@@ -403,6 +403,91 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
+		internal void Serialize(System.Text.StringBuilder buffer)
+		{
+			buffer.Append (SerializerSupport.SerializeInt (this.style_index));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeInt (this.CountLocalSettings));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeInt (this.CountExtraSettings));
+			buffer.Append ("/");
+			
+			this.SerializeProperties (buffer);
+			
+			//	Sérialise maintenant les réglages "local", s'il y en a :
+			
+			if ((this.local_settings != null) &&
+				(this.local_settings.Length > 0))
+			{
+				this.SerializeSettings (this.local_settings, buffer);
+			}
+			
+			//	Sérialise maintenant les réglages "extra", s'il y en a :
+			
+			if ((this.extra_settings != null) &&
+				(this.extra_settings.Length > 0))
+			{
+				this.SerializeSettings (this.extra_settings, buffer);
+			}
+		}
+		
+		internal void Deserialize(TextContext context, int version, string[] args, ref int offset)
+		{
+			int index   = SerializerSupport.DeserializeInt (args[offset++]);
+			int n_local = SerializerSupport.DeserializeInt (args[offset++]);
+			int n_extra = SerializerSupport.DeserializeInt (args[offset++]);
+			
+			this.DeserializeProperties (context, args, ref offset);
+			
+			if (n_local > 0)
+			{
+				this.local_settings = new Styles.LocalSettings[n_local];
+				
+				for (int i = 0; i < n_local; i++)
+				{
+					this.local_settings[i] = new Styles.LocalSettings ();
+				}
+				
+				this.DeserializeSettings (this.local_settings, context, version, args, ref offset);
+			}
+			
+			if (n_extra > 0)
+			{
+				this.extra_settings = new Styles.ExtraSettings[n_extra];
+				
+				for (int i = 0; i < n_extra; i++)
+				{
+					this.extra_settings[i] = new Styles.ExtraSettings ();
+				}
+				
+				this.DeserializeSettings (this.extra_settings, context, version, args, ref offset);
+			}
+			
+			this.style_index = index;
+		}
+		
+		
+		private void SerializeSettings(BaseSettings[] settings, System.Text.StringBuilder buffer)
+		{
+			for (int i = 0; i < settings.Length; i++)
+			{
+				buffer.Append ("/");
+				buffer.Append (SerializerSupport.SerializeInt (settings[i].SettingsIndex));
+				buffer.Append ("/");
+				settings[i].SerializeProperties (buffer);
+			}
+		}
+		
+		private void DeserializeSettings(BaseSettings[] settings, TextContext context, int version, string[] source, ref int offset)
+		{
+			for (int i = 0; i < settings.Length; i++)
+			{
+				settings[i].SettingsIndex = SerializerSupport.DeserializeInt (source[offset++]);
+				settings[i].DeserializeProperties (context, source, ref offset);
+			}
+		}
+		
+		
 		#region IContentsComparer Members
 		public abstract bool CompareEqualContents(object value);
 		#endregion

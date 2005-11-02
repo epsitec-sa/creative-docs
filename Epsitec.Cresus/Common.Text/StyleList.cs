@@ -231,8 +231,11 @@ namespace Epsitec.Common.Text
 		
 		public TextStyle GetTextStyle(string name, TextStyleClass text_style_class)
 		{
-			string full_name = StyleList.GetFullName (name, text_style_class);
-			
+			return this.GetTextStyle (StyleList.GetFullName (name, text_style_class));
+		}
+		
+		internal TextStyle GetTextStyle(string full_name)
+		{
 			if (this.text_style_hash.Contains (full_name))
 			{
 				return this.text_style_hash[full_name] as TextStyle;
@@ -269,6 +272,63 @@ namespace Epsitec.Common.Text
 			}
 			
 			return (TextStyle[]) list.ToArray (typeof (TextStyle));
+		}
+		
+		
+		public byte[] Serialize()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append (SerializerSupport.SerializeLong (this.unique_id));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeInt (this.text_style_list.Count));
+			buffer.Append ("/");
+			
+			this.internal_styles.Serialize (buffer);
+			
+			for (int i = 0; i < this.text_style_list.Count; i++)
+			{
+				TextStyle style = this.text_style_list[i] as TextStyle;
+				
+				buffer.Append ("/");
+				
+				style.Serialize (buffer);
+			}
+			
+			return System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
+		}
+		
+		public void Deserialize(TextContext context, byte[] data)
+		{
+			this.internal_styles = new Internal.StyleTable ();
+			
+			this.text_style_list = new System.Collections.ArrayList ();
+			this.text_style_hash = new System.Collections.Hashtable ();
+			
+			string source = System.Text.Encoding.UTF8.GetString (data);
+			string[] args = source.Split ('/');
+			
+			int offset = 0;
+			
+			long unique   = SerializerSupport.DeserializeLong (args[offset++]);
+			int  n_styles = SerializerSupport.DeserializeInt (args[offset++]);
+			
+			this.unique_id = unique;
+			this.internal_styles.Deserialize (context, args, ref offset);
+			
+			for (int i = 0; i < n_styles; i++)
+			{
+				TextStyle style = new TextStyle ();
+				
+				style.Deserialize (context, args, ref offset);
+				
+				this.Attach (style);
+			}
+			
+			foreach (TextStyle style in this.text_style_list)
+			{
+				style.DeserializeFixups (this);
+			}
 		}
 		
 		

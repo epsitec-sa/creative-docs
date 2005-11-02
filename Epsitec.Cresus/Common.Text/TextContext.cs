@@ -980,7 +980,23 @@ namespace Epsitec.Common.Text
 				Styles.SimpleStyle        style = this.style_list.GetStyleFromIndex (current_style_index);
 				Properties.StylesProperty props = style == null ? null : style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 				
-				this.get_styles_last_styles        = (props == null) ? new TextStyle[0] : props.Styles;
+				if (props == null)
+				{
+					styles = new TextStyle[0];
+				}
+				else
+				{
+					string[] names = props.StyleNames;
+					
+					styles = new TextStyle[names.Length];
+					
+					for (int i = 0; i < names.Length; i++)
+					{
+						styles[i] = this.style_list.GetTextStyle (names[i]);
+					}
+				}
+				
+				this.get_styles_last_styles        = styles;
 				this.get_styles_last_style_version = current_style_version;
 				this.get_styles_last_style_index   = current_style_index;
 			}

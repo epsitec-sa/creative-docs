@@ -9,6 +9,10 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public sealed class TextStyle : Styles.PropertyContainer, IContentsComparer
 	{
+		internal TextStyle()
+		{
+		}
+		
 		internal TextStyle(string name, TextStyleClass text_style_class)
 		{
 			this.name             = name;
@@ -43,6 +47,14 @@ namespace Epsitec.Common.Text
 			get
 			{
 				return this.meta_id;
+			}
+		}
+		
+		public int								Priority
+		{
+			get
+			{
+				return this.priority;
 			}
 		}
 		
@@ -188,6 +200,122 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal void Serialize(System.Text.StringBuilder buffer)
+		{
+			Property[] properties = null;
+			
+			if ((this.style_properties == null) ||
+				(this.style_properties.Length == 0))
+			{
+				properties = this.GetProperties ();
+			}
+			else
+			{
+				properties = this.style_properties;
+			}
+			
+			buffer.Append (SerializerSupport.SerializeString (this.name));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeString (this.meta_id));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeInt (this.priority));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeEnum (this.TextStyleClass));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeInt (this.parent_styles == null ? 0 : this.parent_styles.Length));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeInt (properties == null ? 0 : properties.Length));
+			
+			if (this.parent_styles != null)
+			{
+				for (int i = 0; i < this.parent_styles.Length; i++)
+				{
+					TextStyle parent = this.parent_styles[i] as TextStyle;
+					
+					buffer.Append ("/");
+					buffer.Append (SerializerSupport.SerializeString (StyleList.GetFullName (parent.Name, parent.TextStyleClass)));
+				}
+			}
+			
+			if (properties != null)
+			{
+				for (int i = 0; i < properties.Length; i++)
+				{
+					Property property = properties[i];
+				
+					buffer.Append ("/");
+					buffer.Append (SerializerSupport.SerializeString (Property.Serialize (property)));
+				}
+			}
+		}
+		
+		internal void Deserialize(TextContext context, string[] args, ref int offset)
+		{
+			string name     = SerializerSupport.DeserializeString (args[offset++]);
+			string meta_id  = SerializerSupport.DeserializeString (args[offset++]);
+			int    priority = SerializerSupport.DeserializeInt (args[offset++]);
+			
+			TextStyleClass tsc = (TextStyleClass) SerializerSupport.DeserializeEnum (typeof (TextStyleClass), args[offset++]);
+			
+			int n_styles = SerializerSupport.DeserializeInt (args[offset++]);
+			int n_props  = SerializerSupport.DeserializeInt (args[offset++]);
+			
+			this.name     = name;
+			this.meta_id  = meta_id;
+			this.priority = priority;
+			
+			this.text_style_class = tsc;
+			
+			if (n_styles > 0)
+			{
+				this.parent_styles = new string[n_styles];
+				
+				for (int i = 0; i < n_styles; i++)
+				{
+					this.parent_styles[i] = SerializerSupport.DeserializeString (args[offset++]);
+				}
+			}
+			
+			if (n_props > 0)
+			{
+				this.style_properties = new Property[n_props];
+				
+				for (int i = 0; i < n_props; i++)
+				{
+					this.style_properties[i] = Property.Deserialize (context, SerializerSupport.DeserializeString (args[offset++]));
+				}
+			}
+		}
+		
+		internal void DeserializeFixups(StyleList list)
+		{
+			if (this.parent_styles != null)
+			{
+				TextStyle[] parent_styles = new TextStyle[this.parent_styles.Length];
+				
+				for (int i = 0; i < this.parent_styles.Length; i++)
+				{
+					parent_styles[i] = list.GetTextStyle (this.parent_styles[i] as string);
+				}
+				
+				Property[] style_properties = this.style_properties;
+				
+				this.parent_styles    = null;
+				this.style_properties = null;
+				
+				this.Initialise (style_properties, parent_styles);
+			}
+			else
+			{
+				Property[] style_properties = this.style_properties;
+				
+				this.style_properties = null;
+				
+				this.Initialise (style_properties);
+			}
+		}
+		
+		
 		#region IContentsComparer Members
 		public bool CompareEqualContents(object value)
 		{
@@ -313,7 +441,7 @@ namespace Epsitec.Common.Text
 		private int								priority;
 		private string							meta_id;
 		private TextStyleClass					text_style_class;
-		private TextStyle[]						parent_styles;
+		private object[]						parent_styles;
 		private Property[]						style_properties;
 	}
 }

@@ -11,42 +11,36 @@ namespace Epsitec.Common.Text.Properties
 	{
 		public StylesProperty()
 		{
-			this.styles = new TextStyle[0];
+			this.Setup (null);
 		}
 		
 		public StylesProperty(TextStyle style)
 		{
-			this.styles = new TextStyle[1];
-			this.styles[0] = style;
+			this.Setup (new TextStyle[] { style });
 		}
 		
 		public StylesProperty(System.Collections.ICollection styles)
 		{
-			this.styles = new TextStyle[styles.Count];
-			styles.CopyTo (this.styles, 0);
+			this.Setup (styles);
 		}
 
 		
-		public override long					Version
+		private void Setup(System.Collections.ICollection styles)
 		{
-			get
+			int n = styles == null ? 0 : styles.Count;
+			int i = 0;
+			
+			this.style_names = new string[n];
+			
+			if (n > 0)
 			{
-				long version = base.Version;
-				
-				for (int i = 0; i < this.styles.Length; i++)
+				foreach (TextStyle style in styles)
 				{
-					long style_version = this.styles[i].Version;
-					
-					if (style_version > version)
-					{
-						version = style_version;
-					}
+					this.style_names[i++] = StyleList.GetFullName (style.Name, style.TextStyleClass);
 				}
-				
-				return version;
 			}
 		}
-
+		
 		public override PropertyType			PropertyType
 		{
 			get
@@ -64,11 +58,11 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public TextStyle[]						Styles
+		public string[]							StyleNames
 		{
 			get
 			{
-				return this.styles.Clone () as TextStyle[];
+				return this.style_names.Clone () as string[];
 			}
 		}
 		
@@ -76,16 +70,10 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.styles.Length;
+				return this.style_names.Length;
 			}
 		}
 		
-		
-		
-		public int CountMatchingStyles(TextStyleClass style_class)
-		{
-			return StylesProperty.CountMatchingStyles (this.styles, style_class);
-		}
 		
 		
 		public override Property EmptyClone()
@@ -95,19 +83,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
-			string[] names = new string[this.styles.Length];
-			
-			//	Les styles sont définis par un nom et une classe d'appartenance
-			//	(par exemple "Default" et TextStyleClass.Paragraph). Il faut
-			//	conserver les deux en cas de sérialisation.
-			
-			for (int i = 0; i < this.styles.Length; i++)
-			{
-				names[i] = StyleList.GetFullName (this.styles[i].Name, this.styles[i].TextStyleClass);
-			}
-			
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeStringArray (names));
+				/**/				SerializerSupport.SerializeStringArray (this.style_names));
 		}
 		
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -118,17 +95,7 @@ namespace Epsitec.Common.Text.Properties
 			
 			string[] names = SerializerSupport.DeserializeStringArray (args[0]);
 			
-			this.styles = new TextStyle[names.Length];
-			
-			for (int i = 0; i < names.Length; i++)
-			{
-				TextStyleClass text_style_class;
-				string         name;
-				
-				StyleList.SplitFullName (names[i], out name, out text_style_class);
-				
-				this.styles[i] = context.StyleList.GetTextStyle (name, text_style_class);
-			}
+			this.style_names = names;
 		}
 
 		public override Property GetCombination(Property property)
@@ -145,10 +112,10 @@ namespace Epsitec.Common.Text.Properties
 			
 			//	TODO: gérer les doublets
 			
-			c.styles = new TextStyle[a.styles.Length + b.styles.Length];
+			c.style_names = new string[a.style_names.Length + b.style_names.Length];
 			
-			a.styles.CopyTo (c.styles, 0);
-			b.styles.CopyTo (c.styles, a.styles.Length);
+			a.style_names.CopyTo (c.style_names, 0);
+			b.style_names.CopyTo (c.style_names, a.style_names.Length);
 			
 			c.DefineVersion (System.Math.Max (a.Version, b.Version));
 			
@@ -162,9 +129,9 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(Epsitec.Common.IO.IChecksum checksum)
 		{
-			foreach (TextStyle style in this.styles)
+			foreach (string style in this.style_names)
 			{
-				checksum.UpdateValue (style.GetContentsSignature ());
+				checksum.UpdateValue (style);
 			}
 		}
 		
@@ -232,7 +199,12 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(StylesProperty a, StylesProperty b)
 		{
-			return StylesProperty.CompareEqualContents (a.styles, b.styles);
+			if (a == b)
+			{
+				return true;
+			}
+			
+			return Types.Comparer.Equal (a.style_names, b.style_names);
 		}
 		
 		private static bool CompareEqualContents(TextStyle[] a, TextStyle[] b)
@@ -276,6 +248,6 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		private TextStyle[]						styles;
+		private string[]						style_names;
 	}
 }

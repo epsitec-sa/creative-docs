@@ -272,6 +272,21 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public static string Serialize(Property property)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			Property.SerializeToText (buffer, property);
+			return buffer.ToString ();
+		}
+		
+		public static Property Deserialize(TextContext context, string text)
+		{
+			Property property;
+			Property.DeserializeFromText (context, text, out property);
+			return property;
+		}
+		
+		
 		public static void SerializeToText(System.Text.StringBuilder buffer, Property property)
 		{
 			System.Diagnostics.Debug.Assert (property != null);

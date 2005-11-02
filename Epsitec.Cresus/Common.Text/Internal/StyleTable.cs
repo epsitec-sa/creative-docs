@@ -171,13 +171,71 @@ namespace Epsitec.Common.Text.Internal
 			
 			foreach (Styles.SimpleStyle style in this.styles)
 			{
-				if (style.Update ())
+				if (style != null)
 				{
-					changed = true;
+					if (style.Update ())
+					{
+						changed = true;
+					}
 				}
 			}
 			
 			return changed;
+		}
+		
+		
+		public void Serialize(System.Text.StringBuilder buffer)
+		{
+			buffer.Append (SerializerSupport.SerializeInt (0));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeInt (this.styles.Count));
+			
+			for (int i = 0; i < styles.Count; i++)
+			{
+				Styles.SimpleStyle style = this.styles[i] as Styles.SimpleStyle;
+				
+				buffer.Append ("/");
+				buffer.Append (style == null ? "0" : "1");
+				
+				if (style != null)
+				{
+					buffer.Append ("/");
+					style.Serialize (buffer);
+				}
+			}
+		}
+		
+		public void Deserialize(TextContext context, string[] args, ref int offset)
+		{
+			int version = SerializerSupport.DeserializeInt (args[offset++]);
+			int count   = SerializerSupport.DeserializeInt (args[offset++]);
+			
+			Debug.Assert.IsTrue (version == 0);
+			
+			if (count > 0)
+			{
+				this.styles = new System.Collections.ArrayList ();
+				
+				for (int i = 0; i < count; i++)
+				{
+					string test = args[offset++];
+					
+					if (test == "0")
+					{
+						this.styles.Add (null);
+					}
+					else if (test == "1")
+					{
+						Styles.SimpleStyle style = new Styles.SimpleStyle ();
+						style.Deserialize (context, version, args, ref offset);
+						this.styles.Add (style);
+					}
+					else
+					{
+						throw new System.InvalidOperationException ("Deserialization problem");
+					}
+				}
+			}
 		}
 		
 		

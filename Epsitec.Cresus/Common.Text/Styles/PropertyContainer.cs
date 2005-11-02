@@ -587,6 +587,34 @@ namespace Epsitec.Common.Text.Styles
 		}
 		#endregion
 		
+		internal void SerializeProperties(System.Text.StringBuilder buffer)
+		{
+			buffer.Append (SerializerSupport.SerializeInt (this.properties.Length));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeInt (this.user_count));
+			
+			for (int i = 0; i < this.properties.Length; i++)
+			{
+				buffer.Append ("/");
+				buffer.Append (SerializerSupport.SerializeString (Property.Serialize (this.properties[i])));
+			}
+		}
+		
+		internal void DeserializeProperties(TextContext context, string[] source, ref int index)
+		{
+			int length = SerializerSupport.DeserializeInt (source[index++]);
+			int users  = SerializerSupport.DeserializeInt (source[index++]);
+			
+			this.properties = new Property[length];
+			this.user_count = users;
+			
+			for (int i = 0; i < length; i++)
+			{
+				this.properties[i] = Property.Deserialize (context, SerializerSupport.DeserializeString (source[index++]));
+			}
+		}
+		
+		
 		protected void ClearContentsSignature()
 		{
 			this.contents_signature = 0;

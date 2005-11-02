@@ -771,6 +771,53 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public byte[] Serialize()
+		{
+			System.IO.MemoryStream stream = new System.IO.MemoryStream ();
+			
+			this.text.WriteRawText (stream, this.text_length + 1);
+			
+			return stream.ToArray ();
+		}
+		
+		public void Deserialize(byte[] data)
+		{
+			System.IO.MemoryStream stream = new System.IO.MemoryStream (data, 0, data.Length, false);
+			
+			Internal.CursorTable cursor_table = this.text.CursorTable;
+			ICursor[]            cursor_array = cursor_table.GetCursorArray ();
+			
+			//	Dans un texte fraîchement créé, il y a un curseur temporaire qui
+			//	appartient à TextStory, un curseur normal qui appartient au navi-
+			//	gateur, ainsi qu'un curseur temporaire (pour le navigateur) :
+			
+			System.Diagnostics.Debug.Assert (cursor_array.Length == 3);
+			
+			foreach (ICursor cursor in cursor_array)
+			{
+				this.text.RecycleCursor (cursor.CursorId);
+			}
+			
+			//	Le plus simple est de tuer l'ancienne TextTable pour la remplacer
+			//	par une toute fraîche et toute propre. Elle n'a aucun curseur :
+			
+			this.text = new Internal.TextTable ();
+			
+			this.text.ReadRawText (stream);
+			
+			this.text_length = this.text.TextLength - 1;
+			this.undo_length = 0;
+			
+			//	Restitue les curseurs; ils seront placés en début de document,
+			//	ce qui convient parfaitement :
+			
+			foreach (ICursor cursor in cursor_array)
+			{
+				this.text.NewCursor (cursor);
+			}
+		}
+		
+		
 		private void IncrementUserCount(ulong[] text, int length)
 		{
 			Internal.StyleTable styles = this.StyleList.InternalStyleTable;

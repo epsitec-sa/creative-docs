@@ -35,6 +35,23 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
+		public ICursor[] GetCursorArray()
+		{
+			ICursor[] cursors = new ICursor[this.CursorCount];
+			
+			for (int i = 1, j = 0; i < this.cursors.Length; i++)
+			{
+				if (this.cursors[i].CursorState == CursorState.Allocated)
+				{
+					cursors[j++] = this.cursors[i].CursorInstance;
+				}
+			}
+			
+			System.Diagnostics.Debug.Assert (cursors.Length == 0 || cursors[cursors.Length-1] != null);
+			
+			return cursors;
+		}
+		
 		
 		public Internal.Cursor ReadCursor(Internal.CursorId id)
 		{

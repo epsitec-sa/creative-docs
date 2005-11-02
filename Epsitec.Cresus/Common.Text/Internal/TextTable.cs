@@ -49,6 +49,15 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		internal CursorTable					CursorTable
+		{
+			get
+			{
+				return this.cursors;
+			}
+		}
+		
+		
 		public Internal.CursorId NewCursor(ICursor cursor)
 		{
 			Internal.CursorId id     = this.cursors.NewCursor ();
@@ -1153,7 +1162,13 @@ namespace Epsitec.Common.Text.Internal
 			throw new System.InvalidOperationException ("Not a valid text stream.");
 		}
 		
+		
 		internal void WriteRawText(System.IO.Stream stream)
+		{
+			this.WriteRawText (stream, this.text_length);
+		}
+		
+		internal void WriteRawText(System.IO.Stream stream, int length)
 		{
 			byte[] header = new byte[8];
 			
@@ -1161,10 +1176,12 @@ namespace Epsitec.Common.Text.Internal
 			header[1] = (byte) ('X');
 			header[2] = (byte) ('T');
 			header[3] = (byte) ('1');
-			header[4] = (byte) ((this.text_length >> 24) & 0xff);
-			header[5] = (byte) ((this.text_length >> 16) & 0xff);
-			header[6] = (byte) ((this.text_length >>  8) & 0xff);
-			header[7] = (byte) ((this.text_length >>  0) & 0xff);
+			header[4] = (byte) ((length >> 24) & 0xff);
+			header[5] = (byte) ((length >> 16) & 0xff);
+			header[6] = (byte) ((length >>  8) & 0xff);
+			header[7] = (byte) ((length >>  0) & 0xff);
+			
+			length *= 8;
 			
 			stream.Write (header, 0, header.Length);
 			
@@ -1185,7 +1202,16 @@ namespace Epsitec.Common.Text.Internal
 			for (int i = 0; i < this.text_chunks.Length; i++)
 			{
 				int count = this.text_chunks[i].GetRawText (buffer);
-				stream.Write (buffer, 0, count);
+				int write = System.Math.Min (count, length);
+				
+				stream.Write (buffer, 0, write);
+				
+				length -= write;
+				
+				if (length == 0)
+				{
+					break;
+				}
 			}
 		}
 		
