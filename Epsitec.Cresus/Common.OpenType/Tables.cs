@@ -287,7 +287,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (36);
+				return (short) this.ReadInt16 (36);
 			}
 		}
 		
@@ -295,7 +295,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (38);
+				return (short) this.ReadInt16 (38);
 			}
 		}
 		
@@ -303,7 +303,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (40);
+				return (short) this.ReadInt16 (40);
 			}
 		}
 		
@@ -311,7 +311,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (42);
+				return (short) this.ReadInt16 (42);
 			}
 		}
 		
@@ -1596,7 +1596,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (10);
+				return (short) this.ReadInt16 (10);
 			}
 		}
 		
@@ -1628,7 +1628,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (18);
+				return (short) this.ReadInt16 (18);
 			}
 		}
 		
@@ -1636,7 +1636,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (20);
+				return (short) this.ReadInt16 (20);
 			}
 		}
 		
@@ -1644,7 +1644,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (22);
+				return (short) this.ReadInt16 (22);
 			}
 		}
 		
