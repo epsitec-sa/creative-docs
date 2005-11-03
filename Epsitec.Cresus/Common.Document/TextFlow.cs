@@ -171,12 +171,10 @@ namespace Epsitec.Common.Document
 		// Sérialise l'objet.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			byte[] data1 = this.textStory.Serialize();
-			byte[] data2 = this.textStory.TextContext.StyleList.Serialize();
-			
 			info.AddValue("ObjectsChain", this.objectsChain);
-			info.AddValue("TextStoryData", data1);
-			info.AddValue("StyleListData", data2);
+
+			byte[] textStoryData = this.textStory.Serialize();
+			info.AddValue("TextStoryData", textStoryData);
 		}
 
 		// Constructeur qui désérialise l'objet.
@@ -188,11 +186,8 @@ namespace Epsitec.Common.Document
 			
 			this.objectsChain = (UndoableList) info.GetValue("ObjectsChain", typeof(UndoableList));
 			
-			byte[] data1 = (byte[]) info.GetValue("TextStoryData", typeof(byte[]));
-			byte[] data2 = (byte[]) info.GetValue("StyleListData", typeof(byte[]));
-			
-			this.textStory.Deserialize(data1);
-			this.textStory.TextContext.StyleList.Deserialize(this.textStory.TextContext, data2);
+			byte[] textStoryData = (byte[]) info.GetValue("TextStoryData", typeof(byte[]));
+			this.textStory.Deserialize(textStoryData);
 		}
 
 		// Adapte l'objet après une désérialisation.
