@@ -464,7 +464,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void NotifyTextStyleChanged()
+		public void NotifyTextChanged()
 		{
 			//	Indique que les réglages internes du texte entier ont changé sans notre
 			//	connaissance. On doit considérer le texte complet comme "sale".
