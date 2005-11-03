@@ -1589,8 +1589,7 @@ namespace Epsitec.Common.Document.Objects
 							// Le caractère considéré est sélectionné.
 							if ( isInSelection == false )
 							{
-								// C'est le premier caractère d'une tranche. Il faut
-								// mémoriser son début :
+								// C'est le premier caractère d'une tranche. Il faut mémoriser son début :
 								double xx = x1 + ((x2 - x1) * i) / numChars;
 								isInSelection = true;
 								selX = xx;
@@ -1600,8 +1599,7 @@ namespace Epsitec.Common.Document.Objects
 						{
 							if ( isInSelection )
 							{
-								// Nous avons quitté une tranche sélectionnée. Il faut
-								// mémoriser sa fin :
+								// Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
 								double xx = x1 + ((x2 - x1) * i) / numChars;
 								isInSelection = false;
 
@@ -1618,8 +1616,7 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( isInSelection )
 				{
-					// Nous avons quitté une tranche sélectionnée. Il faut
-					// mémoriser sa fin :
+					// Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
 					double xx = x2;
 					isInSelection = false;
 
@@ -1633,6 +1630,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.hasSelection = true;
 
+					// Dessine les rectangles correspondant à la sélection.
 					foreach ( Drawing.Rectangle rect in selRectList )
 					{
 						this.graphics.AddFilledRectangle(rect);
@@ -1641,6 +1639,7 @@ namespace Epsitec.Common.Document.Objects
 					this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
 				}
 
+				// Dessine le texte.
 				this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName(color));
 			}
 			
