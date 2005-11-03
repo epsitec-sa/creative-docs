@@ -1218,16 +1218,19 @@ namespace Epsitec.Common.Document.Objects
 		// Crée le chemin d'une "poignée" du flux de l'objet.
 		protected void PathFlowIcon(Path path, Point p1, Point p2, Point p3, Point p4, IPaintPort port, DrawingContext drawingContext, bool plus)
 		{
-			this.Align(ref p1, port);
-			this.Align(ref p2, port);
-			this.Align(ref p3, port);
-			this.Align(ref p4, port);
+			if ( this.direction%90.0 == 0.0 )
+			{
+				this.Align(ref p1, port);
+				this.Align(ref p2, port);
+				this.Align(ref p3, port);
+				this.Align(ref p4, port);
 
-			double adjust = 0.5/drawingContext.ScaleX;
-			p1.X += adjust;  p1.Y += adjust;
-			p2.X -= adjust;  p2.Y += adjust;
-			p3.X += adjust;  p3.Y -= adjust;
-			p4.X -= adjust;  p4.Y -= adjust;
+				double adjust = 0.5/drawingContext.ScaleX;
+				p1.X += adjust;  p1.Y += adjust;
+				p2.X -= adjust;  p2.Y += adjust;
+				p3.X += adjust;  p3.Y -= adjust;
+				p4.X -= adjust;  p4.Y -= adjust;
+			}
 
 			path.MoveTo(p1);
 			path.LineTo(p2);
@@ -1337,9 +1340,9 @@ namespace Epsitec.Common.Document.Objects
 		{
 			double x = p.X;
 			double y = p.Y;
-			
+		
 			port.Align(ref x, ref y);
-			
+		
 			p.X = x;
 			p.Y = y;
 		}
@@ -1440,9 +1443,19 @@ namespace Epsitec.Common.Document.Objects
 				ot = port.Transform;
 			}
 
-			double angle = Point.ComputeAngleDeg(p1, p2);
+			//?double angle = Point.ComputeAngleDeg(p1, p2);
+			double angle = this.direction;
+
+			Point pp1 = Transform.RotatePointDeg(p1, -angle, p1);
+			Point pp2 = Transform.RotatePointDeg(p1, -angle, p2);
+			Point pp3 = Transform.RotatePointDeg(p1, -angle, p3);
+
+			double sx = (pp1.X <= pp2.X) ? 1.0 : -1.0;
+			double sy = (pp1.Y <= pp3.Y) ? 1.0 : -1.0;
+
 			this.transform = new Transform();
 			this.transform.Translate(p1);
+			this.transform.Scale(sx, sy, p1.X, p1.Y);
 			this.transform.RotateDeg(angle, p1);
 			if ( port != null )
 			{
@@ -1918,6 +1931,8 @@ namespace Epsitec.Common.Document.Objects
 		{
 //-			this.textFlow.TextFitter.ClearAllMarks();
 			this.textFlow.TextFitter.GenerateMarks();
+
+			this.textFlow.TextStory.NotifyTextChanged();
 
 			// Indique qu'il faudra recalculer les bbox à toute la chaîne des pavés.
 			UndoableList chain = this.textFlow.Chain;
