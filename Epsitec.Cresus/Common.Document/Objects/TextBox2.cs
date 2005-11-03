@@ -513,6 +513,9 @@ namespace Epsitec.Common.Document.Objects
 		// Insère un texte dans le pavé en édition.
 		public override bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
+			this.metaNavigator.EndSelection();
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
+
 			if ( fontFace == "" )
 			{
 				this.metaNavigator.Insert(text);
@@ -529,6 +532,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
+			this.document.Modifier.OpletQueueValidateAction();
 			this.NotifyAreaFlow();
 			return true;
 		}
@@ -536,6 +540,9 @@ namespace Epsitec.Common.Document.Objects
 		// Insère un glyphe dans le pavé en édition.
 		public override bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
 		{
+			this.metaNavigator.EndSelection();
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Alternate);
+
 			if ( fontFace == "" )
 			{
 				string text = code.ToString();
@@ -549,6 +556,7 @@ namespace Epsitec.Common.Document.Objects
 				this.metaNavigator.SelectInsertedCharacter();
 			}
 
+			this.document.Modifier.OpletQueueValidateAction();
 			this.NotifyAreaFlow();
 			return true;
 		}

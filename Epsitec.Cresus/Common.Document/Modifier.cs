@@ -1113,10 +1113,7 @@ namespace Epsitec.Common.Document
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
-			this.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
-			bool ok = editObject.EditInsertText(text, fontFace, fontStyle);
-			this.OpletQueueValidateAction();
-			return ok;
+			return editObject.EditInsertText(text, fontFace, fontStyle);
 		}
 
 		// Insère un glyphe dans le pavé en édition.
@@ -1125,10 +1122,7 @@ namespace Epsitec.Common.Document
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
-			this.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Alternate);
-			bool ok = editObject.EditInsertGlyph(code, glyph, fontFace, fontStyle);
-			this.OpletQueueValidateAction();
-			return ok;
+			return editObject.EditInsertGlyph(code, glyph, fontFace, fontStyle);
 		}
 
 		// Donne la fonte actullement utilisée.

@@ -227,10 +227,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessBackKey(Message message)
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			if (this.text_navigator.HasSelection)
 			{
@@ -244,10 +241,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessDeleteKey(Message message)
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			if (this.text_navigator.HasSelection)
 			{
@@ -434,10 +428,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if (this.text_navigator.IsSelectionActive)
-				{
-					this.text_navigator.EndSelection ();
-				}
+				this.EndSelection ();
 				
 				//	Si une sélection est active, il faut la désactiver en tenant
 				//	compte de la direction de déplacement souhaitée :
@@ -478,10 +469,8 @@ namespace Epsitec.Common.Widgets
 				this.is_mouse_dragging = true;
 			}
 			
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
+
 			if (this.text_navigator.HasSelection)
 			{
 				this.text_navigator.ClearSelection ();
@@ -578,10 +567,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void SelectInsertedCharacter()
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
 			this.text_navigator.StartSelection ();
@@ -590,10 +576,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void SelectWord()
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.WordStart, 0);
 			this.text_navigator.StartSelection ();
@@ -602,10 +585,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void SelectLine()
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.LineStart, 0);
 			this.text_navigator.StartSelection ();
@@ -614,10 +594,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void SelectAll()
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			this.text_navigator.StartSelection ();
@@ -686,10 +663,8 @@ namespace Epsitec.Common.Widgets
 		
 		public void DeleteSelection()
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
+
 			if (this.text_navigator.HasSelection)
 			{
 				this.text_navigator.Delete ();
@@ -697,12 +672,18 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool Undo()
+		public void EndSelection()
 		{
 			if (this.text_navigator.IsSelectionActive)
 			{
 				this.text_navigator.EndSelection ();
 			}
+		}
+		
+		
+		public bool Undo()
+		{
+			this.EndSelection ();
 			
 			if (this.text_navigator.OpletQueue.CanUndo)
 			{
@@ -716,10 +697,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool Redo()
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			if (this.text_navigator.OpletQueue.CanRedo)
 			{
@@ -734,60 +712,42 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetParagraphStyles(params Text.TextStyle[] styles)
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			this.text_navigator.SetParagraphStyles (styles);
 		}
 		
 		public void SetTextStyles(params Text.TextStyle[] styles)
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			this.text_navigator.SetTextStyles (styles);
 		}
 		
 		public void SetCharacterStyles(params Text.TextStyle[] styles)
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			this.text_navigator.SetCharacterStyles (styles);
 		}
 		
 		public void SetMetaProperties(Text.Properties.ApplyMode mode, params Text.TextStyle[] meta_properties)
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			this.text_navigator.SetMetaProperties (mode, meta_properties);
 		}
 		
 		public void SetParagraphProperties(Text.Properties.ApplyMode mode, params Text.Property[] properties)
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			this.text_navigator.SetParagraphProperties (mode, properties);
 		}
 		
 		public void SetTextProperties(Text.Properties.ApplyMode mode, params Text.Property[] properties)
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
+			this.EndSelection ();
 			
 			this.text_navigator.SetTextProperties (mode, properties);
 		}
