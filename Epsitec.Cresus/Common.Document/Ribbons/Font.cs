@@ -66,7 +66,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8+180+5+50+22*2+20;
+				return 8+180+5+50+22*2+25;
 			}
 		}
 
@@ -135,12 +135,6 @@ namespace Epsitec.Common.Document.Ribbons
 
 			rect = this.UsefulZone;
 			rect.Height = dy;
-			rect.Width = 76;
-			this.fontStyle.Bounds = rect;
-			rect.Offset(rect.Width, 0);
-			rect.Width = dx;
-			this.fontFeatures.Bounds = rect;
-			rect.Offset(dx+5, 0);
 			rect.Width = dx;
 			this.buttonBold.Bounds = rect;
 			rect.Offset(dx, 0);
@@ -159,6 +153,12 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonUserZ.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.fontColor.Bounds = rect;
+			rect.Offset(dx+5, 0);
+			rect.Width = 76;
+			this.fontStyle.Bounds = rect;
+			rect.Offset(rect.Width, 0);
+			rect.Width = dx;
+			this.fontFeatures.Bounds = rect;
 		}
 
 

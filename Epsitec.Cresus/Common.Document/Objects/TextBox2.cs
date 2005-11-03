@@ -1465,6 +1465,14 @@ namespace Epsitec.Common.Document.Objects
 			this.port = port;
 			this.graphics = port as Graphics;
 			this.drawingContext = drawingContext;
+
+			this.isActive = true;
+			if ( this.document.Modifier != null )
+			{
+				this.isActive = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext &&
+								 this.document.Modifier.ActiveViewer.IsFocused);
+			}
+
 			this.hasSelection = false;
 
 			this.redrawArea = Drawing.Rectangle.Empty;
@@ -1491,20 +1499,13 @@ namespace Epsitec.Common.Document.Objects
 			
 				if ( frame == this.textFrame )
 				{
-					bool active = true;
-					if ( this.document.Modifier != null )
-					{
-						active = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext &&
-								  this.document.Modifier.ActiveViewer.IsFocused);
-					}
-
 					double tan = System.Math.Tan(System.Math.PI/2.0 - angle);
 					Point c1 = new Point(cx+tan*descender, cy+descender);
 					Point c2 = new Point(cx+tan*ascender,  cy+ascender);
 				
 					this.graphics.LineWidth = 1.0/drawingContext.ScaleX;
 					this.graphics.AddLine(c1, c2);
-					this.graphics.RenderSolid(DrawingContext.ColorCursorEdit(active));
+					this.graphics.RenderSolid(DrawingContext.ColorCursorEdit(this.isActive));
 
 					c1 = this.transform.TransformDirect(c1);
 					c2 = this.transform.TransformDirect(c2);
@@ -1565,7 +1566,6 @@ namespace Epsitec.Common.Document.Objects
 				double selX = 0;
 
 				System.Collections.ArrayList selRectList = null;
-				Drawing.Rectangle selBbox = Drawing.Rectangle.Empty;
 
 				double x1 = 0;
 				double x2 = 0;
@@ -1607,7 +1607,7 @@ namespace Epsitec.Common.Document.Objects
 
 								if ( xx > selX )
 								{
-									this.MarkSel(layout, ref selRectList, ref selBbox, xx, selX);
+									this.MarkSel(layout, ref selRectList, xx, selX);
 								}
 							}
 						}
@@ -1625,27 +1625,23 @@ namespace Epsitec.Common.Document.Objects
 
 					if ( xx > selX )
 					{
-						this.MarkSel(layout, ref selRectList, ref selBbox, xx, selX);
+						this.MarkSel(layout, ref selRectList, xx, selX);
 					}
 				}
-
-				this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName(color));
 
 				if ( this.edited && selRectList != null && this.graphics != null )
 				{
 					this.hasSelection = true;
 
-					Drawing.Rectangle saveClip = this.graphics.SaveClippingRectangle();
-				
-					this.graphics.SetClippingRectangles(selRectList);
-					this.graphics.AddFilledRectangle(selBbox);
-					this.graphics.RenderSolid(Drawing.Color.FromName("Highlight"));
-					this.selectBox.MergeWith(selBbox);
-
-					this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName("HighlightText"));
-
-					this.graphics.RestoreClippingRectangle(saveClip);
+					foreach ( Drawing.Rectangle rect in selRectList )
+					{
+						this.graphics.AddFilledRectangle(rect);
+						this.selectBox.MergeWith(rect);
+					}
+					this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
 				}
+
+				this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName(color));
 			}
 			
 			if ( this.internalOperation == InternalOperation.CharactersTable )
@@ -1694,8 +1690,8 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Marque la fin d'une tranche sélectionnée.
-		protected void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, ref Drawing.Rectangle selBbox, double x, double selX)
+		// Marque une tranche sélectionnée.
+		protected void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, double x, double selX)
 		{
 			if ( this.graphics == null )  return;
 
@@ -1704,22 +1700,12 @@ namespace Epsitec.Common.Document.Objects
 			Drawing.Rectangle rect = new Drawing.Rectangle(selX, layout.LineY1, dx, dy);
 			graphics.Align(ref rect);
 
-			selBbox = Drawing.Rectangle.Union(selBbox, rect);
-
-			double px1 = rect.Left;
-			double px2 = rect.Right;
-			double py1 = rect.Bottom;
-			double py2 = rect.Top;
-
-			this.graphics.Rasterizer.Transform.TransformDirect(ref px1, ref py1);
-			this.graphics.Rasterizer.Transform.TransformDirect(ref px2, ref py2);
-
 			if ( selRectList == null )
 			{
 				selRectList = new System.Collections.ArrayList();
 			}
 
-			selRectList.Add(Drawing.Rectangle.FromCorners(px1, py1, px2, py2));
+			selRectList.Add(rect);
 		}
 
 		// Effectue le rendu des caractères.
@@ -2036,6 +2022,7 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		protected bool							hasSelection;
+		protected bool							isActive;
 		protected ulong							markerSelected;
 		protected TextFlow						textFlow;
 		protected Text.SimpleTextFrame			textFrame;
