@@ -908,7 +908,7 @@ namespace Epsitec.Common.Document
 			info.AddValue("Properties", this.propertiesAuto);
 			info.AddValue("Aggregates", this.aggregates);
 
-			byte[] textContextData = this.textContext.Serialize();
+			byte[] textContextData = this.textContext == null ? null : this.textContext.Serialize();
 			info.AddValue("TextContextData", textContextData);
 
 			info.AddValue("TextFlows", this.textFlows);
@@ -982,7 +982,11 @@ namespace Epsitec.Common.Document
 			if ( this.IsRevisionGreaterOrEqual(1,2,3) )
 			{
 				byte[] textContextData = (byte[]) info.GetValue("TextContextData", typeof(byte[]));
-				this.textContext.Deserialize(textContextData);
+				
+				if ( textContextData != null )
+				{
+					this.textContext.Deserialize(textContextData);
+				}
 
 				this.textFlows = (UndoableList) info.GetValue("TextFlows", typeof(UndoableList));
 			}
