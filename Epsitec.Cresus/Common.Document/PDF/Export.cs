@@ -1511,7 +1511,7 @@ namespace Epsitec.Common.Document.PDF
 				compression = ImageCompression.ZIP;  // utilise la compression sans pertes
 			}
 
-			if ( compression == ImageCompression.JPEG && bpp == 3 )
+			if ( compression == ImageCompression.JPEG )
 			{
 				bpp = 4;  // il faut mettre R,G,B,0 pour Magick !
 			}
@@ -1529,7 +1529,17 @@ namespace Epsitec.Common.Document.PDF
 
 						if ( baseType == TypeComplexSurface.XObject )
 						{
-							if ( this.colorConversion == PDF.ColorConversion.ToGray )
+							if ( compression == ImageCompression.JPEG )
+							{
+								int r = (int) (color.R * 255.0);
+								int g = (int) (color.G * 255.0);
+								int b = (int) (color.B * 255.0);
+								buffer[i++] = (byte) r;
+								buffer[i++] = (byte) g;
+								buffer[i++] = (byte) b;
+								buffer[i++] = 0;
+							}
+							else if ( this.colorConversion == PDF.ColorConversion.ToGray )
 							{
 								double gray = Color.GetBrightness(color.R, color.G, color.B);
 								int g = (int) (gray * 255.0);
@@ -1556,10 +1566,6 @@ namespace Epsitec.Common.Document.PDF
 								buffer[i++] = (byte) r;
 								buffer[i++] = (byte) g;
 								buffer[i++] = (byte) b;
-								if ( compression == ImageCompression.JPEG )
-								{
-									buffer[i++] = 0;
-								}
 							}
 
 							if ( color.A < 1.0 )  useMask = true;
@@ -1605,8 +1611,8 @@ namespace Epsitec.Common.Document.PDF
 				magick.ModifyEnd();
 				buffer = null;
 
-				magick.ColorSpace      = (bpp == 1) ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
-				magick.ImageType       = (bpp == 1) ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
+				magick.ColorSpace      = (this.colorConversion == PDF.ColorConversion.ToGray) ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
+				magick.ImageType       = (this.colorConversion == PDF.ColorConversion.ToGray) ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
 				magick.MagickFormat    = "JPEG";
 				magick.Quality         = (int) (this.jpegQuality*100.0);
 
