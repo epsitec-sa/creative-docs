@@ -532,6 +532,7 @@ namespace Epsitec.Common.Document
 			this.propertiesAuto = doc.propertiesAuto;
 			this.aggregates = doc.aggregates;
 			this.textFlows = doc.textFlows;
+			this.textContext = doc.textContext; 
 			this.uniqueObjectId = doc.uniqueObjectId;
 			this.uniqueAggregateId = doc.uniqueAggregateId;
 			

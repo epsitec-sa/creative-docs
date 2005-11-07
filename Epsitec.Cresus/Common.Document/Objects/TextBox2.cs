@@ -34,6 +34,23 @@ namespace Epsitec.Common.Document.Objects
 			this.metaNavigator.TextFrame = this.textFrame;
 
 			this.NewTextFlow();
+			this.InitialiseInternals();
+		}
+		
+		protected void InitialiseInternals()
+		{
+			if ( this.textFrame == null )
+			{
+				this.textFrame = new Text.SimpleTextFrame();
+			}
+			
+			System.Diagnostics.Debug.Assert(this.textFlow != null);
+			
+			if ( this.metaNavigator == null )
+			{
+				this.metaNavigator = new TextNavigator2();
+				this.metaNavigator.TextFrame = this.textFrame;
+			}
 
 			this.metaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
 			this.metaNavigator.CursorMoved += new Support.EventHandler(this.HandleCursorMoved);
@@ -1851,18 +1868,29 @@ namespace Epsitec.Common.Document.Objects
 		// Constructeur qui désérialise l'objet.
 		protected TextBox2(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			this.Initialise();
-
 			this.textFlow = (TextFlow) info.GetValue("TextFlow", typeof(TextFlow));
-			this.metaNavigator.TextNavigator = this.textFlow.TextNavigator;
-
-			this.UpdateTextFrame();
 		}
 
 		// Vérifie si tous les fichiers existent.
 		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
 		{
 			//?Common.Document.Objects.Abstract.ReadCheckFonts(fonts, warnings, this.textLayout);
+		}
+		
+		public override void ReadFinalize()
+		{
+			base.ReadFinalize ();
+			
+			this.InitialiseInternals();
+		}
+		
+		public void ReadFinalizeFlowReady(TextFlow flow)
+		{
+			System.Diagnostics.Debug.Assert(this.textFlow == flow);
+			
+			this.metaNavigator.TextNavigator = this.textFlow.TextNavigator;
+
+			this.UpdateTextFrame();
 		}
 		#endregion
 

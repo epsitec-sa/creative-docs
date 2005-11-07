@@ -2862,7 +2862,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Adapte l'objet après une désérialisation.
-		public void ReadFinalize()
+		public virtual void ReadFinalize()
 		{
 			foreach ( Properties.Abstract property in this.properties )
 			{

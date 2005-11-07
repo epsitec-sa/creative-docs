@@ -138,6 +138,75 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public static void SerializeStringStringHash(System.Collections.Hashtable hash, System.Text.StringBuilder buffer)
+		{
+			int count = hash.Count;
+			
+			buffer.Append (SerializerSupport.SerializeInt (count));
+			
+			if (count > 0)
+			{
+				foreach (System.Collections.DictionaryEntry entry in hash)
+				{
+					string key   = entry.Key as string;
+					string value = entry.Value as string;
+					
+					buffer.Append ("/");
+					buffer.Append (SerializerSupport.SerializeString (key));
+					buffer.Append ("/");
+					buffer.Append (SerializerSupport.SerializeString (value));
+				}
+			}
+		}
+		
+		public static void SerializeStringIntHash(System.Collections.Hashtable hash, System.Text.StringBuilder buffer)
+		{
+			int count = hash.Count;
+			
+			buffer.Append (SerializerSupport.SerializeInt (count));
+			
+			if (count > 0)
+			{
+				foreach (System.Collections.DictionaryEntry entry in hash)
+				{
+					string key   = entry.Key as string;
+					int    value = (int) entry.Value;
+					
+					buffer.Append ("/");
+					buffer.Append (SerializerSupport.SerializeString (key));
+					buffer.Append ("/");
+					buffer.Append (SerializerSupport.SerializeInt (value));
+				}
+			}
+		}
+		
+		public static void DeserializeStringStringHash(string[] args, ref int offset, System.Collections.Hashtable hash)
+		{
+			int count = SerializerSupport.DeserializeInt (args[offset++]);
+			
+			for (int i = 0; i < count; i++)
+			{
+				string key   = SerializerSupport.DeserializeString (args[offset++]);
+				string value = SerializerSupport.DeserializeString (args[offset++]);
+				
+				hash[key] = value;
+			}
+		}
+		
+		public static void DeserializeStringIntHash(string[] args, ref int offset, System.Collections.Hashtable hash)
+		{
+			int count = SerializerSupport.DeserializeInt (args[offset++]);
+			
+			for (int i = 0; i < count; i++)
+			{
+				string key   = SerializerSupport.DeserializeString (args[offset++]);
+				int    value = SerializerSupport.DeserializeInt (args[offset++]);
+				
+				hash[key] = value;
+			}
+		}
+		
+		
 		public static string DeserializeString(string value)
 		{
 			if (value == "[null]")

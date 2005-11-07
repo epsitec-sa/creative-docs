@@ -126,6 +126,38 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal void Serialize(System.Text.StringBuilder buffer)
+		{
+			System.Diagnostics.Debug.Assert (this.t_style_hash.Count == this.caption_hash.Count);
+			
+			SerializerSupport.SerializeStringStringHash (this.t_style_hash, buffer);
+			buffer.Append ("/");
+			SerializerSupport.SerializeStringIntHash (this.rank_hash, buffer);
+		}
+		
+		internal void Deserialize(TextContext context, int version, string[] args, ref int offset)
+		{
+			this.t_style_hash = new System.Collections.Hashtable ();
+			this.caption_hash = new System.Collections.Hashtable ();
+			this.rank_hash    = new	System.Collections.Hashtable ();
+			this.sorted_list  = null;
+			
+			SerializerSupport.DeserializeStringStringHash (args, ref offset, this.t_style_hash);
+			SerializerSupport.DeserializeStringIntHash (args, ref offset, this.rank_hash);
+			
+			//	Construit encore le dictionnaire inverse utilisé pour retrouver
+			//	rapidement un style d'après son nom (caption) :
+			
+			foreach (System.Collections.DictionaryEntry entry in this.t_style_hash)
+			{
+				string key   = entry.Key as string;
+				string value = entry.Value as string;
+				
+				this.caption_hash[value] = key;
+			}
+		}
+		
+		
 		private string GetKeyName(TextStyle style)
 		{
 			return string.Concat (style.Name, ".", style.TextStyleClass.ToString ());
@@ -181,9 +213,9 @@ namespace Epsitec.Common.Text
 		
 		
 		private StyleList						style_list;
-		private System.Collections.Hashtable	t_style_hash;
-		private System.Collections.Hashtable	caption_hash;
-		private System.Collections.Hashtable	rank_hash;
+		private System.Collections.Hashtable	t_style_hash;		//	text style -> caption
+		private System.Collections.Hashtable	caption_hash;		//	caption -> text style
+		private System.Collections.Hashtable	rank_hash;			//	rank -> text style
 		private TextStyle[]						sorted_list;
 	}
 }

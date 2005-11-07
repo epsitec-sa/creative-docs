@@ -182,22 +182,23 @@ namespace Epsitec.Common.Document
 		{
 			this.document = Document.ReadDocument;
 
-			this.Initialise();
-			
 			this.objectsChain = (UndoableList) info.GetValue("ObjectsChain", typeof(UndoableList));
-			
-			byte[] textStoryData = (byte[]) info.GetValue("TextStoryData", typeof(byte[]));
-			this.textStory.Deserialize(textStoryData);
+			this.textStoryData = (byte[]) info.GetValue("TextStoryData", typeof(byte[]));
 		}
 
 		// Adapte l'objet après une désérialisation.
 		public void ReadFinalize()
 		{
+			this.Initialise();
+			this.textStory.Deserialize(this.textStoryData);
+			this.textStoryData = null;
+			
 			System.Diagnostics.Debug.Assert(this.TextFitter.FrameList.Count == 0);
 			foreach ( Objects.TextBox2 obj in this.objectsChain )
 			{
 				System.Diagnostics.Debug.Assert(obj.TextFrame != null);
 				this.textFitter.FrameList.Add(obj.TextFrame);
+				obj.ReadFinalizeFlowReady(this);
 			}
 
 			this.textFitter.ClearAllMarks();
@@ -207,6 +208,7 @@ namespace Epsitec.Common.Document
 
 		
 		protected Document						document;
+		protected byte[]						textStoryData;
 		protected Text.TextStory				textStory;
 		protected Text.TextFitter				textFitter;
 		protected Text.TextNavigator			textNavigator;

@@ -201,6 +201,9 @@ namespace Epsitec.Common.Text.Internal
 					style.Serialize (buffer);
 				}
 			}
+			
+			buffer.Append ("/");
+			buffer.Append ("\n");
 		}
 		
 		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
@@ -233,6 +236,10 @@ namespace Epsitec.Common.Text.Internal
 					}
 				}
 			}
+			
+			System.Diagnostics.Debug.Assert (args[offset] == "\n");
+			
+			offset++;
 		}
 		
 		

@@ -283,15 +283,17 @@ namespace Epsitec.Common.Text
 			buffer.Append ("/");
 			
 			this.internal_styles.Serialize (buffer);
+			buffer.Append ("/");
 			
 			for (int i = 0; i < this.text_style_list.Count; i++)
 			{
 				TextStyle style = this.text_style_list[i] as TextStyle;
 				
-				buffer.Append ("/");
-				
 				style.Serialize (buffer);
+				buffer.Append ("/");
 			}
+			
+			this.StyleMap.Serialize (buffer);
 		}
 		
 		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
@@ -319,6 +321,8 @@ namespace Epsitec.Common.Text
 			{
 				style.DeserializeFixups (this);
 			}
+			
+			this.StyleMap.Deserialize (context, version, args, ref offset);
 		}
 		
 		
