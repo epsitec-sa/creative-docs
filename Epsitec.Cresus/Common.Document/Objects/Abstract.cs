@@ -791,7 +791,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Donne le nombre de tabulateurs du texte.
-		public virtual int GetTextTabCount
+		public virtual int TextTabCount
 		{
 			get
 			{

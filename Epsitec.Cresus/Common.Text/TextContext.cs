@@ -163,6 +163,10 @@ namespace Epsitec.Common.Text
 			
 			this.style_list.Serialize (buffer);
 			
+			buffer.Append ("/");
+			
+			this.tab_list.Serialize (buffer);
+			
 			return System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
 		}
 		
@@ -180,6 +184,7 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (version <= TextContext.SerializationVersion);
 			
 			this.style_list.Deserialize (this, version, args, ref offset);
+			this.tab_list.Deserialize (this, version, args, ref offset);
 		}
 		
 		

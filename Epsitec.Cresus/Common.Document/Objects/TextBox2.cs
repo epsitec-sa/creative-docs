@@ -861,7 +861,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Donne le nombre de tabulateurs du texte.
-		public override int GetTextTabCount
+		public override int TextTabCount
 		{
 			get
 			{
@@ -874,28 +874,15 @@ namespace Epsitec.Common.Document.Objects
 		// Crée un nouveau tabulateur dans le texte.
 		public override int NewTextTab(double pos, TextTabType type)
 		{
-			Text.Properties.TabsProperty existingTabs = this.GetTextTabs();
-			
 			double dispo = 0.0;
 			if ( type == TextTabType.Center )  dispo = 0.5;
 			if ( type == TextTabType.Left   )  dispo = 1.0;
 
-			string tag = this.document.SearchTabNextTag();
+			int count = this.TextTabCount;
 			Text.TabList list = this.document.TextContext.TabList;
-			list.NewTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute);
-
-			int count = 0;
-			if ( existingTabs != null )  count = existingTabs.TabTags.Length;
-			string[] newTags = new string[count+1];
-
-			for ( int i=0 ; i<count ; i++ )
-			{
-				newTags[i] = existingTabs.TabTags[i];
-			}
-			newTags[count] = tag;
-
-			Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(newTags);
-			this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Set, tabs);
+			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute);
+			Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
+			this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
 			this.HandleTabChanged(null);  // TODO: devrait être inutile
 			return count;
 		}
@@ -942,7 +929,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == TextTabType.Center )  dispo = 0.5;
 			if ( type == TextTabType.Left   )  dispo = 1.0;
 
-			list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute);
+			list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute, null);
 			this.HandleTabChanged(null);  // TODO: devrait être inutile
 		}
 
@@ -1047,7 +1034,7 @@ namespace Epsitec.Common.Document.Objects
 				this.document.HRuler.MarginLeftBody  = bbox.Left+leftBody;
 				this.document.HRuler.MarginRight     = bbox.Right-right;
 
-				int count = this.GetTextTabCount;
+				int count = this.TextTabCount;
 				Widgets.Tab[] tabs = new Widgets.Tab[count];
 				for ( int i=0 ; i<count ; i++ )
 				{

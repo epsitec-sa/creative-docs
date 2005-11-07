@@ -46,15 +46,7 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public override PropertyAffinity		PropertyAffinity
-		{
-			get
-			{
-				return PropertyAffinity.Symbol;
-			}
-		}
-
-
+		
 		public override bool					RequiresUniformParagraph
 		{
 			get
