@@ -1162,6 +1162,19 @@ namespace Epsitec.Common.Document.PDF
 			this.stringBuilder.Append(" ");
 		}
 
+		// Met un buffer binaire en codage ASCII85 (voir [*] page 45).
+		public void PutASCII85(byte[] buffer)
+		{
+			byte[] ascii85 = Magick.Ascii85.EncodeBytes(buffer, 75);
+			buffer = null;
+
+			for ( int i=0 ; i<ascii85.Length ; i++ )
+			{
+				string s = new string((char)ascii85[i], 1);
+				this.stringBuilder.Append(s);
+			}
+		}
+
 		// Met une fin de ligne.
 		public void PutEOL()
 		{

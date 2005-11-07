@@ -1539,41 +1539,41 @@ namespace Epsitec.Common.Document.PDF
 						{
 							if ( compression == ImageCompression.JPEG )
 							{
-								int r = (int) (color.R * 255.0);
-								int g = (int) (color.G * 255.0);
-								int b = (int) (color.B * 255.0);
-								buffer[i++] = (byte) r;
-								buffer[i++] = (byte) g;
-								buffer[i++] = (byte) b;
+								byte r = (byte) (color.R * 255.0);
+								byte g = (byte) (color.G * 255.0);
+								byte b = (byte) (color.B * 255.0);
+								buffer[i++] = r;
+								buffer[i++] = g;
+								buffer[i++] = b;
 								buffer[i++] = 0;
 							}
 							else if ( this.colorConversion == PDF.ColorConversion.ToGray )
 							{
 								double gray = Color.GetBrightness(color.R, color.G, color.B);
-								int g = (int) (gray * 255.0);
+								byte g = (byte) (gray * 255.0);
 								buffer[i++] = (byte) g;
 							}
 							else if ( this.colorConversion == PDF.ColorConversion.ToCMYK )
 							{
 								double cyan, magenta, yellow, black;
 								RichColor.RGB2CMYK(color.R, color.G, color.B, out cyan, out magenta, out yellow, out black);
-								int cc = (int) (cyan    * 255.0);
-								int mm = (int) (magenta * 255.0);
-								int yy = (int) (yellow  * 255.0);
-								int kk = (int) (black   * 255.0);
-								buffer[i++] = (byte) cc;
-								buffer[i++] = (byte) mm;
-								buffer[i++] = (byte) yy;
-								buffer[i++] = (byte) kk;
+								byte cc = (byte) (cyan    * 255.0);
+								byte mm = (byte) (magenta * 255.0);
+								byte yy = (byte) (yellow  * 255.0);
+								byte kk = (byte) (black   * 255.0);
+								buffer[i++] = cc;
+								buffer[i++] = mm;
+								buffer[i++] = yy;
+								buffer[i++] = kk;
 							}
 							else
 							{
-								int r = (int) (color.R * 255.0);
-								int g = (int) (color.G * 255.0);
-								int b = (int) (color.B * 255.0);
-								buffer[i++] = (byte) r;
-								buffer[i++] = (byte) g;
-								buffer[i++] = (byte) b;
+								byte r = (byte) (color.R * 255.0);
+								byte g = (byte) (color.G * 255.0);
+								byte b = (byte) (color.B * 255.0);
+								buffer[i++] = r;
+								buffer[i++] = g;
+								buffer[i++] = b;
 							}
 
 							if ( color.A < 1.0 )  useMask = true;
@@ -1583,16 +1583,16 @@ namespace Epsitec.Common.Document.PDF
 						{
 							if ( compression == ImageCompression.JPEG )
 							{
-								int a = (int) (color.A * 255.0);
-								buffer[i++] = (byte) a;
-								buffer[i++] = (byte) a;
-								buffer[i++] = (byte) a;
+								byte a = (byte) (color.A * 255.0);
+								buffer[i++] = a;
+								buffer[i++] = a;
+								buffer[i++] = a;
 								buffer[i++] = 0;
 							}
 							else
 							{
-								int a = (int) (color.A * 255.0);
-								buffer[i++] = (byte) a;
+								byte a = (byte) (color.A * 255.0);
+								buffer[i++] = a;
 							}
 						}
 					}
@@ -1606,15 +1606,8 @@ namespace Epsitec.Common.Document.PDF
 				byte[] zip = Common.IO.DeflateCompressor.Compress(buffer, 9);  // 9 = compression forte mais lente
 				buffer = null;
 
-				byte[] ascii85 = Magick.Ascii85.EncodeBytes(zip, 75);
-				zip = null;
-
 				port.Reset();
-				for ( int i=0 ; i<ascii85.Length ; i++ )
-				{
-					string s = new string((char)ascii85[i], 1);
-					port.PutCommand(s);
-				}
+				port.PutASCII85(zip);
 				port.PutEOL();
 			}
 			else if ( compression == ImageCompression.JPEG )  // compression JPEG ?
@@ -1631,40 +1624,27 @@ namespace Epsitec.Common.Document.PDF
 				buffer = null;
 
 				bool gray = (this.colorConversion == PDF.ColorConversion.ToGray || baseType == TypeComplexSurface.XObjectMask);
-				magick.ColorSpace      = gray ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
-				magick.ImageType       = gray ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
-				magick.MagickFormat    = "JPEG";
-				magick.Quality         = (int) (this.jpegQuality*100.0);
+				magick.ColorSpace   = gray ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
+				magick.ImageType    = gray ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
+				magick.MagickFormat = "JPEG";
+				magick.Quality      = (int) (this.jpegQuality*100.0);
 
 				Magick.Blob blob = new Magick.Blob();
 				magick.SaveToBlob(blob);
 				byte[] jpeg = blob.GetData();
-				byte[] ascii85 = Magick.Ascii85.EncodeBytes(jpeg, 75);
-				jpeg = null;
 				blob.Dispose();
 				blob = null;
 
 				port.Reset();
-				for ( int i=0 ; i<ascii85.Length ; i++ )
-				{
-					string s = new string((char)ascii85[i], 1);
-					port.PutCommand(s);
-				}
+				port.PutASCII85(jpeg);
 				port.PutEOL();
 			}
 			else	// pas de compression ?
 			{
 				writer.WriteString("/Filter /ASCII85Decode ");  // voir [*] page 43
 
-				byte[] ascii85 = Magick.Ascii85.EncodeBytes(buffer, 75);
-				buffer = null;
-
 				port.Reset();
-				for ( int i=0 ; i<ascii85.Length ; i++ )
-				{
-					string s = new string((char)ascii85[i], 1);
-					port.PutCommand(s);
-				}
+				port.PutASCII85(buffer);
 				port.PutEOL();
 			}
 
