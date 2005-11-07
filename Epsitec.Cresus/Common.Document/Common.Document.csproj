@@ -139,6 +139,11 @@
                     Project = "{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Magick.Wrapper"
+                    AssemblyName = "Magick.Wrapper"
+                    HintPath = "..\External\Magick.Wrapper.dll"
+                />
             </References>
         </Build>
         <Files>

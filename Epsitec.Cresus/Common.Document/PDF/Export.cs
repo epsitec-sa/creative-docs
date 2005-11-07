@@ -51,6 +51,13 @@ namespace Epsitec.Common.Document.PDF
 			Alpha        = 6,
 		}
 
+		protected enum ImageCompression
+		{
+			None,
+			ZIP,
+			JPEG,
+		}
+
 		public Export(Document document)
 		{
 			this.document = document;
@@ -1437,16 +1444,16 @@ namespace Epsitec.Common.Document.PDF
 			{
 				if ( image.DrawingImage == null )  continue;
 
-				if ( this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObject, TypeComplexSurface.XObjectMask) )
+				if ( this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObject, TypeComplexSurface.XObjectMask, ImageCompression.JPEG) )
 				{
-					this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObjectMask, TypeComplexSurface.None);
+					this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObjectMask, TypeComplexSurface.None, ImageCompression.JPEG);
 				}
 			}
 		}
 
 		// Crée une image.
 		protected bool CreateImageSurface(Writer writer, Port port, ImageSurface image,
-										  TypeComplexSurface baseType, TypeComplexSurface maskType)
+										  TypeComplexSurface baseType, TypeComplexSurface maskType, ImageCompression compression)
 		{
 			Pixmap.RawData data = new Pixmap.RawData(image.DrawingImage);
 
@@ -1473,29 +1480,52 @@ namespace Epsitec.Common.Document.PDF
 				writer.WriteString("/ColorSpace /DeviceGray ");
 			}
 
-			writer.WriteString("/BitsPerComponent 8 /Filter /ASCIIHexDecode /Width ");
+			writer.WriteString("/BitsPerComponent 8 /Width ");  // voir [*] page 310
 			writer.WriteString(Port.StringValue(data.Width, 0));
 			writer.WriteString(" /Height ");
 			writer.WriteString(Port.StringValue(data.Height, 0));
+			writer.WriteString(" ");
 
-			port.Reset();
+			int bpp = 1;
+			if ( baseType == TypeComplexSurface.XObject )
+			{
+				if ( this.colorConversion == PDF.ColorConversion.ToGray )
+				{
+					bpp = 1;
+				}
+				else if ( this.colorConversion == PDF.ColorConversion.ToCMYK )
+				{
+					bpp = 4;
+				}
+				else
+				{
+					bpp = 3;
+				}
+			}
 
+			if ( bpp == 4 && compression == ImageCompression.JPEG )  // cmyk impossible en jpg !
+			{
+				compression = ImageCompression.ZIP;
+			}
+
+			byte[] buffer = new byte[data.Width*data.Height*bpp];
 			bool useMask = false;
 			using ( data )
 			{
+				int i = 0;
 				for ( int y=0 ; y<data.Height ; y++ )
 				{
 					for ( int x=0 ; x<data.Width ; x++ )
 					{
 						Color color = data[x,y];
+
 						if ( baseType == TypeComplexSurface.XObject )
 						{
 							if ( this.colorConversion == PDF.ColorConversion.ToGray )
 							{
 								double gray = Color.GetBrightness(color.R, color.G, color.B);
 								int g = (int) (gray * 255.0);
-
-								port.PutCommand(g.ToString("X2"));
+								buffer[i++] = (byte) g;
 							}
 							else if ( this.colorConversion == PDF.ColorConversion.ToCMYK )
 							{
@@ -1505,33 +1535,98 @@ namespace Epsitec.Common.Document.PDF
 								int mm = (int) (magenta * 255.0);
 								int yy = (int) (yellow  * 255.0);
 								int kk = (int) (black   * 255.0);
-
-								port.PutCommand(cc.ToString("X2"));
-								port.PutCommand(mm.ToString("X2"));
-								port.PutCommand(yy.ToString("X2"));
-								port.PutCommand(kk.ToString("X2"));
+								buffer[i++] = (byte) cc;
+								buffer[i++] = (byte) mm;
+								buffer[i++] = (byte) yy;
+								buffer[i++] = (byte) kk;
 							}
 							else
 							{
 								int r = (int) (color.R * 255.0);
 								int g = (int) (color.G * 255.0);
 								int b = (int) (color.B * 255.0);
-
-								port.PutCommand(r.ToString("X2"));
-								port.PutCommand(g.ToString("X2"));
-								port.PutCommand(b.ToString("X2"));
+								buffer[i++] = (byte) r;
+								buffer[i++] = (byte) g;
+								buffer[i++] = (byte) b;
 							}
 
 							if ( color.A < 1.0 )  useMask = true;
 						}
+							
 						if ( baseType == TypeComplexSurface.XObjectMask )
 						{
 							int a = (int) (color.A * 255.0);
-							port.PutCommand(a.ToString("X2"));
+							buffer[i++] = (byte) a;
 						}
 					}
-					port.PutEOL();
 				}
+			}
+
+			if ( compression == ImageCompression.ZIP )  // compression ZIP ?
+			{
+				writer.WriteString("/Filter [/ASCII85Decode /FlateDecode] ");  // voir [*] page 43
+
+				byte[] zip = Common.IO.DeflateCompressor.Compress(buffer, 9);  // 9 = compression forte mais lente
+				buffer = null;
+
+				byte[] ascii85 = Magick.Ascii85.EncodeBytes(zip, 75);
+				zip = null;
+
+				port.Reset();
+				for ( int i=0 ; i<ascii85.Length ; i++ )
+				{
+					string s = new string((char)ascii85[i], 1);
+					port.PutCommand(s);
+				}
+				port.PutEOL();
+			}
+			else if ( compression == ImageCompression.JPEG )  // compression JPEG ?
+			{
+				writer.WriteString("/Filter [/ASCII85Decode /DCTDecode] ");  // voir [*] page 43
+
+				Magick.Image magick = new Magick.Image(data.Width, data.Height);
+				magick.CompressionType = Magick.Compression.JPEG;
+				magick.ClassType       = Magick.ClassType.Direct;
+				magick.ColorSpace      = (bpp == 1) ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
+				magick.ImageType       = (bpp == 1) ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
+				magick.MagickFormat    = "JPEG";
+				magick.Quality         = 70;
+
+				magick.ModifyBegin();
+				magick.SetRawPixels(buffer, 0, 0, data.Width, data.Height);
+				magick.ModifyEnd();
+				buffer = null;
+
+				Magick.Blob blob = new Magick.Blob();
+				magick.SaveToBlob(blob);
+				byte[] jpeg = blob.GetData();
+				byte[] ascii85 = Magick.Ascii85.EncodeBytes(jpeg, 75);
+				jpeg = null;
+				blob.Dispose();
+				blob = null;
+
+				port.Reset();
+				for ( int i=0 ; i<ascii85.Length ; i++ )
+				{
+					string s = new string((char)ascii85[i], 1);
+					port.PutCommand(s);
+				}
+				port.PutEOL();
+			}
+			else	// pas de compression ?
+			{
+				writer.WriteString("/Filter /ASCII85Decode ");  // voir [*] page 43
+
+				byte[] ascii85 = Magick.Ascii85.EncodeBytes(buffer, 75);
+				buffer = null;
+
+				port.Reset();
+				for ( int i=0 ; i<ascii85.Length ; i++ )
+				{
+					string s = new string((char)ascii85[i], 1);
+					port.PutCommand(s);
+				}
+				port.PutEOL();
 			}
 
 			if ( maskType == TypeComplexSurface.XObjectMask && useMask )
