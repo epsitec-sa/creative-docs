@@ -364,6 +364,9 @@ namespace Epsitec.Common.Document
 				
 				this.tabIndex = 0;
 				Dialogs.CreateSeparator(container);
+				this.CreateCombo(container, "ExportPDFImageCompression");
+				this.CreateDouble(container, "ExportPDFJpegQuality");
+				Dialogs.CreateSeparator(container);
 
 				// Onglet Pré-presse:
 				parent = book.FindChild("Publisher");
@@ -392,6 +395,8 @@ namespace Epsitec.Common.Document
 			this.UpdateDialogSettings("ExportPDF");
 			this.UpdateRangeField("ExportPDFRange");
 			this.UpdateCombo("ExportPDFColorConversion");
+			this.UpdateCombo("ExportPDFImageCompression");
+			this.UpdateDouble("ExportPDFJpegQuality");
 		}
 
 		// Appelé lorsque les pages ont changé.
@@ -595,7 +600,6 @@ namespace Epsitec.Common.Document
 				text.Name = sDouble.Name;
 				text.Text = "<font size=\"80%\">" + sDouble.GetInfo() + "</font>";
 				text.Width = 150;
-//				text.SetClientZoom(0.8);
 				text.Dock = DockStyle.Left;
 				text.DockMargins = new Margins(120, 0, 0, 0);
 				this.WidgetsTableAdd(text, ".Info");
@@ -618,7 +622,7 @@ namespace Epsitec.Common.Document
 			if ( sDouble.Info )
 			{
 				StaticText info = this.WidgetsTableSearch(sDouble.Name, ".Info") as StaticText;
-				info.Text = sDouble.GetInfo();
+				info.Text = "<font size=\"80%\">" + sDouble.GetInfo() + "</font>";
 			}
 		}
 
@@ -1007,6 +1011,11 @@ namespace Epsitec.Common.Document
 			if ( sInteger == null )  return;
 
 			sInteger.Value = sInteger.RankToType(field.SelectedIndex);
+
+			if ( sInteger.Name == "ExportPDFImageCompression" )
+			{
+				this.UpdateDouble("ExportPDFJpegQuality");
+			}
 		}
 
 		protected void UpdateCombo(string name)
@@ -1346,7 +1355,7 @@ namespace Epsitec.Common.Document
 
 			Button button = new Button(container);
 			button.Name = sString.Name;
-			button.Text = Res.Strings.Dialog.Button.Properties;
+			button.Text = Res.Strings.Dialog.Print.Properties;
 			button.Width = 80;
 			button.Dock = DockStyle.Left;
 			button.DockMargins = new Margins(3, 0, 0, 0);

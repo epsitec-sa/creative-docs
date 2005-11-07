@@ -25,6 +25,7 @@
 	<data name="Dialog.Settings.MouseWheelAction.VScroll">Scroll page</data>
 	
 	<data name="Dialog.Print.Printer">Select printer</data>
+	<data name="Dialog.Print.Properties">Properties</data>
 	<data name="Dialog.Print.Area">Area</data>
 	<data name="Dialog.Print.Copies">Copies</data>
 	<data name="Dialog.Print.Param">Printer settings</data>
@@ -76,6 +77,7 @@
 	<data name="Dialog.Double.PrintMargins">Safety margins</data>
 	<data name="Dialog.Double.PrintDebord">Bleed</data>
 	<data name="Dialog.Double.ExportPDFDebord">Bleed</data>
+	<data name="Dialog.Double.ExportPDFJpegQuality">Images quality</data>
 	<data name="Dialog.Double.ImageDpi">Resolution (dpi)</data>
 	<data name="Dialog.Double.ImageQuality">Image quality</data>
 	<data name="Dialog.Double.ImageQuality1">Minium quality, smallest size</data>
@@ -130,6 +132,10 @@
 	<data name="Dialog.Integer.ExportPDFColorConversion.ToRGB">RGB Colors</data>
 	<data name="Dialog.Integer.ExportPDFColorConversion.ToCMYK">CMYK Colors</data>
 	<data name="Dialog.Integer.ExportPDFColorConversion.ToGray">Grayscale</data>
+	<data name="Dialog.Integer.ExportPDFImageCompression.Text">Compression</data>
+	<data name="Dialog.Integer.ExportPDFImageCompression.None">None</data>
+	<data name="Dialog.Integer.ExportPDFImageCompression.ZIP">@@Sans pertes (zip)</data>
+	<data name="Dialog.Integer.ExportPDFImageCompression.JPEG">@@Avec pertes (jpeg)</data>
 
 	<data name="Dialog.Point.PageSizeX">Width</data>
 	<data name="Dialog.Point.PageSizeY">Height</data>

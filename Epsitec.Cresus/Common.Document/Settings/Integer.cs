@@ -51,6 +51,10 @@ namespace Epsitec.Common.Document.Settings
 				case "ExportPDFColorConversion":
 					this.text = Res.Strings.Dialog.Integer.ExportPDFColorConversion.Text;
 					break;
+
+				case "ExportPDFImageCompression":
+					this.text = Res.Strings.Dialog.Integer.ExportPDFImageCompression.Text;
+					break;
 			}
 		}
 
@@ -77,6 +81,9 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ExportPDFColorConversion":
 						return (int) this.document.Settings.ExportPDFInfo.ColorConversion;
+
+					case "ExportPDFImageCompression":
+						return (int) this.document.Settings.ExportPDFInfo.ImageCompression;
 				}
 
 				return 0;
@@ -108,6 +115,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ExportPDFColorConversion":
 						this.document.Settings.ExportPDFInfo.ColorConversion = (PDF.ColorConversion) value;
+						break;
+
+					case "ExportPDFImageCompression":
+						this.document.Settings.ExportPDFInfo.ImageCompression = (PDF.ImageCompression) value;
 						break;
 				}
 			}
@@ -222,6 +233,13 @@ namespace Epsitec.Common.Document.Settings
 					if ( cc == PDF.ColorConversion.ToCMYK )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.ToCMYK;
 					if ( cc == PDF.ColorConversion.ToGray )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.ToGray;
 					break;
+
+				case "ExportPDFImageCompression":
+					PDF.ImageCompression imc = (PDF.ImageCompression) type;
+					if ( imc == PDF.ImageCompression.None )  return Res.Strings.Dialog.Integer.ExportPDFImageCompression.None;
+					if ( imc == PDF.ImageCompression.ZIP  )  return Res.Strings.Dialog.Integer.ExportPDFImageCompression.ZIP;
+					if ( imc == PDF.ImageCompression.JPEG )  return Res.Strings.Dialog.Integer.ExportPDFImageCompression.JPEG;
+					break;
 			}
 			return "";
 		}
@@ -274,6 +292,12 @@ namespace Epsitec.Common.Document.Settings
 					if ( rank == 1 )  return (int) PDF.ColorConversion.ToRGB;
 					if ( rank == 2 )  return (int) PDF.ColorConversion.ToCMYK;
 					if ( rank == 3 )  return (int) PDF.ColorConversion.ToGray;
+					return -1;
+
+				case "ExportPDFImageCompression":
+					if ( rank == 0 )  return (int) PDF.ImageCompression.None;
+					if ( rank == 1 )  return (int) PDF.ImageCompression.ZIP;
+					if ( rank == 2 )  return (int) PDF.ImageCompression.JPEG;
 					return -1;
 			}
 			return -1;

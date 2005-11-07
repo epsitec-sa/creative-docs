@@ -33,6 +33,13 @@ namespace Epsitec.Common.Document.PDF
 		ToGray = 3,
 	}
 
+	public enum ImageCompression
+	{
+		None = 0,
+		ZIP  = 1,
+		JPEG = 2,
+	}
+
 	/// <summary>
 	/// La classe Export implémente la publication d'un document PDF.
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
@@ -51,13 +58,6 @@ namespace Epsitec.Common.Document.PDF
 			Alpha        = 6,
 		}
 
-		protected enum ImageCompression
-		{
-			None,
-			ZIP,
-			JPEG,
-		}
-
 		public Export(Document document)
 		{
 			this.document = document;
@@ -68,6 +68,8 @@ namespace Epsitec.Common.Document.PDF
 		{
 			Settings.ExportPDFInfo info = this.document.Settings.ExportPDFInfo;
 			this.colorConversion = info.ColorConversion;
+			this.imageCompression = info.ImageCompression;
+			this.jpegQuality = info.JpegQuality;
 
 			this.complexSurfaces = new System.Collections.ArrayList();
 			this.imageSurfaces   = new System.Collections.ArrayList();
@@ -1444,16 +1446,16 @@ namespace Epsitec.Common.Document.PDF
 			{
 				if ( image.DrawingImage == null )  continue;
 
-				if ( this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObject, TypeComplexSurface.XObjectMask, ImageCompression.JPEG) )
+				if ( this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObject, TypeComplexSurface.XObjectMask) )
 				{
-					this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObjectMask, TypeComplexSurface.None, ImageCompression.JPEG);
+					this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObjectMask, TypeComplexSurface.None);
 				}
 			}
 		}
 
 		// Crée une image.
 		protected bool CreateImageSurface(Writer writer, Port port, ImageSurface image,
-										  TypeComplexSurface baseType, TypeComplexSurface maskType, ImageCompression compression)
+										  TypeComplexSurface baseType, TypeComplexSurface maskType)
 		{
 			Pixmap.RawData data = new Pixmap.RawData(image.DrawingImage);
 
@@ -1503,9 +1505,15 @@ namespace Epsitec.Common.Document.PDF
 				}
 			}
 
+			ImageCompression compression = this.imageCompression;
 			if ( bpp == 4 && compression == ImageCompression.JPEG )  // cmyk impossible en jpg !
 			{
-				compression = ImageCompression.ZIP;
+				compression = ImageCompression.ZIP;  // utilise la compression sans pertes
+			}
+
+			if ( compression == ImageCompression.JPEG && bpp == 3 )
+			{
+				bpp = 4;  // il faut mettre R,G,B,0 pour Magick !
 			}
 
 			byte[] buffer = new byte[data.Width*data.Height*bpp];
@@ -1548,6 +1556,10 @@ namespace Epsitec.Common.Document.PDF
 								buffer[i++] = (byte) r;
 								buffer[i++] = (byte) g;
 								buffer[i++] = (byte) b;
+								if ( compression == ImageCompression.JPEG )
+								{
+									buffer[i++] = 0;
+								}
 							}
 
 							if ( color.A < 1.0 )  useMask = true;
@@ -1587,15 +1599,16 @@ namespace Epsitec.Common.Document.PDF
 				Magick.Image magick = new Magick.Image(data.Width, data.Height);
 				magick.CompressionType = Magick.Compression.JPEG;
 				magick.ClassType       = Magick.ClassType.Direct;
-				magick.ColorSpace      = (bpp == 1) ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
-				magick.ImageType       = (bpp == 1) ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
-				magick.MagickFormat    = "JPEG";
-				magick.Quality         = 70;
 
 				magick.ModifyBegin();
 				magick.SetRawPixels(buffer, 0, 0, data.Width, data.Height);
 				magick.ModifyEnd();
 				buffer = null;
+
+				magick.ColorSpace      = (bpp == 1) ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
+				magick.ImageType       = (bpp == 1) ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
+				magick.MagickFormat    = "JPEG";
+				magick.Quality         = (int) (this.jpegQuality*100.0);
 
 				Magick.Blob blob = new Magick.Blob();
 				magick.SaveToBlob(blob);
@@ -1933,5 +1946,7 @@ namespace Epsitec.Common.Document.PDF
 		protected System.Collections.Hashtable	characterList;
 		protected System.Collections.Hashtable	fontList;
 		protected ColorConversion				colorConversion;
+		protected ImageCompression				imageCompression;
+		protected double						jpegQuality;
 	}
 }

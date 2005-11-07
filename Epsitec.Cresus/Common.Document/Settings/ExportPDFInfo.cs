@@ -25,6 +25,8 @@ namespace Epsitec.Common.Document.Settings
 			this.targetWidth = 1.0;  // 0.1mm
 			this.textCurve = false;
 			this.colorConversion = PDF.ColorConversion.None;
+			this.imageCompression = PDF.ImageCompression.ZIP;
+			this.jpegQuality = 0.7;
 		}
 
 		public PrintRange PageRange
@@ -81,12 +83,24 @@ namespace Epsitec.Common.Document.Settings
 			set { this.colorConversion = value; }
 		}
 
+		public PDF.ImageCompression ImageCompression
+		{
+			get { return this.imageCompression; }
+			set { this.imageCompression = value; }
+		}
+
+		public double JpegQuality
+		{
+			get { return this.jpegQuality; }
+			set { this.jpegQuality = value; }
+		}
+
 
 		#region Serialization
 		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			info.AddValue("Rev", 2);
+			info.AddValue("Rev", 3);
 			info.AddValue("PageRange", this.pageRange);
 			info.AddValue("PageFrom", this.pageFrom);
 			info.AddValue("PageTo", this.pageTo);
@@ -96,6 +110,8 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("TargetWidth", this.targetWidth);
 			info.AddValue("TextCurve", this.textCurve);
 			info.AddValue("ColorConversion", this.colorConversion);
+			info.AddValue("ImageCompression", this.imageCompression);
+			info.AddValue("JpegQuality", this.jpegQuality);
 		}
 
 		// Constructeur qui désérialise les réglages.
@@ -123,6 +139,12 @@ namespace Epsitec.Common.Document.Settings
 				this.textCurve = info.GetBoolean("TextCurve");
 				this.colorConversion = (PDF.ColorConversion) info.GetValue("ColorConversion", typeof(PDF.ColorConversion));
 			}
+
+			if ( rev >= 3 )
+			{
+				this.imageCompression = (PDF.ImageCompression) info.GetValue("ImageCompression", typeof(PDF.ImageCompression));
+				this.jpegQuality = info.GetDouble("JpegQuality");
+			}
 		}
 		#endregion
 
@@ -137,5 +159,7 @@ namespace Epsitec.Common.Document.Settings
 		protected double					targetWidth;
 		protected bool						textCurve;
 		protected PDF.ColorConversion		colorConversion;
+		protected PDF.ImageCompression		imageCompression;
+		protected double					jpegQuality;
 	}
 }

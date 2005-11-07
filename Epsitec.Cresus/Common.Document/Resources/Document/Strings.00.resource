@@ -25,6 +25,7 @@
 	<data name="Dialog.Settings.MouseWheelAction.VScroll">Défilement vertical</data>
 	
 	<data name="Dialog.Print.Printer">Choix de l'imprimante</data>
+	<data name="Dialog.Print.Properties">Propriétés</data>
 	<data name="Dialog.Print.Area">Etendue</data>
 	<data name="Dialog.Print.Copies">Tirage</data>
 	<data name="Dialog.Print.Param">Paramètres pour l'impression</data>
@@ -76,6 +77,7 @@
 	<data name="Dialog.Double.PrintMargins">Marges de centrage</data>
 	<data name="Dialog.Double.PrintDebord">Débord</data>
 	<data name="Dialog.Double.ExportPDFDebord">Débord</data>
+	<data name="Dialog.Double.ExportPDFJpegQuality">Qualité des images</data>
 	<data name="Dialog.Double.ImageDpi">Résolution (dpi)</data>
 	<data name="Dialog.Double.ImageQuality">Qualité de l'image</data>
 	<data name="Dialog.Double.ImageQuality1">Qualité minimale, taille faible</data>
@@ -130,6 +132,10 @@
 	<data name="Dialog.Integer.ExportPDFColorConversion.ToRGB">Couleurs en RVB</data>
 	<data name="Dialog.Integer.ExportPDFColorConversion.ToCMYK">Couleurs en CMJN</data>
 	<data name="Dialog.Integer.ExportPDFColorConversion.ToGray">Couleurs en niveaux de gris</data>
+	<data name="Dialog.Integer.ExportPDFImageCompression.Text">Compression</data>
+	<data name="Dialog.Integer.ExportPDFImageCompression.None">Aucune</data>
+	<data name="Dialog.Integer.ExportPDFImageCompression.ZIP">Sans pertes (zip)</data>
+	<data name="Dialog.Integer.ExportPDFImageCompression.JPEG">Avec pertes (jpeg)</data>
 
 	<data name="Dialog.Point.PageSizeX">Largeur</data>
 	<data name="Dialog.Point.PageSizeY">Hauteur</data>

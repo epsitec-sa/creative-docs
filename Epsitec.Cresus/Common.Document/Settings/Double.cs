@@ -78,6 +78,16 @@ namespace Epsitec.Common.Document.Settings
 					this.factorStep = 1.0;
 					break;
 
+				case "ExportPDFJpegQuality":
+					this.text = Res.Strings.Dialog.Double.ExportPDFJpegQuality;
+					this.integer = true;
+					this.info = true;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 100.0;
+					this.factorStep = 5.0;
+					this.suffix = "%";
+					break;
+
 				case "ImageDpi":
 					this.text = Res.Strings.Dialog.Double.ImageDpi;
 					this.integer = true;
@@ -179,6 +189,9 @@ namespace Epsitec.Common.Document.Settings
 					case "ExportPDFDebord":
 						return this.document.Settings.ExportPDFInfo.Debord;
 
+					case "ExportPDFJpegQuality":
+						return this.document.Settings.ExportPDFInfo.JpegQuality*100.0;
+
 					case "ImageDpi":
 						return this.document.Printer.ImageDpi;
 
@@ -233,6 +246,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ExportPDFDebord":
 						this.document.Settings.ExportPDFInfo.Debord = value;
+						break;
+
+					case "ExportPDFJpegQuality":
+						this.document.Settings.ExportPDFInfo.JpegQuality = value/100.0;
 						break;
 
 					case "ImageDpi":
@@ -338,6 +355,11 @@ namespace Epsitec.Common.Document.Settings
 					enabled = (this.document.Printer.ImageFormat == ImageFormat.Jpeg);
 				}
 
+				if ( this.name == "ExportPDFJpegQuality" )
+				{
+					enabled = (this.document.Settings.ExportPDFInfo.ImageCompression == PDF.ImageCompression.JPEG);
+				}
+
 				return enabled;
 			}
 		}
@@ -354,9 +376,10 @@ namespace Epsitec.Common.Document.Settings
 				text = string.Format("{0} x {1} pixels", dx, dy);
 			}
 
-			if ( this.name == "ImageQuality" )
+			if ( this.name == "ImageQuality"         ||
+				 this.name == "ExportPDFJpegQuality" )
 			{
-				double quality = this.document.Printer.ImageQuality;
+				double quality = (this.name == "ImageQuality") ? this.document.Printer.ImageQuality : this.document.Settings.ExportPDFInfo.JpegQuality;
 				if ( quality == 0.0 )
 				{
 					text = Res.Strings.Dialog.Double.ImageQuality1;

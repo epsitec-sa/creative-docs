@@ -90,6 +90,8 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultBool("ExportPDF", "ExportPDFTarget");
 			this.CreateDefaultBool("ExportPDF", "ExportPDFTextCurve");
 			this.CreateDefaultInteger("ExportPDF", "ExportPDFColorConversion");
+			this.CreateDefaultInteger("ExportPDF", "ExportPDFImageCompression");
+			this.CreateDefaultDouble("ExportPDF", "ExportPDFJpegQuality");
 		}
 
 		protected void CreateDefaultBool(string dialog, string name)
