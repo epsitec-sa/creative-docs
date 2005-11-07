@@ -123,12 +123,20 @@ namespace Epsitec.Common.Document.PDF
 			this.FoundComplexSurfaces(port, drawingContext, from, to);
 
 			// Crée et ouvre le fichier.
-			if ( System.IO.File.Exists(filename) )
+			Writer writer;
+			try
 			{
-				System.IO.File.Delete(filename);
-			}
+				if ( System.IO.File.Exists(filename) )
+				{
+					System.IO.File.Delete(filename);
+				}
 
-			Writer writer = new Writer(filename);
+				writer = new Writer(filename);
+			}
+			catch ( System.Exception e )
+			{
+				return e.Message;
+			}
 
 			// Objet racine du document.
 			writer.WriteObjectDef("Root");
@@ -1573,8 +1581,19 @@ namespace Epsitec.Common.Document.PDF
 							
 						if ( baseType == TypeComplexSurface.XObjectMask )
 						{
-							int a = (int) (color.A * 255.0);
-							buffer[i++] = (byte) a;
+							if ( compression == ImageCompression.JPEG )
+							{
+								int a = (int) (color.A * 255.0);
+								buffer[i++] = (byte) a;
+								buffer[i++] = (byte) a;
+								buffer[i++] = (byte) a;
+								buffer[i++] = 0;
+							}
+							else
+							{
+								int a = (int) (color.A * 255.0);
+								buffer[i++] = (byte) a;
+							}
 						}
 					}
 				}
@@ -1611,8 +1630,9 @@ namespace Epsitec.Common.Document.PDF
 				magick.ModifyEnd();
 				buffer = null;
 
-				magick.ColorSpace      = (this.colorConversion == PDF.ColorConversion.ToGray) ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
-				magick.ImageType       = (this.colorConversion == PDF.ColorConversion.ToGray) ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
+				bool gray = (this.colorConversion == PDF.ColorConversion.ToGray || baseType == TypeComplexSurface.XObjectMask);
+				magick.ColorSpace      = gray ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
+				magick.ImageType       = gray ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
 				magick.MagickFormat    = "JPEG";
 				magick.Quality         = (int) (this.jpegQuality*100.0);
 
