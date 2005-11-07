@@ -151,6 +151,38 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		
+		public byte[] Serialize()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append ("TextContext");
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeInt (TextContext.SerializationVersion));
+			buffer.Append ("/");
+			
+			this.style_list.Serialize (buffer);
+			
+			return System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
+		}
+		
+		public void Deserialize(byte[] data)
+		{
+			string source = System.Text.Encoding.UTF8.GetString (data);
+			string[] args = source.Split ('/');
+			
+			int offset = 0;
+			
+			string magick  = args[offset++];
+			int    version = SerializerSupport.DeserializeInt (args[offset++]);
+			
+			System.Diagnostics.Debug.Assert (magick == "TextContext");
+			System.Diagnostics.Debug.Assert (version <= TextContext.SerializationVersion);
+			
+			this.style_list.Deserialize (this, version, args, ref offset);
+		}
+		
+		
 		public bool GetGlyphAndFontForSpecialCode(ulong code, out ushort special_glyph, out OpenType.Font special_font)
 		{
 			System.Diagnostics.Debug.Assert (Unicode.Bits.GetSpecialCodeFlag (code));
@@ -1571,5 +1603,7 @@ namespace Epsitec.Common.Text
 		private Properties.MarginsProperty		get_margins_last_property;
 		
 		static System.Collections.Hashtable		font_ids = new System.Collections.Hashtable ();
+		
+		internal const int						SerializationVersion = 1;
 	}
 }

@@ -275,10 +275,8 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public byte[] Serialize()
+		public void Serialize(System.Text.StringBuilder buffer)
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
 			buffer.Append (SerializerSupport.SerializeLong (this.unique_id));
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeInt (this.text_style_list.Count));
@@ -294,33 +292,25 @@ namespace Epsitec.Common.Text
 				
 				style.Serialize (buffer);
 			}
-			
-			return System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
 		}
 		
-		public void Deserialize(TextContext context, byte[] data)
+		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
 		{
 			this.internal_styles = new Internal.StyleTable ();
-			
 			this.text_style_list = new System.Collections.ArrayList ();
 			this.text_style_hash = new System.Collections.Hashtable ();
-			
-			string source = System.Text.Encoding.UTF8.GetString (data);
-			string[] args = source.Split ('/');
-			
-			int offset = 0;
 			
 			long unique   = SerializerSupport.DeserializeLong (args[offset++]);
 			int  n_styles = SerializerSupport.DeserializeInt (args[offset++]);
 			
 			this.unique_id = unique;
-			this.internal_styles.Deserialize (context, args, ref offset);
+			this.internal_styles.Deserialize (context, version, args, ref offset);
 			
 			for (int i = 0; i < n_styles; i++)
 			{
 				TextStyle style = new TextStyle ();
 				
-				style.Deserialize (context, args, ref offset);
+				style.Deserialize (context, version, args, ref offset);
 				
 				this.Attach (style);
 			}

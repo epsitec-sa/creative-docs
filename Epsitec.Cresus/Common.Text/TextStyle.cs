@@ -249,7 +249,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		internal void Deserialize(TextContext context, string[] args, ref int offset)
+		internal void Deserialize(TextContext context, int version, string[] args, ref int offset)
 		{
 			string name     = SerializerSupport.DeserializeString (args[offset++]);
 			string meta_id  = SerializerSupport.DeserializeString (args[offset++]);
@@ -266,6 +266,10 @@ namespace Epsitec.Common.Text
 			
 			this.text_style_class = tsc;
 			
+			//	S'il y a des styles "parents" pour le style courant, on récupère leur
+			//	nom; ce n'est qu'au moment du DeserializeFixups que les noms seront
+			//	remplacés par des instances d'objets réels :
+			
 			if (n_styles > 0)
 			{
 				this.parent_styles = new string[n_styles];
@@ -276,13 +280,16 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			//	Désérialise encore les propriétés propres au style, s'il y en a :
+			
 			if (n_props > 0)
 			{
 				this.style_properties = new Property[n_props];
 				
 				for (int i = 0; i < n_props; i++)
 				{
-					this.style_properties[i] = Property.Deserialize (context, SerializerSupport.DeserializeString (args[offset++]));
+					string definition = SerializerSupport.DeserializeString (args[offset++]);
+					this.style_properties[i] = Property.Deserialize (context, version, definition);
 				}
 			}
 		}

@@ -907,8 +907,8 @@ namespace Epsitec.Common.Document
 			info.AddValue("Properties", this.propertiesAuto);
 			info.AddValue("Aggregates", this.aggregates);
 
-			byte[] styleListData = this.textContext.StyleList.Serialize();
-			info.AddValue("StyleListData", styleListData);
+			byte[] textContextData = this.textContext.Serialize();
+			info.AddValue("TextContextData", textContextData);
 
 			info.AddValue("TextFlows", this.textFlows);
 		}
@@ -980,8 +980,8 @@ namespace Epsitec.Common.Document
 			this.DefaultTextContext();
 			if ( this.IsRevisionGreaterOrEqual(1,2,3) )
 			{
-				byte[] styleListData = (byte[]) info.GetValue("StyleListData", typeof(byte[]));
-				this.textContext.StyleList.Deserialize(this.textContext, styleListData);
+				byte[] textContextData = (byte[]) info.GetValue("TextContextData", typeof(byte[]));
+				this.textContext.Deserialize(textContextData);
 
 				this.textFlows = (UndoableList) info.GetValue("TextFlows", typeof(UndoableList));
 			}

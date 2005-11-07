@@ -114,6 +114,9 @@ namespace Epsitec.Common.OpenType
 			this.ot_hhea = new Table_hhea (this.font_data["hhea"]);
 			this.ot_hmtx = new Table_hmtx (this.font_data["hmtx"]);
 			
+			//	TODO: pour les fontes avancées, exploiter la table GPOS pour le positionnement relatif des glyphes.
+			//	Voir http://partners.adobe.com/public/developer/opentype/index_table_formats2.html
+			
 			Table_kern ot_kern = Table_kern.Create (this.font_data["kern"]);
 			
 			if ((ot_kern != null) &&

@@ -600,7 +600,7 @@ namespace Epsitec.Common.Text.Styles
 			}
 		}
 		
-		internal void DeserializeProperties(TextContext context, string[] source, ref int index)
+		internal void DeserializeProperties(TextContext context, int version, string[] source, ref int index)
 		{
 			int length = SerializerSupport.DeserializeInt (source[index++]);
 			int users  = SerializerSupport.DeserializeInt (source[index++]);
@@ -610,7 +610,8 @@ namespace Epsitec.Common.Text.Styles
 			
 			for (int i = 0; i < length; i++)
 			{
-				this.properties[i] = Property.Deserialize (context, SerializerSupport.DeserializeString (source[index++]));
+				string definition = SerializerSupport.DeserializeString (source[index++]);
+				this.properties[i] = Property.Deserialize (context, version, definition);
 			}
 		}
 		

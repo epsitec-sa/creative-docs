@@ -279,7 +279,7 @@ namespace Epsitec.Common.Text
 			return buffer.ToString ();
 		}
 		
-		public static Property Deserialize(TextContext context, string text)
+		public static Property Deserialize(TextContext context, int version, string text)
 		{
 			Property property;
 			Property.DeserializeFromText (context, text, out property);

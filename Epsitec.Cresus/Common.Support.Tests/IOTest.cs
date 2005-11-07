@@ -210,6 +210,18 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		[Test] public void CheckDeflateCompressor()
+		{
+			byte[] data = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 1, 2, 3, 5, 6, 7, 8, 1, 2, 3, 3, 4, 5, 2, 3, 7, 8, 1, 2, 3, 1, 2, 3, 5, 6, 7, 8, 1, 2, 3 };
+			
+			byte[] compressed = IO.DeflateCompressor.Compress (data, 9);
+			byte[] decompressed = IO.DeflateCompressor.Decompress (compressed);
+			
+			System.Console.Out.WriteLine ("Raw data length: {0}, compressed: {1}, decompressed: {2}", data.Length, compressed.Length, decompressed.Length);
+			
+			Assert.IsTrue (Types.Comparer.Equal (data, decompressed), "Original Data != Decompressed Data");
+		}
+		
 		private static string					SampleText
 		{
 			get

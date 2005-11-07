@@ -437,7 +437,7 @@ namespace Epsitec.Common.Text.Styles
 			int n_local = SerializerSupport.DeserializeInt (args[offset++]);
 			int n_extra = SerializerSupport.DeserializeInt (args[offset++]);
 			
-			this.DeserializeProperties (context, args, ref offset);
+			this.DeserializeProperties (context, version, args, ref offset);
 			
 			if (n_local > 0)
 			{
@@ -483,7 +483,7 @@ namespace Epsitec.Common.Text.Styles
 			for (int i = 0; i < settings.Length; i++)
 			{
 				settings[i].SettingsIndex = SerializerSupport.DeserializeInt (source[offset++]);
-				settings[i].DeserializeProperties (context, source, ref offset);
+				settings[i].DeserializeProperties (context, version, source, ref offset);
 			}
 		}
 		

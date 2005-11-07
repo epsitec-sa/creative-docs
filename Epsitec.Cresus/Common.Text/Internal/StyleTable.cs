@@ -186,8 +186,6 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void Serialize(System.Text.StringBuilder buffer)
 		{
-			buffer.Append (SerializerSupport.SerializeInt (0));
-			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeInt (this.styles.Count));
 			
 			for (int i = 0; i < styles.Count; i++)
@@ -205,12 +203,11 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public void Deserialize(TextContext context, string[] args, ref int offset)
+		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
 		{
-			int version = SerializerSupport.DeserializeInt (args[offset++]);
-			int count   = SerializerSupport.DeserializeInt (args[offset++]);
+			int count = SerializerSupport.DeserializeInt (args[offset++]);
 			
-			Debug.Assert.IsTrue (version == 0);
+			Debug.Assert.IsTrue (version == 1);
 			
 			if (count > 0)
 			{
