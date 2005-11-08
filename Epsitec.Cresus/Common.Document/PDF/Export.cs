@@ -70,6 +70,8 @@ namespace Epsitec.Common.Document.PDF
 			this.colorConversion = info.ColorConversion;
 			this.imageCompression = info.ImageCompression;
 			this.jpegQuality = info.JpegQuality;
+			this.imageMinDpi = info.ImageMinDpi;
+			this.imageMaxDpi = info.ImageMaxDpi;
 
 			this.complexSurfaces = new System.Collections.ArrayList();
 			this.imageSurfaces   = new System.Collections.ArrayList();
@@ -514,10 +516,14 @@ namespace Epsitec.Common.Document.PDF
 							System.Diagnostics.Debug.Assert(propImage != null);
 							string filename = propImage.Filename;
 
-							ImageSurface image = ImageSurface.Search(this.imageSurfaces, filename);
+							Point center;
+							double width, height, angle;
+							objImage.ImageGeometry(out center, out width, out height, out angle);
+
+							ImageSurface image = ImageSurface.Search(this.imageSurfaces, filename, width, height);
 							if ( image == null )
 							{
-								image = new ImageSurface(filename, id++);
+								image = new ImageSurface(filename, width, height, id++);
 								this.imageSurfaces.Add(image);
 							}
 						}
@@ -1465,8 +1471,62 @@ namespace Epsitec.Common.Document.PDF
 		protected bool CreateImageSurface(Writer writer, Port port, ImageSurface image,
 										  TypeComplexSurface baseType, TypeComplexSurface maskType)
 		{
-			Pixmap.RawData data = new Pixmap.RawData(image.DrawingImage);
+			// Créeation d'une instance de Magick.Image à partir du nom de fichier.
+			byte[] imageData;
+			using ( System.IO.FileStream file = System.IO.File.OpenRead(image.Filename) )
+			{
+				imageData = new byte[file.Length];
+				file.Read(imageData, 0, imageData.Length);
+				file.Close();
+			}
+			
+			Magick.Blob blob = new Magick.Blob();
+			blob.Update(imageData);
+			
+			Magick.Image magick = new Magick.Image(blob);
+			
+			blob.Dispose();
+			blob = null;
 
+			bool useMask = false;
+
+			// Mise à l'échelle éventuelle de l'image selon les choix de l'utilisateur.
+			double currentDpiX = magick.Width*254.0/image.Width;
+			double currentDpiY = magick.Height*254.0/image.Height;
+
+			double finalDpiX = currentDpiX;
+			double finalDpiY = currentDpiY;
+
+			if ( this.imageMinDpi != 0.0 )
+			{
+				finalDpiX = System.Math.Max(finalDpiX, this.imageMinDpi);
+				finalDpiY = System.Math.Max(finalDpiY, this.imageMinDpi);
+			}
+
+			if ( this.imageMaxDpi != 0.0 )
+			{
+				finalDpiX = System.Math.Min(finalDpiX, this.imageMaxDpi);
+				finalDpiY = System.Math.Min(finalDpiY, this.imageMaxDpi);
+			}
+
+			if ( currentDpiX != finalDpiX || currentDpiY != finalDpiY )
+			{
+				int dx = (int) ((magick.Width+0.5)*finalDpiX/currentDpiX);
+				int dy = (int) ((magick.Height+0.5)*finalDpiY/currentDpiY);
+				magick.Zoom(dx, dy, Magick.FilterType.Cubic);  // TODO: vérifier si Cubic est le type le plus approprié
+			}
+
+			// Choix du mode de compression possible.
+			ImageCompression compression = this.imageCompression;
+
+			if ( baseType == TypeComplexSurface.XObject &&
+				 this.colorConversion == PDF.ColorConversion.ToCMYK &&
+				 compression == ImageCompression.JPEG )  // cmyk impossible en jpg !
+			{
+				compression = ImageCompression.ZIP;  // utilise la compression sans pertes
+			}
+
+			// Génération de l'en-tête.
 			writer.WriteObjectDef(Export.NameComplexSurface(image.Id, baseType));
 			writer.WriteString("<< /Subtype /Image ");
 
@@ -1491,10 +1551,93 @@ namespace Epsitec.Common.Document.PDF
 			}
 
 			writer.WriteString("/BitsPerComponent 8 /Width ");  // voir [*] page 310
-			writer.WriteString(Port.StringValue(data.Width, 0));
+			writer.WriteString(Port.StringValue(magick.Width, 0));
 			writer.WriteString(" /Height ");
-			writer.WriteString(Port.StringValue(data.Height, 0));
+			writer.WriteString(Port.StringValue(magick.Height, 0));
 			writer.WriteString(" ");
+
+			if ( compression == ImageCompression.None )  // sans compression ?
+			{
+				writer.WriteString("/Filter /ASCII85Decode ");  // voir [*] page 43
+			}
+
+			if ( compression == ImageCompression.ZIP )  // compression ZIP ?
+			{
+				writer.WriteString("/Filter [/ASCII85Decode /FlateDecode] ");  // voir [*] page 43
+			}
+
+			if ( compression == ImageCompression.JPEG )  // compression JPEG ?
+			{
+				writer.WriteString("/Filter [/ASCII85Decode /DCTDecode] ");  // voir [*] page 43
+
+				bool isGray = (this.colorConversion == PDF.ColorConversion.ToGray || baseType == TypeComplexSurface.XObjectMask);
+				magick.CompressionType = Magick.Compression.JPEG;
+				magick.ColorSpace      = isGray ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
+				magick.ImageType       = isGray ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
+				magick.MagickFormat    = "JPEG";
+				magick.Quality         = (int) (this.jpegQuality*100.0);
+
+				blob = new Magick.Blob();
+				magick.SaveToBlob(blob);
+				byte[] jpeg = blob.GetData();
+				blob.Dispose();
+				blob = null;
+
+				port.Reset();
+				port.PutASCII85(jpeg);
+				port.PutEOL();
+			}
+
+			if ( maskType == TypeComplexSurface.XObjectMask && useMask )
+			{
+				writer.WriteString(" /SMask ");
+				writer.WriteObjectRef(Export.NameComplexSurface(image.Id, maskType));
+			}
+
+			string pdf = port.GetPDF();
+			writer.WriteLine(string.Format(" {0} >>", Port.StringLength(pdf.Length)));
+			writer.WriteLine("stream");
+			writer.WriteString(pdf);
+			writer.WriteLine("endstream endobj");
+
+			return useMask;
+		}
+
+		// TODO: à supprimer !	
+		protected bool CreateImageSurfaceOld(Writer writer, Port port, ImageSurface image,
+			TypeComplexSurface baseType, TypeComplexSurface maskType)
+		{
+			Pixmap.RawData data = new Pixmap.RawData(image.DrawingImage);
+			int dx = data.Width;
+			int dy = data.Height;
+
+			double currentDpiX = dx*254.0/image.Width;
+			double currentDpiY = dy*254.0/image.Height;
+
+			double finalDpiX = currentDpiX;
+			double finalDpiY = currentDpiY;
+
+			if ( this.imageMinDpi != 0.0 )
+			{
+				finalDpiX = System.Math.Max(finalDpiX, this.imageMinDpi);
+				finalDpiY = System.Math.Max(finalDpiY, this.imageMinDpi);
+			}
+
+			if ( this.imageMaxDpi != 0.0 )
+			{
+				finalDpiX = System.Math.Min(finalDpiX, this.imageMaxDpi);
+				finalDpiY = System.Math.Min(finalDpiY, this.imageMaxDpi);
+			}
+
+			bool resizeRequired = ( currentDpiX != finalDpiX || currentDpiY != finalDpiY );
+
+			int resizedDx = dx;
+			int resizedDy = dy;
+			if ( resizeRequired )
+			{
+				resizedDx = (int) ((dx+0.5)*finalDpiX/currentDpiX);
+				resizedDy = (int) ((dy+0.5)*finalDpiY/currentDpiY);
+			}
 
 			int bpp = 1;
 			if ( baseType == TypeComplexSurface.XObject )
@@ -1519,25 +1662,25 @@ namespace Epsitec.Common.Document.PDF
 				compression = ImageCompression.ZIP;  // utilise la compression sans pertes
 			}
 
-			if ( compression == ImageCompression.JPEG )
+			if ( compression == ImageCompression.JPEG || resizeRequired )
 			{
-				bpp = 4;  // il faut mettre R,G,B,0 pour Magick !
+				bpp = 4;  // il faut mettre R,G,B,0 ou A,A,A,0 pour Magick !
 			}
 
-			byte[] buffer = new byte[data.Width*data.Height*bpp];
+			byte[] buffer = new byte[dx*dy*bpp];
 			bool useMask = false;
 			using ( data )
 			{
 				int i = 0;
-				for ( int y=0 ; y<data.Height ; y++ )
+				for ( int y=0 ; y<dy ; y++ )
 				{
-					for ( int x=0 ; x<data.Width ; x++ )
+					for ( int x=0 ; x<dx ; x++ )
 					{
 						Color color = data[x,y];
 
 						if ( baseType == TypeComplexSurface.XObject )
 						{
-							if ( compression == ImageCompression.JPEG )
+							if ( compression == ImageCompression.JPEG || resizeRequired )
 							{
 								byte r = (byte) (color.R * 255.0);
 								byte g = (byte) (color.G * 255.0);
@@ -1581,7 +1724,7 @@ namespace Epsitec.Common.Document.PDF
 							
 						if ( baseType == TypeComplexSurface.XObjectMask )
 						{
-							if ( compression == ImageCompression.JPEG )
+							if ( compression == ImageCompression.JPEG || resizeRequired )
 							{
 								byte a = (byte) (color.A * 255.0);
 								buffer[i++] = a;
@@ -1599,6 +1742,60 @@ namespace Epsitec.Common.Document.PDF
 				}
 			}
 
+			if ( resizeRequired && compression != ImageCompression.JPEG )
+			{
+				Magick.Image magick = new Magick.Image(dx, dy);
+				magick.CompressionType = Magick.Compression.No;
+				magick.ClassType       = Magick.ClassType.Direct;
+
+				magick.ModifyBegin();
+				magick.SetRawPixels(buffer, 0, 0, dx, dy);
+				magick.ModifyEnd();
+				buffer = null;
+
+				magick.ColorSpace = Magick.ColorSpace.RGB;
+				magick.ImageType  = Magick.ImageType.TrueColor;
+
+				dx = resizedDx;
+				dy = resizedDy;
+				magick.Zoom(dx, dy, Magick.FilterType.Cubic);  // TODO: vérifier si Cubic est le type le plus approprié
+
+				buffer = new byte[dx*dy*bpp];
+
+				magick.ModifyBegin();
+				magick.GetRawPixels(buffer, 0, 0, dx, dy);
+				magick.ModifyEnd();
+			}
+
+			writer.WriteObjectDef(Export.NameComplexSurface(image.Id, baseType));
+			writer.WriteString("<< /Subtype /Image ");
+
+			if ( baseType == TypeComplexSurface.XObject )
+			{
+				if ( this.colorConversion == PDF.ColorConversion.ToGray )
+				{
+					writer.WriteString("/ColorSpace /DeviceGray ");
+				}
+				else if ( this.colorConversion == PDF.ColorConversion.ToCMYK )
+				{
+					writer.WriteString("/ColorSpace /DeviceCMYK ");
+				}
+				else
+				{
+					writer.WriteString("/ColorSpace /DeviceRGB ");
+				}
+			}
+			if ( baseType == TypeComplexSurface.XObjectMask )
+			{
+				writer.WriteString("/ColorSpace /DeviceGray ");
+			}
+
+			writer.WriteString("/BitsPerComponent 8 /Width ");  // voir [*] page 310
+			writer.WriteString(Port.StringValue(resizedDx, 0));
+			writer.WriteString(" /Height ");
+			writer.WriteString(Port.StringValue(resizedDy, 0));
+			writer.WriteString(" ");
+
 			if ( compression == ImageCompression.ZIP )  // compression ZIP ?
 			{
 				writer.WriteString("/Filter [/ASCII85Decode /FlateDecode] ");  // voir [*] page 43
@@ -1614,20 +1811,27 @@ namespace Epsitec.Common.Document.PDF
 			{
 				writer.WriteString("/Filter [/ASCII85Decode /DCTDecode] ");  // voir [*] page 43
 
-				Magick.Image magick = new Magick.Image(data.Width, data.Height);
+				Magick.Image magick = new Magick.Image(dx, dy);
 				magick.CompressionType = Magick.Compression.JPEG;
 				magick.ClassType       = Magick.ClassType.Direct;
 
 				magick.ModifyBegin();
-				magick.SetRawPixels(buffer, 0, 0, data.Width, data.Height);
+				magick.SetRawPixels(buffer, 0, 0, dx, dy);
 				magick.ModifyEnd();
 				buffer = null;
 
-				bool gray = (this.colorConversion == PDF.ColorConversion.ToGray || baseType == TypeComplexSurface.XObjectMask);
-				magick.ColorSpace   = gray ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
-				magick.ImageType    = gray ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
+				bool isGray = (this.colorConversion == PDF.ColorConversion.ToGray || baseType == TypeComplexSurface.XObjectMask);
+				magick.ColorSpace   = isGray ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
+				magick.ImageType    = isGray ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
 				magick.MagickFormat = "JPEG";
 				magick.Quality      = (int) (this.jpegQuality*100.0);
+
+				if ( resizeRequired )
+				{
+					dx = resizedDx;
+					dy = resizedDy;
+					magick.Zoom(dx, dy, Magick.FilterType.Cubic);  // TODO: vérifier si Cubic est le type le plus approprié
+				}
 
 				Magick.Blob blob = new Magick.Blob();
 				magick.SaveToBlob(blob);
@@ -1954,5 +2158,7 @@ namespace Epsitec.Common.Document.PDF
 		protected ColorConversion				colorConversion;
 		protected ImageCompression				imageCompression;
 		protected double						jpegQuality;
+		protected double						imageMinDpi;
+		protected double						imageMaxDpi;
 	}
 }

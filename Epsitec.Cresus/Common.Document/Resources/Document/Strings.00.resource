@@ -78,6 +78,8 @@
 	<data name="Dialog.Double.PrintDebord">Débord</data>
 	<data name="Dialog.Double.ExportPDFDebord">Débord</data>
 	<data name="Dialog.Double.ExportPDFJpegQuality">Qualité des images</data>
+	<data name="Dialog.Double.ExportPDFImageMinDpi">Résolution min. (dpi)</data>
+	<data name="Dialog.Double.ExportPDFImageMaxDpi">Résolution max. (dpi)</data>
 	<data name="Dialog.Double.ImageDpi">Résolution (dpi)</data>
 	<data name="Dialog.Double.ImageQuality">Qualité de l'image</data>
 	<data name="Dialog.Double.ImageQuality1">Qualité minimale, taille faible</data>

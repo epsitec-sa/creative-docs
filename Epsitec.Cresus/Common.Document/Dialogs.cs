@@ -366,6 +366,8 @@ namespace Epsitec.Common.Document
 				Dialogs.CreateSeparator(container);
 				this.CreateCombo(container, "ExportPDFImageCompression");
 				this.CreateDouble(container, "ExportPDFJpegQuality");
+				this.CreateDouble(container, "ExportPDFImageMinDpi");
+				this.CreateDouble(container, "ExportPDFImageMaxDpi");
 				Dialogs.CreateSeparator(container);
 
 				// Onglet Pré-presse:
@@ -397,6 +399,8 @@ namespace Epsitec.Common.Document
 			this.UpdateCombo("ExportPDFColorConversion");
 			this.UpdateCombo("ExportPDFImageCompression");
 			this.UpdateDouble("ExportPDFJpegQuality");
+			this.UpdateDouble("ExportPDFImageMinDpi");
+			this.UpdateDouble("ExportPDFImageMaxDpi");
 		}
 
 		// Appelé lorsque les pages ont changé.

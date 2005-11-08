@@ -88,6 +88,22 @@ namespace Epsitec.Common.Document.Settings
 					this.suffix = "%";
 					break;
 
+				case "ExportPDFImageMinDpi":
+					this.text = Res.Strings.Dialog.Double.ExportPDFImageMinDpi;
+					this.integer = true;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 600.0;
+					this.factorStep = 1.0;
+					break;
+
+				case "ExportPDFImageMaxDpi":
+					this.text = Res.Strings.Dialog.Double.ExportPDFImageMaxDpi;
+					this.integer = true;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 600.0;
+					this.factorStep = 1.0;
+					break;
+
 				case "ImageDpi":
 					this.text = Res.Strings.Dialog.Double.ImageDpi;
 					this.integer = true;
@@ -192,6 +208,12 @@ namespace Epsitec.Common.Document.Settings
 					case "ExportPDFJpegQuality":
 						return this.document.Settings.ExportPDFInfo.JpegQuality*100.0;
 
+					case "ExportPDFImageMinDpi":
+						return this.document.Settings.ExportPDFInfo.ImageMinDpi;
+
+					case "ExportPDFImageMaxDpi":
+						return this.document.Settings.ExportPDFInfo.ImageMaxDpi;
+
 					case "ImageDpi":
 						return this.document.Printer.ImageDpi;
 
@@ -250,6 +272,14 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ExportPDFJpegQuality":
 						this.document.Settings.ExportPDFInfo.JpegQuality = value/100.0;
+						break;
+
+					case "ExportPDFImageMinDpi":
+						this.document.Settings.ExportPDFInfo.ImageMinDpi = value;
+						break;
+
+					case "ExportPDFImageMaxDpi":
+						this.document.Settings.ExportPDFInfo.ImageMaxDpi = value;
 						break;
 
 					case "ImageDpi":

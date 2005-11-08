@@ -27,6 +27,8 @@ namespace Epsitec.Common.Document.Settings
 			this.colorConversion = PDF.ColorConversion.None;
 			this.imageCompression = PDF.ImageCompression.ZIP;
 			this.jpegQuality = 0.7;
+			this.imageMinDpi = 0.0;
+			this.imageMaxDpi = 300.0;
 		}
 
 		public PrintRange PageRange
@@ -95,12 +97,24 @@ namespace Epsitec.Common.Document.Settings
 			set { this.jpegQuality = value; }
 		}
 
+		public double ImageMinDpi
+		{
+			get { return this.imageMinDpi; }
+			set { this.imageMinDpi = value; }
+		}
+
+		public double ImageMaxDpi
+		{
+			get { return this.imageMaxDpi; }
+			set { this.imageMaxDpi = value; }
+		}
+
 
 		#region Serialization
 		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			info.AddValue("Rev", 3);
+			info.AddValue("Rev", 4);
 			info.AddValue("PageRange", this.pageRange);
 			info.AddValue("PageFrom", this.pageFrom);
 			info.AddValue("PageTo", this.pageTo);
@@ -112,6 +126,8 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("ColorConversion", this.colorConversion);
 			info.AddValue("ImageCompression", this.imageCompression);
 			info.AddValue("JpegQuality", this.jpegQuality);
+			info.AddValue("ImageMinDpi", this.imageMinDpi);
+			info.AddValue("ImageMaxDpi", this.imageMaxDpi);
 		}
 
 		// Constructeur qui désérialise les réglages.
@@ -145,6 +161,12 @@ namespace Epsitec.Common.Document.Settings
 				this.imageCompression = (PDF.ImageCompression) info.GetValue("ImageCompression", typeof(PDF.ImageCompression));
 				this.jpegQuality = info.GetDouble("JpegQuality");
 			}
+
+			if ( rev >= 4 )
+			{
+				this.imageMinDpi = info.GetDouble("ImageMinDpi");
+				this.imageMaxDpi = info.GetDouble("ImageMaxDpi");
+			}
 		}
 		#endregion
 
@@ -161,5 +183,7 @@ namespace Epsitec.Common.Document.Settings
 		protected PDF.ColorConversion		colorConversion;
 		protected PDF.ImageCompression		imageCompression;
 		protected double					jpegQuality;
+		protected double					imageMinDpi;
+		protected double					imageMaxDpi;
 	}
 }

@@ -9,9 +9,11 @@ namespace Epsitec.Common.Document.PDF
 	/// </summary>
 	public class ImageSurface
 	{
-		public ImageSurface(string filename, int id)
+		public ImageSurface(string filename, double width, double height, int id)
 		{
 			this.filename = filename;
+			this.width = width;
+			this.height = height;
 			this.id = id;
 
 			// Crée une fois pour toutes le Drawing.Image associé à cette image.
@@ -37,6 +39,18 @@ namespace Epsitec.Common.Document.PDF
 			get { return this.filename; }
 		}
 
+		// Largeur de l'image.
+		public double Width
+		{
+			get { return this.width; }
+		}
+
+		// Hauteur de l'image.
+		public double Height
+		{
+			get { return this.height; }
+		}
+
 		// Identificateur unique.
 		public int Id
 		{
@@ -51,11 +65,13 @@ namespace Epsitec.Common.Document.PDF
 
 
 		// Cherche une image d'après son nom dans une liste.
-		public static ImageSurface Search(System.Collections.ArrayList list, string filename)
+		public static ImageSurface Search(System.Collections.ArrayList list, string filename, double width, double height)
 		{
 			foreach ( ImageSurface image in list )
 			{
-				if ( image.Filename == filename )
+				if ( image.filename == filename &&
+					 image.width    == width    &&
+					 image.height   == height   )
 				{
 					return image;
 				}
@@ -80,6 +96,8 @@ namespace Epsitec.Common.Document.PDF
 
 
 		protected string					filename;
+		protected double					width;
+		protected double					height;
 		protected int						id;
 		protected Drawing.Image				drawingImage;
 	}

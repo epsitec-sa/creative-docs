@@ -284,7 +284,7 @@ namespace Epsitec.Common.Document.Objects
 
 		// Calcule le centre, les dimensions et l'angle de l'image en fonction
 		// du quadrilatère de l'objet, qui n'est pas forcément rectangulaire.
-		protected void ImageGeometry(out Point center, out double width, out double height, out double angle)
+		public void ImageGeometry(out Point center, out double width, out double height, out double angle)
 		{
 			Point pbl, pbr, ptl, ptr;
 			this.Corners(out pbl, out pbr, out ptl, out ptr);
@@ -312,7 +312,10 @@ namespace Epsitec.Common.Document.Objects
 					// Ne crée pas un nouveau Drawing.Image, mais utilise celui
 					// qui est associé au PDF.ImageSurface.
 					PDF.Port pdfPort = port as PDF.Port;
-					PDF.ImageSurface surface = pdfPort.SearchImageSurface(image.Filename);
+					Point center;
+					double width, height, angle;
+					this.ImageGeometry(out center, out width, out height, out angle);
+					PDF.ImageSurface surface = pdfPort.SearchImageSurface(image.Filename, width, height);
 					System.Diagnostics.Debug.Assert(surface != null);
 					this.imageOriginal = surface.DrawingImage;
 					this.imageDimmed = null;

@@ -78,6 +78,8 @@
 	<data name="Dialog.Double.PrintDebord">Bleed</data>
 	<data name="Dialog.Double.ExportPDFDebord">Bleed</data>
 	<data name="Dialog.Double.ExportPDFJpegQuality">Images quality</data>
+	<data name="Dialog.Double.ExportPDFImageMinDpi">Minimal resolution</data>
+	<data name="Dialog.Double.ExportPDFImageMaxDpi">Maximal resolution</data>
 	<data name="Dialog.Double.ImageDpi">Resolution (dpi)</data>
 	<data name="Dialog.Double.ImageQuality">Image quality</data>
 	<data name="Dialog.Double.ImageQuality1">Minium quality, smallest size</data>
