@@ -415,9 +415,7 @@ namespace Epsitec.Common.Document.Objects
 			double bestDistance = 1000000;
 			Text.Properties.TabProperty bestTab = null;
 			Text.TabList list = this.document.TextContext.TabList;
-			Text.Properties.TabsProperty tabs = this.GetTextTabs();
-			if ( tabs == null )  return false;
-			string[] tags = tabs.TabTags;
+			string[] tags = this.textFlow.TextNavigator.GetTabTags();
 			for ( int i=0 ; i<tags.Length ; i++ )
 			{
 				Text.Properties.TabProperty tab = list.GetTabProperty(tags[i]);
@@ -865,9 +863,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get
 			{
-				Text.Properties.TabsProperty tabs = this.GetTextTabs();
-				if ( tabs == null )  return 0;
-				return tabs.TabTags.Length;
+				return this.textFlow.TextNavigator.GetTabTags().Length;
 			}
 		}
 
@@ -890,9 +886,9 @@ namespace Epsitec.Common.Document.Objects
 		// Supprime un tabulateur du texte.
 		public override void DeleteTextTab(int rank)
 		{
-			Text.Properties.TabsProperty existingTabs = this.GetTextTabs();
-
-			int count = existingTabs.TabTags.Length;
+			string[] tags = this.textFlow.TextNavigator.GetTabTags();
+			
+			int count = tags.Length;
 			System.Diagnostics.Debug.Assert(rank >= 0 && rank < count);
 			if ( count == 1 )  // supprime le seul et dernier tabulateur ?
 			{
@@ -907,7 +903,7 @@ namespace Epsitec.Common.Document.Objects
 				for ( int i=0 ; i<count ; i++ )
 				{
 					if ( i == rank )  continue;
-					newTags[ii++] = existingTabs.TabTags[i];
+					newTags[ii++] = tags[i];
 				}
 
 				Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(newTags);
@@ -919,8 +915,8 @@ namespace Epsitec.Common.Document.Objects
 		// Modifie un tabulateur du texte.
 		public override void SetTextTab(int rank, double pos, TextTabType type)
 		{
-			Text.Properties.TabsProperty tabs = this.GetTextTabs();
-			string tabName = tabs.TabTags[rank];
+			string[] tags = this.textFlow.TextNavigator.GetTabTags();
+			string tabName = tags[rank];
 
 			Text.TabList list = this.document.TextContext.TabList;
 			Text.Properties.TabProperty tab = list.GetTabProperty(tabName);
@@ -936,8 +932,8 @@ namespace Epsitec.Common.Document.Objects
 		// Donne un tabulateur du texte.
 		public override void GetTextTab(int rank, out double pos, out TextTabType type)
 		{
-			Text.Properties.TabsProperty tabs = this.GetTextTabs();
-			string tabName = tabs.TabTags[rank];
+			string[] tags = this.textFlow.TextNavigator.GetTabTags();
+			string tabName = tags[rank];
 
 			Text.TabList list = this.document.TextContext.TabList;
 			Text.Properties.TabProperty tab = list.GetTabProperty(tabName);
@@ -949,20 +945,6 @@ namespace Epsitec.Common.Document.Objects
 			if ( dispo == 0.5 )  type = TextTabType.Center;
 			if ( dispo == 1.0 )  type = TextTabType.Left;
 
-		}
-
-		// Donne la propriété contenant la liste des tabulateurs du paragraphe.
-		protected Text.Properties.TabsProperty GetTextTabs()
-		{
-			Text.Property[] properties = this.GetTextProperties(false);
-			foreach ( Text.Property property in properties )
-			{
-				if ( property.WellKnownType == Text.Properties.WellKnownType.Tabs )
-				{
-					return property as Text.Properties.TabsProperty;
-				}
-			}
-			return null;
 		}
 
 		// Donne la liste des propriétés.

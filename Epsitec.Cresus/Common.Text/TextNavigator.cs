@@ -611,6 +611,86 @@ namespace Epsitec.Common.Text
 			return texts;
 		}
 		
+		public string[] GetTabTags()
+		{
+			System.Collections.ArrayList tabs_list = new System.Collections.ArrayList ();
+			System.Collections.ArrayList tags_list = new System.Collections.ArrayList ();
+			
+			int length = 0;
+			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				foreach (Range range in ranges)
+				{
+					int start = range.Start;
+					int end   = range.End;
+					int pos   = start;
+					
+					length += end - start;
+					
+					while (pos < end)
+					{
+						Property property = this.GetTabsProperty (pos);
+						
+						if (property != null)
+						{
+							tabs_list.Add (property);
+						}
+						
+						pos = this.FindNextParagraphStart (pos);
+					}
+				}
+			}
+			
+			if (length == 0)
+			{
+				foreach (Property property in this.accumulated_properties)
+				{
+					if (property.WellKnownType == Properties.WellKnownType.Tabs)
+					{
+						tabs_list.Add (property);
+						break;
+					}
+				}
+			}
+			
+			foreach (Properties.TabsProperty tabs_property in tabs_list)
+			{
+				foreach (string tag in tabs_property.TabTags)
+				{
+					if (tags_list.Contains (tag) == false)
+					{
+						tags_list.Add (tag);
+					}
+				}
+			}
+			
+			tags_list.Sort ();
+			
+			return (string[]) tags_list.ToArray (typeof (string));
+		}
+		
+		private Properties.TabsProperty GetTabsProperty(int pos)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			ulong code = this.story.ReadChar (this.temp_cursor);
+			Property[] properties;
+			this.TextContext.GetAllProperties (code, out properties);
+			
+			for (int i = 0; i < properties.Length; i++)
+			{
+				if (properties[i].WellKnownType == Properties.WellKnownType.Tabs)
+				{
+					return properties[i] as Properties.TabsProperty;
+				}
+			}
+			
+			return null;
+		}
+		
 		
 		public void SetParagraphStyles(params TextStyle[] styles)
 		{

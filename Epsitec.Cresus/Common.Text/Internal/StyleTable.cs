@@ -186,9 +186,11 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void Serialize(System.Text.StringBuilder buffer)
 		{
-			buffer.Append (SerializerSupport.SerializeInt (this.styles.Count));
+			int n = this.styles == null ? 0 : this.styles.Count;
 			
-			for (int i = 0; i < styles.Count; i++)
+			buffer.Append (SerializerSupport.SerializeInt (n));
+			
+			for (int i = 0; i < n; i++)
 			{
 				Styles.SimpleStyle style = this.styles[i] as Styles.SimpleStyle;
 				
