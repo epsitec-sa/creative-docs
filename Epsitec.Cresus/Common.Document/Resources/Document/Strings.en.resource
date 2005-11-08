@@ -358,6 +358,7 @@
 	<data name="Panel.Image.Button.MirrorX">Swap X</data>
 	<data name="Panel.Image.Button.MirrorY">Swap Y</data>
 	<data name="Panel.Image.Button.Homo">Keep proportions</data>
+	<data name="Panel.Image.Button.Filter">@@Antialiasing filter</data>
 	<data name="Panel.Image.Tooltip.Filename">Image file name</data>
 	<data name="Panel.Image.Tooltip.Browse">Browse for an image</data>
 	<data name="Panel.Image.Tooltip.Update">Update image</data>

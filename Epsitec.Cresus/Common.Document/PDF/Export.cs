@@ -515,15 +515,16 @@ namespace Epsitec.Common.Document.PDF
 							Properties.Image propImage = obj.PropertyImage;
 							System.Diagnostics.Debug.Assert(propImage != null);
 							string filename = propImage.Filename;
+							bool filter = propImage.Filter;
 
 							Point center;
 							double width, height, angle;
 							objImage.ImageGeometry(out center, out width, out height, out angle);
 
-							ImageSurface image = ImageSurface.Search(this.imageSurfaces, filename, width, height);
+							ImageSurface image = ImageSurface.Search(this.imageSurfaces, filename, width, height, filter);
 							if ( image == null )
 							{
-								image = new ImageSurface(filename, width, height, id++);
+								image = new ImageSurface(filename, width, height, filter, id++);
 								this.imageSurfaces.Add(image);
 							}
 						}
@@ -1555,6 +1556,11 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteString(" /Height ");
 			writer.WriteString(Port.StringValue(magick.Height, 0));
 			writer.WriteString(" ");
+
+			if ( image.Filter )
+			{
+				writer.WriteString("/Interpolate true ");
+			}
 
 			if ( compression == ImageCompression.None )  // sans compression ?
 			{

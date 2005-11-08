@@ -51,6 +51,12 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonHomo.TabIndex = 6;
 			this.buttonHomo.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			this.buttonFilter = new CheckButton(this);
+			this.buttonFilter.Text = Res.Strings.Panel.Image.Button.Filter;
+			this.buttonFilter.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
+			this.buttonFilter.TabIndex = 7;
+			this.buttonFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
 			this.isNormalAndExtended = true;
 		}
 		
@@ -64,6 +70,7 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonMirrorH.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonMirrorV.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonHomo.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
+				this.buttonFilter.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 
 				this.fieldFilename = null;
 				this.buttonBrowse = null;
@@ -71,6 +78,7 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonMirrorH = null;
 				this.buttonMirrorV = null;
 				this.buttonHomo = null;
+				this.buttonFilter = null;
 			}
 			
 			base.Dispose(disposing);
@@ -82,7 +90,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? this.LabelHeight+100 : this.LabelHeight+55 );
+				return ( this.isExtendedSize ? this.LabelHeight+120 : this.LabelHeight+55 );
 			}
 		}
 
@@ -101,6 +109,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonMirrorH.ActiveState = p.MirrorH ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.buttonMirrorV.ActiveState = p.MirrorV ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.buttonHomo   .ActiveState = p.Homo    ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.buttonFilter .ActiveState = p.Filter  ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 
 			this.ignoreChanged = false;
 		}
@@ -115,6 +124,7 @@ namespace Epsitec.Common.Document.Panels
 			p.MirrorH = ( this.buttonMirrorH.ActiveState == WidgetState.ActiveYes );
 			p.MirrorV = ( this.buttonMirrorV.ActiveState == WidgetState.ActiveYes );
 			p.Homo    = ( this.buttonHomo   .ActiveState == WidgetState.ActiveYes );
+			p.Filter  = ( this.buttonFilter .ActiveState == WidgetState.ActiveYes );
 		}
 
 
@@ -150,9 +160,15 @@ namespace Epsitec.Common.Document.Panels
 			r.Right = rect.Right;
 			this.buttonHomo.Bounds = r;
 
+			r.Offset(0, -20);
+			r.Left = rect.Left;
+			r.Right = rect.Right;
+			this.buttonFilter.Bounds = r;
+
 			this.buttonMirrorH.SetVisible(this.isExtendedSize);
 			this.buttonMirrorV.SetVisible(this.isExtendedSize);
 			this.buttonHomo.SetVisible(this.isExtendedSize);
+			this.buttonFilter.SetVisible(this.isExtendedSize);
 		}
 		
 		// Une valeur a été changée.
@@ -199,5 +215,6 @@ namespace Epsitec.Common.Document.Panels
 		protected CheckButton				buttonMirrorH;
 		protected CheckButton				buttonMirrorV;
 		protected CheckButton				buttonHomo;
+		protected CheckButton				buttonFilter;
 	}
 }

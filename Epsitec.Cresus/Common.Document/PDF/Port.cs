@@ -1327,10 +1327,10 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 		// Cherche l'image à utiliser.
-		public ImageSurface SearchImageSurface(string filename, double width, double height)
+		public ImageSurface SearchImageSurface(string filename, double width, double height, bool filter)
 		{
 			if ( this.imageSurfaceList == null )  return null;
-			return ImageSurface.Search(this.imageSurfaceList, filename, width, height);
+			return ImageSurface.Search(this.imageSurfaceList, filename, width, height, filter);
 		}
 
 

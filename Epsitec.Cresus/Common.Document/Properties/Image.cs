@@ -19,6 +19,7 @@ namespace Epsitec.Common.Document.Properties
 			this.mirrorH  = false;
 			this.mirrorV  = false;
 			this.homo     = true;
+			this.filter   = true;
 			this.reload   = false;
 		}
 
@@ -94,6 +95,24 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public bool Filter
+		{
+			get
+			{
+				return this.filter;
+			}
+			
+			set
+			{
+				if ( this.filter != value )
+				{
+					this.NotifyBefore();
+					this.filter = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
 		public bool Reload
 		{
 			get
@@ -144,6 +163,7 @@ namespace Epsitec.Common.Document.Properties
 			p.mirrorH  = this.mirrorH;
 			p.mirrorV  = this.mirrorV;
 			p.homo     = this.homo;
+			p.filter   = this.filter;
 			p.reload   = this.reload;
 		}
 
@@ -157,6 +177,7 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.mirrorH  != this.mirrorH  )  return false;
 			if ( p.mirrorV  != this.mirrorV  )  return false;
 			if ( p.homo     != this.homo     )  return false;
+			if ( p.filter   != this.filter   )  return false;
 			if ( p.reload   != this.reload   )  return false;
 
 			return true;
@@ -189,6 +210,7 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("MirrorH", this.mirrorH);
 			info.AddValue("MirrorV", this.mirrorV);
 			info.AddValue("Homo", this.homo);
+			info.AddValue("Filter", this.filter);
 		}
 
 		// Constructeur qui désérialise la propriété.
@@ -198,6 +220,15 @@ namespace Epsitec.Common.Document.Properties
 			this.mirrorH = info.GetBoolean("MirrorH");
 			this.mirrorV = info.GetBoolean("MirrorV");
 			this.homo = info.GetBoolean("Homo");
+
+			if ( this.document.IsRevisionGreaterOrEqual(1,2,4) )
+			{
+				this.filter = info.GetBoolean("Filter");
+			}
+			else
+			{
+				this.filter = true;
+			}
 
 			// Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
 			// ajoute le nom du dossier dans lequel est désérialisé le fichier
@@ -216,6 +247,7 @@ namespace Epsitec.Common.Document.Properties
 		protected bool				mirrorH;
 		protected bool				mirrorV;
 		protected bool				homo;
+		protected bool				filter;
 		protected bool				reload;
 	}
 }

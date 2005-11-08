@@ -358,6 +358,7 @@
 	<data name="Panel.Image.Button.MirrorX">Miroir X</data>
 	<data name="Panel.Image.Button.MirrorY">Miroir Y</data>
 	<data name="Panel.Image.Button.Homo">Conserver proportions</data>
+	<data name="Panel.Image.Button.Filter">Filtre adoucissant</data>
 	<data name="Panel.Image.Tooltip.Filename">Nom du fichier de l'image</data>
 	<data name="Panel.Image.Tooltip.Browse">Choix du nom de fichier de l'image</data>
 	<data name="Panel.Image.Tooltip.Update">Actualise l'image</data>

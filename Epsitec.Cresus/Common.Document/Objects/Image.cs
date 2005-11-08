@@ -315,7 +315,8 @@ namespace Epsitec.Common.Document.Objects
 					Point center;
 					double width, height, angle;
 					this.ImageGeometry(out center, out width, out height, out angle);
-					PDF.ImageSurface surface = pdfPort.SearchImageSurface(image.Filename, width, height);
+					bool filter = this.PropertyImage.Filter;
+					PDF.ImageSurface surface = pdfPort.SearchImageSurface(image.Filename, width, height, filter);
 					System.Diagnostics.Debug.Assert(surface != null);
 					this.imageOriginal = surface.DrawingImage;
 					this.imageDimmed = null;
@@ -430,8 +431,7 @@ namespace Epsitec.Common.Document.Objects
 					port.ScaleTransform(sx, sy, 0.0, 0.0);
 					port.TranslateTransform(-0.5, -0.5);
 
-					Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, 1.0, 1.0);  // TODO: pourquoi ça ne marche pas ?
-					//Drawing.Rectangle rect = new Drawing.Rectangle(0.0, 0.0, 1.00000001, 1.00000001);
+					Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, 1.0, 1.0);
 					port.PaintImage(image, rect);
 #endif
 				}
