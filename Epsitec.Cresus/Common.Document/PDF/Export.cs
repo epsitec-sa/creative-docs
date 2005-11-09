@@ -1532,11 +1532,6 @@ namespace Epsitec.Common.Document.PDF
 				compression = ImageCompression.ZIP;  // utilise la compression sans pertes
 			}
 
-			if ( baseType == TypeComplexSurface.XObjectMask )
-			{
-				compression = ImageCompression.ZIP;  // utilise la compression sans pertes pour les masques
-			}
-
 			// Génération de l'en-tête.
 			writer.WriteObjectDef(Export.NameComplexSurface(image.Id, baseType));
 			writer.WriteString("<< /Subtype /Image ");
@@ -1615,6 +1610,30 @@ namespace Epsitec.Common.Document.PDF
 				if ( magick.ImageType == Magick.ImageType.GrayscaleMatte )  isGray = true;
 				
 				Magick.Image copy = new Magick.Image(magick);
+				
+				if ( baseType == TypeComplexSurface.XObjectMask )
+				{
+					copy.SelectChannel(Magick.Channel.Alpha);
+					
+					copy.Depth = 8;
+					copy.ImageType = Magick.ImageType.TrueColor;
+					copy.ColorSpace = Magick.ColorSpace.RGB;
+
+					int width = copy.Width;
+					int height = copy.Height;
+					byte[] buffer = new byte[width*height*4];
+
+					copy.ModifyBegin();
+					copy.GetRawPixels(buffer, 0, 0, width, height);
+					
+					for ( int i=0 ; i<buffer.Length ; i++ )
+					{
+						buffer[i] = (byte)(0xff - buffer[i]);
+					}
+					
+					copy.SetRawPixels(buffer, 0, 0, width, height);
+					copy.ModifyEnd();
+				}
 				
 				copy.CompressionType = Magick.Compression.JPEG;
 				copy.ColorSpace      = isGray ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
