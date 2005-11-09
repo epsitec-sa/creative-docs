@@ -231,6 +231,10 @@ namespace Epsitec.Common.Text.Cursors
 		
 		internal int[] GetLineStartPositions(Internal.TextTable text)
 		{
+			//	Détermine où commencent des lignes (position exprimée par rapport
+			//	au début du texte) en filtrant les éléments qui sont liés à des
+			//	marques de tabulation :
+			
 			int   count = this.elements.Length + 1;
 			int[] pos   = new int[count];
 			int   offset;
@@ -252,14 +256,9 @@ namespace Epsitec.Common.Text.Cursors
 			
 			if (count < pos.Length)
 			{
-				int[] copy = new int[count];
-				
-				for (int i = 0; i < count; i++)
-				{
-					copy[i] = pos[i];
-				}
-				
-				pos = copy;
+				int[] temp = new int[count];
+				System.Array.Copy (pos, 0, temp, 0, count);
+				pos = temp;
 			}
 			
 			return pos;

@@ -1210,23 +1210,16 @@ restart_paragraph_layout:
 					
 					layout.DefineLineGeometry (oy, y1, y2, asc, desc);
 					
+					//	S'il y a une marque de tabulation à la fin de l'élément précé-
+					//	dent, on va donner une chance au renderer de la peindre mainte-
+					//	nant :
+					
 					if (is_tab)
 					{
-						double tab_origin = 0;
+						double tab_origin = elements[i-1].IsNewLine ? elements[i].LineOriginX : elements[i-1].LineStartX + elements[i-1].LineWidth;
 						double tab_stop   = elements[i].LineStartX;
 						
-						if (elements[i-1].IsNewLine)
-						{
-							tab_origin = elements[i].LineOriginX;
-						}
-						else
-						{
-							tab_origin = elements[i-1].LineStartX + elements[i-1].LineWidth;
-						}
-						
-						System.Diagnostics.Debug.WriteLine (string.Format ("Tab from {0:0.0} to {1:0.0}", tab_origin, tab_stop));
-						
-						renderer.RenderTab (layout, tab_origin, oy, tab_stop);
+						renderer.RenderTab (layout, tab_origin, tab_stop);
 					}
 					
 					layout.RenderLine (renderer, profile, length, ox, oy, width, i, is_tab, is_last);

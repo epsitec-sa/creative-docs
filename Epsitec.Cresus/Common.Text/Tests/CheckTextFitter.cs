@@ -730,7 +730,7 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void RenderTab(Layout.Context layout, double ox, double oy, double tab_x)
+			public void RenderTab(Layout.Context layout, double tab_origin, double tab_stop)
 			{
 			}
 			
@@ -810,7 +810,7 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void RenderTab(Layout.Context layout, double ox, double oy, double tab_x)
+			public void RenderTab(Layout.Context layout, double tab_origin, double tab_stop)
 			{
 			}
 			

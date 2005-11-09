@@ -92,10 +92,10 @@ namespace Epsitec.Common.Text.Internal
 		{
 		}
 		
-		public void RenderTab(Layout.Context layout, double ox, double oy, double tab_x)
+		public void RenderTab(Layout.Context layout, double tab_origin, double tab_stop)
 		{
-			this.tab_origin = ox;
-			this.tab_stop   = tab_x;
+			this.tab_origin = tab_origin;
+			this.tab_stop   = tab_stop;
 		}
 		
 		public void Render(Layout.Context layout, OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)

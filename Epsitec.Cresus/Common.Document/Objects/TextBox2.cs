@@ -1539,12 +1539,16 @@ namespace Epsitec.Common.Document.Objects
 			context.DisableSimpleRendering();
 		}
 		
-		public void RenderTab(Text.Layout.Context layout, double ox, double oy, double tab_x)
+		public void RenderTab(Text.Layout.Context layout, double tab_origin, double tab_stop)
 		{
 			if ( this.graphics == null )  return;
 			if ( this.edited == false )  return;
 			
-			this.graphics.AddLine(ox, oy, tab_x, oy);
+			double x1 = tab_origin;
+			double y  = layout.LineBaseY + layout.LineAscender * 0.3;
+			double x2 = tab_stop;
+			
+			this.graphics.AddLine(x1, y, x2, y);
 			this.graphics.RenderSolid(Drawing.Color.FromBrightness(0.6));
 		}
 			
