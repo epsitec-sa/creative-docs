@@ -880,7 +880,7 @@ namespace Epsitec.Common.Document.Objects
 			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute);
 			Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
 			this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
-			this.HandleTabsChanged(null);  // TODO: devrait être inutile
+//-			this.HandleTabsChanged(null);  // TODO: devrait être inutile
 			return count;
 		}
 
@@ -891,7 +891,7 @@ namespace Epsitec.Common.Document.Objects
 			string tabTag = tags[rank];
 			
 			this.metaNavigator.RemoveTab(tabTag);
-			this.HandleTabsChanged(null);  // TODO: devrait être inutile
+//-			this.HandleTabsChanged(null);  // TODO: devrait être inutile
 		}
 
 		// Modifie un tabulateur du texte.
@@ -983,6 +983,22 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.edited )
 			{
+				if ( true )
+				{
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+					Text.TextNavigator.TabInfo[] infos = this.textFlow.TextNavigator.GetTabInfos();
+					Text.TabList list = this.document.TextContext.TabList;
+					
+					buffer.Append("UpdateTextRulers:");
+					
+					foreach (Text.TextNavigator.TabInfo info in infos)
+					{
+						buffer.AppendFormat (" {0}->{1} p={2:0.0} m={3:0.0}", info.Tag, info.Status, list.GetTabPositionInPoints(list[info.Tag]), list.GetTabDisposition(list[info.Tag]));
+					}
+					
+					System.Diagnostics.Debug.WriteLine(buffer.ToString());
+				}
+				
 				Drawing.Rectangle bbox = this.bboxThin;
 				this.document.HRuler.LimitLow  = bbox.Left;
 				this.document.HRuler.LimitHigh = bbox.Right;

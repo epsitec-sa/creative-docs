@@ -208,6 +208,10 @@ namespace Epsitec.Common.Text
 			this.InsertText (text);
 			this.NotifyTextChanged ();
 			
+			//	S'il y a des tabulateurs dans le texte qui vient d'être inséré,
+			//	il faut signaler un possible changement des tabulateurs (pour
+			//	refléter ces changements dans la règle, par exemple) :
+			
 			foreach (char c in text)
 			{
 				if (c == '\t')
@@ -221,6 +225,8 @@ namespace Epsitec.Common.Text
 		public void Delete()
 		{
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
+			int tab_change_count = 0;
 			
 			//	Supprime le contenu de la sélection (pour autant qu'il y en ait
 			//	une qui soit définie).
@@ -263,7 +269,7 @@ namespace Epsitec.Common.Text
 							this.UpdateCurrentStylesAndProperties ();
 						}
 						
-						this.DeleteText (c1, p2-p1);
+						this.DeleteText (c1, p2-p1, ref tab_change_count);
 					}
 					
 					this.story.OpletQueue.ValidateAction ();
@@ -274,11 +280,18 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.NotifyTextChanged ();
+			
+			if (tab_change_count > 0)
+			{
+				this.NotifyTabsChanged ();
+			}
 		}
 		
 		public void Delete(int move)
 		{
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
+			int tab_change_count = 0;
 			
 			int p1 = this.story.GetCursorPosition (this.cursor);
 			int p2 = p1 + move;
@@ -350,7 +363,7 @@ namespace Epsitec.Common.Text
 				if (p2 > p1)
 				{
 					this.story.SetCursorPosition (temp, p1);
-					this.DeleteText (temp, p2-p1);
+					this.DeleteText (temp, p2-p1, ref tab_change_count);
 				}
 				
 				if (Internal.Navigator.IsParagraphStart (this.story, this.ActiveCursor, 0))
@@ -373,6 +386,11 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.NotifyTextChanged ();
+			
+			if (tab_change_count > 0)
+			{
+				this.NotifyTabsChanged ();
+			}
 		}
 		
 		public void MoveTo(int position, int direction)
@@ -625,6 +643,46 @@ namespace Epsitec.Common.Text
 			}
 			
 			return texts;
+		}
+		
+		
+		public TabInfo[] GetTabInfos()
+		{
+			string[] tags_1 = this.GetParagraphTabTags ();
+			string[] tags_2 = this.GetTextTabTags ();
+			
+			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+			
+			foreach (string tag in tags_1)
+			{
+				System.Diagnostics.Debug.Assert (hash.Contains (tag) == false);
+				
+				TabInfo info = new TabInfo (tag, TabStatus.Definition);
+				
+				hash[tag] = info;
+			}
+			
+			foreach (string tag in tags_2)
+			{
+				if (hash.Contains (tag))
+				{
+					hash[tag] = new TabInfo (tag, TabStatus.Live);
+				}
+				else
+				{
+					hash[tag] = new TabInfo (tag, TabStatus.Zombie);
+				}
+			}
+			
+			string[]  tags  = new string[hash.Count];
+			TabInfo[] infos = new TabInfo[hash.Count];
+			
+			hash.Keys.CopyTo (tags, 0);
+			hash.Values.CopyTo (infos, 0);
+			
+			System.Array.Sort (tags, infos);
+			
+			return infos;
 		}
 		
 		
@@ -895,6 +953,7 @@ namespace Epsitec.Common.Text
 			
 			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
+			this.NotifyTabsChanged ();
 		}
 		
 		public void SetTextStyles(params TextStyle[] styles)
@@ -1081,6 +1140,7 @@ namespace Epsitec.Common.Text
 			
 			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
+			this.NotifyTabsChanged ();
 		}
 		
 		public void SetParagraphProperties(Properties.ApplyMode mode, params Property[] properties)
@@ -1134,6 +1194,15 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.NotifyTextChanged ();
+			
+			foreach (Property property in properties)
+			{
+				if (property.WellKnownType == Properties.WellKnownType.Tabs)
+				{
+					this.NotifyTabsChanged ();
+					break;
+				}
+			}
 		}
 		
 		public void SetTextProperties(Properties.ApplyMode mode, params Property[] properties)
@@ -1762,7 +1831,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		protected void DeleteText(ICursor cursor, int length)
+		protected void DeleteText(ICursor cursor, int length, ref int tab_change_count)
 		{
 			//	Supprime le fragment de texte; il faut traiter spécialement la
 			//	destruction des fins de paragraphes, car elle provoque le change-
@@ -1773,6 +1842,14 @@ namespace Epsitec.Common.Text
 			
 			ulong[] text = new ulong[length];
 			this.story.ReadText (cursor, length, text);
+			
+			for (int i = 0; i < text.Length; i++)
+			{
+				if (Unicode.Bits.GetUnicodeCode (text[i]) == Unicode.Code.HorizontalTab)
+				{
+					tab_change_count++;
+				}
+			}
 			
 			System.Collections.Stack ranges = new System.Collections.Stack ();
 			
@@ -2813,6 +2890,38 @@ namespace Epsitec.Common.Text
 			
 			WordStart,
 			WordEnd,
+		}
+		#endregion
+		
+		#region TabInfo Class
+		public class TabInfo
+		{
+			public TabInfo(string tag, TabStatus status)
+			{
+				this.tag    = tag;
+				this.status = status;
+			}
+			
+			
+			public string						Tag
+			{
+				get
+				{
+					return this.tag;
+				}
+			}
+			
+			public TabStatus					Status
+			{
+				get
+				{
+					return this.status;
+				}
+			}
+			
+			
+			private string						tag;
+			private TabStatus					status;
 		}
 		#endregion
 		
