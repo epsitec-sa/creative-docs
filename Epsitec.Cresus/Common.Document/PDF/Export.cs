@@ -1517,19 +1517,24 @@ namespace Epsitec.Common.Document.PDF
 
 			if ( currentDpiX != finalDpiX || currentDpiY != finalDpiY )
 			{
-//				dx = (int) ((dx+0.5)*finalDpiX/currentDpiX);
-//				dy = (int) ((dy+0.5)*finalDpiY/currentDpiY);
-//				resizeRequired = true;
+				dx = (int) ((dx+0.5)*finalDpiX/currentDpiX);
+				dy = (int) ((dy+0.5)*finalDpiY/currentDpiY);
+				resizeRequired = true;
 			}
 
 			// Choix du mode de compression possible.
 			ImageCompression compression = this.imageCompression;
 
 			if ( baseType == TypeComplexSurface.XObject &&
-				 this.colorConversion == PDF.ColorConversion.ToCMYK &&
-				 compression == ImageCompression.JPEG )  // cmyk impossible en jpg !
+				this.colorConversion == PDF.ColorConversion.ToCMYK &&
+				compression == ImageCompression.JPEG )  // cmyk impossible en jpg !
 			{
 				compression = ImageCompression.ZIP;  // utilise la compression sans pertes
+			}
+
+			if ( baseType == TypeComplexSurface.XObjectMask )
+			{
+				compression = ImageCompression.ZIP;  // utilise la compression sans pertes pour les masques
 			}
 
 			// Génération de l'en-tête.
@@ -1559,7 +1564,14 @@ namespace Epsitec.Common.Document.PDF
 							break;
 						
 						case Magick.ColorSpace.CMYK:
-							writer.WriteString("/ColorSpace /DeviceCMYK ");
+							if ( compression == ImageCompression.JPEG )
+							{
+								writer.WriteString("/ColorSpace /DeviceRGB ");
+							}
+							else
+							{
+								writer.WriteString("/ColorSpace /DeviceCMYK ");
+							}
 							break;
 						
 						default:
@@ -1583,19 +1595,35 @@ namespace Epsitec.Common.Document.PDF
 				writer.WriteString("/Interpolate true ");
 			}
 
+			if ( magick.ImageType == Magick.ImageType.PaletteMatte ||
+				 magick.ImageType == Magick.ImageType.TrueColorMatte ||
+				 magick.ImageType == Magick.ImageType.ColorSeparationMatte ||
+				 magick.ImageType == Magick.ImageType.GrayscaleMatte )
+			{
+				useMask = true;
+			}
+			
 			if ( compression == ImageCompression.JPEG )  // compression JPEG ?
 			{
 				writer.WriteString("/Filter [/ASCII85Decode /DCTDecode] ");  // voir [*] page 43
 
-				bool isGray = (this.colorConversion == PDF.ColorConversion.ToGray || baseType == TypeComplexSurface.XObjectMask);
-				magick.CompressionType = Magick.Compression.JPEG;
-				magick.ColorSpace      = isGray ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
-				magick.ImageType       = isGray ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
-				magick.MagickFormat    = "JPEG";
-				magick.Quality         = (int) (this.jpegQuality*100.0);
+				bool isGray = false;
+				
+				if ( this.colorConversion == PDF.ColorConversion.ToGray )	isGray = true;
+				if ( baseType == TypeComplexSurface.XObjectMask )			isGray = true;
+				if ( magick.ImageType == Magick.ImageType.Grayscale )		isGray = true;
+				if ( magick.ImageType == Magick.ImageType.GrayscaleMatte )  isGray = true;
+				
+				Magick.Image copy = new Magick.Image(magick);
+				
+				copy.CompressionType = Magick.Compression.JPEG;
+				copy.ColorSpace      = isGray ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
+				copy.ImageType       = isGray ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
+				copy.MagickFormat    = "JPEG";
+				copy.Quality         = (int) (this.jpegQuality*100.0);
 
 				blob = new Magick.Blob();
-				magick.SaveToBlob(blob);
+				copy.SaveToBlob(blob);
 				byte[] jpeg = blob.GetData();
 				blob.Dispose();
 				blob = null;
@@ -1620,13 +1648,6 @@ namespace Epsitec.Common.Document.PDF
 				int bpp = 3;
 				if ( baseType == TypeComplexSurface.XObject )
 				{
-					if ( magick.ImageType == Magick.ImageType.PaletteMatte ||
-						 magick.ImageType == Magick.ImageType.TrueColorMatte ||
-						 magick.ImageType == Magick.ImageType.ColorSeparationMatte )
-					{
-						useMask = true;
-					}
-
 					if ( this.colorConversion == PDF.ColorConversion.ToGray )
 					{
 						bpp = 1;
