@@ -53,6 +53,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.metaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
+			this.metaNavigator.TabsChanged += new Support.EventHandler(this.HandleTabsChanged);
 			this.metaNavigator.CursorMoved += new Support.EventHandler(this.HandleCursorMoved);
 			this.metaNavigator.ActiveStyleChanged += new Support.EventHandler(this.HandleStyleChanged);
 
@@ -415,7 +416,7 @@ namespace Epsitec.Common.Document.Objects
 			double bestDistance = 1000000;
 			Text.Properties.TabProperty bestTab = null;
 			Text.TabList list = this.document.TextContext.TabList;
-			string[] tags = this.textFlow.TextNavigator.GetTabTags();
+			string[] tags = this.textFlow.TextNavigator.GetAllTabTags();
 			for ( int i=0 ; i<tags.Length ; i++ )
 			{
 				Text.Properties.TabProperty tab = list.GetTabProperty(tags[i]);
@@ -863,7 +864,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get
 			{
-				return this.textFlow.TextNavigator.GetTabTags().Length;
+				return this.textFlow.TextNavigator.GetAllTabTags().Length;
 			}
 		}
 
@@ -879,64 +880,45 @@ namespace Epsitec.Common.Document.Objects
 			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute);
 			Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
 			this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
-			this.HandleTabChanged(null);  // TODO: devrait être inutile
+			this.HandleTabsChanged(null);  // TODO: devrait être inutile
 			return count;
 		}
 
 		// Supprime un tabulateur du texte.
 		public override void DeleteTextTab(int rank)
 		{
-			string[] tags = this.textFlow.TextNavigator.GetTabTags();
+			string[] tags = this.textFlow.TextNavigator.GetAllTabTags();
+			string tabTag = tags[rank];
 			
-			int count = tags.Length;
-			System.Diagnostics.Debug.Assert(rank >= 0 && rank < count);
-			if ( count == 1 )  // supprime le seul et dernier tabulateur ?
-			{
-				Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty();
-				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Clear, tabs);
-			}
-			else
-			{
-				string[] newTags = new string[count-1];
-
-				int ii=0;
-				for ( int i=0 ; i<count ; i++ )
-				{
-					if ( i == rank )  continue;
-					newTags[ii++] = tags[i];
-				}
-
-				Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(newTags);
-				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Set, tabs);
-			}
-			this.HandleTabChanged(null);  // TODO: devrait être inutile
+			this.metaNavigator.RemoveTab(tabTag);
+			this.HandleTabsChanged(null);  // TODO: devrait être inutile
 		}
 
 		// Modifie un tabulateur du texte.
 		public override void SetTextTab(int rank, double pos, TextTabType type)
 		{
-			string[] tags = this.textFlow.TextNavigator.GetTabTags();
-			string tabName = tags[rank];
+			string[] tags = this.textFlow.TextNavigator.GetAllTabTags();
+			string tabTag = tags[rank];
 
 			Text.TabList list = this.document.TextContext.TabList;
-			Text.Properties.TabProperty tab = list.GetTabProperty(tabName);
-
+			Text.Properties.TabProperty tab = list.GetTabProperty(tabTag);
+			
 			double dispo = 0.0;
 			if ( type == TextTabType.Center )  dispo = 0.5;
 			if ( type == TextTabType.Left   )  dispo = 1.0;
 
 			list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute, null);
-			this.HandleTabChanged(null);  // TODO: devrait être inutile
+			this.HandleTabsChanged(null);  // TODO: devrait être inutile
 		}
 
 		// Donne un tabulateur du texte.
 		public override void GetTextTab(int rank, out double pos, out TextTabType type)
 		{
-			string[] tags = this.textFlow.TextNavigator.GetTabTags();
-			string tabName = tags[rank];
+			string[] tags = this.textFlow.TextNavigator.GetAllTabTags();
+			string tabTag = tags[rank];
 
 			Text.TabList list = this.document.TextContext.TabList;
-			Text.Properties.TabProperty tab = list.GetTabProperty(tabName);
+			Text.Properties.TabProperty tab = list.GetTabProperty(tabTag);
 
 			pos = list.GetTabPosition(tab);
 
@@ -944,7 +926,6 @@ namespace Epsitec.Common.Document.Objects
 			double dispo = list.GetTabDisposition(tab);
 			if ( dispo == 0.5 )  type = TextTabType.Center;
 			if ( dispo == 1.0 )  type = TextTabType.Left;
-
 		}
 
 		// Donne la liste des propriétés.
@@ -1891,7 +1872,7 @@ namespace Epsitec.Common.Document.Objects
 			this.ChangeObjectEdited();
 		}
 
-		private void HandleTabChanged(object sender)
+		private void HandleTabsChanged(object sender)
 		{
 			if ( !this.edited )  return;
 			this.UpdateTextRulers();

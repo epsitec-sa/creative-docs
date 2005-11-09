@@ -1517,9 +1517,9 @@ namespace Epsitec.Common.Document.PDF
 
 			if ( currentDpiX != finalDpiX || currentDpiY != finalDpiY )
 			{
-				dx = (int) ((dx+0.5)*finalDpiX/currentDpiX);
-				dy = (int) ((dy+0.5)*finalDpiY/currentDpiY);
-				resizeRequired = true;
+//				dx = (int) ((dx+0.5)*finalDpiX/currentDpiX);
+//				dy = (int) ((dy+0.5)*finalDpiY/currentDpiY);
+//				resizeRequired = true;
 			}
 
 			// Choix du mode de compression possible.
@@ -1548,7 +1548,23 @@ namespace Epsitec.Common.Document.PDF
 				}
 				else
 				{
-					writer.WriteString("/ColorSpace /DeviceRGB ");
+					switch ( magick.ColorSpace )
+					{
+						case Magick.ColorSpace.GRAY:
+							writer.WriteString("/ColorSpace /DeviceGray ");
+							break;
+						
+						case Magick.ColorSpace.RGB:
+							writer.WriteString("/ColorSpace /DeviceRGB ");
+							break;
+						
+						case Magick.ColorSpace.CMYK:
+							writer.WriteString("/ColorSpace /DeviceCMYK ");
+							break;
+						
+						default:
+							throw new System.InvalidOperationException();
+					}
 				}
 			}
 			if ( baseType == TypeComplexSurface.XObjectMask )
@@ -1644,7 +1660,7 @@ namespace Epsitec.Common.Document.PDF
 					data = new byte[dx*dy];
 					for ( int i=0 ; i<dx*dy ; i++ )
 					{
-						data[i] = bufferAlpha[i*4+0];
+						data[i] = (byte)(0xff - bufferAlpha[i*4+0]);
 					}
 				}
 
@@ -1722,6 +1738,7 @@ namespace Epsitec.Common.Document.PDF
 		{
 			Magick.Image copy = new Magick.Image(magick);
 			copy.SelectChannel(channel);
+			copy.Depth = 8;
 
 			if ( resizeRequired )
 			{

@@ -38,6 +38,7 @@ namespace Epsitec.Common.Widgets
 					if (this.text_navigator != null)
 					{
 						this.text_navigator.ActiveStyleChanged -= new Support.EventHandler (this.HandleActiveStyleChanged);
+						this.text_navigator.TabsChanged -= new Support.EventHandler (this.HandleTabsChanged);
 						this.text_navigator.TextChanged -= new Support.EventHandler (this.HandleTextChanged);
 						this.text_navigator.CursorMoved -= new Support.EventHandler (this.HandleCursorMoved);
 					}
@@ -48,6 +49,7 @@ namespace Epsitec.Common.Widgets
 					{
 						this.text_navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
 						this.text_navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
+						this.text_navigator.TabsChanged += new Support.EventHandler (this.HandleTabsChanged);
 						this.text_navigator.ActiveStyleChanged += new Support.EventHandler (this.HandleActiveStyleChanged);
 					}
 				}
@@ -753,9 +755,21 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public void RemoveTab(string tag)
+		{
+			this.EndSelection ();
+			this.text_navigator.RemoveTab (tag);
+		}
+		
+		
 		public void NotifyTextChanged()
 		{
 			this.OnTextChanged ();
+		}
+		
+		public void NotifyTabsChanged()
+		{
+			this.OnTabsChanged ();
 		}
 		
 		public void NotifyCursorMoved()
@@ -772,6 +786,11 @@ namespace Epsitec.Common.Widgets
 		private void HandleTextChanged(object sender)
 		{
 			this.NotifyTextChanged ();
+		}
+		
+		private void HandleTabsChanged(object sender)
+		{
+			this.NotifyTabsChanged ();
 		}
 		
 		private void HandleCursorMoved(object sender)
@@ -795,6 +814,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnTabsChanged()
+		{
+			this.ClearVerticalMoveCache ();
+			
+			if (this.TabsChanged != null)
+			{
+				this.TabsChanged (this);
+			}
+		}
+		
 		protected virtual void OnCursorMoved()
 		{
 			if (this.CursorMoved != null)
@@ -813,6 +842,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		public event Support.EventHandler		TextChanged;
+		public event Support.EventHandler		TabsChanged;
 		public event Support.EventHandler		CursorMoved;
 		public event Support.EventHandler		ActiveStyleChanged;
 		

@@ -60,7 +60,17 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return (string[]) this.tab_tags.Clone ();
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				for (int i = 0; i < this.tab_tags.Length; i++)
+				{
+					if (this.tab_tags[i].StartsWith ("-") == false)
+					{
+						list.Add (this.tab_tags[i]);
+					}
+				}
+				
+				return (string[]) list.ToArray (typeof (string));
 			}
 		}
 		
@@ -114,7 +124,11 @@ namespace Epsitec.Common.Text.Properties
 			{
 				foreach (string tag in b.tab_tags)
 				{
-					if (tags.Contains (tag) == false)
+					if (tag.StartsWith ("-"))
+					{
+						tags.Remove (tag.Substring (1));
+					}
+					else if (tags.Contains (tag) == false)
 					{
 						tags.Add (tag);
 					}

@@ -160,6 +160,8 @@ namespace Epsitec.Common.Text
 		
 		public void Insert(Unicode.Code code)
 		{
+			System.Diagnostics.Debug.Assert (code != Unicode.Code.HorizontalTab);
+			
 			this.InsertText (new string ((char) code, 1));
 			this.NotifyTextChanged ();
 		}
@@ -194,12 +196,26 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.NotifyTextChanged ();
+			
+			if (code == Unicode.Code.HorizontalTab)
+			{
+				this.NotifyTabsChanged ();
+			}
 		}
 		
 		public void Insert(string text)
 		{
 			this.InsertText (text);
 			this.NotifyTextChanged ();
+			
+			foreach (char c in text)
+			{
+				if (c == '\t')
+				{
+					this.NotifyTabsChanged ();
+					break;
+				}
+			}
 		}
 		
 		public void Delete()
@@ -611,7 +627,41 @@ namespace Epsitec.Common.Text
 			return texts;
 		}
 		
-		public string[] GetTabTags()
+		
+		public string[] GetAllTabTags()
+		{
+			string[] tags_1 = this.GetParagraphTabTags ();
+			string[] tags_2 = this.GetTextTabTags ();
+			
+			if (tags_2.Length == 0)
+			{
+				return tags_1;
+			}
+			if (tags_1.Length == 0)
+			{
+				return tags_2;
+			}
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (string tag in tags_1)
+			{
+				list.Add (tag);
+			}
+			foreach (string tag in tags_2)
+			{
+				if (list.Contains (tag) == false)
+				{
+					list.Add (tag);
+				}
+			}
+			
+			list.Sort ();
+			
+			return (string[]) list.ToArray (typeof (string));
+		}
+		
+		public string[] GetParagraphTabTags()
 		{
 			System.Collections.ArrayList tabs_list = new System.Collections.ArrayList ();
 			System.Collections.ArrayList tags_list = new System.Collections.ArrayList ();
@@ -673,6 +723,64 @@ namespace Epsitec.Common.Text
 			return (string[]) tags_list.ToArray (typeof (string));
 		}
 		
+		public string[] GetTextTabTags()
+		{
+			System.Collections.ArrayList tags_list = new System.Collections.ArrayList ();
+			
+			int length = 0;
+			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				foreach (Range range in ranges)
+				{
+					int start = range.Start;
+					int end   = range.End;
+					int pos   = start;
+					
+					length += end - start;
+					
+					while (pos < end)
+					{
+						this.FindTextTabTags (tags_list, pos);
+						
+						pos = this.FindNextParagraphStart (pos);
+					}
+				}
+			}
+			
+			if (length == 0)
+			{
+				this.FindTextTabTags (tags_list, this.CursorPosition);
+			}
+			
+			tags_list.Sort ();
+			
+			return (string[]) tags_list.ToArray (typeof (string));
+		}
+		
+		
+		public void RemoveTab(string tag)
+		{
+			string[] tags = this.GetParagraphTabTags ();
+			
+			for (int i = 0; i < tags.Length; i++)
+			{
+				if (tags[i] == tag)
+				{
+					//	Trouvé le tabulateur dans au moins un des paragraphes
+					//	concernés. Il y a donc bien quelque chose à faire :
+					
+					Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty (string.Concat ("-", tag));
+					this.SetParagraphProperties (Text.Properties.ApplyMode.Combine, tabs);
+					
+					break;
+				}
+			}
+		}
+		
 		private Properties.TabsProperty GetTabsProperty(int pos)
 		{
 			this.story.SetCursorPosition (this.temp_cursor, pos);
@@ -689,6 +797,43 @@ namespace Epsitec.Common.Text
 			}
 			
 			return null;
+		}
+		
+		private void FindTextTabTags(System.Collections.ArrayList list, int pos)
+		{
+			int start;
+			int end;
+			
+			Internal.Navigator.GetParagraphPositions (this.story, pos, out start, out end);
+			
+			int length = end - start;
+			
+			if (length > 0)
+			{
+				ulong[] text = new ulong[length];
+				this.story.ReadText (start, length, text);
+				
+				for (int i = 0; i < length; i++)
+				{
+					if (Unicode.Bits.GetUnicodeCode (text[i]) == Unicode.Code.HorizontalTab)
+					{
+						//	Trouvé un tabulateur. Détermine le tag correspondant en
+						//	analysant la propriété attachée :
+						
+						Properties.TabProperty property;
+						
+						this.TextContext.GetTab (text[i], out property);
+						
+						System.Diagnostics.Debug.Assert (property != null);
+						System.Diagnostics.Debug.Assert (property.TabTag != null);
+						
+						if (list.Contains (property.TabTag) == false)
+						{
+							list.Add (property.TabTag);
+						}
+					}
+				}
+			}
 		}
 		
 		
@@ -1644,8 +1789,7 @@ namespace Epsitec.Common.Text
 			{
 				System.Diagnostics.Debug.Assert (start <= pos+i);
 				
-				if ((Internal.Navigator.IsParagraphSeparator (text[i])) /*||
-					(Internal.Navigator.IsEndOfText (this.story, cursor, i+1))*/)
+				if (Internal.Navigator.IsParagraphSeparator (text[i]))
 				{
 					//	Vérifie si l'on détruit un paragraphe complet (avec un
 					//	éventuel texte automatique au début)
@@ -1664,20 +1808,29 @@ namespace Epsitec.Common.Text
 						System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == start);
 						System.Diagnostics.Debug.Assert (this.IsParagraphStart (0, -1));
 					}
+					else
+					{
+						//	Il n'y avait aucun texte automatique. Mais comme effet
+						//	de bord, SkipOverAutoText a positionnée le curseur
+						//	temporaire :
+						
+						System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == start);
+					}
 					
 					Range range;
 					
 					if (this.IsParagraphStart (0, 1))
 					{
 						//	C'est un paragraphe complet qui est sélectionné. On le
-						//	détruit sans autre forme de procès.
+						//	détruira sans autre forme de procès.
 						
 						range = new Range (start, pos+i - start + 1);
 					}
 					else
 					{
 						//	Le paragraphe n'est pas sélectionné depuis le début; on va
-						//	devoir appliquer notre style au reste du paragraphe suivant.
+						//	devoir appliquer notre style au reste du paragraphe suivant
+						//	au moment du "fix up" plus loin :
 						
 						System.Diagnostics.Debug.Assert (count == 1);
 						
@@ -1703,8 +1856,9 @@ namespace Epsitec.Common.Text
 				//	Le premier paragraphe est sélectionné dans son entier. Cela
 				//	implique que si la fin de la sélection arrive au début d'un
 				//	paragraphe contenant du texte automatique, il faut déplacer
-				//	la fin après la fin du paragraphe précédent (sinon on supprime
-				//	du texte automatique qu'il faudrait conserver).
+				//	la fin après la fin du paragraphe précédent, mais avant le
+				//	texte automatique du paragraphe en cours (sinon on supprime
+				//	du texte automatique qu'il faut conserver).
 				
 				if (this.SkipOverAutoText (ref fence, -1))
 				{
@@ -1730,6 +1884,10 @@ namespace Epsitec.Common.Text
 			
 			if (fix_up)
 			{
+				//	La destruction a combiné le début du premier paragraphe avec
+				//	la fin du dernier paragraphe. Il faut donc appliquer les ré-
+				//	glages associés au début à la fin aussi :
+				
 				TextStyle[] styles;
 				Property[]  props;
 				
@@ -1742,42 +1900,41 @@ namespace Epsitec.Common.Text
 				Internal.Navigator.SetParagraphStyles (this.story, this.temp_cursor, styles);
 				Internal.Navigator.SetParagraphProperties (this.story, this.temp_cursor, Properties.ApplyMode.Overwrite, props);
 			}
-//-			else
-			{
-				//	Le curseur pourrait maintenant avoir une mise en page de paragraphe
-				//	différente de ce qu'il avait avant. Il faut mettre à jour juste la
-				//	partie "paragraphe" du style et des propriétés...
-				
-				Property[]  old_properties = this.current_properties;
-				TextStyle[] old_styles     = this.current_styles;
-				
-				System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (old_properties) == false);
-				System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (old_properties) == false);
-				
-				//	Change l'état du curseur, comme s'il venait d'arriver où il est; on
-				//	perd donc les réglages précédents, temporairement.
-				
-				this.UpdateCurrentStylesAndProperties ();
-				
-				System.Collections.ArrayList new_styles     = new System.Collections.ArrayList ();
-				System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
-				
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
-				new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Text));
-				new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Character));
-				new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.MetaProperty));
-				
-				new_properties.AddRange (Property.Filter (this.current_properties, Properties.PropertyFilter.UniformOnly));
-				new_properties.AddRange (Property.Filter (old_properties, Properties.PropertyFilter.NonUniformOnly));
-				
-				//	Regénère les styles et propriétés d'origine du curseur, pour ce qui
-				//	concerne le texte, mais conserve les réglages du paragraphe en cours.
-				
-				this.current_styles     = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
-				this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
-				
-				this.RefreshAccumulatedStylesAndProperties ();
-			}
+			
+			
+			//	Le curseur pourrait maintenant avoir une mise en page de paragraphe
+			//	différente de ce qu'il avait avant. Il faut mettre à jour juste la
+			//	partie "paragraphe" du style et des propriétés...
+			
+			Property[]  old_properties = this.current_properties;
+			TextStyle[] old_styles     = this.current_styles;
+			
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (old_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (old_properties) == false);
+			
+			//	Change l'état du curseur, comme s'il venait d'arriver où il est; on
+			//	perd donc les réglages précédents, temporairement.
+			
+			this.UpdateCurrentStylesAndProperties ();
+			
+			System.Collections.ArrayList new_styles     = new System.Collections.ArrayList ();
+			System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
+			
+			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
+			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Text));
+			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Character));
+			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.MetaProperty));
+			
+			new_properties.AddRange (Property.Filter (this.current_properties, Properties.PropertyFilter.UniformOnly));
+			new_properties.AddRange (Property.Filter (old_properties, Properties.PropertyFilter.NonUniformOnly));
+			
+			//	Regénère les styles et propriétés d'origine du curseur, pour ce qui
+			//	concerne le texte, mais conserve les réglages du paragraphe en cours.
+			
+			this.current_styles     = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+			this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
+			
+			this.RefreshAccumulatedStylesAndProperties ();
 		}
 		
 		
@@ -2484,6 +2641,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.NotifyTextChanged ();
+			this.NotifyTabsChanged ();
 		}
 		
 		protected virtual void OnTextChanged()
@@ -2491,6 +2649,14 @@ namespace Epsitec.Common.Text
 			if (this.TextChanged != null)
 			{
 				this.TextChanged (this);
+			}
+		}
+		
+		protected virtual void OnTabsChanged()
+		{
+			if (this.TabsChanged != null)
+			{
+				this.TabsChanged (this);
 			}
 		}
 		
@@ -2524,6 +2690,11 @@ namespace Epsitec.Common.Text
 		private void NotifyTextChanged()
 		{
 			this.OnTextChanged ();
+		}
+		
+		private void NotifyTabsChanged()
+		{
+			this.OnTabsChanged ();
 		}
 		
 		private void NotifyCursorMoved()
@@ -2649,6 +2820,7 @@ namespace Epsitec.Common.Text
 		
 		public event OpletEventHandler			OpletExecuted;
 		public event EventHandler				TextChanged;
+		public event EventHandler				TabsChanged;
 		public event EventHandler				CursorMoved;
 		public event EventHandler				ActiveStyleChanged;
 		
