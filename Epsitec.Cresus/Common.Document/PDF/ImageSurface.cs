@@ -9,11 +9,10 @@ namespace Epsitec.Common.Document.PDF
 	/// </summary>
 	public class ImageSurface
 	{
-		public ImageSurface(string filename, double width, double height, bool filter, int id)
+		public ImageSurface(string filename, Size size, bool filter, int id)
 		{
 			this.filename = filename;
-			this.width = width;
-			this.height = height;
+			this.size = size;
 			this.filter = filter;
 			this.id = id;
 
@@ -40,16 +39,10 @@ namespace Epsitec.Common.Document.PDF
 			get { return this.filename; }
 		}
 
-		// Largeur de l'image.
-		public double Width
+		// Dimensions de l'image.
+		public Size Size
 		{
-			get { return this.width; }
-		}
-
-		// Hauteur de l'image.
-		public double Height
-		{
-			get { return this.height; }
+			get { return this.size; }
 		}
 
 		// Filtre de l'image.
@@ -72,13 +65,12 @@ namespace Epsitec.Common.Document.PDF
 
 
 		// Cherche une image d'après son nom dans une liste.
-		public static ImageSurface Search(System.Collections.ArrayList list, string filename, double width, double height, bool filter)
+		public static ImageSurface Search(System.Collections.ArrayList list, string filename, Size size, bool filter)
 		{
 			foreach ( ImageSurface image in list )
 			{
 				if ( image.filename == filename &&
-					 image.width    == width    &&
-					 image.height   == height   &&
+					 image.size     == size     &&
 					 image.filter   == filter   )
 				{
 					return image;
@@ -104,8 +96,7 @@ namespace Epsitec.Common.Document.PDF
 
 
 		protected string					filename;
-		protected double					width;
-		protected double					height;
+		protected Size						size;
 		protected bool						filter;
 		protected int						id;
 		protected Drawing.Image				drawingImage;

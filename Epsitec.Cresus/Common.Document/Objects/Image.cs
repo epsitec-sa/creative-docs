@@ -282,9 +282,31 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Donne les dimensions effectives utilisées par le bitmap rectangulaire de l'image.
+		public Size ImageBitmapSize()
+		{
+			Point center;
+			double width, height, angle;
+			this.ImageGeometry(out center, out width, out height, out angle);
+
+			if ( width > 0 && height > 0 && this.imageOriginal != null )
+			{
+				Properties.Image property = this.PropertyImage;
+
+				if ( property.Homo )  // conserve les proportions ?
+				{
+					double rapport = this.imageOriginal.Height/this.imageOriginal.Width;
+					if ( rapport < height/width )  height = width*rapport;
+					else                           width  = height/rapport;
+				}
+			}
+
+			return new Size(width, height);
+		}
+
 		// Calcule le centre, les dimensions et l'angle de l'image en fonction
 		// du quadrilatère de l'objet, qui n'est pas forcément rectangulaire.
-		public void ImageGeometry(out Point center, out double width, out double height, out double angle)
+		protected void ImageGeometry(out Point center, out double width, out double height, out double angle)
 		{
 			Point pbl, pbr, ptl, ptr;
 			this.Corners(out pbl, out pbr, out ptl, out ptr);
@@ -312,11 +334,9 @@ namespace Epsitec.Common.Document.Objects
 					// Ne crée pas un nouveau Drawing.Image, mais utilise celui
 					// qui est associé au PDF.ImageSurface.
 					PDF.Port pdfPort = port as PDF.Port;
-					Point center;
-					double width, height, angle;
-					this.ImageGeometry(out center, out width, out height, out angle);
+					Size size = this.ImageBitmapSize();
 					bool filter = this.PropertyImage.Filter;
-					PDF.ImageSurface surface = pdfPort.SearchImageSurface(image.Filename, width, height, filter);
+					PDF.ImageSurface surface = pdfPort.SearchImageSurface(image.Filename, size, filter);
 					System.Diagnostics.Debug.Assert(surface != null);
 					this.imageOriginal = surface.DrawingImage;
 					this.imageDimmed = null;
