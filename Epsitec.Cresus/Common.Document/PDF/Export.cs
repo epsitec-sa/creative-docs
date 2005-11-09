@@ -1692,6 +1692,8 @@ namespace Epsitec.Common.Document.PDF
 
 				if ( bpp == 1 )
 				{
+					magick.ImageType = Magick.ImageType.Grayscale;
+					
 					byte[] bufferGray = this.CreateImageSurfaceChannel(magick, resizeRequired, dx, dy, Magick.Channel.Gray);
 
 					data = new byte[dx*dy];
@@ -1703,6 +1705,8 @@ namespace Epsitec.Common.Document.PDF
 
 				if ( bpp == 3 )
 				{
+					magick.ImageType = Magick.ImageType.TrueColor;
+					
 					byte[] bufferRed   = this.CreateImageSurfaceChannel(magick, resizeRequired, dx, dy, Magick.Channel.Red);
 					byte[] bufferGreen = this.CreateImageSurfaceChannel(magick, resizeRequired, dx, dy, Magick.Channel.Green);
 					byte[] bufferBlue  = this.CreateImageSurfaceChannel(magick, resizeRequired, dx, dy, Magick.Channel.Blue);
@@ -1718,6 +1722,8 @@ namespace Epsitec.Common.Document.PDF
 
 				if ( bpp == 4 )
 				{
+					magick.ImageType = Magick.ImageType.ColorSeparation;
+					
 					byte[] bufferCyan    = this.CreateImageSurfaceChannel(magick, resizeRequired, dx, dy, Magick.Channel.Cyan);
 					byte[] bufferMagenta = this.CreateImageSurfaceChannel(magick, resizeRequired, dx, dy, Magick.Channel.Magenta);
 					byte[] bufferYellow  = this.CreateImageSurfaceChannel(magick, resizeRequired, dx, dy, Magick.Channel.Yellow);
