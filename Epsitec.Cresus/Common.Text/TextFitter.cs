@@ -1218,8 +1218,15 @@ restart_paragraph_layout:
 					{
 						double tab_origin = elements[i-1].IsNewLine ? elements[i].LineOriginX : elements[i-1].LineStartX + elements[i-1].LineWidth;
 						double tab_stop   = elements[i].LineStartX;
+						ulong  tab_code   = layout.Text[layout.TextOffset-1];
 						
-						renderer.RenderTab (layout, tab_origin, tab_stop);
+						Properties.TabProperty tab_property;
+						
+						this.story.TextContext.GetTab (tab_code, out tab_property);
+						
+						string tag = tab_property == null ? null : tab_property.TabTag;
+						
+						renderer.RenderTab (layout, tag, tab_origin, tab_stop);
 					}
 					
 					layout.RenderLine (renderer, profile, length, ox, oy, width, i, is_tab, is_last);
