@@ -140,6 +140,18 @@ namespace Epsitec.Common.Drawing.Renderers
 			AntiGrain.Renderer.Image.SetAlphaMask (this.agg_ren, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
 		}
 		
+		public void SelectBilinearFilter()
+		{
+			this.AssertAttached ();
+			AntiGrain.Renderer.Image.SetStretchMode (this.agg_ren, 1);
+		}
+		
+		public void SelectNoFilter()
+		{
+			this.AssertAttached ();
+			AntiGrain.Renderer.Image.SetStretchMode (this.agg_ren, 0);
+		}
+		
 		
 		#region IDisposable Members
 		public void Dispose()

@@ -20,6 +20,7 @@ namespace Epsitec.Common.Drawing
 		Color		FinalColor			{ get; set; }
 		Transform	Transform			{ get; set; }
 		FillMode	FillMode			{ get; set; }
+		bool		FilterImage			{ get; set; }
 		
 		void PushColorModifier(ColorModifier method);
 		ColorModifier PopColorModifier();

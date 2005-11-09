@@ -158,6 +158,19 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		public bool							FilterImage
+		{
+			get
+			{
+				return this.filter_image;
+			}
+			set
+			{
+				this.filter_image = value;
+			}
+		}
+		
+		
 		public void PushColorModifier(ColorModifier method)
 		{
 			this.stackColorModifier.Push(method);
@@ -491,6 +504,16 @@ namespace Epsitec.Common.Drawing
 			this.AddFilledRectangle (fill_x, fill_y, fill_width, fill_height);
 			this.ImageRenderer.BitmapImage = bitmap;
 			this.ImageRenderer.Transform = transform;
+			
+			if (this.filter_image)
+			{
+				this.ImageRenderer.SelectBilinearFilter ();
+			}
+			else
+			{
+				this.ImageRenderer.SelectNoFilter ();
+			}
+			
 			this.RenderImage ();
 			this.ImageRenderer.BitmapImage = null;
 		}
@@ -994,6 +1017,7 @@ namespace Epsitec.Common.Drawing
 
 		
 		private const double				AlmostInfinite = 1000000000.0;
+		private bool						filter_image = true;
 		
 		private double						line_width;
 		private JoinStyle					line_join;

@@ -189,6 +189,19 @@ namespace Epsitec.Common.Printing
 			}
 		}
 		
+		public bool								FilterImage
+		{
+			get
+			{
+				return this.filter_image;
+			}
+			set
+			{
+				this.filter_image = value;
+			}
+		}
+		
+		
 		public void PushColorModifier(Drawing.ColorModifier method)
 		{
 			this.stackColorModifier.Push(method);
@@ -802,6 +815,7 @@ namespace Epsitec.Common.Printing
 		protected Drawing.JoinStyle				line_join        = Drawing.JoinStyle.Miter;
 		protected Drawing.CapStyle				line_cap         = Drawing.CapStyle.Square;
 		protected double						line_miter_limit = 4.0;
+		protected bool							filter_image;
 		
 		protected float							offset_x, offset_y;
 		protected float							scale;
