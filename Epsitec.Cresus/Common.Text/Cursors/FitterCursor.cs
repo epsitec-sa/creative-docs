@@ -233,12 +233,33 @@ namespace Epsitec.Common.Text.Cursors
 		{
 			int   count = this.elements.Length + 1;
 			int[] pos   = new int[count];
+			int   offset;
 			
 			pos[0] = text.GetCursorPosition (this.CursorId);
+			offset = pos[0];
+			count  = 1;
 			
-			for (int i = 1; i < count; i++)
+			for (int i = 0, j = 1; i < this.elements.Length; i++)
 			{
-				pos[i] = pos[i-1] + this.elements[i-1].Length;
+				offset += this.elements[i].Length;
+				
+				if (this.elements[i].IsNewLine)
+				{
+					pos[j++] = offset;
+					count++;
+				}
+			}
+			
+			if (count < pos.Length)
+			{
+				int[] copy = new int[count];
+				
+				for (int i = 0; i < count; i++)
+				{
+					copy[i] = pos[i];
+				}
+				
+				pos = copy;
 			}
 			
 			return pos;
