@@ -1585,9 +1585,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 
 			writer.WriteString("/BitsPerComponent 8 /Width ");  // voir [*] page 310
-			writer.WriteString(Port.StringValue(magick.Width, 0));
+			writer.WriteString(Port.StringValue(dx, 0));
 			writer.WriteString(" /Height ");
-			writer.WriteString(Port.StringValue(magick.Height, 0));
+			writer.WriteString(Port.StringValue(dy, 0));
 			writer.WriteString(" ");
 
 			if ( image.Filter )
@@ -1621,6 +1621,11 @@ namespace Epsitec.Common.Document.PDF
 				copy.ImageType       = isGray ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
 				copy.MagickFormat    = "JPEG";
 				copy.Quality         = (int) (this.jpegQuality*100.0);
+				
+				if ( resizeRequired )
+				{
+					copy.Zoom(dx, dy, Magick.FilterType.Cubic);  // TODO: vérifier si Cubic est le type le plus approprié
+				}
 
 				blob = new Magick.Blob();
 				copy.SaveToBlob(blob);
@@ -1759,7 +1764,10 @@ namespace Epsitec.Common.Document.PDF
 		{
 			Magick.Image copy = new Magick.Image(magick);
 			copy.SelectChannel(channel);
-			copy.Depth = 8;
+			
+			copy.Depth      = 8;
+			copy.ImageType  = Magick.ImageType.TrueColor;
+			copy.ColorSpace = Magick.ColorSpace.RGB;
 
 			if ( resizeRequired )
 			{
