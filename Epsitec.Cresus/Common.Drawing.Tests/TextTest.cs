@@ -284,6 +284,10 @@ namespace Epsitec.Common.Drawing
 				context.DisableSimpleRendering ();
 			}
 			
+			public void RenderTab(Text.Layout.Context layout, double ox, double oy, double tab_x)
+			{
+			}
+			
 			public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 			{
 				Text.ITextFrame frame = layout.Frame;

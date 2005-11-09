@@ -730,6 +730,10 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
+			public void RenderTab(Layout.Context layout, double ox, double oy, double tab_x)
+			{
+			}
+			
 			public void Render(Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 			{
 				ITextFrame frame = layout.Frame;
@@ -803,6 +807,10 @@ namespace Epsitec.Common.Text.Tests
 			}
 			
 			public void RenderStartLine(Layout.Context context)
+			{
+			}
+			
+			public void RenderTab(Layout.Context layout, double ox, double oy, double tab_x)
 			{
 			}
 			

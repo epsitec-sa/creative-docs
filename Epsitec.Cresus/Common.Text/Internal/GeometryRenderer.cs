@@ -40,6 +40,42 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public bool								HasTabBeforeText
+		{
+			get
+			{
+				return double.IsNaN (this.tab_origin) == false;
+			}
+		}
+		
+		public double							TabOrigin
+		{
+			get
+			{
+				return this.tab_origin;
+			}
+		}
+		
+		public double							TabStop
+		{
+			get
+			{
+				return this.tab_stop;
+			}
+		}
+		
+		
+		public void DefineTab(double tab_origin, double tab_stop)
+		{
+			System.Diagnostics.Debug.Assert (this.ElementCount > 1);
+			
+			Element tab_element = this[this.ElementCount-2];
+			Element end_element = this[this.ElementCount-1];
+			
+			end_element.X = tab_stop;
+		}
+		
+		
 		#region ITextRenderer Members
 		public bool IsFrameAreaVisible(ITextFrame frame, double x, double y, double width, double height)
 		{
@@ -54,6 +90,12 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void RenderStartLine(Layout.Context context)
 		{
+		}
+		
+		public void RenderTab(Layout.Context layout, double ox, double oy, double tab_x)
+		{
+			this.tab_origin = ox;
+			this.tab_stop   = tab_x;
 		}
 		
 		public void Render(Layout.Context layout, OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
@@ -163,11 +205,49 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			
+			public Unicode.Code					Unicode
+			{
+				get
+				{
+					return (Unicode.Code) this.code;
+				}
+			}
+			
+			
+			public ITextFrame					Frame
+			{
+				get
+				{
+					return this.frame;
+				}
+			}
+			
+			public OpenType.Font				Font
+			{
+				get
+				{
+					return this.font;
+				}
+			}
+			
+			public double						Size
+			{
+				get
+				{
+					return this.size;
+				}
+			}
+			
+			
 			public double						X
 			{
 				get
 				{
 					return this.x;
+				}
+				set
+				{
+					this.x = value;
 				}
 			}
 			
@@ -207,5 +287,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		
 		private System.Collections.ArrayList	items;
+		private double							tab_origin = double.NaN;
+		private double							tab_stop = double.NaN;
 	}
 }

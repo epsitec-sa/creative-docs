@@ -29,6 +29,7 @@ namespace Epsitec.Common.Text.Layout
 			this.mx_left  = mx_left;
 			this.mx_left_body = mx_left;
 			this.mx_right = mx_right;
+			this.x_origin = this.mx_left;
 			
 			this.break_fence_before = break_fence_before;
 			this.break_fence_after  = break_fence_after;
@@ -156,6 +157,14 @@ namespace Epsitec.Common.Text.Layout
 			get
 			{
 				return this.ox_line_start;
+			}
+		}
+		
+		public double							LineOriginX
+		{
+			get
+			{
+				return this.x_origin;
 			}
 		}
 		
@@ -1263,6 +1272,7 @@ restart:
 			{
 				this.mx_left  = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
 				this.mx_right = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+				this.x_origin = this.mx_left;
 				
 				this.break_fence_before = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
 				this.break_fence_after  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
@@ -1287,9 +1297,10 @@ restart:
 			
 			if (margins != null)
 			{
-				this.mx_left  = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
-				this.mx_right = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+				this.mx_left      = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
+				this.mx_right     = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
 				this.mx_left_body = Properties.UnitsTools.ConvertToPoints (margins.LeftMarginBody, margins.Units);
+				this.x_origin     = this.mx_left;
 				
 				this.justification = is_last_line ? margins.JustificationLastLine : margins.JustificationBody;
 				this.disposition   = margins.Disposition;
@@ -1728,6 +1739,7 @@ restart:
 		private double							mx_left;
 		private double							mx_left_body;
 		private double							mx_right;
+		private double							x_origin;
 		
 		private bool							use_tab_indentation;
 		private double							tab_indentation_x;

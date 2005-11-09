@@ -223,7 +223,7 @@ namespace Epsitec.Common.Text
 			
 			for (int i = 0; i < elements.Length; i++)
 			{
-				this.RenderElement (renderer, frame, elements, i, layout, cursor.SpaceAfterParagraph);
+				this.RenderElement (renderer, frame, cursor, elements, i, layout, cursor.SpaceAfterParagraph);
 			}
 			
 			renderer.RenderEndParagraph (layout);
@@ -354,7 +354,7 @@ namespace Epsitec.Common.Text
 					double cy1 = 0;
 					double cy2 = 0;
 					
-					this.GetCursorGeometry (frame, para_start + line_offset, 0, elements, i, ref cx1, ref cy, ref cy1, ref cy2, dy_after);
+					this.GetCursorGeometry (frame, para_start + line_offset, 0, cursor, elements, i, ref cx1, ref cy, ref cy1, ref cy2, dy_after);
 					
 					if ((view_y >= cy1) &&
 						(view_y <= cy2))
@@ -369,6 +369,8 @@ namespace Epsitec.Common.Text
 							
 							position  = para_start + line_offset;
 							direction = -1;
+							
+							break;
 						}
 						else
 						{
@@ -382,7 +384,7 @@ namespace Epsitec.Common.Text
 								int    pos = para_start + line_offset;
 								double cx2 = cx1;
 								
-								this.GetCursorGeometry (frame, pos, glyph_offset, elements, i, ref cx2, ref cy, ref cy1, ref cy2, dy_after);
+								this.GetCursorGeometry (frame, pos, glyph_offset, cursor, elements, i, ref cx2, ref cy, ref cy1, ref cy2, dy_after);
 								
 								if ((view_x >= cx1) &&
 									(view_x <= cx2))
@@ -500,7 +502,7 @@ namespace Epsitec.Common.Text
 							double y1 = 0;
 							double y2 = 0;
 							
-							this.GetCursorGeometry (line_start, position - line_start, elements, i, ref x, ref y, ref y1, ref y2, fitter_cursor.SpaceAfterParagraph);
+							this.GetCursorGeometry (line_start, position - line_start, fitter_cursor, elements, i, ref x, ref y, ref y1, ref y2, fitter_cursor.SpaceAfterParagraph);
 							
 							return true;
 						}
@@ -874,6 +876,7 @@ restart_paragraph_layout:
 					element.Profile       = profile;
 					element.FrameIndex    = layout.FrameIndex;
 					element.LineStartX    = layout.LineStartX;
+					element.LineOriginX   = layout.LineOriginX;
 					element.LineBaseY     = layout.LineBaseY;
 					element.LineY1        = layout.LineY1;
 					element.LineY2        = layout.LineY2;
@@ -1059,14 +1062,36 @@ restart_paragraph_layout:
 		}
 		
 		
-		private void GetCursorGeometry(int position, int cursor_offset, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y, ref double y1, ref double y2, double space_after)
+		private void GetCursorGeometry(int position, int cursor_offset, Cursors.FitterCursor cursor, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y, ref double y1, ref double y2, double space_after)
 		{
 			ITextFrame frame = this.FrameList[elements[i].FrameIndex];
 			
-			this.GetCursorGeometry (frame, position, cursor_offset, elements, i, ref x, ref y, ref y1, ref y2, space_after);
+			this.GetCursorGeometry (frame, position, cursor_offset, cursor, elements, i, ref x, ref y, ref y1, ref y2, space_after);
 		}
 		
-		private void GetCursorGeometry(ITextFrame frame, int position, int cursor_offset, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y, ref double y1, ref double y2, double space_after)
+		private Internal.GeometryRenderer GenerateGeometryInformation(ITextFrame frame, int position, Cursors.FitterCursor cursor, Cursors.FitterCursor.Element[] elements, int i, double space_after)
+		{
+			int     length = elements[i].Length;
+			ulong[] text   = new ulong[length];
+			
+			this.story.ReadText (position, length, text);
+				
+			//	Analyse le layout précis en réalisant un rendu du texte avec
+			//	GeometryRenderer, lequel enregistre les positions de tous les
+			//	caractères traités :
+			
+			Layout.Context            layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
+			Internal.GeometryRenderer renderer = new Internal.GeometryRenderer ();
+			
+			layout.DisableFontBaselineOffset ();
+			layout.DisableSimpleRendering ();
+			
+			this.RenderElement (renderer, frame, cursor, elements, i, layout, space_after);
+			
+			return renderer;
+		}
+		
+		private void GetCursorGeometry(ITextFrame frame, int position, int cursor_offset, Cursors.FitterCursor cursor, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y, ref double y1, ref double y2, double space_after)
 		{
 			//	Pour éviter de redemander à chaque fois au geometry renderer de produire
 			//	les informations de position des caractères, on utilise un cache ici :
@@ -1074,24 +1099,34 @@ restart_paragraph_layout:
 			if ((this.geometry_cache_version.HasAnythingChanged) ||
 				(this.geometry_cache_start != position))
 			{
-				int     length = elements[i].Length;
-				ulong[] text   = new ulong[length];
+				Internal.GeometryRenderer renderer = this.GenerateGeometryInformation (frame, position, cursor, elements, i, space_after);
+				
+				int n = renderer.ElementCount;
+				
+				if ((n > 1) &&
+					(elements[i].IsTabulation) &&
+					(elements[i].IsNewLine == false))
+				{
+					//	La tranche de texte se termine par une marque de tabulation.
+					//	On doit mettre à jour sa largeur en déterminant où commence
+					//	la ligne suivante :
+					
+					System.Diagnostics.Debug.Assert (renderer[n-2].Unicode == Unicode.Code.HorizontalTab);
+					System.Diagnostics.Debug.Assert (renderer[n-1].Unicode == Unicode.Code.Null);
+					System.Diagnostics.Debug.Assert (i+1 < elements.Length);
+					
+					int length = elements[i].Length;
+					int next_pos = position + length;
+					int next_i   = i + 1;
+					
+					Internal.GeometryRenderer next = this.GenerateGeometryInformation (frame, next_pos, cursor, elements, next_i, space_after);
+					
+					System.Diagnostics.Debug.Assert (next.HasTabBeforeText);
+					
+					renderer.DefineTab (next.TabOrigin, next.TabStop);
+				}
 				
 				this.geometry_cache_version.Update ();
-				
-				this.story.ReadText (position, length, text);
-				
-				//	Analyse le layout précis en réalisant un rendu du texte avec
-				//	GeometryRenderer, lequel enregistre les positions de tous les
-				//	caractères traités :
-				
-				Layout.Context            layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
-				Internal.GeometryRenderer renderer = new Internal.GeometryRenderer ();
-				
-				layout.DisableFontBaselineOffset ();
-				layout.DisableSimpleRendering ();
-				
-				this.RenderElement (renderer, frame, elements, i, layout, space_after);
 				
 				this.geometry_cache_renderer = renderer;
 				this.geometry_cache_start    = position;
@@ -1124,7 +1159,7 @@ restart_paragraph_layout:
 		}
 		
 		
-		private void RenderElement(ITextRenderer renderer, ITextFrame frame, Cursors.FitterCursor.Element[] elements, int i, Layout.Context layout, double space_after)
+		private void RenderElement(ITextRenderer renderer, ITextFrame frame, Cursors.FitterCursor cursor, Cursors.FitterCursor.Element[] elements, int i, Layout.Context layout, double space_after)
 		{
 			int last_i = elements.Length - 1;
 			int index  = elements[i].FrameIndex;
@@ -1174,6 +1209,26 @@ restart_paragraph_layout:
 					//	sur la géométrie de la ligne. On les initialise à cet effet :
 					
 					layout.DefineLineGeometry (oy, y1, y2, asc, desc);
+					
+					if (is_tab)
+					{
+						double tab_origin = 0;
+						double tab_stop   = elements[i].LineStartX;
+						
+						if (elements[i-1].IsNewLine)
+						{
+							tab_origin = elements[i].LineOriginX;
+						}
+						else
+						{
+							tab_origin = elements[i-1].LineStartX + elements[i-1].LineWidth;
+						}
+						
+						System.Diagnostics.Debug.WriteLine (string.Format ("Tab from {0:0.0} to {1:0.0}", tab_origin, tab_stop));
+						
+						renderer.RenderTab (layout, tab_origin, oy, tab_stop);
+					}
+					
 					layout.RenderLine (renderer, profile, length, ox, oy, width, i, is_tab, is_last);
 				}
 				else

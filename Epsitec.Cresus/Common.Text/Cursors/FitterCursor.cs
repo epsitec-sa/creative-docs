@@ -312,6 +312,18 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
+			public double						LineOriginX
+			{
+				get
+				{
+					return this.line_origin_x;
+				}
+				set
+				{
+					this.line_origin_x = value;
+				}
+			}
+			
 			public double						LineBaseY
 			{
 				get
@@ -414,6 +426,7 @@ namespace Epsitec.Common.Text.Cursors
 			private Layout.StretchProfile		profile;
 			private int							frame_index;
 			private double						line_start_x;
+			private double						line_origin_x;
 			private double						line_base_y;
 			private double						line_y1;
 			private double						line_y2;

@@ -776,6 +776,7 @@ advance_next:
 		}
 		
 		
+		#region FitScratch Structure
 		private struct FitScratch
 		{
 			public void RecordAscender(double value)
@@ -835,5 +836,6 @@ advance_next:
 			public double						FontBaseline;
 			public double						FontAdvance;
 		}
+		#endregion
 	}
 }

@@ -993,7 +993,11 @@ namespace Epsitec.Common.Document.Objects
 					
 					foreach (Text.TextNavigator.TabInfo info in infos)
 					{
-						buffer.AppendFormat (" {0}->{1} p={2:0.0} m={3:0.0}", info.Tag, info.Status, list.GetTabPositionInPoints(list[info.Tag]), list.GetTabDisposition(list[info.Tag]));
+						string tag = info.Tag;
+						Text.Properties.TabProperty tab = list[tag];
+						TabStatus tabStatus = info.Status;
+						TabClass  tabClass = list.GetTabClass(tab);
+						buffer.AppendFormat (" {0}->{1}/{2} p={3:0.0} m={4:0.0}", tag, tabStatus, tabClass, list.GetTabPositionInPoints(tab), list.GetTabDisposition(tab));
 					}
 					
 					System.Diagnostics.Debug.WriteLine(buffer.ToString());
@@ -1535,6 +1539,15 @@ namespace Epsitec.Common.Document.Objects
 			context.DisableSimpleRendering();
 		}
 		
+		public void RenderTab(Text.Layout.Context layout, double ox, double oy, double tab_x)
+		{
+			if ( this.graphics == null )  return;
+			if ( this.edited == false )  return;
+			
+			this.graphics.AddLine(ox, oy, tab_x, oy);
+			this.graphics.RenderSolid(Drawing.Color.FromBrightness(0.6));
+		}
+			
 		public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
 		{
 			if ( this.internalOperation == InternalOperation.Painting )

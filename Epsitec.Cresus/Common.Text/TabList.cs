@@ -54,7 +54,7 @@ namespace Epsitec.Common.Text
 		{
 			if (tag == null)
 			{
-				tag = this.GenerateUniqueName ();
+				tag = this.GetAutoTagName ();
 			}
 			
 			Properties.TabProperty tab = new Properties.TabProperty (tag);
@@ -158,6 +158,34 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		public string GetAutoTagName()
+		{
+			return this.GenerateUniqueName (TabList.AutoTagPrefix);
+		}
+		
+		public string GetSharedTagName()
+		{
+			return this.GenerateUniqueName (TabList.SharedTagPrefix);
+		}
+		
+		
+		public TabClass GetTabClass(Properties.TabProperty tab)
+		{
+			string tag = tab.TabTag;
+			
+			if ((tag != null) &&
+				(tag.Length > 3))
+			{
+				switch (tag.Substring (0, 3))
+				{
+					case "#A#":	return TabClass.Auto;
+					case "#S#":	return TabClass.Shared;
+				}
+			}
+			
+			return TabClass.Unknown;
+		}
 		
 		internal void Serialize(System.Text.StringBuilder buffer)
 		{
@@ -331,11 +359,11 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
-		private string GenerateUniqueName()
+		private string GenerateUniqueName(string prefix)
 		{
 			lock (this)
 			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "#ID#{0}", this.unique_id++);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}{1}", prefix, this.unique_id++);
 			}
 		}
 		
@@ -374,5 +402,8 @@ namespace Epsitec.Common.Text
 		
 		private System.Collections.Hashtable	tab_hash;
 		private long							unique_id;
+		
+		private const string					AutoTagPrefix = "#A#";
+		private const string					SharedTagPrefix = "#S#";
 	}
 }
