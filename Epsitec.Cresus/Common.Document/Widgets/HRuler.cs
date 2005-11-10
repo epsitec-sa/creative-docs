@@ -465,6 +465,8 @@ namespace Epsitec.Common.Document.Widgets
 				this.draggingOffset = initial - pos.X;
 			}
 			this.draggingTabToDelete = -1;
+			this.draggingFirstMove = true;
+			this.draggingTabTag = null;
 		}
 
 		// Déplace une poignée.
@@ -498,6 +500,8 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.SetHandleHorizontalPos(handle, pos);
 
+			this.draggingFirstMove = false;
+			
 			pos.X = this.GetHandleHorizontalPos(handle);
 			pos = this.document.Modifier.ActiveViewer.ScreenToInternal(pos);
 			this.document.Modifier.ActiveViewer.MarkerVertical = (this.draggingTabToDelete == -1) ? pos.X : double.NaN;
@@ -515,8 +519,11 @@ namespace Epsitec.Common.Document.Widgets
 				Rectangle rect = this.Client.Bounds;
 				if ( pos.Y < rect.Bottom || pos.Y > rect.Top )  // hors de la règle ?
 				{
-					this.editObject.DeleteTextTab(handle-HRuler.HandleFirstTab);
+					this.editObject.DeleteTextTab(this.draggingTabTag);
 				}
+				
+				this.draggingTabTag = null;
+				this.draggingTabToDelete = -1;
 			}
 		}
 
@@ -595,13 +602,19 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					double tabPos;
 					TextTabType type;
-					this.editObject.GetTextTab(handle, out tabPos, out type);
-
+					if ( this.draggingTabTag == null )
+					{
+						this.editObject.GetTextTabTag(handle, out this.draggingTabTag);
+					}
+					
+					this.editObject.GetTextTab(this.draggingTabTag, out tabPos, out type);
+					
 					tabPos = this.ScreenToDocument(pos.X);
 					tabPos = tabPos - bbox.Left;
 					tabPos = this.SnapGrid(tabPos);
 					tabPos = System.Math.Max(tabPos, 0);
-					this.editObject.SetTextTab(handle, tabPos, type);
+					
+					this.editObject.SetTextTab(ref this.draggingTabTag, this.draggingFirstMove, tabPos, type);
 				}
 			}
 		}
@@ -712,5 +725,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected Drawing.TextTabType		tabToCreate = Drawing.TextTabType.Right;
 		protected double					draggingOffset = 0.0;
 		protected int						draggingTabToDelete = -1;
+		protected bool						draggingFirstMove = false;
+		protected string					draggingTabTag = null;
 	}
 }

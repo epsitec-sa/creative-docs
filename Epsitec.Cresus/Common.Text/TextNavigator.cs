@@ -838,6 +838,40 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public bool RenameTab(string old_tag, string new_tag)
+		{
+			if (old_tag != new_tag)
+			{
+				int[] pos = this.FindTextTabPositions (old_tag);
+				
+				if (pos.Length > 0)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Rename tab from {0} to {1}", old_tag, new_tag));
+					using (this.story.OpletQueue.BeginAction ())
+					{
+						//	Remplace les propriétés TabProperty des divers TAB
+						//	du texte par une nouvelle avec le nouveau nom :
+						
+						Property[] tab_rename  = new Property[1];
+						Property[] tabs_change = new Property[1];
+						
+						tab_rename[0]  = this.TextContext.TabList[new_tag];
+						tabs_change[0] = new Properties.TabsProperty (string.Concat ("-", old_tag), new_tag);
+						
+						for (int i = 0; i < pos.Length; i++)
+						{
+							this.SetTextProperties (pos[i], 1, Properties.ApplyMode.Set, tab_rename);
+							this.SetParagraphProperties (pos[i], Properties.ApplyMode.Combine, tabs_change);
+						}
+						
+						this.story.OpletQueue.ValidateAction ();
+					}
+				}
+			}
+			
+			return false;
+		}
+		
 		public void RemoveTab(string tag)
 		{
 			string[] tags = this.GetParagraphTabTags ();
@@ -857,6 +891,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
 		private Properties.TabsProperty GetTabsProperty(int pos)
 		{
 			this.story.SetCursorPosition (this.temp_cursor, pos);
@@ -875,8 +910,12 @@ namespace Epsitec.Common.Text
 			return null;
 		}
 		
+		
 		private void FindTextTabTags(System.Collections.ArrayList list, int pos)
 		{
+			//	Trouve les tags utilisés par des tabulateurs dans le texte
+			//	du paragraphe :
+			
 			int start;
 			int end;
 			
@@ -906,6 +945,84 @@ namespace Epsitec.Common.Text
 						if (list.Contains (property.TabTag) == false)
 						{
 							list.Add (property.TabTag);
+						}
+					}
+				}
+			}
+		}
+		
+		
+		private int[] FindTextTabPositions(string tag)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			int length = 0;
+			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				foreach (Range range in ranges)
+				{
+					int start = range.Start;
+					int end   = range.End;
+					int pos   = start;
+					
+					length += end - start;
+					
+					while (pos < end)
+					{
+						this.FindTextTabPositions (list, pos, tag);
+						
+						pos = this.FindNextParagraphStart (pos);
+					}
+				}
+			}
+			
+			if (length == 0)
+			{
+				this.FindTextTabPositions (list, this.CursorPosition, tag);
+			}
+			
+			return (int[]) list.ToArray (typeof (int));
+		}
+		
+		private void  FindTextTabPositions(System.Collections.ArrayList list, int pos, string tag)
+		{
+			//	Trouve la position des caractères TAB dand le texte du
+			//	paragraphe qui correspondent à la marque de tabulation
+			//	cherchée :
+			
+			int start;
+			int end;
+			
+			Internal.Navigator.GetParagraphPositions (this.story, pos, out start, out end);
+			
+			int length = end - start;
+			
+			if (length > 0)
+			{
+				ulong[] text = new ulong[length];
+				this.story.ReadText (start, length, text);
+				
+				for (int i = 0; i < length; i++)
+				{
+					if (Unicode.Bits.GetUnicodeCode (text[i]) == Unicode.Code.HorizontalTab)
+					{
+						//	Trouvé un tabulateur. Détermine le tag correspondant en
+						//	analysant la propriété attachée :
+						
+						Properties.TabProperty property;
+						
+						this.TextContext.GetTab (text[i], out property);
+						
+						System.Diagnostics.Debug.Assert (property != null);
+						System.Diagnostics.Debug.Assert (property.TabTag != null);
+						
+						if (property.TabTag == tag)
+						{
+							list.Add (start + i);
 						}
 					}
 				}
@@ -1117,7 +1234,7 @@ namespace Epsitec.Common.Text
 							
 							while (pos < positions[range.EndIndex])
 							{
-								this.SetParagraphMetaProperties (pos, meta_properties, mode);
+								this.SetParagraphMetaProperties (pos, mode, meta_properties);
 								pos = this.FindNextParagraphStart (pos);
 								
 								//	Comme l'application d'un style de paragraphe avec manager peut
@@ -1129,7 +1246,7 @@ namespace Epsitec.Common.Text
 						}
 						else
 						{
-							this.SetMetaProperties (start, range.Length, meta_properties, mode);
+							this.SetMetaProperties (start, range.Length, mode, meta_properties);
 						}
 					}
 					
@@ -1143,7 +1260,7 @@ namespace Epsitec.Common.Text
 			{
 				int pos = this.story.GetCursorPosition (this.cursor);
 			
-				this.SetParagraphMetaProperties (pos, meta_properties, mode);
+				this.SetParagraphMetaProperties (pos, mode, meta_properties);
 			}
 			
 			
@@ -1246,7 +1363,7 @@ namespace Epsitec.Common.Text
 						int pos    = range.Start;
 						int length = range.Length;
 					
-						this.SetTextProperties (pos, length, text_properties, mode);
+						this.SetTextProperties (pos, length, mode, text_properties);
 					}
 					
 					this.story.OpletQueue.ValidateAction ();
@@ -2346,21 +2463,21 @@ namespace Epsitec.Common.Text
 			Internal.Navigator.SetCharacterStyles (this.story, this.temp_cursor, length, styles);
 		}
 		
-		private void SetTextProperties(int pos, int length, Property[] properties, Properties.ApplyMode mode)
+		private void SetTextProperties(int pos, int length, Properties.ApplyMode mode, Property[] properties)
 		{
 			this.story.SetCursorPosition (this.temp_cursor, pos);
 			
 			Internal.Navigator.SetTextProperties (this.story, this.temp_cursor, length, mode, properties);
 		}
 		
-		private void SetMetaProperties(int pos, int length, TextStyle[] meta_properties, Properties.ApplyMode mode)
+		private void SetMetaProperties(int pos, int length, Properties.ApplyMode mode, TextStyle[] meta_properties)
 		{
 			this.story.SetCursorPosition (this.temp_cursor, pos);
 			
 			Internal.Navigator.SetMetaProperties (this.story, this.temp_cursor, length, mode, meta_properties);
 		}
 		
-		private void SetParagraphMetaProperties(int pos, TextStyle[] meta_properties, Properties.ApplyMode mode)
+		private void SetParagraphMetaProperties(int pos, Properties.ApplyMode mode, TextStyle[] meta_properties)
 		{
 			this.story.SetCursorPosition (this.temp_cursor, pos);
 			

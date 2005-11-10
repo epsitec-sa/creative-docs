@@ -81,6 +81,19 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public Properties.TabProperty CreateOrGetAutoTab(double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		{
+			Properties.TabProperty find = this.FindAutoTab (position, units, disposition, docking_mark, position_mode, attribute);
+			
+			if (find == null)
+			{
+				find = this.NewTab (null, position, units, disposition, docking_mark, position_mode, attribute);
+			}
+			
+			return find;
+		}
+		
+		
 		public void RedefineTab(Properties.TabProperty tab, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
 		{
 			System.Diagnostics.Debug.Assert (tab != null);

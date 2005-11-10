@@ -884,41 +884,56 @@ namespace Epsitec.Common.Document.Objects
 			return count;
 		}
 
-		// Supprime un tabulateur du texte.
-		public override void DeleteTextTab(int rank)
+		// Trouve le nom du tabulateur d'après son rang.
+		public override void GetTextTabTag(int rank, out string tag)
 		{
 			string[] tags = this.textFlow.TextNavigator.GetAllTabTags();
-			string tabTag = tags[rank];
-			
-			this.metaNavigator.RemoveTab(tabTag);
-//-			this.HandleTabsChanged(null);  // TODO: devrait être inutile
+			tag = tags[rank];
+		}
+		
+		// Supprime un tabulateur du texte.
+		public override void DeleteTextTab(string tag)
+		{
+			this.metaNavigator.RemoveTab(tag);
 		}
 
 		// Modifie un tabulateur du texte.
-		public override void SetTextTab(int rank, double pos, TextTabType type)
+		public override void SetTextTab(ref string tag, bool firstChange, double pos, TextTabType type)
 		{
-			string[] tags = this.textFlow.TextNavigator.GetAllTabTags();
-			string tabTag = tags[rank];
-
 			Text.TabList list = this.document.TextContext.TabList;
-			Text.Properties.TabProperty tab = list.GetTabProperty(tabTag);
 			
 			double dispo = 0.0;
 			if ( type == TextTabType.Center )  dispo = 0.5;
 			if ( type == TextTabType.Left   )  dispo = 1.0;
-
-			list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute, null);
+			
+			if ( firstChange && Text.TabList.GetTabClass(tag) == Text.TabClass.Auto )
+			{
+				// Les tabulateurs "automatiques" ne sont pas liés à un style. Leur
+				// modification ne doit toucher que le paragraphe courant (ou la
+				// sélection en cours), c'est pourquoi on crée une copie avant de
+				// procéder à des modifications :
+				
+				Text.Properties.TabProperty oldTab = list.GetTabProperty(tag);
+				Text.Properties.TabProperty newTab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute, null);
+				
+				this.textFlow.TextNavigator.RenameTab(oldTab.TabTag, newTab.TabTag);
+				
+				tag = newTab.TabTag;
+			}
+			else
+			{
+				Text.Properties.TabProperty tab = list.GetTabProperty(tag);
+				list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute, null);
+			}
+			
 			this.HandleTabsChanged(null);  // TODO: devrait être inutile
 		}
 
 		// Donne un tabulateur du texte.
-		public override void GetTextTab(int rank, out double pos, out TextTabType type)
+		public override void GetTextTab(string tag, out double pos, out TextTabType type)
 		{
-			string[] tags = this.textFlow.TextNavigator.GetAllTabTags();
-			string tabTag = tags[rank];
-
 			Text.TabList list = this.document.TextContext.TabList;
-			Text.Properties.TabProperty tab = list.GetTabProperty(tabTag);
+			Text.Properties.TabProperty tab = list.GetTabProperty(tag);
 
 			pos = list.GetTabPosition(tab);
 
@@ -1023,7 +1038,9 @@ namespace Epsitec.Common.Document.Objects
 				{
 					double pos;
 					TextTabType type;
-					this.GetTextTab(i, out pos, out type);
+					string tag;
+					this.GetTextTabTag(i, out tag);
+					this.GetTextTab(tag, out pos, out type);
 					tabs[i].Pos = bbox.Left+pos;
 					tabs[i].Type = type;
 				}

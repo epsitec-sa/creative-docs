@@ -805,18 +805,24 @@ namespace Epsitec.Common.Document.Objects
 			return -1;
 		}
 
+		// Trouve le nom du tabulateur d'après son rang.
+		public virtual void GetTextTabTag(int rank, out string tag)
+		{
+			tag = null;
+		}
+
 		// Supprime un tabulateur du texte.
-		public virtual void DeleteTextTab(int rank)
+		public virtual void DeleteTextTab(string tag)
 		{
 		}
 
 		// Modifie un tabulateur du texte.
-		public virtual void SetTextTab(int rank, double pos, TextTabType type)
+		public virtual void SetTextTab(ref string tag, bool firstChange, double pos, TextTabType type)
 		{
 		}
 
 		// Donne un tabulateur du texte.
-		public virtual void GetTextTab(int rank, out double pos, out TextTabType type)
+		public virtual void GetTextTab(string tag, out double pos, out TextTabType type)
 		{
 			pos = 0;
 			type = TextTabType.None;

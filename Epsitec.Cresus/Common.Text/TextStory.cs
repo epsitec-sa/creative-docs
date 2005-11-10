@@ -422,7 +422,10 @@ namespace Epsitec.Common.Text
 				return length;
 			}
 			
-			this.DecrementUserCount (old_text, length);
+			//	Met à jour les compteurs pour le texte de remplacement. Le texte
+			//	ancien ne doit pas être "décrémenté" pour le moment, car il va
+			//	être mémorisé dans l'oplet ci-après :
+			
 			this.IncrementUserCount (new_text, length);
 			
 			int position = this.text.GetCursorPosition (cursor.CursorId) + offset;
