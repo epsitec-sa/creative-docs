@@ -4612,13 +4612,23 @@ namespace Epsitec.Common.Document
 		// Force une valeur de zoom.
 		public void ZoomValue(double value)
 		{
+			this.ZoomValue(value, true);
+		}
+
+		// Force une valeur de zoom.
+		public void ZoomValue(double value, bool memorize)
+		{
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
 			value = System.Math.Max(value, this.ZoomMin);
 			value = System.Math.Min(value, this.ZoomMax);
 			if ( value == context.Zoom )  return;
 
-			this.ZoomMemorize();
+			if ( memorize )
+			{
+				this.ZoomMemorize();
+			}
+
 			context.ZoomAndCenter(value, context.Center);
 		}
 

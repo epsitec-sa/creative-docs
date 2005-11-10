@@ -42,7 +42,9 @@
 	<data name="Status.Objects.Select">Sélection</data>
 	<data name="Status.Objects.Level">Niveau {0}</data>
 	<data name="Status.Modif.Default">Page: {0}  Calque: {1}</data>
-	<data name="Status.Zoom.Value">Zoom {0}%</data>
+	<data name="Status.Zoom.Value">{0}%</data>
+	<data name="Status.Zoom.Menu">Cliquez pour choisir le zoom dans un menu</data>
+	<data name="Status.Zoom.Slider">Choix du zoom</data>
 
 	<data name="Dialog.Button.Close">Fermer</data>
 	<data name="Dialog.Button.OK">D'accord</data>

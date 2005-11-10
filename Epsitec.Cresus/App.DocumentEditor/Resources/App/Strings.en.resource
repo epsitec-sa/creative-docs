@@ -42,7 +42,9 @@
 	<data name="Status.Objects.Select">Selection</data>
 	<data name="Status.Objects.Level">Level {0}</data>
 	<data name="Status.Modif.Default">Page: {0}  Layer: {1}</data>
-	<data name="Status.Zoom.Value">Zoom {0}%</data>
+	<data name="Status.Zoom.Value">{0}%</data>
+	<data name="Status.Zoom.Menu">@@Cliquez pour choisir le zoom dans un menu</data>
+	<data name="Status.Zoom.Slider">@@Choix du zoom</data>
 
 	<data name="Dialog.Button.Close">Close</data>
 	<data name="Dialog.Button.OK">OK</data>

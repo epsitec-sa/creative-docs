@@ -246,6 +246,28 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.00);
 					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.20);
 					break;
+
+				case GlyphShape.Plus:
+					path.MoveTo(center.X-rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo(center.X-rect.Width*0.07, center.Y+rect.Height*0.07);
+					path.LineTo(center.X-rect.Width*0.07, center.Y+rect.Height*0.29);
+					path.LineTo(center.X+rect.Width*0.07, center.Y+rect.Height*0.29);
+					path.LineTo(center.X+rect.Width*0.07, center.Y+rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.29, center.Y-rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.07, center.Y-rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.07, center.Y-rect.Height*0.29);
+					path.LineTo(center.X-rect.Width*0.07, center.Y-rect.Height*0.29);
+					path.LineTo(center.X-rect.Width*0.07, center.Y-rect.Height*0.07);
+					path.LineTo(center.X-rect.Width*0.29, center.Y-rect.Height*0.07);
+					break;
+
+				case GlyphShape.Minus:
+					path.MoveTo(center.X-rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.29, center.Y-rect.Height*0.07);
+					path.LineTo(center.X-rect.Width*0.29, center.Y-rect.Height*0.07);
+					break;
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
@@ -459,6 +481,19 @@ namespace Epsitec.Common.Widgets.Adorner
 					  style == ButtonStyle.UpDown       ||
 					  style == ButtonStyle.Icon         ||
 					  style == ButtonStyle.HeaderSlider )
+			{
+				Drawing.Path path = this.PathRoundRectangle(rect, 0.5, 0);
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(this.colorFocus);
+
+				Drawing.Rectangle rInside = rect;
+				rInside.Right  -= 1;
+				rInside.Bottom += 1;
+				Drawing.Path pInside = this.PathRoundRectangle(rInside, 0, 0);
+				graphics.Rasterizer.AddOutline(pInside, 1);
+				graphics.RenderSolid(this.colorControlLightLight);
+			}
+			else if ( style == ButtonStyle.Slider )
 			{
 				Drawing.Path path = this.PathRoundRectangle(rect, 0.5, 0);
 				graphics.Rasterizer.AddSurface(path);
@@ -738,6 +773,139 @@ namespace Epsitec.Common.Widgets.Adorner
 											Drawing.Rectangle tabRect,
 											Widgets.WidgetState state,
 											Widgets.Direction dir)
+		{
+		}
+
+		// Dessine le fond d'un potentiomètre linéaire.
+		public void PaintSliderBackground(Drawing.Graphics graphics,
+										  Drawing.Rectangle frameRect,
+										  Drawing.Rectangle thumbRect,
+										  Drawing.Rectangle tabRect,
+										  Widgets.WidgetState state,
+										  Widgets.Direction dir)
+		{
+			if ( dir == Widgets.Direction.Left )
+			{
+				Drawing.Point p1 = new Drawing.Point(frameRect.Left +frameRect.Height*1.2, frameRect.Center.Y);
+				Drawing.Point p2 = new Drawing.Point(frameRect.Right-frameRect.Height*1.2, frameRect.Center.Y);
+				graphics.Align(ref p1);
+				graphics.Align(ref p2);
+
+				graphics.AddLine(p1.X+0.5, p1.Y+0.5, p2.X-0.5, p2.Y+0.5);
+				graphics.RenderSolid(this.colorControlDark);
+				graphics.AddLine(p1.X+0.5, p1.Y-0.5, p2.X-0.5, p2.Y-0.5);
+				graphics.RenderSolid(this.colorControlLightLight);
+
+				if ( !tabRect.IsSurfaceZero && (state&WidgetState.Engaged) != 0 )
+				{
+					graphics.AddLine(tabRect.Left, p1.Y+0.5, tabRect.Right, p2.Y+0.5);
+					graphics.AddLine(tabRect.Left, p1.Y-0.5, tabRect.Right, p2.Y-0.5);
+					graphics.RenderSolid(this.colorCaption);
+				}
+			}
+			else
+			{
+				Drawing.Point p1 = new Drawing.Point(frameRect.Center.X, frameRect.Bottom+frameRect.Width*1.2);
+				Drawing.Point p2 = new Drawing.Point(frameRect.Center.X, frameRect.Top   -frameRect.Width*1.2);
+				graphics.Align(ref p1);
+				graphics.Align(ref p2);
+
+				graphics.AddLine(p1.X-0.5, p1.Y+0.5, p2.X-0.5, p2.Y-0.5);
+				graphics.RenderSolid(this.colorControlDark);
+				graphics.AddLine(p1.X+0.5, p1.Y+0.5, p2.X+0.5, p2.Y-0.5);
+				graphics.RenderSolid(this.colorControlLightLight);
+
+				if ( !tabRect.IsSurfaceZero && (state&WidgetState.Engaged) != 0 )
+				{
+					graphics.AddLine(p1.X-0.5, tabRect.Bottom, p2.X-0.5, tabRect.Top);
+					graphics.AddLine(p1.X+0.5, tabRect.Bottom, p2.X+0.5, tabRect.Top);
+					graphics.RenderSolid(this.colorCaption);
+				}
+			}
+		}
+
+		// Dessine la cabine d'un potentiomètre linéaire.
+		public void PaintSliderHandle(Drawing.Graphics graphics,
+									  Drawing.Rectangle thumbRect,
+									  Drawing.Rectangle tabRect,
+									  Widgets.WidgetState state,
+									  Widgets.Direction dir)
+		{
+			if ( dir == Widgets.Direction.Left )
+			{
+				thumbRect.Deflate(0.5);
+				double d = thumbRect.Width/2;
+				double r = 0.5;
+				Drawing.Path path = new Drawing.Path();
+				path.MoveTo(thumbRect.Center.X, thumbRect.Bottom);
+				path.LineTo(thumbRect.Left, thumbRect.Bottom+d);
+				path.LineTo(thumbRect.Left, thumbRect.Top-r);
+				path.LineTo(thumbRect.Left+r, thumbRect.Top);
+				path.LineTo(thumbRect.Right-r, thumbRect.Top);
+				path.LineTo(thumbRect.Right, thumbRect.Top-r);
+				path.LineTo(thumbRect.Right, thumbRect.Bottom+d);
+				path.Close();
+
+				graphics.Rasterizer.AddSurface(path);
+				if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
+					 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
+				{
+					graphics.RenderSolid(this.colorHilite);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlLight);
+				}
+
+				graphics.Rasterizer.AddOutline(path, 1);
+				graphics.RenderSolid(this.colorControlDarkDark);
+
+				graphics.AddLine(thumbRect.Center.X, thumbRect.Bottom+d+1, thumbRect.Center.X, thumbRect.Top-d);
+				graphics.RenderSolid(this.colorControlDark);
+				graphics.AddLine(thumbRect.Center.X+1, thumbRect.Bottom+d+1, thumbRect.Center.X+1, thumbRect.Top-d);
+				graphics.RenderSolid(this.colorControlLightLight);
+			}
+			else
+			{
+				thumbRect.Deflate(0.5);
+				double d = thumbRect.Height/2;
+				double r = 0.5;
+				Drawing.Path path = new Drawing.Path();
+				path.MoveTo(thumbRect.Right, thumbRect.Center.Y);
+				path.LineTo(thumbRect.Right-d, thumbRect.Bottom);
+				path.LineTo(thumbRect.Left+r, thumbRect.Bottom);
+				path.LineTo(thumbRect.Left, thumbRect.Bottom+r);
+				path.LineTo(thumbRect.Left, thumbRect.Top-r);
+				path.LineTo(thumbRect.Left+r, thumbRect.Top);
+				path.LineTo(thumbRect.Right-d, thumbRect.Top);
+				path.Close();
+
+				graphics.Rasterizer.AddSurface(path);
+				if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
+					 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
+				{
+					graphics.RenderSolid(this.colorHilite);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlLight);
+				}
+
+				graphics.Rasterizer.AddOutline(path, 1);
+				graphics.RenderSolid(this.colorControlDarkDark);
+
+				graphics.AddLine(thumbRect.Left+d, thumbRect.Center.Y, thumbRect.Right-d-1, thumbRect.Center.Y);
+				graphics.RenderSolid(this.colorControlDark);
+				graphics.AddLine(thumbRect.Left+d, thumbRect.Center.Y-1, thumbRect.Right-d-1, thumbRect.Center.Y-1);
+				graphics.RenderSolid(this.colorControlLightLight);
+			}
+		}
+
+		public void PaintSliderForeground(Drawing.Graphics graphics,
+										  Drawing.Rectangle thumbRect,
+										  Drawing.Rectangle tabRect,
+										  Widgets.WidgetState state,
+										  Widgets.Direction dir)
 		{
 		}
 

@@ -149,6 +149,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "AbstractSlider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AbstractTextField.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -290,6 +295,11 @@
                 />
                 <File
                     RelPath = "HScroller.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "HSlider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -570,6 +580,11 @@
                 />
                 <File
                     RelPath = "VScroller.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "VSlider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

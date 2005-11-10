@@ -81,6 +81,7 @@ namespace Epsitec.Common.Document
 			this.surfaceRotationAngle = 0.0;
 			this.uniqueObjectId = 0;
 			this.uniqueAggregateId = 0;
+			this.fontWrapper = new Text.Wrappers.FontWrapper();
 
 			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
 
@@ -169,6 +170,12 @@ namespace Epsitec.Common.Document
 				}
 				return this.textContext;
 			}
+		}
+
+		// Wrapper pour la fonte.
+		public Text.Wrappers.FontWrapper FontWrapper
+		{
+			get { return this.fontWrapper; }
 		}
 
 		// Règle horizontale.
@@ -1872,5 +1879,6 @@ namespace Epsitec.Common.Document
 		protected Text.TextContext				textContext;
 		protected Widgets.HRuler				hRuler;
 		protected Widgets.VRuler				vRuler;
+		protected Text.Wrappers.FontWrapper		fontWrapper;
 	}
 }

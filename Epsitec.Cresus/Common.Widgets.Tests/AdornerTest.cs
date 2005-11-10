@@ -63,7 +63,7 @@ namespace Epsitec.Common.Widgets
 
 			Window window = new Window();
 			
-			window.ClientSize = new Size(600, 340);
+			window.ClientSize = new Size(700, 340);
 			window.Text = "CheckAdornerWidgets";
 			window.Name = "CheckAdornerWidgets";
 
@@ -319,7 +319,7 @@ namespace Epsitec.Common.Widgets
 			link.Width = 120;
 			link.Text = @"Visitez notre <a href=""http://www.epsitec.ch"">site web</a> !";
 			link.Anchor = AnchorStyles.BottomRight;
-			link.AnchorMargins = new Margins(0, 600 - 360 - 120, 0, 36);
+			link.AnchorMargins = new Margins(0, 600-360-120+100, 0, 36);
 			link.HypertextClicked += new MessageEventHandler(link_HypertextClicked);
 			window.Root.Children.Add(link);
 			
@@ -414,6 +414,28 @@ namespace Epsitec.Common.Widgets
 			scrollh.AnchorMargins = new Margins(140, 0, 0, 70);
 			window.Root.Children.Add(scrollh);
 			tip.SetToolTip(scrollh, "Ascenseur horizontal");
+
+			VSlider slidev = new VSlider();
+			slidev.Size = new Size(16, 100);
+			slidev.MaxValue = 10;
+			slidev.Value = 4;
+			slidev.SmallChange = 1;
+			slidev.LargeChange = 2;
+			slidev.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
+			slidev.AnchorMargins = new Margins(0, 50, 100, 140);
+			window.Root.Children.Add(slidev);
+			tip.SetToolTip(slidev, "Slider vertical");
+
+			HSlider slideh = new HSlider();
+			slideh.Size = new Size(100, 16);
+			slideh.MaxValue = 10;
+			slideh.Value = 4;
+			slideh.SmallChange = 1;
+			slideh.LargeChange = 2;
+			slideh.Anchor = AnchorStyles.BottomRight;
+			slideh.AnchorMargins = new Margins(0, 10, 0, 100);
+			window.Root.Children.Add(slideh);
+			tip.SetToolTip(slideh, "Slider horizontal");
 
 			TextFieldExList combo = new TextFieldExList();
 			combo.PlaceHolder = "<b>&lt;autre&gt;</b>";
@@ -511,7 +533,7 @@ namespace Epsitec.Common.Widgets
 //			tab.Location = new Point(280, 70);
 //			tab.Size = new Size(300, 180);
 			tab.Anchor = AnchorStyles.All;
-			tab.AnchorMargins = new Margins(280, 600-280-300, 340-180-70, 70);
+			tab.AnchorMargins = new Margins(280, 600-280-300+100, 340-180-70, 70);
 			tab.HasMenuButton = true;
 			tab.HasCloseButton = true;
 			tab.TabIndex = 15;

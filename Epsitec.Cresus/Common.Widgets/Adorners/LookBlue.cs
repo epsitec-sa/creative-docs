@@ -233,6 +233,28 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.00);
 					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.20);
 					break;
+
+				case GlyphShape.Plus:
+					path.MoveTo(center.X-rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo(center.X-rect.Width*0.07, center.Y+rect.Height*0.07);
+					path.LineTo(center.X-rect.Width*0.07, center.Y+rect.Height*0.29);
+					path.LineTo(center.X+rect.Width*0.07, center.Y+rect.Height*0.29);
+					path.LineTo(center.X+rect.Width*0.07, center.Y+rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.29, center.Y-rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.07, center.Y-rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.07, center.Y-rect.Height*0.29);
+					path.LineTo(center.X-rect.Width*0.07, center.Y-rect.Height*0.29);
+					path.LineTo(center.X-rect.Width*0.07, center.Y-rect.Height*0.07);
+					path.LineTo(center.X-rect.Width*0.29, center.Y-rect.Height*0.07);
+					break;
+
+				case GlyphShape.Minus:
+					path.MoveTo(center.X-rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo(center.X+rect.Width*0.29, center.Y-rect.Height*0.07);
+					path.LineTo(center.X-rect.Width*0.29, center.Y-rect.Height*0.07);
+					break;
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
@@ -466,6 +488,43 @@ namespace Epsitec.Common.Widgets.Adorner
 					  style == ButtonStyle.UpDown       ||
 					  style == ButtonStyle.Icon         ||
 					  style == ButtonStyle.HeaderSlider )
+			{
+				double radius = (style == ButtonStyle.UpDown) ? -1 : 0;
+				Drawing.Path path = this.PathRoundRectangle(rect, radius);
+			
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(this.colorControl);
+			
+				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				{
+					Drawing.Rectangle rInside = rect;
+					rInside.Deflate(1.5);
+					Drawing.Path pInside = this.PathRoundRectangle(rInside, radius);
+					graphics.Rasterizer.AddOutline(pInside, 2);
+					graphics.RenderSolid(this.colorHilite);
+				}
+
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					Drawing.Rectangle lightRect = rect;
+					lightRect.Left += 1;
+					lightRect.Top  -= 1;
+					Drawing.Path lightPath = this.PathRoundRectangle(lightRect, radius);
+					graphics.Rasterizer.AddOutline(lightPath, 1);
+					graphics.RenderSolid(this.colorControlLightLight);
+				}
+
+				graphics.Rasterizer.AddOutline(path, 1);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorBlack);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlDark);
+				}
+			}
+			else if ( style == ButtonStyle.Slider )
 			{
 				double radius = (style == ButtonStyle.UpDown) ? -1 : 0;
 				Drawing.Path path = this.PathRoundRectangle(rect, radius);
@@ -753,6 +812,74 @@ namespace Epsitec.Common.Widgets.Adorner
 											Drawing.Rectangle tabRect,
 											Widgets.WidgetState state,
 											Widgets.Direction dir)
+		{
+		}
+
+		// Dessine le fond d'un potentiomètre linéaire.
+		public void PaintSliderBackground(Drawing.Graphics graphics,
+										  Drawing.Rectangle frameRect,
+										  Drawing.Rectangle thumbRect,
+										  Drawing.Rectangle tabRect,
+										  Widgets.WidgetState state,
+										  Widgets.Direction dir)
+		{
+			bool enabled = ( (state&WidgetState.Enabled) != 0 );
+
+			if ( dir == Widgets.Direction.Left )
+			{
+				Drawing.Point p1 = new Drawing.Point(frameRect.Left +frameRect.Height*1.2, frameRect.Center.Y);
+				Drawing.Point p2 = new Drawing.Point(frameRect.Right-frameRect.Height*1.2, frameRect.Center.Y);
+				graphics.Align(ref p1);
+				graphics.Align(ref p2);
+
+				graphics.AddLine(p1.X+0.5, p1.Y+0.5, p2.X-0.5, p2.Y+0.5);
+				graphics.RenderSolid(this.colorControlDark);
+				graphics.AddLine(p1.X+0.5, p1.Y-0.5, p2.X-0.5, p2.Y-0.5);
+				graphics.RenderSolid(enabled ? this.colorControlLightLight : this.colorControlDark);
+
+				if ( !tabRect.IsSurfaceZero && (state&WidgetState.Engaged) != 0 )
+				{
+					graphics.AddLine(tabRect.Left, p1.Y+0.5, tabRect.Right, p2.Y+0.5);
+					graphics.AddLine(tabRect.Left, p1.Y-0.5, tabRect.Right, p2.Y-0.5);
+					graphics.RenderSolid(this.colorCaption);
+				}
+			}
+			else
+			{
+				Drawing.Point p1 = new Drawing.Point(frameRect.Center.X, frameRect.Bottom+frameRect.Width*1.2);
+				Drawing.Point p2 = new Drawing.Point(frameRect.Center.X, frameRect.Top   -frameRect.Width*1.2);
+				graphics.Align(ref p1);
+				graphics.Align(ref p2);
+
+				graphics.AddLine(p1.X-0.5, p1.Y+0.5, p2.X-0.5, p2.Y-0.5);
+				graphics.RenderSolid(this.colorControlDark);
+				graphics.AddLine(p1.X+0.5, p1.Y+0.5, p2.X+0.5, p2.Y-0.5);
+				graphics.RenderSolid(enabled ? this.colorControlLightLight : this.colorControlDark);
+
+				if ( !tabRect.IsSurfaceZero && (state&WidgetState.Engaged) != 0 )
+				{
+					graphics.AddLine(p1.X-0.5, tabRect.Bottom, p2.X-0.5, tabRect.Top);
+					graphics.AddLine(p1.X+0.5, tabRect.Bottom, p2.X+0.5, tabRect.Top);
+					graphics.RenderSolid(this.colorCaption);
+				}
+			}
+		}
+
+		// Dessine la cabine d'un potentiomètre linéaire.
+		public void PaintSliderHandle(Drawing.Graphics graphics,
+									  Drawing.Rectangle thumbRect,
+									  Drawing.Rectangle tabRect,
+									  Widgets.WidgetState state,
+									  Widgets.Direction dir)
+		{
+			this.PaintButtonBackground(graphics, thumbRect, state, dir, ButtonStyle.Scroller);
+		}
+
+		public void PaintSliderForeground(Drawing.Graphics graphics,
+										  Drawing.Rectangle thumbRect,
+										  Drawing.Rectangle tabRect,
+										  Widgets.WidgetState state,
+										  Widgets.Direction dir)
 		{
 		}
 

@@ -1244,7 +1244,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.UpdateTextRulers();
 
-			// Redessine tout, à cause de "poignées" du flux qui peuvent apparaître
+			// Redessine tout, à cause des "poignées" du flux qui peuvent apparaître
 			// ou disparaître.
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 		}

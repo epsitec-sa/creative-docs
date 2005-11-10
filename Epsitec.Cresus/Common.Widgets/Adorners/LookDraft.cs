@@ -187,6 +187,28 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+rect.Width*0.20*zoom, center.Y-rect.Height*0.00*zoom);
 					path.LineTo(center.X-rect.Width*0.10*zoom, center.Y-rect.Height*0.20*zoom);
 					break;
+
+				case GlyphShape.Plus:
+					path.MoveTo(center.X-rect.Width*0.29*zoom, center.Y+rect.Height*0.07*zoom);
+					path.LineTo(center.X-rect.Width*0.07*zoom, center.Y+rect.Height*0.07*zoom);
+					path.LineTo(center.X-rect.Width*0.07*zoom, center.Y+rect.Height*0.29*zoom);
+					path.LineTo(center.X+rect.Width*0.07*zoom, center.Y+rect.Height*0.29*zoom);
+					path.LineTo(center.X+rect.Width*0.07*zoom, center.Y+rect.Height*0.07*zoom);
+					path.LineTo(center.X+rect.Width*0.29*zoom, center.Y+rect.Height*0.07*zoom);
+					path.LineTo(center.X+rect.Width*0.29*zoom, center.Y-rect.Height*0.07*zoom);
+					path.LineTo(center.X+rect.Width*0.07*zoom, center.Y-rect.Height*0.07*zoom);
+					path.LineTo(center.X+rect.Width*0.07*zoom, center.Y-rect.Height*0.29*zoom);
+					path.LineTo(center.X-rect.Width*0.07*zoom, center.Y-rect.Height*0.29*zoom);
+					path.LineTo(center.X-rect.Width*0.07*zoom, center.Y-rect.Height*0.07*zoom);
+					path.LineTo(center.X-rect.Width*0.29*zoom, center.Y-rect.Height*0.07*zoom);
+					break;
+
+				case GlyphShape.Minus:
+					path.MoveTo(center.X-rect.Width*0.29*zoom, center.Y+rect.Height*0.07*zoom);
+					path.LineTo(center.X+rect.Width*0.29*zoom, center.Y+rect.Height*0.07*zoom);
+					path.LineTo(center.X+rect.Width*0.29*zoom, center.Y-rect.Height*0.07*zoom);
+					path.LineTo(center.X-rect.Width*0.29*zoom, center.Y-rect.Height*0.07*zoom);
+					break;
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
@@ -362,6 +384,28 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 			}
 			else if ( style == ButtonStyle.Scroller )
+			{
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rect, 42);
+					}
+					else if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 42);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 40);
+					}
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rect, 41);
+				}
+			}
+			else if ( style == ButtonStyle.Slider )
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
@@ -763,6 +807,88 @@ namespace Epsitec.Common.Widgets.Adorner
 											Drawing.Rectangle tabRect,
 											Widgets.WidgetState state,
 											Widgets.Direction dir)
+		{
+		}
+
+		// Dessine le fond d'un potentiomètre linéaire.
+		public void PaintSliderBackground(Drawing.Graphics graphics,
+										  Drawing.Rectangle frameRect,
+										  Drawing.Rectangle thumbRect,
+										  Drawing.Rectangle tabRect,
+										  Widgets.WidgetState state,
+										  Widgets.Direction dir)
+		{
+			if ( dir == Widgets.Direction.Left )
+			{
+				double m = frameRect.Height*1.2;
+				frameRect.Left  += m;
+				frameRect.Right -= m;
+				this.PaintSeparatorBackground(graphics, frameRect, state, Direction.Up, false);
+			}
+			else
+			{
+				double m = frameRect.Width*1.2;
+				frameRect.Bottom += m;
+				frameRect.Top    -= m;
+				this.PaintSeparatorBackground(graphics, frameRect, state, Direction.Right, false);
+			}
+		}
+
+		// Dessine la cabine d'un potentiomètre linéaire.
+		public void PaintSliderHandle(Drawing.Graphics graphics,
+									  Drawing.Rectangle thumbRect,
+									  Drawing.Rectangle tabRect,
+									  Widgets.WidgetState state,
+									  Widgets.Direction dir)
+		{
+			if ( dir == Direction.Left )
+			{
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintImageButton(graphics, thumbRect, 55);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, thumbRect, 53);
+				}
+
+				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				{
+					this.PaintImageButton(graphics, thumbRect, 54);
+				}
+				else if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				{
+					this.PaintImageButton(graphics, thumbRect, 54);
+				}
+			}
+
+			if ( dir == Direction.Up )
+			{
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintImageButton(graphics, thumbRect, 58);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, thumbRect, 50);
+				}
+
+				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				{
+					this.PaintImageButton(graphics, thumbRect, 56);
+				}
+				else if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				{
+					this.PaintImageButton(graphics, thumbRect, 56);
+				}
+			}
+		}
+
+		public void PaintSliderForeground(Drawing.Graphics graphics,
+										  Drawing.Rectangle thumbRect,
+										  Drawing.Rectangle tabRect,
+										  Widgets.WidgetState state,
+										  Widgets.Direction dir)
 		{
 		}
 

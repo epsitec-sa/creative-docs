@@ -295,7 +295,7 @@ namespace Epsitec.Common.Document.Ribbons
 				units = Common.Text.Properties.SizeUnits.None;
 			}
 
-			editObject.SetTextLeftMargins(leftFirst, leftBody, units);
+			editObject.SetTextLeftMargins(leftFirst, leftBody, units, true);  // DR: ajout mystérieux pour pouvoir compiler
 		}
 
 		protected void InvertStyle(Objects.Abstract editObject, string name, string exclude)

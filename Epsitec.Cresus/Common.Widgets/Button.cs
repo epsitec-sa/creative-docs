@@ -6,6 +6,7 @@ namespace Epsitec.Common.Widgets
 		Flat,							// pas de cadre, ni de relief
 		Normal,							// bouton normal
 		Scroller,						// bouton pour Scroller
+		Slider,							// bouton pour Slider
 		Combo,							// bouton pour TextFieldCombo
 		UpDown,							// bouton pour TextFieldUpDown
 		ExListLeft,						// bouton pour TextFieldExList, à gauche

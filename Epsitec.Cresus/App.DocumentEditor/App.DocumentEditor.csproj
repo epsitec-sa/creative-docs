@@ -611,6 +611,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\DeselectAll2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\DimensionAuto.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -783,6 +787,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\HideCancel2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\HideHalf.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -791,7 +799,15 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\HideRest2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\HideSel.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\HideSel2.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -1359,7 +1375,15 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\SelectAll2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\SelectInvert.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SelectInvert2.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -1615,7 +1639,15 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\ZoomDefault2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ZoomMin.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ZoomMin2.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -1627,7 +1659,15 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\ZoomPage2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ZoomPageWidth.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ZoomPageWidth2.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -1635,11 +1675,23 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\ZoomPrev2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ZoomSel.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\ZoomSel2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ZoomSelWidth.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ZoomSelWidth2.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

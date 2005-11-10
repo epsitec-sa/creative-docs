@@ -849,6 +849,7 @@
 	<data name="Action.ZoomPrev">Zoom précédent</data>
 	<data name="Action.ZoomSub">Réduction</data>
 	<data name="Action.ZoomAdd">Agrandissement</data>
+	<data name="Action.ZoomValue">Facteur de zoom</data>
 	<data name="Action.ZoomMenu">Choix du zoom</data>
 	
 	<data name="Action.ViewMain">Vue</data>

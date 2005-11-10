@@ -158,9 +158,12 @@ namespace Epsitec.Common.Types
 				//
 				//	Ceci permet de garantir que ToString() se comporte de manière prévisible.
 				
-				value *= this.digits_mul;
-				value  = System.Decimal.Truncate (value);
-				value *= this.digits_div;
+				if (this.resolution != 0)
+				{
+					value *= this.digits_mul;
+					value  = System.Decimal.Truncate (value);
+					value *= this.digits_div;
+				}
 				
 				return value;
 			}
@@ -209,9 +212,12 @@ namespace Epsitec.Common.Types
 				//
 				//	Ceci permet de garantir que ToString() se comporte de manière prévisible.
 				
-				value *= this.digits_mul;
-				value  = System.Decimal.Truncate (value);
-				value *= this.digits_div;
+				if (this.resolution != 0)
+				{
+					value *= this.digits_mul;
+					value  = System.Decimal.Truncate (value);
+					value *= this.digits_div;
+				}
 				
 				return value;
 			}

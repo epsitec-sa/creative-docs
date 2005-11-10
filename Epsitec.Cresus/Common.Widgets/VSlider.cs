@@ -1,17 +1,17 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe VSlider implémente le potentiomètre linéaire vertical.
+	/// La classe VScroller implémente l'ascenceur vertical.
 	/// </summary>
-	public class VSlider : AbstractSlider
+	public class VScroller : AbstractScroller
 	{
-		public VSlider() : base(true)
+		public VScroller() : base(true)
 		{
 			this.ArrowUp.Name   = "Up";
 			this.ArrowDown.Name = "Down";
 		}
 		
-		public VSlider(Widget embedder) : this()
+		public VScroller(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return AbstractSlider.defaultBreadth;
+				return AbstractScroller.defaultBreadth;
 			}
 		}
 		
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return new Drawing.Size (AbstractSlider.defaultBreadth, AbstractSlider.minimalThumb+6);
+				return new Drawing.Size (AbstractScroller.defaultBreadth, AbstractScroller.minimalThumb+6);
 			}
 		}
 	}

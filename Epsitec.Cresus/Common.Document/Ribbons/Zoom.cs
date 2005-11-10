@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonZoomSelWidth = this.CreateIconButton("ZoomSelWidth", Misc.Icon("ZoomSelWidth"), Res.Strings.Action.ZoomSelWidth);
 			this.buttonZoomPrev = this.CreateIconButton("ZoomPrev", Misc.Icon("ZoomPrev"), Res.Strings.Action.ZoomPrev);
 			this.separator = new IconSeparator(this);
-			this.CreateFieldZoom(ref this.fieldZoom, "Zoom factor");
+			this.CreateFieldZoom(ref this.fieldZoom, Res.Strings.Action.ZoomValue);
 			this.buttonOthers = this.CreateMenuButton("", Res.Strings.Action.ZoomMenu, new MessageEventHandler(this.HandleOthersClicked));
 			
 			this.UpdateClientGeometry();
