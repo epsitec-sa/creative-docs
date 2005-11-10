@@ -654,6 +654,11 @@ namespace Epsitec.Common.Document
 			{
 				flow.ReadFinalize();
 			}
+			
+			System.Diagnostics.Debug.WriteLine("Unused tab tags:");
+			System.Diagnostics.Debug.WriteLine("  " + string.Join ("\n  ", this.textContext.TabList.GetUnusedTabTags()));
+			
+			this.textContext.TabList.ClearUnusedTabTags();
 
 			if ( this.settings != null )
 			{

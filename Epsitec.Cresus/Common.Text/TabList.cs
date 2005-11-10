@@ -130,6 +130,40 @@ namespace Epsitec.Common.Text
 			return tags;
 		}
 		
+		public string[] GetUnusedTabTags()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (TabRecord record in this.auto_tab_hash.Values)
+			{
+				if (record.UserCount == 0)
+				{
+					list.Add (record.Tag);
+				}
+			}
+			
+			return (string[]) list.ToArray (typeof (string));
+		}
+		
+		
+		public void ClearUnusedTabTags()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (TabRecord record in this.auto_tab_hash.Values)
+			{
+				if (record.UserCount == 0)
+				{
+					list.Add (record.Tag);
+				}
+			}
+			
+			foreach (string tag in list)
+			{
+				this.Detach (tag);
+			}
+		}
+		
 		
 		public Properties.TabProperty GetTabProperty(string tag)
 		{
