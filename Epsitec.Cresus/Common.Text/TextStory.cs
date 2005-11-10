@@ -805,6 +805,10 @@ namespace Epsitec.Common.Text
 			
 			this.text.ReadRawText (stream);
 			
+			stream.Close ();
+			stream = null;
+			data   = null;
+			
 			this.text_length = this.text.TextLength - 1;
 			this.undo_length = 0;
 			
@@ -815,6 +819,15 @@ namespace Epsitec.Common.Text
 			{
 				this.text.NewCursor (cursor);
 			}
+			
+			//	Met à jour les compteurs d'utilisation pour les "styles" et les
+			//	tabulateurs :
+			
+			int     length = this.TextLength;
+			ulong[] text   = new ulong[length];
+			
+			this.ReadText (0, length, text);
+			this.IncrementUserCount (text, length);
 		}
 		
 		

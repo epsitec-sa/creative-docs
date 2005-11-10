@@ -17,20 +17,6 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		internal void IncreaseTabUserCount()
-		{
-			PropertyWrapper[] wrappers = this.GetPropertyUsage (Properties.WellKnownType.Tab);
-			
-			TabList list = this.context.TabList;
-			
-			foreach (PropertyWrapper wrapper in wrappers)
-			{
-				Properties.TabProperty tab = wrapper.Value as Properties.TabProperty;
-				list.IncreaseTabUserCount (tab, wrapper.Count);
-			}
-		}
-		
-		
 		public OpenType.FontName[] GetFontUsage()
 		{
 			PropertyWrapper[] wrappers = this.GetPropertyUsage (Properties.WellKnownType.Font);
