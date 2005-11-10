@@ -194,6 +194,9 @@ namespace Epsitec.Common.Text
 			
 			ulong stripped_code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
+			//	TODO: optimiser l'accès aux style, local_settings et extra_settings dans
+			//	tout TextContext en utilisant StyleTable.GetStyleAndSettings()
+			
 			Styles.SimpleStyle   style          = this.style_list[stripped_code];
 			Styles.LocalSettings local_settings = style.GetLocalSettings (stripped_code);
 			Styles.ExtraSettings extra_settings = style.GetExtraSettings (stripped_code);

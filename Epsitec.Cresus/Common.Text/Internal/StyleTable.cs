@@ -284,6 +284,14 @@ namespace Epsitec.Common.Text.Internal
 			return null;
 		}
 		
+		public void GetStyleAndSettings(ulong code, out Styles.SimpleStyle style, out Styles.LocalSettings local_settings, out Styles.ExtraSettings extra_settings)
+		{
+			style = this.GetStyleFromIndex (Internal.CharMarker.GetStyleIndex (code));
+			
+			local_settings = (Internal.CharMarker.HasSettings (code) && (style != null)) ? style.GetLocalSettings (code) : null;
+			extra_settings = (Internal.CharMarker.HasSettings (code) && (style != null)) ? style.GetExtraSettings (code) : null;
+		}
+		
 		
 		public Styles.SimpleStyle FindStyle(Styles.SimpleStyle style, StyleMatcher matcher)
 		{

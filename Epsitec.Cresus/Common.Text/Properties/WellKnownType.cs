@@ -43,6 +43,8 @@ namespace Epsitec.Common.Text.Properties
 		Break				= 220,		//	local
 		Tab					= 221,		//	local
 		
+		TotalCount,
+		
 		Other				= 1000000,
 	}
 }

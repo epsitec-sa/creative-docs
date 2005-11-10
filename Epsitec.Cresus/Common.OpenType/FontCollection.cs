@@ -17,7 +17,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public FontIdentity						this[string name]
+		internal FontIdentity					this[string name]
 		{
 			get
 			{
