@@ -234,9 +234,19 @@ namespace Epsitec.Common.Text
 			this.GetTabRecord (tab).IncrementUserCount (1);
 		}
 		
+		public void IncrementTabUserCount(string tag)
+		{
+			this.GetTabRecord (tag).IncrementUserCount (1);
+		}
+		
 		public void DecrementTabUserCount(Properties.TabProperty tab)
 		{
 			this.GetTabRecord (tab).DecrementUserCount ();
+		}
+		
+		public void DecrementTabUserCount(string tag)
+		{
+			this.GetTabRecord (tag).DecrementUserCount ();
 		}
 		
 		
@@ -432,15 +442,12 @@ namespace Epsitec.Common.Text
 				{
 					System.Threading.Interlocked.Increment (ref this.user_count);
 				}
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Tab {0} incremented to {1} users.", this.tag, this.user_count));
 			}
 		
 			public void DecrementUserCount()
 			{
 				Debug.Assert.IsInBounds (this.user_count, 1, TabRecord.MaxUserCount);
 				System.Threading.Interlocked.Decrement (ref this.user_count);
-				System.Diagnostics.Debug.WriteLine (string.Format ("Tab {0} decremented to {1} users.", this.tag, this.user_count));
 			}
 		
 			

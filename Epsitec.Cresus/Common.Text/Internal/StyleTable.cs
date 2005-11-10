@@ -35,7 +35,7 @@ namespace Epsitec.Common.Text.Internal
 			Debug.Assert.IsFalse (Internal.CharMarker.HasStyleOrSettings (code));
 			Debug.Assert.IsTrue (find.StyleIndex > 0);
 			
-			find.IncrementUserCount ();
+//-			find.IncrementUserCount ();
 			
 			Internal.CharMarker.SetStyleIndex (ref code, find.StyleIndex);
 			Internal.CharMarker.SetLocalIndex (ref code, 0);
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Text.Internal
 					Debug.Assert.IsTrue (extra_settings.SettingsIndex > 0);
 				}
 				
-				find.IncrementUserCount ();
+//-				find.IncrementUserCount ();
 				
 				Internal.CharMarker.SetStyleIndex (ref code, find.StyleIndex);
 				Internal.CharMarker.SetLocalIndex (ref code, local_settings == null ? 0 : local_settings.SettingsIndex);
@@ -144,16 +144,16 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (local_index != 0)
 				{
-					style.GetLocalSettings (code).DecrementUserCount ();
+//-					style.GetLocalSettings (code).DecrementUserCount ();
 					Internal.CharMarker.SetLocalIndex (ref code, 0);
 				}
 				if (extra_index != 0)
 				{
-					style.GetExtraSettings (code).DecrementUserCount ();
+//-					style.GetExtraSettings (code).DecrementUserCount ();
 					Internal.CharMarker.SetExtraIndex (ref code, 0);
 				}
 				
-				style.DecrementUserCount ();
+//-				style.DecrementUserCount ();
 				
 				Internal.CharMarker.SetStyleIndex (ref code, 0);
 			}
@@ -326,7 +326,7 @@ namespace Epsitec.Common.Text.Internal
 			//	liste). Ceci n'affecte nullement le compteur d'utilisations.
 			
 			Debug.Assert.IsTrue (style.StyleIndex == 0);
-			Debug.Assert.IsTrue (style.CountUsers == 0);
+			Debug.Assert.IsTrue (style.UserCount == 0);
 			
 			if (this.styles == null)
 			{

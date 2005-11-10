@@ -117,7 +117,7 @@ namespace Epsitec.Common.Text.Styles
 			}
 		}
 		
-		public int								CountUsers
+		public int								UserCount
 		{
 			get
 			{
@@ -591,7 +591,7 @@ namespace Epsitec.Common.Text.Styles
 		{
 			buffer.Append (SerializerSupport.SerializeInt (this.properties.Length));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeInt (this.user_count));
+			buffer.Append (SerializerSupport.SerializeInt (0));
 			
 			for (int i = 0; i < this.properties.Length; i++)
 			{

@@ -766,7 +766,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Modifie les marges gauche du texte.
-		public virtual void SetTextLeftMargins(double leftFirst, double leftBody, Text.Properties.SizeUnits units, bool firstChange)
+		public virtual void SetTextLeftMargins(double leftFirst, double leftBody, Text.Properties.SizeUnits units, bool enableUndoRedo)
 		{
 		}
 
@@ -779,7 +779,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Modifie la marge droite du texte.
-		public virtual void SetTextRightMargins(double right, Text.Properties.SizeUnits units, bool firstChange)
+		public virtual void SetTextRightMargins(double right, Text.Properties.SizeUnits units, bool enableUndoRedo)
 		{
 		}
 
@@ -800,8 +800,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Crée un nouveau tabulateur dans le texte.
-		public virtual int NewTextTab(double pos, TextTabType type)
+		public virtual int NewTextTab(double pos, TextTabType type, out string tag)
 		{
+			tag = null;
 			return -1;
 		}
 

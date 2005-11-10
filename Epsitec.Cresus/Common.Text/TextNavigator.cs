@@ -217,7 +217,7 @@ namespace Epsitec.Common.Text
 			{
 				tab_user_count_2 = this.TextContext.TabList.GetTabUserCount (property as Properties.TabProperty);
 				
-				System.Diagnostics.Debug.Assert (tab_user_count_2 == tab_user_count_1+1);
+				System.Diagnostics.Debug.Assert (tab_user_count_2 > tab_user_count_1);
 				
 				this.NotifyTabsChanged ();
 			}
@@ -253,7 +253,7 @@ namespace Epsitec.Common.Text
 			{
 				Internal.TextTable text = this.story.TextTable;
 				
-				using (this.story.OpletQueue.BeginAction ())
+				using (this.story.BeginAction ())
 				{
 					this.InternalInsertSelectionOplet ();
 					
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Text
 						this.DeleteText (c1, p2-p1, ref tab_change_count);
 					}
 					
-					this.story.OpletQueue.ValidateAction ();
+					this.story.ValidateAction ();
 				}
 				
 				this.InternalClearSelection ();
@@ -535,10 +535,10 @@ namespace Epsitec.Common.Text
 			
 			this.active_selection_cursor = null;
 			
-			using (this.story.OpletQueue.BeginAction ())
+			using (this.story.BeginAction ())
 			{
 				this.InternalInsertDeselectionOplet ();
-				this.story.OpletQueue.ValidateAction ();
+				this.story.ValidateAction ();
 			}
 			
 			this.NotifyCursorMoved ();
@@ -560,7 +560,7 @@ namespace Epsitec.Common.Text
 				//	Prend note de la position des curseurs de sélection pour
 				//	pouvoir restaurer la sélection en cas de UNDO :
 				
-				using (this.story.OpletQueue.BeginAction ())
+				using (this.story.BeginAction ())
 				{
 					int[]   positions = this.GetSelectionCursorPositions ();
 					Range[] ranges    = Range.CreateSortedRanges (positions);
@@ -577,7 +577,7 @@ namespace Epsitec.Common.Text
 						this.story.SetCursorPosition (this.cursor, pos, direction);
 					}
 					
-					this.story.OpletQueue.ValidateAction ();
+					this.story.ValidateAction ();
 				}
 				
 				this.InternalClearSelection ();
@@ -847,7 +847,7 @@ namespace Epsitec.Common.Text
 				if (pos.Length > 0)
 				{
 					System.Diagnostics.Debug.WriteLine (string.Format ("Rename tab from {0} to {1}", old_tag, new_tag));
-					using (this.story.OpletQueue.BeginAction ())
+					using (this.story.BeginAction ())
 					{
 						//	Remplace les propriétés TabProperty des divers TAB
 						//	du texte par une nouvelle avec le nouveau nom :
@@ -864,8 +864,12 @@ namespace Epsitec.Common.Text
 							this.SetParagraphProperties (pos[i], Properties.ApplyMode.Combine, tabs_change);
 						}
 						
-						this.story.OpletQueue.ValidateAction ();
+						this.story.ValidateAction ();
 					}
+					
+					this.UpdateCurrentStylesAndProperties ();
+					this.NotifyTextChanged ();
+					this.NotifyTabsChanged ();
 				}
 			}
 			
@@ -1048,7 +1052,7 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				using (this.story.OpletQueue.BeginAction ())
+				using (this.story.BeginAction ())
 				{
 					foreach (Range range in ranges)
 					{
@@ -1069,7 +1073,7 @@ namespace Epsitec.Common.Text
 						}
 					}
 					
-					this.story.OpletQueue.ValidateAction ();
+					this.story.ValidateAction ();
 				}
 			}
 			
@@ -1109,7 +1113,7 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				using (this.story.OpletQueue.BeginAction ())
+				using (this.story.BeginAction ())
 				{
 					foreach (Range range in ranges)
 					{
@@ -1119,7 +1123,7 @@ namespace Epsitec.Common.Text
 						this.SetTextStyles (pos, length, text_styles);
 					}
 					
-					this.story.OpletQueue.ValidateAction ();
+					this.story.ValidateAction ();
 				}
 			}
 //			else
@@ -1159,7 +1163,7 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				using (this.story.OpletQueue.BeginAction ())
+				using (this.story.BeginAction ())
 				{
 					foreach (Range range in ranges)
 					{
@@ -1169,7 +1173,7 @@ namespace Epsitec.Common.Text
 						this.SetCharacterStyles (pos, length, character_styles);
 					}
 					
-					this.story.OpletQueue.ValidateAction ();
+					this.story.ValidateAction ();
 				}
 			}
 			else
@@ -1221,7 +1225,7 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				using (this.story.OpletQueue.BeginAction ())
+				using (this.story.BeginAction ())
 				{
 					foreach (Range range in ranges)
 					{
@@ -1250,7 +1254,7 @@ namespace Epsitec.Common.Text
 						}
 					}
 					
-					this.story.OpletQueue.ValidateAction ();
+					this.story.ValidateAction ();
 				}
 			}
 			
@@ -1294,7 +1298,7 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				using (this.story.OpletQueue.BeginAction ())
+				using (this.story.BeginAction ())
 				{
 					foreach (Range range in ranges)
 					{
@@ -1309,7 +1313,7 @@ namespace Epsitec.Common.Text
 						}
 					}
 					
-					this.story.OpletQueue.ValidateAction ();
+					this.story.ValidateAction ();
 				}
 			}
 //			else
@@ -1356,7 +1360,7 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				using (this.story.OpletQueue.BeginAction ())
+				using (this.story.BeginAction ())
 				{
 					foreach (Range range in ranges)
 					{
@@ -1366,7 +1370,7 @@ namespace Epsitec.Common.Text
 						this.SetTextProperties (pos, length, mode, text_properties);
 					}
 					
-					this.story.OpletQueue.ValidateAction ();
+					this.story.ValidateAction ();
 				}
 			}
 //			else
@@ -2602,12 +2606,12 @@ namespace Epsitec.Common.Text
 		
 		private void InternalInsertSelectionOplet(int[] positions)
 		{
-			this.story.OpletQueue.Insert (new ClearSelectionOplet (this, positions));
+			this.story.Insert (new ClearSelectionOplet (this, positions));
 		}
 		
 		private void InternalInsertDeselectionOplet()
 		{
-			this.story.OpletQueue.Insert (new DefineSelectionOplet (this));
+			this.story.Insert (new DefineSelectionOplet (this));
 		}
 		
 		private void InternalClearSelection()

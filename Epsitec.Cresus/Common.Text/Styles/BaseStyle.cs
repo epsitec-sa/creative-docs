@@ -237,7 +237,7 @@ namespace Epsitec.Common.Text.Styles
 			
 		assign:
 			this.local_settings[index].SettingsIndex = index+1;
-			this.local_settings[index].IncrementUserCount ();
+//-			this.local_settings[index].IncrementUserCount ();
 			
 			return this.local_settings[index];
 		}
@@ -300,7 +300,7 @@ namespace Epsitec.Common.Text.Styles
 			
 		assign:
 			this.extra_settings[index].SettingsIndex = index+1;
-			this.extra_settings[index].IncrementUserCount ();
+//-			this.extra_settings[index].IncrementUserCount ();
 			
 			return this.extra_settings[index];
 		}

@@ -8,6 +8,7 @@ namespace Epsitec.Common.Document.Widgets
 	{
 		public double			Pos;
 		public TextTabType		Type;
+		public string			Tag;
 	}
 
 	/// <summary>
@@ -100,7 +101,32 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				if ( this.isDragging || !HRuler.TabCompare(this.tabs, value) )
 				{
-					this.tabs = value;
+					if ( this.isDragging )
+					{
+						// Si l'on est en train de déplacer une poignée, il se peut que
+						// la modification des tabulateurs rende l'ancien handle caduc.
+						// Il faut se baser sur le nom du tabulateur pour le retrouver
+						// ici :
+						
+						this.tabs = value;
+						
+						if ( this.tabs != null && this.draggingTabTag != null )
+						{
+							for ( int i=0 ; i < this.tabs.Length ; i++ )
+							{
+								if ( this.tabs[i].Tag == this.draggingTabTag )
+								{
+									this.draggingHandle = HRuler.HandleFirstTab+i;
+									break;
+								}
+							}
+						}
+					}
+					else
+					{
+						this.tabs = value;
+					}
+					
 					this.Invalidate();
 				}
 			}
@@ -320,7 +346,7 @@ namespace Epsitec.Common.Document.Widgets
 			for ( int i=0 ; i<this.tabs.Length ; i++ )
 			{
 				if ( i == this.draggingTabToDelete )  continue;
-
+				
 				Rectangle rect = this.Client.Bounds;
 
 				double posx = this.GetHandleHorizontalPos(HRuler.HandleFirstTab+i);
@@ -433,6 +459,11 @@ namespace Epsitec.Common.Document.Widgets
 		// Début du drag d'une poignée.
 		protected override void DraggingStart(ref int handle, Point pos)
 		{
+			this.draggingTabToDelete = -1;
+			this.draggingFirstMove = true;
+			this.draggingTabTag = null;
+			this.draggingFirstTabTag = null;
+			
 			if ( handle == -1 )
 			{
 				Rectangle rect = this.Client.Bounds;
@@ -454,9 +485,11 @@ namespace Epsitec.Common.Document.Widgets
 					Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
 					double tabPos = this.ScreenToDocument(pos.X);
 					tabPos = tabPos - bbox.Left;
-					handle = this.editObject.NewTextTab(tabPos, this.tabToCreate);
+					handle = this.editObject.NewTextTab(tabPos, this.tabToCreate, out this.draggingTabTag);
 					handle += HRuler.HandleFirstTab;
 					this.draggingOffset = 0.0;
+					this.draggingFirstMove = false;
+					this.draggingFirstTabTag = this.draggingTabTag;
 				}
 			}
 			else
@@ -464,9 +497,6 @@ namespace Epsitec.Common.Document.Widgets
 				double initial = this.GetHandleHorizontalPos(handle);
 				this.draggingOffset = initial - pos.X;
 			}
-			this.draggingTabToDelete = -1;
-			this.draggingFirstMove = true;
-			this.draggingTabTag = null;
 		}
 
 		// Déplace une poignée.
@@ -498,7 +528,7 @@ namespace Epsitec.Common.Document.Widgets
 				}
 			}
 
-			this.SetHandleHorizontalPos(handle, pos);
+			this.SetHandleHorizontalPos(ref handle, pos);
 
 			this.draggingFirstMove = false;
 			
@@ -520,9 +550,11 @@ namespace Epsitec.Common.Document.Widgets
 				if ( pos.Y < rect.Bottom || pos.Y > rect.Top )  // hors de la règle ?
 				{
 					this.editObject.DeleteTextTab(this.draggingTabTag);
+					this.editObject.DeleteTextTab(this.draggingFirstTabTag);
 				}
 				
 				this.draggingTabTag = null;
+				this.draggingFirstTabTag = null;
 				this.draggingTabToDelete = -1;
 			}
 		}
@@ -543,7 +575,7 @@ namespace Epsitec.Common.Document.Widgets
 			return 0;
 		}
 
-		protected void SetHandleHorizontalPos(int handle, Point pos)
+		protected void SetHandleHorizontalPos(ref int handle, Point pos)
 		{
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
 
@@ -605,6 +637,7 @@ namespace Epsitec.Common.Document.Widgets
 					if ( this.draggingTabTag == null )
 					{
 						this.editObject.GetTextTabTag(handle, out this.draggingTabTag);
+						this.draggingFirstTabTag = this.draggingTabTag;
 					}
 					
 					this.editObject.GetTextTab(this.draggingTabTag, out tabPos, out type);
@@ -615,6 +648,7 @@ namespace Epsitec.Common.Document.Widgets
 					tabPos = System.Math.Max(tabPos, 0);
 					
 					this.editObject.SetTextTab(ref this.draggingTabTag, this.draggingFirstMove, tabPos, type);
+					handle = this.draggingHandle;
 				}
 			}
 		}
@@ -727,5 +761,6 @@ namespace Epsitec.Common.Document.Widgets
 		protected int						draggingTabToDelete = -1;
 		protected bool						draggingFirstMove = false;
 		protected string					draggingTabTag = null;
+		protected string					draggingFirstTabTag = null;
 	}
 }

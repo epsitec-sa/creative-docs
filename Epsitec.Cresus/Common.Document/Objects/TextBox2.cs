@@ -784,19 +784,28 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Modifie les marges gauche du texte.
-		public override void SetTextLeftMargins(double leftFirst, double leftBody, Text.Properties.SizeUnits units, bool firstChange)
+		public override void SetTextLeftMargins(double leftFirst, double leftBody, Text.Properties.SizeUnits units, bool enableUndoRedo)
 		{
-			if ( units == Text.Properties.SizeUnits.None )  // remet l'indentation par défaut ?
+			if ( !enableUndoRedo )
 			{
-				Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty();
-				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Clear, margins);
+				this.textFlow.TextStory.DisableOpletQueue();
+				this.SetTextLeftMargins(leftFirst, leftBody, units, true);
+				this.textFlow.TextStory.EnableOpletQueue();
 			}
 			else
 			{
-				Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty(leftFirst, leftBody, double.NaN, double.NaN, units, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined);
-				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, margins);
+				if ( units == Text.Properties.SizeUnits.None )  // remet l'indentation par défaut ?
+				{
+					Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty();
+					this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Clear, margins);
+				}
+				else
+				{
+					Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty(leftFirst, leftBody, double.NaN, double.NaN, units, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined);
+					this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, margins);
+				}
+				this.UpdateTextRulers();
 			}
-			this.UpdateTextRulers();
 		}
 
 		// Donne les msrges gauche du texte.
@@ -823,19 +832,28 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Modifie la marge droite du texte.
-		public override void SetTextRightMargins(double right, Text.Properties.SizeUnits units, bool firstChange)
+		public override void SetTextRightMargins(double right, Text.Properties.SizeUnits units, bool enableUndoRedo)
 		{
-			if ( units == Text.Properties.SizeUnits.None )  // remet l'indentation par défaut ?
+			if ( !enableUndoRedo )
 			{
-				Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty();
-				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Clear, margins);
+				this.textFlow.TextStory.DisableOpletQueue();
+				this.SetTextRightMargins(right, units, true);
+				this.textFlow.TextStory.EnableOpletQueue();
 			}
 			else
 			{
-				Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty(double.NaN, double.NaN, right, right, units, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined);
-				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, margins);
+				if ( units == Text.Properties.SizeUnits.None )  // remet l'indentation par défaut ?
+				{
+					Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty();
+					this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Clear, margins);
+				}
+				else
+				{
+					Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty(double.NaN, double.NaN, right, right, units, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined);
+					this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, margins);
+				}
+				this.UpdateTextRulers();
 			}
-			this.UpdateTextRulers();
 		}
 
 		// Donne la marge droite du texte.
@@ -869,7 +887,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Crée un nouveau tabulateur dans le texte.
-		public override int NewTextTab(double pos, TextTabType type)
+		public override int NewTextTab(double pos, TextTabType type, out string tag)
 		{
 			double dispo = 0.0;
 			if ( type == TextTabType.Center )  dispo = 0.5;
@@ -880,6 +898,7 @@ namespace Epsitec.Common.Document.Objects
 			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute);
 			Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
 			this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
+			tag = tab.TabTag;
 //-			this.HandleTabsChanged(null);  // TODO: devrait être inutile
 			return count;
 		}
@@ -1043,6 +1062,7 @@ namespace Epsitec.Common.Document.Objects
 					this.GetTextTab(tag, out pos, out type);
 					tabs[i].Pos = bbox.Left+pos;
 					tabs[i].Type = type;
+					tabs[i].Tag = tag;
 				}
 				this.document.HRuler.Tabs = tabs;
 			}

@@ -144,6 +144,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public bool								IsOpletQueueEnabled
+		{
+			get
+			{
+				return (this.DebugDisableOpletQueue || (this.oplet_queue == null)) ? false : (this.oplet_queue_disable == 0);
+			}
+		}
+		
 		
 		public void NewCursor(ICursor cursor)
 		{
@@ -182,7 +190,7 @@ namespace Epsitec.Common.Text
 				System.Diagnostics.Debug.Assert (new_dir == direction);
 				
 				if ((old_pos != new_pos) &&
-					(this.debug_disable_oplet == false))
+					(this.IsOpletQueueEnabled))
 				{
 					this.InternalAddOplet (new CursorMoveOplet (this, cursor, old_pos, old_dir));
 				}
@@ -203,6 +211,50 @@ namespace Epsitec.Common.Text
 			if (cursor.Attachment != CursorAttachment.Temporary)
 			{
 				this.InternalAddOplet (new CursorNewRecycleOplet (this, cursor, pos, dir));
+			}
+		}
+		
+		
+		public void DisableOpletQueue()
+		{
+			this.oplet_queue_disable++;
+		}
+		
+		public void EnableOpletQueue()
+		{
+			this.oplet_queue_disable--;
+		}
+		
+		
+		public System.IDisposable BeginAction()
+		{
+			if (this.IsOpletQueueEnabled)
+			{
+				return this.oplet_queue.BeginAction ();
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		public void Insert(Common.Support.IOplet oplet)
+		{
+			if (this.IsOpletQueueEnabled)
+			{
+				this.oplet_queue.Insert (oplet);
+			}
+			else
+			{
+				oplet.Dispose ();
+			}
+		}
+		
+		public void ValidateAction()
+		{
+			if (this.IsOpletQueueEnabled)
+			{
+				this.oplet_queue.ValidateAction ();
 			}
 		}
 		
@@ -785,6 +837,17 @@ namespace Epsitec.Common.Text
 		
 		public void Deserialize(byte[] data)
 		{
+			//	Commence par remettre les compteurs à zéro pour ce qui était
+			//	utilisé pour le texte :
+			
+			int     length = this.TextLength;
+			ulong[] text   = new ulong[length];
+			
+			this.ReadText (0, length, text);
+			this.DecrementUserCount (text, length);
+			
+			//	Désérialise à partir d'un memory stream :
+			
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (data, 0, data.Length, false);
 			
 			Internal.CursorTable cursor_table = this.text.CursorTable;
@@ -826,8 +889,8 @@ namespace Epsitec.Common.Text
 			//	Met à jour les compteurs d'utilisation pour les "styles" et les
 			//	tabulateurs :
 			
-			int     length = this.TextLength;
-			ulong[] text   = new ulong[length];
+			length = this.TextLength;
+			text   = new ulong[length];
 			
 			this.ReadText (0, length, text);
 			this.IncrementUserCount (text, length);
@@ -849,6 +912,20 @@ namespace Epsitec.Common.Text
 				if (style != null) style.IncrementUserCount ();
 				if (local != null) local.IncrementUserCount ();
 				if (extra != null) extra.IncrementUserCount ();
+				
+				if ((local != null) &&
+					(local.UserCount == 1))
+				{
+					Properties.TabsProperty tabs = local[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+					
+					if (tabs != null)
+					{
+						foreach (string tag in tabs.TabTags)
+						{
+							this.context.TabList.IncrementTabUserCount (tag);
+						}
+					}
+				}
 				
 				if (Unicode.Bits.GetUnicodeCode (code) == Unicode.Code.HorizontalTab)
 				{
@@ -875,6 +952,20 @@ namespace Epsitec.Common.Text
 				if (local != null) local.DecrementUserCount ();
 				if (extra != null) extra.DecrementUserCount ();
 				
+				if ((local != null) &&
+					(local.UserCount == 0))
+				{
+					Properties.TabsProperty tabs = local[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+					
+					if (tabs != null)
+					{
+						foreach (string tag in tabs.TabTags)
+						{
+							this.context.TabList.DecrementTabUserCount (tag);
+						}
+					}
+				}
+				
 				if (Unicode.Bits.GetUnicodeCode (code) == Unicode.Code.HorizontalTab)
 				{
 					Properties.TabProperty tab;
@@ -887,8 +978,7 @@ namespace Epsitec.Common.Text
 		
 		private void InternalAddOplet(Common.Support.IOplet oplet)
 		{
-			if ((this.debug_disable_oplet == false) &&
-				(this.oplet_queue != null))
+			if (this.IsOpletQueueEnabled)
 			{
 				Common.Support.IOplet[] last_oplets = this.oplet_queue.LastActionOplets;
 				
@@ -1892,6 +1982,7 @@ namespace Epsitec.Common.Text
 		private ICursor							temp_cursor;
 		
 		private Common.Support.OpletQueue		oplet_queue;
+		private int								oplet_queue_disable;
 		private TextContext						context;
 		
 		private bool							debug_disable_oplet;
