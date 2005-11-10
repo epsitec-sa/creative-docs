@@ -422,7 +422,7 @@ namespace Epsitec.Common.Text
 				return length;
 			}
 			
-			
+			this.DecrementUserCount (old_text, length);
 			this.IncrementUserCount (new_text, length);
 			
 			int position = this.text.GetCursorPosition (cursor.CursorId) + offset;
@@ -833,6 +833,13 @@ namespace Epsitec.Common.Text
 				if (style != null) style.IncrementUserCount ();
 				if (local != null) local.IncrementUserCount ();
 				if (extra != null) extra.IncrementUserCount ();
+				
+				if (Unicode.Bits.GetUnicodeCode (code) == Unicode.Code.HorizontalTab)
+				{
+					Properties.TabProperty tab;
+					this.context.GetTab (code, out tab);
+					this.context.TabList.IncrementTabUserCount (tab);
+				}
 			}
 		}
 		
@@ -851,6 +858,13 @@ namespace Epsitec.Common.Text
 				if (style != null) style.DecrementUserCount ();
 				if (local != null) local.DecrementUserCount ();
 				if (extra != null) extra.DecrementUserCount ();
+				
+				if (Unicode.Bits.GetUnicodeCode (code) == Unicode.Code.HorizontalTab)
+				{
+					Properties.TabProperty tab;
+					this.context.GetTab (code, out tab);
+					this.context.TabList.DecrementTabUserCount (tab);
+				}
 			}
 		}
 		
@@ -1091,8 +1105,8 @@ namespace Epsitec.Common.Text
 			
 			CursorInfo[] infos;
 			
-			this.InternalDeleteText (position, length, out infos, false);
-			this.InternalInsertText (position, text, false);
+			this.InternalDeleteText (position, length, out infos, true);
+			this.InternalInsertText (position, text, true);
 			
 			if ((infos != null) &&
 				(infos.Length > 0))
@@ -1142,8 +1156,8 @@ namespace Epsitec.Common.Text
 			
 			CursorInfo[] infos;
 			
-			this.InternalDeleteText (position, length, out infos, false);
-			this.InternalInsertText (position, text, false);
+			this.InternalDeleteText (position, length, out infos, true);
+			this.InternalInsertText (position, text, true);
 			
 			if ((infos != null) &&
 				(infos.Length > 0))

@@ -265,6 +265,25 @@ namespace Epsitec.Common.Text.Cursors
 		}
 		
 		
+		internal int GetElementStartPosition(int index)
+		{
+			if ((index < 0) ||
+				(index >= this.elements.Length))
+			{
+				throw new System.ArgumentOutOfRangeException ("index", index, string.Format ("Index {0} not in 0..{1}", index, this.elements.Length));
+			}
+			
+			int offset = 0;
+			
+			for (int i = 0; i < index; i++)
+			{
+				offset += this.elements[i].Length;
+			}
+			
+			return offset;
+		}
+		
+		
 		internal static bool IsLastLine(Cursors.FitterCursor.Element[] elements, int i)
 		{
 			for (int j = i; j < elements.Length - 1; j++)

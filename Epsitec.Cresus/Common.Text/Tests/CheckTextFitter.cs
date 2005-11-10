@@ -563,7 +563,6 @@ namespace Epsitec.Common.Text.Tests
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty ("Black"));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
 			
 			properties_2.Add (font_bold);
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
@@ -575,7 +574,11 @@ namespace Epsitec.Common.Text.Tests
 			properties_3.Add (new Properties.ColorProperty ("Black"));
 			properties_3.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, Properties.ThreeState.False));
 			
-			story.ConvertToStyledText ("Text:\t", properties_1, out text);
+			story.ConvertToStyledText ("Text:", properties_1, out text);
+			story.InsertText (cursor, text);
+			
+			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
+			story.ConvertToStyledText ("\t", properties_1, out text);
 			story.InsertText (cursor, text);
 			
 			story.ConvertToStyledText ("Tout un paragraphe indenté (comme si le tabulateur se comportait comme un indentateur).\n", properties_2, out text);

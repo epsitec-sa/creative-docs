@@ -376,5 +376,37 @@ namespace Epsitec.Common.Support
 			Common.Text.Tests.CheckUnicode.RunTests ();
 		}
 		
+		[Test] public void CheckTabList()
+		{
+			Text.TabList list = new Text.TabList ();
+			
+			Text.Properties.TabProperty tp1 = list.NewTab (null, 10.0, Text.Properties.SizeUnits.Millimeters, 0.0, null, Text.TabPositionMode.Absolute, null);
+			Text.Properties.TabProperty tp2 = list.NewTab (null, 20.0, Text.Properties.SizeUnits.Millimeters, 0.0, null, Text.TabPositionMode.Absolute, null);
+			Text.Properties.TabProperty tp3 = list.NewTab (null, 30.0, Text.Properties.SizeUnits.Millimeters, 0.0, null, Text.TabPositionMode.Absolute, null);
+			
+			Text.Properties.TabProperty tpx;
+			
+			tpx = list.FindAutoTab (10.0, Text.Properties.SizeUnits.Millimeters, 0.0, null, Text.TabPositionMode.Absolute, null);
+			
+			Assert.IsNotNull (tpx);
+			Assert.IsTrue (tpx.TabTag == tp1.TabTag);
+			
+			tpx = list.FindAutoTab (40.0, Text.Properties.SizeUnits.Millimeters, 0.0, null, Text.TabPositionMode.Absolute, null);
+			
+			Assert.IsNull (tpx);
+			
+			tpx = list.FindAutoTab (20.0, Text.Properties.SizeUnits.Millimeters, 0.5, null, Text.TabPositionMode.Absolute, null);
+			
+			Assert.IsNull (tpx);
+			
+			tpx = list.FindAutoTab (20.0, Text.Properties.SizeUnits.Millimeters, 0.0, ".", Text.TabPositionMode.Absolute, null);
+			
+			Assert.IsNull (tpx);
+			
+			tpx = list.FindAutoTab (30.0, Text.Properties.SizeUnits.Millimeters, 0.0, null, Text.TabPositionMode.Absolute, null);
+			
+			Assert.IsNotNull (tpx);
+			Assert.IsTrue (tpx.TabTag == tp3.TabTag);
+		}
 	}
 }

@@ -996,8 +996,8 @@ namespace Epsitec.Common.Document.Objects
 						string tag = info.Tag;
 						Text.Properties.TabProperty tab = list[tag];
 						TabStatus tabStatus = info.Status;
-						TabClass  tabClass = list.GetTabClass(tab);
-						buffer.AppendFormat (" {0}->{1}/{2} p={3:0.0} m={4:0.0}", tag, tabStatus, tabClass, list.GetTabPositionInPoints(tab), list.GetTabDisposition(tab));
+						TabClass  tabClass = Text.TabList.GetTabClass(tab);
+						buffer.AppendFormat (" {0}->{1}/{2}({5}) p={3:0.0} m={4:0.0}", tag, tabStatus, tabClass, list.GetTabPositionInPoints(tab), list.GetTabDisposition(tab), list.GetTabUserCount(tab));
 					}
 					
 					System.Diagnostics.Debug.WriteLine(buffer.ToString());

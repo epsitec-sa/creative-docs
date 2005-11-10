@@ -1218,7 +1218,7 @@ restart_paragraph_layout:
 					{
 						double tab_origin = elements[i-1].IsNewLine ? elements[i].LineOriginX : elements[i-1].LineStartX + elements[i-1].LineWidth;
 						double tab_stop   = elements[i].LineStartX;
-						ulong  tab_code   = layout.Text[layout.TextOffset-1];
+						ulong  tab_code   = this.story.ReadChar (cursor, cursor.GetElementStartPosition (i) - 1);
 						
 						Properties.TabProperty tab_property;
 						

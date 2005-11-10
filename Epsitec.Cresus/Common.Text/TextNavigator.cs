@@ -160,7 +160,10 @@ namespace Epsitec.Common.Text
 		
 		public void Insert(Unicode.Code code)
 		{
-			System.Diagnostics.Debug.Assert (code != Unicode.Code.HorizontalTab);
+			if (code == Unicode.Code.HorizontalTab)
+			{
+				throw new System.InvalidOperationException ("Cannot insert tab without tag");
+			}
 			
 			this.InsertText (new string ((char) code, 1));
 			this.NotifyTextChanged ();
@@ -173,6 +176,19 @@ namespace Epsitec.Common.Text
 			
 			System.Diagnostics.Debug.Assert (property != null);
 			System.Diagnostics.Debug.Assert (property.PropertyAffinity == Properties.PropertyAffinity.Symbol);
+			
+			int tab_user_count_1 = 0;
+			int tab_user_count_2 = 0;
+			
+			if (code == Unicode.Code.HorizontalTab)
+			{
+				if (property.WellKnownType != Properties.WellKnownType.Tab)
+				{
+					throw new System.InvalidOperationException ("Cannot insert tab without tag");
+				}
+				
+				tab_user_count_1 = this.TextContext.TabList.GetTabUserCount (property as Properties.TabProperty);
+			}
 			
 			//	La propriété passée en entrée est simplement ajoutée en fin de
 			//	liste des propriétés associées au curseur, temporairement :
@@ -199,27 +215,29 @@ namespace Epsitec.Common.Text
 			
 			if (code == Unicode.Code.HorizontalTab)
 			{
+				tab_user_count_2 = this.TextContext.TabList.GetTabUserCount (property as Properties.TabProperty);
+				
+				System.Diagnostics.Debug.Assert (tab_user_count_2 == tab_user_count_1+1);
+				
 				this.NotifyTabsChanged ();
 			}
 		}
 		
 		public void Insert(string text)
 		{
-			this.InsertText (text);
-			this.NotifyTextChanged ();
-			
-			//	S'il y a des tabulateurs dans le texte qui vient d'être inséré,
-			//	il faut signaler un possible changement des tabulateurs (pour
-			//	refléter ces changements dans la règle, par exemple) :
+			//	On n'a pas le droit d'insérer des tabulateurs avec cette méthode,
+			//	car il faudrait connaître la position à atteindre :
 			
 			foreach (char c in text)
 			{
 				if (c == '\t')
 				{
-					this.NotifyTabsChanged ();
-					break;
+					throw new System.InvalidOperationException ("Cannot insert tab without tag");
 				}
 			}
+			
+			this.InsertText (text);
+			this.NotifyTextChanged ();
 		}
 		
 		public void Delete()
@@ -1847,6 +1865,11 @@ namespace Epsitec.Common.Text
 			{
 				if (Unicode.Bits.GetUnicodeCode (text[i]) == Unicode.Code.HorizontalTab)
 				{
+					//	On ne modifie pas le compteur d'utilisation pour le TAB
+					//	correspondant, car le texte est placé dans la zone des
+					//	UNDO dans TextStory et les tabulateurs sont donc encore
+					//	référencés.
+					
 					tab_change_count++;
 				}
 			}
