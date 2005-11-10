@@ -17,7 +17,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public OpenType.FontName[] GetFontUsage()
+		public OpenType.FontName[] GetFontUse()
 		{
 			PropertyWrapper[] wrappers = this.GetPropertyUsage (Properties.WellKnownType.Font);
 			
@@ -40,12 +40,38 @@ namespace Epsitec.Common.Text
 			
 			OpenType.FontName[] names = new OpenType.FontName[hash.Count];
 			
-			hash.Values.CopyTo (names, 0);
+			hash.Keys.CopyTo (names, 0);
 			
 			System.Array.Sort (names);
 			
 			return names;
 		}
+		
+		public string[] GetImageUse()
+		{
+			PropertyWrapper[] wrappers = this.GetPropertyUsage (Properties.WellKnownType.Image);
+			
+			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+			
+			foreach (PropertyWrapper wrapper in wrappers)
+			{
+				Properties.ImageProperty image_property = wrapper.Value as Properties.ImageProperty;
+				
+				if (hash.Contains (image_property.ImageTag) == false)
+				{
+					hash[image_property.ImageTag] = image_property;
+				}
+			}
+			
+			string[] names = new string[hash.Count];
+			
+			hash.Keys.CopyTo (names, 0);
+			
+			System.Array.Sort (names);
+			
+			return names;
+		}
+		
 		
 		public PropertyWrapper[] GetPropertyUsage(Properties.WellKnownType type)
 		{
