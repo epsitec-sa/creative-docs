@@ -189,10 +189,6 @@ namespace Epsitec.Common.Text.Styles
 			{
 				this.local_settings = new Styles.LocalSettings[0];
 			}
-			else if (this.local_settings.Length == BaseStyle.MaxSettingsCount)
-			{
-				return null;
-			}
 			
 			int index;
 			int count = this.local_settings.Length;
@@ -224,6 +220,13 @@ namespace Epsitec.Common.Text.Styles
 			
 			Debug.Assert.IsTrue (index == count);
 			
+			if (this.local_settings.Length == BaseStyle.MaxSettingsCount)
+			{
+				//	La table est pleine. On s'arrête ici !
+				
+				return null;
+			}
+			
 			Styles.LocalSettings[] old_settings = this.local_settings;
 			Styles.LocalSettings[] new_settings = new Styles.LocalSettings[index+1];
 			
@@ -251,10 +254,6 @@ namespace Epsitec.Common.Text.Styles
 			if (this.extra_settings == null)
 			{
 				this.extra_settings = new Styles.ExtraSettings[0];
-			}
-			else if (this.extra_settings.Length == BaseStyle.MaxSettingsCount)
-			{
-				return null;
 			}
 			
 			int index;
@@ -286,6 +285,13 @@ namespace Epsitec.Common.Text.Styles
 			//	la fin :
 			
 			Debug.Assert.IsTrue (index == count);
+			
+			if (this.extra_settings.Length == BaseStyle.MaxSettingsCount)
+			{
+				//	La table est pleine. On s'arrête ici !
+				
+				return null;
+			}
 			
 			Styles.ExtraSettings[] old_settings = this.extra_settings;
 			Styles.ExtraSettings[] new_settings = new Styles.ExtraSettings[index+1];
