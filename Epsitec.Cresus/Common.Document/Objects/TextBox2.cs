@@ -784,7 +784,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Modifie les marges gauche du texte.
-		public override void SetTextLeftMargins(double leftFirst, double leftBody, Text.Properties.SizeUnits units)
+		public override void SetTextLeftMargins(double leftFirst, double leftBody, Text.Properties.SizeUnits units, bool firstChange)
 		{
 			if ( units == Text.Properties.SizeUnits.None )  // remet l'indentation par défaut ?
 			{
@@ -823,7 +823,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Modifie la marge droite du texte.
-		public override void SetTextRightMargins(double right, Text.Properties.SizeUnits units)
+		public override void SetTextRightMargins(double right, Text.Properties.SizeUnits units, bool firstChange)
 		{
 			if ( units == Text.Properties.SizeUnits.None )  // remet l'indentation par défaut ?
 			{

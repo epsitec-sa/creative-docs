@@ -561,7 +561,7 @@ namespace Epsitec.Common.Document.Widgets
 					leftFirst = leftFirst - bbox.Left;
 					leftFirst = this.SnapGrid(leftFirst);
 					leftFirst = System.Math.Max(leftFirst, 0);
-					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
+					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units, this.draggingFirstMove);
 				}
 
 				if ( handle == HRuler.HandleLeftBody )
@@ -570,7 +570,7 @@ namespace Epsitec.Common.Document.Widgets
 					leftBody = leftBody - bbox.Left;
 					leftBody = this.SnapGrid(leftBody);
 					leftBody = System.Math.Max(leftBody, 0);
-					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
+					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units, this.draggingFirstMove);
 				}
 
 				if ( handle == HRuler.HandleFirstBody )
@@ -583,7 +583,7 @@ namespace Epsitec.Common.Document.Widgets
 					leftFirst += leftBody - initialBody;
 					leftFirst = this.SnapGrid(leftFirst);
 					leftFirst = System.Math.Max(leftFirst, 0);
-					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
+					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units, this.draggingFirstMove);
 				}
 
 				if ( handle == HRuler.HandleRight )
@@ -592,7 +592,7 @@ namespace Epsitec.Common.Document.Widgets
 					right = bbox.Right - right;
 					right = this.SnapGrid(right);
 					right = System.Math.Max(right, 0);
-					this.editObject.SetTextRightMargins(right, units);
+					this.editObject.SetTextRightMargins(right, units, this.draggingFirstMove);
 				}
 			}
 			else	// tabulateur ?
