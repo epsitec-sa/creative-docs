@@ -13,7 +13,7 @@ namespace Epsitec.Common.Text
 		
 		void RenderStartParagraph(Layout.Context context);
 		void RenderStartLine(Layout.Context context);
-		void RenderTab(Layout.Context layout, string tag, double tab_origin, double tab_stop);
+		void RenderTab(Layout.Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined);
 		void Render(Layout.Context layout, OpenType.Font font, double size, string color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run);
 		void Render(Layout.Context layout, IGlyphRenderer glyph_renderer, string color, double x, double y, bool is_last_run);
 		void RenderEndLine(Layout.Context context);

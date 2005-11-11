@@ -92,7 +92,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 		}
 		
-		public void RenderTab(Layout.Context layout, string tag, double tab_origin, double tab_stop)
+		public void RenderTab(Layout.Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined)
 		{
 			this.tab_origin = tab_origin;
 			this.tab_stop   = tab_stop;

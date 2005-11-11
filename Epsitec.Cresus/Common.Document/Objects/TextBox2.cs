@@ -1590,7 +1590,7 @@ namespace Epsitec.Common.Document.Objects
 			context.DisableSimpleRendering();
 		}
 		
-		public void RenderTab(Text.Layout.Context layout, string tag, double tab_origin, double tab_stop)
+		public void RenderTab(Text.Layout.Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined)
 		{
 			if ( this.graphics == null )  return;
 			if ( this.edited == false )  return;

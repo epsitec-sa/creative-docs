@@ -1220,13 +1220,15 @@ restart_paragraph_layout:
 						double tab_stop   = elements[i].LineStartX;
 						ulong  tab_code   = this.story.ReadChar (cursor, cursor.GetElementStartPosition (i) - 1);
 						
-						Properties.TabProperty tab_property;
+						Properties.TabProperty  tab_property;
+						Properties.TabsProperty tabs_property;
 						
-						this.story.TextContext.GetTab (tab_code, out tab_property);
+						this.story.TextContext.GetTabAndTabs (tab_code, out tab_property, out tabs_property);
 						
 						string tag = tab_property == null ? null : tab_property.TabTag;
+						bool is_tab_defined = tabs_property == null ? false : tabs_property.ContainsTabTag (tag);
 						
-						renderer.RenderTab (layout, tag, tab_origin, tab_stop);
+						renderer.RenderTab (layout, tag, tab_origin, tab_stop, tab_code, is_tab_defined);
 					}
 					
 					layout.RenderLine (renderer, profile, length, ox, oy, width, i, is_tab, is_last);

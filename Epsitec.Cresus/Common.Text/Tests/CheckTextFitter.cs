@@ -733,7 +733,7 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void RenderTab(Layout.Context layout, string tag, double tab_origin, double tab_stop)
+			public void RenderTab(Layout.Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined)
 			{
 			}
 			
@@ -813,7 +813,7 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void RenderTab(Layout.Context layout, string tag, double tab_origin, double tab_stop)
+			public void RenderTab(Layout.Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined)
 			{
 			}
 			

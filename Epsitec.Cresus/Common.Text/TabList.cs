@@ -208,6 +208,11 @@ namespace Epsitec.Common.Text
 			return this.GetTabRecord (tab).PositionMode;
 		}
 		
+		public string GetTabAttribute(Properties.TabProperty tab)
+		{
+			return this.GetTabRecord (tab).Attribute;
+		}
+		
 		public long GetTabVersion(Properties.TabProperty tab)
 		{
 			TabRecord record = this.GetTabRecord (tab);

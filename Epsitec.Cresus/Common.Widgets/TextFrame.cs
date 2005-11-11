@@ -190,7 +190,7 @@ namespace Epsitec.Common.Widgets
 			context.DisableSimpleRendering ();
 		}
 		
-		public void RenderTab(Text.Layout.Context layout, string tag, double tab_origin, double tab_stop)
+		public void RenderTab(Text.Layout.Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined)
 		{
 		}
 			
