@@ -361,6 +361,7 @@ namespace Epsitec.Common.Document.Widgets
 				double posx = this.GetHandleHorizontalPos(HRuler.HandleFirstTab+i);
 				rect.Left  = posx-rect.Height/2;
 				rect.Right = posx+rect.Height/2;
+				graphics.Align(ref rect);
 
 				Color colorBack = Color.FromBrightness(1);
 
@@ -385,6 +386,7 @@ namespace Epsitec.Common.Document.Widgets
 				graphics.RenderSolid(colorBack);
 
 				rect.Inflate(5);
+				rect.Offset(0.5, 0);
 
 				Color colorGlyph = Color.FromBrightness(0);  // noir
 				if ( colorBack.GetBrightness() <= 0.4 )  // couleur foncée ?
@@ -475,8 +477,8 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Détecte la poignée visé par la souris.
-		protected override int DraggingDetect(Point pos)
+		// Détecte la poignée visée par la souris.
+		protected override int DraggingDetect(Point pos, int exclude)
 		{
 			if ( !this.edited )  return -1;
 			if ( this.editObject == null )  return -1;
@@ -485,6 +487,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.tabs != null )  total += this.tabs.Length;
 			for ( int handle=total-1 ; handle>=0 ; handle-- )
 			{
+				if ( handle == exclude )  continue;
 				double posx = this.GetHandleHorizontalPos(handle);
 				if ( pos.X < posx-5 || pos.X > posx+5 )  continue;
 				if ( handle == HRuler.HandleLeftFirst && pos.Y < this.Client.Bounds.Top-4    )  continue;
@@ -590,6 +593,19 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					this.editObject.DeleteTextTab(this.draggingTabTag);
 					this.editObject.DeleteTextTab(this.draggingFirstTabTag);
+				}
+				else
+				{
+					int existingHandle = this.DraggingDetect(pos, handle);
+					if ( existingHandle >= HRuler.HandleFirstTab && this.editObject is Objects.TextBox2 )
+					{
+						string tag, existingTag;
+						this.editObject.GetTextTabTag(existingHandle-HRuler.HandleFirstTab, out existingTag);
+						this.editObject.GetTextTabTag(handle-HRuler.HandleFirstTab, out tag);
+
+						Objects.TextBox2 tb = this.editObject as Objects.TextBox2;
+						tb.TextFlow.TextNavigator.RenameTab(existingTag, tag);
+					}
 				}
 				
 				this.draggingTabTag = null;

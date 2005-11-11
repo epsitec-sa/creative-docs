@@ -294,7 +294,13 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		// Détecte la poignée visé par la souris.
-		protected virtual int DraggingDetect(Point pos)
+		protected int DraggingDetect(Point pos)
+		{
+			return this.DraggingDetect(pos, -1);
+		}
+
+		// Détecte la poignée visé par la souris.
+		protected virtual int DraggingDetect(Point pos, int exclude)
 		{
 			return -1;
 		}

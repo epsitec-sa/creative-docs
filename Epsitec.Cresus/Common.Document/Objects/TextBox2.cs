@@ -628,8 +628,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 //				Text.Properties.FontProperty font = new Text.Properties.FontProperty();
 //				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Clear, font);
-				Text.TextStyle meta_font = this.document.TextContext.StyleList.CreateOrGetMetaProperty("TextFont", new Text.Property[0]);
-				this.metaNavigator.SetMetaProperties(Text.Properties.ApplyMode.Clear, meta_font);
+				Text.TextStyle metaFont = this.document.TextContext.StyleList.CreateOrGetMetaProperty("TextFont", new Text.Property[0]);
+				this.metaNavigator.SetMetaProperties(Text.Properties.ApplyMode.Clear, metaFont);
 			}
 			else
 			{
@@ -642,8 +642,8 @@ namespace Epsitec.Common.Document.Objects
 				{
 					font = new Text.Properties.FontProperty(face, style, features);
 				}
-				Text.TextStyle meta_font = this.document.TextContext.StyleList.CreateOrGetMetaProperty("TextFont", font);
-				this.metaNavigator.SetMetaProperties(Text.Properties.ApplyMode.Set, meta_font);
+				Text.TextStyle metaFont = this.document.TextContext.StyleList.CreateOrGetMetaProperty("TextFont", font);
+				this.metaNavigator.SetMetaProperties(Text.Properties.ApplyMode.Set, metaFont);
 //				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Combine, font);
 			}
 		}
