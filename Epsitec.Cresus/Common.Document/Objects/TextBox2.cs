@@ -1051,6 +1051,8 @@ namespace Epsitec.Common.Document.Objects
 				this.document.HRuler.MarginLeftBody  = bbox.Left+leftBody;
 				this.document.HRuler.MarginRight     = bbox.Right-right;
 
+				Text.TextNavigator.TabInfo[] tabInfos = this.textFlow.TextNavigator.GetTabInfos();
+
 				int count = this.TextTabCount;
 				Widgets.Tab[] tabs = new Widgets.Tab[count];
 				for ( int i=0 ; i<count ; i++ )
@@ -1059,9 +1061,21 @@ namespace Epsitec.Common.Document.Objects
 					TextTabType type;
 					string tag;
 					this.GetTextTabTag(i, out tag);
+
+					bool zombie = false;
+					foreach ( Text.TextNavigator.TabInfo tabInfo in tabInfos )
+					{
+						if ( tabInfo.Tag == tag )
+						{
+							zombie = (tabInfo.Status == TabStatus.Zombie);
+							break;
+						}
+					}
+
 					this.GetTextTab(tag, out pos, out type);
 					tabs[i].Pos = bbox.Left+pos;
 					tabs[i].Type = type;
+					tabs[i].Zombie = zombie;
 					tabs[i].Tag = tag;
 				}
 				this.document.HRuler.Tabs = tabs;

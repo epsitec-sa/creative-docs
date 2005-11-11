@@ -8,6 +8,7 @@ namespace Epsitec.Common.Document.Widgets
 	{
 		public double			Pos;
 		public TextTabType		Type;
+		public bool				Zombie;
 		public string			Tag;
 	}
 
@@ -359,6 +360,12 @@ namespace Epsitec.Common.Document.Widgets
 					rect.Inflate(3);  // plus grand
 				}
 
+				if ( this.tabs[i].Zombie )
+				{
+					graphics.AddFilledCircle(rect.Center, rect.Width/2-3);
+					graphics.RenderSolid(Color.FromBrightness(1));
+				}
+
 				Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
 				switch ( this.tabs[i].Type )
 				{
@@ -368,7 +375,8 @@ namespace Epsitec.Common.Document.Widgets
 					case Drawing.TextTabType.Decimal:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
 					case Drawing.TextTabType.Indent:   glyph = Common.Widgets.GlyphShape.TabIndent;   break;
 				}
-				adorner.PaintGlyph(graphics, rect, Common.Widgets.WidgetState.Enabled, glyph, Common.Widgets.PaintTextStyle.Button);
+				Common.Widgets.WidgetState state = this.tabs[i].Zombie ? Common.Widgets.WidgetState.None : Common.Widgets.WidgetState.Enabled;
+				adorner.PaintGlyph(graphics, rect, state, glyph, Common.Widgets.PaintTextStyle.Button);
 			}
 		}
 
@@ -726,13 +734,21 @@ namespace Epsitec.Common.Document.Widgets
 			handle -= HRuler.HandleFirstTab;
 			if ( handle >= 0 && handle < this.tabs.Length )
 			{
-				switch ( this.tabs[handle].Type )
+				if ( this.tabs[handle].Zombie )
 				{
-					case Drawing.TextTabType.Right:    return Res.Strings.Action.Text.Ruler.TabRight;
-					case Drawing.TextTabType.Left:     return Res.Strings.Action.Text.Ruler.TabLeft;
-					case Drawing.TextTabType.Center:   return Res.Strings.Action.Text.Ruler.TabCenter;
-					case Drawing.TextTabType.Decimal:  return Res.Strings.Action.Text.Ruler.TabDecimal;
-					case Drawing.TextTabType.Indent:   return Res.Strings.Action.Text.Ruler.TabIndent;
+					return Res.Strings.Action.Text.Ruler.TabZombie;
+				}
+				else
+				{
+					switch ( this.tabs[handle].Type )
+					{
+						case Drawing.TextTabType.Right:    return Res.Strings.Action.Text.Ruler.TabRight;
+						case Drawing.TextTabType.Left:     return Res.Strings.Action.Text.Ruler.TabLeft;
+						case Drawing.TextTabType.Center:   return Res.Strings.Action.Text.Ruler.TabCenter;
+						case Drawing.TextTabType.Decimal:  return Res.Strings.Action.Text.Ruler.TabDecimal;
+						case Drawing.TextTabType.Indent:   return Res.Strings.Action.Text.Ruler.TabIndent;
+				
+					}
 				}
 			}
 

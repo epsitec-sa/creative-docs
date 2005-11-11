@@ -1853,7 +1853,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( active )
 			{
-				return Color.FromARGB(1.0, 1.0, 0.0, 0.0);  // rouge
+				return Color.FromARGB(1.0, 0.0, 0.0, 1.0);  // bleu
 			}
 			else
 			{
@@ -1866,7 +1866,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( active )
 			{
-				return Color.FromARGB(1.0, 1.0, 1.0, 0.0);  // jaune
+				return Color.FromARGB(1.0, 0.73, 0.81, 0.98);  // bleu
 			}
 			else
 			{

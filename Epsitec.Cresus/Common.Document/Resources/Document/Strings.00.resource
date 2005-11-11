@@ -906,6 +906,7 @@
 	<data name="Action.Text.Ruler.TabCenter">Tabulateur centré</data>
 	<data name="Action.Text.Ruler.TabDecimal">Tabulateur décimal</data>
 	<data name="Action.Text.Ruler.TabIndent">Indentateur</data>
+	<data name="Action.Text.Ruler.TabZombie">Tabulateur supprimé</data>
 	<data name="Action.Text.Ruler.TabCreate">Cliquez pour poser un tabulateur</data>
 	<data name="Action.Text.Glyphs.Insert">Insertion caractère spécial</data>
 	<data name="Action.Text.Glyphs.Alternate">Caractère alternatif</data>
