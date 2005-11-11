@@ -75,6 +75,23 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public bool ContainsTabTag(string tag)
+		{
+			if (this.tab_tags != null)
+			{
+				for (int i = 0; i < this.tab_tags.Length; i++)
+				{
+					if (this.tab_tags[i] == tag)
+					{
+						return true;
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		
 		public override Property EmptyClone()
 		{
 			return new TabsProperty ();

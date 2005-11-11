@@ -842,11 +842,14 @@ namespace Epsitec.Common.Text
 		{
 			if (old_tag != new_tag)
 			{
-				int[] pos = this.FindTextTabPositions (old_tag);
+				int[] pos_1 = this.FindTextTabPositions (old_tag);
+				int[] pos_2 = this.FindTextTabsPositions (old_tag);
 				
-				if (pos.Length > 0)
+				if ((pos_1.Length > 0) ||
+					(pos_2.Length > 0))
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Rename tab from {0} to {1}", old_tag, new_tag));
+					System.Diagnostics.Debug.WriteLine (string.Format ("Rename tab from {0} to {1}, {2} live, {3} defined", old_tag, new_tag, pos_1.Length, pos_2.Length));
+					
 					using (this.story.BeginAction ())
 					{
 						//	Remplace les propriétés TabProperty des divers TAB
@@ -858,10 +861,14 @@ namespace Epsitec.Common.Text
 						tab_rename[0]  = this.TextContext.TabList[new_tag];
 						tabs_change[0] = new Properties.TabsProperty (string.Concat ("-", old_tag), new_tag);
 						
-						for (int i = 0; i < pos.Length; i++)
+						for (int i = 0; i < pos_1.Length; i++)
 						{
-							this.SetTextProperties (pos[i], 1, Properties.ApplyMode.Set, tab_rename);
-							this.SetParagraphProperties (pos[i], Properties.ApplyMode.Combine, tabs_change);
+							this.SetTextProperties (pos_1[i], 1, Properties.ApplyMode.Set, tab_rename);
+						}
+						
+						for (int i = 0; i < pos_2.Length; i++)
+						{
+							this.SetParagraphProperties (pos_2[i], Properties.ApplyMode.Combine, tabs_change);
 						}
 						
 						this.story.ValidateAction ();
@@ -900,18 +907,9 @@ namespace Epsitec.Common.Text
 		{
 			this.story.SetCursorPosition (this.temp_cursor, pos);
 			ulong code = this.story.ReadChar (this.temp_cursor);
-			Property[] properties;
-			this.TextContext.GetAllProperties (code, out properties);
-			
-			for (int i = 0; i < properties.Length; i++)
-			{
-				if (properties[i].WellKnownType == Properties.WellKnownType.Tabs)
-				{
-					return properties[i] as Properties.TabsProperty;
-				}
-			}
-			
-			return null;
+			Properties.TabsProperty property;
+			this.TextContext.GetTabs (code, out property);
+			return property;
 		}
 		
 		
@@ -992,6 +990,42 @@ namespace Epsitec.Common.Text
 			return (int[]) list.ToArray (typeof (int));
 		}
 		
+		private int[] FindTextTabsPositions(string tag)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			int length = 0;
+			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				foreach (Range range in ranges)
+				{
+					int start = range.Start;
+					int end   = range.End;
+					int pos   = start;
+					
+					length += end - start;
+					
+					while (pos < end)
+					{
+						this.FindTextTabsPositions (list, pos, tag);
+						
+						pos = this.FindNextParagraphStart (pos);
+					}
+				}
+			}
+			
+			if (length == 0)
+			{
+				this.FindTextTabsPositions (list, this.CursorPosition, tag);
+			}
+			
+			return (int[]) list.ToArray (typeof (int));
+		}
+		
 		private void  FindTextTabPositions(System.Collections.ArrayList list, int pos, string tag)
 		{
 			//	Trouve la position des caractères TAB dand le texte du
@@ -1030,6 +1064,20 @@ namespace Epsitec.Common.Text
 						}
 					}
 				}
+			}
+		}
+		
+		private void  FindTextTabsPositions(System.Collections.ArrayList list, int pos, string tag)
+		{
+			//	Trouve la position des paragraphes qui font référence au moyen
+			//	d'un Properties.TabsProperty au tag spécifié :
+			
+			Properties.TabsProperty property = this.GetTabsProperty (pos);
+			
+			if ((property != null) &&
+				(property.ContainsTabTag (tag)))
+			{
+				list.Add (pos);
 			}
 		}
 		

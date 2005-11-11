@@ -1302,6 +1302,16 @@ namespace Epsitec.Common.Text
 			property = local_settings[Properties.WellKnownType.Tab] as Properties.TabProperty;
 		}
 		
+		public void GetTabs(ulong code, out Properties.TabsProperty property)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			Styles.SimpleStyle   style          = this.style_list[code];
+			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			
+			property = local_settings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+		}
+		
 		public void GetImage(ulong code, out Properties.ImageProperty property)
 		{
 			ulong stripped_code = Internal.CharMarker.ExtractStyleAndSettings (code);
