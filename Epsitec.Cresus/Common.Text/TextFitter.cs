@@ -777,7 +777,8 @@ restart_paragraph_layout:
 							status = TextProcessor.Status.Continue;
 							return;
 						}
-						else if (tab_status == TabStatus.ErrorNeedMoreRoom)
+						else if ((tab_status == TabStatus.ErrorNeedMoreRoom) ||
+							/**/ (tab_status == TabStatus.ErrorCannotFit))
 						{
 							//	Le tabulateur ne tient plus sur cette ligne. Force un passage
 							//	à la ligne.
@@ -791,7 +792,7 @@ restart_paragraph_layout:
 								//	positionner le texte selon les besoins du tabulateur;
 								//	on le cale simplement sur la marge :
 								
-								layout.MoveTo (layout.LeftMargin, layout.TextOffset);
+								layout.MoveTo (layout.LineOriginX, layout.TextOffset);
 							}
 							else
 							{
@@ -1315,7 +1316,7 @@ restart_paragraph_layout:
 				d = 1.0;
 			}
 			
-			double x1 = start_of_line ? layout.LeftMargin : layout.LineCurrentX;
+			double x1 = start_of_line ? layout.LineOriginX : layout.LineCurrentX;
 			double x2 = tabs.GetTabPositionInPoints (tab_property);
 			double x3 = layout.LineWidth - layout.RightMargin;
 			
