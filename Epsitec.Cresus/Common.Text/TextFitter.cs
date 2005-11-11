@@ -1297,16 +1297,29 @@ restart_paragraph_layout:
 		
 		private TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, int line_count, bool start_of_line, out double tab_x, out double width, out bool tab_indents)
 		{
+			//	Détermine la position de départ du texte après le tabulateur, sa
+			//	largeur et l'indentation éventuellement à appliquer à la suite du
+			//	texte :
+			
 			tab_x = 0;
 			width = 0;
 			
 			TabList tabs = layout.TextContext.TabList;
 			
 			double d = tabs.GetTabDisposition (tab_property);
+			string docking_mark = tabs.GetTabDockingMark (tab_property);
+			
+			if ((docking_mark != null) &&
+				(docking_mark.Length > 0))
+			{
+				d = 1.0;
+			}
 			
 			double x1 = start_of_line ? layout.LeftMargin : layout.LineCurrentX;
 			double x2 = tabs.GetTabPositionInPoints (tab_property);
 			double x3 = layout.LineWidth - layout.RightMargin;
+			
+			//	Gestion des modes absolus/relatifs :
 			
 			switch (tabs.GetTabPositionMode (tab_property))
 			{
@@ -1326,6 +1339,8 @@ restart_paragraph_layout:
 				default:
 					throw new System.NotSupportedException (string.Format ("Tab position mode {0} not supported", tabs.GetTabPositionMode (tab_property)));
 			}
+			
+			//	Gestion de l'indentation du paragraphe après la marque de tabulation :
 			
 			switch (tabs.GetTabPositionMode (tab_property))
 			{
@@ -1363,9 +1378,6 @@ restart_paragraph_layout:
 			scratch.RecordAscender (layout.LineAscender);
 			scratch.RecordDescender (layout.LineDescender);
 			scratch.RecordLineHeight (layout.LineHeight);
-			
-//-			Debug.Assert.IsTrue (layout.Disposition == 0);
-//-			Debug.Assert.IsTrue (layout.Justification == 0);
 			
 			if ((x_before < 0) ||
 				(x_after < 0))
@@ -1426,6 +1438,7 @@ restart_paragraph_layout:
 			
 			scratch.DefineAvailableWidth (room);
 			scratch.MoveTo (0, layout.TextOffset);
+			scratch.DefineTabDockingMark (docking_mark);
 			
 			Layout.Status fit_status = scratch.Fit (ref result, line_count, true);
 			

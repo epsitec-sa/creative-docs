@@ -48,6 +48,11 @@ namespace Epsitec.Common.Text
 				value = (value & ~Bits.CodeMask) | (uint) code;
 			}
 			
+			public static void SetCode(ref ulong value, Code code)
+			{
+				Bits.SetCode (ref value, (int) code);
+			}
+			
 			
 			public static bool GetCombiningFlag(ulong value)
 			{

@@ -1260,6 +1260,51 @@ restart:
 			this.line_width = width + this.LeftMargin + this.RightMargin;
 		}
 		
+		public void DefineTabDockingMark(string tab_docking_mark)
+		{
+			if ((tab_docking_mark != null) &&
+				(tab_docking_mark.Length > 0))
+			{
+				uint[] utf32;
+				
+				TextConverter.ConvertFromString (tab_docking_mark, out utf32);
+				
+				int start = this.text_start + this.text_offset;
+				
+				for (int i = start; i < this.text.Length; i++)
+				{
+					uint code = (uint) Unicode.Bits.GetCode (this.text[i]);
+					
+					for (int j = 0; j < utf32.Length; j++)
+					{
+						if (code == utf32[j])
+						{
+							//	Trouvé un terminateur dans le texte. Il faut raccourcir
+							//	le texte en le tronquant ici :
+							
+							int     count = i - start;
+							ulong[] copy  = new ulong[count+1];
+							
+							System.Array.Copy (this.text, start, copy, 0, count);
+							
+							//	Ajoute une fin de texte synthétique, au cas où :
+							
+							copy[count] = this.text[i];
+							
+							Unicode.Bits.SetCode (ref copy[count], Unicode.Code.EndOfText);
+							Unicode.Bits.SetBreakInfo (ref copy[count], Unicode.BreakInfo.Yes);
+							
+							this.text        = copy;
+							this.text_start  = 0;
+							this.text_offset = 0;
+							
+							return;
+						}
+					}
+				}
+			}
+		}
+		
 		public void SelectMargins(int paragraph_line_index)
 		{
 			ulong code = this.text[this.text_start + this.text_offset];
