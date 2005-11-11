@@ -177,19 +177,6 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (property != null);
 			System.Diagnostics.Debug.Assert (property.PropertyAffinity == Properties.PropertyAffinity.Symbol);
 			
-			int tab_user_count_1 = 0;
-			int tab_user_count_2 = 0;
-			
-			if (code == Unicode.Code.HorizontalTab)
-			{
-				if (property.WellKnownType != Properties.WellKnownType.Tab)
-				{
-					throw new System.InvalidOperationException ("Cannot insert tab without tag");
-				}
-				
-				tab_user_count_1 = this.TextContext.TabList.GetTabUserCount (property as Properties.TabProperty);
-			}
-			
 			//	La propriété passée en entrée est simplement ajoutée en fin de
 			//	liste des propriétés associées au curseur, temporairement :
 			
@@ -212,15 +199,6 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.NotifyTextChanged ();
-			
-			if (code == Unicode.Code.HorizontalTab)
-			{
-				tab_user_count_2 = this.TextContext.TabList.GetTabUserCount (property as Properties.TabProperty);
-				
-				System.Diagnostics.Debug.Assert (tab_user_count_2 > tab_user_count_1);
-				
-				this.NotifyTabsChanged ();
-			}
 		}
 		
 		public void Insert(string text)
@@ -243,8 +221,6 @@ namespace Epsitec.Common.Text
 		public void Delete()
 		{
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
-			
-			int tab_change_count = 0;
 			
 			//	Supprime le contenu de la sélection (pour autant qu'il y en ait
 			//	une qui soit définie).
@@ -287,7 +263,7 @@ namespace Epsitec.Common.Text
 							this.UpdateCurrentStylesAndProperties ();
 						}
 						
-						this.DeleteText (c1, p2-p1, ref tab_change_count);
+						this.DeleteText (c1, p2-p1);
 					}
 					
 					this.story.ValidateAction ();
@@ -298,18 +274,11 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.NotifyTextChanged ();
-			
-			if (tab_change_count > 0)
-			{
-				this.NotifyTabsChanged ();
-			}
 		}
 		
 		public void Delete(int move)
 		{
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
-			
-			int tab_change_count = 0;
 			
 			int p1 = this.story.GetCursorPosition (this.cursor);
 			int p2 = p1 + move;
@@ -381,7 +350,7 @@ namespace Epsitec.Common.Text
 				if (p2 > p1)
 				{
 					this.story.SetCursorPosition (temp, p1);
-					this.DeleteText (temp, p2-p1, ref tab_change_count);
+					this.DeleteText (temp, p2-p1);
 				}
 				
 				if (Internal.Navigator.IsParagraphStart (this.story, this.ActiveCursor, 0))
@@ -404,11 +373,6 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.NotifyTextChanged ();
-			
-			if (tab_change_count > 0)
-			{
-				this.NotifyTabsChanged ();
-			}
 		}
 		
 		public void MoveTo(int position, int direction)
@@ -882,6 +846,7 @@ namespace Epsitec.Common.Text
 						for (int i = 0; i < pos_1.Length; i++)
 						{
 							this.SetTextProperties (pos_1[i], 1, Properties.ApplyMode.Set, tab_rename);
+							this.SetParagraphProperties (pos_1[i], Properties.ApplyMode.Combine, tabs_change);
 						}
 						
 						for (int i = 0; i < pos_2.Length; i++)
@@ -894,7 +859,6 @@ namespace Epsitec.Common.Text
 					
 					this.UpdateCurrentStylesAndProperties ();
 					this.NotifyTextChanged ();
-					this.NotifyTabsChanged ();
 				}
 			}
 			
@@ -1168,7 +1132,6 @@ namespace Epsitec.Common.Text
 			
 			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
-			this.NotifyTabsChanged ();
 		}
 		
 		public void SetTextStyles(params TextStyle[] styles)
@@ -1355,7 +1318,6 @@ namespace Epsitec.Common.Text
 			
 			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
-			this.NotifyTabsChanged ();
 		}
 		
 		public void SetParagraphProperties(Properties.ApplyMode mode, params Property[] properties)
@@ -1409,15 +1371,6 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.NotifyTextChanged ();
-			
-			foreach (Property property in properties)
-			{
-				if (property.WellKnownType == Properties.WellKnownType.Tabs)
-				{
-					this.NotifyTabsChanged ();
-					break;
-				}
-			}
 		}
 		
 		public void SetTextProperties(Properties.ApplyMode mode, params Property[] properties)
@@ -2046,7 +1999,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		protected void DeleteText(ICursor cursor, int length, ref int tab_change_count)
+		protected void DeleteText(ICursor cursor, int length)
 		{
 			//	Supprime le fragment de texte; il faut traiter spécialement la
 			//	destruction des fins de paragraphes, car elle provoque le change-
@@ -2057,19 +2010,6 @@ namespace Epsitec.Common.Text
 			
 			ulong[] text = new ulong[length];
 			this.story.ReadText (cursor, length, text);
-			
-			for (int i = 0; i < text.Length; i++)
-			{
-				if (Unicode.Bits.GetUnicodeCode (text[i]) == Unicode.Code.HorizontalTab)
-				{
-					//	On ne modifie pas le compteur d'utilisation pour le TAB
-					//	correspondant, car le texte est placé dans la zone des
-					//	UNDO dans TextStory et les tabulateurs sont donc encore
-					//	référencés.
-					
-					tab_change_count++;
-				}
-			}
 			
 			System.Collections.Stack ranges = new System.Collections.Stack ();
 			
@@ -2596,12 +2536,31 @@ namespace Epsitec.Common.Text
 			if (this.accumulated_properties_fingerprint != fingerprint.ToString ())
 			{
 				this.accumulated_properties_fingerprint = fingerprint.ToString ();
-				System.Diagnostics.Debug.WriteLine (string.Format ("Fingerprint: {0}", this.accumulated_properties_fingerprint));
+				System.Diagnostics.Debug.WriteLine (string.Format ("Property Fingerprint: {0}", this.accumulated_properties_fingerprint));
 				
 				this.OnActiveStyleChanged ();
 			}
 		}
 		
+		private void RefreshTabInfosFingerprint()
+		{
+			System.Text.StringBuilder fingerprint = new System.Text.StringBuilder ();
+			TabInfo[] infos = this.GetTabInfos ();
+			
+			foreach (TabInfo info in infos)
+			{
+				fingerprint.Append (info.Tag);
+				fingerprint.Append (info.Status);
+			}
+			
+			if (this.accumulated_tab_info_fingerprint != fingerprint.ToString ())
+			{
+				this.accumulated_tab_info_fingerprint = fingerprint.ToString ();
+				System.Diagnostics.Debug.WriteLine (string.Format ("TabInfo Fingerprint: {0}", this.accumulated_tab_info_fingerprint));
+				
+				this.NotifyTabsChanged ();
+			}
+		}
 		
 		private int FindNextParagraphStart(int pos)
 		{
@@ -2927,7 +2886,10 @@ namespace Epsitec.Common.Text
 		{
 			if ((e.Oplet is TextStory.CursorMoveOplet) ||
 				(e.Oplet is TextNavigator.DefineSelectionOplet) ||
-				(e.Oplet is TextNavigator.ClearSelectionOplet))
+				(e.Oplet is TextNavigator.ClearSelectionOplet) ||
+				(e.Oplet is TextStory.TextChangeOplet) ||
+				(e.Oplet is TextStory.TextInsertOplet) ||
+				(e.Oplet is TextStory.TextDeleteOplet))
 			{
 				this.UpdateCurrentStylesAndProperties ();
 			}
@@ -2938,7 +2900,6 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.NotifyTextChanged ();
-			this.NotifyTabsChanged ();
 		}
 		
 		protected virtual void OnTextChanged()
@@ -2987,6 +2948,7 @@ namespace Epsitec.Common.Text
 		private void NotifyTextChanged()
 		{
 			this.OnTextChanged ();
+			this.RefreshTabInfosFingerprint ();
 		}
 		
 		private void NotifyTabsChanged()
@@ -3164,5 +3126,6 @@ namespace Epsitec.Common.Text
 		private Property[]						current_properties;
 		private Property[]						accumulated_properties;
 		private string							accumulated_properties_fingerprint;
+		private string							accumulated_tab_info_fingerprint;
 	}
 }
