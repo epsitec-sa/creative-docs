@@ -117,7 +117,15 @@ namespace Epsitec.Common.Document.Widgets
 							{
 								if ( this.tabs[i].Tag == this.draggingTabTag )
 								{
+									int oldDraggingHandle = this.draggingHandle;
+									
 									this.draggingHandle = HRuler.HandleFirstTab+i;
+									
+									if ( oldDraggingHandle == this.hiliteHandle )
+									{
+										this.hiliteHandle = this.draggingHandle;
+									}
+									
 									break;
 								}
 							}
