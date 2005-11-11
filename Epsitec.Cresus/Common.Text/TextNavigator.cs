@@ -840,15 +840,24 @@ namespace Epsitec.Common.Text
 		
 		public bool RenameTab(string old_tag, string new_tag)
 		{
-			if (old_tag != new_tag)
+			return this.RenameTabs (new string[] { old_tag }, new_tag);
+		}
+		
+		public bool RenameTabs(string[] old_tags, string new_tag)
+		{
+			System.Diagnostics.Debug.Assert (old_tags != null);
+			System.Diagnostics.Debug.Assert (old_tags.Length > 0);
+			
+			if ((old_tags.Length > 1) ||
+				(old_tags[0] != new_tag))
 			{
-				int[] pos_1 = this.FindTextTabPositions (old_tag);
-				int[] pos_2 = this.FindTextTabsPositions (old_tag);
+				int[] pos_1 = this.FindTextTabPositions (old_tags);
+				int[] pos_2 = this.FindTextTabsPositions (old_tags);
 				
 				if ((pos_1.Length > 0) ||
 					(pos_2.Length > 0))
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Rename tab from {0} to {1}, {2} live, {3} defined", old_tag, new_tag, pos_1.Length, pos_2.Length));
+					System.Diagnostics.Debug.WriteLine (string.Format ("Rename tab from {0} to {1}, {2} live, {3} defined", string.Join ("/", old_tags), new_tag, pos_1.Length, pos_2.Length));
 					
 					using (this.story.BeginAction ())
 					{
@@ -858,8 +867,17 @@ namespace Epsitec.Common.Text
 						Property[] tab_rename  = new Property[1];
 						Property[] tabs_change = new Property[1];
 						
+						string[] tabs = new string[old_tags.Length + 1];
+						
+						for (int i = 0; i < old_tags.Length; i++)
+						{
+							tabs[i] = string.Concat ("-", old_tags[i]);
+						}
+						
+						tabs[old_tags.Length] = new_tag;
+						
 						tab_rename[0]  = this.TextContext.TabList[new_tag];
-						tabs_change[0] = new Properties.TabsProperty (string.Concat ("-", old_tag), new_tag);
+						tabs_change[0] = new Properties.TabsProperty (tabs);
 						
 						for (int i = 0; i < pos_1.Length; i++)
 						{
@@ -954,7 +972,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		private int[] FindTextTabPositions(string tag)
+		private int[] FindTextTabPositions(string[] tags)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -975,7 +993,7 @@ namespace Epsitec.Common.Text
 					
 					while (pos < end)
 					{
-						this.FindTextTabPositions (list, pos, tag);
+						this.FindTextTabPositions (list, pos, tags);
 						
 						pos = this.FindNextParagraphStart (pos);
 					}
@@ -984,13 +1002,13 @@ namespace Epsitec.Common.Text
 			
 			if (length == 0)
 			{
-				this.FindTextTabPositions (list, this.CursorPosition, tag);
+				this.FindTextTabPositions (list, this.CursorPosition, tags);
 			}
 			
 			return (int[]) list.ToArray (typeof (int));
 		}
 		
-		private int[] FindTextTabsPositions(string tag)
+		private int[] FindTextTabsPositions(string[] tags)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -1011,7 +1029,7 @@ namespace Epsitec.Common.Text
 					
 					while (pos < end)
 					{
-						this.FindTextTabsPositions (list, pos, tag);
+						this.FindTextTabsPositions (list, pos, tags);
 						
 						pos = this.FindNextParagraphStart (pos);
 					}
@@ -1020,13 +1038,13 @@ namespace Epsitec.Common.Text
 			
 			if (length == 0)
 			{
-				this.FindTextTabsPositions (list, this.CursorPosition, tag);
+				this.FindTextTabsPositions (list, this.CursorPosition, tags);
 			}
 			
 			return (int[]) list.ToArray (typeof (int));
 		}
 		
-		private void  FindTextTabPositions(System.Collections.ArrayList list, int pos, string tag)
+		private void  FindTextTabPositions(System.Collections.ArrayList list, int pos, string[] tags)
 		{
 			//	Trouve la position des caractères TAB dand le texte du
 			//	paragraphe qui correspondent à la marque de tabulation
@@ -1058,26 +1076,36 @@ namespace Epsitec.Common.Text
 						System.Diagnostics.Debug.Assert (property != null);
 						System.Diagnostics.Debug.Assert (property.TabTag != null);
 						
-						if (property.TabTag == tag)
+						for (int j = 0; j < tags.Length; j++)
 						{
-							list.Add (start + i);
+							if (property.TabTag == tags[j])
+							{
+								list.Add (start + i);
+								break;
+							}
 						}
 					}
 				}
 			}
 		}
 		
-		private void  FindTextTabsPositions(System.Collections.ArrayList list, int pos, string tag)
+		private void  FindTextTabsPositions(System.Collections.ArrayList list, int pos, string[] tags)
 		{
 			//	Trouve la position des paragraphes qui font référence au moyen
 			//	d'un Properties.TabsProperty au tag spécifié :
 			
 			Properties.TabsProperty property = this.GetTabsProperty (pos);
 			
-			if ((property != null) &&
-				(property.ContainsTabTag (tag)))
+			if (property != null)
 			{
-				list.Add (pos);
+				for (int i = 0; i < tags.Length; i++)
+				{
+					if (property.ContainsTabTag (tags[i]))
+					{
+						list.Add (pos);
+						break;
+					}
+				}
 			}
 		}
 		
