@@ -890,16 +890,20 @@ namespace Epsitec.Common.Document.Objects
 		public override int NewTextTab(double pos, TextTabType type, out string tag)
 		{
 			double dispo = 0.0;
-			if ( type == TextTabType.Center )  dispo = 0.5;
-			if ( type == TextTabType.Left   )  dispo = 1.0;
+			string dockingMark = null;
+			TabPositionMode positionMode = TabPositionMode.Absolute;
+
+			if ( type == TextTabType.Center  )  dispo = 0.5;
+			if ( type == TextTabType.Left    )  dispo = 1.0;
+			if ( type == TextTabType.Decimal )  dockingMark = ".";
+			if ( type == TextTabType.Indent  )  positionMode = TabPositionMode.AbsoluteIndent;
 
 			int count = this.TextTabCount;
 			Text.TabList list = this.document.TextContext.TabList;
-			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute);
+			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode);
 			Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
 			this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
 			tag = tab.TabTag;
-//-			this.HandleTabsChanged(null);  // TODO: devrait être inutile
 			return count;
 		}
 
@@ -922,8 +926,13 @@ namespace Epsitec.Common.Document.Objects
 			Text.TabList list = this.document.TextContext.TabList;
 			
 			double dispo = 0.0;
-			if ( type == TextTabType.Center )  dispo = 0.5;
-			if ( type == TextTabType.Left   )  dispo = 1.0;
+			string dockingMark = null;
+			TabPositionMode positionMode = TabPositionMode.Absolute;
+
+			if ( type == TextTabType.Center  )  dispo = 0.5;
+			if ( type == TextTabType.Left    )  dispo = 1.0;
+			if ( type == TextTabType.Decimal )  dockingMark = ".";
+			if ( type == TextTabType.Indent  )  positionMode = TabPositionMode.AbsoluteIndent;
 			
 			if ( firstChange && Text.TabList.GetTabClass(tag) == Text.TabClass.Auto )
 			{
@@ -933,7 +942,7 @@ namespace Epsitec.Common.Document.Objects
 				// procéder à des modifications :
 				
 				Text.Properties.TabProperty oldTab = list.GetTabProperty(tag);
-				Text.Properties.TabProperty newTab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute, null);
+				Text.Properties.TabProperty newTab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
 				
 				this.textFlow.TextNavigator.RenameTab(oldTab.TabTag, newTab.TabTag);
 				
@@ -942,7 +951,7 @@ namespace Epsitec.Common.Document.Objects
 			else
 			{
 				Text.Properties.TabProperty tab = list.GetTabProperty(tag);
-				list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute, null);
+				list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
 			}
 			
 			this.HandleTabsChanged(null);  // TODO: devrait être inutile
@@ -957,9 +966,21 @@ namespace Epsitec.Common.Document.Objects
 			pos = list.GetTabPosition(tab);
 
 			type = TextTabType.Right;
-			double dispo = list.GetTabDisposition(tab);
-			if ( dispo == 0.5 )  type = TextTabType.Center;
-			if ( dispo == 1.0 )  type = TextTabType.Left;
+
+			if ( list.GetTabPositionMode(tab) == TabPositionMode.AbsoluteIndent )
+			{
+				type = TextTabType.Indent;
+			}
+			else if ( list.GetTabDockingMark(tab) != null )
+			{
+				type = TextTabType.Decimal;
+			}
+			else
+			{
+				double dispo = list.GetTabDisposition(tab);
+				if ( dispo == 0.5 )  type = TextTabType.Center;
+				if ( dispo == 1.0 )  type = TextTabType.Left;
+			}
 		}
 
 		// Donne la liste des propriétés.
@@ -1598,23 +1619,27 @@ namespace Epsitec.Common.Document.Objects
 			p2.X -= adjust;  p2.Y += adjust;
 			if ( p1.X >= p2.X )  return;
 
-			Point p2a = new Point(p2.X-a, p2.Y-a);
-			Point p2b = new Point(p2.X-a, p2.Y+a);
+			Point p2a = new Point(p2.X-a, p2.Y-a*0.75);
+			Point p2b = new Point(p2.X-a, p2.Y+a*0.75);
+
+			Color color = isTabDefined ? Drawing.Color.FromBrightness(0.8) : DrawingContext.ColorTabZombie;
 			
-			if ( (tabCode & this.markerSelected) != 0 )
+			if ( (tabCode & this.markerSelected) != 0 )  // tabulateur sélectionné ?
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle(x1, layout.LineY1, x2-x1, layout.LineY2-layout.LineY1);
 				graphics.Align(ref rect);
 				
 				this.graphics.AddFilledRectangle(rect);
 				this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
+
+				if ( isTabDefined )  color = Drawing.Color.FromBrightness(0.5);
 			}
 			
 			this.graphics.LineWidth = 1.0/drawingContext.ScaleX;
 			this.graphics.AddLine(p1, p2);
 			this.graphics.AddLine(p2, p2a);
 			this.graphics.AddLine(p2, p2b);
-			this.graphics.RenderSolid(isTabDefined ? Drawing.Color.FromBrightness(0.8) : DrawingContext.ColorTabZombie);
+			this.graphics.RenderSolid(color);
 		}
 			
 		public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)

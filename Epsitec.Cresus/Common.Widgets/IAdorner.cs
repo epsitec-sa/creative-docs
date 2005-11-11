@@ -38,6 +38,7 @@ namespace Epsitec.Common.Widgets
 		void PaintWindowBackground(Drawing.Graphics graphics, Drawing.Rectangle windowRect, Drawing.Rectangle paintRect, WidgetState state);
 
 		void PaintGlyph(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, GlyphShape type, PaintTextStyle style);
+		void PaintGlyph(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Drawing.Color color, GlyphShape type, PaintTextStyle style);
 		void PaintCheck(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintRadio(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintIcon(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, string icon);

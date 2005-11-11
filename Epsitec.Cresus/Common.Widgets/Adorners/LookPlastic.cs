@@ -62,6 +62,21 @@ namespace Epsitec.Common.Widgets.Adorner
 							   GlyphShape type,
 							   PaintTextStyle style)
 		{
+			Drawing.Color color = this.colorBlack;
+			if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRGB(0.5, 0.0, 0.0);  // rouge foncé
+			if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRGB(0.0, 0.5, 0.0);  // vert foncé
+
+			this.PaintGlyph(graphics, rect, state, color, type, style);
+		}
+		
+		// Dessine une icône simple (dans un bouton d'ascenseur par exemple).
+		public void PaintGlyph(Drawing.Graphics graphics,
+							   Drawing.Rectangle rect,
+							   Widgets.WidgetState state,
+							   Drawing.Color color,
+							   GlyphShape type,
+							   PaintTextStyle style)
+		{
 			if ( type == GlyphShape.ResizeKnob )
 			{
 				Drawing.Point p = rect.BottomRight;
@@ -257,9 +272,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
-			Drawing.Color color = this.colorBlack;
-			if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRGB(0.5, 0.0, 0.0);  // rouge foncé
-			if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRGB(0.0, 0.5, 0.0);  // vert foncé
+			path.Dispose();
 			graphics.RenderSolid(color);
 		}
 

@@ -354,23 +354,35 @@ namespace Epsitec.Common.Document.Widgets
 				rect.Left  = posx-rect.Height/2;
 				rect.Right = posx+rect.Height/2;
 
-				rect.Inflate(2);
+				Color colorBack = Color.FromBrightness(1);
+
 				if ( i == hilite )  // tabulateur survolé par la souris ?
 				{
-					rect.Inflate(3);  // plus grand
+					colorBack = this.ColorBackgroundMargins(true);
+				}
+				else	// tabulateur non survolé ?
+				{
+					if ( this.tabs[i].Zombie )
+					{
+						colorBack = DrawingContext.ColorTabZombie;
+					}
+					else
+					{
+						colorBack = this.ColorBackgroundEdited;
+					}
 				}
 
-				graphics.AddFilledCircle(rect.Center, rect.Width/2-3);
-				if ( this.tabs[i].Zombie )
+				rect.Bottom += 3.0;
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(colorBack);
+
+				rect.Inflate(5);
+
+				Color colorGlyph = Color.FromBrightness(0);  // noir
+				if ( colorBack.GetBrightness() <= 0.4 )  // couleur foncée ?
 				{
-					graphics.RenderSolid(DrawingContext.ColorTabZombie);
+					colorGlyph = Color.FromBrightness(1);  // blanc
 				}
-				else
-				{
-					graphics.RenderSolid(this.ColorBackgroundEdited);
-				}
-				graphics.AddCircle(rect.Center, rect.Width/2-3);
-				graphics.RenderSolid(this.ColorBorderMargins);
 
 				Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
 				switch ( this.tabs[i].Type )
@@ -381,9 +393,8 @@ namespace Epsitec.Common.Document.Widgets
 					case Drawing.TextTabType.Decimal:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
 					case Drawing.TextTabType.Indent:   glyph = Common.Widgets.GlyphShape.TabIndent;   break;
 				}
-				//?Common.Widgets.WidgetState state = this.tabs[i].Zombie ? Common.Widgets.WidgetState.None : Common.Widgets.WidgetState.Enabled;
 				Common.Widgets.WidgetState state = Common.Widgets.WidgetState.Enabled;
-				adorner.PaintGlyph(graphics, rect, state, glyph, Common.Widgets.PaintTextStyle.Button);
+				adorner.PaintGlyph(graphics, rect, state, colorGlyph, glyph, Common.Widgets.PaintTextStyle.Button);
 			}
 		}
 
@@ -399,10 +410,15 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(this.ColorBackgroundEdited);
 
 			rect.Deflate(0.5);
+			rect.Width += 1;
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(adorner.ColorTextFieldBorder(this.IsEnabled));
+			rect.Width -= 1;
+			rect.Inflate(0.5);
+			rect.Bottom += 3.0;
+			rect.Inflate(5);
+			rect.Offset(0.5, -1);
 
-			rect.Inflate(2);
 			Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
 			switch ( this.tabToCreate )
 			{
@@ -438,10 +454,10 @@ namespace Epsitec.Common.Document.Widgets
 
 			if ( this.edited )  // édition en cours ?
 			{
+				this.PaintTabs(graphics);
 				this.PaintMarginLeftFirst(graphics, this.HiliteHandle == HRuler.HandleLeftFirst || this.HiliteHandle == HRuler.HandleFirstBody);
 				this.PaintMarginLeftBody (graphics, this.HiliteHandle == HRuler.HandleLeftBody  || this.HiliteHandle == HRuler.HandleFirstBody);
 				this.PaintMarginRight    (graphics, this.HiliteHandle == HRuler.HandleRight);
-				this.PaintTabs(graphics);
 				this.PaintTabChoice(graphics);
 			}
 
