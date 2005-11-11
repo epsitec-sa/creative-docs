@@ -1017,26 +1017,6 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.edited )
 			{
-				if ( true )
-				{
-					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-					Text.TextNavigator.TabInfo[] infos = this.textFlow.TextNavigator.GetTabInfos();
-					Text.TabList list = this.document.TextContext.TabList;
-					
-					buffer.Append("UpdateTextRulers:");
-					
-					foreach (Text.TextNavigator.TabInfo info in infos)
-					{
-						string tag = info.Tag;
-						Text.Properties.TabProperty tab = list[tag];
-						TabStatus tabStatus = info.Status;
-						TabClass  tabClass = Text.TabList.GetTabClass(tab);
-						buffer.AppendFormat (" {0}->{1}/{2}({5}) p={3:0.0} m={4:0.0}", tag, tabStatus, tabClass, list.GetTabPositionInPoints(tab), list.GetTabDisposition(tab), list.GetTabUserCount(tab));
-					}
-					
-					System.Diagnostics.Debug.WriteLine(buffer.ToString());
-				}
-				
 				Drawing.Rectangle bbox = this.bboxThin;
 				this.document.HRuler.LimitLow  = bbox.Left;
 				this.document.HRuler.LimitHigh = bbox.Right;
@@ -1051,32 +1031,40 @@ namespace Epsitec.Common.Document.Objects
 				this.document.HRuler.MarginLeftBody  = bbox.Left+leftBody;
 				this.document.HRuler.MarginRight     = bbox.Right-right;
 
-				Text.TextNavigator.TabInfo[] tabInfos = this.textFlow.TextNavigator.GetTabInfos();
+				Text.TextNavigator.TabInfo[] infos = this.textFlow.TextNavigator.GetTabInfos();
 
-				int count = this.TextTabCount;
-				Widgets.Tab[] tabs = new Widgets.Tab[count];
-				for ( int i=0 ; i<count ; i++ )
+				if ( true )
 				{
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+					Text.TabList list = this.document.TextContext.TabList;
+					
+					buffer.Append("UpdateTextRulers:");
+					
+					foreach ( Text.TextNavigator.TabInfo info in infos )
+					{
+						string tag = info.Tag;
+						Text.Properties.TabProperty tab = list[tag];
+						TabStatus tabStatus = info.Status;
+						TabClass  tabClass = Text.TabList.GetTabClass(tab);
+						buffer.AppendFormat(" {0}->{1}/{2}({5}) p={3:0.0} m={4:0.0}", tag, tabStatus, tabClass, list.GetTabPositionInPoints(tab), list.GetTabDisposition(tab), list.GetTabUserCount(tab));
+					}
+					
+					System.Diagnostics.Debug.WriteLine(buffer.ToString());
+				}
+
+				Widgets.Tab[] tabs = new Widgets.Tab[infos.Length];
+				for ( int i=0 ; i<infos.Length ; i++ )
+				{
+					Text.TextNavigator.TabInfo info = infos[i] as Text.TextNavigator.TabInfo;
+
 					double pos;
 					TextTabType type;
-					string tag;
-					this.GetTextTabTag(i, out tag);
+					this.GetTextTab(info.Tag, out pos, out type);
 
-					bool zombie = false;
-					foreach ( Text.TextNavigator.TabInfo tabInfo in tabInfos )
-					{
-						if ( tabInfo.Tag == tag )
-						{
-							zombie = (tabInfo.Status == TabStatus.Zombie);
-							break;
-						}
-					}
-
-					this.GetTextTab(tag, out pos, out type);
 					tabs[i].Pos = bbox.Left+pos;
 					tabs[i].Type = type;
-					tabs[i].Zombie = zombie;
-					tabs[i].Tag = tag;
+					tabs[i].Zombie = (info.Status == TabStatus.Zombie);
+					tabs[i].Tag = info.Tag;
 				}
 				this.document.HRuler.Tabs = tabs;
 			}
@@ -1590,17 +1578,43 @@ namespace Epsitec.Common.Document.Objects
 			context.DisableSimpleRendering();
 		}
 		
-		public void RenderTab(Text.Layout.Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined)
+		public void RenderTab(Text.Layout.Context layout, string tag, double tabOrigin, double tabStop, ulong tabCode, bool isTabDefined)
 		{
 			if ( this.graphics == null )  return;
+			if ( this.drawingContext == null )  return;
 			if ( this.edited == false )  return;
+
+			double x1 = tabOrigin;
+			double x2 = tabStop;
+			double y  = layout.LineBaseY + layout.LineAscender*0.3;
+			double a  = System.Math.Min(layout.LineAscender*0.3, (x2-x1)*0.5);
+
+			Point p1 = new Point(x1, y);
+			Point p2 = new Point(x2, y);
+			graphics.Align(ref p1);
+			graphics.Align(ref p2);
+			double adjust = 0.5/drawingContext.ScaleX;
+			p1.X += adjust;  p1.Y += adjust;
+			p2.X -= adjust;  p2.Y += adjust;
+			if ( p1.X >= p2.X )  return;
+
+			Point p2a = new Point(p2.X-a, p2.Y-a);
+			Point p2b = new Point(p2.X-a, p2.Y+a);
 			
-			double x1 = tab_origin;
-			double y  = layout.LineBaseY + layout.LineAscender * 0.3;
-			double x2 = tab_stop;
+			if ( (tabCode & this.markerSelected) != 0 )
+			{
+				Drawing.Rectangle rect = new Drawing.Rectangle(x1, layout.LineY1, x2-x1, layout.LineY2-layout.LineY1);
+				graphics.Align(ref rect);
+				
+				this.graphics.AddFilledRectangle(rect);
+				this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
+			}
 			
-			this.graphics.AddLine(x1, y, x2, y);
-			this.graphics.RenderSolid(Drawing.Color.FromBrightness(0.6));
+			this.graphics.LineWidth = 1.0/drawingContext.ScaleX;
+			this.graphics.AddLine(p1, p2);
+			this.graphics.AddLine(p2, p2a);
+			this.graphics.AddLine(p2, p2b);
+			this.graphics.RenderSolid(isTabDefined ? Drawing.Color.FromBrightness(0.8) : DrawingContext.ColorTabZombie);
 		}
 			
 		public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)

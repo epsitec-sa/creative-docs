@@ -360,11 +360,17 @@ namespace Epsitec.Common.Document.Widgets
 					rect.Inflate(3);  // plus grand
 				}
 
+				graphics.AddFilledCircle(rect.Center, rect.Width/2-3);
 				if ( this.tabs[i].Zombie )
 				{
-					graphics.AddFilledCircle(rect.Center, rect.Width/2-3);
-					graphics.RenderSolid(Color.FromBrightness(1));
+					graphics.RenderSolid(DrawingContext.ColorTabZombie);
 				}
+				else
+				{
+					graphics.RenderSolid(this.ColorBackgroundEdited);
+				}
+				graphics.AddCircle(rect.Center, rect.Width/2-3);
+				graphics.RenderSolid(this.ColorBorderMargins);
 
 				Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
 				switch ( this.tabs[i].Type )
@@ -375,7 +381,8 @@ namespace Epsitec.Common.Document.Widgets
 					case Drawing.TextTabType.Decimal:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
 					case Drawing.TextTabType.Indent:   glyph = Common.Widgets.GlyphShape.TabIndent;   break;
 				}
-				Common.Widgets.WidgetState state = this.tabs[i].Zombie ? Common.Widgets.WidgetState.None : Common.Widgets.WidgetState.Enabled;
+				//?Common.Widgets.WidgetState state = this.tabs[i].Zombie ? Common.Widgets.WidgetState.None : Common.Widgets.WidgetState.Enabled;
+				Common.Widgets.WidgetState state = Common.Widgets.WidgetState.Enabled;
 				adorner.PaintGlyph(graphics, rect, state, glyph, Common.Widgets.PaintTextStyle.Button);
 			}
 		}

@@ -1873,6 +1873,12 @@ namespace Epsitec.Common.Document
 				return Color.FromBrightness(0.85);  // gris
 			}
 		}
+
+		// Retourne la couleur du fond d'un tabulateur supprimé.
+		static public Color ColorTabZombie
+		{
+			get { return Color.FromARGB(1.0, 1.0, 0.4, 0.0); }  // rouge-orange
+		}
 		#endregion
 
 
