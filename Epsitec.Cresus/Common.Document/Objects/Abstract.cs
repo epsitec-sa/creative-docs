@@ -790,26 +790,20 @@ namespace Epsitec.Common.Document.Objects
 			units = Text.Properties.SizeUnits.None;
 		}
 
-		// Donne le nombre de tabulateurs du texte.
-		public virtual int TextTabCount
+
+		// Retourne tous les tags des tabulateurs.
+		public virtual string[] TextTabTags
 		{
 			get
 			{
-				return 0;
+				return null;
 			}
 		}
 
 		// Crée un nouveau tabulateur dans le texte.
-		public virtual int NewTextTab(double pos, TextTabType type, out string tag)
+		public virtual string NewTextTab(double pos, TextTabType type)
 		{
-			tag = null;
-			return -1;
-		}
-
-		// Trouve le nom du tabulateur d'après son rang.
-		public virtual void GetTextTabTag(int rank, out string tag)
-		{
-			tag = null;
+			return null;
 		}
 
 		// Supprime un tabulateur du texte.
@@ -817,16 +811,28 @@ namespace Epsitec.Common.Document.Objects
 		{
 		}
 
-		// Modifie un tabulateur du texte.
-		public virtual void SetTextTab(ref string tag, bool firstChange, double pos, TextTabType type)
+		// Renomme un tabulateur du texte.
+		public bool RenameTextTab(string oldTag, string newTag)
 		{
+			return this.RenameTextTabs(new string[] { oldTag }, newTag);
 		}
-
+		
+		// Renomme plusieurs tabulateurs du texte.
+		public virtual bool RenameTextTabs(string[] oldTags, string newTag)
+		{
+			return false;
+		}
+		
 		// Donne un tabulateur du texte.
 		public virtual void GetTextTab(string tag, out double pos, out TextTabType type)
 		{
 			pos = 0;
 			type = TextTabType.None;
+		}
+
+		// Modifie un tabulateur du texte.
+		public virtual void SetTextTab(ref string tag, double pos, TextTabType type, bool firstChange)
+		{
 		}
 
 		

@@ -6,10 +6,10 @@ namespace Epsitec.Common.Document.Widgets
 {
 	public struct Tab
 	{
+		public string			Tag;
 		public double			Pos;
 		public TextTabType		Type;
 		public bool				Zombie;
-		public string			Tag;
 	}
 
 	/// <summary>
@@ -19,6 +19,10 @@ namespace Epsitec.Common.Document.Widgets
 	{
 		public HRuler() : base(false)
 		{
+			this.invalidTab.Tag = null;
+			this.invalidTab.Pos = 0;
+			this.invalidTab.Type = TextTabType.None;
+			this.invalidTab.Zombie = false;
 		}
 		
 		public HRuler(Widget embedder) : this()
@@ -102,40 +106,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				if ( this.isDragging || !HRuler.TabCompare(this.tabs, value) )
 				{
-					if ( this.isDragging )
-					{
-						// Si l'on est en train de déplacer une poignée, il se peut que
-						// la modification des tabulateurs rende l'ancien handle caduc.
-						// Il faut se baser sur le nom du tabulateur pour le retrouver
-						// ici :
-						
-						this.tabs = value;
-						
-						if ( this.tabs != null && this.draggingTabTag != null )
-						{
-							for ( int i=0 ; i < this.tabs.Length ; i++ )
-							{
-								if ( this.tabs[i].Tag == this.draggingTabTag )
-								{
-									int oldDraggingHandle = this.draggingHandle;
-									
-									this.draggingHandle = HRuler.HandleFirstTab+i;
-									
-									if ( oldDraggingHandle == this.hiliteHandle )
-									{
-										this.hiliteHandle = this.draggingHandle;
-									}
-									
-									break;
-								}
-							}
-						}
-					}
-					else
-					{
-						this.tabs = value;
-					}
-					
+					this.tabs = value;
 					this.Invalidate();
 				}
 			}
@@ -260,7 +231,7 @@ namespace Epsitec.Common.Document.Widgets
 			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			double posx = this.GetHandleHorizontalPos(0);
+			double posx = this.GetHandleHorizontalPos("LeftFirst");
 			rect.Left  = posx-3;
 			rect.Right = posx+3;
 			graphics.Align(ref rect);
@@ -291,7 +262,7 @@ namespace Epsitec.Common.Document.Widgets
 			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			double posx = this.GetHandleHorizontalPos(1);
+			double posx = this.GetHandleHorizontalPos("LeftBody");
 			rect.Left  = posx-3;
 			rect.Right = posx+3;
 			graphics.Align(ref rect);
@@ -323,7 +294,7 @@ namespace Epsitec.Common.Document.Widgets
 			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			double posx = this.GetHandleHorizontalPos(3);
+			double posx = this.GetHandleHorizontalPos("Right");
 			rect.Left  = posx-3;
 			rect.Right = posx+3;
 			graphics.Align(ref rect);
@@ -350,61 +321,74 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.tabs == null || this.tabs.Length == 0 )  return;
 
 			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
-			int hilite = this.HiliteHandle-HRuler.HandleFirstTab;
 
-			for ( int i=0 ; i<this.tabs.Length ; i++ )
+			for ( int pass=1 ; pass<=3 ; pass++ )
 			{
-				if ( i == this.draggingTabToDelete )  continue;
+				if ( pass == 2 && this.draggingTabDest == null )  continue;
+
+				foreach ( Tab tab in this.tabs )
+				{
+					if ( tab.Tag == this.draggingTabToDelete )  continue;
 				
-				Rectangle rect = this.Client.Bounds;
+					Rectangle rect = this.Client.Bounds;
 
-				double posx = this.GetHandleHorizontalPos(HRuler.HandleFirstTab+i);
-				rect.Left  = posx-rect.Height/2;
-				rect.Right = posx+rect.Height/2;
-				graphics.Align(ref rect);
+					double posx = this.GetHandleHorizontalPos(tab);
+					rect.Left  = posx-rect.Height/2;
+					rect.Right = posx+rect.Height/2;
+					graphics.Align(ref rect);
+					rect.Bottom += 3.0;
 
-				Color colorBack = Color.FromBrightness(1);
+					Color colorBack = Color.FromBrightness(1);
 
-				if ( i == hilite )  // tabulateur survolé par la souris ?
-				{
-					colorBack = this.ColorBackgroundMargins(true);
-				}
-				else	// tabulateur non survolé ?
-				{
-					if ( this.tabs[i].Zombie )
+					if ( tab.Tag == this.HiliteHandle )  // tabulateur survolé par la souris ?
 					{
-						colorBack = DrawingContext.ColorTabZombie;
+						colorBack = this.ColorBackgroundMargins(true);
 					}
 					else
 					{
-						colorBack = this.ColorBackgroundEdited;
+						colorBack = tab.Zombie ? DrawingContext.ColorTabZombie : this.ColorBackgroundEdited;
+					}
+
+					Color colorGlyph = Color.FromBrightness(0);  // noir
+					if ( colorBack.GetBrightness() <= 0.4 )  // couleur foncée ?
+					{
+						colorGlyph = Color.FromBrightness(1);  // blanc
+					}
+
+					if ( pass == 1 )
+					{
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(colorBack);
+					}
+					else if ( pass == 2 )
+					{
+						if ( tab.Tag == this.draggingTabDest )
+						{
+							graphics.AddFilledCircle(rect.Center, rect.Width/2);
+							graphics.RenderSolid(this.ColorBackgroundMargins(true));
+
+							graphics.AddCircle(rect.Center, rect.Width/2);
+							graphics.RenderSolid(colorGlyph);
+						}
+					}
+					else if ( pass == 3 )
+					{
+						rect.Inflate(5);
+						rect.Offset(0.5, 0);
+
+						Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
+						switch ( tab.Type )
+						{
+							case Drawing.TextTabType.Right:    glyph = Common.Widgets.GlyphShape.TabRight;    break;
+							case Drawing.TextTabType.Left:     glyph = Common.Widgets.GlyphShape.TabLeft;     break;
+							case Drawing.TextTabType.Center:   glyph = Common.Widgets.GlyphShape.TabCenter;   break;
+							case Drawing.TextTabType.Decimal:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+							case Drawing.TextTabType.Indent:   glyph = Common.Widgets.GlyphShape.TabIndent;   break;
+						}
+						Common.Widgets.WidgetState state = Common.Widgets.WidgetState.Enabled;
+						adorner.PaintGlyph(graphics, rect, state, colorGlyph, glyph, Common.Widgets.PaintTextStyle.Button);
 					}
 				}
-
-				rect.Bottom += 3.0;
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(colorBack);
-
-				rect.Inflate(5);
-				rect.Offset(0.5, 0);
-
-				Color colorGlyph = Color.FromBrightness(0);  // noir
-				if ( colorBack.GetBrightness() <= 0.4 )  // couleur foncée ?
-				{
-					colorGlyph = Color.FromBrightness(1);  // blanc
-				}
-
-				Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
-				switch ( this.tabs[i].Type )
-				{
-					case Drawing.TextTabType.Right:    glyph = Common.Widgets.GlyphShape.TabRight;    break;
-					case Drawing.TextTabType.Left:     glyph = Common.Widgets.GlyphShape.TabLeft;     break;
-					case Drawing.TextTabType.Center:   glyph = Common.Widgets.GlyphShape.TabCenter;   break;
-					case Drawing.TextTabType.Decimal:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
-					case Drawing.TextTabType.Indent:   glyph = Common.Widgets.GlyphShape.TabIndent;   break;
-				}
-				Common.Widgets.WidgetState state = Common.Widgets.WidgetState.Enabled;
-				adorner.PaintGlyph(graphics, rect, state, colorGlyph, glyph, Common.Widgets.PaintTextStyle.Button);
 			}
 		}
 
@@ -465,9 +449,9 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.edited )  // édition en cours ?
 			{
 				this.PaintTabs(graphics);
-				this.PaintMarginLeftFirst(graphics, this.HiliteHandle == HRuler.HandleLeftFirst || this.HiliteHandle == HRuler.HandleFirstBody);
-				this.PaintMarginLeftBody (graphics, this.HiliteHandle == HRuler.HandleLeftBody  || this.HiliteHandle == HRuler.HandleFirstBody);
-				this.PaintMarginRight    (graphics, this.HiliteHandle == HRuler.HandleRight);
+				this.PaintMarginLeftFirst(graphics, this.HiliteHandle == "LeftFirst" || this.HiliteHandle == "FirstBody");
+				this.PaintMarginLeftBody (graphics, this.HiliteHandle == "LeftBody"  || this.HiliteHandle == "FirstBody");
+				this.PaintMarginRight    (graphics, this.HiliteHandle == "Right");
 				this.PaintTabChoice(graphics);
 			}
 
@@ -477,36 +461,83 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Détecte la poignée visée par la souris.
-		protected override int DraggingDetect(Point pos, int exclude)
+		// Détecte les tabulateurs visés par la souris.
+		protected string[] DetectTabs(Point pos, string exclude)
 		{
-			if ( !this.edited )  return -1;
-			if ( this.editObject == null )  return -1;
-
-			int total = HRuler.HandleFirstTab;
-			if ( this.tabs != null )  total += this.tabs.Length;
-			for ( int handle=total-1 ; handle>=0 ; handle-- )
+			int total = 0;
+			for ( int i=0 ; i<this.tabs.Length ; i++ )
 			{
-				if ( handle == exclude )  continue;
-				double posx = this.GetHandleHorizontalPos(handle);
+				Tab tab = this.tabs[i];
+				if ( tab.Tag == exclude )  continue;
+
+				double posx = this.GetHandleHorizontalPos(tab);
 				if ( pos.X < posx-5 || pos.X > posx+5 )  continue;
-				if ( handle == HRuler.HandleLeftFirst && pos.Y < this.Client.Bounds.Top-4    )  continue;
-				if ( handle == HRuler.HandleLeftBody  && pos.Y > this.Client.Bounds.Bottom+8 )  continue;
-				if ( handle == HRuler.HandleFirstBody && pos.Y > this.Client.Bounds.Bottom+4 )  continue;
-				return handle;
+				
+				total ++;
 			}
-			return -1;
+			if ( total == 0 )  return null;
+
+			string[] list = new string[total];
+			int j = 0;
+			for ( int i=0 ; i<this.tabs.Length ; i++ )
+			{
+				Tab tab = this.tabs[i];
+				if ( tab.Tag == exclude )  continue;
+
+				double posx = this.GetHandleHorizontalPos(tab);
+				if ( pos.X < posx-5 || pos.X > posx+5 )  continue;
+				
+				list[j++] = tab.Tag;
+			}
+
+			return list;
+		}
+
+		// Détecte la poignée visée par la souris.
+		protected override string DraggingDetect(Point pos, string exclude)
+		{
+			if ( !this.edited )  return null;
+			if ( this.editObject == null )  return null;
+
+			if ( this.DetectHandle("Right",     pos) )  return "Right";
+			if ( this.DetectHandle("FirstBody", pos) )  return "FirstBody";
+			if ( this.DetectHandle("LeftBody",  pos) )  return "LeftBody";
+			if ( this.DetectHandle("LeftFirst", pos) )  return "LeftFirst";
+
+			for ( int i=this.tabs.Length-1 ; i>=0 ; i-- )
+			{
+				Tab tab = this.tabs[i];
+				if ( tab.Tag == exclude )  continue;
+
+				double posx = this.GetHandleHorizontalPos(tab);
+				if ( pos.X < posx-5 || pos.X > posx+5 )  continue;
+				
+				return tab.Tag;
+			}
+			return null;
+		}
+
+		// Détecte si la souris est sur une poignée.
+		protected bool DetectHandle(string handle, Point pos)
+		{
+			double posx = this.GetHandleHorizontalPos(handle);
+			if ( pos.X < posx-5 || pos.X > posx+5 )  return false;
+
+			if ( handle == "LeftFirst" && pos.Y < this.Client.Bounds.Top-4    )  return false;
+			if ( handle == "LeftBody"  && pos.Y > this.Client.Bounds.Bottom+8 )  return false;
+			if ( handle == "FirstBody" && pos.Y > this.Client.Bounds.Bottom+4 )  return false;
+
+			return true;
 		}
 
 		// Début du drag d'une poignée.
-		protected override void DraggingStart(ref int handle, Point pos)
+		protected override void DraggingStart(ref string handle, Point pos)
 		{
-			this.draggingTabToDelete = -1;
+			this.draggingTabToDelete = null;
+			this.draggingTabDest = null;
 			this.draggingFirstMove = true;
-			this.draggingTabTag = null;
-			this.draggingFirstTabTag = null;
 			
-			if ( handle == -1 )
+			if ( handle == null )
 			{
 				Rectangle rect = this.Client.Bounds;
 				rect.Width = rect.Height;
@@ -527,11 +558,9 @@ namespace Epsitec.Common.Document.Widgets
 					Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
 					double tabPos = this.ScreenToDocument(pos.X);
 					tabPos = tabPos - bbox.Left;
-					handle = this.editObject.NewTextTab(tabPos, this.tabToCreate, out this.draggingTabTag);
-					handle += HRuler.HandleFirstTab;
+					handle = this.editObject.NewTextTab(tabPos, this.tabToCreate);
 					this.draggingOffset = 0.0;
 					this.draggingFirstMove = false;
-					this.draggingFirstTabTag = this.draggingTabTag;
 				}
 			}
 			else
@@ -542,31 +571,33 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		// Déplace une poignée.
-		protected override void DraggingMove(int handle, Point pos)
+		protected override void DraggingMove(ref string handle, Point pos)
 		{
-			if ( handle == -1 )  return;
+			if ( handle == null )  return;
 
 			pos.X += this.draggingOffset;
 
-			if ( handle == HRuler.HandleLeftFirst )  // left first ?
+			if ( handle == "LeftFirst" )  // left first ?
 			{
-				double posBody = this.GetHandleHorizontalPos(HRuler.HandleLeftBody);
+				double posBody = this.GetHandleHorizontalPos("LeftBody");
 				if ( System.Math.Abs(pos.X-posBody) < 3 )
 				{
 					pos.X = posBody;  // magnétise pile sur le left body
 				}
 			}
 
-			if ( handle >= HRuler.HandleFirstTab )  // déplacement d'un tab ?
+			if ( this.IsTab(handle) )  // déplacement d'un tab ?
 			{
 				Rectangle rect = this.Client.Bounds;
 				if ( pos.Y < rect.Bottom || pos.Y > rect.Top )  // hors de la règle ?
 				{
-					this.draggingTabToDelete = handle-HRuler.HandleFirstTab;
+					this.draggingTabToDelete = handle;
+					this.draggingTabDest = null;
 				}
 				else
 				{
-					this.draggingTabToDelete = -1;
+					this.draggingTabToDelete = null;
+					this.draggingTabDest = this.DraggingDetect(pos, handle);
 				}
 			}
 
@@ -576,65 +607,59 @@ namespace Epsitec.Common.Document.Widgets
 			
 			pos.X = this.GetHandleHorizontalPos(handle);
 			pos = this.document.Modifier.ActiveViewer.ScreenToInternal(pos);
-			this.document.Modifier.ActiveViewer.MarkerVertical = (this.draggingTabToDelete == -1) ? pos.X : double.NaN;
+			this.document.Modifier.ActiveViewer.MarkerVertical = (this.draggingTabToDelete == null) ? pos.X : double.NaN;
 		}
 
 		// Fin du drag d'une poignée.
-		protected override void DraggingEnd(int handle, Point pos)
+		protected override void DraggingEnd(ref string handle, Point pos)
 		{
-			if ( handle == -1 )  return;
+			if ( handle == null )  return;
 
 			this.document.Modifier.ActiveViewer.MarkerVertical = double.NaN;
 
-			if ( handle >= HRuler.HandleFirstTab )  // fin du déplacement d'un tab ?
+			if ( this.IsTab(handle) )  // fin du déplacement d'un tab ?
 			{
 				Rectangle rect = this.Client.Bounds;
 				if ( pos.Y < rect.Bottom || pos.Y > rect.Top )  // hors de la règle ?
 				{
-					this.editObject.DeleteTextTab(this.draggingTabTag);
-					this.editObject.DeleteTextTab(this.draggingFirstTabTag);
+					this.editObject.DeleteTextTab(handle);
 				}
 				else
 				{
-					int existingHandle = this.DraggingDetect(pos, handle);
-					if ( existingHandle >= HRuler.HandleFirstTab && this.editObject is Objects.TextBox2 )
+					string[] list = this.DetectTabs(pos, handle);
+					if ( list != null )
 					{
-						string tag, existingTag;
-						this.editObject.GetTextTabTag(existingHandle-HRuler.HandleFirstTab, out existingTag);
-						this.editObject.GetTextTabTag(handle-HRuler.HandleFirstTab, out tag);
-
-						Objects.TextBox2 tb = this.editObject as Objects.TextBox2;
-						tb.TextFlow.TextNavigator.RenameTab(existingTag, tag);
+						this.editObject.RenameTextTabs(list, handle);
 					}
 				}
 				
-				this.draggingTabTag = null;
-				this.draggingFirstTabTag = null;
-				this.draggingTabToDelete = -1;
+				this.draggingTabToDelete = null;
+				this.draggingTabDest = null;
 			}
 		}
 
-		protected double GetHandleHorizontalPos(int handle)
+		protected double GetHandleHorizontalPos(Tab tab)
 		{
-			if ( handle == HRuler.HandleLeftFirst )  return this.DocumentToScreen(this.marginLeftFirst);
-			if ( handle == HRuler.HandleLeftBody  )  return this.DocumentToScreen(this.marginLeftBody);
-			if ( handle == HRuler.HandleFirstBody )  return this.DocumentToScreen(this.marginLeftBody);
-			if ( handle == HRuler.HandleRight     )  return this.DocumentToScreen(this.marginRight);
-
-			handle -= HRuler.HandleFirstTab;  // 0..n
-			if ( handle < this.tabs.Length )
-			{
-				return this.DocumentToScreen(this.tabs[handle].Pos);
-			}
-
-			return 0;
+			return this.DocumentToScreen(tab.Pos);
 		}
 
-		protected void SetHandleHorizontalPos(ref int handle, Point pos)
+		protected double GetHandleHorizontalPos(string handle)
+		{
+			if ( handle == "LeftFirst" )  return this.DocumentToScreen(this.marginLeftFirst);
+			if ( handle == "LeftBody"  )  return this.DocumentToScreen(this.marginLeftBody);
+			if ( handle == "FirstBody" )  return this.DocumentToScreen(this.marginLeftBody);
+			if ( handle == "Right"     )  return this.DocumentToScreen(this.marginRight);
+
+			Tab tab = this.GetTab(handle);
+			return this.DocumentToScreen(tab.Pos);
+		}
+
+		protected void SetHandleHorizontalPos(ref string handle, Point pos)
 		{
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
 
-			if ( handle < HRuler.HandleFirstTab )
+			Tab tab = this.GetTab(handle);
+			if ( tab.Tag == null )
 			{
 				double leftFirst, leftBody, right;
 				Text.Properties.SizeUnits units;
@@ -642,7 +667,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.editObject.GetTextRightMargins(out right, out units, true);
 				units = Common.Text.Properties.SizeUnits.Points;
 
-				if ( handle == HRuler.HandleLeftFirst )
+				if ( handle == "LeftFirst" )
 				{
 					leftFirst = this.ScreenToDocument(pos.X);
 					leftFirst = leftFirst - bbox.Left;
@@ -651,7 +676,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units, this.draggingFirstMove);
 				}
 
-				if ( handle == HRuler.HandleLeftBody )
+				if ( handle == "LeftBody" )
 				{
 					leftBody = this.ScreenToDocument(pos.X);
 					leftBody = leftBody - bbox.Left;
@@ -660,7 +685,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units, this.draggingFirstMove);
 				}
 
-				if ( handle == HRuler.HandleFirstBody )
+				if ( handle == "FirstBody" )
 				{
 					double initialBody = leftBody;
 					leftBody = this.ScreenToDocument(pos.X);
@@ -673,7 +698,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units, this.draggingFirstMove);
 				}
 
-				if ( handle == HRuler.HandleRight )
+				if ( handle == "Right" )
 				{
 					right = this.ScreenToDocument(pos.X);
 					right = bbox.Right - right;
@@ -684,28 +709,37 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else	// tabulateur ?
 			{
-				handle -= HRuler.HandleFirstTab;  // 0..n
-				if ( handle < this.tabs.Length )
-				{
-					double tabPos;
-					TextTabType type;
-					if ( this.draggingTabTag == null )
-					{
-						this.editObject.GetTextTabTag(handle, out this.draggingTabTag);
-						this.draggingFirstTabTag = this.draggingTabTag;
-					}
-					
-					this.editObject.GetTextTab(this.draggingTabTag, out tabPos, out type);
-					
-					tabPos = this.ScreenToDocument(pos.X);
-					tabPos = tabPos - bbox.Left;
-					tabPos = this.SnapGrid(tabPos);
-					tabPos = System.Math.Max(tabPos, 0);
-					
-					this.editObject.SetTextTab(ref this.draggingTabTag, this.draggingFirstMove, tabPos, type);
-					handle = this.draggingHandle;
-				}
+				double tabPos;
+				TextTabType type;
+				this.editObject.GetTextTab(handle, out tabPos, out type);
+				
+				tabPos = this.ScreenToDocument(pos.X);
+				tabPos = tabPos - bbox.Left;
+				tabPos = this.SnapGrid(tabPos);
+				tabPos = System.Math.Max(tabPos, 0);
+				
+				this.editObject.SetTextTab(ref handle, tabPos, type, this.draggingFirstMove);
 			}
+		}
+
+		// Indique si un tag ou un handle correspond à un tabulateur.
+		protected bool IsTab(string tag)
+		{
+			foreach ( Tab tab in this.tabs )
+			{
+				if ( tab.Tag == tag )  return true;
+			}
+			return false;
+		}
+
+		// Donne un tabulateur Tab d'après son tag ou handle.
+		protected Tab GetTab(string tag)
+		{
+			foreach ( Tab tab in this.tabs )
+			{
+				if ( tab.Tag == tag )  return tab;
+			}
+			return this.invalidTab;
 		}
 
 		// Conversion d'une position relative dans le texte selon la grille.
@@ -745,8 +779,9 @@ namespace Epsitec.Common.Document.Widgets
 
 			for ( int i=0 ; i<list1.Length ; i++ )
 			{
-				if ( list1[i].Pos  != list2[i].Pos  )  return false;
-				if ( list1[i].Type != list2[i].Type )  return false;
+				if ( list1[i].Pos    != list2[i].Pos    )  return false;
+				if ( list1[i].Type   != list2[i].Type   )  return false;
+				if ( list1[i].Zombie != list2[i].Zombie )  return false;
 			}
 			return true;
 		}
@@ -771,23 +806,23 @@ namespace Epsitec.Common.Document.Widgets
 				return Res.Strings.Action.Text.Ruler.TabChoice;
 			}
 			
-			int handle = this.DraggingDetect(pos);
+			string handle = this.DraggingDetect(pos);
 
-			if ( handle == HRuler.HandleLeftFirst )  return Res.Strings.Action.Text.Ruler.HandleLeftFirst;
-			if ( handle == HRuler.HandleLeftBody  )  return Res.Strings.Action.Text.Ruler.HandleLeftBody;
-			if ( handle == HRuler.HandleFirstBody )  return Res.Strings.Action.Text.Ruler.HandleFirstBody;
-			if ( handle == HRuler.HandleRight     )  return Res.Strings.Action.Text.Ruler.HandleRight;
+			if ( handle == "LeftFirst" )  return Res.Strings.Action.Text.Ruler.HandleLeftFirst;
+			if ( handle == "LeftBody"  )  return Res.Strings.Action.Text.Ruler.HandleLeftBody;
+			if ( handle == "FirstBody" )  return Res.Strings.Action.Text.Ruler.HandleFirstBody;
+			if ( handle == "Right"     )  return Res.Strings.Action.Text.Ruler.HandleRight;
 
-			handle -= HRuler.HandleFirstTab;
-			if ( handle >= 0 && handle < this.tabs.Length )
+			Tab tab = this.GetTab(handle);
+			if ( tab.Tag != null )
 			{
-				if ( this.tabs[handle].Zombie )
+				if ( tab.Zombie )
 				{
 					return Res.Strings.Action.Text.Ruler.TabZombie;
 				}
 				else
 				{
-					switch ( this.tabs[handle].Type )
+					switch ( tab.Type )
 					{
 						case Drawing.TextTabType.Right:    return Res.Strings.Action.Text.Ruler.TabRight;
 						case Drawing.TextTabType.Left:     return Res.Strings.Action.Text.Ruler.TabLeft;
@@ -808,22 +843,16 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		
-		protected static readonly int		HandleLeftFirst = 0;
-		protected static readonly int		HandleLeftBody  = 1;
-		protected static readonly int		HandleFirstBody = 2;
-		protected static readonly int		HandleRight     = 3;
-		protected static readonly int		HandleFirstTab  = 4;
-
 		protected double					marginLeftFirst = 0.0;
 		protected double					marginLeftBody = 0.0;
 		protected double					marginRight = 0.0;
 		protected Tab[]						tabs = null;
+		protected Tab						invalidTab;
 
 		protected Drawing.TextTabType		tabToCreate = Drawing.TextTabType.Right;
 		protected double					draggingOffset = 0.0;
-		protected int						draggingTabToDelete = -1;
+		protected string					draggingTabToDelete = null;
+		protected string					draggingTabDest = null;
 		protected bool						draggingFirstMove = false;
-		protected string					draggingTabTag = null;
-		protected string					draggingFirstTabTag = null;
 	}
 }

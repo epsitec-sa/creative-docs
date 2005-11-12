@@ -236,7 +236,7 @@ namespace Epsitec.Common.Document.Widgets
 					{
 						if ( this.isDragging )
 						{
-							this.DraggingMove(this.draggingHandle, pos);
+							this.DraggingMove(ref this.draggingHandle, pos);
 							message.Consumer = this;
 							return;
 						}
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Document.Widgets
 					{
 						if ( this.isDragging )
 						{
-							this.DraggingEnd(this.draggingHandle, pos);
+							this.DraggingEnd(ref this.draggingHandle, pos);
 							this.isDragging = false;
 							message.Consumer = this;
 							return;
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Document.Widgets
 				case MessageType.MouseLeave:
 					if ( this.edited )
 					{
-						this.HiliteHandle = -1;
+						this.HiliteHandle = null;
 					}
 					break;
 			}
@@ -276,7 +276,7 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		// Poignée mise en évidence.
-		protected int HiliteHandle
+		protected string HiliteHandle
 		{
 			get
 			{
@@ -294,29 +294,29 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		// Détecte la poignée visé par la souris.
-		protected int DraggingDetect(Point pos)
+		protected string DraggingDetect(Point pos)
 		{
-			return this.DraggingDetect(pos, -1);
+			return this.DraggingDetect(pos, null);
 		}
 
 		// Détecte la poignée visé par la souris.
-		protected virtual int DraggingDetect(Point pos, int exclude)
+		protected virtual string DraggingDetect(Point pos, string exclude)
 		{
-			return -1;
+			return null;
 		}
 
 		// Début du drag d'une poignée.
-		protected virtual void DraggingStart(ref int handle, Point pos)
+		protected virtual void DraggingStart(ref string handle, Point pos)
 		{
 		}
 
 		// Déplace une poignée.
-		protected virtual void DraggingMove(int handle, Point pos)
+		protected virtual void DraggingMove(ref string handle, Point pos)
 		{
 		}
 
 		// Fin du drag d'une poignée.
-		protected virtual void DraggingEnd(int handle, Point pos)
+		protected virtual void DraggingEnd(ref string handle, Point pos)
 		{
 		}
 
@@ -423,8 +423,8 @@ namespace Epsitec.Common.Document.Widgets
 		protected double					limitLow = 0.0;
 		protected double					limitHigh = 0.0;
 		protected Rectangle					invalidateBox;
-		protected int						hiliteHandle = -1;
+		protected string					hiliteHandle = null;
 		protected bool						isDragging = false;
-		protected int						draggingHandle = -1;
+		protected string					draggingHandle = null;
 	}
 }

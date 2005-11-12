@@ -877,17 +877,18 @@ namespace Epsitec.Common.Document.Objects
 			units = Text.Properties.SizeUnits.None;
 		}
 
-		// Donne le nombre de tabulateurs du texte.
-		public override int TextTabCount
+
+		// Retourne tous les tags des tabulateurs.
+		public override string[] TextTabTags
 		{
 			get
 			{
-				return this.textFlow.TextNavigator.GetAllTabTags().Length;
+				return this.textFlow.TextNavigator.GetAllTabTags();
 			}
 		}
 
 		// Crée un nouveau tabulateur dans le texte.
-		public override int NewTextTab(double pos, TextTabType type, out string tag)
+		public override string NewTextTab(double pos, TextTabType type)
 		{
 			double dispo = 0.0;
 			string dockingMark = null;
@@ -898,30 +899,53 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == TextTabType.Decimal )  dockingMark = ".";
 			if ( type == TextTabType.Indent  )  positionMode = TabPositionMode.AbsoluteIndent;
 
-			int count = this.TextTabCount;
 			Text.TabList list = this.document.TextContext.TabList;
 			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode);
 			Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
 			this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
-			tag = tab.TabTag;
-			return count;
+			return tab.TabTag;
 		}
 
-		// Trouve le nom du tabulateur d'après son rang.
-		public override void GetTextTabTag(int rank, out string tag)
-		{
-			string[] tags = this.textFlow.TextNavigator.GetAllTabTags();
-			tag = tags[rank];
-		}
-		
 		// Supprime un tabulateur du texte.
 		public override void DeleteTextTab(string tag)
 		{
 			this.metaNavigator.RemoveTab(tag);
 		}
 
+		// Renomme plusieurs tabulateurs du texte.
+		public override bool RenameTextTabs(string[] oldTags, string newTag)
+		{
+			return this.textFlow.TextNavigator.RenameTabs(oldTags, newTag);
+		}
+
+		// Donne un tabulateur du texte.
+		public override void GetTextTab(string tag, out double pos, out TextTabType type)
+		{
+			Text.TabList list = this.document.TextContext.TabList;
+			Text.Properties.TabProperty tab = list.GetTabProperty(tag);
+
+			pos = list.GetTabPosition(tab);
+
+			type = TextTabType.Right;
+
+			if ( list.GetTabPositionMode(tab) == TabPositionMode.AbsoluteIndent )
+			{
+				type = TextTabType.Indent;
+			}
+			else if ( list.GetTabDockingMark(tab) != null )
+			{
+				type = TextTabType.Decimal;
+			}
+			else
+			{
+				double dispo = list.GetTabDisposition(tab);
+				if ( dispo == 0.5 )  type = TextTabType.Center;
+				if ( dispo == 1.0 )  type = TextTabType.Left;
+			}
+		}
+
 		// Modifie un tabulateur du texte.
-		public override void SetTextTab(ref string tag, bool firstChange, double pos, TextTabType type)
+		public override void SetTextTab(ref string tag, double pos, TextTabType type, bool firstChange)
 		{
 			Text.TabList list = this.document.TextContext.TabList;
 			
@@ -957,31 +981,6 @@ namespace Epsitec.Common.Document.Objects
 			this.HandleTabsChanged(null);  // TODO: devrait être inutile
 		}
 
-		// Donne un tabulateur du texte.
-		public override void GetTextTab(string tag, out double pos, out TextTabType type)
-		{
-			Text.TabList list = this.document.TextContext.TabList;
-			Text.Properties.TabProperty tab = list.GetTabProperty(tag);
-
-			pos = list.GetTabPosition(tab);
-
-			type = TextTabType.Right;
-
-			if ( list.GetTabPositionMode(tab) == TabPositionMode.AbsoluteIndent )
-			{
-				type = TextTabType.Indent;
-			}
-			else if ( list.GetTabDockingMark(tab) != null )
-			{
-				type = TextTabType.Decimal;
-			}
-			else
-			{
-				double dispo = list.GetTabDisposition(tab);
-				if ( dispo == 0.5 )  type = TextTabType.Center;
-				if ( dispo == 1.0 )  type = TextTabType.Left;
-			}
-		}
 
 		// Donne la liste des propriétés.
 		protected Text.Property[] GetTextProperties(bool accumulated)
@@ -1082,10 +1081,10 @@ namespace Epsitec.Common.Document.Objects
 					TextTabType type;
 					this.GetTextTab(info.Tag, out pos, out type);
 
+					tabs[i].Tag = info.Tag;
 					tabs[i].Pos = bbox.Left+pos;
 					tabs[i].Type = type;
 					tabs[i].Zombie = (info.Status == TabStatus.Zombie);
-					tabs[i].Tag = info.Tag;
 				}
 				this.document.HRuler.Tabs = tabs;
 			}
