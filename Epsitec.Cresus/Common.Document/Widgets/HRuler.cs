@@ -376,15 +376,7 @@ namespace Epsitec.Common.Document.Widgets
 						rect.Inflate(5);
 						rect.Offset(0.5, 0);
 
-						Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
-						switch ( tab.Type )
-						{
-							case Drawing.TextTabType.Right:    glyph = Common.Widgets.GlyphShape.TabRight;    break;
-							case Drawing.TextTabType.Left:     glyph = Common.Widgets.GlyphShape.TabLeft;     break;
-							case Drawing.TextTabType.Center:   glyph = Common.Widgets.GlyphShape.TabCenter;   break;
-							case Drawing.TextTabType.Decimal:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
-							case Drawing.TextTabType.Indent:   glyph = Common.Widgets.GlyphShape.TabIndent;   break;
-						}
+						Common.Widgets.GlyphShape glyph = this.ConvType2Glyph(tab.Type);
 						Common.Widgets.WidgetState state = Common.Widgets.WidgetState.Enabled;
 						adorner.PaintGlyph(graphics, rect, state, colorGlyph, glyph, Common.Widgets.PaintTextStyle.Button);
 					}
@@ -413,15 +405,7 @@ namespace Epsitec.Common.Document.Widgets
 			rect.Inflate(5);
 			rect.Offset(0.5, -1);
 
-			Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
-			switch ( this.tabToCreate )
-			{
-				case Drawing.TextTabType.Right:    glyph = Common.Widgets.GlyphShape.TabRight;    break;
-				case Drawing.TextTabType.Left:     glyph = Common.Widgets.GlyphShape.TabLeft;     break;
-				case Drawing.TextTabType.Center:   glyph = Common.Widgets.GlyphShape.TabCenter;   break;
-				case Drawing.TextTabType.Decimal:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
-				case Drawing.TextTabType.Indent:   glyph = Common.Widgets.GlyphShape.TabIndent;   break;
-			}
+			Common.Widgets.GlyphShape glyph = this.ConvType2Glyph(this.tabToCreate);
 			adorner.PaintGlyph(graphics, rect, Common.Widgets.WidgetState.Enabled, glyph, Common.Widgets.PaintTextStyle.Button);
 		}
 		
@@ -543,15 +527,11 @@ namespace Epsitec.Common.Document.Widgets
 				rect.Width = rect.Height;
 				if ( rect.Contains(pos) )  // change le type de tabulateur à insérer ?
 				{
-					switch ( this.tabToCreate )
-					{
-						case Drawing.TextTabType.Right:    this.tabToCreate = Drawing.TextTabType.Center;   break;
-						case Drawing.TextTabType.Center:   this.tabToCreate = Drawing.TextTabType.Left;     break;
-						case Drawing.TextTabType.Left:     this.tabToCreate = Drawing.TextTabType.Decimal;  break;
-						case Drawing.TextTabType.Decimal:  this.tabToCreate = Drawing.TextTabType.Indent;   break;
-						case Drawing.TextTabType.Indent:   this.tabToCreate = Drawing.TextTabType.Right;    break;
-					}
-					this.Invalidate(rect);
+					Point posMenu = this.MapClientToScreen(new Point(0, 1));
+					VMenu menu = this.CreateMenu(new MessageEventHandler(this.HandleMenuPressed));
+					if ( menu == null )  return;
+					menu.Host = this;
+					menu.ShowAsContextMenu(this.Window, posMenu);
 				}
 				else
 				{
@@ -638,11 +618,13 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Donne la position d'un tabulateur.
 		protected double GetHandleHorizontalPos(Tab tab)
 		{
 			return this.DocumentToScreen(tab.Pos);
 		}
 
+		// Donne la position d'une poignée quelconque (marge ou tabulateur).
 		protected double GetHandleHorizontalPos(string handle)
 		{
 			if ( handle == "LeftFirst" )  return this.DocumentToScreen(this.marginLeftFirst);
@@ -654,6 +636,7 @@ namespace Epsitec.Common.Document.Widgets
 			return this.DocumentToScreen(tab.Pos);
 		}
 
+		// Modifie la position d'une poignée quelconque (marge ou tabulateur).
 		protected void SetHandleHorizontalPos(ref string handle, Point pos)
 		{
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
@@ -795,8 +778,15 @@ namespace Epsitec.Common.Document.Widgets
 
 			if ( this.isDragging )  // déplacement en cours ?
 			{
-				x = this.SnapGrid(x);
-				return this.document.Modifier.RealToString(x);
+				if ( this.draggingTabDest == null )
+				{
+					x = this.SnapGrid(x);
+					return this.document.Modifier.RealToString(x);
+				}
+				else
+				{
+					return Res.Strings.Action.Text.Ruler.TabMerge;
+				}
 			}
 
 			Rectangle rect = this.Client.Bounds;
@@ -822,15 +812,7 @@ namespace Epsitec.Common.Document.Widgets
 				}
 				else
 				{
-					switch ( tab.Type )
-					{
-						case Drawing.TextTabType.Right:    return Res.Strings.Action.Text.Ruler.TabRight;
-						case Drawing.TextTabType.Left:     return Res.Strings.Action.Text.Ruler.TabLeft;
-						case Drawing.TextTabType.Center:   return Res.Strings.Action.Text.Ruler.TabCenter;
-						case Drawing.TextTabType.Decimal:  return Res.Strings.Action.Text.Ruler.TabDecimal;
-						case Drawing.TextTabType.Indent:   return Res.Strings.Action.Text.Ruler.TabIndent;
-				
-					}
+					return this.ConvType2String(tab.Type);
 				}
 			}
 
@@ -841,6 +823,132 @@ namespace Epsitec.Common.Document.Widgets
 
 			return null;  // pas de tooltip
 		}
+
+
+		#region Conversion
+		protected Common.Widgets.GlyphShape ConvType2Glyph(TextTabType type)
+		{
+			Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
+			switch ( type )
+			{
+				case Drawing.TextTabType.Right:          glyph = Common.Widgets.GlyphShape.TabRight;    break;
+				case Drawing.TextTabType.Left:           glyph = Common.Widgets.GlyphShape.TabLeft;     break;
+				case Drawing.TextTabType.Center:         glyph = Common.Widgets.GlyphShape.TabCenter;   break;
+				case Drawing.TextTabType.DecimalDot:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalComma:   glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalSlash:   glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalIndent:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalSpace:   glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.Indent:         glyph = Common.Widgets.GlyphShape.TabIndent;   break;
+			}
+			return glyph;
+		}
+
+		protected string ConvType2String(TextTabType type)
+		{
+			switch ( type )
+			{
+				case Drawing.TextTabType.Right:          return Res.Strings.Action.Text.Ruler.TabRight;
+				case Drawing.TextTabType.Left:           return Res.Strings.Action.Text.Ruler.TabLeft;
+				case Drawing.TextTabType.Center:         return Res.Strings.Action.Text.Ruler.TabCenter;
+				case Drawing.TextTabType.DecimalDot:     return Res.Strings.Action.Text.Ruler.TabDecimalDot;
+				case Drawing.TextTabType.DecimalComma:   return Res.Strings.Action.Text.Ruler.TabDecimalComma;
+				case Drawing.TextTabType.DecimalSlash:   return Res.Strings.Action.Text.Ruler.TabDecimalSlash;
+				case Drawing.TextTabType.DecimalIndent:  return Res.Strings.Action.Text.Ruler.TabDecimalIndent;
+				case Drawing.TextTabType.DecimalSpace:   return Res.Strings.Action.Text.Ruler.TabDecimalSpace;
+				case Drawing.TextTabType.Indent:         return Res.Strings.Action.Text.Ruler.TabIndent;
+			}
+			return "";
+		}
+
+		protected string ConvType2Name(TextTabType type)
+		{
+			switch ( type )
+			{
+				case Drawing.TextTabType.Right:          return "TabRight";
+				case Drawing.TextTabType.Left:           return "TabLeft";
+				case Drawing.TextTabType.Center:         return "TabCenter";
+				case Drawing.TextTabType.DecimalDot:     return "TabDecimalDot";
+				case Drawing.TextTabType.DecimalComma:   return "TabDecimalComma";
+				case Drawing.TextTabType.DecimalSlash:   return "TabDecimalSlash";
+				case Drawing.TextTabType.DecimalIndent:  return "TabDecimalIndent";
+				case Drawing.TextTabType.DecimalSpace:   return "TabDecimalSpace";
+				case Drawing.TextTabType.Indent:         return "TabIndent";
+			}
+			return "";
+		}
+
+		protected TextTabType ConvName2Type(string name)
+		{
+			switch ( name )
+			{
+				case "TabRight":          return Drawing.TextTabType.Right;
+				case "TabLeft":           return Drawing.TextTabType.Left;
+				case "TabCenter":         return Drawing.TextTabType.Center;
+				case "TabDecimalDot":     return Drawing.TextTabType.DecimalDot;
+				case "TabDecimalComma":   return Drawing.TextTabType.DecimalComma;
+				case "TabDecimalSlash":   return Drawing.TextTabType.DecimalSlash;
+				case "TabDecimalIndent":  return Drawing.TextTabType.DecimalIndent;
+				case "TabDecimalSpace":   return Drawing.TextTabType.DecimalSpace;
+				case "TabIndent":         return Drawing.TextTabType.Indent;
+			}
+			return Drawing.TextTabType.None;
+		}
+		#endregion
+
+
+		#region Menu
+		// Crée le menu pour choisir un tabulateur.
+		protected VMenu CreateMenu(MessageEventHandler message)
+		{
+			VMenu menu = new VMenu();
+
+			this.CreateMenu(menu, TextTabType.Right,  message);
+			this.CreateMenu(menu, TextTabType.Left,   message);
+			this.CreateMenu(menu, TextTabType.Center, message);
+			menu.Items.Add(new MenuSeparator());
+			this.CreateMenu(menu, TextTabType.DecimalDot,    message);
+			this.CreateMenu(menu, TextTabType.DecimalComma,  message);
+			this.CreateMenu(menu, TextTabType.DecimalSlash,  message);
+			this.CreateMenu(menu, TextTabType.DecimalIndent, message);
+			this.CreateMenu(menu, TextTabType.DecimalSpace,  message);
+			menu.Items.Add(new MenuSeparator());
+			this.CreateMenu(menu, TextTabType.Indent, message);
+
+			menu.AdjustSize();
+			return menu;
+		}
+
+		// Crée une case du menu pour choisir un tabulateur.
+		protected void CreateMenu(VMenu menu, TextTabType type, MessageEventHandler message)
+		{
+			string text = this.ConvType2String(type);
+			string name = this.ConvType2Name(type);
+			string icon = Misc.Icon("RadioNo");
+			if ( type == this.tabToCreate )
+			{
+				icon = Misc.Icon("RadioYes");
+				text = Misc.Bold(text);
+			}
+
+			MenuItem item = new MenuItem("", icon, text, "", name);
+
+			if ( message != null )
+			{
+				item.Pressed += message;
+			}
+			
+			menu.Items.Add(item);
+		}
+
+		// Appelé lorsqu'une case du menu est pressée.
+		private void HandleMenuPressed(object sender, MessageEventArgs e)
+		{
+			MenuItem item = sender as MenuItem;
+			this.tabToCreate = this.ConvName2Type(item.Name);
+			this.Invalidate();
+		}
+		#endregion
 
 		
 		protected double					marginLeftFirst = 0.0;

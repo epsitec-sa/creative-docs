@@ -894,10 +894,14 @@ namespace Epsitec.Common.Document.Objects
 			string dockingMark = null;
 			TabPositionMode positionMode = TabPositionMode.Absolute;
 
-			if ( type == TextTabType.Center  )  dispo = 0.5;
-			if ( type == TextTabType.Left    )  dispo = 1.0;
-			if ( type == TextTabType.Decimal )  dockingMark = ".";
-			if ( type == TextTabType.Indent  )  positionMode = TabPositionMode.AbsoluteIndent;
+			if ( type == TextTabType.Center        )  dispo = 0.5;
+			if ( type == TextTabType.Left          )  dispo = 1.0;
+			if ( type == TextTabType.DecimalDot    )  dockingMark = ".";
+			if ( type == TextTabType.DecimalComma  )  dockingMark = ",";
+			if ( type == TextTabType.DecimalSlash  )  dockingMark = "/";
+			if ( type == TextTabType.DecimalIndent )  dockingMark = "-";
+			if ( type == TextTabType.DecimalSpace  )  dockingMark = " ";
+			if ( type == TextTabType.Indent        )  positionMode = TabPositionMode.AbsoluteIndent;
 
 			Text.TabList list = this.document.TextContext.TabList;
 			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode);
@@ -925,6 +929,7 @@ namespace Epsitec.Common.Document.Objects
 			Text.Properties.TabProperty tab = list.GetTabProperty(tag);
 
 			pos = list.GetTabPosition(tab);
+			string mark = list.GetTabDockingMark(tab);
 
 			type = TextTabType.Right;
 
@@ -932,9 +937,25 @@ namespace Epsitec.Common.Document.Objects
 			{
 				type = TextTabType.Indent;
 			}
-			else if ( list.GetTabDockingMark(tab) != null )
+			else if ( mark == "." )
 			{
-				type = TextTabType.Decimal;
+				type = TextTabType.DecimalDot;
+			}
+			else if ( mark == "," )
+			{
+				type = TextTabType.DecimalComma;
+			}
+			else if ( mark == "/" )
+			{
+				type = TextTabType.DecimalSlash;
+			}
+			else if ( mark == "-" )
+			{
+				type = TextTabType.DecimalIndent;
+			}
+			else if ( mark == " " )
+			{
+				type = TextTabType.DecimalSpace;
 			}
 			else
 			{
@@ -953,10 +974,14 @@ namespace Epsitec.Common.Document.Objects
 			string dockingMark = null;
 			TabPositionMode positionMode = TabPositionMode.Absolute;
 
-			if ( type == TextTabType.Center  )  dispo = 0.5;
-			if ( type == TextTabType.Left    )  dispo = 1.0;
-			if ( type == TextTabType.Decimal )  dockingMark = ".";
-			if ( type == TextTabType.Indent  )  positionMode = TabPositionMode.AbsoluteIndent;
+			if ( type == TextTabType.Center        )  dispo = 0.5;
+			if ( type == TextTabType.Left          )  dispo = 1.0;
+			if ( type == TextTabType.DecimalDot    )  dockingMark = ".";
+			if ( type == TextTabType.DecimalComma  )  dockingMark = ",";
+			if ( type == TextTabType.DecimalSlash  )  dockingMark = "/";
+			if ( type == TextTabType.DecimalIndent )  dockingMark = "-";
+			if ( type == TextTabType.DecimalSpace  )  dockingMark = " ";
+			if ( type == TextTabType.Indent        )  positionMode = TabPositionMode.AbsoluteIndent;
 			
 			if ( firstChange && Text.TabList.GetTabClass(tag) == Text.TabClass.Auto )
 			{

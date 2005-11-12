@@ -20,6 +20,11 @@ namespace Epsitec.Common.Drawing
 		Left,
 		Center,
 		Decimal,
+		DecimalDot,
+		DecimalComma,
+		DecimalSlash,
+		DecimalIndent,
+		DecimalSpace,
 		Indent,
 	}
 	
