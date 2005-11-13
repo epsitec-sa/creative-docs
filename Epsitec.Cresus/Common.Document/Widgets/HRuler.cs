@@ -1138,7 +1138,18 @@ namespace Epsitec.Common.Document.Widgets
 		// Crée un case pour un sous-menu.
 		protected void CreateMenu(VMenu menu, VMenu subMenu, string text)
 		{
-			MenuItem item = new MenuItem("", "", text, "");
+			string icon = Misc.Icon("RadioNo");
+			foreach ( MenuItem subItem in subMenu.Items )
+			{
+				if ( HRuler.ConvName2Type(subItem.Name) == this.tabToCreate )
+				{
+					icon = Misc.Icon("RadioYes");
+					text = Misc.Bold(text);
+					break;
+				}
+			}
+
+			MenuItem item = new MenuItem("", icon, text, "");
 			item.Submenu = subMenu;
 			menu.Items.Add(item);
 		}
