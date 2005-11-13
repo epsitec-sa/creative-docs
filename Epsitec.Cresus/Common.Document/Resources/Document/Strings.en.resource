@@ -904,12 +904,40 @@
 	<data name="Action.Text.Ruler.TabRight">Normal Tab Stop</data>
 	<data name="Action.Text.Ruler.TabLeft">Left Tab Stop</data>
 	<data name="Action.Text.Ruler.TabCenter">Centered Tab Stop</data>
-	<data name="Action.Text.Ruler.TabDecimalDot">@@Dot Tap Stop</data>
-	<data name="Action.Text.Ruler.TabDecimalComma">@@Comma Tap Stop</data>
-	<data name="Action.Text.Ruler.TabDecimalSlash">@@Slash Tap Stop</data>
-	<data name="Action.Text.Ruler.TabDecimalIndent">@@Indent Tap Stop</data>
-	<data name="Action.Text.Ruler.TabDecimalSpace">@@Space Tap Stop</data>
 	<data name="Action.Text.Ruler.TabIndent">Indentation Tab Stop</data>
+	
+	<data name="Action.Text.Ruler.TabDecimalDot">@@Dot Tap Stop (.)</data>
+	<data name="Action.Text.Ruler.TabDecimalComma">@@Comma Tap Stop (,)</data>
+	<data name="Action.Text.Ruler.TabDecimalColon">@@Colon Tap Stop (:)</data>
+	<data name="Action.Text.Ruler.TabDecimalSColon">@@Semicolon Tap Stop (;)</data>
+	<data name="Action.Text.Ruler.TabDecimalAdd">@@Plus Tap Stop (+)</data>
+	<data name="Action.Text.Ruler.TabDecimalSub">@@Minus Tap Stop (-)</data>
+	<data name="Action.Text.Ruler.TabDecimalMul">@@Asterisk Tap Stop (*)</data>
+	<data name="Action.Text.Ruler.TabDecimalDiv">@@Slash Tap Stop (/)</data>
+	<data name="Action.Text.Ruler.TabDecimalSpace">@@Space Tap Stop ( )</data>
+	<data name="Action.Text.Ruler.TabDecimalAt">@@Commercial at Tap Stop (@)</data>
+	<data name="Action.Text.Ruler.TabDecimalP100">@@Percent Tap Stop (%)</data>
+	<data name="Action.Text.Ruler.TabDecimalEq">@@Equal Tap Stop (=)</data>
+	<data name="Action.Text.Ruler.TabDecimalLt">@@Less-than Tap Stop (&amp;lt;)</data>
+	<data name="Action.Text.Ruler.TabDecimalGt">@@Greater-than Tap Stop (&amp;gt;)</data>
+	<data name="Action.Text.Ruler.TabDecimalAmp">@@Ampersand Tap Stop (&amp;amp;)</data>
+	<data name="Action.Text.Ruler.TabDecimalQuot">@@Apostrophe-quote Tap Stop (&quot;)</data>
+	<data name="Action.Text.Ruler.TabDecimalNumber">@@Number Tap Stop (#)</data>
+	<data name="Action.Text.Ruler.TabDecimalApos">@@Quotation mark Tap Stop (')</data>
+	<data name="Action.Text.Ruler.TabDecimalVert">@@Vertical bar Tap Stop (|)</data>
+	<data name="Action.Text.Ruler.TabDecimalTilde">@@Tilde Tap Stop (~)</data>
+	<data name="Action.Text.Ruler.TabDecimalExclam">@@Exclamation mark Tap Stop (!)</data>
+	<data name="Action.Text.Ruler.TabDecimalQuestion">@@Question mark Tap Stop (?)</data>
+	<data name="Action.Text.Ruler.TabDecimalOpPar">@@Opening parenthesis Tap Stop (()</data>
+	<data name="Action.Text.Ruler.TabDecimalClPar">@@Closing parenthesis Stop ())</data>
+	<data name="Action.Text.Ruler.TabDecimalOpSBr">@@Opening square bracket Tap Stop ([)</data>
+	<data name="Action.Text.Ruler.TabDecimalClSBr">@@Closing square bracket Tap Stop (])</data>
+	<data name="Action.Text.Ruler.TabDecimalOpCBr">@@Opening curly bracket Tap Stop ({)</data>
+	<data name="Action.Text.Ruler.TabDecimalClCBr">@@Closing curly bracket Tap Stop (})</data>
+	<data name="Action.Text.Ruler.TabDecimalMath">@@Mathematical Tap Stop</data>
+	<data name="Action.Text.Ruler.TabDecimalSign">@@Special sign Tap Stop</data>
+	<data name="Action.Text.Ruler.TabDecimalPar">@@Parenthesis Tap Stop</data>
+	
 	<data name="Action.Text.Ruler.TabZombie">@@Tabulateur supprimé</data>
 	<data name="Action.Text.Ruler.TabMerge">@@Fusionner les tabulateurs</data>
 	<data name="Action.Text.Ruler.TabCreate">Click to create a Tab Stop</data>

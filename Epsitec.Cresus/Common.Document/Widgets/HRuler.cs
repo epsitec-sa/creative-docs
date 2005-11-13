@@ -376,7 +376,7 @@ namespace Epsitec.Common.Document.Widgets
 						rect.Inflate(5);
 						rect.Offset(0.5, 0);
 
-						Common.Widgets.GlyphShape glyph = this.ConvType2Glyph(tab.Type);
+						Common.Widgets.GlyphShape glyph = HRuler.ConvType2Glyph(tab.Type);
 						Common.Widgets.WidgetState state = Common.Widgets.WidgetState.Enabled;
 						adorner.PaintGlyph(graphics, rect, state, colorGlyph, glyph, Common.Widgets.PaintTextStyle.Button);
 					}
@@ -405,7 +405,7 @@ namespace Epsitec.Common.Document.Widgets
 			rect.Inflate(5);
 			rect.Offset(0.5, -1);
 
-			Common.Widgets.GlyphShape glyph = this.ConvType2Glyph(this.tabToCreate);
+			Common.Widgets.GlyphShape glyph = HRuler.ConvType2Glyph(this.tabToCreate);
 			adorner.PaintGlyph(graphics, rect, Common.Widgets.WidgetState.Enabled, glyph, Common.Widgets.PaintTextStyle.Button);
 		}
 		
@@ -812,7 +812,7 @@ namespace Epsitec.Common.Document.Widgets
 				}
 				else
 				{
-					return this.ConvType2String(tab.Type);
+					return HRuler.ConvType2String(tab.Type);
 				}
 			}
 
@@ -826,71 +826,235 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		#region Conversion
-		protected Common.Widgets.GlyphShape ConvType2Glyph(TextTabType type)
+		protected static Common.Widgets.GlyphShape ConvType2Glyph(TextTabType type)
 		{
 			Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
 			switch ( type )
 			{
-				case Drawing.TextTabType.Right:          glyph = Common.Widgets.GlyphShape.TabRight;    break;
-				case Drawing.TextTabType.Left:           glyph = Common.Widgets.GlyphShape.TabLeft;     break;
-				case Drawing.TextTabType.Center:         glyph = Common.Widgets.GlyphShape.TabCenter;   break;
-				case Drawing.TextTabType.DecimalDot:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
-				case Drawing.TextTabType.DecimalComma:   glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
-				case Drawing.TextTabType.DecimalSlash:   glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
-				case Drawing.TextTabType.DecimalIndent:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
-				case Drawing.TextTabType.DecimalSpace:   glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
-				case Drawing.TextTabType.Indent:         glyph = Common.Widgets.GlyphShape.TabIndent;   break;
+				case Drawing.TextTabType.Right:            glyph = Common.Widgets.GlyphShape.TabRight;    break;
+				case Drawing.TextTabType.Left:             glyph = Common.Widgets.GlyphShape.TabLeft;     break;
+				case Drawing.TextTabType.Center:           glyph = Common.Widgets.GlyphShape.TabCenter;   break;
+				case Drawing.TextTabType.Indent:           glyph = Common.Widgets.GlyphShape.TabIndent;   break;
+				case Drawing.TextTabType.DecimalDot:       glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalComma:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalColon:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalSColon:    glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalAdd:       glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalSub:       glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalMul:       glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalDiv:       glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalSpace:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalAt:        glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalP100:      glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalEq:        glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalLt:        glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalGt:        glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalAmp:       glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalQuot:      glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalNumber:    glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalApos:      glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalVert:      glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalTilde:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalExclam:    glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalQuestion:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalOpPar:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalClPar:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalOpSBr:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalClSBr:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalOpCBr:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.DecimalClCBr:     glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
 			}
 			return glyph;
 		}
 
-		protected string ConvType2String(TextTabType type)
+		protected static string ConvType2String(TextTabType type)
 		{
 			switch ( type )
 			{
-				case Drawing.TextTabType.Right:          return Res.Strings.Action.Text.Ruler.TabRight;
-				case Drawing.TextTabType.Left:           return Res.Strings.Action.Text.Ruler.TabLeft;
-				case Drawing.TextTabType.Center:         return Res.Strings.Action.Text.Ruler.TabCenter;
-				case Drawing.TextTabType.DecimalDot:     return Res.Strings.Action.Text.Ruler.TabDecimalDot;
-				case Drawing.TextTabType.DecimalComma:   return Res.Strings.Action.Text.Ruler.TabDecimalComma;
-				case Drawing.TextTabType.DecimalSlash:   return Res.Strings.Action.Text.Ruler.TabDecimalSlash;
-				case Drawing.TextTabType.DecimalIndent:  return Res.Strings.Action.Text.Ruler.TabDecimalIndent;
-				case Drawing.TextTabType.DecimalSpace:   return Res.Strings.Action.Text.Ruler.TabDecimalSpace;
-				case Drawing.TextTabType.Indent:         return Res.Strings.Action.Text.Ruler.TabIndent;
+				case Drawing.TextTabType.Right:            return Res.Strings.Action.Text.Ruler.TabRight;
+				case Drawing.TextTabType.Left:             return Res.Strings.Action.Text.Ruler.TabLeft;
+				case Drawing.TextTabType.Center:           return Res.Strings.Action.Text.Ruler.TabCenter;
+				case Drawing.TextTabType.Indent:           return Res.Strings.Action.Text.Ruler.TabIndent;
+				case Drawing.TextTabType.DecimalDot:       return Res.Strings.Action.Text.Ruler.TabDecimalDot;
+				case Drawing.TextTabType.DecimalComma:     return Res.Strings.Action.Text.Ruler.TabDecimalComma;
+				case Drawing.TextTabType.DecimalColon:     return Res.Strings.Action.Text.Ruler.TabDecimalColon;
+				case Drawing.TextTabType.DecimalSColon:    return Res.Strings.Action.Text.Ruler.TabDecimalSColon;
+				case Drawing.TextTabType.DecimalAdd:       return Res.Strings.Action.Text.Ruler.TabDecimalAdd;
+				case Drawing.TextTabType.DecimalSub:       return Res.Strings.Action.Text.Ruler.TabDecimalSub;
+				case Drawing.TextTabType.DecimalMul:       return Res.Strings.Action.Text.Ruler.TabDecimalMul;
+				case Drawing.TextTabType.DecimalDiv:       return Res.Strings.Action.Text.Ruler.TabDecimalDiv;
+				case Drawing.TextTabType.DecimalSpace:     return Res.Strings.Action.Text.Ruler.TabDecimalSpace;
+				case Drawing.TextTabType.DecimalAt:        return Res.Strings.Action.Text.Ruler.TabDecimalAt;
+				case Drawing.TextTabType.DecimalP100:      return Res.Strings.Action.Text.Ruler.TabDecimalP100;
+				case Drawing.TextTabType.DecimalEq:        return Res.Strings.Action.Text.Ruler.TabDecimalEq;
+				case Drawing.TextTabType.DecimalLt:        return Res.Strings.Action.Text.Ruler.TabDecimalLt;
+				case Drawing.TextTabType.DecimalGt:        return Res.Strings.Action.Text.Ruler.TabDecimalGt;
+				case Drawing.TextTabType.DecimalAmp:       return Res.Strings.Action.Text.Ruler.TabDecimalAmp;
+				case Drawing.TextTabType.DecimalQuot:      return Res.Strings.Action.Text.Ruler.TabDecimalQuot;
+				case Drawing.TextTabType.DecimalNumber:    return Res.Strings.Action.Text.Ruler.TabDecimalNumber;
+				case Drawing.TextTabType.DecimalApos:      return Res.Strings.Action.Text.Ruler.TabDecimalApos;
+				case Drawing.TextTabType.DecimalVert:      return Res.Strings.Action.Text.Ruler.TabDecimalVert;
+				case Drawing.TextTabType.DecimalTilde:     return Res.Strings.Action.Text.Ruler.TabDecimalTilde;
+				case Drawing.TextTabType.DecimalExclam:    return Res.Strings.Action.Text.Ruler.TabDecimalExclam;
+				case Drawing.TextTabType.DecimalQuestion:  return Res.Strings.Action.Text.Ruler.TabDecimalQuestion;
+				case Drawing.TextTabType.DecimalOpPar:     return Res.Strings.Action.Text.Ruler.TabDecimalOpPar;
+				case Drawing.TextTabType.DecimalClPar:     return Res.Strings.Action.Text.Ruler.TabDecimalClPar;
+				case Drawing.TextTabType.DecimalOpSBr:     return Res.Strings.Action.Text.Ruler.TabDecimalOpSBr;
+				case Drawing.TextTabType.DecimalClSBr:     return Res.Strings.Action.Text.Ruler.TabDecimalClSBr;
+				case Drawing.TextTabType.DecimalOpCBr:     return Res.Strings.Action.Text.Ruler.TabDecimalOpCBr;
+				case Drawing.TextTabType.DecimalClCBr:     return Res.Strings.Action.Text.Ruler.TabDecimalClCBr;
 			}
 			return "";
 		}
 
-		protected string ConvType2Name(TextTabType type)
+		protected static string ConvType2Name(TextTabType type)
 		{
 			switch ( type )
 			{
-				case Drawing.TextTabType.Right:          return "TabRight";
-				case Drawing.TextTabType.Left:           return "TabLeft";
-				case Drawing.TextTabType.Center:         return "TabCenter";
-				case Drawing.TextTabType.DecimalDot:     return "TabDecimalDot";
-				case Drawing.TextTabType.DecimalComma:   return "TabDecimalComma";
-				case Drawing.TextTabType.DecimalSlash:   return "TabDecimalSlash";
-				case Drawing.TextTabType.DecimalIndent:  return "TabDecimalIndent";
-				case Drawing.TextTabType.DecimalSpace:   return "TabDecimalSpace";
-				case Drawing.TextTabType.Indent:         return "TabIndent";
+				case Drawing.TextTabType.Right:            return "TabRight";
+				case Drawing.TextTabType.Left:             return "TabLeft";
+				case Drawing.TextTabType.Center:           return "TabCenter";
+				case Drawing.TextTabType.Indent:           return "TabIndent";
+				case Drawing.TextTabType.DecimalDot:       return "TabDecimalDot";
+				case Drawing.TextTabType.DecimalComma:     return "TabDecimalComma";
+				case Drawing.TextTabType.DecimalColon:     return "TabDecimalColon";
+				case Drawing.TextTabType.DecimalSColon:    return "TabDecimalSColon";
+				case Drawing.TextTabType.DecimalAdd:       return "TabDecimalAdd";
+				case Drawing.TextTabType.DecimalSub:       return "TabDecimalSub";
+				case Drawing.TextTabType.DecimalMul:       return "TabDecimalMul";
+				case Drawing.TextTabType.DecimalDiv:       return "TabDecimalDiv";
+				case Drawing.TextTabType.DecimalSpace:     return "TabDecimalSpace";
+				case Drawing.TextTabType.DecimalAt:        return "TabDecimalAt";
+				case Drawing.TextTabType.DecimalP100:      return "TabDecimalP100";
+				case Drawing.TextTabType.DecimalEq:        return "TabDecimalEq";
+				case Drawing.TextTabType.DecimalLt:        return "TabDecimalLt";
+				case Drawing.TextTabType.DecimalGt:        return "TabDecimalGt";
+				case Drawing.TextTabType.DecimalAmp:       return "TabDecimalAmp";
+				case Drawing.TextTabType.DecimalQuot:      return "TabDecimalQuot";
+				case Drawing.TextTabType.DecimalNumber:    return "TabDecimalNumber";
+				case Drawing.TextTabType.DecimalApos:      return "TabDecimalApos";
+				case Drawing.TextTabType.DecimalVert:      return "TabDecimalVert";
+				case Drawing.TextTabType.DecimalTilde:     return "TabDecimalTilde";
+				case Drawing.TextTabType.DecimalExclam:    return "TabDecimalExclam";
+				case Drawing.TextTabType.DecimalQuestion:  return "TabDecimalQuestion";
+				case Drawing.TextTabType.DecimalOpPar:     return "TabDecimalOpPar";
+				case Drawing.TextTabType.DecimalClPar:     return "TabDecimalClPar";
+				case Drawing.TextTabType.DecimalOpSBr:     return "TabDecimalOpSBr";
+				case Drawing.TextTabType.DecimalClSBr:     return "TabDecimalClSBr";
+				case Drawing.TextTabType.DecimalOpCBr:     return "TabDecimalOpCBr";
+				case Drawing.TextTabType.DecimalClCBr:     return "TabDecimalClCBr";
 			}
 			return "";
 		}
 
-		protected TextTabType ConvName2Type(string name)
+		protected static TextTabType ConvName2Type(string name)
 		{
 			switch ( name )
 			{
-				case "TabRight":          return Drawing.TextTabType.Right;
-				case "TabLeft":           return Drawing.TextTabType.Left;
-				case "TabCenter":         return Drawing.TextTabType.Center;
-				case "TabDecimalDot":     return Drawing.TextTabType.DecimalDot;
-				case "TabDecimalComma":   return Drawing.TextTabType.DecimalComma;
-				case "TabDecimalSlash":   return Drawing.TextTabType.DecimalSlash;
-				case "TabDecimalIndent":  return Drawing.TextTabType.DecimalIndent;
-				case "TabDecimalSpace":   return Drawing.TextTabType.DecimalSpace;
-				case "TabIndent":         return Drawing.TextTabType.Indent;
+				case "TabRight":            return Drawing.TextTabType.Right;
+				case "TabLeft":             return Drawing.TextTabType.Left;
+				case "TabCenter":           return Drawing.TextTabType.Center;
+				case "TabIndent":           return Drawing.TextTabType.Indent;
+				case "TabDecimalDot":       return Drawing.TextTabType.DecimalDot;
+				case "TabDecimalComma":     return Drawing.TextTabType.DecimalComma;
+				case "TabDecimalColon":     return Drawing.TextTabType.DecimalColon;
+				case "TabDecimalSColon":    return Drawing.TextTabType.DecimalSColon;
+				case "TabDecimalAdd":       return Drawing.TextTabType.DecimalAdd;
+				case "TabDecimalSub":       return Drawing.TextTabType.DecimalSub;
+				case "TabDecimalMul":       return Drawing.TextTabType.DecimalMul;
+				case "TabDecimalDiv":       return Drawing.TextTabType.DecimalDiv;
+				case "TabDecimalSpace":     return Drawing.TextTabType.DecimalSpace;
+				case "TabDecimalAt":        return Drawing.TextTabType.DecimalAt;
+				case "TabDecimalP100":      return Drawing.TextTabType.DecimalP100;
+				case "TabDecimalEq":        return Drawing.TextTabType.DecimalEq;
+				case "TabDecimalLt":        return Drawing.TextTabType.DecimalLt;
+				case "TabDecimalGt":        return Drawing.TextTabType.DecimalGt;
+				case "TabDecimalAmp":       return Drawing.TextTabType.DecimalAmp;
+				case "TabDecimalQuot":      return Drawing.TextTabType.DecimalQuot;
+				case "TabDecimalNumber":    return Drawing.TextTabType.DecimalNumber;
+				case "TabDecimalApos":      return Drawing.TextTabType.DecimalApos;
+				case "TabDecimalVert":      return Drawing.TextTabType.DecimalVert;
+				case "TabDecimalTilde":     return Drawing.TextTabType.DecimalTilde;
+				case "TabDecimalExclam":    return Drawing.TextTabType.DecimalExclam;
+				case "TabDecimalQuestion":  return Drawing.TextTabType.DecimalQuestion;
+				case "TabDecimalOpPar":     return Drawing.TextTabType.DecimalOpPar;
+				case "TabDecimalClPar":     return Drawing.TextTabType.DecimalClPar;
+				case "TabDecimalOpSBr":     return Drawing.TextTabType.DecimalOpSBr;
+				case "TabDecimalClSBr":     return Drawing.TextTabType.DecimalClSBr;
+				case "TabDecimalOpCBr":     return Drawing.TextTabType.DecimalOpCBr;
+				case "TabDecimalClCBr":     return Drawing.TextTabType.DecimalClCBr;
+			}
+			return Drawing.TextTabType.None;
+		}
+
+		public static string ConvType2Mark(TextTabType type)
+		{
+			switch ( type )
+			{
+				case Drawing.TextTabType.DecimalDot:       return ".";
+				case Drawing.TextTabType.DecimalComma:     return ",";
+				case Drawing.TextTabType.DecimalColon:     return ":";
+				case Drawing.TextTabType.DecimalSColon:    return ";";
+				case Drawing.TextTabType.DecimalAdd:       return "+";
+				case Drawing.TextTabType.DecimalSub:       return "-";
+				case Drawing.TextTabType.DecimalMul:       return "*";
+				case Drawing.TextTabType.DecimalDiv:       return "/";
+				case Drawing.TextTabType.DecimalSpace:     return " ";
+				case Drawing.TextTabType.DecimalAt:        return "@";
+				case Drawing.TextTabType.DecimalP100:      return "%";
+				case Drawing.TextTabType.DecimalEq:        return "=";
+				case Drawing.TextTabType.DecimalLt:        return "<";
+				case Drawing.TextTabType.DecimalGt:        return ">";
+				case Drawing.TextTabType.DecimalAmp:       return "&";
+				case Drawing.TextTabType.DecimalQuot:      return "\"";
+				case Drawing.TextTabType.DecimalNumber:    return "#";
+				case Drawing.TextTabType.DecimalApos:      return "'";
+				case Drawing.TextTabType.DecimalVert:      return "|";
+				case Drawing.TextTabType.DecimalTilde:     return "~";
+				case Drawing.TextTabType.DecimalExclam:    return "!";
+				case Drawing.TextTabType.DecimalQuestion:  return "?";
+				case Drawing.TextTabType.DecimalOpPar:     return "(";
+				case Drawing.TextTabType.DecimalClPar:     return ")";
+				case Drawing.TextTabType.DecimalOpSBr:     return "[";
+				case Drawing.TextTabType.DecimalClSBr:     return "]";
+				case Drawing.TextTabType.DecimalOpCBr:     return "{";
+				case Drawing.TextTabType.DecimalClCBr:     return "}";
+			}
+			return null;
+		}
+
+		public static TextTabType ConvMark2Type(string mark)
+		{
+			switch ( mark )
+			{
+				case ".":  return Drawing.TextTabType.DecimalDot;
+				case ",":  return Drawing.TextTabType.DecimalComma;
+				case ":":  return Drawing.TextTabType.DecimalColon;
+				case ";":  return Drawing.TextTabType.DecimalSColon;
+				case "+":  return Drawing.TextTabType.DecimalAdd;
+				case "-":  return Drawing.TextTabType.DecimalSub;
+				case "*":  return Drawing.TextTabType.DecimalMul;
+				case "/":  return Drawing.TextTabType.DecimalDiv;
+				case " ":  return Drawing.TextTabType.DecimalSpace;
+				case "@":  return Drawing.TextTabType.DecimalAt;
+				case "%":  return Drawing.TextTabType.DecimalP100;
+				case "=":  return Drawing.TextTabType.DecimalEq;
+				case "<":  return Drawing.TextTabType.DecimalLt;
+				case ">":  return Drawing.TextTabType.DecimalGt;
+				case "&":  return Drawing.TextTabType.DecimalAmp;
+				case "\"": return Drawing.TextTabType.DecimalQuot;
+				case "#":  return Drawing.TextTabType.DecimalNumber;
+				case "'":  return Drawing.TextTabType.DecimalApos;
+				case "|":  return Drawing.TextTabType.DecimalVert;
+				case "~":  return Drawing.TextTabType.DecimalTilde;
+				case "!":  return Drawing.TextTabType.DecimalExclam;
+				case "?":  return Drawing.TextTabType.DecimalQuestion;
+				case "(":  return Drawing.TextTabType.DecimalOpPar;
+				case ")":  return Drawing.TextTabType.DecimalClPar;
+				case "[":  return Drawing.TextTabType.DecimalOpSBr;
+				case "]":  return Drawing.TextTabType.DecimalClSBr;
+				case "{":  return Drawing.TextTabType.DecimalOpCBr;
+				case "}":  return Drawing.TextTabType.DecimalClCBr;
 			}
 			return Drawing.TextTabType.None;
 		}
@@ -901,19 +1065,49 @@ namespace Epsitec.Common.Document.Widgets
 		// Crée le menu pour choisir un tabulateur.
 		protected VMenu CreateMenu(MessageEventHandler message)
 		{
-			VMenu menu = new VMenu();
+			VMenu menuMath = new VMenu();
+			this.CreateMenu(menuMath, TextTabType.DecimalAdd,  message);
+			this.CreateMenu(menuMath, TextTabType.DecimalSub,  message);
+			this.CreateMenu(menuMath, TextTabType.DecimalMul,  message);
+			this.CreateMenu(menuMath, TextTabType.DecimalDiv,  message);
+			this.CreateMenu(menuMath, TextTabType.DecimalP100, message);
+			this.CreateMenu(menuMath, TextTabType.DecimalEq,   message);
+			this.CreateMenu(menuMath, TextTabType.DecimalLt,   message);
+			this.CreateMenu(menuMath, TextTabType.DecimalGt,   message);
 
+			VMenu menuSign = new VMenu();
+			this.CreateMenu(menuSign, TextTabType.DecimalColon,    message);
+			this.CreateMenu(menuSign, TextTabType.DecimalSColon,   message);
+			this.CreateMenu(menuSign, TextTabType.DecimalAt,       message);
+			this.CreateMenu(menuSign, TextTabType.DecimalAmp,      message);
+			this.CreateMenu(menuSign, TextTabType.DecimalNumber,   message);
+			this.CreateMenu(menuSign, TextTabType.DecimalQuot,     message);
+			this.CreateMenu(menuSign, TextTabType.DecimalApos,     message);
+			this.CreateMenu(menuSign, TextTabType.DecimalVert,     message);
+			this.CreateMenu(menuSign, TextTabType.DecimalTilde,    message);
+			this.CreateMenu(menuSign, TextTabType.DecimalExclam,   message);
+			this.CreateMenu(menuSign, TextTabType.DecimalQuestion, message);
+
+			VMenu menuPar = new VMenu();
+			this.CreateMenu(menuPar, TextTabType.DecimalOpPar, message);
+			this.CreateMenu(menuPar, TextTabType.DecimalClPar, message);
+			this.CreateMenu(menuPar, TextTabType.DecimalOpSBr, message);
+			this.CreateMenu(menuPar, TextTabType.DecimalClSBr, message);
+			this.CreateMenu(menuPar, TextTabType.DecimalOpCBr, message);
+			this.CreateMenu(menuPar, TextTabType.DecimalClCBr, message);
+
+			VMenu menu = new VMenu();
 			this.CreateMenu(menu, TextTabType.Right,  message);
 			this.CreateMenu(menu, TextTabType.Left,   message);
 			this.CreateMenu(menu, TextTabType.Center, message);
+			this.CreateMenu(menu, TextTabType.Indent, message);
 			menu.Items.Add(new MenuSeparator());
 			this.CreateMenu(menu, TextTabType.DecimalDot,    message);
 			this.CreateMenu(menu, TextTabType.DecimalComma,  message);
-			this.CreateMenu(menu, TextTabType.DecimalSlash,  message);
-			this.CreateMenu(menu, TextTabType.DecimalIndent, message);
 			this.CreateMenu(menu, TextTabType.DecimalSpace,  message);
-			menu.Items.Add(new MenuSeparator());
-			this.CreateMenu(menu, TextTabType.Indent, message);
+			this.CreateMenu(menu, menuMath, Res.Strings.Action.Text.Ruler.TabDecimalMath);
+			this.CreateMenu(menu, menuSign, Res.Strings.Action.Text.Ruler.TabDecimalSign);
+			this.CreateMenu(menu, menuPar,  Res.Strings.Action.Text.Ruler.TabDecimalPar);
 
 			menu.AdjustSize();
 			return menu;
@@ -922,8 +1116,8 @@ namespace Epsitec.Common.Document.Widgets
 		// Crée une case du menu pour choisir un tabulateur.
 		protected void CreateMenu(VMenu menu, TextTabType type, MessageEventHandler message)
 		{
-			string text = this.ConvType2String(type);
-			string name = this.ConvType2Name(type);
+			string text = HRuler.ConvType2String(type);
+			string name = HRuler.ConvType2Name(type);
 			string icon = Misc.Icon("RadioNo");
 			if ( type == this.tabToCreate )
 			{
@@ -941,11 +1135,19 @@ namespace Epsitec.Common.Document.Widgets
 			menu.Items.Add(item);
 		}
 
+		// Crée un case pour un sous-menu.
+		protected void CreateMenu(VMenu menu, VMenu subMenu, string text)
+		{
+			MenuItem item = new MenuItem("", "", text, "");
+			item.Submenu = subMenu;
+			menu.Items.Add(item);
+		}
+
 		// Appelé lorsqu'une case du menu est pressée.
 		private void HandleMenuPressed(object sender, MessageEventArgs e)
 		{
 			MenuItem item = sender as MenuItem;
-			this.tabToCreate = this.ConvName2Type(item.Name);
+			this.tabToCreate = HRuler.ConvName2Type(item.Name);
 			this.Invalidate();
 		}
 		#endregion
