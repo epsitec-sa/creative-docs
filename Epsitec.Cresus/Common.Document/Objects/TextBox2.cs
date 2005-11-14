@@ -1658,9 +1658,14 @@ namespace Epsitec.Common.Document.Objects
 				double x1 = 0;
 				double x2 = 0;
 
-				int[]    cArray;
-				ushort[] gArray;
-				ulong[]  tArray;
+				int[]    cArray;  // unicodes
+				ushort[] gArray;  // glyphes
+				ulong[]  tArray;  // textes
+
+				byte[]   iArray = new byte[glyphs.Length];  // insécables
+				int ii = 0;
+				bool isSpace = false;
+
 				while ( mapping.GetNextMapping(out cArray, out gArray, out tArray) )
 				{
 					int numChars  = cArray.Length;
@@ -1669,6 +1674,34 @@ namespace Epsitec.Common.Document.Objects
 
 					x1 = x[offset+0];
 					x2 = x[offset+numGlyphs];
+
+					if ( numChars == 1 && numGlyphs == 1 )
+					{
+						int code = cArray[0];
+						if ( code == 0x20 || code == 0xA0 || (code >= 0x2000 && code <= 0x20FF) )  // espace ?
+						{
+							isSpace = true;  // contient au moins un espace
+							if ( code == 0xA0 || code == 0x2007 || code == 0x200D || code == 0x202F || code == 0x2060 )
+							{
+								iArray[ii++] = 2;  // espace insécable
+							}
+							else
+							{
+								iArray[ii++] = 1;  // espace sécable
+							}
+						}
+						else
+						{
+							iArray[ii++] = 0;  // pas un espace
+						}
+					}
+					else
+					{
+						for ( int i=0 ; i<numGlyphs ; i++ )
+						{
+							iArray[ii++] = 0;  // pas un espace
+						}
+					}
 
 					for ( int i=0 ; i<numChars ; i++ )
 					{
@@ -1728,7 +1761,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 
 				// Dessine le texte.
-				this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName(color));
+				this.RenderText(font, size, glyphs, iArray, x, y, sx, sy, RichColor.FromName(color), isSpace);
 			}
 			
 			if ( this.internalOperation == InternalOperation.CharactersTable )
@@ -1773,7 +1806,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.internalOperation == InternalOperation.RealBoundingBox )
 			{
-				this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.Empty);
+				this.RenderText(font, size, glyphs, null, x, y, sx, sy, RichColor.Empty, false);
 			}
 		}
 
@@ -1796,7 +1829,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Effectue le rendu des caractères.
-		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, RichColor color)
+		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, byte[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
 		{
 			if ( this.internalOperation == InternalOperation.Painting )
 			{
@@ -1822,6 +1855,23 @@ namespace Epsitec.Common.Document.Objects
 									if ( glyphs[i] < 0xffff )
 									{
 										this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+									}
+								}
+							}
+
+							if ( this.edited && isSpace && insecs != null )
+							{
+								for ( int i=0 ; i<glyphs.Length ; i++ )
+								{
+									double width = font.GetGlyphWidth(glyphs[i], size);
+									double oy = font.GetAscender(size)*0.3;
+									if ( insecs[i] == 1 )  // espace sécable ?
+									{
+										this.graphics.AddFilledCircle(x[i]+width/2, y[i]+oy, 2);
+									}
+									if ( insecs[i] == 2 )  // espace insécable ?
+									{
+										this.graphics.AddCircle(x[i]+width/2, y[i]+oy, 4);
 									}
 								}
 							}
@@ -1871,7 +1921,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 		}
-		
+
 		public void Render(Text.Layout.Context layout, Text.IGlyphRenderer glyphRenderer, string color, double x, double y, bool isLastRun)
 		{
 			glyphRenderer.RenderGlyph(layout.Frame, x, y);
