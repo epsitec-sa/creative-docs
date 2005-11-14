@@ -1678,7 +1678,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( numChars == 1 && numGlyphs == 1 )
 					{
 						int code = cArray[0];
-						if ( code == 0x20 || code == 0xA0 || (code >= 0x2000 && code <= 0x20FF) )  // espace ?
+						if ( code == 0x20 || code == 0xA0 || code == 0x202F || (code >= 0x2000 && code <= 0x200F) )  // espace ?
 						{
 							isSpace = true;  // contient au moins un espace
 							if ( code == 0xA0 || code == 0x2007 || code == 0x200D || code == 0x202F || code == 0x2060 )

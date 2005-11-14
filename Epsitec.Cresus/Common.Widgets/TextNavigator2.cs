@@ -109,6 +109,7 @@ namespace Epsitec.Common.Widgets
 					case KeyCode.Tab:		processed = this.ProcessTabKey (message);		break;
 					case KeyCode.Back:		processed = this.ProcessBackKey (message);		break;
 					case KeyCode.Delete:	processed = this.ProcessDeleteKey (message);	break;
+					case KeyCode.Space:	    processed = this.ProcessSpaceKey (message);	    break;
 				}
 			}
 			
@@ -253,6 +254,16 @@ namespace Epsitec.Common.Widgets
 			
 			this.text_navigator.Delete (1);
 			return true;
+		}
+		
+		private bool ProcessSpaceKey(Message message)
+		{
+			if (message.IsCtrlPressed && message.IsShiftPressed)
+			{
+				this.Insert (Text.Unicode.Code.NoBreakSpace);
+				return true;
+			}
+			return false;
 		}
 		
 		private bool ProcessHomeKey(Message message)
