@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Inflate(adorner.GeometryButtonShapeBounds);
 			return rect;

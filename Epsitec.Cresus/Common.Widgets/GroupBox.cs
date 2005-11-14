@@ -84,14 +84,14 @@ namespace Epsitec.Common.Widgets
 		public override Drawing.Rectangle GetShapeBounds()
 		{
 			Drawing.Rectangle rect = base.GetShapeBounds();
-			rect.Inflate(Widgets.Adorner.Factory.Active.GeometryGroupShapeBounds);
+			rect.Inflate(Widgets.Adorners.Factory.Active.GeometryGroupShapeBounds);
 			return rect;
 		}
 
 		// Dessine le texte.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			IAdorner    adorner = Widgets.Adorner.Factory.Active;
+			IAdorner    adorner = Widgets.Adorners.Factory.Active;
 			WidgetState state   = this.PaintState;
 			
 #if false

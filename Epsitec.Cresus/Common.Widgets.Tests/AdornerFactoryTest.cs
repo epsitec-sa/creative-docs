@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		[Test] public void CheckAdornerNames()
 		{
-			string[] names = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
+			string[] names = Epsitec.Common.Widgets.Adorners.Factory.AdornerNames;
 			
 			Assert.IsNotNull (names);
 			Assert.IsTrue (names.Length > 0);
@@ -20,16 +20,16 @@ namespace Epsitec.Common.Widgets
 		
 		[Test] public void CheckAdornerActivation()
 		{
-			string[] names = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
+			string[] names = Epsitec.Common.Widgets.Adorners.Factory.AdornerNames;
 			
 			Assert.IsNotNull (names);
 			Assert.IsTrue (names.Length > 0);
 			
 			foreach (string name in names)
 			{
-				Assert.IsTrue (Epsitec.Common.Widgets.Adorner.Factory.SetActive (name));
-				Assert.AreEqual (name, Epsitec.Common.Widgets.Adorner.Factory.ActiveName);
-				Assert.IsNotNull (Epsitec.Common.Widgets.Adorner.Factory.Active);
+				Assert.IsTrue (Epsitec.Common.Widgets.Adorners.Factory.SetActive (name));
+				Assert.AreEqual (name, Epsitec.Common.Widgets.Adorners.Factory.ActiveName);
+				Assert.IsNotNull (Epsitec.Common.Widgets.Adorners.Factory.Active);
 			}
 		}
 	}

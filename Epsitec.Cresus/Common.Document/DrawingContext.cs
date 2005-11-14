@@ -1152,7 +1152,7 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 				Color color = Color.FromColor(adorner.ColorCaption, 0.8);
 				if ( this.previewActive )
 				{
@@ -1168,7 +1168,7 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 				Color color = Color.FromColor(adorner.ColorCaption, 0.4);
 				if ( this.previewActive )
 				{

@@ -137,7 +137,7 @@ namespace Epsitec.Common.Widgets
 		Drawing.Color ColorTextSliderBorder(bool enabled);
 		Drawing.Color ColorTextFieldBorder(bool enabled);
 
-		double AlphaVMenu { get; }
+		double AlphaMenu { get; }
 
 		Drawing.Margins GeometryMenuShadow { get; }
 		Drawing.Margins GeometryMenuMargins { get; }

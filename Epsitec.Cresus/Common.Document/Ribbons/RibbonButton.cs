@@ -59,7 +59,7 @@ namespace Epsitec.Common.Document.Ribbons
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Inflate(adorner.GeometryRibbonShapeBounds);
 			return rect;
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Document.Ribbons
 		// Dessine la case.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;

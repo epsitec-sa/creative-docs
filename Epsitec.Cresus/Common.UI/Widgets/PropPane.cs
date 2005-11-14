@@ -230,7 +230,7 @@ namespace Epsitec.Common.UI.Widgets
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			
 			Drawing.Rectangle rect = this.Client.Bounds;
 			

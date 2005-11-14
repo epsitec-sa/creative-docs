@@ -156,7 +156,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
 			WidgetState state = this.PaintState;

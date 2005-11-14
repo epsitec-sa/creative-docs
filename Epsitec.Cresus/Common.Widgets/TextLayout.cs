@@ -1516,7 +1516,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdateLayout();
 
-			IAdorner adorner = Adorner.Factory.Active;
+			IAdorner adorner = Adorners.Factory.Active;
 			double listValue = 0.0;
 			bool listEncounter = false;
 			foreach ( JustifBlock block in this.blocks )

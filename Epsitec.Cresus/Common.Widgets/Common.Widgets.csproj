@@ -349,6 +349,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MenuWindow.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Message.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -624,6 +629,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Adorners\AbstractAdorner.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adorners\Default.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -768,6 +778,11 @@
                 />
                 <File
                     RelPath = "Behaviors\IDragBehaviorHost.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Behaviors\MenuBehavior.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void PaintGrad(Graphics graphics, Rectangle clipRect)
 		{
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
 			graphics.Align(ref rect);
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.marker < this.starting ||
 				 this.marker > this.ending   )  return;
 
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 			graphics.Align(ref rect);
 
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			
 			Rectangle rect = this.Client.Bounds;
 			graphics.AddFilledRectangle(rect);

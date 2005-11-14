@@ -8,7 +8,7 @@ namespace Epsitec.Common.Script
 		{
 			Common.Widgets.Widget.Initialise ();
 			Common.Document.Engine.Initialise ();
-			Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
+			Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}
 		
 		[Test] public void CheckEditorEngine()

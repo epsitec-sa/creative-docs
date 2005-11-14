@@ -413,7 +413,7 @@ namespace Epsitec.Common.Widgets
 		// Dessine la couleur.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
 			if ( this.possibleSource && this.ActiveState == WidgetState.ActiveYes )
@@ -475,7 +475,7 @@ namespace Epsitec.Common.Widgets
 			color.GetHSV(out h, out s, out v);
 			if ( s < 0.2 )  // gris ou presque ?
 			{
-				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				color = adorner.ColorCaption;
 			}
 			else

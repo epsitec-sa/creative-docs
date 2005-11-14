@@ -103,7 +103,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.arrowUp == null )  return;
 
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Width -= System.Math.Floor(rect.Height*adorner.GeometryUpDownWidthFactor)-1;
 			rect.Height = TextFieldSlider.sliderHeight;

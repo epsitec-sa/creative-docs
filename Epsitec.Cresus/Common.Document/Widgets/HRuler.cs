@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document.Widgets
 		// Dessine la graduation.
 		protected void PaintGrad(Graphics graphics, Rectangle clipRect)
 		{
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
 			graphics.Align(ref rect);
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.marker < this.starting ||
 				 this.marker > this.ending   )  return;
 
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 			graphics.Align(ref rect);
 
@@ -228,7 +228,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.marginLeftFirst < this.starting ||
 				 this.marginLeftFirst > this.ending   )  return;
 
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
 			double posx = this.GetHandleHorizontalPos("LeftFirst");
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.marginLeftBody < this.starting ||
 				 this.marginLeftBody > this.ending   )  return;
 
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
 			double posx = this.GetHandleHorizontalPos("LeftBody");
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.marginRight < this.starting ||
 				 this.marginRight > this.ending   )  return;
 
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
 			double posx = this.GetHandleHorizontalPos("Right");
@@ -320,7 +320,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( !this.edited )  return;
 			if ( this.tabs == null || this.tabs.Length == 0 )  return;
 
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			for ( int pass=1 ; pass<=3 ; pass++ )
 			{
@@ -387,7 +387,7 @@ namespace Epsitec.Common.Document.Widgets
 		// Dessine le "bouton" pour choisir le type de tabulateur.
 		protected void PaintTabChoice(Graphics graphics)
 		{
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
 			rect.Width = rect.Height;
@@ -412,7 +412,7 @@ namespace Epsitec.Common.Document.Widgets
 		// Dessine toute la règle.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			
 			Rectangle rect = this.Client.Bounds;
 			graphics.AddFilledRectangle(rect);

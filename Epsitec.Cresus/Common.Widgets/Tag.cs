@@ -85,7 +85,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
-			IAdorner          adorner = Widgets.Adorner.Factory.Active;
+			IAdorner          adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
 			WidgetState       state   = this.PaintState;
 			

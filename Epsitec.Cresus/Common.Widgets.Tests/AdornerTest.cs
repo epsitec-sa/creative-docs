@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Epsitec.Common.UI.Engine.Initialise ();
 			Epsitec.Common.Document.Engine.Initialise ();
-			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}
 		
 		[Test] public void CheckAdornerWidgets()
@@ -1601,13 +1601,13 @@ namespace Epsitec.Common.Widgets
 				sl.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
-			string[] list = Widgets.Adorner.Factory.AdornerNames;
+			string[] list = Widgets.Adorners.Factory.AdornerNames;
 			int i = 0;
 			int sel = 0;
 			foreach ( string name in list )
 			{
 				sl.Items.Add(name);
-				if ( name == Widgets.Adorner.Factory.ActiveName )  sel = i;
+				if ( name == Widgets.Adorners.Factory.ActiveName )  sel = i;
 				i ++;
 			}
 
@@ -1625,7 +1625,7 @@ namespace Epsitec.Common.Widgets
 		{
 			ScrollList sl = sender as ScrollList;
 			int sel = sl.SelectedIndex;
-			Widgets.Adorner.Factory.SetActive(sl.Items[sel]);
+			Widgets.Adorners.Factory.SetActive(sl.Items[sel]);
 		}
 		
 		[Test] public void CheckAdornerPaneBook1()

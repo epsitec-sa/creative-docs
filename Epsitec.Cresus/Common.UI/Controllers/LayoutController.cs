@@ -348,7 +348,7 @@ namespace Epsitec.Common.UI.Controllers
 			
 			protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 			{
-				IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 				
 				Drawing.Rectangle rect_1 = this.Client.Bounds;
 				Drawing.Rectangle rect_2 = this.Client.Bounds;

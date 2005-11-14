@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 	{
 		[Test] public void CheckFicheApplication()
 		{
-			Widgets.Adorner.Factory.SetActive("LookDany");
+			Widgets.Adorners.Factory.SetActive("LookDany");
 			
 			this.window = new Window();
 			this.window.Root.LayoutChanged += new EventHandler(this.Root_LayoutChanged);
@@ -484,13 +484,13 @@ namespace Epsitec.Common.Widgets
 			
 			this.listLook = new ScrollList();
 
-			string[] list = Widgets.Adorner.Factory.AdornerNames;
+			string[] list = Widgets.Adorners.Factory.AdornerNames;
 			int i = 0;
 			int sel = 0;
 			foreach ( string name in list )
 			{
 				this.listLook.Items.Add(name);
-				if ( name == Widgets.Adorner.Factory.ActiveName )  sel = i;
+				if ( name == Widgets.Adorners.Factory.ActiveName )  sel = i;
 				i ++;
 			}
 
@@ -599,7 +599,7 @@ namespace Epsitec.Common.Widgets
 		{
 			ScrollList sl = sender as ScrollList;
 			int sel = sl.SelectedIndex;
-			Widgets.Adorner.Factory.SetActive(sl.Items[sel]);
+			Widgets.Adorners.Factory.SetActive(sl.Items[sel]);
 		}
 
 		protected void ResizeLayout()

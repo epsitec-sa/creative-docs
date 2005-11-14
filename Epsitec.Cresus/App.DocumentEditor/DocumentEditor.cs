@@ -65,7 +65,7 @@ namespace Epsitec.App.DocumentEditor
 				this.globalSettings.Initialise(this.type);
 			}
 
-			Epsitec.Common.Widgets.Adorner.Factory.SetActive(this.globalSettings.Adorner);
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive(this.globalSettings.Adorner);
 
 			this.dlgAbout     = new Dialogs.About(this);
 			this.dlgDownload  = new Dialogs.Download(this);
@@ -5068,7 +5068,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgSettings.Save();
 			this.dlgUpdate.Save();
 
-			this.globalSettings.Adorner = Epsitec.Common.Widgets.Adorner.Factory.ActiveName;
+			this.globalSettings.Adorner = Epsitec.Common.Widgets.Adorners.Factory.ActiveName;
 
 			try
 			{

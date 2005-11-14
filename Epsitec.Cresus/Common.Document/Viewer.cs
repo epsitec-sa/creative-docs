@@ -3081,7 +3081,7 @@ namespace Epsitec.Common.Document
 			}
 			
 			//?System.Diagnostics.Debug.WriteLine("PaintBackgroundImplementation "+clipRect.ToString());
-			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{

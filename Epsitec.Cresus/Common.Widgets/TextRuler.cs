@@ -1089,7 +1089,7 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			// Dessine la règle et sa graduation.
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
 			graphics.AddFilledRectangle(rect);
@@ -1135,7 +1135,7 @@ namespace Epsitec.Common.Widgets
 		protected void PaintGrad(Drawing.Graphics graphics)
 		{
 			// Dessine la graduation dans la règle.
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Height = TextRuler.zoneInfHeight;
@@ -1190,7 +1190,7 @@ namespace Epsitec.Common.Widgets
 			// Dessine les tabulateurs dans la règle.
 			if ( this.textNavigator == null )  return;
 
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Height = TextRuler.zoneInfHeight;

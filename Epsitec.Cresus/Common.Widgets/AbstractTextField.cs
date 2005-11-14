@@ -480,7 +480,7 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Rectangle GetButtonBounds()
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = new Drawing.Rectangle();
 			rect.Left   = this.Bounds.Width-this.margins.Right-adorner.GeometryComboRightMargin;
 			rect.Right  = this.Bounds.Width-adorner.GeometryComboRightMargin;
@@ -1085,7 +1085,7 @@ namespace Epsitec.Common.Widgets
 			// Dessine le texte en cours d'édition :
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			WidgetState       state     = this.PaintState;
 			Drawing.Point     pos       = this.InnerTextBounds.Location - this.scrollOffset + new Drawing.Point(0, 1);
@@ -1233,7 +1233,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Inflate(adorner.GeometryTextFieldShapeBounds);
 			return rect;

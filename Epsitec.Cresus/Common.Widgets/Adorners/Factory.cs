@@ -1,7 +1,10 @@
-namespace Epsitec.Common.Widgets.Adorner
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+namespace Epsitec.Common.Widgets.Adorners
 {
 	/// <summary>
-	/// La classe Adorner.Factory donne accès à l'interface IAdorner actuellement
+	/// La classe Adorners.Factory donne accès à l'interface IAdorner actuellement
 	/// active. De plus, elle liste et crée automatiquement des instances de chaque
 	/// classe implémentant IAdorner dans l'assembly actuelle...
 	/// </summary>
@@ -40,7 +43,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			
 			foreach (System.Type type in all_types_in_assembly)
 			{
-				if (type.IsClass && type.IsPublic)
+				if (type.IsClass && type.IsPublic && !type.IsAbstract)
 				{
 					System.Type[] interfaces = type.GetInterfaces ();
 					

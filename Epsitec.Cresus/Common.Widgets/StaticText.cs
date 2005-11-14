@@ -106,7 +106,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.TextLayout != null)
 			{
-				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, this.TextLayout, state, this.paint_text_style, this.BackColor);
 			}
 			

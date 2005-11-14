@@ -103,7 +103,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				Common.Document.Dialogs.CreateTitle(global, Res.Strings.Dialog.Settings.Screen);
 
 				combo = this.CreateCombo(global, "Adorner", Res.Strings.Dialog.Settings.Adorner);
-				string[] list = Widgets.Adorner.Factory.AdornerNames;
+				string[] list = Widgets.Adorners.Factory.AdornerNames;
 				int rank = 0;
 				foreach ( string name in list )
 				{
@@ -113,7 +113,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					if ( name == "LookXP" )  continue;
 #endif
 					combo.Items.Add(name);
-					if ( name == Widgets.Adorner.Factory.ActiveName )
+					if ( name == Widgets.Adorners.Factory.ActiveName )
 					{
 						combo.SelectedIndex = rank;
 					}
@@ -305,7 +305,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( combo.Name == "Adorner" )
 			{
 				this.globalSettings.Adorner = combo.Text;
-				Widgets.Adorner.Factory.SetActive(combo.Text);
+				Widgets.Adorners.Factory.SetActive(combo.Text);
 			}
 		}
 

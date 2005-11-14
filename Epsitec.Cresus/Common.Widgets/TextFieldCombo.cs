@@ -380,7 +380,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( cancel_event.Cancel )  return;
 			
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Margins shadow = adorner.GeometryMenuShadow;
 
 			this.scrollList = new ScrollList(null);
@@ -414,10 +414,10 @@ namespace Epsitec.Common.Widgets
 			this.comboWindow.MakeFramelessWindow();
 			this.comboWindow.MakeFloatingWindow();
 			this.comboWindow.Owner = this.Window;
-			if ( adorner.AlphaVMenu < 1.0 )
+			if ( adorner.AlphaMenu < 1.0 )
 			{
 				this.comboWindow.MakeLayeredWindow();
-				this.comboWindow.Alpha = adorner.AlphaVMenu;
+				this.comboWindow.Alpha = adorner.AlphaMenu;
 				this.comboWindow.Root.BackColor = Drawing.Color.Transparent;
 			}
 			//?pos = this.MapClientToScreen(new Drawing.Point(0, 0));

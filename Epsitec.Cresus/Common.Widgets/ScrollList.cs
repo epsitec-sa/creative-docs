@@ -251,7 +251,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Inflate(adorner.GeometryListShapeBounds);
 			if ( this.scrollListStyle == ScrollListStyle.Menu )
@@ -457,7 +457,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.scroller != null )
 			{
 				this.UpdateMargins ();
-				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
 				rect.Right  = this.Client.Width-adorner.GeometryScrollerRightMargin;
 				rect.Left   = rect.Right-this.scroller.Width;
@@ -495,7 +495,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateMargins()
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			this.margins = new Drawing.Margins (adorner.GeometryScrollListXMargin, adorner.GeometryScrollListXMargin,
 				/**/                            adorner.GeometryScrollListYMargin, adorner.GeometryScrollListYMargin);
@@ -540,7 +540,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdatetextLayouts();
 			
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;

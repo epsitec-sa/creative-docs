@@ -48,7 +48,7 @@ namespace Epsitec.Common.Widgets
 			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;
 			
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			this.frame_margins = adorner.GeometryArrayMargins;
 			this.table_margins = new Drawing.Margins ();
@@ -1530,7 +1530,7 @@ invalid:	row    = -1;
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			IAdorner          adorner = Widgets.Adorner.Factory.Active;
+			IAdorner          adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
 			
 			rect.Inflate (adorner.GeometryListShapeBounds);
@@ -1603,7 +1603,7 @@ invalid:	row    = -1;
 		
 		protected virtual void UpdateTableBounds()
 		{
-			this.frame_margins = Widgets.Adorner.Factory.Active.GeometryArrayMargins;
+			this.frame_margins = Widgets.Adorners.Factory.Active.GeometryArrayMargins;
 			this.table_margins = new Drawing.Margins (0, this.v_scroller.Width - 1, this.row_height + this.title_height, this.h_scroller.Height - 1);
 			
 			if (this.v_scroller.IsVisible == false)
@@ -2098,7 +2098,7 @@ invalid:	row    = -1;
 				return;
 			}
 			
-			IAdorner          adorner = Widgets.Adorner.Factory.Active;
+			IAdorner          adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
 			WidgetState       state   = this.PaintState;
 			
@@ -2251,7 +2251,7 @@ invalid:	row    = -1;
 		{
 			base.PaintForegroundImplementation (graphics, clip_rect);
 			
-			IAdorner          adorner = Widgets.Adorner.Factory.Active;
+			IAdorner          adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
 			WidgetState       state   = this.PaintState;
 			

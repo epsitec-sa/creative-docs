@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			this.margins = adorner.GeometryMenuMargins;
 			this.shadow  = adorner.GeometryMenuShadow;
 
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Widgets
 			// Il faut appeler AdjustSize après avoir fini de remplir le menu vertical.
 			if ( this.IsVertical )
 			{
-				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				this.margins = adorner.GeometryMenuMargins;
 				this.shadow  = adorner.GeometryMenuShadow;
 				this.Size    = this.RequiredSize;
@@ -282,11 +282,11 @@ namespace Epsitec.Common.Widgets
 			this.window.Owner = owner;
 			this.window.CommandDispatcher = owner.CommandDispatcher;
 			this.window.Name = "ContextMenu";
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			if ( adorner.AlphaVMenu < 1.0 )
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			if ( adorner.AlphaMenu < 1.0 )
 			{
 				this.window.MakeLayeredWindow();
-				this.window.Alpha = adorner.AlphaVMenu;
+				this.window.Alpha = adorner.AlphaMenu;
 				this.window.Root.BackColor = Drawing.Color.Transparent;
 			}
 			this.window.DisableMouseActivation();
@@ -426,7 +426,7 @@ namespace Epsitec.Common.Widgets
 			
 			// Met à jour la géométrie du menu.
 			
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			this.margins = adorner.GeometryMenuMargins;
 			this.shadow  = adorner.GeometryMenuShadow;
 
@@ -771,11 +771,11 @@ namespace Epsitec.Common.Widgets
 			this.submenu.window.Owner = item.Window;
 			this.submenu.window.CommandDispatcher = item.Window.CommandDispatcher;
 			this.submenu.window.Name = "Menu";
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			if ( this.submenu.IsVertical && adorner.AlphaVMenu < 1.0 )
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			if ( this.submenu.IsVertical && adorner.AlphaMenu < 1.0 )
 			{
 				this.submenu.window.MakeLayeredWindow();
-				this.submenu.window.Alpha = adorner.AlphaVMenu;
+				this.submenu.window.Alpha = adorner.AlphaMenu;
 				this.submenu.window.Root.BackColor = Drawing.Color.Transparent;
 			}
 			this.submenu.window.DisableMouseActivation();
@@ -1079,7 +1079,7 @@ namespace Epsitec.Common.Widgets
 				/**/						 "The menu you are trying to display has no associated command dispatcher host.\n"+
 				/**/						 "Use AbstractMenu.Host to define it when you setup the menu.");
 			
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
 			WidgetState       state = this.PaintState;

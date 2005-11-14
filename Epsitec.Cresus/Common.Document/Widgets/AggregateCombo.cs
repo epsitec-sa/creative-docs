@@ -352,7 +352,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.OnOpeningCombo(cancelEvent);
 			if ( cancelEvent.Cancel )  return;
 			
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Margins margins = adorner.GeometryArrayMargins;
 
 			this.list = new AggregateList();

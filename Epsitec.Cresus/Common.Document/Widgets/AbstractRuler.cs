@@ -332,7 +332,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			get
 			{
-				IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 				Color color = adorner.ColorWindow;
 				if ( this.edited )
 				{
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			get
 			{
-				IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 				return adorner.ColorWindow;
 			}
 		}
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Document.Widgets
 		// Donne la couleur pour le fond des marqueurs des marges.
 		protected Color ColorBackgroundMargins(bool hilite)
 		{
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			if ( hilite )
 			{
 				return adorner.ColorCaption;

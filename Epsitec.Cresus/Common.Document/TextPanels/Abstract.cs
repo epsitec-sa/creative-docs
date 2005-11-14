@@ -282,7 +282,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 
 			Rectangle rect = this.Client.Bounds;

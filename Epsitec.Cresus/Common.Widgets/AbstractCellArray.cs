@@ -38,7 +38,7 @@ namespace Epsitec.Common.Widgets
 			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState &= ~InternalState.PossibleContainer;
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			this.margins = adorner.GeometryArrayMargins;
 
 			double h = this.DefaultFontHeight+4;
@@ -1253,7 +1253,7 @@ namespace Epsitec.Common.Widgets
 
 			this.isDirty = false;
 
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			this.margins = adorner.GeometryArrayMargins;
 
 			this.showScrollerV = false;
@@ -1447,7 +1447,7 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Inflate(adorner.GeometryListShapeBounds);
 			return rect;
@@ -1835,7 +1835,7 @@ namespace Epsitec.Common.Widgets
 		// Dessine le tableau.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			this.Update();  // mis à jour si nécessaire
 
@@ -1860,7 +1860,7 @@ namespace Epsitec.Common.Widgets
 		// Dessine la grille par-dessus.
 		protected override void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			WidgetState state = this.PaintState;
 			Drawing.Rectangle rect = this.Client.Bounds;

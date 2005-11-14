@@ -10,7 +10,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			Common.Widgets.Widget.Initialise ();
 			Common.Document.Engine.Initialise ();
-			Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
+			Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}
 		
 		public MessageTest()

@@ -55,7 +55,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.scroller != null )
 			{
-				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
 				rect.Left   = this.Bounds.Width-this.margins.Right-adorner.GeometryScrollerRightMargin;
 				rect.Right  = this.Bounds.Width-adorner.GeometryScrollerRightMargin;

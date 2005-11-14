@@ -429,7 +429,7 @@ namespace Epsitec.Common.Widgets
 		// Peinture du widget.
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			IAdorner    adorner = Widgets.Adorner.Factory.Active;
+			IAdorner    adorner = Widgets.Adorners.Factory.Active;
 			WidgetState state   = this.PaintState;
 			
 			Rectangle area = this.DrawingArea();

@@ -71,7 +71,7 @@ namespace Epsitec.Common.Widgets
 			
 			text_rect.Offset (this.LabelOffset);
 			text_rect.Inflate (1, 1);
-			text_rect.Inflate (Widgets.Adorner.Factory.Active.GeometryRadioShapeBounds);
+			text_rect.Inflate (Widgets.Adorners.Factory.Active.GeometryRadioShapeBounds);
 			base_rect.MergeWith (text_rect);
 			
 			return base_rect;
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle (0, (this.Client.Height-RadioButton.RadioHeight)/2, RadioButton.RadioHeight, RadioButton.RadioHeight);
 			WidgetState       state = this.PaintState;

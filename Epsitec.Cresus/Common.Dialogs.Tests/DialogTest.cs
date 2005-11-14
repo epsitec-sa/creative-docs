@@ -73,7 +73,7 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckLoad3WithData()
 		{
-			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookPastel");
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookPastel");
 			
 			Dialog           dialog     = new Dialog (Support.Resources.DefaultManager, "dialog_with_data");
 			DialogController controller = new DialogController (dialog);

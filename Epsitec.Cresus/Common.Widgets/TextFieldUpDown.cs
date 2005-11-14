@@ -285,7 +285,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateClientGeometry();
 			
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Bounds;
 			double width = System.Math.Floor(rect.Height*adorner.GeometryUpDownWidthFactor);
 			this.margins.Right = width - AbstractTextField.FrameMargin;

@@ -8,7 +8,7 @@ namespace Epsitec.Common.UI
 		[SetUp] public void SetUp()
 		{
 			Common.Widgets.Widget.Initialise ();
-			Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
+			Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 			
 			Support.Resources.SetupApplication ("Test");
 		}

@@ -66,7 +66,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			if ( this.document == null )  return;
 
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
 			Color color = this.IsSelected ? adorner.ColorCaption : adorner.ColorTextBackground;
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected void PaintCorner(Graphics graphics, Rectangle rect)
 		{
 			Properties.Corner corner = this.property as Properties.Corner;
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle form = rect;
 			form.Deflate(3.5);
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected void PaintArc(Graphics graphics, Rectangle rect)
 		{
 			Properties.Arc arc = this.property as Properties.Arc;
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle form = rect;
 			form.Deflate(1.5);
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected void PaintArrow(Graphics graphics, Rectangle rect)
 		{
 			Properties.Arrow arrow = this.property as Properties.Arrow;
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			double scale = 1.0/10.0;
 			Transform initialTransform = graphics.Transform;

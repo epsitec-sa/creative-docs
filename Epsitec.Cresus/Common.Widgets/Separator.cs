@@ -30,7 +30,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( !this.IsEnabled )  return;
 
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			graphics.AddFilledRectangle(rect);

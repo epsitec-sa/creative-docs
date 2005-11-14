@@ -82,7 +82,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			if ( this.document == null )  return;
 
-			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
 			Color color = this.IsSelected ? adorner.ColorCaption : adorner.ColorTextBackground;

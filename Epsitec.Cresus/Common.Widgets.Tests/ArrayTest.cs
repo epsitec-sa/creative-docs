@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Widgets.Widget.Initialise ();
 			Document.Engine.Initialise ();
-			Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
+			Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}
 		
 		[Test] public void CheckInteractive()

@@ -90,7 +90,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			Drawing.Rectangle rect  = new Drawing.Rectangle (0, (this.Client.Height-CheckButton.CheckHeight)/2, CheckButton.CheckHeight, CheckButton.CheckHeight);
 			WidgetState       state = this.PaintState;

@@ -568,7 +568,7 @@ namespace Epsitec.Common.Widgets.Tools
 					color_1.G = bright;
 					color_1.B = bright;
 					
-					color_2 = Adorner.Factory.Active.ColorTextFieldBorder (false);
+					color_2 = Adorners.Factory.Active.ColorTextFieldBorder (false);
 				}
 				
 				graphics.AddFilledCircle (cx, cy, r);
