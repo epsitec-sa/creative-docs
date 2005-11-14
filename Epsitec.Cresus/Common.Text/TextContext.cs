@@ -1299,7 +1299,14 @@ namespace Epsitec.Common.Text
 			Styles.SimpleStyle   style          = this.style_list[code];
 			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
 			
-			property = local_settings[Properties.WellKnownType.Tab] as Properties.TabProperty;
+			if (local_settings == null)
+			{
+				property = null;
+			}
+			else
+			{
+				property = local_settings[Properties.WellKnownType.Tab] as Properties.TabProperty;
+			}
 		}
 		
 		public void GetTabs(ulong code, out Properties.TabsProperty property)
@@ -1309,7 +1316,14 @@ namespace Epsitec.Common.Text
 			Styles.SimpleStyle   style          = this.style_list[code];
 			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
 			
-			property = local_settings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+			if (local_settings == null)
+			{
+				property = null;
+			}
+			else
+			{
+				property = local_settings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+			}
 		}
 		
 		public void GetTabAndTabs(ulong code, out Properties.TabProperty tab_property, out Properties.TabsProperty tabs_property)
@@ -1319,8 +1333,16 @@ namespace Epsitec.Common.Text
 			Styles.SimpleStyle   style          = this.style_list[code];
 			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
 			
-			tab_property  = local_settings[Properties.WellKnownType.Tab] as Properties.TabProperty;
-			tabs_property = local_settings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+			if (local_settings == null)
+			{
+				tab_property  = null;
+				tabs_property = null;
+			}
+			else
+			{
+				tab_property  = local_settings[Properties.WellKnownType.Tab] as Properties.TabProperty;
+				tabs_property = local_settings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+			}
 		}
 		
 		public void GetImage(ulong code, out Properties.ImageProperty property)
