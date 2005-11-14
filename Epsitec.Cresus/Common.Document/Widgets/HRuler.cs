@@ -1071,6 +1071,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.CreateMenu(menuMath, TextTabType.DecimalMul,  message);
 			this.CreateMenu(menuMath, TextTabType.DecimalDiv,  message);
 			this.CreateMenu(menuMath, TextTabType.DecimalP100, message);
+			menuMath.Items.Add(new MenuSeparator());
 			this.CreateMenu(menuMath, TextTabType.DecimalEq,   message);
 			this.CreateMenu(menuMath, TextTabType.DecimalLt,   message);
 			this.CreateMenu(menuMath, TextTabType.DecimalGt,   message);
@@ -1078,6 +1079,7 @@ namespace Epsitec.Common.Document.Widgets
 			VMenu menuSign = new VMenu();
 			this.CreateMenu(menuSign, TextTabType.DecimalColon,    message);
 			this.CreateMenu(menuSign, TextTabType.DecimalSColon,   message);
+			menuSign.Items.Add(new MenuSeparator());
 			this.CreateMenu(menuSign, TextTabType.DecimalAt,       message);
 			this.CreateMenu(menuSign, TextTabType.DecimalAmp,      message);
 			this.CreateMenu(menuSign, TextTabType.DecimalNumber,   message);
@@ -1085,14 +1087,17 @@ namespace Epsitec.Common.Document.Widgets
 			this.CreateMenu(menuSign, TextTabType.DecimalApos,     message);
 			this.CreateMenu(menuSign, TextTabType.DecimalVert,     message);
 			this.CreateMenu(menuSign, TextTabType.DecimalTilde,    message);
+			menuSign.Items.Add(new MenuSeparator());
 			this.CreateMenu(menuSign, TextTabType.DecimalExclam,   message);
 			this.CreateMenu(menuSign, TextTabType.DecimalQuestion, message);
 
 			VMenu menuPar = new VMenu();
 			this.CreateMenu(menuPar, TextTabType.DecimalOpPar, message);
 			this.CreateMenu(menuPar, TextTabType.DecimalClPar, message);
+			menuPar.Items.Add(new MenuSeparator());
 			this.CreateMenu(menuPar, TextTabType.DecimalOpSBr, message);
 			this.CreateMenu(menuPar, TextTabType.DecimalClSBr, message);
+			menuPar.Items.Add(new MenuSeparator());
 			this.CreateMenu(menuPar, TextTabType.DecimalOpCBr, message);
 			this.CreateMenu(menuPar, TextTabType.DecimalClCBr, message);
 
