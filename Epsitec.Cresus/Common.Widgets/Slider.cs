@@ -3,11 +3,11 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe Slider implémente un curseur de réglage.
 	/// </summary>
-	public class Slider : Widget, Support.Data.INumValue, Helpers.IDragBehaviorHost
+	public class Slider : Widget, Support.Data.INumValue, Behaviors.IDragBehaviorHost
 	{
 		public Slider()
 		{
-			this.drag_behavior = new Helpers.DragBehavior (this, true, true);
+			this.drag_behavior = new Behaviors.DragBehavior (this, true, true);
 		}
 		
 		public Slider(Widget embedder) : this()
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		#region IDragBehaviorHost Members
-		Drawing.Point						Helpers.IDragBehaviorHost.DragLocation
+		Drawing.Point						Behaviors.IDragBehaviorHost.DragLocation
 		{
 			get
 			{
@@ -157,17 +157,17 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		bool Helpers.IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
+		bool Behaviors.IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
 		{
 			return true;
 		}
 
-		void Helpers.IDragBehaviorHost.OnDragging(DragEventArgs e)
+		void Behaviors.IDragBehaviorHost.OnDragging(DragEventArgs e)
 		{
 			this.LogarithmicValue = this.Detect (e.ToPoint);
 		}
 
-		void Helpers.IDragBehaviorHost.OnDragEnd()
+		void Behaviors.IDragBehaviorHost.OnDragEnd()
 		{
 		}
 		#endregion
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		private Helpers.DragBehavior		drag_behavior;
+		private Behaviors.DragBehavior		drag_behavior;
 		private decimal						value = 0;
 		private Types.DecimalRange			range = new Types.DecimalRange (0, 100, 1);
 		private decimal						logarithmic = 1;

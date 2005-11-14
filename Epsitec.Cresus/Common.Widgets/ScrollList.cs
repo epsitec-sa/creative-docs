@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe ScrollList réalise une liste déroulante simple.
 	/// </summary>
-	public class ScrollList : Widget, Helpers.IStringCollectionHost, Support.Data.INamedStringSelection
+	public class ScrollList : Widget, Collections.IStringCollectionHost, Support.Data.INamedStringSelection
 	{
 		public ScrollList()
 		{
@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			this.items = new Helpers.StringCollection(this);
+			this.items = new Collections.StringCollection(this);
 			this.DockPadding = new Drawing.Margins(2, 2, 2, 2);
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
@@ -601,7 +601,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Helpers.StringCollection			Items
+		public Collections.StringCollection			Items
 		{
 			get
 			{
@@ -705,7 +705,7 @@ namespace Epsitec.Common.Widgets
 		protected ScrollListStyle				scrollListStyle;
 		protected bool							isDirty;
 		protected bool							mouseDown = false;
-		protected Helpers.StringCollection		items;
+		protected Collections.StringCollection		items;
 		protected TextLayout[]					textLayouts;
 		
 		protected Drawing.Margins				margins;

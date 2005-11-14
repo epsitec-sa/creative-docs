@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets
 	/// Summary description for TabBook.
 	/// </summary>
 	[Support.SuppressBundleSupport]
-	public class TabBook : AbstractGroup, Helpers.IWidgetCollectionHost
+	public class TabBook : AbstractGroup, Collections.IWidgetCollectionHost
 	{
 		public TabBook()
 		{
@@ -813,7 +813,7 @@ namespace Epsitec.Common.Widgets
 
 		
 		#region IWidgetCollectionHost Members
-		Helpers.WidgetCollection Helpers.IWidgetCollectionHost.GetWidgetCollection()
+		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
 		{
 			return this.Items;
 		}
@@ -892,7 +892,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region TabPageCollection Class
-		public class TabPageCollection : Helpers.WidgetCollection
+		public class TabPageCollection : Collections.WidgetCollection
 		{
 			public TabPageCollection(TabBook book) : base(book)
 			{

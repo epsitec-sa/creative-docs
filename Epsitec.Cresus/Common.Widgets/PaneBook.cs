@@ -15,7 +15,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Summary description for PaneBook.
 	/// </summary>
-	public class PaneBook : AbstractGroup, Helpers.IWidgetCollectionHost
+	public class PaneBook : AbstractGroup, Collections.IWidgetCollectionHost
 	{
 		public PaneBook()
 		{
@@ -775,7 +775,7 @@ namespace Epsitec.Common.Widgets
 
 
 		#region IWidgetCollectionHost Members
-		Helpers.WidgetCollection Helpers.IWidgetCollectionHost.GetWidgetCollection()
+		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
 		{
 			return this.Items;
 		}
@@ -834,7 +834,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 		#region PanePageCollection Class
-		public class PanePageCollection : Helpers.WidgetCollection
+		public class PanePageCollection : Collections.WidgetCollection
 		{
 			public PanePageCollection(PaneBook book) : base(book)
 			{

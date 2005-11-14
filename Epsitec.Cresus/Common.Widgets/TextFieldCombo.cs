@@ -8,13 +8,13 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe TextFieldCombo implémente la ligne éditable avec bouton "v".
 	/// </summary>
-	public class TextFieldCombo : AbstractTextField, Helpers.IStringCollectionHost, Support.Data.INamedStringSelection
+	public class TextFieldCombo : AbstractTextField, Collections.IStringCollectionHost, Support.Data.INamedStringSelection
 	{
 		public TextFieldCombo()
 		{
 			this.textFieldStyle = TextFieldStyle.Combo;
 
-			this.items = new Helpers.StringCollection(this);
+			this.items = new Collections.StringCollection(this);
 			this.isCombo = true;
 			
 			this.button = new GlyphButton(this);
@@ -325,7 +325,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void FillComboList(Helpers.StringCollection list)
+		protected virtual void FillComboList(Collections.StringCollection list)
 		{
 			for ( int i=0 ; i<this.items.Count ; i++ )
 			{
@@ -612,7 +612,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Helpers.StringCollection				Items
+		public Collections.StringCollection				Items
 		{
 			get { return this.items; }
 		}
@@ -724,7 +724,7 @@ namespace Epsitec.Common.Widgets
 		private Widget							initiallyFocusedWidget;
 		
 		protected GlyphButton					button;
-		protected Helpers.StringCollection		items;
+		protected Collections.StringCollection		items;
 		protected Window						comboWindow;
 		protected ScrollList					scrollList;
 		protected string						openText;

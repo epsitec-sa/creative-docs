@@ -49,7 +49,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Menu représente un menu horizontal ou vertical.
 	/// </summary>
 	[Support.SuppressBundleSupport]
-	public abstract class AbstractMenu : Widget, Helpers.IWidgetCollectionHost
+	public abstract class AbstractMenu : Widget, Collections.IWidgetCollectionHost
 	{
 		protected AbstractMenu(MenuType type)
 		{
@@ -1146,7 +1146,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region IWidgetCollectionHost Members
-		Helpers.WidgetCollection Helpers.IWidgetCollectionHost.GetWidgetCollection()
+		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
 		{
 			return this.Items;
 		}
@@ -1185,7 +1185,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region MenuItemCollection Class
-		public class MenuItemCollection : Helpers.WidgetCollection
+		public class MenuItemCollection : Collections.WidgetCollection
 		{
 			public MenuItemCollection(AbstractMenu menu) : base(menu)
 			{

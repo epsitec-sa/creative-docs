@@ -752,7 +752,32 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Behaviors\AcceptRejectBehavior.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Behaviors\CopyPasteBehavior.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Behaviors\DragBehavior.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Behaviors\IDragBehaviorHost.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Collections\ChildrenCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\IStringCollectionHost.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -762,12 +787,27 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Collections\IWidgetCollectionHost.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Collections\LayerCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Collections\StringCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Collections\VisualCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\WidgetCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -782,21 +822,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Helpers\AcceptRejectBehavior.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Helpers\CopyPasteBehavior.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Helpers\DragBehavior.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Helpers\GroupComparer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -807,27 +832,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Helpers\IDragBehaviorHost.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Helpers\IStringCollectionHost.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Helpers\IToolTipHost.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Helpers\IWidgetCollectionHost.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Helpers\StringCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -848,11 +853,6 @@
                 />
                 <File
                     RelPath = "Helpers\VisualTreeSnapshot.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Helpers\WidgetCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

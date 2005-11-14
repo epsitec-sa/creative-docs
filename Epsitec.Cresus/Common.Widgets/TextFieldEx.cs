@@ -35,7 +35,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldEx()
 		{
-			this.accept_reject_behavior = new Helpers.AcceptRejectBehavior (this);
+			this.accept_reject_behavior = new Behaviors.AcceptRejectBehavior (this);
 			this.accept_reject_behavior.CreateButtons ();
 			
 			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
@@ -323,6 +323,6 @@ namespace Epsitec.Common.Widgets
 		protected bool							has_edited_text;
 		protected ShowCondition					button_show_condition;
 		protected DefocusAction					defocus_action;
-		protected Helpers.AcceptRejectBehavior	accept_reject_behavior;
+		protected Behaviors.AcceptRejectBehavior	accept_reject_behavior;
 	}
 }

@@ -55,7 +55,7 @@ namespace Epsitec.Common.Widgets
 			this.navigator.StyleChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorStyleChanged);
 			this.textFieldStyle = TextFieldStyle.Normal;
 			
-			this.copyPasteBehavior = new Helpers.CopyPasteBehavior(this);
+			this.copyPasteBehavior = new Behaviors.CopyPasteBehavior(this);
 			this.OnCursorChanged(true);
 		}
 		
@@ -1283,7 +1283,7 @@ namespace Epsitec.Common.Widgets
 		private int								lastCursorFrom = -1;
 		private int								lastCursorTo = -1;
 		
-		private Helpers.CopyPasteBehavior		copyPasteBehavior;
+		private Behaviors.CopyPasteBehavior		copyPasteBehavior;
 		
 		private static Timer					flashTimer;
 		private static bool						flashTimerStarted = false;

@@ -527,11 +527,11 @@ namespace Epsitec.Common.Widgets.Tools
 		}
 		
 		[Support.SuppressBundleSupport]
-		public class DragSource : Widget, Helpers.IDragBehaviorHost
+		public class DragSource : Widget, Behaviors.IDragBehaviorHost
 		{
 			public DragSource()
 			{
-				this.drag_behavior = new Helpers.DragBehavior (this);
+				this.drag_behavior = new Behaviors.DragBehavior (this);
 			}
 			
 			public DragSource(Widget embedder) : this ()
@@ -683,7 +683,7 @@ namespace Epsitec.Common.Widgets.Tools
 			
 			
 			private bool						is_sampling;
-			private Helpers.DragBehavior		drag_behavior;
+			private Behaviors.DragBehavior		drag_behavior;
 			private Magnifier					magnifier;
 			private Drawing.Color				color = Drawing.Color.Empty;
 		}

@@ -70,11 +70,6 @@
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
-                    Name = "Common.Designer"
-                    Project = "{55C3166C-C975-4147-91B1-9A57E4F48538}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "Common.Drawing"
                     Project = "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"

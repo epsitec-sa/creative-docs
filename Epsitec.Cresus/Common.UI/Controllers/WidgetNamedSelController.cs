@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
@@ -6,6 +6,8 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.UI.Controllers
 {
+	using IStringCollectionHost = Common.Widgets.Collections.IStringCollectionHost;
+	
 	/// <summary>
 	/// La classe WidgetNamedSelController réalise un contrôleur très simple qui
 	/// s'appuie sur un widget existant implémentant INamedStringSelection; elle
@@ -52,8 +54,8 @@ namespace Epsitec.Common.UI.Controllers
 		
 		public override void CreateUI(Widget widget)
 		{
-			Support.Data.INamedStringSelection           named_sel   = widget as Support.Data.INamedStringSelection;
-			Common.Widgets.Helpers.IStringCollectionHost string_host = widget as Common.Widgets.Helpers.IStringCollectionHost;
+			Support.Data.INamedStringSelection named_sel   = widget as Support.Data.INamedStringSelection;
+			IStringCollectionHost              string_host = widget as IStringCollectionHost;
 			
 			if (named_sel == null)
 			{

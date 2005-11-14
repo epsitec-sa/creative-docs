@@ -30,7 +30,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			this.accept_reject_behavior = new Helpers.AcceptRejectBehavior (this);
+			this.accept_reject_behavior = new Behaviors.AcceptRejectBehavior (this);
 			this.accept_reject_behavior.CreateButtons ();
 			
 			this.accept_reject_behavior.RejectClicked += new Support.EventHandler (this.HandleRejectClicked);
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Widgets
 			base.OnDefocused ();
 		}
 		
-		protected override void FillComboList(Epsitec.Common.Widgets.Helpers.StringCollection list)
+		protected override void FillComboList(Epsitec.Common.Widgets.Collections.StringCollection list)
 		{
 			if (this.HasPlaceHolder)
 			{
@@ -517,6 +517,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected TextFieldExListMode			mode = TextFieldExListMode.Undefined;
 		protected DefocusAction					defocus_action;
-		protected Helpers.AcceptRejectBehavior	accept_reject_behavior;
+		protected Behaviors.AcceptRejectBehavior	accept_reject_behavior;
 	}
 }

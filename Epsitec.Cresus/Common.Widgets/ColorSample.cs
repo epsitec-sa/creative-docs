@@ -5,11 +5,11 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe ColorSample permet de représenter une couleur rgb.
 	/// </summary>
-	public class ColorSample : AbstractButton, Helpers.IDragBehaviorHost
+	public class ColorSample : AbstractButton, Behaviors.IDragBehaviorHost
 	{
 		public ColorSample()
 		{
-			this.dragBehavior = new Helpers.DragBehavior(this, true, true);
+			this.dragBehavior = new Behaviors.DragBehavior(this, true, true);
 			this.DetachColorCollection();
 		}
 		
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		Changed;
 
 		
-		private Helpers.DragBehavior			dragBehavior;
+		private Behaviors.DragBehavior			dragBehavior;
 		private DragWindow						dragWindow;
 		private Drawing.Point					dragOrigin;
 		private ColorSample						dragTarget;

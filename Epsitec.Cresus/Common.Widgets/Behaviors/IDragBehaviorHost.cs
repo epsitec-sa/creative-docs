@@ -1,7 +1,7 @@
 //	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Widgets.Helpers
+namespace Epsitec.Common.Widgets.Behaviors
 {
 	/// <summary>
 	/// L'interface IDragBehaviorHost doit être implémentée par toutes les classes

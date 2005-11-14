@@ -1,4 +1,7 @@
-namespace Epsitec.Common.Widgets.Helpers
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+namespace Epsitec.Common.Widgets.Behaviors
 {
 	/// <summary>
 	/// La classe AcceptRejectBehavior gère les boutons pour accepter/rejeter une

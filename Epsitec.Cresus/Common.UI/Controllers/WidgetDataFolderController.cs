@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
@@ -6,7 +6,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.UI.Controllers
 {
-	using IStringCollectionHost = Common.Widgets.Helpers.IStringCollectionHost;
+	using IStringCollectionHost = Common.Widgets.Collections.IStringCollectionHost;
 	using IStringSelection      = Common.Support.Data.IStringSelection;
 	
 	/// <summary>

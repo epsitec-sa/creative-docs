@@ -5,11 +5,11 @@ namespace Epsitec.Common.Widgets
 	/// HScroller et VScroller.
 	/// </summary>
 	[Support.SuppressBundleSupport]
-	public abstract class AbstractScroller : Widget, Helpers.IDragBehaviorHost, Support.Data.INumValue
+	public abstract class AbstractScroller : Widget, Behaviors.IDragBehaviorHost, Support.Data.INumValue
 	{
 		protected AbstractScroller(bool vertical)
 		{
-			this.drag_behavior = new Helpers.DragBehavior (this, true, false);
+			this.drag_behavior = new Behaviors.DragBehavior (this, true, false);
 			
 			this.is_vertical = vertical;
 			
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Widgets
 
 
 		#region IDragBehaviorHost Members
-		Drawing.Point						Helpers.IDragBehaviorHost.DragLocation
+		Drawing.Point						Behaviors.IDragBehaviorHost.DragLocation
 		{
 			get
 			{
@@ -546,19 +546,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		bool Helpers.IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
+		bool Behaviors.IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
 		{
 			this.is_dragging = true;
 			this.Invalidate ();
 			return true;
 		}
 		
-		void Helpers.IDragBehaviorHost.OnDragging(DragEventArgs e)
+		void Behaviors.IDragBehaviorHost.OnDragging(DragEventArgs e)
 		{
 			this.ScrollByDragging (this.is_vertical ? e.ToPoint.Y : e.ToPoint.X);
 		}
 		
-		void Helpers.IDragBehaviorHost.OnDragEnd()
+		void Behaviors.IDragBehaviorHost.OnDragEnd()
 		{
 			this.is_dragging = false;
 			this.Invalidate ();
@@ -653,7 +653,7 @@ namespace Epsitec.Common.Widgets
 		protected static readonly double	minimalThumb = 8;
 		protected static readonly double	minimalArrow = 6;
 		
-		private Helpers.DragBehavior		drag_behavior;
+		private Behaviors.DragBehavior		drag_behavior;
 		
 		private bool						is_vertical;
 		private bool						is_inverted;

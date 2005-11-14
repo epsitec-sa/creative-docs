@@ -3,13 +3,13 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe AbstractToolBar implémente ce qui est commun à HToolBar et à VToolBar.
 	/// </summary>
-	public abstract class AbstractToolBar : Widget, Helpers.IWidgetCollectionHost
+	public abstract class AbstractToolBar : Widget, Collections.IWidgetCollectionHost
 	{
 		public AbstractToolBar()
 		{
 			this.iconDockStyle = this.DefaultIconDockStyle;
 			
-			this.items = new Helpers.WidgetCollection (this);
+			this.items = new Collections.WidgetCollection (this);
 			this.items.AutoEmbedding = true;
 			
 			using (IconButton button = new IconButton ())
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Helpers.WidgetCollection		Items
+		public Collections.WidgetCollection		Items
 		{
 			get { return this.items; }
 		}
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region IWidgetCollectionHost Members
-		Helpers.WidgetCollection Helpers.IWidgetCollectionHost.GetWidgetCollection()
+		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
 		{
 			return this.Items;
 		}
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Widgets
 		
 		private DockStyle					iconDockStyle;
 		protected Direction					direction;
-		protected Helpers.WidgetCollection	items;
+		protected Collections.WidgetCollection	items;
 		
 		protected double					defaultButtonWidth;
 		protected double					defaultButtonHeight;
