@@ -895,7 +895,7 @@ namespace Epsitec.Common.Document.Objects
 			TabPositionMode positionMode = TabPositionMode.Absolute;
 
 			if ( type == TextTabType.Center )  dispo = 0.5;
-			if ( type == TextTabType.Left   )  dispo = 1.0;
+			if ( type == TextTabType.Right  )  dispo = 1.0;
 			if ( type == TextTabType.Indent )  positionMode = TabPositionMode.AbsoluteIndent;
 
 			Text.TabList list = this.document.TextContext.TabList;
@@ -926,7 +926,7 @@ namespace Epsitec.Common.Document.Objects
 			pos = list.GetTabPosition(tab);
 			string mark = list.GetTabDockingMark(tab);
 
-			type = TextTabType.Right;
+			type = TextTabType.Left;
 
 			if ( list.GetTabPositionMode(tab) == TabPositionMode.AbsoluteIndent )
 			{
@@ -940,7 +940,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				double dispo = list.GetTabDisposition(tab);
 				if ( dispo == 0.5 )  type = TextTabType.Center;
-				if ( dispo == 1.0 )  type = TextTabType.Left;
+				if ( dispo == 1.0 )  type = TextTabType.Right;
 			}
 		}
 
@@ -954,7 +954,7 @@ namespace Epsitec.Common.Document.Objects
 			TabPositionMode positionMode = TabPositionMode.Absolute;
 
 			if ( type == TextTabType.Center )  dispo = 0.5;
-			if ( type == TextTabType.Left   )  dispo = 1.0;
+			if ( type == TextTabType.Right  )  dispo = 1.0;
 			if ( type == TextTabType.Indent )  positionMode = TabPositionMode.AbsoluteIndent;
 			
 			if ( firstChange && Text.TabList.GetTabClass(tag) == Text.TabClass.Auto )

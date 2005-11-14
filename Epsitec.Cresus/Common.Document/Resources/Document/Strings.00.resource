@@ -901,43 +901,15 @@
 	<data name="Action.Text.Ruler.HandleFirstBody">Marge gauche</data>
 	<data name="Action.Text.Ruler.HandleRight">Marge droite</data>
 	<data name="Action.Text.Ruler.TabChoice">Choix du tabulateur</data>
-	<data name="Action.Text.Ruler.TabRight">Tabulateur normal</data>
-	<data name="Action.Text.Ruler.TabLeft">Tabulateur gauche</data>
+	<data name="Action.Text.Ruler.TabLeft">Tabulateur normal</data>
+	<data name="Action.Text.Ruler.TabRight">Tabulateur droite</data>
 	<data name="Action.Text.Ruler.TabCenter">Tabulateur centré</data>
 	<data name="Action.Text.Ruler.TabIndent">Indentateur</data>
-	
-	<data name="Action.Text.Ruler.TabDecimalDot">Tabulateur sur point (.)</data>
-	<data name="Action.Text.Ruler.TabDecimalComma">Tabulateur sur virgule (,)</data>
-	<data name="Action.Text.Ruler.TabDecimalColon">Tabulateur sur deux-points (:)</data>
-	<data name="Action.Text.Ruler.TabDecimalSColon">Tabulateur point-virgule (;)</data>
-	<data name="Action.Text.Ruler.TabDecimalAdd">Tabulateur sur plus (+)</data>
-	<data name="Action.Text.Ruler.TabDecimalSub">Tabulateur sur moins (-)</data>
-	<data name="Action.Text.Ruler.TabDecimalMul">Tabulateur sur astérisque (*)</data>
-	<data name="Action.Text.Ruler.TabDecimalDiv">Tabulateur sur barre oblique (/)</data>
-	<data name="Action.Text.Ruler.TabDecimalSpace">Tabulateur sur espace ( )</data>
-	<data name="Action.Text.Ruler.TabDecimalAt">Tabulateur sur arrobe (@)</data>
-	<data name="Action.Text.Ruler.TabDecimalP100">Tabulateur sur pour cent (%)</data>
-	<data name="Action.Text.Ruler.TabDecimalEq">Tabulateur sur égal (=)</data>
-	<data name="Action.Text.Ruler.TabDecimalLt">Tabulateur sur inférieur à (&amp;lt;)</data>
-	<data name="Action.Text.Ruler.TabDecimalGt">Tabulateur sur supérieur à (&amp;gt;)</data>
-	<data name="Action.Text.Ruler.TabDecimalAmp">Tabulateur sur perluète (&amp;amp;)</data>
-	<data name="Action.Text.Ruler.TabDecimalQuot">Tabulateur sur guillemet (&quot;)</data>
-	<data name="Action.Text.Ruler.TabDecimalNumber">Tabulateur sur croisillon (#)</data>
-	<data name="Action.Text.Ruler.TabDecimalApos">Tabulateur sur apostrophe (')</data>
-	<data name="Action.Text.Ruler.TabDecimalVert">Tabulateur sur barre verticale (|)</data>
-	<data name="Action.Text.Ruler.TabDecimalTilde">Tabulateur sur tilde (~)</data>
-	<data name="Action.Text.Ruler.TabDecimalExclam">Tabulateur sur point d'exclamation (!)</data>
-	<data name="Action.Text.Ruler.TabDecimalQuestion">Tabulateur sur point d'interrogation (?)</data>
-	<data name="Action.Text.Ruler.TabDecimalOpPar">Tabulateur sur parenthèse gauche (()</data>
-	<data name="Action.Text.Ruler.TabDecimalClPar">Tabulateur sur parenthèse droite ())</data>
-	<data name="Action.Text.Ruler.TabDecimalOpSBr">Tabulateur sur crochet gauche ([)</data>
-	<data name="Action.Text.Ruler.TabDecimalClSBr">Tabulateur sur crochet droite (])</data>
-	<data name="Action.Text.Ruler.TabDecimalOpCBr">Tabulateur sur accolade gauche ({)</data>
-	<data name="Action.Text.Ruler.TabDecimalClCBr">Tabulateur sur accolade droite (})</data>
+	<data name="Action.Text.Ruler.TabDecimal">Tabulateur sur {0} ({1})</data>
 	<data name="Action.Text.Ruler.TabDecimalMath">Tabulateur sur symbole mathématique</data>
+	<data name="Action.Text.Ruler.TabDecimalBus">Tabulateur sur symbole commercial</data>
 	<data name="Action.Text.Ruler.TabDecimalSign">Tabulateur sur caractère spécial</data>
 	<data name="Action.Text.Ruler.TabDecimalPar">Tabulateur sur parenthèse</data>
-	
 	<data name="Action.Text.Ruler.TabZombie">Tabulateur supprimé</data>
 	<data name="Action.Text.Ruler.TabMerge">Fusionner les tabulateurs</data>
 	<data name="Action.Text.Ruler.TabCreate">Cliquez pour poser un tabulateur</data>

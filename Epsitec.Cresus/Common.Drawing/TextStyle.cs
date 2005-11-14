@@ -16,8 +16,8 @@ namespace Epsitec.Common.Drawing
 	public enum TextTabType
 	{
 		None,
-		Right,
 		Left,
+		Right,
 		Center,
 		Decimal,
 		DecimalDot,
@@ -48,6 +48,12 @@ namespace Epsitec.Common.Drawing
 		DecimalClSBr,
 		DecimalOpCBr,
 		DecimalClCBr,
+		DecimalEuro,
+		DecimalDollar,
+		DecimalLivre,
+		DecimalCopy,
+		DecimalReg,
+		DecimalTM,
 		Indent,
 	}
 	

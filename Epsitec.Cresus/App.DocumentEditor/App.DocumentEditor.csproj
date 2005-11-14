@@ -1551,6 +1551,26 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\TabCenter.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TabDecimal.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TabIndent.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TabLeft.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TabRight.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\TextFlow.icon"
                     BuildAction = "EmbeddedResource"
                 />

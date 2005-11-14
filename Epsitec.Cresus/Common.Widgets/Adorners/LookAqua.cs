@@ -187,7 +187,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X-rect.Width*0.10*zoom, center.Y-rect.Height*0.30*zoom);
 					break;
 
-				case GlyphShape.TabRight:
+				case GlyphShape.TabLeft:
 					path.MoveTo(center.X-rect.Width*0.10*zoom, center.Y+rect.Height*0.15*zoom);
 					path.LineTo(center.X+rect.Width*0.00*zoom, center.Y+rect.Height*0.15*zoom);
 					path.LineTo(center.X+rect.Width*0.00*zoom, center.Y-rect.Height*0.05*zoom);
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X-rect.Width*0.10*zoom, center.Y-rect.Height*0.15*zoom);
 					break;
 
-				case GlyphShape.TabLeft:
+				case GlyphShape.TabRight:
 					path.MoveTo(center.X+rect.Width*0.00*zoom, center.Y+rect.Height*0.15*zoom);
 					path.LineTo(center.X+rect.Width*0.10*zoom, center.Y+rect.Height*0.15*zoom);
 					path.LineTo(center.X+rect.Width*0.10*zoom, center.Y-rect.Height*0.15*zoom);
