@@ -614,6 +614,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "WindowMode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "WindowRoot.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -980,6 +985,11 @@
                     RelPath = "Platform\Window.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Platform\Window.resx"
+                    DependentUpon = "Window.cs"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Platform\WindowList.cs"

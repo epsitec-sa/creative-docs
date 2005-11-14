@@ -136,6 +136,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		public bool ContainsLocalValue(Property property)
+		{
+			return this.properties.Contains (property);
+		}
+		
 		
 		public void AddEvent(Property property, PropertyChangedEventHandler handler)
 		{

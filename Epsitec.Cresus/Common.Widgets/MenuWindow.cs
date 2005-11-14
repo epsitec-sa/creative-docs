@@ -9,37 +9,95 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class MenuWindow : Window
 	{
-		public MenuWindow()
+		public MenuWindow(Behaviors.MenuBehavior behavior)
 		{
+			this.behavior = behavior;
+			
 			this.MakeFramelessWindow ();
 			this.MakeFloatingWindow ();
+			
+			this.DisableMouseActivation ();
 		}
-
 		
-		public void Initialise(Widget parent)
+		
+		public Widget							ParentWidget
 		{
-			Window owner = parent.Window;
-			
-			this.Owner             = owner;
-			this.CommandDispatcher = owner.CommandDispatcher;
-			
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-#if false
-			if ( adorner.AlphaMenu < 1.0 )
+			get
 			{
-				this.window.MakeLayeredWindow();
-				this.window.Alpha = adorner.AlphaMenu;
-				this.window.Root.BackColor = Drawing.Color.Transparent;
+				return this.parent_widget;
 			}
-			this.window.DisableMouseActivation();
-			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.Width, this.Height);
-			
-			this.SetParent (this.window.Root);
-			AbstractMenu.RegisterFilter(this);
-
-			this.window.AnimateShow(Animation.FadeIn);
-			this.SetFocused(true);
-#endif
+			set
+			{
+				if (this.parent_widget != value)
+				{
+					this.DefineParent (value);
+				}
+			}
 		}
+		
+		
+		
+		public new void Show()
+		{
+			if (this.IsVisible == false)
+			{
+				this.AnimateShow (Animation.FadeIn);
+			}
+			
+			this.FocusWidget (this.Root);
+		}
+		
+		
+		private void DefineParent(Widget parent_widget)
+		{
+			this.parent_widget = parent_widget;
+			
+			Window owner_window = this.parent_widget == null ? null : this.parent_widget.Window;
+			
+			this.Owner             = owner_window;
+			this.CommandDispatcher = owner_window == null ? null : owner_window.CommandDispatcher;
+		}
+		
+		
+		protected override void OnAboutToShowWindow()
+		{
+			System.Diagnostics.Debug.Assert (this.behavior != null);
+			System.Diagnostics.Debug.Assert (this.IsVisible == false);
+			
+			double alpha = Widgets.Adorners.Factory.Active.AlphaMenu;
+			
+			if (alpha < 1.0)
+			{
+				this.MakeLayeredWindow (true);
+				
+				this.Alpha          = alpha;
+				this.Root.BackColor = Drawing.Color.Transparent;
+			}
+			else
+			{
+				this.MakeLayeredWindow (false);
+				
+				this.Alpha = 1.0;
+				this.Root.ClearLocalValue (Widget.BackColorProperty);
+			}
+			
+			this.Root.Invalidate ();
+			this.behavior.AttachMenuWindow (this);
+			
+			base.OnAboutToShowWindow ();
+		}
+		
+		protected override void OnAboutToHideWindow()
+		{
+			System.Diagnostics.Debug.Assert (this.behavior != null);
+			
+			this.behavior.DetachMenuWindow (this);
+			
+			base.OnAboutToHideWindow ();
+		}
+		
+		
+		private Widget							parent_widget;
+		private Behaviors.MenuBehavior			behavior;
 	}
 }

@@ -138,6 +138,7 @@ namespace Epsitec.Common.Widgets.Platform
 		internal void AnimateShow(Animation animation, Drawing.Rectangle bounds)
 		{
 			Window.DummyHandleEater (this.Handle);
+			
 			Drawing.Rectangle b1;
 			Drawing.Rectangle b2;
 			Drawing.Point o1;
@@ -539,6 +540,18 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
+		
+		internal WindowMode						WindowMode
+		{
+			get
+			{
+				return this.window_mode;
+			}
+			set
+			{
+				this.window_mode = window_mode;
+			}
+		}
 		
 		internal Drawing.Rectangle				WindowBounds
 		{
@@ -1789,13 +1802,11 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void ShowWindow()
 		{
-//			System.Windows.Forms.Application.DoEvents ();
 			this.UpdateLayeredWindow ();
+			
 			if (this.IsMouseActivationEnabled)
 			{
-//				System.Diagnostics.Debug.WriteLine ("Show-----------------------------------");
 				this.Show ();
-//				System.Diagnostics.Debug.WriteLine ("Show OK--------------------------------");
 			}
 			else
 			{
@@ -1805,20 +1816,9 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void ShowDialogWindow()
 		{
-//			if (this.Owner != null)
-//			{
-//				if (Win32Api.IsWindowVisible (this.Owner.Handle) == false)
-//				{
-//					this.Owner.Show ();
-//				}
-//				if (Win32Api.IsIconic (this.Owner.Handle))
-//				{
-//					Win32Api.ShowWindow (this.Owner.Handle, Win32Const.SW_RESTORE);
-//				}
-//			}
+			this.UpdateLayeredWindow ();
 			
 			System.Windows.Forms.Application.DoEvents ();
-			this.UpdateLayeredWindow ();
 			
 			this.ShowDialog (this.Owner);
 		}
@@ -1850,6 +1850,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool							filter_key_messages;
 		private double							alpha = 1.0;
 		
+		private WindowMode						window_mode = WindowMode.Window;
 		private WindowStyles					window_styles;
 		private WindowType						window_type;
 		

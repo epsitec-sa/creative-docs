@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : System.IDisposable, Support.Data.IContainer, Support.ICommandDispatcherHost, Support.Data.IPropertyProvider
+	public class Window : Types.Object, System.IDisposable, Support.Data.IContainer, Support.ICommandDispatcherHost, Support.Data.IPropertyProvider
 	{
 		public Window()
 		{
@@ -220,6 +220,11 @@ namespace Epsitec.Common.Widgets
 			this.window.IsLayered = true;
 		}
 		
+		public void MakeLayeredWindow(bool layered)
+		{
+			this.window.IsLayered = layered;
+		}
+		
 		public void MakeFixedSizeWindow()
 		{
 			this.window.MakeFixedSizeWindow ();
@@ -271,6 +276,11 @@ namespace Epsitec.Common.Widgets
 				this.root.Invalidate ();
 			}
 			
+			if (this.IsVisible == false)
+			{
+				this.OnAboutToShowWindow ();
+			}
+			
 			this.window.ShowWindow ();
 		}
 		
@@ -284,18 +294,33 @@ namespace Epsitec.Common.Widgets
 				this.root.InternalUpdateGeometry ();
 			}
 			
+			if (this.IsVisible == false)
+			{
+				this.OnAboutToShowWindow ();
+			}
+			
 			this.window.ShowDialogWindow ();
 		}
 		
 		public void Hide()
 		{
-			this.window.Hide ();
+			if (this.IsVisible)
+			{
+				this.OnAboutToHideWindow ();
+				this.window.Hide ();
+			}
 		}
 		
 		public void Close()
 		{
+			if (this.IsVisible)
+			{
+				this.OnAboutToHideWindow ();
+			}
+			
 			this.window.Close ();
 		}
+		
 		
 		public void SynchronousRepaint()
 		{
@@ -305,18 +330,31 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		public void AnimateShow(Animation animation)
 		{
+			if (this.IsVisible == false)
+			{
+				this.OnAboutToShowWindow ();
+			}
 			this.window.AnimateShow (animation, this.WindowBounds);
 		}
 		
 		public void AnimateShow(Animation animation, Drawing.Rectangle bounds)
 		{
+			if (this.IsVisible == false)
+			{
+				this.OnAboutToShowWindow ();
+			}
 			this.window.AnimateShow (animation, bounds);
 		}
 
 		public void AnimateHide(Animation animation)
 		{
+			if (this.IsVisible)
+			{
+				this.OnAboutToHideWindow ();
+			}
 			this.window.AnimateHide (animation, this.WindowBounds);
 		}
 		
@@ -579,6 +617,18 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.window.WindowType = value;
+			}
+		}
+		
+		internal WindowMode						WindowMode
+		{
+			get
+			{
+				return this.window.WindowMode;
+			}
+			set
+			{
+				this.window.WindowMode = value;
 			}
 		}
 		
@@ -880,6 +930,11 @@ namespace Epsitec.Common.Widgets
 			
 			if (disposing)
 			{
+				if (this.IsVisible)
+				{
+					this.OnAboutToHideWindow ();
+				}
+				
 				if (this.cmd_queue.Count > 0)
 				{
 					//	Il y a encore des commandes dans la queue d'exécution. Il faut soit les transmettre
@@ -999,6 +1054,23 @@ namespace Epsitec.Common.Widgets
 			if (this.AsyncNotification != null)
 			{
 				this.AsyncNotification (this);
+			}
+		}
+		
+		
+		protected virtual void OnAboutToShowWindow()
+		{
+			if (this.AboutToShowWindow != null)
+			{
+				this.AboutToShowWindow (this);
+			}
+		}
+		
+		protected virtual void OnAboutToHideWindow()
+		{
+			if (this.AboutToHideWindow != null)
+			{
+				this.AboutToHideWindow (this);
 			}
 		}
 		
@@ -1730,6 +1802,9 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowSizeMoveStatusChanged;
 		
 		public event EventHandler				FocusedWidgetChanged;
+		
+		public event EventHandler				AboutToShowWindow;
+		public event EventHandler				AboutToHideWindow;
 		
 		public event WindowDragEventHandler		WindowDragEntered;
 		public event EventHandler				WindowDragLeft;
