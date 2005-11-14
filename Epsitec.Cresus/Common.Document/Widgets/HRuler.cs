@@ -870,7 +870,7 @@ namespace Epsitec.Common.Document.Widgets
 			return (TextTabType) System.Enum.Parse(typeof(TextTabType), name);
 		}
 
-		// Conversion d'un type de tabulateur en marque à utiliser pour .
+		// Conversion d'un type de tabulateur en marque à utiliser pour les tabulateurs décimaux (dockingMark).
 		public static string ConvType2Mark(TextTabType type)
 		{
 			switch ( type )
@@ -913,7 +913,7 @@ namespace Epsitec.Common.Document.Widgets
 			return null;
 		}
 
-		// Conversion d'une marque en type de tabulateur.
+		// Conversion d'une marque de tabulateur décimal (dockingMark) en type de tabulateur.
 		public static TextTabType ConvMark2Type(string mark)
 		{
 			switch ( mark )

@@ -667,7 +667,10 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.WriteLine("  " + string.Join ("\n  ", this.textContext.TabList.GetUnusedTabTags()));
 #endif
 			
-			this.textContext.TabList.ClearUnusedTabTags();
+			if ( this.textContext != null )
+			{
+				this.textContext.TabList.ClearUnusedTabTags();
+			}
 
 			if ( this.settings != null )
 			{
@@ -992,13 +995,13 @@ namespace Epsitec.Common.Document
 				this.uniqueAggregateId = 0;
 			}
 
-			this.DefaultTextContext();
 			if ( this.IsRevisionGreaterOrEqual(1,2,3) )
 			{
 				byte[] textContextData = (byte[]) info.GetValue("TextContextData", typeof(byte[]));
 				
 				if ( textContextData != null )
 				{
+					this.DefaultTextContext();
 					this.textContext.Deserialize(textContextData);
 				}
 

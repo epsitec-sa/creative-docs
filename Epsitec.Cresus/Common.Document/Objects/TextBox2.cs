@@ -1867,11 +1867,11 @@ namespace Epsitec.Common.Document.Objects
 									double oy = font.GetAscender(size)*0.3;
 									if ( insecs[i] == 1 )  // espace sécable ?
 									{
-										this.graphics.AddFilledCircle(x[i]+width/2, y[i]+oy, 2);
+										this.graphics.AddFilledCircle(x[i]+width/2, y[i]+oy, size*0.05);
 									}
 									if ( insecs[i] == 2 )  // espace insécable ?
 									{
-										this.graphics.AddCircle(x[i]+width/2, y[i]+oy, 4);
+										this.graphics.AddCircle(x[i]+width/2, y[i]+oy, size*0.08);
 									}
 								}
 							}
