@@ -14,6 +14,15 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
+		public bool								IsAttached
+		{
+			get
+			{
+				return this.context != null;
+			}
+		}
+		
+		
 		public void Attach(Text.TextNavigator navigator)
 		{
 			this.InternalDetach ();
