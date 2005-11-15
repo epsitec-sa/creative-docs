@@ -533,7 +533,7 @@ namespace Epsitec.Common.Document.Widgets
 					menu.Host = this;
 					menu.ShowAsContextMenu(this.Window, posMenu);
 				}
-				else
+				else	// pose un nouveau tabulateur ?
 				{
 					Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
 					double tabPos = this.ScreenToDocument(pos.X);
@@ -543,7 +543,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.draggingFirstMove = false;
 				}
 			}
-			else
+			else	// déplace un tabulateur existant ?
 			{
 				double initial = this.GetHandleHorizontalPos(handle);
 				this.draggingOffset = initial - pos.X;

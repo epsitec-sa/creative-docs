@@ -1242,11 +1242,13 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.document.HRuler.EditObject = this;
 				this.document.VRuler.EditObject = this;
+				this.EditWrappersAttach();  // attache l'objet aux différents wrappers
 			}
 			else
 			{
 				this.document.HRuler.EditObject = null;
 				this.document.VRuler.EditObject = null;
+				this.document.FontWrapper.Detach();
 			}
 
 			this.UpdateTextRulers();
@@ -1254,6 +1256,11 @@ namespace Epsitec.Common.Document.Objects
 			// Redessine tout, à cause des "poignées" du flux qui peuvent apparaître
 			// ou disparaître.
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+		}
+
+		// Attache l'objet au différents wrappers.
+		protected virtual void EditWrappersAttach()
+		{
 		}
 
 		// Met à jour les règles pour le texte en édition.

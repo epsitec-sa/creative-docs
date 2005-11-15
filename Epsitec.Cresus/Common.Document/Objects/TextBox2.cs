@@ -1031,6 +1031,12 @@ namespace Epsitec.Common.Document.Objects
 			this.metaNavigator.SetParagraphStyles(styles);
 		}
 
+		// Attache l'objet au différents wrappers.
+		protected override void EditWrappersAttach()
+		{
+			this.document.FontWrapper.Attach(this.textFlow.TextNavigator);
+		}
+
 		// Met à jour les règles pour le texte en édition.
 		protected override void UpdateTextRulers()
 		{
