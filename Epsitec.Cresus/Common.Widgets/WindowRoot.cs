@@ -154,18 +154,32 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		protected override void SetBounds(double x1, double y1, double x2, double y2)
+		public override Epsitec.Common.Drawing.Size GetBestFitSize()
 		{
-			double dx = x2 - x1;
-			double dy = y2 - y1;
+			Widget[] children = this.Children.Widgets;
+			
+			if (children.Length == 1)
+			{
+				return children[0].GetBestFitSize ();
+			}
+			else
+			{
+				return this.Size;
+			}
+		}
+
+		
+		internal override void SetBounds(Drawing.Rectangle value)
+		{
+			double dx = value.Width;
+			double dy = value.Height;
 			
 			if (this.window != null)
 			{
 				this.window.ClientSize = new Drawing.Size (dx, dy);
 			}
 			
-			base.SetBounds (0, 0, dx, dy);
+			base.SetBounds (value);
 		}
 
 		protected override void Dispose(bool disposing)

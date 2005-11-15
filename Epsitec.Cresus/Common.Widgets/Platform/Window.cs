@@ -221,6 +221,8 @@ namespace Epsitec.Common.Widgets.Platform
 				case Animation.RollRight:
 				case Animation.RollLeft:
 					this.is_frozen = true;
+					this.form_min_size = this.MinimumSize;
+					this.MinimumSize = new System.Drawing.Size (1, 1);
 					this.WindowBounds = b1;
 					this.UpdateLayeredWindow ();
 					
@@ -343,6 +345,7 @@ namespace Epsitec.Common.Widgets.Platform
 				return;
 			}
 			
+			this.MinimumSize = this.form_min_size;
 			this.is_frozen = false;
 			this.Invalidate ();
 			this.widget_window.OnWindowAnimationEnded ();
@@ -1842,6 +1845,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private Drawing.Rectangle				window_bounds;
 		private Drawing.Point					paint_offset;
 		private System.Drawing.Rectangle		form_bounds;
+		private System.Drawing.Size				form_min_size;
 		private bool							form_bounds_set = false;
 		private bool							on_resize_event = false;
 		
