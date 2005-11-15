@@ -93,7 +93,7 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				if (this.defined_state.InvertBold)
 				{
-					Property p_font = new Properties.FontProperty (null, "!Bold", null);
+					Property p_font = new Properties.FontProperty (null, "!Bold", new string[0]);
 					this.DefineMetaProperty (FontWrapper.InvertBold, 1, p_font);
 				}
 				else
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				if (this.defined_state.InvertItalic)
 				{
-					Property p_font = new Properties.FontProperty (null, "!Italic", null);
+					Property p_font = new Properties.FontProperty (null, "!Italic", new string[0]);
 					this.DefineMetaProperty (FontWrapper.InvertItalic, 1, p_font);
 				}
 				else

@@ -81,6 +81,11 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			if (this.navigator != null)
 			{
+				if (this.navigator.IsSelectionActive)
+				{
+					this.navigator.EndSelection ();
+				}
+				
 				this.navigator.SetMetaProperties (Properties.ApplyMode.Set, style);
 			}
 		}
@@ -91,6 +96,11 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			if (this.navigator != null)
 			{
+				if (this.navigator.IsSelectionActive)
+				{
+					this.navigator.EndSelection ();
+				}
+				
 				this.navigator.SetMetaProperties (Properties.ApplyMode.Clear, style);
 			}
 		}

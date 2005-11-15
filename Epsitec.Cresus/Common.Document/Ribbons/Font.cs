@@ -433,14 +433,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			if ( !this.document.FontWrapper.IsAttached )  return;
 			bool state = (this.buttonBold.ActiveState == WidgetState.ActiveYes);
-			this.document.FontWrapper.Defined.InvertBold = state;
+			this.document.FontWrapper.Defined.InvertBold = !state;
 		}
 
 		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
 		{
 			if ( !this.document.FontWrapper.IsAttached )  return;
 			bool state = (this.buttonItalic.ActiveState == WidgetState.ActiveYes);
-			this.document.FontWrapper.Defined.InvertItalic = state;
+			this.document.FontWrapper.Defined.InvertItalic = !state;
 		}
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)

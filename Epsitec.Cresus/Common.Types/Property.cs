@@ -130,6 +130,15 @@ namespace Epsitec.Common.Types
 			return Property.Register (name, property_type, owner_type, new PropertyMetadata ());
 		}
 		
+		public static Property RegisterAttached(string name, System.Type property_type, System.Type owner_type, PropertyMetadata metadata)
+		{
+			Property dp = new Property (name, property_type, owner_type, metadata);
+			
+			Object.Register (dp);
+			
+			return dp;
+		}
+		
 		
 		public static Property RegisterReadOnly(string name, System.Type property_type, System.Type owner_type)
 		{
