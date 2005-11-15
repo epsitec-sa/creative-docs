@@ -16,27 +16,39 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public void Attach(Text.TextNavigator navigator)
 		{
-			this.Detach ();
+			this.InternalDetach ();
 			
 			this.navigator  = navigator;
 			this.context    = this.navigator.TextContext;
 			this.style_list = this.context.StyleList;
 			
 			//	TODO: attache au navigateur
+			
+			this.NotifyChanged ();
 		}
 		
 		public void Attach(Text.TextContext context, Text.TextStyle style)
 		{
-			this.Detach ();
+			this.InternalDetach ();
 			
 			this.context    = context;
 			this.style      = style;
 			this.style_list = this.context.StyleList;
 			
 			//	TODO: attache au styliste
+			
+			this.NotifyChanged ();
 		}
 		
 		public void Detach()
+		{
+			this.InternalDetach ();
+			
+			this.NotifyChanged ();
+		}
+		
+		
+		private void InternalDetach()
 		{
 			if (this.navigator != null)
 			{
@@ -147,6 +159,25 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
+		internal void Register(AbstractState state)
+		{
+			if (this.states == null)
+			{
+				this.states = new System.Collections.ArrayList (2);
+			}
+			
+			this.states.Add (state);
+		}
+		
+		internal void NotifyChanged()
+		{
+			foreach (AbstractState state in this.states)
+			{
+				state.NotifyWrapperChanged ();
+			}
+		}
+		
+		
 		internal abstract void Synchronise(AbstractState state, StateProperty property);
 		internal abstract void Update(bool active);
 		
@@ -154,5 +185,6 @@ namespace Epsitec.Common.Text.Wrappers
 		private TextNavigator					navigator;
 		private StyleList						style_list;
 		private TextStyle						style;
+		private System.Collections.ArrayList	states;
 	}
 }

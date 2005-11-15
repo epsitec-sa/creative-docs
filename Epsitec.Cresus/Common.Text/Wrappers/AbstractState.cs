@@ -15,6 +15,8 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			this.wrapper = wrapper;
 			this.access  = access;
+			
+			this.wrapper.Register (this);
 		}
 		
 		
@@ -117,6 +119,11 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		internal void NotifyChanged(StateProperty property)
+		{
+			this.OnChanged ();
+		}
+		
+		internal void NotifyWrapperChanged()
 		{
 			this.OnChanged ();
 		}
