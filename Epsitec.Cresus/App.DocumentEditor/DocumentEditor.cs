@@ -232,6 +232,11 @@ namespace Epsitec.App.DocumentEditor
 				this.dlgKey.Show();
 			}
 
+			if ( this.IsCurrentDocument )
+			{
+				this.CurrentDocument.Notifier.NotifyOriginChanged();
+			}
+
 			this.EndCheck(false);
 		}
 
@@ -5146,7 +5151,7 @@ namespace Epsitec.App.DocumentEditor
 
 			while ( !this.checker.IsReady )
 			{
-				System.Threading.Thread.Sleep(100);
+				System.Threading.Thread.Sleep(100);  // attend 0.1s
 			}
 
 			this.globalSettings.DateChecker = Common.Types.Date.Today;
