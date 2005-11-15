@@ -832,6 +832,7 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		
 		public event PropertyChangedEventHandler	SizeChanged
 		{
 			add
