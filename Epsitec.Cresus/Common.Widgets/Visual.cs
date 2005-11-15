@@ -595,6 +595,8 @@ namespace Epsitec.Common.Widgets
 		
 		internal void SetParentLayer(Layouts.Layer parent_layer)
 		{
+			Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this, Visual.IsVisibleProperty);
+			
 			Visual old_parent = this.Parent;
 			
 			if (old_parent != null)
@@ -615,6 +617,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.InvalidateProperty (Visual.ParentProperty, old_parent, new_parent);
 			}
+			
+			snapshot.InvalidateDifferent ();
 		}
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)

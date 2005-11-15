@@ -5028,6 +5028,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void NotifyChangedToHidden()
 		{
+			//#fix -- plus nécessaire ? supprimer VisibleChanged en faveur de IsVisibleChanged
 			this.OnVisibleChanged ();
 			
 			Widget[] children = this.Children.Widgets;
@@ -5043,6 +5044,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void NotifyChangedToVisible()
 		{
+			//#fix
 			this.OnVisibleChanged ();
 			
 			Widget[] children = this.Children.Widgets;
