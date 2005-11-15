@@ -481,7 +481,16 @@ namespace Epsitec.Common.Widgets.Platform
 					if (SystemInformation.SupportsLayeredWindows)
 					{
 						int ex_style = Win32Api.GetWindowExStyle (this.Handle);
-						ex_style |= Win32Const.WS_EX_LAYERED;
+						
+						if (value)
+						{
+							ex_style |= Win32Const.WS_EX_LAYERED;
+						}
+						else
+						{
+							ex_style &= ~ Win32Const.WS_EX_LAYERED;
+						}
+						
 						Win32Api.SetWindowExStyle (this.Handle, ex_style);
 						this.is_layered = value;
 					}
