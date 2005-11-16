@@ -194,7 +194,37 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 				else
 				{
-					state.DefineValue (State.FontStyleProperty, p_font.StyleName);
+					string style_name = p_font.StyleName;
+					
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+					
+					foreach (string element in style_name.Split (' '))
+					{
+						if ((element.StartsWith ("!")) ||
+							(element.StartsWith ("-")))
+						{
+							continue;
+						}
+						
+						if (buffer.Length > 0)
+						{
+							buffer.Append (" ");
+						}
+						
+						if (element.StartsWith ("+"))
+						{
+							buffer.Append (element.Substring (1));
+						}
+						else
+						{
+							buffer.Append (element);
+						}
+					}
+					
+					style_name = buffer.ToString ();
+					style_name = OpenType.FontCollection.GetStyleHash (style_name);
+					
+					state.DefineValue (State.FontStyleProperty, style_name.Length == 0 ? "Regular" : style_name);
 				}
 			}
 			else

@@ -155,7 +155,7 @@ namespace Epsitec.Common.Widgets.Platform
 			switch (animation)
 			{
 				case Animation.None:
-					this.Show ();
+					this.ShowWindow ();
 					return;
 				
 				case Animation.RollDown:
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Widgets.Platform
 					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
 					animator.SetValue (0.0, start_alpha);
 					animator.Start ();
-					this.Show ();
+					this.ShowWindow ();
 					return;
 				
 				case Animation.FadeOut:
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Widgets.Platform
 					return;
 				
 				default:
-					this.Show ();
+					this.ShowWindow ();
 					return;
 			}
 			
@@ -231,7 +231,7 @@ namespace Epsitec.Common.Widgets.Platform
 					animator.SetValue (0, b1, b2);
 					animator.SetValue (1, o1, o2);
 					animator.Start ();
-					this.Show ();
+					this.ShowWindow ();
 					break;
 			}
 		}
@@ -505,14 +505,24 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				System.Windows.Forms.Form active = System.Windows.Forms.Form.ActiveForm;
-				return (active == this);
+				if (this.Handle == Win32Api.GetActiveWindow ())
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 		
 		internal bool							IsFrozen
 		{
-			get { return this.is_frozen || (this.widget_window.Root == null); }
+			get
+			{
+				return (this.is_frozen)
+					|| (this.widget_window.Root == null);
+			}
 		}
 		
 		internal bool							IsMouseActivationEnabled
