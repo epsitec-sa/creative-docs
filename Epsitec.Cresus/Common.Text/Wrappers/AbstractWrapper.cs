@@ -31,7 +31,8 @@ namespace Epsitec.Common.Text.Wrappers
 			this.context    = this.navigator.TextContext;
 			this.style_list = this.context.StyleList;
 			
-			//	TODO: attache au navigateur
+			this.navigator.TextChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextChanged);
+			this.navigator.CursorMoved += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorMoved);
 			
 			this.NotifyChanged ();
 		}
@@ -57,11 +58,46 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
+		public void SuspendSynchronisations()
+		{
+			this.suspend_synchronisations++;
+		}
+		
+		public void ResumeSynchronisations()
+		{
+			System.Diagnostics.Debug.Assert (this.suspend_synchronisations > 0);
+			
+			this.suspend_synchronisations--;
+			
+			if (this.suspend_synchronisations == 0)
+			{
+				if (this.navigator != null)
+				{
+					this.navigator.SuspendNotifications ();
+					
+					foreach (AbstractState state in this.states)
+					{
+						foreach (StateProperty property in state.GetPendingProperties ())
+						{
+							state.NotifyChanged (property);
+							this.InternalSynchronise (state, property);
+						}
+						
+						state.ClearPendingProperties ();
+					}
+					
+					this.navigator.ResumeNotifications ();
+				}
+			}
+		}
+		
+		
 		private void InternalDetach()
 		{
 			if (this.navigator != null)
 			{
-				//	TODO: détache du navigateur
+				this.navigator.CursorMoved -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorMoved);
+				this.navigator.TextChanged -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextChanged);
 			}
 			if (this.style_list != null)
 			{
@@ -72,6 +108,19 @@ namespace Epsitec.Common.Text.Wrappers
 			this.style      = null;
 			this.style_list = null;
 			this.context    = null;
+		}
+		
+		
+		private void HandleNavigatorTextChanged(object sender)
+		{
+			this.Update (false);
+			this.Update (true);
+		}
+
+		private void HandleNavigatorCursorMoved(object sender)
+		{
+			this.Update (false);
+			this.Update (true);
 		}
 		
 		
@@ -197,7 +246,37 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
-		internal abstract void Synchronise(AbstractState state, StateProperty property);
+		internal void Synchronise(AbstractState state, StateProperty property)
+		{
+			if (state.AccessMode == AccessMode.ReadOnly)
+			{
+				//	Si les réglages sont définis en lecture seule, la synchronisation
+				//	ne doit peut pas affecter le texte sous-jacent :
+				
+				state.NotifyChanged (property);
+			}
+			else
+			{
+				if (this.suspend_synchronisations > 0)
+				{
+					state.AddPendingProperty (property);
+				}
+				else
+				{
+					state.NotifyChanged (property);
+					
+					if (this.navigator != null)
+					{
+						this.navigator.SuspendNotifications ();
+						this.InternalSynchronise (state, property);
+						this.navigator.ResumeNotifications ();
+					}
+				}
+			}
+		}
+		
+		
+		internal abstract void InternalSynchronise(AbstractState state, StateProperty property);
 		internal abstract void Update(bool active);
 		
 		private TextContext						context;
@@ -205,5 +284,7 @@ namespace Epsitec.Common.Text.Wrappers
 		private StyleList						style_list;
 		private TextStyle						style;
 		private System.Collections.ArrayList	states;
+		
+		private int								suspend_synchronisations;
 	}
 }

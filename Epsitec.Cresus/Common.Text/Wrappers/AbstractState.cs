@@ -51,19 +51,50 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
+		public void AddPendingProperty(StateProperty property)
+		{
+			this.pending_properties[property] = property;
+		}
+		
+		public void RemovePendingProperty(StateProperty property)
+		{
+			this.pending_properties.Remove (property);
+		}
+		
+		public void ClearPendingProperties()
+		{
+			this.pending_properties.Clear ();
+		}
+		
+		
+		public StateProperty[] GetPendingProperties()
+		{
+			StateProperty[] properties = new StateProperty[this.pending_properties.Count];
+			this.pending_properties.Keys.CopyTo (properties, 0);
+			return properties;
+		}
+		
+		
 		internal bool IsValueDefined(StateProperty property)
 		{
 			return this.state.Contains (property);
 		}
 		
-		internal void ClearValue(StateProperty property)
+		internal bool IsValueFlagged(StateProperty property)
 		{
-			if (this.IsValueDefined (property))
-			{
-				this.state.Remove (property);
-				this.is_dirty = true;
-			}
+			return this.flags.Contains (property);
 		}
+		
+		internal bool ReadValueFlag(StateProperty property)
+		{
+			return (bool) this.flags[property];
+		}
+		
+		internal void ClearValueFlags()
+		{
+			this.flags.Clear ();
+		}
+		
 		
 		internal object GetValue(StateProperty property)
 		{
@@ -77,21 +108,31 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		internal void ClearValue(StateProperty property)
+		{
+			bool changed = (this.IsValueDefined (property));
+			
+			this.state.Remove (property);
+			this.flags[property] = changed;
+			
+			this.wrapper.Synchronise (this, property);
+		}
+		
 		internal void SetValue(StateProperty property, object value)
 		{
-			if ((this.IsValueDefined (property) == false) ||
-				(this.GetValue (property) != value))
+			if (this.access == AccessMode.ReadOnly)
 			{
-				if (this.access == AccessMode.ReadOnly)
-				{
-					throw new System.InvalidOperationException (string.Format ("Property {0} in {1} is read only", property.Name, this.GetType ().Name));
-				}
-				
-				this.state[property] = value;
-				this.wrapper.Synchronise (this, property);
-				this.NotifyChanged (property);
+				throw new System.InvalidOperationException (string.Format ("Property {0} in {1} is read only", property.Name, this.GetType ().Name));
 			}
+			
+			bool changed = (this.IsValueDefined (property) == false) || (this.GetValue (property) != value);
+			
+			this.state[property] = value;
+			this.flags[property] = changed;
+			
+			this.wrapper.Synchronise (this, property);
 		}
+		
 		
 		internal void DefineValue(StateProperty property, object value)
 		{
@@ -102,6 +143,16 @@ namespace Epsitec.Common.Text.Wrappers
 				this.is_dirty = true;
 			}
 		}
+		
+		internal void DefineValue(StateProperty property)
+		{
+			if (this.IsValueDefined (property))
+			{
+				this.state.Remove (property);
+				this.is_dirty = true;
+			}
+		}
+		
 		
 		internal void CopyFrom(AbstractState model)
 		{
@@ -143,6 +194,8 @@ namespace Epsitec.Common.Text.Wrappers
 		private readonly AbstractWrapper		wrapper;
 		private readonly AccessMode				access;
 		private System.Collections.Hashtable	state = new System.Collections.Hashtable ();
+		private System.Collections.Hashtable	flags = new System.Collections.Hashtable ();
+		private System.Collections.Hashtable	pending_properties = new System.Collections.Hashtable ();
 		private bool							is_dirty;
 	}
 }

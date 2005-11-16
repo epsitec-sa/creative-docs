@@ -1596,8 +1596,6 @@ namespace Epsitec.Common.Text
 		{
 			this.current_styles     = null;
 			this.current_properties = null;
-			
-//-			this.OnActiveStyleChanged ();
 		}
 		
 		public void UpdateCurrentStylesAndPropertiesIfNeeded()
@@ -1708,6 +1706,43 @@ namespace Epsitec.Common.Text
 			this.current_properties  = properties;
 			
 			this.RefreshAccumulatedStylesAndProperties ();
+		}
+		
+		
+		public void SuspendNotifications()
+		{
+			this.suspend_notifications++;
+		}
+		
+		public void ResumeNotifications()
+		{
+			System.Diagnostics.Debug.Assert (this.suspend_notifications > 0);
+			
+			this.suspend_notifications--;
+			
+			if (this.suspend_notifications == 0)
+			{
+				if (this.notify_text_changed)
+				{
+					this.OnTextChanged ();
+					this.notify_text_changed = false;
+				}
+				if (this.notify_tabs_changed)
+				{
+					this.OnTabsChanged ();
+					this.notify_tabs_changed = false;
+				}
+				if (this.notify_style_changed)
+				{
+					this.OnActiveStyleChanged ();
+					this.notify_style_changed = false;
+				}
+				if (this.notify_cursor_moved)
+				{
+					this.OnCursorMoved ();
+					this.notify_cursor_moved = false;
+				}
+			}
 		}
 		
 		
@@ -2538,7 +2573,7 @@ namespace Epsitec.Common.Text
 				this.accumulated_properties_fingerprint = fingerprint.ToString ();
 				System.Diagnostics.Debug.WriteLine (string.Format ("Property Fingerprint: {0}", this.accumulated_properties_fingerprint));
 				
-				this.OnActiveStyleChanged ();
+				this.NotifyActiveStyleChanged ();
 			}
 		}
 		
@@ -2947,18 +2982,52 @@ namespace Epsitec.Common.Text
 		
 		private void NotifyTextChanged()
 		{
-			this.OnTextChanged ();
+			if (this.suspend_notifications == 0)
+			{
+				this.OnTextChanged ();
+			}
+			else
+			{
+				this.notify_text_changed = true;
+			}
+			
 			this.RefreshTabInfosFingerprint ();
 		}
 		
 		private void NotifyTabsChanged()
 		{
-			this.OnTabsChanged ();
+			if (this.suspend_notifications == 0)
+			{
+				this.OnTabsChanged ();
+			}
+			else
+			{
+				this.notify_tabs_changed = true;
+			}
 		}
 		
 		private void NotifyCursorMoved()
 		{
-			this.OnCursorMoved ();
+			if (this.suspend_notifications == 0)
+			{
+				this.OnCursorMoved ();
+			}
+			else
+			{
+				this.notify_cursor_moved = true;
+			}
+		}
+		
+		private void NotifyActiveStyleChanged()
+		{
+			if (this.suspend_notifications == 0)
+			{
+				this.OnActiveStyleChanged ();
+			}
+			else
+			{
+				this.notify_style_changed = true;
+			}
 		}
 		
 		
@@ -3127,5 +3196,11 @@ namespace Epsitec.Common.Text
 		private Property[]						accumulated_properties;
 		private string							accumulated_properties_fingerprint;
 		private string							accumulated_tab_info_fingerprint;
+		
+		private int								suspend_notifications;
+		private bool							notify_text_changed;
+		private bool							notify_tabs_changed;
+		private bool							notify_cursor_moved;
+		private bool							notify_style_changed;
 	}
 }

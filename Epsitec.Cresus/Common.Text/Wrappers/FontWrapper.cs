@@ -33,85 +33,116 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
-		internal override void Synchronise(AbstractState state, StateProperty property)
+		internal override void InternalSynchronise(AbstractState state, StateProperty property)
 		{
-			this.SynchroniseFont ();
-			this.SynchroniseInvert ();
+			if (state == this.defined_state)
+			{
+				this.SynchroniseFont ();
+				this.SynchroniseInvert ();
+				
+				this.defined_state.ClearValueFlags ();
+			}
 		}
 		
 		
 		private void SynchroniseFont()
 		{
 			int defines = 0;
+			int changes = 0;
 			
 			string   font_face     = null;
 			string   font_style    = null;
-			string[] font_features = null;
+			string[] font_features = new string[0];
 			
 			double font_size = double.NaN;
 			
 			Properties.SizeUnits units = Properties.SizeUnits.None;
 			
-			if (this.defined_state.IsFontFaceDefined)
+			if (this.defined_state.IsValueFlagged (State.FontFaceProperty))
 			{
-				font_face = this.defined_state.FontFace;
-				defines++;
+				changes++;
+				
+				if (this.defined_state.IsFontFaceDefined)
+				{
+					font_face = this.defined_state.FontFace;
+					defines++;
+				}
 			}
 			
-			if (this.defined_state.IsFontStyleDefined)
+			if (this.defined_state.IsValueFlagged (State.FontStyleProperty))
 			{
-				font_style = this.defined_state.FontStyle;
-				defines++;
+				changes++;
+				
+				if (this.defined_state.IsFontStyleDefined)
+				{
+					font_style = this.defined_state.FontStyle;
+					defines++;
+				}
 			}
 			
-			if ((this.defined_state.IsFontSizeDefined) &&
-				(this.defined_state.IsUnitsDefined))
+			if (this.defined_state.IsValueFlagged (State.FontSizeProperty) ||
+				this.defined_state.IsValueFlagged (State.UnitsProperty))
 			{
-				font_size = this.defined_state.FontSize;
-				units     = this.defined_state.Units;
-				defines++;
+				changes++;
+				
+				if ((this.defined_state.IsFontSizeDefined) &&
+					(this.defined_state.IsUnitsDefined))
+				{
+					font_size = this.defined_state.FontSize;
+					units     = this.defined_state.Units;
+					defines++;
+				}
 			}
 			
 			//	...
 			
-			if (defines > 0)
+			if (changes > 0)
 			{
-				Property p_font = new Properties.FontProperty (font_face, font_style, font_features);
-				Property p_size = new Properties.FontSizeProperty (font_size, units);
-				
-				this.DefineMetaProperty (FontWrapper.Font, 0, p_font, p_size);
-			}
-			else
-			{
-				this.ClearMetaProperty (FontWrapper.Font);
+				if (defines > 0)
+				{
+					Property p_font = new Properties.FontProperty (font_face, font_style, font_features);
+					Property p_size = new Properties.FontSizeProperty (font_size, units);
+					
+					this.DefineMetaProperty (FontWrapper.Font, 0, p_font, p_size);
+				}
+				else
+				{
+					this.ClearMetaProperty (FontWrapper.Font);
+				}
 			}
 		}
 		
 		private void SynchroniseInvert()
 		{
-			if (this.defined_state.IsInvertBoldDefined)
+			if (this.defined_state.IsValueFlagged (State.InvertBoldProperty))
 			{
-				if (this.defined_state.InvertBold)
+				if (this.defined_state.IsInvertBoldDefined)
 				{
-					Property p_font = new Properties.FontProperty (null, "!Bold", new string[0]);
-					this.DefineMetaProperty (FontWrapper.InvertBold, 1, p_font);
-				}
-				else
-				{
-					this.ClearMetaProperty (FontWrapper.InvertBold);
+					if (this.defined_state.InvertBold)
+					{
+						Property p_font = new Properties.FontProperty (null, "!Bold", new string[0]);
+						this.DefineMetaProperty (FontWrapper.InvertBold, 1, p_font);
+					}
+					else
+					{
+						this.ClearMetaProperty (FontWrapper.InvertBold);
+					}
 				}
 			}
 			
-			if (this.defined_state.IsInvertItalicDefined)
+			if (this.defined_state.IsValueFlagged (State.InvertItalicProperty))
 			{
-				if (this.defined_state.InvertItalic)
+				if (this.defined_state.IsInvertItalicDefined)
 				{
-					Property p_font = new Properties.FontProperty (null, "!Italic", new string[0]);
-					this.DefineMetaProperty (FontWrapper.InvertItalic, 1, p_font);
-				}
-				else
-				{
-					this.ClearMetaProperty (FontWrapper.InvertItalic);
+					if (this.defined_state.InvertItalic)
+					{
+						Property p_font = new Properties.FontProperty (null, "!Italic", new string[0]);
+						this.DefineMetaProperty (FontWrapper.InvertItalic, 1, p_font);
+					}
+					else
+					{
+						this.ClearMetaProperty (FontWrapper.InvertItalic);
+					}
 				}
 			}
 		}
@@ -150,7 +181,7 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				if (p_font.FaceName == null)
 				{
-					state.ClearValue (State.FontFaceProperty);
+					state.DefineValue (State.FontFaceProperty);
 				}
 				else
 				{
@@ -159,7 +190,7 @@ namespace Epsitec.Common.Text.Wrappers
 				
 				if (p_font.StyleName == null)
 				{
-					state.ClearValue (State.FontStyleProperty);
+					state.DefineValue (State.FontStyleProperty);
 				}
 				else
 				{
@@ -168,8 +199,8 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				state.ClearValue (State.FontFaceProperty);
-				state.ClearValue (State.FontStyleProperty);
+				state.DefineValue (State.FontFaceProperty);
+				state.DefineValue (State.FontStyleProperty);
 			}
 			
 			if ((p_size != null) &&
@@ -179,7 +210,7 @@ namespace Epsitec.Common.Text.Wrappers
 				
 				if (double.IsNaN (p_size.Size))
 				{
-					state.ClearValue (State.FontSizeProperty);
+					state.DefineValue (State.FontSizeProperty);
 				}
 				else
 				{
@@ -188,8 +219,8 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				state.ClearValue (State.FontSizeProperty);
-				state.ClearValue (State.UnitsProperty);
+				state.DefineValue (State.FontSizeProperty);
+				state.DefineValue (State.UnitsProperty);
 			}
 		}
 		
