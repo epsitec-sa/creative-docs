@@ -109,6 +109,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 				enabled = true;
 				state   = ((int)weight > (int)OpenType.FontWeight.Medium);
+				state  ^= this.document.FontWrapper.Defined.InvertBold;
 			}
 
 			this.buttonBold.SetEnabled(enabled);
@@ -144,6 +145,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 				enabled = true;
 				state   = italic != OpenType.FontStyle.Normal;
+				state  ^= this.document.FontWrapper.Defined.InvertItalic;
 			}
 
 			this.buttonItalic.SetEnabled(enabled);
@@ -489,14 +491,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			if ( !this.document.FontWrapper.IsAttached )  return;
 			bool state = (this.buttonBold.ActiveState == WidgetState.ActiveYes);
-			this.document.FontWrapper.Defined.InvertBold = !state;
+			this.document.FontWrapper.Defined.InvertBold = !this.document.FontWrapper.Defined.InvertBold;
 		}
 
 		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
 		{
 			if ( !this.document.FontWrapper.IsAttached )  return;
 			bool state = (this.buttonItalic.ActiveState == WidgetState.ActiveYes);
-			this.document.FontWrapper.Defined.InvertItalic = !state;
+			this.document.FontWrapper.Defined.InvertItalic = !this.document.FontWrapper.Defined.InvertItalic;
 		}
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
