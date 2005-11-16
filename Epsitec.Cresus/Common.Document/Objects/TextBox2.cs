@@ -109,8 +109,6 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == Properties.Type.LineMode )  return true;
 			if ( type == Properties.Type.LineColor )  return true;
 			if ( type == Properties.Type.FillGradient )  return true;
-			if ( type == Properties.Type.TextJustif )  return true;
-			if ( type == Properties.Type.TextFont )  return true;
 			return false;
 		}
 
@@ -808,7 +806,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Donne les msrges gauche du texte.
+		// Donne les marges gauche du texte.
 		public override void GetTextLeftMargins(out double leftFirst, out double leftBody, out Text.Properties.SizeUnits units, bool accumulated)
 		{
 			Text.Property[] properties = this.GetTextProperties(accumulated);

@@ -86,10 +86,29 @@ namespace Epsitec.Common.Document.Ribbons
 			bool enabled = false;
 			bool state   = false;
 
-			if ( this.document.FontWrapper.IsAttached )
+			if ( this.document != null && this.document.FontWrapper.IsAttached )
 			{
+				string face  = this.document.FontWrapper.Defined.FontFace;
+				if ( face == null )
+				{
+					face = this.document.FontWrapper.Active.FontFace;
+				}
+
+				string style = this.document.FontWrapper.Defined.FontStyle;
+				if ( style == null )
+				{
+					style = this.document.FontWrapper.Active.FontStyle;
+				}
+
+				OpenType.FontWeight weight = OpenType.FontWeight.Medium;
+				if ( face != null && style != null )
+				{
+					OpenType.Font font = TextContext.GetFont(face, style);
+					weight = font.FontIdentity.FontWeight;
+				}
+
 				enabled = true;
-				state   = this.document.FontWrapper.Defined.InvertBold;
+				state   = ((int)weight > (int)OpenType.FontWeight.Medium);
 			}
 
 			this.buttonBold.SetEnabled(enabled);
@@ -101,10 +120,30 @@ namespace Epsitec.Common.Document.Ribbons
 			bool enabled = false;
 			bool state   = false;
 
-			if ( this.document.FontWrapper.IsAttached )
+			if ( this.document != null && this.document.FontWrapper.IsAttached )
 			{
+				string face  = this.document.FontWrapper.Defined.FontFace;
+				if ( face == null )
+				{
+					face = this.document.FontWrapper.Active.FontFace;
+				}
+
+				string style = this.document.FontWrapper.Defined.FontStyle;
+				if ( style == null )
+				{
+					style = this.document.FontWrapper.Active.FontStyle;
+				}
+
+				OpenType.FontStyle italic = OpenType.FontStyle.Normal;
+
+				if ( face != null && style != null )
+				{
+					OpenType.Font font = TextContext.GetFont(face, style);
+					italic = font.FontIdentity.FontStyle;
+				}
+
 				enabled = true;
-				state   = this.document.FontWrapper.Defined.InvertItalic;
+				state   = italic != OpenType.FontStyle.Normal;
 			}
 
 			this.buttonItalic.SetEnabled(enabled);
@@ -180,7 +219,7 @@ namespace Epsitec.Common.Document.Ribbons
 		// Adapte un champ éditable pour le nom de la police.
 		protected void AdaptFieldFontFace(TextFieldCombo field)
 		{
-			if ( this.document.FontWrapper.IsAttached )
+			if ( this.document != null && this.document.FontWrapper.IsAttached )
 			{
 				field.SetEnabled(true);
 
@@ -233,7 +272,7 @@ namespace Epsitec.Common.Document.Ribbons
 		// Adapte un champ éditable pour le style de la police.
 		protected void AdaptFieldFontStyle(TextFieldCombo field)
 		{
-			if ( this.document.FontWrapper.IsAttached )
+			if ( this.document != null && this.document.FontWrapper.IsAttached )
 			{
 				field.SetEnabled(true);
 
@@ -293,7 +332,7 @@ namespace Epsitec.Common.Document.Ribbons
 		// Adapte un champ éditable pour la taille de la police.
 		protected void AdaptFieldFontSize(TextFieldCombo field)
 		{
-			if ( this.document.FontWrapper.IsAttached )
+			if ( this.document != null && this.document.FontWrapper.IsAttached )
 			{
 				field.SetEnabled(true);
 
