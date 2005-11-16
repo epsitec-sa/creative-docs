@@ -62,15 +62,16 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			this.margins = adorner.GeometryMenuMargins;
-			this.shadow  = adorner.GeometryMenuShadow;
+			this.UpdateAdornerInformation ();
 
 			this.type  = type;
 			this.items = new MenuItemCollection(this);
 			this.items.AutoEmbedding = true;
 			this.timer = new Timer();
 			this.timer.TimeElapsed += new Support.EventHandler(this.HandleTimerTimeElapsed);
+			
+			MenuItem.SetMenuBehavior (this, new Behaviors.MenuBehavior ());
+			MenuItem.SetMenuHost (this, new MenuHost (this));
 		}
 		
 		
@@ -246,17 +247,40 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		public override Drawing.Size GetBestFitSize()
+		{
+			this.UpdateAdornerInformation ();
+			System.Diagnostics.Debug.WriteLine ("GetBestFitSize --> " + this.RequiredSize.ToString ());
+			return this.RequiredSize;
+		}
+
 		public void AdjustSize()
 		{
 			// Ajuste les dimensions du menu selon son contenu.
 			// Il faut appeler AdjustSize après avoir fini de remplir le menu vertical.
-			if ( this.IsVertical )
+			
+			this.UpdateAdornerInformation ();
+			
+			if (this.IsVertical)
 			{
-				IAdorner adorner = Widgets.Adorners.Factory.Active;
-				this.margins = adorner.GeometryMenuMargins;
-				this.shadow  = adorner.GeometryMenuShadow;
-				this.Size    = this.RequiredSize;
-				this.isDirty = true;
+				this.Size = this.RequiredSize;
+			}
+		}
+		
+		private void UpdateAdornerInformation()
+		{
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			
+			this.margins = adorner.GeometryMenuMargins;
+			this.shadow  = adorner.GeometryMenuShadow;
+			
+			if (this.IsVertical)
+			{
+				this.DockPadding = this.shadow + this.margins;
+			}
+			else
+			{
+				this.DockPadding = new Drawing.Margins (0, 0, 0, 0);
 			}
 		}
 
@@ -303,40 +327,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		#region Interface IBundleSupport
-		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			base.RestoreFromBundle(bundler, bundle);
-			this.items.RestoreFromBundle("items", bundler, bundle);
-			this.AdjustSize();
-		}
-		
-		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			base.SerializeToBundle(bundler, bundle);
-			this.items.SerializeToBundle("items", bundler, bundle);
-		}
-		#endregion
-		
-		#region Serialization support
-		protected override bool ShouldSerializeLocation()
-		{
-			return false;
-		}
-		
-		protected override bool ShouldSerializeSize()
-		{
-			return false;
-		}
-		#endregion
-		
-		protected void Update()
-		{
-			// Met à jour si nécessaire.
-			if ( !this.isDirty )  return;
-			this.UpdateClientGeometry();
-		}
-
 		protected Support.ICommandDispatcherHost GetHost()
 		{
 			if ( this.host != null )
@@ -418,56 +408,13 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 
-		protected override void UpdateClientGeometry()
-		{
-			base.UpdateClientGeometry();
-			
-			if ( this.items == null ) return;
-			
-			// Met à jour la géométrie du menu.
-			
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			this.margins = adorner.GeometryMenuMargins;
-			this.shadow  = adorner.GeometryMenuShadow;
-
-			if ( this.IsHorizontal )
-			{
-				double x = this.margin;
-				foreach ( MenuItem cell in this.items )
-				{
-					Drawing.Size rs = cell.RequiredSize;
-					Drawing.Rectangle rect = new Drawing.Rectangle();
-					rect.Left   = x;
-					rect.Right  = x+rs.Width;
-					rect.Bottom = this.margin;
-					rect.Top    = this.Height-this.margin;
-					cell.Bounds = rect;
-					x += rs.Width;
-				}
-			}
-			else
-			{
-				double y = this.Height-this.shadow.Top-this.margins.Top;
-				foreach ( MenuItem cell in this.items )
-				{
-					Drawing.Size rs = cell.RequiredSize;
-					y -= rs.Height;
-					Drawing.Rectangle rect = new Drawing.Rectangle();
-					rect.Left   = this.shadow.Left+this.margins.Left;
-					rect.Right  = this.Width-this.shadow.Right-this.margins.Right;
-					rect.Bottom = y;
-					rect.Top    = y+rs.Height;
-					cell.Bounds = rect;
-				}
-			}
-
-			this.isDirty = false;
-		}
 
 		protected override void OnAdornerChanged()
 		{
-			this.UpdateClientGeometry();
-			base.OnAdornerChanged();
+			this.AdjustSize ();
+			this.UpdateClientGeometry ();
+			
+			base.OnAdornerChanged ();
 		}
 
 
@@ -702,7 +649,7 @@ namespace Epsitec.Common.Widgets
 			{
 				closed = this.submenu.CloseSubmenu();
 			}
-			this.submenu = item.Submenu;
+			this.submenu = item.Submenu as AbstractMenu;
 			if ( this.submenu == null )  return false;
 
 			this.isActive = false;
@@ -794,6 +741,81 @@ namespace Epsitec.Common.Widgets
 			
 			return true;
 		}
+		
+		
+		#region MenuHost Class
+		private class MenuHost : IMenuHost
+		{
+			public MenuHost(AbstractMenu menu)
+			{
+				this.menu = menu;
+			}
+			
+			
+			#region IMenuHost Members
+			public void GetMenuDisposition(Widget item, Drawing.Size size, out Drawing.Point location, out Animation animation)
+			{
+				ScreenInfo        screen_info;
+				Drawing.Rectangle working_area;
+				
+				if (this.menu.IsHorizontal)
+				{
+					animation = Animation.RollDown;
+					location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, 0));
+					
+					location.X -= this.menu.shadow.Left;
+					location.Y -= size.Height;
+				}
+				else
+				{
+					Drawing.Point test = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (item.Width, 0));
+					
+					test.X += size.Width;
+					
+					screen_info  = ScreenInfo.Find (test);
+					working_area = screen_info.WorkingArea;
+					
+					if (test.X <= working_area.Right)
+					{
+						//	Le menu a suffisamment de place pour s'afficher à droite
+						//	de son parent :
+						
+						animation = Animation.RollRight;
+						location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (item.Width, item.Height));
+						
+						location.X -= this.menu.shadow.Left;
+						location.Y -= size.Height - this.menu.shadow.Top - 1;
+					}
+					else
+					{
+						//	Il n'y a plus de place à droite; on affiche par conséquent
+						//	le sous-menu à gauche :
+						
+						animation = Animation.RollLeft;
+						location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, item.Height));
+						
+						location.X -= size.Width + this.menu.shadow.Left;
+						location.Y -= size.Height - this.menu.shadow.Top - 1;
+					}
+				}
+				
+				//	Détermine s'il faut décaler verticalement le menu pour qu'il tienne
+				//	dans la partie visible de l'écran :
+				
+				screen_info  = ScreenInfo.Find (new Drawing.Rectangle (location, size));
+				working_area = screen_info.WorkingArea;
+				
+				if (location.Y < working_area.Bottom)
+				{
+					animation  = Animation.FadeIn;
+					location.Y = working_area.Bottom;
+				}
+			}
+			#endregion
+			
+			private AbstractMenu				menu;
+		}
+		#endregion
 
 		private bool CloseSubmenu()
 		{
@@ -1061,6 +1083,16 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		protected override void OnPressed(MessageEventArgs e)
+		{
+			base.OnPressed (e);
+			
+			if (this.IsHorizontal)
+			{
+				MenuItem.GetMenuBehavior (this).Reject ();
+			}
+		}
+
 		protected override void OnEntered(MessageEventArgs e)
 		{
 			base.OnEntered(e);
@@ -1084,8 +1116,6 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
 
-			this.Update();
-
 			if ( this.IsVertical )
 			{
 				double iw = 0;
@@ -1102,8 +1132,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( AbstractMenu.menuDeveloped == false )
 			{
-				Window.ApplicationDeactivated += new Support.EventHandler(AbstractMenu.HandleApplicationDeactivated);
-				Window.MessageFilter += new MessageHandler(AbstractMenu.MessageFilter);
+//#				Window.ApplicationDeactivated += new Support.EventHandler(AbstractMenu.HandleApplicationDeactivated);
+//#				Window.MessageFilter += new MessageHandler(AbstractMenu.MessageFilter);
 				AbstractMenu.menuDeveloped = true;
 				AbstractMenu.menuRoot      = root;
 				AbstractMenu.menuLastLeaf  = root;
@@ -1126,8 +1156,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( AbstractMenu.menuDeveloped )
 			{
-				Window.ApplicationDeactivated -= new Support.EventHandler(AbstractMenu.HandleApplicationDeactivated);
-				Window.MessageFilter -= new MessageHandler(AbstractMenu.MessageFilter);
+//#				Window.ApplicationDeactivated -= new Support.EventHandler(AbstractMenu.HandleApplicationDeactivated);
+//#				Window.MessageFilter -= new MessageHandler(AbstractMenu.MessageFilter);
 				AbstractMenu.menuDeveloped = false;
 				AbstractMenu.menuLastLeaf  = null;
 				AbstractMenu.menuRoot      = null;
@@ -1155,14 +1185,27 @@ namespace Epsitec.Common.Widgets
 		{
 			MenuItem item = widget as MenuItem;
 			
+			item.Size = item.RequiredSize;
 			this.Children.Add(item);
-			this.isDirty = true;
 			
 			item.SetMenuType(this.type);
 			
-			item.Pressed += new MessageEventHandler(this.HandleCellPressed);
-			item.Entered += new MessageEventHandler(this.HandleCellEntered);
-			item.Exited  += new MessageEventHandler(this.HandleCellExited);
+			switch (this.type)
+			{
+				case MenuType.Horizontal:
+					item.Dock = DockStyle.Left;
+					item.DockMargins = new Drawing.Margins (this.margin, 0, this.margin, this.margin);
+					break;
+				
+				case MenuType.Vertical:
+					item.Dock = DockStyle.Top;
+					item.DockMargins = new Drawing.Margins (0, 0, 0, 0);
+					break;
+			}
+			
+//#			item.Pressed += new MessageEventHandler(this.HandleCellPressed);
+//#			item.Entered += new MessageEventHandler(this.HandleCellEntered);
+//#			item.Exited  += new MessageEventHandler(this.HandleCellExited);
 		}
 
 		public void NotifyRemoval(Widget widget)
@@ -1171,12 +1214,11 @@ namespace Epsitec.Common.Widgets
 			
 			item.SetMenuType(MenuType.Invalid);
 			
-			item.Pressed -= new MessageEventHandler(this.HandleCellPressed);
-			item.Entered -= new MessageEventHandler(this.HandleCellEntered);
-			item.Exited  -= new MessageEventHandler(this.HandleCellExited);
+//#			item.Pressed -= new MessageEventHandler(this.HandleCellPressed);
+//#			item.Entered -= new MessageEventHandler(this.HandleCellEntered);
+//#			item.Exited  -= new MessageEventHandler(this.HandleCellExited);
 			
 			this.Children.Remove(item);
-			this.isDirty = true;
 		}
 		
 		public void NotifyPostRemoval(Widget widget)
@@ -1207,7 +1249,6 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-
 		#endregion
 		
 		
@@ -1233,10 +1274,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected MenuType							type;
 		
-		private bool								isDirty;
 		private bool								isActive = true;	// dernier menu (feuille)
 		private bool								isContextRoot = false;
-		private double								margin = 2;			// pour menu horizontal
+		private readonly double						margin = 2;			// pour menu horizontal
 		private Drawing.Margins						margins = new Drawing.Margins(2,2,2,2);
 		private Drawing.Margins						shadow  = new Drawing.Margins(0,0,0,0);
 		private MenuItemCollection					items;

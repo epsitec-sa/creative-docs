@@ -1,3 +1,6 @@
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets.Helpers;
+
 namespace Epsitec.Common.Widgets
 {
 	using BundleAttribute = Support.BundleAttribute;
@@ -66,7 +69,7 @@ namespace Epsitec.Common.Widgets
 			this.Name = name;
 		}
 		
-		public MenuItem(AbstractMenu submenu, string icon, string text, string shortcut) : this()
+		public MenuItem(Widget submenu, string icon, string text, string shortcut) : this()
 		{
 			this.IconName = icon;
 			this.Text     = text;
@@ -75,7 +78,7 @@ namespace Epsitec.Common.Widgets
 			this.Submenu  = submenu;
 		}
 		
-		public MenuItem(AbstractMenu submenu, string icon, string text, string shortcut, string name) : this(submenu, icon, text, shortcut)
+		public MenuItem(Widget submenu, string icon, string text, string shortcut, string name) : this(submenu, icon, text, shortcut)
 		{
 			this.Name = name;
 		}
@@ -91,32 +94,30 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				if (this.submenu != null)
+				System.IDisposable submenu = this.Submenu as System.IDisposable;
+				
+				if (submenu != null)
 				{
-					this.submenu.Dispose ();
-					this.submenu = null;
+					submenu.Dispose ();
 				}
+				
+				this.Submenu = null;
 			}
 			
 			base.Dispose (disposing);
 		}
 
 
-		// Type de la case.
-		public MenuItemType ItemType
+		public MenuItemType						ItemType
 		{
 			get
 			{
-				return this.itemType;
+				return (MenuItemType) this.GetValue (MenuItem.ItemTypeProperty);
 			}
 
 			set
 			{
-				if ( this.itemType != value )
-				{
-					this.itemType = value;
-					this.Invalidate();
-				}
+				this.SetValue (MenuItem.ItemTypeProperty, value);
 			}
 		}
 
@@ -139,7 +140,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Nom de l'icône affichée à gauche.
-		[Bundle ("Icon")]		public string IconName
+		public string IconName
 		{
 			get
 			{
@@ -164,7 +165,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Nom de l'icône affichée à gauche.
-		[Bundle ("IconNo")]		public string IconNameActiveNo
+		public string IconNameActiveNo
 		{
 			get
 			{
@@ -189,7 +190,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Nom de l'icône affichée à gauche.
-		[Bundle ("IconYes")]	public string IconNameActiveYes
+		public string IconNameActiveYes
 		{
 			get
 			{
@@ -214,7 +215,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Nom du raccourci clavier affiché à droite.
-		[Bundle]				public string ShortKey
+		public string ShortKey
 		{
 			get
 			{
@@ -230,41 +231,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Sous-menu éventuel associé à la case.
-		[Bundle]				public AbstractMenu Submenu
+		
+		public Widget			Submenu
 		{
 			get
 			{
-				return this.submenu;
+				return this.GetValue (MenuItem.SubmenuProperty) as Widget;
 			}
 
 			set
 			{
-				if ( value != null )
-				{
-					//	Un MenuItem qui pointe sur un sous-menu ne peut pas avoir de
-					//	commande associée :
-					
-					this.Command = null;
-				}
-				
-				this.separator = false;
-				this.submenu = value;
+				this.SetValue (MenuItem.SubmenuProperty, value);
 			}
 		}
 
-		
-		#region Serialization support
-		protected override bool ShouldSerializeLocation()
-		{
-			return false;
-		}
-		
-		protected override bool ShouldSerializeSize()
-		{
-			return false;
-		}
-		#endregion
 		
 		public static MenuItem CreateYesNo(string command, string text, string shortcut, string name)
 		{
@@ -390,9 +370,9 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
-			MenuItemType      iType = this.itemType;
+			MenuItemType      iType = this.ItemType;
 			Drawing.Point     pos   = new Drawing.Point();
-
+			
 			if ( this.separator )
 			{
 				iType = MenuItemType.Deselect;
@@ -450,7 +430,7 @@ namespace Epsitec.Common.Widgets
 				pos.Y = (rect.Height-this.shortKeySize.Height)/2;
 				adorner.PaintMenuItemTextLayout(graphics, pos, this.shortKey, state, Direction.Up, this.type, iType);
 
-				if ( this.submenu != null )  // triangle ">" ?
+				if ( this.Submenu != null )  // triangle ">" ?
 				{
 					Drawing.Rectangle aRect = rect;
 					aRect.Left = aRect.Right-this.subIndicatorWidth;
@@ -460,12 +440,227 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		protected override void OnPressed(MessageEventArgs e)
+		{
+			Widget submenu = this.Submenu;
+			
+			if (submenu == null)
+			{
+				Behaviors.MenuBehavior.CloseItemMenu (this);
+				
+				this.ExecuteCommand ();
+			}
+			else
+			{
+				Behaviors.MenuBehavior.OpenItemSubmenu (this, Behaviors.MenuBehavior.Animate.Automatic);
+			}
+			
+			base.OnPressed (e);
+		}
+		
+		protected override void OnEntered(MessageEventArgs e)
+		{
+			base.OnEntered (e);
+		}
+		
+		protected override void OnExited(MessageEventArgs e)
+		{
+			base.OnExited (e);
+		}
 
 
+		
+		public static Widget GetMenuRoot(Widget widget)
+		{
+			//	Trouve le widget à la racine de la hiérarchie d'un menu. C'est
+			//	soit l'ancêtre de l'arbre des widgets, soit le premier parent
+			//	qui possède une définition de "menu" :
+			
+			if (widget == null)
+			{
+				return widget;
+			}
+			
+			Widget parent = widget.Parent;
+			
+			while (parent != null)
+			{
+				if (widget.ContainsLocalValue (MenuItem.MenuBehaviorProperty))
+				{
+					return widget;
+				}
+				
+				widget = parent;
+				parent = widget.Parent;
+			}
+			
+			return widget;
+		}
+		
+		
+		public static Behaviors.MenuBehavior GetMenuBehavior(Widget widget)
+		{
+			//	Trouve le "menu" associé avec un widget.
+			
+			Widget root = MenuItem.GetMenuRoot (widget);
+			Widget parent = MenuItem.GetParentMenuItem (root);
+			
+			if (parent == null)
+			{
+				return root.GetValue (MenuItem.MenuBehaviorProperty) as Behaviors.MenuBehavior;
+			}
+			else
+			{
+				return MenuItem.GetMenuBehavior (parent);
+			}
+		}
+		
+		public static void SetMenuBehavior(Widget widget, Behaviors.MenuBehavior value)
+		{
+			//	Associe un "menu" avec un widget.
+			
+			Widget root = MenuItem.GetMenuRoot (widget);
+			root.SetValue (MenuItem.MenuBehaviorProperty, value);
+		}
+		
+		
+		public static Widget GetSubmenu(Widget widget)
+		{
+			return widget.GetValue (MenuItem.SubmenuProperty) as Widget;
+		}
+		
+		public static Window GetMenuWindow(Widget widget)
+		{
+			//	Retourne la fenêtre utilisée par le menu. Si le menu n'avait
+			//	pas encore de fenêtre associée, un MenuWindow est créé pour
+			//	le menu :
+			
+			Window window = widget.Window;
+			
+			if (window == null)
+			{
+				window = new MenuWindow (MenuItem.GetMenuBehavior (widget), MenuItem.GetParentMenuItem (widget));
+				
+				Drawing.Size size = widget.GetBestFitSize ();
+				
+				widget.Dock = DockStyle.Fill;
+				
+				window.Root.Size = size;
+				window.Root.Children.Add (widget);
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("RootSize -> {0}", window.Root.Size.ToString ()));
+				System.Diagnostics.Debug.WriteLine (string.Format ("ClientSize -> {0}", window.ClientSize.ToString ()));
+			}
+			
+			return window;
+		}
+		
+		public static MenuItem GetParentMenuItem(Widget widget)
+		{
+			return widget.GetValue (MenuItem.ParentMenuItemProperty) as MenuItem;
+		}
+		
+		
+		public static IMenuHost GetMenuHost(Widget widget)
+		{
+			IMenuHost host = widget.GetValue (MenuItem.MenuHostProperty) as IMenuHost;
+			
+			if (host == null)
+			{
+				Widget root = MenuItem.GetMenuRoot (widget);
+				host = root.GetValue (MenuItem.MenuHostProperty) as IMenuHost;
+			}
+			
+			return host;
+		}
+		
+		public static void SetMenuHost(Widget widget, IMenuHost value)
+		{
+			widget.SetValue (MenuItem.MenuHostProperty, value);
+		}
+		
+		
+		public static bool GetZeroDelay(Widget widget)
+		{
+			if (widget.ContainsLocalValue (MenuItem.ZeroDelayProperty))
+			{
+				return (bool) widget.GetValue (MenuItem.ZeroDelayProperty);
+			}
+			else
+			{
+				Widget root = MenuItem.GetMenuRoot (widget);
+				return (bool) root.GetValue (MenuItem.ZeroDelayProperty);
+			}
+		}
+		
+		public static void SetZeroDelay(Widget widget, bool value)
+		{
+			widget.SetValue (MenuItem.ZeroDelayProperty, value);
+		}
+		
+		
+		public static MenuItemType GetItemType(Widget widget)
+		{
+			return (MenuItemType) widget.GetValue (MenuItem.ItemTypeProperty);
+		}
+		
+		public static void SetItemType(Widget widget, MenuItemType value)
+		{
+			widget.SetValue (MenuItem.ItemTypeProperty, value);
+		}
+		
+		
+		private static void NotifySubmenuChanged(Object o, object old_value, object new_value)
+		{
+			//	Quand la propriété "Submenu" est appliquée à un item d'un menu,
+			//	on réalise un lien entre le menu et l'item en question. Ce lien
+			//	est stocké dans une propriété nommée "ParentMenuItem" :
+			
+			MenuItem that = o as MenuItem;
+			
+			Widget old_submenu = old_value as Widget;
+			Widget new_submenu = new_value as Widget;
+			
+			if (new_submenu != null)
+			{
+				//	Un MenuItem qui pointe sur un sous-menu ne peut pas avoir de
+				//	commande associée :
+				
+				that.Command = null;
+			}
+			
+			that.separator = false;
+			
+			if (old_submenu != null)
+			{
+				System.Diagnostics.Debug.Assert (old_submenu == MenuItem.GetMenuRoot (old_submenu));
+				System.Diagnostics.Debug.Assert (MenuItem.GetParentMenuItem (old_submenu) == that);
+				
+				old_submenu.SetValue (MenuItem.ParentMenuItemProperty, null);
+			}
+			
+			if (new_submenu != null)
+			{
+				System.Diagnostics.Debug.Assert (new_submenu == MenuItem.GetMenuRoot (new_submenu));
+				
+				new_submenu.SetValue (MenuItem.ParentMenuItemProperty, that);
+			}
+		}
+		
+		
+		public static readonly Property			SubmenuProperty			= Property.Register ("Submenu", typeof (Widget), typeof (MenuItem), new PropertyMetadata (null, new PropertyInvalidatedCallback (MenuItem.NotifySubmenuChanged)));
+		public static readonly Property			ItemTypeProperty		= Property.Register ("ItemType", typeof (MenuItemType), typeof (MenuItem), new VisualPropertyMetadata (MenuItemType.Deselect, VisualPropertyFlags.AffectsDisplay));
+		
+		public static readonly Property			MenuBehaviorProperty	= Property.RegisterAttached ("MenuBehavior", typeof (Behaviors.MenuBehavior), typeof (MenuItem));
+		public static readonly Property			ParentMenuItemProperty	= Property.RegisterAttached ("ParentMenuItem", typeof (MenuItem), typeof (MenuItem));
+		public static readonly Property			MenuHostProperty		= Property.RegisterAttached ("MenuHost", typeof (IMenuHost), typeof (MenuItem));
+		public static readonly Property			ZeroDelayProperty		= Property.RegisterAttached ("ZeroDelay", typeof (bool), typeof (MenuItem), new PropertyMetadata (false));
+		
+		
 		protected bool				onlyText = false;
 		protected bool				separator = false;
 		protected MenuType			type = MenuType.Invalid;
-		protected MenuItemType		itemType = MenuItemType.Deselect;
 		protected double			marginHeader = 6;
 		protected double			marginItem = 2;
 		protected double			marginSpace = 8;
@@ -481,7 +676,7 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Size		iconSize;
 		protected Drawing.Size		mainTextSize;
 		protected Drawing.Size		shortKeySize;
-		protected AbstractMenu		submenu;
+		protected Object			submenu;
 		protected Drawing.Color		colorControlDark;
 	}
 }

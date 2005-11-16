@@ -1,6 +1,8 @@
 //	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -9,16 +11,37 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class MenuWindow : Window
 	{
-		public MenuWindow(Behaviors.MenuBehavior behavior)
+		public MenuWindow()
 		{
-			this.behavior = behavior;
-			
 			this.MakeFramelessWindow ();
 			this.MakeFloatingWindow ();
 			
 			this.DisableMouseActivation ();
 		}
 		
+		public MenuWindow(Behaviors.MenuBehavior behavior, Widget parent_widget) : this ()
+		{
+			System.Diagnostics.Debug.Assert (behavior != null);
+			
+			this.Behavior     = behavior;
+			this.ParentWidget = parent_widget;
+		}
+		
+		
+		public Behaviors.MenuBehavior			Behavior
+		{
+			get
+			{
+				return this.behavior;
+			}
+			set
+			{
+				if (this.behavior != value)
+				{
+					this.behavior = value;
+				}
+			}
+		}
 		
 		public Widget							ParentWidget
 		{
@@ -34,6 +57,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
 		
 		
 		
@@ -82,7 +106,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.Root.Invalidate ();
-			this.behavior.AttachMenuWindow (this);
+			this.behavior.HandleAboutToShowMenuWindow (this);
 			
 			base.OnAboutToShowWindow ();
 		}
@@ -91,7 +115,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (this.behavior != null);
 			
-			this.behavior.DetachMenuWindow (this);
+			this.behavior.HandleAboutToHideMenuWindow (this);
 			
 			base.OnAboutToHideWindow ();
 		}
