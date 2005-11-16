@@ -34,6 +34,7 @@ namespace Epsitec.Common.Text.Wrappers
 			this.navigator.TextChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextChanged);
 			this.navigator.CursorMoved += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorMoved);
 			
+			this.UpdateAll ();
 			this.NotifyChanged ();
 		}
 		
@@ -47,6 +48,7 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			//	TODO: attache au styliste
 			
+			this.UpdateAll ();
 			this.NotifyChanged ();
 		}
 		
@@ -92,6 +94,12 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
+		public void UpdateAll()
+		{
+			this.Update (false);
+			this.Update (true);
+		}
+		
 		private void InternalDetach()
 		{
 			if (this.navigator != null)
@@ -113,14 +121,12 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		private void HandleNavigatorTextChanged(object sender)
 		{
-			this.Update (false);
-			this.Update (true);
+			this.UpdateAll ();
 		}
 
 		private void HandleNavigatorCursorMoved(object sender)
 		{
-			this.Update (false);
-			this.Update (true);
+			this.UpdateAll ();
 		}
 		
 		
