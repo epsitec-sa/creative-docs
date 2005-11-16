@@ -614,10 +614,10 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonMainButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
 			this.hToolBar.Items.Add(this.ribbonMainButton);
 
-			this.ribbonObjectButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Objects);
-			this.ribbonObjectButton.Size = this.ribbonObjectButton.RequiredSize;
-			this.ribbonObjectButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
-			this.hToolBar.Items.Add(this.ribbonObjectButton);
+			this.ribbonGeomButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Geom);
+			this.ribbonGeomButton.Size = this.ribbonGeomButton.RequiredSize;
+			this.ribbonGeomButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
+			this.hToolBar.Items.Add(this.ribbonGeomButton);
 
 			this.ribbonOperButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Oper);
 			this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
@@ -629,6 +629,29 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonTextButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
 			this.hToolBar.Items.Add(this.ribbonTextButton);
 
+			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd(Misc.Icon("New"), "New", DocumentEditor.GetRes("Action.New"));
+			this.HToolBarAdd(Misc.Icon("Open"), "Open", DocumentEditor.GetRes("Action.Open"));
+			this.HToolBarAdd(Misc.Icon("Save"), "Save", DocumentEditor.GetRes("Action.Save"));
+			this.HToolBarAdd(Misc.Icon("Print"), "Print", DocumentEditor.GetRes("Action.Print"));
+			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd(Misc.Icon("Undo"), "Undo", DocumentEditor.GetRes("Action.Undo"));
+			this.HToolBarAdd(Misc.Icon("Redo"), "Redo", DocumentEditor.GetRes("Action.Redo"));
+			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd(Misc.Icon("Delete"), "Delete", DocumentEditor.GetRes("Action.Delete"));
+			this.HToolBarAdd(Misc.Icon("Duplicate"), "Duplicate", DocumentEditor.GetRes("Action.Duplicate"));
+			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd(Misc.Icon("Cut"), "Cut", DocumentEditor.GetRes("Action.Cut"));
+			this.HToolBarAdd(Misc.Icon("Copy"), "Copy", DocumentEditor.GetRes("Action.Copy"));
+			this.HToolBarAdd(Misc.Icon("Paste"), "Paste", DocumentEditor.GetRes("Action.Paste"));
+			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd(Misc.Icon("Inside"), "Inside", DocumentEditor.GetRes("Action.Inside"));
+			this.HToolBarAdd(Misc.Icon("Outside"), "Outside", DocumentEditor.GetRes("Action.Outside"));
+			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd(Misc.Icon("Preview"), "Preview", DocumentEditor.GetRes("Action.Preview"));
+			this.HToolBarAdd(Misc.Icon("Grid"), "Grid", DocumentEditor.GetRes("Action.Grid"));
+			this.HToolBarAdd("", "", "");
+
 			this.ribbonMain = new Ribbons.RibbonContainer(this);
 			this.ribbonMain.Name = "Main";
 			this.ribbonMain.Height = this.ribbonHeight;
@@ -636,27 +659,27 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonMain.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonMain.SetVisible(true);
 			this.ribbonMain.Items.Add(new Ribbons.File());
+			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
+			this.ribbonMain.Items.Add(new Ribbons.Undo());
+			this.ribbonMain.Items.Add(new Ribbons.Select());
 			this.ribbonMain.Items.Add(new Ribbons.View());
-			this.ribbonMain.Items.Add(new Ribbons.Zoom());
 			this.ribbonMain.Items.Add(new Ribbons.Action());
 #if DEBUG
 			this.ribbonMain.Items.Add(new Ribbons.Debug());
 #endif
 
-			this.ribbonObject = new Ribbons.RibbonContainer(this);
-			this.ribbonObject.Name = "Object";
-			this.ribbonObject.Height = this.ribbonHeight;
-			this.ribbonObject.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonObject.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
-			this.ribbonObject.SetVisible(false);
-			this.ribbonObject.Items.Add(new Ribbons.Undo());
-			this.ribbonObject.Items.Add(new Ribbons.Select());
-			this.ribbonObject.Items.Add(new Ribbons.Clipboard());
-			this.ribbonObject.Items.Add(new Ribbons.Order());
-			this.ribbonObject.Items.Add(new Ribbons.Group());
-			this.ribbonObject.Items.Add(new Ribbons.Move());
-			this.ribbonObject.Items.Add(new Ribbons.Rotate());
-			this.ribbonObject.Items.Add(new Ribbons.Scale());
+			this.ribbonGeom = new Ribbons.RibbonContainer(this);
+			this.ribbonGeom.Name = "Geom";
+			this.ribbonGeom.Height = this.ribbonHeight;
+			this.ribbonGeom.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.ribbonGeom.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonGeom.SetVisible(false);
+			this.ribbonGeom.Items.Add(new Ribbons.Move());
+			this.ribbonGeom.Items.Add(new Ribbons.Rotate());
+			this.ribbonGeom.Items.Add(new Ribbons.Scale());
+			this.ribbonGeom.Items.Add(new Ribbons.Align());
+			this.ribbonGeom.Items.Add(new Ribbons.Bool());
+			this.ribbonGeom.Items.Add(new Ribbons.Geom());
 
 			this.ribbonOper = new Ribbons.RibbonContainer(this);
 			this.ribbonOper.Name = "Oper";
@@ -664,9 +687,8 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonOper.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonOper.SetVisible(false);
-			this.ribbonOper.Items.Add(new Ribbons.Align());
-			this.ribbonOper.Items.Add(new Ribbons.Bool());
-			this.ribbonOper.Items.Add(new Ribbons.Geom());
+			this.ribbonOper.Items.Add(new Ribbons.Order());
+			this.ribbonOper.Items.Add(new Ribbons.Group());
 			this.ribbonOper.Items.Add(new Ribbons.Color());
 
 			this.ribbonText = new Ribbons.RibbonContainer(this);
@@ -1215,10 +1237,10 @@ namespace Epsitec.App.DocumentEditor
 		{
 			Ribbons.RibbonButton button = sender as Ribbons.RibbonButton;
 			Ribbons.RibbonContainer ribbon = null;
-			if ( button == this.ribbonMainButton   )  ribbon = this.ribbonMain;
-			if ( button == this.ribbonObjectButton )  ribbon = this.ribbonObject;
-			if ( button == this.ribbonOperButton   )  ribbon = this.ribbonOper;
-			if ( button == this.ribbonTextButton   )  ribbon = this.ribbonText;
+			if ( button == this.ribbonMainButton )  ribbon = this.ribbonMain;
+			if ( button == this.ribbonGeomButton )  ribbon = this.ribbonGeom;
+			if ( button == this.ribbonOperButton )  ribbon = this.ribbonOper;
+			if ( button == this.ribbonTextButton )  ribbon = this.ribbonText;
 			if ( ribbon == null )  return;
 
 			this.ActiveRibbon(ribbon.IsVisible ? null : ribbon);
@@ -1227,10 +1249,10 @@ namespace Epsitec.App.DocumentEditor
 		// Donne le ruban correspondant à un nom.
 		protected Ribbons.RibbonContainer GetRibbon(string name)
 		{
-			if ( name == this.ribbonMain.Name   )  return this.ribbonMain;
-			if ( name == this.ribbonObject.Name )  return this.ribbonObject;
-			if ( name == this.ribbonOper.Name   )  return this.ribbonOper;
-			if ( name == this.ribbonText.Name   )  return this.ribbonText;
+			if ( name == this.ribbonMain.Name )  return this.ribbonMain;
+			if ( name == this.ribbonGeom.Name )  return this.ribbonGeom;
+			if ( name == this.ribbonOper.Name )  return this.ribbonOper;
+			if ( name == this.ribbonText.Name )  return this.ribbonText;
 			return null;
 		}
 
@@ -1275,15 +1297,15 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			this.SuspendLayout();
-			this.ribbonMain.SetVisible  (this.ribbonMain   == this.ribbonActive);
-			this.ribbonObject.SetVisible(this.ribbonObject == this.ribbonActive);
-			this.ribbonOper.SetVisible  (this.ribbonOper   == this.ribbonActive);
-			this.ribbonText.SetVisible  (this.ribbonText   == this.ribbonActive);
+			this.ribbonMain.SetVisible(this.ribbonMain == this.ribbonActive);
+			this.ribbonGeom.SetVisible(this.ribbonGeom == this.ribbonActive);
+			this.ribbonOper.SetVisible(this.ribbonOper == this.ribbonActive);
+			this.ribbonText.SetVisible(this.ribbonText == this.ribbonActive);
 
-			this.ribbonMainButton.ActiveState   = (this.ribbonMain   == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonObjectButton.ActiveState = (this.ribbonObject == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonOperButton.ActiveState   = (this.ribbonOper   == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonTextButton.ActiveState   = (this.ribbonText   == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonMainButton.ActiveState = (this.ribbonMain == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonGeomButton.ActiveState = (this.ribbonGeom == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonOperButton.ActiveState = (this.ribbonOper == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonTextButton.ActiveState = (this.ribbonText == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 
 			double h = this.RibbonHeight;
 			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height+h, this.info.Height);
@@ -2278,6 +2300,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("UndoRedoList")]
 		void CommandUndoRedoList(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+#if false
 			Widget button = this.hToolBar.FindChild("Undo");
 			if ( button == null )  return;
 			Point pos = button.MapClientToScreen(new Point(0, 1));
@@ -2287,6 +2310,7 @@ namespace Epsitec.App.DocumentEditor
 			menu.Rejected += new EventHandler(this.HandleUndoRedoMenuRejected);
 			menu.ShowAsContextMenu(this.Window, pos);
 			this.WidgetUndoRedoMenuEngaged(true);
+#endif
 		}
 
 		private void HandleUndoRedoMenuAccepted(object sender, MenuEventArgs e)
@@ -4896,7 +4920,7 @@ namespace Epsitec.App.DocumentEditor
 				this.CurrentDocument.VRuler = di.vRuler;
 
 				this.ribbonMain.SetDocument(this.type, this.installType, this.globalSettings, this.CurrentDocument);
-				this.ribbonObject.SetDocument(this.type, this.installType, this.globalSettings, this.CurrentDocument);
+				this.ribbonGeom.SetDocument(this.type, this.installType, this.globalSettings, this.CurrentDocument);
 				this.ribbonOper.SetDocument(this.type, this.installType, this.globalSettings, this.CurrentDocument);
 				this.ribbonText.SetDocument(this.type, this.installType, this.globalSettings, this.CurrentDocument);
 
@@ -4912,7 +4936,7 @@ namespace Epsitec.App.DocumentEditor
 			else
 			{
 				this.ribbonMain.SetDocument(this.type, this.installType, this.globalSettings, null);
-				this.ribbonObject.SetDocument(this.type, this.installType, this.globalSettings, null);
+				this.ribbonGeom.SetDocument(this.type, this.installType, this.globalSettings, null);
 				this.ribbonOper.SetDocument(this.type, this.installType, this.globalSettings, null);
 				this.ribbonText.SetDocument(this.type, this.installType, this.globalSettings, null);
 
@@ -5237,11 +5261,11 @@ namespace Epsitec.App.DocumentEditor
 		protected VMenu							fileMenu;
 		protected HToolBar						hToolBar;
 		protected Ribbons.RibbonButton			ribbonMainButton;
-		protected Ribbons.RibbonButton			ribbonObjectButton;
+		protected Ribbons.RibbonButton			ribbonGeomButton;
 		protected Ribbons.RibbonButton			ribbonOperButton;
 		protected Ribbons.RibbonButton			ribbonTextButton;
 		protected Ribbons.RibbonContainer		ribbonMain;
-		protected Ribbons.RibbonContainer		ribbonObject;
+		protected Ribbons.RibbonContainer		ribbonGeom;
 		protected Ribbons.RibbonContainer		ribbonOper;
 		protected Ribbons.RibbonContainer		ribbonText;
 		protected Ribbons.RibbonContainer		ribbonActive;

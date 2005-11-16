@@ -827,6 +827,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Inside2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\JoinBevel.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -1151,6 +1155,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\OrderDownAll2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\OrderDownOne.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -1159,11 +1167,19 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\OrderUpAll2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\OrderUpOne.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Images\Outside.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Outside2.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

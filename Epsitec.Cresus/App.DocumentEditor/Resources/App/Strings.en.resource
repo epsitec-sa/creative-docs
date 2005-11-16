@@ -9,8 +9,8 @@
 	<data name="Application.Type">F</data>
 	
 	<data name="Ribbon.Main">Documents</data>
-	<data name="Ribbon.Objects">Objects</data>
 	<data name="Ribbon.Oper">Operations</data>
+	<data name="Ribbon.Geom">Geometry</data>
 	<data name="Ribbon.Text">Text</data>
 
 	<data name="Menu.Main.File">File</data>

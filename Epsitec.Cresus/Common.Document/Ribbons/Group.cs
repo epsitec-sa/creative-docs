@@ -14,12 +14,12 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.GroupMain;
 
-			this.buttonGroup   = this.CreateIconButton("Group",   Misc.Icon("Group"),   Res.Strings.Action.Group);
-			this.buttonMerge   = this.CreateIconButton("Merge",   Misc.Icon("Merge"),   Res.Strings.Action.Merge);
-			this.buttonExtract = this.CreateIconButton("Extract", Misc.Icon("Extract"), Res.Strings.Action.Extract);
-			this.buttonUngroup = this.CreateIconButton("Ungroup", Misc.Icon("Ungroup"), Res.Strings.Action.Ungroup);
-			this.buttonInside  = this.CreateIconButton("Inside",  Misc.Icon("Inside"),  Res.Strings.Action.Inside);
-			this.buttonOutside = this.CreateIconButton("Outside", Misc.Icon("Outside"), Res.Strings.Action.Outside);
+			this.buttonGroup   = this.CreateIconButton("Group",   Misc.Icon("Group"),    Res.Strings.Action.Group);
+			this.buttonUngroup = this.CreateIconButton("Ungroup", Misc.Icon("Ungroup"),  Res.Strings.Action.Ungroup);
+			this.buttonMerge   = this.CreateIconButton("Merge",   Misc.Icon("Merge"),    Res.Strings.Action.Merge);
+			this.buttonExtract = this.CreateIconButton("Extract", Misc.Icon("Extract"),  Res.Strings.Action.Extract);
+			this.buttonInside  = this.CreateIconButton("Inside",  Misc.Icon("Inside2"),  Res.Strings.Action.Inside);
+			this.buttonOutside = this.CreateIconButton("Outside", Misc.Icon("Outside2"), Res.Strings.Action.Outside);
 			
 			this.UpdateClientGeometry();
 		}
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8 + 22*3;
+				return 8 + 22*2 + 4 + 22*1.5*2;
 			}
 		}
 
@@ -59,17 +59,21 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(0, dy+5);
 			this.buttonGroup.Bounds = rect;
 			rect.Offset(dx, 0);
+			this.buttonUngroup.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
 			this.buttonMerge.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonExtract.Bounds = rect;
 
 			rect = this.UsefulZone;
-			rect.Width  = dx;
-			rect.Height = dy;
-			this.buttonUngroup.Bounds = rect;
-			rect.Offset(dx, 0);
+			rect.Width  = dx*1.5;
+			rect.Height = dy*1.5;
+			rect.Offset(dx*2+4, dy*0.5);
 			this.buttonInside.Bounds = rect;
-			rect.Offset(dx, 0);
+			rect.Offset(dx*1.5, 0);
 			this.buttonOutside.Bounds = rect;
 		}
 

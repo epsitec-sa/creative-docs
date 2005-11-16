@@ -14,10 +14,10 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.OrderMain;
 
-			this.buttonDownAll = this.CreateIconButton("OrderDownAll", Misc.Icon("OrderDownAll"), Res.Strings.Action.OrderDownAll);
-			this.buttonDownOne = this.CreateIconButton("OrderDownOne", Misc.Icon("OrderDownOne"), Res.Strings.Action.OrderDownOne);
-			this.buttonUpOne   = this.CreateIconButton("OrderUpOne",   Misc.Icon("OrderUpOne"),   Res.Strings.Action.OrderUpOne);
-			this.buttonUpAll   = this.CreateIconButton("OrderUpAll",   Misc.Icon("OrderUpAll"),   Res.Strings.Action.OrderUpAll);
+			this.buttonUpAll   = this.CreateIconButton("OrderUpAll",   Misc.Icon("OrderUpAll2"),   Res.Strings.Action.OrderUpAll);
+			this.buttonDownAll = this.CreateIconButton("OrderDownAll", Misc.Icon("OrderDownAll2"), Res.Strings.Action.OrderDownAll);
+			this.buttonUpOne   = this.CreateIconButton("OrderUpOne",   Misc.Icon("OrderUpOne"),    Res.Strings.Action.OrderUpOne);
+			this.buttonDownOne = this.CreateIconButton("OrderDownOne", Misc.Icon("OrderDownOne"),  Res.Strings.Action.OrderDownOne);
 			
 			this.UpdateClientGeometry();
 		}
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8 + 22*2;
+				return 8 + 22*1.5*2 + 4 + 22*1;
 			}
 		}
 
@@ -52,19 +52,20 @@ namespace Epsitec.Common.Document.Ribbons
 			double dy = this.buttonDownAll.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
-			rect.Width  = dx;
-			rect.Height = dy;
+			rect.Width  = dx*1.5;
+			rect.Height = dy*1.5;
+			rect.Offset(0, dy*0.5+5);
+			this.buttonUpAll.Bounds = rect;
+			rect.Offset(dx*1.5, -dy*0.5-5);
 			this.buttonDownAll.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonDownOne.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(0, dy+5);
-			this.buttonUpAll.Bounds = rect;
-			rect.Offset(dx, 0);
+			rect.Offset(dx*1.5*2+4, dy+5);
 			this.buttonUpOne.Bounds = rect;
+			rect.Offset(0, -dy-5);
+			this.buttonDownOne.Bounds = rect;
 		}
 
 
