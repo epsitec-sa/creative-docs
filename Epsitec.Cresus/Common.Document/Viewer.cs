@@ -2980,7 +2980,7 @@ namespace Epsitec.Common.Document
 			double iy = 0.5/this.drawingContext.ScaleY;
 			Rectangle rd = this.RectangleDisplayed;
 
-			if ( this.markerVertical != double.NaN )
+			if ( !double.IsNaN(this.markerVertical) )
 			{
 				double x = this.markerVertical;
 				double y = rd.Bottom;
@@ -2991,7 +2991,7 @@ namespace Epsitec.Common.Document
 				graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.0,0.8));  // bleuté
 			}
 
-			if ( this.markerHorizontal != double.NaN )
+			if ( !double.IsNaN(this.markerHorizontal) )
 			{
 				double x = rd.Left;
 				double y = this.markerHorizontal;

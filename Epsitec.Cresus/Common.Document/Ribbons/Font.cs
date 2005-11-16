@@ -301,24 +301,36 @@ namespace Epsitec.Common.Document.Ribbons
 				
 				this.UpdateFieldFontSizeList(field);
 
+				string text = "";
 				double size = this.document.FontWrapper.Defined.FontSize;
 				Text.Properties.SizeUnits units = this.document.FontWrapper.Defined.Units;
-				if ( size == double.NaN )
+				if ( double.IsNaN(size) )
 				{
 					size = this.document.FontWrapper.Active.FontSize;
 					units = this.document.FontWrapper.Active.Units;
-					if ( size == double.NaN )
+					if ( double.IsNaN(size) )
 					{
-						size = 0;
-						units = Common.Text.Properties.SizeUnits.Points;
+						text = "*";
+					}
+					else
+					{
+						if ( units == Common.Text.Properties.SizeUnits.Points )
+						{
+							size /= Modifier.fontSizeScale;
+						}
+						text = Misc.Italic(Misc.ConvertDoubleToString(size, units, 0));
 					}
 				}
-
-				if ( units == Common.Text.Properties.SizeUnits.Points )
+				else
 				{
-					size /= Modifier.fontSizeScale;
+					if ( units == Common.Text.Properties.SizeUnits.Points )
+					{
+						size /= Modifier.fontSizeScale;
+					}
+					text = Misc.ConvertDoubleToString(size, units, 0);
 				}
-				field.Text = Misc.ConvertDoubleToString(size, units, 0);
+
+				field.Text = text;
 
 				this.ignoreChange = false;
 			}
@@ -379,7 +391,10 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( field == this.fontFace )
 			{
 				string face = field.Text;
+				this.document.FontWrapper.SuspendSynchronisations();
 				this.document.FontWrapper.Defined.FontFace = face;
+				this.document.FontWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
+				this.document.FontWrapper.ResumeSynchronisations();
 			}
 
 			if ( field == this.fontStyle )
@@ -409,8 +424,10 @@ namespace Epsitec.Common.Document.Ribbons
 						size *= Modifier.fontSizeScale;
 					}
 				}
+				this.document.FontWrapper.SuspendSynchronisations();
 				this.document.FontWrapper.Defined.FontSize = size;
 				this.document.FontWrapper.Defined.Units = units;
+				this.document.FontWrapper.ResumeSynchronisations();
 			}
 		}
 
