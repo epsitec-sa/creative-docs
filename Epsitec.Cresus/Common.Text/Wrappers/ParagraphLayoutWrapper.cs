@@ -35,6 +35,16 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		internal override void InternalSynchronise(AbstractState state, StateProperty property)
 		{
+			if (state != this.defined_state)
+			{
+				return;
+			}
+			
+			if (this.defined_state.CountFlaggedValues () == 0)
+			{
+				return;
+			}
+			
 			int defines = 0;
 			
 			double left_m_first  = double.NaN;

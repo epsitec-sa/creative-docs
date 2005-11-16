@@ -95,6 +95,11 @@ namespace Epsitec.Common.Text.Wrappers
 			this.flags.Clear ();
 		}
 		
+		internal int CountFlaggedValues()
+		{
+			return this.flags.Count;
+		}
+		
 		
 		internal object GetValue(StateProperty property)
 		{
