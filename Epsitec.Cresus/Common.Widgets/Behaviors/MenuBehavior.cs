@@ -491,8 +491,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 			Window   window = null;
 			
 			if ((n > 0) &&
-				(this.root_window == this.keyboard_menu_window))
+				((this.root_window == this.keyboard_menu_window) || (MenuBehavior.menu_last_item == null)))
 			{
+				//	Aucune case sélectionnée dans le menu, ou alors c'est une case
+				//	du menu principal. Dans ce cas, il faut commencer par sélec-
+				//	tionner la première case du premier sous-menu :
+				
 				MenuWindow menu = this.live_menu_windows[0] as MenuWindow;
 				
 				item = this.FindFirstItem (menu.Root);
@@ -506,7 +510,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			if (n == 0)
 			{
-				//	Déplacement horizontal dans le menu de base.
+				//	Déplacement horizontal dans le menu de base. Aucun sous-menu
+				//	n'est actuellement ouvert. On ne va donc pas ouvrir de menu,
+				//	mais juste changer de MenuItem actif :
 				
 				if (direction < 0)
 				{
@@ -534,6 +540,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 			else
 			{
+				//	Déplacement horizontal avec un ou plusieurs sous-menus ouverts.
+				//	En fonction du niveau, il faudra soit ouvrir un sous-menu, soit
+				//	passer au menu suivant/précédent :
+				
 				item = this.keyboard_menu_item;
 				
 				if (item == null)
