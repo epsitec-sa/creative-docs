@@ -1465,6 +1465,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		internal void ReleaseCapture()
+		{
+			this.capturing_widget = null;
+			this.window.Capture = false;
+		}
+		
+		
 		internal void FocusWidget(Widget consumer)
 		{
 			if ((consumer != null) &&

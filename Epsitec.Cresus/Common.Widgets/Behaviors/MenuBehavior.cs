@@ -38,27 +38,42 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			Widget submenu = MenuItem.GetSubmenu (item);
 			
+			MenuBehavior behavior = null;
+			MenuWindow   window   = null;
+			
 			if (submenu == null)
 			{
 				//	Il n'y a pas de sous-menu ! Il faut en tout cas montrer le
 				//	menu qui contient cet item :
 				
-				MenuWindow menu = MenuItem.GetMenuWindow (item) as MenuWindow;
+				window = MenuItem.GetMenuWindow (item) as MenuWindow;
 				
-				if ((menu != null) &&
-					(menu.ParentWidget != null))
+				if (window != null)
 				{
-					MenuBehavior.OpenItemSubmenu (menu.ParentWidget, animate);
+					if (window.ParentWidget == null)
+					{
+						//	Le menu n'a pas de parent. C'est donc le menu racine
+						//	dans le cas d'un menu flottant. Il faut fermer tous
+						//	les sous-menus :
+						
+						behavior = MenuItem.GetMenuBehavior (item);
+						behavior.OpenSubmenu (window, Animate.No);
+						behavior.UpdateItems ();
+					}
+					else
+					{
+						MenuBehavior.OpenItemSubmenu (window.ParentWidget, animate);
+					}
 				}
-				
-				return;
 			}
-			
-			MenuBehavior behavior = MenuItem.GetMenuBehavior (submenu);
-			MenuWindow   window   = MenuItem.GetMenuWindow (submenu) as MenuWindow;
-			
-			behavior.OpenSubmenu (window, animate);
-			behavior.UpdateItems ();
+			else
+			{
+				behavior = MenuItem.GetMenuBehavior (submenu);
+				window   = MenuItem.GetMenuWindow (submenu) as MenuWindow;
+				
+				behavior.OpenSubmenu (window, animate);
+				behavior.UpdateItems ();
+			}
 		}
 		
 		public static void CloseItemMenu(Widget item)
@@ -804,6 +819,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		private void SuspendUpdates()
 		{
 			this.suspend_updates++;
+			System.Diagnostics.Debug.WriteLine (string.Format ("Suspended : {0}", this.suspend_updates));
 		}
 		
 		private void ResumeUpdates()
@@ -811,6 +827,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			System.Diagnostics.Debug.Assert (this.suspend_updates > 0);
 			
 			this.suspend_updates--;
+			System.Diagnostics.Debug.WriteLine (string.Format ("Resumed : {0}", this.suspend_updates));
 			
 			if (this.suspend_updates == 0)
 			{
@@ -1036,6 +1053,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 			
 			MenuBehavior.keyboard_navigation_active = false;
+			MenuBehavior suspend_behavior = null;
+			
 			
 			if (MenuBehavior.menu_last_item != null)
 			{
@@ -1045,9 +1064,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 				MenuBehavior.menu_last_behavior = null;
 				MenuBehavior.menu_last_item     = null;
 				
-				behavior.SuspendUpdates ();
-				behavior.NotifyExitedItem (last_item);
-				behavior.ResumeUpdates ();
+				suspend_behavior = behavior;
+				
+				suspend_behavior.SuspendUpdates ();
+				suspend_behavior.NotifyExitedItem (last_item);
 			}
 			
 			if (item != null)
@@ -1060,6 +1080,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 				behavior.SuspendUpdates ();
 				behavior.NotifyEnteredItem (MenuBehavior.menu_last_item);
 				behavior.ResumeUpdates ();
+			}
+			
+			if (suspend_behavior != null)
+			{
+				suspend_behavior.ResumeUpdates ();
 			}
 		}
 		
@@ -1077,6 +1102,39 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 			
 			Window window = sender as Window;
+			
+			if ((MenuBehavior.menu_list.Count > 0) &&
+				(window.CapturingWidget != null))
+			{
+				//	Quelqu'un a capturé la souris... On désactive cette capture,
+				//	à moins que la fenêtre responsable de la capture soit elle-
+				//	même une fenêtre appartenant au menu actif :
+				
+				int  n       = MenuBehavior.menu_list.Count;
+				bool release = true;
+				
+				if (n > 0)
+				{
+					MenuBehavior that = MenuBehavior.menu_list[n-1] as MenuBehavior;
+					
+					foreach (Window menu in that.live_menu_windows)
+					{
+						if (menu == window)
+						{
+							release = false;
+							break;
+						}
+					}
+				}
+				
+				if (release)
+				{
+					System.Diagnostics.Debug.WriteLine ("Released Window Capture because a menu is visible.");
+					window.ReleaseCapture ();
+				}
+			}
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("{0} {1}", (window.CapturingWidget == null) ? "" : "Captured; ", message.ToString ()));
 			
 			if (message.IsMouseType)
 			{
@@ -1097,7 +1155,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			Window menu = MenuBehavior.DetectWindow (mouse);
 			Window root = menu == null ? MenuBehavior.DetectRootWindow (mouse) : null;
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Menu={0} Root={1}", menu == null ? "null" : "found", root == null ? "null" : "found"));
+			bool swallow_message = (MenuBehavior.menu_list.Count > 0) && (message.NonClient == false);
 			
 			switch (message.Type)
 			{
@@ -1114,39 +1172,43 @@ namespace Epsitec.Common.Widgets.Behaviors
 							//	est nécessaire.
 							
 							MenuBehavior.RejectAll ();
-							
-							if (message.NonClient == false)
-							{
-								message.Swallowed = true;
-							}
 						}
 					}
-					if (root != null)
+					else if (root == null)
 					{
+						//	L'utilisateur a cliqué dans une fenêtre appartenant à
+						//	un menu autre que celui de la racine : on ne va pas
+						//	manger l'événement pour laisser une chance au MenuItem
+						//	de le recevoir :
+						
+						swallow_message = false;
+					}
+					else
+					{
+						//	L'utilisateur a cliqué dans la fenêtre racine, dans la
+						//	surface du menu racine. S'il y a des menus ouverts, il
+						//	faut les fermer :
+						
 						if (MenuBehavior.menu_list.Count > 0)
 						{
 							MenuBehavior.RejectAll ();
-							
-							message.Swallowed = true;
+							swallow_message = true;
+						}
+						else
+						{
+							swallow_message = false;
 						}
 					}
 					break;
 				
 				case MessageType.MouseUp:
-					if (message.NonClient == false)
-					{
-						message.Swallowed = true;
-					}
+					break;
+				
+				case MessageType.MouseLeave:
 					break;
 				
 				case MessageType.MouseEnter:
-				case MessageType.MouseLeave:
 				case MessageType.MouseMove:
-					if (message.NonClient == false)
-					{
-						message.Swallowed = true;
-					}
-					
 					if (MenuBehavior.keyboard_navigation_active)
 					{
 						//	En cas de navigation au clavier, on ne tient pas compte
@@ -1166,13 +1228,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 					else
 					{
 						MenuBehavior.NotifyCursorInItem (null);
-						
-						if (menu != null)
-						{
-							message.Swallowed = true;
-						}
 					}
 					break;
+			}
+			
+			if (swallow_message)
+			{
+				message.Swallowed = true;
 			}
 		}
 		
@@ -1208,7 +1270,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			that.SuspendUpdates ();
 			
-			bool swallowed_event = true;
+			bool swallow_message = true;
 			
 			if (message.Type == MessageType.KeyDown)
 			{
@@ -1248,7 +1310,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			that.ResumeUpdates ();
 			
-			message.Swallowed = swallowed_event;
+			if (swallow_message)
+			{
+				message.Swallowed = true;
+			}
 		}
 		
 		

@@ -289,6 +289,13 @@ namespace Epsitec.Common.Widgets
 		{
 			this.AdjustSize ();
 			
+			Window lastWindow = Message.State.LastWindow;
+			
+			if (lastWindow != null)
+			{
+				lastWindow.MouseCursor = MouseCursor.Default;
+			}
+			
 			MenuWindow             window   = MenuItem.GetMenuWindow (this) as MenuWindow;
 			Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
 			
@@ -301,6 +308,7 @@ namespace Epsitec.Common.Widgets
 			
 			behavior.OpenSubmenu (window, Behaviors.MenuBehavior.Animate.Yes);
 			
+			this.SetFocused(true);
 #if false
 			// Affiche un menu contextuel dont on spécifie le coin supérieur/gauche.
 
