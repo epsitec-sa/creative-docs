@@ -136,8 +136,8 @@
 	<data name="Dialog.Integer.ExportPDFColorConversion.ToGray">Grayscale</data>
 	<data name="Dialog.Integer.ExportPDFImageCompression.Text">Compression</data>
 	<data name="Dialog.Integer.ExportPDFImageCompression.None">None</data>
-	<data name="Dialog.Integer.ExportPDFImageCompression.ZIP">@@Sans pertes (zip)</data>
-	<data name="Dialog.Integer.ExportPDFImageCompression.JPEG">@@Avec pertes (jpeg)</data>
+	<data name="Dialog.Integer.ExportPDFImageCompression.ZIP">Lossless compression (ZIP)</data>
+	<data name="Dialog.Integer.ExportPDFImageCompression.JPEG">Lossy compression (JPEG)</data>
 
 	<data name="Dialog.Point.PageSizeX">Width</data>
 	<data name="Dialog.Point.PageSizeY">Height</data>
@@ -358,7 +358,7 @@
 	<data name="Panel.Image.Button.MirrorX">Swap X</data>
 	<data name="Panel.Image.Button.MirrorY">Swap Y</data>
 	<data name="Panel.Image.Button.Homo">Keep proportions</data>
-	<data name="Panel.Image.Button.Filter">@@Antialiasing filter</data>
+	<data name="Panel.Image.Button.Filter">Antialiasing filter</data>
 	<data name="Panel.Image.Tooltip.Filename">Image file name</data>
 	<data name="Panel.Image.Tooltip.Browse">Browse for an image</data>
 	<data name="Panel.Image.Tooltip.Update">Update image</data>
@@ -845,7 +845,7 @@
 	<data name="Action.ZoomPageWidth">Zoom to page width</data>
 	<data name="Action.ZoomDefault">Zoom to 100%</data>
 	<data name="Action.ZoomSel">Zoom to selection</data>
-	<data name="Action.ZoomSelWidth">Zoom selection width</data>
+	<data name="Action.ZoomSelWidth">Zoom to selection width</data>
 	<data name="Action.ZoomPrev">Previous zoom</data>
 	<data name="Action.ZoomSub">Zoom out</data>
 	<data name="Action.ZoomAdd">Zoom in</data>
@@ -900,19 +900,19 @@
 	<data name="Action.Text.Ruler.HandleLeftBody">Left margin, text body</data>
 	<data name="Action.Text.Ruler.HandleFirstBody">Left margin</data>
 	<data name="Action.Text.Ruler.HandleRight">Right margin</data>
-	<data name="Action.Text.Ruler.TabChoice">Select Tab Stop type</data>
-	<data name="Action.Text.Ruler.TabLeft">Normal Tab Stop</data>
-	<data name="Action.Text.Ruler.TabRight">Right Tab Stop</data>
-	<data name="Action.Text.Ruler.TabCenter">Centered Tab Stop</data>
-	<data name="Action.Text.Ruler.TabIndent">Indentation Tab Stop</data>
-	<data name="Action.Text.Ruler.TabDecimal">{0} Tap Stop ({1})</data>
-	<data name="Action.Text.Ruler.TabDecimalMath">@@Mathematical Tap Stop</data>
-	<data name="Action.Text.Ruler.TabDecimalBus">@@Business sign Tap Stop</data>
-	<data name="Action.Text.Ruler.TabDecimalSign">@@Special sign Tap Stop</data>
-	<data name="Action.Text.Ruler.TabDecimalPar">@@Parenthesis Tap Stop</data>
-	<data name="Action.Text.Ruler.TabZombie">@@Tabulateur supprimé</data>
-	<data name="Action.Text.Ruler.TabMerge">@@Fusionner les tabulateurs</data>
-	<data name="Action.Text.Ruler.TabCreate">Click to create a Tab Stop</data>
+	<data name="Action.Text.Ruler.TabChoice">Select Tab Mark type</data>
+	<data name="Action.Text.Ruler.TabLeft">Normal Tab Mark</data>
+	<data name="Action.Text.Ruler.TabRight">Right Tab Mark</data>
+	<data name="Action.Text.Ruler.TabCenter">Centered Tab Mark</data>
+	<data name="Action.Text.Ruler.TabIndent">Indentation Tab Mark</data>
+	<data name="Action.Text.Ruler.TabDecimal">{0} Tab Mark ({1})</data>
+	<data name="Action.Text.Ruler.TabDecimalMath">Mathematical Tab Mark</data>
+	<data name="Action.Text.Ruler.TabDecimalBus">Business sign Tab Mark</data>
+	<data name="Action.Text.Ruler.TabDecimalSign">Special sign Tab Mark</data>
+	<data name="Action.Text.Ruler.TabDecimalPar">Parenthesis Tab Mark</data>
+	<data name="Action.Text.Ruler.TabZombie">Removed Tab Mark being still used in the text</data>
+	<data name="Action.Text.Ruler.TabMerge">Merge Tab Marks</data>
+	<data name="Action.Text.Ruler.TabCreate">Click to create a new Tab Mark</data>
 	<data name="Action.Text.Glyphs.Insert">Insert special character</data>
 	<data name="Action.Text.Glyphs.Alternate">Alternate character</data>
 

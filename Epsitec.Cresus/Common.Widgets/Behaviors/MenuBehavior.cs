@@ -108,7 +108,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 				//	Le sous-menu n'est pas encore visible. Il faut s'assurer que
 				//	le parent immédiat est visible avant de montrer le sous-menu :
 				
-				this.OpenSubmenu (MenuItem.GetMenuWindow (window.ParentWidget) as MenuWindow, animate);
+				Widget parent_widget = window.ParentWidget;
+				Window parent_window = parent_widget == null ? null : MenuItem.GetMenuWindow (parent_widget);
+				
+				if (parent_widget != null)
+				{
+					this.OpenSubmenu (parent_window as MenuWindow, animate);
+				}
+				
 				this.ShowSubmenu (window, animate);
 			}
 		}
@@ -173,7 +180,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			IMenuHost host = parent as IMenuHost;
 			
-			if (host == null)
+			if ((host == null) &&
+				(parent != null))
 			{
 				host = MenuItem.GetMenuHost (parent);
 			}
@@ -875,7 +883,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 				MenuWindow menu = windows[i];
 				
 				Widget widget = menu.ParentWidget;
-				MenuItem.SetItemType (widget, MenuItemType.Parent);
+				
+				if (widget != null)
+				{
+					MenuItem.SetItemType (widget, MenuItemType.Parent);
+				}
+				
 				list.Remove (widget);
 			}
 			
@@ -1084,6 +1097,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			Window menu = MenuBehavior.DetectWindow (mouse);
 			Window root = menu == null ? MenuBehavior.DetectRootWindow (mouse) : null;
 			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Menu={0} Root={1}", menu == null ? "null" : "found", root == null ? "null" : "found"));
+			
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
@@ -1118,10 +1133,20 @@ namespace Epsitec.Common.Widgets.Behaviors
 					break;
 				
 				case MessageType.MouseUp:
+					if (message.NonClient == false)
+					{
+						message.Swallowed = true;
+					}
 					break;
 				
 				case MessageType.MouseEnter:
+				case MessageType.MouseLeave:
 				case MessageType.MouseMove:
+					if (message.NonClient == false)
+					{
+						message.Swallowed = true;
+					}
+					
 					if (MenuBehavior.keyboard_navigation_active)
 					{
 						//	En cas de navigation au clavier, on ne tient pas compte

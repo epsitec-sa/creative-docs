@@ -284,8 +284,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		public void ShowAsContextMenu(Window owner, Drawing.Point pos)
 		{
+			this.AdjustSize ();
+			
+			MenuWindow             window   = MenuItem.GetMenuWindow (this) as MenuWindow;
+			Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
+			
+			pos.Y -= this.Height;
+			pos.X -= this.shadow.Left;
+			pos.Y += this.shadow.Top;
+			
+			window.Owner          = owner;
+			window.WindowLocation = pos;
+			
+			behavior.OpenSubmenu (window, Behaviors.MenuBehavior.Animate.Yes);
+			
+#if false
 			// Affiche un menu contextuel dont on spécifie le coin supérieur/gauche.
 
 			this.isContextRoot = true;
@@ -324,6 +340,7 @@ namespace Epsitec.Common.Widgets
 			
 			//	TODO: vérifier que lorsque le menu est refermé, les deux event handlers sont
 			//	bien supprimés correctement...
+#endif
 		}
 
 		
