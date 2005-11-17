@@ -607,7 +607,11 @@ namespace Epsitec.Common.Widgets
 		
 		public static void SetItemType(Widget widget, MenuItemType value)
 		{
-			widget.SetValue (MenuItem.ItemTypeProperty, value);
+			if ((MenuItemType) widget.GetValue (MenuItem.ItemTypeProperty) != value)
+			{
+				widget.SetValue (MenuItem.ItemTypeProperty, value);
+				System.Diagnostics.Debug.WriteLine (string.Format ("Changed {0} to {1}", widget.ToString (), value));
+			}
 		}
 		
 		

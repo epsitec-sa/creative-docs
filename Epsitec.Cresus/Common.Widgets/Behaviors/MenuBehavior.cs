@@ -591,6 +591,54 @@ namespace Epsitec.Common.Widgets.Behaviors
 							}
 						}
 					}
+					else if (direction < 0)
+					{
+						//	Si nous sommes actuellement dans un sous-menu, il faut le
+						//	fermer et revenir au menu parent, si c'est possible :
+						
+						Widget parent = this.FindParentItem (item);
+						
+						if ((parent == null) ||
+							(parent.Window == this.root_window))
+						{
+							//	Il n'y a plus de parent sur lequel on puisse se
+							//	rabattre. Montre le menu précédent :
+							
+							Widget root = this.FindRootItem (item);
+							
+							if (root != null)
+							{
+								item = this.FindPrevItem (this.root_menu, root);
+								
+								if (item == null)
+								{
+									item = this.FindLastItem (this.root_menu);
+								}
+								
+								if (item != null)
+								{
+									MenuBehavior.OpenItemSubmenu (item, Animate.No);
+									
+									if (this.live_menu_windows.Count == 1)
+									{
+										window = this.live_menu_windows[0] as MenuWindow;
+										item   = this.FindFirstItem (window.Root);
+									}
+								}
+							}
+						}
+						else
+						{
+							//	Ferme le sous-menu actuellement ouvert et change
+							//	le "focus" de place :
+							
+							window = this.live_menu_windows[n-1] as MenuWindow;
+							window.Hide ();
+							
+							item   = parent as MenuItem;
+							window = parent.Window as MenuWindow;
+						}
+					}
 				}
 			}
 			
@@ -627,6 +675,18 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 			
 			return this.FindRootItem (widget);
+		}
+		
+		private Widget FindParentItem(Widget item)
+		{
+			MenuWindow window = MenuItem.GetMenuWindow (item) as MenuWindow;
+			
+			if (window == null)
+			{
+				return null;
+			}
+			
+			return window.ParentWidget;
 		}
 		
 		
@@ -723,8 +783,36 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 		
 		
+		private void SuspendUpdates()
+		{
+			this.suspend_updates++;
+		}
+		
+		private void ResumeUpdates()
+		{
+			System.Diagnostics.Debug.Assert (this.suspend_updates > 0);
+			
+			this.suspend_updates--;
+			
+			if (this.suspend_updates == 0)
+			{
+				if (this.update_requested > 0)
+				{
+					this.UpdateItems ();
+				}
+			}
+		}
+		
 		private void UpdateItems()
 		{
+			if (this.suspend_updates > 0)
+			{
+				this.update_requested++;
+				return;
+			}
+			
+			this.suspend_updates++;
+			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			MenuWindow[] windows = (MenuWindow[]) this.live_menu_windows.ToArray (typeof (MenuWindow));
@@ -785,6 +873,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				MenuItem.SetItemType (widget, MenuItemType.Deselect);
 			}
+			
+			this.suspend_updates--;
+			this.update_requested = 0;
 		}
 		
 		
@@ -931,15 +1022,21 @@ namespace Epsitec.Common.Widgets.Behaviors
 				MenuBehavior.menu_last_behavior = null;
 				MenuBehavior.menu_last_item     = null;
 				
+				behavior.SuspendUpdates ();
 				behavior.NotifyExitedItem (last_item);
+				behavior.ResumeUpdates ();
 			}
 			
 			if (item != null)
 			{
-				MenuBehavior.menu_last_behavior = MenuItem.GetMenuBehavior (item);
+				MenuBehavior behavior = MenuItem.GetMenuBehavior (item);
+				
+				MenuBehavior.menu_last_behavior = behavior;
 				MenuBehavior.menu_last_item     = item;
 				
-				MenuBehavior.menu_last_behavior.NotifyEnteredItem (MenuBehavior.menu_last_item);
+				behavior.SuspendUpdates ();
+				behavior.NotifyEnteredItem (MenuBehavior.menu_last_item);
+				behavior.ResumeUpdates ();
 			}
 		}
 		
@@ -1020,8 +1117,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 						//	En cas de navigation au clavier, on ne tient pas compte
 						//	des petits déplacements de souris :
 						
-						System.Diagnostics.Debug.WriteLine (string.Format ("Mouse={0} Origin={1} Distance={2:0.0}", mouse.ToString (), MenuBehavior.keyboard_navigation_mouse_pos.ToString (), Drawing.Point.Distance (mouse, MenuBehavior.keyboard_navigation_mouse_pos)));
-						
 						if (Drawing.Point.Distance (mouse, MenuBehavior.keyboard_navigation_mouse_pos) < 4)
 						{
 							return;
@@ -1076,14 +1171,16 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			System.Diagnostics.Debug.WriteLine ("Keyboard event routed to menu");
 			
+			that.SuspendUpdates ();
+			
+			bool swallowed_event = true;
+			
 			if (message.Type == MessageType.KeyDown)
 			{
+				IFeel feel = Feel.Factory.Active;
+				
 				switch (message.KeyCode)
 				{
-					case KeyCode.Escape:
-						that.KeyboardCloseLatestMenu ();
-						break;
-					
 					case KeyCode.ArrowUp:
 						that.KeyboardSelectItem (-1);
 						break;
@@ -1099,10 +1196,24 @@ namespace Epsitec.Common.Widgets.Behaviors
 					case KeyCode.ArrowLeft:
 						that.KeyboardSelectMenu (-1);
 						break;
+					
+					default:
+						if ((feel.TestSelectItemKey (message)) &&
+							(that.keyboard_menu_item != null))
+						{
+							that.keyboard_menu_item.SimulatePressed ();
+						}
+						else if (feel.TestCancelKey (message))
+						{
+							that.KeyboardCloseLatestMenu ();
+						}
+						break;
 				}
 			}
-			 
-			message.Swallowed = true;
+			
+			that.ResumeUpdates ();
+			
+			message.Swallowed = swallowed_event;
 		}
 		
 		
@@ -1145,8 +1256,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 		private Widget							root_menu;
 		private bool							is_open;
 		
+		private bool							keyboard_menu_active;
 		private Window							keyboard_menu_window;
 		private MenuItem						keyboard_menu_item;
-		private bool							keyboard_menu_active;
+		
+		private int								suspend_updates;
+		private int								update_requested;
 	}
 }
