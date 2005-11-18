@@ -569,7 +569,7 @@ namespace Epsitec.Common.Widgets
 		private static readonly Drawing.Point	margin = new Drawing.Point(3, 2);
 		private static readonly Drawing.Point	offset = new Drawing.Point(8, -16);
 		
-		static ToolTip							default_tool_tip = new ToolTip ();
 		static System.Collections.ArrayList		global_tool_tips = new System.Collections.ArrayList ();
+		static ToolTip							default_tool_tip = new ToolTip ();
 	}
 }
