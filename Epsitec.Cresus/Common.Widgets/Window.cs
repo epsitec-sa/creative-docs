@@ -1349,6 +1349,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public static void ResetMouseCursor()
+		{
+			Window window = Message.State.LastWindow;
+			
+			if (window != null)
+			{
+				window.MouseCursor = MouseCursor.Default;
+			}
+		}
+		
+		
 		private void HandleValidationRuleBecameDirty(object sender)
 		{
 			this.AsyncValidation ();

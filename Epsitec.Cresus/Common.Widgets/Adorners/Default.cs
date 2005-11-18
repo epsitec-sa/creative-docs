@@ -1131,7 +1131,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											MenuType type,
 											MenuItemType itemType)
 		{
-			if ( itemType != MenuItemType.Deselect )
+			if ( itemType != MenuItemType.Default )
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
@@ -1158,7 +1158,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			if ( text == null )  return;
 			state &= ~WidgetState.Focused;
-			if ( itemType == MenuItemType.Deselect )
+			if ( itemType == MenuItemType.Default )
 			{
 				state &= ~WidgetState.Selected;
 			}

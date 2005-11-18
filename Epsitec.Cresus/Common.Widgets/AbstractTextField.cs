@@ -710,8 +710,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.contextMenu = new VMenu();
 			this.contextMenu.Host = this;
-			this.contextMenu.Accepted += new MenuEventHandler(this.HandleContextMenuAccepted);
-			this.contextMenu.Rejected += new Epsitec.Common.Support.EventHandler(this.HandleContextMenuRejected);
+//@			this.contextMenu.Accepted += new MenuEventHandler(this.HandleContextMenuAccepted);
+//@			this.contextMenu.Rejected += new Epsitec.Common.Support.EventHandler(this.HandleContextMenuRejected);
 
 			MenuItem mi;
 			bool sel = (this.TextNavigator.CursorFrom != this.TextNavigator.CursorTo);
@@ -760,36 +760,36 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu.ShowAsContextMenu(this.Window, mouse);
 		}
 
-		private void HandleContextMenuAccepted(object sender, MenuEventArgs e)
-		{
-			if ( e.MenuItem.Name == "Cut" )
-			{
-				this.copyPasteBehavior.ProcessCopy();
-				this.copyPasteBehavior.ProcessDelete();
-			}
-
-			if ( e.MenuItem.Name == "Copy" )
-			{
-				this.copyPasteBehavior.ProcessCopy();
-			}
-
-			if ( e.MenuItem.Name == "Paste" )
-			{
-				this.copyPasteBehavior.ProcessPaste();
-			}
-
-			if ( e.MenuItem.Name == "Delete" )
-			{
-				this.copyPasteBehavior.ProcessDelete();
-			}
-
-			if ( e.MenuItem.Name == "SelectAll" )
-			{
-				this.copyPasteBehavior.ProcessSelectAll();
-			}
-
-			this.contextMenu = null;
-		}
+//		private void HandleContextMenuAccepted(object sender, MenuEventArgs e)
+//		{
+//			if ( e.MenuItem.Name == "Cut" )
+//			{
+//				this.copyPasteBehavior.ProcessCopy();
+//				this.copyPasteBehavior.ProcessDelete();
+//			}
+//
+//			if ( e.MenuItem.Name == "Copy" )
+//			{
+//				this.copyPasteBehavior.ProcessCopy();
+//			}
+//
+//			if ( e.MenuItem.Name == "Paste" )
+//			{
+//				this.copyPasteBehavior.ProcessPaste();
+//			}
+//
+//			if ( e.MenuItem.Name == "Delete" )
+//			{
+//				this.copyPasteBehavior.ProcessDelete();
+//			}
+//
+//			if ( e.MenuItem.Name == "SelectAll" )
+//			{
+//				this.copyPasteBehavior.ProcessSelectAll();
+//			}
+//
+//			this.contextMenu = null;
+//		}
 
 		private void HandleContextMenuRejected(object sender)
 		{

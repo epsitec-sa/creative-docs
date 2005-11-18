@@ -1270,7 +1270,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if ( type == MenuType.Horizontal )
 				{
-					if ( itemType != MenuItemType.Deselect )
+					if ( itemType != MenuItemType.Default )
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorCaption);
@@ -1279,7 +1279,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( type == MenuType.Vertical )
 				{
-					if ( itemType != MenuItemType.Deselect )
+					if ( itemType != MenuItemType.Default )
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorCaption);
@@ -1288,7 +1288,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				if ( itemType != MenuItemType.Deselect )
+				if ( itemType != MenuItemType.Default )
 				{
 					rect.Deflate(0.5);
 					graphics.AddRectangle(rect);
@@ -1308,7 +1308,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			if ( text == null )  return;
 			state &= ~WidgetState.Focused;
-			if ( itemType == MenuItemType.Deselect )
+			if ( itemType == MenuItemType.Default )
 			{
 				state &= ~WidgetState.Selected;
 			}

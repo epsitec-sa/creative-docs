@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class HMenu : AbstractMenu
 	{
-		public HMenu() : base (MenuType.Horizontal)
+		public HMenu()
 		{
 			MenuItem.SetZeroDelay (this, true);
 			
@@ -24,6 +24,16 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
+		
+
+		public override MenuType				MenuType
+		{
+			get
+			{
+				return MenuType.Horizontal;
+			}
+		}
+
 		
 		
 		protected override void Dispose(bool disposing)

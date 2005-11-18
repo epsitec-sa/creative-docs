@@ -254,8 +254,8 @@ namespace Epsitec.Common.Widgets
 						
 						if (command != null)
 						{
-							if ((command.Shortcut != null) &&
-								(command.Shortcut.Match (shortcut)) &&
+							if ((command.HasShortcuts) &&
+								(command.Shortcuts.Match (shortcut)) &&
 								(command.Enabled))
 							{
 								//	Exécute la commande.

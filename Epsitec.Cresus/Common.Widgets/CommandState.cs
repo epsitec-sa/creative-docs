@@ -1,10 +1,12 @@
 namespace Epsitec.Common.Widgets
 {
+	using ShortcutCollection = Collections.ShortcutCollection;
+	
 	/// <summary>
 	/// La classe CommandState permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec les widgets associés.
 	/// </summary>
-	public class CommandState : Support.CommandDispatcher.CommandState
+	public sealed class CommandState : Support.CommandDispatcher.CommandState
 	{
 		static CommandState()
 		{
@@ -26,7 +28,12 @@ namespace Epsitec.Common.Widgets
 		
 		public CommandState(string name, Support.CommandDispatcher dispatcher, Shortcut shortcut) : base (name, dispatcher)
 		{
-			this.Shortcut = shortcut;
+			this.Shortcuts.Add (shortcut);
+		}
+		
+		public CommandState(string name, Support.CommandDispatcher dispatcher, params Shortcut[] shortcuts) : base (name, dispatcher)
+		{
+			this.Shortcuts.AddRange (shortcuts);
 		}
 		
 		
@@ -82,17 +89,47 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Shortcut						Shortcut
+		public ShortcutCollection			Shortcuts
 		{
 			get
 			{
-				return this.shortcut;
-			}
-			set
-			{
-				this.shortcut = value;
+				if (this.shortcuts == null)
+				{
+					this.shortcuts = new ShortcutCollection ();
+				}
+				
+				return this.shortcuts;
 			}
 		}
+		
+		public bool							HasShortcuts
+		{
+			get
+			{
+				if (this.shortcuts != null)
+				{
+					return this.shortcuts.Count > 0;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		
+		public Shortcut						PreferredShortcut
+		{
+			get
+			{
+				if (this.HasShortcuts)
+				{
+					return this.Shortcuts[0];
+				}
+				
+				return null;
+			}
+		}
+		
 		
 		public Widget[] FindWidgets()
 		{
@@ -143,7 +180,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected WidgetState				state		= WidgetState.Enabled | WidgetState.ActiveNo;
-		protected Shortcut					shortcut	= null;
+		private WidgetState						state		= WidgetState.Enabled | WidgetState.ActiveNo;
+		private Collections.ShortcutCollection	shortcuts;
 	}
 }

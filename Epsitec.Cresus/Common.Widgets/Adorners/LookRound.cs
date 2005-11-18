@@ -1304,7 +1304,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if ( type == MenuType.Horizontal )
 				{
-					if ( itemType == MenuItemType.Select )
+					if ( itemType == MenuItemType.Selected )
 					{
 						double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
 						Drawing.Path path = this.PathRoundRectangle(rect, radius);
@@ -1315,7 +1315,7 @@ namespace Epsitec.Common.Widgets.Adorners
 						graphics.Rasterizer.AddOutline(path, 1);
 						graphics.RenderSolid(this.colorCaption);
 					}
-					if ( itemType == MenuItemType.Parent )
+					if ( itemType == MenuItemType.SubmenuOpen )
 					{
 						double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
 						Drawing.Path path = this.PathTopRoundRectangle(rect, radius);
@@ -1330,7 +1330,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( type == MenuType.Vertical )
 				{
-					if ( itemType != MenuItemType.Deselect )
+					if ( itemType != MenuItemType.Default )
 					{
 						double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
 						Drawing.Path path = this.PathRoundRectangle(rect, radius);
@@ -1345,7 +1345,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				if ( itemType != MenuItemType.Deselect )
+				if ( itemType != MenuItemType.Default )
 				{
 					double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
 					Drawing.Path path = this.PathRoundRectangle(rect, radius);

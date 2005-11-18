@@ -1236,11 +1236,11 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if ( type == MenuType.Horizontal )
 				{
-					if ( itemType == MenuItemType.Select )
+					if ( itemType == MenuItemType.Selected )
 					{
 						this.PaintImageButton(graphics, rect, 0);
 					}
-					if ( itemType == MenuItemType.Parent )
+					if ( itemType == MenuItemType.SubmenuOpen )
 					{
 						this.PaintImageButton(graphics, rect, 8);
 					}
@@ -1248,7 +1248,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( type == MenuType.Vertical )
 				{
-					if ( itemType != MenuItemType.Deselect )
+					if ( itemType != MenuItemType.Default )
 					{
 						this.PaintImageButton(graphics, rect, 0);
 					}
@@ -1256,7 +1256,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				if ( itemType != MenuItemType.Deselect )
+				if ( itemType != MenuItemType.Default )
 				{
 					this.PaintImageButton(graphics, rect, 3);
 				}

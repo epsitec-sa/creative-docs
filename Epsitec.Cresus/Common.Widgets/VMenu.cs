@@ -5,7 +5,7 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class VMenu : AbstractMenu
 	{
-		public VMenu() : base(MenuType.Vertical)
+		public VMenu() : base ()
 		{
 		}
 		
@@ -13,5 +13,15 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
+		
+		
+		public override MenuType				MenuType
+		{
+			get
+			{
+				return MenuType.Vertical;
+			}
+		}
+
 	}
 }

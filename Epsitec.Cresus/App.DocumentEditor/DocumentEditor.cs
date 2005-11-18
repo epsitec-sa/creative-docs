@@ -2313,6 +2313,7 @@ namespace Epsitec.App.DocumentEditor
 #endif
 		}
 
+#if false
 		private void HandleUndoRedoMenuAccepted(object sender, MenuEventArgs e)
 		{
 			this.WidgetUndoRedoMenuEngaged(false);
@@ -2322,6 +2323,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.WidgetUndoRedoMenuEngaged(false);
 		}
+#endif
 
 		protected void WidgetUndoRedoMenuEngaged(bool engaged)
 		{
@@ -2823,8 +2825,8 @@ namespace Epsitec.App.DocumentEditor
 			Point pos = button.MapClientToScreen(new Point(0, 1));
 			VMenu menu = di.containerPrincipal.CreateStretchTypeMenu(null);
 			menu.Host = this;
-			menu.Accepted += new MenuEventHandler(this.HandleStretchTypeMenuAccepted);
-			menu.Rejected += new EventHandler(this.HandleStretchTypeMenuRejected);
+//@			menu.Accepted += new MenuEventHandler(this.HandleStretchTypeMenuAccepted);
+//@			menu.Rejected += new EventHandler(this.HandleStretchTypeMenuRejected);
 
 			ScreenInfo si = ScreenInfo.Find(pos);
 			Drawing.Rectangle wa = si.WorkingArea;
@@ -2837,17 +2839,17 @@ namespace Epsitec.App.DocumentEditor
 			this.WidgetStretchTypeMenuEngaged(true, true);
 		}
 
-		private void HandleStretchTypeMenuAccepted(object sender, MenuEventArgs e)
-		{
-			this.WidgetStretchTypeMenuEngaged(false, true);
-		}
-
-		private void HandleStretchTypeMenuRejected(object sender)
-		{
-			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
-			bool activate = (viewer.SelectorType == SelectorType.Stretcher);
-			this.WidgetStretchTypeMenuEngaged(false, activate);
-		}
+//		private void HandleStretchTypeMenuAccepted(object sender, MenuEventArgs e)
+//		{
+//			this.WidgetStretchTypeMenuEngaged(false, true);
+//		}
+//
+//		private void HandleStretchTypeMenuRejected(object sender)
+//		{
+//			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
+//			bool activate = (viewer.SelectorType == SelectorType.Stretcher);
+//			this.WidgetStretchTypeMenuEngaged(false, activate);
+//		}
 
 		protected void WidgetStretchTypeMenuEngaged(bool engaged, bool activate)
 		{
@@ -5205,9 +5207,9 @@ namespace Epsitec.App.DocumentEditor
 		// Retourne le nom des touches associées à une commande.
 		public static string GetShortCut(CommandState state)
 		{
-			if ( state == null || state.Shortcut == null )  return null;
+			if ( state == null || state.HasShortcuts == false )  return null;
 
-			KeyCode code = state.Shortcut.KeyCode;
+			KeyCode code = state.PreferredShortcut.KeyCode;
 			if ( code == 0 )  return null;
 
 			return Message.GetKeyName(code);

@@ -1,16 +1,32 @@
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets.Helpers;
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Support.BundleAttribute;
-
+	/// <summary>
+	/// Le MenuType détermine la disposition d'un menu.
+	/// </summary>
+	public enum MenuType
+	{
+		Invalid,
+		Vertical,
+		Horizontal
+	}
+	
+	
+	/// <summary>
+	/// Le MenuItemType détermine l'état d'une case d'un menu.
+	/// </summary>
 	public enum MenuItemType
 	{
-		Deselect,					// case désélectionnée
-		Select,						// case sélectionnée
-		Parent,						// case sélectionnée comme parent
+		Default,					//	case de menu inactive
+		Selected,					//	case de menu sélectionnée
+		SubmenuOpen					//	case de menu sélectionnée, sous-menu affiché
 	}
+	
 	
 	/// <summary>
 	/// La classe MenuItem représente une case dans un menu.
@@ -25,89 +41,76 @@ namespace Epsitec.Common.Widgets
 			
 			this.InternalState &= ~InternalState.Focusable;
 			this.InternalState &= ~InternalState.Engageable;
-
-			this.iconName          = "";
-			this.iconNameActiveNo  = "";
-			this.iconNameActiveYes = "";
-			this.icon          = new TextLayout();
-			this.iconActiveNo  = new TextLayout();
-			this.iconActiveYes = new TextLayout();
-			this.shortKey      = new TextLayout();
-			this.icon.Alignment          = Drawing.ContentAlignment.MiddleLeft;
-			this.iconActiveNo.Alignment  = Drawing.ContentAlignment.MiddleLeft;
-			this.iconActiveYes.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			this.Alignment               = Drawing.ContentAlignment.MiddleLeft;
-			this.shortKey.Alignment      = Drawing.ContentAlignment.MiddleLeft;
-
-			this.subIndicatorWidth = this.DefaultFontHeight;
-			this.colorControlDark = Drawing.Color.FromName("ControlDark");
+			
+			this.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			
+			this.icon     = new TextLayout();
+			this.shortcut = new TextLayout();
+			
+			this.icon.Alignment     = Drawing.ContentAlignment.MiddleLeft;
+			this.shortcut.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			
+			this.submenu_mark_width = this.DefaultFontHeight;
 		}
 		
-		public MenuItem(Widget embedder) : this()
+		public MenuItem(Widget embedder) : this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
 		
-		public MenuItem(string command, string text) : this()
+		public MenuItem(string command, string text) : this ()
 		{
 			this.Command  = command;
 			this.Text     = text;
 			this.onlyText = true;
 		}
 		
-		public MenuItem(string command, string icon, string text, string shortcut) : this()
+		public MenuItem(string command, string icon, string text, string shortcut) : this ()
 		{
 			this.Command  = command;
 			this.IconName = icon;
 			this.Text     = text;
-			this.ShortKey = shortcut;
+			this.ShortKey = shortcut;	//#fix
 			this.onlyText = false;
 		}
 		
-		public MenuItem(string command, string icon, string text, string shortcut, string name) : this(command, icon, text, shortcut)
+		public MenuItem(string command, string icon, string text, string shortcut, string name) : this (command, icon, text, shortcut)
 		{
 			this.Name = name;
 		}
 		
-		public MenuItem(Widget submenu, string icon, string text, string shortcut) : this()
+		public MenuItem(Widget submenu, string icon, string text, string shortcut) : this ()
 		{
 			this.IconName = icon;
 			this.Text     = text;
-			this.ShortKey = shortcut;
+			this.ShortKey = shortcut;	//#fix
 			this.onlyText = false;
 			this.Submenu  = submenu;
 		}
 		
-		public MenuItem(Widget submenu, string icon, string text, string shortcut, string name) : this(submenu, icon, text, shortcut)
+		public MenuItem(Widget submenu, string icon, string text, string shortcut, string name) : this (submenu, icon, text, shortcut)
 		{
 			this.Name = name;
 		}
 		
 		
-		internal void SetMenuType(MenuType type)
+		public virtual bool						IsSeparator
 		{
-			this.type = type;
-		}
-		
-		
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
+			get
 			{
-				System.IDisposable submenu = this.Submenu as System.IDisposable;
-				
-				if (submenu != null)
-				{
-					submenu.Dispose ();
-				}
-				
-				this.Submenu = null;
+				return false;
 			}
-			
-			base.Dispose (disposing);
 		}
 
-
+		
+		public MenuType							MenuType
+		{
+			get
+			{
+				return (MenuType) this.GetValue (MenuItem.MenuTypeProperty);
+			}
+		}
+		
 		public MenuItemType						ItemType
 		{
 			get
@@ -121,51 +124,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Indique s'il s'agit d'une case d'un menu horizontal avec un texte seul.
-		public bool OnlyText
-		{
-			get
-			{
-				return this.onlyText;
-			}
-		}
-
-		// Indique s'il s'agit d'une ligne de séparation horizontale.
-		public bool Separator
-		{
-			get
-			{
-				return this.separator;
-			}
-		}
-
-		// Nom de l'icône affichée à gauche.
-		public string IconName
+		
+		public string							IconName
 		{
 			get
 			{
 				return this.iconName;
 			}
-
 			set
 			{
-				this.iconName = value;
-				if ( this.iconName == "" )
+				if (this.iconName != value)
 				{
-					this.icon.Text = "";
+					this.iconName = value;
+					this.UpdateIconSize ();
 				}
-				else
-				{
-					this.icon.Text = @"<img src=""" + this.iconName + @"""/>";
-				}
-				this.iconSize = this.icon.SingleLineSize;
-				this.AdjustSize(ref this.iconSize);
-				this.separator = false;
 			}
 		}
 
-		// Nom de l'icône affichée à gauche.
-		public string IconNameActiveNo
+		public string							IconNameActiveNo
 		{
 			get
 			{
@@ -174,23 +150,15 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				this.iconNameActiveNo = value;
-				if ( this.iconNameActiveNo == "" )
+				if (this.iconNameActiveNo != value)
 				{
-					this.iconActiveNo.Text = "";
+					this.iconNameActiveNo = value;
+					this.UpdateIconSize ();
 				}
-				else
-				{
-					this.iconActiveNo.Text = @"<img src=""" + this.iconNameActiveNo + @"""/>";
-					this.iconSize = this.iconActiveNo.SingleLineSize;
-					this.AdjustSize(ref this.iconSize);
-				}
-				this.separator = false;
 			}
 		}
-
-		// Nom de l'icône affichée à gauche.
-		public string IconNameActiveYes
+		
+		public string							IconNameActiveYes
 		{
 			get
 			{
@@ -199,40 +167,30 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				this.iconNameActiveYes = value;
-				if ( this.iconNameActiveYes == "" )
+				if (this.iconNameActiveYes != value)
 				{
-					this.iconActiveYes.Text = "";
+					this.iconNameActiveYes = value;
+					this.UpdateIconSize ();
 				}
-				else
-				{
-					this.iconActiveYes.Text = @"<img src=""" + this.iconNameActiveYes + @"""/>";
-					this.iconSize = this.iconActiveYes.SingleLineSize;
-					this.AdjustSize(ref this.iconSize);
-				}
-				this.separator = false;
-			}
-		}
-
-		// Nom du raccourci clavier affiché à droite.
-		public string ShortKey
-		{
-			get
-			{
-				return this.shortKey.Text;
-			}
-
-			set
-			{
-				this.shortKey.Text = value;
-				this.separator = false;
-				this.shortKeySize = this.shortKey.SingleLineSize;
-				this.AdjustSize(ref this.shortKeySize);
 			}
 		}
 
 		
-		public Widget			Submenu
+		public string							ShortKey
+		{
+			get
+			{
+				return this.shortcut.Text;
+			}
+
+			set
+			{
+				this.shortcut.Text = value;
+				this.shortcutSize = this.AdjustSize (this.shortcut.SingleLineSize);
+			}
+		}
+
+		public Widget							Submenu
 		{
 			get
 			{
@@ -246,6 +204,59 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		public double							IconWidth
+		{
+			get
+			{
+				return this.iconSize.Width;
+			}
+			set
+			{
+				this.iconSize.Width = value;
+			}
+		}
+		
+		
+		public override Drawing.Size GetBestFitSize()
+		{
+			double dx = 0;
+			double dy = 0;
+
+			if (this.onlyText)
+			{
+				dx = MenuItem.MarginHeader*2 + this.mainTextSize.Width;
+				dy = this.mainTextSize.Height;
+			}
+			else if (this.IsSeparator)
+			{
+				dy = MenuItem.SeparatorHeight;
+			}
+			else
+			{
+				dx += this.iconSize.Width;
+				dx += this.mainTextSize.Width;
+				dx += MenuItem.MarginSpace;
+				dx += this.shortcutSize.Width;
+				dx += this.submenu_mark_width;
+
+				dy = System.Math.Max(dy, this.iconSize.Height);
+				dy = System.Math.Max(dy, this.mainTextSize.Height);
+				dy = System.Math.Max(dy, this.shortcutSize.Height);
+			}
+			
+			return new Drawing.Size (dx, dy);
+		}
+
+		
+		internal void DefineMenuType(MenuType value)
+		{
+			this.SetValue (MenuItem.MenuTypeProperty, value);
+		}
+		
+		
+		
+		
+		
 		public static MenuItem CreateYesNo(string command, string text, string shortcut, string name)
 		{
 			MenuItem item = new MenuItem (command, "", text, shortcut, name);
@@ -258,13 +269,79 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
+		private void UpdateIconSize()
+		{
+			double dx = 0;
+			double dy = 0;
+			
+			if ((this.iconNameActiveNo != null) &&
+				(this.iconNameActiveNo.Length > 0))
+			{
+				TextLayout layout = this.GetIconTextLayout (this.iconNameActiveNo);
+				Drawing.Size size = layout.SingleLineSize;
+				
+				dx = System.Math.Max (dx, size.Width);
+				dy = System.Math.Max (dy, size.Height);
+			}
+			
+			if ((this.iconNameActiveYes != null) &&
+				(this.iconNameActiveYes.Length > 0))
+			{
+				TextLayout layout = this.GetIconTextLayout (this.iconNameActiveYes);
+				Drawing.Size size = layout.SingleLineSize;
+				
+				dx = System.Math.Max (dx, size.Width);
+				dy = System.Math.Max (dy, size.Height);
+			}
+			
+			if ((this.iconName != null) &&
+				(this.iconName.Length > 0))
+			{
+				TextLayout layout = this.GetIconTextLayout (this.iconName);
+				Drawing.Size size = layout.SingleLineSize;
+				
+				dx = System.Math.Max (dx, size.Width);
+				dy = System.Math.Max (dy, size.Height);
+			}
+			
+			this.iconSize = this.AdjustSize (new Drawing.Size (dx, dy));
+		}
+		
+		private string GetIconText(string icon)
+		{
+			return string.Concat (@"<img src=""", icon, @"""/>");
+		}
+		
+		private TextLayout GetIconTextLayout(string icon)
+		{
+			TextLayout layout = new TextLayout ();
+			
+			layout.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			layout.Text      = this.GetIconText (icon);
+			
+			return layout;
+		}
+
+		private Drawing.Size AdjustSize(Drawing.Size size)
+		{
+			size.Width  = System.Math.Ceiling(size.Width);
+			size.Height = System.Math.Ceiling(size.Height);
+
+			if ( !this.onlyText )
+			{
+				size.Width  += MenuItem.MarginItem*2;
+				size.Height += MenuItem.MarginItem*2;
+			}
+			
+			return size;
+		}
+
+		
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged ();
 			
-			this.separator = false;
-			this.mainTextSize = this.TextLayout.SingleLineSize;
-			this.AdjustSize (ref this.mainTextSize);
+			this.mainTextSize = this.AdjustSize (this.TextLayout.SingleLineSize);
 		}
 
 		protected override void OnResourceManagerChanged()
@@ -274,172 +351,11 @@ namespace Epsitec.Common.Widgets
 			Support.ResourceManager resource_manager = this.ResourceManager;
 			
 			this.icon.ResourceManager          = resource_manager;
-			this.iconActiveNo.ResourceManager  = resource_manager;
-			this.iconActiveYes.ResourceManager = resource_manager;
-			this.shortKey.ResourceManager      = resource_manager;
+			this.shortcut.ResourceManager      = resource_manager;
 
 			this.Invalidate ();
 		}
 		
-		// Ajuste des dimensions d'un TextLayout.
-		protected void AdjustSize(ref Drawing.Size size)
-		{
-			size.Width  = System.Math.Ceiling(size.Width);
-			size.Height = System.Math.Ceiling(size.Height);
-
-			if ( !this.onlyText )
-			{
-				size.Width  += this.marginItem*2;
-				size.Height += this.marginItem*2;
-			}
-		}
-
-		// Largeur effective pour l'icône. Cette largeur doit être identique
-		// dans toutes les lignes d'un menu vertical.
-		public double IconWidth
-		{
-			get
-			{
-				return this.iconSize.Width;
-			}
-
-			set
-			{
-				this.iconSize.Width = value;
-			}
-		}
-
-		// Retourne les dimensions requises en fonction du contenu.
-		public Drawing.Size RequiredSize
-		{
-			get
-			{
-				Drawing.Size size = new Drawing.Size(0, 0);
-
-				if ( this.onlyText )
-				{
-					size.Width = this.marginHeader*2 + this.mainTextSize.Width;
-					size.Height = this.mainTextSize.Height;
-				}
-				else if ( this.separator )
-				{
-					size.Height = this.separatorHeight;
-				}
-				else
-				{
-					size.Width += this.iconSize.Width;
-					size.Width += this.mainTextSize.Width;
-					size.Width += this.marginSpace;
-					size.Width += this.shortKeySize.Width;
-					size.Width += this.subIndicatorWidth;
-
-					size.Height = System.Math.Max(size.Height, this.iconSize.Height);
-					size.Height = System.Math.Max(size.Height, this.mainTextSize.Height);
-					size.Height = System.Math.Max(size.Height, this.shortKeySize.Height);
-				}
-				return size;
-			}
-		}
-
-		// Met à jour la géométrie de la case du menu.
-		protected override void UpdateClientGeometry()
-		{
-			base.UpdateClientGeometry();
-
-			if ( this.onlyText )
-			{
-				if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
-			}
-			else if ( this.separator )
-			{
-			}
-			else
-			{
-				if ( this.icon != null )  this.icon.LayoutSize = this.iconSize;
-				if ( this.iconActiveNo != null )  this.iconActiveNo.LayoutSize = this.iconSize;
-				if ( this.iconActiveYes != null )  this.iconActiveYes.LayoutSize = this.iconSize;
-				if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
-				if ( this.shortKey != null )  this.shortKey.LayoutSize = this.shortKeySize;
-			}
-		}
-
-		// Dessine la case.
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
-		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-
-			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
-			MenuItemType      iType = this.ItemType;
-			Drawing.Point     pos   = new Drawing.Point();
-			
-			if ( this.separator )
-			{
-				iType = MenuItemType.Deselect;
-			}
-			adorner.PaintMenuItemBackground(graphics, rect, state, Direction.Up, this.type, iType);
-
-			if ( this.onlyText || this.type == MenuType.Horizontal )
-			{
-				pos.X = (rect.Width-this.mainTextSize.Width)/2;
-				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.type, iType);
-			}
-			else if ( this.separator )
-			{
-				Drawing.Rectangle inside = rect;
-				inside.Left  = this.marginItem*2+this.iconSize.Width;
-				inside.Right = rect.Width-this.marginItem;
-				adorner.PaintSeparatorBackground(graphics, inside, state, Direction.Up, false);
-			}
-			else
-			{
-				TextLayout il = null;
-				if ( this.iconNameActiveNo != "" && this.ActiveState == WidgetState.ActiveNo )
-				{
-					il = this.iconActiveNo;
-				}
-				if ( this.iconNameActiveYes != "" && this.ActiveState == WidgetState.ActiveYes )
-				{
-					il = this.iconActiveYes;
-				}
-				if ( il == null && this.iconName != "" )
-				{
-					il = this.icon;
-				}
-
-				if ( il != null )  // icône existe ?
-				{
-					if ( this.ActiveState == WidgetState.ActiveYes && il != this.iconActiveYes )
-					{
-						Drawing.Rectangle iRect = rect;
-						iRect.Width = this.iconSize.Width;
-						iRect.Inflate(-2, -2);
-						adorner.PaintButtonBackground(graphics, iRect, state, Direction.Up, ButtonStyle.ToolItem);
-					}
-					pos.X = this.marginItem;
-					pos.Y = (rect.Height-this.iconSize.Height)/2;
-					adorner.PaintMenuItemTextLayout(graphics, pos, il, state, Direction.Up, this.type, iType);
-				}
-
-				pos.X = this.marginItem*2+this.iconSize.Width;
-				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.type, iType);
-
-				pos.X = rect.Width-this.subIndicatorWidth-this.shortKeySize.Width+this.marginItem;
-				pos.Y = (rect.Height-this.shortKeySize.Height)/2;
-				adorner.PaintMenuItemTextLayout(graphics, pos, this.shortKey, state, Direction.Up, this.type, iType);
-
-				if ( this.Submenu != null )  // triangle ">" ?
-				{
-					Drawing.Rectangle aRect = rect;
-					aRect.Left = aRect.Right-this.subIndicatorWidth;
-					aRect.Bottom = (rect.Height-this.subIndicatorWidth)/2;
-					aRect.Top = aRect.Bottom+this.subIndicatorWidth;
-					adorner.PaintGlyph(graphics, aRect, state, GlyphShape.ArrowRight, PaintTextStyle.VMenu);
-				}
-			}
-		}
 		
 		protected override void OnPressed(MessageEventArgs e)
 		{
@@ -469,7 +385,138 @@ namespace Epsitec.Common.Widgets
 			base.OnExited (e);
 		}
 
+		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				System.IDisposable submenu = this.Submenu as System.IDisposable;
+				
+				if (submenu != null)
+				{
+					submenu.Dispose ();
+				}
+				
+				this.Submenu = null;
+			}
+			
+			base.Dispose (disposing);
+		}
 
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry();
+
+			if ( this.onlyText )
+			{
+				if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
+			}
+			else if ( this.IsSeparator )
+			{
+			}
+			else
+			{
+				if ( this.icon != null )  this.icon.LayoutSize = this.iconSize;
+				if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
+				if ( this.shortcut != null )  this.shortcut.LayoutSize = this.shortcutSize;
+			}
+		}
+
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
+
+			Drawing.Rectangle rect  = this.Client.Bounds;
+			WidgetState       state = this.PaintState;
+			MenuItemType      iType = this.ItemType;
+			Drawing.Point     pos   = new Drawing.Point();
+			
+			if ( this.IsSeparator )
+			{
+				iType = MenuItemType.Default;
+			}
+			adorner.PaintMenuItemBackground(graphics, rect, state, Direction.Up, this.MenuType, iType);
+
+			if ( this.onlyText || this.MenuType == MenuType.Horizontal )
+			{
+				pos.X = (rect.Width-this.mainTextSize.Width)/2;
+				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.MenuType, iType);
+			}
+			else if ( this.IsSeparator )
+			{
+				Drawing.Rectangle inside = rect;
+				inside.Left  = MenuItem.MarginItem*2+this.iconSize.Width;
+				inside.Right = rect.Width-MenuItem.MarginItem;
+				adorner.PaintSeparatorBackground(graphics, inside, state, Direction.Up, false);
+			}
+			else
+			{
+				string icon = this.iconName;
+				
+				switch (this.ActiveState)
+				{
+					case WidgetState.ActiveNo:
+						if ((this.iconNameActiveNo != null) &&
+							(this.iconNameActiveNo.Length > 0))
+						{
+							icon = this.iconNameActiveNo;
+						}
+						break;
+					
+					case WidgetState.ActiveYes:
+						if ((this.iconNameActiveYes != null) &&
+							(this.iconNameActiveYes.Length > 0))
+						{
+							icon = this.iconNameActiveYes;
+						}
+						break;
+				}
+				
+				if ((icon != null) &&
+					(icon.Length > 0))
+				{
+					if ((this.ActiveState == WidgetState.ActiveYes) &&
+						(icon != this.iconNameActiveYes))
+					{
+						Drawing.Rectangle iRect = rect;
+						iRect.Width = this.iconSize.Width;
+						iRect.Inflate(-2, -2);
+						adorner.PaintButtonBackground(graphics, iRect, state, Direction.Up, ButtonStyle.ToolItem);
+					}
+					
+					pos.X = MenuItem.MarginItem;
+					pos.Y = (rect.Height-this.iconSize.Height)/2;
+					
+					icon = this.GetIconText (icon);
+					
+					if (this.icon.Text != icon)
+					{
+						this.icon.Text = icon;
+					}
+					
+					adorner.PaintMenuItemTextLayout(graphics, pos, this.icon, state, Direction.Up, this.MenuType, iType);
+				}
+
+				pos.X = MenuItem.MarginItem*2+this.iconSize.Width;
+				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.MenuType, iType);
+
+				pos.X = rect.Width-this.submenu_mark_width-this.shortcutSize.Width+MenuItem.MarginItem;
+				pos.Y = (rect.Height-this.shortcutSize.Height)/2;
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.shortcut, state, Direction.Up, this.MenuType, iType);
+
+				if ( this.Submenu != null )  // triangle ">" ?
+				{
+					Drawing.Rectangle aRect = rect;
+					aRect.Left = aRect.Right-this.submenu_mark_width;
+					aRect.Bottom = (rect.Height-this.submenu_mark_width)/2;
+					aRect.Top = aRect.Bottom+this.submenu_mark_width;
+					adorner.PaintGlyph(graphics, aRect, state, GlyphShape.ArrowRight, PaintTextStyle.VMenu);
+				}
+			}
+		}
+		
 		
 		public static Widget GetMenuRoot(Widget widget)
 		{
@@ -548,9 +595,6 @@ namespace Epsitec.Common.Widgets
 				
 				window.Root.Size = size;
 				window.Root.Children.Add (widget);
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("RootSize -> {0}", window.Root.Size.ToString ()));
-				System.Diagnostics.Debug.WriteLine (string.Format ("ClientSize -> {0}", window.ClientSize.ToString ()));
 			}
 			
 			return window;
@@ -610,7 +654,6 @@ namespace Epsitec.Common.Widgets
 			if ((MenuItemType) widget.GetValue (MenuItem.ItemTypeProperty) != value)
 			{
 				widget.SetValue (MenuItem.ItemTypeProperty, value);
-				System.Diagnostics.Debug.WriteLine (string.Format ("Changed {0} to {1}", widget.ToString (), value));
 			}
 		}
 		
@@ -634,8 +677,6 @@ namespace Epsitec.Common.Widgets
 				that.Command = null;
 			}
 			
-			that.separator = false;
-			
 			if (old_submenu != null)
 			{
 				System.Diagnostics.Debug.Assert (old_submenu == MenuItem.GetMenuRoot (old_submenu));
@@ -654,7 +695,8 @@ namespace Epsitec.Common.Widgets
 		
 		
 		public static readonly Property			SubmenuProperty			= Property.Register ("Submenu", typeof (Widget), typeof (MenuItem), new PropertyMetadata (null, new PropertyInvalidatedCallback (MenuItem.NotifySubmenuChanged)));
-		public static readonly Property			ItemTypeProperty		= Property.Register ("ItemType", typeof (MenuItemType), typeof (MenuItem), new VisualPropertyMetadata (MenuItemType.Deselect, VisualPropertyFlags.AffectsDisplay));
+		public static readonly Property			ItemTypeProperty		= Property.Register ("ItemType", typeof (MenuItemType), typeof (MenuItem), new VisualPropertyMetadata (MenuItemType.Default, VisualPropertyFlags.AffectsDisplay));
+		public static readonly Property			MenuTypeProperty		= Property.Register ("MenuType", typeof (MenuType), typeof (MenuItem), new VisualPropertyMetadata (MenuType.Invalid, VisualPropertyFlags.AffectsDisplay));
 		
 		public static readonly Property			MenuBehaviorProperty	= Property.RegisterAttached ("MenuBehavior", typeof (Behaviors.MenuBehavior), typeof (MenuItem));
 		public static readonly Property			ParentMenuItemProperty	= Property.RegisterAttached ("ParentMenuItem", typeof (MenuItem), typeof (MenuItem));
@@ -662,25 +704,22 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property			ZeroDelayProperty		= Property.RegisterAttached ("ZeroDelay", typeof (bool), typeof (MenuItem), new PropertyMetadata (false));
 		
 		
-		protected bool				onlyText = false;
-		protected bool				separator = false;
-		protected MenuType			type = MenuType.Invalid;
-		protected double			marginHeader = 6;
-		protected double			marginItem = 2;
-		protected double			marginSpace = 8;
-		protected double			separatorHeight = 5;
-		protected double			subIndicatorWidth;
-		protected string			iconName;
-		protected string			iconNameActiveNo;
-		protected string			iconNameActiveYes;
-		protected TextLayout		icon;
-		protected TextLayout		iconActiveNo;
-		protected TextLayout		iconActiveYes;
-		protected TextLayout		shortKey;
-		protected Drawing.Size		iconSize;
-		protected Drawing.Size		mainTextSize;
-		protected Drawing.Size		shortKeySize;
-		protected Object			submenu;
-		protected Drawing.Color		colorControlDark;
+		private const double					MarginHeader	= 6;
+		private const double					MarginItem		= 2;
+		private const double					MarginSpace		= 8;
+		private const double					SeparatorHeight = 5;
+		
+		protected bool							onlyText = false;
+		
+		protected double						submenu_mark_width;
+		protected string						iconName;
+		protected string						iconNameActiveNo;
+		protected string						iconNameActiveYes;
+		protected TextLayout					icon;
+		protected TextLayout					shortcut;
+		protected Drawing.Size					iconSize;
+		protected Drawing.Size					mainTextSize;
+		protected Drawing.Size					shortcutSize;
+		protected Widget						submenu;
 	}
 }

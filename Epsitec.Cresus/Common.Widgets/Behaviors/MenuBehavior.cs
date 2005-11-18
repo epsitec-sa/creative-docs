@@ -90,7 +90,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		public void OpenSubmenu(MenuWindow window, Animate animate)
 		{
 			//	Ouvre le sous-menu spécifié par sa fenêtre. Le sous-menu doit
-			//	impérativement appartenir à notre "menu" :
+			//	impérativement appartenir à notre "menu".
 			
 			if (window == null)
 			{
@@ -228,6 +228,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			window.AnimateShow (animation);
 			
 			this.is_open = true;
+			
+			if (this.keyboard_menu_window == null)
+			{
+				this.keyboard_menu_window = window;
+			}
 		}
 		
 		
@@ -423,8 +428,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			MenuBehavior.menu_last_item     = this.keyboard_menu_item;
 			MenuBehavior.menu_last_behavior = this.keyboard_menu_item == null ? null : this;
 			
-			System.Diagnostics.Debug.WriteLine (this.keyboard_menu_item == null ? "No selected keyboard item" : "Selected " + this.keyboard_menu_item.ToString ());
-			
 			this.UpdateItems ();
 		}
 		
@@ -496,8 +499,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			MenuBehavior.menu_last_item     = this.keyboard_menu_item;
 			MenuBehavior.menu_last_behavior = this.keyboard_menu_item == null ? null : this;
-			
-			System.Diagnostics.Debug.WriteLine (this.keyboard_menu_item == null ? "No selected keyboard item" : "Selected " + this.keyboard_menu_item.ToString ());
 			
 			this.keyboard_menu_active = true;
 			
@@ -819,7 +820,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 		private void SuspendUpdates()
 		{
 			this.suspend_updates++;
-			System.Diagnostics.Debug.WriteLine (string.Format ("Suspended : {0}", this.suspend_updates));
 		}
 		
 		private void ResumeUpdates()
@@ -827,7 +827,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			System.Diagnostics.Debug.Assert (this.suspend_updates > 0);
 			
 			this.suspend_updates--;
-			System.Diagnostics.Debug.WriteLine (string.Format ("Resumed : {0}", this.suspend_updates));
 			
 			if (this.suspend_updates == 0)
 			{
@@ -861,7 +860,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 					{
 						if (widget == MenuBehavior.menu_last_item)
 						{
-							MenuItem.SetItemType (widget, MenuItemType.Select);
+							MenuItem.SetItemType (widget, MenuItemType.Selected);
 							hilite_below_i = i + 1;
 						}
 						else
@@ -880,7 +879,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 					{
 						if (widget == MenuBehavior.menu_last_item)
 						{
-							MenuItem.SetItemType (widget, MenuItemType.Select);
+							MenuItem.SetItemType (widget, MenuItemType.Selected);
 						}
 						else
 						{
@@ -903,7 +902,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				if (widget != null)
 				{
-					MenuItem.SetItemType (widget, MenuItemType.Parent);
+					MenuItem.SetItemType (widget, MenuItemType.SubmenuOpen);
 				}
 				
 				list.Remove (widget);
@@ -911,7 +910,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			foreach (Widget widget in list)
 			{
-				MenuItem.SetItemType (widget, MenuItemType.Deselect);
+				MenuItem.SetItemType (widget, MenuItemType.Default);
 			}
 			
 			this.suspend_updates--;
@@ -1134,8 +1133,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 				}
 			}
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("{0} {1}", (window.CapturingWidget == null) ? "" : "Captured; ", message.ToString ()));
-			
 			if (message.IsMouseType)
 			{
 				MenuBehavior.ProcessMouseEvent (window, message);
@@ -1265,8 +1262,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 			
 			MenuBehavior.ActivateKeyboardNavigation ();
-			
-			System.Diagnostics.Debug.WriteLine ("Keyboard event routed to menu");
 			
 			that.SuspendUpdates ();
 			

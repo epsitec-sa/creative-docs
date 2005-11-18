@@ -1346,7 +1346,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if ( type == MenuType.Horizontal )
 				{
-					if ( itemType == MenuItemType.Select )
+					if ( itemType == MenuItemType.Selected )
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorCaptionLight);
@@ -1357,7 +1357,7 @@ namespace Epsitec.Common.Widgets.Adorners
 						graphics.AddRectangle(rInside);
 						graphics.RenderSolid(this.colorCaption);
 					}
-					if ( itemType == MenuItemType.Parent )
+					if ( itemType == MenuItemType.SubmenuOpen )
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorControl);
@@ -1374,7 +1374,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( type == MenuType.Vertical )
 				{
-					if ( itemType != MenuItemType.Deselect )
+					if ( itemType != MenuItemType.Default )
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorCaptionLight);
@@ -1389,7 +1389,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				if ( itemType != MenuItemType.Deselect )
+				if ( itemType != MenuItemType.Default )
 				{
 					rect.Deflate(0.5);
 					graphics.AddRectangle(rect);

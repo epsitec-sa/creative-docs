@@ -1149,7 +1149,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											MenuType type,
 											MenuItemType itemType)
 		{
-			if ( itemType != MenuItemType.Deselect )
+			if ( itemType != MenuItemType.Default )
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
