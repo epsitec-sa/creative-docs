@@ -91,6 +91,20 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 		
 		
+		public static void DisableKeyboardFilter()
+		{
+			MenuBehavior.filter_keyboard_off++;
+		}
+		
+		public static void EnableKeyboardFilter()
+		{
+			if (MenuBehavior.filter_keyboard_off > 0)
+			{
+				MenuBehavior.filter_keyboard_off--;
+			}
+		}
+		
+		
 		public void OpenSubmenu(MenuWindow window, Animate animate)
 		{
 			//	Ouvre le sous-menu spécifié par sa fenêtre. Le sous-menu doit
@@ -142,24 +156,19 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		public void HideAll()
 		{
-			MenuBehavior.timer.Stop ();
-			MenuBehavior.timer_item = null;
-			MenuBehavior.timer_keep_menu = null;
-			MenuBehavior.timer_behaviour = null;
-			
 			while (this.live_menu_windows.Count > 0)
 			{
 				MenuWindow window = this.live_menu_windows[this.live_menu_windows.Count-1] as MenuWindow;
 				window.Hide ();
 			}
 			
-			this.is_open = false;
-			this.keyboard_menu_active = false;
+			this.CleanupAfterClose ();
 		}
 		
 		public void Reject()
 		{
 			this.HideAll ();
+			
 			this.OnRejected ();
 		}
 		
@@ -247,14 +256,27 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 		}
 		
-		
-		internal void HandleMenuItemPressed(MenuItem item)
+		private void CleanupAfterClose()
 		{
 			MenuBehavior.timer.Stop ();
 			MenuBehavior.timer_item = null;
 			MenuBehavior.timer_keep_menu = null;
 			MenuBehavior.timer_behaviour = null;
 			
+			MenuBehavior.keyboard_navigation_active = false;
+			
+			MenuBehavior.filter_keyboard_off = 0;
+			
+			this.is_open = false;
+			this.keyboard_menu_active = false;
+			
+			System.Diagnostics.Debug.WriteLine ("Timer stopped, cleaned up");
+		}
+		
+		
+		internal void HandleMenuItemPressed(MenuItem item)
+		{
+			this.CleanupAfterClose ();
 			this.OnAccepted ();
 		}
 		
@@ -310,6 +332,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 					MenuBehavior.menu_list.Remove (this);
 				}
 			}
+		}
+		
+		internal void HandleKeyboardEvent(Window window, Message message)
+		{
+			MenuBehavior.ProcessKeyboardEvent (window, message);
 		}
 		
 		
@@ -425,15 +452,21 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			this.keyboard_menu_item = null;
 			
-			MenuBehavior.timer.Suspend ();
-			
-			MenuBehavior.timer_item      = null;
-			MenuBehavior.timer_keep_menu = MenuItem.GetMenuWindow (item) as MenuWindow;
-			MenuBehavior.timer_behaviour = this;
-			
-			MenuBehavior.timer.Delay = SystemInformation.MenuShowDelay * 10;
-			MenuBehavior.timer.Start ();
+			if (this.live_menu_windows.Count > 1)
+			{
+				//	Il reste probablement des fenêtres de sous-menu à
+				//	refermer :
 				
+				MenuBehavior.timer.Suspend ();
+				
+				MenuBehavior.timer_item      = null;
+				MenuBehavior.timer_keep_menu = MenuItem.GetMenuWindow (item) as MenuWindow;
+				MenuBehavior.timer_behaviour = this;
+				
+				MenuBehavior.timer.Delay = SystemInformation.MenuShowDelay;
+				MenuBehavior.timer.Start ();
+			}
+			
 			this.UpdateItems ();
 		}
 		
@@ -1157,43 +1190,48 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			Window window = sender as Window;
 			
-			if ((MenuBehavior.menu_list.Count > 0) &&
-				(window.CapturingWidget != null))
+			if (message.IsMouseType)
 			{
-				//	Quelqu'un a capturé la souris... On désactive cette capture,
-				//	à moins que la fenêtre responsable de la capture soit elle-
-				//	même une fenêtre appartenant au menu actif :
-				
-				int  n       = MenuBehavior.menu_list.Count;
-				bool release = true;
-				
-				if (n > 0)
+				if ((MenuBehavior.menu_list.Count > 0) &&
+					(window.CapturingWidget != null))
 				{
-					MenuBehavior that = MenuBehavior.menu_list[n-1] as MenuBehavior;
+					//	Quelqu'un a capturé la souris... On désactive cette capture,
+					//	à moins que la fenêtre responsable de la capture soit elle-
+					//	même une fenêtre appartenant au menu actif :
 					
-					foreach (Window menu in that.live_menu_windows)
+					int  n       = MenuBehavior.menu_list.Count;
+					bool release = true;
+					
+					if (n > 0)
 					{
-						if (menu == window)
+						MenuBehavior that = MenuBehavior.menu_list[n-1] as MenuBehavior;
+						
+						foreach (Window menu in that.live_menu_windows)
 						{
-							release = false;
-							break;
+							if (menu == window)
+							{
+								release = false;
+								break;
+							}
 						}
+					}
+					
+					if (release)
+					{
+						System.Diagnostics.Debug.WriteLine ("Released Window Capture because a menu is visible.");
+						window.ReleaseCapture ();
 					}
 				}
 				
-				if (release)
-				{
-					System.Diagnostics.Debug.WriteLine ("Released Window Capture because a menu is visible.");
-					window.ReleaseCapture ();
-				}
-			}
-			
-			if (message.IsMouseType)
-			{
 				MenuBehavior.ProcessMouseEvent (window, message);
 			}
 			else if (message.IsKeyType)
 			{
+				if (MenuBehavior.filter_keyboard_off > 0)
+				{
+					return;
+				}
+				
 				MenuBehavior.ProcessKeyboardEvent (window, message);
 			}
 		}
@@ -1206,7 +1244,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			Window   menu = MenuBehavior.DetectWindow (mouse);
 			Window   root = menu == null ? MenuBehavior.DetectRootWindow (mouse) : null;
-			MenuItem item = MenuBehavior.DetectMenuItem (window, message.Cursor);
+			MenuItem item = ((menu == null) && (root == null)) ? null : MenuBehavior.DetectMenuItem (window, message.Cursor);
 			
 			bool swallow_message = (MenuBehavior.menu_list.Count > 0) && (message.NonClient == false);
 			
@@ -1242,9 +1280,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 						//	un menu (autre que celui de la racine); on va changer
 						//	le focus si un item a été cliqué :
 						
-						if (item != null)
+						MenuItemContainer container = item as MenuItemContainer;
+						
+						if (container != null)
 						{
-							item.Window.MakeFocused ();
+							container.FocusFromMenu ();
 						}
 					}
 					else
@@ -1266,6 +1306,23 @@ namespace Epsitec.Common.Widgets.Behaviors
 					break;
 				
 				case MessageType.MouseUp:
+					if (item != null)
+					{
+						if ((item is MenuItemContainer) ||
+							(item is MenuSeparator))
+						{
+							//	Rien à faire...
+						}
+						else
+						{
+							//	Simule une pression du widget en question et consomme
+							//	l'événement.
+							
+							item.SimulatePressed ();
+							
+							swallow_message = true;
+						}
+					}
 					break;
 				
 				case MessageType.MouseLeave:
@@ -1404,10 +1461,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 				MenuBehavior.timer_keep_menu = null;
 				MenuBehavior.timer_behaviour = null;
 				
-				behavior.SuspendUpdates ();
-				behavior.OpenSubmenu (menu, Animate.No);
-				behavior.UpdateItems ();
-				behavior.ResumeUpdates ();
+				if (menu != null)
+				{
+					behavior.SuspendUpdates ();
+					behavior.OpenSubmenu (menu, Animate.No);
+					behavior.UpdateItems ();
+					behavior.ResumeUpdates ();
+				}
 			}
 		}
 		
@@ -1446,6 +1506,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		static MenuWindow						timer_keep_menu;
 		static MenuBehavior						timer_behaviour;
 		
+		static int								filter_keyboard_off;
 		static Drawing.Point					last_mouse_pos;
 		static bool								keyboard_navigation_active;
 		static Drawing.Point					keyboard_navigation_mouse_pos;

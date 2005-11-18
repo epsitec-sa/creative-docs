@@ -507,7 +507,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				if ((this.window != null) &&
-					(this.window.Visible))
+					(this.window_is_visible))
 				{
 					return true;
 				}
@@ -1111,6 +1111,14 @@ namespace Epsitec.Common.Widgets
 		
 		internal void OnWindowShown()
 		{
+			System.Diagnostics.Debug.Assert (! this.window_is_visible);
+			
+			Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.Root, Visual.IsVisibleProperty);
+			
+			this.window_is_visible = true;
+			
+			snapshot.InvalidateDifferent ();
+			
 			if (this.WindowShown != null)
 			{
 				this.WindowShown (this);
@@ -1119,6 +1127,14 @@ namespace Epsitec.Common.Widgets
 		
 		internal void OnWindowHidden()
 		{
+			System.Diagnostics.Debug.Assert (this.window_is_visible);
+			
+			Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.Root, Visual.IsVisibleProperty);
+			
+			this.window_is_visible = false;
+			
+			snapshot.InvalidateDifferent ();
+			
 			if (this.WindowHidden != null)
 			{
 				this.WindowHidden (this);
@@ -1870,6 +1886,7 @@ namespace Epsitec.Common.Widgets
 		private Platform.Window					window;
 		private Window							owner;
 		private WindowRoot						root;
+		private bool							window_is_visible;
 		
 		private int								show_count;
 		private Widget							last_in_widget;

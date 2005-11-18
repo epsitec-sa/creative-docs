@@ -310,8 +310,17 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				if (visual is WindowRoot)
 				{
-					WindowRoot root = visual as WindowRoot;
-					return true;
+					WindowRoot root   = visual as WindowRoot;
+					Window     window = root.Window;
+					
+					if (window == null)
+					{
+						return false;
+					}
+					else
+					{
+						return window.IsVisible;
+					}
 				}
 				
 				visual = visual.Parent;
