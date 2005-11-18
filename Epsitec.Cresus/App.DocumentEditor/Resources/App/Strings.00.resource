@@ -162,6 +162,9 @@
 	<data name="Dialog.Settings.Title">Réglages...</data>
 	<data name="Dialog.Settings.RadioGlobal">Global</data>
 	<data name="Dialog.Settings.RadioDocument">Document</data>
+	<data name="Dialog.Settings.TabPage.General">Général</data>
+	<data name="Dialog.Settings.TabPage.Periph">Périphériques</data>
+	<data name="Dialog.Settings.TabPage.Quick">Commandes rapides</data>
 	<data name="Dialog.Settings.Startup">Que faire au démarrage du logiciel ?</data>
 	<data name="Dialog.Settings.Mouse">Réglages de la souris</data>
 	<data name="Dialog.Settings.Screen">Réglages de l'écran</data>
@@ -173,6 +176,14 @@
 	<data name="Dialog.Settings.ScreenDpi">Résolution (dpi)</data>
 	<data name="Dialog.Settings.AutoUpdate">Mise à jour du logiciel</data>
 	<data name="Dialog.Settings.AutoChecker">Recherche automatique</data>
+	<data name="Dialog.Settings.PanelProperties">Panneaux des attributs</data>
+	<data name="Dialog.Settings.LabelProperties">Attributs détaillés</data>
+	<data name="Dialog.Settings.QuickFirst">Commande au début</data>
+	<data name="Dialog.Settings.QuickUp">Reculer la commande</data>
+	<data name="Dialog.Settings.QuickDown">Avancer la commande</data>
+	<data name="Dialog.Settings.QuickLast">Commande à la fin</data>
+	<data name="Dialog.Settings.QuickDefault">Commandes par défaut</data>
+	<data name="Dialog.Settings.QuickClear">Supprimer toutes les commandes</data>
 	<data name="Dialog.Settings.TabPage.Format">Format</data>
 	<data name="Dialog.Settings.TabPage.Grid">Grille</data>
 	<data name="Dialog.Settings.TabPage.Guides">Repères</data>

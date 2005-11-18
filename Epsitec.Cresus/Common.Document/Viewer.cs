@@ -2180,7 +2180,7 @@ namespace Epsitec.Common.Document
 
 				exist = false;
 				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuOrder, Misc.Icon("OrderUpAll"), Res.Strings.Action.OrderMain);
-				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuOper,  Misc.Icon("OperMoveH"),  Res.Strings.Action.OperationMain);
+				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuOper,  Misc.Icon("MoveH"),      Res.Strings.Action.OperationMain);
 				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuGeom,  Misc.Icon("Combine"),    Res.Strings.Action.GeometryMain);
 				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuBool,  Misc.Icon("BooleanOr"),  Res.Strings.Action.BooleanMain);
 

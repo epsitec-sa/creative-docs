@@ -14,14 +14,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ColorMain;
 
-			this.buttonColorToRGB  = this.CreateIconButton("ColorToRGB",  Misc.Icon("OperColorToRGB"),  Res.Strings.Action.ColorToRGB);
-			this.buttonColorToCMYK = this.CreateIconButton("ColorToCMYK", Misc.Icon("OperColorToCMYK"), Res.Strings.Action.ColorToCMYK);
-			this.buttonColorToGray = this.CreateIconButton("ColorToGray", Misc.Icon("OperColorToGray"), Res.Strings.Action.ColorToGray);
+			this.buttonColorToRGB  = this.CreateIconButton("ColorToRGB",  Misc.Icon("ColorToRGB"),  Res.Strings.Action.ColorToRGB);
+			this.buttonColorToCMYK = this.CreateIconButton("ColorToCMYK", Misc.Icon("ColorToCMYK"), Res.Strings.Action.ColorToCMYK);
+			this.buttonColorToGray = this.CreateIconButton("ColorToGray", Misc.Icon("ColorToGray"), Res.Strings.Action.ColorToGray);
 			this.separator = new IconSeparator(this);
-			this.buttonColorStrokeDark  = this.CreateIconButton("ColorStrokeDark",  Misc.Icon("OperColorStrokeDark"),  Res.Strings.Action.ColorStrokeDark);
-			this.buttonColorStrokeLight = this.CreateIconButton("ColorStrokeLight", Misc.Icon("OperColorStrokeLight"), Res.Strings.Action.ColorStrokeLight);
-			this.buttonColorFillDark    = this.CreateIconButton("ColorFillDark",    Misc.Icon("OperColorFillDark"),    Res.Strings.Action.ColorFillDark);
-			this.buttonColorFillLight   = this.CreateIconButton("ColorFillLight",   Misc.Icon("OperColorFillLight"),   Res.Strings.Action.ColorFillLight);
+			this.buttonColorStrokeDark  = this.CreateIconButton("ColorStrokeDark",  Misc.Icon("ColorStrokeDark"),  Res.Strings.Action.ColorStrokeDark);
+			this.buttonColorStrokeLight = this.CreateIconButton("ColorStrokeLight", Misc.Icon("ColorStrokeLight"), Res.Strings.Action.ColorStrokeLight);
+			this.buttonColorFillDark    = this.CreateIconButton("ColorFillDark",    Misc.Icon("ColorFillDark"),    Res.Strings.Action.ColorFillDark);
+			this.buttonColorFillLight   = this.CreateIconButton("ColorFillLight",   Misc.Icon("ColorFillLight"),   Res.Strings.Action.ColorFillLight);
 			this.CreateFieldColor(ref this.fieldColor, Res.Strings.Action.ColorValue);
 			
 			this.UpdateClientGeometry();

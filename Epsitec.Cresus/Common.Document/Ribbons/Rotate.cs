@@ -14,12 +14,12 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.RotateMain;
 
-			this.buttonRotate90  = this.CreateIconButton("Rotate90",  Misc.Icon("OperRot90"),  Res.Strings.Action.Rotate90);
-			this.buttonRotate270 = this.CreateIconButton("Rotate270", Misc.Icon("OperRot270"), Res.Strings.Action.Rotate270);
-			this.buttonRotate180 = this.CreateIconButton("Rotate180", Misc.Icon("OperRot180"), Res.Strings.Action.Rotate180);
+			this.buttonRotate90  = this.CreateIconButton("Rotate90",  Misc.Icon("Rotate90"),  Res.Strings.Action.Rotate90);
+			this.buttonRotate270 = this.CreateIconButton("Rotate270", Misc.Icon("Rotate270"), Res.Strings.Action.Rotate270);
+			this.buttonRotate180 = this.CreateIconButton("Rotate180", Misc.Icon("Rotate180"), Res.Strings.Action.Rotate180);
 			this.separator = new IconSeparator(this);
-			this.buttonRotateFreeCCW = this.CreateIconButton("RotateFreeCCW", Misc.Icon("OperRot"),  Res.Strings.Action.RotateFreeCCW);
-			this.buttonRotateFreeCW  = this.CreateIconButton("RotateFreeCW",  Misc.Icon("OperRoti"), Res.Strings.Action.RotateFreeCW);
+			this.buttonRotateFreeCCW = this.CreateIconButton("RotateFreeCCW", Misc.Icon("Rotate"),  Res.Strings.Action.RotateFreeCCW);
+			this.buttonRotateFreeCW  = this.CreateIconButton("RotateFreeCW",  Misc.Icon("Rotatei"), Res.Strings.Action.RotateFreeCW);
 			this.fieldRotate = this.CreateFieldRot(Res.Strings.Action.RotateValue);
 			
 			this.UpdateClientGeometry();

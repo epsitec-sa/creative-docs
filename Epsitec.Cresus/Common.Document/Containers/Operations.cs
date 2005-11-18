@@ -17,36 +17,36 @@ namespace Epsitec.Common.Document.Containers
 			// Déplacement.
 			this.CreateHeader(ref this.boxMove, ref this.toolBarMove, Res.Strings.Action.MoveMain);
 			this.CreateFieldMove(this.toolBarMove, ref this.fieldMoveH, Res.Strings.Action.MoveValueX);
-			this.CreateButton(this.toolBarMove, ref this.buttonMoveHi, "OperMoveHi", Res.Strings.Action.MoveLeft,  new MessageEventHandler(this.HandleButtonMoveHi));
-			this.CreateButton(this.toolBarMove, ref this.buttonMoveH,  "OperMoveH",  Res.Strings.Action.MoveRight, new MessageEventHandler(this.HandleButtonMoveH));
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveHi, "MoveHi", Res.Strings.Action.MoveLeft,  new MessageEventHandler(this.HandleButtonMoveHi));
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveH,  "MoveH",  Res.Strings.Action.MoveRight, new MessageEventHandler(this.HandleButtonMoveH));
 			this.CreateSeparator(this.toolBarMove);
 			this.CreateFieldMove(this.toolBarMove, ref this.fieldMoveV, Res.Strings.Action.MoveValueY);
-			this.CreateButton(this.toolBarMove, ref this.buttonMoveVi, "OperMoveVi", Res.Strings.Action.MoveDown, new MessageEventHandler(this.HandleButtonMoveVi));
-			this.CreateButton(this.toolBarMove, ref this.buttonMoveV,  "OperMoveV",  Res.Strings.Action.MoveUp,   new MessageEventHandler(this.HandleButtonMoveV));
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveVi, "MoveVi", Res.Strings.Action.MoveDown, new MessageEventHandler(this.HandleButtonMoveVi));
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveV,  "MoveV",  Res.Strings.Action.MoveUp,   new MessageEventHandler(this.HandleButtonMoveV));
 
 			// Rotation.
 			this.CreateHeader(ref this.boxRot, ref this.toolBarRot, Res.Strings.Action.RotateMain);
-			this.CreateButton(this.toolBarRot, ref this.buttonRotate90,  "OperRot90",  Res.Strings.Action.Rotate90,  new MessageEventHandler(this.HandleButtonRotate90));
-			this.CreateButton(this.toolBarRot, ref this.buttonRotate180, "OperRot180", Res.Strings.Action.Rotate180, new MessageEventHandler(this.HandleButtonRotate180));
-			this.CreateButton(this.toolBarRot, ref this.buttonRotate270, "OperRot270", Res.Strings.Action.Rotate270, new MessageEventHandler(this.HandleButtonRotate270));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate90,  "Rotate90",  Res.Strings.Action.Rotate90,  new MessageEventHandler(this.HandleButtonRotate90));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate180, "Rotate180", Res.Strings.Action.Rotate180, new MessageEventHandler(this.HandleButtonRotate180));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate270, "Rotate270", Res.Strings.Action.Rotate270, new MessageEventHandler(this.HandleButtonRotate270));
 			this.CreateSeparator(this.toolBarRot);
 			this.CreateFieldRot(this.toolBarRot, ref this.fieldRotate, Res.Strings.Action.RotateValue);
-			this.CreateButton(this.toolBarRot, ref this.buttonRotate,  "OperRot",  Res.Strings.Action.RotateFreeCCW, new MessageEventHandler(this.HandleButtonRotate));
-			this.CreateButton(this.toolBarRot, ref this.buttonRotatei, "OperRoti", Res.Strings.Action.RotateFreeCW,  new MessageEventHandler(this.HandleButtonRotatei));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate,  "Rotate",  Res.Strings.Action.RotateFreeCCW, new MessageEventHandler(this.HandleButtonRotate));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotatei, "Rotatei", Res.Strings.Action.RotateFreeCW,  new MessageEventHandler(this.HandleButtonRotatei));
 
 			// Miroir.
 			this.CreateHeader(ref this.boxMirror, ref this.toolBarMirror, Res.Strings.Action.MirrorMain);
-			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorH, "OperMirrorH", Res.Strings.Action.MirrorH, new MessageEventHandler(this.HandleButtonMirrorH));
-			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorV, "OperMirrorV", Res.Strings.Action.MirrorV, new MessageEventHandler(this.HandleButtonMirrorV));
+			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorH, "MirrorH", Res.Strings.Action.MirrorH, new MessageEventHandler(this.HandleButtonMirrorH));
+			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorV, "MirrorV", Res.Strings.Action.MirrorV, new MessageEventHandler(this.HandleButtonMirrorV));
 
 			// Echelle.
 			this.CreateHeader(ref this.boxScale, ref this.toolBarScale, Res.Strings.Action.ScaleMain);
-			this.CreateButton(this.toolBarScale, ref this.buttonScaleDiv2, "OperScaleDiv2", Res.Strings.Action.ScaleDiv2, new MessageEventHandler(this.HandleButtonScaleDiv2));
-			this.CreateButton(this.toolBarScale, ref this.buttonScaleMul2, "OperScaleMul2", Res.Strings.Action.ScaleMul2, new MessageEventHandler(this.HandleButtonScaleMul2));
+			this.CreateButton(this.toolBarScale, ref this.buttonScaleDiv2, "ScaleDiv2", Res.Strings.Action.ScaleDiv2, new MessageEventHandler(this.HandleButtonScaleDiv2));
+			this.CreateButton(this.toolBarScale, ref this.buttonScaleMul2, "ScaleMul2", Res.Strings.Action.ScaleMul2, new MessageEventHandler(this.HandleButtonScaleMul2));
 			this.CreateSeparator(this.toolBarScale);
 			this.CreateFieldScale(this.toolBarScale, ref this.fieldScale, Res.Strings.Action.ScaleValue);
-			this.CreateButton(this.toolBarScale, ref this.buttonScaleDivFree, "OperScaleDivFree", Res.Strings.Action.ScaleDivFree, new MessageEventHandler(this.HandleButtonScaleDivFree));
-			this.CreateButton(this.toolBarScale, ref this.buttonScaleMulFree, "OperScaleMulFree", Res.Strings.Action.ScaleMulFree, new MessageEventHandler(this.HandleButtonScaleMulFree));
+			this.CreateButton(this.toolBarScale, ref this.buttonScaleDivFree, "ScaleDivFree", Res.Strings.Action.ScaleDivFree, new MessageEventHandler(this.HandleButtonScaleDivFree));
+			this.CreateButton(this.toolBarScale, ref this.buttonScaleMulFree, "ScaleMulFree", Res.Strings.Action.ScaleMulFree, new MessageEventHandler(this.HandleButtonScaleMulFree));
 
 			// Alignement.
 			this.CreateHeader(ref this.boxAlign, ref this.toolBarAlign, Res.Strings.Action.Align);
@@ -79,15 +79,15 @@ namespace Epsitec.Common.Document.Containers
 
 			// Couleurs.
 			this.CreateHeader(ref this.boxColor, ref this.toolBarColor, Res.Strings.Action.Color);
-			this.CreateButton(this.toolBarColor, ref this.buttonColorToRGB,  "OperColorToRGB",  Res.Strings.Action.ColorToRGB,  new MessageEventHandler(this.HandleButtonColorToRGB));
-			this.CreateButton(this.toolBarColor, ref this.buttonColorToCMYK, "OperColorToCMYK", Res.Strings.Action.ColorToCMYK, new MessageEventHandler(this.HandleButtonColorToCMYK));
-			this.CreateButton(this.toolBarColor, ref this.buttonColorToGray, "OperColorToGray", Res.Strings.Action.ColorToGray, new MessageEventHandler(this.HandleButtonColorToGray));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorToRGB,  "ColorToRGB",  Res.Strings.Action.ColorToRGB,  new MessageEventHandler(this.HandleButtonColorToRGB));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorToCMYK, "ColorToCMYK", Res.Strings.Action.ColorToCMYK, new MessageEventHandler(this.HandleButtonColorToCMYK));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorToGray, "ColorToGray", Res.Strings.Action.ColorToGray, new MessageEventHandler(this.HandleButtonColorToGray));
 			this.CreateSeparator(this.toolBarColor);
 			this.CreateFieldColor(this.toolBarColor, ref this.fieldColor, Res.Strings.Action.ColorValue);
-			this.CreateButton(this.toolBarColor, ref this.buttonColorStrokeDark,  "OperColorStrokeDark",  Res.Strings.Action.ColorStrokeDark,  new MessageEventHandler(this.HandleButtonColorStrokeDark));
-			this.CreateButton(this.toolBarColor, ref this.buttonColorStrokeLight, "OperColorStrokeLight", Res.Strings.Action.ColorStrokeLight, new MessageEventHandler(this.HandleButtonColorStrokeLight));
-			this.CreateButton(this.toolBarColor, ref this.buttonColorFillDark,    "OperColorFillDark",    Res.Strings.Action.ColorFillDark,    new MessageEventHandler(this.HandleButtonColorFillDark));
-			this.CreateButton(this.toolBarColor, ref this.buttonColorFillLight,   "OperColorFillLight",   Res.Strings.Action.ColorFillLight,   new MessageEventHandler(this.HandleButtonColorFillLight));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorStrokeDark,  "ColorStrokeDark",  Res.Strings.Action.ColorStrokeDark,  new MessageEventHandler(this.HandleButtonColorStrokeDark));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorStrokeLight, "ColorStrokeLight", Res.Strings.Action.ColorStrokeLight, new MessageEventHandler(this.HandleButtonColorStrokeLight));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorFillDark,    "ColorFillDark",    Res.Strings.Action.ColorFillDark,    new MessageEventHandler(this.HandleButtonColorFillDark));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorFillLight,   "ColorFillLight",   Res.Strings.Action.ColorFillLight,   new MessageEventHandler(this.HandleButtonColorFillLight));
 		}
 
 		// Crée l'en-tête d'un groupe.

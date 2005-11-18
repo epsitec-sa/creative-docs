@@ -20,7 +20,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonRulers = this.CreateIconButton("Rulers", Misc.Icon("Rulers"), Res.Strings.Action.Rulers, true);
 			this.buttonLabels = this.CreateIconButton("Labels", Misc.Icon("Labels"), Res.Strings.Action.Labels, true);
 			this.buttonAggregates = this.CreateIconButton("Aggregates", Misc.Icon("Aggregates"), Res.Strings.Action.Aggregates, true);
-			this.buttonLabelProperties = this.CreateIconButton("LabelProperties", Misc.Icon("LabelProperties"), Res.Strings.Action.LabelProperties, true);
 			
 			this.UpdateClientGeometry();
 		}
@@ -39,7 +38,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8 + 22*4;
+				return 8 + 22*3;
 			}
 		}
 
@@ -63,17 +62,15 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonGrid.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonMagnet.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonRulers.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
+			this.buttonRulers.Bounds = rect;
+			rect.Offset(dx, 0);
 			this.buttonLabels.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonAggregates.Bounds = rect;
-			rect.Offset(dx*2, 0);
-			this.buttonLabelProperties.Bounds = rect;
 		}
 
 
@@ -83,6 +80,5 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonRulers;
 		protected IconButton				buttonLabels;
 		protected IconButton				buttonAggregates;
-		protected IconButton				buttonLabelProperties;
 	}
 }

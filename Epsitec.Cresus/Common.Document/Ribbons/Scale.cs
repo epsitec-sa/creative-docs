@@ -14,13 +14,13 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ScaleMain;
 
-			this.buttonScaleDiv2 = this.CreateIconButton("ScaleDiv2", Misc.Icon("OperScaleDiv2"), Res.Strings.Action.ScaleDiv2);
-			this.buttonScaleMul2 = this.CreateIconButton("ScaleMul2", Misc.Icon("OperScaleMul2"), Res.Strings.Action.ScaleMul2);
-			this.buttonMirrorH = this.CreateIconButton("MirrorH", Misc.Icon("OperMirrorH"), Res.Strings.Action.MirrorH);
-			this.buttonMirrorV = this.CreateIconButton("MirrorV", Misc.Icon("OperMirrorV"), Res.Strings.Action.MirrorV);
+			this.buttonScaleDiv2 = this.CreateIconButton("ScaleDiv2", Misc.Icon("ScaleDiv2"), Res.Strings.Action.ScaleDiv2);
+			this.buttonScaleMul2 = this.CreateIconButton("ScaleMul2", Misc.Icon("ScaleMul2"), Res.Strings.Action.ScaleMul2);
+			this.buttonMirrorH = this.CreateIconButton("MirrorH", Misc.Icon("MirrorH"), Res.Strings.Action.MirrorH);
+			this.buttonMirrorV = this.CreateIconButton("MirrorV", Misc.Icon("MirrorV"), Res.Strings.Action.MirrorV);
 			this.separator = new IconSeparator(this);
-			this.buttonScaleDivFree = this.CreateIconButton("ScaleDivFree", Misc.Icon("OperScaleDivFree"), Res.Strings.Action.ScaleDivFree);
-			this.buttonScaleMulFree = this.CreateIconButton("ScaleMulFree", Misc.Icon("OperScaleMulFree"),  Res.Strings.Action.ScaleMulFree);
+			this.buttonScaleDivFree = this.CreateIconButton("ScaleDivFree", Misc.Icon("ScaleDivFree"), Res.Strings.Action.ScaleDivFree);
+			this.buttonScaleMulFree = this.CreateIconButton("ScaleMulFree", Misc.Icon("ScaleMulFree"), Res.Strings.Action.ScaleMulFree);
 			this.CreateFieldScale(ref this.fieldScale, Res.Strings.Action.ScaleValue);
 			
 			this.UpdateClientGeometry();

@@ -136,7 +136,6 @@ namespace Epsitec.Common.Document.Ribbons
 				}
 
 				OpenType.FontStyle italic = OpenType.FontStyle.Normal;
-
 				if ( face != null && style != null )
 				{
 					OpenType.Font font = TextContext.GetFont(face, style);
@@ -490,14 +489,12 @@ namespace Epsitec.Common.Document.Ribbons
 		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
 		{
 			if ( !this.document.FontWrapper.IsAttached )  return;
-			bool state = (this.buttonBold.ActiveState == WidgetState.ActiveYes);
 			this.document.FontWrapper.Defined.InvertBold = !this.document.FontWrapper.Defined.InvertBold;
 		}
 
 		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
 		{
 			if ( !this.document.FontWrapper.IsAttached )  return;
-			bool state = (this.buttonItalic.ActiveState == WidgetState.ActiveYes);
 			this.document.FontWrapper.Defined.InvertItalic = !this.document.FontWrapper.Defined.InvertItalic;
 		}
 

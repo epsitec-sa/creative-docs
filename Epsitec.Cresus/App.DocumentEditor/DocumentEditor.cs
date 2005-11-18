@@ -340,7 +340,7 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(objMenu, "y/n", "HideHalf", DocumentEditor.GetRes("Action.HideHalf"), "");
 			this.MenuAdd(objMenu, "", "", "", "");
 			this.MenuAdd(objMenu, Misc.Icon("OrderUpAll"), "SubmenuOrder", DocumentEditor.GetRes("Action.OrderMain"), "");
-			this.MenuAdd(objMenu, Misc.Icon("OperMoveH"), "SubmenuOper", DocumentEditor.GetRes("Action.OperationMain"), "");
+			this.MenuAdd(objMenu, Misc.Icon("MoveH"), "SubmenuOper", DocumentEditor.GetRes("Action.OperationMain"), "");
 			this.MenuAdd(objMenu, Misc.Icon("GroupEmpty"), "SubmenuGroup", DocumentEditor.GetRes("Action.GroupMain"), "");
 			this.MenuAdd(objMenu, Misc.Icon("Combine"), "SubmenuGeom", DocumentEditor.GetRes("Action.GeometryMain"), "");
 			this.MenuAdd(objMenu, Misc.Icon("BooleanOr"), "SubmenuBool", DocumentEditor.GetRes("Action.BooleanMain"), "");
@@ -360,15 +360,15 @@ namespace Epsitec.App.DocumentEditor
 			VMenu operMenu = new VMenu();
 			operMenu.Name = "Oper";
 			operMenu.Host = this;
-			this.MenuAdd(operMenu, Misc.Icon("OperRot90"), "Rotate90", DocumentEditor.GetRes("Action.Rotate90"), DocumentEditor.GetShortCut(this.rotate90State));
-			this.MenuAdd(operMenu, Misc.Icon("OperRot180"), "Rotate180", DocumentEditor.GetRes("Action.Rotate180"), DocumentEditor.GetShortCut(this.rotate180State));
-			this.MenuAdd(operMenu, Misc.Icon("OperRot270"), "Rotate270", DocumentEditor.GetRes("Action.Rotate270"), DocumentEditor.GetShortCut(this.rotate270State));
+			this.MenuAdd(operMenu, Misc.Icon("Rotate90"), "Rotate90", DocumentEditor.GetRes("Action.Rotate90"), DocumentEditor.GetShortCut(this.rotate90State));
+			this.MenuAdd(operMenu, Misc.Icon("Rotate180"), "Rotate180", DocumentEditor.GetRes("Action.Rotate180"), DocumentEditor.GetShortCut(this.rotate180State));
+			this.MenuAdd(operMenu, Misc.Icon("Rotate270"), "Rotate270", DocumentEditor.GetRes("Action.Rotate270"), DocumentEditor.GetShortCut(this.rotate270State));
 			this.MenuAdd(operMenu, "", "", "", "");
-			this.MenuAdd(operMenu, Misc.Icon("OperMirrorH"), "MirrorH", DocumentEditor.GetRes("Action.MirrorH"), DocumentEditor.GetShortCut(this.mirrorHState));
-			this.MenuAdd(operMenu, Misc.Icon("OperMirrorV"), "MirrorV", DocumentEditor.GetRes("Action.MirrorV"), DocumentEditor.GetShortCut(this.mirrorVState));
+			this.MenuAdd(operMenu, Misc.Icon("MirrorH"), "MirrorH", DocumentEditor.GetRes("Action.MirrorH"), DocumentEditor.GetShortCut(this.mirrorHState));
+			this.MenuAdd(operMenu, Misc.Icon("MirrorV"), "MirrorV", DocumentEditor.GetRes("Action.MirrorV"), DocumentEditor.GetShortCut(this.mirrorVState));
 			this.MenuAdd(operMenu, "", "", "", "");
-			this.MenuAdd(operMenu, Misc.Icon("OperScaleDiv2"), "ScaleDiv2", DocumentEditor.GetRes("Action.ScaleDiv2"), DocumentEditor.GetShortCut(this.scaleDiv2State));
-			this.MenuAdd(operMenu, Misc.Icon("OperScaleMul2"), "ScaleMul2", DocumentEditor.GetRes("Action.ScaleMul2"), DocumentEditor.GetShortCut(this.scaleMul2State));
+			this.MenuAdd(operMenu, Misc.Icon("ScaleDiv2"), "ScaleDiv2", DocumentEditor.GetRes("Action.ScaleDiv2"), DocumentEditor.GetShortCut(this.scaleDiv2State));
+			this.MenuAdd(operMenu, Misc.Icon("ScaleMul2"), "ScaleMul2", DocumentEditor.GetRes("Action.ScaleMul2"), DocumentEditor.GetShortCut(this.scaleMul2State));
 			operMenu.AdjustSize();
 			this.MenuAddSub(objMenu, operMenu, "SubmenuOper");
 
@@ -424,7 +424,6 @@ namespace Epsitec.App.DocumentEditor
 				this.MenuAdd(showMenu, Misc.Icon("Labels"), "Labels", DocumentEditor.GetRes("Action.Labels"), DocumentEditor.GetShortCut(this.labelsState));
 				this.MenuAdd(showMenu, Misc.Icon("Aggregates"), "Aggregates", DocumentEditor.GetRes("Action.Aggregates"), DocumentEditor.GetShortCut(this.aggregatesState));
 			}
-			this.MenuAdd(showMenu, Misc.Icon("LabelProperties"), "LabelProperties", DocumentEditor.GetRes("Action.LabelProperties"), DocumentEditor.GetShortCut(this.labelPropertiesState));
 			this.MenuAdd(showMenu, "", "", "", "");
 			this.MenuAdd(showMenu, Misc.Icon("ZoomMin"), "ZoomMin", DocumentEditor.GetRes("Action.ZoomMin"), DocumentEditor.GetShortCut(this.zoomMinState));
 			if ( this.type != DocumentType.Pictogram )
@@ -595,7 +594,6 @@ namespace Epsitec.App.DocumentEditor
 			this.HToolBarAdd(Misc.Icon("Magnet"), "Magnet", DocumentEditor.GetRes("Action.Magnet"));
 			this.HToolBarAdd(Misc.Icon("Labels"), "Labels", DocumentEditor.GetRes("Action.Labels"));
 			this.HToolBarAdd(Misc.Icon("Aggregates"), "Aggregates", DocumentEditor.GetRes("Action.Aggregates"));
-			this.HToolBarAdd(Misc.Icon("LabelProperties"), "LabelProperties", DocumentEditor.GetRes("Action.LabelProperties"));
 			this.HToolBarAdd(Misc.Icon("Settings"), "Settings", DocumentEditor.GetRes("Action.Settings"));
 			this.HToolBarAdd(Misc.Icon("Infos"), "Infos", DocumentEditor.GetRes("Action.Infos"));
 			this.HToolBarAdd(Misc.Icon("Glyphs"), "Glyphs", DocumentEditor.GetRes("Action.Glyphs"));
@@ -629,28 +627,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonTextButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
 			this.hToolBar.Items.Add(this.ribbonTextButton);
 
-			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(Misc.Icon("New"), "New", DocumentEditor.GetRes("Action.New"));
-			this.HToolBarAdd(Misc.Icon("Open"), "Open", DocumentEditor.GetRes("Action.Open"));
-			this.HToolBarAdd(Misc.Icon("Save"), "Save", DocumentEditor.GetRes("Action.Save"));
-			this.HToolBarAdd(Misc.Icon("Print"), "Print", DocumentEditor.GetRes("Action.Print"));
-			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(Misc.Icon("Undo"), "Undo", DocumentEditor.GetRes("Action.Undo"));
-			this.HToolBarAdd(Misc.Icon("Redo"), "Redo", DocumentEditor.GetRes("Action.Redo"));
-			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(Misc.Icon("Delete"), "Delete", DocumentEditor.GetRes("Action.Delete"));
-			this.HToolBarAdd(Misc.Icon("Duplicate"), "Duplicate", DocumentEditor.GetRes("Action.Duplicate"));
-			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(Misc.Icon("Cut"), "Cut", DocumentEditor.GetRes("Action.Cut"));
-			this.HToolBarAdd(Misc.Icon("Copy"), "Copy", DocumentEditor.GetRes("Action.Copy"));
-			this.HToolBarAdd(Misc.Icon("Paste"), "Paste", DocumentEditor.GetRes("Action.Paste"));
-			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(Misc.Icon("Inside"), "Inside", DocumentEditor.GetRes("Action.Inside"));
-			this.HToolBarAdd(Misc.Icon("Outside"), "Outside", DocumentEditor.GetRes("Action.Outside"));
-			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(Misc.Icon("Preview"), "Preview", DocumentEditor.GetRes("Action.Preview"));
-			this.HToolBarAdd(Misc.Icon("Grid"), "Grid", DocumentEditor.GetRes("Action.Grid"));
-			this.HToolBarAdd("", "", "");
+			this.UpdateQuickCommands();
 
 			this.ribbonMain = new Ribbons.RibbonContainer(this);
 			this.ribbonMain.Name = "Main";
@@ -815,6 +792,43 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(this.bookDocuments.CloseButton, Res.Strings.Tooltip.TabBook.Close);
 
 			this.ActiveRibbon(this.ribbonMain);
+		}
+
+		// Met à jour toutes les icônes de la partie rapide, à droite des choix du ruban actif.
+		public void UpdateQuickCommands()
+		{
+			// Supprime tous les IconButtons.
+			foreach ( Widget widget in this.hToolBar.Children.Widgets )
+			{
+				if ( widget is Ribbons.RibbonButton )  continue;
+				widget.Dispose();
+			}
+
+			bool first = true;
+			foreach ( string xcmd in this.globalSettings.QuickCommands )
+			{
+				bool   used = GlobalSettings.QuickUsed(xcmd);
+				bool   sep  = GlobalSettings.QuickSep(xcmd);
+				string cmd  = GlobalSettings.QuickCmd(xcmd);
+
+				if ( used )
+				{
+					if ( first )  // première icône ?
+					{
+						this.HToolBarAdd("", "", "");  // séparateur au début
+						first = false;
+					}
+
+					this.HToolBarAdd(Misc.Icon(cmd), cmd, DocumentEditor.GetRes("Action."+cmd));
+
+					if ( sep )
+					{
+						this.HToolBarAdd("", "", "");  // séparateur après l'icône
+					}
+				}
+			}
+
+			this.hToolBar.CommandDispatcher.SyncCommandStates();
 		}
 
 		protected void CreateDocumentLayout(Document document)
@@ -2742,13 +2756,6 @@ namespace Epsitec.App.DocumentEditor
 			context.PreviewActive = !context.PreviewActive;
 		}
 
-		[Command ("LabelProperties")]
-		void CommandLabelProperties(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.GlobalSettings.LabelProperties = !this.CurrentDocument.GlobalSettings.LabelProperties;
-			this.CurrentDocument.Notifier.NotifyLabelPropertiesChanged();
-		}
-
 		[Command ("DeselectAll")]
 		void CommandDeselectAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3579,7 +3586,6 @@ namespace Epsitec.App.DocumentEditor
 			this.rulersState = new CommandState("Rulers", this.commandDispatcher);
 			this.labelsState = new CommandState("Labels", this.commandDispatcher);
 			this.aggregatesState = new CommandState("Aggregates", this.commandDispatcher);
-			this.labelPropertiesState = new CommandState("LabelProperties", this.commandDispatcher);
 
 			this.arrayOutlineFrameState = new CommandState("ArrayOutlineFrame", this.commandDispatcher);
 			this.arrayOutlineHorizState = new CommandState("ArrayOutlineHoriz", this.commandDispatcher);
@@ -4346,16 +4352,9 @@ namespace Epsitec.App.DocumentEditor
 		{
 			if ( this.IsCurrentDocument )
 			{
-				this.labelPropertiesState.Enabled = true;
-				this.labelPropertiesState.ActiveState = this.CurrentDocument.GlobalSettings.LabelProperties ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerPrincipal.SetDirtyContent();
 				di.containerStyles.SetDirtyContent();
-			}
-			else
-			{
-				this.labelPropertiesState.Enabled = false;
-				this.labelPropertiesState.ActiveState = WidgetState.ActiveNo;
 			}
 		}
 
@@ -5428,7 +5427,6 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					rulersState;
 		protected CommandState					labelsState;
 		protected CommandState					aggregatesState;
-		protected CommandState					labelPropertiesState;
 		protected CommandState					arrayOutlineFrameState;
 		protected CommandState					arrayOutlineHorizState;
 		protected CommandState					arrayOutlineVertiState;

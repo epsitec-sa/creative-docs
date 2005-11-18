@@ -161,6 +161,9 @@
 	<data name="Dialog.Settings.Title">Settings...</data>
 	<data name="Dialog.Settings.RadioGlobal">Global</data>
 	<data name="Dialog.Settings.RadioDocument">Document</data>
+	<data name="Dialog.Settings.TabPage.General">@@Général</data>
+	<data name="Dialog.Settings.TabPage.Periph">@@Périphériques</data>
+	<data name="Dialog.Settings.TabPage.Quick">@@Barre d'icônes</data>
 	<data name="Dialog.Settings.Startup">What to do at startup?</data>
 	<data name="Dialog.Settings.Mouse">Mouse settings</data>
 	<data name="Dialog.Settings.Screen">Display settings</data>
@@ -172,6 +175,14 @@
 	<data name="Dialog.Settings.ScreenDpi">Resolution (dpi)</data>
 	<data name="Dialog.Settings.AutoUpdate">Automatically check for updates</data>
 	<data name="Dialog.Settings.AutoChecker">Check once every day</data>
+	<data name="Dialog.Settings.PanelProperties">@@Panneaux des attributs</data>
+	<data name="Dialog.Settings.LabelProperties">@@Attributs détaillés</data>
+	<data name="Dialog.Settings.QuickFirst">@@Commande au début</data>
+	<data name="Dialog.Settings.QuickUp">R@@eculer la commande</data>
+	<data name="Dialog.Settings.QuickDown">@@Avancer la commande</data>
+	<data name="Dialog.Settings.QuickLast">@@Commande à la fin</data>
+	<data name="Dialog.Settings.QuickDefault">@@Commandes par défaut</data>
+	<data name="Dialog.Settings.QuickClear">@@Supprimer toutes les commandes</data>
 	<data name="Dialog.Settings.TabPage.Format">Format</data>
 	<data name="Dialog.Settings.TabPage.Grid">Grid</data>
 	<data name="Dialog.Settings.TabPage.Guides">Guides</data>

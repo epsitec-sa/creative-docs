@@ -169,6 +169,25 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		public double LineHeight
+		{
+			// Hauteur d'une ligne.
+
+			get
+			{
+				return this.lineHeight;
+			}
+
+			set
+			{
+				if ( this.lineHeight != value )
+				{
+					this.lineHeight = value;
+				}
+			}
+		}
+
+
 		public bool AdjustHeight(ScrollAdjustMode mode)
 		{
 			// Ajuste la hauteur pour afficher pile un nombre entier de lignes.

@@ -44,6 +44,7 @@ namespace Epsitec.Common.Document.Settings
 			this.labelProperties = true;
 			this.fineCursor = false;
 			this.fineCursor = false;
+			this.quickCommands = GlobalSettings.DefaultQuickCommands();
 
 			// Suppose que le dossier des exemples est dans le même dossier
 			// que l'application.
@@ -499,11 +500,205 @@ namespace Epsitec.Common.Document.Settings
 		#endregion
 
 
+		#region QuickCommands
+		// Donne la liste des commandes rapides sous la forme "US:Name".
+		// U -> '1' si utilisé
+		// S -> '1' si séparateur après
+		// Name -> nom de la commande
+		public System.Collections.ArrayList QuickCommands
+		{
+			get
+			{
+				return this.quickCommands;
+			}
+
+			set
+			{
+				this.quickCommands = value;
+			}
+		}
+
+		// Donne la liste des commandes rapides par défaut.
+		public static System.Collections.ArrayList DefaultQuickCommands()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+
+			list.Add("10:New");
+			list.Add("10:Open");
+			list.Add("10:Save");
+			list.Add("00:SaveAs");
+			list.Add("11:Print");
+			list.Add("00:Export");
+			list.Add("00:CloseAll");
+			list.Add("00:OpenModel");
+			list.Add("00:SaveModel");
+
+			list.Add("10:Undo");
+			list.Add("11:Redo");
+			
+			list.Add("10:Delete");
+			list.Add("11:Duplicate");
+			
+			list.Add("10:Cut");
+			list.Add("10:Copy");
+			list.Add("11:Paste");
+			
+			list.Add("00:DeselectAll");
+			list.Add("00:SelectAll");
+			list.Add("00:SelectInvert");
+			list.Add("00:HideSel");
+			list.Add("00:HideRest");
+			list.Add("00:HideCancel");
+			list.Add("00:HideHalf");
+
+			list.Add("10:OrderUpAll");
+			list.Add("11:OrderDownAll");
+			list.Add("00:OrderUpOne");
+			list.Add("00:OrderDownOne");
+
+			list.Add("00:Group");
+			list.Add("00:Merge");
+			list.Add("00:Extract");
+			list.Add("00:Ungroup");
+			list.Add("10:Inside");
+			list.Add("11:Outside");
+
+			list.Add("00:Rotate90");
+			list.Add("00:Rotate180");
+			list.Add("00:Rotate270");
+			list.Add("00:MirrorH");
+			list.Add("00:MirrorV");
+			list.Add("00:ScaleDiv2");
+			list.Add("00:ScaleMul2");
+
+			list.Add("00:AlignLeft");
+			list.Add("00:AlignCenterX");
+			list.Add("00:AlignRight");
+			list.Add("00:AlignTop");
+			list.Add("00:AlignCenterY");
+			list.Add("00:AlignBottom");
+			list.Add("00:AlignGrid");
+			list.Add("00:ShareLeft");
+			list.Add("00:ShareCenterX");
+			list.Add("00:ShareSpaceX");
+			list.Add("00:ShareRight");
+			list.Add("00:ShareTop");
+			list.Add("00:ShareCenterY");
+			list.Add("00:ShareSpaceY");
+			list.Add("00:ShareBottom");
+			list.Add("00:AdjustWidth");
+			list.Add("00:AdjustHeight");
+
+			list.Add("00:Combine");
+			list.Add("00:Uncombine");
+			list.Add("00:ToBezier");
+			list.Add("00:ToPoly");
+			list.Add("00:Fragment");
+
+			list.Add("00:BooleanOr");
+			list.Add("00:BooleanAnd");
+			list.Add("00:BooleanXor");
+			list.Add("00:BooleanFrontMinus");
+			list.Add("00:BooleanBackMinus");
+
+			list.Add("00:ColorToRGB");
+			list.Add("00:ColorToCMYK");
+			list.Add("00:ColorToGray");
+			
+			list.Add("00:ZoomMin");
+			list.Add("00:ZoomPage");
+			list.Add("00:ZoomPageWidth");
+			list.Add("00:ZoomDefault");
+			list.Add("00:ZoomSel");
+			list.Add("00:ZoomSelWidth");
+			list.Add("00:ZoomPrev");
+			list.Add("00:ZoomSub");
+			list.Add("00:ZoomAdd");
+
+			list.Add("10:Preview");
+			list.Add("11:Grid");
+			list.Add("00:Magnet");
+			list.Add("00:Rulers");
+			list.Add("00:Labels");
+			list.Add("00:Aggregates");
+
+			list.Add("00:Settings");
+			list.Add("00:Infos");
+			list.Add("00:PageStack");
+
+			return list;
+		}
+
+		// Met à jour la liste des commandes rapides en fonction d'éventuelles commandes qui n'y
+		// seraient pas encore.
+		protected void UpdateQuickCommands()
+		{
+			System.Collections.ArrayList all = GlobalSettings.DefaultQuickCommands();
+
+			for ( int i=0 ; i<all.Count ; i++ )
+			{
+				string cmd = GlobalSettings.QuickCmd(all[i] as string);
+				if ( this.SearchQuickList(cmd) != -1 )  continue;
+				int index = this.IndexQuickExisting(all, i);
+				this.quickCommands.Insert(index, GlobalSettings.QuickXcmd(false, false, cmd));
+			}
+		}
+
+		protected int IndexQuickExisting(System.Collections.ArrayList all, int i)
+		{
+			while ( true )
+			{
+				if ( i == 0 )  return 0;
+				i --;
+				string cmd = GlobalSettings.QuickCmd(all[i] as string);
+				int index = this.SearchQuickList(cmd);
+				if ( index != -1 )  return index+1;
+			}
+		}
+
+		protected int SearchQuickList(string cmd)
+		{
+			for ( int i=0 ; i<this.quickCommands.Count ; i++ )
+			{
+				string xcmd = this.quickCommands[i] as string;
+				if ( cmd == GlobalSettings.QuickCmd(xcmd) )  return i;
+			}
+			return -1;
+		}
+
+		// Donne la commande étendue à partir de ses composantes.
+		public static string QuickXcmd(bool used, bool sep, string cmd)
+		{
+			return string.Format("{0}{1}:{2}", used?"1":"0", sep?"1":"0", cmd);
+		}
+
+		// Indique si une commande est utilisée (visible dans la barre d'icônes).
+		public static bool QuickUsed(string xcmd)
+		{
+			return xcmd[0] == '1';
+		}
+
+		// Indique si une commande est suivie d'un séparateur.
+		public static bool QuickSep(string xcmd)
+		{
+			return xcmd[1] == '1';
+		}
+
+		// Donne le nom d'une commande.
+		public static string QuickCmd(string xcmd)
+		{
+			int index = xcmd.IndexOf(":");
+			if ( index == -1 )  return "";
+			return xcmd.Substring(index+1);
+		}
+		#endregion
+
+
 		#region Serialization
 		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			info.AddValue("Version", 3);
+			info.AddValue("Version", 4);
 
 			info.AddValue("WindowLocation", this.windowLocation);
 			info.AddValue("WindowSize", this.windowSize);
@@ -527,6 +722,8 @@ namespace Epsitec.Common.Document.Settings
 
 			info.AddValue("AutoChecker", this.autoChecker);
 			info.AddValue("DateChecker", this.dateChecker.Ticks);
+
+			info.AddValue("QuickCommands", this.quickCommands);
 		}
 
 		// Constructeur qui désérialise les réglages.
@@ -563,6 +760,16 @@ namespace Epsitec.Common.Document.Settings
 				this.autoChecker = info.GetBoolean("AutoChecker");
 				this.dateChecker = new Types.Date(info.GetInt64("DateChecker"));
 			}
+
+			if ( version >= 4 )
+			{
+				this.quickCommands = (System.Collections.ArrayList) info.GetValue("QuickCommands", typeof(System.Collections.ArrayList));
+				this.UpdateQuickCommands();
+			}
+			else
+			{
+				this.quickCommands = GlobalSettings.DefaultQuickCommands();
+			}
 		}
 		#endregion
 
@@ -587,6 +794,7 @@ namespace Epsitec.Common.Document.Settings
 		protected string						colorCollectionFilename;
 		protected bool							autoChecker;
 		protected Common.Types.Date				dateChecker;
+		protected System.Collections.ArrayList	quickCommands;
 
 
 		#region WindowBounds
