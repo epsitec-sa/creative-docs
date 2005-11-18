@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -27,6 +27,11 @@ namespace Epsitec.Common.Widgets
 			
 			this.timer = new Timer ();
 			this.timer.TimeElapsed += new Support.EventHandler (this.HandleTimerTimeElapsed);
+			
+			lock (ToolTip.global_tool_tips)
+			{
+				ToolTip.global_tool_tips.Add (this);
+			}
 		}
 
 		
@@ -64,11 +69,26 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public static void HideAllToolTips()
+		{
+			ToolTip[] tips = null;
+			
+			lock (ToolTip.global_tool_tips)
+			{
+				tips = (ToolTip[]) ToolTip.global_tool_tips.ToArray (typeof (ToolTip));
+			}
+			
+			foreach (ToolTip tip in tips)
+			{
+				tip.HideToolTip ();
+			}
+		}
+		
+		
 		public void ShowToolTipForWidget(Widget widget)
 		{
 			if (this.hash.Contains (widget))
 			{
-				this.timer.Stop ();
 				this.HideToolTip ();
 				this.AttachToWidget (widget);
 				this.ShowToolTip ();
@@ -79,7 +99,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.widget == widget)
 			{
-				this.timer.Stop ();
 				this.HideToolTip ();
 			}
 		}
@@ -226,6 +245,11 @@ namespace Epsitec.Common.Widgets
 					this.Disposed (this);
 					this.Disposed = null;
 				}
+				
+				lock (ToolTip.global_tool_tips)
+				{
+					ToolTip.global_tool_tips.Remove (this);
+				}
 			}
 		}
 		
@@ -296,7 +320,6 @@ namespace Epsitec.Common.Widgets
 				}
 				else if (caption == null)
 				{
-					this.timer.Stop ();
 					this.HideToolTip ();
 				}
 				
@@ -339,7 +362,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.behaviour != ToolTipBehaviour.Manual )
 			{
-				this.timer.Stop();
 				this.HideToolTip();
 				this.DetachFromWidget (this.widget);
 			}
@@ -363,7 +385,6 @@ namespace Epsitec.Common.Widgets
 					case ToolTipBehaviour.Normal:
 						if (Drawing.Point.Distance (mouse, this.birth_pos) > ToolTip.hide_distance)
 						{
-							this.timer.Stop ();
 							this.HideToolTip ();
 							this.RestartTimer (SystemInformation.ToolTipShowDelay);
 						}
@@ -485,6 +506,8 @@ namespace Epsitec.Common.Widgets
 
 		private void HideToolTip()
 		{
+			this.timer.Stop ();
+			
 			if (this.is_displayed)
 			{
 				this.window.Hide ();
@@ -546,6 +569,7 @@ namespace Epsitec.Common.Widgets
 		private static readonly Drawing.Point	margin = new Drawing.Point(3, 2);
 		private static readonly Drawing.Point	offset = new Drawing.Point(8, -16);
 		
-		private static ToolTip					default_tool_tip = new ToolTip ();
+		static ToolTip							default_tool_tip = new ToolTip ();
+		static System.Collections.ArrayList		global_tool_tips = new System.Collections.ArrayList ();
 	}
 }

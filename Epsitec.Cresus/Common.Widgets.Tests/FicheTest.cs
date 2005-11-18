@@ -387,12 +387,23 @@ namespace Epsitec.Common.Widgets
 			debugMenu3.AdjustSize();
 			debugMenu.Items[2].Submenu = debugMenu3;
 
+			MenuItemContainer helpMenuItemContainer = new MenuItemContainer ();
+			TextField         helpMenuItemTextField = new TextField ();
+			
+			helpMenuItemTextField.Dock = DockStyle.Fill;
+			helpMenuItemTextField.DockMargins = new Margins (1, 1, 1, 1);
+			helpMenuItemTextField.MinSize = new Size (100, 20);
+			
+			helpMenuItemContainer.Children.Add (helpMenuItemTextField);
+			
 			VMenu helpMenu = new VMenu();
 			helpMenu.Host = this.window;
 			helpMenu.Name = "helpMenu";
 			helpMenu.Items.Add(new MenuItem ("help", "", "Aide", "F1"));
 			helpMenu.Items.Add(new MenuItem ("ctxhelp", @"file:images/help.png", "Aide contextuelle", ""));
 			helpMenu.Items.Add(new MenuItem ("about", "", "A propos de...", ""));
+			helpMenu.Items.Add(new MenuSeparator ());
+			helpMenu.Items.Add(helpMenuItemContainer);
 			helpMenu.AdjustSize();
 			this.menu.Items[4].Submenu = helpMenu;
 

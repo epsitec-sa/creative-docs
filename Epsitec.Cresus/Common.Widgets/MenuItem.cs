@@ -208,52 +208,39 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.iconSize.Width;
+				return this.icon_size.Width;
 			}
 			set
 			{
-				this.iconSize.Width = value;
+				if (this.icon_size.Width != value)
+				{
+					this.icon_size.Width = value;
+					this.OnIconSizeChanged ();
+				}
 			}
 		}
 		
-		
-		public override Drawing.Size GetBestFitSize()
+		public Drawing.Size						IconSize
 		{
-			double dx = 0;
-			double dy = 0;
-
-			if (this.onlyText)
+			get
 			{
-				dx = MenuItem.MarginHeader*2 + this.mainTextSize.Width;
-				dy = this.mainTextSize.Height;
+				return this.icon_size;
 			}
-			else if (this.IsSeparator)
+			set
 			{
-				dy = MenuItem.SeparatorHeight;
+				if (this.icon_size != value)
+				{
+					this.icon_size = value;
+					this.OnIconSizeChanged ();
+				}
 			}
-			else
-			{
-				dx += this.iconSize.Width;
-				dx += this.mainTextSize.Width;
-				dx += MenuItem.MarginSpace;
-				dx += this.shortcutSize.Width;
-				dx += this.submenu_mark_width;
-
-				dy = System.Math.Max(dy, this.iconSize.Height);
-				dy = System.Math.Max(dy, this.mainTextSize.Height);
-				dy = System.Math.Max(dy, this.shortcutSize.Height);
-			}
-			
-			return new Drawing.Size (dx, dy);
 		}
-
+		
 		
 		internal void DefineMenuType(MenuType value)
 		{
 			this.SetValue (MenuItem.MenuTypeProperty, value);
 		}
-		
-		
 		
 		
 		
@@ -304,7 +291,7 @@ namespace Epsitec.Common.Widgets
 				dy = System.Math.Max (dy, size.Height);
 			}
 			
-			this.iconSize = this.AdjustSize (new Drawing.Size (dx, dy));
+			this.IconSize = this.AdjustSize (new Drawing.Size (dx, dy));
 		}
 		
 		private string GetIconText(string icon)
@@ -334,6 +321,37 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			return size;
+		}
+
+		
+		public override Drawing.Size GetBestFitSize()
+		{
+			double dx = 0;
+			double dy = 0;
+
+			if (this.onlyText)
+			{
+				dx = MenuItem.MarginHeader*2 + this.mainTextSize.Width;
+				dy = this.mainTextSize.Height;
+			}
+			else if (this.IsSeparator)
+			{
+				dy = MenuItem.SeparatorHeight;
+			}
+			else
+			{
+				dx += this.icon_size.Width;
+				dx += this.mainTextSize.Width;
+				dx += MenuItem.MarginSpace;
+				dx += this.shortcutSize.Width;
+				dx += this.submenu_mark_width;
+
+				dy = System.Math.Max(dy, this.icon_size.Height);
+				dy = System.Math.Max(dy, this.mainTextSize.Height);
+				dy = System.Math.Max(dy, this.shortcutSize.Height);
+			}
+			
+			return new Drawing.Size (dx, dy);
 		}
 
 		
@@ -421,7 +439,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if ( this.icon != null )  this.icon.LayoutSize = this.iconSize;
+				if ( this.icon != null )  this.icon.LayoutSize = this.icon_size;
 				if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
 				if ( this.shortcut != null )  this.shortcut.LayoutSize = this.shortcutSize;
 			}
@@ -451,7 +469,7 @@ namespace Epsitec.Common.Widgets
 			else if ( this.IsSeparator )
 			{
 				Drawing.Rectangle inside = rect;
-				inside.Left  = MenuItem.MarginItem*2+this.iconSize.Width;
+				inside.Left  = MenuItem.MarginItem*2+this.icon_size.Width;
 				inside.Right = rect.Width-MenuItem.MarginItem;
 				adorner.PaintSeparatorBackground(graphics, inside, state, Direction.Up, false);
 			}
@@ -485,13 +503,13 @@ namespace Epsitec.Common.Widgets
 						(icon != this.iconNameActiveYes))
 					{
 						Drawing.Rectangle iRect = rect;
-						iRect.Width = this.iconSize.Width;
+						iRect.Width = this.icon_size.Width;
 						iRect.Inflate(-2, -2);
 						adorner.PaintButtonBackground(graphics, iRect, state, Direction.Up, ButtonStyle.ToolItem);
 					}
 					
 					pos.X = MenuItem.MarginItem;
-					pos.Y = (rect.Height-this.iconSize.Height)/2;
+					pos.Y = (rect.Height-this.icon_size.Height)/2;
 					
 					icon = this.GetIconText (icon);
 					
@@ -503,7 +521,7 @@ namespace Epsitec.Common.Widgets
 					adorner.PaintMenuItemTextLayout(graphics, pos, this.icon, state, Direction.Up, this.MenuType, iType);
 				}
 
-				pos.X = MenuItem.MarginItem*2+this.iconSize.Width;
+				pos.X = MenuItem.MarginItem*2+this.icon_size.Width;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
 				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.MenuType, iType);
 
@@ -520,6 +538,11 @@ namespace Epsitec.Common.Widgets
 					adorner.PaintGlyph(graphics, aRect, state, GlyphShape.ArrowRight, PaintTextStyle.VMenu);
 				}
 			}
+		}
+		
+		
+		protected virtual void OnIconSizeChanged()
+		{
 		}
 		
 		
@@ -722,7 +745,7 @@ namespace Epsitec.Common.Widgets
 		protected string						iconNameActiveYes;
 		protected TextLayout					icon;
 		protected TextLayout					shortcut;
-		protected Drawing.Size					iconSize;
+		protected Drawing.Size					icon_size;
 		protected Drawing.Size					mainTextSize;
 		protected Drawing.Size					shortcutSize;
 		protected Widget						submenu;

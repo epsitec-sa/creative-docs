@@ -228,6 +228,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 					break;
 			}
 			
+			ToolTip.HideAllToolTips ();
+			
 			window.WindowSize     = size;
 			window.WindowLocation = location;
 			window.AnimateShow (animation);
