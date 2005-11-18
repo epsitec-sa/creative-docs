@@ -735,10 +735,41 @@ namespace Epsitec.Common.Document
 
 				if ( this.finalData.TypeInUse == SelectorType.Stretcher )
 				{
-					graphics.LineWidth = 1.0/drawingContext.ScaleX;
-					graphics.AddLine(p1, p2);
-					graphics.AddLine(p3, p4);
-					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
+					if ( this.finalData.TypeStretch == SelectorTypeStretch.TrapezeH )
+					{
+						Point a = Point.Scale(p1, p4, 0.5);
+						Point b = Point.Scale(p2, p3, 0.5);
+						this.DrawDashLine(graphics, drawingContext, a, b);
+					}
+					else if ( this.finalData.TypeStretch == SelectorTypeStretch.TrapezeV )
+					{
+						Point a = Point.Scale(p1, p3, 0.5);
+						Point b = Point.Scale(p2, p4, 0.5);
+						this.DrawDashLine(graphics, drawingContext, a, b);
+					}
+					else if ( this.finalData.TypeStretch == SelectorTypeStretch.ParallelH )
+					{
+						Point a = Point.Scale(p1, p3, 0.05);
+						Point b = Point.Scale(p4, p2, 0.05);
+						this.DrawDashLine(graphics, drawingContext, a, b);
+						Point c = Point.Scale(p3, p1, 0.05);
+						Point d = Point.Scale(p2, p4, 0.05);
+						this.DrawDashLine(graphics, drawingContext, c, d);
+					}
+					else if ( this.finalData.TypeStretch == SelectorTypeStretch.ParallelV )
+					{
+						Point a = Point.Scale(p1, p4, 0.05);
+						Point b = Point.Scale(p3, p2, 0.05);
+						this.DrawDashLine(graphics, drawingContext, a, b);
+						Point c = Point.Scale(p4, p1, 0.05);
+						Point d = Point.Scale(p2, p3, 0.05);
+						this.DrawDashLine(graphics, drawingContext, c, d);
+					}
+					else
+					{
+						this.DrawDashLine(graphics, drawingContext, p1, p2);
+						this.DrawDashLine(graphics, drawingContext, p3, p4);
+					}
 				}
 
 				h1.Draw(graphics, drawingContext);
@@ -748,6 +779,22 @@ namespace Epsitec.Common.Document
 				center.Draw(graphics, drawingContext);
 				rotate.Draw(graphics, drawingContext);
 			}
+		}
+
+		// Dessine un traitillé pour le modificateur.
+		protected void DrawDashLine(Graphics graphics, DrawingContext drawingContext, Point p1, Point p2)
+		{
+			graphics.Align(ref p1);
+			graphics.Align(ref p2);
+			p1.X += 0.5/drawingContext.ScaleX;
+			p1.Y += 0.5/drawingContext.ScaleX;
+			p2.X += 0.5/drawingContext.ScaleX;
+			p2.Y += 0.5/drawingContext.ScaleX;
+
+			Path path = new Path();
+			path.MoveTo(p1);
+			path.LineTo(p2);
+			Drawer.DrawPathDash(graphics, drawingContext, path, 1.0, 5.0, 5.0, drawingContext.HiliteOutlineColor);
 		}
 
 		// Calcule l'extrémité gauche ou droite de la flèche.
