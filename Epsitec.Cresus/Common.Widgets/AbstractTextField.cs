@@ -828,6 +828,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void OnFocused()
 		{
+			System.Diagnostics.Debug.WriteLine ("AbstractTextField focused");
 			TextField.blinking = this;
 			this.ResetCursor();
 			
@@ -858,6 +859,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnDefocused()
 		{
+			System.Diagnostics.Debug.WriteLine ("AbstractTextField de-focused");
 			TextField.blinking = null;
 			base.OnDefocused();
 		}

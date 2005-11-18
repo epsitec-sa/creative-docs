@@ -20,6 +20,31 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 		
 		
+		public bool								IsFrozen
+		{
+			get
+			{
+				return this.is_frozen;
+			}
+			set
+			{
+				if (this.is_frozen != value)
+				{
+					this.is_frozen = value;
+					
+					if (value)
+					{
+						Behaviors.MenuBehavior.DisableKeyboardFilter ();
+					}
+					else
+					{
+						Behaviors.MenuBehavior.EnableKeyboardFilter ();
+					}
+				}
+			}
+		}
+		
+		
 		#region Animate Enumeration
 		public enum Animate
 		{
@@ -1142,7 +1167,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			MenuBehavior.keyboard_navigation_active = false;
 			MenuBehavior suspend_behavior = null;
 			
-			
 			if (MenuBehavior.menu_last_item != null)
 			{
 				MenuItem     last_item = MenuBehavior.menu_last_item;
@@ -1151,10 +1175,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 				MenuBehavior.menu_last_behavior = null;
 				MenuBehavior.menu_last_item     = null;
 				
-				suspend_behavior = behavior;
-				
-				suspend_behavior.SuspendUpdates ();
-				suspend_behavior.NotifyExitedItem (last_item);
+				if (behavior.IsFrozen == false)
+				{
+					behavior.SuspendUpdates ();
+					behavior.NotifyExitedItem (last_item);
+					
+					suspend_behavior = behavior;
+				}
 			}
 			
 			if (item != null)
@@ -1164,9 +1191,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 				MenuBehavior.menu_last_behavior = behavior;
 				MenuBehavior.menu_last_item     = item;
 				
-				behavior.SuspendUpdates ();
-				behavior.NotifyEnteredItem (MenuBehavior.menu_last_item);
-				behavior.ResumeUpdates ();
+				if (behavior.IsFrozen == false)
+				{
+					behavior.SuspendUpdates ();
+					behavior.NotifyEnteredItem (MenuBehavior.menu_last_item);
+					behavior.ResumeUpdates ();
+				}
 			}
 			
 			if (suspend_behavior != null)
@@ -1516,6 +1546,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		private Window							root_window;
 		private Widget							root_menu;
 		private bool							is_open;
+		private bool							is_frozen;
 		
 		private bool							keyboard_menu_active;
 		private Window							keyboard_menu_window;

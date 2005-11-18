@@ -24,6 +24,21 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Window.MakeFocused ();
 			
+			if (this.Children.Count > 0)
+			{
+				Widget[] widgets = this.Children.Widgets;
+				
+				foreach (Widget widget in widgets)
+				{
+					if (widget.CanFocus)
+					{
+						System.Diagnostics.Debug.WriteLine ("Setting focus on " + widget.ToString ());
+						widget.Focus ();
+						break;
+					}
+				}
+			}
+			
 			this.DisableFilter ();
 		}
 		
@@ -59,6 +74,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected override void OnPressed(MessageEventArgs e)
+		{
+			this.FocusFromMenu ();
+		}
+
 		protected override void OnIconSizeChanged()
 		{
 			//	Met à jour le positionnement des éléments internes en fonction
@@ -81,17 +101,40 @@ namespace Epsitec.Common.Widgets
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
 		{
 			if ((this.filter_disabled) &&
-				(message.IsKeyType))
+				(message.Type == MessageType.KeyDown))
 			{
-				Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
-				Window                 window   = this.Window;
+				IFeel feel    = Feel.Factory.Active;
+				bool  forward = false;
 				
-				if ((behavior != null) &&
-					(window != null))
+				if (feel.TestAcceptKey (message))
 				{
-					System.Diagnostics.Debug.WriteLine ("Bubbling up message " + message.ToString ());
+					this.EnableFilter ();
+					this.Parent.Focus ();
 					
-					behavior.HandleKeyboardEvent (window, message);
+					message.Consumer = this;
+					return;
+				}
+				else if (feel.TestCancelKey (message))
+				{
+					this.EnableFilter ();
+					this.Parent.Focus ();
+					
+					message.Consumer = this;
+					return;
+				}
+				
+				if (forward)
+				{
+					Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
+					Window                 window   = this.Window;
+					
+					if ((behavior != null) &&
+						(window != null))
+					{
+						System.Diagnostics.Debug.WriteLine ("Bubbling up message " + message.ToString ());
+						
+						behavior.HandleKeyboardEvent (window, message);
+					}
 				}
 			}
 			
@@ -103,7 +146,9 @@ namespace Epsitec.Common.Widgets
 		{
 			if (! this.filter_disabled)
 			{
-				Behaviors.MenuBehavior.DisableKeyboardFilter ();
+				Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
+				
+				behavior.IsFrozen = true;
 				
 				System.Diagnostics.Debug.WriteLine ("Keyboard Filter disabled temporarily");
 				
@@ -116,7 +161,9 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.filter_disabled)
 			{
-				Behaviors.MenuBehavior.EnableKeyboardFilter ();
+				Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
+				
+				behavior.IsFrozen = false;
 				
 				System.Diagnostics.Debug.WriteLine ("Keyboard Filter re-enabled");
 				
