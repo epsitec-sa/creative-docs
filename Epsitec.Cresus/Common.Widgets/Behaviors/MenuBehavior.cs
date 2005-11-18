@@ -452,7 +452,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			this.keyboard_menu_item = null;
 			
-			if (this.live_menu_windows.Count > 1)
+			if (this.live_menu_windows.Count > 0)
 			{
 				//	Il reste probablement des fenêtres de sous-menu à
 				//	refermer :
