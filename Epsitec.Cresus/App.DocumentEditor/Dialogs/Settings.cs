@@ -588,13 +588,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.ignoreChange = false;
 		}
 
-		// Liste des commandes rapides cliquée.
-		private void HandleQuickListSelectionChanged(object sender)
-		{
-			if ( this.ignoreChange )  return;
-			this.UpdateQuickButtons();
-		}
-
 		// Déplace une commande rapide.
 		protected void MoveQuickCommand(int src, int dst)
 		{
@@ -607,6 +600,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateQuickList(dst);
 			this.UpdateQuickButtons();
 			this.editor.UpdateQuickCommands();
+		}
+
+		// Liste des commandes rapides cliquée.
+		private void HandleQuickListSelectionChanged(object sender)
+		{
+			if ( this.ignoreChange )  return;
+			this.UpdateQuickButtons();
 		}
 
 		// Bouton "check" dans la liste des commandes rapides cliqué.

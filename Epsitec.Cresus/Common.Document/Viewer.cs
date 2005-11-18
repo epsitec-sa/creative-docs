@@ -2020,19 +2020,19 @@ namespace Epsitec.Common.Document
 				System.Collections.ArrayList listOper = new System.Collections.ArrayList();
 
 				exist = false;
-				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "Rotate90",  Misc.Icon("OperRot90"),    Res.Strings.Action.Rotate90);
-				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "Rotate180", Misc.Icon("OperRot180"),   Res.Strings.Action.Rotate180);
-				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "Rotate270", Misc.Icon("OperRot270"),   Res.Strings.Action.Rotate270);
+				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "Rotate90",  Misc.Icon("Rotate90"),  Res.Strings.Action.Rotate90);
+				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "Rotate180", Misc.Icon("Rotate180"), Res.Strings.Action.Rotate180);
+				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "Rotate270", Misc.Icon("Rotate270"), Res.Strings.Action.Rotate270);
 				if ( exist )  ContextMenuItem.MenuAddSep(listOper);
 
 				exist = false;
-				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "MirrorH",   Misc.Icon("OperMirrorH"),  Res.Strings.Action.MirrorH);
-				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "MirrorV",   Misc.Icon("OperMirrorV"),  Res.Strings.Action.MirrorV);
+				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "MirrorH",   Misc.Icon("MirrorH"),   Res.Strings.Action.MirrorH);
+				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "MirrorV",   Misc.Icon("MirrorV"),   Res.Strings.Action.MirrorV);
 				if ( exist )  ContextMenuItem.MenuAddSep(listOper);
 
 				exist = false;
-				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ScaleDiv2",  Misc.Icon("OperScaleDiv2"), Res.Strings.Action.ScaleDiv2);
-				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ScaleMul2",  Misc.Icon("OperScaleMul2"), Res.Strings.Action.ScaleMul2);
+				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ScaleDiv2", Misc.Icon("ScaleDiv2"), Res.Strings.Action.ScaleDiv2);
+				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ScaleMul2", Misc.Icon("ScaleMul2"), Res.Strings.Action.ScaleMul2);
 
 				if ( ContextMenuItem.IsMenuActive(listOper) )
 				{
