@@ -259,6 +259,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public void MakeFocused()
+		{
+			if (! this.IsDisposed)
+			{
+				this.window.Focus ();
+			}
+		}
+		
+		
 		public void DisableMouseActivation()
 		{
 			this.window.IsMouseActivationEnabled = false;

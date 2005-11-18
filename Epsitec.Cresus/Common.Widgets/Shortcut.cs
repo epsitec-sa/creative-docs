@@ -183,7 +183,6 @@ namespace Epsitec.Common.Widgets
 		
 		public override string ToString()
 		{
-			System.Diagnostics.Debug.WriteLine ("Shortcut.ToString -> [" + Message.GetKeyName (this.key_code) + "]");
 			return Message.GetKeyName (this.key_code);
 		}
 

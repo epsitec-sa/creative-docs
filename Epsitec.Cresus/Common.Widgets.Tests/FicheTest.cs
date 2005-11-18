@@ -388,7 +388,7 @@ namespace Epsitec.Common.Widgets
 			debugMenu.Items[2].Submenu = debugMenu3;
 
 			MenuItemContainer helpMenuItemContainer = new MenuItemContainer ();
-			TextField         helpMenuItemTextField = new TextField ();
+			Widget            helpMenuItemTextField = new TextField ();
 			
 			helpMenuItemTextField.Dock = DockStyle.Fill;
 			helpMenuItemTextField.DockMargins = new Margins (1, 1, 1, 1);
