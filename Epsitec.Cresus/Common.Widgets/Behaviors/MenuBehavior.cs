@@ -27,13 +27,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 		#endregion
 		
-		public static void OpenItemSubmenu(Widget item, Animate animate)
+		public static MenuBehavior OpenItemSubmenu(Widget item, Animate animate)
 		{
 			//	Ouvre le sous-menu d'un MenuItem donné.
 			
 			if (item == null)
 			{
-				return;
+				return null;
 			}
 			
 			Widget submenu = MenuItem.GetSubmenu (item);
@@ -46,7 +46,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 				//	Il n'y a pas de sous-menu ! Il faut en tout cas montrer le
 				//	menu qui contient cet item :
 				
-				window = MenuItem.GetMenuWindow (item) as MenuWindow;
+				window   = MenuItem.GetMenuWindow (item) as MenuWindow;
+				behavior = MenuItem.GetMenuBehavior (item);
 				
 				if (window != null)
 				{
@@ -56,7 +57,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 						//	dans le cas d'un menu flottant. Il faut fermer tous
 						//	les sous-menus :
 						
-						behavior = MenuItem.GetMenuBehavior (item);
 						behavior.OpenSubmenu (window, Animate.No);
 						behavior.UpdateItems ();
 					}
@@ -74,9 +74,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 				behavior.OpenSubmenu (window, animate);
 				behavior.UpdateItems ();
 			}
+			
+			return behavior;
 		}
 		
-		public static void CloseItemMenu(Widget item)
+		public static MenuBehavior CloseItemMenu(Widget item)
 		{
 			MenuBehavior behavior = MenuItem.GetMenuBehavior (item);
 			
@@ -84,6 +86,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				behavior.HideAll ();
 			}
+			
+			return behavior;
 		}
 		
 		
@@ -151,6 +155,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		public void Reject()
 		{
 			this.HideAll ();
+			this.OnRejected ();
 		}
 		
 		
@@ -235,6 +240,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 		}
 		
+		
+		internal void HandleMenuItemPressed(MenuItem item)
+		{
+			this.OnAccepted ();
+		}
 		
 		internal void HandleAboutToShowMenuWindow(MenuWindow window)
 		{
@@ -1331,6 +1341,26 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 		}
 		
+		
+		private void OnAccepted()
+		{
+			if (this.Accepted != null)
+			{
+				this.Accepted (this);
+			}
+		}
+		
+		private void OnRejected()
+		{
+			if (this.Rejected != null)
+			{
+				this.Rejected (this);
+			}
+		}
+		
+		
+		public event Support.EventHandler		Accepted;
+		public event Support.EventHandler		Rejected;
 		
 		static object							sync_object = new object ();
 		static long								next_id = 1;

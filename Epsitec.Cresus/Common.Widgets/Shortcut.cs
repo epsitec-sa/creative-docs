@@ -1,3 +1,6 @@
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -110,68 +113,27 @@ namespace Epsitec.Common.Widgets
 		
 		public bool Match(Shortcut shortcut)
 		{
-			switch (this.mode)
+			if (shortcut.KeyCode == this.key_code)
 			{
-				case ShortcutMode.Mnemonic:
-					if (shortcut.KeyChar == this.mnemonic_code)
-					{
-						return true;
-					}
-					break;
-				
-				case ShortcutMode.KeyCode:
-					if (shortcut.KeyCode == this.key_code)
-					{
-						return true;
-					}
-					break;
+				return true;
 			}
-			
-			return false;
+			else
+			{
+				return false;
+			}
 		}
 		
-		
-		public ShortcutMode				Mode
-		{
-			get { return this.mode; }
-		}
-
-		public char						Mnemonic
-		{
-			get
-			{
-				if (this.mode == ShortcutMode.Mnemonic)
-				{
-					return this.mnemonic_code;
-				}
-				return (char) 0;
-			}
-			set
-			{
-				if (this.mnemonic_code != value)
-				{
-					this.mode          = ShortcutMode.Mnemonic;
-					this.mnemonic_code = value;
-				}
-			}
-		}
 		
 		public KeyCode					KeyCode
 		{
 			get
 			{
-				if (this.Mode == ShortcutMode.KeyCode)
-				{
-					return this.key_code;
-				}
-				
-				return 0;
+				return this.key_code;
 			}
 			set
 			{
 				if (this.key_code != value)
 				{
-					this.mode     = ShortcutMode.KeyCode;
 					this.key_code = value;
 				}
 			}
@@ -189,15 +151,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				switch (this.mode)
-				{
-					case ShortcutMode.KeyCode:
-						return (char) (this.KeyCode & KeyCode.KeyCodeMask);
-					case ShortcutMode.Mnemonic:
-						return this.mnemonic_code;
-				}
-				
-				return (char) 0;
+				return (char) (this.KeyCode & KeyCode.KeyCodeMask);
 			}
 		}
 		
@@ -229,25 +183,22 @@ namespace Epsitec.Common.Widgets
 		
 		public override string ToString()
 		{
-			System.Text.StringBuilder extra = new System.Text.StringBuilder ();
-			
-			if (this.IsShiftPressed) extra.Append ("+SHIFT");
-			if (this.IsCtrlPressed)  extra.Append ("+CTRL");
-			if (this.IsAltPressed)   extra.Append ("+ALT");
-			
-			return System.String.Format ("[{0}{1}]", this.KeyCodeOnly.ToString (), extra.ToString ());
+			System.Diagnostics.Debug.WriteLine ("Shortcut.ToString -> [" + Message.GetKeyName (this.key_code) + "]");
+			return Message.GetKeyName (this.key_code);
 		}
 
 		public override bool Equals(object obj)
 		{
-			Shortcut s = obj as Shortcut;
+			Shortcut that = obj as Shortcut;
 			
-			if (s == null)
+			if (that == null)
 			{
 				return false;
 			}
-			
-			return (this.mode == s.mode) && (this.key_code == s.key_code);
+			else
+			{
+				return this.key_code == that.key_code;
+			}
 		}
 		
 		public override int GetHashCode()
@@ -267,15 +218,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private ShortcutMode			mode;
-		private char					mnemonic_code;
 		private KeyCode					key_code;
-	}
-	
-	public enum ShortcutMode
-	{
-		None,
-		Mnemonic,
-		KeyCode
 	}
 }

@@ -64,6 +64,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Behaviors.MenuBehavior			Behavior
+		{
+			get
+			{
+				return MenuItem.GetMenuBehavior (this);
+			}
+		}
 		
 		public ICommandDispatcherHost			Host
 		{
@@ -106,8 +113,7 @@ namespace Epsitec.Common.Widgets
 			
 			Window.ResetMouseCursor ();
 			
-			MenuWindow             window   = MenuItem.GetMenuWindow (this) as MenuWindow;
-			Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
+			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
 			
 			pos.Y -= this.Height;
 			pos.X -= this.shadow.Left;
@@ -116,7 +122,7 @@ namespace Epsitec.Common.Widgets
 			window.Owner          = owner;
 			window.WindowLocation = pos;
 			
-			behavior.OpenSubmenu (window, Behaviors.MenuBehavior.Animate.Yes);
+			this.Behavior.OpenSubmenu (window, Behaviors.MenuBehavior.Animate.Yes);
 			
 			this.Focus ();
 		}

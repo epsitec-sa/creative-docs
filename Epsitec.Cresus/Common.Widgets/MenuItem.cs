@@ -363,9 +363,14 @@ namespace Epsitec.Common.Widgets
 			
 			if (submenu == null)
 			{
-				Behaviors.MenuBehavior.CloseItemMenu (this);
+				Behaviors.MenuBehavior behavior = Behaviors.MenuBehavior.CloseItemMenu (this);
 				
 				this.ExecuteCommand ();
+				
+				if (behavior != null)
+				{
+					behavior.HandleMenuItemPressed (this);
+				}
 			}
 			else
 			{

@@ -1,3 +1,6 @@
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	using ShortcutCollection = Collections.ShortcutCollection;
@@ -173,6 +176,7 @@ namespace Epsitec.Common.Widgets
 			
 			return dispatcher.CreateCommandState (command_name) as CommandState;
 		}
+		
 		
 		static Support.CommandDispatcher.CommandState DefaultCreate(string command_name, Support.CommandDispatcher dispatcher)
 		{

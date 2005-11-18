@@ -4561,11 +4561,12 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.AutoMnemonic)
 			{
-				if (this.Shortcut.Mnemonic != this.Mnemonic)
-				{
-					this.Shortcut.Mnemonic = this.Mnemonic;
-					this.OnShortcutChanged ();
-				}
+				//#fix
+//				if (this.Shortcut.Mnemonic != this.Mnemonic)
+//				{
+//					this.Shortcut.Mnemonic = this.Mnemonic;
+//					this.OnShortcutChanged ();
+//				}
 			}
 		}
 		

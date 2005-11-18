@@ -298,6 +298,11 @@ namespace Epsitec.Common.Widgets
 		
 		public static string GetKeyName(KeyCode code)
 		{
+			if (code == 0)
+			{
+				return "";
+			}
+			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
 			if ((code & KeyCode.ModifierControl) != 0)
