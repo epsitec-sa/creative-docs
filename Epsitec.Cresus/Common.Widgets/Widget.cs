@@ -4274,6 +4274,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public void DispatchDummyMouseUpEvent(MouseButtons button, Drawing.Point pos)
+		{
+			Window window = this.Window;
+			
+			if (window != null)
+			{
+				window.DispatchMessage (Message.CreateDummyMouseUpEvent (button, pos));
+			}
+		}
+		
 		public void MessageHandler(Message message)
 		{
 			Drawing.Point point = message.Cursor;

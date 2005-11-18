@@ -377,6 +377,23 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void OnPressed(MessageEventArgs e)
 		{
+			this.OnUserAction (e);
+			base.OnPressed (e);
+		}
+		
+		protected override void OnEntered(MessageEventArgs e)
+		{
+			base.OnEntered (e);
+		}
+		
+		protected override void OnExited(MessageEventArgs e)
+		{
+			base.OnExited (e);
+		}
+
+		
+		protected virtual void OnUserAction(MessageEventArgs e)
+		{
 			Widget submenu = this.Submenu;
 			
 			if (submenu == null)
@@ -394,20 +411,8 @@ namespace Epsitec.Common.Widgets
 			{
 				Behaviors.MenuBehavior.OpenItemSubmenu (this, Behaviors.MenuBehavior.Animate.Automatic);
 			}
-			
-			base.OnPressed (e);
 		}
 		
-		protected override void OnEntered(MessageEventArgs e)
-		{
-			base.OnEntered (e);
-		}
-		
-		protected override void OnExited(MessageEventArgs e)
-		{
-			base.OnExited (e);
-		}
-
 		
 		protected override void Dispose(bool disposing)
 		{

@@ -1016,6 +1016,7 @@ namespace Epsitec.Common.Widgets
 				
 				this.last_in_widget   = null;
 				this.capturing_widget = null;
+				this.capturing_button = MouseButtons.None;
 				this.focused_widget   = null;
 				this.engaged_widget   = null;;
 				
@@ -1369,6 +1370,20 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		private void ReleaseCapturingWidget()
+		{
+			if ((this.capturing_widget != null) &&
+				(this.capturing_button != MouseButtons.None))
+			{
+				this.capturing_widget.DispatchDummyMouseUpEvent (this.capturing_button, this.capturing_cursor);
+			}
+			
+			this.capturing_widget = null;
+			this.capturing_button = MouseButtons.None;
+			
+			this.window.Capture = false;
+		}
+		
 		private void HandleValidationRuleBecameDirty(object sender)
 		{
 			this.AsyncValidation ();
@@ -1487,10 +1502,8 @@ namespace Epsitec.Common.Widgets
 		
 		internal void ReleaseCapture()
 		{
-			this.capturing_widget = null;
-			this.window.Capture = false;
+			this.ReleaseCapturingWidget ();
 		}
-		
 		
 		internal void FocusWidget(Widget consumer)
 		{
@@ -1538,8 +1551,7 @@ namespace Epsitec.Common.Widgets
 					//	sinon on risque de ne plus jamais recevoir d'événements pour
 					//	les autres widgets.
 					
-					this.capturing_widget = null;
-					this.window.Capture = false;
+					this.ReleaseCapturingWidget ();
 				}
 			}
 			
@@ -1552,6 +1564,8 @@ namespace Epsitec.Common.Widgets
 							(message.ForceCapture))
 						{
 							this.capturing_widget = consumer;
+							this.capturing_button = message.Button;
+							this.capturing_cursor = message.Cursor;
 							this.window.Capture = true;
 						}
 						else
@@ -1578,6 +1592,7 @@ namespace Epsitec.Common.Widgets
 					
 					case MessageType.MouseUp:
 						this.capturing_widget = null;
+						this.capturing_button = MouseButtons.None;
 						this.window.Capture = false;
 						
 						if (message.IsLeftButton)
@@ -1649,6 +1664,7 @@ namespace Epsitec.Common.Widgets
 					case MessageType.MouseDown:
 						this.window.FilterMouseMessages = true;
 						this.capturing_widget = null;
+						this.capturing_button = MouseButtons.None;
 						break;
 							
 					case MessageType.KeyDown:
@@ -1858,6 +1874,8 @@ namespace Epsitec.Common.Widgets
 		private int								show_count;
 		private Widget							last_in_widget;
 		private Widget							capturing_widget;
+		private MouseButtons					capturing_button;
+		private Drawing.Point					capturing_cursor;
 		private Widget							focused_widget;
 		private Widget							engaged_widget;
 		private Widget							initially_engaged_widget;

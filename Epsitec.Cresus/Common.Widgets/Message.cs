@@ -716,6 +716,20 @@ namespace Epsitec.Common.Widgets
 			return message;
 		}
 		
+		internal static Message CreateDummyMouseUpEvent(MouseButtons button, Drawing.Point pos)
+		{
+			Message message = new Message ();
+			
+			message.type                = MessageType.MouseUp;
+			message.button              = button;
+			message.cursor              = pos;
+			message.filter_no_children  = false;
+			message.filter_only_focused = false;
+			message.filter_only_on_hit  = true;
+			
+			return message;
+		}
+		
 		
 		internal static void DefineLastWindow(Window window)
 		{
