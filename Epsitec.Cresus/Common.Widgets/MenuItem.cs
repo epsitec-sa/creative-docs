@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Command  = command;
 			this.Text     = text;
-			this.onlyText = true;
+			this.text_only = true;
 		}
 		
 		public MenuItem(string command, string icon, string text, string shortcut) : this ()
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Widgets
 			this.IconName = icon;
 			this.Text     = text;
 			this.ShortKey = shortcut;	//#fix
-			this.onlyText = false;
+			this.text_only = false;
 		}
 		
 		public MenuItem(string command, string icon, string text, string shortcut, string name) : this (command, icon, text, shortcut)
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Widgets
 			this.IconName = icon;
 			this.Text     = text;
 			this.ShortKey = shortcut;	//#fix
-			this.onlyText = false;
+			this.text_only = false;
 			this.Submenu  = submenu;
 		}
 		
@@ -129,13 +129,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.iconName;
+				return this.icon_name;
 			}
 			set
 			{
-				if (this.iconName != value)
+				if (this.icon_name != value)
 				{
-					this.iconName = value;
+					this.icon_name = value;
 					this.UpdateIconSize ();
 				}
 			}
@@ -145,14 +145,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.iconNameActiveNo;
+				return this.icon_nameActiveNo;
 			}
 
 			set
 			{
-				if (this.iconNameActiveNo != value)
+				if (this.icon_nameActiveNo != value)
 				{
-					this.iconNameActiveNo = value;
+					this.icon_nameActiveNo = value;
 					this.UpdateIconSize ();
 				}
 			}
@@ -162,14 +162,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.iconNameActiveYes;
+				return this.icon_nameActiveYes;
 			}
 
 			set
 			{
-				if (this.iconNameActiveYes != value)
+				if (this.icon_nameActiveYes != value)
 				{
-					this.iconNameActiveYes = value;
+					this.icon_nameActiveYes = value;
 					this.UpdateIconSize ();
 				}
 			}
@@ -261,30 +261,30 @@ namespace Epsitec.Common.Widgets
 			double dx = 0;
 			double dy = 0;
 			
-			if ((this.iconNameActiveNo != null) &&
-				(this.iconNameActiveNo.Length > 0))
+			if ((this.icon_nameActiveNo != null) &&
+				(this.icon_nameActiveNo.Length > 0))
 			{
-				TextLayout layout = this.GetIconTextLayout (this.iconNameActiveNo);
+				TextLayout layout = this.GetIconTextLayout (this.icon_nameActiveNo);
 				Drawing.Size size = layout.SingleLineSize;
 				
 				dx = System.Math.Max (dx, size.Width);
 				dy = System.Math.Max (dy, size.Height);
 			}
 			
-			if ((this.iconNameActiveYes != null) &&
-				(this.iconNameActiveYes.Length > 0))
+			if ((this.icon_nameActiveYes != null) &&
+				(this.icon_nameActiveYes.Length > 0))
 			{
-				TextLayout layout = this.GetIconTextLayout (this.iconNameActiveYes);
+				TextLayout layout = this.GetIconTextLayout (this.icon_nameActiveYes);
 				Drawing.Size size = layout.SingleLineSize;
 				
 				dx = System.Math.Max (dx, size.Width);
 				dy = System.Math.Max (dy, size.Height);
 			}
 			
-			if ((this.iconName != null) &&
-				(this.iconName.Length > 0))
+			if ((this.icon_name != null) &&
+				(this.icon_name.Length > 0))
 			{
-				TextLayout layout = this.GetIconTextLayout (this.iconName);
+				TextLayout layout = this.GetIconTextLayout (this.icon_name);
 				Drawing.Size size = layout.SingleLineSize;
 				
 				dx = System.Math.Max (dx, size.Width);
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Widgets
 			size.Width  = System.Math.Ceiling(size.Width);
 			size.Height = System.Math.Ceiling(size.Height);
 
-			if ( !this.onlyText )
+			if ( !this.text_only )
 			{
 				size.Width  += MenuItem.MarginItem*2;
 				size.Height += MenuItem.MarginItem*2;
@@ -329,7 +329,7 @@ namespace Epsitec.Common.Widgets
 			double dx = 0;
 			double dy = 0;
 
-			if (this.onlyText)
+			if (this.text_only)
 			{
 				dx = MenuItem.MarginHeader*2 + this.mainTextSize.Width;
 				dy = this.mainTextSize.Height;
@@ -435,7 +435,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.onlyText )
+			if ( this.text_only )
 			{
 				if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
 			}
@@ -465,7 +465,7 @@ namespace Epsitec.Common.Widgets
 			}
 			adorner.PaintMenuItemBackground(graphics, rect, state, Direction.Up, this.MenuType, iType);
 
-			if ( this.onlyText || this.MenuType == MenuType.Horizontal )
+			if ( this.text_only || this.MenuType == MenuType.Horizontal )
 			{
 				pos.X = (rect.Width-this.mainTextSize.Width)/2;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
@@ -480,23 +480,23 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				string icon = this.iconName;
+				string icon = this.icon_name;
 				
 				switch (this.ActiveState)
 				{
 					case WidgetState.ActiveNo:
-						if ((this.iconNameActiveNo != null) &&
-							(this.iconNameActiveNo.Length > 0))
+						if ((this.icon_nameActiveNo != null) &&
+							(this.icon_nameActiveNo.Length > 0))
 						{
-							icon = this.iconNameActiveNo;
+							icon = this.icon_nameActiveNo;
 						}
 						break;
 					
 					case WidgetState.ActiveYes:
-						if ((this.iconNameActiveYes != null) &&
-							(this.iconNameActiveYes.Length > 0))
+						if ((this.icon_nameActiveYes != null) &&
+							(this.icon_nameActiveYes.Length > 0))
 						{
-							icon = this.iconNameActiveYes;
+							icon = this.icon_nameActiveYes;
 						}
 						break;
 				}
@@ -505,7 +505,7 @@ namespace Epsitec.Common.Widgets
 					(icon.Length > 0))
 				{
 					if ((this.ActiveState == WidgetState.ActiveYes) &&
-						(icon != this.iconNameActiveYes))
+						(icon != this.icon_nameActiveYes))
 					{
 						Drawing.Rectangle iRect = rect;
 						iRect.Width = this.icon_size.Width;
@@ -742,12 +742,12 @@ namespace Epsitec.Common.Widgets
 		private const double					MarginSpace		= 8;
 		private const double					SeparatorHeight = 5;
 		
-		protected bool							onlyText = false;
+		protected bool							text_only = false;
 		
 		protected double						submenu_mark_width;
-		protected string						iconName;
-		protected string						iconNameActiveNo;
-		protected string						iconNameActiveYes;
+		protected string						icon_name;
+		protected string						icon_nameActiveNo;
+		protected string						icon_nameActiveYes;
 		protected TextLayout					icon;
 		protected TextLayout					shortcut;
 		protected Drawing.Size					icon_size;
