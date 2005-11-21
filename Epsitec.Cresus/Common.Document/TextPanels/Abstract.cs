@@ -25,9 +25,6 @@ namespace Epsitec.Common.Document.TextPanels
 			this.extendedButton.TabIndex = 0;
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Panel.Abstract.Extend);
-
-			this.document.FontWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
-			this.document.FontWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -35,9 +32,6 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( disposing )
 			{
 				this.extendedButton.Clicked -= new MessageEventHandler(this.ExtendedButtonClicked);
-
-				this.document.FontWrapper.Active.Changed -= new EventHandler(this.HandleWrapperChanged);
-				this.document.FontWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -96,6 +90,7 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( this.isExtendedSize != value )
 				{
 					this.isExtendedSize = value;
+					this.document.Modifier.IsTextPanelExtended(this, this.isExtendedSize);
 					this.UpdateAfterChanging();
 					this.HeightChanged();
 				}
@@ -210,14 +205,8 @@ namespace Epsitec.Common.Document.TextPanels
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
 		{
 			this.IsExtendedSize = !this.isExtendedSize;
-			this.document.Modifier.IsTextPanelExtended(this, this.isExtendedSize);
 		}
 
-
-		// Le wrapper associé a changé.
-		protected virtual void HandleWrapperChanged(object sender)
-		{
-		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{

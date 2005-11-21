@@ -983,6 +983,9 @@ namespace Epsitec.Common.Document.Objects
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
+			TextPanels.ParagraphLayout layout = new TextPanels.ParagraphLayout(this.document);
+			list.Add(layout);
+
 			TextPanels.Font font = new TextPanels.Font(this.document);
 			list.Add(font);
 
@@ -1042,7 +1045,7 @@ namespace Epsitec.Common.Document.Objects
 		// Attache l'objet au différents wrappers.
 		protected override void EditWrappersAttach()
 		{
-			this.document.FontWrapper.Attach(this.textFlow.TextNavigator);
+			this.document.WrappersAttach(this.textFlow);
 		}
 
 		// Met à jour les règles pour le texte en édition.

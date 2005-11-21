@@ -82,6 +82,7 @@ namespace Epsitec.Common.Document
 			this.uniqueObjectId = 0;
 			this.uniqueAggregateId = 0;
 			this.fontWrapper = new Text.Wrappers.FontWrapper();
+			this.paragraphLayoutWrapper = new Text.Wrappers.ParagraphLayoutWrapper();
 
 			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
 
@@ -176,6 +177,26 @@ namespace Epsitec.Common.Document
 		public Text.Wrappers.FontWrapper FontWrapper
 		{
 			get { return this.fontWrapper; }
+		}
+
+		// Wrapper pour le paragraphe.
+		public Text.Wrappers.ParagraphLayoutWrapper ParagraphLayoutWrapper
+		{
+			get { return this.paragraphLayoutWrapper; }
+		}
+
+		// Attache tous les wrappers à un texte.
+		public void WrappersAttach(TextFlow textFlow)
+		{
+			this.fontWrapper.Attach(textFlow.TextNavigator);
+			//?this.paragraphLayoutWrapper.Attach(textFlow.TextNavigator);
+		}
+
+		// Détache tous les wrappers.
+		public void WrappersDetach()
+		{
+			this.fontWrapper.Detach();
+			this.paragraphLayoutWrapper.Detach();
 		}
 
 		// Règle horizontale.
@@ -1845,45 +1866,46 @@ namespace Epsitec.Common.Document
 
 
 
-		protected DocumentType					type;
-		protected DocumentMode					mode;
-		protected InstallType					installType;
-		protected Settings.GlobalSettings		globalSettings;
-		protected CommandDispatcher				commandDispatcher;
-		protected string						name;
-		protected Document						clipboard;
-		protected Size							size;
-		protected Point							hotSpot;
-		protected string						filename;
-		protected string						exportDirectory;
-		protected string						exportFilename;
-		protected int							exportFilter;
-		protected bool							isDirtySerialize;
-		protected UndoableList					objects;
-		protected UndoableList					propertiesAuto;
-		protected UndoableList					propertiesSel;
-		protected UndoableList					aggregates;
-		protected UndoableList					textFlows;
-		protected Settings.Settings				settings;
-		protected Modifier						modifier;
-		protected Notifier						notifier;
-		protected Printer						printer;
-		protected Common.Dialogs.Print			printDialog;
-		protected PDF.Export					exportPDF;
-		protected Dialogs						dialogs;
-		protected string						ioDirectory;
-		protected System.Collections.ArrayList	readWarnings;
-		protected IOType						ioType;
-		protected Objects.Memory				readObjectMemory;
-		protected Objects.Memory				readObjectMemoryText;
-		protected System.Collections.ArrayList	readRootStack;
-		protected bool							isSurfaceRotation;
-		protected double						surfaceRotationAngle;
-		protected int							uniqueObjectId = 0;
-		protected int							uniqueAggregateId = 0;
-		protected Text.TextContext				textContext;
-		protected Widgets.HRuler				hRuler;
-		protected Widgets.VRuler				vRuler;
-		protected Text.Wrappers.FontWrapper		fontWrapper;
+		protected DocumentType							type;
+		protected DocumentMode							mode;
+		protected InstallType							installType;
+		protected Settings.GlobalSettings				globalSettings;
+		protected CommandDispatcher						commandDispatcher;
+		protected string								name;
+		protected Document								clipboard;
+		protected Size									size;
+		protected Point									hotSpot;
+		protected string								filename;
+		protected string								exportDirectory;
+		protected string								exportFilename;
+		protected int									exportFilter;
+		protected bool									isDirtySerialize;
+		protected UndoableList							objects;
+		protected UndoableList							propertiesAuto;
+		protected UndoableList							propertiesSel;
+		protected UndoableList							aggregates;
+		protected UndoableList							textFlows;
+		protected Settings.Settings						settings;
+		protected Modifier								modifier;
+		protected Notifier								notifier;
+		protected Printer								printer;
+		protected Common.Dialogs.Print					printDialog;
+		protected PDF.Export							exportPDF;
+		protected Dialogs								dialogs;
+		protected string								ioDirectory;
+		protected System.Collections.ArrayList			readWarnings;
+		protected IOType								ioType;
+		protected Objects.Memory						readObjectMemory;
+		protected Objects.Memory						readObjectMemoryText;
+		protected System.Collections.ArrayList			readRootStack;
+		protected bool									isSurfaceRotation;
+		protected double								surfaceRotationAngle;
+		protected int									uniqueObjectId = 0;
+		protected int									uniqueAggregateId = 0;
+		protected Text.TextContext						textContext;
+		protected Widgets.HRuler						hRuler;
+		protected Widgets.VRuler						vRuler;
+		protected Text.Wrappers.FontWrapper				fontWrapper;
+		protected Text.Wrappers.ParagraphLayoutWrapper	paragraphLayoutWrapper;
 	}
 }

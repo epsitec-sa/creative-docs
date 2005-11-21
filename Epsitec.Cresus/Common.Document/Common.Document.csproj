@@ -837,6 +837,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TextPanels\ParagraphLayout.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\AbstractRuler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -1254,7 +1254,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.document.HRuler.EditObject = null;
 				this.document.VRuler.EditObject = null;
-				this.document.FontWrapper.Detach();
+				this.document.WrappersDetach();
 			}
 
 			this.UpdateTextRulers();

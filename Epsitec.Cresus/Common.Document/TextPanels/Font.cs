@@ -13,7 +13,10 @@ namespace Epsitec.Common.Document.TextPanels
 	{
 		public Font(Document document) : base(document)
 		{
-			this.label.Text = "Police";
+			this.label.Text = Res.Strings.Property.Abstract.TextFont;
+
+			this.fixIcon.Text = Misc.Image("PropertyTextFont");
+			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.Property.Abstract.TextFont);
 
 			this.fontFace = new TextFieldCombo(this);
 			this.fontFace.IsReadOnly = true;
@@ -55,6 +58,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.Text.Font.Subscript,   new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonSuperscript = this.CreateIconButton(Misc.Icon("FontSuperscript"), Res.Strings.Action.Text.Font.Superscript, new MessageEventHandler(this.HandleButtonClicked));
 
+			this.document.FontWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.document.FontWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
 		}
@@ -68,6 +74,9 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontSize.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
+
+				this.document.FontWrapper.Active.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.document.FontWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 
 				this.fontFace = null;
 				this.fontSize = null;
@@ -356,7 +365,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		
 		// Le wrapper associé a changé.
-		protected override void HandleWrapperChanged(object sender)
+		protected void HandleWrapperChanged(object sender)
 		{
 			this.UpdateAfterChanging();
 		}
@@ -670,10 +679,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleFieldColorClicked(object sender, MessageEventArgs e)
 		{
+			if ( this.ignoreChanged )  return;
 		}
 
 		private void HandleFieldColorChanged(object sender)
 		{
+			if ( this.ignoreChanged )  return;
 			ColorSample cs = sender as ColorSample;
 			if ( cs.ActiveState == ActiveState.Yes )
 			{
@@ -682,30 +693,35 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleButtonSizeMinusClicked(object sender, MessageEventArgs e)
 		{
+			if ( this.ignoreChanged )  return;
 			if ( !this.document.FontWrapper.IsAttached )  return;
 			this.ChangeFontSize(-1, 80);
 		}
 
 		private void HandleButtonSizePlusClicked(object sender, MessageEventArgs e)
 		{
+			if ( this.ignoreChanged )  return;
 			if ( !this.document.FontWrapper.IsAttached )  return;
 			this.ChangeFontSize(1, 125);
 		}
 
 		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
 		{
+			if ( this.ignoreChanged )  return;
 			if ( !this.document.FontWrapper.IsAttached )  return;
 			this.document.FontWrapper.Defined.InvertBold = !this.document.FontWrapper.Defined.InvertBold;
 		}
 
 		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
 		{
+			if ( this.ignoreChanged )  return;
 			if ( !this.document.FontWrapper.IsAttached )  return;
 			this.document.FontWrapper.Defined.InvertItalic = !this.document.FontWrapper.Defined.InvertItalic;
 		}
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
+			if ( this.ignoreChanged )  return;
 			if ( !this.document.FontWrapper.IsAttached )  return;
 		}
 

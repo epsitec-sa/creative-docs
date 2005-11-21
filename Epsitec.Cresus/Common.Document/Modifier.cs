@@ -4520,13 +4520,17 @@ namespace Epsitec.Common.Document
 				this.tableTextPanelExtended = new System.Collections.Hashtable();
 			}
 
-			System.Type type = panel.GetType();
-			if ( !this.tableTextPanelExtended.ContainsKey(type) )
+			System.Type type = panel.GetType();  // clé pour HashTable
+
+			if ( this.tableTextPanelExtended.ContainsKey(type) )
+			{
+				return (bool) this.tableTextPanelExtended[type];
+			}
+			else
 			{
 				this.tableTextPanelExtended.Add(type, false);
+				return false;
 			}
-
-			return (bool) this.tableTextPanelExtended[type];
 		}
 
 		// Modifie l'état étendu ou pas d'un panneau pour le texte.
@@ -4537,13 +4541,16 @@ namespace Epsitec.Common.Document
 				this.tableTextPanelExtended = new System.Collections.Hashtable();
 			}
 
-			System.Type type = panel.GetType();
-			if ( !this.tableTextPanelExtended.ContainsKey(type) )
-			{
-				this.tableTextPanelExtended.Add(type, false);
-			}
+			System.Type type = panel.GetType();  // clé pour HashTable
 
-			this.tableTextPanelExtended[type] = extended;
+			if ( this.tableTextPanelExtended.ContainsKey(type) )
+			{
+				this.tableTextPanelExtended[type] = extended;
+			}
+			else
+			{
+				this.tableTextPanelExtended.Add(type, extended);
+			}
 		}
 		#endregion
 
