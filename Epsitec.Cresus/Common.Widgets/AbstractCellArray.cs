@@ -1570,7 +1570,7 @@ namespace Epsitec.Common.Widgets
 		protected void DetachCell(Cell cell, bool keep_focus)
 		{
 			if ((keep_focus) &&
-				(cell.ContainsFocus))
+				(cell.ContainsKeyboardFocus))
 			{
 				//	La cellule qui contient le focus n'est plus visible; il faudrait donc
 				//	supprimer son parent, mais ce faisant, on perdrait le focus. Dilemme !
@@ -1621,7 +1621,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleFocusedWidgetDefocused(object sender)
 		{
-			if ( ! this.focusedWidget.IsFocusedFlagSet )
+			if ( ! this.focusedWidget.IsKeyboardFocused )
 			{
 				this.SetFocusedCell (null);
 			}

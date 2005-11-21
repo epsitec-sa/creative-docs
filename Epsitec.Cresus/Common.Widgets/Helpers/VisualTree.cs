@@ -304,6 +304,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
+		
 		public static bool IsVisible(Visual visual)
 		{
 			while ((visual != null) && (visual.Visibility))
@@ -313,14 +314,7 @@ namespace Epsitec.Common.Widgets.Helpers
 					WindowRoot root   = visual as WindowRoot;
 					Window     window = root.Window;
 					
-					if (window == null)
-					{
-						return false;
-					}
-					else
-					{
-						return window.IsVisible;
-					}
+					return window == null ? false : window.IsVisible;
 				}
 				
 				visual = visual.Parent;
@@ -342,6 +336,87 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 			
 			return false;
+		}
+		
+		public static bool IsFocused(Visual visual)
+		{
+			//	Retourne true si un widget, ou l'un de ses parents (pour autant
+			//	que l'héritage soit activé) contient le focus.
+			
+			while (visual != null)
+			{
+				if (visual.IsKeyboardFocused)
+				{
+					Window window = VisualTree.GetWindow (visual);
+					return window == null ? false : window.IsFocused;
+				}
+				
+				if (visual.InheritFocus)
+				{
+					visual = visual.Parent;
+				}
+				else
+				{
+					break;
+				}
+			}
+			
+			return false;
+		}
+		
+		
+		public static bool ContainsKeyboardFocus(Visual visual)
+		{
+			//	Retourne true si un widget, ou l'un de ses enfants, contient le
+			//	focus du clavier.
+			
+			while (visual != null)
+			{
+				if (visual.IsKeyboardFocused)
+				{
+					return true;
+				}
+				
+				if (visual.HasChildren)
+				{
+					Visual[] children = visual.Children.ToArray ();
+					int  children_num = children.Length;
+					
+					for (int i = 0; i < children_num; i++)
+					{
+						if (VisualTree.ContainsKeyboardFocus (children[i]))
+						{
+							return true;
+						}
+					}
+				}
+			}	
+			
+			return false;
+		}
+		
+		
+		public static Visual FindParentUsingEvent(Visual visual, Types.Property property)
+		{
+			//	Cherche le premier parent dans la hiérarchie pour lequel un
+			//	événement a été attaché pour la propriété spécifiée.
+			
+			if (visual != null)
+			{
+				visual = visual.Parent;
+				
+				while (visual != null)
+				{
+					if (visual.IsEventUsed (property))
+					{
+						return visual;
+					}
+					
+					visual = visual.Parent;
+				}
+			}
+			
+			return null;
 		}
 		
 		

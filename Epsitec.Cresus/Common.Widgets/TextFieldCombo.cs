@@ -170,8 +170,8 @@ namespace Epsitec.Common.Widgets
 					show = this.IsFocused || this.IsComboOpen;
 					break;
 				
-				case ShowCondition.WhenFocusedFlagSet:
-					show = this.IsFocusedFlagSet || this.IsComboOpen;
+				case ShowCondition.WhenKeyboardFocused:
+					show = this.IsKeyboardFocused || this.IsComboOpen;
 					break;
 				
 				case ShowCondition.WhenModified:

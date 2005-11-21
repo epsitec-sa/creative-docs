@@ -413,6 +413,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual MenuItemType GetPaintItemType()
+		{
+			return this.ItemType;
+		}
+
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -449,14 +454,14 @@ namespace Epsitec.Common.Widgets
 				if ( this.shortcut != null )  this.shortcut.LayoutSize = this.shortcutSize;
 			}
 		}
-
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
-			MenuItemType      iType = this.ItemType;
+			MenuItemType      iType = this.GetPaintItemType ();
 			Drawing.Point     pos   = new Drawing.Point();
 			
 			if ( this.IsSeparator )

@@ -11,6 +11,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public MenuItemContainer()
 		{
+			this.InternalState |= InternalState.Focusable;
 		}
 		
 		public MenuItemContainer(Widget embedder) : this()
@@ -20,8 +21,9 @@ namespace Epsitec.Common.Widgets
 		
 		
 
-		public void FocusFromMenu()
+		public void FocusFromMenu(Message message)
 		{
+			System.Diagnostics.Debug.WriteLine ("FocusFromMenu called");
 			this.Window.MakeFocused ();
 			
 			if (this.Children.Count > 0)
@@ -32,14 +34,30 @@ namespace Epsitec.Common.Widgets
 				{
 					if (widget.CanFocus)
 					{
-						System.Diagnostics.Debug.WriteLine ("Setting focus on " + widget.ToString ());
-						widget.Focus ();
+						if (widget.IsFocused)
+						{
+							System.Diagnostics.Debug.WriteLine ("Removing focus from " + widget.ToString ());
+							
+							this.EnableFilter ();
+							this.Focus ();
+							
+							if (message != null)
+							{
+								message.Swallowed = true;
+							}
+						}
+						else
+						{
+							System.Diagnostics.Debug.WriteLine ("Setting focus on " + widget.ToString ());
+							this.DisableFilter ();
+							widget.Focus ();
+						}
 						break;
 					}
 				}
 			}
 			
-			this.DisableFilter ();
+			this.Invalidate ();
 		}
 		
 		
@@ -59,6 +77,18 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 
+		protected override MenuItemType GetPaintItemType()
+		{
+			if (this.filter_disabled)
+			{
+				return MenuItemType.Default;
+			}
+			else
+			{
+				return base.GetPaintItemType ();
+			}
+		}
+
 		
 		private void HandleIsVisibleChanged(object sender, Epsitec.Common.Types.PropertyChangedEventArgs e)
 		{
@@ -74,9 +104,21 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected override void OnFocused()
+		{
+			System.Diagnostics.Debug.WriteLine ("MenuItemContainer focused");
+			base.OnFocused ();
+		}
+
+		protected override void OnDefocused()
+		{
+			System.Diagnostics.Debug.WriteLine ("MenuItemContainer de-focused");
+			base.OnDefocused ();
+		}
+		
 		protected override void OnPressed(MessageEventArgs e)
 		{
-			this.FocusFromMenu ();
+			this.FocusFromMenu (e == null ? null : e.Message);
 		}
 
 		protected override void OnIconSizeChanged()
@@ -109,7 +151,7 @@ namespace Epsitec.Common.Widgets
 				if (feel.TestAcceptKey (message))
 				{
 					this.EnableFilter ();
-					this.Parent.Focus ();
+					this.Focus ();
 					
 					message.Consumer = this;
 					return;
@@ -117,7 +159,7 @@ namespace Epsitec.Common.Widgets
 				else if (feel.TestCancelKey (message))
 				{
 					this.EnableFilter ();
-					this.Parent.Focus ();
+					this.Focus ();
 					
 					message.Consumer = this;
 					return;

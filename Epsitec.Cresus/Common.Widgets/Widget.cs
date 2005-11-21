@@ -658,29 +658,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.IsFocusedFlagSet)
-				{
-					Window window = this.Window;
-				
-					if (window == null)
-					{
-						return false;
-					}
-				
-					return window.IsFocused;
-				}
-				
-				if ((this.InheritFocus) &&
-					(this.Parent != null))
-				{
-					return this.Parent.IsFocused;
-				}
-				
-				return false;
+				return Helpers.VisualTree.IsFocused (this);
 			}
 		}
 		
-		public bool									IsFocusedFlagSet
+		public override bool						IsKeyboardFocused
 		{
 			get
 			{
@@ -827,7 +809,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool									InheritFocus
+		public override bool						InheritFocus
 		{
 			get
 			{
@@ -984,36 +966,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool									ContainsFocus
+		public virtual bool							CanFocus
 		{
 			get
 			{
-				if (this.IsFocusedFlagSet)
-				{
-					return true;
-				}
-				
-				if (this.HasChildren)
-				{
-					Widget[] children = this.Children.Widgets;
-					int  children_num = children.Length;
-					
-					for (int i = 0; i < children_num; i++)
-					{
-						if (children[i].ContainsFocus)
-						{
-							return true;
-						}
-					}
-				}
-				
-				return false;
+				return ((this.internal_state & InternalState.Focusable) != 0)
+					&& (!this.IsFrozen);
 			}
-		}
-		
-		public virtual bool							CanFocus
-		{
-			get { return ((this.internal_state & InternalState.Focusable) != 0) && !this.IsFrozen; }
 		}
 		
 		public bool									CanSelect
@@ -1816,7 +1775,7 @@ namespace Epsitec.Common.Widgets
 			
 			Window window = this.Window;
 			
-			if (! this.IsFocusedFlagSet)
+			if (! this.IsKeyboardFocused)
 			{
 				if (focused)
 				{
@@ -2765,7 +2724,7 @@ namespace Epsitec.Common.Widgets
 					//	Il y a un widget avec le focus. Ca peut être nous, un de nos descendants
 					//	ou un autre widget sans aucun lien.
 					
-					if (this.IsFocusedFlagSet)
+					if (this.IsKeyboardFocused)
 					{
 						return this;
 					}
@@ -4317,7 +4276,7 @@ namespace Epsitec.Common.Widgets
 				for (int i = 0; i < children_num; i++)
 				{
 					Widget widget         = children[children_num-1 - i];
-					bool   contains_focus = widget.ContainsFocus;
+					bool   contains_focus = widget.ContainsKeyboardFocus;
 					
 					if ((widget.IsFrozen == false) &&
 						((widget.Visibility) || (contains_focus && message.IsKeyType)) &&
@@ -4522,7 +4481,7 @@ namespace Epsitec.Common.Widgets
 				{
 					Widget widget = children[children_num-1 - i];
 				
-					if (widget.ContainsFocus)
+					if (widget.ContainsKeyboardFocus)
 					{
 						if (widget.ShortcutHandler (shortcut))
 						{

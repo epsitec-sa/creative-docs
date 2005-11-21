@@ -297,7 +297,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.focused_column = this.edit_line.FindFocusedColumn ();
 					
-					if (this.edit_line.ContainsFocus)
+					if (this.edit_line.ContainsKeyboardFocus)
 					{
 						this.SetFocused (true);
 					}
@@ -514,7 +514,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnDefocused ();
 			
-			if (this.ContainsFocus)
+			if (this.ContainsKeyboardFocus)
 			{
 				//	En fait, on contient toujours le focus...
 			}
@@ -871,7 +871,7 @@ namespace Epsitec.Common.Widgets
 			{
 				for (int i = 0; i < this.edit_widgets.Length; i++)
 				{
-					if (this.edit_widgets[i].ContainsFocus)
+					if (this.edit_widgets[i].ContainsKeyboardFocus)
 					{
 						return i;
 					}

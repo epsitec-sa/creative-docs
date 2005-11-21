@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets
 		Always,
 		
 		WhenFocused,
-		WhenFocusedFlagSet,
+		WhenKeyboardFocused,
 		
 		WhenModified,
 		
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void OnDefocused()
 		{
-			if (this.IsFocusedFlagSet == false)
+			if (this.IsKeyboardFocused == false)
 			{
 				switch (this.DefocusAction)
 				{
@@ -235,8 +235,8 @@ namespace Epsitec.Common.Widgets
 					show = this.IsFocused;
 					break;
 				
-				case ShowCondition.WhenFocusedFlagSet:
-					show = this.IsFocusedFlagSet;
+				case ShowCondition.WhenKeyboardFocused:
+					show = this.IsKeyboardFocused;
 					break;
 				
 				case ShowCondition.WhenModified:

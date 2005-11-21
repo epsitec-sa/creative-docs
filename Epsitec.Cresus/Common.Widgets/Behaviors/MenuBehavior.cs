@@ -1314,7 +1314,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 						
 						if (container != null)
 						{
-							container.FocusFromMenu ();
+							container.FocusFromMenu (message);
 						}
 					}
 					else

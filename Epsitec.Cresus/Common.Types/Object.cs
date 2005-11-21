@@ -188,6 +188,33 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		public bool IsEventUsed(Property property)
+		{
+			if (this.events != null)
+			{
+				if (this.events[property] != null)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		public bool IsEventUsed(string name)
+		{
+			if (this.events != null)
+			{
+				if (this.events[name] != null)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		
 		public void InvalidateProperty(Property property, object old_value, object new_value)
 		{
 			PropertyMetadata metadata = property.GetMetadata (this);

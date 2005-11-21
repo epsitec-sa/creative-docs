@@ -439,7 +439,7 @@ namespace Epsitec.Common.Script.Developer
 		private void HandleWindowFocusedWidgetChanged(object sender)
 		{
 			EditArray edit  = this.panel.ParameterInfoPanel.EditArray;
-			bool      value = edit.ContainsFocus;
+			bool      value = edit.ContainsKeyboardFocus;
 			
 			if (this.edit_array_focused != value)
 			{

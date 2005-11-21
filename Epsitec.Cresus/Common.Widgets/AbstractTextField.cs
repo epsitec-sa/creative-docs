@@ -649,7 +649,7 @@ namespace Epsitec.Common.Widgets
 				this.navigator.ProcessMessage(message, pos);
 			}
 			
-			if ( this.AutoSelectOnFocus && !this.IsFocusedFlagSet )
+			if ( this.AutoSelectOnFocus && !this.IsKeyboardFocused )
 			{
 				this.SelectAll();
 				message.Swallowed = true;

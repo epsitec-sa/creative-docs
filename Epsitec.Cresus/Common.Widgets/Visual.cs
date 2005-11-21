@@ -250,6 +250,27 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public virtual bool						IsKeyboardFocused
+		{
+			get
+			{
+				return false;
+			}
+		}
+		
+		public virtual bool						InheritFocus
+		{
+			get
+			{
+				return false;
+			}
+			set
+			{
+				//	TODO: ...
+			}
+		}
+		
+		
 		public double							Left
 		{
 			get
@@ -574,6 +595,15 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				return false;
+			}
+		}
+		
+		
+		public bool								ContainsKeyboardFocus
+		{
+			get
+			{
+				return Helpers.VisualTree.ContainsKeyboardFocus (this);
 			}
 		}
 		
