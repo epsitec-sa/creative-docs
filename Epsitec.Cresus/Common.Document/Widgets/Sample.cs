@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.Widgets
 				double size = rect.Height*0.5;
 				double x = rect.Left+1.0;
 				double y = rect.Bottom+rect.Height*0.3;
-				graphics.Color = adorner.ColorText(this.State);
+				graphics.Color = adorner.ColorText(this.PaintState);
 				graphics.PaintText(x, y, text, Font.DefaultFont, size);
 			}
 			else if ( this.property is Properties.Gradient )
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document.Widgets
 					double size = rect.Height*0.8;
 					double x = rect.Left+1.0;
 					double y = rect.Bottom+rect.Height*0.3;
-					graphics.Color = adorner.ColorText(this.State);
+					graphics.Color = adorner.ColorText(this.PaintState);
 					graphics.PaintText(x, y, "...", Font.DefaultFont, size);
 				}
 				else
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			path.LineTo(p3);
 
-			graphics.Color = adorner.ColorText(this.State);
+			graphics.Color = adorner.ColorText(this.PaintState);
 			graphics.PaintOutline(path);
 			graphics.RenderSolid();
 		}
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			Path path = arc.PathEllipse(form);
 
-			graphics.Color = adorner.ColorText(this.State);
+			graphics.Color = adorner.ColorText(this.PaintState);
 			graphics.PaintOutline(path);
 			graphics.RenderSolid();
 		}
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Document.Widgets
 			pathLine.MoveTo(pp1);
 			pathLine.LineTo(pp2);
 
-			graphics.Color = adorner.ColorText(this.State);
+			graphics.Color = adorner.ColorText(this.PaintState);
 			graphics.LineWidth = w;
 			if ( outlineStart )  graphics.PaintOutline(pathStart);
 			if ( outlineEnd   )  graphics.PaintOutline(pathEnd);

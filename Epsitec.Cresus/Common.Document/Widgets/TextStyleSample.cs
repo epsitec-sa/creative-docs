@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document.Widgets
 				double size = rect.Height*0.5;
 				double x = rect.Left+1.0;
 				double y = rect.Bottom+rect.Height*0.3;
-				graphics.Color = adorner.ColorText(this.State);
+				graphics.Color = adorner.ColorText(this.PaintState);
 				graphics.PaintText(x, y, text, Font.DefaultFont, size);
 			}
 			else if ( this.type == Common.Text.Properties.WellKnownType.Font )
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Document.Widgets
 					double size = rect.Height*0.8;
 					double x = rect.Left+1.0;
 					double y = rect.Bottom+rect.Height*0.3;
-					graphics.Color = adorner.ColorText(this.State);
+					graphics.Color = adorner.ColorText(this.PaintState);
 					graphics.PaintText(x, y, "...", Font.DefaultFont, size);
 				}
 				else

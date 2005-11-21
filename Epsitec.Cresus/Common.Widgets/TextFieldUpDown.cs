@@ -367,16 +367,16 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnTextChanged()
 		{
-			base.OnTextChanged();
+			base.OnTextChanged ();
 			
-			if ( this.IsValid )
+			if (this.IsValid)
 			{
-				this.IsError = false;
+				this.SetError (false);
 				this.OnValueChanged();
 			}
 			else
 			{
-				this.IsError = true;
+				this.SetError (true);
 			}
 		}
 		

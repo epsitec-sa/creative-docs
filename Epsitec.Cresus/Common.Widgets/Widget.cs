@@ -20,12 +20,13 @@ namespace Epsitec.Common.Widgets
 	#region WidgetState enum
 	[System.Flags] public enum WidgetState : uint
 	{
+		None		= 0x00000000,				//	=> neutre
+		
 		ActiveYes	= 0x00000001,				//	=> mode ActiveState.Yes
 		ActiveMaybe	= 0x00000002,				//	=> mode ActiveState.Maybe
 		ActiveMask	= ActiveYes | ActiveMaybe,
 		
-		None		= 0x00000000,				//	=> neutre
-		Enabled		= 0x00010000,				//	=> pas grisé
+		Enabled		= 0x00010000,				//	=> reçoit des événements
 		Focused		= 0x00020000,				//	=> reçoit les événements clavier
 		Entered		= 0x00040000,				//	=> contient la souris
 		Selected	= 0x00080000,				//	=> sélectionné
@@ -669,37 +670,33 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									IsEntered
 		{
-			get { return (this.widget_state & WidgetState.Entered) != 0; }
+			get
+			{
+				return (this.widget_state & WidgetState.Entered) != 0;
+			}
 		}
 		
 		public bool									IsSelected
 		{
-			get { return (this.widget_state & WidgetState.Selected) != 0; }
+			get
+			{
+				return (this.widget_state & WidgetState.Selected) != 0;
+			}
 		}
 		
 		public bool									IsEngaged
 		{
-			get { return (this.widget_state & WidgetState.Engaged) != 0; }
+			get
+			{
+				return (this.widget_state & WidgetState.Engaged) != 0;
+			}
 		}
 		
 		public bool									IsError
 		{
-			get { return (this.widget_state & WidgetState.Error) != 0; }
-			set
+			get
 			{
-				if (this.IsError != value)
-				{
-					if (value)
-					{
-						this.widget_state |= WidgetState.Error;
-					}
-					else
-					{
-						this.widget_state &= ~WidgetState.Error;
-					}
-					
-					this.Invalidate ();
-				}
+				return (this.widget_state & WidgetState.Error) != 0;
 			}
 		}
 		
@@ -825,25 +822,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public WidgetState							State
-		{
-			get
-			{
-				WidgetState state = this.widget_state;
-				
-				if ((this.InheritParentFocus) &&
-					(this.Parent != null))
-				{
-					if (this.Parent.IsFocused)
-					{
-						state |= WidgetState.Focused;
-					}
-				}
-				
-				return state;
-			}
-		}
-		
 		public ActiveState							ActiveState
 		{
 			get
@@ -852,12 +830,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				ActiveState active = (ActiveState) (this.widget_state & WidgetState.ActiveMask);
-				
-				if (active != value)
+				if (this.ActiveState != value)
 				{
 					this.widget_state &= ~WidgetState.ActiveMask;
-					this.widget_state |= (WidgetState)(int)value;
+					this.widget_state |= (WidgetState) value;
+					
 					this.OnActiveStateChanged ();
 					this.Invalidate (InvalidateReason.ActiveStateChanged);
 				}
@@ -874,20 +851,13 @@ namespace Epsitec.Common.Widgets
 					/**/			WidgetState.Selected |
 					/**/			WidgetState.Error;
 				
-				if (this.InheritParentFocus)
-				{
-					mask |= WidgetState.Focused;
-				}
-				
-				WidgetState state = this.State & mask;
+				WidgetState state = this.widget_state & mask;
 				
 				if (this.IsEnabled)
 				{
 					state |= WidgetState.Enabled;
 				}
-				
-				if (((state & WidgetState.Focused) == 0) &&
-					(this.IsFocused))
+				if (this.IsFocused)
 				{
 					state |= WidgetState.Focused;
 				}
@@ -1506,29 +1476,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void ForceState(WidgetState state)
-		{
-			this.widget_state = state;
-		}
-		
-		
-//		public void SetClientAngle(int angle)
-//		{
-//			this.client_info.SetAngle (angle);
-//			this.UpdateClientGeometry ();
-//		}
-//		
-//		public void SetClientZoom(double zoom)
-//		{
-//			this.client_info.SetZoom (zoom);
-//			this.UpdateClientGeometry ();
-//		}
-		
-//		public void SetClientOffset(double ox, double oy)
-//		{
-//			this.client_info.SetOffset (ox, oy);
-//		}
-		
 		
 		public virtual Drawing.Size GetBestFitSize()
 		{
@@ -1730,6 +1677,23 @@ namespace Epsitec.Common.Widgets
 					this.internal_state &= ~ InternalState.Frozen;
 					this.Invalidate (InvalidateReason.FrozenChanged);
 				}
+			}
+		}
+		
+		public virtual void SetError(bool value)
+		{
+			if (this.IsError != value)
+			{
+				if (value)
+				{
+					this.widget_state |= WidgetState.Error;
+				}
+				else
+				{
+					this.widget_state &= ~WidgetState.Error;
+				}
+				
+				this.Invalidate ();
 			}
 		}
 		
