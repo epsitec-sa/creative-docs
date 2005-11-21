@@ -511,7 +511,7 @@ namespace Epsitec.Common.Document.Ribbons
 			IconButton button = sender as IconButton;
 			if ( button == null )  return;
 
-			Objects.Abstract editObject = this.EditObject;
+			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
 			if ( editObject == null )  return;
 			string face, style;
 			string[] features;

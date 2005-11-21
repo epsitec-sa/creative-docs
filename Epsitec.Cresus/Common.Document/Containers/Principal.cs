@@ -266,8 +266,7 @@ namespace Epsitec.Common.Document.Containers
 			DrawingContext context = viewer.DrawingContext;
 
 			if ( this.document.Modifier.Tool == "Select" ||
-				 this.document.Modifier.Tool == "Global" ||
-				 this.document.Modifier.Tool == "Edit"   )
+				 this.document.Modifier.Tool == "Global" )
 			{
 				if ( this.document.Modifier.TotalSelected == 0 )
 				{
@@ -335,6 +334,28 @@ namespace Epsitec.Common.Document.Containers
 					button.SetParent(this.scrollable.Panel);
 
 					if ( topMargin == 50 )  topMargin = 10;
+				}
+			}
+			else if ( this.document.Modifier.Tool == "Edit" )
+			{
+				Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+				if ( editObject != null )
+				{
+					TextPanels.Abstract.StaticDocument = this.document;
+					System.Collections.ArrayList list = editObject.CreateTextPanels();
+					if ( list != null )
+					{
+						int index = 1;
+						foreach ( TextPanels.Abstract panel in list )
+						{
+							panel.TabIndex = index++;
+							panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+							panel.Dock = DockStyle.Top;
+							panel.DockMargins = new Margins(0, 1, 0, -1);
+							panel.IsExtendedSize = this.document.Modifier.IsTextPanelExtended(panel);
+							panel.SetParent(this.scrollable.Panel);
+						}
+					}
 				}
 			}
 			else

@@ -723,7 +723,35 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\FontBold-de.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontBold-en.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontBold-fr.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\FontFeatures.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontFrame.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontItalic-de.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontItalic-en.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontItalic-fr.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -735,11 +763,27 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\FontStrike.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\FontSubscript.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Images\FontSuperscript.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontUnderlined-de.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontUnderlined-en.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontUnderlined-fr.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

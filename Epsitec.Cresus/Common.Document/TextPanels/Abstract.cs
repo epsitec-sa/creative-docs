@@ -26,27 +26,18 @@ namespace Epsitec.Common.Document.TextPanels
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Panel.Abstract.Extend);
 
-			this.UpdateButtons();
+			this.document.FontWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.document.FontWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 		}
 
-		// Crée un nouveau panneau.
-		public static Abstract NewPanel(Text.Properties.WellKnownType type, Document document)
-		{
-			Abstract.StaticDocument = document;
-
-			switch ( type )
-			{
-				case Common.Text.Properties.WellKnownType.Font:  return new Font(document);
-			}
-
-			return null;
-		}
-		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
 				this.extendedButton.Clicked -= new MessageEventHandler(this.ExtendedButtonClicked);
+
+				this.document.FontWrapper.Active.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.document.FontWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -105,7 +96,7 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( this.isExtendedSize != value )
 				{
 					this.isExtendedSize = value;
-					this.UpdateButtons();
+					this.UpdateAfterChanging();
 					this.HeightChanged();
 				}
 			}
@@ -123,41 +114,10 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Choix du style édité par le panneau.
-		public Text.TextStyle TextStyle
-		{
-			get
-			{
-				return this.textStyle;
-			}
-
-			set
-			{
-				this.textStyle = value;
-				this.PropertyToWidgets();
-
-				this.label.Text = Abstract.LabelText(this.Type);
-
-				this.fixIcon.Text = Misc.Image(Abstract.IconText(this.Type));
-				ToolTip.Default.SetToolTip(this.fixIcon, Abstract.LabelText(this.Type));
-			}
-		}
-
-		// Met à jour toutes les valeurs du panneau.
-		public void UpdateValues()
-		{
-			this.PropertyToWidgets();
-		}
-
-		// Propriété -> widgets.
-		protected virtual void PropertyToWidgets()
+		// Met à jour après un changement du wrapper.
+		protected virtual void UpdateAfterChanging()
 		{
 			this.UpdateButtons();
-		}
-
-		// Widgets -> propriété.
-		protected virtual void WidgetsToProperty()
-		{
 		}
 
 
@@ -207,8 +167,6 @@ namespace Epsitec.Common.Document.TextPanels
 			rect.Left = this.Client.Bounds.Right-this.extendedZoneWidth+1;
 			rect.Width = this.extendedZoneWidth-3;
 			this.extendedButton.Bounds = rect;
-
-			this.UpdateButtons();
 		}
 
 		// Met à jour les boutons.
@@ -247,38 +205,19 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Génère un événement pour dire que ça a changé.
-		protected virtual void OnChanged()
-		{
-			if ( this.ignoreChanged )  return;
-
-			if ( this.Changed != null )  // qq'un écoute ?
-			{
-				this.Changed(this);
-			}
-		}
-
-		public event EventHandler Changed;
-
 		
-		// Génère un événement pour dire que la couleur d'origine a changé.
-		protected virtual void OnOriginColorChanged()
-		{
-			if ( this.OriginColorChanged != null )  // qq'un écoute ?
-			{
-				this.OriginColorChanged(this);
-			}
-		}
-
-		public event EventHandler OriginColorChanged;
-
-
 		// Le bouton pour étendre/réduire le panneau a été cliqué.
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
 		{
 			this.IsExtendedSize = !this.isExtendedSize;
+			this.document.Modifier.IsTextPanelExtended(this, this.isExtendedSize);
 		}
 
+
+		// Le wrapper associé a changé.
+		protected virtual void HandleWrapperChanged(object sender)
+		{
+		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -307,6 +246,38 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
+		// Crée un bouton.
+		protected IconButton CreateIconButton(string icon, string tooltip, MessageEventHandler handler)
+		{
+			return this.CreateIconButton(icon, tooltip, handler, true);
+		}
+		
+		protected IconButton CreateIconButton(string icon, string tooltip, MessageEventHandler handler, bool activable)
+		{
+			IconButton button = new IconButton(this);
+
+			if ( icon.StartsWith("manifest:") )
+			{
+				button.IconName = icon;
+			}
+			else
+			{
+				button.Text = icon;
+			}
+
+			if ( activable )
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+			}
+
+			button.Clicked += handler;
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(button, tooltip);
+			return button;
+		}
+
+		
 		// Met un texte dans un widget quelconque.
 		public static void SetText(Widget widget, string text)
 		{
@@ -314,39 +285,6 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				widget.Text = text;
 			}
-		}
-
-
-		// Donne le type.
-		protected virtual Text.Properties.WellKnownType Type
-		{
-			get { return Common.Text.Properties.WellKnownType.Other; }
-		}
-
-		// Nom d'une propriété de style de texte.
-		public static string LabelText(Text.Properties.WellKnownType type)
-		{
-			switch ( type )
-			{
-				case Common.Text.Properties.WellKnownType.Font:      return Res.Strings.Property.Abstract.TextFont;
-				case Common.Text.Properties.WellKnownType.Margins:   return Res.Strings.Property.Abstract.TextJustif;
-				case Common.Text.Properties.WellKnownType.Leading:   return Res.Strings.Property.Abstract.TextLine;
-				case Common.Text.Properties.WellKnownType.Language:  return Res.Strings.Property.Abstract.Name;
-			}
-			return "";
-		}
-
-		// Nom d'une icône de style de texte.
-		public static string IconText(Text.Properties.WellKnownType type)
-		{
-			switch ( type )
-			{
-				case Common.Text.Properties.WellKnownType.Font:      return "PropertyTextFont";
-				case Common.Text.Properties.WellKnownType.Margins:   return "PropertyTextJustif";
-				case Common.Text.Properties.WellKnownType.Leading:   return "PropertyTextLine";
-				case Common.Text.Properties.WellKnownType.Language:  return "PropertyName";
-			}
-			return "";
 		}
 
 
@@ -368,5 +306,6 @@ namespace Epsitec.Common.Document.TextPanels
 		protected StaticText				fixIcon;
 		protected GlyphButton				extendedButton;
 		protected bool						ignoreChanged = false;
+		protected int						tabIndex = 0;
 	}
 }

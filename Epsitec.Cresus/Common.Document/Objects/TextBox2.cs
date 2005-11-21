@@ -978,6 +978,16 @@ namespace Epsitec.Common.Document.Objects
 			this.HandleTabsChanged(null);  // TODO: devrait être inutile
 		}
 
+		// Crée tous les panneaux pour l'édition.
+		public override System.Collections.ArrayList CreateTextPanels()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+
+			TextPanels.Font font = new TextPanels.Font(this.document);
+			list.Add(font);
+
+			return list;
+		}
 
 		// Donne la liste des propriétés.
 		protected Text.Property[] GetTextProperties(bool accumulated)

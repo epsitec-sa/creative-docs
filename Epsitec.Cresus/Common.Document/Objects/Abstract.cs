@@ -835,6 +835,12 @@ namespace Epsitec.Common.Document.Objects
 		{
 		}
 
+		// Crée tous les panneaux pour l'édition.
+		public virtual System.Collections.ArrayList CreateTextPanels()
+		{
+			return null;
+		}
+
 		
 		// Détecte la cellule pointée par la souris.
 		public virtual int DetectCell(Point pos)
@@ -1611,8 +1617,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Ajoute toutes les propriétés de l'objet dans une liste.
-		public void PropertiesList(System.Collections.ArrayList list,
-			bool propertiesDetail)
+		public void PropertiesList(System.Collections.ArrayList list, bool propertiesDetail)
 		{
 			foreach ( Properties.Abstract property in this.properties )
 			{
@@ -1660,8 +1665,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Ajoute toutes les propriétés de l'objet dans une liste.
-		public void PropertiesList(System.Collections.ArrayList list,
-			Objects.Abstract filter)
+		public void PropertiesList(System.Collections.ArrayList list, Objects.Abstract filter)
 		{
 			foreach ( Properties.Abstract property in this.properties )
 			{

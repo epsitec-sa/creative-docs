@@ -873,6 +873,8 @@
 	<data name="Action.Text.Font.Bold">Bold</data>
 	<data name="Action.Text.Font.Italic">Italic</data>
 	<data name="Action.Text.Font.Underlined">Underlined</data>
+	<data name="Action.Text.Font.Strike">Strikethrough</data>
+	<data name="Action.Text.Font.Frame">Frame</data>
 	<data name="Action.Text.Font.Subscript">Subscript</data>
 	<data name="Action.Text.Font.Superscript">Superscript</data>
 	<data name="Action.Text.Font.UserX">User style X</data>

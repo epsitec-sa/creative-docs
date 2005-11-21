@@ -329,8 +329,8 @@ namespace Epsitec.Common.Document.Widgets
 
 			for ( i=0 ; i<this.types.Length ; i++ )
 			{
-				this.SetHeaderTextH(fix+i, Misc.Image(TextPanels.Abstract.IconText(this.types[i])));
-				ToolTip.Default.SetToolTip(this.FindButtonH(fix+i), TextPanels.Abstract.LabelText(this.types[i]));
+				//?this.SetHeaderTextH(fix+i, Misc.Image(TextPanels.Abstract.IconText(this.types[i])));
+				//?ToolTip.Default.SetToolTip(this.FindButtonH(fix+i), TextPanels.Abstract.LabelText(this.types[i]));
 			}
 
 			for ( i=0 ; i<rows ; i++ )

@@ -4511,6 +4511,43 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region IsTextPanelExtended
+		// Indique si un panneau pour le texte est étendu ou pas.
+		public bool IsTextPanelExtended(TextPanels.Abstract panel)
+		{
+			if ( this.tableTextPanelExtended == null )
+			{
+				this.tableTextPanelExtended = new System.Collections.Hashtable();
+			}
+
+			System.Type type = panel.GetType();
+			if ( !this.tableTextPanelExtended.ContainsKey(type) )
+			{
+				this.tableTextPanelExtended.Add(type, false);
+			}
+
+			return (bool) this.tableTextPanelExtended[type];
+		}
+
+		// Modifie l'état étendu ou pas d'un panneau pour le texte.
+		public void IsTextPanelExtended(TextPanels.Abstract panel, bool extended)
+		{
+			if ( this.tableTextPanelExtended == null )
+			{
+				this.tableTextPanelExtended = new System.Collections.Hashtable();
+			}
+
+			System.Type type = panel.GetType();
+			if ( !this.tableTextPanelExtended.ContainsKey(type) )
+			{
+				this.tableTextPanelExtended.Add(type, false);
+			}
+
+			this.tableTextPanelExtended[type] = extended;
+		}
+		#endregion
+
+
 		#region Zoom
 		// Montre les objets sélectionnés si nécessaire.
 		protected void ShowSelection()
@@ -5640,6 +5677,7 @@ namespace Epsitec.Common.Document
 		protected SelectorType					bookInitialSelector = SelectorType.None;
 		protected Containers.Abstract			activeContainer;
 		protected bool[]						isPropertiesExtended;
+		protected System.Collections.Hashtable	tableTextPanelExtended;
 		protected RealUnitType					realUnitDimension;
 		protected double						realScale;
 		protected double						realPrecision;

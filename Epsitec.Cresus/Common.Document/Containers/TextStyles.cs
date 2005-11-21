@@ -210,36 +210,6 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.colorSelector.SetVisible(false);
 			this.colorSelector.BackColor = Color.Empty;
-
-			if ( this.panel != null )
-			{
-				this.panel.Changed -= new EventHandler(this.HandlePanelChanged);
-				this.panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
-				this.panel.Dispose();
-				this.panel = null;
-				this.panelContainer.Height = 0.0;
-				this.panelContainer.ForceLayout();
-			}
-
-			Common.Text.TextStyle style = this.GetStyle();
-			if ( style == null )  return;
-
-			Common.Text.Properties.WellKnownType type = this.list.SelectedProperty;
-			if ( type == Common.Text.Properties.WellKnownType.Other )  return;
-
-			this.panel = TextPanels.Abstract.NewPanel(type, this.document);
-			if ( this.panel == null )  return;
-
-			this.panel.TextStyle = style;
-			this.panel.IsExtendedSize = true;
-			this.panel.Changed += new EventHandler(this.HandlePanelChanged);
-			this.panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
-			this.panel.SetParent(this.panelContainer);
-			this.panel.Dock = DockStyle.Fill;
-			this.panel.TabIndex = 1;
-			this.panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.panelContainer.Height = this.panel.DefaultHeight;
-			this.panelContainer.ForceLayout();
 		}
 
 		// Montre la ligne sélectionnée dans la liste des agrégats.
