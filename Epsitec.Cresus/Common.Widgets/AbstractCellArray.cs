@@ -1599,7 +1599,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.focusedWidget != null )
 				{
-					this.focusedWidget.Defocused -= new Support.EventHandler(this.HandleFocusedWidgetDefocused);
+					this.focusedWidget.IsKeyboardFocusedChanged -= new Types.PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
 					this.focusedWidget.PreProcessing -= new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
 					this.focusedWidget = null;
 				}
@@ -1612,16 +1612,18 @@ namespace Epsitec.Common.Widgets
 					
 					System.Diagnostics.Debug.Assert( this.focusedWidget != null );
 					
-					this.focusedWidget.Defocused += new Support.EventHandler(this.HandleFocusedWidgetDefocused);
+					this.focusedWidget.IsKeyboardFocusedChanged += new Types.PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
 					this.focusedWidget.PreProcessing += new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
 				}
 			}
 		}
 
 		
-		private void HandleFocusedWidgetDefocused(object sender)
+		private void HandleFocusedWidgetIsKeyboardFocusedChanged(object sender, Types.PropertyChangedEventArgs e)
 		{
-			if ( ! this.focusedWidget.IsKeyboardFocused )
+			bool focused = (bool) e.NewValue;
+			
+			if (! focused)
 			{
 				this.SetFocusedCell (null);
 			}

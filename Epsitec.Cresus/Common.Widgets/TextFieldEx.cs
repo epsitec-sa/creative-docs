@@ -150,7 +150,7 @@ namespace Epsitec.Common.Widgets
 			return base.AboutToGetFocus (dir, mode, out focus);
 		}
 		
-		protected override void OnDefocused()
+		protected override void HandleDefocused()
 		{
 			if (this.IsKeyboardFocused == false)
 			{
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			base.OnDefocused ();
+			base.HandleDefocused ();
 		}
 
 		
@@ -280,9 +280,10 @@ namespace Epsitec.Common.Widgets
 			this.UpdateButtonVisibility ();
 		}
 
-		protected override void OnFocusChanged()
+		protected override void OnIsKeyboardFocusedChanged(Types.PropertyChangedEventArgs e)
 		{
-			base.OnFocusChanged ();
+			base.OnIsKeyboardFocusedChanged (e);
+			
 			this.UpdateButtonVisibility ();
 		}
 		

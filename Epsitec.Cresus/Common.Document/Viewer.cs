@@ -3167,7 +3167,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Gère l'invalidation en fonction de la raison.
-		protected override void Invalidate(InvalidateReason reason)
+		public override void Invalidate(InvalidateReason reason)
 		{
 			if ( reason != InvalidateReason.FocusedChanged )
 			{
@@ -3175,8 +3175,24 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected override void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
+		{
+			bool focused = (bool) e.NewValue;
+			
+			if ( focused )
+			{
+				this.HandleFocused();
+			}
+			else
+			{
+				this.HandleDefocused();
+			}
+			
+			base.OnIsFocusedChanged(e);
+		}
+
 		// Appelé lorsque la vue prend le focus.
-		protected override void OnFocused()
+		protected void HandleFocused()
 		{
 			Objects.Abstract edit = this.document.Modifier.RetEditObject();
 			if ( edit != null )
@@ -3186,7 +3202,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Appelé lorsque la vue perd le focus.
-		protected override void OnDefocused()
+		protected void HandleDefocused()
 		{
 			Objects.Abstract edit = this.document.Modifier.RetEditObject();
 			if ( edit != null )

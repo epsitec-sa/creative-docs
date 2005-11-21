@@ -825,8 +825,23 @@ namespace Epsitec.Common.Widgets
 			this.CursorScroll(true);
 		}
 
-		
-		protected override void OnFocused()
+		protected override void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
+		{
+			bool focused = (bool) e.NewValue;
+			
+			if (focused)
+			{
+				this.HandleFocused ();
+			}
+			else
+			{
+				this.HandleDefocused ();
+			}
+			
+			base.OnIsFocusedChanged (e);
+		}
+
+		protected virtual void HandleFocused()
 		{
 			System.Diagnostics.Debug.WriteLine ("AbstractTextField focused");
 			TextField.blinking = this;
@@ -853,15 +868,12 @@ namespace Epsitec.Common.Widgets
 					this.Text = "";
 				}
 			}
-			
-			base.OnFocused();
 		}
 
-		protected override void OnDefocused()
+		protected virtual void HandleDefocused()
 		{
 			System.Diagnostics.Debug.WriteLine ("AbstractTextField de-focused");
 			TextField.blinking = null;
-			base.OnDefocused();
 		}
 
 		protected override void OnTextChanged()

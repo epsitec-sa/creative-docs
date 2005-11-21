@@ -536,7 +536,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool								IsFocused
 		{
-			get { return this.window.Focused; }
+			get { return this.window_is_focused; }
 		}
 		
 		public bool								IsOwned
@@ -1175,25 +1175,47 @@ namespace Epsitec.Common.Widgets
 		
 		internal void OnWindowFocused()
 		{
+			System.Diagnostics.Debug.WriteLine ("Window focused");
+			if (this.focused_widget != null)
+			{
+				Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.focused_widget, Visual.IsFocusedProperty);
+				
+				this.window_is_focused = true;
+				this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
+				
+				snapshot.InvalidateDifferent ();
+			}
+			else
+			{
+				this.window_is_focused = true;
+			}
+			
 			if (this.WindowFocused != null)
 			{
 				this.WindowFocused (this);
-			}
-			if (this.focused_widget != null)
-			{
-				this.focused_widget.SimulateFocused ();
 			}
 		}
 		
 		internal void OnWindowDefocused()
 		{
+			System.Diagnostics.Debug.WriteLine ("Window de-focused");
+			if (this.focused_widget != null)
+			{
+				Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.focused_widget, Visual.IsFocusedProperty);
+				
+				this.window_is_focused = false;
+				this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
+				
+				snapshot.InvalidateDifferent ();
+			}
+			else
+			{
+				this.window_is_focused = false;
+			}
+			
 			if (this.WindowDefocused != null)
 			{
 				this.WindowDefocused (this);
-			}
-			if (this.focused_widget != null)
-			{
-				this.focused_widget.SimulateDefocused ();
 			}
 		}
 		
@@ -1890,6 +1912,7 @@ namespace Epsitec.Common.Widgets
 		private Window							owner;
 		private WindowRoot						root;
 		private bool							window_is_visible;
+		private bool							window_is_focused;
 		
 		private int								show_count;
 		private Widget							last_in_widget;

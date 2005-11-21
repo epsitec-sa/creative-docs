@@ -239,9 +239,15 @@ namespace Epsitec.Common.Document.Widgets
 			this.UpdateButtonVisibility();
 		}
 
-		protected override void OnFocusChanged()
+		protected override void HandleFocused()
 		{
-			base.OnFocusChanged();
+			base.HandleFocused();
+			this.UpdateButtonVisibility();
+		}
+
+		protected override void HandleDefocused()
+		{
+			base.HandleDefocused();
 			this.UpdateButtonVisibility();
 		}
 		

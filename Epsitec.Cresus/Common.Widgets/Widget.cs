@@ -668,6 +668,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		public bool									IsEntered
 		{
 			get
@@ -1712,39 +1713,45 @@ namespace Epsitec.Common.Widgets
 			//	Utiliser Focus() en lieu et place de SetFocused(true), pour
 			//	avoir une gestion complète des conditions de focus.
 			
+			bool old_focus = this.IsKeyboardFocused;
+			bool new_focus = focused;
+			
+			if (old_focus == new_focus)
+			{
+				return;
+			}
+			
 			Window window = this.Window;
 			
-			if (! this.IsKeyboardFocused)
+			Helpers.VisualTreeSnapshot snapshot_1 = Helpers.VisualTree.SnapshotProperties (this, Visual.IsKeyboardFocusedProperty);
+			Helpers.VisualTreeSnapshot snapshot_2 = Helpers.VisualTree.SnapshotProperties (this, Visual.IsFocusedProperty);
+			
+			if (new_focus)
 			{
-				if (focused)
+				if (window != null)
 				{
-					if (window != null)
-					{
-						this.widget_state |= WidgetState.Focused;
-						window.FocusedWidget = this;
-					}
-					
-					if (this.IsFocused)
-					{
-						this.OnFocused ();
-						this.Invalidate (InvalidateReason.FocusedChanged);
-					}
+					this.widget_state |= WidgetState.Focused;
+					window.FocusedWidget = this;
 				}
+				
+				snapshot_1.InvalidateDifferent ();
+				snapshot_2.InvalidateDifferent ();
+				
+				this.Invalidate (InvalidateReason.FocusedChanged);
 			}
 			else
 			{
-				if (!focused)
+				this.widget_state &= ~ WidgetState.Focused;
+				
+				if (window != null)
 				{
-					this.widget_state &= ~ WidgetState.Focused;
-					
-					if (window != null)
-					{
-						window.FocusedWidget = null;
-					}
-					
-					this.OnDefocused ();
-					this.Invalidate (InvalidateReason.FocusedChanged);
+					window.FocusedWidget = null;
 				}
+				
+				snapshot_1.InvalidateDifferent ();
+				snapshot_2.InvalidateDifferent ();
+				
+				this.Invalidate (InvalidateReason.FocusedChanged);
 			}
 		}
 		
@@ -1864,24 +1871,6 @@ namespace Epsitec.Common.Widgets
 			if (this.IsEnabled)
 			{
 				this.OnClicked (null);
-			}
-		}
-		
-		internal void SimulateFocused()
-		{
-			if (this.IsEnabled)
-			{
-				this.OnFocused ();
-				this.Invalidate (InvalidateReason.FocusedChanged);
-			}
-		}
-		
-		internal void SimulateDefocused()
-		{
-			if (this.IsEnabled)
-			{
-				this.OnDefocused ();
-				this.Invalidate (InvalidateReason.FocusedChanged);
 			}
 		}
 		
@@ -2123,7 +2112,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void Invalidate(InvalidateReason reason)
+		public virtual void Invalidate(InvalidateReason reason)
 		{
 			this.Invalidate ();
 		}
@@ -4976,33 +4965,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnFocusChanged()
-		{
-			if (this.FocusChanged != null)
-			{
-				this.FocusChanged (this);
-			}
-		}
-		
-		protected virtual void OnFocused()
-		{
-			this.OnFocusChanged ();
-			
-			if (this.Focused != null)
-			{
-				this.Focused (this);
-			}
-		}
-		
-		protected virtual void OnDefocused()
-		{
-			this.OnFocusChanged ();
-			
-			if (this.Defocused != null)
-			{
-				this.Defocused (this);
-			}
-		}
 		
 		protected virtual void OnSelected()
 		{
@@ -5160,9 +5122,6 @@ namespace Epsitec.Common.Widgets
 		public event MessageEventHandler			PreProcessing;
 		public event MessageEventHandler			PostProcessing;
 		
-		public event Support.EventHandler			FocusChanged;
-		public event Support.EventHandler			Focused;
-		public event Support.EventHandler			Defocused;
 		public event Support.EventHandler			Selected;
 		public event Support.EventHandler			Deselected;
 		public event Support.EventHandler			Engaged;

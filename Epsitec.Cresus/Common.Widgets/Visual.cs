@@ -258,6 +258,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								ContainsKeyboardFocus
+		{
+			get
+			{
+				return Helpers.VisualTree.ContainsKeyboardFocus (this);
+			}
+		}
+		
+		
 		public bool								InheritParentFocus
 		{
 			get
@@ -608,14 +617,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool								ContainsKeyboardFocus
-		{
-			get
-			{
-				return Helpers.VisualTree.ContainsKeyboardFocus (this);
-			}
-		}
-		
 		
 		public Collections.ChildrenCollection	Children
 		{
@@ -844,6 +845,18 @@ namespace Epsitec.Common.Widgets
 			return that.IsFocused;
 		}
 		
+		private static object GetIsKeyboardFocusedValue(Object o)
+		{
+			Visual that = o as Visual;
+			return that.IsKeyboardFocused;
+		}
+		
+		private static object GetContainsKeyboardFocusValue(Object o)
+		{
+			Visual that = o as Visual;
+			return that.ContainsKeyboardFocus;
+		}
+		
 		private static void SetEnableValue(Object o, object value)
 		{
 			Visual that = o as Visual;
@@ -868,12 +881,32 @@ namespace Epsitec.Common.Widgets
 			that.OnParentChanged (new PropertyChangedEventArgs (Visual.ParentProperty, old_value, new_value));
 		}
 		
+		private static void NotifyIsFocusedChanged(Object o, object old_value, object new_value)
+		{
+			Visual that = o as Visual;
+			that.OnIsFocusedChanged (new PropertyChangedEventArgs (Visual.IsFocusedProperty, old_value, new_value));
+		}
+		
+		private static void NotifyIsKeyboardFocusedChanged(Object o, object old_value, object new_value)
+		{
+			Visual that = o as Visual;
+			that.OnIsKeyboardFocusedChanged (new PropertyChangedEventArgs (Visual.IsKeyboardFocusedProperty, old_value, new_value));
+		}
+		
 		
 		protected virtual void OnSizeChanged(Types.PropertyChangedEventArgs e)
 		{
 		}
 		
 		protected virtual void OnParentChanged(Types.PropertyChangedEventArgs e)
+		{
+		}
+		
+		protected virtual void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
+		{
+		}
+		
+		protected virtual void OnIsKeyboardFocusedChanged(Types.PropertyChangedEventArgs e)
 		{
 		}
 		
@@ -930,6 +963,42 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public event PropertyChangedEventHandler	IsFocusedChanged
+		{
+			add
+			{
+				this.AddEvent (Visual.IsFocusedProperty, value);
+			}
+			remove
+			{
+				this.RemoveEvent (Visual.IsFocusedProperty, value);
+			}
+		}
+		
+		public event PropertyChangedEventHandler	IsKeyboardFocusedChanged
+		{
+			add
+			{
+				this.AddEvent (Visual.IsKeyboardFocusedProperty, value);
+			}
+			remove
+			{
+				this.RemoveEvent (Visual.IsKeyboardFocusedProperty, value);
+			}
+		}
+		
+		public event PropertyChangedEventHandler	ContainsKeyboardFocusChanged
+		{
+			add
+			{
+				this.AddEvent (Visual.ContainsKeyboardFocusProperty, value);
+			}
+			remove
+			{
+				this.RemoveEvent (Visual.ContainsKeyboardFocusProperty, value);
+			}
+		}
+		
 		
 		public static readonly Property IndexProperty				= Property.Register ("Index", typeof (int), typeof (Visual), new PropertyMetadata (-1));
 		public static readonly Property GroupProperty				= Property.Register ("Group", typeof (string), typeof (Visual));
@@ -956,8 +1025,11 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property InheritParentFocusProperty	= Property.Register ("InheritParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false));
 		
 		public static readonly Property IsVisibleProperty			= Property.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsVisibleValue), VisualPropertyFlags.InheritsValue));
-		public static readonly Property IsEnabledProperty			= Property.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsEnabledValue), VisualPropertyFlags.InheritsValue));
-		public static readonly Property IsFocusedProperty			= Property.RegisterReadOnly ("IsFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsFocusedValue), VisualPropertyFlags.InheritsValue));
+		public static readonly Property IsEnabledProperty			= Property.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsEnabledValue), VisualPropertyFlags.InheritsValue | VisualPropertyFlags.AffectsDisplay));
+		public static readonly Property IsFocusedProperty			= Property.RegisterReadOnly ("IsFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsFocusedChanged), VisualPropertyFlags.InheritsValue | VisualPropertyFlags.AffectsDisplay));
+		
+		public static readonly Property IsKeyboardFocusedProperty	= Property.RegisterReadOnly ("IsKeyboardFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetIsKeyboardFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsKeyboardFocusedChanged), VisualPropertyFlags.AffectsDisplay));
+		public static readonly Property ContainsKeyboardFocusProperty = Property.RegisterReadOnly ("ContainsKeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetContainsKeyboardFocusValue), VisualPropertyFlags.None));
 		
 		public static readonly Property AutoCaptureProperty			= Property.Register ("AutoCapture", typeof (bool), typeof (Visual), new PropertyMetadata (true));
 		public static readonly Property AutoFocusProperty			= Property.Register ("AutoFocus", typeof (bool), typeof (Visual), new PropertyMetadata (false));

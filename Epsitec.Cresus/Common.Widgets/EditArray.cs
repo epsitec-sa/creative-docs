@@ -510,10 +510,24 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
-		protected override void OnDefocused()
+		protected override void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
 		{
-			base.OnDefocused ();
+			bool focused = (bool) e.NewValue;
 			
+			if (focused)
+			{
+				//	...
+			}
+			else
+			{
+				this.HandleDefocused ();
+			}
+			
+			base.OnIsFocusedChanged (e);
+		}
+
+		protected void HandleDefocused()
+		{
 			if (this.ContainsKeyboardFocus)
 			{
 				//	En fait, on contient toujours le focus...
@@ -1013,8 +1027,10 @@ namespace Epsitec.Common.Widgets
 				widget.Index         = i;
 				widget.TabIndex      = i;
 				widget.TabNavigation = TabNavigationMode.ActivateOnTab;
-				widget.Focused      += new Support.EventHandler (this.HandleEditArrayFocused);
-				widget.TextChanged  += new Epsitec.Common.Support.EventHandler (this.HandleTextChanged);
+				
+				widget.IsKeyboardFocusedChanged += new Types.PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
+				widget.TextChanged              += new Support.EventHandler (this.HandleTextChanged);
+				
 				widget.AutoSelectOnFocus = true;
 				widget.Hide ();
 			}
@@ -1024,22 +1040,28 @@ namespace Epsitec.Common.Widgets
 				if (widget != null)
 				{
 					widget.SetParent (null);
-					widget.Focused     -= new Support.EventHandler (this.HandleEditArrayFocused);
-					widget.TextChanged -= new Epsitec.Common.Support.EventHandler (this.HandleTextChanged);
+					
+					widget.IsKeyboardFocusedChanged -= new Types.PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
+					widget.TextChanged              -= new Support.EventHandler (this.HandleTextChanged);
+					
 					widget.Dispose ();
 					widget = null;
 				}
 			}
 			
-			
-			private void HandleEditArrayFocused(object sender)
+			private void HandleEditArrayIsKeyboardFocusedChanged(object sender, Types.PropertyChangedEventArgs e)
 			{
-				AbstractTextField widget = sender as AbstractTextField;
+				bool focused = (bool) e.NewValue;
 				
-				int row    = this.host.SelectedIndex;
-				int column = widget.Index;
-				
-				this.host.ShowCell (ScrollShowMode.Extremity, row, column);
+				if (focused)
+				{
+					AbstractTextField widget = sender as AbstractTextField;
+					
+					int row    = this.host.SelectedIndex;
+					int column = widget.Index;
+					
+					this.host.ShowCell (ScrollShowMode.Extremity, row, column);
+				}
 			}
 			
 			private void HandleTextChanged(object sender)

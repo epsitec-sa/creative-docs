@@ -104,16 +104,30 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void OnFocused()
+		protected override void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine ("MenuItemContainer focused");
-			base.OnFocused ();
+			bool focused = (bool) e.NewValue;
+			
+			if (focused)
+			{
+				this.HandleFocused ();
+			}
+			else
+			{
+				this.HandleDefocused ();
+			}
+			
+			base.OnIsFocusedChanged (e);
 		}
 
-		protected override void OnDefocused()
+		protected void HandleFocused()
+		{
+			System.Diagnostics.Debug.WriteLine ("MenuItemContainer focused");
+		}
+
+		protected void HandleDefocused()
 		{
 			System.Diagnostics.Debug.WriteLine ("MenuItemContainer de-focused");
-			base.OnDefocused ();
 		}
 		
 		protected override void OnPressed(MessageEventArgs e)

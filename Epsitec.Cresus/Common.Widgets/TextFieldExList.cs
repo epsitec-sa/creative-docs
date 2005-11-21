@@ -264,7 +264,7 @@ namespace Epsitec.Common.Widgets
 			return base.AboutToGetFocus (dir, mode, out focus);
 		}
 
-		protected override void OnDefocused()
+		protected override void HandleDefocused()
 		{
 			if ((this.IsKeyboardFocused == false) &&
 				(this.Mode == TextFieldExListMode.EditActive))
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			base.OnDefocused ();
+			base.HandleDefocused ();
 		}
 		
 		protected override void FillComboList(Epsitec.Common.Widgets.Collections.StringCollection list)
