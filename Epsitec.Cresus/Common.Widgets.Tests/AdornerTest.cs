@@ -374,13 +374,13 @@ namespace Epsitec.Common.Widgets
 			box.Children.Add(radio3);
 			tip.SetToolTip(radio3, "Couleur bleue");
 			
-			radio1.ActiveState = WidgetState.ActiveYes;
+			radio1.ActiveState = ActiveState.Yes;
 
 			CheckButton check = new CheckButton();
 //			check.Location = new Point(10, 70);
 			check.Width = 100;
 			check.Text = "<m>C</m>ochez ici";
-			check.ActiveState = WidgetState.ActiveYes;
+			check.ActiveState = ActiveState.Yes;
 			check.Anchor = AnchorStyles.BottomLeft;
 			check.AnchorMargins = new Margins(10, 0, 0, 70);
 			check.TabIndex = 3;

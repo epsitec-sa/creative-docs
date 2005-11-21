@@ -206,8 +206,8 @@ namespace Epsitec.Common.Document.Containers
 		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
-			this.radioGlobal.ActiveState =  this.document.Settings.GlobalGuides ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioPage.ActiveState   = !this.document.Settings.GlobalGuides ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioGlobal.ActiveState =  this.document.Settings.GlobalGuides ? ActiveState.Yes : ActiveState.No;
+			this.radioPage.ActiveState   = !this.document.Settings.GlobalGuides ? ActiveState.Yes : ActiveState.No;
 
 			int rows = this.document.Settings.GuidesCount;
 			int initialColumns = this.table.Columns;
@@ -303,7 +303,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			RadioButton radio = sender as RadioButton;
 			if ( radio == null )  return;
-			if ( radio.ActiveState != WidgetState.ActiveYes )  return;
+			if ( radio.ActiveState != ActiveState.Yes )  return;
 
 			this.document.Settings.GlobalGuides = (radio == this.radioGlobal);
 		}

@@ -106,10 +106,10 @@ namespace Epsitec.Common.Document.Panels
 
 			this.fieldFilename.Text = p.Filename;
 			this.fieldFilename.Cursor = p.Filename.Length;
-			this.buttonMirrorH.ActiveState = p.MirrorH ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonMirrorV.ActiveState = p.MirrorV ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonHomo   .ActiveState = p.Homo    ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonFilter .ActiveState = p.Filter  ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.buttonMirrorH.ActiveState = p.MirrorH ? ActiveState.Yes : ActiveState.No;
+			this.buttonMirrorV.ActiveState = p.MirrorV ? ActiveState.Yes : ActiveState.No;
+			this.buttonHomo   .ActiveState = p.Homo    ? ActiveState.Yes : ActiveState.No;
+			this.buttonFilter .ActiveState = p.Filter  ? ActiveState.Yes : ActiveState.No;
 
 			this.ignoreChanged = false;
 		}
@@ -121,10 +121,10 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			p.Filename = this.fieldFilename.Text;
-			p.MirrorH = ( this.buttonMirrorH.ActiveState == WidgetState.ActiveYes );
-			p.MirrorV = ( this.buttonMirrorV.ActiveState == WidgetState.ActiveYes );
-			p.Homo    = ( this.buttonHomo   .ActiveState == WidgetState.ActiveYes );
-			p.Filter  = ( this.buttonFilter .ActiveState == WidgetState.ActiveYes );
+			p.MirrorH = ( this.buttonMirrorH.ActiveState == ActiveState.Yes );
+			p.MirrorV = ( this.buttonMirrorV.ActiveState == ActiveState.Yes );
+			p.Homo    = ( this.buttonHomo   .ActiveState == ActiveState.Yes );
+			p.Filter  = ( this.buttonFilter .ActiveState == ActiveState.Yes );
 		}
 
 

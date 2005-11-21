@@ -1316,10 +1316,10 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonOper.SetVisible(this.ribbonOper == this.ribbonActive);
 			this.ribbonText.SetVisible(this.ribbonText == this.ribbonActive);
 
-			this.ribbonMainButton.ActiveState = (this.ribbonMain == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonGeomButton.ActiveState = (this.ribbonGeom == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonOperButton.ActiveState = (this.ribbonOper == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonTextButton.ActiveState = (this.ribbonText == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonMainButton.ActiveState = (this.ribbonMain == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
+			this.ribbonGeomButton.ActiveState = (this.ribbonGeom == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
+			this.ribbonOperButton.ActiveState = (this.ribbonOper == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
+			this.ribbonTextButton.ActiveState = (this.ribbonText == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
 
 			double h = this.RibbonHeight;
 			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height+h, this.info.Height);
@@ -1349,22 +1349,22 @@ namespace Epsitec.App.DocumentEditor
 		{
 			if ( sender == this.dlgGlyphs )
 			{
-				this.glyphsState.ActiveState = WidgetState.ActiveNo;
+				this.glyphsState.ActiveState = ActiveState.No;
 			}
 
 			if ( sender == this.dlgInfos )
 			{
-				this.infosState.ActiveState = WidgetState.ActiveNo;
+				this.infosState.ActiveState = ActiveState.No;
 			}
 
 			if ( sender == this.dlgPageStack )
 			{
-				this.pageStackState.ActiveState = WidgetState.ActiveNo;
+				this.pageStackState.ActiveState = ActiveState.No;
 			}
 
 			if ( sender == this.dlgSettings )
 			{
-				this.settingsState.ActiveState = WidgetState.ActiveNo;
+				this.settingsState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -2112,15 +2112,15 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.dlgSplash.Hide();
 
-			if ( this.glyphsState.ActiveState == WidgetState.ActiveNo )
+			if ( this.glyphsState.ActiveState == ActiveState.No )
 			{
 				this.dlgGlyphs.Show();
-				this.glyphsState.ActiveState = WidgetState.ActiveYes;
+				this.glyphsState.ActiveState = ActiveState.Yes;
 			}
 			else
 			{
 				this.dlgGlyphs.Hide();
-				this.glyphsState.ActiveState = WidgetState.ActiveNo;
+				this.glyphsState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -2344,13 +2344,13 @@ namespace Epsitec.App.DocumentEditor
 			Widget button;
 
 			button = this.hToolBar.FindChild("Undo");
-			if ( button != null )  button.ActiveState = engaged ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			if ( button != null )  button.ActiveState = engaged ? ActiveState.Yes : ActiveState.No;
 			
 			button = this.hToolBar.FindChild("UndoRedoList");
-			if ( button != null )  button.ActiveState = engaged ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			if ( button != null )  button.ActiveState = engaged ? ActiveState.Yes : ActiveState.No;
 			
 			button = this.hToolBar.FindChild("Redo");
-			if ( button != null )  button.ActiveState = engaged ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			if ( button != null )  button.ActiveState = engaged ? ActiveState.Yes : ActiveState.No;
 		}
 
 		[Command ("UndoRedoListDo")]
@@ -2867,10 +2867,10 @@ namespace Epsitec.App.DocumentEditor
 			if ( toolbar == null )  return;
 
 			button = toolbar.FindChild("SelectorStretch");
-			if ( button != null )  button.ActiveState = activate ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			if ( button != null )  button.ActiveState = activate ? ActiveState.Yes : ActiveState.No;
 			
 			button = toolbar.FindChild("SelectorStretchType");
-			if ( button != null )  button.ActiveState = engaged ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			if ( button != null )  button.ActiveState = engaged ? ActiveState.Yes : ActiveState.No;
 		}
 
 		[Command ("SelectorStretchTypeDo")]
@@ -3021,15 +3021,15 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.dlgSplash.Hide();
 
-			if ( this.settingsState.ActiveState == WidgetState.ActiveNo )
+			if ( this.settingsState.ActiveState == ActiveState.No )
 			{
 				this.dlgSettings.Show();
-				this.settingsState.ActiveState = WidgetState.ActiveYes;
+				this.settingsState.ActiveState = ActiveState.Yes;
 			}
 			else
 			{
 				this.dlgSettings.Hide();
-				this.settingsState.ActiveState = WidgetState.ActiveNo;
+				this.settingsState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -3038,15 +3038,15 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.dlgSplash.Hide();
 
-			if ( this.infosState.ActiveState == WidgetState.ActiveNo )
+			if ( this.infosState.ActiveState == ActiveState.No )
 			{
 				this.dlgInfos.Show();
-				this.infosState.ActiveState = WidgetState.ActiveYes;
+				this.infosState.ActiveState = ActiveState.Yes;
 			}
 			else
 			{
 				this.dlgInfos.Hide();
-				this.infosState.ActiveState = WidgetState.ActiveNo;
+				this.infosState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -3055,15 +3055,15 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.dlgSplash.Hide();
 
-			if ( this.pageStackState.ActiveState == WidgetState.ActiveNo )
+			if ( this.pageStackState.ActiveState == ActiveState.No )
 			{
 				this.dlgPageStack.Show();
-				this.pageStackState.ActiveState = WidgetState.ActiveYes;
+				this.pageStackState.ActiveState = ActiveState.Yes;
 			}
 			else
 			{
 				this.dlgPageStack.Hide();
-				this.pageStackState.ActiveState = WidgetState.ActiveNo;
+				this.pageStackState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -3772,9 +3772,9 @@ namespace Epsitec.App.DocumentEditor
 				this.zoomPageState.Enabled = true;
 				this.zoomPageWidthState.Enabled = true;
 				this.zoomDefaultState.Enabled = true;
-				this.zoomPageState.ActiveState = context.IsZoomPage ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
-				this.zoomPageWidthState.ActiveState = context.IsZoomPageWidth ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
-				this.zoomDefaultState.ActiveState = context.IsZoomDefault ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
+				this.zoomPageState.ActiveState = context.IsZoomPage ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
+				this.zoomPageWidthState.ActiveState = context.IsZoomPageWidth ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
+				this.zoomDefaultState.ActiveState = context.IsZoomDefault ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
 			}
 			else
 			{
@@ -3796,10 +3796,10 @@ namespace Epsitec.App.DocumentEditor
 				this.zoomPageState.Enabled = true;
 				this.zoomPageWidthState.Enabled = true;
 				this.zoomDefaultState.Enabled = true;
-				this.zoomMinState.ActiveState = ( context.Zoom <= this.CurrentDocument.Modifier.ZoomMin ) ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
-				this.zoomPageState.ActiveState = context.IsZoomPage ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
-				this.zoomPageWidthState.ActiveState = context.IsZoomPageWidth ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
-				this.zoomDefaultState.ActiveState = context.IsZoomDefault ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
+				this.zoomMinState.ActiveState = ( context.Zoom <= this.CurrentDocument.Modifier.ZoomMin ) ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
+				this.zoomPageState.ActiveState = context.IsZoomPage ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
+				this.zoomPageWidthState.ActiveState = context.IsZoomPageWidth ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
+				this.zoomDefaultState.ActiveState = context.IsZoomDefault ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
 				this.zoomPrevState.Enabled = ( this.CurrentDocument.Modifier.ZoomMemorizeCount > 0 );
 				this.zoomSubState.Enabled = ( context.Zoom > this.CurrentDocument.Modifier.ZoomMin );
 				this.zoomAddState.Enabled = ( context.Zoom < this.CurrentDocument.Modifier.ZoomMax );
@@ -3810,10 +3810,10 @@ namespace Epsitec.App.DocumentEditor
 				this.zoomPageState.Enabled = false;
 				this.zoomPageWidthState.Enabled = false;
 				this.zoomDefaultState.Enabled = false;
-				this.zoomMinState.ActiveState = Widgets.WidgetState.ActiveNo;
-				this.zoomPageState.ActiveState = Widgets.WidgetState.ActiveNo;
-				this.zoomPageWidthState.ActiveState = Widgets.WidgetState.ActiveNo;
-				this.zoomDefaultState.ActiveState = Widgets.WidgetState.ActiveNo;
+				this.zoomMinState.ActiveState = Widgets.ActiveState.No;
+				this.zoomPageState.ActiveState = Widgets.ActiveState.No;
+				this.zoomPageWidthState.ActiveState = Widgets.ActiveState.No;
+				this.zoomDefaultState.ActiveState = Widgets.ActiveState.No;
 				this.zoomPrevState.Enabled = false;
 				this.zoomSubState.Enabled = false;
 				this.zoomAddState.Enabled = false;
@@ -3833,12 +3833,12 @@ namespace Epsitec.App.DocumentEditor
 		{
 			if ( enabled )
 			{
-				cmd.ActiveState = (tool == currentTool) ? WidgetState.ActiveYes : WidgetState.ActiveNo;;
+				cmd.ActiveState = (tool == currentTool) ? ActiveState.Yes : ActiveState.No;;
 				cmd.Enabled = (tool == currentTool || tool == "Select" || !isCreating);
 			}
 			else
 			{
-				cmd.ActiveState = WidgetState.ActiveNo;
+				cmd.ActiveState = ActiveState.No;
 				cmd.Enabled = false;
 			}
 		}
@@ -4006,21 +4006,21 @@ namespace Epsitec.App.DocumentEditor
 				this.selectorScalerState.Enabled      = true;
 				this.selectorStretchState.Enabled     = true;
 				this.selectorStretchTypeState.Enabled = true;
-				this.selectorAutoState.ActiveState       = (sType == SelectorType.Auto      ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.selectorIndividualState.ActiveState = (sType == SelectorType.Individual) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.selectorScalerState.ActiveState     = (sType == SelectorType.Scaler    ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.selectorStretchState.ActiveState    = (sType == SelectorType.Stretcher ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorAutoState.ActiveState       = (sType == SelectorType.Auto      ) ? ActiveState.Yes : ActiveState.No;
+				this.selectorIndividualState.ActiveState = (sType == SelectorType.Individual) ? ActiveState.Yes : ActiveState.No;
+				this.selectorScalerState.ActiveState     = (sType == SelectorType.Scaler    ) ? ActiveState.Yes : ActiveState.No;
+				this.selectorStretchState.ActiveState    = (sType == SelectorType.Stretcher ) ? ActiveState.Yes : ActiveState.No;
 				di.containerPrincipal.UpdateSelectorStretch();
 
 				this.selectTotalState.Enabled   = true;
 				this.selectPartialState.Enabled = true;
-				this.selectTotalState.ActiveState   = !viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.selectPartialState.ActiveState =  viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectTotalState.ActiveState   = !viewer.PartialSelect ? ActiveState.Yes : ActiveState.No;
+				this.selectPartialState.ActiveState =  viewer.PartialSelect ? ActiveState.Yes : ActiveState.No;
 
 				this.selectorAdaptLine.Enabled = true;
 				this.selectorAdaptText.Enabled = true;
-				this.selectorAdaptLine.ActiveState = viewer.SelectorAdaptLine ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.selectorAdaptText.ActiveState = viewer.SelectorAdaptText ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorAdaptLine.ActiveState = viewer.SelectorAdaptLine ? ActiveState.Yes : ActiveState.No;
+				this.selectorAdaptText.ActiveState = viewer.SelectorAdaptText ? ActiveState.Yes : ActiveState.No;
 
 				Objects.Abstract edit = this.CurrentDocument.Modifier.RetEditObject();
 				if ( edit == null )
@@ -4134,20 +4134,20 @@ namespace Epsitec.App.DocumentEditor
 				this.selectorScalerState.Enabled      = false;
 				this.selectorStretchState.Enabled     = false;
 				this.selectorStretchTypeState.Enabled = false;
-				this.selectorAutoState.ActiveState       = WidgetState.ActiveNo;
-				this.selectorIndividualState.ActiveState = WidgetState.ActiveNo;
-				this.selectorScalerState.ActiveState     = WidgetState.ActiveNo;
-				this.selectorStretchState.ActiveState    = WidgetState.ActiveNo;
+				this.selectorAutoState.ActiveState       = ActiveState.No;
+				this.selectorIndividualState.ActiveState = ActiveState.No;
+				this.selectorScalerState.ActiveState     = ActiveState.No;
+				this.selectorStretchState.ActiveState    = ActiveState.No;
 
 				this.selectTotalState.Enabled   = false;
 				this.selectPartialState.Enabled = false;
-				this.selectTotalState.ActiveState   = WidgetState.ActiveNo;
-				this.selectPartialState.ActiveState = WidgetState.ActiveNo;
+				this.selectTotalState.ActiveState   = ActiveState.No;
+				this.selectPartialState.ActiveState = ActiveState.No;
 
 				this.selectorAdaptLine.Enabled = false;
 				this.selectorAdaptText.Enabled = false;
-				this.selectorAdaptLine.ActiveState = WidgetState.ActiveNo;
-				this.selectorAdaptText.ActiveState = WidgetState.ActiveNo;
+				this.selectorAdaptLine.ActiveState = ActiveState.No;
+				this.selectorAdaptText.ActiveState = ActiveState.No;
 			}
 
 			this.ribbonText.SetDirtyText();
@@ -4326,24 +4326,24 @@ namespace Epsitec.App.DocumentEditor
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.gridState.Enabled = true;
-				this.gridState.ActiveState = context.GridActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.gridState.ActiveState = context.GridActive ? ActiveState.Yes : ActiveState.No;
 				this.rulersState.Enabled = true;
-				this.rulersState.ActiveState = context.RulersShow ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.rulersState.ActiveState = context.RulersShow ? ActiveState.Yes : ActiveState.No;
 				this.labelsState.Enabled = true;
-				this.labelsState.ActiveState = context.LabelsShow ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.labelsState.ActiveState = context.LabelsShow ? ActiveState.Yes : ActiveState.No;
 				this.aggregatesState.Enabled = true;
-				this.aggregatesState.ActiveState = context.AggregatesShow ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.aggregatesState.ActiveState = context.AggregatesShow ? ActiveState.Yes : ActiveState.No;
 			}
 			else
 			{
 				this.gridState.Enabled = false;
-				this.gridState.ActiveState = WidgetState.ActiveNo;
+				this.gridState.ActiveState = ActiveState.No;
 				this.rulersState.Enabled = false;
-				this.rulersState.ActiveState = WidgetState.ActiveNo;
+				this.rulersState.ActiveState = ActiveState.No;
 				this.labelsState.Enabled = false;
-				this.labelsState.ActiveState = WidgetState.ActiveNo;
+				this.labelsState.ActiveState = ActiveState.No;
 				this.aggregatesState.Enabled = false;
-				this.aggregatesState.ActiveState = WidgetState.ActiveNo;
+				this.aggregatesState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -4368,18 +4368,18 @@ namespace Epsitec.App.DocumentEditor
 				if ( layers.Count == 0 )
 				{
 					this.magnetState.Enabled = false;
-					this.magnetState.ActiveState = WidgetState.ActiveNo;
+					this.magnetState.ActiveState = ActiveState.No;
 				}
 				else
 				{
 					this.magnetState.Enabled = true;
-					this.magnetState.ActiveState = context.MagnetActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+					this.magnetState.ActiveState = context.MagnetActive ? ActiveState.Yes : ActiveState.No;
 				}
 			}
 			else
 			{
 				this.magnetState.Enabled = false;
-				this.magnetState.ActiveState = WidgetState.ActiveNo;
+				this.magnetState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -4390,12 +4390,12 @@ namespace Epsitec.App.DocumentEditor
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.previewState.Enabled = true;
-				this.previewState.ActiveState = context.PreviewActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.previewState.ActiveState = context.PreviewActive ? ActiveState.Yes : ActiveState.No;
 			}
 			else
 			{
 				this.previewState.Enabled = false;
-				this.previewState.ActiveState = WidgetState.ActiveNo;
+				this.previewState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -4424,12 +4424,12 @@ namespace Epsitec.App.DocumentEditor
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.hideHalfState.Enabled = true;
-				this.hideHalfState.ActiveState = context.HideHalfActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.hideHalfState.ActiveState = context.HideHalfActive ? ActiveState.Yes : ActiveState.No;
 			}
 			else
 			{
 				this.hideHalfState.Enabled = false;
-				this.hideHalfState.ActiveState = WidgetState.ActiveNo;
+				this.hideHalfState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -4442,9 +4442,9 @@ namespace Epsitec.App.DocumentEditor
 				this.debugBboxThinState.Enabled = true;
 				this.debugBboxGeomState.Enabled = true;
 				this.debugBboxFullState.Enabled = true;
-				this.debugBboxThinState.ActiveState = context.IsDrawBoxThin ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.debugBboxGeomState.ActiveState = context.IsDrawBoxGeom ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.debugBboxFullState.ActiveState = context.IsDrawBoxFull ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.debugBboxThinState.ActiveState = context.IsDrawBoxThin ? ActiveState.Yes : ActiveState.No;
+				this.debugBboxGeomState.ActiveState = context.IsDrawBoxGeom ? ActiveState.Yes : ActiveState.No;
+				this.debugBboxFullState.ActiveState = context.IsDrawBoxFull ? ActiveState.Yes : ActiveState.No;
 				this.debugDirtyState.Enabled = true;
 			}
 			else
@@ -4452,9 +4452,9 @@ namespace Epsitec.App.DocumentEditor
 				this.debugBboxThinState.Enabled = false;
 				this.debugBboxGeomState.Enabled = false;
 				this.debugBboxFullState.Enabled = false;
-				this.debugBboxThinState.ActiveState = WidgetState.ActiveNo;
-				this.debugBboxGeomState.ActiveState = WidgetState.ActiveNo;
-				this.debugBboxFullState.ActiveState = WidgetState.ActiveNo;
+				this.debugBboxThinState.ActiveState = ActiveState.No;
+				this.debugBboxGeomState.ActiveState = ActiveState.No;
+				this.debugBboxFullState.ActiveState = ActiveState.No;
 				this.debugDirtyState.Enabled = false;
 			}
 		}

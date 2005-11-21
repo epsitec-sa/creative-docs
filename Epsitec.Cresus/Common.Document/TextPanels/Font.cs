@@ -205,13 +205,13 @@ namespace Epsitec.Common.Document.TextPanels
 		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
-			this.fontColor.ActiveState = WidgetState.ActiveNo;
+			this.fontColor.ActiveState = ActiveState.No;
 		}
 
 		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
-			this.fontColor.ActiveState = WidgetState.ActiveYes;
+			this.fontColor.ActiveState = ActiveState.Yes;
 		}
 
 		// Modifie la couleur d'origine.
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleFieldColorChanged(object sender)
 		{
 			ColorSample cs = sender as ColorSample;
-			if ( cs.ActiveState == WidgetState.ActiveYes )
+			if ( cs.ActiveState == ActiveState.Yes )
 			{
 				this.OnOriginColorChanged();
 			}

@@ -51,7 +51,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				radio2.Text = Res.Strings.Dialog.Settings.RadioDocument;
 				radio2.Width = 80;
 				radio2.Dock = DockStyle.Left;
-				radio2.ActiveState = WidgetState.ActiveYes;
+				radio2.ActiveState = ActiveState.Yes;
 				radio2.ActiveStateChanged += new EventHandler(this.HandleRadioSettingsChanged);
 				radio2.Index = 2;
 
@@ -96,17 +96,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				combo.SelectedIndex = GlobalSettings.FirstActionRank(this.globalSettings.FirstAction);
 
 				check = this.CreateCheck(bookGeneral, "SplashScreen", Res.Strings.Dialog.Settings.SplashScreen);
-				check.ActiveState = this.globalSettings.SplashScreen ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				check.ActiveState = this.globalSettings.SplashScreen ? ActiveState.Yes : ActiveState.No;
 
 				Common.Document.Dialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.AutoUpdate);
 
 				check = this.CreateCheck(bookGeneral, "AutoChecker", Res.Strings.Dialog.Settings.AutoChecker);
-				check.ActiveState = this.globalSettings.AutoChecker ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				check.ActiveState = this.globalSettings.AutoChecker ? ActiveState.Yes : ActiveState.No;
 
 				Common.Document.Dialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.PanelProperties);
 
 				check = this.CreateCheck(bookGeneral, "LabelProperties", Res.Strings.Dialog.Settings.LabelProperties);
-				check.ActiveState = this.globalSettings.LabelProperties ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				check.ActiveState = this.globalSettings.LabelProperties ? ActiveState.Yes : ActiveState.No;
 
 				Common.Document.Dialogs.CreateSeparator(bookGeneral);
 
@@ -129,7 +129,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				field.Value = (decimal) this.globalSettings.DefaultZoom;
 
 				check = this.CreateCheck(bookPeriph, "FineCursor", Res.Strings.Dialog.Settings.FineCursor);
-				check.ActiveState = this.globalSettings.FineCursor ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				check.ActiveState = this.globalSettings.FineCursor ? ActiveState.Yes : ActiveState.No;
 
 				Common.Document.Dialogs.CreateTitle(bookPeriph, Res.Strings.Dialog.Settings.Screen);
 
@@ -377,7 +377,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			RadioButton radio = sender as RadioButton;
 			
 			if ( radio == null )  return;
-			if ( radio.ActiveState != WidgetState.ActiveYes )  return;
+			if ( radio.ActiveState != ActiveState.Yes )  return;
 			
 			if ( radio.Name == "RadioGlobal" )
 			{
@@ -562,7 +562,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				// Bouton check pour déterminer la visibilité.
 				bt = this.quickList[0, row].Children[0] as CheckButton;
-				bt.ActiveState = used ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				bt.ActiveState = used ? ActiveState.Yes : ActiveState.No;
 
 				// Icône.
 				ib = this.quickList[1, row].Children[0] as IconButton;

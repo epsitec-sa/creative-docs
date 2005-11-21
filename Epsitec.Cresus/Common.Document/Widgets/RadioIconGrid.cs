@@ -109,11 +109,11 @@ namespace Epsitec.Common.Document.Widgets
 
 						if ( icon.EnumValue == this.selectedValue )
 						{
-							icon.ActiveState = WidgetState.ActiveYes;
+							icon.ActiveState = ActiveState.Yes;
 						}
 						else
 						{
-							icon.ActiveState = WidgetState.ActiveNo;
+							icon.ActiveState = ActiveState.No;
 						}
 					}
 

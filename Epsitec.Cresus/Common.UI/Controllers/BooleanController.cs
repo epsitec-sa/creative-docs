@@ -53,7 +53,7 @@ namespace Epsitec.Common.UI.Controllers
 			if ((adapter != null) &&
 				(this.check_button != null))
 			{
-				this.check_button.ActiveState = adapter.Value ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.check_button.ActiveState = adapter.Value ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 		

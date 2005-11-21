@@ -69,7 +69,7 @@ namespace Epsitec.Common.UI.Controllers
 				long flags = (long) adapter.Value;
 				long bit   = (long) this.widget.Index;
 				
-				this.widget.ActiveState = ((flags & bit) != 0) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.widget.ActiveState = ((flags & bit) != 0) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 		

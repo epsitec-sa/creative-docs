@@ -1543,15 +1543,15 @@ namespace Epsitec.Common.Widgets
 			{
 				int index  = this.host.SelectedIndex;
 				
-				WidgetState act_edition  = WidgetState.ActiveNo;
-				WidgetState act_search   = WidgetState.ActiveNo;
-				WidgetState act_readonly = WidgetState.ActiveNo;
+				ActiveState act_edition  = ActiveState.No;
+				ActiveState act_search   = ActiveState.No;
+				ActiveState act_readonly = ActiveState.No;
 				
 				switch (this.host.InteractionMode)
 				{
-					case ScrollInteractionMode.ReadOnly: act_readonly = WidgetState.ActiveYes;	break;
-					case ScrollInteractionMode.Edition:  act_edition = WidgetState.ActiveYes;	break;
-					case ScrollInteractionMode.Search:   act_search = WidgetState.ActiveYes;	break;
+					case ScrollInteractionMode.ReadOnly: act_readonly = ActiveState.Yes;	break;
+					case ScrollInteractionMode.Edition:  act_edition = ActiveState.Yes;	break;
+					case ScrollInteractionMode.Search:   act_search = ActiveState.Yes;	break;
 				}
 				
 				bool ok_edit       = this.store.CheckSetRow (index);
@@ -1565,14 +1565,14 @@ namespace Epsitec.Common.Widgets
 				this.UpdateCommandState ("StartEdition", ok_edit, act_edition);
 				this.UpdateCommandState ("StartSearch", true, act_search);
 				
-				this.UpdateCommandState ("InsertBefore", ok_ins_before, WidgetState.ActiveNo);
-				this.UpdateCommandState ("InsertAfter",  ok_ins_after,  WidgetState.ActiveNo);
-				this.UpdateCommandState ("Delete",       ok_delete,     WidgetState.ActiveNo);
-				this.UpdateCommandState ("MoveUp",       ok_move_up,    WidgetState.ActiveNo);
-				this.UpdateCommandState ("MoveDown",     ok_move_down,  WidgetState.ActiveNo);
+				this.UpdateCommandState ("InsertBefore", ok_ins_before, ActiveState.No);
+				this.UpdateCommandState ("InsertAfter",  ok_ins_after,  ActiveState.No);
+				this.UpdateCommandState ("Delete",       ok_delete,     ActiveState.No);
+				this.UpdateCommandState ("MoveUp",       ok_move_up,    ActiveState.No);
+				this.UpdateCommandState ("MoveDown",     ok_move_down,  ActiveState.No);
 			}
 			
-			protected virtual void UpdateCommandState(string name, bool enabled, WidgetState active)
+			protected virtual void UpdateCommandState(string name, bool enabled, ActiveState active)
 			{
 				CommandState state = this.GetCommandState (name);
 				

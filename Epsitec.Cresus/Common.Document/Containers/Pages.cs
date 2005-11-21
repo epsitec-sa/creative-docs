@@ -392,22 +392,22 @@ namespace Epsitec.Common.Document.Containers
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 
-			this.radioSlave.ActiveState  = (page.MasterType == Objects.MasterType.Slave) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioMaster.ActiveState = (page.MasterType != Objects.MasterType.Slave) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioSlave.ActiveState  = (page.MasterType == Objects.MasterType.Slave) ? ActiveState.Yes : ActiveState.No;
+			this.radioMaster.ActiveState = (page.MasterType != Objects.MasterType.Slave) ? ActiveState.Yes : ActiveState.No;
 
 			this.radioSlaveGroup.SetVisible (page.MasterType == Objects.MasterType.Slave);
 			this.radioMasterGroup.SetVisible(page.MasterType != Objects.MasterType.Slave);
 
-			this.radioAll.ActiveState =  (page.MasterType == Objects.MasterType.All ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioEven.ActiveState = (page.MasterType == Objects.MasterType.Even) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioOdd.ActiveState =  (page.MasterType == Objects.MasterType.Odd ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioNone.ActiveState = (page.MasterType == Objects.MasterType.None) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioAll.ActiveState =  (page.MasterType == Objects.MasterType.All ) ? ActiveState.Yes : ActiveState.No;
+			this.radioEven.ActiveState = (page.MasterType == Objects.MasterType.Even) ? ActiveState.Yes : ActiveState.No;
+			this.radioOdd.ActiveState =  (page.MasterType == Objects.MasterType.Odd ) ? ActiveState.Yes : ActiveState.No;
+			this.radioNone.ActiveState = (page.MasterType == Objects.MasterType.None) ? ActiveState.Yes : ActiveState.No;
 
-			this.radioNever.ActiveState    = (page.MasterUse == Objects.MasterUse.Never   ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioDefault.ActiveState  = (page.MasterUse == Objects.MasterUse.Default ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioSpecific.ActiveState = (page.MasterUse == Objects.MasterUse.Specific) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioNever.ActiveState    = (page.MasterUse == Objects.MasterUse.Never   ) ? ActiveState.Yes : ActiveState.No;
+			this.radioDefault.ActiveState  = (page.MasterUse == Objects.MasterUse.Default ) ? ActiveState.Yes : ActiveState.No;
+			this.radioSpecific.ActiveState = (page.MasterUse == Objects.MasterUse.Specific) ? ActiveState.Yes : ActiveState.No;
 
-			this.checkGuides.ActiveState = page.MasterGuides ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.checkGuides.ActiveState = page.MasterGuides ? ActiveState.Yes : ActiveState.No;
 
 			this.specificSlavePage.SetEnabled(page.MasterUse == Objects.MasterUse.Specific);
 			if ( page.MasterPageToUse == null ||
@@ -420,8 +420,8 @@ namespace Epsitec.Common.Document.Containers
 				this.specificSlavePage.Text = page.MasterPageToUse.ShortName;
 			}
 
-			this.checkAutoStop.ActiveState = page.MasterAutoStop ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.checkSpecific.ActiveState = page.MasterSpecific ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.checkAutoStop.ActiveState = page.MasterAutoStop ? ActiveState.Yes : ActiveState.No;
+			this.checkSpecific.ActiveState = page.MasterSpecific ? ActiveState.Yes : ActiveState.No;
 
 			this.specificMasterPage.SetEnabled(page.MasterSpecific);
 			if ( page.MasterPageToUse == null || !page.MasterSpecific )
@@ -497,7 +497,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			RadioButton radio = sender as RadioButton;
 			if ( radio == null )  return;
-			if ( radio.ActiveState != WidgetState.ActiveYes )  return;
+			if ( radio.ActiveState != ActiveState.Yes )  return;
 
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChangeStatus);
 

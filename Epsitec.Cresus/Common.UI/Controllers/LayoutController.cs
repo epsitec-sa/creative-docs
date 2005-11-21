@@ -149,7 +149,7 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			RadioButton radio = sender as RadioButton;
 			
-			if ((radio.ActiveState == WidgetState.ActiveYes) &&
+			if ((radio.ActiveState == ActiveState.Yes) &&
 				(radio.Group == "mode"))
 			{
 				this.SetShowMode ((ShowMode) radio.Index);

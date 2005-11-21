@@ -52,7 +52,7 @@ namespace Epsitec.Common.Widgets
 			this.scrollerV  = new VScroller(this);
 			this.scrollerH  = new HScroller(this);
 			
-			this.container.InheritFocus = true;
+			this.container.InheritParentFocus = true;
 			
 			this.scrollerV.IsInverted = true;  // de haut en bas
 			this.scrollerV.ValueChanged += new Support.EventHandler(this.HandleScrollerV);

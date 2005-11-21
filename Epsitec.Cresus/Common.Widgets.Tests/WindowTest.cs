@@ -395,7 +395,7 @@ namespace Epsitec.Common.Widgets
 			radio.SetParent (window.Root);
 			radio.TabIndex = 40;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			radio.ActiveState = WidgetState.ActiveYes;
+			radio.ActiveState = ActiveState.Yes;
 			
 			radio = new RadioButton ();
 			radio.Bounds = new Drawing.Rectangle (260, 61+7, 40, 20);
@@ -423,7 +423,7 @@ namespace Epsitec.Common.Widgets
 			radio.SetParent (window.Root);
 			radio.TabIndex = 41;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			radio.ActiveState = WidgetState.ActiveYes;
+			radio.ActiveState = ActiveState.Yes;
 			
 			radio = new RadioButton ();
 			radio.Bounds = new Drawing.Rectangle (300, 61+7, 40, 20);
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Widgets
 			check.SetParent (window.Root);
 			check.TabIndex = 50;
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			check.ActiveState = WidgetState.ActiveYes;
+			check.ActiveState = ActiveState.Yes;
 			
 			check = new CheckButton ();
 			check.Bounds = new Drawing.Rectangle (340, 61+7, 40, 20);

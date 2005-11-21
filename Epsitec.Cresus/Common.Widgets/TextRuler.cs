@@ -955,7 +955,7 @@ namespace Epsitec.Common.Widgets
 		protected void ButtonActive(Button button, bool active)
 		{
 			// Indique si un bouton est actif.
-			button.ActiveState = active ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			button.ActiveState = active ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected void GlyphType(GlyphButton button, Drawing.TextTabType type)

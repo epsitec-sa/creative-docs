@@ -280,7 +280,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
 				{
-					if ( this.radioDashRank[i].ActiveState == WidgetState.ActiveYes )
+					if ( this.radioDashRank[i].ActiveState == ActiveState.Yes )
 					{
 						return i;
 					}
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
 				{
-					this.radioDashRank[i].ActiveState = (i==value) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+					this.radioDashRank[i].ActiveState = (i==value) ? ActiveState.Yes : ActiveState.No;
 				}
 			}
 		}

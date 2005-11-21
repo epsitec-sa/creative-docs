@@ -207,8 +207,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void UpdateRadio()
 		{
-			this.radio1.ActiveState = this.demo ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radio2.ActiveState = this.demo ? WidgetState.ActiveNo : WidgetState.ActiveYes;
+			this.radio1.ActiveState = this.demo ? ActiveState.Yes : ActiveState.No;
+			this.radio2.ActiveState = this.demo ? ActiveState.No : ActiveState.Yes;
 		}
 
 		protected void UpdateKeys()
@@ -229,7 +229,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleRadioActiveStateChanged(object sender)
 		{
-			bool demo = (this.radio1.ActiveState == WidgetState.ActiveYes);
+			bool demo = (this.radio1.ActiveState == ActiveState.Yes);
 			if ( demo == this.demo )  return;
 			this.demo = demo;
 

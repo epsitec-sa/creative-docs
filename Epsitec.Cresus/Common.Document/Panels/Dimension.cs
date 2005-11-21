@@ -166,7 +166,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fontOffset.TextFieldReal.InternalValue = (decimal) p.FontOffset*100;
 			this.dimensionText.TextField.Text = p.DimensionText;
 
-			this.rotateText.ActiveState = p.RotateText ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.rotateText.ActiveState = p.RotateText ? ActiveState.Yes : ActiveState.No;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Document.Panels
 			p.FontOffset = (double) this.fontOffset.TextFieldReal.InternalValue/100;
 			p.DimensionText = this.dimensionText.TextField.Text;
 
-			p.RotateText = (this.rotateText.ActiveState == WidgetState.ActiveYes);
+			p.RotateText = (this.rotateText.ActiveState == ActiveState.Yes);
 		}
 
 
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Document.Panels
 			if ( this.ignoreChanged )  return;
 
 			IconButton button = sender as IconButton;
-			button.ActiveState = (button.ActiveState==WidgetState.ActiveNo) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			button.ActiveState = (button.ActiveState==ActiveState.No) ? ActiveState.Yes : ActiveState.No;
 
 			this.OnChanged();
 		}

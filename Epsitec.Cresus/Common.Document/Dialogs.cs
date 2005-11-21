@@ -508,7 +508,7 @@ namespace Epsitec.Common.Document
 			check.Text = sBool.Text;
 			check.Width = 100;
 			check.Name = sBool.Name;
-			check.ActiveState = sBool.Value ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			check.ActiveState = sBool.Value ? ActiveState.Yes : ActiveState.No;
 			check.TabIndex = this.tabIndex++;
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.Dock = DockStyle.Top;
@@ -528,7 +528,7 @@ namespace Epsitec.Common.Document
 			Settings.Bool sBool = settings as Settings.Bool;
 			if ( sBool == null )  return;
 
-			sBool.Value = ( check.ActiveState == WidgetState.ActiveYes );
+			sBool.Value = ( check.ActiveState == ActiveState.Yes );
 
 			int total = this.document.Settings.Count;
 			for ( int i=0 ; i<total ; i++ )
@@ -912,13 +912,13 @@ namespace Epsitec.Common.Document
 		{
 			if ( state )
 			{
-				ib.ActiveState = WidgetState.ActiveYes;
+				ib.ActiveState = ActiveState.Yes;
 				ib.IconName = Misc.Icon("Linked");
 				sep.SetEnabled(true);
 			}
 			else
 			{
-				ib.ActiveState = WidgetState.ActiveNo;
+				ib.ActiveState = ActiveState.No;
 				ib.IconName = Misc.Icon("Unlinked");
 				sep.SetEnabled(false);
 			}
@@ -1214,7 +1214,7 @@ namespace Epsitec.Common.Document
 
 			Size size = Dialogs.PaperRankToSize(sel);
 			RadioButton radio = this.WidgetsTableSearch("PaperFormat.Landscape", "") as RadioButton;
-			if ( radio != null && radio.ActiveState == WidgetState.ActiveYes )
+			if ( radio != null && radio.ActiveState == ActiveState.Yes )
 			{
 				Dialogs.SwapSize(ref size);
 			}
@@ -1263,13 +1263,13 @@ namespace Epsitec.Common.Document
 			radio = this.WidgetsTableSearch("PaperFormat.Portrait", "") as RadioButton;
 			if ( radio != null )
 			{
-				radio.ActiveState = portrait ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				radio.ActiveState = portrait ? ActiveState.Yes : ActiveState.No;
 			}
 
 			radio = this.WidgetsTableSearch("PaperFormat.Landscape", "") as RadioButton;
 			if ( radio != null )
 			{
-				radio.ActiveState = !portrait ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				radio.ActiveState = !portrait ? ActiveState.Yes : ActiveState.No;
 			}
 
 			this.ignoreChanged = initial;
@@ -1443,7 +1443,7 @@ namespace Epsitec.Common.Document
 			radio.Height = 20;
 			radio.Width = 100;
 			radio.Name = sRange.Name;
-			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.All) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.All) ? ActiveState.Yes : ActiveState.No;
 			radio.TabIndex = this.tabIndex++;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Top;
@@ -1464,7 +1464,7 @@ namespace Epsitec.Common.Document
 			radio.Height = 20;
 			radio.Width = 85;
 			radio.Name = sRange.Name;
-			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.FromTo) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.FromTo) ? ActiveState.Yes : ActiveState.No;
 			radio.TabIndex = this.tabIndex++;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Left;
@@ -1519,7 +1519,7 @@ namespace Epsitec.Common.Document
 			radio.Height = 20;
 			radio.Width = 100;
 			radio.Name = sRange.Name;
-			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.Current) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.Current) ? ActiveState.Yes : ActiveState.No;
 			radio.TabIndex = this.tabIndex++;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Top;
@@ -1535,7 +1535,7 @@ namespace Epsitec.Common.Document
 		{
 			RadioButton radio = sender as RadioButton;
 			if ( radio == null )  return;
-			if ( radio.ActiveState != WidgetState.ActiveYes )  return;
+			if ( radio.ActiveState != ActiveState.Yes )  return;
 
 			Settings.Abstract settings = this.document.Settings.Get(radio.Name);
 			if ( settings == null )  return;
@@ -1594,19 +1594,19 @@ namespace Epsitec.Common.Document
 			radio = this.WidgetsTableSearch(name, ".All") as RadioButton;
 			if ( radio != null )
 			{
-				radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.All) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.All) ? ActiveState.Yes : ActiveState.No;
 			}
 
 			radio = this.WidgetsTableSearch(name, ".FromTo") as RadioButton;
 			if ( radio != null )
 			{
-				radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.FromTo) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.FromTo) ? ActiveState.Yes : ActiveState.No;
 			}
 
 			radio = this.WidgetsTableSearch(name, ".Current") as RadioButton;
 			if ( radio != null )
 			{
-				radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.Current) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.Current) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 
@@ -1738,7 +1738,7 @@ namespace Epsitec.Common.Document
 					CheckButton check = this.WidgetsTableSearch(setting.Name, "") as CheckButton;
 					if ( check != null )
 					{
-						check.ActiveState = sBool.Value ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+						check.ActiveState = sBool.Value ? ActiveState.Yes : ActiveState.No;
 					}
 				}
 
@@ -1786,7 +1786,7 @@ namespace Epsitec.Common.Document
 					if ( ib != null && sep != null )
 					{
 						Dialogs.UpdateLink(ib, sep, sPoint.Link);
-						ib.ActiveState = sPoint.Link ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+						ib.ActiveState = sPoint.Link ? ActiveState.Yes : ActiveState.No;
 					}
 
 					if ( setting.Name == "PageSize" )

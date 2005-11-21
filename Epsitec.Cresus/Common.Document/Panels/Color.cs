@@ -60,13 +60,13 @@ namespace Epsitec.Common.Document.Panels
 		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
-			this.field.ActiveState = WidgetState.ActiveNo;
+			this.field.ActiveState = ActiveState.No;
 		}
 
 		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
-			this.field.ActiveState = WidgetState.ActiveYes;
+			this.field.ActiveState = ActiveState.Yes;
 		}
 
 		// Modifie la couleur d'origine.
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.Panels
 		private void HandleFieldColorChanged(object sender)
 		{
 			ColorSample cs = sender as ColorSample;
-			if ( cs.ActiveState == WidgetState.ActiveYes )
+			if ( cs.ActiveState == ActiveState.Yes )
 			{
 				this.OnOriginColorChanged();
 			}

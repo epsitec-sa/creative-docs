@@ -345,7 +345,7 @@ namespace Epsitec.Common.Document.Containers
 
 				if ( list.Count > 0 && this.document.Modifier.TotalSelected > 1 )
 				{
-					this.detailButton.ActiveState = this.document.Modifier.PropertiesDetail ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+					this.detailButton.ActiveState = this.document.Modifier.PropertiesDetail ? ActiveState.Yes : ActiveState.No;
 					this.detailButton.SetParent(this);
 				}
 
@@ -492,7 +492,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.originColorPanel = null;
 			this.originColorRuler = ruler;
-			this.originColorRuler.ColorSample.ActiveState = WidgetState.ActiveYes;
+			this.originColorRuler.ColorSample.ActiveState = ActiveState.Yes;
 
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
 			{
@@ -564,7 +564,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			if ( this.originColorRuler == null )  return;
 
-			this.originColorRuler.ColorSample.ActiveState = WidgetState.ActiveNo;
+			this.originColorRuler.ColorSample.ActiveState = ActiveState.No;
 			this.originColorRuler = null;
 		}
 

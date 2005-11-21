@@ -424,7 +424,7 @@ namespace Epsitec.Common.Drawing
 				CheckButton cb6 = new CheckButton (this.window.Root);
 				CheckButton cb7 = new CheckButton (this.window.Root);
 				
-				rb1.ActiveState = WidgetState.ActiveYes;
+				rb1.ActiveState = ActiveState.Yes;
 				
 				st1.Dock = DockStyle.Top; st1.DockMargins = new Margins (4, 4, 4, 4);
 				cb1.Dock = DockStyle.Top; cb1.DockMargins = new Margins (4, 4, 4, 0);

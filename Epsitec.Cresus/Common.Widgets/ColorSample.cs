@@ -416,7 +416,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
-			if ( this.possibleSource && this.ActiveState == WidgetState.ActiveYes )
+			if ( this.possibleSource && this.ActiveState == ActiveState.Yes )
 			{
 				Drawing.Rectangle r = rect;
 				r.Inflate(this.marginSource);

@@ -113,7 +113,7 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 
 			this.buttonBold.SetEnabled(enabled);
-			this.buttonBold.ActiveState = state ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.buttonBold.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected void UpdateButtonItalic()
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 
 			this.buttonItalic.SetEnabled(enabled);
-			this.buttonItalic.ActiveState = state ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.buttonItalic.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
 		
@@ -480,7 +480,7 @@ namespace Epsitec.Common.Document.Ribbons
 		private void HandleFieldColorChanged(object sender)
 		{
 			ColorSample cs = sender as ColorSample;
-			if ( cs.ActiveState == WidgetState.ActiveYes )
+			if ( cs.ActiveState == ActiveState.Yes )
 			{
 				this.OnOriginColorChanged();
 			}

@@ -347,10 +347,10 @@ namespace Epsitec.Common.Document.Containers
 
 			bt = this.table[3, row].Children[0] as CheckButton;
 			bt.Name = row.ToString();
-			WidgetState state = WidgetState.ActiveNo;
-			if ( layer.Type == Objects.LayerType.Show   )  state = WidgetState.ActiveYes;
-			if ( layer.Type == Objects.LayerType.Dimmed )  state = WidgetState.ActiveMaybe;
-			if ( select )  state = WidgetState.ActiveYes;
+			ActiveState state = ActiveState.No;
+			if ( layer.Type == Objects.LayerType.Show   )  state = ActiveState.Yes;
+			if ( layer.Type == Objects.LayerType.Dimmed )  state = ActiveState.Maybe;
+			if ( select )  state = ActiveState.Yes;
 			bt.ActiveState = state;
 			bt.SetEnabled(!select);
 
@@ -430,9 +430,9 @@ namespace Epsitec.Common.Document.Containers
 			using ( this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.LayerChangeShowOne) )
 			{
 				Objects.LayerType type = Objects.LayerType.None;
-				if ( bt.ActiveState == WidgetState.ActiveYes   )  type = Objects.LayerType.Show;
-				if ( bt.ActiveState == WidgetState.ActiveNo    )  type = Objects.LayerType.Hide;
-				if ( bt.ActiveState == WidgetState.ActiveMaybe )  type = Objects.LayerType.Dimmed;
+				if ( bt.ActiveState == ActiveState.Yes   )  type = Objects.LayerType.Show;
+				if ( bt.ActiveState == ActiveState.No    )  type = Objects.LayerType.Hide;
+				if ( bt.ActiveState == ActiveState.Maybe )  type = Objects.LayerType.Dimmed;
 				layer.Type = type;
 
 				this.document.Notifier.NotifyMagnetChanged();
@@ -464,7 +464,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			RadioButton radio = sender as RadioButton;
 			if ( radio == null )  return;
-			if ( radio.ActiveState != WidgetState.ActiveYes )  return;
+			if ( radio.ActiveState != ActiveState.Yes )  return;
 
 			using ( this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.LayerChangePrint) )
 			{
@@ -494,9 +494,9 @@ namespace Epsitec.Common.Document.Containers
 			Objects.Layer layer = page.Objects[sel] as Objects.Layer;
 
 			Objects.LayerPrint print = layer.Print;
-			this.radioShowPrint.ActiveState   = (print == Objects.LayerPrint.Show  ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioDimmedPrint.ActiveState = (print == Objects.LayerPrint.Dimmed) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioHidePrint.ActiveState   = (print == Objects.LayerPrint.Hide  ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioShowPrint.ActiveState   = (print == Objects.LayerPrint.Show  ) ? ActiveState.Yes : ActiveState.No;
+			this.radioDimmedPrint.ActiveState = (print == Objects.LayerPrint.Dimmed) ? ActiveState.Yes : ActiveState.No;
+			this.radioHidePrint.ActiveState   = (print == Objects.LayerPrint.Hide  ) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -550,7 +550,7 @@ namespace Epsitec.Common.Document.Containers
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 			Objects.Layer layer = page.Objects[sel] as Objects.Layer;
 
-			this.checkMagnet.ActiveState = layer.Magnet ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.checkMagnet.ActiveState = layer.Magnet ? ActiveState.Yes : ActiveState.No;
 		}
 
 

@@ -98,14 +98,14 @@ namespace Epsitec.Common.Document.Ribbons
 				alignJustif = editObject.GetTextStyle("AlignJustif");
 			}
 
-			this.buttonBulletRound.ActiveState   = bulletRound   ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonBulletNumeric.ActiveState = bulletNumeric ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonBulletAlpha.ActiveState   = bulletAlpha   ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.buttonBulletRound.ActiveState   = bulletRound   ? ActiveState.Yes : ActiveState.No;
+			this.buttonBulletNumeric.ActiveState = bulletNumeric ? ActiveState.Yes : ActiveState.No;
+			this.buttonBulletAlpha.ActiveState   = bulletAlpha   ? ActiveState.Yes : ActiveState.No;
 
-			this.buttonAlignLeft.ActiveState   = alignLeft   ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonAlignCenter.ActiveState = alignCenter ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonAlignRight.ActiveState  = alignRight  ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonAlignJustif.ActiveState = alignJustif ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.buttonAlignLeft.ActiveState   = alignLeft   ? ActiveState.Yes : ActiveState.No;
+			this.buttonAlignCenter.ActiveState = alignCenter ? ActiveState.Yes : ActiveState.No;
+			this.buttonAlignRight.ActiveState  = alignRight  ? ActiveState.Yes : ActiveState.No;
+			this.buttonAlignJustif.ActiveState = alignJustif ? ActiveState.Yes : ActiveState.No;
 		}
 
 		

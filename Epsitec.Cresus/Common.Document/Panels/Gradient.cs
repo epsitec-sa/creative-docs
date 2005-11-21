@@ -326,7 +326,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 				{
-					if ( this.radioHatchRank[i].ActiveState == WidgetState.ActiveYes )
+					if ( this.radioHatchRank[i].ActiveState == ActiveState.Yes )
 					{
 						return i;
 					}
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 				{
-					this.radioHatchRank[i].ActiveState = (i==value) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+					this.radioHatchRank[i].ActiveState = (i==value) ? ActiveState.Yes : ActiveState.No;
 				}
 			}
 		}
@@ -511,8 +511,8 @@ namespace Epsitec.Common.Document.Panels
 		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
-			this.fieldColor1.ActiveState = WidgetState.ActiveNo;
-			this.fieldColor2.ActiveState = WidgetState.ActiveNo;
+			this.fieldColor1.ActiveState = ActiveState.No;
+			this.fieldColor2.ActiveState = ActiveState.No;
 		}
 
 		// Sélectionne l'origine de couleur.
@@ -527,7 +527,7 @@ namespace Epsitec.Common.Document.Panels
 			if ( this.originFieldColor == null )  return;
 
 			this.OriginColorDeselect();
-			this.originFieldColor.ActiveState = WidgetState.ActiveYes;
+			this.originFieldColor.ActiveState = ActiveState.Yes;
 		}
 
 		// Retourne le rang de la couleur d'origine.
@@ -804,7 +804,7 @@ namespace Epsitec.Common.Document.Panels
 		private void HandleFieldColorChanged(object sender)
 		{
 			ColorSample cs = sender as ColorSample;
-			if ( cs.ActiveState == WidgetState.ActiveYes )
+			if ( cs.ActiveState == ActiveState.Yes )
 			{
 				this.OnOriginColorChanged();
 			}

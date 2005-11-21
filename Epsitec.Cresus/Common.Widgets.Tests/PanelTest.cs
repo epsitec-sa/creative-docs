@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 			radio.Text = "Auto";
 			radio.Group = "h";
 			radio.Index = (int) ScrollableScrollerMode.Auto;
-			radio.ActiveState = WidgetState.ActiveYes;
+			radio.ActiveState = ActiveState.Yes;
 			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
 			
 			radio = new RadioButton (surface.Panel);
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 			radio.Text = "Auto";
 			radio.Group = "v";
 			radio.Index = (int) ScrollableScrollerMode.Auto;
-			radio.ActiveState = WidgetState.ActiveYes;
+			radio.ActiveState = ActiveState.Yes;
 			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
 			
 			radio = new RadioButton (surface.Panel);
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Widgets
 			Panel       panel   = radio.Parent as Panel;
 			Scrollable  surface = panel.Parent as Scrollable;
 			
-			if (radio.ActiveState == WidgetState.ActiveYes)
+			if (radio.ActiveState == ActiveState.Yes)
 			{
 				if (radio.Group == "h")
 				{

@@ -9,22 +9,28 @@ namespace Epsitec.Common.Widgets
 	
 	public delegate bool WalkWidgetCallback(Widget widget);
 	
+	[System.Flags] public enum ActiveState
+	{
+		No			= 0,
+		Yes			= (int) WidgetState.ActiveYes,
+		Maybe		= (int) WidgetState.ActiveMaybe,
+	}
+	
+	
 	#region WidgetState enum
 	[System.Flags] public enum WidgetState : uint
 	{
-		ActiveNo			= 0,
-		ActiveYes			= 1,
-		ActiveMaybe			= 2,
-		ActiveMask			= ActiveNo | ActiveYes | ActiveMaybe,
+		ActiveYes	= 0x00000001,				//	=> mode ActiveState.Yes
+		ActiveMaybe	= 0x00000002,				//	=> mode ActiveState.Maybe
+		ActiveMask	= ActiveYes | ActiveMaybe,
 		
-		
-		None				= 0x00000000,		//	=> neutre
-		Enabled				= 0x00010000,		//	=> pas grisé
-		Focused				= 0x00020000,		//	=> reçoit les événements clavier
-		Entered				= 0x00040000,		//	=> contient la souris
-		Selected			= 0x00080000,		//	=> sélectionné
-		Engaged				= 0x00100000,		//	=> pression en cours
-		Error				= 0x00200000,		//	=> signale une erreur
+		None		= 0x00000000,				//	=> neutre
+		Enabled		= 0x00010000,				//	=> pas grisé
+		Focused		= 0x00020000,				//	=> reçoit les événements clavier
+		Entered		= 0x00040000,				//	=> contient la souris
+		Selected	= 0x00080000,				//	=> sélectionné
+		Engaged		= 0x00100000,				//	=> pression en cours
+		Error		= 0x00200000,				//	=> signale une erreur
 	}
 	#endregion
 	
@@ -48,7 +54,6 @@ namespace Epsitec.Common.Widgets
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
 		EditionEnabled		= 0x02000000,		//	widget peut être édité
 		
-		InheritFocus		= 0x10000000,
 		SyncPaint			= 0x20000000,		//	peinture synchrone
 		
 		DebugActive			= 0x80000000		//	widget marqué pour le debug
@@ -650,15 +655,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.ActiveState == WidgetState.ActiveYes;
-			}
-		}
-		
-		public bool									IsFocused
-		{
-			get
-			{
-				return Helpers.VisualTree.IsFocused (this);
+				return this.ActiveState == ActiveState.Yes;
 			}
 		}
 		
@@ -809,26 +806,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override bool						InheritFocus
-		{
-			get
-			{
-				return (this.internal_state & InternalState.InheritFocus) != 0;
-			}
-			set
-			{
-				if (value)
-				{
-					this.internal_state |= InternalState.InheritFocus;
-				}
-				else
-				{
-					this.internal_state &= ~InternalState.InheritFocus;
-				}
-			}
-		}
-		
-		
 		protected InternalState						InternalState
 		{
 			get
@@ -854,7 +831,7 @@ namespace Epsitec.Common.Widgets
 			{
 				WidgetState state = this.widget_state;
 				
-				if ((this.InheritFocus) &&
+				if ((this.InheritParentFocus) &&
 					(this.Parent != null))
 				{
 					if (this.Parent.IsFocused)
@@ -867,22 +844,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public WidgetState							ActiveState
+		public ActiveState							ActiveState
 		{
 			get
 			{
-				return this.widget_state & WidgetState.ActiveMask;
+				return (ActiveState) (this.widget_state & WidgetState.ActiveMask);
 			}
 			set
 			{
-				WidgetState active = this.widget_state & WidgetState.ActiveMask;
-				
-				System.Diagnostics.Debug.Assert ((value & WidgetState.ActiveMask) == value);
+				ActiveState active = (ActiveState) (this.widget_state & WidgetState.ActiveMask);
 				
 				if (active != value)
 				{
 					this.widget_state &= ~WidgetState.ActiveMask;
-					this.widget_state |= value & WidgetState.ActiveMask;
+					this.widget_state |= (WidgetState)(int)value;
 					this.OnActiveStateChanged ();
 					this.Invalidate (InvalidateReason.ActiveStateChanged);
 				}
@@ -899,7 +874,7 @@ namespace Epsitec.Common.Widgets
 					/**/			WidgetState.Selected |
 					/**/			WidgetState.Error;
 				
-				if (this.InheritFocus)
+				if (this.InheritParentFocus)
 				{
 					mask |= WidgetState.Focused;
 				}
@@ -1579,7 +1554,7 @@ namespace Epsitec.Common.Widgets
 		public virtual void Toggle()
 		{
 			if ((this.AutoRadio) &&
-				(this.ActiveState == WidgetState.ActiveYes))
+				(this.ActiveState == ActiveState.Yes))
 			{
 				return;
 			}
@@ -1588,14 +1563,14 @@ namespace Epsitec.Common.Widgets
 			{
 				switch (this.ActiveState)
 				{
-					case WidgetState.ActiveYes:
-						this.ActiveState = WidgetState.ActiveMaybe;
+					case ActiveState.Yes:
+						this.ActiveState = ActiveState.Maybe;
 						break;
-					case WidgetState.ActiveMaybe:
-						this.ActiveState = WidgetState.ActiveNo;
+					case ActiveState.Maybe:
+						this.ActiveState = ActiveState.No;
 						break;
-					case WidgetState.ActiveNo:
-						this.ActiveState = WidgetState.ActiveYes;
+					case ActiveState.No:
+						this.ActiveState = ActiveState.Yes;
 						break;
 				}
 			}
@@ -1603,12 +1578,12 @@ namespace Epsitec.Common.Widgets
 			{
 				switch (this.ActiveState)
 				{
-					case WidgetState.ActiveYes:
-					case WidgetState.ActiveMaybe:
-						this.ActiveState = WidgetState.ActiveNo;
+					case ActiveState.Yes:
+					case ActiveState.Maybe:
+						this.ActiveState = ActiveState.No;
 						break;
-					case WidgetState.ActiveNo:
-						this.ActiveState = WidgetState.ActiveYes;
+					case ActiveState.No:
+						this.ActiveState = ActiveState.Yes;
 						break;
 				}
 			}
@@ -3040,7 +3015,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (find != null)
 					{
-						find.ActiveState = WidgetState.ActiveYes;
+						find.ActiveState = ActiveState.Yes;
 						return find;
 					}
 				}
@@ -3062,7 +3037,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (find != null)
 					{
-						find.ActiveState = WidgetState.ActiveYes;
+						find.ActiveState = ActiveState.Yes;
 						return find;
 					}
 				}
@@ -3439,7 +3414,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
 			if ((this.AutoRadio) &&
-				(this.ActiveState != WidgetState.ActiveYes) &&
+				(this.ActiveState != ActiveState.Yes) &&
 				(mode == TabNavigationMode.ActivateOnTab))
 			{
 				//	Ce n'est pas ce bouton radio qui est allumé. TAB voudrait nous
@@ -5107,7 +5082,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnActiveStateChanged()
 		{
-			if ((this.ActiveState == WidgetState.ActiveYes) &&
+			if ((this.ActiveState == ActiveState.Yes) &&
 				(this.Group != null) &&
 				(this.Group.Length > 0))
 			{

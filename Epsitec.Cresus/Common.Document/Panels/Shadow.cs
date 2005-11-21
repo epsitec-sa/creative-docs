@@ -126,13 +126,13 @@ namespace Epsitec.Common.Document.Panels
 		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
-			this.fieldColor.ActiveState = WidgetState.ActiveNo;
+			this.fieldColor.ActiveState = ActiveState.No;
 		}
 
 		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
-			this.fieldColor.ActiveState = WidgetState.ActiveYes;
+			this.fieldColor.ActiveState = ActiveState.Yes;
 		}
 
 		// Modifie la couleur d'origine.

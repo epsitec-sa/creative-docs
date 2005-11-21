@@ -145,7 +145,7 @@ namespace Epsitec.Common.Widgets
 			graphics.Rasterizer.AddOutline (path, 0.6);
 			graphics.RenderSolid ();
 			
-			if (this.ActiveState == WidgetState.ActiveYes)
+			if (this.ActiveState == ActiveState.Yes)
 			{
 				graphics.SolidRenderer.Color = Color.FromRGB (1.0, 0, 0);
 				graphics.AddText (2, 2, dx-4, dy-4, "A", font, size, ContentAlignment.MiddleRight);

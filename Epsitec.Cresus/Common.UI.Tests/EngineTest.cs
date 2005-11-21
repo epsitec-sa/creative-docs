@@ -183,9 +183,9 @@ namespace Epsitec.Common.UI
 			
 			text.Text           = "Helvetica";
 			up_down.Value       = 14M;
-			check_b.ActiveState = WidgetState.ActiveYes;
-			radio_2.ActiveState = WidgetState.ActiveYes;
-			radio_5.ActiveState = WidgetState.ActiveYes;
+			check_b.ActiveState = ActiveState.Yes;
+			radio_2.ActiveState = ActiveState.Yes;
+			radio_5.ActiveState = ActiveState.Yes;
 			combo_w.Text        = "Heading";
 			
 			Assert.AreEqual (false, radio_1.IsActive);

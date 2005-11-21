@@ -123,13 +123,13 @@ namespace Epsitec.Common.UI.Controllers
 				}
 				else
 				{
-					this.widget.ActiveState = (dec_adapter.Value == 0) ? WidgetState.ActiveNo : WidgetState.ActiveYes;
+					this.widget.ActiveState = (dec_adapter.Value == 0) ? ActiveState.No : ActiveState.Yes;
 				}
 			}
 			if ((bool_adapter != null) &&
 				(this.widget != null))
 			{
-				this.widget.ActiveState = (bool_adapter.Value) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.widget.ActiveState = (bool_adapter.Value) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 		

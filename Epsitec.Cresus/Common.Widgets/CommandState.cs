@@ -44,7 +44,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.state & WidgetState.Enabled) != 0;
+				return (this.widget_state & WidgetState.Enabled) != 0;
 			}
 			set
 			{
@@ -52,11 +52,11 @@ namespace Epsitec.Common.Widgets
 				{
 					if (value)
 					{
-						this.state |= WidgetState.Enabled;
+						this.widget_state |= WidgetState.Enabled;
 					}
 					else
 					{
-						this.state &= ~ WidgetState.Enabled;
+						this.widget_state &= ~ WidgetState.Enabled;
 					}
 					
 					foreach (Widget widget in this.FindWidgets ())
@@ -68,20 +68,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public WidgetState					ActiveState
+		public ActiveState					ActiveState
 		{
 			get
 			{
-				return this.state & WidgetState.ActiveMask;
+				return this.active_state;
 			}
 			set
 			{
-				System.Diagnostics.Debug.Assert ((value & WidgetState.ActiveMask) == value);
-				
-				if (this.ActiveState != value)
+				if (this.active_state != value)
 				{
-					this.state &= ~WidgetState.ActiveMask;
-					this.state |= value & WidgetState.ActiveMask;
+					this.active_state = value;
 					
 					foreach (Widget widget in this.FindWidgets ())
 					{
@@ -143,7 +140,7 @@ namespace Epsitec.Common.Widgets
 		public override void Synchronise()
 		{
 			bool        enabled = this.Enabled;
-			WidgetState active  = this.ActiveState;
+			ActiveState active  = this.ActiveState;
 			
 			foreach (Widget widget in this.FindWidgets ())
 			{
@@ -184,7 +181,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private WidgetState						state		= WidgetState.Enabled | WidgetState.ActiveNo;
+		private WidgetState						widget_state = WidgetState.Enabled;
+		private ActiveState						active_state = ActiveState.No;
+		
 		private Collections.ShortcutCollection	shortcuts;
 	}
 }

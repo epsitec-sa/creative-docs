@@ -132,7 +132,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldArray[4].TextFieldReal.InternalValue = (decimal) p.G*100;
 			this.fieldArray[5].TextFieldReal.InternalValue = (decimal) p.B*100;
 			this.fieldArray[6].TextFieldReal.InternalValue = (decimal) p.A*100;
-			this.negativ.ActiveState = p.N ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.negativ.ActiveState = p.N ? ActiveState.Yes : ActiveState.No;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Document.Panels
 			p.G = (double) this.fieldArray[4].TextFieldReal.InternalValue/100;
 			p.B = (double) this.fieldArray[5].TextFieldReal.InternalValue/100;
 			p.A = (double) this.fieldArray[6].TextFieldReal.InternalValue/100;
-			p.N = (this.negativ.ActiveState & WidgetState.ActiveYes) != 0;
+			p.N = (this.negativ.ActiveState & ActiveState.Yes) != 0;
 		}
 
 
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldArray[4].TextFieldReal.InternalValue =    0.0M;  // V
 			this.fieldArray[5].TextFieldReal.InternalValue =    0.0M;  // B
 			this.fieldArray[6].TextFieldReal.InternalValue =  -75.0M;  // A
-			this.negativ.ActiveState = WidgetState.ActiveNo;
+			this.negativ.ActiveState = ActiveState.No;
 		}
 
 		private void HandleReset(object sender, MessageEventArgs e)
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldArray[4].TextFieldReal.InternalValue = 0.0M;
 			this.fieldArray[5].TextFieldReal.InternalValue = 0.0M;
 			this.fieldArray[6].TextFieldReal.InternalValue = 0.0M;
-			this.negativ.ActiveState = WidgetState.ActiveNo;
+			this.negativ.ActiveState = ActiveState.No;
 		}
 
 		protected Widgets.TextFieldLabel[]	fieldArray;

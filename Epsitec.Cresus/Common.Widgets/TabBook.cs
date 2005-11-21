@@ -475,14 +475,14 @@ namespace Epsitec.Common.Widgets
 				if ( page == this.ActivePage )  // est-ce la page active ?
 				{
 					page.SetVisible(true);
-					page.TabButton.ActiveState = WidgetState.ActiveYes;
-					page.TabButton.InheritFocus = true;
+					page.TabButton.ActiveState = ActiveState.Yes;
+					page.TabButton.InheritParentFocus = true;
 				}
 				else
 				{
 					page.SetVisible(false);
-					page.TabButton.ActiveState = WidgetState.ActiveNo;
-					page.TabButton.InheritFocus = false;
+					page.TabButton.ActiveState = ActiveState.No;
+					page.TabButton.InheritParentFocus = false;
 				}
 			}
 		}

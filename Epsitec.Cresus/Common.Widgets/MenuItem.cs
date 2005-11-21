@@ -489,7 +489,7 @@ namespace Epsitec.Common.Widgets
 				
 				switch (this.ActiveState)
 				{
-					case WidgetState.ActiveNo:
+					case ActiveState.No:
 						if ((this.icon_nameActiveNo != null) &&
 							(this.icon_nameActiveNo.Length > 0))
 						{
@@ -497,7 +497,7 @@ namespace Epsitec.Common.Widgets
 						}
 						break;
 					
-					case WidgetState.ActiveYes:
+					case ActiveState.Yes:
 						if ((this.icon_nameActiveYes != null) &&
 							(this.icon_nameActiveYes.Length > 0))
 						{
@@ -509,7 +509,7 @@ namespace Epsitec.Common.Widgets
 				if ((icon != null) &&
 					(icon.Length > 0))
 				{
-					if ((this.ActiveState == WidgetState.ActiveYes) &&
+					if ((this.ActiveState == ActiveState.Yes) &&
 						(icon != this.icon_nameActiveYes))
 					{
 						Drawing.Rectangle iRect = rect;

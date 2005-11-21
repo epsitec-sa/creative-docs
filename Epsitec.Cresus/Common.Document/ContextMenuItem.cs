@@ -148,7 +148,7 @@ namespace Epsitec.Common.Document
 					MenuItem mi = new MenuItem(cmi.Command, cmi.Icon, cmi.Text, "", cmi.Name);
 					mi.IconNameActiveNo = cmi.IconActiveNo;
 					mi.IconNameActiveYes = cmi.IconActiveYes;
-					mi.ActiveState = cmi.Active ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+					mi.ActiveState = cmi.Active ? ActiveState.Yes : ActiveState.No;
 					menu.Items.Add(mi);
 				}
 			}

@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle saveClip  = graphics.SaveClippingRectangle();
 			graphics.SetClippingRectangle(localClip);
 			
-			if ( this.ActiveState == WidgetState.ActiveYes )
+			if ( this.ActiveState == ActiveState.Yes )
 			{
 				rect.Bottom -= 2;
 				adorner.PaintTabAboveBackground(graphics, frameRect, rect, state, Direction.Up);

@@ -258,15 +258,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual bool						InheritFocus
+		public bool								InheritParentFocus
 		{
 			get
 			{
-				return false;
+				return (bool) this.GetValue (Visual.InheritParentFocusProperty);
 			}
 			set
 			{
-				//	TODO: ...
+				this.SetValue (Visual.InheritParentFocusProperty, value);
 			}
 		}
 		
@@ -440,6 +440,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		public bool								IsVisible
 		{
 			get
@@ -453,6 +454,14 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return VisualTree.IsEnabled (this);
+			}
+		}
+		
+		public bool								IsFocused
+		{
+			get
+			{
+				return VisualTree.IsFocused (this);
 			}
 		}
 		
@@ -829,6 +838,12 @@ namespace Epsitec.Common.Widgets
 			return that.IsVisible;
 		}
 		
+		private static object GetIsFocusedValue(Object o)
+		{
+			Visual that = o as Visual;
+			return that.IsFocused;
+		}
+		
 		private static void SetEnableValue(Object o, object value)
 		{
 			Visual that = o as Visual;
@@ -938,8 +953,11 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property VisibilityProperty			= Property.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyFlags.AffectsParentLayout));
 		public static readonly Property EnableProperty				= Property.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyFlags.AffectsDisplay));
 		
+		public static readonly Property InheritParentFocusProperty	= Property.Register ("InheritParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false));
+		
 		public static readonly Property IsVisibleProperty			= Property.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsVisibleValue), VisualPropertyFlags.InheritsValue));
 		public static readonly Property IsEnabledProperty			= Property.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsEnabledValue), VisualPropertyFlags.InheritsValue));
+		public static readonly Property IsFocusedProperty			= Property.RegisterReadOnly ("IsFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsFocusedValue), VisualPropertyFlags.InheritsValue));
 		
 		public static readonly Property AutoCaptureProperty			= Property.Register ("AutoCapture", typeof (bool), typeof (Visual), new PropertyMetadata (true));
 		public static readonly Property AutoFocusProperty			= Property.Register ("AutoFocus", typeof (bool), typeof (Visual), new PropertyMetadata (false));

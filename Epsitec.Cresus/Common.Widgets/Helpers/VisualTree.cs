@@ -351,7 +351,7 @@ namespace Epsitec.Common.Widgets.Helpers
 					return window == null ? false : window.IsFocused;
 				}
 				
-				if (visual.InheritFocus)
+				if (visual.InheritParentFocus)
 				{
 					visual = visual.Parent;
 				}
@@ -370,7 +370,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			//	Retourne true si un widget, ou l'un de ses enfants, contient le
 			//	focus du clavier.
 			
-			while (visual != null)
+			if (visual != null)
 			{
 				if (visual.IsKeyboardFocused)
 				{

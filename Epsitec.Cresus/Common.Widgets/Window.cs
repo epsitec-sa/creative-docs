@@ -1388,16 +1388,19 @@ namespace Epsitec.Common.Widgets
 		
 		private void ReleaseCapturingWidget()
 		{
-			if ((this.capturing_widget != null) &&
-				(this.capturing_button != MouseButtons.None))
-			{
-				this.capturing_widget.DispatchDummyMouseUpEvent (this.capturing_button, this.capturing_cursor);
-			}
+			Widget       widget = this.capturing_widget;
+			MouseButtons button = this.capturing_button;
 			
 			this.capturing_widget = null;
 			this.capturing_button = MouseButtons.None;
 			
 			this.window.Capture = false;
+			
+			if ((widget != null) &&
+				(button != MouseButtons.None))
+			{
+				widget.DispatchDummyMouseUpEvent (button, this.capturing_cursor);
+			}
 		}
 		
 		private void HandleValidationRuleBecameDirty(object sender)

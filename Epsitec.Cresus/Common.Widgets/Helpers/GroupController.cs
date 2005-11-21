@@ -33,7 +33,7 @@ namespace Epsitec.Common.Widgets.Helpers
 					
 					if (widget != null)
 					{
-						widget.ActiveState = WidgetState.ActiveYes;
+						widget.ActiveState = ActiveState.Yes;
 					}
 				}
 			}
@@ -108,9 +108,9 @@ namespace Epsitec.Common.Widgets.Helpers
 			foreach (Widget radio in this.FindWidgets ())
 			{
 				if ((radio != keep) &&
-					(radio.ActiveState != WidgetState.ActiveNo))
+					(radio.ActiveState != ActiveState.No))
 				{
-					radio.ActiveState = WidgetState.ActiveNo;
+					radio.ActiveState = ActiveState.No;
 				}
 			}
 		}
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				if ((widget.AutoRadio) &&
 					(widget.Group == this.group) &&
-					(widget.ActiveState == WidgetState.ActiveYes))
+					(widget.ActiveState == ActiveState.Yes))
 				{
 					return widget;
 				}

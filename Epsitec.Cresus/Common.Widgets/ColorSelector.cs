@@ -302,9 +302,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.ColorSpace cs = this.color.ColorSpace;
 
-			this.buttonRGB .ActiveState = (cs == Drawing.ColorSpace.RGB ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonCMYK.ActiveState = (cs == Drawing.ColorSpace.CMYK) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonGray.ActiveState = (cs == Drawing.ColorSpace.Gray) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.buttonRGB .ActiveState = (cs == Drawing.ColorSpace.RGB ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonCMYK.ActiveState = (cs == Drawing.ColorSpace.CMYK) ? ActiveState.Yes : ActiveState.No;
+			this.buttonGray.ActiveState = (cs == Drawing.ColorSpace.Gray) ? ActiveState.Yes : ActiveState.No;
 		}
 
 		// Couleur -> textes éditables.
