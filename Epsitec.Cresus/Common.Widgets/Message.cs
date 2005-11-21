@@ -3,16 +3,16 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
+	using Win32Api   = Epsitec.Common.Widgets.Platform.Win32Api;
 	using Win32Const = Epsitec.Common.Widgets.Platform.Win32Const;
-	
 	
 	public delegate void MessageHandler(object sender, Message message);
 	
 	/// <summary>
-	/// Summary description for Message.
+	/// La classe Message décrit un événement en provenance du clavier ou de
+	/// la souris.
 	/// </summary>
-	public class Message
+	public sealed class Message
 	{
 		public Message()
 		{
@@ -244,16 +244,97 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		internal static void ClearLastWindow()
-		{
-			Message.state.window = null;
-		}
-		
-		
 		public static void ResetButtonDownCounter()
 		{
 			Message.state.button_down_count = 0;
 		}
+		
+		public static string GetKeyName(KeyCode code)
+		{
+			if (code == 0)
+			{
+				return "";
+			}
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			if ((code & KeyCode.ModifierCtrl) != 0)
+			{
+				buffer.Append (Message.GetSimpleKeyName (KeyCode.ControlKey));
+				buffer.Append ("+");
+			}
+			
+			if ((code & KeyCode.ModifierAlt) != 0)
+			{
+				buffer.Append (Message.GetSimpleKeyName (KeyCode.AltKey));
+				buffer.Append ("+");
+			}
+			
+			if ((code & KeyCode.ModifierShift) != 0)
+			{
+				buffer.Append (Message.GetSimpleKeyName (KeyCode.ShiftKey));
+				buffer.Append ("+");
+			}
+			
+			buffer.Append (Message.GetSimpleKeyName (code & KeyCode.KeyCodeMask));
+			
+			return buffer.ToString ();
+		}
+		
+		
+		public override string ToString()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append ("{");
+			buffer.Append (this.type.ToString ());
+			buffer.Append (" ");
+			buffer.Append (this.cursor.ToString ());
+			
+			if (this.button != MouseButtons.None)
+			{
+				buffer.Append (" ");
+				buffer.Append (this.button.ToString ());
+				buffer.Append (" (");
+				buffer.Append (this.button_down_count.ToString ());
+				buffer.Append (")");
+			}
+			
+			if (this.modifiers != ModifierKeys.None)
+			{
+				buffer.Append (" ");
+				buffer.Append (this.modifiers.ToString ());
+			}
+			
+			if (this.key_char != 0)
+			{
+				buffer.Append (" char=");
+				buffer.Append (this.key_char.ToString ());
+			}
+			
+			if (this.key_code != 0)
+			{
+				buffer.Append (" code=");
+				buffer.Append (this.key_code.ToString ());
+			}
+			
+			if (this.in_widget != null)
+			{
+				buffer.Append (" in='");
+				buffer.Append (this.in_widget.Name);
+				buffer.Append ("'");
+			}
+			
+			if (this.wheel != 0)
+			{
+				buffer.Append (" wheel=");
+				buffer.Append (this.wheel.ToString ());
+			}
+			
+			buffer.Append ("}");
+			return buffer.ToString ();
+		}
+
 		
 		private static string GetSimpleKeyName(KeyCode code)
 		{
@@ -296,36 +377,10 @@ namespace Epsitec.Common.Widgets
 			return name;
 		}
 		
-		public static string GetKeyName(KeyCode code)
+		
+		internal static void ClearLastWindow()
 		{
-			if (code == 0)
-			{
-				return "";
-			}
-			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			if ((code & KeyCode.ModifierControl) != 0)
-			{
-				buffer.Append (Message.GetSimpleKeyName (KeyCode.ControlKey));
-				buffer.Append ("+");
-			}
-			
-			if ((code & KeyCode.ModifierAlt) != 0)
-			{
-				buffer.Append (Message.GetSimpleKeyName (KeyCode.AltKey));
-				buffer.Append ("+");
-			}
-			
-			if ((code & KeyCode.ModifierShift) != 0)
-			{
-				buffer.Append (Message.GetSimpleKeyName (KeyCode.ShiftKey));
-				buffer.Append ("+");
-			}
-			
-			buffer.Append (Message.GetSimpleKeyName (code & KeyCode.KeyCodeMask));
-			
-			return buffer.ToString ();
+			Message.state.window = null;
 		}
 		
 		
@@ -737,87 +792,39 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override string ToString()
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			buffer.Append ("{");
-			buffer.Append (this.type.ToString ());
-			buffer.Append (" ");
-			buffer.Append (this.cursor.ToString ());
-			
-			if (this.button != MouseButtons.None)
-			{
-				buffer.Append (" ");
-				buffer.Append (this.button.ToString ());
-				buffer.Append (" (");
-				buffer.Append (this.button_down_count.ToString ());
-				buffer.Append (")");
-			}
-			
-			if (this.modifiers != ModifierKeys.None)
-			{
-				buffer.Append (" ");
-				buffer.Append (this.modifiers.ToString ());
-			}
-			
-			if (this.key_char != 0)
-			{
-				buffer.Append (" char=");
-				buffer.Append (this.key_char.ToString ());
-			}
-			
-			if (this.key_code != 0)
-			{
-				buffer.Append (" code=");
-				buffer.Append (this.key_code.ToString ());
-			}
-			
-			if (this.in_widget != null)
-			{
-				buffer.Append (" in='");
-				buffer.Append (this.in_widget.Name);
-				buffer.Append ("'");
-			}
-			
-			if (this.wheel != 0)
-			{
-				buffer.Append (" wheel=");
-				buffer.Append (this.wheel.ToString ());
-			}
-			
-			buffer.Append ("}");
-			return buffer.ToString ();
-		}
-
+		private bool						filter_no_children;
+		private bool						filter_only_focused;
+		private bool						filter_only_on_hit;
+		private bool						is_captured;
+		private bool						is_handled;
+		private bool						is_non_client;
+		private bool						is_swallowed;
+		private bool						force_capture;
+		private Widget						in_widget;
+		private Widget						consumer;
 		
-		protected bool						filter_no_children;
-		protected bool						filter_only_focused;
-		protected bool						filter_only_on_hit;
-		protected bool						is_captured;
-		protected bool						is_handled;
-		protected bool						is_non_client;
-		protected bool						is_swallowed;
-		protected Widget					in_widget;
-		protected Widget					consumer;
-		protected bool						force_capture;
+		private MessageType					type;
+		private int							tick_count;
+		private Drawing.Point				cursor;
 		
-		protected MessageType				type;
-		protected int						tick_count;
-		protected Drawing.Point				cursor;
+		private MouseButtons				button;
+		private int							button_down_count;
+		private int							wheel;
 		
-		protected MouseButtons				button;
-		protected int						button_down_count;
-		protected int						wheel;
+		private ModifierKeys				modifiers;
+		private KeyCode						key_code;
+		private int							key_char;
 		
-		protected ModifierKeys				modifiers;
-		protected KeyCode					key_code;
-		protected int						key_char;
-		
-		protected static KeyCode			last_code = 0;
-		protected static MessageState		state;
+		private static KeyCode				last_code = 0;
+		private static MessageState			state;
 	}
 	
+	
+	/// <summary>
+	/// La classe MessageState décrit l'état des boutons et des touches super-
+	/// shift, la dernière position de la souris, la dernière fenêtre visitée,
+	/// etc.
+	/// </summary>
 	public struct MessageState
 	{
 		public MouseButtons					Buttons
@@ -891,7 +898,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		
+		#region Internal Fields
 		internal ModifierKeys				modifiers;
 		internal KeyCode					key_down_code;
 		internal MouseButtons				buttons;
@@ -903,9 +910,14 @@ namespace Epsitec.Common.Widgets
 		internal Drawing.Point				cursor;
 		internal Window						window;
 		internal Window						window_mouse_down;
+		#endregion
 	}
 	
 	
+	/// <summary>
+	/// L'énumération MessageType définit les divers types de messages qui
+	/// peuvent survenir dans une application.
+	/// </summary>
 	public enum MessageType
 	{
 		None,
@@ -923,7 +935,10 @@ namespace Epsitec.Common.Widgets
 		KeyPress,
 	}
 	
-	
+	/// <summary>
+	/// L'énumération KeyCode liste tous les codes de touches connus et supportés
+	/// par le système de gestion des événements.
+	/// </summary>
 	[System.Flags] public enum KeyCode
 	{
 		None			= 0,
@@ -994,15 +1009,19 @@ namespace Epsitec.Common.Widgets
 		AltKey			= 18,
 		AltKeyLeft		= 164,
 		AltKeyRight		= 165,
+		
 		ArrowDown		= 40,
 		ArrowLeft		= 37,
 		ArrowRight		= 39,
 		ArrowUp			= 38,
+		
 		Back			= 8,
 		Clear			= 12,
+		
 		ControlKey		= 17,
 		ControlKeyLeft	= 162,
 		ControlKeyRight	= 163,
+		
 		Decimal			= 110,
 		Delete			= 46,
 		Divide			= 111,
@@ -1015,9 +1034,11 @@ namespace Epsitec.Common.Widgets
 		PageUp			= 33,
 		Pause			= 19,
 		Return			= 13,
+		
 		ShiftKey		= 16,
 		ShiftKeyLeft	= 160,
 		ShiftKeyRight	= 161,
+		
 		Space			= 32,
 		Add				= 107,
 		Substract		= 109,
@@ -1026,11 +1047,16 @@ namespace Epsitec.Common.Widgets
 		KeyCodeMask		= 0x0000ffff,
 		ModifierMask	= 0x00ff0000,
 		
-		ModifierShift	= 0x10000,
-		ModifierControl	= 0x20000,
-		ModifierAlt		= 0x40000
+		ModifierShift	= (int) ModifierKeys.Shift,
+		ModifierCtrl	= (int) ModifierKeys.Ctrl,
+		ModifierAlt		= (int) ModifierKeys.Alt
 	}
 	
+	
+	/// <summary>
+	/// L'énumération MouseButtons définit les boutons de la souris connus.
+	/// Plusieurs boutons peuvent être combinés.
+	/// </summary>
 	[System.Flags] public enum MouseButtons
 	{
 		None			= 0,
@@ -1042,6 +1068,11 @@ namespace Epsitec.Common.Widgets
 		XButton2		= 0x01000000
 	}
 	
+	
+	/// <summary>
+	/// L'énumération ModifierKeys définit les touches super-shift connues.
+	/// Plusieurs touches super-shift peuvent être combinées.
+	/// </summary>
 	[System.Flags] public enum ModifierKeys
 	{
 		None			= 0,
