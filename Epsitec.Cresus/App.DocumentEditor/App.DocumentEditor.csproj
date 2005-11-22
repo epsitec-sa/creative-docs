@@ -1671,6 +1671,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\TextHyphen.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ToBezier.icon"
                     BuildAction = "EmbeddedResource"
                 />

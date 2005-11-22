@@ -466,6 +466,20 @@
 	<data name="Panel.Volume.Tooltip.Left">Left side angle</data>
 	<data name="Panel.Volume.Tooltip.Right">Right side angle</data>
 
+	<data name="TextPanel.Font.Title">Font</data>
+	<data name="TextPanel.Font.Tooltip.Face">Font name</data>
+	<data name="TextPanel.Font.Tooltip.Style">Font style</data>
+	<data name="TextPanel.Font.Tooltip.Features">OpenType features</data>
+	<data name="TextPanel.Font.Tooltip.Size">Font size</data>
+	
+	<data name="TextPanel.ParagraphLayout.Title">Paragraph layout</data>
+	<data name="TextPanel.ParagraphLayout.Short.LeftFirst">F</data>
+	<data name="TextPanel.ParagraphLayout.Short.LeftBody">L</data>
+	<data name="TextPanel.ParagraphLayout.Short.Right">R</data>
+	<data name="TextPanel.ParagraphLayout.Long.LeftFirst">@@Marge première ligne</data>
+	<data name="TextPanel.ParagraphLayout.Long.LeftBody">@@Marge gauche</data>
+	<data name="TextPanel.ParagraphLayout.Long.Right">@@Marge droite</data>
+
 	<data name="Property.Abstract.Name">Name</data>
 	<data name="Property.Abstract.LineColor">Line color</data>
 	<data name="Property.Abstract.LineMode">Line width</data>
@@ -892,6 +906,7 @@
 	<data name="Action.Text.Paragraph.AlignCenter">Centered</data>
 	<data name="Action.Text.Paragraph.AlignRight">Right aligned</data>
 	<data name="Action.Text.Paragraph.AlignJustif">Justified</data>
+	<data name="Action.Text.Paragraph.Hyphen">@@Césures dans les mots</data>
 	<data name="Action.Text.Paragraph.LeadingNorm">Interligne normal</data>
 	<data name="Action.Text.Paragraph.LeadingPlus">Interligne étendu</data>
 	<data name="Action.Text.Paragraph.LeadingAuto">Interligne automatique</data>

@@ -466,6 +466,20 @@
 	<data name="Panel.Volume.Tooltip.Left">Angle gauche en degrés</data>
 	<data name="Panel.Volume.Tooltip.Right">Angle droite en degrés</data>
 
+	<data name="TextPanel.Font.Title">Police</data>
+	<data name="TextPanel.Font.Tooltip.Face">Police de caractères</data>
+	<data name="TextPanel.Font.Tooltip.Style">Style de la police</data>
+	<data name="TextPanel.Font.Tooltip.Features">Variantes OpenType</data>
+	<data name="TextPanel.Font.Tooltip.Size">Taille de la police</data>
+	
+	<data name="TextPanel.ParagraphLayout.Title">Mise en page</data>
+	<data name="TextPanel.ParagraphLayout.Short.LeftFirst">P</data>
+	<data name="TextPanel.ParagraphLayout.Short.LeftBody">G</data>
+	<data name="TextPanel.ParagraphLayout.Short.Right">D</data>
+	<data name="TextPanel.ParagraphLayout.Long.LeftFirst">Marge première ligne</data>
+	<data name="TextPanel.ParagraphLayout.Long.LeftBody">Marge gauche</data>
+	<data name="TextPanel.ParagraphLayout.Long.Right">Marge droite</data>
+
 	<data name="Property.Abstract.Name">Nom</data>
 	<data name="Property.Abstract.LineColor">Couleur trait</data>
 	<data name="Property.Abstract.LineMode">Epaisseur trait</data>
@@ -892,6 +906,7 @@
 	<data name="Action.Text.Paragraph.AlignCenter">Centré</data>
 	<data name="Action.Text.Paragraph.AlignRight">Aligné à droite</data>
 	<data name="Action.Text.Paragraph.AlignJustif">Justifié</data>
+	<data name="Action.Text.Paragraph.Hyphen">Césures dans les mots</data>
 	<data name="Action.Text.Paragraph.LeadingNorm">Interligne normal</data>
 	<data name="Action.Text.Paragraph.LeadingPlus">Interligne étendu</data>
 	<data name="Action.Text.Paragraph.LeadingAuto">Interligne automatique</data>

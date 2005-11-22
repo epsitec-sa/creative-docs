@@ -13,32 +13,32 @@ namespace Epsitec.Common.Document.TextPanels
 	{
 		public Font(Document document) : base(document)
 		{
-			this.label.Text = Res.Strings.Property.Abstract.TextFont;
+			this.label.Text = Res.Strings.TextPanel.Font.Title;
 
 			this.fixIcon.Text = Misc.Image("PropertyTextFont");
-			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.Property.Abstract.TextFont);
+			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Font.Title);
 
 			this.fontFace = new TextFieldCombo(this);
 			this.fontFace.IsReadOnly = true;
 			this.fontFace.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontFace.TabIndex = this.tabIndex++;
 			this.fontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.Action.Text.Font.Face);
+			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
 
 			this.fontStyle = new TextFieldCombo(this);
 			this.fontStyle.IsReadOnly = true;
 			this.fontStyle.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontStyle.TabIndex = this.tabIndex++;
 			this.fontStyle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fontStyle, Res.Strings.Action.Text.Font.Style);
+			ToolTip.Default.SetToolTip(this.fontStyle, Res.Strings.TextPanel.Font.Tooltip.Style);
 
-			this.fontFeatures = this.CreateIconButton(Misc.Icon("FontFeatures"), Res.Strings.Action.Text.Font.Features, new MessageEventHandler(this.HandleFeaturesClicked));
+			this.fontFeatures = this.CreateIconButton(Misc.Icon("FontFeatures"), Res.Strings.TextPanel.Font.Tooltip.Features, new MessageEventHandler(this.HandleFeaturesClicked));
 
 			this.fontSize = new TextFieldCombo(this);
 			this.fontSize.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontSize.TabIndex = this.tabIndex++;
 			this.fontSize.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fontSize, Res.Strings.Action.Text.Font.Size);
+			ToolTip.Default.SetToolTip(this.fontSize, Res.Strings.TextPanel.Font.Tooltip.Size);
 
 			this.fontColor = new ColorSample(this);
 			this.fontColor.PossibleSource = true;

@@ -189,7 +189,7 @@ namespace Epsitec.Common.Document
 		public void WrappersAttach(TextFlow textFlow)
 		{
 			this.fontWrapper.Attach(textFlow.TextNavigator);
-			this.paragraphLayoutWrapper.Attach(textFlow.TextNavigator);  // TODO: stack overflow
+			this.paragraphLayoutWrapper.Attach(textFlow.TextNavigator);
 		}
 
 		// Détache tous les wrappers.

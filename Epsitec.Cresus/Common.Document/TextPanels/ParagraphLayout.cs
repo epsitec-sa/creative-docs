@@ -13,19 +13,21 @@ namespace Epsitec.Common.Document.TextPanels
 	{
 		public ParagraphLayout(Document document) : base(document)
 		{
-			this.label.Text = Res.Strings.Property.Abstract.TextJustif;
+			this.label.Text = Res.Strings.TextPanel.ParagraphLayout.Title;
 
 			this.fixIcon.Text = Misc.Image("PropertyTextJustif");
-			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.Property.Abstract.TextJustif);
+			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.ParagraphLayout.Title);
 
 			this.buttonAlignLeft   = this.CreateIconButton(Misc.Icon("JustifHLeft"),   Res.Strings.Action.Text.Paragraph.AlignLeft,   new MessageEventHandler(this.HandleJustifClicked));
 			this.buttonAlignCenter = this.CreateIconButton(Misc.Icon("JustifHCenter"), Res.Strings.Action.Text.Paragraph.AlignCenter, new MessageEventHandler(this.HandleJustifClicked));
 			this.buttonAlignRight  = this.CreateIconButton(Misc.Icon("JustifHRight"),  Res.Strings.Action.Text.Paragraph.AlignRight,  new MessageEventHandler(this.HandleJustifClicked));
 			this.buttonAlignJustif = this.CreateIconButton(Misc.Icon("JustifHJustif"), Res.Strings.Action.Text.Paragraph.AlignJustif, new MessageEventHandler(this.HandleJustifClicked));
 
-			this.fieldLeftMarginFirst = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftFirst, "P", "Marge début",  0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
-			this.fieldLeftMarginBody  = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftBody,  "G", "Marge gauche", 0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
-			this.fieldRightMargin     = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleRight,     "D", "Marge droite", 0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
+			this.buttonHyphen = this.CreateIconButton(Misc.Icon("TextHyphen"), Res.Strings.Action.Text.Paragraph.Hyphen, new MessageEventHandler(this.HandleHyphenClicked));
+
+			this.fieldLeftMarginFirst = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftFirst, Res.Strings.TextPanel.ParagraphLayout.Short.LeftFirst, Res.Strings.TextPanel.ParagraphLayout.Long.LeftFirst, 0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
+			this.fieldLeftMarginBody  = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftBody,  Res.Strings.TextPanel.ParagraphLayout.Short.LeftBody,  Res.Strings.TextPanel.ParagraphLayout.Long.LeftBody,  0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
+			this.fieldRightMargin     = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleRight,     Res.Strings.TextPanel.ParagraphLayout.Short.Right,     Res.Strings.TextPanel.ParagraphLayout.Long.Right,     0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
 
 			this.document.ParagraphLayoutWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
 			this.document.ParagraphLayoutWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
@@ -79,9 +81,17 @@ namespace Epsitec.Common.Document.TextPanels
 			base.UpdateAfterChanging();
 
 			Common.Text.Wrappers.JustificationMode justif = this.document.ParagraphLayoutWrapper.Defined.JustificationMode;
+#if false
 			if ( justif == Common.Text.Wrappers.JustificationMode.Unknown )
 			{
 				justif = this.document.ParagraphLayoutWrapper.Active.JustificationMode;
+			}
+#endif
+
+			bool hyphen = this.document.ParagraphLayoutWrapper.Defined.Hyphenation;
+			if ( false )  // TODO: comment savoir si c'est indéfini ?
+			{
+				hyphen = this.document.ParagraphLayoutWrapper.Active.Hyphenation;
 			}
 
 			double leftMarginFirst = this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst;
@@ -124,6 +134,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonAlignRight.ActiveState  = (justif == Common.Text.Wrappers.JustificationMode.AlignRight)       ? ActiveState.Yes : ActiveState.No;
 			this.buttonAlignJustif.ActiveState = (justif == Common.Text.Wrappers.JustificationMode.JustifyAlignLeft) ? ActiveState.Yes : ActiveState.No;
 
+			this.buttonHyphen.ActiveState = hyphen ? ActiveState.Yes : ActiveState.No;
+
 			this.fieldLeftMarginFirst.TextFieldReal.InternalValue = (decimal) leftMarginFirst;
 			this.fieldLeftMarginBody.TextFieldReal.InternalValue  = (decimal) leftMarginBody;
 			this.fieldRightMargin.TextFieldReal.InternalValue     = (decimal) rightMargin;
@@ -164,6 +176,8 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonAlignRight.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonAlignJustif.Bounds = r;
+					r.Offset(25, 0);
+					this.buttonHyphen.Bounds = r;
 
 					r.Left = rect.Left;
 					r.Right = rect.Right;
@@ -188,6 +202,8 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonAlignRight.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonAlignJustif.Bounds = r;
+					r.Offset(25, 0);
+					this.buttonHyphen.Bounds = r;
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
@@ -216,6 +232,8 @@ namespace Epsitec.Common.Document.TextPanels
 				this.buttonAlignRight.Bounds = r;
 				r.Offset(20, 0);
 				this.buttonAlignJustif.Bounds = r;
+				r.Offset(25, 0);
+				this.buttonHyphen.Bounds = r;
 
 				this.fieldLeftMarginFirst.SetVisible(false);
 				this.fieldLeftMarginBody.SetVisible(false);
@@ -240,12 +258,30 @@ namespace Epsitec.Common.Document.TextPanels
 
 			Common.Text.Wrappers.JustificationMode justif = Common.Text.Wrappers.JustificationMode.Unknown;
 
-			if ( this.buttonAlignLeft.ActiveState   ==  ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.AlignLeft;
-			if ( this.buttonAlignCenter.ActiveState ==  ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.Center;
-			if ( this.buttonAlignRight.ActiveState  ==  ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.AlignRight;
-			if ( this.buttonAlignJustif.ActiveState ==  ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.JustifyAlignLeft;
+			if ( this.buttonAlignLeft.ActiveState   == ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.AlignLeft;
+			if ( this.buttonAlignCenter.ActiveState == ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.Center;
+			if ( this.buttonAlignRight.ActiveState  == ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.AlignRight;
+			if ( this.buttonAlignJustif.ActiveState == ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.JustifyAlignLeft;
 
-			this.document.ParagraphLayoutWrapper.Defined.JustificationMode = justif;
+			if ( justif == Common.Text.Wrappers.JustificationMode.Unknown )
+			{
+				this.document.ParagraphLayoutWrapper.Defined.ClearJustificationMode();
+			}
+			else
+			{
+				this.document.ParagraphLayoutWrapper.Defined.JustificationMode = justif;
+			}
+		}
+
+		private void HandleHyphenClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.ParagraphLayoutWrapper.IsAttached )  return;
+
+			this.buttonHyphen.ActiveState = (this.buttonHyphen.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
+
+			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.Yes);
+			this.document.ParagraphLayoutWrapper.Defined.Hyphenation = hyphen;
 		}
 
 		private void HandleMarginChanged(object sender)
@@ -253,22 +289,22 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphLayoutWrapper.IsAttached )  return;
 
-			Widgets.TextFieldLabel field = sender as Widgets.TextFieldLabel;
+			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
 
-			double value = (double) field.TextFieldReal.InternalValue;
+			double value = (double) field.InternalValue;
 
-			if ( field == this.fieldLeftMarginFirst )
+			if ( field == this.fieldLeftMarginFirst.TextFieldReal )
 			{
 				this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst = value;
 			}
 
-			if ( field == this.fieldLeftMarginBody )
+			if ( field == this.fieldLeftMarginBody.TextFieldReal )
 			{
 				this.document.ParagraphLayoutWrapper.Defined.LeftMarginBody = value;
 			}
 
-			if ( field == this.fieldRightMargin )
+			if ( field == this.fieldRightMargin.TextFieldReal )
 			{
 				this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
 				this.document.ParagraphLayoutWrapper.Defined.RightMarginFirst = value;
@@ -282,6 +318,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonAlignCenter;
 		protected IconButton				buttonAlignRight;
 		protected IconButton				buttonAlignJustif;
+		protected IconButton				buttonHyphen;
 		protected Widgets.TextFieldLabel	fieldLeftMarginFirst;
 		protected Widgets.TextFieldLabel	fieldLeftMarginBody;
 		protected Widgets.TextFieldLabel	fieldRightMargin;
