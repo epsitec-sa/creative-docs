@@ -554,37 +554,65 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else if ( style == ButtonStyle.ToolItem )
 			{
-				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
-				{
-					this.PaintImageButton(graphics, rect, 1);
-				}
-				if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
-				{
-					this.PaintImageButton(graphics, rect, 4);
-				}
 				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
-					this.PaintImageButton(graphics, rect, 2);
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 5);
+					}
+					else if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rect, 5);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 2);
+					}
+				}
+				else
+				{
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 1);
+					}
+					if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rect, 4);
+					}
 				}
 				rFocus.Inflate(2);
 			}
 			else if ( style == ButtonStyle.ActivableIcon )
 			{
-				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
-					this.PaintImageButton(graphics, rect, 1);
-				}
-				else if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
-				{
-					this.PaintImageButton(graphics, rect, 4);
-				}
-				else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
-				{
-					this.PaintImageButton(graphics, rect, 2);
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 5);
+					}
+					else if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rect, 5);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 2);
+					}
 				}
 				else
 				{
-					this.PaintImageButton(graphics, rect, 0);
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 1);
+					}
+					else if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rect, 4);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 0);
+					}
 				}
 				rFocus.Inflate(2);
 			}

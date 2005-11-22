@@ -635,7 +635,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					{
 						this.PaintImageButton(graphics, rect, 36);
 					}
-					else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+					if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 					{
 						this.PaintImageButton(graphics, rect, 32);
 					}
@@ -661,6 +661,10 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintFocusBox(graphics, rFocus);
 				}
 
+				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					this.PaintImageButton(graphics, rect, 44);
+				}
 				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 				{
 					this.PaintImageButton(graphics, rect, 45);
@@ -668,10 +672,6 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
 				{
 					this.PaintImageButton(graphics, rect, 46);
-				}
-				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
-				{
-					this.PaintImageButton(graphics, rect, 44);
 				}
 			}
 			else if ( style == ButtonStyle.HeaderSlider )

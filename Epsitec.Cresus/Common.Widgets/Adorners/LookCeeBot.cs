@@ -528,64 +528,108 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else if ( style == ButtonStyle.ToolItem )
 			{
-				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
-				{
-					this.PaintImageButton(graphics, rInside, 8);
-
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.colorBorder);
-				}
-				if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
-				{
-					this.PaintImageButton(graphics, rInside, 12);
-
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.colorBorder);
-				}
 				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
-					this.PaintImageButton(graphics, rInside, 10);
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rInside, 13);
 
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.colorBorder);
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
+					if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rInside, 13);
+
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
+					if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+					{
+						this.PaintImageButton(graphics, rInside, 10);
+
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
+				}
+				else
+				{
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rInside, 8);
+
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
+					if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rInside, 12);
+
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
 				}
 			}
 			else if ( style == ButtonStyle.ActivableIcon )
 			{
-				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
-					this.PaintImageButton(graphics, rInside, 9);
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rInside, 13);
 
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.colorBorder);
-				}
-				else if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
-				{
-					this.PaintImageButton(graphics, rInside, 12);
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
+					else if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rInside, 13);
 
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.colorBorder);
-				}
-				else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
-				{
-					this.PaintImageButton(graphics, rInside, 10);
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rInside, 10);
 
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.colorBorder);
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
 				}
 				else
 				{
-					this.PaintImageButton(graphics, rInside, 8);
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rInside, 9);
 
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.colorBorder);
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
+					else if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rInside, 12);
+
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rInside, 8);
+
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
 				}
 			}
 			else if ( style == ButtonStyle.ListItem )
