@@ -687,28 +687,28 @@ namespace Epsitec.App.DocumentEditor
 
 			this.InfoAdd("", 120, "StatusDocument", "");
 
-			this.InfoAdd(Misc.Icon("DeselectAll2"), 0, "DeselectAll", DocumentEditor.GetRes("Action.DeselectAll"));
-			this.InfoAdd(Misc.Icon("SelectAll2"), 0, "SelectAll", DocumentEditor.GetRes("Action.SelectAll"));
-			this.InfoAdd(Misc.Icon("SelectInvert2"), 0, "SelectInvert", DocumentEditor.GetRes("Action.SelectInvert"));
-			this.InfoAdd(Misc.Icon("HideSel2"), 0, "HideSel", DocumentEditor.GetRes("Action.HideSel"));
-			this.InfoAdd(Misc.Icon("HideRest2"), 0, "HideRest", DocumentEditor.GetRes("Action.HideRest"));
-			this.InfoAdd(Misc.Icon("HideCancel2"), 0, "HideCancel", DocumentEditor.GetRes("Action.HideCancel"));
+			this.InfoAdd(Misc.Icon("DeselectAll1"), 0, "DeselectAll", DocumentEditor.GetRes("Action.DeselectAll"));
+			this.InfoAdd(Misc.Icon("SelectAll1"), 0, "SelectAll", DocumentEditor.GetRes("Action.SelectAll"));
+			this.InfoAdd(Misc.Icon("SelectInvert1"), 0, "SelectInvert", DocumentEditor.GetRes("Action.SelectInvert"));
+			this.InfoAdd(Misc.Icon("HideSel1"), 0, "HideSel", DocumentEditor.GetRes("Action.HideSel"));
+			this.InfoAdd(Misc.Icon("HideRest1"), 0, "HideRest", DocumentEditor.GetRes("Action.HideRest"));
+			this.InfoAdd(Misc.Icon("HideCancel1"), 0, "HideCancel", DocumentEditor.GetRes("Action.HideCancel"));
 
 			this.InfoAdd("", 120, "StatusObject", "");
 
-			//?this.InfoAdd(Misc.Icon("ZoomMin2"), 0, "ZoomMin", DocumentEditor.GetRes("Action.ZoomMin"));
+			//?this.InfoAdd(Misc.Icon("ZoomMin1"), 0, "ZoomMin", DocumentEditor.GetRes("Action.ZoomMin"));
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.InfoAdd(Misc.Icon("ZoomPage2"), 0, "ZoomPage", DocumentEditor.GetRes("Action.ZoomPage"));
-				this.InfoAdd(Misc.Icon("ZoomPageWidth2"), 0, "ZoomPageWidth", DocumentEditor.GetRes("Action.ZoomPageWidth"));
+				this.InfoAdd(Misc.Icon("ZoomPage1"), 0, "ZoomPage", DocumentEditor.GetRes("Action.ZoomPage"));
+				this.InfoAdd(Misc.Icon("ZoomPageWidth1"), 0, "ZoomPageWidth", DocumentEditor.GetRes("Action.ZoomPageWidth"));
 			}
-			this.InfoAdd(Misc.Icon("ZoomDefault2"), 0, "ZoomDefault", DocumentEditor.GetRes("Action.ZoomDefault"));
-			this.InfoAdd(Misc.Icon("ZoomSel2"), 0, "ZoomSel", DocumentEditor.GetRes("Action.ZoomSel"));
+			this.InfoAdd(Misc.Icon("ZoomDefault1"), 0, "ZoomDefault", DocumentEditor.GetRes("Action.ZoomDefault"));
+			this.InfoAdd(Misc.Icon("ZoomSel1"), 0, "ZoomSel", DocumentEditor.GetRes("Action.ZoomSel"));
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.InfoAdd(Misc.Icon("ZoomSelWidth2"), 0, "ZoomSelWidth", DocumentEditor.GetRes("Action.ZoomSelWidth"));
+				this.InfoAdd(Misc.Icon("ZoomSelWidth1"), 0, "ZoomSelWidth", DocumentEditor.GetRes("Action.ZoomSelWidth"));
 			}
-			this.InfoAdd(Misc.Icon("ZoomPrev2"), 0, "ZoomPrev", DocumentEditor.GetRes("Action.ZoomPrev"));
+			this.InfoAdd(Misc.Icon("ZoomPrev1"), 0, "ZoomPrev", DocumentEditor.GetRes("Action.ZoomPrev"));
 
 			StatusField sf = this.InfoAdd("", 55, "StatusZoom", "") as StatusField;
 			sf.Clicked += new MessageEventHandler(this.HandleStatusZoomClicked);

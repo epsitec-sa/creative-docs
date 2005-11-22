@@ -287,18 +287,19 @@ namespace Epsitec.Common.Document
 		// Retourne le nom complet d'une icône.
 		static public string Icon(string icon)
 		{
-			return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon);
-		}
-
-		// Retourne le nom complet d'une icône selon la langue.
-		static public string IconL(string icon)
-		{
-			string language = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-			if ( language != "fr" && language != "en" && language != "de" )
+			if ( icon == "FontBold" || icon == "FontItalic" || icon == "FontUnderlined" )
 			{
-				language = "en";
+				string language = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+				if ( language != "fr" && language != "en" && language != "de" )
+				{
+					language = "en";
+				}
+				return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}-{1}.icon", icon, language);
 			}
-			return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}-{1}.icon", icon, language);
+			else
+			{
+				return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon);
+			}
 		}
 
 		// Donne le nom complet du fichier.

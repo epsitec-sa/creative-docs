@@ -50,9 +50,9 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonSizeMinus   = this.CreateIconButton(Misc.Icon("FontSizeMinus"),   Res.Strings.Action.Text.Font.SizeMinus,   new MessageEventHandler(this.HandleButtonSizeMinusClicked), false);
 			this.buttonSizePlus    = this.CreateIconButton(Misc.Icon("FontSizePlus"),    Res.Strings.Action.Text.Font.SizePlus,    new MessageEventHandler(this.HandleButtonSizePlusClicked), false);
-			this.buttonBold        = this.CreateIconButton(Misc.IconL("FontBold"),       Res.Strings.Action.Text.Font.Bold,        new MessageEventHandler(this.HandleButtonBoldClicked));
-			this.buttonItalic      = this.CreateIconButton(Misc.IconL("FontItalic"),     Res.Strings.Action.Text.Font.Italic,      new MessageEventHandler(this.HandleButtonItalicClicked));
-			this.buttonUnderlined  = this.CreateIconButton(Misc.IconL("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined,  new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonBold        = this.CreateIconButton(Misc.Icon("FontBold"),        Res.Strings.Action.Text.Font.Bold,        new MessageEventHandler(this.HandleButtonBoldClicked));
+			this.buttonItalic      = this.CreateIconButton(Misc.Icon("FontItalic"),      Res.Strings.Action.Text.Font.Italic,      new MessageEventHandler(this.HandleButtonItalicClicked));
+			this.buttonUnderlined  = this.CreateIconButton(Misc.Icon("FontUnderlined"),  Res.Strings.Action.Text.Font.Underlined,  new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonStrike      = this.CreateIconButton(Misc.Icon("FontStrike"),      Res.Strings.Action.Text.Font.Strike,      new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonFrame       = this.CreateIconButton(Misc.Icon("FontFrame"),       Res.Strings.Action.Text.Font.Frame,       new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.Text.Font.Subscript,   new MessageEventHandler(this.HandleButtonClicked));

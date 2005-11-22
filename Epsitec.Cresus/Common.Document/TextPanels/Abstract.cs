@@ -266,6 +266,32 @@ namespace Epsitec.Common.Document.TextPanels
 			return button;
 		}
 
+		// Crée un TextFieldLabel.
+		protected Widgets.TextFieldLabel CreateTextFieldLabel(string tooltip, string shortText, string longText, double minRange, double maxRange, double step, bool simply, EventHandler handler)
+		{
+			Widgets.TextFieldLabel field = new Widgets.TextFieldLabel(this, simply);
+
+			field.LabelShortText = shortText;
+			field.LabelLongText  = longText;
+			
+			field.TextFieldReal.FactorMinRange = (decimal) minRange;
+			field.TextFieldReal.FactorMaxRange = (decimal) maxRange;
+			field.TextFieldReal.FactorStep     = (decimal) step;
+			
+			if ( !simply )
+			{
+				this.document.Modifier.AdaptTextFieldRealDimension(field.TextFieldReal);
+			}
+			
+			field.TextFieldReal.ValueChanged += handler;
+			
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(field, tooltip);
+			
+			return field;
+		}
+
 		
 		// Met un texte dans un widget quelconque.
 		public static void SetText(Widget widget, string text)
