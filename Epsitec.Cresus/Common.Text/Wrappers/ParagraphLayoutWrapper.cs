@@ -136,6 +136,18 @@ namespace Epsitec.Common.Text.Wrappers
 
 		internal override void Update(bool active)
 		{
+			State state = active ? this.Active : this.Defined;
+			
+			System.Diagnostics.Debug.Assert (state.IsDirty == false);
+			
+			this.UpdateMargins (state, active);
+			
+			state.NotifyIfDirty ();
+		}
+		
+		
+		private void UpdateMargins(State state, bool active)
+		{
 			Properties.MarginsProperty margins;
 			
 			if (active)
@@ -146,10 +158,6 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				margins = this.ReadMetaProperty (ParagraphLayoutWrapper.Margins, Properties.WellKnownType.Margins) as Properties.MarginsProperty;
 			}
-			
-			State state = active ? this.Active : this.Defined;
-			
-			System.Diagnostics.Debug.Assert (state.IsDirty == false);
 			
 			if ((margins != null) &&
 				(double.IsNaN (margins.Disposition) == false) &&
@@ -189,7 +197,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				state.ClearValue (State.JustificationModeProperty);
+				state.DefineValue (State.JustificationModeProperty);
 			}
 			
 			if ((margins != null) &&
@@ -199,7 +207,7 @@ namespace Epsitec.Common.Text.Wrappers
 				
 				if (double.IsNaN (margins.LeftMarginFirstLine))
 				{
-					state.ClearValue (State.LeftMarginFirstProperty);
+					state.DefineValue (State.LeftMarginFirstProperty);
 				}
 				else
 				{
@@ -208,7 +216,7 @@ namespace Epsitec.Common.Text.Wrappers
 				
 				if (double.IsNaN (margins.LeftMarginBody))
 				{
-					state.ClearValue (State.LeftMarginBodyProperty);
+					state.DefineValue (State.LeftMarginBodyProperty);
 				}
 				else
 				{
@@ -217,7 +225,7 @@ namespace Epsitec.Common.Text.Wrappers
 				
 				if (double.IsNaN (margins.RightMarginFirstLine))
 				{
-					state.ClearValue (State.RightMarginFirstProperty);
+					state.DefineValue (State.RightMarginFirstProperty);
 				}
 				else
 				{
@@ -226,7 +234,7 @@ namespace Epsitec.Common.Text.Wrappers
 				
 				if (double.IsNaN (margins.RightMarginBody))
 				{
-					state.ClearValue (State.RightMarginBodyProperty);
+					state.DefineValue (State.RightMarginBodyProperty);
 				}
 				else
 				{
@@ -235,12 +243,12 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				state.ClearValue (State.UnitsProperty);
+				state.DefineValue (State.UnitsProperty);
 				
-				state.ClearValue (State.LeftMarginFirstProperty);
-				state.ClearValue (State.LeftMarginBodyProperty);
-				state.ClearValue (State.RightMarginFirstProperty);
-				state.ClearValue (State.RightMarginBodyProperty);
+				state.DefineValue (State.LeftMarginFirstProperty);
+				state.DefineValue (State.LeftMarginBodyProperty);
+				state.DefineValue (State.RightMarginFirstProperty);
+				state.DefineValue (State.RightMarginBodyProperty);
 			}
 			
 			if (margins != null)
@@ -248,7 +256,7 @@ namespace Epsitec.Common.Text.Wrappers
 				switch (margins.EnableHyphenation)
 				{
 					case Properties.ThreeState.Undefined:
-						state.ClearValue (State.HyphenationProperty);
+						state.DefineValue (State.HyphenationProperty);
 						break;
 					
 					case Properties.ThreeState.True:
@@ -262,10 +270,8 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				state.ClearValue (State.HyphenationProperty);
+				state.DefineValue (State.HyphenationProperty);
 			}
-			
-			state.NotifyIfDirty ();
 		}
 		
 		
