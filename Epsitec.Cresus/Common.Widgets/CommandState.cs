@@ -7,9 +7,21 @@ namespace Epsitec.Common.Widgets
 {
 	using ShortcutCollection = Epsitec.Common.Widgets.Collections.ShortcutCollection;
 	
-	public abstract class AbstractCommandState
+	/// <summary>
+	/// La classe CommandState permet de représenter l'état d'une commande tout
+	/// en maintenant la synchronisation avec les widgets associés.
+	/// </summary>
+	public class CommandState
 	{
-		public AbstractCommandState(string name, CommandDispatcher dispatcher)
+		public CommandState(string name) : this (name, CommandDispatcher.Default)
+		{
+		}
+		
+		public CommandState(string name, Window window) : this (name, window.CommandDispatcher)
+		{
+		}
+		
+		public CommandState(string name, CommandDispatcher dispatcher)
 		{
 			System.Diagnostics.Debug.Assert (name != null);
 			System.Diagnostics.Debug.Assert (name.Length > 0);
@@ -19,6 +31,18 @@ namespace Epsitec.Common.Widgets
 			
 			this.name       = name;
 			this.dispatcher = dispatcher;
+			
+			this.dispatcher.AddCommandState (this);
+		}
+		
+		public CommandState(string name, CommandDispatcher dispatcher, Shortcut shortcut) : this (name, dispatcher)
+		{
+			this.Shortcuts.Add (shortcut);
+		}
+		
+		public CommandState(string name, CommandDispatcher dispatcher, params Shortcut[] shortcuts) : this (name, dispatcher)
+		{
+			this.Shortcuts.AddRange (shortcuts);
 		}
 		
 		
@@ -44,65 +68,8 @@ namespace Epsitec.Common.Widgets
 				return this.regex;
 			}
 		}
-		public abstract bool				Enabled { get; set; }
 		
-		
-		public abstract void Synchronise();
-		
-		public override int GetHashCode()
-		{
-			return this.name.GetHashCode ();
-		}
-		
-		public override bool Equals(object obj)
-		{
-			CommandState other = obj as CommandState;
-			
-			if (other == null)
-			{
-				return false;
-			}
-			
-			return this.name.Equals (other.name) && (this.dispatcher == other.dispatcher);
-		}
-
-		
-		private string						name;
-		private CommandDispatcher			dispatcher;
-		private Regex						regex;
-	}
-	
-	/// <summary>
-	/// La classe CommandState permet de représenter l'état d'une commande tout
-	/// en maintenant la synchronisation avec les widgets associés.
-	/// </summary>
-	public class CommandState : AbstractCommandState
-	{
-		public CommandState(string name) : this (name, CommandDispatcher.Default)
-		{
-		}
-		
-		public CommandState(string name, Window window) : this (name, window.CommandDispatcher)
-		{
-		}
-		
-		public CommandState(string name, CommandDispatcher dispatcher) : base (name, dispatcher)
-		{
-			this.CommandDispatcher.AddCommandState (this);
-		}
-		
-		public CommandState(string name, CommandDispatcher dispatcher, Shortcut shortcut) : this (name, dispatcher)
-		{
-			this.Shortcuts.Add (shortcut);
-		}
-		
-		public CommandState(string name, CommandDispatcher dispatcher, params Shortcut[] shortcuts) : this (name, dispatcher)
-		{
-			this.Shortcuts.AddRange (shortcuts);
-		}
-		
-		
-		public override bool				Enabled
+		public virtual bool					Enabled
 		{
 			get
 			{
@@ -199,7 +166,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override void Synchronise()
+		public virtual void Synchronise()
 		{
 			bool        enabled = this.Enabled;
 			ActiveState active  = this.ActiveState;
@@ -227,14 +194,40 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (command_name != null);
 			System.Diagnostics.Debug.Assert (command_name.Length > 0);
 			
-			return dispatcher.CreateCommandState (command_name) as CommandState;
+			return dispatcher.CreateCommandState (command_name);
 		}
 		
+		
+		public override int GetHashCode()
+		{
+			return this.name.GetHashCode ();
+		}
+		
+		public override bool Equals(object obj)
+		{
+			if (this == obj)
+			{
+				return true;
+			}
+			
+			CommandState other = obj as CommandState;
+			
+			if (other == null)
+			{
+				return false;
+			}
+			
+			return this.name.Equals (other.name) && (this.dispatcher == other.dispatcher);
+		}
+
 		
 		
 		private WidgetState						widget_state = WidgetState.Enabled;
 		private ActiveState						active_state = ActiveState.No;
 		
 		private Collections.ShortcutCollection	shortcuts;
+		private string							name;
+		private CommandDispatcher				dispatcher;
+		private Regex							regex;
 	}
 }
