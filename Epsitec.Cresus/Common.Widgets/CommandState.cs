@@ -56,19 +56,6 @@ namespace Epsitec.Common.Widgets
 			get { return this.dispatcher; }
 		}
 		
-		public Regex						Regex
-		{
-			get
-			{
-				if (this.regex == null)
-				{
-					this.regex = Support.RegexFactory.FromSimpleJoker (this.name, Support.RegexFactory.Options.None);
-				}
-				
-				return this.regex;
-			}
-		}
-		
 		public virtual bool					Enabled
 		{
 			get
@@ -156,6 +143,20 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				return null;
+			}
+		}
+		
+		
+		protected Regex						Regex
+		{
+			get
+			{
+				if (this.regex == null)
+				{
+					this.regex = Support.RegexFactory.FromSimpleJoker (this.name, Support.RegexFactory.Options.None);
+				}
+				
+				return this.regex;
 			}
 		}
 		

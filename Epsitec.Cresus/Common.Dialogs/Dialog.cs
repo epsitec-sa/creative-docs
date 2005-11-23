@@ -14,14 +14,14 @@ namespace Epsitec.Common.Dialogs
 		public Dialog(Support.ResourceManager resource_manager)
 		{
 			this.name             = "AnonymousDialog";
-			this.dispatcher       = new CommandDispatcher (this.name, true);
+			this.dispatcher       = new CommandDispatcher (this.name, CommandDispatcherLevel.Secondary);
 			this.resource_manager = resource_manager;
 		}
 		
 		public Dialog(Support.ResourceManager resource_manager, string name)
 		{
 			this.name             = name;
-			this.dispatcher       = new CommandDispatcher (this.name);
+			this.dispatcher       = new CommandDispatcher (this.name, CommandDispatcherLevel.Secondary);
 			this.resource_manager = resource_manager;
 		}
 		

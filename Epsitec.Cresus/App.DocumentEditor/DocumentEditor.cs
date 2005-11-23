@@ -213,7 +213,7 @@ namespace Epsitec.App.DocumentEditor
 				if ( this.commandDispatcher == null )
 				{
 					// On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
-					this.commandDispatcher = new CommandDispatcher("DocumentEditor");
+					this.commandDispatcher = new CommandDispatcher("DocumentEditor", CommandDispatcherLevel.Primary);
 					this.commandDispatcher.RegisterController(this);
 				}
 				

@@ -49,34 +49,48 @@ namespace Epsitec.Common.Widgets
 			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
 			
 			CommandDispatcher.command_arg_regex  = new Regex (regex_1, options);
-			CommandDispatcher.default_dispatcher = new CommandDispatcher ("default");
+			CommandDispatcher default_dispatcher = new CommandDispatcher ("default", CommandDispatcherLevel.Root);
+			
+			System.Diagnostics.Debug.Assert (CommandDispatcher.default_dispatcher == default_dispatcher);
 		}
 		
 		
-		public CommandDispatcher() : this ("anonymous", true)
+		public CommandDispatcher() : this ("anonymous", CommandDispatcherLevel.Secondary)
 		{
 		}
 		
-		public CommandDispatcher(string name) : this (name, false)
+		public CommandDispatcher(string name, CommandDispatcherLevel level)
 		{
-		}
-		
-		public CommandDispatcher(string name, bool private_dispatcher)
-		{
-			if (private_dispatcher)
+			switch (level)
 			{
-				this.dispatcher_name = string.Format ("{0}_{1}", name, CommandDispatcher.generation++);
-				CommandDispatcher.local_list.Add (this);
-			}
-			else
-			{
-				this.dispatcher_name = name;
-				CommandDispatcher.global_list.Add (this);
+				case CommandDispatcherLevel.Root:
+					if (CommandDispatcher.default_dispatcher == null)
+					{
+						CommandDispatcher.default_dispatcher = this;
+					}
+					else
+					{
+						throw new System.InvalidOperationException ("Root command dispatcher already defined");
+					}
+					
+					break;
+				
+				case CommandDispatcherLevel.Secondary:
+					this.dispatcher_name = string.Format ("{0}_{1}", name, CommandDispatcher.generation++);
+					CommandDispatcher.local_list.Add (this);
+					break;
+				
+				case CommandDispatcherLevel.Primary:
+					this.dispatcher_name = name;
+					CommandDispatcher.global_list.Add (this);
+					break;
+				
+				default:
+					throw new System.ArgumentException (string.Format ("CommandDispatcherLevel {0} not valid for dispatcher {1}", level, name), "level");
 			}
 			
 			this.validation_rule = new ValidationRule (this);
 		}
-		
 		
 		public CommandState						this[string command_name]
 		{

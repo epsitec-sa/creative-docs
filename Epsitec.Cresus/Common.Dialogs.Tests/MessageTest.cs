@@ -16,7 +16,7 @@ namespace Epsitec.Common.Dialogs
 		
 		public MessageTest()
 		{
-			this.dispatcher = new CommandDispatcher ("MessageTestDispatcher", true);
+			this.dispatcher = new CommandDispatcher ("MessageTestDispatcher", CommandDispatcherLevel.Secondary);
 			this.dispatcher.RegisterController (this);
 		}
 		

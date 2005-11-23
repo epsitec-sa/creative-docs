@@ -17,7 +17,7 @@ namespace Epsitec.Common.Dialogs
 			this.command_yes_template = command_yes_template;
 			this.command_no_template  = command_no_template;
 			this.command_dispatcher   = command_dispatcher;
-			this.private_dispatcher   = new CommandDispatcher ("Dialog", true);
+			this.private_dispatcher   = new CommandDispatcher ("Dialog", CommandDispatcherLevel.Secondary);
 		}
 		
 		

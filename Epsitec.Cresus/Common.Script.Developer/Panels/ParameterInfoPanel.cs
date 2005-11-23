@@ -92,7 +92,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 			System.Diagnostics.Debug.Assert (this.edit_array == null);
 			System.Diagnostics.Debug.Assert (this.local_dispatcher == null);
 			
-			this.local_dispatcher = new CommandDispatcher ("ParameterInfoPanel", true);
+			this.local_dispatcher = new CommandDispatcher ("ParameterInfoPanel", CommandDispatcherLevel.Secondary);
 			
 			EditArray            edit  = new EditArray (parent);
 			EditArray.Header     title = new EditArray.Header (edit);

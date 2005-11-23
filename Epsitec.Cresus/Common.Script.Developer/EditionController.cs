@@ -13,7 +13,7 @@ namespace Epsitec.Common.Script.Developer
 	{
 		public EditionController()
 		{
-			this.dispatcher = new CommandDispatcher ("EditionController", true);
+			this.dispatcher = new CommandDispatcher ("EditionController", CommandDispatcherLevel.Primary);
 			this.dispatcher.RegisterController (this);
 			
 			this.save_command_state = CommandState.Find ("SaveSource", this.dispatcher);

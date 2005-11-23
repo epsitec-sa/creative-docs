@@ -249,6 +249,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "CommandDispatcherLevel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "CommandEvent.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

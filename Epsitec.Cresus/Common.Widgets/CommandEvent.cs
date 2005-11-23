@@ -16,26 +16,40 @@ namespace Epsitec.Common.Widgets
 			this.args    = args;
 		}
 		
-		public object					Source
+		
+		public object							Source
 		{
-			get { return this.source; }
+			get
+			{
+				return this.source;
+			}
 		}
 		
-		public string					CommandName
+		public string							CommandName
 		{
-			get { return this.command; }
+			get
+			{
+				return this.command;
+			}
 		}
 		
-		public string[]					CommandArgs
+		public string[]							CommandArgs
 		{
-			get { return this.args; }
+			get
+			{
+				return this.args;
+			}
 		}
 		
 		
-		protected object				source;
-		protected string				command;
-		protected string[]				args;
+		private object							source;
+		private string							command;
+		private string[]						args;
 	}
 	
+	/// <summary>
+	/// Le delegate CommandEventHandler permet d'exécuter une commande envoyée
+	/// par un CommandDispatcher et décrite par l'événement associé.
+	/// </summary>
 	public delegate void CommandEventHandler(CommandDispatcher sender, CommandEventArgs e);
 }
