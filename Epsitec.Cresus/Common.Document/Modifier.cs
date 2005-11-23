@@ -115,11 +115,20 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.ActiveViewer);
 					}
 
+					string initialTool = this.tool;
 					this.tool = value;
 
 					this.ToolAdaptRibbon();
 
 					if ( this.tool == "Select" && isCreate )  // on vient de créer un objet ?
+					{
+						DrawingContext context = this.ActiveViewer.DrawingContext;
+						Objects.Abstract layer = context.RootObject();
+						Objects.Abstract obj = layer.Objects[layer.Objects.Count-1] as Objects.Abstract;
+						this.ActiveViewer.Select(obj, false, false);
+					}
+
+					if ( this.tool == "Shaper" && isCreate )  // on vient de créer un objet ?
 					{
 						DrawingContext context = this.ActiveViewer.DrawingContext;
 						Objects.Abstract layer = context.RootObject();
@@ -135,11 +144,27 @@ namespace Epsitec.Common.Document
 						this.ActiveViewer.Select(obj, true, false);
 					}
 
+					else if ( this.tool == "Shaper" )
+					{
+						if ( editObject != null )
+						{
+							editObject.Select(true);
+						}
+						else if ( this.TotalSelected > 1 )
+						{
+							this.DeselectAll();
+						}
+					}
+
 					else if ( this.IsTool && this.tool != "Edit" )
 					{
 						if ( editObject != null )
 						{
 							editObject.Select(true);
+						}
+						else if ( initialTool == "Shaper" )
+						{
+							this.ActiveViewer.UpdateSelector();
 						}
 					}
 
@@ -200,7 +225,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.tool == "Select"  )  return true;
 				if ( this.tool == "Global"  )  return true;
-				if ( this.tool == "Form"    )  return true;
+				if ( this.tool == "Shaper"  )  return true;
 				if ( this.tool == "Edit"    )  return true;
 				if ( this.tool == "Zoom"    )  return true;
 				if ( this.tool == "Hand"    )  return true;
@@ -222,6 +247,15 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Indique si l'outil est le modeleur.
+		public bool IsToolShaper
+		{
+			get
+			{
+				return this.tool == "Shaper";
+			}
+		}
+
 		// Retourne le nom d'un outil.
 		public string ToolName(string tool)
 		{
@@ -229,7 +263,7 @@ namespace Epsitec.Common.Document
 			{
 				case "Select":           return Res.Strings.Tool.Select;
 				case "Global":           return Res.Strings.Tool.Global;
-				case "Form":             return Res.Strings.Tool.Form;
+				case "Shaper":           return Res.Strings.Tool.Shaper;
 				case "Edit":             return Res.Strings.Tool.Edit;
 				case "Zoom":             return Res.Strings.Tool.Zoom;
 				case "Hand":             return Res.Strings.Tool.Hand;

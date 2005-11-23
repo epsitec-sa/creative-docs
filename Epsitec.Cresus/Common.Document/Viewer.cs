@@ -17,8 +17,8 @@ namespace Epsitec.Common.Document
 			ArrowPlus,
 			ArrowDup,
 			ArrowGlobal,
-			FormEmpty,
-			FormFull,
+			ShaperEmpty,
+			ShaperFull,
 			Hand,
 			IBeam,
 			HSplit,
@@ -433,9 +433,9 @@ namespace Epsitec.Common.Document
 			{
 				this.SelectMouseDown(pos, message.ButtonDownCount, message.IsRightButton, true);
 			}
-			else if ( modifier.Tool == "Form" )
+			else if ( modifier.Tool == "Shaper" )
 			{
-				this.FormMouseDown(pos, message.ButtonDownCount, message.IsRightButton);
+				this.ShaperMouseDown(pos, message.ButtonDownCount, message.IsRightButton);
 			}
 			else if ( modifier.Tool == "Edit" )
 			{
@@ -482,9 +482,9 @@ namespace Epsitec.Common.Document
 			{
 				this.SelectMouseMove(pos, message.IsRightButton, true);
 			}
-			else if ( modifier.Tool == "Form" )
+			else if ( modifier.Tool == "Shaper" )
 			{
-				this.FormMouseMove(pos, message.IsRightButton);
+				this.ShaperMouseMove(pos, message.IsRightButton);
 			}
 			else if ( modifier.Tool == "Edit" )
 			{
@@ -533,9 +533,9 @@ namespace Epsitec.Common.Document
 			{
 				this.SelectMouseUp(pos, message.IsRightButton, true);
 			}
-			else if ( modifier.Tool == "Form" )
+			else if ( modifier.Tool == "Shaper" )
 			{
-				this.FormMouseUp(pos, message.IsRightButton);
+				this.ShaperMouseUp(pos, message.IsRightButton);
 			}
 			else if ( modifier.Tool == "Edit" )
 			{
@@ -1133,18 +1133,250 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		#region FormMouse
-		protected void FormMouseDown(Point mouse, int downCount, bool isRight)
+		#region ShaperMouse
+		protected void ShaperMouseDown(Point mouse, int downCount, bool isRight)
 		{
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Shaper);
+			this.moveStart = mouse;
+			this.moveAccept = false;
+			this.moveInitialSel = false;
+			this.drawingContext.ConstrainFlush();
+			this.drawingContext.ConstrainAddHV(mouse);
+			this.Hilite(null);
+			this.selector.HiliteHandle(-1);
+			this.HiliteHandle(null, -1);
+			this.moveGlobal = -1;
+			this.moveObject = null;
+			this.guideInteractive = -1;
+			this.guideCreate = false;
+			this.ctrlDown = this.drawingContext.IsCtrl;
+			this.ctrlDuplicate = false;
+			this.moveReclick = false;
+
+			Objects.Abstract obj;
+			int rank;
+			if ( this.DetectHandle(mouse, out obj, out rank) )
+			{
+				this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.HandleMove);
+				this.moveObject = obj;
+				this.moveHandle = rank;
+				this.moveOffset = mouse-obj.GetHandlePosition(rank);
+				this.moveObject.MoveHandleStarting(this.moveHandle, mouse, this.drawingContext);
+				this.HiliteHandle(this.moveObject, this.moveHandle);
+				this.document.Modifier.FlushMoveAfterDuplicate();
+			}
+			else
+			{
+				obj = this.Detect(mouse, !this.drawingContext.IsShift);
+				if ( obj == null )
+				{
+					this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.SelectGlobal);
+					this.selector.FixStarting(mouse);
+				}
+				else
+				{
+					if ( !obj.IsSelected )
+					{
+						this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.SelectObject);
+						this.Select(obj, false, this.drawingContext.IsShift);
+					}
+					else
+					{
+						this.moveInitialSel = true;
+
+						if ( this.drawingContext.IsShift )
+						{
+							this.document.Modifier.UpdateCounters();
+							obj.Deselect();
+							this.document.Modifier.TotalSelected --;
+							this.document.Modifier.FlushMoveAfterDuplicate();
+						}
+						else
+						{
+							this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.MoveObject);
+							this.moveReclick = true;
+						}
+					}
+
+					this.moveObject = obj;
+					this.moveHandle = -1;  // déplace tout l'objet
+					this.moveCenter = this.moveObject.HotSpotPosition;
+					this.moveLast = this.moveCenter;
+					this.moveOffset = mouse-this.moveLast;
+					this.drawingContext.ConstrainFlush();
+					this.drawingContext.ConstrainAddHV(this.moveLast);
+					this.MoveAllStarting();
+					this.hotSpotHandle.Position = this.moveCenter;
+					this.hotSpotHandle.IsVisible = this.drawingContext.MagnetActiveAndExist;
+					this.hotSpotHandle.IsHilited = true;
+				}
+			}
 		}
 
-		protected void FormMouseMove(Point mouse, bool isRight)
+		protected void ShaperMouseMove(Point mouse, bool isRight)
 		{
-			this.ChangeMouseCursor(MouseCursorType.FormEmpty);
+			this.HiliteHandle(null, -1);
+			this.selector.HiliteHandle(-1);
+
+			if ( this.mouseDragging )  // bouton souris pressé ?
+			{
+				if ( this.selector.Visible && !this.selector.Handles )
+				{
+					this.selector.FixEnding(mouse);
+				}
+				else if ( this.moveObject != null && !this.drawingContext.IsShift )
+				{
+					if ( this.moveHandle != -1 )  // déplace une poignée ?
+					{
+						mouse -= this.moveOffset;
+						this.MoveHandleProcess(this.moveObject, this.moveHandle, mouse);
+						this.HiliteHandle(this.moveObject, this.moveHandle);
+						this.document.Modifier.FlushMoveAfterDuplicate();
+					}
+					else	// déplace tout l'objet ?
+					{
+						if ( !this.moveInitialSel && this.moveAccept )
+						{
+							this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.SelectAndMove);
+						}
+
+						if ( !this.moveAccept )
+						{
+							double len = Point.Distance(mouse, this.moveStart);
+							if ( len > this.drawingContext.MinimalSize )
+							{
+								this.moveAccept = true;
+							}
+						}
+
+						if ( this.moveAccept )
+						{
+							mouse -= this.moveOffset;
+							if ( !this.drawingContext.ConstrainSnapPos(ref mouse) )
+							{
+								Rectangle box = this.moveObject.BoundingBoxThin;
+								box.Offset(mouse-this.moveLast);
+								this.drawingContext.SnapGrid(ref mouse, -this.moveCenter, box);
+							}
+							this.MoveAllProcess(mouse-this.moveLast);
+							this.moveLast = mouse;
+
+							this.hotSpotHandle.IsVisible = (this.drawingContext.IsCtrl || this.drawingContext.MagnetActiveAndExist);
+							this.hotSpotHandle.Position = this.moveObject.HotSpotPosition;
+						}
+					}
+				}
+			}
+			else	// bouton souris relâché ?
+			{
+				Objects.Abstract hiliteObj = this.Detect(mouse, true);
+				this.document.Modifier.ContainerHilite(hiliteObj);
+
+				Objects.Abstract obj;
+				int rank;
+
+				if ( this.DetectHandle(mouse, out obj, out rank) )
+				{
+					this.Hilite(null);
+					this.HiliteHandle(obj, rank);
+					this.ChangeMouseCursor(MouseCursorType.ShaperFull);
+				}
+				else
+				{
+					obj = hiliteObj;
+					if ( obj == null )
+					{
+						this.Hilite(null);
+						this.ChangeMouseCursor(MouseCursorType.ShaperEmpty);
+					}
+					else
+					{
+						if ( obj.IsSelected )
+						{
+							this.Hilite(null);
+							this.ChangeMouseCursor(MouseCursorType.ShaperFull);
+						}
+						else
+						{
+							this.Hilite(obj);
+							this.ChangeMouseCursor(MouseCursorType.ShaperEmpty);
+						}
+					}
+				}
+			}
 		}
 
-		protected void FormMouseUp(Point mouse, bool isRight)
+		protected void ShaperMouseUp(Point mouse, bool isRight)
 		{
+			bool globalMenu = false;
+			this.HiliteHandle(null, -1);
+
+			if ( this.selector.Visible && !this.selector.Handles )
+			{
+				double len = Point.Distance(mouse, this.moveStart);
+				if ( isRight && len <= this.drawingContext.MinimalSize )
+				{
+					globalMenu = true;
+				}
+				else
+				{
+					Rectangle rSelect = this.selector.Rectangle;
+					this.Select(rSelect, this.drawingContext.IsShift, true);
+				}
+				if ( this.document.Modifier.TotalSelected == 0 )
+				{
+					this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.DeselectAll);
+				}
+				else if ( this.drawingContext.IsShift )
+				{
+					this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.SelectGlobalAdd);
+				}
+			}
+			else if ( this.moveObject != null )
+			{
+				if ( this.moveHandle != -1 )  // déplace une poignée ?
+				{
+					this.moveObject.MoveHandleEnding(this.moveHandle, mouse, this.drawingContext);
+				}
+
+				if ( this.drawingContext.IsShift )
+				{
+					if ( this.moveObject.IsSelected )
+					{
+						this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.SelectObjectAdd);
+					}
+					else
+					{
+						this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.SelectObjectSub);
+					}
+				}
+
+				if ( this.moveReclick && !this.moveAccept && !isRight && !this.drawingContext.IsShift )
+				{
+					this.SelectOther(mouse, this.moveObject);
+				}
+				else
+				{
+					this.document.Modifier.GroupUpdateChildrens();
+					this.document.Modifier.GroupUpdateParents();
+
+					this.moveObject = null;
+					this.moveHandle = -1;
+					this.UpdateSelector();
+				}
+
+				this.hotSpotHandle.IsVisible = false;
+			}
+
+			this.drawingContext.ConstrainDelStarting();
+			this.drawingContext.MagnetDelStarting();
+			this.document.Modifier.OpletQueueValidateAction();
+
+			if ( isRight )  // avec le bouton de droite de la souris ?
+			{
+				this.document.Notifier.GenerateEvents();
+				this.ContextMenu(mouse, globalMenu);
+			}
 		}
 		#endregion
 
@@ -1890,7 +2122,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			if ( this.document.Modifier.TotalSelected == 0 )
+			if ( this.document.Modifier.TotalSelected == 0 || this.document.Modifier.IsToolShaper )
 			{
 				this.selector.Visible = false;
 				this.selector.Handles = false;
@@ -2463,12 +2695,12 @@ namespace Epsitec.Common.Document
 					this.MouseCursorImage(ref this.mouseCursorArrowGlobal, Misc.Icon("ArrowGlobal"));
 					break;
 
-				case MouseCursorType.FormEmpty:
-					this.MouseCursorImage(ref this.mouseCursorFormEmpty, Misc.Icon("FormEmpty"));
+				case MouseCursorType.ShaperEmpty:
+					this.MouseCursorImage(ref this.mouseCursorShaperEmpty, Misc.Icon("ShaperEmpty"));
 					break;
 
-				case MouseCursorType.FormFull:
-					this.MouseCursorImage(ref this.mouseCursorFormFull, Misc.Icon("FormFull"));
+				case MouseCursorType.ShaperFull:
+					this.MouseCursorImage(ref this.mouseCursorShaperFull, Misc.Icon("ShaperFull"));
 					break;
 
 				case MouseCursorType.Finger:
@@ -3388,8 +3620,8 @@ namespace Epsitec.Common.Document
 		protected Image							mouseCursorArrowPlus = null;
 		protected Image							mouseCursorArrowDup = null;
 		protected Image							mouseCursorArrowGlobal = null;
-		protected Image							mouseCursorFormEmpty = null;
-		protected Image							mouseCursorFormFull = null;
+		protected Image							mouseCursorShaperEmpty = null;
+		protected Image							mouseCursorShaperFull = null;
 		protected Image							mouseCursorFinger = null;
 		protected Image							mouseCursorFingerPlus = null;
 		protected Image							mouseCursorFingerDup = null;

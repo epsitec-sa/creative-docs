@@ -787,18 +787,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\Form.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\FormEmpty.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\FormFull.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "Images\Fragment.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -1532,6 +1520,18 @@
                 />
                 <File
                     RelPath = "Images\Settings.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Shaper.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperEmpty.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperFull.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

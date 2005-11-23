@@ -213,7 +213,7 @@
 	
 	<data name="Tool.Select">Select</data>
 	<data name="Tool.Global">Selection rectangle</data>
-	<data name="Tool.Form">Form</data>
+	<data name="Tool.Shaper">Shaper</data>
 	<data name="Tool.Edit">Edit</data>
 	<data name="Tool.Zoom">Magnifying glass</data>
 	<data name="Tool.Hand">Hand</data>
@@ -837,6 +837,7 @@
 	<data name="Action.PickerProperty">Style from pipette</data>
 	<data name="Action.ObjectCreate">Create object &quot;{0}&quot;</data>
 	<data name="Action.Select">Select</data>
+	<data name="Action.Shaper">Shaper</data>
 	<data name="Action.HandleMove">Move handle</data>
 	<data name="Action.GuideMove">Move guide</data>
 	<data name="Action.GuideCreateAndMove">Create and move a guide</data>

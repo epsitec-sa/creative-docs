@@ -277,7 +277,7 @@ namespace Epsitec.Common.Document.Objects
 		// Met à jour toutes les poignées des propriétés.
 		public void HandlePropertiesUpdate()
 		{
-			bool sel = this.selected && !this.edited && !this.globalSelected;
+			bool sel = this.selected && !this.edited && !this.globalSelected && !this.document.Modifier.IsToolShaper;
 			int total = this.TotalHandle;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -1096,14 +1096,24 @@ namespace Epsitec.Common.Document.Objects
 			this.allSelected = true;
 			this.SplitProperties();
 
+			bool shaper = this.document.Modifier.IsToolShaper;
+
 			int total = this.TotalHandle;
 			for ( int i=0 ; i<total ; i++ )
 			{
 				Handle handle = this.Handle(i);
 				if ( handle.PropertyType != Properties.Type.None )  break;
 
-				handle.IsVisible = select && !edit;
-				handle.IsGlobalSelected = false;
+				if ( shaper && select )
+				{
+					handle.IsVisible = true;
+					handle.IsGlobalSelected = true;
+				}
+				else
+				{
+					handle.IsVisible = select && !edit;
+					handle.IsGlobalSelected = false;
+				}
 			}
 			this.HandlePropertiesUpdate();
 			this.SetDirtyBbox();
@@ -1117,6 +1127,8 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.InsertOpletSelection();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+
+			bool shaper = this.document.Modifier.IsToolShaper;
 
 			int sel = 0;
 			int total = this.TotalMainHandle;
@@ -1133,8 +1145,16 @@ namespace Epsitec.Common.Document.Objects
 				}
 				else
 				{
-					handle.IsVisible = false;
-					handle.IsGlobalSelected = false;
+					if ( shaper )
+					{
+						handle.IsVisible = true;
+						handle.IsGlobalSelected = true;
+					}
+					else
+					{
+						handle.IsVisible = false;
+						handle.IsGlobalSelected = false;
+					}
 				}
 			}
 			this.selected = ( sel > 0 );
@@ -1204,6 +1224,11 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.InsertOpletSelection();
 
+			if ( this.document.Modifier.IsToolShaper )
+			{
+				global = true;
+			}
+
 			int total = this.TotalHandle;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -1234,13 +1259,6 @@ namespace Epsitec.Common.Document.Objects
 		public bool IsGlobalSelected
 		{
 			get { return this.globalSelected; }
-		}
-
-		// Adapte une poignée à la sélection globale.
-		protected void GlobalHandleAdapt(int rank)
-		{
-			this.Handle(rank).IsGlobalSelected = this.globalSelected && this.Handle(rank).IsVisible;
-			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
 

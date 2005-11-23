@@ -213,7 +213,7 @@
 
 	<data name="Tool.Select">Sélectionner</data>
 	<data name="Tool.Global">Rectangle de sélection</data>
-	<data name="Tool.Form">Former</data>
+	<data name="Tool.Shaper">Modeler</data>
 	<data name="Tool.Edit">Editer</data>
 	<data name="Tool.Zoom">Loupe</data>
 	<data name="Tool.Hand">Main</data>
@@ -837,6 +837,7 @@
 	<data name="Action.PickerProperty">Style selon la pipette</data>
 	<data name="Action.ObjectCreate">Création d'un objet &quot;{0}&quot;</data>
 	<data name="Action.Select">Sélection</data>
+	<data name="Action.Shaper">Former</data>
 	<data name="Action.HandleMove">Déplacement d'une poignée</data>
 	<data name="Action.GuideMove">Déplacement d'un repère</data>
 	<data name="Action.GuideCreateAndMove">Création puis déplacement d'un repère</data>
