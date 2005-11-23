@@ -80,7 +80,7 @@ namespace Epsitec.Common.Widgets
 			this.command_states.Add (name);
 		}
 		
-		public void AddCommandState(CommandDispatcher.CommandState command_state)
+		public void AddCommandState(CommandState command_state)
 		{
 			this.command_states.Add (command_state);
 		}
@@ -440,7 +440,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			public int Add(CommandDispatcher.CommandState value)
+			public int Add(CommandState value)
 			{
 				int index = this.list.Add (value);
 				this.OnListChanged ();

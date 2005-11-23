@@ -393,6 +393,8 @@ Global
 		{C189739F-7419-4C54-A870-215A538C10C5}.Release.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
+		External\AntiGrain.NET.dll = External\AntiGrain.NET.dll
+		External\AntiGrain.Win32.dll = External\AntiGrain.Win32.dll
 		External\copy.info = External\copy.info
 		copyproject-clean.py = copyproject-clean.py
 		copyproject.py = copyproject.py
@@ -403,7 +405,8 @@ Global
 		External\FirebirdSql.Data.Firebird.dll = External\FirebirdSql.Data.Firebird.dll
 		External\ICSharpCode.SharpZipLib.dll = External\ICSharpCode.SharpZipLib.dll
 		import-bin.bat = import-bin.bat
-		loc-bigdell.txt = loc-bigdell.txt
+		External\Magick.Win32.dll = External\Magick.Win32.dll
+		External\Magick.Wrapper.dll = External\Magick.Wrapper.dll
 		External\nunit-gui.exe = External\nunit-gui.exe
 		External\nunit-gui.exe.manifest = External\nunit-gui.exe.manifest
 		External\nunit.framework.dll = External\nunit.framework.dll

@@ -1,22 +1,83 @@
 //	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Text.RegularExpressions;
+
 namespace Epsitec.Common.Widgets
 {
-	using ShortcutCollection = Collections.ShortcutCollection;
+	using ShortcutCollection = Epsitec.Common.Widgets.Collections.ShortcutCollection;
+	
+	public abstract class AbstractCommandState
+	{
+		public AbstractCommandState(string name, CommandDispatcher dispatcher)
+		{
+			System.Diagnostics.Debug.Assert (name != null);
+			System.Diagnostics.Debug.Assert (name.Length > 0);
+			System.Diagnostics.Debug.Assert (dispatcher != null);
+			
+			System.Diagnostics.Debug.Assert (dispatcher[name] == null, "CommandState created twice.", string.Format ("The CommandState {0} for dispatcher {1} already exists.\nIt cannot be created more than once.", name, dispatcher.Name));
+			
+			this.name       = name;
+			this.dispatcher = dispatcher;
+		}
+		
+		
+		public string						Name
+		{
+			get { return this.name; }
+		}
+		
+		public CommandDispatcher			CommandDispatcher
+		{
+			get { return this.dispatcher; }
+		}
+		
+		public Regex						Regex
+		{
+			get
+			{
+				if (this.regex == null)
+				{
+					this.regex = Support.RegexFactory.FromSimpleJoker (this.name, Support.RegexFactory.Options.None);
+				}
+				
+				return this.regex;
+			}
+		}
+		public abstract bool				Enabled { get; set; }
+		
+		
+		public abstract void Synchronise();
+		
+		public override int GetHashCode()
+		{
+			return this.name.GetHashCode ();
+		}
+		
+		public override bool Equals(object obj)
+		{
+			CommandState other = obj as CommandState;
+			
+			if (other == null)
+			{
+				return false;
+			}
+			
+			return this.name.Equals (other.name) && (this.dispatcher == other.dispatcher);
+		}
+
+		
+		private string						name;
+		private CommandDispatcher			dispatcher;
+		private Regex						regex;
+	}
 	
 	/// <summary>
 	/// La classe CommandState permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec les widgets associés.
 	/// </summary>
-	public sealed class CommandState : CommandDispatcher.CommandState
+	public class CommandState : AbstractCommandState
 	{
-		static CommandState()
-		{
-			CommandDispatcher.DefineCommandStateCreationCallback (new CommandDispatcher.CreateCommandStateCallback (CommandState.DefaultCreate));
-		}
-		
-		
 		public CommandState(string name) : this (name, CommandDispatcher.Default)
 		{
 		}
@@ -27,14 +88,15 @@ namespace Epsitec.Common.Widgets
 		
 		public CommandState(string name, CommandDispatcher dispatcher) : base (name, dispatcher)
 		{
+			this.CommandDispatcher.AddCommandState (this);
 		}
 		
-		public CommandState(string name, CommandDispatcher dispatcher, Shortcut shortcut) : base (name, dispatcher)
+		public CommandState(string name, CommandDispatcher dispatcher, Shortcut shortcut) : this (name, dispatcher)
 		{
 			this.Shortcuts.Add (shortcut);
 		}
 		
-		public CommandState(string name, CommandDispatcher dispatcher, params Shortcut[] shortcuts) : base (name, dispatcher)
+		public CommandState(string name, CommandDispatcher dispatcher, params Shortcut[] shortcuts) : this (name, dispatcher)
 		{
 			this.Shortcuts.AddRange (shortcuts);
 		}
@@ -155,12 +217,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static void Initialise()
-		{
-			//	En appelant cette méthode statique, on peut garantir que le constructeur
-			//	statique de CommandState a bien été exécuté.
-		}
-		
 		public static CommandState Find(string command_name, CommandDispatcher dispatcher)
 		{
 			if (dispatcher == null)
@@ -174,11 +230,6 @@ namespace Epsitec.Common.Widgets
 			return dispatcher.CreateCommandState (command_name) as CommandState;
 		}
 		
-		
-		static CommandDispatcher.CommandState DefaultCreate(string command_name, CommandDispatcher dispatcher)
-		{
-			return new CommandState (command_name, dispatcher);
-		}
 		
 		
 		private WidgetState						widget_state = WidgetState.Enabled;

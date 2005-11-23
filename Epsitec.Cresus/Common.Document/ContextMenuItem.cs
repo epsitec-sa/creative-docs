@@ -73,7 +73,7 @@ namespace Epsitec.Common.Document
 		// Ajoute une case dans le menu.
 		public static bool MenuAddItem(System.Collections.ArrayList list, CommandDispatcher cd, string cmd, string icon, string text)
 		{
-			CommandDispatcher.CommandState state = cd[cmd];
+			CommandState state = cd[cmd];
 			if ( state != null )
 			{
 				if ( !state.Enabled )  return false;

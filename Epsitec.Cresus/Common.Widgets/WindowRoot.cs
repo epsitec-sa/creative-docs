@@ -244,13 +244,11 @@ namespace Epsitec.Common.Widgets
 				
 				if (execute)
 				{
-					CommandDispatcher                dispatcher = this.CommandDispatcher;
-					CommandDispatcher.CommandState[] states     = dispatcher.CommandStates;
+					CommandDispatcher dispatcher = this.CommandDispatcher;
+					CommandState[]    states     = dispatcher.CommandStates;
 					
-					foreach (CommandDispatcher.CommandState state in states)
+					foreach (CommandState command in states)
 					{
-						CommandState command = state as CommandState;
-						
 						if (command != null)
 						{
 							if ((command.HasShortcuts) &&

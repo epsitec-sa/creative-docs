@@ -78,7 +78,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public CommandDispatcher.CommandState	this[string command_name]
+		public CommandState						this[string command_name]
 		{
 			get
 			{
@@ -166,13 +166,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public CommandDispatcher.CommandState[]	CommandStates
+		public CommandState[]					CommandStates
 		{
 			get
 			{
-				CommandState[] states = new CommandState[this.command_states.Count];
-				this.command_states.CopyTo (states);
-				return states;
+				return (CommandState[]) this.command_states.ToArray (typeof (CommandState));
 			}
 		}
 		
@@ -284,7 +282,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public CommandDispatcher.CommandState CreateCommandState(string command_name)
+		public CommandState CreateCommandState(string command_name)
 		{
 			//	Retourne un object CommandState pour le nom spécifié; si l'objet n'existe pas encore,
 			//	il sera créé dynamiquement.
@@ -299,15 +297,14 @@ namespace Epsitec.Common.Widgets
 			//	La création se fait dans Widgets.CommandState et pour éviter des problèmes de
 			//	dépendances circulaires, on utilise un callback :
 			
-			if (CommandDispatcher.create_command_state_callback == null)
-			{
-				throw new System.InvalidOperationException ("Missing CommandState creation callback.");
-			}
-			
-			return CommandDispatcher.create_command_state_callback (command_name, this);
+			return new CommandState (command_name, this);
 		}
 		
 		
+		internal void AddCommandState(CommandState command_state)
+		{
+			this.command_states.Add (command_state);
+		}
 		
 		public void RegisterController(object controller)
 		{
@@ -385,11 +382,6 @@ namespace Epsitec.Common.Widgets
 			{
 				dispatcher.SyncValidationRule ();
 			}
-		}
-		
-		public static void DefineCommandStateCreationCallback(CreateCommandStateCallback value)
-		{
-			CommandDispatcher.create_command_state_callback = value;
 		}
 		#endregion
 		
@@ -622,79 +614,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		#region CommandState class
-		public abstract class CommandState
-		{
-			public CommandState(string name, CommandDispatcher dispatcher)
-			{
-				System.Diagnostics.Debug.Assert (name != null);
-				System.Diagnostics.Debug.Assert (name.Length > 0);
-				System.Diagnostics.Debug.Assert (dispatcher != null);
-				
-				System.Diagnostics.Debug.Assert (dispatcher[name] == null, "CommandState created twice.", string.Format ("The CommandState {0} for dispatcher {1} already exists.\nIt cannot be created more than once.", name, dispatcher.Name));
-				
-				this.name       = name;
-				this.dispatcher = dispatcher;
-				
-				this.dispatcher.command_states.Add (this);
-			}
-			
-			
-			public string						Name
-			{
-				get { return this.name; }
-			}
-			
-			public CommandDispatcher			CommandDispatcher
-			{
-				get { return this.dispatcher; }
-			}
-			
-			public Regex						Regex
-			{
-				get
-				{
-					if (this.regex == null)
-					{
-						this.regex = Support.RegexFactory.FromSimpleJoker (this.name, Support.RegexFactory.Options.None);
-					}
-					
-					return this.regex;
-				}
-			}
-			public abstract bool				Enabled { get; set; }
-			
-			
-			public abstract void Synchronise();
-			
-			public override int GetHashCode()
-			{
-				return this.name.GetHashCode ();
-			}
-			
-			public override bool Equals(object obj)
-			{
-				CommandState other = obj as CommandState;
-				
-				if (other == null)
-				{
-					return false;
-				}
-				
-				return this.name.Equals (other.name) && (this.dispatcher == other.dispatcher);
-			}
-
-			
-			private string						name;
-			private CommandDispatcher			dispatcher;
-			private Regex						regex;
-		}
-		#endregion
-		
-		#region CreateCommandStateCallback Delegate
-		public delegate CommandDispatcher.CommandState CreateCommandStateCallback(string name, CommandDispatcher dispatcher);
-		#endregion
-		
 		internal void NotifyValidationRuleBecameDirty()
 		{
 			this.OnValidationRuleBecameDirty ();
@@ -864,7 +783,6 @@ namespace Epsitec.Common.Widgets
 		protected bool							aborted;
 		protected Support.OpletQueue			oplet_queue;
 		
-		static CreateCommandStateCallback		create_command_state_callback;
 		static Regex							command_arg_regex;
 		static System.Type						command_attr_type  = typeof (Support.CommandAttribute);
 		static CommandDispatcher				default_dispatcher;

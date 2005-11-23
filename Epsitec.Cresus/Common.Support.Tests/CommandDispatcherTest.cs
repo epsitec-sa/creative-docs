@@ -95,9 +95,9 @@ namespace Epsitec.Common.Support
 			
 			CommandDispatcherTest.buffer.Length = 0;
 			
-			CommandState s1 = new CommandState ("s1", dispatcher);
-			CommandState s2 = new CommandState ("s2", dispatcher);
-			CommandState s3 = new CommandState ("s3", dispatcher);
+			CommandState s1 = new MyCommandState ("s1", dispatcher);
+			CommandState s2 = new MyCommandState ("s2", dispatcher);
+			CommandState s3 = new MyCommandState ("s3", dispatcher);
 			
 			dispatcher.SyncCommandStates ();
 			
@@ -215,10 +215,10 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 		
-		#region Custom CommandState class
-		class CommandState : CommandDispatcher.CommandState
+		#region MyCommandState Class
+		class MyCommandState : CommandState
 		{
-			public CommandState(string name, CommandDispatcher dispatcher) : base (name, dispatcher)
+			public MyCommandState(string name, CommandDispatcher dispatcher) : base (name, dispatcher)
 			{
 			}
 			

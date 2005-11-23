@@ -159,10 +159,7 @@ namespace Epsitec.Common.Widgets
 			Res.Initialise (typeof (Widget), "Common.Widgets");
 			
 			Support.ImageProvider.Initialise ();
-			Widgets.CommandState.Initialise ();
-			
 			Support.ObjectBundler.Initialise ();
-			Support.ImageProvider.Initialise ();
 			
 			System.Threading.Thread          thread  = System.Threading.Thread.CurrentThread;
 			System.Globalization.CultureInfo culture = thread.CurrentCulture;
