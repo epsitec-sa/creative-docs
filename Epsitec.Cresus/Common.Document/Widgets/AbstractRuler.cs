@@ -1,5 +1,6 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Document.Widgets
 {
@@ -166,6 +167,16 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				this.editObject = value;
 			}
+		}
+
+		// Attache la règle aux wrappers.
+		public virtual void WrappersAttach()
+		{
+		}
+
+		// Détache la règle des wrappers.
+		public virtual void WrappersDetach()
+		{
 		}
 
 		// Limite basse, selon la bbox de l'obet édité.

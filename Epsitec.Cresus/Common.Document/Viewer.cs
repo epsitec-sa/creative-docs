@@ -17,6 +17,8 @@ namespace Epsitec.Common.Document
 			ArrowPlus,
 			ArrowDup,
 			ArrowGlobal,
+			FormEmpty,
+			FormFull,
 			Hand,
 			IBeam,
 			HSplit,
@@ -431,6 +433,10 @@ namespace Epsitec.Common.Document
 			{
 				this.SelectMouseDown(pos, message.ButtonDownCount, message.IsRightButton, true);
 			}
+			else if ( modifier.Tool == "Form" )
+			{
+				this.FormMouseDown(pos, message.ButtonDownCount, message.IsRightButton);
+			}
 			else if ( modifier.Tool == "Edit" )
 			{
 				this.EditMouseDown(message, pos, message.ButtonDownCount);
@@ -475,6 +481,10 @@ namespace Epsitec.Common.Document
 			else if ( modifier.Tool == "Global" )
 			{
 				this.SelectMouseMove(pos, message.IsRightButton, true);
+			}
+			else if ( modifier.Tool == "Form" )
+			{
+				this.FormMouseMove(pos, message.IsRightButton);
 			}
 			else if ( modifier.Tool == "Edit" )
 			{
@@ -522,6 +532,10 @@ namespace Epsitec.Common.Document
 			else if ( modifier.Tool == "Global" )
 			{
 				this.SelectMouseUp(pos, message.IsRightButton, true);
+			}
+			else if ( modifier.Tool == "Form" )
+			{
+				this.FormMouseUp(pos, message.IsRightButton);
 			}
 			else if ( modifier.Tool == "Edit" )
 			{
@@ -1119,6 +1133,22 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region FormMouse
+		protected void FormMouseDown(Point mouse, int downCount, bool isRight)
+		{
+		}
+
+		protected void FormMouseMove(Point mouse, bool isRight)
+		{
+			this.ChangeMouseCursor(MouseCursorType.FormEmpty);
+		}
+
+		protected void FormMouseUp(Point mouse, bool isRight)
+		{
+		}
+		#endregion
+
+		
 		#region EditMouse
 		public bool EditFlowTerminate()
 		{
@@ -2433,6 +2463,14 @@ namespace Epsitec.Common.Document
 					this.MouseCursorImage(ref this.mouseCursorArrowGlobal, Misc.Icon("ArrowGlobal"));
 					break;
 
+				case MouseCursorType.FormEmpty:
+					this.MouseCursorImage(ref this.mouseCursorFormEmpty, Misc.Icon("FormEmpty"));
+					break;
+
+				case MouseCursorType.FormFull:
+					this.MouseCursorImage(ref this.mouseCursorFormFull, Misc.Icon("FormFull"));
+					break;
+
 				case MouseCursorType.Finger:
 					this.MouseCursorImage(ref this.mouseCursorFinger, Misc.Icon("Finger"));
 					break;
@@ -3350,6 +3388,8 @@ namespace Epsitec.Common.Document
 		protected Image							mouseCursorArrowPlus = null;
 		protected Image							mouseCursorArrowDup = null;
 		protected Image							mouseCursorArrowGlobal = null;
+		protected Image							mouseCursorFormEmpty = null;
+		protected Image							mouseCursorFormFull = null;
 		protected Image							mouseCursorFinger = null;
 		protected Image							mouseCursorFingerPlus = null;
 		protected Image							mouseCursorFingerDup = null;

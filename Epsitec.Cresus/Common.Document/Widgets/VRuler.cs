@@ -1,5 +1,6 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Document.Widgets
 {

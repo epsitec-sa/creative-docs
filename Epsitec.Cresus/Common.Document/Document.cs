@@ -185,6 +185,15 @@ namespace Epsitec.Common.Document
 			get { return this.paragraphLayoutWrapper; }
 		}
 
+		// Indique si les wrappers sont attachés.
+		public bool IsWrappersAttached
+		{
+			get
+			{
+				return this.fontWrapper.IsAttached;
+			}
+		}
+
 		// Attache tous les wrappers à un texte.
 		public void WrappersAttach(TextFlow textFlow)
 		{

@@ -213,6 +213,7 @@
 
 	<data name="Tool.Select">Sélectionner</data>
 	<data name="Tool.Global">Rectangle de sélection</data>
+	<data name="Tool.Form">Former</data>
 	<data name="Tool.Edit">Editer</data>
 	<data name="Tool.Zoom">Loupe</data>
 	<data name="Tool.Hand">Main</data>
@@ -932,13 +933,6 @@
 	<data name="Action.Text.Ruler.TabCreate">Cliquez pour poser un tabulateur</data>
 	<data name="Action.Text.Glyphs.Insert">Insertion caractère spécial</data>
 	<data name="Action.Text.Glyphs.Alternate">Caractère alternatif</data>
-
-	<data name="Text.ButtonBold">&lt;b&gt;G&lt;/b&gt;</data>
-	<data name="Text.ButtonItalic">&lt;i&gt;I&lt;/i&gt;</data>
-	<data name="Text.ButtonUnderlined">&lt;u&gt;S&lt;/u&gt;</data>
-	<data name="Text.ButtonUserX">[&lt;b&gt;X&lt;/b&gt;]</data>
-	<data name="Text.ButtonUserY">[&lt;b&gt;Y&lt;/b&gt;]</data>
-	<data name="Text.ButtonUserZ">[&lt;b&gt;Z&lt;/b&gt;]</data>
 
 	<data name="Text.Features_aalt">Access All Alternates</data>
 	<data name="Text.Features_abvf">Above-Base Forms</data>

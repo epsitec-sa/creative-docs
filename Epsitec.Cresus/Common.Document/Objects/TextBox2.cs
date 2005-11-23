@@ -593,9 +593,26 @@ namespace Epsitec.Common.Document.Objects
 			Text.Properties.OpenTypeProperty otp;
 			this.document.TextContext.GetOpenType(sel[0], out otp);
 
-			string face, style;
-			string[] features;
-			this.GetTextFont(true, out face, out style, out features);
+			string face = this.document.FontWrapper.Defined.FontFace;
+			if ( face == null )
+			{
+				face = this.document.FontWrapper.Active.FontFace;
+				if ( face == null )
+				{
+					face = "";
+				}
+			}
+
+			string style = this.document.FontWrapper.Defined.FontStyle;
+			if ( style == null )
+			{
+				style = this.document.FontWrapper.Active.FontStyle;
+				if ( style == null )
+				{
+					style = "";
+				}
+			}
+
 			font = TextContext.GetFont(face, style);
 
 			if ( otp == null )
@@ -619,263 +636,6 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region TextFormat
-		// Modifie la police du texte.
-		public override void SetTextFont(string face, string style, string[] features)
-		{
-			if ( face == "" )  // remet la fonte par défaut ?
-			{
-//				Text.Properties.FontProperty font = new Text.Properties.FontProperty();
-//				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Clear, font);
-				Text.TextStyle metaFont = this.document.TextContext.StyleList.CreateOrGetMetaProperty("TextFont", new Text.Property[0]);
-				this.metaNavigator.SetMetaProperties(Text.Properties.ApplyMode.Clear, metaFont);
-			}
-			else
-			{
-				Text.Properties.FontProperty font;
-				if ( features == null )
-				{
-					font = new Text.Properties.FontProperty(face, style);
-				}
-				else
-				{
-					font = new Text.Properties.FontProperty(face, style, features);
-				}
-				Text.TextStyle metaFont = this.document.TextContext.StyleList.CreateOrGetMetaProperty("TextFont", font);
-				this.metaNavigator.SetMetaProperties(Text.Properties.ApplyMode.Set, metaFont);
-//				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Combine, font);
-			}
-		}
-
-		// Donne la police du texte.
-		public override void GetTextFont(bool accumulated, out string face, out string style, out string[] features)
-		{
-#if false
-			Text.Property[] properties = this.GetTextProperties(accumulated);
-			foreach ( Text.Property property in properties )
-			{
-				if ( property.WellKnownType == Text.Properties.WellKnownType.Font )
-				{
-					Text.Properties.FontProperty font = property as Text.Properties.FontProperty;
-					System.Diagnostics.Debug.Assert(font != null);
-					face = font.FaceName;
-					style = Misc.SimplifyFontStyle(font.StyleName);
-					features = font.Features;
-					return;
-				}
-			}
-#else
-			Text.TextStyle[] styles = this.textFlow.TextNavigator.TextStyles;
-			foreach ( Text.TextStyle s in styles )
-			{
-				if ( s.TextStyleClass == Text.TextStyleClass.MetaProperty &&
-					 s.MetaId == "TextFont" )
-				{
-					Text.Properties.FontProperty font = s[Text.Properties.WellKnownType.Font] as Text.Properties.FontProperty;
-					System.Diagnostics.Debug.Assert(font != null);
-					face = font.FaceName;
-					style = Misc.SimplifyFontStyle(font.StyleName);
-					features = font.Features;
-					return;
-				}
-			}
-#endif
-
-			face = "";
-			style = "";
-			features = null;
-		}
-
-		// Modifie la taille de la police du texte.
-		public override void SetTextFontSize(double size, Text.Properties.SizeUnits units, bool combine)
-		{
-			if ( units == Text.Properties.SizeUnits.None )  // remet la taille par défaut ?
-			{
-				Text.Properties.FontSizeProperty fs = new Text.Properties.FontSizeProperty();
-				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Clear, fs);
-			}
-			else
-			{
-				Text.Properties.FontSizeProperty fs = new Text.Properties.FontSizeProperty(size, units);
-				Text.Properties.ApplyMode mode = combine ? Text.Properties.ApplyMode.Combine : Text.Properties.ApplyMode.Set;
-				this.metaNavigator.SetTextProperties(mode, fs);
-			}
-		}
-
-		// Donne la taille de la police du texte.
-		public override void GetTextFontSize(out double size, out Text.Properties.SizeUnits units, bool accumulated)
-		{
-			Text.Property[] properties = this.GetTextProperties(accumulated);
-			foreach ( Text.Property property in properties )
-			{
-				if ( property.WellKnownType == Text.Properties.WellKnownType.FontSize )
-				{
-					Text.Properties.FontSizeProperty fs = property as Text.Properties.FontSizeProperty;
-					System.Diagnostics.Debug.Assert(fs != null);
-
-					size = fs.Size;
-					units = fs.Units;
-					return;
-				}
-			}
-			
-			size = 0;
-			units = Text.Properties.SizeUnits.None;
-		}
-
-		// Modifie l'état d'un style de caractère.
-		public override void SetTextStyle(string name, bool state)
-		{
-			Text.TextStyle style = this.document.TextContext.StyleList[name, Text.TextStyleClass.MetaProperty];
-			if ( style != null )
-			{
-				Text.Properties.ApplyMode mode = state ? Text.Properties.ApplyMode.Set : Text.Properties.ApplyMode.Clear;
-				this.metaNavigator.SetMetaProperties(mode, style);
-			}
-		}
-
-		// Modifie l'état d'un style de paragraphe.
-		public override void SetTextStyle(string name, string exclude, bool state)
-		{
-			this.ApplyParagraphStyle(name, exclude, state);
-		}
-
-		// Donne l'état d'un style de paragraphe.
-		public override bool GetTextStyle(string name)
-		{
-			return this.IsExistingStyle(name);
-		}
-
-		// Modifie l'interligne du texte.
-		public override void SetTextLeading(double size, Text.Properties.SizeUnits units)
-		{
-			if ( units == Text.Properties.SizeUnits.None )  // remet l'interligne par défaut ?
-			{
-				Text.Properties.LeadingProperty leading = new Text.Properties.LeadingProperty();
-				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Clear, leading);
-			}
-			else
-			{
-				Text.Properties.LeadingProperty leading = new Text.Properties.LeadingProperty(size, units, Text.Properties.AlignMode.Undefined);
-				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Set, leading);
-			}
-		}
-
-		// Donne l'interligne du texte.
-		public override void GetTextLeading(out double size, out Text.Properties.SizeUnits units, bool accumulated)
-		{
-			Text.Property[] properties = this.GetTextProperties(accumulated);
-			foreach ( Text.Property property in properties )
-			{
-				if ( property.WellKnownType == Text.Properties.WellKnownType.Leading )
-				{
-					Text.Properties.LeadingProperty leading = property as Text.Properties.LeadingProperty;
-					System.Diagnostics.Debug.Assert(leading != null);
-
-					size = leading.Leading;
-					units = leading.LeadingUnits;
-					return;
-				}
-			}
-			
-			size = 0;
-			units = Text.Properties.SizeUnits.None;
-		}
-
-		// Modifie les marges gauche du texte.
-		public override void SetTextLeftMargins(double leftFirst, double leftBody, Text.Properties.SizeUnits units, bool enableUndoRedo)
-		{
-			if ( !enableUndoRedo )
-			{
-				this.textFlow.TextStory.DisableOpletQueue();
-				this.SetTextLeftMargins(leftFirst, leftBody, units, true);
-				this.textFlow.TextStory.EnableOpletQueue();
-			}
-			else
-			{
-				if ( units == Text.Properties.SizeUnits.None )  // remet l'indentation par défaut ?
-				{
-					Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty();
-					this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Clear, margins);
-				}
-				else
-				{
-					Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty(leftFirst, leftBody, double.NaN, double.NaN, units, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined);
-					this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, margins);
-				}
-				this.UpdateTextRulers();
-			}
-		}
-
-		// Donne les marges gauche du texte.
-		public override void GetTextLeftMargins(out double leftFirst, out double leftBody, out Text.Properties.SizeUnits units, bool accumulated)
-		{
-			Text.Property[] properties = this.GetTextProperties(accumulated);
-			foreach ( Text.Property property in properties )
-			{
-				if ( property.WellKnownType == Text.Properties.WellKnownType.Margins )
-				{
-					Text.Properties.MarginsProperty margins = property as Text.Properties.MarginsProperty;
-					System.Diagnostics.Debug.Assert(margins != null);
-
-					leftFirst = margins.LeftMarginFirstLine;
-					leftBody = margins.LeftMarginBody;
-					units = margins.Units;
-					return;
-				}
-			}
-			
-			leftFirst = 0;
-			leftBody = 0;
-			units = Text.Properties.SizeUnits.None;
-		}
-
-		// Modifie la marge droite du texte.
-		public override void SetTextRightMargins(double right, Text.Properties.SizeUnits units, bool enableUndoRedo)
-		{
-			if ( !enableUndoRedo )
-			{
-				this.textFlow.TextStory.DisableOpletQueue();
-				this.SetTextRightMargins(right, units, true);
-				this.textFlow.TextStory.EnableOpletQueue();
-			}
-			else
-			{
-				if ( units == Text.Properties.SizeUnits.None )  // remet l'indentation par défaut ?
-				{
-					Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty();
-					this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Clear, margins);
-				}
-				else
-				{
-					Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty(double.NaN, double.NaN, right, right, units, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined);
-					this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, margins);
-				}
-				this.UpdateTextRulers();
-			}
-		}
-
-		// Donne la marge droite du texte.
-		public override void GetTextRightMargins(out double right, out Text.Properties.SizeUnits units, bool accumulated)
-		{
-			Text.Property[] properties = this.GetTextProperties(accumulated);
-			foreach ( Text.Property property in properties )
-			{
-				if ( property.WellKnownType == Text.Properties.WellKnownType.Margins )
-				{
-					Text.Properties.MarginsProperty margins = property as Text.Properties.MarginsProperty;
-					System.Diagnostics.Debug.Assert(margins != null);
-
-					right = margins.RightMarginBody;
-					units = margins.Units;
-					return;
-				}
-			}
-			
-			right = 0;
-			units = Text.Properties.SizeUnits.None;
-		}
-
-
 		// Retourne tous les tags des tabulateurs.
 		public override string[] TextTabTags
 		{
@@ -1058,14 +818,6 @@ namespace Epsitec.Common.Document.Objects
 				this.document.HRuler.LimitHigh = bbox.Right;
 				this.document.VRuler.LimitLow  = bbox.Bottom;
 				this.document.VRuler.LimitHigh = bbox.Top;
-
-				double leftFirst, leftBody, right;
-				Text.Properties.SizeUnits units;
-				this.GetTextLeftMargins(out leftFirst, out leftBody, out units, true);
-				this.GetTextRightMargins(out right, out units, true);
-				this.document.HRuler.MarginLeftFirst = bbox.Left+leftFirst;
-				this.document.HRuler.MarginLeftBody  = bbox.Left+leftBody;
-				this.document.HRuler.MarginRight     = bbox.Right-right;
 
 				Text.TextNavigator.TabInfo[] infos = this.textFlow.TextNavigator.GetTabInfos();
 

@@ -89,7 +89,7 @@ namespace Epsitec.Common.Document.TextPanels
 #endif
 
 			bool hyphen = this.document.ParagraphLayoutWrapper.Defined.Hyphenation;
-			if ( false )  // TODO: comment savoir si c'est indéfini ?
+			if ( !this.document.ParagraphLayoutWrapper.Defined.IsHyphenationDefined )
 			{
 				hyphen = this.document.ParagraphLayoutWrapper.Active.Hyphenation;
 			}
@@ -279,9 +279,16 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.document.ParagraphLayoutWrapper.IsAttached )  return;
 
 			this.buttonHyphen.ActiveState = (this.buttonHyphen.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
-
 			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.Yes);
-			this.document.ParagraphLayoutWrapper.Defined.Hyphenation = hyphen;
+
+			if ( hyphen )
+			{
+				this.document.ParagraphLayoutWrapper.Defined.Hyphenation = true;
+			}
+			else
+			{
+				this.document.ParagraphLayoutWrapper.Defined.ClearHyphenation();
+			}
 		}
 
 		private void HandleMarginChanged(object sender)

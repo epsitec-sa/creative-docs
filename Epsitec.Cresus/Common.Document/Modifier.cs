@@ -200,6 +200,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.tool == "Select"  )  return true;
 				if ( this.tool == "Global"  )  return true;
+				if ( this.tool == "Form"    )  return true;
 				if ( this.tool == "Edit"    )  return true;
 				if ( this.tool == "Zoom"    )  return true;
 				if ( this.tool == "Hand"    )  return true;
@@ -228,6 +229,7 @@ namespace Epsitec.Common.Document
 			{
 				case "Select":           return Res.Strings.Tool.Select;
 				case "Global":           return Res.Strings.Tool.Global;
+				case "Form":             return Res.Strings.Tool.Form;
 				case "Edit":             return Res.Strings.Tool.Edit;
 				case "Zoom":             return Res.Strings.Tool.Zoom;
 				case "Hand":             return Res.Strings.Tool.Hand;
@@ -1128,16 +1130,33 @@ namespace Epsitec.Common.Document
 		// Donne la fonte actullement utilisée.
 		public void EditGetFont(out string fontFace, out string fontStyle)
 		{
-			Objects.Abstract editObject = this.RetEditObject();
-			if ( editObject == null )
+			if ( this.document.IsWrappersAttached )
+			{
+				fontFace = this.document.FontWrapper.Defined.FontFace;
+				if ( fontFace == null )
+				{
+					fontFace = this.document.FontWrapper.Active.FontFace;
+					if ( fontFace == null )
+					{
+						fontFace = "";
+					}
+				}
+
+				fontStyle = this.document.FontWrapper.Defined.FontStyle;
+				if ( fontStyle == null )
+				{
+					fontStyle = this.document.FontWrapper.Active.FontStyle;
+					if ( fontStyle == null )
+					{
+						fontStyle = "";
+					}
+				}
+			}
+			else
 			{
 				fontFace  = "";
 				fontStyle = "";
-				return;
 			}
-
-			string[] features;
-			editObject.GetTextFont(true, out fontFace, out fontStyle, out features);
 		}
 
 		// Retourne le seul objet en édition.

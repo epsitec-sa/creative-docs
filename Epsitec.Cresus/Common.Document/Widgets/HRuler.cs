@@ -1,5 +1,6 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Text;
 
 namespace Epsitec.Common.Document.Widgets
@@ -40,60 +41,87 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Position de la marge gauche pour la première ligne.
-		public double MarginLeftFirst
+		// Attache la règle aux wrappers.
+		public override void WrappersAttach()
 		{
-			get
+			this.document.FontWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.document.FontWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+		}
+
+		// Détache la règle des wrappers.
+		public override void WrappersDetach()
+		{
+			this.document.FontWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+			this.document.FontWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+		}
+
+		// Le wrapper associé a changé.
+		protected void HandleWrapperChanged(object sender)
+		{
+			double leftFirst, leftBody, right;
+			this.GetMargins(out leftFirst, out leftBody, out right);
+
+			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
+			leftFirst = bbox.Left  + leftFirst;
+			leftBody  = bbox.Left  + leftBody;
+			right     = bbox.Right - right;
+
+			if ( this.marginLeftFirst != leftFirst )
 			{
-				return this.marginLeftFirst;
+				this.marginLeftFirst = leftFirst;
+				this.Invalidate();
 			}
 
-			set
+			if ( this.marginLeftBody != leftBody )
 			{
-				if ( this.marginLeftFirst != value )
+				this.marginLeftBody = leftBody;
+				this.Invalidate();
+			}
+
+			if ( this.marginRight != right )
+			{
+				this.marginRight = right;
+				this.Invalidate();
+			}
+		}
+
+		protected void GetMargins(out double leftFirst, out double leftBody, out double right)
+		{
+			leftFirst = this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst;
+			if ( double.IsNaN(leftFirst) )
+			{
+				leftFirst = this.document.ParagraphLayoutWrapper.Active.LeftMarginFirst;
+
+				if ( double.IsNaN(leftFirst) )
 				{
-					this.marginLeftFirst = value;
-					this.Invalidate();
+					leftFirst = 0;
+				}
+			}
+
+			leftBody = this.document.ParagraphLayoutWrapper.Defined.LeftMarginBody;
+			if ( double.IsNaN(leftBody) )
+			{
+				leftBody = this.document.ParagraphLayoutWrapper.Active.LeftMarginBody;
+
+				if ( double.IsNaN(leftBody) )
+				{
+					leftBody = 0;
+				}
+			}
+
+			right = this.document.ParagraphLayoutWrapper.Defined.RightMarginBody;
+			if ( double.IsNaN(right) )
+			{
+				right = this.document.ParagraphLayoutWrapper.Active.RightMarginBody;
+
+				if ( double.IsNaN(right) )
+				{
+					right = 0;
 				}
 			}
 		}
 
-		// Position de la marge gauche pour le corps du texte.
-		public double MarginLeftBody
-		{
-			get
-			{
-				return this.marginLeftBody;
-			}
-
-			set
-			{
-				if ( this.marginLeftBody != value )
-				{
-					this.marginLeftBody = value;
-					this.Invalidate();
-				}
-			}
-		}
-
-		// Position de la marge droite.
-		public double MarginRight
-		{
-			get
-			{
-				return this.marginRight;
-			}
-
-			set
-			{
-				if ( this.marginRight != value )
-				{
-					this.marginRight = value;
-					this.Invalidate();
-				}
-			}
-		}
-
+		
 		// Liste des tabulateurs.
 		public Tab[] Tabs
 		{
@@ -644,50 +672,57 @@ namespace Epsitec.Common.Document.Widgets
 			Tab tab = this.GetTab(handle);
 			if ( tab.Tag == null )
 			{
-				double leftFirst, leftBody, right;
-				Text.Properties.SizeUnits units;
-				this.editObject.GetTextLeftMargins(out leftFirst, out leftBody, out units, true);
-				this.editObject.GetTextRightMargins(out right, out units, true);
-				units = Common.Text.Properties.SizeUnits.Points;
-
 				if ( handle == "LeftFirst" )
 				{
-					leftFirst = this.ScreenToDocument(pos.X);
+					double leftFirst = this.ScreenToDocument(pos.X);
 					leftFirst = leftFirst - bbox.Left;
 					leftFirst = this.SnapGrid(leftFirst);
 					leftFirst = System.Math.Max(leftFirst, 0);
-					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units, this.draggingFirstMove);
+
+					this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst = leftFirst;
 				}
 
 				if ( handle == "LeftBody" )
 				{
-					leftBody = this.ScreenToDocument(pos.X);
+					double leftBody = this.ScreenToDocument(pos.X);
 					leftBody = leftBody - bbox.Left;
 					leftBody = this.SnapGrid(leftBody);
 					leftBody = System.Math.Max(leftBody, 0);
-					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units, this.draggingFirstMove);
+
+					this.document.ParagraphLayoutWrapper.Defined.LeftMarginBody = leftBody;
 				}
 
 				if ( handle == "FirstBody" )
 				{
-					double initialBody = leftBody;
-					leftBody = this.ScreenToDocument(pos.X);
+					double initialLeftFirst, initialLeftBody, initialRight;
+					this.GetMargins(out initialLeftFirst, out initialLeftBody, out initialRight);
+
+					double leftBody = this.ScreenToDocument(pos.X);
 					leftBody = leftBody - bbox.Left;
 					leftBody = this.SnapGrid(leftBody);
 					leftBody = System.Math.Max(leftBody, 0);
-					leftFirst += leftBody - initialBody;
+
+					double leftFirst = initialLeftFirst + (leftBody-initialLeftBody);
 					leftFirst = this.SnapGrid(leftFirst);
 					leftFirst = System.Math.Max(leftFirst, 0);
-					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units, this.draggingFirstMove);
+
+					this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
+					this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst = leftFirst;
+					this.document.ParagraphLayoutWrapper.Defined.LeftMarginBody  = leftBody;
+					this.document.ParagraphLayoutWrapper.ResumeSynchronisations();
 				}
 
 				if ( handle == "Right" )
 				{
-					right = this.ScreenToDocument(pos.X);
+					double right = this.ScreenToDocument(pos.X);
 					right = bbox.Right - right;
 					right = this.SnapGrid(right);
 					right = System.Math.Max(right, 0);
-					this.editObject.SetTextRightMargins(right, units, this.draggingFirstMove);
+
+					this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
+					this.document.ParagraphLayoutWrapper.Defined.RightMarginFirst = right;
+					this.document.ParagraphLayoutWrapper.Defined.RightMarginBody  = right;
+					this.document.ParagraphLayoutWrapper.ResumeSynchronisations();
 				}
 			}
 			else	// tabulateur ?

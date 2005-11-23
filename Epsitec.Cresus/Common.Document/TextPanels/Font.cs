@@ -58,7 +58,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.Text.Font.Subscript,   new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonSuperscript = this.CreateIconButton(Misc.Icon("FontSuperscript"), Res.Strings.Action.Text.Font.Superscript, new MessageEventHandler(this.HandleButtonClicked));
 
-			this.document.FontWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.document.FontWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.FontWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.isNormalAndExtended = true;
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
 
-				this.document.FontWrapper.Active.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.document.FontWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
 				this.document.FontWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 
 				this.fontFace = null;
@@ -532,7 +532,13 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( editObject == null )  return;
 			string face, style;
 			string[] features;
+#if false
 			editObject.GetTextFont(true, out face, out style, out features);
+#else
+			face = "";
+			style = "";
+			features = null;
+#endif
 
 			Point pos = button.MapClientToScreen(new Point(0, 1));
 			VMenu menu = this.BuildFeaturesMenu(face, style, features);
@@ -605,7 +611,13 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string face, style;
 			string[] features;
+#if false
 			editObject.GetTextFont(false, out face, out style, out features);
+#else
+			face = "";
+			style = "";
+			features = null;
+#endif
 
 			if ( features == null )  features = new string[0];
 			
@@ -632,7 +644,9 @@ namespace Epsitec.Common.Document.TextPanels
 				newFeatures[features.Length] = cmd;
 			}
 
+#if false
 			editObject.SetTextFont(face, style, newFeatures);
+#endif
 		}
 		#endregion
 

@@ -712,85 +712,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Modifie la police du texte.
-		public virtual void SetTextFont(string face, string style, string[] features)
-		{
-		}
-
-		// Donne la police du texte.
-		public virtual void GetTextFont(bool accumulated, out string face, out string style, out string[] features)
-		{
-			face = "";
-			style = "";
-			features = null;
-		}
-
-		// Modifie la taille de la police du texte.
-		public virtual void SetTextFontSize(double size, Text.Properties.SizeUnits units, bool combine)
-		{
-		}
-
-		// Donne la taille de la police du texte.
-		public virtual void GetTextFontSize(out double size, out Text.Properties.SizeUnits units, bool accumulated)
-		{
-			size = 0;
-			units = Text.Properties.SizeUnits.None;
-		}
-
-		// Modifie l'état d'un style de caractère.
-		public virtual void SetTextStyle(string name, bool state)
-		{
-		}
-
-		// Modifie l'état d'un style de paragraphe.
-		public virtual void SetTextStyle(string name, string exclude, bool state)
-		{
-		}
-
-		// Donne l'état d'un style de paragraphe.
-		public virtual bool GetTextStyle(string name)
-		{
-			return false;
-		}
-
-		// Modifie l'interligne du texte.
-		public virtual void SetTextLeading(double size, Text.Properties.SizeUnits units)
-		{
-		}
-
-		// Donne l'interligne du texte.
-		public virtual void GetTextLeading(out double size, out Text.Properties.SizeUnits units, bool accumulated)
-		{
-			size = 0;
-			units = Text.Properties.SizeUnits.None;
-		}
-
-		// Modifie les marges gauche du texte.
-		public virtual void SetTextLeftMargins(double leftFirst, double leftBody, Text.Properties.SizeUnits units, bool enableUndoRedo)
-		{
-		}
-
-		// Donne les marges gauche du texte.
-		public virtual void GetTextLeftMargins(out double leftFirst, out double leftBody, out Text.Properties.SizeUnits units, bool accumulated)
-		{
-			leftFirst = 0;
-			leftBody = 0;
-			units = Text.Properties.SizeUnits.None;
-		}
-
-		// Modifie la marge droite du texte.
-		public virtual void SetTextRightMargins(double right, Text.Properties.SizeUnits units, bool enableUndoRedo)
-		{
-		}
-
-		// Donne la marge droite du texte.
-		public virtual void GetTextRightMargins(out double right, out Text.Properties.SizeUnits units, bool accumulated)
-		{
-			right = 0;
-			units = Text.Properties.SizeUnits.None;
-		}
-
-
 		// Retourne tous les tags des tabulateurs.
 		public virtual string[] TextTabTags
 		{
@@ -1248,12 +1169,16 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.document.HRuler.EditObject = this;
 				this.document.VRuler.EditObject = this;
+				this.document.HRuler.WrappersAttach();
+				this.document.VRuler.WrappersAttach();
 				this.EditWrappersAttach();  // attache l'objet aux différents wrappers
 			}
 			else
 			{
 				this.document.HRuler.EditObject = null;
 				this.document.VRuler.EditObject = null;
+				this.document.HRuler.WrappersDetach();
+				this.document.VRuler.WrappersDetach();
 				this.document.WrappersDetach();
 			}
 

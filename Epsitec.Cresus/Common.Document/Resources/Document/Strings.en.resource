@@ -213,6 +213,7 @@
 	
 	<data name="Tool.Select">Select</data>
 	<data name="Tool.Global">Selection rectangle</data>
+	<data name="Tool.Form">Form</data>
 	<data name="Tool.Edit">Edit</data>
 	<data name="Tool.Zoom">Magnifying glass</data>
 	<data name="Tool.Hand">Hand</data>
@@ -932,13 +933,6 @@
 	<data name="Action.Text.Ruler.TabCreate">Click to create a new Tab Mark</data>
 	<data name="Action.Text.Glyphs.Insert">Insert special character</data>
 	<data name="Action.Text.Glyphs.Alternate">Alternate character</data>
-
-	<data name="Text.ButtonBold">&lt;b&gt;B&lt;/b&gt;</data>
-	<data name="Text.ButtonItalic">&lt;i&gt;I&lt;/i&gt;</data>
-	<data name="Text.ButtonUnderlined">&lt;u&gt;U&lt;/u&gt;</data>
-	<data name="Text.ButtonUserX">[&lt;b&gt;X&lt;/b&gt;]</data>
-	<data name="Text.ButtonUserY">[&lt;b&gt;Y&lt;/b&gt;]</data>
-	<data name="Text.ButtonUserZ">[&lt;b&gt;Z&lt;/b&gt;]</data>
 
 	<data name="Text.Features_aalt">Access All Alternates</data>
 	<data name="Text.Features_abvf">Above-Base Forms</data>

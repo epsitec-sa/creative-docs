@@ -749,6 +749,7 @@ namespace Epsitec.App.DocumentEditor
 			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height+this.RibbonHeight, this.info.Height);
 			this.VToolBarAdd(Misc.Icon("Select"), "ToolSelect", DocumentEditor.GetRes("Tool.Select", this.toolSelectState), "Select");
 			this.VToolBarAdd(Misc.Icon("Global"), "ToolGlobal", DocumentEditor.GetRes("Tool.Global", this.toolGlobalState), "Global");
+			this.VToolBarAdd(Misc.Icon("Form"), "ToolForm", DocumentEditor.GetRes("Tool.Form", this.toolFormState), "Form");
 			this.VToolBarAdd(Misc.Icon("Edit"), "ToolEdit", DocumentEditor.GetRes("Tool.Edit", this.toolEditState), "Edit");
 			this.VToolBarAdd(Misc.Icon("Zoom"), "ToolZoom", DocumentEditor.GetRes("Tool.Zoom", this.toolZoomState), "Zoom");
 			this.VToolBarAdd(Misc.Icon("Hand"), "ToolHand", DocumentEditor.GetRes("Tool.Hand", this.toolHandState), "Hand");
@@ -1427,6 +1428,13 @@ namespace Epsitec.App.DocumentEditor
 		void CommandToolGlobal(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.Tool = "Global";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolForm")]
+		void CommandToolForm(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "Form";
 			this.DispatchDummyMouseMoveEvent();
 		}
 
@@ -3450,6 +3458,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.toolSelectState = new CommandState("ToolSelect", this.commandDispatcher, KeyCode.AlphaS);
 			this.toolGlobalState = new CommandState("ToolGlobal", this.commandDispatcher, KeyCode.AlphaG);
+			this.toolFormState = new CommandState("ToolForm", this.commandDispatcher, KeyCode.AlphaF);
 			this.toolEditState = new CommandState("ToolEdit", this.commandDispatcher, KeyCode.AlphaE);
 			this.toolZoomState = new CommandState("ToolZoom", this.commandDispatcher, KeyCode.AlphaZ);
 			this.toolHandState = new CommandState("ToolHand", this.commandDispatcher, KeyCode.AlphaH);
@@ -3859,6 +3868,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.UpdateTool(this.toolSelectState, "Select", tool, isCreating, enabled);
 			this.UpdateTool(this.toolGlobalState, "Global", tool, isCreating, enabled);
+			this.UpdateTool(this.toolFormState, "Form", tool, isCreating, enabled);
 			this.UpdateTool(this.toolEditState, "Edit", tool, isCreating, enabled);
 			this.UpdateTool(this.toolZoomState, "Zoom", tool, isCreating, enabled);
 			this.UpdateTool(this.toolHandState, "Hand", tool, isCreating, enabled);
@@ -5292,6 +5302,7 @@ namespace Epsitec.App.DocumentEditor
 
 		protected CommandState					toolSelectState;
 		protected CommandState					toolGlobalState;
+		protected CommandState					toolFormState;
 		protected CommandState					toolEditState;
 		protected CommandState					toolZoomState;
 		protected CommandState					toolHandState;
