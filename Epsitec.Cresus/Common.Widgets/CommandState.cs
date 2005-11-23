@@ -9,15 +9,15 @@ namespace Epsitec.Common.Widgets
 	/// La classe CommandState permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec les widgets associés.
 	/// </summary>
-	public sealed class CommandState : Support.CommandDispatcher.CommandState
+	public sealed class CommandState : CommandDispatcher.CommandState
 	{
 		static CommandState()
 		{
-			Support.CommandDispatcher.DefineCommandStateCreationCallback (new Support.CommandDispatcher.CreateCommandStateCallback (CommandState.DefaultCreate));
+			CommandDispatcher.DefineCommandStateCreationCallback (new CommandDispatcher.CreateCommandStateCallback (CommandState.DefaultCreate));
 		}
 		
 		
-		public CommandState(string name) : this (name, Support.CommandDispatcher.Default)
+		public CommandState(string name) : this (name, CommandDispatcher.Default)
 		{
 		}
 		
@@ -25,16 +25,16 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
-		public CommandState(string name, Support.CommandDispatcher dispatcher) : base (name, dispatcher)
+		public CommandState(string name, CommandDispatcher dispatcher) : base (name, dispatcher)
 		{
 		}
 		
-		public CommandState(string name, Support.CommandDispatcher dispatcher, Shortcut shortcut) : base (name, dispatcher)
+		public CommandState(string name, CommandDispatcher dispatcher, Shortcut shortcut) : base (name, dispatcher)
 		{
 			this.Shortcuts.Add (shortcut);
 		}
 		
-		public CommandState(string name, Support.CommandDispatcher dispatcher, params Shortcut[] shortcuts) : base (name, dispatcher)
+		public CommandState(string name, CommandDispatcher dispatcher, params Shortcut[] shortcuts) : base (name, dispatcher)
 		{
 			this.Shortcuts.AddRange (shortcuts);
 		}
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Widgets
 			//	statique de CommandState a bien été exécuté.
 		}
 		
-		public static CommandState Find(string command_name, Support.CommandDispatcher dispatcher)
+		public static CommandState Find(string command_name, CommandDispatcher dispatcher)
 		{
 			if (dispatcher == null)
 			{
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		static Support.CommandDispatcher.CommandState DefaultCreate(string command_name, Support.CommandDispatcher dispatcher)
+		static CommandDispatcher.CommandState DefaultCreate(string command_name, CommandDispatcher dispatcher)
 		{
 			return new CommandState (command_name, dispatcher);
 		}

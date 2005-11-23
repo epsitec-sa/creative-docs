@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : Types.Object, System.IDisposable, Support.Data.IContainer, Support.ICommandDispatcherHost, Support.Data.IPropertyProvider
+	public class Window : Types.Object, System.IDisposable, Support.Data.IContainer, ICommandDispatcherHost, Support.Data.IPropertyProvider
 	{
 		public Window()
 		{
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void Initialise(WindowRoot root)
 		{
-			this.CommandDispatcher = Support.CommandDispatcher.Default;
+			this.CommandDispatcher = CommandDispatcher.Default;
 			this.components        = new Support.Data.ComponentCollection (this);
 			
 			this.root   = root;
@@ -643,7 +643,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region ICommandDispatcherHost Members
-		public Support.CommandDispatcher		CommandDispatcher
+		public CommandDispatcher		CommandDispatcher
 		{
 			get
 			{
@@ -1300,7 +1300,7 @@ namespace Epsitec.Common.Widgets
 		#region QueueItem class
 		protected class QueueItem
 		{
-			public QueueItem(object source, string command, Support.CommandDispatcher dispatcher)
+			public QueueItem(object source, string command, CommandDispatcher dispatcher)
 			{
 				this.source     = source;
 				this.command    = command;
@@ -1325,7 +1325,7 @@ namespace Epsitec.Common.Widgets
 				get { return this.command; }
 			}
 			
-			public Support.CommandDispatcher	CommandDispatcher
+			public CommandDispatcher			CommandDispatcher
 			{
 				get { return this.dispatcher; }
 			}
@@ -1333,7 +1333,7 @@ namespace Epsitec.Common.Widgets
 			
 			protected object					source;
 			protected string					command;
-			protected Support.CommandDispatcher	dispatcher;
+			protected CommandDispatcher			dispatcher;
 		}
 		#endregion
 		
@@ -1347,7 +1347,7 @@ namespace Epsitec.Common.Widgets
 			this.QueueCommand (source, command, this.CommandDispatcher);
 		}
 		
-		public void QueueCommand(object source, string command, Support.CommandDispatcher dispatcher)
+		public void QueueCommand(object source, string command, CommandDispatcher dispatcher)
 		{
 			this.QueueCommand (new QueueItem (source, command, dispatcher));
 		}
@@ -1439,7 +1439,7 @@ namespace Epsitec.Common.Widgets
 				object    source  = item.Source;
 				string    command = item.Command;
 				
-				Support.CommandDispatcher dispatcher = item.CommandDispatcher;
+				CommandDispatcher dispatcher = item.CommandDispatcher;
 				
 				if (dispatcher == null)
 				{
@@ -1463,7 +1463,7 @@ namespace Epsitec.Common.Widgets
 		internal void DispatchValidation()
 		{
 			this.pending_validation = false;
-			Support.CommandDispatcher.SyncAllValidationRules ();
+			CommandDispatcher.SyncAllValidationRules ();
 		}
 		
 		internal void DispatchMessage(Message message)
@@ -1925,7 +1925,7 @@ namespace Epsitec.Common.Widgets
 		private Timer							timer;
 		private MouseCursor						window_cursor;
 		
-		private Support.CommandDispatcher		cmd_dispatcher;
+		private CommandDispatcher				cmd_dispatcher;
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
 		private bool							is_dispose_queued;
 		private bool							is_async_notification_queued;

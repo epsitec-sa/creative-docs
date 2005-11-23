@@ -1,12 +1,14 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Script
 {
 	/// <summary>
 	/// Summary description for ScriptWrapper.
 	/// </summary>
-	public class ScriptWrapper : Support.ICommandDispatcher
+	public class ScriptWrapper : ICommandDispatcher
 	{
 		public ScriptWrapper()
 		{
@@ -364,13 +366,13 @@ namespace Epsitec.Common.Script
 		
 		
 		#region ICommandDispatcher Members
-		public bool DispatchCommand(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+		public bool DispatchCommand(CommandDispatcher sender, CommandEventArgs e)
 		{
 			Script script = this.Script;
 			
 			if (script.HasErrors == false)
 			{
-				Support.ICommandDispatcher dispatcher = script as Support.ICommandDispatcher;
+				ICommandDispatcher dispatcher = script as ICommandDispatcher;
 				
 				if (dispatcher != null)
 				{
@@ -381,7 +383,7 @@ namespace Epsitec.Common.Script
 			return false;
 		}
 
-		string									Support.ICommandDispatcher.Name
+		string									ICommandDispatcher.Name
 		{
 			get
 			{

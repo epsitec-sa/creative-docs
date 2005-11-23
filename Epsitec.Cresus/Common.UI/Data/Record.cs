@@ -1,6 +1,8 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+
 namespace Epsitec.Common.UI.Data
 {
 	/// <summary>
@@ -41,7 +43,7 @@ namespace Epsitec.Common.UI.Data
 			}
 		}
 		
-		public Support.IValidator				Validator
+		public IValidator						Validator
 		{
 			get
 			{
@@ -373,16 +375,16 @@ namespace Epsitec.Common.UI.Data
 		
 		
 		#region RecordValidator Class
-		protected class RecordValidator : Support.IValidator
+		protected class RecordValidator : IValidator
 		{
 			public RecordValidator(Record record)
 			{
 				this.record = record;
-				this.state  = Support.ValidationState.Dirty;
+				this.state  = ValidationState.Dirty;
 			}
 			
 			
-			public Support.ValidationState		State
+			public ValidationState				State
 			{
 				get
 				{
@@ -394,12 +396,12 @@ namespace Epsitec.Common.UI.Data
 			{
 				get
 				{
-					if (this.state == Support.ValidationState.Dirty)
+					if (this.state == ValidationState.Dirty)
 					{
 						this.Validate ();
 					}
 				
-					return (this.state == Support.ValidationState.Ok);
+					return (this.state == ValidationState.Ok);
 				}
 			}
 			
@@ -414,23 +416,23 @@ namespace Epsitec.Common.UI.Data
 			
 			public void Validate()
 			{
-				this.state = Support.ValidationState.Unknown;
+				this.state = ValidationState.Unknown;
 				
 				foreach (Field field in this.record.CachedItemArray)
 				{
 					if (field.IsValueValid == false)
 					{
-						this.state = Support.ValidationState.Error;
+						this.state = ValidationState.Error;
 						return;
 					}
 				}
 				
-				this.state = Support.ValidationState.Ok;
+				this.state = ValidationState.Ok;
 			}
 			
 			public void MakeDirty(bool deep)
 			{
-				this.state = Support.ValidationState.Dirty;
+				this.state = ValidationState.Dirty;
 				this.OnBecameDirty ();
 			}
 			
@@ -447,7 +449,7 @@ namespace Epsitec.Common.UI.Data
 			public event Support.EventHandler	BecameDirty;
 			
 			private Record						record;
-			private Support.ValidationState		state;
+			private ValidationState				state;
 		}
 		#endregion
 		

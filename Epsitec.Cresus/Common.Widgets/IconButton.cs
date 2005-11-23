@@ -96,7 +96,7 @@ namespace Epsitec.Common.Widgets
 		{
 			IconButton button = new IconButton (command, icon);
 			
-			button.Name = Support.CommandDispatcher.ExtractCommandName (command);
+			button.Name = CommandDispatcher.ExtractCommandName (command);
 			
 			return button;
 		}
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Widgets
 			IconButton button = new IconButton (command, icon);
 			
 			button.SetVisible (false);
-			button.Name = Support.CommandDispatcher.ExtractCommandName (command);
+			button.Name = CommandDispatcher.ExtractCommandName (command);
 			
 			return button;
 		}
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Widgets
 			IconButton button = new IconButton (command, icon);
 			
 			button.AutoToggle = true;
-			button.Name = Support.CommandDispatcher.ExtractCommandName (command);
+			button.Name = CommandDispatcher.ExtractCommandName (command);
 			
 			return button;
 		}

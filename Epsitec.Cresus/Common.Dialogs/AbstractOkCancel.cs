@@ -111,7 +111,7 @@ namespace Epsitec.Common.Dialogs
 		
 		protected string						dialog_title;
 		protected string						command_template;
-		protected Support.CommandDispatcher		command_dispatcher;
-		protected Support.CommandDispatcher		private_dispatcher;
+		protected CommandDispatcher				command_dispatcher;
+		protected CommandDispatcher				private_dispatcher;
 	}
 }

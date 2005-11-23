@@ -1248,16 +1248,16 @@ namespace Epsitec.Common.Widgets
 			
 			public void CreateCommands()
 			{
-				Support.CommandDispatcher dispatcher = this.host.CommandDispatcher;
+				CommandDispatcher dispatcher = this.host.CommandDispatcher;
 				
-				dispatcher.Register (this.GetCommandName ("StartReadOnly"), new Support.CommandEventHandler (this.CommandStartReadOnly));
-				dispatcher.Register (this.GetCommandName ("StartEdition"),  new Support.CommandEventHandler (this.CommandStartEdition));
-				dispatcher.Register (this.GetCommandName ("StartSearch"),   new Support.CommandEventHandler (this.CommandStartSearch));
-				dispatcher.Register (this.GetCommandName ("InsertBefore"),  new Support.CommandEventHandler (this.CommandInsertBefore));
-				dispatcher.Register (this.GetCommandName ("InsertAfter"),   new Support.CommandEventHandler (this.CommandInsertAfter));
-				dispatcher.Register (this.GetCommandName ("Delete"),        new Support.CommandEventHandler (this.CommandDelete));
-				dispatcher.Register (this.GetCommandName ("MoveUp"),        new Support.CommandEventHandler (this.CommandMoveUp));
-				dispatcher.Register (this.GetCommandName ("MoveDown"),      new Support.CommandEventHandler (this.CommandMoveDown));
+				dispatcher.Register (this.GetCommandName ("StartReadOnly"), new CommandEventHandler (this.CommandStartReadOnly));
+				dispatcher.Register (this.GetCommandName ("StartEdition"),  new CommandEventHandler (this.CommandStartEdition));
+				dispatcher.Register (this.GetCommandName ("StartSearch"),   new CommandEventHandler (this.CommandStartSearch));
+				dispatcher.Register (this.GetCommandName ("InsertBefore"),  new CommandEventHandler (this.CommandInsertBefore));
+				dispatcher.Register (this.GetCommandName ("InsertAfter"),   new CommandEventHandler (this.CommandInsertAfter));
+				dispatcher.Register (this.GetCommandName ("Delete"),        new CommandEventHandler (this.CommandDelete));
+				dispatcher.Register (this.GetCommandName ("MoveUp"),        new CommandEventHandler (this.CommandMoveUp));
+				dispatcher.Register (this.GetCommandName ("MoveDown"),      new CommandEventHandler (this.CommandMoveDown));
 			}
 			
 			public void CreateToolBarButtons()
@@ -1488,42 +1488,42 @@ namespace Epsitec.Common.Widgets
 			#endregion
 			
 			#region Commands...
-			private void CommandStartReadOnly(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			private void CommandStartReadOnly(CommandDispatcher sender, CommandEventArgs e)
 			{
 				this.StartReadOnly ();
 			}
 			
-			private void CommandStartEdition(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			private void CommandStartEdition(CommandDispatcher sender, CommandEventArgs e)
 			{
 				this.StartEdition ();
 			}
 			
-			private void CommandStartSearch(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			private void CommandStartSearch(CommandDispatcher sender, CommandEventArgs e)
 			{
 				this.StartSearch ();
 			}
 			
-			private void CommandInsertBefore(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			private void CommandInsertBefore(CommandDispatcher sender, CommandEventArgs e)
 			{
 				this.InsertBefore ();
 			}
 			
-			private void CommandInsertAfter(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			private void CommandInsertAfter(CommandDispatcher sender, CommandEventArgs e)
 			{
 				this.InsertAfter ();
 			}
 			
-			private void CommandDelete(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			private void CommandDelete(CommandDispatcher sender, CommandEventArgs e)
 			{
 				this.Delete ();
 			}
 			
-			private void CommandMoveUp(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			private void CommandMoveUp(CommandDispatcher sender, CommandEventArgs e)
 			{
 				this.MoveUp ();
 			}
 			
-			private void CommandMoveDown(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			private void CommandMoveDown(CommandDispatcher sender, CommandEventArgs e)
 			{
 				this.MoveDown ();
 			}
@@ -1749,7 +1749,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Widget iter = this.widget;
 				
-				this.state = Support.ValidationState.Ok;
+				this.state = ValidationState.Ok;
 				
 				while (iter != null)
 				{
@@ -1769,7 +1769,7 @@ namespace Epsitec.Common.Widgets
 							{
 								if (store.GetCellText (i, this.column) == text)
 								{
-									this.state = Support.ValidationState.Error;
+									this.state = ValidationState.Error;
 									return;
 								}
 							}

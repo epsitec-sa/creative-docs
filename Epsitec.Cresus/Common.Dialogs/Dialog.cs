@@ -1,25 +1,27 @@
 //	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
 	/// La classe Dialog permet d'ouvrir et de gérer un dialogue à partir d'une
 	/// ressource et d'une source de données.
 	/// </summary>
-	public class Dialog : AbstractDialog, Support.ICommandDispatcherHost
+	public class Dialog : AbstractDialog, ICommandDispatcherHost
 	{
 		public Dialog(Support.ResourceManager resource_manager)
 		{
 			this.name             = "AnonymousDialog";
-			this.dispatcher       = new Support.CommandDispatcher (this.name, true);
+			this.dispatcher       = new CommandDispatcher (this.name, true);
 			this.resource_manager = resource_manager;
 		}
 		
 		public Dialog(Support.ResourceManager resource_manager, string name)
 		{
 			this.name             = name;
-			this.dispatcher       = new Support.CommandDispatcher (this.name);
+			this.dispatcher       = new CommandDispatcher (this.name);
 			this.resource_manager = resource_manager;
 		}
 		
@@ -64,7 +66,7 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
-		public Support.CommandDispatcher		CommandDispatcher
+		public CommandDispatcher				CommandDispatcher
 		{
 			get
 			{
@@ -97,7 +99,7 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		#region ICommandDispatcherHost Members
-		Support.CommandDispatcher				Support.ICommandDispatcherHost.CommandDispatcher
+		CommandDispatcher ICommandDispatcherHost.CommandDispatcher
 		{
 			get
 			{
@@ -168,9 +170,9 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		public void AddRule(Support.IValidator validator, string command_states)
+		public void AddRule(IValidator validator, string command_states)
 		{
-			this.CommandDispatcher.AddValidator (new Support.ValidationRule (validator, command_states));
+			this.CommandDispatcher.AddValidator (new ValidationRule (validator, command_states));
 		}
 		
 		public void AddController(object controller)
@@ -412,7 +414,7 @@ namespace Epsitec.Common.Dialogs
 		protected InternalMode					mode;
 		protected Types.IDataGraph				data;
 		protected Types.IDataFolder				initial_data_folder;
-		protected Support.CommandDispatcher		dispatcher;
+		protected CommandDispatcher				dispatcher;
 		protected Script.ScriptWrapper			script;
 		protected IDialogDesigner				designer;
 		protected string						name;

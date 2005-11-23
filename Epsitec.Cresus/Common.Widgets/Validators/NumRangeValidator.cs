@@ -36,11 +36,11 @@ namespace Epsitec.Common.Widgets.Validators
 			
 			if (range.CheckInRange (num.Value))
 			{
-				this.state = Support.ValidationState.Ok;
+				this.state = ValidationState.Ok;
 			}
 			else
 			{
-				this.state = Support.ValidationState.Error;
+				this.state = ValidationState.Error;
 			}
 		}
 		

@@ -1,6 +1,8 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+
 namespace Epsitec.Common.UI.Widgets
 {
 	using SuppressBundleSupportAttribute = Support.SuppressBundleSupportAttribute;
@@ -25,7 +27,7 @@ namespace Epsitec.Common.UI.Widgets
 			if ((data_widget == null) ||
 				(data_widget.DataSource == null))
 			{
-				this.state = Support.ValidationState.Error;
+				this.state = ValidationState.Error;
 				return;
 			}
 			
@@ -40,7 +42,7 @@ namespace Epsitec.Common.UI.Widgets
 				ok = constraint.CheckConstraint (data_source.ReadValue ());
 			}
 			
-			this.state = ok ? Support.ValidationState.Ok : Support.ValidationState.Error;
+			this.state = ok ? ValidationState.Ok : ValidationState.Error;
 		}
 		
 		

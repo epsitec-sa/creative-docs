@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets.Validators
 	
 	[SuppressBundleSupport]
 	
-	public abstract class AbstractValidator : Support.IValidator, System.IDisposable, Support.IBundleSupport
+	public abstract class AbstractValidator : IValidator, System.IDisposable, Support.IBundleSupport
 	{
 		public AbstractValidator(Widget widget)
 		{
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		
 		#region IValidator Members
-		public Support.ValidationState			State
+		public ValidationState					State
 		{
 			get
 			{
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		public void MakeDirty(bool deep)
 		{
-			this.state = Support.ValidationState.Dirty;
+			this.state = ValidationState.Dirty;
 			this.OnBecameDirty ();
 		}
 		
@@ -78,12 +78,12 @@ namespace Epsitec.Common.Widgets.Validators
 		{
 			get
 			{
-				if (this.state == Support.ValidationState.Dirty)
+				if (this.state == ValidationState.Dirty)
 				{
 					this.Validate ();
 				}
 				
-				return (this.state == Support.ValidationState.Ok);
+				return (this.state == ValidationState.Ok);
 			}
 		}
 
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Widgets.Validators
 		}
 		
 		
-		protected Support.ValidationState		state;
+		protected ValidationState				state;
 		protected Widget						widget;
 	}
 }

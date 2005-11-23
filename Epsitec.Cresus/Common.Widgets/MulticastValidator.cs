@@ -1,7 +1,7 @@
 //	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Support
+namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe MulticastValidator représente le "et" logique d'un ensemble de
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public event EventHandler					BecameDirty;
+		public event Support.EventHandler			BecameDirty;
 		
 		public void Validate()
 		{
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Support
 			IValidator[] validators = new IValidator[list.Count];
 			list.CopyTo (validators);
 			
-			validator.BecameDirty += new EventHandler (this.HandleBecameDirty);
+			validator.BecameDirty += new Support.EventHandler (this.HandleBecameDirty);
 			this.validators = validators;
 			
 			this.OnValidatorsChanged ();
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Support
 			IValidator[] validators = new IValidator[list.Count];
 			list.CopyTo (validators);
 			
-			validator.BecameDirty -= new EventHandler (this.HandleBecameDirty);
+			validator.BecameDirty -= new Support.EventHandler (this.HandleBecameDirty);
 			this.validators = validators;
 			
 			this.OnValidatorsChanged ();

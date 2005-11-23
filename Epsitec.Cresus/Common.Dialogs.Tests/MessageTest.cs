@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -15,7 +16,7 @@ namespace Epsitec.Common.Dialogs
 		
 		public MessageTest()
 		{
-			this.dispatcher = new Support.CommandDispatcher ("MessageTestDispatcher", true);
+			this.dispatcher = new CommandDispatcher ("MessageTestDispatcher", true);
 			this.dispatcher.RegisterController (this);
 		}
 		
@@ -59,6 +60,6 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
-		private Support.CommandDispatcher		dispatcher;
+		private CommandDispatcher				dispatcher;
 	}
 }

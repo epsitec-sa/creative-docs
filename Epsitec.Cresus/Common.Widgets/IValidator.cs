@@ -1,7 +1,7 @@
 //	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Support
+namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// L'interface IValidator permet de déterminer si un objet est dans un état
@@ -16,7 +16,7 @@ namespace Epsitec.Common.Support
 		void Validate();
 		void MakeDirty(bool deep);
 		
-		event EventHandler	BecameDirty;
+		event Support.EventHandler	BecameDirty;
 	}
 	
 	/// <summary>

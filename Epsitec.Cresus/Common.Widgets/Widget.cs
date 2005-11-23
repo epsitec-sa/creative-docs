@@ -107,7 +107,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : Visual, System.IDisposable, Support.IBundleSupport, Support.ICommandDispatcherHost, Support.Data.IPropertyProvider
+	public class Widget : Visual, System.IDisposable, Support.IBundleSupport, ICommandDispatcherHost, Support.Data.IPropertyProvider
 	{
 		public Widget()
 		{
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Widgets
 			if (this.validator != null)
 			{
 				System.Collections.ArrayList list       = new System.Collections.ArrayList ();
-				Support.IValidator[]         validators = Support.MulticastValidator.ToArray (this.validator);
+				IValidator[]                 validators = MulticastValidator.ToArray (this.validator);
 				
 				for (int i = 0; i < validators.Length; i++)
 				{
@@ -970,7 +970,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region ICommandDispatcherHost Members
-		public virtual Support.CommandDispatcher	CommandDispatcher
+		public virtual CommandDispatcher			CommandDispatcher
 		{
 			get
 			{
@@ -1000,7 +1000,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				Support.CommandDispatcher dispatcher = this.CommandDispatcher;
+				CommandDispatcher dispatcher = this.CommandDispatcher;
 				
 				return dispatcher == null ? null : dispatcher.OpletQueue;
 			}
@@ -1162,7 +1162,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.command = value;
 					
-					Support.CommandDispatcher dispatcher = this.CommandDispatcher;
+					CommandDispatcher dispatcher = this.CommandDispatcher;
 					
 					if (dispatcher != null)
 					{
@@ -1181,7 +1181,7 @@ namespace Epsitec.Common.Widgets
 					return "";
 				}
 
-				return Support.CommandDispatcher.ExtractCommandName (this.command);
+				return CommandDispatcher.ExtractCommandName (this.command);
 			}
 		}
 		
@@ -1361,7 +1361,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Shortcut								Shortcut
+		public Shortcut								Shortcut		//#fix
 		{
 			get
 			{
@@ -1405,7 +1405,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Support.IValidator					Validator
+		public IValidator							Validator
 		{
 			get
 			{
@@ -1542,7 +1542,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.Validator != null)
 			{
-				if (this.Validator.State == Support.ValidationState.Dirty)
+				if (this.Validator.State == ValidationState.Dirty)
 				{
 					this.Validator.Validate ();
 				}
@@ -1550,22 +1550,22 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal void AddValidator(Support.IValidator value)
+		internal void AddValidator(IValidator value)
 		{
-			this.validator = Support.MulticastValidator.Combine (this.validator, value);
+			this.validator = MulticastValidator.Combine (this.validator, value);
 			this.OnValidatorChanged ();
 		}
 		
-		internal void RemoveValidator(Support.IValidator value)
+		internal void RemoveValidator(IValidator value)
 		{
 			if (this.validator != null)
 			{
-				Support.MulticastValidator mv = this.validator as Support.MulticastValidator;
+				MulticastValidator mv = this.validator as MulticastValidator;
 				
 				if (mv != null)
 				{
 					mv.Remove (value);
-					this.validator = Support.MulticastValidator.Simplify (mv);
+					this.validator = MulticastValidator.Simplify (mv);
 				}
 				else if (this.validator == value)
 				{
@@ -1576,7 +1576,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual bool ShouldSerializeValidator(Support.IValidator validator)
+		protected virtual bool ShouldSerializeValidator(IValidator validator)
 		{
 			return true;
 		}
@@ -1813,7 +1813,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void SetCommandDispatcher(Support.CommandDispatcher dispatcher)
+		public void SetCommandDispatcher(CommandDispatcher dispatcher)
 		{
 			this.dispatcher = dispatcher;
 		}
@@ -2688,7 +2688,7 @@ namespace Epsitec.Common.Widgets
 			return Widget.FindAllCommandWidgets (regex, null);
 		}
 		
-		public static Widget[]	FindAllCommandWidgets(string command, Support.CommandDispatcher dispatcher)
+		public static Widget[]	FindAllCommandWidgets(string command, CommandDispatcher dispatcher)
 		{
 			//	Passe en revue absolument tous les widgets qui existent et cherche ceux qui ont
 			//	une commande qui correspond au critère spécifié.
@@ -2743,7 +2743,7 @@ namespace Epsitec.Common.Widgets
 			return widgets;
 		}
 		
-		public static Widget[]	FindAllCommandWidgets(System.Text.RegularExpressions.Regex regex, Support.CommandDispatcher dispatcher)
+		public static Widget[]	FindAllCommandWidgets(System.Text.RegularExpressions.Regex regex, CommandDispatcher dispatcher)
 		{
 			//	Passe en revue absolument tous les widgets qui existent et cherche ceux qui ont
 			//	une commande qui correspond au critère spécifié.
@@ -4458,12 +4458,13 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.AutoMnemonic)
 			{
-				//#fix
-//				if (this.Shortcut.Mnemonic != this.Mnemonic)
-//				{
-//					this.Shortcut.Mnemonic = this.Mnemonic;
-//					this.OnShortcutChanged ();
-//				}
+#if false //#fix
+				if (this.Shortcut.Mnemonic != this.Mnemonic)
+				{
+					this.Shortcut.Mnemonic = this.Mnemonic;
+					this.OnShortcutChanged ();
+				}
+#endif
 			}
 		}
 		
@@ -5333,8 +5334,8 @@ namespace Epsitec.Common.Widgets
 		private MouseCursor						mouse_cursor;
 		private System.Collections.Hashtable	property_hash;
 		private Support.ResourceManager			resource_manager;
-		private Support.CommandDispatcher		dispatcher;
-		private Support.IValidator				validator;
+		private CommandDispatcher				dispatcher;
+		private IValidator						validator;
 		private int								widget_id;
 		
 		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();

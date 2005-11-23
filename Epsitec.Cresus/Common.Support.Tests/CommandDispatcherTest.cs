@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Support
 {

@@ -30,11 +30,11 @@ namespace Epsitec.Common.Widgets.Validators
 			if ((sel.SelectedIndex >= 0) &&
 				(this.IsSelectionValid (sel)))
 			{
-				this.state = Support.ValidationState.Ok;
+				this.state = ValidationState.Ok;
 			}
 			else
 			{
-				this.state = Support.ValidationState.Error;
+				this.state = ValidationState.Error;
 			}
 		}
 		

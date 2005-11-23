@@ -1,10 +1,8 @@
 //	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Support
+namespace Epsitec.Common.Widgets
 {
-	using CommandState = CommandDispatcher.CommandState;
-	
 	/// <summary>
 	/// La classe ValidationRule représente des règles de validation
 	/// pour des commandes.
@@ -121,7 +119,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public event EventHandler					BecameDirty;
+		public event Support.EventHandler			BecameDirty;
 		
 		public void Validate()
 		{
@@ -365,7 +363,7 @@ namespace Epsitec.Common.Support
 					throw new System.ArgumentNullException ("value", "Expected an IValidator.");
 				}
 				
-				value.BecameDirty += new EventHandler (this.HandleBecameDirty);
+				value.BecameDirty += new Support.EventHandler (this.HandleBecameDirty);
 				
 				if (this.host.CommandDispatcher != null)
 				{
@@ -396,7 +394,7 @@ namespace Epsitec.Common.Support
 					throw new System.ArgumentNullException ("value", "Expected an IValidator.");
 				}
 				
-				value.BecameDirty -= new EventHandler (this.HandleBecameDirty);
+				value.BecameDirty -= new Support.EventHandler (this.HandleBecameDirty);
 			}
 			
 			protected virtual void OnListChanged()
@@ -442,7 +440,7 @@ namespace Epsitec.Common.Support
 			}
 			
 			
-			public int Add(CommandState value)
+			public int Add(CommandDispatcher.CommandState value)
 			{
 				int index = this.list.Add (value);
 				this.OnListChanged ();

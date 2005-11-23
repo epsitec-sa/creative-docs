@@ -1,12 +1,10 @@
 //	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Support
+using System.Text.RegularExpressions;
+
+namespace Epsitec.Common.Widgets
 {
-	using Match        = System.Text.RegularExpressions.Match;
-	using Regex        = System.Text.RegularExpressions.Regex;
-	using RegexOptions = System.Text.RegularExpressions.RegexOptions;
-	
 	/// <summary>
 	/// La classe CommandDispatcher permet de gérer la distribution des
 	/// commandes de l'interface graphique vers les routines de traitement.
@@ -53,6 +51,7 @@ namespace Epsitec.Common.Support
 			CommandDispatcher.command_arg_regex  = new Regex (regex_1, options);
 			CommandDispatcher.default_dispatcher = new CommandDispatcher ("default");
 		}
+		
 		
 		public CommandDispatcher() : this ("anonymous", true)
 		{
@@ -132,7 +131,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public OpletQueue						OpletQueue
+		public Support.OpletQueue				OpletQueue
 		{
 			get
 			{
@@ -446,7 +445,7 @@ namespace Epsitec.Common.Support
 			for (int i = 0; i < args.Length; i++)
 			{
 				string arg   = args[i];
-				Match  match = RegexFactory.InvariantDecimalNum.Match (arg);
+				Match  match = Support.RegexFactory.InvariantDecimalNum.Match (arg);
 				
 				if (match.Success)
 				{
@@ -646,7 +645,7 @@ namespace Epsitec.Common.Support
 				get { return this.name; }
 			}
 			
-			public Support.CommandDispatcher	CommandDispatcher
+			public CommandDispatcher			CommandDispatcher
 			{
 				get { return this.dispatcher; }
 			}
@@ -687,7 +686,7 @@ namespace Epsitec.Common.Support
 
 			
 			private string						name;
-			private Support.CommandDispatcher	dispatcher;
+			private CommandDispatcher			dispatcher;
 			private Regex						regex;
 		}
 		#endregion
@@ -709,13 +708,13 @@ namespace Epsitec.Common.Support
 			
 			object[] attributes = info.GetCustomAttributes (CommandDispatcher.command_attr_type, false);
 			
-			foreach (CommandAttribute attribute in attributes)
+			foreach (Support.CommandAttribute attribute in attributes)
 			{
 				this.RegisterMethod (controller, info, attribute);
 			}
 		}
 		
-		protected void RegisterMethod(object controller, System.Reflection.MethodInfo method_info, CommandAttribute attribute)
+		protected void RegisterMethod(object controller, System.Reflection.MethodInfo method_info, Support.CommandAttribute attribute)
 		{
 			System.Diagnostics.Debug.WriteLine ("Command '" + attribute.CommandName + "' implemented by method " + method_info.Name + " in class " + method_info.DeclaringType.Name + ", prototype: " + method_info.ToString ());
 			
@@ -845,9 +844,9 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public event EventHandler				ValidationRuleBecameDirty;
-		public event EventHandler				OpletQueueBindingChanged;
-		public event EventHandler				CommandDispatched;
+		public event Support.EventHandler		ValidationRuleBecameDirty;
+		public event Support.EventHandler		OpletQueueBindingChanged;
+		public event Support.EventHandler		CommandDispatched;
 		
 		public static CommandDispatcher			Default
 		{
@@ -863,11 +862,11 @@ namespace Epsitec.Common.Support
 		protected string						dispatcher_name;
 		protected ValidationRule				validation_rule;
 		protected bool							aborted;
-		protected OpletQueue					oplet_queue;
+		protected Support.OpletQueue			oplet_queue;
 		
 		static CreateCommandStateCallback		create_command_state_callback;
 		static Regex							command_arg_regex;
-		static System.Type						command_attr_type  = typeof (CommandAttribute);
+		static System.Type						command_attr_type  = typeof (Support.CommandAttribute);
 		static CommandDispatcher				default_dispatcher;
 		static int								generation = 1;
 		static System.Collections.ArrayList		global_list;

@@ -9,14 +9,14 @@ namespace Epsitec.Common.UI
 	/// <summary>
 	/// La classe AbstractPanel est la base de toutes les classes XyzPanel.
 	/// </summary>
-	public abstract class AbstractPanel : Support.ICommandDispatcherHost, System.IDisposable
+	public abstract class AbstractPanel : ICommandDispatcherHost, System.IDisposable
 	{
 		public AbstractPanel()
 		{
 		}
 		
 		
-		public void SetCommandDispatcher(Support.CommandDispatcher dispatcher)
+		public void SetCommandDispatcher(CommandDispatcher dispatcher)
 		{
 			if (this.dispatcher != dispatcher)
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 		
-		public Support.CommandDispatcher		CommandDispatcher
+		public CommandDispatcher				CommandDispatcher
 		{
 			get
 			{
@@ -107,6 +107,6 @@ namespace Epsitec.Common.UI
 		
 		protected Drawing.Size					size;
 		protected Widget						widget;
-		protected Support.CommandDispatcher		dispatcher;
+		protected CommandDispatcher				dispatcher;
 	}
 }

@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
@@ -519,7 +519,7 @@ namespace Epsitec.Common.Script.Developer
 			
 			protected override void ValidateText(string text)
 			{
-				this.state = Support.ValidationState.Ok;
+				this.state = ValidationState.Ok;
 				
 				int max = this.controller.Source.Methods.Length;
 				
@@ -529,7 +529,7 @@ namespace Epsitec.Common.Script.Developer
 					{
 						if (this.controller.Source.Methods[i].Name == text)
 						{
-							this.state = Support.ValidationState.Error;
+							this.state = ValidationState.Error;
 							return;
 						}
 					}

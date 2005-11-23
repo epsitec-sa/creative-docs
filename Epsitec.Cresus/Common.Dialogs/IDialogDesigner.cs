@@ -1,6 +1,8 @@
 //	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
@@ -12,7 +14,7 @@ namespace Epsitec.Common.Dialogs
 	{
 		Widgets.Window				DialogWindow		{ get; set; }
 		Types.IDataGraph			DialogData			{ get; set; }
-		Support.CommandDispatcher	DialogCommands		{ get; set; }
+		CommandDispatcher			DialogCommands		{ get; set; }
 		string						ResourceName		{ get; set; }
 		Support.ResourceManager		ResourceManager		{ get; set; }
 		Script.ScriptWrapper		DialogScript		{ get; set; }

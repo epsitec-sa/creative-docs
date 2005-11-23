@@ -3,10 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using CommandDispatcher			= Support.CommandDispatcher;
-	using ICommandDispatcherHost	= Support.ICommandDispatcherHost;
-	
-	
 	/// <summary>
 	/// La classe Menu représente un menu (horizontal ou vertical).
 	/// </summary>

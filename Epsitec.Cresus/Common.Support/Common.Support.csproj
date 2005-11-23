@@ -139,16 +139,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "CommandDispatcher.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "CommandEvent.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "EmptyEnumerator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -169,16 +159,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ICommandDispatcher.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ICommandDispatcherHost.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "IImageProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -195,16 +175,6 @@
                 />
                 <File
                     RelPath = "IResourceProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "IValidator.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MulticastValidator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -296,11 +266,6 @@
                 <File
                     RelPath = "TODO.txt"
                     BuildAction = "Content"
-                />
-                <File
-                    RelPath = "ValidationRule.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "VersionChecker.cs"

@@ -1,12 +1,14 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Script
 {
 	/// <summary>
 	/// Summary description for Script.
 	/// </summary>
-	public class Script : System.MarshalByRefObject, System.IDisposable, Glue.IScriptHost, Support.ICommandDispatcher
+	public class Script : System.MarshalByRefObject, System.IDisposable, Glue.IScriptHost, ICommandDispatcher
 	{
 		internal Script()
 		{
@@ -137,7 +139,7 @@ namespace Epsitec.Common.Script
 		#endregion
 		
 		#region ICommandDispatcher Members
-		bool Support.ICommandDispatcher.DispatchCommand(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+		bool ICommandDispatcher.DispatchCommand(CommandDispatcher sender, CommandEventArgs e)
 		{
 			return this.Execute (e.CommandName, e.CommandArgs);
 		}

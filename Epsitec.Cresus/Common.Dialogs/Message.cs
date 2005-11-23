@@ -1,6 +1,8 @@
 //	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
@@ -8,52 +10,52 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public class Message
 	{
-		public static IDialog CreateYesNoCancel(string dialog_title, string message_icon, string message_text, string command_yes_template, string command_no_template, Support.CommandDispatcher command_dispatcher)
+		public static IDialog CreateYesNoCancel(string dialog_title, string message_icon, string message_text, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
 		{
 			return new Message.YesNoCancel (dialog_title, message_icon, message_text, command_yes_template, command_no_template, command_dispatcher);
 		}
 		
-		public static IDialog CreateYesNoCancel(string dialog_title, Icon icon, string message_text, string command_yes_template, string command_no_template, Support.CommandDispatcher command_dispatcher)
+		public static IDialog CreateYesNoCancel(string dialog_title, Icon icon, string message_text, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
 		{
 			string message_icon = Message.GetIconName (icon);
 			
 			return Message.CreateYesNoCancel (dialog_title, message_icon, message_text, command_yes_template, command_no_template, command_dispatcher);
 		}
 		
-		public static IDialog CreateYesNo(string dialog_title, string message_icon, string message_text, string command_yes_template, string command_no_template, Support.CommandDispatcher command_dispatcher)
+		public static IDialog CreateYesNo(string dialog_title, string message_icon, string message_text, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
 		{
 			AbstractMessageDialog dialog = new Message.YesNoCancel (dialog_title, message_icon, message_text, command_yes_template, command_no_template, command_dispatcher);
 			dialog.HideCancelButton ();
 			return dialog;
 		}
 		
-		public static IDialog CreateYesNo(string dialog_title, Icon icon, string message_text, string command_yes_template, string command_no_template, Support.CommandDispatcher command_dispatcher)
+		public static IDialog CreateYesNo(string dialog_title, Icon icon, string message_text, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
 		{
 			string message_icon = Message.GetIconName (icon);
 			
 			return Message.CreateYesNo (dialog_title, message_icon, message_text, command_yes_template, command_no_template, command_dispatcher);
 		}
 		
-		public static IDialog CreateOkCancel(string dialog_title, string message_icon, string message_text, string command_ok_template, Support.CommandDispatcher command_dispatcher)
+		public static IDialog CreateOkCancel(string dialog_title, string message_icon, string message_text, string command_ok_template, CommandDispatcher command_dispatcher)
 		{
 			return new Message.OkCancel (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
 		}
 		
-		public static IDialog CreateOkCancel(string dialog_title, Icon icon, string message_text, string command_ok_template, Support.CommandDispatcher command_dispatcher)
+		public static IDialog CreateOkCancel(string dialog_title, Icon icon, string message_text, string command_ok_template, CommandDispatcher command_dispatcher)
 		{
 			string message_icon = Message.GetIconName (icon);
 			
 			return Message.CreateOkCancel (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
 		}
 		
-		public static IDialog CreateOk(string dialog_title, string message_icon, string message_text, string command_ok_template, Support.CommandDispatcher command_dispatcher)
+		public static IDialog CreateOk(string dialog_title, string message_icon, string message_text, string command_ok_template, CommandDispatcher command_dispatcher)
 		{
 			AbstractMessageDialog dialog = new Message.OkCancel (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
 			dialog.HideCancelButton ();
 			return dialog;
 		}
 		
-		public static IDialog CreateOk(string dialog_title, Icon icon, string message_text, string command_ok_template, Support.CommandDispatcher command_dispatcher)
+		public static IDialog CreateOk(string dialog_title, Icon icon, string message_text, string command_ok_template, CommandDispatcher command_dispatcher)
 		{
 			string message_icon = Message.GetIconName (icon);
 			
@@ -75,7 +77,7 @@ namespace Epsitec.Common.Dialogs
 		
 		public class YesNoCancel : AbstractYesNoCancel
 		{
-			public YesNoCancel(string dialog_title, string message_icon, string message_text, string command_yes_template, string command_no_template, Support.CommandDispatcher command_dispatcher) : base (dialog_title, command_yes_template, command_no_template, command_dispatcher)
+			public YesNoCancel(string dialog_title, string message_icon, string message_text, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher) : base (dialog_title, command_yes_template, command_no_template, command_dispatcher)
 			{
 				this.message_icon = message_icon;
 				this.message_text = message_text;
@@ -108,7 +110,7 @@ namespace Epsitec.Common.Dialogs
 		
 		public class OkCancel : AbstractOkCancel
 		{
-			public OkCancel(string dialog_title, string message_icon, string message_text, string command_template, Support.CommandDispatcher command_dispatcher) : base (dialog_title, command_template, command_dispatcher)
+			public OkCancel(string dialog_title, string message_icon, string message_text, string command_template, CommandDispatcher command_dispatcher) : base (dialog_title, command_template, command_dispatcher)
 			{
 				this.message_icon = message_icon;
 				this.message_text = message_text;

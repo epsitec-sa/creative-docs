@@ -3,8 +3,7 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute   = Support.BundleAttribute;
-	using CommandDispatcher = Support.CommandDispatcher;
+	using BundleAttribute = Support.BundleAttribute;
 	
 	/// <summary>
 	/// La classe WindowRoot implémente le fond de chaque fenêtre. L'utilisateur obtient

@@ -694,7 +694,7 @@ namespace Epsitec.Common.UI.Widgets
 		}
 		
 		
-		protected override bool ShouldSerializeValidator(Support.IValidator validator)
+		protected override bool ShouldSerializeValidator(IValidator validator)
 		{
 			if (this.validator == validator)
 			{

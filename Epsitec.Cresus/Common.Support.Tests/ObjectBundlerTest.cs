@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Support
 {
@@ -304,10 +305,10 @@ namespace Epsitec.Common.Support
 			
 			Widgets.Widget w2 = bundler.CopyObject (w1) as Widgets.Widget;
 			
-			Assert.AreEqual (2, Support.MulticastValidator.ToArray (w1.Validator).Length);
+			Assert.AreEqual (2, MulticastValidator.ToArray (w1.Validator).Length);
 			
-			Widgets.Validators.RegexValidator v3 = Support.MulticastValidator.ToArray (w1.Validator)[0] as Widgets.Validators.RegexValidator;
-			Widgets.Validators.RegexValidator v4 = Support.MulticastValidator.ToArray (w1.Validator)[1] as Widgets.Validators.RegexValidator;
+			Widgets.Validators.RegexValidator v3 = MulticastValidator.ToArray (w1.Validator)[0] as Widgets.Validators.RegexValidator;
+			Widgets.Validators.RegexValidator v4 = MulticastValidator.ToArray (w1.Validator)[1] as Widgets.Validators.RegexValidator;
 			
 			Assert.AreEqual (v1.Regex, v3.Regex);
 			Assert.AreEqual (v2.Regex, v4.Regex);

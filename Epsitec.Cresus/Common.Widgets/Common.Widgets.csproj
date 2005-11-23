@@ -119,6 +119,11 @@
                     Project = "{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Extension"
+                    Project = "{10453A3B-CA2A-4D36-B634-78BA87AAAB26}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -239,6 +244,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "CommandDispatcher.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "CommandEvent.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "CommandState.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -314,6 +329,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ICommandDispatcher.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ICommandDispatcherHost.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IconButton.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -344,6 +369,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IValidator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MenuItem.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -370,6 +400,11 @@
                 />
                 <File
                     RelPath = "MouseCursor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MulticastValidator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -580,6 +615,11 @@
                 />
                 <File
                     RelPath = "ToolTip.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ValidationRule.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
