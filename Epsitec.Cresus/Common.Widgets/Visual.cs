@@ -658,6 +658,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		internal int GetCommandCacheId()
+		{
+			return this.command_cache_id;
+		}
+		
+		internal void SetCommandCacheId(int value)
+		{
+			this.command_cache_id = value;
+		}
+		
+		
 		internal void SetParentLayer(Layouts.Layer parent_layer)
 		{
 			Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this, Visual.IsVisibleProperty);
@@ -1095,6 +1106,7 @@ namespace Epsitec.Common.Widgets
 //-		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
 		
 		
+		private int								command_cache_id = -1;
 		private short							suspend_layout_counter;
 		
 		protected bool							has_layout_changed;
