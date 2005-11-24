@@ -843,12 +843,15 @@
 	<data name="Action.GuideCreateAndMove">Create and move a guide</data>
 	<data name="Action.SelectGlobal">Rectangular selection</data>
 	<data name="Action.SelectObject">Select object</data>
+	<data name="Action.SelectHandle">Select handle</data>
 	<data name="Action.MoveObject">Move object</data>
 	<data name="Action.DuplicateAndMove">Duplicate and move</data>
 	<data name="Action.SelectAndMove">Select and move</data>
 	<data name="Action.SelectGlobalAdd">Add rectangular selection</data>
 	<data name="Action.SelectObjectAdd">Object added to selection</data>
 	<data name="Action.SelectObjectSub">Object removed from selection</data>
+	<data name="Action.SelectHandleAdd">Handle added to selection</data>
+	<data name="Action.SelectHandleSub">Handle removed from selection</data>
 	<data name="Action.Edit">Edition</data>
 	<data name="Action.Picker">Pipette</data>
 	<data name="Action.SelectMode">Selection mode</data>

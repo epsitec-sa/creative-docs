@@ -230,8 +230,8 @@ namespace Epsitec.Common.Document.Objects
 
 				Handle handle = this.handles[this.hotSpotRank] as Handle;
 				if ( handle.Type != HandleType.Bezier    &&
-					handle.Type != HandleType.Secondary &&
-					handle.Type != HandleType.Hide      )  break;
+					 handle.Type != HandleType.Secondary &&
+					 handle.Type != HandleType.Hide      )  break;
 			}
 		}
 		#endregion
@@ -285,8 +285,12 @@ namespace Epsitec.Common.Document.Objects
 				if ( handle.PropertyType != Properties.Type.None )
 				{
 					Properties.Abstract property = this.Property(handle.PropertyType);
-					handle.IsVisible = property.IsHandleVisible(this, handle.PropertyRank) && sel;
-					handle.IsGlobalSelected = this.globalSelected && handle.IsVisible;
+
+					bool isVisible = property.IsHandleVisible(this, handle.PropertyRank) && sel;
+					bool isGlobalSelected = this.globalSelected && handle.IsVisible;
+					bool isShaperDeselected = false;
+					handle.Modify(isVisible, isGlobalSelected, isShaperDeselected);
+
 					handle.Position = property.GetHandlePosition(this, handle.PropertyRank);
 					this.SetDirtyBbox();
 				}
@@ -348,7 +352,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Détecte la poignée pointée par la souris.
-		public virtual int DetectHandle(Point pos)
+		public int DetectHandle(Point pos)
 		{
 			int total = this.TotalHandle;
 			double min = 1000000.0;
@@ -366,6 +370,123 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 			return rank;
+		}
+
+		// Indique si une poignée est sélectionnée par le modeleur.
+		public bool IsShaperHandleSelected(int rank)
+		{
+			Handle handle = this.Handle(rank);
+			return handle.IsVisible && !handle.IsShaperDeselected;
+		}
+
+		// Indique si au moins une poignée est sélectionnée par le modeleur.
+		public virtual bool IsShaperHandleSelected()
+		{
+			int total = this.TotalHandle;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Handle handle = this.Handle(i);
+				if ( !handle.IsVisible )  continue;
+
+				if ( !handle.IsShaperDeselected )  return true;
+			}
+			return false;
+		}
+
+		// Sélectionne une poignée avec le modeleur.
+		public void SelectHandle(int rank, bool add)
+		{
+			if ( !add && rank != -1 )
+			{
+				Handle handle = this.Handle(rank);
+				if ( !handle.IsShaperDeselected )  return;  // poignée déjà sélectionnée ?
+			}
+
+			this.InsertOpletSelection();
+
+			int total = this.TotalHandle;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Handle handle = this.Handle(i);
+				if ( !handle.IsVisible )  continue;
+
+				if ( i == rank )
+				{
+					if ( add )
+					{
+						handle.IsShaperDeselected = !handle.IsShaperDeselected;
+					}
+					else
+					{
+						handle.IsShaperDeselected = false;
+					}
+				}
+				else
+				{
+					if ( !add )
+					{
+						handle.IsShaperDeselected = true;
+					}
+				}
+			}
+		}
+
+		// Retourne la liste des positions des poignées sélectionnées par le modeleur.
+		public virtual System.Collections.ArrayList MoveSelectedHandles()
+		{
+			this.InsertOpletGeometry();
+
+			System.Collections.ArrayList startingPos = new System.Collections.ArrayList();
+			int total = this.TotalHandle;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Handle handle = this.Handle(i);
+				if ( !handle.IsVisible )  continue;
+
+				if ( !handle.IsShaperDeselected )
+				{
+					startingPos.Add(handle.Position);
+				}
+			}
+			return startingPos;
+		}
+
+		// Déplace toutes les poignées sélectionnées par le modeleur.
+		public virtual void MoveSelectedHandles(System.Collections.ArrayList startingPos, Point move)
+		{
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+
+			int s = 0;
+			int total = this.TotalHandle;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Handle handle = this.Handle(i);
+				if ( !handle.IsVisible )  continue;
+
+				if ( !handle.IsShaperDeselected )
+				{
+					Point sPos = (Point) startingPos[s++];
+					handle.Position = sPos+move;
+				}
+			}
+
+			this.SetDirtyBbox();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Mise en évidence de toutes les poignées pour le modeleur.
+		public void ShaperHiliteHandles(bool hilite)
+		{
+			int total = this.TotalHandle;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Handle handle = this.Handle(i);
+				if ( handle.PropertyType != Properties.Type.None )  continue;
+				if ( handle.Type == HandleType.Secondary )  continue;
+				if ( handle.Type == HandleType.Bezier )  continue;
+
+				handle.Modify(hilite, false, hilite);
+			}
 		}
 
 		// Début du déplacement d'une poignée.
@@ -1104,15 +1225,13 @@ namespace Epsitec.Common.Document.Objects
 				Handle handle = this.Handle(i);
 				if ( handle.PropertyType != Properties.Type.None )  break;
 
-				if ( shaper && select )
+				if ( shaper )
 				{
-					handle.IsVisible = true;
-					handle.IsGlobalSelected = true;
+					handle.Modify(select, false, select);
 				}
 				else
 				{
-					handle.IsVisible = select && !edit;
-					handle.IsGlobalSelected = false;
+					handle.Modify(select && !edit, false, false);
 				}
 			}
 			this.HandlePropertiesUpdate();
@@ -1139,21 +1258,18 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( rect.Contains(handle.Position) )
 				{
-					handle.IsVisible = true;
-					handle.IsGlobalSelected = false;
+					handle.Modify(true, false, false);
 					sel ++;
 				}
 				else
 				{
 					if ( shaper )
 					{
-						handle.IsVisible = true;
-						handle.IsGlobalSelected = true;
+						handle.Modify(true, false, true);
 					}
 					else
 					{
-						handle.IsVisible = false;
-						handle.IsGlobalSelected = false;
+						handle.Modify(false, false, false);
 					}
 				}
 			}
@@ -1236,6 +1352,7 @@ namespace Epsitec.Common.Document.Objects
 				if ( handle.PropertyType != Properties.Type.None )  break;
 
 				handle.IsGlobalSelected = handle.IsVisible && global;
+				handle.IsShaperDeselected = false;
 			}
 			this.globalSelected = global;
 			this.HandlePropertiesUpdate();
@@ -2028,7 +2145,7 @@ namespace Epsitec.Common.Document.Objects
 				foreach ( Handle handle in this.handles )
 				{
 					if ( handle.Type != HandleType.Primary  &&
-						handle.Type != HandleType.Starting )
+						 handle.Type != HandleType.Starting )
 					{
 						continue;
 					}

@@ -1527,11 +1527,19 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\ShaperEmpty.icon"
+                    RelPath = "Images\ShaperMove.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\ShaperFull.icon"
+                    RelPath = "Images\ShaperMulti.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperNorm.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperPlus.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

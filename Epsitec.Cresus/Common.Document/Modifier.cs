@@ -103,6 +103,8 @@ namespace Epsitec.Common.Document
 						this.ActiveViewer.CreateEnding(false);
 					}
 
+					this.ActiveViewer.ClearHilite();
+
 					bool isCreate = this.opletCreate;
 					string name = string.Format(Res.Strings.Action.ChangeTool, this.ToolName(value));
 					this.OpletQueueBeginAction(name);
@@ -150,9 +152,9 @@ namespace Epsitec.Common.Document
 						{
 							editObject.Select(true);
 						}
-						else if ( this.TotalSelected > 1 )
+						else
 						{
-							this.DeselectAll();
+							this.ActiveViewer.SelectToShaper();
 						}
 					}
 

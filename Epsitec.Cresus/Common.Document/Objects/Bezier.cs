@@ -84,22 +84,33 @@ namespace Epsitec.Common.Document.Objects
 			this.InsertOpletSelection();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 
+			bool shaper = this.document.Modifier.IsToolShaper;
+
 			int sel = 0;
 			int total = this.TotalMainHandle;
 			for ( int i=0 ; i<total ; i+=3 )
 			{
 				if ( rect.Contains(this.Handle(i+1).Position) )
 				{
-					this.Handle(i+0).IsVisible = true;
-					this.Handle(i+1).IsVisible = true;
-					this.Handle(i+2).IsVisible = true;
+					this.Handle(i+0).Modify(true, false, false);
+					this.Handle(i+1).Modify(true, false, false);
+					this.Handle(i+2).Modify(true, false, false);
 					sel += 3;
 				}
 				else
 				{
-					this.Handle(i+0).IsVisible = false;
-					this.Handle(i+1).IsVisible = false;
-					this.Handle(i+2).IsVisible = false;
+					if ( shaper )
+					{
+						this.Handle(i+0).Modify(true, false, true);
+						this.Handle(i+1).Modify(true, false, true);
+						this.Handle(i+2).Modify(true, false, true);
+					}
+					else
+					{
+						this.Handle(i+0).Modify(false, false, false);
+						this.Handle(i+1).Modify(false, false, false);
+						this.Handle(i+2).Modify(false, false, false);
+					}
 				}
 			}
 			this.selected = ( sel > 0 );
@@ -525,6 +536,65 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(next+1).ConstrainType = HandleConstrainType.Corner;
 			this.SetDirtyBbox();
 			this.HandlePropertiesUpdate();
+		}
+
+
+		// Indique si au moins une poignée est sélectionnée par le modeleur.
+		public override bool IsShaperHandleSelected()
+		{
+			int total = this.TotalMainHandle;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				Handle handle = this.Handle(i+1);
+				if ( !handle.IsVisible )  continue;
+
+				if ( !handle.IsShaperDeselected )  return true;
+			}
+			return false;
+		}
+
+		// Retourne la liste des positions des poignées sélectionnées par le modeleur.
+		public override System.Collections.ArrayList MoveSelectedHandles()
+		{
+			this.InsertOpletGeometry();
+
+			System.Collections.ArrayList startingPos = new System.Collections.ArrayList();
+			int total = this.TotalMainHandle;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				if ( !this.Handle(i+1).IsVisible )  continue;
+
+				if ( !this.Handle(i+1).IsShaperDeselected )
+				{
+					startingPos.Add(this.Handle(i+0).Position);
+					startingPos.Add(this.Handle(i+1).Position);
+					startingPos.Add(this.Handle(i+2).Position);
+				}
+			}
+			return startingPos;
+		}
+
+		// Déplace toutes les poignées sélectionnées par le modeleur.
+		public override void MoveSelectedHandles(System.Collections.ArrayList startingPos, Point move)
+		{
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+
+			int s = 0;
+			int total = this.TotalMainHandle;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				if ( !this.Handle(i+1).IsVisible )  continue;
+
+				if ( !this.Handle(i+1).IsShaperDeselected )
+				{
+					this.Handle(i+0).Position = ((Point)startingPos[s++]) + move;
+					this.Handle(i+1).Position = ((Point)startingPos[s++]) + move;
+					this.Handle(i+2).Position = ((Point)startingPos[s++]) + move;
+				}
+			}
+
+			this.SetDirtyBbox();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
 

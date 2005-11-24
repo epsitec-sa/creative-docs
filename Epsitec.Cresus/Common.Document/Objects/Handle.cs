@@ -113,6 +113,21 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Modifie l'état d'une poignée.
+		public void Modify(bool isVisible, bool isGlobalSelected, bool isShaperDeselected)
+		{
+			if ( this.isVisible          != isVisible          ||
+				 this.isGlobalSelected   != isGlobalSelected   ||
+				 this.isShaperDeselected != isShaperDeselected )
+			{
+				this.NotifyArea();
+				this.isVisible          = isVisible;
+				this.isGlobalSelected   = isGlobalSelected;
+				this.isShaperDeselected = isShaperDeselected;
+				this.NotifyArea();
+			}
+		}
+
 		// Etat "visible" de la poignée.
 		public bool IsVisible
 		{
@@ -168,6 +183,24 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Etat "modeleur désélectionné" de la poignée.
+		public bool IsShaperDeselected
+		{
+			get
+			{
+				return this.isShaperDeselected;
+			}
+
+			set
+			{
+				if ( this.isShaperDeselected != value )
+				{
+					this.isShaperDeselected = value;
+					this.NotifyArea();
+				}
+			}
+		}
+
 		// Type de la propriété liée à la poignée.
 		public Properties.Type PropertyType
 		{
@@ -208,22 +241,24 @@ namespace Epsitec.Common.Document.Objects
 		// Copie la poignée courante dans une poignée destination.
 		public void CopyTo(Handle dst)
 		{
-			dst.position         = this.position;
-			dst.initialPosition  = this.initialPosition;
-			dst.type             = this.type;
-			dst.constrainType    = this.constrainType;
-			dst.isVisible        = this.isVisible;
-			dst.isHilited        = this.isHilited;
-			dst.isGlobalSelected = this.isGlobalSelected;
-			dst.propertyType     = this.propertyType;
-			dst.propertyRank     = this.propertyRank;
+			dst.position           = this.position;
+			dst.initialPosition    = this.initialPosition;
+			dst.type               = this.type;
+			dst.constrainType      = this.constrainType;
+			dst.isVisible          = this.isVisible;
+			dst.isHilited          = this.isHilited;
+			dst.isGlobalSelected   = this.isGlobalSelected;
+			dst.isShaperDeselected = this.isShaperDeselected;
+			dst.propertyType       = this.propertyType;
+			dst.propertyRank       = this.propertyRank;
 		}
 
 		// Permute les informations de sélections entre 2 poignées.
 		public void SwapSelection(Handle h)
 		{
-			Misc.Swap(ref this.isVisible,        ref h.isVisible       );
-			Misc.Swap(ref this.isGlobalSelected, ref h.isGlobalSelected);
+			Misc.Swap(ref this.isVisible,          ref h.isVisible         );
+			Misc.Swap(ref this.isGlobalSelected,   ref h.isGlobalSelected  );
+			Misc.Swap(ref this.isShaperDeselected, ref h.isShaperDeselected);
 		}
 
 
@@ -322,10 +357,11 @@ namespace Epsitec.Common.Document.Objects
 			else
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle();
-				rect.Left   = pos.X-handleSize*0.5;
-				rect.Right  = pos.X+handleSize*0.5;
-				rect.Bottom = pos.Y-handleSize*0.5;
-				rect.Top    = pos.Y+handleSize*0.5;
+				double hs = this.IsShaperDeselected ? handleSize*0.4 : handleSize*0.5;
+				rect.Left   = pos.X-hs;
+				rect.Right  = pos.X+hs;
+				rect.Bottom = pos.Y-hs;
+				rect.Top    = pos.Y+hs;
 				graphics.Align(ref rect);
 
 				Color color;
@@ -336,12 +372,19 @@ namespace Epsitec.Common.Document.Objects
 				}
 				else
 				{
-					switch ( this.type )
+					if ( this.IsShaperDeselected )
 					{
-						case HandleType.Starting:  color = DrawingContext.ColorHandleStart;     break;
-						case HandleType.Ending:    color = DrawingContext.ColorHandleStart;     break;
-						case HandleType.Property:  color = DrawingContext.ColorHandleProperty;  break;
-						default:                   color = DrawingContext.ColorHandleMain;      break;
+						color = DrawingContext.ColorHandleGlobal;
+					}
+					else
+					{
+						switch ( this.type )
+						{
+							case HandleType.Starting:  color = DrawingContext.ColorHandleStart;     break;
+							case HandleType.Ending:    color = DrawingContext.ColorHandleStart;     break;
+							case HandleType.Property:  color = DrawingContext.ColorHandleProperty;  break;
+							default:                   color = DrawingContext.ColorHandleMain;      break;
+						}
 					}
 				}
 
@@ -387,7 +430,8 @@ namespace Epsitec.Common.Document.Objects
 				if ( this.type == HandleType.Secondary ||
 					 this.type == HandleType.Bezier    )
 				{
-					rect.Deflate(2.0/scaleX, 2.0/scaleY);
+					double d = this.IsShaperDeselected ? 1.0 : 2.0;
+					rect.Deflate(d/scaleX, d/scaleY);
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(this.Adapt(color, context));
 
@@ -500,6 +544,7 @@ namespace Epsitec.Common.Document.Objects
 		protected bool						isVisible = false;
 		protected bool						isHilited = false;
 		protected bool						isGlobalSelected = false;
+		protected bool						isShaperDeselected = false;
 		protected Properties.Type			propertyType = Properties.Type.None;
 		protected int						propertyRank;
 	}
