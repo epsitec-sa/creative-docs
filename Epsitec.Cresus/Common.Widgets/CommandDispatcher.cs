@@ -9,15 +9,10 @@ namespace Epsitec.Common.Widgets
 	/// La classe CommandDispatcher permet de gérer la distribution des
 	/// commandes de l'interface graphique vers les routines de traitement.
 	/// </summary>
-	public class CommandDispatcher : System.IDisposable
+	public class CommandDispatcher : System.IDisposable, ICommandDispatcherHost
 	{
 		static CommandDispatcher()
 		{
-			//	Initialise les champs statiques :
-			
-			CommandDispatcher.global_list = new System.Collections.ArrayList ();
-			CommandDispatcher.local_list  = new System.Collections.ArrayList ();
-			
 			//	Capture le nom et les arguments d'une commande complexe, en filtrant les
 			//	caractères et vérifiant ainsi la validité de la syntaxe. Voici l'inter-
 			//	prétation de la regex :
@@ -51,7 +46,8 @@ namespace Epsitec.Common.Widgets
 			CommandDispatcher.command_arg_regex  = new Regex (regex_1, options);
 			CommandDispatcher default_dispatcher = new CommandDispatcher ("default", CommandDispatcherLevel.Root);
 			
-			System.Diagnostics.Debug.Assert (CommandDispatcher.default_dispatcher == default_dispatcher);
+			System.Diagnostics.Debug.Assert (default_dispatcher == CommandDispatcher.default_dispatcher);
+			System.Diagnostics.Debug.Assert (default_dispatcher.id == 0);
 		}
 		
 		
@@ -61,36 +57,42 @@ namespace Epsitec.Common.Widgets
 		
 		public CommandDispatcher(string name, CommandDispatcherLevel level)
 		{
-			switch (level)
+			lock (CommandDispatcher.global_exclusion)
 			{
-				case CommandDispatcherLevel.Root:
-					if (CommandDispatcher.default_dispatcher == null)
-					{
-						CommandDispatcher.default_dispatcher = this;
-					}
-					else
-					{
-						throw new System.InvalidOperationException ("Root command dispatcher already defined");
-					}
+				this.name  = name;
+				this.level = level;
+				this.id    = CommandDispatcher.unique_id++;
+				
+				this.validation_rule = new ValidationRule (this);
+				
+				switch (level)
+				{
+					case CommandDispatcherLevel.Root:
+						if (CommandDispatcher.default_dispatcher == null)
+						{
+							CommandDispatcher.default_dispatcher = this;
+						}
+						else
+						{
+							throw new System.InvalidOperationException ("Root command dispatcher already defined");
+						}
+						break;
 					
-					break;
-				
-				case CommandDispatcherLevel.Secondary:
-					this.dispatcher_name = string.Format ("{0}_{1}", name, CommandDispatcher.generation++);
-					CommandDispatcher.local_list.Add (this);
-					break;
-				
-				case CommandDispatcherLevel.Primary:
-					this.dispatcher_name = name;
-					CommandDispatcher.global_list.Add (this);
-					break;
-				
-				default:
-					throw new System.ArgumentException (string.Format ("CommandDispatcherLevel {0} not valid for dispatcher {1}", level, name), "level");
+					case CommandDispatcherLevel.Secondary:
+						CommandDispatcher.local_list.Add (this);
+						break;
+					
+					case CommandDispatcherLevel.Primary:
+						CommandDispatcher.global_list.Add (this);
+						break;
+					
+					default:
+						throw new System.ArgumentException (string.Format ("CommandDispatcherLevel {0} not valid for dispatcher {1}", level, name), "level");
+				}
 			}
-			
-			this.validation_rule = new ValidationRule (this);
 		}
+		
+		
 		
 		public CommandState						this[string command_name]
 		{
@@ -113,9 +115,43 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.dispatcher_name;
+				return this.name;
 			}
 		}
+		
+		public CommandDispatcherLevel			Level
+		{
+			get
+			{
+				return this.level;
+			}
+		}
+		
+		public CommandDispatcher				Master
+		{
+			get
+			{
+				return this.master;
+			}
+			set
+			{
+				if (this.master != value)
+				{
+					if (this.master != null)
+					{
+						this.DetachFromMaster (this.master);
+					}
+					
+					this.master = value;
+					
+					if (this.master != null)
+					{
+						this.AttachToMaster (this.master);
+					}
+				}
+			}
+		}
+		
 		
 		public bool								Aborted
 		{
@@ -189,16 +225,50 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void AddValidator(IValidator validator)
+		public void AddValidationRule(ValidationRule validation_rule)
 		{
-			this.ValidationRule.AddValidator (validator);
+			this.ValidationRule.AddValidator (validation_rule);
 		}
 		
 		
-		public void Dispatch(string command, object source)
+		public void Focus()
+		{
+			if (this.Level == CommandDispatcherLevel.Primary)
+			{
+				CommandDispatcher old_focused = null;
+				CommandDispatcher new_focused = this;
+				
+				lock (CommandDispatcher.global_exclusion)
+				{
+					old_focused = CommandDispatcher.focused_primary_dispatcher;
+					CommandDispatcher.focused_primary_dispatcher = new_focused;
+				}
+				
+				if (old_focused != new_focused)
+				{
+					CommandDispatcher.OnFocusedPrimaryDispatcherChanged (old_focused, new_focused);
+				}
+			}
+		}
+		
+		
+		public static void Dispatch(System.Collections.ICollection dispatchers, string command, object source)
+		{
+			foreach (CommandDispatcher dispatcher in dispatchers)
+			{
+				if (dispatcher.InternalDispatch (command, source))
+				{
+					break;
+				}
+			}
+		}
+		
+		
+		public bool InternalDispatch(string command, object source)
 		{
 			this.aborted = false;
 			
+#if false //#fix
 			//	L'appelant peut spécifier une ou plusieurs commandes. Dans ce dernier cas, les
 			//	commandes sont chaînées au moyen du symbole "->" et elles sont exécutées dans
 			//	l'ordre. Une commande peut prendre connaissance des commandes encore en attente
@@ -239,19 +309,23 @@ namespace Epsitec.Common.Widgets
 					commands = System.Utilities.Split (command, "->");
 				}
 			}
+#endif
+			bool handled = false;
 			
 			try
 			{
 				this.pending_commands.Push (null);
-				this.DispatchSingleCommand (command, source);
+				handled = this.DispatchSingleCommand (command, source);
 			}
 			finally
 			{
 				this.pending_commands.Pop ();
 			}
+			
+			return handled;
 		}
 		
-		public void DispatchCancelTopPendingMultipleCommands()
+		public void InternalCancelTopPendingMultipleCommands()
 		{
 			this.pending_commands.Pop ();
 			this.pending_commands.Push (null);
@@ -319,6 +393,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.command_states.Add (command_state);
 		}
+		
 		
 		public void RegisterController(object controller)
 		{
@@ -398,6 +473,69 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		#endregion
+		
+		public static void SyncCommandStates(Visual visual)
+		{
+			foreach (CommandDispatcher dispatcher in CommandDispatcher.GetDispatchers (visual))
+			{
+				dispatcher.SyncCommandStates ();
+			}
+		}
+		
+		
+		public static CommandDispatcher GetFocusedPrimaryDispatcher()
+		{
+			lock (CommandDispatcher.global_exclusion)
+			{
+				return CommandDispatcher.focused_primary_dispatcher;
+			}
+		}
+		
+		public static CommandDispatcher[] GetDispatchers(Visual visual)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			CommandDispatcher.GetDispatchers (list, visual);
+			CommandDispatcher.GetDispatchers (list, Helpers.VisualTree.GetWindow (visual));
+			
+			return (CommandDispatcher[]) list.ToArray (typeof (CommandDispatcher));
+		}
+		
+		
+		private static void GetDispatchers(System.Collections.ArrayList list, Visual visual)
+		{
+			while (visual != null)
+			{
+				CommandDispatcher dispatcher = visual.CommandDispatcher;
+				
+				while ((dispatcher != null) && (list.Contains (dispatcher) == false))
+				{
+					list.Add (dispatcher);
+					
+					dispatcher = dispatcher.Master;
+				}
+				
+				visual = visual.Parent;
+			}
+		}
+		
+		private static void GetDispatchers(System.Collections.ArrayList list, Window window)
+		{
+			while (window != null)
+			{
+				CommandDispatcher dispatcher = window.CommandDispatcher;
+				
+				while ((dispatcher != null) && (list.Contains (dispatcher) == false))
+				{
+					list.Add (dispatcher);
+					
+					dispatcher = dispatcher.Master;
+				}
+				
+				window = window.Owner;
+			}
+		}
+		
 		
 		public static string ExtractCommandName(string command)
 		{
@@ -515,10 +653,39 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		#region ICommandDispatcherHost Members
+		Epsitec.Common.Widgets.CommandDispatcher Epsitec.Common.Widgets.ICommandDispatcherHost.CommandDispatcher
+		{
+			get
+			{
+				return this;
+			}
+			set
+			{
+				throw new System.InvalidOperationException ();
+			}
+		}
+		#endregion
+		
+		protected virtual void AttachToMaster(CommandDispatcher master)
+		{
+		}
+		
+		protected virtual void DetachFromMaster(CommandDispatcher master)
+		{
+		}
+		
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
+				if (this.master != null)
+				{
+					this.DetachFromMaster (this.master);
+					this.master = null;
+				}
+				
 				if (CommandDispatcher.global_list.Contains (this))
 				{
 					CommandDispatcher.global_list.Remove (this);
@@ -703,7 +870,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void DispatchSingleCommand(string command, object source)
+		protected bool DispatchSingleCommand(string command, object source)
 		{
 			command = command.Trim ();
 			
@@ -744,9 +911,13 @@ namespace Epsitec.Common.Widgets
 			if (handled == 0)
 			{
 				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' not handled.");
+				return false;
 			}
-			
-			this.OnCommandDispatched ();
+			else
+			{
+				this.OnCommandDispatched ();
+				return true;
+			}
 		}
 		
 		
@@ -777,6 +948,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		private static void OnFocusedPrimaryDispatcherChanged(CommandDispatcher old_value, CommandDispatcher new_value)
+		{
+		}
+		
+		
 		public event Support.EventHandler		ValidationRuleBecameDirty;
 		public event Support.EventHandler		OpletQueueBindingChanged;
 		public event Support.EventHandler		CommandDispatched;
@@ -787,21 +963,30 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		private string							name;
+		private CommandDispatcherLevel			level;
+		private long							id;
+		private CommandDispatcher				master;
+		
 		protected System.Collections.Hashtable	event_handlers    = new System.Collections.Hashtable ();
 		protected System.Collections.ArrayList	command_states    = new System.Collections.ArrayList ();
 		protected System.Collections.ArrayList	validation_states = new System.Collections.ArrayList ();
 		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
 		protected System.Collections.ArrayList	extra_dispatchers = new System.Collections.ArrayList ();
-		protected string						dispatcher_name;
+		
 		protected ValidationRule				validation_rule;
 		protected bool							aborted;
 		protected Support.OpletQueue			oplet_queue;
 		
+		static object							global_exclusion = new object ();
+		static System.Collections.ArrayList		global_list = new System.Collections.ArrayList ();
+		static System.Collections.ArrayList		local_list  = new System.Collections.ArrayList ();
+		
 		static Regex							command_arg_regex;
-		static System.Type						command_attr_type  = typeof (Support.CommandAttribute);
+		static System.Type						command_attr_type = typeof (Support.CommandAttribute);
+		
 		static CommandDispatcher				default_dispatcher;
-		static int								generation = 1;
-		static System.Collections.ArrayList		global_list;
-		static System.Collections.ArrayList		local_list;
+		static CommandDispatcher				focused_primary_dispatcher;
+		static long								unique_id;
 	}
 }

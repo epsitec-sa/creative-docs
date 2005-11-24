@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorToolBar.Dock = DockStyle.Top;
 			this.selectorToolBar.DockMargins = new Margins(0, 0, 0, 5);
 
-			System.Diagnostics.Debug.Assert(this.selectorToolBar.CommandDispatcher != null);
+//-			System.Diagnostics.Debug.Assert(this.selectorToolBar.CommandDispatcher != null);
 			
 			this.selectorAuto = new IconButton(Misc.Icon("SelectorAuto"));
 			this.selectorToolBar.Items.Add(this.selectorAuto);
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateToolBar.Dock = DockStyle.Top;
 			this.aggregateToolBar.DockMargins = new Margins(0, 0, 0, 5);
 
-			System.Diagnostics.Debug.Assert(this.aggregateToolBar.CommandDispatcher != null);
+//-			System.Diagnostics.Debug.Assert(this.aggregateToolBar.CommandDispatcher != null);
 
 			StaticText st = new StaticText(this.aggregateToolBar);
 			st.Width = 30;

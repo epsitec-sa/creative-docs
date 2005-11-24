@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -36,6 +36,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+#if false //#fix
 		public override CommandDispatcher		CommandDispatcher
 		{
 			get
@@ -48,6 +49,7 @@ namespace Epsitec.Common.Widgets
 				return null;
 			}
 		}
+#endif
 		
 		
 		[Bundle] public WindowStyles			WindowStyles
@@ -242,6 +244,7 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
+#if false //#fix
 				if (execute)
 				{
 					CommandDispatcher dispatcher = this.CommandDispatcher;
@@ -263,6 +266,7 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 				}
+#endif
 				
 				if (focused == null)
 				{

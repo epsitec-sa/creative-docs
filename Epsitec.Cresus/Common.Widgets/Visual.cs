@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Visual.
 	/// </summary>
-	public class Visual : Types.Object
+	public class Visual : Types.Object, ICommandDispatcherHost
 	{
 		public Visual()
 		{
@@ -72,6 +72,19 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.parent_layer;
+			}
+		}
+		
+		
+		public CommandDispatcher				CommandDispatcher
+		{
+			get
+			{
+				return (CommandDispatcher) this.GetValue (Visual.CommandDispatcherProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.CommandDispatcherProperty, value);
 			}
 		}
 		
@@ -1042,6 +1055,8 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property AcceptThreeStatePropery		= Property.Register ("AcceptThreeState", typeof (bool), typeof (Visual), new PropertyMetadata (false));
 		
 		public static readonly Property BackColorProperty			= Property.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyFlags.AffectsDisplay));
+		
+		public static readonly Property CommandDispatcherProperty	= Property.Register ("CommandDispatcher", typeof (CommandDispatcher), typeof (Visual), new PropertyMetadata (null));
 		
 //-		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
 		

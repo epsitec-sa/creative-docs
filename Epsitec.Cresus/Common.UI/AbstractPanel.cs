@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -41,7 +41,11 @@ namespace Epsitec.Common.UI
 				if (this.widget == null)
 				{
 					this.CreateWidget ();
-					this.widget.SetCommandDispatcher (this.CommandDispatcher);
+					
+					if (this.dispatcher != null)
+					{
+						this.widget.CommandDispatcher = this.dispatcher;
+					}
 				}
 				
 				return this.widget;
@@ -100,7 +104,7 @@ namespace Epsitec.Common.UI
 		{
 			if (this.widget != null)
 			{
-				this.widget.SetCommandDispatcher (this.dispatcher);
+				this.widget.CommandDispatcher = this.dispatcher;
 			}
 		}
 		

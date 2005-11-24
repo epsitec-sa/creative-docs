@@ -172,7 +172,7 @@ namespace Epsitec.Common.Dialogs
 		
 		public void AddRule(IValidator validator, string command_states)
 		{
-			this.CommandDispatcher.AddValidator (new ValidationRule (validator, command_states));
+			this.CommandDispatcher.AddValidationRule (new ValidationRule (validator, command_states));
 		}
 		
 		public void AddController(object controller)

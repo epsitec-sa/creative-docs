@@ -80,6 +80,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+#if false //#fix
 		public override CommandDispatcher		CommandDispatcher
 		{
 			get
@@ -89,6 +90,7 @@ namespace Epsitec.Common.Widgets
 				return host == null ? base.CommandDispatcher : host.CommandDispatcher;
 			}
 		}
+#endif
 		
 		
 		public void AdjustSize()

@@ -966,33 +966,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region ICommandDispatcherHost Members
-		public virtual CommandDispatcher			CommandDispatcher
-		{
-			get
-			{
-				if (this.dispatcher != null)
-				{
-					return this.dispatcher;
-				}
-				
-				if (this.Parent != null)
-				{
-					return this.Parent.CommandDispatcher;
-				}
-				
-				return null;
-			}
-			set
-			{
-				if (this.dispatcher != value)
-				{
-					this.SetCommandDispatcher (value);
-				}
-			}
-		}
-		#endregion
-		
 		public virtual Support.OpletQueue			OpletQueue
 		{
 			get
@@ -1808,11 +1781,6 @@ namespace Epsitec.Common.Widgets
 					this.Invalidate (InvalidateReason.EngagedChanged);
 				}
 			}
-		}
-		
-		public void SetCommandDispatcher(CommandDispatcher dispatcher)
-		{
-			this.dispatcher = dispatcher;
 		}
 		
 		public void SetSyncPaint(bool enabled)
@@ -3448,13 +3416,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void ExecuteCommand(string command)
+		internal void ExecuteCommand(string command)
 		{
 			Window window = this.Window;
 			
 			if (window != null)
 			{
-				window.QueueCommand (this, command, this.CommandDispatcher);
+				window.QueueCommand (this, command, this);
 			}
 		}
 		
@@ -5331,7 +5299,6 @@ namespace Epsitec.Common.Widgets
 		private MouseCursor						mouse_cursor;
 		private System.Collections.Hashtable	property_hash;
 		private Support.ResourceManager			resource_manager;
-		private CommandDispatcher				dispatcher;
 		private IValidator						validator;
 		private int								widget_id;
 		

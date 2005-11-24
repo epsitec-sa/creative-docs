@@ -1300,18 +1300,18 @@ namespace Epsitec.Common.Widgets
 		#region QueueItem class
 		protected class QueueItem
 		{
-			public QueueItem(object source, string command, CommandDispatcher dispatcher)
+			public QueueItem(object source, string command, ICommandDispatcherHost dispatcher)
 			{
-				this.source     = source;
-				this.command    = command;
-				this.dispatcher = dispatcher;
+				this.source      = source;
+				this.command     = command;
+				this.dispatchers = new CommandDispatcher[] { dispatcher.CommandDispatcher };
 			}
 			
 			public QueueItem(Widget source)
 			{
-				this.source     = source;
-				this.command    = source.Command;
-				this.dispatcher = source.CommandDispatcher;
+				this.source      = source;
+				this.command     = source.Command;
+				this.dispatchers = CommandDispatcher.GetDispatchers (source);
 			}
 			
 			
@@ -1325,15 +1325,15 @@ namespace Epsitec.Common.Widgets
 				get { return this.command; }
 			}
 			
-			public CommandDispatcher			CommandDispatcher
+			public CommandDispatcher[]			CommandDispatchers
 			{
-				get { return this.dispatcher; }
+				get { return this.dispatchers; }
 			}
 			
 			
 			protected object					source;
 			protected string					command;
-			protected CommandDispatcher			dispatcher;
+			protected CommandDispatcher[]		dispatchers;
 		}
 		#endregion
 		
@@ -1344,10 +1344,10 @@ namespace Epsitec.Common.Widgets
 		
 		public void QueueCommand(object source, string command)
 		{
-			this.QueueCommand (source, command, this.CommandDispatcher);
+			this.QueueCommand (source, command, this);
 		}
 		
-		public void QueueCommand(object source, string command, CommandDispatcher dispatcher)
+		public void QueueCommand(object source, string command, ICommandDispatcherHost dispatcher)
 		{
 			this.QueueCommand (new QueueItem (source, command, dispatcher));
 		}
@@ -1439,14 +1439,18 @@ namespace Epsitec.Common.Widgets
 				object    source  = item.Source;
 				string    command = item.Command;
 				
-				CommandDispatcher dispatcher = item.CommandDispatcher;
+				CommandDispatcher[] dispatchers = item.CommandDispatchers;
 				
+				System.Diagnostics.Debug.Assert (dispatchers.Length > 0);
+				
+#if false //#fix
 				if (dispatcher == null)
 				{
 					dispatcher = this.CommandDispatcher;
 				}
+#endif
 				
-				dispatcher.Dispatch (command, source);
+				CommandDispatcher.Dispatch (dispatchers, command, source);
 			}
 			
 			if (this.is_dispose_queued)
