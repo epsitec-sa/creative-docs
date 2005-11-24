@@ -628,7 +628,12 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									IsCommand
 		{
-			get { return (this.command != null); }
+			get
+			{
+				string command = this.Command;
+				
+				return (command != null) && (command.Length > 0);
+			}
 		}
 		
 		public virtual bool							IsFrozen
@@ -1109,49 +1114,19 @@ namespace Epsitec.Common.Widgets
 			get { return (this.internal_state & InternalState.ChildrenDocked) != 0; }
 		}
 		
-		
-		[Bundle]			public string			Command
-		{
-			get
-			{
-				if (this.command == null)
-				{
-					return "";
-				}
-				
-				return this.command;
-			}
-			
-			set
-			{
-				if ((value == null) || (value.Length == 0))
-				{
-					this.command = null;
-				}
-				else if (this.command != value)
-				{
-					this.command = value;
-					
-					CommandDispatcher dispatcher = this.CommandDispatcher;
-					
-					if (dispatcher != null)
-					{
-						dispatcher.SyncCommandStates (this.command);
-					}
-				}
-			}
-		}
 
 		public string								CommandName
 		{
 			get
 			{
-				if (this.command == null)
+				string command = this.Command;
+				
+				if (command == null)
 				{
 					return "";
 				}
 
-				return CommandDispatcher.ExtractCommandName (this.command);
+				return CommandDispatcher.ExtractCommandName (command);
 			}
 		}
 		
@@ -1798,12 +1773,14 @@ namespace Epsitec.Common.Widgets
 		
 		public CommandState CreateCommandState()
 		{
-			if (this.command == null)
+			if (this.IsCommand)
+			{
+				return CommandState.Find (this.CommandName, this.CommandDispatcher);
+			}
+			else
 			{
 				return null;
 			}
-			
-			return CommandState.Find (this.CommandName, this.CommandDispatcher);
 		}
 		
 		
@@ -4509,6 +4486,35 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void OnCommandChanged(Epsitec.Common.Types.PropertyChangedEventArgs e)
+		{
+			base.OnCommandChanged (e);
+			
+			CommandDispatcher dispatcher = this.CommandDispatcher;
+			string            command    = e.NewValue as string;
+					
+			if ((dispatcher != null) &&
+				(command != null))
+			{
+				dispatcher.SyncCommandStates (command);
+			}
+		}
+		
+		protected override void OnCommandDispatcherChanged(Epsitec.Common.Types.PropertyChangedEventArgs e)
+		{
+			base.OnCommandDispatcherChanged (e);
+			
+			CommandDispatcher dispatcher = e.NewValue as CommandDispatcher;
+			string            command    = this.Command;
+			
+			if ((dispatcher != null) &&
+				(command != null))
+			{
+				dispatcher.SyncCommandStates (command);
+			}
+		}
+
+
 #if false //#fix
 		protected void HandleParentChanged()
 		{
@@ -5288,7 +5294,6 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.ArrayList	hypertext_list;
 		private HypertextInfo					hypertext;
 		
-		private string							command;
 		private string							text;
 		private TextLayout						text_layout;
 		private ContentAlignment				alignment;

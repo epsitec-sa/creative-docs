@@ -88,6 +88,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public string							Command
+		{
+			get
+			{
+				return (string) this.GetValue (Visual.CommandProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.CommandProperty, value);
+			}
+		}
+		
 		
 		public AnchorStyles						Anchor
 		{
@@ -906,6 +918,18 @@ namespace Epsitec.Common.Widgets
 			that.OnIsKeyboardFocusedChanged (new PropertyChangedEventArgs (Visual.IsKeyboardFocusedProperty, old_value, new_value));
 		}
 		
+		private static void NotifyCommandChanged(Object o, object old_value, object new_value)
+		{
+			Visual that = o as Visual;
+			that.OnCommandChanged (new PropertyChangedEventArgs (Visual.CommandProperty, old_value, new_value));
+		}
+		
+		private static void NotifyCommandDispatcherChanged(Object o, object old_value, object new_value)
+		{
+			Visual that = o as Visual;
+			that.OnCommandDispatcherChanged (new PropertyChangedEventArgs (Visual.CommandDispatcherProperty, old_value, new_value));
+		}
+		
 		
 		protected virtual void OnSizeChanged(Types.PropertyChangedEventArgs e)
 		{
@@ -922,6 +946,15 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnIsKeyboardFocusedChanged(Types.PropertyChangedEventArgs e)
 		{
 		}
+		
+		protected virtual void OnCommandChanged(Types.PropertyChangedEventArgs e)
+		{
+		}
+		
+		protected virtual void OnCommandDispatcherChanged(Types.PropertyChangedEventArgs e)
+		{
+		}
+		
 		
 		protected virtual void UpdateClientGeometry()
 		{
@@ -1056,7 +1089,8 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly Property BackColorProperty			= Property.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyFlags.AffectsDisplay));
 		
-		public static readonly Property CommandDispatcherProperty	= Property.Register ("CommandDispatcher", typeof (CommandDispatcher), typeof (Visual), new PropertyMetadata (null));
+		public static readonly Property CommandDispatcherProperty	= Property.Register ("CommandDispatcher", typeof (CommandDispatcher), typeof (Visual), new PropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandDispatcherChanged)));
+		public static readonly Property CommandProperty				= Property.Register ("Command", typeof (string), typeof (Visual), new PropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged)));
 		
 //-		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
 		
