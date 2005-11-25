@@ -842,8 +842,6 @@ namespace Epsitec.App.DocumentEditor
 					}
 				}
 			}
-
-			CommandDispatcher.SyncCommandStates(this.hToolBar);
 		}
 
 		protected void CreateDocumentLayout(Document document)

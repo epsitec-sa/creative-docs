@@ -4471,33 +4471,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void OnCommandChanged(Epsitec.Common.Types.PropertyChangedEventArgs e)
-		{
-			base.OnCommandChanged (e);
-			
-			CommandDispatcher dispatcher = this.CommandDispatcher;
-			string            command    = e.NewValue as string;
-					
-			if ((dispatcher != null) &&
-				(command != null))
-			{
-				dispatcher.SyncCommandStates (command);
-			}
-		}
-		
-		protected override void OnCommandDispatcherChanged(Epsitec.Common.Types.PropertyChangedEventArgs e)
-		{
-			base.OnCommandDispatcherChanged (e);
-			
-			CommandDispatcher dispatcher = e.NewValue as CommandDispatcher;
-			string            command    = this.Command;
-			
-			if ((dispatcher != null) &&
-				(command != null))
-			{
-				dispatcher.SyncCommandStates (command);
-			}
-		}
 
 
 #if false //#fix

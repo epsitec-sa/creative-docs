@@ -2477,7 +2477,6 @@ namespace Epsitec.Common.Document
 			this.contextMenu.AdjustSize();
 			mouse = this.InternalToScreen(mouse);
 			mouse = this.MapClientToScreen(mouse);
-			CommandDispatcher.SyncCommandStates(this);
 
 			ScreenInfo si = ScreenInfo.Find(mouse);
 			Drawing.Rectangle wa = si.WorkingArea;
