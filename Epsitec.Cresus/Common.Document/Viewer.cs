@@ -1144,7 +1144,7 @@ namespace Epsitec.Common.Document
 			this.moveInitialSel = false;
 			this.drawingContext.ConstrainFlush();
 			this.drawingContext.ConstrainAddHV(mouse);
-			this.ShaperHilite(null);
+			this.ShaperHilite(null, Point.Empty);
 			this.selector.HiliteHandle(-1);
 			this.HiliteHandle(null, -1);
 			this.moveGlobal = -1;
@@ -1271,7 +1271,7 @@ namespace Epsitec.Common.Document
 
 				if ( this.DetectHandle(mouse, out obj, out rank) )
 				{
-					this.ShaperHilite(null);
+					this.ShaperHilite(null, Point.Empty);
 					this.HiliteHandle(obj, rank);
 					this.ChangeMouseCursor(MouseCursorType.ShaperMove);
 				}
@@ -1280,21 +1280,15 @@ namespace Epsitec.Common.Document
 					obj = hiliteObj;
 					if ( obj == null )
 					{
-						this.ShaperHilite(null);
+						this.ShaperHilite(null, Point.Empty);
 					}
 					else
 					{
-						if ( obj.IsSelected )
+						this.ShaperHilite(obj, mouse);
+
+						if ( obj.IsSelected && obj.IsShaperHandleSelected() )
 						{
-							this.ShaperHilite(null);
-							if ( obj.IsShaperHandleSelected() )
-							{
-								this.ChangeMouseCursor(MouseCursorType.ShaperMulti);
-							}
-						}
-						else
-						{
-							this.ShaperHilite(obj);
+							this.ChangeMouseCursor(MouseCursorType.ShaperMulti);
 						}
 					}
 				}
@@ -1834,7 +1828,7 @@ namespace Epsitec.Common.Document
 		public void ClearHilite()
 		{
 			this.Hilite(null);
-			this.ShaperHilite(null);
+			this.ShaperHilite(null, Point.Empty);
 		}
 
 		// Hilite un objet.
@@ -1851,14 +1845,19 @@ namespace Epsitec.Common.Document
 		}
 
 		// Hilite un objet pour le modeleur.
-		protected void ShaperHilite(Objects.Abstract item)
+		protected void ShaperHilite(Objects.Abstract item, Point mouse)
 		{
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
-				if ( obj.IsSelected )  continue;
-
-				obj.ShaperHiliteHandles(obj == item);
+				if ( obj.IsSelected )
+				{
+					obj.ShaperHiliteSegment(obj == item, mouse);
+				}
+				else
+				{
+					obj.ShaperHiliteHandles(obj == item);
+				}
 			}
 		}
 

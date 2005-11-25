@@ -201,6 +201,24 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Etat "segment sélectionné" du segment qui suit la poignée.
+		public bool IsSegmentSelected
+		{
+			get
+			{
+				return this.isSegmentSelected;
+			}
+
+			set
+			{
+				if ( this.isSegmentSelected != value )
+				{
+					this.isSegmentSelected = value;
+					this.NotifyArea();
+				}
+			}
+		}
+
 		// Type de la propriété liée à la poignée.
 		public Properties.Type PropertyType
 		{
@@ -249,6 +267,7 @@ namespace Epsitec.Common.Document.Objects
 			dst.isHilited          = this.isHilited;
 			dst.isGlobalSelected   = this.isGlobalSelected;
 			dst.isShaperDeselected = this.isShaperDeselected;
+			dst.isSegmentSelected  = this.isSegmentSelected;
 			dst.propertyType       = this.propertyType;
 			dst.propertyRank       = this.propertyRank;
 		}
@@ -259,6 +278,7 @@ namespace Epsitec.Common.Document.Objects
 			Misc.Swap(ref this.isVisible,          ref h.isVisible         );
 			Misc.Swap(ref this.isGlobalSelected,   ref h.isGlobalSelected  );
 			Misc.Swap(ref this.isShaperDeselected, ref h.isShaperDeselected);
+			Misc.Swap(ref this.isSegmentSelected,  ref h.isSegmentSelected );
 		}
 
 
@@ -545,6 +565,7 @@ namespace Epsitec.Common.Document.Objects
 		protected bool						isHilited = false;
 		protected bool						isGlobalSelected = false;
 		protected bool						isShaperDeselected = false;
+		protected bool						isSegmentSelected = false;
 		protected Properties.Type			propertyType = Properties.Type.None;
 		protected int						propertyRank;
 	}

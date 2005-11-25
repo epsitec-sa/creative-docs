@@ -7,10 +7,89 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Geometry
 	{
+		// Extrait un fragment d'un chemin.
+		public static Path PathExtract(Path path, int rank)
+		{
+			PathElement[] elements;
+			Point[] points;
+			path.GetElements(out elements, out points);
+
+			Point start = new Point(0, 0);
+			Point current = new Point(0, 0);
+			Point p1 = new Point(0, 0);
+			Point p2 = new Point(0, 0);
+			Point p3 = new Point(0, 0);
+			int i = 0;
+			while ( i < elements.Length )
+			{
+				switch ( elements[i] & PathElement.MaskCommand )
+				{
+					case PathElement.MoveTo:
+						current = points[i++];
+						start = current;
+						break;
+
+					case PathElement.LineTo:
+						p1 = points[i++];
+						if ( --rank < 0 )
+						{
+							Path extractPath = new Path();
+							extractPath.MoveTo(current);
+							extractPath.LineTo(p1);
+							return extractPath;
+						}
+						current = p1;
+						break;
+
+					case PathElement.Curve3:
+						p1 = points[i++];
+						p2 = points[i++];
+						if ( --rank < 0 )
+						{
+							Path extractPath = new Path();
+							extractPath.MoveTo(current);
+							extractPath.CurveTo(p1, p1, p2);
+							return extractPath;
+						}
+						current = p2;
+						break;
+
+					case PathElement.Curve4:
+						p1 = points[i++];
+						p2 = points[i++];
+						p3 = points[i++];
+						if ( --rank < 0 )
+						{
+							Path extractPath = new Path();
+							extractPath.MoveTo(current);
+							extractPath.CurveTo(p1, p2, p3);
+							return extractPath;
+						}
+						current = p3;
+						break;
+
+					default:
+						if ( (elements[i] & PathElement.FlagClose) != 0 )
+						{
+							if ( --rank < 0 )
+							{
+								Path extractPath = new Path();
+								extractPath.MoveTo(current);
+								extractPath.LineTo(start);
+								return extractPath;
+							}
+						}
+						i ++;
+						break;
+				}
+			}
+			return null;
+		}
+
 		// Détecte si la souris est sur le trait d'un chemin.
 		public static bool DetectOutline(Path path, double width, Point pos)
 		{
-			return (Geometry.DetectOutlineRank(path, width, pos) != -1 );
+			return (Geometry.DetectOutlineRank(path, width, pos) != -1);
 		}
 
 		// Détecte sur quel trait d'un chemin est la souris.

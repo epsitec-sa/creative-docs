@@ -474,7 +474,38 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Mise en évidence de toutes les poignées pour le modeleur.
+		// Mise en évidence un segment pour le modeleur, lorsque l'objet est survolé et sélectionné.
+		public void ShaperHiliteSegment(bool hilite, Point mouse)
+		{
+			Path hilitePath = null;
+
+			if ( hilite )
+			{
+				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+				Path path = this.GetMagnetPath();
+				double width = 0.0;
+				Properties.Line line = this.PropertyLineMode;
+				if ( line != null )
+				{
+					width = line.Width;
+				}
+				width = System.Math.Max(width, context.MinimalWidth);
+				int rank = Geometry.DetectOutlineRank(path, width, mouse);
+				if ( rank != -1 )
+				{
+					hilitePath = Geometry.PathExtract(path, rank);
+				}
+			}
+
+			if ( this.hilitePath != hilitePath )
+			{
+				this.hilitePath = hilitePath;
+				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+			}
+		}
+
+		// Mise en évidence de toutes les poignées pour le modeleur, lorsque l'objet est survolé
+		// sans être sélectionné.
 		public void ShaperHiliteHandles(bool hilite)
 		{
 			int total = this.TotalHandle;
@@ -892,8 +923,8 @@ namespace Epsitec.Common.Document.Objects
 
 		// Début du déplacement d'une cellule.
 		public virtual void MoveCellStarting(int rank, Point pos,
-			bool isShift, bool isCtrl, int downCount,
-			DrawingContext drawingContext)
+											 bool isShift, bool isCtrl, int downCount,
+											 DrawingContext drawingContext)
 		{
 		}
 
@@ -2355,6 +2386,20 @@ namespace Epsitec.Common.Document.Objects
 			{
 				Graphics graphics = port as Graphics;
 
+				// Dessine le segment en évidence.
+				if ( this.hilitePath != null )
+				{
+					double width = 0.0;
+					Properties.Line line = this.PropertyLineMode;
+					if ( line != null )
+					{
+						width = line.Width;
+					}
+					width = System.Math.Max(width, drawingContext.MinimalWidth);
+					graphics.Rasterizer.AddOutline(this.hilitePath, width);
+					graphics.FinalRenderSolid(drawingContext.HiliteOutlineColor);
+				}
+
 				// Dessine les bbox en mode debug.
 				if ( drawingContext.IsDrawBoxThin )
 				{
@@ -3015,6 +3060,7 @@ namespace Epsitec.Common.Document.Objects
 		protected Drawing.Rectangle				bboxGeom = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxFull = Drawing.Rectangle.Empty;
 		protected int							hotSpotRank = -1;
+		protected Path							hilitePath = null;
 
 		protected string						name = "";
 		protected UndoableList					properties;
