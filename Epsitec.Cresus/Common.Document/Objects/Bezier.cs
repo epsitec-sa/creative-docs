@@ -571,6 +571,13 @@ namespace Epsitec.Common.Document.Objects
 					startingPos.Add(this.Handle(i+2).Position);
 				}
 			}
+			if ( startingPos.Count == 0 )  return null;
+
+			if ( this.selectedSegments != null )
+			{
+				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
+			}
+
 			return startingPos;
 		}
 
@@ -591,6 +598,11 @@ namespace Epsitec.Common.Document.Objects
 					this.Handle(i+1).Position = ((Point)startingPos[s++]) + move;
 					this.Handle(i+2).Position = ((Point)startingPos[s++]) + move;
 				}
+			}
+
+			if ( this.selectedSegments != null )
+			{
+				SelectedSegment.Update(this.selectedSegments, this);
 			}
 
 			this.SetDirtyBbox();

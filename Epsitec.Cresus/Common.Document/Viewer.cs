@@ -1320,7 +1320,15 @@ namespace Epsitec.Common.Document
 			}
 			else if ( this.moveObject != null )
 			{
-				if ( this.moveHandle != -1 )  // déplace une poignée ?
+				if ( this.moveHandle == -1 )
+				{
+					int rank = this.moveObject.ShaperDetectSegment(mouse);
+					if ( rank != -1 )
+					{
+						this.moveObject.SelectedSegmentAdd(rank, mouse, this.drawingContext.IsShift);
+					}
+				}
+				else	// déplace une poignée ?
 				{
 					if ( mouse.X != this.moveStart.X ||
 						 mouse.Y != this.moveStart.Y )

@@ -10,9 +10,40 @@ namespace Epsitec.Common.Document
 		// Extrait un fragment d'un chemin.
 		public static Path PathExtract(Path path, int rank)
 		{
+			Point p1, s1, s2, p2;
+			Objects.SelectedSegment.Type type;
+			type = Geometry.PathExtract(path, rank, out p1, out s1, out s2, out p2);
+
+			if ( type == Objects.SelectedSegment.Type.Line )
+			{
+				Path subPath = new Path();
+				subPath.MoveTo(p1);
+				subPath.LineTo(p2);
+				return subPath;
+			}
+			
+			if ( type == Objects.SelectedSegment.Type.Curve )
+			{
+				Path subPath = new Path();
+				subPath.MoveTo(p1);
+				subPath.CurveTo(s1, s2, p2);
+				return subPath;
+			}
+
+			return null;
+		}
+
+		// Extrait un fragment de droite ou de courbe d'un chemin.
+		public static Objects.SelectedSegment.Type PathExtract(Path path, int rank, out Point pp1, out Point ss1, out Point ss2, out Point pp2)
+		{
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements(out elements, out points);
+
+			pp1 = new Point(0, 0);
+			ss1 = new Point(0, 0);
+			ss2 = new Point(0, 0);
+			pp2 = new Point(0, 0);
 
 			Point start = new Point(0, 0);
 			Point current = new Point(0, 0);
@@ -33,10 +64,11 @@ namespace Epsitec.Common.Document
 						p1 = points[i++];
 						if ( --rank < 0 )
 						{
-							Path extractPath = new Path();
-							extractPath.MoveTo(current);
-							extractPath.LineTo(p1);
-							return extractPath;
+							pp1 = current;
+							ss1 = current;
+							ss2 = p1;
+							pp2 = p1;
+							return Objects.SelectedSegment.Type.Line;
 						}
 						current = p1;
 						break;
@@ -46,10 +78,11 @@ namespace Epsitec.Common.Document
 						p2 = points[i++];
 						if ( --rank < 0 )
 						{
-							Path extractPath = new Path();
-							extractPath.MoveTo(current);
-							extractPath.CurveTo(p1, p1, p2);
-							return extractPath;
+							pp1 = current;
+							ss1 = p1;
+							ss2 = p1;
+							pp2 = p2;
+							return Objects.SelectedSegment.Type.Curve;
 						}
 						current = p2;
 						break;
@@ -60,10 +93,11 @@ namespace Epsitec.Common.Document
 						p3 = points[i++];
 						if ( --rank < 0 )
 						{
-							Path extractPath = new Path();
-							extractPath.MoveTo(current);
-							extractPath.CurveTo(p1, p2, p3);
-							return extractPath;
+							pp1 = current;
+							ss1 = p1;
+							ss2 = p2;
+							pp2 = p3;
+							return Objects.SelectedSegment.Type.Curve;
 						}
 						current = p3;
 						break;
@@ -73,17 +107,18 @@ namespace Epsitec.Common.Document
 						{
 							if ( --rank < 0 )
 							{
-								Path extractPath = new Path();
-								extractPath.MoveTo(current);
-								extractPath.LineTo(start);
-								return extractPath;
+								pp1 = current;
+								ss1 = current;
+								ss2 = start;
+								pp2 = start;
+								return Objects.SelectedSegment.Type.Line;
 							}
 						}
 						i ++;
 						break;
 				}
 			}
-			return null;
+			return Objects.SelectedSegment.Type.None;
 		}
 
 		// Détecte si la souris est sur le trait d'un chemin.

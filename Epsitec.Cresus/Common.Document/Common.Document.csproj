@@ -389,6 +389,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Objects\SelectedSegment.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Objects\Surface.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

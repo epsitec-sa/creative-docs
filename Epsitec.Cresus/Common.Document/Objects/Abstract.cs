@@ -396,6 +396,11 @@ namespace Epsitec.Common.Document.Objects
 		// Sélectionne une poignée avec le modeleur.
 		public void SelectHandle(int rank, bool add)
 		{
+			if ( !add )
+			{
+				this.SelectedSegmentClear();
+			}
+
 			if ( !add && rank != -1 )
 			{
 				Handle handle = this.Handle(rank);
@@ -448,6 +453,13 @@ namespace Epsitec.Common.Document.Objects
 					startingPos.Add(handle.Position);
 				}
 			}
+			if ( startingPos.Count == 0 )  return null;
+
+			if ( this.selectedSegments != null )
+			{
+				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
+			}
+
 			return startingPos;
 		}
 
@@ -470,36 +482,37 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
+			if ( this.selectedSegments != null )
+			{
+				SelectedSegment.Update(this.selectedSegments, this);
+			}
+
 			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Mise en évidence un segment pour le modeleur, lorsque l'objet est survolé et sélectionné.
+		// Détecte le segment pour le modeleur survolé par la souris.
+		public int ShaperDetectSegment(Point mouse)
+		{
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			Path path = this.GetMagnetPath();
+			double width = this.SelectedSegmentWidth(context, true);
+			return Geometry.DetectOutlineRank(path, width, mouse);
+		}
+
+		// Met en évidence un segment pour le modeleur, lorsque l'objet est survolé et sélectionné.
 		public void ShaperHiliteSegment(bool hilite, Point mouse)
 		{
-			Path hilitePath = null;
+			int hilitedSegment = -1;
 
 			if ( hilite )
 			{
-				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-				Path path = this.GetMagnetPath();
-				double width = 0.0;
-				Properties.Line line = this.PropertyLineMode;
-				if ( line != null )
-				{
-					width = line.Width;
-				}
-				width = System.Math.Max(width, context.MinimalWidth);
-				int rank = Geometry.DetectOutlineRank(path, width, mouse);
-				if ( rank != -1 )
-				{
-					hilitePath = Geometry.PathExtract(path, rank);
-				}
+				hilitedSegment = this.ShaperDetectSegment(mouse);
 			}
 
-			if ( this.hilitePath != hilitePath )
+			if ( this.hilitedSegment != hilitedSegment )
 			{
-				this.hilitePath = hilitePath;
+				this.hilitedSegment = hilitedSegment;
 				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			}
 		}
@@ -519,6 +532,62 @@ namespace Epsitec.Common.Document.Objects
 				handle.Modify(hilite, false, hilite);
 			}
 		}
+
+		// Désélectionne tous les segments de l'objet.
+		public void SelectedSegmentClear()
+		{
+			if ( this.selectedSegments != null )
+			{
+				this.selectedSegments = null;
+				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+			}
+		}
+
+		// Sélectionne un segment de l'objet.
+		public void SelectedSegmentAdd(int rank, Point pos, bool add)
+		{
+			if ( !add )
+			{
+				this.SelectHandle(-1, false);
+			}
+
+			if ( this.selectedSegments == null )
+			{
+				this.selectedSegments = new System.Collections.ArrayList();
+			}
+
+			if ( !add )
+			{
+				this.selectedSegments.Clear();
+			}
+
+			int i = SelectedSegment.Search(this.selectedSegments, rank);
+			if ( i == -1 )
+			{
+				SelectedSegment ss = new SelectedSegment(this.document, this, rank, pos);
+				this.selectedSegments.Add(ss);
+			}
+			else
+			{
+				if ( add )
+				{
+					this.selectedSegments.RemoveAt(i);
+				}
+				else
+				{
+					SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
+					ss.Position = pos;
+				}
+			}
+
+			if ( this.selectedSegments.Count == 0 )
+			{
+				this.selectedSegments = null;
+			}
+
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+		}
+
 
 		// Début du déplacement d'une poignée.
 		public virtual void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
@@ -1265,6 +1334,7 @@ namespace Epsitec.Common.Document.Objects
 					handle.Modify(select && !edit, false, false);
 				}
 			}
+			this.SelectedSegmentClear();
 			this.HandlePropertiesUpdate();
 			this.SetDirtyBbox();
 
@@ -2386,18 +2456,29 @@ namespace Epsitec.Common.Document.Objects
 			{
 				Graphics graphics = port as Graphics;
 
-				// Dessine le segment en évidence.
-				if ( this.hilitePath != null )
+				// Dessine les segments sélectionnés ou survolés.
+				if ( this.selectedSegments != null || this.hilitedSegment != -1 )
 				{
-					double width = 0.0;
-					Properties.Line line = this.PropertyLineMode;
-					if ( line != null )
+					Path path = this.GetMagnetPath();
+					double width = this.SelectedSegmentWidth(drawingContext, false);
+
+					if ( this.selectedSegments != null )
 					{
-						width = line.Width;
+						foreach ( SelectedSegment ss in this.selectedSegments )
+						{
+							Path selPath = Geometry.PathExtract(path, ss.Rank);
+							graphics.Rasterizer.AddOutline(selPath, width);
+							graphics.FinalRenderSolid(DrawingContext.ColorSelectedSegment);
+							ss.Draw(graphics, drawingContext);
+						}
 					}
-					width = System.Math.Max(width, drawingContext.MinimalWidth);
-					graphics.Rasterizer.AddOutline(this.hilitePath, width);
-					graphics.FinalRenderSolid(drawingContext.HiliteOutlineColor);
+
+					if ( this.hilitedSegment != -1 )
+					{
+						Path hilitePath = Geometry.PathExtract(path, this.hilitedSegment);
+						graphics.Rasterizer.AddOutline(hilitePath, width);
+						graphics.FinalRenderSolid(drawingContext.HiliteOutlineColor);
+					}
 				}
 
 				// Dessine les bbox en mode debug.
@@ -2434,6 +2515,18 @@ namespace Epsitec.Common.Document.Objects
 					graphics.LineWidth = initialWidth;
 				}
 			}
+		}
+
+		// Retourne la largeur pour les segments sélectionnés.
+		protected double SelectedSegmentWidth(DrawingContext context, bool detect)
+		{
+			double width = 0.0;
+			Properties.Line line = this.PropertyLineMode;
+			if ( line != null )
+			{
+				width = line.Width;
+			}
+			return System.Math.Max(width, detect ? context.MinimalWidth : 3.0/context.ScaleX);
 		}
 
 		// Dessine le texte.
@@ -3060,11 +3153,12 @@ namespace Epsitec.Common.Document.Objects
 		protected Drawing.Rectangle				bboxGeom = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxFull = Drawing.Rectangle.Empty;
 		protected int							hotSpotRank = -1;
-		protected Path							hilitePath = null;
+		protected int							hilitedSegment = -1;
 
 		protected string						name = "";
 		protected UndoableList					properties;
 		protected System.Collections.ArrayList	handles = new System.Collections.ArrayList();
+		protected System.Collections.ArrayList	selectedSegments = null;
 		protected UndoableList					objects = null;
 		protected int							totalPropertyHandle = 0;
 		protected double						direction = 0.0;

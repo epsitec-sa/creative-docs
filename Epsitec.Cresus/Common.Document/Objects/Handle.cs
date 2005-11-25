@@ -16,6 +16,7 @@ namespace Epsitec.Common.Document.Objects
 		Property  = 6,		// poignée d'une propriété
 		Center    = 7,		// poignée du centre de rotation
 		Rotate    = 8,		// poignée de l'angle de rotation
+		Add       = 9,		// poignée à ajouter
 	}
 
 	public enum HandleConstrainType
@@ -201,24 +202,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Etat "segment sélectionné" du segment qui suit la poignée.
-		public bool IsSegmentSelected
-		{
-			get
-			{
-				return this.isSegmentSelected;
-			}
-
-			set
-			{
-				if ( this.isSegmentSelected != value )
-				{
-					this.isSegmentSelected = value;
-					this.NotifyArea();
-				}
-			}
-		}
-
 		// Type de la propriété liée à la poignée.
 		public Properties.Type PropertyType
 		{
@@ -267,7 +250,6 @@ namespace Epsitec.Common.Document.Objects
 			dst.isHilited          = this.isHilited;
 			dst.isGlobalSelected   = this.isGlobalSelected;
 			dst.isShaperDeselected = this.isShaperDeselected;
-			dst.isSegmentSelected  = this.isSegmentSelected;
 			dst.propertyType       = this.propertyType;
 			dst.propertyRank       = this.propertyRank;
 		}
@@ -278,7 +260,6 @@ namespace Epsitec.Common.Document.Objects
 			Misc.Swap(ref this.isVisible,          ref h.isVisible         );
 			Misc.Swap(ref this.isGlobalSelected,   ref h.isGlobalSelected  );
 			Misc.Swap(ref this.isShaperDeselected, ref h.isShaperDeselected);
-			Misc.Swap(ref this.isSegmentSelected,  ref h.isSegmentSelected );
 		}
 
 
@@ -496,6 +477,24 @@ namespace Epsitec.Common.Document.Objects
 					rect.Deflate(1.0/scaleX, 1.0/scaleY);
 					this.PaintCircle(graphics, rect, color, context);
 				}
+
+				if ( this.type == HandleType.Add )
+				{
+					Drawing.Rectangle r1 = rect;
+					Drawing.Rectangle r2 = rect;
+					r1.Inflate(0.0/scaleX, -2.0/scaleY);
+					r2.Inflate(-2.0/scaleX, 0.0/scaleY);
+
+					graphics.AddFilledRectangle(r1);
+					graphics.AddFilledRectangle(r2);
+					graphics.RenderSolid(this.Adapt(DrawingContext.ColorHandleOutline, context));
+
+					r1.Deflate(1.0/scaleX, 1.0/scaleY);
+					r2.Deflate(1.0/scaleX, 1.0/scaleY);
+					graphics.AddFilledRectangle(r1);
+					graphics.AddFilledRectangle(r2);
+					graphics.RenderSolid(this.Adapt(color, context));
+				}
 			}
 
 			graphics.LineWidth = initialWidth;
@@ -565,7 +564,6 @@ namespace Epsitec.Common.Document.Objects
 		protected bool						isHilited = false;
 		protected bool						isGlobalSelected = false;
 		protected bool						isShaperDeselected = false;
-		protected bool						isSegmentSelected = false;
 		protected Properties.Type			propertyType = Properties.Type.None;
 		protected int						propertyRank;
 	}

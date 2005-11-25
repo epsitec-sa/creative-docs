@@ -1818,6 +1818,12 @@ namespace Epsitec.Common.Document
 			get { return Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
 		}
 
+		// Retourne la couleur d'un segment sélectionné.
+		static public Color ColorSelectedSegment
+		{
+			get { return Color.FromARGB(0.5, 1.0, 0.0, 0.0); }  // rouge
+		}
+
 		// Retourne la couleur d'une poignée de début/fin.
 		static public Color ColorHandleStart
 		{
