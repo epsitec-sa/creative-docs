@@ -359,6 +359,19 @@ namespace Epsitec.Common.Widgets
 			return state;
 		}
 		
+		public CommandState GetCommandState(Shortcut shortcut)
+		{
+			foreach (CommandState command in this.command_states)
+			{
+				if (command.Shortcuts.Match (shortcut))
+				{
+					return command;
+				}
+			}
+			
+			return null;
+		}
+		
 		
 		internal void AddCommandState(CommandState command_state)
 		{
@@ -497,6 +510,32 @@ namespace Epsitec.Common.Widgets
 			foreach (CommandDispatcher dispatcher in list)
 			{
 				CommandState command = dispatcher.GetCommandState (name);
+				
+				if (command != null)
+				{
+					return command;
+				}
+			}
+			
+			return null;
+		}
+		
+		public static CommandState GetCommandState(Shortcut shortcut, Visual context)
+		{
+			if (context == null)
+			{
+				return null;
+			}
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			CommandDispatcher.GetDispatchers (list, context);
+			CommandDispatcher.GetDispatchers (list, Helpers.VisualTree.GetWindow (context));
+			CommandDispatcher.GetDispatchers (list, CommandDispatcher.GetFocusedPrimaryDispatcher ());
+			
+			foreach (CommandDispatcher dispatcher in list)
+			{
+				CommandState command = dispatcher.GetCommandState (shortcut);
 				
 				if (command != null)
 				{

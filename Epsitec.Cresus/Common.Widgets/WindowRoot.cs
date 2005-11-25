@@ -217,21 +217,14 @@ namespace Epsitec.Common.Widgets
 				
 				System.Diagnostics.Debug.WriteLine (shortcut.ToString ());
 				
-				if (shortcut.IsAltPressed)
-				{
-					//	TODO: gère les commandes globales
-					
-					if (shortcut.KeyCodeOnly == KeyCode.FuncF4)
-					{
-						this.Window.QueueCommand (this, "Quit" + this.Window.Name);
-					}
-				}
-				
 				Widget focused = this.window.FocusedWidget;
 				bool   execute = true;
 				
 				if ((focused != null) &&
-					(focused.AutoRadio))
+					(focused.AutoRadio) &&
+					(shortcut.IsAltPressed == false) &&
+					(shortcut.IsCtrlPressed == false) &&
+					(shortcut.IsShiftPressed == false))
 				{
 					switch (shortcut.KeyCodeOnly)
 					{
@@ -244,29 +237,28 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-#if false //#fix
 				if (execute)
 				{
-					CommandDispatcher dispatcher = this.CommandDispatcher;
-					CommandState[]    states     = dispatcher.CommandStates;
+					Widget widget = focused == null ? this : focused;
+					Window window = this.window;
 					
-					foreach (CommandState command in states)
+					CommandState command = CommandDispatcher.GetCommandState (shortcut, widget);
+					
+					if (command != null)
 					{
-						if (command != null)
-						{
-							if ((command.HasShortcuts) &&
-								(command.Shortcuts.Match (shortcut)) &&
-								(command.Enabled))
-							{
-								//	Exécute la commande.
-								
-								dispatcher.Dispatch (command.Name, this);
-								return true;
-							}
-						}
+						window.QueueCommand (widget, command);
+						return true;
+					}
+					
+					if ((shortcut.KeyCodeOnly == KeyCode.FuncF4) &&
+						(shortcut.IsAltPressed) &&
+						(shortcut.IsCtrlPressed == false) &&
+						(shortcut.IsShiftPressed == false))
+					{
+						window.QueueCommand (this, "Quit" + this.Window.Name);
+						return true;
 					}
 				}
-#endif
 				
 				if (focused == null)
 				{

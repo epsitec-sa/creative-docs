@@ -1363,20 +1363,36 @@ namespace Epsitec.Common.Widgets
 				this.dispatchers = CommandDispatcher.GetDispatchers (source);
 			}
 			
+			public QueueItem(Widget source, CommandState command)
+			{
+				this.source      = source;
+				this.command     = command.Name;
+				this.dispatchers = CommandDispatcher.GetDispatchers (source);
+			}
+			
 			
 			public object						Source
 			{
-				get { return this.source; }
+				get
+				{
+					return this.source;
+				}
 			}
 			
 			public string						Command
 			{
-				get { return this.command; }
+				get
+				{
+					return this.command;
+				}
 			}
 			
 			public CommandDispatcher[]			CommandDispatchers
 			{
-				get { return this.dispatchers; }
+				get
+				{
+					return this.dispatchers;
+				}
 			}
 			
 			
@@ -1389,6 +1405,11 @@ namespace Epsitec.Common.Widgets
 		public void QueueCommand(Widget source)
 		{
 			this.QueueCommand (new QueueItem (source));
+		}
+		
+		public void QueueCommand(Widget source, CommandState command)
+		{
+			this.QueueCommand (new QueueItem (source, command));
 		}
 		
 		public void QueueCommand(object source, string command)
