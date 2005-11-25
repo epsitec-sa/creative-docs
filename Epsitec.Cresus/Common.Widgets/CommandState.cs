@@ -48,12 +48,18 @@ namespace Epsitec.Common.Widgets
 		
 		public string						Name
 		{
-			get { return this.name; }
+			get
+			{
+				return this.name;
+			}
 		}
 		
 		public CommandDispatcher			CommandDispatcher
 		{
-			get { return this.dispatcher; }
+			get
+			{
+				return this.dispatcher;
+			}
 		}
 		
 		public virtual bool					Enabled
@@ -75,11 +81,7 @@ namespace Epsitec.Common.Widgets
 						this.widget_state &= ~ WidgetState.Enabled;
 					}
 					
-					foreach (Widget widget in this.FindWidgets ())
-					{
-						widget.SetEnabled (value);
-						widget.Invalidate ();
-					}
+					this.Synchronize ();
 				}
 			}
 		}
@@ -95,12 +97,7 @@ namespace Epsitec.Common.Widgets
 				if (this.active_state != value)
 				{
 					this.active_state = value;
-					
-					foreach (Widget widget in this.FindWidgets ())
-					{
-						widget.ActiveState = value;
-						widget.Invalidate ();
-					}
+					this.Synchronize ();
 				}
 			}
 		}
@@ -161,27 +158,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Widget[] FindWidgets()
-		{
-			return Widget.FindAllCommandWidgets (this.Regex, this.CommandDispatcher);
-		}
-		
-		
 		public virtual void Synchronize()
 		{
-			bool        enabled = this.Enabled;
-			ActiveState active  = this.ActiveState;
-			
-			foreach (Widget widget in this.FindWidgets ())
-			{
-				if ((widget.IsEnabled != enabled) ||
-					(widget.ActiveState != active))
-				{
-					widget.SetEnabled (enabled);
-					widget.ActiveState = active;
-					widget.Invalidate ();
-				}
-			}
+			CommandCache.Default.UpdateWidgets (this);
 		}
 		
 		

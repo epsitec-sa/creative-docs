@@ -32,7 +32,9 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.records[id].IsAlive);
 			System.Diagnostics.Debug.Assert (this.records[id].IsDirty);
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Command {0} attached ({1})", visual.CommandName, id));
+//			System.Diagnostics.Debug.WriteLine (string.Format ("Command {0} attached ({1}/{2}; {3} free)", visual.CommandName, id, this.records.Length - this.free_count, this.free_count));
+			
+			this.RequestAsyncSynchronization ();
 		}
 		
 		public void DetachVisual(Visual visual)
@@ -48,7 +50,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (! this.records[id].IsAlive);
 			System.Diagnostics.Debug.Assert (! this.records[id].IsDirty);
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Command detached ({0})", id));
+//			System.Diagnostics.Debug.WriteLine (string.Format ("Command detached ({0})", id));
 		}
 		
 		
@@ -63,10 +65,12 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.records[id].ClearCommand ())
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Command {0}: cache invalidated", visual.CommandName));
+//				System.Diagnostics.Debug.WriteLine (string.Format ("Command {0}: cache invalidated", visual.CommandName));
 				
 				this.clear_count += 1;
 			}
+			
+			this.RequestAsyncSynchronization ();
 		}
 		
 		public void Invalidate(CommandState command)
@@ -80,6 +84,18 @@ namespace Epsitec.Common.Widgets
 						this.clear_count += 1;
 					}
 				}
+			}
+			
+			this.RequestAsyncSynchronization ();
+		}
+		
+		
+		public void RequestAsyncSynchronization()
+		{
+			if (this.synchronize == false)
+			{
+				this.synchronize = true;
+				Platform.Window.SendSynchronizeCommandCache ();
 			}
 		}
 		
@@ -107,6 +123,31 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				this.clear_count = count;
+			}
+			
+			this.synchronize = false;
+		}
+		
+		public void UpdateWidgets(CommandState command)
+		{
+			if (this.synchronize)
+			{
+				this.Synchronize ();
+			}
+			
+			bool        enabled = command.Enabled;
+			ActiveState active  = command.ActiveState;
+			
+			int count = 0;
+			
+			for (int i = 0; i < this.records.Length; i++)
+			{
+				if (this.records[i].Command == command)
+				{
+					this.UpdateWidget (this.records[i].Visual as Widget, enabled, active);
+					
+					count++;
+				}
 			}
 		}
 		
@@ -270,7 +311,29 @@ namespace Epsitec.Common.Widgets
 					this.clear_count -= 1;
 				}
 				
-				this.records[index].SetCommand (command);
+				if (command != null)
+				{
+					this.records[index].SetCommand (command);
+					
+					bool        enabled = command.Enabled;
+					ActiveState active  = command.ActiveState;
+					
+					this.UpdateWidget (this.records[index].Visual as Widget, enabled, active);
+				}
+			}
+		}
+		
+		private void UpdateWidget(Widget widget, bool enabled, ActiveState active)
+		{
+			if (widget != null)
+			{
+				if ((widget.IsEnabled != enabled) ||
+					(widget.ActiveState != active))
+				{
+					widget.SetEnabled (enabled);
+					widget.ActiveState = active;
+					widget.Invalidate ();
+				}
 			}
 		}
 		
@@ -358,5 +421,6 @@ namespace Epsitec.Common.Widgets
 		private int								clear_count;
 		private int[]							bunch_of_free_indexes;
 		private int								bunch_of_free_indexes_count;
+		private bool							synchronize;
 	}
 }

@@ -13,6 +13,8 @@ namespace Epsitec.Common.Widgets.Platform
 		static Window()
 		{
 			Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler (Window.HandleSystemEventsUserPreferenceChanged);
+			
+			Window.dispatch_window = new Window ();
 		}
 		
 		
@@ -36,6 +38,10 @@ namespace Epsitec.Common.Widgets.Platform
 		private delegate void BoundsOffsetCallback(Drawing.Rectangle bounds, Drawing.Point offset);
 		private delegate void AnimatorCallback(Animator animator);
 		private delegate void DoubleCallback(double value);
+		
+		private Window()
+		{
+		}
 		
 		internal Window(Epsitec.Common.Widgets.Window window)
 		{
@@ -1212,11 +1218,37 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			Win32Api.PostMessage (this.Handle, Win32Const.WM_APP_VALIDATION, System.IntPtr.Zero, System.IntPtr.Zero);
 		}
+		
+		
+		internal static void SendSynchronizeCommandCache()
+		{
+			Window.is_sync_requested = true;
+			
+			try
+			{
+				Win32Api.PostMessage (Window.dispatch_window.Handle, Win32Const.WM_APP_SYNCMDCACHE, System.IntPtr.Zero, System.IntPtr.Zero);
+			}
+			catch (System.Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine ("Exception thrown in Platform.Window.SendSynchronizeCommandCache :");
+				System.Diagnostics.Debug.WriteLine (ex.Message);
+			}
+		}
 
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
-//			System.Diagnostics.Debug.WriteLine ("WndProc: " + msg.Msg.ToString ("X4") + " LP=" + msg.LParam.ToInt32 ().ToString ("X8") + " WP=" + msg.WParam.ToInt32 ().ToString ("X8") + " Bounds=" + this.Bounds.ToString());
+			if (Window.is_sync_requested)
+			{
+				Window.is_sync_requested = false;
+				CommandCache.Default.Synchronize ();
+			}
+			
+			if (Window.dispatch_window == this)
+			{
+				base.WndProc (ref msg);
+				return;
+			}
 			
 			if (msg.Msg == Win32Const.WM_GETMINMAXINFO)
 			{
@@ -1884,5 +1916,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private int								disable_sync_paint;
 		
 		private static bool						is_app_active;
+		private static bool						is_sync_requested;
+		private static Window					dispatch_window;
 	}
 }

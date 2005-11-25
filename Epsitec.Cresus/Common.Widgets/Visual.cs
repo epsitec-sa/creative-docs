@@ -956,6 +956,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnParentChanged(Types.PropertyChangedEventArgs e)
 		{
+			Helpers.VisualTree.InvalidateCommandDispatcher (this);
 		}
 		
 		protected virtual void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)

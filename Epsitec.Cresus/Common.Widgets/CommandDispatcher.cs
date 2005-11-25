@@ -338,27 +338,27 @@ namespace Epsitec.Common.Widgets
 			//	des surprises en cas de modifications en cours de synchronisation, on copie la liste
 			//	dans une table temporaire :
 			
-			CommandState[] states = new CommandState[this.command_states.Count];
-			this.command_states.CopyTo (states);
-			
-			for (int i = 0; i < states.Length; i++)
-			{
-				states[i].Synchronize ();
-			}
+//			CommandState[] states = new CommandState[this.command_states.Count];
+//			this.command_states.CopyTo (states);
+//			
+//			for (int i = 0; i < states.Length; i++)
+//			{
+//				states[i].Synchronize ();
+//			}
 		}
 		
 		public void SyncCommandStates(string name)
 		{
-			CommandState[] states = new CommandState[this.command_states.Count];
-			this.command_states.CopyTo (states);
-			
-			for (int i = 0; i < states.Length; i++)
-			{
-				if (states[i].Name == name)
-				{
-					states[i].Synchronize ();
-				}
-			}
+//			CommandState[] states = new CommandState[this.command_states.Count];
+//			this.command_states.CopyTo (states);
+//			
+//			for (int i = 0; i < states.Length; i++)
+//			{
+//				if (states[i].Name == name)
+//				{
+//					states[i].Synchronize ();
+//				}
+//			}
 		}
 		
 		public void SyncValidationRule()
@@ -476,10 +476,10 @@ namespace Epsitec.Common.Widgets
 		
 		public static void SyncCommandStates(Visual visual)
 		{
-			foreach (CommandDispatcher dispatcher in CommandDispatcher.GetDispatchers (visual))
-			{
-				dispatcher.SyncCommandStates ();
-			}
+//			foreach (CommandDispatcher dispatcher in CommandDispatcher.GetDispatchers (visual))
+//			{
+//				dispatcher.SyncCommandStates ();
+//			}
 		}
 		
 		
