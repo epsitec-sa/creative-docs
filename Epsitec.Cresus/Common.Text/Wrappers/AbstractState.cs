@@ -120,7 +120,7 @@ namespace Epsitec.Common.Text.Wrappers
 			this.state.Remove (property);
 			this.flags[property] = changed;
 			
-			this.wrapper.Synchronise (this, property);
+			this.wrapper.Synchronize (this, property);
 		}
 		
 		internal void SetValue(StateProperty property, object value)
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Text.Wrappers
 			this.state[property] = value;
 			this.flags[property] = changed;
 			
-			this.wrapper.Synchronise (this, property);
+			this.wrapper.Synchronize (this, property);
 		}
 		
 		

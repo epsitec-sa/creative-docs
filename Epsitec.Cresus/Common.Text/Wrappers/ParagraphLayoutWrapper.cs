@@ -33,7 +33,7 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
-		internal override void InternalSynchronise(AbstractState state, StateProperty property)
+		internal override void InternalSynchronize(AbstractState state, StateProperty property)
 		{
 			if (state != this.defined_state)
 			{

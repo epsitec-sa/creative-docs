@@ -33,19 +33,19 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
-		internal override void InternalSynchronise(AbstractState state, StateProperty property)
+		internal override void InternalSynchronize(AbstractState state, StateProperty property)
 		{
 			if (state == this.defined_state)
 			{
-				this.SynchroniseFont ();
-				this.SynchroniseInvert ();
+				this.SynchronizeFont ();
+				this.SynchronizeInvert ();
 				
 				this.defined_state.ClearValueFlags ();
 			}
 		}
 		
 		
-		private void SynchroniseFont()
+		private void SynchronizeFont()
 		{
 			int defines = 0;
 			int changes = 0;
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
-		private void SynchroniseInvert()
+		private void SynchronizeInvert()
 		{
 			if (this.defined_state.IsValueFlagged (State.InvertBoldProperty))
 			{

@@ -11,7 +11,10 @@ namespace Epsitec.Common.Widgets
 	{
 		public CommandCache()
 		{
+			this.records = new Record[0];
+			this.free_count = 0;
 			this.bunch_of_free_indexes = new int[20];
+			this.bunch_of_free_indexes_count = 0;
 		}
 		
 		
@@ -43,7 +46,42 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		struct Record
+		public void Invalidate(Widget widget)
+		{
+			int id = widget.GetCommandCacheId ();
+			
+			if (id == -1)
+			{
+				return;
+			}
+			
+			if (this.records[id].ClearCommand ())
+			{
+				this.clear_count += 1;
+			}
+		}
+		
+		public void Invalidate(CommandState command)
+		{
+			for (int i = 0; i < this.records.Length; i++)
+			{
+				if (this.records[i].Command == command)
+				{
+					if (this.records[i].ClearCommand ())
+					{
+						this.clear_count += 1;
+					}
+				}
+			}
+		}
+		
+		
+		public void Synchronize()
+		{
+		}
+		
+		#region Record Struct
+		private struct Record
 		{
 			public Record(Widget widget)
 			{
@@ -106,9 +144,17 @@ namespace Epsitec.Common.Widgets
 				this.command       = null;
 			}
 			
-			public void ClearCommand()
+			public bool ClearCommand()
 			{
-				this.command = null;
+				if (this.command != null)
+				{
+					this.command = null;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 			
 			public void SetCommand(CommandState command)
@@ -120,9 +166,13 @@ namespace Epsitec.Common.Widgets
 			private System.WeakReference		widget;
 			private CommandState				command;
 		}
+		#endregion
 		
 		private int FindFreeIndex()
 		{
+			//	Trouve l'index d'un enregistrement vide, utilisable pour stocker
+			//	une information sur une paire widget/commande.
+			
 			if (this.free_count == 0)
 			{
 				this.GrowRecords ();
@@ -203,6 +253,7 @@ namespace Epsitec.Common.Widgets
 		
 		private Record[]						records;
 		private int								free_count;
+		private int								clear_count;
 		private int[]							bunch_of_free_indexes;
 		private int								bunch_of_free_indexes_count;
 	}

@@ -343,7 +343,7 @@ namespace Epsitec.Common.Widgets
 			
 			for (int i = 0; i < states.Length; i++)
 			{
-				states[i].Synchronise ();
+				states[i].Synchronize ();
 			}
 		}
 		
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (states[i].Name == name)
 				{
-					states[i].Synchronise ();
+					states[i].Synchronize ();
 				}
 			}
 		}

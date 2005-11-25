@@ -167,7 +167,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual void Synchronise()
+		public virtual void Synchronize()
 		{
 			bool        enabled = this.Enabled;
 			ActiveState active  = this.ActiveState;

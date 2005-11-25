@@ -82,7 +82,7 @@ namespace Epsitec.Common.Text.Wrappers
 						foreach (StateProperty property in state.GetPendingProperties ())
 						{
 							state.NotifyChanged (property);
-							this.InternalSynchronise (state, property);
+							this.InternalSynchronize (state, property);
 						}
 						
 						state.ClearPendingProperties ();
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
-		internal void Synchronise(AbstractState state, StateProperty property)
+		internal void Synchronize(AbstractState state, StateProperty property)
 		{
 			if (state.AccessMode == AccessMode.ReadOnly)
 			{
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Text.Wrappers
 					if (this.navigator != null)
 					{
 						this.navigator.SuspendNotifications ();
-						this.InternalSynchronise (state, property);
+						this.InternalSynchronize (state, property);
 						this.navigator.ResumeNotifications ();
 					}
 				}
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
-		internal abstract void InternalSynchronise(AbstractState state, StateProperty property);
+		internal abstract void InternalSynchronize(AbstractState state, StateProperty property);
 		internal abstract void Update(bool active);
 		
 		private TextContext						context;

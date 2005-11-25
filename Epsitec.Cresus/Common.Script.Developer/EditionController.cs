@@ -206,9 +206,9 @@ namespace Epsitec.Common.Script.Developer
 			
 			if (synchronise)
 			{
-				this.save_command_state.Synchronise ();
-				this.compile_command_state.Synchronise ();
-				this.next_error_command_state.Synchronise ();
+				this.save_command_state.Synchronize ();
+				this.compile_command_state.Synchronize ();
+				this.next_error_command_state.Synchronize ();
 			}
 		}
 		

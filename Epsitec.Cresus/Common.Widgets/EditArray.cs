@@ -1600,7 +1600,7 @@ namespace Epsitec.Common.Widgets
 				
 				state.Enabled     = enabled;
 				state.ActiveState = active;
-				state.Synchronise ();
+				state.Synchronize ();
 			}
 			
 			

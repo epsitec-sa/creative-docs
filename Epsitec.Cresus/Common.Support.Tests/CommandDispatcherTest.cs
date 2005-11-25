@@ -222,7 +222,7 @@ namespace Epsitec.Common.Support
 			{
 			}
 			
-			public override void Synchronise()
+			public override void Synchronize()
 			{
 				CommandDispatcherTest.buffer.Append (this.Name);
 				CommandDispatcherTest.buffer.Append ("/");
