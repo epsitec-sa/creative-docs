@@ -237,6 +237,36 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
+		public static void InvalidateCommandDispatcher(Window window)
+		{
+			if (window != null)
+			{
+				VisualTree.InvalidateCommandDispatcher (window.Root);
+				
+				foreach (Window owned in window.OwnedWindows)
+				{
+					VisualTree.InvalidateCommandDispatcher (owned);
+				}
+			}
+		}
+		
+		public static void InvalidateCommandDispatcher(Visual visual)
+		{
+			if (visual != null)
+			{
+				CommandCache.Default.Invalidate (visual);
+				
+				if (visual.HasChildren)
+				{
+					foreach (Visual child in visual.Children)
+					{
+						VisualTree.InvalidateCommandDispatcher (child);
+					}
+				}
+			}
+		}
+		
+		
 		public static Window GetWindow(Visual visual)
 		{
 			for ( ; visual != null; )

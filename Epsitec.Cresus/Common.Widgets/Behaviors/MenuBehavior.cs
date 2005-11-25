@@ -185,6 +185,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				MenuWindow window = this.live_menu_windows[this.live_menu_windows.Count-1] as MenuWindow;
 				window.Hide ();
+				window.Close ();
 			}
 			
 			this.CleanupAfterClose ();
@@ -509,6 +510,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.keyboard_menu_active = true;
 				
 				window.Hide ();
+				window.Close ();
 			}
 			else
 			{
@@ -764,6 +766,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 							
 							window = this.live_menu_windows[n-1] as MenuWindow;
 							window.Hide ();
+							window.Close ();
 							
 							item   = parent as MenuItem;
 							window = parent.Window as MenuWindow;

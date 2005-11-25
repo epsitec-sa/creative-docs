@@ -370,22 +370,22 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public CommandState CreateCommandState(string command_name)
+		public CommandState GetCommandState(string name)
 		{
+			System.Diagnostics.Debug.Assert (name != null);
+			System.Diagnostics.Debug.Assert (name.Length > 0);
+			
 			//	Retourne un object CommandState pour le nom spécifié; si l'objet n'existe pas encore,
 			//	il sera créé dynamiquement.
 			
-			CommandState state = this[command_name];
+			CommandState state = this[name];
 			
-			if (state != null)
+			if (state == null)
 			{
-				return state;
+				state = new CommandState (name, this);
 			}
 			
-			//	La création se fait dans Widgets.CommandState et pour éviter des problèmes de
-			//	dépendances circulaires, on utilise un callback :
-			
-			return new CommandState (command_name, this);
+			return state;
 		}
 		
 		
@@ -501,20 +501,56 @@ namespace Epsitec.Common.Widgets
 			return (CommandDispatcher[]) list.ToArray (typeof (CommandDispatcher));
 		}
 		
+		public static CommandDispatcher[] GetAllDispatchers(Visual visual)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			CommandDispatcher.GetDispatchers (list, visual);
+			CommandDispatcher.GetDispatchers (list, Helpers.VisualTree.GetWindow (visual));
+			CommandDispatcher.GetDispatchers (list, CommandDispatcher.GetFocusedPrimaryDispatcher ());
+			
+			return (CommandDispatcher[]) list.ToArray (typeof (CommandDispatcher));
+		}
+		
+		public static CommandState GetCommandState(Visual visual)
+		{
+			if (visual == null)
+			{
+				return null;
+			}
+			
+			string name = visual.CommandName;
+			
+			if (name == null)
+			{
+				return null;
+			}
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			CommandDispatcher.GetDispatchers (list, visual);
+			CommandDispatcher.GetDispatchers (list, Helpers.VisualTree.GetWindow (visual));
+			CommandDispatcher.GetDispatchers (list, CommandDispatcher.GetFocusedPrimaryDispatcher ());
+			
+			foreach (CommandDispatcher dispatcher in list)
+			{
+				CommandState command = dispatcher.GetCommandState (name);
+				
+				if (command != null)
+				{
+					return command;
+				}
+			}
+			
+			return null;
+		}
+		
 		
 		private static void GetDispatchers(System.Collections.ArrayList list, Visual visual)
 		{
 			while (visual != null)
 			{
-				CommandDispatcher dispatcher = visual.CommandDispatcher;
-				
-				while ((dispatcher != null) && (list.Contains (dispatcher) == false))
-				{
-					list.Add (dispatcher);
-					
-					dispatcher = dispatcher.Master;
-				}
-				
+				CommandDispatcher.GetDispatchers (list, visual.CommandDispatcher);
 				visual = visual.Parent;
 			}
 		}
@@ -523,39 +559,68 @@ namespace Epsitec.Common.Widgets
 		{
 			while (window != null)
 			{
-				CommandDispatcher dispatcher = window.CommandDispatcher;
-				
-				while ((dispatcher != null) && (list.Contains (dispatcher) == false))
-				{
-					list.Add (dispatcher);
-					
-					dispatcher = dispatcher.Master;
-				}
-				
+				CommandDispatcher.GetDispatchers (list, window.CommandDispatcher);
 				window = window.Owner;
 			}
 		}
 		
-		
-		public static string ExtractCommandName(string command)
+		private static void GetDispatchers(System.Collections.ArrayList list, CommandDispatcher dispatcher)
 		{
-			int pos = command.IndexOf ('(');
-			if (pos < 0)
+			while ((dispatcher != null) && (list.Contains (dispatcher) == false))
 			{
-				return command.Trim ();
+				list.Add (dispatcher);
+				
+				dispatcher = dispatcher.Master;
 			}
-			
-			return command.Substring (0, pos).Trim ();
 		}
+		
 		
 		public static bool IsSimpleCommand(string command)
 		{
+			if (command == null)
+			{
+				return true;
+			}
+			
 			int pos = command.IndexOf ('(');
 			return (pos < 0) ? true : false;
 		}
 		
+		
+		public static string   ExtractCommandName(string command)
+		{
+			if ((command == null) ||
+				(command.Length == 0))
+			{
+				return null;
+			}
+			
+			int pos = command.IndexOf ('(');
+			
+			if (pos >= 0)
+			{
+				command = command.Substring (0, pos);
+			}
+			
+			command = command.Trim ();
+			
+			if (command.Length == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return command;
+			}
+		}
+		
 		public static string[] ExtractCommandArgs(string command)
 		{
+			if (command == null)
+			{
+				return new string[0];
+			}
+			
 			int pos = command.IndexOf ('(');
 			
 			if (pos < 0)
@@ -872,11 +937,15 @@ namespace Epsitec.Common.Widgets
 		
 		protected bool DispatchSingleCommand(string command, object source)
 		{
-			command = command.Trim ();
-			
 			//	Transmet la commande à ceux qui sont intéressés
 			
-			string   command_name     = CommandDispatcher.ExtractCommandName (command);
+			string command_name = CommandDispatcher.ExtractCommandName (command);
+			
+			if (command_name == null)
+			{
+				return false;
+			}
+			
 			string[] command_elements = command_name.Split ('/');
 			int      command_length   = command_elements.Length;
 			string[] command_args     = CommandDispatcher.ExtractAndParseCommandArgs (command, source);

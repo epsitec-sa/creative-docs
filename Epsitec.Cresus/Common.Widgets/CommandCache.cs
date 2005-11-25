@@ -4,7 +4,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe CommandCache permet de réaliser le lien entre des widgets et
+	/// La classe CommandCache permet de réaliser le lien entre des visuals et
 	/// leur CommandDispatcher & CommandState associé.
 	/// </summary>
 	public sealed class CommandCache
@@ -18,37 +18,43 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void AttachWidget(Widget widget)
+		public void AttachVisual(Visual visual)
 		{
-			System.Diagnostics.Debug.Assert (widget.GetCommandCacheId () == -1);
+			System.Diagnostics.Debug.Assert (visual.GetCommandCacheId () == -1);
 			
 			int id = this.FindFreeIndex ();
 			
-			widget.SetCommandCacheId (id);
+			visual.SetCommandCacheId (id);
 			
-			this.records[id] = new Record (widget);
+			this.records[id]  = new Record (visual);
+			this.clear_count += 1;
 			
 			System.Diagnostics.Debug.Assert (this.records[id].IsAlive);
 			System.Diagnostics.Debug.Assert (this.records[id].IsDirty);
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Command {0} attached ({1})", visual.CommandName, id));
 		}
 		
-		public void DetachWidget(Widget widget)
+		public void DetachVisual(Visual visual)
 		{
-			System.Diagnostics.Debug.Assert (widget.GetCommandCacheId () != -1);
+			System.Diagnostics.Debug.Assert (visual.GetCommandCacheId () != -1);
 			
-			int id = widget.GetCommandCacheId ();
+			int id = visual.GetCommandCacheId ();
 			
 			this.RecycleIndex (id);
-			widget.SetCommandCacheId (-1);
+			
+			visual.SetCommandCacheId (-1);
 			
 			System.Diagnostics.Debug.Assert (! this.records[id].IsAlive);
 			System.Diagnostics.Debug.Assert (! this.records[id].IsDirty);
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Command detached ({0})", id));
 		}
 		
 		
-		public void Invalidate(Widget widget)
+		public void Invalidate(Visual visual)
 		{
-			int id = widget.GetCommandCacheId ();
+			int id = visual.GetCommandCacheId ();
 			
 			if (id == -1)
 			{
@@ -57,6 +63,8 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.records[id].ClearCommand ())
 			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Command {0}: cache invalidated", visual.CommandName));
+				
 				this.clear_count += 1;
 			}
 		}
@@ -78,20 +86,63 @@ namespace Epsitec.Common.Widgets
 		
 		public void Synchronize()
 		{
+			if (this.clear_count > 0)
+			{
+				int count = 0;
+				
+				for (int i = 0; i < this.records.Length; i++)
+				{
+					if (this.records[i].IsDirty)
+					{
+						//	Nous avons trouvé un visual qui n'a pas encore de
+						//	CommandState attaché dans le cache.
+						
+						this.SynchronizeIndex (i);
+						
+						if (this.records[i].IsDirty)
+						{
+							count++;
+						}
+					}
+				}
+				
+				this.clear_count = count;
+			}
 		}
+		
+		
+		public CommandState GetCommandState(Visual visual)
+		{
+			int id = visual.GetCommandCacheId ();
+			
+			if (id == -1)
+			{
+				return null;
+			}
+			
+			System.Diagnostics.Debug.Assert (this.records[id].IsAlive);
+			
+			if (this.records[id].IsDirty)
+			{
+				this.SynchronizeIndex (id);
+			}
+			
+			return this.records[id].Command;
+		}
+		
 		
 		#region Record Struct
 		private struct Record
 		{
-			public Record(Widget widget)
+			public Record(Visual visual)
 			{
-				this.widget = new System.WeakReference (widget, false);
+				this.visual = new System.WeakReference (visual, false);
 				this.command = null;
 			}
 			
-			public Record(Widget widget, CommandState command)
+			public Record(Visual visual, CommandState command)
 			{
-				this.widget = new System.WeakReference (widget, false);
+				this.visual = new System.WeakReference (visual, false);
 				this.command = null;
 			}
 			
@@ -100,7 +151,7 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					return this.widget.IsAlive;
+					return this.visual == null ? false : this.visual.IsAlive;
 				}
 			}
 			
@@ -108,7 +159,11 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					return ! this.widget.IsAlive;
+					//	IsDead n'est pas le contraire de IsAlive ! Si un visual
+					//	a déjà été supprimé proprement de l'enregistrement, alors
+					//	IsDead sera false.
+					
+					return this.visual == null ? false : ! this.visual.IsAlive;
 				}
 			}
 			
@@ -121,11 +176,11 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			public Widget						Widget
+			public Visual						Visual
 			{
 				get
 				{
-					return this.widget.Target as Widget;
+					return this.visual == null ? null : this.visual.Target as Visual;
 				}
 			}
 			
@@ -140,8 +195,8 @@ namespace Epsitec.Common.Widgets
 			
 			public void Clear()
 			{
-				this.widget.Target = null;
-				this.command       = null;
+				this.visual  = null;
+				this.command = null;
 			}
 			
 			public bool ClearCommand()
@@ -163,7 +218,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			private System.WeakReference		widget;
+			private System.WeakReference		visual;
 			private CommandState				command;
 		}
 		#endregion
@@ -171,7 +226,7 @@ namespace Epsitec.Common.Widgets
 		private int FindFreeIndex()
 		{
 			//	Trouve l'index d'un enregistrement vide, utilisable pour stocker
-			//	une information sur une paire widget/commande.
+			//	une information sur une paire visual/commande.
 			
 			if (this.free_count == 0)
 			{
@@ -188,6 +243,7 @@ namespace Epsitec.Common.Widgets
 			return this.bunch_of_free_indexes[this.bunch_of_free_indexes_count];
 		}
 		
+		
 		private void RecycleIndex(int index)
 		{
 			this.records[index].Clear ();
@@ -200,37 +256,79 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		private void SynchronizeIndex(int index)
+		{
+			Visual visual = this.records[index].Visual;
+			
+			if (visual != null)
+			{
+				CommandState command = CommandDispatcher.GetCommandState (visual);
+				
+				if ((this.clear_count > 0) &&
+					(this.records[index].Command == null))
+				{
+					this.clear_count -= 1;
+				}
+				
+				this.records[index].SetCommand (command);
+			}
+		}
+		
 		private void RefreshBunchOfFreeIndexes()
 		{
 			//	Remplit la mini-table des index libres. L'idée est de ne parcourir
 			//	la table des enregistrements qu'une fois pour trouver plusieurs
 			//	éléments libres; on évite ainsi du cache trashing.
 			
-			int free  = this.free_count;
+			int free  = 0;
 			int index = 0;
 			int count = 0;
 			
 			for (int i = 0; i < this.bunch_of_free_indexes.Length; i++)
 			{
-				if (free > 0)
+				while ((index < this.records.Length)
+					&& (this.records[index].IsAlive))
 				{
-					while (this.records[index].IsAlive)
-					{
-						index++;
-					}
-					
-					this.bunch_of_free_indexes[i] = index;
-					
-					free  -= 1;
-					index += 1;
-					count += 1;
+					index++;
 				}
-				else
+				
+				if (index == this.records.Length)
 				{
 					break;
 				}
+				
+				this.bunch_of_free_indexes[i] = index;
+				
+				if (this.records[index].IsDead)
+				{
+					this.records[index].Clear ();
+				}
+				
+				index += 1;
+				count += 1;
+				free  += 1;
 			}
 			
+			while (index < this.records.Length)
+			{
+				if (this.records[index].IsAlive)
+				{
+					//	Rien à faire : l'enregistrement est encore utilisé.
+				}
+				else
+				{
+					if (this.records[index].IsDead)
+					{
+						this.records[index].Clear ();
+					}
+					
+					free += 1;
+				}
+				
+				index++;
+			}
+			
+			this.free_count                  = free;
 			this.bunch_of_free_indexes_count = count;
 			
 			System.Diagnostics.Debug.Assert (this.bunch_of_free_indexes_count == System.Math.Min (this.bunch_of_free_indexes.Length, this.free_count));
@@ -246,10 +344,14 @@ namespace Epsitec.Common.Widgets
 			
 			System.Array.Copy (old_records, 0, new_records, 0, old_size);
 			
+			this.records     = new_records;
 			this.free_count += new_size - old_size;
+			
 			this.RefreshBunchOfFreeIndexes ();
 		}
 		
+		
+		public static readonly CommandCache		Default = new CommandCache ();
 		
 		private Record[]						records;
 		private int								free_count;

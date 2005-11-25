@@ -100,6 +100,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public string							CommandName
+		{
+			get
+			{
+				return CommandDispatcher.ExtractCommandName (this.Command);
+			}
+		}
+		
 		
 		public AnchorStyles						Anchor
 		{
@@ -960,10 +968,33 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnCommandChanged(Types.PropertyChangedEventArgs e)
 		{
+			string old_command = e.OldValue as string;
+			string new_command = e.NewValue as string;
+			string old_command_name = CommandDispatcher.ExtractCommandName (old_command);
+			string new_command_name = CommandDispatcher.ExtractCommandName (new_command);
+			
+			if (old_command_name == new_command_name)
+			{
+				//	Quelqu'un a fait un changement minime (espace ou argument de
+				//	la commande). Ca ne compte pas ici.
+			}
+			else if (old_command_name == null)
+			{
+				CommandCache.Default.AttachVisual (this);
+			}
+			else if (new_command_name == null)
+			{
+				CommandCache.Default.DetachVisual (this);
+			}
+			else
+			{
+				CommandCache.Default.Invalidate (this);
+			}
 		}
 		
 		protected virtual void OnCommandDispatcherChanged(Types.PropertyChangedEventArgs e)
 		{
+			Helpers.VisualTree.InvalidateCommandDispatcher (this);
 		}
 		
 		

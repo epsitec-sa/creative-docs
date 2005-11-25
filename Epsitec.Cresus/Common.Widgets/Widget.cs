@@ -1115,26 +1115,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		public string								CommandName
-		{
-			get
-			{
-				string command = this.Command;
-				
-				if (command == null)
-				{
-					return "";
-				}
-
-				return CommandDispatcher.ExtractCommandName (command);
-			}
-		}
-		
 		public CommandState							CommandState
 		{
 			get
 			{
-				return this.CreateCommandState ();
+				return this.GetCommandState ();
 			}
 		}
 
@@ -1771,11 +1756,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public CommandState CreateCommandState()
+		public CommandState GetCommandState()
 		{
 			if (this.IsCommand)
 			{
-				return CommandState.Find (this.CommandName, this.CommandDispatcher);
+				return CommandCache.Default.GetCommandState (this);
 			}
 			else
 			{

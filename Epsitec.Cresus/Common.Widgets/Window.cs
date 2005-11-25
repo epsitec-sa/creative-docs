@@ -371,12 +371,18 @@ namespace Epsitec.Common.Widgets
 		
 		public WindowRoot						Root
 		{
-			get { return this.root; }
+			get
+			{
+				return this.root;
+			}
 		}
 		
 		public Window							Owner
 		{
-			get { return this.owner; }
+			get
+			{
+				return this.owner;
+			}
 			set
 			{
 				if (this.owner != value)
@@ -390,9 +396,38 @@ namespace Epsitec.Common.Widgets
 					else
 					{
 						this.window.Owner = null;
-						this.window.Owner = this.owner.window;
+						
+						if (this.IsVisible)
+						{
+							this.window.Owner = this.owner.window;
+						}
+					}
+					
+					Helpers.VisualTree.InvalidateCommandDispatcher (this);
+				}
+			}
+		}
+		
+		public Window[]							OwnedWindows
+		{
+			get
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				if ((this.window != null) &&
+					(this.window.IsDisposed == false))
+				{
+					foreach (Platform.Window owned in this.window.FindOwnedWindows ())
+					{
+						if ((owned.IsDisposed == false) &&
+							(owned.HostingWidgetWindow != null))
+						{
+							list.Add (owned.HostingWidgetWindow);
+						}
 					}
 				}
+				
+				return (Window[]) list.ToArray (typeof (Window));
 			}
 		}
 		
@@ -664,6 +699,8 @@ namespace Epsitec.Common.Widgets
 					{
 						this.cmd_dispatcher.ValidationRuleBecameDirty += new Support.EventHandler (this.HandleValidationRuleBecameDirty);
 					}
+					
+					Helpers.VisualTree.InvalidateCommandDispatcher (this);
 				}
 			}
 		}
@@ -1117,6 +1154,12 @@ namespace Epsitec.Common.Widgets
 			
 			this.window_is_visible = true;
 			
+			if ((this.owner != null) &&
+				(this.window != null))
+			{
+				this.window.Owner = this.owner.window;
+			}
+			
 			snapshot.InvalidateDifferent ();
 			
 			if (this.WindowShown != null)
@@ -1132,6 +1175,12 @@ namespace Epsitec.Common.Widgets
 			Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.Root, Visual.IsVisibleProperty);
 			
 			this.window_is_visible = false;
+			
+			if ((this.owner != null) &&
+				(this.window != null))
+			{
+				this.window.Owner = null;
+			}
 			
 			snapshot.InvalidateDifferent ();
 			

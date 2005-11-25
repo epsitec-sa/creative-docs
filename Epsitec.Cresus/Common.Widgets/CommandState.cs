@@ -192,10 +192,7 @@ namespace Epsitec.Common.Widgets
 				return null;
 			}
 			
-			System.Diagnostics.Debug.Assert (command_name != null);
-			System.Diagnostics.Debug.Assert (command_name.Length > 0);
-			
-			return dispatcher.CreateCommandState (command_name);
+			return dispatcher.GetCommandState (command_name);
 		}
 		
 		

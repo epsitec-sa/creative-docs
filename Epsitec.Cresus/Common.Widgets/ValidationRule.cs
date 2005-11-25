@@ -453,7 +453,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (dispatcher != null)
 				{
-					this.Add (dispatcher.CreateCommandState (value));
+					this.Add (dispatcher.GetCommandState (value));
 				}
 				else
 				{
@@ -589,7 +589,7 @@ namespace Epsitec.Common.Widgets
 				{
 					foreach (string name in this.names)
 					{
-						this.Add (dispatcher.CreateCommandState (name));
+						this.Add (dispatcher.GetCommandState (name));
 					}
 					
 					this.names.Clear ();
