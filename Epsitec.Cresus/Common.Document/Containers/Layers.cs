@@ -236,7 +236,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void Synchro(Widget widget)
 		{
 #if false //#fix
-			widget.SetEnabled(this.toolBar.CommandDispatcher[widget.Command].Enabled);
+			widget.Enable = (this.toolBar.CommandDispatcher[widget.Command].Enabled);
 #endif
 		}
 
@@ -354,7 +354,7 @@ namespace Epsitec.Common.Document.Containers
 			if ( layer.Type == Objects.LayerType.Dimmed )  state = ActiveState.Maybe;
 			if ( select )  state = ActiveState.Yes;
 			bt.ActiveState = state;
-			bt.SetEnabled(!select);
+			bt.Enable = (!select);
 
 			this.table.SelectRow(row, n==context.CurrentLayer);
 

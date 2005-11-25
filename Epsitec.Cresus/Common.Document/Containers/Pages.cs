@@ -306,7 +306,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void Synchro(Widget widget)
 		{
 #if false //#fix
-			widget.SetEnabled(this.toolBar.CommandDispatcher[widget.Command].Enabled);
+			widget.Enable = (this.toolBar.CommandDispatcher[widget.Command].Enabled);
 #endif
 		}
 
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.checkGuides.ActiveState = page.MasterGuides ? ActiveState.Yes : ActiveState.No;
 
-			this.specificSlavePage.SetEnabled(page.MasterUse == Objects.MasterUse.Specific);
+			this.specificSlavePage.Enable = (page.MasterUse == Objects.MasterUse.Specific);
 			if ( page.MasterPageToUse == null ||
 				 page.MasterPageToUse.MasterType == Objects.MasterType.Slave )
 			{
@@ -425,7 +425,7 @@ namespace Epsitec.Common.Document.Containers
 			this.checkAutoStop.ActiveState = page.MasterAutoStop ? ActiveState.Yes : ActiveState.No;
 			this.checkSpecific.ActiveState = page.MasterSpecific ? ActiveState.Yes : ActiveState.No;
 
-			this.specificMasterPage.SetEnabled(page.MasterSpecific);
+			this.specificMasterPage.Enable = (page.MasterSpecific);
 			if ( page.MasterPageToUse == null || !page.MasterSpecific )
 			{
 				this.specificMasterPage.Text = "";

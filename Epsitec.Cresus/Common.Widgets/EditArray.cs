@@ -656,7 +656,7 @@ namespace Epsitec.Common.Widgets
 							this.edit_widgets[i].IsReadOnly = read_only;
 						}
 						
-						this.edit_widgets[i].SetEnabled (!read_only);
+						this.edit_widgets[i].Enable = !read_only;
 					}
 					
 					this.setting_values = false;
@@ -1594,13 +1594,12 @@ namespace Epsitec.Common.Widgets
 				this.UpdateCommandState ("MoveDown",     ok_move_down,  ActiveState.No);
 			}
 			
-			protected virtual void UpdateCommandState(string name, bool enabled, ActiveState active)
+			protected virtual void UpdateCommandState(string name, bool enable, ActiveState active)
 			{
 				CommandState state = this.GetCommandState (name);
 				
-				state.Enabled     = enabled;
+				state.Enable      = enable;
 				state.ActiveState = active;
-				state.Synchronize ();
 			}
 			
 			

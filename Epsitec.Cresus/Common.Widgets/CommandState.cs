@@ -2,31 +2,21 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Text.RegularExpressions;
+using Epsitec.Common.Widgets.Collections;
 
 namespace Epsitec.Common.Widgets
 {
-	using ShortcutCollection = Epsitec.Common.Widgets.Collections.ShortcutCollection;
-	
 	/// <summary>
 	/// La classe CommandState permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec les widgets associés.
 	/// </summary>
 	public class CommandState
 	{
-		public CommandState(string name) : this (name, CommandDispatcher.Default)
-		{
-		}
-		
-		public CommandState(string name, Window window) : this (name, window.CommandDispatcher)
-		{
-		}
-		
 		public CommandState(string name, CommandDispatcher dispatcher)
 		{
 			System.Diagnostics.Debug.Assert (name != null);
 			System.Diagnostics.Debug.Assert (name.Length > 0);
 			System.Diagnostics.Debug.Assert (dispatcher != null);
-			
 			System.Diagnostics.Debug.Assert (dispatcher[name] == null, "CommandState created twice.", string.Format ("The CommandState {0} for dispatcher {1} already exists.\nIt cannot be created more than once.", name, dispatcher.Name));
 			
 			this.name       = name;
@@ -62,7 +52,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual bool					Enabled
+		
+		public virtual bool					Enable
 		{
 			get
 			{
@@ -70,7 +61,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				if (this.Enabled != value)
+				if (this.Enable != value)
 				{
 					if (value)
 					{
@@ -158,7 +149,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual void Synchronize()
+		protected virtual void Synchronize()
 		{
 			CommandCache.Default.UpdateWidgets (this);
 		}

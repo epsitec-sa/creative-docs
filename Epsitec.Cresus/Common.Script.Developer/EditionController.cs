@@ -100,7 +100,7 @@ namespace Epsitec.Common.Script.Developer
 			
 			this.UpdateToolBar ();
 			this.UpdateFromSource ();
-			this.UpdateCommandStates (true);
+			this.UpdateCommandStates ();
 			
 			new UniqueValueValidator (this, this.panel.MethodProtoPanel.MethodNameWidget);
 			
@@ -198,18 +198,11 @@ namespace Epsitec.Common.Script.Developer
 			this.UpdateVisiblePage ();
 		}
 		
-		protected virtual void UpdateCommandStates(bool synchronise)
+		protected virtual void UpdateCommandStates()
 		{
-			this.save_command_state.Enabled       = this.panel.IsModified;
-			this.compile_command_state.Enabled    = this.source.Methods.Length > 0;
-			this.next_error_command_state.Enabled = this.errors.Count > 0;
-			
-			if (synchronise)
-			{
-				this.save_command_state.Synchronize ();
-				this.compile_command_state.Synchronize ();
-				this.next_error_command_state.Synchronize ();
-			}
+			this.save_command_state.Enable       = this.panel.IsModified;
+			this.compile_command_state.Enable    = this.source.Methods.Length > 0;
+			this.next_error_command_state.Enable = this.errors.Count > 0;
 		}
 		
 		protected virtual void UpdateVisiblePage()
@@ -342,7 +335,7 @@ namespace Epsitec.Common.Script.Developer
 			}
 			
 			this.UpdateFromSource ();
-			this.UpdateCommandStates (false);
+			this.UpdateCommandStates ();
 		}
 		
 		protected void FindNextError(int dir)
@@ -388,7 +381,7 @@ namespace Epsitec.Common.Script.Developer
 		
 		private void HandlePanelIsModifiedChanged(object sender)
 		{
-			this.UpdateCommandStates (false);
+			this.UpdateCommandStates ();
 		}
 		
 		private void HandleSourceCursorChanged(object sender)

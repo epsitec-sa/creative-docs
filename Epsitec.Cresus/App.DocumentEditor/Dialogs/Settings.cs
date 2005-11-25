@@ -482,17 +482,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if ( sel == -1 )
 			{
-				this.buttonFirst.SetEnabled(false);
-				this.buttonUp.SetEnabled(false);
-				this.buttonDown.SetEnabled(false);
-				this.buttonLast.SetEnabled(false);
+				this.buttonFirst.Enable = (false);
+				this.buttonUp.Enable = (false);
+				this.buttonDown.Enable = (false);
+				this.buttonLast.Enable = (false);
 			}
 			else
 			{
-				this.buttonFirst.SetEnabled(sel > 0);
-				this.buttonUp.SetEnabled(sel > 0);
-				this.buttonDown.SetEnabled(sel < this.globalSettings.QuickCommands.Count-1);
-				this.buttonLast.SetEnabled(sel < this.globalSettings.QuickCommands.Count-1);
+				this.buttonFirst.Enable = (sel > 0);
+				this.buttonUp.Enable = (sel > 0);
+				this.buttonDown.Enable = (sel < this.globalSettings.QuickCommands.Count-1);
+				this.buttonLast.Enable = (sel < this.globalSettings.QuickCommands.Count-1);
 			}
 		}
 
@@ -571,7 +571,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Bouton pour le séparateur.
 				ib = this.quickList[2, row].Children[0] as IconButton;
 				ib.IconName = Misc.Icon(sep ? "QuickSeparatorYes" : "QuickSeparatorNo");
-				ib.SetEnabled(used);
+				ib.Enable = (used);
 
 				// Texte de la commande.
 				st = this.quickList[3, row].Children[0] as StaticText;

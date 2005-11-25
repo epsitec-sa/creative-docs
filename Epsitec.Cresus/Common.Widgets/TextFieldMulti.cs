@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
 			this.textFieldStyle = TextFieldStyle.Multi;
 
 			this.scroller = new VScroller(this);
-			this.scroller.SetEnabled(false);
+			this.scroller.Enable = false;
 			this.scroller.ValueChanged += new Support.EventHandler(this.HandleScrollerValueChanged);
 			//this.scroller.Dock = DockStyle.Right;
 			
@@ -146,14 +146,14 @@ namespace Epsitec.Common.Widgets
 			double h = AbstractTextField.Infinity-end.Y;  // hauteur de tout le texte
 			if ( h <= this.realSize.Height || this.realSize.Height < 0 )
 			{
-				this.scroller.SetEnabled(false);
+				this.scroller.Enable            = false;
 				this.scroller.MaxValue          = 0;
 				this.scroller.VisibleRangeRatio = 0;
 				this.scroller.Value             = 0;
 			}
 			else
 			{
-				this.scroller.SetEnabled(true);
+				this.scroller.Enable            = true;
 				this.scroller.MaxValue          = (decimal) (h-this.realSize.Height);
 				this.scroller.VisibleRangeRatio = (decimal) (this.realSize.Height/h);
 				

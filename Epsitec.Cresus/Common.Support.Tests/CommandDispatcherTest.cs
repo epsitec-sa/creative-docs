@@ -207,13 +207,13 @@ namespace Epsitec.Common.Support
 			{
 			}
 			
-			public override void Synchronize()
+			protected override void Synchronize()
 			{
 				CommandDispatcherTest.buffer.Append (this.Name);
 				CommandDispatcherTest.buffer.Append ("/");
 			}
 
-			public override bool Enabled
+			public override bool Enable
 			{
 				get
 				{

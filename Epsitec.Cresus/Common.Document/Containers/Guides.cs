@@ -196,11 +196,11 @@ namespace Epsitec.Common.Document.Containers
 			int total = this.document.Settings.GuidesCount;
 			int sel = this.document.Settings.GuidesSelected;
 
-			this.buttonDuplicate.SetEnabled(sel != -1);
-			this.buttonXfer.SetEnabled(sel != -1 && total > 0);
-			this.buttonUp.SetEnabled(sel != -1 && sel > 0);
-			this.buttonDown.SetEnabled(sel != -1 && sel < total-1);
-			this.buttonDelete.SetEnabled(sel != -1 && total > 0);
+			this.buttonDuplicate.Enable = (sel != -1);
+			this.buttonXfer.Enable = (sel != -1 && total > 0);
+			this.buttonUp.Enable = (sel != -1 && sel > 0);
+			this.buttonDown.Enable = (sel != -1 && sel < total-1);
+			this.buttonDelete.Enable = (sel != -1 && total > 0);
 		}
 
 		// Met à jour le contenu de la table.
@@ -279,15 +279,15 @@ namespace Epsitec.Common.Document.Containers
 			int sel = this.document.Settings.GuidesSelected;
 			if ( sel < 0 )
 			{
-				this.editType.SetEnabled(false);
-				this.editPosition.SetEnabled(false);
+				this.editType.Enable = (false);
+				this.editPosition.Enable = (false);
 				this.editType.Text = "";
 				this.editPosition.Text = "";
 			}
 			else
 			{
-				this.editType.SetEnabled(true);
-				this.editPosition.SetEnabled(true);
+				this.editType.Enable = (true);
+				this.editPosition.Enable = (true);
 				Settings.Guide guide = this.document.Settings.GuidesGet(sel);
 				this.editType.Text = Settings.Guide.TypeToString(guide.Type);
 				this.editPosition.InternalValue = (decimal) guide.Position;

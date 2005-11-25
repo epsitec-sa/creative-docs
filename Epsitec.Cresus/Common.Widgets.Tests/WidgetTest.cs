@@ -360,8 +360,8 @@ namespace Epsitec.Common.Widgets
 				this.CreateButton (pane, "Redo", "redo");
 				this.CreateButton (pane, "Forget", "purge-undo-redo");
 				
-//-				pane.FindChild ("undo").SetEnabled (false);
-//-				pane.FindChild ("redo").SetEnabled (false);
+//-				pane.FindChild ("undo").Enable =  (false);
+//-				pane.FindChild ("redo").Enable =  (false);
 			}
 			
 			private void CreateButton(Widget pane, string title, string name)
@@ -454,8 +454,8 @@ namespace Epsitec.Common.Widgets
 //-				System.Diagnostics.Debug.WriteLine ("Undo=" + this.frame.TextStory.GetDebugUndo ());
 //-				System.Diagnostics.Debug.WriteLine ("");
 				
-				button.Parent.FindChild ("undo").SetEnabled (this.frame.OpletQueue.CanUndo);
-				button.Parent.FindChild ("redo").SetEnabled (this.frame.OpletQueue.CanRedo);
+				button.Parent.FindChild ("undo").Enable = this.frame.OpletQueue.CanUndo;
+				button.Parent.FindChild ("redo").Enable = this.frame.OpletQueue.CanRedo;
 				
 				this.frame.TextNavigator.NotifyTextChanged ();
 			}
@@ -1156,7 +1156,7 @@ namespace Epsitec.Common.Widgets
 			
 			for (int i = 0; i < find.Length; i++)
 			{
-				find[i].SetEnabled (true);
+				find[i].Enable = true;
 				find[i].Invalidate ();
 				
 				System.Diagnostics.Debug.Assert (find[i].CommandState == state);
@@ -1169,18 +1169,18 @@ namespace Epsitec.Common.Widgets
 			
 			for (int i = 0; i < find.Length; i++)
 			{
-				find[i].SetEnabled (false);
+				find[i].Enable = false;
 				find[i].Invalidate ();
 			}
 		}
 		
 		[Test] public void CheckCommandState()
 		{
-			WidgetTest.open_state.Enabled = ! WidgetTest.open_state.Enabled;
+			WidgetTest.open_state.Enable = ! WidgetTest.open_state.Enable;
 		}
 		
 		
-		static CommandState open_state = new CommandState ("open");
+		static CommandState open_state = CommandDispatcher.Default.GetCommandState ("open");
 		
 		[Test] public void CheckFindChildBasedOnName()
 		{

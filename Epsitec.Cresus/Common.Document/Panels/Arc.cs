@@ -140,8 +140,8 @@ namespace Epsitec.Common.Document.Panels
 		{
 			bool enable = (this.SelectButtonType != Properties.ArcType.Full);
 
-			this.fieldStarting.SetEnabled(this.isExtendedSize && enable);
-			this.fieldEnding.SetEnabled(this.isExtendedSize && enable);
+			this.fieldStarting.Enable = (this.isExtendedSize && enable);
+			this.fieldEnding.Enable = (this.isExtendedSize && enable);
 
 			this.fieldStarting.SetVisible(this.isExtendedSize);
 			this.fieldEnding.SetVisible(this.isExtendedSize);

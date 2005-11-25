@@ -1740,14 +1740,14 @@ invalid:	row    = -1;
 				(rows <= 0) ||
 				(this.n_fully_visible_rows <= 0))
 			{
-				this.v_scroller.SetEnabled (false);
+				this.v_scroller.Enable            = false;
 				this.v_scroller.MaxValue          = 1;
 				this.v_scroller.VisibleRangeRatio = 1;
 				this.v_scroller.Value             = 0;
 			}
 			else
 			{
-				this.v_scroller.SetEnabled (true);
+				this.v_scroller.Enable            = true;
 				this.v_scroller.MaxValue          = (decimal) (rows - this.n_fully_visible_rows);
 				this.v_scroller.VisibleRangeRatio = (decimal) (this.n_fully_visible_rows / (double) rows);
 				this.v_scroller.Value             = (decimal) (this.first_virtvis_row);
@@ -1765,14 +1765,14 @@ invalid:	row    = -1;
 				(width <= 0) ||
 				(this.table_bounds.Width <= 0))
 			{
-				this.h_scroller.SetEnabled (false);
+				this.h_scroller.Enable            = false;
 				this.h_scroller.MaxValue          = 1;
 				this.h_scroller.VisibleRangeRatio = 1;
 				this.h_scroller.Value             = 0;
 			}
 			else
 			{
-				this.h_scroller.SetEnabled (true);
+				this.h_scroller.Enable            = true;
 				this.h_scroller.MaxValue          = (decimal) (width - this.table_bounds.Width);
 				this.h_scroller.VisibleRangeRatio = (decimal) (this.table_bounds.Width / width);
 				this.h_scroller.Value             = (decimal) (this.offset);

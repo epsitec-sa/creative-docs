@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		ActiveStateChanged,
 		ColorChanged,
-		EnabledChanged,
+//-		EnabledChanged,
 		EngagedChanged,
 		FocusedChanged,
 		FrozenChanged,

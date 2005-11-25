@@ -959,23 +959,23 @@ namespace Epsitec.Common.Widgets
 			bool enable;
 
 			enable = !this.recordModified && !this.recordCreated;
-			this.buttonCreate.SetEnabled(enable);
+			this.buttonCreate.Enable = (enable);
 
 			enable = !this.recordModified && !this.recordCreated && this.recordRank != -1;
-			this.buttonDuplicate.SetEnabled(enable);
+			this.buttonDuplicate.Enable = (enable);
 
 			enable = this.recordRank != -1;
-			this.buttonDelete.SetEnabled(enable);
+			this.buttonDelete.Enable = (enable);
 
 			enable = this.recordModified;
-			this.buttonValidate.SetEnabled(enable);
+			this.buttonValidate.Enable = (enable);
 
 			enable = this.recordModified || this.recordCreated;
-			this.buttonCancel.SetEnabled(enable);
+			this.buttonCancel.Enable = (enable);
 
 			string crit = this.editCrit.Text;
 			enable = crit.Length > 0;
-			this.buttonSearch.SetEnabled(enable);
+			this.buttonSearch.Enable = (enable);
 		}
 
 		// Met le focus dans une rubrique éditable.

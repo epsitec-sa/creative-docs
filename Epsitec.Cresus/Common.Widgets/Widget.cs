@@ -1571,26 +1571,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void SetEnabled(bool enabled)
-		{
-			if (this.Enable == false)
-			{
-				if (enabled)
-				{
-					this.Enable = true;
-					this.Invalidate (InvalidateReason.EnabledChanged);
-				}
-			}
-			else
-			{
-				if (!enabled)
-				{
-					this.Enable = false;
-					this.Invalidate (InvalidateReason.EnabledChanged);
-				}
-			}
-		}
-		
 		public virtual void SetFrozen(bool frozen)
 		{
 			if ((this.internal_state & InternalState.Frozen) == 0)

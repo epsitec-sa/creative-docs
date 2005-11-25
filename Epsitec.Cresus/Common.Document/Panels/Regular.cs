@@ -112,7 +112,7 @@ namespace Epsitec.Common.Document.Panels
 		protected void EnableWidgets()
 		{
 			bool star = (this.grid.SelectedValue == 1);
-			this.fieldDeep.SetEnabled(this.isExtendedSize && star);
+			this.fieldDeep.Enable = (this.isExtendedSize && star);
 		}
 
 		// Met à jour la géométrie.

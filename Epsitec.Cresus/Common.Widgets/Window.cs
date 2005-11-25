@@ -1492,13 +1492,6 @@ namespace Epsitec.Common.Widgets
 				
 				System.Diagnostics.Debug.Assert (dispatchers.Length > 0);
 				
-#if false //#fix
-				if (dispatcher == null)
-				{
-					dispatcher = this.CommandDispatcher;
-				}
-#endif
-				
 				CommandDispatcher.Dispatch (dispatchers, command, source);
 			}
 			

@@ -76,7 +76,7 @@ namespace Epsitec.Common.Document
 			CommandState state = cd[cmd];
 			if ( state != null )
 			{
-				if ( !state.Enabled )  return false;
+				if ( !state.Enable )  return false;
 			}
 
 			ContextMenuItem item = new ContextMenuItem();

@@ -186,9 +186,9 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEffect2.TextFieldReal.InternalMinValue = (decimal) min2*100;
 			this.fieldEffect2.TextFieldReal.InternalMaxValue = (decimal) max2*100;
 
-			this.fieldRadius.SetEnabled(enableRadius);
-			this.fieldEffect1.SetEnabled(this.isExtendedSize && enable1);
-			this.fieldEffect2.SetEnabled(this.isExtendedSize && enable2);
+			this.fieldRadius.Enable = (enableRadius);
+			this.fieldEffect1.Enable = (this.isExtendedSize && enable1);
+			this.fieldEffect2.Enable = (this.isExtendedSize && enable2);
 
 			this.fieldRadius.SetVisible(true);
 			this.fieldEffect1.SetVisible(this.isExtendedSize);

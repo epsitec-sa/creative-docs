@@ -220,7 +220,7 @@ namespace Epsitec.Common.Document.TextPanels
 				state  ^= this.document.FontWrapper.Defined.InvertBold;
 			}
 
-			this.buttonBold.SetEnabled(enabled);
+			this.buttonBold.Enable = (enabled);
 			this.buttonBold.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Document.TextPanels
 				state  ^= this.document.FontWrapper.Defined.InvertItalic;
 			}
 
-			this.buttonItalic.SetEnabled(enabled);
+			this.buttonItalic.Enable = (enabled);
 			this.buttonItalic.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 

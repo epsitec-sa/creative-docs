@@ -640,7 +640,7 @@ namespace Epsitec.Common.Document
 			TextFieldSlider field = this.WidgetsTableSearch(name, "") as TextFieldSlider;
 			if ( field != null )
 			{
-				field.SetEnabled(sDouble.IsEnabled);
+				field.Enable = (sDouble.IsEnabled);
 			}
 
 			if ( sDouble.Info )
@@ -914,13 +914,13 @@ namespace Epsitec.Common.Document
 			{
 				ib.ActiveState = ActiveState.Yes;
 				ib.IconName = Misc.Icon("Linked");
-				sep.SetEnabled(true);
+				sep.Enable = (true);
 			}
 			else
 			{
 				ib.ActiveState = ActiveState.No;
 				ib.IconName = Misc.Icon("Unlinked");
-				sep.SetEnabled(false);
+				sep.Enable = (false);
 			}
 		}
 
@@ -1835,7 +1835,7 @@ namespace Epsitec.Common.Document
 		{
 			Widget widget = this.WidgetsTableSearch(name, "");
 			if ( widget == null )  return;
-			widget.SetEnabled(enabled);
+			widget.Enable = (enabled);
 		}
 
 		// Ajoute un widget dans la table.

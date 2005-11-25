@@ -584,7 +584,7 @@ namespace Epsitec.Common.Widgets
 					rect.Offset(-2, 0);
 					this.arrowLeft.Bounds = rect;
 					this.arrowLeft.SetVisible(true);
-					this.arrowLeft.SetEnabled(this.scrollOffset > this.TabOffsetMin);
+					this.arrowLeft.Enable = (this.scrollOffset > this.TabOffsetMin);
 
 					double x = this.Client.Width-this.tabHeight;
 					if ( this.hasMenuButton  )  x -= this.tabHeight-4;
@@ -594,7 +594,7 @@ namespace Epsitec.Common.Widgets
 					rect.Offset(2, 0);
 					this.arrowRight.Bounds = rect;
 					this.arrowRight.SetVisible(true);
-					this.arrowRight.SetEnabled(this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
+					this.arrowRight.Enable = (this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
 				}
 				else if ( this.Arrows == TabBookArrows.Right )
 				{
@@ -606,12 +606,12 @@ namespace Epsitec.Common.Widgets
 					rect.Offset(6, 0);
 					this.arrowLeft.Bounds = rect;
 					this.arrowLeft.SetVisible(true);
-					this.arrowLeft.SetEnabled(this.scrollOffset > this.TabOffsetMin);
+					this.arrowLeft.Enable = (this.scrollOffset > this.TabOffsetMin);
 
 					rect.Offset(this.tabHeight-4, 0);
 					this.arrowRight.Bounds = rect;
 					this.arrowRight.SetVisible(true);
-					this.arrowRight.SetEnabled(this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
+					this.arrowRight.Enable = (this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
 				}
 			}
 			else

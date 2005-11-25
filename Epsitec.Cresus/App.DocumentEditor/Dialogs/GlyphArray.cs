@@ -532,12 +532,12 @@ namespace Epsitec.Common.Widgets
 
 			if ( max <= 0 )
 			{
-				this.scroller.SetEnabled(false);
+				this.scroller.Enable = false;
 				return 0;
 			}
 			else
 			{
-				this.scroller.SetEnabled(true);
+				this.scroller.Enable = true;
 				this.scroller.SmallChange = (decimal) ((double)dx/max);
 				this.scroller.LargeChange = (decimal) ((double)dx*dy/max);
 				this.scroller.VisibleRangeRatio = (decimal) ((double)dx*dy/total);

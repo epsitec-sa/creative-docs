@@ -344,24 +344,24 @@ namespace Epsitec.Common.Document.Panels
 			}
 
 			this.fieldStandardLength.SetVisible(showStandardLength);
-			this.fieldStandardLength.SetEnabled(enableStandardLength);
+			this.fieldStandardLength.Enable = (enableStandardLength);
 
 			for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
 			{
 				this.radioDashRank[i].SetVisible(showDash);
-				this.radioDashRank[i].SetEnabled(enableDash);
+				this.radioDashRank[i].Enable = (enableDash);
 			}
 
 			this.fieldDashPen.SetVisible(showDash);
-			this.fieldDashPen.SetEnabled(enableDash);
+			this.fieldDashPen.Enable = (enableDash);
 			this.fieldDashGap.SetVisible(showDash);
-			this.fieldDashGap.SetEnabled(enableDash);
+			this.fieldDashGap.Enable = (enableDash);
 
 			this.gridCap.SetVisible(capJoin);
-			this.gridCap.SetEnabled(capJoin);
+			this.gridCap.Enable = (capJoin);
 
 			this.gridJoin.SetVisible(capJoin);
-			this.gridJoin.SetEnabled(capJoin);
+			this.gridJoin.Enable = (capJoin);
 		}
 
 		// Adapte les textes courts ou longs.

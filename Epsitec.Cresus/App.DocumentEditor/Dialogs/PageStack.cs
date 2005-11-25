@@ -245,20 +245,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				Document doc = this.editor.CurrentDocument;
 				DrawingContext context = doc.Modifier.ActiveViewer.DrawingContext;
 
-				this.pagePrev.SetEnabled(this.showedPage > 0);
-				this.pageMenu.SetEnabled(true);
-				this.pageNext.SetEnabled(this.showedPage < context.TotalPages()-1);
-				this.buttonCurrent.SetEnabled(this.showedPage != context.CurrentPage);
+				this.pagePrev.Enable = (this.showedPage > 0);
+				this.pageMenu.Enable = (true);
+				this.pageNext.Enable = (this.showedPage < context.TotalPages()-1);
+				this.buttonCurrent.Enable = (this.showedPage != context.CurrentPage);
 
 				Objects.Page page = doc.GetObjects[this.showedPage] as Objects.Page;
 				this.pageMenu.Text = page.ShortName;
 			}
 			else
 			{
-				this.pagePrev.SetEnabled(false);
-				this.pageMenu.SetEnabled(false);
-				this.pageNext.SetEnabled(false);
-				this.buttonCurrent.SetEnabled(false);
+				this.pagePrev.Enable = (false);
+				this.pageMenu.Enable = (false);
+				this.pageNext.Enable = (false);
+				this.buttonCurrent.Enable = (false);
 			}
 		}
 

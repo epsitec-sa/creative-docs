@@ -85,7 +85,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			if (this.button_accept != null)
 			{
-				this.button_accept.SetEnabled (this.is_accept_enabled);
+				this.button_accept.Enable = this.is_accept_enabled;
 			}
 		}
 		

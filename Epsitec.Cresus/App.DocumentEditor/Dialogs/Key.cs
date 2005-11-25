@@ -165,7 +165,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 					if ( this.validKey )
 					{
-						this.radio1.SetEnabled(false);
+						this.radio1.Enable = (false);
 					}
 					else
 					{
@@ -213,16 +213,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void UpdateKeys()
 		{
-			this.keyLabel.SetEnabled(!this.demo);
-			this.key1.SetEnabled(!this.demo);
-			this.key2.SetEnabled(!this.demo);
-			this.key3.SetEnabled(!this.demo);
-			this.key4.SetEnabled(!this.demo);
+			this.keyLabel.Enable = (!this.demo);
+			this.key1.Enable = (!this.demo);
+			this.key2.Enable = (!this.demo);
+			this.key3.Enable = (!this.demo);
+			this.key4.Enable = (!this.demo);
 		}
 
 		protected void UpdateButton()
 		{
-			this.buttonOK.SetEnabled(this.demo || this.validKey);
+			this.buttonOK.Enable = (this.demo || this.validKey);
 		}
 
 

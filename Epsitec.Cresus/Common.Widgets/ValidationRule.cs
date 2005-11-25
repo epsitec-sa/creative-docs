@@ -625,7 +625,7 @@ namespace Epsitec.Common.Widgets
 			
 			foreach (CommandState command_state in this.command_states)
 			{
-				command_state.Enabled = is_valid;
+				command_state.Enable = is_valid;
 			}
 		}
 		

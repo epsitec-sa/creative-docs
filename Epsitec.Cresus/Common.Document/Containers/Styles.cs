@@ -291,11 +291,11 @@ namespace Epsitec.Common.Document.Containers
 			int total = this.list.Rows;
 			int sel = this.document.Aggregates.Selected;
 
-			this.buttonAggregateNewAll.SetEnabled(!this.document.Modifier.IsTool || this.document.Modifier.TotalSelected > 0);
-			this.buttonAggregateUp.SetEnabled(sel != -1 && sel > 0);
-			this.buttonAggregateDuplicate.SetEnabled(sel != -1);
-			this.buttonAggregateDown.SetEnabled(sel != -1 && sel < total-1);
-			this.buttonAggregateDelete.SetEnabled(sel != -1);
+			this.buttonAggregateNewAll.Enable = (!this.document.Modifier.IsTool || this.document.Modifier.TotalSelected > 0);
+			this.buttonAggregateUp.Enable = (sel != -1 && sel > 0);
+			this.buttonAggregateDuplicate.Enable = (sel != -1);
+			this.buttonAggregateDown.Enable = (sel != -1 && sel < total-1);
+			this.buttonAggregateDelete.Enable = (sel != -1);
 
 			Properties.Type type = Properties.Type.None;
 			bool enableDelete = false;
@@ -311,8 +311,8 @@ namespace Epsitec.Common.Document.Containers
 					}
 				}
 			}
-			this.buttonStyleNew.SetEnabled(sel != -1);
-			this.buttonStyleDelete.SetEnabled(enableDelete);
+			this.buttonStyleNew.Enable = (sel != -1);
+			this.buttonStyleDelete.Enable = (enableDelete);
 		}
 
 
@@ -347,10 +347,10 @@ namespace Epsitec.Common.Document.Containers
 			int total = this.childrens.Rows;
 			int sel = this.childrens.SelectedPropertyRow;
 
-			this.buttonChildrensNew.SetEnabled(aggSel != -1);
-			this.buttonChildrensUp.SetEnabled(sel != -1 && sel > 0);
-			this.buttonChildrensDown.SetEnabled(sel != -1 && sel < total-1);
-			this.buttonChildrensDelete.SetEnabled(sel != -1);
+			this.buttonChildrensNew.Enable = (aggSel != -1);
+			this.buttonChildrensUp.Enable = (sel != -1 && sel > 0);
+			this.buttonChildrensDown.Enable = (sel != -1 && sel < total-1);
+			this.buttonChildrensDelete.Enable = (sel != -1);
 		}
 
 		// Met à jour le panneau pour éditer les enfants de l'agrégat sélectionné.
@@ -739,7 +739,7 @@ namespace Epsitec.Common.Document.Containers
 				string text = Properties.Abstract.Text(type);
 				string line = string.Format("{0}   {1}", icon, text);
 				MenuItem item = new MenuItem("StyleNew", "", line, "", Properties.Abstract.TypeName(type));
-				item.SetEnabled(!this.MenuTypesExist(agg.Styles, type));
+				item.Enable = (!this.MenuTypesExist(agg.Styles, type));
 				item.Pressed += new MessageEventHandler(this.HandleMenuTypesPressed);
 				menu.Items.Add(item);
 			}

@@ -135,8 +135,8 @@ namespace Epsitec.Common.Widgets
 				this.Synchronize ();
 			}
 			
-			bool        enabled = command.Enabled;
-			ActiveState active  = command.ActiveState;
+			bool        enable = command.Enable;
+			ActiveState active = command.ActiveState;
 			
 			int count = 0;
 			
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.records[i].Command == command)
 				{
-					this.UpdateWidget (this.records[i].Visual as Widget, enabled, active);
+					this.UpdateWidget (this.records[i].Visual as Widget, enable, active);
 					
 					count++;
 				}
@@ -315,25 +315,20 @@ namespace Epsitec.Common.Widgets
 				{
 					this.records[index].SetCommand (command);
 					
-					bool        enabled = command.Enabled;
-					ActiveState active  = command.ActiveState;
+					bool        enable = command.Enable;
+					ActiveState active = command.ActiveState;
 					
-					this.UpdateWidget (this.records[index].Visual as Widget, enabled, active);
+					this.UpdateWidget (this.records[index].Visual as Widget, enable, active);
 				}
 			}
 		}
 		
-		private void UpdateWidget(Widget widget, bool enabled, ActiveState active)
+		private void UpdateWidget(Widget widget, bool enable, ActiveState active)
 		{
 			if (widget != null)
 			{
-				if ((widget.IsEnabled != enabled) ||
-					(widget.ActiveState != active))
-				{
-					widget.SetEnabled (enabled);
-					widget.ActiveState = active;
-					widget.Invalidate ();
-				}
+				widget.Enable      = enable;
+				widget.ActiveState = active;
 			}
 		}
 		

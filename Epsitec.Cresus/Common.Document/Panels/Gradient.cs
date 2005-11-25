@@ -483,19 +483,19 @@ namespace Epsitec.Common.Document.Panels
 			this.swapColor.SetVisible(color2);
 
 			this.reset.SetVisible(showReset);
-			this.reset.SetEnabled(enableReset);
+			this.reset.Enable = (enableReset);
 
 			this.fieldAngle.SetVisible(showAngle);
-			this.fieldAngle.SetEnabled(enableAngle);
+			this.fieldAngle.Enable = (enableAngle);
 
 			this.fieldRepeat.SetVisible(showRepeat);
-			this.fieldRepeat.SetEnabled(enableRepeat);
+			this.fieldRepeat.Enable = (enableRepeat);
 
 			this.fieldMiddle.SetVisible(showRepeat);
-			this.fieldMiddle.SetEnabled(enableRepeat);
+			this.fieldMiddle.Enable = (enableRepeat);
 
 			this.fieldSmooth.SetVisible(showSmooth);
-			this.fieldSmooth.SetEnabled(enableSmooth);
+			this.fieldSmooth.Enable = (enableSmooth);
 
 			for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 			{

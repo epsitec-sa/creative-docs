@@ -206,52 +206,52 @@ namespace Epsitec.Common.Document.Containers
 				enabled3 = false;
 			}
 
-			this.buttonMoveH.SetEnabled(enabled);
-			this.buttonMoveHi.SetEnabled(enabled);
-			this.buttonMoveV.SetEnabled(enabled);
-			this.buttonMoveVi.SetEnabled(enabled);
+			this.buttonMoveH.Enable = (enabled);
+			this.buttonMoveHi.Enable = (enabled);
+			this.buttonMoveV.Enable = (enabled);
+			this.buttonMoveVi.Enable = (enabled);
 
-			this.buttonRotate90.SetEnabled(enabled);
-			this.buttonRotate180.SetEnabled(enabled);
-			this.buttonRotate270.SetEnabled(enabled);
-			this.buttonRotate.SetEnabled(enabled);
-			this.buttonRotatei.SetEnabled(enabled);
+			this.buttonRotate90.Enable = (enabled);
+			this.buttonRotate180.Enable = (enabled);
+			this.buttonRotate270.Enable = (enabled);
+			this.buttonRotate.Enable = (enabled);
+			this.buttonRotatei.Enable = (enabled);
 			
-			this.buttonMirrorH.SetEnabled(enabled);
-			this.buttonMirrorV.SetEnabled(enabled);
+			this.buttonMirrorH.Enable = (enabled);
+			this.buttonMirrorV.Enable = (enabled);
 			
-			this.buttonScaleMul2.SetEnabled(enabled);
-			this.buttonScaleDiv2.SetEnabled(enabled);
-			this.buttonScaleMulFree.SetEnabled(enabled);
-			this.buttonScaleDivFree.SetEnabled(enabled);
+			this.buttonScaleMul2.Enable = (enabled);
+			this.buttonScaleDiv2.Enable = (enabled);
+			this.buttonScaleMulFree.Enable = (enabled);
+			this.buttonScaleDivFree.Enable = (enabled);
 
-			this.buttonAlignGrid.SetEnabled(enabled);
-			this.buttonAlignLeft.SetEnabled(enabled2);
-			this.buttonAlignCenterX.SetEnabled(enabled2);
-			this.buttonAlignRight.SetEnabled(enabled2);
-			this.buttonAlignTop.SetEnabled(enabled2);
-			this.buttonAlignCenterY.SetEnabled(enabled2);
-			this.buttonAlignBottom.SetEnabled(enabled2);
+			this.buttonAlignGrid.Enable = (enabled);
+			this.buttonAlignLeft.Enable = (enabled2);
+			this.buttonAlignCenterX.Enable = (enabled2);
+			this.buttonAlignRight.Enable = (enabled2);
+			this.buttonAlignTop.Enable = (enabled2);
+			this.buttonAlignCenterY.Enable = (enabled2);
+			this.buttonAlignBottom.Enable = (enabled2);
 
-			this.buttonShareLeft.SetEnabled(enabled3);
-			this.buttonShareCenterX.SetEnabled(enabled3);
-			this.buttonShareSpaceX.SetEnabled(enabled3);
-			this.buttonShareRight.SetEnabled(enabled3);
-			this.buttonShareTop.SetEnabled(enabled3);
-			this.buttonShareCenterY.SetEnabled(enabled3);
-			this.buttonShareSpaceY.SetEnabled(enabled3);
-			this.buttonShareBottom.SetEnabled(enabled3);
+			this.buttonShareLeft.Enable = (enabled3);
+			this.buttonShareCenterX.Enable = (enabled3);
+			this.buttonShareSpaceX.Enable = (enabled3);
+			this.buttonShareRight.Enable = (enabled3);
+			this.buttonShareTop.Enable = (enabled3);
+			this.buttonShareCenterY.Enable = (enabled3);
+			this.buttonShareSpaceY.Enable = (enabled3);
+			this.buttonShareBottom.Enable = (enabled3);
 
-			this.buttonAdjustWidth.SetEnabled(enabled2);
-			this.buttonAdjustHeight.SetEnabled(enabled2);
+			this.buttonAdjustWidth.Enable = (enabled2);
+			this.buttonAdjustHeight.Enable = (enabled2);
 
-			this.buttonColorToRGB.SetEnabled(enabled);
-			this.buttonColorToCMYK.SetEnabled(enabled);
-			this.buttonColorToGray.SetEnabled(enabled);
-			this.buttonColorStrokeDark.SetEnabled(enabled);
-			this.buttonColorStrokeLight.SetEnabled(enabled);
-			this.buttonColorFillDark.SetEnabled(enabled);
-			this.buttonColorFillLight.SetEnabled(enabled);
+			this.buttonColorToRGB.Enable = (enabled);
+			this.buttonColorToCMYK.Enable = (enabled);
+			this.buttonColorToGray.Enable = (enabled);
+			this.buttonColorStrokeDark.Enable = (enabled);
+			this.buttonColorStrokeLight.Enable = (enabled);
+			this.buttonColorFillDark.Enable = (enabled);
+			this.buttonColorFillLight.Enable = (enabled);
 		}
 
 

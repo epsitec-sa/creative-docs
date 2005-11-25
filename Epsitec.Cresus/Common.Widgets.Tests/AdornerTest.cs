@@ -40,7 +40,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (widget.IsEnabled)
 			{
-				widget.SetEnabled (top_level);
+				widget.Enable =  (top_level);
 
 				foreach (Widget child in widget.Children)
 				{
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Widgets
 			fileMenu.Items.Add(new MenuItem("quit", "", "Quitter", ""));
 			fileMenu.AdjustSize();
 			menu.Items[0].Submenu = fileMenu;
-			fileMenu.Items[4].SetEnabled(false);
+			fileMenu.Items[4].Enable = (false);
 
 			VMenu editMenu = new VMenu();
 			editMenu.Host = window;
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Widgets
 			showMenu.Items.Add(new MenuItem("set", "", "Reglages", ""));
 			showMenu.AdjustSize();
 			menu.Items[2].Submenu = showMenu;
-			showMenu.Items[1].SetEnabled(false);
+			showMenu.Items[1].Enable = (false);
 
 			VMenu optMenu = new VMenu();
 			optMenu.Host = window;
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Widgets
 //			c.Location = new Point(95+150, 30);
 			c.Width = 75;
 			c.Text = "Ai<m>d</m>e";
-//			c.SetEnabled(false);
+//			c.Enable = (false);
 			c.Anchor = AnchorStyles.BottomLeft;
 			c.AnchorMargins = new Margins(245, 0, 0, 30);
 			c.TabIndex = 22;
@@ -682,7 +682,7 @@ namespace Epsitec.Common.Widgets
 			TextFieldEx text_ex_3 = new TextFieldEx();
 			text_ex_3.SetParent (page3);
 			text_ex_3.Bounds = new Drawing.Rectangle(10, page3.Height-30-28-28, 120, text_ex_3.Height);
-			text_ex_3.SetEnabled(false);
+			text_ex_3.Enable = (false);
 			text_ex_3.TabIndex = 3;
 			
 			TextFieldEx text_ex_4 = new TextFieldEx();

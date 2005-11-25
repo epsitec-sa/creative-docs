@@ -44,12 +44,12 @@ namespace Epsitec.Common.Document.Panels
 			if ( this.property.IsMulti )
 			{
 				this.field.Text = "...";
-				this.field.SetEnabled(false);
+				this.field.Enable = (false);
 			}
 			else
 			{
 				this.field.Text = p.String;
-				this.field.SetEnabled(true);
+				this.field.Enable = (true);
 			}
 
 			this.ignoreChanged = false;

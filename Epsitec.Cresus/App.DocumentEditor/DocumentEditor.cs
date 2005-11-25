@@ -161,7 +161,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleSizeChanged()
 		{
 			if ( this.resize == null || this.Window == null )  return;
-			this.resize.SetEnabled(!this.Window.IsFullScreen);
+			this.resize.Enable = !this.Window.IsFullScreen;
 		}
 		
 		protected override void OnSizeChanged(Epsitec.Common.Types.PropertyChangedEventArgs e)
@@ -3717,22 +3717,22 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( this.IsCurrentDocument )
 			{
-				this.printState.Enabled = true;
-				this.exportState.Enabled = true;
-				this.glyphsState.Enabled = true;
-				this.infosState.Enabled = true;
-				this.pageStackState.Enabled = true;
+				this.printState.Enable = true;
+				this.exportState.Enable = true;
+				this.glyphsState.Enable = true;
+				this.infosState.Enable = true;
+				this.pageStackState.Enable = true;
 
 				this.CurrentDocument.Dialogs.UpdateInfos();
 				this.UpdateBookDocuments();
 			}
 			else
 			{
-				this.printState.Enabled = false;
-				this.exportState.Enabled = false;
-				this.glyphsState.Enabled = false;
-				this.infosState.Enabled = false;
-				this.pageStackState.Enabled = false;
+				this.printState.Enable = false;
+				this.exportState.Enable = false;
+				this.glyphsState.Enable = false;
+				this.infosState.Enable = false;
+				this.pageStackState.Enable = false;
 			}
 
 			this.BuildLastFilenamesMenu();
@@ -3790,18 +3790,18 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-				this.zoomPageState.Enabled = true;
-				this.zoomPageWidthState.Enabled = true;
-				this.zoomDefaultState.Enabled = true;
+				this.zoomPageState.Enable = true;
+				this.zoomPageWidthState.Enable = true;
+				this.zoomDefaultState.Enable = true;
 				this.zoomPageState.ActiveState = context.IsZoomPage ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
 				this.zoomPageWidthState.ActiveState = context.IsZoomPageWidth ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
 				this.zoomDefaultState.ActiveState = context.IsZoomDefault ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
 			}
 			else
 			{
-				this.zoomPageState.Enabled = false;
-				this.zoomPageWidthState.Enabled = false;
-				this.zoomDefaultState.Enabled = false;
+				this.zoomPageState.Enable = false;
+				this.zoomPageWidthState.Enable = false;
+				this.zoomDefaultState.Enable = false;
 			}
 		}
 
@@ -3813,31 +3813,31 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-				this.zoomMinState.Enabled = true;
-				this.zoomPageState.Enabled = true;
-				this.zoomPageWidthState.Enabled = true;
-				this.zoomDefaultState.Enabled = true;
+				this.zoomMinState.Enable = true;
+				this.zoomPageState.Enable = true;
+				this.zoomPageWidthState.Enable = true;
+				this.zoomDefaultState.Enable = true;
 				this.zoomMinState.ActiveState = ( context.Zoom <= this.CurrentDocument.Modifier.ZoomMin ) ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
 				this.zoomPageState.ActiveState = context.IsZoomPage ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
 				this.zoomPageWidthState.ActiveState = context.IsZoomPageWidth ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
 				this.zoomDefaultState.ActiveState = context.IsZoomDefault ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
-				this.zoomPrevState.Enabled = ( this.CurrentDocument.Modifier.ZoomMemorizeCount > 0 );
-				this.zoomSubState.Enabled = ( context.Zoom > this.CurrentDocument.Modifier.ZoomMin );
-				this.zoomAddState.Enabled = ( context.Zoom < this.CurrentDocument.Modifier.ZoomMax );
+				this.zoomPrevState.Enable = ( this.CurrentDocument.Modifier.ZoomMemorizeCount > 0 );
+				this.zoomSubState.Enable = ( context.Zoom > this.CurrentDocument.Modifier.ZoomMin );
+				this.zoomAddState.Enable = ( context.Zoom < this.CurrentDocument.Modifier.ZoomMax );
 			}
 			else
 			{
-				this.zoomMinState.Enabled = false;
-				this.zoomPageState.Enabled = false;
-				this.zoomPageWidthState.Enabled = false;
-				this.zoomDefaultState.Enabled = false;
+				this.zoomMinState.Enable = false;
+				this.zoomPageState.Enable = false;
+				this.zoomPageWidthState.Enable = false;
+				this.zoomDefaultState.Enable = false;
 				this.zoomMinState.ActiveState = Widgets.ActiveState.No;
 				this.zoomPageState.ActiveState = Widgets.ActiveState.No;
 				this.zoomPageWidthState.ActiveState = Widgets.ActiveState.No;
 				this.zoomDefaultState.ActiveState = Widgets.ActiveState.No;
-				this.zoomPrevState.Enabled = false;
-				this.zoomSubState.Enabled = false;
-				this.zoomAddState.Enabled = false;
+				this.zoomPrevState.Enable = false;
+				this.zoomSubState.Enable = false;
+				this.zoomAddState.Enable = false;
 			}
 
 			StatusField field = this.info.Items["StatusZoom"] as StatusField;
@@ -3846,7 +3846,7 @@ namespace Epsitec.App.DocumentEditor
 
 			HSlider slider = this.info.Items["StatusZoomSlider"] as HSlider;
 			slider.Value = (decimal) this.ValueInfoZoom;
-			slider.SetEnabled(this.IsCurrentDocument);
+			slider.Enable = this.IsCurrentDocument;
 		}
 
 		// Met à jour une commande d'outil.
@@ -3855,12 +3855,12 @@ namespace Epsitec.App.DocumentEditor
 			if ( enabled )
 			{
 				cmd.ActiveState = (tool == currentTool) ? ActiveState.Yes : ActiveState.No;;
-				cmd.Enabled = (tool == currentTool || tool == "Select" || !isCreating);
+				cmd.Enable = (tool == currentTool || tool == "Select" || !isCreating);
 			}
 			else
 			{
 				cmd.ActiveState = ActiveState.No;
-				cmd.Enabled = false;
+				cmd.Enable = false;
 			}
 		}
 
@@ -3908,16 +3908,16 @@ namespace Epsitec.App.DocumentEditor
 		{
 			if ( this.IsCurrentDocument )
 			{
-				this.saveState.Enabled = this.CurrentDocument.IsDirtySerialize;
-				this.saveAsState.Enabled = true;
-				this.saveModelState.Enabled = true;
+				this.saveState.Enable = this.CurrentDocument.IsDirtySerialize;
+				this.saveAsState.Enable = true;
+				this.saveModelState.Enable = true;
 				this.UpdateBookDocuments();
 			}
 			else
 			{
-				this.saveState.Enabled = false;
-				this.saveAsState.Enabled = false;
-				this.saveModelState.Enabled = false;
+				this.saveState.Enable = false;
+				this.saveAsState.Enable = false;
+				this.saveModelState.Enable = false;
 			}
 		}
 
@@ -3946,228 +3946,228 @@ namespace Epsitec.App.DocumentEditor
 				SelectorType sType = viewer.SelectorType;
 				Objects.Abstract one = this.CurrentDocument.Modifier.RetOnlySelectedObject();
 
-				this.newState.Enabled = true;
-				this.openState.Enabled = true;
-				this.openModelState.Enabled = true;
-				this.deleteState.Enabled = ( totalSelected > 0 || isCreating );
-				this.duplicateState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.orderUpOneState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
-				this.orderDownOneState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
-				this.orderUpAllState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
-				this.orderDownAllState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
-				this.moveLeftFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.moveRightFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.moveUpFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.moveDownFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.rotate90State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.rotate180State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.rotate270State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.rotateFreeCCWState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.rotateFreeCWState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.mirrorHState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.mirrorVState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.scaleMul2State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.scaleDiv2State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.scaleMulFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.scaleDivFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.alignLeftState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.alignCenterXState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.alignRightState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.alignTopState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.alignCenterYState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.alignBottomState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.alignGridState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.shareLeftState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
-				this.shareCenterXState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
-				this.shareSpaceXState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
-				this.shareRightState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
-				this.shareTopState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
-				this.shareCenterYState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
-				this.shareSpaceYState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
-				this.shareBottomState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
-				this.adjustWidthState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.adjustHeightState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.colorToRGBState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.colorToCMYKState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.colorToGrayState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.colorStrokeDarkState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.colorStrokeLightState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.colorFillDarkState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.colorFillLightState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.mergeState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.extractState.Enabled = ( totalSelected > 0 && !isBase && !isCreating && !isEdit );
-				this.groupState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.ungroupState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating && !isEdit );
-				this.insideState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating && !isEdit );
-				this.outsideState.Enabled = ( !isBase && !isCreating );
-				this.combineState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.uncombineState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.toBezierState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.toPolyState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.fragmentState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.booleanAndState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.booleanOrState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.booleanXorState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.booleanFrontMinusState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.booleanBackMinusState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.layerNewSelState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.newState.Enable = true;
+				this.openState.Enable = true;
+				this.openModelState.Enable = true;
+				this.deleteState.Enable = ( totalSelected > 0 || isCreating );
+				this.duplicateState.Enable = ( totalSelected > 0 && !isCreating );
+				this.orderUpOneState.Enable = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
+				this.orderDownOneState.Enable = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
+				this.orderUpAllState.Enable = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
+				this.orderDownAllState.Enable = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
+				this.moveLeftFreeState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.moveRightFreeState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.moveUpFreeState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.moveDownFreeState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.rotate90State.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.rotate180State.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.rotate270State.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.rotateFreeCCWState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.rotateFreeCWState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.mirrorHState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.mirrorVState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.scaleMul2State.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.scaleDiv2State.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.scaleMulFreeState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.scaleDivFreeState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.alignLeftState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignCenterXState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignRightState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignTopState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignCenterYState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignBottomState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignGridState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.shareLeftState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareCenterXState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareSpaceXState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareRightState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareTopState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareCenterYState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareSpaceYState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareBottomState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.adjustWidthState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.adjustHeightState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.colorToRGBState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorToCMYKState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorToGrayState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorStrokeDarkState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorStrokeLightState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorFillDarkState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorFillLightState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.mergeState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.extractState.Enable = ( totalSelected > 0 && !isBase && !isCreating && !isEdit );
+				this.groupState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.ungroupState.Enable = ( totalSelected == 1 && one is Objects.Group && !isCreating && !isEdit );
+				this.insideState.Enable = ( totalSelected == 1 && one is Objects.Group && !isCreating && !isEdit );
+				this.outsideState.Enable = ( !isBase && !isCreating );
+				this.combineState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.uncombineState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.toBezierState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.toPolyState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.fragmentState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.booleanAndState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.booleanOrState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.booleanXorState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.booleanFrontMinusState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.booleanBackMinusState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.layerNewSelState.Enable = ( totalSelected > 0 && !isCreating );
 
-				this.hideSelState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.hideRestState.Enabled = ( totalObjects-totalSelected-totalHide > 0 && !isCreating );
-				this.hideCancelState.Enabled = ( totalPageHide > 0 && !isCreating );
+				this.hideSelState.Enable = ( totalSelected > 0 && !isCreating );
+				this.hideRestState.Enable = ( totalObjects-totalSelected-totalHide > 0 && !isCreating );
+				this.hideCancelState.Enable = ( totalPageHide > 0 && !isCreating );
 
-				this.zoomSelState.Enabled = ( totalSelected > 0 );
-				this.zoomSelWidthState.Enabled = ( totalSelected > 0 );
+				this.zoomSelState.Enable = ( totalSelected > 0 );
+				this.zoomSelWidthState.Enable = ( totalSelected > 0 );
 
-				this.deselectAllState.Enabled = ( totalSelected > 0 );
-				this.selectAllState.Enabled = ( totalSelected < totalObjects-totalHide );
-				this.selectInvertState.Enabled = ( totalSelected > 0 && totalSelected < totalObjects-totalHide );
+				this.deselectAllState.Enable = ( totalSelected > 0 );
+				this.selectAllState.Enable = ( totalSelected < totalObjects-totalHide );
+				this.selectInvertState.Enable = ( totalSelected > 0 && totalSelected < totalObjects-totalHide );
 
-				this.selectorAutoState.Enabled        = true;
-				this.selectorIndividualState.Enabled  = true;
-				this.selectorScalerState.Enabled      = true;
-				this.selectorStretchState.Enabled     = true;
-				this.selectorStretchTypeState.Enabled = true;
+				this.selectorAutoState.Enable        = true;
+				this.selectorIndividualState.Enable  = true;
+				this.selectorScalerState.Enable      = true;
+				this.selectorStretchState.Enable     = true;
+				this.selectorStretchTypeState.Enable = true;
 				this.selectorAutoState.ActiveState       = (sType == SelectorType.Auto      ) ? ActiveState.Yes : ActiveState.No;
 				this.selectorIndividualState.ActiveState = (sType == SelectorType.Individual) ? ActiveState.Yes : ActiveState.No;
 				this.selectorScalerState.ActiveState     = (sType == SelectorType.Scaler    ) ? ActiveState.Yes : ActiveState.No;
 				this.selectorStretchState.ActiveState    = (sType == SelectorType.Stretcher ) ? ActiveState.Yes : ActiveState.No;
 				di.containerPrincipal.UpdateSelectorStretch();
 
-				this.selectTotalState.Enabled   = true;
-				this.selectPartialState.Enabled = true;
+				this.selectTotalState.Enable   = true;
+				this.selectPartialState.Enable = true;
 				this.selectTotalState.ActiveState   = !viewer.PartialSelect ? ActiveState.Yes : ActiveState.No;
 				this.selectPartialState.ActiveState =  viewer.PartialSelect ? ActiveState.Yes : ActiveState.No;
 
-				this.selectorAdaptLine.Enabled = true;
-				this.selectorAdaptText.Enabled = true;
+				this.selectorAdaptLine.Enable = true;
+				this.selectorAdaptText.Enable = true;
 				this.selectorAdaptLine.ActiveState = viewer.SelectorAdaptLine ? ActiveState.Yes : ActiveState.No;
 				this.selectorAdaptText.ActiveState = viewer.SelectorAdaptText ? ActiveState.Yes : ActiveState.No;
 
 				Objects.Abstract edit = this.CurrentDocument.Modifier.RetEditObject();
 				if ( edit == null )
 				{
-					this.cutState.Enabled = ( totalSelected > 0 && !isCreating );
-					this.copyState.Enabled = ( totalSelected > 0 && !isCreating );
-					this.pasteState.Enabled = ( !this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating );
-					this.textBoldState.Enabled = false;
-					this.textItalicState.Enabled = false;
-					this.textUnderlinedState.Enabled = false;
+					this.cutState.Enable = ( totalSelected > 0 && !isCreating );
+					this.copyState.Enable = ( totalSelected > 0 && !isCreating );
+					this.pasteState.Enable = ( !this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating );
+					this.textBoldState.Enable = false;
+					this.textItalicState.Enable = false;
+					this.textUnderlinedState.Enable = false;
 				}
 				else
 				{
-					this.cutState.Enabled = true;
-					this.copyState.Enabled = true;
-					this.pasteState.Enabled = true;
-					this.textBoldState.Enabled = true;
-					this.textItalicState.Enabled = true;
-					this.textUnderlinedState.Enabled = true;
+					this.cutState.Enable = true;
+					this.copyState.Enable = true;
+					this.pasteState.Enable = true;
+					this.textBoldState.Enable = true;
+					this.textItalicState.Enable = true;
+					this.textUnderlinedState.Enable = true;
 				}
 
 				this.CurrentDocument.Dialogs.UpdateInfos();
 			}
 			else
 			{
-				this.newState.Enabled = true;
-				this.openState.Enabled = true;
-				this.openModelState.Enabled = true;
-				this.deleteState.Enabled = false;
-				this.duplicateState.Enabled = false;
-				this.cutState.Enabled = false;
-				this.copyState.Enabled = false;
-				this.pasteState.Enabled = false;
-				this.textBoldState.Enabled = false;
-				this.textItalicState.Enabled = false;
-				this.textUnderlinedState.Enabled = false;
-				this.orderUpOneState.Enabled = false;
-				this.orderDownOneState.Enabled = false;
-				this.orderUpAllState.Enabled = false;
-				this.orderDownAllState.Enabled = false;
-				this.moveLeftFreeState.Enabled = false;
-				this.moveRightFreeState.Enabled = false;
-				this.moveUpFreeState.Enabled = false;
-				this.moveDownFreeState.Enabled = false;
-				this.rotate90State.Enabled = false;
-				this.rotate180State.Enabled = false;
-				this.rotate270State.Enabled = false;
-				this.rotateFreeCCWState.Enabled = false;
-				this.rotateFreeCWState.Enabled = false;
-				this.mirrorHState.Enabled = false;
-				this.mirrorVState.Enabled = false;
-				this.scaleMul2State.Enabled = false;
-				this.scaleDiv2State.Enabled = false;
-				this.scaleMulFreeState.Enabled = false;
-				this.scaleDivFreeState.Enabled = false;
-				this.alignLeftState.Enabled = false;
-				this.alignCenterXState.Enabled = false;
-				this.alignRightState.Enabled = false;
-				this.alignTopState.Enabled = false;
-				this.alignCenterYState.Enabled = false;
-				this.alignBottomState.Enabled = false;
-				this.alignGridState.Enabled = false;
-				this.shareLeftState.Enabled = false;
-				this.shareCenterXState.Enabled = false;
-				this.shareSpaceXState.Enabled = false;
-				this.shareRightState.Enabled = false;
-				this.shareTopState.Enabled = false;
-				this.shareCenterYState.Enabled = false;
-				this.shareSpaceYState.Enabled = false;
-				this.shareBottomState.Enabled = false;
-				this.adjustWidthState.Enabled = false;
-				this.adjustHeightState.Enabled = false;
-				this.colorToRGBState.Enabled = false;
-				this.colorToCMYKState.Enabled = false;
-				this.colorToGrayState.Enabled = false;
-				this.colorStrokeDarkState.Enabled = false;
-				this.colorStrokeLightState.Enabled = false;
-				this.colorFillDarkState.Enabled = false;
-				this.colorFillLightState.Enabled = false;
-				this.mergeState.Enabled = false;
-				this.extractState.Enabled = false;
-				this.groupState.Enabled = false;
-				this.ungroupState.Enabled = false;
-				this.insideState.Enabled = false;
-				this.outsideState.Enabled = false;
-				this.combineState.Enabled = false;
-				this.uncombineState.Enabled = false;
-				this.toBezierState.Enabled = false;
-				this.toPolyState.Enabled = false;
-				this.fragmentState.Enabled = false;
-				this.booleanAndState.Enabled = false;
-				this.booleanOrState.Enabled = false;
-				this.booleanXorState.Enabled = false;
-				this.booleanFrontMinusState.Enabled = false;
-				this.booleanBackMinusState.Enabled = false;
-				this.layerNewSelState.Enabled = false;
+				this.newState.Enable = true;
+				this.openState.Enable = true;
+				this.openModelState.Enable = true;
+				this.deleteState.Enable = false;
+				this.duplicateState.Enable = false;
+				this.cutState.Enable = false;
+				this.copyState.Enable = false;
+				this.pasteState.Enable = false;
+				this.textBoldState.Enable = false;
+				this.textItalicState.Enable = false;
+				this.textUnderlinedState.Enable = false;
+				this.orderUpOneState.Enable = false;
+				this.orderDownOneState.Enable = false;
+				this.orderUpAllState.Enable = false;
+				this.orderDownAllState.Enable = false;
+				this.moveLeftFreeState.Enable = false;
+				this.moveRightFreeState.Enable = false;
+				this.moveUpFreeState.Enable = false;
+				this.moveDownFreeState.Enable = false;
+				this.rotate90State.Enable = false;
+				this.rotate180State.Enable = false;
+				this.rotate270State.Enable = false;
+				this.rotateFreeCCWState.Enable = false;
+				this.rotateFreeCWState.Enable = false;
+				this.mirrorHState.Enable = false;
+				this.mirrorVState.Enable = false;
+				this.scaleMul2State.Enable = false;
+				this.scaleDiv2State.Enable = false;
+				this.scaleMulFreeState.Enable = false;
+				this.scaleDivFreeState.Enable = false;
+				this.alignLeftState.Enable = false;
+				this.alignCenterXState.Enable = false;
+				this.alignRightState.Enable = false;
+				this.alignTopState.Enable = false;
+				this.alignCenterYState.Enable = false;
+				this.alignBottomState.Enable = false;
+				this.alignGridState.Enable = false;
+				this.shareLeftState.Enable = false;
+				this.shareCenterXState.Enable = false;
+				this.shareSpaceXState.Enable = false;
+				this.shareRightState.Enable = false;
+				this.shareTopState.Enable = false;
+				this.shareCenterYState.Enable = false;
+				this.shareSpaceYState.Enable = false;
+				this.shareBottomState.Enable = false;
+				this.adjustWidthState.Enable = false;
+				this.adjustHeightState.Enable = false;
+				this.colorToRGBState.Enable = false;
+				this.colorToCMYKState.Enable = false;
+				this.colorToGrayState.Enable = false;
+				this.colorStrokeDarkState.Enable = false;
+				this.colorStrokeLightState.Enable = false;
+				this.colorFillDarkState.Enable = false;
+				this.colorFillLightState.Enable = false;
+				this.mergeState.Enable = false;
+				this.extractState.Enable = false;
+				this.groupState.Enable = false;
+				this.ungroupState.Enable = false;
+				this.insideState.Enable = false;
+				this.outsideState.Enable = false;
+				this.combineState.Enable = false;
+				this.uncombineState.Enable = false;
+				this.toBezierState.Enable = false;
+				this.toPolyState.Enable = false;
+				this.fragmentState.Enable = false;
+				this.booleanAndState.Enable = false;
+				this.booleanOrState.Enable = false;
+				this.booleanXorState.Enable = false;
+				this.booleanFrontMinusState.Enable = false;
+				this.booleanBackMinusState.Enable = false;
+				this.layerNewSelState.Enable = false;
 
-				this.hideSelState.Enabled = false;
-				this.hideRestState.Enabled = false;
-				this.hideCancelState.Enabled = false;
+				this.hideSelState.Enable = false;
+				this.hideRestState.Enable = false;
+				this.hideCancelState.Enable = false;
 
-				this.zoomSelState.Enabled = false;
-				this.zoomSelWidthState.Enabled = false;
+				this.zoomSelState.Enable = false;
+				this.zoomSelWidthState.Enable = false;
 
-				this.deselectAllState.Enabled = false;
-				this.selectAllState.Enabled = false;
-				this.selectInvertState.Enabled = false;
+				this.deselectAllState.Enable = false;
+				this.selectAllState.Enable = false;
+				this.selectInvertState.Enable = false;
 
-				this.selectorAutoState.Enabled        = false;
-				this.selectorIndividualState.Enabled  = false;
-				this.selectorScalerState.Enabled      = false;
-				this.selectorStretchState.Enabled     = false;
-				this.selectorStretchTypeState.Enabled = false;
+				this.selectorAutoState.Enable        = false;
+				this.selectorIndividualState.Enable  = false;
+				this.selectorScalerState.Enable      = false;
+				this.selectorStretchState.Enable     = false;
+				this.selectorStretchTypeState.Enable = false;
 				this.selectorAutoState.ActiveState       = ActiveState.No;
 				this.selectorIndividualState.ActiveState = ActiveState.No;
 				this.selectorScalerState.ActiveState     = ActiveState.No;
 				this.selectorStretchState.ActiveState    = ActiveState.No;
 
-				this.selectTotalState.Enabled   = false;
-				this.selectPartialState.Enabled = false;
+				this.selectTotalState.Enable   = false;
+				this.selectPartialState.Enable = false;
 				this.selectTotalState.ActiveState   = ActiveState.No;
 				this.selectPartialState.ActiveState = ActiveState.No;
 
-				this.selectorAdaptLine.Enabled = false;
-				this.selectorAdaptText.Enabled = false;
+				this.selectorAdaptLine.Enable = false;
+				this.selectorAdaptText.Enable = false;
 				this.selectorAdaptLine.ActiveState = ActiveState.No;
 				this.selectorAdaptText.ActiveState = ActiveState.No;
 			}
@@ -4229,14 +4229,14 @@ namespace Epsitec.App.DocumentEditor
 
 				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
 
-				this.pagePrevState.Enabled = (cp > 0 && !isCreating );
-				this.pageNextState.Enabled = (cp < tp-1 && !isCreating );
-				this.pageMenuState.Enabled = (tp > 1 && !isCreating );
-				this.pageNewState.Enabled = !isCreating;
-				this.pageDuplicateState.Enabled = !isCreating;
-				this.pageUpState.Enabled = (cp > 0 && !isCreating );
-				this.pageDownState.Enabled = (cp < tp-1 && !isCreating );
-				this.pageDeleteState.Enabled = (tp > 1 && !isCreating );
+				this.pagePrevState.Enable = (cp > 0 && !isCreating );
+				this.pageNextState.Enable = (cp < tp-1 && !isCreating );
+				this.pageMenuState.Enable = (tp > 1 && !isCreating );
+				this.pageNewState.Enable = !isCreating;
+				this.pageDuplicateState.Enable = !isCreating;
+				this.pageUpState.Enable = (cp > 0 && !isCreating );
+				this.pageDownState.Enable = (cp < tp-1 && !isCreating );
+				this.pageDeleteState.Enable = (tp > 1 && !isCreating );
 
 				Objects.Page page = this.CurrentDocument.GetObjects[cp] as Objects.Page;
 				this.CurrentDocumentInfo.quickPageMenu.Text = page.ShortName;
@@ -4248,14 +4248,14 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				this.pagePrevState.Enabled = false;
-				this.pageNextState.Enabled = false;
-				this.pageMenuState.Enabled = false;
-				this.pageNewState.Enabled = false;
-				this.pageDuplicateState.Enabled = false;
-				this.pageUpState.Enabled = false;
-				this.pageDownState.Enabled = false;
-				this.pageDeleteState.Enabled = false;
+				this.pagePrevState.Enable = false;
+				this.pageNextState.Enable = false;
+				this.pageMenuState.Enable = false;
+				this.pageNewState.Enable = false;
+				this.pageDuplicateState.Enable = false;
+				this.pageUpState.Enable = false;
+				this.pageDownState.Enable = false;
+				this.pageDeleteState.Enable = false;
 
 				this.dlgPageStack.Update();
 			}
@@ -4275,16 +4275,16 @@ namespace Epsitec.App.DocumentEditor
 
 				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
 
-				this.layerPrevState.Enabled = (cl > 0 && !isCreating );
-				this.layerNextState.Enabled = (cl < tl-1 && !isCreating );
-				this.layerMenuState.Enabled = (tl > 1 && !isCreating );
-				this.layerNewState.Enabled = !isCreating ;
-				this.layerDuplicateState.Enabled = !isCreating ;
-				this.layerMergeUpState.Enabled = (cl < tl-1 && !isCreating );
-				this.layerMergeDownState.Enabled = (cl > 0 && !isCreating );
-				this.layerUpState.Enabled = (cl < tl-1 && !isCreating );
-				this.layerDownState.Enabled = (cl > 0 && !isCreating );
-				this.layerDeleteState.Enabled = (tl > 1 && !isCreating );
+				this.layerPrevState.Enable = (cl > 0 && !isCreating );
+				this.layerNextState.Enable = (cl < tl-1 && !isCreating );
+				this.layerMenuState.Enable = (tl > 1 && !isCreating );
+				this.layerNewState.Enable = !isCreating ;
+				this.layerDuplicateState.Enable = !isCreating ;
+				this.layerMergeUpState.Enable = (cl < tl-1 && !isCreating );
+				this.layerMergeDownState.Enable = (cl > 0 && !isCreating );
+				this.layerUpState.Enable = (cl < tl-1 && !isCreating );
+				this.layerDownState.Enable = (cl > 0 && !isCreating );
+				this.layerDeleteState.Enable = (tl > 1 && !isCreating );
 
 				this.CurrentDocumentInfo.quickLayerMenu.Text = Objects.Layer.ShortName(cl);
 				this.dlgPageStack.Update();
@@ -4292,16 +4292,16 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				this.layerPrevState.Enabled = false;
-				this.layerNextState.Enabled = false;
-				this.layerMenuState.Enabled = false;
-				this.layerNewState.Enabled = false;
-				this.layerDuplicateState.Enabled = false;
-				this.layerMergeUpState.Enabled = false;
-				this.layerMergeDownState.Enabled = false;
-				this.layerUpState.Enabled = false;
-				this.layerDownState.Enabled = false;
-				this.layerDeleteState.Enabled = false;
+				this.layerPrevState.Enable = false;
+				this.layerNextState.Enable = false;
+				this.layerMenuState.Enable = false;
+				this.layerNewState.Enable = false;
+				this.layerDuplicateState.Enable = false;
+				this.layerMergeUpState.Enable = false;
+				this.layerMergeDownState.Enable = false;
+				this.layerUpState.Enable = false;
+				this.layerDownState.Enable = false;
+				this.layerDeleteState.Enable = false;
 			}
 		}
 
@@ -4329,15 +4329,15 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
-				this.undoState.Enabled = ( this.CurrentDocument.Modifier.OpletQueue.CanUndo && !isCreating );
-				this.redoState.Enabled = ( this.CurrentDocument.Modifier.OpletQueue.CanRedo && !isCreating );
-				this.undoRedoListState.Enabled = this.undoState.Enabled|this.redoState.Enabled;
+				this.undoState.Enable = ( this.CurrentDocument.Modifier.OpletQueue.CanUndo && !isCreating );
+				this.redoState.Enable = ( this.CurrentDocument.Modifier.OpletQueue.CanRedo && !isCreating );
+				this.undoRedoListState.Enable = this.undoState.Enable|this.redoState.Enable;
 			}
 			else
 			{
-				this.undoState.Enabled = false;
-				this.redoState.Enabled = false;
-				this.undoRedoListState.Enabled = false;
+				this.undoState.Enable = false;
+				this.redoState.Enable = false;
+				this.undoRedoListState.Enable = false;
 			}
 		}
 
@@ -4347,24 +4347,24 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-				this.gridState.Enabled = true;
+				this.gridState.Enable = true;
 				this.gridState.ActiveState = context.GridActive ? ActiveState.Yes : ActiveState.No;
-				this.rulersState.Enabled = true;
+				this.rulersState.Enable = true;
 				this.rulersState.ActiveState = context.RulersShow ? ActiveState.Yes : ActiveState.No;
-				this.labelsState.Enabled = true;
+				this.labelsState.Enable = true;
 				this.labelsState.ActiveState = context.LabelsShow ? ActiveState.Yes : ActiveState.No;
-				this.aggregatesState.Enabled = true;
+				this.aggregatesState.Enable = true;
 				this.aggregatesState.ActiveState = context.AggregatesShow ? ActiveState.Yes : ActiveState.No;
 			}
 			else
 			{
-				this.gridState.Enabled = false;
+				this.gridState.Enable = false;
 				this.gridState.ActiveState = ActiveState.No;
-				this.rulersState.Enabled = false;
+				this.rulersState.Enable = false;
 				this.rulersState.ActiveState = ActiveState.No;
-				this.labelsState.Enabled = false;
+				this.labelsState.Enable = false;
 				this.labelsState.ActiveState = ActiveState.No;
-				this.aggregatesState.Enabled = false;
+				this.aggregatesState.Enable = false;
 				this.aggregatesState.ActiveState = ActiveState.No;
 			}
 		}
@@ -4389,18 +4389,18 @@ namespace Epsitec.App.DocumentEditor
 				System.Collections.ArrayList layers = context.MagnetLayerList;
 				if ( layers.Count == 0 )
 				{
-					this.magnetState.Enabled = false;
+					this.magnetState.Enable = false;
 					this.magnetState.ActiveState = ActiveState.No;
 				}
 				else
 				{
-					this.magnetState.Enabled = true;
+					this.magnetState.Enable = true;
 					this.magnetState.ActiveState = context.MagnetActive ? ActiveState.Yes : ActiveState.No;
 				}
 			}
 			else
 			{
-				this.magnetState.Enabled = false;
+				this.magnetState.Enable = false;
 				this.magnetState.ActiveState = ActiveState.No;
 			}
 		}
@@ -4411,12 +4411,12 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-				this.previewState.Enabled = true;
+				this.previewState.Enable = true;
 				this.previewState.ActiveState = context.PreviewActive ? ActiveState.Yes : ActiveState.No;
 			}
 			else
 			{
-				this.previewState.Enabled = false;
+				this.previewState.Enable = false;
 				this.previewState.ActiveState = ActiveState.No;
 			}
 		}
@@ -4445,12 +4445,12 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-				this.hideHalfState.Enabled = true;
+				this.hideHalfState.Enable = true;
 				this.hideHalfState.ActiveState = context.HideHalfActive ? ActiveState.Yes : ActiveState.No;
 			}
 			else
 			{
-				this.hideHalfState.Enabled = false;
+				this.hideHalfState.Enable = false;
 				this.hideHalfState.ActiveState = ActiveState.No;
 			}
 		}
@@ -4461,23 +4461,23 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-				this.debugBboxThinState.Enabled = true;
-				this.debugBboxGeomState.Enabled = true;
-				this.debugBboxFullState.Enabled = true;
+				this.debugBboxThinState.Enable = true;
+				this.debugBboxGeomState.Enable = true;
+				this.debugBboxFullState.Enable = true;
 				this.debugBboxThinState.ActiveState = context.IsDrawBoxThin ? ActiveState.Yes : ActiveState.No;
 				this.debugBboxGeomState.ActiveState = context.IsDrawBoxGeom ? ActiveState.Yes : ActiveState.No;
 				this.debugBboxFullState.ActiveState = context.IsDrawBoxFull ? ActiveState.Yes : ActiveState.No;
-				this.debugDirtyState.Enabled = true;
+				this.debugDirtyState.Enable = true;
 			}
 			else
 			{
-				this.debugBboxThinState.Enabled = false;
-				this.debugBboxGeomState.Enabled = false;
-				this.debugBboxFullState.Enabled = false;
+				this.debugBboxThinState.Enable = false;
+				this.debugBboxGeomState.Enable = false;
+				this.debugBboxFullState.Enable = false;
 				this.debugBboxThinState.ActiveState = ActiveState.No;
 				this.debugBboxGeomState.ActiveState = ActiveState.No;
 				this.debugBboxFullState.ActiveState = ActiveState.No;
-				this.debugDirtyState.Enabled = false;
+				this.debugDirtyState.Enable = false;
 			}
 		}
 
@@ -5019,11 +5019,11 @@ namespace Epsitec.App.DocumentEditor
 				this.bookDocuments.ActivePage = di.tabPage;
 			}
 
-			this.closeState.Enabled = (this.bookDocuments.PageCount > 0);
-			this.closeAllState.Enabled = (this.bookDocuments.PageCount > 0);
-			this.forceSaveAllState.Enabled = (this.bookDocuments.PageCount > 0);
-			this.nextDocState.Enabled = (this.bookDocuments.PageCount > 1);
-			this.prevDocState.Enabled = (this.bookDocuments.PageCount > 1);
+			this.closeState.Enable = (this.bookDocuments.PageCount > 0);
+			this.closeAllState.Enable = (this.bookDocuments.PageCount > 0);
+			this.forceSaveAllState.Enable = (this.bookDocuments.PageCount > 0);
+			this.nextDocState.Enable = (this.bookDocuments.PageCount > 1);
+			this.prevDocState.Enable = (this.bookDocuments.PageCount > 1);
 			
 			if ( di != null )
 			{
@@ -5061,8 +5061,8 @@ namespace Epsitec.App.DocumentEditor
 		// Secoue un CommandState pour le forcer à se remettre à jour.
 		protected void CommandStateShake(CommandState state)
 		{
-			state.Enabled = !state.Enabled;
-			state.Enabled = !state.Enabled;
+			state.Enable = !state.Enable;
+			state.Enable = !state.Enable;
 		}
 		#endregion
 

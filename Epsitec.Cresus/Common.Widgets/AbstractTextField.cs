@@ -719,13 +719,13 @@ namespace Epsitec.Common.Widgets
 			mi = new MenuItem();
 			mi.Name = "Cut";
 			mi.Text = Res.Strings.AbstractTextField.Menu.Cut;
-			mi.SetEnabled(sel);
+			mi.Enable = sel;
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
 			mi.Name = "Copy";
 			mi.Text = Res.Strings.AbstractTextField.Menu.Copy;
-			mi.SetEnabled(sel);
+			mi.Enable = sel;
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
@@ -736,7 +736,7 @@ namespace Epsitec.Common.Widgets
 			mi = new MenuItem();
 			mi.Name = "Delete";
 			mi.Text = Res.Strings.AbstractTextField.Menu.Delete;
-			mi.SetEnabled(sel);
+			mi.Enable = sel;
 			this.contextMenu.Items.Add(mi);
 
 			this.contextMenu.Items.Add(new MenuSeparator());

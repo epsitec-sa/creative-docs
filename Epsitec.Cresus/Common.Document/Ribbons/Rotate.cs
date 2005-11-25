@@ -107,11 +107,11 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			if ( this.document == null )
 			{
-				field.SetEnabled(false);
+				field.Enable = false;
 			}
 			else
 			{
-				field.SetEnabled(true);
+				field.Enable = true;
 
 				this.ignoreChange = true;
 				this.document.Modifier.AdaptTextFieldRealAngle(field);

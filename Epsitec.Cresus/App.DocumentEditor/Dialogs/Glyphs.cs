@@ -514,8 +514,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( this.book.ActivePage.Name == "List" )  return;
 
 			double size = this.Array.CellSize;
-			this.Minus.SetEnabled(size > 20.0);
-			this.Plus.SetEnabled(size < 48.0);
+			this.Minus.Enable = (size > 20.0);
+			this.Plus.Enable = (size < 48.0);
 		}
 
 		// Insère le glyphe selon l'onglet actif dans le texte en édition.

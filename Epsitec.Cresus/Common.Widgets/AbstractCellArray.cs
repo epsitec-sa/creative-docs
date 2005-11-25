@@ -1472,14 +1472,14 @@ namespace Epsitec.Common.Widgets
 					 totalHeight <= 0          ||
 					 areaHeight  <= 0          )
 				{
-					this.scrollerV.SetEnabled(false);
+					this.scrollerV.Enable            = false;
 					this.scrollerV.MaxValue          = 1;
 					this.scrollerV.VisibleRangeRatio = 1;
 					this.scrollerV.Value             = 0;
 				}
 				else
 				{
-					this.scrollerV.SetEnabled(true);
+					this.scrollerV.Enable            = true;
 					this.scrollerV.MaxValue          = (decimal) (totalHeight-areaHeight);
 					this.scrollerV.VisibleRangeRatio = (decimal) (areaHeight/totalHeight);
 					this.scrollerV.Value             = (decimal) (this.offsetV);
@@ -1511,14 +1511,14 @@ namespace Epsitec.Common.Widgets
 					 totalWidth <= 0         ||
 					 areaWidth  <= 0         )
 				{
-					this.scrollerH.SetEnabled(false);
+					this.scrollerH.Enable            = false;
 					this.scrollerH.MaxValue          = 1;
 					this.scrollerH.VisibleRangeRatio = 1;
 					this.scrollerH.Value             = 0;
 				}
 				else
 				{
-					this.scrollerH.SetEnabled(true);
+					this.scrollerH.Enable            = true;
 					this.scrollerH.MaxValue          = (decimal) (totalWidth-areaWidth);
 					this.scrollerH.VisibleRangeRatio = (decimal) (areaWidth/totalWidth);
 					this.scrollerH.Value             = (decimal) (this.offsetH);

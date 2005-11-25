@@ -175,7 +175,7 @@ namespace Epsitec.Common.Document.Settings
 				combo.SelectedIndex = sel;
 			}
 
-			combo.SetEnabled(combo.Items.Count > 1);
+			combo.Enable = (combo.Items.Count > 1);
 		}
 
 		protected string TypeToString(int type)

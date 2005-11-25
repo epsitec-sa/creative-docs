@@ -202,10 +202,10 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldEffect2[j].TextFieldReal.InternalMinValue = (decimal) min2*100;
 				this.fieldEffect2[j].TextFieldReal.InternalMaxValue = (decimal) max2*100;
 
-				this.grid[j].SetEnabled(this.isExtendedSize || j== 0);
-				this.fieldLength[j].SetEnabled((this.isExtendedSize || j== 0) && enableRadius);
-				this.fieldEffect1[j].SetEnabled(this.isExtendedSize && enable1);
-				this.fieldEffect2[j].SetEnabled(this.isExtendedSize && enable2);
+				this.grid[j].Enable = (this.isExtendedSize || j== 0);
+				this.fieldLength[j].Enable = ((this.isExtendedSize || j== 0) && enableRadius);
+				this.fieldEffect1[j].Enable = (this.isExtendedSize && enable1);
+				this.fieldEffect2[j].Enable = (this.isExtendedSize && enable2);
 
 				this.grid[j].SetVisible(this.isExtendedSize || j== 0);
 

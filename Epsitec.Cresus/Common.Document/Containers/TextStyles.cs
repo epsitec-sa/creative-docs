@@ -167,11 +167,11 @@ namespace Epsitec.Common.Document.Containers
 			int total = this.list.Rows;
 			int sel = this.list.SelectedPropertyRow;
 
-			this.buttonAggregateNewAll.SetEnabled(!this.document.Modifier.IsTool || this.document.Modifier.TotalSelected > 0);
-			this.buttonAggregateUp.SetEnabled(sel != -1 && sel > 0);
-			this.buttonAggregateDuplicate.SetEnabled(sel != -1);
-			this.buttonAggregateDown.SetEnabled(sel != -1 && sel < total-1);
-			this.buttonAggregateDelete.SetEnabled(sel != -1);
+			this.buttonAggregateNewAll.Enable = (!this.document.Modifier.IsTool || this.document.Modifier.TotalSelected > 0);
+			this.buttonAggregateUp.Enable = (sel != -1 && sel > 0);
+			this.buttonAggregateDuplicate.Enable = (sel != -1);
+			this.buttonAggregateDown.Enable = (sel != -1 && sel < total-1);
+			this.buttonAggregateDelete.Enable = (sel != -1);
 
 			Common.Text.Properties.WellKnownType type = Common.Text.Properties.WellKnownType.Other;
 			bool enableDelete = false;
@@ -184,8 +184,8 @@ namespace Epsitec.Common.Document.Containers
 					enableDelete = true;
 				}
 			}
-			this.buttonStyleNew.SetEnabled(sel != -1);
-			this.buttonStyleDelete.SetEnabled(enableDelete);
+			this.buttonStyleNew.Enable = (sel != -1);
+			this.buttonStyleDelete.Enable = (enableDelete);
 		}
 
 

@@ -194,9 +194,9 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateCombo.SelectAll();
 			this.ignoreChanged = false;
 
-			this.aggregateNew3.SetEnabled(name == "");
-			this.aggregateNewAll.SetEnabled(name == "");
-			this.aggregateFree.SetEnabled(name != "");
+			this.aggregateNew3.Enable = (name == "");
+			this.aggregateNewAll.Enable = (name == "");
+			this.aggregateFree.Enable = (name != "");
 		}
 
 		// Crée le panneau pour les sélections.
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Document.Containers
 		// Met à jour le bouton de séleciton.
 		protected void UpdateSelectorGo()
 		{
-			this.selectorGo.SetEnabled(this.selectorName.Text.Length > 0);
+			this.selectorGo.Enable = (this.selectorName.Text.Length > 0);
 		}
 
 
