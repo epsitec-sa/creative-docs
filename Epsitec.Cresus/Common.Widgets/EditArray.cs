@@ -1441,7 +1441,7 @@ namespace Epsitec.Common.Widgets
 			protected IconButton CreateIconButton(string command_name, string icon_name, string tool_tip, KeyCode shortcut)
 			{
 				IconButton button = this.CreateIconButton (command_name, icon_name, tool_tip);
-				button.Shortcut.KeyCode = shortcut;
+				button.Shortcuts.Add (new Shortcut (shortcut));
 				return button;
 			}
 			

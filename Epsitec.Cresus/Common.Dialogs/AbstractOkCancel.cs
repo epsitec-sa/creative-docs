@@ -69,7 +69,7 @@ namespace Epsitec.Common.Dialogs
 			button1.Command       = "ValidateDialog";
 			button1.TabIndex      = 2;
 			button1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			button1.Shortcut      = Widgets.Feel.Factory.Active.AcceptShortcut;
+			button1.Shortcuts.Add (Widgets.Feel.Factory.Active.AcceptShortcut);
 			
 			if (this.hide_cancel == false)
 			{
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Dialogs
 				button2.Command       = "QuitDialog";
 				button2.TabIndex      = 3;
 				button2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				button2.Shortcut      = Widgets.Feel.Factory.Active.CancelShortcut;
+				button2.Shortcuts.Add (Widgets.Feel.Factory.Active.CancelShortcut);
 			}
 			
 			AbstractMessageDialog.LayoutButtons (this.window.Root.Width, button1, button2);

@@ -77,19 +77,19 @@ namespace Epsitec.Common.Script.Developer
 			this.compile_button = new Button ();
 			this.compile_button.Text = "Compile";
 			this.compile_button.Command = "CompileSourceCode";
-			this.compile_button.Shortcut = new Shortcut (KeyCode.FuncF7);
+			this.compile_button.Shortcuts.Add (new Shortcut (KeyCode.FuncF7));
 			
 			this.find_prev_error_button = new Button ();
 			this.find_prev_error_button.Width = 20;
 			this.find_prev_error_button.Text = "&lt;";
 			this.find_prev_error_button.Command = "FindNextError(-1)";
-			this.find_prev_error_button.Shortcut = new Shortcut (KeyCode.FuncF8 | KeyCode.ModifierShift);
+			this.find_prev_error_button.Shortcuts.Add (new Shortcut (KeyCode.FuncF8 | KeyCode.ModifierShift));
 			
 			this.find_next_error_button = new Button ();
 			this.find_next_error_button.Width = 20;
 			this.find_next_error_button.Text = "&gt;";
 			this.find_next_error_button.Command = "FindNextError(1)";
-			this.find_next_error_button.Shortcut = new Shortcut (KeyCode.FuncF8);
+			this.find_next_error_button.Shortcuts.Add (new Shortcut (KeyCode.FuncF8));
 			
 			this.panel.Widget.SetParent (page);
 			this.panel.Widget.Dock        = DockStyle.Fill;

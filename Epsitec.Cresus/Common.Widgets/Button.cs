@@ -101,11 +101,11 @@ namespace Epsitec.Common.Widgets
 			{
 				IFeel feel = Feel.Factory.Active;
 				
-				if (feel.AcceptShortcut == this.Shortcut)
+				if (this.Shortcuts.Match (feel.AcceptShortcut))
 				{
 					this.ButtonStyle = ButtonStyle.DefaultAccept;
 				}
-				else if (feel.CancelShortcut == this.Shortcut)
+				else if (this.Shortcuts.Match (feel.CancelShortcut))
 				{
 					this.ButtonStyle = ButtonStyle.DefaultCancel;
 				}

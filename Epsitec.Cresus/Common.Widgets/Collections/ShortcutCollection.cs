@@ -29,9 +29,55 @@ namespace Epsitec.Common.Widgets.Collections
 		}
 		
 		
+		public void Define(Shortcut value)
+		{
+			if (this.list.Count == 1)
+			{
+				Shortcut old = this[0];
+				
+				if (old.Equals (value))
+				{
+					return;
+				}
+			}
+			
+			this.list.Clear ();
+			this.list.Add (value);
+			
+			this.NotifyCollectionChanged ();
+		}
+		
+		public void Define(Shortcut[] values)
+		{
+			if (this.list.Count == values.Length)
+			{
+				int same = 0;
+				
+				for (int i = 0; i < values.Length; i++)
+				{
+					if (this[i].Equals (values[i]))
+					{
+						same++;
+					}
+				}
+				
+				if (same == values.Length)
+				{
+					return;
+				}
+			}
+			
+			this.list.Clear ();
+			this.list.AddRange (values);
+			
+			this.NotifyCollectionChanged ();
+		}
+		
 		public int  Add(Shortcut value)
 		{
-			return this.list.Add (value);
+			int index = this.list.Add (value);
+			this.NotifyCollectionChanged ();
+			return index;
 		}
 		
 		public void AddRange(System.Collections.ICollection values)
@@ -42,12 +88,15 @@ namespace Epsitec.Common.Widgets.Collections
 				{
 					this.Add (shortcut);
 				}
+				
+				this.NotifyCollectionChanged ();
 			}
 		}
 		
 		public void Remove(Shortcut value)
 		{
 			this.list.Remove (value);
+			this.NotifyCollectionChanged ();
 		}
 		
 		public bool Contains(Shortcut value)
@@ -82,6 +131,10 @@ namespace Epsitec.Common.Widgets.Collections
 				this.list.Clear ();
 				this.list = null;
 			}
+		}
+		
+		protected virtual void NotifyCollectionChanged()
+		{
 		}
 		
 		
@@ -119,11 +172,13 @@ namespace Epsitec.Common.Widgets.Collections
 		public void RemoveAt(int index)
 		{
 			this.list.RemoveAt (index);
+			this.NotifyCollectionChanged ();
 		}
 
 		public void Clear()
 		{
 			this.list.Clear ();
+			this.NotifyCollectionChanged ();
 		}
 
 		void System.Collections.IList.Insert(int index, object value)
@@ -191,7 +246,7 @@ namespace Epsitec.Common.Widgets.Collections
 			return this.list.GetEnumerator ();
 		}
 		#endregion
-		
+
 		private System.Collections.ArrayList	list;
 	}
 }

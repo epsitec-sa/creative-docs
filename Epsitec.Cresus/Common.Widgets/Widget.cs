@@ -107,7 +107,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : Visual, System.IDisposable, Support.IBundleSupport, ICommandDispatcherHost, Support.Data.IPropertyProvider
+	public class Widget : Visual, System.IDisposable, Support.IBundleSupport, ICommandDispatcherHost, Support.Data.IPropertyProvider, Collections.IShortcutCollectionHost
 	{
 		public Widget()
 		{
@@ -180,6 +180,31 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
+		#region IShortcutCollectionHost Members
+		public void NotifyShortcutsChanged(Epsitec.Common.Widgets.Collections.ShortcutCollection collection)
+		{
+			if (collection.Count == 0)
+			{
+				this.shortcuts = null;
+			}
+			else
+			{
+				this.shortcuts = collection;
+			}
+			
+			if (this.AutoMnemonic)
+			{
+				//	Supprime le flag 'auto mnemonic' sans altérer le raccourci,
+				//	ce qui évite de générer un événement ShortcutChanged avant
+				//	l'heure :
+				
+				this.internal_state &= ~InternalState.AutoMnemonic;
+			}
+			
+			this.OnShortcutChanged ();
 		}
 		#endregion
 		
@@ -1291,33 +1316,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Shortcut								Shortcut		//#fix
+		public Collections.ShortcutCollection		Shortcuts
 		{
 			get
 			{
-				if (this.shortcut == null)
+				if (this.shortcuts == null)
 				{
-					this.shortcut = new Shortcut ();
+					return new Collections.HostedShortcutCollection (this);
 				}
-				
-				return this.shortcut;
-			}
-			
-			set
-			{
-				if (this.AutoMnemonic)
+				else
 				{
-					//	Supprime le flag 'auto mnemonic' sans altérer le raccourci,
-					//	ce qui évite de générer un événement ShortcutChanged avant
-					//	l'heure :
-					
-					this.internal_state &= ~InternalState.AutoMnemonic;
-				}
-				
-				if (this.shortcut != value)
-				{
-					this.shortcut = value;
-					this.OnShortcutChanged ();
+					return this.shortcuts;
 				}
 			}
 		}
@@ -4271,8 +4280,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual bool ProcessShortcut(Shortcut shortcut)
 		{
-			if ((this.shortcut != null) &&
-				(this.shortcut.Match (shortcut)))
+			if ((this.shortcuts != null) &&
+				(this.shortcuts.Match (shortcut)))
 			{
 				this.OnShortcutPressed ();
 				return true;
@@ -4285,16 +4294,19 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.AutoMnemonic)
 			{
-#if false //#fix
-				if (this.Shortcut.Mnemonic != this.Mnemonic)
-				{
-					this.Shortcut.Mnemonic = this.Mnemonic;
-					this.OnShortcutChanged ();
-				}
-#endif
+				this.Shortcuts.Define (this.GetMnemonicShortcuts ());
 			}
 		}
 		
+		protected virtual Shortcut[] GetMnemonicShortcuts()
+		{
+			Shortcut[] shortcuts = new Shortcut[2];
+			
+			shortcuts[0] = new Shortcut (this.Mnemonic, ModifierKeys.None);
+			shortcuts[1] = new Shortcut (this.Mnemonic, ModifierKeys.Alt);
+			
+			return shortcuts;
+		}
 		
 		protected virtual void BuildFullPathName(System.Text.StringBuilder buffer)
 		{
@@ -5118,7 +5130,7 @@ namespace Epsitec.Common.Widgets
 		private ContentAlignment				alignment;
 		private int								tab_index = 0;
 		private TabNavigationMode				tab_navigation_mode;
-		private Shortcut						shortcut;
+		private Collections.ShortcutCollection	shortcuts;
 		private double							default_font_height;
 		private MouseCursor						mouse_cursor;
 		private System.Collections.Hashtable	property_hash;

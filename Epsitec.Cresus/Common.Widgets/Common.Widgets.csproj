@@ -857,6 +857,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Collections\HostedShortcutCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\IShortcutCollectionHost.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Collections\IStringCollectionHost.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

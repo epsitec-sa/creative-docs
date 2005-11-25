@@ -17,6 +17,26 @@ namespace Epsitec.Common.Widgets
 			this.KeyCode = code;
 		}
 		
+		public Shortcut(char code, ModifierKeys modifier)
+		{
+			if ((code >= 'a') && (code <= 'z'))
+			{
+				this.KeyCode = (KeyCode)(KeyCode.AlphaA + code - 'a' + (int) modifier);
+			}
+			else if ((code >= 'A') && (code <= 'Z'))
+			{
+				this.KeyCode = (KeyCode)(KeyCode.AlphaA + code - 'A' + (int) modifier);
+			}
+			else if ((code >= '0') && (code <= '9'))
+			{
+				this.KeyCode = (KeyCode)(KeyCode.Digit0 + code - '0' + (int) modifier);
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("No KeyCode mapping for shortcut char '{0}'", code));
+			}
+		}
+		
 		
 		public static implicit operator Shortcut(KeyCode code)
 		{
