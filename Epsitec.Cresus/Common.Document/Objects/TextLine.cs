@@ -169,7 +169,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Curve";
-					item.Icon = Misc.Icon("ToCurve");
+					item.Icon = Misc.Icon("HandleToCurve");
 					item.Text = Res.Strings.Object.Bezier.Menu.ToCurve;
 					list.Add(item);
 				}
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Line";
-					item.Icon = Misc.Icon("ToLine");
+					item.Icon = Misc.Icon("HandleToLine");
 					item.Text = Res.Strings.Object.Bezier.Menu.ToLine;
 					list.Add(item);
 				}
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Document.Objects
 				item = new ContextMenuItem();
 				item.Command = "Object";
 				item.Name = "HandleAdd";
-				item.Icon = Misc.Icon("Add");
+				item.Icon = Misc.Icon("HandleAdd");
 				item.Text = Res.Strings.Object.Bezier.Menu.HandleAdd;
 				list.Add(item);
 			}
@@ -266,7 +266,7 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleContinue";
-						item.Icon = Misc.Icon("Add");
+						item.Icon = Misc.Icon("HandleContinue");
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleContinue;
 						list.Add(item);
 					}
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleDelete";
-						item.Icon = Misc.Icon("Sub");
+						item.Icon = Misc.Icon("HandleSub");
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleDelete;
 						list.Add(item);
 					}

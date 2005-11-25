@@ -2690,6 +2690,23 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.ToPolySelection();
 		}
 
+		[Command ("HandleAdd")]
+		[Command ("HandleSub")]
+		[Command ("HandleToLine")]
+		[Command ("HandleToCurve")]
+		[Command ("HandleSym")]
+		[Command ("HandleSmooth")]
+		[Command ("HandleDis")]
+		[Command ("HandleLine")]
+		[Command ("HandleFree")]
+		[Command ("HandleSimply")]
+		[Command ("HandleCorner")]
+		[Command ("HandleContinue")]
+		void CommandHandle(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.DoHandleCommand(e.CommandName);
+		}
+
 		[Command ("ToSimplest")]
 		void CommandToSimplest(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3567,6 +3584,18 @@ namespace Epsitec.App.DocumentEditor
 			this.uncombineState = new CommandState("Uncombine", this.commandDispatcher);
 			this.toBezierState = new CommandState("ToBezier", this.commandDispatcher);
 			this.toPolyState = new CommandState("ToPoly", this.commandDispatcher);
+			this.handleAddState = new CommandState("HandleAdd", this.commandDispatcher);
+			this.handleSubState = new CommandState("HandleSub", this.commandDispatcher);
+			this.handleToLineState = new CommandState("HandleToLine", this.commandDispatcher);
+			this.handleToCurveState = new CommandState("HandleToCurve", this.commandDispatcher);
+			this.handleSymState = new CommandState("HandleSym", this.commandDispatcher);
+			this.handleSmoothState = new CommandState("HandleSmooth", this.commandDispatcher);
+			this.handleDisState = new CommandState("HandleDis", this.commandDispatcher);
+			this.handleLineState = new CommandState("HandleLine", this.commandDispatcher);
+			this.handleFreeState = new CommandState("HandleFree", this.commandDispatcher);
+			this.handleSimplyState = new CommandState("HandleSimply", this.commandDispatcher);
+			this.handleCornerState = new CommandState("HandleCorner", this.commandDispatcher);
+			this.handleContinueState = new CommandState("HandleContinue", this.commandDispatcher);
 			this.fragmentState = new CommandState("Fragment", this.commandDispatcher);
 			this.booleanAndState = new CommandState("BooleanAnd", this.commandDispatcher);
 			this.booleanOrState = new CommandState("BooleanOr", this.commandDispatcher);
@@ -5410,6 +5439,18 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					uncombineState;
 		protected CommandState					toBezierState;
 		protected CommandState					toPolyState;
+		protected CommandState					handleAddState;
+		protected CommandState					handleSubState;
+		protected CommandState					handleToLineState;
+		protected CommandState					handleToCurveState;
+		protected CommandState					handleSymState;
+		protected CommandState					handleSmoothState;
+		protected CommandState					handleDisState;
+		protected CommandState					handleLineState;
+		protected CommandState					handleFreeState;
+		protected CommandState					handleSimplyState;
+		protected CommandState					handleCornerState;
+		protected CommandState					handleContinueState;
 		protected CommandState					fragmentState;
 		protected CommandState					booleanAndState;
 		protected CommandState					booleanOrState;

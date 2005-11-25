@@ -862,6 +862,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\Balloon.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\HRuler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

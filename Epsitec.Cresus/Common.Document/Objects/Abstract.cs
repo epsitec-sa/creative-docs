@@ -2272,6 +2272,31 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Met les commandes pour l'objet dans une liste.
+		public virtual void PutCommands(System.Collections.ArrayList list)
+		{
+			if ( this.document.Modifier.IsToolShaper )
+			{
+				if ( this.selectedSegments != null )
+				{
+					this.PutCommands(list, "HandleAdd");
+				}
+
+				if ( this.IsShaperHandleSelected() )
+				{
+					this.PutCommands(list, "HandleSub");
+				}
+			}
+		}
+
+		protected void PutCommands(System.Collections.ArrayList list, string cmd)
+		{
+			if ( !list.Contains(cmd) )
+			{
+				list.Add(cmd);
+			}
+		}
+
 		// Donne le contenu du menu contextuel.
 		public virtual void ContextMenu(System.Collections.ArrayList list, Point pos, int handleRank)
 		{

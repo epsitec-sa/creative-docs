@@ -291,11 +291,6 @@ namespace Epsitec.Common.Document
 			Modifier modifier = this.document.Modifier;
 			if ( modifier == null )  return;
 
-			if ( this.miniBar != null && message.Type == MessageType.MouseMove )
-			{
-				this.AnimateMiniBar(pos);
-			}
-
 			// Après un MouseUp, on reçoit toujours un MouseMove inutile,
 			// qui est filtré ici !!!
 			if ( message.Type == MessageType.MouseMove &&
@@ -309,6 +304,11 @@ namespace Epsitec.Common.Document
 
 			this.mousePosWidget = pos;
 			pos = this.ScreenToInternal(pos);  // position en coordonnées internes
+
+			if ( this.miniBar != null && message.Type == MessageType.MouseMove )
+			{
+				this.AnimateMiniBar(pos);
+			}
 
 			if ( pos.X != this.mousePos.X || pos.Y != this.mousePos.Y )
 			{
@@ -1029,6 +1029,11 @@ namespace Epsitec.Common.Document
 			this.selector.HiliteHandle(-1);  // supprime tous les hilites
 			this.HiliteHandle(null, -1);
 
+			bool mb = true;
+			if ( this.moveAccept )  mb = false;
+			if ( this.moveHandle != -1 )  mb = false;
+			if ( this.moveGlobal != -1 )  mb = false;
+
 			if ( this.selector.Visible && !this.selector.Handles )
 			{
 				double len = Point.Distance(mouse, this.moveStart);
@@ -1101,6 +1106,13 @@ namespace Epsitec.Common.Document
 			{
 				this.document.Notifier.GenerateEvents();
 				this.ContextMenu(mouse, globalMenu);
+			}
+			else
+			{
+				if ( mb )
+				{
+					this.OpenMiniBar(mouse);
+				}
 			}
 		}
 
@@ -1306,6 +1318,9 @@ namespace Epsitec.Common.Document
 			this.HiliteHandle(null, -1);
 			this.moveStartingList = null;
 
+			bool mb = true;
+			if ( !Point.Equals(mouse, this.moveStart) )  mb = false;
+
 			if ( this.selector.Visible && !this.selector.Handles )
 			{
 				double len = Point.Distance(mouse, this.moveStart);
@@ -1365,12 +1380,17 @@ namespace Epsitec.Common.Document
 			this.drawingContext.MagnetDelStarting();
 			this.document.Modifier.OpletQueueValidateAction();
 
-			this.OpenMiniBar(this.mousePosWidget);
-
 			if ( isRight )  // avec le bouton de droite de la souris ?
 			{
 				this.document.Notifier.GenerateEvents();
 				this.ContextMenu(mouse, globalMenu);
+			}
+			else
+			{
+				if ( mb )
+				{
+					this.OpenMiniBar(mouse);
+				}
 			}
 		}
 		#endregion
@@ -2270,21 +2290,23 @@ namespace Epsitec.Common.Document
 
 
 		#region MiniBar
-		// 
-		protected void OpenMiniBar(Point mouse)
+		// Ouvre la mini-palette.
+		public void OpenMiniBar(Point mouse)
 		{
 			this.CloseMiniBar();
 
-			Size size = new Size(100, 30);
-			this.miniBarCenter = new Point(mouse.X+size.Width/2, mouse.Y+size.Height/2);
-			this.miniBarRadius = System.Math.Sqrt(size.Width*size.Width + size.Height*size.Height)/2;
+			System.Collections.ArrayList cmds = this.MiniBarCommands();
+			if ( cmds == null || cmds.Count == 0 )  return;
 
-			mouse = this.MapClientToScreen(mouse);
+			Widgets.Balloon frame = new Widgets.Balloon();
+			IconButton button = new IconButton();
 
-			ScreenInfo si = ScreenInfo.Find(mouse);
-			Drawing.Rectangle wa = si.WorkingArea;
+			mouse = this.InternalToScreen(mouse);
+			Size size = new Size(cmds.Count*button.DefaultWidth+frame.Margin*2, button.DefaultHeight+frame.Margin*2+frame.Distance);
+			mouse.X -= size.Width/2;
+			this.miniBarRect = new Drawing.Rectangle(mouse, size);
 
-			Point pos = mouse;
+			Point pos = this.MapClientToScreen(mouse);
 
 			this.miniBar = new Window();
 			this.miniBar.MakeFramelessWindow();
@@ -2294,48 +2316,105 @@ namespace Epsitec.Common.Document
 			this.miniBar.Root.SetSyncPaint(true);
 			this.miniBar.WindowSize = size;
 			this.miniBar.WindowLocation = pos;
+			this.miniBar.Root.BackColor = Color.FromARGB(0, 1,1,1);
 			this.miniBar.Owner = this.Window.Owner;
+			this.miniBar.CommandDispatcher = this.GetCommandDispatcher();
 
-			HToolBar toolbar = new HToolBar(this.miniBar.Root);
-			toolbar.Anchor = AnchorStyles.All;
+			frame.SetParent(this.miniBar.Root);
+			frame.Anchor = AnchorStyles.All;
 
-			IconButton button = new IconButton("Delete", Misc.Icon("Delete"), "Delete");
-			toolbar.Items.Add(button);
-			toolbar.Invalidate();
+			foreach ( string cmd in cmds )
+			{
+				button = new IconButton(cmd, Misc.Icon(cmd), cmd);
+				button.Dock = DockStyle.Left;
+				button.SetParent(frame);
+				button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
+
+				string s = Res.Strings.GetString("Action."+cmd);
+				if ( s != null )
+				{
+					ToolTip.Default.SetToolTip(button, s);
+				}
+			}
 
 			this.miniBar.Show();
 		}
 
-		// 
-		protected void CloseMiniBar()
+		private void HandleMiniBarButtonClicked(object sender, MessageEventArgs e)
+		{
+			this.CloseMiniBar();
+		}
+
+		// Ferme la mini-palette.
+		public void CloseMiniBar()
 		{
 			if ( this.miniBar == null )  return;
 			this.miniBar.Close();
 			this.miniBar = null;
 		}
 
-		// 
+		// Anime la mini-palette en fonction de l'éloignement de la souris.
 		protected void AnimateMiniBar(Point mouse)
 		{
 			if ( this.miniBar == null )  return;
 
-			double alpha = 1.0;
-			double d = Point.Distance(mouse, this.miniBarCenter);
-			if ( d > this.miniBarRadius*1.2 )
-			{
-				alpha = 1.0 - (d-this.miniBarRadius*1.2)/(this.miniBarRadius*0.5);
-				alpha = System.Math.Max(alpha, 0.0);
-			}
+			mouse = this.InternalToScreen(mouse);
+			double dx = System.Math.Abs(mouse.X-this.miniBarRect.Center.X);
+			double dy = System.Math.Abs(mouse.Y-this.miniBarRect.Center.Y);
+			double d = (dx > dy*(this.miniBarRect.Width/this.miniBarRect.Height)) ?
+						System.Math.Max(dx-this.miniBarRect.Width/2,  0.0) :
+						System.Math.Max(dy-this.miniBarRect.Height/2, 0.0);
+			double alpha = 1.0-d/this.miniBarMax;
 
-			System.Diagnostics.Debug.WriteLine(string.Format("alpha={0}", alpha));
-			if ( alpha == 0.0 )
+			if ( alpha <= 0.0 )  // trop loin ?
 			{
-				this.CloseMiniBar();
+				this.CloseMiniBar();  // ferme définitivement
 			}
 			else
 			{
-				this.miniBar.Alpha = alpha;
+				this.miniBar.Alpha = alpha;  // estompe...
 			}
+		}
+
+		// Retourne la liste des commandes pour la mini-palette.
+		protected System.Collections.ArrayList MiniBarCommands()
+		{
+			int nbSel = this.document.Modifier.TotalSelected;
+			if ( nbSel == 0 )  return null;
+
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+
+			if ( this.document.Modifier.Tool == "Select" )
+			{
+				this.MiniBarAdd(list, "Delete");
+				this.MiniBarAdd(list, "Duplicate");
+				this.MiniBarAdd(list, "Cut");
+				this.MiniBarAdd(list, "Copy");
+				this.MiniBarAdd(list, "Paste");
+				this.MiniBarAdd(list, "OrderUpAll");
+				this.MiniBarAdd(list, "OrderDownAll");
+			}
+
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
+			{
+				obj.PutCommands(list);
+			}
+
+			return list;
+		}
+
+		// Ajoute une commande dans la liste pour la mini-palette.
+		protected void MiniBarAdd(System.Collections.ArrayList list, string cmd)
+		{
+			CommandDispatcher cd = this.GetCommandDispatcher();
+			CommandState state = cd[cmd];
+			if ( state != null )
+			{
+				if ( !state.Enable )  return;
+			}
+
+			list.Add(cmd);
 		}
 		#endregion
 
@@ -3734,8 +3813,8 @@ namespace Epsitec.Common.Document
 		protected Objects.TextBox2				editFlowAfterCreate = null;
 
 		protected Window						miniBar = null;
-		protected Point							miniBarCenter;
-		protected double						miniBarRadius;
+		protected Drawing.Rectangle				miniBarRect;
+		protected double						miniBarMax = 20;
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOrder;
 		protected VMenu							contextMenuOper;

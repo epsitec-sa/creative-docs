@@ -135,6 +135,21 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Met les commandes pour l'objet dans une liste.
+		public override void PutCommands(System.Collections.ArrayList list)
+		{
+			base.PutCommands(list);
+
+			if ( this.document.Modifier.IsToolShaper )
+			{
+				if ( this.IsShaperHandleSelected() )
+				{
+					this.PutCommands(list, "HandleSimply");
+					this.PutCommands(list, "HandleCorner");
+				}
+			}
+		}
+
 		// Donne le contenu du menu contextuel.
 		public override void ContextMenu(System.Collections.ArrayList list, Point pos, int handleRank)
 		{
@@ -150,7 +165,7 @@ namespace Epsitec.Common.Document.Objects
 				item = new ContextMenuItem();
 				item.Command = "Object";
 				item.Name = "HandleAdd";
-				item.Icon = Misc.Icon("Add");
+				item.Icon = Misc.Icon("HandleAdd");
 				item.Text = Res.Strings.Object.Poly.Menu.HandleAdd;
 				list.Add(item);
 			}
@@ -191,7 +206,7 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleContinue";
-						item.Icon = Misc.Icon("Add");
+						item.Icon = Misc.Icon("HandleContinue");
 						item.Text = Res.Strings.Object.Poly.Menu.HandleContinue;
 						list.Add(item);
 					}
@@ -199,7 +214,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "HandleDelete";
-					item.Icon = Misc.Icon("Sub");
+					item.Icon = Misc.Icon("HandleSub");
 					item.Text = Res.Strings.Object.Poly.Menu.HandleDelete;
 					list.Add(item);
 				}

@@ -3407,6 +3407,11 @@ namespace Epsitec.Common.Document
 				corner.CornerType = Properties.CornerType.Right;
 			}
 		}
+
+		// Effectue une commande sur une poignée.
+		public void DoHandleCommand(string cmd)
+		{
+		}
 		#endregion
 
 

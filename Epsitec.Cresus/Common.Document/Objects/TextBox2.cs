@@ -354,10 +354,39 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Met les commandes pour l'objet dans une liste.
+		public override void PutCommands(System.Collections.ArrayList list)
+		{
+			base.PutCommands(list);
+
+			if ( this.document.Modifier.Tool == "Edit" )
+			{
+				bool sel = (this.textFlow.TextNavigator.SelectionCount != 0);
+				if ( sel )
+				{
+					this.PutCommands(list, "Cut");
+					this.PutCommands(list, "Copy");
+					this.PutCommands(list, "Paste");
+					this.PutCommands(list, "FontBold");
+					this.PutCommands(list, "FontItalic");
+				}
+				else
+				{
+					this.PutCommands(list, "Paste");
+				}
+			}
+		}
+
+
 		// Gestion d'un événement pendant l'édition.
 		public override bool EditProcessMessage(Message message, Point pos)
 		{
 			if ( this.transform == null )  return false;
+
+			if ( message.IsKeyType )
+			{
+				this.document.Modifier.ActiveViewer.CloseMiniBar();
+			}
 
 			if ( message.Type == MessageType.KeyDown   ||
 				 message.Type == MessageType.KeyPress  ||
@@ -380,8 +409,14 @@ namespace Epsitec.Common.Document.Objects
 				return true;
 			}
 
-			pos = this.transform.TransformInverse(pos);
-			if ( !this.metaNavigator.ProcessMessage(message, pos) )  return false;
+			Point ppos = this.transform.TransformInverse(pos);
+			if ( !this.metaNavigator.ProcessMessage(message, ppos) )  return false;
+
+			if ( message.Type == MessageType.MouseUp )
+			{
+				this.document.Modifier.ActiveViewer.OpenMiniBar(pos);
+			}
+
 			return true;
 		}
 

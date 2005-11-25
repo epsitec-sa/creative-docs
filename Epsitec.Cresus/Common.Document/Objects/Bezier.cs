@@ -125,6 +125,30 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Met les commandes pour l'objet dans une liste.
+		public override void PutCommands(System.Collections.ArrayList list)
+		{
+			base.PutCommands(list);
+
+			if ( this.document.Modifier.IsToolShaper )
+			{
+				if ( this.selectedSegments != null )
+				{
+					this.PutCommands(list, "HandleToLine");
+					this.PutCommands(list, "HandleToCurve");
+				}
+
+				if ( this.IsShaperHandleSelected() )
+				{
+					this.PutCommands(list, "HandleLine");
+					this.PutCommands(list, "HandleFree");
+					this.PutCommands(list, "HandleSym");
+					this.PutCommands(list, "HandleSmooth");
+					this.PutCommands(list, "HandleDis");
+				}
+			}
+		}
+
 		// Donne le contenu du menu contextuel.
 		public override void ContextMenu(System.Collections.ArrayList list, Point pos, int handleRank)
 		{
@@ -143,7 +167,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Curve";
-					item.Icon = Misc.Icon("ToCurve");
+					item.Icon = Misc.Icon("HandleToCurve");
 					item.Text = Res.Strings.Object.Bezier.Menu.ToCurve;
 					list.Add(item);
 				}
@@ -152,7 +176,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Line";
-					item.Icon = Misc.Icon("ToLine");
+					item.Icon = Misc.Icon("HandleToLine");
 					item.Text = Res.Strings.Object.Bezier.Menu.ToLine;
 					list.Add(item);
 				}
@@ -160,7 +184,7 @@ namespace Epsitec.Common.Document.Objects
 				item = new ContextMenuItem();
 				item.Command = "Object";
 				item.Name = "HandleAdd";
-				item.Icon = Misc.Icon("Add");
+				item.Icon = Misc.Icon("HandleAdd");
 				item.Text = Res.Strings.Object.Bezier.Menu.HandleAdd;
 				list.Add(item);
 			}
@@ -241,7 +265,7 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleContinue";
-						item.Icon = Misc.Icon("Add");
+						item.Icon = Misc.Icon("HandleContinue");
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleContinue;
 						list.Add(item);
 					}
@@ -257,7 +281,7 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleDelete";
-						item.Icon = Misc.Icon("Sub");
+						item.Icon = Misc.Icon("HandleSub");
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleDelete;
 						list.Add(item);
 					}
