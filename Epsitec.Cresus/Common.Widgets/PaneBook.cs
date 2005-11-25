@@ -299,7 +299,7 @@ namespace Epsitec.Common.Widgets
 					rect.Width = end.X-start.X-this.sliderDim;
 					this.Align(ref rect);
 					page.Bounds = rect;
-					page.SetVisible(rect.Width >= page.PaneHideSize);
+					page.Visibility = (rect.Width >= page.PaneHideSize);
 
 					rect.Left = end.X-this.sliderDim;
 					rect.Width = this.sliderDim;

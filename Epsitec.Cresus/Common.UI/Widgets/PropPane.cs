@@ -39,7 +39,7 @@ namespace Epsitec.Common.UI.Widgets
 				if (this.accept_toggle != value)
 				{
 					this.accept_toggle = value;
-					this.toggle_button.SetVisible (this.accept_toggle);
+					this.toggle_button.Visibility = (this.accept_toggle);
 				}
 			}
 		}
@@ -133,7 +133,7 @@ namespace Epsitec.Common.UI.Widgets
 			this.extra_button.Anchor         = AnchorStyles.TopRight;
 			this.extra_button.AnchorMargins  = new Drawing.Margins (0, 1, 8, 0);
 			
-			this.toggle_button.SetVisible (this.accept_toggle);
+			this.toggle_button.Visibility = (this.accept_toggle);
 			this.extra_button.Enable = this.accept_extra;
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
@@ -177,7 +177,7 @@ namespace Epsitec.Common.UI.Widgets
 			widget.AnchorMargins = margins;
 			widget.Height        = this.DefaultHeight - 1;
 			
-			widget.SetVisible (false);
+			widget.Visibility = false;
 			
 			return widget;
 		}
@@ -192,7 +192,7 @@ namespace Epsitec.Common.UI.Widgets
 			
 			if (this.visible_view_index >= 0)
 			{
-				this.views[this.visible_view_index].SetVisible (false);
+				this.views[this.visible_view_index].Visibility = false;
 			}
 			
 			this.visible_view_index = index;
@@ -203,7 +203,7 @@ namespace Epsitec.Common.UI.Widgets
 			}
 			else
 			{
-				this.views[this.visible_view_index].SetVisible (true);
+				this.views[this.visible_view_index].Visibility = true;
 				this.Height = this.views[this.visible_view_index].Height + 1;
 			}
 			

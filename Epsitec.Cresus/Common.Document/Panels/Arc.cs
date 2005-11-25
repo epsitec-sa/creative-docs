@@ -143,8 +143,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldStarting.Enable = (this.isExtendedSize && enable);
 			this.fieldEnding.Enable = (this.isExtendedSize && enable);
 
-			this.fieldStarting.SetVisible(this.isExtendedSize);
-			this.fieldEnding.SetVisible(this.isExtendedSize);
+			this.fieldStarting.Visibility = (this.isExtendedSize);
+			this.fieldEnding.Visibility = (this.isExtendedSize);
 		}
 
 		// Met à jour la géométrie.

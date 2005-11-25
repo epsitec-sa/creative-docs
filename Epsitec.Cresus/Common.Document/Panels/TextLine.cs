@@ -133,8 +133,8 @@ namespace Epsitec.Common.Document.Panels
 		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
-			this.fieldOffset.SetVisible(this.isExtendedSize);
-			this.fieldAdd.SetVisible(this.isExtendedSize);
+			this.fieldOffset.Visibility = (this.isExtendedSize);
+			this.fieldAdd.Visibility = (this.isExtendedSize);
 		}
 
 		// Met à jour la géométrie.

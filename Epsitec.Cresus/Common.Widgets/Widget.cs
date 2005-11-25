@@ -1421,12 +1421,12 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void Hide()
 		{
-			this.SetVisible (false);
+			this.Visibility = false;
 		}
 		
 		public virtual void Show()
 		{
-			this.SetVisible (true);
+			this.Visibility = true;
 		}
 		
 		public virtual void Toggle()
@@ -1533,43 +1533,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void SetVisible(bool visible)
-		{
-			if (this.Visibility == false)
-			{
-				if (visible)
-				{
-					this.Visibility = true;
-					this.Invalidate ();
-					
-					if (this.Dock != DockStyle.None)
-					{
-						this.Parent.UpdateChildrenLayout ();
-					}
-					
-					this.NotifyChangedToVisible ();
-				}
-			}
-			else
-			{
-				if (!visible)
-				{
-					//	Rend invisible un widget qui était visible avant. Il faut
-					//	aussi s'assurer que le widget n'est plus "Entered".
-					
-					this.SetEntered (false);
-					this.Invalidate ();
-					this.Visibility = false;
-					
-					if (this.Dock != DockStyle.None)
-					{
-						this.Parent.UpdateChildrenLayout ();
-					}
-					
-					this.NotifyChangedToHidden ();
-				}
-			}
-		}
 		
 		public virtual void SetFrozen(bool frozen)
 		{
@@ -3379,49 +3342,6 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetBounds (Drawing.Rectangle.FromCorners (x1, y1, x2, y2));
 		}
-#if false
-		internal override void SetBounds(Drawing.Rectangle bounds)
-		{
-			Drawing.Rectangle old_bounds = this.Bounds;
-			Drawing.Rectangle new_bounds = bounds;
-			
-			base.SetBounds (bounds);
-			
-			if (old_bounds != new_bounds)
-			{
-				this.UpdateClientGeometry ();
-				this.Invalidate ();
-			}
-#if false //#fix
-			if ((x1 == this.x1) && (y1 == this.y1) && (x2 == this.x2) && (y2 == this.y2))
-			{
-				return;
-			}
-			
-			this.Invalidate ();
-			
-			bool loc_changed  = (this.x1 != x1) || (this.y1 != y1);
-			bool size_changed = (this.x2-this.x1 != x2-x1) || (this.y2-this.y1 != y2-y1);
-			
-			this.x1 = x1;
-			this.y1 = y1;
-			this.x2 = x2;
-			this.y2 = y2;
-			
-			this.UpdateClientGeometry ();
-			
-			if (loc_changed)
-			{
-				this.OnLocationChanged ();
-			}
-			
-			if (size_changed)
-			{
-				this.OnSizeChanged ();
-			}
-#endif
-		}
-#endif
 		
 		protected override void UpdateClientGeometry()
 		{
@@ -4834,46 +4754,8 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private void NotifyChangedToHidden()
-		{
-			//#fix -- plus nécessaire ? supprimer VisibleChanged en faveur de IsVisibleChanged
-			this.OnVisibleChanged ();
-			
-			Widget[] children = this.Children.Widgets;
-			
-			foreach (Widget child in children)
-			{
-				if (child.Visibility)
-				{
-					child.NotifyChangedToHidden ();
-				}
-			}
-		}
-		
-		private void NotifyChangedToVisible()
-		{
-			//#fix
-			this.OnVisibleChanged ();
-			
-			Widget[] children = this.Children.Widgets;
-			
-			foreach (Widget child in children)
-			{
-				if (child.Visibility)
-				{
-					child.NotifyChangedToVisible ();
-				}
-			}
-		}
 		
 		
-		protected virtual void OnVisibleChanged()
-		{
-			if (this.VisibleChanged != null)
-			{
-				this.VisibleChanged (this);
-			}
-		}
 		
 		
 		protected virtual void OnSelected()
@@ -5045,7 +4927,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			TextChanged;
 		public event Support.EventHandler			NameChanged;
 		public event Support.EventHandler			LocationChanged;
-		public event Support.EventHandler			VisibleChanged;
 		#endregion
 		
 		#region Various enums

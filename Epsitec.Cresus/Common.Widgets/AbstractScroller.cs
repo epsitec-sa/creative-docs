@@ -209,13 +209,13 @@ namespace Epsitec.Common.Widgets
 				
 				bounds = new Drawing.Rectangle (0, rect.Height - arrow_length, rect.Width, arrow_length);
 				
-				this.arrowUp.SetVisible (arrow_length > 0);
+				this.arrowUp.Visibility = (arrow_length > 0);
 				this.arrowUp.Bounds    = bounds;
 				this.arrowUp.GlyphShape = GlyphShape.ArrowUp;
 				
 				bounds = new Drawing.Rectangle (0, 0, rect.Width, arrow_length);
 				
-				this.arrowDown.SetVisible (arrow_length > 0);
+				this.arrowDown.Visibility = (arrow_length > 0);
 				this.arrowDown.Bounds    = bounds;
 				this.arrowDown.GlyphShape = GlyphShape.ArrowDown;
 				
@@ -228,13 +228,13 @@ namespace Epsitec.Common.Widgets
 				
 				bounds = new Drawing.Rectangle (rect.Width - arrow_length, 0, arrow_length, rect.Height);
 				
-				this.arrowUp.SetVisible (arrow_length > 0);
+				this.arrowUp.Visibility = (arrow_length > 0);
 				this.arrowUp.Bounds    = bounds;
 				this.arrowUp.GlyphShape = GlyphShape.ArrowRight;
 				
 				bounds = new Drawing.Rectangle (0, 0, arrow_length, rect.Height);
 				
-				this.arrowDown.SetVisible (arrow_length > 0);
+				this.arrowDown.Visibility = (arrow_length > 0);
 				this.arrowDown.Bounds    = bounds;
 				this.arrowDown.GlyphShape = GlyphShape.ArrowLeft;
 				

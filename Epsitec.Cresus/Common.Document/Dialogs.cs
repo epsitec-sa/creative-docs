@@ -648,7 +648,7 @@ namespace Epsitec.Common.Document
 				StaticText info = this.WidgetsTableSearch(name, ".Info") as StaticText;
 				if ( info != null )
 				{
-					info.SetVisible(sDouble.IsEnabled);
+					info.Visibility = (sDouble.IsEnabled);
 				}
 			}
 		}
@@ -914,13 +914,13 @@ namespace Epsitec.Common.Document
 			{
 				ib.ActiveState = ActiveState.Yes;
 				ib.IconName = Misc.Icon("Linked");
-				sep.Enable = (true);
+				sep.Enable = true;
 			}
 			else
 			{
 				ib.ActiveState = ActiveState.No;
 				ib.IconName = Misc.Icon("Unlinked");
-				sep.Enable = (false);
+				sep.Enable = false;
 			}
 		}
 

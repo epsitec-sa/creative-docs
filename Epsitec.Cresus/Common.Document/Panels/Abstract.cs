@@ -274,7 +274,7 @@ namespace Epsitec.Common.Document.Panels
 			rect.Top -= 1;
 			rect.Bottom = rect.Top-this.LabelHeight;
 			this.label.Bounds = rect;
-			this.label.SetVisible(this.IsLabelProperties || this is ModColor);
+			this.label.Visibility = (this.IsLabelProperties || this is ModColor);
 
 			rect = this.Client.Bounds;
 			rect.Left += 1;
@@ -296,16 +296,16 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( this.isObjectHilite )
 			{
-				this.fixIcon.SetVisible(false);
-				this.hiliteButton.SetVisible(this.isHilite);
+				this.fixIcon.Visibility = false;
+				this.hiliteButton.Visibility = (this.isHilite);
 			}
 			else
 			{
-				this.fixIcon.SetVisible(true);
-				this.hiliteButton.SetVisible(false);
+				this.fixIcon.Visibility = true;
+				this.hiliteButton.Visibility = false;
 			}
 
-			this.extendedButton.SetVisible(this.isNormalAndExtended && !this.isStyleDirect && !this.isLayoutDirect);
+			this.extendedButton.Visibility = (this.isNormalAndExtended && !this.isStyleDirect && !this.isLayoutDirect);
 			this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 		}
 

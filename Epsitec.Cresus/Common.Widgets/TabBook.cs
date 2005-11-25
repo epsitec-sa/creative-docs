@@ -474,13 +474,13 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( page == this.ActivePage )  // est-ce la page active ?
 				{
-					page.SetVisible(true);
+					page.Visibility = true;
 					page.TabButton.ActiveState = ActiveState.Yes;
 					page.TabButton.InheritParentFocus = true;
 				}
 				else
 				{
-					page.SetVisible(false);
+					page.Visibility = false;
 					page.TabButton.ActiveState = ActiveState.No;
 					page.TabButton.InheritParentFocus = false;
 				}
@@ -583,7 +583,7 @@ namespace Epsitec.Common.Widgets
 					rect.Deflate(2, 2);
 					rect.Offset(-2, 0);
 					this.arrowLeft.Bounds = rect;
-					this.arrowLeft.SetVisible(true);
+					this.arrowLeft.Visibility = true;
 					this.arrowLeft.Enable = (this.scrollOffset > this.TabOffsetMin);
 
 					double x = this.Client.Width-this.tabHeight;
@@ -593,7 +593,7 @@ namespace Epsitec.Common.Widgets
 					rect.Deflate(2, 2);
 					rect.Offset(2, 0);
 					this.arrowRight.Bounds = rect;
-					this.arrowRight.SetVisible(true);
+					this.arrowRight.Visibility = true;
 					this.arrowRight.Enable = (this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
 				}
 				else if ( this.Arrows == TabBookArrows.Right )
@@ -605,19 +605,19 @@ namespace Epsitec.Common.Widgets
 					rect.Deflate(2, 2);
 					rect.Offset(6, 0);
 					this.arrowLeft.Bounds = rect;
-					this.arrowLeft.SetVisible(true);
+					this.arrowLeft.Visibility = true;
 					this.arrowLeft.Enable = (this.scrollOffset > this.TabOffsetMin);
 
 					rect.Offset(this.tabHeight-4, 0);
 					this.arrowRight.Bounds = rect;
-					this.arrowRight.SetVisible(true);
+					this.arrowRight.Visibility = true;
 					this.arrowRight.Enable = (this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
 				}
 			}
 			else
 			{
-				this.arrowLeft.SetVisible(false);
-				this.arrowRight.SetVisible(false);
+				this.arrowLeft.Visibility = false;
+				this.arrowRight.Visibility = false;
 			}
 
 			if ( this.hasMenuButton )
@@ -627,11 +627,11 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 				rect.Inflate(-2, -2);
 				this.buttonMenu.Bounds = rect;
-				this.buttonMenu.SetVisible(true);
+				this.buttonMenu.Visibility = true;
 			}
 			else
 			{
-				this.buttonMenu.SetVisible(false);
+				this.buttonMenu.Visibility = false;
 			}
 
 			if ( this.hasCloseButton )
@@ -639,11 +639,11 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle rect = new Drawing.Rectangle(this.Client.Width-(this.tabHeight-2), this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 				rect.Inflate(-2, -2);
 				this.buttonClose.Bounds = rect;
-				this.buttonClose.SetVisible(true);
+				this.buttonClose.Visibility = true;
 			}
 			else
 			{
-				this.buttonClose.SetVisible(false);
+				this.buttonClose.Visibility = false;
 			}
 
 			// Pour détecter le clic sur les flèches en premier.

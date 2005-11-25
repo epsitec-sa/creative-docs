@@ -74,8 +74,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			if (this.button_accept != null)
 			{
-				this.button_accept.SetVisible (this.is_visible);
-				this.button_reject.SetVisible (this.is_visible);
+				this.button_accept.Visibility = (this.is_visible);
+				this.button_reject.Visibility = (this.is_visible);
 			}
 		}
 		

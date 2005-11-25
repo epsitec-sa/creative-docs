@@ -587,7 +587,7 @@ namespace Epsitec.Common.Widgets
 			r.Bottom = rect.Top - hCircle;
 			r.Top    = rect.Top;
 			this.circle.Bounds = r;
-			this.circle.SetVisible(visibleCircle);
+			this.circle.Visibility = (visibleCircle);
 
 			double dx = System.Math.Floor((rect.Width-hCircle-10)/this.palette.Columns);
 			if ( dx > 4 )
@@ -614,12 +614,12 @@ namespace Epsitec.Common.Widgets
 				r.Left  = 10;
 				r.Width = 12;
 				this.labels[i].Bounds = r;
-				this.labels[i].SetVisible(visibleFieldsRGB);
+				this.labels[i].Visibility = (visibleFieldsRGB);
 
 				r.Left  = r.Right;
 				r.Width = 50;
 				this.fields[i].Bounds = r;
-				this.fields[i].SetVisible(visibleFieldsRGB);
+				this.fields[i].Visibility = (visibleFieldsRGB);
 
 				r.Offset(0, -19);
 			}
@@ -631,12 +631,12 @@ namespace Epsitec.Common.Widgets
 				r.Left  = 10+70;
 				r.Width = 12;
 				this.labels[i].Bounds = r;
-				this.labels[i].SetVisible(visibleFieldsRGB);
+				this.labels[i].Visibility = (visibleFieldsRGB);
 
 				r.Left  = r.Right;
 				r.Width = 50;
 				this.fields[i].Bounds = r;
-				this.fields[i].SetVisible(visibleFieldsRGB);
+				this.fields[i].Visibility = (visibleFieldsRGB);
 
 				r.Offset(0, -19);
 			}
@@ -648,12 +648,12 @@ namespace Epsitec.Common.Widgets
 				r.Left  = 10;
 				r.Width = 12;
 				this.labels[i].Bounds = r;
-				this.labels[i].SetVisible(visibleFieldsCMYK);
+				this.labels[i].Visibility = (visibleFieldsCMYK);
 
 				r.Left  = r.Right;
 				r.Width = 50;
 				this.fields[i].Bounds = r;
-				this.fields[i].SetVisible(visibleFieldsCMYK);
+				this.fields[i].Visibility = (visibleFieldsCMYK);
 
 				r.Offset(0, -19);
 			}
@@ -663,24 +663,24 @@ namespace Epsitec.Common.Widgets
 			r.Left  = 10+70;
 			r.Width = 12;
 			this.labels[10].Bounds = r;
-			this.labels[10].SetVisible(visibleFieldsCMYK);
+			this.labels[10].Visibility = (visibleFieldsCMYK);
 
 			r.Left  = r.Right;
 			r.Width = 50;
 			this.fields[10].Bounds = r;
-			this.fields[10].SetVisible(visibleFieldsCMYK);
+			this.fields[10].Visibility = (visibleFieldsCMYK);
 
 			r.Top    = rect.Bottom+3*19;
 			r.Bottom = r.Top-20;
 			r.Left  = 10;
 			r.Width = 12;
 			this.labels[11].Bounds = r;
-			this.labels[11].SetVisible(visibleFieldsGray);
+			this.labels[11].Visibility = (visibleFieldsGray);
 
 			r.Left  = r.Right;
 			r.Width = 50;
 			this.fields[11].Bounds = r;
-			this.fields[11].SetVisible(visibleFieldsGray);
+			this.fields[11].Visibility = (visibleFieldsGray);
 
 			r.Top    = rect.Bottom+3*19;
 			r.Bottom = r.Top-20;
@@ -689,12 +689,12 @@ namespace Epsitec.Common.Widgets
 				r.Left  = 10+70+70;
 				r.Width = 12;
 				this.labels[i].Bounds = r;
-				this.labels[i].SetVisible(visibleFields);
+				this.labels[i].Visibility = (visibleFields);
 
 				r.Left  = r.Right;
 				r.Width = 50;
 				this.fields[i].Bounds = r;
-				this.fields[i].SetVisible(visibleFields);
+				this.fields[i].Visibility = (visibleFields);
 
 				r.Offset(0, -19);
 			}
@@ -714,7 +714,7 @@ namespace Epsitec.Common.Widgets
 			r.Right = this.fields[3].Right;
 			r.Left  = r.Right - r.Height;
 			this.picker.Bounds = r;
-			this.picker.SetVisible(visibleFields);
+			this.picker.Visibility = (visibleFields);
 
 			if ( this.hasCloseButton )
 			{
@@ -726,11 +726,11 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.WriteLine ("Setting close button bounds to " + r.ToString());
 				
 				this.buttonClose.Bounds = r;
-				this.buttonClose.SetVisible(true);
+				this.buttonClose.Visibility = true;
 			}
 			else
 			{
-				this.buttonClose.SetVisible(false);
+				this.buttonClose.Visibility = false;
 			}
 
 			r.Left = rect.Left;

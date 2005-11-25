@@ -1701,7 +1701,7 @@ invalid:	row    = -1;
 				
 //@				slider.ZOrder = i;
 				slider.Bounds = bounds;
-				slider.SetVisible (this.columns[i].Elasticity == 0);
+				slider.Visibility = (this.columns[i].Elasticity == 0);
 			}
 			
 			this.header.ResumeLayout ();

@@ -216,7 +216,7 @@ namespace Epsitec.Common.Document.Panels
 				Rectangle r = rect;
 				r.Bottom = r.Top-20;
 				this.fontName.Bounds = r;
-				this.fontName.SetVisible(true);
+				this.fontName.Visibility = true;
 
 				if ( this.IsLabelProperties )
 				{
@@ -225,17 +225,17 @@ namespace Epsitec.Common.Document.Panels
 					r.Right = rect.Right;
 					this.fontSize.LabelVisibility = true;
 					this.fontSize.Bounds = r;
-					this.fontSize.SetVisible(true);
+					this.fontSize.Visibility = true;
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-Widgets.TextFieldLabel.DefaultMarginWidth;
 					this.labelColor.Bounds = r;
-					this.labelColor.SetVisible(true);
+					this.labelColor.Visibility = true;
 					r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
 					r.Right = rect.Right;
 					this.fontColor.Bounds = r;
-					this.fontColor.SetVisible(true);
+					this.fontColor.Visibility = true;
 				}
 				else
 				{
@@ -244,15 +244,15 @@ namespace Epsitec.Common.Document.Panels
 					r.Width = this.fontSize.Width;
 					this.fontSize.LabelVisibility = true;
 					this.fontSize.Bounds = r;
-					this.fontSize.SetVisible(true);
+					this.fontSize.Visibility = true;
 					r.Left = r.Right;
 					r.Width = Widgets.TextFieldLabel.DefaultLabelWidth;
 					this.labelColor.Bounds = r;
-					this.labelColor.SetVisible(true);
+					this.labelColor.Visibility = true;
 					r.Left = r.Right+Widgets.TextFieldLabel.DefaultMarginWidth;
 					r.Width = Widgets.TextFieldLabel.DefaultTextWidth;
 					this.fontColor.Bounds = r;
-					this.fontColor.SetVisible(true);
+					this.fontColor.Visibility = true;
 				}
 			}
 			else
@@ -261,16 +261,16 @@ namespace Epsitec.Common.Document.Panels
 				r.Bottom = r.Top-20;
 				r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-5;
 				this.fontName.Bounds = r;
-				this.fontName.SetVisible(true);
+				this.fontName.Visibility = true;
 
 				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
 				this.fontSize.LabelVisibility = false;
 				this.fontSize.Bounds = r;
-				this.fontSize.SetVisible(true);
+				this.fontSize.Visibility = true;
 
-				this.labelColor.SetVisible(false);
-				this.fontColor.SetVisible(false);
+				this.labelColor.Visibility = false;
+				this.fontColor.Visibility = false;
 			}
 		}
 

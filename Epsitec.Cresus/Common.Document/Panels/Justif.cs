@@ -186,29 +186,29 @@ namespace Epsitec.Common.Document.Panels
 		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
-			this.gridVertical.SetVisible(this.isExtendedSize);
-			this.gridOrientation.SetVisible(this.isExtendedSize);
+			this.gridVertical.Visibility = (this.isExtendedSize);
+			this.gridOrientation.Visibility = (this.isExtendedSize);
 
-			this.fieldMarginH.SetVisible(this.isExtendedSize);
+			this.fieldMarginH.Visibility = (this.isExtendedSize);
 
 			if ( this.isExtendedSize )
 			{
 				Properties.JustifVertical v = (Properties.JustifVertical) this.gridVertical.SelectedValue;
 				if ( v == Properties.JustifVertical.Center )
 				{
-					this.fieldMarginV.SetVisible(false);
-					this.fieldOffsetV.SetVisible(true);
+					this.fieldMarginV.Visibility = false;
+					this.fieldOffsetV.Visibility = true;
 				}
 				else
 				{
-					this.fieldMarginV.SetVisible(true);
-					this.fieldOffsetV.SetVisible(false);
+					this.fieldMarginV.Visibility = true;
+					this.fieldOffsetV.Visibility = false;
 				}
 			}
 			else
 			{
-				this.fieldMarginV.SetVisible(false);
-				this.fieldOffsetV.SetVisible(false);
+				this.fieldMarginV.Visibility = false;
+				this.fieldOffsetV.Visibility = false;
 			}
 		}
 

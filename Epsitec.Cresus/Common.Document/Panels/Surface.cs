@@ -170,7 +170,7 @@ namespace Epsitec.Common.Document.Panels
 			for ( int i=0 ; i<4 ; i++ )
 			{
 				bool visible = Properties.Surface.IsVisibleFactor(p.SurfaceType, i);
-				this.fieldFactor[i].SetVisible(visible);
+				this.fieldFactor[i].Visibility = (visible);
 
 				bool enable = Properties.Surface.IsEnableFactor(p.SurfaceType, i);
 				this.fieldFactor[i].Enable = (enable);
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Document.Panels
 			for ( int i=0 ; i<2 ; i++ )
 			{
 				bool visible = Properties.Surface.IsVisibleScalar(p.SurfaceType, i);
-				this.fieldScalar[i].SetVisible(visible);
+				this.fieldScalar[i].Visibility = (visible);
 
 				bool enable = Properties.Surface.IsEnableScalar(p.SurfaceType, i);
 				this.fieldScalar[i].Enable = (enable);

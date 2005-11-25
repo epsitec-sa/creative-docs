@@ -925,6 +925,13 @@ namespace Epsitec.Common.Widgets
 			that.OnParentChanged (new PropertyChangedEventArgs (Visual.ParentProperty, old_value, new_value));
 		}
 		
+		private static void NotifyIsVisibleChanged(Object o, object old_value, object new_value)
+		{
+			Visual that = o as Visual;
+			that.OnIsVisibleChanged (new PropertyChangedEventArgs (Visual.IsVisibleProperty, old_value, new_value));
+		}
+		
+		
 		private static void NotifyIsFocusedChanged(Object o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
@@ -957,6 +964,10 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnParentChanged(Types.PropertyChangedEventArgs e)
 		{
 			Helpers.VisualTree.InvalidateCommandDispatcher (this);
+		}
+		
+		protected virtual void OnIsVisibleChanged(Types.PropertyChangedEventArgs e)
+		{
 		}
 		
 		protected virtual void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
@@ -1108,12 +1119,12 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property MinSizeProperty				= Property.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyFlags.AffectsParentLayout));
 		public static readonly Property MaxSizeProperty				= Property.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, VisualPropertyFlags.AffectsParentLayout));
 		
-		public static readonly Property VisibilityProperty			= Property.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property VisibilityProperty			= Property.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyFlags.AffectsParentLayout | VisualPropertyFlags.AffectsDisplay));
 		public static readonly Property EnableProperty				= Property.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyFlags.AffectsDisplay));
 		
 		public static readonly Property InheritParentFocusProperty	= Property.Register ("InheritParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false));
 		
-		public static readonly Property IsVisibleProperty			= Property.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsVisibleValue), VisualPropertyFlags.InheritsValue));
+		public static readonly Property IsVisibleProperty			= Property.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsVisibleValue), new PropertyInvalidatedCallback (Visual.NotifyIsVisibleChanged), VisualPropertyFlags.InheritsValue));
 		public static readonly Property IsEnabledProperty			= Property.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsEnabledValue), VisualPropertyFlags.InheritsValue | VisualPropertyFlags.AffectsDisplay));
 		public static readonly Property IsFocusedProperty			= Property.RegisterReadOnly ("IsFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsFocusedChanged), VisualPropertyFlags.InheritsValue | VisualPropertyFlags.AffectsDisplay));
 		

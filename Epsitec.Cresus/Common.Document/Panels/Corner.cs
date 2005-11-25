@@ -190,9 +190,9 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEffect1.Enable = (this.isExtendedSize && enable1);
 			this.fieldEffect2.Enable = (this.isExtendedSize && enable2);
 
-			this.fieldRadius.SetVisible(true);
-			this.fieldEffect1.SetVisible(this.isExtendedSize);
-			this.fieldEffect2.SetVisible(this.isExtendedSize);
+			this.fieldRadius.Visibility = true;
+			this.fieldEffect1.Visibility = (this.isExtendedSize);
+			this.fieldEffect2.Visibility = (this.isExtendedSize);
 		}
 
 		// Met à jour la géométrie.

@@ -368,8 +368,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void ActiveBook(string book)
 		{
-			this.window.Root.FindChild("BookGlobal").SetVisible(book == "BookGlobal");
-			this.window.Root.FindChild("BookDocument").SetVisible(book == "BookDocument");
+			this.window.Root.FindChild("BookGlobal").Visibility = (book == "BookGlobal");
+			this.window.Root.FindChild("BookDocument").Visibility = (book == "BookDocument");
 		}
 
 		private void HandleRadioSettingsChanged(object sender)
@@ -482,10 +482,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if ( sel == -1 )
 			{
-				this.buttonFirst.Enable = (false);
-				this.buttonUp.Enable = (false);
-				this.buttonDown.Enable = (false);
-				this.buttonLast.Enable = (false);
+				this.buttonFirst.Enable = false;
+				this.buttonUp.Enable = false;
+				this.buttonDown.Enable = false;
+				this.buttonLast.Enable = false;
 			}
 			else
 			{

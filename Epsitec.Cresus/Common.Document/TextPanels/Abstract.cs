@@ -150,7 +150,7 @@ namespace Epsitec.Common.Document.TextPanels
 			rect.Top -= 1;
 			rect.Bottom = rect.Top-this.LabelHeight;
 			this.label.Bounds = rect;
-			this.label.SetVisible(this.IsLabelProperties);
+			this.label.Visibility = (this.IsLabelProperties);
 
 			rect = this.Client.Bounds;
 			rect.Left += 1;
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Document.TextPanels
 		// Met à jour les boutons.
 		protected void UpdateButtons()
 		{
-			this.extendedButton.SetVisible(this.isNormalAndExtended);
+			this.extendedButton.Visibility = (this.isNormalAndExtended);
 			this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 		}
 

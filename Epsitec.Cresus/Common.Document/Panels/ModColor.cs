@@ -160,11 +160,11 @@ namespace Epsitec.Common.Document.Panels
 		{
 			for ( int i=0 ; i<7 ; i++ )
 			{
-				this.fieldArray[i].SetVisible(this.isExtendedSize);
+				this.fieldArray[i].Visibility = (this.isExtendedSize);
 			}
-			this.negativ.SetVisible(this.isExtendedSize);
-			this.draft.SetVisible(this.isExtendedSize);
-			this.reset.SetVisible(this.isExtendedSize);
+			this.negativ.Visibility = (this.isExtendedSize);
+			this.draft.Visibility = (this.isExtendedSize);
+			this.reset.Visibility = (this.isExtendedSize);
 		}
 
 		// Met à jour la géométrie.

@@ -1553,7 +1553,7 @@ namespace Epsitec.Common.Widgets
 						cRect.Top  -= 1;  // laisse la place pour la grille
 						this.array[x,y].Bounds = cRect;
 						this.array[x,y].SetParent (this.container);
-						this.array[x,y].SetVisible(true);
+						this.array[x,y].Visibility = true;
 						this.array[x,y].SetArrayRank(this, x, y);
 					}
 					else if (this.array[x,y].Parent != null)

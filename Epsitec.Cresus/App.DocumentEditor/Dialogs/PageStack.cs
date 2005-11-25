@@ -63,7 +63,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				b.Append(chip);
 				b.Append(Res.Strings.Dialog.PageStack.Help5);
 				this.help.Text = b.ToString();
-				this.help.SetVisible(true);
+				this.help.Visibility = true;
 
 				this.table = new CellTable(this.window.Root);
 				this.table.StyleH  = CellArrayStyle.ScrollNorm;
@@ -246,7 +246,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				DrawingContext context = doc.Modifier.ActiveViewer.DrawingContext;
 
 				this.pagePrev.Enable = (this.showedPage > 0);
-				this.pageMenu.Enable = (true);
+				this.pageMenu.Enable = true;
 				this.pageNext.Enable = (this.showedPage < context.TotalPages()-1);
 				this.buttonCurrent.Enable = (this.showedPage != context.CurrentPage);
 
@@ -255,10 +255,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			else
 			{
-				this.pagePrev.Enable = (false);
-				this.pageMenu.Enable = (false);
-				this.pageNext.Enable = (false);
-				this.buttonCurrent.Enable = (false);
+				this.pagePrev.Enable = false;
+				this.pageMenu.Enable = false;
+				this.pageNext.Enable = false;
+				this.buttonCurrent.Enable = false;
 			}
 		}
 
@@ -339,7 +339,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleButtonHelpClicked(object sender, MessageEventArgs e)
 		{
-			this.help.SetVisible(!this.help.IsVisible);
+			this.help.Visibility = (!this.help.IsVisible);
 		}
 
 

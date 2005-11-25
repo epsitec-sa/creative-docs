@@ -343,24 +343,24 @@ namespace Epsitec.Common.Document.Panels
 				capJoin = true;
 			}
 
-			this.fieldStandardLength.SetVisible(showStandardLength);
+			this.fieldStandardLength.Visibility = (showStandardLength);
 			this.fieldStandardLength.Enable = (enableStandardLength);
 
 			for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
 			{
-				this.radioDashRank[i].SetVisible(showDash);
+				this.radioDashRank[i].Visibility = (showDash);
 				this.radioDashRank[i].Enable = (enableDash);
 			}
 
-			this.fieldDashPen.SetVisible(showDash);
+			this.fieldDashPen.Visibility = (showDash);
 			this.fieldDashPen.Enable = (enableDash);
-			this.fieldDashGap.SetVisible(showDash);
+			this.fieldDashGap.Visibility = (showDash);
 			this.fieldDashGap.Enable = (enableDash);
 
-			this.gridCap.SetVisible(capJoin);
+			this.gridCap.Visibility = (capJoin);
 			this.gridCap.Enable = (capJoin);
 
-			this.gridJoin.SetVisible(capJoin);
+			this.gridJoin.Visibility = (capJoin);
 			this.gridJoin.Enable = (capJoin);
 		}
 

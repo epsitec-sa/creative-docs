@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.DockMargins = new Margins(0, 0, 5, 0);
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.colorSelector.SetVisible(false);
+			this.colorSelector.Visibility = false;
 
 			// Conteneur du panneau.
 			this.panelContainer = new Widget(this);
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Document.Containers
 		// Met à jour le panneau pour éditer la propriété sélectionnée.
 		protected void UpdatePanel()
 		{
-			this.colorSelector.SetVisible(false);
+			this.colorSelector.Visibility = false;
 			this.colorSelector.BackColor = Color.Empty;
 		}
 
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Document.Containers
 		// Le widget qui détermine la couleur d'origine a changé.
 		private void HandleOriginColorChanged(object sender)
 		{
-			this.colorSelector.SetVisible(true);
+			this.colorSelector.Visibility = true;
 			this.ignoreChanged = true;
 			this.colorSelector.Color = this.panel.OriginColorGet();
 			this.ignoreChanged = false;
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.panel.OriginColorDeselect();
 
-			this.colorSelector.SetVisible(false);
+			this.colorSelector.Visibility = false;
 			this.colorSelector.BackColor = Color.Empty;
 		}
 

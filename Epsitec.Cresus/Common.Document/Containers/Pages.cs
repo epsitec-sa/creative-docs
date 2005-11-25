@@ -397,8 +397,8 @@ namespace Epsitec.Common.Document.Containers
 			this.radioSlave.ActiveState  = (page.MasterType == Objects.MasterType.Slave) ? ActiveState.Yes : ActiveState.No;
 			this.radioMaster.ActiveState = (page.MasterType != Objects.MasterType.Slave) ? ActiveState.Yes : ActiveState.No;
 
-			this.radioSlaveGroup.SetVisible (page.MasterType == Objects.MasterType.Slave);
-			this.radioMasterGroup.SetVisible(page.MasterType != Objects.MasterType.Slave);
+			this.radioSlaveGroup.Visibility = (page.MasterType == Objects.MasterType.Slave);
+			this.radioMasterGroup.Visibility = (page.MasterType != Objects.MasterType.Slave);
 
 			this.radioAll.ActiveState =  (page.MasterType == Objects.MasterType.All ) ? ActiveState.Yes : ActiveState.No;
 			this.radioEven.ActiveState = (page.MasterType == Objects.MasterType.Even) ? ActiveState.Yes : ActiveState.No;
@@ -490,8 +490,8 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.extendedButton.GlyphShape = this.isExtended ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
 
-			this.panelMisc.SetVisible(this.isExtended);
-			this.buttonPageStack.SetVisible(this.isExtended);
+			this.panelMisc.Visibility = (this.isExtended);
+			this.buttonPageStack.Visibility = (this.isExtended);
 		}
 
 		// Un bouton radio a été cliqué.

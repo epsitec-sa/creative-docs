@@ -385,7 +385,7 @@ namespace Epsitec.Common.Document.TextPanels
 				Rectangle r = rect;
 				r.Bottom = r.Top-20;
 				this.fontFace.Bounds = r;
-				this.fontFace.SetVisible(true);
+				this.fontFace.Visibility = true;
 				r.Offset(0, -25);
 
 				if ( this.IsLabelProperties )
@@ -393,103 +393,103 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Left = rect.Right-(100+20);
 					r.Width = 100;
 					this.fontStyle.Bounds = r;
-					this.fontStyle.SetVisible(true);
+					this.fontStyle.Visibility = true;
 					r.Left = r.Right-1;
 					r.Width = 20;
 					this.fontFeatures.Bounds = r;
-					this.fontFeatures.SetVisible(true);
+					this.fontFeatures.Visibility = true;
 
 					r.Offset(0, -25);
 					r.Left = rect.Right-(50+20+20);
 					r.Width = 50;
 					this.fontSize.Bounds = r;
-					this.fontSize.SetVisible(true);
+					this.fontSize.Visibility = true;
 					r.Offset(50, 0);
 					r.Width = 20;
 					this.buttonSizeMinus.Bounds = r;
-					this.buttonSizeMinus.SetVisible(true);
+					this.buttonSizeMinus.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonSizePlus.Bounds = r;
-					this.buttonSizePlus.SetVisible(true);
+					this.buttonSizePlus.Visibility = true;
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Width = 20;
 					this.buttonBold.Bounds = r;
-					this.buttonBold.SetVisible(true);
+					this.buttonBold.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonItalic.Bounds = r;
-					this.buttonItalic.SetVisible(true);
+					this.buttonItalic.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonUnderlined.Bounds = r;
-					this.buttonUnderlined.SetVisible(true);
+					this.buttonUnderlined.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonStrike.Bounds = r;
-					this.buttonStrike.SetVisible(true);
+					this.buttonStrike.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonFrame.Bounds = r;
-					this.buttonFrame.SetVisible(true);
+					this.buttonFrame.Visibility = true;
 					r.Offset(20+5, 0);
 					this.buttonSubscript.Bounds = r;
-					this.buttonSubscript.SetVisible(true);
+					this.buttonSubscript.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonSuperscript.Bounds = r;
-					this.buttonSuperscript.SetVisible(true);
+					this.buttonSuperscript.Visibility = true;
 					r.Offset(20+5, 0);
 					r.Width = 30;
 					this.fontColor.Bounds = r;
-					this.fontColor.SetVisible(true);
+					this.fontColor.Visibility = true;
 				}
 				else
 				{
 					r.Left = rect.Left;
 					r.Right = rect.Right-(20+5+50+20+20);
 					this.fontStyle.Bounds = r;
-					this.fontStyle.SetVisible(true);
+					this.fontStyle.Visibility = true;
 					r.Left = r.Right-1;
 					r.Width = 20;
 					this.fontFeatures.Bounds = r;
-					this.fontFeatures.SetVisible(true);
+					this.fontFeatures.Visibility = true;
 					
 					r.Left = rect.Right-(50+20+20);
 					r.Width = 50;
 					this.fontSize.Bounds = r;
-					this.fontSize.SetVisible(true);
+					this.fontSize.Visibility = true;
 					r.Offset(50, 0);
 					r.Width = 20;
 					this.buttonSizeMinus.Bounds = r;
-					this.buttonSizeMinus.SetVisible(true);
+					this.buttonSizeMinus.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonSizePlus.Bounds = r;
-					this.buttonSizePlus.SetVisible(true);
+					this.buttonSizePlus.Visibility = true;
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Width = 20;
 					this.buttonBold.Bounds = r;
-					this.buttonBold.SetVisible(true);
+					this.buttonBold.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonItalic.Bounds = r;
-					this.buttonItalic.SetVisible(true);
+					this.buttonItalic.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonUnderlined.Bounds = r;
-					this.buttonUnderlined.SetVisible(true);
+					this.buttonUnderlined.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonStrike.Bounds = r;
-					this.buttonStrike.SetVisible(true);
+					this.buttonStrike.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonFrame.Bounds = r;
-					this.buttonFrame.SetVisible(true);
+					this.buttonFrame.Visibility = true;
 					r.Offset(20+5, 0);
 					this.buttonSubscript.Bounds = r;
-					this.buttonSubscript.SetVisible(true);
+					this.buttonSubscript.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonSuperscript.Bounds = r;
-					this.buttonSuperscript.SetVisible(true);
+					this.buttonSuperscript.Visibility = true;
 					r.Offset(20+5, 0);
 					r.Width = 30;
 					this.fontColor.Bounds = r;
-					this.fontColor.SetVisible(true);
+					this.fontColor.Visibility = true;
 				}
 			}
 			else
@@ -498,25 +498,25 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Bottom = r.Top-20;
 				r.Right = rect.Right-55;
 				this.fontFace.Bounds = r;
-				this.fontFace.SetVisible(true);
+				this.fontFace.Visibility = true;
 
 				r.Left = rect.Right-50;
 				r.Width = 50;
 				this.fontSize.Bounds = r;
-				this.fontSize.SetVisible(true);
+				this.fontSize.Visibility = true;
 
-				this.fontStyle.SetVisible(false);
-				this.fontFeatures.SetVisible(false);
-				this.fontColor.SetVisible(false);
-				this.buttonSizeMinus.SetVisible(false);
-				this.buttonSizePlus.SetVisible(false);
-				this.buttonBold.SetVisible(false);
-				this.buttonItalic.SetVisible(false);
-				this.buttonUnderlined.SetVisible(false);
-				this.buttonStrike.SetVisible(false);
-				this.buttonFrame.SetVisible(false);
-				this.buttonSubscript.SetVisible(false);
-				this.buttonSuperscript.SetVisible(false);
+				this.fontStyle.Visibility = false;
+				this.fontFeatures.Visibility = false;
+				this.fontColor.Visibility = false;
+				this.buttonSizeMinus.Visibility = false;
+				this.buttonSizePlus.Visibility = false;
+				this.buttonBold.Visibility = false;
+				this.buttonItalic.Visibility = false;
+				this.buttonUnderlined.Visibility = false;
+				this.buttonStrike.Visibility = false;
+				this.buttonFrame.Visibility = false;
+				this.buttonSubscript.Visibility = false;
+				this.buttonSuperscript.Visibility = false;
 			}
 		}
 

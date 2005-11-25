@@ -155,7 +155,7 @@ namespace Epsitec.Common.Document.Widgets
 				icon.Column = column;
 				icon.Row = row;
 				icon.Index = row * 1000 + column;
-				icon.SetVisible(box.Contains(rect));
+				icon.Visibility = (box.Contains(rect));
 
 				corner.X += this.defaultButtonWidth;
 				column ++;

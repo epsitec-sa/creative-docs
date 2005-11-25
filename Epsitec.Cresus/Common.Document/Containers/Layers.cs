@@ -456,9 +456,9 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.extendedButton.GlyphShape = this.isExtended ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
 
-			this.panelMisc.SetVisible(this.isExtended);
-			this.checkMagnet.SetVisible(this.isExtended);
-			this.panelModColor.SetVisible(this.isExtended);
+			this.panelMisc.Visibility = (this.isExtended);
+			this.checkMagnet.Visibility = (this.isExtended);
+			this.panelModColor.Visibility = (this.isExtended);
 		}
 
 		// Un bouton radio a changé.

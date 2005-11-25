@@ -479,32 +479,32 @@ namespace Epsitec.Common.Document.Panels
 				}
 			}
 
-			this.fieldColor2.SetVisible(color2);
-			this.swapColor.SetVisible(color2);
+			this.fieldColor2.Visibility = (color2);
+			this.swapColor.Visibility = (color2);
 
-			this.reset.SetVisible(showReset);
+			this.reset.Visibility = (showReset);
 			this.reset.Enable = (enableReset);
 
-			this.fieldAngle.SetVisible(showAngle);
+			this.fieldAngle.Visibility = (showAngle);
 			this.fieldAngle.Enable = (enableAngle);
 
-			this.fieldRepeat.SetVisible(showRepeat);
+			this.fieldRepeat.Visibility = (showRepeat);
 			this.fieldRepeat.Enable = (enableRepeat);
 
-			this.fieldMiddle.SetVisible(showRepeat);
+			this.fieldMiddle.Visibility = (showRepeat);
 			this.fieldMiddle.Enable = (enableRepeat);
 
-			this.fieldSmooth.SetVisible(showSmooth);
+			this.fieldSmooth.Visibility = (showSmooth);
 			this.fieldSmooth.Enable = (enableSmooth);
 
 			for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 			{
-				this.radioHatchRank[i].SetVisible(showHatch);
+				this.radioHatchRank[i].Visibility = (showHatch);
 			}
 
-			this.fieldHatchAngle.SetVisible(showHatch);
-			this.fieldHatchWidth.SetVisible(showHatch);
-			this.fieldHatchDistance.SetVisible(showHatch);
+			this.fieldHatchAngle.Visibility = (showHatch);
+			this.fieldHatchWidth.Visibility = (showHatch);
+			this.fieldHatchDistance.Visibility = (showHatch);
 		}
 
 

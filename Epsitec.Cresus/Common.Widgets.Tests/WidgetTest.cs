@@ -360,8 +360,8 @@ namespace Epsitec.Common.Widgets
 				this.CreateButton (pane, "Redo", "redo");
 				this.CreateButton (pane, "Forget", "purge-undo-redo");
 				
-//-				pane.FindChild ("undo").Enable =  (false);
-//-				pane.FindChild ("redo").Enable =  (false);
+//-				pane.FindChild ("undo").Enable = false;
+//-				pane.FindChild ("redo").Enable = false;
 			}
 			
 			private void CreateButton(Widget pane, string title, string name)

@@ -29,13 +29,15 @@ namespace Epsitec.Common.Document.Containers
 
 
 		// Appelé par Widget lorsque la visibilité change.
-		protected override void OnVisibleChanged()
+		protected override void OnIsVisibleChanged(Types.PropertyChangedEventArgs e)
 		{
-			base.OnVisibleChanged();
-			this.Update();  // màj si visible et sale
-
-			if ( this.IsVisible )
+			base.OnIsVisibleChanged(e);
+			
+			bool visible = (bool) e.NewValue;
+			
+			if ( visible )
 			{
+				this.Update();  // màj si visible et sale
 				this.document.Modifier.ActiveContainer = this;
 			}
 		}

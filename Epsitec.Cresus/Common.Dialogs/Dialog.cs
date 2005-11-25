@@ -276,7 +276,7 @@ namespace Epsitec.Common.Dialogs
 			
 			if (this.designer_activator_widget != null)
 			{
-				this.designer_activator_widget.SetVisible (false);
+				this.designer_activator_widget.Visibility = false;
 			}
 			
 			this.AttachDesigner ();
@@ -298,7 +298,7 @@ namespace Epsitec.Common.Dialogs
 			
 			if (this.designer_activator_widget != null)
 			{
-				this.designer_activator_widget.SetVisible (true);
+				this.designer_activator_widget.Visibility = true;
 			}
 		}
 		

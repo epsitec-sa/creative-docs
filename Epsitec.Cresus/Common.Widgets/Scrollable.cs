@@ -380,8 +380,8 @@ namespace Epsitec.Common.Widgets
 			this.panel.Bounds   = new Drawing.Rectangle (-offset_x, total_dy - panel_dy + offset_y, panel_dx, panel_dy);
 			this.panel.Aperture = this.panel.MapParentToClient (this.panel_aperture);
 			
-			this.h_scroller.SetVisible (margin_y > 0);
-			this.v_scroller.SetVisible (margin_x > 0);
+			this.h_scroller.Visibility = (margin_y > 0);
+			this.v_scroller.Visibility = (margin_x > 0);
 			
 			this.Invalidate ();
 		}

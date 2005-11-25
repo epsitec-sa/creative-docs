@@ -207,20 +207,20 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldEffect1[j].Enable = (this.isExtendedSize && enable1);
 				this.fieldEffect2[j].Enable = (this.isExtendedSize && enable2);
 
-				this.grid[j].SetVisible(this.isExtendedSize || j== 0);
+				this.grid[j].Visibility = (this.isExtendedSize || j== 0);
 
 				if ( this.isExtendedSize && this.IsLabelProperties )
 				{
 					int n = this.GetTotalTextField(j);
-					this.fieldLength[j].SetVisible(n >= 1);
-					this.fieldEffect1[j].SetVisible(n >= 2);
-					this.fieldEffect2[j].SetVisible(n >= 3);
+					this.fieldLength[j].Visibility = (n >= 1);
+					this.fieldEffect1[j].Visibility = (n >= 2);
+					this.fieldEffect2[j].Visibility = (n >= 3);
 				}
 				else
 				{
-					this.fieldLength[j].SetVisible(this.isExtendedSize || j== 0);
-					this.fieldEffect1[j].SetVisible(this.isExtendedSize);
-					this.fieldEffect2[j].SetVisible(this.isExtendedSize);
+					this.fieldLength[j].Visibility = (this.isExtendedSize || j== 0);
+					this.fieldEffect1[j].Visibility = (this.isExtendedSize);
+					this.fieldEffect2[j].Visibility = (this.isExtendedSize);
 				}
 			}
 		}

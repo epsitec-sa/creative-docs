@@ -387,11 +387,11 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle r = new Drawing.Rectangle(rect.Left, rect.Top-14, 14, 14);
 				this.buttonOption.Bounds = r;
-				this.buttonOption.SetVisible(true);
+				this.buttonOption.Visibility = true;
 			}
 			else
 			{
-				this.buttonOption.SetVisible(false);
+				this.buttonOption.Visibility = false;
 			}
 		}
 		

@@ -165,10 +165,10 @@ namespace Epsitec.Common.Document.Panels
 			r.Right = rect.Right;
 			this.buttonFilter.Bounds = r;
 
-			this.buttonMirrorH.SetVisible(this.isExtendedSize);
-			this.buttonMirrorV.SetVisible(this.isExtendedSize);
-			this.buttonHomo.SetVisible(this.isExtendedSize);
-			this.buttonFilter.SetVisible(this.isExtendedSize);
+			this.buttonMirrorH.Visibility = (this.isExtendedSize);
+			this.buttonMirrorV.Visibility = (this.isExtendedSize);
+			this.buttonHomo.Visibility = (this.isExtendedSize);
+			this.buttonFilter.Visibility = (this.isExtendedSize);
 		}
 		
 		// Une valeur a été changée.

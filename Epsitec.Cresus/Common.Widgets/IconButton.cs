@@ -105,7 +105,7 @@ namespace Epsitec.Common.Widgets
 		{
 			IconButton button = new IconButton (command, icon);
 			
-			button.SetVisible (false);
+			button.Visibility = false;
 			button.Name = CommandDispatcher.ExtractCommandName (command);
 			
 			return button;

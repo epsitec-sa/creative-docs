@@ -37,7 +37,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			base.SetDocument(type, install, gs, document);
 
-			this.buttonKey.SetVisible(this.installType != InstallType.Freeware);
+			this.buttonKey.Visibility = (this.installType != InstallType.Freeware);
 		}
 
 		// Retourne la largeur standard.

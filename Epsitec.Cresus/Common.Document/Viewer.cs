@@ -70,7 +70,7 @@ namespace Epsitec.Common.Document
 			this.RedrawAreaFlush();
 
 			this.textRuler = new TextRuler(this);
-			this.textRuler.SetVisible(false);
+			this.textRuler.Visibility = false;
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				this.textRuler.AllFonts = false;
@@ -2579,7 +2579,7 @@ namespace Epsitec.Common.Document
 
 					this.textRuler.PPM = this.document.Modifier.RealScale;
 					this.textRuler.Scale = this.drawingContext.ScaleX;
-					this.textRuler.SetVisible(true);
+					this.textRuler.Visibility = true;
 				}
 				else
 				{
@@ -2597,7 +2597,7 @@ namespace Epsitec.Common.Document
 				this.document.Notifier.NotifyArea(this, rect);
 			}
 
-			this.textRuler.SetVisible(false);
+			this.textRuler.Visibility = false;
 			this.textRuler.DetachFromText();
 		}
 		#endregion

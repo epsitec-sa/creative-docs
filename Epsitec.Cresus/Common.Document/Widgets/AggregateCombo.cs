@@ -215,7 +215,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				if ( this.button.Visibility != show )
 				{
-					this.button.SetVisible(show);
+					this.button.Visibility = (show);
 					
 					this.UpdateButtonGeometry();
 					this.UpdateTextLayout();

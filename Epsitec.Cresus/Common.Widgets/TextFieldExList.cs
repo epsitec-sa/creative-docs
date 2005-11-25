@@ -360,12 +360,12 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.mode == TextFieldExListMode.EditActive)
 				{
-					this.button.SetVisible (false);
+					this.button.Visibility = false;
 					this.accept_reject_behavior.SetVisible (this.ComputeButtonVisibility ());
 				}
 				else
 				{
-					this.button.SetVisible (this.ComputeButtonVisibility ());
+					this.button.Visibility = (this.ComputeButtonVisibility ());
 					this.accept_reject_behavior.SetVisible (false);
 				}
 			}

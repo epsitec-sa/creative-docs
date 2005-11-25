@@ -43,7 +43,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			this.colorSelector.SetParent(this);
-			this.colorSelector.SetVisible(false);
+			this.colorSelector.Visibility = false;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Document.Containers
 				}
 
 				this.selectorToolBar.Show();
-				this.selectorPanel.SetVisible(this.document.Modifier.NamesExist);
+				this.selectorPanel.Visibility = (this.document.Modifier.NamesExist);
 			}
 			else
 			{
@@ -438,7 +438,7 @@ namespace Epsitec.Common.Document.Containers
 			if ( this.document.Modifier.Tool == "Select" ||
 				 this.document.Modifier.Tool == "Global" )
 			{
-				this.selectorPanel.SetVisible(this.document.Modifier.NamesExist);
+				this.selectorPanel.Visibility = (this.document.Modifier.NamesExist);
 			}
 			else
 			{
@@ -493,12 +493,12 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.originColorPanel == null )
 			{
-				this.colorSelector.SetVisible(false);
+				this.colorSelector.Visibility = false;
 				this.colorSelector.BackColor = Color.Empty;
 			}
 			else
 			{
-				this.colorSelector.SetVisible(true);
+				this.colorSelector.Visibility = true;
 				this.colorSelector.BackColor = backColor;
 				this.ignoreColorChanged = true;
 				this.colorSelector.Color = this.originColorPanel.OriginColorGet();
@@ -523,7 +523,7 @@ namespace Epsitec.Common.Document.Containers
 				panel.OriginColorDeselect();
 			}
 
-			this.colorSelector.SetVisible(true);
+			this.colorSelector.Visibility = true;
 			this.colorSelector.BackColor = Color.Empty;
 			this.ignoreColorChanged = true;
 			this.colorSelector.Color = this.originColorRuler.FontRichColor;
@@ -576,7 +576,7 @@ namespace Epsitec.Common.Document.Containers
 				panel.OriginColorDeselect();
 			}
 
-			this.colorSelector.SetVisible(false);
+			this.colorSelector.Visibility = false;
 			this.colorSelector.BackColor = Color.Empty;
 		}
 

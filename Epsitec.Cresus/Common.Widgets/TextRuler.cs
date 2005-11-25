@@ -947,8 +947,8 @@ namespace Epsitec.Common.Widgets
 
 			this.ButtonActive(this.buttonListNum, this.list == Drawing.TextListType.Num);
 			this.ButtonActive(this.buttonListFix, this.list == Drawing.TextListType.Fix);
-			this.buttonListNum.SetVisible(this.listCapability);
-			this.buttonListFix.SetVisible(this.listCapability);
+			this.buttonListNum.Visibility = (this.listCapability);
+			this.buttonListFix.Visibility = (this.listCapability);
 			this.silent = false;
 		}
 

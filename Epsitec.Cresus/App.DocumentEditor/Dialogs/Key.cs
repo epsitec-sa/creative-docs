@@ -165,7 +165,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 					if ( this.validKey )
 					{
-						this.radio1.Enable = (false);
+						this.radio1.Enable = false;
 					}
 					else
 					{

@@ -64,10 +64,16 @@ namespace Epsitec.Common.Document.Ribbons
 
 
 		// Appelé par Widget lorsque la visibilité change.
-		protected override void OnVisibleChanged()
+		protected override void OnIsVisibleChanged(Types.PropertyChangedEventArgs e)
 		{
-			base.OnVisibleChanged();
-			this.Update();  // màj si visible et sale
+			base.OnIsVisibleChanged(e);
+			
+			bool visible = (bool) e.NewValue;
+			
+			if ( visible )
+			{
+				this.Update();  // màj si visible et sale
+			}
 		}
 
 		// Indique qu'il faudra mettre à jour tout le contenu d'édition.

@@ -277,7 +277,7 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.Behaviour = ToolTipBehaviour.Normal;
 
 			this.menu = new HMenu();
-			this.menu.SetVisible(false);
+			this.menu.Visibility = false;
 			this.menu.Host = this;
 			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Main.File));
 			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Main.Edit));
@@ -648,7 +648,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonMain.Height = this.ribbonHeight;
 			this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonMain.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
-			this.ribbonMain.SetVisible(true);
+			this.ribbonMain.Visibility = true;
 			this.ribbonMain.Items.Add(new Ribbons.File());
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
 			this.ribbonMain.Items.Add(new Ribbons.Undo());
@@ -664,7 +664,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonGeom.Height = this.ribbonHeight;
 			this.ribbonGeom.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonGeom.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
-			this.ribbonGeom.SetVisible(false);
+			this.ribbonGeom.Visibility = false;
 			this.ribbonGeom.Items.Add(new Ribbons.Move());
 			this.ribbonGeom.Items.Add(new Ribbons.Rotate());
 			this.ribbonGeom.Items.Add(new Ribbons.Scale());
@@ -677,7 +677,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonOper.Height = this.ribbonHeight;
 			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonOper.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
-			this.ribbonOper.SetVisible(false);
+			this.ribbonOper.Visibility = false;
 			this.ribbonOper.Items.Add(new Ribbons.Order());
 			this.ribbonOper.Items.Add(new Ribbons.Group());
 			this.ribbonOper.Items.Add(new Ribbons.Color());
@@ -687,7 +687,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonText.Height = this.ribbonHeight;
 			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonText.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
-			this.ribbonText.SetVisible(false);
+			this.ribbonText.Visibility = false;
 			this.ribbonText.Items.Add(new Ribbons.Paragraph());
 			this.ribbonText.Items.Add(new Ribbons.Font());
 			this.ribbonText.Items.Add(new Ribbons.Clipboard());
@@ -1324,10 +1324,10 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			this.SuspendLayout();
-			this.ribbonMain.SetVisible(this.ribbonMain == this.ribbonActive);
-			this.ribbonGeom.SetVisible(this.ribbonGeom == this.ribbonActive);
-			this.ribbonOper.SetVisible(this.ribbonOper == this.ribbonActive);
-			this.ribbonText.SetVisible(this.ribbonText == this.ribbonActive);
+			this.ribbonMain.Visibility = (this.ribbonMain == this.ribbonActive);
+			this.ribbonGeom.Visibility = (this.ribbonGeom == this.ribbonActive);
+			this.ribbonOper.Visibility = (this.ribbonOper == this.ribbonActive);
+			this.ribbonText.Visibility = (this.ribbonText == this.ribbonActive);
 
 			this.ribbonMainButton.ActiveState = (this.ribbonMain == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
 			this.ribbonGeomButton.ActiveState = (this.ribbonGeom == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
@@ -4652,8 +4652,8 @@ namespace Epsitec.App.DocumentEditor
 			DocumentInfo di = this.CurrentDocumentInfo;
 			if ( di.hRuler == null )  return;
 
-			di.hRuler.SetVisible(context.RulersShow);
-			di.vRuler.SetVisible(context.RulersShow);
+			di.hRuler.Visibility = (context.RulersShow);
+			di.vRuler.Visibility = (context.RulersShow);
 
 			double sw = 17;  // largeur d'un ascenseur
 			double sr = 13;  // largeur d'une règle
@@ -4935,7 +4935,7 @@ namespace Epsitec.App.DocumentEditor
 				for ( int i=0 ; i<total ; i++ )
 				{
 					di = this.documents[i] as DocumentInfo;
-					di.bookPanels.SetVisible(i == this.currentDocument);
+					di.bookPanels.Visibility = (i == this.currentDocument);
 				}
 
 				di = this.CurrentDocumentInfo;

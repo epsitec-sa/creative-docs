@@ -183,13 +183,13 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Right = rect.Right;
 					r.Offset(0, -25);
 					this.fieldLeftMarginFirst.Bounds = r;
-					this.fieldLeftMarginFirst.SetVisible(true);
+					this.fieldLeftMarginFirst.Visibility = true;
 					r.Offset(0, -25);
 					this.fieldLeftMarginBody.Bounds = r;
-					this.fieldLeftMarginBody.SetVisible(true);
+					this.fieldLeftMarginBody.Visibility = true;
 					r.Offset(0, -25);
 					this.fieldRightMargin.Bounds = r;
-					this.fieldRightMargin.SetVisible(true);
+					this.fieldRightMargin.Visibility = true;
 				}
 				else
 				{
@@ -209,13 +209,13 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Left = rect.Left;
 					r.Width = 60;
 					this.fieldLeftMarginFirst.Bounds = r;
-					this.fieldLeftMarginFirst.SetVisible(true);
+					this.fieldLeftMarginFirst.Visibility = true;
 					r.Offset(60, 0);
 					this.fieldLeftMarginBody.Bounds = r;
-					this.fieldLeftMarginBody.SetVisible(true);
+					this.fieldLeftMarginBody.Visibility = true;
 					r.Offset(60, 0);
 					this.fieldRightMargin.Bounds = r;
-					this.fieldRightMargin.SetVisible(true);
+					this.fieldRightMargin.Visibility = true;
 				}
 			}
 			else
@@ -235,9 +235,9 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Offset(25, 0);
 				this.buttonHyphen.Bounds = r;
 
-				this.fieldLeftMarginFirst.SetVisible(false);
-				this.fieldLeftMarginBody.SetVisible(false);
-				this.fieldRightMargin.SetVisible(false);
+				this.fieldLeftMarginFirst.Visibility = false;
+				this.fieldLeftMarginBody.Visibility = false;
+				this.fieldRightMargin.Visibility = false;
 			}
 		}
 

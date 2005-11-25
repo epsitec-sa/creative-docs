@@ -279,15 +279,15 @@ namespace Epsitec.Common.Document.Containers
 			int sel = this.document.Settings.GuidesSelected;
 			if ( sel < 0 )
 			{
-				this.editType.Enable = (false);
-				this.editPosition.Enable = (false);
+				this.editType.Enable = false;
+				this.editPosition.Enable = false;
 				this.editType.Text = "";
 				this.editPosition.Text = "";
 			}
 			else
 			{
-				this.editType.Enable = (true);
-				this.editPosition.Enable = (true);
+				this.editType.Enable = true;
+				this.editPosition.Enable = true;
 				Settings.Guide guide = this.document.Settings.GuidesGet(sel);
 				this.editType.Text = Settings.Guide.TypeToString(guide.Type);
 				this.editPosition.InternalValue = (decimal) guide.Position;
