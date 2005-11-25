@@ -2289,7 +2289,9 @@ namespace Epsitec.Common.Document
 			this.miniBar = new Window();
 			this.miniBar.MakeFramelessWindow();
 			this.miniBar.MakeFloatingWindow();
+			this.miniBar.DisableMouseActivation();
 			this.miniBar.MakeLayeredWindow(true);
+			this.miniBar.Root.SetSyncPaint(true);
 			this.miniBar.WindowSize = size;
 			this.miniBar.WindowLocation = pos;
 			this.miniBar.Owner = this.Window.Owner;

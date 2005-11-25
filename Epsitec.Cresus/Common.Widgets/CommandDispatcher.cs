@@ -315,7 +315,7 @@ namespace Epsitec.Common.Widgets
 			try
 			{
 				this.pending_commands.Push (null);
-				handled = this.DispatchSingleCommand (command, source);
+				handled = this.InternalDispatchSingleCommand (command, source);
 			}
 			finally
 			{
@@ -936,7 +936,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected bool DispatchSingleCommand(string command, object source)
+		protected bool InternalDispatchSingleCommand(string command, object source)
 		{
 			//	Transmet la commande à ceux qui sont intéressés
 			
@@ -985,8 +985,16 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				this.OnCommandDispatched ();
-				return true;
+				if (e.Executed)
+				{
+					this.OnCommandDispatched ();
+					return true;
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' handled but not marked as executed.");
+					return false;
+				}
 			}
 		}
 		

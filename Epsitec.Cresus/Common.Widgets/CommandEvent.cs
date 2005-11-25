@@ -41,10 +41,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								Executed
+		{
+			get
+			{
+				return this.executed;
+			}
+			set
+			{
+				this.executed = value;
+			}
+		}
+		
 		
 		private object							source;
 		private string							command;
 		private string[]						args;
+		private bool							executed;
 	}
 	
 	/// <summary>
