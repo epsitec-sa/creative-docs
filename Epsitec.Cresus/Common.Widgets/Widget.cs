@@ -1951,7 +1951,24 @@ namespace Epsitec.Common.Widgets
 		
 		public override void Invalidate()
 		{
+			bool invalidate = false;
+			
 			if (this.IsVisible)
+			{
+				invalidate = true;
+			}
+			else
+			{
+				Window window = this.Window;
+				
+				if ((window == null) ||
+					(window.IsVisible == false))
+				{
+					invalidate = true;
+				}
+			}
+			
+			if (invalidate)
 			{
 				this.Invalidate (this.GetPaintBounds ());
 			}
@@ -1959,7 +1976,24 @@ namespace Epsitec.Common.Widgets
 		
 		public override void Invalidate(Drawing.Rectangle rect)
 		{
+			bool invalidate = false;
+			
 			if (this.IsVisible)
+			{
+				invalidate = true;
+			}
+			else
+			{
+				Window window = this.Window;
+				
+				if ((window == null) ||
+					(window.IsVisible == false))
+				{
+					invalidate = true;
+				}
+			}
+			
+			if (invalidate)
 			{
 				if (this.Parent != null)
 				{
