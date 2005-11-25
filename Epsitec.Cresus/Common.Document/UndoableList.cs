@@ -18,6 +18,7 @@ namespace Epsitec.Common.Document
 		TextFlows,					// flux de textes
 		ObjectsChain,				// chaîne d'objets pour un flux de textes
 		TextStylesInsideDocument,	// styles de texte du document
+		SelectedSegments,			// segments sélectionnés pour le modeleur
 	}
 
 	/// <summary>

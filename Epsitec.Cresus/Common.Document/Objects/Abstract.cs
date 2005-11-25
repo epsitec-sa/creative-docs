@@ -553,7 +553,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.selectedSegments == null )
 			{
-				this.selectedSegments = new System.Collections.ArrayList();
+				this.selectedSegments = new UndoableList(this.document, UndoableListType.SelectedSegments);
 			}
 
 			if ( !add )
@@ -2469,7 +2469,6 @@ namespace Epsitec.Common.Document.Objects
 							Path selPath = Geometry.PathExtract(path, ss.Rank);
 							graphics.Rasterizer.AddOutline(selPath, width);
 							graphics.FinalRenderSolid(DrawingContext.ColorSelectedSegment);
-							ss.Draw(graphics, drawingContext);
 						}
 					}
 
@@ -2478,6 +2477,14 @@ namespace Epsitec.Common.Document.Objects
 						Path hilitePath = Geometry.PathExtract(path, this.hilitedSegment);
 						graphics.Rasterizer.AddOutline(hilitePath, width);
 						graphics.FinalRenderSolid(drawingContext.HiliteOutlineColor);
+					}
+
+					if ( this.selectedSegments != null )
+					{
+						foreach ( SelectedSegment ss in this.selectedSegments )
+						{
+							ss.Draw(graphics, drawingContext);
+						}
 					}
 				}
 
@@ -3158,7 +3165,7 @@ namespace Epsitec.Common.Document.Objects
 		protected string						name = "";
 		protected UndoableList					properties;
 		protected System.Collections.ArrayList	handles = new System.Collections.ArrayList();
-		protected System.Collections.ArrayList	selectedSegments = null;
+		protected UndoableList					selectedSegments = null;
 		protected UndoableList					objects = null;
 		protected int							totalPropertyHandle = 0;
 		protected double						direction = 0.0;

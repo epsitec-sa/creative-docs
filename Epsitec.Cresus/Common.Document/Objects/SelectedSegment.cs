@@ -1,4 +1,5 @@
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Document.Objects
 {
@@ -76,8 +77,51 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		#region OpletGeometry
+		// Ajoute un oplet pour mémoriser la géométrie du segment.
+		protected void InsertOpletGeometry()
+		{
+			if ( !this.document.Modifier.OpletQueueEnable )  return;
+			OpletGeometry oplet = new OpletGeometry(this);
+			this.document.Modifier.OpletQueue.Insert(oplet);
+		}
+
+		// Mémorise toutes les informations sur la géométrie de l'objet.
+		protected class OpletGeometry : AbstractOplet
+		{
+			public OpletGeometry(SelectedSegment host)
+			{
+				this.host = host;
+				this.pos = host.Position;
+			}
+
+			protected void Swap()
+			{
+				Point temp = this.pos;
+				this.pos = this.host.Position;
+				this.host.Position = temp;
+			}
+
+			public override IOplet Undo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			public override IOplet Redo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			protected SelectedSegment				host;
+			protected Point							pos;
+		}
+		#endregion
+
+		
 		// Cherche un segment sélectionné dans une liste.
-		public static int Search(System.Collections.ArrayList list, int rank)
+		public static int Search(UndoableList list, int rank)
 		{
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
@@ -88,12 +132,17 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Mémorise pour le undo.
-		public static void InsertOpletGeometry(System.Collections.ArrayList list, Objects.Abstract obj)
+		public static void InsertOpletGeometry(UndoableList list, Objects.Abstract obj)
 		{
+			for ( int i=0 ; i<list.Count ; i++ )
+			{
+				SelectedSegment ss = list[i] as SelectedSegment;
+				ss.InsertOpletGeometry();
+			}
 		}
 
 		// Mise à jour après un changement de géométrie.
-		public static void Update(System.Collections.ArrayList list, Objects.Abstract obj)
+		public static void Update(UndoableList list, Objects.Abstract obj)
 		{
 			Path path = obj.GetMagnetPath();
 
