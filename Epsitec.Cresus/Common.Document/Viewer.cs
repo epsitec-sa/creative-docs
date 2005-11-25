@@ -291,6 +291,11 @@ namespace Epsitec.Common.Document
 			Modifier modifier = this.document.Modifier;
 			if ( modifier == null )  return;
 
+			if ( this.miniBar != null && message.Type == MessageType.MouseMove )
+			{
+				this.AnimateMiniBar(pos);
+			}
+
 			// Après un MouseUp, on reçoit toujours un MouseMove inutile,
 			// qui est filtré ici !!!
 			if ( message.Type == MessageType.MouseMove &&
@@ -1360,6 +1365,8 @@ namespace Epsitec.Common.Document
 			this.drawingContext.MagnetDelStarting();
 			this.document.Modifier.OpletQueueValidateAction();
 
+			this.OpenMiniBar(this.mousePosWidget);
+
 			if ( isRight )  // avec le bouton de droite de la souris ?
 			{
 				this.document.Notifier.GenerateEvents();
@@ -2260,6 +2267,75 @@ namespace Epsitec.Common.Document
 				return ( this == this.document.Modifier.ActiveViewer );
 			}
 		}
+
+
+		#region MiniBar
+		// 
+		protected void OpenMiniBar(Point mouse)
+		{
+			this.CloseMiniBar();
+
+			Size size = new Size(100, 30);
+			this.miniBarCenter = new Point(mouse.X+size.Width/2, mouse.Y+size.Height/2);
+			this.miniBarRadius = System.Math.Sqrt(size.Width*size.Width + size.Height*size.Height)/2;
+
+			mouse = this.MapClientToScreen(mouse);
+
+			ScreenInfo si = ScreenInfo.Find(mouse);
+			Drawing.Rectangle wa = si.WorkingArea;
+
+			Point pos = mouse;
+
+			this.miniBar = new Window();
+			this.miniBar.MakeFramelessWindow();
+			this.miniBar.MakeFloatingWindow();
+			this.miniBar.MakeLayeredWindow(true);
+			this.miniBar.WindowSize = size;
+			this.miniBar.WindowLocation = pos;
+			this.miniBar.Owner = this.Window.Owner;
+
+			HToolBar toolbar = new HToolBar(this.miniBar.Root);
+			toolbar.Anchor = AnchorStyles.All;
+
+			IconButton button = new IconButton("Delete", Misc.Icon("Delete"), "Delete");
+			toolbar.Items.Add(button);
+			toolbar.Invalidate();
+
+			this.miniBar.Show();
+		}
+
+		// 
+		protected void CloseMiniBar()
+		{
+			if ( this.miniBar == null )  return;
+			this.miniBar.Close();
+			this.miniBar = null;
+		}
+
+		// 
+		protected void AnimateMiniBar(Point mouse)
+		{
+			if ( this.miniBar == null )  return;
+
+			double alpha = 1.0;
+			double d = Point.Distance(mouse, this.miniBarCenter);
+			if ( d > this.miniBarRadius*1.2 )
+			{
+				alpha = 1.0 - (d-this.miniBarRadius*1.2)/(this.miniBarRadius*0.5);
+				alpha = System.Math.Max(alpha, 0.0);
+			}
+
+			System.Diagnostics.Debug.WriteLine(string.Format("alpha={0}", alpha));
+			if ( alpha == 0.0 )
+			{
+				this.CloseMiniBar();
+			}
+			else
+			{
+				this.miniBar.Alpha = alpha;
+			}
+		}
+		#endregion
 
 
 		#region ContextMenu
@@ -3655,6 +3731,9 @@ namespace Epsitec.Common.Document
 		protected Objects.Abstract				editFlowSrc = null;
 		protected Objects.TextBox2				editFlowAfterCreate = null;
 
+		protected Window						miniBar = null;
+		protected Point							miniBarCenter;
+		protected double						miniBarRadius;
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOrder;
 		protected VMenu							contextMenuOper;
