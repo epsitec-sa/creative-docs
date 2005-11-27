@@ -377,7 +377,9 @@ namespace Epsitec.Common.Widgets
 					{
 						if (cdh.CommandDispatcher == null)
 						{
+#if false //#fix
 							cdh.CommandDispatcher = this.host.CommandDispatcher;
+#endif
 						}
 					}
 				}
@@ -665,7 +667,9 @@ namespace Epsitec.Common.Widgets
 				{
 					if (cdh.CommandDispatcher == null)
 					{
+#if false //#fix
 						cdh.CommandDispatcher = this.dispatcher;
+#endif
 					}
 				}
 			}

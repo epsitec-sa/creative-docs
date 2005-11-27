@@ -13,7 +13,6 @@ namespace Epsitec.Common.Document.Containers
 		public Abstract(Document document)
 		{
 			this.document = document;
-			this.CommandDispatcher = document.CommandDispatcher;
 		}
 		
 		protected override void Dispose(bool disposing)

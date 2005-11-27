@@ -256,6 +256,11 @@ namespace Epsitec.Common.Widgets
 		
 		private void AttachToWidget(Widget widget)
 		{
+			if (this.widget != null)
+			{
+				this.DetachFromWidget (this.widget);
+			}
+			
 			System.Diagnostics.Debug.Assert (this.widget == null);
 			System.Diagnostics.Debug.Assert (widget != null);
 			
@@ -405,6 +410,11 @@ namespace Epsitec.Common.Widgets
 		private void HandleWidgetDisposed(object sender)
 		{
 			Widget widget = sender as Widget;
+			
+			if (this.widget == widget)
+			{
+				this.DetachFromWidget (widget);
+			}
 			
 			System.Diagnostics.Debug.Assert(this.widget != widget);
 			System.Diagnostics.Debug.Assert(this.hash.Contains(widget));

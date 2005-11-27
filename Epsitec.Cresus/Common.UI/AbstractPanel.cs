@@ -20,8 +20,11 @@ namespace Epsitec.Common.UI
 		{
 			if (this.dispatcher != dispatcher)
 			{
+				CommandDispatcher old_dispatcher = this.dispatcher;
 				this.dispatcher = dispatcher;
-				this.OnCommandDispatcherChanged ();
+				CommandDispatcher new_dispatcher = this.dispatcher;
+				
+				this.OnCommandDispatcherChanged (old_dispatcher, new_dispatcher);
 			}
 		}
 		
@@ -44,7 +47,7 @@ namespace Epsitec.Common.UI
 					
 					if (this.dispatcher != null)
 					{
-						this.widget.CommandDispatcher = this.dispatcher;
+						this.widget.AttachCommandDispatcher (this.dispatcher);
 					}
 				}
 				
@@ -100,11 +103,12 @@ namespace Epsitec.Common.UI
 
 		protected abstract void CreateWidgets(Widget parent);
 		
-		protected virtual void OnCommandDispatcherChanged()
+		protected virtual void OnCommandDispatcherChanged(CommandDispatcher old_dispatcher, CommandDispatcher new_dispatcher)
 		{
 			if (this.widget != null)
 			{
-				this.widget.CommandDispatcher = this.dispatcher;
+				this.widget.DetachCommandDispatcher (old_dispatcher);
+				this.widget.AttachCommandDispatcher (new_dispatcher);
 			}
 		}
 		

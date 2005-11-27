@@ -105,10 +105,6 @@ namespace Epsitec.Common.Dialogs
 			{
 				return this.CommandDispatcher;
 			}
-			set
-			{
-				throw new System.InvalidOperationException ("CommandDispatcher is read-only.");
-			}
 		}
 		#endregion
 		

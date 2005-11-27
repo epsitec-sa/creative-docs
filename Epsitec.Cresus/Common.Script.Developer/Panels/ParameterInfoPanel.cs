@@ -99,7 +99,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 			EditArray.Controller ctrl  = new EditArray.Controller (edit, "Table");
 			
 //@			edit.AutoResolveResRef = false;
-			edit.CommandDispatcher = this.local_dispatcher;
+			edit.AttachCommandDispatcher (this.local_dispatcher);
 			edit.Dock              = DockStyle.Fill;
 			edit.DockMargins       = new Drawing.Margins (0, 0, 0, 0);
 			edit.ColumnCount       = 3;

@@ -200,7 +200,7 @@ namespace Epsitec.Common.Widgets
 			EditArray.Header     header = new EditArray.Header (table);
 			EditArray.Controller ctrl   = new EditArray.Controller (table, "Table");
 			
-			table.CommandDispatcher = new CommandDispatcher ("SearchTable", CommandDispatcherLevel.Secondary);
+			table.AttachCommandDispatcher (new CommandDispatcher ("SearchTable", CommandDispatcherLevel.Secondary));
 			table.SetParent (window.Root);
 			table.Dock              = DockStyle.Fill;
 			table.ColumnCount       = 5;

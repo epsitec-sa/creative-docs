@@ -722,13 +722,10 @@ namespace Epsitec.Common.Widgets
 		#region ICommandDispatcherHost Members
 		Epsitec.Common.Widgets.CommandDispatcher Epsitec.Common.Widgets.ICommandDispatcherHost.CommandDispatcher
 		{
+			//	Le CommandDispatcher est sont propre "host".
 			get
 			{
 				return this;
-			}
-			set
-			{
-				throw new System.InvalidOperationException ();
 			}
 		}
 		#endregion

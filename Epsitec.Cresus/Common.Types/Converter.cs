@@ -76,6 +76,11 @@ namespace Epsitec.Common.Types
 				value = false;
 				return false;
 			}
+			catch (System.FormatException)
+			{
+				value = false;
+				return false;
+			}
 		}
 		
 		public static bool SafeConvert(object obj, out int value)
@@ -85,6 +90,11 @@ namespace Epsitec.Common.Types
 				return Converter.Convert (obj, out value);
 			}
 			catch (System.ArgumentException)
+			{
+				value = 0;
+				return false;
+			}
+			catch (System.FormatException)
 			{
 				value = 0;
 				return false;
@@ -102,6 +112,11 @@ namespace Epsitec.Common.Types
 				value = 0;
 				return false;
 			}
+			catch (System.FormatException)
+			{
+				value = 0;
+				return false;
+			}
 		}
 		
 		public static bool SafeConvert(object obj, out decimal value)
@@ -115,6 +130,11 @@ namespace Epsitec.Common.Types
 				value = 0;
 				return false;
 			}
+			catch (System.FormatException)
+			{
+				value = 0;
+				return false;
+			}
 		}
 		
 		public static bool SafeConvert(object obj, System.Type type, out System.Enum value)
@@ -124,6 +144,11 @@ namespace Epsitec.Common.Types
 				return Converter.Convert (obj, type, out value);
 			}
 			catch (System.ArgumentException)
+			{
+				value = null;
+				return false;
+			}
+			catch (System.FormatException)
 			{
 				value = null;
 				return false;
