@@ -56,8 +56,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		
-		
 		public new void Show()
 		{
 			if (this.IsVisible == false)

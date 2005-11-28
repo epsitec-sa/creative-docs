@@ -319,6 +319,15 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
+		public static CommandDispatcher[] GetDispatchers(CommandDispatcher dispatcher)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			VisualTree.GetDispatchers (list, dispatcher);
+			
+			return (CommandDispatcher[]) list.ToArray (typeof (CommandDispatcher));
+		}
+		
 		public static CommandDispatcher[] GetDispatchers(Visual visual)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
@@ -339,6 +348,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			return (CommandDispatcher[]) list.ToArray (typeof (CommandDispatcher));
 		}
+		
 		
 		public static CommandState GetCommandState(Visual visual)
 		{
@@ -398,60 +408,6 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			return null;
 		}
-		
-		
-		private static void GetDispatchers(System.Collections.ArrayList list, Visual visual)
-		{
-			while (visual != null)
-			{
-				VisualTree.GetDispatchers (list, visual.CommandDispatchers);
-				visual = visual.Parent;
-			}
-		}
-		
-		private static void GetDispatchers(System.Collections.ArrayList list, Window window)
-		{
-			while (window != null)
-			{
-				Widget parent = MenuWindow.GetParentWidget (window);
-				
-				if (parent != null)
-				{
-					VisualTree.GetDispatchers (list, parent);
-				}
-				
-				VisualTree.GetDispatchers (list, window.CommandDispatchers);
-				window = window.Owner;
-			}
-		}
-		
-		private static void GetDispatchers(System.Collections.ArrayList list, CommandDispatcher[] dispatchers)
-		{
-			if (dispatchers != null)
-			{
-				foreach (CommandDispatcher dispatcher in dispatchers)
-				{
-					VisualTree.GetDispatchers (list, dispatcher);
-				}
-			}
-		}
-		
-		private static void GetDispatchers(System.Collections.ArrayList list, CommandDispatcher dispatcher)
-		{
-			if (dispatcher != null)
-			{
-				CommandDispatcher[] dispatchers = dispatcher.CommandDispatchers;
-				
-				for (int i = 0; i < dispatchers.Length; i++)
-				{
-					if (list.Contains (dispatchers[i]) == false)
-					{
-						list.Add (dispatchers[i]);
-					}
-				}
-			}
-		}
-		
 		
 		
 		public static bool IsAncestor(Visual visual, Visual ancestor)
@@ -633,5 +589,58 @@ namespace Epsitec.Common.Widgets.Helpers
 				}
 			}
 		}
+		
+		
+		#region GetDispatchers (Private Methods)
+		private static void GetDispatchers(System.Collections.ArrayList list, Visual visual)
+		{
+			while (visual != null)
+			{
+				VisualTree.GetDispatchers (list, visual.CommandDispatchers);
+				visual = visual.Parent;
+			}
+		}
+		
+		private static void GetDispatchers(System.Collections.ArrayList list, Window window)
+		{
+			while (window != null)
+			{
+				Widget parent = MenuWindow.GetParentWidget (window);
+				
+				if (parent != null)
+				{
+					VisualTree.GetDispatchers (list, parent);
+				}
+				
+				VisualTree.GetDispatchers (list, window.CommandDispatchers);
+				window = window.Owner;
+			}
+		}
+		
+		private static void GetDispatchers(System.Collections.ArrayList list, CommandDispatcher[] dispatchers)
+		{
+			if ((dispatchers != null) &&
+				(dispatchers.Length > 0))
+			{
+				foreach (CommandDispatcher dispatcher in dispatchers)
+				{
+					if (list.Contains (dispatcher) == false)
+					{
+						VisualTree.GetDispatchers (list, dispatcher);
+					}
+				}
+			}
+		}
+		
+		private static void GetDispatchers(System.Collections.ArrayList list, CommandDispatcher dispatcher)
+		{
+			if ((dispatcher != null) &&
+				(list.Contains (dispatcher) == false))
+			{
+				list.Add (dispatcher);
+				VisualTree.GetDispatchers (list, dispatcher.CommandDispatchers);
+			}
+		}
+		#endregion
 	}
 }

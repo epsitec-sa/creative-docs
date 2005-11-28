@@ -1626,7 +1626,7 @@ namespace Epsitec.App.DocumentEditor
 			string question1 = string.Format(Res.Strings.Dialog.Save.Question1, shortFilename);
 			string question2 = Res.Strings.Dialog.Save.Question2;
 			string message = string.Format("<font size=\"100%\">{0}</font><br/><br/>{1}{2}", question1, statistic, question2);
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, "", "", dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, null, null, dispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;

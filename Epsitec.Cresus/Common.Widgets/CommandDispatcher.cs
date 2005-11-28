@@ -479,44 +479,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public static CommandDispatcher[] Flatten(CommandDispatcher dispatcher)
-		{
-			if (dispatcher == null)
-			{
-				return new CommandDispatcher[0];
-			}
-			else
-			{
-				return dispatcher.CommandDispatchers;
-			}
-		}
-		
-		public static CommandDispatcher[] Flatten(CommandDispatcher[] dispatchers)
-		{
-			if ((dispatchers == null) ||
-				(dispatchers.Length == 0))
-			{
-				return new CommandDispatcher[0];
-			}
-			else
-			{
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
-				
-				foreach (CommandDispatcher dispatcher in dispatchers)
-				{
-					foreach (CommandDispatcher candidate in dispatcher.CommandDispatchers)
-					{
-						if (list.Contains (candidate) == false)
-						{
-							list.Add (candidate);
-						}
-					}
-				}
-				
-				return (CommandDispatcher[]) list.ToArray (typeof (CommandDispatcher));
-			}
-		}
-		
 		
 		public static bool IsSimpleCommand(string command)
 		{
@@ -664,28 +626,16 @@ namespace Epsitec.Common.Widgets
 		#region ICommandDispatcherHost Members
 		public CommandDispatcher[]				CommandDispatchers
 		{
-			//	Le CommandDispatcher est sont propre "host". Mais il fournit
-			//	aussi l'accès à ses maîtres.
 			get
 			{
 				if (this.master == null)
 				{
-					return new CommandDispatcher[] { this };
+					return new CommandDispatcher[0];
 				}
-				
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
-				
-				list.Add (this);
-				
-				foreach (CommandDispatcher dispatcher in this.master.CommandDispatchers)
+				else
 				{
-					if (list.Contains (dispatcher) == false)
-					{
-						list.Add (dispatcher);
-					}
+					return new CommandDispatcher[1] { this.master };
 				}
-				
-				return (CommandDispatcher[]) list.ToArray (typeof (CommandDispatcher));
 			}
 		}
 		#endregion
