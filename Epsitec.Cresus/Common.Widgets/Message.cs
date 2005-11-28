@@ -356,8 +356,11 @@ namespace Epsitec.Common.Widgets
 						buffer.Append (".");
 					}
 					
-					buffer.Append (upper.Substring (0, 1));
-					buffer.Append (lower.Substring (1));
+					if (upper.Length > 0)
+					{
+						buffer.Append (upper.Substring (0, 1));
+						buffer.Append (lower.Substring (1));
+					}
 				}
 				
 				return buffer.ToString ();

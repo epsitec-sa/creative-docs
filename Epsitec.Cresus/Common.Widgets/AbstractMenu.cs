@@ -125,6 +125,28 @@ namespace Epsitec.Common.Widgets
 			this.Focus ();
 		}
 
+		public void ShowAsContextMenu(Widget parent, Drawing.Point pos)
+		{
+			this.AdjustSize ();
+			
+			Window.ResetMouseCursor ();
+			
+			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
+			Window     owner  = parent.Window;
+			
+			pos.Y -= this.Height;
+			pos.X -= this.shadow.Left;
+			pos.Y += this.shadow.Top;
+			
+			window.Owner          = owner;
+			window.WindowLocation = pos;
+			window.ParentWidget   = parent;
+			
+			this.Behavior.OpenSubmenu (window, Behaviors.MenuBehavior.Animate.Yes);
+			
+			this.Focus ();
+		}
+
 		
 		public override Drawing.Size GetBestFitSize()
 		{

@@ -1525,7 +1525,7 @@ namespace Epsitec.Common.Widgets
 				
 				CommandDispatcher[] dispatchers = item.CommandDispatchers;
 				
-				System.Diagnostics.Debug.Assert (dispatchers.Length > 0);
+//-				System.Diagnostics.Debug.Assert (dispatchers.Length > 0);
 				
 				CommandDispatcher.Dispatch (dispatchers, command, source);
 			}

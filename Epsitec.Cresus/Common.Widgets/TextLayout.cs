@@ -2897,6 +2897,11 @@ namespace Epsitec.Common.Widgets
 		
 		public static string ConvertToTaggedText(string text, bool autoMnemonic)
 		{
+			if (text == null)
+			{
+				return null;
+			}
+			
 			// Convertit le texte simple en un texte compatible avec les tags. Supprime
 			// toute occurrence de "<", "&" et ">" dans le texte.
 			System.Diagnostics.Debug.Assert(text != null);

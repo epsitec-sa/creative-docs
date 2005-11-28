@@ -1394,15 +1394,25 @@ namespace Epsitec.Common.Widgets
 		
 		public override void ExecutePendingLayoutOperations()
 		{
+			bool invalidate = false;
+			
 			if (this.has_layout_changed)
 			{
 				this.has_layout_changed = false;
 				this.UpdateChildrenLayout ();
+				invalidate = true;
 			}
+			
 			if (this.have_children_changed)
 			{
 				this.have_children_changed = false;
 				this.HandleChildrenChanged ();
+				invalidate = true;
+			}
+			
+			if (invalidate)
+			{
+				this.Invalidate ();
 			}
 		}
 		

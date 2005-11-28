@@ -57,6 +57,10 @@ namespace Epsitec.Common.Widgets
 			
 			this.copyPasteBehavior = new Behaviors.CopyPasteBehavior(this);
 			this.OnCursorChanged(true);
+			
+			CommandDispatcher dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
+			dispatcher.RegisterController (new Dispatcher (this));
+			this.AttachCommandDispatcher (dispatcher);
 		}
 		
 		public AbstractTextField(Widget embedder) : this()
@@ -717,23 +721,27 @@ namespace Epsitec.Common.Widgets
 			bool sel = (this.TextNavigator.CursorFrom != this.TextNavigator.CursorTo);
 
 			mi = new MenuItem();
+			mi.Command = "Cut";
 			mi.Name = "Cut";
 			mi.Text = Res.Strings.AbstractTextField.Menu.Cut;
 			mi.Enable = sel;
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
+			mi.Command = "Copy";
 			mi.Name = "Copy";
 			mi.Text = Res.Strings.AbstractTextField.Menu.Copy;
 			mi.Enable = sel;
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
+			mi.Command = "Paste";
 			mi.Name = "Paste";
 			mi.Text = Res.Strings.AbstractTextField.Menu.Paste;
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
+			mi.Command = "Delete";
 			mi.Name = "Delete";
 			mi.Text = Res.Strings.AbstractTextField.Menu.Delete;
 			mi.Enable = sel;
@@ -742,6 +750,7 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu.Items.Add(new MenuSeparator());
 
 			mi = new MenuItem();
+			mi.Command = "SelectAll";
 			mi.Name = "SelectAll";
 			mi.Text = Res.Strings.AbstractTextField.Menu.SelectAll;
 			this.contextMenu.Items.Add(mi);
@@ -757,7 +766,8 @@ namespace Epsitec.Common.Widgets
 				mouse.Y = wa.Bottom+this.contextMenu.Height;
 			}
 			
-			this.contextMenu.ShowAsContextMenu(this.Window, mouse);
+//			this.contextMenu.AttachCommandDispatcher(this.CommandDispatchers[0]);
+			this.contextMenu.ShowAsContextMenu(this, mouse);
 		}
 
 //		private void HandleContextMenuAccepted(object sender, MenuEventArgs e)
@@ -1263,6 +1273,120 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		#endregion
+		
+		private class Dispatcher
+		{
+			public Dispatcher(AbstractTextField host)
+			{
+				this.host = host;
+			}
+			
+			
+			[Support.Command ("Copy")]		public void CommandCopy(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				string value = this.host.Selection;
+				
+				if (value == "")
+				{
+					value = this.host.Text;
+				}
+				
+				Support.Clipboard.WriteData data = new Support.Clipboard.WriteData ();
+				
+				data.WriteTextLayout (value);
+				data.WriteHtmlFragment (value);
+				Support.Clipboard.SetData (data);
+				
+				e.Executed = true;
+			}
+			
+			[Support.Command ("Cut")]		public void CommandCut(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				string value = this.host.Selection;
+				
+				if (value == "")
+				{
+					value = this.host.Text;
+					this.host.SelectAll ();
+				}
+				
+				Support.Clipboard.WriteData data = new Support.Clipboard.WriteData ();
+				
+				data.WriteTextLayout (value);
+				data.WriteHtmlFragment (value);
+				Support.Clipboard.SetData (data);
+				
+				this.host.TextNavigator.DeleteSelection ();
+				this.host.SimulateEdited ();
+				
+				e.Executed = true;
+			}
+			
+			[Support.Command ("Delete")]	public void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				string value = this.host.Selection;
+				
+				if (value == "")
+				{
+					this.host.SelectAll ();
+				}
+				
+				this.host.TextNavigator.DeleteSelection ();
+				this.host.SimulateEdited ();
+				
+				e.Executed = true;
+			}
+			
+			[Support.Command ("SelectAll")]	public void CommandSelectAll(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				this.host.SelectAll ();
+				
+				e.Executed = true;
+			}
+			
+			[Support.Command ("Paste")]		public void CommandPaste(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				Support.Clipboard.ReadData data = Support.Clipboard.GetData ();
+				
+				string text_layout = data.ReadTextLayout ();
+				string html        = null;
+				
+				if (text_layout != null)
+				{
+					html = text_layout;
+				}
+				else
+				{
+					html = data.ReadHtmlFragment ();
+					
+					if (html != null)
+					{
+						html = Support.Clipboard.ConvertHtmlToSimpleXml (html);
+					}
+					else
+					{
+						html = TextLayout.ConvertToTaggedText (data.ReadText ());
+					}
+				}
+				
+				if ((html != null) &&
+					(html.Length > 0))
+				{
+					if (this.host.TextFieldStyle != TextFieldStyle.Multi)
+					{
+						html = html.Replace ("<br/>", " ");
+					}
+					
+					this.host.Selection = html;
+					this.host.SimulateEdited ();
+					
+					e.Executed = true;
+				}
+			}
+			
+			
+			private AbstractTextField			host;
+		}
 		
 		public event Support.EventHandler		TextEdited;
 		public event Support.EventHandler		TextInserted;

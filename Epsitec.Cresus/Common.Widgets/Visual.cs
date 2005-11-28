@@ -16,6 +16,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		internal short							VisualSerialId
+		{
+			get
+			{
+				return this.visual_serial_id;
+			}
+		}
+
 		public int								Index
 		{
 			get
@@ -1202,6 +1210,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		private int								command_cache_id = -1;
+		private short							visual_serial_id = Visual.next_serial_id++;
 		private short							suspend_layout_counter;
 		
 		protected bool							has_layout_changed;
@@ -1210,5 +1219,7 @@ namespace Epsitec.Common.Widgets
 		
 		private Collections.LayerCollection		layer_collection;
 		private Layouts.Layer					parent_layer;
+		
+		private static short					next_serial_id = 0;
 	}
 }
