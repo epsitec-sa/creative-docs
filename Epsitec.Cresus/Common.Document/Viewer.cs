@@ -1345,7 +1345,7 @@ namespace Epsitec.Common.Document
 					int rank = this.moveObject.ShaperDetectSegment(mouse);
 					if ( rank != -1 )
 					{
-						this.moveObject.SelectedSegmentAdd(rank, mouse, this.drawingContext.IsShift);
+						this.moveObject.SelectedSegmentAdd(rank, ref mouse, this.drawingContext.IsShift);
 					}
 				}
 				else	// déplace une poignée ?
@@ -1356,6 +1356,7 @@ namespace Epsitec.Common.Document
 						this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.HandleMove);
 					}
 
+					mouse -= this.moveOffset;
 					this.moveObject.MoveHandleEnding(this.moveHandle, mouse, this.drawingContext);
 				}
 
@@ -1389,6 +1390,8 @@ namespace Epsitec.Common.Document
 			{
 				if ( mb )
 				{
+					this.document.Notifier.NotifyShaperChanged();
+					this.document.Notifier.GenerateEvents();
 					this.OpenMiniBar(mouse);
 				}
 			}
@@ -2300,9 +2303,25 @@ namespace Epsitec.Common.Document
 
 			Widgets.Balloon frame = new Widgets.Balloon();
 			IconButton button = new IconButton();
+			IconSeparator sep = new IconSeparator();
 
 			mouse = this.InternalToScreen(mouse);
-			Size size = new Size(cmds.Count*button.DefaultWidth+frame.Margin*2, button.DefaultHeight+frame.Margin*2+frame.Distance);
+			mouse.Y ++;
+
+			double width = 0;
+			foreach ( string cmd in cmds )
+			{
+				if ( cmd == "" )  // séparateur ?
+				{
+					width += sep.DefaultWidth;
+				}
+				else
+				{
+					width += button.DefaultWidth;
+				}
+			}
+
+			Size size = new Size(width+frame.Margin*2, button.DefaultHeight+frame.Margin*2+frame.Distance);
 			mouse.X -= size.Width/2;
 			this.miniBarRect = new Drawing.Rectangle(mouse, size);
 
@@ -2325,15 +2344,38 @@ namespace Epsitec.Common.Document
 
 			foreach ( string cmd in cmds )
 			{
-				button = new IconButton(cmd, Misc.Icon(cmd), cmd);
-				button.Dock = DockStyle.Left;
-				button.SetParent(frame);
-				button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
-
-				string s = Res.Strings.GetString("Action."+cmd);
-				if ( s != null )
+				if ( cmd == "" )  // séparateur ?
 				{
-					ToolTip.Default.SetToolTip(button, s);
+					sep = new IconSeparator();
+					sep.Dock = DockStyle.Left;
+					sep.SetParent(frame);
+				}
+				else
+				{
+					string c = cmd;
+					bool activable = false;
+					if ( c[0] == '#' )
+					{
+						activable = true;
+						c = c.Substring(1);
+					}
+
+					button = new IconButton(c, Misc.Icon(c), c);
+					
+					if ( activable )
+					{
+						button.ButtonStyle = ButtonStyle.ActivableIcon;
+					}
+
+					button.Dock = DockStyle.Left;
+					button.SetParent(frame);
+					button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
+
+					string s = Res.Strings.GetString("Action."+c);
+					if ( s != null )
+					{
+						ToolTip.Default.SetToolTip(button, s);
+					}
 				}
 			}
 
@@ -2388,11 +2430,14 @@ namespace Epsitec.Common.Document
 			{
 				this.MiniBarAdd(list, "Delete");
 				this.MiniBarAdd(list, "Duplicate");
+				this.MiniBarAdd(list, "");
 				this.MiniBarAdd(list, "Cut");
 				this.MiniBarAdd(list, "Copy");
 				this.MiniBarAdd(list, "Paste");
+				this.MiniBarAdd(list, "");
 				this.MiniBarAdd(list, "OrderUpAll");
 				this.MiniBarAdd(list, "OrderDownAll");
+				this.MiniBarAdd(list, "");
 			}
 
 			Objects.Abstract layer = this.drawingContext.RootObject();
@@ -2401,17 +2446,44 @@ namespace Epsitec.Common.Document
 				obj.PutCommands(list);
 			}
 
+			if ( list.Count != 0 )
+			{
+				string last = list[list.Count-1] as string;
+				if ( last == "" )  // terminé par un séparateur ?
+				{
+					list.RemoveAt(list.Count-1);  // supprime le séparateur final
+				}
+			}
+
 			return list;
 		}
 
 		// Ajoute une commande dans la liste pour la mini-palette.
-		protected void MiniBarAdd(System.Collections.ArrayList list, string cmd)
+		public void MiniBarAdd(System.Collections.ArrayList list, string cmd)
 		{
-			CommandDispatcher cd = this.GetCommandDispatcher();
-			CommandState state = cd[cmd];
-			if ( state != null )
+			if ( cmd == "" )  // séparateur ?
 			{
-				if ( !state.Enable )  return;
+				if ( list.Count != 0 )
+				{
+					string last = list[list.Count-1] as string;
+					if ( last == "" )  return;  // déjà un séparateur ?
+				}
+			}
+			else
+			{
+				if ( list.Contains(cmd) )  return;
+
+				string c = cmd;
+				if ( c[0] == '#' )
+				{
+					c = c.Substring(1);
+				}
+				CommandDispatcher cd = this.GetCommandDispatcher();
+				CommandState state = cd[c];
+				if ( state != null )
+				{
+					if ( !state.Enable )  return;
+				}
 			}
 
 			list.Add(cmd);

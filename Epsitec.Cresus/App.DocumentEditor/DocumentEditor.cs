@@ -2704,23 +2704,6 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.ToPolySelection();
 		}
 
-		[Command ("HandleAdd")]
-		[Command ("HandleSub")]
-		[Command ("HandleToLine")]
-		[Command ("HandleToCurve")]
-		[Command ("HandleSym")]
-		[Command ("HandleSmooth")]
-		[Command ("HandleDis")]
-		[Command ("HandleLine")]
-		[Command ("HandleFree")]
-		[Command ("HandleSimply")]
-		[Command ("HandleCorner")]
-		[Command ("HandleContinue")]
-		void CommandHandle(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.DoHandleCommand(e.CommandName);
-		}
-
 		[Command ("ToSimplest")]
 		void CommandToSimplest(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -2731,6 +2714,23 @@ namespace Epsitec.App.DocumentEditor
 		void CommandFragment(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.FragmentSelection();
+		}
+
+		[Command ("ShaperHandleAdd")]
+		[Command ("ShaperHandleSub")]
+		[Command ("ShaperHandleToLine")]
+		[Command ("ShaperHandleToCurve")]
+		[Command ("ShaperHandleSym")]
+		[Command ("ShaperHandleSmooth")]
+		[Command ("ShaperHandleDis")]
+		[Command ("ShaperHandleInline")]
+		[Command ("ShaperHandleFree")]
+		[Command ("ShaperHandleSimply")]
+		[Command ("ShaperHandleCorner")]
+		[Command ("ShaperHandleContinue")]
+		void CommandShaperHandle(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ShaperHandleCommand(e.CommandName);
 		}
 
 		[Command ("BooleanOr")]
@@ -3598,19 +3598,19 @@ namespace Epsitec.App.DocumentEditor
 			this.uncombineState = new CommandState("Uncombine", this.commandDispatcher);
 			this.toBezierState = new CommandState("ToBezier", this.commandDispatcher);
 			this.toPolyState = new CommandState("ToPoly", this.commandDispatcher);
-			this.handleAddState = new CommandState("HandleAdd", this.commandDispatcher);
-			this.handleSubState = new CommandState("HandleSub", this.commandDispatcher);
-			this.handleToLineState = new CommandState("HandleToLine", this.commandDispatcher);
-			this.handleToCurveState = new CommandState("HandleToCurve", this.commandDispatcher);
-			this.handleSymState = new CommandState("HandleSym", this.commandDispatcher);
-			this.handleSmoothState = new CommandState("HandleSmooth", this.commandDispatcher);
-			this.handleDisState = new CommandState("HandleDis", this.commandDispatcher);
-			this.handleLineState = new CommandState("HandleLine", this.commandDispatcher);
-			this.handleFreeState = new CommandState("HandleFree", this.commandDispatcher);
-			this.handleSimplyState = new CommandState("HandleSimply", this.commandDispatcher);
-			this.handleCornerState = new CommandState("HandleCorner", this.commandDispatcher);
-			this.handleContinueState = new CommandState("HandleContinue", this.commandDispatcher);
 			this.fragmentState = new CommandState("Fragment", this.commandDispatcher);
+			this.shaperHandleAddState = new CommandState("ShaperHandleAdd", this.commandDispatcher);
+			this.shaperHandleSubState = new CommandState("ShaperHandleSub", this.commandDispatcher);
+			this.shaperHandleToLineState = new CommandState("ShaperHandleToLine", this.commandDispatcher);
+			this.shaperHandleToCurveState = new CommandState("ShaperHandleToCurve", this.commandDispatcher);
+			this.shaperHandleSymState = new CommandState("ShaperHandleSym", this.commandDispatcher);
+			this.shaperHandleSmoothState = new CommandState("ShaperHandleSmooth", this.commandDispatcher);
+			this.shaperHandleDisState = new CommandState("ShaperHandleDis", this.commandDispatcher);
+			this.shaperHandleInlineState = new CommandState("ShaperHandleInline", this.commandDispatcher);
+			this.shaperHandleFreeState = new CommandState("ShaperHandleFree", this.commandDispatcher);
+			this.shaperHandleSimplyState = new CommandState("ShaperHandleSimply", this.commandDispatcher);
+			this.shaperHandleCornerState = new CommandState("ShaperHandleCorner", this.commandDispatcher);
+			this.shaperHandleContinueState = new CommandState("ShaperHandleContinue", this.commandDispatcher);
 			this.booleanAndState = new CommandState("BooleanAnd", this.commandDispatcher);
 			this.booleanOrState = new CommandState("BooleanOr", this.commandDispatcher);
 			this.booleanXorState = new CommandState("BooleanXor", this.commandDispatcher);
@@ -3725,6 +3725,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.ToolChanged            += new SimpleEventHandler(this.HandleToolChanged);
 			this.CurrentDocument.Notifier.SaveChanged            += new SimpleEventHandler(this.HandleSaveChanged);
 			this.CurrentDocument.Notifier.SelectionChanged       += new SimpleEventHandler(this.HandleSelectionChanged);
+			this.CurrentDocument.Notifier.ShaperChanged          += new SimpleEventHandler(this.HandleShaperChanged);
 			this.CurrentDocument.Notifier.TextChanged            += new SimpleEventHandler(this.HandleTextChanged);
 			this.CurrentDocument.Notifier.CreateChanged          += new SimpleEventHandler(this.HandleCreateChanged);
 			this.CurrentDocument.Notifier.StyleChanged           += new SimpleEventHandler(this.HandleStyleChanged);
@@ -4221,6 +4222,32 @@ namespace Epsitec.App.DocumentEditor
 			StatusField field = this.info.Items["StatusObject"] as StatusField;
 			field.Text = this.TextInfoObject;
 			field.Invalidate();
+		}
+
+		// Appelé par le document lorsque le modeleur a changé.
+		private void HandleShaperChanged()
+		{
+			if ( this.IsCurrentDocument &&
+				 this.CurrentDocument.Modifier.IsToolShaper &&
+				 this.CurrentDocument.Modifier.TotalSelected != 0 )
+			{
+				this.CurrentDocument.Modifier.ShaperHandleUpdate(this.CommandDispatcher);
+			}
+			else
+			{
+				this.shaperHandleAddState.Enable = false;
+				this.shaperHandleSubState.Enable = false;
+				this.shaperHandleToLineState.Enable = false;
+				this.shaperHandleToCurveState.Enable = false;
+				this.shaperHandleSymState.Enable = false;
+				this.shaperHandleSmoothState.Enable = false;
+				this.shaperHandleDisState.Enable = false;
+				this.shaperHandleInlineState.Enable = false;
+				this.shaperHandleFreeState.Enable = false;
+				this.shaperHandleSimplyState.Enable = false;
+				this.shaperHandleCornerState.Enable = false;
+				this.shaperHandleContinueState.Enable = false;
+			}
 		}
 
 		// Appelé par le document lorsque le texte en édition a changé.
@@ -5453,19 +5480,19 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					uncombineState;
 		protected CommandState					toBezierState;
 		protected CommandState					toPolyState;
-		protected CommandState					handleAddState;
-		protected CommandState					handleSubState;
-		protected CommandState					handleToLineState;
-		protected CommandState					handleToCurveState;
-		protected CommandState					handleSymState;
-		protected CommandState					handleSmoothState;
-		protected CommandState					handleDisState;
-		protected CommandState					handleLineState;
-		protected CommandState					handleFreeState;
-		protected CommandState					handleSimplyState;
-		protected CommandState					handleCornerState;
-		protected CommandState					handleContinueState;
 		protected CommandState					fragmentState;
+		protected CommandState					shaperHandleAddState;
+		protected CommandState					shaperHandleSubState;
+		protected CommandState					shaperHandleToLineState;
+		protected CommandState					shaperHandleToCurveState;
+		protected CommandState					shaperHandleSymState;
+		protected CommandState					shaperHandleSmoothState;
+		protected CommandState					shaperHandleDisState;
+		protected CommandState					shaperHandleInlineState;
+		protected CommandState					shaperHandleFreeState;
+		protected CommandState					shaperHandleSimplyState;
+		protected CommandState					shaperHandleCornerState;
+		protected CommandState					shaperHandleContinueState;
 		protected CommandState					booleanAndState;
 		protected CommandState					booleanOrState;
 		protected CommandState					booleanXorState;

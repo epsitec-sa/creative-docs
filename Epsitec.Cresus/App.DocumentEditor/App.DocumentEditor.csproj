@@ -855,54 +855,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\HandleAdd.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\HandleContinue.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\HandleCorner.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\HandleDis.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\HandleFree.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\HandleLine.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\HandleSimply.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\HandleSmooth.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\HandleSub.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\HandleSym.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\HandleToCurve.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\HandleToLine.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "Images\HideCancel.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -1568,6 +1520,54 @@
                 />
                 <File
                     RelPath = "Images\Shaper.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleAdd.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleContinue.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleCorner.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleDis.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleFree.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleInline.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleSimply.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleSmooth.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleSub.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleSym.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleToCurve.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShaperHandleToLine.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

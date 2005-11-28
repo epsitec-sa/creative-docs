@@ -135,19 +135,48 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Met les commandes pour l'objet dans une liste.
-		public override void PutCommands(System.Collections.ArrayList list)
+		// Donne l'état d'une commande ShaperHandle*.
+		public override bool ShaperHandleState(string family, ref bool enable, System.Collections.ArrayList actives)
 		{
-			base.PutCommands(list);
+			if ( family == "Continue" )
+			{
+				if ( this.IsShaperHandleSelected() && !this.PropertyPolyClose.BoolValue )
+				{
+					int total = this.TotalMainHandle;
+					for ( int i=0 ; i<total ; i++ )
+					{
+						if ( !this.Handle(i).IsVisible )  continue;
+						if ( this.Handle(i).IsShaperDeselected )  continue;
+						if ( this.Handle(i).Type == HandleType.Starting ||
+							 this.Handle(this.NextRank(i)).Type == HandleType.Starting )
+						{
+							enable = true;
+						}
+					}
+				}
+				return true;
+			}
 
-			if ( this.document.Modifier.IsToolShaper )
+			if ( family == "Poly" )
 			{
 				if ( this.IsShaperHandleSelected() )
 				{
-					this.PutCommands(list, "HandleSimply");
-					this.PutCommands(list, "HandleCorner");
+					int total = this.TotalMainHandle;
+					for ( int i=0 ; i<total ; i++ )
+					{
+						if ( !this.Handle(i).IsVisible )  continue;
+						if ( this.Handle(i).IsShaperDeselected )  continue;
+
+						HandleConstrainType type = this.Handle(i).ConstrainType;
+						if ( type == HandleConstrainType.Simply )  Abstract.ShaperHandleStateAdd(actives, "Simply"); 
+						else                                       Abstract.ShaperHandleStateAdd(actives, "Corner"); 
+						enable = true;
+					}
 				}
+				return true;
 			}
+
+			return base.ShaperHandleState(family, ref enable, actives);
 		}
 
 		// Donne le contenu du menu contextuel.

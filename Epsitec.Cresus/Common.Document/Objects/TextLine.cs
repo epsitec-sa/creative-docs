@@ -151,6 +151,98 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Donne l'état d'une commande ShaperHandle*.
+		public override bool ShaperHandleState(string family, ref bool enable, System.Collections.ArrayList actives)
+		{
+			if ( family == "Continue" )
+			{
+				if ( this.IsShaperHandleSelected() && !this.PropertyPolyClose.BoolValue )
+				{
+					int total = this.TotalMainHandle;
+					for ( int i=0 ; i<total ; i+=3 )
+					{
+						if ( !this.Handle(i+1).IsVisible )  continue;
+						if ( this.Handle(i+1).IsShaperDeselected )  continue;
+						if ( this.Handle(i+1).Type == HandleType.Starting ||
+							 this.Handle(this.NextRank(i)+1).Type == HandleType.Starting )
+						{
+							enable = true;
+						}
+					}
+				}
+				return true;
+			}
+
+			if ( family == "Sub" )
+			{
+				enable = (this.TotalMainHandle > 2*3 && this.IsShaperHandleSelected());
+				return true;
+			}
+
+			if ( family == "Segment" )
+			{
+				if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
+				{
+					enable = true;
+					for ( int i=0 ; i<this.selectedSegments.Count ; i++ )
+					{
+						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
+						int rank = ss.Rank*3+2;
+						string state = (this.Handle(rank+2).Type == HandleType.Hide) ? "ToLine" : "ToCurve";
+					{
+						Abstract.ShaperHandleStateAdd(actives, state);
+					}
+					}
+				}
+				return true;
+			}
+
+			if ( family == "Curve" )
+			{
+				if ( this.IsShaperHandleSelected() )
+				{
+					int total = this.TotalMainHandle;
+					for ( int i=0 ; i<total ; i+=3 )
+					{
+						if ( !this.Handle(i+1).IsVisible )  continue;
+						if ( this.Handle(i+1).IsShaperDeselected )  continue;
+						if ( this.Handle(i).Type != HandleType.Hide && this.Handle(i+2).Type != HandleType.Hide )
+						{
+							HandleConstrainType type = this.Handle(i+1).ConstrainType;
+							if ( type == HandleConstrainType.Symmetric )  Abstract.ShaperHandleStateAdd(actives, "Sym"); 
+							if ( type == HandleConstrainType.Smooth    )  Abstract.ShaperHandleStateAdd(actives, "Smooth"); 
+							if ( type == HandleConstrainType.Corner    )  Abstract.ShaperHandleStateAdd(actives, "Dis"); 
+							enable = true;
+						}
+					}
+				}
+				return true;
+			}
+
+			if ( family == "CurveLine" )
+			{
+				if ( this.IsShaperHandleSelected() )
+				{
+					int total = this.TotalMainHandle;
+					for ( int i=0 ; i<total ; i+=3 )
+					{
+						if ( !this.Handle(i+1).IsVisible )  continue;
+						if ( this.Handle(i+1).IsShaperDeselected )  continue;
+						if ( (this.Handle(i).Type == HandleType.Hide) != (this.Handle(i+2).Type == HandleType.Hide) )
+						{
+							HandleConstrainType type = this.Handle(i+1).ConstrainType;
+							if ( type == HandleConstrainType.Smooth )  Abstract.ShaperHandleStateAdd(actives, "Inline"); 
+							else                                       Abstract.ShaperHandleStateAdd(actives, "Free"); 
+							enable = true;
+						}
+					}
+				}
+				return true;
+			}
+
+			return base.ShaperHandleState(family, ref enable, actives);
+		}
+
 		// Donne le contenu du menu contextuel.
 		public override void ContextMenu(System.Collections.ArrayList list, Point pos, int handleRank)
 		{

@@ -3407,9 +3407,82 @@ namespace Epsitec.Common.Document
 				corner.CornerType = Properties.CornerType.Right;
 			}
 		}
+		#endregion
 
-		// Effectue une commande sur une poignée.
-		public void DoHandleCommand(string cmd)
+
+		#region ShaperHandle
+		// Met à jour toutes les commandes pour le modeleur.
+		public void ShaperHandleUpdate(CommandDispatcher cd)
+		{
+			if ( this.IsToolShaper && this.TotalSelected != 0 )
+			{
+				bool enable;
+				System.Collections.ArrayList actives = new System.Collections.ArrayList();
+
+				this.ShaperHandleState("Add", out enable, actives);
+				this.ShaperHandleState(cd, "ShaperHandleAdd", enable, actives, "");
+
+				this.ShaperHandleState("Continue", out enable, actives);
+				this.ShaperHandleState(cd, "ShaperHandleContinue",  enable, actives, "");
+
+				this.ShaperHandleState("Sub", out enable, actives);
+				this.ShaperHandleState(cd, "ShaperHandleSub", enable, actives, "");
+
+				this.ShaperHandleState("Segment", out enable, actives);
+				this.ShaperHandleState(cd, "ShaperHandleToLine",  enable, actives, "ToLine");
+				this.ShaperHandleState(cd, "ShaperHandleToCurve", enable, actives, "ToCurve");
+
+				this.ShaperHandleState("Curve", out enable, actives);
+				this.ShaperHandleState(cd, "ShaperHandleSym",    enable, actives, "Sym");
+				this.ShaperHandleState(cd, "ShaperHandleSmooth", enable, actives, "Smooth");
+				this.ShaperHandleState(cd, "ShaperHandleDis",    enable, actives, "Dis");
+
+				this.ShaperHandleState("CurveLine", out enable, actives);
+				this.ShaperHandleState(cd, "ShaperHandleInline", enable, actives, "Inline");
+				this.ShaperHandleState(cd, "ShaperHandleFree",   enable, actives, "Free");
+
+				this.ShaperHandleState("Poly", out enable, actives);
+				this.ShaperHandleState(cd, "ShaperHandleSimply", enable, actives, "Simply");
+				this.ShaperHandleState(cd, "ShaperHandleCorner", enable, actives, "Corner");
+			}
+			else
+			{
+				cd.GetCommandState("ShaperHandleAdd").Enable = false;
+				cd.GetCommandState("ShaperHandleContinue").Enable = false;
+				cd.GetCommandState("ShaperHandleSub").Enable = false;
+				cd.GetCommandState("ShaperHandleToLine").Enable = false;
+				cd.GetCommandState("ShaperHandleToCurve").Enable = false;
+				cd.GetCommandState("ShaperHandleSym").Enable = false;
+				cd.GetCommandState("ShaperHandleSmooth").Enable = false;
+				cd.GetCommandState("ShaperHandleDis").Enable = false;
+				cd.GetCommandState("ShaperHandleInline").Enable = false;
+				cd.GetCommandState("ShaperHandleFree").Enable = false;
+				cd.GetCommandState("ShaperHandleSimply").Enable = false;
+				cd.GetCommandState("ShaperHandleCorner").Enable = false;
+			}
+		}
+
+		protected void ShaperHandleState(string family, out bool enable, System.Collections.ArrayList actives)
+		{
+			enable = false;
+			actives.Clear();
+
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
+			{
+				obj.ShaperHandleState(family, ref enable, actives);
+			}
+		}
+
+		protected void ShaperHandleState(CommandDispatcher cd, string cmd, bool enable, System.Collections.ArrayList actives, string active)
+		{
+			cd.GetCommandState(cmd).Enable = enable;
+			cd.GetCommandState(cmd).ActiveState = actives.Contains(active) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
+		}
+
+		// Effectue une commande du modeleur sur une poignée.
+		public void ShaperHandleCommand(string cmd)
 		{
 		}
 		#endregion

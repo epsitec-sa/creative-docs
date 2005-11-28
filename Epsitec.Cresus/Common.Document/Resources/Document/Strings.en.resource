@@ -761,18 +761,18 @@
 	<data name="Action.BooleanFrontMinus">Foreground minus background</data>
 	<data name="Action.BooleanBackMinus">Background minus foreground</data>
 	
-	<data name="Action.HandleAdd">Add point(s)</data>
-	<data name="Action.HandleSub">Remove point(s)</data>
-	<data name="Action.HandleToLine">Line</data>
-	<data name="Action.HandleToCurve">Curve</data>
-	<data name="Action.HandleSym">Symmetric</data>
-	<data name="Action.HandleSmooth">Smooth</data>
-	<data name="Action.HandleDis">Cusp</data>
-	<data name="Action.HandleLine">In line</data>
-	<data name="Action.HandleFree">Free</data>
-	<data name="Action.HandleSimply">@@Droit</data>
-	<data name="Action.HandleCorner">@@Selon la propriété de coin</data>
-	<data name="Action.HandleContinue">Extend line</data>
+	<data name="Action.ShaperHandleAdd">Add point(s)</data>
+	<data name="Action.ShaperHandleSub">Remove point(s)</data>
+	<data name="Action.ShaperHandleToLine">Line</data>
+	<data name="Action.ShaperHandleToCurve">Curve</data>
+	<data name="Action.ShaperHandleSym">Symmetric</data>
+	<data name="Action.ShaperHandleSmooth">Smooth</data>
+	<data name="Action.ShaperHandleDis">Cusp</data>
+	<data name="Action.ShaperHandleInline">In line</data>
+	<data name="Action.ShaperHandleFree">Free</data>
+	<data name="Action.ShaperHandleSimply">@@Droit</data>
+	<data name="Action.ShaperHandleCorner">@@Selon la propriété de coin</data>
+	<data name="Action.ShaperHandleContinue">Extend line</data>
 
 	<data name="Action.Glyphs">Symbols...</data>
 

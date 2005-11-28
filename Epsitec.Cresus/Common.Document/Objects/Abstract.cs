@@ -455,7 +455,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			if ( startingPos.Count == 0 )  return null;
 
-			if ( this.selectedSegments != null )
+			if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
 			{
 				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
 			}
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			if ( this.selectedSegments != null )
+			if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
 			{
 				SelectedSegment.Update(this.selectedSegments, this);
 			}
@@ -544,7 +544,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Sélectionne un segment de l'objet.
-		public void SelectedSegmentAdd(int rank, Point pos, bool add)
+		public void SelectedSegmentAdd(int rank, ref Point pos, bool add)
 		{
 			if ( !add )
 			{
@@ -566,17 +566,13 @@ namespace Epsitec.Common.Document.Objects
 			{
 				SelectedSegment ss = new SelectedSegment(this.document, this, rank, pos);
 				this.selectedSegments.Add(ss);
+				pos = ss.Position;
 			}
 			else
 			{
 				if ( add )
 				{
 					this.selectedSegments.RemoveAt(i);
-				}
-				else
-				{
-					SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
-					ss.Position = pos;
 				}
 			}
 
@@ -2277,23 +2273,55 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.document.Modifier.IsToolShaper )
 			{
-				if ( this.selectedSegments != null )
-				{
-					this.PutCommands(list, "HandleAdd");
-				}
-
-				if ( this.IsShaperHandleSelected() )
-				{
-					this.PutCommands(list, "HandleSub");
-				}
+				this.PutCommands(list, "ShaperHandleAdd");
+				this.PutCommands(list, "ShaperHandleContinue");
+				this.PutCommands(list, "ShaperHandleSub");
+				this.PutCommands(list, "");
+				this.PutCommands(list, "#ShaperHandleToLine");
+				this.PutCommands(list, "#ShaperHandleToCurve");
+				this.PutCommands(list, "");
+				this.PutCommands(list, "#ShaperHandleSym");
+				this.PutCommands(list, "#ShaperHandleSmooth");
+				this.PutCommands(list, "#ShaperHandleDis");
+				this.PutCommands(list, "");
+				this.PutCommands(list, "#ShaperHandleInline");
+				this.PutCommands(list, "#ShaperHandleFree");
+				this.PutCommands(list, "");
+				this.PutCommands(list, "#ShaperHandleSimply");
+				this.PutCommands(list, "#ShaperHandleCorner");
+				this.PutCommands(list, "");
 			}
 		}
 
+		// Met une commande pour l'objet dans une liste, si nécessaire.
 		protected void PutCommands(System.Collections.ArrayList list, string cmd)
 		{
-			if ( !list.Contains(cmd) )
+			this.document.Modifier.ActiveViewer.MiniBarAdd(list, cmd);
+		}
+
+		// Donne l'état d'une commande ShaperHandle*.
+		public virtual bool ShaperHandleState(string family, ref bool enable, System.Collections.ArrayList actives)
+		{
+			if ( family == "Add" )
 			{
-				list.Add(cmd);
+				enable = (this.selectedSegments != null && this.selectedSegments.Count != 0);
+				return true;
+			}
+
+			if ( family == "Sub" )
+			{
+				enable = (this.TotalMainHandle > 2 && this.IsShaperHandleSelected());
+				return true;
+			}
+
+			return false;
+		}
+
+		protected static void ShaperHandleStateAdd(System.Collections.ArrayList actives, string state)
+		{
+			if ( !actives.Contains(state) )
+			{
+				actives.Add(state);
 			}
 		}
 

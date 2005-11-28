@@ -761,18 +761,18 @@
 	<data name="Action.BooleanFrontMinus">Avant moins arrières</data>
 	<data name="Action.BooleanBackMinus">Arrière moins avants</data>
 	
-	<data name="Action.HandleAdd">Ajouter le(s) point(s)</data>
-	<data name="Action.HandleSub">Enlever le(s) point(s)</data>
-	<data name="Action.HandleToLine">Droit</data>
-	<data name="Action.HandleToCurve">Courbe</data>
-	<data name="Action.HandleSym">Symétrique</data>
-	<data name="Action.HandleSmooth">Lisse</data>
-	<data name="Action.HandleDis">Anguleux</data>
-	<data name="Action.HandleLine">En ligne</data>
-	<data name="Action.HandleFree">Libre</data>
-	<data name="Action.HandleSimply">Droit</data>
-	<data name="Action.HandleCorner">Selon la propriété de coin</data>
-	<data name="Action.HandleContinue">Prolonger le trait</data>
+	<data name="Action.ShaperHandleAdd">Ajouter le(s) point(s)</data>
+	<data name="Action.ShaperHandleSub">Enlever le(s) point(s)</data>
+	<data name="Action.ShaperHandleToLine">Droit</data>
+	<data name="Action.ShaperHandleToCurve">Courbe</data>
+	<data name="Action.ShaperHandleSym">Symétrique</data>
+	<data name="Action.ShaperHandleSmooth">Lisse</data>
+	<data name="Action.ShaperHandleDis">Anguleux</data>
+	<data name="Action.ShaperHandleInline">En ligne</data>
+	<data name="Action.ShaperHandleFree">Libre</data>
+	<data name="Action.ShaperHandleSimply">Droit</data>
+	<data name="Action.ShaperHandleCorner">Selon la propriété de coin</data>
+	<data name="Action.ShaperHandleContinue">Prolonger le trait</data>
 
 	<data name="Action.Glyphs">Caractères spéciaux...</data>
 

@@ -51,6 +51,7 @@ namespace Epsitec.Common.Document
 			this.toolChanged = true;
 			this.saveChanged = true;
 			this.selectionChanged = true;
+			this.shaperChanged = true;
 			this.textChanged = true;
 			this.createChanged = true;
 			this.styleChanged = true;
@@ -133,6 +134,14 @@ namespace Epsitec.Common.Document
 		{
 			if ( !this.enable || !this.enableSelectionChanged )  return;
 			this.selectionChanged = true;
+			this.NotifyAsync();
+		}
+
+		// Indique que les objets pour le modeleur ont changé.
+		public void NotifyShaperChanged()
+		{
+			if ( !this.enable )  return;
+			this.shaperChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -429,6 +438,12 @@ namespace Epsitec.Common.Document
 				this.selectionChanged = false;
 			}
 
+			if ( this.shaperChanged )
+			{
+				this.OnShaperChanged();
+				this.shaperChanged = false;
+			}
+
 			if ( this.textChanged )
 			{
 				this.OnTextChanged();
@@ -625,6 +640,14 @@ namespace Epsitec.Common.Document
 			if ( this.SelectionChanged != null )  // qq'un écoute ?
 			{
 				this.SelectionChanged();
+			}
+		}
+
+		protected void OnShaperChanged()
+		{
+			if ( this.ShaperChanged != null )  // qq'un écoute ?
+			{
+				this.ShaperChanged();
 			}
 		}
 
@@ -829,6 +852,7 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			ToolChanged;
 		public event SimpleEventHandler			SaveChanged;
 		public event SimpleEventHandler			SelectionChanged;
+		public event SimpleEventHandler			ShaperChanged;
 		public event SimpleEventHandler			TextChanged;
 		public event SimpleEventHandler			CreateChanged;
 		public event SimpleEventHandler			StyleChanged;
@@ -865,6 +889,7 @@ namespace Epsitec.Common.Document
 		protected bool							toolChanged;
 		protected bool							saveChanged;
 		protected bool							selectionChanged;
+		protected bool							shaperChanged;
 		protected bool							textChanged;
 		protected bool							createChanged;
 		protected bool							styleChanged;
