@@ -107,7 +107,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : Visual, System.IDisposable, Support.IBundleSupport, ICommandDispatcherHost, Support.Data.IPropertyProvider, Collections.IShortcutCollectionHost
+	public class Widget : Visual, System.IDisposable, Support.IBundleSupport, Support.Data.IPropertyProvider, Collections.IShortcutCollectionHost
 	{
 		public Widget()
 		{
@@ -1000,9 +1000,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				CommandDispatcher dispatcher = this.CommandDispatcher;
-				
-				return dispatcher == null ? null : dispatcher.OpletQueue;
+				return CommandDispatcher.GetOpletQueue (this);
 			}
 			set
 			{
@@ -2590,7 +2588,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
+#if false //#fix
 		public static Widget[]	FindAllCommandWidgets(string command)
 		{
 			return Widget.FindAllCommandWidgets (command, null);
@@ -2710,6 +2708,7 @@ namespace Epsitec.Common.Widgets
 			
 			return widgets;
 		}
+#endif
 		
 		public static Widget[]	FindAllFullPathWidgets(System.Text.RegularExpressions.Regex regex)
 		{
@@ -4334,12 +4333,19 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual Shortcut[] GetMnemonicShortcuts()
 		{
-			Shortcut[] shortcuts = new Shortcut[2];
-			
-			shortcuts[0] = new Shortcut (this.Mnemonic, ModifierKeys.None);
-			shortcuts[1] = new Shortcut (this.Mnemonic, ModifierKeys.Alt);
-			
-			return shortcuts;
+			if (this.Mnemonic == '\0')
+			{
+				return new Shortcut[0];
+			}
+			else
+			{
+				Shortcut[] shortcuts = new Shortcut[2];
+				
+				shortcuts[0] = new Shortcut (this.Mnemonic, ModifierKeys.None);
+				shortcuts[1] = new Shortcut (this.Mnemonic, ModifierKeys.Alt);
+				
+				return shortcuts;
+			}
 		}
 		
 		protected virtual void BuildFullPathName(System.Text.StringBuilder buffer)

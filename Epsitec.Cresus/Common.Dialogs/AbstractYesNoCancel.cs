@@ -18,6 +18,7 @@ namespace Epsitec.Common.Dialogs
 			this.command_no_template  = command_no_template;
 			this.command_dispatcher   = command_dispatcher;
 			this.private_dispatcher   = new CommandDispatcher ("Dialog", CommandDispatcherLevel.Secondary);
+			this.private_dispatcher.RegisterController (this);
 		}
 		
 		
@@ -54,8 +55,7 @@ namespace Epsitec.Common.Dialogs
 			this.window.Name              = "Dialog";
 			this.window.ClientSize        = new Drawing.Size (dx+2*8, dy+2*16+24+16);
 			this.window.PreventAutoClose  = true;
-			this.window.CommandDispatcher = this.private_dispatcher;
-			this.window.CommandDispatcher.RegisterController (this);
+			this.window.AttachCommandDispatcher (this.private_dispatcher);
 			this.window.MakeFixedSizeWindow ();
 			this.window.MakeSecondaryWindow ();
 			

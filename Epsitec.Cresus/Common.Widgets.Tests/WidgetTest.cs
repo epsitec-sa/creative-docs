@@ -1137,43 +1137,6 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (w2, find[0]);
 		}
 		
-		[Test] public void CheckFindAllCommandNames()
-		{
-			Widget[] find = Widget.FindAllCommandWidgets (Support.RegexFactory.FromSimpleJoker ("*"));
-			
-			for (int i = 0; i < find.Length; i++)
-			{
-				System.Console.Out.WriteLine ("{0} : '{1}' in {2}", i, find[i].CommandName, find[i].ToString ());
-			}
-		}
-		
-		[Test] public void CheckSaveCommandEnable()
-		{
-			Widget[]     find  = Widget.FindAllCommandWidgets ("save");
-			CommandState state = find.Length == 0 ? null : find[0].CommandState;
-			
-			Assert.IsNotNull (state);
-			
-			for (int i = 0; i < find.Length; i++)
-			{
-				find[i].Enable = true;
-				find[i].Invalidate ();
-				
-				System.Diagnostics.Debug.Assert (find[i].CommandState == state);
-			}
-		}
-		
-		[Test] public void CheckSaveCommandDisable()
-		{
-			Widget[] find = Widget.FindAllCommandWidgets ("save");
-			
-			for (int i = 0; i < find.Length; i++)
-			{
-				find[i].Enable = false;
-				find[i].Invalidate ();
-			}
-		}
-		
 		[Test] public void CheckCommandState()
 		{
 			WidgetTest.open_state.Enable = ! WidgetTest.open_state.Enable;

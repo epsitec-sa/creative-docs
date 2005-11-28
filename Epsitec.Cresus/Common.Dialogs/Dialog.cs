@@ -99,11 +99,11 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		#region ICommandDispatcherHost Members
-		CommandDispatcher ICommandDispatcherHost.CommandDispatcher
+		CommandDispatcher[] ICommandDispatcherHost.CommandDispatchers
 		{
 			get
 			{
-				return this.CommandDispatcher;
+				return CommandDispatcher.ToArray (this.CommandDispatcher);
 			}
 		}
 		#endregion
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Dialogs
 				this.window = root.Window;
 				this.mode   = InternalMode.Dialog;
 				
-				this.window.CommandDispatcher = this.CommandDispatcher;
+				this.window.AttachCommandDispatcher (this.CommandDispatcher);
 				
 				this.CreateDesignerActivatorWidget ();
 				this.AttachWindow ();

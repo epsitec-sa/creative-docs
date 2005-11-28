@@ -1248,7 +1248,7 @@ namespace Epsitec.Common.Widgets
 			
 			public void CreateCommands()
 			{
-				CommandDispatcher dispatcher = this.host.CommandDispatcher;
+				CommandDispatcher dispatcher = this.host.CommandDispatchers[0];
 				
 				dispatcher.Register (this.GetCommandName ("StartReadOnly"), new CommandEventHandler (this.CommandStartReadOnly));
 				dispatcher.Register (this.GetCommandName ("StartEdition"),  new CommandEventHandler (this.CommandStartEdition));
@@ -1427,7 +1427,7 @@ namespace Epsitec.Common.Widgets
 			
 			protected CommandState GetCommandState(string command_name)
 			{
-				return CommandState.Find (this.GetCommandName (command_name), this.host.CommandDispatcher);
+				return CommandState.Find (this.GetCommandName (command_name), this.host.CommandDispatchers[0]);
 			}
 			
 			

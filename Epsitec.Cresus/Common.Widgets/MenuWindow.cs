@@ -76,10 +76,15 @@ namespace Epsitec.Common.Widgets
 		{
 			this.parent_widget = parent_widget;
 			
-			Window owner_window = this.parent_widget == null ? null : this.parent_widget.Window;
+			Window old_owner = this.Owner;
+			Window new_owner = this.parent_widget == null ? null : this.parent_widget.Window;
 			
-			this.Owner             = owner_window;
-			this.CommandDispatcher = owner_window == null ? null : owner_window.CommandDispatcher;
+			if (old_owner == new_owner)
+			{
+				return;
+			}
+			
+			this.Owner = new_owner;
 		}
 		
 		

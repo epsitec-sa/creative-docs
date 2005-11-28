@@ -81,13 +81,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 #if false //#fix
-		public override CommandDispatcher		CommandDispatcher
+		public override CommandDispatcher[]		CommandDispatchers
 		{
 			get
 			{
 				ICommandDispatcherHost host = this.FindHost ();
 				
-				return host == null ? base.CommandDispatcher : host.CommandDispatcher;
+				return host == null ? base.CommandDispatchers : host.CommandDispatchers;
 			}
 		}
 #endif

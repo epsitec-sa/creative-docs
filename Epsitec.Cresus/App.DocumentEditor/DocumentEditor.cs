@@ -25,6 +25,13 @@ namespace Epsitec.App.DocumentEditor
 	{
 		public DocumentEditor(DocumentType type)
 		{
+			// On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
+			
+			System.Diagnostics.Debug.WriteLine("*** Created Primary Command Dispatcher ***");
+			this.commandDispatcher = new CommandDispatcher("DocumentEditor", CommandDispatcherLevel.Primary);
+			this.commandDispatcher.RegisterController(this);
+			this.AttachCommandDispatcher(this.commandDispatcher);
+			
 			this.type = type;
 			this.useArray = false;
 
@@ -206,6 +213,12 @@ namespace Epsitec.App.DocumentEditor
 			get { return this.globalSettings; }
 		}
 		
+		public CommandDispatcher CommandDispatcher
+		{
+			get { return this.commandDispatcher; }
+		}
+
+#if false //#fix
 		static DocumentEditor()
 		{
 			//	Toute modification de la propriété BackColor doit être répercutée
@@ -214,13 +227,13 @@ namespace Epsitec.App.DocumentEditor
 			
 			Epsitec.Common.Types.PropertyMetadata metadata = new Epsitec.Common.Types.PropertyMetadata ();
 			
-			metadata.GetValueOverride = new Epsitec.Common.Types.GetValueOverrideCallback (DocumentEditor.GetCommandDispatcherValue);
+			metadata.GetValueOverride = new Epsitec.Common.Types.GetValueOverrideCallback (DocumentEditor.GetCommandDispatchersValue);
 			
 			Visual.CommandDispatcherProperty.OverrideMetadata (typeof (DocumentEditor), metadata);
 		}
 		
 		
-		private static object GetCommandDispatcherValue(Epsitec.Common.Types.Object o)
+		private static object GetCommandDispatchersValue(Epsitec.Common.Types.Object o)
 		{
 			DocumentEditor that = o as DocumentEditor;
 			
@@ -234,6 +247,7 @@ namespace Epsitec.App.DocumentEditor
 			
 			return that.commandDispatcher;
 		}
+#endif
 
 
 		// Appelé lorsque l'application a fini de démarrer.

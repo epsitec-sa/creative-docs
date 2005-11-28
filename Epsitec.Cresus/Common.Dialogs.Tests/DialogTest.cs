@@ -97,7 +97,7 @@ namespace Epsitec.Common.Dialogs
 			
 //			ScriptWrapper script = new ScriptWrapper ();
 //			script.Source = DialogTest.CreateSource (null);
-//			dialog.CommandDispatcher.RegisterExtraDispatcher (script);
+//			dialog.CommandDispatcher.Register (script);
 			
 			dialog.Load ();
 			dialog.Data = record;

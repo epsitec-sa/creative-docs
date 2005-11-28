@@ -76,11 +76,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public CommandDispatcher				CommandDispatcher
+		public CommandDispatcher[]				CommandDispatchers
 		{
 			get
 			{
-				return (CommandDispatcher) this.GetValue (Visual.CommandDispatcherProperty);
+				return (CommandDispatcher[]) this.GetValue (Visual.CommandDispatchersProperty);
 			}
 		}
 		
@@ -792,38 +792,48 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (value != null);
 			
-			CommandDispatcher dispatcher = this.CommandDispatcher;
+			CommandDispatcher[] dispatchers = this.CommandDispatchers;
 			
-			if (dispatcher != null)
+			if ((dispatchers == null) ||
+				(dispatchers.Length == 0))
 			{
-				if (dispatcher != value)
-				{
-					//	TODO: gérer les CommandDispatchers chaînés
-				}
+				this.SetValueBase (Visual.CommandDispatchersProperty, new CommandDispatcher[] { value });
 			}
-            
-			this.SetValueBase (Visual.CommandDispatcherProperty, value);
+			else if ((dispatchers.Length == 1) &&
+				/**/ (dispatchers[0] == value))
+			{
+				throw new System.InvalidOperationException ("Cannot attach same CommandDispatcher twice");
+			}
+			else
+			{
+				//	TODO: terminer AttachCommandDispatcher
+				
+				throw new System.NotImplementedException ("AttachCommandDispatcher not fully implemented");
+			}
 		}
 		
 		public void DetachCommandDispatcher(CommandDispatcher value)
 		{
 			System.Diagnostics.Debug.Assert (value != null);
 			
-			CommandDispatcher dispatcher = this.CommandDispatcher;
+			CommandDispatcher[] dispatchers = this.CommandDispatchers;
 			
-			if (dispatcher != null)
+			if ((dispatchers == null) ||
+				(dispatchers.Length == 0))
 			{
-				if (dispatcher == value)
-				{
-					value = null;
-				}
-				else
-				{
-					//	TODO: gérer les CommandDispatchers chaînés
-				}
+				throw new System.InvalidOperationException ("Cannot detach unknown CommandDispatcher");
 			}
-            
-			this.SetValueBase (Visual.CommandDispatcherProperty, value);
+			else if ((dispatchers.Length == 1) &&
+				/**/ (dispatchers[0] == value))
+			{
+				this.SetValueBase (Visual.CommandDispatchersProperty, null);
+			}
+			else
+			{
+				//	TODO: terminer DetachCommandDispatcher
+				
+				throw new System.NotImplementedException ("DetachCommandDispatcher not fully implemented");
+			}
 		}
 		
 		public virtual void Invalidate()
@@ -935,6 +945,14 @@ namespace Epsitec.Common.Widgets
 			return that.ContainsKeyboardFocus;
 		}
 		
+		private static object GetCommandDispatchersValue(Object o)
+		{
+			Visual that = o as Visual;
+			CommandDispatcher[] value = (CommandDispatcher[]) that.GetValueBase (Visual.CommandDispatchersProperty);
+			return value == null ? new CommandDispatcher[0] : value.Clone ();
+		}
+		
+		
 		private static void SetEnableValue(Object o, object value)
 		{
 			Visual that = o as Visual;
@@ -984,10 +1002,10 @@ namespace Epsitec.Common.Widgets
 			that.OnCommandChanged (new PropertyChangedEventArgs (Visual.CommandProperty, old_value, new_value));
 		}
 		
-		private static void NotifyCommandDispatcherChanged(Object o, object old_value, object new_value)
+		private static void NotifyCommandDispatchersChanged(Object o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
-			that.OnCommandDispatcherChanged (new PropertyChangedEventArgs (Visual.CommandDispatcherProperty, old_value, new_value));
+			that.OnCommandDispatchersChanged (new PropertyChangedEventArgs (Visual.CommandDispatchersProperty, old_value, new_value));
 		}
 		
 		
@@ -1038,7 +1056,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnCommandDispatcherChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnCommandDispatchersChanged(Types.PropertyChangedEventArgs e)
 		{
 			Helpers.VisualTree.InvalidateCommandDispatcher (this);
 		}
@@ -1177,7 +1195,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly Property BackColorProperty			= Property.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyFlags.AffectsDisplay));
 		
-		public static readonly Property CommandDispatcherProperty	= Property.RegisterReadOnly ("CommandDispatcher", typeof (CommandDispatcher), typeof (Visual), new PropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandDispatcherChanged)));
+		public static readonly Property CommandDispatchersProperty	= Property.RegisterReadOnly ("CommandDispatchers", typeof (CommandDispatcher[]), typeof (Visual), new PropertyMetadata (null, new GetValueOverrideCallback (Visual.GetCommandDispatchersValue), new PropertyInvalidatedCallback (Visual.NotifyCommandDispatchersChanged)));
 		public static readonly Property CommandProperty				= Property.Register ("Command", typeof (string), typeof (Visual), new PropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged)));
 		
 //-		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));

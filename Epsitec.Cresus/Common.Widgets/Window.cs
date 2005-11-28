@@ -27,8 +27,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void Initialise(WindowRoot root)
 		{
-			this.CommandDispatcher = CommandDispatcher.Default;
-			this.components        = new Support.Data.ComponentCollection (this);
+			this.components = new Support.Data.ComponentCollection (this);
 			
 			this.root   = root;
 			this.window = new Platform.Window (this);
@@ -678,30 +677,11 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region ICommandDispatcherHost Members
-		public CommandDispatcher		CommandDispatcher
+		public CommandDispatcher[]				CommandDispatchers
 		{
 			get
 			{
-				return this.cmd_dispatcher;
-			}
-			set
-			{
-				if (this.cmd_dispatcher != value)
-				{
-					if (this.cmd_dispatcher != null)
-					{
-						this.cmd_dispatcher.ValidationRuleBecameDirty -= new Support.EventHandler (this.HandleValidationRuleBecameDirty);
-					}
-					
-					this.cmd_dispatcher = value;
-					
-					if (this.cmd_dispatcher != null)
-					{
-						this.cmd_dispatcher.ValidationRuleBecameDirty += new Support.EventHandler (this.HandleValidationRuleBecameDirty);
-					}
-					
-					Helpers.VisualTree.InvalidateCommandDispatcher (this);
-				}
+				return CommandDispatcher.ToArray (this.dispatcher);
 			}
 		}
 		#endregion
@@ -967,6 +947,36 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		public void AttachCommandDispatcher(CommandDispatcher value)
+		{
+			if (this.dispatcher != value)
+			{
+				System.Diagnostics.Debug.Assert (this.dispatcher == null);
+				
+				this.dispatcher = value;
+				
+				if (this.dispatcher != null)
+				{
+					this.dispatcher.ValidationRuleBecameDirty += new Support.EventHandler (this.HandleValidationRuleBecameDirty);
+				}
+				
+				Helpers.VisualTree.InvalidateCommandDispatcher (this);
+			}
+		}
+		
+		public void DetachCommandDispatcher(CommandDispatcher value)
+		{
+			if (this.dispatcher != null)
+			{
+				System.Diagnostics.Debug.Assert (this.dispatcher == value);
+				
+				this.dispatcher.ValidationRuleBecameDirty -= new Support.EventHandler (this.HandleValidationRuleBecameDirty);
+				
+				Helpers.VisualTree.InvalidateCommandDispatcher (this);
+			}
+		}
+		
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (Widget.DebugDispose)
@@ -1007,7 +1017,11 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				this.CommandDispatcher = null;
+				if (this.dispatcher != null)
+				{
+					this.DetachCommandDispatcher (this.dispatcher);
+					this.dispatcher = null;
+				}
 				
 				if (this.root != null)
 				{
@@ -1353,7 +1367,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.source      = source;
 				this.command     = command;
-				this.dispatchers = new CommandDispatcher[] { dispatcher.CommandDispatcher };
+				this.dispatchers = dispatcher.CommandDispatchers;
 			}
 			
 			public QueueItem(Widget source)
@@ -1992,7 +2006,7 @@ namespace Epsitec.Common.Widgets
 		private Timer							timer;
 		private MouseCursor						window_cursor;
 		
-		private CommandDispatcher				cmd_dispatcher;
+		private CommandDispatcher				dispatcher;
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
 		private bool							is_dispose_queued;
 		private bool							is_async_notification_queued;

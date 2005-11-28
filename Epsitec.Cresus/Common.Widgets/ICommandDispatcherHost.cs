@@ -4,11 +4,11 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// L'interface ICommandDispatcherHost permet de lier un objet à un
-	/// CommandDispatcher spécifique.
+	/// L'interface ICommandDispatcherHost permet de lier un objet à un ou
+	/// plusieurs CommandDispatcher(s) spécifique(s).
 	/// </summary>
 	public interface ICommandDispatcherHost
 	{
-		CommandDispatcher	CommandDispatcher	{ get; }
+		CommandDispatcher[] CommandDispatchers { get; }
 	}
 }

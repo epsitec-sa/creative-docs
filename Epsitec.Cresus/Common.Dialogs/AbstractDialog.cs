@@ -80,8 +80,10 @@ namespace Epsitec.Common.Dialogs
 					}
 					
 					this.Window.Hide ();
+#if false //#fix
 					this.Window.CommandDispatcher.Dispose ();
 					this.Window.CommandDispatcher = null;
+#endif
 					
 					if (this.is_modal)
 					{

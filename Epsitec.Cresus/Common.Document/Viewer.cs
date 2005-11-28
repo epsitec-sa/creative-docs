@@ -2318,7 +2318,7 @@ namespace Epsitec.Common.Document
 			this.miniBar.WindowLocation = pos;
 			this.miniBar.Root.BackColor = Color.FromARGB(0, 1,1,1);
 			this.miniBar.Owner = this.Window.Owner;
-			this.miniBar.CommandDispatcher = this.GetCommandDispatcher();
+			this.miniBar.AttachCommandDispatcher(this.GetCommandDispatcher());
 
 			frame.SetParent(this.miniBar.Root);
 			frame.Anchor = AnchorStyles.All;

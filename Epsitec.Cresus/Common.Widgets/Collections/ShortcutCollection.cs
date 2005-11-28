@@ -49,7 +49,14 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		public void Define(Shortcut[] values)
 		{
-			if (this.list.Count == values.Length)
+			if ((values == null) &&
+				(this.list.Count == 0))
+			{
+				return;
+			}
+			
+			if ((values != null) &&
+				(this.list.Count == values.Length))
 			{
 				int same = 0;
 				
@@ -68,7 +75,12 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 			
 			this.list.Clear ();
-			this.list.AddRange (values);
+			
+			if ((values != null) &&
+				(values.Length > 0))
+			{
+				this.list.AddRange (values);
+			}
 			
 			this.NotifyCollectionChanged ();
 		}

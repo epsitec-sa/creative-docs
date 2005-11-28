@@ -203,14 +203,14 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Drawing.Size (450, 230);
 			window.MakeFixedSizeWindow ();
 			
-			Assert.IsNotNull (window.CommandDispatcher);
-			Assert.IsNotNull (window.Root.CommandDispatcher);
+			Assert.IsNotNull (window.CommandDispatchers[0]);
+			Assert.IsNotNull (window.Root.CommandDispatchers[0]);
 			
-			CommandDispatcher dispatcher = window.CommandDispatcher;
+			CommandDispatcher dispatcher = window.CommandDispatchers[0];
 			
 			dispatcher.RegisterController (new MyController ());
 			
-			Assert.AreSame (dispatcher, window.Root.CommandDispatcher);
+			Assert.AreSame (dispatcher, window.Root.CommandDispatchers[0]);
 			
 			CommandState command_open = new CommandState ("Open", dispatcher, KeyCode.ModifierCtrl | KeyCode.AlphaO);
 			CommandState command_save = new CommandState ("Save", dispatcher, KeyCode.ModifierAlt | KeyCode.AlphaS);

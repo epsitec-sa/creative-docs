@@ -382,14 +382,6 @@ namespace Epsitec.Common.Script
 			
 			return false;
 		}
-
-		string									ICommandDispatcher.Name
-		{
-			get
-			{
-				return this.Name;
-			}
-		}
 		#endregion
 		
 		protected void AttachSource()

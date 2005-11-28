@@ -55,18 +55,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 		
-		public CommandDispatcher				CommandDispatcher
+		public CommandDispatcher[]				CommandDispatchers
 		{
 			get
 			{
-				return this.dispatcher;
-			}
-			set
-			{
-				if (this.dispatcher != value)
-				{
-					this.SetCommandDispatcher (value);
-				}
+				return CommandDispatcher.ToArray (this.dispatcher);
 			}
 		}
 		

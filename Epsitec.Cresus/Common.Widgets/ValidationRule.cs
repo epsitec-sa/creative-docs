@@ -85,6 +85,21 @@ namespace Epsitec.Common.Widgets
 			this.command_states.Add (command_state);
 		}
 		
+		public void DefineDispatcher(CommandDispatcher value)
+		{
+			if (this.dispatcher != value)
+			{
+				if (this.dispatcher == null)
+				{
+					this.dispatcher = value;
+					this.OnDispatcherDefined ();
+				}
+				else
+				{
+					throw new System.InvalidOperationException ("CommandDispatcher cannot be changed.");
+				}
+			}
+		}
 		
 		#region IValidator Members
 		public ValidationState						State
@@ -176,26 +191,11 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region ICommandDispatcherHost Members
-		public CommandDispatcher					CommandDispatcher
+		public CommandDispatcher[]					CommandDispatchers
 		{
 			get
 			{
-				return this.dispatcher;
-			}
-			set
-			{
-				if (this.dispatcher != value)
-				{
-					if (this.dispatcher == null)
-					{
-						this.dispatcher = value;
-						this.OnDispatcherDefined ();
-					}
-					else
-					{
-						throw new System.InvalidOperationException ("CommandDispatcher cannot be changed.");
-					}
-				}
+				return CommandDispatcher.ToArray (this.dispatcher);
 			}
 		}
 		#endregion
@@ -365,7 +365,7 @@ namespace Epsitec.Common.Widgets
 				
 				value.BecameDirty += new Support.EventHandler (this.HandleBecameDirty);
 				
-				if (this.host.CommandDispatcher != null)
+				if (this.host.CommandDispatchers != null)
 				{
 					//	Le validateur a été ajouté à une règle qui est liée à un CommandDispatcher
 					//	particulier; si le validateur implémente le support pour le CommandDispatcher,
@@ -375,12 +375,12 @@ namespace Epsitec.Common.Widgets
 					
 					if (cdh != null)
 					{
+#if false //#fix
 						if (cdh.CommandDispatcher == null)
 						{
-#if false //#fix
 							cdh.CommandDispatcher = this.host.CommandDispatcher;
-#endif
 						}
+#endif
 					}
 				}
 			}
@@ -451,8 +451,9 @@ namespace Epsitec.Common.Widgets
 			
 			public void Add(string value)
 			{
-				CommandDispatcher dispatcher = this.host.CommandDispatcher;
+				CommandDispatcher[] dispatcher = this.host.CommandDispatchers;
 				
+#if false //#fix
 				if (dispatcher != null)
 				{
 					this.Add (dispatcher.GetCommandState (value));
@@ -466,6 +467,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.names.Add (value);
 				}
+#endif
 			}
 			
 			
@@ -665,12 +667,12 @@ namespace Epsitec.Common.Widgets
 				
 				if (cdh != null)
 				{
+#if false //#fix
 					if (cdh.CommandDispatcher == null)
 					{
-#if false //#fix
 						cdh.CommandDispatcher = this.dispatcher;
-#endif
 					}
+#endif
 				}
 			}
 			

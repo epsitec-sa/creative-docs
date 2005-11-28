@@ -433,12 +433,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void RegisterExtraDispatcher(ICommandDispatcher extra)
+		public void Register(ICommandDispatcher extra)
 		{
 			this.extra_dispatchers.Add (extra);
 		}
 		
-		public void UnregisterExtraDispatcher(ICommandDispatcher extra)
+		public void Unregister(ICommandDispatcher extra)
 		{
 			this.extra_dispatchers.Remove (extra);
 		}
@@ -547,11 +547,27 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public static Support.OpletQueue GetOpletQueue(Visual visual)
+		{
+			CommandDispatcher[] dispatchers = CommandDispatcher.GetAllDispatchers (visual);
+			
+			foreach (CommandDispatcher dispatcher in dispatchers)
+			{
+				if (dispatcher.OpletQueue != null)
+				{
+					return dispatcher.OpletQueue;
+				}
+			}
+			
+			return null;
+		}
+		
+		
 		private static void GetDispatchers(System.Collections.ArrayList list, Visual visual)
 		{
 			while (visual != null)
 			{
-				CommandDispatcher.GetDispatchers (list, visual.CommandDispatcher);
+				CommandDispatcher.GetDispatchers (list, visual.CommandDispatchers);
 				visual = visual.Parent;
 			}
 		}
@@ -560,18 +576,92 @@ namespace Epsitec.Common.Widgets
 		{
 			while (window != null)
 			{
-				CommandDispatcher.GetDispatchers (list, window.CommandDispatcher);
+				if (window is MenuWindow)
+				{
+					MenuWindow menu = window as MenuWindow;
+					CommandDispatcher.GetDispatchers (list, menu.ParentWidget);
+				}
+				
+				CommandDispatcher.GetDispatchers (list, window.CommandDispatchers);
 				window = window.Owner;
+			}
+		}
+		
+		private static void GetDispatchers(System.Collections.ArrayList list, CommandDispatcher[] dispatchers)
+		{
+			if (dispatchers != null)
+			{
+				foreach (CommandDispatcher dispatcher in dispatchers)
+				{
+					CommandDispatcher.GetDispatchers (list, dispatcher);
+				}
 			}
 		}
 		
 		private static void GetDispatchers(System.Collections.ArrayList list, CommandDispatcher dispatcher)
 		{
-			while ((dispatcher != null) && (list.Contains (dispatcher) == false))
+			if (dispatcher != null)
 			{
-				list.Add (dispatcher);
+				CommandDispatcher[] dispatchers = dispatcher.CommandDispatchers;
 				
-				dispatcher = dispatcher.Master;
+				for (int i = 0; i < dispatchers.Length; i++)
+				{
+					if (list.Contains (dispatchers[i]) == false)
+					{
+						list.Add (dispatchers[i]);
+					}
+				}
+			}
+		}
+		
+		
+		public static CommandDispatcher[] ToArray(CommandDispatcher dispatcher)
+		{
+			if (dispatcher == null)
+			{
+				return new CommandDispatcher[0];
+			}
+			else
+			{
+				return new CommandDispatcher[] { dispatcher };
+			}
+		}
+		
+		public static CommandDispatcher[] Flatten(CommandDispatcher dispatcher)
+		{
+			if (dispatcher == null)
+			{
+				return new CommandDispatcher[0];
+			}
+			else
+			{
+				return dispatcher.CommandDispatchers;
+			}
+		}
+		
+		public static CommandDispatcher[] Flatten(CommandDispatcher[] dispatchers)
+		{
+			if ((dispatchers == null) ||
+				(dispatchers.Length == 0))
+			{
+				return new CommandDispatcher[0];
+			}
+			else
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				foreach (CommandDispatcher dispatcher in dispatchers)
+				{
+					foreach (CommandDispatcher candidate in dispatcher.CommandDispatchers)
+					{
+						if (list.Contains (candidate) == false)
+						{
+							list.Add (candidate);
+						}
+					}
+				}
+				
+				return (CommandDispatcher[]) list.ToArray (typeof (CommandDispatcher));
 			}
 		}
 		
@@ -720,12 +810,30 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region ICommandDispatcherHost Members
-		Epsitec.Common.Widgets.CommandDispatcher Epsitec.Common.Widgets.ICommandDispatcherHost.CommandDispatcher
+		public CommandDispatcher[]				CommandDispatchers
 		{
-			//	Le CommandDispatcher est sont propre "host".
+			//	Le CommandDispatcher est sont propre "host". Mais il fournit
+			//	aussi l'accès à ses maîtres.
 			get
 			{
-				return this;
+				if (this.master == null)
+				{
+					return new CommandDispatcher[] { this };
+				}
+				
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				list.Add (this);
+				
+				foreach (CommandDispatcher dispatcher in this.master.CommandDispatchers)
+				{
+					if (list.Contains (dispatcher) == false)
+					{
+						list.Add (dispatcher);
+					}
+				}
+				
+				return (CommandDispatcher[]) list.ToArray (typeof (CommandDispatcher));
 			}
 		}
 		#endregion
