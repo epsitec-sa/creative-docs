@@ -47,14 +47,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.parent_widget;
+				return (Widget) this.GetValue (MenuWindow.ParentWidgetProperty);
 			}
 			set
 			{
-				if (this.parent_widget != value)
-				{
-					this.DefineParent (value);
-				}
+				this.SetValue (MenuWindow.ParentWidgetProperty, value);
 			}
 		}
 		
@@ -72,19 +69,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private void DefineParent(Widget parent_widget)
+		public static Widget GetParentWidget(Object o)
 		{
-			this.parent_widget = parent_widget;
-			
-			Window old_owner = this.Owner;
-			Window new_owner = this.parent_widget == null ? null : this.parent_widget.Window;
-			
-			if (old_owner == new_owner)
-			{
-				return;
-			}
-			
-			this.Owner = new_owner;
+			return (Widget) o.GetValue (MenuWindow.ParentWidgetProperty);
+		}
+		
+		public static void SetParentWidget(Object o, Widget value)
+		{
+			o.SetValue (MenuWindow.ParentWidgetProperty, value);
 		}
 		
 		
@@ -126,7 +118,25 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private Widget							parent_widget;
+		private static void SetParentWidgetValue(Object o, object value)
+		{
+			MenuWindow that = o as MenuWindow;
+			Widget   parent = value as Widget;
+			
+			that.SetValueBase (MenuWindow.ParentWidgetProperty, value);
+			
+			Window old_owner = that.Owner;
+			Window new_owner = parent == null ? null : parent.Window;
+			
+			if (old_owner != new_owner)
+			{
+				that.Owner = new_owner;
+			}
+		}
+		
+		
+		public static readonly Property ParentWidgetProperty	= Property.Register ("ParentWidget", typeof (Widget), typeof (MenuWindow), new PropertyMetadata (null, new SetValueOverrideCallback (MenuWindow.SetParentWidgetValue)));
+		
 		private Behaviors.MenuBehavior			behavior;
 	}
 }

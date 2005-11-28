@@ -303,7 +303,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (visual != null)
 			{
-				CommandState command = CommandDispatcher.GetCommandState (visual);
+				CommandState command = Helpers.VisualTree.GetCommandState (visual);
 				
 				if ((this.clear_count > 0) &&
 					(this.records[index].Command == null))

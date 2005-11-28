@@ -242,7 +242,7 @@ namespace Epsitec.Common.Widgets
 					Widget widget = focused == null ? this : focused;
 					Window window = this.window;
 					
-					CommandState command = CommandDispatcher.GetCommandState (shortcut, widget);
+					CommandState command = Helpers.VisualTree.GetCommandState (shortcut, widget);
 					
 					if (command != null)
 					{

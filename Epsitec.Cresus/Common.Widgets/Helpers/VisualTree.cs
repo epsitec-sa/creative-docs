@@ -303,6 +303,157 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
+		public static Support.OpletQueue GetOpletQueue(Visual visual)
+		{
+			CommandDispatcher[] dispatchers = VisualTree.GetAllDispatchers (visual);
+			
+			foreach (CommandDispatcher dispatcher in dispatchers)
+			{
+				if (dispatcher.OpletQueue != null)
+				{
+					return dispatcher.OpletQueue;
+				}
+			}
+			
+			return null;
+		}
+		
+		
+		public static CommandDispatcher[] GetDispatchers(Visual visual)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			VisualTree.GetDispatchers (list, visual);
+			VisualTree.GetDispatchers (list, Helpers.VisualTree.GetWindow (visual));
+			
+			return (CommandDispatcher[]) list.ToArray (typeof (CommandDispatcher));
+		}
+		
+		public static CommandDispatcher[] GetAllDispatchers(Visual visual)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			VisualTree.GetDispatchers (list, visual);
+			VisualTree.GetDispatchers (list, Helpers.VisualTree.GetWindow (visual));
+			VisualTree.GetDispatchers (list, CommandDispatcher.GetFocusedPrimaryDispatcher ());
+			
+			return (CommandDispatcher[]) list.ToArray (typeof (CommandDispatcher));
+		}
+		
+		public static CommandState GetCommandState(Visual visual)
+		{
+			if (visual == null)
+			{
+				return null;
+			}
+			
+			string name = visual.CommandName;
+			
+			if (name == null)
+			{
+				return null;
+			}
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			VisualTree.GetDispatchers (list, visual);
+			VisualTree.GetDispatchers (list, Helpers.VisualTree.GetWindow (visual));
+			VisualTree.GetDispatchers (list, CommandDispatcher.GetFocusedPrimaryDispatcher ());
+			
+			foreach (CommandDispatcher dispatcher in list)
+			{
+				CommandState command = dispatcher.GetCommandState (name);
+				
+				if (command != null)
+				{
+					return command;
+				}
+			}
+			
+			return null;
+		}
+		
+		public static CommandState GetCommandState(Shortcut shortcut, Visual context)
+		{
+			if (context == null)
+			{
+				return null;
+			}
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			VisualTree.GetDispatchers (list, context);
+			VisualTree.GetDispatchers (list, Helpers.VisualTree.GetWindow (context));
+			VisualTree.GetDispatchers (list, CommandDispatcher.GetFocusedPrimaryDispatcher ());
+			
+			foreach (CommandDispatcher dispatcher in list)
+			{
+				CommandState command = dispatcher.GetCommandState (shortcut);
+				
+				if (command != null)
+				{
+					return command;
+				}
+			}
+			
+			return null;
+		}
+		
+		
+		private static void GetDispatchers(System.Collections.ArrayList list, Visual visual)
+		{
+			while (visual != null)
+			{
+				VisualTree.GetDispatchers (list, visual.CommandDispatchers);
+				visual = visual.Parent;
+			}
+		}
+		
+		private static void GetDispatchers(System.Collections.ArrayList list, Window window)
+		{
+			while (window != null)
+			{
+				Widget parent = MenuWindow.GetParentWidget (window);
+				
+				if (parent != null)
+				{
+					VisualTree.GetDispatchers (list, parent);
+				}
+				
+				VisualTree.GetDispatchers (list, window.CommandDispatchers);
+				window = window.Owner;
+			}
+		}
+		
+		private static void GetDispatchers(System.Collections.ArrayList list, CommandDispatcher[] dispatchers)
+		{
+			if (dispatchers != null)
+			{
+				foreach (CommandDispatcher dispatcher in dispatchers)
+				{
+					VisualTree.GetDispatchers (list, dispatcher);
+				}
+			}
+		}
+		
+		private static void GetDispatchers(System.Collections.ArrayList list, CommandDispatcher dispatcher)
+		{
+			if (dispatcher != null)
+			{
+				CommandDispatcher[] dispatchers = dispatcher.CommandDispatchers;
+				
+				for (int i = 0; i < dispatchers.Length; i++)
+				{
+					if (list.Contains (dispatchers[i]) == false)
+					{
+						list.Add (dispatchers[i]);
+					}
+				}
+			}
+		}
+		
+		
+		
 		public static bool IsAncestor(Visual visual, Visual ancestor)
 		{
 			for (;;)

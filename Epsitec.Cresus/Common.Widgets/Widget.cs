@@ -1000,7 +1000,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return CommandDispatcher.GetOpletQueue (this);
+				return Helpers.VisualTree.GetOpletQueue (this);
 			}
 			set
 			{
