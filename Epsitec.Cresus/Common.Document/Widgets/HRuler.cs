@@ -679,7 +679,10 @@ namespace Epsitec.Common.Document.Widgets
 					leftFirst = this.SnapGrid(leftFirst);
 					leftFirst = System.Math.Max(leftFirst, 0);
 
+					this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
 					this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst = leftFirst;
+					this.document.ParagraphLayoutWrapper.Defined.Units           = Common.Text.Properties.SizeUnits.Points;
+					this.document.ParagraphLayoutWrapper.ResumeSynchronisations();
 				}
 
 				if ( handle == "LeftBody" )
@@ -689,7 +692,10 @@ namespace Epsitec.Common.Document.Widgets
 					leftBody = this.SnapGrid(leftBody);
 					leftBody = System.Math.Max(leftBody, 0);
 
+					this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
 					this.document.ParagraphLayoutWrapper.Defined.LeftMarginBody = leftBody;
+					this.document.ParagraphLayoutWrapper.Defined.Units          = Common.Text.Properties.SizeUnits.Points;
+					this.document.ParagraphLayoutWrapper.ResumeSynchronisations();
 				}
 
 				if ( handle == "FirstBody" )
@@ -709,6 +715,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
 					this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst = leftFirst;
 					this.document.ParagraphLayoutWrapper.Defined.LeftMarginBody  = leftBody;
+					this.document.ParagraphLayoutWrapper.Defined.Units           = Common.Text.Properties.SizeUnits.Points;
 					this.document.ParagraphLayoutWrapper.ResumeSynchronisations();
 				}
 
@@ -722,6 +729,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
 					this.document.ParagraphLayoutWrapper.Defined.RightMarginFirst = right;
 					this.document.ParagraphLayoutWrapper.Defined.RightMarginBody  = right;
+					this.document.ParagraphLayoutWrapper.Defined.Units            = Common.Text.Properties.SizeUnits.Points;
 					this.document.ParagraphLayoutWrapper.ResumeSynchronisations();
 				}
 			}
