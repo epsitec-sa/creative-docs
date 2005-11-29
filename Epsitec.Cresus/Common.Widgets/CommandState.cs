@@ -57,23 +57,27 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.widget_state & WidgetState.Enabled) != 0;
+				return this.enable;
 			}
 			set
 			{
-				if (this.Enable != value)
+				if (this.enable != value)
 				{
-					if (value)
-					{
-						this.widget_state |= WidgetState.Enabled;
-					}
-					else
-					{
-						this.widget_state &= ~ WidgetState.Enabled;
-					}
-					
+					this.enable = value;
 					this.Synchronize ();
 				}
+			}
+		}
+		
+		public bool							Statefull
+		{
+			get
+			{
+				return this.statefull;
+			}
+			set
+			{
+				this.statefull = value;
 			}
 		}
 		
@@ -106,6 +110,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Shortcut						PreferredShortcut
+		{
+			get
+			{
+				if (this.HasShortcuts)
+				{
+					return this.Shortcuts[0];
+				}
+				
+				return null;
+			}
+		}
+		
+		
 		public bool							HasShortcuts
 		{
 			get
@@ -118,19 +136,6 @@ namespace Epsitec.Common.Widgets
 				{
 					return false;
 				}
-			}
-		}
-		
-		public Shortcut						PreferredShortcut
-		{
-			get
-			{
-				if (this.HasShortcuts)
-				{
-					return this.Shortcuts[0];
-				}
-				
-				return null;
 			}
 		}
 		
@@ -190,8 +195,9 @@ namespace Epsitec.Common.Widgets
 
 		
 		
-		private WidgetState						widget_state = WidgetState.Enabled;
 		private ActiveState						active_state = ActiveState.No;
+		private bool							enable       = true;
+		private bool							statefull;
 		
 		private Collections.ShortcutCollection	shortcuts;
 		private string							name;
