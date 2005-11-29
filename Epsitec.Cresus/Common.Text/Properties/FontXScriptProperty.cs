@@ -13,11 +13,10 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public FontXScriptProperty(double scale, double offset, string feature)
+		public FontXScriptProperty(double scale, double offset)
 		{
 			this.scale   = scale;
 			this.offset  = offset;
-			this.feature = feature;
 		}
 		
 		
@@ -62,14 +61,6 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public string							Feature
-		{
-			get
-			{
-				return this.feature;
-			}
-		}
-		
 		
 		public override Property EmptyClone()
 		{
@@ -80,23 +71,20 @@ namespace Epsitec.Common.Text.Properties
 		{
 			SerializerSupport.Join (buffer,
 				/**/				SerializerSupport.SerializeDouble (this.scale),
-				/**/				SerializerSupport.SerializeDouble (this.offset),
-				/**/				SerializerSupport.SerializeString (this.feature));
+				/**/				SerializerSupport.SerializeDouble (this.offset));
 		}
 		
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 3);
+			Debug.Assert.IsTrue (args.Length == 2);
 			
-			double scale   = SerializerSupport.DeserializeDouble (args[0]);
-			double offset  = SerializerSupport.DeserializeDouble (args[1]);
-			string feature = SerializerSupport.DeserializeString (args[2]);
+			double scale  = SerializerSupport.DeserializeDouble (args[0]);
+			double offset = SerializerSupport.DeserializeDouble (args[1]);
 			
-			this.scale   = scale;
-			this.offset  = offset;
-			this.feature = feature;
+			this.scale  = scale;
+			this.offset = offset;
 		}
 		
 		public override Property GetCombination(Property property)
@@ -117,7 +105,6 @@ namespace Epsitec.Common.Text.Properties
 		{
 			checksum.UpdateValue (this.scale);
 			checksum.UpdateValue (this.offset);
-			checksum.UpdateValue (this.feature);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -129,13 +116,11 @@ namespace Epsitec.Common.Text.Properties
 		private static bool CompareEqualContents(FontXScriptProperty a, FontXScriptProperty b)
 		{
 			return a.scale == b.scale
-				&& a.offset == b.offset
-				&& a.feature == b.feature;
+				&& a.offset == b.offset;
 		}
 		
 		
 		private double							scale;
 		private double							offset;
-		private string							feature;
 	}
 }

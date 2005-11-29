@@ -18,6 +18,19 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public static OverlineProperty			DisableOverride
+		{
+			get
+			{
+				OverlineProperty property = new OverlineProperty ();
+				
+				property.Disable ();
+				
+				return property;
+			}
+		}
+		
+		
 		public override WellKnownType			WellKnownType
 		{
 			get

@@ -150,7 +150,6 @@ namespace Epsitec.Common.Text.Wrappers
 
 		private void SynchronizeXline()
 		{
-			int defines = 0;
 			int changes = 0;
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
@@ -162,15 +161,52 @@ namespace Epsitec.Common.Text.Wrappers
 				if (this.defined_state.IsUnderlineDefined)
 				{
 					list.Add (this.defined_state.Underline.ToProperty ());
-					defines++;
 				}
 			}
 			
-			//	TODO: compléter...
+			if (this.defined_state.IsValueFlagged (State.StrikeoutProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsStrikeoutDefined)
+				{
+					list.Add (this.defined_state.Strikeout.ToProperty ());
+				}
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.OverlineProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsOverlineDefined)
+				{
+					list.Add (this.defined_state.Overline.ToProperty ());
+				}
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.TextBoxProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsTextBoxDefined)
+				{
+					list.Add (this.defined_state.TextBox.ToProperty ());
+				}
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.TextMarkerProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsTextMarkerDefined)
+				{
+					list.Add (this.defined_state.TextMarker.ToProperty ());
+				}
+			}
 			
 			if (changes > 0)
 			{
-				if (defines > 0)
+				if (list.Count > 0)
 				{
 					Property[] properties = (Property[]) list.ToArray (typeof (Property));
 					this.DefineMetaProperty (FontWrapper.Xline, 0, properties);
@@ -324,18 +360,27 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		private void UpdateXline(State state, bool active)
 		{
-			Properties.UnderlineProperty p_underline;
-			Properties.StrikeoutProperty p_strikeout;
+			Properties.UnderlineProperty  p_underline;
+			Properties.StrikeoutProperty  p_strikeout;
+			Properties.OverlineProperty   p_overline;
+			Properties.TextBoxProperty    p_textbox;
+			Properties.TextMarkerProperty p_textmarker;
 			
 			if (active)
 			{
-				p_underline = this.ReadAccumulatedProperty (Properties.WellKnownType.Underline) as Properties.UnderlineProperty;
-				p_strikeout = this.ReadAccumulatedProperty (Properties.WellKnownType.Strikeout) as Properties.StrikeoutProperty;
+				p_underline  = this.ReadAccumulatedProperty (Properties.WellKnownType.Underline)  as Properties.UnderlineProperty;
+				p_strikeout  = this.ReadAccumulatedProperty (Properties.WellKnownType.Strikeout)  as Properties.StrikeoutProperty;
+				p_overline   = this.ReadAccumulatedProperty (Properties.WellKnownType.Overline)   as Properties.OverlineProperty;
+				p_textbox    = this.ReadAccumulatedProperty (Properties.WellKnownType.TextBox)    as Properties.TextBoxProperty;
+				p_textmarker = this.ReadAccumulatedProperty (Properties.WellKnownType.TextMarker) as Properties.TextMarkerProperty;
 			}
 			else
 			{
-				p_underline = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.Underline) as Properties.UnderlineProperty;
-				p_strikeout = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.Strikeout) as Properties.StrikeoutProperty;
+				p_underline  = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.Underline)  as Properties.UnderlineProperty;
+				p_strikeout  = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.Strikeout)  as Properties.StrikeoutProperty;
+				p_overline   = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.Overline)   as Properties.OverlineProperty;
+				p_textbox    = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.TextBox)    as Properties.TextBoxProperty;
+				p_textmarker = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.TextMarker) as Properties.TextMarkerProperty;
 			}
 			
 			if (p_underline == null)
@@ -356,7 +401,32 @@ namespace Epsitec.Common.Text.Wrappers
 				state.Strikeout.DefineUsingProperty (p_strikeout);
 			}
 			
-			//	TODO: compléter...
+			if (p_overline == null)
+			{
+				state.DefineValue (State.OverlineProperty);
+			}
+			else
+			{
+				state.Overline.DefineUsingProperty (p_overline);
+			}
+			
+			if (p_textbox == null)
+			{
+				state.DefineValue (State.TextBoxProperty);
+			}
+			else
+			{
+				state.TextBox.DefineUsingProperty (p_textbox);
+			}
+			
+			if (p_textmarker == null)
+			{
+				state.DefineValue (State.TextMarkerProperty);
+			}
+			else
+			{
+				state.TextMarker.DefineUsingProperty (p_textmarker);
+			}
 		}
 		
 		
@@ -829,10 +899,10 @@ namespace Epsitec.Common.Text.Wrappers
 					switch (this.property.Name)
 					{
 						case "Underline":	return Properties.UnderlineProperty.DisableOverride;
-//-						case "Strikeout":	return Properties.StrikeoutProperty.DisableOverride;
-//-						case "Overline":	return Properties.OverlineProperty.DisableOverride;
-//-						case "TextBox":		return Properties.TextBoxProperty.DisableOverride;
-//-						case "TextMarker":	return Properties.TextMarkerProperty.DisableOverride;
+						case "Strikeout":	return Properties.StrikeoutProperty.DisableOverride;
+						case "Overline":	return Properties.OverlineProperty.DisableOverride;
+						case "TextBox":		return Properties.TextBoxProperty.DisableOverride;
+						case "TextMarker":	return Properties.TextMarkerProperty.DisableOverride;
 					}
 				}
 				else

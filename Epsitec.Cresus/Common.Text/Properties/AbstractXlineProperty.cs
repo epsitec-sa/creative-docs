@@ -263,6 +263,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
+			checksum.UpdateValue (this.is_disabled);
 			checksum.UpdateValue ((int) this.position_units);
 			checksum.UpdateValue ((int) this.thickness_units);
 			checksum.UpdateValue (this.position);

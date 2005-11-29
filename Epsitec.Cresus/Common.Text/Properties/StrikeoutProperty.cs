@@ -18,6 +18,19 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public static StrikeoutProperty			DisableOverride
+		{
+			get
+			{
+				StrikeoutProperty property = new StrikeoutProperty ();
+				
+				property.Disable ();
+				
+				return property;
+			}
+		}
+		
+		
 		public override WellKnownType			WellKnownType
 		{
 			get

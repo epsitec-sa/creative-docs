@@ -18,6 +18,19 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public static TextBoxProperty			DisableOverride
+		{
+			get
+			{
+				TextBoxProperty property = new TextBoxProperty ();
+				
+				property.Disable ();
+				
+				return property;
+			}
+		}
+		
+		
 		public override WellKnownType			WellKnownType
 		{
 			get

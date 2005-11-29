@@ -1268,8 +1268,8 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));
 			this.textContext.StyleList.NewMetaProperty("Underlined", "Underlined", 0, properties);
 			
-			this.textContext.StyleList.NewMetaProperty("Subscript", "SuperScript", new Text.Properties.FontXScriptProperty (0.6, -0.15, "subs"));
-			this.textContext.StyleList.NewMetaProperty("Superscript", "SuperScript", new Text.Properties.FontXScriptProperty (0.6, 0.25, "sups"));
+			this.textContext.StyleList.NewMetaProperty("Subscript", "SuperScript", new Text.Properties.FontXScriptProperty (0.6, -0.15));
+			this.textContext.StyleList.NewMetaProperty("Superscript", "SuperScript", new Text.Properties.FontXScriptProperty (0.6, 0.25));
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));

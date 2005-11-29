@@ -18,6 +18,19 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public static TextMarkerProperty		DisableOverride
+		{
+			get
+			{
+				TextMarkerProperty property = new TextMarkerProperty ();
+				
+				property.Disable ();
+				
+				return property;
+			}
+		}
+		
+		
 		public override WellKnownType			WellKnownType
 		{
 			get

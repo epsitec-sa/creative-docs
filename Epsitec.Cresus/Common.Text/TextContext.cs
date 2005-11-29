@@ -403,19 +403,6 @@ namespace Epsitec.Common.Text
 		
 		public void GetFontSize(Properties.FontProperty font_property, Properties.FontSizeProperty font_size_property, Properties.FontXScriptProperty font_xscript_property, out double font_size, out double font_scale)
 		{
-			if ((font_xscript_property != null) &&
-				(font_xscript_property.Feature != null))
-			{
-				OpenType.Font font;
-				
-				this.GetFont (font_property, out font);
-				
-				if (font.SupportsFeature (font_xscript_property.Feature))
-				{
-					font_xscript_property = null;
-				}
-			}
-			
 			font_size  = font_size_property.SizeInPoints;
 			font_scale = font_xscript_property == null ? 1.0 : font_xscript_property.Scale;
 		}
@@ -482,18 +469,6 @@ namespace Epsitec.Common.Text
 			
 			if (font_xscript_property != null)
 			{
-				if (font_xscript_property.Feature != null)
-				{
-					OpenType.Font font;
-					
-					this.GetFont (font_property, out font);
-					
-					if (font.SupportsFeature (font_xscript_property.Feature))
-					{
-						return;
-					}
-				}
-				
 				offset += font_xscript_property.Offset * font_pt_size;
 			}
 		}
@@ -529,18 +504,7 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				if ((font_xscript_p != null) &&
-					(font_xscript_p.Feature != null))
-				{
-					string[] features = new string[font_p.Features.Length + 1];
-					font_p.Features.CopyTo (features, 0);
-					features[font_p.Features.Length] = font_xscript_p.Feature;
-					font.SelectFeatures (features);
-				}
-				else
-				{
-					font.SelectFeatures (font_p.Features);
-				}
+				font.SelectFeatures (font_p.Features);
 			}
 			
 			this.get_font_last_style_version = current_style_version;
@@ -608,16 +572,7 @@ namespace Epsitec.Common.Text
 			
 			if (font_xscript_p != null)
 			{
-				if ((font_xscript_p.Feature != null) &&
-					(this.get_font_last_font.SupportsFeature (font_xscript_p.Feature)))
-				{
-					//	Ne modifie pas l'offset, puisque la fonte supporte le "feature"
-					//	superscript/subscript.
-				}
-				else
-				{
-					baseline_offset += font_xscript_p.Offset * this.get_font_last_font_size;
-				}
+				baseline_offset += font_xscript_p.Offset * this.get_font_last_font_size;
 			}
 			
 			this.get_font_offset_last_style_version   = current_style_version;
