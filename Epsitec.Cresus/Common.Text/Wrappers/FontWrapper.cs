@@ -42,6 +42,7 @@ namespace Epsitec.Common.Text.Wrappers
 				this.SynchronizeXline ();
 				this.SynchronizeXscript ();
 				this.SynchronizeColor ();
+				this.SynchronizeLanguage ();
 				
 				this.defined_state.ClearValueFlags ();
 			}
@@ -262,6 +263,26 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void SynchronizeLanguage()
+		{
+			if ((this.defined_state.IsValueFlagged (State.LanguageLocaleProperty)) ||
+				(this.defined_state.IsValueDefined (State.LanguageHyphenationProperty)))
+			{
+				if ((this.defined_state.IsLanguageLocaleDefined) ||
+					(this.defined_state.IsLanguageHyphenationDefined))
+				{
+					string locale = this.defined_state.LanguageLocale;
+					double hyphen = this.defined_state.LanguageHyphenation;
+					
+					this.DefineMetaProperty (FontWrapper.Language, 0, new Properties.LanguageProperty (locale, hyphen));
+				}
+				else
+				{
+					this.ClearMetaProperty (FontWrapper.Language);
+				}
+			}
+		}
+		
 		
 		internal override void UpdateState(bool active)
 		{
@@ -274,6 +295,7 @@ namespace Epsitec.Common.Text.Wrappers
 			this.UpdateXline (state, active);
 			this.UpdateXscript (state, active);
 			this.UpdateColor (state, active);
+			this.UpdateLanguage (state, active);
 			
 			state.NotifyIfDirty ();
 		}
@@ -531,6 +553,31 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void UpdateLanguage(State state, bool active)
+		{
+			Properties.LanguageProperty p_language;
+			
+			if (active)
+			{
+				p_language = this.ReadAccumulatedProperty (Properties.WellKnownType.Language) as Properties.LanguageProperty;
+			}
+			else
+			{
+				p_language = this.ReadMetaProperty (FontWrapper.Language, Properties.WellKnownType.Language) as Properties.LanguageProperty;
+			}
+			
+			if (p_language == null)
+			{
+				state.DefineValue (State.LanguageLocaleProperty);
+				state.DefineValue (State.LanguageHyphenationProperty);
+			}
+			else
+			{
+				state.DefineValue (State.LanguageLocaleProperty, p_language.Locale);
+				state.DefineValue (State.LanguageHyphenationProperty, p_language.Hyphenation);
+			}
+		}
+		
 		
 		public class State : AbstractState
 		{
@@ -634,6 +681,31 @@ namespace Epsitec.Common.Text.Wrappers
 					this.SetValue (State.ColorProperty, value);
 				}
 			}
+			
+			public string							LanguageLocale
+			{
+				get
+				{
+					return (string) this.GetValue (State.LanguageLocaleProperty);
+				}
+				set
+				{
+					this.SetValue (State.LanguageLocaleProperty, value);
+				}
+			}
+			
+			public double							LanguageHyphenation
+			{
+				get
+				{
+					return (double) this.GetValue (State.LanguageHyphenationProperty);
+				}
+				set
+				{
+					this.SetValue (State.LanguageHyphenationProperty, value);
+				}
+			}
+			
 			
 			public XscriptDefinition				Xscript
 			{
@@ -760,6 +832,22 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public bool								IsLanguageLocaleDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.LanguageLocaleProperty);
+				}
+			}
+			
+			public bool								IsLanguageHyphenationDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.LanguageHyphenationProperty);
+				}
+			}
+			
 			public bool								IsXscriptDefined
 			{
 				get
@@ -849,6 +937,16 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.ColorProperty);
 			}
 			
+			public void ClearLanguageLocale()
+			{
+				this.ClearValue (State.LanguageLocaleProperty);
+			}
+			
+			public void ClearLanguageHyphenation()
+			{
+				this.ClearValue (State.LanguageHyphenationProperty);
+			}
+			
 			public void ClearXscript()
 			{
 				this.ClearValue (State.XscriptProperty);
@@ -889,6 +987,8 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	InvertBoldProperty = new StateProperty (typeof (State), "InvertBold", false);
 			public static readonly StateProperty	InvertItalicProperty = new StateProperty (typeof (State), "InvertItalic", false);
 			public static readonly StateProperty	ColorProperty = new StateProperty (typeof (State), "Color", null);
+			public static readonly StateProperty	LanguageLocaleProperty = new StateProperty (typeof (State), "LanguageLocale", null);
+			public static readonly StateProperty	LanguageHyphenationProperty = new StateProperty (typeof (State), "LanguageHyphenation", 0);
 			public static readonly StateProperty	XscriptProperty = new StateProperty (typeof (State), "Xscript", null);
 			public static readonly StateProperty	UnderlineProperty = new StateProperty (typeof (State), "Underline", null);
 			public static readonly StateProperty	StrikeoutProperty = new StateProperty (typeof (State), "Strikeout", null);
@@ -1300,6 +1400,7 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		private const string						Font  = "Font";
 		private const string						Color = "FontColor";
+		private const string						Language = "FontLang";
 		private const string						Xline = "FontXline";
 		private const string						Xscript = "FontXscript";
 		private const string						InvertBold = "Font-X-Bold";
