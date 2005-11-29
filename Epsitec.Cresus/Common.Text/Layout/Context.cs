@@ -858,6 +858,15 @@ restart:
 			
 			this.text_context.GetXlines (this.text[offset], out current);
 			
+			//	Supprime les définitions qui donnent lieu à des soulignements
+			//	invisibles :
+			
+			if ((current != null) &&
+				(current.Length > 0))
+			{
+				Properties.AbstractXlineProperty.RemoveInvisible (ref current);
+			}
+			
 			if (! Property.CompareEqualContents (previous, current))
 			{
 				//	Enregistre le changement d'état de soulignement.

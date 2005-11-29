@@ -40,10 +40,18 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return CombinationMode.Accumulate;
+				return CombinationMode.Combine;
 			}
 		}
 		
+		
+		public bool								IsVisible
+		{
+			get
+			{
+				return (this.thickness != 0) && (double.IsNaN (this.thickness) == false);
+			}
+		}
 		
 		public SizeUnits						PositionUnits
 		{
@@ -103,6 +111,69 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public double GetPositionInPoints(double font_size_in_points)
+		{
+			if (UnitsTools.IsAbsoluteSize (this.position_units))
+			{
+				return UnitsTools.ConvertToPoints (this.position, this.position_units);
+			}
+			if (UnitsTools.IsScale (this.position_units))
+			{
+				return UnitsTools.ConvertToScale (this.position, this.position_units) * font_size_in_points;
+			}
+			
+			throw new System.InvalidOperationException ();
+		}
+		
+		public double GetThiknessInPoints(double font_size_in_points)
+		{
+			if (UnitsTools.IsAbsoluteSize (this.thickness_units))
+			{
+				return UnitsTools.ConvertToPoints (this.thickness, this.thickness_units);
+			}
+			if (UnitsTools.IsScale (this.thickness_units))
+			{
+				return UnitsTools.ConvertToScale (this.thickness, this.thickness_units) * font_size_in_points;
+			}
+			
+			throw new System.InvalidOperationException ();
+		}
+		
+		
+		public static void RemoveInvisible(ref AbstractXlineProperty[] properties)
+		{
+			int count = 0;
+			
+			for (int i = 0; i < properties.Length; i++)
+			{
+				if (properties[i].IsVisible)
+				{
+					count++;
+				}
+			}
+			
+			if (count < properties.Length)
+			{
+				//	Il y a des définitions de soulignements invisibles. Il faut
+				//	recopier le tableau en les supprimant :
+				
+				AbstractXlineProperty[] copy  = new AbstractXlineProperty[count];
+				int                     index = 0;
+				
+				for (int i = 0; (i < properties.Length) && (index < copy.Length); i++)
+				{
+					if (properties[i].IsVisible)
+					{
+						copy[index] = properties[i];
+						index++;
+					}
+				}
+				
+				properties = copy;
+			}
+		}
+		
+		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
@@ -139,7 +210,9 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override Property GetCombination(Property property)
 		{
-			throw new System.NotImplementedException ();
+			//	C'est toujours la dernière propriété qui l'emporte.
+			
+			return property as AbstractXlineProperty;
 		}
 
 		

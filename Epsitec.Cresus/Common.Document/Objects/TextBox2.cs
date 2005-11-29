@@ -1764,6 +1764,9 @@ namespace Epsitec.Common.Document.Objects
 						this.port.PaintOutline(path);
 					}
 					
+					// TODO: calculer correctement la position du souligné en fonction des réglages
+					// TODO: déterminer correctement ce qu'il faut peindre
+					
 					x1 = records[i].X;
 					y1 = records[i].Y + records[i].Descender * 0.8;
 					

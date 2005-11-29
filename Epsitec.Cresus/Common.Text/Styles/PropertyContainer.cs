@@ -149,10 +149,17 @@ namespace Epsitec.Common.Text.Styles
 			//	valeur WellKnownType plus faible, ce qui les place en tête du
 			//	tableau et accélère la recherche.
 			
-			this.properties = new Property[properties.Count];
-			properties.CopyTo (this.properties, 0);
-			
-			System.Array.Sort (this.properties, new PropertyComparer ());
+			if (properties == null)
+			{
+				this.properties = new Property[0];
+			}
+			else
+			{
+				this.properties = new Property[properties.Count];
+				properties.CopyTo (this.properties, 0);
+				
+				System.Array.Sort (this.properties, new PropertyComparer ());
+			}
 			
 			this.Invalidate ();
 		}

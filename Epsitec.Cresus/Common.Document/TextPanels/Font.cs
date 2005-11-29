@@ -740,7 +740,19 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.document.FontWrapper.SuspendSynchronisations();
 			
-			if ( this.document.FontWrapper.Active.IsUnderlineDefined )
+			// Cycle entre divers états:
+			//
+			// (1) Soulignement hérité du style actif
+			// (2) Pas de soulignement (forcé par un souligné d'épaisseur nulle)
+			// (3) Soulignement défini localement
+			//
+			// ou si aucun soulignement n'est défini dans le style actif:
+			//
+			// (1) Pas de soulignement
+			// (2) Soulignement défini localement
+			
+			if ( this.document.FontWrapper.Active.IsUnderlineDefined &&
+				 this.document.FontWrapper.Active.Underline.Thickness != 0.0 )
 			{
 				if ( this.document.FontWrapper.Defined.IsUnderlineDefined )
 				{
@@ -748,7 +760,8 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 				else
 				{
-					// TODO: trouver un moyen de désactiver le soulignement du style actif
+					this.document.FontWrapper.Defined.Underline.Thickness = 0.0;
+					this.document.FontWrapper.Defined.Underline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
 				}
 			}
 			else
