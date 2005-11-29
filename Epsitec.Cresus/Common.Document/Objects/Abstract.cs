@@ -538,7 +538,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.selectedSegments != null )
 			{
-				this.selectedSegments = null;
+				this.selectedSegments.Clear();
 				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			}
 		}
@@ -561,6 +561,7 @@ namespace Epsitec.Common.Document.Objects
 				this.selectedSegments.Clear();
 			}
 
+#if false
 			int i = SelectedSegment.Search(this.selectedSegments, rank);
 			if ( i == -1 )
 			{
@@ -575,11 +576,11 @@ namespace Epsitec.Common.Document.Objects
 					this.selectedSegments.RemoveAt(i);
 				}
 			}
-
-			if ( this.selectedSegments.Count == 0 )
-			{
-				this.selectedSegments = null;
-			}
+#else
+			SelectedSegment ss = new SelectedSegment(this.document, this, rank, pos);
+			this.selectedSegments.Add(ss);
+			pos = ss.Position;
+#endif
 
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
@@ -2323,6 +2324,12 @@ namespace Epsitec.Common.Document.Objects
 			{
 				actives.Add(state);
 			}
+		}
+
+		// Exécute une commande ShaperHandle*.
+		public virtual bool ShaperHandleCommand(string cmd)
+		{
+			return false;
 		}
 
 		// Donne le contenu du menu contextuel.

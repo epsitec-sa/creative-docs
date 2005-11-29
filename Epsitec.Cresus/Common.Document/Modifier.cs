@@ -160,6 +160,8 @@ namespace Epsitec.Common.Document
 
 					else if ( this.IsTool && this.tool != "Edit" )
 					{
+						this.SelectedSegmentClear();
+
 						if ( editObject != null )
 						{
 							editObject.Select(true);
@@ -1210,6 +1212,17 @@ namespace Epsitec.Common.Document
 				if ( obj.IsSelected && obj.IsEdited )  return obj;
 			}
 			return null;
+		}
+
+		// Supprime tous les segments sélectionnés des objets sélectionnés.
+		protected void SelectedSegmentClear()
+		{
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+			{
+				obj.SelectedSegmentClear();
+			}
 		}
 
 		// Désélectionne tous les objets.
@@ -3484,6 +3497,12 @@ namespace Epsitec.Common.Document
 		// Effectue une commande du modeleur sur une poignée.
 		public void ShaperHandleCommand(string cmd)
 		{
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
+			{
+				obj.ShaperHandleCommand(cmd);
+			}
 		}
 		#endregion
 

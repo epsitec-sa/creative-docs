@@ -131,6 +131,51 @@ namespace Epsitec.Common.Document.Objects
 			return -1;
 		}
 
+		// Retourne un index trié de tous les segments sélectionnés pour que ceux ayant
+		// un rang élévé soient traités en premier.
+		public static int[] Sort(UndoableList list)
+		{
+			int[] index = new int[list.Count];
+			for ( int i=0 ; i<list.Count ; i++ )
+			{
+				index[i] = i;
+			}
+
+			bool more;
+			do
+			{
+				more = false;
+				for ( int i=0 ; i<list.Count-1 ; i++ )
+				{
+					SelectedSegment ss1 = list[index[i+0]] as SelectedSegment;
+					SelectedSegment ss2 = list[index[i+1]] as SelectedSegment;
+
+					if ( SelectedSegment.SortCompare(ss1, ss2) )
+					{
+						int t      = index[i+0];
+						index[i+0] = index[i+1];  // index[i+0] <-> index[i+1]
+						index[i+1] = t;
+						more = true;
+					}
+				}
+			}
+			while ( more );
+
+			return index;
+		}
+
+		protected static bool SortCompare(SelectedSegment ss1, SelectedSegment ss2)
+		{
+			if ( ss1.rank != ss2.rank )
+			{
+				return (ss1.rank < ss2.rank);
+			}
+			else
+			{
+				return (ss1.scale < ss2.scale);
+			}
+		}
+
 		// Mémorise pour le undo.
 		public static void InsertOpletGeometry(UndoableList list, Objects.Abstract obj)
 		{

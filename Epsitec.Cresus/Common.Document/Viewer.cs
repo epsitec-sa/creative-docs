@@ -2463,11 +2463,10 @@ namespace Epsitec.Common.Document
 		{
 			if ( cmd == "" )  // séparateur ?
 			{
-				if ( list.Count != 0 )
-				{
-					string last = list[list.Count-1] as string;
-					if ( last == "" )  return;  // déjà un séparateur ?
-				}
+				if ( list.Count == 0 )  return;
+
+				string last = list[list.Count-1] as string;
+				if ( last == "" )  return;  // déjà un séparateur ?
 			}
 			else
 			{
