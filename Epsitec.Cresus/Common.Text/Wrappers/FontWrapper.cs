@@ -72,6 +72,17 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			if (this.defined_state.IsValueFlagged (State.FontFeaturesProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsFontFeaturesDefined)
+				{
+					font_features = this.defined_state.FontFeatures;
+					defines++;
+				}
+			}
+			
 			if (this.defined_state.IsValueFlagged (State.FontStyleProperty))
 			{
 				changes++;
@@ -293,6 +304,16 @@ namespace Epsitec.Common.Text.Wrappers
 				else
 				{
 					state.DefineValue (State.FontFaceProperty, p_font.FaceName);
+				}
+				
+				if ((p_font.Features == null) ||
+					(p_font.Features.Length == 0))
+				{
+					state.DefineValue (State.FontFeaturesProperty);
+				}
+				else
+				{
+					state.DefineValue (State.FontFeaturesProperty, p_font.Features);
 				}
 				
 				if (p_font.StyleName == null)
@@ -554,6 +575,18 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public string[]							FontFeatures
+			{
+				get
+				{
+					return (string[]) this.GetValue (State.FontFeaturesProperty);
+				}
+				set
+				{
+					this.SetValue (State.FontFeaturesProperty, value);
+				}
+			}
+			
 			public Properties.SizeUnits				Units
 			{
 				get
@@ -687,6 +720,14 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public bool								IsFontFeaturesDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.FontFeaturesProperty);
+				}
+			}
+			
 			public bool								IsUnitsDefined
 			{
 				get
@@ -783,6 +824,11 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.FontSizeProperty);
 			}
 			
+			public void ClearFontFeatures()
+			{
+				this.ClearValue (State.FontFeaturesProperty);
+			}
+			
 			public void ClearUnits()
 			{
 				this.ClearValue (State.UnitsProperty);
@@ -838,6 +884,7 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	FontFaceProperty = new StateProperty (typeof (State), "FontFace", null);
 			public static readonly StateProperty	FontStyleProperty = new StateProperty (typeof (State), "FontStyle", null);
 			public static readonly StateProperty	FontSizeProperty = new StateProperty (typeof (State), "FontSize", double.NaN);
+			public static readonly StateProperty	FontFeaturesProperty = new StateProperty (typeof (State), "FontFeatures", new string[0]);
 			public static readonly StateProperty	UnitsProperty = new StateProperty (typeof (State), "Units", Properties.SizeUnits.None);
 			public static readonly StateProperty	InvertBoldProperty = new StateProperty (typeof (State), "InvertBold", false);
 			public static readonly StateProperty	InvertItalicProperty = new StateProperty (typeof (State), "InvertItalic", false);

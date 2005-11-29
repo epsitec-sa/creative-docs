@@ -20,6 +20,11 @@ namespace Epsitec.Common.Text.Properties
 		
 		public FontProperty(string face, string style, params string[] features)
 		{
+			if (features == null)
+			{
+				features = new string[0];
+			}
+			
 			this.face_name  = face;
 			this.style_name = style;
 			this.features   = features.Clone () as string[];
