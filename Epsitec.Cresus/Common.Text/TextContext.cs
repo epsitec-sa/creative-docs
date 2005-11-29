@@ -162,10 +162,12 @@ namespace Epsitec.Common.Text
 			buffer.Append ("/");
 			
 			this.style_list.Serialize (buffer);
-			
 			buffer.Append ("/");
 			
 			this.tab_list.Serialize (buffer);
+			buffer.Append ("/");
+			
+			this.SerializeConditions (buffer);
 			
 			return System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
 		}
@@ -185,6 +187,7 @@ namespace Epsitec.Common.Text
 			
 			this.style_list.Deserialize (this, version, args, ref offset);
 			this.tab_list.Deserialize (this, version, args, ref offset);
+			this.DeserializeConditions (version, args, ref offset);
 		}
 		
 		
@@ -256,6 +259,11 @@ namespace Epsitec.Common.Text
 		public void SetCondition(string name)
 		{
 			this.conditions[name] = this;
+		}
+		
+		public bool TestCondition(string name)
+		{
+			return this.conditions.Contains (name);
 		}
 		
 		public void ClearCondition(string name)
@@ -1499,6 +1507,29 @@ namespace Epsitec.Common.Text
 			public const string					TagSpellCheckingError		= "SpellCheckingError";
 		}
 		#endregion
+		
+		private void SerializeConditions(System.Text.StringBuilder buffer)
+		{
+			string[] conditions = new string[this.conditions.Count];
+			this.conditions.Keys.CopyTo (conditions, 0);
+			
+			buffer.Append (SerializerSupport.SerializeStringArray (conditions));
+		}
+		
+		private void DeserializeConditions(int version, string[] args, ref int offset)
+		{
+			string[] conditions = SerializerSupport.DeserializeStringArray (args[offset++]);
+			
+			this.conditions.Clear ();
+			
+			foreach (string condition in conditions)
+			{
+				this.SetCondition (condition);
+			}
+			
+			System.Diagnostics.Debug.Assert (this.conditions.Count == conditions.Length);
+		}
+		
 		
 		private void CreateDefaultLayout()
 		{
