@@ -70,6 +70,12 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Détecte si la souris est sur la poignée.
+		public bool Detect(Point pos)
+		{
+			return this.handle.Detect(pos);
+		}
+
 		// Dessine la poignée sur le segment.
 		public void Draw(Graphics graphics, DrawingContext drawingContext)
 		{

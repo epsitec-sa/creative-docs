@@ -126,6 +126,44 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Début du déplacement d'une poignée d'un segment sélectionné.
+		public override void MoveSelectedSegmentStarting(int rank, Point pos, DrawingContext drawingContext)
+		{
+			base.MoveSelectedSegmentStarting(rank, pos, drawingContext);
+
+			this.initialPos = pos;
+			SelectedSegment ss = this.selectedSegments[rank] as SelectedSegment;
+			int r = ss.Rank;
+			int n = this.NextRank(ss.Rank);
+			this.Handle(r).InitialPosition = this.Handle(r).Position;
+			this.Handle(n).InitialPosition = this.Handle(n).Position;
+		}
+
+		// Déplace une poignée d'un segment sélectionné.
+		public override void MoveSelectedSegmentProcess(int rank, Point pos, DrawingContext drawingContext)
+		{
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+
+			drawingContext.SnapPos(ref pos);
+			Point move = pos-this.initialPos;
+
+			SelectedSegment ss = this.selectedSegments[rank] as SelectedSegment;
+			int r = ss.Rank;
+			int n = this.NextRank(ss.Rank);
+			this.Handle(r).Position = this.Handle(r).InitialPosition+move;
+			this.Handle(n).Position = this.Handle(n).InitialPosition+move;
+			SelectedSegment.Update(this.selectedSegments, this);
+
+			this.SetDirtyBbox();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Fin du déplacement d'une poignée d'un segment sélectionné.
+		public override void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
+		{
+		}
+
+		
 		// Déplace globalement l'objet.
 		public override void MoveGlobalProcess(Selector selector)
 		{
@@ -1074,5 +1112,6 @@ namespace Epsitec.Common.Document.Objects
 		protected bool				additionalLineExist = false;
 		protected Point				additionalLineP1;
 		protected Point				additionalLineP2;
+		protected Point				initialPos;
 	}
 }

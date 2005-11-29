@@ -372,6 +372,30 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
+		// Détecte la poignée d'un segment sélectionné pointée par la souris.
+		public int DetectSelectedSegmentHandle(Point pos)
+		{
+			int rank = -1;
+			if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
+			{
+				double min = 1000000.0;
+				for ( int i=0 ; i<this.selectedSegments.Count ; i++ )
+				{
+					SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
+					if ( ss.Detect(pos) )
+					{
+						double distance = Point.Distance(ss.Position, pos);
+						if ( distance < min && System.Math.Abs(distance-min) > 0.00001 )
+						{
+							min = distance;
+							rank = i;
+						}
+					}
+				}
+			}
+			return rank;
+		}
+
 		// Indique si une poignée est sélectionnée par le modeleur.
 		public bool IsShaperHandleSelected(int rank)
 		{
@@ -551,8 +575,15 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Retourne la position de la poignée d'un segment sélectionné.
+		public Point GetSelectedSegmentPosition(int rank)
+		{
+			SelectedSegment ss = this.selectedSegments[rank] as SelectedSegment;
+			return ss.Position;
+		}
+
 		// Sélectionne un segment de l'objet.
-		public void SelectedSegmentAdd(int rank, ref Point pos, bool add)
+		public int SelectedSegmentAdd(int rank, ref Point pos, bool add)
 		{
 			if ( !add )
 			{
@@ -569,28 +600,12 @@ namespace Epsitec.Common.Document.Objects
 				this.selectedSegments.Clear();
 			}
 
-#if false
-			int i = SelectedSegment.Search(this.selectedSegments, rank);
-			if ( i == -1 )
-			{
-				SelectedSegment ss = new SelectedSegment(this.document, this, rank, pos);
-				this.selectedSegments.Add(ss);
-				pos = ss.Position;
-			}
-			else
-			{
-				if ( add )
-				{
-					this.selectedSegments.RemoveAt(i);
-				}
-			}
-#else
 			SelectedSegment ss = new SelectedSegment(this.document, this, rank, pos);
-			this.selectedSegments.Add(ss);
+			int i = this.selectedSegments.Add(ss);
 			pos = ss.Position;
-#endif
 
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+			return i;
 		}
 
 
@@ -636,6 +651,24 @@ namespace Epsitec.Common.Document.Objects
 				this.document.Modifier.TextInfoModif = "";
 			}
 		}
+
+
+		// Début du déplacement d'une poignée d'un segment sélectionné.
+		public virtual void MoveSelectedSegmentStarting(int rank, Point pos, DrawingContext drawingContext)
+		{
+			this.InsertOpletGeometry();
+		}
+
+		// Déplace une poignée d'un segment sélectionné.
+		public virtual void MoveSelectedSegmentProcess(int rank, Point pos, DrawingContext drawingContext)
+		{
+		}
+
+		// Fin du déplacement d'une poignée d'un segment sélectionné.
+		public virtual void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
+		{
+		}
+
 
 		// Déplace un coin tout en conservant une forme rectangulaire.
 		protected void MoveCorner(Point pc, int corner, int left, int right, int opposite)

@@ -933,7 +933,7 @@ namespace Epsitec.Common.Document
 					if ( this.moveHandle != -1 )  // déplace une poignée ?
 					{
 						mouse -= this.moveOffset;
-						this.MoveHandleProcess(this.moveObject, this.moveHandle, mouse);
+						this.moveObject.MoveHandleProcess(this.moveHandle, mouse, this.drawingContext);
 						this.HiliteHandle(this.moveObject, this.moveHandle);
 						this.document.Modifier.FlushMoveAfterDuplicate();
 					}
@@ -1168,6 +1168,8 @@ namespace Epsitec.Common.Document
 			this.HiliteHandle(null, -1);
 			this.moveGlobal = -1;
 			this.moveObject = null;
+			this.moveHandle = -1;
+			this.moveSelectedSegment = -1;
 			this.guideInteractive = -1;
 			this.guideCreate = false;
 			this.ctrlDown = this.drawingContext.IsCtrl;
@@ -1201,6 +1203,14 @@ namespace Epsitec.Common.Document
 				this.moveObject.MoveHandleStarting(this.moveHandle, mouse, this.drawingContext);
 				this.HiliteHandle(this.moveObject, this.moveHandle);
 			}
+			else if ( this.DetectSelectedSegmentHandle(mouse, out obj, out rank) )
+			{
+				this.moveObject = obj;
+				this.moveSelectedSegment = rank;
+				this.moveOffset = mouse-this.moveObject.GetSelectedSegmentPosition(rank);
+				mouse -= this.moveOffset;
+				this.moveObject.MoveSelectedSegmentStarting(this.moveSelectedSegment, mouse, this.drawingContext);
+			}
 			else
 			{
 				obj = this.Detect(mouse, !this.drawingContext.IsShift);
@@ -1218,6 +1228,9 @@ namespace Epsitec.Common.Document
 					}
 					this.moveObject = obj;
 					this.moveHandle = -1;
+					this.moveSelectedSegment = -1;
+
+					int rankSegment = this.moveObject.ShaperDetectSegment(mouse);
 
 					if ( this.DetectHandle(mouse, out obj, out rank) )
 					{
@@ -1241,6 +1254,16 @@ namespace Epsitec.Common.Document
 						this.moveOffset = mouse-obj.GetHandlePosition(rank);
 						this.moveObject.MoveHandleStarting(this.moveHandle, mouse, this.drawingContext);
 						this.HiliteHandle(this.moveObject, this.moveHandle);
+					}
+					else if ( rankSegment != -1 )
+					{
+						Point pos = mouse;
+						rank = this.moveObject.SelectedSegmentAdd(rankSegment, ref pos, this.drawingContext.IsShift);
+
+						this.moveSelectedSegment = rank;
+						this.moveOffset = mouse-this.moveObject.GetSelectedSegmentPosition(rank);
+						mouse -= this.moveOffset;
+						this.moveObject.MoveSelectedSegmentStarting(this.moveSelectedSegment, mouse, this.drawingContext);
 					}
 					else
 					{
@@ -1266,9 +1289,15 @@ namespace Epsitec.Common.Document
 					if ( this.moveHandle != -1 )  // déplace une poignée ?
 					{
 						mouse -= this.moveOffset;
-						this.MoveHandleProcess(this.moveObject, this.moveHandle, mouse);
+						this.moveObject.MoveHandleProcess(this.moveHandle, mouse, this.drawingContext);
 						this.HiliteHandle(this.moveObject, this.moveHandle);
 						this.document.Modifier.FlushMoveAfterDuplicate();
+					}
+
+					if ( this.moveSelectedSegment != -1 )  // déplace un segment sélectionné ?
+					{
+						mouse -= this.moveOffset;
+						this.moveObject.MoveSelectedSegmentProcess(this.moveSelectedSegment, mouse, this.drawingContext);
 					}
 
 					if ( this.moveStartingList != null )  // déplace plusieurs poignées ?
@@ -1305,9 +1334,17 @@ namespace Epsitec.Common.Document
 					{
 						this.ShaperHilite(obj, mouse);
 
-						if ( obj.IsSelected && obj.IsShaperHandleSelected() )
+						rank = obj.ShaperDetectSegment(mouse);
+						if ( rank == -1 )
 						{
-							this.ChangeMouseCursor(MouseCursorType.ShaperMulti);
+							if ( obj.IsSelected && obj.IsShaperHandleSelected() )
+							{
+								this.ChangeMouseCursor(MouseCursorType.ShaperMulti);
+							}
+						}
+						else
+						{
+							this.ChangeMouseCursor(MouseCursorType.ShaperMove);
 						}
 					}
 				}
@@ -1342,15 +1379,7 @@ namespace Epsitec.Common.Document
 			}
 			else if ( this.moveObject != null )
 			{
-				if ( this.moveHandle == -1 )
-				{
-					int rank = this.moveObject.ShaperDetectSegment(mouse);
-					if ( rank != -1 )
-					{
-						this.moveObject.SelectedSegmentAdd(rank, ref mouse, this.drawingContext.IsShift);
-					}
-				}
-				else	// déplace une poignée ?
+				if ( this.moveHandle != -1 )  // déplace une poignée ?
 				{
 					if ( mouse.X != this.moveStart.X ||
 						 mouse.Y != this.moveStart.Y )
@@ -1361,20 +1390,19 @@ namespace Epsitec.Common.Document
 					mouse -= this.moveOffset;
 					this.moveObject.MoveHandleEnding(this.moveHandle, mouse, this.drawingContext);
 				}
-
-				if ( this.moveReclick && !this.moveAccept && !isRight && !this.drawingContext.IsShift )
+				else if ( this.moveSelectedSegment != -1 )  // déplace un segment sélectionné ?
 				{
-					this.SelectOther(mouse, this.moveObject);
+					mouse -= this.moveOffset;
+					this.moveObject.MoveSelectedSegmentEnding(this.moveSelectedSegment, mouse, this.drawingContext);
 				}
-				else
-				{
-					this.document.Modifier.GroupUpdateChildrens();
-					this.document.Modifier.GroupUpdateParents();
 
-					this.moveObject = null;
-					this.moveHandle = -1;
-					this.UpdateSelector();
-				}
+				this.document.Modifier.GroupUpdateChildrens();
+				this.document.Modifier.GroupUpdateParents();
+
+				this.moveObject = null;
+				this.moveHandle = -1;
+				this.moveSelectedSegment = -1;
+				this.UpdateSelector();
 
 				this.hotSpotHandle.IsVisible = false;
 			}
@@ -1864,6 +1892,33 @@ namespace Epsitec.Common.Document
 			return ( detect != null );
 		}
 
+		// Détecte la poignée d'un segment sélectionné pointée par la souris.
+		protected bool DetectSelectedSegmentHandle(Point mouse, out Objects.Abstract detect, out int rank)
+		{
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			double min = 1000000.0;
+			Objects.Abstract best = null;
+			int found = -1;
+			foreach ( Objects.Abstract obj in this.document.FlatReverse(layer, true) )
+			{
+				rank = obj.DetectSelectedSegmentHandle(mouse);
+				if ( rank != -1 )
+				{
+					double distance = Point.Distance(obj.Handle(rank).Position, mouse);
+					if ( distance < min )
+					{
+						min = distance;
+						best = obj;
+						found = rank;
+					}
+				}
+			}
+
+			detect = best;
+			rank = found;
+			return ( detect != null );
+		}
+
 		// Annule le hilite des objets.
 		public void ClearHilite()
 		{
@@ -1929,12 +1984,6 @@ namespace Epsitec.Common.Document
 			{
 				this.hiliteHandleObject.HandleHilite(this.hiliteHandleRank, true);
 			}
-		}
-
-		// Déplace une poignée d'un objet.
-		protected void MoveHandleProcess(Objects.Abstract obj, int rank, Point pos)
-		{
-			obj.MoveHandleProcess(rank, pos, this.drawingContext);
 		}
 
 		// Mode de sélection.
@@ -3838,6 +3887,7 @@ namespace Epsitec.Common.Document
 		protected bool							moveInitialSel;
 		protected bool							moveReclick;
 		protected int							moveHandle = -1;
+		protected int							moveSelectedSegment = -1;
 		protected int							moveGlobal = -1;
 		protected System.Collections.ArrayList	moveStartingList = null;
 		protected Objects.Abstract				moveObject;

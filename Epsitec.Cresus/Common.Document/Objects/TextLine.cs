@@ -168,7 +168,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( family == "Continue" )
 			{
-				if ( this.IsShaperHandleSelected() && !this.PropertyPolyClose.BoolValue )
+				if ( this.IsShaperHandleSelected() )
 				{
 					int total = this.TotalMainHandle;
 					for ( int i=0 ; i<total ; i+=3 )
@@ -901,6 +901,67 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Début du déplacement d'une poignée d'un segment sélectionné.
+		public override void MoveSelectedSegmentStarting(int rank, Point pos, DrawingContext drawingContext)
+		{
+			base.MoveSelectedSegmentStarting(rank, pos, drawingContext);
+
+			this.initialPos = pos;
+			SelectedSegment ss = this.selectedSegments[rank] as SelectedSegment;
+			int rp1 = ss.Rank*3+1;
+			int rs1 = ss.Rank*3+2;
+			int rs2 = this.NextRank(ss.Rank*3)+0;
+			int rp2 = this.NextRank(ss.Rank*3)+1;
+
+			if ( (this.Handle(rs1).Type == HandleType.Hide) )  // droite ?
+			{
+				this.Handle(rp1).InitialPosition = this.Handle(rp1).Position;
+				this.Handle(rp2).InitialPosition = this.Handle(rp2).Position;
+			}
+			else	// courbe ?
+			{
+				this.Handle(rs1).InitialPosition = this.Handle(rs1).Position;
+				this.Handle(rs2).InitialPosition = this.Handle(rs2).Position;
+			}
+		}
+
+		// Déplace une poignée d'un segment sélectionné.
+		public override void MoveSelectedSegmentProcess(int rank, Point pos, DrawingContext drawingContext)
+		{
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+
+			drawingContext.SnapPos(ref pos);
+			Point move = pos-this.initialPos;
+
+			SelectedSegment ss = this.selectedSegments[rank] as SelectedSegment;
+			int rp1 = ss.Rank*3+1;
+			int rs1 = ss.Rank*3+2;
+			int rs2 = this.NextRank(ss.Rank*3)+0;
+			int rp2 = this.NextRank(ss.Rank*3)+1;
+
+			if ( (this.Handle(rs1).Type == HandleType.Hide) )  // droite ?
+			{
+				this.MovePrimary(rp1, this.Handle(rp1).InitialPosition+move);
+				this.MovePrimary(rp2, this.Handle(rp2).InitialPosition+move);
+			}
+			else	// courbe ?
+			{
+				this.MoveSecondary(rs1-1, rs1, rs1-2, this.Handle(rs1).InitialPosition+move);
+				this.MoveSecondary(rs2+1, rs2, rs2+2, this.Handle(rs2).InitialPosition+move);
+			}
+
+			SelectedSegment.Update(this.selectedSegments, this);
+
+			this.SetDirtyBbox();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Fin du déplacement d'une poignée d'un segment sélectionné.
+		public override void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
+		{
+		}
+
+		
 		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
@@ -1891,6 +1952,7 @@ namespace Epsitec.Common.Document.Objects
 		protected double					advanceMaxAscender;
 		protected Drawing.Rectangle			cursorBox;
 		protected Drawing.Rectangle			selectBox;
+		protected Point						initialPos;
 
 		protected static readonly double	step = 0.01;
 	}
