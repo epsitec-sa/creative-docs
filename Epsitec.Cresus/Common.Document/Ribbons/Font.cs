@@ -35,16 +35,16 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			if ( this.document != null )
 			{
-				this.document.FontWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.document.FontWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.document.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+				this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
 
 			base.SetDocument(type, install, gs, document);
 
 			if ( this.document != null )
 			{
-				this.document.FontWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-				this.document.FontWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+				this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+				this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 			}
 
 			this.HandleWrapperChanged(null);
@@ -65,18 +65,18 @@ namespace Epsitec.Common.Document.Ribbons
 			bool enabled = false;
 			bool state   = false;
 
-			if ( this.document != null && this.document.FontWrapper.IsAttached )
+			if ( this.document != null && this.document.TextWrapper.IsAttached )
 			{
-				string face  = this.document.FontWrapper.Defined.FontFace;
+				string face  = this.document.TextWrapper.Defined.FontFace;
 				if ( face == null )
 				{
-					face = this.document.FontWrapper.Active.FontFace;
+					face = this.document.TextWrapper.Active.FontFace;
 				}
 
-				string style = this.document.FontWrapper.Defined.FontStyle;
+				string style = this.document.TextWrapper.Defined.FontStyle;
 				if ( style == null )
 				{
-					style = this.document.FontWrapper.Active.FontStyle;
+					style = this.document.TextWrapper.Active.FontStyle;
 				}
 
 				OpenType.FontWeight weight = OpenType.FontWeight.Medium;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 				enabled = true;
 				state   = ((int)weight > (int)OpenType.FontWeight.Medium);
-				state  ^= this.document.FontWrapper.Defined.InvertBold;
+				state  ^= this.document.TextWrapper.Defined.InvertBold;
 			}
 
 			this.buttonBold.Enable = enabled;
@@ -100,18 +100,18 @@ namespace Epsitec.Common.Document.Ribbons
 			bool enabled = false;
 			bool state   = false;
 
-			if ( this.document != null && this.document.FontWrapper.IsAttached )
+			if ( this.document != null && this.document.TextWrapper.IsAttached )
 			{
-				string face  = this.document.FontWrapper.Defined.FontFace;
+				string face  = this.document.TextWrapper.Defined.FontFace;
 				if ( face == null )
 				{
-					face = this.document.FontWrapper.Active.FontFace;
+					face = this.document.TextWrapper.Active.FontFace;
 				}
 
-				string style = this.document.FontWrapper.Defined.FontStyle;
+				string style = this.document.TextWrapper.Defined.FontStyle;
 				if ( style == null )
 				{
-					style = this.document.FontWrapper.Active.FontStyle;
+					style = this.document.TextWrapper.Active.FontStyle;
 				}
 
 				OpenType.FontStyle italic = OpenType.FontStyle.Normal;
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 				enabled = true;
 				state   = italic != OpenType.FontStyle.Normal;
-				state  ^= this.document.FontWrapper.Defined.InvertItalic;
+				state  ^= this.document.TextWrapper.Defined.InvertItalic;
 			}
 
 			this.buttonItalic.Enable = enabled;
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Document.Ribbons
 			bool enabled = false;
 			bool state   = false;
 
-			if ( this.document != null && this.document.FontWrapper.IsAttached )
+			if ( this.document != null && this.document.TextWrapper.IsAttached )
 			{
 			}
 
@@ -176,19 +176,19 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
 		{
-			if ( !this.document.FontWrapper.IsAttached )  return;
-			this.document.FontWrapper.Defined.InvertBold = !this.document.FontWrapper.Defined.InvertBold;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+			this.document.TextWrapper.Defined.InvertBold = !this.document.TextWrapper.Defined.InvertBold;
 		}
 
 		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
 		{
-			if ( !this.document.FontWrapper.IsAttached )  return;
-			this.document.FontWrapper.Defined.InvertItalic = !this.document.FontWrapper.Defined.InvertItalic;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+			this.document.TextWrapper.Defined.InvertItalic = !this.document.TextWrapper.Defined.InvertItalic;
 		}
 
 		private void HandleButtonUnderlinedClicked(object sender, MessageEventArgs e)
 		{
-			if ( !this.document.FontWrapper.IsAttached )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
 		}
 
 

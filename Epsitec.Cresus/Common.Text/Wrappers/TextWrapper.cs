@@ -4,12 +4,12 @@
 namespace Epsitec.Common.Text.Wrappers
 {
 	/// <summary>
-	/// La classe FontWrapper simplifie l'accès aux réglages liés à la fonte
-	/// (FontFace, FontStyle, taille, etc.)
+	/// La classe TextWrapper simplifie l'accès aux réglages liés à la fonte
+	/// (FontFace, FontStyle, taille, etc.) et au texte en général.
 	/// </summary>
-	public class FontWrapper : AbstractWrapper
+	public class TextWrapper : AbstractWrapper
 	{
-		public FontWrapper()
+		public TextWrapper()
 		{
 			this.active_state  = new State (this, AccessMode.ReadOnly);
 			this.defined_state = new State (this, AccessMode.ReadWrite);
@@ -118,11 +118,11 @@ namespace Epsitec.Common.Text.Wrappers
 					Property p_font = new Properties.FontProperty (font_face, font_style, font_features);
 					Property p_size = new Properties.FontSizeProperty (font_size, units);
 					
-					this.DefineMetaProperty (FontWrapper.Font, 0, p_font, p_size);
+					this.DefineMetaProperty (TextWrapper.Font, 0, p_font, p_size);
 				}
 				else
 				{
-					this.ClearMetaProperty (FontWrapper.Font);
+					this.ClearMetaProperty (TextWrapper.Font);
 				}
 			}
 		}
@@ -136,11 +136,11 @@ namespace Epsitec.Common.Text.Wrappers
 					if (this.defined_state.InvertBold)
 					{
 						Property p_font = new Properties.FontProperty (null, "!Bold", new string[0]);
-						this.DefineMetaProperty (FontWrapper.InvertBold, 1, p_font);
+						this.DefineMetaProperty (TextWrapper.InvertBold, 1, p_font);
 					}
 					else
 					{
-						this.ClearMetaProperty (FontWrapper.InvertBold);
+						this.ClearMetaProperty (TextWrapper.InvertBold);
 					}
 				}
 			}
@@ -152,11 +152,11 @@ namespace Epsitec.Common.Text.Wrappers
 					if (this.defined_state.InvertItalic)
 					{
 						Property p_font = new Properties.FontProperty (null, "!Italic", new string[0]);
-						this.DefineMetaProperty (FontWrapper.InvertItalic, 1, p_font);
+						this.DefineMetaProperty (TextWrapper.InvertItalic, 1, p_font);
 					}
 					else
 					{
-						this.ClearMetaProperty (FontWrapper.InvertItalic);
+						this.ClearMetaProperty (TextWrapper.InvertItalic);
 					}
 				}
 			}
@@ -223,11 +223,11 @@ namespace Epsitec.Common.Text.Wrappers
 				if (list.Count > 0)
 				{
 					Property[] properties = (Property[]) list.ToArray (typeof (Property));
-					this.DefineMetaProperty (FontWrapper.Xline, 0, properties);
+					this.DefineMetaProperty (TextWrapper.Xline, 0, properties);
 				}
 				else
 				{
-					this.ClearMetaProperty (FontWrapper.Xline);
+					this.ClearMetaProperty (TextWrapper.Xline);
 				}
 			}
 		}
@@ -239,11 +239,11 @@ namespace Epsitec.Common.Text.Wrappers
 				if (this.defined_state.IsXscriptDefined)
 				{
 					Properties.FontXscriptProperty property = this.defined_state.Xscript.ToProperty ();
-					this.DefineMetaProperty (FontWrapper.Xscript, 0, property);
+					this.DefineMetaProperty (TextWrapper.Xscript, 0, property);
 				}
 				else
 				{
-					this.ClearMetaProperty (FontWrapper.Xscript);
+					this.ClearMetaProperty (TextWrapper.Xscript);
 				}
 			}
 		}
@@ -254,11 +254,11 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				if (this.defined_state.IsColorDefined)
 				{
-					this.DefineMetaProperty (FontWrapper.Color, 0, new Properties.FontColorProperty (this.defined_state.Color));
+					this.DefineMetaProperty (TextWrapper.Color, 0, new Properties.FontColorProperty (this.defined_state.Color));
 				}
 				else
 				{
-					this.ClearMetaProperty (FontWrapper.Color);
+					this.ClearMetaProperty (TextWrapper.Color);
 				}
 			}
 		}
@@ -274,11 +274,11 @@ namespace Epsitec.Common.Text.Wrappers
 					string locale = this.defined_state.LanguageLocale;
 					double hyphen = this.defined_state.LanguageHyphenation;
 					
-					this.DefineMetaProperty (FontWrapper.Language, 0, new Properties.LanguageProperty (locale, hyphen));
+					this.DefineMetaProperty (TextWrapper.Language, 0, new Properties.LanguageProperty (locale, hyphen));
 				}
 				else
 				{
-					this.ClearMetaProperty (FontWrapper.Language);
+					this.ClearMetaProperty (TextWrapper.Language);
 				}
 			}
 		}
@@ -313,8 +313,8 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				p_font = this.ReadMetaProperty (FontWrapper.Font, Properties.WellKnownType.Font) as Properties.FontProperty;
-				p_size = this.ReadMetaProperty (FontWrapper.Font, Properties.WellKnownType.FontSize) as Properties.FontSizeProperty;
+				p_font = this.ReadMetaProperty (TextWrapper.Font, Properties.WellKnownType.Font) as Properties.FontProperty;
+				p_size = this.ReadMetaProperty (TextWrapper.Font, Properties.WellKnownType.FontSize) as Properties.FontSizeProperty;
 			}
 			
 			if (p_font != null)
@@ -413,8 +413,8 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				Properties.FontProperty p_bold   = this.ReadMetaProperty (FontWrapper.InvertBold, Properties.WellKnownType.Font) as Properties.FontProperty;
-				Properties.FontProperty p_italic = this.ReadMetaProperty (FontWrapper.InvertItalic, Properties.WellKnownType.Font) as Properties.FontProperty;
+				Properties.FontProperty p_bold   = this.ReadMetaProperty (TextWrapper.InvertBold, Properties.WellKnownType.Font) as Properties.FontProperty;
+				Properties.FontProperty p_italic = this.ReadMetaProperty (TextWrapper.InvertItalic, Properties.WellKnownType.Font) as Properties.FontProperty;
 				
 				if (p_bold == null)
 				{
@@ -454,11 +454,11 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				p_underline  = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.Underline)  as Properties.UnderlineProperty;
-				p_strikeout  = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.Strikeout)  as Properties.StrikeoutProperty;
-				p_overline   = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.Overline)   as Properties.OverlineProperty;
-				p_textbox    = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.TextBox)    as Properties.TextBoxProperty;
-				p_textmarker = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.TextMarker) as Properties.TextMarkerProperty;
+				p_underline  = this.ReadMetaProperty (TextWrapper.Xline, Properties.WellKnownType.Underline)  as Properties.UnderlineProperty;
+				p_strikeout  = this.ReadMetaProperty (TextWrapper.Xline, Properties.WellKnownType.Strikeout)  as Properties.StrikeoutProperty;
+				p_overline   = this.ReadMetaProperty (TextWrapper.Xline, Properties.WellKnownType.Overline)   as Properties.OverlineProperty;
+				p_textbox    = this.ReadMetaProperty (TextWrapper.Xline, Properties.WellKnownType.TextBox)    as Properties.TextBoxProperty;
+				p_textmarker = this.ReadMetaProperty (TextWrapper.Xline, Properties.WellKnownType.TextMarker) as Properties.TextMarkerProperty;
 			}
 			
 			if (p_underline == null)
@@ -517,7 +517,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				p_xscript = this.ReadMetaProperty (FontWrapper.Xscript, Properties.WellKnownType.FontXscript) as Properties.FontXscriptProperty;
+				p_xscript = this.ReadMetaProperty (TextWrapper.Xscript, Properties.WellKnownType.FontXscript) as Properties.FontXscriptProperty;
 			}
 			
 			if (p_xscript == null)
@@ -540,7 +540,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				p_color = this.ReadMetaProperty (FontWrapper.Color, Properties.WellKnownType.FontColor) as Properties.FontColorProperty;
+				p_color = this.ReadMetaProperty (TextWrapper.Color, Properties.WellKnownType.FontColor) as Properties.FontColorProperty;
 			}
 			
 			if (p_color == null)
@@ -563,7 +563,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				p_language = this.ReadMetaProperty (FontWrapper.Language, Properties.WellKnownType.Language) as Properties.LanguageProperty;
+				p_language = this.ReadMetaProperty (TextWrapper.Language, Properties.WellKnownType.Language) as Properties.LanguageProperty;
 			}
 			
 			if (p_language == null)

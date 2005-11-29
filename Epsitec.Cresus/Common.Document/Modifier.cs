@@ -1170,20 +1170,20 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.document.IsWrappersAttached )
 			{
-				fontFace = this.document.FontWrapper.Defined.FontFace;
+				fontFace = this.document.TextWrapper.Defined.FontFace;
 				if ( fontFace == null )
 				{
-					fontFace = this.document.FontWrapper.Active.FontFace;
+					fontFace = this.document.TextWrapper.Active.FontFace;
 					if ( fontFace == null )
 					{
 						fontFace = "";
 					}
 				}
 
-				fontStyle = this.document.FontWrapper.Defined.FontStyle;
+				fontStyle = this.document.TextWrapper.Defined.FontStyle;
 				if ( fontStyle == null )
 				{
-					fontStyle = this.document.FontWrapper.Active.FontStyle;
+					fontStyle = this.document.TextWrapper.Active.FontStyle;
 					if ( fontStyle == null )
 					{
 						fontStyle = "";

@@ -29,8 +29,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldLeftMarginBody  = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftBody,  Res.Strings.TextPanel.ParagraphLayout.Short.LeftBody,  Res.Strings.TextPanel.ParagraphLayout.Long.LeftBody,  0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
 			this.fieldRightMargin     = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleRight,     Res.Strings.TextPanel.ParagraphLayout.Short.Right,     Res.Strings.TextPanel.ParagraphLayout.Long.Right,     0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
 
-			this.document.ParagraphLayoutWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
-			this.document.ParagraphLayoutWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.document.ParagraphWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.document.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -40,8 +40,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.document.ParagraphLayoutWrapper.Active.Changed -= new EventHandler(this.HandleWrapperChanged);
-				this.document.ParagraphLayoutWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.document.ParagraphWrapper.Active.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.document.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -80,24 +80,24 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			base.UpdateAfterChanging();
 
-			Common.Text.Wrappers.JustificationMode justif = this.document.ParagraphLayoutWrapper.Defined.JustificationMode;
+			Common.Text.Wrappers.JustificationMode justif = this.document.ParagraphWrapper.Defined.JustificationMode;
 #if false
 			if ( justif == Common.Text.Wrappers.JustificationMode.Unknown )
 			{
-				justif = this.document.ParagraphLayoutWrapper.Active.JustificationMode;
+				justif = this.document.ParagraphWrapper.Active.JustificationMode;
 			}
 #endif
 
-			bool hyphen = this.document.ParagraphLayoutWrapper.Defined.Hyphenation;
-			if ( !this.document.ParagraphLayoutWrapper.Defined.IsHyphenationDefined )
+			bool hyphen = this.document.ParagraphWrapper.Defined.Hyphenation;
+			if ( !this.document.ParagraphWrapper.Defined.IsHyphenationDefined )
 			{
-				hyphen = this.document.ParagraphLayoutWrapper.Active.Hyphenation;
+				hyphen = this.document.ParagraphWrapper.Active.Hyphenation;
 			}
 
-			double leftMarginFirst = this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst;
+			double leftMarginFirst = this.document.ParagraphWrapper.Defined.LeftMarginFirst;
 			if ( double.IsNaN(leftMarginFirst) )
 			{
-				leftMarginFirst = this.document.ParagraphLayoutWrapper.Active.LeftMarginFirst;
+				leftMarginFirst = this.document.ParagraphWrapper.Active.LeftMarginFirst;
 
 				if ( double.IsNaN(leftMarginFirst) )
 				{
@@ -105,10 +105,10 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 
-			double leftMarginBody = this.document.ParagraphLayoutWrapper.Defined.LeftMarginBody;
+			double leftMarginBody = this.document.ParagraphWrapper.Defined.LeftMarginBody;
 			if ( double.IsNaN(leftMarginBody) )
 			{
-				leftMarginBody = this.document.ParagraphLayoutWrapper.Active.LeftMarginBody;
+				leftMarginBody = this.document.ParagraphWrapper.Active.LeftMarginBody;
 
 				if ( double.IsNaN(leftMarginBody) )
 				{
@@ -116,10 +116,10 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 
-			double rightMargin = this.document.ParagraphLayoutWrapper.Defined.RightMarginBody;
+			double rightMargin = this.document.ParagraphWrapper.Defined.RightMarginBody;
 			if ( double.IsNaN(rightMargin) )
 			{
-				rightMargin = this.document.ParagraphLayoutWrapper.Active.RightMarginBody;
+				rightMargin = this.document.ParagraphWrapper.Active.RightMarginBody;
 
 				if ( double.IsNaN(rightMargin) )
 				{
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleJustifClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphLayoutWrapper.IsAttached )  return;
+			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
 			IconButton button = sender as IconButton;
 			if ( button == null )  return;
@@ -265,36 +265,36 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( justif == Common.Text.Wrappers.JustificationMode.Unknown )
 			{
-				this.document.ParagraphLayoutWrapper.Defined.ClearJustificationMode();
+				this.document.ParagraphWrapper.Defined.ClearJustificationMode();
 			}
 			else
 			{
-				this.document.ParagraphLayoutWrapper.Defined.JustificationMode = justif;
+				this.document.ParagraphWrapper.Defined.JustificationMode = justif;
 			}
 		}
 
 		private void HandleHyphenClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphLayoutWrapper.IsAttached )  return;
+			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
 			this.buttonHyphen.ActiveState = (this.buttonHyphen.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
 			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.Yes);
 
 			if ( hyphen )
 			{
-				this.document.ParagraphLayoutWrapper.Defined.Hyphenation = true;
+				this.document.ParagraphWrapper.Defined.Hyphenation = true;
 			}
 			else
 			{
-				this.document.ParagraphLayoutWrapper.Defined.ClearHyphenation();
+				this.document.ParagraphWrapper.Defined.ClearHyphenation();
 			}
 		}
 
 		private void HandleMarginChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphLayoutWrapper.IsAttached )  return;
+			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
@@ -303,20 +303,20 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( field == this.fieldLeftMarginFirst.TextFieldReal )
 			{
-				this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst = value;
+				this.document.ParagraphWrapper.Defined.LeftMarginFirst = value;
 			}
 
 			if ( field == this.fieldLeftMarginBody.TextFieldReal )
 			{
-				this.document.ParagraphLayoutWrapper.Defined.LeftMarginBody = value;
+				this.document.ParagraphWrapper.Defined.LeftMarginBody = value;
 			}
 
 			if ( field == this.fieldRightMargin.TextFieldReal )
 			{
-				this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
-				this.document.ParagraphLayoutWrapper.Defined.RightMarginFirst = value;
-				this.document.ParagraphLayoutWrapper.Defined.RightMarginBody  = value;
-				this.document.ParagraphLayoutWrapper.ResumeSynchronisations();
+				this.document.ParagraphWrapper.SuspendSynchronisations();
+				this.document.ParagraphWrapper.Defined.RightMarginFirst = value;
+				this.document.ParagraphWrapper.Defined.RightMarginBody  = value;
+				this.document.ParagraphWrapper.ResumeSynchronisations();
 			}
 		}
 

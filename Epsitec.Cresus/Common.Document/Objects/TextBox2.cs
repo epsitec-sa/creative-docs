@@ -631,20 +631,20 @@ namespace Epsitec.Common.Document.Objects
 			Text.Properties.OpenTypeProperty otp;
 			this.document.TextContext.GetOpenType(sel[0], out otp);
 
-			string face = this.document.FontWrapper.Defined.FontFace;
+			string face = this.document.TextWrapper.Defined.FontFace;
 			if ( face == null )
 			{
-				face = this.document.FontWrapper.Active.FontFace;
+				face = this.document.TextWrapper.Active.FontFace;
 				if ( face == null )
 				{
 					face = "";
 				}
 			}
 
-			string style = this.document.FontWrapper.Defined.FontStyle;
+			string style = this.document.TextWrapper.Defined.FontStyle;
 			if ( style == null )
 			{
-				style = this.document.FontWrapper.Active.FontStyle;
+				style = this.document.TextWrapper.Active.FontStyle;
 				if ( style == null )
 				{
 					style = "";

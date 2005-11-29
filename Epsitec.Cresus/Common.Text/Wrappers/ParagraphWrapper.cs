@@ -4,12 +4,12 @@
 namespace Epsitec.Common.Text.Wrappers
 {
 	/// <summary>
-	/// La classe ParagraphLayoutWrapper simplifie l'accès aux réglages liés à
+	/// La classe ParagraphWrapper simplifie l'accès aux réglages liés à
 	/// la disposition d'un paragraphe (justification, marges, etc.)
 	/// </summary>
-	public class ParagraphLayoutWrapper : AbstractWrapper
+	public class ParagraphWrapper : AbstractWrapper
 	{
-		public ParagraphLayoutWrapper()
+		public ParagraphWrapper()
 		{
 			this.active_state  = new State (this, AccessMode.ReadOnly);
 			this.defined_state = new State (this, AccessMode.ReadWrite);
@@ -126,11 +126,11 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			if (defines > 0)
 			{
-				this.DefineMetaProperty (ParagraphLayoutWrapper.Margins, 0, new Properties.MarginsProperty (left_m_first, left_m_body, right_m_first, right_m_body, units, justif_body, justif_last, disposition, double.NaN, double.NaN, hyphenate));
+				this.DefineMetaProperty (ParagraphWrapper.Margins, 0, new Properties.MarginsProperty (left_m_first, left_m_body, right_m_first, right_m_body, units, justif_body, justif_last, disposition, double.NaN, double.NaN, hyphenate));
 			}
 			else
 			{
-				this.ClearMetaProperty (ParagraphLayoutWrapper.Margins);
+				this.ClearMetaProperty (ParagraphWrapper.Margins);
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				margins = this.ReadMetaProperty (ParagraphLayoutWrapper.Margins, Properties.WellKnownType.Margins) as Properties.MarginsProperty;
+				margins = this.ReadMetaProperty (ParagraphWrapper.Margins, Properties.WellKnownType.Margins) as Properties.MarginsProperty;
 			}
 			
 			if ((margins != null) &&

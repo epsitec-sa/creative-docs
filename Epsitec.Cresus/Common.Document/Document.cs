@@ -82,8 +82,8 @@ namespace Epsitec.Common.Document
 			this.surfaceRotationAngle = 0.0;
 			this.uniqueObjectId = 0;
 			this.uniqueAggregateId = 0;
-			this.fontWrapper = new Text.Wrappers.FontWrapper();
-			this.paragraphLayoutWrapper = new Text.Wrappers.ParagraphLayoutWrapper();
+			this.fontWrapper = new Text.Wrappers.TextWrapper();
+			this.paragraphLayoutWrapper = new Text.Wrappers.ParagraphWrapper();
 
 			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
 
@@ -175,13 +175,13 @@ namespace Epsitec.Common.Document
 		}
 
 		// Wrapper pour la fonte.
-		public Text.Wrappers.FontWrapper FontWrapper
+		public Text.Wrappers.TextWrapper TextWrapper
 		{
 			get { return this.fontWrapper; }
 		}
 
 		// Wrapper pour le paragraphe.
-		public Text.Wrappers.ParagraphLayoutWrapper ParagraphLayoutWrapper
+		public Text.Wrappers.ParagraphWrapper ParagraphWrapper
 		{
 			get { return this.paragraphLayoutWrapper; }
 		}
@@ -1916,7 +1916,7 @@ namespace Epsitec.Common.Document
 		protected Text.TextContext						textContext;
 		protected Widgets.HRuler						hRuler;
 		protected Widgets.VRuler						vRuler;
-		protected Text.Wrappers.FontWrapper				fontWrapper;
-		protected Text.Wrappers.ParagraphLayoutWrapper	paragraphLayoutWrapper;
+		protected Text.Wrappers.TextWrapper				fontWrapper;
+		protected Text.Wrappers.ParagraphWrapper	paragraphLayoutWrapper;
 	}
 }

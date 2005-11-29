@@ -848,22 +848,22 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Wrappers\FontWrapper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Wrappers\JustificationMode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Wrappers\ParagraphLayoutWrapper.cs"
+                    RelPath = "Wrappers\ParagraphWrapper.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Wrappers\StateProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Wrappers\TextWrapper.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

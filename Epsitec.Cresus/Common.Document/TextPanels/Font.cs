@@ -58,8 +58,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.Text.Font.Subscript,   new MessageEventHandler(this.HandleButtonSubscriptClicked));
 			this.buttonSuperscript = this.CreateIconButton(Misc.Icon("FontSuperscript"), Res.Strings.Action.Text.Font.Superscript, new MessageEventHandler(this.HandleButtonSuperscriptClicked));
 
-			this.document.FontWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.FontWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -75,8 +75,8 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
 
-				this.document.FontWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.document.FontWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.document.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+				this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 
 				this.fontFace = null;
 				this.fontSize = null;
@@ -119,11 +119,11 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			base.UpdateAfterChanging();
 
-			string face = this.document.FontWrapper.Defined.FontFace;
+			string face = this.document.TextWrapper.Defined.FontFace;
 			string baseFace = face;
 			if ( face == null )
 			{
-				face = this.document.FontWrapper.Active.FontFace;
+				face = this.document.TextWrapper.Active.FontFace;
 				baseFace = face;
 				if ( face == null )
 				{
@@ -133,10 +133,10 @@ namespace Epsitec.Common.Document.TextPanels
 				face = Misc.Italic(face);
 			}
 
-			string style = this.document.FontWrapper.Defined.FontStyle;
+			string style = this.document.TextWrapper.Defined.FontStyle;
 			if ( style == null )
 			{
-				style = this.document.FontWrapper.Active.FontStyle;
+				style = this.document.TextWrapper.Active.FontStyle;
 				if ( style == null )
 				{
 					style = Res.Strings.Action.Text.Font.Default;
@@ -145,12 +145,12 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			string textSize = "";
-			double size = this.document.FontWrapper.Defined.FontSize;
-			Text.Properties.SizeUnits units = this.document.FontWrapper.Defined.Units;
+			double size = this.document.TextWrapper.Defined.FontSize;
+			Text.Properties.SizeUnits units = this.document.TextWrapper.Defined.Units;
 			if ( double.IsNaN(size) )
 			{
-				size = this.document.FontWrapper.Active.FontSize;
-				units = this.document.FontWrapper.Active.Units;
+				size = this.document.TextWrapper.Active.FontSize;
+				units = this.document.TextWrapper.Active.Units;
 				if ( double.IsNaN(size) )
 				{
 					textSize = "*";
@@ -194,18 +194,18 @@ namespace Epsitec.Common.Document.TextPanels
 			bool enabled = false;
 			bool state   = false;
 
-			if ( this.document != null && this.document.FontWrapper.IsAttached )
+			if ( this.document != null && this.document.TextWrapper.IsAttached )
 			{
-				string face  = this.document.FontWrapper.Defined.FontFace;
+				string face  = this.document.TextWrapper.Defined.FontFace;
 				if ( face == null )
 				{
-					face = this.document.FontWrapper.Active.FontFace;
+					face = this.document.TextWrapper.Active.FontFace;
 				}
 
-				string style = this.document.FontWrapper.Defined.FontStyle;
+				string style = this.document.TextWrapper.Defined.FontStyle;
 				if ( style == null )
 				{
-					style = this.document.FontWrapper.Active.FontStyle;
+					style = this.document.TextWrapper.Active.FontStyle;
 				}
 
 				OpenType.FontWeight weight = OpenType.FontWeight.Medium;
@@ -217,7 +217,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				enabled = true;
 				state   = ((int)weight > (int)OpenType.FontWeight.Medium);
-				state  ^= this.document.FontWrapper.Defined.InvertBold;
+				state  ^= this.document.TextWrapper.Defined.InvertBold;
 			}
 
 			this.buttonBold.Enable = (enabled);
@@ -229,18 +229,18 @@ namespace Epsitec.Common.Document.TextPanels
 			bool enabled = false;
 			bool state   = false;
 
-			if ( this.document != null && this.document.FontWrapper.IsAttached )
+			if ( this.document != null && this.document.TextWrapper.IsAttached )
 			{
-				string face  = this.document.FontWrapper.Defined.FontFace;
+				string face  = this.document.TextWrapper.Defined.FontFace;
 				if ( face == null )
 				{
-					face = this.document.FontWrapper.Active.FontFace;
+					face = this.document.TextWrapper.Active.FontFace;
 				}
 
-				string style = this.document.FontWrapper.Defined.FontStyle;
+				string style = this.document.TextWrapper.Defined.FontStyle;
 				if ( style == null )
 				{
-					style = this.document.FontWrapper.Active.FontStyle;
+					style = this.document.TextWrapper.Active.FontStyle;
 				}
 
 				OpenType.FontStyle italic = OpenType.FontStyle.Normal;
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				enabled = true;
 				state   = italic != OpenType.FontStyle.Normal;
-				state  ^= this.document.FontWrapper.Defined.InvertItalic;
+				state  ^= this.document.TextWrapper.Defined.InvertItalic;
 			}
 
 			this.buttonItalic.Enable = (enabled);
@@ -312,12 +312,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void ChangeFontSize(double add, double percents)
 		{
-			double size = this.document.FontWrapper.Defined.FontSize;
-			Text.Properties.SizeUnits units = this.document.FontWrapper.Defined.Units;
+			double size = this.document.TextWrapper.Defined.FontSize;
+			Text.Properties.SizeUnits units = this.document.TextWrapper.Defined.Units;
 			if ( double.IsNaN(size) )
 			{
-				size = this.document.FontWrapper.Active.FontSize;
-				units = this.document.FontWrapper.Active.Units;
+				size = this.document.TextWrapper.Active.FontSize;
+				units = this.document.TextWrapper.Active.Units;
 			}
 
 			if ( units == Common.Text.Properties.SizeUnits.Percent )
@@ -329,10 +329,10 @@ namespace Epsitec.Common.Document.TextPanels
 				size += add*Modifier.fontSizeScale;
 			}
 
-			this.document.FontWrapper.SuspendSynchronisations();
-			this.document.FontWrapper.Defined.FontSize = size;
-			this.document.FontWrapper.Defined.Units = units;
-			this.document.FontWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.Defined.FontSize = size;
+			this.document.TextWrapper.Defined.Units = units;
+			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
 
@@ -659,16 +659,16 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( sender == this.fontFace )
 			{
 				string face = this.fontFace.Text;
-				this.document.FontWrapper.SuspendSynchronisations();
-				this.document.FontWrapper.Defined.FontFace = face;
-				this.document.FontWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
-				this.document.FontWrapper.ResumeSynchronisations();
+				this.document.TextWrapper.SuspendSynchronisations();
+				this.document.TextWrapper.Defined.FontFace = face;
+				this.document.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
+				this.document.TextWrapper.ResumeSynchronisations();
 			}
 
 			if ( sender == this.fontStyle )
 			{
 				string style = this.fontStyle.Text;
-				this.document.FontWrapper.Defined.FontStyle = style;
+				this.document.TextWrapper.Defined.FontStyle = style;
 			}
 
 			if ( sender == this.fontSize )
@@ -684,10 +684,10 @@ namespace Epsitec.Common.Document.TextPanels
 						size *= Modifier.fontSizeScale;
 					}
 				}
-				this.document.FontWrapper.SuspendSynchronisations();
-				this.document.FontWrapper.Defined.FontSize = size;
-				this.document.FontWrapper.Defined.Units = units;
-				this.document.FontWrapper.ResumeSynchronisations();
+				this.document.TextWrapper.SuspendSynchronisations();
+				this.document.TextWrapper.Defined.FontSize = size;
+				this.document.TextWrapper.Defined.Units = units;
+				this.document.TextWrapper.ResumeSynchronisations();
 			}
 		}
 
@@ -708,37 +708,37 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleButtonSizeMinusClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.FontWrapper.IsAttached )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
 			this.ChangeFontSize(-1, 80);
 		}
 
 		private void HandleButtonSizePlusClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.FontWrapper.IsAttached )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
 			this.ChangeFontSize(1, 125);
 		}
 
 		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.FontWrapper.IsAttached )  return;
-			this.document.FontWrapper.Defined.InvertBold = !this.document.FontWrapper.Defined.InvertBold;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+			this.document.TextWrapper.Defined.InvertBold = !this.document.TextWrapper.Defined.InvertBold;
 		}
 
 		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.FontWrapper.IsAttached )  return;
-			this.document.FontWrapper.Defined.InvertItalic = !this.document.FontWrapper.Defined.InvertItalic;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+			this.document.TextWrapper.Defined.InvertItalic = !this.document.TextWrapper.Defined.InvertItalic;
 		}
 
 		private void HandleButtonUnderlineClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.FontWrapper.IsAttached )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
 			
-			this.document.FontWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronisations();
 			
 			// Cycle entre divers états:
 			//
@@ -751,31 +751,31 @@ namespace Epsitec.Common.Document.TextPanels
 			// (B1) Pas de soulignement
 			// (B2) Soulignement défini localement
 			
-			Common.Text.Wrappers.FontWrapper.XlineDefinition underline = this.document.FontWrapper.Defined.Underline;
+			Common.Text.Wrappers.TextWrapper.XlineDefinition underline = this.document.TextWrapper.Defined.Underline;
 			
-			if ( this.document.FontWrapper.Active.IsUnderlineDefined )
+			if ( this.document.TextWrapper.Active.IsUnderlineDefined )
 			{
-				if ( this.document.FontWrapper.Active.Underline.IsDisabled &&
-					 this.document.FontWrapper.Active.Underline.IsEmpty == false )
+				if ( this.document.TextWrapper.Active.Underline.IsDisabled &&
+					 this.document.TextWrapper.Active.Underline.IsEmpty == false )
 				{
 					// (A2)
 
 					this.FillUnderlineDefinition(underline);					// ---> (A3)
 					
-					if ( underline.EqualsIgnoringIsDisabled(this.document.FontWrapper.Active.Underline) )
+					if ( underline.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Underline) )
 					{
 						// L'état défini par notre souligné local est identique à
 						// celui hérité par le style actif; utilise celui du style
 						// dans ce cas.
 						
-						this.document.FontWrapper.Defined.ClearUnderline();		// ---> (A1)
+						this.document.TextWrapper.Defined.ClearUnderline();		// ---> (A1)
 					}
 				}
-				else if ( this.document.FontWrapper.Defined.IsUnderlineDefined )
+				else if ( this.document.TextWrapper.Defined.IsUnderlineDefined )
 				{
 					// (A3) ou (B2)
 					
-					this.document.FontWrapper.Defined.ClearUnderline();			// ---> (A1) ou (B1)
+					this.document.TextWrapper.Defined.ClearUnderline();			// ---> (A1) ou (B1)
 				}
 				else
 				{
@@ -791,33 +791,33 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillUnderlineDefinition(underline);						// ---> (B2)
 			}
 			
-			this.document.FontWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronisations();
 		}
 		
 		private void HandleButtonSubscriptClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.FontWrapper.IsAttached )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
 			
-			this.document.FontWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronisations();
 			
-			Common.Text.Wrappers.FontWrapper.XscriptDefinition xscript = this.document.FontWrapper.Defined.Xscript;
+			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
 			
-			if ( this.document.FontWrapper.Active.IsXscriptDefined )
+			if ( this.document.TextWrapper.Active.IsXscriptDefined )
 			{
-				if ( this.document.FontWrapper.Active.Xscript.IsDisabled &&
-					 this.document.FontWrapper.Active.Xscript.IsEmpty == false )
+				if ( this.document.TextWrapper.Active.Xscript.IsDisabled &&
+					 this.document.TextWrapper.Active.Xscript.IsEmpty == false )
 				{
 					this.FillSubscriptDefinition(xscript);
 					
-					if ( xscript.EqualsIgnoringIsDisabled(this.document.FontWrapper.Active.Xscript) )
+					if ( xscript.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Xscript) )
 					{
-						this.document.FontWrapper.Defined.ClearXscript();
+						this.document.TextWrapper.Defined.ClearXscript();
 					}
 				}
-				else if ( this.document.FontWrapper.Defined.IsXscriptDefined )
+				else if ( this.document.TextWrapper.Defined.IsXscriptDefined )
 				{
-					this.document.FontWrapper.Defined.ClearXscript();
+					this.document.TextWrapper.Defined.ClearXscript();
 				}
 				else
 				{
@@ -829,33 +829,33 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillSubscriptDefinition(xscript);
 			}
 			
-			this.document.FontWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleButtonSuperscriptClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.FontWrapper.IsAttached )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
 			
-			this.document.FontWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronisations();
 			
-			Common.Text.Wrappers.FontWrapper.XscriptDefinition xscript = this.document.FontWrapper.Defined.Xscript;
+			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
 			
-			if ( this.document.FontWrapper.Active.IsXscriptDefined )
+			if ( this.document.TextWrapper.Active.IsXscriptDefined )
 			{
-				if ( this.document.FontWrapper.Active.Xscript.IsDisabled &&
-					 this.document.FontWrapper.Active.Xscript.IsEmpty == false )
+				if ( this.document.TextWrapper.Active.Xscript.IsDisabled &&
+					 this.document.TextWrapper.Active.Xscript.IsEmpty == false )
 				{
 					this.FillSuperscriptDefinition(xscript);
 					
-					if ( xscript.EqualsIgnoringIsDisabled(this.document.FontWrapper.Active.Xscript) )
+					if ( xscript.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Xscript) )
 					{
-						this.document.FontWrapper.Defined.ClearXscript();
+						this.document.TextWrapper.Defined.ClearXscript();
 					}
 				}
-				else if ( this.document.FontWrapper.Defined.IsXscriptDefined )
+				else if ( this.document.TextWrapper.Defined.IsXscriptDefined )
 				{
-					this.document.FontWrapper.Defined.ClearXscript();
+					this.document.TextWrapper.Defined.ClearXscript();
 				}
 				else
 				{
@@ -867,16 +867,16 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillSuperscriptDefinition(xscript);
 			}
 			
-			this.document.FontWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.FontWrapper.IsAttached )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
 		}
 
-		private void FillUnderlineDefinition(Common.Text.Wrappers.FontWrapper.XlineDefinition underline)
+		private void FillUnderlineDefinition(Common.Text.Wrappers.TextWrapper.XlineDefinition underline)
 		{
 			underline.IsDisabled = false;
 			
@@ -888,7 +888,7 @@ namespace Epsitec.Common.Document.TextPanels
 			underline.DrawStyle      = "Black";
 		}
         
-		private void FillSubscriptDefinition(Common.Text.Wrappers.FontWrapper.XscriptDefinition xscript)
+		private void FillSubscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript)
 		{
 			xscript.IsDisabled = false;
 			
@@ -896,7 +896,7 @@ namespace Epsitec.Common.Document.TextPanels
 			xscript.Offset = -0.15;
 		}
         
-		private void FillSuperscriptDefinition(Common.Text.Wrappers.FontWrapper.XscriptDefinition xscript)
+		private void FillSuperscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript)
 		{
 			xscript.IsDisabled = false;
 			

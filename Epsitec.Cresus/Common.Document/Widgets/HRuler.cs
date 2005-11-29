@@ -44,15 +44,15 @@ namespace Epsitec.Common.Document.Widgets
 		// Attache la règle aux wrappers.
 		public override void WrappersAttach()
 		{
-			this.document.FontWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.FontWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 		}
 
 		// Détache la règle des wrappers.
 		public override void WrappersDetach()
 		{
-			this.document.FontWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-			this.document.FontWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+			this.document.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+			this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 		}
 
 		// Le wrapper associé a changé.
@@ -87,10 +87,10 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void GetMargins(out double leftFirst, out double leftBody, out double right)
 		{
-			leftFirst = this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst;
+			leftFirst = this.document.ParagraphWrapper.Defined.LeftMarginFirst;
 			if ( double.IsNaN(leftFirst) )
 			{
-				leftFirst = this.document.ParagraphLayoutWrapper.Active.LeftMarginFirst;
+				leftFirst = this.document.ParagraphWrapper.Active.LeftMarginFirst;
 
 				if ( double.IsNaN(leftFirst) )
 				{
@@ -98,10 +98,10 @@ namespace Epsitec.Common.Document.Widgets
 				}
 			}
 
-			leftBody = this.document.ParagraphLayoutWrapper.Defined.LeftMarginBody;
+			leftBody = this.document.ParagraphWrapper.Defined.LeftMarginBody;
 			if ( double.IsNaN(leftBody) )
 			{
-				leftBody = this.document.ParagraphLayoutWrapper.Active.LeftMarginBody;
+				leftBody = this.document.ParagraphWrapper.Active.LeftMarginBody;
 
 				if ( double.IsNaN(leftBody) )
 				{
@@ -109,10 +109,10 @@ namespace Epsitec.Common.Document.Widgets
 				}
 			}
 
-			right = this.document.ParagraphLayoutWrapper.Defined.RightMarginBody;
+			right = this.document.ParagraphWrapper.Defined.RightMarginBody;
 			if ( double.IsNaN(right) )
 			{
-				right = this.document.ParagraphLayoutWrapper.Active.RightMarginBody;
+				right = this.document.ParagraphWrapper.Active.RightMarginBody;
 
 				if ( double.IsNaN(right) )
 				{
@@ -679,10 +679,10 @@ namespace Epsitec.Common.Document.Widgets
 					leftFirst = this.SnapGrid(leftFirst);
 					leftFirst = System.Math.Max(leftFirst, 0);
 
-					this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
-					this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst = leftFirst;
-					this.document.ParagraphLayoutWrapper.Defined.Units           = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphLayoutWrapper.ResumeSynchronisations();
+					this.document.ParagraphWrapper.SuspendSynchronisations();
+					this.document.ParagraphWrapper.Defined.LeftMarginFirst = leftFirst;
+					this.document.ParagraphWrapper.Defined.Units           = Common.Text.Properties.SizeUnits.Points;
+					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
 
 				if ( handle == "LeftBody" )
@@ -692,10 +692,10 @@ namespace Epsitec.Common.Document.Widgets
 					leftBody = this.SnapGrid(leftBody);
 					leftBody = System.Math.Max(leftBody, 0);
 
-					this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
-					this.document.ParagraphLayoutWrapper.Defined.LeftMarginBody = leftBody;
-					this.document.ParagraphLayoutWrapper.Defined.Units          = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphLayoutWrapper.ResumeSynchronisations();
+					this.document.ParagraphWrapper.SuspendSynchronisations();
+					this.document.ParagraphWrapper.Defined.LeftMarginBody = leftBody;
+					this.document.ParagraphWrapper.Defined.Units          = Common.Text.Properties.SizeUnits.Points;
+					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
 
 				if ( handle == "FirstBody" )
@@ -712,11 +712,11 @@ namespace Epsitec.Common.Document.Widgets
 					leftFirst = this.SnapGrid(leftFirst);
 					leftFirst = System.Math.Max(leftFirst, 0);
 
-					this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
-					this.document.ParagraphLayoutWrapper.Defined.LeftMarginFirst = leftFirst;
-					this.document.ParagraphLayoutWrapper.Defined.LeftMarginBody  = leftBody;
-					this.document.ParagraphLayoutWrapper.Defined.Units           = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphLayoutWrapper.ResumeSynchronisations();
+					this.document.ParagraphWrapper.SuspendSynchronisations();
+					this.document.ParagraphWrapper.Defined.LeftMarginFirst = leftFirst;
+					this.document.ParagraphWrapper.Defined.LeftMarginBody  = leftBody;
+					this.document.ParagraphWrapper.Defined.Units           = Common.Text.Properties.SizeUnits.Points;
+					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
 
 				if ( handle == "Right" )
@@ -726,11 +726,11 @@ namespace Epsitec.Common.Document.Widgets
 					right = this.SnapGrid(right);
 					right = System.Math.Max(right, 0);
 
-					this.document.ParagraphLayoutWrapper.SuspendSynchronisations();
-					this.document.ParagraphLayoutWrapper.Defined.RightMarginFirst = right;
-					this.document.ParagraphLayoutWrapper.Defined.RightMarginBody  = right;
-					this.document.ParagraphLayoutWrapper.Defined.Units            = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphLayoutWrapper.ResumeSynchronisations();
+					this.document.ParagraphWrapper.SuspendSynchronisations();
+					this.document.ParagraphWrapper.Defined.RightMarginFirst = right;
+					this.document.ParagraphWrapper.Defined.RightMarginBody  = right;
+					this.document.ParagraphWrapper.Defined.Units            = Common.Text.Properties.SizeUnits.Points;
+					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
 			}
 			else	// tabulateur ?
