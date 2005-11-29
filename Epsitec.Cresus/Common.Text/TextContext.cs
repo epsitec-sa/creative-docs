@@ -404,7 +404,7 @@ namespace Epsitec.Common.Text
 		public void GetFontSize(Properties.FontProperty font_property, Properties.FontSizeProperty font_size_property, Properties.FontXscriptProperty font_xscript_property, out double font_size, out double font_scale)
 		{
 			font_size  = font_size_property.SizeInPoints;
-			font_scale = font_xscript_property == null ? 1.0 : font_xscript_property.Scale;
+			font_scale = (font_xscript_property == null) || (font_xscript_property.IsDisabled) ? 1.0 : font_xscript_property.Scale;
 		}
 		
 		public void GetFontSize(Property[] properties, out double font_size, out double font_scale)
@@ -467,7 +467,8 @@ namespace Epsitec.Common.Text
 			
 			offset = (font_offset_property == null) ? 0 : font_offset_property.GetOffsetInPoints (font_pt_size);
 			
-			if (font_xscript_property != null)
+			if ((font_xscript_property != null) &&
+				(font_xscript_property.IsDisabled == false))
 			{
 				offset += font_xscript_property.Offset * font_pt_size;
 			}
@@ -570,7 +571,8 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			if (font_xscript_p != null)
+			if ((font_xscript_p != null) &&
+				(font_xscript_p.IsDisabled == false))
 			{
 				baseline_offset += font_xscript_p.Offset * this.get_font_last_font_size;
 			}

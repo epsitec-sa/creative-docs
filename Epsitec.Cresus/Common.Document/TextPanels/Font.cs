@@ -55,8 +55,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonUnderlined  = this.CreateIconButton(Misc.Icon("FontUnderlined"),  Res.Strings.Action.Text.Font.Underlined,  new MessageEventHandler(this.HandleButtonUnderlineClicked));
 			this.buttonStrike      = this.CreateIconButton(Misc.Icon("FontStrike"),      Res.Strings.Action.Text.Font.Strike,      new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonFrame       = this.CreateIconButton(Misc.Icon("FontFrame"),       Res.Strings.Action.Text.Font.Frame,       new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.Text.Font.Subscript,   new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonSuperscript = this.CreateIconButton(Misc.Icon("FontSuperscript"), Res.Strings.Action.Text.Font.Superscript, new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.Text.Font.Subscript,   new MessageEventHandler(this.HandleButtonSubscriptClicked));
+			this.buttonSuperscript = this.CreateIconButton(Misc.Icon("FontSuperscript"), Res.Strings.Action.Text.Font.Superscript, new MessageEventHandler(this.HandleButtonSuperscriptClicked));
 
 			this.document.FontWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.FontWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
@@ -794,23 +794,116 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.FontWrapper.ResumeSynchronisations();
 		}
 		
-		private void FillUnderlineDefinition(Common.Text.Wrappers.FontWrapper.XlineDefinition underline)
+		private void HandleButtonSubscriptClicked(object sender, MessageEventArgs e)
 		{
-			underline.IsDisabled = false;
-			underline.Thickness = 1.0;
-			underline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
-			underline.Position = -5.0;
-			underline.PositionUnits = Common.Text.Properties.SizeUnits.Points;
-			underline.DrawClass = "underline";
-			underline.DrawStyle = "Black";
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.FontWrapper.IsAttached )  return;
+			
+			this.document.FontWrapper.SuspendSynchronisations();
+			
+			Common.Text.Wrappers.FontWrapper.XscriptDefinition xscript = this.document.FontWrapper.Defined.Xscript;
+			
+			if ( this.document.FontWrapper.Active.IsXscriptDefined )
+			{
+				if ( this.document.FontWrapper.Active.Xscript.IsDisabled &&
+					 this.document.FontWrapper.Active.Xscript.IsEmpty == false )
+				{
+					this.FillSubscriptDefinition(xscript);
+					
+					if ( xscript.EqualsIgnoringIsDisabled(this.document.FontWrapper.Active.Xscript) )
+					{
+						this.document.FontWrapper.Defined.ClearXscript();
+					}
+				}
+				else if ( this.document.FontWrapper.Defined.IsXscriptDefined )
+				{
+					this.document.FontWrapper.Defined.ClearXscript();
+				}
+				else
+				{
+					xscript.IsDisabled = true;
+				}
+			}
+			else
+			{
+				this.FillSubscriptDefinition(xscript);
+			}
+			
+			this.document.FontWrapper.ResumeSynchronisations();
 		}
-        
+
+		private void HandleButtonSuperscriptClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.FontWrapper.IsAttached )  return;
+			
+			this.document.FontWrapper.SuspendSynchronisations();
+			
+			Common.Text.Wrappers.FontWrapper.XscriptDefinition xscript = this.document.FontWrapper.Defined.Xscript;
+			
+			if ( this.document.FontWrapper.Active.IsXscriptDefined )
+			{
+				if ( this.document.FontWrapper.Active.Xscript.IsDisabled &&
+					 this.document.FontWrapper.Active.Xscript.IsEmpty == false )
+				{
+					this.FillSuperscriptDefinition(xscript);
+					
+					if ( xscript.EqualsIgnoringIsDisabled(this.document.FontWrapper.Active.Xscript) )
+					{
+						this.document.FontWrapper.Defined.ClearXscript();
+					}
+				}
+				else if ( this.document.FontWrapper.Defined.IsXscriptDefined )
+				{
+					this.document.FontWrapper.Defined.ClearXscript();
+				}
+				else
+				{
+					xscript.IsDisabled = true;
+				}
+			}
+			else
+			{
+				this.FillSuperscriptDefinition(xscript);
+			}
+			
+			this.document.FontWrapper.ResumeSynchronisations();
+		}
+
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.FontWrapper.IsAttached )  return;
 		}
 
+		private void FillUnderlineDefinition(Common.Text.Wrappers.FontWrapper.XlineDefinition underline)
+		{
+			underline.IsDisabled = false;
+			
+			underline.Thickness      = 1.0;
+			underline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
+			underline.Position       = -5.0;
+			underline.PositionUnits  = Common.Text.Properties.SizeUnits.Points;
+			underline.DrawClass      = "underline";
+			underline.DrawStyle      = "Black";
+		}
+        
+		private void FillSubscriptDefinition(Common.Text.Wrappers.FontWrapper.XscriptDefinition xscript)
+		{
+			xscript.IsDisabled = false;
+			
+			xscript.Scale  = 0.6;
+			xscript.Offset = -0.15;
+		}
+        
+		private void FillSuperscriptDefinition(Common.Text.Wrappers.FontWrapper.XscriptDefinition xscript)
+		{
+			xscript.IsDisabled = false;
+			
+			xscript.Scale  = 0.6;
+			xscript.Offset = 0.25;
+		}
+        
 
 		protected TextFieldCombo			fontFace;
 		protected TextFieldCombo			fontStyle;
