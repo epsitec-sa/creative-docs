@@ -195,7 +195,7 @@ namespace Epsitec.Common.Document.Objects
 					for ( int i=0 ; i<index.Length ; i++ )
 					{
 						SelectedSegment ss = this.selectedSegments[index[i]] as SelectedSegment;
-						this.ContextAddHandle(ss.Position, ss.Rank);
+						this.ShaperHandleAdd(ss.Position, ss.Rank);
 					}
 				}
 				this.SelectedSegmentClear();
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( this.Handle(i).Type == HandleType.Starting ||
 						this.Handle(this.NextRank(i)).Type == HandleType.Starting )
 					{
-						this.ContextContinueHandle(i);
+						this.ShaperHandleContinue(i);
 					}
 				}
 
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( !this.Handle(i).IsVisible )  continue;
 					if ( this.Handle(i).IsShaperDeselected )  continue;
-					this.ContextSubHandle(i);
+					this.ShaperHandleSub(i);
 				}
 
 				this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -286,111 +286,8 @@ namespace Epsitec.Common.Document.Objects
 			return base.ShaperHandleCommand(cmd);
 		}
 
-		// Donne le contenu du menu contextuel.
-		public override void ContextMenu(System.Collections.ArrayList list, Point pos, int handleRank)
-		{
-			ContextMenuItem item;
-
-			if ( handleRank == -1 )
-			{
-				if ( this.DetectOutline(pos) == -1 )  return;
-
-				item = new ContextMenuItem();
-				list.Add(item);  // séparateur
-
-				item = new ContextMenuItem();
-				item.Command = "Object";
-				item.Name = "HandleAdd";
-				item.Icon = Misc.Icon("HandleAdd");
-				item.Text = Res.Strings.Object.Poly.Menu.HandleAdd;
-				list.Add(item);
-			}
-			else
-			{
-				if ( this.TotalMainHandle > 2 )
-				{
-					item = new ContextMenuItem();
-					list.Add(item);  // séparateur
-
-					HandleConstrainType type = this.Handle(handleRank).ConstrainType;
-
-					item = new ContextMenuItem();
-					item.Command = "Object";
-					item.Name = "HandleSym";
-					item.IconActiveNo = Misc.Icon("RadioNo");
-					item.IconActiveYes = Misc.Icon("RadioYes");
-					item.Active = ( type == HandleConstrainType.Symmetric );
-					item.Text = Res.Strings.Object.Poly.Menu.HandleSym;
-					list.Add(item);
-
-					item = new ContextMenuItem();
-					item.Command = "Object";
-					item.Name = "HandleSimply";
-					item.IconActiveNo = Misc.Icon("RadioNo");
-					item.IconActiveYes = Misc.Icon("RadioYes");
-					item.Active = ( type == HandleConstrainType.Simply );
-					item.Text = Res.Strings.Object.Poly.Menu.HandleSimply;
-					list.Add(item);
-
-					item = new ContextMenuItem();
-					list.Add(item);  // séparateur
-
-					if ( !this.PropertyPolyClose.BoolValue &&
-						 (this.Handle(handleRank).Type == HandleType.Starting ||
-						  this.Handle(this.NextRank(handleRank)).Type == HandleType.Starting) )
-					{
-						item = new ContextMenuItem();
-						item.Command = "Object";
-						item.Name = "HandleContinue";
-						item.Icon = Misc.Icon("HandleContinue");
-						item.Text = Res.Strings.Object.Poly.Menu.HandleContinue;
-						list.Add(item);
-					}
-
-					item = new ContextMenuItem();
-					item.Command = "Object";
-					item.Name = "HandleDelete";
-					item.Icon = Misc.Icon("HandleSub");
-					item.Text = Res.Strings.Object.Poly.Menu.HandleDelete;
-					list.Add(item);
-				}
-			}
-		}
-
-		// Exécute une commande du menu contextuel.
-		public override void ContextCommand(string cmd, Point pos, int handleRank)
-		{
-			int rank = this.DetectOutline(pos);
-
-			if ( cmd == "HandleAdd" )
-			{
-				if ( rank == -1 )  return;
-				this.ContextAddHandle(pos, rank);
-			}
-
-			if ( cmd == "HandleContinue" )
-			{
-				this.ContextContinueHandle(handleRank);
-			}
-
-			if ( cmd == "HandleDelete" )
-			{
-				this.ContextSubHandle(handleRank);
-			}
-
-			if ( cmd == "HandleSym" )
-			{
-				this.Handle(handleRank).ConstrainType = HandleConstrainType.Symmetric;
-			}
-
-			if ( cmd == "HandleSimply" )
-			{
-				this.Handle(handleRank).ConstrainType = HandleConstrainType.Simply;
-			}
-		}
-
 		// Ajoute une poignée sans changer l'aspect.
-		protected void ContextAddHandle(Point pos, int rank)
+		protected void ShaperHandleAdd(Point pos, int rank)
 		{
 			int next = this.NextRank(rank);
 			Point p = Point.Projection(this.Handle(rank).Position, this.Handle(next).Position, pos);
@@ -404,7 +301,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Supprime une poignée sans trop changer l'aspect.
-		protected void ContextSubHandle(int rank)
+		protected void ShaperHandleSub(int rank)
 		{
 			bool starting = (this.Handle(rank).Type == HandleType.Starting);
 			this.HandleDelete(rank);
@@ -418,7 +315,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Prolonge la ligne.
-		protected void ContextContinueHandle(int rank)
+		protected void ShaperHandleContinue(int rank)
 		{
 			HandleType type = this.Handle(rank).Type;
 			this.Handle(rank).Type = HandleType.Primary;

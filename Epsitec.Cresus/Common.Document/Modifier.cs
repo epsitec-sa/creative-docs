@@ -1778,7 +1778,7 @@ namespace Epsitec.Common.Document
 
 		#region TextFormat
 		// Met le texte en gras.
-		public void TextBold()
+		public void FontBold()
 		{
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return;
@@ -1786,7 +1786,7 @@ namespace Epsitec.Common.Document
 		}
 		
 		// Met le texte en italique.
-		public void TextItalic()
+		public void FontItalic()
 		{
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return;
@@ -1794,7 +1794,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Met le texte en souligné.
-		public void TextUnderlined()
+		public void FontUnderlined()
 		{
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return;

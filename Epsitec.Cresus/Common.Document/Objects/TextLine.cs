@@ -259,7 +259,7 @@ namespace Epsitec.Common.Document.Objects
 					for ( int i=0 ; i<index.Length ; i++ )
 					{
 						SelectedSegment ss = this.selectedSegments[index[i]] as SelectedSegment;
-						this.ContextAddHandle(ss.Position, ss.Rank*3);
+						this.ShaperHandleAdd(ss.Position, ss.Rank*3);
 					}
 				}
 				this.SelectedSegmentClear();
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( this.Handle(i+1).Type == HandleType.Starting ||
 						this.Handle(this.NextRank(i)+1).Type == HandleType.Starting )
 					{
-						this.ContextContinueHandle(i+1);
+						this.ShaperHandleContinue(i+1);
 					}
 				}
 
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( !this.Handle(i+1).IsVisible )  continue;
 					if ( this.Handle(i+1).IsShaperDeselected )  continue;
-					this.ContextSubHandle(i+1);
+					this.ShaperHandleSub(i+1);
 				}
 
 				this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Document.Objects
 					{
 						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
 						int rank = ss.Rank*3;
-						this.ContextToLine(rank);
+						this.ShaperHandleToLine(rank);
 					}
 				}
 				this.SelectedSegmentClear();
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Document.Objects
 					{
 						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
 						int rank = ss.Rank*3;
-						this.ContextToCurve(rank);
+						this.ShaperHandleToCurve(rank);
 					}
 				}
 				this.SelectedSegmentClear();
@@ -368,7 +368,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( this.Handle(i+1).IsShaperDeselected )  continue;
 					if ( this.Handle(i).Type != HandleType.Hide && this.Handle(i+2).Type != HandleType.Hide )
 					{
-						this.ContextSym(i+1);
+						this.ShaperHandleSym(i+1);
 					}
 				}
 
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( this.Handle(i+1).IsShaperDeselected )  continue;
 					if ( this.Handle(i).Type != HandleType.Hide && this.Handle(i+2).Type != HandleType.Hide )
 					{
-						this.ContextSmooth(i+1);
+						this.ShaperHandleSmooth(i+1);
 					}
 				}
 
@@ -412,7 +412,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( this.Handle(i+1).IsShaperDeselected )  continue;
 					if ( this.Handle(i).Type != HandleType.Hide && this.Handle(i+2).Type != HandleType.Hide )
 					{
-						this.ContextCorner(i+1);
+						this.ShaperHandleCorner(i+1);
 					}
 				}
 
@@ -434,7 +434,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( this.Handle(i+1).IsShaperDeselected )  continue;
 					if ( (this.Handle(i).Type == HandleType.Hide) != (this.Handle(i+2).Type == HandleType.Hide) )
 					{
-						this.ContextSmooth(i+1);
+						this.ShaperHandleSmooth(i+1);
 					}
 				}
 
@@ -456,7 +456,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( this.Handle(i+1).IsShaperDeselected )  continue;
 					if ( (this.Handle(i).Type == HandleType.Hide) != (this.Handle(i+2).Type == HandleType.Hide) )
 					{
-						this.ContextCorner(i+1);
+						this.ShaperHandleCorner(i+1);
 					}
 				}
 
@@ -468,196 +468,8 @@ namespace Epsitec.Common.Document.Objects
 			return base.ShaperHandleCommand(cmd);
 		}
 
-		// Donne le contenu du menu contextuel.
-		public override void ContextMenu(System.Collections.ArrayList list, Point pos, int handleRank)
-		{
-			ContextMenuItem item;
-
-			if ( handleRank == -1 )  // sur un segment ?
-			{
-				int rank = this.DetectOutline(pos);
-				if ( rank == -1 )  return;
-
-				item = new ContextMenuItem();
-				list.Add(item);  // séparateur
-
-				if ( this.Handle(rank+2).Type == HandleType.Hide )
-				{
-					item = new ContextMenuItem();
-					item.Command = "Object";
-					item.Name = "Curve";
-					item.Icon = Misc.Icon("HandleToCurve");
-					item.Text = Res.Strings.Object.Bezier.Menu.ToCurve;
-					list.Add(item);
-				}
-				else
-				{
-					item = new ContextMenuItem();
-					item.Command = "Object";
-					item.Name = "Line";
-					item.Icon = Misc.Icon("HandleToLine");
-					item.Text = Res.Strings.Object.Bezier.Menu.ToLine;
-					list.Add(item);
-				}
-
-				item = new ContextMenuItem();
-				item.Command = "Object";
-				item.Name = "HandleAdd";
-				item.Icon = Misc.Icon("HandleAdd");
-				item.Text = Res.Strings.Object.Bezier.Menu.HandleAdd;
-				list.Add(item);
-			}
-			else	// sur un point ?
-			{
-				if ( handleRank%3 == 1 )  // poignée principale ?
-				{
-					if ( this.Handle(handleRank-1).Type != HandleType.Hide && this.Handle(handleRank+1).Type != HandleType.Hide )
-					{
-						item = new ContextMenuItem();
-						list.Add(item);  // séparateur
-
-						HandleConstrainType type = this.Handle(handleRank).ConstrainType;
-
-						item = new ContextMenuItem();
-						item.Command = "Object";
-						item.Name = "HandleSym";
-						item.IconActiveNo = Misc.Icon("RadioNo");
-						item.IconActiveYes = Misc.Icon("RadioYes");
-						item.Active = ( type == HandleConstrainType.Symmetric );
-						item.Text = Res.Strings.Object.Bezier.Menu.HandleSym;
-						list.Add(item);
-
-						item = new ContextMenuItem();
-						item.Command = "Object";
-						item.Name = "HandleSmooth";
-						item.IconActiveNo = Misc.Icon("RadioNo");
-						item.IconActiveYes = Misc.Icon("RadioYes");
-						item.Active = ( type == HandleConstrainType.Smooth );
-						item.Text = Res.Strings.Object.Bezier.Menu.HandleSmooth;
-						list.Add(item);
-
-						item = new ContextMenuItem();
-						item.Command = "Object";
-						item.Name = "HandleCorner";
-						item.IconActiveNo = Misc.Icon("RadioNo");
-						item.IconActiveYes = Misc.Icon("RadioYes");
-						item.Active = ( type == HandleConstrainType.Corner );
-						item.Text = Res.Strings.Object.Bezier.Menu.HandleCorner;
-						list.Add(item);
-					}
-					else if ( this.Handle(handleRank-1).Type != HandleType.Hide || this.Handle(handleRank+1).Type != HandleType.Hide )
-					{
-						item = new ContextMenuItem();
-						list.Add(item);  // séparateur
-
-						HandleConstrainType type = this.Handle(handleRank).ConstrainType;
-
-						item = new ContextMenuItem();
-						item.Command = "Object";
-						item.Name = "HandleSmooth";
-						item.IconActiveNo = Misc.Icon("RadioNo");
-						item.IconActiveYes = Misc.Icon("RadioYes");
-						item.Active = ( type == HandleConstrainType.Smooth );
-						item.Text = Res.Strings.Object.Bezier.Menu.HandleLine;
-						list.Add(item);
-
-						item = new ContextMenuItem();
-						item.Command = "Object";
-						item.Name = "HandleCorner";
-						item.IconActiveNo = Misc.Icon("RadioNo");
-						item.IconActiveYes = Misc.Icon("RadioYes");
-						item.Active = ( type != HandleConstrainType.Smooth );
-						item.Text = Res.Strings.Object.Bezier.Menu.HandleFree;
-						list.Add(item);
-					}
-
-					bool sep = false;
-
-					if ( this.Handle(handleRank).Type == HandleType.Starting ||
-						 this.Handle(this.NextRank(handleRank-1)+1).Type == HandleType.Starting )
-					{
-						item = new ContextMenuItem();
-						list.Add(item);  // séparateur
-						sep = true;
-
-						item = new ContextMenuItem();
-						item.Command = "Object";
-						item.Name = "HandleContinue";
-						item.Icon = Misc.Icon("HandleContinue");
-						item.Text = Res.Strings.Object.Bezier.Menu.HandleContinue;
-						list.Add(item);
-					}
-
-					if ( this.TotalMainHandle >= 3*3 )
-					{
-						if ( !sep )
-						{
-							item = new ContextMenuItem();
-							list.Add(item);  // séparateur
-						}
-
-						item = new ContextMenuItem();
-						item.Command = "Object";
-						item.Name = "HandleDelete";
-						item.Icon = Misc.Icon("HandleSub");
-						item.Text = Res.Strings.Object.Bezier.Menu.HandleDelete;
-						list.Add(item);
-					}
-				}
-			}
-		}
-
-		// Exécute une commande du menu contextuel.
-		public override void ContextCommand(string cmd, Point pos, int handleRank)
-		{
-			int rank = this.DetectOutline(pos);
-
-			if ( cmd == "Line" )
-			{
-				if ( rank == -1 )  return;
-				this.ContextToLine(rank);
-			}
-
-			if ( cmd == "Curve" )
-			{
-				if ( rank == -1 )  return;
-				this.ContextToCurve(rank);
-			}
-
-			if ( cmd == "HandleAdd" )
-			{
-				if ( rank == -1 )  return;
-				this.ContextAddHandle(pos, rank);
-			}
-
-			if ( cmd == "HandleContinue" )
-			{
-				this.ContextContinueHandle(handleRank);
-			}
-
-			if ( cmd == "HandleSym" )
-			{
-				this.ContextSym(handleRank);
-			}
-
-			if ( cmd == "HandleSmooth" )
-			{
-				this.ContextSmooth(handleRank);
-			}
-
-			if ( cmd == "HandleCorner" )
-			{
-				this.ContextCorner(handleRank);
-			}
-
-			if ( cmd == "HandleDelete" )
-			{
-				this.ContextSubHandle(handleRank);
-			}
-		}
-
 		// Passe le point en mode symétrique.
-		protected void ContextSym(int rank)
+		protected void ShaperHandleSym(int rank)
 		{
 			this.Handle(rank).ConstrainType = HandleConstrainType.Symmetric;
 			this.MoveSecondary(rank, rank-1, rank+1, this.Handle(rank-1).Position);
@@ -665,7 +477,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Passe le point en mode lisse.
-		protected void ContextSmooth(int rank)
+		protected void ShaperHandleSmooth(int rank)
 		{
 			this.Handle(rank).ConstrainType = HandleConstrainType.Smooth;
 
@@ -681,13 +493,13 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Passe le point en mode anguleux.
-		protected void ContextCorner(int rank)
+		protected void ShaperHandleCorner(int rank)
 		{
 			this.Handle(rank).ConstrainType = HandleConstrainType.Corner;
 		}
 
 		// Prolonge la courbe.
-		protected void ContextContinueHandle(int rank)
+		protected void ShaperHandleContinue(int rank)
 		{
 			HandleType type = this.Handle(rank).Type;
 			this.Handle(rank).Type = HandleType.Primary;
@@ -781,7 +593,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Ajoute une poignée sans changer l'aspect de la courbe.
-		protected void ContextAddHandle(Point pos, int rank)
+		protected void ShaperHandleAdd(Point pos, int rank)
 		{
 			for ( int i=0 ; i<3 ; i++ )
 			{
@@ -824,7 +636,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Supprime une poignée sans changer l'aspect de la courbe.
-		protected void ContextSubHandle(int rank)
+		protected void ShaperHandleSub(int rank)
 		{
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
@@ -839,14 +651,14 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( this.Handle(prev+2).Type != this.Handle(next+0).Type )
 				{
-					this.ContextToCurve(prev);
+					this.ShaperHandleToCurve(prev);
 				}
 			}
 			this.SetDirtyBbox();
 		}
 
 		// Conversion d'un segement en ligne droite.
-		protected void ContextToLine(int rank)
+		protected void ShaperHandleToLine(int rank)
 		{
 			int next = rank+3;
 			if ( next >= this.handles.Count )  next = 0;
@@ -860,7 +672,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Conversion d'un segement en courbe.
-		protected void ContextToCurve(int rank)
+		protected void ShaperHandleToCurve(int rank)
 		{
 			int next = rank+3;
 			if ( next >= this.handles.Count )  next = 0;

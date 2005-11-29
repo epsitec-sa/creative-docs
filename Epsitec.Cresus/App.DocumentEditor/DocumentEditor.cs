@@ -2314,22 +2314,22 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.Paste();
 		}
 
-		[Command ("TextBold")]
-		void CommandTextBold(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("FontBold")]
+		void CommandFontBold(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.TextBold();
+			this.CurrentDocument.Modifier.FontBold();
 		}
 
-		[Command ("TextItalic")]
-		void CommandTextItalic(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("FontItalic")]
+		void CommandFontItalic(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.TextItalic();
+			this.CurrentDocument.Modifier.FontItalic();
 		}
 
-		[Command ("TextUnderlined")]
-		void CommandTextUnderlined(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("FontUnderlined")]
+		void CommandFontUnderlined(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.TextUnderlined();
+			this.CurrentDocument.Modifier.FontUnderlined();
 		}
 
 
@@ -3544,9 +3544,9 @@ namespace Epsitec.App.DocumentEditor
 			this.copyState = new CommandState("Copy", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaC);
 			this.pasteState = new CommandState("Paste", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaV);
 			
-			this.textBoldState = new CommandState("TextBold", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaB);
-			this.textItalicState = new CommandState("TextItalic", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaI);
-			this.textUnderlinedState = new CommandState("TextUnderlined", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
+			this.fontBoldState = new CommandState("FontBold", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaB);
+			this.fontItalicState = new CommandState("FontItalic", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaI);
+			this.fontUnderlinedState = new CommandState("FontUnderlined", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
 			
 			this.orderUpOneState = new CommandState("OrderUpOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageUp);
 			this.orderDownOneState = new CommandState("OrderDownOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageDown);
@@ -4122,18 +4122,18 @@ namespace Epsitec.App.DocumentEditor
 					this.cutState.Enable = ( totalSelected > 0 && !isCreating );
 					this.copyState.Enable = ( totalSelected > 0 && !isCreating );
 					this.pasteState.Enable = ( !this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating );
-					this.textBoldState.Enable = false;
-					this.textItalicState.Enable = false;
-					this.textUnderlinedState.Enable = false;
+					this.fontBoldState.Enable = false;
+					this.fontItalicState.Enable = false;
+					this.fontUnderlinedState.Enable = false;
 				}
 				else
 				{
 					this.cutState.Enable = true;
 					this.copyState.Enable = true;
 					this.pasteState.Enable = true;
-					this.textBoldState.Enable = true;
-					this.textItalicState.Enable = true;
-					this.textUnderlinedState.Enable = true;
+					this.fontBoldState.Enable = true;
+					this.fontItalicState.Enable = true;
+					this.fontUnderlinedState.Enable = true;
 				}
 
 				this.CurrentDocument.Dialogs.UpdateInfos();
@@ -4148,9 +4148,9 @@ namespace Epsitec.App.DocumentEditor
 				this.cutState.Enable = false;
 				this.copyState.Enable = false;
 				this.pasteState.Enable = false;
-				this.textBoldState.Enable = false;
-				this.textItalicState.Enable = false;
-				this.textUnderlinedState.Enable = false;
+				this.fontBoldState.Enable = false;
+				this.fontItalicState.Enable = false;
+				this.fontUnderlinedState.Enable = false;
 				this.orderUpOneState.Enable = false;
 				this.orderDownOneState.Enable = false;
 				this.orderUpAllState.Enable = false;
@@ -5452,9 +5452,9 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					cutState;
 		protected CommandState					copyState;
 		protected CommandState					pasteState;
-		protected CommandState					textBoldState;
-		protected CommandState					textItalicState;
-		protected CommandState					textUnderlinedState;
+		protected CommandState					fontBoldState;
+		protected CommandState					fontItalicState;
+		protected CommandState					fontUnderlinedState;
 		protected CommandState					orderUpOneState;
 		protected CommandState					orderDownOneState;
 		protected CommandState					orderUpAllState;

@@ -368,8 +368,9 @@ namespace Epsitec.Common.Document.Objects
 					this.PutCommands(list, "Copy");
 					this.PutCommands(list, "Paste");
 					this.PutCommands(list, "");
-					this.PutCommands(list, "#FontBold");
-					this.PutCommands(list, "#FontItalic");
+					this.PutCommands(list, "FontBold");
+					this.PutCommands(list, "FontItalic");
+					this.PutCommands(list, "FontUnderlined");
 					this.PutCommands(list, "");
 				}
 				else

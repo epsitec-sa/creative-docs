@@ -15,8 +15,9 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.Text.Font.Main;
 
-			this.buttonBold   = this.CreateIconButton(Misc.Icon("FontBold"),   Res.Strings.Action.Text.Font.Bold,   new MessageEventHandler(this.HandleButtonBoldClicked));
-			this.buttonItalic = this.CreateIconButton(Misc.Icon("FontItalic"), Res.Strings.Action.Text.Font.Italic, new MessageEventHandler(this.HandleButtonItalicClicked));
+			this.buttonBold       = this.CreateIconButton(Misc.Icon("FontBold"),       Res.Strings.Action.Text.Font.Bold,       new MessageEventHandler(this.HandleButtonBoldClicked));
+			this.buttonItalic     = this.CreateIconButton(Misc.Icon("FontItalic"),     Res.Strings.Action.Text.Font.Italic,     new MessageEventHandler(this.HandleButtonItalicClicked));
+			this.buttonUnderlined = this.CreateIconButton(Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, new MessageEventHandler(this.HandleButtonUnderlinedClicked));
 
 			this.UpdateClientGeometry();
 		}
@@ -90,7 +91,7 @@ namespace Epsitec.Common.Document.Ribbons
 				state  ^= this.document.FontWrapper.Defined.InvertBold;
 			}
 
-			this.buttonBold.Enable = (enabled);
+			this.buttonBold.Enable = enabled;
 			this.buttonBold.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
@@ -125,8 +126,21 @@ namespace Epsitec.Common.Document.Ribbons
 				state  ^= this.document.FontWrapper.Defined.InvertItalic;
 			}
 
-			this.buttonItalic.Enable = (enabled);
+			this.buttonItalic.Enable = enabled;
 			this.buttonItalic.ActiveState = state ? ActiveState.Yes : ActiveState.No;
+		}
+
+		protected void UpdateButtonUnderlined()
+		{
+			bool enabled = false;
+			bool state   = false;
+
+			if ( this.document != null && this.document.FontWrapper.IsAttached )
+			{
+			}
+
+			this.buttonUnderlined.Enable = enabled;
+			this.buttonUnderlined.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
 		
@@ -147,6 +161,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonBold.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonItalic.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonUnderlined.Bounds = rect;
 		}
 
 
@@ -155,6 +171,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.UpdateButtonBold();
 			this.UpdateButtonItalic();
+			this.UpdateButtonUnderlined();
 		}
 
 		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
@@ -169,8 +186,14 @@ namespace Epsitec.Common.Document.Ribbons
 			this.document.FontWrapper.Defined.InvertItalic = !this.document.FontWrapper.Defined.InvertItalic;
 		}
 
+		private void HandleButtonUnderlinedClicked(object sender, MessageEventArgs e)
+		{
+			if ( !this.document.FontWrapper.IsAttached )  return;
+		}
+
 
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
+		protected IconButton				buttonUnderlined;
 	}
 }
