@@ -43,6 +43,7 @@ namespace Epsitec.Common.Text.Wrappers
 				this.SynchronizeXscript ();
 				this.SynchronizeColor ();
 				this.SynchronizeLanguage ();
+				this.SynchronizeLink ();
 				
 				this.defined_state.ClearValueFlags ();
 			}
@@ -283,6 +284,23 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void SynchronizeLink()
+		{
+			if (this.defined_state.IsValueFlagged (State.LinkProperty))
+			{
+				if (this.defined_state.IsLinkDefined)
+				{
+					string link = this.defined_state.Link;
+					
+					this.DefineMetaProperty (TextWrapper.Link, 0, new Properties.LinkProperty (link));
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.Link);
+				}
+			}
+		}
+		
 		
 		internal override void UpdateState(bool active)
 		{
@@ -296,6 +314,7 @@ namespace Epsitec.Common.Text.Wrappers
 			this.UpdateXscript (state, active);
 			this.UpdateColor (state, active);
 			this.UpdateLanguage (state, active);
+			this.UpdateLink (state, active);
 			
 			state.NotifyIfDirty ();
 		}
@@ -578,6 +597,29 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void UpdateLink(State state, bool active)
+		{
+			Properties.LinkProperty p_link;
+			
+			if (active)
+			{
+				p_link = this.ReadAccumulatedProperty (Properties.WellKnownType.Link) as Properties.LinkProperty;
+			}
+			else
+			{
+				p_link = this.ReadMetaProperty (TextWrapper.Link, Properties.WellKnownType.Link) as Properties.LinkProperty;
+			}
+			
+			if (p_link == null)
+			{
+				state.DefineValue (State.LinkProperty);
+			}
+			else
+			{
+				state.DefineValue (State.LinkProperty, p_link.Link);
+			}
+		}
+		
 		
 		public class State : AbstractState
 		{
@@ -706,7 +748,6 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
-			
 			public XscriptDefinition				Xscript
 			{
 				get
@@ -764,6 +805,18 @@ namespace Epsitec.Common.Text.Wrappers
 					XlineDefinition value = this.GetValue (State.TextMarkerProperty) as XlineDefinition;
 					
 					return value == null ? new XlineDefinition (this, State.TextMarkerProperty) : value;
+				}
+			}
+			
+			public string							Link
+			{
+				get
+				{
+					return (string) this.GetValue (State.LinkProperty);
+				}
+				set
+				{
+					this.SetValue (State.LinkProperty, value);
 				}
 			}
 			
@@ -896,6 +949,14 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public bool								IsLinkDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.LinkProperty);
+				}
+			}
+			
 			
 			public void ClearFontFace()
 			{
@@ -977,6 +1038,11 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.TextMarkerProperty);
 			}
 			
+			public void ClearLink()
+			{
+				this.ClearValue (State.LinkProperty);
+			}
+			
 			
 			#region State Properties
 			public static readonly StateProperty	FontFaceProperty = new StateProperty (typeof (State), "FontFace", null);
@@ -989,6 +1055,7 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	ColorProperty = new StateProperty (typeof (State), "Color", null);
 			public static readonly StateProperty	LanguageLocaleProperty = new StateProperty (typeof (State), "LanguageLocale", null);
 			public static readonly StateProperty	LanguageHyphenationProperty = new StateProperty (typeof (State), "LanguageHyphenation", 0);
+			public static readonly StateProperty	LinkProperty = new StateProperty (typeof (State), "Link", null);
 			public static readonly StateProperty	XscriptProperty = new StateProperty (typeof (State), "Xscript", null);
 			public static readonly StateProperty	UnderlineProperty = new StateProperty (typeof (State), "Underline", null);
 			public static readonly StateProperty	StrikeoutProperty = new StateProperty (typeof (State), "Strikeout", null);
@@ -1398,12 +1465,13 @@ namespace Epsitec.Common.Text.Wrappers
 		private State								active_state;
 		private State								defined_state;
 		
-		private const string						Font  = "Font";
-		private const string						Color = "FontColor";
-		private const string						Language = "FontLang";
-		private const string						Xline = "FontXline";
-		private const string						Xscript = "FontXscript";
-		private const string						InvertBold = "Font-X-Bold";
-		private const string						InvertItalic = "Font-X-Italic";
+		private const string						Font			= "Text-Font";
+		private const string						Color			= "Text-Color";
+		private const string						Language		= "Text-Lang";
+		private const string						Link			= "Text-Link";
+		private const string						Xline			= "Text-Xline";
+		private const string						Xscript			= "Text-Xscript";
+		private const string						InvertBold		= "Text-X-Bold";
+		private const string						InvertItalic	= "Text-X-Italic";
 	}
 }
