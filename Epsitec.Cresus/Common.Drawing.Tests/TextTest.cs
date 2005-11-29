@@ -379,7 +379,7 @@ namespace Epsitec.Common.Drawing
 						
 						if (records[i].Xlines.Length > 0)
 						{
-							color = records[i].Xlines[0].LineStyle;
+							color = records[i].Xlines[0].DrawStyle;
 						}
 					}
 				}

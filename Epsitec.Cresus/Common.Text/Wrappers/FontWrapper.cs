@@ -39,6 +39,7 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				this.SynchronizeFont ();
 				this.SynchronizeInvert ();
+				this.SynchronizeXline ();
 				
 				this.defined_state.ClearValueFlags ();
 			}
@@ -147,8 +148,42 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 
+		private void SynchronizeXline()
+		{
+			int defines = 0;
+			int changes = 0;
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			if (this.defined_state.IsValueFlagged (State.UnderlineProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsUnderlineDefined)
+				{
+					list.Add (this.defined_state.Underline.ToProperty ());
+					defines++;
+				}
+			}
+			
+			//	TODO: compléter...
+			
+			if (changes > 0)
+			{
+				if (defines > 0)
+				{
+					Property[] properties = (Property[]) list.ToArray (typeof (Property));
+					this.DefineMetaProperty (FontWrapper.Xline, 0, properties);
+				}
+				else
+				{
+					this.ClearMetaProperty (FontWrapper.Xline);
+				}
+			}
+		}
 		
-		internal override void Update(bool active)
+		
+		internal override void UpdateState(bool active)
 		{
 			State state = active ? this.Active : this.Defined;
 			
@@ -156,6 +191,7 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			this.UpdateFont (state, active);
 			this.UpdateInvert (state, active);
+			this.UpdateXline (state, active);
 			
 			state.NotifyIfDirty ();
 		}
@@ -286,6 +322,43 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void UpdateXline(State state, bool active)
+		{
+			Properties.UnderlineProperty p_underline;
+			Properties.StrikeoutProperty p_strikeout;
+			
+			if (active)
+			{
+				p_underline = this.ReadAccumulatedProperty (Properties.WellKnownType.Underline) as Properties.UnderlineProperty;
+				p_strikeout = this.ReadAccumulatedProperty (Properties.WellKnownType.Strikeout) as Properties.StrikeoutProperty;
+			}
+			else
+			{
+				p_underline = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.Underline) as Properties.UnderlineProperty;
+				p_strikeout = this.ReadMetaProperty (FontWrapper.Xline, Properties.WellKnownType.Strikeout) as Properties.StrikeoutProperty;
+			}
+			
+			if (p_underline == null)
+			{
+				state.DefineValue (State.UnderlineProperty);
+			}
+			else
+			{
+				state.Underline.DefineUsingProperty (p_underline);
+			}
+			
+			if (p_strikeout == null)
+			{
+				state.DefineValue (State.StrikeoutProperty);
+			}
+			else
+			{
+				state.Strikeout.DefineUsingProperty (p_strikeout);
+			}
+			
+			//	TODO: compléter...
+		}
+		
 		
 		public class State : AbstractState
 		{
@@ -366,6 +439,68 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public string							TextColor
+			{
+				get
+				{
+					return (string) this.GetValue (State.TextColorProperty);
+				}
+				set
+				{
+					this.SetValue (State.TextColorProperty, value);
+				}
+			}
+			
+			public XlineDefinition					Underline
+			{
+				get
+				{
+					XlineDefinition value = this.GetValue (State.UnderlineProperty) as XlineDefinition;
+					
+					return value == null ? new XlineDefinition (this, State.UnderlineProperty) : value;
+				}
+			}
+			
+			public XlineDefinition					Strikeout
+			{
+				get
+				{
+					XlineDefinition value = this.GetValue (State.StrikeoutProperty) as XlineDefinition;
+					
+					return value == null ? new XlineDefinition (this, State.StrikeoutProperty) : value;
+				}
+			}
+			
+			public XlineDefinition					Overline
+			{
+				get
+				{
+					XlineDefinition value = this.GetValue (State.OverlineProperty) as XlineDefinition;
+					
+					return value == null ? new XlineDefinition (this, State.OverlineProperty) : value;
+				}
+			}
+			
+			public XlineDefinition					TextBox
+			{
+				get
+				{
+					XlineDefinition value = this.GetValue (State.TextBoxProperty) as XlineDefinition;
+					
+					return value == null ? new XlineDefinition (this, State.TextBoxProperty) : value;
+				}
+			}
+			
+			public XlineDefinition					TextMarker
+			{
+				get
+				{
+					XlineDefinition value = this.GetValue (State.TextMarkerProperty) as XlineDefinition;
+					
+					return value == null ? new XlineDefinition (this, State.TextMarkerProperty) : value;
+				}
+			}
+			
 			
 			public bool								IsFontFaceDefined
 			{
@@ -415,6 +550,54 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public bool								IsTextColorDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.TextColorProperty);
+				}
+			}
+			
+			public bool								IsUnderlineDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.UnderlineProperty);
+				}
+			}
+			
+			public bool								IsStrikeoutDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.StrikeoutProperty);
+				}
+			}
+			
+			public bool								IsOverlineDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.OverlineProperty);
+				}
+			}
+			
+			public bool								IsTextBoxDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.TextBoxProperty);
+				}
+			}
+			
+			public bool								IsTextMarkerDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.TextMarkerProperty);
+				}
+			}
+			
 			
 			public void ClearFontFace()
 			{
@@ -446,6 +629,36 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.InvertItalicProperty);
 			}
 			
+			public void ClearTextColor()
+			{
+				this.ClearValue (State.TextColorProperty);
+			}
+			
+			public void ClearUnderline()
+			{
+				this.ClearValue (State.UnderlineProperty);
+			}
+			
+			public void ClearStrikeout()
+			{
+				this.ClearValue (State.StrikeoutProperty);
+			}
+			
+			public void ClearOverline()
+			{
+				this.ClearValue (State.OverlineProperty);
+			}
+			
+			public void ClearTextBox()
+			{
+				this.ClearValue (State.TextBoxProperty);
+			}
+			
+			public void ClearTextMarker()
+			{
+				this.ClearValue (State.TextMarkerProperty);
+			}
+			
 			
 			#region State Properties
 			public static readonly StateProperty	FontFaceProperty = new StateProperty (typeof (State), "FontFace", null);
@@ -454,7 +667,189 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	UnitsProperty = new StateProperty (typeof (State), "Units", Properties.SizeUnits.None);
 			public static readonly StateProperty	InvertBoldProperty = new StateProperty (typeof (State), "InvertBold", false);
 			public static readonly StateProperty	InvertItalicProperty = new StateProperty (typeof (State), "InvertItalic", false);
+			public static readonly StateProperty	TextColorProperty = new StateProperty (typeof (State), "TextColor", null);
+			public static readonly StateProperty	UnderlineProperty = new StateProperty (typeof (State), "Underline", null);
+			public static readonly StateProperty	StrikeoutProperty = new StateProperty (typeof (State), "Strikeout", null);
+			public static readonly StateProperty	OverlineProperty = new StateProperty (typeof (State), "Overline", null);
+			public static readonly StateProperty	TextBoxProperty = new StateProperty (typeof (State), "TextBox", null);
+			public static readonly StateProperty	TextMarkerProperty = new StateProperty (typeof (State), "TextMarker", null);
 			#endregion
+		}
+		
+		public class XlineDefinition
+		{
+			internal XlineDefinition(State host, StateProperty property)
+			{
+				this.host = host;
+				this.property = property;
+			}
+			
+			
+			public double							Position
+			{
+				get
+				{
+					return this.position;
+				}
+				set
+				{
+					if (this.position != value)
+					{
+						this.position = value;
+						this.SetState ();
+					}
+				}
+			}
+			
+			public Properties.SizeUnits				PositionUnits
+			{
+				get
+				{
+					return this.position_units;
+				}
+				set
+				{
+					if (this.position_units != value)
+					{
+						this.position_units = value;
+						this.SetState ();
+					}
+				}
+			}
+			
+			public double							Thickness
+			{
+				get
+				{
+					return this.thickness;
+				}
+				set
+				{
+					if (this.thickness != value)
+					{
+						this.thickness = value;
+						this.SetState ();
+					}
+				}
+			}
+			
+			public Properties.SizeUnits				ThicknessUnits
+			{
+				get
+				{
+					return this.thickness_units;
+				}
+				set
+				{
+					if (this.thickness_units != value)
+					{
+						this.thickness_units = value;
+						this.SetState ();
+					}
+				}
+			}
+			
+			public string							DrawClass
+			{
+				get
+				{
+					return this.draw_class;
+				}
+				set
+				{
+					if (this.draw_class != value)
+					{
+						this.draw_class = value;
+						this.SetState ();
+					}
+				}
+			}
+			
+			public string							DrawStyle
+			{
+				get
+				{
+					return this.draw_style;
+				}
+				set
+				{
+					if (this.draw_style != value)
+					{
+						this.draw_style = value;
+						this.SetState ();
+					}
+				}
+			}
+			
+			
+			public void DefineUsingProperty(Properties.AbstractXlineProperty value)
+			{
+				this.position        = value.Position;
+				this.position_units  = value.PositionUnits;
+				this.thickness       = value.Thickness;
+				this.thickness_units = value.ThicknessUnits;
+				this.draw_class      = value.DrawClass;
+				this.draw_style      = value.DrawStyle;
+				
+				this.host.DefineValue (this.property, this, true);
+			}
+			
+			public Properties.AbstractXlineProperty ToProperty()
+			{
+				switch (this.property.Name)
+				{
+					case "Underline":	return new Properties.UnderlineProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
+					case "Strikeout":	return new Properties.StrikeoutProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
+					case "Overline":	return new Properties.OverlineProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
+					case "TextBox":		return new Properties.TextBoxProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
+					case "TextMarker":	return new Properties.TextMarkerProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
+				}
+				
+				throw new System.NotSupportedException (string.Format ("Property {0} not supported", this.property.Name));
+			}
+			
+			
+			public override bool Equals(object obj)
+			{
+				XlineDefinition that = obj as XlineDefinition;
+				
+				if (that == null)
+				{
+					return false;
+				}
+				if (this == that)
+				{
+					return true;
+				}
+				
+				return NumberSupport.Equal (this.position, that.position)
+					&& NumberSupport.Equal (this.thickness, that.thickness)
+					&& this.position_units == that.position_units
+					&& this.thickness_units == that.thickness_units
+					&& this.draw_class == that.draw_class
+					&& this.draw_style == that.draw_style;
+			}
+			
+			public override int GetHashCode()
+			{
+				return base.GetHashCode ();
+			}
+
+			
+			private void SetState()
+			{
+				this.host.SetValue (this.property, this, true);
+			}
+			
+			
+			private State							host;
+			private StateProperty					property;
+			private double							position;
+			private double							thickness;
+			private Properties.SizeUnits			position_units;
+			private Properties.SizeUnits			thickness_units;
+			private string							draw_class;
+			private string							draw_style;
 		}
 		
 		
@@ -462,6 +857,7 @@ namespace Epsitec.Common.Text.Wrappers
 		private State								defined_state;
 		
 		private const string						Font = "Font";
+		private const string						Xline = "Xline";
 		private const string						InvertBold = "X-Bold";
 		private const string						InvertItalic = "X-Italic";
 	}

@@ -125,12 +125,15 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		internal void SetValue(StateProperty property, object value)
 		{
+			this.SetValue (property, value, (this.IsValueDefined (property) == false) || (this.GetValue (property).Equals (value) == false));
+		}
+		
+		internal void SetValue(StateProperty property, object value, bool changed)
+		{
 			if (this.access == AccessMode.ReadOnly)
 			{
 				throw new System.InvalidOperationException (string.Format ("Property {0} in {1} is read only", property.Name, this.GetType ().Name));
 			}
-			
-			bool changed = (this.IsValueDefined (property) == false) || (this.GetValue (property) != value);
 			
 			this.state[property] = value;
 			this.flags[property] = changed;
@@ -141,8 +144,12 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		internal void DefineValue(StateProperty property, object value)
 		{
-			if ((this.IsValueDefined (property) == false) ||
-				(this.GetValue (property) != value))
+			this.DefineValue (property, value, (this.IsValueDefined (property) == false) || (this.GetValue (property).Equals (value) == false));
+		}
+		
+		internal void DefineValue(StateProperty property, object value, bool changed)
+		{
+			if (changed)
 			{
 				this.state[property] = value;
 				this.is_dirty = true;

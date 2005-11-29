@@ -45,6 +45,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		
 		public override Property EmptyClone()
 		{
 			return new ColorProperty ();

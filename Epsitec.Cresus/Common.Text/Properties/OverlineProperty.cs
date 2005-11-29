@@ -13,7 +13,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public OverlineProperty(double position, SizeUnits position_units, double thickness, SizeUnits thickness_units, string line_class, string line_style) : base (position, position_units, thickness, thickness_units, line_class, line_style)
+		public OverlineProperty(double position, SizeUnits position_units, double thickness, SizeUnits thickness_units, string draw_class, string draw_style) : base (position, position_units, thickness, thickness_units, draw_class, draw_style)
 		{
 		}
 		

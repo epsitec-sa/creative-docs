@@ -126,10 +126,10 @@ namespace Epsitec.Common.Text.Tests
 //			System.Array.Sort (underlines, Properties.AbstractXlineProperty.Comparer);
 //			System.Array.Sort (links, Properties.LinkProperty.Comparer);
 			
-			Debug.Assert.IsTrue (underlines[0].LineStyle == "backcolor=yellow;color=black");
-			Debug.Assert.IsTrue (underlines[1].LineStyle == "-");
-			Debug.Assert.IsTrue (underlines[2].LineStyle == "color=red");
-			Debug.Assert.IsTrue (underlines[3].LineStyle == "color=red");
+			Debug.Assert.IsTrue (underlines[0].DrawStyle == "backcolor=yellow;color=black");
+			Debug.Assert.IsTrue (underlines[1].DrawStyle == "-");
+			Debug.Assert.IsTrue (underlines[2].DrawStyle == "color=red");
+			Debug.Assert.IsTrue (underlines[3].DrawStyle == "color=red");
 			Debug.Assert.IsTrue (underlines[2].ThicknessUnits == Properties.SizeUnits.None);
 			Debug.Assert.IsTrue (underlines[3].ThicknessUnits == Properties.SizeUnits.Points);
 			

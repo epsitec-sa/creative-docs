@@ -13,15 +13,15 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public AbstractXlineProperty(double position, SizeUnits position_units, double thickness, SizeUnits thickness_units, string line_class, string line_style)
+		public AbstractXlineProperty(double position, SizeUnits position_units, double thickness, SizeUnits thickness_units, string draw_class, string draw_style)
 		{
 			this.position_units  = position_units;
 			this.position        = position;
 			this.thickness_units = thickness_units;
 			this.thickness       = thickness;
 			
-			this.line_class = line_class;
-			this.line_style = line_style;
+			this.draw_class = draw_class;
+			this.draw_style = draw_style;
 			
 			System.Diagnostics.Debug.Assert (UnitsTools.IsAbsoluteSize (this.position_units)  || this.position_units == SizeUnits.None);
 			System.Diagnostics.Debug.Assert (UnitsTools.IsAbsoluteSize (this.thickness_units) || this.thickness_units == SizeUnits.None);
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return CombinationMode.Invalid;
+				return CombinationMode.Accumulate;
 			}
 		}
 		
@@ -77,19 +77,19 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public string							LineClass
+		public string							DrawClass
 		{
 			get
 			{
-				return this.line_class;
+				return this.draw_class;
 			}
 		}
 		
-		public string							LineStyle
+		public string							DrawStyle
 		{
 			get
 			{
-				return this.line_style;
+				return this.draw_style;
 			}
 		}
 		
@@ -110,8 +110,8 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeSizeUnits (this.thickness_units),
 				/**/				SerializerSupport.SerializeDouble (this.position),
 				/**/				SerializerSupport.SerializeDouble (this.thickness),
-				/**/				SerializerSupport.SerializeString (this.line_class),
-				/**/				SerializerSupport.SerializeString (this.line_style));
+				/**/				SerializerSupport.SerializeString (this.draw_class),
+				/**/				SerializerSupport.SerializeString (this.draw_style));
 		}
 
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -124,8 +124,8 @@ namespace Epsitec.Common.Text.Properties
 			SizeUnits thickness_units = SerializerSupport.DeserializeSizeUnits (args[1]);
 			double    position        = SerializerSupport.DeserializeDouble (args[2]);
 			double    thickness       = SerializerSupport.DeserializeDouble (args[3]);
-			string    line_class      = SerializerSupport.DeserializeString (args[4]);
-			string    line_style      = SerializerSupport.DeserializeString (args[5]);
+			string    draw_class      = SerializerSupport.DeserializeString (args[4]);
+			string    draw_style      = SerializerSupport.DeserializeString (args[5]);
 			
 			this.position_units  = position_units;
 			this.thickness_units = thickness_units;
@@ -133,8 +133,8 @@ namespace Epsitec.Common.Text.Properties
 			this.position   = position;
 			this.thickness  = thickness;
 			
-			this.line_class = line_class;
-			this.line_style = line_style;
+			this.draw_class = draw_class;
+			this.draw_style = draw_style;
 		}
 		
 		public override Property GetCombination(Property property)
@@ -149,8 +149,8 @@ namespace Epsitec.Common.Text.Properties
 			checksum.UpdateValue ((int) this.thickness_units);
 			checksum.UpdateValue (this.position);
 			checksum.UpdateValue (this.thickness);
-			checksum.UpdateValue (this.line_class);
-			checksum.UpdateValue (this.line_style);
+			checksum.UpdateValue (this.draw_class);
+			checksum.UpdateValue (this.draw_style);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -166,8 +166,8 @@ namespace Epsitec.Common.Text.Properties
 				&& NumberSupport.Equal (a.position, b.position)
 				&& a.thickness_units == b.thickness_units
 				&& NumberSupport.Equal (a.thickness, b.thickness)
-				&& a.line_class == b.line_class
-				&& a.line_style == b.line_style;
+				&& a.draw_class == b.draw_class
+				&& a.draw_style == b.draw_style;
 		}
 		
 		
@@ -184,11 +184,11 @@ namespace Epsitec.Common.Text.Properties
 				
 				if (px.WellKnownType == py.WellKnownType)
 				{
-					result = string.Compare (px.line_class, py.line_class);
+					result = string.Compare (px.draw_class, py.draw_class);
 					
 					if (result == 0)
 					{
-						result = string.Compare (px.line_style, py.line_style);
+						result = string.Compare (px.draw_style, py.draw_style);
 						
 						if (result == 0)
 						{
@@ -225,7 +225,7 @@ namespace Epsitec.Common.Text.Properties
 		private SizeUnits						thickness_units;
 		private double							thickness;
 		
-		private string							line_class;
-		private string							line_style;
+		private string							draw_class;
+		private string							draw_style;
 	}
 }

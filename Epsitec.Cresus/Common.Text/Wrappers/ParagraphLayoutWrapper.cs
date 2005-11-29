@@ -134,7 +134,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 
-		internal override void Update(bool active)
+		internal override void UpdateState(bool active)
 		{
 			State state = active ? this.Active : this.Defined;
 			

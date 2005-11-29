@@ -96,8 +96,8 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public void UpdateAll()
 		{
-			this.Update (false);
-			this.Update (true);
+			this.UpdateState (false);
+			this.UpdateState (true);
 		}
 		
 		private void InternalDetach()
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		
 		internal abstract void InternalSynchronize(AbstractState state, StateProperty property);
-		internal abstract void Update(bool active);
+		internal abstract void UpdateState(bool active);
 		
 		private TextContext						context;
 		private TextNavigator					navigator;

@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonSizePlus    = this.CreateIconButton(Misc.Icon("FontSizePlus"),    Res.Strings.Action.Text.Font.SizePlus,    new MessageEventHandler(this.HandleButtonSizePlusClicked), false);
 			this.buttonBold        = this.CreateIconButton(Misc.Icon("FontBold"),        Res.Strings.Action.Text.Font.Bold,        new MessageEventHandler(this.HandleButtonBoldClicked));
 			this.buttonItalic      = this.CreateIconButton(Misc.Icon("FontItalic"),      Res.Strings.Action.Text.Font.Italic,      new MessageEventHandler(this.HandleButtonItalicClicked));
-			this.buttonUnderlined  = this.CreateIconButton(Misc.Icon("FontUnderlined"),  Res.Strings.Action.Text.Font.Underlined,  new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonUnderlined  = this.CreateIconButton(Misc.Icon("FontUnderlined"),  Res.Strings.Action.Text.Font.Underlined,  new MessageEventHandler(this.HandleButtonUnderlineClicked));
 			this.buttonStrike      = this.CreateIconButton(Misc.Icon("FontStrike"),      Res.Strings.Action.Text.Font.Strike,      new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonFrame       = this.CreateIconButton(Misc.Icon("FontFrame"),       Res.Strings.Action.Text.Font.Frame,       new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.Text.Font.Subscript,   new MessageEventHandler(this.HandleButtonClicked));
@@ -731,6 +731,37 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.FontWrapper.IsAttached )  return;
 			this.document.FontWrapper.Defined.InvertItalic = !this.document.FontWrapper.Defined.InvertItalic;
+		}
+
+		private void HandleButtonUnderlineClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.FontWrapper.IsAttached )  return;
+			
+			this.document.FontWrapper.SuspendSynchronisations();
+			
+			if ( this.document.FontWrapper.Active.IsUnderlineDefined )
+			{
+				if ( this.document.FontWrapper.Defined.IsUnderlineDefined )
+				{
+					this.document.FontWrapper.Defined.ClearUnderline();
+				}
+				else
+				{
+					// TODO: trouver un moyen de désactiver le soulignement du style actif
+				}
+			}
+			else
+			{
+				this.document.FontWrapper.Defined.Underline.Thickness = 1.0;
+				this.document.FontWrapper.Defined.Underline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
+				this.document.FontWrapper.Defined.Underline.Position = -5.0;
+				this.document.FontWrapper.Defined.Underline.PositionUnits = Common.Text.Properties.SizeUnits.Points;
+				this.document.FontWrapper.Defined.Underline.DrawClass = "underline";
+				this.document.FontWrapper.Defined.Underline.DrawStyle = "Black";
+			}
+			
+			this.document.FontWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
