@@ -2303,8 +2303,8 @@ namespace Epsitec.Common.Document.Objects
 				this.PutCommands(list, "ShaperHandleInline");
 				this.PutCommands(list, "ShaperHandleFree");
 				this.PutCommands(list, "");
-				this.PutCommands(list, "ShaperHandleSimply");
 				this.PutCommands(list, "ShaperHandleCorner");
+				this.PutCommands(list, "ShaperHandleSimply");
 				this.PutCommands(list, "");
 			}
 		}

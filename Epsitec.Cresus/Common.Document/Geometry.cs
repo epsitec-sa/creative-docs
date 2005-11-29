@@ -105,7 +105,7 @@ namespace Epsitec.Common.Document
 					default:
 						if ( (elements[i] & PathElement.FlagClose) != 0 )
 						{
-							if ( --rank < 0 )
+							if ( !Point.Equals(current, start) && --rank < 0 )
 							{
 								pp1 = current;
 								ss1 = current;

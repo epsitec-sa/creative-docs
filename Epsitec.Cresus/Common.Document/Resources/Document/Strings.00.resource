@@ -770,7 +770,7 @@
 	<data name="Action.ShaperHandleDis">Anguleux</data>
 	<data name="Action.ShaperHandleInline">En ligne</data>
 	<data name="Action.ShaperHandleFree">Libre</data>
-	<data name="Action.ShaperHandleSimply">Droit</data>
+	<data name="Action.ShaperHandleSimply">Toujours droit</data>
 	<data name="Action.ShaperHandleCorner">Selon la propriété de coin</data>
 	<data name="Action.ShaperHandleContinue">Prolonger le trait</data>
 

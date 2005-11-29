@@ -770,7 +770,7 @@
 	<data name="Action.ShaperHandleDis">Cusp</data>
 	<data name="Action.ShaperHandleInline">In line</data>
 	<data name="Action.ShaperHandleFree">Free</data>
-	<data name="Action.ShaperHandleSimply">@@Droit</data>
+	<data name="Action.ShaperHandleSimply">@@Toujours droit</data>
 	<data name="Action.ShaperHandleCorner">@@Selon la propriété de coin</data>
 	<data name="Action.ShaperHandleContinue">Extend line</data>
 
