@@ -4,7 +4,8 @@
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// Summary description for LanguageEngine.
+	/// La classe LanguageEngine offre des services dépendants de la langue, tels
+	/// que la césure, par exemple.
 	/// </summary>
 	public sealed class LanguageEngine
 	{
@@ -72,9 +73,15 @@ namespace Epsitec.Common.Text
 			{
 				return;
 			}
+			if ((locale == null) ||
+				(locale.Length < 2))
+			{
+				return;
+			}
 			
-			if ((locale.StartsWith ("fr")) ||
-				(locale.StartsWith ("FR")))
+			string two_letter_code = locale.Substring (0, 2);
+			
+			if (two_letter_code == "fr")
 			{
 				System.Text.StringBuilder word = new System.Text.StringBuilder (length);
 				

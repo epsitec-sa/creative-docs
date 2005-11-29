@@ -32,7 +32,7 @@ namespace Epsitec.Common.Text.Properties
 		Tabs				= 52,		//	style
 		
 		Link				= 101,		//	extra
-		Meta				= 102,		//	extra
+		UserTag				= 102,		//	extra
 		
 		Underline			= 110,		//	extra
 		Strikeout			= 111,		//	extra

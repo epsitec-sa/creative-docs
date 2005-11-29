@@ -1127,14 +1127,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public void GetMetas(ulong code, out Properties.MetaProperty[] properties)
+		public void GetUserTags(ulong code, out Properties.UserTagProperty[] properties)
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
 			long current_style_version = this.style_list.Version;
 			
-			if ((this.get_metas_last_style_version != current_style_version) ||
-				(this.get_metas_last_code != code))
+			if ((this.get_usertags_last_style_version != current_style_version) ||
+				(this.get_usertags_last_code != code))
 			{
 				Styles.SimpleStyle style = this.style_list[code];
 				
@@ -1143,23 +1143,23 @@ namespace Epsitec.Common.Text
 				
 				if (extra_settings != null)
 				{
-					base_props = extra_settings.FindProperties (Properties.WellKnownType.Meta);
+					base_props = extra_settings.FindProperties (Properties.WellKnownType.UserTag);
 					
-					System.Array.Sort (base_props, Properties.MetaProperty.Comparer);
+					System.Array.Sort (base_props, Properties.UserTagProperty.Comparer);
 				}
 				
-				this.get_metas_last_style_version = current_style_version;
-				this.get_metas_last_code          = code;
-				this.get_metas_last_properties    = base_props;
+				this.get_usertags_last_style_version = current_style_version;
+				this.get_usertags_last_code          = code;
+				this.get_usertags_last_properties    = base_props;
 			}
 			
-			if ((this.get_metas_last_properties != null) &&
-				(this.get_metas_last_properties.Length > 0))
+			if ((this.get_usertags_last_properties != null) &&
+				(this.get_usertags_last_properties.Length > 0))
 			{
-				int count = this.get_metas_last_properties.Length;
+				int count = this.get_usertags_last_properties.Length;
 				
-				properties = new Properties.MetaProperty[count];
-				this.get_metas_last_properties.CopyTo (properties, 0);
+				properties = new Properties.UserTagProperty[count];
+				this.get_usertags_last_properties.CopyTo (properties, 0);
 			}
 			else
 			{
@@ -1597,9 +1597,9 @@ namespace Epsitec.Common.Text
 		private ulong							get_links_last_code;
 		private Property[]						get_links_last_properties;
 		
-		private long							get_metas_last_style_version;
-		private ulong							get_metas_last_code;
-		private Property[]						get_metas_last_properties;
+		private long							get_usertags_last_style_version;
+		private ulong							get_usertags_last_code;
+		private Property[]						get_usertags_last_properties;
 		
 		private long							get_layout_last_style_version;
 		private int								get_layout_last_style_index;

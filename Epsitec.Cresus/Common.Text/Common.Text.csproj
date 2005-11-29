@@ -614,11 +614,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Properties\MetaProperty.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Properties\OpenTypeProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -700,6 +695,11 @@
                 />
                 <File
                     RelPath = "Properties\UnitsTools.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\UserTagProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

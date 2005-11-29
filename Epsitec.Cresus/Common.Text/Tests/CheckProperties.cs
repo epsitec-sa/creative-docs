@@ -14,7 +14,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckProperties.TestFontSize ();
 			CheckProperties.TestMargins ();
 			CheckProperties.TestXlines ();
-			CheckProperties.TestMetas ();
+			CheckProperties.TestUserTags ();
 			CheckProperties.TestSerialization ();
 			CheckProperties.TestGeneratorProperties ();
 			CheckProperties.TestTraverseText ();
@@ -106,9 +106,9 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties.Add (new Properties.UnderlineProperty (double.NaN, Properties.SizeUnits.None, double.NaN, Properties.SizeUnits.None, "underline", "-"));
-			properties.Add (new Properties.UnderlineProperty (double.NaN, Properties.SizeUnits.None, double.NaN, Properties.SizeUnits.None, "underline", "color=red"));
-			properties.Add (new Properties.UnderlineProperty (double.NaN, Properties.SizeUnits.None, double.NaN, Properties.SizeUnits.None, "frame", "backcolor=yellow;color=black"));
-			properties.Add (new Properties.UnderlineProperty (double.NaN, Properties.SizeUnits.None, 2.0, Properties.SizeUnits.Points, "underline", "color=red"));
+			properties.Add (new Properties.StrikeoutProperty (double.NaN, Properties.SizeUnits.None, double.NaN, Properties.SizeUnits.None, "underline", "color=red"));
+			properties.Add (new Properties.TextBoxProperty (double.NaN, Properties.SizeUnits.None, double.NaN, Properties.SizeUnits.None, "frame", "backcolor=yellow;color=black"));
+			properties.Add (new Properties.OverlineProperty (double.NaN, Properties.SizeUnits.None, 2.0, Properties.SizeUnits.Points, "underline", "color=red"));
 			properties.Add (new Properties.LinkProperty ("http://www.epsitec.ch"));
 			properties.Add (new Properties.LinkProperty ("mailto:epsitec@epsitec.ch"));
 			
@@ -126,18 +126,24 @@ namespace Epsitec.Common.Text.Tests
 //			System.Array.Sort (underlines, Properties.AbstractXlineProperty.Comparer);
 //			System.Array.Sort (links, Properties.LinkProperty.Comparer);
 			
-			Debug.Assert.IsTrue (underlines[0].DrawStyle == "backcolor=yellow;color=black");
-			Debug.Assert.IsTrue (underlines[1].DrawStyle == "-");
+			Debug.Assert.IsTrue (underlines[0].WellKnownType == Properties.WellKnownType.Underline);
+			Debug.Assert.IsTrue (underlines[1].WellKnownType == Properties.WellKnownType.Strikeout);
+			Debug.Assert.IsTrue (underlines[2].WellKnownType == Properties.WellKnownType.Overline);
+			Debug.Assert.IsTrue (underlines[3].WellKnownType == Properties.WellKnownType.TextBox);
+			
+			Debug.Assert.IsTrue (underlines[0].DrawStyle == "-");
+			Debug.Assert.IsTrue (underlines[1].DrawStyle == "color=red");
 			Debug.Assert.IsTrue (underlines[2].DrawStyle == "color=red");
-			Debug.Assert.IsTrue (underlines[3].DrawStyle == "color=red");
-			Debug.Assert.IsTrue (underlines[2].ThicknessUnits == Properties.SizeUnits.None);
-			Debug.Assert.IsTrue (underlines[3].ThicknessUnits == Properties.SizeUnits.Points);
+			Debug.Assert.IsTrue (underlines[3].DrawStyle == "backcolor=yellow;color=black");
+			
+			Debug.Assert.IsTrue (underlines[1].ThicknessUnits == Properties.SizeUnits.None);
+			Debug.Assert.IsTrue (underlines[2].ThicknessUnits == Properties.SizeUnits.Points);
 			
 			Debug.Assert.IsTrue (links[0].Link == "http://www.epsitec.ch");
 			Debug.Assert.IsTrue (links[1].Link == "mailto:epsitec@epsitec.ch");
 		}
 		
-		private static void TestMetas()
+		private static void TestUserTags()
 		{
 			TextStory story = new TextStory ();
 			
@@ -146,25 +152,25 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties.Add (new Properties.MetaProperty ("x", "foo"));
-			properties.Add (new Properties.MetaProperty ("x", "bar"));
-			properties.Add (new Properties.MetaProperty ("Comment", "Hello :-)"));
+			properties.Add (new Properties.UserTagProperty ("x", "foo"));
+			properties.Add (new Properties.UserTagProperty ("x", "bar"));
+			properties.Add (new Properties.UserTagProperty ("Comment", "Hello :-)"));
 			
 			story.ConvertToStyledText ("Abc", properties, out text);
 			
-			Properties.MetaProperty[] metas;
+			Properties.UserTagProperty[] usertags;
 			
-			story.TextContext.GetMetas (text[0], out metas);
+			story.TextContext.GetUserTags (text[0], out usertags);
 			
-			Debug.Assert.IsTrue (metas.Length == 3);
+			Debug.Assert.IsTrue (usertags.Length == 3);
 			
-			Debug.Assert.IsTrue (metas[0].MetaType == "Comment");
-			Debug.Assert.IsTrue (metas[1].MetaType == "x");
-			Debug.Assert.IsTrue (metas[2].MetaType == "x");
+			Debug.Assert.IsTrue (usertags[0].TagType == "Comment");
+			Debug.Assert.IsTrue (usertags[1].TagType == "x");
+			Debug.Assert.IsTrue (usertags[2].TagType == "x");
 			
-			Debug.Assert.IsTrue (metas[0].MetaData == "Hello :-)");
-			Debug.Assert.IsTrue (metas[1].MetaData == "bar");
-			Debug.Assert.IsTrue (metas[2].MetaData == "foo");
+			Debug.Assert.IsTrue (usertags[0].TagData == "Hello :-)");
+			Debug.Assert.IsTrue (usertags[1].TagData == "bar");
+			Debug.Assert.IsTrue (usertags[2].TagData == "foo");
 		}
 		
 		private static void TestSerialization()
