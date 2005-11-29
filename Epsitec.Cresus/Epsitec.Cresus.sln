@@ -404,7 +404,6 @@ Global
 		External\FirebirdNETProviderSDK.chm = External\FirebirdNETProviderSDK.chm
 		External\FirebirdSql.Data.Firebird.dll = External\FirebirdSql.Data.Firebird.dll
 		External\ICSharpCode.SharpZipLib.dll = External\ICSharpCode.SharpZipLib.dll
-		import-bin.bat = import-bin.bat
 		External\Magick.Win32.dll = External\Magick.Win32.dll
 		External\Magick.Wrapper.dll = External\Magick.Wrapper.dll
 		External\nunit-gui.exe = External\nunit-gui.exe
