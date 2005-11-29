@@ -742,41 +742,69 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			// Cycle entre divers états:
 			//
-			// (1) Soulignement hérité du style actif
-			// (2) Pas de soulignement (forcé par un souligné d'épaisseur nulle)
-			// (3) Soulignement défini localement
+			// (A1) Soulignement hérité du style actif
+			// (A2) Pas de soulignement (forcé par un disable local)
+			// (A3) Soulignement défini localement
 			//
 			// ou si aucun soulignement n'est défini dans le style actif:
 			//
-			// (1) Pas de soulignement
-			// (2) Soulignement défini localement
+			// (B1) Pas de soulignement
+			// (B2) Soulignement défini localement
 			
-			if ( this.document.FontWrapper.Active.IsUnderlineDefined &&
-				 this.document.FontWrapper.Active.Underline.Thickness != 0.0 )
+			Common.Text.Wrappers.FontWrapper.XlineDefinition underline = this.document.FontWrapper.Defined.Underline;
+			
+			if ( this.document.FontWrapper.Active.IsUnderlineDefined )
 			{
-				if ( this.document.FontWrapper.Defined.IsUnderlineDefined )
+				if ( this.document.FontWrapper.Active.Underline.IsDisabled &&
+					 this.document.FontWrapper.Active.Underline.IsEmpty == false )
 				{
-					this.document.FontWrapper.Defined.ClearUnderline();
+					// (A2)
+
+					this.FillUnderlineDefinition(underline);					// ---> (A3)
+					
+					if ( underline.EqualsIgnoringIsDisabled(this.document.FontWrapper.Active.Underline) )
+					{
+						// L'état défini par notre souligné local est identique à
+						// celui hérité par le style actif; utilise celui du style
+						// dans ce cas.
+						
+						this.document.FontWrapper.Defined.ClearUnderline();		// ---> (A1)
+					}
+				}
+				else if ( this.document.FontWrapper.Defined.IsUnderlineDefined )
+				{
+					// (A3) ou (B2)
+					
+					this.document.FontWrapper.Defined.ClearUnderline();			// ---> (A1) ou (B1)
 				}
 				else
 				{
-					this.document.FontWrapper.Defined.Underline.Thickness = 0.0;
-					this.document.FontWrapper.Defined.Underline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
+					// (A1)
+					
+					underline.IsDisabled = true;								// ---> (A2)
 				}
 			}
 			else
 			{
-				this.document.FontWrapper.Defined.Underline.Thickness = 1.0;
-				this.document.FontWrapper.Defined.Underline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
-				this.document.FontWrapper.Defined.Underline.Position = -5.0;
-				this.document.FontWrapper.Defined.Underline.PositionUnits = Common.Text.Properties.SizeUnits.Points;
-				this.document.FontWrapper.Defined.Underline.DrawClass = "underline";
-				this.document.FontWrapper.Defined.Underline.DrawStyle = "Black";
+				// (B1)
+				
+				this.FillUnderlineDefinition(underline);						// ---> (B2)
 			}
 			
 			this.document.FontWrapper.ResumeSynchronisations();
 		}
-
+		
+		private void FillUnderlineDefinition(Common.Text.Wrappers.FontWrapper.XlineDefinition underline)
+		{
+			underline.IsDisabled = false;
+			underline.Thickness = 1.0;
+			underline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
+			underline.Position = -5.0;
+			underline.PositionUnits = Common.Text.Properties.SizeUnits.Points;
+			underline.DrawClass = "underline";
+			underline.DrawStyle = "Black";
+		}
+        
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;

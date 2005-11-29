@@ -49,9 +49,26 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return (this.thickness != 0) && (double.IsNaN (this.thickness) == false);
+				return (this.is_disabled == false) && (this.thickness != 0) && (double.IsNaN (this.thickness) == false);
 			}
 		}
+		
+		public bool								IsDisabled
+		{
+			get
+			{
+				return this.is_disabled;
+			}
+		}
+		
+		public bool								IsEmpty
+		{
+			get
+			{
+				return (this.draw_class == null) && (this.draw_style == null);
+			}
+		}
+		
 		
 		public SizeUnits						PositionUnits
 		{
@@ -177,6 +194,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
+				/**/				SerializerSupport.SerializeBoolean (this.is_disabled),
 				/**/				SerializerSupport.SerializeSizeUnits (this.position_units),
 				/**/				SerializerSupport.SerializeSizeUnits (this.thickness_units),
 				/**/				SerializerSupport.SerializeDouble (this.position),
@@ -189,14 +207,17 @@ namespace Epsitec.Common.Text.Properties
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			System.Diagnostics.Debug.Assert (args.Length == 6);
+			System.Diagnostics.Debug.Assert (args.Length == 7);
 			
-			SizeUnits position_units  = SerializerSupport.DeserializeSizeUnits (args[0]);
-			SizeUnits thickness_units = SerializerSupport.DeserializeSizeUnits (args[1]);
-			double    position        = SerializerSupport.DeserializeDouble (args[2]);
-			double    thickness       = SerializerSupport.DeserializeDouble (args[3]);
-			string    draw_class      = SerializerSupport.DeserializeString (args[4]);
-			string    draw_style      = SerializerSupport.DeserializeString (args[5]);
+			bool      is_disabled     = SerializerSupport.DeserializeBoolean (args[0]);
+			SizeUnits position_units  = SerializerSupport.DeserializeSizeUnits (args[1]);
+			SizeUnits thickness_units = SerializerSupport.DeserializeSizeUnits (args[2]);
+			double    position        = SerializerSupport.DeserializeDouble (args[3]);
+			double    thickness       = SerializerSupport.DeserializeDouble (args[4]);
+			string    draw_class      = SerializerSupport.DeserializeString (args[5]);
+			string    draw_style      = SerializerSupport.DeserializeString (args[6]);
+			
+			this.is_disabled = is_disabled;
 			
 			this.position_units  = position_units;
 			this.thickness_units = thickness_units;
@@ -210,9 +231,33 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override Property GetCombination(Property property)
 		{
-			//	C'est toujours la dernière propriété qui l'emporte.
+			AbstractXlineProperty a = this;
+			AbstractXlineProperty b = property as AbstractXlineProperty;
 			
-			return property as AbstractXlineProperty;
+			if (b.is_disabled == false)
+			{
+				//	Cas normal: la deuxième définition le remporte sur la première.
+				
+				return b;
+			}
+			else
+			{
+				//	Cas spécial: la deuxième définition indique qu'il faut désacriver
+				//	le soulignement. On construit une définition conforme à la pre-
+				//	mière, avec juste l'information qu'elle est désactivée :
+				
+				AbstractXlineProperty c = this.EmptyClone () as AbstractXlineProperty;
+				
+				c.is_disabled     = true;
+				c.position_units  = a.position_units;
+				c.thickness_units = a.thickness_units;
+				c.position        = a.position;
+				c.thickness       = a.thickness;
+				c.draw_class      = a.draw_class;
+				c.draw_style      = a.draw_style;
+				
+				return c;
+			}
 		}
 
 		
@@ -232,12 +277,19 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		protected void Disable()
+		{
+			this.is_disabled = true;
+		}
+		
+		
 		private static bool CompareEqualContents(AbstractXlineProperty a, AbstractXlineProperty b)
 		{
 			return a.WellKnownType == b.WellKnownType
+				&& a.is_disabled == b.is_disabled
 				&& a.position_units == b.position_units
-				&& NumberSupport.Equal (a.position, b.position)
 				&& a.thickness_units == b.thickness_units
+				&& NumberSupport.Equal (a.position, b.position)
 				&& NumberSupport.Equal (a.thickness, b.thickness)
 				&& a.draw_class == b.draw_class
 				&& a.draw_style == b.draw_style;
@@ -291,11 +343,12 @@ namespace Epsitec.Common.Text.Properties
 		}
 		#endregion
 		
+		private bool							is_disabled;
 		
 		private SizeUnits						position_units;
-		private double							position;
-		
 		private SizeUnits						thickness_units;
+		
+		private double							position;
 		private double							thickness;
 		
 		private string							draw_class;

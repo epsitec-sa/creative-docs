@@ -685,6 +685,31 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			
+			public bool								IsDisabled
+			{
+				get
+				{
+					return this.is_disabled;
+				}
+				set
+				{
+					if (this.is_disabled != value)
+					{
+						this.is_disabled = value;
+						this.SetState ();
+					}
+				}
+			}
+			
+			public bool								IsEmpty
+			{
+				get
+				{
+					return (this.draw_style == null) && (this.draw_class == null);
+				}
+			}
+			
+			
 			public double							Position
 			{
 				get
@@ -717,6 +742,7 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			
 			public double							Thickness
 			{
 				get
@@ -748,6 +774,7 @@ namespace Epsitec.Common.Text.Wrappers
 					}
 				}
 			}
+			
 			
 			public string							DrawClass
 			{
@@ -784,10 +811,11 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			public void DefineUsingProperty(Properties.AbstractXlineProperty value)
 			{
-				this.position        = value.Position;
+				this.is_disabled     = value.IsDisabled;
 				this.position_units  = value.PositionUnits;
-				this.thickness       = value.Thickness;
 				this.thickness_units = value.ThicknessUnits;
+				this.position        = value.Position;
+				this.thickness       = value.Thickness;
 				this.draw_class      = value.DrawClass;
 				this.draw_style      = value.DrawStyle;
 				
@@ -796,16 +824,52 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			public Properties.AbstractXlineProperty ToProperty()
 			{
-				switch (this.property.Name)
+				if (this.is_disabled)
 				{
-					case "Underline":	return new Properties.UnderlineProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
-					case "Strikeout":	return new Properties.StrikeoutProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
-					case "Overline":	return new Properties.OverlineProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
-					case "TextBox":		return new Properties.TextBoxProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
-					case "TextMarker":	return new Properties.TextMarkerProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
+					switch (this.property.Name)
+					{
+						case "Underline":	return Properties.UnderlineProperty.DisableOverride;
+//-						case "Strikeout":	return Properties.StrikeoutProperty.DisableOverride;
+//-						case "Overline":	return Properties.OverlineProperty.DisableOverride;
+//-						case "TextBox":		return Properties.TextBoxProperty.DisableOverride;
+//-						case "TextMarker":	return Properties.TextMarkerProperty.DisableOverride;
+					}
+				}
+				else
+				{
+					switch (this.property.Name)
+					{
+						case "Underline":	return new Properties.UnderlineProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
+						case "Strikeout":	return new Properties.StrikeoutProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
+						case "Overline":	return new Properties.OverlineProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
+						case "TextBox":		return new Properties.TextBoxProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
+						case "TextMarker":	return new Properties.TextMarkerProperty (this.position, this.position_units, this.thickness, this.thickness_units, this.draw_class, this.draw_style);
+					}
 				}
 				
 				throw new System.NotSupportedException (string.Format ("Property {0} not supported", this.property.Name));
+			}
+			
+			
+			public bool EqualsIgnoringIsDisabled(object obj)
+			{
+				XlineDefinition that = obj as XlineDefinition;
+				
+				if (that == null)
+				{
+					return false;
+				}
+				if (this == that)
+				{
+					return true;
+				}
+				
+				return this.position_units == that.position_units
+					&& this.thickness_units == that.thickness_units
+					&& NumberSupport.Equal (this.position, that.position)
+					&& NumberSupport.Equal (this.thickness, that.thickness)
+					&& this.draw_class == that.draw_class
+					&& this.draw_style == that.draw_style;
 			}
 			
 			
@@ -822,10 +886,11 @@ namespace Epsitec.Common.Text.Wrappers
 					return true;
 				}
 				
-				return NumberSupport.Equal (this.position, that.position)
-					&& NumberSupport.Equal (this.thickness, that.thickness)
+				return this.is_disabled == that.is_disabled
 					&& this.position_units == that.position_units
 					&& this.thickness_units == that.thickness_units
+					&& NumberSupport.Equal (this.position, that.position)
+					&& NumberSupport.Equal (this.thickness, that.thickness)
 					&& this.draw_class == that.draw_class
 					&& this.draw_style == that.draw_style;
 			}
@@ -844,6 +909,8 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			private State							host;
 			private StateProperty					property;
+			
+			private bool							is_disabled;
 			private double							position;
 			private double							thickness;
 			private Properties.SizeUnits			position_units;
