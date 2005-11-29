@@ -2342,6 +2342,8 @@ namespace Epsitec.Common.Document
 			frame.SetParent(this.miniBar.Root);
 			frame.Anchor = AnchorStyles.All;
 
+			CommandDispatcher cd = this.GetCommandDispatcher();
+
 			foreach ( string cmd in cmds )
 			{
 				if ( cmd == "" )  // séparateur ?
@@ -2352,17 +2354,10 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					string c = cmd;
-					bool activable = false;
-					if ( c[0] == '#' )
-					{
-						activable = true;
-						c = c.Substring(1);
-					}
-
-					button = new IconButton(c, Misc.Icon(c), c);
+					button = new IconButton(cmd, Misc.Icon(cmd), cmd);
 					
-					if ( activable )
+					CommandState state = cd[cmd];
+					if ( state.Statefull )
 					{
 						button.ButtonStyle = ButtonStyle.ActivableIcon;
 					}
@@ -2371,7 +2366,7 @@ namespace Epsitec.Common.Document
 					button.SetParent(frame);
 					button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
 
-					string s = Res.Strings.GetString("Action."+c);
+					string s = Res.Strings.GetString("Action."+cmd);
 					if ( s != null )
 					{
 						ToolTip.Default.SetToolTip(button, s);
@@ -2472,13 +2467,8 @@ namespace Epsitec.Common.Document
 			{
 				if ( list.Contains(cmd) )  return;
 
-				string c = cmd;
-				if ( c[0] == '#' )
-				{
-					c = c.Substring(1);
-				}
 				CommandDispatcher cd = this.GetCommandDispatcher();
-				CommandState state = cd[c];
+				CommandState state = cd[cmd];
 				if ( state != null )
 				{
 					if ( !state.Enable )  return;

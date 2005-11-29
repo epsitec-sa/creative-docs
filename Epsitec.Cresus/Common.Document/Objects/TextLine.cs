@@ -164,7 +164,7 @@ namespace Epsitec.Common.Document.Objects
 						if ( !this.Handle(i+1).IsVisible )  continue;
 						if ( this.Handle(i+1).IsShaperDeselected )  continue;
 						if ( this.Handle(i+1).Type == HandleType.Starting ||
-							 this.Handle(this.NextRank(i)+1).Type == HandleType.Starting )
+							this.Handle(this.NextRank(i)+1).Type == HandleType.Starting )
 						{
 							enable = true;
 						}
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Document.Objects
 					{
 						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
 						int rank = ss.Rank*3+2;
-						string state = (this.Handle(rank+2).Type == HandleType.Hide) ? "ToLine" : "ToCurve";
+						string state = (this.Handle(rank).Type == HandleType.Hide) ? "ToLine" : "ToCurve";
 					{
 						Abstract.ShaperHandleStateAdd(actives, state);
 					}
@@ -241,6 +241,231 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			return base.ShaperHandleState(family, ref enable, actives);
+		}
+
+		// Exécute une commande ShaperHandle*.
+		public override bool ShaperHandleCommand(string cmd)
+		{
+			if ( cmd == "ShaperHandleAdd" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleAdd);
+				this.InsertOpletGeometry();
+				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				if ( this.selectedSegments != null )
+				{
+					int[] index = SelectedSegment.Sort(this.selectedSegments);
+					for ( int i=0 ; i<index.Length ; i++ )
+					{
+						SelectedSegment ss = this.selectedSegments[index[i]] as SelectedSegment;
+						this.ContextAddHandle(ss.Position, ss.Rank*3);
+					}
+				}
+				this.SelectedSegmentClear();
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleContinue" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleContinue);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				for ( int i=this.TotalMainHandle-3 ; i>=0 ; i-=3 )
+				{
+					if ( !this.Handle(i+1).IsVisible )  continue;
+					if ( this.Handle(i+1).IsShaperDeselected )  continue;
+					if ( this.Handle(i+1).Type == HandleType.Starting ||
+						this.Handle(this.NextRank(i)+1).Type == HandleType.Starting )
+					{
+						this.ContextContinueHandle(i+1);
+					}
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleSub" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleSub);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				for ( int i=this.TotalMainHandle-3 ; i>=0 ; i-=3 )
+				{
+					if ( !this.Handle(i+1).IsVisible )  continue;
+					if ( this.Handle(i+1).IsShaperDeselected )  continue;
+					this.ContextSubHandle(i+1);
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleToLine" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleToLine);
+				this.InsertOpletGeometry();
+				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				if ( this.selectedSegments != null )
+				{
+					for ( int i=0 ; i<this.selectedSegments.Count ; i++ )
+					{
+						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
+						int rank = ss.Rank*3;
+						this.ContextToLine(rank);
+					}
+				}
+				this.SelectedSegmentClear();
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleToCurve" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleToCurve);
+				this.InsertOpletGeometry();
+				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				if ( this.selectedSegments != null )
+				{
+					for ( int i=0 ; i<this.selectedSegments.Count ; i++ )
+					{
+						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
+						int rank = ss.Rank*3;
+						this.ContextToCurve(rank);
+					}
+				}
+				this.SelectedSegmentClear();
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleSym" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleSym);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				int total = this.TotalMainHandle;
+				for ( int i=0 ; i<total ; i+=3 )
+				{
+					if ( !this.Handle(i+1).IsVisible )  continue;
+					if ( this.Handle(i+1).IsShaperDeselected )  continue;
+					if ( this.Handle(i).Type != HandleType.Hide && this.Handle(i+2).Type != HandleType.Hide )
+					{
+						this.ContextSym(i+1);
+					}
+				}
+
+				this.document.Modifier.OpletQueueValidateAction();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleSmooth" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleSmooth);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				int total = this.TotalMainHandle;
+				for ( int i=0 ; i<total ; i+=3 )
+				{
+					if ( !this.Handle(i+1).IsVisible )  continue;
+					if ( this.Handle(i+1).IsShaperDeselected )  continue;
+					if ( this.Handle(i).Type != HandleType.Hide && this.Handle(i+2).Type != HandleType.Hide )
+					{
+						this.ContextSmooth(i+1);
+					}
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleDis" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleDis);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				int total = this.TotalMainHandle;
+				for ( int i=0 ; i<total ; i+=3 )
+				{
+					if ( !this.Handle(i+1).IsVisible )  continue;
+					if ( this.Handle(i+1).IsShaperDeselected )  continue;
+					if ( this.Handle(i).Type != HandleType.Hide && this.Handle(i+2).Type != HandleType.Hide )
+					{
+						this.ContextCorner(i+1);
+					}
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleInline" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleInline);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				int total = this.TotalMainHandle;
+				for ( int i=0 ; i<total ; i+=3 )
+				{
+					if ( !this.Handle(i+1).IsVisible )  continue;
+					if ( this.Handle(i+1).IsShaperDeselected )  continue;
+					if ( (this.Handle(i).Type == HandleType.Hide) != (this.Handle(i+2).Type == HandleType.Hide) )
+					{
+						this.ContextSmooth(i+1);
+					}
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleFree" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleFree);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				int total = this.TotalMainHandle;
+				for ( int i=0 ; i<total ; i+=3 )
+				{
+					if ( !this.Handle(i+1).IsVisible )  continue;
+					if ( this.Handle(i+1).IsShaperDeselected )  continue;
+					if ( (this.Handle(i).Type == HandleType.Hide) != (this.Handle(i+2).Type == HandleType.Hide) )
+					{
+						this.ContextCorner(i+1);
+					}
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			return base.ShaperHandleCommand(cmd);
 		}
 
 		// Donne le contenu du menu contextuel.
@@ -427,7 +652,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( cmd == "HandleDelete" )
 			{
-				this.ContextSubHandle(pos, handleRank);
+				this.ContextSubHandle(handleRank);
 			}
 		}
 
@@ -599,7 +824,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Supprime une poignée sans changer l'aspect de la courbe.
-		protected void ContextSubHandle(Point pos, int rank)
+		protected void ContextSubHandle(int rank)
 		{
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);

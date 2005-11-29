@@ -2278,18 +2278,18 @@ namespace Epsitec.Common.Document.Objects
 				this.PutCommands(list, "ShaperHandleContinue");
 				this.PutCommands(list, "ShaperHandleSub");
 				this.PutCommands(list, "");
-				this.PutCommands(list, "#ShaperHandleToLine");
-				this.PutCommands(list, "#ShaperHandleToCurve");
+				this.PutCommands(list, "ShaperHandleToLine");
+				this.PutCommands(list, "ShaperHandleToCurve");
 				this.PutCommands(list, "");
-				this.PutCommands(list, "#ShaperHandleSym");
-				this.PutCommands(list, "#ShaperHandleSmooth");
-				this.PutCommands(list, "#ShaperHandleDis");
+				this.PutCommands(list, "ShaperHandleSym");
+				this.PutCommands(list, "ShaperHandleSmooth");
+				this.PutCommands(list, "ShaperHandleDis");
 				this.PutCommands(list, "");
-				this.PutCommands(list, "#ShaperHandleInline");
-				this.PutCommands(list, "#ShaperHandleFree");
+				this.PutCommands(list, "ShaperHandleInline");
+				this.PutCommands(list, "ShaperHandleFree");
 				this.PutCommands(list, "");
-				this.PutCommands(list, "#ShaperHandleSimply");
-				this.PutCommands(list, "#ShaperHandleCorner");
+				this.PutCommands(list, "ShaperHandleSimply");
+				this.PutCommands(list, "ShaperHandleCorner");
 				this.PutCommands(list, "");
 			}
 		}

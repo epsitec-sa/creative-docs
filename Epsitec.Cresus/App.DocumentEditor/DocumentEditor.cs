@@ -3539,31 +3539,39 @@ namespace Epsitec.App.DocumentEditor
 			this.glyphsState = new CommandState("Glyphs", this.commandDispatcher);
 			this.deleteState = new CommandState("Delete", this.commandDispatcher, KeyCode.Delete);
 			this.duplicateState = new CommandState("Duplicate", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaD);
+			
 			this.cutState = new CommandState("Cut", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaX);
 			this.copyState = new CommandState("Copy", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaC);
 			this.pasteState = new CommandState("Paste", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaV);
+			
 			this.textBoldState = new CommandState("TextBold", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaB);
 			this.textItalicState = new CommandState("TextItalic", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaI);
 			this.textUnderlinedState = new CommandState("TextUnderlined", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
+			
 			this.orderUpOneState = new CommandState("OrderUpOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageUp);
 			this.orderDownOneState = new CommandState("OrderDownOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageDown);
 			this.orderUpAllState = new CommandState("OrderUpAll", this.commandDispatcher, KeyCode.ModifierShift|KeyCode.PageUp);
 			this.orderDownAllState = new CommandState("OrderDownAll", this.commandDispatcher, KeyCode.ModifierShift|KeyCode.PageDown);
+			
 			this.moveLeftFreeState = new CommandState("MoveLeftFree", this.commandDispatcher);
 			this.moveRightFreeState = new CommandState("MoveRightFree", this.commandDispatcher);
 			this.moveUpFreeState = new CommandState("MoveUpFree", this.commandDispatcher);
 			this.moveDownFreeState = new CommandState("MoveDownFree", this.commandDispatcher);
+			
 			this.rotate90State = new CommandState("Rotate90", this.commandDispatcher);
 			this.rotate180State = new CommandState("Rotate180", this.commandDispatcher);
 			this.rotate270State = new CommandState("Rotate270", this.commandDispatcher);
 			this.rotateFreeCCWState = new CommandState("RotateFreeCCW", this.commandDispatcher);
 			this.rotateFreeCWState = new CommandState("RotateFreeCW", this.commandDispatcher);
+			
 			this.mirrorHState = new CommandState("MirrorH", this.commandDispatcher);
 			this.mirrorVState = new CommandState("MirrorV", this.commandDispatcher);
+			
 			this.scaleMul2State = new CommandState("ScaleMul2", this.commandDispatcher);
 			this.scaleDiv2State = new CommandState("ScaleDiv2", this.commandDispatcher);
 			this.scaleMulFreeState = new CommandState("ScaleMulFree", this.commandDispatcher);
 			this.scaleDivFreeState = new CommandState("ScaleDivFree", this.commandDispatcher);
+			
 			this.alignLeftState = new CommandState("AlignLeft", this.commandDispatcher);
 			this.alignCenterXState = new CommandState("AlignCenterX", this.commandDispatcher);
 			this.alignRightState = new CommandState("AlignRight", this.commandDispatcher);
@@ -3571,6 +3579,7 @@ namespace Epsitec.App.DocumentEditor
 			this.alignCenterYState = new CommandState("AlignCenterY", this.commandDispatcher);
 			this.alignBottomState = new CommandState("AlignBottom", this.commandDispatcher);
 			this.alignGridState = new CommandState("AlignGrid", this.commandDispatcher);
+			
 			this.shareLeftState = new CommandState("ShareLeft", this.commandDispatcher);
 			this.shareCenterXState = new CommandState("ShareCenterX", this.commandDispatcher);
 			this.shareSpaceXState = new CommandState("ShareSpaceX", this.commandDispatcher);
@@ -3579,8 +3588,10 @@ namespace Epsitec.App.DocumentEditor
 			this.shareCenterYState = new CommandState("ShareCenterY", this.commandDispatcher);
 			this.shareSpaceYState = new CommandState("ShareSpaceY", this.commandDispatcher);
 			this.shareBottomState = new CommandState("ShareBottom", this.commandDispatcher);
+			
 			this.adjustWidthState = new CommandState("AdjustWidth", this.commandDispatcher);
 			this.adjustHeightState = new CommandState("AdjustHeight", this.commandDispatcher);
+			
 			this.colorToRGBState = new CommandState("ColorToRGB", this.commandDispatcher);
 			this.colorToCMYKState = new CommandState("ColorToCMYK", this.commandDispatcher);
 			this.colorToGrayState = new CommandState("ColorToGray", this.commandDispatcher);
@@ -3588,6 +3599,7 @@ namespace Epsitec.App.DocumentEditor
 			this.colorStrokeLightState = new CommandState("ColorStrokeLight", this.commandDispatcher);
 			this.colorFillDarkState = new CommandState("ColorFillDark", this.commandDispatcher);
 			this.colorFillLightState = new CommandState("ColorFillLight", this.commandDispatcher);
+			
 			this.mergeState = new CommandState("Merge", this.commandDispatcher);
 			this.extractState = new CommandState("Extract", this.commandDispatcher);
 			this.groupState = new CommandState("Group", this.commandDispatcher);
@@ -3599,6 +3611,7 @@ namespace Epsitec.App.DocumentEditor
 			this.toBezierState = new CommandState("ToBezier", this.commandDispatcher);
 			this.toPolyState = new CommandState("ToPoly", this.commandDispatcher);
 			this.fragmentState = new CommandState("Fragment", this.commandDispatcher);
+
 			this.shaperHandleAddState = new CommandState("ShaperHandleAdd", this.commandDispatcher);
 			this.shaperHandleSubState = new CommandState("ShaperHandleSub", this.commandDispatcher);
 			this.shaperHandleToLineState = new CommandState("ShaperHandleToLine", this.commandDispatcher);
@@ -3611,14 +3624,26 @@ namespace Epsitec.App.DocumentEditor
 			this.shaperHandleSimplyState = new CommandState("ShaperHandleSimply", this.commandDispatcher);
 			this.shaperHandleCornerState = new CommandState("ShaperHandleCorner", this.commandDispatcher);
 			this.shaperHandleContinueState = new CommandState("ShaperHandleContinue", this.commandDispatcher);
+			this.shaperHandleToLineState.Statefull = true;
+			this.shaperHandleToCurveState.Statefull = true;
+			this.shaperHandleSymState.Statefull = true;
+			this.shaperHandleSmoothState.Statefull = true;
+			this.shaperHandleDisState.Statefull = true;
+			this.shaperHandleInlineState.Statefull = true;
+			this.shaperHandleFreeState.Statefull = true;
+			this.shaperHandleSimplyState.Statefull = true;
+			this.shaperHandleCornerState.Statefull = true;
+			
 			this.booleanAndState = new CommandState("BooleanAnd", this.commandDispatcher);
 			this.booleanOrState = new CommandState("BooleanOr", this.commandDispatcher);
 			this.booleanXorState = new CommandState("BooleanXor", this.commandDispatcher);
 			this.booleanFrontMinusState = new CommandState("BooleanFrontMinus", this.commandDispatcher);
 			this.booleanBackMinusState = new CommandState("BooleanBackMinus", this.commandDispatcher);
+			
 			this.undoState = new CommandState("Undo", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaZ);
 			this.redoState = new CommandState("Redo", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaY);
 			this.undoRedoListState = new CommandState("UndoRedoList", this.commandDispatcher);
+			
 			this.deselectAllState = new CommandState("DeselectAll", this.commandDispatcher, KeyCode.Escape);
 			this.selectAllState = new CommandState("SelectAll", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaA);
 			this.selectInvertState = new CommandState("SelectInvert", this.commandDispatcher);
@@ -3631,10 +3656,12 @@ namespace Epsitec.App.DocumentEditor
 			this.selectPartialState = new CommandState("SelectPartial", this.commandDispatcher);
 			this.selectorAdaptLine = new CommandState("SelectorAdaptLine", this.commandDispatcher);
 			this.selectorAdaptText = new CommandState("SelectorAdaptText", this.commandDispatcher);
+			
 			this.hideHalfState = new CommandState("HideHalf", this.commandDispatcher);
 			this.hideSelState = new CommandState("HideSel", this.commandDispatcher);
 			this.hideRestState = new CommandState("HideRest", this.commandDispatcher);
 			this.hideCancelState = new CommandState("HideCancel", this.commandDispatcher);
+			
 			this.zoomMinState = new CommandState("ZoomMin", this.commandDispatcher);
 			this.zoomPageState = new CommandState("ZoomPage", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.Digit0);
 			this.zoomPageWidthState = new CommandState("ZoomPageWidth", this.commandDispatcher);
@@ -3644,6 +3671,7 @@ namespace Epsitec.App.DocumentEditor
 			this.zoomPrevState = new CommandState("ZoomPrev", this.commandDispatcher);
 			this.zoomSubState = new CommandState("ZoomSub", this.commandDispatcher, KeyCode.Substract);
 			this.zoomAddState = new CommandState("ZoomAdd", this.commandDispatcher, KeyCode.Add);
+			
 			this.previewState = new CommandState("Preview", this.commandDispatcher);
 			this.gridState = new CommandState("Grid", this.commandDispatcher);
 			this.magnetState = new CommandState("Magnet", this.commandDispatcher);
