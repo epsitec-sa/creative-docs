@@ -454,37 +454,37 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public Properties.UnderlineProperty[]	UnderlineProperties
+		public Properties.AbstractXlineProperty[] XlineProperties
 		{
 			get
 			{
-				if ((this.underline_properties == null) ||
-					(this.underline_properties.Length == 0))
+				if ((this.xline_properties == null) ||
+					(this.xline_properties.Length == 0))
 				{
-					return new Properties.UnderlineProperty[0];
+					return new Properties.AbstractXlineProperty[0];
 				}
 				
-				Properties.UnderlineProperty[] properties = new Properties.UnderlineProperty[this.underline_properties.Length];
+				Properties.AbstractXlineProperty[] properties = new Properties.AbstractXlineProperty[this.xline_properties.Length];
 				
-				this.underline_properties.CopyTo (properties, 0);
+				this.xline_properties.CopyTo (properties, 0);
 				
 				return properties;
 			}
 		}
 		
-		public Layout.UnderlineRecord[]			UnderlineRecords
+		public Layout.XlineRecord[]				XlineRecords
 		{
 			get
 			{
-				if ((this.underline_records == null) ||
-					(this.underline_records.Count == 0))
+				if ((this.xline_records == null) ||
+					(this.xline_records.Count == 0))
 				{
-					return new Layout.UnderlineRecord[0];
+					return new Layout.XlineRecord[0];
 				}
 				
-				Layout.UnderlineRecord[] records = new Layout.UnderlineRecord[this.underline_records.Count];
+				Layout.XlineRecord[] records = new Layout.XlineRecord[this.xline_records.Count];
 				
-				this.underline_records.CopyTo (records);
+				this.xline_records.CopyTo (records);
 				
 				return records;
 			}
@@ -849,14 +849,14 @@ restart:
 		}
 		
 		
-		public void UpdateUnderlineProperties(int offset, double ox, bool is_visible)
+		public void UpdateXlineProperties(int offset, double ox, bool is_visible)
 		{
-			Properties.UnderlineProperty[] current;
-			Properties.UnderlineProperty[] previous = this.underline_properties;
+			Properties.AbstractXlineProperty[] current;
+			Properties.AbstractXlineProperty[] previous = this.xline_properties;
 			
 			offset += this.text_offset;
 			
-			this.text_context.GetUnderlines (this.text[offset], out current);
+			this.text_context.GetXlines (this.text[offset], out current);
 			
 			if (! Property.CompareEqualContents (previous, current))
 			{
@@ -866,21 +866,21 @@ restart:
 				double asc  = this.LineAscender;
 				double desc = this.LineDescender;
 				
-				this.AddUnderlineRecord (new UnderlineRecord (UnderlineRecord.RecordType.Change, offset, current, ox, oy, asc, desc, this.frame_index, is_visible));
+				this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.Change, offset, current, ox, oy, asc, desc, this.frame_index, is_visible));
 				
-				this.underline_properties = current;
+				this.xline_properties = current;
 			}
 		}
 		
 		
-		private void AddUnderlineRecord(UnderlineRecord record)
+		private void AddXlineRecord(XlineRecord record)
 		{
-			if (this.underline_records == null)
+			if (this.xline_records == null)
 			{
-				this.underline_records = new System.Collections.ArrayList ();
+				this.xline_records = new System.Collections.ArrayList ();
 			}
 			
-			this.underline_records.Add (record);
+			this.xline_records.Add (record);
 		}
 		
 		
@@ -951,7 +951,7 @@ restart:
 			
 			if (length > 0)
 			{
-				this.UpdateUnderlineProperties (length - 1, 0, false);
+				this.UpdateXlineProperties (length - 1, 0, false);
 			}
 		}
 		
@@ -1056,8 +1056,8 @@ restart:
 			
 			renderer.RenderStartLine (this);
 			
-			if ((this.underline_properties != null) &&
-				(this.underline_properties.Length > 0))
+			if ((this.xline_properties != null) &&
+				(this.xline_properties.Length > 0))
 			{
 				int offset = this.TextOffset;
 				
@@ -1066,7 +1066,7 @@ restart:
 				double asc  = this.LineAscender;
 				double desc = this.LineDescender;
 				
-				this.AddUnderlineRecord (new UnderlineRecord (UnderlineRecord.RecordType.LineStart, offset, this.underline_properties, ox, oy, asc, desc, this.frame_index, true));
+				this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.LineStart, offset, this.xline_properties, ox, oy, asc, desc, this.frame_index, true));
 			}
 			
 			for (;;)
@@ -1078,8 +1078,8 @@ restart:
 					case Layout.Status.Ok:
 						renderer.RenderEndLine (this);
 						
-						if ((this.underline_properties != null) &&
-							(this.underline_properties.Length > 0))
+						if ((this.xline_properties != null) &&
+							(this.xline_properties.Length > 0))
 						{
 							int offset = this.TextOffset;
 							
@@ -1088,7 +1088,7 @@ restart:
 							double asc  = this.LineAscender;
 							double desc = this.LineDescender;
 							
-							this.AddUnderlineRecord (new UnderlineRecord (UnderlineRecord.RecordType.LineEnd, offset, this.underline_properties, ox, oy, asc, desc, this.frame_index, true));
+							this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.LineEnd, offset, this.xline_properties, ox, oy, asc, desc, this.frame_index, true));
 						}
 						
 						return;
@@ -1810,7 +1810,7 @@ restart:
 		
 		private ulong[]							buffer;
 		
-		private Properties.UnderlineProperty[]	underline_properties;
-		private System.Collections.ArrayList	underline_records;
+		Properties.AbstractXlineProperty[]		xline_properties;
+		System.Collections.ArrayList			xline_records;
 	}
 }

@@ -13,7 +13,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckProperties.TestFont ();
 			CheckProperties.TestFontSize ();
 			CheckProperties.TestMargins ();
-			CheckProperties.TestUnderlines ();
+			CheckProperties.TestXlines ();
 			CheckProperties.TestMetas ();
 			CheckProperties.TestSerialization ();
 			CheckProperties.TestGeneratorProperties ();
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/pt/0/0/0/0/0/[false]");
 		}
 		
-		private static void TestUnderlines()
+		private static void TestXlines()
 		{
 			TextStory story = new TextStory ();
 			
@@ -114,16 +114,16 @@ namespace Epsitec.Common.Text.Tests
 			
 			story.ConvertToStyledText ("Abc", properties, out text);
 			
-			Properties.UnderlineProperty[] underlines;
-			Properties.LinkProperty[]      links;
+			Properties.AbstractXlineProperty[] underlines;
+			Properties.LinkProperty[]          links;
 			
-			story.TextContext.GetUnderlines (text[0], out underlines);
+			story.TextContext.GetXlines (text[0], out underlines);
 			story.TextContext.GetLinks (text[0], out links);
 			
 			Debug.Assert.IsTrue (underlines.Length == 4);
 			Debug.Assert.IsTrue (links.Length == 2);
 			
-//			System.Array.Sort (underlines, Properties.UnderlineProperty.Comparer);
+//			System.Array.Sort (underlines, Properties.AbstractXlineProperty.Comparer);
 //			System.Array.Sort (links, Properties.LinkProperty.Comparer);
 			
 			Debug.Assert.IsTrue (underlines[0].LineStyle == "backcolor=yellow;color=black");

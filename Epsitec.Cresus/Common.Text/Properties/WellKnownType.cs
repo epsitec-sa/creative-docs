@@ -10,6 +10,8 @@ namespace Epsitec.Common.Text.Properties
 	/// </summary>
 	public enum WellKnownType
 	{
+		Undefined			= 0,
+		
 		Font				= 1,		//	style
 		FontSize			= 2,		//	style
 		FontKern			= 3,		//	local
@@ -31,7 +33,12 @@ namespace Epsitec.Common.Text.Properties
 		Color				= 100,		//	extra
 		Link				= 101,		//	extra
 		Meta				= 102,		//	extra
-		Underline			= 103,		//	extra
+		
+		Underline			= 110,		//	extra
+		Strikeout			= 111,		//	extra
+		Overline			= 112,		//	extra
+		TextBox				= 113,		//	extra
+		TextMarker			= 114,		//	extra
 		
 		AutoText			= 150,		//	extra
 		Generator			= 151,		//	extra

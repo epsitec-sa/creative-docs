@@ -227,7 +227,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					Properties.LayoutProperty layout;
 					
 					context.TextContext.GetLayoutEngine (text[offset], out engine, out layout);
-					context.UpdateUnderlineProperties (offset, ox, true);
+					context.UpdateXlineProperties (offset, ox, true);
 					
 					if ((engine != this) ||
 						(layout != context.LayoutProperty))

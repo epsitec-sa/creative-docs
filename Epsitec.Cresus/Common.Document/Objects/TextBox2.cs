@@ -1741,7 +1741,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.internalOperation != InternalOperation.Painting )  return;
 
-			Text.Layout.UnderlineRecord[] records = context.UnderlineRecords;
+			Text.Layout.XlineRecord[] records = context.XlineRecords;
 			double x1 = 0;
 			double y1 = 0;
 			
@@ -1753,8 +1753,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				for ( int i=0 ; i<records.Length ; i++ )
 				{
-					if ( (records[i].Type == Common.Text.Layout.UnderlineRecord.RecordType.LineEnd) ||
-						 (records[i].Underlines.Length == 0) )
+					if ( (records[i].Type == Common.Text.Layout.XlineRecord.RecordType.LineEnd) ||
+						 (records[i].Xlines.Length == 0) )
 					{
 						Path path = Path.FromLine(x1, y1, records[i].X, records[i].Y + records[i].Descender * 0.8);
 
@@ -1766,9 +1766,9 @@ namespace Epsitec.Common.Document.Objects
 					x1 = records[i].X;
 					y1 = records[i].Y + records[i].Descender * 0.8;
 					
-					if ( records[i].Underlines.Length > 0 )
+					if ( records[i].Xlines.Length > 0 )
 					{
-						color = records[i].Underlines[0].LineStyle;
+						color = records[i].Xlines[0].LineStyle;
 					}
 				}
 			}

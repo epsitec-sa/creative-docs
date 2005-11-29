@@ -4,23 +4,23 @@
 namespace Epsitec.Common.Text.Layout
 {
 	/// <summary>
-	/// La classe UnderlineRecord représente un changement de soulignement au
-	/// sein d'un paragraphe.
+	/// La classe XlineRecord représente un changement de soulignement, biffé,
+	/// etc. au sein d'un paragraphe.
 	/// </summary>
-	public class UnderlineRecord
+	public class XlineRecord
 	{
-		public UnderlineRecord(RecordType record_type, int text_offset, System.Collections.ICollection underlines,
-			/**/			   double x, double y, double ascender, double descender, int frame_index, bool is_visible)
+		public XlineRecord(RecordType record_type, int text_offset, System.Collections.ICollection xlines,
+			/**/		   double x, double y, double ascender, double descender, int frame_index, bool is_visible)
 		{
-			int count = underlines == null ? 0 : underlines.Count;
+			int count = xlines == null ? 0 : xlines.Count;
 			
 			this.record_type = record_type;
 			this.text_offset = text_offset;
-			this.underlines  = new Properties.UnderlineProperty[count];
+			this.xlines      = new Properties.AbstractXlineProperty[count];
 			
-			if (underlines != null)
+			if (xlines != null)
 			{
-				underlines.CopyTo (this.underlines, 0);
+				xlines.CopyTo (this.xlines, 0);
 			}
 			
 			this.x = x;
@@ -50,11 +50,11 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public Properties.UnderlineProperty[]	Underlines
+		public Properties.AbstractXlineProperty[]	Xlines
 		{
 			get
 			{
-				return this.underlines;
+				return this.xlines;
 			}
 		}
 		
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Text.Layout
 		
 		private RecordType						record_type;
 		private int								text_offset;
-		private Properties.UnderlineProperty[]	underlines;
+		private Properties.AbstractXlineProperty[]	xlines;
 		private int								frame_index;
 		private bool							is_visible;
 		private double							x, y;

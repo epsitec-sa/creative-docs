@@ -504,6 +504,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\AbstractXlineProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\AlignMode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -619,6 +624,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\OverlineProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\ParagraphStartMode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -649,6 +659,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\StrikeoutProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\StylesProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -660,6 +675,16 @@
                 />
                 <File
                     RelPath = "Properties\TabsProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\TextBoxProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\TextMarkerProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

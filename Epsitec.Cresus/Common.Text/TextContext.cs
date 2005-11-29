@@ -1090,7 +1090,7 @@ namespace Epsitec.Common.Text
 			this.get_keep_last_property      = property;
 		}
 		
-		public void GetUnderlines(ulong code, out Properties.UnderlineProperty[] properties)
+		public void GetXlines(ulong code, out Properties.AbstractXlineProperty[] properties)
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
@@ -1106,9 +1106,9 @@ namespace Epsitec.Common.Text
 				
 				if (extra_settings != null)
 				{
-					base_props = extra_settings.FindProperties (Properties.WellKnownType.Underline);
+					base_props = extra_settings.FindProperties (Properties.WellKnownType.Underline, Properties.WellKnownType.Strikeout, Properties.WellKnownType.Overline, Properties.WellKnownType.TextBox, Properties.WellKnownType.TextMarker);
 					
-					System.Array.Sort (base_props, Properties.UnderlineProperty.Comparer);
+					System.Array.Sort (base_props, Properties.AbstractXlineProperty.Comparer);
 				}
 				
 				this.get_underlines_last_style_version = current_style_version;
@@ -1121,7 +1121,7 @@ namespace Epsitec.Common.Text
 			{
 				int count = this.get_underlines_last_properties.Length;
 				
-				properties = new Properties.UnderlineProperty[count];
+				properties = new Properties.AbstractXlineProperty[count];
 				this.get_underlines_last_properties.CopyTo (properties, 0);
 			}
 			else

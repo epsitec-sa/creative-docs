@@ -369,6 +369,53 @@ namespace Epsitec.Common.Text.Styles
 			return props;
 		}
 		
+		public Property[] FindProperties(params Properties.WellKnownType[] types)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			if ((this.properties != null) &&
+				(types.Length > 0))
+			{
+				Properties.WellKnownType max_type = Properties.WellKnownType.Undefined;
+				
+				for (int i = 0; i < types.Length; i++)
+				{
+					if (types[i] > max_type)
+					{
+						max_type = types[i];
+					}
+				}
+				
+				for (int i = 0; i < this.properties.Length; i++)
+				{
+					Properties.WellKnownType found = this.properties[i].WellKnownType;
+					
+					//	On peut s'arrêter dès que l'on trouve une propriété avec
+					//	un WellKnownType plus grand que celui recherché, car la
+					//	table est triée :
+					
+					if (found > max_type)
+					{
+						break;
+					}
+					
+					for (int j = 0; j < types.Length; j++)
+					{
+						if (found == types[j])
+						{
+							list.Add (this.properties[i]);
+							break;
+						}
+					}
+				}
+			}
+			
+			Property[] props = new Property[list.Count];
+			list.CopyTo (props);
+			
+			return props;
+		}
+		
 		
 		public void Flatten(System.Collections.ArrayList list)
 		{
