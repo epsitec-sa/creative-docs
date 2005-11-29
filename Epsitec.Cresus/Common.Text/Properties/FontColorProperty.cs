@@ -4,16 +4,16 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe ColorProperty définit la couleur à appliquer au corps
+	/// La classe FontColorProperty définit la couleur à appliquer au corps
 	/// du texte.
 	/// </summary>
-	public class ColorProperty : Property
+	public class FontColorProperty : Property
 	{
-		public ColorProperty()
+		public FontColorProperty()
 		{
 		}
 		
-		public ColorProperty(string text_color)
+		public FontColorProperty(string text_color)
 		{
 			this.text_color = text_color;
 		}
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return WellKnownType.Color;
+				return WellKnownType.FontColor;
 			}
 		}
 		
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override Property EmptyClone()
 		{
-			return new ColorProperty ();
+			return new FontColorProperty ();
 		}
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
@@ -70,11 +70,11 @@ namespace Epsitec.Common.Text.Properties
 
 		public override Property GetCombination(Property property)
 		{
-			Debug.Assert.IsTrue (property is Properties.ColorProperty);
+			Debug.Assert.IsTrue (property is Properties.FontColorProperty);
 			
-			ColorProperty a = this;
-			ColorProperty b = property as ColorProperty;
-			ColorProperty c = new ColorProperty ();
+			FontColorProperty a = this;
+			FontColorProperty b = property as FontColorProperty;
+			FontColorProperty c = new FontColorProperty ();
 			
 			c.text_color = (b.text_color == null) ? a.text_color : b.text_color;
 			
@@ -91,11 +91,11 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override bool CompareEqualContents(object value)
 		{
-			return ColorProperty.CompareEqualContents (this, value as ColorProperty);
+			return FontColorProperty.CompareEqualContents (this, value as FontColorProperty);
 		}
 		
 		
-		private static bool CompareEqualContents(ColorProperty a, ColorProperty b)
+		private static bool CompareEqualContents(FontColorProperty a, FontColorProperty b)
 		{
 			return a.text_color == b.text_color;
 		}

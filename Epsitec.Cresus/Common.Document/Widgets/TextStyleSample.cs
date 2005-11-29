@@ -145,9 +145,9 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void PaintFont(Graphics graphics, Rectangle rect)
 		{
-			Text.Properties.FontProperty     font      = this.textStyle[Common.Text.Properties.WellKnownType.Font]     as Text.Properties.FontProperty;
-			Text.Properties.FontSizeProperty fontSize  = this.textStyle[Common.Text.Properties.WellKnownType.FontSize] as Text.Properties.FontSizeProperty;
-			Text.Properties.ColorProperty    fontColor = this.textStyle[Common.Text.Properties.WellKnownType.Color]    as Text.Properties.ColorProperty;
+			Text.Properties.FontProperty      font      = this.textStyle[Common.Text.Properties.WellKnownType.Font]      as Text.Properties.FontProperty;
+			Text.Properties.FontSizeProperty  fontSize  = this.textStyle[Common.Text.Properties.WellKnownType.FontSize]  as Text.Properties.FontSizeProperty;
+			Text.Properties.FontColorProperty fontColor = this.textStyle[Common.Text.Properties.WellKnownType.FontColor] as Text.Properties.FontColorProperty;
 
 			double size = rect.Height*0.5;
 			double x = rect.Left+1.0;

@@ -284,7 +284,7 @@ namespace Epsitec.Common.Widgets
 			properties.Add (fp);
 			properties.Add (new Text.Properties.FontSizeProperty (14.0, Text.Properties.SizeUnits.Points));
 			properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-			properties.Add (new Text.Properties.ColorProperty ("Black"));
+			properties.Add (new Text.Properties.FontColorProperty ("Black"));
 			properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 			properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 15.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			

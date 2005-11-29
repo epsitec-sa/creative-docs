@@ -529,17 +529,17 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Properties\ColorProperty.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Properties\CombinationMode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Properties\ConditionalProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\FontColorProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

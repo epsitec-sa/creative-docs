@@ -40,6 +40,8 @@ namespace Epsitec.Common.Text.Wrappers
 				this.SynchronizeFont ();
 				this.SynchronizeInvert ();
 				this.SynchronizeXline ();
+				this.SynchronizeXscript ();
+				this.SynchronizeColor ();
 				
 				this.defined_state.ClearValueFlags ();
 			}
@@ -218,6 +220,37 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void SynchronizeXscript()
+		{
+			if (this.defined_state.IsValueFlagged (State.XscriptProperty))
+			{
+				if (this.defined_state.IsXscriptDefined)
+				{
+					Properties.FontXscriptProperty property = this.defined_state.Xscript.ToProperty ();
+					this.DefineMetaProperty (FontWrapper.Xscript, 0, property);
+				}
+				else
+				{
+					this.ClearMetaProperty (FontWrapper.Xscript);
+				}
+			}
+		}
+		
+		private void SynchronizeColor()
+		{
+			if (this.defined_state.IsValueFlagged (State.ColorProperty))
+			{
+				if (this.defined_state.IsColorDefined)
+				{
+					this.DefineMetaProperty (FontWrapper.Color, 0, new Properties.FontColorProperty (this.defined_state.Color));
+				}
+				else
+				{
+					this.ClearMetaProperty (FontWrapper.Color);
+				}
+			}
+		}
+		
 		
 		internal override void UpdateState(bool active)
 		{
@@ -228,6 +261,8 @@ namespace Epsitec.Common.Text.Wrappers
 			this.UpdateFont (state, active);
 			this.UpdateInvert (state, active);
 			this.UpdateXline (state, active);
+			this.UpdateXscript (state, active);
+			this.UpdateColor (state, active);
 			
 			state.NotifyIfDirty ();
 		}
@@ -429,6 +464,52 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void UpdateXscript(State state, bool active)
+		{
+			Properties.FontXscriptProperty p_xscript;
+			
+			if (active)
+			{
+				p_xscript = this.ReadAccumulatedProperty (Properties.WellKnownType.FontXscript) as Properties.FontXscriptProperty;
+			}
+			else
+			{
+				p_xscript = this.ReadMetaProperty (FontWrapper.Xscript, Properties.WellKnownType.FontXscript) as Properties.FontXscriptProperty;
+			}
+			
+			if (p_xscript == null)
+			{
+				state.DefineValue (State.XscriptProperty);
+			}
+			else
+			{
+				state.Xscript.DefineUsingProperty (p_xscript);
+			}
+		}
+		
+		private void UpdateColor(State state, bool active)
+		{
+			Properties.FontColorProperty p_color;
+			
+			if (active)
+			{
+				p_color = this.ReadAccumulatedProperty (Properties.WellKnownType.FontColor) as Properties.FontColorProperty;
+			}
+			else
+			{
+				p_color = this.ReadMetaProperty (FontWrapper.Color, Properties.WellKnownType.FontColor) as Properties.FontColorProperty;
+			}
+			
+			if (p_color == null)
+			{
+				state.DefineValue (State.ColorProperty);
+			}
+			else
+			{
+				state.DefineValue (State.ColorProperty, p_color.TextColor);
+			}
+		}
+		
 		
 		public class State : AbstractState
 		{
@@ -509,15 +590,25 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
-			public string							TextColor
+			public string							Color
 			{
 				get
 				{
-					return (string) this.GetValue (State.TextColorProperty);
+					return (string) this.GetValue (State.ColorProperty);
 				}
 				set
 				{
-					this.SetValue (State.TextColorProperty, value);
+					this.SetValue (State.ColorProperty, value);
+				}
+			}
+			
+			public XscriptDefinition				Xscript
+			{
+				get
+				{
+					XscriptDefinition value = this.GetValue (State.XscriptProperty) as XscriptDefinition;
+					
+					return value == null ? new XscriptDefinition (this, State.XscriptProperty) : value;
 				}
 			}
 			
@@ -620,11 +711,19 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
-			public bool								IsTextColorDefined
+			public bool								IsColorDefined
 			{
 				get
 				{
-					return this.IsValueDefined (State.TextColorProperty);
+					return this.IsValueDefined (State.ColorProperty);
+				}
+			}
+			
+			public bool								IsXscriptDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.XscriptProperty);
 				}
 			}
 			
@@ -699,9 +798,14 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.InvertItalicProperty);
 			}
 			
-			public void ClearTextColor()
+			public void ClearColor()
 			{
-				this.ClearValue (State.TextColorProperty);
+				this.ClearValue (State.ColorProperty);
+			}
+			
+			public void ClearXscript()
+			{
+				this.ClearValue (State.XscriptProperty);
 			}
 			
 			public void ClearUnderline()
@@ -737,7 +841,8 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	UnitsProperty = new StateProperty (typeof (State), "Units", Properties.SizeUnits.None);
 			public static readonly StateProperty	InvertBoldProperty = new StateProperty (typeof (State), "InvertBold", false);
 			public static readonly StateProperty	InvertItalicProperty = new StateProperty (typeof (State), "InvertItalic", false);
-			public static readonly StateProperty	TextColorProperty = new StateProperty (typeof (State), "TextColor", null);
+			public static readonly StateProperty	ColorProperty = new StateProperty (typeof (State), "Color", null);
+			public static readonly StateProperty	XscriptProperty = new StateProperty (typeof (State), "Xscript", null);
 			public static readonly StateProperty	UnderlineProperty = new StateProperty (typeof (State), "Underline", null);
 			public static readonly StateProperty	StrikeoutProperty = new StateProperty (typeof (State), "Strikeout", null);
 			public static readonly StateProperty	OverlineProperty = new StateProperty (typeof (State), "Overline", null);
@@ -989,13 +1094,168 @@ namespace Epsitec.Common.Text.Wrappers
 			private string							draw_style;
 		}
 		
+		public class XscriptDefinition
+		{
+			internal XscriptDefinition(State host, StateProperty property)
+			{
+				this.host = host;
+				this.property = property;
+			}
+			
+			
+			public bool								IsDisabled
+			{
+				get
+				{
+					return this.is_disabled;
+				}
+				set
+				{
+					if (this.is_disabled != value)
+					{
+						this.is_disabled = value;
+						this.SetState ();
+					}
+				}
+			}
+			
+			public bool								IsEmpty
+			{
+				get
+				{
+					return double.IsNaN (this.scale) && double.IsNaN (this.offset);
+				}
+			}
+			
+			
+			public double							Scale
+			{
+				get
+				{
+					return this.scale;
+				}
+				set
+				{
+					if (this.scale != value)
+					{
+						this.scale = value;
+						this.SetState ();
+					}
+				}
+			}
+			
+			public double							Offset
+			{
+				get
+				{
+					return this.offset;
+				}
+				set
+				{
+					if (this.offset != value)
+					{
+						this.offset = value;
+						this.SetState ();
+					}
+				}
+			}
+			
+			
+			public void DefineUsingProperty(Properties.FontXscriptProperty value)
+			{
+				this.is_disabled = false;
+				this.scale       = value.Scale;
+				this.offset      = value.Offset;
+				
+				this.host.DefineValue (this.property, this, true);
+			}
+			
+			public Properties.FontXscriptProperty ToProperty()
+			{
+				if (this.is_disabled)
+				{
+					switch (this.property.Name)
+					{
+						case "Xscript": return Properties.FontXscriptProperty.DisableOverride;
+					}
+				}
+				else
+				{
+					switch (this.property.Name)
+					{
+						case "Xscript": return new Properties.FontXscriptProperty (this.scale, this.offset);
+					}
+				}
+				
+				throw new System.NotSupportedException (string.Format ("Property {0} not supported", this.property.Name));
+			}
+			
+			
+			public bool EqualsIgnoringIsDisabled(object obj)
+			{
+				XscriptDefinition that = obj as XscriptDefinition;
+				
+				if (that == null)
+				{
+					return false;
+				}
+				if (this == that)
+				{
+					return true;
+				}
+				
+				return NumberSupport.Equal (this.scale, that.scale)
+					&& NumberSupport.Equal (this.offset, that.offset);
+			}
+			
+			
+			public override bool Equals(object obj)
+			{
+				XscriptDefinition that = obj as XscriptDefinition;
+				
+				if (that == null)
+				{
+					return false;
+				}
+				if (this == that)
+				{
+					return true;
+				}
+				
+				return this.is_disabled == that.is_disabled
+					&& NumberSupport.Equal (this.scale, that.scale)
+					&& NumberSupport.Equal (this.offset, that.offset);
+			}
+			
+			public override int GetHashCode()
+			{
+				return base.GetHashCode ();
+			}
+
+			
+			private void SetState()
+			{
+				this.host.SetValue (this.property, this, true);
+			}
+			
+			
+			private State							host;
+			private StateProperty					property;
+			
+			private bool							is_disabled;
+			private double							scale;
+			private double							offset;
+		}
+		
 		
 		private State								active_state;
 		private State								defined_state;
 		
-		private const string						Font = "Font";
-		private const string						Xline = "Xline";
-		private const string						InvertBold = "X-Bold";
-		private const string						InvertItalic = "X-Italic";
+		private const string						Font  = "Font";
+		private const string						Color = "FontColor";
+		private const string						Xline = "FontXline";
+		private const string						Xscript = "FontXscript";
+		private const string						InvertBold = "Font-X-Bold";
+		private const string						InvertItalic = "Font-X-Italic";
 	}
 }

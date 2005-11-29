@@ -1245,7 +1245,7 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.FontProperty("Arial", Misc.DefaultFontStyle("Arial")));
 			properties.Add(new Text.Properties.FontSizeProperty(12.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
 			properties.Add(new Text.Properties.MarginsProperty(10, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-			properties.Add(new Text.Properties.ColorProperty("Black"));
+			properties.Add(new Text.Properties.FontColorProperty("Black"));
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(0.0, Text.Properties.SizeUnits.Points, 5.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 //-			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));
@@ -1268,8 +1268,8 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));
 			this.textContext.StyleList.NewMetaProperty("Underlined", "Underlined", 0, properties);
 			
-			this.textContext.StyleList.NewMetaProperty("Subscript", "SuperScript", new Text.Properties.FontXScriptProperty (0.6, -0.15));
-			this.textContext.StyleList.NewMetaProperty("Superscript", "SuperScript", new Text.Properties.FontXScriptProperty (0.6, 0.25));
+			this.textContext.StyleList.NewMetaProperty("Subscript", "SuperScript", new Text.Properties.FontXscriptProperty (0.6, -0.15));
+			this.textContext.StyleList.NewMetaProperty("Superscript", "SuperScript", new Text.Properties.FontXscriptProperty (0.6, 0.25));
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));

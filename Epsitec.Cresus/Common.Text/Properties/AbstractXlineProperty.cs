@@ -234,13 +234,7 @@ namespace Epsitec.Common.Text.Properties
 			AbstractXlineProperty a = this;
 			AbstractXlineProperty b = property as AbstractXlineProperty;
 			
-			if (b.is_disabled == false)
-			{
-				//	Cas normal: la deuxième définition le remporte sur la première.
-				
-				return b;
-			}
-			else
+			if (b.is_disabled)
 			{
 				//	Cas spécial: la deuxième définition indique qu'il faut désacriver
 				//	le soulignement. On construit une définition conforme à la pre-
@@ -257,6 +251,12 @@ namespace Epsitec.Common.Text.Properties
 				c.draw_style      = a.draw_style;
 				
 				return c;
+			}
+			else
+			{
+				//	Cas normal: la deuxième définition le remporte sur la première.
+				
+				return b;
 			}
 		}
 

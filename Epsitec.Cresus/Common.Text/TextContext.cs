@@ -378,7 +378,7 @@ namespace Epsitec.Common.Text
 		public void GetFont(Property[] properties, out OpenType.Font font)
 		{
 			Properties.FontProperty        font_property = null;
-			Properties.FontXScriptProperty font_xscript_property = null;
+			Properties.FontXscriptProperty font_xscript_property = null;
 			
 			for (int i = 0; i < properties.Length; i++)
 			{
@@ -390,8 +390,8 @@ namespace Epsitec.Common.Text
 							font_property = properties[i] as Properties.FontProperty;
 							break;
 						
-						case Properties.WellKnownType.FontXScript:
-							font_xscript_property = properties[i] as Properties.FontXScriptProperty;
+						case Properties.WellKnownType.FontXscript:
+							font_xscript_property = properties[i] as Properties.FontXscriptProperty;
 							break;
 					}
 				}
@@ -401,7 +401,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void GetFontSize(Properties.FontProperty font_property, Properties.FontSizeProperty font_size_property, Properties.FontXScriptProperty font_xscript_property, out double font_size, out double font_scale)
+		public void GetFontSize(Properties.FontProperty font_property, Properties.FontSizeProperty font_size_property, Properties.FontXscriptProperty font_xscript_property, out double font_size, out double font_scale)
 		{
 			font_size  = font_size_property.SizeInPoints;
 			font_scale = font_xscript_property == null ? 1.0 : font_xscript_property.Scale;
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Text
 		{
 			Properties.FontProperty        font_property         = null;
 			Properties.FontSizeProperty    font_size_property    = null;
-			Properties.FontXScriptProperty font_xscript_property = null;
+			Properties.FontXscriptProperty font_xscript_property = null;
 			
 			for (int i = 0; i < properties.Length; i++)
 			{
@@ -427,8 +427,8 @@ namespace Epsitec.Common.Text
 							font_size_property = properties[i] as Properties.FontSizeProperty;
 							break;
 						
-						case Properties.WellKnownType.FontXScript:
-							font_xscript_property = properties[i] as Properties.FontXScriptProperty;
+						case Properties.WellKnownType.FontXscript:
+							font_xscript_property = properties[i] as Properties.FontXscriptProperty;
 							break;
 					}
 				}
@@ -442,7 +442,7 @@ namespace Epsitec.Common.Text
 		{
 			Properties.FontProperty        font_property         = null;
 			Properties.FontOffsetProperty  font_offset_property  = null;
-			Properties.FontXScriptProperty font_xscript_property = null;
+			Properties.FontXscriptProperty font_xscript_property = null;
 			
 			for (int i = 0; i < properties.Length; i++)
 			{
@@ -458,8 +458,8 @@ namespace Epsitec.Common.Text
 							font_offset_property = properties[i] as Properties.FontOffsetProperty;
 							break;
 						
-						case Properties.WellKnownType.FontXScript:
-							font_xscript_property = properties[i] as Properties.FontXScriptProperty;
+						case Properties.WellKnownType.FontXscript:
+							font_xscript_property = properties[i] as Properties.FontXscriptProperty;
 							break;
 					}
 				}
@@ -493,7 +493,7 @@ namespace Epsitec.Common.Text
 
 			Properties.FontProperty        font_p         = style[Properties.WellKnownType.Font] as Properties.FontProperty;
 			Properties.FontSizeProperty    font_size_p    = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
-			Properties.FontXScriptProperty font_xscript_p = style[Properties.WellKnownType.FontXScript] as Properties.FontXScriptProperty;
+			Properties.FontXscriptProperty font_xscript_p = style[Properties.WellKnownType.FontXscript] as Properties.FontXscriptProperty;
 			
 			this.GetFont (font_p, out font);
 			this.GetFontSize (font_p, font_size_p, font_xscript_p, out font_size, out scale);
@@ -550,7 +550,7 @@ namespace Epsitec.Common.Text
 			advance_offset  = 0;
 			baseline_offset = 0;
 			
-			Properties.FontXScriptProperty font_xscript_p = style[Properties.WellKnownType.FontXScript] as Properties.FontXScriptProperty;
+			Properties.FontXscriptProperty font_xscript_p = style[Properties.WellKnownType.FontXscript] as Properties.FontXscriptProperty;
 			
 			if (local_settings != null)
 			{
@@ -600,7 +600,7 @@ namespace Epsitec.Common.Text
 			
 			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
 			
-			Properties.ColorProperty color_p = extra_settings[Properties.WellKnownType.Color] as Properties.ColorProperty;
+			Properties.FontColorProperty color_p = extra_settings[Properties.WellKnownType.FontColor] as Properties.FontColorProperty;
 			
 			if (color_p == null)
 			{

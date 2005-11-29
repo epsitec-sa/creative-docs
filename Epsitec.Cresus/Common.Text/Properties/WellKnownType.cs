@@ -16,7 +16,8 @@ namespace Epsitec.Common.Text.Properties
 		FontSize			= 2,		//	style
 		FontKern			= 3,		//	local
 		FontOffset			= 4,		//	local
-		FontXScript			= 5,		//	style
+		FontXscript			= 5,		//	style
+		FontColor			= 6,		//	extra
 		
 		Conditional			= 10,		//	style
 		Keep				= 11,		//	style
@@ -30,7 +31,6 @@ namespace Epsitec.Common.Text.Properties
 		Styles				= 51,		//	style
 		Tabs				= 52,		//	style
 		
-		Color				= 100,		//	extra
 		Link				= 101,		//	extra
 		Meta				= 102,		//	extra
 		

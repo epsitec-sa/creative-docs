@@ -34,7 +34,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties.Add (new Properties.FontSizeProperty (15.0, Properties.SizeUnits.Points));
 			properties.Add (new Properties.LeadingProperty (0, Properties.SizeUnits.Points, Properties.AlignMode.First));
-			properties.Add (new Properties.ColorProperty ("Blue"));
+			properties.Add (new Properties.FontColorProperty ("Blue"));
 			
 			TextStyle style2 = story.StyleList.NewTextStyle ("Titre", TextStyleClass.Paragraph, properties);
 			
