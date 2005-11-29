@@ -3547,6 +3547,9 @@ namespace Epsitec.App.DocumentEditor
 			this.fontBoldState = new CommandState("FontBold", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaB);
 			this.fontItalicState = new CommandState("FontItalic", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaI);
 			this.fontUnderlinedState = new CommandState("FontUnderlined", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
+			this.fontBoldState.Statefull = true;
+			this.fontItalicState.Statefull = true;
+			this.fontUnderlinedState.Statefull = true;
 			
 			this.orderUpOneState = new CommandState("OrderUpOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageUp);
 			this.orderDownOneState = new CommandState("OrderDownOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageDown);

@@ -2692,11 +2692,6 @@ namespace Epsitec.Common.Document
 				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuOper,  Misc.Icon("MoveH"),      Res.Strings.Action.OperationMain);
 				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuGeom,  Misc.Icon("Combine"),    Res.Strings.Action.GeometryMain);
 				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuBool,  Misc.Icon("BooleanOr"),  Res.Strings.Action.BooleanMain);
-
-				if ( nbSel == 1 && this.contextMenuObject != null )
-				{
-					this.contextMenuObject.ContextMenu(list, mouse, this.contextMenuRank);
-				}
 			}
 
 			this.contextMenu = new VMenu();
@@ -2731,10 +2726,6 @@ namespace Epsitec.Common.Document
 				this.document.Modifier.Tool = "Select";
 				return;
 			}
-
-			this.document.Notifier.NotifyArea(this.contextMenuObject.BoundingBox);
-			this.contextMenuObject.ContextCommand(cmd, this.contextMenuPos, this.contextMenuRank);
-			this.document.Notifier.NotifyArea(this.contextMenuObject.BoundingBox);
 		}
 		#endregion
 

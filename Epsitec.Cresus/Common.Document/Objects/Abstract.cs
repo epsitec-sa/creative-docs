@@ -494,6 +494,8 @@ namespace Epsitec.Common.Document.Objects
 		// Détecte le segment pour le modeleur survolé par la souris.
 		public int ShaperDetectSegment(Point mouse)
 		{
+			if ( !this.IsSelectedSegmentPossible )  return -1;
+
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Path path = this.GetMagnetPath();
 			double width = this.SelectedSegmentWidth(context, true);
@@ -531,6 +533,12 @@ namespace Epsitec.Common.Document.Objects
 
 				handle.Modify(hilite, false, hilite);
 			}
+		}
+
+		// Indique si cet objet peut avoir des segments sélectionnés.
+		public virtual bool IsSelectedSegmentPossible
+		{
+			get { return false; }
 		}
 
 		// Désélectionne tous les segments de l'objet.
@@ -2274,6 +2282,13 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.document.Modifier.IsToolShaper )
 			{
+				if ( !this.IsSelectedSegmentPossible )
+				{
+					this.PutCommands(list, "ToBezier");
+					this.PutCommands(list, "ToPoly");
+					this.PutCommands(list, "");
+				}
+
 				this.PutCommands(list, "ShaperHandleAdd");
 				this.PutCommands(list, "ShaperHandleContinue");
 				this.PutCommands(list, "ShaperHandleSub");
@@ -2303,18 +2318,6 @@ namespace Epsitec.Common.Document.Objects
 		// Donne l'état d'une commande ShaperHandle*.
 		public virtual bool ShaperHandleState(string family, ref bool enable, System.Collections.ArrayList actives)
 		{
-			if ( family == "Add" )
-			{
-				enable = (this.selectedSegments != null && this.selectedSegments.Count != 0);
-				return true;
-			}
-
-			if ( family == "Sub" )
-			{
-				enable = (this.TotalMainHandle > 2 && this.IsShaperHandleSelected());
-				return true;
-			}
-
 			return false;
 		}
 
@@ -2330,16 +2333,6 @@ namespace Epsitec.Common.Document.Objects
 		public virtual bool ShaperHandleCommand(string cmd)
 		{
 			return false;
-		}
-
-		// Donne le contenu du menu contextuel.
-		public virtual void ContextMenu(System.Collections.ArrayList list, Point pos, int handleRank)
-		{
-		}
-
-		// Exécute une commande du menu contextuel.
-		public virtual void ContextCommand(string cmd, Point pos, int handleRank)
-		{
 		}
 
 

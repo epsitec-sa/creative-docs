@@ -151,9 +151,21 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Indique si cet objet peut avoir des segments sélectionnés.
+		public override bool IsSelectedSegmentPossible
+		{
+			get { return true; }
+		}
+
 		// Donne l'état d'une commande ShaperHandle*.
 		public override bool ShaperHandleState(string family, ref bool enable, System.Collections.ArrayList actives)
 		{
+			if ( family == "Add" )
+			{
+				enable = (this.selectedSegments != null && this.selectedSegments.Count != 0);
+				return true;
+			}
+
 			if ( family == "Continue" )
 			{
 				if ( this.IsShaperHandleSelected() && !this.PropertyPolyClose.BoolValue )
