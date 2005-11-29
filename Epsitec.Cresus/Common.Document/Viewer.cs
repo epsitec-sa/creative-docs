@@ -757,6 +757,7 @@ namespace Epsitec.Common.Document
 		#region SelectMouse
 		protected void SelectMouseDown(Point mouse, int downCount, bool isRight, bool global)
 		{
+			this.CloseMiniBar();
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Select);
 			this.moveStart = mouse;
 			this.moveAccept = false;
@@ -1155,6 +1156,7 @@ namespace Epsitec.Common.Document
 		#region ShaperMouse
 		protected void ShaperMouseDown(Point mouse, int downCount, bool isRight)
 		{
+			this.CloseMiniBar();
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Shaper);
 			this.moveStart = mouse;
 			this.moveAccept = false;

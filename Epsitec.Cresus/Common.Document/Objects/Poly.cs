@@ -179,6 +179,113 @@ namespace Epsitec.Common.Document.Objects
 			return base.ShaperHandleState(family, ref enable, actives);
 		}
 
+		// Exécute une commande ShaperHandle*.
+		public override bool ShaperHandleCommand(string cmd)
+		{
+			if ( cmd == "ShaperHandleAdd" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleAdd);
+				this.InsertOpletGeometry();
+				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				if ( this.selectedSegments != null )
+				{
+					int[] index = SelectedSegment.Sort(this.selectedSegments);
+					for ( int i=0 ; i<index.Length ; i++ )
+					{
+						SelectedSegment ss = this.selectedSegments[index[i]] as SelectedSegment;
+						this.ContextAddHandle(ss.Position, ss.Rank);
+					}
+				}
+				this.SelectedSegmentClear();
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleContinue" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleContinue);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				for ( int i=this.TotalMainHandle-1 ; i>=0 ; i-- )
+				{
+					if ( !this.Handle(i).IsVisible )  continue;
+					if ( this.Handle(i).IsShaperDeselected )  continue;
+					if ( this.Handle(i).Type == HandleType.Starting ||
+						this.Handle(this.NextRank(i)).Type == HandleType.Starting )
+					{
+						this.ContextContinueHandle(i);
+					}
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleSub" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleSub);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				for ( int i=this.TotalMainHandle-1 ; i>=0 ; i-- )
+				{
+					if ( !this.Handle(i).IsVisible )  continue;
+					if ( this.Handle(i).IsShaperDeselected )  continue;
+					this.ContextSubHandle(i);
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleSimply" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleSimply);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				int total = this.TotalMainHandle;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					if ( !this.Handle(i).IsVisible )  continue;
+					if ( this.Handle(i).IsShaperDeselected )  continue;
+					this.Handle(i).ConstrainType = HandleConstrainType.Simply;
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleCorner" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleCorner);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				int total = this.TotalMainHandle;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					if ( !this.Handle(i).IsVisible )  continue;
+					if ( this.Handle(i).IsShaperDeselected )  continue;
+					this.Handle(i).ConstrainType = HandleConstrainType.Symmetric;
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			return base.ShaperHandleCommand(cmd);
+		}
+
 		// Donne le contenu du menu contextuel.
 		public override void ContextMenu(System.Collections.ArrayList list, Point pos, int handleRank)
 		{
@@ -253,63 +360,22 @@ namespace Epsitec.Common.Document.Objects
 		// Exécute une commande du menu contextuel.
 		public override void ContextCommand(string cmd, Point pos, int handleRank)
 		{
+			int rank = this.DetectOutline(pos);
+
 			if ( cmd == "HandleAdd" )
 			{
-				int rank = this.DetectOutline(pos);
 				if ( rank == -1 )  return;
-
-				int next = this.NextRank(rank);
-				Point p = Point.Projection(this.Handle(rank).Position, this.Handle(next).Position, pos);
-
-				Handle handle = new Handle(this.document);
-				handle.Position = p;
-				handle.Type = HandleType.Primary;
-				handle.IsVisible = true;
-				this.HandleInsert(rank+1, handle);
-				this.HandlePropertiesUpdate();
+				this.ContextAddHandle(pos, rank);
 			}
 
 			if ( cmd == "HandleContinue" )
 			{
-				HandleType type = this.Handle(handleRank).Type;
-				this.Handle(handleRank).Type = HandleType.Primary;
-
-				int ins, prev1, prev2;
-				if ( type == HandleType.Starting )  // insère au début ?
-				{
-					ins   = handleRank;
-					prev1 = handleRank;
-					prev2 = handleRank+1;
-				}
-				else	// insère à la fin ?
-				{
-					ins   = handleRank+1;
-					prev1 = handleRank;
-					prev2 = handleRank-1;
-				}
-
-				double d = 20.0/this.document.Modifier.ActiveViewer.DrawingContext.ScaleX;
-				pos = Point.Move(this.Handle(prev1).Position, this.Handle(prev2).Position, -d);
-
-				Handle handle = new Handle(this.document);
-				handle.Position = pos;
-				handle.Type = type;
-				handle.IsVisible = true;
-				this.HandleInsert(ins, handle);
-				this.HandlePropertiesUpdate();
+				this.ContextContinueHandle(handleRank);
 			}
 
 			if ( cmd == "HandleDelete" )
 			{
-				bool starting = (this.Handle(handleRank).Type == HandleType.Starting);
-				this.HandleDelete(handleRank);
-
-				// Il doit toujours y avoir une poignée de départ !
-				if ( starting )
-				{
-					this.Handle(handleRank).Type = HandleType.Starting;
-				}
-				this.HandlePropertiesUpdate();
+				this.ContextSubHandle(handleRank);
 			}
 
 			if ( cmd == "HandleSym" )
@@ -322,6 +388,66 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(handleRank).ConstrainType = HandleConstrainType.Simply;
 			}
 		}
+
+		// Ajoute une poignée sans changer l'aspect.
+		protected void ContextAddHandle(Point pos, int rank)
+		{
+			int next = this.NextRank(rank);
+			Point p = Point.Projection(this.Handle(rank).Position, this.Handle(next).Position, pos);
+
+			Handle handle = new Handle(this.document);
+			handle.Position = p;
+			handle.Type = HandleType.Primary;
+			handle.IsVisible = true;
+			this.HandleInsert(rank+1, handle);
+			this.HandlePropertiesUpdate();
+		}
+
+		// Supprime une poignée sans trop changer l'aspect.
+		protected void ContextSubHandle(int rank)
+		{
+			bool starting = (this.Handle(rank).Type == HandleType.Starting);
+			this.HandleDelete(rank);
+
+			// Il doit toujours y avoir une poignée de départ !
+			if ( starting )
+			{
+				this.Handle(rank).Type = HandleType.Starting;
+			}
+			this.HandlePropertiesUpdate();
+		}
+
+		// Prolonge la ligne.
+		protected void ContextContinueHandle(int rank)
+		{
+			HandleType type = this.Handle(rank).Type;
+			this.Handle(rank).Type = HandleType.Primary;
+
+			int ins, prev1, prev2;
+			if ( type == HandleType.Starting )  // insère au début ?
+			{
+				ins   = rank;
+				prev1 = rank;
+				prev2 = rank+1;
+			}
+			else	// insère à la fin ?
+			{
+				ins   = rank+1;
+				prev1 = rank;
+				prev2 = rank-1;
+			}
+
+			double d = 20.0/this.document.Modifier.ActiveViewer.DrawingContext.ScaleX;
+			Point pos = Point.Move(this.Handle(prev1).Position, this.Handle(prev2).Position, -d);
+
+			Handle handle = new Handle(this.document);
+			handle.Position = pos;
+			handle.Type = type;
+			handle.IsVisible = true;
+			this.HandleInsert(ins, handle);
+			this.HandlePropertiesUpdate();
+		}
+
 
 		// Détecte si la souris est sur le pourtour de l'objet.
 		// Retourne le rang de la poignée de départ, ou -1

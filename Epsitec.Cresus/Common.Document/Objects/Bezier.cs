@@ -798,7 +798,7 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 		}
 
-		// Supprime une poignée sans changer l'aspect de la courbe.
+		// Supprime une poignée sans trop changer l'aspect de la courbe.
 		protected void ContextSubHandle(int rank)
 		{
 			bool starting = (this.Handle(rank).Type == HandleType.Starting);
