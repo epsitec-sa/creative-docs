@@ -208,6 +208,34 @@ namespace Epsitec.Common.Text.Wrappers
 			return null;
 		}
 		
+		protected Property[] ReadAccumulatedProperties(Properties.WellKnownType type)
+		{
+			Property[] properties = null;
+			
+			if (this.navigator != null)
+			{
+				properties = this.navigator.AccumulatedTextProperties;
+			}
+			
+			if ((properties != null) &&
+				(properties.Length > 0))
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				for (int i = 0; i < properties.Length; i++)
+				{
+					if (properties[i].WellKnownType == type)
+					{
+						list.Add (properties[i]);
+					}
+				}
+				
+				return (Property[]) list.ToArray (typeof (Property));
+			}
+			
+			return null;
+		}
+		
 		protected Property ReadMetaProperty(string meta, Properties.WellKnownType type)
 		{
 			TextStyle[] styles = null;
@@ -225,6 +253,30 @@ namespace Epsitec.Common.Text.Wrappers
 					if (style.MetaId == meta)
 					{
 						return style[type];
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		protected Property[] ReadMetaProperties(string meta, Properties.WellKnownType type)
+		{
+			TextStyle[] styles = null;
+			
+			if (this.navigator != null)
+			{
+				styles = this.navigator.TextStyles;
+			}
+			
+			if ((styles != null) &&
+				(styles.Length > 0))
+			{
+				foreach (TextStyle style in styles)
+				{
+					if (style.MetaId == meta)
+					{
+						return style.FindProperties (type);
 					}
 				}
 			}

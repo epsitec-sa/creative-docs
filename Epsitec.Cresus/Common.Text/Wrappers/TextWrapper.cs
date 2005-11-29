@@ -44,6 +44,7 @@ namespace Epsitec.Common.Text.Wrappers
 				this.SynchronizeColor ();
 				this.SynchronizeLanguage ();
 				this.SynchronizeLink ();
+				this.SynchronizeCondition ();
 				
 				this.defined_state.ClearValueFlags ();
 			}
@@ -301,6 +302,31 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void SynchronizeCondition()
+		{
+			if (this.defined_state.IsValueFlagged (State.ConditionsProperty))
+			{
+				string[] conditions = this.defined_state.Conditions;
+				
+				if ((this.defined_state.IsConditionsDefined) &&
+					(conditions.Length > 0))
+				{
+					Properties.ConditionalProperty[] properties = new Properties.ConditionalProperty[conditions.Length];
+					
+					for (int i = 0; i < conditions.Length; i++)
+					{
+						properties[i] = new Properties.ConditionalProperty (conditions[i]);
+					}
+					
+					this.DefineMetaProperty (TextWrapper.Condition, 0, properties);
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.Condition);
+				}
+			}
+		}
+		
 		
 		internal override void UpdateState(bool active)
 		{
@@ -315,6 +341,7 @@ namespace Epsitec.Common.Text.Wrappers
 			this.UpdateColor (state, active);
 			this.UpdateLanguage (state, active);
 			this.UpdateLink (state, active);
+			this.UpdateCondition (state, active);
 			
 			state.NotifyIfDirty ();
 		}
@@ -620,6 +647,37 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void UpdateCondition(State state, bool active)
+		{
+			Property[] p_conditions;
+			
+			if (active)
+			{
+				p_conditions = this.ReadAccumulatedProperties (Properties.WellKnownType.Conditional);
+			}
+			else
+			{
+				p_conditions = this.ReadMetaProperties (TextWrapper.Condition, Properties.WellKnownType.Conditional);
+			}
+			
+			if ((p_conditions == null) ||
+				(p_conditions.Length == 0))
+			{
+				state.DefineValue (State.ConditionsProperty);
+			}
+			else
+			{
+				string[] conditions = new string[p_conditions.Length];
+				
+				for (int i = 0; i < p_conditions.Length; i++)
+				{
+					conditions[i] = (p_conditions[i] as Properties.ConditionalProperty).Condition;
+				}
+				
+				state.DefineValue (State.ConditionsProperty, conditions);
+			}
+		}
+		
 		
 		public class State : AbstractState
 		{
@@ -820,6 +878,18 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public string[]							Conditions
+			{
+				get
+				{
+					return (string[]) this.GetValue (State.ConditionsProperty);
+				}
+				set
+				{
+					this.SetValue (State.ConditionsProperty, value);
+				}
+			}
+			
 			
 			public bool								IsFontFaceDefined
 			{
@@ -957,6 +1027,14 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public bool								IsConditionsDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.ConditionsProperty);
+				}
+			}
+			
 			
 			public void ClearFontFace()
 			{
@@ -1043,6 +1121,11 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.LinkProperty);
 			}
 			
+			public void ClearConditions()
+			{
+				this.ClearValue (State.ConditionsProperty);
+			}
+			
 			
 			#region State Properties
 			public static readonly StateProperty	FontFaceProperty = new StateProperty (typeof (State), "FontFace", null);
@@ -1055,13 +1138,14 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	ColorProperty = new StateProperty (typeof (State), "Color", null);
 			public static readonly StateProperty	LanguageLocaleProperty = new StateProperty (typeof (State), "LanguageLocale", null);
 			public static readonly StateProperty	LanguageHyphenationProperty = new StateProperty (typeof (State), "LanguageHyphenation", 0);
-			public static readonly StateProperty	LinkProperty = new StateProperty (typeof (State), "Link", null);
 			public static readonly StateProperty	XscriptProperty = new StateProperty (typeof (State), "Xscript", null);
 			public static readonly StateProperty	UnderlineProperty = new StateProperty (typeof (State), "Underline", null);
 			public static readonly StateProperty	StrikeoutProperty = new StateProperty (typeof (State), "Strikeout", null);
 			public static readonly StateProperty	OverlineProperty = new StateProperty (typeof (State), "Overline", null);
 			public static readonly StateProperty	TextBoxProperty = new StateProperty (typeof (State), "TextBox", null);
 			public static readonly StateProperty	TextMarkerProperty = new StateProperty (typeof (State), "TextMarker", null);
+			public static readonly StateProperty	LinkProperty = new StateProperty (typeof (State), "Link", null);
+			public static readonly StateProperty	ConditionsProperty = new StateProperty (typeof (State), "Conditions", new string[0]);
 			#endregion
 		}
 		
@@ -1469,6 +1553,7 @@ namespace Epsitec.Common.Text.Wrappers
 		private const string						Color			= "Text-Color";
 		private const string						Language		= "Text-Lang";
 		private const string						Link			= "Text-Link";
+		private const string						Condition		= "Text-Cond";
 		private const string						Xline			= "Text-Xline";
 		private const string						Xscript			= "Text-Xscript";
 		private const string						InvertBold		= "Text-X-Bold";

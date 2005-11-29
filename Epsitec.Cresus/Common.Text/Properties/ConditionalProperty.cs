@@ -13,6 +13,10 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
+		public ConditionalProperty(string condition) : this (condition, true)
+		{
+		}
+		
 		public ConditionalProperty(string condition, bool show_if_true)
 		{
 			this.condition    = condition;
