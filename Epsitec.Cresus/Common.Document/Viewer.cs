@@ -2383,10 +2383,29 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			ScreenInfo si = ScreenInfo.Find(this.MapClientToScreen(mouse));
+			Drawing.Rectangle wa = si.WorkingArea;
+
 			Size size = new Size(width+frame.Margin*2, button.DefaultHeight+frame.Margin*2+frame.Distance);
 			mouse.X -= size.Width/2;
 			this.miniBarRect = new Drawing.Rectangle(mouse, size);
-			this.miniBarPos = this.MapClientToScreen(mouse);
+			this.miniBarHot = size.Width/2;
+
+			Drawing.Rectangle rect = this.MapClientToScreen(this.miniBarRect);
+			if ( rect.Left < wa.Left )  // dépasse à gauche ?
+			{
+				double dx = wa.Left-rect.Left;
+				this.miniBarRect.Offset(dx, 0);
+				this.miniBarHot -= dx;
+			}
+
+			if ( rect.Right > wa.Right )  // dépasse à droite ?
+			{
+				double dx = rect.Right-wa.Right;
+				this.miniBarRect.Offset(-dx, 0);
+				this.miniBarHot += dx;
+			}
+
 			this.miniBarCmds = cmds;
 
 			this.miniBarTimer.Delay = 0.2;
@@ -2400,6 +2419,7 @@ namespace Epsitec.Common.Document
 			this.CreateMiniBar();
 		}
 
+		// Crée la mini-palette.
 		protected void CreateMiniBar()
 		{
 			Point mouse;
@@ -2416,12 +2436,13 @@ namespace Epsitec.Common.Document
 			this.miniBar.MakeLayeredWindow(true);
 			this.miniBar.Root.SetSyncPaint(true);
 			this.miniBar.WindowSize = this.miniBarRect.Size;
-			this.miniBar.WindowLocation = this.miniBarPos;
+			this.miniBar.WindowLocation = this.MapClientToScreen(this.miniBarRect.BottomLeft);
 			this.miniBar.Root.BackColor = Color.FromARGB(0, 1,1,1);
 			this.miniBar.Owner = this.Window.Owner;
 			this.miniBar.AttachCommandDispatcher(this.GetCommandDispatcher());
 
 			Widgets.Balloon frame = new Widgets.Balloon();
+			frame.Hot = this.miniBarHot;
 			frame.SetParent(this.miniBar.Root);
 			frame.Anchor = AnchorStyles.All;
 
@@ -3961,10 +3982,10 @@ namespace Epsitec.Common.Document
 		protected Objects.TextBox2				editFlowAfterCreate = null;
 
 		protected Timer							miniBarTimer;
-		protected Point							miniBarPos;
 		protected System.Collections.ArrayList	miniBarCmds = null;
-		protected Window						miniBar = null;
 		protected Drawing.Rectangle				miniBarRect;
+		protected double						miniBarHot;
+		protected Window						miniBar = null;
 		protected double						miniBarMax = 5;
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOrder;

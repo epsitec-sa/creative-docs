@@ -59,6 +59,19 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Position horizontale du point chaud, habituellement au milieu de la largeur.
+		public double Hot
+		{
+			get
+			{
+				return this.hot;
+			}
+			set
+			{
+				this.hot = value;
+			}
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -66,17 +79,18 @@ namespace Epsitec.Common.Document.Widgets
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate(0.5);
 
+			double m = this.Client.Bounds.Left+this.hot;
 			double h = this.distance;
 			double w = this.distance*0.3;
 
 			Path path = new Path();
-			path.MoveTo(rect.Center.X, rect.Bottom);
-			path.LineTo(rect.Center.X-w, rect.Bottom+h);
+			path.MoveTo(m, rect.Bottom);
+			path.LineTo(m-w, rect.Bottom+h);
 			path.LineTo(rect.Left, rect.Bottom+h);
 			path.LineTo(rect.Left, rect.Top);
 			path.LineTo(rect.Right, rect.Top);
 			path.LineTo(rect.Right, rect.Bottom+h);
-			path.LineTo(rect.Center.X+w, rect.Bottom+h);
+			path.LineTo(m+w, rect.Bottom+h);
 			path.Close();
 
 			graphics.Rasterizer.AddSurface(path);
@@ -89,6 +103,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected double					distance;
 		protected double					margin;
+		protected double					hot;
 		protected Color						backgroundColor;
 		protected Color						frameColor;
 	}
