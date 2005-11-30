@@ -35,17 +35,17 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		internal override void InternalSynchronize(AbstractState state, StateProperty property)
 		{
-			if (state != this.defined_state)
+			if (state == this.defined_state)
 			{
-				return;
+				this.SynchronizeMargins ();
 			}
-			
-			if (this.defined_state.CountFlaggedValues () == 0)
-			{
-				return;
-			}
-			
+		}
+		
+		
+		private void SynchronizeMargins()
+		{
 			int defines = 0;
+			int changes = 0;
 			
 			double left_m_first  = double.NaN;
 			double left_m_body   = double.NaN;
@@ -59,81 +59,193 @@ namespace Epsitec.Common.Text.Wrappers
 			double justif_last = double.NaN;
 			double disposition = double.NaN;
 			
-			switch (this.defined_state.JustificationMode)
+			if (this.defined_state.IsValueFlagged (State.JustificationModeProperty))
 			{
-				case JustificationMode.AlignLeft:
-					justif_body = 0;
-					justif_last = 0;
-					disposition = 0.0;
-					defines++;
-					break;
+				changes++;
 				
-				case JustificationMode.AlignRight:
-					justif_body = 0;
-					justif_last = 0;
-					disposition = 1.0;
-					defines++;
-					break;
+				switch (this.defined_state.JustificationMode)
+				{
+					case JustificationMode.AlignLeft:
+						justif_body = 0;
+						justif_last = 0;
+						disposition = 0.0;
+						defines++;
+						break;
+					
+					case JustificationMode.AlignRight:
+						justif_body = 0;
+						justif_last = 0;
+						disposition = 1.0;
+						defines++;
+						break;
+					
+					case JustificationMode.Center:
+						justif_body = 0;
+						justif_last = 0;
+						disposition = 0.5;
+						defines++;
+						break;
+					
+					case JustificationMode.JustifyAlignLeft:
+						justif_body = 1.0;
+						justif_last = 0;
+						disposition = 0.0;
+						defines++;
+						break;
+				}
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.LeftMarginFirstProperty))
+			{
+				changes++;
 				
-				case JustificationMode.Center:
-					justif_body = 0;
-					justif_last = 0;
-					disposition = 0.5;
+				if (this.defined_state.IsLeftMarginFirstDefined)
+				{
+					left_m_first = this.defined_state.LeftMarginFirst;
+					units        = this.defined_state.MarginUnits;
 					defines++;
-					break;
+				}
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.LeftMarginBodyProperty))
+			{
+				changes++;
 				
-				case JustificationMode.JustifyAlignLeft:
-					justif_body = 1.0;
-					justif_last = 0;
-					disposition = 0.0;
+				if (this.defined_state.IsLeftMarginBodyDefined)
+				{
+					left_m_body = this.defined_state.LeftMarginBody;
+					units       = this.defined_state.MarginUnits;
 					defines++;
-					break;
+				}
 			}
 			
-			if (this.defined_state.IsLeftMarginFirstDefined)
+			if (this.defined_state.IsValueFlagged (State.RightMarginFirstProperty))
 			{
-				left_m_first = this.defined_state.LeftMarginFirst;
-				units        = this.defined_state.Units;
-				defines++;
+				changes++;
+				
+				if (this.defined_state.IsRightMarginFirstDefined)
+				{
+					right_m_first = this.defined_state.RightMarginFirst;
+					units         = this.defined_state.MarginUnits;
+					defines++;
+				}
 			}
 			
-			if (this.defined_state.IsLeftMarginBodyDefined)
+			if (this.defined_state.IsValueFlagged (State.RightMarginBodyProperty))
 			{
-				left_m_body = this.defined_state.LeftMarginBody;
-				units       = this.defined_state.Units;
-				defines++;
+				changes++;
+				
+				if (this.defined_state.IsRightMarginBodyDefined)
+				{
+					right_m_body = this.defined_state.RightMarginBody;
+					units        = this.defined_state.MarginUnits;
+					defines++;
+				}
 			}
 			
-			if (this.defined_state.IsRightMarginFirstDefined)
+			if (this.defined_state.IsValueFlagged (State.HyphenationProperty))
 			{
-				right_m_first = this.defined_state.RightMarginFirst;
-				units         = this.defined_state.Units;
-				defines++;
+				changes++;
+				
+				if (this.defined_state.IsHyphenationDefined)
+				{
+					hyphenate = this.defined_state.Hyphenation ? Properties.ThreeState.True : Properties.ThreeState.False;
+					defines++;
+				}
 			}
 			
-			if (this.defined_state.IsRightMarginBodyDefined)
+			if (changes > 0)
 			{
-				right_m_body = this.defined_state.RightMarginBody;
-				units        = this.defined_state.Units;
-				defines++;
-			}
-			
-			if (this.defined_state.IsHyphenationDefined)
-			{
-				hyphenate = this.defined_state.Hyphenation ? Properties.ThreeState.True : Properties.ThreeState.False;
-				defines++;
-			}
-			
-			if (defines > 0)
-			{
-				this.DefineMetaProperty (ParagraphWrapper.Margins, 0, new Properties.MarginsProperty (left_m_first, left_m_body, right_m_first, right_m_body, units, justif_body, justif_last, disposition, double.NaN, double.NaN, hyphenate));
-			}
-			else
-			{
-				this.ClearMetaProperty (ParagraphWrapper.Margins);
+				if (defines > 0)
+				{
+					this.DefineMetaProperty (ParagraphWrapper.Margins, 0, new Properties.MarginsProperty (left_m_first, left_m_body, right_m_first, right_m_body, units, justif_body, justif_last, disposition, double.NaN, double.NaN, hyphenate));
+				}
+				else
+				{
+					this.ClearMetaProperty (ParagraphWrapper.Margins);
+				}
 			}
 		}
 
+		private void SynchronizeLeading()
+		{
+			int defines = 0;
+			int changes = 0;
+			
+			double leading      = double.NaN;
+			double space_before = double.NaN;
+			double space_after  = double.NaN;
+			
+			Properties.SizeUnits leading_units      = Properties.SizeUnits.None;
+			Properties.SizeUnits space_before_units = Properties.SizeUnits.None;
+			Properties.SizeUnits space_after_units  = Properties.SizeUnits.None;
+			
+			Properties.AlignMode align_mode = Properties.AlignMode.Undefined;
+			
+			if ((this.defined_state.IsValueFlagged (State.LeadingProperty)) ||
+				(this.defined_state.IsValueFlagged (State.LeadingUnitsProperty)))
+			{
+				changes++;
+				
+				if (this.defined_state.IsLeadingDefined)
+				{
+					leading       = this.defined_state.Leading;
+					leading_units = this.defined_state.LeadingUnits;
+					defines++;
+				}
+			}
+			
+			if ((this.defined_state.IsValueFlagged (State.SpaceBeforeProperty)) ||
+				(this.defined_state.IsValueFlagged (State.SpaceBeforeUnitsProperty)))
+			{
+				changes++;
+				
+				if (this.defined_state.IsSpaceBeforeDefined)
+				{
+					space_before       = this.defined_state.SpaceBefore;
+					space_before_units = this.defined_state.SpaceBeforeUnits;
+					defines++;
+				}
+			}
+			
+			if ((this.defined_state.IsValueFlagged (State.SpaceAfterProperty)) ||
+				(this.defined_state.IsValueFlagged (State.SpaceAfterUnitsProperty)))
+			{
+				changes++;
+				
+				if (this.defined_state.IsSpaceAfterDefined)
+				{
+					space_after       = this.defined_state.SpaceAfter;
+					space_after_units = this.defined_state.SpaceAfterUnits;
+					defines++;
+				}
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.AlignModeProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsAlignModeDefined)
+				{
+					align_mode = this.defined_state.AlignMode;
+					defines++;
+				}
+			}
+			
+			if (changes > 0)
+			{
+				if (defines > 0)
+				{
+					this.DefineMetaProperty (ParagraphWrapper.Leading, 0, new Properties.LeadingProperty (leading, leading_units, space_before, space_before_units, space_after, space_after_units, align_mode));
+				}
+				else
+				{
+					this.ClearMetaProperty (ParagraphWrapper.Leading);
+				}
+			}
+		}
+
+		
 		internal override void UpdateState(bool active)
 		{
 			State state = active ? this.Active : this.Defined;
@@ -141,6 +253,7 @@ namespace Epsitec.Common.Text.Wrappers
 			System.Diagnostics.Debug.Assert (state.IsDirty == false);
 			
 			this.UpdateMargins (state, active);
+			this.UpdateLeading (state, active);
 			
 			state.NotifyIfDirty ();
 		}
@@ -203,7 +316,7 @@ namespace Epsitec.Common.Text.Wrappers
 			if ((margins != null) &&
 				(margins.Units != Properties.SizeUnits.None))
 			{
-				state.DefineValue (State.UnitsProperty, margins.Units);
+				state.DefineValue (State.MarginUnitsProperty, margins.Units);
 				
 				if (double.IsNaN (margins.LeftMarginFirstLine))
 				{
@@ -243,7 +356,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				state.DefineValue (State.UnitsProperty);
+				state.DefineValue (State.MarginUnitsProperty);
 				
 				state.DefineValue (State.LeftMarginFirstProperty);
 				state.DefineValue (State.LeftMarginBodyProperty);
@@ -271,6 +384,69 @@ namespace Epsitec.Common.Text.Wrappers
 			else
 			{
 				state.DefineValue (State.HyphenationProperty);
+			}
+		}
+		
+		private void UpdateLeading(State state, bool active)
+		{
+			Properties.LeadingProperty leading;
+			
+			if (active)
+			{
+				leading = this.ReadAccumulatedProperty (Properties.WellKnownType.Leading) as Properties.LeadingProperty;
+			}
+			else
+			{
+				leading = this.ReadMetaProperty (ParagraphWrapper.Leading, Properties.WellKnownType.Leading) as Properties.LeadingProperty;
+			}
+			
+			if ((leading != null) &&
+				(leading.LeadingUnits != Properties.SizeUnits.None) &&
+				(double.IsNaN (leading.Leading) == false))
+			{
+				state.DefineValue (State.LeadingProperty, leading.Leading);
+				state.DefineValue (State.LeadingUnitsProperty, leading.LeadingUnits);
+			}
+			else
+			{
+				state.DefineValue (State.LeadingProperty);
+				state.DefineValue (State.LeadingUnitsProperty);
+			}
+			
+			if ((leading != null) &&
+				(leading.SpaceBeforeUnits != Properties.SizeUnits.None) &&
+				(double.IsNaN (leading.SpaceBefore) == false))
+			{
+				state.DefineValue (State.SpaceBeforeProperty, leading.SpaceBefore);
+				state.DefineValue (State.SpaceBeforeUnitsProperty, leading.LeadingUnits);
+			}
+			else
+			{
+				state.DefineValue (State.SpaceBeforeProperty);
+				state.DefineValue (State.SpaceBeforeUnitsProperty);
+			}
+			
+			if ((leading != null) &&
+				(leading.SpaceAfterUnits != Properties.SizeUnits.None) &&
+				(double.IsNaN (leading.SpaceAfter) == false))
+			{
+				state.DefineValue (State.SpaceAfterProperty, leading.SpaceAfter);
+				state.DefineValue (State.SpaceAfterUnitsProperty, leading.SpaceAfterUnits);
+			}
+			else
+			{
+				state.DefineValue (State.SpaceAfterProperty);
+				state.DefineValue (State.SpaceAfterUnitsProperty);
+			}
+			
+			if ((leading != null) &&
+				(leading.AlignMode != Properties.AlignMode.Undefined))
+			{
+				state.DefineValue (State.AlignModeProperty, leading.AlignMode);
+			}
+			else
+			{
+				state.DefineValue (State.AlignModeProperty);
 			}
 		}
 		
@@ -355,15 +531,100 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
-			public Properties.SizeUnits				Units
+			public Properties.SizeUnits				MarginUnits
 			{
 				get
 				{
-					return (Properties.SizeUnits) this.GetValue (State.UnitsProperty);
+					return (Properties.SizeUnits) this.GetValue (State.MarginUnitsProperty);
 				}
 				set
 				{
-					this.SetValue (State.UnitsProperty, value);
+					this.SetValue (State.MarginUnitsProperty, value);
+				}
+			}
+			
+			
+			public double							Leading
+			{
+				get
+				{
+					return (double) this.GetValue (State.LeadingProperty);
+				}
+				set
+				{
+					this.SetValue (State.LeadingProperty, value);
+				}
+			}
+			
+			public Properties.SizeUnits				LeadingUnits
+			{
+				get
+				{
+					return (Properties.SizeUnits) this.GetValue (State.LeadingUnitsProperty);
+				}
+				set
+				{
+					this.SetValue (State.LeadingUnitsProperty, value);
+				}
+			}
+			
+			public double							SpaceBefore
+			{
+				get
+				{
+					return (double) this.GetValue (State.SpaceBeforeProperty);
+				}
+				set
+				{
+					this.SetValue (State.SpaceBeforeProperty, value);
+				}
+			}
+			
+			public Properties.SizeUnits				SpaceBeforeUnits
+			{
+				get
+				{
+					return (Properties.SizeUnits) this.GetValue (State.SpaceBeforeUnitsProperty);
+				}
+				set
+				{
+					this.SetValue (State.SpaceBeforeUnitsProperty, value);
+				}
+			}
+			
+			public double							SpaceAfter
+			{
+				get
+				{
+					return (double) this.GetValue (State.SpaceAfterProperty);
+				}
+				set
+				{
+					this.SetValue (State.SpaceAfterProperty, value);
+				}
+			}
+			
+			public Properties.SizeUnits				SpaceAfterUnits
+			{
+				get
+				{
+					return (Properties.SizeUnits) this.GetValue (State.SpaceAfterUnitsProperty);
+				}
+				set
+				{
+					this.SetValue (State.SpaceAfterUnitsProperty, value);
+				}
+			}
+			
+			public Properties.AlignMode				AlignMode
+			{
+				get
+				{
+					return (Properties.AlignMode) this.GetValue (State.AlignModeProperty);
+				}
+				set
+				{
+					this.SetValue (State.AlignModeProperty, value);
 				}
 			}
 			
@@ -416,11 +677,68 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
-			public bool								IsUnitsDefined
+			public bool								IsMarginUnitsDefined
 			{
 				get
 				{
-					return this.IsValueDefined (State.UnitsProperty);
+					return this.IsValueDefined (State.MarginUnitsProperty);
+				}
+			}
+			
+			
+			public bool								IsLeadingDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.LeadingProperty);
+				}
+			}
+			
+			public bool								IsLeadingUnitsDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.LeadingUnitsProperty);
+				}
+			}
+			
+			public bool								IsSpaceBeforeDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.SpaceBeforeProperty);
+				}
+			}
+			
+			public bool								IsSpaceBeforeUnitsDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.SpaceBeforeUnitsProperty);
+				}
+			}
+			
+			public bool								IsSpaceAfterDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.SpaceAfterProperty);
+				}
+			}
+			
+			public bool								IsSpaceAfterUnitsDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.SpaceAfterUnitsProperty);
+				}
+			}
+			
+			public bool								IsAlignModeDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.AlignModeProperty);
 				}
 			}
 			
@@ -455,9 +773,44 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.RightMarginBodyProperty);
 			}
 			
-			public void ClearUnits()
+			public void ClearMarginUnits()
 			{
-				this.ClearValue (State.UnitsProperty);
+				this.ClearValue (State.MarginUnitsProperty);
+			}
+			
+			public void ClearLeading()
+			{
+				this.ClearValue (State.LeadingProperty);
+			}
+			
+			public void ClearLeadingUnits()
+			{
+				this.ClearValue (State.LeadingUnitsProperty);
+			}
+			
+			public void ClearSpaceBefore()
+			{
+				this.ClearValue (State.SpaceBeforeProperty);
+			}
+			
+			public void ClearSpaceBeforeUnits()
+			{
+				this.ClearValue (State.SpaceBeforeUnitsProperty);
+			}
+			
+			public void ClearSpaceAfter()
+			{
+				this.ClearValue (State.SpaceAfterProperty);
+			}
+			
+			public void ClearSpaceAfterUnits()
+			{
+				this.ClearValue (State.SpaceAfterUnitsProperty);
+			}
+			
+			public void ClearAlignMode()
+			{
+				this.ClearValue (State.AlignModeProperty);
 			}
 			
 			
@@ -468,7 +821,14 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	LeftMarginBodyProperty = new StateProperty (typeof (State), "LeftMarginBody", double.NaN);
 			public static readonly StateProperty	RightMarginFirstProperty = new StateProperty (typeof (State), "RightMarginFirst", double.NaN);
 			public static readonly StateProperty	RightMarginBodyProperty = new StateProperty (typeof (State), "RightMarginBody", double.NaN);
-			public static readonly StateProperty	UnitsProperty = new StateProperty (typeof (State), "Units", Properties.SizeUnits.None);
+			public static readonly StateProperty	MarginUnitsProperty = new StateProperty (typeof (State), "MarginUnits", Properties.SizeUnits.None);
+			public static readonly StateProperty	LeadingProperty = new StateProperty (typeof (State), "Leading", double.NaN);
+			public static readonly StateProperty	LeadingUnitsProperty = new StateProperty (typeof (State), "LeadingUnits", Properties.SizeUnits.None);
+			public static readonly StateProperty	SpaceBeforeProperty = new StateProperty (typeof (State), "SpaceBefore", double.NaN);
+			public static readonly StateProperty	SpaceBeforeUnitsProperty = new StateProperty (typeof (State), "SpaceBeforeUnits", Properties.SizeUnits.None);
+			public static readonly StateProperty	SpaceAfterProperty = new StateProperty (typeof (State), "SpaceAfter", double.NaN);
+			public static readonly StateProperty	SpaceAfterUnitsProperty = new StateProperty (typeof (State), "SpaceAfterUnits", Properties.SizeUnits.None);
+			public static readonly StateProperty	AlignModeProperty = new StateProperty (typeof (State), "AlignMode", Properties.AlignMode.Undefined);
 			#endregion
 		}
 		
@@ -477,5 +837,6 @@ namespace Epsitec.Common.Text.Wrappers
 		private State								defined_state;
 		
 		private const string						Margins = "Margins";
+		private const string						Leading = "Leading";
 	}
 }

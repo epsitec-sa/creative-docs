@@ -681,7 +681,7 @@ namespace Epsitec.Common.Document.Widgets
 
 					this.document.ParagraphWrapper.SuspendSynchronisations();
 					this.document.ParagraphWrapper.Defined.LeftMarginFirst = leftFirst;
-					this.document.ParagraphWrapper.Defined.Units           = Common.Text.Properties.SizeUnits.Points;
+					this.document.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
 					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
 
@@ -694,7 +694,7 @@ namespace Epsitec.Common.Document.Widgets
 
 					this.document.ParagraphWrapper.SuspendSynchronisations();
 					this.document.ParagraphWrapper.Defined.LeftMarginBody = leftBody;
-					this.document.ParagraphWrapper.Defined.Units          = Common.Text.Properties.SizeUnits.Points;
+					this.document.ParagraphWrapper.Defined.MarginUnits    = Common.Text.Properties.SizeUnits.Points;
 					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
 
@@ -715,7 +715,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.document.ParagraphWrapper.SuspendSynchronisations();
 					this.document.ParagraphWrapper.Defined.LeftMarginFirst = leftFirst;
 					this.document.ParagraphWrapper.Defined.LeftMarginBody  = leftBody;
-					this.document.ParagraphWrapper.Defined.Units           = Common.Text.Properties.SizeUnits.Points;
+					this.document.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
 					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
 
@@ -729,7 +729,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.document.ParagraphWrapper.SuspendSynchronisations();
 					this.document.ParagraphWrapper.Defined.RightMarginFirst = right;
 					this.document.ParagraphWrapper.Defined.RightMarginBody  = right;
-					this.document.ParagraphWrapper.Defined.Units            = Common.Text.Properties.SizeUnits.Points;
+					this.document.ParagraphWrapper.Defined.MarginUnits      = Common.Text.Properties.SizeUnits.Points;
 					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
 			}
