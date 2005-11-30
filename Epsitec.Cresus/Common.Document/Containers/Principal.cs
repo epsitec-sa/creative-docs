@@ -325,17 +325,21 @@ namespace Epsitec.Common.Document.Containers
 				{
 					string cmd, name, text;
 					if ( !creatingObject.CreateAction(i, out cmd, out name, out text) )  break;
-					Button button = new Button();
-					button.Height = 40;
-					button.Command = cmd;
-					button.Name = name;
-					button.Text = text;
-					button.Alignment = ContentAlignment.MiddleLeft;
-					button.Dock = DockStyle.Top;
-					button.DockMargins = new Margins(10, 10, topMargin, 0);
-					button.SetParent(this.scrollable.Panel);
 
-					if ( topMargin == 50 )  topMargin = 10;
+					if ( cmd != "" )
+					{
+						Button button = new Button();
+						button.Height = 40;
+						button.Command = cmd;
+						button.Name = name;
+						button.Text = text;
+						button.Alignment = ContentAlignment.MiddleLeft;
+						button.Dock = DockStyle.Top;
+						button.DockMargins = new Margins(10, 10, topMargin, 0);
+						button.SetParent(this.scrollable.Panel);
+					}
+
+					topMargin = (cmd == "") ? 20 : 4;
 				}
 			}
 			else if ( this.document.Modifier.Tool == "Edit" )

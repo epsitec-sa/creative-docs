@@ -1310,21 +1310,56 @@ namespace Epsitec.Common.Document.Objects
 			{
 				cmd  = "Object";
 				name = "CreateEnding";
-				text = string.Format("     {0}  {1}", Misc.Image("CreateEnding"), Res.Strings.Object.Button.CreateEnding);
+				text = Abstract.CreateAction("CreateEnding", "CreateCloseNo", Res.Strings.Object.Button.CreateEnding);
 				return true;
 			}
 			if ( rank == 1 )
 			{
 				cmd  = "Object";
-				name = "CreateAndSelect";
-				text = string.Format("     {0}  {1}", Misc.Image("CreateAndSelect"), Res.Strings.Object.Button.CreateAndSelect);
+				name = "CreateCloseEnding";
+				text = Abstract.CreateAction("CreateEnding", "CreateCloseYes", Res.Strings.Object.Button.CreateEnding);
 				return true;
 			}
 			if ( rank == 2 )
 			{
+				cmd  = "";
+				name = "";
+				text = "";
+				return true;
+			}
+			if ( rank == 3 )
+			{
+				cmd  = "Object";
+				name = "CreateAndSelect";
+				text = Abstract.CreateAction("CreateAndSelect", "CreateCloseNo", Res.Strings.Object.Button.CreateAndSelect);
+				return true;
+			}
+			if ( rank == 4 )
+			{
+				cmd  = "Object";
+				name = "CreateCloseAndSelect";
+				text = Abstract.CreateAction("CreateAndSelect", "CreateCloseYes", Res.Strings.Object.Button.CreateAndSelect);
+				return true;
+			}
+			if ( rank == 5 )
+			{
+				cmd  = "";
+				name = "";
+				text = "";
+				return true;
+			}
+			if ( rank == 6 )
+			{
 				cmd  = "Object";
 				name = "CreateAndShaper";
-				text = string.Format("     {0}  {1}", Misc.Image("CreateAndShaper"), Res.Strings.Object.Button.CreateAndShaper);
+				text = Abstract.CreateAction("CreateAndShaper", "CreateCloseNo", Res.Strings.Object.Button.CreateAndShaper);
+				return true;
+			}
+			if ( rank == 7 )
+			{
+				cmd  = "Object";
+				name = "CreateCloseAndShaper";
+				text = Abstract.CreateAction("CreateAndShaper", "CreateCloseYes", Res.Strings.Object.Button.CreateAndShaper);
 				return true;
 			}
 			return base.CreateAction(rank, out cmd, out name, out text);

@@ -100,7 +100,7 @@ namespace Epsitec.Common.Document
 				{
 					if ( this.ActiveViewer.IsCreating )
 					{
-						this.ActiveViewer.CreateEnding(false);
+						this.ActiveViewer.CreateEnding(false, false);
 					}
 
 					this.ActiveViewer.ClearHilite();
@@ -733,7 +733,7 @@ namespace Epsitec.Common.Document
 		// Vide le document de tous ses objets.
 		public void New()
 		{
-			this.ActiveViewer.CreateEnding(false);
+			this.ActiveViewer.CreateEnding(false, false);
 			this.OpletQueueEnable = false;
 
 			this.TotalSelected = 0;
@@ -1239,7 +1239,7 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.DeselectAll) )
 			{
-				this.ActiveViewer.CreateEnding(false);
+				this.ActiveViewer.CreateEnding(false, false);
 				if ( this.TotalSelected > 0 )
 				{
 					DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -1262,7 +1262,7 @@ namespace Epsitec.Common.Document
 		{
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.SelectAll) )
 			{
-				this.ActiveViewer.CreateEnding(false);
+				this.ActiveViewer.CreateEnding(false, false);
 
 				this.opletCreate = false;
 				this.Tool = "Select";
@@ -1291,7 +1291,7 @@ namespace Epsitec.Common.Document
 		{
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.SelectInvert) )
 			{
-				this.ActiveViewer.CreateEnding(false);
+				this.ActiveViewer.CreateEnding(false, false);
 
 				this.opletCreate = false;
 				this.Tool = "Select";
@@ -1355,7 +1355,7 @@ namespace Epsitec.Common.Document
 			string nm = string.Format(Res.Strings.Action.SelectName, name);
 			using ( this.OpletQueueBeginAction(nm) )
 			{
-				this.ActiveViewer.CreateEnding(false);
+				this.ActiveViewer.CreateEnding(false, false);
 
 				this.opletCreate = false;
 				this.Tool = "Select";
@@ -1417,7 +1417,7 @@ namespace Epsitec.Common.Document
 
 			if ( this.ActiveViewer.IsCreating )
 			{
-				this.ActiveViewer.CreateEnding(true);
+				this.ActiveViewer.CreateEnding(true, false);
 			}
 			else
 			{
@@ -1844,7 +1844,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
-			this.ActiveViewer.CreateEnding(false);
+			this.ActiveViewer.CreateEnding(false, false);
 
 			for ( int i=0 ; i<number ; i++ )
 			{
@@ -1867,7 +1867,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
-			this.ActiveViewer.CreateEnding(false);
+			this.ActiveViewer.CreateEnding(false, false);
 
 			for ( int i=0 ; i<number ; i++ )
 			{

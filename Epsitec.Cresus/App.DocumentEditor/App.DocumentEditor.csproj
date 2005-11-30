@@ -623,6 +623,14 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\CreateCloseNo.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\CreateCloseYes.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\CreateEnding.icon"
                     BuildAction = "EmbeddedResource"
                 />

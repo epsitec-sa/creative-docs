@@ -2428,6 +2428,11 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
+		protected static string CreateAction(string icon, string openClose, string text)
+		{
+			return string.Format("     {0} {1}  {2}", Misc.Image(icon), Misc.Image(openClose), text);
+		}
+
 		// Indique s'il faut sélectionner l'objet après sa création.
 		public virtual bool SelectAfterCreation()
 		{

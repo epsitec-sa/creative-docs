@@ -382,7 +382,7 @@ namespace Epsitec.Common.Document
 					{
 						if ( message.KeyCode == KeyCode.Escape )
 						{
-							this.CreateEnding(false);
+							this.CreateEnding(false, false);
 							break;
 						}
 					}
@@ -718,12 +718,17 @@ namespace Epsitec.Common.Document
 		}
 
 		// Si nécessaire, termine la création en cours.
-		public void CreateEnding(bool delete)
+		public void CreateEnding(bool delete, bool close)
 		{
 			if ( this.createRank == -1 )  return;
 
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			Objects.Abstract obj = layer.Objects[this.createRank] as Objects.Abstract;
+
+			if ( close )
+			{
+				obj.ChangePropertyPolyClose(close);
+			}
 
 			this.document.Notifier.NotifyArea(obj.BoundingBox);
 			if ( obj.CreateEnding(this.drawingContext) && !delete )
@@ -2823,20 +2828,41 @@ namespace Epsitec.Common.Document
 		{
 			if ( cmd == "CreateEnding" )
 			{
-				this.CreateEnding(false);
+				this.CreateEnding(false, false);
 				return;
 			}
 
+			if ( cmd == "CreateCloseEnding" )
+			{
+				this.CreateEnding(false, true);
+				return;
+			}
+
+			
 			if ( cmd == "CreateAndSelect" )
 			{
-				this.CreateEnding(false);
+				this.CreateEnding(false, false);
+				this.document.Modifier.Tool = "Select";
+				return;
+			}
+
+			if ( cmd == "CreateCloseAndSelect" )
+			{
+				this.CreateEnding(false, true);
 				this.document.Modifier.Tool = "Select";
 				return;
 			}
 
 			if ( cmd == "CreateAndShaper" )
 			{
-				this.CreateEnding(false);
+				this.CreateEnding(false, false);
+				this.document.Modifier.Tool = "Shaper";
+				return;
+			}
+
+			if ( cmd == "CreateCloseAndShaper" )
+			{
+				this.CreateEnding(false, true);
 				this.document.Modifier.Tool = "Shaper";
 				return;
 			}
