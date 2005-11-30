@@ -158,7 +158,6 @@
 	<data name="Container.Guides.Header.Position">Position</data>
 	<data name="Container.Guides.Undefined">&lt;i&gt;undefined &lt;/i&gt;</data>
 
-	<data name="Container.Layers.Button.Magnet">Use objects as Smart Guides</data>
 	<data name="Container.Layers.Button.Show">Display all</data>
 	<data name="Container.Layers.Button.Dimmed">Fade others</data>
 	<data name="Container.Layers.Button.Hide">Hide others</data>
@@ -171,6 +170,10 @@
 	<data name="Container.Layers.Button.PrintHide">Hide</data>
 	<data name="Container.Layers.Header.Position">Position</data>
 	<data name="Container.Layers.Header.Name">Name</data>
+	<data name="Container.Layers.Header.Magnet">M</data>
+	<data name="Container.Layers.Header.Show">S</data>
+	<data name="Container.Layers.Tooltip.Magnet">@@Use layer's objects as Smart Guides</data>
+	<data name="Container.Layers.Tooltip.Show">@@Visibilité du calque</data>
 
 	<data name="Container.Pages.Button.Slave">Document page</data>
 	<data name="Container.Pages.Button.Master">Template page</data>
@@ -888,6 +891,7 @@
 	<data name="Action.Grid">Magnetic grid</data>
 	<data name="Action.Preview">Preview as printed</data>
 	<data name="Action.Magnet">Magnetic constructions</data>
+	<data name="Action.MagnetLayer">@@Use layer's objects as Smart Guides</data>
 	<data name="Action.Rulers">Rulers</data>
 	<data name="Action.Labels">Display object labels</data>
 	<data name="Action.Aggregates">Display style names</data>

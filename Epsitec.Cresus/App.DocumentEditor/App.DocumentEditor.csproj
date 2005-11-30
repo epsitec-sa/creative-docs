@@ -1063,6 +1063,14 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\MagnetLayer.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\MagnetLayer1.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Merge.icon"
                     BuildAction = "EmbeddedResource"
                 />

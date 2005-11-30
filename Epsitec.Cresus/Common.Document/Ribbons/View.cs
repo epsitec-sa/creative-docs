@@ -17,6 +17,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonPreview = this.CreateIconButton("Preview", Misc.Icon("Preview"), Res.Strings.Action.Preview, true);
 			this.buttonGrid = this.CreateIconButton("Grid", Misc.Icon("Grid"), Res.Strings.Action.Grid, true);
 			this.buttonMagnet = this.CreateIconButton("Magnet", Misc.Icon("Magnet"), Res.Strings.Action.Magnet, true);
+			this.buttonMagnetLayer = this.CreateIconButton("MagnetLayer", Misc.Icon("MagnetLayer"), Res.Strings.Action.MagnetLayer, true);
 			this.buttonRulers = this.CreateIconButton("Rulers", Misc.Icon("Rulers"), Res.Strings.Action.Rulers, true);
 			this.buttonLabels = this.CreateIconButton("Labels", Misc.Icon("Labels"), Res.Strings.Action.Labels, true);
 			this.buttonAggregates = this.CreateIconButton("Aggregates", Misc.Icon("Aggregates"), Res.Strings.Action.Aggregates, true);
@@ -38,7 +39,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8 + 22*3;
+				return 8 + 22*4 + 5;
 			}
 		}
 
@@ -60,8 +61,10 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonPreview.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonGrid.Bounds = rect;
-			rect.Offset(dx, 0);
+			rect.Offset(dx+5, 0);
 			this.buttonMagnet.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonMagnetLayer.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
@@ -77,6 +80,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonPreview;
 		protected IconButton				buttonGrid;
 		protected IconButton				buttonMagnet;
+		protected IconButton				buttonMagnetLayer;
 		protected IconButton				buttonRulers;
 		protected IconButton				buttonLabels;
 		protected IconButton				buttonAggregates;

@@ -618,6 +618,7 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("10:Preview");
 			list.Add("11:Grid");
 			list.Add("00:Magnet");
+			list.Add("00:MagnetLayer");
 			list.Add("00:Rulers");
 			list.Add("00:Labels");
 			list.Add("00:Aggregates");

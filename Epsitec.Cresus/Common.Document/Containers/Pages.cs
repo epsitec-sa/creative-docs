@@ -17,7 +17,6 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
 			this.toolBar.TabIndex = 1;
 			this.toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-//-			System.Diagnostics.Debug.Assert(this.toolBar.CommandDispatcher != null);
 
 			int index = 0;
 

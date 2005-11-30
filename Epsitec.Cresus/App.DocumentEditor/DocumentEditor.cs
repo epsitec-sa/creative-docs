@@ -2778,6 +2778,14 @@ namespace Epsitec.App.DocumentEditor
 			context.MagnetActive = !context.MagnetActive;
 		}
 
+		[Command ("MagnetLayer")]
+		void CommandMagnetLayer(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			int rank = context.CurrentLayer;
+			this.CurrentDocument.Modifier.MagnetLayerInvert(rank);
+		}
+
 		[Command ("Rulers")]
 		void CommandRulers(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3678,6 +3686,7 @@ namespace Epsitec.App.DocumentEditor
 			this.previewState = new CommandState("Preview", this.commandDispatcher);
 			this.gridState = new CommandState("Grid", this.commandDispatcher);
 			this.magnetState = new CommandState("Magnet", this.commandDispatcher);
+			this.magnetLayerState = new CommandState("MagnetLayer", this.commandDispatcher);
 			this.rulersState = new CommandState("Rulers", this.commandDispatcher);
 			this.labelsState = new CommandState("Labels", this.commandDispatcher);
 			this.aggregatesState = new CommandState("Aggregates", this.commandDispatcher);
@@ -4387,6 +4396,10 @@ namespace Epsitec.App.DocumentEditor
 				this.layerDownState.Enable = (cl > 0 && !isCreating );
 				this.layerDeleteState.Enable = (tl > 1 && !isCreating );
 
+				bool ml = this.CurrentDocument.Modifier.MagnetLayerState(cl);
+				this.magnetLayerState.Enable = true;
+				this.magnetLayerState.ActiveState = ml ? ActiveState.Yes : ActiveState.No;
+
 				this.CurrentDocumentInfo.quickLayerMenu.Text = Objects.Layer.ShortName(cl);
 				this.dlgPageStack.Update();
 				this.HandleModifChanged();
@@ -4403,6 +4416,9 @@ namespace Epsitec.App.DocumentEditor
 				this.layerUpState.Enable = false;
 				this.layerDownState.Enable = false;
 				this.layerDeleteState.Enable = false;
+
+				this.magnetLayerState.Enable = false;
+				this.magnetLayerState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -5560,6 +5576,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					previewState;
 		protected CommandState					gridState;
 		protected CommandState					magnetState;
+		protected CommandState					magnetLayerState;
 		protected CommandState					rulersState;
 		protected CommandState					labelsState;
 		protected CommandState					aggregatesState;

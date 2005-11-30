@@ -158,7 +158,6 @@
 	<data name="Container.Guides.Header.Position">Position</data>
 	<data name="Container.Guides.Undefined">&lt;i&gt;indéfini &lt;/i&gt;</data>
 
-	<data name="Container.Layers.Button.Magnet">Objets pour les constructions magnétiques</data>
 	<data name="Container.Layers.Button.Show">Afficher tous</data>
 	<data name="Container.Layers.Button.Dimmed">Estomper les autres</data>
 	<data name="Container.Layers.Button.Hide">Cacher les autres</data>
@@ -171,6 +170,10 @@
 	<data name="Container.Layers.Button.PrintHide">Cacher</data>
 	<data name="Container.Layers.Header.Position">Position</data>
 	<data name="Container.Layers.Header.Name">Nom</data>
+	<data name="Container.Layers.Header.Magnet">M</data>
+	<data name="Container.Layers.Header.Show">V</data>
+	<data name="Container.Layers.Tooltip.Magnet">Objets du calque utilisés pour les constructions magnétiques</data>
+	<data name="Container.Layers.Tooltip.Show">Visibilité du calque</data>
 
 	<data name="Container.Pages.Button.Slave">Page normale</data>
 	<data name="Container.Pages.Button.Master">Page modèle</data>
@@ -888,6 +891,7 @@
 	<data name="Action.Grid">Grille magnétique</data>
 	<data name="Action.Preview">Comme imprimé</data>
 	<data name="Action.Magnet">Constructions magnétiques</data>
+	<data name="Action.MagnetLayer">Objets du calque utilisés pour les constructions magnétiques</data>
 	<data name="Action.Rulers">Règles graduées</data>
 	<data name="Action.Labels">Affiche les noms des objets</data>
 	<data name="Action.Aggregates">Affiche les noms des styles</data>

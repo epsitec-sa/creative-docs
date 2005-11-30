@@ -17,7 +17,6 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
 			this.toolBar.TabIndex = 1;
 			this.toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-//-			System.Diagnostics.Debug.Assert(this.toolBar.CommandDispatcher != null);
 
 			int index = 0;
 
@@ -107,14 +106,6 @@ namespace Epsitec.Common.Document.Containers
 			this.panelModColor.SetParent(this);
 			this.panelModColor.TabIndex = 100;
 			this.panelModColor.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-
-			this.checkMagnet = new CheckButton(this);
-			this.checkMagnet.Text = Res.Strings.Container.Layers.Button.Magnet;
-			this.checkMagnet.Dock = DockStyle.Bottom;
-			this.checkMagnet.DockMargins = new Margins(0, 0, 5, 5);
-			this.checkMagnet.Clicked += new MessageEventHandler(this.HandleCheckMagnetClicked);
-			this.checkMagnet.TabIndex = 99;
-			this.checkMagnet.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			// --- Début panelMisc
 			this.panelMisc = new Widget(this);
@@ -246,7 +237,6 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.UpdateTable();
 			this.UpdateRadio();
-			this.UpdateMagnet();
 			this.UpdatePanel();
 		}
 
@@ -274,20 +264,22 @@ namespace Epsitec.Common.Document.Containers
 
 			int rows = context.TotalLayers();
 			int initialColumns = this.table.Columns;
-			this.table.SetArraySize(4, rows);
+			this.table.SetArraySize(5, rows);
 
 			if ( initialColumns == 0 )
 			{
 				this.table.SetWidthColumn(0, 20);
 				this.table.SetWidthColumn(1, 60);
-				this.table.SetWidthColumn(2, 119);
+				this.table.SetWidthColumn(2, 101);
 				this.table.SetWidthColumn(3, 18);
+				this.table.SetWidthColumn(4, 18);
 			}
 
 			this.table.SetHeaderTextH(0, "");
 			this.table.SetHeaderTextH(1, Res.Strings.Container.Layers.Header.Position);
 			this.table.SetHeaderTextH(2, Res.Strings.Container.Layers.Header.Name);
-			this.table.SetHeaderTextH(3, "");
+			this.table.SetHeaderTextH(3, Res.Strings.Container.Layers.Header.Magnet);
+			this.table.SetHeaderTextH(4, Res.Strings.Container.Layers.Header.Show);
 
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 			for ( int i=0 ; i<rows ; i++ )
@@ -308,12 +300,25 @@ namespace Epsitec.Common.Document.Containers
 				{
 					if ( column == 3 )
 					{
+						IconButton ib = new IconButton();
+						ib.Name = row.ToString();
+						ib.IconName = Misc.Icon("MagnetLayer1");
+						ib.ButtonStyle = ButtonStyle.ActivableIcon;
+						ib.Dock = DockStyle.Fill;
+						ib.DockMargins = new Margins(-1, -1, -1, -1);
+						ib.Clicked += new MessageEventHandler(this.HandleButtonMagnetLayerClicked);
+						ToolTip.Default.SetToolTip(ib, Res.Strings.Container.Layers.Tooltip.Magnet);
+						this.table[column, row].Insert(ib);
+					}
+					else if ( column == 4 )
+					{
 						CheckButton bt = new CheckButton();
 						bt.Name = row.ToString();
 						bt.AcceptThreeState = true;
 						bt.Dock = DockStyle.Fill;
 						bt.DockMargins = new Margins(2, 0, 0, 0);
 						bt.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
+						ToolTip.Default.SetToolTip(bt, Res.Strings.Container.Layers.Tooltip.Show);
 						this.table[column, row].Insert(bt);
 					}
 					else
@@ -333,6 +338,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			StaticText st;
+			IconButton ib;
 			CheckButton bt;
 
 			this.ignoreChanged = true;
@@ -347,7 +353,11 @@ namespace Epsitec.Common.Document.Containers
 			st = this.table[2, row].Children[0] as StaticText;
 			st.Text = layer.Name;
 
-			bt = this.table[3, row].Children[0] as CheckButton;
+			ib = this.table[3, row].Children[0] as IconButton;
+			ib.Name = row.ToString();
+			ib.ActiveState = layer.Magnet ? ActiveState.Yes : ActiveState.No;
+
+			bt = this.table[4, row].Children[0] as CheckButton;
 			bt.Name = row.ToString();
 			ActiveState state = ActiveState.No;
 			if ( layer.Type == Objects.LayerType.Show   )  state = ActiveState.Yes;
@@ -416,6 +426,30 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
+		// Bouton "objets du calque magnétiques" dans la liste cliqué.
+		private void HandleButtonMagnetLayerClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+
+			IconButton ib = sender as IconButton;
+			int sel = System.Convert.ToInt32(ib.Name);
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			if ( sel < 0 || sel >= context.TotalLayers() )  return;
+			sel = context.TotalLayers()-sel-1;
+			Objects.Page page = context.RootObject(1) as Objects.Page;
+			Objects.Layer layer = page.Objects[sel] as Objects.Layer;
+
+			using ( this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.LayerChangeMagnet) )
+			{
+				layer.Magnet = !layer.Magnet;
+
+				this.document.Notifier.NotifyMagnetChanged();
+				this.document.Notifier.NotifyPagesChanged();
+				this.document.Notifier.NotifyLayersChanged();
+				this.document.Modifier.OpletQueueValidateAction();
+			}
+		}
+
 		// Bouton "check" à 3 états dans la liste cliqué.
 		private void HandleCheckActiveStateChanged(object sender)
 		{
@@ -457,7 +491,6 @@ namespace Epsitec.Common.Document.Containers
 			this.extendedButton.GlyphShape = this.isExtended ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
 
 			this.panelMisc.Visibility = (this.isExtended);
-			this.checkMagnet.Visibility = (this.isExtended);
 			this.panelModColor.Visibility = (this.isExtended);
 		}
 
@@ -527,34 +560,6 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Le bouton "magnétique" a été cliqué.
-		private void HandleCheckMagnetClicked(object sender, MessageEventArgs e)
-		{
-			using ( this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.LayerChangeMagnet) )
-			{
-				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-				int sel = context.CurrentLayer;
-				Objects.Page page = context.RootObject(1) as Objects.Page;
-				Objects.Layer layer = page.Objects[sel] as Objects.Layer;
-				layer.Magnet = !layer.Magnet;
-
-				this.document.Notifier.NotifyMagnetChanged();
-				this.document.Notifier.NotifyPagesChanged();
-				this.document.Modifier.OpletQueueValidateAction();
-			}
-		}
-
-		// Met à jour le bouton "magnétique".
-		private void UpdateMagnet()
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int sel = context.CurrentLayer;
-			Objects.Page page = context.RootObject(1) as Objects.Page;
-			Objects.Layer layer = page.Objects[sel] as Objects.Layer;
-
-			this.checkMagnet.ActiveState = layer.Magnet ? ActiveState.Yes : ActiveState.No;
-		}
-
 
 		protected HToolBar				toolBar;
 		protected IconButton			buttonNew;
@@ -578,7 +583,6 @@ namespace Epsitec.Common.Document.Containers
 		protected RadioButton			radioShowPrint;
 		protected RadioButton			radioDimmedPrint;
 		protected RadioButton			radioHidePrint;
-		protected CheckButton			checkMagnet;
 		protected Panels.ModColor		panelModColor;
 		protected bool					isExtended = false;
 		protected bool					ignoreChanged = false;

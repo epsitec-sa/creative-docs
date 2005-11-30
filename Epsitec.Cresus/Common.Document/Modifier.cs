@@ -4436,6 +4436,30 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		#region MagnetLayer
+		// Change l'état "objets magnétiques" d'un calque.
+		public void MagnetLayerInvert(int rank)
+		{
+			this.document.IsDirtySerialize = true;
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerChangeMagnet) )
+			{
+				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
+				Objects.Layer layer = list[rank] as Objects.Layer;
+				layer.Magnet = !layer.Magnet;
+
+				this.document.Notifier.NotifyLayersChanged();
+				this.document.Notifier.NotifyMagnetChanged();
+				this.OpletQueueValidateAction();
+			}
+		}
+
+		// Donne l'état "objets magnétiques" d'un calque.
+		public bool MagnetLayerState(int rank)
+		{
+			UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
+			Objects.Layer layer = list[rank] as Objects.Layer;
+			return layer.Magnet;
+		}
+
 		// Détecte sur quel segment de droite est la souris.
 		public bool MagnetLayerDetect(Point pos, Point filterP1, Point filterP2,
 									  out Point p1, out Point p2)
