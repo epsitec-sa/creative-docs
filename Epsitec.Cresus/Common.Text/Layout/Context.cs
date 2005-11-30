@@ -647,6 +647,8 @@ restart:
 				
 				if (this.frame != null)
 				{
+					this.SelectLineHeightAndLeading (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
+					
 					double line_ascender  = this.LineAscender;
 					double line_descender = this.LineDescender;
 					double line_height    = this.LineHeight;
@@ -670,12 +672,6 @@ restart:
 						oy -= this.line_skip_before;
 						
 						this.line_y2 -= this.line_skip_before;
-						
-//-						this.frame_y_line = this.frame_y - this.line_space_before - this.line_skip_before;
-					}
-					else
-					{
-//-						this.frame_y_line = this.frame_y;
 					}
 					
 					this.frame_y_line = oy;
@@ -759,6 +755,9 @@ restart:
 								result.Clear ();
 								this.break_mode = BreakMode.Default;
 								pass = 0;
+								
+								initial_line_ascender  = this.LineAscender;
+								initial_line_descender = this.LineDescender;
 								
 								snapshot.Restore (this);
 								continue;
@@ -1463,6 +1462,8 @@ restart:
 				ascender  = System.Math.Max (ascender, font.GetAscender (font_size));
 				descender = System.Math.Min (descender, font.GetDescender (font_size));
 				
+				font_size = System.Math.Max (font_size, ascender - descender);
+				
 				double auto_scale = 1.2;
 				double leading    = font_size * auto_scale;
 				
@@ -1477,14 +1478,14 @@ restart:
 					{
 						if (leading_property.LeadingUnits == Properties.SizeUnits.Percent)
 						{
-							leading *= leading_property.Leading;
+							leading   *= leading_property.Leading;
+							auto_scale = leading_property.Leading;
 						}
 						else
 						{
-							leading = leading_property.LeadingInPoints;
+							leading    = leading_property.LeadingInPoints;
+							auto_scale = 0;
 						}
-						
-						auto_scale = 0;
 					}
 					
 					this.line_space_before = double.IsNaN (leading_property.SpaceBefore) ? 0 : leading_property.SpaceBeforeInPoints;
