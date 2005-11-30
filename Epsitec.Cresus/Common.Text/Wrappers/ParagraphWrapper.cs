@@ -38,6 +38,10 @@ namespace Epsitec.Common.Text.Wrappers
 			if (state == this.defined_state)
 			{
 				this.SynchronizeMargins ();
+				this.SynchronizeLeading ();
+				this.SynchronizeKeep ();
+				
+				this.defined_state.ClearValueFlags ();
 			}
 		}
 		
@@ -245,6 +249,87 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 
+		private void SynchronizeKeep()
+		{
+			int defines = 0;
+			int changes = 0;
+			
+			int keep_start_lines = 0;
+			int keep_end_lines   = 0;
+			
+			Properties.ThreeState keep_with_next     = Properties.ThreeState.Undefined;
+			Properties.ThreeState keep_with_previous = Properties.ThreeState.Undefined;
+			
+			Properties.ParagraphStartMode start_mode = Properties.ParagraphStartMode.Undefined;
+			
+			if (this.defined_state.IsValueFlagged (State.KeepStartLinesProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsKeepStartLinesDefined)
+				{
+					keep_start_lines = this.defined_state.KeepStartLines;
+					defines++;
+				}
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.KeepEndLinesProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsKeepEndLinesDefined)
+				{
+					keep_end_lines = this.defined_state.KeepEndLines;
+					defines++;
+				}
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.KeepWithNextParagraphProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsKeepWithNextParagraphDefined)
+				{
+					keep_with_next = this.defined_state.KeepWithNextParagraph ? Properties.ThreeState.True : Properties.ThreeState.False;
+					defines++;
+				}
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.KeepWithPreviousParagraphProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsKeepWithPreviousParagraphDefined)
+				{
+					keep_with_previous = this.defined_state.KeepWithPreviousParagraph ? Properties.ThreeState.True : Properties.ThreeState.False;
+					defines++;
+				}
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.ParagraphStartModeProperty))
+			{
+				changes++;
+				
+				if (this.defined_state.IsParagraphStartModeDefined)
+				{
+					start_mode = this.defined_state.ParagraphStartMode;
+					defines++;
+				}
+			}
+			
+			if (changes > 0)
+			{
+				if (defines > 0)
+				{
+					this.DefineMetaProperty (ParagraphWrapper.Keep, 0, new Properties.KeepProperty (keep_start_lines, keep_end_lines, start_mode, keep_with_previous, keep_with_next));
+				}
+				else
+				{
+					this.ClearMetaProperty (ParagraphWrapper.Leading);
+				}
+			}
+		}
+		
 		
 		internal override void UpdateState(bool active)
 		{
@@ -254,6 +339,7 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			this.UpdateMargins (state, active);
 			this.UpdateLeading (state, active);
+			this.UpdateKeep (state, active);
 			
 			state.NotifyIfDirty ();
 		}
@@ -450,6 +536,70 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void UpdateKeep(State state, bool active)
+		{
+			Properties.KeepProperty keep;
+			
+			if (active)
+			{
+				keep = this.ReadAccumulatedProperty (Properties.WellKnownType.Keep) as Properties.KeepProperty;
+			}
+			else
+			{
+				keep = this.ReadMetaProperty (ParagraphWrapper.Keep, Properties.WellKnownType.Keep) as Properties.KeepProperty;
+			}
+			
+			if ((keep != null) &&
+				(keep.StartLines > 0))
+			{
+				state.DefineValue (State.KeepStartLinesProperty, keep.StartLines);
+			}
+			else
+			{
+				state.DefineValue (State.KeepStartLinesProperty);
+			}
+			
+			if ((keep != null) &&
+				(keep.EndLines > 0))
+			{
+				state.DefineValue (State.KeepEndLinesProperty, keep.EndLines);
+			}
+			else
+			{
+				state.DefineValue (State.KeepEndLinesProperty);
+			}
+			
+			if ((keep != null) &&
+				(keep.KeepWithPreviousParagraph != Properties.ThreeState.Undefined))
+			{
+				state.DefineValue (State.KeepWithPreviousParagraphProperty, keep.KeepWithPreviousParagraph == Properties.ThreeState.True);
+			}
+			else
+			{
+				state.DefineValue (State.KeepWithPreviousParagraphProperty);
+			}
+			
+			if ((keep != null) &&
+				(keep.KeepWithNextParagraph != Properties.ThreeState.Undefined))
+			{
+				state.DefineValue (State.KeepWithNextParagraphProperty, keep.KeepWithNextParagraph == Properties.ThreeState.True);
+			}
+			else
+			{
+				state.DefineValue (State.KeepWithNextParagraphProperty);
+			}
+			
+			if ((keep != null) &&
+				(keep.ParagraphStartMode != Properties.ParagraphStartMode.Undefined))
+			{
+				state.DefineValue (State.ParagraphStartModeProperty, keep.ParagraphStartMode);
+			}
+			else
+			{
+				state.DefineValue (State.ParagraphStartModeProperty);
+			}
+		}
+		
 		
 		
 		public class State : AbstractState
@@ -629,6 +779,67 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			
+			public int								KeepStartLines
+			{
+				get
+				{
+					return (int) this.GetValue (State.KeepStartLinesProperty);
+				}
+				set
+				{
+					this.SetValue (State.KeepStartLinesProperty, value);
+				}
+			}
+			
+			public int								KeepEndLines
+			{
+				get
+				{
+					return (int) this.GetValue (State.KeepEndLinesProperty);
+				}
+				set
+				{
+					this.SetValue (State.KeepEndLinesProperty, value);
+				}
+			}
+			
+			public bool								KeepWithNextParagraph
+			{
+				get
+				{
+					return (bool) this.GetValue (State.KeepWithNextParagraphProperty);
+				}
+				set
+				{
+					this.SetValue (State.KeepWithNextParagraphProperty, value);
+				}
+			}
+			
+			public bool								KeepWithPreviousParagraph
+			{
+				get
+				{
+					return (bool) this.GetValue (State.KeepWithPreviousParagraphProperty);
+				}
+				set
+				{
+					this.SetValue (State.KeepWithPreviousParagraphProperty, value);
+				}
+			}
+			
+			public Properties.ParagraphStartMode	ParagraphStartMode
+			{
+				get
+				{
+					return (Properties.ParagraphStartMode) this.GetValue (State.ParagraphStartModeProperty);
+				}
+				set
+				{
+					this.SetValue (State.ParagraphStartModeProperty, value);
+				}
+			}
+			
+			
 			public bool								IsJustificationModeDefined
 			{
 				get
@@ -743,6 +954,47 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			
+			public bool								IsKeepStartLinesDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.KeepStartLinesProperty);
+				}
+			}
+			
+			public bool								IsKeepEndLinesDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.KeepEndLinesProperty);
+				}
+			}
+			
+			public bool								IsKeepWithNextParagraphDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.KeepWithNextParagraphProperty);
+				}
+			}
+			
+			public bool								IsKeepWithPreviousParagraphDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.KeepWithPreviousParagraphProperty);
+				}
+			}
+			
+			public bool								IsParagraphStartModeDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.ParagraphStartModeProperty);
+				}
+			}
+			
+			
 			public void ClearJustificationMode()
 			{
 				this.ClearValue (State.JustificationModeProperty);
@@ -777,6 +1029,7 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				this.ClearValue (State.MarginUnitsProperty);
 			}
+			
 			
 			public void ClearLeading()
 			{
@@ -814,6 +1067,32 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			
+			public void ClearKeepStartLines()
+			{
+				this.ClearValue (State.KeepStartLinesProperty);
+			}
+			
+			public void ClearKeepEndLines()
+			{
+				this.ClearValue (State.KeepEndLinesProperty);
+			}
+			
+			public void ClearKeepWithNextParagraph()
+			{
+				this.ClearValue (State.KeepWithNextParagraphProperty);
+			}
+			
+			public void ClearKeepWithPreviousParagraph()
+			{
+				this.ClearValue (State.KeepWithPreviousParagraphProperty);
+			}
+			
+			public void ClearParagraphStartMode()
+			{
+				this.ClearValue (State.ParagraphStartModeProperty);
+			}
+			
+			
 			#region State Properties
 			public static readonly StateProperty	JustificationModeProperty = new StateProperty (typeof (State), "JustificationMode", JustificationMode.Unknown);
 			public static readonly StateProperty	HyphenationProperty = new StateProperty (typeof (State), "Hyphenation", false);
@@ -829,6 +1108,11 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	SpaceAfterProperty = new StateProperty (typeof (State), "SpaceAfter", double.NaN);
 			public static readonly StateProperty	SpaceAfterUnitsProperty = new StateProperty (typeof (State), "SpaceAfterUnits", Properties.SizeUnits.None);
 			public static readonly StateProperty	AlignModeProperty = new StateProperty (typeof (State), "AlignMode", Properties.AlignMode.Undefined);
+			public static readonly StateProperty	KeepStartLinesProperty = new StateProperty (typeof (State), "KeepStartLines", 0);
+			public static readonly StateProperty	KeepEndLinesProperty = new StateProperty (typeof (State), "KeepEndLines", 0);
+			public static readonly StateProperty	ParagraphStartModeProperty = new StateProperty (typeof (State), "ParagraphStartMode", Properties.ParagraphStartMode.Undefined);
+			public static readonly StateProperty	KeepWithNextParagraphProperty = new StateProperty (typeof (State), "KeepWithNextParagraph", false);
+			public static readonly StateProperty	KeepWithPreviousParagraphProperty = new StateProperty (typeof (State), "KeepWithPreviousParagraph", false);
 			#endregion
 		}
 		
@@ -836,7 +1120,8 @@ namespace Epsitec.Common.Text.Wrappers
 		private State								active_state;
 		private State								defined_state;
 		
-		private const string						Margins = "Margins";
-		private const string						Leading = "Leading";
+		private const string						Margins = "#Pa#Margins";
+		private const string						Leading = "#Pa#Leading";
+		private const string						Keep	= "#Pa#Keep";
 	}
 }

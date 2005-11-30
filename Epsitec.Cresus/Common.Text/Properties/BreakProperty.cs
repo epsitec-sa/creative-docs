@@ -4,7 +4,7 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe BreakProperty décrit une tabulation.
+	/// La classe BreakProperty décrit un saut vertical (de page, section, etc.)
 	/// </summary>
 	public class BreakProperty : Property
 	{

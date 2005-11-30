@@ -1549,14 +1549,14 @@ namespace Epsitec.Common.Text.Wrappers
 		private State								active_state;
 		private State								defined_state;
 		
-		private const string						Font			= "Text-Font";
-		private const string						Color			= "Text-Color";
-		private const string						Language		= "Text-Lang";
-		private const string						Link			= "Text-Link";
-		private const string						Condition		= "Text-Cond";
-		private const string						Xline			= "Text-Xline";
-		private const string						Xscript			= "Text-Xscript";
-		private const string						InvertBold		= "Text-X-Bold";
-		private const string						InvertItalic	= "Text-X-Italic";
+		private const string						Font			= "#Tx#Font";
+		private const string						Color			= "#Tx#Color";
+		private const string						Language		= "#Tx#Lang";
+		private const string						Link			= "#Tx#Link";
+		private const string						Condition		= "#Tx#Cond";
+		private const string						Xline			= "#Tx#Xline";
+		private const string						Xscript			= "#Tx#Xscript";
+		private const string						InvertBold		= "#Tx#X-Bold";
+		private const string						InvertItalic	= "#Tx#X-Italic";
 	}
 }
