@@ -44,7 +44,8 @@ namespace Epsitec.Common.Text.Wrappers
 				this.SynchronizeColor ();
 				this.SynchronizeLanguage ();
 				this.SynchronizeLink ();
-				this.SynchronizeCondition ();
+				this.SynchronizeConditions ();
+				this.SynchronizeUserTags ();
 				
 				this.defined_state.ClearValueFlags ();
 			}
@@ -302,7 +303,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
-		private void SynchronizeCondition()
+		private void SynchronizeConditions()
 		{
 			if (this.defined_state.IsValueFlagged (State.ConditionsProperty))
 			{
@@ -318,11 +319,41 @@ namespace Epsitec.Common.Text.Wrappers
 						properties[i] = new Properties.ConditionalProperty (conditions[i]);
 					}
 					
-					this.DefineMetaProperty (TextWrapper.Condition, 0, properties);
+					this.DefineMetaProperty (TextWrapper.Conditions, 0, properties);
 				}
 				else
 				{
-					this.ClearMetaProperty (TextWrapper.Condition);
+					this.ClearMetaProperty (TextWrapper.Conditions);
+				}
+			}
+		}
+		
+		private void SynchronizeUserTags()
+		{
+			if (this.defined_state.IsValueFlagged (State.UserTagsProperty))
+			{
+				string[] user_tags = this.defined_state.UserTags;
+				
+				if ((this.defined_state.IsUserTagsDefined) &&
+					(user_tags.Length > 0))
+				{
+					Properties.UserTagProperty[] properties = new Properties.UserTagProperty[user_tags.Length];
+					
+					for (int i = 0; i < user_tags.Length; i++)
+					{
+						string tag_type = "?";
+						string tag_data = user_tags[i];
+						
+						//	TODO: gérer correctement TagType et TagData
+						
+						properties[i] = new Properties.UserTagProperty (tag_type, tag_data);
+					}
+					
+					this.DefineMetaProperty (TextWrapper.UserTags, 0, properties);
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.UserTags);
 				}
 			}
 		}
@@ -341,7 +372,8 @@ namespace Epsitec.Common.Text.Wrappers
 			this.UpdateColor (state, active);
 			this.UpdateLanguage (state, active);
 			this.UpdateLink (state, active);
-			this.UpdateCondition (state, active);
+			this.UpdateConditions (state, active);
+			this.UpdateUserTags (state, active);
 			
 			state.NotifyIfDirty ();
 		}
@@ -647,7 +679,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
-		private void UpdateCondition(State state, bool active)
+		private void UpdateConditions(State state, bool active)
 		{
 			Property[] p_conditions;
 			
@@ -657,7 +689,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				p_conditions = this.ReadMetaProperties (TextWrapper.Condition, Properties.WellKnownType.Conditional);
+				p_conditions = this.ReadMetaProperties (TextWrapper.Conditions, Properties.WellKnownType.Conditional);
 			}
 			
 			if ((p_conditions == null) ||
@@ -675,6 +707,39 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 				
 				state.DefineValue (State.ConditionsProperty, conditions);
+			}
+		}
+		
+		private void UpdateUserTags(State state, bool active)
+		{
+			Property[] p_user_tags;
+			
+			if (active)
+			{
+				p_user_tags = this.ReadAccumulatedProperties (Properties.WellKnownType.UserTag);
+			}
+			else
+			{
+				p_user_tags = this.ReadMetaProperties (TextWrapper.UserTags, Properties.WellKnownType.UserTag);
+			}
+			
+			if ((p_user_tags == null) ||
+				(p_user_tags.Length == 0))
+			{
+				state.DefineValue (State.UserTagsProperty);
+			}
+			else
+			{
+				string[] user_tags = new string[p_user_tags.Length];
+				
+				for (int i = 0; i < p_user_tags.Length; i++)
+				{
+					user_tags[i] = (p_user_tags[i] as Properties.UserTagProperty).TagData;
+				}
+				
+				//	TODO: gérer correctement TagData et TagType
+				
+				state.DefineValue (State.UserTagsProperty, user_tags);
 			}
 		}
 		
@@ -890,6 +955,18 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public string[]							UserTags
+			{
+				get
+				{
+					return (string[]) this.GetValue (State.UserTagsProperty);
+				}
+				set
+				{
+					this.SetValue (State.UserTagsProperty, value);
+				}
+			}
+			
 			
 			public bool								IsFontFaceDefined
 			{
@@ -1035,6 +1112,14 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public bool								IsUserTagsDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.UserTagsProperty);
+				}
+			}
+			
 			
 			public void ClearFontFace()
 			{
@@ -1126,6 +1211,11 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.ConditionsProperty);
 			}
 			
+			public void ClearUserTags()
+			{
+				this.ClearValue (State.UserTagsProperty);
+			}
+			
 			
 			#region State Properties
 			public static readonly StateProperty	FontFaceProperty = new StateProperty (typeof (State), "FontFace", null);
@@ -1146,6 +1236,7 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	TextMarkerProperty = new StateProperty (typeof (State), "TextMarker", null);
 			public static readonly StateProperty	LinkProperty = new StateProperty (typeof (State), "Link", null);
 			public static readonly StateProperty	ConditionsProperty = new StateProperty (typeof (State), "Conditions", new string[0]);
+			public static readonly StateProperty	UserTagsProperty = new StateProperty (typeof (State), "UserTags", new string[0]);
 			#endregion
 		}
 		
@@ -1553,7 +1644,8 @@ namespace Epsitec.Common.Text.Wrappers
 		private const string						Color			= "#Tx#Color";
 		private const string						Language		= "#Tx#Lang";
 		private const string						Link			= "#Tx#Link";
-		private const string						Condition		= "#Tx#Cond";
+		private const string						UserTags		= "#Tx#UsrTags";
+		private const string						Conditions		= "#Tx#Conds";
 		private const string						Xline			= "#Tx#Xline";
 		private const string						Xscript			= "#Tx#Xscript";
 		private const string						InvertBold		= "#Tx#X-Bold";
