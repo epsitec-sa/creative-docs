@@ -84,7 +84,10 @@ namespace Epsitec.Common.Document
 
 			this.autoScrollTimer = new Timer();
 			this.autoScrollTimer.AutoRepeat = 0.1;
-			this.autoScrollTimer.TimeElapsed += new EventHandler(this.HandleTimeElapsed);
+			this.autoScrollTimer.TimeElapsed += new EventHandler(this.HandleAutoScrollTimeElapsed);
+
+			this.miniBarTimer = new Timer();
+			this.miniBarTimer.TimeElapsed += new Support.EventHandler (this.HandleMiniBarTimeElapsed);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -94,9 +97,14 @@ namespace Epsitec.Common.Document
 				this.textRuler.Changed -= new EventHandler(this.HandleRulerChanged);
 				this.textRuler.ColorClicked -= new EventHandler(this.HandleRulerColorClicked);
 				this.textRuler.ColorNavigatorChanged -= new EventHandler(this.HandleRulerColorNavigatorChanged);
-				this.autoScrollTimer.TimeElapsed -= new EventHandler(this.HandleTimeElapsed);
+
+				this.autoScrollTimer.TimeElapsed -= new EventHandler(this.HandleAutoScrollTimeElapsed);
 				this.autoScrollTimer.Dispose();
 				this.autoScrollTimer = null;
+
+				this.miniBarTimer.TimeElapsed -= new EventHandler(this.HandleMiniBarTimeElapsed);
+				this.miniBarTimer.Dispose();
+				this.miniBarTimer = null;
 			}
 			
 			base.Dispose(disposing);
@@ -202,7 +210,7 @@ namespace Epsitec.Common.Document
 
 		// Appelé lorsque le timer arrive à échéance.
 		// Effectue éventuellement un scroll si la souris est proche des bords.
-		protected void HandleTimeElapsed(object sender)
+		protected void HandleAutoScrollTimeElapsed(object sender)
 		{
 			if ( this.mouseDragging && this.zoomShift )  return;
 			if ( this.mouseDragging && this.guideInteractive != -1 )  return;
@@ -2360,7 +2368,7 @@ namespace Epsitec.Common.Document
 			IconSeparator sep = new IconSeparator();
 
 			mouse = this.InternalToScreen(mouse);
-			mouse.Y ++;
+			mouse.Y ++;  // pour ne pas être sur le pixel visé par la souris
 
 			double width = 0;
 			foreach ( string cmd in cmds )
@@ -2378,8 +2386,28 @@ namespace Epsitec.Common.Document
 			Size size = new Size(width+frame.Margin*2, button.DefaultHeight+frame.Margin*2+frame.Distance);
 			mouse.X -= size.Width/2;
 			this.miniBarRect = new Drawing.Rectangle(mouse, size);
+			this.miniBarPos = this.MapClientToScreen(mouse);
+			this.miniBarCmds = cmds;
 
-			Point pos = this.MapClientToScreen(mouse);
+			this.miniBarTimer.Delay = 0.2;
+			this.miniBarTimer.Start();
+		}
+
+		// Appelé lorsque le timer arrive à échéance.
+		protected void HandleMiniBarTimeElapsed(object sender)
+		{
+			this.miniBarTimer.Suspend();
+			this.CreateMiniBar();
+		}
+
+		protected void CreateMiniBar()
+		{
+			Point mouse;
+			if ( !this.MousePos(out mouse) || this.MiniBarAway(mouse) )
+			{
+				this.miniBarCmds = null;
+				return;
+			}
 
 			this.miniBar = new Window();
 			this.miniBar.MakeFramelessWindow();
@@ -2387,28 +2415,29 @@ namespace Epsitec.Common.Document
 			this.miniBar.DisableMouseActivation();
 			this.miniBar.MakeLayeredWindow(true);
 			this.miniBar.Root.SetSyncPaint(true);
-			this.miniBar.WindowSize = size;
-			this.miniBar.WindowLocation = pos;
+			this.miniBar.WindowSize = this.miniBarRect.Size;
+			this.miniBar.WindowLocation = this.miniBarPos;
 			this.miniBar.Root.BackColor = Color.FromARGB(0, 1,1,1);
 			this.miniBar.Owner = this.Window.Owner;
 			this.miniBar.AttachCommandDispatcher(this.GetCommandDispatcher());
 
+			Widgets.Balloon frame = new Widgets.Balloon();
 			frame.SetParent(this.miniBar.Root);
 			frame.Anchor = AnchorStyles.All;
 
 			CommandDispatcher cd = this.GetCommandDispatcher();
 
-			foreach ( string cmd in cmds )
+			foreach ( string cmd in this.miniBarCmds )
 			{
 				if ( cmd == "" )  // séparateur ?
 				{
-					sep = new IconSeparator();
+					IconSeparator sep = new IconSeparator();
 					sep.Dock = DockStyle.Left;
 					sep.SetParent(frame);
 				}
 				else
 				{
-					button = new IconButton(cmd, Misc.Icon(cmd), cmd);
+					IconButton button = new IconButton(cmd, Misc.Icon(cmd), cmd);
 					
 					CommandState state = cd[cmd];
 					if ( state.Statefull )
@@ -2427,6 +2456,7 @@ namespace Epsitec.Common.Document
 					}
 				}
 			}
+			this.miniBarCmds = null;
 
 			this.miniBar.Show();
 		}
@@ -2439,6 +2469,8 @@ namespace Epsitec.Common.Document
 		// Ferme la mini-palette.
 		public void CloseMiniBar()
 		{
+			this.miniBarTimer.Suspend();
+
 			if ( this.miniBar == null )  return;
 			this.miniBar.Close();
 			this.miniBar = null;
@@ -2449,22 +2481,24 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.miniBar == null )  return;
 
+			if ( this.MiniBarAway(mouse) )
+			{
+				this.miniBar.AnimateShow(Animation.FadeOut);
+				this.miniBar = null;
+			}
+		}
+
+		// Indique si la souris est trop loin de la mini-palette.
+		protected bool MiniBarAway(Point mouse)
+		{
 			mouse = this.InternalToScreen(mouse);
 			double dx = System.Math.Abs(mouse.X-this.miniBarRect.Center.X);
 			double dy = System.Math.Abs(mouse.Y-this.miniBarRect.Center.Y);
 			double d = (dx > dy*(this.miniBarRect.Width/this.miniBarRect.Height)) ?
 						System.Math.Max(dx-this.miniBarRect.Width/2,  0.0) :
 						System.Math.Max(dy-this.miniBarRect.Height/2, 0.0);
-			double alpha = 1.0-d/this.miniBarMax;
 
-			if ( alpha <= 0.0 )  // trop loin ?
-			{
-				this.CloseMiniBar();  // ferme définitivement
-			}
-			else
-			{
-				this.miniBar.Alpha = alpha;  // estompe...
-			}
+			return (d > this.miniBarMax);
 		}
 
 		// Retourne la liste des commandes pour la mini-palette.
@@ -3926,9 +3960,12 @@ namespace Epsitec.Common.Document
 		protected Objects.Abstract				editFlowSrc = null;
 		protected Objects.TextBox2				editFlowAfterCreate = null;
 
+		protected Timer							miniBarTimer;
+		protected Point							miniBarPos;
+		protected System.Collections.ArrayList	miniBarCmds = null;
 		protected Window						miniBar = null;
 		protected Drawing.Rectangle				miniBarRect;
-		protected double						miniBarMax = 20;
+		protected double						miniBarMax = 5;
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOrder;
 		protected VMenu							contextMenuOper;
