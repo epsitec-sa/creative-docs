@@ -959,6 +959,7 @@ namespace Epsitec.Common.Document.Objects
 		// Fin du déplacement d'une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
 		{
+			base.MoveSelectedSegmentEnding(rank, pos, drawingContext);
 		}
 
 		

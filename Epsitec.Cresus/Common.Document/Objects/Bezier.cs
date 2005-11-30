@@ -987,11 +987,27 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.Handle(rp1).InitialPosition = this.Handle(rp1).Position;
 				this.Handle(rp2).InitialPosition = this.Handle(rp2).Position;
+
+				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainAddHV(ss.Position);
+				Point p1 = this.Handle(rp1).Position;
+				Point p2 = this.Handle(rp2).Position;
+				Size d = new Size(p2.X-p1.X, p2.Y-p1.Y);
+				drawingContext.ConstrainAddLine(p1, p2);
+				drawingContext.ConstrainAddLine(pos, new Point(pos.X-d.Height, pos.Y+d.Width));
 			}
 			else	// courbe ?
 			{
 				this.Handle(rs1).InitialPosition = this.Handle(rs1).Position;
 				this.Handle(rs2).InitialPosition = this.Handle(rs2).Position;
+
+				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainAddHV(ss.Position);
+				double a1 = Point.ComputeAngleDeg(this.Handle(rp1).Position, this.Handle(rs1).Position);
+				double a2 = Point.ComputeAngleDeg(this.Handle(rp2).Position, this.Handle(rs2).Position);
+				Point c = ss.Position;
+				Point p = Transform.RotatePointDeg(c, (a1+a2)/2, new Point(c.X+100, c.Y));
+				drawingContext.ConstrainAddLine(c, p);
 			}
 		}
 
@@ -1029,6 +1045,7 @@ namespace Epsitec.Common.Document.Objects
 		// Fin du déplacement d'une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
 		{
+			base.MoveSelectedSegmentEnding(rank, pos, drawingContext);
 		}
 
 		
@@ -1111,13 +1128,13 @@ namespace Epsitec.Common.Document.Objects
 				if ( this.TotalHandle == 0 )
 				{
 					this.HandleAdd(pos, HandleType.Bezier);
-					this.HandleAdd(pos, HandleType.Starting);
+					this.HandleAdd(pos, HandleType.Starting, HandleConstrainType.Smooth);
 					this.HandleAdd(pos, HandleType.Bezier);
 				}
 				else
 				{
 					this.HandleAdd(pos, HandleType.Bezier);
-					this.HandleAdd(pos, HandleType.Primary);
+					this.HandleAdd(pos, HandleType.Primary, HandleConstrainType.Smooth);
 					this.HandleAdd(pos, HandleType.Bezier);
 
 					int rank = this.TotalHandle-6;

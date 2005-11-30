@@ -1126,7 +1126,7 @@ namespace Epsitec.Common.Document
 			{
 				this.drawingContext.ConstrainSpacePressed();
 			}
-			else
+			else if ( !this.document.Modifier.IsToolShaper )
 			{
 				Point move = this.moveObject.HotSpotPosition;
 				this.moveObject.ChangeHotSpot(1);
@@ -1148,6 +1148,7 @@ namespace Epsitec.Common.Document
 		protected void UpdateHotSpot()
 		{
 			if ( this.moveObject == null || this.moveHandle != -1 )  return;
+			if ( this.document.Modifier.IsToolShaper )  return;
 			this.hotSpotHandle.IsVisible = (this.drawingContext.IsCtrl || this.drawingContext.MagnetActiveAndExist);
 		}
 		#endregion
@@ -1176,6 +1177,7 @@ namespace Epsitec.Common.Document
 			this.ctrlDuplicate = false;
 			this.moveReclick = false;
 			this.moveStartingList = null;
+			this.hotSpotHandle.IsVisible = false;
 
 			Objects.Abstract obj;
 			int rank;
@@ -1403,8 +1405,6 @@ namespace Epsitec.Common.Document
 				this.moveHandle = -1;
 				this.moveSelectedSegment = -1;
 				this.UpdateSelector();
-
-				this.hotSpotHandle.IsVisible = false;
 			}
 
 			this.drawingContext.ConstrainDelStarting();

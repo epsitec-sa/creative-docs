@@ -300,9 +300,16 @@ namespace Epsitec.Common.Document.Objects
 		// Ajoute une poignée.
 		public void HandleAdd(Point pos, HandleType type)
 		{
+			this.HandleAdd(pos, type, HandleConstrainType.Symmetric);
+		}
+
+		// Ajoute une poignée.
+		public void HandleAdd(Point pos, HandleType type, HandleConstrainType constrain)
+		{
 			Handle handle = new Handle(this.document);
 			handle.Position = pos;
 			handle.Type = type;
+			handle.ConstrainType = constrain;
 			this.handles.Add(handle);
 			this.SetDirtyBbox();
 		}
@@ -667,6 +674,8 @@ namespace Epsitec.Common.Document.Objects
 		// Fin du déplacement d'une poignée d'un segment sélectionné.
 		public virtual void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
 		{
+			drawingContext.ConstrainDelStarting();
+			drawingContext.MagnetClearStarting();
 		}
 
 

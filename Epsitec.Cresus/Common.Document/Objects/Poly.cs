@@ -137,6 +137,14 @@ namespace Epsitec.Common.Document.Objects
 			int n = this.NextRank(ss.Rank);
 			this.Handle(r).InitialPosition = this.Handle(r).Position;
 			this.Handle(n).InitialPosition = this.Handle(n).Position;
+
+			drawingContext.ConstrainFlush();
+			drawingContext.ConstrainAddHV(ss.Position);
+			Point p1 = this.Handle(r).Position;
+			Point p2 = this.Handle(n).Position;
+			Size d = new Size(p2.X-p1.X, p2.Y-p1.Y);
+			drawingContext.ConstrainAddLine(p1, p2);
+			drawingContext.ConstrainAddLine(pos, new Point(pos.X-d.Height, pos.Y+d.Width));
 		}
 
 		// Déplace une poignée d'un segment sélectionné.
@@ -161,6 +169,7 @@ namespace Epsitec.Common.Document.Objects
 		// Fin du déplacement d'une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
 		{
+			base.MoveSelectedSegmentEnding(rank, pos, drawingContext);
 		}
 
 		
