@@ -249,8 +249,6 @@
 	<data name="Object.Bezier.Menu.HandleContinue">Prolonger le trait</data>
 	<data name="Object.Bezier.Menu.HandleDelete">Enlever le point</data>
 	<data name="Object.Bezier.Info">lg={0} α={1}</data>
-	<data name="Object.Bezier.Button.CreateEnding">Terminer la création</data>
-	<data name="Object.Bezier.Button.CreateAndSelect">Terminer et sélectionner</data>
 
 	<data name="Object.Poly.Menu.HandleAdd">Ajouter un point</data>
 	<data name="Object.Poly.Menu.HandleSym">Coin quelconque</data>
@@ -259,8 +257,10 @@
 	<data name="Object.Poly.Menu.HandleDelete">Enlever le point</data>
 	<data name="Object.Poly.Info1">lg={0} α={1}</data>
 	<data name="Object.Poly.Info2">lg={0} α={2}  |  lg={1} α={3}</data>
-	<data name="Object.Poly.Button.CreateEnding">Terminer la création</data>
-	<data name="Object.Poly.Button.CreateAndSelect">Terminer et sélectionner</data>
+	
+	<data name="Object.Button.CreateEnding">Terminer la création</data>
+	<data name="Object.Button.CreateAndSelect">Terminer et sélectionner</data>
+	<data name="Object.Button.CreateAndShaper">Terminer et modeler</data>
 
 	<data name="Object.Image.Error">Le fichier &lt;b&gt;{0}&lt;/b&gt; n'existe pas.</data>
 

@@ -2775,6 +2775,13 @@ namespace Epsitec.Common.Document
 				this.document.Modifier.Tool = "Select";
 				return;
 			}
+
+			if ( cmd == "CreateAndShaper" )
+			{
+				this.CreateEnding(false);
+				this.document.Modifier.Tool = "Shaper";
+				return;
+			}
 		}
 		#endregion
 

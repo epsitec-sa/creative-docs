@@ -615,6 +615,18 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\CreateAndSelect.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\CreateAndShaper.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\CreateEnding.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Cut.icon"
                     BuildAction = "EmbeddedResource"
                 />

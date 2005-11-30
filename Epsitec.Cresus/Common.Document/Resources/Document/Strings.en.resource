@@ -249,8 +249,6 @@
 	<data name="Object.Bezier.Menu.HandleContinue">Extend line</data>
 	<data name="Object.Bezier.Menu.HandleDelete">Remove point</data>
 	<data name="Object.Bezier.Info">ln={0} α={1}</data>
-	<data name="Object.Bezier.Button.CreateEnding">Validate</data>
-	<data name="Object.Bezier.Button.CreateAndSelect">Validate and select</data>
 
 	<data name="Object.Poly.Menu.HandleAdd">Add point</data>
 	<data name="Object.Poly.Menu.HandleSym">Free form corner</data>
@@ -259,8 +257,10 @@
 	<data name="Object.Poly.Menu.HandleDelete">Remove point</data>
 	<data name="Object.Poly.Info1">ln={0} α={1}</data>
 	<data name="Object.Poly.Info2">ln={0} α={2}  |  ln={1} α={3}</data>
-	<data name="Object.Poly.Button.CreateEnding">Validate</data>
-	<data name="Object.Poly.Button.CreateAndSelect">Validate and select</data>
+
+	<data name="Object.Button.CreateEnding">Validate</data>
+	<data name="Object.Button.CreateAndSelect">Validate and select</data>
+	<data name="Object.Button.CreateAndShaper">Validate and shaper</data>
 
 	<data name="Object.Image.Error">File &lt;b&gt;{0}&lt;/b&gt; does not exist.</data>
 

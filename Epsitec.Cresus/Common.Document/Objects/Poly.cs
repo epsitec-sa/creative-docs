@@ -610,14 +610,21 @@ namespace Epsitec.Common.Document.Objects
 			{
 				cmd  = "Object";
 				name = "CreateEnding";
-				text = Res.Strings.Object.Poly.Button.CreateEnding;
+				text = string.Format("     {0}  {1}", Misc.Image("CreateEnding"), Res.Strings.Object.Button.CreateEnding);
 				return true;
 			}
 			if ( rank == 1 )
 			{
 				cmd  = "Object";
 				name = "CreateAndSelect";
-				text = Res.Strings.Object.Poly.Button.CreateAndSelect;
+				text = string.Format("     {0}  {1}", Misc.Image("CreateAndSelect"), Res.Strings.Object.Button.CreateAndSelect);
+				return true;
+			}
+			if ( rank == 2 )
+			{
+				cmd  = "Object";
+				name = "CreateAndShaper";
+				text = string.Format("     {0}  {1}", Misc.Image("CreateAndShaper"), Res.Strings.Object.Button.CreateAndShaper);
 				return true;
 			}
 			return base.CreateAction(rank, out cmd, out name, out text);
