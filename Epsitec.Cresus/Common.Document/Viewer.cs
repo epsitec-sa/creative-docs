@@ -346,7 +346,10 @@ namespace Epsitec.Common.Document
 
 				case MessageType.MouseLeave:
 					this.mousePosValid = false;
-					this.ClearHilite();
+					if ( !this.IsCreating )
+					{
+						this.ClearHilite();
+					}
 					break;
 
 				case MessageType.MouseWheel:

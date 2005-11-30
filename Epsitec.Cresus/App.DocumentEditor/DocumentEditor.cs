@@ -3501,7 +3501,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.toolSelectState = new CommandState("ToolSelect", this.commandDispatcher, KeyCode.AlphaS);
 			this.toolGlobalState = new CommandState("ToolGlobal", this.commandDispatcher, KeyCode.AlphaG);
-			this.toolShaperState = new CommandState("ToolShaper", this.commandDispatcher, KeyCode.AlphaM);
+			this.toolShaperState = new CommandState("ToolShaper", this.commandDispatcher, KeyCode.AlphaA);
 			this.toolEditState = new CommandState("ToolEdit", this.commandDispatcher, KeyCode.AlphaE);
 			this.toolZoomState = new CommandState("ToolZoom", this.commandDispatcher, KeyCode.AlphaZ);
 			this.toolHandState = new CommandState("ToolHand", this.commandDispatcher, KeyCode.AlphaH);
@@ -3930,7 +3930,7 @@ namespace Epsitec.App.DocumentEditor
 			if ( enabled )
 			{
 				cmd.ActiveState = (tool == currentTool) ? ActiveState.Yes : ActiveState.No;;
-				cmd.Enable = (tool == currentTool || tool == "Select" || !isCreating);
+				cmd.Enable = (tool == currentTool || tool == "Select" || tool == "Shaper" || !isCreating);
 			}
 			else
 			{

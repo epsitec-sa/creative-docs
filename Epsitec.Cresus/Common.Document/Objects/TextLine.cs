@@ -782,13 +782,11 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( rankOpposite > rankSecondary )
 					{
-						rankOpposite += 2;
-						if ( rankOpposite >= this.handles.Count )  rankOpposite = 1;
+						rankOpposite = this.NextRank(rankPrimary-1);
 					}
 					else
 					{
-						rankOpposite -= 2;
-						if ( rankOpposite < 0 )  rankOpposite = this.handles.Count-2;
+						rankOpposite = this.PrevRank(rankPrimary-1);
 					}
 					this.Handle(rankSecondary).Position = Point.Projection(this.Handle(rankPrimary).Position, this.Handle(rankOpposite).Position, pos);
 				}
