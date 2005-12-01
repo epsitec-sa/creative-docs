@@ -697,8 +697,6 @@ namespace Epsitec.Common.Document.Objects
 		// Retourne la liste des positions des poignées sélectionnées par le modeleur.
 		public override System.Collections.ArrayList MoveSelectedHandles()
 		{
-			this.InsertOpletGeometry();
-
 			System.Collections.ArrayList startingPos = new System.Collections.ArrayList();
 			int total = this.TotalMainHandle;
 			for ( int i=0 ; i<total ; i+=3 )
@@ -713,6 +711,8 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 			if ( startingPos.Count == 0 )  return null;
+
+			this.InsertOpletGeometry();
 
 			if ( this.selectedSegments != null )
 			{

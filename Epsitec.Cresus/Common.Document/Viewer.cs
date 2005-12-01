@@ -2374,6 +2374,8 @@ namespace Epsitec.Common.Document
 			mouse = this.InternalToScreen(mouse);
 			mouse.Y ++;  // pour ne pas être sur le pixel visé par la souris
 
+			this.miniBarLines = 1;
+			double maxWidth = 0;
 			double width = 0;
 			foreach ( string cmd in cmds )
 			{
@@ -2381,16 +2383,23 @@ namespace Epsitec.Common.Document
 				{
 					width += sep.DefaultWidth;
 				}
+				else if ( cmd == "#" )  // fin de ligne ?
+				{
+					maxWidth = System.Math.Max(maxWidth, width);
+					width = 0;
+					this.miniBarLines ++;
+				}
 				else
 				{
 					width += button.DefaultWidth;
 				}
 			}
+			maxWidth = System.Math.Max(maxWidth, width);
 
 			ScreenInfo si = ScreenInfo.Find(this.MapClientToScreen(mouse));
 			Drawing.Rectangle wa = si.WorkingArea;
 
-			Size size = new Size(width+frame.Margin*2, button.DefaultHeight+frame.Margin*2+frame.Distance);
+			Size size = new Size(maxWidth+frame.Margin*2, button.DefaultHeight*this.miniBarLines+frame.Margin*2+frame.Distance);
 			mouse.X -= size.Width/2;
 			this.miniBarRect = new Drawing.Rectangle(mouse, size);
 			this.miniBarHot = size.Width/2;
@@ -2452,13 +2461,28 @@ namespace Epsitec.Common.Document
 
 			CommandDispatcher cd = this.GetCommandDispatcher();
 
+			bool beginOfLine = true;
+			Widget line = null;
 			foreach ( string cmd in this.miniBarCmds )
 			{
+				if ( beginOfLine )
+				{
+					IconButton button = new IconButton();
+					line = new Widget(frame);
+					line.Height = button.DefaultHeight;
+					line.Dock = DockStyle.Top;
+					beginOfLine = false;
+				}
+
 				if ( cmd == "" )  // séparateur ?
 				{
 					IconSeparator sep = new IconSeparator();
 					sep.Dock = DockStyle.Left;
-					sep.SetParent(frame);
+					sep.SetParent(line);
+				}
+				else if ( cmd == "#" )  // fin de ligne ?
+				{
+					beginOfLine = true;
 				}
 				else
 				{
@@ -2471,7 +2495,7 @@ namespace Epsitec.Common.Document
 					}
 
 					button.Dock = DockStyle.Left;
-					button.SetParent(frame);
+					button.SetParent(line);
 					button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
 
 					string s = Res.Strings.GetString("Action."+cmd);
@@ -2488,6 +2512,13 @@ namespace Epsitec.Common.Document
 
 		private void HandleMiniBarButtonClicked(object sender, MessageEventArgs e)
 		{
+			IconButton button = sender as IconButton;
+			if ( button != null )
+			{
+				if ( button.Name == "OrderUpOne"   ||
+					 button.Name == "OrderDownOne" )  return;
+			}
+
 			this.CloseMiniBar();
 		}
 
@@ -2517,42 +2548,82 @@ namespace Epsitec.Common.Document
 		protected bool MiniBarAway(Point mouse)
 		{
 			mouse = this.InternalToScreen(mouse);
+
 			double dx = System.Math.Abs(mouse.X-this.miniBarRect.Center.X);
 			double dy = System.Math.Abs(mouse.Y-this.miniBarRect.Center.Y);
-			double d = (dx > dy*(this.miniBarRect.Width/this.miniBarRect.Height)) ?
-						System.Math.Max(dx-this.miniBarRect.Width/2,  0.0) :
-						System.Math.Max(dy-this.miniBarRect.Height/2, 0.0);
 
-			return (d > this.miniBarMax);
+			if ( dx > dy*(this.miniBarRect.Width/this.miniBarRect.Height) )
+			{
+				return (dx-this.miniBarRect.Width/2 > this.miniBarMax);
+			}
+			else
+			{
+				return (dy-this.miniBarRect.Height/2 > this.miniBarMax);
+			}
 		}
 
 		// Retourne la liste des commandes pour la mini-palette.
 		protected System.Collections.ArrayList MiniBarCommands()
 		{
-			int nbSel = this.document.Modifier.TotalSelected;
-			if ( nbSel == 0 )  return null;
-
 			this.document.Notifier.GenerateEvents();
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
-			if ( this.document.Modifier.Tool == "Select" )
+			int nbSel = this.document.Modifier.TotalSelected;
+			if ( nbSel == 0 )
 			{
-				this.MiniBarAdd(list, "Delete");
-				this.MiniBarAdd(list, "Duplicate");
+				this.MiniBarAdd(list, "DeselectAll");
+				this.MiniBarAdd(list, "SelectAll");
+				this.MiniBarAdd(list, "SelectInvert");
 				this.MiniBarAdd(list, "");
-				this.MiniBarAdd(list, "Cut");
-				this.MiniBarAdd(list, "Copy");
-				this.MiniBarAdd(list, "Paste");
+				this.MiniBarAdd(list, "HideSel");
+				this.MiniBarAdd(list, "HideRest");
+				this.MiniBarAdd(list, "HideCancel");
 				this.MiniBarAdd(list, "");
-				this.MiniBarAdd(list, "OrderUpAll");
-				this.MiniBarAdd(list, "OrderDownAll");
+				this.MiniBarAdd(list, "ZoomPage");
+				this.MiniBarAdd(list, "ZoomDefault");
+				this.MiniBarAdd(list, "");
+				this.MiniBarAdd(list, "Outside");
+				this.MiniBarAdd(list, "Grid");
+				this.MiniBarAdd(list, "Magnet");
 				this.MiniBarAdd(list, "");
 			}
-
-			Objects.Abstract layer = this.drawingContext.RootObject();
-			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
+			else
 			{
-				obj.PutCommands(list);
+				if ( this.document.Modifier.Tool == "Select" )
+				{
+					this.MiniBarAdd(list, "Delete");
+					this.MiniBarAdd(list, "Duplicate");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "Cut");
+					this.MiniBarAdd(list, "Copy");
+					this.MiniBarAdd(list, "Paste");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "HideSel");
+					this.MiniBarAdd(list, "HideRest");
+					this.MiniBarAdd(list, "HideCancel");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "ZoomSel");
+					this.MiniBarAdd(list, "ZoomSelWidth");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "OrderDownAll");
+					this.MiniBarAdd(list, "OrderDownOne");
+					this.MiniBarAdd(list, "OrderUpOne");
+					this.MiniBarAdd(list, "OrderUpAll");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "Group");
+					this.MiniBarAdd(list, "Merge");
+					this.MiniBarAdd(list, "Extract");
+					this.MiniBarAdd(list, "Ungroup");
+					this.MiniBarAdd(list, "Inside");
+					this.MiniBarAdd(list, "Outside");
+					this.MiniBarAdd(list, "");
+				}
+
+				Objects.Abstract layer = this.drawingContext.RootObject();
+				foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
+				{
+					obj.PutCommands(list);
+				}
 			}
 
 			if ( list.Count != 0 )
@@ -2564,7 +2635,39 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			this.MiniBarJustif(list);
+
 			return list;
+		}
+
+		protected void MiniBarJustif(System.Collections.ArrayList list)
+		{
+			int count = 0;
+			foreach ( string cmd in list )
+			{
+				if ( cmd != "" )  count ++;
+			}
+			if ( count < 8 )  return;
+
+			int maxHope = System.Math.Min(count/2, 8);
+			int inlineCount = 0;
+			for ( int i=0 ; i<list.Count ; i++ )
+			{
+				string cmd = list[i] as string;
+				if ( cmd == "" )  // séparateur ?
+				{
+					if ( inlineCount >= maxHope )
+					{
+						list.RemoveAt(i);
+						list.Insert(i, "#");
+						inlineCount = 0;
+					}
+				}
+				else
+				{
+					inlineCount ++;
+				}
+			}
 		}
 
 		// Ajoute une commande dans la liste pour la mini-palette.
@@ -2731,7 +2834,7 @@ namespace Epsitec.Common.Document
 			if ( globalMenu || nbSel == 0 )
 			{
 				exist = false;
-				exist |= ContextMenuItem.MenuAddItem(list, this.GetCommandDispatcher(), "Deselect",     Misc.Icon("DeselectAll"),  Res.Strings.Action.DeselectAll);
+				exist |= ContextMenuItem.MenuAddItem(list, this.GetCommandDispatcher(), "DeselectAll",  Misc.Icon("DeselectAll"),  Res.Strings.Action.DeselectAll);
 				exist |= ContextMenuItem.MenuAddItem(list, this.GetCommandDispatcher(), "SelectAll",    Misc.Icon("SelectAll"),    Res.Strings.Action.SelectAll);
 				exist |= ContextMenuItem.MenuAddItem(list, this.GetCommandDispatcher(), "SelectInvert", Misc.Icon("SelectInvert"), Res.Strings.Action.SelectInvert);
 				if ( exist )  ContextMenuItem.MenuAddSep(list);
@@ -2763,6 +2866,7 @@ namespace Epsitec.Common.Document
 				exist = false;
 				exist |= ContextMenuItem.MenuAddItem(list, this.GetCommandDispatcher(), "Outside",      Misc.Icon("Outside"),      Res.Strings.Action.Outside);
 				exist |= ContextMenuItem.MenuAddItem(list, this.GetCommandDispatcher(), "Grid",         Misc.Icon("Grid"),         Res.Strings.Action.Grid);
+				exist |= ContextMenuItem.MenuAddItem(list, this.GetCommandDispatcher(), "Magnet",       Misc.Icon("Magnet"),       Res.Strings.Action.Magnet);
 			}
 			else
 			{
@@ -4009,6 +4113,7 @@ namespace Epsitec.Common.Document
 
 		protected Timer							miniBarTimer;
 		protected System.Collections.ArrayList	miniBarCmds = null;
+		protected int							miniBarLines;
 		protected Drawing.Rectangle				miniBarRect;
 		protected double						miniBarHot;
 		protected Window						miniBar = null;

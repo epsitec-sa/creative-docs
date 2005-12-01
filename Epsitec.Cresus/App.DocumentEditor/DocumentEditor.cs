@@ -4080,7 +4080,7 @@ namespace Epsitec.App.DocumentEditor
 				this.colorFillLightState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.mergeState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.extractState.Enable = ( totalSelected > 0 && !isBase && !isCreating && !isEdit );
-				this.groupState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.groupState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.ungroupState.Enable = ( totalSelected == 1 && one is Objects.Group && !isCreating && !isEdit );
 				this.insideState.Enable = ( totalSelected == 1 && one is Objects.Group && !isCreating && !isEdit );
 				this.outsideState.Enable = ( !isBase && !isCreating );
@@ -4097,7 +4097,7 @@ namespace Epsitec.App.DocumentEditor
 				this.layerNewSelState.Enable = ( totalSelected > 0 && !isCreating );
 
 				this.hideSelState.Enable = ( totalSelected > 0 && !isCreating );
-				this.hideRestState.Enable = ( totalObjects-totalSelected-totalHide > 0 && !isCreating );
+				this.hideRestState.Enable = ( totalSelected > 0 && totalObjects-totalSelected-totalHide > 0 && !isCreating );
 				this.hideCancelState.Enable = ( totalPageHide > 0 && !isCreating );
 
 				this.zoomSelState.Enable = ( totalSelected > 0 );
