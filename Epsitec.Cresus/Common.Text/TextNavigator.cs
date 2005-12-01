@@ -3170,6 +3170,14 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			public TabClass						Class
+			{
+				get
+				{
+					return TabList.GetTabClass (this.tag);
+				}
+			}
+			
 			
 			private string						tag;
 			private TabStatus					status;

@@ -263,6 +263,10 @@ namespace Epsitec.Common.Text
 		
 		public string GetAutoTagName()
 		{
+			//	Il y a deux classes de tabulateurs : ceux qui sont définis localement
+			//	dans le texte (TabClass.Auto) et ceux qui sont définis au sein d'un
+			//	style (TabClass.Shared).
+			
 			return this.GenerateUniqueName (TabList.AutoTagPrefix);
 		}
 		
