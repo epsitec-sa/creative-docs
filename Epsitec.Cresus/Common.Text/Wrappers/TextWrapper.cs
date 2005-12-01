@@ -343,10 +343,11 @@ namespace Epsitec.Common.Text.Wrappers
 					{
 						string tag_type = "?";
 						string tag_data = user_tags[i];
+						long   id       = 0;
 						
 						//	TODO: gérer correctement TagType et TagData
 						
-						properties[i] = new Properties.UserTagProperty (tag_type, tag_data);
+						properties[i] = new Properties.UserTagProperty (tag_type, tag_data, id);
 					}
 					
 					this.DefineMetaProperty (TextWrapper.UserTags, 0, properties);

@@ -105,7 +105,7 @@ namespace Epsitec.Common.Text
 		{
 			if (name == null)
 			{
-				name = this.GenerateUniqueName ();
+				name = this.GetUniqueName ();
 			}
 			
 			TextStyle style = new TextStyle (name, text_style_class, properties, parent_styles);
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Text
 		{
 			if (name == null)
 			{
-				name = this.GenerateUniqueName ();
+				name = this.GetUniqueName ();
 			}
 			
 			TextStyle style = new TextStyle (name, TextStyleClass.MetaProperty, properties, parent_styles);
@@ -326,6 +326,20 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public string GetUniqueName()
+		{
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "#ID#{0}", this.GetUniqueId ());
+		}
+		
+		public long GetUniqueId()
+		{
+			lock (this)
+			{
+				return this.unique_id++;
+			}
+		}
+		
+		
 		#region Internal Methods
 		internal Styles.SimpleStyle GetStyleFromIndex(int index)
 		{
@@ -418,15 +432,6 @@ namespace Epsitec.Common.Text
 			else
 			{
 				throw new System.ArgumentException (string.Format ("TextStyle named {0} ({1}) does not exist", name, text_style_class), "style");
-			}
-		}
-		
-		
-		private string GenerateUniqueName()
-		{
-			lock (this)
-			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "#ID#{0}", this.unique_id++);
 			}
 		}
 		

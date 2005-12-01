@@ -701,106 +701,6 @@ namespace Epsitec.Common.Text
 			return (string[]) list.ToArray (typeof (string));
 		}
 		
-		public string[] GetParagraphTabTags()
-		{
-			System.Collections.ArrayList tabs_list = new System.Collections.ArrayList ();
-			System.Collections.ArrayList tags_list = new System.Collections.ArrayList ();
-			
-			int length = 0;
-			
-			if (this.HasSelection)
-			{
-				int[]   positions = this.GetSelectionCursorPositions ();
-				Range[] ranges    = Range.CreateSortedRanges (positions);
-				
-				foreach (Range range in ranges)
-				{
-					int start = range.Start;
-					int end   = range.End;
-					int pos   = start;
-					
-					length += end - start;
-					
-					while (pos < end)
-					{
-						Property property = this.GetTabsProperty (pos);
-						
-						if (property != null)
-						{
-							tabs_list.Add (property);
-						}
-						
-						pos = this.FindNextParagraphStart (pos);
-					}
-				}
-			}
-			
-			if (length == 0)
-			{
-				foreach (Property property in this.accumulated_properties)
-				{
-					if (property.WellKnownType == Properties.WellKnownType.Tabs)
-					{
-						tabs_list.Add (property);
-						break;
-					}
-				}
-			}
-			
-			foreach (Properties.TabsProperty tabs_property in tabs_list)
-			{
-				foreach (string tag in tabs_property.TabTags)
-				{
-					if (tags_list.Contains (tag) == false)
-					{
-						tags_list.Add (tag);
-					}
-				}
-			}
-			
-			tags_list.Sort ();
-			
-			return (string[]) tags_list.ToArray (typeof (string));
-		}
-		
-		public string[] GetTextTabTags()
-		{
-			System.Collections.ArrayList tags_list = new System.Collections.ArrayList ();
-			
-			int length = 0;
-			
-			if (this.HasSelection)
-			{
-				int[]   positions = this.GetSelectionCursorPositions ();
-				Range[] ranges    = Range.CreateSortedRanges (positions);
-				
-				foreach (Range range in ranges)
-				{
-					int start = range.Start;
-					int end   = range.End;
-					int pos   = start;
-					
-					length += end - start;
-					
-					while (pos < end)
-					{
-						this.FindTextTabTags (tags_list, pos);
-						
-						pos = this.FindNextParagraphStart (pos);
-					}
-				}
-			}
-			
-			if (length == 0)
-			{
-				this.FindTextTabTags (tags_list, this.CursorPosition);
-			}
-			
-			tags_list.Sort ();
-			
-			return (string[]) tags_list.ToArray (typeof (string));
-		}
-		
 		
 		public bool RenameTab(string old_tag, string new_tag)
 		{
@@ -882,6 +782,108 @@ namespace Epsitec.Common.Text
 					break;
 				}
 			}
+		}
+		
+		
+		#region Private Tabulator Manipulation Methods
+		private string[] GetParagraphTabTags()
+		{
+			System.Collections.ArrayList tabs_list = new System.Collections.ArrayList ();
+			System.Collections.ArrayList tags_list = new System.Collections.ArrayList ();
+			
+			int length = 0;
+			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				foreach (Range range in ranges)
+				{
+					int start = range.Start;
+					int end   = range.End;
+					int pos   = start;
+					
+					length += end - start;
+					
+					while (pos < end)
+					{
+						Property property = this.GetTabsProperty (pos);
+						
+						if (property != null)
+						{
+							tabs_list.Add (property);
+						}
+						
+						pos = this.FindNextParagraphStart (pos);
+					}
+				}
+			}
+			
+			if (length == 0)
+			{
+				foreach (Property property in this.accumulated_properties)
+				{
+					if (property.WellKnownType == Properties.WellKnownType.Tabs)
+					{
+						tabs_list.Add (property);
+						break;
+					}
+				}
+			}
+			
+			foreach (Properties.TabsProperty tabs_property in tabs_list)
+			{
+				foreach (string tag in tabs_property.TabTags)
+				{
+					if (tags_list.Contains (tag) == false)
+					{
+						tags_list.Add (tag);
+					}
+				}
+			}
+			
+			tags_list.Sort ();
+			
+			return (string[]) tags_list.ToArray (typeof (string));
+		}
+		
+		private string[] GetTextTabTags()
+		{
+			System.Collections.ArrayList tags_list = new System.Collections.ArrayList ();
+			
+			int length = 0;
+			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				foreach (Range range in ranges)
+				{
+					int start = range.Start;
+					int end   = range.End;
+					int pos   = start;
+					
+					length += end - start;
+					
+					while (pos < end)
+					{
+						this.FindTextTabTags (tags_list, pos);
+						
+						pos = this.FindNextParagraphStart (pos);
+					}
+				}
+			}
+			
+			if (length == 0)
+			{
+				this.FindTextTabTags (tags_list, this.CursorPosition);
+			}
+			
+			tags_list.Sort ();
+			
+			return (string[]) tags_list.ToArray (typeof (string));
 		}
 		
 		
@@ -1072,7 +1074,7 @@ namespace Epsitec.Common.Text
 				}
 			}
 		}
-		
+		#endregion
 		
 		public void SetParagraphStyles(params TextStyle[] styles)
 		{

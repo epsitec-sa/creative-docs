@@ -475,6 +475,8 @@ namespace Epsitec.Common.Text
 			
 			public void Serialize(System.Text.StringBuilder buffer)
 			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Tab {0} at {1} {2} used {3} times", this.tag, (int) this.position, this.units, this.user_count));
+				
 				buffer.Append (SerializerSupport.SerializeString (this.tag));
 				buffer.Append ("/");
 				buffer.Append (SerializerSupport.SerializeDouble (this.position));

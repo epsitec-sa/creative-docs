@@ -13,10 +13,11 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public UserTagProperty(string tag_type, string tag_data)
+		public UserTagProperty(string tag_type, string tag_data, long id)
 		{
 			this.tag_type = tag_type;
 			this.tag_data = tag_data;
+			this.id       = id;
 		}
 		
 		
@@ -61,6 +62,14 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public long								Id
+		{
+			get
+			{
+				return this.id;
+			}
+		}
+		
 		
 		public static System.Collections.IComparer	Comparer
 		{
@@ -80,20 +89,23 @@ namespace Epsitec.Common.Text.Properties
 		{
 			SerializerSupport.Join (buffer,
 				/**/				SerializerSupport.SerializeString (this.tag_type),
-				/**/				SerializerSupport.SerializeString (this.tag_data));
+				/**/				SerializerSupport.SerializeString (this.tag_data),
+				/**/				SerializerSupport.SerializeLong (this.id));
 		}
 
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			System.Diagnostics.Debug.Assert (args.Length == 2);
+			System.Diagnostics.Debug.Assert (args.Length == 3);
 			
 			string tag_type = SerializerSupport.DeserializeString (args[0]);
 			string tag_data = SerializerSupport.DeserializeString (args[1]);
+			long   id       = SerializerSupport.DeserializeLong (args[2]);
 			
 			this.tag_type = tag_type;
 			this.tag_data = tag_data;
+			this.id       = id;
 		}
 		
 		public override Property GetCombination(Property property)
@@ -106,6 +118,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			checksum.UpdateValue (this.tag_type);
 			checksum.UpdateValue (this.tag_data);
+			checksum.UpdateValue (this.id);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -117,7 +130,8 @@ namespace Epsitec.Common.Text.Properties
 		private static bool CompareEqualContents(UserTagProperty a, UserTagProperty b)
 		{
 			return a.tag_type == b.tag_type
-				&& a.tag_data == b.tag_data;
+				&& a.tag_data == b.tag_data
+				&& a.id == b.id;
 		}
 		
 		
@@ -135,6 +149,14 @@ namespace Epsitec.Common.Text.Properties
 				if (result == 0)
 				{
 					result = string.Compare (px.tag_data, py.tag_data);
+					
+					if (result == 0)
+					{
+						if (px.id != py.id)
+						{
+							result = (px.id < py.id) ? -1 : 1;
+						}
+					}
 				}
 				
 				return result;
@@ -146,5 +168,6 @@ namespace Epsitec.Common.Text.Properties
 		
 		private string							tag_type;
 		private string							tag_data;
+		private long							id;
 	}
 }

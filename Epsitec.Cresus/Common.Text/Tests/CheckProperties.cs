@@ -152,9 +152,9 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties.Add (new Properties.UserTagProperty ("x", "foo"));
-			properties.Add (new Properties.UserTagProperty ("x", "bar"));
-			properties.Add (new Properties.UserTagProperty ("Comment", "Hello :-)"));
+			properties.Add (new Properties.UserTagProperty ("x", "foo", 0));
+			properties.Add (new Properties.UserTagProperty ("x", "bar", 1));
+			properties.Add (new Properties.UserTagProperty ("Comment", "Hello :-)", 2));
 			
 			story.ConvertToStyledText ("Abc", properties, out text);
 			
@@ -171,6 +171,10 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (usertags[0].TagData == "Hello :-)");
 			Debug.Assert.IsTrue (usertags[1].TagData == "bar");
 			Debug.Assert.IsTrue (usertags[2].TagData == "foo");
+			
+			Debug.Assert.IsTrue (usertags[0].Id == 2);
+			Debug.Assert.IsTrue (usertags[1].Id == 1);
+			Debug.Assert.IsTrue (usertags[2].Id == 0);
 		}
 		
 		private static void TestSerialization()
