@@ -975,8 +975,21 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else	// courbe ?
 			{
-				this.MoveSecondary(rs1-1, rs1, rs1-2, this.Handle(rs1).InitialPosition+move);
-				this.MoveSecondary(rs2+1, rs2, rs2+2, this.Handle(rs2).InitialPosition+move);
+				if ( drawingContext.IsCtrl )  // contraintes ?
+				{
+					double d1 = Point.Distance(this.Handle(rp1).Position, this.Handle(rs1).InitialPosition+move);
+					Point s1 = Point.Move(this.Handle(rp1).Position, this.Handle(rs1).InitialPosition, d1);
+					this.MoveSecondary(rs1-1, rs1, rs1-2, s1);
+
+					double d2 = Point.Distance(this.Handle(rp2).Position, this.Handle(rs2).InitialPosition+move);
+					Point s2 = Point.Move(this.Handle(rp2).Position, this.Handle(rs2).InitialPosition, d2);
+					this.MoveSecondary(rs2+1, rs2, rs2+2, s2);
+				}
+				else
+				{
+					this.MoveSecondary(rs1-1, rs1, rs1-2, this.Handle(rs1).InitialPosition+move);
+					this.MoveSecondary(rs2+1, rs2, rs2+2, this.Handle(rs2).InitialPosition+move);
+				}
 			}
 
 			SelectedSegment.Update(this.selectedSegments, this);
