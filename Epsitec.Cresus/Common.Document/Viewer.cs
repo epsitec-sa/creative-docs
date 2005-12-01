@@ -2374,6 +2374,9 @@ namespace Epsitec.Common.Document
 			mouse = this.InternalToScreen(mouse);
 			mouse.Y ++;  // pour ne pas être sur le pixel visé par la souris
 
+			ScreenInfo si = ScreenInfo.Find(this.MapClientToScreen(mouse));
+			Drawing.Rectangle wa = si.WorkingArea;
+
 			this.miniBarLines = 1;
 			double maxWidth = 0;
 			double width = 0;
@@ -2396,10 +2399,9 @@ namespace Epsitec.Common.Document
 			}
 			maxWidth = System.Math.Max(maxWidth, width);
 
-			ScreenInfo si = ScreenInfo.Find(this.MapClientToScreen(mouse));
-			Drawing.Rectangle wa = si.WorkingArea;
-
-			Size size = new Size(maxWidth+frame.Margin*2, button.DefaultHeight*this.miniBarLines+frame.Margin*2+frame.Distance);
+			double mx = maxWidth + frame.Margin*2;
+			double my = button.DefaultHeight*this.miniBarLines + frame.Margin*(this.miniBarLines-1) + frame.Margin*2 + frame.Distance;
+			Size size = new Size(mx, my);
 			mouse.X -= size.Width/2;
 			this.miniBarRect = new Drawing.Rectangle(mouse, size);
 			this.miniBarHot = size.Width/2;
@@ -2467,10 +2469,12 @@ namespace Epsitec.Common.Document
 			{
 				if ( beginOfLine )
 				{
+					double m = (line == null) ? 0 : frame.Margin;
 					IconButton button = new IconButton();
 					line = new Widget(frame);
 					line.Height = button.DefaultHeight;
 					line.Dock = DockStyle.Top;
+					line.DockMargins = new Margins(0, 0, m, 0);
 					beginOfLine = false;
 				}
 
@@ -2515,8 +2519,10 @@ namespace Epsitec.Common.Document
 			IconButton button = sender as IconButton;
 			if ( button != null )
 			{
-				if ( button.Name == "OrderUpOne"   ||
-					 button.Name == "OrderDownOne" )  return;
+				if ( button.Name == "OrderUpAll"   ||
+					 button.Name == "OrderUpOne"   ||
+					 button.Name == "OrderDownOne" ||
+					 button.Name == "OrderDownAll" )  return;
 			}
 
 			this.CloseMiniBar();
@@ -2571,6 +2577,7 @@ namespace Epsitec.Common.Document
 			int nbSel = this.document.Modifier.TotalSelected;
 			if ( nbSel == 0 )
 			{
+#if false
 				this.MiniBarAdd(list, "DeselectAll");
 				this.MiniBarAdd(list, "SelectAll");
 				this.MiniBarAdd(list, "SelectInvert");
@@ -2586,6 +2593,7 @@ namespace Epsitec.Common.Document
 				this.MiniBarAdd(list, "Grid");
 				this.MiniBarAdd(list, "Magnet");
 				this.MiniBarAdd(list, "");
+#endif
 			}
 			else
 			{
@@ -2635,31 +2643,50 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			this.MiniBarJustif(list);
+			// Essaie différentes largeurs de justifications, pour retenir la meilleure,
+			// c'est-à-dire celle qui a le moins de déchets (place perdue sur la dernière ligne).
+			int bestScraps = 1000;
+			int bestHope = 8;
+			for ( int hope=5 ; hope<=10 ; hope++ )
+			{
+				this.MiniBarJustifDo(list, hope);
+				int scraps = this.MiniBarScraps(list);
+				this.MiniBarJustifClear(list);
+
+				if ( bestScraps > scraps )
+				{
+					bestScraps = scraps;
+					bestHope = hope;
+				}
+			}
+			this.MiniBarJustifDo(list, bestHope);
 
 			return list;
 		}
 
-		protected void MiniBarJustif(System.Collections.ArrayList list)
+		// Justifie la mini-palette, en remplaçant certains séparateurs ("") par une marque
+		// de fin de ligne ("#").
+		protected void MiniBarJustifDo(System.Collections.ArrayList list, int hope)
 		{
 			int count = 0;
 			foreach ( string cmd in list )
 			{
 				if ( cmd != "" )  count ++;
 			}
-			if ( count < 8 )  return;
+			if ( count < hope )  return;
 
-			int maxHope = System.Math.Min(count/2, 8);
+			int maxHope = System.Math.Min(count/2, hope);
 			int inlineCount = 0;
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
 				string cmd = list[i] as string;
+
 				if ( cmd == "" )  // séparateur ?
 				{
 					if ( inlineCount >= maxHope )
 					{
-						list.RemoveAt(i);
-						list.Insert(i, "#");
+						list.RemoveAt(i);     // supprime le séparateur...
+						list.Insert(i, "#");  // ...et remplace-le par une marque de fin de ligne
 						inlineCount = 0;
 					}
 				}
@@ -2670,7 +2697,52 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Supprime la justification de la mini-palette.
+		protected void MiniBarJustifClear(System.Collections.ArrayList list)
+		{
+			for ( int i=0 ; i<list.Count ; i++ )
+			{
+				string cmd = list[i] as string;
+
+				if ( cmd == "#" )  // fin de ligne d'un essai précédent ?
+				{
+					list.RemoveAt(i);    // supprime la marque de fin de ligne...
+					list.Insert(i, "");  // ...et remplace-la par un séparateur
+				}
+			}
+		}
+
+		// Retourne la longueur inutilisée la plus grande. Il s'agit généralement de la place
+		// perdue à la fin de la dernipre ligne.
+		protected int MiniBarScraps(System.Collections.ArrayList list)
+		{
+			int shortestLine = 1000;
+			int longestLine = 0;
+			int index = 0;
+			foreach ( string cmd in list )
+			{
+				if ( cmd == "" )
+				{
+				}
+				else if ( cmd == "#" )
+				{
+					shortestLine = System.Math.Min(shortestLine, index);
+					longestLine  = System.Math.Max(longestLine,  index);
+					index = 0;
+				}
+				else
+				{
+					index ++;
+				}
+			}
+			shortestLine = System.Math.Min(shortestLine, index);
+			longestLine  = System.Math.Max(longestLine,  index);
+
+			return longestLine-shortestLine;
+		}
+
 		// Ajoute une commande dans la liste pour la mini-palette.
+		// Si la commande est disable (selon le CommandDispatcher), elle n'est pas ajoutée.
 		public void MiniBarAdd(System.Collections.ArrayList list, string cmd)
 		{
 			if ( cmd == "" )  // séparateur ?
