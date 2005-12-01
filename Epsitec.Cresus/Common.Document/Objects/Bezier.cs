@@ -694,62 +694,6 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Retourne la liste des positions des poignées sélectionnées par le modeleur.
-		public override System.Collections.ArrayList MoveSelectedHandles()
-		{
-			System.Collections.ArrayList startingPos = new System.Collections.ArrayList();
-			int total = this.TotalMainHandle;
-			for ( int i=0 ; i<total ; i+=3 )
-			{
-				if ( !this.Handle(i+1).IsVisible )  continue;
-
-				if ( !this.Handle(i+1).IsShaperDeselected )
-				{
-					startingPos.Add(this.Handle(i+0).Position);
-					startingPos.Add(this.Handle(i+1).Position);
-					startingPos.Add(this.Handle(i+2).Position);
-				}
-			}
-			if ( startingPos.Count == 0 )  return null;
-
-			this.InsertOpletGeometry();
-
-			if ( this.selectedSegments != null )
-			{
-				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
-			}
-
-			return startingPos;
-		}
-
-		// Déplace toutes les poignées sélectionnées par le modeleur.
-		public override void MoveSelectedHandles(System.Collections.ArrayList startingPos, Point move)
-		{
-			this.document.Notifier.NotifyArea(this.BoundingBox);
-
-			int s = 0;
-			int total = this.TotalMainHandle;
-			for ( int i=0 ; i<total ; i+=3 )
-			{
-				if ( !this.Handle(i+1).IsVisible )  continue;
-
-				if ( !this.Handle(i+1).IsShaperDeselected )
-				{
-					this.Handle(i+0).Position = ((Point)startingPos[s++]) + move;
-					this.Handle(i+1).Position = ((Point)startingPos[s++]) + move;
-					this.Handle(i+2).Position = ((Point)startingPos[s++]) + move;
-				}
-			}
-
-			if ( this.selectedSegments != null )
-			{
-				SelectedSegment.Update(this.selectedSegments, this);
-			}
-
-			this.SetDirtyBbox();
-			this.document.Notifier.NotifyArea(this.BoundingBox);
-		}
-
 
 		// Adapte le point secondaire s'il est en mode "en ligne".
 		protected void AdaptPrimaryLine(int rankPrimary, int rankSecondary, out int rankExtremity)
@@ -1048,6 +992,54 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
+		// Retourne la liste des positions des poignées sélectionnées par le modeleur.
+		public override void MoveSelectedHandlesStarting(Point mouse, DrawingContext drawingContext)
+		{
+			drawingContext.SnapPos(ref mouse);
+			this.moveSelectedHandleStart = mouse;
+
+			this.moveSelectedHandleList = new System.Collections.ArrayList();
+			int total = this.TotalMainHandle;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				if ( !this.Handle(i+1).IsVisible )  continue;
+
+				if ( !this.Handle(i+1).IsShaperDeselected )
+				{
+					this.MoveSelectedHandlesAdd(i+0);
+					this.MoveSelectedHandlesAdd(i+1);
+					this.MoveSelectedHandlesAdd(i+2);
+				}
+			}
+
+			if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
+			{
+				foreach ( SelectedSegment ss in this.selectedSegments )
+				{
+					this.MoveSelectedHandlesAdd((ss.Rank+0)*3+0);
+					this.MoveSelectedHandlesAdd((ss.Rank+0)*3+1);
+					this.MoveSelectedHandlesAdd((ss.Rank+0)*3+2);
+					this.MoveSelectedHandlesAdd((ss.Rank+1)*3+0);
+					this.MoveSelectedHandlesAdd((ss.Rank+1)*3+1);
+					this.MoveSelectedHandlesAdd((ss.Rank+1)*3+2);
+				}
+			}
+
+			if ( this.moveSelectedHandleList.Count == 0 )
+			{
+				this.moveSelectedHandleList = null;
+				return;
+			}
+
+			this.InsertOpletGeometry();
+
+			if ( this.selectedSegments != null )
+			{
+				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
+			}
+		}
+
+
 		// Déplace globalement l'objet.
 		public override void MoveGlobalProcess(Selector selector)
 		{

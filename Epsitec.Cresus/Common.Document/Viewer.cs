@@ -1192,7 +1192,7 @@ namespace Epsitec.Common.Document
 			this.ctrlDown = this.drawingContext.IsCtrl;
 			this.ctrlDuplicate = false;
 			this.moveReclick = false;
-			this.moveStartingList = null;
+			this.moveSelectedHandle = false;
 			this.hotSpotHandle.IsVisible = false;
 
 			Objects.Abstract obj;
@@ -1285,7 +1285,8 @@ namespace Epsitec.Common.Document
 					}
 					else
 					{
-						this.moveStartingList = this.moveObject.MoveSelectedHandles();
+						this.moveObject.MoveSelectedHandlesStarting(mouse, this.drawingContext);
+						this.moveSelectedHandle = true;
 					}
 				}
 			}
@@ -1318,10 +1319,9 @@ namespace Epsitec.Common.Document
 						this.moveObject.MoveSelectedSegmentProcess(this.moveSelectedSegment, mouse, this.drawingContext);
 					}
 
-					if ( this.moveStartingList != null )  // déplace plusieurs poignées ?
+					if ( this.moveSelectedHandle )  // déplace plusieurs poignées ?
 					{
-						this.drawingContext.ConstrainSnapPos(ref mouse);
-						this.moveObject.MoveSelectedHandles(this.moveStartingList, mouse-this.moveStart);
+						this.moveObject.MoveSelectedHandlesProcess(mouse, this.drawingContext);
 					}
 				}
 			}
@@ -1355,7 +1355,7 @@ namespace Epsitec.Common.Document
 						rank = obj.ShaperDetectSegment(mouse);
 						if ( rank == -1 )
 						{
-							if ( obj.IsSelected && obj.IsShaperHandleSelected() )
+							if ( obj.IsSelected && (obj.IsShaperHandleSelected() || obj.IsSelectedSegments()) )
 							{
 								this.ChangeMouseCursor(MouseCursorType.ShaperMulti);
 							}
@@ -1373,7 +1373,12 @@ namespace Epsitec.Common.Document
 		{
 			bool globalMenu = false;
 			this.HiliteHandle(null, -1);
-			this.moveStartingList = null;
+
+			if ( this.moveSelectedHandle )
+			{
+				this.moveObject.MoveSelectedHandlesEnding(mouse, this.drawingContext);
+				this.moveSelectedHandle = false;
+			}
 
 			bool mb = true;
 			if ( !Point.Equals(mouse, this.moveStart) )  mb = false;
@@ -1977,6 +1982,7 @@ namespace Epsitec.Common.Document
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
+				obj.ShaperHiliteHandles(true);
 				obj.SelectHandle(-1, false);
 			}
 
@@ -2625,6 +2631,30 @@ namespace Epsitec.Common.Document
 					this.MiniBarAdd(list, "Inside");
 					this.MiniBarAdd(list, "Outside");
 					this.MiniBarAdd(list, "");
+#if false
+					this.MiniBarAdd(list, "Rotate90");
+					this.MiniBarAdd(list, "Rotate180");
+					this.MiniBarAdd(list, "Rotate270");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "MirrorH");
+					this.MiniBarAdd(list, "MirrorV");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "ScaleDiv2");
+					this.MiniBarAdd(list, "ScaleMul2");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "Combine");
+					this.MiniBarAdd(list, "Uncombine");
+					this.MiniBarAdd(list, "ToBezier");
+					this.MiniBarAdd(list, "ToPoly");
+					this.MiniBarAdd(list, "Fragment");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "BooleanOr");
+					this.MiniBarAdd(list, "BooleanAnd");
+					this.MiniBarAdd(list, "BooleanXor");
+					this.MiniBarAdd(list, "BooleanFrontMinus");
+					this.MiniBarAdd(list, "BooleanBackMinus");
+					this.MiniBarAdd(list, "");
+#endif
 				}
 
 				Objects.Abstract layer = this.drawingContext.RootObject();
@@ -2650,7 +2680,7 @@ namespace Epsitec.Common.Document
 			for ( int hope=5 ; hope<=10 ; hope++ )
 			{
 				this.MiniBarJustifDo(list, hope);
-				int scraps = this.MiniBarScraps(list);
+				int scraps = this.MiniBarJustifScraps(list);
 				this.MiniBarJustifClear(list);
 
 				if ( bestScraps > scraps )
@@ -2675,7 +2705,6 @@ namespace Epsitec.Common.Document
 			}
 			if ( count < hope )  return;
 
-			int maxHope = System.Math.Min(count/2, hope);
 			int inlineCount = 0;
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
@@ -2683,14 +2712,14 @@ namespace Epsitec.Common.Document
 
 				if ( cmd == "" )  // séparateur ?
 				{
-					if ( inlineCount >= maxHope )
+					if ( inlineCount >= hope )
 					{
 						list.RemoveAt(i);     // supprime le séparateur...
 						list.Insert(i, "#");  // ...et remplace-le par une marque de fin de ligne
 						inlineCount = 0;
 					}
 				}
-				else
+				else	// commande ?
 				{
 					inlineCount ++;
 				}
@@ -2713,24 +2742,24 @@ namespace Epsitec.Common.Document
 		}
 
 		// Retourne la longueur inutilisée la plus grande. Il s'agit généralement de la place
-		// perdue à la fin de la dernipre ligne.
-		protected int MiniBarScraps(System.Collections.ArrayList list)
+		// perdue à la fin de la dernière ligne.
+		protected int MiniBarJustifScraps(System.Collections.ArrayList list)
 		{
 			int shortestLine = 1000;
 			int longestLine = 0;
 			int index = 0;
 			foreach ( string cmd in list )
 			{
-				if ( cmd == "" )
+				if ( cmd == "" )  // séparateur ?
 				{
 				}
-				else if ( cmd == "#" )
+				else if ( cmd == "#" )  // fin de ligne ?
 				{
 					shortestLine = System.Math.Min(shortestLine, index);
 					longestLine  = System.Math.Max(longestLine,  index);
 					index = 0;
 				}
-				else
+				else	// commande ?
 				{
 					index ++;
 				}
@@ -2742,6 +2771,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Ajoute une commande dans la liste pour la mini-palette.
+		// Une commande n'est qu'une seule fois dans la liste.
 		// Si la commande est disable (selon le CommandDispatcher), elle n'est pas ajoutée.
 		public void MiniBarAdd(System.Collections.ArrayList list, string cmd)
 		{
@@ -2752,9 +2782,9 @@ namespace Epsitec.Common.Document
 				string last = list[list.Count-1] as string;
 				if ( last == "" )  return;  // déjà un séparateur ?
 			}
-			else
+			else	// commande ?
 			{
-				if ( list.Contains(cmd) )  return;
+				if ( list.Contains(cmd) )  return;  // déjà dans la liste ?
 
 				CommandDispatcher cd = this.GetCommandDispatcher();
 				CommandState state = cd[cmd];
@@ -4155,8 +4185,8 @@ namespace Epsitec.Common.Document
 		protected bool							moveReclick;
 		protected int							moveHandle = -1;
 		protected int							moveSelectedSegment = -1;
+		protected bool							moveSelectedHandle = false;
 		protected int							moveGlobal = -1;
-		protected System.Collections.ArrayList	moveStartingList = null;
 		protected Objects.Abstract				moveObject;
 		protected Objects.Abstract				hiliteHandleObject;
 		protected int							hiliteHandleRank = -1;

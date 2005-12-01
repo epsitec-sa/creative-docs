@@ -403,6 +403,12 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
+		// Indique s'il existe un segment sélectionné.
+		public bool IsSelectedSegments()
+		{
+			return ( this.selectedSegments != null && this.selectedSegments.Count != 0 );
+		}
+
 		// Indique si une poignée est sélectionnée par le modeleur.
 		public bool IsShaperHandleSelected(int rank)
 		{
@@ -465,61 +471,6 @@ namespace Epsitec.Common.Document.Objects
 					}
 				}
 			}
-		}
-
-		// Retourne la liste des positions des poignées sélectionnées par le modeleur.
-		public virtual System.Collections.ArrayList MoveSelectedHandles()
-		{
-			System.Collections.ArrayList startingPos = new System.Collections.ArrayList();
-			int total = this.TotalHandle;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				Handle handle = this.Handle(i);
-				if ( !handle.IsVisible )  continue;
-
-				if ( !handle.IsShaperDeselected )
-				{
-					startingPos.Add(handle.Position);
-				}
-			}
-			if ( startingPos.Count == 0 )  return null;
-
-			this.InsertOpletGeometry();
-
-			if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
-			{
-				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
-			}
-
-			return startingPos;
-		}
-
-		// Déplace toutes les poignées sélectionnées par le modeleur.
-		public virtual void MoveSelectedHandles(System.Collections.ArrayList startingPos, Point move)
-		{
-			this.document.Notifier.NotifyArea(this.BoundingBox);
-
-			int s = 0;
-			int total = this.TotalHandle;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				Handle handle = this.Handle(i);
-				if ( !handle.IsVisible )  continue;
-
-				if ( !handle.IsShaperDeselected )
-				{
-					Point sPos = (Point) startingPos[s++];
-					handle.Position = sPos+move;
-				}
-			}
-
-			if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
-			{
-				SelectedSegment.Update(this.selectedSegments, this);
-			}
-
-			this.SetDirtyBbox();
-			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
 		// Détecte le segment pour le modeleur survolé par la souris.
@@ -676,6 +627,93 @@ namespace Epsitec.Common.Document.Objects
 		{
 			drawingContext.ConstrainDelStarting();
 			drawingContext.MagnetClearStarting();
+		}
+
+
+		// Retourne la liste des positions des poignées sélectionnées par le modeleur.
+		public virtual void MoveSelectedHandlesStarting(Point mouse, DrawingContext drawingContext)
+		{
+			drawingContext.SnapPos(ref mouse);
+			this.moveSelectedHandleStart = mouse;
+
+			this.moveSelectedHandleList = new System.Collections.ArrayList();
+			int total = this.TotalHandle;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Handle handle = this.Handle(i);
+				if ( !handle.IsVisible )  continue;
+
+				if ( !handle.IsShaperDeselected )
+				{
+					this.MoveSelectedHandlesAdd(i);
+				}
+			}
+
+			if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
+			{
+				foreach ( SelectedSegment ss in this.selectedSegments )
+				{
+					this.MoveSelectedHandlesAdd(ss.Rank+0);
+					this.MoveSelectedHandlesAdd(ss.Rank+1);
+				}
+			}
+
+			if ( this.moveSelectedHandleList.Count == 0 )
+			{
+				this.moveSelectedHandleList = null;
+				return;
+			}
+
+			this.InsertOpletGeometry();
+
+			if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
+			{
+				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
+			}
+		}
+
+		protected void MoveSelectedHandlesAdd(int rank)
+		{
+			foreach ( MoveSelectedHandle h in this.moveSelectedHandleList )
+			{
+				if ( h.rank == rank )  return;
+			}
+
+			MoveSelectedHandle nh = new MoveSelectedHandle();
+			nh.rank = rank;
+			nh.position = this.Handle(rank).Position;
+			this.moveSelectedHandleList.Add(nh);
+		}
+
+		// Déplace toutes les poignées sélectionnées par le modeleur.
+		public virtual void MoveSelectedHandlesProcess(Point mouse, DrawingContext drawingContext)
+		{
+			if ( this.moveSelectedHandleList == null )  return;
+
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+
+			drawingContext.SnapPos(ref mouse);
+			Point move = mouse-moveSelectedHandleStart;
+
+			foreach ( MoveSelectedHandle h in this.moveSelectedHandleList )
+			{
+				Handle handle = this.Handle(h.rank);
+				handle.Position = h.position+move;
+			}
+
+			if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
+			{
+				SelectedSegment.Update(this.selectedSegments, this);
+			}
+
+			this.SetDirtyBbox();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Fin du déplacement de toutes les poignées sélectionnées par le modeleur.
+		public virtual void MoveSelectedHandlesEnding(Point move, DrawingContext drawingContext)
+		{
+			this.moveSelectedHandleList = null;
 		}
 
 
@@ -3244,6 +3282,13 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		protected struct MoveSelectedHandle
+		{
+			public int				rank;
+			public Point			position;
+		}
+
+
 		protected Document						document;
 		protected int							uniqueId;
 		protected bool							isHilite = false;
@@ -3261,6 +3306,8 @@ namespace Epsitec.Common.Document.Objects
 		protected Drawing.Rectangle				bboxFull = Drawing.Rectangle.Empty;
 		protected int							hotSpotRank = -1;
 		protected int							hilitedSegment = -1;
+		protected Point							moveSelectedHandleStart;
+		protected System.Collections.ArrayList	moveSelectedHandleList;
 
 		protected string						name = "";
 		protected UndoableList					properties;
