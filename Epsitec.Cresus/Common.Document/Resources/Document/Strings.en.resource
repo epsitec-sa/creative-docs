@@ -56,7 +56,7 @@
 	<data name="Dialog.Bool.PreviewActive">Preview as printed</data>
 	<data name="Dialog.Bool.RulersShow">Show rulers</data>
 	<data name="Dialog.Bool.LabelsShow">Show object names</data>
-	<data name="Dialog.Bool.MagnetActive">Smart guides</data>
+	<data name="Dialog.Bool.MagnetActive">@@Objets magnétiques</data>
 	<data name="Dialog.Bool.PrintCollate">Collate (1,2,3 - 1,2,3)</data>
 	<data name="Dialog.Bool.PrintReverse">Reverse order</data>
 	<data name="Dialog.Bool.PrintToFile">Print to file</data>
@@ -172,7 +172,6 @@
 	<data name="Container.Layers.Header.Name">Name</data>
 	<data name="Container.Layers.Header.Magnet">M</data>
 	<data name="Container.Layers.Header.Show">S</data>
-	<data name="Container.Layers.Tooltip.Magnet">@@Use layer's objects as Smart Guides</data>
 	<data name="Container.Layers.Tooltip.Show">@@Visibilité du calque</data>
 
 	<data name="Container.Pages.Button.Slave">Document page</data>
@@ -890,8 +889,8 @@
 	<data name="Action.ViewMain">View</data>
 	<data name="Action.Grid">Magnetic grid</data>
 	<data name="Action.Preview">Preview as printed</data>
-	<data name="Action.Magnet">Magnetic constructions</data>
-	<data name="Action.MagnetLayer">@@Use layer's objects as Smart Guides</data>
+	<data name="Action.Magnet">@@Objets magnétiques</data>
+	<data name="Action.MagnetLayer">@@Les objets du calque sont magnétiques</data>
 	<data name="Action.Rulers">Rulers</data>
 	<data name="Action.Labels">Display object labels</data>
 	<data name="Action.Aggregates">Display style names</data>

@@ -56,7 +56,7 @@
 	<data name="Dialog.Bool.PreviewActive">Comme imprimé</data>
 	<data name="Dialog.Bool.RulersShow">Règles visibles</data>
 	<data name="Dialog.Bool.LabelsShow">Affiche le nom des objets</data>
-	<data name="Dialog.Bool.MagnetActive">Constructions magnétiques</data>
+	<data name="Dialog.Bool.MagnetActive">Objets magnétiques</data>
 	<data name="Dialog.Bool.PrintCollate">Copies assemblées (1,2,3 - 1,2,3)</data>
 	<data name="Dialog.Bool.PrintReverse">Ordre inversé</data>
 	<data name="Dialog.Bool.PrintToFile">Imprimer dans un fichier</data>
@@ -172,7 +172,6 @@
 	<data name="Container.Layers.Header.Name">Nom</data>
 	<data name="Container.Layers.Header.Magnet">M</data>
 	<data name="Container.Layers.Header.Show">V</data>
-	<data name="Container.Layers.Tooltip.Magnet">Objets du calque utilisés pour les constructions magnétiques</data>
 	<data name="Container.Layers.Tooltip.Show">Visibilité du calque</data>
 
 	<data name="Container.Pages.Button.Slave">Page normale</data>
@@ -890,8 +889,8 @@
 	<data name="Action.ViewMain">Vue</data>
 	<data name="Action.Grid">Grille magnétique</data>
 	<data name="Action.Preview">Comme imprimé</data>
-	<data name="Action.Magnet">Constructions magnétiques</data>
-	<data name="Action.MagnetLayer">Objets du calque utilisés pour les constructions magnétiques</data>
+	<data name="Action.Magnet">Objets magnétiques</data>
+	<data name="Action.MagnetLayer">Les objets du calque sont magnétiques</data>
 	<data name="Action.Rulers">Règles graduées</data>
 	<data name="Action.Labels">Affiche les noms des objets</data>
 	<data name="Action.Aggregates">Affiche les noms des styles</data>

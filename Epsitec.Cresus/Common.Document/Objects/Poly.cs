@@ -606,62 +606,57 @@ namespace Epsitec.Common.Document.Objects
 		// Retourne un bouton d'action pendant la création.
 		public override bool CreateAction(int rank, out string cmd, out string name, out string text)
 		{
-			if ( rank == 0 )
+			switch ( rank )
 			{
-				cmd  = "Object";
-				name = "CreateEnding";
-				text = Abstract.CreateAction("CreateEnding", "CreateCloseNo", Res.Strings.Object.Button.CreateEnding);
-				return true;
+				case 0:
+					cmd  = "Object";
+					name = "CreateEnding";
+					text = Abstract.CreateAction("CreateEnding", "CreateCloseNo", Res.Strings.Object.Button.CreateEnding);
+					return true;
+
+				case 1:
+					cmd  = "Object";
+					name = "CreateCloseEnding";
+					text = Abstract.CreateAction("CreateEnding", "CreateCloseYes", Res.Strings.Object.Button.CreateEnding);
+					return true;
+
+				case 2:
+					cmd  = "";
+					name = "";
+					text = "";
+					return true;
+
+				case 3:
+					cmd  = "Object";
+					name = "CreateAndSelect";
+					text = Abstract.CreateAction("CreateAndSelect", "CreateCloseNo", Res.Strings.Object.Button.CreateAndSelect);
+					return true;
+
+				case 4:
+					cmd  = "Object";
+					name = "CreateCloseAndSelect";
+					text = Abstract.CreateAction("CreateAndSelect", "CreateCloseYes", Res.Strings.Object.Button.CreateAndSelect);
+					return true;
+
+				case 5:
+					cmd  = "";
+					name = "";
+					text = "";
+					return true;
+
+				case 6:
+					cmd  = "Object";
+					name = "CreateAndShaper";
+					text = Abstract.CreateAction("CreateAndShaper", "CreateCloseNo", Res.Strings.Object.Button.CreateAndShaper);
+					return true;
+
+				case 7:
+					cmd  = "Object";
+					name = "CreateCloseAndShaper";
+					text = Abstract.CreateAction("CreateAndShaper", "CreateCloseYes", Res.Strings.Object.Button.CreateAndShaper);
+					return true;
 			}
-			if ( rank == 1 )
-			{
-				cmd  = "Object";
-				name = "CreateCloseEnding";
-				text = Abstract.CreateAction("CreateEnding", "CreateCloseYes", Res.Strings.Object.Button.CreateEnding);
-				return true;
-			}
-			if ( rank == 2 )
-			{
-				cmd  = "";
-				name = "";
-				text = "";
-				return true;
-			}
-			if ( rank == 3 )
-			{
-				cmd  = "Object";
-				name = "CreateAndSelect";
-				text = Abstract.CreateAction("CreateAndSelect", "CreateCloseNo", Res.Strings.Object.Button.CreateAndSelect);
-				return true;
-			}
-			if ( rank == 4 )
-			{
-				cmd  = "Object";
-				name = "CreateCloseAndSelect";
-				text = Abstract.CreateAction("CreateAndSelect", "CreateCloseYes", Res.Strings.Object.Button.CreateAndSelect);
-				return true;
-			}
-			if ( rank == 5 )
-			{
-				cmd  = "";
-				name = "";
-				text = "";
-				return true;
-			}
-			if ( rank == 6 )
-			{
-				cmd  = "Object";
-				name = "CreateAndShaper";
-				text = Abstract.CreateAction("CreateAndShaper", "CreateCloseNo", Res.Strings.Object.Button.CreateAndShaper);
-				return true;
-			}
-			if ( rank == 7 )
-			{
-				cmd  = "Object";
-				name = "CreateCloseAndShaper";
-				text = Abstract.CreateAction("CreateAndShaper", "CreateCloseYes", Res.Strings.Object.Button.CreateAndShaper);
-				return true;
-			}
+
 			return base.CreateAction(rank, out cmd, out name, out text);
 		}
 

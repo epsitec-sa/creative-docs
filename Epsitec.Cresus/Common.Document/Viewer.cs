@@ -1437,7 +1437,6 @@ namespace Epsitec.Common.Document
 				if ( mb )
 				{
 					this.document.Notifier.NotifyShaperChanged();
-					this.document.Notifier.GenerateEvents();
 					this.OpenMiniBar(mouse);
 				}
 			}
@@ -2533,6 +2532,7 @@ namespace Epsitec.Common.Document
 			int nbSel = this.document.Modifier.TotalSelected;
 			if ( nbSel == 0 )  return null;
 
+			this.document.Notifier.GenerateEvents();
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
 			if ( this.document.Modifier.Tool == "Select" )

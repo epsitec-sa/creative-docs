@@ -307,7 +307,7 @@ namespace Epsitec.Common.Document.Containers
 						ib.Dock = DockStyle.Fill;
 						ib.DockMargins = new Margins(-1, -1, -1, -1);
 						ib.Clicked += new MessageEventHandler(this.HandleButtonMagnetLayerClicked);
-						ToolTip.Default.SetToolTip(ib, Res.Strings.Container.Layers.Tooltip.Magnet);
+						ToolTip.Default.SetToolTip(ib, Res.Strings.Action.MagnetLayer);
 						this.table[column, row].Insert(ib);
 					}
 					else if ( column == 4 )
