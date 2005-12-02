@@ -781,11 +781,38 @@ namespace Epsitec.Common.Document.Objects
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
-			TextPanels.ParagraphLayout layout = new TextPanels.ParagraphLayout(this.document);
-			list.Add(layout);
+			TextPanels.Justif justif = new TextPanels.Justif(this.document);
+			list.Add(justif);
+
+			TextPanels.Leading leading = new TextPanels.Leading(this.document);
+			list.Add(leading);
+
+			TextPanels.Margins margins = new TextPanels.Margins(this.document);
+			list.Add(margins);
+
+			TextPanels.Spaces spaces = new TextPanels.Spaces(this.document);
+			list.Add(spaces);
+
+			TextPanels.Keep keep = new TextPanels.Keep(this.document);
+			list.Add(keep);
+
+			TextPanels.Align align = new TextPanels.Align(this.document);
+			list.Add(align);
 
 			TextPanels.Font font = new TextPanels.Font(this.document);
 			list.Add(font);
+
+			TextPanels.Strike strike = new TextPanels.Strike(this.document);
+			list.Add(strike);
+
+			TextPanels.XScript script = new TextPanels.XScript(this.document);
+			list.Add(script);
+
+			TextPanels.Box box = new TextPanels.Box(this.document);
+			list.Add(box);
+
+			TextPanels.Language language = new TextPanels.Language(this.document);
+			list.Add(language);
 
 			return list;
 		}

@@ -469,19 +469,37 @@
 	<data name="Panel.Volume.Tooltip.Left">Left side angle</data>
 	<data name="Panel.Volume.Tooltip.Right">Right side angle</data>
 
+	<data name="TextPanel.Justif.Title">Layout</data>
+
+	<data name="TextPanel.Leading.Title">Leading</data>
+
+	<data name="TextPanel.Margins.Title">@@Retraits</data>
+	<data name="TextPanel.Margins.Short.LeftFirst">F</data>
+	<data name="TextPanel.Margins.Short.LeftBody">L</data>
+	<data name="TextPanel.Margins.Short.Right">R</data>
+	<data name="TextPanel.Margins.Long.LeftFirst">@@Marge première ligne</data>
+	<data name="TextPanel.Margins.Long.LeftBody">@@Marge gauche</data>
+	<data name="TextPanel.Margins.Long.Right">@@Marge droite</data>
+
+	<data name="TextPanel.Spaces.Title">Spacing</data>
+
+	<data name="TextPanel.Keep.Title">@@Enchaînements</data>
+
+	<data name="TextPanel.Align.Title">Vertical alignment</data>
+
 	<data name="TextPanel.Font.Title">Font</data>
 	<data name="TextPanel.Font.Tooltip.Face">Font name</data>
 	<data name="TextPanel.Font.Tooltip.Style">Font style</data>
 	<data name="TextPanel.Font.Tooltip.Features">OpenType features</data>
 	<data name="TextPanel.Font.Tooltip.Size">Font size</data>
-	
-	<data name="TextPanel.ParagraphLayout.Title">Paragraph layout</data>
-	<data name="TextPanel.ParagraphLayout.Short.LeftFirst">F</data>
-	<data name="TextPanel.ParagraphLayout.Short.LeftBody">L</data>
-	<data name="TextPanel.ParagraphLayout.Short.Right">R</data>
-	<data name="TextPanel.ParagraphLayout.Long.LeftFirst">@@Marge première ligne</data>
-	<data name="TextPanel.ParagraphLayout.Long.LeftBody">@@Marge gauche</data>
-	<data name="TextPanel.ParagraphLayout.Long.Right">@@Marge droite</data>
+
+	<data name="TextPanel.Strike.Title">Underlined, strikeout, usw.</data>
+
+	<data name="TextPanel.XScript.Title">Substript and superscript</data>
+
+	<data name="TextPanel.Box.Title">@@Cadres</data>
+
+	<data name="TextPanel.Language.Title">Language</data>
 
 	<data name="Property.Abstract.Name">Name</data>
 	<data name="Property.Abstract.LineColor">Line color</data>

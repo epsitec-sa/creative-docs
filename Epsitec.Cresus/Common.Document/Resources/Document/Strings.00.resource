@@ -469,19 +469,37 @@
 	<data name="Panel.Volume.Tooltip.Left">Angle gauche en degrés</data>
 	<data name="Panel.Volume.Tooltip.Right">Angle droite en degrés</data>
 
+	<data name="TextPanel.Justif.Title">Mise en page</data>
+
+	<data name="TextPanel.Leading.Title">Interligne</data>
+
+	<data name="TextPanel.Margins.Title">Retraits</data>
+	<data name="TextPanel.Margins.Short.LeftFirst">P</data>
+	<data name="TextPanel.Margins.Short.LeftBody">G</data>
+	<data name="TextPanel.Margins.Short.Right">D</data>
+	<data name="TextPanel.Margins.Long.LeftFirst">Marge première ligne</data>
+	<data name="TextPanel.Margins.Long.LeftBody">Marge gauche</data>
+	<data name="TextPanel.Margins.Long.Right">Marge droite</data>
+
+	<data name="TextPanel.Spaces.Title">Espacements</data>
+
+	<data name="TextPanel.Keep.Title">Enchaînements</data>
+
+	<data name="TextPanel.Align.Title">Alignement vertical</data>
+
 	<data name="TextPanel.Font.Title">Police</data>
 	<data name="TextPanel.Font.Tooltip.Face">Police de caractères</data>
 	<data name="TextPanel.Font.Tooltip.Style">Style de la police</data>
 	<data name="TextPanel.Font.Tooltip.Features">Variantes OpenType</data>
 	<data name="TextPanel.Font.Tooltip.Size">Taille de la police</data>
-	
-	<data name="TextPanel.ParagraphLayout.Title">Mise en page</data>
-	<data name="TextPanel.ParagraphLayout.Short.LeftFirst">P</data>
-	<data name="TextPanel.ParagraphLayout.Short.LeftBody">G</data>
-	<data name="TextPanel.ParagraphLayout.Short.Right">D</data>
-	<data name="TextPanel.ParagraphLayout.Long.LeftFirst">Marge première ligne</data>
-	<data name="TextPanel.ParagraphLayout.Long.LeftBody">Marge gauche</data>
-	<data name="TextPanel.ParagraphLayout.Long.Right">Marge droite</data>
+
+	<data name="TextPanel.Strike.Title">Souligné, biffé, etc.</data>
+
+	<data name="TextPanel.XScript.Title">Indices et exposants</data>
+
+	<data name="TextPanel.Box.Title">Cadres</data>
+
+	<data name="TextPanel.Language.Title">Langue</data>
 
 	<data name="Property.Abstract.Name">Nom</data>
 	<data name="Property.Abstract.LineColor">Couleur trait</data>

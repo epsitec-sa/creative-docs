@@ -1,0 +1,212 @@
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Text;
+
+namespace Epsitec.Common.Document.TextPanels
+{
+	/// <summary>
+	/// La classe Margins permet de choisir les marges horizontales.
+	/// </summary>
+	[SuppressBundleSupport]
+	public class Margins : Abstract
+	{
+		public Margins(Document document) : base(document)
+		{
+			this.label.Text = Res.Strings.TextPanel.Margins.Title;
+
+			this.fixIcon.Text = Misc.Image("TextMargins");
+			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Margins.Title);
+
+			this.fieldLeftMarginFirst = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftFirst, Res.Strings.TextPanel.Margins.Short.LeftFirst, Res.Strings.TextPanel.Margins.Long.LeftFirst, 0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
+			this.fieldLeftMarginBody  = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftBody,  Res.Strings.TextPanel.Margins.Short.LeftBody,  Res.Strings.TextPanel.Margins.Long.LeftBody,  0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
+			this.fieldRightMargin     = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleRight,     Res.Strings.TextPanel.Margins.Short.Right,     Res.Strings.TextPanel.Margins.Long.Right,     0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
+
+			this.document.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.document.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+
+			this.isNormalAndExtended = true;
+			this.UpdateAfterChanging();
+		}
+		
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				this.document.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+				this.document.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+			}
+			
+			base.Dispose(disposing);
+		}
+
+		
+		// Retourne la hauteur standard.
+		public override double DefaultHeight
+		{
+			get
+			{
+				double h = this.LabelHeight;
+
+				if ( this.isExtendedSize )  // panneau étendu ?
+				{
+					if ( this.IsLabelProperties )  // étendu/détails ?
+					{
+						h += 105;
+					}
+					else	// étendu/compact ?
+					{
+						h += 55;
+					}
+				}
+				else	// panneau réduit ?
+				{
+					h += 30;
+				}
+
+				return h;
+			}
+		}
+
+		// Met à jour après un changement du wrapper.
+		protected override void UpdateAfterChanging()
+		{
+			base.UpdateAfterChanging();
+
+			double leftMarginFirst = this.document.ParagraphWrapper.Defined.LeftMarginFirst;
+			if ( double.IsNaN(leftMarginFirst) )
+			{
+				leftMarginFirst = this.document.ParagraphWrapper.Active.LeftMarginFirst;
+
+				if ( double.IsNaN(leftMarginFirst) )
+				{
+					leftMarginFirst = 0;
+				}
+			}
+
+			double leftMarginBody = this.document.ParagraphWrapper.Defined.LeftMarginBody;
+			if ( double.IsNaN(leftMarginBody) )
+			{
+				leftMarginBody = this.document.ParagraphWrapper.Active.LeftMarginBody;
+
+				if ( double.IsNaN(leftMarginBody) )
+				{
+					leftMarginBody = 0;
+				}
+			}
+
+			double rightMargin = this.document.ParagraphWrapper.Defined.RightMarginBody;
+			if ( double.IsNaN(rightMargin) )
+			{
+				rightMargin = this.document.ParagraphWrapper.Active.RightMarginBody;
+
+				if ( double.IsNaN(rightMargin) )
+				{
+					rightMargin = 0;
+				}
+			}
+
+			this.ignoreChanged = true;
+
+			this.fieldLeftMarginFirst.TextFieldReal.InternalValue = (decimal) leftMarginFirst;
+			this.fieldLeftMarginBody.TextFieldReal.InternalValue  = (decimal) leftMarginBody;
+			this.fieldRightMargin.TextFieldReal.InternalValue     = (decimal) rightMargin;
+			
+			this.ignoreChanged = false;
+		}
+
+
+		// Le wrapper associé a changé.
+		protected void HandleWrapperChanged(object sender)
+		{
+			this.UpdateAfterChanging();
+		}
+
+		
+		// Met à jour la géométrie.
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry();
+
+			if ( this.fieldLeftMarginFirst == null )  return;
+
+			Rectangle rect = this.UsefulZone;
+
+			if ( this.isExtendedSize )
+			{
+				Rectangle r = rect;
+				r.Bottom = r.Top-20;
+
+				if ( this.IsLabelProperties )
+				{
+					r.Left = rect.Left;
+					r.Right = rect.Right;
+					r.Offset(0, -25);
+					this.fieldLeftMarginFirst.Bounds = r;
+					r.Offset(0, -25);
+					this.fieldLeftMarginBody.Bounds = r;
+					r.Offset(0, -25);
+					this.fieldRightMargin.Bounds = r;
+				}
+				else
+				{
+					r.Left = rect.Left;
+					r.Width = 60;
+					this.fieldLeftMarginFirst.Bounds = r;
+					r.Offset(60, 0);
+					this.fieldLeftMarginBody.Bounds = r;
+					r.Offset(60, 0);
+					this.fieldRightMargin.Bounds = r;
+				}
+			}
+			else
+			{
+				Rectangle r = rect;
+				r.Bottom = r.Top-20;
+
+				r.Left = rect.Left;
+				r.Width = 60;
+				this.fieldLeftMarginFirst.Bounds = r;
+				r.Offset(60, 0);
+				this.fieldLeftMarginBody.Bounds = r;
+				r.Offset(60, 0);
+				this.fieldRightMargin.Bounds = r;
+			}
+		}
+
+
+		private void HandleMarginChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+
+			TextFieldReal field = sender as TextFieldReal;
+			if ( field == null )  return;
+
+			double value = (double) field.InternalValue;
+
+			if ( field == this.fieldLeftMarginFirst.TextFieldReal )
+			{
+				this.document.ParagraphWrapper.Defined.LeftMarginFirst = value;
+			}
+
+			if ( field == this.fieldLeftMarginBody.TextFieldReal )
+			{
+				this.document.ParagraphWrapper.Defined.LeftMarginBody = value;
+			}
+
+			if ( field == this.fieldRightMargin.TextFieldReal )
+			{
+				this.document.ParagraphWrapper.SuspendSynchronisations();
+				this.document.ParagraphWrapper.Defined.RightMarginFirst = value;
+				this.document.ParagraphWrapper.Defined.RightMarginBody  = value;
+				this.document.ParagraphWrapper.ResumeSynchronisations();
+			}
+		}
+
+
+		protected Widgets.TextFieldLabel	fieldLeftMarginFirst;
+		protected Widgets.TextFieldLabel	fieldLeftMarginBody;
+		protected Widgets.TextFieldLabel	fieldRightMargin;
+	}
+}

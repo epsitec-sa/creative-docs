@@ -357,7 +357,7 @@ namespace Epsitec.Common.Document.Containers
 							panel.TabIndex = index++;
 							panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 							panel.Dock = DockStyle.Top;
-							panel.DockMargins = new Margins(0, 1, 0, -1);
+							panel.DockMargins = new Margins(0, 1, panel.TopMargin, -1);
 							panel.IsExtendedSize = this.document.Modifier.IsTextPanelExtended(panel);
 							panel.SetParent(this.scrollable.Panel);
 						}

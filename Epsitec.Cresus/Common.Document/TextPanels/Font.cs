@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			this.label.Text = Res.Strings.TextPanel.Font.Title;
 
-			this.fixIcon.Text = Misc.Image("PropertyTextFont");
+			this.fixIcon.Text = Misc.Image("TextFont");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Font.Title);
 
 			this.fontFace = new TextFieldCombo(this);
@@ -53,10 +53,6 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonBold        = this.CreateIconButton(Misc.Icon("FontBold"),        Res.Strings.Action.Text.Font.Bold,        new MessageEventHandler(this.HandleButtonBoldClicked));
 			this.buttonItalic      = this.CreateIconButton(Misc.Icon("FontItalic"),      Res.Strings.Action.Text.Font.Italic,      new MessageEventHandler(this.HandleButtonItalicClicked));
 			this.buttonUnderlined  = this.CreateIconButton(Misc.Icon("FontUnderlined"),  Res.Strings.Action.Text.Font.Underlined,  new MessageEventHandler(this.HandleButtonUnderlineClicked));
-			this.buttonStrike      = this.CreateIconButton(Misc.Icon("FontStrike"),      Res.Strings.Action.Text.Font.Strike,      new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonFrame       = this.CreateIconButton(Misc.Icon("FontFrame"),       Res.Strings.Action.Text.Font.Frame,       new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.Text.Font.Subscript,   new MessageEventHandler(this.HandleButtonSubscriptClicked));
-			this.buttonSuperscript = this.CreateIconButton(Misc.Icon("FontSuperscript"), Res.Strings.Action.Text.Font.Superscript, new MessageEventHandler(this.HandleButtonSuperscriptClicked));
 
 			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
@@ -111,6 +107,15 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 
 				return h;
+			}
+		}
+
+		// Retourne la marge supérieure.
+		public override double TopMargin
+		{
+			get
+			{
+				return 5;
 			}
 		}
 
@@ -423,18 +428,6 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Offset(20, 0);
 					this.buttonUnderlined.Bounds = r;
 					this.buttonUnderlined.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonStrike.Bounds = r;
-					this.buttonStrike.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonFrame.Bounds = r;
-					this.buttonFrame.Visibility = true;
-					r.Offset(20+5, 0);
-					this.buttonSubscript.Bounds = r;
-					this.buttonSubscript.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonSuperscript.Bounds = r;
-					this.buttonSuperscript.Visibility = true;
 					r.Offset(20+5, 0);
 					r.Width = 30;
 					this.fontColor.Bounds = r;
@@ -474,18 +467,6 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Offset(20, 0);
 					this.buttonUnderlined.Bounds = r;
 					this.buttonUnderlined.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonStrike.Bounds = r;
-					this.buttonStrike.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonFrame.Bounds = r;
-					this.buttonFrame.Visibility = true;
-					r.Offset(20+5, 0);
-					this.buttonSubscript.Bounds = r;
-					this.buttonSubscript.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonSuperscript.Bounds = r;
-					this.buttonSuperscript.Visibility = true;
 					r.Offset(20+5, 0);
 					r.Width = 30;
 					this.fontColor.Bounds = r;
@@ -513,10 +494,6 @@ namespace Epsitec.Common.Document.TextPanels
 				this.buttonBold.Visibility = false;
 				this.buttonItalic.Visibility = false;
 				this.buttonUnderlined.Visibility = false;
-				this.buttonStrike.Visibility = false;
-				this.buttonFrame.Visibility = false;
-				this.buttonSubscript.Visibility = false;
-				this.buttonSuperscript.Visibility = false;
 			}
 		}
 
@@ -915,9 +892,5 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
-		protected IconButton				buttonStrike;
-		protected IconButton				buttonFrame;
-		protected IconButton				buttonSubscript;
-		protected IconButton				buttonSuperscript;
 	}
 }

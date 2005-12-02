@@ -47,6 +47,15 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
+		// Retourne la marge supérieure.
+		public virtual double TopMargin
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
 		// Retourne la hauteur pour le label supérieur.
 		protected double LabelHeight
 		{
