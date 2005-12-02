@@ -113,7 +113,7 @@ namespace Epsitec.Common.Document
 
 		protected override void OnIsVisibleChanged(Types.PropertyChangedEventArgs e)
 		{
-			this.CloseMiniBar();  // ferme la mini-palette si le viewer devient invisible
+			this.CloseMiniBar(false);  // ferme la mini-palette si le viewer devient invisible
 		}
 
 
@@ -319,11 +319,6 @@ namespace Epsitec.Common.Document
 			this.mousePosWidget = pos;
 			pos = this.ScreenToInternal(pos);  // position en coordonnées internes
 
-			if ( this.miniBar != null && message.Type == MessageType.MouseMove )
-			{
-				this.AnimateMiniBar(pos);
-			}
-
 			if ( pos.X != this.mousePos.X || pos.Y != this.mousePos.Y )
 			{
 				this.mousePos = pos;
@@ -413,7 +408,7 @@ namespace Epsitec.Common.Document
 							}
 							else
 							{
-								this.CloseMiniBar();
+								this.CloseMiniBar(false);
 							}
 						}
 						break;
@@ -789,7 +784,7 @@ namespace Epsitec.Common.Document
 		#region SelectMouse
 		protected void SelectMouseDown(Point mouse, int downCount, bool isRight, bool global)
 		{
-			this.CloseMiniBar();
+			this.CloseMiniBar(false);
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Select);
 			this.moveStart = mouse;
 			this.moveAccept = false;
@@ -1190,7 +1185,7 @@ namespace Epsitec.Common.Document
 		#region ShaperMouse
 		protected void ShaperMouseDown(Point mouse, int downCount, bool isRight)
 		{
-			this.CloseMiniBar();
+			this.CloseMiniBar(false);
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Shaper);
 			this.moveStart = mouse;
 			this.moveAccept = false;
@@ -2385,7 +2380,7 @@ namespace Epsitec.Common.Document
 		// Ouvre la mini-palette.
 		public void OpenMiniBar(Point mouse, bool delayed, bool noSelected)
 		{
-			this.CloseMiniBar();
+			this.CloseMiniBar(false);
 
 			System.Collections.ArrayList cmds = this.MiniBarCommands(noSelected);
 			if ( cmds == null || cmds.Count == 0 )  return;
@@ -2461,7 +2456,7 @@ namespace Epsitec.Common.Document
 		protected void CreateMiniBar()
 		{
 			Point mouse;
-			if ( !this.MousePos(out mouse) || this.MiniBarAway(mouse) )
+			if ( !this.MousePos(out mouse) )
 			{
 				this.miniBarCmds = null;
 				return;
@@ -2479,11 +2474,21 @@ namespace Epsitec.Common.Document
 			this.miniBar.Owner = this.Window.Owner;
 			this.miniBar.AttachCommandDispatcher(this.GetCommandDispatcher());
 
-			Widgets.Balloon frame = new Widgets.Balloon();
-			frame.Hot = this.miniBarHot;
-			frame.SetParent(this.miniBar.Root);
-			frame.Anchor = AnchorStyles.All;
-			frame.Attach();
+			this.miniBarBalloon = new Widgets.Balloon();
+			this.miniBarBalloon.Hot = this.miniBarHot;
+			this.miniBarBalloon.SetParent(this.miniBar.Root);
+			this.miniBarBalloon.Anchor = AnchorStyles.All;
+			this.miniBarBalloon.CloseNeeded += new EventHandler(this.HandleMiniBarCloseNeeded);
+			this.miniBarBalloon.Attach();
+
+			mouse = this.InternalToScreen(mouse);
+			mouse = this.MapClientToScreen(mouse);
+			if ( this.miniBarBalloon.IsAway(mouse) )
+			{
+				this.CloseMiniBar(false);
+				this.miniBarCmds = null;
+				return;
+			}
 
 			CommandDispatcher cd = this.GetCommandDispatcher();
 
@@ -2493,9 +2498,9 @@ namespace Epsitec.Common.Document
 			{
 				if ( beginOfLine )
 				{
-					double m = (line == null) ? 0 : frame.Margin;
+					double m = (line == null) ? 0 : this.miniBarBalloon.Margin;
 					IconButton button = new IconButton();
-					line = new Widget(frame);
+					line = new Widget(this.miniBarBalloon);
 					line.Height = button.DefaultHeight;
 					line.Dock = DockStyle.Top;
 					line.DockMargins = new Margins(0, 0, m, 0);
@@ -2538,6 +2543,12 @@ namespace Epsitec.Common.Document
 			this.miniBar.Show();
 		}
 
+		// Appelé lorsque la souris s'est éloignée est que la fermeture est nécessaire.
+		private void HandleMiniBarCloseNeeded(object sender)
+		{
+			this.CloseMiniBar(true);
+		}
+
 		private void HandleMiniBarButtonClicked(object sender, MessageEventArgs e)
 		{
 			IconButton button = sender as IconButton;
@@ -2549,49 +2560,30 @@ namespace Epsitec.Common.Document
 					 button.Name == "OrderDownAll" )  return;
 			}
 
-			this.CloseMiniBar();
+			this.CloseMiniBar(false);
 		}
 
 		// Ferme la mini-palette.
-		public void CloseMiniBar()
+		public void CloseMiniBar(bool fadeout)
 		{
 			this.miniBarTimer.Suspend();
 
 			if ( this.miniBar != null )
 			{
-//-				frame.Detach();				//#PA	trouver le frame à partir du minibar ?
-				this.miniBar.Close();
+				if ( fadeout )
+				{
+					this.miniBar.AnimateShow(Animation.FadeOut);
+				}
+				else
+				{
+					this.miniBar.Close();
+				}
+
+				this.miniBarBalloon.CloseNeeded -= new EventHandler(this.HandleMiniBarCloseNeeded);
+				this.miniBarBalloon.Detach();
+
+				this.miniBarBalloon = null;
 				this.miniBar = null;
-			}
-		}
-
-		// Anime la mini-palette en fonction de l'éloignement de la souris.
-		protected void AnimateMiniBar(Point mouse)
-		{
-			if ( this.miniBar == null )  return;
-
-			if ( this.MiniBarAway(mouse) )
-			{
-				this.miniBar.AnimateShow(Animation.FadeOut);
-				this.miniBar = null;
-			}
-		}
-
-		// Indique si la souris est trop loin de la mini-palette.
-		protected bool MiniBarAway(Point mouse)
-		{
-			mouse = this.InternalToScreen(mouse);
-
-			double dx = System.Math.Abs(mouse.X-this.miniBarRect.Center.X);
-			double dy = System.Math.Abs(mouse.Y-this.miniBarRect.Center.Y);
-
-			if ( dx > dy*(this.miniBarRect.Width/this.miniBarRect.Height) )
-			{
-				return (dx-this.miniBarRect.Width/2 > this.miniBarMax);
-			}
-			else
-			{
-				return (dy-this.miniBarRect.Height/2 > this.miniBarMax);
 			}
 		}
 
@@ -4241,6 +4233,7 @@ namespace Epsitec.Common.Document
 		protected Drawing.Rectangle				miniBarRect;
 		protected double						miniBarHot;
 		protected Window						miniBar = null;
+		protected Widgets.Balloon				miniBarBalloon = null;
 		protected double						miniBarMax = 5;
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOrder;

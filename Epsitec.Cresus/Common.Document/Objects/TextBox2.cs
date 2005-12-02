@@ -388,7 +388,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( message.IsKeyType )
 			{
-				this.document.Modifier.ActiveViewer.CloseMiniBar();
+				this.document.Modifier.ActiveViewer.CloseMiniBar(false);
 			}
 
 			if ( message.Type == MessageType.KeyDown   ||

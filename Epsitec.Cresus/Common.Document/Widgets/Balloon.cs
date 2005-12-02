@@ -12,6 +12,9 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			this.distance = 10;
 			this.margin = 3;
+			this.hot = 0;
+			this.awayMargin = 5;
+
 			this.DockPadding = new Drawing.Margins(this.margin, this.margin, this.margin, this.distance+this.margin);
 
 			this.backgroundColor = Color.FromName("Info");
@@ -83,6 +86,19 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Distance d'extinction.
+		public double AwayMargin
+		{
+			get
+			{
+				return this.awayMargin;
+			}
+			set
+			{
+				this.awayMargin = value;
+			}
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -112,24 +128,58 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		// Indique si la souris est trop loin de la mini-palette.
+		public bool IsAway(Point mouse)
+		{
+			Point p1 = this.MapClientToScreen(new Point(0, 0));
+			Point p2 = this.MapClientToScreen(new Point(this.Width, this.Height));
+			Rectangle rect = new Rectangle(p1, p2);
+
+			double dx = System.Math.Abs(mouse.X-rect.Center.X);
+			double dy = System.Math.Abs(mouse.Y-rect.Center.Y);
+
+			if ( dx > dy*(rect.Width/rect.Height) )
+			{
+				return (dx-rect.Width/2 > this.awayMargin);
+			}
+			else
+			{
+				return (dy-rect.Height/2 > this.awayMargin);
+			}
+		}
+
+		// Appelé même lorsque la souris n'est plus sur le widget.
 		private void MessageFilter(object sender, Message message)
 		{
 			if ( message.Type == MessageType.MouseMove )
 			{
 				Window window = sender as Window;
 				
-				Point cursor = window.MapWindowToScreen(message.Cursor);
-				Point p1 = this.MapClientToScreen(new Point(0, 0));
-				Point p2 = this.MapClientToScreen(new Point(this.Width, this.Height));
-				Rectangle rect = new Rectangle(p1, p2);
-				System.Diagnostics.Debug.WriteLine(string.Format("Filter: x={0} l={1} r={2}", cursor.X, rect.Left, rect.Right));
+				Point mouse = window.MapWindowToScreen(message.Cursor);
+				if ( this.IsAway(mouse) )
+				{
+					this.OnCloseNeeded();
+				}
 			}
 		}
 
 
+		// Génère un événement pour dire que la fermeture est nécessaire.
+		protected virtual void OnCloseNeeded()
+		{
+			if ( this.CloseNeeded != null )  // qq'un écoute ?
+			{
+				this.CloseNeeded(this);
+			}
+		}
+
+		public event Support.EventHandler CloseNeeded;
+
+		
 		protected double					distance;
 		protected double					margin;
 		protected double					hot;
+		protected double					awayMargin;
 		protected Color						backgroundColor;
 		protected Color						frameColor;
 	}
