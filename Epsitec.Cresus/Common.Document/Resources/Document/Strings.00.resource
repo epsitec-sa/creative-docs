@@ -500,6 +500,8 @@
 	<data name="TextPanel.Box.Title">Cadres</data>
 
 	<data name="TextPanel.Language.Title">Langue</data>
+	
+	<data name="TextPanel.Clear">Supprime l'attribut</data>
 
 	<data name="Property.Abstract.Name">Nom</data>
 	<data name="Property.Abstract.LineColor">Couleur trait</data>

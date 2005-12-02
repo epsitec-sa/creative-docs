@@ -275,6 +275,21 @@ namespace Epsitec.Common.Document.TextPanels
 			return button;
 		}
 
+		// Crée un bouton "x" pour effacer une propriété.
+		protected IconButton CreateClearButton(MessageEventHandler handler)
+		{
+			IconButton button = new IconButton(this);
+
+			button = new IconButton(this);
+			button.Clicked += handler;
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button.IconName = Misc.Icon("Nothing");
+			ToolTip.Default.SetToolTip(button, Res.Strings.TextPanel.Clear);
+			
+			return button;
+		}
+
 		// Crée un TextFieldLabel.
 		protected Widgets.TextFieldLabel CreateTextFieldLabel(string tooltip, string shortText, string longText, double minRange, double maxRange, double step, bool simply, EventHandler handler)
 		{

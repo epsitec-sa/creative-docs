@@ -25,6 +25,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonHyphen = this.CreateIconButton(Misc.Icon("TextHyphen"), Res.Strings.Action.Text.Paragraph.Hyphen, new MessageEventHandler(this.HandleHyphenClicked));
 
+			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+
 			this.document.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
@@ -48,25 +50,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			get
 			{
-				double h = this.LabelHeight;
-
-				if ( this.isExtendedSize )  // panneau étendu ?
-				{
-					if ( this.IsLabelProperties )  // étendu/détails ?
-					{
-						h += 105;
-					}
-					else	// étendu/compact ?
-					{
-						h += 55;
-					}
-				}
-				else	// panneau réduit ?
-				{
-					h += 30;
-				}
-
-				return h;
+				return this.LabelHeight + 30;
 			}
 		}
 
@@ -76,18 +60,8 @@ namespace Epsitec.Common.Document.TextPanels
 			base.UpdateAfterChanging();
 
 			Common.Text.Wrappers.JustificationMode justif = this.document.ParagraphWrapper.Defined.JustificationMode;
-#if false
-			if ( justif == Common.Text.Wrappers.JustificationMode.Unknown )
-			{
-				justif = this.document.ParagraphWrapper.Active.JustificationMode;
-			}
-#endif
 
 			bool hyphen = this.document.ParagraphWrapper.Defined.Hyphenation;
-			if ( !this.document.ParagraphWrapper.Defined.IsHyphenationDefined )
-			{
-				hyphen = this.document.ParagraphWrapper.Active.Hyphenation;
-			}
 
 			this.ignoreChanged = true;
 
@@ -118,57 +92,23 @@ namespace Epsitec.Common.Document.TextPanels
 
 			Rectangle rect = this.UsefulZone;
 
-			if ( this.isExtendedSize )
-			{
-				Rectangle r = rect;
-				r.Bottom = r.Top-20;
+			Rectangle r = rect;
+			r.Bottom = r.Top-20;
+			r.Left = rect.Left;
+			r.Width = 20;
+			this.buttonAlignLeft.Bounds = r;
+			r.Offset(20, 0);
+			this.buttonAlignCenter.Bounds = r;
+			r.Offset(20, 0);
+			this.buttonAlignRight.Bounds = r;
+			r.Offset(20, 0);
+			this.buttonAlignJustif.Bounds = r;
+			r.Offset(25, 0);
+			this.buttonHyphen.Bounds = r;
 
-				if ( this.IsLabelProperties )
-				{
-					r.Left = rect.Left;
-					r.Width = 20;
-					this.buttonAlignLeft.Bounds = r;
-					r.Offset(20, 0);
-					this.buttonAlignCenter.Bounds = r;
-					r.Offset(20, 0);
-					this.buttonAlignRight.Bounds = r;
-					r.Offset(20, 0);
-					this.buttonAlignJustif.Bounds = r;
-					r.Offset(25, 0);
-					this.buttonHyphen.Bounds = r;
-				}
-				else
-				{
-					r.Left = rect.Left;
-					r.Width = 20;
-					this.buttonAlignLeft.Bounds = r;
-					r.Offset(20, 0);
-					this.buttonAlignCenter.Bounds = r;
-					r.Offset(20, 0);
-					this.buttonAlignRight.Bounds = r;
-					r.Offset(20, 0);
-					this.buttonAlignJustif.Bounds = r;
-					r.Offset(25, 0);
-					this.buttonHyphen.Bounds = r;
-				}
-			}
-			else
-			{
-				Rectangle r = rect;
-				r.Bottom = r.Top-20;
-
-				r.Left = rect.Left;
-				r.Width = 20;
-				this.buttonAlignLeft.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonAlignCenter.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonAlignRight.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonAlignJustif.Bounds = r;
-				r.Offset(25, 0);
-				this.buttonHyphen.Bounds = r;
-			}
+			r.Left = rect.Right-20;
+			r.Width = 20;
+			this.buttonClear.Bounds = r;
 		}
 
 
@@ -179,19 +119,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 			IconButton button = sender as IconButton;
 			if ( button == null )  return;
-			button.ActiveState = (button.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
-
-			if ( this.buttonAlignLeft   != button )  this.buttonAlignLeft.ActiveState   = ActiveState.No;
-			if ( this.buttonAlignCenter != button )  this.buttonAlignCenter.ActiveState = ActiveState.No;
-			if ( this.buttonAlignRight  != button )  this.buttonAlignRight.ActiveState  = ActiveState.No;
-			if ( this.buttonAlignJustif != button )  this.buttonAlignJustif.ActiveState = ActiveState.No;
 
 			Common.Text.Wrappers.JustificationMode justif = Common.Text.Wrappers.JustificationMode.Unknown;
-
-			if ( this.buttonAlignLeft.ActiveState   == ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.AlignLeft;
-			if ( this.buttonAlignCenter.ActiveState == ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.Center;
-			if ( this.buttonAlignRight.ActiveState  == ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.AlignRight;
-			if ( this.buttonAlignJustif.ActiveState == ActiveState.Yes )  justif = Common.Text.Wrappers.JustificationMode.JustifyAlignLeft;
+			if ( this.buttonAlignLeft   == button )  justif = Common.Text.Wrappers.JustificationMode.AlignLeft;
+			if ( this.buttonAlignCenter == button )  justif = Common.Text.Wrappers.JustificationMode.Center;
+			if ( this.buttonAlignRight  == button )  justif = Common.Text.Wrappers.JustificationMode.AlignRight;
+			if ( this.buttonAlignJustif == button )  justif = Common.Text.Wrappers.JustificationMode.JustifyAlignLeft;
 
 			if ( justif == Common.Text.Wrappers.JustificationMode.Unknown )
 			{
@@ -208,17 +141,25 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
-			this.buttonHyphen.ActiveState = (this.buttonHyphen.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
 			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.Yes);
 
 			if ( hyphen )
 			{
-				this.document.ParagraphWrapper.Defined.Hyphenation = true;
+				this.document.ParagraphWrapper.Defined.ClearHyphenation();
 			}
 			else
 			{
-				this.document.ParagraphWrapper.Defined.ClearHyphenation();
+				this.document.ParagraphWrapper.Defined.Hyphenation = true;
 			}
+		}
+
+		private void HandleClearClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+
+			this.document.ParagraphWrapper.Defined.ClearJustificationMode();
+			this.document.ParagraphWrapper.Defined.ClearHyphenation();
 		}
 
 
@@ -227,5 +168,6 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonAlignRight;
 		protected IconButton				buttonAlignJustif;
 		protected IconButton				buttonHyphen;
+		protected IconButton				buttonClear;
 	}
 }

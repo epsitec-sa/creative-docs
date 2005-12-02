@@ -501,6 +501,8 @@
 
 	<data name="TextPanel.Language.Title">Language</data>
 
+	<data name="TextPanel.Clear">Clear property</data>
+
 	<data name="Property.Abstract.Name">Name</data>
 	<data name="Property.Abstract.LineColor">Line color</data>
 	<data name="Property.Abstract.LineMode">Line width</data>
