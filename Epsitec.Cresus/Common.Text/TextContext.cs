@@ -976,7 +976,7 @@ namespace Epsitec.Common.Text
 					if (props == null)
 					{
 						Styles.ExtraSettings extra = style.GetExtraSettings (code);
-						props = extra[Properties.WellKnownType.Styles];
+						props = extra[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 					}
 				}
 				
