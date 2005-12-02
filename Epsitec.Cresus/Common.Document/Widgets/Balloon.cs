@@ -45,6 +45,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				return this.distance;
 			}
+
 			set
 			{
 				if ( this.distance != value )
@@ -62,6 +63,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				return this.margin;
 			}
+
 			set
 			{
 				if ( this.margin != value )
@@ -73,26 +75,28 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Position horizontale du point chaud, habituellement au milieu de la largeur.
+		// Position horizontale du point chaud (queue), habituellement au milieu de la largeur.
 		public double Hot
 		{
 			get
 			{
 				return this.hot;
 			}
+
 			set
 			{
 				this.hot = value;
 			}
 		}
 
-		// Distance d'extinction.
+		// Distance d'extinction lorsque la souris s'éloigne.
 		public double AwayMargin
 		{
 			get
 			{
 				return this.awayMargin;
 			}
+
 			set
 			{
 				this.awayMargin = value;
@@ -100,6 +104,7 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		// Dessine la "bulle" de style bd.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;

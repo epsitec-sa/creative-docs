@@ -2417,7 +2417,7 @@ namespace Epsitec.Common.Document
 			}
 			maxWidth = System.Math.Max(maxWidth, width);
 
-			double mx = maxWidth + frame.Margin*2;
+			double mx = maxWidth + frame.Margin*2 + 1;
 			double my = button.DefaultHeight*this.miniBarLines + frame.Margin*(this.miniBarLines-1) + frame.Margin*2 + frame.Distance;
 			Size size = new Size(mx, my);
 			mouse.X -= size.Width/2;
@@ -2483,7 +2483,7 @@ namespace Epsitec.Common.Document
 
 			mouse = this.InternalToScreen(mouse);
 			mouse = this.MapClientToScreen(mouse);
-			if ( this.miniBarBalloon.IsAway(mouse) )
+			if ( this.miniBarBalloon.IsAway(mouse) )  // souris déjà trop loin ?
 			{
 				this.CloseMiniBar(false);
 				this.miniBarCmds = null;
@@ -2624,7 +2624,6 @@ namespace Epsitec.Common.Document
 					this.MiniBarAdd(list, "");
 					this.MiniBarAdd(list, "Cut");
 					this.MiniBarAdd(list, "Copy");
-					this.MiniBarAdd(list, "Paste");
 					this.MiniBarAdd(list, "");
 					this.MiniBarAdd(list, "HideSel");
 					this.MiniBarAdd(list, "HideRest");
@@ -2691,35 +2690,47 @@ namespace Epsitec.Common.Document
 			// c'est-à-dire celle qui a le moins de déchets (place perdue sur la dernière ligne).
 			int bestScraps = 1000;
 			int bestHope = 8;
-			for ( int hope=5 ; hope<=10 ; hope++ )
+			int linesRequired = this.MiniBarCount(list)/8 + 1;
+			for ( int hope=2 ; hope<=16 ; hope++ )
 			{
-				this.MiniBarJustifDo(list, hope);
-				int scraps = this.MiniBarJustifScraps(list);
-				this.MiniBarJustifClear(list);
-
-				if ( bestScraps > scraps )
+				if ( this.MiniBarJustifDo(list, hope) == linesRequired )
 				{
-					bestScraps = scraps;
-					bestHope = hope;
+					int scraps = this.MiniBarJustifScraps(list);
+					if ( bestScraps > scraps )
+					{
+						bestScraps = scraps;
+						bestHope = hope;
+					}
 				}
+
+				this.MiniBarJustifClear(list);
 			}
 			this.MiniBarJustifDo(list, bestHope);
 
 			return list;
 		}
 
-		// Justifie la mini-palette, en remplaçant certains séparateurs ("") par une marque
-		// de fin de ligne ("#").
-		protected void MiniBarJustifDo(System.Collections.ArrayList list, int hope)
+		// Compte le nombre de commandes dans une liste.
+		protected int MiniBarCount(System.Collections.ArrayList list)
 		{
 			int count = 0;
 			foreach ( string cmd in list )
 			{
 				if ( cmd != "" )  count ++;
 			}
-			if ( count < hope )  return;
+			return count;
+		}
+
+		// Justifie la mini-palette, en remplaçant certains séparateurs ("") par une marque
+		// de fin de ligne ("#").
+		// Retourne le nombre de lignes nécessaires.
+		protected int MiniBarJustifDo(System.Collections.ArrayList list, int hope)
+		{
+			int count = this.MiniBarCount(list);
+			if ( count < hope )  return 1;
 
 			int inlineCount = 0;
+			int lineCount = 1;
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
 				string cmd = list[i] as string;
@@ -2731,6 +2742,7 @@ namespace Epsitec.Common.Document
 						list.RemoveAt(i);     // supprime le séparateur...
 						list.Insert(i, "#");  // ...et remplace-le par une marque de fin de ligne
 						inlineCount = 0;
+						lineCount ++;
 					}
 				}
 				else	// commande ?
@@ -2738,6 +2750,7 @@ namespace Epsitec.Common.Document
 					inlineCount ++;
 				}
 			}
+			return lineCount;
 		}
 
 		// Supprime la justification de la mini-palette.
@@ -4234,7 +4247,6 @@ namespace Epsitec.Common.Document
 		protected double						miniBarHot;
 		protected Window						miniBar = null;
 		protected Widgets.Balloon				miniBarBalloon = null;
-		protected double						miniBarMax = 5;
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOrder;
 		protected VMenu							contextMenuOper;
