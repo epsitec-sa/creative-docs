@@ -24,6 +24,17 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		public static void Attach()
+		{
+			Window.MessageFilter += new MessageHandler(Balloon.MessageFilter);
+		}
+
+		public static void Detach()
+		{
+			Window.MessageFilter -= new MessageHandler(Balloon.MessageFilter);
+		}
+
+		
 		// Hauteur de la queue.
 		public double Distance
 		{
@@ -98,6 +109,20 @@ namespace Epsitec.Common.Document.Widgets
 
 			graphics.Rasterizer.AddOutline(path);
 			graphics.RenderSolid(this.frameColor);
+		}
+
+
+		private static void MessageFilter(object sender, Message message)
+		{
+			if ( message.Type == MessageType.MouseMove )
+			{
+				Window window = sender as Window;
+				Drawing.Rectangle rect = new Drawing.Rectangle(window.Root.Location, window.Root.Size);
+				Point p1 = window.MapWindowToScreen(rect.BottomLeft);
+				Point p2 = window.MapWindowToScreen(rect.TopRight);
+				rect = new Rectangle(p1, p2);
+				System.Diagnostics.Debug.WriteLine(string.Format("Filter: x={0} l={1} r={2}", message.X, rect.Left, rect.Right));
+			}
 		}
 
 

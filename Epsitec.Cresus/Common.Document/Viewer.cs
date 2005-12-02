@@ -111,6 +111,12 @@ namespace Epsitec.Common.Document
 		}
 
 
+		protected override void OnIsVisibleChanged(Types.PropertyChangedEventArgs e)
+		{
+			this.CloseMiniBar();  // ferme la mini-palette si le viewer devient invisible
+		}
+
+
 		public Document Document
 		{
 			get { return this.document; }
@@ -399,7 +405,17 @@ namespace Epsitec.Common.Document
 
 					if ( message.KeyCode == KeyCode.Space )
 					{
-						this.NextHotSpot();
+						if ( !this.NextHotSpot() )
+						{
+							if ( this.miniBar == null )
+							{
+								this.OpenMiniBar(pos, false, true);
+							}
+							else
+							{
+								this.CloseMiniBar();
+							}
+						}
 						break;
 					}
 
@@ -1048,7 +1064,7 @@ namespace Epsitec.Common.Document
 
 			bool mb = true;
 			if ( this.moveAccept )  mb = false;
-			if ( this.moveHandle != -1 )  mb = false;
+			if ( this.moveHandle != -1 && !Point.Equals(mouse, this.moveStart) )  mb = false;
 			if ( this.moveGlobal != -1 )  mb = false;
 
 			if ( this.selector.Visible && !this.selector.Handles )
@@ -1107,7 +1123,6 @@ namespace Epsitec.Common.Document
 					this.document.Modifier.GroupUpdateChildrens();
 					this.document.Modifier.GroupUpdateParents();
 
-					this.moveObject = null;
 					this.moveHandle = -1;
 					this.UpdateSelector();
 				}
@@ -1115,6 +1130,7 @@ namespace Epsitec.Common.Document
 				this.hotSpotHandle.IsVisible = false;
 			}
 
+			this.moveObject = null;
 			this.drawingContext.ConstrainDelStarting();
 			this.drawingContext.MagnetDelStarting();
 			this.document.Modifier.OpletQueueValidateAction();
@@ -1128,15 +1144,15 @@ namespace Epsitec.Common.Document
 			{
 				if ( mb )
 				{
-					this.OpenMiniBar(mouse);
+					this.OpenMiniBar(mouse, true, false);
 				}
 			}
 		}
 
 		// Change le point chaud.
-		protected void NextHotSpot()
+		protected bool NextHotSpot()
 		{
-			if ( this.moveObject == null )  return;
+			if ( this.moveObject == null )  return false;
 
 			if ( this.drawingContext.IsCtrl )
 			{
@@ -1158,6 +1174,7 @@ namespace Epsitec.Common.Document
 				this.drawingContext.ConstrainFlush();
 				this.drawingContext.ConstrainAddHV(this.moveLast);
 			}
+			return true;
 		}
 
 		// Met à jour la poignée spéciale "hot spot".
@@ -1422,12 +1439,12 @@ namespace Epsitec.Common.Document
 				this.document.Modifier.GroupUpdateChildrens();
 				this.document.Modifier.GroupUpdateParents();
 
-				this.moveObject = null;
 				this.moveHandle = -1;
 				this.moveSelectedSegment = -1;
 				this.UpdateSelector();
 			}
 
+			this.moveObject = null;
 			this.drawingContext.ConstrainDelStarting();
 			this.drawingContext.MagnetDelStarting();
 			this.document.Modifier.OpletQueueValidateAction();
@@ -1442,7 +1459,7 @@ namespace Epsitec.Common.Document
 				if ( mb )
 				{
 					this.document.Notifier.NotifyShaperChanged();
-					this.OpenMiniBar(mouse);
+					this.OpenMiniBar(mouse, true, false);
 				}
 			}
 		}
@@ -2366,11 +2383,11 @@ namespace Epsitec.Common.Document
 
 		#region MiniBar
 		// Ouvre la mini-palette.
-		public void OpenMiniBar(Point mouse)
+		public void OpenMiniBar(Point mouse, bool delayed, bool noSelected)
 		{
 			this.CloseMiniBar();
 
-			System.Collections.ArrayList cmds = this.MiniBarCommands();
+			System.Collections.ArrayList cmds = this.MiniBarCommands(noSelected);
 			if ( cmds == null || cmds.Count == 0 )  return;
 
 			Widgets.Balloon frame = new Widgets.Balloon();
@@ -2429,7 +2446,7 @@ namespace Epsitec.Common.Document
 
 			this.miniBarCmds = cmds;
 
-			this.miniBarTimer.Delay = 0.2;
+			this.miniBarTimer.Delay = delayed ? 0.2 : 0.01;
 			this.miniBarTimer.Start();
 		}
 
@@ -2461,6 +2478,7 @@ namespace Epsitec.Common.Document
 			this.miniBar.Root.BackColor = Color.FromARGB(0, 1,1,1);
 			this.miniBar.Owner = this.Window.Owner;
 			this.miniBar.AttachCommandDispatcher(this.GetCommandDispatcher());
+			Widgets.Balloon.Attach();
 
 			Widgets.Balloon frame = new Widgets.Balloon();
 			frame.Hot = this.miniBarHot;
@@ -2539,9 +2557,12 @@ namespace Epsitec.Common.Document
 		{
 			this.miniBarTimer.Suspend();
 
-			if ( this.miniBar == null )  return;
-			this.miniBar.Close();
-			this.miniBar = null;
+			if ( this.miniBar != null )
+			{
+				Widgets.Balloon.Detach();
+				this.miniBar.Close();
+				this.miniBar = null;
+			}
 		}
 
 		// Anime la mini-palette en fonction de l'éloignement de la souris.
@@ -2575,7 +2596,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Retourne la liste des commandes pour la mini-palette.
-		protected System.Collections.ArrayList MiniBarCommands()
+		protected System.Collections.ArrayList MiniBarCommands(bool noSelected)
 		{
 			this.document.Notifier.GenerateEvents();
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
@@ -2583,23 +2604,24 @@ namespace Epsitec.Common.Document
 			int nbSel = this.document.Modifier.TotalSelected;
 			if ( nbSel == 0 )
 			{
-#if false
-				this.MiniBarAdd(list, "DeselectAll");
-				this.MiniBarAdd(list, "SelectAll");
-				this.MiniBarAdd(list, "SelectInvert");
-				this.MiniBarAdd(list, "");
-				this.MiniBarAdd(list, "HideSel");
-				this.MiniBarAdd(list, "HideRest");
-				this.MiniBarAdd(list, "HideCancel");
-				this.MiniBarAdd(list, "");
-				this.MiniBarAdd(list, "ZoomPage");
-				this.MiniBarAdd(list, "ZoomDefault");
-				this.MiniBarAdd(list, "");
-				this.MiniBarAdd(list, "Outside");
-				this.MiniBarAdd(list, "Grid");
-				this.MiniBarAdd(list, "Magnet");
-				this.MiniBarAdd(list, "");
-#endif
+				if ( noSelected )
+				{
+					this.MiniBarAdd(list, "DeselectAll");
+					this.MiniBarAdd(list, "SelectAll");
+					this.MiniBarAdd(list, "SelectInvert");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "HideSel");
+					this.MiniBarAdd(list, "HideRest");
+					this.MiniBarAdd(list, "HideCancel");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "ZoomPage");
+					this.MiniBarAdd(list, "ZoomDefault");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "Outside");
+					this.MiniBarAdd(list, "Grid");
+					this.MiniBarAdd(list, "Magnet");
+					this.MiniBarAdd(list, "");
+				}
 			}
 			else
 			{
