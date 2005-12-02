@@ -24,14 +24,14 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		public static void Attach()
+		public void Attach()
 		{
-			Window.MessageFilter += new MessageHandler(Balloon.MessageFilter);
+			Window.MessageFilter += new MessageHandler(this.MessageFilter);
 		}
 
-		public static void Detach()
+		public void Detach()
 		{
-			Window.MessageFilter -= new MessageHandler(Balloon.MessageFilter);
+			Window.MessageFilter -= new MessageHandler(this.MessageFilter);
 		}
 
 		
@@ -112,16 +112,17 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		private static void MessageFilter(object sender, Message message)
+		private void MessageFilter(object sender, Message message)
 		{
 			if ( message.Type == MessageType.MouseMove )
 			{
 				Window window = sender as Window;
-				Drawing.Rectangle rect = new Drawing.Rectangle(window.Root.Location, window.Root.Size);
-				Point p1 = window.MapWindowToScreen(rect.BottomLeft);
-				Point p2 = window.MapWindowToScreen(rect.TopRight);
-				rect = new Rectangle(p1, p2);
-				System.Diagnostics.Debug.WriteLine(string.Format("Filter: x={0} l={1} r={2}", message.X, rect.Left, rect.Right));
+				
+				Point cursor = window.MapWindowToScreen(message.Cursor);
+				Point p1 = this.MapClientToScreen(new Point(0, 0));
+				Point p2 = this.MapClientToScreen(new Point(this.Width, this.Height));
+				Rectangle rect = new Rectangle(p1, p2);
+				System.Diagnostics.Debug.WriteLine(string.Format("Filter: x={0} l={1} r={2}", cursor.X, rect.Left, rect.Right));
 			}
 		}
 

@@ -2478,12 +2478,12 @@ namespace Epsitec.Common.Document
 			this.miniBar.Root.BackColor = Color.FromARGB(0, 1,1,1);
 			this.miniBar.Owner = this.Window.Owner;
 			this.miniBar.AttachCommandDispatcher(this.GetCommandDispatcher());
-			Widgets.Balloon.Attach();
 
 			Widgets.Balloon frame = new Widgets.Balloon();
 			frame.Hot = this.miniBarHot;
 			frame.SetParent(this.miniBar.Root);
 			frame.Anchor = AnchorStyles.All;
+			frame.Attach();
 
 			CommandDispatcher cd = this.GetCommandDispatcher();
 
@@ -2559,7 +2559,7 @@ namespace Epsitec.Common.Document
 
 			if ( this.miniBar != null )
 			{
-				Widgets.Balloon.Detach();
+//-				frame.Detach();				//#PA	trouver le frame à partir du minibar ?
 				this.miniBar.Close();
 				this.miniBar = null;
 			}

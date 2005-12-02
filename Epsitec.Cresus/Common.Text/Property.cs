@@ -164,6 +164,16 @@ namespace Epsitec.Common.Text
 				return false;
 			}
 			
+			if (a.WellKnownType != b.WellKnownType)
+			{
+				return false;
+			}
+			
+			if (a.GetContentsSignature () != b.GetContentsSignature ())
+			{
+				return false;
+			}
+			
 			return a.CompareEqualContents (b);
 		}
 		
@@ -195,7 +205,7 @@ namespace Epsitec.Common.Text
 				Property pa = a[i];
 				Property pb = b[i];
 				
-				if (pa.GetType () != pb.GetType ())
+				if (pa.WellKnownType != pb.WellKnownType)
 				{
 					return false;
 				}
@@ -247,7 +257,7 @@ namespace Epsitec.Common.Text
 				Property pa = a[i] as Property;
 				Property pb = b[i] as Property;
 				
-				if (pa.GetType () != pb.GetType ())
+				if (pa.WellKnownType != pb.WellKnownType)
 				{
 					return false;
 				}
