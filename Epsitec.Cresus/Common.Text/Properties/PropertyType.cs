@@ -17,5 +17,7 @@ namespace Epsitec.Common.Text.Properties
 		Style			= 1,			//	définition pour un style
 		LocalSetting	= 2,			//	définition pour un réglage local
 		ExtraSetting	= 3,			//	définition pour un réglage spécial
+		
+		Polymorph		= 4,			//	définition soit Style, soit Extra; utilisé par StylesProperty
 	}
 }

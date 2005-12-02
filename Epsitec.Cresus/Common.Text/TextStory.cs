@@ -736,6 +736,7 @@ namespace Epsitec.Common.Text
 			int length = properties == null ? 0 : properties.Count;
 			
 			Property[] prop_mixed = new Property[length];
+			Property   polymorph  = null;
 			
 			Styles.SimpleStyle   search_style = new Styles.SimpleStyle ();
 			Styles.LocalSettings search_local = new Styles.LocalSettings ();
@@ -758,8 +759,36 @@ namespace Epsitec.Common.Text
 					case Properties.PropertyType.LocalSetting:	local_acc.Accumulate (prop_mixed[i]); break;
 					case Properties.PropertyType.ExtraSetting:	extra_acc.Accumulate (prop_mixed[i]); break;
 					
+					case Properties.PropertyType.Polymorph:
+						if (polymorph == null)
+						{
+							polymorph = prop_mixed[i];
+						}
+						else
+						{
+							System.Diagnostics.Debug.Assert (polymorph.WellKnownType == prop_mixed[i].WellKnownType);
+							
+							polymorph = polymorph.GetCombination (prop_mixed[i]);
+						}
+						break;
+					
 					default:
 						throw new System.ArgumentException ("Invalid property type", "properties");
+				}
+			}
+			
+			//	S'il y a des propriétés polymorphes, décide encore dans quelle
+			//	catégorie les placer (utilisé pour StylesProperty).
+			
+			if (polymorph != null)
+			{
+				if (extra_acc.IsEmpty)
+				{
+					style_acc.Accumulate (polymorph);
+				}
+				else
+				{
+					extra_acc.Accumulate (polymorph);
 				}
 			}
 			

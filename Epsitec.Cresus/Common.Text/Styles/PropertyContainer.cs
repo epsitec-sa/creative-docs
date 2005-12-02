@@ -457,6 +457,15 @@ namespace Epsitec.Common.Text.Styles
 			}
 			
 			
+			public bool							IsEmpty
+			{
+				get
+				{
+					return ((this.hash == null) || (this.hash.Count == 0))
+						&& ((this.list == null) || (this.list.Count == 0));
+				}
+			}
+			
 			public bool							RequiresSpecialCodeProcessing
 			{
 				get

@@ -738,11 +738,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Styles\RichStyle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Styles\SimpleStyle.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

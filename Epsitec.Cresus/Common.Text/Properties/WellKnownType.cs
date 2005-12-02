@@ -28,7 +28,7 @@ namespace Epsitec.Common.Text.Properties
 		ManagedParagraph	= 30,		//	style
 		
 		Properties			= 50,		//	style
-		Styles				= 51,		//	style
+		Styles				= 51,		//	polymorph
 		Tabs				= 52,		//	style
 		
 		Link				= 101,		//	extra

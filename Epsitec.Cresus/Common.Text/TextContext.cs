@@ -819,33 +819,14 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				this.GetOriginalProperties (code, out properties);
+				TextStyle[] styles;
+				this.GetOriginalProperties (code, out styles, out properties);
 			}
-
-#if false
-			Property[] pp = properties;
-			Property[] op;
-			this.GetOriginalProperties (code, out op);
-			
-			if (pp.Length != op.Length)
-			{
-				System.Diagnostics.Debug.WriteLine ("GetProperties: Length Mismatch");
-			}
-			else
-			{
-				for (int i = 0; i < pp.Length; i++)
-				{
-					if (pp[i].WellKnownType != op[i].WellKnownType)
-					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("GetProperties: WellKnownType mismatch {0}/{1}", pp[i].WellKnownType, op[i].WellKnownType));
-					}
-					else if (! Property.CompareEqualContents (pp[i], op[i]))
-					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("GetProperties: Contents mismatch {0}/{1}", pp[i].WellKnownType, op[i].WellKnownType));
-					}
-				}
-			}
-#endif
+		}
+		
+		public void GetStylesAndProperties(ulong code, out TextStyle[] styles, out Property[] properties)
+		{
+			this.GetOriginalProperties (code, out styles, out properties);
 		}
 		
 		
@@ -908,15 +889,14 @@ namespace Epsitec.Common.Text
 			properties = (Property[]) list.ToArray (typeof (Property));
 		}
 		
-		internal void GetOriginalProperties(ulong code, out Property[] properties)
+		internal void GetOriginalProperties(ulong code, out TextStyle[] styles, out Property[] properties)
 		{
 			Property[]  all_properties;
-			TextStyle[] all_styles;
 			Property[]  style_properties;
 			
 			this.GetAllProperties (code, out all_properties);
-			this.GetStyles (code, out all_styles);
-			this.GetFlatProperties (all_styles, out all_styles, out style_properties);
+			this.GetStyles (code, out styles);
+			this.GetFlatProperties (styles, out styles, out style_properties);
 			this.AccumulateProperties (style_properties, out style_properties);
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
@@ -983,7 +963,22 @@ namespace Epsitec.Common.Text
 				(this.get_styles_last_style_index   != current_style_index))
 			{
 				Styles.SimpleStyle        style = this.style_list.GetStyleFromIndex (current_style_index);
-				Properties.StylesProperty props = style == null ? null : style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
+				Properties.StylesProperty props;
+				
+				if (style == null)
+				{
+					props = null;
+				}
+				else
+				{
+					props = style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
+					
+					if (props == null)
+					{
+						Styles.ExtraSettings extra = style.GetExtraSettings (code);
+						props = extra[Properties.WellKnownType.Styles];
+					}
+				}
 				
 				if (props == null)
 				{
