@@ -2471,7 +2471,7 @@ namespace Epsitec.Common.Document
 			this.miniBar.WindowSize = this.miniBarRect.Size;
 			this.miniBar.WindowLocation = this.MapClientToScreen(this.miniBarRect.BottomLeft);
 			this.miniBar.Root.BackColor = Color.FromARGB(0, 1,1,1);
-			this.miniBar.Owner = this.Window.Owner;
+			this.miniBar.Owner = this.Window;
 			this.miniBar.AttachCommandDispatcher(this.GetCommandDispatcher());
 
 			this.miniBarBalloon = new Widgets.Balloon();
