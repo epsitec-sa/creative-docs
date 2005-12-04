@@ -108,8 +108,6 @@ namespace Epsitec.Common.Text.Properties
 			
 			UnitsTools.Combine (a.offset, a.units, b.offset, b.units, out c.offset, out c.units);
 			
-			c.DefineVersion (System.Math.Max (a.Version, b.Version));
-			
 			return c;
 		}
 

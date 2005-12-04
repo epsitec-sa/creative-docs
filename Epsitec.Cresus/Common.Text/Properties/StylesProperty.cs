@@ -117,8 +117,6 @@ namespace Epsitec.Common.Text.Properties
 			a.style_names.CopyTo (c.style_names, 0);
 			b.style_names.CopyTo (c.style_names, a.style_names.Length);
 			
-			c.DefineVersion (System.Math.Max (a.Version, b.Version));
-			
 			return c;
 		}
 		

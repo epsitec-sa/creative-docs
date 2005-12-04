@@ -78,8 +78,6 @@ namespace Epsitec.Common.Text.Properties
 			
 			c.text_color = (b.text_color == null) ? a.text_color : b.text_color;
 			
-			c.DefineVersion (System.Math.Max (a.Version, b.Version));
-			
 			return c;
 		}
 

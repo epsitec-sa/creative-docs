@@ -5,22 +5,13 @@ namespace Epsitec.Common.Text
 {
 	/// <summary>
 	/// La classe StyleVersion abrite un compteur qui permet d'associer des
-	/// numéros de version aux styles et aux propriétés afin de détecter les
+	/// numéros de version aux styles, tabulateurs, etc. afin de détecter les
 	/// modifications.
 	/// </summary>
 	public sealed class StyleVersion
 	{
-		private StyleVersion()
+		public StyleVersion()
 		{
-		}
-		
-		
-		public static StyleVersion				Default
-		{
-			get
-			{
-				return StyleVersion.default_instance;
-			}
 		}
 		
 		
@@ -41,17 +32,16 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public long Change()
+		public long ChangeVersion()
 		{
-			//	Il faut appeler cette méthode chaque fois que la valeur d'une
-			//	propriété est modifiée (c'est fait par Property.Invalidate).
+			//	Il faut appeler cette méthode chaque fois qu'un style est
+			//	modifié.
 			
 			System.Threading.Interlocked.Increment (ref this.current);
 			this.time = System.DateTime.Now;
 			return this.current;
 		}
 		
-		private static StyleVersion				default_instance = new StyleVersion ();
 		
 		private long							current	= 1;
 		private System.DateTime					time	= System.DateTime.Now;

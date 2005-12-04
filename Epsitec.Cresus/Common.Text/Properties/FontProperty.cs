@@ -151,8 +151,6 @@ namespace Epsitec.Common.Text.Properties
 			
 			FontProperty c = new FontProperty (face_name, style_name, (string[]) features.ToArray (typeof (string)));
 			
-			c.DefineVersion (System.Math.Max (a.Version, b.Version));
-			
 			return c;
 		}
 		

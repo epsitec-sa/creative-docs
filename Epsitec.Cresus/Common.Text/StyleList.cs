@@ -23,15 +23,15 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.StyleVersion.Current;
+				return this.version.Current;
 			}
 		}
 		
-		public StyleVersion						StyleVersion
+		private StyleVersion					StyleVersion
 		{
 			get
 			{
-				return Text.StyleVersion.Default;
+				return this.version;
 			}
 		}
 
@@ -205,6 +205,8 @@ namespace Epsitec.Common.Text
 			
 			System.Diagnostics.Debug.Assert (this.text_style_list.Contains (style));
 			
+			this.version.ChangeVersion ();
+			
 			style.Clear ();
 			style.Initialise (properties);
 		}
@@ -218,6 +220,8 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (parent_styles != null);
 			System.Diagnostics.Debug.Assert (parent_styles.Count > 0);
 			
+			this.version.ChangeVersion ();
+			
 			style.Clear ();
 			style.Initialise (properties, parent_styles);
 		}
@@ -226,6 +230,34 @@ namespace Epsitec.Common.Text
 		public void RecycleTextStyle(TextStyle style)
 		{
 			this.Detach (style);
+		}
+		
+		
+		public void UpdateTextStyles()
+		{
+			//	Met à jour tous les styles, à la suite d'éventuels changements.
+			//	Ne fait rien si aucune modification n'a eu lieu depuis le der-
+			//	nier appel à UpdateTextStyles.
+			
+			long version = this.Version;
+			int  changes = 0;
+			
+			if (version == this.version_of_last_update)
+			{
+				return;
+			}
+			
+			this.version_of_last_update = version;
+			
+			foreach (TextStyle style in this.text_style_list)
+			{
+				if (style.Update (version))
+				{
+					changes++;
+				}
+			}
+			
+			//	TODO: en cas de changements, resynchronise TextStory.
 		}
 		
 		
@@ -441,5 +473,7 @@ namespace Epsitec.Common.Text
 		private System.Collections.Hashtable	text_style_hash;
 		private StyleMap						style_map;
 		private long							unique_id;
+		private StyleVersion					version = new StyleVersion ();
+		private long							version_of_last_update;
 	}
 }

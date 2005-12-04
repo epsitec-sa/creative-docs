@@ -154,8 +154,6 @@ namespace Epsitec.Common.Text.Properties
 			
 			TabsProperty c = new TabsProperty ((string[]) tags.ToArray (typeof (string)));
 			
-			c.DefineVersion (System.Math.Max (a.Version, b.Version));
-			
 			return c;
 		}
 		

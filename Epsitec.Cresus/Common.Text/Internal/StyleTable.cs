@@ -162,28 +162,6 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public bool UpdateSimpleStyles()
-		{
-			//	Met à jour tous les styles simples (passe en revue tous les
-			//	styles et ne régénère que le minimum qui a changé).
-			
-			bool changed = false;
-			
-			foreach (Styles.SimpleStyle style in this.styles)
-			{
-				if (style != null)
-				{
-					if (style.Update ())
-					{
-						changed = true;
-					}
-				}
-			}
-			
-			return changed;
-		}
-		
-		
 		public void Serialize(System.Text.StringBuilder buffer)
 		{
 			int n = this.styles == null ? 0 : this.styles.Count;
@@ -333,8 +311,6 @@ namespace Epsitec.Common.Text.Internal
 				this.styles = new System.Collections.ArrayList ();
 			}
 			
-			StyleVersion.Default.Change ();
-			
 			for (int i = 0; i < this.styles.Count; i++)
 			{
 				if (this.styles[i] == null)
@@ -355,8 +331,6 @@ namespace Epsitec.Common.Text.Internal
 			
 			Debug.Assert.IsTrue (style.StyleIndex > 0);
 			Debug.Assert.IsTrue (this.styles[style.StyleIndex-1] == style);
-			
-			StyleVersion.Default.Change ();
 			
 			//	Retire de la liste, sans pour autant réorganiser la liste
 			//	elle-même :

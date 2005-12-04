@@ -101,8 +101,6 @@ namespace Epsitec.Common.Text.Properties
 			
 			UnitsTools.Combine (a.size, a.units, b.size, b.units, out c.size, out c.units);
 			
-			c.DefineVersion (System.Math.Max (a.Version, b.Version));
-			
 			return c;
 		}
 

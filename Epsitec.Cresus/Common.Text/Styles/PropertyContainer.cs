@@ -108,11 +108,6 @@ namespace Epsitec.Common.Text.Styles
 		{
 			get
 			{
-				if (this.version == 0)
-				{
-					this.Update ();
-				}
-				
 				return this.version;
 			}
 		}
@@ -183,42 +178,18 @@ namespace Epsitec.Common.Text.Styles
 			this.ClearContentsSignature ();
 		}
 		
-		public virtual bool Update()
+		public virtual bool Update(long current_version)
 		{
-			//	Recalcule le numéro de version correspondant à ce style
-			//	en se basant sur les versions des propriétés.
-			
-			bool changed = false;
-			
-			//	Retourne true si une modification a eu lieu.
-			
-			if ((this.properties != null) &&
-				(this.properties.Length > 0))
+			if (this.version < current_version)
 			{
-				long version = 0;
+				this.version = current_version;
 				
-				for (int i = 0; i < this.properties.Length; i++)
-				{
-					version = System.Math.Max (version, this.properties[i].Version);
-				}
-				
-				if (this.version != version)
-				{
-					this.version = version;
-					this.ClearContentsSignature ();
-					
-					changed = true;
-				}
+				return true;
 			}
-			else if (this.version > 0)
+			else
 			{
-				this.version = 0;
-				this.ClearContentsSignature ();
-				
-				changed = true;
+				return false;
 			}
-			
-			return changed;
 		}
 		
 		
@@ -682,16 +653,6 @@ namespace Epsitec.Common.Text.Styles
 		protected void ClearContentsSignature()
 		{
 			this.contents_signature = 0;
-		}
-		
-		protected long GetInternalVersion()
-		{
-			return this.version;
-		}
-		
-		protected void SetInternalVersion(long value)
-		{
-			this.version = value;
 		}
 		
 		

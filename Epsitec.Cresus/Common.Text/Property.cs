@@ -13,19 +13,6 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public virtual long 						Version
-		{
-			get
-			{
-				if (this.version == 0)
-				{
-					this.version = StyleVersion.Default.Current;
-				}
-				
-				return this.version;
-			}
-		}
-		
 		public abstract Properties.WellKnownType	WellKnownType
 		{
 			get;
@@ -71,13 +58,7 @@ namespace Epsitec.Common.Text
 		
 		public void Invalidate()
 		{
-			if (this.version != 0)
-			{
-				StyleVersion.Default.Change ();
-			}
-			
 			this.contents_signature = 0;
-			this.version            = 0;
 		}
 		
 		
@@ -445,14 +426,8 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected void DefineVersion(long version)
-		{
-			this.version = version;
-		}
-		
 		
 		private int								contents_signature;
-		private long							version;
 		
 		static System.Collections.Hashtable		templates = new System.Collections.Hashtable ();
 	}

@@ -482,48 +482,6 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		
-		private void InternalGetFontAndSize(ulong code, out OpenType.Font font, out double font_size, out double scale)
-		{
-			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
-			long current_style_version = this.style_list.Version;
-			
-			if ((this.get_font_last_style_version == current_style_version) &&
-				(this.get_font_last_style_index   == current_style_index))
-			{
-				font      = this.get_font_last_font;
-				font_size = this.get_font_last_font_size;
-				scale     = this.get_font_last_scale;
-				
-				return;
-			}
-			
-			Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
-
-			Properties.FontProperty        font_p         = style[Properties.WellKnownType.Font] as Properties.FontProperty;
-			Properties.FontSizeProperty    font_size_p    = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
-			Properties.FontXscriptProperty font_xscript_p = style[Properties.WellKnownType.FontXscript] as Properties.FontXscriptProperty;
-			
-			this.GetFont (font_p, out font);
-			this.GetFontSize (font_p, font_size_p, font_xscript_p, out font_size, out scale);
-			
-			if (font_p.Features == null)
-			{
-				font.SelectFeatures ();
-			}
-			else
-			{
-				font.SelectFeatures (font_p.Features);
-			}
-			
-			this.get_font_last_style_version = current_style_version;
-			this.get_font_last_style_index   = current_style_index;
-			this.get_font_last_font          = font;
-			this.get_font_last_scale         = scale;
-			this.get_font_last_font_size     = font_size;
-		}
-		
-		
 		public void GetFontOffsets(ulong code, out double baseline_offset, out double advance_offset)
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
@@ -829,7 +787,59 @@ namespace Epsitec.Common.Text
 			this.GetOriginalProperties (code, out styles, out properties);
 		}
 		
+		public void GetStyles(ulong code, out TextStyle[] styles)
+		{
+			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+			long current_style_version = this.style_list.Version;
+			
+			if ((this.get_styles_last_style_version != current_style_version) ||
+				(this.get_styles_last_style_index   != current_style_index))
+			{
+				Styles.SimpleStyle        style = this.style_list.GetStyleFromIndex (current_style_index);
+				Properties.StylesProperty props;
+				
+				if (style == null)
+				{
+					props = null;
+				}
+				else
+				{
+					props = style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
+					
+					if (props == null)
+					{
+						Styles.ExtraSettings extra = style.GetExtraSettings (code);
+						props = extra[Properties.WellKnownType.Styles] as Properties.StylesProperty;
+					}
+				}
+				
+				if (props == null)
+				{
+					styles = new TextStyle[0];
+				}
+				else
+				{
+					string[] names = props.StyleNames;
+					
+					styles = new TextStyle[names.Length];
+					
+					for (int i = 0; i < names.Length; i++)
+					{
+						styles[i] = this.style_list.GetTextStyle (names[i]);
+					}
+				}
+				
+				this.get_styles_last_styles        = styles;
+				this.get_styles_last_style_version = current_style_version;
+				this.get_styles_last_style_index   = current_style_index;
+			}
+			
+			styles = new TextStyle[this.get_styles_last_styles.Length];
+			this.get_styles_last_styles.CopyTo (styles, 0);
+		}
 		
+		
+		#region Internal Property & Style Related Methods
 		internal void GetAllProperties(ulong code, out Property[] properties)
 		{
 			//	Retourne les propriétés associées à un code de caractère donné.
@@ -952,59 +962,7 @@ namespace Epsitec.Common.Text
 			
 			properties = accumulator.AccumulatedProperties;
 		}
-		
-		
-		public void GetStyles(ulong code, out TextStyle[] styles)
-		{
-			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
-			long current_style_version = this.style_list.Version;
-			
-			if ((this.get_styles_last_style_version != current_style_version) ||
-				(this.get_styles_last_style_index   != current_style_index))
-			{
-				Styles.SimpleStyle        style = this.style_list.GetStyleFromIndex (current_style_index);
-				Properties.StylesProperty props;
-				
-				if (style == null)
-				{
-					props = null;
-				}
-				else
-				{
-					props = style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
-					
-					if (props == null)
-					{
-						Styles.ExtraSettings extra = style.GetExtraSettings (code);
-						props = extra[Properties.WellKnownType.Styles] as Properties.StylesProperty;
-					}
-				}
-				
-				if (props == null)
-				{
-					styles = new TextStyle[0];
-				}
-				else
-				{
-					string[] names = props.StyleNames;
-					
-					styles = new TextStyle[names.Length];
-					
-					for (int i = 0; i < names.Length; i++)
-					{
-						styles[i] = this.style_list.GetTextStyle (names[i]);
-					}
-				}
-				
-				this.get_styles_last_styles        = styles;
-				this.get_styles_last_style_version = current_style_version;
-				this.get_styles_last_style_index   = current_style_index;
-			}
-			
-			styles = new TextStyle[this.get_styles_last_styles.Length];
-			this.get_styles_last_styles.CopyTo (styles, 0);
-		}
-		
+		#endregion
 		
 		public void GetLeading(ulong code, out Properties.LeadingProperty property)
 		{
@@ -1546,6 +1504,47 @@ namespace Epsitec.Common.Text
 				}
 			}
 		}
+		
+		private void InternalGetFontAndSize(ulong code, out OpenType.Font font, out double font_size, out double scale)
+		{
+			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+			long current_style_version = this.style_list.Version;
+			
+			if ((this.get_font_last_style_version == current_style_version) &&
+				(this.get_font_last_style_index   == current_style_index))
+			{
+				font      = this.get_font_last_font;
+				font_size = this.get_font_last_font_size;
+				scale     = this.get_font_last_scale;
+				
+				return;
+			}
+			
+			Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
+
+			Properties.FontProperty        font_p         = style[Properties.WellKnownType.Font] as Properties.FontProperty;
+			Properties.FontSizeProperty    font_size_p    = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
+			Properties.FontXscriptProperty font_xscript_p = style[Properties.WellKnownType.FontXscript] as Properties.FontXscriptProperty;
+			
+			this.GetFont (font_p, out font);
+			this.GetFontSize (font_p, font_size_p, font_xscript_p, out font_size, out scale);
+			
+			if (font_p.Features == null)
+			{
+				font.SelectFeatures ();
+			}
+			else
+			{
+				font.SelectFeatures (font_p.Features);
+			}
+			
+			this.get_font_last_style_version = current_style_version;
+			this.get_font_last_style_index   = current_style_index;
+			this.get_font_last_font          = font;
+			this.get_font_last_scale         = scale;
+			this.get_font_last_font_size     = font_size;
+		}
+		
 		
 		
 		private StyleList						style_list;

@@ -19,15 +19,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.StyleVersion.Current;
-			}
-		}
-		
-		public StyleVersion						StyleVersion
-		{
-			get
-			{
-				return Text.StyleVersion.Default;
+				return this.version.Current;
 			}
 		}
 		
@@ -106,7 +98,7 @@ namespace Epsitec.Common.Text
 				throw new System.ArgumentException (string.Format ("TabProperty named {0} does not exist", tab.TabTag), "tab");
 			}
 			
-			this.StyleVersion.Change ();
+			this.version.ChangeVersion ();
 			
 			lock (record)
 			{
@@ -648,6 +640,7 @@ namespace Epsitec.Common.Text
 		private System.Collections.Hashtable	tag_hash;
 		private System.Collections.Hashtable	auto_tab_hash;
 		private long							unique_id;
+		private StyleVersion					version = new StyleVersion ();
 		
 		private const string					AutoTagPrefix = "#A#";
 		private const string					SharedTagPrefix = "#S#";

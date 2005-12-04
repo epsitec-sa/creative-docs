@@ -159,29 +159,27 @@ namespace Epsitec.Common.Text
 			base.UpdateContentsSignature (checksum);
 		}
 		
-		public override bool Update()
+		public override bool Update(long current_version)
 		{
-			if ((this.parent_styles != null) &&
-				(this.parent_styles.Length > 0))
+			if (base.Update (current_version))
 			{
-				long version = 0;
-				
-				foreach (TextStyle style in this.parent_styles)
+				if ((this.parent_styles != null) &&
+					(this.parent_styles.Length > 0))
 				{
-					version = System.Math.Max (version, style.Version);
-				}
+					foreach (TextStyle style in this.parent_styles)
+					{
+						style.Update (current_version);
+					}
 				
-				if (this.GetInternalVersion () != version)
-				{
-					this.SetInternalVersion (version);
-					this.ClearContentsSignature ();
 					this.GenerateStyleProperties ();
-					
-					return true;
 				}
+				
+				return true;
 			}
-			
-			return base.Update ();
+			else
+			{
+				return false;
+			}
 		}
 
 		public override string ToString()
@@ -428,6 +426,10 @@ namespace Epsitec.Common.Text
 		
 		private void GenerateStyleProperties()
 		{
+			//	Génère les propriétés accumulées/combinées correspondant à tous
+			//	les styles parents et aux propriétés locales, puis initialise le
+			//	PropertyContainer avec ces propriétés "à plat".
+			
 			System.Diagnostics.Debug.Assert (this.style_properties != null);
 			System.Diagnostics.Debug.Assert (this.parent_styles != null);
 			
@@ -441,6 +443,8 @@ namespace Epsitec.Common.Text
 			accumulator.Accumulate (this.style_properties);
 			
 			base.Initialise (accumulator.AccumulatedProperties);
+			
+			this.ClearContentsSignature ();
 		}
 		
 		
