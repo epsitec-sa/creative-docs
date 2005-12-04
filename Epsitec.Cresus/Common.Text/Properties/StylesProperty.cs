@@ -76,6 +76,25 @@ namespace Epsitec.Common.Text.Properties
 		
 		
 		
+		public TextStyle[] GetTextStyles(TextContext context)
+		{
+			if (this.style_cache == null)
+			{
+				int       n    = this.style_names == null ? 0 : this.style_names.Length;
+				StyleList list = context.StyleList;
+				
+				this.style_cache = new TextStyle[n];
+				
+				for (int i = 0; i < n; i++)
+				{
+					this.style_cache[i] = list.GetTextStyle (this.style_names[i]);
+				}
+			}
+			
+			return (TextStyle[]) this.style_cache.Clone ();
+		}
+		
+		
 		public override Property EmptyClone()
 		{
 			return new StylesProperty ();
@@ -247,5 +266,6 @@ namespace Epsitec.Common.Text.Properties
 		
 		
 		private string[]						style_names;
+		private TextStyle[]						style_cache;
 	}
 }

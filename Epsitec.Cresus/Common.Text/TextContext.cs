@@ -819,14 +819,7 @@ namespace Epsitec.Common.Text
 				}
 				else
 				{
-					string[] names = props.StyleNames;
-					
-					styles = new TextStyle[names.Length];
-					
-					for (int i = 0; i < names.Length; i++)
-					{
-						styles[i] = this.style_list.GetTextStyle (names[i]);
-					}
+					styles = props.GetTextStyles (this);
 				}
 				
 				this.get_styles_last_styles        = styles;
