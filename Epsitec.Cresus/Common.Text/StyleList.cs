@@ -10,8 +10,9 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public sealed class StyleList
 	{
-		public StyleList()
+		public StyleList(TextContext context)
 		{
+			this.context         = context;
 			this.internal_styles = new Internal.StyleTable ();
 			
 			this.text_style_list = new System.Collections.ArrayList ();
@@ -209,6 +210,7 @@ namespace Epsitec.Common.Text
 			
 			style.Clear ();
 			style.Initialise (properties);
+			style.DefineIsFlagged (true);
 		}
 		
 		public void RedefineTextStyle(TextStyle style, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
@@ -224,6 +226,7 @@ namespace Epsitec.Common.Text
 			
 			style.Clear ();
 			style.Initialise (properties, parent_styles);
+			style.DefineIsFlagged (true);
 		}
 		
 		
@@ -257,7 +260,15 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			//	TODO: en cas de changements, resynchronise TextStory.
+			if (changes > 0)
+			{
+				this.UpdateTextStories ();
+			}
+			
+			foreach (TextStyle style in this.text_style_list)
+			{
+				style.DefineIsFlagged (false);
+			}
 		}
 		
 		
@@ -435,6 +446,171 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		private bool UpdateTextStories()
+		{
+			//	Met à jour tous les textes attaché au même TextContext que ce
+			//	styliste, en regénérant toutes les propriétés pour les styles
+			//	qui ont changé (qui retournent TextStyle.IsFlagged == true).
+			
+			Patcher patcher = new Patcher ();
+			ulong[] buffer  = new ulong[1000];
+			
+			System.Collections.ArrayList dirty_stories = new System.Collections.ArrayList ();
+			
+			foreach (TextStory story in this.context.GetTextStories ())
+			{
+				int  length = story.TextLength;
+				bool update = false;
+				
+				if (length > 0)
+				{
+					Cursors.TempCursor cursor = new Cursors.TempCursor ();
+					
+					story.NewCursor (cursor);
+					
+					try
+					{
+						while (length > 0)
+						{
+							int count = System.Math.Min (length, buffer.Length);
+							
+							story.ReadText (cursor, count, buffer);
+							
+							if (this.UpdateTextBuffer (story, patcher, buffer, count))
+							{
+								update |= story.ReplaceText (cursor, count, buffer);
+							}
+							
+							story.MoveCursor (cursor, count);
+							
+							length -= count;
+						}
+					}
+					finally
+					{
+						story.RecycleCursor (cursor);
+					}
+				}
+				
+				if (update)
+				{
+					dirty_stories.Add (story);
+				}
+			}
+			
+			//	Signale encore que les diverses instances de TextStory ont été
+			//	modifiées :
+			
+			foreach (TextStory story in dirty_stories)
+			{
+				story.NotifyTextChanged ();
+			}
+			
+			return dirty_stories.Count > 0;
+		}
+		
+		private bool UpdateTextBuffer(TextStory story, Patcher patcher, ulong[] buffer, int length)
+		{
+			bool update = false;
+			
+			if (length == 0)
+			{
+				return update;
+			}
+			
+			ulong last = Internal.CharMarker.ExtractStyleAndSettings (buffer[0]);
+			int   num  = 1;
+			
+			for (int i = 1; i < length; i++)
+			{
+				ulong code = Internal.CharMarker.ExtractStyleAndSettings (buffer[i]);
+				
+				if (code != last)
+				{
+					update |= this.UpdateTextRun (story, patcher, buffer, last, i-num, num);
+					
+					num  = 1;
+					last = code;
+				}
+			}
+			
+			update |= this.UpdateTextRun (story, patcher, buffer, last, length-num, num);
+			
+			return update;
+		}
+		
+		private bool UpdateTextRun(TextStory story, Patcher patcher, ulong[] buffer, ulong code, int pos, int length)
+		{
+			//	La tranche définie par 'pos' et 'length' est définie avec les
+			//	mêmes propriétés. On peut donc procéder au même remplacement
+			//	partout :
+			
+			ulong replacement;
+			
+			if (patcher.FindReplacement (code, out replacement) == false)
+			{
+				TextStyle[] styles;
+				Property[]  properties;
+				
+				this.context.GetStylesAndProperties (code, out styles, out properties);
+				
+				bool is_flagged = false;
+				
+				for (int i = 0; i < styles.Length; i++)
+				{
+					if (styles[i].IsFlagged)
+					{
+						is_flagged = true;
+						break;
+					}
+				}
+				
+				if (is_flagged)
+				{
+					//	Trouve le remplacement adéquat pour les styles et propriétés
+					//	définies pour l'ancien 'code' :
+					
+					story.ConvertToStyledText (story.FlattenStylesAndProperties (styles, properties), out replacement);
+				}
+				else
+				{
+					//	Aucun des styles composant ce code n'a été modifié. Il n'est
+					//	donc pas nécessaire de remplacer quoi que ce soit :
+					
+					replacement = code;
+				}
+				
+				patcher.DefineReplacement (code, replacement);
+			}
+			
+			int end = pos + length;
+			
+			//	Le remplacement se fait par une série d'opérations XOR, ce qui
+			//	évite de devoir masquer et combiner les bits :
+			//
+			//	nouveau-car = ancien-car XOR ancien-code XOR nouveau-code
+			//
+			//	Note: si ancien-code == nouveau-code, le XOR des deux donne zéro
+			//	et cela implique qu'il n'y aura aucune modification.
+			
+			replacement ^= code;
+			
+			if (replacement != 0)
+			{
+				for (int i = pos; i < end; i++)
+				{
+					buffer[i] ^= replacement;
+				}
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		
 		private void Attach(TextStyle style)
 		{
 			string         name             = style.Name;
@@ -468,6 +644,42 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		#region Patcher Class
+		private class Patcher
+		{
+			public Patcher()
+			{
+				this.hash = new System.Collections.Hashtable ();
+			}
+			
+			
+			public bool FindReplacement(ulong code, out ulong replacement)
+			{
+				object data = this.hash[code];
+				
+				if (data == null)
+				{
+					replacement = 0;
+					return false;
+				}
+				else
+				{
+					replacement = (ulong) data;
+					return true;
+				}
+			}
+			
+			public void DefineReplacement(ulong code, ulong replacement)
+			{
+				this.hash[code] = replacement;
+			}
+			
+			
+			System.Collections.Hashtable		hash;
+		}
+		#endregion
+		
+		private TextContext						context;
 		private Internal.StyleTable				internal_styles;
 		private System.Collections.ArrayList	text_style_list;
 		private System.Collections.Hashtable	text_style_hash;

@@ -378,7 +378,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckTabList()
 		{
-			Text.TabList list = new Text.TabList ();
+			Text.TabList list = new Text.TabList (null);
 			
 			Text.Properties.TabProperty tp1 = list.NewTab (null, 10.0, Text.Properties.SizeUnits.Millimeters, 0.0, null, Text.TabPositionMode.Absolute, null);
 			Text.Properties.TabProperty tp2 = list.NewTab (null, 20.0, Text.Properties.SizeUnits.Millimeters, 0.0, null, Text.TabPositionMode.Absolute, null);

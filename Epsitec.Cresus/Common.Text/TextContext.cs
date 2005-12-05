@@ -11,13 +11,14 @@ namespace Epsitec.Common.Text
 	{
 		public TextContext()
 		{
-			this.style_list     = new StyleList ();
-			this.tab_list       = new TabList ();
+			this.style_list     = new StyleList (this);
+			this.tab_list       = new TabList (this);
 			this.layout_list    = new LayoutList (this);
 			this.generator_list = new GeneratorList (this);
 			this.p_manager_list = new ParagraphManagerList (this);
 			this.char_marker    = new Internal.CharMarker ();
 			this.conditions     = new System.Collections.Hashtable ();
+			this.stories        = new System.Collections.ArrayList ();
 			
 			this.char_marker.Add (TextContext.DefaultMarkers.TagSelected);
 			this.char_marker.Add (TextContext.DefaultMarkers.TagRequiresSpellChecking);
@@ -1427,6 +1428,22 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal void Attach(TextStory story)
+		{
+			this.stories.Add (story);
+		}
+		
+		internal void Detach(TextStory story)
+		{
+			this.stories.Remove (story);
+		}
+		
+		internal System.Collections.ICollection GetTextStories()
+		{
+			return this.stories;
+		}
+		
+		
 		#region TextFinder Class
 		private class TextFinder
 		{
@@ -1614,6 +1631,7 @@ namespace Epsitec.Common.Text
 		private Internal.CharMarker				char_marker;
 		private DefaultMarkers					markers;
 		private System.Collections.Hashtable	conditions;
+		private System.Collections.ArrayList	stories;
 		private TextStyle						default_style;
 		
 		private bool							show_control_characters;

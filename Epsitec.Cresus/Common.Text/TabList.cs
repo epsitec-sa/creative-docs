@@ -8,8 +8,9 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public sealed class TabList
 	{
-		public TabList()
+		public TabList(TextContext context)
 		{
+			this.context  = context;
 			this.tag_hash = new System.Collections.Hashtable ();
 			this.auto_tab_hash = new System.Collections.Hashtable ();
 		}
@@ -280,8 +281,8 @@ namespace Epsitec.Common.Text
 			{
 				switch (tag.Substring (0, 3))
 				{
-					case "#A#":	return TabClass.Auto;
-					case "#S#":	return TabClass.Shared;
+					case TabList.AutoTagPrefix:		return TabClass.Auto;
+					case TabList.SharedTagPrefix:	return TabClass.Shared;
 				}
 			}
 			
@@ -678,6 +679,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		private TextContext						context;
 		private System.Collections.Hashtable	tag_hash;
 		private System.Collections.Hashtable	auto_tab_hash;
 		private long							unique_id;

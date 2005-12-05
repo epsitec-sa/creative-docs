@@ -210,6 +210,11 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public static ulong ExtractButStyleAndSettings(ulong code)
+		{
+			return code & ~CharMarker.StyleAndSettingsMask;
+		}
+		
 		public static ulong ExtractStyleAndSettings(ulong code)
 		{
 			return code & CharMarker.StyleAndSettingsMask;

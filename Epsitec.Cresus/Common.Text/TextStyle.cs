@@ -92,6 +92,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public bool								IsFlagged
+		{
+			get
+			{
+				return this.is_flagged;
+			}
+		}
+		
 		
 		public static System.Collections.IComparer	Comparer
 		{
@@ -110,6 +118,11 @@ namespace Epsitec.Common.Text
 		internal void DefinePriority(int priority)
 		{
 			this.priority = priority;
+		}
+		
+		internal void DefineIsFlagged(bool value)
+		{
+			this.is_flagged = value;
 		}
 		
 		
@@ -161,6 +174,8 @@ namespace Epsitec.Common.Text
 		
 		public override bool Update(long current_version)
 		{
+			bool flag = this.IsFlagged;
+			
 			if (base.Update (current_version))
 			{
 				if ((this.parent_styles != null) &&
@@ -169,10 +184,17 @@ namespace Epsitec.Common.Text
 					foreach (TextStyle style in this.parent_styles)
 					{
 						style.Update (current_version);
+						
+						if (flag == false)
+						{
+							flag = style.IsFlagged;
+						}
 					}
 				
 					this.GenerateStyleProperties ();
 				}
+				
+				this.DefineIsFlagged (flag);
 				
 				return true;
 			}
@@ -454,5 +476,7 @@ namespace Epsitec.Common.Text
 		private TextStyleClass					text_style_class;
 		private object[]						parent_styles;
 		private Property[]						style_properties;
+		
+		private bool							is_flagged;
 	}
 }

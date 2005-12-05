@@ -10,7 +10,7 @@ namespace Epsitec.Common.Text
 	/// La classe TextStory représente un texte complet, avec tous ses attributs
 	/// typographiques, ses curseurs, sa gestion du undo, etc.
 	/// </summary>
-	public class TextStory
+	public class TextStory : System.IDisposable
 	{
 		public TextStory()
 		{
@@ -1422,7 +1422,17 @@ namespace Epsitec.Common.Text
 		
 		private void SetupContext(TextContext context)
 		{
+			if (this.context != null)
+			{
+				this.context.Detach (this);
+			}
+			
 			this.context = context;
+			
+			if (this.context != null)
+			{
+				this.context.Attach (this);
+			}
 		}
 		
 		
@@ -1442,6 +1452,14 @@ namespace Epsitec.Common.Text
 			if (this.OpletExecuted != null)
 			{
 				this.OpletExecuted (this, e);
+			}
+		}
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.SetupContext (null);
 			}
 		}
 		
@@ -1476,6 +1494,14 @@ namespace Epsitec.Common.Text
 		{
 			ICursor			Cursor		{ get; }
 			CursorInfo[]	CursorInfos	{ get; }
+		}
+		#endregion
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
 		}
 		#endregion
 		
