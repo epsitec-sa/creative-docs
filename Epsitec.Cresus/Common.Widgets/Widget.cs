@@ -32,6 +32,7 @@ namespace Epsitec.Common.Widgets
 		Selected	= 0x00080000,				//	=> sélectionné
 		Engaged		= 0x00100000,				//	=> pression en cours
 		Error		= 0x00200000,				//	=> signale une erreur
+		ThreeState	= 0x00400000,				//	=> accepte 3 états
 	}
 	#endregion
 	
@@ -888,6 +889,10 @@ namespace Epsitec.Common.Widgets
 				if (this.IsFocused)
 				{
 					state |= WidgetState.Focused;
+				}
+				if (this.AcceptThreeState)
+				{
+					state |= WidgetState.ThreeState;
 				}
 				
 				return state;
