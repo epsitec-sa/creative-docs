@@ -58,6 +58,8 @@ namespace Epsitec.Common.Document.Widgets
 		// Le wrapper associé a changé.
 		protected void HandleWrapperChanged(object sender)
 		{
+			if ( this.editObject == null )  return;
+
 			double leftFirst, leftBody, right;
 			this.GetMargins(out leftFirst, out leftBody, out right);
 
