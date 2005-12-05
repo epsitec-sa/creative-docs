@@ -946,7 +946,8 @@
 	<data name="Action.Text.Paragraph.AlignLeft">Aligné à gauche</data>
 	<data name="Action.Text.Paragraph.AlignCenter">Centré</data>
 	<data name="Action.Text.Paragraph.AlignRight">Aligné à droite</data>
-	<data name="Action.Text.Paragraph.AlignJustif">Justifié</data>
+	<data name="Action.Text.Paragraph.AlignJustif">Justifié (sans la dernière ligne)</data>
+	<data name="Action.Text.Paragraph.AlignAll">Justifié (avec la dernière ligne)</data>
 	<data name="Action.Text.Paragraph.Hyphen">Césures dans les mots</data>
 	<data name="Action.Text.Paragraph.LeadingNorm">Interligne normal</data>
 	<data name="Action.Text.Paragraph.LeadingPlus">Interligne étendu</data>

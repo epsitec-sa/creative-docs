@@ -22,6 +22,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonAlignCenter = this.CreateIconButton(Misc.Icon("JustifHCenter"), Res.Strings.Action.Text.Paragraph.AlignCenter, new MessageEventHandler(this.HandleJustifClicked));
 			this.buttonAlignRight  = this.CreateIconButton(Misc.Icon("JustifHRight"),  Res.Strings.Action.Text.Paragraph.AlignRight,  new MessageEventHandler(this.HandleJustifClicked));
 			this.buttonAlignJustif = this.CreateIconButton(Misc.Icon("JustifHJustif"), Res.Strings.Action.Text.Paragraph.AlignJustif, new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonAlignAll    = this.CreateIconButton(Misc.Icon("JustifHAll"),    Res.Strings.Action.Text.Paragraph.AlignAll,    new MessageEventHandler(this.HandleJustifClicked));
 
 			this.buttonHyphen = this.CreateIconButton(Misc.Icon("TextHyphen"), Res.Strings.Action.Text.Paragraph.Hyphen, new MessageEventHandler(this.HandleHyphenClicked));
 
@@ -71,6 +72,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ActiveIconButton(this.buttonAlignCenter, justif == Common.Text.Wrappers.JustificationMode.Center,           isJustif);
 			this.ActiveIconButton(this.buttonAlignRight,  justif == Common.Text.Wrappers.JustificationMode.AlignRight,       isJustif);
 			this.ActiveIconButton(this.buttonAlignJustif, justif == Common.Text.Wrappers.JustificationMode.JustifyAlignLeft, isJustif);
+			this.ActiveIconButton(this.buttonAlignAll,    justif == Common.Text.Wrappers.JustificationMode.JustifyJustfy,    isJustif);
 
 			this.ActiveIconButton(this.buttonHyphen, hyphen, isHyphen);
 
@@ -105,6 +107,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonAlignRight.Bounds = r;
 			r.Offset(20, 0);
 			this.buttonAlignJustif.Bounds = r;
+			r.Offset(20, 0);
+			this.buttonAlignAll.Bounds = r;
 			r.Offset(25, 0);
 			this.buttonHyphen.Bounds = r;
 
@@ -127,6 +131,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.buttonAlignCenter == button )  justif = Common.Text.Wrappers.JustificationMode.Center;
 			if ( this.buttonAlignRight  == button )  justif = Common.Text.Wrappers.JustificationMode.AlignRight;
 			if ( this.buttonAlignJustif == button )  justif = Common.Text.Wrappers.JustificationMode.JustifyAlignLeft;
+			if ( this.buttonAlignAll    == button )  justif = Common.Text.Wrappers.JustificationMode.JustifyJustfy;
 
 			if ( justif == Common.Text.Wrappers.JustificationMode.Unknown )
 			{
@@ -161,6 +166,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonAlignCenter;
 		protected IconButton				buttonAlignRight;
 		protected IconButton				buttonAlignJustif;
+		protected IconButton				buttonAlignAll;
 		protected IconButton				buttonHyphen;
 		protected IconButton				buttonClear;
 	}

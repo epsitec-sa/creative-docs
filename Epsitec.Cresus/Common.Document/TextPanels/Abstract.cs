@@ -299,7 +299,6 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			IconButton button = new IconButton(this);
 
-			button = new IconButton(this);
 			button.AutoFocus = false;
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;

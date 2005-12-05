@@ -21,6 +21,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
+			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
 		}
 		

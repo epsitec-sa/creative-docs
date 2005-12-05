@@ -1743,10 +1743,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\TextAlign.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "Images\TextBox.icon"
                     BuildAction = "EmbeddedResource"
                 />

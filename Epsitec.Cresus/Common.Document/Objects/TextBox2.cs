@@ -796,9 +796,6 @@ namespace Epsitec.Common.Document.Objects
 			TextPanels.Keep keep = new TextPanels.Keep(this.document);
 			list.Add(keep);
 
-			TextPanels.Align align = new TextPanels.Align(this.document);
-			list.Add(align);
-
 			TextPanels.Font font = new TextPanels.Font(this.document);
 			list.Add(font);
 
