@@ -59,7 +59,9 @@ namespace Epsitec.Common.Text.Internal
 		public const ulong						MarkerMask  = 0x00000000F8000000ul;
 		public const int						MarkerShift = 27;
 		
-		public const ulong						StyleAndSettingsMask = 0xffffffff00000000ul;
+		public const ulong						StyleAndSettingsMask      = 0xffffffff00000000ul;
+		public const ulong						StyleAndExtraSettingsMask = 0xfe3fffff00000000ul;
+		public const ulong						StyleAndLocalSettingsMask = 0x01ffffff00000000ul;
 		
 		public ulong							this[object key]
 		{
@@ -212,6 +214,17 @@ namespace Epsitec.Common.Text.Internal
 		{
 			return code & CharMarker.StyleAndSettingsMask;
 		}
+		
+		public static ulong ExtractStyleAndExtraSettings(ulong code)
+		{
+			return code & CharMarker.StyleAndExtraSettingsMask;
+		}
+		
+		public static ulong ExtractStyleAndLocalSettings(ulong code)
+		{
+			return code & CharMarker.StyleAndLocalSettingsMask;
+		}
+		
 		
 		public static int GetStyleIndex(ulong code)
 		{

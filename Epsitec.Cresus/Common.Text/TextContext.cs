@@ -778,24 +778,25 @@ namespace Epsitec.Common.Text
 			else
 			{
 				TextStyle[] styles;
-				this.GetOriginalProperties (code, out styles, out properties);
+				this.GetPropertiesQuickAndDirty (code, out styles, out properties);
 			}
 		}
 		
 		public void GetStylesAndProperties(ulong code, out TextStyle[] styles, out Property[] properties)
 		{
-			this.GetOriginalProperties (code, out styles, out properties);
+			this.GetPropertiesQuickAndDirty (code, out styles, out properties);
 		}
 		
 		public void GetStyles(ulong code, out TextStyle[] styles)
 		{
-			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+			code = Internal.CharMarker.ExtractStyleAndExtraSettings (code);
+			
 			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_styles_last_style_version != current_style_version) ||
-				(this.get_styles_last_style_index   != current_style_index))
+				(this.get_styles_last_style_code    != code))
 			{
-				Styles.SimpleStyle        style = this.style_list.GetStyleFromIndex (current_style_index);
+				Styles.SimpleStyle        style = this.style_list[code];
 				Properties.StylesProperty props;
 				
 				if (style == null)
@@ -824,7 +825,7 @@ namespace Epsitec.Common.Text
 				
 				this.get_styles_last_styles        = styles;
 				this.get_styles_last_style_version = current_style_version;
-				this.get_styles_last_style_index   = current_style_index;
+				this.get_styles_last_style_code    = code;
 			}
 			
 			styles = new TextStyle[this.get_styles_last_styles.Length];
@@ -842,8 +843,8 @@ namespace Epsitec.Common.Text
 			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
 			
 			Styles.SimpleStyle   style = styles.GetStyle (code);
-			Styles.LocalSettings local = styles.GetLocalSettings (code);
-			Styles.ExtraSettings extra = styles.GetExtraSettings (code);
+			Styles.LocalSettings local = style == null ? null : style.GetLocalSettings (code);
+			Styles.ExtraSettings extra = style == null ? null : style.GetExtraSettings (code);
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -861,6 +862,27 @@ namespace Epsitec.Common.Text
 			}
 			
 			properties = (Property[]) list.ToArray (typeof (Property));
+		}
+		
+		internal void GetLocalSettingsProperties(ulong code, out Property[] properties)
+		{
+			//	Retourne les propriétés associées à un code de caractère donné.
+			//	Les propriétés sont brutes, telles que vues par le système de
+			//	layout, par exemple.
+			//	Ne retourne que les propriétés de la catégorie LocalSettings.
+			
+			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
+			
+			Styles.LocalSettings local = styles.GetLocalSettings (code);
+			
+			if (local != null)
+			{
+				properties = local.GetProperties ();
+			}
+			else
+			{
+				properties = new Property[0];
+			}
 		}
 		
 		internal void GetFlatProperties(System.Collections.ICollection text_styles, out TextStyle[] styles, out Property[] properties)
@@ -892,17 +914,60 @@ namespace Epsitec.Common.Text
 			properties = (Property[]) list.ToArray (typeof (Property));
 		}
 		
-		internal void GetOriginalProperties(ulong code, out TextStyle[] styles, out Property[] properties)
+		internal void GetPropertiesQuickAndDirty(ulong code, out TextStyle[] styles, out Property[] properties)
 		{
-			Property[]  all_properties;
-			Property[]  style_properties;
-			
-			this.GetAllProperties (code, out all_properties);
-			this.GetStyles (code, out styles);
-			this.GetFlatProperties (styles, out styles, out style_properties);
-			this.AccumulateProperties (style_properties, out style_properties);
+			//	Détermine quels styles et propriétés ont conduit aux propriétés
+			//	associées avec le caractère spécifié. Cette méthode se base sur
+			//	un certain nombre de simplifications :
+			//
+			//	- Un style ne fait pas référence à des propriétés LocalSettings.
+			//
+			//	- Les propriétés PropertyType.Style et ExtraSettings sont toujours
+			//	  enrobées dans une méta-propriété (donc un TextStyle).
+			//
+			//	- TabsProperty doit être adaptée (catégorie des LocalSettings)
+			//	  pour ne garder que les taquets locaux (TabClass.Auto).
+			//
+			//	Avec ces données, la liste des propriétés se laisse reconstruire
+			//	relativement facilement.
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			Property[] all_properties;
+			
+#if true
+			this.GetLocalSettingsProperties (code, out all_properties);
+			this.GetStyles (code, out styles);
+			
+			foreach (Property property in all_properties)
+			{
+				if (property.PropertyType == Properties.PropertyType.LocalSetting)
+				{
+					if (property.WellKnownType == Properties.WellKnownType.Tabs)
+					{
+						Properties.TabsProperty tabs = property as Properties.TabsProperty;
+						
+						tabs = TabList.FilterTabs (tabs, TabClass.Auto);
+						
+						if (tabs != null)
+						{
+							list.Add (tabs);
+						}
+					}
+					else
+					{
+						list.Add (property);
+					}
+				}
+			}
+#else
+			this.GetAllProperties (code, out all_properties);
+			this.GetStyles (code, out styles);
+			
+			Property[] style_properties;
+			
+			this.GetFlatProperties (styles, out styles, out style_properties);
+			this.AccumulateProperties (style_properties, out style_properties);
 			
 			foreach (Property pp in all_properties)
 			{
@@ -940,6 +1005,7 @@ namespace Epsitec.Common.Text
 					list.Add (pp);
 				}
 			}
+#endif
 			
 			properties = (Property[]) list.ToArray (typeof (Property));
 		}
@@ -1222,7 +1288,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetTabs(ulong code, out Properties.TabsProperty property)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractStyleAndLocalSettings (code);
 			
 			Styles.SimpleStyle   style          = this.style_list[code];
 			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
@@ -1239,7 +1305,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetTabAndTabs(ulong code, out Properties.TabProperty tab_property, out Properties.TabsProperty tabs_property)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractStyleAndLocalSettings (code);
 			
 			Styles.SimpleStyle   style          = this.style_list[code];
 			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
@@ -1596,7 +1662,7 @@ namespace Epsitec.Common.Text
 		private Property[]						get_properties_last_properties;
 		
 		private long							get_styles_last_style_version;
-		private int								get_styles_last_style_index;
+		private ulong							get_styles_last_style_code;
 		private TextStyle[]						get_styles_last_styles;
 		
 		private long							get_leading_last_style_version;

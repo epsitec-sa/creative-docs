@@ -1668,8 +1668,51 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				this.TextContext.GetStyles (code, out styles);
-				this.TextContext.GetProperties (code, out properties);
+				this.TextContext.GetStylesAndProperties (code, out styles, out properties);
+				
+				System.Text.StringBuilder debug_styles = new System.Text.StringBuilder ();
+				System.Text.StringBuilder debug_properties = new System.Text.StringBuilder ();
+				
+				foreach (TextStyle s in styles)
+				{
+					if (debug_styles.Length > 0)
+					{
+						debug_styles.Append ("/");
+					}
+					
+					if (s.MetaId != null)
+					{
+						debug_styles.Append (s.MetaId);
+						debug_styles.Append ("-");
+						debug_styles.Append (s.Priority);
+					}
+					else
+					{
+						debug_styles.Append (s.Name);
+					}
+				}
+				
+				foreach (Property p in properties)
+				{
+					if (debug_properties.Length > 0)
+					{
+						debug_properties.Append ("/");
+					}
+					
+					debug_properties.Append (p.WellKnownType);
+				}
+				
+				if (debug_properties.Length == 0)
+				{
+					debug_properties.Append ("[none]");
+				}
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("[{0}:{1}:{2}:{3}] -> {4} + {5}",
+					/**/										   Internal.CharMarker.GetLocalIndex (code),
+					/**/										   Internal.CharMarker.GetExtraIndex (code),
+					/**/										   Internal.CharMarker.GetStyleIndex (code),
+					/**/										   Unicode.Bits.GetUnicodeCode (code),
+					/**/										   debug_styles, debug_properties));
 				
 				int n = 0;
 				

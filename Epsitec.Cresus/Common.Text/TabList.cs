@@ -289,6 +289,47 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public static Properties.TabsProperty FilterTabs(Properties.TabsProperty property, TabClass tab_class)
+		{
+			string[] tags = property.TabTags;
+			
+			int count = 0;
+			
+			for (int i = 0; i < tags.Length; i++)
+			{
+				if (TabList.GetTabClass (tags[i]) == tab_class)
+				{
+					count++;
+				}
+			}
+			
+			if (count > 0)
+			{
+				if (count == tags.Length)
+				{
+					return property;
+				}
+				
+				string[] copy = new string[count];
+				
+				for (int i = 0, j = 0; (i < tags.Length) && (j < count); i++)
+				{
+					if (TabList.GetTabClass (tags[i]) == tab_class)
+					{
+						copy[j] = tags[i];
+						j++;
+					}
+				}
+				
+				return new Properties.TabsProperty (copy);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		
 		internal void Serialize(System.Text.StringBuilder buffer)
 		{
 			int count = this.tag_hash.Count;
