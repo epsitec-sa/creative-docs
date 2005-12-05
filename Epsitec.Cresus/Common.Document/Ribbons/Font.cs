@@ -203,7 +203,26 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( text != null )
 			{
 				TextFlow flow = text.TextFlow;
-				// TODO: pour Pierre !
+				
+				Common.Text.TextStyle  style = this.document.TextContext.StyleList["Default", Common.Text.TextStyleClass.Paragraph];
+				Common.Text.Property[] props = flow.TextNavigator.AccumulatedTextProperties;
+				
+				System.Collections.ArrayList list = new	System.Collections.ArrayList();
+				
+				foreach ( Common.Text.Property property in props )
+				{
+					if ( property.PropertyType != Common.Text.Properties.PropertyType.LocalSetting &&
+						 property.WellKnownType != Common.Text.Properties.WellKnownType.Styles )
+					{
+						list.Add(property);
+					}
+				}
+				
+				props = (Common.Text.Property[]) list.ToArray(typeof(Common.Text.Property));
+				
+				this.document.TextContext.StyleList.RedefineTextStyle(style, props);
+				this.document.TextContext.StyleList.UpdateTextStyles();
+				flow.TextNavigator.ExternalNotifyTextChanged();
 			}
 		}
 

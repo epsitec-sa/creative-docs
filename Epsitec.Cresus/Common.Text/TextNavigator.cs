@@ -1791,6 +1791,12 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void ExternalNotifyTextChanged()
+		{
+			this.NotifyTextChanged ();
+		}
+		
+		
 		protected bool MoveCursor(ICursor cursor, int distance, out int new_pos, out int new_dir)
 		{
 			int count;

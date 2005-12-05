@@ -478,7 +478,17 @@ namespace Epsitec.Common.Text
 							
 							if (this.UpdateTextBuffer (story, patcher, buffer, count))
 							{
-								update |= story.ReplaceText (cursor, count, buffer);
+								if (count == buffer.Length)
+								{
+									story.WriteText (cursor, buffer);
+								}
+								else
+								{
+									ulong[] copy = new ulong[count];
+									System.Array.Copy (buffer, 0, copy, 0, count);
+									story.WriteText (cursor, copy);
+								}
+								update = true;
 							}
 							
 							story.MoveCursor (cursor, count);
@@ -531,6 +541,10 @@ namespace Epsitec.Common.Text
 					
 					num  = 1;
 					last = code;
+				}
+				else
+				{
+					num += 1;
 				}
 			}
 			

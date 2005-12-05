@@ -816,6 +816,11 @@ namespace Epsitec.Common.Text
 		
 		public System.Collections.ArrayList FlattenStylesAndProperties(System.Collections.ICollection text_styles, System.Collections.ICollection properties)
 		{
+			return this.FlattenStylesAndProperties (text_styles, properties, true);
+		}
+		
+		public System.Collections.ArrayList FlattenStylesAndProperties(System.Collections.ICollection text_styles, System.Collections.ICollection properties, bool generate_styles_property)
+		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			if ((text_styles != null) &&
@@ -830,7 +835,11 @@ namespace Epsitec.Common.Text
 				//	les propriétés viennent d'être mises à plat ci-dessus :
 				
 				list.AddRange (flat_properties);
-				list.Add (new Properties.StylesProperty (flat_styles));
+				
+				if (generate_styles_property)
+				{
+					list.Add (new Properties.StylesProperty (flat_styles));
+				}
 			}
 			
 			if ((properties != null) &&
