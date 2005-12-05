@@ -644,6 +644,10 @@ namespace Epsitec.Common.Widgets.Adorners
 					{
 						this.PaintImageButton(graphics, rect, 32);
 					}
+					else if ( (state&WidgetState.ActiveMaybe) != 0 )
+					{
+						this.PaintImageButton(graphics, rect, 59);
+					}
 				}
 				else
 				{

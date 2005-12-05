@@ -51,8 +51,9 @@ namespace Epsitec.Common.Widgets.Adorners
 			b = 1-(1-this.colorControlLight.B)*0.7;
 			this.colorButton = Drawing.Color.FromRGB(r,g,b);
 
-			this.colorHilite = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorError  = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorHilite     = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorError      = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorThreeState = Drawing.Color.FromRGB(211.0/255.0, 187.0/255.0, 153.0/255.0);
 		}
 		
 
@@ -640,6 +641,11 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(this.colorCaptionMiddle);
+				}
+				else if ( (state&WidgetState.ActiveMaybe) != 0 )
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorThreeState);
 				}
 
 				graphics.Rasterizer.AddOutline(path, 1);
@@ -2079,6 +2085,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaptionLight;
 		protected Drawing.Color		colorCaptionMiddle;
+		protected Drawing.Color		colorThreeState;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorError;

@@ -587,6 +587,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( AbstractAdorner.IsThreeState2(state) )
 				{
 					rect.Top += 2;
+					rFocus.Top += 2;
 				}
 
 				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
@@ -602,6 +603,21 @@ namespace Epsitec.Common.Widgets.Adorners
 					else
 					{
 						this.PaintImageButton(graphics, rect, 2);
+					}
+				}
+				else if ( (state&WidgetState.ActiveMaybe) != 0 )
+				{
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 7);
+					}
+					else if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rect, 7);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 6);
 					}
 				}
 				else

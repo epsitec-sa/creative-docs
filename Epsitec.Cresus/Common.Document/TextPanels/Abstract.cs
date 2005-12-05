@@ -277,6 +277,7 @@ namespace Epsitec.Common.Document.TextPanels
 			return button;
 		}
 
+		// Modifie l'état d'un bouton à 3 états.
 		protected void ActiveIconButton(IconButton button, bool active, bool defined)
 		{
 			if ( active && defined )
@@ -299,6 +300,7 @@ namespace Epsitec.Common.Document.TextPanels
 			IconButton button = new IconButton(this);
 
 			button = new IconButton(this);
+			button.AutoFocus = false;
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

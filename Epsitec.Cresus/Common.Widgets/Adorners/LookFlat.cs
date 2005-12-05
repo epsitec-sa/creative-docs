@@ -27,6 +27,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorControlDarkDark   = Drawing.Color.FromRGB(100.0/255.0, 100.0/255.0, 100.0/255.0);
 			this.colorCaption           = Drawing.Color.FromRGB(255.0/255.0, 210.0/255.0,   0.0/255.0);
 			this.colorCaptionText       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorThreeState        = Drawing.Color.FromRGB(218.0/255.0, 207.0/255.0, 162.0/255.0);
 			this.colorInfo              = Drawing.Color.FromRGB(250.0/255.0, 250.0/255.0, 250.0/255.0);
 			this.colorError             = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
 		}
@@ -487,6 +488,11 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(this.colorCaption);
+				}
+				else if ( (state&WidgetState.ActiveMaybe) != 0 )
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorThreeState);
 				}
 				else
 				{
@@ -1625,8 +1631,8 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override Drawing.Margins GeometryArrayMargins { get { return new Drawing.Margins(0,0,0,0); } }
 		public override Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public override Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
-		public override Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,1,0,0); } }
-		public override Drawing.Margins GeometryThreeStateShapeBounds { get { return new Drawing.Margins(0,1,2,0); } }
+		public override Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
+		public override Drawing.Margins GeometryThreeStateShapeBounds { get { return new Drawing.Margins(0,0,2,0); } }
 		public override Drawing.Margins GeometryButtonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public override Drawing.Margins GeometryRibbonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public override Drawing.Margins GeometryTextFieldShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
@@ -1653,6 +1659,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorControlBar;
 		protected Drawing.Color		colorBackDisabled;
 		protected Drawing.Color		colorFrontDisabled;
+		protected Drawing.Color		colorThreeState;
 		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
 	}

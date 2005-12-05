@@ -51,8 +51,9 @@ namespace Epsitec.Common.Widgets.Adorners
 			b = 1-(1-this.colorControlLight.B)*0.7;
 			this.colorButton = Drawing.Color.FromRGB(r,g,b);
 
-			this.colorHilite = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorError  = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorHilite     = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorError      = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorThreeState = Drawing.Color.FromRGB(211.0/255.0, 187.0/255.0, 153.0/255.0);
 		}
 		
 
@@ -610,23 +611,33 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				rect.Right += 1;
 				rFocus.Right += 1;
+				Drawing.Path path;
 
 				if ( (state&WidgetState.Entered)   != 0 ||  // bouton survolé ?
 					 (state&WidgetState.Engaged)   != 0 )   // bouton pressé ?
 				{
-					graphics.AddFilledRectangle(rect);
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(this.colorCaptionLight);
 				}
 				else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
-					graphics.AddFilledRectangle(rect);
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(this.colorCaptionMiddle);
+				}
+				else if ( (state&WidgetState.ActiveMaybe) != 0 )
+				{
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorThreeState);
 				}
 
 				Drawing.Rectangle rInside;
 				rInside = rect;
 				rInside.Deflate(0.5);
-				graphics.AddRectangle(rInside);
+				path = AbstractAdorner.PathThreeState2Frame(rInside, state);
+				graphics.Rasterizer.AddOutline(path, 1);
 				graphics.RenderSolid(this.ColorBorder);
 
 				radFocus = -1;
@@ -2074,6 +2085,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaptionLight;
 		protected Drawing.Color		colorCaptionMiddle;
+		protected Drawing.Color		colorThreeState;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorError;

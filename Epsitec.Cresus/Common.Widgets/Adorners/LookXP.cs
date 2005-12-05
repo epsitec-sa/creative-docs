@@ -47,10 +47,11 @@ namespace Epsitec.Common.Widgets.Adorners
 			b = 1-(1-this.colorCaption.B)*0.5;
 			this.colorCaptionMiddle = Drawing.Color.FromRGB(r,g,b);
 
-			this.colorButton = Drawing.Color.FromRGB(243.0/255.0, 243.0/255.0, 238.0/255.0);
-			this.colorFocus  = Drawing.Color.FromRGB(157.0/255.0, 188.0/255.0, 235.0/255.0);
-			this.colorHilite = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorError  = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorButton     = Drawing.Color.FromRGB(243.0/255.0, 243.0/255.0, 238.0/255.0);
+			this.colorFocus      = Drawing.Color.FromRGB(157.0/255.0, 188.0/255.0, 235.0/255.0);
+			this.colorHilite     = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorError      = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorThreeState = Drawing.Color.FromRGB(211.0/255.0, 187.0/255.0, 153.0/255.0);
 		}
 		
 
@@ -557,6 +558,11 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(this.colorCaptionMiddle);
+				}
+				else if ( (state&WidgetState.ActiveMaybe) != 0 )
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorThreeState);
 				}
 
 				Drawing.Rectangle rInside;
@@ -2016,6 +2022,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaptionLight;
 		protected Drawing.Color		colorCaptionMiddle;
+		protected Drawing.Color		colorThreeState;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorFocus;
 		protected Drawing.Color		colorHilite;

@@ -616,15 +616,15 @@ namespace Epsitec.Common.Widgets.Adorners
 					{
 						if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 						{
-							this.PaintImageButton(graphics, rInside, 6);
+							this.PaintImageButton(graphics, rInside, 43);
 						}
 						else if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 						{
-							this.PaintImageButton(graphics, rInside, 6);
+							this.PaintImageButton(graphics, rInside, 43);
 						}
 						else
 						{
-							this.PaintImageButton(graphics, rInside, 5);
+							this.PaintImageButton(graphics, rInside, 42);
 						}
 					}
 					else

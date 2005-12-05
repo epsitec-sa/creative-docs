@@ -25,6 +25,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorCaption           = Drawing.Color.FromRGB(255.0/255.0, 186.0/255.0,   1.0/255.0);
 			this.colorCaptionNF         = Drawing.Color.FromRGB(178.0/255.0, 198.0/255.0, 221.0/255.0);
 			this.colorCaptionText       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorThreeState        = Drawing.Color.FromRGB(228.0/255.0, 236.0/255.0, 244.0/255.0);
 			this.colorHilite            = Drawing.Color.FromRGB(255.0/255.0, 186.0/255.0,   1.0/255.0);
 			this.colorError             = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
 			this.colorInfo              = Drawing.Color.FromName("Info");
@@ -609,6 +610,12 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(this.colorCaptionLight);
+				}
+
+				if ( (state&WidgetState.ActiveMaybe) != 0 )
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorThreeState);
 				}
 
 				graphics.Rasterizer.AddOutline(path, 1);
@@ -2003,6 +2010,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorControlReadOnly;
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaptionLight;
+		protected Drawing.Color		colorThreeState;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorError;

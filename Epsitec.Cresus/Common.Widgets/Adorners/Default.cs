@@ -301,8 +301,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.PaintL(graphics, rInside, this.colorControlLight, shadow);
 
 			// Ombre foncée en haut à droite.
-			this.PaintL(graphics, rect, this.colorControlDarkDark, Opposite(shadow));
-			this.PaintL(graphics, rInside, this.colorControlDark, Opposite(shadow));
+			this.PaintL(graphics, rect, this.colorControlDarkDark, this.Opposite(shadow));
+			this.PaintL(graphics, rInside, this.colorControlDark, this.Opposite(shadow));
 
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
 			{
@@ -358,8 +358,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.PaintHalfCircle(graphics, rInside, this.colorControlLight, shadow);
 
 			// Ombre foncée en haut à droite.
-			this.PaintHalfCircle(graphics, rect, this.colorControlDarkDark, Opposite(shadow));
-			this.PaintHalfCircle(graphics, rInside, this.colorControlDark, Opposite(shadow));
+			this.PaintHalfCircle(graphics, rect, this.colorControlDarkDark, this.Opposite(shadow));
+			this.PaintHalfCircle(graphics, rInside, this.colorControlDark, this.Opposite(shadow));
 
 			rInside = rect;
 			rInside.Deflate(2);
@@ -442,12 +442,12 @@ namespace Epsitec.Common.Widgets.Adorners
 					}
 
 					// Ombre claire en haut à gauche.
-					PaintL(graphics, rect, this.colorControlLightLight, Opposite(shadow));
-					PaintL(graphics, rInside, this.colorControlLight, Opposite(shadow));
+					this.PaintL(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
+					this.PaintL(graphics, rInside, this.colorControlLight, this.Opposite(shadow));
 
 					// Ombre foncée en bas à droite.
-					PaintL(graphics, rect, this.colorControlDarkDark, shadow);
-					PaintL(graphics, rInside, this.colorControlDark, shadow);
+					this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+					this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 				}
 			}
 			else if ( style == ButtonStyle.Scroller     ||
@@ -470,16 +470,16 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 				{
-					shadow = Opposite(shadow);
+					shadow = this.Opposite(shadow);
 				}
 
 				// Ombre claire en haut à gauche.
-				PaintL(graphics, rect, this.colorControlLight, Opposite(shadow));
-				PaintL(graphics, rInside, this.colorControlLightLight, Opposite(shadow));
+				this.PaintL(graphics, rect, this.colorControlLight, this.Opposite(shadow));
+				this.PaintL(graphics, rInside, this.colorControlLightLight, this.Opposite(shadow));
 
 				// Ombre foncée en bas à droite.
-				PaintL(graphics, rect, this.colorControlDarkDark, shadow);
-				PaintL(graphics, rInside, this.colorControlDark, shadow);
+				this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+				this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 			}
 			else if ( style == ButtonStyle.Slider )
 			{
@@ -494,26 +494,19 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 				{
-					shadow = Opposite(shadow);
+					shadow = this.Opposite(shadow);
 				}
 
 				// Ombre claire en haut à gauche.
-				PaintL(graphics, rect, this.colorControlLight, Opposite(shadow));
-				PaintL(graphics, rInside, this.colorControlLightLight, Opposite(shadow));
+				this.PaintL(graphics, rect, this.colorControlLight, this.Opposite(shadow));
+				this.PaintL(graphics, rInside, this.colorControlLightLight, this.Opposite(shadow));
 
 				// Ombre foncée en bas à droite.
-				PaintL(graphics, rect, this.colorControlDarkDark, shadow);
-				PaintL(graphics, rInside, this.colorControlDark, shadow);
+				this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+				this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 			}
-			else if ( style == ButtonStyle.ToolItem      ||
-					  style == ButtonStyle.ActivableIcon )
+			else if ( style == ButtonStyle.ToolItem )
 			{
-				if ( style == ButtonStyle.ActivableIcon &&
-					 AbstractAdorner.IsThreeState2(state) )
-				{
-					rect.Top += 2;
-				}
-
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
@@ -529,18 +522,65 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 				{
-					shadow = Opposite(shadow);
+					shadow = this.Opposite(shadow);
 				}
 				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
-					shadow = Opposite(shadow);
+					shadow = this.Opposite(shadow);
 				}
 
 				// Ombre claire en haut à gauche.
-				PaintL(graphics, rect, this.colorControlLightLight, Opposite(shadow));
+				this.PaintL(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
 
 				// Ombre foncée en bas à droite.
-				PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+				this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+			}
+			else if ( style == ButtonStyle.ActivableIcon )
+			{
+				if ( AbstractAdorner.IsThreeState2(state) )
+				{
+					rect.Top += 2;
+				}
+
+				graphics.AddFilledRectangle(rect);
+				if ( (state&WidgetState.ActiveYes)   != 0 ||   // bouton activé ?
+					 (state&WidgetState.ActiveMaybe) != 0 )
+				{
+					graphics.RenderSolid(this.colorControlLight);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControl);
+				}
+
+				graphics.LineWidth = 1;
+				graphics.LineCap = Drawing.CapStyle.Butt;
+
+				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				{
+					shadow = this.Opposite(shadow);
+				}
+				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					shadow = this.Opposite(shadow);
+				}
+
+				if ( AbstractAdorner.IsThreeState2(state) )
+				{
+					// Ombre claire en haut à gauche.
+					this.PaintL2(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
+
+					// Ombre foncée en bas à droite.
+					this.PaintL2(graphics, rect, this.colorControlDarkDark, shadow);
+				}
+				else
+				{
+					// Ombre claire en haut à gauche.
+					this.PaintL(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
+
+					// Ombre foncée en bas à droite.
+					this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+				}
 			}
 			else if ( style == ButtonStyle.ListItem )
 			{
@@ -648,12 +688,12 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				// Ombre foncée en haut à gauche.
 				Direction shadow = Direction.Up;
-				PaintL(graphics, rect, this.colorControlDark, Opposite(shadow));
-				PaintL(graphics, rInside, this.colorControlDarkDark, Opposite(shadow));
+				this.PaintL(graphics, rect, this.colorControlDark, this.Opposite(shadow));
+				this.PaintL(graphics, rInside, this.colorControlDarkDark, this.Opposite(shadow));
 
 				// Ombre claire en bas à droite.
-				PaintL(graphics, rect, this.colorControlLightLight, shadow);
-				PaintL(graphics, rInside, this.colorControlLight, shadow);
+				this.PaintL(graphics, rect, this.colorControlLightLight, shadow);
+				this.PaintL(graphics, rInside, this.colorControlLight, shadow);
 			}
 			else if ( style == TextFieldStyle.Simple )
 			{
@@ -797,16 +837,16 @@ namespace Epsitec.Common.Widgets.Adorners
 			Direction shadow = Direction.Up;
 			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 			{
-				shadow = Opposite(shadow);
+				shadow = this.Opposite(shadow);
 			}
 
 			// Ombre claire en haut à gauche.
-			PaintL(graphics, thumbRect, this.colorControlLight, Opposite(shadow));
-			PaintL(graphics, rInside, this.colorControlLightLight, Opposite(shadow));
+			this.PaintL(graphics, thumbRect, this.colorControlLight, this.Opposite(shadow));
+			this.PaintL(graphics, rInside, this.colorControlLightLight, this.Opposite(shadow));
 
 			// Ombre foncée en bas à droite.
-			PaintL(graphics, thumbRect, this.colorControlDarkDark, shadow);
-			PaintL(graphics, rInside, this.colorControlDark, shadow);
+			this.PaintL(graphics, thumbRect, this.colorControlDarkDark, shadow);
+			this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 		}
 
 		public override void PaintSliderForeground(Drawing.Graphics graphics,
@@ -893,12 +933,12 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			// Ombre claire en haut à gauche.
 			Direction shadow = Direction.Up;
-			PaintL(graphics, rect, this.colorControlLightLight, Opposite(shadow));
-			PaintL(graphics, rInside, this.colorControlLight, Opposite(shadow));
+			this.PaintL(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
+			this.PaintL(graphics, rInside, this.colorControlLight, this.Opposite(shadow));
 
 			// Ombre foncée en bas à droite.
-			PaintL(graphics, rect, this.colorControlDarkDark, shadow);
-			PaintL(graphics, rInside, this.colorControlDark, shadow);
+			this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+			this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 		}
 
 		// Dessine l'onglet devant les autres.
@@ -1026,12 +1066,12 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			// Ombre foncée en haut à gauche.
 			Direction shadow = Direction.Up;
-			PaintL(graphics, rect, this.colorControlDark, Opposite(shadow));
-			PaintL(graphics, rInside, this.colorControlDarkDark, Opposite(shadow));
+			this.PaintL(graphics, rect, this.colorControlDark, this.Opposite(shadow));
+			this.PaintL(graphics, rInside, this.colorControlDarkDark, this.Opposite(shadow));
 
 			// Ombre claire en bas à droite.
-			PaintL(graphics, rect, this.colorControlLightLight, shadow);
-			PaintL(graphics, rInside, this.colorControlLight, shadow);
+			this.PaintL(graphics, rect, this.colorControlLightLight, shadow);
+			this.PaintL(graphics, rInside, this.colorControlLight, shadow);
 		}
 
 		public override void PaintArrayForeground(Drawing.Graphics graphics,
@@ -1115,12 +1155,12 @@ namespace Epsitec.Common.Widgets.Adorners
 			rInside.Deflate(1);
 
 			// Ombre claire en haut à gauche.
-			PaintL(graphics, rect, this.colorControlLightLight, Opposite(shadow));
-			PaintL(graphics, rInside, this.colorControlLight, Opposite(shadow));
+			this.PaintL(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
+			this.PaintL(graphics, rInside, this.colorControlLight, this.Opposite(shadow));
 
 			// Ombre foncée en bas à droite.
-			PaintL(graphics, rect, this.colorControlDarkDark, shadow);
-			PaintL(graphics, rInside, this.colorControlDark, shadow);
+			this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+			this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 #endif
 		}
 
@@ -1437,8 +1477,8 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			// Ombre foncée en bas à droite.
 			Direction shadow = Direction.Up;
-			this.PaintHalfCircle(graphics, rect, this.colorControlLightLight, Opposite(shadow));
-			this.PaintHalfCircle(graphics, rInside, this.colorControlLight, Opposite(shadow));
+			this.PaintHalfCircle(graphics, rect, this.colorControlLightLight, this.Opposite(shadow));
+			this.PaintHalfCircle(graphics, rInside, this.colorControlLight, this.Opposite(shadow));
 
 			// Ombre claire en haut à droite.
 			this.PaintHalfCircle(graphics, rect, this.colorControlDarkDark, shadow);
@@ -1670,6 +1710,52 @@ namespace Epsitec.Common.Widgets.Adorners
 					p1.Y = rect.Top+1.0;
 					p2.X = p1.X;
 					p2.Y = rect.Bottom;
+					graphics.AddLine(p1, p2);
+					break;
+			}
+			graphics.RenderSolid(color);
+		}
+
+		// Dessine un "L" pour simuler une ombre sur un bouton ThreeState 2 pixels plus haut.
+		protected void PaintL2(Drawing.Graphics graphics,
+							   Drawing.Rectangle rect,
+							   Drawing.Color color,
+							   Widgets.Direction dir)
+		{
+			Drawing.Point p1 = new Drawing.Point();
+			Drawing.Point p2 = new Drawing.Point();
+
+			switch ( dir )
+			{
+				case Direction.Up:	// en bas à droite
+					p1.X = rect.Left;
+					p1.Y = rect.Bottom+0.5;
+					p2.X = rect.Right-0.5;
+					p2.Y = rect.Bottom+0.5;
+					graphics.AddLine(p1, p2);
+					p1 = p2;
+					p2.X = rect.Right-0.5;
+					p2.Y = rect.Top-2.5;
+					graphics.AddLine(p1, p2);
+					p1 = p2;
+					p2.X = rect.Right-2.5;
+					p2.Y = rect.Top-0.5;
+					graphics.AddLine(p1, p2);
+					break;
+
+				case Direction.Down:	// en haut à gauche
+					p1.X = rect.Left+0.5;
+					p1.Y = rect.Bottom;
+					p2.X = rect.Left+0.5;
+					p2.Y = rect.Top-2.5;
+					graphics.AddLine(p1, p2);
+					p1 = p2;
+					p2.X = rect.Left+2.5;
+					p2.Y = rect.Top-0.5;
+					graphics.AddLine(p1, p2);
+					p1 = p2;
+					p2.X = rect.Right-2.5;
+					p2.Y = rect.Top-0.5;
 					graphics.AddLine(p1, p2);
 					break;
 			}

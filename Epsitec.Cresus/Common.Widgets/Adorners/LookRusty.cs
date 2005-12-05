@@ -24,6 +24,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorDisabled       = Drawing.Color.FromRGB(140.0/255.0, 140.0/255.0, 140.0/255.0);
 			this.colorError          = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
 			this.colorTextBackground = Drawing.Color.FromRGB( 63.0/255.0,  45.0/255.0,  15.0/255.0);
+			this.colorThreeState     = Drawing.Color.FromRGB(206.0/255.0, 182.0/255.0, 154.0/255.0);
+			this.colorActivableIcon  = Drawing.Color.FromRGB( 96.0/255.0,  70.0/255.0,  27.0/255.0);
 			this.colorWindow         = Drawing.Color.FromRGB( 79.0/255.0,  74.0/255.0,  66.0/255.0);
 
 			this.colorBorder.A = 0.6;
@@ -574,20 +576,8 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintFocusBox(graphics, rect);
 				}
 			}
-			else if ( style == ButtonStyle.ToolItem      ||
-					  style == ButtonStyle.ActivableIcon )
+			else if ( style == ButtonStyle.ToolItem )
 			{
-				if ( style == ButtonStyle.ActivableIcon &&
-					 AbstractAdorner.IsThreeState2(state) )
-				{
-					rect.Top += 2;
-				}
-
-				if ( style == ButtonStyle.ActivableIcon )
-				{
-					rect.Right += 1;
-				}
-
 				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 				{
 					graphics.AddFilledRectangle(rect);
@@ -615,14 +605,84 @@ namespace Epsitec.Common.Widgets.Adorners
 					graphics.AddRectangle(rect);
 					graphics.RenderSolid(this.colorBorder);
 				}
+
+				if ( (state&WidgetState.Focused) != 0 )
+				{
+					if ( System.Math.Min(rect.Width, rect.Height) < 16 )
+					{
+						rect.Deflate(2);
+					}
+					else
+					{
+						rect.Deflate(3);
+					}
+					this.PaintFocusBox(graphics, rect);
+				}
+			}
+			else if ( style == ButtonStyle.ActivableIcon )
+			{
+				if ( AbstractAdorner.IsThreeState2(state) )
+				{
+					rect.Top += 2;
+				}
+
+				rect.Right += 1;
+				Drawing.Path path;
+
+				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				{
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorCaptionNF);
+
+					rect.Deflate(0.5);
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddOutline(path, 1);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+				{
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorCaptionNF);
+
+					rect.Deflate(0.5);
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddOutline(path, 1);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorCaption);
+
+					rect.Deflate(0.5);
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddOutline(path, 1);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else if ( (state&WidgetState.ActiveMaybe) != 0 )
+				{
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorThreeState);
+
+					rect.Deflate(0.5);
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddOutline(path, 1);
+					graphics.RenderSolid(this.colorBorder);
+				}
 				else
 				{
-					if ( style == ButtonStyle.ActivableIcon )
-					{
-						rect.Deflate(0.5);
-						graphics.AddRectangle(rect);
-						graphics.RenderSolid(this.colorBorder);
-					}
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorActivableIcon);
+
+					rect.Deflate(0.5);
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddOutline(path, 1);
+					graphics.RenderSolid(this.colorBorder);
 				}
 
 				if ( (state&WidgetState.Focused) != 0 )
@@ -2354,6 +2414,8 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorTextBackground;
+		protected Drawing.Color		colorThreeState;
+		protected Drawing.Color		colorActivableIcon;
 		protected Drawing.Color		colorWindow;
 	}
 }

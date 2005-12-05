@@ -537,11 +537,37 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintFocusBox(graphics, rect);
 				}
 			}
-			else if ( style == ButtonStyle.ToolItem      ||
-					  style == ButtonStyle.ActivableIcon )
+			else if ( style == ButtonStyle.ToolItem )
 			{
-				if ( style == ButtonStyle.ActivableIcon &&
-					 AbstractAdorner.IsThreeState2(state) )
+				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				{
+					this.PaintImageButton(graphics, rect, 47);
+				}
+				else if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+				{
+					this.PaintImageButton(graphics, rect, 47);
+				}
+				else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					this.PaintImageButton(graphics, rect, 46);
+				}
+
+				if ( (state&WidgetState.Focused) != 0 )
+				{
+					if ( System.Math.Min(rect.Width, rect.Height) < 16 )
+					{
+						rect.Deflate(1);
+					}
+					else
+					{
+						rect.Deflate(2);
+					}
+					this.PaintFocusBox(graphics, rect);
+				}
+			}
+			else if ( style == ButtonStyle.ActivableIcon )
+			{
+				if ( AbstractAdorner.IsThreeState2(state) )
 				{
 					rect.Top += 2;
 				}
@@ -557,6 +583,10 @@ namespace Epsitec.Common.Widgets.Adorners
 				else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
 					this.PaintImageButton(graphics, rect, 46);
+				}
+				else if ( (state&WidgetState.ActiveMaybe) != 0 )
+				{
+					this.PaintImageButton(graphics, rect, 22);
 				}
 
 				if ( (state&WidgetState.Focused) != 0 )
@@ -1747,7 +1777,8 @@ namespace Epsitec.Common.Widgets.Adorners
 				this.PaintImageButton9(graphics, rect, 4, icon, 7);
 			}
 			else if ( (rank >= 36 && rank < 38) ||
-					  (rank >= 44 && rank < 48) )
+					  (rank >= 44 && rank < 48) ||
+					  rank == 22 )
 			{
 				this.PaintImageButton9(graphics, rect, 4, icon, 7);
 			}

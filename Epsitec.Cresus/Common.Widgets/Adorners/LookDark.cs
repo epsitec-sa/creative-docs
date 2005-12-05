@@ -582,22 +582,33 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( AbstractAdorner.IsThreeState2(state) )
 				{
 					rect.Top += 2;
+					rFocus.Top += 2;
 				}
 
 				rect.Right += 1;
+				Drawing.Path path;
 
 				if ( (state&WidgetState.Entered)   != 0 ||  // bouton survolé ?
 					 (state&WidgetState.Engaged)   != 0 ||  // bouton pressé ?
 					 (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
-					graphics.AddFilledRectangle(rect);
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(this.colorCaption);
+				}
+
+				if ( (state&WidgetState.ActiveMaybe) != 0 )
+				{
+					path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorWhite);
 				}
 
 				Drawing.Rectangle rInside;
 				rInside = rect;
 				rInside.Deflate(0.5);
-				graphics.AddRectangle(rInside);
+				path = AbstractAdorner.PathThreeState2Frame(rInside, state);
+				graphics.Rasterizer.AddOutline(path, 1);
 				graphics.RenderSolid(this.colorBlack);
 
 				rFocus.Deflate(1.0);
