@@ -96,6 +96,27 @@ namespace Epsitec.Common.Text.Wrappers
 						disposition = 0.0;
 						defines++;
 						break;
+					
+					case JustificationMode.JustifyCenter:
+						justif_body = 1.0;
+						justif_last = 0.0;
+						disposition = 0.5;
+						defines++;
+						break;
+					
+					case JustificationMode.JustifyAlignRight:
+						justif_body = 1.0;
+						justif_last = 0;
+						disposition = 1.0;
+						defines++;
+						break;
+					
+					case JustificationMode.JustifyJustfy:
+						justif_body = 1.0;
+						justif_last = 1.0;
+						disposition = 0.0;
+						defines++;
+						break;
 				}
 			}
 			
@@ -388,6 +409,24 @@ namespace Epsitec.Common.Text.Wrappers
 					/**/ (margins.Disposition == 0.0))
 				{
 					state.DefineValue (State.JustificationModeProperty, JustificationMode.JustifyAlignLeft);
+				}
+				else if ((margins.JustificationBody == 1.0) &&
+					/**/ (margins.JustificationLastLine == 0.0) &&
+					/**/ (margins.Disposition == 0.5))
+				{
+					state.DefineValue (State.JustificationModeProperty, JustificationMode.JustifyCenter);
+				}
+				else if ((margins.JustificationBody == 1.0) &&
+					/**/ (margins.JustificationLastLine == 0.0) &&
+					/**/ (margins.Disposition == 1.0))
+				{
+					state.DefineValue (State.JustificationModeProperty, JustificationMode.JustifyAlignRight);
+				}
+				else if ((margins.JustificationBody == 1.0) &&
+					/**/ (margins.JustificationLastLine == 1.0) &&
+					/**/ (margins.Disposition == 0.0))
+				{
+					state.DefineValue (State.JustificationModeProperty, JustificationMode.JustifyJustfy);
 				}
 				else
 				{
