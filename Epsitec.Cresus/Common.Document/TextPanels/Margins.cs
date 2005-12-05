@@ -73,44 +73,18 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			base.UpdateAfterChanging();
 
-			double leftMarginFirst = this.document.ParagraphWrapper.Defined.LeftMarginFirst;
-			if ( double.IsNaN(leftMarginFirst) )
-			{
-				leftMarginFirst = this.document.ParagraphWrapper.Active.LeftMarginFirst;
-
-				if ( double.IsNaN(leftMarginFirst) )
-				{
-					leftMarginFirst = 0;
-				}
-			}
-
-			double leftMarginBody = this.document.ParagraphWrapper.Defined.LeftMarginBody;
-			if ( double.IsNaN(leftMarginBody) )
-			{
-				leftMarginBody = this.document.ParagraphWrapper.Active.LeftMarginBody;
-
-				if ( double.IsNaN(leftMarginBody) )
-				{
-					leftMarginBody = 0;
-				}
-			}
-
-			double rightMargin = this.document.ParagraphWrapper.Defined.RightMarginBody;
-			if ( double.IsNaN(rightMargin) )
-			{
-				rightMargin = this.document.ParagraphWrapper.Active.RightMarginBody;
-
-				if ( double.IsNaN(rightMargin) )
-				{
-					rightMargin = 0;
-				}
-			}
+			double leftFirst = this.document.ParagraphWrapper.Active.LeftMarginFirst;
+			double leftBody  = this.document.ParagraphWrapper.Active.LeftMarginBody;
+			double right     = this.document.ParagraphWrapper.Active.RightMarginBody;
+			bool isLeftFirst = this.document.ParagraphWrapper.Active.IsLeftMarginFirstDefined;
+			bool isLeftBody  = this.document.ParagraphWrapper.Active.IsLeftMarginBodyDefined;
+			bool isRight     = this.document.ParagraphWrapper.Active.IsRightMarginBodyDefined;
 
 			this.ignoreChanged = true;
 
-			this.fieldLeftMarginFirst.TextFieldReal.InternalValue = (decimal) leftMarginFirst;
-			this.fieldLeftMarginBody.TextFieldReal.InternalValue  = (decimal) leftMarginBody;
-			this.fieldRightMargin.TextFieldReal.InternalValue     = (decimal) rightMargin;
+			this.fieldLeftMarginFirst.TextFieldReal.InternalValue = (decimal) leftFirst;
+			this.fieldLeftMarginBody.TextFieldReal.InternalValue  = (decimal) leftBody;
+			this.fieldRightMargin.TextFieldReal.InternalValue     = (decimal) right;
 			
 			this.ignoreChanged = false;
 		}
@@ -187,12 +161,18 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( field == this.fieldLeftMarginFirst.TextFieldReal )
 			{
+				this.document.ParagraphWrapper.SuspendSynchronisations();
 				this.document.ParagraphWrapper.Defined.LeftMarginFirst = value;
+				this.document.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
+				this.document.ParagraphWrapper.ResumeSynchronisations();
 			}
 
 			if ( field == this.fieldLeftMarginBody.TextFieldReal )
 			{
+				this.document.ParagraphWrapper.SuspendSynchronisations();
 				this.document.ParagraphWrapper.Defined.LeftMarginBody = value;
+				this.document.ParagraphWrapper.Defined.MarginUnits    = Common.Text.Properties.SizeUnits.Points;
+				this.document.ParagraphWrapper.ResumeSynchronisations();
 			}
 
 			if ( field == this.fieldRightMargin.TextFieldReal )
@@ -200,6 +180,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.document.ParagraphWrapper.SuspendSynchronisations();
 				this.document.ParagraphWrapper.Defined.RightMarginFirst = value;
 				this.document.ParagraphWrapper.Defined.RightMarginBody  = value;
+				this.document.ParagraphWrapper.Defined.MarginUnits      = Common.Text.Properties.SizeUnits.Points;
 				this.document.ParagraphWrapper.ResumeSynchronisations();
 			}
 		}

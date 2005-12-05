@@ -89,38 +89,9 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void GetMargins(out double leftFirst, out double leftBody, out double right)
 		{
-			leftFirst = this.document.ParagraphWrapper.Defined.LeftMarginFirst;
-			if ( double.IsNaN(leftFirst) )
-			{
-				leftFirst = this.document.ParagraphWrapper.Active.LeftMarginFirst;
-
-				if ( double.IsNaN(leftFirst) )
-				{
-					leftFirst = 0;
-				}
-			}
-
-			leftBody = this.document.ParagraphWrapper.Defined.LeftMarginBody;
-			if ( double.IsNaN(leftBody) )
-			{
-				leftBody = this.document.ParagraphWrapper.Active.LeftMarginBody;
-
-				if ( double.IsNaN(leftBody) )
-				{
-					leftBody = 0;
-				}
-			}
-
-			right = this.document.ParagraphWrapper.Defined.RightMarginBody;
-			if ( double.IsNaN(right) )
-			{
-				right = this.document.ParagraphWrapper.Active.RightMarginBody;
-
-				if ( double.IsNaN(right) )
-				{
-					right = 0;
-				}
-			}
+			leftFirst = this.document.ParagraphWrapper.Active.LeftMarginFirst;
+			leftBody  = this.document.ParagraphWrapper.Active.LeftMarginBody;
+			right     = this.document.ParagraphWrapper.Active.RightMarginBody;
 		}
 
 		
