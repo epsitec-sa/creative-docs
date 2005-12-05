@@ -312,34 +312,65 @@ namespace Epsitec.Common.Text
 					this.style_properties[i] = Property.Deserialize (context, version, definition);
 				}
 			}
+			
+			this.is_fixup_required = true;
 		}
 		
 		internal void DeserializeFixups(StyleList list)
 		{
-			if (this.parent_styles != null)
+			if (this.is_fixup_required)
 			{
-				TextStyle[] parent_styles = new TextStyle[this.parent_styles.Length];
+				this.is_fixup_required = false;
 				
-				for (int i = 0; i < this.parent_styles.Length; i++)
+				if ((this.parent_styles != null) &&
+					(this.parent_styles.Length > 0))
 				{
-					parent_styles[i] = list.GetTextStyle (this.parent_styles[i] as string);
+					TextStyle[] parent_styles = new TextStyle[this.parent_styles.Length];
+					
+					for (int i = 0; i < this.parent_styles.Length; i++)
+					{
+						parent_styles[i] = list.GetTextStyle (this.parent_styles[i] as string);
+						
+						//	Il faut s'assurer que le style duquel nous dérivons est
+						//	prête à l'emploi :
+						
+						parent_styles[i].DeserializeFixups (list);
+					}
+					
+					Property[] style_properties = this.style_properties;
+					
+					this.parent_styles    = null;
+					this.style_properties = null;
+					
+					this.Initialise (style_properties, parent_styles);
 				}
-				
-				Property[] style_properties = this.style_properties;
-				
-				this.parent_styles    = null;
-				this.style_properties = null;
-				
-				this.Initialise (style_properties, parent_styles);
+				else
+				{
+					Property[] style_properties = this.style_properties;
+					
+					this.style_properties = null;
+					
+					this.Initialise (style_properties);
+				}
 			}
-			else
-			{
-				Property[] style_properties = this.style_properties;
-				
-				this.style_properties = null;
-				
-				this.Initialise (style_properties);
-			}
+		}
+		
+		
+		internal string SaveState(StyleList list)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			this.Serialize (buffer);
+			return buffer.ToString ();
+		}
+		
+		internal void RestoreState(StyleList list, string state)
+		{
+			string[] args    = state.Split ('/');
+			int      version = TextContext.SerializationVersion;
+			int      offset  = 0;
+			
+			this.Deserialize (list.TextContext, version, args, ref offset);
+			this.DeserializeFixups (list);
 		}
 		
 		
@@ -478,5 +509,6 @@ namespace Epsitec.Common.Text
 		private Property[]						style_properties;
 		
 		private bool							is_flagged;
+		private bool							is_fixup_required;
 	}
 }

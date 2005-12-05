@@ -220,7 +220,7 @@ namespace Epsitec.Common.Document.Ribbons
 				
 				props = (Common.Text.Property[]) list.ToArray(typeof(Common.Text.Property));
 				
-				this.document.TextContext.StyleList.RedefineTextStyle(style, props);
+				this.document.TextContext.StyleList.RedefineTextStyle(flow.TextStory.OpletQueue, style, props);
 				this.document.TextContext.StyleList.UpdateTextStyles();
 				flow.TextNavigator.ExternalNotifyTextChanged();
 			}

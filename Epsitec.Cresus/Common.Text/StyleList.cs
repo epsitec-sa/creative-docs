@@ -49,6 +49,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public TextContext						TextContext
+		{
+			get
+			{
+				return this.context;
+			}
+		}
+		
 		
 		public TextStyle						this[string name, TextStyleClass text_style_class]
 		{
@@ -199,21 +207,28 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void RedefineTextStyle(TextStyle style, System.Collections.ICollection properties)
+		public void RedefineTextStyle(Common.Support.OpletQueue queue, TextStyle style, System.Collections.ICollection properties)
 		{
 			//	Change les propriétés d'un style. Le style devient un style "plat"
 			//	indépendant d'autres styles.
 			
 			System.Diagnostics.Debug.Assert (this.text_style_list.Contains (style));
 			
-			this.version.ChangeVersion ();
-			
-			style.Clear ();
-			style.Initialise (properties);
-			style.DefineIsFlagged (true);
+			using (queue.BeginAction ())
+			{
+				queue.Insert (new RedefineOplet (this, style));
+				
+				this.version.ChangeVersion ();
+				
+				style.Clear ();
+				style.Initialise (properties);
+				style.DefineIsFlagged (true);
+				
+				queue.ValidateAction ();
+			}
 		}
 		
-		public void RedefineTextStyle(TextStyle style, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		public void RedefineTextStyle(Common.Support.OpletQueue queue, TextStyle style, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
 		{
 			//	Change les propriétés et les parents d'un style. Le style devient
 			//	un style dérivé.
@@ -222,11 +237,18 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (parent_styles != null);
 			System.Diagnostics.Debug.Assert (parent_styles.Count > 0);
 			
-			this.version.ChangeVersion ();
-			
-			style.Clear ();
-			style.Initialise (properties, parent_styles);
-			style.DefineIsFlagged (true);
+			using (queue.BeginAction ())
+			{
+				queue.Insert (new RedefineOplet (this, style));
+				
+				this.version.ChangeVersion ();
+				
+				style.Clear ();
+				style.Initialise (properties, parent_styles);
+				style.DefineIsFlagged (true);
+				
+				queue.ValidateAction ();
+			}
 		}
 		
 		
@@ -467,6 +489,7 @@ namespace Epsitec.Common.Text
 					Cursors.TempCursor cursor = new Cursors.TempCursor ();
 					
 					story.NewCursor (cursor);
+					story.DisableOpletQueue ();
 					
 					try
 					{
@@ -498,6 +521,7 @@ namespace Epsitec.Common.Text
 					}
 					finally
 					{
+						story.EnableOpletQueue ();
 						story.RecycleCursor (cursor);
 					}
 				}
@@ -692,6 +716,50 @@ namespace Epsitec.Common.Text
 			System.Collections.Hashtable		hash;
 		}
 		#endregion
+		
+		private class RedefineOplet : Common.Support.AbstractOplet
+		{
+			public RedefineOplet(StyleList stylist, TextStyle style)
+			{
+				this.stylist = stylist;
+				this.style   = style;
+				this.state   = this.style.SaveState (this.stylist);
+			}
+			
+			
+			public override Common.Support.IOplet Undo()
+			{
+				string state = this.style.SaveState (this.stylist);
+				
+				this.stylist.version.ChangeVersion ();
+				
+				this.style.Clear ();
+				this.style.RestoreState (this.stylist, this.state);
+				this.style.DefineIsFlagged (true);
+				
+				this.state = state;
+				
+				this.stylist.UpdateTextStyles ();
+				
+				return this;
+			}
+			
+			public override Common.Support.IOplet Redo()
+			{
+				return this.Undo ();
+			}
+			
+			public override void Dispose()
+			{
+				base.Dispose ();
+			}
+			
+			
+			private StyleList					stylist;
+			private TextStyle					style;
+			private string						state;
+		}
+		
 		
 		private TextContext						context;
 		private Internal.StyleTable				internal_styles;
