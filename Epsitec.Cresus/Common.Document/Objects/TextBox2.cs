@@ -1288,6 +1288,8 @@ namespace Epsitec.Common.Document.Objects
 
 			this.textFrame.Width  = Point.Distance(p1, p2);
 			this.textFrame.Height = Point.Distance(p1, p3);
+			
+			this.textFlow.TextStory.NotifyTextChanged();
 		}
 
 		// Dessine le texte du pavé.
