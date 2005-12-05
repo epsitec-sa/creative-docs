@@ -199,7 +199,12 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleButtonStyleClicked(object sender, MessageEventArgs e)
 		{
-			// TODO: pour Pierre !
+			Objects.TextBox2 text = this.document.Modifier.RetEditObject() as Objects.TextBox2;
+			if ( text != null )
+			{
+				TextFlow flow = text.TextFlow;
+				// TODO: pour Pierre !
+			}
 		}
 
 
