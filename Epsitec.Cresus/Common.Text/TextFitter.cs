@@ -122,6 +122,8 @@ namespace Epsitec.Common.Text
 		
 		public void GenerateMarks()
 		{
+			System.Diagnostics.Debug.WriteLine ("GenerateMarks.");
+			
 			int start = this.story.TextChangeMarkStart;
 			int end   = this.story.TextChangeMarkEnd;
 			

@@ -477,11 +477,11 @@ namespace Epsitec.Common.Document.Objects
 		{
 			DrawingContext drawingContext = this.document.Modifier.ActiveViewer.DrawingContext;
 
-			Point prevP1 = new Point();
-			Point prevP2 = new Point();
-			Point prevP3 = new Point();
-			Point prevP4 = new Point();
-			this.CornersFlowPrev(ref prevP1, ref prevP2, ref prevP3, ref prevP4, drawingContext);
+			Point prevP1;
+			Point prevP2;
+			Point prevP3;
+			Point prevP4;
+			this.CornersFlowPrev(out prevP1, out prevP2, out prevP3, out prevP4, drawingContext);
 
 			InsideSurface surf = new InsideSurface(pos, 4);
 			surf.AddLine(prevP1, prevP2);
@@ -490,11 +490,11 @@ namespace Epsitec.Common.Document.Objects
 			surf.AddLine(prevP3, prevP1);
 			if ( surf.IsInside() )  return DetectEditType.HandleFlowPrev;
 
-			Point nextP1 = new Point();
-			Point nextP2 = new Point();
-			Point nextP3 = new Point();
-			Point nextP4 = new Point();
-			this.CornersFlowNext(ref nextP1, ref nextP2, ref nextP3, ref nextP4, drawingContext);
+			Point nextP1;
+			Point nextP2;
+			Point nextP3;
+			Point nextP4;
+			this.CornersFlowNext(out nextP1, out nextP2, out nextP3, out nextP4, drawingContext);
 
 			surf = new InsideSurface(pos, 4);
 			surf.AddLine(nextP1, nextP2);
@@ -1034,17 +1034,17 @@ namespace Epsitec.Common.Document.Objects
 		// Crée le chemin des "poignées" du flux de l'objet.
 		protected Path PathFlowHandlesStroke(IPaintPort port, DrawingContext drawingContext)
 		{
-			Point prevP1 = new Point();
-			Point prevP2 = new Point();
-			Point prevP3 = new Point();
-			Point prevP4 = new Point();
-			this.CornersFlowPrev(ref prevP1, ref prevP2, ref prevP3, ref prevP4, drawingContext);
+			Point prevP1;
+			Point prevP2;
+			Point prevP3;
+			Point prevP4;
+			this.CornersFlowPrev(out prevP1, out prevP2, out prevP3, out prevP4, drawingContext);
 
-			Point nextP1 = new Point();
-			Point nextP2 = new Point();
-			Point nextP3 = new Point();
-			Point nextP4 = new Point();
-			this.CornersFlowNext(ref nextP1, ref nextP2, ref nextP3, ref nextP4, drawingContext);
+			Point nextP1;
+			Point nextP2;
+			Point nextP3;
+			Point nextP4;
+			this.CornersFlowNext(out nextP1, out nextP2, out nextP3, out nextP4, drawingContext);
 
 			int count = this.textFlow.Count;
 			int rank = this.textFlow.Rank(this);
@@ -1058,17 +1058,17 @@ namespace Epsitec.Common.Document.Objects
 		// Crée le chemin des "poignées" du flux de l'objet.
 		protected Path PathFlowHandlesSurface(IPaintPort port, DrawingContext drawingContext)
 		{
-			Point prevP1 = new Point();
-			Point prevP2 = new Point();
-			Point prevP3 = new Point();
-			Point prevP4 = new Point();
-			this.CornersFlowPrev(ref prevP1, ref prevP2, ref prevP3, ref prevP4, drawingContext);
+			Point prevP1;
+			Point prevP2;
+			Point prevP3;
+			Point prevP4;
+			this.CornersFlowPrev(out prevP1, out prevP2, out prevP3, out prevP4, drawingContext);
 
-			Point nextP1 = new Point();
-			Point nextP2 = new Point();
-			Point nextP3 = new Point();
-			Point nextP4 = new Point();
-			this.CornersFlowNext(ref nextP1, ref nextP2, ref nextP3, ref nextP4, drawingContext);
+			Point nextP1;
+			Point nextP2;
+			Point nextP3;
+			Point nextP4;
+			this.CornersFlowNext(out nextP1, out nextP2, out nextP3, out nextP4, drawingContext);
 
 			int count = this.textFlow.Count;
 			int rank = this.textFlow.Rank(this);
@@ -1178,13 +1178,10 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Calcules les 4 coins de la poignée "pavé précédent".
-		protected void CornersFlowPrev(ref Point p1, ref Point p2, ref Point p3, ref Point p4, DrawingContext drawingContext)
+		protected void CornersFlowPrev(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
 		{
-			Point c1 = new Point();
-			Point c2 = new Point();
-			Point c3 = new Point();
-			Point c4 = new Point();
-			this.Corners(ref c1, ref c2, ref c3, ref c4);
+			Point c1, c2, c3, c4;
+			this.Corners(out c1, out c2, out c3, out c4);
 
 			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
 			p1 = c3;
@@ -1194,13 +1191,10 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Calcules les 4 coins de la poignée "pavé suivant".
-		protected void CornersFlowNext(ref Point p1, ref Point p2, ref Point p3, ref Point p4, DrawingContext drawingContext)
+		protected void CornersFlowNext(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
 		{
-			Point c1 = new Point();
-			Point c2 = new Point();
-			Point c3 = new Point();
-			Point c4 = new Point();
-			this.Corners(ref c1, ref c2, ref c3, ref c4);
+			Point c1, c2, c3, c4;
+			this.Corners(out c1, out c2, out c3, out c4);
 
 			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
 			p4 = c2;
@@ -1221,7 +1215,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Calcules les 4 coins.
-		protected void Corners(ref Point p1, ref Point p2, ref Point p3, ref Point p4)
+		protected void Corners(out Point p1, out Point p2, out Point p3, out Point p4)
 		{
 			Point h0, h1, h2, h3;
 
@@ -1280,16 +1274,20 @@ namespace Epsitec.Common.Document.Objects
 		// Met à jour le TextFrame en fonction des dimensions du pavé.
 		protected void UpdateTextFrame()
 		{
-			Point p1 = new Point();
-			Point p2 = new Point();
-			Point p3 = new Point();
-			Point p4 = new Point();
-			this.Corners(ref p1, ref p2, ref p3, ref p4);
-
-			this.textFrame.Width  = Point.Distance(p1, p2);
-			this.textFrame.Height = Point.Distance(p1, p3);
+			Point p1, p2, p3, p4;
+			this.Corners(out p1, out p2, out p3, out p4);
 			
-			this.textFlow.TextStory.NotifyTextChanged();
+			double width = Point.Distance(p1, p2);
+			double height = Point.Distance(p1, p3);
+			
+			if ( this.textFrame.Width != width ||
+				 this.textFrame.Height != height )
+			{
+				this.textFrame.Width  = width;
+				this.textFrame.Height = height;
+				
+				this.textFlow.TextStory.NotifyTextChanged();
+			}
 		}
 
 		// Dessine le texte du pavé.
@@ -1306,11 +1304,8 @@ namespace Epsitec.Common.Document.Objects
 			this.cursorBox = Drawing.Rectangle.Empty;
 			this.selectBox = Drawing.Rectangle.Empty;
 
-			Point p1 = new Point();
-			Point p2 = new Point();
-			Point p3 = new Point();
-			Point p4 = new Point();
-			this.Corners(ref p1, ref p2, ref p3, ref p4);
+			Point p1, p2, p3, p4;
+			this.Corners(out p1, out p2, out p3, out p4);
 
 			Transform ot = null;
 			if ( port != null )
