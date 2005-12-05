@@ -3,6 +3,8 @@
 
 namespace Epsitec.Common.Text
 {
+	using EventHandler = Common.Support.EventHandler;
+	
 	/// <summary>
 	/// La classe StyleList gère la liste des styles associés à un ou plusieurs
 	/// textes.
@@ -212,20 +214,7 @@ namespace Epsitec.Common.Text
 			//	Change les propriétés d'un style. Le style devient un style "plat"
 			//	indépendant d'autres styles.
 			
-			System.Diagnostics.Debug.Assert (this.text_style_list.Contains (style));
-			
-			using (queue.BeginAction ())
-			{
-				queue.Insert (new RedefineOplet (this, style));
-				
-				this.version.ChangeVersion ();
-				
-				style.Clear ();
-				style.Initialise (properties);
-				style.DefineIsFlagged (true);
-				
-				queue.ValidateAction ();
-			}
+			this.RedefineTextStyle (queue, style, properties, null);
 		}
 		
 		public void RedefineTextStyle(Common.Support.OpletQueue queue, TextStyle style, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
@@ -234,21 +223,16 @@ namespace Epsitec.Common.Text
 			//	un style dérivé.
 			
 			System.Diagnostics.Debug.Assert (this.text_style_list.Contains (style));
-			System.Diagnostics.Debug.Assert (parent_styles != null);
-			System.Diagnostics.Debug.Assert (parent_styles.Count > 0);
 			
 			using (queue.BeginAction ())
 			{
 				queue.Insert (new RedefineOplet (this, style));
-				
-				this.version.ChangeVersion ();
-				
-				style.Clear ();
-				style.Initialise (properties, parent_styles);
-				style.DefineIsFlagged (true);
-				
 				queue.ValidateAction ();
 			}
+			
+			this.PreRedefine (style);
+			style.Initialise (properties, parent_styles);
+			this.PostRedefine (style);
 		}
 		
 		
@@ -467,6 +451,20 @@ namespace Epsitec.Common.Text
 			name = full_name.Substring (2);
 		}
 		#endregion
+		
+		private void PreRedefine(TextStyle style)
+		{
+			this.version.ChangeVersion ();
+			
+			style.Clear ();
+		}
+		
+		private void PostRedefine(TextStyle style)
+		{
+			style.DefineIsFlagged (true);
+			
+			this.OnStyleRedefined ();
+		}
 		
 		private bool UpdateTextStories()
 		{
@@ -717,6 +715,7 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		#region RedefineOplet Class
 		private class RedefineOplet : Common.Support.AbstractOplet
 		{
 			public RedefineOplet(StyleList stylist, TextStyle style)
@@ -729,17 +728,14 @@ namespace Epsitec.Common.Text
 			
 			public override Common.Support.IOplet Undo()
 			{
-				string state = this.style.SaveState (this.stylist);
+				string new_state = this.style.SaveState (this.stylist);
+				string old_state = this.state;
 				
-				this.stylist.version.ChangeVersion ();
+				this.state = new_state;
 				
-				this.style.Clear ();
-				this.style.RestoreState (this.stylist, this.state);
-				this.style.DefineIsFlagged (true);
-				
-				this.state = state;
-				
-				this.stylist.UpdateTextStyles ();
+				this.stylist.PreRedefine (this.style);
+				this.style.RestoreState (this.stylist, old_state);
+				this.stylist.PostRedefine (this.style);
 				
 				return this;
 			}
@@ -759,7 +755,36 @@ namespace Epsitec.Common.Text
 			private TextStyle					style;
 			private string						state;
 		}
+		#endregion
 		
+		private void OnStyleRedefined()
+		{
+			if (this.StyleRedefined != null)
+			{
+				this.StyleRedefined (this);
+			}
+		}
+		
+		private void OnStyleAdded()
+		{
+			if (this.StyleAdded != null)
+			{
+				this.StyleAdded (this);
+			}
+		}
+		
+		private void OnStyleRemoved()
+		{
+			if (this.StyleRemoved != null)
+			{
+				this.StyleRemoved (this);
+			}
+		}
+		
+		
+		public event EventHandler				StyleRedefined;
+		public event EventHandler				StyleAdded;
+		public event EventHandler				StyleRemoved;
 		
 		private TextContext						context;
 		private Internal.StyleTable				internal_styles;

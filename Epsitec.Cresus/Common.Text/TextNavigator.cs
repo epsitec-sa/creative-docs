@@ -29,6 +29,7 @@ namespace Epsitec.Common.Text
 			this.story.NewCursor (this.temp_cursor);
 			
 			this.story.OpletExecuted += new OpletEventHandler (this.HandleStoryOpletExecuted);
+			this.story.TextChanged   += new EventHandler (this.HandleStoryTextChanged);
 		}
 		
 		
@@ -2519,6 +2520,8 @@ namespace Epsitec.Common.Text
 					this.UpdateSelectionMarkers ();
 					
 					this.story.OpletExecuted -= new OpletEventHandler (this.HandleStoryOpletExecuted);
+					this.story.TextChanged   -= new EventHandler (this.HandleStoryTextChanged);
+					
 					this.story.RecycleCursor (this.cursor);
 					this.story.RecycleCursor (this.temp_cursor);
 					
@@ -3018,6 +3021,14 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (this.story == sender);
 			
 			this.OnOpletExecuted (e);
+		}
+		
+		private void HandleStoryTextChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.story == sender);
+			
+			this.UpdateCurrentStylesAndProperties ();
+			this.NotifyTextChanged ();
 		}
 		
 		

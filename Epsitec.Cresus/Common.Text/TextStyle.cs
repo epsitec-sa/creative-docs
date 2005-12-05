@@ -138,19 +138,27 @@ namespace Epsitec.Common.Text
 		
 		internal void Initialise(System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
 		{
-			//	Initialise un style dérivé d'autres styles. Il faut d'une part
-			//	prendre note des styles parents et d'autre part se souvenir des
-			//	propriétés additionnelles. En effet, PropertyContainer stockant
-			//	toutes les propriétés au même niveau, il ne serait pas possible
-			//	d'en regénérer la liste si ces infos n'étaient pas conservées.
-			
-			this.parent_styles    = new TextStyle[parent_styles.Count];
-			this.style_properties = new Property[properties.Count];
+			if ((parent_styles == null) ||
+				(parent_styles.Count == 0))
+			{
+				this.Initialise (properties);
+			}
+			else
+			{
+				//	Initialise un style dérivé d'autres styles. Il faut d'une part
+				//	prendre note des styles parents et d'autre part se souvenir des
+				//	propriétés additionnelles. En effet, PropertyContainer stockant
+				//	toutes les propriétés au même niveau, il ne serait pas possible
+				//	d'en regénérer la liste si ces infos n'étaient pas conservées.
 				
-			parent_styles.CopyTo (this.parent_styles, 0);
-			properties.CopyTo (this.style_properties, 0);
-				
-			this.GenerateStyleProperties ();
+				this.parent_styles    = new TextStyle[parent_styles.Count];
+				this.style_properties = new Property[properties.Count];
+					
+				parent_styles.CopyTo (this.parent_styles, 0);
+				properties.CopyTo (this.style_properties, 0);
+					
+				this.GenerateStyleProperties ();
+			}
 		}
 		
 		

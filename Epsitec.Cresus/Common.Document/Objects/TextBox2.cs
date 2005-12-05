@@ -1897,7 +1897,7 @@ namespace Epsitec.Common.Document.Objects
 //-			this.textFlow.TextFitter.ClearAllMarks();
 			this.textFlow.TextFitter.GenerateMarks();
 
-			this.textFlow.TextStory.NotifyTextChanged();
+//-			this.textFlow.TextStory.NotifyTextChanged();
 
 			// Indique qu'il faudra recalculer les bbox à toute la chaîne des pavés.
 			UndoableList chain = this.textFlow.Chain;

@@ -3,6 +3,7 @@
 
 namespace Epsitec.Common.Text
 {
+	using EventHandler      = Epsitec.Common.Support.EventHandler;
 	using OpletEventHandler = Epsitec.Common.Support.OpletEventHandler;
 	using OpletEventArgs	= Epsitec.Common.Support.OpletEventArgs;
 	
@@ -528,6 +529,8 @@ namespace Epsitec.Common.Text
 			this.text_change_mark_end   = this.TextLength;
 			
 			this.text.ChangeVersion ();
+			
+			this.OnTextChanged ();
 		}
 		
 		
@@ -1464,6 +1467,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		protected virtual void OnTextChanged()
+		{
+			if (this.TextChanged != null)
+			{
+				this.TextChanged (this);
+			}
+		}
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -2038,6 +2049,7 @@ namespace Epsitec.Common.Text
 		
 		
 		public event OpletEventHandler			OpletExecuted;
+		public event EventHandler				TextChanged;
 		
 		
 		private Internal.TextTable				text;

@@ -1321,8 +1321,17 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.NewMetaProperty("AlignCenter", "Align", new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 0.5, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
 			this.textContext.StyleList.NewMetaProperty("AlignRight",  "Align", new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 1.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
 			this.textContext.StyleList.NewMetaProperty("AlignJustif", "Align", new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 1.0, 0.0, 0.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
+			
+			this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
 		}
 
+		
+		// Appelé quand un TextStyle est modifié dans StyleList.
+		private void HandleStyleListStyleRedefined(object sender)
+		{
+			this.textContext.StyleList.UpdateTextStyles();
+		}
+		
 		// Cherche un tag unique pour le prochain tabulateur interactif à créer.
 		public string SearchTabNextTag()
 		{
