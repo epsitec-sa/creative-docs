@@ -68,48 +68,44 @@ namespace Epsitec.Common.Text.Wrappers
 			if (this.defined_state.IsValueFlagged (State.FontFaceProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsFontFaceDefined)
-				{
-					font_face = this.defined_state.FontFace;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsFontFaceDefined)
+			{
+				font_face = this.defined_state.FontFace;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.FontFeaturesProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsFontFeaturesDefined)
-				{
-					font_features = this.defined_state.FontFeatures;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsFontFeaturesDefined)
+			{
+				font_features = this.defined_state.FontFeatures;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.FontStyleProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsFontStyleDefined)
-				{
-					font_style = this.defined_state.FontStyle;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsFontStyleDefined)
+			{
+				font_style = this.defined_state.FontStyle;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.FontSizeProperty) ||
 				this.defined_state.IsValueFlagged (State.UnitsProperty))
 			{
 				changes++;
-				
-				if ((this.defined_state.IsFontSizeDefined) &&
-					(this.defined_state.IsUnitsDefined))
-				{
-					font_size = this.defined_state.FontSize;
-					units     = this.defined_state.Units;
-					defines++;
-				}
+			}
+			if ((this.defined_state.IsFontSizeDefined) &&
+				(this.defined_state.IsUnitsDefined))
+			{
+				font_size = this.defined_state.FontSize;
+				units     = this.defined_state.Units;
+				defines++;
 			}
 			
 			//	...
@@ -174,51 +170,46 @@ namespace Epsitec.Common.Text.Wrappers
 			if (this.defined_state.IsValueFlagged (State.UnderlineProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsUnderlineDefined)
-				{
-					list.Add (this.defined_state.Underline.ToProperty ());
-				}
+			}
+			if (this.defined_state.IsUnderlineDefined)
+			{
+				list.Add (this.defined_state.Underline.ToProperty ());
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.StrikeoutProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsStrikeoutDefined)
-				{
-					list.Add (this.defined_state.Strikeout.ToProperty ());
-				}
+			}
+			if (this.defined_state.IsStrikeoutDefined)
+			{
+				list.Add (this.defined_state.Strikeout.ToProperty ());
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.OverlineProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsOverlineDefined)
-				{
-					list.Add (this.defined_state.Overline.ToProperty ());
-				}
+			}
+			if (this.defined_state.IsOverlineDefined)
+			{
+				list.Add (this.defined_state.Overline.ToProperty ());
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.TextBoxProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsTextBoxDefined)
-				{
-					list.Add (this.defined_state.TextBox.ToProperty ());
-				}
+			}
+			if (this.defined_state.IsTextBoxDefined)
+			{
+				list.Add (this.defined_state.TextBox.ToProperty ());
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.TextMarkerProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsTextMarkerDefined)
-				{
-					list.Add (this.defined_state.TextMarker.ToProperty ());
-				}
+			}
+			if (this.defined_state.IsTextMarkerDefined)
+			{
+				list.Add (this.defined_state.TextMarker.ToProperty ());
 			}
 			
 			if (changes > 0)

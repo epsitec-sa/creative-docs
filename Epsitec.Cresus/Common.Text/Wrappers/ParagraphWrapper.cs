@@ -66,7 +66,10 @@ namespace Epsitec.Common.Text.Wrappers
 			if (this.defined_state.IsValueFlagged (State.JustificationModeProperty))
 			{
 				changes++;
-				
+			}
+			
+			if (this.defined_state.IsJustificationModeDefined)
+			{
 				switch (this.defined_state.JustificationMode)
 				{
 					case JustificationMode.AlignLeft:
@@ -123,60 +126,55 @@ namespace Epsitec.Common.Text.Wrappers
 			if (this.defined_state.IsValueFlagged (State.LeftMarginFirstProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsLeftMarginFirstDefined)
-				{
-					left_m_first = this.defined_state.LeftMarginFirst;
-					units        = this.defined_state.MarginUnits;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsLeftMarginFirstDefined)
+			{
+				left_m_first = this.defined_state.LeftMarginFirst;
+				units        = this.defined_state.MarginUnits;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.LeftMarginBodyProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsLeftMarginBodyDefined)
-				{
-					left_m_body = this.defined_state.LeftMarginBody;
-					units       = this.defined_state.MarginUnits;
-					defines++;
-				}
+			}	
+			if (this.defined_state.IsLeftMarginBodyDefined)
+			{
+				left_m_body = this.defined_state.LeftMarginBody;
+				units       = this.defined_state.MarginUnits;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.RightMarginFirstProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsRightMarginFirstDefined)
-				{
-					right_m_first = this.defined_state.RightMarginFirst;
-					units         = this.defined_state.MarginUnits;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsRightMarginFirstDefined)
+			{
+				right_m_first = this.defined_state.RightMarginFirst;
+				units         = this.defined_state.MarginUnits;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.RightMarginBodyProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsRightMarginBodyDefined)
-				{
-					right_m_body = this.defined_state.RightMarginBody;
-					units        = this.defined_state.MarginUnits;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsRightMarginBodyDefined)
+			{
+				right_m_body = this.defined_state.RightMarginBody;
+				units        = this.defined_state.MarginUnits;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.HyphenationProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsHyphenationDefined)
-				{
-					hyphenate = this.defined_state.Hyphenation ? Properties.ThreeState.True : Properties.ThreeState.False;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsHyphenationDefined)
+			{
+				hyphenate = this.defined_state.Hyphenation ? Properties.ThreeState.True : Properties.ThreeState.False;
+				defines++;
 			}
 			
 			if (changes > 0)
@@ -211,50 +209,46 @@ namespace Epsitec.Common.Text.Wrappers
 				(this.defined_state.IsValueFlagged (State.LeadingUnitsProperty)))
 			{
 				changes++;
-				
-				if (this.defined_state.IsLeadingDefined)
-				{
-					leading       = this.defined_state.Leading;
-					leading_units = this.defined_state.LeadingUnits;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsLeadingDefined)
+			{
+				leading       = this.defined_state.Leading;
+				leading_units = this.defined_state.LeadingUnits;
+				defines++;
 			}
 			
 			if ((this.defined_state.IsValueFlagged (State.SpaceBeforeProperty)) ||
 				(this.defined_state.IsValueFlagged (State.SpaceBeforeUnitsProperty)))
 			{
 				changes++;
-				
-				if (this.defined_state.IsSpaceBeforeDefined)
-				{
-					space_before       = this.defined_state.SpaceBefore;
-					space_before_units = this.defined_state.SpaceBeforeUnits;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsSpaceBeforeDefined)
+			{
+				space_before       = this.defined_state.SpaceBefore;
+				space_before_units = this.defined_state.SpaceBeforeUnits;
+				defines++;
 			}
 			
 			if ((this.defined_state.IsValueFlagged (State.SpaceAfterProperty)) ||
 				(this.defined_state.IsValueFlagged (State.SpaceAfterUnitsProperty)))
 			{
 				changes++;
-				
-				if (this.defined_state.IsSpaceAfterDefined)
-				{
-					space_after       = this.defined_state.SpaceAfter;
-					space_after_units = this.defined_state.SpaceAfterUnits;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsSpaceAfterDefined)
+			{
+				space_after       = this.defined_state.SpaceAfter;
+				space_after_units = this.defined_state.SpaceAfterUnits;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.AlignModeProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsAlignModeDefined)
-				{
-					align_mode = this.defined_state.AlignMode;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsAlignModeDefined)
+			{
+				align_mode = this.defined_state.AlignMode;
+				defines++;
 			}
 			
 			if (changes > 0)
@@ -286,56 +280,51 @@ namespace Epsitec.Common.Text.Wrappers
 			if (this.defined_state.IsValueFlagged (State.KeepStartLinesProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsKeepStartLinesDefined)
-				{
-					keep_start_lines = this.defined_state.KeepStartLines;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsKeepStartLinesDefined)
+			{
+				keep_start_lines = this.defined_state.KeepStartLines;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.KeepEndLinesProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsKeepEndLinesDefined)
-				{
-					keep_end_lines = this.defined_state.KeepEndLines;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsKeepEndLinesDefined)
+			{
+				keep_end_lines = this.defined_state.KeepEndLines;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.KeepWithNextParagraphProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsKeepWithNextParagraphDefined)
-				{
-					keep_with_next = this.defined_state.KeepWithNextParagraph ? Properties.ThreeState.True : Properties.ThreeState.False;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsKeepWithNextParagraphDefined)
+			{
+				keep_with_next = this.defined_state.KeepWithNextParagraph ? Properties.ThreeState.True : Properties.ThreeState.False;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.KeepWithPreviousParagraphProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsKeepWithPreviousParagraphDefined)
-				{
-					keep_with_previous = this.defined_state.KeepWithPreviousParagraph ? Properties.ThreeState.True : Properties.ThreeState.False;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsKeepWithPreviousParagraphDefined)
+			{
+				keep_with_previous = this.defined_state.KeepWithPreviousParagraph ? Properties.ThreeState.True : Properties.ThreeState.False;
+				defines++;
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.ParagraphStartModeProperty))
 			{
 				changes++;
-				
-				if (this.defined_state.IsParagraphStartModeDefined)
-				{
-					start_mode = this.defined_state.ParagraphStartMode;
-					defines++;
-				}
+			}
+			if (this.defined_state.IsParagraphStartModeDefined)
+			{
+				start_mode = this.defined_state.ParagraphStartMode;
+				defines++;
 			}
 			
 			if (changes > 0)
