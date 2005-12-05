@@ -266,13 +266,31 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( activable )
 			{
 				button.ButtonStyle = ButtonStyle.ActivableIcon;
+				button.AcceptThreeState = true;
 			}
 
+			button.AutoFocus = false;
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(button, tooltip);
 			return button;
+		}
+
+		protected void ActiveIconButton(IconButton button, bool active, bool defined)
+		{
+			if ( active && defined )
+			{
+				button.ActiveState = ActiveState.Yes;
+			}
+			else if ( active )
+			{
+				button.ActiveState = ActiveState.Maybe;
+			}
+			else
+			{
+				button.ActiveState = ActiveState.No;
+			}
 		}
 
 		// Crée un bouton "x" pour effacer une propriété.

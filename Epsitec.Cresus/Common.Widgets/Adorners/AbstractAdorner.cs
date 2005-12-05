@@ -29,6 +29,43 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorCaptionText       = Drawing.Color.FromName("ActiveCaptionText");
 			this.colorInfo              = Drawing.Color.FromName("Info");
 		}
+
+
+		// Indique si un IconButton en mode ThreeState est 2 pixels plus haut.
+		protected static bool IsThreeState2(Widgets.WidgetState state)
+		{
+			if ( (state&WidgetState.ThreeState) == 0 )  return false;
+
+			return ( (state&WidgetState.ActiveYes)   != 0 ||
+					 (state&WidgetState.ActiveMaybe) != 0 );
+		}
+
+		// Donne le chemin d'un IconButton en mode ThreeState.
+		protected static Drawing.Path PathThreeState2Frame(Drawing.Rectangle rect, Widgets.WidgetState state)
+		{
+			Drawing.Path path = new Drawing.Path();
+
+			if ( AbstractAdorner.IsThreeState2(state) )
+			{
+				path.MoveTo(rect.Left, rect.Bottom);
+				path.LineTo(rect.Left, rect.Top-2);
+				path.LineTo(rect.Left+2, rect.Top);
+				path.LineTo(rect.Right-2, rect.Top);
+				path.LineTo(rect.Right, rect.Top-2);
+				path.LineTo(rect.Right, rect.Bottom);
+				path.Close();
+			}
+			else
+			{
+				path.MoveTo(rect.Left, rect.Bottom);
+				path.LineTo(rect.Left, rect.Top);
+				path.LineTo(rect.Right, rect.Top);
+				path.LineTo(rect.Right, rect.Bottom);
+				path.Close();
+			}
+
+			return path;
+		}
 		
 		
 		#region IAdorner Members
@@ -184,6 +221,11 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 		public abstract Drawing.Margins GeometryToolShapeBounds
+		{
+			get;
+		}
+
+		public abstract Drawing.Margins GeometryThreeStateShapeBounds
 		{
 			get;
 		}

@@ -145,6 +145,7 @@ namespace Epsitec.Common.Widgets
 		Drawing.Margins GeometryRadioShapeBounds { get; }
 		Drawing.Margins GeometryGroupShapeBounds { get; }
 		Drawing.Margins GeometryToolShapeBounds { get; }
+		Drawing.Margins GeometryThreeStateShapeBounds { get; }
 		Drawing.Margins GeometryButtonShapeBounds { get; }
 		Drawing.Margins GeometryRibbonShapeBounds { get; }
 		Drawing.Margins GeometryTextFieldShapeBounds { get; }

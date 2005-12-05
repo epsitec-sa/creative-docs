@@ -59,18 +59,20 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			base.UpdateAfterChanging();
 
-			Common.Text.Wrappers.JustificationMode justif = this.document.ParagraphWrapper.Defined.JustificationMode;
+			Common.Text.Wrappers.JustificationMode justif = this.document.ParagraphWrapper.Active.JustificationMode;
+			bool isJustif = this.document.ParagraphWrapper.Defined.IsJustificationModeDefined;
 
-			bool hyphen = this.document.ParagraphWrapper.Defined.Hyphenation;
+			bool hyphen = this.document.ParagraphWrapper.Active.Hyphenation;
+			bool isHyphen = this.document.ParagraphWrapper.Defined.IsHyphenationDefined;
 
 			this.ignoreChanged = true;
 
-			this.buttonAlignLeft.ActiveState   = (justif == Common.Text.Wrappers.JustificationMode.AlignLeft)        ? ActiveState.Yes : ActiveState.No;
-			this.buttonAlignCenter.ActiveState = (justif == Common.Text.Wrappers.JustificationMode.Center)           ? ActiveState.Yes : ActiveState.No;
-			this.buttonAlignRight.ActiveState  = (justif == Common.Text.Wrappers.JustificationMode.AlignRight)       ? ActiveState.Yes : ActiveState.No;
-			this.buttonAlignJustif.ActiveState = (justif == Common.Text.Wrappers.JustificationMode.JustifyAlignLeft) ? ActiveState.Yes : ActiveState.No;
+			this.ActiveIconButton(this.buttonAlignLeft,   justif == Common.Text.Wrappers.JustificationMode.AlignLeft,        isJustif);
+			this.ActiveIconButton(this.buttonAlignCenter, justif == Common.Text.Wrappers.JustificationMode.Center,           isJustif);
+			this.ActiveIconButton(this.buttonAlignRight,  justif == Common.Text.Wrappers.JustificationMode.AlignRight,       isJustif);
+			this.ActiveIconButton(this.buttonAlignJustif, justif == Common.Text.Wrappers.JustificationMode.JustifyAlignLeft, isJustif);
 
-			this.buttonHyphen.ActiveState = hyphen ? ActiveState.Yes : ActiveState.No;
+			this.ActiveIconButton(this.buttonHyphen, hyphen, isHyphen);
 
 			this.ignoreChanged = false;
 		}
@@ -141,16 +143,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
-			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.Yes);
-
-			if ( hyphen )
-			{
-				this.document.ParagraphWrapper.Defined.ClearHyphenation();
-			}
-			else
-			{
-				this.document.ParagraphWrapper.Defined.Hyphenation = true;
-			}
+			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.No);
+			this.document.ParagraphWrapper.Defined.Hyphenation = hyphen;
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)

@@ -588,6 +588,13 @@ namespace Epsitec.Common.Widgets.Adorners
 				rInside.Right += 1;
 				rFocus.Right += 1;
 
+				if ( AbstractAdorner.IsThreeState2(state) )
+				{
+					rect.Top += 2;
+					rInside.Top += 2;
+					rFocus.Top += 2;
+				}
+
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
 					if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
@@ -622,7 +629,8 @@ namespace Epsitec.Common.Widgets.Adorners
 					}
 
 					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
+					Drawing.Path path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddOutline(path, 1);
 					graphics.RenderSolid(this.colorBorder);
 				}
 				else
@@ -630,7 +638,8 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintImageButton(graphics, rInside, 11);
 
 					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
+					Drawing.Path path = AbstractAdorner.PathThreeState2Frame(rect, state);
+					graphics.Rasterizer.AddOutline(path, 1);
 					graphics.RenderSolid(this.colorDisabled);
 				}
 
@@ -692,6 +701,10 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				pos.X ++;
 				pos.Y --;
+			}
+			if ( AbstractAdorner.IsThreeState2(state) )
+			{
+				pos.Y ++;
 			}
 			if ( style != ButtonStyle.Tab )
 			{
@@ -2285,6 +2298,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public override Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public override Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,1,0,0); } }
+		public override Drawing.Margins GeometryThreeStateShapeBounds { get { return new Drawing.Margins(0,1,2,0); } }
 		public override Drawing.Margins GeometryButtonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public override Drawing.Margins GeometryRibbonShapeBounds { get { return new Drawing.Margins(0,0,0,3); } }
 		public override Drawing.Margins GeometryTextFieldShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }

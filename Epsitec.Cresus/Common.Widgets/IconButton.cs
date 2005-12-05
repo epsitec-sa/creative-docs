@@ -87,7 +87,14 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryToolShapeBounds);
+			if ( (this.PaintState&WidgetState.ThreeState) == 0 )
+			{
+				rect.Inflate(adorner.GeometryToolShapeBounds);
+			}
+			else
+			{
+				rect.Inflate(adorner.GeometryThreeStateShapeBounds);
+			}
 			return rect;
 		}
 		

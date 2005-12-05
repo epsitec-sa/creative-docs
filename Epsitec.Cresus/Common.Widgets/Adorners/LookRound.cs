@@ -620,6 +620,11 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else if ( style == ButtonStyle.ActivableIcon )
 			{
+				if ( AbstractAdorner.IsThreeState2(state) )
+				{
+					rect.Top += 2;
+				}
+
 				rect.Right += 1;
 
 				double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
@@ -679,6 +684,10 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				pos.X ++;
 				pos.Y --;
+			}
+			if ( AbstractAdorner.IsThreeState2(state) )
+			{
+				pos.Y ++;
 			}
 			if ( style != ButtonStyle.Tab )
 			{
@@ -2044,6 +2053,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public override Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public override Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,1,0,0); } }
+		public override Drawing.Margins GeometryThreeStateShapeBounds { get { return new Drawing.Margins(0,1,2,0); } }
 		public override Drawing.Margins GeometryButtonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public override Drawing.Margins GeometryRibbonShapeBounds { get { return new Drawing.Margins(0,0,0,3); } }
 		public override Drawing.Margins GeometryTextFieldShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
