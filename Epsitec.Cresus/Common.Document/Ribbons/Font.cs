@@ -19,6 +19,10 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonItalic     = this.CreateIconButton(Misc.Icon("FontItalic"),     Res.Strings.Action.Text.Font.Italic,     new MessageEventHandler(this.HandleButtonItalicClicked));
 			this.buttonUnderlined = this.CreateIconButton(Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, new MessageEventHandler(this.HandleButtonUnderlinedClicked));
 
+			this.buttonStyle = new Button(this);
+			this.buttonStyle.Text = "S";
+			this.buttonStyle.Clicked += new MessageEventHandler(this.HandleButtonStyleClicked);
+
 			this.UpdateClientGeometry();
 		}
 		
@@ -163,6 +167,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonItalic.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonUnderlined.Bounds = rect;
+			rect.Offset(dx+5, 0);
+			this.buttonStyle.Bounds = rect;
 		}
 
 
@@ -191,9 +197,16 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( !this.document.TextWrapper.IsAttached )  return;
 		}
 
+		private void HandleButtonStyleClicked(object sender, MessageEventArgs e)
+		{
+			// TODO: pour Pierre !
+		}
+
 
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
+
+		protected Button					buttonStyle;
 	}
 }
