@@ -684,6 +684,14 @@ namespace Epsitec.Common.Widgets
 							case KeyCode.ArrowRight:
 								message.Consumer = this;
 								break;
+//							
+//							case KeyCode.Escape:
+//								this.RejectEdition ();
+//								break;
+//							
+//							case KeyCode.Return:
+//								this.AcceptEdition ();
+//								break;
 						}
 					}
 					break;

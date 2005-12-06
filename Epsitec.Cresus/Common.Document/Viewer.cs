@@ -4094,6 +4094,21 @@ namespace Epsitec.Common.Document
 			base.OnIsFocusedChanged(e);
 		}
 
+		protected override void NotifyWindowChanged(Window oldWindow, Window newWindow)
+		{
+			base.NotifyWindowChanged(oldWindow, newWindow);
+			
+			if ( oldWindow != null )
+			{
+				oldWindow.DetachLogicalFocus(this);
+			}
+			
+			if ( newWindow != null )
+			{
+				newWindow.AttachLogicalFocus(this);
+			}
+		}
+		
 		// Appelé lorsque la vue prend le focus.
 		protected void HandleFocused()
 		{

@@ -294,6 +294,36 @@ namespace Epsitec.Common.Widgets
 						mode = TabNavigationMode.ActivateOnCursorY;
 						dir  = TabNavigationDir.Forwards;
 						break;
+					
+					case KeyCode.Return:
+						if (window != null)
+						{
+							Widget focus = window.FindLogicalFocus ();
+							
+							if ((focus != null) &&
+								(focus.CanFocus) &&
+								(focus.IsFocused != true))
+							{
+								focus.Focus ();
+								return true;
+							}
+						}
+						break;
+					
+					case KeyCode.Escape:
+						if (window != null)
+						{
+							Widget focus = window.FindLogicalFocus ();
+							
+							if ((focus != null) &&
+								(focus.CanFocus) &&
+								(focus.IsFocused != true))
+							{
+								focus.Focus ();
+								return true;
+							}
+						}
+						break;
 				}
 				
 				if ((mode != TabNavigationMode.Passive) &&

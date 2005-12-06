@@ -4432,12 +4432,31 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnParentChanged (e);
 			
-			if (e.NewValue == null)
+			Widget old_parent = e.OldValue as Widget;
+			Widget new_parent = e.NewValue as Widget;
+			
+			if (new_parent == null)
 			{
 				this.AboutToBecomeOrphan ();
 			}
+			
+			Window old_window = old_parent == null ? null : Helpers.VisualTree.GetWindow (old_parent);
+			Window new_window = new_parent == null ? null : Helpers.VisualTree.GetWindow (new_parent);
+			
+			if (old_window != new_window)
+			{
+				this.NotifyWindowChanged (old_window, new_window);
+			}
 		}
-
+		
+		protected virtual void NotifyWindowChanged(Window old_window, Window new_window)
+		{
+			foreach (Widget widget in this.Children.Widgets)
+			{
+				widget.NotifyWindowChanged (old_window, new_window);
+			}
+		}
+		
 
 
 #if false //#fix

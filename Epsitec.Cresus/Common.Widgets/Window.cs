@@ -977,6 +977,33 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public void AttachLogicalFocus(Widget widget)
+		{
+			this.logical_focus_list.Remove (widget);
+			this.logical_focus_list.Add (widget);
+		}
+		
+		public void DetachLogicalFocus(Widget widget)
+		{
+			this.logical_focus_list.Remove (widget);
+		}
+		
+		
+		public Widget FindLogicalFocus()
+		{
+			foreach (Widget widget in this.logical_focus_list)
+			{
+				if ((widget.IsVisible) &&
+					(widget.IsEnabled))
+				{
+					return widget;
+				}
+			}
+			
+			return null;
+		}
+		
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (Widget.DebugDispose)
@@ -2005,6 +2032,7 @@ namespace Epsitec.Common.Widgets
 		private Widget							initially_engaged_widget;
 		private Timer							timer;
 		private MouseCursor						window_cursor;
+		private System.Collections.ArrayList	logical_focus_list = new System.Collections.ArrayList ();
 		
 		private CommandDispatcher				dispatcher;
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
