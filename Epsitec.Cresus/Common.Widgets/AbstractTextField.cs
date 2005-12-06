@@ -55,6 +55,7 @@ namespace Epsitec.Common.Widgets
 			this.CreateTextLayout();
 			
 			this.navigator = new TextNavigator(this.TextLayout);
+			this.navigator.AboutToChange += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorAboutToChange);
 			this.navigator.TextDeleted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextDeleted);
 			this.navigator.TextInserted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
 			this.navigator.CursorScrolled += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorScrolled);
@@ -95,7 +96,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		[Bundle]	public bool					IsReadOnly
+		public bool								IsReadOnly
 		{
 			get
 			{
@@ -123,13 +124,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle]	public bool					AutoSelectOnFocus
+		public bool								AutoSelectOnFocus
 		{
 			get { return this.autoSelectOnFocus; }
 			set { this.autoSelectOnFocus = value; }
 		}
 		
-		[Bundle]	public bool					AutoEraseOnFocus
+		public bool								AutoEraseOnFocus
 		{
 			get { return this.autoEraseOnFocus; }
 			set { this.autoEraseOnFocus = value; }
@@ -429,6 +430,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public string							InitialText
+		{
+			get
+			{
+				return this.initial_text;
+			}
+			set
+			{
+				this.initial_text = value;
+			}
+		}
+		
 
 		protected override void Dispose(bool disposing)
 		{
@@ -438,6 +451,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( this.navigator != null )
 					{
+						this.navigator.AboutToChange -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorAboutToChange);
 						this.navigator.TextDeleted -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextDeleted);
 						this.navigator.TextInserted -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
 						this.navigator.CursorScrolled -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorScrolled);
@@ -491,16 +505,38 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		public virtual bool StartEdition()
+		{
+			if (this.is_editing == false)
+			{
+				this.initial_text = this.Text;
+				this.is_editing   = true;
+				return true;
+			}
+			return false;
+		}
+		
 		public virtual bool AcceptEdition()
 		{
-			this.OnEditionAccepted ();
-			return true;
+			if (this.is_editing)
+			{
+				this.OnEditionAccepted ();
+				this.is_editing = false;
+				return true;
+			}
+			return false;
 		}
 		
 		public virtual bool RejectEdition()
 		{
-			this.OnEditionRejected ();
-			return true;
+			if (this.is_editing)
+			{
+				this.OnEditionRejected ();
+				this.Text = this.initial_text;
+				this.is_editing = false;
+				return true;
+			}
+			return false;
 		}
 		
 		
@@ -684,14 +720,19 @@ namespace Epsitec.Common.Widgets
 							case KeyCode.ArrowRight:
 								message.Consumer = this;
 								break;
-//							
-//							case KeyCode.Escape:
-//								this.RejectEdition ();
-//								break;
-//							
-//							case KeyCode.Return:
-//								this.AcceptEdition ();
-//								break;
+							
+							case KeyCode.Escape:
+								if (this.RejectEdition ())
+								{
+									message.Consumer = this;
+									message.Swallowed = true;
+									System.Diagnostics.Debug.WriteLine ("Swallowed Escape in AbstractTextField.");
+								}
+								break;
+							
+							case KeyCode.Return:
+								this.AcceptEdition ();
+								break;
 						}
 					}
 					break;
@@ -855,6 +896,11 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 
+		
+		private void HandleNavigatorAboutToChange(object sender)
+		{
+			this.StartEdition ();
+		}
 		
 		private void HandleNavigatorTextDeleted(object sender)
 		{
@@ -1536,6 +1582,8 @@ namespace Epsitec.Common.Widgets
 		protected double						scrollZone = 0.5;
 		protected TextDisplayMode				textDisplayMode = TextDisplayMode.Default;
 		protected DefocusAction					defocus_action;
+		protected string						initial_text;
+		protected bool							is_editing;
 		
 		private TextNavigator					navigator;
 		private int								lastCursorFrom = -1;

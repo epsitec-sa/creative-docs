@@ -732,6 +732,8 @@ namespace Epsitec.Common.Widgets
 		// Mémorise l'état actuel complet du texte, pour permettre l'annulation.
 		protected void UndoMemorise(UndoType type)
 		{
+			this.OnAboutToChange ();
+			
 			if ( this.undoQueue == null )  return;
 
 			Support.IOplet[] oplets = this.undoQueue.LastActionOplets;
@@ -895,7 +897,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler TextDeleted;
 
 		// Génère un événement pour dire que le curseur a bougé.
 		protected void OnCursorChanged(bool always)
@@ -911,7 +912,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler CursorChanged;
 
 		// Génère un événement pour dire que le curseur a scrollé.
 		protected void OnCursorScrolled()
@@ -922,7 +922,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler CursorScrolled;
 
 		// Génère un événement pour dire que le style a changé.
 		protected void OnStyleChanged()
@@ -933,7 +932,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler StyleChanged;
+		
+		protected void OnAboutToChange()
+		{
+			if (this.AboutToChange != null)
+			{
+				this.AboutToChange (this);
+			}
+		}
+		
+		public event EventHandler				AboutToChange;
+		public event EventHandler				TextDeleted;
+		public event EventHandler				CursorChanged;
+		public event EventHandler				CursorScrolled;
+		public event EventHandler				StyleChanged;
 
 
 		protected TextLayout					textLayout;
