@@ -47,8 +47,8 @@ namespace Epsitec.Common.Widgets
 		void PaintButtonTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, ButtonStyle style);
 		void PaintButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, ButtonStyle style);
 		
-		void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, TextFieldStyle style, bool readOnly);
-		void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, TextFieldStyle style, bool readOnly);
+		void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, TextFieldStyle style, TextDisplayMode mode, bool readOnly);
+		void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, TextFieldStyle style, TextDisplayMode mode, bool readOnly);
 		
 		void PaintScrollerBackground(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, WidgetState state, Direction dir);
 		void PaintScrollerHandle(Drawing.Graphics graphics, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, WidgetState state, Direction dir);
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Widgets
 		void PaintTextSelectionBackground(Drawing.Graphics graphics, TextLayout.SelectedArea[] areas, WidgetState state);
 		void PaintTextSelectionForeground(Drawing.Graphics graphics, TextLayout.SelectedArea[] areas, WidgetState state);
 		
-		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Point pos, TextLayout text, WidgetState state, PaintTextStyle style, Drawing.Color backColor);
+		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Point pos, TextLayout text, WidgetState state, PaintTextStyle style, TextDisplayMode mode, Drawing.Color backColor);
 
 		void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor);
 
@@ -136,6 +136,7 @@ namespace Epsitec.Common.Widgets
 		Drawing.Color ColorText(WidgetState state);
 		Drawing.Color ColorTextSliderBorder(bool enabled);
 		Drawing.Color ColorTextFieldBorder(bool enabled);
+		Drawing.Color ColorTextDisplayMode(TextDisplayMode mode);
 
 		double AlphaMenu { get; }
 

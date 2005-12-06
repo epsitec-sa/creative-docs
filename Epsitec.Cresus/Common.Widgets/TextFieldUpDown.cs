@@ -50,7 +50,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				string  text  = this.Text;
+				string  text  = TextLayout.ConvertToSimpleText(this.Text);
 				decimal value = this.DefaultValue;
 				
 				if ( text != "" )

@@ -22,6 +22,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldLeftMarginBody  = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftBody,  Res.Strings.TextPanel.Margins.Short.LeftBody,  Res.Strings.TextPanel.Margins.Long.LeftBody,  0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
 			this.fieldRightMargin     = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleRight,     Res.Strings.TextPanel.Margins.Short.Right,     Res.Strings.TextPanel.Margins.Long.Right,     0.0, 100.0, 1.0, false, new EventHandler(this.HandleMarginChanged));
 
+			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+
 			this.document.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
@@ -52,7 +54,7 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					if ( this.IsLabelProperties )  // étendu/détails ?
 					{
-						h += 105;
+						h += 80;
 					}
 					else	// étendu/compact ?
 					{
@@ -76,15 +78,18 @@ namespace Epsitec.Common.Document.TextPanels
 			double leftFirst = this.document.ParagraphWrapper.Active.LeftMarginFirst;
 			double leftBody  = this.document.ParagraphWrapper.Active.LeftMarginBody;
 			double right     = this.document.ParagraphWrapper.Active.RightMarginBody;
-			bool isLeftFirst = this.document.ParagraphWrapper.Active.IsLeftMarginFirstDefined;
-			bool isLeftBody  = this.document.ParagraphWrapper.Active.IsLeftMarginBodyDefined;
-			bool isRight     = this.document.ParagraphWrapper.Active.IsRightMarginBodyDefined;
+			bool isLeftFirst = this.document.ParagraphWrapper.Defined.IsLeftMarginFirstDefined;
+			bool isLeftBody  = this.document.ParagraphWrapper.Defined.IsLeftMarginBodyDefined;
+			bool isRight     = this.document.ParagraphWrapper.Defined.IsRightMarginBodyDefined;
 
 			this.ignoreChanged = true;
 
 			this.fieldLeftMarginFirst.TextFieldReal.InternalValue = (decimal) leftFirst;
 			this.fieldLeftMarginBody.TextFieldReal.InternalValue  = (decimal) leftBody;
 			this.fieldRightMargin.TextFieldReal.InternalValue     = (decimal) right;
+			this.ProposalTextFieldLabel(this.fieldLeftMarginFirst, !isLeftFirst);
+			this.ProposalTextFieldLabel(this.fieldLeftMarginBody,  !isLeftBody );
+			this.ProposalTextFieldLabel(this.fieldRightMargin,     !isRight    );
 			
 			this.ignoreChanged = false;
 		}
@@ -114,13 +119,17 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( this.IsLabelProperties )
 				{
 					r.Left = rect.Left;
-					r.Right = rect.Right;
-					r.Offset(0, -25);
+					r.Right = rect.Right-25;
 					this.fieldLeftMarginFirst.Bounds = r;
 					r.Offset(0, -25);
 					this.fieldLeftMarginBody.Bounds = r;
 					r.Offset(0, -25);
 					this.fieldRightMargin.Bounds = r;
+
+					r.Left = rect.Right-20;
+					r.Width = 20;
+					this.buttonClear.Bounds = r;
+					this.buttonClear.Visibility = true;
 				}
 				else
 				{
@@ -131,6 +140,12 @@ namespace Epsitec.Common.Document.TextPanels
 					this.fieldLeftMarginBody.Bounds = r;
 					r.Offset(60, 0);
 					this.fieldRightMargin.Bounds = r;
+
+					r.Offset(0, -25);
+					r.Left = rect.Right-20;
+					r.Width = 20;
+					this.buttonClear.Bounds = r;
+					this.buttonClear.Visibility = true;
 				}
 			}
 			else
@@ -145,6 +160,8 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fieldLeftMarginBody.Bounds = r;
 				r.Offset(60, 0);
 				this.fieldRightMargin.Bounds = r;
+
+				this.buttonClear.Visibility = false;
 			}
 		}
 
@@ -185,9 +202,24 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
+		private void HandleClearClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+
+			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.Defined.ClearLeftMarginFirst();
+			this.document.ParagraphWrapper.Defined.ClearLeftMarginBody();
+			this.document.ParagraphWrapper.Defined.ClearRightMarginFirst();
+			this.document.ParagraphWrapper.Defined.ClearRightMarginBody();
+			this.document.ParagraphWrapper.Defined.ClearMarginUnits();
+			this.document.ParagraphWrapper.ResumeSynchronisations();
+		}
+
 
 		protected Widgets.TextFieldLabel	fieldLeftMarginFirst;
 		protected Widgets.TextFieldLabel	fieldLeftMarginBody;
 		protected Widgets.TextFieldLabel	fieldRightMargin;
+		protected IconButton				buttonClear;
 	}
 }

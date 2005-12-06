@@ -335,6 +335,18 @@ namespace Epsitec.Common.Document.TextPanels
 			return field;
 		}
 
+		// Modifie le mode d'un TextFieldLabel.
+		protected void ProposalTextFieldLabel(Widgets.TextFieldLabel field, bool proposal)
+		{
+			field.TextFieldReal.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
+		}
+
+		// Donne le mode d'un TextFieldLabel.
+		protected bool ProposalTextFieldLabel(Widgets.TextFieldLabel field)
+		{
+			return (field.TextFieldReal.TextDisplayMode == TextDisplayMode.Proposal);
+		}
+
 		
 		// Met un texte dans un widget quelconque.
 		public static void SetText(Widget widget, string text)

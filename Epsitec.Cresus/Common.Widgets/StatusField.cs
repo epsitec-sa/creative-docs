@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 			adorner.PaintStatusItemBackground(graphics, rect, state);
 			pos.X += this.margin;
 			pos.Y += 0.5;
-			adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, state, PaintTextStyle.Status, this.BackColor);
+			adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, state, PaintTextStyle.Status, TextDisplayMode.Default, this.BackColor);
 		}
 
 

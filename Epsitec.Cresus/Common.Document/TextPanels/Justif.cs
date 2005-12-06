@@ -157,8 +157,10 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
+			this.document.ParagraphWrapper.SuspendSynchronisations();
 			this.document.ParagraphWrapper.Defined.ClearJustificationMode();
 			this.document.ParagraphWrapper.Defined.ClearHyphenation();
+			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
 

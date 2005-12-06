@@ -78,8 +78,8 @@ namespace Epsitec.Common.Widgets.Adorners
 		public abstract void PaintButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetState state, Widgets.Direction dir, Widgets.ButtonStyle style);
 		public abstract void PaintButtonTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, Widgets.WidgetState state, Widgets.ButtonStyle style);
 		public abstract void PaintButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetState state, Widgets.Direction dir, Widgets.ButtonStyle style);
-		public abstract void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetState state, Widgets.TextFieldStyle style, bool readOnly);
-		public abstract void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetState state, Widgets.TextFieldStyle style, bool readOnly);
+		public abstract void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetState state, Widgets.TextFieldStyle style, TextDisplayMode mode, bool readOnly);
+		public abstract void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetState state, Widgets.TextFieldStyle style, TextDisplayMode mode, bool readOnly);
 		public abstract void PaintScrollerBackground(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, Widgets.WidgetState state, Widgets.Direction dir);
 		public abstract void PaintScrollerHandle(Drawing.Graphics graphics, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, Widgets.WidgetState state, Widgets.Direction dir);
 		public abstract void PaintScrollerForeground(Drawing.Graphics graphics, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, Widgets.WidgetState state, Widgets.Direction dir);
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public abstract void PaintTextCursor(Drawing.Graphics graphics, Drawing.Point p1, Drawing.Point p2, bool cursorOn);
 		public abstract void PaintTextSelectionBackground(Drawing.Graphics graphics, Widgets.TextLayout.SelectedArea[] areas, Widgets.WidgetState state);
 		public abstract void PaintTextSelectionForeground(Drawing.Graphics graphics, Widgets.TextLayout.SelectedArea[] areas, Widgets.WidgetState state);
-		public abstract void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Point pos, TextLayout text, Widgets.WidgetState state, Widgets.PaintTextStyle style, Drawing.Color backColor);
+		public abstract void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Point pos, TextLayout text, Widgets.WidgetState state, Widgets.PaintTextStyle style, TextDisplayMode mode, Drawing.Color backColor);
 		public abstract void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor);
 		
 		public virtual Drawing.Color ColorCaption
@@ -186,6 +186,8 @@ namespace Epsitec.Common.Widgets.Adorners
 		public abstract Drawing.Color ColorTextSliderBorder(bool enabled);
 
 		public abstract Drawing.Color ColorTextFieldBorder(bool enabled);
+
+		public abstract Drawing.Color ColorTextDisplayMode(TextDisplayMode mode);
 
 		public virtual double AlphaMenu
 		{

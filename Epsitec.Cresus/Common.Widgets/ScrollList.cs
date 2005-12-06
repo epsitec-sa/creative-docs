@@ -568,13 +568,13 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle menu = rect;
 				menu.Deflate(0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom);
-				adorner.PaintTextFieldBackground(graphics, menu, state, TextFieldStyle.Simple, false);
+				adorner.PaintTextFieldBackground(graphics, menu, state, TextFieldStyle.Simple, TextDisplayMode.Default, false);
 			}
 			else
 			{
 				Drawing.Rectangle menu = rect;
 				menu.Deflate(0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom);
-				adorner.PaintTextFieldBackground(graphics, menu, state, TextFieldStyle.Multi, false);
+				adorner.PaintTextFieldBackground(graphics, menu, state, TextFieldStyle.Multi, TextDisplayMode.Default, false);
 			}
 
 			Drawing.Point pos = new Drawing.Point(ScrollList.TextOffsetX, rect.Height-ScrollList.TextOffsetY-this.lineHeight);

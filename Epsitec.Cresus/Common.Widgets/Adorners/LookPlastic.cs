@@ -671,7 +671,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				state &= ~WidgetState.Focused;
 			}
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, PaintTextStyle.Button, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, PaintTextStyle.Button, TextDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		public override void PaintButtonForeground(Drawing.Graphics graphics,
@@ -687,6 +687,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Drawing.Rectangle rect,
 											 Widgets.WidgetState state,
 											 Widgets.TextFieldStyle style,
+											 TextDisplayMode mode,
 											 bool readOnly)
 		{
 			double radius;
@@ -698,12 +699,20 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
+					Drawing.Color color = this.ColorTextDisplayMode(mode);
 					if ( (state&WidgetState.Error) != 0 )
 					{
 						radius = this.RetRadiusFrame(rect);
 						path = this.PathRoundRectangle(rect, radius);
 						graphics.Rasterizer.AddSurface(path);
 						graphics.RenderSolid(this.colorError);
+					}
+					else if ( !color.IsEmpty )
+					{
+						radius = this.RetRadiusFrame(rect);
+						path = this.PathRoundRectangle(rect, radius);
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(color);
 					}
 					else
 					{
@@ -724,12 +733,20 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
+					Drawing.Color color = this.ColorTextDisplayMode(mode);
 					if ( (state&WidgetState.Error) != 0 )
 					{
 						radius = this.RetRadiusFrame(rect);
 						path = this.PathRoundRectangle(rect, radius);
 						graphics.Rasterizer.AddSurface(path);
 						graphics.RenderSolid(this.colorError);
+					}
+					else if ( !color.IsEmpty )
+					{
+						radius = this.RetRadiusFrame(rect);
+						path = this.PathRoundRectangle(rect, radius);
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(color);
 					}
 					else
 					{
@@ -773,6 +790,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Drawing.Rectangle rect,
 											 Widgets.WidgetState state,
 											 Widgets.TextFieldStyle style,
+											 TextDisplayMode mode,
 											 bool readOnly)
 		{
 		}
@@ -1329,7 +1347,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			state &= ~WidgetState.Selected;
 			state &= ~WidgetState.Focused;
 			PaintTextStyle style = ( type == MenuType.Horizontal ) ? PaintTextStyle.HMenu : PaintTextStyle.VMenu;
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		// Dessine le devant d'une case de menu.
@@ -1490,7 +1508,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			if ( text == null )  return;
 			state &= ~WidgetState.Focused;
 			PaintTextStyle style = PaintTextStyle.HMenu;
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		// Dessine la bande principale d'un ruban.
@@ -1684,9 +1702,17 @@ namespace Epsitec.Common.Widgets.Adorners
 										   TextLayout text,
 										   WidgetState state,
 										   PaintTextStyle style,
+										   TextDisplayMode mode,
 										   Drawing.Color backColor)
 		{
 			if ( text == null )  return;
+
+			string iText = "";
+			if ( mode == TextDisplayMode.Proposal )
+			{
+				iText = text.Text;
+				text.Text = string.Format("<i>{0}</i>", text.Text);
+			}
 
 			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
 
@@ -1704,6 +1730,11 @@ namespace Epsitec.Common.Widgets.Adorners
 			else
 			{
 				text.Paint(pos, graphics, clipRect, this.colorControlDarkDark, Drawing.GlyphPaintStyle.Disabled);
+			}
+
+			if ( mode == TextDisplayMode.Proposal )
+			{
+				text.Text = iText;
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )
@@ -2021,6 +2052,17 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
 			return this.colorBorder;
+		}
+
+		public override Drawing.Color ColorTextDisplayMode(TextDisplayMode mode)
+		{
+			switch ( mode )
+			{
+				case TextDisplayMode.Default:   return Drawing.Color.Empty;
+				case TextDisplayMode.Defined:   return Drawing.Color.FromRGB(255.0/255.0, 226.0/255.0, 110.0/255.0);
+				case TextDisplayMode.Proposal:  return Drawing.Color.FromRGB(186.0/255.0, 220.0/255.0, 255.0/255.0);
+			}
+			return Drawing.Color.Empty;
 		}
 
 		public override Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
