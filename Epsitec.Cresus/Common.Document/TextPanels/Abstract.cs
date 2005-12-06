@@ -341,10 +341,10 @@ namespace Epsitec.Common.Document.TextPanels
 			field.TextFieldReal.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
 		}
 
-		// Donne le mode d'un TextFieldLabel.
-		protected bool ProposalTextFieldLabel(Widgets.TextFieldLabel field)
+		// Modifie le mode d'un TextFieldCombo.
+		protected void ProposalTextFieldCombo(TextFieldCombo field, bool proposal)
 		{
-			return (field.TextFieldReal.TextDisplayMode == TextDisplayMode.Proposal);
+			field.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
 		}
 
 		

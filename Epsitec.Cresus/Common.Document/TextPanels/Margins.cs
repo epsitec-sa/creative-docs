@@ -70,30 +70,6 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Met à jour après un changement du wrapper.
-		protected override void UpdateAfterChanging()
-		{
-			base.UpdateAfterChanging();
-
-			double leftFirst = this.document.ParagraphWrapper.Active.LeftMarginFirst;
-			double leftBody  = this.document.ParagraphWrapper.Active.LeftMarginBody;
-			double right     = this.document.ParagraphWrapper.Active.RightMarginBody;
-			bool isLeftFirst = this.document.ParagraphWrapper.Defined.IsLeftMarginFirstDefined;
-			bool isLeftBody  = this.document.ParagraphWrapper.Defined.IsLeftMarginBodyDefined;
-			bool isRight     = this.document.ParagraphWrapper.Defined.IsRightMarginBodyDefined;
-
-			this.ignoreChanged = true;
-
-			this.fieldLeftMarginFirst.TextFieldReal.InternalValue = (decimal) leftFirst;
-			this.fieldLeftMarginBody.TextFieldReal.InternalValue  = (decimal) leftBody;
-			this.fieldRightMargin.TextFieldReal.InternalValue     = (decimal) right;
-			this.ProposalTextFieldLabel(this.fieldLeftMarginFirst, !isLeftFirst);
-			this.ProposalTextFieldLabel(this.fieldLeftMarginBody,  !isLeftBody );
-			this.ProposalTextFieldLabel(this.fieldRightMargin,     !isRight    );
-			
-			this.ignoreChanged = false;
-		}
-
 
 		// Le wrapper associé a changé.
 		protected void HandleWrapperChanged(object sender)
@@ -166,6 +142,31 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
+		// Met à jour après un changement du wrapper.
+		protected override void UpdateAfterChanging()
+		{
+			base.UpdateAfterChanging();
+
+			double leftFirst = this.document.ParagraphWrapper.Active.LeftMarginFirst;
+			double leftBody  = this.document.ParagraphWrapper.Active.LeftMarginBody;
+			double right     = this.document.ParagraphWrapper.Active.RightMarginBody;
+			bool isLeftFirst = this.document.ParagraphWrapper.Defined.IsLeftMarginFirstDefined;
+			bool isLeftBody  = this.document.ParagraphWrapper.Defined.IsLeftMarginBodyDefined;
+			bool isRight     = this.document.ParagraphWrapper.Defined.IsRightMarginBodyDefined;
+
+			this.ignoreChanged = true;
+
+			this.fieldLeftMarginFirst.TextFieldReal.InternalValue = (decimal) leftFirst;
+			this.fieldLeftMarginBody.TextFieldReal.InternalValue  = (decimal) leftBody;
+			this.fieldRightMargin.TextFieldReal.InternalValue     = (decimal) right;
+			this.ProposalTextFieldLabel(this.fieldLeftMarginFirst, !isLeftFirst);
+			this.ProposalTextFieldLabel(this.fieldLeftMarginBody,  !isLeftBody );
+			this.ProposalTextFieldLabel(this.fieldRightMargin,     !isRight    );
+			
+			this.ignoreChanged = false;
+		}
+
+
 		private void HandleMarginChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
@@ -175,31 +176,60 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( field == null )  return;
 
 			double value = (double) field.InternalValue;
+			bool isDefined = field.Text != "";
+
+			this.document.ParagraphWrapper.SuspendSynchronisations();
 
 			if ( field == this.fieldLeftMarginFirst.TextFieldReal )
 			{
-				this.document.ParagraphWrapper.SuspendSynchronisations();
-				this.document.ParagraphWrapper.Defined.LeftMarginFirst = value;
-				this.document.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
-				this.document.ParagraphWrapper.ResumeSynchronisations();
+				if ( isDefined )
+				{
+					this.document.ParagraphWrapper.Defined.LeftMarginFirst = value;
+					this.document.ParagraphWrapper.Defined.MarginUnits = Common.Text.Properties.SizeUnits.Points;
+				}
+				else
+				{
+					this.document.ParagraphWrapper.Defined.ClearLeftMarginFirst();
+				}
 			}
 
 			if ( field == this.fieldLeftMarginBody.TextFieldReal )
 			{
-				this.document.ParagraphWrapper.SuspendSynchronisations();
-				this.document.ParagraphWrapper.Defined.LeftMarginBody = value;
-				this.document.ParagraphWrapper.Defined.MarginUnits    = Common.Text.Properties.SizeUnits.Points;
-				this.document.ParagraphWrapper.ResumeSynchronisations();
+				if ( isDefined )
+				{
+					this.document.ParagraphWrapper.Defined.LeftMarginBody = value;
+					this.document.ParagraphWrapper.Defined.MarginUnits = Common.Text.Properties.SizeUnits.Points;
+				}
+				else
+				{
+					this.document.ParagraphWrapper.Defined.ClearLeftMarginBody();
+				}
 			}
 
 			if ( field == this.fieldRightMargin.TextFieldReal )
 			{
-				this.document.ParagraphWrapper.SuspendSynchronisations();
-				this.document.ParagraphWrapper.Defined.RightMarginFirst = value;
-				this.document.ParagraphWrapper.Defined.RightMarginBody  = value;
-				this.document.ParagraphWrapper.Defined.MarginUnits      = Common.Text.Properties.SizeUnits.Points;
-				this.document.ParagraphWrapper.ResumeSynchronisations();
+				if ( isDefined )
+				{
+					this.document.ParagraphWrapper.Defined.RightMarginFirst = value;
+					this.document.ParagraphWrapper.Defined.RightMarginBody  = value;
+					this.document.ParagraphWrapper.Defined.MarginUnits = Common.Text.Properties.SizeUnits.Points;
+				}
+				else
+				{
+					this.document.ParagraphWrapper.Defined.ClearRightMarginFirst();
+					this.document.ParagraphWrapper.Defined.ClearRightMarginBody();
+				}
 			}
+
+			if ( !this.document.ParagraphWrapper.Defined.IsLeftMarginFirstDefined  &&
+				 !this.document.ParagraphWrapper.Defined.IsLeftMarginBodyDefined   &&
+				 !this.document.ParagraphWrapper.Defined.IsRightMarginFirstDefined &&
+				 !this.document.ParagraphWrapper.Defined.IsRightMarginBodyDefined  )
+			{
+				this.document.ParagraphWrapper.Defined.ClearMarginUnits();
+			}
+
+			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)

@@ -54,6 +54,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonItalic      = this.CreateIconButton(Misc.Icon("FontItalic"),      Res.Strings.Action.Text.Font.Italic,      new MessageEventHandler(this.HandleButtonItalicClicked));
 			this.buttonUnderlined  = this.CreateIconButton(Misc.Icon("FontUnderlined"),  Res.Strings.Action.Text.Font.Underlined,  new MessageEventHandler(this.HandleButtonUnderlineClicked));
 
+			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+
 			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
@@ -124,69 +126,34 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			base.UpdateAfterChanging();
 
-			string face = this.document.TextWrapper.Defined.FontFace;
-			string baseFace = face;
-			if ( face == null )
-			{
-				face = this.document.TextWrapper.Active.FontFace;
-				baseFace = face;
-				if ( face == null )
-				{
-					face = Res.Strings.Action.Text.Font.Default;
-					baseFace = null;
-				}
-				face = Misc.Italic(face);
-			}
+			string face = this.document.TextWrapper.Active.FontFace;
+			bool isFace = this.document.TextWrapper.Defined.IsFontFaceDefined;
 
-			string style = this.document.TextWrapper.Defined.FontStyle;
-			if ( style == null )
-			{
-				style = this.document.TextWrapper.Active.FontStyle;
-				if ( style == null )
-				{
-					style = Res.Strings.Action.Text.Font.Default;
-				}
-				style = Misc.Italic(style);
-			}
+			string style = this.document.TextWrapper.Active.FontStyle;
+			bool isStyle = this.document.TextWrapper.Defined.IsFontStyleDefined;
 
-			string textSize = "";
-			double size = this.document.TextWrapper.Defined.FontSize;
-			Text.Properties.SizeUnits units = this.document.TextWrapper.Defined.Units;
-			if ( double.IsNaN(size) )
+			double size = this.document.TextWrapper.Active.FontSize;
+			Text.Properties.SizeUnits units = this.document.TextWrapper.Active.Units;
+			if ( units == Common.Text.Properties.SizeUnits.Points )
 			{
-				size = this.document.TextWrapper.Active.FontSize;
-				units = this.document.TextWrapper.Active.Units;
-				if ( double.IsNaN(size) )
-				{
-					textSize = "*";
-				}
-				else
-				{
-					if ( units == Common.Text.Properties.SizeUnits.Points )
-					{
-						size /= Modifier.fontSizeScale;
-					}
-					textSize = Misc.Italic(Misc.ConvertDoubleToString(size, units, 0));
-				}
+				size /= Modifier.fontSizeScale;
 			}
-			else
-			{
-				if ( units == Common.Text.Properties.SizeUnits.Points )
-				{
-					size /= Modifier.fontSizeScale;
-				}
-				textSize = Misc.ConvertDoubleToString(size, units, 0);
-			}
+			bool isSize = this.document.TextWrapper.Defined.IsFontSizeDefined;
+			string textSize = Misc.ConvertDoubleToString(size, units, 0);
 
 			this.ignoreChanged = true;
 
 			this.UpdateComboFaceList();
-			this.UpdateComboStyleList(baseFace);
+			this.UpdateComboStyleList(face);
 			this.UpdateComboSizeList();
 
-			this.fontFace.Text = face;
+			this.fontFace.Text  = face;
 			this.fontStyle.Text = style;
-			this.fontSize.Text = textSize;
+			this.fontSize.Text  = textSize;
+
+			this.ProposalTextFieldCombo(this.fontFace,  !isFace);
+			this.ProposalTextFieldCombo(this.fontStyle, !isStyle);
+			this.ProposalTextFieldCombo(this.fontSize,  !isSize);
 
 			this.UpdateButtonBold();
 			this.UpdateButtonItalic();
@@ -432,6 +399,10 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Width = 30;
 					this.fontColor.Bounds = r;
 					this.fontColor.Visibility = true;
+					r.Left = rect.Right-20;
+					r.Width = 20;
+					this.buttonClear.Bounds = r;
+					this.buttonClear.Visibility = true;
 				}
 				else
 				{
@@ -471,6 +442,10 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Width = 30;
 					this.fontColor.Bounds = r;
 					this.fontColor.Visibility = true;
+					r.Left = rect.Right-20;
+					r.Width = 20;
+					this.buttonClear.Bounds = r;
+					this.buttonClear.Visibility = true;
 				}
 			}
 			else
@@ -494,6 +469,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.buttonBold.Visibility = false;
 				this.buttonItalic.Visibility = false;
 				this.buttonUnderlined.Visibility = false;
+				this.buttonClear.Visibility = false;
 			}
 		}
 
@@ -633,39 +609,58 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( this.ignoreChanged )  return;
 
+			this.document.TextWrapper.SuspendSynchronisations();
+
 			if ( sender == this.fontFace )
 			{
 				string face = this.fontFace.Text;
-				this.document.TextWrapper.SuspendSynchronisations();
-				this.document.TextWrapper.Defined.FontFace = face;
-				this.document.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
-				this.document.TextWrapper.ResumeSynchronisations();
+				if ( face != "" )
+				{
+					this.document.TextWrapper.Defined.FontFace = face;
+					this.document.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
+				}
+				else
+				{
+					this.document.TextWrapper.Defined.ClearFontFace();
+					this.document.TextWrapper.Defined.ClearFontStyle();
+				}
 			}
 
 			if ( sender == this.fontStyle )
 			{
 				string style = this.fontStyle.Text;
-				this.document.TextWrapper.Defined.FontStyle = style;
+				if ( style != "" )
+				{
+					this.document.TextWrapper.Defined.FontStyle = style;
+				}
+				else
+				{
+					this.document.TextWrapper.Defined.ClearFontStyle();
+				}
 			}
 
 			if ( sender == this.fontSize )
 			{
-				double size = 0;
-				Text.Properties.SizeUnits units = Common.Text.Properties.SizeUnits.None;
-				if ( this.fontSize.Text != Res.Strings.Action.Text.Font.Default )
+				if ( this.fontSize.Text != "" )
 				{
-
+					double size;
+					Text.Properties.SizeUnits units;
 					Misc.ConvertStringToDouble(out size, out units, this.fontSize.Text, 0, 1000, 0);
 					if ( units == Common.Text.Properties.SizeUnits.Points )
 					{
 						size *= Modifier.fontSizeScale;
 					}
+					this.document.TextWrapper.Defined.FontSize = size;
+					this.document.TextWrapper.Defined.Units = units;
 				}
-				this.document.TextWrapper.SuspendSynchronisations();
-				this.document.TextWrapper.Defined.FontSize = size;
-				this.document.TextWrapper.Defined.Units = units;
-				this.document.TextWrapper.ResumeSynchronisations();
+				else
+				{
+					this.document.TextWrapper.Defined.ClearFontSize();
+					this.document.TextWrapper.Defined.ClearUnits();
+				}
 			}
+
+			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleFieldColorClicked(object sender, MessageEventArgs e)
@@ -853,6 +848,27 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.document.TextWrapper.IsAttached )  return;
 		}
 
+		private void HandleClearClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+
+			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.Defined.ClearFontFace();
+			this.document.TextWrapper.Defined.ClearFontStyle();
+			this.document.TextWrapper.Defined.ClearFontFeatures();
+			this.document.TextWrapper.Defined.ClearFontSize();
+			this.document.TextWrapper.Defined.ClearUnits();
+			this.document.TextWrapper.Defined.ClearInvertBold();
+			this.document.TextWrapper.Defined.ClearInvertItalic();
+			this.document.TextWrapper.Defined.ClearUnderline();
+			this.document.TextWrapper.Defined.ClearOverline();
+			this.document.TextWrapper.Defined.ClearStrikeout();
+			this.document.TextWrapper.Defined.ClearColor();
+			this.document.TextWrapper.ResumeSynchronisations();
+		}
+
+		
 		private void FillUnderlineDefinition(Common.Text.Wrappers.TextWrapper.XlineDefinition underline)
 		{
 			underline.IsDisabled = false;
@@ -892,5 +908,6 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
+		protected IconButton				buttonClear;
 	}
 }
