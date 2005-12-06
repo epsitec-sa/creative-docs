@@ -52,18 +52,6 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		[Bundle] public DefocusAction			DefocusAction
-		{
-			get
-			{
-				return this.defocus_action;
-			}
-			set
-			{
-				this.defocus_action = value;
-			}
-		}
-		
 		[Bundle] public ShowCondition			ButtonShowCondition
 		{
 			get
@@ -81,7 +69,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool AcceptEdition()
+		public override bool AcceptEdition()
 		{
 			if (this.IsValid)
 			{
@@ -96,7 +84,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		public bool RejectEdition()
+		public override bool RejectEdition()
 		{
 			this.Text = this.accept_reject_behavior.InitialText;
 			this.has_edited_text = false;
@@ -148,43 +136,6 @@ namespace Epsitec.Common.Widgets
 		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
 		{
 			return base.AboutToGetFocus (dir, mode, out focus);
-		}
-		
-		protected override void HandleDefocused()
-		{
-			if (this.IsKeyboardFocused == false)
-			{
-				switch (this.DefocusAction)
-				{
-					case DefocusAction.AcceptEdition:
-						this.AcceptEdition ();
-						break;
-					
-					case DefocusAction.RejectEdition:
-						this.RejectEdition ();
-						break;
-					
-					case DefocusAction.Modal:
-					case DefocusAction.AutoAcceptOrRejectEdition:
-						if (this.IsValid)
-						{
-							this.AcceptEdition ();
-						}
-						else
-						{
-							this.RejectEdition ();
-						}
-						break;
-					
-					case DefocusAction.None:
-						break;
-					
-					default:
-						throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
-				}
-			}
-			
-			base.HandleDefocused ();
 		}
 
 		
@@ -287,22 +238,6 @@ namespace Epsitec.Common.Widgets
 			this.UpdateButtonVisibility ();
 		}
 		
-		protected virtual void  OnEditionAccepted()
-		{
-			if (this.EditionAccepted != null)
-			{
-				this.EditionAccepted (this);
-			}
-		}
-		
-		protected virtual void  OnEditionRejected()
-		{
-			if (this.EditionRejected != null)
-			{
-				this.EditionRejected (this);
-			}
-		}
-		
 		
 		private void HandleAcceptRejectAcceptClicked(object sender)
 		{
@@ -317,13 +252,9 @@ namespace Epsitec.Common.Widgets
 		}		
 		
 		
-		public event Support.EventHandler		EditionAccepted;
-		public event Support.EventHandler		EditionRejected;
-		
 		protected bool							show_buttons;
 		protected bool							has_edited_text;
 		protected ShowCondition					button_show_condition;
-		protected DefocusAction					defocus_action;
 		protected Behaviors.AcceptRejectBehavior	accept_reject_behavior;
 	}
 }

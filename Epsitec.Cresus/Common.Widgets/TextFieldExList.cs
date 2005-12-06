@@ -93,18 +93,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle] public DefocusAction			DefocusAction
-		{
-			get
-			{
-				return this.defocus_action;
-			}
-			set
-			{
-				this.defocus_action = value;
-			}
-		}
-		
 		
 		
 		public void StartPassiveEdition(string text)
@@ -121,7 +109,7 @@ namespace Epsitec.Common.Widgets
 			this.OnEditionStarted ();
 		}
 		
-		public bool RejectEdition()
+		public override bool RejectEdition()
 		{
 			if ((this.mode == TextFieldExListMode.EditActive) ||
 				(this.mode == TextFieldExListMode.EditPassive))
@@ -135,7 +123,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		public bool AcceptEdition()
+		public override bool AcceptEdition()
 		{
 			if ((this.mode == TextFieldExListMode.EditActive) ||
 				(this.mode == TextFieldExListMode.EditPassive))
@@ -416,22 +404,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual  void OnEditionAccepted()
-		{
-			if (this.EditionAccepted != null)
-			{
-				this.EditionAccepted (this);
-			}
-		}
-		
-		protected virtual  void OnEditionRejected()
-		{
-			if (this.EditionRejected != null)
-			{
-				this.EditionRejected (this);
-			}
-		}
-		
 		
 		protected override void OpenCombo()
 		{
@@ -510,13 +482,10 @@ namespace Epsitec.Common.Widgets
 		
 		
 		public event Support.EventHandler		EditionStarted;
-		public event Support.EventHandler		EditionAccepted;
-		public event Support.EventHandler		EditionRejected;
 		
 		protected string						place_holder;
 		
 		protected TextFieldExListMode			mode = TextFieldExListMode.Undefined;
-		protected DefocusAction					defocus_action;
 		protected Behaviors.AcceptRejectBehavior	accept_reject_behavior;
 	}
 }

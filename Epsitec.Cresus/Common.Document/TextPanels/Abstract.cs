@@ -326,7 +326,9 @@ namespace Epsitec.Common.Document.TextPanels
 				this.document.Modifier.AdaptTextFieldRealDimension(field.TextFieldReal);
 			}
 			
-			field.TextFieldReal.ValueChanged += handler;
+			field.TextFieldReal.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			field.TextFieldReal.EditionAccepted += handler;
+//-			field.TextFieldReal.ValueChanged += handler;
 			
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

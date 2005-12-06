@@ -417,6 +417,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public DefocusAction					DefocusAction
+		{
+			get
+			{
+				return this.defocus_action;
+			}
+			set
+			{
+				this.defocus_action = value;
+			}
+		}
+		
 
 		protected override void Dispose(bool disposing)
 		{
@@ -478,6 +490,20 @@ namespace Epsitec.Common.Widgets
 			this.SelectAll(false);
 		}
 
+		
+		public virtual bool AcceptEdition()
+		{
+			this.OnEditionAccepted ();
+			return true;
+		}
+		
+		public virtual bool RejectEdition()
+		{
+			this.OnEditionRejected ();
+			return true;
+		}
+		
+		
 		protected virtual void SelectAll(bool silent)
 		{
 			this.TextLayout.SelectAll(this.navigator.Context);
@@ -722,17 +748,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void OnStillEngaged()
-		{
-			base.OnStillEngaged();
-
-			double amplitude = 4;
-			if ( this.scrollLeft   )  this.ScrollHorizontal(-amplitude);
-			if ( this.scrollRight  )  this.ScrollHorizontal(amplitude);
-			if ( this.scrollBottom )  this.ScrollVertical(-amplitude);
-			if ( this.scrollTop    )  this.ScrollVertical(amplitude);
-		}
-
 
 		#region ContextMenu
 		protected void ContextMenu()
@@ -860,22 +875,7 @@ namespace Epsitec.Common.Widgets
 			this.CursorScroll(true);
 		}
 
-		protected override void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
-		{
-			bool focused = (bool) e.NewValue;
-			
-			if (focused)
-			{
-				this.HandleFocused ();
-			}
-			else
-			{
-				this.HandleDefocused ();
-			}
-			
-			base.OnIsFocusedChanged (e);
-		}
-
+		
 		protected virtual void HandleFocused()
 		{
 			System.Diagnostics.Debug.WriteLine ("AbstractTextField focused");
@@ -908,7 +908,68 @@ namespace Epsitec.Common.Widgets
 		protected virtual void HandleDefocused()
 		{
 			System.Diagnostics.Debug.WriteLine ("AbstractTextField de-focused");
+			
 			TextField.blinking = null;
+			
+			if (this.IsKeyboardFocused == false)
+			{
+				switch (this.DefocusAction)
+				{
+					case DefocusAction.AcceptEdition:
+						this.AcceptEdition ();
+						break;
+					
+					case DefocusAction.RejectEdition:
+						this.RejectEdition ();
+						break;
+					
+					case DefocusAction.Modal:
+					case DefocusAction.AutoAcceptOrRejectEdition:
+						if (this.IsValid)
+						{
+							this.AcceptEdition ();
+						}
+						else
+						{
+							this.RejectEdition ();
+						}
+						break;
+					
+					case DefocusAction.None:
+						break;
+					
+					default:
+						throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
+				}
+			}
+		}
+
+		
+		protected override void OnStillEngaged()
+		{
+			base.OnStillEngaged();
+
+			double amplitude = 4;
+			if ( this.scrollLeft   )  this.ScrollHorizontal(-amplitude);
+			if ( this.scrollRight  )  this.ScrollHorizontal(amplitude);
+			if ( this.scrollBottom )  this.ScrollVertical(-amplitude);
+			if ( this.scrollTop    )  this.ScrollVertical(amplitude);
+		}
+
+		protected override void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
+		{
+			bool focused = (bool) e.NewValue;
+			
+			if (focused)
+			{
+				this.HandleFocused ();
+			}
+			else
+			{
+				this.HandleDefocused ();
+			}
+			
+			base.OnIsFocusedChanged (e);
 		}
 
 		protected override void OnTextChanged()
@@ -1019,6 +1080,27 @@ namespace Epsitec.Common.Widgets
 			if ( this.AutoErasing != null )
 			{
 				this.AutoErasing(this, e);
+			}
+		}
+		
+		
+		protected virtual void OnEditionAccepted()
+		{
+			System.Diagnostics.Debug.WriteLine ("Accepted Edition");
+			
+			if (this.EditionAccepted != null)
+			{
+				this.EditionAccepted (this);
+			}
+		}
+		
+		protected virtual void OnEditionRejected()
+		{
+			System.Diagnostics.Debug.WriteLine ("Rejected Edition");
+			
+			if (this.EditionRejected != null)
+			{
+				this.EditionRejected (this);
 			}
 		}
 		
@@ -1422,6 +1504,9 @@ namespace Epsitec.Common.Widgets
 		public event Support.CancelEventHandler	AutoSelecting;
 		public event Support.CancelEventHandler	AutoErasing;
 		
+		public event Support.EventHandler		EditionAccepted;
+		public event Support.EventHandler		EditionRejected;
+		
 		
 		internal static readonly double			TextMargin = 2;
 		internal static readonly double			FrameMargin = 2;
@@ -1442,6 +1527,7 @@ namespace Epsitec.Common.Widgets
 		protected TextFieldStyle				textFieldStyle = TextFieldStyle.Normal;
 		protected double						scrollZone = 0.5;
 		protected TextDisplayMode				textDisplayMode = TextDisplayMode.Default;
+		protected DefocusAction					defocus_action;
 		
 		private TextNavigator					navigator;
 		private int								lastCursorFrom = -1;
