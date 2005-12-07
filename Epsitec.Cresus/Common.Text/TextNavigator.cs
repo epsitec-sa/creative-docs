@@ -1620,8 +1620,40 @@ namespace Epsitec.Common.Text
 			//	En marche arrière, on utilise le style du caractère courant, alors
 			//	qu'en marche avant, on utilise le style du caractère précédent :
 			
-			int pos    = this.story.GetCursorPosition (this.cursor);
-			int dir    = this.story.GetCursorDirection (this.cursor);
+			int pos = this.story.GetCursorPosition (this.cursor);
+			int dir = this.story.GetCursorDirection (this.cursor);
+			
+			if (this.HasSelection)
+			{
+				int[] sel = this.GetSelectionCursorPositions ();
+				
+				int sel_1 = sel[0];
+				int sel_2 = sel[1];
+				
+				if (sel_1 < sel_2)
+				{
+					if (pos < sel_2)
+					{
+						dir = -1;
+					}
+					else if (pos > sel_1)
+					{
+						dir = 1;
+					}
+				}
+				else
+				{
+					if (pos < sel_1)
+					{
+						dir = -1;
+					}
+					else if (pos > sel_2)
+					{
+						dir = 1;
+					}
+				}
+			}
+			
 			int offset = ((pos > 0) && (dir > 0)) ? -1 : 0;
 			
 			if ((dir > -1) &&
@@ -1643,7 +1675,7 @@ namespace Epsitec.Common.Text
 			
 			if ((offset != 0) &&
 				(pos < this.TextLength) &&
-				(Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0)))
+				(Internal.Navigator.IsParagraphStart (this.story, this.cursor, 0)))
 			{
 				//	Au début d'un paragraphe, on prend toujours le style du premier caractère
 				//	du paragraphe, quelle que soit la direction (on ne veut pas hériter du
@@ -2713,6 +2745,7 @@ namespace Epsitec.Common.Text
 			if (this.IsSelectionActive)
 			{
 				this.UpdateSelectionMarkers ();
+				this.UpdateCurrentStylesAndProperties ();
 			}
 			else
 			{
@@ -2775,6 +2808,8 @@ namespace Epsitec.Common.Text
 			}
 			
 			System.Diagnostics.Debug.Assert (this.HasSelection);
+			
+			this.UpdateCurrentStylesAndProperties ();
 		}
 		
 		
