@@ -1,4 +1,4 @@
-namespace Epsitec.Common.Drawing
+﻿namespace Epsitec.Common.Drawing
 {
 	public enum ColorSpace
 	{
@@ -12,7 +12,7 @@ namespace Epsitec.Common.Drawing
 	[System.ComponentModel.TypeConverter (typeof (RichColor.Converter))]
 	
 	/// <summary>
-	/// Cette classe repr�sente une couleur RGB ou CMYK.
+	/// Cette classe représente une couleur RGB ou CMYK.
 	/// </summary>
 	public struct RichColor : System.Runtime.Serialization.ISerializable
 	{
@@ -611,7 +611,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		// Change la luminosit� d'une couleur.
+		// Change la luminosité d'une couleur.
 		public void ChangeBrightness(double adjust)
 		{
 			switch ( this.colorSpace )
@@ -860,7 +860,7 @@ namespace Epsitec.Common.Drawing
 			return color;
 		}
 		
-		// Conversion d'un nom syst�me ou hexa en une couleur.
+		// Conversion d'un nom système ou hexa en une couleur.
 		public static RichColor FromName(string name)
 		{
 			if ( name.Length > 1 && name[0] == '#' )
@@ -878,7 +878,7 @@ namespace Epsitec.Common.Drawing
 			return RichColor.FromColor(new Color(color));
 		}
 
-		// Conversion d'une cha�ne "FF3300" ou "003300FF" en une couleur.
+		// Conversion d'une chaîne "FF3300" ou "003300FF" en une couleur.
 		public static RichColor FromHexa(string hexa)
 		{
 			try
@@ -914,7 +914,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		// Conversion d'une couleur en cha�ne "FF3300" ou "003300FF".
+		// Conversion d'une couleur en chaîne "FF3300" ou "003300FF".
 		public static string ToHexa(RichColor color)
 		{
 			if ( color.colorSpace == ColorSpace.RGB )
@@ -962,7 +962,7 @@ namespace Epsitec.Common.Drawing
 					}
 					break;
 				
-				case "aG":
+				case "αG":
 					if (args.Length == 3)
 					{
 						return RichColor.FromAGray (Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]));
@@ -976,7 +976,7 @@ namespace Epsitec.Common.Drawing
 					}
 					break;
 				
-				case "aRGB":
+				case "αRGB":
 					if (args.Length == 5)
 					{
 						return RichColor.FromARGB (Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]), Color.ColorComponentToDouble (args[4]));
@@ -990,7 +990,7 @@ namespace Epsitec.Common.Drawing
 					}
 					break;
 				
-				case "aCMYK":
+				case "αCMYK":
 					if (args.Length == 6)
 					{
 						return RichColor.FromACMYK (Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]), Color.ColorComponentToDouble (args[4]), Color.ColorComponentToDouble (args[5]));
@@ -1012,7 +1012,7 @@ namespace Epsitec.Common.Drawing
 					}
 					else
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aG;{0};{1}", Color.DoubleToColorComponent (color.A), Color.DoubleToColorComponent (color.Gray));
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "αG;{0};{1}", Color.DoubleToColorComponent (color.A), Color.DoubleToColorComponent (color.Gray));
 					}
 				
 				case ColorSpace.RGB:
@@ -1022,7 +1022,7 @@ namespace Epsitec.Common.Drawing
 					}
 					else
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aRGB;{0};{1};{2};{3}", Color.DoubleToColorComponent (color.A), Color.DoubleToColorComponent (color.R), Color.DoubleToColorComponent (color.G), Color.DoubleToColorComponent (color.B));
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "αRGB;{0};{1};{2};{3}", Color.DoubleToColorComponent (color.A), Color.DoubleToColorComponent (color.R), Color.DoubleToColorComponent (color.G), Color.DoubleToColorComponent (color.B));
 					}
 				
 				case ColorSpace.CMYK:
@@ -1032,7 +1032,7 @@ namespace Epsitec.Common.Drawing
 					}
 					else
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aCMYK;{0};{1};{2};{3};{4}", Color.DoubleToColorComponent (color.A), Color.DoubleToColorComponent (color.C), Color.DoubleToColorComponent (color.M), Color.DoubleToColorComponent (color.Y), Color.DoubleToColorComponent (color.K));
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "αCMYK;{0};{1};{2};{3};{4}", Color.DoubleToColorComponent (color.A), Color.DoubleToColorComponent (color.C), Color.DoubleToColorComponent (color.M), Color.DoubleToColorComponent (color.Y), Color.DoubleToColorComponent (color.K));
 					}
 				
 				default:

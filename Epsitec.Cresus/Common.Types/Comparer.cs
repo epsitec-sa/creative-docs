@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+ï»¿//	Copyright Â© 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		public static bool Equal(double a, double b, double d)
+		public static bool Equal(double a, double b, double Î´)
 		{
 			//	Compare deux nombres avec une certaine marge d'erreur.
 			
@@ -41,11 +41,11 @@ namespace Epsitec.Common.Types
 			
 			if (diff < 0)
 			{
-				return -diff < d;
+				return -diff < Î´;
 			}
 			else
 			{
-				return diff < d;
+				return diff < Î´;
 			}
 		}
 		
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Types
 		public static bool Equal(object a, object b)
 		{
 			//	Compare deux objets. Pour les tableaux, compare leur contenu; c'est
-			//	la seule différence notable par rapport à la méthode Object.Equals.
+			//	la seule diffÃ©rence notable par rapport Ã  la mÃ©thode Object.Equals.
 			
 			if (a == b)
 			{
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Types
 		
 		public static bool Equal(System.Array a, System.Array b)
 		{
-			//	Compare deux tableaux d'objets : l'égalité est définie par le
+			//	Compare deux tableaux d'objets : l'Ã©galitÃ© est dÃ©finie par le
 			//	contenu des tableaux.
 			
 			if (a == b)
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Types
 		}
 		public static bool Equal(int[] a, int[] b)
 		{
-			//	Version optimisée pour comparer des tableaux à une dimension de
+			//	Version optimisÃ©e pour comparer des tableaux Ã  une dimension de
 			//	nombres entiers.
 			
 			if (a == b)
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Types
 		
 		public static bool Equal(string[] a, string[] b)
 		{
-			//	Version optimisée pour comparer des tableaux à une dimension de
+			//	Version optimisÃ©e pour comparer des tableaux Ã  une dimension de
 			//	nombres entiers.
 			
 			if (a == b)

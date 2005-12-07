@@ -1,4 +1,4 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Drawing
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Drawing
 			RichColor c4 = new RichColor (1.0, 0.5, 0.2, 0.1, 0x1234/65535.0);
 			
 			Assert.AreEqual ("RGB;#80;#20;#05", RichColor.ToString (c1));
-			Assert.AreEqual ("aRGB;#F332;#0;#2;#5", RichColor.ToString (c2));
+			Assert.AreEqual ("αRGB;#F332;#0;#2;#5", RichColor.ToString (c2));
 			Assert.AreEqual ("RGB;#F;#F;#F", RichColor.ToString (c3));
 			Assert.AreEqual ("CMYK;#8000;#3;#199A;#1234", RichColor.ToString (c4));
 			
