@@ -71,7 +71,7 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public Text.TextContext						TextContext
+		public Text.TextContext					TextContext
 		{
 			get
 			{
@@ -1043,8 +1043,9 @@ restart:
 				StretchProfile glue_profile = new StretchProfile ();
 				
 				this.text_glue = glue_width / glue_count;
+				int fill_count = this.text_profile.TotalCount;	// end - this.text_offset
 				
-				this.layout_engine.FillProfile (this, end - this.text_offset - end_space_count, glue_profile);
+				this.layout_engine.FillProfile (this, fill_count - end_space_count, glue_profile);
 				
 				glue_count = glue_profile.TotalCount;
 				glue_count = System.Math.Max (1, glue_count - 1);

@@ -663,7 +663,27 @@ advance_next:
 					skip_glue_at--;
 				}
 				
-				skip_glue_at -= context.TextStretchProfile.CountEndSpace;
+				StretchProfile profile = context.TextStretchProfile;
+				
+				//	Une ligne qui se termine par un caractère spécial (symbole de
+				//	fin de ligne, par exemple) possède une longueur 'length' qui
+				//	dépasse le nombre de caractères dénombrés par le profil.
+				//
+				//	On peut donc utiliser cette différence pour ajuster le point
+				//	de fin de 'glue' pour ne pas mettre d'espace supplémentaire
+				//	avant le pilcrow (¶).
+				
+				if (context.ShowControlCharacters)
+				{
+					skip_glue_at -= offset + length - profile.TotalCount;
+				}
+				
+				skip_glue_at -= profile.CountEndSpace;
+				
+				if (skip_glue_at < 0)
+				{
+					skip_glue_at = 0;
+				}
 			}
 			
 			this.GenerateXScale (attributes, scales, x_scale, skip_glue_at + 1);

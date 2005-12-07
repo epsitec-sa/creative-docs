@@ -264,7 +264,7 @@ namespace Epsitec.Common.Text.Layout
 			switch ((Unicode.Code)code)
 			{
 				case Unicode.Code.ParagraphSeparator:
-					code = 0x00B6;
+					code = 0x00B6;						//	¶ -- pilcrow sign
 					break;
 				
 				case Unicode.Code.LineSeparator:
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Text.Layout
 					break;
 				
 				case Unicode.Code.EndOfText:
-					code = 0x00A4;
+					code = 0x00A4;						//	¤ -- currency sign
 					break;
 				
 				default:
