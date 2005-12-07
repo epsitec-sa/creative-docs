@@ -958,42 +958,42 @@ namespace Epsitec.Common.Drawing
 				case "G":
 					if (args.Length == 2)
 					{
-						return RichColor.FromAGray (1.0, Types.Converter.ToDouble (args[1])/255);
+						return RichColor.FromAGray (1.0, Color.ColorComponentToDouble (args[1]));
 					}
 					break;
 				
 				case "aG":
 					if (args.Length == 3)
 					{
-						return RichColor.FromAGray (Types.Converter.ToDouble (args[1])/255, Types.Converter.ToDouble (args[2])/255);
+						return RichColor.FromAGray (Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]));
 					}
 					break;
 				
 				case "RGB":
 					if (args.Length == 4)
 					{
-						return RichColor.FromARGB (1.0, Types.Converter.ToDouble (args[1])/255, Types.Converter.ToDouble (args[2])/255, Types.Converter.ToDouble (args[3])/255);
+						return RichColor.FromARGB (1.0, Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]));
 					}
 					break;
 				
 				case "aRGB":
 					if (args.Length == 5)
 					{
-						return RichColor.FromARGB (Types.Converter.ToDouble (args[1])/255, Types.Converter.ToDouble (args[2])/255, Types.Converter.ToDouble (args[3])/255, Types.Converter.ToDouble (args[4])/255);
+						return RichColor.FromARGB (Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]), Color.ColorComponentToDouble (args[4]));
 					}
 					break;
 				
 				case "CMYK":
 					if (args.Length == 5)
 					{
-						return RichColor.FromACMYK (1.0, Types.Converter.ToDouble (args[1])/255, Types.Converter.ToDouble (args[2])/255, Types.Converter.ToDouble (args[3])/255, Types.Converter.ToDouble (args[4])/255);
+						return RichColor.FromACMYK (1.0, Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]), Color.ColorComponentToDouble (args[4]));
 					}
 					break;
 				
 				case "aCMYK":
 					if (args.Length == 6)
 					{
-						return RichColor.FromACMYK (Types.Converter.ToDouble (args[1])/255, Types.Converter.ToDouble (args[2])/255, Types.Converter.ToDouble (args[3])/255, Types.Converter.ToDouble (args[4])/255, Types.Converter.ToDouble (args[5])/255);
+						return RichColor.FromACMYK (Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]), Color.ColorComponentToDouble (args[4]), Color.ColorComponentToDouble (args[5]));
 					}
 					break;
 			}
@@ -1008,31 +1008,31 @@ namespace Epsitec.Common.Drawing
 				case ColorSpace.Gray:
 					if (color.IsOpaque)
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "G;{0}", color.Gray*255);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "G;{0}", Color.DoubleToColorComponent (color.Gray));
 					}
 					else
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aG;{0};{1}", color.A*255, color.Gray*255);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aG;{0};{1}", Color.DoubleToColorComponent (color.A), Color.DoubleToColorComponent (color.Gray));
 					}
 				
 				case ColorSpace.RGB:
 					if (color.IsOpaque)
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "RGB;{0};{1};{2}", color.R*255, color.G*255, color.B*255);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "RGB;{0};{1};{2}", Color.DoubleToColorComponent (color.R), Color.DoubleToColorComponent (color.G), Color.DoubleToColorComponent (color.B));
 					}
 					else
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aRGB;{0};{1};{2};{3}", color.A*255, color.R*255, color.G*255, color.B*255);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aRGB;{0};{1};{2};{3}", Color.DoubleToColorComponent (color.A), Color.DoubleToColorComponent (color.R), Color.DoubleToColorComponent (color.G), Color.DoubleToColorComponent (color.B));
 					}
 				
 				case ColorSpace.CMYK:
 					if (color.IsOpaque)
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "CMYK;{0};{1};{2};{3}", color.C*255, color.M*255, color.Y*255, color.K*255);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "CMYK;{0};{1};{2};{3}", Color.DoubleToColorComponent (color.C), Color.DoubleToColorComponent (color.M), Color.DoubleToColorComponent (color.Y), Color.DoubleToColorComponent (color.K));
 					}
 					else
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aCMYK;{0};{1};{2};{3};{4}", color.A*255, color.C*255, color.M*255, color.Y*255, color.K*255);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aCMYK;{0};{1};{2};{3};{4}", Color.DoubleToColorComponent (color.A), Color.DoubleToColorComponent (color.C), Color.DoubleToColorComponent (color.M), Color.DoubleToColorComponent (color.Y), Color.DoubleToColorComponent (color.K));
 					}
 				
 				default:
@@ -1051,52 +1051,28 @@ namespace Epsitec.Common.Drawing
 			switch ( a.colorSpace )
 			{
 				case ColorSpace.RGB:
-					return ( a.alpha  == b.alpha  &&
-							 a.value1 == b.value1 &&
-							 a.value2 == b.value2 &&
-							 a.value3 == b.value3 );
+					return Types.Comparer.Equal (a.alpha,  b.alpha,  Color.ColorComponentDelta)
+						&& Types.Comparer.Equal (a.value1, b.value1, Color.ColorComponentDelta)
+						&& Types.Comparer.Equal (a.value2, b.value2, Color.ColorComponentDelta)
+						&& Types.Comparer.Equal (a.value3, b.value3, Color.ColorComponentDelta);
 
 				case ColorSpace.CMYK:
-					return ( a.alpha  == b.alpha  &&
-							 a.value1 == b.value1 &&
-							 a.value2 == b.value2 &&
-							 a.value3 == b.value3 &&
-							 a.value4 == b.value4 );
+					return Types.Comparer.Equal (a.alpha,  b.alpha,  Color.ColorComponentDelta)
+						&& Types.Comparer.Equal (a.value1, b.value1, Color.ColorComponentDelta)
+						&& Types.Comparer.Equal (a.value2, b.value2, Color.ColorComponentDelta)
+						&& Types.Comparer.Equal (a.value3, b.value3, Color.ColorComponentDelta)
+						&& Types.Comparer.Equal (a.value4, b.value4, Color.ColorComponentDelta);
 
 				case ColorSpace.Gray:
-					return ( a.alpha  == b.alpha  &&
-							 a.value1 == b.value1 );
+					return Types.Comparer.Equal (a.alpha,  b.alpha,  Color.ColorComponentDelta)
+						&& Types.Comparer.Equal (a.value1, b.value1, Color.ColorComponentDelta);
 			}
 			return true;
 		}
 		
 		public static bool operator != (RichColor a, RichColor b)
 		{
-			if ( a.isEmpty && b.isEmpty )  return false;
-			if ( a.isEmpty || b.isEmpty )  return true;
-			
-			if ( a.colorSpace != b.colorSpace )  return true;
-
-			switch ( a.colorSpace )
-			{
-				case ColorSpace.RGB:
-					return ( a.alpha  != b.alpha  ||
-							 a.value1 != b.value1 ||
-							 a.value2 != b.value2 ||
-							 a.value3 != b.value3 );
-
-				case ColorSpace.CMYK:
-					return ( a.alpha  != b.alpha  ||
-							 a.value1 != b.value1 ||
-							 a.value2 != b.value2 ||
-							 a.value3 != b.value3 ||
-							 a.value4 != b.value4 );
-
-				case ColorSpace.Gray:
-					return ( a.alpha  != b.alpha  ||
-							 a.value1 != b.value1 );
-			}
-			return false;
+			return ! (a == b);
 		}
 		
 
@@ -1134,6 +1110,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 
+		#region Converter Class
 		public class Converter : Epsitec.Common.Types.AbstractStringConverter
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
@@ -1146,6 +1123,7 @@ namespace Epsitec.Common.Drawing
 				return RichColor.ToString ((RichColor) value);
 			}
 		}
+		#endregion
 		
 		#region ISerializable Members
 		public RichColor(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)

@@ -72,6 +72,42 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		[Test] public void CheckToStringParse()
+		{
+			Color c1 = new Color (128.0/255.0, 32.0/255.0, 5.0/255.0);
+			Color c2 = new Color (0.0, 2.0/15.0, 5.0/15.0);
+			Color c3 = new Color (1.0, 1.0, 1.0);
+			Color c4 = new Color (0.5, 0.2, 0.1);
+			
+			Assert.AreEqual ("#80;#20;#05", Color.ToString (c1));
+			Assert.AreEqual ("#0;#2;#5", Color.ToString (c2));
+			Assert.AreEqual ("#F;#F;#F", Color.ToString (c3));
+			Assert.AreEqual ("#8000;#3;#199A", Color.ToString (c4));
+			
+			Assert.IsTrue (Color.Parse (Color.ToString (c1)) == c1);
+			Assert.IsTrue (Color.Parse (Color.ToString (c2)) == c2);
+			Assert.IsTrue (Color.Parse (Color.ToString (c3)) == c3);
+			Assert.IsTrue (Color.Parse (Color.ToString (c4)) == c4);
+		}
+		
+		[Test] public void CheckRichToStringParse()
+		{
+			RichColor c1 = new RichColor (128.0/255.0, 32.0/255.0, 5.0/255.0);
+			RichColor c2 = new RichColor (0.95, 0.0, 2.0/15.0, 5.0/15.0);
+			RichColor c3 = new RichColor (1.0, 1.0, 1.0);
+			RichColor c4 = new RichColor (1.0, 0.5, 0.2, 0.1, 0x1234/65535.0);
+			
+			Assert.AreEqual ("RGB;#80;#20;#05", RichColor.ToString (c1));
+			Assert.AreEqual ("aRGB;#F332;#0;#2;#5", RichColor.ToString (c2));
+			Assert.AreEqual ("RGB;#F;#F;#F", RichColor.ToString (c3));
+			Assert.AreEqual ("CMYK;#8000;#3;#199A;#1234", RichColor.ToString (c4));
+			
+			Assert.IsTrue (RichColor.Parse (RichColor.ToString (c1)) == c1);
+			Assert.IsTrue (RichColor.Parse (RichColor.ToString (c2)) == c2);
+			Assert.IsTrue (RichColor.Parse (RichColor.ToString (c3)) == c3);
+			Assert.IsTrue (RichColor.Parse (RichColor.ToString (c4)) == c4);
+		}
+		
 		[Test] public void CheckNamedColors()
 		{
 			Window window = new Window ();
@@ -208,6 +244,7 @@ namespace Epsitec.Common.Drawing
 			Assert.IsTrue(c1.B == 0.0);
 		}
 
+		
 		private void NamedColors_PaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;

@@ -1,4 +1,4 @@
-//	Copyright � 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+﻿//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Drawing
 		
 		public static double GetBrightness(double r, double g, double b)
 		{
-			//	Calcule la luminosit� de la couleur.
+			//	Calcule la luminosité de la couleur.
 			
 			return r*0.30 + g*0.59 + b*0.11;
 		}
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Drawing
 
 		public static Color FromHexa(string hexa)
 		{
-			// Conversion d'une cha�ne "FF3300" en une couleur.
+			// Conversion d'une chaîne "FF3300" en une couleur.
 			
 			if (hexa.Length != 6)
 			{
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Drawing
 
 		public static string ToHexa(Color color)
 		{
-			// Conversion d'une couleur en cha�ne "FF3300".
+			// Conversion d'une couleur en chaîne "FF3300".
 			
 			int r = (int)(color.R*255.0+0.5);
 			int g = (int)(color.G*255.0+0.5);
@@ -287,19 +287,19 @@ namespace Epsitec.Common.Drawing
 			
 			if (args.Length == 3)
 			{
-				double r = Types.Converter.ToDouble (args[0]);
-				double g = Types.Converter.ToDouble (args[1]);
-				double b = Types.Converter.ToDouble (args[2]);
+				double r = Color.ColorComponentToDouble (args[0]);
+				double g = Color.ColorComponentToDouble (args[1]);
+				double b = Color.ColorComponentToDouble (args[2]);
 			
 				return new Color (r, g, b);
 			}
 			
 			if (args.Length == 4)
 			{
-				double a = Types.Converter.ToDouble (args[0]);
-				double r = Types.Converter.ToDouble (args[1]);
-				double g = Types.Converter.ToDouble (args[2]);
-				double b = Types.Converter.ToDouble (args[3]);
+				double a = Color.ColorComponentToDouble (args[0]);
+				double r = Color.ColorComponentToDouble (args[1]);
+				double g = Color.ColorComponentToDouble (args[2]);
+				double b = Color.ColorComponentToDouble (args[3]);
 				
 				return new Color (a, r, g, b);
 			}
@@ -311,13 +311,81 @@ namespace Epsitec.Common.Drawing
 		{
 			if (color.A == 1.0)
 			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2}", color.R, color.G, color.B);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2}",
+					/**/			  Color.DoubleToColorComponent (color.R),
+					/**/			  Color.DoubleToColorComponent (color.G),
+					/**/			  Color.DoubleToColorComponent (color.B));
 			}
 			else
 			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}", color.A, color.R, color.G, color.B);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}",
+					/**/			  Color.DoubleToColorComponent (color.A),
+					/**/			  Color.DoubleToColorComponent (color.R),
+					/**/			  Color.DoubleToColorComponent (color.G),
+					/**/			  Color.DoubleToColorComponent (color.B));
 			}
 		}
+		
+		
+		public static double ColorComponentToDouble(string value)
+		{
+			if (value.Length > 0)
+			{
+				if (value[0] == '#')
+				{
+					//	Convertit une chaîne du type #01F en une valeur numérique,
+					//	à savoir 31/4095 dans ce cas (code hexa sur 12 bits).
+					//
+					//	#0 -----> 0.0
+					//	#f -----> 1.0
+					//	#ff ----> 1.0
+					//	#ffff --> 1.0
+					
+					int n = System.Convert.ToInt32 (value.Substring (1), 16);
+					double div = System.Math.Pow (16, value.Length-1) - 1;
+					return n / div;
+				}
+				else
+				{
+					return Types.Converter.ToDouble (value);
+				}
+			}
+			
+			return 0;
+		}
+		
+		public static string DoubleToColorComponent(double value)
+		{
+			//	Utilise la représentation qui utilise le moins de digits possible
+			//	pour representer exactement (sur 16 bits) la valeur spécifiée.
+			
+			double mul = 16;
+			
+			for (int i = 1; i < Color.ColorComponentDigits; i++)
+			{
+				int n = (int) (value * (mul - 1) + 0.5);
+				
+				if (Types.Comparer.Equal (value, n / (mul - 1), Color.ColorComponentDelta))
+				{
+					return Color.DoubleToColorComponent (value, i);
+				}
+				
+				mul *= 16;
+			}
+			
+			return Color.DoubleToColorComponent (value, Color.ColorComponentDigits);
+		}
+		
+		public static string DoubleToColorComponent(double value, int digits)
+		{
+			double mul = System.Math.Pow (16, digits) - 1;
+			int    n   = (int) (value * mul + 0.5);
+			
+			string format = string.Format (System.Globalization.CultureInfo.InvariantCulture, "X{0}", digits);
+			
+			return string.Concat ("#", n.ToString (format));
+		}
+		
 		
 		public static bool operator==(Color a, Color b)
 		{
@@ -330,10 +398,10 @@ namespace Epsitec.Common.Drawing
 				return false;
 			}
 			
-			return (a.r == b.r)
-				&& (a.g == b.g)
-				&& (a.b == b.b)
-				&& (a.a == b.a);
+			return Types.Comparer.Equal (a.r, b.r, Color.ColorComponentDelta)
+				&& Types.Comparer.Equal (a.g, b.g, Color.ColorComponentDelta)
+				&& Types.Comparer.Equal (a.b, b.b, Color.ColorComponentDelta)
+				&& Types.Comparer.Equal (a.a, b.a, Color.ColorComponentDelta);
 		}
 		
 		public static bool operator!=(Color a, Color b)
@@ -347,10 +415,10 @@ namespace Epsitec.Common.Drawing
 				return true;
 			}
 			
-			return (a.r != b.r)
-				|| (a.g != b.g)
-				|| (a.b != b.b)
-				|| (a.a != b.a);
+			return ! Types.Comparer.Equal (a.r, b.r, Color.ColorComponentDelta)
+				|| ! Types.Comparer.Equal (a.g, b.g, Color.ColorComponentDelta)
+				|| ! Types.Comparer.Equal (a.b, b.b, Color.ColorComponentDelta)
+				|| ! Types.Comparer.Equal (a.a, b.a, Color.ColorComponentDelta);
 		}
 		
 		
@@ -416,7 +484,7 @@ namespace Epsitec.Common.Drawing
 		}
 
 		
-		
+		#region Converter Class
 		public class Converter : Epsitec.Common.Types.AbstractStringConverter
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
@@ -429,7 +497,10 @@ namespace Epsitec.Common.Drawing
 				return Color.ToString ((Color) value);
 			}
 		}
+		#endregion
 		
+		public const int				ColorComponentDigits = 4;
+		public const double				ColorComponentDelta  = (1.0 / 65535.0) / 2.0;
 		
 		private double					r, g, b, a;
 		private bool					is_empty;

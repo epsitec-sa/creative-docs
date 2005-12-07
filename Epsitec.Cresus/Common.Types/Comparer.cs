@@ -13,6 +13,43 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		public static bool Equal(double a, double b, double d)
+		{
+			//	Compare deux nombres avec une certaine marge d'erreur.
+			
+			if (a == b)
+			{
+				return true;
+			}
+			
+			if (double.IsNaN (a) && double.IsNaN (b))
+			{
+				return true;
+			}
+			
+			if (double.IsNegativeInfinity (a) && double.IsNegativeInfinity (b))
+			{
+				return true;
+			}
+			
+			if (double.IsPositiveInfinity (a) && double.IsPositiveInfinity (b))
+			{
+				return true;
+			}
+			
+			double diff = a - b;
+			
+			if (diff < 0)
+			{
+				return -diff < d;
+			}
+			else
+			{
+				return diff < d;
+			}
+		}
+		
+		
 		public static bool Equal(object a, object b)
 		{
 			//	Compare deux objets. Pour les tableaux, compare leur contenu; c'est
