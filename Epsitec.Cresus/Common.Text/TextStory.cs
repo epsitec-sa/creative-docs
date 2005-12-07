@@ -935,6 +935,22 @@ namespace Epsitec.Common.Text
 			
 			this.ReadText (0, length, text);
 			this.IncrementUserCount (text, length);
+			
+			//	Met à jour les marqueurs dans le texte; supprime toutes traces
+			//	liées à d'anciennes sélections ou erreurs d'orthographe.
+			
+			ulong markers = 0;
+			
+			markers  = this.TextContext.Markers.Selected;
+			markers |= this.TextContext.Markers.SpellCheckingError;
+			
+			this.ChangeAllMarkers (markers, false);
+			
+			//	Prend note qu'il faudra tout vérifier au correcteur :
+			
+			markers  = this.TextContext.Markers.RequiresSpellChecking;
+			
+			this.ChangeAllMarkers (markers, true);
 		}
 		
 		
