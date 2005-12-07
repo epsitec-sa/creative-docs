@@ -276,7 +276,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static Color Parse(string value, System.Globalization.CultureInfo culture)
+		public static Color Parse(string value)
 		{
 			if (value == null)
 			{
@@ -307,7 +307,7 @@ namespace Epsitec.Common.Drawing
 			throw new System.ArgumentException (string.Format ("Invalid color specification ({0}).", value));
 		}
 		
-		public static string ToString(Color color, System.Globalization.CultureInfo culture)
+		public static string ToString(Color color)
 		{
 			if (color.A == 1.0)
 			{
@@ -421,12 +421,12 @@ namespace Epsitec.Common.Drawing
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
-				return Color.Parse (value, culture);
+				return Color.Parse (value);
 			}
 			
 			public override string ToString(object value, System.Globalization.CultureInfo culture)
 			{
-				return Color.ToString ((Color) value, culture);
+				return Color.ToString ((Color) value);
 			}
 		}
 		

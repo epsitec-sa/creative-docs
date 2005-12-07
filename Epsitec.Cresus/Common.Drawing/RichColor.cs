@@ -944,7 +944,7 @@ namespace Epsitec.Common.Drawing
 		}
 
 
-		public static RichColor Parse(string value, System.Globalization.CultureInfo culture)
+		public static RichColor Parse(string value)
 		{
 			if (value == null)
 			{
@@ -1001,7 +1001,7 @@ namespace Epsitec.Common.Drawing
 			throw new System.ArgumentException (string.Format ("Invalid color specification ({0}).", value));
 		}
 		
-		public static string ToString(RichColor color, System.Globalization.CultureInfo culture)
+		public static string ToString(RichColor color)
 		{
 			switch (color.ColorSpace)
 			{
@@ -1138,12 +1138,12 @@ namespace Epsitec.Common.Drawing
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
-				return RichColor.Parse (value, culture);
+				return RichColor.Parse (value);
 			}
 			
 			public override string ToString(object value, System.Globalization.CultureInfo culture)
 			{
-				return RichColor.ToString ((RichColor) value, culture);
+				return RichColor.ToString ((RichColor) value);
 			}
 		}
 		
