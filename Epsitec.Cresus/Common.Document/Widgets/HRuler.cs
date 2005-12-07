@@ -45,14 +45,16 @@ namespace Epsitec.Common.Document.Widgets
 		public override void WrappersAttach()
 		{
 			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.document.ParagraphWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
+//-			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 		}
 
 		// Détache la règle des wrappers.
 		public override void WrappersDetach()
 		{
 			this.document.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-			this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+			this.document.ParagraphWrapper.Active.Changed -= new EventHandler(this.HandleWrapperChanged);
+//-			this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 		}
 
 		// Le wrapper associé a changé.

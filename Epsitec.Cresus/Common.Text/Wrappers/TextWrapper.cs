@@ -478,8 +478,8 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			if (active)
 			{
-				state.ClearInvertBold ();
-				state.ClearInvertItalic ();
+				state.DefineValue (State.InvertBoldProperty);
+				state.DefineValue (State.InvertItalicProperty);
 			}
 			else
 			{
