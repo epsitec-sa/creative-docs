@@ -57,13 +57,13 @@ namespace Epsitec.Common.Document.TextPanels
 			this.checkBold.Text = "Inverser le gras";
 			this.checkBold.TabIndex = this.tabIndex++;
 			this.checkBold.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.checkBold.Clicked += new MessageEventHandler(this.HandleCheckBoldClicked);
+			this.checkBold.ActiveStateChanged += new EventHandler(this.HandleCheckBoldActiveStateChanged);
 
 			this.checkItalic = new CheckButton(this);
 			this.checkItalic.Text = "Inverser l'italique";
 			this.checkItalic.TabIndex = this.tabIndex++;
 			this.checkItalic.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.checkItalic.Clicked += new MessageEventHandler(this.HandleCheckItalicClicked);
+			this.checkItalic.ActiveStateChanged += new EventHandler(this.HandleCheckItalicActiveStateChanged);
 
 			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
@@ -679,18 +679,32 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ChangeFontSize(1, 125);
 		}
 
-		private void HandleCheckBoldClicked(object sender, MessageEventArgs e)
+		private void HandleCheckBoldActiveStateChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
-			this.document.TextWrapper.Defined.InvertBold = !this.document.TextWrapper.Defined.InvertBold;
+			
+			bool value = this.checkBold.ActiveState == ActiveState.Yes;
+			
+			if ( this.document.TextWrapper.Defined.InvertBold != value ||
+				 this.document.TextWrapper.Defined.IsInvertBoldDefined == false )
+			{
+				this.document.TextWrapper.Defined.InvertBold = value;
+			}
 		}
 
-		private void HandleCheckItalicClicked(object sender, MessageEventArgs e)
+		private void HandleCheckItalicActiveStateChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
-			this.document.TextWrapper.Defined.InvertItalic = !this.document.TextWrapper.Defined.InvertItalic;
+			
+			bool value = this.checkItalic.ActiveState == ActiveState.Yes;
+			
+			if ( this.document.TextWrapper.Defined.InvertItalic != value ||
+				 this.document.TextWrapper.Defined.IsInvertItalicDefined == false )
+			{
+				this.document.TextWrapper.Defined.InvertItalic = value;
+			}
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
