@@ -28,47 +28,52 @@ namespace Epsitec.Common.Widgets
 
 				this.fields[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fields[i].Value = 0;
+
+				this.fields[i].DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+				this.fields[i].AutoSelectOnFocus = true;
+				this.fields[i].SwallowEscape = true;
+
 				if ( i < 3 )  // r,g,b ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 255;
 					this.fields[i].Step = 10;
-					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextRGBChanged);
+					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextRGBChanged);
 				}
 				else if ( i == 3 )  // a ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 255;
 					this.fields[i].Step = 10;
-					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextAlphaChanged);
+					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextAlphaChanged);
 				}
 				else if ( i == 4 )  // t ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 360;
 					this.fields[i].Step = 10;
-					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextHSVChanged);
+					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextHSVChanged);
 				}
 				else if ( i < 7 )  // s,i ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextHSVChanged);
+					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextHSVChanged);
 				}
 				else if ( i< 11 )  // c,m,y,k ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextCMYKChanged);
+					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextCMYKChanged);
 				}
 				else	// g ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextGrayChanged);
+					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextGrayChanged);
 				}
 			}
 
@@ -141,7 +146,10 @@ namespace Epsitec.Common.Widgets
 			this.labelHexa.Text = Res.Strings.ColorSelector.ShortHexa;
 
 			this.fieldHexa = new TextField(this);
-			this.fieldHexa.TextChanged += new Support.EventHandler(this.HandleTextHexaChanged);
+			this.fieldHexa.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			this.fieldHexa.AutoSelectOnFocus = true;
+			this.fieldHexa.SwallowEscape = true;
+			this.fieldHexa.EditionAccepted += new Support.EventHandler(this.HandleTextHexaChanged);
 			this.fieldHexa.TabIndex = 200;
 			this.fieldHexa.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHexa, Res.Strings.ColorSelector.LongHexa);
@@ -761,33 +769,33 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( i < 3 )
 					{
-						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextRGBChanged);
+						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextRGBChanged);
 					}
 					else if ( i == 3 )
 					{
-						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextAlphaChanged);
+						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextAlphaChanged);
 					}
 					else if ( i == 4 )
 					{
-						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextHSVChanged);
+						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextHSVChanged);
 					}
 					else if ( i < 7 )
 					{
-						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextHSVChanged);
+						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextHSVChanged);
 					}
 					else if ( i < 11 )
 					{
-						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextCMYKChanged);
+						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextCMYKChanged);
 					}
 					else
 					{
-						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextGrayChanged);
+						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextGrayChanged);
 					}
 				}
 				
 				if ( this.fieldHexa != null )
 				{
-					this.fieldHexa.TextChanged -= new Support.EventHandler(this.HandleTextHexaChanged);
+					this.fieldHexa.EditionAccepted -= new Support.EventHandler(this.HandleTextHexaChanged);
 				}
 
 				if ( this.circle != null )
