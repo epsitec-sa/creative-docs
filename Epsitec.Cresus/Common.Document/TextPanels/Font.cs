@@ -50,10 +50,20 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonSizeMinus = this.CreateIconButton(Misc.Icon("FontSizeMinus"), Res.Strings.Action.Text.Font.SizeMinus, new MessageEventHandler(this.HandleButtonSizeMinusClicked), false);
 			this.buttonSizePlus  = this.CreateIconButton(Misc.Icon("FontSizePlus"),  Res.Strings.Action.Text.Font.SizePlus,  new MessageEventHandler(this.HandleButtonSizePlusClicked), false);
-			this.buttonBold      = this.CreateIconButton(Misc.Icon("FontBold"),      Res.Strings.Action.Text.Font.Bold,      new MessageEventHandler(this.HandleButtonBoldClicked));
-			this.buttonItalic    = this.CreateIconButton(Misc.Icon("FontItalic"),    Res.Strings.Action.Text.Font.Italic,    new MessageEventHandler(this.HandleButtonItalicClicked));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+
+			this.checkBold = new CheckButton(this);
+			this.checkBold.Text = "Inverser le gras";
+			this.checkBold.TabIndex = this.tabIndex++;
+			this.checkBold.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.checkBold.Clicked += new MessageEventHandler(this.HandleCheckBoldClicked);
+
+			this.checkItalic = new CheckButton(this);
+			this.checkItalic.Text = "Inverser l'italique";
+			this.checkItalic.TabIndex = this.tabIndex++;
+			this.checkItalic.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.checkItalic.Clicked += new MessageEventHandler(this.HandleCheckItalicClicked);
 
 			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
@@ -95,11 +105,11 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					if ( this.IsLabelProperties )  // étendu/détails ?
 					{
-						h += 105;
+						h += 120;
 					}
 					else	// étendu/compact ?
 					{
-						h += 80;
+						h += 120;
 					}
 				}
 				else	// panneau réduit ?
@@ -176,7 +186,6 @@ namespace Epsitec.Common.Document.TextPanels
 			else
 			{
 				string sc = RichColor.ToString(sample.Color);
-				System.Diagnostics.Debug.WriteLine(string.Format("b: {0} a={1} r={2} g={3} b={4}", sc, sample.Color.A, sample.Color.R, sample.Color.G, sample.Color.B));
 				this.document.TextWrapper.Defined.Color = sc;
 			}
 		}
@@ -204,7 +213,9 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string sc = this.document.TextWrapper.Defined.Color;
 			RichColor color = (sc == null) ? RichColor.Empty : RichColor.Parse(sc);
-			System.Diagnostics.Debug.WriteLine(string.Format("a: {0} a={1} r={2} g={3} b={4}", sc, color.A, color.R, color.G, color.B));
+
+			bool bold   = this.document.TextWrapper.Defined.InvertBold;
+			bool italic = this.document.TextWrapper.Defined.InvertItalic;
 
 			this.ignoreChanged = true;
 
@@ -220,87 +231,17 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ProposalTextFieldCombo(this.fontStyle, !isStyle);
 			this.ProposalTextFieldCombo(this.fontSize,  !isSize);
 
-			this.UpdateButtonBold();
-			this.UpdateButtonItalic();
-
 			this.fontColor.Color = color;
 
 			if ( this.fontColor.ActiveState == ActiveState.Yes )
 			{
-				this.OnOriginColorChanged();
+				this.OnOriginColorChanged();  // change la couleur dans le ColorSelector
 			}
+
+			this.checkBold.ActiveState   = bold   ? ActiveState.Yes : ActiveState.No;
+			this.checkItalic.ActiveState = italic ? ActiveState.Yes : ActiveState.No;
 			
 			this.ignoreChanged = false;
-		}
-
-		protected void UpdateButtonBold()
-		{
-			bool enabled = false;
-			bool state   = false;
-
-			if ( this.document != null && this.document.TextWrapper.IsAttached )
-			{
-				string face  = this.document.TextWrapper.Defined.FontFace;
-				if ( face == null )
-				{
-					face = this.document.TextWrapper.Active.FontFace;
-				}
-
-				string style = this.document.TextWrapper.Defined.FontStyle;
-				if ( style == null )
-				{
-					style = this.document.TextWrapper.Active.FontStyle;
-				}
-
-				OpenType.FontWeight weight = OpenType.FontWeight.Medium;
-				if ( face != null && style != null )
-				{
-					OpenType.Font font = TextContext.GetFont(face, style);
-					weight = font.FontIdentity.FontWeight;
-				}
-
-				enabled = true;
-				state   = ((int)weight > (int)OpenType.FontWeight.Medium);
-				state  ^= this.document.TextWrapper.Defined.InvertBold;
-			}
-
-			this.buttonBold.Enable = (enabled);
-			this.buttonBold.ActiveState = state ? ActiveState.Yes : ActiveState.No;
-		}
-
-		protected void UpdateButtonItalic()
-		{
-			bool enabled = false;
-			bool state   = false;
-
-			if ( this.document != null && this.document.TextWrapper.IsAttached )
-			{
-				string face  = this.document.TextWrapper.Defined.FontFace;
-				if ( face == null )
-				{
-					face = this.document.TextWrapper.Active.FontFace;
-				}
-
-				string style = this.document.TextWrapper.Defined.FontStyle;
-				if ( style == null )
-				{
-					style = this.document.TextWrapper.Active.FontStyle;
-				}
-
-				OpenType.FontStyle italic = OpenType.FontStyle.Normal;
-				if ( face != null && style != null )
-				{
-					OpenType.Font font = TextContext.GetFont(face, style);
-					italic = font.FontIdentity.FontStyle;
-				}
-
-				enabled = true;
-				state   = italic != OpenType.FontStyle.Normal;
-				state  ^= this.document.TextWrapper.Defined.InvertItalic;
-			}
-
-			this.buttonItalic.Enable = (enabled);
-			this.buttonItalic.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
 		// Met à jour la liste d'un champ éditable pour le nom de la police.
@@ -406,8 +347,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( this.IsLabelProperties )
 				{
-					r.Left = rect.Right-(100+20);
-					r.Width = 100;
+					r.Left = rect.Right-(120+20);
+					r.Width = 120;
 					this.fontStyle.Bounds = r;
 					this.fontStyle.Visibility = true;
 					r.Left = r.Right-1;
@@ -416,74 +357,75 @@ namespace Epsitec.Common.Document.TextPanels
 					this.fontFeatures.Visibility = true;
 
 					r.Offset(0, -25);
-					r.Left = rect.Right-(50+20+20);
-					r.Width = 50;
+					r.Left = rect.Left;
+					r.Width = 60;
 					this.fontSize.Bounds = r;
 					this.fontSize.Visibility = true;
-					r.Offset(50, 0);
+					r.Offset(60, 0);
 					r.Width = 20;
 					this.buttonSizeMinus.Bounds = r;
 					this.buttonSizeMinus.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonSizePlus.Bounds = r;
 					this.buttonSizePlus.Visibility = true;
-
-					r.Offset(0, -25);
-					r.Left = rect.Left;
-					r.Width = 20;
-					this.buttonBold.Bounds = r;
-					this.buttonBold.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonItalic.Bounds = r;
-					this.buttonItalic.Visibility = true;
-					r.Offset(20+5, 0);
-					r.Width = 30;
+					r.Offset(20+10, 0);
+					r.Width = 40;
 					this.fontColor.Bounds = r;
 					this.fontColor.Visibility = true;
 					r.Left = rect.Right-20;
 					r.Width = 20;
 					this.buttonClear.Bounds = r;
 					this.buttonClear.Visibility = true;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Right = rect.Right;
+					this.checkBold.Bounds = r;
+					this.checkBold.Visibility = true;
+					r.Offset(0, -18);
+					this.checkItalic.Bounds = r;
+					this.checkItalic.Visibility = true;
 				}
 				else
 				{
-					r.Left = rect.Left;
-					r.Right = rect.Right-(20+5+50+20+20);
+					r.Left = rect.Right-(120+20);
+					r.Width = 120;
 					this.fontStyle.Bounds = r;
 					this.fontStyle.Visibility = true;
 					r.Left = r.Right-1;
 					r.Width = 20;
 					this.fontFeatures.Bounds = r;
 					this.fontFeatures.Visibility = true;
-					
-					r.Left = rect.Right-(50+20+20);
-					r.Width = 50;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Width = 60;
 					this.fontSize.Bounds = r;
 					this.fontSize.Visibility = true;
-					r.Offset(50, 0);
+					r.Offset(60, 0);
 					r.Width = 20;
 					this.buttonSizeMinus.Bounds = r;
 					this.buttonSizeMinus.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonSizePlus.Bounds = r;
 					this.buttonSizePlus.Visibility = true;
-
-					r.Offset(0, -25);
-					r.Left = rect.Left;
-					r.Width = 20;
-					this.buttonBold.Bounds = r;
-					this.buttonBold.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonItalic.Bounds = r;
-					this.buttonItalic.Visibility = true;
-					r.Offset(20+5, 0);
-					r.Width = 30;
+					r.Offset(20+10, 0);
+					r.Width = 40;
 					this.fontColor.Bounds = r;
 					this.fontColor.Visibility = true;
 					r.Left = rect.Right-20;
 					r.Width = 20;
 					this.buttonClear.Bounds = r;
 					this.buttonClear.Visibility = true;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Right = rect.Right;
+					this.checkBold.Bounds = r;
+					this.checkBold.Visibility = true;
+					r.Offset(0, -18);
+					this.checkItalic.Bounds = r;
+					this.checkItalic.Visibility = true;
 				}
 			}
 			else
@@ -501,12 +443,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 				this.fontStyle.Visibility = false;
 				this.fontFeatures.Visibility = false;
-				this.fontColor.Visibility = false;
 				this.buttonSizeMinus.Visibility = false;
 				this.buttonSizePlus.Visibility = false;
-				this.buttonBold.Visibility = false;
-				this.buttonItalic.Visibility = false;
+				this.fontColor.Visibility = false;
 				this.buttonClear.Visibility = false;
+				this.checkBold.Visibility = false;
+				this.checkItalic.Visibility = false;
 			}
 		}
 
@@ -737,24 +679,18 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ChangeFontSize(1, 125);
 		}
 
-		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
+		private void HandleCheckBoldClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 			this.document.TextWrapper.Defined.InvertBold = !this.document.TextWrapper.Defined.InvertBold;
 		}
 
-		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
+		private void HandleCheckItalicClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 			this.document.TextWrapper.Defined.InvertItalic = !this.document.TextWrapper.Defined.InvertItalic;
-		}
-
-		private void HandleButtonClicked(object sender, MessageEventArgs e)
-		{
-			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -782,9 +718,10 @@ namespace Epsitec.Common.Document.TextPanels
 		protected ColorSample				fontColor;
 		protected IconButton				buttonSizeMinus;
 		protected IconButton				buttonSizePlus;
-		protected IconButton				buttonBold;
-		protected IconButton				buttonItalic;
 		protected IconButton				buttonClear;
+		protected CheckButton				checkBold;
+		protected CheckButton				checkItalic;
+
 		protected ColorSample				originFieldColor;
 		protected int						originFieldRank = -1;
 	}
