@@ -1586,7 +1586,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 
 				// Dessine le texte.
-				this.RenderText(font, size, glyphs, iArray, x, y, sx, sy, RichColor.FromName(color), isSpace);
+				this.RenderText(font, size, glyphs, iArray, x, y, sx, sy, RichColor.Parse(color), isSpace);
 			}
 			
 			if ( this.internalOperation == InternalOperation.CharactersTable )
@@ -1778,7 +1778,7 @@ namespace Epsitec.Common.Document.Objects
 						Path path = Path.FromLine(x1, y1, records[i].X, records[i].Y + records[i].Descender * 0.8);
 
 						this.port.LineWidth = 1.0;
-						this.port.RichColor = RichColor.FromName(color);
+						this.port.RichColor = RichColor.Parse(color);
 						this.port.PaintOutline(path);
 					}
 					

@@ -1240,15 +1240,17 @@ namespace Epsitec.Common.Document
 			//?Text.Properties.TabProperty t1 = tabs.NewTab("T1", 100, Text.Properties.SizeUnits.Points, 0.0, null);
 			//?Text.Properties.TabProperty t2 = tabs.NewTab("T2", 400, Text.Properties.SizeUnits.Points, 0.0, null);
 
+			string black = RichColor.ToString(RichColor.FromBrightness(0));
+
 			properties = new System.Collections.ArrayList();
 			//?properties.Add(new Text.Properties.FontProperty("Palatino Linotype", "Italic", "liga", "dlig", "kern"));
 			properties.Add(new Text.Properties.FontProperty("Arial", Misc.DefaultFontStyle("Arial")));
 			properties.Add(new Text.Properties.FontSizeProperty(12.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
 			properties.Add(new Text.Properties.MarginsProperty(10, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-			properties.Add(new Text.Properties.FontColorProperty("Black"));
+			properties.Add(new Text.Properties.FontColorProperty(black));
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(0.0, Text.Properties.SizeUnits.Points, 5.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
-//-			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));
+//-			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", black));
 			//?aproperties.Add(new Text.Properties.TabsProperty(t1, t2));
 			style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
 			this.textContext.DefaultStyle = style;
@@ -1265,7 +1267,7 @@ namespace Epsitec.Common.Document
 //			this.textContext.StyleList.NewMetaProperty("Italic", "Italic", new Text.Properties.FontItalicProperty ());
 
 			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));
+			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", black));
 			this.textContext.StyleList.NewMetaProperty("Underlined", "Underlined", 0, properties);
 			
 			this.textContext.StyleList.NewMetaProperty("Subscript", "SuperScript", new Text.Properties.FontXscriptProperty (0.6, -0.15));
@@ -1280,7 +1282,7 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.NewMetaProperty("UserY", "UserY", 0, properties);
 
 			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));
+			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", black));
 			this.textContext.StyleList.NewMetaProperty("UserZ", "UserZ", 0, properties);
 
 			

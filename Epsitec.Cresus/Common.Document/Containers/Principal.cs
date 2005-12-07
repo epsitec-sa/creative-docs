@@ -310,6 +310,12 @@ namespace Epsitec.Common.Document.Containers
 					panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
 				}
 
+				if ( widget is TextPanels.Abstract )
+				{
+					TextPanels.Abstract panel = widget as TextPanels.Abstract;
+					panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
+				}
+
 				widget.Dispose();
 			}
 
@@ -359,6 +365,7 @@ namespace Epsitec.Common.Document.Containers
 							panel.Dock = DockStyle.Top;
 							panel.DockMargins = new Margins(0, 1, panel.TopMargin, -1);
 							panel.IsExtendedSize = this.document.Modifier.IsTextPanelExtended(panel);
+							panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
 							panel.SetParent(this.scrollable.Panel);
 						}
 					}
@@ -472,6 +479,7 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleOriginColorChanged(object sender, bool lastOrigin)
 		{
 			this.originColorPanel = null;
+			this.originColorTextPanel = null;
 			this.OriginColorRulerDeselect();
 
 			Widget wSender = sender as Widget;
@@ -479,30 +487,42 @@ namespace Epsitec.Common.Document.Containers
 
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
 			{
-				Panels.Abstract panel = widget as Panels.Abstract;
-				if ( panel == null )  continue;
-
-				if ( panel == wSender )
+				if ( widget is Panels.Abstract )
 				{
-					this.originColorPanel = panel;
-					panel.OriginColorSelect( lastOrigin ? this.originColorRank : -1 );
-					if ( panel.Property.IsStyle )
+					Panels.Abstract panel = widget as Panels.Abstract;
+
+					if ( panel == wSender )
 					{
-						backColor = DrawingContext.ColorStyleBack;
+						this.originColorPanel = panel;
+						panel.OriginColorSelect( lastOrigin ? this.originColorRank : -1 );
+						if ( panel.Property.IsStyle )
+						{
+							backColor = DrawingContext.ColorStyleBack;
+						}
+					}
+					else
+					{
+						panel.OriginColorDeselect();
 					}
 				}
-				else
+
+				if ( widget is TextPanels.Abstract )
 				{
-					panel.OriginColorDeselect();
+					TextPanels.Abstract panel = widget as TextPanels.Abstract;
+
+					if ( panel == wSender )
+					{
+						this.originColorTextPanel = panel;
+						panel.OriginColorSelect( lastOrigin ? this.originColorRank : -1 );
+					}
+					else
+					{
+						panel.OriginColorDeselect();
+					}
 				}
 			}
 
-			if ( this.originColorPanel == null )
-			{
-				this.colorSelector.Visibility = false;
-				this.colorSelector.BackColor = Color.Empty;
-			}
-			else
+			if ( this.originColorPanel != null )
 			{
 				this.colorSelector.Visibility = true;
 				this.colorSelector.BackColor = backColor;
@@ -511,6 +531,20 @@ namespace Epsitec.Common.Document.Containers
 				this.ignoreColorChanged = false;
 				this.originColorType = this.originColorPanel.Property.Type;
 				this.originColorRank = this.originColorPanel.OriginColorRank();
+			}
+			else if ( this.originColorTextPanel != null )
+			{
+				this.colorSelector.Visibility = true;
+				this.colorSelector.BackColor = backColor;
+				this.ignoreColorChanged = true;
+				this.colorSelector.Color = this.originColorTextPanel.OriginColorGet();
+				this.ignoreColorChanged = false;
+				this.originColorRank = this.originColorTextPanel.OriginColorRank();
+			}
+			else
+			{
+				this.colorSelector.Visibility = false;
+				this.colorSelector.BackColor = Color.Empty;
 			}
 		}
 
@@ -556,6 +590,11 @@ namespace Epsitec.Common.Document.Containers
 				this.originColorPanel.OriginColorChange(this.colorSelector.Color);
 			}
 
+			if ( this.originColorTextPanel != null )
+			{
+				this.originColorTextPanel.OriginColorChange(this.colorSelector.Color);
+			}
+
 			if ( this.originColorRuler != null )
 			{
 				this.originColorRuler.FontRichColor = this.colorSelector.Color;
@@ -572,14 +611,23 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleColorSelectorClosed(object sender)
 		{
 			this.originColorPanel = null;
+			this.originColorTextPanel = null;
 			this.OriginColorRulerDeselect();
 			this.originColorType = Properties.Type.None;
 
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
 			{
-				Panels.Abstract panel = widget as Panels.Abstract;
-				if ( panel == null )  continue;
-				panel.OriginColorDeselect();
+				if ( widget is Panels.Abstract )
+				{
+					Panels.Abstract panel = widget as Panels.Abstract;
+					panel.OriginColorDeselect();
+				}
+
+				if ( widget is TextPanels.Abstract )
+				{
+					TextPanels.Abstract panel = widget as TextPanels.Abstract;
+					panel.OriginColorDeselect();
+				}
 			}
 
 			this.colorSelector.Visibility = false;
@@ -732,6 +780,7 @@ namespace Epsitec.Common.Document.Containers
 		protected Scrollable					scrollable;
 		protected ColorSelector					colorSelector;
 		protected Panels.Abstract				originColorPanel = null;
+		protected TextPanels.Abstract			originColorTextPanel = null;
 		protected Properties.Type				originColorType = Properties.Type.None;
 		protected int							originColorRank = -1;
 		protected Common.Widgets.TextRuler		originColorRuler = null;

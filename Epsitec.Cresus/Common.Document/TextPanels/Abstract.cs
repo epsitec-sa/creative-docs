@@ -362,6 +362,18 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
+		// Génère un événement pour dire que la couleur d'origine a changé.
+		protected virtual void OnOriginColorChanged()
+		{
+			if ( this.OriginColorChanged != null )  // qq'un écoute ?
+			{
+				this.OriginColorChanged(this);
+			}
+		}
+
+		public event EventHandler OriginColorChanged;
+
+		
 		// ATTENTION: Ceci n'est pas propre, mais je ne sais pas comment faire mieux.
 		// Le constructeur de Common.Widget appelle DefaultHeight, qui doit
 		// connaître le document pour déterminer la hauteur (avec LabelHeight).

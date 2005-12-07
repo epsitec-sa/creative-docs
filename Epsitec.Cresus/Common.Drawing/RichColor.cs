@@ -958,42 +958,42 @@ namespace Epsitec.Common.Drawing
 				case "G":
 					if (args.Length == 2)
 					{
-						return RichColor.FromAGray (1.0, Types.Converter.ToDouble (args[1]));
+						return RichColor.FromAGray (1.0, Types.Converter.ToDouble (args[1])/255);
 					}
 					break;
 				
 				case "aG":
 					if (args.Length == 3)
 					{
-						return RichColor.FromAGray (Types.Converter.ToDouble (args[1]), Types.Converter.ToDouble (args[2]));
+						return RichColor.FromAGray (Types.Converter.ToDouble (args[1])/255, Types.Converter.ToDouble (args[2])/255);
 					}
 					break;
 				
 				case "RGB":
 					if (args.Length == 4)
 					{
-						return RichColor.FromARGB (1.0, Types.Converter.ToDouble (args[1]), Types.Converter.ToDouble (args[2]), Types.Converter.ToDouble (args[3]));
+						return RichColor.FromARGB (1.0, Types.Converter.ToDouble (args[1])/255, Types.Converter.ToDouble (args[2])/255, Types.Converter.ToDouble (args[3])/255);
 					}
 					break;
 				
 				case "aRGB":
 					if (args.Length == 5)
 					{
-						return RichColor.FromARGB (Types.Converter.ToDouble (args[1]), Types.Converter.ToDouble (args[2]), Types.Converter.ToDouble (args[3]), Types.Converter.ToDouble (args[4]));
+						return RichColor.FromARGB (Types.Converter.ToDouble (args[1])/255, Types.Converter.ToDouble (args[2])/255, Types.Converter.ToDouble (args[3])/255, Types.Converter.ToDouble (args[4])/255);
 					}
 					break;
 				
 				case "CMYK":
 					if (args.Length == 5)
 					{
-						return RichColor.FromACMYK (1.0, Types.Converter.ToDouble (args[1]), Types.Converter.ToDouble (args[2]), Types.Converter.ToDouble (args[3]), Types.Converter.ToDouble (args[4]));
+						return RichColor.FromACMYK (1.0, Types.Converter.ToDouble (args[1])/255, Types.Converter.ToDouble (args[2])/255, Types.Converter.ToDouble (args[3])/255, Types.Converter.ToDouble (args[4])/255);
 					}
 					break;
 				
 				case "aCMYK":
 					if (args.Length == 6)
 					{
-						return RichColor.FromACMYK (Types.Converter.ToDouble (args[1]), Types.Converter.ToDouble (args[2]), Types.Converter.ToDouble (args[3]), Types.Converter.ToDouble (args[4]), Types.Converter.ToDouble (args[5]));
+						return RichColor.FromACMYK (Types.Converter.ToDouble (args[1])/255, Types.Converter.ToDouble (args[2])/255, Types.Converter.ToDouble (args[3])/255, Types.Converter.ToDouble (args[4])/255, Types.Converter.ToDouble (args[5])/255);
 					}
 					break;
 			}
@@ -1008,31 +1008,31 @@ namespace Epsitec.Common.Drawing
 				case ColorSpace.Gray:
 					if (color.IsOpaque)
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "G;{0}", color.Gray);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "G;{0}", color.Gray*255);
 					}
 					else
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aG;{0};{1}", color.A, color.Gray);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aG;{0};{1}", color.A*255, color.Gray*255);
 					}
 				
 				case ColorSpace.RGB:
 					if (color.IsOpaque)
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "RGB;{0};{1};{2}", color.R, color.G, color.B);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "RGB;{0};{1};{2}", color.R*255, color.G*255, color.B*255);
 					}
 					else
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aRGB;{0};{1};{2};{3}", color.A, color.R, color.G, color.B);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aRGB;{0};{1};{2};{3}", color.A*255, color.R*255, color.G*255, color.B*255);
 					}
 				
 				case ColorSpace.CMYK:
 					if (color.IsOpaque)
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "CMYK;{0};{1};{2};{3}", color.C, color.M, color.Y, color.K);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "CMYK;{0};{1};{2};{3}", color.C*255, color.M*255, color.Y*255, color.K*255);
 					}
 					else
 					{
-						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aCMYK;{0};{1};{2};{3};{4}", color.A, color.C, color.M, color.Y, color.K);
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aCMYK;{0};{1};{2};{3};{4}", color.A*255, color.C*255, color.M*255, color.Y*255, color.K*255);
 					}
 				
 				default:

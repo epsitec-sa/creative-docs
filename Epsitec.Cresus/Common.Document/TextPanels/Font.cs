@@ -48,11 +48,10 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Action.Text.Font.Color);
 
-			this.buttonSizeMinus   = this.CreateIconButton(Misc.Icon("FontSizeMinus"),   Res.Strings.Action.Text.Font.SizeMinus,   new MessageEventHandler(this.HandleButtonSizeMinusClicked), false);
-			this.buttonSizePlus    = this.CreateIconButton(Misc.Icon("FontSizePlus"),    Res.Strings.Action.Text.Font.SizePlus,    new MessageEventHandler(this.HandleButtonSizePlusClicked), false);
-			this.buttonBold        = this.CreateIconButton(Misc.Icon("FontBold"),        Res.Strings.Action.Text.Font.Bold,        new MessageEventHandler(this.HandleButtonBoldClicked));
-			this.buttonItalic      = this.CreateIconButton(Misc.Icon("FontItalic"),      Res.Strings.Action.Text.Font.Italic,      new MessageEventHandler(this.HandleButtonItalicClicked));
-			this.buttonUnderlined  = this.CreateIconButton(Misc.Icon("FontUnderlined"),  Res.Strings.Action.Text.Font.Underlined,  new MessageEventHandler(this.HandleButtonUnderlineClicked));
+			this.buttonSizeMinus = this.CreateIconButton(Misc.Icon("FontSizeMinus"), Res.Strings.Action.Text.Font.SizeMinus, new MessageEventHandler(this.HandleButtonSizeMinusClicked), false);
+			this.buttonSizePlus  = this.CreateIconButton(Misc.Icon("FontSizePlus"),  Res.Strings.Action.Text.Font.SizePlus,  new MessageEventHandler(this.HandleButtonSizePlusClicked), false);
+			this.buttonBold      = this.CreateIconButton(Misc.Icon("FontBold"),      Res.Strings.Action.Text.Font.Bold,      new MessageEventHandler(this.HandleButtonBoldClicked));
+			this.buttonItalic    = this.CreateIconButton(Misc.Icon("FontItalic"),    Res.Strings.Action.Text.Font.Italic,    new MessageEventHandler(this.HandleButtonItalicClicked));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -121,6 +120,68 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
+
+		// Désélectionne toutes les origines de couleurs possibles.
+		public override void OriginColorDeselect()
+		{
+			this.fontColor.ActiveState = ActiveState.No;
+		}
+
+		// Sélectionne l'origine de couleur.
+		public override void OriginColorSelect(int rank)
+		{
+			if ( rank != -1 )
+			{
+				this.originFieldRank = rank;
+				if ( rank == 0 )  this.originFieldColor = this.fontColor;
+			}
+			if ( this.originFieldColor == null )  return;
+
+			this.OriginColorDeselect();
+			this.originFieldColor.ActiveState = ActiveState.Yes;
+		}
+
+		// Retourne le rang de la couleur d'origine.
+		public override int OriginColorRank()
+		{
+			return this.originFieldRank;
+		}
+
+		// Modifie la couleur d'origine.
+		public override void OriginColorChange(Drawing.RichColor color)
+		{
+			if ( this.originFieldColor == null )  return;
+			
+			if ( this.originFieldColor.Color != color )
+			{
+				this.originFieldColor.Color = color;
+				this.ColorToWrapper(this.originFieldColor);
+			}
+		}
+
+		// Donne la couleur d'origine.
+		public override Drawing.RichColor OriginColorGet()
+		{
+			if ( this.originFieldColor == null )  return Drawing.RichColor.FromBrightness(0.0);
+			return this.originFieldColor.Color;
+		}
+
+		// Donne la couleur au wrapper.
+		protected void ColorToWrapper(ColorSample sample)
+		{
+			if ( sample.Color.IsEmpty )
+			{
+				this.document.TextWrapper.Defined.ClearColor();
+			}
+			else
+			{
+				string sc = RichColor.ToString(sample.Color);
+				System.Diagnostics.Debug.WriteLine(string.Format("b: {0} a={1} r={2} g={3} b={4}", sc, sample.Color.A, sample.Color.R, sample.Color.G, sample.Color.B));
+				this.document.TextWrapper.Defined.Color = sc;
+			}
+		}
+
+		
 		// Met à jour après un changement du wrapper.
 		protected override void UpdateAfterChanging()
 		{
@@ -141,6 +202,10 @@ namespace Epsitec.Common.Document.TextPanels
 			bool isSize = this.document.TextWrapper.Defined.IsFontSizeDefined;
 			string textSize = Misc.ConvertDoubleToString(size, units, 0);
 
+			string sc = this.document.TextWrapper.Defined.Color;
+			RichColor color = (sc == null) ? RichColor.Empty : RichColor.Parse(sc);
+			System.Diagnostics.Debug.WriteLine(string.Format("a: {0} a={1} r={2} g={3} b={4}", sc, color.A, color.R, color.G, color.B));
+
 			this.ignoreChanged = true;
 
 			this.UpdateComboFaceList();
@@ -157,6 +222,13 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.UpdateButtonBold();
 			this.UpdateButtonItalic();
+
+			this.fontColor.Color = color;
+
+			if ( this.fontColor.ActiveState == ActiveState.Yes )
+			{
+				this.OnOriginColorChanged();
+			}
 			
 			this.ignoreChanged = false;
 		}
@@ -308,34 +380,6 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
-		public override void OriginColorDeselect()
-		{
-			this.fontColor.ActiveState = ActiveState.No;
-		}
-
-		// Sélectionne l'origine de couleur.
-		public override void OriginColorSelect(int rank)
-		{
-			this.fontColor.ActiveState = ActiveState.Yes;
-		}
-
-		// Modifie la couleur d'origine.
-		public override void OriginColorChange(Drawing.RichColor color)
-		{
-			if ( this.fontColor.Color != color )
-			{
-				this.fontColor.Color = color;
-			}
-		}
-
-		// Donne la couleur d'origine.
-		public override Drawing.RichColor OriginColorGet()
-		{
-			return this.fontColor.Color;
-		}
-
-		
 		// Le wrapper associé a changé.
 		protected void HandleWrapperChanged(object sender)
 		{
@@ -392,9 +436,6 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Offset(20, 0);
 					this.buttonItalic.Bounds = r;
 					this.buttonItalic.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonUnderlined.Bounds = r;
-					this.buttonUnderlined.Visibility = true;
 					r.Offset(20+5, 0);
 					r.Width = 30;
 					this.fontColor.Bounds = r;
@@ -435,9 +476,6 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Offset(20, 0);
 					this.buttonItalic.Bounds = r;
 					this.buttonItalic.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonUnderlined.Bounds = r;
-					this.buttonUnderlined.Visibility = true;
 					r.Offset(20+5, 0);
 					r.Width = 30;
 					this.fontColor.Bounds = r;
@@ -468,7 +506,6 @@ namespace Epsitec.Common.Document.TextPanels
 				this.buttonSizePlus.Visibility = false;
 				this.buttonBold.Visibility = false;
 				this.buttonItalic.Visibility = false;
-				this.buttonUnderlined.Visibility = false;
 				this.buttonClear.Visibility = false;
 			}
 		}
@@ -665,16 +702,25 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleFieldColorClicked(object sender, MessageEventArgs e)
 		{
-			if ( this.ignoreChanged )  return;
+			this.originFieldColor = sender as ColorSample;
+
+			this.originFieldRank = -1;
+			if ( this.originFieldColor == this.fontColor )  this.originFieldRank = 0;
+
+			this.OnOriginColorChanged();
 		}
 
 		private void HandleFieldColorChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
+
 			ColorSample cs = sender as ColorSample;
 			if ( cs.ActiveState == ActiveState.Yes )
 			{
+				this.OnOriginColorChanged();
 			}
+
+			this.ColorToWrapper(cs);
 		}
 
 		private void HandleButtonSizeMinusClicked(object sender, MessageEventArgs e)
@@ -705,143 +751,6 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.Defined.InvertItalic = !this.document.TextWrapper.Defined.InvertItalic;
 		}
 
-		private void HandleButtonUnderlineClicked(object sender, MessageEventArgs e)
-		{
-			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
-			
-			this.document.TextWrapper.SuspendSynchronisations();
-			
-			// Cycle entre divers états:
-			//
-			// (A1) Soulignement hérité du style actif
-			// (A2) Pas de soulignement (forcé par un disable local)
-			// (A3) Soulignement défini localement
-			//
-			// ou si aucun soulignement n'est défini dans le style actif:
-			//
-			// (B1) Pas de soulignement
-			// (B2) Soulignement défini localement
-			
-			Common.Text.Wrappers.TextWrapper.XlineDefinition underline = this.document.TextWrapper.Defined.Underline;
-			
-			if ( this.document.TextWrapper.Active.IsUnderlineDefined )
-			{
-				if ( this.document.TextWrapper.Active.Underline.IsDisabled &&
-					 this.document.TextWrapper.Active.Underline.IsEmpty == false )
-				{
-					// (A2)
-
-					this.FillUnderlineDefinition(underline);					// ---> (A3)
-					
-					if ( underline.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Underline) )
-					{
-						// L'état défini par notre souligné local est identique à
-						// celui hérité par le style actif; utilise celui du style
-						// dans ce cas.
-						
-						this.document.TextWrapper.Defined.ClearUnderline();		// ---> (A1)
-					}
-				}
-				else if ( this.document.TextWrapper.Defined.IsUnderlineDefined )
-				{
-					// (A3) ou (B2)
-					
-					this.document.TextWrapper.Defined.ClearUnderline();			// ---> (A1) ou (B1)
-				}
-				else
-				{
-					// (A1)
-					
-					underline.IsDisabled = true;								// ---> (A2)
-				}
-			}
-			else
-			{
-				// (B1)
-				
-				this.FillUnderlineDefinition(underline);						// ---> (B2)
-			}
-			
-			this.document.TextWrapper.ResumeSynchronisations();
-		}
-		
-		private void HandleButtonSubscriptClicked(object sender, MessageEventArgs e)
-		{
-			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
-			
-			this.document.TextWrapper.SuspendSynchronisations();
-			
-			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
-			
-			if ( this.document.TextWrapper.Active.IsXscriptDefined )
-			{
-				if ( this.document.TextWrapper.Active.Xscript.IsDisabled &&
-					 this.document.TextWrapper.Active.Xscript.IsEmpty == false )
-				{
-					this.FillSubscriptDefinition(xscript);
-					
-					if ( xscript.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Xscript) )
-					{
-						this.document.TextWrapper.Defined.ClearXscript();
-					}
-				}
-				else if ( this.document.TextWrapper.Defined.IsXscriptDefined )
-				{
-					this.document.TextWrapper.Defined.ClearXscript();
-				}
-				else
-				{
-					xscript.IsDisabled = true;
-				}
-			}
-			else
-			{
-				this.FillSubscriptDefinition(xscript);
-			}
-			
-			this.document.TextWrapper.ResumeSynchronisations();
-		}
-
-		private void HandleButtonSuperscriptClicked(object sender, MessageEventArgs e)
-		{
-			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
-			
-			this.document.TextWrapper.SuspendSynchronisations();
-			
-			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
-			
-			if ( this.document.TextWrapper.Active.IsXscriptDefined )
-			{
-				if ( this.document.TextWrapper.Active.Xscript.IsDisabled &&
-					 this.document.TextWrapper.Active.Xscript.IsEmpty == false )
-				{
-					this.FillSuperscriptDefinition(xscript);
-					
-					if ( xscript.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Xscript) )
-					{
-						this.document.TextWrapper.Defined.ClearXscript();
-					}
-				}
-				else if ( this.document.TextWrapper.Defined.IsXscriptDefined )
-				{
-					this.document.TextWrapper.Defined.ClearXscript();
-				}
-				else
-				{
-					xscript.IsDisabled = true;
-				}
-			}
-			else
-			{
-				this.FillSuperscriptDefinition(xscript);
-			}
-			
-			this.document.TextWrapper.ResumeSynchronisations();
-		}
-
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
@@ -861,43 +770,11 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.Defined.ClearUnits();
 			this.document.TextWrapper.Defined.ClearInvertBold();
 			this.document.TextWrapper.Defined.ClearInvertItalic();
-			this.document.TextWrapper.Defined.ClearUnderline();
-			this.document.TextWrapper.Defined.ClearOverline();
-			this.document.TextWrapper.Defined.ClearStrikeout();
 			this.document.TextWrapper.Defined.ClearColor();
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
 		
-		private void FillUnderlineDefinition(Common.Text.Wrappers.TextWrapper.XlineDefinition underline)
-		{
-			underline.IsDisabled = false;
-			
-			underline.Thickness      = 1.0;
-			underline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
-			underline.Position       = -5.0;
-			underline.PositionUnits  = Common.Text.Properties.SizeUnits.Points;
-			underline.DrawClass      = "underline";
-			underline.DrawStyle      = "Black";
-		}
-        
-		private void FillSubscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript)
-		{
-			xscript.IsDisabled = false;
-			
-			xscript.Scale  = 0.6;
-			xscript.Offset = -0.15;
-		}
-        
-		private void FillSuperscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript)
-		{
-			xscript.IsDisabled = false;
-			
-			xscript.Scale  = 0.6;
-			xscript.Offset = 0.25;
-		}
-        
-
 		protected TextFieldCombo			fontFace;
 		protected TextFieldCombo			fontStyle;
 		protected IconButton				fontFeatures;
@@ -907,7 +784,8 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonSizePlus;
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
-		protected IconButton				buttonUnderlined;
 		protected IconButton				buttonClear;
+		protected ColorSample				originFieldColor;
+		protected int						originFieldRank = -1;
 	}
 }
