@@ -160,6 +160,21 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		protected void ClearMetaProperty(string meta, Property template_property)
+		{
+			TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, template_property);
+			
+			if (this.navigator != null)
+			{
+				if (this.navigator.IsSelectionActive)
+				{
+					this.navigator.EndSelection ();
+				}
+				
+				this.navigator.SetMetaProperties (Properties.ApplyMode.Clear, style);
+			}
+		}
+		
 		protected Property ReadProperty(Properties.WellKnownType type)
 		{
 			Property[] properties = null;

@@ -185,7 +185,7 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 				else
 				{
-					this.ClearMetaProperty (ParagraphWrapper.Margins);
+					this.ClearMetaProperty (ParagraphWrapper.Margins, new Properties.MarginsProperty ());
 				}
 			}
 		}
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 				else
 				{
-					this.ClearMetaProperty (ParagraphWrapper.Leading);
+					this.ClearMetaProperty (ParagraphWrapper.Leading, new Properties.LeadingProperty ());
 				}
 			}
 		}
@@ -335,7 +335,7 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 				else
 				{
-					this.ClearMetaProperty (ParagraphWrapper.Leading);
+					this.ClearMetaProperty (ParagraphWrapper.Leading, new Properties.KeepProperty ());
 				}
 			}
 		}
