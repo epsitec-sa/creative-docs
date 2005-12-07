@@ -570,6 +570,7 @@ namespace Epsitec.Common.Widgets
 				this.OnEditionAccepted ();
 				
 				this.is_editing = false;
+				this.SelectAll ();
 				
 				return true;
 			}
