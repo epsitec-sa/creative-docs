@@ -438,7 +438,14 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			this.Value = roundValue;
+			if ( this.Value != roundValue )
+			{
+				if ( this.StartEdition() )
+				{
+					this.Value = roundValue;
+					this.AcceptEdition();
+				}
+			}
 		}
 		
 		protected virtual void UpdateValidator()

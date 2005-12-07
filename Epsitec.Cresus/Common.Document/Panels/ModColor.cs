@@ -25,7 +25,7 @@ namespace Epsitec.Common.Document.Panels
 				if ( i == 5 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.B;
 				if ( i == 6 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.A;
 				
-				this.fieldArray[i].TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
+				this.fieldArray[i].TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
 				this.fieldArray[i].TabIndex = 1+i;
 				this.fieldArray[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				if ( i == 0 )
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				for ( int i=0 ; i<7 ; i++ )
 				{
-					this.fieldArray[i].TextFieldReal.ValueChanged -= new EventHandler(this.HandleValueChanged);
+					this.fieldArray[i].TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
 					this.fieldArray[i] = null;
 				}
 				this.negativ.ActiveStateChanged -= new EventHandler(this.HandleNegativChanged);

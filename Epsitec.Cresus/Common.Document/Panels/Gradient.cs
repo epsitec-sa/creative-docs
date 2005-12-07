@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldAngle.TextFieldReal);
 			this.fieldAngle.TextFieldReal.InternalMinValue = -360.0M;
 			this.fieldAngle.TextFieldReal.InternalMaxValue =  360.0M;
-			this.fieldAngle.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldAngle.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
 			this.fieldAngle.TabIndex = 6;
 			this.fieldAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldAngle, Res.Strings.Panel.Gradient.Tooltip.Angle);
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldRepeat.TextFieldReal);
 			this.fieldRepeat.TextFieldReal.InternalMinValue = 1;
 			this.fieldRepeat.TextFieldReal.InternalMaxValue = 8;
-			this.fieldRepeat.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldRepeat.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
 			this.fieldRepeat.TabIndex = 20;
 			this.fieldRepeat.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRepeat, Res.Strings.Panel.Gradient.Tooltip.Repeat);
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMiddle.TextFieldReal.InternalMaxValue =  500;
 			this.fieldMiddle.TextFieldReal.Step = 10;
 			this.fieldMiddle.TextFieldReal.TextSuffix = "%";
-			this.fieldMiddle.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldMiddle.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
 			this.fieldMiddle.TabIndex = 21;
 			this.fieldMiddle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMiddle, Res.Strings.Panel.Gradient.Tooltip.Middle);
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldSmooth.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldSmooth.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldSmooth.TextFieldReal);
-			this.fieldSmooth.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldSmooth.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
 			this.fieldSmooth.TabIndex = 22;
 			this.fieldSmooth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldSmooth, Res.Strings.Panel.Gradient.Tooltip.Smooth);
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldHatchAngle.TextFieldReal);
 			this.fieldHatchAngle.TextFieldReal.InternalMinValue = -360.0M;
 			this.fieldHatchAngle.TextFieldReal.InternalMaxValue =  360.0M;
-			this.fieldHatchAngle.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldHatchAngle.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchAngle.TabIndex = 23;
 			this.fieldHatchAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchAngle, Res.Strings.Panel.Gradient.Tooltip.HatchAngle);
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldHatchWidth.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldHatchWidth.TextFieldReal.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchWidth.TextFieldReal);
-			this.fieldHatchWidth.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldHatchWidth.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchWidth.TabIndex = 24;
 			this.fieldHatchWidth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchWidth, Res.Strings.Panel.Gradient.Tooltip.HatchWidth);
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldHatchDistance.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldHatchDistance.TextFieldReal.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchDistance.TextFieldReal);
-			this.fieldHatchDistance.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldHatchDistance.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchDistance.TabIndex = 25;
 			this.fieldHatchDistance.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchDistance, Res.Strings.Panel.Gradient.Tooltip.HatchDistance);
@@ -176,10 +176,13 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldColor1.Changed -= new EventHandler(this.HandleFieldColorChanged);
 				this.fieldColor2.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fieldColor2.Changed -= new EventHandler(this.HandleFieldColorChanged);
-				this.fieldAngle.TextFieldReal.ValueChanged -= new EventHandler(this.HandleValueChanged);
-				this.fieldRepeat.TextFieldReal.ValueChanged -= new EventHandler(this.HandleValueChanged);
-				this.fieldMiddle.TextFieldReal.ValueChanged -= new EventHandler(this.HandleValueChanged);
-				this.fieldSmooth.TextFieldReal.ValueChanged -= new EventHandler(this.HandleValueChanged);
+				this.fieldAngle.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
+				this.fieldRepeat.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
+				this.fieldMiddle.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
+				this.fieldSmooth.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
+				this.fieldHatchAngle.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
+				this.fieldHatchWidth.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
+				this.fieldHatchDistance.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
 				this.swapColor.Clicked -= new MessageEventHandler(this.HandleSwapColorClicked);
 
 				for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )

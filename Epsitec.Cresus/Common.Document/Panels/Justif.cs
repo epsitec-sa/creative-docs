@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMarginH.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldMarginH.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMarginH.TextFieldReal);
-			this.fieldMarginH.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldMarginH.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginH.TabIndex = 20;
 			this.fieldMarginH.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMarginH, Res.Strings.Panel.Justif.Tooltip.MarginH);
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMarginV.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldMarginV.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMarginV.TextFieldReal);
-			this.fieldMarginV.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldMarginV.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginV.TabIndex = 21;
 			this.fieldMarginV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMarginV, Res.Strings.Panel.Justif.Tooltip.MarginV);
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldOffsetV.TextFieldReal.InternalMinValue = -50.0M;
 			this.fieldOffsetV.TextFieldReal.InternalMaxValue =  50.0M;
 			this.fieldOffsetV.TextFieldReal.TextSuffix = "%";
-			this.fieldOffsetV.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldOffsetV.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffsetV.TabIndex = 22;
 			this.fieldOffsetV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldOffsetV, Res.Strings.Panel.Justif.Tooltip.OffsetV);
@@ -104,9 +104,9 @@ namespace Epsitec.Common.Document.Panels
 				this.gridVertical.SelectionChanged -= new EventHandler(HandleTypeChanged);
 				this.gridOrientation.SelectionChanged -= new EventHandler(HandleTypeChanged);
 
-				this.fieldMarginH.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldMarginV.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldOffsetV.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldMarginH.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldMarginV.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldOffsetV.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 
 				this.gridHorizontal = null;
 				this.gridVertical = null;

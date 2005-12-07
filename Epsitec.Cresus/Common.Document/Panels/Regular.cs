@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldNbFaces.TextFieldReal.InternalMinValue = 3;
 			this.fieldNbFaces.TextFieldReal.InternalMaxValue = 24;
 			this.fieldNbFaces.TextFieldReal.Step = 1;
-			this.fieldNbFaces.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldNbFaces.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldNbFaces.TabIndex = 1;
 			this.fieldNbFaces.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldNbFaces, Res.Strings.Panel.Regular.Tooltip.Faces);
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDeep.TextFieldReal.InternalMaxValue = 100;
 			this.fieldDeep.TextFieldReal.Step = 5;
 			this.fieldDeep.TextFieldReal.TextSuffix = "%";
-			this.fieldDeep.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldDeep.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldDeep.TabIndex = 3;
 			this.fieldDeep.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDeep, Res.Strings.Panel.Regular.Tooltip.Deep);
@@ -58,8 +58,8 @@ namespace Epsitec.Common.Document.Panels
 			if ( disposing )
 			{
 				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.fieldNbFaces.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldDeep.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldNbFaces.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldDeep.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 
 				this.grid = null;
 				this.fieldNbFaces = null;

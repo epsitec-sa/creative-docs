@@ -31,6 +31,9 @@ namespace Epsitec.Common.Document.Widgets
 				this.textFieldSimple.Dock = DockStyle.Right;
 				this.textFieldSimple.TabIndex = 0;
 				this.textFieldSimple.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.textFieldSimple.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+				this.textFieldSimple.AutoSelectOnFocus = true;
+				this.textFieldSimple.SwallowEscape = true;
 			}
 			else
 			{
@@ -39,6 +42,9 @@ namespace Epsitec.Common.Document.Widgets
 				this.textFieldReal.Dock = DockStyle.Right;
 				this.textFieldReal.TabIndex = 0;
 				this.textFieldReal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.textFieldReal.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+				this.textFieldReal.AutoSelectOnFocus = true;
+				this.textFieldReal.SwallowEscape = true;
 			}
 		}
 

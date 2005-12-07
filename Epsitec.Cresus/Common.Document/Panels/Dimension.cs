@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Panels
 			this.addLength.TextFieldReal.FactorMaxRange = 0.1M;
 			this.addLength.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.addLength.TextFieldReal);
-			this.addLength.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.addLength.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.addLength.TabIndex = 10;
 			this.addLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.addLength, Res.Strings.Panel.Dimension.Tooltip.AddLength);
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Document.Panels
 			this.outLength.TextFieldReal.FactorMaxRange = 0.1M;
 			this.outLength.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.outLength.TextFieldReal);
-			this.outLength.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.outLength.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.outLength.TabIndex = 11;
 			this.outLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.outLength, Res.Strings.Panel.Dimension.Tooltip.OutLength);
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fontOffset.TextFieldReal.InternalMaxValue =  100;
 			this.fontOffset.TextFieldReal.Step = 5;
 			this.fontOffset.TextFieldReal.TextSuffix = "%";
-			this.fontOffset.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fontOffset.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fontOffset.TabIndex = 13;
 			this.fontOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontOffset, Res.Strings.Panel.Dimension.Tooltip.FontOffset);
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Document.Panels
 			this.dimensionText = new Widgets.TextFieldLabel(this, true);
 			this.dimensionText.LabelShortText = Res.Strings.Panel.Dimension.Short.Text;
 			this.dimensionText.LabelLongText  = Res.Strings.Panel.Dimension.Long.Text;
-			this.dimensionText.TextField.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.dimensionText.TextField.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.dimensionText.TabIndex = 14;
 			this.dimensionText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.dimensionText, Res.Strings.Panel.Dimension.Tooltip.Text);
@@ -102,10 +102,10 @@ namespace Epsitec.Common.Document.Panels
 			{
 				this.gridForm.SelectionChanged -= new EventHandler(HandleTypeChanged);
 				this.gridJustif.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.addLength.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.outLength.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fontOffset.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.dimensionText.TextField.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.addLength.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.outLength.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fontOffset.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.dimensionText.TextField.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 				this.rotateText.Clicked -= new MessageEventHandler(this.HandleRotateTextClicked);
 
 				this.gridForm = null;

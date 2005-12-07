@@ -59,7 +59,7 @@ namespace Epsitec.Common.Document.Panels
 			this.field.TextFieldReal.FactorStep = 0.1M;
 			this.field.TextFieldReal.Logarithmic = 3.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.field.TextFieldReal);
-			this.field.TextFieldReal.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.field.TextFieldReal.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 2;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.Line.Tooltip.Width);
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldStandardLength.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldStandardLength.TextFieldReal.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldStandardLength.TextFieldReal);
-			this.fieldStandardLength.TextFieldReal.ValueChanged += new EventHandler(this.HandleDashChanged);
+			this.fieldStandardLength.TextFieldReal.EditionAccepted += new EventHandler(this.HandleDashChanged);
 			this.fieldStandardLength.TabIndex = 20;
 			this.fieldStandardLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStandardLength, Res.Strings.Panel.Line.Tooltip.DashLength);
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDashPen.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldDashPen.TextFieldReal.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashPen.TextFieldReal);
-			this.fieldDashPen.TextFieldReal.ValueChanged += new EventHandler(this.HandleDashChanged);
+			this.fieldDashPen.TextFieldReal.EditionAccepted += new EventHandler(this.HandleDashChanged);
 			this.fieldDashPen.TabIndex = 21;
 			this.fieldDashPen.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashPen, Res.Strings.Panel.Line.Tooltip.DashPen);
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDashGap.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldDashGap.TextFieldReal.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashGap.TextFieldReal);
-			this.fieldDashGap.TextFieldReal.ValueChanged += new EventHandler(this.HandleDashChanged);
+			this.fieldDashGap.TextFieldReal.EditionAccepted += new EventHandler(this.HandleDashChanged);
 			this.fieldDashGap.TabIndex = 22;
 			this.fieldDashGap.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashGap, Res.Strings.Panel.Line.Tooltip.DashGap);
@@ -141,16 +141,16 @@ namespace Epsitec.Common.Document.Panels
 				this.gridCap.SelectionChanged -= new EventHandler(HandleTypeChanged);
 				this.gridJoin.SelectionChanged -= new EventHandler(HandleTypeChanged);
 				this.nothingButton.Clicked -= new MessageEventHandler(this.HandleNothingClicked);
-				this.field.TextFieldReal.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.field.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleTextChanged);
 
 				for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
 				{
 					this.radioDashRank[i].ActiveStateChanged -= new EventHandler(this.HandleDashRankChanged);
 					this.radioDashRank[i] = null;
 				}
-				this.fieldStandardLength.TextFieldReal.ValueChanged -= new EventHandler(this.HandleDashChanged);
-				this.fieldDashPen.TextFieldReal.ValueChanged -= new EventHandler(this.HandleDashChanged);
-				this.fieldDashGap.TextFieldReal.ValueChanged -= new EventHandler(this.HandleDashChanged);
+				this.fieldStandardLength.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleDashChanged);
+				this.fieldDashPen.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleDashChanged);
+				this.fieldDashGap.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleDashChanged);
 
 				this.grid = null;
 				this.field = null;

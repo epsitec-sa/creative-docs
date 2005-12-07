@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fontSize.LabelShortText = Res.Strings.Panel.Font.Short.Size;
 			this.fontSize.LabelLongText  = Res.Strings.Panel.Font.Long.Size;
 			this.document.Modifier.AdaptTextFieldRealFontSize(this.fontSize.TextFieldReal);
-			this.fontSize.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fontSize.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fontSize.TabIndex = 3;
 			this.fontSize.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontSize, Res.Strings.Panel.Font.Tooltip.Size);
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				//?this.fontName.SelectedIndexChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontName.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fontSize.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fontSize.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
 

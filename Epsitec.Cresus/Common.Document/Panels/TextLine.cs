@@ -30,7 +30,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldOffset.TextFieldReal.InternalMaxValue = 70.0M;
 			this.fieldOffset.TextFieldReal.Step = 5.0M;
 			this.fieldOffset.TextFieldReal.TextSuffix = "%";
-			this.fieldOffset.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldOffset.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffset.TabIndex = 20;
 			this.fieldOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldOffset, Res.Strings.Panel.TextLine.Tooltip.Offset);
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldAdd.TextFieldReal.InternalMaxValue = 100.0M;
 			this.fieldAdd.TextFieldReal.Step = 1.0M;
 			this.fieldAdd.TextFieldReal.TextSuffix = "%";
-			this.fieldAdd.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldAdd.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldAdd.TabIndex = 21;
 			this.fieldAdd.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldAdd, Res.Strings.Panel.TextLine.Tooltip.Add);
@@ -61,8 +61,8 @@ namespace Epsitec.Common.Document.Panels
 			if ( disposing )
 			{
 				this.gridHorizontal.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.fieldOffset.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldAdd.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldOffset.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldAdd.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 
 				this.gridHorizontal = null;
 				this.fieldOffset = null;

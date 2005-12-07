@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRadius.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldRadius.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldRadius.TextFieldReal);
-			this.fieldRadius.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldRadius.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldRadius.TabIndex = 2;
 			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRadius, Res.Strings.Panel.Corner.Tooltip.Radius);
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEffect1.TextFieldReal.InternalMaxValue = 200;
 			this.fieldEffect1.TextFieldReal.Step = 5;
 			this.fieldEffect1.TextFieldReal.TextSuffix = "%";
-			this.fieldEffect1.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldEffect1.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect1.TabIndex = 3;
 			this.fieldEffect1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldEffect1, Res.Strings.Panel.Corner.Tooltip.Effect1);
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEffect2.TextFieldReal.InternalMaxValue = 200;
 			this.fieldEffect2.TextFieldReal.Step = 5;
 			this.fieldEffect2.TextFieldReal.TextSuffix = "%";
-			this.fieldEffect2.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldEffect2.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect2.TabIndex = 4;
 			this.fieldEffect2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldEffect2, Res.Strings.Panel.Corner.Tooltip.Effect2);
@@ -86,9 +86,9 @@ namespace Epsitec.Common.Document.Panels
 			if ( disposing )
 			{
 				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.fieldRadius.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldEffect1.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldEffect2.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldRadius.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldEffect1.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldEffect2.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 
 				this.grid = null;
 				this.fieldRadius = null;
