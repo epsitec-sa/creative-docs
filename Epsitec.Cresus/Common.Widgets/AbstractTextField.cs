@@ -136,6 +136,29 @@ namespace Epsitec.Common.Widgets
 			set { this.autoEraseOnFocus = value; }
 		}
 		
+		public bool								SwallowReturn
+		{
+			get
+			{
+				return this.swallow_return;
+			}
+			set
+			{
+				this.swallow_return = value;
+			}
+		}
+		
+		public bool								SwallowEscape
+		{
+			get
+			{
+				return this.swallow_escape;
+			}
+			set
+			{
+				this.swallow_escape = value;
+			}
+		}
 		
 		public override Drawing.ContentAlignment DefaultAlignment
 		{
@@ -401,6 +424,18 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public DefocusAction					DefocusAction
+		{
+			get
+			{
+				return this.defocus_action;
+			}
+			set
+			{
+				this.defocus_action = value;
+			}
+		}
+		
 		public TextDisplayMode					TextDisplayMode
 		{
 			get
@@ -418,18 +453,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public DefocusAction					DefocusAction
+		public TextDisplayMode					InitialTextDisplayMode
 		{
 			get
 			{
-				return this.defocus_action;
+				return this.initial_text_display_mode;
 			}
+
 			set
 			{
-				this.defocus_action = value;
+				this.initial_text_display_mode = value;
 			}
 		}
-		
+
 		public string							InitialText
 		{
 			get
@@ -507,10 +543,21 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual bool StartEdition()
 		{
-			if (this.is_editing == false)
+			if ((this.is_editing == false) &&
+				(this.defocus_action != DefocusAction.None))
 			{
-				this.initial_text = this.Text;
-				this.is_editing   = true;
+				this.initial_text              = this.Text;
+				this.initial_text_display_mode = this.TextDisplayMode;
+				
+				this.is_editing = true;
+				
+				if (this.textDisplayMode == TextDisplayMode.Proposal)
+				{
+					this.textDisplayMode = TextDisplayMode.Defined;
+				}
+				
+				this.OnEditionStarted ();
+				
 				return true;
 			}
 			return false;
@@ -521,9 +568,12 @@ namespace Epsitec.Common.Widgets
 			if (this.is_editing)
 			{
 				this.OnEditionAccepted ();
+				
 				this.is_editing = false;
+				
 				return true;
 			}
+			
 			return false;
 		}
 		
@@ -532,10 +582,16 @@ namespace Epsitec.Common.Widgets
 			if (this.is_editing)
 			{
 				this.OnEditionRejected ();
-				this.Text = this.initial_text;
+				
+				this.Text            = this.InitialText;
+				this.TextDisplayMode = this.InitialTextDisplayMode;
+				
 				this.is_editing = false;
+				this.SelectAll ();
+				
 				return true;
 			}
+			
 			return false;
 		}
 		
@@ -722,16 +778,19 @@ namespace Epsitec.Common.Widgets
 								break;
 							
 							case KeyCode.Escape:
-								if (this.RejectEdition ())
+								if (this.RejectEdition () && this.SwallowEscape)
 								{
 									message.Consumer = this;
 									message.Swallowed = true;
-									System.Diagnostics.Debug.WriteLine ("Swallowed Escape in AbstractTextField.");
 								}
 								break;
 							
 							case KeyCode.Return:
-								this.AcceptEdition ();
+								if (this.AcceptEdition () && this.SwallowReturn)
+								{
+									message.Consumer = this;
+									message.Swallowed = true;
+								}
 								break;
 						}
 					}
@@ -1137,6 +1196,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
+		protected virtual void OnEditionStarted()
+		{
+			System.Diagnostics.Debug.WriteLine ("Started Edition");
+			
+			if (this.EditionStarted != null)
+			{
+				this.EditionStarted (this);
+			}
+		}
 		
 		protected virtual void OnEditionAccepted()
 		{
@@ -1558,6 +1627,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.CancelEventHandler	AutoSelecting;
 		public event Support.CancelEventHandler	AutoErasing;
 		
+		public event Support.EventHandler		EditionStarted;
 		public event Support.EventHandler		EditionAccepted;
 		public event Support.EventHandler		EditionRejected;
 		
@@ -1583,7 +1653,10 @@ namespace Epsitec.Common.Widgets
 		protected TextDisplayMode				textDisplayMode = TextDisplayMode.Default;
 		protected DefocusAction					defocus_action;
 		protected string						initial_text;
+		protected TextDisplayMode				initial_text_display_mode;
 		protected bool							is_editing;
+		protected bool							swallow_return;
+		protected bool							swallow_escape;
 		
 		private TextNavigator					navigator;
 		private int								lastCursorFrom = -1;

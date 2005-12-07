@@ -396,14 +396,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual  void OnEditionStarted()
-		{
-			if (this.EditionStarted != null)
-			{
-				this.EditionStarted (this);
-			}
-		}
-		
 		
 		protected override void OpenCombo()
 		{
@@ -480,8 +472,6 @@ namespace Epsitec.Common.Widgets
 			this.AutoRejectEdition (true);
 		}
 		
-		
-		public event Support.EventHandler		EditionStarted;
 		
 		protected string						place_holder;
 		

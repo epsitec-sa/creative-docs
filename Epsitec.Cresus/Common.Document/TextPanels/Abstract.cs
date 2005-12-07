@@ -326,8 +326,10 @@ namespace Epsitec.Common.Document.TextPanels
 				this.document.Modifier.AdaptTextFieldRealDimension(field.TextFieldReal);
 			}
 			
-			field.TextFieldReal.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
-			field.TextFieldReal.EditionAccepted += handler;
+			field.TextFieldReal.DefocusAction     = DefocusAction.AutoAcceptOrRejectEdition;
+			field.TextFieldReal.AutoSelectOnFocus = true;
+			field.TextFieldReal.SwallowEscape     = true;
+			field.TextFieldReal.EditionAccepted  += handler;
 //-			field.TextFieldReal.ValueChanged += handler;
 			
 			field.TabIndex = this.tabIndex++;
