@@ -51,6 +51,13 @@ namespace Epsitec.Common.Types
 			return value;
 		}
 		
+		public static double ToDouble(object obj)
+		{
+			decimal value;
+			Converter.Convert (obj, out value);
+			return (double) value;
+		}
+		
 
 		public static bool SafeConvert(object obj, out string value)
 		{

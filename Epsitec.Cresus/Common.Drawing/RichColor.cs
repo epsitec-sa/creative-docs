@@ -9,6 +9,8 @@ namespace Epsitec.Common.Drawing
 	}
 
 	[System.Serializable]
+	[System.ComponentModel.TypeConverter (typeof (RichColor.Converter))]
+	
 	/// <summary>
 	/// Cette classe représente une couleur RGB ou CMYK.
 	/// </summary>
@@ -942,6 +944,103 @@ namespace Epsitec.Common.Drawing
 		}
 
 
+		public static RichColor Parse(string value, System.Globalization.CultureInfo culture)
+		{
+			if (value == null)
+			{
+				return RichColor.Empty;
+			}
+			
+			string[] args = value.Split (';');
+			
+			switch (args[0])
+			{
+				case "G":
+					if (args.Length == 2)
+					{
+						return RichColor.FromAGray (1.0, Types.Converter.ToDouble (args[1]));
+					}
+					break;
+				
+				case "aG":
+					if (args.Length == 3)
+					{
+						return RichColor.FromAGray (Types.Converter.ToDouble (args[1]), Types.Converter.ToDouble (args[2]));
+					}
+					break;
+				
+				case "RGB":
+					if (args.Length == 4)
+					{
+						return RichColor.FromARGB (1.0, Types.Converter.ToDouble (args[1]), Types.Converter.ToDouble (args[2]), Types.Converter.ToDouble (args[3]));
+					}
+					break;
+				
+				case "aRGB":
+					if (args.Length == 5)
+					{
+						return RichColor.FromARGB (Types.Converter.ToDouble (args[1]), Types.Converter.ToDouble (args[2]), Types.Converter.ToDouble (args[3]), Types.Converter.ToDouble (args[4]));
+					}
+					break;
+				
+				case "CMYK":
+					if (args.Length == 5)
+					{
+						return RichColor.FromACMYK (1.0, Types.Converter.ToDouble (args[1]), Types.Converter.ToDouble (args[2]), Types.Converter.ToDouble (args[3]), Types.Converter.ToDouble (args[4]));
+					}
+					break;
+				
+				case "aCMYK":
+					if (args.Length == 6)
+					{
+						return RichColor.FromACMYK (Types.Converter.ToDouble (args[1]), Types.Converter.ToDouble (args[2]), Types.Converter.ToDouble (args[3]), Types.Converter.ToDouble (args[4]), Types.Converter.ToDouble (args[5]));
+					}
+					break;
+			}
+			
+			throw new System.ArgumentException (string.Format ("Invalid color specification ({0}).", value));
+		}
+		
+		public static string ToString(RichColor color, System.Globalization.CultureInfo culture)
+		{
+			switch (color.ColorSpace)
+			{
+				case ColorSpace.Gray:
+					if (color.IsOpaque)
+					{
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "G;{0}", color.Gray);
+					}
+					else
+					{
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aG;{0};{1}", color.A, color.Gray);
+					}
+				
+				case ColorSpace.RGB:
+					if (color.IsOpaque)
+					{
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "RGB;{0};{1};{2}", color.R, color.G, color.B);
+					}
+					else
+					{
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aRGB;{0};{1};{2};{3}", color.A, color.R, color.G, color.B);
+					}
+				
+				case ColorSpace.CMYK:
+					if (color.IsOpaque)
+					{
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "CMYK;{0};{1};{2};{3}", color.C, color.M, color.Y, color.K);
+					}
+					else
+					{
+						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "aCMYK;{0};{1};{2};{3};{4}", color.A, color.C, color.M, color.Y, color.K);
+					}
+				
+				default:
+					throw new System.NotSupportedException (string.Format ("ColorSpace.{0} not supported", color.ColorSpace));
+			}
+		}
+		
+		
 		public static bool operator == (RichColor a, RichColor b)
 		{
 			if ( a.isEmpty && b.isEmpty )  return true;
@@ -1035,6 +1134,19 @@ namespace Epsitec.Common.Drawing
 		}
 		
 
+		public class Converter : Epsitec.Common.Types.AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				return RichColor.Parse (value, culture);
+			}
+			
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				return RichColor.ToString ((RichColor) value, culture);
+			}
+		}
+		
 		#region ISerializable Members
 		public RichColor(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{

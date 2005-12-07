@@ -283,32 +283,23 @@ namespace Epsitec.Common.Drawing
 				return Color.Empty;
 			}
 			
-			string[] args = value.Split (';', ':');
+			string[] args = value.Split (';');
 			
 			if (args.Length == 3)
 			{
-				string arg_r = args[0].Trim ();
-				string arg_g = args[1].Trim ();
-				string arg_b = args[2].Trim ();
-			
-				double r = System.Double.Parse (arg_r, culture);
-				double g = System.Double.Parse (arg_g, culture);
-				double b = System.Double.Parse (arg_b, culture);
+				double r = Types.Converter.ToDouble (args[0]);
+				double g = Types.Converter.ToDouble (args[1]);
+				double b = Types.Converter.ToDouble (args[2]);
 			
 				return new Color (r, g, b);
 			}
 			
 			if (args.Length == 4)
 			{
-				string arg_a = args[0].Trim ();
-				string arg_r = args[1].Trim ();
-				string arg_g = args[2].Trim ();
-				string arg_b = args[3].Trim ();
-				
-				double a = System.Double.Parse (arg_a, culture);
-				double r = System.Double.Parse (arg_r, culture);
-				double g = System.Double.Parse (arg_g, culture);
-				double b = System.Double.Parse (arg_b, culture);
+				double a = Types.Converter.ToDouble (args[0]);
+				double r = Types.Converter.ToDouble (args[1]);
+				double g = Types.Converter.ToDouble (args[2]);
+				double b = Types.Converter.ToDouble (args[3]);
 				
 				return new Color (a, r, g, b);
 			}
@@ -320,11 +311,11 @@ namespace Epsitec.Common.Drawing
 		{
 			if (color.A == 1.0)
 			{
-				return string.Format ("{0};{1};{2}", color.R, color.G, color.B);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2}", color.R, color.G, color.B);
 			}
 			else
 			{
-				return string.Format ("{0};{1};{2};{3}", color.A, color.R, color.G, color.B);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}", color.A, color.R, color.G, color.B);
 			}
 		}
 		
