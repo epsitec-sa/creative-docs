@@ -1605,13 +1605,20 @@ namespace Epsitec.Common.Widgets.Adorners
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public override void PaintTextSelectionBackground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
 				if ( (state&WidgetState.Focused) != 0 )
 				{
-					this.PaintImageButton(graphics, areas[i].Rect, 20);
+					if ( mode == TextDisplayMode.Proposal )
+					{
+						this.PaintImageButton(graphics, areas[i].Rect, 23);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, areas[i].Rect, 20);
+					}
 
 					if ( areas[i].Color != Drawing.Color.FromBrightness(0) )
 					{
@@ -1630,7 +1637,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTextSelectionForeground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 		}
 
@@ -2021,8 +2028,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			switch ( mode )
 			{
 				case TextDisplayMode.Default:   return Drawing.Color.Empty;
-				case TextDisplayMode.Defined:   return Drawing.Color.FromRGB(247.0/255.0, 168.0/255.0, 105.0/255.0);
-				case TextDisplayMode.Proposal:  return Drawing.Color.FromRGB(206.0/255.0, 173.0/255.0, 255.0/255.0);
+				case TextDisplayMode.Defined:   return Drawing.Color.FromRGB(249.0/255.0, 205.0/255.0, 173.0/255.0);
+				case TextDisplayMode.Proposal:  return Drawing.Color.FromRGB(226.0/255.0, 209.0/255.0, 255.0/255.0);
 			}
 			return Drawing.Color.Empty;
 		}

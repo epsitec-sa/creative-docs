@@ -47,11 +47,12 @@ namespace Epsitec.Common.Widgets.Adorners
 			b = 1-(1-this.colorCaption.B)*0.5;
 			this.colorCaptionMiddle = Drawing.Color.FromRGB(r,g,b);
 
-			this.colorButton     = Drawing.Color.FromRGB(243.0/255.0, 243.0/255.0, 238.0/255.0);
-			this.colorFocus      = Drawing.Color.FromRGB(157.0/255.0, 188.0/255.0, 235.0/255.0);
-			this.colorHilite     = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorError      = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorThreeState = Drawing.Color.FromRGB(211.0/255.0, 187.0/255.0, 153.0/255.0);
+			this.colorButton          = Drawing.Color.FromRGB(243.0/255.0, 243.0/255.0, 238.0/255.0);
+			this.colorFocus           = Drawing.Color.FromRGB(157.0/255.0, 188.0/255.0, 235.0/255.0);
+			this.colorHilite          = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorError           = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorThreeState      = Drawing.Color.FromRGB(211.0/255.0, 187.0/255.0, 153.0/255.0);
+			this.colorCaptionProposal = Drawing.Color.FromRGB(154.0/255.0, 119.0/255.0,  74.0/255.0);
 		}
 		
 
@@ -1751,14 +1752,21 @@ namespace Epsitec.Common.Widgets.Adorners
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public override void PaintTextSelectionBackground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
 				graphics.AddFilledRectangle(areas[i].Rect);
 				if ( (state&WidgetState.Focused) != 0 )
 				{
-					graphics.RenderSolid(this.colorCaption);
+					if ( mode == TextDisplayMode.Proposal )
+					{
+						graphics.RenderSolid(this.colorCaptionProposal);
+					}
+					else
+					{
+						graphics.RenderSolid(this.colorCaption);
+					}
 
 					if ( areas[i].Color != Drawing.Color.FromBrightness(0) )
 					{
@@ -1777,7 +1785,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTextSelectionForeground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 		}
 
@@ -2053,6 +2061,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaptionLight;
 		protected Drawing.Color		colorCaptionMiddle;
+		protected Drawing.Color		colorCaptionProposal;
 		protected Drawing.Color		colorThreeState;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorFocus;

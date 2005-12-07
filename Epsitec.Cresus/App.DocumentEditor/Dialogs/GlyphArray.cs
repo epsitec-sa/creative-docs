@@ -463,7 +463,7 @@ namespace Epsitec.Common.Widgets
 							TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
 							areas[0] = new TextLayout.SelectedArea();
 							areas[0].Rect = rect;
-							adorner.PaintTextSelectionBackground(graphics, areas, state);
+							adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, TextDisplayMode.Default);
 
 							cellState |= WidgetState.Selected;
 						}

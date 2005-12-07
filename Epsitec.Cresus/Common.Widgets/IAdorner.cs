@@ -120,8 +120,8 @@ namespace Epsitec.Common.Widgets
 		
 		void PaintFocusBox(Drawing.Graphics graphics, Drawing.Rectangle rect);
 		void PaintTextCursor(Drawing.Graphics graphics, Drawing.Point p1, Drawing.Point p2, bool cursorOn);
-		void PaintTextSelectionBackground(Drawing.Graphics graphics, TextLayout.SelectedArea[] areas, WidgetState state);
-		void PaintTextSelectionForeground(Drawing.Graphics graphics, TextLayout.SelectedArea[] areas, WidgetState state);
+		void PaintTextSelectionBackground(Drawing.Graphics graphics, TextLayout.SelectedArea[] areas, WidgetState state, PaintTextStyle style, TextDisplayMode mode);
+		void PaintTextSelectionForeground(Drawing.Graphics graphics, TextLayout.SelectedArea[] areas, WidgetState state, PaintTextStyle style, TextDisplayMode mode);
 		
 		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Point pos, TextLayout text, WidgetState state, PaintTextStyle style, TextDisplayMode mode, Drawing.Color backColor);
 

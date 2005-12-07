@@ -25,6 +25,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorCaption           = Drawing.Color.FromRGB(255.0/255.0, 186.0/255.0,   1.0/255.0);
 			this.colorCaptionNF         = Drawing.Color.FromRGB(178.0/255.0, 198.0/255.0, 221.0/255.0);
 			this.colorCaptionText       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorCaptionProposal   = Drawing.Color.FromRGB(133.0/255.0, 174.0/255.0, 221.0/255.0);
 			this.colorThreeState        = Drawing.Color.FromRGB(228.0/255.0, 236.0/255.0, 244.0/255.0);
 			this.colorHilite            = Drawing.Color.FromRGB(255.0/255.0, 186.0/255.0,   1.0/255.0);
 			this.colorError             = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
@@ -1722,14 +1723,21 @@ namespace Epsitec.Common.Widgets.Adorners
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public override void PaintTextSelectionBackground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
 				graphics.AddFilledRectangle(areas[i].Rect);
 				if ( (state&WidgetState.Focused) != 0 )
 				{
-					graphics.RenderSolid(this.colorCaption);
+					if ( mode == TextDisplayMode.Proposal )
+					{
+						graphics.RenderSolid(this.colorCaptionProposal);
+					}
+					else
+					{
+						graphics.RenderSolid(this.colorCaption);
+					}
 
 					if ( areas[i].Color != Drawing.Color.FromBrightness(0) )
 					{
@@ -1748,7 +1756,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTextSelectionForeground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 		}
 
@@ -2046,6 +2054,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorControlReadOnly;
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaptionLight;
+		protected Drawing.Color		colorCaptionProposal;
 		protected Drawing.Color		colorThreeState;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;

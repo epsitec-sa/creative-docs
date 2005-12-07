@@ -1713,7 +1713,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public override void PaintTextSelectionBackground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
@@ -1739,7 +1739,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTextSelectionForeground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 		}
 

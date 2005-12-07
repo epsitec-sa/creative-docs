@@ -1387,7 +1387,7 @@ namespace Epsitec.Common.Widgets
 					areas[0] = new TextLayout.SelectedArea();
 					areas[0].Rect = rInside;
 					areas[0].Rect.Deflate(1, 1);
-					adorner.PaintTextSelectionBackground(graphics, areas, state);
+					adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, this.textDisplayMode);
 					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					adorner.PaintFocusBox(graphics, areas[0].Rect);
 				}
@@ -1420,7 +1420,7 @@ namespace Epsitec.Common.Widgets
 						}
 						WidgetState st = state;
 						if ( this.contextMenu != null )  st |= WidgetState.Focused;
-						adorner.PaintTextSelectionBackground(graphics, areas, st);
+						adorner.PaintTextSelectionBackground(graphics, areas, st, PaintTextStyle.TextField, this.textDisplayMode);
 					
 						Drawing.Rectangle[] rects = new Drawing.Rectangle[areas.Length];
 						for ( int i=0 ; i<areas.Length ; i++ )

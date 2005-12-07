@@ -131,8 +131,8 @@ namespace Epsitec.Common.Widgets.Adorners
 		public abstract void PaintTooltipTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text);
 		public abstract void PaintFocusBox(Drawing.Graphics graphics, Drawing.Rectangle rect);
 		public abstract void PaintTextCursor(Drawing.Graphics graphics, Drawing.Point p1, Drawing.Point p2, bool cursorOn);
-		public abstract void PaintTextSelectionBackground(Drawing.Graphics graphics, Widgets.TextLayout.SelectedArea[] areas, Widgets.WidgetState state);
-		public abstract void PaintTextSelectionForeground(Drawing.Graphics graphics, Widgets.TextLayout.SelectedArea[] areas, Widgets.WidgetState state);
+		public abstract void PaintTextSelectionBackground(Drawing.Graphics graphics, Widgets.TextLayout.SelectedArea[] areas, Widgets.WidgetState state, PaintTextStyle style, TextDisplayMode mode);
+		public abstract void PaintTextSelectionForeground(Drawing.Graphics graphics, Widgets.TextLayout.SelectedArea[] areas, Widgets.WidgetState state, PaintTextStyle style, TextDisplayMode mode);
 		public abstract void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Point pos, TextLayout text, Widgets.WidgetState state, Widgets.PaintTextStyle style, TextDisplayMode mode, Drawing.Color backColor);
 		public abstract void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor);
 		

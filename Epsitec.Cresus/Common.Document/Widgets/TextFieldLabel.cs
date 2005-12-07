@@ -35,6 +35,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.textFieldSimple.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 				this.textFieldSimple.AutoSelectOnFocus = true;
 				this.textFieldSimple.SwallowEscape = true;
+				this.textFieldSimple.SwallowReturn = true;
 			}
 			else
 			{
@@ -47,6 +48,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.textFieldReal.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 				this.textFieldReal.AutoSelectOnFocus = true;
 				this.textFieldReal.SwallowEscape = true;
+				this.textFieldReal.SwallowReturn = true;
 			}
 		}
 

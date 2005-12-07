@@ -21,14 +21,15 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
 			this.colorInfo              = Drawing.Color.FromName("Info");
 
-			this.colorGlyph          = Drawing.Color.FromRGB( 68.0/255.0, 106.0/255.0, 140.0/255.0);
-			this.colorCaption        = Drawing.Color.FromRGB(111.0/255.0, 189.0/255.0, 249.0/255.0);
-			this.colorCaptionNF      = Drawing.Color.FromRGB(180.0/255.0, 230.0/255.0, 255.0/255.0);
-			this.colorHilite         = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorBorder         = Drawing.Color.FromRGB(122.0/255.0, 148.0/255.0, 170.0/255.0);
-			this.colorError          = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorTextBackground = Drawing.Color.FromRGB(250.0/255.0, 252.0/255.0, 252.0/255.0);
-			this.colorWindow         = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorGlyph           = Drawing.Color.FromRGB( 68.0/255.0, 106.0/255.0, 140.0/255.0);
+			this.colorCaption         = Drawing.Color.FromRGB(111.0/255.0, 189.0/255.0, 249.0/255.0);
+			this.colorCaptionNF       = Drawing.Color.FromRGB(180.0/255.0, 230.0/255.0, 255.0/255.0);
+			this.colorCaptionProposal = Drawing.Color.FromRGB(240.0/255.0, 203.0/255.0,   0.0/255.0);
+			this.colorHilite          = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorBorder          = Drawing.Color.FromRGB(122.0/255.0, 148.0/255.0, 170.0/255.0);
+			this.colorError           = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorTextBackground  = Drawing.Color.FromRGB(250.0/255.0, 252.0/255.0, 252.0/255.0);
+			this.colorWindow          = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
 		}
 		
 
@@ -1719,14 +1720,21 @@ namespace Epsitec.Common.Widgets.Adorners
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public override void PaintTextSelectionBackground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
 				graphics.AddFilledRectangle(areas[i].Rect);
 				if ( (state&WidgetState.Focused) != 0 )
 				{
-					graphics.RenderSolid(this.colorCaption);
+					if ( mode == TextDisplayMode.Proposal )
+					{
+						graphics.RenderSolid(this.colorCaptionProposal);
+					}
+					else
+					{
+						graphics.RenderSolid(this.colorCaption);
+					}
 
 					if ( areas[i].Color != Drawing.Color.FromBrightness(0) )
 					{
@@ -1745,7 +1753,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTextSelectionForeground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 		}
 
@@ -2239,6 +2247,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
 		protected Drawing.Color		colorTextBackground;
+		protected Drawing.Color		colorCaptionProposal;
 		protected Drawing.Color		colorGlyph;
 	}
 }

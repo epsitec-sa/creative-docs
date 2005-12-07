@@ -17,16 +17,17 @@ namespace Epsitec.Common.Widgets.Adorners
 		// Initialise les couleurs en fonction des réglages de Windows.
 		protected override void RefreshColors()
 		{
-			this.colorBlack       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorControl     = Drawing.Color.FromRGB( 53.0/255.0, 146.0/255.0, 255.0/255.0);
-			this.colorCaption     = Drawing.Color.FromRGB(  0.0/255.0, 115.0/255.0, 244.0/255.0);
-			this.colorCaptionNF   = Drawing.Color.FromRGB(190.0/255.0, 190.0/255.0, 190.0/255.0);
-			this.colorCaptionText = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorInfo        = Drawing.Color.FromRGB(213.0/255.0, 233.0/255.0, 255.0/255.0);
-			this.colorBorder      = Drawing.Color.FromRGB(170.0/255.0, 170.0/255.0, 170.0/255.0);
-			this.colorDisabled    = Drawing.Color.FromRGB(140.0/255.0, 140.0/255.0, 140.0/255.0);
-			this.colorError       = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorWindow      = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorBlack           = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorControl         = Drawing.Color.FromRGB( 53.0/255.0, 146.0/255.0, 255.0/255.0);
+			this.colorCaption         = Drawing.Color.FromRGB(  0.0/255.0, 115.0/255.0, 244.0/255.0);
+			this.colorCaptionNF       = Drawing.Color.FromRGB(190.0/255.0, 190.0/255.0, 190.0/255.0);
+			this.colorCaptionText     = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorCaptionProposal = Drawing.Color.FromRGB(191.0/255.0, 128.0/255.0,  53.0/255.0);
+			this.colorInfo            = Drawing.Color.FromRGB(213.0/255.0, 233.0/255.0, 255.0/255.0);
+			this.colorBorder          = Drawing.Color.FromRGB(170.0/255.0, 170.0/255.0, 170.0/255.0);
+			this.colorDisabled        = Drawing.Color.FromRGB(140.0/255.0, 140.0/255.0, 140.0/255.0);
+			this.colorError           = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorWindow          = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
 
 			this.colorCaption.A = 0.7;
 		}
@@ -1831,14 +1832,21 @@ namespace Epsitec.Common.Widgets.Adorners
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public override void PaintTextSelectionBackground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
 				graphics.AddFilledRectangle(areas[i].Rect);
 				if ( (state&WidgetState.Focused) != 0 )
 				{
-					graphics.RenderSolid(this.colorCaption);
+					if ( mode == TextDisplayMode.Proposal )
+					{
+						graphics.RenderSolid(this.colorCaptionProposal);
+					}
+					else
+					{
+						graphics.RenderSolid(this.colorCaption);
+					}
 
 					if ( areas[i].Color != Drawing.Color.FromBrightness(0) )
 					{
@@ -1857,7 +1865,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTextSelectionForeground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 		}
 
@@ -2611,6 +2619,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
+		protected Drawing.Color		colorCaptionProposal;
 	}
 
 	public class LookAquaMetal : LookAqua

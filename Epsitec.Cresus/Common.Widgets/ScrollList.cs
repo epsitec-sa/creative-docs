@@ -592,7 +592,7 @@ namespace Epsitec.Common.Widgets
 					areas[0].Rect.Width  = this.GetTextWidth();
 					areas[0].Rect.Bottom = pos.Y;
 					areas[0].Rect.Height = this.lineHeight;
-					adorner.PaintTextSelectionBackground(graphics, areas, state);
+					adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, TextDisplayMode.Default);
 
 					state |= WidgetState.Selected;
 				}

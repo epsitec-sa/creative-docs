@@ -34,14 +34,15 @@ namespace Epsitec.Common.Widgets.Adorners
 			b = 1-(1-this.colorControlLight.B)*0.7;
 			this.colorButton = Drawing.Color.FromRGB(r,g,b);
 
-			this.colorCaption        = Drawing.Color.FromRGB(170.0/255.0, 195.0/255.0, 249.0/255.0);
-			this.colorCaptionNF      = Drawing.Color.FromRGB(210.0/255.0, 210.0/255.0, 210.0/255.0);
-			this.colorHilite         = Drawing.Color.FromRGB(147.0/255.0, 172.0/255.0, 245.0/255.0);
-			this.colorBorder         = Drawing.Color.FromRGB(102.0/255.0, 102.0/255.0, 126.0/255.0);
-			this.colorDisabled       = Drawing.Color.FromRGB(176.0/255.0, 176.0/255.0, 188.0/255.0);
-			this.colorError          = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorTextBackground = Drawing.Color.FromRGB(247.0/255.0, 247.0/255.0, 248.0/255.0);
-			this.colorWindow         = Drawing.Color.FromRGB(210.0/255.0, 213.0/255.0, 223.0/255.0);
+			this.colorCaption         = Drawing.Color.FromRGB(170.0/255.0, 195.0/255.0, 249.0/255.0);
+			this.colorCaptionNF       = Drawing.Color.FromRGB(210.0/255.0, 210.0/255.0, 210.0/255.0);
+			this.colorCaptionProposal = Drawing.Color.FromRGB(233.0/255.0, 194.0/255.0,  59.0/255.0);
+			this.colorHilite          = Drawing.Color.FromRGB(147.0/255.0, 172.0/255.0, 245.0/255.0);
+			this.colorBorder          = Drawing.Color.FromRGB(102.0/255.0, 102.0/255.0, 126.0/255.0);
+			this.colorDisabled        = Drawing.Color.FromRGB(176.0/255.0, 176.0/255.0, 188.0/255.0);
+			this.colorError           = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorTextBackground  = Drawing.Color.FromRGB(247.0/255.0, 247.0/255.0, 248.0/255.0);
+			this.colorWindow          = Drawing.Color.FromRGB(210.0/255.0, 213.0/255.0, 223.0/255.0);
 		}
 		
 
@@ -1916,14 +1917,21 @@ namespace Epsitec.Common.Widgets.Adorners
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public override void PaintTextSelectionBackground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
 				graphics.AddFilledRectangle(areas[i].Rect);
 				if ( (state&WidgetState.Focused) != 0 )
 				{
-					graphics.RenderSolid(this.colorCaption);
+					if ( mode == TextDisplayMode.Proposal )
+					{
+						graphics.RenderSolid(this.colorCaptionProposal);
+					}
+					else
+					{
+						graphics.RenderSolid(this.colorCaption);
+					}
 
 					if ( areas[i].Color != Drawing.Color.FromBrightness(0) )
 					{
@@ -1942,7 +1950,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTextSelectionForeground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state)
+												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 		}
 
@@ -2333,8 +2341,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			switch ( mode )
 			{
 				case TextDisplayMode.Default:   return Drawing.Color.Empty;
-				case TextDisplayMode.Defined:   return Drawing.Color.FromRGB(183.0/255.0, 208.0/255.0, 251.0/255.0);
-				case TextDisplayMode.Proposal:  return Drawing.Color.FromRGB(253.0/255.0, 225.0/255.0, 185.0/255.0);
+				case TextDisplayMode.Defined:   return Drawing.Color.FromRGB(223.0/255.0, 240.0/255.0, 255.0/255.0);
+				case TextDisplayMode.Proposal:  return Drawing.Color.FromRGB(255.0/255.0, 238.0/255.0, 209.0/255.0);
 			}
 			return Drawing.Color.Empty;
 		}
@@ -2375,6 +2383,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorTextBackground;
+		protected Drawing.Color		colorCaptionProposal;
 		protected Drawing.Color		colorWindow;
 	}
 }
