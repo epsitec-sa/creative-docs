@@ -1128,7 +1128,7 @@ namespace Epsitec.Common.Text
 			
 			new_styles.AddRange (paragraph_styles);
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
-			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
+			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Symbol));
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
 			
 			this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
@@ -1176,7 +1176,7 @@ namespace Epsitec.Common.Text
 				
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
 				new_styles.AddRange (text_styles);
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Symbol));
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
 				
 				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
@@ -1187,16 +1187,16 @@ namespace Epsitec.Common.Text
 			this.NotifyTextChanged ();
 		}
 		
-		public void SetCharacterStyles(params TextStyle[] styles)
+		public void SetSymbolStyles(params TextStyle[] styles)
 		{
-			//	Change les styles des caractères attachés à la position courante (ou
+			//	Change les styles des symboles attachés à la position courante (ou
 			//	compris dans la sélection).
 			
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
 			System.Diagnostics.Debug.Assert (styles != null);
 			System.Diagnostics.Debug.Assert (styles.Length > 0);
 			
-			TextStyle[] character_styles = TextStyle.FilterStyles (styles, TextStyleClass.Character);
+			TextStyle[] character_styles = TextStyle.FilterStyles (styles, TextStyleClass.Symbol);
 			
 			System.Diagnostics.Debug.Assert (character_styles.Length > 0);
 			
@@ -1212,7 +1212,7 @@ namespace Epsitec.Common.Text
 						int pos    = range.Start;
 						int length = range.Length;
 						
-						this.SetCharacterStyles (pos, length, character_styles);
+						this.SetSymbolStyles (pos, length, character_styles);
 					}
 					
 					this.story.ValidateAction ();
@@ -1314,7 +1314,7 @@ namespace Epsitec.Common.Text
 			
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
-			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
+			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Symbol));
 			new_styles.AddRange (Internal.Navigator.Combine (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty), meta_properties, mode));
 			
 			this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
@@ -2278,7 +2278,7 @@ namespace Epsitec.Common.Text
 			
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
 			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Text));
-			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Character));
+			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Symbol));
 			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.MetaProperty));
 			
 			new_properties.AddRange (Property.Filter (this.current_properties, Properties.PropertyFilter.UniformOnly));
@@ -2597,11 +2597,11 @@ namespace Epsitec.Common.Text
 			Internal.Navigator.SetTextStyles (this.story, this.temp_cursor, length, styles);
 		}
 		
-		private void SetCharacterStyles(int pos, int length, TextStyle[] styles)
+		private void SetSymbolStyles(int pos, int length, TextStyle[] styles)
 		{
 			this.story.SetCursorPosition (this.temp_cursor, pos);
 			
-			Internal.Navigator.SetCharacterStyles (this.story, this.temp_cursor, length, styles);
+			Internal.Navigator.SetSymbolStyles (this.story, this.temp_cursor, length, styles);
 		}
 		
 		private void SetTextProperties(int pos, int length, Properties.ApplyMode mode, Property[] properties)

@@ -687,10 +687,10 @@ namespace Epsitec.Common.Text.Internal
 			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, offset_start, old_props, new_props);
 		}
 		
-		public static void SetCharacterStyles(TextStory story, ICursor cursor, int length, params TextStyle[] styles)
+		public static void SetSymbolStyles(TextStory story, ICursor cursor, int length, params TextStyle[] styles)
 		{
 			//	Définit les styles à utiliser pour les caractères spécifiés. Remplace
-			//	tous les styles de caractères précédemment appliqués.
+			//	tous les styles de symboles précédemment appliqués.
 			
 			if (length == 0)
 			{
@@ -722,7 +722,7 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (code != next)
 				{
-					Navigator.SetCharacterStyles (story, text, code, start, count, styles);
+					Navigator.SetSymbolStyles (story, text, code, start, count, styles);
 					
 					start = i;
 					count = 1;
@@ -736,7 +736,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			//	Change encore le style de la dernière (ou de l'unique) tranche :
 			
-			Navigator.SetCharacterStyles (story, text, code, start, count, styles);
+			Navigator.SetSymbolStyles (story, text, code, start, count, styles);
 			
 			story.WriteText (cursor, offset_start, text);
 		}
@@ -1101,7 +1101,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph));
 			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Text));
-			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Character));
+			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Symbol));
 			all_styles.AddRange (Navigator.Combine (TextStyle.FilterStyles (current_styles, TextStyleClass.MetaProperty), meta_properties, mode));
 			
 			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, current_properties);
@@ -1175,9 +1175,9 @@ namespace Epsitec.Common.Text.Internal
 		
 		
 		
-		private static void SetCharacterStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] character_styles)
+		private static void SetSymbolStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] character_styles)
 		{
-			//	Remplace les styles de caractères par ceux passés en entrée.
+			//	Remplace les styles de symboles par ceux passés en entrée.
 			
 			if (length == 0)
 			{
@@ -1199,7 +1199,7 @@ namespace Epsitec.Common.Text.Internal
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
 			
 			//	Ne conserve que les styles associés directement au paragraphe et
-			//	au texte. En fait, on supprime les styles liés aux caractères :
+			//	au texte. En fait, on supprime les styles liés aux symboles :
 			
 			TextStyle[] filtered_styles = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph, TextStyleClass.Text, TextStyleClass.MetaProperty);
 			TextStyle[] all_styles      = new TextStyle[filtered_styles.Length + character_styles.Length];
@@ -1245,9 +1245,9 @@ namespace Epsitec.Common.Text.Internal
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
 			
 			//	Ne conserve que les styles associés directement au paragraphe et
-			//	aux caractères. En fait, on supprime les styles liés au texte :
+			//	aux symboles. En fait, on supprime les styles liés au texte :
 			
-			TextStyle[] filtered_styles = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph, TextStyleClass.Character, TextStyleClass.MetaProperty);
+			TextStyle[] filtered_styles = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph, TextStyleClass.Symbol, TextStyleClass.MetaProperty);
 			TextStyle[] all_styles      = new TextStyle[filtered_styles.Length + text_styles.Length];
 			Property[]  all_properties  = current_properties;
 			

@@ -418,7 +418,7 @@ namespace Epsitec.Common.Text
 				case TextStyleClass.Abstract:		return string.Concat ("A.", name);
 				case TextStyleClass.Paragraph:		return string.Concat ("P.", name);
 				case TextStyleClass.Text:			return string.Concat ("T.", name);
-				case TextStyleClass.Character:		return string.Concat ("C.", name);
+				case TextStyleClass.Symbol:			return string.Concat ("S.", name);
 				case TextStyleClass.MetaProperty:	return string.Concat ("M.", name);
 				
 				default:
@@ -441,7 +441,7 @@ namespace Epsitec.Common.Text
 				case 'A': text_style_class = TextStyleClass.Abstract;		break;
 				case 'P': text_style_class = TextStyleClass.Paragraph;		break;
 				case 'T': text_style_class = TextStyleClass.Text;			break;
-				case 'C': text_style_class = TextStyleClass.Character;		break;
+				case 'S': text_style_class = TextStyleClass.Symbol;			break;
 				case 'M': text_style_class = TextStyleClass.MetaProperty;	break;
 				
 				default:

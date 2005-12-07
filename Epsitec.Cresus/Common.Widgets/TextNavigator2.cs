@@ -737,11 +737,11 @@ namespace Epsitec.Common.Widgets
 			this.text_navigator.SetTextStyles (styles);
 		}
 		
-		public void SetCharacterStyles(params Text.TextStyle[] styles)
+		public void SetSymbolStyles(params Text.TextStyle[] styles)
 		{
 			this.EndSelection ();
 			
-			this.text_navigator.SetCharacterStyles (styles);
+			this.text_navigator.SetSymbolStyles (styles);
 		}
 		
 		public void SetMetaProperties(Text.Properties.ApplyMode mode, params Text.TextStyle[] meta_properties)

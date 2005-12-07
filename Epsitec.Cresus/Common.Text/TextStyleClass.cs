@@ -14,7 +14,7 @@ namespace Epsitec.Common.Text
 		Abstract		= 1,			//	style abstrait, sert uniquement de base aux autres
 		Paragraph		= 2,			//	style de paragraphe, appliqué au paragraphe entier
 		Text			= 3,			//	style de texte, appliqué à un passage de texte local
-		Character		= 4,			//	style de caractère, appliqué à un caractère unique
+		Symbol			= 4,			//	style de symboles, appliqué à un caractère unique
 		
 		MetaProperty	= 5,			//	style se comportant comme une propriété
 	}
