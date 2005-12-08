@@ -3776,6 +3776,42 @@ namespace Epsitec.Common.Document
 					}
 				}
 
+				// Dessine la grille pour le texte.
+				if ( this.drawingContext.TextGridShow )
+				{
+					double s = this.drawingContext.GridStep.Y*this.drawingContext.ScaleY;
+					int mul = (int) System.Math.Max(10.0/s, 1.0);
+
+					Point origin = this.document.Modifier.OriginArea;
+					origin = Point.GridAlign(origin, new Point(0, -this.drawingContext.TextGridOffset), new Point(0, this.drawingContext.TextGridStep));
+
+					// Dessine les traits horizontaux.
+					double step = this.drawingContext.TextGridStep*mul;
+					int subdiv = 1;
+					int rank = subdiv-(int)(-this.document.Modifier.OriginArea.Y/step);
+					for ( double pos=origin.Y ; pos<=this.document.Modifier.SizeArea.Height ; pos+=step )
+					{
+						if ( pos >= clipRect.Bottom && pos <= clipRect.Top )
+						{
+							double x = clipRect.Left;
+							double y = pos;
+							graphics.Align(ref x, ref y);
+							x += ix;
+							y += iy;
+							graphics.AddLine(x, y, clipRect.Right, y);
+							if ( rank%subdiv == 0 )
+							{
+								graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.8,0.9));  // gris-bleu
+							}
+							else
+							{
+								graphics.RenderSolid(Color.FromARGB(0.1, 0.6,0.8,0.9));  // gris-bleu
+							}
+						}
+						rank ++;
+					}
+				}
+
 				// Dessine les repères.
 				if ( this.drawingContext.GuidesShow )
 				{

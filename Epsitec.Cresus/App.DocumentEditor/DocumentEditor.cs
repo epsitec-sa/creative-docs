@@ -2771,6 +2771,13 @@ namespace Epsitec.App.DocumentEditor
 			context.GridShow = context.GridActive;
 		}
 
+		[Command ("TextGrid")]
+		void CommandTextGrid(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			context.TextGridShow = !context.TextGridShow;
+		}
+
 		[Command ("Magnet")]
 		void CommandMagnet(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3685,6 +3692,7 @@ namespace Epsitec.App.DocumentEditor
 			
 			this.previewState = new CommandState("Preview", this.commandDispatcher);
 			this.gridState = new CommandState("Grid", this.commandDispatcher);
+			this.textGridState = new CommandState("TextGrid", this.commandDispatcher);
 			this.magnetState = new CommandState("Magnet", this.commandDispatcher);
 			this.magnetLayerState = new CommandState("MagnetLayer", this.commandDispatcher);
 			this.rulersState = new CommandState("Rulers", this.commandDispatcher);
@@ -4466,6 +4474,8 @@ namespace Epsitec.App.DocumentEditor
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.gridState.Enable = true;
 				this.gridState.ActiveState = context.GridActive ? ActiveState.Yes : ActiveState.No;
+				this.textGridState.Enable = true;
+				this.textGridState.ActiveState = context.TextGridShow ? ActiveState.Yes : ActiveState.No;
 				this.rulersState.Enable = true;
 				this.rulersState.ActiveState = context.RulersShow ? ActiveState.Yes : ActiveState.No;
 				this.labelsState.Enable = true;
@@ -4477,6 +4487,8 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.gridState.Enable = false;
 				this.gridState.ActiveState = ActiveState.No;
+				this.textGridState.Enable = false;
+				this.textGridState.ActiveState = ActiveState.No;
 				this.rulersState.Enable = false;
 				this.rulersState.ActiveState = ActiveState.No;
 				this.labelsState.Enable = false;
@@ -5575,6 +5587,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					zoomAddState;
 		protected CommandState					previewState;
 		protected CommandState					gridState;
+		protected CommandState					textGridState;
 		protected CommandState					magnetState;
 		protected CommandState					magnetLayerState;
 		protected CommandState					rulersState;

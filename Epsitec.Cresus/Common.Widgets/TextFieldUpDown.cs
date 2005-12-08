@@ -445,6 +445,10 @@ namespace Epsitec.Common.Widgets
 					this.Value = roundValue;
 					this.AcceptEdition();
 				}
+				else
+				{
+					this.Value = roundValue;
+				}
 			}
 		}
 		

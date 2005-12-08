@@ -82,7 +82,7 @@ namespace Epsitec.Common.Document
 			this.surfaceRotationAngle = 0.0;
 			this.uniqueObjectId = 0;
 			this.uniqueAggregateId = 0;
-			this.fontWrapper = new Text.Wrappers.TextWrapper();
+			this.textWrapper = new Text.Wrappers.TextWrapper();
 			this.paragraphLayoutWrapper = new Text.Wrappers.ParagraphWrapper();
 
 			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Document
 		// Wrapper pour la fonte.
 		public Text.Wrappers.TextWrapper TextWrapper
 		{
-			get { return this.fontWrapper; }
+			get { return this.textWrapper; }
 		}
 
 		// Wrapper pour le paragraphe.
@@ -191,21 +191,21 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				return this.fontWrapper.IsAttached;
+				return this.textWrapper.IsAttached;
 			}
 		}
 
 		// Attache tous les wrappers à un texte.
 		public void WrappersAttach(TextFlow textFlow)
 		{
-			this.fontWrapper.Attach(textFlow.TextNavigator);
+			this.textWrapper.Attach(textFlow.TextNavigator);
 			this.paragraphLayoutWrapper.Attach(textFlow.TextNavigator);
 		}
 
 		// Détache tous les wrappers.
 		public void WrappersDetach()
 		{
-			this.fontWrapper.Detach();
+			this.textWrapper.Detach();
 			this.paragraphLayoutWrapper.Detach();
 		}
 
@@ -1928,7 +1928,7 @@ namespace Epsitec.Common.Document
 		protected Text.TextContext						textContext;
 		protected Widgets.HRuler						hRuler;
 		protected Widgets.VRuler						vRuler;
-		protected Text.Wrappers.TextWrapper				fontWrapper;
-		protected Text.Wrappers.ParagraphWrapper	paragraphLayoutWrapper;
+		protected Text.Wrappers.TextWrapper				textWrapper;
+		protected Text.Wrappers.ParagraphWrapper		paragraphLayoutWrapper;
 	}
 }

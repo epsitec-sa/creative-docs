@@ -31,6 +31,9 @@ namespace Epsitec.Common.Document
 				this.gridStep   = new Point(1.0, 1.0);
 				this.gridSubdiv = new Point(1.0, 1.0);
 				this.gridOffset = new Point(0.0, 0.0);
+
+				this.textGridStep   = 1.0;
+				this.textGridOffset = 0.0;
 			}
 			else
 			{
@@ -39,12 +42,18 @@ namespace Epsitec.Common.Document
 					this.gridStep   = new Point(50.0, 50.0);  // 5mm
 					this.gridSubdiv = new Point(5.0, 5.0);
 					this.gridOffset = new Point(0.0, 0.0);
+
+					this.textGridStep   = 100.0;  // 10mm
+					this.textGridOffset = 0.0;
 				}
 				else
 				{
 					this.gridStep   = new Point(50.8, 50.8);  // 0.2in
 					this.gridSubdiv = new Point(5.0, 5.0);
 					this.gridOffset = new Point(0.0, 0.0);
+
+					this.textGridStep   = 127.0;  // 0.5in
+					this.textGridOffset = 0.0;
 				}
 			}
 
@@ -692,6 +701,102 @@ namespace Epsitec.Common.Document
 					offset = new Point(this.gridStep.X/2, this.gridStep.Y/2);
 				}
 				return offset-this.gridOffset;
+			}
+		}
+		#endregion
+
+
+		#region TextGrid
+		// Affichage de la grille magnétique pour le texte.
+		public bool TextGridShow
+		{
+			get
+			{
+				return this.textGridShow;
+			}
+
+			set
+			{
+				if ( this.textGridShow != value )
+				{
+					this.textGridShow = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyArea(this.viewer);
+						this.document.Notifier.NotifyGridChanged();
+						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
+
+		// Pas de la grille magnétique pour le texte.
+		public double TextGridStep
+		{
+			get
+			{
+				return this.textGridStep;
+			}
+
+			set
+			{
+				if ( this.textGridStep != value )
+				{
+					this.textGridStep = value;
+					this.UpdateAllText();
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyArea();
+						this.document.Notifier.NotifyGridChanged();
+						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
+
+		// Décalage de la grille magnétique pour le texte.
+		public double TextGridOffset
+		{
+			get
+			{
+				return this.textGridOffset;
+			}
+
+			set
+			{
+				if ( this.textGridOffset != value )
+				{
+					this.textGridOffset = value;
+					this.UpdateAllText();
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyArea();
+						this.document.Notifier.NotifyGridChanged();
+						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
+
+		protected void UpdateAllText()
+		{
+			foreach ( TextFlow flow in this.document.TextFlows )
+			{
+				foreach ( Objects.TextBox2 obj in flow.Chain )
+				{
+					Text.SimpleTextFrame frame = obj.TextFrame as Text.SimpleTextFrame;
+					if ( frame != null )
+					{
+						frame.GridStep   = this.textGridStep;
+						frame.GridOffset = this.textGridOffset;
+					}
+				}
 			}
 		}
 		#endregion
@@ -2197,6 +2302,9 @@ namespace Epsitec.Common.Document
 		protected Point							gridStep = new Point(1, 1);
 		protected Point							gridSubdiv = new Point(1, 1);
 		protected Point							gridOffset = new Point(0, 0);
+		protected bool							textGridShow = false;
+		protected double						textGridStep;
+		protected double						textGridOffset;
 		protected bool							guidesActive = true;
 		protected bool							guidesShow = true;
 		protected bool							guidesMouse = true;

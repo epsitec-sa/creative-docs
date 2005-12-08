@@ -20,7 +20,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fieldLeading = this.CreateTextFieldLabel(Res.Strings.TextPanel.Leading.Tooltip.Leading, Res.Strings.TextPanel.Leading.Short.Leading, Res.Strings.TextPanel.Leading.Long.Leading, 0.0, 100.0, 1.0, false, new EventHandler(this.HandleLeadingChanged));
 			this.buttonAlign = this.CreateIconButton(Misc.Icon("ParaLeadingAlign"), Res.Strings.TextPanel.Leading.Tooltip.Mode, new MessageEventHandler(this.HandleButtonAlignClicked));
-			this.fieldAlign = this.CreateTextFieldLabel(Res.Strings.TextPanel.Leading.Tooltip.Align, Res.Strings.TextPanel.Leading.Short.Align, Res.Strings.TextPanel.Leading.Long.Align, 0.0, 100.0, 1.0, false, new EventHandler(this.HandleAlignChanged));
+			this.fieldGridStep = this.CreateTextFieldLabel(Res.Strings.TextPanel.Leading.Tooltip.GridStep, Res.Strings.TextPanel.Leading.Short.GridStep, Res.Strings.TextPanel.Leading.Long.GridStep, 0.0, 100.0, 1.0, false, new EventHandler(this.HandleStepGridChanged));
+			this.fieldGridOffset = this.CreateTextFieldLabel(Res.Strings.TextPanel.Leading.Tooltip.GridOffset, Res.Strings.TextPanel.Leading.Short.GridOffset, Res.Strings.TextPanel.Leading.Long.GridOffset, 0.0, 100.0, 1.0, false, new EventHandler(this.HandleStepOffsetChanged));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -61,11 +62,11 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					if ( this.IsLabelProperties )  // étendu/détails ?
 					{
-						h += 55;
+						h += 80;
 					}
 					else	// étendu/compact ?
 					{
-						h += 30;
+						h += 55;
 					}
 				}
 				else	// panneau réduit ?
@@ -110,7 +111,11 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonAlign.Bounds = r;
 					r.Left = rect.Left+20;
 					r.Right = rect.Right-25;
-					this.fieldAlign.Bounds = r;
+					this.fieldGridStep.Bounds = r;
+					this.fieldGridStep.Visibility = true;
+					r.Offset(0, -25);
+					this.fieldGridOffset.Bounds = r;
+					this.fieldGridOffset.Visibility = true;
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
@@ -121,12 +126,18 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Left = rect.Left;
 					r.Width = 60;
 					this.fieldLeading.Bounds = r;
-					r.Offset(65, 0);
+					r.Offset(60+12, 0);
 					r.Width = 20;
 					this.buttonAlign.Bounds = r;
-					r.Offset(20, 0);
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
 					r.Width = 60;
-					this.fieldAlign.Bounds = r;
+					this.fieldGridStep.Bounds = r;
+					this.fieldGridStep.Visibility = true;
+					r.Offset(60, 0);
+					this.fieldGridOffset.Bounds = r;
+					this.fieldGridOffset.Visibility = true;
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
@@ -141,16 +152,17 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Left = rect.Left;
 				r.Width = 60;
 				this.fieldLeading.Bounds = r;
-				r.Offset(65, 0);
+				r.Offset(60+12, 0);
 				r.Width = 20;
 				this.buttonAlign.Bounds = r;
 				r.Offset(20, 0);
-				r.Width = 60;
-				this.fieldAlign.Bounds = r;
 
 				r.Left = rect.Right-20;
 				r.Width = 20;
 				this.buttonClear.Bounds = r;
+
+				this.fieldGridStep.Visibility = false;
+				this.fieldGridOffset.Visibility = false;
 			}
 		}
 
@@ -172,6 +184,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ProposalTextFieldLabel(this.fieldLeading, !isLeading);
 
 			this.ActiveIconButton(this.buttonAlign, align, isAlign);
+
+			this.fieldGridStep.TextFieldReal.InternalValue = (decimal) this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
+			this.fieldGridOffset.TextFieldReal.InternalValue = (decimal) this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
 
 			this.ignoreChanged = false;
 		}
@@ -217,7 +232,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.Defined.AlignMode = mode;
 		}
 
-		private void HandleAlignChanged(object sender)
+		private void HandleStepGridChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
@@ -225,8 +240,18 @@ namespace Epsitec.Common.Document.TextPanels
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
 
-			double value = (double) field.InternalValue;
-			bool isDefined = field.Text != "";
+			this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep = (double) field.InternalValue;
+		}
+
+		private void HandleStepOffsetChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+
+			TextFieldReal field = sender as TextFieldReal;
+			if ( field == null )  return;
+
+			this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset = (double) field.InternalValue;
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -244,7 +269,8 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		protected Widgets.TextFieldLabel	fieldLeading;
 		protected IconButton				buttonAlign;
-		protected Widgets.TextFieldLabel	fieldAlign;
+		protected Widgets.TextFieldLabel	fieldGridStep;
+		protected Widgets.TextFieldLabel	fieldGridOffset;
 		protected IconButton				buttonClear;
 	}
 }

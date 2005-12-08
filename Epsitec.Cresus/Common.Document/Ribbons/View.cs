@@ -16,6 +16,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonPreview = this.CreateIconButton("Preview", Misc.Icon("Preview"), Res.Strings.Action.Preview, true);
 			this.buttonGrid = this.CreateIconButton("Grid", Misc.Icon("Grid"), Res.Strings.Action.Grid, true);
+			this.buttonTextGrid = this.CreateIconButton("TextGrid", Misc.Icon("TextGrid"), Res.Strings.Action.TextGrid, true);
 			this.buttonMagnet = this.CreateIconButton("Magnet", Misc.Icon("Magnet"), Res.Strings.Action.Magnet, true);
 			this.buttonMagnetLayer = this.CreateIconButton("MagnetLayer", Misc.Icon("MagnetLayer"), Res.Strings.Action.MagnetLayer, true);
 			this.buttonRulers = this.CreateIconButton("Rulers", Misc.Icon("Rulers"), Res.Strings.Action.Rulers, true);
@@ -39,7 +40,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8 + 22*4 + 5;
+				return 8 + 22*5 + 5;
 			}
 		}
 
@@ -61,6 +62,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonPreview.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonGrid.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonTextGrid.Bounds = rect;
 			rect.Offset(dx+5, 0);
 			this.buttonMagnet.Bounds = rect;
 			rect.Offset(dx, 0);
@@ -79,6 +82,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected IconButton				buttonPreview;
 		protected IconButton				buttonGrid;
+		protected IconButton				buttonTextGrid;
 		protected IconButton				buttonMagnet;
 		protected IconButton				buttonMagnetLayer;
 		protected IconButton				buttonRulers;

@@ -99,6 +99,11 @@ namespace Epsitec.Common.Document
 				this.CreatePoint(container, "GridStep");
 				this.CreatePoint(container, "GridSubdiv");
 				this.CreatePoint(container, "GridOffset");
+
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.TextGrid);
+				this.CreateBool(container, "TextGridShow");
+				this.CreateDouble(container, "TextGridStep");
+				this.CreateDouble(container, "TextGridOffset");
 				Dialogs.CreateSeparator(container);
 
 				// Onglet Guides:

@@ -178,6 +178,22 @@ namespace Epsitec.Common.Document.Settings
 					this.factorMaxValue = 4.0;
 					this.factorStep = 1.0;
 					break;
+
+				case "TextGridStep":
+					this.text = Res.Strings.TextPanel.Leading.Long.GridStep;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
+				case "TextGridOffset":
+					this.text = Res.Strings.TextPanel.Leading.Long.GridOffset;
+					this.factorMinValue = -0.1;
+					this.factorMaxValue =  0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
 			}
 		}
 
@@ -237,6 +253,12 @@ namespace Epsitec.Common.Document.Settings
 
 					case "DimensionDecimal":
 						return this.document.Modifier.DimensionDecimal;
+
+					case "TextGridStep":
+						return this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
+
+					case "TextGridOffset":
+						return this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
 				}
 
 				return 0.0;
@@ -312,6 +334,14 @@ namespace Epsitec.Common.Document.Settings
 
 					case "DimensionDecimal":
 						this.document.Modifier.DimensionDecimal = value;
+						break;
+
+					case "TextGridStep":
+						this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep = value;
+						break;
+
+					case "TextGridOffset":
+						this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset = value;
 						break;
 				}
 			}

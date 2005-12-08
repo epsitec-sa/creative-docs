@@ -12,6 +12,7 @@
 	<data name="Dialog.Settings.SizeDoc">Page size</data>
 	<data name="Dialog.Settings.SizePic">Pictogram size</data>
 	<data name="Dialog.Settings.Grid">Magnetic grid</data>
+	<data name="Dialog.Settings.TextGrid">@@Lignes magnétiques pour le texte</data>
 	<data name="Dialog.Settings.Magnet">Magnetic guides</data>
 	<data name="Dialog.Settings.DuplicateMove">Offset for object duplication</data>
 	<data name="Dialog.Settings.ArrowMove">Keyboard arrows move by...</data>
@@ -50,6 +51,7 @@
 	
 	<data name="Dialog.Bool.GridActive">Enable grid</data>
 	<data name="Dialog.Bool.GridShow">Show grid</data>
+	<data name="Dialog.Bool.TextGridShow">@@Lignes visibles</data>
 	<data name="Dialog.Bool.GuidesActive">Enable guides</data>
 	<data name="Dialog.Bool.GuidesShow">Show guides</data>
 	<data name="Dialog.Bool.GuidesMouse">Allow guides to be dragged</data>
@@ -480,12 +482,15 @@
 
 	<data name="TextPanel.Leading.Title">Leading</data>
 	<data name="TextPanel.Leading.Short.Leading">L</data>
-	<data name="TextPanel.Leading.Short.Align">A</data>
+	<data name="TextPanel.Leading.Short.GridStep">S</data>
+	<data name="TextPanel.Leading.Short.GridOffset">O</data>
 	<data name="TextPanel.Leading.Long.Leading">Leading</data>
-	<data name="TextPanel.Leading.Long.Align">@@Grille verticale</data>
+	<data name="TextPanel.Leading.Long.GridStep">@@Espacement vertical</data>
+	<data name="TextPanel.Leading.Long.GridOffset">@@Décalage vertical</data>
 	<data name="TextPanel.Leading.Tooltip.Leading">Leading</data>
-	<data name="TextPanel.Leading.Tooltip.Align">@@Espacement de la grille magnétique verticale</data>
-	<data name="TextPanel.Leading.Tooltip.Mode">@@Grille magnétique verticale pour l'interligne</data>
+	<data name="TextPanel.Leading.Tooltip.GridStep">@@Espacement vertical des lignes magnétiques</data>
+	<data name="TextPanel.Leading.Tooltip.GridOffset">@@Décalage vertical des lignes magnétiques</data>
+	<data name="TextPanel.Leading.Tooltip.Mode">@@Lignes magnétiques pour l'interligne</data>
 
 	<data name="TextPanel.Margins.Title">@@Retraits</data>
 	<data name="TextPanel.Margins.Short.LeftFirst">F</data>
@@ -941,6 +946,7 @@
 	
 	<data name="Action.ViewMain">View</data>
 	<data name="Action.Grid">Magnetic grid</data>
+	<data name="Action.TextGrid">@@Montrer les lignes magnétiques pour le texte</data>
 	<data name="Action.Preview">Preview as printed</data>
 	<data name="Action.Magnet">@@Objets magnétiques</data>
 	<data name="Action.MagnetLayer">@@Les objets du calque sont magnétiques</data>

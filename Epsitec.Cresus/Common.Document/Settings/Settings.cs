@@ -94,6 +94,10 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFJpegQuality");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFImageMinDpi");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFImageMaxDpi");
+
+			this.CreateDefaultBool("Text", "TextGridShow");
+			this.CreateDefaultDouble("Text", "TextGridStep");
+			this.CreateDefaultDouble("Text", "TextGridOffset");
 		}
 
 		protected void CreateDefaultBool(string dialog, string name)

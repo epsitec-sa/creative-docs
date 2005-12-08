@@ -43,6 +43,9 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.textFrame = new Text.SimpleTextFrame();
 			}
+
+			this.textFrame.GridStep   = this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
+			this.textFrame.GridOffset = this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
 			
 			System.Diagnostics.Debug.Assert(this.textFlow != null);
 			

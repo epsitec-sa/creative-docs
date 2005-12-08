@@ -12,6 +12,7 @@
 	<data name="Dialog.Settings.SizeDoc">Dimensions d'une page</data>
 	<data name="Dialog.Settings.SizePic">Dimensions d'un pictogramme</data>
 	<data name="Dialog.Settings.Grid">Grille magnétique</data>
+	<data name="Dialog.Settings.TextGrid">Lignes magnétiques pour le texte</data>
 	<data name="Dialog.Settings.Magnet">Repères magnétiques</data>
 	<data name="Dialog.Settings.DuplicateMove">Déplacement lorsqu'un objet est dupliqué</data>
 	<data name="Dialog.Settings.ArrowMove">Déplacements avec les touches flèches</data>
@@ -50,6 +51,7 @@
 	
 	<data name="Dialog.Bool.GridActive">Grille active</data>
 	<data name="Dialog.Bool.GridShow">Grille visible</data>
+	<data name="Dialog.Bool.TextGridShow">Lignes visibles</data>
 	<data name="Dialog.Bool.GuidesActive">Repères actifs</data>
 	<data name="Dialog.Bool.GuidesShow">Repères visibles</data>
 	<data name="Dialog.Bool.GuidesMouse">Déplacements avec la souris</data>
@@ -480,12 +482,15 @@
 
 	<data name="TextPanel.Leading.Title">Interligne</data>
 	<data name="TextPanel.Leading.Short.Leading">I</data>
-	<data name="TextPanel.Leading.Short.Align">G</data>
+	<data name="TextPanel.Leading.Short.GridStep">G</data>
+	<data name="TextPanel.Leading.Short.GridOffset">O</data>
 	<data name="TextPanel.Leading.Long.Leading">Interligne</data>
-	<data name="TextPanel.Leading.Long.Align">Grille verticale</data>
+	<data name="TextPanel.Leading.Long.GridStep">Espacement vertical</data>
+	<data name="TextPanel.Leading.Long.GridOffset">Décalage vertical</data>
 	<data name="TextPanel.Leading.Tooltip.Leading">Interligne</data>
-	<data name="TextPanel.Leading.Tooltip.Align">Espacement de la grille magnétique verticale</data>
-	<data name="TextPanel.Leading.Tooltip.Mode">Grille magnétique verticale pour l'interligne</data>
+	<data name="TextPanel.Leading.Tooltip.GridStep">Espacement vertical des lignes magnétiques</data>
+	<data name="TextPanel.Leading.Tooltip.GridOffset">Décalage vertical des lignes magnétiques</data>
+	<data name="TextPanel.Leading.Tooltip.Mode">Lignes magnétiques pour l'interligne</data>
 
 	<data name="TextPanel.Margins.Title">Retraits</data>
 	<data name="TextPanel.Margins.Short.LeftFirst">P</data>
@@ -941,6 +946,7 @@
 	
 	<data name="Action.ViewMain">Vue</data>
 	<data name="Action.Grid">Grille magnétique</data>
+	<data name="Action.TextGrid">Montrer les lignes magnétiques pour le texte</data>
 	<data name="Action.Preview">Comme imprimé</data>
 	<data name="Action.Magnet">Objets magnétiques</data>
 	<data name="Action.MagnetLayer">Les objets du calque sont magnétiques</data>
