@@ -1200,7 +1200,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			foreach (MenuBehavior behavior in behaviors)
 			{
-//-				behavior.Reject ();
+				behavior.Reject ();
 			}
 		}
 		
