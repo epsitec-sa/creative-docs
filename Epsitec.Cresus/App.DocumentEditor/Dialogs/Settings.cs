@@ -26,7 +26,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeToolWindow();
-				this.WindowInit("Settings", 300, 426);
+				this.WindowInit("Settings", 300, 415);
 				this.window.Text = Res.Strings.Dialog.Settings.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;

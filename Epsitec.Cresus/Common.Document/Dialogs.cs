@@ -95,7 +95,6 @@ namespace Epsitec.Common.Document
 				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Grid);
 				this.CreateBool(container, "GridActive");
 				this.CreateBool(container, "GridShow");
-				Dialogs.CreateSeparator(container);
 				this.CreatePoint(container, "GridStep");
 				this.CreatePoint(container, "GridSubdiv");
 				this.CreatePoint(container, "GridOffset");
