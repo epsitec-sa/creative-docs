@@ -1395,7 +1395,7 @@ namespace Epsitec.Common.Widgets
 				else if ( from == to )
 				{
 					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
-					visibleCursor = TextField.showCursor && this.Window.IsFocused;
+					visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
 				}
 				else
 				{

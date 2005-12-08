@@ -871,13 +871,13 @@ namespace Epsitec.Common.Widgets.Platform
 		protected override void OnGotFocus(System.EventArgs e)
 		{
 			base.OnGotFocus (e);
-			this.widget_window.OnWindowFocused ();
+			this.widget_window.NotifyWindowFocused ();
 		}
 		
 		protected override void OnLostFocus(System.EventArgs e)
 		{
 			base.OnLostFocus (e);
-			this.widget_window.OnWindowDefocused ();
+			this.widget_window.NotifyWindowDefocused ();
 		}
 
 

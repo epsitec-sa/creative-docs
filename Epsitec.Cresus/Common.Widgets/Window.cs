@@ -570,7 +570,10 @@ namespace Epsitec.Common.Widgets
 		
 		public bool								IsFocused
 		{
-			get { return this.window_is_focused; }
+			get
+			{
+				return this.window_is_focused;
+			}
 		}
 		
 		public bool								IsOwned
@@ -1288,51 +1291,101 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		internal void OnWindowFocused()
+		
+		public bool								IsSubmenuOpen
 		{
-			System.Diagnostics.Debug.WriteLine ("Window focused");
-			if (this.focused_widget != null)
+			get
 			{
-				Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.focused_widget, Visual.IsFocusedProperty);
+				Window[] windows = this.OwnedWindows;
 				
-				this.window_is_focused = true;
-				this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
-				
-				snapshot.InvalidateDifferent ();
-			}
-			else
-			{
-				this.window_is_focused = true;
-			}
+				foreach (Window window in windows)
+				{
+					if (window is MenuWindow)
+					{
+						return true;
+					}
+				}
 			
+				return false;
+			}
+		}
+				
+		internal void NotifyWindowFocused()
+		{
+			System.Diagnostics.Debug.WriteLine ("Platform Window focused");
+			
+			if (this.window_is_focused == false)
+			{
+				if (this.focused_widget != null)
+				{
+					Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.focused_widget, Visual.IsFocusedProperty);
+				
+					this.window_is_focused = true;
+					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
+				
+					snapshot.InvalidateDifferent ();
+				}
+				else
+				{
+					this.window_is_focused = true;
+				}
+				
+				System.Diagnostics.Debug.WriteLine ("Window focused");
+				
+				this.OnWindowFocused ();
+			}
+		}
+		
+		internal void NotifyWindowDefocused()
+		{
+			System.Diagnostics.Debug.WriteLine ("Platform Window de-focused");
+			
+			if ((this.window_is_focused == true) &&
+				(this.IsSubmenuOpen == false))
+			{
+				if (this.focused_widget != null)
+				{
+					Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.focused_widget, Visual.IsFocusedProperty);
+					
+					this.window_is_focused = false;
+					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
+					
+					snapshot.InvalidateDifferent ();
+				}
+				else
+				{
+					this.window_is_focused = false;
+				}
+				
+				System.Diagnostics.Debug.WriteLine ("Window de-focused");
+				
+				this.OnWindowDefocused ();
+				
+				if ((this.owner != null) &&
+					(this.owner.window.Focused == false))
+				{
+					this.owner.NotifyWindowDefocused ();
+				}
+			}
+		}
+		
+		
+		protected virtual void OnWindowFocused()
+		{
 			if (this.WindowFocused != null)
 			{
 				this.WindowFocused (this);
 			}
 		}
 		
-		internal void OnWindowDefocused()
+		protected virtual void OnWindowDefocused()
 		{
-			System.Diagnostics.Debug.WriteLine ("Window de-focused");
-			if (this.focused_widget != null)
-			{
-				Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.focused_widget, Visual.IsFocusedProperty);
-				
-				this.window_is_focused = false;
-				this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
-				
-				snapshot.InvalidateDifferent ();
-			}
-			else
-			{
-				this.window_is_focused = false;
-			}
-			
 			if (this.WindowDefocused != null)
 			{
 				this.WindowDefocused (this);
 			}
 		}
+		
 		
 		internal void OnWindowDragEntered(WindowDragEventArgs e)
 		{
@@ -1679,12 +1732,12 @@ namespace Epsitec.Common.Widgets
 			this.ReleaseCapturingWidget ();
 		}
 		
-		internal void FocusWidget(Widget consumer)
+		internal void FocusWidget(Widget widget)
 		{
-			if ((consumer != null) &&
-				(consumer.IsFocused == false) &&
-				(consumer.CanFocus) &&
-				(consumer != this.focused_widget))
+			if ((widget != null) &&
+				(widget.IsFocused == false) &&
+				(widget.CanFocus) &&
+				(widget != this.focused_widget))
 			{
 				//	On va réaliser un changement de focus. Mais pour cela, il faut que le widget
 				//	ayant le focus actuellement, ainsi que le widget candidat pour l'obtention du
@@ -1695,7 +1748,7 @@ namespace Epsitec.Common.Widgets
 				{
 					Widget focus;
 					
-					if (consumer.InternalAboutToGetFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive, out focus))
+					if (widget.InternalAboutToGetFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive, out focus))
 					{
 						this.FocusedWidget = focus;
 					}
