@@ -530,9 +530,9 @@
 	<data name="TextPanel.Language.Title">Language</data>
 	<data name="TextPanel.Language.Tooltip.Language">Language</data>
 	<data name="TextPanel.Language.List.None">None</data>
-	<data name="TextPanel.Language.List.FR">French</data>
-	<data name="TextPanel.Language.List.DE">German</data>
-	<data name="TextPanel.Language.List.EN">English</data>
+	<data name="TextPanel.Language.List.fr">French</data>
+	<data name="TextPanel.Language.List.de">German</data>
+	<data name="TextPanel.Language.List.en">English</data>
 
 	<data name="TextPanel.Clear">Clear property</data>
 

@@ -125,26 +125,26 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.fieldLanguage.Items.Count == 0 )
 			{
 				this.fieldLanguage.Items.Add(Res.Strings.TextPanel.Language.List.None);
-				this.fieldLanguage.Items.Add(Res.Strings.TextPanel.Language.List.FR);
-				this.fieldLanguage.Items.Add(Res.Strings.TextPanel.Language.List.DE);
-				this.fieldLanguage.Items.Add(Res.Strings.TextPanel.Language.List.EN);
+				this.fieldLanguage.Items.Add(Res.Strings.TextPanel.Language.List.fr);
+				this.fieldLanguage.Items.Add(Res.Strings.TextPanel.Language.List.de);
+				this.fieldLanguage.Items.Add(Res.Strings.TextPanel.Language.List.en);
 			}
 		}
 
 		protected static string LanguageShortToLong(string shortLanguage)
 		{
-			shortLanguage = shortLanguage.ToUpper();
-			if ( shortLanguage.StartsWith("FR") )  return Res.Strings.TextPanel.Language.List.FR;
-			if ( shortLanguage.StartsWith("DE") )  return Res.Strings.TextPanel.Language.List.DE;
-			if ( shortLanguage.StartsWith("EN") )  return Res.Strings.TextPanel.Language.List.EN;
+			shortLanguage = shortLanguage.ToLower();
+			if ( shortLanguage.StartsWith("fr") )  return Res.Strings.TextPanel.Language.List.fr;
+			if ( shortLanguage.StartsWith("de") )  return Res.Strings.TextPanel.Language.List.de;
+			if ( shortLanguage.StartsWith("en") )  return Res.Strings.TextPanel.Language.List.en;
 			return Res.Strings.TextPanel.Language.List.None;
 		}
 
 		protected static string LanguageLongToShort(string longLanguage)
 		{
-			if ( longLanguage == Res.Strings.TextPanel.Language.List.FR )  return "FR";
-			if ( longLanguage == Res.Strings.TextPanel.Language.List.DE )  return "DE";
-			if ( longLanguage == Res.Strings.TextPanel.Language.List.EN )  return "EN";
+			if ( longLanguage == Res.Strings.TextPanel.Language.List.fr )  return "fr";
+			if ( longLanguage == Res.Strings.TextPanel.Language.List.de )  return "de";
+			if ( longLanguage == Res.Strings.TextPanel.Language.List.en )  return "en";
 			return "";
 		}
 

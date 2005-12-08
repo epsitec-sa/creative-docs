@@ -530,9 +530,9 @@
 	<data name="TextPanel.Language.Title">Langue</data>
 	<data name="TextPanel.Language.Tooltip.Language">Langue</data>
 	<data name="TextPanel.Language.List.None">Aucune</data>
-	<data name="TextPanel.Language.List.FR">Français</data>
-	<data name="TextPanel.Language.List.DE">Allemand</data>
-	<data name="TextPanel.Language.List.EN">Anglais</data>
+	<data name="TextPanel.Language.List.fr">Français</data>
+	<data name="TextPanel.Language.List.de">Allemand</data>
+	<data name="TextPanel.Language.List.en">Anglais</data>
 	
 	<data name="TextPanel.Clear">Effacer l'attribut</data>
 
