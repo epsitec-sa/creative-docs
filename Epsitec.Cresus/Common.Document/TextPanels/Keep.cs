@@ -23,8 +23,18 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fieldKeepStart = this.CreateTextFieldLabel(Res.Strings.TextPanel.Keep.Tooltip.KeepStart, Res.Strings.TextPanel.Keep.Short.KeepStart, Res.Strings.TextPanel.Keep.Long.KeepStart, 0.0, 100.0, 1.0, false, new EventHandler(this.HandleKeepStartChanged));
 			this.fieldKeepEnd   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Keep.Tooltip.KeepEnd,   Res.Strings.TextPanel.Keep.Short.KeepEnd,   Res.Strings.TextPanel.Keep.Long.KeepEnd,   0.0, 100.0, 1.0, false, new EventHandler(this.HandleKeepEndChanged));
+			
 			this.fieldKeepStart.TextFieldReal.Resolution = 1.0M;
-			this.fieldKeepEnd  .TextFieldReal.Resolution = 1.0M;
+			this.fieldKeepStart.TextFieldReal.Scale      = 1.0M;
+			this.fieldKeepStart.TextFieldReal.UnitType   = RealUnitType.Scalar;
+			this.fieldKeepStart.TextFieldReal.MinValue   = 1M;
+			this.fieldKeepStart.TextFieldReal.MaxValue   = 19M;
+			
+			this.fieldKeepEnd.TextFieldReal.Resolution = 1.0M;
+			this.fieldKeepEnd.TextFieldReal.Scale      = 1.0M;
+			this.fieldKeepEnd.TextFieldReal.UnitType   = RealUnitType.Scalar;
+			this.fieldKeepEnd.TextFieldReal.MinValue   = 1M;
+			this.fieldKeepEnd.TextFieldReal.MaxValue   = 19M;
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 

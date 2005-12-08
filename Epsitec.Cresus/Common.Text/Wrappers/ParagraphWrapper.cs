@@ -335,7 +335,7 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 				else
 				{
-					this.ClearMetaProperty (ParagraphWrapper.Leading, new Properties.KeepProperty ());
+					this.ClearMetaProperty (ParagraphWrapper.Keep, new Properties.KeepProperty ());
 				}
 			}
 		}
@@ -532,7 +532,7 @@ namespace Epsitec.Common.Text.Wrappers
 				(double.IsNaN (leading.SpaceBefore) == false))
 			{
 				state.DefineValue (State.SpaceBeforeProperty, leading.SpaceBefore);
-				state.DefineValue (State.SpaceBeforeUnitsProperty, leading.LeadingUnits);
+				state.DefineValue (State.SpaceBeforeUnitsProperty, leading.SpaceBeforeUnits);
 			}
 			else
 			{
