@@ -81,7 +81,21 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			base.UpdateAfterChanging();
 
+			bool subscript   = false;
+			bool superscript = false;
+			bool isXScript   = this.document.TextWrapper.Defined.IsXscriptDefined;
+
+			if ( isXScript )
+			{
+				subscript   = (this.document.TextWrapper.Defined.Xscript.Offset < 0.0);
+				superscript = (this.document.TextWrapper.Defined.Xscript.Offset > 0.0);
+			}
+
 			this.ignoreChanged = true;
+
+			this.ActiveIconButton(this.buttonSubscript,   subscript,   isXScript);
+			this.ActiveIconButton(this.buttonSuperscript, superscript, isXScript);
+			
 			this.ignoreChanged = false;
 		}
 

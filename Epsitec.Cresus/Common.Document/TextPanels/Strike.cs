@@ -19,7 +19,7 @@ namespace Epsitec.Common.Document.TextPanels
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Strike.Title);
 
 			this.buttonUnderlined = this.CreateIconButton(Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, new MessageEventHandler(this.HandleButtonUnderlineClicked));
-			this.buttonStrike     = this.CreateIconButton(Misc.Icon("FontStrike"),     Res.Strings.Action.Text.Font.Strike,     new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonStrikeout  = this.CreateIconButton(Misc.Icon("FontStrikeout"),  Res.Strings.Action.Text.Font.Strikeout,  new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonOverlined  = this.CreateIconButton(Misc.Icon("FontOverlined"),  Res.Strings.Action.Text.Font.Overlined,  new MessageEventHandler(this.HandleButtonClicked));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
@@ -82,7 +82,21 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			base.UpdateAfterChanging();
 
+			bool underlined   = this.document.TextWrapper.Active.IsUnderlineDefined;
+			bool isUnderlined = this.document.TextWrapper.Defined.IsUnderlineDefined;
+
+			bool strikeout    = this.document.TextWrapper.Active.IsStrikeoutDefined;
+			bool isStrikeout  = this.document.TextWrapper.Defined.IsStrikeoutDefined;
+
+			bool overlined    = this.document.TextWrapper.Active.IsOverlineDefined;
+			bool isOverlined  = this.document.TextWrapper.Defined.IsOverlineDefined;
+
 			this.ignoreChanged = true;
+			
+			this.ActiveIconButton(this.buttonUnderlined, underlined, isUnderlined);
+			this.ActiveIconButton(this.buttonStrikeout,  strikeout,  isStrikeout );
+			this.ActiveIconButton(this.buttonOverlined,  overlined,  isOverlined );
+
 			this.ignoreChanged = false;
 		}
 
@@ -114,7 +128,7 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Width = 20;
 					this.buttonUnderlined.Bounds = r;
 					r.Offset(20, 0);
-					this.buttonStrike.Bounds = r;
+					this.buttonStrikeout.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonOverlined.Bounds = r;
 					r.Left = rect.Right-20;
@@ -127,7 +141,7 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Width = 20;
 					this.buttonUnderlined.Bounds = r;
 					r.Offset(20, 0);
-					this.buttonStrike.Bounds = r;
+					this.buttonStrikeout.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonOverlined.Bounds = r;
 					r.Left = rect.Right-20;
@@ -144,7 +158,7 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Width = 20;
 				this.buttonUnderlined.Bounds = r;
 				r.Offset(20, 0);
-				this.buttonStrike.Bounds = r;
+				this.buttonStrikeout.Bounds = r;
 				r.Offset(20, 0);
 				this.buttonOverlined.Bounds = r;
 				r.Left = rect.Right-20;
@@ -242,7 +256,7 @@ namespace Epsitec.Common.Document.TextPanels
         
 
 		protected IconButton				buttonUnderlined;
-		protected IconButton				buttonStrike;
+		protected IconButton				buttonStrikeout;
 		protected IconButton				buttonOverlined;
 		protected IconButton				buttonClear;
 	}

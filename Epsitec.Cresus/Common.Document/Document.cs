@@ -1249,7 +1249,7 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.MarginsProperty(10, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 			properties.Add(new Text.Properties.FontColorProperty(black));
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
-			properties.Add(new Text.Properties.LeadingProperty(0.0, Text.Properties.SizeUnits.Points, 5.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+			properties.Add(new Text.Properties.LeadingProperty(1.2, Text.Properties.SizeUnits.Percent, 5.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 //-			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", black));
 			//?aproperties.Add(new Text.Properties.TabsProperty(t1, t2));
 			style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);

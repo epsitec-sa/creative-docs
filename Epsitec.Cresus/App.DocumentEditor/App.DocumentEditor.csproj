@@ -791,7 +791,7 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\FontStrike.icon"
+                    RelPath = "Images\FontStrikeout.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

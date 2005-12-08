@@ -962,7 +962,7 @@
 	<data name="Action.Text.Font.Italic">Italique</data>
 	<data name="Action.Text.Font.Underlined">Souligné</data>
 	<data name="Action.Text.Font.Overlined">Surligné</data>
-	<data name="Action.Text.Font.Strike">Biffé</data>
+	<data name="Action.Text.Font.Strikeout">Biffé</data>
 	<data name="Action.Text.Font.Frame">Bordure</data>
 	<data name="Action.Text.Font.Subscript">Indice</data>
 	<data name="Action.Text.Font.Superscript">Exposant</data>
