@@ -125,7 +125,10 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		internal void SetValue(StateProperty property, object value)
 		{
-			this.SetValue (property, value, (this.IsValueDefined (property) == false) || (this.GetValue (property).Equals (value) == false));
+			bool changed = (this.IsValueDefined (property) == false) ||
+				/**/	   (AbstractState.Equal (this.GetValue (property), value) == false);
+			
+			this.SetValue (property, value, changed);
 		}
 		
 		internal void SetValue(StateProperty property, object value, bool changed)
@@ -144,7 +147,25 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		internal void DefineValue(StateProperty property, object value)
 		{
-			this.DefineValue (property, value, (this.IsValueDefined (property) == false) || (this.GetValue (property).Equals (value) == false));
+			bool changed = (this.IsValueDefined (property) == false) ||
+				/**/	   (AbstractState.Equal (this.GetValue (property), value) == false);
+			
+			this.DefineValue (property, value, changed);
+		}
+		
+		static private bool Equal(object a, object b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			
+			if (a == null)
+			{
+				return false;
+			}
+			
+			return a.Equals (b);
 		}
 		
 		internal void DefineValue(StateProperty property, object value, bool changed)

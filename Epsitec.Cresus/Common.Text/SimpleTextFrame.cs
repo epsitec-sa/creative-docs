@@ -102,6 +102,21 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public double							GridOffset
+		{
+			get
+			{
+				return this.grid_offset;
+			}
+			set
+			{
+				if (this.grid_offset != value)
+				{
+					this.grid_offset = value;
+				}
+			}
+		}
+		
 		
 		public int								PageNumber
 		{
@@ -148,7 +163,7 @@ namespace Epsitec.Common.Text
 				//	et vont vers des valeurs négatives, plus on descend. L'arrondi doit
 				//	donc toujours se faire vers une valeur plus basse :
 				
-				oy = System.Math.Floor ((oy + 0.5) / this.grid_step) * this.grid_step;
+				oy = System.Math.Floor ((oy - this.grid_offset + 0.5) / this.grid_step) * this.grid_step + this.grid_offset;
 				
 				y_top  = oy + ascender + filler / 2;
 				y_bot  = y_top - line_dy;
@@ -185,5 +200,6 @@ namespace Epsitec.Common.Text
 		private double							width, height;
 		private int								page_number;
 		private double							grid_step;
+		private double							grid_offset;
 	}
 }

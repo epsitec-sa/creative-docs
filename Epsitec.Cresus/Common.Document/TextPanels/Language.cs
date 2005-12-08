@@ -191,7 +191,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			else
 			{
-				this.document.TextWrapper.Defined.ClearLanguageHyphenation();
+				this.document.TextWrapper.Defined.LanguageHyphenation = 0.0;
 			}
 		}
 
@@ -211,6 +211,8 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.document.TextWrapper.Defined.ClearLanguageLocale();
 			}
+			
+			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
