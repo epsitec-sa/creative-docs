@@ -185,7 +185,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				MenuWindow window = this.live_menu_windows[this.live_menu_windows.Count-1] as MenuWindow;
 				window.Hide ();
-				window.Close ();
 			}
 			
 			this.CleanupAfterClose ();
@@ -510,7 +509,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.keyboard_menu_active = true;
 				
 				window.Hide ();
-				window.Close ();
 			}
 			else
 			{
@@ -766,7 +764,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 							
 							window = this.live_menu_windows[n-1] as MenuWindow;
 							window.Hide ();
-							window.Close ();
 							
 							item   = parent as MenuItem;
 							window = parent.Window as MenuWindow;
@@ -1275,19 +1272,31 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			MenuBehavior.last_mouse_pos = mouse;
 			
+			//	Détermine dans quelle fenêtre appartenant à un menu la souris se
+			//	trouve ('menu' ou 'root' si la souris se trouve dans la fenêtre
+			//	racine d'un menu hiérarchique).
+			
 			Window   menu = MenuBehavior.DetectWindow (mouse);
 			Window   root = menu == null ? MenuBehavior.DetectRootWindow (mouse) : null;
-			MenuItem item = ((menu == null) && (root == null)) ? null : MenuBehavior.DetectMenuItem (window, message.Cursor);
+			MenuItem item = null;
 			
-			bool swallow_message = (MenuBehavior.menu_list.Count > 0) && (message.NonClient == false);
+			//	Détermine dans quel MenuItem la souris se trouve actuellement :
 			
-			if (swallow_message)
+			if ((menu != null) ||
+				(root != null))
 			{
-				if (item != null)
-				{
-					swallow_message = false;
-				}
+				item = MenuBehavior.DetectMenuItem (window, message.Cursor);
 			}
+			
+			//	Par défaut, on consomme l'événement lorsque toutes les conditions
+			//	suivantes sont remplies :
+			//
+			//	- Un menu est affiché
+			//	- La souris se trouve dans une partie "client" d'une fenêtre
+			//	- La souris se trouve hors d'une fenêtre appartenant à un menu
+
+			bool mouse_in_menu   = (item != null) || (menu != null);
+			bool swallow_message = (MenuBehavior.menu_list.Count > 0) && (message.NonClient == false) && !mouse_in_menu;
 			
 			switch (message.Type)
 			{

@@ -78,6 +78,24 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public override void Hide()
+		{
+			base.Hide ();
+			base.Close ();
+		}
+
+		
+		protected override void OnWindowDisposing()
+		{
+			base.OnWindowDisposing ();
+			
+			//	Supprime le lien entre les widgets de cette fenêtre et la fenêtre
+			//	elle-même, ce qui évite un Dispose automatique du widget menu, par
+			//	exemple.
+			
+			this.Root.Children.Clear ();
+		}
+
 		protected override void OnAboutToShowWindow()
 		{
 			System.Diagnostics.Debug.Assert (this.behavior != null);

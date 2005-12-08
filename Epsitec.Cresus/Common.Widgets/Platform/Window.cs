@@ -43,6 +43,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 		}
 		
+		
 		internal Window(Epsitec.Common.Widgets.Window window)
 		{
 			this.widget_window = window;
@@ -836,8 +837,7 @@ namespace Epsitec.Common.Widgets.Platform
 				{
 					if (this.widget_window_disposed == false)
 					{
-						this.widget_window.ResetWindow ();
-						this.widget_window.Dispose ();
+						this.widget_window.PlatformWindowDisposing ();
 						this.widget_window_disposed = true;
 					}
 				}

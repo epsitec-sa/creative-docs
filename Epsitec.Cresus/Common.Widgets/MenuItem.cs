@@ -618,8 +618,8 @@ namespace Epsitec.Common.Widgets
 		public static Window GetMenuWindow(Widget widget)
 		{
 			//	Retourne la fenêtre utilisée par le menu. Si le menu n'avait
-			//	pas encore de fenêtre associée, un MenuWindow est créé pour
-			//	le menu :
+			//	pas encore (ou plus) de fenêtre associée, un MenuWindow est
+			//	(re)créé pour le menu :
 			
 			Window window = widget.Window;
 			

@@ -273,7 +273,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void Show()
+		public virtual void Show()
 		{
 			this.AsyncValidation ();
 			
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Widgets
 			this.window.ShowWindow ();
 		}
 		
-		public void ShowDialog()
+		public virtual void ShowDialog()
 		{
 			this.AsyncValidation ();
 			
@@ -310,7 +310,7 @@ namespace Epsitec.Common.Widgets
 			this.window.ShowDialogWindow ();
 		}
 		
-		public void Hide()
+		public virtual void Hide()
 		{
 			if (this.IsVisible)
 			{
@@ -319,7 +319,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void Close()
+		public virtual void Close()
 		{
 			if (this.IsVisible)
 			{
@@ -1004,6 +1004,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		internal void PlatformWindowDisposing()
+		{
+			if (this.is_disposed == false)
+			{
+				this.window = null;
+				this.Dispose ();
+			}
+		}
+		
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (Widget.DebugDispose)
@@ -1013,6 +1023,8 @@ namespace Epsitec.Common.Widgets
 			
 			if (disposing)
 			{
+				this.OnWindowDisposing ();
+				
 				if (this.IsVisible)
 				{
 					this.OnAboutToHideWindow ();
@@ -1123,10 +1135,7 @@ namespace Epsitec.Common.Widgets
 					Message.ClearLastWindow ();
 				}
 				
-				if (this.WindowDisposed != null)
-				{
-					this.WindowDisposed (this);
-				}
+				this.OnWindowDisposed ();
 			}
 		}
 		
@@ -1145,6 +1154,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
+		protected virtual void OnWindowDisposing()
+		{
+			if (this.WindowDisposing != null)
+			{
+				this.WindowDisposing (this);
+			}
+		}
+		
+		protected virtual void OnWindowDisposed()
+		{
+			if (this.WindowDisposed != null)
+			{
+				this.WindowDisposed (this);
+			}
+		}
 		
 		protected virtual void OnAboutToShowWindow()
 		{
@@ -1991,6 +2016,7 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowFocused;
 		public event EventHandler				WindowDefocused;
 		public event EventHandler				WindowDisposed;
+		public event EventHandler				WindowDisposing;
 		public event EventHandler				WindowSizeMoveStatusChanged;
 		
 		public event EventHandler				FocusedWidgetChanged;
