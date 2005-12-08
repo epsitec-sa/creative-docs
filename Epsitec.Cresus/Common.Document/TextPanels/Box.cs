@@ -20,6 +20,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonFrame = this.CreateIconButton(Misc.Icon("FontFrame"), Res.Strings.Action.Text.Font.Frame, new MessageEventHandler(this.HandleButtonClicked));
 
+			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+
 			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
@@ -39,6 +41,13 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
+		// Indique si ce panneau est visible pour un filtre donné.
+		public override bool IsFilterShow(string filter)
+		{
+			return ( filter == "All" || filter == "Character" );
+		}
+
+
 		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
@@ -100,12 +109,18 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Left = rect.Left;
 					r.Width = 20;
 					this.buttonFrame.Bounds = r;
+					r.Left = rect.Right-20;
+					r.Width = 20;
+					this.buttonClear.Bounds = r;
 				}
 				else
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
 					this.buttonFrame.Bounds = r;
+					r.Left = rect.Right-20;
+					r.Width = 20;
+					this.buttonClear.Bounds = r;
 				}
 			}
 			else
@@ -116,6 +131,9 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Left = rect.Left;
 				r.Width = 20;
 				this.buttonFrame.Bounds = r;
+				r.Left = rect.Right-20;
+				r.Width = 20;
+				this.buttonClear.Bounds = r;
 			}
 		}
 
@@ -126,7 +144,18 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.document.TextWrapper.IsAttached )  return;
 		}
 
+		private void HandleClearClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+
+			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.Defined.ClearTextBox();
+			this.document.TextWrapper.ResumeSynchronisations();
+		}
+
 		
 		protected IconButton				buttonFrame;
+		protected IconButton				buttonClear;
 	}
 }

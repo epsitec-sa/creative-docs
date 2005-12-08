@@ -771,6 +771,18 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\FontOverlined-de.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontOverlined-en.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontOverlined-fr.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\FontSizeMinus.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -1240,6 +1252,18 @@
                 />
                 <File
                     RelPath = "Images\ParagraphLeading.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParaKeepNext.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParaKeepPrev.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParaLeadingAlign.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -1744,6 +1768,26 @@
                 />
                 <File
                     RelPath = "Images\TextBox.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TextFilterAll.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TextFilterCharacter.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TextFilterFrequently.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TextFilterParagraph.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TextFilterUsual.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

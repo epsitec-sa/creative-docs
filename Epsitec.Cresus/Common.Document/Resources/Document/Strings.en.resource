@@ -469,9 +469,23 @@
 	<data name="Panel.Volume.Tooltip.Left">Left side angle</data>
 	<data name="Panel.Volume.Tooltip.Right">Right side angle</data>
 
+	<data name="TextPanel.Filter.Title">Visible properties</data>
+	<data name="TextPanel.Filter.Tooltip.Usual">@@Attributs courants</data>
+	<data name="TextPanel.Filter.Tooltip.Frequently">@@Attributs fréquents</data>
+	<data name="TextPanel.Filter.Tooltip.All">@@Tous les attributs</data>
+	<data name="TextPanel.Filter.Tooltip.Paragraph">@@Attributs pour les paragraphes</data>
+	<data name="TextPanel.Filter.Tooltip.Character">@@Attributs pour les caractères</data>
+	
 	<data name="TextPanel.Justif.Title">Layout</data>
 
 	<data name="TextPanel.Leading.Title">Leading</data>
+	<data name="TextPanel.Leading.Short.Leading">L</data>
+	<data name="TextPanel.Leading.Short.Align">A</data>
+	<data name="TextPanel.Leading.Long.Leading">Leading</data>
+	<data name="TextPanel.Leading.Long.Align">@@Grille verticale</data>
+	<data name="TextPanel.Leading.Tooltip.Leading">Leading</data>
+	<data name="TextPanel.Leading.Tooltip.Align">@@Espacement de la grille magnétique verticale</data>
+	<data name="TextPanel.Leading.Tooltip.Mode">@@Grille magnétique verticale pour l'interligne</data>
 
 	<data name="TextPanel.Margins.Title">@@Retraits</data>
 	<data name="TextPanel.Margins.Short.LeftFirst">F</data>
@@ -482,8 +496,22 @@
 	<data name="TextPanel.Margins.Long.Right">@@Marge droite</data>
 
 	<data name="TextPanel.Spaces.Title">Spacing</data>
+	<data name="TextPanel.Spaces.Short.Before">B</data>
+	<data name="TextPanel.Spaces.Short.After">A</data>
+	<data name="TextPanel.Spaces.Long.Before">@@Espacement avant</data>
+	<data name="TextPanel.Spaces.Long.After">@@Espacement après</data>
+	<data name="TextPanel.Spaces.Tooltip.Before">@@Espacement avant le paragraphe</data>
+	<data name="TextPanel.Spaces.Tooltip.After">@@Espacement après le paragraphe</data>
 
 	<data name="TextPanel.Keep.Title">@@Enchaînements</data>
+	<data name="TextPanel.Keep.Tooltip.KeepNext">@@Lié au paragraphe suivant</data>
+	<data name="TextPanel.Keep.Tooltip.KeepPrev">@@Lié au paragraphe précédent</data>
+	<data name="TextPanel.Keep.Short.KeepStart">S</data>
+	<data name="TextPanel.Keep.Short.KeepEnd">E</data>
+	<data name="TextPanel.Keep.Long.KeepStart">@@Lignes solidaires au début</data>
+	<data name="TextPanel.Keep.Long.KeepEnd">@@Lignes solidaires à la fin</data>
+	<data name="TextPanel.Keep.Tooltip.KeepStart">@@Nombre de lignes solidaires au début du paragraphe</data>
+	<data name="TextPanel.Keep.Tooltip.KeepEnd">@@Nombre de lignes solidaires à la fin du paragraphe</data>
 
 	<data name="TextPanel.Align.Title">Vertical alignment</data>
 
@@ -500,6 +528,11 @@
 	<data name="TextPanel.Box.Title">@@Cadres</data>
 
 	<data name="TextPanel.Language.Title">Language</data>
+	<data name="TextPanel.Language.Tooltip.Language">Language</data>
+	<data name="TextPanel.Language.List.None">None</data>
+	<data name="TextPanel.Language.List.FR">French</data>
+	<data name="TextPanel.Language.List.DE">German</data>
+	<data name="TextPanel.Language.List.EN">English</data>
 
 	<data name="TextPanel.Clear">Clear property</data>
 
@@ -928,6 +961,7 @@
 	<data name="Action.Text.Font.Bold">Bold</data>
 	<data name="Action.Text.Font.Italic">Italic</data>
 	<data name="Action.Text.Font.Underlined">Underlined</data>
+	<data name="Action.Text.Font.Overlined">Overlined</data>
 	<data name="Action.Text.Font.Strike">Strikethrough</data>
 	<data name="Action.Text.Font.Frame">Frame</data>
 	<data name="Action.Text.Font.Subscript">Subscript</data>

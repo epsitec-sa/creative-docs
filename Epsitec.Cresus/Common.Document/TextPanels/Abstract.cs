@@ -37,6 +37,13 @@ namespace Epsitec.Common.Document.TextPanels
 			base.Dispose(disposing);
 		}
 
+
+		// Indique si ce panneau est visible pour un filtre donné.
+		public virtual bool IsFilterShow(string filter)
+		{
+			return true;
+		}
+
 		
 		// Retourne la hauteur standard.
 		public override double DefaultHeight

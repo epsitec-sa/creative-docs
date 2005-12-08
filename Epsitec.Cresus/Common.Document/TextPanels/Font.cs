@@ -94,6 +94,13 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
+		// Indique si ce panneau est visible pour un filtre donné.
+		public override bool IsFilterShow(string filter)
+		{
+			return ( filter == "All" || filter == "Frequently" || filter == "Usual" || filter == "Character" );
+		}
+
+
 		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
@@ -460,17 +467,9 @@ namespace Epsitec.Common.Document.TextPanels
 			IconButton button = sender as IconButton;
 			if ( button == null )  return;
 
-			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
-			if ( editObject == null )  return;
-			string face, style;
-			string[] features;
-#if false
-			editObject.GetTextFont(true, out face, out style, out features);
-#else
-			face = "";
-			style = "";
-			features = null;
-#endif
+			string face = this.document.TextWrapper.Active.FontFace;
+			string style = this.document.TextWrapper.Active.FontStyle;
+			string[] features = this.document.TextWrapper.Active.FontFeatures;
 
 			Point pos = button.MapClientToScreen(new Point(0, 1));
 			VMenu menu = this.BuildFeaturesMenu(face, style, features);
@@ -541,16 +540,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string cmd = item.Name;
 
-			string face, style;
-			string[] features;
-#if false
-			editObject.GetTextFont(false, out face, out style, out features);
-#else
-			face = "";
-			style = "";
-			features = null;
-#endif
-
+			string[] features = this.document.TextWrapper.Active.FontFeatures;
 			if ( features == null )  features = new string[0];
 			
 			string[] newFeatures;
@@ -576,9 +566,7 @@ namespace Epsitec.Common.Document.TextPanels
 				newFeatures[features.Length] = cmd;
 			}
 
-#if false
-			editObject.SetTextFont(face, style, newFeatures);
-#endif
+			this.document.TextWrapper.Defined.FontFeatures = newFeatures;
 		}
 		#endregion
 

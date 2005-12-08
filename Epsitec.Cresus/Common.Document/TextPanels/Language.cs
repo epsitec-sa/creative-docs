@@ -18,7 +18,16 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextLanguage");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Font.Title);
 
+			this.fieldLanguage = new TextFieldCombo(this);
+			this.fieldLanguage.IsReadOnly = true;
+			this.fieldLanguage.TextChanged += new EventHandler(this.HandleLanguageChanged);
+			this.fieldLanguage.TabIndex = this.tabIndex++;
+			this.fieldLanguage.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldLanguage, Res.Strings.TextPanel.Language.Tooltip.Language);
+
 			this.buttonHyphen = this.CreateIconButton(Misc.Icon("TextHyphen"), Res.Strings.Action.Text.Paragraph.Hyphen, new MessageEventHandler(this.HandleHyphenClicked));
+
+			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
 			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
@@ -30,14 +39,25 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
+				this.fieldLanguage.TextChanged -= new EventHandler(this.HandleLanguageChanged);
+
 				this.document.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
 				this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+
+				this.fieldLanguage = null;
 			}
 			
 			base.Dispose(disposing);
 		}
 
 		
+		// Indique si ce panneau est visible pour un filtre donné.
+		public override bool IsFilterShow(string filter)
+		{
+			return ( filter == "All" || filter == "Character" );
+		}
+
+
 		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
@@ -65,22 +85,6 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Met à jour après un changement du wrapper.
-		protected override void UpdateAfterChanging()
-		{
-			base.UpdateAfterChanging();
-
-			bool hyphen = this.document.ParagraphWrapper.Defined.Hyphenation;
-			if ( !this.document.ParagraphWrapper.Defined.IsHyphenationDefined )
-			{
-				hyphen = this.document.ParagraphWrapper.Active.Hyphenation;
-			}
-
-			this.ignoreChanged = true;
-			this.buttonHyphen.ActiveState = hyphen ? ActiveState.Yes : ActiveState.No;
-			this.ignoreChanged = false;
-		}
-
 		
 		// Le wrapper associé a changé.
 		protected void HandleWrapperChanged(object sender)
@@ -98,55 +102,131 @@ namespace Epsitec.Common.Document.TextPanels
 
 			Rectangle rect = this.UsefulZone;
 
-			if ( this.isExtendedSize )
-			{
-				Rectangle r = rect;
-				r.Bottom = r.Top-20;
+			Rectangle r = rect;
+			r.Bottom = r.Top-20;
 
-				if ( this.IsLabelProperties )
-				{
-					r.Left = rect.Left;
-					r.Width = 20;
-					this.buttonHyphen.Bounds = r;
-				}
-				else
-				{
-					r.Left = rect.Left;
-					r.Width = 20;
-					this.buttonHyphen.Bounds = r;
-				}
-			}
-			else
-			{
-				Rectangle r = rect;
-				r.Bottom = r.Top-20;
+			r.Left = rect.Left;
+			r.Width = 100;
+			this.fieldLanguage.Bounds = r;
 
-				r.Left = rect.Left;
-				r.Width = 20;
-				this.buttonHyphen.Bounds = r;
+			r.Offset(105, 0);
+			r.Width = 20;
+			this.buttonHyphen.Bounds = r;
+
+			r.Left = rect.Right-20;
+			r.Width = 20;
+			this.buttonClear.Bounds = r;
+		}
+
+
+		// Met à jour la liste des langues.
+		protected void UpdateComboLanguage()
+		{
+			if ( this.fieldLanguage.Items.Count == 0 )
+			{
+				this.fieldLanguage.Items.Add(Res.Strings.TextPanel.Language.List.None);
+				this.fieldLanguage.Items.Add(Res.Strings.TextPanel.Language.List.FR);
+				this.fieldLanguage.Items.Add(Res.Strings.TextPanel.Language.List.DE);
+				this.fieldLanguage.Items.Add(Res.Strings.TextPanel.Language.List.EN);
 			}
+		}
+
+		protected static string LanguageShortToLong(string shortLanguage)
+		{
+			shortLanguage = shortLanguage.ToUpper();
+			if ( shortLanguage.StartsWith("FR") )  return Res.Strings.TextPanel.Language.List.FR;
+			if ( shortLanguage.StartsWith("DE") )  return Res.Strings.TextPanel.Language.List.DE;
+			if ( shortLanguage.StartsWith("EN") )  return Res.Strings.TextPanel.Language.List.EN;
+			return Res.Strings.TextPanel.Language.List.None;
+		}
+
+		protected static string LanguageLongToShort(string longLanguage)
+		{
+			if ( longLanguage == Res.Strings.TextPanel.Language.List.FR )  return "FR";
+			if ( longLanguage == Res.Strings.TextPanel.Language.List.DE )  return "DE";
+			if ( longLanguage == Res.Strings.TextPanel.Language.List.EN )  return "EN";
+			return "";
+		}
+
+
+		// Met à jour après un changement du wrapper.
+		protected override void UpdateAfterChanging()
+		{
+			base.UpdateAfterChanging();
+
+			bool hyphen = false;
+			bool isHyphen = false;
+			if ( this.document.TextWrapper.Defined.IsLanguageHyphenationDefined )
+			{
+				hyphen = (this.document.TextWrapper.Active.LanguageHyphenation == 1.0);
+				isHyphen = true;
+			}
+
+			string language = Language.LanguageShortToLong(this.document.TextWrapper.Active.LanguageLocale);
+			bool isLanguage = this.document.TextWrapper.Defined.IsLanguageLocaleDefined;
+
+			this.ignoreChanged = true;
+			
+			this.ActiveIconButton(this.buttonHyphen, hyphen, isHyphen);
+			
+			this.UpdateComboLanguage();
+			this.fieldLanguage.Text = language;
+			this.ProposalTextFieldCombo(this.fieldLanguage, !isLanguage);
+
+			this.ignoreChanged = false;
 		}
 
 
 		private void HandleHyphenClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
 
 			this.buttonHyphen.ActiveState = (this.buttonHyphen.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
 			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.Yes);
 
 			if ( hyphen )
 			{
-				this.document.ParagraphWrapper.Defined.Hyphenation = true;
+				this.document.TextWrapper.Defined.LanguageHyphenation = 1.0;
 			}
 			else
 			{
-				this.document.ParagraphWrapper.Defined.ClearHyphenation();
+				this.document.TextWrapper.Defined.ClearLanguageHyphenation();
 			}
+		}
+
+		// Un champ a été changé.
+		private void HandleLanguageChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			this.document.TextWrapper.SuspendSynchronisations();
+
+			string language = Language.LanguageLongToShort(this.fieldLanguage.Text);
+			if ( language != "" )
+			{
+				this.document.TextWrapper.Defined.LanguageLocale = language;
+			}
+			else
+			{
+				this.document.TextWrapper.Defined.ClearLanguageLocale();
+			}
+		}
+
+		private void HandleClearClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+
+			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.Defined.ClearLanguageHyphenation();
+			this.document.TextWrapper.Defined.ClearLanguageLocale();
+			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
 
 		protected IconButton				buttonHyphen;
+		protected TextFieldCombo			fieldLanguage;
+		protected IconButton				buttonClear;
 	}
 }

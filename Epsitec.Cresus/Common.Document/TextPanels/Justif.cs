@@ -46,6 +46,13 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
+		// Indique si ce panneau est visible pour un filtre donné.
+		public override bool IsFilterShow(string filter)
+		{
+			return ( filter == "All" || filter == "Frequently" || filter == "Usual" || filter == "Paragraph" );
+		}
+
+
 		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
@@ -53,30 +60,6 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				return this.LabelHeight + 30;
 			}
-		}
-
-		// Met à jour après un changement du wrapper.
-		protected override void UpdateAfterChanging()
-		{
-			base.UpdateAfterChanging();
-
-			Common.Text.Wrappers.JustificationMode justif = this.document.ParagraphWrapper.Active.JustificationMode;
-			bool isJustif = this.document.ParagraphWrapper.Defined.IsJustificationModeDefined;
-
-			bool hyphen = this.document.ParagraphWrapper.Active.Hyphenation;
-			bool isHyphen = this.document.ParagraphWrapper.Defined.IsHyphenationDefined;
-
-			this.ignoreChanged = true;
-
-			this.ActiveIconButton(this.buttonAlignLeft,   justif == Common.Text.Wrappers.JustificationMode.AlignLeft,        isJustif);
-			this.ActiveIconButton(this.buttonAlignCenter, justif == Common.Text.Wrappers.JustificationMode.Center,           isJustif);
-			this.ActiveIconButton(this.buttonAlignRight,  justif == Common.Text.Wrappers.JustificationMode.AlignRight,       isJustif);
-			this.ActiveIconButton(this.buttonAlignJustif, justif == Common.Text.Wrappers.JustificationMode.JustifyAlignLeft, isJustif);
-			this.ActiveIconButton(this.buttonAlignAll,    justif == Common.Text.Wrappers.JustificationMode.JustifyJustfy,    isJustif);
-
-			this.ActiveIconButton(this.buttonHyphen, hyphen, isHyphen);
-
-			this.ignoreChanged = false;
 		}
 
 
@@ -115,6 +98,31 @@ namespace Epsitec.Common.Document.TextPanels
 			r.Left = rect.Right-20;
 			r.Width = 20;
 			this.buttonClear.Bounds = r;
+		}
+
+
+		// Met à jour après un changement du wrapper.
+		protected override void UpdateAfterChanging()
+		{
+			base.UpdateAfterChanging();
+
+			Common.Text.Wrappers.JustificationMode justif = this.document.ParagraphWrapper.Active.JustificationMode;
+			bool isJustif = this.document.ParagraphWrapper.Defined.IsJustificationModeDefined;
+
+			bool hyphen = this.document.ParagraphWrapper.Active.Hyphenation;
+			bool isHyphen = this.document.ParagraphWrapper.Defined.IsHyphenationDefined;
+
+			this.ignoreChanged = true;
+
+			this.ActiveIconButton(this.buttonAlignLeft,   justif == Common.Text.Wrappers.JustificationMode.AlignLeft,        isJustif);
+			this.ActiveIconButton(this.buttonAlignCenter, justif == Common.Text.Wrappers.JustificationMode.Center,           isJustif);
+			this.ActiveIconButton(this.buttonAlignRight,  justif == Common.Text.Wrappers.JustificationMode.AlignRight,       isJustif);
+			this.ActiveIconButton(this.buttonAlignJustif, justif == Common.Text.Wrappers.JustificationMode.JustifyAlignLeft, isJustif);
+			this.ActiveIconButton(this.buttonAlignAll,    justif == Common.Text.Wrappers.JustificationMode.JustifyJustfy,    isJustif);
+
+			this.ActiveIconButton(this.buttonHyphen, hyphen, isHyphen);
+
+			this.ignoreChanged = false;
 		}
 
 

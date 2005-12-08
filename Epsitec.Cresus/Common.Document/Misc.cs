@@ -287,7 +287,10 @@ namespace Epsitec.Common.Document
 		// Retourne le nom complet d'une icône.
 		static public string Icon(string icon)
 		{
-			if ( icon == "FontBold" || icon == "FontItalic" || icon == "FontUnderlined" )
+			if ( icon == "FontBold"       ||
+				 icon == "FontItalic"     ||
+				 icon == "FontUnderlined" ||
+				 icon == "FontOverlined"  )
 			{
 				string language = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 				if ( language != "fr" && language != "en" && language != "de" )

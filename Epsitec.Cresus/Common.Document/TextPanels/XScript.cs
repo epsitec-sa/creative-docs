@@ -21,6 +21,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.Text.Font.Subscript,   new MessageEventHandler(this.HandleButtonSubscriptClicked));
 			this.buttonSuperscript = this.CreateIconButton(Misc.Icon("FontSuperscript"), Res.Strings.Action.Text.Font.Superscript, new MessageEventHandler(this.HandleButtonSuperscriptClicked));
 
+			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+
 			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
@@ -40,6 +42,13 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
+		// Indique si ce panneau est visible pour un filtre donné.
+		public override bool IsFilterShow(string filter)
+		{
+			return ( filter == "All" || filter == "Frequently" || filter == "Character" );
+		}
+
+
 		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
@@ -105,6 +114,10 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonSubscript.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonSuperscript.Bounds = r;
+
+					r.Left = rect.Right-20;
+					r.Width = 20;
+					this.buttonClear.Bounds = r;
 				}
 				else
 				{
@@ -113,6 +126,10 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonSubscript.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonSuperscript.Bounds = r;
+
+					r.Left = rect.Right-20;
+					r.Width = 20;
+					this.buttonClear.Bounds = r;
 				}
 			}
 			else
@@ -125,6 +142,10 @@ namespace Epsitec.Common.Document.TextPanels
 				this.buttonSubscript.Bounds = r;
 				r.Offset(20, 0);
 				this.buttonSuperscript.Bounds = r;
+			
+				r.Left = rect.Right-20;
+				r.Width = 20;
+				this.buttonClear.Bounds = r;
 			}
 		}
 
@@ -205,6 +226,17 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
+		private void HandleClearClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+
+			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.Defined.ClearXscript();
+			this.document.TextWrapper.ResumeSynchronisations();
+		}
+
+		
 		private void FillSubscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript)
 		{
 			xscript.IsDisabled = false;
@@ -224,5 +256,6 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected IconButton				buttonSubscript;
 		protected IconButton				buttonSuperscript;
+		protected IconButton				buttonClear;
 	}
 }

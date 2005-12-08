@@ -14,6 +14,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.CreateSelectorToolBar();
 			this.CreateAggregateToolBar();
+			this.CreateTextToolBar();
 			this.CreateSelectorPanel();
 
 			this.detailButton = new CheckButton();
@@ -199,6 +200,71 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateFree.Enable = (name != "");
 		}
 
+		// Crée la toolbar pour le texte.
+		protected void CreateTextToolBar()
+		{
+			this.textToolBar = new HToolBar(this);
+			this.textToolBar.Dock = DockStyle.Top;
+			this.textToolBar.DockMargins = new Margins(0, 0, 0, 5);
+
+			StaticText st = new StaticText(this.textToolBar);
+			st.Text = Res.Strings.TextPanel.Filter.Title;
+			st.Width = 90;
+			st.Dock = DockStyle.Left;
+
+			this.textUsual = new IconButton(this.textToolBar);
+			this.textUsual.IconName = Misc.Icon("TextFilterUsual");
+			this.textUsual.Name = "Usual";
+			this.textUsual.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.textUsual.Dock = DockStyle.Left;
+			this.textUsual.Clicked += new MessageEventHandler(this.HandleRadioTextClicked);
+			ToolTip.Default.SetToolTip(this.textUsual, Res.Strings.TextPanel.Filter.Tooltip.Usual);
+
+			this.textFrequently = new IconButton(this.textToolBar);
+			this.textFrequently.IconName = Misc.Icon("TextFilterFrequently");
+			this.textFrequently.Name = "Frequently";
+			this.textFrequently.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.textFrequently.Dock = DockStyle.Left;
+			this.textFrequently.Clicked += new MessageEventHandler(this.HandleRadioTextClicked);
+			ToolTip.Default.SetToolTip(this.textFrequently, Res.Strings.TextPanel.Filter.Tooltip.Frequently);
+
+			this.textAll = new IconButton(this.textToolBar);
+			this.textAll.IconName = Misc.Icon("TextFilterAll");
+			this.textAll.Name = "All";
+			this.textAll.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.textAll.Dock = DockStyle.Left;
+			this.textAll.Clicked += new MessageEventHandler(this.HandleRadioTextClicked);
+			ToolTip.Default.SetToolTip(this.textAll, Res.Strings.TextPanel.Filter.Tooltip.All);
+
+			this.textParagraph = new IconButton(this.textToolBar);
+			this.textParagraph.IconName = Misc.Icon("TextFilterParagraph");
+			this.textParagraph.Name = "Paragraph";
+			this.textParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.textParagraph.Dock = DockStyle.Left;
+			this.textParagraph.Clicked += new MessageEventHandler(this.HandleRadioTextClicked);
+			ToolTip.Default.SetToolTip(this.textParagraph, Res.Strings.TextPanel.Filter.Tooltip.Paragraph);
+
+			this.textCharacter = new IconButton(this.textToolBar);
+			this.textCharacter.IconName = Misc.Icon("TextFilterCharacter");
+			this.textCharacter.Name = "Character";
+			this.textCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.textCharacter.Dock = DockStyle.Left;
+			this.textCharacter.Clicked += new MessageEventHandler(this.HandleRadioTextClicked);
+			ToolTip.Default.SetToolTip(this.textCharacter, Res.Strings.TextPanel.Filter.Tooltip.Character);
+
+			this.UpdateText();
+		}
+
+		// Met à jour les boutons de la toolbar du texte.
+		protected void UpdateText()
+		{
+			this.textUsual.ActiveState      = (this.textFilter == "Usual"     ) ? ActiveState.Yes : ActiveState.No;
+			this.textFrequently.ActiveState = (this.textFilter == "Frequently") ? ActiveState.Yes : ActiveState.No;
+			this.textAll.ActiveState        = (this.textFilter == "All"       ) ? ActiveState.Yes : ActiveState.No;
+			this.textParagraph.ActiveState  = (this.textFilter == "Paragraph" ) ? ActiveState.Yes : ActiveState.No;
+			this.textCharacter.ActiveState  = (this.textFilter == "Character" ) ? ActiveState.Yes : ActiveState.No;
+		}
+
 		// Crée le panneau pour les sélections.
 		protected void CreateSelectorPanel()
 		{
@@ -295,6 +361,15 @@ namespace Epsitec.Common.Document.Containers
 				this.selectorPanel.Hide();
 			}
 
+			if ( this.document.Modifier.Tool == "Edit" )
+			{
+				this.textToolBar.Show();
+			}
+			else
+			{
+				this.textToolBar.Hide();
+			}
+
 			this.UpdateAggregate();
 
 			this.detailButton.SetParent(null);
@@ -350,6 +425,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 			else if ( this.document.Modifier.Tool == "Edit" )
 			{
+				// Crée tous les panneaux des "propriétés" de texte (pour les wrappers).
 				Objects.Abstract editObject = this.document.Modifier.RetEditObject();
 				if ( editObject != null )
 				{
@@ -360,10 +436,13 @@ namespace Epsitec.Common.Document.Containers
 						int index = 1;
 						foreach ( TextPanels.Abstract panel in list )
 						{
+							if ( !panel.IsFilterShow(this.textFilter) )  continue;
+
+							double tm = (index == 1) ? 0 : panel.TopMargin;
 							panel.TabIndex = index++;
 							panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 							panel.Dock = DockStyle.Top;
-							panel.DockMargins = new Margins(0, 1, panel.TopMargin, -1);
+							panel.DockMargins = new Margins(0, 1, tm, -1);
 							panel.IsExtendedSize = this.document.Modifier.IsTextPanelExtended(panel);
 							panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
 							panel.SetParent(this.scrollable.Panel);
@@ -710,6 +789,15 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
+		private void HandleRadioTextClicked(object sender, MessageEventArgs e)
+		{
+			IconButton button = sender as IconButton;
+			this.textFilter = button.Name;
+			this.UpdateText();
+			this.DoUpdateContent();
+		}
+
+
 		#region StretchMenu
 		// Construit le menu des types de stretch.
 		public VMenu CreateStretchTypeMenu(MessageEventHandler message)
@@ -776,6 +864,13 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton					aggregateNewAll;
 		protected IconButton					aggregateFree;
 
+		protected HToolBar						textToolBar;
+		protected IconButton					textUsual;
+		protected IconButton					textFrequently;
+		protected IconButton					textAll;
+		protected IconButton					textParagraph;
+		protected IconButton					textCharacter;
+
 		protected CheckButton					detailButton;
 		protected Scrollable					scrollable;
 		protected ColorSelector					colorSelector;
@@ -784,6 +879,7 @@ namespace Epsitec.Common.Document.Containers
 		protected Properties.Type				originColorType = Properties.Type.None;
 		protected int							originColorRank = -1;
 		protected Common.Widgets.TextRuler		originColorRuler = null;
+		protected string						textFilter = "Usual";
 
 		protected bool							ignoreColorChanged = false;
 		protected bool							ignoreChanged = false;

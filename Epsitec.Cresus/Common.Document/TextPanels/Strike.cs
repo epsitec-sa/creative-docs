@@ -18,8 +18,11 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextStrike");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Strike.Title);
 
-			this.buttonUnderlined  = this.CreateIconButton(Misc.Icon("FontUnderlined"),  Res.Strings.Action.Text.Font.Underlined,  new MessageEventHandler(this.HandleButtonUnderlineClicked));
-			this.buttonStrike      = this.CreateIconButton(Misc.Icon("FontStrike"),      Res.Strings.Action.Text.Font.Strike,      new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonUnderlined = this.CreateIconButton(Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, new MessageEventHandler(this.HandleButtonUnderlineClicked));
+			this.buttonStrike     = this.CreateIconButton(Misc.Icon("FontStrike"),     Res.Strings.Action.Text.Font.Strike,     new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonOverlined  = this.CreateIconButton(Misc.Icon("FontOverlined"),  Res.Strings.Action.Text.Font.Overlined,  new MessageEventHandler(this.HandleButtonClicked));
+
+			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
 			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
@@ -40,6 +43,13 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
+		// Indique si ce panneau est visible pour un filtre donné.
+		public override bool IsFilterShow(string filter)
+		{
+			return ( filter == "All" || filter == "Frequently" || filter == "Character" );
+		}
+
+
 		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
@@ -105,6 +115,11 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonUnderlined.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonStrike.Bounds = r;
+					r.Offset(20, 0);
+					this.buttonOverlined.Bounds = r;
+					r.Left = rect.Right-20;
+					r.Width = 20;
+					this.buttonClear.Bounds = r;
 				}
 				else
 				{
@@ -113,6 +128,11 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonUnderlined.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonStrike.Bounds = r;
+					r.Offset(20, 0);
+					this.buttonOverlined.Bounds = r;
+					r.Left = rect.Right-20;
+					r.Width = 20;
+					this.buttonClear.Bounds = r;
 				}
 			}
 			else
@@ -125,6 +145,11 @@ namespace Epsitec.Common.Document.TextPanels
 				this.buttonUnderlined.Bounds = r;
 				r.Offset(20, 0);
 				this.buttonStrike.Bounds = r;
+				r.Offset(20, 0);
+				this.buttonOverlined.Bounds = r;
+				r.Left = rect.Right-20;
+				r.Width = 20;
+				this.buttonClear.Bounds = r;
 			}
 		}
 
@@ -155,36 +180,30 @@ namespace Epsitec.Common.Document.TextPanels
 					 this.document.TextWrapper.Active.Underline.IsEmpty == false )
 				{
 					// (A2)
-
-					this.FillUnderlineDefinition(underline);					// ---> (A3)
+					this.FillUnderlineDefinition(underline);  // --> (A3)
 					
 					if ( underline.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Underline) )
 					{
-						// L'état défini par notre souligné local est identique à
-						// celui hérité par le style actif; utilise celui du style
-						// dans ce cas.
-						
-						this.document.TextWrapper.Defined.ClearUnderline();		// ---> (A1)
+						// L'état défini par notre souligné local est identique à celui hérité
+						// par le style actif; utilise celui du style dans ce cas.
+						this.document.TextWrapper.Defined.ClearUnderline();  // --> (A1)
 					}
 				}
 				else if ( this.document.TextWrapper.Defined.IsUnderlineDefined )
 				{
 					// (A3) ou (B2)
-					
-					this.document.TextWrapper.Defined.ClearUnderline();			// ---> (A1) ou (B1)
+					this.document.TextWrapper.Defined.ClearUnderline();  // --> (A1) ou (B1)
 				}
 				else
 				{
 					// (A1)
-					
-					underline.IsDisabled = true;								// ---> (A2)
+					underline.IsDisabled = true;  // --> (A2)
 				}
 			}
 			else
 			{
 				// (B1)
-				
-				this.FillUnderlineDefinition(underline);						// ---> (B2)
+				this.FillUnderlineDefinition(underline);  // --> (B2)
 			}
 			
 			this.document.TextWrapper.ResumeSynchronisations();
@@ -196,6 +215,19 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.document.TextWrapper.IsAttached )  return;
 		}
 
+		private void HandleClearClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+
+			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.Defined.ClearUnderline();
+			this.document.TextWrapper.Defined.ClearStrikeout();
+			this.document.TextWrapper.Defined.ClearOverline();
+			this.document.TextWrapper.ResumeSynchronisations();
+		}
+
+		
 		private void FillUnderlineDefinition(Common.Text.Wrappers.TextWrapper.XlineDefinition underline)
 		{
 			underline.IsDisabled = false;
@@ -205,11 +237,13 @@ namespace Epsitec.Common.Document.TextPanels
 			underline.Position       = -5.0;
 			underline.PositionUnits  = Common.Text.Properties.SizeUnits.Points;
 			underline.DrawClass      = "underline";
-			underline.DrawStyle      = "Black";
+			underline.DrawStyle      = RichColor.ToString(RichColor.FromBrightness(0));
 		}
         
 
 		protected IconButton				buttonUnderlined;
 		protected IconButton				buttonStrike;
+		protected IconButton				buttonOverlined;
+		protected IconButton				buttonClear;
 	}
 }
