@@ -265,8 +265,8 @@ namespace Epsitec.Common.Text.Wrappers
 				if ((this.defined_state.IsLanguageLocaleDefined) ||
 					(this.defined_state.IsLanguageHyphenationDefined))
 				{
-					string locale = this.defined_state.LanguageLocale;
-					double hyphen = this.defined_state.LanguageHyphenation;
+					string locale = this.defined_state.IsLanguageLocaleDefined ? this.defined_state.LanguageLocale : null;
+					double hyphen = this.defined_state.IsLanguageHyphenationDefined ? this.defined_state.LanguageHyphenation : double.NaN;
 					
 					this.DefineMetaProperty (TextWrapper.Language, 0, new Properties.LanguageProperty (locale, hyphen));
 				}
@@ -643,8 +643,23 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				state.DefineValue (State.LanguageLocaleProperty, p_language.Locale);
-				state.DefineValue (State.LanguageHyphenationProperty, p_language.Hyphenation);
+				if (p_language.Locale == null)
+				{
+					state.DefineValue (State.LanguageLocaleProperty);
+				}
+				else
+				{
+					state.DefineValue (State.LanguageLocaleProperty, p_language.Locale);
+				}
+				
+				if (double.IsNaN (p_language.Hyphenation))
+				{
+					state.DefineValue (State.LanguageHyphenationProperty);
+				}
+				else
+				{
+					state.DefineValue (State.LanguageHyphenationProperty, p_language.Hyphenation);
+				}
 			}
 		}
 		

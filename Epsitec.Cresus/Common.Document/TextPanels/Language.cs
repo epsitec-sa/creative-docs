@@ -133,10 +133,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected static string LanguageShortToLong(string shortLanguage)
 		{
-			shortLanguage = shortLanguage.ToLower();
 			if ( shortLanguage.StartsWith("fr") )  return Res.Strings.TextPanel.Language.List.fr;
 			if ( shortLanguage.StartsWith("de") )  return Res.Strings.TextPanel.Language.List.de;
 			if ( shortLanguage.StartsWith("en") )  return Res.Strings.TextPanel.Language.List.en;
+			
 			return Res.Strings.TextPanel.Language.List.None;
 		}
 
@@ -145,7 +145,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( longLanguage == Res.Strings.TextPanel.Language.List.fr )  return "fr";
 			if ( longLanguage == Res.Strings.TextPanel.Language.List.de )  return "de";
 			if ( longLanguage == Res.Strings.TextPanel.Language.List.en )  return "en";
-			return "";
+			
+			return "xx";
 		}
 
 
