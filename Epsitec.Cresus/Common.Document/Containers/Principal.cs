@@ -217,7 +217,7 @@ namespace Epsitec.Common.Document.Containers
 			this.textUsual.Name = "Usual";
 			this.textUsual.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textUsual.Dock = DockStyle.Left;
-			this.textUsual.Clicked += new MessageEventHandler(this.HandleRadioTextClicked);
+			this.textUsual.Clicked += new MessageEventHandler(this.HandleFilterTextClicked);
 			ToolTip.Default.SetToolTip(this.textUsual, Res.Strings.TextPanel.Filter.Tooltip.Usual);
 
 			this.textFrequently = new IconButton(this.textToolBar);
@@ -225,7 +225,7 @@ namespace Epsitec.Common.Document.Containers
 			this.textFrequently.Name = "Frequently";
 			this.textFrequently.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textFrequently.Dock = DockStyle.Left;
-			this.textFrequently.Clicked += new MessageEventHandler(this.HandleRadioTextClicked);
+			this.textFrequently.Clicked += new MessageEventHandler(this.HandleFilterTextClicked);
 			ToolTip.Default.SetToolTip(this.textFrequently, Res.Strings.TextPanel.Filter.Tooltip.Frequently);
 
 			this.textAll = new IconButton(this.textToolBar);
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Document.Containers
 			this.textAll.Name = "All";
 			this.textAll.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textAll.Dock = DockStyle.Left;
-			this.textAll.Clicked += new MessageEventHandler(this.HandleRadioTextClicked);
+			this.textAll.Clicked += new MessageEventHandler(this.HandleFilterTextClicked);
 			ToolTip.Default.SetToolTip(this.textAll, Res.Strings.TextPanel.Filter.Tooltip.All);
 
 			this.textParagraph = new IconButton(this.textToolBar);
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Document.Containers
 			this.textParagraph.Name = "Paragraph";
 			this.textParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textParagraph.Dock = DockStyle.Left;
-			this.textParagraph.Clicked += new MessageEventHandler(this.HandleRadioTextClicked);
+			this.textParagraph.Clicked += new MessageEventHandler(this.HandleFilterTextClicked);
 			ToolTip.Default.SetToolTip(this.textParagraph, Res.Strings.TextPanel.Filter.Tooltip.Paragraph);
 
 			this.textCharacter = new IconButton(this.textToolBar);
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Document.Containers
 			this.textCharacter.Name = "Character";
 			this.textCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textCharacter.Dock = DockStyle.Left;
-			this.textCharacter.Clicked += new MessageEventHandler(this.HandleRadioTextClicked);
+			this.textCharacter.Clicked += new MessageEventHandler(this.HandleFilterTextClicked);
 			ToolTip.Default.SetToolTip(this.textCharacter, Res.Strings.TextPanel.Filter.Tooltip.Character);
 
 			this.UpdateText();
@@ -498,6 +498,47 @@ namespace Epsitec.Common.Document.Containers
 			this.scrollable.Panel.ResumeLayout();
 			this.HandleOriginColorChanged(originColorLastPanel, true);
 			//?System.Diagnostics.Debug.WriteLine(string.Format("B: DebugAliveWidgetsCount = {0}", Widget.DebugAliveWidgetsCount));
+		}
+
+		// Indique si tous les panneaux pour le texte sont étendus.
+		protected bool IsTextPanelsExtended()
+		{
+			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			{
+				if ( widget is TextPanels.Abstract )
+				{
+					TextPanels.Abstract panel = widget as TextPanels.Abstract;
+					if ( !panel.IsExtendedSize )  return false;
+				}
+			}
+			return true;
+		}
+
+		// Indique si tous les panneaux pour le texte sont réduits.
+		protected bool IsTextPanelsReduced()
+		{
+			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			{
+				if ( widget is TextPanels.Abstract )
+				{
+					TextPanels.Abstract panel = widget as TextPanels.Abstract;
+					if ( panel.IsExtendedSize )  return false;
+				}
+			}
+			return true;
+		}
+
+		// Etend ou réduit tous les panneaux pour le texte.
+		protected void TextPanelsExtend(bool extend)
+		{
+			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			{
+				if ( widget is TextPanels.Abstract )
+				{
+					TextPanels.Abstract panel = widget as TextPanels.Abstract;
+					panel.IsExtendedSize = extend;
+				}
+			}
 		}
 
 		// Effectue la mise à jour des propriétés.
@@ -789,12 +830,27 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		private void HandleRadioTextClicked(object sender, MessageEventArgs e)
+		private void HandleFilterTextClicked(object sender, MessageEventArgs e)
 		{
 			IconButton button = sender as IconButton;
-			this.textFilter = button.Name;
-			this.UpdateText();
-			this.DoUpdateContent();
+
+			if ( this.textFilter == button.Name )
+			{
+				if ( this.IsTextPanelsReduced() )
+				{
+					this.TextPanelsExtend(true);
+				}
+				else
+				{
+					this.TextPanelsExtend(false);
+				}
+			}
+			else
+			{
+				this.textFilter = button.Name;
+				this.UpdateText();
+				this.DoUpdateContent();
+			}
 		}
 
 
