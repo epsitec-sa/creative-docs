@@ -201,7 +201,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
-			bool value = this.buttonKeepNext.ActiveState == ActiveState.Yes;
+			bool value = (this.buttonKeepNext.ActiveState == ActiveState.No);
 			
 			if ( this.document.ParagraphWrapper.Defined.KeepWithNextParagraph != value ||
 				 this.document.ParagraphWrapper.Defined.IsKeepWithNextParagraphDefined == false )
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
-			bool value = this.buttonKeepPrev.ActiveState == ActiveState.Yes;
+			bool value = (this.buttonKeepPrev.ActiveState == ActiveState.No);
 			
 			if ( this.document.ParagraphWrapper.Defined.KeepWithPreviousParagraph != value ||
 				 this.document.ParagraphWrapper.Defined.IsKeepWithPreviousParagraphDefined == false )
