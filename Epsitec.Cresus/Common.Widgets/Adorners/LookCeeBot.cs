@@ -1235,7 +1235,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											Drawing.Rectangle rect,
 											WidgetState state,
 											Direction dir,
-											MenuType type,
+											MenuOrientation type,
 											MenuItemType itemType)
 		{
 			if ( itemType != MenuItemType.Default )
@@ -1257,13 +1257,13 @@ namespace Epsitec.Common.Widgets.Adorners
 											TextLayout text,
 											WidgetState state,
 											Direction dir,
-											MenuType type,
+											MenuOrientation type,
 											MenuItemType itemType)
 		{
 			if ( text == null )  return;
 			state &= ~WidgetState.Selected;
 			state &= ~WidgetState.Focused;
-			PaintTextStyle style = ( type == MenuType.Horizontal ) ? PaintTextStyle.HMenu : PaintTextStyle.VMenu;
+			PaintTextStyle style = ( type == MenuOrientation.Horizontal ) ? PaintTextStyle.HMenu : PaintTextStyle.VMenu;
 			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
 		}
 
@@ -1272,7 +1272,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											Drawing.Rectangle rect,
 											WidgetState state,
 											Direction dir,
-											MenuType type,
+											MenuOrientation type,
 											MenuItemType itemType)
 		{
 		}

@@ -110,6 +110,24 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		public void ClearValueBase(Property property)
+		{
+			object old_value = this.GetValue (property);
+			
+			this.ClearLocalValue (property);
+			
+			object new_value = this.GetValue (property);
+			
+			if (old_value == new_value)
+			{
+				//	C'est exactement la même valeur -- on ne signale donc rien ici.
+			}
+			else if ((old_value == null) || (! old_value.Equals (new_value)))
+			{
+				this.InvalidateProperty (property, old_value, new_value);
+			}
+		}
+		
 		
 		public object GetLocalValue(Property property)
 		{

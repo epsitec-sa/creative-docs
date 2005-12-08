@@ -631,8 +631,15 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Rectangle				WindowBounds
 		{
-			get { return this.window.WindowBounds; }
-			set { this.window.WindowBounds = value; }
+			get
+			{
+				return this.window.WindowBounds;
+			}
+			set
+			{
+				this.window_location_set = true;
+				this.window.WindowBounds = value;
+			}
 		}
 		
 		public Drawing.Image					Icon
@@ -782,24 +789,31 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Rectangle				PlatformBounds
 		{
-			get { return new Drawing.Rectangle (this.window.Bounds); }
+			get
+			{
+				return new Drawing.Rectangle (this.window.Bounds);
+			}
 		}
 		
 		public Drawing.Point					PlatformLocation
 		{
-			get { return new Drawing.Point (this.window.Location); }
-			set { this.window.Location = new System.Drawing.Point ((int)(value.X + 0.5), (int)(value.Y + 0.5)); }
-		}
-		
-		public Drawing.Size						PlatformSize
-		{
-			get { return new Drawing.Size (this.window.Size); }
-			set { this.window.Size = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5)); }
+			get
+			{
+				return new Drawing.Point (this.window.Location);
+			}
+			set
+			{
+				this.window_location_set = true;
+				this.window.Location = new System.Drawing.Point ((int)(value.X + 0.5), (int)(value.Y + 0.5));
+			}
 		}
 		
 		internal Platform.Window				PlatformWindow
 		{
-			get { return this.window; }
+			get
+			{
+				return this.window;
+			}
 		}
 		
 		public object							PlatformWindowObject
@@ -813,14 +827,47 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Point					WindowLocation
 		{
-			get { return this.window.WindowLocation; }
-			set { this.window.WindowLocation = value; }
+			get
+			{
+				return this.window.WindowLocation;
+			}
+			set
+			{
+				this.window_location_set = true;
+				this.window.WindowLocation = value;
+			}
 		}
 		
 		public Drawing.Size						WindowSize
 		{
-			get { return this.window.WindowSize; }
-			set { this.window.WindowSize = value; }
+			get
+			{
+				return this.window.WindowSize;
+			}
+			set
+			{
+				if (this.window_location_set == false)
+				{
+					//	L'utilisateur n'a jamais positionné sa fenêtre et le système
+					//	dans son immense bonté nous a proposé une origine. Si nous
+					//	changeons sa taille avec notre système de coordonnées, le
+					//	sommet ne sera plus là où l'OS aurait voulu qu'il soit. Il
+					//	faut donc repositionner en même temps que l'on redimensionne
+					//	la fenêtre :
+					
+					Drawing.Rectangle bounds = this.WindowBounds;
+					
+					bounds.Bottom = bounds.Top - value.Height;
+					bounds.Width  = value.Width;
+					
+					this.WindowBounds        = bounds;
+					this.window_location_set = false;
+				}
+				else
+				{
+					this.window.WindowSize = value;
+				}
+			}
 		}
 		
 		public Drawing.Rectangle				WindowPlacementNormalBounds
@@ -836,9 +883,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle ("Size")]	public Drawing.Size	ClientSize
+		public Drawing.Size						ClientSize
 		{
-			get { return new Drawing.Size (this.window.ClientSize); }
+			get
+			{
+				return new Drawing.Size (this.window.ClientSize);
+			}
 			set
 			{
 				if (this.window != null)
@@ -846,7 +896,7 @@ namespace Epsitec.Common.Widgets
 					Drawing.Size window_size = this.window.WindowSize;
 					Drawing.Size client_size = this.ClientSize;
 					
-					this.window.WindowSize = new Drawing.Size (value.Width - client_size.Width + window_size.Width, value.Height - client_size.Height + window_size.Height);
+					this.WindowSize = new Drawing.Size (value.Width - client_size.Width + window_size.Width, value.Height - client_size.Height + window_size.Height);
 				}
 			}
 		}
@@ -2100,6 +2150,7 @@ namespace Epsitec.Common.Widgets
 		private WindowRoot						root;
 		private bool							window_is_visible;
 		private bool							window_is_focused;
+		private bool							window_location_set;
 		
 		private int								show_count;
 		private Widget							last_in_widget;

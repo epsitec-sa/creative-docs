@@ -7,13 +7,14 @@ using Epsitec.Common.Widgets.Helpers;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// Le MenuType détermine la disposition d'un menu.
+	/// Le MenuOrientation détermine la disposition d'un menu.
 	/// </summary>
-	public enum MenuType
+	public enum MenuOrientation
 	{
-		Invalid,
-		Vertical,
-		Horizontal
+		Undefined			= 0,
+		
+		Vertical			= 1,
+		Horizontal			= 2
 	}
 	
 	
@@ -103,11 +104,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public MenuType							MenuType
+		public MenuOrientation					MenuOrientation
 		{
 			get
 			{
-				return (MenuType) this.GetValue (MenuItem.MenuTypeProperty);
+				return (MenuOrientation) this.GetValue (MenuItem.MenuOrientationProperty);
 			}
 		}
 		
@@ -120,6 +121,11 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
+				if (this.Text == "Aide")
+				{
+					System.Diagnostics.Debug.WriteLine ("Setting ItemType to " + value + " on 'Aide' item");
+				}
+				
 				this.SetValue (MenuItem.ItemTypeProperty, value);
 			}
 		}
@@ -237,9 +243,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal void DefineMenuType(MenuType value)
+		internal void DefineMenuOrientation(MenuOrientation value)
 		{
-			this.SetValue (MenuItem.MenuTypeProperty, value);
+			this.SetValue (MenuItem.MenuOrientationProperty, value);
 		}
 		
 		
@@ -468,13 +474,13 @@ namespace Epsitec.Common.Widgets
 			{
 				iType = MenuItemType.Default;
 			}
-			adorner.PaintMenuItemBackground(graphics, rect, state, Direction.Up, this.MenuType, iType);
+			adorner.PaintMenuItemBackground(graphics, rect, state, Direction.Up, this.MenuOrientation, iType);
 
-			if ( this.text_only || this.MenuType == MenuType.Horizontal )
+			if ( this.text_only || this.MenuOrientation == MenuOrientation.Horizontal )
 			{
 				pos.X = (rect.Width-this.mainTextSize.Width)/2;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.MenuType, iType);
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.MenuOrientation, iType);
 			}
 			else if ( this.IsSeparator )
 			{
@@ -528,16 +534,16 @@ namespace Epsitec.Common.Widgets
 						this.icon.Text = icon;
 					}
 					
-					adorner.PaintMenuItemTextLayout(graphics, pos, this.icon, state, Direction.Up, this.MenuType, iType);
+					adorner.PaintMenuItemTextLayout(graphics, pos, this.icon, state, Direction.Up, this.MenuOrientation, iType);
 				}
 
 				pos.X = MenuItem.MarginItem*2+this.icon_size.Width;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.MenuType, iType);
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.MenuOrientation, iType);
 
 				pos.X = rect.Width-this.submenu_mark_width-this.shortcutSize.Width+MenuItem.MarginItem;
 				pos.Y = (rect.Height-this.shortcutSize.Height)/2;
-				adorner.PaintMenuItemTextLayout(graphics, pos, this.shortcut, state, Direction.Up, this.MenuType, iType);
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.shortcut, state, Direction.Up, this.MenuOrientation, iType);
 
 				if ( this.Submenu != null )  // triangle ">" ?
 				{
@@ -586,9 +592,9 @@ namespace Epsitec.Common.Widgets
 		
 		public static Behaviors.MenuBehavior GetMenuBehavior(Widget widget)
 		{
-			//	Trouve le "menu" associé avec un widget.
+			//	Trouve le "menu" associé à un widget.
 			
-			Widget root = MenuItem.GetMenuRoot (widget);
+			Widget root   = MenuItem.GetMenuRoot (widget);
 			Widget parent = MenuItem.GetParentMenuItem (root);
 			
 			if (parent == null)
@@ -625,14 +631,19 @@ namespace Epsitec.Common.Widgets
 			
 			if (window == null)
 			{
-				window = new MenuWindow (MenuItem.GetMenuBehavior (widget), MenuItem.GetParentMenuItem (widget));
+				MenuWindow menu = new MenuWindow (MenuItem.GetMenuBehavior (widget), MenuItem.GetParentMenuItem (widget));
 				
 				Drawing.Size size = widget.GetBestFitSize ();
 				
 				widget.Dock = DockStyle.Fill;
 				
-				window.Root.Size = size;
-				window.Root.Children.Add (widget);
+				menu.Root.Size = size;
+				menu.Root.Children.Add (widget);
+				menu.MenuType = MenuItem.GetParentMenuItem (widget) == null ? MenuType.Undefined : MenuType.Submenu;
+				
+				System.Diagnostics.Debug.WriteLine ("Menu defaulting to MenuType." + menu.MenuType);
+				
+				window = menu;
 			}
 			
 			return window;
@@ -720,7 +731,7 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (old_submenu == MenuItem.GetMenuRoot (old_submenu));
 				System.Diagnostics.Debug.Assert (MenuItem.GetParentMenuItem (old_submenu) == that);
 				
-				old_submenu.SetValue (MenuItem.ParentMenuItemProperty, null);
+				old_submenu.ClearValueBase (MenuItem.ParentMenuItemProperty);
 			}
 			
 			if (new_submenu != null)
@@ -734,7 +745,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly Property			SubmenuProperty			= Property.Register ("Submenu", typeof (Widget), typeof (MenuItem), new PropertyMetadata (null, new PropertyInvalidatedCallback (MenuItem.NotifySubmenuChanged)));
 		public static readonly Property			ItemTypeProperty		= Property.Register ("ItemType", typeof (MenuItemType), typeof (MenuItem), new VisualPropertyMetadata (MenuItemType.Default, VisualPropertyFlags.AffectsDisplay));
-		public static readonly Property			MenuTypeProperty		= Property.Register ("MenuType", typeof (MenuType), typeof (MenuItem), new VisualPropertyMetadata (MenuType.Invalid, VisualPropertyFlags.AffectsDisplay));
+		public static readonly Property			MenuOrientationProperty	= Property.Register ("MenuOrientation", typeof (MenuOrientation), typeof (MenuItem), new VisualPropertyMetadata (MenuOrientation.Undefined, VisualPropertyFlags.AffectsDisplay));
 		
 		public static readonly Property			MenuBehaviorProperty	= Property.RegisterAttached ("MenuBehavior", typeof (Behaviors.MenuBehavior), typeof (MenuItem));
 		public static readonly Property			ParentMenuItemProperty	= Property.RegisterAttached ("ParentMenuItem", typeof (MenuItem), typeof (MenuItem));

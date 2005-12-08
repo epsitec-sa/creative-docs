@@ -19,11 +19,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override MenuType				MenuType
+		public override MenuOrientation			MenuOrientation
 		{
 			get
 			{
-				return MenuType.Vertical;
+				return MenuOrientation.Vertical;
 			}
 		}
 	}

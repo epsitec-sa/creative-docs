@@ -39,7 +39,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public abstract MenuType				MenuType
+		public abstract MenuOrientation			MenuOrientation
 		{
 			get;
 		}
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.MenuType == MenuType.Horizontal;
+				return this.MenuOrientation == MenuOrientation.Horizontal;
 			}
 		}
 
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.MenuType == MenuType.Vertical;
+				return this.MenuOrientation == MenuOrientation.Vertical;
 			}
 		}
 
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Widgets
 			window.Owner          = owner;
 			window.WindowLocation = pos;
 			
-			this.Behavior.OpenSubmenu (window, Behaviors.MenuBehavior.Animate.Yes);
+			this.Behavior.OpenPopup (window, Behaviors.MenuBehavior.Animate.Yes);
 			
 			this.Focus ();
 		}
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Widgets
 			window.WindowLocation = pos;
 			window.ParentWidget   = parent;
 			
-			this.Behavior.OpenSubmenu (window, Behaviors.MenuBehavior.Animate.Yes);
+			this.Behavior.OpenPopup (window, Behaviors.MenuBehavior.Animate.Yes);
 			
 			this.Focus ();
 		}
@@ -399,18 +399,18 @@ namespace Epsitec.Common.Widgets
 			MenuItem item = widget as MenuItem;
 			
 			item.Size = item.GetBestFitSize ();
-			item.DefineMenuType (this.MenuType);
+			item.DefineMenuOrientation (this.MenuOrientation);
 			
 			this.Children.Add (item);
 			
-			switch (this.MenuType)
+			switch (this.MenuOrientation)
 			{
-				case MenuType.Horizontal:
+				case MenuOrientation.Horizontal:
 					item.Dock        = DockStyle.Left;
 					item.DockMargins = new Drawing.Margins (2, 0, 2, 2);
 					break;
 				
-				case MenuType.Vertical:
+				case MenuOrientation.Vertical:
 					item.Dock        = DockStyle.Top;
 					item.DockMargins = Drawing.Margins.Zero;
 					break;
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Widgets
 		{
 			MenuItem item = widget as MenuItem;
 			
-			item.DefineMenuType (MenuType.Invalid);
+			item.DefineMenuOrientation (MenuOrientation.Undefined);
 			
 			this.Children.Remove (item);
 		}

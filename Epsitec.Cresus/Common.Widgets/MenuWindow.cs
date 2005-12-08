@@ -5,6 +5,14 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
+	public enum MenuType
+	{
+		Undefined		= 0,
+		
+		Popup			= 1,
+		Submenu			= 2,
+	}
+	
 	/// <summary>
 	/// La classe MenuWindow représente une fenêtre utilisée spécifiquement
 	/// pour contenir des menus (ou des palettes de type pop-up).
@@ -55,6 +63,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public MenuType							MenuType
+		{
+			get
+			{
+				return this.menu_type;
+			}
+			set
+			{
+				this.menu_type = value;
+			}
+		}
 		
 		public new void Show()
 		{
@@ -154,5 +173,6 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property ParentWidgetProperty	= Property.Register ("ParentWidget", typeof (Widget), typeof (MenuWindow), new PropertyMetadata (null, new SetValueOverrideCallback (MenuWindow.SetParentWidgetValue)));
 		
 		private Behaviors.MenuBehavior			behavior;
+		private MenuType						menu_type;
 	}
 }
