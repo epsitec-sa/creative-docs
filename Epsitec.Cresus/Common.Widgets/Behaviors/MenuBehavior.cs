@@ -441,8 +441,16 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void NotifyEnteredItem(MenuItem item)
 		{
-			this.keyboard_menu_item   = item;
-			this.keyboard_menu_window = item.Window;
+			if (item == null)
+			{
+				return;
+			}
+			
+			if (this.keyboard_menu_item != item)
+			{
+				this.keyboard_menu_item   = item;
+				this.keyboard_menu_window = item.Window;
+			}
 			
 			if (this.is_open == false)
 			{

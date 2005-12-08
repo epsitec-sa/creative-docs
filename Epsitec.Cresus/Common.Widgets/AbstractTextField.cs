@@ -1017,6 +1017,8 @@ namespace Epsitec.Common.Widgets
 					this.Text = "";
 				}
 			}
+			
+			this.Invalidate ();
 		}
 
 		protected virtual void HandleDefocused()
@@ -1056,6 +1058,8 @@ namespace Epsitec.Common.Widgets
 						throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
 				}
 			}
+			
+			this.Invalidate ();
 		}
 
 		
@@ -1408,7 +1412,7 @@ namespace Epsitec.Common.Widgets
 					if ( areas.Length == 0 )
 					{
 						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
-						visibleCursor = TextField.showCursor && this.Window.IsFocused;
+						visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
 					}
 					else
 					{
