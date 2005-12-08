@@ -1375,7 +1375,7 @@ namespace Epsitec.Common.Widgets
 			rClip = this.MapClientToRoot(rClip);
 			graphics.SetClippingRectangle(rClip);
 			
-			if ( this.IsFocused || this.contextMenu != null )
+			if ( this.IsKeyboardFocused || this.contextMenu != null )
 			{
 				bool visibleCursor = false;
 				

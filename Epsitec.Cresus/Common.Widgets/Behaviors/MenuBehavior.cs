@@ -1270,6 +1270,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			Drawing.Point mouse = window.MapWindowToScreen (message.Cursor);
 			
+			System.Diagnostics.Debug.WriteLine ("Mouse at " + mouse.ToString ());
+			
 			MenuBehavior.last_mouse_pos = mouse;
 			
 			//	Détermine dans quelle fenêtre appartenant à un menu la souris se
@@ -1298,29 +1300,30 @@ namespace Epsitec.Common.Widgets.Behaviors
 			bool mouse_in_menu   = (item != null) || (menu != null);
 			bool swallow_message = (MenuBehavior.menu_list.Count > 0) && (message.NonClient == false) && !mouse_in_menu;
 			
+			
+			//	Pour résumer : un clic hors du menu ferme le menu; un clic dans
+			//	le menu est traité par le menu item lui-même. Un relâchement de
+			//	bouton dans un menu item est considéré comme un clic.
+			
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
-					if ((menu == null) &&
-						(root == null))
+					if (!mouse_in_menu)
 					{
 						//	L'utilisateur a cliqué hors de tout menu actuellement
-						//	ouvert.
+						//	ouvert. Si un menu est actuellement ouvert, il faut le
+						//	refermer :
 						
 						if (MenuBehavior.menu_list.Count > 0)
 						{
-							//	Referme le(s) menu(s) et mange l'événement si cela
-							//	est nécessaire.
-							
 							MenuBehavior.RejectAll ();
 						}
 					}
-					else if ((menu != null) &&
-						/**/ (root == null))
+					else if (mouse_in_menu && (root == null))
 					{
 						//	L'utilisateur a cliqué dans une fenêtre appartenant à
 						//	un menu (autre que celui de la racine); on va changer
-						//	le focus si un item a été cliqué :
+						//	le focus si un item "riche" a été cliqué :
 						
 						MenuItemContainer container = item as MenuItemContainer;
 						
@@ -1340,10 +1343,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 							MenuBehavior.RejectAll ();
 							swallow_message = true;
 						}
-						else
-						{
-							swallow_message = false;
-						}
 					}
 					break;
 				
@@ -1353,11 +1352,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 						if ((item is MenuItemContainer) ||
 							(item is MenuSeparator))
 						{
-							//	Rien à faire...
+							//	Rien à faire (on transmet le message plus loin) si
+							//	la souris se trouve dans un séparateur ou dans un
+							//	item "riche".
 						}
 						else
 						{
-							//	Simule une pression du widget en question et consomme
+							//	Sinon, simule une pression du MenuItem et consomme
 							//	l'événement.
 							
 							item.SimulatePressed ();
@@ -1367,30 +1368,22 @@ namespace Epsitec.Common.Widgets.Behaviors
 					}
 					break;
 				
-				case MessageType.MouseLeave:
-					break;
-				
 				case MessageType.MouseEnter:
+				case MessageType.MouseLeave:
 				case MessageType.MouseMove:
-					if (MenuBehavior.keyboard_navigation_active)
+					if ((MenuBehavior.keyboard_navigation_active) &&
+						(Drawing.Point.Distance (mouse, MenuBehavior.keyboard_navigation_mouse_pos) < 4))
 					{
 						//	En cas de navigation au clavier, on ne tient pas compte
-						//	des petits déplacements de souris :
+						//	des petits déplacements de souris.
 						
-						if (Drawing.Point.Distance (mouse, MenuBehavior.keyboard_navigation_mouse_pos) < 4)
-						{
-							return;
-						}
-					}
-					
-					if ((menu != null) ||
-						(root != null))
-					{
-						MenuBehavior.NotifyCursorInItem (item);
+						swallow_message = true;
 					}
 					else
 					{
-						MenuBehavior.NotifyCursorInItem (null);
+						//	...sinon, on traite l'éventuel changement d'item actif :
+						
+						MenuBehavior.NotifyCursorInItem (item);
 					}
 					break;
 			}
@@ -1482,6 +1475,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			MenuBehavior.keyboard_navigation_active    = true;
 			MenuBehavior.keyboard_navigation_mouse_pos = MenuBehavior.last_mouse_pos;
+			
+			System.Diagnostics.Debug.WriteLine ("Keyboard active, mouse at " + MenuBehavior.keyboard_navigation_mouse_pos.ToString ());
 		}
 		
 		private static void HandleApplicationDeactivated(object sender)
