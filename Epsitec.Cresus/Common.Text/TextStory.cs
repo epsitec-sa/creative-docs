@@ -1197,7 +1197,17 @@ namespace Epsitec.Common.Text
 				int para_start;
 				int para_end;
 				
-				Internal.Navigator.GetParagraphPositions (this, word_start, out para_start, out para_end);
+				Internal.Navigator.GetExtendedParagraphPositions (this, word_start, out para_start, out para_end);
+				
+#if DEBUG
+				int para_start_1;
+				int para_end_1;
+				
+				Internal.Navigator.GetParagraphPositions (this, word_start, out para_start_1, out para_end_1);
+				
+				System.Diagnostics.Debug.Assert (para_start <= para_start_1);
+				System.Diagnostics.Debug.Assert (para_end == para_end_1);
+#endif
 				
 				if (word_end > para_end)
 				{
@@ -1208,8 +1218,6 @@ namespace Epsitec.Common.Text
 					
 					para_end = para_end_2;
 				}
-				
-				//	TODO: étendre au paragraphe précédent (et précédents si chaînés)
 				
 				if (para_start < this.text_change_mark_start)
 				{

@@ -259,6 +259,29 @@ namespace Epsitec.Common.Text.Internal
 			story.RecycleCursor (temp);
 		}
 		
+		public static void GetExtendedParagraphPositions(TextStory story, int pos, out int start, out int end)
+		{
+			ICursor temp = new Cursors.TempCursor ();
+			
+			story.NewCursor (temp);
+			story.SetCursorPosition (temp, pos);
+			
+			int begin;
+			
+			//	'start' est le début du groupe de paragraphes liés, en prenant
+			//	toujours un paragraphe de plus.
+			//	'begin' est le début du paragraphe actuel.
+			
+			start = pos + Navigator.GetParagraphGroupStartOffset (story, temp, 1);
+			begin = pos + Navigator.GetParagraphStartOffset (story, temp);
+			
+			story.SetCursorPosition (temp, begin);
+			
+			end   = begin + Navigator.GetParagraphEndLength (story, temp);
+			
+			story.RecycleCursor (temp);
+		}
+		
 		public static int GetParagraphStartOffset(TextStory story, ICursor cursor)
 		{
 			//	Retourne l'offset au début du paragraphe. L'offset est négatif
@@ -272,6 +295,88 @@ namespace Epsitec.Common.Text.Internal
 			
 			return (offset == -1) ? -distance : -offset;
 		}
+		
+		public static int GetParagraphGroupStartOffset(TextStory story, ICursor cursor, int skip)
+		{
+			//	Retourne l'offset au début du groupe de paragraphes, en sautant
+			//	le nombre de paragraphes indiqué et en suivant les paragraphes
+			//	liés (Keep).
+			
+			//	Cf. GetParagraphStartOffset pour les détails.
+			
+			TextStory.CodeCallback callback = new TextStory.CodeCallback (new ParagraphGroupStartFinder (story.TextContext, skip).Check);
+			
+			int distance = story.GetCursorPosition (cursor);
+			int offset   = story.TextTable.TraverseText (cursor.CursorId, - distance, callback);
+			
+			return (offset == -1) ? -distance : -offset;
+		}
+		
+		#region ParagraphGroupStartFinder Class
+		private class ParagraphGroupStartFinder
+		{
+			public ParagraphGroupStartFinder(TextContext context, int skip)
+			{
+				this.context   = context;
+				this.skip      = skip;
+				this.last_code = 0;
+			}
+			
+			
+			public bool Check(ulong code)
+			{
+				ulong last = this.last_code;
+				
+				this.last_code = code;
+				
+				if (Navigator.IsParagraphSeparator (code))
+				{
+					if (this.skip > 0)
+					{
+						this.skip -= 1;
+						return false;
+					}
+					
+					//	Vérifie si le dernier code rencontré correspond à un paragraphe
+					//	lié avec le précédent :
+					
+					Properties.KeepProperty keep;
+					
+					this.context.GetKeep (last, out keep);
+					
+					if ((keep != null) &&
+						(keep.KeepWithPreviousParagraph == Properties.ThreeState.True))
+					{
+						//	Paragraphe actuel lié au précédent : on doit encore
+						//	sauter un paragraphe de plus pour arriver au début
+						//	du groupe.
+						
+						return false;
+					}
+					
+					this.context.GetKeep (code, out keep);
+					
+					if ((keep != null) &&
+						(keep.KeepWithNextParagraph == Properties.ThreeState.True))
+					{
+						//	Paragraphe précédent lié au courant : continue la
+						//	recherche.
+						
+						return false;
+					}
+					
+					return true;
+				}
+				
+				return false;
+			}
+			
+			
+			private int							skip;
+			private TextContext					context;
+			private ulong						last_code;
+		}
+		#endregion
 		
 		public static int GetParagraphEndLength(TextStory story, ICursor cursor)
 		{
