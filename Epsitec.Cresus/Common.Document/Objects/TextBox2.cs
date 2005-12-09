@@ -233,6 +233,13 @@ namespace Epsitec.Common.Document.Objects
 			this.NotifyAreaFlow();
 		}
 
+		// Effectue le déplacement de tout l'objet.
+		public override void MoveAllProcess(Point move)
+		{
+			base.MoveAllProcess (move);
+			this.UpdateGeometry();
+		}
+
 		// Déplace globalement l'objet.
 		public override void MoveGlobalProcess(Selector selector)
 		{
@@ -1284,10 +1291,12 @@ namespace Epsitec.Common.Document.Objects
 			double height = Point.Distance(p1, p3);
 			
 			if ( this.textFrame.Width != width ||
-				 this.textFrame.Height != height )
+				 this.textFrame.Height != height ||
+				 this.textFrame.OriginY != p4.Y )
 			{
-				this.textFrame.Width  = width;
-				this.textFrame.Height = height;
+				this.textFrame.OriginY = p4.Y;
+				this.textFrame.Width   = width;
+				this.textFrame.Height  = height;
 				
 				this.textFlow.TextStory.NotifyTextChanged();
 			}

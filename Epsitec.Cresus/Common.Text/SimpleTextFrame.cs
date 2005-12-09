@@ -57,6 +57,36 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public double							OriginX
+		{
+			get
+			{
+				return this.origin_x;
+			}
+			set
+			{
+				if (this.origin_x != value)
+				{
+					this.origin_x = value;
+				}
+			}
+		}
+		
+		public double							OriginY
+		{
+			get
+			{
+				return this.origin_y;
+			}
+			set
+			{
+				if (this.origin_y != value)
+				{
+					this.origin_y = value;
+				}
+			}
+		}
+		
 		public double							Width
 		{
 			get
@@ -163,7 +193,9 @@ namespace Epsitec.Common.Text
 				//	et vont vers des valeurs négatives, plus on descend. L'arrondi doit
 				//	donc toujours se faire vers une valeur plus basse :
 				
-				oy = System.Math.Floor ((oy - this.grid_offset + 0.5) / this.grid_step) * this.grid_step + this.grid_offset;
+				oy += this.origin_y;
+				oy  = System.Math.Floor ((oy - this.grid_offset + 0.5) / this.grid_step) * this.grid_step + this.grid_offset;
+				oy -= this.origin_y;
 				
 				y_top  = oy + ascender + filler / 2;
 				y_bot  = y_top - line_dy;
@@ -197,6 +229,7 @@ namespace Epsitec.Common.Text
 		
 		
 		private double							x, y;
+		private double							origin_x, origin_y;
 		private double							width, height;
 		private int								page_number;
 		private double							grid_step;
