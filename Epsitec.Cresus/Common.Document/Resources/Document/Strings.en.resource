@@ -493,31 +493,31 @@
 	<data name="TextPanel.Leading.Tooltip.GridOffset">@@Décalage vertical des lignes magnétiques</data>
 	<data name="TextPanel.Leading.Tooltip.Mode">@@Forcer l'interligne sur les lignes magnétiques</data>
 
-	<data name="TextPanel.Margins.Title">@@Retraits</data>
+	<data name="TextPanel.Margins.Title">Padding</data>
 	<data name="TextPanel.Margins.Short.LeftFirst">F</data>
 	<data name="TextPanel.Margins.Short.LeftBody">L</data>
 	<data name="TextPanel.Margins.Short.Right">R</data>
-	<data name="TextPanel.Margins.Long.LeftFirst">@@Marge première ligne</data>
-	<data name="TextPanel.Margins.Long.LeftBody">@@Marge gauche</data>
-	<data name="TextPanel.Margins.Long.Right">@@Marge droite</data>
+	<data name="TextPanel.Margins.Long.LeftFirst">First line</data>
+	<data name="TextPanel.Margins.Long.LeftBody">Left indent</data>
+	<data name="TextPanel.Margins.Long.Right">Right indent</data>
 
 	<data name="TextPanel.Spaces.Title">Spacing</data>
 	<data name="TextPanel.Spaces.Short.Before">B</data>
 	<data name="TextPanel.Spaces.Short.After">A</data>
-	<data name="TextPanel.Spaces.Long.Before">@@Espacement avant</data>
-	<data name="TextPanel.Spaces.Long.After">@@Espacement après</data>
-	<data name="TextPanel.Spaces.Tooltip.Before">@@Espacement avant le paragraphe</data>
-	<data name="TextPanel.Spaces.Tooltip.After">@@Espacement après le paragraphe</data>
+	<data name="TextPanel.Spaces.Long.Before">Space before</data>
+	<data name="TextPanel.Spaces.Long.After">Space after</data>
+	<data name="TextPanel.Spaces.Tooltip.Before">Additional space before paragraph</data>
+	<data name="TextPanel.Spaces.Tooltip.After">Additional space before paragraph</data>
 
-	<data name="TextPanel.Keep.Title">@@Enchaînements</data>
-	<data name="TextPanel.Keep.Tooltip.KeepNext">@@Lié au paragraphe suivant</data>
-	<data name="TextPanel.Keep.Tooltip.KeepPrev">@@Lié au paragraphe précédent</data>
+	<data name="TextPanel.Keep.Title">Keep Options</data>
+	<data name="TextPanel.Keep.Tooltip.KeepNext">Keep with next paragraph</data>
+	<data name="TextPanel.Keep.Tooltip.KeepPrev">Keep with previous paragraph</data>
 	<data name="TextPanel.Keep.Short.KeepStart">S</data>
 	<data name="TextPanel.Keep.Short.KeepEnd">E</data>
-	<data name="TextPanel.Keep.Long.KeepStart">@@Lignes solidaires au début</data>
-	<data name="TextPanel.Keep.Long.KeepEnd">@@Lignes solidaires à la fin</data>
-	<data name="TextPanel.Keep.Tooltip.KeepStart">@@Nombre de lignes solidaires au début du paragraphe</data>
-	<data name="TextPanel.Keep.Tooltip.KeepEnd">@@Nombre de lignes solidaires à la fin du paragraphe</data>
+	<data name="TextPanel.Keep.Long.KeepStart">Keep start lines</data>
+	<data name="TextPanel.Keep.Long.KeepEnd">Keep end lines</data>
+	<data name="TextPanel.Keep.Tooltip.KeepStart">Lines to keep together at the start of a paragraph</data>
+	<data name="TextPanel.Keep.Tooltip.KeepEnd">Lines to keep together at the end of a paragraph</data>
 
 	<data name="TextPanel.Align.Title">Vertical alignment</data>
 
@@ -527,11 +527,11 @@
 	<data name="TextPanel.Font.Tooltip.Features">OpenType features</data>
 	<data name="TextPanel.Font.Tooltip.Size">Font size</data>
 
-	<data name="TextPanel.Strike.Title">Underlined, strikeout, usw.</data>
+	<data name="TextPanel.Strike.Title">Underline and strike out</data>
 
-	<data name="TextPanel.XScript.Title">Substript and superscript</data>
+	<data name="TextPanel.XScript.Title">Subscript and superscript</data>
 
-	<data name="TextPanel.Box.Title">@@Cadres</data>
+	<data name="TextPanel.Box.Title">Frames</data>
 
 	<data name="TextPanel.Language.Title">Language</data>
 	<data name="TextPanel.Language.Tooltip.Language">Language</data>

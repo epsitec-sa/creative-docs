@@ -187,7 +187,14 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 				else if ( this.document.TextWrapper.Defined.IsXscriptDefined )
 				{
-					this.document.TextWrapper.Defined.ClearXscript();
+					if ( this.document.TextWrapper.Defined.Xscript.Offset < 0 )
+					{
+						this.document.TextWrapper.Defined.ClearXscript();
+					}
+					else
+					{
+						this.FillSubscriptDefinition(xscript);
+					}
 				}
 				else
 				{
@@ -225,7 +232,14 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 				else if ( this.document.TextWrapper.Defined.IsXscriptDefined )
 				{
-					this.document.TextWrapper.Defined.ClearXscript();
+					if ( this.document.TextWrapper.Defined.Xscript.Offset > 0 )
+					{
+						this.document.TextWrapper.Defined.ClearXscript();
+					}
+					else
+					{
+						this.FillSuperscriptDefinition(xscript);
+					}
 				}
 				else
 				{
