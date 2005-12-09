@@ -55,7 +55,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				radio2.ActiveStateChanged += new EventHandler(this.HandleRadioSettingsChanged);
 				radio2.Index = 2;
 
-				// Crée les onglest "global".
+				// Crée les onglets "global".
 				TabBook bookGlobal = new TabBook(this.window.Root);
 				bookGlobal.Name = "BookGlobal";
 				bookGlobal.Arrows = TabBookArrows.Stretch;
@@ -298,6 +298,36 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.editor.CurrentDocument.Dialogs.BuildSettings(this.window);
 		}
 
+		// Montre une page donnée du dialogue.
+		public void ShowPage(string book, string tab)
+		{
+			this.ActiveBook(book);
+
+			this.ignoreChange = true;
+
+			RadioButton radio1 = this.window.Root.FindChild("RadioGlobal") as RadioButton;
+			if ( radio1 != null )
+			{
+				radio1.ActiveState = (book == "BookGlobal") ? ActiveState.Yes : ActiveState.No;
+			}
+
+			RadioButton radio2 = this.window.Root.FindChild("RadioDocument") as RadioButton;
+			if ( radio2 != null )
+			{
+				radio2.ActiveState = (book == "BookDocument") ? ActiveState.Yes : ActiveState.No;
+			}
+
+			this.ignoreChange = false;
+
+			TabBook tabBook = this.window.Root.FindChild(book) as TabBook;
+			if ( tabBook == null )  return;
+
+			TabPage tabPage = tabBook.FindChild(tab) as TabPage;
+			if ( tabPage == null )  return;
+
+			tabBook.ActivePage = tabPage;
+		}
+
 
 		// Crée un widget combo.
 		protected TextFieldCombo CreateCombo(Widget parent, string name, string label)
@@ -374,6 +404,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleRadioSettingsChanged(object sender)
 		{
+			if ( this.ignoreChange )  return;
+
 			RadioButton radio = sender as RadioButton;
 			
 			if ( radio == null )  return;

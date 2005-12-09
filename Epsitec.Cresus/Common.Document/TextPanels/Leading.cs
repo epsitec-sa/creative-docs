@@ -20,6 +20,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fieldLeading = this.CreateTextFieldLabel(Res.Strings.TextPanel.Leading.Tooltip.Leading, Res.Strings.TextPanel.Leading.Short.Leading, Res.Strings.TextPanel.Leading.Long.Leading, 0.0, 100.0, 1.0, false, new EventHandler(this.HandleLeadingChanged));
 			this.buttonAlign = this.CreateIconButton(Misc.Icon("ParaLeadingAlign"), Res.Strings.TextPanel.Leading.Tooltip.Mode, new MessageEventHandler(this.HandleButtonAlignClicked));
+			this.buttonSettings = this.CreateIconButton(Misc.Icon("Settings"), Res.Strings.Action.Settings, new MessageEventHandler(this.HandleButtonSettingsClicked), false);
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -83,6 +84,8 @@ namespace Epsitec.Common.Document.TextPanels
 			r.Offset(60+12, 0);
 			r.Width = 20;
 			this.buttonAlign.Bounds = r;
+			r.Offset(20+5, 0);
+			this.buttonSettings.Bounds = r;
 
 			r.Left = rect.Right-20;
 			r.Width = 20;
@@ -152,6 +155,11 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.Defined.AlignMode = mode;
 		}
 
+		private void HandleButtonSettingsClicked(object sender, MessageEventArgs e)
+		{
+			this.document.Notifier.NotifySettingsShowPage("BookDocument", "Grid");
+		}
+
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
@@ -167,6 +175,7 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		protected Widgets.TextFieldLabel	fieldLeading;
 		protected IconButton				buttonAlign;
+		protected IconButton				buttonSettings;
 		protected IconButton				buttonClear;
 	}
 }

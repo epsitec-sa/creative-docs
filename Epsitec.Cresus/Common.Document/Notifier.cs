@@ -11,6 +11,7 @@ namespace Epsitec.Common.Document
 	public delegate void RedrawEventHandler(Viewer viewer, Rectangle rect);
 	public delegate void TextRulerColorEventHandler(Common.Widgets.TextRuler ruler);
 	public delegate void RibbonEventHandler(string name);
+	public delegate void SettingsEventHandler(string book, string tab);
 
 	/// <summary>
 	/// Summary description for Notifier.
@@ -383,6 +384,12 @@ namespace Epsitec.Common.Document
 		public void NotifyRibbonCommand(string name)
 		{
 			this.OnRibbonCommand(name);
+		}
+
+		// Indique qu'il faut afficher une page du dialogue des commandes.
+		public void NotifySettingsShowPage(string book, string tab)
+		{
+			this.OnSettingsShowPage(book, tab);
 		}
 
 		
@@ -843,6 +850,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnSettingsShowPage(string book, string tab)
+		{
+			if ( this.SettingsShowPage != null )  // qq'un écoute ?
+			{
+				this.SettingsShowPage(book, tab);
+			}
+		}
+
 
 		public event SimpleEventHandler			DocumentChanged;
 		public event SimpleEventHandler			MouseChanged;
@@ -877,6 +892,7 @@ namespace Epsitec.Common.Document
 		public event TextRulerColorEventHandler	TextRulerColorClicked;
 		public event TextRulerColorEventHandler	TextRulerColorChanged;
 		public event RibbonEventHandler			RibbonCommand;
+		public event SettingsEventHandler		SettingsShowPage;
 
 		protected Document						document;
 		protected bool							enable = true;

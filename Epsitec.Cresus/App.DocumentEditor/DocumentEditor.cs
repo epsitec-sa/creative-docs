@@ -3798,6 +3798,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.TextRulerColorClicked  += new TextRulerColorEventHandler(this.HandleTextRulerColorClicked);
 			this.CurrentDocument.Notifier.TextRulerColorChanged  += new TextRulerColorEventHandler(this.HandleTextRulerColorChanged);
 			this.CurrentDocument.Notifier.RibbonCommand          += new RibbonEventHandler(this.HandleRibbonCommand);
+			this.CurrentDocument.Notifier.SettingsShowPage       += new SettingsEventHandler(this.HandleSettingsShowPage);
 		}
 
 		// Appelé par le document lorsque les informations sur le document ont changé.
@@ -4696,6 +4697,20 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			this.ActiveRibbon(ribbon);
+		}
+		
+		// Appelé par le document lorsqu'il faut afficher une page spécifique du dialoque des réglages.
+		private void HandleSettingsShowPage(string book, string tab)
+		{
+			this.dlgSplash.Hide();
+
+			if ( this.settingsState.ActiveState == ActiveState.No )
+			{
+				this.dlgSettings.Show();
+				this.settingsState.ActiveState = ActiveState.Yes;
+			}
+
+			this.dlgSettings.ShowPage(book, tab);
 		}
 		
 
