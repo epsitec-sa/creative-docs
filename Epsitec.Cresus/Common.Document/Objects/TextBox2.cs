@@ -44,8 +44,7 @@ namespace Epsitec.Common.Document.Objects
 				this.textFrame = new Text.SimpleTextFrame();
 			}
 
-			this.textFrame.GridStep   = this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
-			this.textFrame.GridOffset = this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
+			this.UpdateTextGrid(false);
 			
 			System.Diagnostics.Debug.Assert(this.textFlow != null);
 			
@@ -236,7 +235,7 @@ namespace Epsitec.Common.Document.Objects
 		// Effectue le déplacement de tout l'objet.
 		public override void MoveAllProcess(Point move)
 		{
-			base.MoveAllProcess (move);
+			base.MoveAllProcess(move);
 			this.UpdateGeometry();
 		}
 
@@ -1898,6 +1897,20 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.UpdateTextFrame();
 			this.UpdateTextLayout();
+		}
+
+		// Met à jour le pavé en fonction des lignes magnétiques.
+		public void UpdateTextGrid(bool notify)
+		{
+			this.textFrame.GridStep   = this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
+			this.textFrame.GridOffset = this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
+
+			if ( notify )
+			{
+				this.textFlow.TextStory.NotifyTextChanged();
+				this.SetDirtyBbox();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+			}
 		}
 
 		// Met à jour le texte suite à une modification du conteneur.

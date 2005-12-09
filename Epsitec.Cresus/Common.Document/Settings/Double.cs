@@ -181,26 +181,22 @@ namespace Epsitec.Common.Document.Settings
 
 				case "TextGridStep":
 					this.text = Res.Strings.TextPanel.Leading.Long.GridStep;
-					this.factorMinValue = 0.0;
-					this.factorMaxValue = 0.1;
-					this.factorResolution = 0.1;
-					this.factorStep = 1.0;
+					this.factorMinValue = 0.0001;  // 0.1mm
+					this.factorMaxValue = 0.1;  // 100mm
 					break;
 
 				case "TextGridSubdiv":
 					this.text = Res.Strings.TextPanel.Leading.Long.GridSubdiv;
-					this.factorMinValue = 0.0;
-					this.factorMaxValue = 0.1;
-					this.factorResolution = 0.1;
-					this.factorStep = 1.0;
+					this.integer = true;
+					this.factorMinValue = 1.0;
+					this.factorMaxValue = 10.0;
 					break;
 
 				case "TextGridOffset":
 					this.text = Res.Strings.TextPanel.Leading.Long.GridOffset;
 					this.factorMinValue = -0.1;
 					this.factorMaxValue =  0.1;
-					this.factorResolution = 0.1;
-					this.factorStep = 1.0;
+					this.factorStep = 0.5;
 					break;
 			}
 		}

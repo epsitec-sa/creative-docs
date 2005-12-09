@@ -748,7 +748,7 @@ namespace Epsitec.Common.Document
 				if ( this.textGridStep != value )
 				{
 					this.textGridStep = value;
-					this.UpdateAllText();
+					this.UpdateAllTextForTextGrid();
 
 					if ( this.document.Notifier != null )
 					{
@@ -799,7 +799,7 @@ namespace Epsitec.Common.Document
 				if ( this.textGridOffset != value )
 				{
 					this.textGridOffset = value;
-					this.UpdateAllText();
+					this.UpdateAllTextForTextGrid();
 
 					if ( this.document.Notifier != null )
 					{
@@ -812,7 +812,8 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void UpdateAllText()
+		// Met à jour tous les pavés du document lorsque les lignes magnétiques ont changé.
+		protected void UpdateAllTextForTextGrid()
 		{
 			foreach ( TextFlow flow in this.document.TextFlows )
 			{
@@ -821,8 +822,7 @@ namespace Epsitec.Common.Document
 					Text.SimpleTextFrame frame = obj.TextFrame as Text.SimpleTextFrame;
 					if ( frame != null )
 					{
-						frame.GridStep   = this.textGridStep;
-						frame.GridOffset = this.textGridOffset;
+						obj.UpdateTextGrid(true);
 					}
 				}
 			}
