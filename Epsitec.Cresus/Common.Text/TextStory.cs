@@ -1209,6 +1209,8 @@ namespace Epsitec.Common.Text
 					para_end = para_end_2;
 				}
 				
+				//	TODO: étendre au paragraphe précédent (et précédents si chaînés)
+				
 				if (para_start < this.text_change_mark_start)
 				{
 					this.text_change_mark_start = para_start;
