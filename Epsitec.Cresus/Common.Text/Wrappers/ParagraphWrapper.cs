@@ -214,6 +214,12 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				leading       = this.defined_state.Leading;
 				leading_units = this.defined_state.LeadingUnits;
+				
+				if (leading_units == Properties.SizeUnits.Percent)
+				{
+					leading_units = Properties.SizeUnits.PercentNotCombining;
+				}
+				
 				defines++;
 			}
 			
@@ -518,8 +524,15 @@ namespace Epsitec.Common.Text.Wrappers
 				(leading.LeadingUnits != Properties.SizeUnits.None) &&
 				(double.IsNaN (leading.Leading) == false))
 			{
+				Properties.SizeUnits leading_units = leading.LeadingUnits;
+				
+				if (leading_units == Properties.SizeUnits.PercentNotCombining)
+				{
+					leading_units = Properties.SizeUnits.Percent;
+				}
+
 				state.DefineValue (State.LeadingProperty, leading.Leading);
-				state.DefineValue (State.LeadingUnitsProperty, leading.LeadingUnits);
+				state.DefineValue (State.LeadingUnitsProperty, leading_units);
 			}
 			else
 			{

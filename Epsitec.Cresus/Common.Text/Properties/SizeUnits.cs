@@ -20,5 +20,6 @@ namespace Epsitec.Common.Text.Properties
 		DeltaInches,				//	N +/- n [in]
 		
 		Percent,					//	N * n%
+		PercentNotCombining			//	N * n% (ne se combine pas avec d'autres valeurs)
 	}
 }

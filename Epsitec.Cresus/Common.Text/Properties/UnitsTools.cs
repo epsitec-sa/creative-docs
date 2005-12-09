@@ -19,7 +19,12 @@ namespace Epsitec.Common.Text.Properties
 			{
 				case SizeUnits.Percent:				//	xxx * Percent --> xxx
 					c_units = a_units;
-					c_value = a_value * b_value / 100.0;
+					c_value = a_value * b_value;
+					break;
+				
+				case SizeUnits.PercentNotCombining:	//	[%] --> [%] (écrase)
+					c_units = b_units;
+					c_value = b_value;
 					break;
 				
 				case SizeUnits.Points:				//	[pt] --> [pt] (écrase)
@@ -67,6 +72,7 @@ namespace Epsitec.Common.Text.Properties
 				case SizeUnits.DeltaMillimeters:	return "+mm";
 				case SizeUnits.DeltaInches:			return "+in";
 				case SizeUnits.Percent:				return "%";
+				case SizeUnits.PercentNotCombining:	return "!%";
 			}
 			
 			throw new System.NotSupportedException (string.Format ("Unsupported units: {0}.", units));
@@ -84,6 +90,7 @@ namespace Epsitec.Common.Text.Properties
 				case "+mm":	return SizeUnits.DeltaMillimeters;
 				case "+in":	return SizeUnits.DeltaInches;
 				case "%":	return SizeUnits.Percent;
+				case "!%":	return SizeUnits.PercentNotCombining;
 			}
 			
 			throw new System.NotSupportedException (string.Format ("Unsupported units: {0}.", units));
@@ -123,6 +130,7 @@ namespace Epsitec.Common.Text.Properties
 			switch (units)
 			{
 				case SizeUnits.Percent:
+				case SizeUnits.PercentNotCombining:
 					return true;
 				
 				default:
@@ -143,6 +151,7 @@ namespace Epsitec.Common.Text.Properties
 				case SizeUnits.DeltaMillimeters:	return "mm";
 				case SizeUnits.DeltaInches:			return "in";
 				case SizeUnits.Percent:				return "%";
+				case SizeUnits.PercentNotCombining:	return "!%";
 			}
 			
 			throw new System.NotSupportedException (string.Format ("Unsupported units: {0}.", units));
@@ -216,7 +225,8 @@ namespace Epsitec.Common.Text.Properties
 			switch (units)
 			{
 				case SizeUnits.Percent:
-					return value / 100.0;
+				case SizeUnits.PercentNotCombining:
+					return value;
 				
 				default:
 					throw new System.InvalidOperationException (string.Format ("Cannot convert from {0} to {1}.", units, SizeUnits.Percent));

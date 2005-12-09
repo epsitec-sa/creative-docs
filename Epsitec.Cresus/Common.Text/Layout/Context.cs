@@ -1463,10 +1463,9 @@ restart:
 			{
 				ascender  = System.Math.Max (ascender, font.GetAscender (font_size));
 				descender = System.Math.Min (descender, font.GetDescender (font_size));
+				font_size = System.Math.Max (font_size, (ascender - descender) * 1.2);
 				
-				font_size = System.Math.Max (font_size, ascender - descender);
-				
-				double auto_scale = 1.2;
+				double auto_scale = 1.0;
 				double leading    = font_size * auto_scale;
 				
 				if (leading_property != null)
@@ -1478,7 +1477,8 @@ restart:
 					}
 					else
 					{
-						if (leading_property.LeadingUnits == Properties.SizeUnits.Percent)
+						if ((leading_property.LeadingUnits == Properties.SizeUnits.Percent) ||
+							(leading_property.LeadingUnits == Properties.SizeUnits.PercentNotCombining))
 						{
 							leading   *= leading_property.Leading;
 							auto_scale = leading_property.Leading;
