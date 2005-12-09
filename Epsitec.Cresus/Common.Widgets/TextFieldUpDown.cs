@@ -438,16 +438,22 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			if ( this.Value != roundValue )
+			this.SetValue(roundValue);
+		}
+
+		// Modifie une valeur en envoyant l'événement AcceptEdition si nécessaire.
+		protected void SetValue(decimal value)
+		{
+			if ( this.Value != value )
 			{
 				if ( this.StartEdition() )
 				{
-					this.Value = roundValue;
+					this.Value = value;
 					this.AcceptEdition();
 				}
 				else
 				{
-					this.Value = roundValue;
+					this.Value = value;
 				}
 			}
 		}

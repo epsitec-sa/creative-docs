@@ -124,7 +124,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleSliderValueChanged(object sender)
 		{
-			this.Value = this.slider.Value;
+			this.SetValue(this.slider.Value);
 		}
 		
 		private void HandleRangeChanged(object sender)
