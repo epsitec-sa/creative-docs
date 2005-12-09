@@ -528,9 +528,15 @@
 	<data name="TextPanel.Font.Tooltip.Features">Variantes OpenType</data>
 	<data name="TextPanel.Font.Tooltip.Size">Taille de la police</data>
 
-	<data name="TextPanel.Strike.Title">Souligné, biffé, etc.</data>
+	<data name="TextPanel.Xline.Title">Souligné, biffé, etc.</data>
 
-	<data name="TextPanel.XScript.Title">Indices et exposants</data>
+	<data name="TextPanel.Xscript.Title">Indices et exposants</data>
+	<data name="TextPanel.Xscript.Short.Scale">E</data>
+	<data name="TextPanel.Xscript.Short.Offset">D</data>
+	<data name="TextPanel.Xscript.Long.Scale">Echelle</data>
+	<data name="TextPanel.Xscript.Long.Offset">Décalage</data>
+	<data name="TextPanel.Xscript.Tooltip.Scale">Réduction d'échelle</data>
+	<data name="TextPanel.Xscript.Tooltip.Offset">Décalage vertical</data>
 
 	<data name="TextPanel.Box.Title">Cadres</data>
 

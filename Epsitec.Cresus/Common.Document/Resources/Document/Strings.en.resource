@@ -528,9 +528,15 @@
 	<data name="TextPanel.Font.Tooltip.Features">OpenType features</data>
 	<data name="TextPanel.Font.Tooltip.Size">Font size</data>
 
-	<data name="TextPanel.Strike.Title">Underline and strike out</data>
+	<data name="TextPanel.Xline.Title">Underline and strike out</data>
 
-	<data name="TextPanel.XScript.Title">Subscript and superscript</data>
+	<data name="TextPanel.Xscript.Title">Subscript and superscript</data>
+	<data name="TextPanel.Xscript.Short.Scale">S</data>
+	<data name="TextPanel.Xscript.Short.Offset">O</data>
+	<data name="TextPanel.Xscript.Long.Scale">@@Echelle</data>
+	<data name="TextPanel.Xscript.Long.Offset">@@Décalage</data>
+	<data name="TextPanel.Xscript.Tooltip.Scale">@@Réduction d'échelle</data>
+	<data name="TextPanel.Xscript.Tooltip.Offset">@@Décalage vertical</data>
 
 	<data name="TextPanel.Box.Title">Frames</data>
 

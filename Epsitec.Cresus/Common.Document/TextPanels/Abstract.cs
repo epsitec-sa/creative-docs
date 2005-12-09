@@ -342,6 +342,30 @@ namespace Epsitec.Common.Document.TextPanels
 			return field;
 		}
 
+		// Crée un TextFieldLabel en %.
+		protected Widgets.TextFieldLabel CreateTextFieldLabelPercent(string tooltip, string shortText, string longText, double minRange, double maxRange, double step, EventHandler handler)
+		{
+			Widgets.TextFieldLabel field = new Widgets.TextFieldLabel(this, false);
+
+			field.LabelShortText = shortText;
+			field.LabelLongText  = longText;
+			
+			this.document.Modifier.AdaptTextFieldRealPercent(field.TextFieldReal);
+
+			field.TextFieldReal.MinValue   = (decimal) minRange;
+			field.TextFieldReal.MaxValue   = (decimal) maxRange;
+			field.TextFieldReal.Step       = (decimal) step;
+			field.TextFieldReal.Resolution = 1.0M;
+			
+			field.TextFieldReal.EditionAccepted += handler;
+			
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(field, tooltip);
+			
+			return field;
+		}
+
 		// Modifie la valeur d'un TextFieldReal.
 		protected void SetTextFieldRealValue(TextFieldReal field, double value, Common.Text.Properties.SizeUnits units, bool isDefined)
 		{
@@ -374,6 +398,14 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			isDefined = (field.Text != "");
+		}
+
+		// Modifie la valeur d'un TextFieldReal en %.
+		protected void SetTextFieldRealPercent(TextFieldReal field, double value, bool isDefined)
+		{
+			field.InternalValue = (decimal) value;
+			field.TextDisplayMode = isDefined ? TextDisplayMode.Defined : TextDisplayMode.Default;
+			field.Enable = isDefined;
 		}
 
 		// Modifie le mode d'un TextFieldLabel.

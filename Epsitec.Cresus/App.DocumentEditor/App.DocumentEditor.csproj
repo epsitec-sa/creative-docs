@@ -1867,11 +1867,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\TextStrike.icon"
+                    RelPath = "Images\TextXline.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\TextXScript.icon"
+                    RelPath = "Images\TextXscript.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

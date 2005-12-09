@@ -808,11 +808,11 @@ namespace Epsitec.Common.Document.Objects
 			TextPanels.Font font = new TextPanels.Font(this.document);
 			list.Add(font);
 
-			TextPanels.Strike strike = new TextPanels.Strike(this.document);
-			list.Add(strike);
+			TextPanels.Xline xline = new TextPanels.Xline(this.document);
+			list.Add(xline);
 
-			TextPanels.XScript script = new TextPanels.XScript(this.document);
-			list.Add(script);
+			TextPanels.Xscript xscript = new TextPanels.Xscript(this.document);
+			list.Add(xscript);
 
 			TextPanels.Box box = new TextPanels.Box(this.document);
 			list.Add(box);

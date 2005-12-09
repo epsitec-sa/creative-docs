@@ -877,12 +877,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TextPanels\Strike.cs"
+                    RelPath = "TextPanels\Xline.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TextPanels\XScript.cs"
+                    RelPath = "TextPanels\Xscript.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

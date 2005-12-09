@@ -6,20 +6,23 @@ using Epsitec.Common.Text;
 namespace Epsitec.Common.Document.TextPanels
 {
 	/// <summary>
-	/// La classe XScript permet de définir les indices/exposants.
+	/// La classe Xscript permet de définir les indices/exposants.
 	/// </summary>
 	[SuppressBundleSupport]
-	public class XScript : Abstract
+	public class Xscript : Abstract
 	{
-		public XScript(Document document) : base(document)
+		public Xscript(Document document) : base(document)
 		{
-			this.label.Text = Res.Strings.TextPanel.XScript.Title;
+			this.label.Text = Res.Strings.TextPanel.Xscript.Title;
 
-			this.fixIcon.Text = Misc.Image("TextXScript");
-			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.XScript.Title);
+			this.fixIcon.Text = Misc.Image("TextXscript");
+			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Xscript.Title);
 
 			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.Text.Font.Subscript,   new MessageEventHandler(this.HandleButtonSubscriptClicked));
 			this.buttonSuperscript = this.CreateIconButton(Misc.Icon("FontSuperscript"), Res.Strings.Action.Text.Font.Superscript, new MessageEventHandler(this.HandleButtonSuperscriptClicked));
+
+			this.fieldScale  = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Xscript.Tooltip.Scale,  Res.Strings.TextPanel.Xscript.Short.Scale,  Res.Strings.TextPanel.Xscript.Long.Scale, 25.0, 100.0, 5.0, new EventHandler(this.HandleScaleOffsetChanged));
+			this.fieldOffset = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Xscript.Tooltip.Offset, Res.Strings.TextPanel.Xscript.Short.Offset, Res.Strings.TextPanel.Xscript.Long.Offset, 0.0, 100.0, 5.0, new EventHandler(this.HandleScaleOffsetChanged));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -60,11 +63,11 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					if ( this.IsLabelProperties )  // étendu/détails ?
 					{
-						h += 105;
+						h += 80;
 					}
 					else	// étendu/compact ?
 					{
-						h += 80;
+						h += 30;
 					}
 				}
 				else	// panneau réduit ?
@@ -74,29 +77,6 @@ namespace Epsitec.Common.Document.TextPanels
 
 				return h;
 			}
-		}
-
-		// Met à jour après un changement du wrapper.
-		protected override void UpdateAfterChanging()
-		{
-			base.UpdateAfterChanging();
-
-			bool subscript   = false;
-			bool superscript = false;
-			bool isXScript   = this.document.TextWrapper.Defined.IsXscriptDefined;
-
-			if ( isXScript )
-			{
-				subscript   = (this.document.TextWrapper.Defined.Xscript.Offset < 0.0);
-				superscript = (this.document.TextWrapper.Defined.Xscript.Offset > 0.0);
-			}
-
-			this.ignoreChanged = true;
-
-			this.ActiveIconButton(this.buttonSubscript,   subscript,   isXScript);
-			this.ActiveIconButton(this.buttonSuperscript, superscript, isXScript);
-			
-			this.ignoreChanged = false;
 		}
 
 		
@@ -132,6 +112,13 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Left = rect.Right-20;
 					r.Width = 20;
 					this.buttonClear.Bounds = r;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Right = rect.Right;
+					this.fieldScale.Bounds = r;
+					r.Offset(0, -25);
+					this.fieldOffset.Bounds = r;
 				}
 				else
 				{
@@ -140,6 +127,11 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonSubscript.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonSuperscript.Bounds = r;
+					r.Offset(20, 0);
+					r.Width = 60;
+					this.fieldScale.Bounds = r;
+					r.Offset(60, 0);
+					this.fieldOffset.Bounds = r;
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
@@ -156,11 +148,47 @@ namespace Epsitec.Common.Document.TextPanels
 				this.buttonSubscript.Bounds = r;
 				r.Offset(20, 0);
 				this.buttonSuperscript.Bounds = r;
+				r.Offset(20, 0);
+				r.Width = 60;
+				this.fieldScale.Bounds = r;
+				r.Offset(60, 0);
+				this.fieldOffset.Bounds = r;
 			
 				r.Left = rect.Right-20;
 				r.Width = 20;
 				this.buttonClear.Bounds = r;
 			}
+		}
+
+
+		// Met à jour après un changement du wrapper.
+		protected override void UpdateAfterChanging()
+		{
+			base.UpdateAfterChanging();
+
+			bool subscript   = false;
+			bool superscript = false;
+			bool isXscript   = this.document.TextWrapper.Defined.IsXscriptDefined;
+			double scale     = 0.0;
+			double offset    = 0.0;
+
+			if ( isXscript )
+			{
+				subscript   = (this.document.TextWrapper.Defined.Xscript.Offset < 0.0);
+				superscript = (this.document.TextWrapper.Defined.Xscript.Offset > 0.0);
+				scale       =  this.document.TextWrapper.Defined.Xscript.Scale;
+				offset      = System.Math.Abs(this.document.TextWrapper.Defined.Xscript.Offset);
+			}
+
+			this.ignoreChanged = true;
+
+			this.ActiveIconButton(this.buttonSubscript,   subscript,   isXscript);
+			this.ActiveIconButton(this.buttonSuperscript, superscript, isXscript);
+
+			this.SetTextFieldRealPercent(this.fieldScale.TextFieldReal,  scale,  isXscript);
+			this.SetTextFieldRealPercent(this.fieldOffset.TextFieldReal, offset, isXscript);
+			
+			this.ignoreChanged = false;
 		}
 
 
@@ -178,7 +206,7 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( this.document.TextWrapper.Active.Xscript.IsDisabled &&
 					 this.document.TextWrapper.Active.Xscript.IsEmpty == false )
 				{
-					this.FillSubscriptDefinition(xscript);
+					this.FillSubscriptDefinition(xscript, false);
 					
 					if ( xscript.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Xscript) )
 					{
@@ -193,7 +221,7 @@ namespace Epsitec.Common.Document.TextPanels
 					}
 					else
 					{
-						this.FillSubscriptDefinition(xscript);
+						this.FillSubscriptDefinition(xscript, true);
 					}
 				}
 				else
@@ -203,7 +231,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			else
 			{
-				this.FillSubscriptDefinition(xscript);
+				this.FillSubscriptDefinition(xscript, true);
 			}
 			
 			this.document.TextWrapper.ResumeSynchronisations();
@@ -223,7 +251,7 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( this.document.TextWrapper.Active.Xscript.IsDisabled &&
 					 this.document.TextWrapper.Active.Xscript.IsEmpty == false )
 				{
-					this.FillSuperscriptDefinition(xscript);
+					this.FillSuperscriptDefinition(xscript, false);
 					
 					if ( xscript.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Xscript) )
 					{
@@ -238,7 +266,7 @@ namespace Epsitec.Common.Document.TextPanels
 					}
 					else
 					{
-						this.FillSuperscriptDefinition(xscript);
+						this.FillSuperscriptDefinition(xscript, true);
 					}
 				}
 				else
@@ -248,9 +276,21 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			else
 			{
-				this.FillSuperscriptDefinition(xscript);
+				this.FillSuperscriptDefinition(xscript, true);
 			}
 			
+			this.document.TextWrapper.ResumeSynchronisations();
+		}
+
+		private void HandleScaleOffsetChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+
+			this.document.TextWrapper.SuspendSynchronisations();
+			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
+			if ( xscript.Offset < 0 )  this.FillSubscriptDefinition(xscript, false);
+			if ( xscript.Offset > 0 )  this.FillSuperscriptDefinition(xscript, false);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -265,25 +305,33 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		private void FillSubscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript)
+		private void FillSubscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript, bool def)
 		{
 			xscript.IsDisabled = false;
 			
-			xscript.Scale  = 0.6;
-			xscript.Offset = -0.15;
+			xscript.Scale  = def ? 0 : (double)  this.fieldScale.TextFieldReal.InternalValue;
+			xscript.Offset = def ? 0 : (double) -this.fieldOffset.TextFieldReal.InternalValue;
+
+			if ( xscript.Scale  == 0 )  xscript.Scale  =  0.6;
+			if ( xscript.Offset == 0 )  xscript.Offset = -0.15;
 		}
         
-		private void FillSuperscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript)
+		private void FillSuperscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript, bool def)
 		{
 			xscript.IsDisabled = false;
 			
-			xscript.Scale  = 0.6;
-			xscript.Offset = 0.25;
+			xscript.Scale  = def ? 0 : (double) this.fieldScale.TextFieldReal.InternalValue;
+			xscript.Offset = def ? 0 : (double) this.fieldOffset.TextFieldReal.InternalValue;
+
+			if ( xscript.Scale  == 0 )  xscript.Scale  = 0.6;
+			if ( xscript.Offset == 0 )  xscript.Offset = 0.25;
 		}
         
 
 		protected IconButton				buttonSubscript;
 		protected IconButton				buttonSuperscript;
 		protected IconButton				buttonClear;
+		protected Widgets.TextFieldLabel	fieldScale;
+		protected Widgets.TextFieldLabel	fieldOffset;
 	}
 }

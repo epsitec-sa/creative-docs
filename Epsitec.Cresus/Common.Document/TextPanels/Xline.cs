@@ -6,17 +6,17 @@ using Epsitec.Common.Text;
 namespace Epsitec.Common.Document.TextPanels
 {
 	/// <summary>
-	/// La classe Strike permet de choisir les soulignements.
+	/// La classe Xline permet de choisir les soulignements.
 	/// </summary>
 	[SuppressBundleSupport]
-	public class Strike : Abstract
+	public class Xline : Abstract
 	{
-		public Strike(Document document) : base(document)
+		public Xline(Document document) : base(document)
 		{
-			this.label.Text = Res.Strings.TextPanel.Strike.Title;
+			this.label.Text = Res.Strings.TextPanel.Xline.Title;
 
-			this.fixIcon.Text = Misc.Image("TextStrike");
-			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Strike.Title);
+			this.fixIcon.Text = Misc.Image("TextXline");
+			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Xline.Title);
 
 			this.buttonUnderlined = this.CreateIconButton(Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, new MessageEventHandler(this.HandleButtonUnderlineClicked));
 			this.buttonStrikeout  = this.CreateIconButton(Misc.Icon("FontStrikeout"),  Res.Strings.Action.Text.Font.Strikeout,  new MessageEventHandler(this.HandleButtonClicked));
