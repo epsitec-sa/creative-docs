@@ -97,6 +97,7 @@ namespace Epsitec.Common.Document.Settings
 
 			this.CreateDefaultBool("Text", "TextGridShow");
 			this.CreateDefaultDouble("Text", "TextGridStep");
+			this.CreateDefaultDouble("Text", "TextGridSubdiv");
 			this.CreateDefaultDouble("Text", "TextGridOffset");
 		}
 

@@ -187,6 +187,14 @@ namespace Epsitec.Common.Document.Settings
 					this.factorStep = 1.0;
 					break;
 
+				case "TextGridSubdiv":
+					this.text = Res.Strings.TextPanel.Leading.Long.GridSubdiv;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
 				case "TextGridOffset":
 					this.text = Res.Strings.TextPanel.Leading.Long.GridOffset;
 					this.factorMinValue = -0.1;
@@ -256,6 +264,9 @@ namespace Epsitec.Common.Document.Settings
 
 					case "TextGridStep":
 						return this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
+
+					case "TextGridSubdiv":
+						return this.document.Modifier.ActiveViewer.DrawingContext.TextGridSubdiv;
 
 					case "TextGridOffset":
 						return this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
@@ -338,6 +349,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "TextGridStep":
 						this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep = value;
+						break;
+
+					case "TextGridSubdiv":
+						this.document.Modifier.ActiveViewer.DrawingContext.TextGridSubdiv = value;
 						break;
 
 					case "TextGridOffset":

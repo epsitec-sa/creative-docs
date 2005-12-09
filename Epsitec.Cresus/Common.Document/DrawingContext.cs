@@ -33,6 +33,7 @@ namespace Epsitec.Common.Document
 				this.gridOffset = new Point(0.0, 0.0);
 
 				this.textGridStep   = 1.0;
+				this.textGridSubdiv = 1.0;
 				this.textGridOffset = 0.0;
 			}
 			else
@@ -44,6 +45,7 @@ namespace Epsitec.Common.Document
 					this.gridOffset = new Point(0.0, 0.0);
 
 					this.textGridStep   = 100.0;  // 10mm
+					this.textGridSubdiv = 1.0;
 					this.textGridOffset = 0.0;
 				}
 				else
@@ -53,6 +55,7 @@ namespace Epsitec.Common.Document
 					this.gridOffset = new Point(0.0, 0.0);
 
 					this.textGridStep   = 127.0;  // 0.5in
+					this.textGridSubdiv = 1.0;
 					this.textGridOffset = 0.0;
 				}
 			}
@@ -750,6 +753,31 @@ namespace Epsitec.Common.Document
 					if ( this.document.Notifier != null )
 					{
 						this.document.Notifier.NotifyArea();
+						this.document.Notifier.NotifyGridChanged();
+						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
+
+		// Subdivisions de la grille magnétique pour le texte.
+		public double TextGridSubdiv
+		{
+			get
+			{
+				return this.textGridSubdiv;
+			}
+
+			set
+			{
+				if ( this.textGridSubdiv != value )
+				{
+					this.textGridSubdiv = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 						this.document.IsDirtySerialize = true;
@@ -2304,6 +2332,7 @@ namespace Epsitec.Common.Document
 		protected Point							gridOffset = new Point(0, 0);
 		protected bool							textGridShow = false;
 		protected double						textGridStep;
+		protected double						textGridSubdiv;
 		protected double						textGridOffset;
 		protected bool							guidesActive = true;
 		protected bool							guidesShow = true;

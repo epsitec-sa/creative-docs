@@ -486,6 +486,7 @@
 	<data name="TextPanel.Leading.Short.GridOffset">O</data>
 	<data name="TextPanel.Leading.Long.Leading">Interligne</data>
 	<data name="TextPanel.Leading.Long.GridStep">Espacement vertical</data>
+	<data name="TextPanel.Leading.Long.GridSubdiv">Subdivisions</data>
 	<data name="TextPanel.Leading.Long.GridOffset">Décalage vertical</data>
 	<data name="TextPanel.Leading.Tooltip.Leading">Interligne</data>
 	<data name="TextPanel.Leading.Tooltip.GridStep">Espacement vertical des lignes magnétiques</data>

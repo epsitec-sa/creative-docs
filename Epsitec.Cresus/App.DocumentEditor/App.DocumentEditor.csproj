@@ -1031,6 +1031,26 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Leading10.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Leading12.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Leading15.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Leading20.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Leading30.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Limit.icon"
                     BuildAction = "EmbeddedResource"
                 />

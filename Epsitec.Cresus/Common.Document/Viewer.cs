@@ -3779,7 +3779,7 @@ namespace Epsitec.Common.Document
 				// Dessine la grille pour le texte.
 				if ( this.drawingContext.TextGridShow )
 				{
-					double s = this.drawingContext.GridStep.Y*this.drawingContext.ScaleY;
+					double s = this.drawingContext.TextGridStep*this.drawingContext.ScaleY;
 					int mul = (int) System.Math.Max(10.0/s, 1.0);
 
 					Point origin = this.document.Modifier.OriginArea;
@@ -3787,7 +3787,7 @@ namespace Epsitec.Common.Document
 
 					// Dessine les traits horizontaux.
 					double step = this.drawingContext.TextGridStep*mul;
-					int subdiv = 1;
+					int subdiv = (int) this.drawingContext.TextGridSubdiv;
 					int rank = subdiv-(int)(-this.document.Modifier.OriginArea.Y/step);
 					for ( double pos=origin.Y ; pos<=this.document.Modifier.SizeArea.Height ; pos+=step )
 					{
