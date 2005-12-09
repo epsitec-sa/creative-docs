@@ -99,6 +99,7 @@ namespace Epsitec.Common.Document.TextPanels
 			base.UpdateAfterChanging();
 
 			double leading = this.document.ParagraphWrapper.Active.Leading;
+			Common.Text.Properties.SizeUnits units = this.document.ParagraphWrapper.Active.LeadingUnits;
 			bool isLeading = this.document.ParagraphWrapper.Defined.IsLeadingDefined;
 
 			bool align = (this.document.ParagraphWrapper.Active.AlignMode == Common.Text.Properties.AlignMode.All);
@@ -106,9 +107,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ignoreChanged = true;
 
-			this.fieldLeading.TextFieldReal.InternalValue = (decimal) leading;
-			this.ProposalTextFieldLabel(this.fieldLeading, !isLeading);
-
+			this.SetTextFieldRealValue(this.fieldLeading.TextFieldReal, leading, units, isLeading);
 			this.ActiveIconButton(this.buttonAlign, align, isAlign);
 
 			this.ignoreChanged = false;
@@ -123,23 +122,22 @@ namespace Epsitec.Common.Document.TextPanels
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
 
-			double value = (double) field.InternalValue;
-			bool isDefined = field.Text != "";
+			double value;
+			Common.Text.Properties.SizeUnits units;
+			bool isDefined;
+			this.GetTextFieldRealValue(field, out value, out units, out isDefined);
 
 			this.document.ParagraphWrapper.SuspendSynchronisations();
 
-			if ( field == this.fieldLeading.TextFieldReal )
+			if ( isDefined )
 			{
-				if ( isDefined )
-				{
-					this.document.ParagraphWrapper.Defined.Leading = value;
-					this.document.ParagraphWrapper.Defined.LeadingUnits = Common.Text.Properties.SizeUnits.Points;
-				}
-				else
-				{
-					this.document.ParagraphWrapper.Defined.ClearLeading();
-					this.document.ParagraphWrapper.Defined.ClearLeadingUnits();
-				}
+				this.document.ParagraphWrapper.Defined.Leading = value;
+				this.document.ParagraphWrapper.Defined.LeadingUnits = units;
+			}
+			else
+			{
+				this.document.ParagraphWrapper.Defined.ClearLeading();
+				this.document.ParagraphWrapper.Defined.ClearLeadingUnits();
 			}
 
 			this.document.ParagraphWrapper.ResumeSynchronisations();

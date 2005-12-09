@@ -342,6 +342,40 @@ namespace Epsitec.Common.Document.TextPanels
 			return field;
 		}
 
+		// Modifie la valeur d'un TextFieldReal.
+		protected void SetTextFieldRealValue(TextFieldReal field, double value, Common.Text.Properties.SizeUnits units, bool isDefined)
+		{
+			if ( units == Common.Text.Properties.SizeUnits.Percent )
+			{
+				this.document.Modifier.AdaptTextFieldRealPercent(field);
+				field.InternalValue = (decimal) value;
+			}
+			else
+			{
+				this.document.Modifier.AdaptTextFieldRealDimension(field);
+				field.InternalValue = (decimal) value;
+			}
+
+			field.TextDisplayMode = isDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+		}
+
+		// Donne la valeur d'un TextFieldReal.
+		protected void GetTextFieldRealValue(TextFieldReal field, out double value, out Common.Text.Properties.SizeUnits units, out bool isDefined)
+		{
+			if ( field.UnitType == RealUnitType.Percent )
+			{
+				value = (double) field.InternalValue;
+				units = Common.Text.Properties.SizeUnits.Percent;
+			}
+			else
+			{
+				value = (double) field.InternalValue;
+				units = Common.Text.Properties.SizeUnits.Points;
+			}
+
+			isDefined = (field.Text != "");
+		}
+
 		// Modifie le mode d'un TextFieldLabel.
 		protected void ProposalTextFieldLabel(Widgets.TextFieldLabel field, bool proposal)
 		{
