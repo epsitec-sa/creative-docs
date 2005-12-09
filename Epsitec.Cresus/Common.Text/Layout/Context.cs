@@ -775,12 +775,13 @@ restart:
 						if ((status == Layout.Status.OkFitEnded) &&
 							(this.frame != null) &&
 							(this.frame_first_line > 0) &&
+							(paragraph_line_count > 0) &&
 							(paragraph_line_count - this.frame_first_line + 1 < this.keep_end_lines))
 						{
 							//	Les lignes qui constituent cette fin de paragraphe se trouvent
 							//	seules dans un frame et il y en a moins que le minimum requis.
 							
-							this.fence_line_count = paragraph_line_count + 1 - this.keep_end_lines;
+							this.fence_line_count = System.Math.Max (0, paragraph_line_count + 1 - this.keep_end_lines);
 							
 							return Layout.Status.RestartParagraphLayout;
 						}

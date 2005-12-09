@@ -704,7 +704,7 @@ restart_paragraph_layout:
 					
 					case Layout.Status.RestartParagraphLayout:
 						
-						if (layout.FenceLineCount > 0)
+						if (layout.FenceLineCount > -1)
 						{
 							//	Il faut se replacer dans le frame correspondant au début
 							//	du paragraphe en cours :
