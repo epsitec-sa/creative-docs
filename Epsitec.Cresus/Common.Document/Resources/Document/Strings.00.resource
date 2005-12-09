@@ -491,7 +491,8 @@
 	<data name="TextPanel.Leading.Tooltip.Leading">Interligne</data>
 	<data name="TextPanel.Leading.Tooltip.GridStep">Espacement vertical des lignes magnétiques</data>
 	<data name="TextPanel.Leading.Tooltip.GridOffset">Décalage vertical des lignes magnétiques</data>
-	<data name="TextPanel.Leading.Tooltip.Mode">Forcer l'interligne sur les lignes magnétiques</data>
+	<data name="TextPanel.Leading.Tooltip.AlignFirst">Forcer les premières lignes de chaque paragraphe sur les lignes magnétiques</data>
+	<data name="TextPanel.Leading.Tooltip.AlignAll">Forcer toutes les lignes sur les lignes magnétiques</data>
 
 	<data name="TextPanel.Margins.Title">Retraits</data>
 	<data name="TextPanel.Margins.Short.LeftFirst">P</data>

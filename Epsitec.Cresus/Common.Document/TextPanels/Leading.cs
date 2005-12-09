@@ -19,7 +19,8 @@ namespace Epsitec.Common.Document.TextPanels
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Leading.Title);
 
 			this.fieldLeading = this.CreateTextFieldLabel(Res.Strings.TextPanel.Leading.Tooltip.Leading, Res.Strings.TextPanel.Leading.Short.Leading, Res.Strings.TextPanel.Leading.Long.Leading, 0.0, 100.0, 1.0, false, new EventHandler(this.HandleLeadingChanged));
-			this.buttonAlign = this.CreateIconButton(Misc.Icon("ParaLeadingAlign"), Res.Strings.TextPanel.Leading.Tooltip.Mode, new MessageEventHandler(this.HandleButtonAlignClicked));
+			this.buttonAlignFirst = this.CreateIconButton(Misc.Icon("ParaLeadingAlignFirst"), Res.Strings.TextPanel.Leading.Tooltip.AlignFirst, new MessageEventHandler(this.HandleButtonAlignFirstClicked));
+			this.buttonAlignAll = this.CreateIconButton(Misc.Icon("ParaLeadingAlignAll"), Res.Strings.TextPanel.Leading.Tooltip.AlignAll, new MessageEventHandler(this.HandleButtonAlignAllClicked));
 			this.buttonSettings = this.CreateIconButton(Misc.Icon("Settings"), Res.Strings.Action.Settings, new MessageEventHandler(this.HandleButtonSettingsClicked), false);
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
@@ -83,7 +84,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldLeading.Bounds = r;
 			r.Offset(60+12, 0);
 			r.Width = 20;
-			this.buttonAlign.Bounds = r;
+			this.buttonAlignFirst.Bounds = r;
+			r.Offset(20, 0);
+			this.buttonAlignAll.Bounds = r;
 			r.Offset(20+5, 0);
 			this.buttonSettings.Bounds = r;
 
@@ -102,13 +105,15 @@ namespace Epsitec.Common.Document.TextPanels
 			Common.Text.Properties.SizeUnits units = this.document.ParagraphWrapper.Active.LeadingUnits;
 			bool isLeading = this.document.ParagraphWrapper.Defined.IsLeadingDefined;
 
-			bool align = (this.document.ParagraphWrapper.Active.AlignMode == Common.Text.Properties.AlignMode.All);
+			bool alignFirst = (this.document.ParagraphWrapper.Active.AlignMode == Common.Text.Properties.AlignMode.First);
+			bool alignAll   = (this.document.ParagraphWrapper.Active.AlignMode == Common.Text.Properties.AlignMode.All);
 			bool isAlign = this.document.ParagraphWrapper.Defined.IsAlignModeDefined;
 
 			this.ignoreChanged = true;
 
 			this.SetTextFieldRealValue(this.fieldLeading.TextFieldReal, leading, units, isLeading);
-			this.ActiveIconButton(this.buttonAlign, align, isAlign);
+			this.ActiveIconButton(this.buttonAlignFirst, alignFirst, isAlign);
+			this.ActiveIconButton(this.buttonAlignAll,   alignAll,   isAlign);
 
 			this.ignoreChanged = false;
 		}
@@ -143,12 +148,22 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
-		private void HandleButtonAlignClicked(object sender, MessageEventArgs e)
+		private void HandleButtonAlignFirstClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
-			bool align = (this.buttonAlign.ActiveState == ActiveState.No);
+			bool align = (this.buttonAlignFirst.ActiveState == ActiveState.No);
+			Common.Text.Properties.AlignMode mode = align ? Common.Text.Properties.AlignMode.First : Common.Text.Properties.AlignMode.None;
+			this.document.ParagraphWrapper.Defined.AlignMode = mode;
+		}
+
+		private void HandleButtonAlignAllClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+
+			bool align = (this.buttonAlignAll.ActiveState == ActiveState.No);
 			Common.Text.Properties.AlignMode mode = align ? Common.Text.Properties.AlignMode.All : Common.Text.Properties.AlignMode.None;
 			this.document.ParagraphWrapper.Defined.AlignMode = mode;
 		}
@@ -172,7 +187,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		
 		protected Widgets.TextFieldLabel	fieldLeading;
-		protected IconButton				buttonAlign;
+		protected IconButton				buttonAlignFirst;
+		protected IconButton				buttonAlignAll;
 		protected IconButton				buttonSettings;
 		protected IconButton				buttonClear;
 	}

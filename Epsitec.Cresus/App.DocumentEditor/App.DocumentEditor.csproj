@@ -1283,7 +1283,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\ParaLeadingAlign.icon"
+                    RelPath = "Images\ParaLeadingAlignAll.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParaLeadingAlignFirst.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
