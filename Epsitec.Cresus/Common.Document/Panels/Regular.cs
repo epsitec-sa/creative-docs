@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(false);
 			this.AddRadioIcon(true);
 
-			this.fieldNbFaces = new Widgets.TextFieldLabel(this, false);
+			this.fieldNbFaces = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldNbFaces.LabelShortText = Res.Strings.Panel.Regular.Short.Faces;
 			this.fieldNbFaces.LabelLongText  = Res.Strings.Panel.Regular.Long.Faces;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldNbFaces.TextFieldReal);
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldNbFaces.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldNbFaces, Res.Strings.Panel.Regular.Tooltip.Faces);
 
-			this.fieldDeep = new Widgets.TextFieldLabel(this, false);
+			this.fieldDeep = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldDeep.LabelShortText = Res.Strings.Panel.Regular.Short.Deep;
 			this.fieldDeep.LabelLongText  = Res.Strings.Panel.Regular.Long.Deep;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldDeep.TextFieldReal);

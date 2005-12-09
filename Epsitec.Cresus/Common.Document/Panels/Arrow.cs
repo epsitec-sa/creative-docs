@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Panels
 				this.AddRadioIcon(j, Properties.ArrowType.Square, false);
 				this.AddRadioIcon(j, Properties.ArrowType.Diamond, false);
 
-				this.fieldLength[j] = new Widgets.TextFieldLabel(this, false);
+				this.fieldLength[j] = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 				this.fieldLength[j].LabelShortText = Res.Strings.Panel.Arrow.Short.Length;
 				this.fieldLength[j].LabelLongText  = Res.Strings.Panel.Arrow.Long.Length;
 				this.fieldLength[j].TextFieldReal.FactorMinRange = 0.0M;
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldLength[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldLength[j], Res.Strings.Panel.Arrow.Tooltip.Length);
 
-				this.fieldEffect1[j] = new Widgets.TextFieldLabel(this, false);
+				this.fieldEffect1[j] = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 				this.fieldEffect1[j].LabelShortText = Res.Strings.Panel.Arrow.Short.Effect1;
 				this.fieldEffect1[j].LabelLongText  = Res.Strings.Panel.Arrow.Long.Effect1;
 				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect1[j].TextFieldReal);
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldEffect1[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldEffect1[j], Res.Strings.Panel.Arrow.Tooltip.Effect1);
 
-				this.fieldEffect2[j] = new Widgets.TextFieldLabel(this, false);
+				this.fieldEffect2[j] = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 				this.fieldEffect2[j].LabelShortText = Res.Strings.Panel.Arrow.Short.Effect2;
 				this.fieldEffect2[j].LabelLongText  = Res.Strings.Panel.Arrow.Long.Effect2;
 				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect2[j].TextFieldReal);

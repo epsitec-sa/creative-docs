@@ -9,12 +9,19 @@ namespace Epsitec.Common.Document.Widgets
 	/// </summary>
 	public class TextFieldLabel : AbstractGroup
 	{
+		public enum Type
+		{
+			TextField,
+			TextFieldReal,
+		}
+
+
 		public TextFieldLabel()
 		{
 			//throw new System.InvalidOperationException("Do not user this constructor.");
 		}
 
-		public TextFieldLabel(bool simply)
+		public TextFieldLabel(Type type)
 		{
 			this.marginWidth = TextFieldLabel.DefaultMarginWidth;
 
@@ -24,7 +31,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.label.Dock = DockStyle.Fill;
 			this.label.DockMargins = new Margins(0, this.marginWidth, 0, 0);
 
-			if ( simply )
+			if ( type == Type.TextField )
 			{
 				this.textFieldSimple = new TextField(this);
 				this.textFieldSimple.Width = TextFieldLabel.DefaultTextWidth;
@@ -37,7 +44,8 @@ namespace Epsitec.Common.Document.Widgets
 				this.textFieldSimple.SwallowEscape = true;
 				this.textFieldSimple.SwallowReturn = true;
 			}
-			else
+
+			if ( type == Type.TextFieldReal )
 			{
 				this.textFieldReal = new TextFieldReal(this);
 				this.textFieldReal.Width = TextFieldLabel.DefaultTextWidth;
@@ -52,7 +60,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public TextFieldLabel(Widget embedder, bool simply) : this(simply)
+		public TextFieldLabel(Widget embedder, Type type) : this(type)
 		{
 			this.SetEmbedder(embedder);
 		}

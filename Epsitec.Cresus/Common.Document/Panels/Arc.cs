@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.ArcType.Close);
 			this.AddRadioIcon(Properties.ArcType.Pie);
 			
-			this.fieldStarting = new Widgets.TextFieldLabel(this, false);
+			this.fieldStarting = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldStarting.LabelShortText = Res.Strings.Panel.Arc.Short.Initial;
 			this.fieldStarting.LabelLongText  = Res.Strings.Panel.Arc.Long.Initial;
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldStarting.TextFieldReal);
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldStarting.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStarting, Res.Strings.Panel.Arc.Tooltip.Initial);
 
-			this.fieldEnding = new Widgets.TextFieldLabel(this, false);
+			this.fieldEnding = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldEnding.LabelShortText = Res.Strings.Panel.Arc.Short.Final;
 			this.fieldEnding.LabelLongText  = Res.Strings.Panel.Arc.Long.Final;
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldEnding.TextFieldReal);

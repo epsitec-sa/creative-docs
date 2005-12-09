@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.DimensionJustif.Left);
 			this.AddRadioIcon(Properties.DimensionJustif.Right);
 
-			this.addLength = new Widgets.TextFieldLabel(this, false);
+			this.addLength = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.addLength.LabelShortText = Res.Strings.Panel.Dimension.Short.AddLength;
 			this.addLength.LabelLongText  = Res.Strings.Panel.Dimension.Long.AddLength;
 			this.addLength.TextFieldReal.FactorMinRange = 0.0M;
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Document.Panels
 			this.addLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.addLength, Res.Strings.Panel.Dimension.Tooltip.AddLength);
 
-			this.outLength = new Widgets.TextFieldLabel(this, false);
+			this.outLength = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.outLength.LabelShortText = Res.Strings.Panel.Dimension.Short.OutLength;
 			this.outLength.LabelLongText  = Res.Strings.Panel.Dimension.Long.OutLength;
 			this.outLength.TextFieldReal.FactorMinRange = 0.0M;
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Document.Panels
 			this.rotateText.IconName = Misc.Icon("DimensionRotateText");
 			ToolTip.Default.SetToolTip(this.rotateText, Res.Strings.Panel.Dimension.Tooltip.RotateText);
 
-			this.fontOffset = new Widgets.TextFieldLabel(this, false);
+			this.fontOffset = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fontOffset.LabelShortText = Res.Strings.Panel.Dimension.Short.FontOffset;
 			this.fontOffset.LabelLongText  = Res.Strings.Panel.Dimension.Long.FontOffset;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fontOffset.TextFieldReal);
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fontOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontOffset, Res.Strings.Panel.Dimension.Tooltip.FontOffset);
 
-			this.dimensionText = new Widgets.TextFieldLabel(this, true);
+			this.dimensionText = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextField);
 			this.dimensionText.LabelShortText = Res.Strings.Panel.Dimension.Short.Text;
 			this.dimensionText.LabelLongText  = Res.Strings.Panel.Dimension.Long.Text;
 			this.dimensionText.TextField.EditionAccepted += new EventHandler(this.HandleFieldChanged);

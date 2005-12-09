@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFactor = new Widgets.TextFieldLabel[4];
 			for ( int i=0 ; i<4 ; i++ )
 			{
-				this.fieldFactor[i] = new Widgets.TextFieldLabel(this, false);
+				this.fieldFactor[i] = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 				this.fieldFactor[i].LabelShortText = string.Format(Res.Strings.Panel.Surface.Short.Factor, i+1);
 				this.document.Modifier.AdaptTextFieldRealPercent(this.fieldFactor[i].TextFieldReal);
 				this.fieldFactor[i].TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldScalar = new Widgets.TextFieldLabel[2];
 			for ( int i=0 ; i<2 ; i++ )
 			{
-				this.fieldScalar[i] = new Widgets.TextFieldLabel(this, false);
+				this.fieldScalar[i] = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 				this.fieldScalar[i].LabelShortText = string.Format(Res.Strings.Panel.Surface.Short.Scalar, i+1);
 				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldScalar[i].TextFieldReal);
 				this.fieldScalar[i].TextFieldReal.InternalMinValue = 1;

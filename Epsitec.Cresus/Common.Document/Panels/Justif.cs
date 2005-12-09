@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.JustifOrientation.RightToLeft);
 			this.AddRadioIcon(Properties.JustifOrientation.TopToBottom);
 
-			this.fieldMarginH = new Widgets.TextFieldLabel(this, false);
+			this.fieldMarginH = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldMarginH.LabelShortText = Res.Strings.Panel.Justif.Short.MarginH;
 			this.fieldMarginH.LabelLongText  = Res.Strings.Panel.Justif.Long.MarginH;
 			this.fieldMarginH.TextFieldReal.FactorMinRange = 0.0M;
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMarginH.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMarginH, Res.Strings.Panel.Justif.Tooltip.MarginH);
 
-			this.fieldMarginV = new Widgets.TextFieldLabel(this, false);
+			this.fieldMarginV = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldMarginV.LabelShortText = Res.Strings.Panel.Justif.Short.MarginV;
 			this.fieldMarginV.LabelLongText  = Res.Strings.Panel.Justif.Long.MarginV;
 			this.fieldMarginV.TextFieldReal.FactorMinRange = 0.0M;
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMarginV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMarginV, Res.Strings.Panel.Justif.Tooltip.MarginV);
 
-			this.fieldOffsetV = new Widgets.TextFieldLabel(this, false);
+			this.fieldOffsetV = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldOffsetV.LabelShortText = Res.Strings.Panel.Justif.Short.OffsetV;
 			this.fieldOffsetV.LabelLongText  = Res.Strings.Panel.Justif.Long.OffsetV;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldOffsetV.TextFieldReal);

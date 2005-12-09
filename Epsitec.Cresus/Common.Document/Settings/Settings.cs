@@ -40,6 +40,11 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultPoint("Settings", "GridSubdiv");
 			this.CreateDefaultPoint("Settings", "GridOffset");
 
+			this.CreateDefaultBool("Settings", "TextGridShow");
+			this.CreateDefaultDouble("Settings", "TextGridStep");
+			this.CreateDefaultDouble("Settings", "TextGridSubdiv");
+			this.CreateDefaultDouble("Settings", "TextGridOffset");
+
 			this.CreateDefaultBool("Settings", "GuidesActive");
 			this.CreateDefaultBool("Settings", "GuidesShow");
 			this.CreateDefaultBool("Settings", "GuidesMouse");
@@ -94,11 +99,6 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFJpegQuality");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFImageMinDpi");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFImageMaxDpi");
-
-			this.CreateDefaultBool("Text", "TextGridShow");
-			this.CreateDefaultDouble("Text", "TextGridStep");
-			this.CreateDefaultDouble("Text", "TextGridSubdiv");
-			this.CreateDefaultDouble("Text", "TextGridOffset");
 		}
 
 		protected void CreateDefaultBool(string dialog, string name)

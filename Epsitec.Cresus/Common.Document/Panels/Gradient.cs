@@ -57,7 +57,7 @@ namespace Epsitec.Common.Document.Panels
 			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
 			ToolTip.Default.SetToolTip(this.reset, Res.Strings.Panel.Gradient.Tooltip.Reset);
 
-			this.fieldAngle = new Widgets.TextFieldLabel(this, false);
+			this.fieldAngle = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldAngle.LabelShortText = Res.Strings.Panel.Gradient.Short.Angle;
 			this.fieldAngle.LabelLongText  = Res.Strings.Panel.Gradient.Long.Angle;
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldAngle.TextFieldReal);
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.radioHatchRank[1], Res.Strings.Panel.Gradient.Tooltip.Hatch2);
 			this.RadioSelected = 0;
 
-			this.fieldRepeat = new Widgets.TextFieldLabel(this, false);
+			this.fieldRepeat = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldRepeat.LabelShortText = Res.Strings.Panel.Gradient.Short.Repeat;
 			this.fieldRepeat.LabelLongText  = Res.Strings.Panel.Gradient.Long.Repeat;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldRepeat.TextFieldReal);
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRepeat.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRepeat, Res.Strings.Panel.Gradient.Tooltip.Repeat);
 
-			this.fieldMiddle = new Widgets.TextFieldLabel(this, false);
+			this.fieldMiddle = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldMiddle.LabelShortText = Res.Strings.Panel.Gradient.Short.Middle;
 			this.fieldMiddle.LabelLongText  = Res.Strings.Panel.Gradient.Long.Middle;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldMiddle.TextFieldReal);
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMiddle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMiddle, Res.Strings.Panel.Gradient.Tooltip.Middle);
 
-			this.fieldSmooth = new Widgets.TextFieldLabel(this, false);
+			this.fieldSmooth = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldSmooth.LabelShortText = Res.Strings.Panel.Gradient.Short.Smooth;
 			this.fieldSmooth.LabelLongText  = Res.Strings.Panel.Gradient.Long.Smooth;
 			this.fieldSmooth.TextFieldReal.FactorMinRange = 0.0M;
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldSmooth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldSmooth, Res.Strings.Panel.Gradient.Tooltip.Smooth);
 
-			this.fieldHatchAngle = new Widgets.TextFieldLabel(this, false);
+			this.fieldHatchAngle = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldHatchAngle.LabelShortText = Res.Strings.Panel.Gradient.Short.HatchAngle;
 			this.fieldHatchAngle.LabelLongText  = Res.Strings.Panel.Gradient.Long.HatchAngle;
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldHatchAngle.TextFieldReal);
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldHatchAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchAngle, Res.Strings.Panel.Gradient.Tooltip.HatchAngle);
 
-			this.fieldHatchWidth = new Widgets.TextFieldLabel(this, false);
+			this.fieldHatchWidth = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldHatchWidth.LabelShortText = Res.Strings.Panel.Gradient.Short.HatchWidth;
 			this.fieldHatchWidth.LabelLongText  = Res.Strings.Panel.Gradient.Long.HatchWidth;
 			this.fieldHatchWidth.TextFieldReal.FactorMinRange = 0.0M;
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldHatchWidth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchWidth, Res.Strings.Panel.Gradient.Tooltip.HatchWidth);
 
-			this.fieldHatchDistance = new Widgets.TextFieldLabel(this, false);
+			this.fieldHatchDistance = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldHatchDistance.LabelShortText = Res.Strings.Panel.Gradient.Short.HatchDistance;
 			this.fieldHatchDistance.LabelLongText  = Res.Strings.Panel.Gradient.Long.HatchDistance;
 			this.fieldHatchDistance.TextFieldReal.FactorMinRange = 0.0M;

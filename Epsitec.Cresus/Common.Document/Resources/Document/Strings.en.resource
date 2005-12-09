@@ -481,17 +481,23 @@
 	<data name="TextPanel.Justif.Title">Layout</data>
 
 	<data name="TextPanel.Leading.Title">Leading</data>
-	<data name="TextPanel.Leading.Short.Leading">L</data>
+	<data name="TextPanel.Leading.Short.LeadingAbs">d</data>
+	<data name="TextPanel.Leading.Short.LeadingRel">%</data>
 	<data name="TextPanel.Leading.Short.GridStep">S</data>
 	<data name="TextPanel.Leading.Short.GridOffset">O</data>
-	<data name="TextPanel.Leading.Long.Leading">Leading</data>
+	<data name="TextPanel.Leading.Long.LeadingAbs">@@Interligne précis</data>
+	<data name="TextPanel.Leading.Long.LeadingRel">@@Interligne en pourcents</data>
 	<data name="TextPanel.Leading.Long.GridStep">@@Espacement vertical</data>
 	<data name="TextPanel.Leading.Long.GridSubdiv">@@Subdivisions</data>
 	<data name="TextPanel.Leading.Long.GridOffset">@@Décalage vertical</data>
-	<data name="TextPanel.Leading.Tooltip.Leading">Leading</data>
+	<data name="TextPanel.Leading.Tooltip.LeadingUnits">@@Choix de l'unité pour l'interligne</data>
+	<data name="TextPanel.Leading.Tooltip.LeadingAbs">@@Interligne précis</data>
+	<data name="TextPanel.Leading.Tooltip.LeadingRel">@@Interligne en pourcents</data>
+	<data name="TextPanel.Leading.Tooltip.LeadingMinus">@@Diminue l'nterligne</data>
+	<data name="TextPanel.Leading.Tooltip.LeadingPlus">@@Augmente l'interligne</data>
 	<data name="TextPanel.Leading.Tooltip.GridStep">@@Espacement vertical des lignes magnétiques</data>
 	<data name="TextPanel.Leading.Tooltip.GridOffset">@@Décalage vertical des lignes magnétiques</data>
-	<data name="TextPanel.Leading.Tooltip.AlignFirst">@@Forcer les premières lignes de chaque paragraphe sur les lignes magnétiques</data>
+	<data name="TextPanel.Leading.Tooltip.AlignFirst">@@Forcer la première ligne du paragraphe sur une ligne magnétique</data>
 	<data name="TextPanel.Leading.Tooltip.AlignAll">@@Forcer toutes les lignes sur les lignes magnétiques</data>
 
 	<data name="TextPanel.Margins.Title">Padding</data>

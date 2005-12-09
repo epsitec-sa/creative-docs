@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.JustifHorizontal.Right);
 			this.AddRadioIcon(Properties.JustifHorizontal.Stretch);
 
-			this.fieldOffset = new Widgets.TextFieldLabel(this, false);
+			this.fieldOffset = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldOffset.LabelShortText = Res.Strings.Panel.TextLine.Short.Offset;
 			this.fieldOffset.LabelLongText  = Res.Strings.Panel.TextLine.Long.Offset;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldOffset.TextFieldReal);
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldOffset, Res.Strings.Panel.TextLine.Tooltip.Offset);
 
-			this.fieldAdd = new Widgets.TextFieldLabel(this, false);
+			this.fieldAdd = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldAdd.LabelShortText = Res.Strings.Panel.TextLine.Short.Add;
 			this.fieldAdd.LabelLongText  = Res.Strings.Panel.TextLine.Long.Add;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldAdd.TextFieldReal);

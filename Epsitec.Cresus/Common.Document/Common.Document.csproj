@@ -932,6 +932,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\TextFieldUnit.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\TextStyleSample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

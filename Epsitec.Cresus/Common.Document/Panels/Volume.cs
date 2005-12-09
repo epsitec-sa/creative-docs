@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.VolumeType.Pyramid);
 			this.AddRadioIcon(Properties.VolumeType.Cylinder);
 
-			this.fieldRapport = new Widgets.TextFieldLabel(this, false);
+			this.fieldRapport = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldRapport.LabelShortText = Res.Strings.Panel.Volume.Short.Rapport;
 			this.fieldRapport.LabelLongText  = Res.Strings.Panel.Volume.Long.Rapport;
 			this.document.Modifier.AdaptTextFieldRealPercent(this.fieldRapport.TextFieldReal);
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRapport.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRapport, Res.Strings.Panel.Volume.Tooltip.Rapport);
 
-			this.fieldLeft = new Widgets.TextFieldLabel(this, false);
+			this.fieldLeft = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldLeft.LabelShortText = Res.Strings.Panel.Volume.Short.Left;
 			this.fieldLeft.LabelLongText  = Res.Strings.Panel.Volume.Long.Left;
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldLeft.TextFieldReal);
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldLeft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldLeft, Res.Strings.Panel.Volume.Tooltip.Left);
 
-			this.fieldRight = new Widgets.TextFieldLabel(this, false);
+			this.fieldRight = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldRight.LabelShortText = Res.Strings.Panel.Volume.Short.Right;
 			this.fieldRight.LabelLongText  = Res.Strings.Panel.Volume.Long.Right;
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldRight.TextFieldReal);

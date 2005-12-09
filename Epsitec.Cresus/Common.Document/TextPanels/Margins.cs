@@ -18,9 +18,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextMargins");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Margins.Title);
 
-			this.fieldLeftMarginFirst = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftFirst, Res.Strings.TextPanel.Margins.Short.LeftFirst, Res.Strings.TextPanel.Margins.Long.LeftFirst, 0.0, 0.1, 1.0, false, new EventHandler(this.HandleMarginChanged));
-			this.fieldLeftMarginBody  = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftBody,  Res.Strings.TextPanel.Margins.Short.LeftBody,  Res.Strings.TextPanel.Margins.Long.LeftBody,  0.0, 0.1, 1.0, false, new EventHandler(this.HandleMarginChanged));
-			this.fieldRightMargin     = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleRight,     Res.Strings.TextPanel.Margins.Short.Right,     Res.Strings.TextPanel.Margins.Long.Right,     0.0, 0.1, 1.0, false, new EventHandler(this.HandleMarginChanged));
+			this.fieldLeftMarginFirst = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftFirst, Res.Strings.TextPanel.Margins.Short.LeftFirst, Res.Strings.TextPanel.Margins.Long.LeftFirst, 0.0, 0.1, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
+			this.fieldLeftMarginBody  = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftBody,  Res.Strings.TextPanel.Margins.Short.LeftBody,  Res.Strings.TextPanel.Margins.Long.LeftBody,  0.0, 0.1, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
+			this.fieldRightMargin     = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleRight,     Res.Strings.TextPanel.Margins.Short.Right,     Res.Strings.TextPanel.Margins.Long.Right,     0.0, 0.1, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 

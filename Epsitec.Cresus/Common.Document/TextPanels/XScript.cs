@@ -185,8 +185,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ActiveIconButton(this.buttonSubscript,   subscript,   isXscript);
 			this.ActiveIconButton(this.buttonSuperscript, superscript, isXscript);
 
-			this.SetTextFieldRealPercent(this.fieldScale.TextFieldReal,  scale,  isXscript);
-			this.SetTextFieldRealPercent(this.fieldOffset.TextFieldReal, offset, isXscript);
+			this.SetTextFieldRealPercent(this.fieldScale.TextFieldReal,  scale,  isXscript, true);
+			this.SetTextFieldRealPercent(this.fieldOffset.TextFieldReal, offset, isXscript, true);
 			
 			this.ignoreChanged = false;
 		}

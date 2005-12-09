@@ -21,8 +21,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonKeepNext = this.CreateIconButton(Misc.Icon("ParaKeepNext"), Res.Strings.TextPanel.Keep.Tooltip.KeepNext, new MessageEventHandler(this.HandleButtonKeepNextClicked));
 			this.buttonKeepPrev = this.CreateIconButton(Misc.Icon("ParaKeepPrev"), Res.Strings.TextPanel.Keep.Tooltip.KeepPrev, new MessageEventHandler(this.HandleButtonKeepPrevClicked));
 
-			this.fieldKeepStart = this.CreateTextFieldLabel(Res.Strings.TextPanel.Keep.Tooltip.KeepStart, Res.Strings.TextPanel.Keep.Short.KeepStart, Res.Strings.TextPanel.Keep.Long.KeepStart, 0.0, 100.0, 1.0, false, new EventHandler(this.HandleKeepStartChanged));
-			this.fieldKeepEnd   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Keep.Tooltip.KeepEnd,   Res.Strings.TextPanel.Keep.Short.KeepEnd,   Res.Strings.TextPanel.Keep.Long.KeepEnd,   0.0, 100.0, 1.0, false, new EventHandler(this.HandleKeepEndChanged));
+			this.fieldKeepStart = this.CreateTextFieldLabel(Res.Strings.TextPanel.Keep.Tooltip.KeepStart, Res.Strings.TextPanel.Keep.Short.KeepStart, Res.Strings.TextPanel.Keep.Long.KeepStart, 0.0, 100.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleKeepStartChanged));
+			this.fieldKeepEnd   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Keep.Tooltip.KeepEnd,   Res.Strings.TextPanel.Keep.Short.KeepEnd,   Res.Strings.TextPanel.Keep.Long.KeepEnd,   0.0, 100.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleKeepEndChanged));
 			
 			this.fieldKeepStart.TextFieldReal.Resolution = 1.0M;
 			this.fieldKeepStart.TextFieldReal.Scale      = 1.0M;

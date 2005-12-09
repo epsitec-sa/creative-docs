@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.Panels
 			this.nothingButton.IconName = Misc.Icon("Nothing");
 			ToolTip.Default.SetToolTip(this.nothingButton, Res.Strings.Panel.Line.Tooltip.Nothing);
 
-			this.field = new Widgets.TextFieldLabel(this, false);
+			this.field = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.field.LabelLongText = Res.Strings.Panel.Line.Long.Width;
 			this.field.TextFieldReal.FactorMinRange = 0.0M;
 			this.field.TextFieldReal.FactorMaxRange = 0.1M;
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.radioDashRank[2], Res.Strings.Panel.Line.Tooltip.Dash3);
 			this.RadioSelected = 0;
 
-			this.fieldStandardLength = new Widgets.TextFieldLabel(this, false);
+			this.fieldStandardLength = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldStandardLength.LabelShortText = Res.Strings.Panel.Line.Short.DashLength;
 			this.fieldStandardLength.LabelLongText  = Res.Strings.Panel.Line.Long.DashLength;
 			this.fieldStandardLength.TextFieldReal.FactorMinRange = 0.0M;
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldStandardLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStandardLength, Res.Strings.Panel.Line.Tooltip.DashLength);
 
-			this.fieldDashPen = new Widgets.TextFieldLabel(this, false);
+			this.fieldDashPen = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldDashPen.LabelShortText = Res.Strings.Panel.Line.Short.DashPen;
 			this.fieldDashPen.LabelLongText  = Res.Strings.Panel.Line.Long.DashPen;
 			this.fieldDashPen.TextFieldReal.FactorMinRange = 0.0M;
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDashPen.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashPen, Res.Strings.Panel.Line.Tooltip.DashPen);
 
-			this.fieldDashGap = new Widgets.TextFieldLabel(this, false);
+			this.fieldDashGap = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldDashGap.LabelShortText = Res.Strings.Panel.Line.Short.DashGap;
 			this.fieldDashGap.LabelLongText  = Res.Strings.Panel.Line.Long.DashGap;
 			this.fieldDashGap.TextFieldReal.FactorMinRange = 0.0M;

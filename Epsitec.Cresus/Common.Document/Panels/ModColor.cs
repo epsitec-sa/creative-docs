@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldArray = new Widgets.TextFieldLabel[7];
 			for ( int i=0 ; i<7 ; i++ )
 			{
-				this.fieldArray[i] = new Widgets.TextFieldLabel(this, false);
+				this.fieldArray[i] = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 
 				if ( i == 0 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.H;
 				if ( i == 1 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.S;

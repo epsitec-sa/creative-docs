@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fontName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontName, Res.Strings.Panel.Font.Tooltip.Name);
 
-			this.fontSize = new Widgets.TextFieldLabel(this, false);
+			this.fontSize = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fontSize.LabelShortText = Res.Strings.Panel.Font.Short.Size;
 			this.fontSize.LabelLongText  = Res.Strings.Panel.Font.Long.Size;
 			this.document.Modifier.AdaptTextFieldRealFontSize(this.fontSize.TextFieldReal);

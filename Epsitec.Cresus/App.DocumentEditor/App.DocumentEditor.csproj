@@ -1031,26 +1031,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\Leading10.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\Leading12.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\Leading15.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\Leading20.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\Leading30.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "Images\Limit.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -1283,11 +1263,39 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\ParaLeading08.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParaLeading10.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParaLeading15.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParaLeading20.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParaLeading30.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ParaLeadingAlignAll.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Images\ParaLeadingAlignFirst.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParaLeadingMinus.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParaLeadingPlus.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
