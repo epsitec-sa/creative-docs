@@ -356,7 +356,9 @@ namespace Epsitec.Common.Text
 		
 		public void GetFontAndSize(ulong code, out OpenType.Font font, out double font_size, out double scale)
 		{
-			this.InternalGetFontAndSize (code, out font, out font_size, out scale);
+			double glue;
+			
+			this.InternalGetFontAndSize (code, out font, out font_size, out scale, out glue);
 			
 			if (Unicode.Bits.GetSpecialCodeFlag (code))
 			{
@@ -378,7 +380,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetFontAndSize(ulong code, out OpenType.Font font, out double font_size, out double scale, out double glue)
 		{
-			this.InternalGetFontAndSize (code, out font, out font_size, out scale);
+			this.InternalGetFontAndSize (code, out font, out font_size, out scale, out glue);
 			
 			if (Unicode.Bits.GetSpecialCodeFlag (code))
 			{
@@ -396,8 +398,6 @@ namespace Epsitec.Common.Text
 					font = s_font;
 				}
 			}
-			
-			glue = font_size * 0.5;
 		}
 		
 		public void GetFont(Properties.FontProperty font_property, out OpenType.Font font)
@@ -434,13 +434,14 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void GetFontSize(Properties.FontProperty font_property, Properties.FontSizeProperty font_size_property, Properties.FontXscriptProperty font_xscript_property, out double font_size, out double font_scale)
+		public void GetFontSize(Properties.FontProperty font_property, Properties.FontSizeProperty font_size_property, Properties.FontXscriptProperty font_xscript_property, out double font_size, out double font_scale, out double font_glue)
 		{
 			font_size  = font_size_property.SizeInPoints;
 			font_scale = (font_xscript_property == null) || (font_xscript_property.IsDisabled) ? 1.0 : font_xscript_property.Scale;
+			font_glue  = font_size * font_size_property.Glue;
 		}
 		
-		public void GetFontSize(Property[] properties, out double font_size, out double font_scale)
+		public void GetFontSize(Property[] properties, out double font_size, out double font_scale, out double font_glue)
 		{
 			Properties.FontProperty        font_property         = null;
 			Properties.FontSizeProperty    font_size_property    = null;
@@ -467,7 +468,7 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			this.GetFontSize (font_property, font_size_property, font_xscript_property, out font_size, out font_scale);
+			this.GetFontSize (font_property, font_size_property, font_xscript_property, out font_size, out font_scale, out font_glue);
 		}
 		
 		
@@ -1605,7 +1606,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		private void InternalGetFontAndSize(ulong code, out OpenType.Font font, out double font_size, out double scale)
+		private void InternalGetFontAndSize(ulong code, out OpenType.Font font, out double font_size, out double scale, out double glue)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
 			long current_style_version = this.style_list.Version;
@@ -1616,6 +1617,7 @@ namespace Epsitec.Common.Text
 				font      = this.get_font_last_font;
 				font_size = this.get_font_last_font_size;
 				scale     = this.get_font_last_scale;
+				glue      = this.get_font_last_glue;
 				
 				return;
 			}
@@ -1627,7 +1629,7 @@ namespace Epsitec.Common.Text
 			Properties.FontXscriptProperty font_xscript_p = style[Properties.WellKnownType.FontXscript] as Properties.FontXscriptProperty;
 			
 			this.GetFont (font_p, out font);
-			this.GetFontSize (font_p, font_size_p, font_xscript_p, out font_size, out scale);
+			this.GetFontSize (font_p, font_size_p, font_xscript_p, out font_size, out scale, out glue);
 			
 			if (font_p.Features == null)
 			{
@@ -1643,6 +1645,7 @@ namespace Epsitec.Common.Text
 			this.get_font_last_font          = font;
 			this.get_font_last_scale         = scale;
 			this.get_font_last_font_size     = font_size;
+			this.get_font_last_glue          = glue;
 		}
 		
 		
@@ -1672,6 +1675,7 @@ namespace Epsitec.Common.Text
 		private OpenType.Font					get_font_last_font;
 		private double							get_font_last_font_size;
 		private double							get_font_last_scale;
+		private double							get_font_last_glue;
 		
 		private long							get_font_offset_last_style_version;
 		private ulong							get_font_offset_last_code;

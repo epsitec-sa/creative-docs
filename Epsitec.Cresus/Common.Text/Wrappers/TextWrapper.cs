@@ -62,6 +62,7 @@ namespace Epsitec.Common.Text.Wrappers
 			string[] font_features = new string[0];
 			
 			double font_size = double.NaN;
+			double font_glue = double.NaN;
 			
 			Properties.SizeUnits units = Properties.SizeUnits.None;
 			
@@ -105,6 +106,7 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				font_size = this.defined_state.FontSize;
 				units     = this.defined_state.Units;
+				font_glue = this.defined_state.FontGlue / 2;
 				defines++;
 			}
 			
@@ -115,7 +117,7 @@ namespace Epsitec.Common.Text.Wrappers
 				if (defines > 0)
 				{
 					Property p_font = new Properties.FontProperty (font_face, font_style, font_features);
-					Property p_size = new Properties.FontSizeProperty (font_size, units);
+					Property p_size = new Properties.FontSizeProperty (font_size, units, font_glue);
 					
 					this.DefineMetaProperty (TextWrapper.Font, 0, p_font, p_size);
 				}
@@ -472,6 +474,16 @@ namespace Epsitec.Common.Text.Wrappers
 				state.DefineValue (State.FontSizeProperty);
 				state.DefineValue (State.UnitsProperty);
 			}
+			
+			if ((p_size != null) &&
+				(double.IsNaN (p_size.Glue) == false))
+			{
+				state.DefineValue (State.FontGlueProperty, p_size.Glue * 2);
+			}
+			else
+			{
+				state.DefineValue (State.FontGlueProperty);
+			}
 		}
 		
 		private void UpdateInvert(State state, bool active)
@@ -794,6 +806,18 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public double							FontGlue
+			{
+				get
+				{
+					return (double) this.GetValue (State.FontGlueProperty);
+				}
+				set
+				{
+					this.SetValue (State.FontGlueProperty, value);
+				}
+			}
+			
 			public string[]							FontFeatures
 			{
 				get
@@ -999,6 +1023,14 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public bool								IsFontGlueDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.FontGlueProperty);
+				}
+			}
+			
 			public bool								IsFontFeaturesDefined
 			{
 				get
@@ -1143,6 +1175,11 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.FontSizeProperty);
 			}
 			
+			public void ClearFontGlue()
+			{
+				this.ClearValue (State.FontGlueProperty);
+			}
+			
 			public void ClearFontFeatures()
 			{
 				this.ClearValue (State.FontFeaturesProperty);
@@ -1228,6 +1265,7 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	FontFaceProperty = new StateProperty (typeof (State), "FontFace", null);
 			public static readonly StateProperty	FontStyleProperty = new StateProperty (typeof (State), "FontStyle", null);
 			public static readonly StateProperty	FontSizeProperty = new StateProperty (typeof (State), "FontSize", double.NaN);
+			public static readonly StateProperty	FontGlueProperty = new StateProperty (typeof (State), "FontGlue", double.NaN);
 			public static readonly StateProperty	FontFeaturesProperty = new StateProperty (typeof (State), "FontFeatures", new string[0]);
 			public static readonly StateProperty	UnitsProperty = new StateProperty (typeof (State), "Units", Properties.SizeUnits.None);
 			public static readonly StateProperty	InvertBoldProperty = new StateProperty (typeof (State), "InvertBold", false);

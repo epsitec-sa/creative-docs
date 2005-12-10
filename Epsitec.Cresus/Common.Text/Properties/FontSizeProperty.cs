@@ -18,6 +18,13 @@ namespace Epsitec.Common.Text.Properties
 			this.units = units;
 		}
 		
+		public FontSizeProperty(double size, SizeUnits units, double glue)
+		{
+			this.size  = size;
+			this.units = units;
+			this.glue  = glue;
+		}
+		
 		
 		public override WellKnownType			WellKnownType
 		{
@@ -57,6 +64,14 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public double							Glue
+		{
+			get
+			{
+				return this.glue;
+			}
+		}
+		
 		public SizeUnits						Units
 		{
 			get
@@ -75,20 +90,23 @@ namespace Epsitec.Common.Text.Properties
 		{
 			SerializerSupport.Join (buffer,
 				/**/				SerializerSupport.SerializeDouble (this.size),
-				/**/				SerializerSupport.SerializeSizeUnits (this.units));
+				/**/				SerializerSupport.SerializeSizeUnits (this.units),
+				/**/				SerializerSupport.SerializeDouble (this.glue));
 		}
 
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 2);
+			Debug.Assert.IsTrue (args.Length == 3);
 			
 			double    size  = SerializerSupport.DeserializeDouble (args[0]);
 			SizeUnits units = SerializerSupport.DeserializeSizeUnits (args[1]);
+			double    glue  = SerializerSupport.DeserializeDouble (args[2]);
 			
 			this.size  = size;
 			this.units = units;
+			this.glue  = glue;
 		}
 
 		public override Property GetCombination(Property property)
@@ -101,6 +119,8 @@ namespace Epsitec.Common.Text.Properties
 			
 			UnitsTools.Combine (a.size, a.units, b.size, b.units, out c.size, out c.units);
 			
+			c.glue = NumberSupport.Combine (a.glue, b.glue);
+			
 			return c;
 		}
 
@@ -109,6 +129,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			checksum.UpdateValue (this.size);
 			checksum.UpdateValue ((int) this.units);
+			checksum.UpdateValue (this.glue);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -120,11 +141,13 @@ namespace Epsitec.Common.Text.Properties
 		private static bool CompareEqualContents(FontSizeProperty a, FontSizeProperty b)
 		{
 			return NumberSupport.Equal (a.size, b.size)
-				&& a.units == b.units;
+				&& a.units == b.units
+				&& NumberSupport.Equal (a.glue, b.glue);
 		}
 		
 		
 		private double							size;
+		private double							glue;
 		private SizeUnits						units;
 	}
 }

@@ -1563,9 +1563,10 @@ namespace Epsitec.Common.Text
 				double        pt_size;
 				double        pt_offset;
 				double        font_scale;
+				double        font_glue;
 				
 				this.story.TextContext.GetFont (properties, out ot_font);
-				this.story.TextContext.GetFontSize (properties, out pt_size, out font_scale);
+				this.story.TextContext.GetFontSize (properties, out pt_size, out font_scale, out font_glue);
 				this.story.TextContext.GetFontBaselineOffset (pt_size, properties, out pt_offset);
 				
 				ascender  = ot_font.GetAscender (pt_size) * font_scale;
