@@ -16,6 +16,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			this.size  = size;
 			this.units = units;
+			this.glue  = double.NaN;
 		}
 		
 		public FontSizeProperty(double size, SizeUnits units, double glue)

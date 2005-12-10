@@ -438,7 +438,7 @@ namespace Epsitec.Common.Text
 		{
 			font_size  = font_size_property.SizeInPoints;
 			font_scale = (font_xscript_property == null) || (font_xscript_property.IsDisabled) ? 1.0 : font_xscript_property.Scale;
-			font_glue  = font_size * font_size_property.Glue;
+			font_glue  = double.IsNaN (font_size_property.Glue) ? 0 : font_size * font_size_property.Glue;
 		}
 		
 		public void GetFontSize(Property[] properties, out double font_size, out double font_scale, out double font_glue)
