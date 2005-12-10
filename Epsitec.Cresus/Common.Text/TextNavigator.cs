@@ -2860,12 +2860,19 @@ namespace Epsitec.Common.Text
 		
 		protected bool SkipOverAutoText(ref int pos, int direction)
 		{
+			//	Saute le texte automatique et place le curseur temporaire avant/après
+			//	celui-ci. Si aucun texte automatique n'existe, le curseur temporaire
+			//	est tout de même positionné.
+			
 			bool hit = false;
 			
 			if (direction > 0)
 			{
 				for (;;)
 				{
+					//	Important de faire le SetCursorPosition ici; c'est un effet
+					//	de bord dont certaines méthodes dépendent !
+					
 					this.story.SetCursorPosition (this.temp_cursor, pos);
 					
 					ulong code = this.story.ReadChar (this.temp_cursor);
@@ -2894,9 +2901,17 @@ namespace Epsitec.Common.Text
 			}
 			else if (direction < 0)
 			{
-				while (pos > 0)
+				for (;;)
 				{
+					//	Important de faire le SetCursorPosition ici; c'est un effet
+					//	de bord dont certaines méthodes dépendent !
+					
 					this.story.SetCursorPosition (this.temp_cursor, pos);
+					
+					if (pos == 0)
+					{
+						break;
+					}
 					
 					ulong code = this.story.ReadChar (this.temp_cursor, -1);
 					
@@ -2916,6 +2931,13 @@ namespace Epsitec.Common.Text
 					pos += this.SkipOverProperty (this.temp_cursor, property, -1);
 					hit  = true;
 				}
+			}
+			else
+			{
+				//	Important de faire le SetCursorPosition ici; c'est un effet
+				//	de bord dont certaines méthodes dépendent !
+				
+				this.story.SetCursorPosition (this.temp_cursor, pos);
 			}
 			
 			return hit;
