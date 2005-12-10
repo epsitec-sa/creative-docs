@@ -325,9 +325,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		protected override void UpdateClientGeometry()
+		protected override void OnLayoutChanged()
 		{
-			base.UpdateClientGeometry();
+			base.OnLayoutChanged ();
 			
 			if ( this.label != null )
 			{
