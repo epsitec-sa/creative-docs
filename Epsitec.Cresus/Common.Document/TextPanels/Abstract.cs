@@ -331,13 +331,14 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			if ( type == Widgets.TextFieldLabel.Type.TextFieldReal )
 			{
-				field.TextFieldReal.FactorMinRange = (decimal) minRange;
-				field.TextFieldReal.FactorMaxRange = (decimal) maxRange;
-				field.TextFieldReal.FactorStep     = (decimal) step;
-
-				this.document.Modifier.AdaptTextFieldRealDimension(field.TextFieldReal);
-
+				field.SetRangeDimension(this.document, minRange, maxRange, step);
 				field.TextFieldReal.EditionAccepted += handler;
+			}
+
+			if ( type == Widgets.TextFieldLabel.Type.TextFieldUnit )
+			{
+				field.TextFieldReal1.EditionAccepted += handler;
+				field.TextFieldReal2.EditionAccepted += handler;
 			}
 
 			field.TabIndex = this.tabIndex++;
@@ -354,13 +355,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			field.LabelShortText = shortText;
 			field.LabelLongText  = longText;
-			
-			this.document.Modifier.AdaptTextFieldRealPercent(field.TextFieldReal);
-
-			field.TextFieldReal.MinValue   = (decimal) minRange;
-			field.TextFieldReal.MaxValue   = (decimal) maxRange;
-			field.TextFieldReal.Step       = (decimal) step;
-			field.TextFieldReal.Resolution = 1.0M;
+			field.SetRangePercents(this.document, minRange, maxRange, step);
 			
 			field.TextFieldReal.EditionAccepted += handler;
 			
@@ -376,12 +371,10 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( units == Common.Text.Properties.SizeUnits.Percent )
 			{
-				this.document.Modifier.AdaptTextFieldRealPercent(field);
 				field.InternalValue = (decimal) value;
 			}
 			else
 			{
-				this.document.Modifier.AdaptTextFieldRealDimension(field);
 				field.InternalValue = (decimal) value;
 			}
 

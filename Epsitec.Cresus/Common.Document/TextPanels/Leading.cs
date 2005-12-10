@@ -18,18 +18,11 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextLeading");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Leading.Title);
 
-			int index = this.tabIndex++;
-
-			this.fieldLeadingAbs = this.CreateTextFieldLabel       (Res.Strings.TextPanel.Leading.Tooltip.LeadingAbs, " ", Res.Strings.TextPanel.Leading.Long.LeadingAbs,  0.0,  0.1,   1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleLeadingAbsChanged));
-			this.fieldLeadingRel = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Leading.Tooltip.LeadingRel, " ", Res.Strings.TextPanel.Leading.Long.LeadingRel, 50.0, 300.0, 10.0, new EventHandler(this.HandleLeadingRelChanged));
-
-			this.buttonUnits = new Button(this);
-			this.buttonUnits.Width = 20;
-			this.buttonUnits.AutoFocus = false;
-			this.buttonUnits.Clicked += new MessageEventHandler(this.HandleButtonUnitsClicked);
-			this.buttonUnits.TabIndex = index;
-			this.buttonUnits.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.buttonUnits, Res.Strings.TextPanel.Leading.Tooltip.LeadingUnits);
+			this.fieldLeading = this.CreateTextFieldLabel(Res.Strings.TextPanel.Leading.Tooltip.Leading, Res.Strings.TextPanel.Leading.Short.Leading, Res.Strings.TextPanel.Leading.Long.Leading, 0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, new EventHandler(this.HandleLeadingChanged));
+			this.fieldLeading.SetRangeDimension(this.document, 0.0, 0.1, 1.0);
+			this.fieldLeading.SetRangePercents(this.document, 50.0, 300.0, 10.0);
+			this.fieldLeading.IsUnitPercent = true;
+			this.fieldLeading.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 
 			this.buttonLeadingMinus = this.CreateIconButton(Misc.Icon("ParaLeadingMinus"),      Res.Strings.TextPanel.Leading.Tooltip.LeadingMinus, new MessageEventHandler(this.HandleButtonLeadingMinusClicked), false);
 			this.buttonLeadingPlus  = this.CreateIconButton(Misc.Icon("ParaLeadingPlus"),       Res.Strings.TextPanel.Leading.Tooltip.LeadingPlus,  new MessageEventHandler(this.HandleButtonLeadingPlusClicked), false);
@@ -50,6 +43,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
+				this.fieldLeading.ButtonUnit.Clicked -= new MessageEventHandler(this.HandleButtonUnitClicked);
 				this.document.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
 				this.document.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
@@ -105,7 +99,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.fieldLeadingRel == null )  return;
+			if ( this.fieldLeading == null )  return;
 
 			Rectangle rect = this.UsefulZone;
 
@@ -117,12 +111,8 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( this.IsLabelProperties )
 				{
 					r.Left = rect.Left;
-					r.Width = 20;
-					this.buttonUnits.Bounds = r;
-					r.Left = rect.Left+20;
-					r.Right = rect.Right;
-					this.fieldLeadingAbs.Bounds = r;
-					this.fieldLeadingRel.Bounds = r;
+					r.Width = 69;
+					this.fieldLeading.Bounds = r;
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
@@ -147,13 +137,9 @@ namespace Epsitec.Common.Document.TextPanels
 				else
 				{
 					r.Left = rect.Left;
-					r.Width = 20;
-					this.buttonUnits.Bounds = r;
-					r.Offset(20-11, 0);
-					r.Width = 60;
-					this.fieldLeadingAbs.Bounds = r;
-					this.fieldLeadingRel.Bounds = r;
-					r.Offset(60, 0);
+					r.Width = 69;
+					this.fieldLeading.Bounds = r;
+					r.Offset(69, 0);
 					r.Width = 20;
 					this.buttonLeadingMinus.Bounds = r;
 					r.Offset(20, 0);
@@ -182,13 +168,9 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Bottom = r.Top-20;
 
 				r.Left = rect.Left;
-				r.Width = 20;
-				this.buttonUnits.Bounds = r;
-				r.Offset(20-11, 0);
-				r.Width = 60;
-				this.fieldLeadingAbs.Bounds = r;
-				this.fieldLeadingRel.Bounds = r;
-				r.Offset(60, 0);
+				r.Width = 69;
+				this.fieldLeading.Bounds = r;
+				r.Offset(69, 0);
 				r.Width = 20;
 				this.buttonLeadingMinus.Bounds = r;
 				r.Offset(20, 0);
@@ -220,20 +202,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ignoreChanged = true;
 
-			if ( units == Common.Text.Properties.SizeUnits.Percent )
-			{
-				this.buttonUnits.Text = Res.Strings.TextPanel.Leading.Short.LeadingRel;
-				this.fieldLeadingAbs.Visibility = false;
-				this.fieldLeadingRel.Visibility = true;
-				this.SetTextFieldRealPercent(this.fieldLeadingRel.TextFieldReal, leading, isLeading, false);
-			}
-			else
-			{
-				this.buttonUnits.Text = Res.Strings.TextPanel.Leading.Short.LeadingAbs;
-				this.fieldLeadingAbs.Visibility = true;
-				this.fieldLeadingRel.Visibility = false;
-				this.SetTextFieldRealValue(this.fieldLeadingAbs.TextFieldReal, leading, units, isLeading);
-			}
+			this.fieldLeading.IsUnitPercent = (units == Common.Text.Properties.SizeUnits.Percent);
+			this.SetTextFieldRealValue(this.fieldLeading.TextFieldReal, leading, units, isLeading);
 
 			this.ActiveIconButton(this.buttonAlignFirst, alignFirst, isAlign);
 			this.ActiveIconButton(this.buttonAlignAll,   alignAll,   isAlign);
@@ -242,14 +212,21 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		private void HandleButtonUnitsClicked(object sender, MessageEventArgs e)
+		private void HandleButtonUnitClicked(object sender, MessageEventArgs e)
 		{
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
-			double value;
-			Common.Text.Properties.SizeUnits units = this.document.ParagraphWrapper.Active.LeadingUnits;
+			this.fieldLeading.IsUnitPercent = !this.fieldLeading.IsUnitPercent;
 
-			if ( units == Common.Text.Properties.SizeUnits.Percent )
+			double value;
+			Common.Text.Properties.SizeUnits units;
+
+			if ( this.fieldLeading.IsUnitPercent )
+			{
+				value = 1.2;
+				units = Common.Text.Properties.SizeUnits.Percent;
+			}
+			else
 			{
 				if ( this.document.Modifier.RealUnitDimension == RealUnitType.DimensionInch )
 				{
@@ -261,11 +238,6 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
-			else
-			{
-				value = 1.2;
-				units = Common.Text.Properties.SizeUnits.Percent;
-			}
 
 			this.document.ParagraphWrapper.SuspendSynchronisations();
 			this.document.ParagraphWrapper.Defined.Leading = value;
@@ -273,7 +245,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
-		private void HandleLeadingAbsChanged(object sender)
+		private void HandleLeadingChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
@@ -285,36 +257,6 @@ namespace Epsitec.Common.Document.TextPanels
 			Common.Text.Properties.SizeUnits units;
 			bool isDefined;
 			this.GetTextFieldRealValue(field, out value, out units, out isDefined);
-
-			this.document.ParagraphWrapper.SuspendSynchronisations();
-
-			if ( isDefined )
-			{
-				this.document.ParagraphWrapper.Defined.Leading = value;
-				this.document.ParagraphWrapper.Defined.LeadingUnits = units;
-			}
-			else
-			{
-				this.document.ParagraphWrapper.Defined.ClearLeading();
-				this.document.ParagraphWrapper.Defined.ClearLeadingUnits();
-			}
-
-			this.document.ParagraphWrapper.ResumeSynchronisations();
-		}
-
-		private void HandleLeadingRelChanged(object sender)
-		{
-			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
-
-			TextFieldReal field = sender as TextFieldReal;
-			if ( field == null )  return;
-
-			double value;
-			Common.Text.Properties.SizeUnits units;
-			bool isDefined;
-			this.GetTextFieldRealPercent(field, out value, out isDefined);
-			units = Common.Text.Properties.SizeUnits.Percent;
 
 			this.document.ParagraphWrapper.SuspendSynchronisations();
 
@@ -352,14 +294,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( units == Common.Text.Properties.SizeUnits.Percent )
 			{
-				if ( delta > 0 )
-				{
-					leading *= 1.5;
-				}
-				else
-				{
-					leading /= 1.5;
-				}
+				if ( delta > 0 )  leading *= 1.2;
+				else              leading /= 1.2;
 				leading = System.Math.Max(leading, 0.5);
 			}
 			else
@@ -421,8 +357,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 
 		protected Button					buttonUnits;
-		protected Widgets.TextFieldLabel	fieldLeadingAbs;
-		protected Widgets.TextFieldLabel	fieldLeadingRel;
+		protected Widgets.TextFieldLabel	fieldLeading;
 		protected IconButton				buttonLeadingMinus;
 		protected IconButton				buttonLeadingPlus;
 		protected IconButton				buttonAlignFirst;
