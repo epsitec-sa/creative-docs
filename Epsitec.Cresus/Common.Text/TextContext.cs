@@ -376,6 +376,30 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public void GetFontAndSize(ulong code, out OpenType.Font font, out double font_size, out double scale, out double glue)
+		{
+			this.InternalGetFontAndSize (code, out font, out font_size, out scale);
+			
+			if (Unicode.Bits.GetSpecialCodeFlag (code))
+			{
+				//	Ce n'est pas un caractère normal, mais un caractère qui doit
+				//	être remplacé par un glyph à la volée. Modifie aussi la fonte
+				//	si besoin.
+				
+				ushort        s_glyph;
+				OpenType.Font s_font;
+				
+				this.GetGlyphAndFontForSpecialCode (code, out s_glyph, out s_font);
+				
+				if (s_font != null)
+				{
+					font = s_font;
+				}
+			}
+			
+			glue = font_size * 0.5;
+		}
+		
 		public void GetFont(Properties.FontProperty font_property, out OpenType.Font font)
 		{
 			string font_face  = font_property.FaceName;

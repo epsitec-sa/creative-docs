@@ -225,7 +225,7 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public void Add(Layout.Context context, OpenType.Font font, double size, ulong[] text, int offset, int length)
+		public void Add(Layout.Context context, OpenType.Font font, double size, ulong[] text, int offset, int length, double glue)
 		{
 			ushort[] glyphs;
 			byte[]   attributes = new byte[length];
@@ -248,13 +248,13 @@ namespace Epsitec.Common.Text.Layout
 			{
 				if (glyphs[i] != 0xffff)
 				{
-					this.Add ((Unicode.StretchClass) attributes[i], x_pos[i+1] - x_pos[i]);
+					this.Add ((Unicode.StretchClass) attributes[i], x_pos[i+1] - x_pos[i] + glue);
 				}
 			}
 			
 			if (glyphs[count-1] != 0xffff)
 			{
-				this.Add ((Unicode.StretchClass) attributes[count-1], x_end - x_pos[count-1]);
+				this.Add ((Unicode.StretchClass) attributes[count-1], x_end - x_pos[count-1] + glue);
 			}
 		}
 		

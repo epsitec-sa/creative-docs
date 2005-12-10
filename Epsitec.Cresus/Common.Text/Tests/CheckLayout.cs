@@ -381,7 +381,7 @@ namespace Epsitec.Common.Text.Tests
 			story.TextContext.GetFontAndSize (story_text[0], out font, out font_size, out font_scale);
 			
 			Layout.StretchProfile profile = new Layout.StretchProfile ();
-			profile.Add (null, font, font_size, story_text, 0, 26);
+			profile.Add (null, font, font_size, story_text, 0, 26, 0);
 			
 			context = new Layout.Context (story.TextContext, story_text, 0, 0, 14.0, 300, 20, 20, 30, 0);
 			status  = context.Fit (ref breaks, 0);

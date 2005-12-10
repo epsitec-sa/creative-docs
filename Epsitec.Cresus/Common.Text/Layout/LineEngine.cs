@@ -95,12 +95,14 @@ namespace Epsitec.Common.Text.Layout
 						Layout.BaseEngine         engine;
 						Properties.LayoutProperty layout;
 						double font_scale;
+						double font_advance;
 						
-						context.TextContext.GetFontAndSize (code, out scratch.Font, out scratch.FontSize, out font_scale);
+						context.TextContext.GetFontAndSize (code, out scratch.Font, out scratch.FontSize, out font_scale, out font_advance);
 						context.TextContext.GetFontOffsets (code, out scratch.FontBaseline, out scratch.FontAdvance);
 						context.TextContext.GetLayoutEngine (code, out engine, out layout);
 						
-						scratch.FontSize *= font_scale;
+						scratch.FontAdvance += font_advance;
+						scratch.FontSize    *= font_scale;
 						
 						if ((engine != this) ||
 							(layout != context.LayoutProperty))
@@ -537,11 +539,13 @@ advance_next:
 			double        font_baseline;
 			double        font_advance;
 			double        font_scale;
+			double        font_advance_offset;
 			
-			context.TextContext.GetFontAndSize (text[offset], out font, out font_size, out font_scale);
-			context.TextContext.GetFontOffsets (text[offset], out font_baseline, out font_advance);
+			context.TextContext.GetFontAndSize (text[offset], out font, out font_size, out font_scale, out font_advance);
+			context.TextContext.GetFontOffsets (text[offset], out font_baseline, out font_advance_offset);
 			
-			font_size *= font_scale;
+			font_size    *= font_scale;
+			font_advance += font_advance_offset;
 			
 			//	Si l'appelant a désactivé le décalage vertical de la ligne de base
 			//	(par ex. pour déterminer la position du curseur), on en tient compte
@@ -557,10 +561,10 @@ advance_next:
 			StretchProfile.Scales scales = context.TextStretchScales;
 			double                glue   = context.TextStretchGlue;
 			
-			if (glue > 0)
+			if ((glue > 0) || (font_advance != 0))
 			{
 				font.PushActiveFeatures ();
-				font.DisableActiveFeatures ("liga", "dlig");
+				font.DisableActiveFeatures ("liga", "clig", "hlig", "dlig");
 			}
 			
 			//	Génère les glyphes et les informations relatives à l'extensibilité
@@ -730,17 +734,22 @@ advance_next:
 			OpenType.Font font;
 			double        font_size;
 			double        font_scale;
+			double        font_advance;
+			double        font_baseline;
+			double        font_advance_offset;
 			
-			context.TextContext.GetFontAndSize (text[offset], out font, out font_size, out font_scale);
+			context.TextContext.GetFontAndSize (text[offset], out font, out font_size, out font_scale, out font_advance);
+			context.TextContext.GetFontOffsets (text[offset], out font_baseline, out font_advance_offset);
 			
-			font_size *= font_scale;
+			font_size    *= font_scale;
+			font_advance += font_advance_offset;
 			
 			double glue = context.TextStretchGlue;
 			
-			if (glue > 0)
+			if ((glue > 0) || (font_advance != 0))
 			{
 				font.PushActiveFeatures ();
-				font.DisableActiveFeatures ("liga", "dlig");
+				font.DisableActiveFeatures ("liga", "clig", "hlig", "dlig");
 			}
 			
 			//	Génère les glyphes et les informations relatives à l'extensibilité
@@ -755,11 +764,11 @@ advance_next:
 				
 				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.GetHyphen ());
 				
-				profile.Add (context, font, font_size, temp, 0, length + 1);
+				profile.Add (context, font, font_size, temp, 0, length + 1, font_advance);
 			}
 			else
 			{
-				profile.Add (context, font, font_size, text, offset, length);
+				profile.Add (context, font, font_size, text, offset, length, font_advance);
 			}
 			
 			if (glue > 0)
