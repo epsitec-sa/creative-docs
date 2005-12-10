@@ -70,6 +70,7 @@ namespace Epsitec.Common.Text.Wrappers
 			System.Diagnostics.Debug.Assert (this.suspend_synchronisations > 0);
 			
 			this.suspend_synchronisations--;
+			int id = this.change_id++;
 			
 			if (this.suspend_synchronisations == 0)
 			{
@@ -81,7 +82,7 @@ namespace Epsitec.Common.Text.Wrappers
 					{
 						foreach (StateProperty property in state.GetPendingProperties ())
 						{
-							state.NotifyChanged (property);
+							state.NotifyChanged (property, id);
 							this.InternalSynchronize (state, property);
 						}
 						
@@ -321,12 +322,14 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		internal void Synchronize(AbstractState state, StateProperty property)
 		{
+			int id = this.change_id++;
+			
 			if (state.AccessMode == AccessMode.ReadOnly)
 			{
 				//	Si les réglages sont définis en lecture seule, la synchronisation
 				//	ne doit peut pas affecter le texte sous-jacent :
 				
-				state.NotifyChanged (property);
+				state.NotifyChanged (property, id);
 			}
 			else
 			{
@@ -336,7 +339,7 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 				else
 				{
-					state.NotifyChanged (property);
+					state.NotifyChanged (property, id);
 					
 					if (this.navigator != null)
 					{
@@ -359,5 +362,6 @@ namespace Epsitec.Common.Text.Wrappers
 		private System.Collections.ArrayList	states;
 		
 		private int								suspend_synchronisations;
+		private int								change_id;
 	}
 }

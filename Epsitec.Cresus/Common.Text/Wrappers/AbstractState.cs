@@ -202,9 +202,13 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
-		internal void NotifyChanged(StateProperty property)
+		internal void NotifyChanged(StateProperty property, int change_id)
 		{
-			this.OnChanged ();
+			if (this.change_id != change_id)
+			{
+				this.change_id = change_id;
+				this.OnChanged ();
+			}
 		}
 		
 		internal void NotifyWrapperChanged()
@@ -229,6 +233,7 @@ namespace Epsitec.Common.Text.Wrappers
 		private System.Collections.Hashtable	state = new System.Collections.Hashtable ();
 		private System.Collections.Hashtable	flags = new System.Collections.Hashtable ();
 		private System.Collections.Hashtable	pending_properties = new System.Collections.Hashtable ();
+		private int								change_id;
 		private bool							is_dirty;
 	}
 }
