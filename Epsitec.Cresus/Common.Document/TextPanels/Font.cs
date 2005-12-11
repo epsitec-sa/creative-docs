@@ -40,13 +40,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontSize.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontSize, Res.Strings.TextPanel.Font.Tooltip.Size);
 
-			this.fontColor = new ColorSample(this);
-			this.fontColor.PossibleSource = true;
-			this.fontColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
-			this.fontColor.Changed += new EventHandler(this.HandleFieldColorChanged);
-			this.fontColor.TabIndex = this.tabIndex++;
-			this.fontColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Action.Text.Font.Color);
+			this.fontColor = this.CreateColorSample(Res.Strings.Action.Text.Font.Color, new MessageEventHandler(this.HandleFieldColorClicked), new EventHandler(this.HandleFieldColorChanged));
 
 			this.buttonSizeMinus = this.CreateIconButton(Misc.Icon("FontSizeMinus"), Res.Strings.Action.Text.Font.SizeMinus, new MessageEventHandler(this.HandleButtonSizeMinusClicked), false);
 			this.buttonSizePlus  = this.CreateIconButton(Misc.Icon("FontSizePlus"),  Res.Strings.Action.Text.Font.SizePlus,  new MessageEventHandler(this.HandleButtonSizePlusClicked), false);
@@ -186,14 +180,15 @@ namespace Epsitec.Common.Document.TextPanels
 		// Donne la couleur au wrapper.
 		protected void ColorToWrapper(ColorSample sample)
 		{
-			if ( sample.Color.IsEmpty )
+			string color = this.GetColorSample(sample);
+
+			if ( color == null )
 			{
 				this.document.TextWrapper.Defined.ClearColor();
 			}
 			else
 			{
-				string sc = RichColor.ToString(sample.Color);
-				this.document.TextWrapper.Defined.Color = sc;
+				this.document.TextWrapper.Defined.Color = color;
 			}
 		}
 
@@ -218,8 +213,8 @@ namespace Epsitec.Common.Document.TextPanels
 			bool isSize = this.document.TextWrapper.Defined.IsFontSizeDefined;
 			string textSize = Misc.ConvertDoubleToString(size, units, 0);
 
-			string sc = this.document.TextWrapper.Defined.Color;
-			RichColor color = (sc == null) ? RichColor.Empty : RichColor.Parse(sc);
+			string color = this.document.TextWrapper.Defined.Color;
+			bool isColor = this.document.TextWrapper.Defined.IsColorDefined;
 
 			bool bold   = this.document.TextWrapper.Defined.InvertBold;
 			bool italic = this.document.TextWrapper.Defined.InvertItalic;
@@ -238,7 +233,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ProposalTextFieldCombo(this.fontStyle, !isStyle);
 			this.ProposalTextFieldCombo(this.fontSize,  !isSize);
 
-			this.fontColor.Color = color;
+			this.SetColorSample(this.fontColor, color, isColor, false);
 
 			if ( this.fontColor.ActiveState == ActiveState.Yes )
 			{

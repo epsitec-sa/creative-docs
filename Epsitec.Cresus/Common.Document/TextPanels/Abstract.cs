@@ -367,7 +367,7 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		// Modifie la valeur d'un TextFieldReal.
-		protected void SetTextFieldRealValue(TextFieldReal field, double value, Common.Text.Properties.SizeUnits units, bool isDefined)
+		protected void SetTextFieldRealValue(TextFieldReal field, double value, Common.Text.Properties.SizeUnits units, bool isDefined, bool disabledIfUndefined)
 		{
 			if ( units == Common.Text.Properties.SizeUnits.Percent )
 			{
@@ -378,7 +378,15 @@ namespace Epsitec.Common.Document.TextPanels
 				field.InternalValue = (decimal) value;
 			}
 
-			field.TextDisplayMode = isDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+			if ( disabledIfUndefined )
+			{
+				field.TextDisplayMode = isDefined ? TextDisplayMode.Defined : TextDisplayMode.Default;
+				field.Enable = isDefined;
+			}
+			else
+			{
+				field.TextDisplayMode = isDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+			}
 		}
 
 		// Donne la valeur d'un TextFieldReal.
@@ -431,6 +439,47 @@ namespace Epsitec.Common.Document.TextPanels
 		protected void ProposalTextFieldCombo(TextFieldCombo field, bool proposal)
 		{
 			field.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
+		}
+
+
+		// Crée un échantilon de couleur.
+		protected ColorSample CreateColorSample(string tooltip, MessageEventHandler handlerClicked, EventHandler handlerChanged)
+		{
+			ColorSample sample = new ColorSample(this);
+
+			sample.PossibleSource = true;
+			sample.Clicked += handlerClicked;
+			sample.Changed += handlerChanged;
+			sample.TabIndex = this.tabIndex++;
+			sample.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(sample, tooltip);
+
+			return sample;
+		}
+
+		// Donne la couleur d'un échantillon.
+		protected void SetColorSample(ColorSample sample, string color, bool isDefined, bool disabledIfUndefined)
+		{
+			RichColor rc = (color == null) ? RichColor.Empty : RichColor.Parse(color);
+			sample.Color = rc;
+
+			if ( disabledIfUndefined )
+			{
+				sample.Enable = isDefined;
+			}
+		}
+
+		// Donne la couleur d'un échantillon.
+		protected string GetColorSample(ColorSample sample)
+		{
+			if ( sample.Color.IsEmpty )
+			{
+				return null;
+			}
+			else
+			{
+				return RichColor.ToString(sample.Color);
+			}
 		}
 
 		

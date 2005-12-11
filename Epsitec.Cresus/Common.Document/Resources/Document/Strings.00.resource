@@ -530,7 +530,28 @@
 	<data name="TextPanel.Font.Tooltip.Features">Variantes OpenType</data>
 	<data name="TextPanel.Font.Tooltip.Size">Taille de la police</data>
 
-	<data name="TextPanel.Xline.Title">Souligné, biffé, etc.</data>
+	<data name="TextPanel.Xline.Title">Traits horizontaux</data>
+	<data name="TextPanel.Xline.Short.Underlined.Thickness">E</data>
+	<data name="TextPanel.Xline.Short.Underlined.Position">P</data>
+	<data name="TextPanel.Xline.Short.Strikeout.Thickness">E</data>
+	<data name="TextPanel.Xline.Short.Strikeout.Position">P</data>
+	<data name="TextPanel.Xline.Short.Overlined.Thickness">E</data>
+	<data name="TextPanel.Xline.Short.Overlined.Position">P</data>
+	<data name="TextPanel.Xline.Long.Underlined.Thickness">Epaisseur souligné</data>
+	<data name="TextPanel.Xline.Long.Underlined.Position">Position souligné</data>
+	<data name="TextPanel.Xline.Long.Strikeout.Thickness">Epaisseur biffé</data>
+	<data name="TextPanel.Xline.Long.Strikeout.Position">Position biffé</data>
+	<data name="TextPanel.Xline.Long.Overlined.Thickness">Epaisseur surligné</data>
+	<data name="TextPanel.Xline.Long.Overlined.Position">Position surligné</data>
+	<data name="TextPanel.Xline.Tooltip.Underlined.Thickness">Epaisseur du souligné</data>
+	<data name="TextPanel.Xline.Tooltip.Underlined.Position">Position verticale du souligné</data>
+	<data name="TextPanel.Xline.Tooltip.Underlined.Color">Couleur du souligné</data>
+	<data name="TextPanel.Xline.Tooltip.Strikeout.Thickness">Epaisseur du biffé</data>
+	<data name="TextPanel.Xline.Tooltip.Strikeout.Position">Position verticale du biffé</data>
+	<data name="TextPanel.Xline.Tooltip.Strikeout.Color">Couleur du biffé</data>
+	<data name="TextPanel.Xline.Tooltip.Overlined.Thickness">Epaisseur du surligné</data>
+	<data name="TextPanel.Xline.Tooltip.Overlined.Position">Position verticale du surligné</data>
+	<data name="TextPanel.Xline.Tooltip.Overlined.Color">Couleur du surligné</data>
 
 	<data name="TextPanel.Xscript.Title">Indices et exposants</data>
 	<data name="TextPanel.Xscript.Short.Scale">E</data>

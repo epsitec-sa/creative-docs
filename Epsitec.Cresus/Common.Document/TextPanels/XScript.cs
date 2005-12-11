@@ -115,7 +115,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
-					r.Right = rect.Right;
+					r.Right = rect.Right-25;
 					this.fieldScale.Bounds = r;
 					r.Offset(0, -25);
 					this.fieldOffset.Bounds = r;
@@ -330,8 +330,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected IconButton				buttonSubscript;
 		protected IconButton				buttonSuperscript;
-		protected IconButton				buttonClear;
 		protected Widgets.TextFieldLabel	fieldScale;
 		protected Widgets.TextFieldLabel	fieldOffset;
+		protected IconButton				buttonClear;
 	}
 }

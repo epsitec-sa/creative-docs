@@ -203,7 +203,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ignoreChanged = true;
 
 			this.fieldLeading.IsUnitPercent = (units == Common.Text.Properties.SizeUnits.Percent);
-			this.SetTextFieldRealValue(this.fieldLeading.TextFieldReal, leading, units, isLeading);
+			this.SetTextFieldRealValue(this.fieldLeading.TextFieldReal, leading, units, isLeading, false);
 
 			this.ActiveIconButton(this.buttonAlignFirst, alignFirst, isAlign);
 			this.ActiveIconButton(this.buttonAlignAll,   alignAll,   isAlign);
