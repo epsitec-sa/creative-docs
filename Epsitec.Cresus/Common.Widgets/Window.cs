@@ -993,6 +993,7 @@ namespace Epsitec.Common.Widgets
 			if (!this.is_disposed)
 			{
 				this.is_disposed = true;
+				System.Diagnostics.Debug.WriteLine("Disposing window, still " + Window.DebugAliveWindowsCount + " windows alive");
 				
 				this.Dispose (true);
 				System.GC.SuppressFinalize (this);

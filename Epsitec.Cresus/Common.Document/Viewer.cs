@@ -2572,11 +2572,13 @@ namespace Epsitec.Common.Document
 			{
 				if ( fadeout )
 				{
+					this.miniBar.WindowAnimationEnded += new EventHandler(this.HandleMiniBarWindowAnimationEnded);
 					this.miniBar.AnimateShow(Animation.FadeOut);
 				}
 				else
 				{
 					this.miniBar.Close();
+					this.miniBar.AsyncDispose();
 				}
 
 				this.miniBarBalloon.CloseNeeded -= new EventHandler(this.HandleMiniBarCloseNeeded);
@@ -2585,6 +2587,14 @@ namespace Epsitec.Common.Document
 				this.miniBarBalloon = null;
 				this.miniBar = null;
 			}
+		}
+		
+		// Quand l'animation de fermeture de la mini-palette est terminée, il faut
+		// encore supprimer la fenêtre, pour éviter qu'elle ne traîne ad eternum.
+		private void HandleMiniBarWindowAnimationEnded(object sender)
+		{
+			Window miniBar = sender as Window;
+			miniBar.AsyncDispose();
 		}
 
 		// Retourne la liste des commandes pour la mini-palette.
