@@ -84,6 +84,11 @@ namespace Epsitec.Common.Document.TextPanels
 					{
 						h += 30 + 25*total;
 					}
+
+					if ( total == 0 )
+					{
+						h += 20;  // feedback visuel lorsque le panneau est étendu mais vide (à part les IconButtons)
+					}
 				}
 				else	// panneau réduit ?
 				{
