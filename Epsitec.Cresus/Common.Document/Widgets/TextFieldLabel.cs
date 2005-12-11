@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.buttonUnit.AutoFocus = false;
 				this.buttonUnit.Dock = DockStyle.Left;
 				this.buttonUnit.DockMargins = new Margins(0, 1, 0, 0);
-				//?ToolTip.Default.SetToolTip(this.buttonUnit, Res.Strings.TextPanel.Units);  // TODO: voir avec Pierre pourquoi ça plante !
+				ToolTip.Default.SetToolTip(this.buttonUnit, Res.Strings.TextPanel.Units);
 			}
 			else
 			{

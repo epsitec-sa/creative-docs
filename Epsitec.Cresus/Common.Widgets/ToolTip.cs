@@ -97,7 +97,8 @@ namespace Epsitec.Common.Widgets
 		
 		public void HideToolTipForWidget(Widget widget)
 		{
-			if (this.widget == widget)
+			if ((this.widget == widget) &&
+				(widget != null))
 			{
 				this.HideToolTip ();
 			}
@@ -348,7 +349,11 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleWidgetEntered(object sender, MessageEventArgs e)
 		{
-			this.AttachToWidget (sender as Widget);
+			Widget widget = sender as Widget;
+			
+//-			System.Diagnostics.Debug.WriteLine ("HandleWidgetEntered: " + widget.ToString ());
+			
+			this.AttachToWidget (widget);
 			
 			System.Diagnostics.Debug.Assert (this.widget != null);
 			
@@ -365,10 +370,16 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleWidgetExited(object sender, MessageEventArgs e)
 		{
-			if ( this.behaviour != ToolTipBehaviour.Manual )
+			Widget widget = sender as Widget;
+			
+			if (this.behaviour != ToolTipBehaviour.Manual)
 			{
-				this.HideToolTip();
-				this.DetachFromWidget (this.widget);
+//-				System.Diagnostics.Debug.WriteLine ("HandleWidgetExited: " + widget.ToString ());
+				if (this.widget == widget)
+				{
+					this.HideToolTip ();
+					this.DetachFromWidget (widget);
+				}
 			}
 		}
 		
