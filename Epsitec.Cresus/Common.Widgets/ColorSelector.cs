@@ -240,13 +240,12 @@ namespace Epsitec.Common.Widgets
 
 				if ( this.color != value )
 				{
-					System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
-					
+					bool isc = this.suspendColorEvents;
 					this.suspendColorEvents = true;
 					this.color = value;
 					this.circle.Color = value;
 					this.UpdateColors();
-					this.suspendColorEvents = false;
+					this.suspendColorEvents = isc;
 				}
 			}
 		}
@@ -393,7 +392,7 @@ namespace Epsitec.Common.Widgets
 			double b = (double) this.fields[2].Value/255;
 			double a = (double) this.fields[3].Value/255;
 
-			System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
+			bool isc = this.suspendColorEvents;
 			this.suspendColorEvents = true;
 			this.color = Drawing.RichColor.FromARGB(a,r,g,b);
 			this.circle.Color = this.color;
@@ -404,7 +403,7 @@ namespace Epsitec.Common.Widgets
 			this.ColoriseSliders();
 			this.Invalidate();
 			this.OnChanged();
-			this.suspendColorEvents = false;
+			this.suspendColorEvents = isc;
 		}
 
 		// Textes éditables HSV -> couleur.
@@ -414,7 +413,7 @@ namespace Epsitec.Common.Widgets
 			double s = (double) this.fields[5].Value/100;
 			double v = (double) this.fields[6].Value/100;
 
-			System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
+			bool isc = this.suspendColorEvents;
 			this.suspendColorEvents = true;
 			this.circle.SetHSV(h,s,v);
 			this.color = Drawing.RichColor.FromAHSV(this.color.A, h,s,v);
@@ -425,7 +424,7 @@ namespace Epsitec.Common.Widgets
 			this.ColoriseSliders();
 			this.Invalidate();
 			this.OnChanged();
-			this.suspendColorEvents = false;
+			this.suspendColorEvents = isc;
 		}
 
 		// Textes éditables CMYK -> couleur.
@@ -437,7 +436,7 @@ namespace Epsitec.Common.Widgets
 			double y = (double) this.fields[ 9].Value/100;
 			double k = (double) this.fields[10].Value/100;
 
-			System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
+			bool isc = this.suspendColorEvents;
 			this.suspendColorEvents = true;
 			this.color = Drawing.RichColor.FromACMYK(a,c,m,y,k);
 			this.circle.Color = this.color;
@@ -448,7 +447,7 @@ namespace Epsitec.Common.Widgets
 			this.ColoriseSliders();
 			this.Invalidate();
 			this.OnChanged();
-			this.suspendColorEvents = false;
+			this.suspendColorEvents = isc;
 		}
 
 		// Textes éditables Gray -> couleur.
@@ -457,7 +456,7 @@ namespace Epsitec.Common.Widgets
 			double a = (double) this.fields[ 3].Value/255;
 			double g = (double) this.fields[11].Value/100;
 
-			System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
+			bool isc = this.suspendColorEvents;
 			this.suspendColorEvents = true;
 			this.color = Drawing.RichColor.FromAGray(a,g);
 			this.circle.SetAGray(a,g);
@@ -468,7 +467,7 @@ namespace Epsitec.Common.Widgets
 			this.ColoriseSliders();
 			this.Invalidate();
 			this.OnChanged();
-			this.suspendColorEvents = false;
+			this.suspendColorEvents = isc;
 		}
 
 		// Textes éditables Hexa -> couleur.
@@ -513,7 +512,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
+			bool isc = this.suspendColorEvents;
 			this.suspendColorEvents = true;
 			this.color = Drawing.RichColor.FromARGB(a,r,g,b);
 			this.circle.Color = this.color;
@@ -524,7 +523,7 @@ namespace Epsitec.Common.Widgets
 			this.ColoriseSliders();
 			this.Invalidate();
 			this.OnChanged();
-			this.suspendColorEvents = false;
+			this.suspendColorEvents = isc;
 		}
 
 		// Colorise certains sliders en fonction de la couleur définie.
@@ -896,6 +895,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( !this.suspendColorEvents )
 			{
+				bool isc = this.suspendColorEvents;
 				this.suspendColorEvents = true;
 				this.color = this.circle.Color;
 				this.ColorToFieldsRGB();
@@ -906,7 +906,7 @@ namespace Epsitec.Common.Widgets
 				this.ColoriseSliders();
 				this.Invalidate();
 				this.OnChanged();
-				this.suspendColorEvents = false;
+				this.suspendColorEvents = isc;
 			}
 		}
 
@@ -939,9 +939,10 @@ namespace Epsitec.Common.Widgets
 			
 			this.circle.Color = this.color;
 
+			bool isc = this.suspendColorEvents;
 			this.suspendColorEvents = true;
 			this.UpdateColors();
-			this.suspendColorEvents = false;
+			this.suspendColorEvents = isc;
 		}
 		
 		
