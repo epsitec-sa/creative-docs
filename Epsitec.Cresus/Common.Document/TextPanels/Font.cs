@@ -34,16 +34,18 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fontFeatures = this.CreateIconButton(Misc.Icon("FontFeatures"), Res.Strings.TextPanel.Font.Tooltip.Features, new MessageEventHandler(this.HandleFeaturesClicked));
 
-			this.fontSize = new TextFieldCombo(this);
-			this.fontSize.TextChanged += new EventHandler(this.HandleFieldChanged);
-			this.fontSize.TabIndex = this.tabIndex++;
-			this.fontSize.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fontSize, Res.Strings.TextPanel.Font.Tooltip.Size);
+			this.fontSize = this.CreateTextFieldLabel(Res.Strings.TextPanel.Font.Tooltip.Size, Res.Strings.TextPanel.Font.Short.Size, Res.Strings.TextPanel.Font.Long.Size, 0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, new EventHandler(this.HandleSizeChanged));
+			this.fontSize.SetRangeFontSize();
+			this.fontSize.SetRangePercents(this.document, 25.0, 400.0, 10.0);
+			this.fontSize.IsUnitPercent = true;
+			this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 
 			this.fontColor = this.CreateColorSample(Res.Strings.Action.Text.Font.Color, new MessageEventHandler(this.HandleFieldColorClicked), new EventHandler(this.HandleFieldColorChanged));
 
 			this.buttonSizeMinus = this.CreateIconButton(Misc.Icon("FontSizeMinus"), Res.Strings.Action.Text.Font.SizeMinus, new MessageEventHandler(this.HandleButtonSizeMinusClicked), false);
 			this.buttonSizePlus  = this.CreateIconButton(Misc.Icon("FontSizePlus"),  Res.Strings.Action.Text.Font.SizePlus,  new MessageEventHandler(this.HandleButtonSizePlusClicked), false);
+
+			this.fontGlue = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Font.Tooltip.Glue, Res.Strings.TextPanel.Font.Short.Glue, Res.Strings.TextPanel.Font.Long.Glue, 50.0, 200.0, 10.0, new EventHandler(this.HandleGlueValueChanged));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -72,7 +74,7 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.fontFace.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontStyle.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fontSize.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
 
@@ -99,11 +101,11 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					if ( this.IsLabelProperties )  // étendu/détails ?
 					{
-						h += 120;
+						h += 30+25+25+25+40;
 					}
 					else	// étendu/compact ?
 					{
-						h += 120;
+						h += 30+25+25+25+40;
 					}
 				}
 				else	// panneau réduit ?
@@ -199,12 +201,11 @@ namespace Epsitec.Common.Document.TextPanels
 
 			double size = this.document.TextWrapper.Active.FontSize;
 			Text.Properties.SizeUnits units = this.document.TextWrapper.Active.Units;
-			if ( units == Common.Text.Properties.SizeUnits.Points )
-			{
-				size /= Modifier.fontSizeScale;
-			}
 			bool isSize = this.document.TextWrapper.Defined.IsFontSizeDefined;
-			string textSize = Misc.ConvertDoubleToString(size, units, 0);
+
+			double glue = this.document.TextWrapper.Active.FontGlue;
+			if ( double.IsNaN(glue) )  glue = 0.0;  // TODO: devrait être inutile, non ?
+			bool isGlue = this.document.TextWrapper.Defined.IsFontGlueDefined;
 
 			string color = this.document.TextWrapper.Defined.Color;
 			bool isColor = this.document.TextWrapper.Defined.IsColorDefined;
@@ -216,15 +217,16 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.UpdateComboFaceList();
 			this.UpdateComboStyleList(face);
-			this.UpdateComboSizeList();
 
 			this.fontFace.Text  = face;
 			this.fontStyle.Text = style;
-			this.fontSize.Text  = textSize;
-
 			this.ProposalTextFieldCombo(this.fontFace,  !isFace);
 			this.ProposalTextFieldCombo(this.fontStyle, !isStyle);
-			this.ProposalTextFieldCombo(this.fontSize,  !isSize);
+
+			this.fontSize.IsUnitPercent = (units == Common.Text.Properties.SizeUnits.Percent);
+			this.SetTextFieldRealValue(this.fontSize.TextFieldReal, size, units, isSize, false);
+
+			this.SetTextFieldRealPercent(this.fontGlue.TextFieldReal, glue, isGlue, false);
 
 			this.SetColorSample(this.fontColor, color, isColor, false);
 
@@ -259,34 +261,6 @@ namespace Epsitec.Common.Document.TextPanels
 			foreach ( OpenType.FontIdentity id in list )
 			{
 				this.fontStyle.Items.Add(id.InvariantStyleName);
-			}
-		}
-
-		// Met à jour la liste d'un champ éditable pour la taille de la police.
-		protected void UpdateComboSizeList()
-		{
-			if ( this.fontSize.Items.Count == 0 )
-			{
-				this.fontSize.Items.Add(Res.Strings.Action.Text.Font.Default);  // par défaut
-				this.fontSize.Items.Add("\u2015\u2015\u2015\u2015");
-				this.fontSize.Items.Add("50%");
-				this.fontSize.Items.Add("75%");
-				this.fontSize.Items.Add("150%");
-				this.fontSize.Items.Add("200%");
-				this.fontSize.Items.Add("\u2015\u2015\u2015\u2015");
-				this.fontSize.Items.Add("8");
-				this.fontSize.Items.Add("9");
-				this.fontSize.Items.Add("10");
-				this.fontSize.Items.Add("11");
-				this.fontSize.Items.Add("12");
-				this.fontSize.Items.Add("14");
-				this.fontSize.Items.Add("16");
-				this.fontSize.Items.Add("18");
-				this.fontSize.Items.Add("20");
-				this.fontSize.Items.Add("24");
-				this.fontSize.Items.Add("36");
-				this.fontSize.Items.Add("48");
-				this.fontSize.Items.Add("72");
 			}
 		}
 
@@ -342,31 +316,37 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( this.IsLabelProperties )
 				{
-					r.Left = rect.Right-(120+20);
-					r.Width = 120;
-					this.fontStyle.Bounds = r;
-					this.fontStyle.Visibility = true;
-					r.Left = r.Right-1;
-					r.Width = 20;
-					this.fontFeatures.Bounds = r;
-					this.fontFeatures.Visibility = true;
-
-					r.Offset(0, -25);
 					r.Left = rect.Left;
-					r.Width = 60;
+					r.Width = 69;
 					this.fontSize.Bounds = r;
 					this.fontSize.Visibility = true;
-					r.Offset(60, 0);
+					r.Offset(69, 0);
 					r.Width = 20;
 					this.buttonSizeMinus.Bounds = r;
 					this.buttonSizeMinus.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonSizePlus.Bounds = r;
 					this.buttonSizePlus.Visibility = true;
-					r.Offset(20+10, 0);
+					r.Left = rect.Right-40;
 					r.Width = 40;
 					this.fontColor.Bounds = r;
 					this.fontColor.Visibility = true;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Width = 120;
+					this.fontStyle.Bounds = r;
+					this.fontStyle.Visibility = true;
+					r.Offset(120+5, 0);
+					r.Width = 20;
+					this.fontFeatures.Bounds = r;
+					this.fontFeatures.Visibility = true;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Right = rect.Right-25;
+					this.fontGlue.Bounds = r;
+					this.fontGlue.Visibility = true;
 					r.Left = rect.Right-20;
 					r.Width = 20;
 					this.buttonClear.Bounds = r;
@@ -383,31 +363,37 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 				else
 				{
-					r.Left = rect.Right-(120+20);
-					r.Width = 120;
-					this.fontStyle.Bounds = r;
-					this.fontStyle.Visibility = true;
-					r.Left = r.Right-1;
-					r.Width = 20;
-					this.fontFeatures.Bounds = r;
-					this.fontFeatures.Visibility = true;
-
-					r.Offset(0, -25);
 					r.Left = rect.Left;
-					r.Width = 60;
+					r.Width = 69;
 					this.fontSize.Bounds = r;
 					this.fontSize.Visibility = true;
-					r.Offset(60, 0);
+					r.Offset(69, 0);
 					r.Width = 20;
 					this.buttonSizeMinus.Bounds = r;
 					this.buttonSizeMinus.Visibility = true;
 					r.Offset(20, 0);
 					this.buttonSizePlus.Bounds = r;
 					this.buttonSizePlus.Visibility = true;
-					r.Offset(20+10, 0);
+					r.Left = rect.Right-40;
 					r.Width = 40;
 					this.fontColor.Bounds = r;
 					this.fontColor.Visibility = true;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Width = 120;
+					this.fontStyle.Bounds = r;
+					this.fontStyle.Visibility = true;
+					r.Offset(120+5, 0);
+					r.Width = 20;
+					this.fontFeatures.Bounds = r;
+					this.fontFeatures.Visibility = true;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Right = rect.Right-25;
+					this.fontGlue.Bounds = r;
+					this.fontGlue.Visibility = true;
 					r.Left = rect.Right-20;
 					r.Width = 20;
 					this.buttonClear.Bounds = r;
@@ -427,17 +413,13 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				Rectangle r = rect;
 				r.Bottom = r.Top-20;
-				r.Right = rect.Right-55;
 				this.fontFace.Bounds = r;
 				this.fontFace.Visibility = true;
 
-				r.Left = rect.Right-50;
-				r.Width = 50;
-				this.fontSize.Bounds = r;
-				this.fontSize.Visibility = true;
-
+				this.fontSize.Visibility = false;
 				this.fontStyle.Visibility = false;
 				this.fontFeatures.Visibility = false;
+				this.fontGlue.Visibility = false;
 				this.buttonSizeMinus.Visibility = false;
 				this.buttonSizePlus.Visibility = false;
 				this.fontColor.Visibility = false;
@@ -594,27 +576,6 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 
-			if ( sender == this.fontSize )
-			{
-				if ( this.fontSize.Text != "" )
-				{
-					double size;
-					Text.Properties.SizeUnits units;
-					Misc.ConvertStringToDouble(out size, out units, this.fontSize.Text, 0, 1000, 0);
-					if ( units == Common.Text.Properties.SizeUnits.Points )
-					{
-						size *= Modifier.fontSizeScale;
-					}
-					this.document.TextWrapper.Defined.FontSize = size;
-					this.document.TextWrapper.Defined.Units = units;
-				}
-				else
-				{
-					this.document.TextWrapper.Defined.ClearFontSize();
-					this.document.TextWrapper.Defined.ClearUnits();
-				}
-			}
-
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -641,6 +602,61 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ColorToWrapper(cs);
 		}
 
+		private void HandleButtonUnitClicked(object sender, MessageEventArgs e)
+		{
+			if ( !this.document.TextWrapper.IsAttached )  return;
+
+			this.fontSize.IsUnitPercent = !this.fontSize.IsUnitPercent;
+
+			double value;
+			Common.Text.Properties.SizeUnits units;
+
+			if ( this.fontSize.IsUnitPercent )
+			{
+				value = 1.0;  // 100%
+				units = Common.Text.Properties.SizeUnits.Percent;
+			}
+			else
+			{
+				value = 12.0;
+				units = Common.Text.Properties.SizeUnits.Points;
+			}
+
+			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.Defined.FontSize = value;
+			this.document.TextWrapper.Defined.Units = units;
+			this.document.TextWrapper.ResumeSynchronisations();
+		}
+
+		private void HandleSizeChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+
+			TextFieldReal field = sender as TextFieldReal;
+			if ( field == null )  return;
+
+			double value;
+			Common.Text.Properties.SizeUnits units;
+			bool isDefined;
+			this.GetTextFieldRealValue(field, out value, out units, out isDefined);
+
+			this.document.TextWrapper.SuspendSynchronisations();
+
+			if ( isDefined )
+			{
+				this.document.TextWrapper.Defined.FontSize = value;
+				this.document.TextWrapper.Defined.Units = units;
+			}
+			else
+			{
+				this.document.TextWrapper.Defined.ClearFontSize();
+				this.document.TextWrapper.Defined.ClearUnits();
+			}
+
+			this.document.TextWrapper.ResumeSynchronisations();
+		}
+
 		private void HandleButtonSizeMinusClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
@@ -653,6 +669,25 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 			this.ChangeFontSize(1, 125);
+		}
+
+		private void HandleGlueValueChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+
+			double value;
+			bool isDefined;
+			this.GetTextFieldRealPercent(this.fontGlue.TextFieldReal, out value, out isDefined);
+
+			if ( isDefined )
+			{
+				this.document.TextWrapper.Defined.FontGlue = value;
+			}
+			else
+			{
+				this.document.TextWrapper.Defined.ClearFontGlue();
+			}
 		}
 
 		private void HandleCheckBoldActiveStateChanged(object sender)
@@ -693,6 +728,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.Defined.ClearFontStyle();
 			this.document.TextWrapper.Defined.ClearFontFeatures();
 			this.document.TextWrapper.Defined.ClearFontSize();
+			this.document.TextWrapper.Defined.ClearFontGlue();
 			this.document.TextWrapper.Defined.ClearUnits();
 			this.document.TextWrapper.Defined.ClearInvertBold();
 			this.document.TextWrapper.Defined.ClearInvertItalic();
@@ -704,8 +740,9 @@ namespace Epsitec.Common.Document.TextPanels
 		protected TextFieldCombo			fontFace;
 		protected TextFieldCombo			fontStyle;
 		protected IconButton				fontFeatures;
-		protected TextFieldCombo			fontSize;
+		protected Widgets.TextFieldLabel	fontSize;
 		protected ColorSample				fontColor;
+		protected Widgets.TextFieldLabel	fontGlue;
 		protected IconButton				buttonSizeMinus;
 		protected IconButton				buttonSizePlus;
 		protected IconButton				buttonClear;

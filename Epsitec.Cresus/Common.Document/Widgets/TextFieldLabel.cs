@@ -146,6 +146,17 @@ namespace Epsitec.Common.Document.Widgets
 			document.Modifier.AdaptTextFieldRealDimension(this.textFieldReal);
 		}
 
+		// Spécifie les bornes pour une taille de fonte.
+		public void SetRangeFontSize()
+		{
+			this.textFieldReal.UnitType = RealUnitType.Scalar;
+			this.textFieldReal.Scale = (decimal) Modifier.fontSizeScale;
+			this.textFieldReal.InternalMinValue = 1.0M;
+			this.textFieldReal.InternalMaxValue = 100.0M;
+			this.textFieldReal.Step = 1.0M;
+			this.textFieldReal.Resolution = 0.1M;
+		}
+
 		// Spécifie les bornes pour une valeur en pourcents.
 		public void SetRangePercents(Document document, double min, double max, double step)
 		{

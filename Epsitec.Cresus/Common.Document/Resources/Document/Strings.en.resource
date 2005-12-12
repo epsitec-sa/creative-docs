@@ -525,10 +525,15 @@
 	<data name="TextPanel.Align.Title">Vertical alignment</data>
 
 	<data name="TextPanel.Font.Title">Font</data>
+	<data name="TextPanel.Font.Short.Size">S</data>
+	<data name="TextPanel.Font.Short.Glue">G</data>
+	<data name="TextPanel.Font.Long.Size">%</data>
+	<data name="TextPanel.Font.Long.Glue">@@Espacement</data>
 	<data name="TextPanel.Font.Tooltip.Face">Font name</data>
 	<data name="TextPanel.Font.Tooltip.Style">Font style</data>
 	<data name="TextPanel.Font.Tooltip.Features">OpenType features</data>
 	<data name="TextPanel.Font.Tooltip.Size">Font size</data>
+	<data name="TextPanel.Font.Tooltip.Glue">@@Espacement des caractères</data>
 
 	<data name="TextPanel.Xline.Title">@@Traits horizontaux</data>
 	<data name="TextPanel.Xline.Short.Underlined.Thickness">T</data>

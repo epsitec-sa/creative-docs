@@ -525,10 +525,15 @@
 	<data name="TextPanel.Align.Title">Alignement vertical</data>
 
 	<data name="TextPanel.Font.Title">Police</data>
+	<data name="TextPanel.Font.Short.Size">T</data>
+	<data name="TextPanel.Font.Short.Glue">E</data>
+	<data name="TextPanel.Font.Long.Size">%</data>
+	<data name="TextPanel.Font.Long.Glue">Espacement</data>
 	<data name="TextPanel.Font.Tooltip.Face">Police de caractères</data>
 	<data name="TextPanel.Font.Tooltip.Style">Style de la police</data>
 	<data name="TextPanel.Font.Tooltip.Features">Variantes OpenType</data>
 	<data name="TextPanel.Font.Tooltip.Size">Taille de la police</data>
+	<data name="TextPanel.Font.Tooltip.Glue">Espacement des caractères</data>
 
 	<data name="TextPanel.Xline.Title">Traits horizontaux</data>
 	<data name="TextPanel.Xline.Short.Underlined.Thickness">E</data>
