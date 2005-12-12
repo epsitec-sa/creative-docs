@@ -461,10 +461,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ignoreChanged = false;
 
-			double h = this.DefaultHeight;
-			if ( this.Height != h )
+			string newSignature = this.Signature;
+			if ( this.signature != newSignature )
 			{
-				this.Height = h;  // adapte la hauteur du panneau
+				this.signature = newSignature;
+				this.Height = this.DefaultHeight;  // adapte la hauteur du panneau
+				this.UpdateClientGeometry();
 			}
 		}
 
@@ -803,6 +805,25 @@ namespace Epsitec.Common.Document.TextPanels
 			xline.DrawClass      = "";
 			xline.DrawStyle      = color;
 		}
+
+
+		// Donne une signature unique en fonction du contenu.
+		protected string Signature
+		{
+			get
+			{
+				string signature = "";
+
+				if ( this.document != null && this.document.TextWrapper.IsAttached )
+				{
+					if ( this.document.TextWrapper.Defined.IsUnderlineDefined )  signature += "u";
+					if ( this.document.TextWrapper.Defined.IsOverlineDefined  )  signature += "o";
+					if ( this.document.TextWrapper.Defined.IsStrikeoutDefined )  signature += "s";
+				}
+
+				return signature;
+			}
+		}
         
 
 		protected IconButton				buttonUnderlined;
@@ -818,6 +839,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected Widgets.TextFieldLabel	fieldStrikeoutPosition;
 		protected ColorSample				strikeoutColor;
 		protected IconButton				buttonClear;
+		protected string					signature = "";
 
 		protected ColorSample				originFieldColor;
 		protected int						originFieldRank = -1;

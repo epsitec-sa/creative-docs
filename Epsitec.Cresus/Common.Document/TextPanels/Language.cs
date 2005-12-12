@@ -56,25 +56,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			get
 			{
-				double h = this.LabelHeight;
-
-				if ( this.isExtendedSize )  // panneau étendu ?
-				{
-					if ( this.IsLabelProperties )  // étendu/détails ?
-					{
-						h += 105;
-					}
-					else	// étendu/compact ?
-					{
-						h += 80;
-					}
-				}
-				else	// panneau réduit ?
-				{
-					h += 30;
-				}
-
-				return h;
+				return this.LabelHeight+30;
 			}
 		}
 
