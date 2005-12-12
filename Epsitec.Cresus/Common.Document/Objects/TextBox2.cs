@@ -1802,39 +1802,81 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.internalOperation != InternalOperation.Painting )  return;
 
 			Text.Layout.XlineRecord[] records = context.XlineRecords;
-			double x1 = 0;
-			double y1 = 0;
-			
-			// Dans ce test, la couleur est stockée directement comme LineStyle pour
-			// la propriété "underline".
-			string color = RichColor.ToString(RichColor.FromBrightness(0));
-			
-			if ( records.Length > 0 )
+			if ( records.Length == 0 )  return;
+
+			System.Collections.ArrayList process = new System.Collections.ArrayList();
+			Text.Properties.AbstractXlineProperty xline;
+			Text.Layout.XlineRecord starting, ending;
+
+			do
 			{
+				xline    = null;
+				starting = null;
+				ending   = null;
+
 				for ( int i=0 ; i<records.Length ; i++ )
 				{
-					if ( (records[i].Type == Common.Text.Layout.XlineRecord.RecordType.LineEnd) ||
-						 (records[i].Xlines.Length == 0) )
+					bool found = false;
+					for ( int j=0 ; j<records[i].Xlines.Length ; j++ )
 					{
-						Path path = Path.FromLine(x1, y1, records[i].X, records[i].Y + records[i].Descender * 0.8);
+						if ( xline == null )  // cherche le début ?
+						{
+							if ( TextBox2.XlineContains(process, records[i].Xlines[j]) )  continue;
 
-						this.port.LineWidth = 1.0;
-						this.port.RichColor = RichColor.Parse(color);
-						this.port.PaintOutline(path);
+							xline = records[i].Xlines[j];
+							starting = records[i];
+							found = true;  // la fin ne peut pas être dans ce record
+						}
+						else	// cherche la fin ?
+						{
+							found |= Text.Property.CompareEqualContents(xline, records[i].Xlines[j]);
+						}
 					}
-					
-					// TODO: calculer correctement la position du souligné en fonction des réglages
-					// TODO: déterminer correctement ce qu'il faut peindre
-					
-					x1 = records[i].X;
-					y1 = records[i].Y + records[i].Descender * 0.8;
-					
-					if ( records[i].Xlines.Length > 0 )
+
+					if ( xline != null && !found )  // fin trouvée ?
 					{
-						color = records[i].Xlines[0].DrawStyle;
+						ending = records[i];
+						this.RenderXline(context, xline, starting, ending);  // dessine le trait
+						process.Add(xline);  // le trait est fait
+						break;
 					}
 				}
 			}
+			while ( xline != null && starting != null && ending != null );
+		}
+
+		// Dessine un trait souligné, surligné ou biffé.
+		protected void RenderXline(Text.Layout.Context context, Text.Properties.AbstractXlineProperty xline, Text.Layout.XlineRecord starting, Text.Layout.XlineRecord ending)
+		{
+			double y = starting.Y;
+
+			if ( xline.WellKnownType == Text.Properties.WellKnownType.Underline )
+			{
+				y -= xline.Position;
+			}
+			if ( xline.WellKnownType == Text.Properties.WellKnownType.Overline )
+			{
+				y += context.LineAscender;
+				y -= xline.Position;
+			}
+			if ( xline.WellKnownType == Text.Properties.WellKnownType.Strikeout )
+			{
+				y += xline.Position;
+			}
+
+			Path path = Path.FromRectangle(starting.X, y-xline.Thickness/2, ending.X-starting.X, xline.Thickness);
+			this.port.RichColor = RichColor.Parse(xline.DrawStyle);
+			this.port.PaintSurface(path);
+		}
+
+		// Cherche si une propriété Xline est déjà dans une liste.
+		protected static bool XlineContains(System.Collections.ArrayList process, Text.Properties.AbstractXlineProperty xline)
+		{
+			foreach ( Text.Properties.AbstractXlineProperty existing in process )
+			{
+				if ( Text.Property.CompareEqualContents(existing, xline) )  return true;
+			}
+			return false;
 		}
 		#endregion
 

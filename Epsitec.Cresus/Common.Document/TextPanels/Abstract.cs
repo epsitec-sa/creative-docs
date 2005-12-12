@@ -41,6 +41,7 @@ namespace Epsitec.Common.Document.TextPanels
 		// Indique si ce panneau est visible pour un filtre donné.
 		public static bool IsFilterShow(string panel, string filter)
 		{
+			if ( panel == "Box" )  return false;  // provisoire...
 			if ( filter == "All" )  return true;
 
 			bool F = filter == "Frequently";

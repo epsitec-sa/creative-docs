@@ -442,7 +442,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ActiveIconButton(this.buttonStrikeout,  strikeout,  isStrikeout );
 
 			this.SetTextFieldRealValue(this.fieldUnderlinedThickness.TextFieldReal, underlinedThickness, Common.Text.Properties.SizeUnits.Points, isUnderlined, true);
-			this.SetTextFieldRealValue(this.fieldUnderlinedPosition.TextFieldReal, -underlinedPosition,  Common.Text.Properties.SizeUnits.Points, isUnderlined, true);
+			this.SetTextFieldRealValue(this.fieldUnderlinedPosition.TextFieldReal,  underlinedPosition,  Common.Text.Properties.SizeUnits.Points, isUnderlined, true);
 			this.SetTextFieldRealValue(this.fieldOverlinedThickness.TextFieldReal,  overlinedThickness,  Common.Text.Properties.SizeUnits.Points, isOverlined,  true);
 			this.SetTextFieldRealValue(this.fieldOverlinedPosition.TextFieldReal,   overlinedPosition,   Common.Text.Properties.SizeUnits.Points, isOverlined,  true);
 			this.SetTextFieldRealValue(this.fieldStrikeoutThickness.TextFieldReal,  strikeoutThickness,  Common.Text.Properties.SizeUnits.Points, isStrikeout,  true);
@@ -709,14 +709,24 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			xline.IsDisabled = false;
 
-			double thickness =  1.0;
-			double position  = -5.0;
+			double thickness;
+			double position;
+			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+			{
+				thickness = 1.0;  // 0.1mm
+				position  = 5.0;  // 0.5mm
+			}
+			else
+			{
+				thickness = 1.27;  // 0.005in
+				position  = 5.08;  // 0.02in
+			}
 			string color     = RichColor.ToString(RichColor.FromBrightness(0));
 
 			if ( !def )
 			{
-				thickness = (double)  this.fieldUnderlinedThickness.TextFieldReal.InternalValue;
-				position  = (double) -this.fieldUnderlinedPosition.TextFieldReal.InternalValue;
+				thickness = (double) this.fieldUnderlinedThickness.TextFieldReal.InternalValue;
+				position  = (double) this.fieldUnderlinedPosition.TextFieldReal.InternalValue;
 				color     = this.GetColorSample(this.underlinedColor);
 			}
 			
@@ -724,7 +734,7 @@ namespace Epsitec.Common.Document.TextPanels
 			xline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
 			xline.Position       = position;
 			xline.PositionUnits  = Common.Text.Properties.SizeUnits.Points;
-			xline.DrawClass      = "underline";
+			xline.DrawClass      = "";
 			xline.DrawStyle      = color;
 		}
         
@@ -732,8 +742,18 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			xline.IsDisabled = false;
 
-			double thickness = 1.0;
-			double position  = 5.0;
+			double thickness;
+			double position;
+			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+			{
+				thickness = 1.0;  // 0.1mm
+				position  = 2.0;  // 0.2mm
+			}
+			else
+			{
+				thickness = 1.27;  // 0.005in
+				position  = 2.54;  // 0.01in
+			}
 			string color     = RichColor.ToString(RichColor.FromBrightness(0));
 
 			if ( !def )
@@ -747,7 +767,7 @@ namespace Epsitec.Common.Document.TextPanels
 			xline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
 			xline.Position       = position;
 			xline.PositionUnits  = Common.Text.Properties.SizeUnits.Points;
-			xline.DrawClass      = "overline";
+			xline.DrawClass      = "";
 			xline.DrawStyle      = color;
 		}
         
@@ -755,8 +775,18 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			xline.IsDisabled = false;
 
-			double thickness = 1.0;
-			double position  = 2.0;
+			double thickness;
+			double position;
+			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+			{
+				thickness =  2.0;  // 0.2mm
+				position  = 12.0;  // 1.2mm
+			}
+			else
+			{
+				thickness =  2.54;  // 0.01in
+				position  = 12.70;  // 0.5in
+			}
 			string color     = RichColor.ToString(RichColor.FromBrightness(0));
 
 			if ( !def )
@@ -770,7 +800,7 @@ namespace Epsitec.Common.Document.TextPanels
 			xline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
 			xline.Position       = position;
 			xline.PositionUnits  = Common.Text.Properties.SizeUnits.Points;
-			xline.DrawClass      = "srikeout";
+			xline.DrawClass      = "";
 			xline.DrawStyle      = color;
 		}
         
