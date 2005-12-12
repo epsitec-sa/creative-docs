@@ -165,65 +165,84 @@ namespace Epsitec.Common.Text.Wrappers
 
 		private void SynchronizeXline()
 		{
-			int changes = 0;
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
+			this.SynchronizeUnderline ();
+			this.SynchronizeOverline ();
+			this.SynchronizeStrikeout ();
+			this.SynchronizeTextBox ();
+			this.SynchronizeTextMarker ();
+		}
+		
+		private void SynchronizeUnderline()
+		{
 			if (this.defined_state.IsValueFlagged (State.UnderlineProperty))
 			{
-				changes++;
-			}
-			if (this.defined_state.IsUnderlineDefined)
-			{
-				list.Add (this.defined_state.Underline.ToProperty ());
-			}
-			
-			if (this.defined_state.IsValueFlagged (State.StrikeoutProperty))
-			{
-				changes++;
-			}
-			if (this.defined_state.IsStrikeoutDefined)
-			{
-				list.Add (this.defined_state.Strikeout.ToProperty ());
-			}
-			
-			if (this.defined_state.IsValueFlagged (State.OverlineProperty))
-			{
-				changes++;
-			}
-			if (this.defined_state.IsOverlineDefined)
-			{
-				list.Add (this.defined_state.Overline.ToProperty ());
-			}
-			
-			if (this.defined_state.IsValueFlagged (State.TextBoxProperty))
-			{
-				changes++;
-			}
-			if (this.defined_state.IsTextBoxDefined)
-			{
-				list.Add (this.defined_state.TextBox.ToProperty ());
-			}
-			
-			if (this.defined_state.IsValueFlagged (State.TextMarkerProperty))
-			{
-				changes++;
-			}
-			if (this.defined_state.IsTextMarkerDefined)
-			{
-				list.Add (this.defined_state.TextMarker.ToProperty ());
-			}
-			
-			if (changes > 0)
-			{
-				if (list.Count > 0)
+				if (this.defined_state.IsUnderlineDefined)
 				{
-					Property[] properties = (Property[]) list.ToArray (typeof (Property));
-					this.DefineMetaProperty (TextWrapper.Xline, 0, properties);
+					this.DefineMetaProperty (TextWrapper.Underline, 0, this.defined_state.Underline.ToProperty ());
 				}
 				else
 				{
-					this.ClearMetaProperty (TextWrapper.Xline);
+					this.ClearMetaProperty (TextWrapper.Underline);
+				}
+			}
+		}
+		
+		private void SynchronizeOverline()
+		{
+			if (this.defined_state.IsValueFlagged (State.OverlineProperty))
+			{
+				if (this.defined_state.IsOverlineDefined)
+				{
+					this.DefineMetaProperty (TextWrapper.Overline, 0, this.defined_state.Overline.ToProperty ());
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.Overline);
+				}
+			}
+		}
+		
+		private void SynchronizeStrikeout()
+		{
+			if (this.defined_state.IsValueFlagged (State.StrikeoutProperty))
+			{
+				if (this.defined_state.IsStrikeoutDefined)
+				{
+					this.DefineMetaProperty (TextWrapper.Strikeout, 0, this.defined_state.Strikeout.ToProperty ());
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.Strikeout);
+				}
+			}
+		}
+		
+		private void SynchronizeTextBox()
+		{
+			if (this.defined_state.IsValueFlagged (State.TextBoxProperty))
+			{
+				if (this.defined_state.IsTextBoxDefined)
+				{
+					this.DefineMetaProperty (TextWrapper.TextBox, 0, this.defined_state.TextBox.ToProperty ());
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.TextBox);
+				}
+			}
+		}
+		
+		private void SynchronizeTextMarker()
+		{
+			if (this.defined_state.IsValueFlagged (State.TextMarkerProperty))
+			{
+				if (this.defined_state.IsTextMarkerDefined)
+				{
+					this.DefineMetaProperty (TextWrapper.TextMarker, 0, this.defined_state.TextMarker.ToProperty ());
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.TextMarker);
 				}
 			}
 		}
@@ -536,11 +555,11 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				p_underline  = this.ReadMetaProperty (TextWrapper.Xline, Properties.WellKnownType.Underline)  as Properties.UnderlineProperty;
-				p_strikeout  = this.ReadMetaProperty (TextWrapper.Xline, Properties.WellKnownType.Strikeout)  as Properties.StrikeoutProperty;
-				p_overline   = this.ReadMetaProperty (TextWrapper.Xline, Properties.WellKnownType.Overline)   as Properties.OverlineProperty;
-				p_textbox    = this.ReadMetaProperty (TextWrapper.Xline, Properties.WellKnownType.TextBox)    as Properties.TextBoxProperty;
-				p_textmarker = this.ReadMetaProperty (TextWrapper.Xline, Properties.WellKnownType.TextMarker) as Properties.TextMarkerProperty;
+				p_underline  = this.ReadMetaProperty (TextWrapper.Underline,  Properties.WellKnownType.Underline)  as Properties.UnderlineProperty;
+				p_strikeout  = this.ReadMetaProperty (TextWrapper.Strikeout,  Properties.WellKnownType.Strikeout)  as Properties.StrikeoutProperty;
+				p_overline   = this.ReadMetaProperty (TextWrapper.Overline,   Properties.WellKnownType.Overline)   as Properties.OverlineProperty;
+				p_textbox    = this.ReadMetaProperty (TextWrapper.TextBox,    Properties.WellKnownType.TextBox)    as Properties.TextBoxProperty;
+				p_textmarker = this.ReadMetaProperty (TextWrapper.TextMarker, Properties.WellKnownType.TextMarker) as Properties.TextMarkerProperty;
 			}
 			
 			if (p_underline == null)
@@ -1705,7 +1724,11 @@ namespace Epsitec.Common.Text.Wrappers
 		private const string						Link			= "#Tx#Link";
 		private const string						UserTags		= "#Tx#UsrTags";
 		private const string						Conditions		= "#Tx#Conds";
-		private const string						Xline			= "#Tx#Xline";
+		private const string						Underline		= "#Tx#Under";
+		private const string						Overline		= "#Tx#Over";
+		private const string						Strikeout		= "#Tx#StrOut";
+		private const string						TextBox			= "#Tx#TBox";
+		private const string						TextMarker		= "#Tx#TMark";
 		private const string						Xscript			= "#Tx#Xscript";
 		private const string						InvertBold		= "#Tx#X-Bold";
 		private const string						InvertItalic	= "#Tx#X-Italic";
