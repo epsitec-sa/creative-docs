@@ -1007,6 +1007,7 @@ restart:
 			this.break_mode   = BreakMode.Default;
 			
 			double space;
+			double end_x;
 			
 			space  = line_width - profile.TotalWidth;
 			space *= 1.0 - this.justification;
@@ -1017,6 +1018,8 @@ restart:
 			}
 			
 			this.text_width = line_width - space;
+			
+			end_x = this.ox + this.text_width;
 			
 			this.text_profile.ComputeScales (this.text_width, out this.text_scales);
 			
@@ -1110,7 +1113,7 @@ restart:
 						{
 							int offset = this.TextOffset;
 							
-							double ox   = this.LineCurrentX; // - this.text_profile.WidthEndSpace;
+							double ox   = end_x; //this.LineCurrentX - this.text_profile.WidthEndSpace;
 							double oy   = this.LineBaseY;
 							double asc  = this.LineAscender;
 							double desc = this.LineDescender;
