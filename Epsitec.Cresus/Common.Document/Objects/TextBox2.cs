@@ -1806,7 +1806,7 @@ namespace Epsitec.Common.Document.Objects
 
 			System.Collections.ArrayList process = new System.Collections.ArrayList();
 			
-			for ( int ii=0 ; ii<records.Length ; )
+			for ( int lineStart=0 ; lineStart<records.Length ; )
 			{
 				bool found;
 				
@@ -1820,7 +1820,7 @@ namespace Epsitec.Common.Document.Objects
 
 					found = false;
 					
-					for ( int i=ii ; i<records.Length ; i++ )
+					for ( int i=lineStart ; i<records.Length ; i++ )
 					{
 						if ( records[i].Type == Text.Layout.XlineRecord.RecordType.LineEnd )
 						{
@@ -1894,12 +1894,11 @@ namespace Epsitec.Common.Document.Objects
 				// Saute les enregistrements de la ligne courante et reprend tout depuis
 				// le début de la ligne suivante:
 				
-				while ( ii<records.Length && records[ii].Type != Text.Layout.XlineRecord.RecordType.LineEnd )
+				while ( lineStart<records.Length )
 				{
-					ii++;
+					if ( records[lineStart++].Type != Text.Layout.XlineRecord.RecordType.LineEnd )  break;
 				}
 				
-				ii++;
 				process.Clear();
 			}
 		}
