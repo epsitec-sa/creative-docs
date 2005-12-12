@@ -891,6 +891,8 @@ restart:
 				double asc  = this.LineAscender;
 				double desc = this.LineDescender;
 				
+				ox = System.Math.Min (this.xline_end_x, ox);
+				
 				this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.Change, offset, current, current_color, ox, oy, asc, desc, this.frame_index, is_visible));
 				
 				this.xline_properties = current;
@@ -1007,7 +1009,6 @@ restart:
 			this.break_mode   = BreakMode.Default;
 			
 			double space;
-			double end_x;
 			
 			space  = line_width - profile.TotalWidth;
 			space *= 1.0 - this.justification;
@@ -1017,9 +1018,8 @@ restart:
 				this.ox += space * this.disposition;
 			}
 			
-			this.text_width = line_width - space;
-			
-			end_x = this.ox + this.text_width;
+			this.text_width  = line_width - space;
+			this.xline_end_x = this.ox + this.text_width;
 			
 			this.text_profile.ComputeScales (this.text_width, out this.text_scales);
 			
@@ -1113,7 +1113,7 @@ restart:
 						{
 							int offset = this.TextOffset;
 							
-							double ox   = end_x; //this.LineCurrentX - this.text_profile.WidthEndSpace;
+							double ox   = this.xline_end_x;
 							double oy   = this.LineBaseY;
 							double asc  = this.LineAscender;
 							double desc = this.LineDescender;
@@ -1847,5 +1847,6 @@ restart:
 		Properties.AbstractXlineProperty[]		xline_properties;
 		Properties.FontColorProperty			xline_text_color;
 		System.Collections.ArrayList			xline_records;
+		private double							xline_end_x;
 	}
 }
