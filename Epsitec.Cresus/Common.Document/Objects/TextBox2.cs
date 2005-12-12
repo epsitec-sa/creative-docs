@@ -1906,6 +1906,8 @@ namespace Epsitec.Common.Document.Objects
 		// Dessine un trait souligné, surligné ou biffé.
 		protected void RenderXline(Text.Layout.Context context, Text.Properties.AbstractXlineProperty xline, Text.Layout.XlineRecord starting, Text.Layout.XlineRecord ending)
 		{
+			if ( ending.X <= starting.X )  return;
+			
 			double y = starting.Y;
 
 			if ( xline.WellKnownType == Text.Properties.WellKnownType.Underline )
