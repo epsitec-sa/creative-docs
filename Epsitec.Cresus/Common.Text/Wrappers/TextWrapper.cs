@@ -1420,15 +1420,24 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			public void DefineUsingProperty(Properties.AbstractXlineProperty value)
 			{
-				this.is_disabled     = value.IsDisabled;
-				this.position_units  = value.PositionUnits;
-				this.thickness_units = value.ThicknessUnits;
-				this.position        = value.Position;
-				this.thickness       = value.Thickness;
-				this.draw_class      = value.DrawClass;
-				this.draw_style      = value.DrawStyle;
-				
-				this.host.DefineValue (this.property, this, true);
+				if ((this.is_disabled != value.IsDisabled) ||
+					(this.position_units != value.PositionUnits) ||
+					(this.thickness_units != value.ThicknessUnits) ||
+					(! NumberSupport.Equal (this.position, value.Position)) ||
+					(! NumberSupport.Equal (this.thickness, value.Thickness)) ||
+					(this.draw_class != value.DrawClass) ||
+					(this.draw_style != value.DrawStyle))
+				{
+					this.is_disabled     = value.IsDisabled;
+					this.position_units  = value.PositionUnits;
+					this.thickness_units = value.ThicknessUnits;
+					this.position        = value.Position;
+					this.thickness       = value.Thickness;
+					this.draw_class      = value.DrawClass;
+					this.draw_style      = value.DrawStyle;
+					
+					this.host.DefineValue (this.property, this, true);
+				}
 			}
 			
 			public Properties.AbstractXlineProperty ToProperty()
@@ -1597,11 +1606,16 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			public void DefineUsingProperty(Properties.FontXscriptProperty value)
 			{
-				this.is_disabled = false;
-				this.scale       = value.Scale;
-				this.offset      = value.Offset;
-				
-				this.host.DefineValue (this.property, this, true);
+				if ((this.is_disabled != false) ||
+					(! NumberSupport.Equal (this.scale, value.Scale)) ||
+					(! NumberSupport.Equal (this.offset, value.Offset)))
+				{
+					this.is_disabled = false;
+					this.scale       = value.Scale;
+					this.offset      = value.Offset;
+					
+					this.host.DefineValue (this.property, this, true);
+				}
 			}
 			
 			public Properties.FontXscriptProperty ToProperty()
