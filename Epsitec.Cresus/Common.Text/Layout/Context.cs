@@ -852,11 +852,18 @@ restart:
 		public void UpdateXlineProperties(int offset, double ox, bool is_visible)
 		{
 			Properties.AbstractXlineProperty[] current;
+			Properties.FontColorProperty       current_color;
 			Properties.AbstractXlineProperty[] previous = this.xline_properties;
+			Properties.FontColorProperty       previous_color = this.xline_text_color;
 			
 			offset += this.text_offset;
 			
+			string color;
+			
 			this.text_context.GetXlines (this.text[offset], out current);
+			this.text_context.GetColor (this.text[offset], out color);
+			
+			current_color = new Properties.FontColorProperty (color);
 			
 			//	Supprime les définitions qui donnent lieu à des soulignements
 			//	invisibles :
@@ -867,7 +874,8 @@ restart:
 				Properties.AbstractXlineProperty.RemoveInvisible (ref current);
 			}
 			
-			if (! Property.CompareEqualContents (previous, current))
+			if (! Property.CompareEqualContents (previous, current) ||
+				! Property.CompareEqualContents (previous_color, current_color))
 			{
 				//	Enregistre le changement d'état de soulignement.
 				
@@ -875,9 +883,10 @@ restart:
 				double asc  = this.LineAscender;
 				double desc = this.LineDescender;
 				
-				this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.Change, offset, current, ox, oy, asc, desc, this.frame_index, is_visible));
+				this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.Change, offset, current, current_color, ox, oy, asc, desc, this.frame_index, is_visible));
 				
 				this.xline_properties = current;
+				this.xline_text_color = current_color;
 			}
 		}
 		
@@ -1076,7 +1085,7 @@ restart:
 				double asc  = this.LineAscender;
 				double desc = this.LineDescender;
 				
-				this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.LineStart, offset, this.xline_properties, ox, oy, asc, desc, this.frame_index, true));
+				this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.LineStart, offset, this.xline_properties, this.xline_text_color, ox, oy, asc, desc, this.frame_index, true));
 			}
 			
 			for (;;)
@@ -1098,7 +1107,7 @@ restart:
 							double asc  = this.LineAscender;
 							double desc = this.LineDescender;
 							
-							this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.LineEnd, offset, this.xline_properties, ox, oy, asc, desc, this.frame_index, true));
+							this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.LineEnd, offset, this.xline_properties, this.xline_text_color, ox, oy, asc, desc, this.frame_index, true));
 						}
 						
 						return;
@@ -1823,6 +1832,7 @@ restart:
 		private ulong[]							buffer;
 		
 		Properties.AbstractXlineProperty[]		xline_properties;
+		Properties.FontColorProperty			xline_text_color;
 		System.Collections.ArrayList			xline_records;
 	}
 }

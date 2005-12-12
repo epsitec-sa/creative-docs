@@ -944,9 +944,36 @@
 		}
 
 
+		public static bool IsRichColor(string value)
+		{
+			//	Détermine si la string code une couleur riche qui peut être lue au
+			//	moyen de la méthode RichColor.Parse.
+			
+			if ((value == null) ||
+				(value.Length == 0))
+			{
+				return true;
+			}
+			
+			string[] args = value.Split (';');
+			
+			switch (args[0])
+			{
+				case "G":		return (args.Length == 2);
+				case "αG":		return (args.Length == 3);
+				case "RGB":		return (args.Length == 4);
+				case "αRGB":	return (args.Length == 5);
+				case "CMYK":	return (args.Length == 5);
+				case "αCMYK":	return (args.Length == 6);
+			}
+			
+			return false;
+		}
+		
 		public static RichColor Parse(string value)
 		{
-			if (value == null)
+			if ((value == null) ||
+				(value.Length == 0))
 			{
 				return RichColor.Empty;
 			}

@@ -9,7 +9,7 @@ namespace Epsitec.Common.Text.Layout
 	/// </summary>
 	public class XlineRecord
 	{
-		public XlineRecord(RecordType record_type, int text_offset, System.Collections.ICollection xlines,
+		public XlineRecord(RecordType record_type, int text_offset, System.Collections.ICollection xlines, Properties.FontColorProperty text_color,
 			/**/		   double x, double y, double ascender, double descender, int frame_index, bool is_visible)
 		{
 			int count = xlines == null ? 0 : xlines.Count;
@@ -22,6 +22,8 @@ namespace Epsitec.Common.Text.Layout
 			{
 				xlines.CopyTo (this.xlines, 0);
 			}
+			
+			this.text_color = text_color;
 			
 			this.x = x;
 			this.y = y;
@@ -106,6 +108,14 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public Properties.FontColorProperty		TextColor
+		{
+			get
+			{
+				return this.text_color;
+			}
+		}
+		
 		
 		#region RecordType Enumeration
 		public enum RecordType
@@ -124,5 +134,6 @@ namespace Epsitec.Common.Text.Layout
 		private bool							is_visible;
 		private double							x, y;
 		private double							ascender, descender;
+		private Properties.FontColorProperty	text_color;
 	}
 }
