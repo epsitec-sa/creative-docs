@@ -1896,7 +1896,7 @@ namespace Epsitec.Common.Document.Objects
 				
 				while ( lineStart<records.Length )
 				{
-					if ( records[lineStart++].Type != Text.Layout.XlineRecord.RecordType.LineEnd )  break;
+					if ( records[lineStart++].Type == Text.Layout.XlineRecord.RecordType.LineEnd )  break;
 				}
 				
 				process.Clear();
