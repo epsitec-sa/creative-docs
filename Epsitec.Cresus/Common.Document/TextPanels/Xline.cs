@@ -721,7 +721,7 @@ namespace Epsitec.Common.Document.TextPanels
 				thickness = 1.27;  // 0.005in
 				position  = 5.08;  // 0.02in
 			}
-			string color     = RichColor.ToString(RichColor.FromBrightness(0));
+			string color = null;
 
 			if ( !def )
 			{
@@ -754,7 +754,7 @@ namespace Epsitec.Common.Document.TextPanels
 				thickness = 1.27;  // 0.005in
 				position  = 2.54;  // 0.01in
 			}
-			string color     = RichColor.ToString(RichColor.FromBrightness(0));
+			string color = null;
 
 			if ( !def )
 			{
@@ -787,7 +787,7 @@ namespace Epsitec.Common.Document.TextPanels
 				thickness =  2.54;  // 0.01in
 				position  = 12.70;  // 0.5in
 			}
-			string color     = RichColor.ToString(RichColor.FromBrightness(0));
+			string color = null;
 
 			if ( !def )
 			{

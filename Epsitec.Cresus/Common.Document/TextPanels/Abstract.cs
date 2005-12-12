@@ -501,6 +501,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			else
 			{
+				if ( sample.Color.A == 0.0 )  return null;
 				return RichColor.ToString(sample.Color);
 			}
 		}

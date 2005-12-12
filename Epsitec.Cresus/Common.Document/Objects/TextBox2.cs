@@ -1865,7 +1865,14 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			Path path = Path.FromRectangle(starting.X, y-xline.Thickness/2, ending.X-starting.X, xline.Thickness);
-			this.port.RichColor = RichColor.Parse(xline.DrawStyle);
+
+			string color = xline.DrawStyle;
+			if ( color == null )  // couleur par défaut (comme le texte) ?
+			{
+				color = starting.TextColor.TextColor;
+			}
+			this.port.RichColor = RichColor.Parse(color);
+
 			this.port.PaintSurface(path);
 		}
 
