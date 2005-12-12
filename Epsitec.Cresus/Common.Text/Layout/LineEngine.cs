@@ -112,7 +112,7 @@ namespace Epsitec.Common.Text.Layout
 							
 							context.RecordAscender (scratch.Ascender);
 							context.RecordDescender (scratch.Descender);
-							context.RecordLineHeight (System.Math.Max (scratch.LineHeight, scratch.Ascender - scratch.Descender));
+							context.RecordLineHeight (System.Math.Max (scratch.LineHeight, (scratch.Ascender - scratch.Descender) * 1.2));
 							
 							context.MoveTo (scratch.Advance, scratch.Offset);
 							context.SwitchLayoutEngine (engine, layout);
@@ -148,7 +148,7 @@ advance_next:
 						{
 							context.RecordAscender (scratch.Ascender);
 							context.RecordDescender (scratch.Descender);
-							context.RecordLineHeight (System.Math.Max (scratch.LineHeight, scratch.Ascender - scratch.Descender));
+							context.RecordLineHeight (System.Math.Max (scratch.LineHeight, (scratch.Ascender - scratch.Descender) * 1.2));
 							
 							result.Add (new Layout.Break (scratch.Offset, scratch.Advance, 0, 0, scratch.StretchProfile));
 						}
@@ -363,7 +363,7 @@ advance_next:
 				
 				scratch.RecordAscender (ascender);
 				scratch.RecordDescender (descender);
-				scratch.RecordLineHeight (ascender - descender);
+				scratch.RecordLineHeight ((ascender - descender) * 1.2);
 				
 				return false;
 			}
@@ -478,7 +478,7 @@ advance_next:
 				{
 					context.RecordAscender (scratch.Ascender);
 					context.RecordDescender (scratch.Descender);
-					context.RecordLineHeight (System.Math.Max (scratch.LineHeight, scratch.Ascender - scratch.Descender));
+					context.RecordLineHeight (System.Math.Max (scratch.LineHeight, (scratch.Ascender - scratch.Descender) * 1.2));
 					
 					//	TODO: il faudrait enregistrer les hauteurs de la ligne avec l'information
 					//	Layout.Break si on voulait faire les choses correctement ici !
