@@ -414,7 +414,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Internal\StyleTable.cs"
+                    RelPath = "Internal\SettingsTable.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -713,12 +713,17 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Styles\AdditionalSettings.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Styles\BaseSettings.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Styles\BaseStyle.cs"
+                    RelPath = "Styles\CoreSettings.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -734,11 +739,6 @@
                 />
                 <File
                     RelPath = "Styles\PropertyContainer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Styles\SimpleStyle.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

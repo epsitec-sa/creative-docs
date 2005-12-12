@@ -196,14 +196,14 @@ namespace Epsitec.Common.Text
 		{
 			System.Diagnostics.Debug.Assert (Unicode.Bits.GetSpecialCodeFlag (code));
 			
-			ulong stripped_code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			ulong stripped_code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			//	TODO: optimiser l'accès aux style, local_settings et extra_settings dans
-			//	tout TextContext en utilisant StyleTable.GetStyleAndSettings()
+			//	TODO: optimiser l'accès aux core_settings, local_settings et extra_settings dans
+			//	tout TextContext en utilisant SettingsTable.GetCoreAndSettings()
 			
-			Styles.SimpleStyle   style          = this.style_list[stripped_code];
-			Styles.LocalSettings local_settings = style.GetLocalSettings (stripped_code);
-			Styles.ExtraSettings extra_settings = style.GetExtraSettings (stripped_code);
+			Styles.CoreSettings  core_settings  = this.style_list[stripped_code];
+			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (stripped_code);
+			Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (stripped_code);
 			
 			int           glyph = -1;
 			OpenType.Font font  = null;
@@ -510,7 +510,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetFontOffsets(ulong code, out double baseline_offset, out double advance_offset)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
 			long current_style_version = this.style_list.Version;
 			
@@ -523,7 +523,7 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			int current_style_index = Internal.CharMarker.GetStyleIndex (code);
+			int current_style_index = Internal.CharMarker.GetCoreIndex (code);
 			
 			if ((this.get_font_last_style_version != current_style_version) ||
 				(this.get_font_last_style_index   != current_style_index))
@@ -537,13 +537,13 @@ namespace Epsitec.Common.Text
 				this.GetFontAndSize (code, out font, out font_size, out font_scale);
 			}
 			
-			Styles.SimpleStyle   style          = this.style_list.GetStyleFromIndex (current_style_index);
-			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			Styles.CoreSettings  core_settings  = this.style_list.GetCoreFromIndex (current_style_index);
+			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (code);
 			
 			advance_offset  = 0;
 			baseline_offset = 0;
 			
-			Properties.FontXscriptProperty font_xscript_p = style[Properties.WellKnownType.FontXscript] as Properties.FontXscriptProperty;
+			Properties.FontXscriptProperty font_xscript_p = core_settings[Properties.WellKnownType.FontXscript] as Properties.FontXscriptProperty;
 			
 			if (local_settings != null)
 			{
@@ -578,7 +578,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetColor(ulong code, out string color)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
 			long current_style_version = this.style_list.Version;
 			
@@ -590,9 +590,8 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			Styles.SimpleStyle style = this.style_list[code];
-			
-			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			Styles.CoreSettings  core_settings  = this.style_list[code];
+			Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
 			
 			Properties.FontColorProperty color_p = extra_settings[Properties.WellKnownType.FontColor] as Properties.FontColorProperty;
 			
@@ -612,10 +611,10 @@ namespace Epsitec.Common.Text
 		
 		public void GetOpenType(ulong code, out Properties.OpenTypeProperty property)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			Styles.SimpleStyle   style          = this.style_list[code];
-			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			Styles.CoreSettings  core_settings  = this.style_list[code];
+			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (code);
 			
 			if (local_settings == null)
 			{
@@ -629,7 +628,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetLanguage(ulong code, out Properties.LanguageProperty property)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
 			long current_style_version = this.style_list.Version;
 			
@@ -641,8 +640,8 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			Styles.SimpleStyle   style          = this.style_list[code];
-			Styles.ExtraSettings extra_settings = style == null ? null : style.GetExtraSettings (code);
+			Styles.CoreSettings  core_settings  = this.style_list[code];
+			Styles.ExtraSettings extra_settings = core_settings == null ? null : core_settings.GetExtraSettings (code);
 			
 			property = extra_settings == null ? null : extra_settings[Properties.WellKnownType.Language] as Properties.LanguageProperty;
 			
@@ -653,7 +652,7 @@ namespace Epsitec.Common.Text
 		
 		public bool GetAutoText(ulong code, out Properties.AutoTextProperty property)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
 			long current_style_version = this.style_list.Version;
 			
@@ -665,8 +664,8 @@ namespace Epsitec.Common.Text
 				return property != null;
 			}
 			
-			Styles.SimpleStyle   style          = this.style_list[code];
-			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			Styles.CoreSettings  core_settings  = this.style_list[code];
+			Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
 			
 			property = extra_settings == null ? null : extra_settings[Properties.WellKnownType.AutoText] as Properties.AutoTextProperty;
 			
@@ -679,7 +678,7 @@ namespace Epsitec.Common.Text
 		
 		public bool GetGenerator(ulong code, out Properties.GeneratorProperty property)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
 			long current_style_version = this.style_list.Version;
 			
@@ -691,8 +690,8 @@ namespace Epsitec.Common.Text
 				return property != null;
 			}
 			
-			Styles.SimpleStyle   style          = this.style_list[code];
-			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			Styles.CoreSettings  core_settings  = this.style_list[code];
+			Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
 			
 			property = extra_settings == null ? null : extra_settings[Properties.WellKnownType.Generator] as Properties.GeneratorProperty;
 			
@@ -715,15 +714,15 @@ namespace Epsitec.Common.Text
 		
 		public void GetConditions(ulong code, out Properties.ConditionalProperty[] properties, out bool summary)
 		{
-			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+			int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
 			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_condition_last_style_version != current_style_version) ||
 				(this.get_condition_last_style_index   != current_style_index))
 			{
-				Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
+				Styles.CoreSettings core_settings = this.style_list.GetCoreFromIndex (current_style_index);
 				
-				Property[] props = style.FindProperties (Properties.WellKnownType.Conditional);
+				Property[] props = core_settings.FindProperties (Properties.WellKnownType.Conditional);
 				
 				this.get_condition_last_style_version = current_style_version;
 				this.get_condition_last_style_index   = current_style_index;
@@ -766,15 +765,15 @@ namespace Epsitec.Common.Text
 		{
 			if (this.IsPropertiesPropertyEnabled)
 			{
-				int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+				int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
 				long current_style_version = this.style_list.Version;
 				
 				if ((this.get_properties_last_style_version != current_style_version) ||
 					(this.get_properties_last_style_index   != current_style_index))
 				{
-					Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
+					Styles.CoreSettings core_settings = this.style_list.GetCoreFromIndex (current_style_index);
 					
-					Properties.PropertiesProperty props = style == null ? null : style[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
+					Properties.PropertiesProperty props = core_settings == null ? null : core_settings[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
 					
 					if (props == null)
 					{
@@ -815,27 +814,27 @@ namespace Epsitec.Common.Text
 		
 		public void GetStyles(ulong code, out TextStyle[] styles)
 		{
-			code = Internal.CharMarker.ExtractStyleAndExtraSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndExtraSettings (code);
 			
 			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_styles_last_style_version != current_style_version) ||
 				(this.get_styles_last_style_code    != code))
 			{
-				Styles.SimpleStyle        style = this.style_list[code];
+				Styles.CoreSettings       core_settings = this.style_list[code];
 				Properties.StylesProperty props;
 				
-				if (style == null)
+				if (core_settings == null)
 				{
 					props = null;
 				}
 				else
 				{
-					props = style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
+					props = core_settings[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 					
 					if (props == null)
 					{
-						Styles.ExtraSettings extra = style.GetExtraSettings (code);
+						Styles.ExtraSettings extra = core_settings.GetExtraSettings (code);
 						props = extra[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 					}
 				}
@@ -866,17 +865,17 @@ namespace Epsitec.Common.Text
 			//	Les propriétés sont brutes, telles que vues par le système de
 			//	layout, par exemple.
 			
-			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
+			Internal.SettingsTable settings = this.StyleList.InternalSettingsTable;
 			
-			Styles.SimpleStyle   style = styles.GetStyle (code);
-			Styles.LocalSettings local = style == null ? null : style.GetLocalSettings (code);
-			Styles.ExtraSettings extra = style == null ? null : style.GetExtraSettings (code);
+			Styles.CoreSettings  core  = settings.GetCore (code);
+			Styles.LocalSettings local = core == null ? null : core.GetLocalSettings (code);
+			Styles.ExtraSettings extra = core == null ? null : core.GetExtraSettings (code);
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			if (style != null)
+			if (core != null)
 			{
-				list.AddRange (style.GetProperties ());
+				list.AddRange (core.GetProperties ());
 			}
 			if (local != null)
 			{
@@ -897,9 +896,9 @@ namespace Epsitec.Common.Text
 			//	layout, par exemple.
 			//	Ne retourne que les propriétés de la catégorie LocalSettings.
 			
-			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
+			Internal.SettingsTable settings = this.StyleList.InternalSettingsTable;
 			
-			Styles.LocalSettings local = styles.GetLocalSettings (code);
+			Styles.LocalSettings local = settings.GetLocalSettings (code);
 			
 			if (local != null)
 			{
@@ -948,8 +947,8 @@ namespace Epsitec.Common.Text
 			//
 			//	- Un style ne fait pas référence à des propriétés LocalSettings.
 			//
-			//	- Les propriétés PropertyType.Style et ExtraSettings sont toujours
-			//	  enrobées dans une méta-propriété (donc un TextStyle).
+			//	- Les propriétés PropertyType.CoreSettings et ExtraSettings sont
+			//	  toujours  enrobées dans une méta-propriété (donc un TextStyle).
 			//
 			//	- TabsProperty doit être adaptée (catégorie des LocalSettings)
 			//	  pour ne garder que les taquets locaux (TabClass.Auto).
@@ -1051,7 +1050,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetLeading(ulong code, out Properties.LeadingProperty property)
 		{
-			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+			int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
 			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_leading_last_style_version == current_style_version) &&
@@ -1062,9 +1061,9 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
+			Styles.CoreSettings core_settings = this.style_list.GetCoreFromIndex (current_style_index);
 			
-			property = style[Properties.WellKnownType.Leading] as Properties.LeadingProperty;
+			property = core_settings[Properties.WellKnownType.Leading] as Properties.LeadingProperty;
 			
 			this.get_leading_last_style_version = current_style_version;
 			this.get_leading_last_style_index   = current_style_index;
@@ -1073,7 +1072,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetKeep(ulong code, out Properties.KeepProperty property)
 		{
-			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+			int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
 			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_keep_last_style_version == current_style_version) &&
@@ -1084,9 +1083,9 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
+			Styles.CoreSettings core_settings = this.style_list.GetCoreFromIndex (current_style_index);
 			
-			property = style[Properties.WellKnownType.Keep] as Properties.KeepProperty;
+			property = core_settings[Properties.WellKnownType.Keep] as Properties.KeepProperty;
 			
 			this.get_keep_last_style_version = current_style_version;
 			this.get_keep_last_style_index   = current_style_index;
@@ -1095,17 +1094,17 @@ namespace Epsitec.Common.Text
 		
 		public void GetXlines(ulong code, out Properties.AbstractXlineProperty[] properties)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
 			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_underlines_last_style_version != current_style_version) ||
 				(this.get_underlines_last_code != code))
 			{
-				Styles.SimpleStyle style = this.style_list[code];
+				Styles.CoreSettings core_settings = this.style_list[code];
 				
 				Property[]           base_props     = null;
-				Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+				Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
 				
 				if (extra_settings != null)
 				{
@@ -1135,17 +1134,17 @@ namespace Epsitec.Common.Text
 		
 		public void GetLinks(ulong code, out Properties.LinkProperty[] properties)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
 			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_links_last_style_version != current_style_version) ||
 				(this.get_links_last_code != code))
 			{
-				Styles.SimpleStyle style = this.style_list[code];
+				Styles.CoreSettings core_settings = this.style_list[code];
 				
 				Property[]           base_props     = null;
-				Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+				Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
 				
 				if (extra_settings != null)
 				{
@@ -1175,17 +1174,17 @@ namespace Epsitec.Common.Text
 		
 		public void GetUserTags(ulong code, out Properties.UserTagProperty[] properties)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
 			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_usertags_last_style_version != current_style_version) ||
 				(this.get_usertags_last_code != code))
 			{
-				Styles.SimpleStyle style = this.style_list[code];
+				Styles.CoreSettings core_settings = this.style_list[code];
 				
 				Property[]           base_props     = null;
-				Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+				Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
 				
 				if (extra_settings != null)
 				{
@@ -1215,7 +1214,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetLayoutEngine(ulong code, out Layout.BaseEngine engine, out Properties.LayoutProperty property)
 		{
-			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+			int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
 			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_layout_last_style_version == current_style_version) &&
@@ -1227,9 +1226,9 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
+			Styles.CoreSettings core_settings = this.style_list.GetCoreFromIndex (current_style_index);
 			
-			property = style[Properties.WellKnownType.Layout] as Properties.LayoutProperty;
+			property = core_settings[Properties.WellKnownType.Layout] as Properties.LayoutProperty;
 			
 			if (property == null)
 			{
@@ -1253,7 +1252,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetMargins(ulong code, out Properties.MarginsProperty property)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
 			long current_style_version = this.style_list.Version;
 			
@@ -1265,11 +1264,9 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			Styles.SimpleStyle style = this.style_list[code];
+			Styles.CoreSettings core_settings = this.style_list[code];
 			
-			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
-			
-			property = style[Properties.WellKnownType.Margins] as Properties.MarginsProperty;
+			property = core_settings[Properties.WellKnownType.Margins] as Properties.MarginsProperty;
 			
 			this.get_margins_last_style_version = current_style_version;
 			this.get_margins_last_code          = code;
@@ -1280,10 +1277,10 @@ namespace Epsitec.Common.Text
 		{
 			System.Diagnostics.Debug.WriteLine ("GetBreak: " + code.ToString ("X", System.Globalization.CultureInfo.InvariantCulture));
 			
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			Styles.SimpleStyle   style          = this.style_list[code];
-			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			Styles.CoreSettings  core_settings  = this.style_list[code];
+			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (code);
 			
 			if (local_settings == null)
 			{
@@ -1297,10 +1294,10 @@ namespace Epsitec.Common.Text
 		
 		public void GetTab(ulong code, out Properties.TabProperty property)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			Styles.SimpleStyle   style          = this.style_list[code];
-			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			Styles.CoreSettings  core_settings  = this.style_list[code];
+			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (code);
 			
 			if (local_settings == null)
 			{
@@ -1314,10 +1311,10 @@ namespace Epsitec.Common.Text
 		
 		public void GetTabs(ulong code, out Properties.TabsProperty property)
 		{
-			code = Internal.CharMarker.ExtractStyleAndLocalSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndLocalSettings (code);
 			
-			Styles.SimpleStyle   style          = this.style_list[code];
-			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			Styles.CoreSettings  core_settings  = this.style_list[code];
+			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (code);
 			
 			if (local_settings == null)
 			{
@@ -1331,10 +1328,10 @@ namespace Epsitec.Common.Text
 		
 		public void GetTabAndTabs(ulong code, out Properties.TabProperty tab_property, out Properties.TabsProperty tabs_property)
 		{
-			code = Internal.CharMarker.ExtractStyleAndLocalSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndLocalSettings (code);
 			
-			Styles.SimpleStyle   style          = this.style_list[code];
-			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			Styles.CoreSettings  core_settings  = this.style_list[code];
+			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (code);
 			
 			if (local_settings == null)
 			{
@@ -1350,10 +1347,10 @@ namespace Epsitec.Common.Text
 		
 		public void GetImage(ulong code, out Properties.ImageProperty property)
 		{
-			ulong stripped_code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			ulong stripped_code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			Styles.SimpleStyle   style          = this.style_list[stripped_code];
-			Styles.LocalSettings local_settings = style.GetLocalSettings (stripped_code);
+			Styles.CoreSettings  core_settings  = this.style_list[stripped_code];
+			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (stripped_code);
 			
 			if (local_settings != null)
 			{
@@ -1418,12 +1415,12 @@ namespace Epsitec.Common.Text
 			
 			if (code != 0)
 			{
-				code = Internal.CharMarker.ExtractStyleAndSettings (code);
+				code = Internal.CharMarker.ExtractCoreAndSettings (code);
 				
-				Styles.SimpleStyle style = this.style_list[code];
+				Styles.CoreSettings core_settings = this.style_list[code];
 				
-				if ((style != null) &&
-					(style.Contains (code, property)))
+				if ((core_settings != null) &&
+					(core_settings.Contains (code, property)))
 				{
 					return true;
 				}
@@ -1438,12 +1435,12 @@ namespace Epsitec.Common.Text
 			
 			if (code != 0)
 			{
-				code = Internal.CharMarker.ExtractStyleAndSettings (code);
+				code = Internal.CharMarker.ExtractCoreAndSettings (code);
 				
-				Styles.SimpleStyle style = this.style_list[code];
+				Styles.CoreSettings core_settings = this.style_list[code];
 				
-				if ((style != null) &&
-					(style.Contains (code, well_known_type, property_type)))
+				if ((core_settings != null) &&
+					(core_settings.Contains (code, well_known_type, property_type)))
 				{
 					return true;
 				}
@@ -1490,7 +1487,7 @@ namespace Epsitec.Common.Text
 			
 			public bool Find(ulong code)
 			{
-				code = Internal.CharMarker.ExtractStyleAndSettings (code);
+				code = Internal.CharMarker.ExtractCoreAndSettings (code);
 				
 				if (code == this.code)
 				{
@@ -1499,9 +1496,9 @@ namespace Epsitec.Common.Text
 				
 				this.code = code;
 				
-				Styles.SimpleStyle style = this.context.style_list[code];
+				Styles.CoreSettings core_settings = this.context.style_list[code];
 				
-				if (style.Contains (this.code, this.property))
+				if (core_settings.Contains (this.code, this.property))
 				{
 					return false;
 				}
@@ -1510,7 +1507,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			
-			private TextContext						context;
+			private TextContext					context;
 			private Property					property;
 			private ulong						code;
 		}
@@ -1608,7 +1605,7 @@ namespace Epsitec.Common.Text
 		
 		private void InternalGetFontAndSize(ulong code, out OpenType.Font font, out double font_size, out double scale, out double glue)
 		{
-			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+			int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
 			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_font_last_style_version == current_style_version) &&
@@ -1622,11 +1619,11 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
+			Styles.CoreSettings core_settings = this.style_list.GetCoreFromIndex (current_style_index);
 
-			Properties.FontProperty        font_p         = style[Properties.WellKnownType.Font] as Properties.FontProperty;
-			Properties.FontSizeProperty    font_size_p    = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
-			Properties.FontXscriptProperty font_xscript_p = style[Properties.WellKnownType.FontXscript] as Properties.FontXscriptProperty;
+			Properties.FontProperty        font_p         = core_settings[Properties.WellKnownType.Font] as Properties.FontProperty;
+			Properties.FontSizeProperty    font_size_p    = core_settings[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
+			Properties.FontXscriptProperty font_xscript_p = core_settings[Properties.WellKnownType.FontXscript] as Properties.FontXscriptProperty;
 			
 			this.GetFont (font_p, out font);
 			this.GetFontSize (font_p, font_size_p, font_xscript_p, out font_size, out scale, out glue);

@@ -14,8 +14,8 @@ namespace Epsitec.Common.Text
 	{
 		public StyleList(TextContext context)
 		{
-			this.context         = context;
-			this.internal_styles = new Internal.StyleTable ();
+			this.context           = context;
+			this.internal_settings = new Internal.SettingsTable ();
 			
 			this.text_style_list = new System.Collections.ArrayList ();
 			this.text_style_hash = new System.Collections.Hashtable ();
@@ -70,11 +70,11 @@ namespace Epsitec.Common.Text
 		
 		
 		#region Internal Properties
-		internal Internal.StyleTable			InternalStyleTable
+		internal Internal.SettingsTable			InternalSettingsTable
 		{
 			get
 			{
-				return this.internal_styles;
+				return this.internal_settings;
 			}
 		}
 		
@@ -88,11 +88,11 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		internal Styles.SimpleStyle				this[ulong code]
+		internal Styles.CoreSettings			this[ulong code]
 		{
 			get
 			{
-				return this.internal_styles.GetStyle (code);
+				return this.internal_settings.GetCore (code);
 			}
 		}
 		#endregion
@@ -331,7 +331,7 @@ namespace Epsitec.Common.Text
 			buffer.Append (SerializerSupport.SerializeInt (this.text_style_list.Count));
 			buffer.Append ("/");
 			
-			this.internal_styles.Serialize (buffer);
+			this.internal_settings.Serialize (buffer);
 			buffer.Append ("/");
 			
 			for (int i = 0; i < this.text_style_list.Count; i++)
@@ -347,15 +347,15 @@ namespace Epsitec.Common.Text
 		
 		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
 		{
-			this.internal_styles = new Internal.StyleTable ();
-			this.text_style_list = new System.Collections.ArrayList ();
-			this.text_style_hash = new System.Collections.Hashtable ();
+			this.internal_settings = new Internal.SettingsTable ();
+			this.text_style_list   = new System.Collections.ArrayList ();
+			this.text_style_hash   = new System.Collections.Hashtable ();
 			
 			long unique   = SerializerSupport.DeserializeLong (args[offset++]);
 			int  n_styles = SerializerSupport.DeserializeInt (args[offset++]);
 			
 			this.unique_id = unique;
-			this.internal_styles.Deserialize (context, version, args, ref offset);
+			this.internal_settings.Deserialize (context, version, args, ref offset);
 			
 			for (int i = 0; i < n_styles; i++)
 			{
@@ -390,19 +390,19 @@ namespace Epsitec.Common.Text
 		
 		
 		#region Internal Methods
-		internal Styles.SimpleStyle GetStyleFromIndex(int index)
+		internal Styles.CoreSettings GetCoreFromIndex(int index)
 		{
-			return this.internal_styles.GetStyleFromIndex (index);
+			return this.internal_settings.GetCoreFromIndex (index);
 		}
 		
 		
 		internal Property[] Flatten(ulong code)
 		{
-			Styles.SimpleStyle style = this[code];
+			Styles.CoreSettings core_settings = this[code];
 			
-			if (style != null)
+			if (core_settings != null)
 			{
-				return style.Flatten (code);
+				return core_settings.Flatten (code);
 			}
 			else
 			{
@@ -550,12 +550,12 @@ namespace Epsitec.Common.Text
 				return update;
 			}
 			
-			ulong last = Internal.CharMarker.ExtractStyleAndSettings (buffer[0]);
+			ulong last = Internal.CharMarker.ExtractCoreAndSettings (buffer[0]);
 			int   num  = 1;
 			
 			for (int i = 1; i < length; i++)
 			{
-				ulong code = Internal.CharMarker.ExtractStyleAndSettings (buffer[i]);
+				ulong code = Internal.CharMarker.ExtractCoreAndSettings (buffer[i]);
 				
 				if (code != last)
 				{
@@ -787,7 +787,7 @@ namespace Epsitec.Common.Text
 		public event EventHandler				StyleRemoved;
 		
 		private TextContext						context;
-		private Internal.StyleTable				internal_styles;
+		private Internal.SettingsTable			internal_settings;
 		private System.Collections.ArrayList	text_style_list;
 		private System.Collections.Hashtable	text_style_hash;
 		private StyleMap						style_map;

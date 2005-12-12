@@ -1744,7 +1744,7 @@ namespace Epsitec.Common.Text
 				System.Diagnostics.Debug.WriteLine (string.Format ("[{0}:{1}:{2}:{3}] -> {4} + {5}",
 					/**/										   Internal.CharMarker.GetLocalIndex (code),
 					/**/										   Internal.CharMarker.GetExtraIndex (code),
-					/**/										   Internal.CharMarker.GetStyleIndex (code),
+					/**/										   Internal.CharMarker.GetCoreIndex (code),
 					/**/										   Unicode.Bits.GetUnicodeCode (code),
 					/**/										   debug_styles, debug_properties));
 				

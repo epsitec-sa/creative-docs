@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text.Styles
 	/// <summary>
 	/// Summary description for ExtraSettings.
 	/// </summary>
-	public sealed class ExtraSettings : BaseSettings
+	public sealed class ExtraSettings : AdditionalSettings
 	{
 		public ExtraSettings()
 		{

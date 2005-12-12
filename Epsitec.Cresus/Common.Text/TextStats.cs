@@ -11,9 +11,9 @@ namespace Epsitec.Common.Text
 	{
 		public TextStats(TextStory story)
 		{
-			this.story   = story;
-			this.context = this.story.TextContext;
-			this.styles  = this.context.StyleList.InternalStyleTable;
+			this.story    = story;
+			this.context  = this.story.TextContext;
+			this.settings = this.context.StyleList.InternalSettingsTable;
 		}
 		
 		
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Text
 				
 				foreach (ulong code in buffer)
 				{
-					ulong bits = Internal.CharMarker.ExtractStyleAndSettings (code);
+					ulong bits = Internal.CharMarker.ExtractCoreAndSettings (code);
 					
 					if (bits != cache)
 					{
@@ -135,15 +135,15 @@ namespace Epsitec.Common.Text
 		
 		private void Record(ulong bits, int count)
 		{
-			Styles.SimpleStyle   style;
+			Styles.CoreSettings  core_settings;
 			Styles.LocalSettings local_settings;
 			Styles.ExtraSettings extra_settings;
 			
-			this.styles.GetStyleAndSettings (bits, out style, out local_settings, out extra_settings);
+			this.settings.GetCoreAndSettings (bits, out core_settings, out local_settings, out extra_settings);
 			
-			if (style != null)
+			if (core_settings != null)
 			{
-				foreach (Property property in style.GetProperties ())
+				foreach (Property property in core_settings.GetProperties ())
 				{
 					this.Record (property, count);
 				}
@@ -281,7 +281,7 @@ namespace Epsitec.Common.Text
 		
 		private TextStory						story;
 		private TextContext						context;
-		private Internal.StyleTable				styles;
+		private Internal.SettingsTable			settings;
 		
 		private PropertyBag[]					properties;
 	}

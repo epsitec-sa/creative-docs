@@ -452,8 +452,8 @@ namespace Epsitec.Common.Text
 			int length  = new_text.Length;
 			int changes = 0;
 			
-			Internal.StyleTable styles   = this.StyleList.InternalStyleTable;
-			ulong[]             old_text = new ulong[length];
+			Internal.SettingsTable settings   = this.StyleList.InternalSettingsTable;
+			ulong[]		           old_text = new ulong[length];
 			
 			this.text.ReadText (cursor.CursorId, offset, length, old_text);
 			
@@ -577,14 +577,14 @@ namespace Epsitec.Common.Text
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			ulong prev = Internal.CharMarker.ExtractStyleAndSettings (text[0]);
+			ulong prev = Internal.CharMarker.ExtractCoreAndSettings (text[0]);
 			
 			int start = 0;
 			int count = 1;
 			
 			for (int i = 1; i < text.Length; i++)
 			{
-				ulong code = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				ulong code = Internal.CharMarker.ExtractCoreAndSettings (text[i]);
 				
 				if (code == prev)
 				{
@@ -621,17 +621,17 @@ namespace Epsitec.Common.Text
 			
 			buffer.Append ("]\n    ");
 			
-			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
+			Internal.SettingsTable settings = this.StyleList.InternalSettingsTable;
 			
-			Styles.SimpleStyle   style = styles.GetStyle (code);
-			Styles.LocalSettings local = styles.GetLocalSettings (code);
-			Styles.ExtraSettings extra = styles.GetExtraSettings (code);
+			Styles.CoreSettings  core  = settings.GetCore (code);
+			Styles.LocalSettings local = settings.GetLocalSettings (code);
+			Styles.ExtraSettings extra = settings.GetExtraSettings (code);
 			
 			int n = 0;
 			
-			if (style != null)
+			if (core != null)
 			{
-				foreach (Property property in style)
+				foreach (Property property in core)
 				{
 					if (n > 0) buffer.Append (", ");
 					buffer.Append ("S=");
@@ -664,9 +664,9 @@ namespace Epsitec.Common.Text
 			
 			n = 0;
 			
-			if (style != null)
+			if (core != null)
 			{
-				foreach (Property property in style)
+				foreach (Property property in core)
 				{
 					switch (property.WellKnownType)
 					{
@@ -741,11 +741,11 @@ namespace Epsitec.Common.Text
 			Property[] prop_mixed = new Property[length];
 			Property   polymorph  = null;
 			
-			Styles.SimpleStyle   search_style = new Styles.SimpleStyle ();
+			Styles.CoreSettings  search_core  = new Styles.CoreSettings ();
 			Styles.LocalSettings search_local = new Styles.LocalSettings ();
 			Styles.ExtraSettings search_extra = new Styles.ExtraSettings ();
 			
-			Styles.PropertyContainer.Accumulator style_acc = search_style.StartAccumulation ();
+			Styles.PropertyContainer.Accumulator core_acc  = search_core.StartAccumulation ();
 			Styles.PropertyContainer.Accumulator local_acc = search_local.StartAccumulation ();
 			Styles.PropertyContainer.Accumulator extra_acc = search_extra.StartAccumulation ();
 			
@@ -758,7 +758,7 @@ namespace Epsitec.Common.Text
 			{
 				switch (prop_mixed[i].PropertyType)
 				{
-					case Properties.PropertyType.Style:			style_acc.Accumulate (prop_mixed[i]); break;
+					case Properties.PropertyType.CoreSetting:	core_acc.Accumulate (prop_mixed[i]); break;
 					case Properties.PropertyType.LocalSetting:	local_acc.Accumulate (prop_mixed[i]); break;
 					case Properties.PropertyType.ExtraSetting:	extra_acc.Accumulate (prop_mixed[i]); break;
 					
@@ -787,7 +787,7 @@ namespace Epsitec.Common.Text
 			{
 				if (extra_acc.IsEmpty)
 				{
-					style_acc.Accumulate (polymorph);
+					core_acc.Accumulate (polymorph);
 				}
 				else
 				{
@@ -797,7 +797,7 @@ namespace Epsitec.Common.Text
 			
 			//	Génère le style et les réglages en fonction des propriétés :
 			
-			style_acc.Done ();
+			core_acc.Done ();
 			local_acc.Done ();
 			extra_acc.Done ();
 			
@@ -806,9 +806,9 @@ namespace Epsitec.Common.Text
 			//	Attache le style et les réglages; réutilise de manière interne
 			//	un style existant, si possible :
 			
-			this.StyleList.InternalStyleTable.Attach (ref style, search_style, search_local, search_extra);
+			this.StyleList.InternalSettingsTable.Attach (ref style, search_core, search_local, search_extra);
 			
-			if ((style_acc.RequiresSpecialCodeProcessing) ||
+			if ((core_acc.RequiresSpecialCodeProcessing) ||
 				(local_acc.RequiresSpecialCodeProcessing) ||
 				(extra_acc.RequiresSpecialCodeProcessing))
 			{
@@ -956,17 +956,17 @@ namespace Epsitec.Common.Text
 		
 		private void IncrementUserCount(ulong[] text, int length)
 		{
-			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
+			Internal.SettingsTable settings = this.StyleList.InternalSettingsTable;
 			
 			for (int i = 0; i < length; i++)
 			{
 				ulong code = text[i];
 				
-				Styles.SimpleStyle   style = styles.GetStyle (code);
-				Styles.LocalSettings local = styles.GetLocalSettings (code);
-				Styles.ExtraSettings extra = styles.GetExtraSettings (code);
+				Styles.CoreSettings  core  = settings.GetCore (code);
+				Styles.LocalSettings local = settings.GetLocalSettings (code);
+				Styles.ExtraSettings extra = settings.GetExtraSettings (code);
 				
-				if (style != null) style.IncrementUserCount ();
+				if (core  != null) core.IncrementUserCount ();
 				if (local != null) local.IncrementUserCount ();
 				if (extra != null) extra.IncrementUserCount ();
 				
@@ -995,17 +995,17 @@ namespace Epsitec.Common.Text
 		
 		private void DecrementUserCount(ulong[] text, int length)
 		{
-			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
+			Internal.SettingsTable settings = this.StyleList.InternalSettingsTable;
 			
 			for (int i = 0; i < length; i++)
 			{
 				ulong code = text[i];
 				
-				Styles.SimpleStyle   style = styles.GetStyle (code);
-				Styles.LocalSettings local = styles.GetLocalSettings (code);
-				Styles.ExtraSettings extra = styles.GetExtraSettings (code);
+				Styles.CoreSettings  core  = settings.GetCore (code);
+				Styles.LocalSettings local = settings.GetLocalSettings (code);
+				Styles.ExtraSettings extra = settings.GetExtraSettings (code);
 				
-				if (style != null) style.DecrementUserCount ();
+				if (core  != null) core.DecrementUserCount ();
 				if (local != null) local.DecrementUserCount ();
 				if (extra != null) extra.DecrementUserCount ();
 				

@@ -14,7 +14,7 @@ namespace Epsitec.Common.Text.Properties
 	{
 		Invalid			= 0,			//	définition non valide
 		
-		Style			= 1,			//	définition pour un style
+		CoreSetting		= 1,			//	définition de base
 		LocalSetting	= 2,			//	définition pour un réglage local
 		ExtraSetting	= 3,			//	définition pour un réglage spécial
 		

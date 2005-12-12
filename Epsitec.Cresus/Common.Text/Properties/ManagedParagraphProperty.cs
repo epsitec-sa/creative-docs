@@ -31,7 +31,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return PropertyType.Style;
+				return PropertyType.CoreSetting;
 			}
 		}
 		

@@ -101,8 +101,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public Properties.GeneratorProperty GetGeneratorProperty(ulong code)
 		{
-			Styles.SimpleStyle   style = this.style_list[code];
-			Styles.ExtraSettings extra = style.GetExtraSettings (code);
+			Styles.CoreSettings  core  = this.style_list[code];
+			Styles.ExtraSettings extra = core.GetExtraSettings (code);
 				
 			if (extra != null)
 			{

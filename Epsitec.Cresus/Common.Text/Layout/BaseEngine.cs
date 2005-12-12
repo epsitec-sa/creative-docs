@@ -59,7 +59,7 @@ namespace Epsitec.Common.Text.Layout
 			//	Détermine combien de caractères utilisent exactement les mêmes
 			//	propriétés de style & réglages dans le texte passé en entrée.
 			
-			ulong code = Internal.CharMarker.ExtractStyleAndSettings (text[start]);
+			ulong code = Internal.CharMarker.ExtractCoreAndSettings (text[start]);
 			
 			if (Unicode.Bits.GetCode (text[start]) == (int) Unicode.Code.ObjectReplacement)
 			{
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Text.Layout
 					return i;
 				}
 				
-				if (Internal.CharMarker.ExtractStyleAndSettings (text[start+i]) != code)
+				if (Internal.CharMarker.ExtractCoreAndSettings (text[start+i]) != code)
 				{
 					return i;
 				}

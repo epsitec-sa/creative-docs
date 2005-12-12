@@ -763,7 +763,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				ulong next = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				ulong next = Internal.CharMarker.ExtractCoreAndSettings (text[i]);
 				
 				if (code != next)
 				{
@@ -823,7 +823,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				ulong next = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				ulong next = Internal.CharMarker.ExtractCoreAndSettings (text[i]);
 				
 				if (code != next)
 				{
@@ -877,7 +877,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				ulong next = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				ulong next = Internal.CharMarker.ExtractCoreAndSettings (text[i]);
 				
 				if (code != next)
 				{
@@ -929,7 +929,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				ulong next = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				ulong next = Internal.CharMarker.ExtractCoreAndSettings (text[i]);
 				
 				if (code != next)
 				{
@@ -980,7 +980,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				ulong next = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				ulong next = Internal.CharMarker.ExtractCoreAndSettings (text[i]);
 				
 				if (code != next)
 				{
@@ -1046,7 +1046,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				ulong next = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				ulong next = Internal.CharMarker.ExtractCoreAndSettings (text[i]);
 				
 				if (code != next)
 				{
@@ -1115,7 +1115,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
+				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
 				text[offset+i] |= style_bits;
 			}
 		}
@@ -1172,7 +1172,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
+				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
 				text[offset+i] |= style_bits;
 			}
 		}
@@ -1217,7 +1217,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
+				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
 				text[offset+i] |= style_bits;
 			}
 		}
@@ -1273,7 +1273,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
+				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
 				text[offset+i] |= style_bits;
 			}
 		}
@@ -1321,7 +1321,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
+				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
 				text[offset+i] |= style_bits;
 			}
 		}
@@ -1367,7 +1367,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < length; i++)
 			{
-				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
+				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
 				text[offset+i] |= style_bits;
 			}
 		}
@@ -1579,13 +1579,13 @@ namespace Epsitec.Common.Text.Internal
 			{
 				this.styles   = styles;
 				this.property = property;
-				this.code     = Internal.CharMarker.ExtractStyleAndSettings (code);
+				this.code     = Internal.CharMarker.ExtractCoreAndSettings (code);
 			}
 			
 			
 			public bool MissingProperty(ulong code)
 			{
-				code = Internal.CharMarker.ExtractStyleAndSettings (code);
+				code = Internal.CharMarker.ExtractCoreAndSettings (code);
 				
 				if (this.code == code)
 				{

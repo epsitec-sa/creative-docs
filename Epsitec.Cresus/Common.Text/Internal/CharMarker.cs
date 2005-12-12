@@ -59,9 +59,9 @@ namespace Epsitec.Common.Text.Internal
 		public const ulong						MarkerMask  = 0x00000000F8000000ul;
 		public const int						MarkerShift = 27;
 		
-		public const ulong						StyleAndSettingsMask      = 0xffffffff00000000ul;
-		public const ulong						StyleAndExtraSettingsMask = 0xfe3fffff00000000ul;
-		public const ulong						StyleAndLocalSettingsMask = 0x01ffffff00000000ul;
+		public const ulong						CoreAndSettingsMask      = 0xffffffff00000000ul;
+		public const ulong						CoreAndExtraSettingsMask = 0xfe3fffff00000000ul;
+		public const ulong						CoreAndLocalSettingsMask = 0x01ffffff00000000ul;
 		
 		public ulong							this[object key]
 		{
@@ -210,28 +210,28 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public static ulong ExtractButStyleAndSettings(ulong code)
+		public static ulong ExtractButCoreAndSettings(ulong code)
 		{
-			return code & ~CharMarker.StyleAndSettingsMask;
+			return code & ~CharMarker.CoreAndSettingsMask;
 		}
 		
-		public static ulong ExtractStyleAndSettings(ulong code)
+		public static ulong ExtractCoreAndSettings(ulong code)
 		{
-			return code & CharMarker.StyleAndSettingsMask;
+			return code & CharMarker.CoreAndSettingsMask;
 		}
 		
-		public static ulong ExtractStyleAndExtraSettings(ulong code)
+		public static ulong ExtractCoreAndExtraSettings(ulong code)
 		{
-			return code & CharMarker.StyleAndExtraSettingsMask;
+			return code & CharMarker.CoreAndExtraSettingsMask;
 		}
 		
-		public static ulong ExtractStyleAndLocalSettings(ulong code)
+		public static ulong ExtractCoreAndLocalSettings(ulong code)
 		{
-			return code & CharMarker.StyleAndLocalSettingsMask;
+			return code & CharMarker.CoreAndLocalSettingsMask;
 		}
 		
 		
-		public static int GetStyleIndex(ulong code)
+		public static int GetCoreIndex(ulong code)
 		{
 			return (int)((code >> 32) & 0x000000000003FFFFul);
 		}
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public static void SetStyleIndex(ref ulong code, int value)
+		public static void SetCoreIndex(ref ulong code, int value)
 		{
 			code &= 0xFFFC0000FFFFFFFFul;
 			code |= (ulong) (value & 0x0003FFFF) << 32;
@@ -266,7 +266,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public static bool HasStyleOrSettings(ulong code)
+		public static bool HasCoreOrSettings(ulong code)
 		{
 			return ((code & 0xFFFFFFFF00000000ul) == 0) ? false : true;
 		}

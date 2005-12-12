@@ -968,12 +968,12 @@ namespace Epsitec.Common.Text.Internal
 				{
 					if (count == 0)
 					{
-						code = Internal.CharMarker.ExtractStyleAndSettings (this.text_chunks[index][pos]);
+						code = Internal.CharMarker.ExtractCoreAndSettings (this.text_chunks[index][pos]);
 						next = code;
 					}
 					else
 					{
-						next = Internal.CharMarker.ExtractStyleAndSettings (this.text_chunks[index][pos]);
+						next = Internal.CharMarker.ExtractCoreAndSettings (this.text_chunks[index][pos]);
 						
 						if (code != next)
 						{
