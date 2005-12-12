@@ -681,8 +681,10 @@ advance_next:
 				{
 					skip_glue_at -= offset + length - profile.TotalCount;
 				}
-				
-				skip_glue_at -= profile.CountEndSpace;
+				else
+				{
+					skip_glue_at -= profile.CountEndSpace;
+				}
 				
 				if (skip_glue_at < 0)
 				{
