@@ -1807,7 +1807,7 @@ namespace Epsitec.Common.Document.Objects
 			
 			// Dans ce test, la couleur est stockée directement comme LineStyle pour
 			// la propriété "underline".
-			string color = "Yellow";
+			string color = RichColor.ToString(RichColor.FromBrightness(0));
 			
 			if ( records.Length > 0 )
 			{

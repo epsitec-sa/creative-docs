@@ -852,18 +852,26 @@ restart:
 		public void UpdateXlineProperties(int offset, double ox, bool is_visible)
 		{
 			Properties.AbstractXlineProperty[] current;
-			Properties.FontColorProperty       current_color;
 			Properties.AbstractXlineProperty[] previous = this.xline_properties;
-			Properties.FontColorProperty       previous_color = this.xline_text_color;
+			
+			Properties.FontColorProperty current_color  = this.xline_text_color;
+			Properties.FontColorProperty previous_color = this.xline_text_color;
 			
 			offset += this.text_offset;
 			
-			string color;
-			
 			this.text_context.GetXlines (this.text[offset], out current);
-			this.text_context.GetColor (this.text[offset], out color);
 			
-			current_color = new Properties.FontColorProperty (color);
+			if ((current != null) &&
+				(current.Length > 0))
+			{
+				//	Ne s'occupe de l'information liée à la couleur du texte que si
+				//	un soulignement est en cours :
+				
+				string color;
+				this.text_context.GetColor (this.text[offset], out color);
+				
+				current_color = new Properties.FontColorProperty (color);
+			}
 			
 			//	Supprime les définitions qui donnent lieu à des soulignements
 			//	invisibles :
@@ -1473,6 +1481,8 @@ restart:
 				ascender  = System.Math.Max (ascender, font.GetAscender (font_size));
 				descender = System.Math.Min (descender, font.GetDescender (font_size));
 				font_size = System.Math.Max (font_size, (ascender - descender) * 1.2);
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Asc.={0} Desc.={1} Size={2}", ascender, descender, font_size));
 				
 				double auto_scale = 1.0;
 				double leading    = font_size * auto_scale;
