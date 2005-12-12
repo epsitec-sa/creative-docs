@@ -55,13 +55,6 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		// Indique si ce panneau est visible pour un filtre donné.
-		public override bool IsFilterShow(string filter)
-		{
-			return ( filter == "All" || filter == "Frequently" || filter == "Character" );
-		}
-
-
 		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
@@ -210,7 +203,7 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonUnderlined.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonOverlined.Bounds = r;
-					r.Offset(20, 0);
+					r.Offset(20+5, 0);
 					this.buttonStrikeout.Bounds = r;
 
 					r.Left = rect.Right-20;
@@ -293,7 +286,7 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonUnderlined.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonOverlined.Bounds = r;
-					r.Offset(20, 0);
+					r.Offset(20+5, 0);
 					this.buttonStrikeout.Bounds = r;
 					r.Left = rect.Right-20;
 					r.Width = 20;
@@ -376,7 +369,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.buttonUnderlined.Bounds = r;
 				r.Offset(20, 0);
 				this.buttonOverlined.Bounds = r;
-				r.Offset(20, 0);
+				r.Offset(20+5, 0);
 				this.buttonStrikeout.Bounds = r;
 				r.Left = rect.Right-20;
 				r.Width = 20;

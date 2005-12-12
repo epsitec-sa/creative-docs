@@ -430,14 +430,12 @@ namespace Epsitec.Common.Document.Containers
 				if ( editObject != null )
 				{
 					TextPanels.Abstract.StaticDocument = this.document;
-					System.Collections.ArrayList list = editObject.CreateTextPanels();
+					System.Collections.ArrayList list = editObject.CreateTextPanels(this.textFilter);
 					if ( list != null )
 					{
 						int index = 1;
 						foreach ( TextPanels.Abstract panel in list )
 						{
-							if ( !panel.IsFilterShow(this.textFilter) )  continue;
-
 							double tm = (index == 1) ? 0 : panel.TopMargin;
 							panel.TabIndex = index++;
 							panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;

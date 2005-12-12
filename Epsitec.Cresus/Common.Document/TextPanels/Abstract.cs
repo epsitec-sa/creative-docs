@@ -39,8 +39,30 @@ namespace Epsitec.Common.Document.TextPanels
 
 
 		// Indique si ce panneau est visible pour un filtre donné.
-		public virtual bool IsFilterShow(string filter)
+		public static bool IsFilterShow(string panel, string filter)
 		{
+			if ( filter == "All" )  return true;
+
+			bool F = filter == "Frequently";
+			bool U = filter == "Usual";
+			bool P = filter == "Paragraph";
+			bool C = filter == "Character";
+			bool o = false;
+
+			switch ( panel )
+			{
+				//                         F    U    P    C
+				case "Justif":    return ( F || U || P || o );
+				case "Leading":   return ( F || o || P || o );
+				case "Margins":   return ( o || o || P || o );
+				case "Spaces":    return ( o || o || P || o );
+				case "Keep":      return ( o || o || P || o );
+				case "Font":      return ( F || U || o || C );
+				case "Xline":     return ( F || o || o || C );
+				case "Xscript":   return ( F || o || o || C );
+				case "Box":       return ( o || o || o || C );
+				case "Language":  return ( o || o || o || C );
+			}
 			return true;
 		}
 

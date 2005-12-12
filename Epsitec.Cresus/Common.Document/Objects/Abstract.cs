@@ -1063,7 +1063,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Crée tous les panneaux pour l'édition.
-		public virtual System.Collections.ArrayList CreateTextPanels()
+		public virtual System.Collections.ArrayList CreateTextPanels(string filter)
 		{
 			return null;
 		}

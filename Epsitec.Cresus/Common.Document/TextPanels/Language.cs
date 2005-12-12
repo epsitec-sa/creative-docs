@@ -51,13 +51,6 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		// Indique si ce panneau est visible pour un filtre donné.
-		public override bool IsFilterShow(string filter)
-		{
-			return ( filter == "All" || filter == "Character" );
-		}
-
-
 		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{

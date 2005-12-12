@@ -786,39 +786,69 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Crée tous les panneaux pour l'édition.
-		public override System.Collections.ArrayList CreateTextPanels()
+		public override System.Collections.ArrayList CreateTextPanels(string filter)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
-			TextPanels.Justif justif = new TextPanels.Justif(this.document);
-			list.Add(justif);
+			if ( TextPanels.Abstract.IsFilterShow("Justif", filter) )
+			{
+				TextPanels.Justif justif = new TextPanels.Justif(this.document);
+				list.Add(justif);
+			}
 
-			TextPanels.Leading leading = new TextPanels.Leading(this.document);
-			list.Add(leading);
+			if ( TextPanels.Abstract.IsFilterShow("Leading", filter) )
+			{
+				TextPanels.Leading leading = new TextPanels.Leading(this.document);
+				list.Add(leading);
+			}
 
-			TextPanels.Margins margins = new TextPanels.Margins(this.document);
-			list.Add(margins);
+			if ( TextPanels.Abstract.IsFilterShow("Margins", filter) )
+			{
+				TextPanels.Margins margins = new TextPanels.Margins(this.document);
+				list.Add(margins);
+			}
 
-			TextPanels.Spaces spaces = new TextPanels.Spaces(this.document);
-			list.Add(spaces);
+			if ( TextPanels.Abstract.IsFilterShow("Spaces", filter) )
+			{
+				TextPanels.Spaces spaces = new TextPanels.Spaces(this.document);
+				list.Add(spaces);
+			}
 
-			TextPanels.Keep keep = new TextPanels.Keep(this.document);
-			list.Add(keep);
+			if ( TextPanels.Abstract.IsFilterShow("Keep", filter) )
+			{
+				TextPanels.Keep keep = new TextPanels.Keep(this.document);
+				list.Add(keep);
+			}
 
-			TextPanels.Font font = new TextPanels.Font(this.document);
-			list.Add(font);
+			if ( TextPanels.Abstract.IsFilterShow("Font", filter) )
+			{
+				TextPanels.Font font = new TextPanels.Font(this.document);
+				list.Add(font);
+			}
 
-			TextPanels.Xline xline = new TextPanels.Xline(this.document);
-			list.Add(xline);
+			if ( TextPanels.Abstract.IsFilterShow("Xline", filter) )
+			{
+				TextPanels.Xline xline = new TextPanels.Xline(this.document);
+				list.Add(xline);
+			}
 
-			TextPanels.Xscript xscript = new TextPanels.Xscript(this.document);
-			list.Add(xscript);
+			if ( TextPanels.Abstract.IsFilterShow("Xscript", filter) )
+			{
+				TextPanels.Xscript xscript = new TextPanels.Xscript(this.document);
+				list.Add(xscript);
+			}
 
-			TextPanels.Box box = new TextPanels.Box(this.document);
-			list.Add(box);
+			if ( TextPanels.Abstract.IsFilterShow("Box", filter) )
+			{
+				TextPanels.Box box = new TextPanels.Box(this.document);
+				list.Add(box);
+			}
 
-			TextPanels.Language language = new TextPanels.Language(this.document);
-			list.Add(language);
+			if ( TextPanels.Abstract.IsFilterShow("Language", filter) )
+			{
+				TextPanels.Language language = new TextPanels.Language(this.document);
+				list.Add(language);
+			}
 
 			return list;
 		}
