@@ -3775,7 +3775,6 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.SelectionChanged       += new SimpleEventHandler(this.HandleSelectionChanged);
 			this.CurrentDocument.Notifier.ShaperChanged          += new SimpleEventHandler(this.HandleShaperChanged);
 			this.CurrentDocument.Notifier.TextChanged            += new SimpleEventHandler(this.HandleTextChanged);
-			this.CurrentDocument.Notifier.CreateChanged          += new SimpleEventHandler(this.HandleCreateChanged);
 			this.CurrentDocument.Notifier.StyleChanged           += new SimpleEventHandler(this.HandleStyleChanged);
 			this.CurrentDocument.Notifier.TextStyleChanged       += new SimpleEventHandler(this.HandleTextStyleChanged);
 			this.CurrentDocument.Notifier.PagesChanged           += new SimpleEventHandler(this.HandlePagesChanged);
@@ -4304,18 +4303,6 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.ribbonText.SetDirtyText();
 			this.dlgGlyphs.SetAlternatesDirty();
-		}
-
-		// Appelé lorsque la création d'un objet à débuté ou s'est terminée.
-		private void HandleCreateChanged()
-		{
-			if ( !this.IsCurrentDocument )  return;
-			this.HandleSelectionChanged();
-			this.HandlePagesChanged();
-			this.HandleLayersChanged();
-			this.HandleUndoRedoChanged();
-			this.HandleToolChanged();
-			this.CurrentDocument.Dialogs.UpdateInfos();
 		}
 
 		// Appelé par le document lorsqu'un style a changé.
@@ -5114,7 +5101,6 @@ namespace Epsitec.App.DocumentEditor
 				this.HandleToolChanged();
 				this.HandleSaveChanged();
 				this.HandleSelectionChanged();
-				this.HandleCreateChanged();
 				this.HandleStyleChanged();
 				this.HandleTextStyleChanged();
 				this.HandlePagesChanged();

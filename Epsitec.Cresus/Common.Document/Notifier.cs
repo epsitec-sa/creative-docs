@@ -54,7 +54,6 @@ namespace Epsitec.Common.Document
 			this.selectionChanged = true;
 			this.shaperChanged = true;
 			this.textChanged = true;
-			this.createChanged = true;
 			this.styleChanged = true;
 			this.textStyleChanged = true;
 			this.pagesChanged = true;
@@ -69,7 +68,22 @@ namespace Epsitec.Common.Document
 			this.hideHalfChanged = true;
 			this.debugChanged = true;
 			this.selNamesChanged = true;
+
 			this.NotifyArea();
+		}
+
+		// Indique que la création d'un objet à débuté ou s'est terminée.
+		public void NotifyCreateChanged()
+		{
+			if ( !this.enable )  return;
+
+			this.toolChanged = true;
+			this.selectionChanged = true;
+			this.pagesChanged = true;
+			this.layersChanged = true;
+			this.undoRedoChanged = true;
+
+			this.NotifyAsync();
 		}
 
 
@@ -151,14 +165,6 @@ namespace Epsitec.Common.Document
 		{
 			if ( !this.enable )  return;
 			this.textChanged = true;
-			this.NotifyAsync();
-		}
-
-		// Indique que la création d'un objet à débuté ou s'est terminée.
-		public void NotifyCreateChanged()
-		{
-			if ( !this.enable )  return;
-			this.createChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -457,12 +463,6 @@ namespace Epsitec.Common.Document
 				this.textChanged = false;
 			}
 
-			if ( this.createChanged )
-			{
-				this.OnCreateChanged();
-				this.createChanged = false;
-			}
-
 			if ( this.styleChanged )
 			{
 				this.OnStyleChanged();
@@ -666,14 +666,6 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void OnCreateChanged()
-		{
-			if ( this.CreateChanged != null )  // qq'un écoute ?
-			{
-				this.CreateChanged();
-			}
-		}
-
 		protected void OnStyleChanged()
 		{
 			if ( this.StyleChanged != null )  // qq'un écoute ?
@@ -869,7 +861,6 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			SelectionChanged;
 		public event SimpleEventHandler			ShaperChanged;
 		public event SimpleEventHandler			TextChanged;
-		public event SimpleEventHandler			CreateChanged;
 		public event SimpleEventHandler			StyleChanged;
 		public event SimpleEventHandler			TextStyleChanged;
 		public event SimpleEventHandler			PagesChanged;
@@ -907,7 +898,6 @@ namespace Epsitec.Common.Document
 		protected bool							selectionChanged;
 		protected bool							shaperChanged;
 		protected bool							textChanged;
-		protected bool							createChanged;
 		protected bool							styleChanged;
 		protected bool							textStyleChanged;
 		protected bool							pagesChanged;

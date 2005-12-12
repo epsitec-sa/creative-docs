@@ -714,8 +714,6 @@ namespace Epsitec.Common.Document
 				this.createRank = -1;
 			}
 
-			this.document.Notifier.NotifyCreateChanged();
-
 			if ( selectAfterCreation )
 			{
 				this.document.Modifier.Tool = "Select";
@@ -725,6 +723,7 @@ namespace Epsitec.Common.Document
 				this.document.Modifier.Tool = "Edit";
 			}
 
+			this.document.Notifier.NotifyCreateChanged();
 			this.document.Notifier.NotifySelectionChanged();
 		}
 
