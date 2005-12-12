@@ -1805,44 +1805,103 @@ namespace Epsitec.Common.Document.Objects
 			if ( records.Length == 0 )  return;
 
 			System.Collections.ArrayList process = new System.Collections.ArrayList();
-			Text.Properties.AbstractXlineProperty xline;
-			Text.Layout.XlineRecord starting, ending;
-
-			do
+			
+			for ( int ii=0 ; ii<records.Length ; )
 			{
-				xline    = null;
-				starting = null;
-				ending   = null;
-
-				for ( int i=0 ; i<records.Length ; i++ )
+				bool found;
+				
+				do
 				{
-					bool found = false;
-					for ( int j=0 ; j<records[i].Xlines.Length ; j++ )
-					{
-						if ( xline == null )  // cherche le début ?
-						{
-							if ( TextBox2.XlineContains(process, records[i].Xlines[j]) )  continue;
+					Text.Properties.AbstractXlineProperty xline = null;
+					Text.Properties.FontColorProperty color = null;
+					
+					Text.Layout.XlineRecord starting = null;
+					Text.Layout.XlineRecord ending   = null;
 
-							xline = records[i].Xlines[j];
-							starting = records[i];
-							found = true;  // la fin ne peut pas être dans ce record
-						}
-						else	// cherche la fin ?
-						{
-							found |= Text.Property.CompareEqualContents(xline, records[i].Xlines[j]);
-						}
-					}
-
-					if ( xline != null && !found )  // fin trouvée ?
+					found = false;
+					
+					for ( int i=ii ; i<records.Length ; i++ )
 					{
+						if ( records[i].Type == Text.Layout.XlineRecord.RecordType.LineEnd )
+						{
+							if ( starting != null )
+							{
+								System.Diagnostics.Debug.Assert(xline != null);
+								
+								ending = records[i];
+								found  = true;
+								this.RenderXline(context, xline, starting, ending);  // dessine le trait
+								process.Add(new XlineInfo(xline, color));  // le trait est fait
+							}
+							break;
+						}
+						
 						ending = records[i];
-						this.RenderXline(context, xline, starting, ending);  // dessine le trait
-						process.Add(xline);  // le trait est fait
-						break;
+						
+						for ( int j=0 ; j<records[i].Xlines.Length ; j++ )
+						{
+							if ( xline == null )  // cherche le début ?
+							{
+								if ( TextBox2.XlineContains(process, records[i].Xlines[j], records[i].TextColor) )  continue;
+
+								xline    = records[i].Xlines[j];
+								color    = records[i].TextColor;
+								starting = records[i];
+								ending   = null;  // la fin ne peut pas être dans ce record
+								break;
+							}
+							else if ( starting == null )	// cherche un autre début ?
+							{
+								if ( !Text.Property.CompareEqualContents(xline, records[i].Xlines[j]) ||
+									 !Text.Property.CompareEqualContents(color, records[i].TextColor) )
+								{
+									continue;
+								}
+								
+								starting = records[i];
+								ending   = null;  // la fin ne peut pas être dans ce record
+								break;
+							}
+							else	// cherche la fin ?
+							{
+								if ( Text.Property.CompareEqualContents(xline, records[i].Xlines[j]) &&
+									 Text.Property.CompareEqualContents(color, records[i].TextColor) )
+								{
+									ending = null;  // la fin ne peut pas être dans ce record
+									break;
+								}
+							}
+						}
+						
+						if ( starting != null && ending != null )  // fin trouvée ?
+						{
+							System.Diagnostics.Debug.Assert(xline != null);
+							
+							this.RenderXline(context, xline, starting, ending);  // dessine le trait
+							process.Add(new XlineInfo(xline, color));  // le trait est fait
+							
+							// Cherche encore d'autres occurrences de la même propriété dans
+							// la même ligne...
+							
+							starting = null;
+							ending   = null;
+							found    = true;
+						}
 					}
 				}
+				while ( found );
+				
+				// Saute les enregistrements de la ligne courante et reprend tout depuis
+				// le début de la ligne suivante:
+				
+				while ( ii<records.Length && records[ii].Type != Text.Layout.XlineRecord.RecordType.LineEnd )
+				{
+					ii++;
+				}
+				
+				ii++;
+				process.Clear();
 			}
-			while ( xline != null && starting != null && ending != null );
 		}
 
 		// Dessine un trait souligné, surligné ou biffé.
@@ -1877,13 +1936,47 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Cherche si une propriété Xline est déjà dans une liste.
-		protected static bool XlineContains(System.Collections.ArrayList process, Text.Properties.AbstractXlineProperty xline)
+		protected static bool XlineContains(System.Collections.ArrayList process, Text.Properties.AbstractXlineProperty xline, Text.Properties.FontColorProperty color)
 		{
-			foreach ( Text.Properties.AbstractXlineProperty existing in process )
+			foreach ( XlineInfo existing in process )
 			{
-				if ( Text.Property.CompareEqualContents(existing, xline) )  return true;
+				if ( Text.Property.CompareEqualContents(existing.Xline, xline) &&
+					 Text.Property.CompareEqualContents(existing.Color, color) )
+				{
+					return true;
+				}
 			}
 			return false;
+		}
+		
+		private class XlineInfo
+		{
+			public XlineInfo(Text.Properties.AbstractXlineProperty xline, Text.Properties.FontColorProperty color)
+			{
+				this.xline = xline;
+				this.color = color;
+			}
+			
+			
+			public Text.Properties.AbstractXlineProperty Xline
+			{
+				get
+				{
+					return this.xline;
+				}
+			}
+			
+			public Text.Properties.FontColorProperty Color
+			{
+				get
+				{
+					return this.color;
+				}
+			}
+			
+			
+			Text.Properties.AbstractXlineProperty	xline;
+			Text.Properties.FontColorProperty		color;
 		}
 		#endregion
 
