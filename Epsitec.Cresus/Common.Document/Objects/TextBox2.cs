@@ -777,6 +777,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				Text.Properties.TabProperty tab = list.GetTabProperty(tag);
 				list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
+				this.textFlow.TextStory.NotifyTextChanged();
 			}
 			
 			this.HandleTabsChanged(null);  // TODO: devrait être inutile
