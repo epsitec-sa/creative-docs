@@ -15,6 +15,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.Text.Paragraph.Main;
 
+			this.buttonLeading08    = this.CreateIconButton("ParagraphLeading08",    Misc.Icon("ParagraphLeading08"),    Res.Strings.Action.Text.Paragraph.Leading08, true);
+			this.buttonLeading10    = this.CreateIconButton("ParagraphLeading10",    Misc.Icon("ParagraphLeading10"),    Res.Strings.Action.Text.Paragraph.Leading10, true);
+			this.buttonLeading15    = this.CreateIconButton("ParagraphLeading15",    Misc.Icon("ParagraphLeading15"),    Res.Strings.Action.Text.Paragraph.Leading15, true);
+			this.buttonLeading20    = this.CreateIconButton("ParagraphLeading20",    Misc.Icon("ParagraphLeading20"),    Res.Strings.Action.Text.Paragraph.Leading20, true);
+			this.buttonLeading30    = this.CreateIconButton("ParagraphLeading30",    Misc.Icon("ParagraphLeading30"),    Res.Strings.Action.Text.Paragraph.Leading30, true);
+			this.buttonLeadingMinus = this.CreateIconButton("ParagraphLeadingMinus", Misc.Icon("ParagraphLeadingMinus"), Res.Strings.TextPanel.Leading.Tooltip.LeadingMinus, false);
+			this.buttonLeadingPlus  = this.CreateIconButton("ParagraphLeadingPlus",  Misc.Icon("ParagraphLeadingPlus"),  Res.Strings.TextPanel.Leading.Tooltip.LeadingPlus,  false);
+
 			this.UpdateClientGeometry();
 		}
 		
@@ -27,11 +35,6 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		public override void SetDocument(DocumentType type, InstallType install, Settings.GlobalSettings gs, Document document)
-		{
-			base.SetDocument(type, install, gs, document);
-		}
-
 		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
@@ -42,16 +45,42 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Effectue la mise à jour du contenu d'édition.
-		protected override void DoUpdateText()
-		{
-		}
-
-		
 		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
+
+			if ( this.buttonLeading08 == null )  return;
+
+			double dx = this.buttonLeading08.DefaultWidth;
+			double dy = this.buttonLeading08.DefaultHeight;
+
+			Rectangle rect = this.UsefulZone;
+			rect.Height = dy;
+			rect.Width = dx;
+			rect.Offset(0, dy+5);
+			this.buttonLeading08.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonLeading10.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonLeading15.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonLeading20.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonLeading30.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonLeadingMinus.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonLeadingPlus.Bounds = rect;
 		}
+
+
+		protected IconButton				buttonLeading08;
+		protected IconButton				buttonLeading10;
+		protected IconButton				buttonLeading15;
+		protected IconButton				buttonLeading20;
+		protected IconButton				buttonLeading30;
+		protected IconButton				buttonLeadingMinus;
+		protected IconButton				buttonLeadingPlus;
 	}
 }

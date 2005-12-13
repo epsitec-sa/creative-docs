@@ -1036,6 +1036,11 @@
 	<data name="Action.Text.Paragraph.LeadingNorm">Interligne normal</data>
 	<data name="Action.Text.Paragraph.LeadingPlus">Interligne étendu</data>
 	<data name="Action.Text.Paragraph.LeadingAuto">Interligne automatique</data>
+	<data name="Action.Text.Paragraph.Leading08">Interligne serré</data>
+	<data name="Action.Text.Paragraph.Leading10">Interligne normal</data>
+	<data name="Action.Text.Paragraph.Leading15">Interligne étendu</data>
+	<data name="Action.Text.Paragraph.Leading20">Interligne double</data>
+	<data name="Action.Text.Paragraph.Leading30">Interligne triple</data>
 	<data name="Action.Text.Insert">Insertion</data>
 	<data name="Action.Text.FlowChanged">Modification du chaînage</data>
 	<data name="Action.Text.Ruler.Drag">Tirer avec la souris pour créer un repère</data>

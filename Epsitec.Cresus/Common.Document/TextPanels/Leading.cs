@@ -24,11 +24,11 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldLeading.IsUnitPercent = true;
 			this.fieldLeading.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 
-			this.buttonLeadingMinus = this.CreateIconButton(Misc.Icon("ParaLeadingMinus"),      Res.Strings.TextPanel.Leading.Tooltip.LeadingMinus, new MessageEventHandler(this.HandleButtonLeadingMinusClicked), false);
-			this.buttonLeadingPlus  = this.CreateIconButton(Misc.Icon("ParaLeadingPlus"),       Res.Strings.TextPanel.Leading.Tooltip.LeadingPlus,  new MessageEventHandler(this.HandleButtonLeadingPlusClicked), false);
-			this.buttonAlignFirst   = this.CreateIconButton(Misc.Icon("ParaLeadingAlignFirst"), Res.Strings.TextPanel.Leading.Tooltip.AlignFirst,   new MessageEventHandler(this.HandleButtonAlignFirstClicked));
-			this.buttonAlignAll     = this.CreateIconButton(Misc.Icon("ParaLeadingAlignAll"),   Res.Strings.TextPanel.Leading.Tooltip.AlignAll,     new MessageEventHandler(this.HandleButtonAlignAllClicked));
-			this.buttonSettings     = this.CreateIconButton(Misc.Icon("Settings"),              Res.Strings.Action.Settings,                        new MessageEventHandler(this.HandleButtonSettingsClicked), false);
+			this.buttonLeadingMinus = this.CreateIconButton(Misc.Icon("ParagraphLeadingMinus"),      Res.Strings.TextPanel.Leading.Tooltip.LeadingMinus, new MessageEventHandler(this.HandleButtonLeadingMinusClicked), false);
+			this.buttonLeadingPlus  = this.CreateIconButton(Misc.Icon("ParagraphLeadingPlus"),       Res.Strings.TextPanel.Leading.Tooltip.LeadingPlus,  new MessageEventHandler(this.HandleButtonLeadingPlusClicked), false);
+			this.buttonAlignFirst   = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignFirst"), Res.Strings.TextPanel.Leading.Tooltip.AlignFirst,   new MessageEventHandler(this.HandleButtonAlignFirstClicked));
+			this.buttonAlignAll     = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignAll"),   Res.Strings.TextPanel.Leading.Tooltip.AlignAll,     new MessageEventHandler(this.HandleButtonAlignAllClicked));
+			this.buttonSettings     = this.CreateIconButton(Misc.Icon("Settings"),                   Res.Strings.Action.Settings,                        new MessageEventHandler(this.HandleButtonSettingsClicked), false);
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -269,46 +269,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleButtonLeadingMinusClicked(object sender, MessageEventArgs e)
 		{
-			this.LeadingIncrement(-1);
+			this.document.Wrappers.IncrementParagraphLeading(-1);
 		}
 
 		private void HandleButtonLeadingPlusClicked(object sender, MessageEventArgs e)
 		{
-			this.LeadingIncrement(1);
-		}
-
-		protected void LeadingIncrement(double delta)
-		{
-			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
-
-			double leading = this.document.ParagraphWrapper.Active.Leading;
-			Common.Text.Properties.SizeUnits units = this.document.ParagraphWrapper.Active.LeadingUnits;
-
-			if ( units == Common.Text.Properties.SizeUnits.Percent )
-			{
-				if ( delta > 0 )  leading *= 1.2;
-				else              leading /= 1.2;
-				leading = System.Math.Max(leading, 0.5);
-			}
-			else
-			{
-				if ( this.document.Modifier.RealUnitDimension == RealUnitType.DimensionInch )
-				{
-					leading += delta*50.8;  // 0.2in
-					leading = System.Math.Max(leading, 12.7);
-				}
-				else
-				{
-					leading += delta*50.0;  // 5mm
-					leading = System.Math.Max(leading, 10.0);
-				}
-			}
-
-			this.document.ParagraphWrapper.SuspendSynchronisations();
-			this.document.ParagraphWrapper.Defined.Leading = leading;
-			this.document.ParagraphWrapper.Defined.LeadingUnits = units;
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.Wrappers.IncrementParagraphLeading(1);
 		}
 
 		private void HandleButtonAlignFirstClicked(object sender, MessageEventArgs e)

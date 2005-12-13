@@ -54,15 +54,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-		public void SetDirtyText()
-		{
-			foreach ( Abstract ribbon in this.Children )
-			{
-				if ( ribbon == null )  continue;
-				ribbon.SetDirtyText();
-			}
-		}
-
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;

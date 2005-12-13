@@ -2319,6 +2319,13 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("FontUnderlined")]
 		[Command ("FontOverlined")]
 		[Command ("FontStrikeout")]
+		[Command ("ParagraphLeading08")]
+		[Command ("ParagraphLeading10")]
+		[Command ("ParagraphLeading15")]
+		[Command ("ParagraphLeading20")]
+		[Command ("ParagraphLeading30")]
+		[Command ("ParagraphLeadingPlus")]
+		[Command ("ParagraphLeadingMinus")]
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName);
@@ -3554,13 +3561,25 @@ namespace Epsitec.App.DocumentEditor
 			this.fontBoldState = new CommandState("FontBold", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaB);
 			this.fontItalicState = new CommandState("FontItalic", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaI);
 			this.fontUnderlinedState = new CommandState("FontUnderlined", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
-			this.fontOverlinedState = new CommandState("FontOverlined", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
-			this.fontStrikeoutState = new CommandState("FontStrikeout", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
+			this.fontOverlinedState = new CommandState("FontOverlined", this.commandDispatcher);
+			this.fontStrikeoutState = new CommandState("FontStrikeout", this.commandDispatcher);
+			this.paragraphLeading08State = new CommandState("ParagraphLeading08", this.commandDispatcher);
+			this.paragraphLeading10State = new CommandState("ParagraphLeading10", this.commandDispatcher);
+			this.paragraphLeading15State = new CommandState("ParagraphLeading15", this.commandDispatcher);
+			this.paragraphLeading20State = new CommandState("ParagraphLeading20", this.commandDispatcher);
+			this.paragraphLeading30State = new CommandState("ParagraphLeading30", this.commandDispatcher);
+			this.paragraphLeadingPlusState = new CommandState("ParagraphLeadingPlus", this.commandDispatcher);
+			this.paragraphLeadingMinusState = new CommandState("ParagraphLeadingMinus", this.commandDispatcher);
 			this.fontBoldState.Statefull = true;
 			this.fontItalicState.Statefull = true;
 			this.fontUnderlinedState.Statefull = true;
 			this.fontOverlinedState.Statefull = true;
 			this.fontStrikeoutState.Statefull = true;
+			this.paragraphLeading08State.Statefull = true;
+			this.paragraphLeading10State.Statefull = true;
+			this.paragraphLeading15State.Statefull = true;
+			this.paragraphLeading20State.Statefull = true;
+			this.paragraphLeading30State.Statefull = true;
 			
 			this.orderUpOneState = new CommandState("OrderUpOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageUp);
 			this.orderDownOneState = new CommandState("OrderDownOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageDown);
@@ -4170,6 +4189,13 @@ namespace Epsitec.App.DocumentEditor
 				this.fontUnderlinedState.Enable = false;
 				this.fontOverlinedState.Enable = false;
 				this.fontStrikeoutState.Enable = false;
+				this.paragraphLeading08State.Enable = false;
+				this.paragraphLeading10State.Enable = false;
+				this.paragraphLeading15State.Enable = false;
+				this.paragraphLeading20State.Enable = false;
+				this.paragraphLeading30State.Enable = false;
+				this.paragraphLeadingPlusState.Enable = false;
+				this.paragraphLeadingMinusState.Enable = false;
 				this.orderUpOneState.Enable = false;
 				this.orderDownOneState.Enable = false;
 				this.orderUpAllState.Enable = false;
@@ -4263,7 +4289,6 @@ namespace Epsitec.App.DocumentEditor
 				this.selectorAdaptText.ActiveState = ActiveState.No;
 			}
 
-			this.ribbonText.SetDirtyText();
 			this.dlgGlyphs.SetAlternatesDirty();
 
 			StatusField field = this.info.Items["StatusObject"] as StatusField;
@@ -4300,7 +4325,6 @@ namespace Epsitec.App.DocumentEditor
 		// Appelé par le document lorsque le texte en édition a changé.
 		private void HandleTextChanged()
 		{
-			this.ribbonText.SetDirtyText();
 			this.dlgGlyphs.SetAlternatesDirty();
 		}
 
@@ -5488,6 +5512,13 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					fontUnderlinedState;
 		protected CommandState					fontOverlinedState;
 		protected CommandState					fontStrikeoutState;
+		protected CommandState					paragraphLeading08State;
+		protected CommandState					paragraphLeading10State;
+		protected CommandState					paragraphLeading15State;
+		protected CommandState					paragraphLeading20State;
+		protected CommandState					paragraphLeading30State;
+		protected CommandState					paragraphLeadingPlusState;
+		protected CommandState					paragraphLeadingMinusState;
 		protected CommandState					orderUpOneState;
 		protected CommandState					orderDownOneState;
 		protected CommandState					orderUpAllState;

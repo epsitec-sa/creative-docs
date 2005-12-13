@@ -98,6 +98,25 @@ namespace Epsitec.Common.Document
 		// Le wrapper des paragraphes a changé.
 		protected void HandleParagraphWrapperChanged(object sender)
 		{
+			bool enabled = this.IsWrappersAttached;
+			double leading = 0.0;
+
+			if ( enabled )
+			{
+				if ( this.paragraphWrapper.Active.LeadingUnits == Text.Properties.SizeUnits.Percent )
+				{
+					leading = this.paragraphWrapper.Active.Leading;
+				}
+			}
+
+			this.CommandActiveState("ParagraphLeading08", enabled, (leading == 0.8));
+			this.CommandActiveState("ParagraphLeading10", enabled, (leading == 1.0));
+			this.CommandActiveState("ParagraphLeading12", enabled, (leading == 1.2));
+			this.CommandActiveState("ParagraphLeading15", enabled, (leading == 1.5));
+			this.CommandActiveState("ParagraphLeading20", enabled, (leading == 2.0));
+			this.CommandActiveState("ParagraphLeading30", enabled, (leading == 3.0));
+			this.CommandActiveState("ParagraphLeadingPlus",  enabled);
+			this.CommandActiveState("ParagraphLeadingMinus", enabled);
 		}
 
 
@@ -106,11 +125,19 @@ namespace Epsitec.Common.Document
 		{
 			switch ( name )
 			{
-				case "FontBold":        this.ChangeBold();        break;
-				case "FontItalic":      this.ChangeItalic();      break;
-				case "FontUnderlined":  this.ChangeUnderlined();  break;
-				case "FontOverlined":   this.ChangeOverlined();   break;
-				case "FontStrikeout":   this.ChangeStrikeout();   break;
+				case "FontBold":               this.ChangeBold();                   break;
+				case "FontItalic":             this.ChangeItalic();                 break;
+				case "FontUnderlined":         this.ChangeUnderlined();             break;
+				case "FontOverlined":          this.ChangeOverlined();              break;
+				case "FontStrikeout":          this.ChangeStrikeout();              break;
+				case "ParagraphLeading08":     this.ChangeParagraphLeading(0.8);    break;
+				case "ParagraphLeading10":     this.ChangeParagraphLeading(1.0);    break;
+				case "ParagraphLeading12":     this.ChangeParagraphLeading(1.2);    break;
+				case "ParagraphLeading15":     this.ChangeParagraphLeading(1.5);    break;
+				case "ParagraphLeading20":     this.ChangeParagraphLeading(2.0);    break;
+				case "ParagraphLeading30":     this.ChangeParagraphLeading(3.0);    break;
+				case "ParagraphLeadingPlus":   this.IncrementParagraphLeading(1);   break;
+				case "ParagraphLeadingMinus":  this.IncrementParagraphLeading(-1);  break;
 			}
 		}
 
@@ -173,6 +200,47 @@ namespace Epsitec.Common.Document
 			}
 
 			this.textWrapper.ResumeSynchronisations();
+		}
+
+		protected void ChangeParagraphLeading(double value)
+		{
+			this.paragraphWrapper.SuspendSynchronisations();
+			this.paragraphWrapper.Defined.Leading = value;
+			this.paragraphWrapper.Defined.LeadingUnits = Text.Properties.SizeUnits.Percent;
+			this.paragraphWrapper.ResumeSynchronisations();
+		}
+
+		public void IncrementParagraphLeading(double delta)
+		{
+			if ( !this.paragraphWrapper.IsAttached )  return;
+
+			double leading = this.paragraphWrapper.Active.Leading;
+			Common.Text.Properties.SizeUnits units = this.paragraphWrapper.Active.LeadingUnits;
+
+			if ( units == Common.Text.Properties.SizeUnits.Percent )
+			{
+				if ( delta > 0 )  leading *= 1.2;
+				else              leading /= 1.2;
+				leading = System.Math.Max(leading, 0.5);
+			}
+			else
+			{
+				if ( this.document.Modifier.RealUnitDimension == RealUnitType.DimensionInch )
+				{
+					leading += delta*50.8;  // 0.2in
+					leading = System.Math.Max(leading, 12.7);
+				}
+				else
+				{
+					leading += delta*50.0;  // 5mm
+					leading = System.Math.Max(leading, 10.0);
+				}
+			}
+
+			this.paragraphWrapper.SuspendSynchronisations();
+			this.paragraphWrapper.Defined.Leading = leading;
+			this.paragraphWrapper.Defined.LeadingUnits = units;
+			this.paragraphWrapper.ResumeSynchronisations();
 		}
 
 
@@ -343,6 +411,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+
+		// Modifie l'état d'une commande.
+		protected void CommandActiveState(string name, bool enabled)
+		{
+			CommandState cs = this.document.CommandDispatcher.GetCommandState(name);
+			System.Diagnostics.Debug.Assert(cs != null);
+			cs.Enable = enabled;
+		}
 
 		// Modifie l'état d'une commande.
 		protected void CommandActiveState(string name, bool enabled, bool state)
