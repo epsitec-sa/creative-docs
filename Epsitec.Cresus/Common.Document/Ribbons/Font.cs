@@ -225,7 +225,14 @@ namespace Epsitec.Common.Document.Ribbons
 					if ( property.PropertyType != Common.Text.Properties.PropertyType.LocalSetting &&
 						 property.WellKnownType != Common.Text.Properties.WellKnownType.Styles )
 					{
-						list.Add(property);
+						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.Tabs )
+						{
+							list.Add(this.document.TextContext.TabList.PromoteToSharedTabs(property as Common.Text.Properties.TabsProperty));
+						}
+						else
+						{
+							list.Add(property);
+						}
 					}
 				}
 				

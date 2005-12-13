@@ -48,7 +48,7 @@ namespace Epsitec.Common.Text
 		{
 			if (tag == null)
 			{
-				tag = this.GetAutoTagName ();
+				tag = this.GenerateAutoTagName ();
 			}
 			
 			Properties.TabProperty tab = new Properties.TabProperty (tag);
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public string GetAutoTagName()
+		public string GenerateAutoTagName()
 		{
 			//	Il y a deux classes de tabulateurs : ceux qui sont définis localement
 			//	dans le texte (TabClass.Auto) et ceux qui sont définis au sein d'un
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Text
 			return this.GenerateUniqueName (TabList.AutoTagPrefix);
 		}
 		
-		public string GetSharedTagName()
+		public string GenerateSharedTagName()
 		{
 			return this.GenerateUniqueName (TabList.SharedTagPrefix);
 		}
@@ -323,6 +323,31 @@ namespace Epsitec.Common.Text
 				}
 				
 				return new Properties.TabsProperty (copy);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		
+		public Properties.TabsProperty PromoteToSharedTabs(Properties.TabsProperty property)
+		{
+			string[] tags = property.TabTags;
+			
+			if (tags.Length > 0)
+			{
+				for (int i = 0; i < tags.Length; i++)
+				{
+					TabRecord record = this.GetTabRecord (tags[i]);
+					string    tag    = this.GenerateSharedTagName ();
+					
+					this.NewTab (tag, record.Position, record.Units, record.Disposition, record.DockingMark, record.PositionMode, record.Attribute);
+					
+					tags[i] = tag;
+				}
+				
+				return new Properties.TabsProperty (tags);
 			}
 			else
 			{

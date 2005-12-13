@@ -360,7 +360,7 @@ namespace Epsitec.Common.Document.Widgets
 					}
 					if ( tab.Shared )
 					{
-						colorGlyph = Color.FromRGB(0, 0, 0.6);  // bleu foncé
+						colorGlyph = Color.FromRGB(1.0, 0.5, 0.0);  // orange pour bien voir
 					}
 
 					if ( pass == 1 )
@@ -788,6 +788,7 @@ namespace Epsitec.Common.Document.Widgets
 				if ( list1[i].Pos    != list2[i].Pos    )  return false;
 				if ( list1[i].Type   != list2[i].Type   )  return false;
 				if ( list1[i].Zombie != list2[i].Zombie )  return false;
+				if ( list1[i].Shared != list2[i].Shared )  return false;
 			}
 			return true;
 		}
