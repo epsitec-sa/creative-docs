@@ -10,6 +10,7 @@ namespace Epsitec.Common.Document.Widgets
 		public string			Tag;
 		public double			Pos;
 		public TextTabType		Type;
+		public bool				Shared;
 		public bool				Zombie;
 	}
 
@@ -356,6 +357,10 @@ namespace Epsitec.Common.Document.Widgets
 					if ( colorBack.GetBrightness() <= 0.4 )  // couleur foncée ?
 					{
 						colorGlyph = Color.FromBrightness(1);  // blanc
+					}
+					if ( tab.Shared )
+					{
+						colorGlyph = Color.FromRGB(0, 0, 0.6);  // bleu foncé
 					}
 
 					if ( pass == 1 )

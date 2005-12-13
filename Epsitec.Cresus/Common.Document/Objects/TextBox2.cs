@@ -948,6 +948,7 @@ namespace Epsitec.Common.Document.Objects
 					tabs[i].Tag = info.Tag;
 					tabs[i].Pos = bbox.Left+pos;
 					tabs[i].Type = type;
+					tabs[i].Shared = (info.Class == TabClass.Shared);
 					tabs[i].Zombie = (info.Status == TabStatus.Zombie);
 				}
 				this.document.HRuler.Tabs = tabs;
