@@ -114,19 +114,22 @@ namespace Epsitec.Common.Text
 		
 		public void Serialize(System.Text.StringBuilder buffer)
 		{
+			Generator.Sequence[] sequences    = this.Sequences;
+			int[]                start_vector = this.StartVector;
+			
 			buffer.Append (SerializerSupport.SerializeString (this.name));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeInt (this.sequences.Count));
+			buffer.Append (SerializerSupport.SerializeInt (sequences.Length));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeInt (this.start_vector.Length));
+			buffer.Append (SerializerSupport.SerializeInt (start_vector.Length));
 			
-			foreach (Generator.Sequence sequence in this.sequences)
+			foreach (Generator.Sequence sequence in sequences)
 			{
 				buffer.Append ("/");
 				buffer.Append (SerializerSupport.SerializeString (Generator.SerializeToText (sequence)));
 			}
 			
-			foreach (int start in this.start_vector)
+			foreach (int start in start_vector)
 			{
 				buffer.Append ("/");
 				buffer.Append (SerializerSupport.SerializeInt (start));
@@ -144,7 +147,7 @@ namespace Epsitec.Common.Text
 			{
 				Generator.Sequence sequence;
 				
-				Generator.DeserializeFromText (context, args[offset++], out sequence);
+				Generator.DeserializeFromText (context, SerializerSupport.DeserializeString (args[offset++]), out sequence);
 				
 				this.Add (sequence);
 			}
