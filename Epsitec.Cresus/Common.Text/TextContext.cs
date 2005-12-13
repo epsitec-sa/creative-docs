@@ -911,6 +911,55 @@ namespace Epsitec.Common.Text
 			properties = (Property[]) list.ToArray (typeof (Property));
 		}
 		
+		internal void GetLocalAndExtraSettingsProperties(ulong code, out Property[] properties)
+		{
+			//	Retourne les propriétés associées à un code de caractère donné.
+			//	Les propriétés sont brutes, telles que vues par le système de
+			//	layout, par exemple.
+			
+			Internal.SettingsTable settings = this.StyleList.InternalSettingsTable;
+			
+			Styles.CoreSettings core = settings.GetCore (code);
+			
+			if (core == null)
+			{
+				properties = new Property[0];
+				return;
+			}
+			
+			Styles.LocalSettings local = core.GetLocalSettings (code);
+			Styles.ExtraSettings extra = core.GetExtraSettings (code);
+			
+			if ((local == null) &&
+				(extra == null))
+			{
+				properties = new Property[0];
+				return;
+			}
+			
+			if (local == null)
+			{
+				properties = extra.GetProperties ();
+				return;
+			}
+			
+			if (extra == null)
+			{
+				properties = local.GetProperties ();
+				return;
+			}
+			
+			//	Il y a à la fois des réglages locaux et extra, il faut donc
+			//	accumuler les deux :
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			list.AddRange (local.GetProperties ());
+			list.AddRange (extra.GetProperties ());
+			
+			properties = (Property[]) list.ToArray (typeof (Property));
+		}
+		
 		internal void GetLocalSettingsProperties(ulong code, out Property[] properties)
 		{
 			//	Retourne les propriétés associées à un code de caractère donné.
@@ -972,7 +1021,7 @@ namespace Epsitec.Common.Text
 			//	- Les propriétés PropertyType.CoreSettings et ExtraSettings sont
 			//	  toujours  enrobées dans une méta-propriété (donc un TextStyle).
 			//
-			//	- TabsProperty doit être adaptée (catégorie des LocalSettings)
+			//	- TabsProperty doit être adaptée (catégorie des ExtraSettings)
 			//	  pour ne garder que les taquets locaux (TabClass.Auto).
 			//
 			//	Avec ces données, la liste des propriétés se laisse reconstruire
@@ -983,27 +1032,24 @@ namespace Epsitec.Common.Text
 			Property[] all_properties;
 			
 #if true
-			this.GetLocalSettingsProperties (code, out all_properties);
+			this.GetLocalAndExtraSettingsProperties (code, out all_properties);
 			this.GetStyles (code, out styles);
 			
 			foreach (Property property in all_properties)
 			{
 				if (property.PropertyType == Properties.PropertyType.LocalSetting)
 				{
-					if (property.WellKnownType == Properties.WellKnownType.Tabs)
+					list.Add (property);
+				}
+				else if (property.WellKnownType == Properties.WellKnownType.Tabs)
+				{
+					Properties.TabsProperty tabs = property as Properties.TabsProperty;
+					
+					tabs = TabList.FilterTabs (tabs, TabClass.Auto);
+					
+					if (tabs != null)
 					{
-						Properties.TabsProperty tabs = property as Properties.TabsProperty;
-						
-						tabs = TabList.FilterTabs (tabs, TabClass.Auto);
-						
-						if (tabs != null)
-						{
-							list.Add (tabs);
-						}
-					}
-					else
-					{
-						list.Add (property);
+						list.Add (tabs);
 					}
 				}
 			}
@@ -1333,37 +1379,45 @@ namespace Epsitec.Common.Text
 		
 		public void GetTabs(ulong code, out Properties.TabsProperty property)
 		{
-			code = Internal.CharMarker.ExtractCoreAndLocalSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndExtraSettings (code);
 			
 			Styles.CoreSettings  core_settings  = this.style_list[code];
-			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (code);
+			Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
 			
-			if (local_settings == null)
+			if (extra_settings == null)
 			{
 				property = null;
 			}
 			else
 			{
-				property = local_settings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+				property = extra_settings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
 			}
 		}
 		
 		public void GetTabAndTabs(ulong code, out Properties.TabProperty tab_property, out Properties.TabsProperty tabs_property)
 		{
-			code = Internal.CharMarker.ExtractCoreAndLocalSettings (code);
+			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
 			Styles.CoreSettings  core_settings  = this.style_list[code];
 			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (code);
+			Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
 			
 			if (local_settings == null)
 			{
 				tab_property  = null;
-				tabs_property = null;
 			}
 			else
 			{
 				tab_property  = local_settings[Properties.WellKnownType.Tab] as Properties.TabProperty;
-				tabs_property = local_settings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+			}
+			
+			if (extra_settings == null)
+			{
+				tabs_property = null;
+			}
+			else
+			{
+				tabs_property = extra_settings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
 			}
 		}
 		

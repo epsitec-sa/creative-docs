@@ -970,10 +970,10 @@ namespace Epsitec.Common.Text
 				if (local != null) local.IncrementUserCount ();
 				if (extra != null) extra.IncrementUserCount ();
 				
-				if ((local != null) &&
-					(local.UserCount == 1))
+				if ((extra != null) &&
+					(extra.UserCount == 1))
 				{
-					Properties.TabsProperty tabs = local[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+					Properties.TabsProperty tabs = extra[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
 					
 					if (tabs != null)
 					{
@@ -1009,10 +1009,10 @@ namespace Epsitec.Common.Text
 				if (local != null) local.DecrementUserCount ();
 				if (extra != null) extra.DecrementUserCount ();
 				
-				if ((local != null) &&
-					(local.UserCount == 0))
+				if ((extra != null) &&
+					(extra.UserCount == 0))
 				{
-					Properties.TabsProperty tabs = local[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+					Properties.TabsProperty tabs = extra[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
 					
 					if (tabs != null)
 					{

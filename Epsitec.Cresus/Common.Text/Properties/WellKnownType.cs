@@ -29,7 +29,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		Properties			= 50,		//	style
 		Styles				= 51,		//	polymorph
-		Tabs				= 52,		//	local
+		Tabs				= 52,		//	extra
 		
 		Link				= 101,		//	extra
 		UserTag				= 102,		//	extra
