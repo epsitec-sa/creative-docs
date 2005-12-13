@@ -53,7 +53,7 @@ namespace Epsitec.Common.Text
 		
 		
 		
-		private Text.TextContext					context;
+		private Text.TextContext				context;
 		private System.Collections.Hashtable	generators;
 	}
 }

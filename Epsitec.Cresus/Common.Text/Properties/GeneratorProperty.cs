@@ -11,16 +11,13 @@ namespace Epsitec.Common.Text.Properties
 	{
 		public GeneratorProperty()
 		{
-			lock (GeneratorProperty.unique_id_lock)
-			{
-				this.unique_id = GeneratorProperty.next_unique_id++;
-			}
 		}
 		
-		public GeneratorProperty(string generator, int level) : this ()
+		public GeneratorProperty(string generator, int level, long unique_id)
 		{
 			this.generator = generator;
 			this.level     = level;
+			this.unique_id = unique_id;
 		}
 		
 		
@@ -114,14 +111,6 @@ namespace Epsitec.Common.Text.Properties
 			this.generator = generator;
 			this.level     = level;
 			this.unique_id = unique_id;
-			
-			lock (GeneratorProperty.unique_id_lock)
-			{
-				if (GeneratorProperty.next_unique_id <= this.unique_id)
-				{
-					GeneratorProperty.next_unique_id = this.unique_id + 1;
-				}
-			}
 		}
 		
 		public override Property GetCombination(Property property)
@@ -188,9 +177,6 @@ namespace Epsitec.Common.Text.Properties
 			#endregion
 		}
 		#endregion
-		
-		private static long						next_unique_id;
-		private static object					unique_id_lock = new object ();
 		
 		private string							generator;
 		private int								level;

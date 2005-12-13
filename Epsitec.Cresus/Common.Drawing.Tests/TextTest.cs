@@ -634,8 +634,8 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
 					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.FontSizeProperty (75, Text.Properties.SizeUnits.Percent));
-					properties.Add (new Text.Properties.FontOffsetProperty (80, Text.Properties.SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
+					properties.Add (new Text.Properties.FontSizeProperty (0.75, Text.Properties.SizeUnits.Percent));
+					properties.Add (new Text.Properties.FontOffsetProperty (0.80, Text.Properties.SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText ("(a)", no_styles, properties, out text);
@@ -671,8 +671,8 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
 					properties.Add (new Text.Properties.FontColorProperty ("Black"));
 					properties.Add (new Text.Properties.UnderlineProperty (double.NaN, Text.Properties.SizeUnits.None, double.NaN, Text.Properties.SizeUnits.None, "wave", "Red"));
-					properties.Add (new Text.Properties.FontSizeProperty (75, Text.Properties.SizeUnits.Percent));
-					properties.Add (new Text.Properties.FontOffsetProperty (80, Text.Properties.SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
+					properties.Add (new Text.Properties.FontSizeProperty (0.75, Text.Properties.SizeUnits.Percent));
+					properties.Add (new Text.Properties.FontOffsetProperty (0.80, Text.Properties.SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText ("\u2060(b)", no_styles, properties, out text);

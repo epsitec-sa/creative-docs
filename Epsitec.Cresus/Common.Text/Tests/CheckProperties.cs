@@ -233,7 +233,7 @@ namespace Epsitec.Common.Text.Tests
 			story.InsertText (cursor, text);
 			
 			properties.Clear ();
-			properties.Add (new Properties.GeneratorProperty ("G1", 0));
+			properties.Add (new Properties.GeneratorProperty ("G1", 0, 1));
 			story.ConvertToStyledText ("généré", style, properties, out text);			//	12
 			story.InsertText (cursor, text);
 			
@@ -241,12 +241,12 @@ namespace Epsitec.Common.Text.Tests
 			story.InsertText (cursor, text);
 			
 			properties.Clear ();
-			properties.Add (new Properties.GeneratorProperty ("G1", 0));
+			properties.Add (new Properties.GeneratorProperty ("G1", 0, 1));
 			story.ConvertToStyledText ("[1]", style, properties, out text);				//	32
 			story.InsertText (cursor, text);
 			
 			properties.Clear ();
-			properties.Add (new Properties.GeneratorProperty ("G1", 0));
+			properties.Add (new Properties.GeneratorProperty ("G1", 0, 1));
 			story.ConvertToStyledText ("[2]", style, properties, out text);				//	35
 			story.InsertText (cursor, text);
 			
@@ -267,12 +267,12 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[2]) == 32);
 			
 			properties.Clear ();
-			properties.Add (new Properties.GeneratorProperty ("G1", 0));
+			properties.Add (new Properties.GeneratorProperty ("G1", 0, 1));
 			story.ConvertToStyledText ("[1]", style, properties, out text);				//	3
 			story.InsertText (cursor, text);
 			
 			properties.Clear ();
-			properties.Add (new Properties.GeneratorProperty ("G1", 0));
+			properties.Add (new Properties.GeneratorProperty ("G1", 0, 1));
 			story.ConvertToStyledText ("[2]", style, properties, out text);				//	6
 			story.InsertText (cursor, text);
 			
@@ -348,8 +348,8 @@ namespace Epsitec.Common.Text.Tests
 			story.ConvertToStyledText ("Abc", style, null, out text);
 			story.InsertText (cursor, text);
 			
-			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0);
-			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0);
+			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0, 1);
+			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0, 1);
 			
 			properties.Clear (); properties.Add (g1_a);
 			

@@ -63,6 +63,8 @@ namespace Epsitec.Common.Text.Wrappers
 			double justif_last = double.NaN;
 			double disposition = double.NaN;
 			
+			int level = -1;
+			
 			if (this.defined_state.IsValueFlagged (State.JustificationModeProperty))
 			{
 				changes++;
@@ -177,11 +179,21 @@ namespace Epsitec.Common.Text.Wrappers
 				defines++;
 			}
 			
+			if (this.defined_state.IsValueFlagged (State.IndentationLevelProperty))
+			{
+				changes++;
+			}
+			if (this.defined_state.IsIndentationLevelDefined)
+			{
+				level = this.defined_state.IndentationLevel;
+				defines++;
+			}
+			
 			if (changes > 0)
 			{
 				if (defines > 0)
 				{
-					this.DefineMetaProperty (ParagraphWrapper.Margins, 0, new Properties.MarginsProperty (left_m_first, left_m_body, right_m_first, right_m_body, units, justif_body, justif_last, disposition, double.NaN, double.NaN, hyphenate));
+					this.DefineMetaProperty (ParagraphWrapper.Margins, 0, new Properties.MarginsProperty (left_m_first, left_m_body, right_m_first, right_m_body, units, justif_body, justif_last, disposition, double.NaN, double.NaN, hyphenate, level));
 				}
 				else
 				{
@@ -505,6 +517,16 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				state.DefineValue (State.HyphenationProperty);
 			}
+			
+			if ((margins != null) &&
+				(margins.Level > -1))
+			{
+				state.DefineValue (State.IndentationLevelProperty, margins.Level);
+			}
+			else
+			{
+				state.DefineValue (State.IndentationLevelProperty);
+			}
 		}
 		
 		private void UpdateLeading(State state, bool active)
@@ -734,6 +756,18 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public int								IndentationLevel
+			{
+				get
+				{
+					return (int) this.GetValue (State.IndentationLevelProperty);
+				}
+				set
+				{
+					this.SetValue (State.IndentationLevelProperty, value);
+				}
+			}
+			
 			
 			public double							Leading
 			{
@@ -937,6 +971,14 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public bool								IsIndentationLevelDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.IndentationLevelProperty);
+				}
+			}
+			
 			
 			public bool								IsLeadingDefined
 			{
@@ -1071,6 +1113,11 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.MarginUnitsProperty);
 			}
 			
+			public void ClearIndentationLevel()
+			{
+				this.ClearValue (State.IndentationLevelProperty);
+			}
+			
 			
 			public void ClearLeading()
 			{
@@ -1142,6 +1189,7 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	RightMarginFirstProperty = new StateProperty (typeof (State), "RightMarginFirst", double.NaN);
 			public static readonly StateProperty	RightMarginBodyProperty = new StateProperty (typeof (State), "RightMarginBody", double.NaN);
 			public static readonly StateProperty	MarginUnitsProperty = new StateProperty (typeof (State), "MarginUnits", Properties.SizeUnits.None);
+			public static readonly StateProperty	IndentationLevelProperty = new StateProperty (typeof (State), "IndentationLevel", -1);
 			public static readonly StateProperty	LeadingProperty = new StateProperty (typeof (State), "Leading", double.NaN);
 			public static readonly StateProperty	LeadingUnitsProperty = new StateProperty (typeof (State), "LeadingUnits", Properties.SizeUnits.None);
 			public static readonly StateProperty	SpaceBeforeProperty = new StateProperty (typeof (State), "SpaceBefore", double.NaN);

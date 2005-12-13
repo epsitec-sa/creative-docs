@@ -1485,8 +1485,6 @@ restart:
 				descender = System.Math.Min (descender, font.GetDescender (font_size));
 				font_size = System.Math.Max (font_size, (ascender - descender) * 1.2);
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Asc.={0} Desc.={1} Size={2}", ascender, descender, font_size));
-				
 				double auto_scale = 1.0;
 				double leading    = font_size * auto_scale;
 				

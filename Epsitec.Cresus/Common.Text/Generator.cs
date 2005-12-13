@@ -158,7 +158,11 @@ namespace Epsitec.Common.Text
 						System.Diagnostics.Debug.Assert (property.Generator == this.generator.Name);
 						
 						int    length = this.context.GetTextEndDistance (this.story, cursor, property);
-						string text   = this.series.GetNextText (property.Level);
+						int    level  = property.Level;
+						
+						//	TODO: ajouter la gestion du niveau lié à l'indentation de la marge
+						
+						string text = this.series.GetNextText (level);
 						
 						System.Diagnostics.Debug.Assert (length > 0);
 						System.Diagnostics.Debug.Assert (text.Length > 0);

@@ -1097,7 +1097,7 @@ namespace Epsitec.Common.Text.Internal
 				throw new System.InvalidOperationException ("TextTable must be empty.");
 			}
 			
-			byte[] header = new byte[8];
+			byte[] header = new byte[16];
 			
 			stream.Read (header, 0, header.Length);
 			
@@ -1106,7 +1106,12 @@ namespace Epsitec.Common.Text.Internal
 				(header[2] == (byte) ('T')) &&
 				(header[3] == (byte) ('1')))
 			{
-				int length = (header[4] << 24) | (header[5] << 16) | (header[6] << 8) | (header[7] << 0);
+				int     length = (header[4] << 24) | (header[5] << 16) | (header[6] << 8) | (header[7] << 0);
+				ulong[] magick = new ulong[1];
+				
+				System.Buffer.BlockCopy (header, 8, magick, 0, 8);
+				
+				System.Diagnostics.Debug.Assert (magick[0] == 0x0123456789abcdefL);
 				
 				if (length > 0)
 				{
@@ -1170,7 +1175,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		internal void WriteRawText(System.IO.Stream stream, int length)
 		{
-			byte[] header = new byte[8];
+			byte[] header = new byte[16];
 			
 			header[0] = (byte) ('T');
 			header[1] = (byte) ('X');
@@ -1181,9 +1186,13 @@ namespace Epsitec.Common.Text.Internal
 			header[6] = (byte) ((length >>  8) & 0xff);
 			header[7] = (byte) ((length >>  0) & 0xff);
 			
-			length *= 8;
+			ulong[] magick = new ulong[] { 0x0123456789abcdefL };
+				
+			System.Buffer.BlockCopy (magick, 0, header, 8, 8);
 			
 			stream.Write (header, 0, header.Length);
+			
+			length *= 8;
 			
 			//	Commence par déterminer la place qui sera nécessaire pour stocker
 			//	le plus gros morceau de texte :

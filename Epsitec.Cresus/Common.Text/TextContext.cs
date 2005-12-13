@@ -152,6 +152,14 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public long GenerateUniqueId()
+		{
+			lock (this.unique_id_lock)
+			{
+				return this.next_unique_id++;
+			}
+		}
+		
 		
 		public byte[] Serialize()
 		{
@@ -160,6 +168,8 @@ namespace Epsitec.Common.Text
 			buffer.Append ("TextContext");
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeInt (TextContext.SerializationVersion));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeLong (this.next_unique_id));
 			buffer.Append ("/");
 			
 			this.style_list.Serialize (buffer);
@@ -185,6 +195,8 @@ namespace Epsitec.Common.Text
 			
 			System.Diagnostics.Debug.Assert (magick == "TextContext");
 			System.Diagnostics.Debug.Assert (version <= TextContext.SerializationVersion);
+			
+			this.next_unique_id = SerializerSupport.DeserializeLong (args[offset++]);
 			
 			this.style_list.Deserialize (this, version, args, ref offset);
 			this.tab_list.Deserialize (this, version, args, ref offset);
@@ -1657,6 +1669,9 @@ namespace Epsitec.Common.Text
 		private System.Collections.Hashtable	conditions;
 		private System.Collections.ArrayList	stories;
 		private TextStyle						default_style;
+		
+		private long							next_unique_id = 1;
+		private object							unique_id_lock = new object ();
 		
 		private bool							show_control_characters;
 		private bool							is_degraded_layout_enabled;

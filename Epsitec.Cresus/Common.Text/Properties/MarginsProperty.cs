@@ -23,9 +23,14 @@ namespace Epsitec.Common.Text.Properties
 			this.right_margin_body       = right_margin;
 			
 			this.units = units;
+			this.level = -1;
 		}
 		
-		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, SizeUnits units, double justification_body, double justification_last_line, double disposition, double break_fence_before, double break_fence_after, ThreeState enable_hyphenation)
+		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, SizeUnits units, double justification_body, double justification_last_line, double disposition, double break_fence_before, double break_fence_after, ThreeState enable_hyphenation) : this (left_margin_first_line, left_margin_body, right_margin_first_line, right_margin_body, units, justification_body, justification_last_line, disposition, break_fence_before, break_fence_after, enable_hyphenation, -1)
+		{
+		}
+		
+		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, SizeUnits units, double justification_body, double justification_last_line, double disposition, double break_fence_before, double break_fence_after, ThreeState enable_hyphenation, int level)
 		{
 			this.left_margin_first_line  = left_margin_first_line;
 			this.left_margin_body        = left_margin_body;
@@ -41,6 +46,8 @@ namespace Epsitec.Common.Text.Properties
 			this.break_fence_before = break_fence_before;
 			this.break_fence_after  = break_fence_after;
 			this.enable_hyphenation = enable_hyphenation;
+			
+			this.level = level;
 		}
 		
 		
@@ -157,6 +164,14 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public int								Level
+		{
+			get
+			{
+				return this.level;
+			}
+		}
+		
 		
 		public override Property EmptyClone()
 		{
@@ -176,14 +191,15 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeDouble (this.disposition),
 				/**/				SerializerSupport.SerializeDouble (this.break_fence_before),
 				/**/				SerializerSupport.SerializeDouble (this.break_fence_after),
-				/**/				SerializerSupport.SerializeThreeState (this.enable_hyphenation));
+				/**/				SerializerSupport.SerializeThreeState (this.enable_hyphenation),
+				/**/				SerializerSupport.SerializeInt (this.level));
 		}
 		
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 11);
+			Debug.Assert.IsTrue (args.Length == 12);
 			
 			double     left_margin_first_line  = SerializerSupport.DeserializeDouble (args[0]);
 			double     left_margin_body        = SerializerSupport.DeserializeDouble (args[1]);
@@ -196,6 +212,7 @@ namespace Epsitec.Common.Text.Properties
 			double     break_fence_before      = SerializerSupport.DeserializeDouble (args[8]);
 			double     break_fence_after       = SerializerSupport.DeserializeDouble (args[9]);
 			ThreeState enable_hyphenation      = SerializerSupport.DeserializeThreeState (args[10]);
+			int        level                   = SerializerSupport.DeserializeInt (args[11]);
 			
 			this.left_margin_first_line  = left_margin_first_line;
 			this.left_margin_body        = left_margin_body;
@@ -208,6 +225,7 @@ namespace Epsitec.Common.Text.Properties
 			this.break_fence_before      = break_fence_before;
 			this.break_fence_after       = break_fence_after;
 			this.enable_hyphenation      = enable_hyphenation;
+			this.level                   = level;
 		}
 		
 		
@@ -242,6 +260,7 @@ namespace Epsitec.Common.Text.Properties
 			c.break_fence_before      = NumberSupport.Combine (a.break_fence_before,      b.break_fence_before);
 			c.break_fence_after       = NumberSupport.Combine (a.break_fence_after,       b.break_fence_after);
 			c.enable_hyphenation      = b.enable_hyphenation == ThreeState.Undefined ? a.enable_hyphenation : b.enable_hyphenation;
+			c.level                   = b.level < 0 ? a.level : b.level;
 			
 			return c;
 		}
@@ -260,6 +279,7 @@ namespace Epsitec.Common.Text.Properties
 			checksum.UpdateValue (this.break_fence_before);
 			checksum.UpdateValue (this.break_fence_after);
 			checksum.UpdateValue ((int) this.enable_hyphenation);
+			checksum.UpdateValue (this.level);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -280,7 +300,8 @@ namespace Epsitec.Common.Text.Properties
 				&& NumberSupport.Equal (a.disposition,             b.disposition)
 				&& NumberSupport.Equal (a.break_fence_before,      b.break_fence_before)
 				&& NumberSupport.Equal (a.break_fence_after,       b.break_fence_after)
-				&& a.enable_hyphenation == b.enable_hyphenation;
+				&& a.enable_hyphenation == b.enable_hyphenation
+				&& a.level == b.level;
 		}
 		
 		
@@ -299,5 +320,7 @@ namespace Epsitec.Common.Text.Properties
 		private double							justification_body;			//	0.0 = pas de justification, 1.0 = justification pleine
 		private double							justification_last_line;
 		private double							disposition;				//	0.0 = aligné à gauche, 0.5 = centré, 1.0 = aligné à droite
+		
+		private int								level;						//	-1 => pas de niveau spécifié
 	}
 }

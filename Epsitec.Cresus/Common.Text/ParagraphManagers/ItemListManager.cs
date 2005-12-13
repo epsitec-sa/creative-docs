@@ -29,7 +29,7 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, property));
 			
 			Properties.AutoTextProperty  auto_text_prop = new Properties.AutoTextProperty (this.Name);
-			Properties.GeneratorProperty generator_prop = new Properties.GeneratorProperty (p.Generator.Name, 0);
+			Properties.GeneratorProperty generator_prop = new Properties.GeneratorProperty (p.Generator.Name, 0, context.GenerateUniqueId ());
 			Properties.TabProperty       tab_item_prop  = p.TabItem;
 			Properties.TabProperty       tab_body_prop  = p.TabBody;
 			

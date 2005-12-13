@@ -77,11 +77,11 @@ namespace Epsitec.Common.Text.Tests
 			
 			TextStyle style = story.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
 			
-			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0);
-			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0);
-			Properties.GeneratorProperty g1_c = new Properties.GeneratorProperty ("G1", 1);
-			Properties.GeneratorProperty g1_d = new Properties.GeneratorProperty ("G1", 2);
-			Properties.GeneratorProperty g1_e = new Properties.GeneratorProperty ("G1", 1);
+			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0, 0);
+			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0, 0);
+			Properties.GeneratorProperty g1_c = new Properties.GeneratorProperty ("G1", 1, 0);
+			Properties.GeneratorProperty g1_d = new Properties.GeneratorProperty ("G1", 2, 0);
+			Properties.GeneratorProperty g1_e = new Properties.GeneratorProperty ("G1", 1, 0);
 			
 			properties.Clear (); properties.Add (g1_a);
 			
