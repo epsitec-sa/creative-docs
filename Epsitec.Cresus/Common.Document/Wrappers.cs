@@ -62,6 +62,13 @@ namespace Epsitec.Common.Document
 		}
 
 
+		// Met à jour toutes les commandes.
+		public void UpdateCommands()
+		{
+			this.HandleTextWrapperChanged(null);
+			this.HandleParagraphWrapperChanged(null);
+		}
+
 		// Le wrapper du texte a changé.
 		protected void HandleTextWrapperChanged(object sender)
 		{

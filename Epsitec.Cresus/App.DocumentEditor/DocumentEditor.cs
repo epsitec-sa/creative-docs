@@ -3812,6 +3812,7 @@ namespace Epsitec.App.DocumentEditor
 				this.pageStackState.Enable = true;
 
 				this.CurrentDocument.Dialogs.UpdateInfos();
+				this.CurrentDocument.Wrappers.UpdateCommands();
 				this.UpdateBookDocuments();
 			}
 			else
