@@ -82,8 +82,6 @@ namespace Epsitec.Common.Document
 			this.surfaceRotationAngle = 0.0;
 			this.uniqueObjectId = 0;
 			this.uniqueAggregateId = 0;
-			this.textWrapper = new Text.Wrappers.TextWrapper();
-			this.paragraphLayoutWrapper = new Text.Wrappers.ParagraphWrapper();
 
 			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
 
@@ -91,6 +89,7 @@ namespace Epsitec.Common.Document
 				 this.mode == DocumentMode.Clipboard )
 			{
 				this.modifier  = new Modifier(this);
+				this.wrappers  = new Wrappers(this);
 				this.notifier  = new Notifier(this);
 				this.dialogs   = new Dialogs(this);
 				this.settings  = new Settings.Settings(this);
@@ -177,13 +176,13 @@ namespace Epsitec.Common.Document
 		// Wrapper pour la fonte.
 		public Text.Wrappers.TextWrapper TextWrapper
 		{
-			get { return this.textWrapper; }
+			get { return this.wrappers.TextWrapper; }
 		}
 
 		// Wrapper pour le paragraphe.
 		public Text.Wrappers.ParagraphWrapper ParagraphWrapper
 		{
-			get { return this.paragraphLayoutWrapper; }
+			get { return this.wrappers.ParagraphWrapper; }
 		}
 
 		// Indique si les wrappers sont attachés.
@@ -191,22 +190,8 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				return this.textWrapper.IsAttached;
+				return this.wrappers.IsWrappersAttached;
 			}
-		}
-
-		// Attache tous les wrappers à un texte.
-		public void WrappersAttach(TextFlow textFlow)
-		{
-			this.textWrapper.Attach(textFlow.TextNavigator);
-			this.paragraphLayoutWrapper.Attach(textFlow.TextNavigator);
-		}
-
-		// Détache tous les wrappers.
-		public void WrappersDetach()
-		{
-			this.textWrapper.Detach();
-			this.paragraphLayoutWrapper.Detach();
 		}
 
 		// Règle horizontale.
@@ -259,6 +244,12 @@ namespace Epsitec.Common.Document
 		public Modifier Modifier
 		{
 			get { return this.modifier; }
+		}
+
+		// Wrappers éventuel pour ce document.
+		public Wrappers Wrappers
+		{
+			get { return this.wrappers; }
 		}
 
 		// Notificateur éventuel pour ce document.
@@ -1910,6 +1901,7 @@ namespace Epsitec.Common.Document
 		protected UndoableList							textFlows;
 		protected Settings.Settings						settings;
 		protected Modifier								modifier;
+		protected Wrappers								wrappers;
 		protected Notifier								notifier;
 		protected Printer								printer;
 		protected Common.Dialogs.Print					printDialog;
@@ -1928,7 +1920,5 @@ namespace Epsitec.Common.Document
 		protected Text.TextContext						textContext;
 		protected Widgets.HRuler						hRuler;
 		protected Widgets.VRuler						vRuler;
-		protected Text.Wrappers.TextWrapper				textWrapper;
-		protected Text.Wrappers.ParagraphWrapper		paragraphLayoutWrapper;
 	}
 }

@@ -259,6 +259,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Wrappers.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ZoomHistory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -1501,7 +1501,7 @@ namespace Epsitec.Common.Document.Objects
 				this.document.VRuler.EditObject = null;
 				this.document.HRuler.WrappersDetach();
 				this.document.VRuler.WrappersDetach();
-				this.document.WrappersDetach();
+				this.document.Wrappers.WrappersDetach();
 			}
 
 			this.UpdateTextRulers();
