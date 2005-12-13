@@ -521,6 +521,13 @@
 	<data name="TextPanel.Keep.Long.KeepEnd">Lignes solidaires à la fin</data>
 	<data name="TextPanel.Keep.Tooltip.KeepStart">Nombre de lignes solidaires au début du paragraphe</data>
 	<data name="TextPanel.Keep.Tooltip.KeepEnd">Nombre de lignes solidaires à la fin du paragraphe</data>
+	<data name="TextPanel.Keep.Tooltip.StartMode">Emplacement du début du paragraphe</data>
+	<data name="TextPanel.Keep.StartMode.Undefined">&lt;i&gt;Selon le style sous-jacent&lt;/i&gt;</data>
+	<data name="TextPanel.Keep.StartMode.Anywhere">N'importe où</data>
+	<data name="TextPanel.Keep.StartMode.NewFrame">Au début d'un pavé</data>
+	<data name="TextPanel.Keep.StartMode.NewPage">Au début d'une page</data>
+	<data name="TextPanel.Keep.StartMode.NewOddPage">Au début d'une page impaire</data>
+	<data name="TextPanel.Keep.StartMode.NewEvenPage">Au début d'une page paire</data>
 
 	<data name="TextPanel.Align.Title">Alignement vertical</data>
 

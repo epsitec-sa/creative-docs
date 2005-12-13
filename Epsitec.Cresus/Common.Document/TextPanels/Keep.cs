@@ -36,6 +36,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldKeepEnd.TextFieldReal.MinValue   = 1M;
 			this.fieldKeepEnd.TextFieldReal.MaxValue   = 19M;
 
+			this.fieldStartMode = CreateComboStartMode(new EventHandler(this.HandleStartModeChanged));
+
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
 			this.document.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
@@ -68,11 +70,11 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					if ( this.IsLabelProperties )  // étendu/détails ?
 					{
-						h += 80;
+						h += 105;
 					}
 					else	// étendu/compact ?
 					{
-						h += 30;
+						h += 55;
 					}
 				}
 				else	// panneau réduit ?
@@ -82,6 +84,50 @@ namespace Epsitec.Common.Document.TextPanels
 
 				return h;
 			}
+		}
+
+
+		// Crée le combo pour le StartMode.
+		protected TextFieldCombo CreateComboStartMode(EventHandler handler)
+		{
+			TextFieldCombo combo = new TextFieldCombo(this);
+
+			combo.Width = 180;
+			combo.IsReadOnly = true;
+
+			combo.Items.Add(Res.Strings.TextPanel.Keep.StartMode.Undefined);
+			combo.Items.Add(Res.Strings.TextPanel.Keep.StartMode.Anywhere);
+			combo.Items.Add(Res.Strings.TextPanel.Keep.StartMode.NewFrame);
+			combo.Items.Add(Res.Strings.TextPanel.Keep.StartMode.NewPage);
+			combo.Items.Add(Res.Strings.TextPanel.Keep.StartMode.NewOddPage);
+			combo.Items.Add(Res.Strings.TextPanel.Keep.StartMode.NewEvenPage);
+
+			combo.SelectedIndexChanged += handler;
+
+			return combo;
+		}
+
+		protected static Common.Text.Properties.ParagraphStartMode StringToMode(string text)
+		{
+			if ( text == Res.Strings.TextPanel.Keep.StartMode.Anywhere    )  return Common.Text.Properties.ParagraphStartMode.Anywhere;
+			if ( text == Res.Strings.TextPanel.Keep.StartMode.NewFrame    )  return Common.Text.Properties.ParagraphStartMode.NewFrame;
+			if ( text == Res.Strings.TextPanel.Keep.StartMode.NewPage     )  return Common.Text.Properties.ParagraphStartMode.NewPage;
+			if ( text == Res.Strings.TextPanel.Keep.StartMode.NewOddPage  )  return Common.Text.Properties.ParagraphStartMode.NewOddPage;
+			if ( text == Res.Strings.TextPanel.Keep.StartMode.NewEvenPage )  return Common.Text.Properties.ParagraphStartMode.NewEvenPage;
+			return Common.Text.Properties.ParagraphStartMode.Undefined;
+		}
+
+		protected static string ModeToString(Common.Text.Properties.ParagraphStartMode mode)
+		{
+			switch ( mode )
+			{
+				case Common.Text.Properties.ParagraphStartMode.Anywhere:     return Res.Strings.TextPanel.Keep.StartMode.Anywhere;
+				case Common.Text.Properties.ParagraphStartMode.NewFrame:     return Res.Strings.TextPanel.Keep.StartMode.NewFrame;
+				case Common.Text.Properties.ParagraphStartMode.NewPage:      return Res.Strings.TextPanel.Keep.StartMode.NewPage;
+				case Common.Text.Properties.ParagraphStartMode.NewOddPage:   return Res.Strings.TextPanel.Keep.StartMode.NewOddPage;
+				case Common.Text.Properties.ParagraphStartMode.NewEvenPage:  return Res.Strings.TextPanel.Keep.StartMode.NewEvenPage;
+			}
+			return Res.Strings.TextPanel.Keep.StartMode.Undefined;
 		}
 
 
@@ -128,6 +174,12 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Right = rect.Right;
 					this.fieldKeepEnd.Bounds = r;
 					this.fieldKeepEnd.Visibility = true;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Right = rect.Right;
+					this.fieldStartMode.Bounds = r;
+					this.fieldStartMode.Visibility = true;
 				}
 				else
 				{
@@ -145,6 +197,12 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Left = rect.Right-20;
 					r.Width = 20;
 					this.buttonClear.Bounds = r;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Right = rect.Right;
+					this.fieldStartMode.Bounds = r;
+					this.fieldStartMode.Visibility = true;
 				}
 			}
 			else
@@ -166,6 +224,8 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Left = rect.Right-20;
 				r.Width = 20;
 				this.buttonClear.Bounds = r;
+
+				this.fieldStartMode.Visibility = false;
 			}
 		}
 
@@ -184,6 +244,9 @@ namespace Epsitec.Common.Document.TextPanels
 			bool isKeepStart = this.document.ParagraphWrapper.Defined.IsKeepStartLinesDefined;
 			bool isKeepEnd   = this.document.ParagraphWrapper.Defined.IsKeepEndLinesDefined;
 
+			Common.Text.Properties.ParagraphStartMode mode = this.document.ParagraphWrapper.Active.ParagraphStartMode;
+			bool isMode = this.document.ParagraphWrapper.Defined.IsParagraphStartModeDefined;
+
 			this.ignoreChanged = true;
 
 			this.ActiveIconButton(this.buttonKeepNext, keepNext, isKeepNext);
@@ -193,6 +256,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldKeepEnd  .TextFieldReal.InternalValue = (decimal) keepEnd;
 			this.ProposalTextFieldLabel(this.fieldKeepStart, !isKeepStart);
 			this.ProposalTextFieldLabel(this.fieldKeepEnd,   !isKeepEnd);
+
+			this.fieldStartMode.Text = Keep.ModeToString(mode);
+			this.fieldStartMode.TextDisplayMode = isMode ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
 
 			this.ignoreChanged = false;
 		}
@@ -259,6 +325,22 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 		
+		private void HandleStartModeChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			Common.Text.Properties.ParagraphStartMode mode = Keep.StringToMode(this.fieldStartMode.Text);
+
+			if ( mode == Common.Text.Properties.ParagraphStartMode.Undefined )
+			{
+				this.document.ParagraphWrapper.Defined.ClearParagraphStartMode();
+			}
+			else
+			{
+				this.document.ParagraphWrapper.Defined.ParagraphStartMode = mode;
+			}
+		}
+
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
@@ -269,6 +351,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.Defined.ClearKeepWithPreviousParagraph();
 			this.document.ParagraphWrapper.Defined.ClearKeepStartLines();
 			this.document.ParagraphWrapper.Defined.ClearKeepEndLines();
+			this.document.ParagraphWrapper.Defined.ClearParagraphStartMode();
 			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
@@ -277,6 +360,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonKeepPrev;
 		protected Widgets.TextFieldLabel	fieldKeepStart;
 		protected Widgets.TextFieldLabel	fieldKeepEnd;
+		protected TextFieldCombo			fieldStartMode;
 		protected IconButton				buttonClear;
 	}
 }
