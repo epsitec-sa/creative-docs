@@ -30,14 +30,6 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		private StyleVersion					StyleVersion
-		{
-			get
-			{
-				return this.version;
-			}
-		}
-
 		public StyleMap							StyleMap
 		{
 			get
@@ -116,7 +108,7 @@ namespace Epsitec.Common.Text
 		{
 			if (name == null)
 			{
-				name = this.GetUniqueName ();
+				name = this.GenerateUniqueName ();
 			}
 			
 			TextStyle style = new TextStyle (name, text_style_class, properties, parent_styles);
@@ -146,7 +138,7 @@ namespace Epsitec.Common.Text
 		{
 			if (name == null)
 			{
-				name = this.GetUniqueName ();
+				name = this.GenerateUniqueName ();
 			}
 			
 			TextStyle style = new TextStyle (name, TextStyleClass.MetaProperty, properties, parent_styles);
@@ -375,16 +367,35 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public string GetUniqueName()
+		public string GenerateUniqueName()
 		{
-			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "#ID#{0}", this.GetUniqueId ());
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "#ID#{0}", this.GenerateUniqueId ());
 		}
 		
-		public long GetUniqueId()
+		public long GenerateUniqueId()
 		{
-			lock (this)
+			lock (this.unique_id_lock)
 			{
 				return this.unique_id++;
+			}
+		}
+		
+		
+		public static bool IsAutomaticName(string value)
+		{
+			//	Retourne true si un nom a été généré avec GenerateUniqueName
+			//	(c'est un nom "automatique" par opposition avec un nom qui est
+			//	défini à la main).
+			
+			if ((value != null) &&
+				(value.Length > 4) &&
+				(value.StartsWith ("#ID#")))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 		
@@ -792,6 +803,7 @@ namespace Epsitec.Common.Text
 		private System.Collections.Hashtable	text_style_hash;
 		private StyleMap						style_map;
 		private long							unique_id;
+		private object							unique_id_lock = new object ();
 		private StyleVersion					version = new StyleVersion ();
 		private long							version_of_last_update;
 	}

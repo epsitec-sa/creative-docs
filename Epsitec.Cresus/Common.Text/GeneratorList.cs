@@ -52,6 +52,36 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void Serialize(System.Text.StringBuilder buffer)
+		{
+			//	Sérialise toutes les définitions des générateurs :
+			
+			buffer.Append (SerializerSupport.SerializeInt (this.generators.Count));
+			
+			foreach (Generator generator in this.generators.Values)
+			{
+				buffer.Append ("/");
+				generator.Serialize (buffer);
+			}
+		}
+		
+		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
+		{
+			int count = SerializerSupport.DeserializeInt (args[offset++]);
+			
+			for (int i = 0; i < count; i++)
+			{
+				Generator generator = new Generator (null);
+				
+				generator.Deserialize (context, version, args, ref offset);
+				
+				string name = generator.Name;
+				
+				this.generators[name] = generator;
+			}
+		}
+		
+		
 		
 		private Text.TextContext				context;
 		private System.Collections.Hashtable	generators;

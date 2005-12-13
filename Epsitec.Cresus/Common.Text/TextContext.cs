@@ -156,7 +156,7 @@ namespace Epsitec.Common.Text
 		{
 			lock (this.unique_id_lock)
 			{
-				return this.next_unique_id++;
+				return this.unique_id++;
 			}
 		}
 		
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Text
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeInt (TextContext.SerializationVersion));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeLong (this.next_unique_id));
+			buffer.Append (SerializerSupport.SerializeLong (this.unique_id));
 			buffer.Append ("/");
 			
 			this.style_list.Serialize (buffer);
@@ -178,7 +178,13 @@ namespace Epsitec.Common.Text
 			this.tab_list.Serialize (buffer);
 			buffer.Append ("/");
 			
+			this.generator_list.Serialize (buffer);
+			buffer.Append ("/");
+			
 			this.SerializeConditions (buffer);
+			
+			buffer.Append ("/");
+			buffer.Append ("~");
 			
 			return System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
 		}
@@ -196,11 +202,15 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (magick == "TextContext");
 			System.Diagnostics.Debug.Assert (version <= TextContext.SerializationVersion);
 			
-			this.next_unique_id = SerializerSupport.DeserializeLong (args[offset++]);
+			this.unique_id = SerializerSupport.DeserializeLong (args[offset++]);
 			
 			this.style_list.Deserialize (this, version, args, ref offset);
 			this.tab_list.Deserialize (this, version, args, ref offset);
+			this.generator_list.Deserialize (this, version, args, ref offset);
 			this.DeserializeConditions (version, args, ref offset);
+			
+			System.Diagnostics.Debug.Assert (args[offset] == "~");
+			System.Diagnostics.Debug.Assert (args.Length == offset+1);
 		}
 		
 		
@@ -1670,7 +1680,7 @@ namespace Epsitec.Common.Text
 		private System.Collections.ArrayList	stories;
 		private TextStyle						default_style;
 		
-		private long							next_unique_id = 1;
+		private long							unique_id = 1;
 		private object							unique_id_lock = new object ();
 		
 		private bool							show_control_characters;

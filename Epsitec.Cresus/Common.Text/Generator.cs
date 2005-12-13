@@ -112,6 +112,52 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void Serialize(System.Text.StringBuilder buffer)
+		{
+			buffer.Append (SerializerSupport.SerializeString (this.name));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeInt (this.sequences.Count));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeInt (this.start_vector.Length));
+			
+			foreach (Generator.Sequence sequence in this.sequences)
+			{
+				buffer.Append ("/");
+				buffer.Append (SerializerSupport.SerializeString (Generator.SerializeToText (sequence)));
+			}
+			
+			foreach (int start in this.start_vector)
+			{
+				buffer.Append ("/");
+				buffer.Append (SerializerSupport.SerializeInt (start));
+			}
+		}
+		
+		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
+		{
+			this.name = SerializerSupport.DeserializeString (args[offset++]);
+
+			int num_sequences = SerializerSupport.DeserializeInt (args[offset++]);
+			int num_starts    = SerializerSupport.DeserializeInt (args[offset++]);
+			
+			for (int i = 0; i < num_sequences; i++)
+			{
+				Generator.Sequence sequence;
+				
+				Generator.DeserializeFromText (context, args[offset++], out sequence);
+				
+				this.Add (sequence);
+			}
+			
+			this.start_vector = new int[num_starts];
+			
+			for (int i = 0; i < num_starts; i++)
+			{
+				this.start_vector[i] = SerializerSupport.DeserializeInt (args[offset++]);
+			}
+		}
+		
+		
 		#region TextUpdater Class
 		class TextUpdater
 		{
@@ -452,15 +498,20 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public static string SerializeToText(Sequence sequence)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			Generator.SerializeToText (buffer, sequence);
+			return buffer.ToString ();
+		}
+		
 		public static void SerializeToText(System.Text.StringBuilder buffer, Sequence sequence)
 		{
 			System.Diagnostics.Debug.Assert (sequence != null);
 			
-			string type_name = sequence.GetType ().Name;
-			string sequ_name = type_name.Substring (0, type_name.Length - 8);	//	"XxxSequence" --> "Xxx"
+			string sequ_name = sequence.GetType ().Name;
 			
 			System.Diagnostics.Debug.Assert (sequence.WellKnownType.ToString () == sequ_name);
-			System.Diagnostics.Debug.Assert (type_name.Substring (sequ_name.Length) == "Sequence");
 			
 			buffer.Append ("{");
 			buffer.Append (sequ_name);
@@ -469,6 +520,11 @@ namespace Epsitec.Common.Text
 			sequence.SerializeToText (buffer);
 			
 			buffer.Append ("}");
+		}
+		
+		public static void DeserializeFromText(TextContext context, string text, out Sequence sequence)
+		{
+			Generator.DeserializeFromText (context, text, 0, text.Length, out sequence);
 		}
 		
 		public static void DeserializeFromText(TextContext context, string text, int pos, int length, out Sequence sequence)
