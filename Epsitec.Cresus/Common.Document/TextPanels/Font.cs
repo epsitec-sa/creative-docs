@@ -202,6 +202,11 @@ namespace Epsitec.Common.Document.TextPanels
 			double size = this.document.TextWrapper.Active.FontSize;
 			Text.Properties.SizeUnits units = this.document.TextWrapper.Active.Units;
 			bool isSize = this.document.TextWrapper.Defined.IsFontSizeDefined;
+			if ( isSize )
+			{
+				size = this.document.TextWrapper.Defined.FontSize;
+				units = this.document.TextWrapper.Defined.Units;
+			}
 
 			double glue = this.document.TextWrapper.Active.FontGlue;
 			if ( double.IsNaN(glue) )  glue = 0.0;  // TODO: devrait être inutile, non ?
@@ -314,100 +319,50 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontFace.Visibility = true;
 				r.Offset(0, -25);
 
-				if ( this.IsLabelProperties )
-				{
-					r.Left = rect.Left;
-					r.Width = 69;
-					this.fontSize.Bounds = r;
-					this.fontSize.Visibility = true;
-					r.Offset(69, 0);
-					r.Width = 20;
-					this.buttonSizeMinus.Bounds = r;
-					this.buttonSizeMinus.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonSizePlus.Bounds = r;
-					this.buttonSizePlus.Visibility = true;
-					r.Left = rect.Right-40;
-					r.Width = 40;
-					this.fontColor.Bounds = r;
-					this.fontColor.Visibility = true;
+				r.Left = rect.Left;
+				r.Width = 69;
+				this.fontSize.Bounds = r;
+				this.fontSize.Visibility = true;
+				r.Offset(69, 0);
+				r.Width = 20;
+				this.buttonSizeMinus.Bounds = r;
+				this.buttonSizeMinus.Visibility = true;
+				r.Offset(20, 0);
+				this.buttonSizePlus.Bounds = r;
+				this.buttonSizePlus.Visibility = true;
+				r.Left = rect.Right-40;
+				r.Width = 40;
+				this.fontColor.Bounds = r;
+				this.fontColor.Visibility = true;
 
-					r.Offset(0, -25);
-					r.Left = rect.Left;
-					r.Width = 120;
-					this.fontStyle.Bounds = r;
-					this.fontStyle.Visibility = true;
-					r.Offset(120+5, 0);
-					r.Width = 20;
-					this.fontFeatures.Bounds = r;
-					this.fontFeatures.Visibility = true;
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Width = 129;
+				this.fontStyle.Bounds = r;
+				this.fontStyle.Visibility = true;
+				r.Offset(129+5, 0);
+				r.Width = 20;
+				this.fontFeatures.Bounds = r;
+				this.fontFeatures.Visibility = true;
 
-					r.Offset(0, -25);
-					r.Left = rect.Left;
-					r.Right = rect.Right-25;
-					this.fontGlue.Bounds = r;
-					this.fontGlue.Visibility = true;
-					r.Left = rect.Right-20;
-					r.Width = 20;
-					this.buttonClear.Bounds = r;
-					this.buttonClear.Visibility = true;
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Right = rect.Right-25;
+				this.fontGlue.Bounds = r;
+				this.fontGlue.Visibility = true;
+				r.Left = rect.Right-20;
+				r.Width = 20;
+				this.buttonClear.Bounds = r;
+				this.buttonClear.Visibility = true;
 
-					r.Offset(0, -25);
-					r.Left = rect.Left;
-					r.Right = rect.Right;
-					this.checkBold.Bounds = r;
-					this.checkBold.Visibility = true;
-					r.Offset(0, -18);
-					this.checkItalic.Bounds = r;
-					this.checkItalic.Visibility = true;
-				}
-				else
-				{
-					r.Left = rect.Left;
-					r.Width = 69;
-					this.fontSize.Bounds = r;
-					this.fontSize.Visibility = true;
-					r.Offset(69, 0);
-					r.Width = 20;
-					this.buttonSizeMinus.Bounds = r;
-					this.buttonSizeMinus.Visibility = true;
-					r.Offset(20, 0);
-					this.buttonSizePlus.Bounds = r;
-					this.buttonSizePlus.Visibility = true;
-					r.Left = rect.Right-40;
-					r.Width = 40;
-					this.fontColor.Bounds = r;
-					this.fontColor.Visibility = true;
-
-					r.Offset(0, -25);
-					r.Left = rect.Left;
-					r.Width = 120;
-					this.fontStyle.Bounds = r;
-					this.fontStyle.Visibility = true;
-					r.Offset(120+5, 0);
-					r.Width = 20;
-					this.fontFeatures.Bounds = r;
-					this.fontFeatures.Visibility = true;
-
-					r.Offset(0, -25);
-					r.Left = rect.Left;
-					r.Right = rect.Right-25;
-					this.fontGlue.Bounds = r;
-					this.fontGlue.Visibility = true;
-					r.Left = rect.Right-20;
-					r.Width = 20;
-					this.buttonClear.Bounds = r;
-					this.buttonClear.Visibility = true;
-
-					r.Offset(0, -25);
-					r.Left = rect.Left;
-					r.Right = rect.Right;
-					this.checkBold.Bounds = r;
-					this.checkBold.Visibility = true;
-					r.Offset(0, -18);
-					this.checkItalic.Bounds = r;
-					this.checkItalic.Visibility = true;
-				}
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.checkBold.Bounds = r;
+				this.checkBold.Visibility = true;
+				r.Offset(0, -18);
+				this.checkItalic.Bounds = r;
+				this.checkItalic.Visibility = true;
 			}
 			else
 			{
