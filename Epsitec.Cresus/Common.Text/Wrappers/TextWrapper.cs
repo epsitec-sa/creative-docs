@@ -97,7 +97,8 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.FontSizeProperty) ||
-				this.defined_state.IsValueFlagged (State.UnitsProperty))
+				this.defined_state.IsValueFlagged (State.UnitsProperty) ||
+				this.defined_state.IsValueFlagged (State.FontGlueProperty))
 			{
 				changes++;
 			}
@@ -106,6 +107,10 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				font_size = this.defined_state.FontSize;
 				units     = this.defined_state.Units;
+				defines++;
+			}
+			if (this.defined_state.IsFontGlueDefined)
+			{
 				font_glue = this.defined_state.FontGlue / 2;
 				defines++;
 			}
