@@ -948,24 +948,6 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Met en gras pendant l'édition.
-		public virtual bool EditBold()
-		{
-			return false;
-		}
-
-		// Met en italique pendant l'édition.
-		public virtual bool EditItalic()
-		{
-			return false;
-		}
-
-		// Souligne pendant l'édition.
-		public virtual bool EditUnderlined()
-		{
-			return false;
-		}
-
 		// Sélectionne tout le texte pendant l'édition.
 		public virtual bool EditSelectAll()
 		{

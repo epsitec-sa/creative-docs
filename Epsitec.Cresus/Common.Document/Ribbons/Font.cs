@@ -15,9 +15,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.Text.Font.Main;
 
-			this.buttonBold       = this.CreateIconButton(Misc.Icon("FontBold"),       Res.Strings.Action.Text.Font.Bold,       new MessageEventHandler(this.HandleButtonBoldClicked));
-			this.buttonItalic     = this.CreateIconButton(Misc.Icon("FontItalic"),     Res.Strings.Action.Text.Font.Italic,     new MessageEventHandler(this.HandleButtonItalicClicked));
-			this.buttonUnderlined = this.CreateIconButton(Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, new MessageEventHandler(this.HandleButtonUnderlinedClicked));
+			//?this.buttonBold       = this.CreateIconButton(Misc.Icon("FontBold"),       Res.Strings.Action.Text.Font.Bold,       new MessageEventHandler(this.HandleButtonBoldClicked));
+			//?this.buttonItalic     = this.CreateIconButton(Misc.Icon("FontItalic"),     Res.Strings.Action.Text.Font.Italic,     new MessageEventHandler(this.HandleButtonItalicClicked));
+			//?this.buttonUnderlined = this.CreateIconButton(Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, new MessageEventHandler(this.HandleButtonUnderlinedClicked));
+			this.buttonBold       = this.CreateIconButton("FontBold",       Misc.Icon("FontBold"),       Res.Strings.Action.Text.Font.Bold,       true);
+			this.buttonItalic     = this.CreateIconButton("FontItalic",     Misc.Icon("FontItalic"),     Res.Strings.Action.Text.Font.Italic,     true);
+			this.buttonUnderlined = this.CreateIconButton("FontUnderlined", Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, true);
+			this.buttonOverlined  = this.CreateIconButton("FontOverlined",  Misc.Icon("FontOverlined"),  Res.Strings.Action.Text.Font.Overlined,  true);
+			this.buttonStrikeout  = this.CreateIconButton("FontStrikeout",  Misc.Icon("FontStrikeout"),  Res.Strings.Action.Text.Font.Strikeout,  true);
 
 			this.buttonStyle = new Button(this);
 			this.buttonStyle.Text = "S";
@@ -35,6 +40,7 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
+#if false
 		public override void SetDocument(DocumentType type, InstallType install, Settings.GlobalSettings gs, Document document)
 		{
 			if ( this.document != null )
@@ -53,6 +59,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.HandleWrapperChanged(null);
 		}
+#endif
 
 		// Retourne la largeur standard.
 		public override double DefaultWidth
@@ -167,6 +174,10 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonItalic.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonUnderlined.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonOverlined.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonStrikeout.Bounds = rect;
 			rect.Offset(dx+5, 0);
 			this.buttonStyle.Bounds = rect;
 		}
@@ -230,6 +241,8 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
+		protected IconButton				buttonOverlined;
+		protected IconButton				buttonStrikeout;
 
 		protected Button					buttonStyle;
 	}

@@ -489,7 +489,7 @@ namespace Epsitec.Common.Document.TextPanels
 			// (B1) Pas de soulignement
 			// (B2) Soulignement défini localement
 			
-			Common.Text.Wrappers.TextWrapper.XlineDefinition underline = this.document.TextWrapper.Defined.Underline;
+			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Underline;
 			
 			if ( this.document.TextWrapper.Active.IsUnderlineDefined )
 			{
@@ -497,9 +497,9 @@ namespace Epsitec.Common.Document.TextPanels
 					 this.document.TextWrapper.Active.Underline.IsEmpty == false )
 				{
 					// (A2)
-					this.FillUnderlineDefinition(underline, false);  // --> (A3)
+					this.FillUnderlineDefinition(xline, false);  // --> (A3)
 					
-					if ( underline.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Underline) )
+					if ( xline.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Underline) )
 					{
 						// L'état défini par notre souligné local est identique à celui hérité
 						// par le style actif; utilise celui du style dans ce cas.
@@ -514,13 +514,13 @@ namespace Epsitec.Common.Document.TextPanels
 				else
 				{
 					// (A1)
-					underline.IsDisabled = true;  // --> (A2)
+					xline.IsDisabled = true;  // --> (A2)
 				}
 			}
 			else
 			{
 				// (B1)
-				this.FillUnderlineDefinition(underline, true);  // --> (B2)
+				this.FillUnderlineDefinition(xline, true);  // --> (B2)
 			}
 			
 			this.document.TextWrapper.ResumeSynchronisations();
@@ -544,7 +544,7 @@ namespace Epsitec.Common.Document.TextPanels
 			// (B1) Pas de soulignement
 			// (B2) Soulignement défini localement
 			
-			Common.Text.Wrappers.TextWrapper.XlineDefinition overline = this.document.TextWrapper.Defined.Overline;
+			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Overline;
 			
 			if ( this.document.TextWrapper.Active.IsOverlineDefined )
 			{
@@ -552,9 +552,9 @@ namespace Epsitec.Common.Document.TextPanels
 					 this.document.TextWrapper.Active.Overline.IsEmpty == false )
 				{
 					// (A2)
-					this.FillOverlineDefinition(overline, false);  // --> (A3)
+					this.FillOverlineDefinition(xline, false);  // --> (A3)
 					
-					if ( overline.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Overline) )
+					if ( xline.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Overline) )
 					{
 						// L'état défini par notre souligné local est identique à celui hérité
 						// par le style actif; utilise celui du style dans ce cas.
@@ -569,13 +569,13 @@ namespace Epsitec.Common.Document.TextPanels
 				else
 				{
 					// (A1)
-					overline.IsDisabled = true;  // --> (A2)
+					xline.IsDisabled = true;  // --> (A2)
 				}
 			}
 			else
 			{
 				// (B1)
-				this.FillOverlineDefinition(overline, true);  // --> (B2)
+				this.FillOverlineDefinition(xline, true);  // --> (B2)
 			}
 			
 			this.document.TextWrapper.ResumeSynchronisations();
@@ -599,7 +599,7 @@ namespace Epsitec.Common.Document.TextPanels
 			// (B1) Pas de soulignement
 			// (B2) Soulignement défini localement
 			
-			Common.Text.Wrappers.TextWrapper.XlineDefinition strikeout = this.document.TextWrapper.Defined.Strikeout;
+			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Strikeout;
 			
 			if ( this.document.TextWrapper.Active.IsStrikeoutDefined )
 			{
@@ -607,9 +607,9 @@ namespace Epsitec.Common.Document.TextPanels
 					 this.document.TextWrapper.Active.Strikeout.IsEmpty == false )
 				{
 					// (A2)
-					this.FillStrikeoutDefinition(strikeout, false);  // --> (A3)
+					this.FillStrikeoutDefinition(xline, false);  // --> (A3)
 					
-					if ( strikeout.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Strikeout) )
+					if ( xline.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Strikeout) )
 					{
 						// L'état défini par notre souligné local est identique à celui hérité
 						// par le style actif; utilise celui du style dans ce cas.
@@ -624,13 +624,13 @@ namespace Epsitec.Common.Document.TextPanels
 				else
 				{
 					// (A1)
-					strikeout.IsDisabled = true;  // --> (A2)
+					xline.IsDisabled = true;  // --> (A2)
 				}
 			}
 			else
 			{
 				// (B1)
-				this.FillStrikeoutDefinition(strikeout, true);  // --> (B2)
+				this.FillStrikeoutDefinition(xline, true);  // --> (B2)
 			}
 			
 			this.document.TextWrapper.ResumeSynchronisations();
@@ -709,105 +709,42 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		private void FillUnderlineDefinition(Common.Text.Wrappers.TextWrapper.XlineDefinition xline, bool def)
 		{
-			xline.IsDisabled = false;
-
-			double thickness;
-			double position;
-			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
-			{
-				thickness = 1.0;  // 0.1mm
-				position  = 5.0;  // 0.5mm
-			}
-			else
-			{
-				thickness = 1.27;  // 0.005in
-				position  = 5.08;  // 0.02in
-			}
-			string color = null;
+			this.document.Wrappers.FillUnderlineDefinition(xline);
 
 			if ( !def )
 			{
-				thickness = (double) this.fieldUnderlinedThickness.TextFieldReal.InternalValue;
-				position  = (double) this.fieldUnderlinedPosition.TextFieldReal.InternalValue;
-				color     = this.GetColorSample(this.underlinedColor);
+				xline.Thickness = (double) this.fieldUnderlinedThickness.TextFieldReal.InternalValue;
+				xline.Position  = (double) this.fieldUnderlinedPosition.TextFieldReal.InternalValue;
+				xline.DrawStyle = this.GetColorSample(this.underlinedColor);
 			}
-			
-			xline.Thickness      = thickness;
-			xline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
-			xline.Position       = position;
-			xline.PositionUnits  = Common.Text.Properties.SizeUnits.Points;
-			xline.DrawClass      = "";
-			xline.DrawStyle      = color;
 		}
         
 		private void FillOverlineDefinition(Common.Text.Wrappers.TextWrapper.XlineDefinition xline, bool def)
 		{
-			xline.IsDisabled = false;
-
-			double thickness;
-			double position;
-			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
-			{
-				thickness = 1.0;  // 0.1mm
-				position  = 2.0;  // 0.2mm
-			}
-			else
-			{
-				thickness = 1.27;  // 0.005in
-				position  = 2.54;  // 0.01in
-			}
-			string color = null;
+			this.document.Wrappers.FillOverlineDefinition(xline);
 
 			if ( !def )
 			{
-				thickness = (double) this.fieldOverlinedThickness.TextFieldReal.InternalValue;
-				position  = (double) this.fieldOverlinedPosition.TextFieldReal.InternalValue;
-				color     = this.GetColorSample(this.overlinedColor);
+				xline.Thickness = (double) this.fieldOverlinedThickness.TextFieldReal.InternalValue;
+				xline.Position  = (double) this.fieldOverlinedPosition.TextFieldReal.InternalValue;
+				xline.DrawStyle = this.GetColorSample(this.overlinedColor);
 			}
-			
-			xline.Thickness      = thickness;
-			xline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
-			xline.Position       = position;
-			xline.PositionUnits  = Common.Text.Properties.SizeUnits.Points;
-			xline.DrawClass      = "";
-			xline.DrawStyle      = color;
 		}
         
 		private void FillStrikeoutDefinition(Common.Text.Wrappers.TextWrapper.XlineDefinition xline, bool def)
 		{
-			xline.IsDisabled = false;
-
-			double thickness;
-			double position;
-			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
-			{
-				thickness =  2.0;  // 0.2mm
-				position  = 12.0;  // 1.2mm
-			}
-			else
-			{
-				thickness =  2.54;  // 0.01in
-				position  = 12.70;  // 0.5in
-			}
-			string color = null;
+			this.document.Wrappers.FillStrikeoutDefinition(xline);
 
 			if ( !def )
 			{
-				thickness = (double) this.fieldStrikeoutThickness.TextFieldReal.InternalValue;
-				position  = (double) this.fieldStrikeoutPosition.TextFieldReal.InternalValue;
-				color     = this.GetColorSample(this.strikeoutColor);
+				xline.Thickness = (double) this.fieldStrikeoutThickness.TextFieldReal.InternalValue;
+				xline.Position  = (double) this.fieldStrikeoutPosition.TextFieldReal.InternalValue;
+				xline.DrawStyle = this.GetColorSample(this.strikeoutColor);
 			}
-			
-			xline.Thickness      = thickness;
-			xline.ThicknessUnits = Common.Text.Properties.SizeUnits.Points;
-			xline.Position       = position;
-			xline.PositionUnits  = Common.Text.Properties.SizeUnits.Points;
-			xline.DrawClass      = "";
-			xline.DrawStyle      = color;
 		}
 
 
-		// Donne une signature unique en fonction du contenu.
+		// Donne une signature unique en fonction du type de contenu.
 		protected string Signature
 		{
 			get

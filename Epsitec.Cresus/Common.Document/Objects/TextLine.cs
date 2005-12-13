@@ -1214,21 +1214,21 @@ namespace Epsitec.Common.Document.Objects
 
 		#region TextFormat
 		// Met en gras pendant l'édition.
-		public override bool EditBold()
+		public bool EditBold()
 		{
 			this.textNavigator.SelectionBold = !this.textNavigator.SelectionBold;
 			return true;
 		}
 
 		// Met en italique pendant l'édition.
-		public override bool EditItalic()
+		public bool EditItalic()
 		{
 			this.textNavigator.SelectionItalic = !this.textNavigator.SelectionItalic;
 			return true;
 		}
 
 		// Souligne pendant l'édition.
-		public override bool EditUnderlined()
+		public bool EditUnderlined()
 		{
 			this.textNavigator.SelectionUnderlined = !this.textNavigator.SelectionUnderlined;
 			return true;

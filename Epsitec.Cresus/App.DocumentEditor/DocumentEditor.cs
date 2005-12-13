@@ -2315,21 +2315,13 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		[Command ("FontBold")]
-		void CommandFontBold(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.FontBold();
-		}
-
 		[Command ("FontItalic")]
-		void CommandFontItalic(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.FontItalic();
-		}
-
 		[Command ("FontUnderlined")]
-		void CommandFontUnderlined(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("FontOverlined")]
+		[Command ("FontStrikeout")]
+		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.FontUnderlined();
+			this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName);
 		}
 
 
@@ -3562,9 +3554,13 @@ namespace Epsitec.App.DocumentEditor
 			this.fontBoldState = new CommandState("FontBold", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaB);
 			this.fontItalicState = new CommandState("FontItalic", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaI);
 			this.fontUnderlinedState = new CommandState("FontUnderlined", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
+			this.fontOverlinedState = new CommandState("FontOverlined", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
+			this.fontStrikeoutState = new CommandState("FontStrikeout", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
 			this.fontBoldState.Statefull = true;
 			this.fontItalicState.Statefull = true;
 			this.fontUnderlinedState.Statefull = true;
+			this.fontOverlinedState.Statefull = true;
+			this.fontStrikeoutState.Statefull = true;
 			
 			this.orderUpOneState = new CommandState("OrderUpOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageUp);
 			this.orderDownOneState = new CommandState("OrderDownOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageDown);
@@ -4142,18 +4138,18 @@ namespace Epsitec.App.DocumentEditor
 					this.cutState.Enable = ( totalSelected > 0 && !isCreating );
 					this.copyState.Enable = ( totalSelected > 0 && !isCreating );
 					this.pasteState.Enable = ( !this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating );
-					this.fontBoldState.Enable = false;
-					this.fontItalicState.Enable = false;
-					this.fontUnderlinedState.Enable = false;
+					//?this.fontBoldState.Enable = false;
+					//?this.fontItalicState.Enable = false;
+					//?this.fontUnderlinedState.Enable = false;
 				}
 				else
 				{
 					this.cutState.Enable = true;
 					this.copyState.Enable = true;
 					this.pasteState.Enable = true;
-					this.fontBoldState.Enable = true;
-					this.fontItalicState.Enable = true;
-					this.fontUnderlinedState.Enable = true;
+					//?this.fontBoldState.Enable = true;
+					//?this.fontItalicState.Enable = true;
+					//?this.fontUnderlinedState.Enable = true;
 				}
 
 				this.CurrentDocument.Dialogs.UpdateInfos();
@@ -4171,6 +4167,8 @@ namespace Epsitec.App.DocumentEditor
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
 				this.fontUnderlinedState.Enable = false;
+				this.fontOverlinedState.Enable = false;
+				this.fontStrikeoutState.Enable = false;
 				this.orderUpOneState.Enable = false;
 				this.orderDownOneState.Enable = false;
 				this.orderUpAllState.Enable = false;
@@ -5487,6 +5485,8 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					fontBoldState;
 		protected CommandState					fontItalicState;
 		protected CommandState					fontUnderlinedState;
+		protected CommandState					fontOverlinedState;
+		protected CommandState					fontStrikeoutState;
 		protected CommandState					orderUpOneState;
 		protected CommandState					orderDownOneState;
 		protected CommandState					orderUpAllState;

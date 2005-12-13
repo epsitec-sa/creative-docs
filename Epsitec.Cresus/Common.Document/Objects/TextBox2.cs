@@ -442,9 +442,6 @@ namespace Epsitec.Common.Document.Objects
 					case KeyCode.AlphaX:  return this.EditCut();
 					case KeyCode.AlphaC:  return this.EditCopy();
 					case KeyCode.AlphaV:  return this.EditPaste();
-					case KeyCode.AlphaB:  return this.EditBold();
-					case KeyCode.AlphaI:  return this.EditItalic();
-					case KeyCode.AlphaU:  return this.EditUnderlined();
 					case KeyCode.AlphaA:  return this.EditSelectAll();
 				}
 			}

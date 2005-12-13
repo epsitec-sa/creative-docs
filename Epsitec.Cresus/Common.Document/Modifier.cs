@@ -1777,30 +1777,6 @@ namespace Epsitec.Common.Document
 
 
 		#region TextFormat
-		// Met le texte en gras.
-		public void FontBold()
-		{
-			Objects.Abstract editObject = this.RetEditObject();
-			if ( editObject == null )  return;
-			editObject.EditBold();
-		}
-		
-		// Met le texte en italique.
-		public void FontItalic()
-		{
-			Objects.Abstract editObject = this.RetEditObject();
-			if ( editObject == null )  return;
-			editObject.EditItalic();
-		}
-
-		// Met le texte en souligné.
-		public void FontUnderlined()
-		{
-			Objects.Abstract editObject = this.RetEditObject();
-			if ( editObject == null )  return;
-			editObject.EditUnderlined();
-		}
-
 		// Modifie le flux.
 		public void TextFlowChange(Objects.TextBox2 obj, Objects.TextBox2 parent, bool after)
 		{
