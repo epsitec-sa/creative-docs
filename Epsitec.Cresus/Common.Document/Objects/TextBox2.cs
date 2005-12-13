@@ -678,7 +678,7 @@ namespace Epsitec.Common.Document.Objects
 		// Met à jour le TextFrame en fonction du numéro de la page.
 		protected override void UpdatePageNumber()
 		{
-			this.textFrame.PageNumber = this.pageNumber;
+			this.textFrame.PageNumber = this.pageNumber+1;
 		}
 
 
