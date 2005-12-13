@@ -100,6 +100,7 @@ namespace Epsitec.Common.Document
 		{
 			bool enabled = this.IsWrappersAttached;
 			double leading = 0.0;
+			Common.Text.Wrappers.JustificationMode justif = Text.Wrappers.JustificationMode.Unknown;
 
 			if ( enabled )
 			{
@@ -107,6 +108,8 @@ namespace Epsitec.Common.Document
 				{
 					leading = this.paragraphWrapper.Active.Leading;
 				}
+
+				justif = this.document.ParagraphWrapper.Active.JustificationMode;
 			}
 
 			this.CommandActiveState("ParagraphLeading08", enabled, (leading == 0.8));
@@ -117,6 +120,12 @@ namespace Epsitec.Common.Document
 			this.CommandActiveState("ParagraphLeading30", enabled, (leading == 3.0));
 			this.CommandActiveState("ParagraphLeadingPlus",  enabled);
 			this.CommandActiveState("ParagraphLeadingMinus", enabled);
+
+			this.CommandActiveState("JustifHLeft",   enabled, (justif == Text.Wrappers.JustificationMode.AlignLeft));
+			this.CommandActiveState("JustifHCenter", enabled, (justif == Text.Wrappers.JustificationMode.Center));
+			this.CommandActiveState("JustifHRight",  enabled, (justif == Text.Wrappers.JustificationMode.AlignRight));
+			this.CommandActiveState("JustifHJustif", enabled, (justif == Text.Wrappers.JustificationMode.JustifyAlignLeft));
+			this.CommandActiveState("JustifHAll",    enabled, (justif == Text.Wrappers.JustificationMode.JustifyJustfy));
 		}
 
 
@@ -125,11 +134,12 @@ namespace Epsitec.Common.Document
 		{
 			switch ( name )
 			{
-				case "FontBold":               this.ChangeBold();                   break;
-				case "FontItalic":             this.ChangeItalic();                 break;
-				case "FontUnderlined":         this.ChangeUnderlined();             break;
-				case "FontOverlined":          this.ChangeOverlined();              break;
-				case "FontStrikeout":          this.ChangeStrikeout();              break;
+				case "FontBold":        this.ChangeBold();        break;
+				case "FontItalic":      this.ChangeItalic();      break;
+				case "FontUnderlined":  this.ChangeUnderlined();  break;
+				case "FontOverlined":   this.ChangeOverlined();   break;
+				case "FontStrikeout":   this.ChangeStrikeout();   break;
+
 				case "ParagraphLeading08":     this.ChangeParagraphLeading(0.8);    break;
 				case "ParagraphLeading10":     this.ChangeParagraphLeading(1.0);    break;
 				case "ParagraphLeading12":     this.ChangeParagraphLeading(1.2);    break;
@@ -138,6 +148,12 @@ namespace Epsitec.Common.Document
 				case "ParagraphLeading30":     this.ChangeParagraphLeading(3.0);    break;
 				case "ParagraphLeadingPlus":   this.IncrementParagraphLeading(1);   break;
 				case "ParagraphLeadingMinus":  this.IncrementParagraphLeading(-1);  break;
+
+				case "JustifHLeft":    this.Justif(Text.Wrappers.JustificationMode.AlignLeft);         break;
+				case "JustifHCenter":  this.Justif(Text.Wrappers.JustificationMode.Center);            break;
+				case "JustifHRight":   this.Justif(Text.Wrappers.JustificationMode.AlignRight);        break;
+				case "JustifHJustif":  this.Justif(Text.Wrappers.JustificationMode.JustifyAlignLeft);  break;
+				case "JustifHAll":     this.Justif(Text.Wrappers.JustificationMode.JustifyJustfy);     break;
 			}
 		}
 
@@ -241,6 +257,11 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.Defined.Leading = leading;
 			this.paragraphWrapper.Defined.LeadingUnits = units;
 			this.paragraphWrapper.ResumeSynchronisations();
+		}
+
+		protected void Justif(Common.Text.Wrappers.JustificationMode justif)
+		{
+			this.document.ParagraphWrapper.Defined.JustificationMode = justif;
 		}
 
 

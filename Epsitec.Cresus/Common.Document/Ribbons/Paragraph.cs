@@ -15,6 +15,12 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.Text.Paragraph.Main;
 
+			this.buttonJustifHLeft   = this.CreateIconButton("JustifHLeft",   Misc.Icon("JustifHLeft"),   Res.Strings.Action.Text.Paragraph.AlignLeft,   true);
+			this.buttonJustifHCenter = this.CreateIconButton("JustifHCenter", Misc.Icon("JustifHCenter"), Res.Strings.Action.Text.Paragraph.AlignCenter, true);
+			this.buttonJustifHRight  = this.CreateIconButton("JustifHRight",  Misc.Icon("JustifHRight"),  Res.Strings.Action.Text.Paragraph.AlignRight,  true);
+			this.buttonJustifHJustif = this.CreateIconButton("JustifHJustif", Misc.Icon("JustifHJustif"), Res.Strings.Action.Text.Paragraph.AlignJustif, true);
+			this.buttonJustifHAll    = this.CreateIconButton("JustifHAll",    Misc.Icon("JustifHAll"),    Res.Strings.Action.Text.Paragraph.AlignAll,    true);
+
 			this.buttonLeading08    = this.CreateIconButton("ParagraphLeading08",    Misc.Icon("ParagraphLeading08"),    Res.Strings.Action.Text.Paragraph.Leading08, true);
 			this.buttonLeading10    = this.CreateIconButton("ParagraphLeading10",    Misc.Icon("ParagraphLeading10"),    Res.Strings.Action.Text.Paragraph.Leading10, true);
 			this.buttonLeading15    = this.CreateIconButton("ParagraphLeading15",    Misc.Icon("ParagraphLeading15"),    Res.Strings.Action.Text.Paragraph.Leading15, true);
@@ -59,6 +65,19 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Height = dy;
 			rect.Width = dx;
 			rect.Offset(0, dy+5);
+			this.buttonJustifHLeft.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonJustifHCenter.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonJustifHRight.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonJustifHJustif.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonJustifHAll.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Height = dy;
+			rect.Width = dx;
 			this.buttonLeading08.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonLeading10.Bounds = rect;
@@ -75,6 +94,11 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		protected IconButton				buttonJustifHLeft;
+		protected IconButton				buttonJustifHCenter;
+		protected IconButton				buttonJustifHRight;
+		protected IconButton				buttonJustifHJustif;
+		protected IconButton				buttonJustifHAll;
 		protected IconButton				buttonLeading08;
 		protected IconButton				buttonLeading10;
 		protected IconButton				buttonLeading15;

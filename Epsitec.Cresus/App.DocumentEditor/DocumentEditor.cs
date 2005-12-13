@@ -2326,6 +2326,11 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ParagraphLeading30")]
 		[Command ("ParagraphLeadingPlus")]
 		[Command ("ParagraphLeadingMinus")]
+		[Command ("JustifHLeft")]
+		[Command ("JustifHCenter")]
+		[Command ("JustifHRight")]
+		[Command ("JustifHJustif")]
+		[Command ("JustifHAll")]
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName);
@@ -3570,6 +3575,11 @@ namespace Epsitec.App.DocumentEditor
 			this.paragraphLeading30State = new CommandState("ParagraphLeading30", this.commandDispatcher);
 			this.paragraphLeadingPlusState = new CommandState("ParagraphLeadingPlus", this.commandDispatcher);
 			this.paragraphLeadingMinusState = new CommandState("ParagraphLeadingMinus", this.commandDispatcher);
+			this.justifHLeftState = new CommandState("JustifHLeft", this.commandDispatcher);
+			this.justifHCenterState = new CommandState("JustifHCenter", this.commandDispatcher);
+			this.justifHRightState = new CommandState("JustifHRight", this.commandDispatcher);
+			this.justifHJustifState = new CommandState("JustifHJustif", this.commandDispatcher);
+			this.justifHAllState = new CommandState("JustifHAll", this.commandDispatcher);
 			this.fontBoldState.Statefull = true;
 			this.fontItalicState.Statefull = true;
 			this.fontUnderlinedState.Statefull = true;
@@ -3580,6 +3590,11 @@ namespace Epsitec.App.DocumentEditor
 			this.paragraphLeading15State.Statefull = true;
 			this.paragraphLeading20State.Statefull = true;
 			this.paragraphLeading30State.Statefull = true;
+			this.justifHLeftState.Statefull = true;
+			this.justifHCenterState.Statefull = true;
+			this.justifHRightState.Statefull = true;
+			this.justifHJustifState.Statefull = true;
+			this.justifHAllState.Statefull = true;
 			
 			this.orderUpOneState = new CommandState("OrderUpOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageUp);
 			this.orderDownOneState = new CommandState("OrderDownOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageDown);
@@ -4196,6 +4211,11 @@ namespace Epsitec.App.DocumentEditor
 				this.paragraphLeading30State.Enable = false;
 				this.paragraphLeadingPlusState.Enable = false;
 				this.paragraphLeadingMinusState.Enable = false;
+				this.justifHLeftState.Enable = false;
+				this.justifHCenterState.Enable = false;
+				this.justifHRightState.Enable = false;
+				this.justifHJustifState.Enable = false;
+				this.justifHAllState.Enable = false;
 				this.orderUpOneState.Enable = false;
 				this.orderDownOneState.Enable = false;
 				this.orderUpAllState.Enable = false;
@@ -5519,6 +5539,11 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					paragraphLeading30State;
 		protected CommandState					paragraphLeadingPlusState;
 		protected CommandState					paragraphLeadingMinusState;
+		protected CommandState					justifHLeftState;
+		protected CommandState					justifHCenterState;
+		protected CommandState					justifHRightState;
+		protected CommandState					justifHJustifState;
+		protected CommandState					justifHAllState;
 		protected CommandState					orderUpOneState;
 		protected CommandState					orderDownOneState;
 		protected CommandState					orderUpAllState;
