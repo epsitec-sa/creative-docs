@@ -2,7 +2,9 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Text.RegularExpressions;
+
 using Epsitec.Common.Widgets.Collections;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -10,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe CommandState permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec les widgets associés.
 	/// </summary>
-	public class CommandState
+	public class CommandState : Types.Object
 	{
 		public CommandState(string name, CommandDispatcher dispatcher)
 		{
@@ -36,7 +38,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public string						Name
+		public string							Name
 		{
 			get
 			{
@@ -44,7 +46,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public CommandDispatcher			CommandDispatcher
+		public CommandDispatcher				CommandDispatcher
 		{
 			get
 			{
@@ -52,8 +54,44 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public string							IconName
+		{
+			get
+			{
+				return (string) this.GetValue (CommandState.IconNameProperty);
+			}
+			set
+			{
+				this.SetValue (CommandState.IconNameProperty, value);
+			}
+		}
 		
-		public virtual bool					Enable
+		public string							ShortCaption
+		{
+			get
+			{
+				return (string) this.GetValue (CommandState.ShortCaptionProperty);
+			}
+			set
+			{
+				this.SetValue (CommandState.ShortCaptionProperty, value);
+			}
+		}
+		
+		public string							LongCaption
+		{
+			get
+			{
+				return (string) this.GetValue (CommandState.LongCaptionProperty);
+			}
+			set
+			{
+				this.SetValue (CommandState.LongCaptionProperty, value);
+			}
+		}
+		
+		
+		public virtual bool						Enable
 		{
 			get
 			{
@@ -69,7 +107,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool							Statefull
+		public bool								Statefull
 		{
 			get
 			{
@@ -81,7 +119,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public ActiveState					ActiveState
+		public ActiveState						ActiveState
 		{
 			get
 			{
@@ -97,7 +135,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public ShortcutCollection			Shortcuts
+		public ShortcutCollection				Shortcuts
 		{
 			get
 			{
@@ -110,7 +148,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Shortcut						PreferredShortcut
+		public Shortcut							PreferredShortcut
 		{
 			get
 			{
@@ -124,7 +162,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool							HasShortcuts
+		public bool								HasShortcuts
 		{
 			get
 			{
@@ -140,7 +178,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected Regex						Regex
+		protected Regex							Regex
 		{
 			get
 			{
@@ -194,6 +232,41 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		protected virtual void OnIconNameChanged(Types.PropertyChangedEventArgs e)
+		{
+		}
+		
+		protected virtual void OnShortCaptionChanged(Types.PropertyChangedEventArgs e)
+		{
+		}
+		
+		protected virtual void OnLongCaptionChanged(Types.PropertyChangedEventArgs e)
+		{
+		}
+		
+		
+		private static void NotifyIconNameChanged(Object o, object old_value, object new_value)
+		{
+			CommandState that = o as CommandState;
+			that.OnIconNameChanged (new PropertyChangedEventArgs (CommandState.IconNameProperty, old_value, new_value));
+		}
+		
+		private static void NotifyShortCaptionChanged(Object o, object old_value, object new_value)
+		{
+			CommandState that = o as CommandState;
+			that.OnShortCaptionChanged (new PropertyChangedEventArgs (CommandState.ShortCaptionProperty, old_value, new_value));
+		}
+		
+		private static void NotifyLongCaptionChanged(Object o, object old_value, object new_value)
+		{
+			CommandState that = o as CommandState;
+			that.OnLongCaptionChanged (new PropertyChangedEventArgs (CommandState.LongCaptionProperty, old_value, new_value));
+		}
+		
+		
+		public static readonly Property			IconNameProperty = Property.Register ("IconName", typeof (string), typeof (CommandState), new PropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyIconNameChanged)));
+		public static readonly Property			ShortCaptionProperty = Property.Register ("ShortCaption", typeof (string), typeof (CommandState), new PropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyShortCaptionChanged)));
+		public static readonly Property			LongCaptionProperty	= Property.Register ("LongCaption", typeof (string), typeof (CommandState), new PropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
 		
 		private ActiveState						active_state = ActiveState.No;
 		private bool							enable       = true;
