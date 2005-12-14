@@ -404,6 +404,6 @@ namespace Epsitec.Common.Text.Wrappers
 		private System.Collections.ArrayList	states;
 		
 		private int								suspend_synchronisations;
-		private int								change_id;
+		private int								change_id = 1;
 	}
 }
