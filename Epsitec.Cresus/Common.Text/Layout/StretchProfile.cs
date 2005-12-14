@@ -26,8 +26,10 @@ namespace Epsitec.Common.Text.Layout
 			this.width_space      = profile.width_space;
 			this.width_kashida    = profile.width_kashida;
 			
-			this.count_end_space  = profile.count_end_space;
-			this.width_end_space  = profile.width_end_space;
+			this.count_end_space   = profile.count_end_space;
+			this.count_end_c_space = profile.count_end_c_space;
+			this.width_end_space   = profile.width_end_space;
+			this.width_end_c_space = profile.width_end_c_space;
 		}
 		
 		
@@ -59,7 +61,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.count_end_space;
+				return (short)(this.count_end_space + this.count_end_c_space);
 			}
 		}
 		
@@ -100,7 +102,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.width_end_space;
+				return this.width_end_space + this.width_end_c_space;
 			}
 		}
 		
@@ -142,8 +144,10 @@ namespace Epsitec.Common.Text.Layout
 			this.width_space      = 0;
 			this.width_kashida    = 0;
 			
-			this.count_end_space  = 0;
-			this.width_end_space  = 0;
+			this.count_end_space   = 0;
+			this.count_end_c_space = 0;
+			this.width_end_space   = 0;
+			this.width_end_c_space = 0;
 		}
 		
 		public void IncludeEndSpace()
@@ -151,8 +155,13 @@ namespace Epsitec.Common.Text.Layout
 			this.count_space += this.count_end_space;
 			this.width_space += this.width_end_space;
 			
-			this.count_end_space = 0;
-			this.width_end_space = 0;
+			this.count_character += this.count_end_c_space;
+			this.width_character += this.width_end_c_space;
+			
+			this.count_end_space   = 0;
+			this.count_end_c_space = 0;
+			this.width_end_space   = 0;
+			this.width_end_c_space = 0;
 		}
 		
 		
@@ -165,8 +174,13 @@ namespace Epsitec.Common.Text.Layout
 				this.count_space += this.count_end_space;
 				this.width_space += this.width_end_space;
 				
-				this.count_end_space = 0;
-				this.width_end_space = 0;
+				this.count_character += this.count_end_c_space;
+				this.width_character += this.width_end_c_space;
+				
+				this.count_end_space   = 0;
+				this.count_end_c_space = 0;
+				this.width_end_space   = 0;
+				this.width_end_c_space = 0;
 				
 				this.count_no_stretch += profile.count_no_stretch;
 				this.count_character  += profile.count_character;
@@ -180,21 +194,28 @@ namespace Epsitec.Common.Text.Layout
 			}
 			else
 			{
-				this.count_end_space += profile.CountSpace;
-				this.width_end_space += profile.WidthSpace;
+				this.count_end_space   += profile.count_space;
+				this.count_end_c_space += profile.count_end_c_space;
+				this.width_end_space   += profile.width_space;
+				this.width_end_c_space += profile.width_end_c_space;
 			}
 		}
 		
 		public void Add(Unicode.StretchClass stretch, double width)
 		{
 			if ((stretch != Unicode.StretchClass.Space) &&
-				(this.count_end_space > 0))
+				(stretch != Unicode.StretchClass.CharacterSpace) &&
+				(this.count_end_space + this.count_end_c_space > 0))
 			{
-				this.count_space += this.count_end_space;
-				this.width_space += this.width_end_space;
+				this.count_space     += this.count_end_space;
+				this.count_character += this.count_end_c_space;
+				this.width_space     += this.width_end_space;
+				this.width_character += this.width_end_c_space;
 				
-				this.count_end_space = 0;
-				this.width_end_space = 0;
+				this.count_end_space   = 0;
+				this.count_end_c_space = 0;
+				this.width_end_space   = 0;
+				this.width_end_c_space = 0;
 			}
 			
 			switch (stretch)
@@ -205,9 +226,13 @@ namespace Epsitec.Common.Text.Layout
 					break;
 				
 				case Unicode.StretchClass.Character:
-				case Unicode.StretchClass.CharacterSpace:
 					this.count_character += 1;
 					this.width_character += width;
+					break;
+				
+				case Unicode.StretchClass.CharacterSpace:
+					this.count_end_c_space += 1;
+					this.width_end_c_space += width;
 					break;
 				
 				case Unicode.StretchClass.Space:
@@ -457,7 +482,9 @@ namespace Epsitec.Common.Text.Layout
 		private short							count_kashida;
 		
 		private short							count_end_space;
+		private short							count_end_c_space;
 		private double							width_end_space;
+		private double							width_end_c_space;
 		
 		private double							width_no_stretch;
 		private double							width_character;
