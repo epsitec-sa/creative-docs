@@ -36,8 +36,24 @@ namespace Epsitec.Common.Text.Wrappers
 		public State GetUnderlyingMarginsState()
 		{
 			State state = new State (this, AccessMode.ReadOnly);
-			Properties.MarginsProperty margins = this.ReadUnderlyingProperty (Properties.WellKnownType.Margins) as Properties.MarginsProperty;
-			this.UpdateMargins (state, margins);
+			Properties.MarginsProperty property = this.ReadUnderlyingProperty (Properties.WellKnownType.Margins) as Properties.MarginsProperty;
+			this.UpdateMargins (state, property);
+			return state;
+		}
+		
+		public State GetUnderlyingLeadingState()
+		{
+			State state = new State (this, AccessMode.ReadOnly);
+			Properties.LeadingProperty property = this.ReadUnderlyingProperty (Properties.WellKnownType.Leading) as Properties.LeadingProperty;
+			this.UpdateLeading (state, property);
+			return state;
+		}
+		
+		public State GetUnderlyingKeepState()
+		{
+			State state = new State (this, AccessMode.ReadOnly);
+			Properties.KeepProperty property = this.ReadUnderlyingProperty (Properties.WellKnownType.Keep) as Properties.KeepProperty;
+			this.UpdateKeep (state, property);
 			return state;
 		}
 		
@@ -556,6 +572,11 @@ namespace Epsitec.Common.Text.Wrappers
 				leading = this.ReadMetaProperty (ParagraphWrapper.Leading, Properties.WellKnownType.Leading) as Properties.LeadingProperty;
 			}
 			
+			this.UpdateLeading (state, leading);
+		}
+		
+		private void UpdateLeading(State state, Properties.LeadingProperty leading)
+		{
 			if ((leading != null) &&
 				(leading.LeadingUnits != Properties.SizeUnits.None) &&
 				(double.IsNaN (leading.Leading) == false))
@@ -626,6 +647,11 @@ namespace Epsitec.Common.Text.Wrappers
 				keep = this.ReadMetaProperty (ParagraphWrapper.Keep, Properties.WellKnownType.Keep) as Properties.KeepProperty;
 			}
 			
+			this.UpdateKeep (state, keep);
+		}
+		
+		private void UpdateKeep(State state, Properties.KeepProperty keep)
+		{
 			if ((keep != null) &&
 				(keep.StartLines > 0))
 			{
