@@ -1404,7 +1404,7 @@ namespace Epsitec.Common.Document.Objects
 			this.hasSelection = false;
 
 			this.redrawArea = Drawing.Rectangle.Empty;
-			if ( this.drawingContext != null )
+			if ( this.drawingContext != null && this.drawingContext.Viewer != null )
 			{
 				Point pbl = this.transform.TransformInverse(this.drawingContext.Viewer.RedrawArea.BottomLeft);
 				Point pbr = this.transform.TransformInverse(this.drawingContext.Viewer.RedrawArea.BottomRight);
