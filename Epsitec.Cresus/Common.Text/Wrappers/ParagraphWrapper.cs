@@ -33,6 +33,15 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
+		public State GetUnderlyingMarginsState()
+		{
+			State state = new State (this, AccessMode.ReadOnly);
+			Properties.MarginsProperty margins = this.ReadUnderlyingProperty (Properties.WellKnownType.Margins) as Properties.MarginsProperty;
+			this.UpdateMargins (state, margins);
+			return state;
+		}
+		
+		
 		internal override void InternalSynchronize(AbstractState state, StateProperty property)
 		{
 			if (state == this.defined_state)
@@ -386,6 +395,11 @@ namespace Epsitec.Common.Text.Wrappers
 				margins = this.ReadMetaProperty (ParagraphWrapper.Margins, Properties.WellKnownType.Margins) as Properties.MarginsProperty;
 			}
 			
+			this.UpdateMargins (state, margins);
+		}
+		
+		private void UpdateMargins(State state, Properties.MarginsProperty margins)
+		{
 			if ((margins != null) &&
 				(double.IsNaN (margins.Disposition) == false) &&
 				(double.IsNaN (margins.JustificationBody) == false) &&

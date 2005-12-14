@@ -252,6 +252,48 @@ namespace Epsitec.Common.Text.Wrappers
 			return null;
 		}
 		
+		protected Property ReadUnderlyingProperty(Properties.WellKnownType type)
+		{
+			TextStyle[] styles = null;
+			
+			if (this.navigator != null)
+			{
+				styles = this.navigator.TextStyles;
+			}
+			
+			if ((styles != null) &&
+				(styles.Length > 0))
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				foreach (TextStyle style in styles)
+				{
+					if (style.TextStyleClass != TextStyleClass.MetaProperty)
+					{
+						list.Add (style);
+					}
+				}
+				
+				if (list.Count > 0)
+				{
+					Property[] properties;
+					
+					this.context.GetFlatProperties (list, out styles, out properties);
+					this.context.AccumulateProperties (properties, out properties);
+					
+					for (int i = 0; i < properties.Length; i++)
+					{
+						if (properties[i].WellKnownType == type)
+						{
+							return properties[i];
+						}
+					}
+				}
+			}
+			
+			return null;
+		}
+		
 		protected Property ReadMetaProperty(string meta, Properties.WellKnownType type)
 		{
 			TextStyle[] styles = null;
