@@ -548,7 +548,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			else
 			{
-				value = 12.0;
+				value = 12.0 * Modifier.fontSizeScale;
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
 
@@ -591,14 +591,14 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
-			this.document.Wrappers.ChangeFontSize(-1, 80);
+			this.document.Wrappers.IncrementFontSize(-1);
 		}
 
 		private void HandleButtonSizePlusClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
-			this.document.Wrappers.ChangeFontSize(1, 125);
+			this.document.Wrappers.IncrementFontSize(1);
 		}
 
 		private void HandleGlueValueChanged(object sender)

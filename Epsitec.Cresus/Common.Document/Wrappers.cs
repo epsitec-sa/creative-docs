@@ -134,13 +134,13 @@ namespace Epsitec.Common.Document
 		{
 			switch ( name )
 			{
-				case "FontBold":        this.ChangeBold();        break;
-				case "FontItalic":      this.ChangeItalic();      break;
-				case "FontUnderlined":  this.ChangeUnderlined();  break;
-				case "FontOverlined":   this.ChangeOverlined();   break;
-				case "FontStrikeout":   this.ChangeStrikeout();   break;
-				case "FontSizePlus":    this.ChangeFontSize(1, 125);  break;
-				case "FontSizeMinus":   this.ChangeFontSize(-1, 80);  break;
+				case "FontBold":        this.ChangeBold();           break;
+				case "FontItalic":      this.ChangeItalic();         break;
+				case "FontUnderlined":  this.ChangeUnderlined();     break;
+				case "FontOverlined":   this.ChangeOverlined();      break;
+				case "FontStrikeout":   this.ChangeStrikeout();      break;
+				case "FontSizePlus":    this.IncrementFontSize(1);   break;
+				case "FontSizeMinus":   this.IncrementFontSize(-1);  break;
 
 				case "ParagraphLeading08":     this.ChangeParagraphLeading(0.8);    break;
 				case "ParagraphLeading10":     this.ChangeParagraphLeading(1.0);    break;
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
-		public void ChangeFontSize(double add, double percents)
+		public void IncrementFontSize(double delta)
 		{
 			double size = this.textWrapper.Defined.FontSize;
 			Text.Properties.SizeUnits units = this.textWrapper.Defined.Units;
@@ -234,11 +234,17 @@ namespace Epsitec.Common.Document
 
 			if ( units == Common.Text.Properties.SizeUnits.Percent )
 			{
-				size *= percents/100;
+				double[] list = {0.25, 0.4, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0};
+				size = Wrappers.SearchNextValue(size, list, delta);
 			}
 			else
 			{
-				size += add*Modifier.fontSizeScale;
+				size /= Modifier.fontSizeScale;
+
+				double[] list = {8,9,10,11,12,14,16,18,20,22,24,26,28,36,48,72};
+				size = Wrappers.SearchNextValue(size, list, delta);
+
+				size *= Modifier.fontSizeScale;
 			}
 
 			this.textWrapper.SuspendSynchronisations();
@@ -265,20 +271,19 @@ namespace Epsitec.Common.Document
 
 			if ( units == Common.Text.Properties.SizeUnits.Percent )
 			{
-				if ( delta > 0 )  leading *= 1.2;
-				else              leading /= 1.2;
-				leading = System.Math.Max(leading, 0.5);
+				double[] list = {0.5, 0.8, 0.9, 1.0, 1.2, 1.5, 2.0, 2.5, 3.0};
+				leading = Wrappers.SearchNextValue(leading, list, delta);
 			}
 			else
 			{
 				if ( this.document.Modifier.RealUnitDimension == RealUnitType.DimensionInch )
 				{
-					leading += delta*50.8;  // 0.2in
+					leading += delta*12.7;  // 0.05in
 					leading = System.Math.Max(leading, 12.7);
 				}
 				else
 				{
-					leading += delta*50.0;  // 5mm
+					leading += delta*10.0;  // 1mm
 					leading = System.Math.Max(leading, 10.0);
 				}
 			}
@@ -517,6 +522,34 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(cs != null);
 			cs.Enable = enabled;
 			cs.ActiveState = state ? ActiveState.Yes : ActiveState.No;
+		}
+
+
+		protected static double SearchNextValue(double value, double[] list, double delta)
+		{
+			if ( delta > 0 )
+			{
+				for ( int i=0 ; i<list.Length ; i++ )
+				{
+					if ( value < list[i] )
+					{
+						return list[i];
+					}
+				}
+			}
+
+			if ( delta < 0 )
+			{
+				for ( int i=list.Length-1 ; i>=0 ; i-- )
+				{
+					if ( value > list[i] )
+					{
+						return list[i];
+					}
+				}
+			}
+
+			return value;
 		}
 
 		
