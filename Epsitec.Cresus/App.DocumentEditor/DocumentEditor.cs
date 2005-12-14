@@ -775,40 +775,40 @@ namespace Epsitec.App.DocumentEditor
 			this.vToolBar = new VToolBar(this);
 			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
 			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height+this.RibbonHeight, this.info.Height);
-			this.VToolBarAdd(Misc.Icon("Select"), "ToolSelect", DocumentEditor.GetRes("Tool.Select", this.toolSelectState), "Select");
-			this.VToolBarAdd(Misc.Icon("Global"), "ToolGlobal", DocumentEditor.GetRes("Tool.Global", this.toolGlobalState), "Global");
-			this.VToolBarAdd(Misc.Icon("Shaper"), "ToolShaper", DocumentEditor.GetRes("Tool.Shaper", this.toolShaperState), "Shaper");
-			this.VToolBarAdd(Misc.Icon("Edit"), "ToolEdit", DocumentEditor.GetRes("Tool.Edit", this.toolEditState), "Edit");
-			this.VToolBarAdd(Misc.Icon("Zoom"), "ToolZoom", DocumentEditor.GetRes("Tool.Zoom", this.toolZoomState), "Zoom");
-			this.VToolBarAdd(Misc.Icon("Hand"), "ToolHand", DocumentEditor.GetRes("Tool.Hand", this.toolHandState), "Hand");
-			this.VToolBarAdd(Misc.Icon("Picker"), "ToolPicker", DocumentEditor.GetRes("Tool.Picker", this.toolPickerState), "Picker");
+			this.VToolBarAdd(this.toolSelectState);
+			this.VToolBarAdd(this.toolGlobalState);
+			this.VToolBarAdd(this.toolShaperState);
+			this.VToolBarAdd(this.toolEditState);
+			this.VToolBarAdd(this.toolZoomState);
+			this.VToolBarAdd(this.toolHandState);
+			this.VToolBarAdd(this.toolPickerState);
 			if ( this.type == DocumentType.Pictogram )
 			{
-				this.VToolBarAdd(Misc.Icon("HotSpot"), "ToolHotSpot", DocumentEditor.GetRes("Tool.HotSpot", this.toolHotSpotState), "HotSpot");
+				this.VToolBarAdd(this.toolHotSpotState);
 			}
-			this.VToolBarAdd("", "", "");
-			this.VToolBarAdd(Misc.Icon("ObjectLine"), "ToolLine", DocumentEditor.GetRes("Tool.Line", this.toolLineState), "ObjectLine");
-			this.VToolBarAdd(Misc.Icon("ObjectRectangle"), "ToolRectangle", DocumentEditor.GetRes("Tool.Rectangle", this.toolRectangleState), "ObjectRectangle");
-			this.VToolBarAdd(Misc.Icon("ObjectCircle"), "ToolCircle", DocumentEditor.GetRes("Tool.Circle", this.toolCircleState), "ObjectCircle");
-			this.VToolBarAdd(Misc.Icon("ObjectEllipse"), "ToolEllipse", DocumentEditor.GetRes("Tool.Ellipse", this.toolEllipseState), "ObjectEllipse");
-			this.VToolBarAdd(Misc.Icon("ObjectPoly"), "ToolPoly", DocumentEditor.GetRes("Tool.Poly", this.toolPolyState), "ObjectPoly");
-			this.VToolBarAdd(Misc.Icon("ObjectBezier"), "ToolBezier", DocumentEditor.GetRes("Tool.Bezier", this.toolBezierState), "ObjectBezier");
-			this.VToolBarAdd(Misc.Icon("ObjectRegular"), "ToolRegular", DocumentEditor.GetRes("Tool.Regular", this.toolRegularState), "ObjectRegular");
-			this.VToolBarAdd(Misc.Icon("ObjectSurface"), "ToolSurface", DocumentEditor.GetRes("Tool.Surface", this.toolSurfaceState), "ObjectSurface");
-			this.VToolBarAdd(Misc.Icon("ObjectVolume"), "ToolVolume", DocumentEditor.GetRes("Tool.Volume", this.toolVolumeState), "ObjectVolume");
-			this.VToolBarAdd(Misc.Icon("ObjectTextLine"), "ToolTextLine", DocumentEditor.GetRes("Tool.TextLine", this.toolTextLineState), "ObjectTextLine");
-			this.VToolBarAdd(Misc.Icon("ObjectTextBox"), "ToolTextBox", DocumentEditor.GetRes("Tool.TextBox", this.toolTextBoxState), "ObjectTextBox");
-			this.VToolBarAdd(Misc.Icon("ObjectTextBox"), "ToolTextBox2", DocumentEditor.GetRes("Tool.TextBox", this.toolTextBox2State), "ObjectTextBox2");
+			this.VToolBarAdd(null);
+			this.VToolBarAdd(this.toolLineState);
+			this.VToolBarAdd(this.toolRectangleState);
+			this.VToolBarAdd(this.toolCircleState);
+			this.VToolBarAdd(this.toolEllipseState);
+			this.VToolBarAdd(this.toolPolyState);
+			this.VToolBarAdd(this.toolBezierState);
+			this.VToolBarAdd(this.toolRegularState);
+			this.VToolBarAdd(this.toolSurfaceState);
+			this.VToolBarAdd(this.toolVolumeState);
+			this.VToolBarAdd(this.toolTextLineState);
+			this.VToolBarAdd(this.toolTextBoxState);
+			this.VToolBarAdd(this.toolTextBox2State);
 			if ( this.useArray )
 			{
-				this.VToolBarAdd(Misc.Icon("ObjectArray"), "ToolArray", DocumentEditor.GetRes("Tool.Array", this.toolArrayState), "ObjectArray");
+				this.VToolBarAdd(this.toolArrayState);
 			}
-			this.VToolBarAdd(Misc.Icon("ObjectImage"), "ToolImage", DocumentEditor.GetRes("Tool.Image", this.toolImageState), "ObjectImage");
+			this.VToolBarAdd(this.toolImageState);
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.VToolBarAdd(Misc.Icon("ObjectDimension"), "ToolDimension", DocumentEditor.GetRes("Tool.Dimension", this.toolDimensionState), "ObjectDimension");
+				this.VToolBarAdd(this.toolDimensionState);
 			}
-			this.VToolBarAdd("", "", "");
+			this.VToolBarAdd(null);
 
 			this.bookDocuments = new TabBook(this);
 			this.bookDocuments.Width = this.panelsWidth;
@@ -1222,14 +1222,9 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Ajoute une icône.
-		protected void VToolBarAdd(string icon, string command, string tooltip)
+		protected void VToolBarAdd(CommandState cs)
 		{
-			this.VToolBarAdd(icon, command, tooltip, command);
-		}
-
-		protected void VToolBarAdd(string icon, string command, string tooltip, string name)
-		{
-			if ( icon == "" )
+			if ( cs == null )
 			{
 				IconSeparator sep = new IconSeparator();
 				sep.IsHorizontal = false;
@@ -1237,9 +1232,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				IconButton button = new IconButton(command, icon, name);
+				IconButton button = new IconButton(cs.Name, cs.IconName, cs.Name);
 				this.vToolBar.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, tooltip);
+				ToolTip.Default.SetToolTip(button, cs.LongCaption);
 			}
 		}
 
@@ -1444,163 +1439,31 @@ namespace Epsitec.App.DocumentEditor
 
 
 		[Command ("ToolSelect")]
-		void CommandToolSelect(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "Select";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
 		[Command ("ToolGlobal")]
-		void CommandToolGlobal(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "Global";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
 		[Command ("ToolShaper")]
-		void CommandToolShaper(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "Shaper";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
 		[Command ("ToolEdit")]
-		void CommandToolEdit(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "Edit";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
 		[Command ("ToolZoom")]
-		void CommandToolZoom(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "Zoom";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
 		[Command ("ToolHand")]
-		void CommandToolHand(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "Hand";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
 		[Command ("ToolPicker")]
-		void CommandToolPicker(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "Picker";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
 		[Command ("ToolHotSpot")]
-		void CommandToolHotSpot(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("ObjectLine")]
+		[Command ("ObjectRectangle")]
+		[Command ("ObjectCircle")]
+		[Command ("ObjectEllipse")]
+		[Command ("ObjectPoly")]
+		[Command ("ObjectBezier")]
+		[Command ("ObjectRegular")]
+		[Command ("ObjectSurface")]
+		[Command ("ObjectVolume")]
+		[Command ("ObjectTextLine")]
+		[Command ("ObjectTextBox")]
+		[Command ("ObjectTextBox2")]
+		[Command ("ObjectArray")]
+		[Command ("ObjectImage")]
+		[Command ("ObjectDimension")]
+		void CommandTool(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = "HotSpot";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolLine")]
-		void CommandToolLine(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectLine";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolRectangle")]
-		void CommandToolRectangle(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectRectangle";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolCircle")]
-		void CommandToolCircle(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectCircle";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolEllipse")]
-		void CommandToolEllipse(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectEllipse";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolPoly")]
-		void CommandToolPoly(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectPoly";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolBezier")]
-		void CommandToolBezier(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectBezier";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolRegular")]
-		void CommandToolRegular(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectRegular";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolSurface")]
-		void CommandToolSurface(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectSurface";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolVolume")]
-		void CommandToolVolume(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectVolume";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolTextLine")]
-		void CommandToolTextLine(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectTextLine";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolTextBox")]
-		void CommandToolTextBox(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectTextBox";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolTextBox2")]
-		void CommandToolTextBox2(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectTextBox2";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolArray")]
-		void CommandToolArray(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectArray";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolImage")]
-		void CommandToolImage(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectImage";
-			this.DispatchDummyMouseMoveEvent();
-		}
-
-		[Command ("ToolDimension")]
-		void CommandToolDimension(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.Tool = "ObjectDimension";
+			this.CurrentDocument.Modifier.Tool = e.CommandName;
 			this.DispatchDummyMouseMoveEvent();
 		}
 
@@ -3524,29 +3387,29 @@ namespace Epsitec.App.DocumentEditor
 		{
 			CommandDispatcher foo = this.CommandDispatcher;
 
-			this.toolSelectState = new CommandState("ToolSelect", this.commandDispatcher, KeyCode.AlphaS);
-			this.toolGlobalState = new CommandState("ToolGlobal", this.commandDispatcher, KeyCode.AlphaG);
-			this.toolShaperState = new CommandState("ToolShaper", this.commandDispatcher, KeyCode.AlphaA);
-			this.toolEditState = new CommandState("ToolEdit", this.commandDispatcher, KeyCode.AlphaE);
-			this.toolZoomState = new CommandState("ToolZoom", this.commandDispatcher, KeyCode.AlphaZ);
-			this.toolHandState = new CommandState("ToolHand", this.commandDispatcher, KeyCode.AlphaH);
-			this.toolPickerState = new CommandState("ToolPicker", this.commandDispatcher, KeyCode.AlphaI);
-			this.toolHotSpotState = new CommandState("ToolHotSpot", this.commandDispatcher);
-			this.toolLineState = new CommandState("ToolLine", this.commandDispatcher, KeyCode.AlphaL);
-			this.toolRectangleState = new CommandState("ToolRectangle", this.commandDispatcher, KeyCode.AlphaR);
-			this.toolCircleState = new CommandState("ToolCircle", this.commandDispatcher, KeyCode.AlphaC);
-			this.toolEllipseState = new CommandState("ToolEllipse", this.commandDispatcher);
-			this.toolPolyState = new CommandState("ToolPoly", this.commandDispatcher, KeyCode.AlphaP);
-			this.toolBezierState = new CommandState("ToolBezier", this.commandDispatcher, KeyCode.AlphaB);
-			this.toolRegularState = new CommandState("ToolRegular", this.commandDispatcher);
-			this.toolSurfaceState = new CommandState("ToolSurface", this.commandDispatcher);
-			this.toolVolumeState = new CommandState("ToolVolume", this.commandDispatcher);
-			this.toolTextLineState = new CommandState("ToolTextLine", this.commandDispatcher);
-			this.toolTextBoxState = new CommandState("ToolTextBox", this.commandDispatcher, KeyCode.AlphaT);
-			this.toolTextBox2State = new CommandState("ToolTextBox2", this.commandDispatcher);
-			this.toolArrayState = new CommandState("ToolArray", this.commandDispatcher);
-			this.toolImageState = new CommandState("ToolImage", this.commandDispatcher);
-			this.toolDimensionState = new CommandState("ToolDimension", this.commandDispatcher);
+			this.toolSelectState = this.CreateCommandState("ToolSelect", "Select", "Tool.Select", KeyCode.AlphaS);
+			this.toolGlobalState = this.CreateCommandState("ToolGlobal", "Global", "Tool.Global", KeyCode.AlphaG);
+			this.toolShaperState = this.CreateCommandState("ToolShaper", "Shaper", "Tool.Shaper", KeyCode.AlphaA);
+			this.toolEditState = this.CreateCommandState("ToolEdit", "Edit", "Tool.Edit", KeyCode.AlphaE);
+			this.toolZoomState = this.CreateCommandState("ToolZoom", "Zoom", "Tool.Zoom", KeyCode.AlphaZ);
+			this.toolHandState = this.CreateCommandState("ToolHand", "Hand", "Tool.Hand", KeyCode.AlphaH);
+			this.toolPickerState = this.CreateCommandState("ToolPicker", "Picker", "Tool.Picker", KeyCode.AlphaI);
+			this.toolHotSpotState = this.CreateCommandState("ToolHotSpot", "HotSpot", "Tool.HotSpot");
+			this.toolLineState = this.CreateCommandState("ObjectLine", "ObjectLine", "Tool.Line", KeyCode.AlphaL);
+			this.toolRectangleState = this.CreateCommandState("ObjectRectangle", "ObjectRectangle", "Tool.Rectangle", KeyCode.AlphaR);
+			this.toolCircleState = this.CreateCommandState("ObjectCircle", "ObjectCircle", "Tool.Circle", KeyCode.AlphaC);
+			this.toolEllipseState = this.CreateCommandState("ObjectEllipse", "ObjectEllipse", "Tool.Ellipse");
+			this.toolPolyState = this.CreateCommandState("ObjectPoly", "ObjectPoly", "Tool.Poly", KeyCode.AlphaP);
+			this.toolBezierState = this.CreateCommandState("ObjectBezier", "ObjectBezier", "Tool.Bezier", KeyCode.AlphaB);
+			this.toolRegularState = this.CreateCommandState("ObjectRegular", "ObjectRegular", "Tool.Regular");
+			this.toolSurfaceState = this.CreateCommandState("ObjectSurface", "ObjectSurface", "Tool.Surface");
+			this.toolVolumeState = this.CreateCommandState("ObjectVolume", "ObjectVolume", "Tool.Volume");
+			this.toolTextLineState = this.CreateCommandState("ObjectTextLine", "ObjectTextLine", "Tool.TextLine");
+			this.toolTextBoxState = this.CreateCommandState("ObjectTextBox", "ObjectTextBox", "Tool.TextBox");
+			this.toolTextBox2State = this.CreateCommandState("ObjectTextBox2", "ObjectTextBox", "Tool.TextBox", KeyCode.AlphaT);
+			this.toolArrayState = this.CreateCommandState("ObjectArray", "ObjectArray", "Tool.Array");
+			this.toolImageState = this.CreateCommandState("ObjectImage", "ObjectImage", "Tool.Image");
+			this.toolDimensionState = this.CreateCommandState("ObjectDimension", "ObjectDimension", "Tool.Dimension");
 
 			this.newState = new CommandState("New", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaN);
 			this.openState = new CommandState("Open", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaO);
@@ -3803,6 +3666,29 @@ namespace Epsitec.App.DocumentEditor
 			this.moveDownShiftState  = new CommandState("MoveDownShift",  this.commandDispatcher, KeyCode.ModifierShift|KeyCode.ArrowDown);
 		}
 
+		// Crée un nouveau CommandState.
+		protected CommandState CreateCommandState(string command, string icon, string tooltip, params Widgets.Shortcut[] shortcuts)
+		{
+			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+
+			cs.IconName    = Misc.Icon(icon);
+			cs.LongCaption = DocumentEditor.GetRes(tooltip, cs);
+
+			return cs;
+		}
+
+		// Crée un nouveau CommandState.
+		protected CommandState CreateCommandState(string command, string icon, string tooltip, bool statefull, params Widgets.Shortcut[] shortcuts)
+		{
+			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+
+			cs.IconName    = Misc.Icon(icon);
+			cs.LongCaption = DocumentEditor.GetRes(tooltip, cs);
+			cs.Statefull   = statefull;
+
+			return cs;
+		}
+
 
 		// On s'enregistre auprès du document pour tous les événements.
 		protected void ConnectEvents()
@@ -4013,14 +3899,14 @@ namespace Epsitec.App.DocumentEditor
 				enabled = true;
 			}
 
-			this.UpdateTool(this.toolSelectState, "Select", tool, isCreating, enabled);
-			this.UpdateTool(this.toolGlobalState, "Global", tool, isCreating, enabled);
-			this.UpdateTool(this.toolShaperState, "Shaper", tool, isCreating, enabled);
-			this.UpdateTool(this.toolEditState, "Edit", tool, isCreating, enabled);
-			this.UpdateTool(this.toolZoomState, "Zoom", tool, isCreating, enabled);
-			this.UpdateTool(this.toolHandState, "Hand", tool, isCreating, enabled);
-			this.UpdateTool(this.toolPickerState, "Picker", tool, isCreating, enabled);
-			this.UpdateTool(this.toolHotSpotState, "HotSpot", tool, isCreating, enabled);
+			this.UpdateTool(this.toolSelectState, "ToolSelect", tool, isCreating, enabled);
+			this.UpdateTool(this.toolGlobalState, "ToolGlobal", tool, isCreating, enabled);
+			this.UpdateTool(this.toolShaperState, "ToolShaper", tool, isCreating, enabled);
+			this.UpdateTool(this.toolEditState, "ToolEdit", tool, isCreating, enabled);
+			this.UpdateTool(this.toolZoomState, "ToolZoom", tool, isCreating, enabled);
+			this.UpdateTool(this.toolHandState, "ToolHand", tool, isCreating, enabled);
+			this.UpdateTool(this.toolPickerState, "ToolPicker", tool, isCreating, enabled);
+			this.UpdateTool(this.toolHotSpotState, "ToolHotSpot", tool, isCreating, enabled);
 			this.UpdateTool(this.toolLineState, "ObjectLine", tool, isCreating, enabled);
 			this.UpdateTool(this.toolRectangleState, "ObjectRectangle", tool, isCreating, enabled);
 			this.UpdateTool(this.toolCircleState, "ObjectCircle", tool, isCreating, enabled);

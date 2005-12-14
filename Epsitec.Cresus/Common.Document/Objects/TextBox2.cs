@@ -368,7 +368,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			base.PutCommands(list);
 
-			if ( this.document.Modifier.Tool == "Edit" )
+			if ( this.document.Modifier.Tool == "ToolEdit" )
 			{
 				bool sel = (this.textFlow.TextNavigator.SelectionCount != 0);
 				if ( sel )

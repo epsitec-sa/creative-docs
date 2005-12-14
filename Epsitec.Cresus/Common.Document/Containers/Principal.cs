@@ -331,8 +331,8 @@ namespace Epsitec.Common.Document.Containers
 			Viewer viewer = this.document.Modifier.ActiveViewer;
 			DrawingContext context = viewer.DrawingContext;
 
-			if ( this.document.Modifier.Tool == "Select" ||
-				 this.document.Modifier.Tool == "Global" )
+			if ( this.document.Modifier.Tool == "ToolSelect" ||
+				 this.document.Modifier.Tool == "ToolGlobal" )
 			{
 				if ( this.document.Modifier.TotalSelected == 0 )
 				{
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Document.Containers
 				this.selectorPanel.Hide();
 			}
 
-			if ( this.document.Modifier.Tool == "Edit" )
+			if ( this.document.Modifier.Tool == "ToolEdit" )
 			{
 				this.textToolBar.Show();
 			}
@@ -423,7 +423,7 @@ namespace Epsitec.Common.Document.Containers
 					topMargin = (cmd == "") ? 20 : 4;
 				}
 			}
-			else if ( this.document.Modifier.Tool == "Edit" )
+			else if ( this.document.Modifier.Tool == "ToolEdit" )
 			{
 				// Crée tous les panneaux des "propriétés" de texte (pour les wrappers).
 				Objects.Abstract editObject = this.document.Modifier.RetEditObject();
@@ -566,8 +566,8 @@ namespace Epsitec.Common.Document.Containers
 		// Effectue la mise à jour de la sélection par noms.
 		protected override void DoUpdateSelNames()
 		{
-			if ( this.document.Modifier.Tool == "Select" ||
-				 this.document.Modifier.Tool == "Global" )
+			if ( this.document.Modifier.Tool == "ToolSelect" ||
+				 this.document.Modifier.Tool == "ToolGlobal" )
 			{
 				this.selectorPanel.Visibility = (this.document.Modifier.NamesExist);
 			}

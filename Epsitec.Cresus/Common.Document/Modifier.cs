@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document
 			this.document = document;
 			this.attachViewers = new System.Collections.ArrayList();
 			this.attachContainers = new System.Collections.ArrayList();
-			this.tool = "Select";
+			this.tool = "ToolSelect";
 			this.zoomHistory = new ZoomHistory();
 			this.opletQueue = new OpletQueue();
 			this.CreateObjectMemory();
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Document
 
 					Objects.Abstract editObject = this.RetEditObject();
 
-					if ( this.tool == "HotSpot" || value == "HotSpot" )
+					if ( this.tool == "ToolHotSpot" || value == "ToolHotSpot" )
 					{
 						this.document.Notifier.NotifyArea(this.ActiveViewer);
 					}
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Document
 
 					this.ToolAdaptRibbon();
 
-					if ( this.tool == "Select" && isCreate )  // on vient de créer un objet ?
+					if ( this.tool == "ToolSelect" && isCreate )  // on vient de créer un objet ?
 					{
 						DrawingContext context = this.ActiveViewer.DrawingContext;
 						Objects.Abstract layer = context.RootObject();
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Document
 						this.ActiveViewer.Select(obj, false, false);
 					}
 
-					if ( this.tool == "Shaper" && isCreate )  // on vient de créer un objet ?
+					if ( this.tool == "ToolShaper" && isCreate )  // on vient de créer un objet ?
 					{
 						DrawingContext context = this.ActiveViewer.DrawingContext;
 						Objects.Abstract layer = context.RootObject();
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Document
 						this.ActiveViewer.Select(obj, false, false);
 					}
 
-					else if ( this.tool == "Edit" && isCreate )  // on vient de créer un objet ?
+					else if ( this.tool == "ToolEdit" && isCreate )  // on vient de créer un objet ?
 					{
 						DrawingContext context = this.ActiveViewer.DrawingContext;
 						Objects.Abstract layer = context.RootObject();
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Document
 						this.ActiveViewer.Select(obj, true, false);
 					}
 
-					else if ( this.tool == "Shaper" )
+					else if ( this.tool == "ToolShaper" )
 					{
 						if ( editObject != null )
 						{
@@ -158,7 +158,7 @@ namespace Epsitec.Common.Document
 						}
 					}
 
-					else if ( this.IsTool && this.tool != "Edit" )
+					else if ( this.IsTool && this.tool != "ToolEdit" )
 					{
 						this.SelectedSegmentClear();
 
@@ -166,13 +166,13 @@ namespace Epsitec.Common.Document
 						{
 							editObject.Select(true);
 						}
-						else if ( initialTool == "Shaper" )
+						else if ( initialTool == "ToolShaper" )
 						{
 							this.ActiveViewer.UpdateSelector();
 						}
 					}
 
-					else if ( this.tool == "Edit" )
+					else if ( this.tool == "ToolEdit" )
 					{
 						if ( this.TotalSelected == 1 )
 						{
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Document
 		// Adapte les rubans à l'outil sélectionné.
 		protected void ToolAdaptRibbon()
 		{
-			if ( this.tool == "Edit" )
+			if ( this.tool == "ToolEdit" )
 			{
 				this.document.Notifier.NotifyRibbonCommand("Text");
 			}
@@ -227,14 +227,14 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				if ( this.tool == "Select"  )  return true;
-				if ( this.tool == "Global"  )  return true;
-				if ( this.tool == "Shaper"  )  return true;
-				if ( this.tool == "Edit"    )  return true;
-				if ( this.tool == "Zoom"    )  return true;
-				if ( this.tool == "Hand"    )  return true;
-				if ( this.tool == "Picker"  )  return true;
-				if ( this.tool == "HotSpot" )  return true;
+				if ( this.tool == "ToolSelect"  )  return true;
+				if ( this.tool == "ToolGlobal"  )  return true;
+				if ( this.tool == "ToolShaper"  )  return true;
+				if ( this.tool == "ToolEdit"    )  return true;
+				if ( this.tool == "ToolZoom"    )  return true;
+				if ( this.tool == "ToolHand"    )  return true;
+				if ( this.tool == "ToolPicker"  )  return true;
+				if ( this.tool == "ToolHotSpot" )  return true;
 				return false;
 			}
 		}
@@ -256,7 +256,7 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				return this.tool == "Shaper";
+				return this.tool == "ToolShaper";
 			}
 		}
 
@@ -265,14 +265,14 @@ namespace Epsitec.Common.Document
 		{
 			switch ( tool )
 			{
-				case "Select":           return Res.Strings.Tool.Select;
-				case "Global":           return Res.Strings.Tool.Global;
-				case "Shaper":           return Res.Strings.Tool.Shaper;
-				case "Edit":             return Res.Strings.Tool.Edit;
-				case "Zoom":             return Res.Strings.Tool.Zoom;
-				case "Hand":             return Res.Strings.Tool.Hand;
-				case "Picker":           return Res.Strings.Tool.Picker;
-				case "HotSpot":          return Res.Strings.Tool.HotSpot;
+				case "ToolSelect":       return Res.Strings.Tool.Select;
+				case "ToolGlobal":       return Res.Strings.Tool.Global;
+				case "ToolShaper":       return Res.Strings.Tool.Shaper;
+				case "ToolEdit":         return Res.Strings.Tool.Edit;
+				case "ToolZoom":         return Res.Strings.Tool.Zoom;
+				case "ToolHand":         return Res.Strings.Tool.Hand;
+				case "ToolPicker":       return Res.Strings.Tool.Picker;
+				case "ToolHotSpot":      return Res.Strings.Tool.HotSpot;
 
 				case "ObjectLine":       return Res.Strings.Tool.Line;
 				case "ObjectRectangle":  return Res.Strings.Tool.Rectangle;
@@ -1200,7 +1200,7 @@ namespace Epsitec.Common.Document
 		// Retourne le seul objet en édition.
 		public Objects.Abstract RetEditObject()
 		{
-			if ( this.tool != "Edit" )  return null;
+			if ( this.tool != "ToolEdit" )  return null;
 			if ( this.TotalSelected != 1 )  return null;
 
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -1265,7 +1265,7 @@ namespace Epsitec.Common.Document
 				this.ActiveViewer.CreateEnding(false, false);
 
 				this.opletCreate = false;
-				this.Tool = "Select";
+				this.Tool = "ToolSelect";
 
 				this.UpdateCounters();
 				DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -1294,7 +1294,7 @@ namespace Epsitec.Common.Document
 				this.ActiveViewer.CreateEnding(false, false);
 
 				this.opletCreate = false;
-				this.Tool = "Select";
+				this.Tool = "ToolSelect";
 
 				this.UpdateCounters();
 				DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -1358,7 +1358,7 @@ namespace Epsitec.Common.Document
 				this.ActiveViewer.CreateEnding(false, false);
 
 				this.opletCreate = false;
-				this.Tool = "Select";
+				this.Tool = "ToolSelect";
 
 				this.UpdateCounters();
 				DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -1615,7 +1615,7 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Duplicate) )
 			{
-				this.Tool = "Select";
+				this.Tool = "ToolSelect";
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();
 				Modifier.Duplicate(this.document, this.document, layer.Objects, layer.Objects, true, move, true);
@@ -2175,7 +2175,7 @@ namespace Epsitec.Common.Document
 		// Déplace tous les objets sélectionnés.
 		public void MoveSelection(Point dir, int alter)
 		{
-			if ( this.tool == "Edit" )  return;
+			if ( this.tool == "ToolEdit" )  return;
 
 			Point move = Point.ScaleMul(this.arrowMove, dir);
 
@@ -2214,7 +2214,7 @@ namespace Epsitec.Common.Document
 		// Déplace tous les objets sélectionnés.
 		public void MoveSelection(Point move)
 		{
-			if ( this.tool == "Edit" )  return;
+			if ( this.tool == "ToolEdit" )  return;
 			string name = string.Format(Res.Strings.Action.Move, this.RealToString(move.X), this.RealToString(move.Y));
 			this.PrepareOper(name);
 			this.ActiveViewer.Selector.OperMove(move);
@@ -2224,7 +2224,7 @@ namespace Epsitec.Common.Document
 		// Tourne tous les objets sélectionnés.
 		public void RotateSelection(double angle)
 		{
-			if ( this.tool == "Edit" )  return;
+			if ( this.tool == "ToolEdit" )  return;
 			string name = string.Format(Res.Strings.Action.Rotate, this.AngleToString(angle));
 			this.PrepareOper(name);
 			this.ActiveViewer.Selector.OperRotate(angle);
@@ -2234,7 +2234,7 @@ namespace Epsitec.Common.Document
 		// Miroir de tous les objets sélectionnés. 
 		public void MirrorSelection(bool horizontal)
 		{
-			if ( this.tool == "Edit" )  return;
+			if ( this.tool == "ToolEdit" )  return;
 			string name = horizontal ? Res.Strings.Action.MirrorH : Res.Strings.Action.MirrorV;
 			this.PrepareOper(name);
 			this.ActiveViewer.Selector.OperMirror(horizontal);
@@ -2244,7 +2244,7 @@ namespace Epsitec.Common.Document
 		// Mise à l'échelle de tous les objets sélectionnés.
 		public void ScaleSelection(double scale)
 		{
-			if ( this.tool == "Edit" )  return;
+			if ( this.tool == "ToolEdit" )  return;
 			string name = "";
 			if ( scale > 1.0 )
 			{
@@ -2839,7 +2839,7 @@ namespace Epsitec.Common.Document
 					Objects.Abstract layer = context.RootObject();
 					Objects.Abstract group = layer.Objects[index] as Objects.Abstract;
 					group.Select();
-					this.Tool = "Select";
+					this.Tool = "ToolSelect";
 					this.DirtyCounters();
 				}
 
@@ -4577,7 +4577,7 @@ namespace Epsitec.Common.Document
 			this.OpletQueueEnable = false;
 			list.Clear();
 
-			if ( this.tool == "Picker" && this.TotalSelected == 0 )  // pipette ?
+			if ( this.tool == "ToolPicker" && this.TotalSelected == 0 )  // pipette ?
 			{
 				this.ObjectMemoryTool.PropertiesList(list, null);
 			}

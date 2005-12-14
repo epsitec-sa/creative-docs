@@ -204,7 +204,7 @@ namespace Epsitec.Common.Document
 		// Démarre le timer pour l'auto-scroll.
 		protected void AutoScrollTimerStart(Message message)
 		{
-			if ( this.document.Modifier.Tool == "Hand" )  return;
+			if ( this.document.Modifier.Tool == "ToolHand" )  return;
 			this.autoScrollTimer.Start();
 		}
 
@@ -454,35 +454,35 @@ namespace Epsitec.Common.Document
 		{
 			Modifier modifier = this.document.Modifier;
 
-			if ( modifier.Tool == "Select" )
+			if ( modifier.Tool == "ToolSelect" )
 			{
 				this.SelectMouseDown(pos, message.ButtonDownCount, message.IsRightButton, false);
 			}
-			else if ( modifier.Tool == "Global" )
+			else if ( modifier.Tool == "ToolGlobal" )
 			{
 				this.SelectMouseDown(pos, message.ButtonDownCount, message.IsRightButton, true);
 			}
-			else if ( modifier.Tool == "Shaper" )
+			else if ( modifier.Tool == "ToolShaper" )
 			{
 				this.ShaperMouseDown(pos, message.ButtonDownCount, message.IsRightButton);
 			}
-			else if ( modifier.Tool == "Edit" )
+			else if ( modifier.Tool == "ToolEdit" )
 			{
 				this.EditMouseDown(message, pos, message.ButtonDownCount);
 			}
-			else if ( modifier.Tool == "Zoom" )
+			else if ( modifier.Tool == "ToolZoom" )
 			{
 				this.ZoomMouseDown(pos, message.IsRightButton);
 			}
-			else if ( modifier.Tool == "Hand" )
+			else if ( modifier.Tool == "ToolHand" )
 			{
 				this.HandMouseDown(pos);
 			}
-			else if ( modifier.Tool == "Picker" )
+			else if ( modifier.Tool == "ToolPicker" )
 			{
 				this.PickerMouseDown(pos);
 			}
-			else if ( modifier.Tool == "HotSpot" )
+			else if ( modifier.Tool == "ToolHotSpot" )
 			{
 				this.HotSpotMouseDown(pos);
 			}
@@ -503,35 +503,35 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			if ( modifier.Tool == "Select" )
+			if ( modifier.Tool == "ToolSelect" )
 			{
 				this.SelectMouseMove(pos, message.IsRightButton, false);
 			}
-			else if ( modifier.Tool == "Global" )
+			else if ( modifier.Tool == "ToolGlobal" )
 			{
 				this.SelectMouseMove(pos, message.IsRightButton, true);
 			}
-			else if ( modifier.Tool == "Shaper" )
+			else if ( modifier.Tool == "ToolShaper" )
 			{
 				this.ShaperMouseMove(pos, message.IsRightButton);
 			}
-			else if ( modifier.Tool == "Edit" )
+			else if ( modifier.Tool == "ToolEdit" )
 			{
 				this.EditMouseMove(message, pos);
 			}
-			else if ( modifier.Tool == "Zoom" )
+			else if ( modifier.Tool == "ToolZoom" )
 			{
 				this.ZoomMouseMove(pos, message.IsRightButton);
 			}
-			else if ( modifier.Tool == "Hand" )
+			else if ( modifier.Tool == "ToolHand" )
 			{
 				this.HandMouseMove(pos);
 			}
-			else if ( modifier.Tool == "Picker" )
+			else if ( modifier.Tool == "ToolPicker" )
 			{
 				this.PickerMouseMove(pos);
 			}
-			else if ( modifier.Tool == "HotSpot" )
+			else if ( modifier.Tool == "ToolHotSpot" )
 			{
 				this.HotSpotMouseMove(pos);
 			}
@@ -554,35 +554,35 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			if ( modifier.Tool == "Select" )
+			if ( modifier.Tool == "ToolSelect" )
 			{
 				this.SelectMouseUp(pos, message.IsRightButton, false);
 			}
-			else if ( modifier.Tool == "Global" )
+			else if ( modifier.Tool == "ToolGlobal" )
 			{
 				this.SelectMouseUp(pos, message.IsRightButton, true);
 			}
-			else if ( modifier.Tool == "Shaper" )
+			else if ( modifier.Tool == "ToolShaper" )
 			{
 				this.ShaperMouseUp(pos, message.IsRightButton);
 			}
-			else if ( modifier.Tool == "Edit" )
+			else if ( modifier.Tool == "ToolEdit" )
 			{
 				this.EditMouseUp(message, pos, message.IsRightButton);
 			}
-			else if ( modifier.Tool == "Zoom" )
+			else if ( modifier.Tool == "ToolZoom" )
 			{
 				this.ZoomMouseUp(pos, message.IsRightButton);
 			}
-			else if ( modifier.Tool == "Hand" )
+			else if ( modifier.Tool == "ToolHand" )
 			{
 				this.HandMouseUp(pos);
 			}
-			else if ( modifier.Tool == "Picker" )
+			else if ( modifier.Tool == "ToolPicker" )
 			{
 				this.PickerMouseUp(pos);
 			}
-			else if ( modifier.Tool == "HotSpot" )
+			else if ( modifier.Tool == "ToolHotSpot" )
 			{
 				this.HotSpotMouseUp(pos);
 			}
@@ -716,11 +716,11 @@ namespace Epsitec.Common.Document
 
 			if ( selectAfterCreation )
 			{
-				this.document.Modifier.Tool = "Select";
+				this.document.Modifier.Tool = "ToolSelect";
 			}
 			if ( editAfterCreation )
 			{
-				this.document.Modifier.Tool = "Edit";
+				this.document.Modifier.Tool = "ToolEdit";
 			}
 
 			this.document.Notifier.NotifyCreateChanged();
@@ -2632,7 +2632,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				if ( this.document.Modifier.Tool == "Select" )
+				if ( this.document.Modifier.Tool == "ToolSelect" )
 				{
 					this.MiniBarAdd(list, "Delete");
 					this.MiniBarAdd(list, "Duplicate");
@@ -3090,28 +3090,28 @@ namespace Epsitec.Common.Document
 			if ( cmd == "CreateAndSelect" )
 			{
 				this.CreateEnding(false, false);
-				this.document.Modifier.Tool = "Select";
+				this.document.Modifier.Tool = "ToolSelect";
 				return;
 			}
 
 			if ( cmd == "CreateCloseAndSelect" )
 			{
 				this.CreateEnding(false, true);
-				this.document.Modifier.Tool = "Select";
+				this.document.Modifier.Tool = "ToolSelect";
 				return;
 			}
 
 			if ( cmd == "CreateAndShaper" )
 			{
 				this.CreateEnding(false, false);
-				this.document.Modifier.Tool = "Shaper";
+				this.document.Modifier.Tool = "ToolShaper";
 				return;
 			}
 
 			if ( cmd == "CreateCloseAndShaper" )
 			{
 				this.CreateEnding(false, true);
-				this.document.Modifier.Tool = "Shaper";
+				this.document.Modifier.Tool = "ToolShaper";
 				return;
 			}
 		}
@@ -3229,7 +3229,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					if ( this.document.Modifier.Tool == "Global" )
+					if ( this.document.Modifier.Tool == "ToolGlobal" )
 					{
 						this.ChangeMouseCursor(MouseCursorType.ArrowGlobal);
 					}
@@ -4090,7 +4090,7 @@ namespace Epsitec.Common.Document
 			}
 
 			// Dessine le hotspot.
-			if ( this.IsActiveViewer && this.document.Modifier.Tool == "HotSpot" )
+			if ( this.IsActiveViewer && this.document.Modifier.Tool == "ToolHotSpot" )
 			{
 				this.DrawHotSpot(graphics);
 			}
