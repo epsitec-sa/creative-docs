@@ -676,7 +676,7 @@ restart:
 						}
 						else
 						{
-							this.line_y2 += this.line_skip_before;
+							this.line_y2 += this.line_space_before;
 						}
 					}
 					
