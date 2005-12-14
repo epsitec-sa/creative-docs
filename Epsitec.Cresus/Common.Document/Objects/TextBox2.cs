@@ -426,7 +426,10 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( message.Type == MessageType.MouseUp )
 			{
-				//?this.document.Modifier.ActiveViewer.OpenMiniBar(pos, true, false);
+				if ( this.metaNavigator.TextNavigator.SelectionCount > 0 )
+				{
+					this.document.Modifier.ActiveViewer.OpenMiniBar(pos, true, false);
+				}
 			}
 
 			return true;
