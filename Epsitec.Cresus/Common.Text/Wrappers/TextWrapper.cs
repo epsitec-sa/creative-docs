@@ -149,6 +149,10 @@ namespace Epsitec.Common.Text.Wrappers
 						this.ClearMetaProperty (TextWrapper.InvertBold);
 					}
 				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.InvertBold);
+				}
 			}
 			
 			if (this.defined_state.IsValueFlagged (State.InvertItalicProperty))
@@ -164,6 +168,10 @@ namespace Epsitec.Common.Text.Wrappers
 					{
 						this.ClearMetaProperty (TextWrapper.InvertItalic);
 					}
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.InvertItalic);
 				}
 			}
 		}
