@@ -2553,10 +2553,12 @@ namespace Epsitec.Common.Document
 			IconButton button = sender as IconButton;
 			if ( button != null )
 			{
-				if ( button.Name == "OrderUpAll"   ||
-					 button.Name == "OrderUpOne"   ||
-					 button.Name == "OrderDownOne" ||
-					 button.Name == "OrderDownAll" )  return;
+				if ( button.Name == "OrderUpAll"    ||
+					 button.Name == "OrderUpOne"    ||
+					 button.Name == "OrderDownOne"  ||
+					 button.Name == "OrderDownAll"  ||
+					 button.Name == "FontSizeMinus" ||
+					 button.Name == "FontSizePlus"  )  return;
 			}
 
 			this.CloseMiniBar(false);

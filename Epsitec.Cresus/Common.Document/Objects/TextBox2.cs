@@ -379,7 +379,13 @@ namespace Epsitec.Common.Document.Objects
 					this.PutCommands(list, "");
 					this.PutCommands(list, "FontBold");
 					this.PutCommands(list, "FontItalic");
+					this.PutCommands(list, "");
 					this.PutCommands(list, "FontUnderlined");
+					this.PutCommands(list, "FontOverlined");
+					this.PutCommands(list, "FontStrikeout");
+					this.PutCommands(list, "");
+					this.PutCommands(list, "FontSizeMinus");
+					this.PutCommands(list, "FontSizePlus");
 					this.PutCommands(list, "");
 				}
 				else
@@ -424,9 +430,14 @@ namespace Epsitec.Common.Document.Objects
 			Point ppos = this.transform.TransformInverse(pos);
 			if ( !this.metaNavigator.ProcessMessage(message, ppos) )  return false;
 
+			if ( message.Type == MessageType.MouseDown )
+			{
+				this.document.Modifier.ActiveViewer.CloseMiniBar(false);
+			}
+
 			if ( message.Type == MessageType.MouseUp )
 			{
-				if ( this.metaNavigator.TextNavigator.SelectionCount > 0 )
+				if ( this.textFlow.TextNavigator.SelectionCount > 0 )
 				{
 					this.document.Modifier.ActiveViewer.OpenMiniBar(pos, true, false);
 				}
