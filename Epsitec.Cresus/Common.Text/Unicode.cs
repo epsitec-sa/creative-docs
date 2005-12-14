@@ -520,6 +520,7 @@ namespace Epsitec.Common.Text
 			{
 				switch (break_class)
 				{
+					case Unicode.BreakClass.GL_NonBreakingGlue:
 					case Unicode.BreakClass.SP_Space:
 					case Unicode.BreakClass.ZW_ZeroWidthSpace:
 					case Unicode.BreakClass.BK_MandatoryBreak:

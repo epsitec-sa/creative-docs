@@ -386,10 +386,25 @@ advance_next:
 				}
 				else if (scratch.BreakMode == BreakMode.Break)
 				{
-					//	TODO: break catastrophique
+					//	Break catastrophique. Evalue si le résultat est mauvais ou très
+					//	mauvais...
+					
+					int code = Unicode.Bits.GetCode (text[offset+frag_length]);
+					
+					if (Unicode.DefaultBreakAnalyzer.IsSpace (code))
+					{
+						break_penalty = 1*1000.0;
+					}
+					else if (Unicode.DefaultBreakAnalyzer.IsZeroWidth (code))
+					{
+						break_penalty = 10*1000.0;
+					}
+					else
+					{
+						break_penalty = 100*1000.0;
+					}
 					
 					frag_length++;
-					break_penalty = 100.0;
 				}
 				else
 				{
@@ -430,7 +445,14 @@ advance_next:
 				}
 				else
 				{
-					profile = scratch.StretchProfile;
+					if (scratch.BreakMode == BreakMode.Break)
+					{
+						profile = new StretchProfile (scratch.StretchProfile);
+					}
+					else
+					{
+						profile = scratch.StretchProfile;
+					}
 					
 					if (BaseEngine.GenerateGlyphsAndStretchClassAttributes (context.TextContext, scratch.Font, text, offset, frag_length, out glyphs, out attr))
 					{

@@ -838,6 +838,7 @@ restart_paragraph_layout:
 				if (n_breaks > 1)
 				{
 					double penalty = Layout.StretchProfile.MaxPenalty;
+					double advance = -1;
 					int    p_index = -1;
 					
 					for (int i = 0; i < n_breaks; i++)
@@ -848,6 +849,20 @@ restart_paragraph_layout:
 						{
 							penalty = computed_penalty;
 							p_index = i;
+						}
+					}
+					
+					if (p_index < 0)
+					{
+						p_index = 0;
+						
+						for (int i = 0; i < n_breaks; i++)
+						{
+							if (result[i].Advance > advance)
+							{
+								advance = result[i].Advance;
+								p_index = i;
+							}
 						}
 					}
 					

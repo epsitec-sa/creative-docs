@@ -39,6 +39,9 @@ namespace Epsitec.Common.Text
 					}
 				}
 				
+				//	Détermine un "run" de caractères appartenant à la même langue
+				//	et constituant un mot complet.
+				
 				if ((locale != run_locale) ||
 					((i > 1) && (breaks[i-1] != Unicode.BreakInfo.No) && (breaks[i-1] != Unicode.BreakInfo.NoAlpha)))
 				{
@@ -83,7 +86,7 @@ namespace Epsitec.Common.Text
 			
 			if (two_letter_code == "fr")
 			{
-				System.Text.StringBuilder word = new System.Text.StringBuilder (length);
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder (length);
 				
 				for (int i = 0; i < length; i++)
 				{
@@ -93,15 +96,29 @@ namespace Epsitec.Common.Text
 					{
 						code = 0xffff;
 					}
+					else if (Unicode.DefaultBreakAnalyzer.IsSpace (code))
+					{
+						code = ' ';
+					}
 					
-					word.Append ((char) code);
+					buffer.Append ((char) code);
 				}
 				
-				short[] break_pos = LanguageEngine.GetHyphenationPositions (word.ToString ());
-				
-				foreach (short pos in break_pos)
+				foreach (string word in buffer.ToString ().Split (' '))
 				{
-					breaks[break_offset + pos - 1] = Unicode.BreakInfo.HyphenateGoodChoice;
+					if (word.Length > 3)
+					{
+						short[] break_pos = LanguageEngine.GetHyphenationPositions (word);
+					
+						foreach (short pos in break_pos)
+						{
+							breaks[break_offset + pos - 1] = Unicode.BreakInfo.HyphenateGoodChoice;
+						}
+					}
+					
+					//	Avance de la longueur du mot et de l'espace qui suit.
+					
+					break_offset += word.Length + 1;
 				}
 			}
 		}
