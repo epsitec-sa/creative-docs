@@ -125,6 +125,22 @@ namespace Epsitec.Common.OpenType
 			System.Console.WriteLine ();
 			System.Console.Out.Flush ();
 		}
+		
+		
+		[Test] public void SaveToCache()
+		{
+			FontCollection collection = new FontCollection ();
+			
+			collection.Initialize ();
+			collection.SaveToCache ();
+		}
+		
+		[Test] public void LoadFromCache()
+		{
+			FontCollection collection = new FontCollection ();
+			
+			collection.LoadFromCache ();
+		}
 	}
 }
 

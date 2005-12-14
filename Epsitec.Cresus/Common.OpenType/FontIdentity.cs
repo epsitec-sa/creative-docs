@@ -9,13 +9,18 @@ namespace Epsitec.Common.OpenType
 	/// </summary>
 	public sealed class FontIdentity
 	{
-		public FontIdentity(Table_name open_type_name_table, object system_record) : this (open_type_name_table, system_record, -1)
+		private FontIdentity()
 		{
 		}
 		
-		public FontIdentity(Table_name open_type_name_table, object system_record, int ttc_index)
+		public FontIdentity(Table_name open_type_name_table, int length, object system_record) : this (open_type_name_table, length, system_record, -1)
 		{
-			this.ot_name   = open_type_name_table;
+		}
+		
+		public FontIdentity(Table_name open_type_name_table, int length, object system_record, int ttc_index)
+		{
+			this.DefineTableName (open_type_name_table, length);
+			
 			this.record    = system_record;
 			this.ttc_index = ttc_index;
 		}
@@ -192,8 +197,15 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				Table_cmap cmap = this.GetTable_cmap ();
-				return cmap.FindFormatSubTable (3, 0, 4) != null;
+				if (this.is_symbol_font_defined == false)
+				{
+					Table_cmap cmap = this.GetTable_cmap ();
+					
+					this.is_symbol_font         = cmap.FindFormatSubTable (3, 0, 4) != null;
+					this.is_symbol_font_defined = true;
+				}
+				
+				return this.is_symbol_font;
 			}
 		}
 		
@@ -203,9 +215,17 @@ namespace Epsitec.Common.OpenType
 			return new Table_cmap (this.FontData["cmap"]);
 		}
 		
-		internal void DefineTableName(Table_name open_type_name_table)
+		
+		internal void DefineTableName(Table_name open_type_name_table, int length)
 		{
-			this.ot_name = open_type_name_table;
+			this.ot_name        = open_type_name_table;
+			this.ot_name_length = length;
+		}
+		
+		internal void DefineSystemFontFamilyAndStyle(string family, string style)
+		{
+			this.os_font_family = family;
+			this.os_font_style  = style;
 		}
 		
 		
@@ -256,6 +276,81 @@ namespace Epsitec.Common.OpenType
 			{
 				return null;
 			}
+		}
+		
+		
+		public static void Serialize(System.IO.Stream stream, FontIdentity fid)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append (fid.os_font_family);
+			buffer.Append ('\0');
+			buffer.Append (fid.os_font_style);
+			buffer.Append ('\0');
+			buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0}", fid.ttc_index);
+			buffer.Append ('\0');
+			buffer.Append (fid.is_symbol_font ? "S" : "s");
+			
+			byte[] data_0 = new byte[6];
+			byte[] data_1 = System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
+			byte[] data_2 = new byte[fid.ot_name_length];
+			
+			System.Buffer.BlockCopy (fid.ot_name.BaseData, fid.ot_name.BaseOffset, data_2, 0, fid.ot_name_length);
+			
+			int length_1 = data_1.Length;
+			int length_2 = data_2.Length;
+			
+			data_0[0] = 0;
+			data_0[1] = 0;
+			data_0[2] = (byte)(length_1 >> 8);
+			data_0[3] = (byte)(length_1 & 0xff);
+			data_0[4] = (byte)(length_2 >> 8);
+			data_0[5] = (byte)(length_2 & 0xff);
+			
+			stream.Write (data_0, 0, data_0.Length);
+			stream.Write (data_1, 0, length_1);
+			stream.Write (data_2, 0, length_2);
+		}
+		
+		public static FontIdentity Deserialize(System.IO.Stream stream)
+		{
+			byte[] data_0 = new byte[6];
+			
+			stream.Read (data_0, 0, 6);
+			
+			System.Diagnostics.Debug.Assert (data_0[0] == 0);
+			System.Diagnostics.Debug.Assert (data_0[1] == 0);
+			
+			int length_1 = (data_0[2] << 8) | data_0[3];
+			int length_2 = (data_0[4] << 8) | data_0[5];
+			
+			byte[] data_1 = new byte[length_1];
+			byte[] data_2 = new byte[length_2];
+			
+			stream.Read (data_1, 0, length_1);
+			stream.Read (data_2, 0, length_2);
+			
+			string   text = System.Text.Encoding.UTF8.GetString (data_1);
+			string[] args = text.Split ('\0');
+			
+			System.Diagnostics.Debug.Assert (args.Length == 4);
+			
+			string os_font_family = args[0];
+			string os_font_style  = args[1];
+			int    ttc_index      = System.Int32.Parse (args[2], System.Globalization.CultureInfo.InvariantCulture);
+			string flags          = args[3];
+
+			FontIdentity fid = new FontIdentity ();
+			
+			fid.ot_name        = new Table_name (data_2, 0);
+			fid.ot_name_length = length_2;
+			fid.os_font_family = os_font_family;
+			fid.os_font_style  = os_font_style;
+			
+			fid.is_symbol_font         = flags.IndexOf ("S") != -1;
+			fid.is_symbol_font_defined = flags.IndexOfAny (new char[] { 's', 'S' }) != -1;
+			
+			return fid;
 		}
 		
 		
@@ -407,10 +502,16 @@ namespace Epsitec.Common.OpenType
 		
 		
 		private Table_name						ot_name;
+		private int								ot_name_length;
+		
 		private object							record;
 		private FontData						font_data;
 		private System.Collections.Hashtable	font_sizes;
 		private string							style_hash;
 		private int								ttc_index;
+		private string							os_font_family;
+		private string							os_font_style;
+		private bool							is_symbol_font;
+		private bool							is_symbol_font_defined;
 	}
 }

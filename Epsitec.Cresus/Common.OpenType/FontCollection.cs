@@ -76,12 +76,14 @@ namespace Epsitec.Common.OpenType
 								FontData font_data = new FontData (data, i);
 								FontIdentity fid_n = new FontIdentity (font_data, record, i);
 								int  name_t_offset = fid_n.FontData["name"].Offset;
+								int  name_t_length = fid_n.FontData["name"].Length;
 								
 								name_t    = new Table_name (data, name_t_offset);
 								full_name = name_t.GetFullFontName ();
 								fuid_name = name_t.GetUniqueFontIdentifier ();
 								
-								fid_n.DefineTableName (name_t);
+								fid_n.DefineTableName (name_t, name_t_length);
+								fid_n.DefineSystemFontFamilyAndStyle (family, style);
 								
 								if (this.full_hash.ContainsKey (full_name) == false)
 								{
@@ -103,7 +105,9 @@ namespace Epsitec.Common.OpenType
 							(full_name != null) &&
 							(this.full_hash.ContainsKey (full_name) == false))
 						{
-							FontIdentity fid = new FontIdentity (name_t, record);
+							FontIdentity fid = new FontIdentity (name_t, data_name.Length, record);
+							
+							fid.DefineSystemFontFamilyAndStyle (family, style);
 							
 							this.full_hash[full_name] = fid;
 							this.fuid_hash[fuid_name] = fid;
@@ -120,6 +124,63 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			this.full_list.Sort (FontIdentity.Comparer);
+		}
+		
+		
+		public void SaveToCache()
+		{
+			string app_data_path = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
+			string cache_dir_path = System.IO.Path.Combine (app_data_path, "Epsitec Cache");
+			
+			try
+			{
+				System.IO.Directory.CreateDirectory (cache_dir_path);
+			}
+			catch
+			{
+			}
+			
+			string path = System.IO.Path.Combine (cache_dir_path, "OpenType.FontCollection.data");
+			
+			try
+			{
+				using (System.IO.FileStream file = new System.IO.FileStream (path, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+				{
+					foreach (FontIdentity fid in this.full_list)
+					{
+						FontIdentity.Serialize (file, fid);
+					}
+					
+					file.Flush ();
+					file.SetLength (file.Length);
+				}
+			}
+			catch
+			{
+			}
+		}
+		
+		public void LoadFromCache()
+		{
+			string app_data_path  = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
+			string cache_dir_path = System.IO.Path.Combine (app_data_path, "Epsitec Cache");
+			string path           = System.IO.Path.Combine (cache_dir_path, "OpenType.FontCollection.data");
+			
+			try
+			{
+				using (System.IO.FileStream file = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+				{
+					while (file.Position < file.Length)
+					{
+						FontIdentity fid = FontIdentity.Deserialize (file);
+						
+						System.Diagnostics.Debug.WriteLine ("Deserialized " + fid.LocaleFaceName + " " + fid.LocaleStyleName);
+					}
+				}
+			}
+			catch
+			{
+			}
 		}
 		
 		
