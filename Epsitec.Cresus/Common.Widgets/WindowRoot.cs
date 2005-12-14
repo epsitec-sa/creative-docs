@@ -298,13 +298,8 @@ namespace Epsitec.Common.Widgets
 					case KeyCode.Return:
 						if (window != null)
 						{
-							Widget focus = window.FindLogicalFocus ();
-							
-							if ((focus != null) &&
-								(focus.CanFocus) &&
-								(focus.IsFocused != true))
+							if (window.RestoreLogicalFocus ())
 							{
-								focus.Focus ();
 								return true;
 							}
 						}
@@ -313,13 +308,8 @@ namespace Epsitec.Common.Widgets
 					case KeyCode.Escape:
 						if (window != null)
 						{
-							Widget focus = window.FindLogicalFocus ();
-							
-							if ((focus != null) &&
-								(focus.CanFocus) &&
-								(focus.IsFocused != true))
+							if (window.RestoreLogicalFocus ())
 							{
-								focus.Focus ();
 								return true;
 							}
 						}

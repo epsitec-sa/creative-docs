@@ -1057,6 +1057,21 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 		
+		public bool RestoreLogicalFocus()
+		{
+			Widget focus = this.FindLogicalFocus ();
+							
+			if ((focus != null) &&
+				(focus.CanFocus) &&
+				(focus.IsFocused != true))
+			{
+				focus.Focus ();
+				return true;
+			}
+			
+			return false;
+		}
+		
 		
 		internal void PlatformWindowDisposing()
 		{

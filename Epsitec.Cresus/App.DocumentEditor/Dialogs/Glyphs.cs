@@ -570,6 +570,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			
 			this.editor.Window.MakeFocused();
+			this.editor.Window.RestoreLogicalFocus();
 		}
 
 

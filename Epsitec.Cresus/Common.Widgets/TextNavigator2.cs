@@ -585,6 +585,7 @@ namespace Epsitec.Common.Widgets
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
 			this.text_navigator.StartSelection ();
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);
+			this.text_navigator.EndSelection ();
 		}
 		
 		public void SelectWord()
