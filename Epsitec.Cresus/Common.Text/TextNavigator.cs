@@ -785,6 +785,34 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public void RedefineTab(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		{
+			this.TextContext.TabList.RedefineTab (new Properties.TabProperty (tag), position, units, disposition, docking_mark, position_mode, attribute);
+			
+			int[] pos = this.FindTextTabPositions (tag);
+			
+			this.story.SuspendTextChanged ();
+			
+			for (int i = 0; i < pos.Length; i++)
+			{
+				int start;
+				int end;
+				
+				Internal.Navigator.GetParagraphPositions (this.story, pos[i], out start, out end);
+				
+				if (start < end)
+				{
+					this.story.NotifyTextChanged (start, end - start);
+				}
+				else
+				{
+					this.story.NotifyTextChanged (end, start - end);
+				}
+			}
+			
+			this.story.ResumeTextChanged ();
+		}
+		
 		
 		#region Private Tabulator Manipulation Methods
 		private string[] GetParagraphTabTags()
@@ -939,7 +967,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		private int[] FindTextTabPositions(string[] tags)
+		private int[] FindTextTabPositions(params string[] tags)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			

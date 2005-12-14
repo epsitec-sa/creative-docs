@@ -670,7 +670,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			this.text_length += text.Length;
-			this.version++;
+			this.ChangeVersion ();
 			
 			this.cursors.InvalidatePositionCache ();
 		}
@@ -743,7 +743,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			this.text_length -= count;
-			this.version++;
+			this.ChangeVersion ();
 			
 			this.cursors.InvalidatePositionCache ();
 		}
@@ -1025,7 +1025,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (modified)
 			{
-				this.version++;
+				this.ChangeVersion ();
 			}
 			
 			return changed;
@@ -1079,7 +1079,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (modified)
 			{
-				this.version++;
+				this.ChangeVersion ();
 			}
 			
 			return wrote;
@@ -1159,7 +1159,7 @@ namespace Epsitec.Common.Text.Internal
 						this.text_chunks[i].SetRawText (buffer, 0, read);
 					}
 					
-					this.version++;
+					this.ChangeVersion ();
 					return;
 				}
 			}
@@ -1399,6 +1399,6 @@ namespace Epsitec.Common.Text.Internal
 		private Internal.TextChunk[]			text_chunks;		//	0..n valides; (prendre index-1 pour l'accès)
 		private int								text_length;
 		private Internal.CursorTable			cursors;
-		private long							version;
+		private long							version = 1;
 	}
 }

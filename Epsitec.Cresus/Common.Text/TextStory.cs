@@ -530,7 +530,45 @@ namespace Epsitec.Common.Text
 			
 			this.text.ChangeVersion ();
 			
-			this.OnTextChanged ();
+			if (this.suspend_text_changed == 0)
+			{
+				this.OnTextChanged ();
+			}
+		}
+		
+		public void NotifyTextChanged(int start, int length)
+		{
+			int end = System.Math.Min (start + length, this.TextLength);
+			
+			this.text_change_mark_start = System.Math.Min (this.text_change_mark_start, start);
+			this.text_change_mark_end   = System.Math.Max (this.text_change_mark_end, end);
+			
+			this.text.ChangeVersion ();
+			
+			if (this.suspend_text_changed == 0)
+			{
+				this.OnTextChanged ();
+			}
+		}
+		
+		public void SuspendTextChanged()
+		{
+			this.suspend_text_changed++;
+		}
+		
+		public void ResumeTextChanged()
+		{
+			System.Diagnostics.Debug.Assert (this.suspend_text_changed > 0);
+			
+			this.suspend_text_changed--;
+			
+			if (this.suspend_text_changed == 0)
+			{
+				if (this.last_text_version != this.text.Version)
+				{
+					this.OnTextChanged ();
+				}
+			}
 		}
 		
 		
@@ -1495,6 +1533,8 @@ namespace Epsitec.Common.Text
 		
 		protected virtual void OnTextChanged()
 		{
+			this.last_text_version = this.text.Version;
+			
 			if (this.TextChanged != null)
 			{
 				this.TextChanged (this);
@@ -2092,5 +2132,8 @@ namespace Epsitec.Common.Text
 		
 		private int								text_change_mark_start;
 		private int								text_change_mark_end;
+		
+		private int								suspend_text_changed;
+		private long							last_text_version = 0;
 	}
 }

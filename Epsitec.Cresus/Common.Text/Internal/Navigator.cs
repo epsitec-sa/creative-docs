@@ -312,6 +312,7 @@ namespace Epsitec.Common.Text.Internal
 			return (offset == -1) ? -distance : -offset;
 		}
 		
+		
 		#region ParagraphGroupStartFinder Class
 		private class ParagraphGroupStartFinder
 		{

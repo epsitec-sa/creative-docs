@@ -769,8 +769,6 @@ namespace Epsitec.Common.Document.Objects
 		// Modifie un tabulateur du texte.
 		public override void SetTextTab(ref string tag, double pos, TextTabType type, bool firstChange)
 		{
-			Text.TabList list = this.document.TextContext.TabList;
-			
 			double dispo = 0.0;
 			string dockingMark = Widgets.HRuler.ConvType2Mark(type);
 			TabPositionMode positionMode = TabPositionMode.Absolute;
@@ -786,6 +784,8 @@ namespace Epsitec.Common.Document.Objects
 				// sélection en cours), c'est pourquoi on crée une copie avant de
 				// procéder à des modifications :
 				
+				Text.TabList list = this.document.TextContext.TabList;
+				
 				Text.Properties.TabProperty oldTab = list.GetTabProperty(tag);
 				Text.Properties.TabProperty newTab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
 				
@@ -795,9 +795,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else
 			{
-				Text.Properties.TabProperty tab = list.GetTabProperty(tag);
-				list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
-				this.textFlow.TextStory.NotifyTextChanged();
+				this.textFlow.TextNavigator.RedefineTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
 			}
 			
 			this.HandleTabsChanged(null);  // TODO: devrait être inutile

@@ -835,7 +835,7 @@ restart:
 							this.break_mode = BreakMode.Hyphenate;
 						}
 						
-						System.Diagnostics.Debug.WriteLine ("Cannot fit, break mode : " + this.break_mode);
+//-						System.Diagnostics.Debug.WriteLine ("Cannot fit, break mode : " + this.break_mode);
 						
 						snapshot.Restore (this, false);
 						continue;
