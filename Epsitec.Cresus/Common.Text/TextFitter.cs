@@ -1470,7 +1470,9 @@ restart_paragraph_layout:
 			{
 				//	TODO: sélectionner le résultat optimal
 				
-				width = result[result.Count-1].Profile.TotalWidth;
+				Layout.StretchProfile profile = result[result.Count-1].Profile;
+				
+				width = profile.TotalWidth + profile.WidthEndSpace;
 				tab_x = x2 - d * width;
 				
 				return status;
