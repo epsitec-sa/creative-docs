@@ -387,6 +387,12 @@ namespace Epsitec.Common.Document.Objects
 					this.PutCommands(list, "FontSizeMinus");
 					this.PutCommands(list, "FontSizePlus");
 					this.PutCommands(list, "");
+					this.PutCommands(list, "ParagraphIndentMinus");
+					this.PutCommands(list, "ParagraphIndentPlus");
+					this.PutCommands(list, "");
+					this.PutCommands(list, "ParagraphLeadingMinus");
+					this.PutCommands(list, "ParagraphLeadingPlus");
+					this.PutCommands(list, "");
 				}
 				else
 				{

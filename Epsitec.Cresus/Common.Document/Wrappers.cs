@@ -158,6 +158,9 @@ namespace Epsitec.Common.Document
 				case "JustifHRight":   this.Justif(Text.Wrappers.JustificationMode.AlignRight);        break;
 				case "JustifHJustif":  this.Justif(Text.Wrappers.JustificationMode.JustifyAlignLeft);  break;
 				case "JustifHAll":     this.Justif(Text.Wrappers.JustificationMode.JustifyJustfy);     break;
+
+				case "FontClear":       this.FontClear();       break;
+				case "ParagraphClear":  this.ParagraphClear();  break;
 			}
 		}
 
@@ -336,6 +339,62 @@ namespace Epsitec.Common.Document
 		protected void Justif(Common.Text.Wrappers.JustificationMode justif)
 		{
 			this.document.ParagraphWrapper.Defined.JustificationMode = justif;
+		}
+
+		protected void FontClear()
+		{
+			if ( !this.textWrapper.IsAttached )  return;
+
+			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.Defined.ClearFontFace();
+			this.textWrapper.Defined.ClearFontStyle();
+			this.textWrapper.Defined.ClearFontSize();
+			this.textWrapper.Defined.ClearFontGlue();
+			this.textWrapper.Defined.ClearFontFeatures();
+			this.textWrapper.Defined.ClearUnits();
+			this.textWrapper.Defined.ClearInvertBold();
+			this.textWrapper.Defined.ClearInvertItalic();
+			this.textWrapper.Defined.ClearColor();
+			this.textWrapper.Defined.ClearLanguageLocale();
+			this.textWrapper.Defined.ClearLanguageHyphenation();
+			this.textWrapper.Defined.ClearXscript();
+			this.textWrapper.Defined.ClearUnderline();
+			this.textWrapper.Defined.ClearStrikeout();
+			this.textWrapper.Defined.ClearOverline();
+			this.textWrapper.Defined.ClearTextBox();
+			this.textWrapper.Defined.ClearTextMarker();
+			this.textWrapper.Defined.ClearLink();
+			this.textWrapper.Defined.ClearConditions();
+			this.textWrapper.Defined.ClearUserTags();
+			this.textWrapper.ResumeSynchronisations();
+		}
+
+		protected void ParagraphClear()
+		{
+			if ( !this.paragraphWrapper.IsAttached )  return;
+
+			this.paragraphWrapper.SuspendSynchronisations();
+			this.paragraphWrapper.Defined.ClearJustificationMode();
+			this.paragraphWrapper.Defined.ClearHyphenation();
+			this.paragraphWrapper.Defined.ClearLeftMarginFirst();
+			this.paragraphWrapper.Defined.ClearLeftMarginBody();
+			this.paragraphWrapper.Defined.ClearRightMarginFirst();
+			this.paragraphWrapper.Defined.ClearRightMarginBody();
+			this.paragraphWrapper.Defined.ClearMarginUnits();
+			this.paragraphWrapper.Defined.ClearIndentationLevel();
+			this.paragraphWrapper.Defined.ClearLeading();
+			this.paragraphWrapper.Defined.ClearLeadingUnits();
+			this.paragraphWrapper.Defined.ClearSpaceBefore();
+			this.paragraphWrapper.Defined.ClearSpaceBeforeUnits();
+			this.paragraphWrapper.Defined.ClearSpaceAfter();
+			this.paragraphWrapper.Defined.ClearSpaceAfterUnits();
+			this.paragraphWrapper.Defined.ClearAlignMode();
+			this.paragraphWrapper.Defined.ClearKeepStartLines();
+			this.paragraphWrapper.Defined.ClearKeepEndLines();
+			this.paragraphWrapper.Defined.ClearKeepWithNextParagraph();
+			this.paragraphWrapper.Defined.ClearKeepWithPreviousParagraph();
+			this.paragraphWrapper.Defined.ClearParagraphStartMode();
+			this.paragraphWrapper.ResumeSynchronisations();
 		}
 
 

@@ -1021,6 +1021,7 @@
 	<data name="Action.Text.Font.UserZ">Style utilisateur Z</data>
 	<data name="Action.Text.Font.Color">Couleur de la police</data>
 	<data name="Action.Text.Font.Default">Auto</data>
+	<data name="Action.Text.Font.Clear">Effacer tous les attributs de caractère</data>
 	<data name="Action.Text.Paragraph.Main">Paragraphe</data>
 	<data name="Action.Text.Paragraph.BulletRound">Puces</data>
 	<data name="Action.Text.Paragraph.BulletNumeric">Numérotation 1..</data>
@@ -1041,6 +1042,7 @@
 	<data name="Action.Text.Paragraph.Leading15">Interligne étendu</data>
 	<data name="Action.Text.Paragraph.Leading20">Interligne double</data>
 	<data name="Action.Text.Paragraph.Leading30">Interligne triple</data>
+	<data name="Action.Text.Paragraph.Clear">Effacer tous les attributs de paragraphe</data>
 	<data name="Action.Text.Insert">Insertion</data>
 	<data name="Action.Text.FlowChanged">Modification du chaînage</data>
 	<data name="Action.Text.Ruler.Drag">Tirer avec la souris pour créer un repère</data>

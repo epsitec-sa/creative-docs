@@ -21,6 +21,9 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonJustifHJustif = this.CreateIconButton("JustifHJustif", Misc.Icon("JustifHJustif"), Res.Strings.Action.Text.Paragraph.AlignJustif, true);
 			this.buttonJustifHAll    = this.CreateIconButton("JustifHAll",    Misc.Icon("JustifHAll"),    Res.Strings.Action.Text.Paragraph.AlignAll,    true);
 
+			this.buttonIndentMinus = this.CreateIconButton("ParagraphIndentMinus", Misc.Icon("ParagraphIndentMinus"), Res.Strings.Action.Text.Paragraph.IndentPlus, false);
+			this.buttonIndentPlus  = this.CreateIconButton("ParagraphIndentPlus",  Misc.Icon("ParagraphIndentPlus"),  Res.Strings.Action.Text.Paragraph.IndentPlus, false);
+
 			this.buttonLeading08    = this.CreateIconButton("ParagraphLeading08",    Misc.Icon("ParagraphLeading08"),    Res.Strings.Action.Text.Paragraph.Leading08, true);
 			this.buttonLeading10    = this.CreateIconButton("ParagraphLeading10",    Misc.Icon("ParagraphLeading10"),    Res.Strings.Action.Text.Paragraph.Leading10, true);
 			this.buttonLeading15    = this.CreateIconButton("ParagraphLeading15",    Misc.Icon("ParagraphLeading15"),    Res.Strings.Action.Text.Paragraph.Leading15, true);
@@ -28,8 +31,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLeading30    = this.CreateIconButton("ParagraphLeading30",    Misc.Icon("ParagraphLeading30"),    Res.Strings.Action.Text.Paragraph.Leading30, true);
 			this.buttonLeadingMinus = this.CreateIconButton("ParagraphLeadingMinus", Misc.Icon("ParagraphLeadingMinus"), Res.Strings.TextPanel.Leading.Tooltip.LeadingMinus, false);
 			this.buttonLeadingPlus  = this.CreateIconButton("ParagraphLeadingPlus",  Misc.Icon("ParagraphLeadingPlus"),  Res.Strings.TextPanel.Leading.Tooltip.LeadingPlus,  false);
-			this.buttonIndentMinus  = this.CreateIconButton("ParagraphIndentMinus",  Misc.Icon("ParagraphIndentMinus"),  Res.Strings.Action.Text.Paragraph.IndentPlus, false);
-			this.buttonIndentPlus   = this.CreateIconButton("ParagraphIndentPlus",   Misc.Icon("ParagraphIndentPlus"),   Res.Strings.Action.Text.Paragraph.IndentPlus, false);
+
+			this.buttonClear = this.CreateIconButton("ParagraphClear", Misc.Icon("Nothing"), Res.Strings.Action.Text.Paragraph.Clear, false);
 
 			this.UpdateClientGeometry();
 		}
@@ -97,6 +100,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLeadingMinus.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonLeadingPlus.Bounds = rect;
+			rect.Offset(dx+10, 0);
+			this.buttonClear.Bounds = rect;
 		}
 
 
@@ -114,5 +119,6 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonLeadingPlus;
 		protected IconButton				buttonIndentMinus;
 		protected IconButton				buttonIndentPlus;
+		protected IconButton				buttonClear;
 	}
 }

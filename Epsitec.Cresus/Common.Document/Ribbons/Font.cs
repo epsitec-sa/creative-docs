@@ -15,13 +15,15 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.Text.Font.Main;
 
-			this.buttonFontSizeMinus = this.CreateIconButton("FontSizeMinus",  Misc.Icon("FontSizeMinus"),  Res.Strings.Action.Text.Font.SizeMinus,  false);
-			this.buttonFontSizePlus  = this.CreateIconButton("FontSizePlus",   Misc.Icon("FontSizePlus"),   Res.Strings.Action.Text.Font.SizePlus,   false);
 			this.buttonBold          = this.CreateIconButton("FontBold",       Misc.Icon("FontBold"),       Res.Strings.Action.Text.Font.Bold,       true);
 			this.buttonItalic        = this.CreateIconButton("FontItalic",     Misc.Icon("FontItalic"),     Res.Strings.Action.Text.Font.Italic,     true);
+			this.buttonFontSizeMinus = this.CreateIconButton("FontSizeMinus",  Misc.Icon("FontSizeMinus"),  Res.Strings.Action.Text.Font.SizeMinus,  false);
+			this.buttonFontSizePlus  = this.CreateIconButton("FontSizePlus",   Misc.Icon("FontSizePlus"),   Res.Strings.Action.Text.Font.SizePlus,   false);
 			this.buttonUnderlined    = this.CreateIconButton("FontUnderlined", Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, true);
 			this.buttonOverlined     = this.CreateIconButton("FontOverlined",  Misc.Icon("FontOverlined"),  Res.Strings.Action.Text.Font.Overlined,  true);
 			this.buttonStrikeout     = this.CreateIconButton("FontStrikeout",  Misc.Icon("FontStrikeout"),  Res.Strings.Action.Text.Font.Strikeout,  true);
+
+			this.buttonClear = this.CreateIconButton("FontClear", Misc.Icon("Nothing"), Res.Strings.Action.Text.Font.Clear, false);
 
 			this.buttonStyle = new Button(this);
 			this.buttonStyle.Text = "S";
@@ -80,8 +82,10 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonOverlined.Bounds = rect;
 			rect.Offset(dx+5, 0);
 			this.buttonStrikeout.Bounds = rect;
+			rect.Offset(dx+20, 0);
+			this.buttonClear.Bounds = rect;
 
-			rect.Offset(dx+100, 0);
+			rect.Offset(dx+60, 0);
 			this.buttonStyle.Bounds = rect;
 		}
 
@@ -130,6 +134,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonUnderlined;
 		protected IconButton				buttonOverlined;
 		protected IconButton				buttonStrikeout;
+		protected IconButton				buttonClear;
 
 		protected Button					buttonStyle;
 	}

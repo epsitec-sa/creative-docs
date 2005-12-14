@@ -1021,6 +1021,7 @@
 	<data name="Action.Text.Font.UserZ">User style Z</data>
 	<data name="Action.Text.Font.Color">Font color</data>
 	<data name="Action.Text.Font.Default">Default</data>
+	<data name="Action.Text.Font.Clear">@@Effacer tous les attributs de caractère</data>
 	<data name="Action.Text.Paragraph.Main">Paragraph</data>
 	<data name="Action.Text.Paragraph.BulletRound">Bullet list</data>
 	<data name="Action.Text.Paragraph.BulletNumeric">Numbered list 1..</data>
@@ -1041,6 +1042,7 @@
 	<data name="Action.Text.Paragraph.Leading15">@@Interligne étendu</data>
 	<data name="Action.Text.Paragraph.Leading20">@@Interligne double</data>
 	<data name="Action.Text.Paragraph.Leading30">@@Interligne triple</data>
+	<data name="Action.Text.Paragraph.Clear">@@Effacer tous les attributs de paragraphe</data>
 	<data name="Action.Text.Insert">Insert</data>
 	<data name="Action.Text.FlowChanged">Flow modification</data>
 	<data name="Action.Text.Ruler.Drag">Drag to create a guide</data>

@@ -2321,6 +2321,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("FontStrikeout")]
 		[Command ("FontSizePlus")]
 		[Command ("FontSizeMinus")]
+		[Command ("FontClear")]
 		[Command ("ParagraphLeading08")]
 		[Command ("ParagraphLeading10")]
 		[Command ("ParagraphLeading15")]
@@ -2330,6 +2331,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ParagraphLeadingMinus")]
 		[Command ("ParagraphIndentPlus")]
 		[Command ("ParagraphIndentMinus")]
+		[Command ("ParagraphClear")]
 		[Command ("JustifHLeft")]
 		[Command ("JustifHCenter")]
 		[Command ("JustifHRight")]
@@ -3574,6 +3576,7 @@ namespace Epsitec.App.DocumentEditor
 			this.fontStrikeoutState = new CommandState("FontStrikeout", this.commandDispatcher);
 			this.fontSizePlusState = new CommandState("FontSizePlus", this.commandDispatcher);
 			this.fontSizeMinusState = new CommandState("FontSizeMinus", this.commandDispatcher);
+			this.fontClearState = new CommandState("FontClear", this.commandDispatcher);
 			this.paragraphLeading08State = new CommandState("ParagraphLeading08", this.commandDispatcher);
 			this.paragraphLeading10State = new CommandState("ParagraphLeading10", this.commandDispatcher);
 			this.paragraphLeading15State = new CommandState("ParagraphLeading15", this.commandDispatcher);
@@ -3583,6 +3586,7 @@ namespace Epsitec.App.DocumentEditor
 			this.paragraphLeadingMinusState = new CommandState("ParagraphLeadingMinus", this.commandDispatcher);
 			this.paragraphIndentPlusState = new CommandState("ParagraphIndentPlus", this.commandDispatcher);
 			this.paragraphIndentMinusState = new CommandState("ParagraphIndentMinus", this.commandDispatcher);
+			this.paragraphClearState = new CommandState("ParagraphClear", this.commandDispatcher);
 			this.justifHLeftState = new CommandState("JustifHLeft", this.commandDispatcher);
 			this.justifHCenterState = new CommandState("JustifHCenter", this.commandDispatcher);
 			this.justifHRightState = new CommandState("JustifHRight", this.commandDispatcher);
@@ -4214,6 +4218,7 @@ namespace Epsitec.App.DocumentEditor
 				this.fontStrikeoutState.Enable = false;
 				this.fontSizePlusState.Enable = false;
 				this.fontSizeMinusState.Enable = false;
+				this.fontClearState.Enable = false;
 				this.paragraphLeading08State.Enable = false;
 				this.paragraphLeading10State.Enable = false;
 				this.paragraphLeading15State.Enable = false;
@@ -4223,6 +4228,7 @@ namespace Epsitec.App.DocumentEditor
 				this.paragraphLeadingMinusState.Enable = false;
 				this.paragraphIndentPlusState.Enable = false;
 				this.paragraphIndentMinusState.Enable = false;
+				this.paragraphClearState.Enable = false;
 				this.justifHLeftState.Enable = false;
 				this.justifHCenterState.Enable = false;
 				this.justifHRightState.Enable = false;
@@ -5546,6 +5552,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					fontStrikeoutState;
 		protected CommandState					fontSizePlusState;
 		protected CommandState					fontSizeMinusState;
+		protected CommandState					fontClearState;
 		protected CommandState					paragraphLeading08State;
 		protected CommandState					paragraphLeading10State;
 		protected CommandState					paragraphLeading15State;
@@ -5555,6 +5562,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					paragraphLeadingMinusState;
 		protected CommandState					paragraphIndentPlusState;
 		protected CommandState					paragraphIndentMinusState;
+		protected CommandState					paragraphClearState;
 		protected CommandState					justifHLeftState;
 		protected CommandState					justifHCenterState;
 		protected CommandState					justifHRightState;
