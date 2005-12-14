@@ -150,6 +150,8 @@ namespace Epsitec.Common.Document
 				case "ParagraphLeading30":     this.ChangeParagraphLeading(3.0);    break;
 				case "ParagraphLeadingPlus":   this.IncrementParagraphLeading(1);   break;
 				case "ParagraphLeadingMinus":  this.IncrementParagraphLeading(-1);  break;
+				case "ParagraphIndentPlus":    this.IncrementParagraphIndent(1);    break;
+				case "ParagraphIndentMinus":   this.IncrementParagraphIndent(-1);   break;
 
 				case "JustifHLeft":    this.Justif(Text.Wrappers.JustificationMode.AlignLeft);         break;
 				case "JustifHCenter":  this.Justif(Text.Wrappers.JustificationMode.Center);            break;
@@ -284,6 +286,45 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.SuspendSynchronisations();
 			this.paragraphWrapper.Defined.Leading = leading;
 			this.paragraphWrapper.Defined.LeadingUnits = units;
+			this.paragraphWrapper.ResumeSynchronisations();
+		}
+
+		protected void IncrementParagraphIndent(int delta)
+		{
+			if ( !this.paragraphWrapper.IsAttached )  return;
+
+			int level = 0;
+			if ( this.paragraphWrapper.Active.IsIndentationLevelDefined )
+			{
+				level = this.paragraphWrapper.Active.IndentationLevel;
+			}
+			double marginFirst = this.paragraphWrapper.Active.LeftMarginFirst;
+			double marginBody  = this.paragraphWrapper.Active.LeftMarginBody;
+
+			double distance;
+			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+			{
+				distance = 100.0;  // 10.0mm
+			}
+			else
+			{
+				distance = 127.0;  // 0.5in
+			}
+
+			level += delta;
+			level = System.Math.Max(level, 0);
+
+			double diff = marginFirst-marginBody;
+			marginBody  = level*distance;
+			marginFirst = marginBody+diff;
+			marginBody  = System.Math.Max(marginBody,  0);
+			marginFirst = System.Math.Max(marginFirst, 0);
+
+			this.paragraphWrapper.SuspendSynchronisations();
+			this.paragraphWrapper.Defined.IndentationLevel = level;
+			this.paragraphWrapper.Defined.LeftMarginFirst = marginFirst;
+			this.paragraphWrapper.Defined.LeftMarginBody  = marginBody;
+			this.paragraphWrapper.Defined.MarginUnits = Common.Text.Properties.SizeUnits.Points;
 			this.paragraphWrapper.ResumeSynchronisations();
 		}
 

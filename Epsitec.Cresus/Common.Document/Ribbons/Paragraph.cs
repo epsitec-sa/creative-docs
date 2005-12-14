@@ -28,6 +28,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLeading30    = this.CreateIconButton("ParagraphLeading30",    Misc.Icon("ParagraphLeading30"),    Res.Strings.Action.Text.Paragraph.Leading30, true);
 			this.buttonLeadingMinus = this.CreateIconButton("ParagraphLeadingMinus", Misc.Icon("ParagraphLeadingMinus"), Res.Strings.TextPanel.Leading.Tooltip.LeadingMinus, false);
 			this.buttonLeadingPlus  = this.CreateIconButton("ParagraphLeadingPlus",  Misc.Icon("ParagraphLeadingPlus"),  Res.Strings.TextPanel.Leading.Tooltip.LeadingPlus,  false);
+			this.buttonIndentMinus  = this.CreateIconButton("ParagraphIndentMinus",  Misc.Icon("ParagraphIndentMinus"),  Res.Strings.Action.Text.Paragraph.IndentPlus, false);
+			this.buttonIndentPlus   = this.CreateIconButton("ParagraphIndentPlus",   Misc.Icon("ParagraphIndentPlus"),   Res.Strings.Action.Text.Paragraph.IndentPlus, false);
 
 			this.UpdateClientGeometry();
 		}
@@ -74,6 +76,10 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonJustifHJustif.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonJustifHAll.Bounds = rect;
+			rect.Offset(dx+5, 0);
+			this.buttonIndentMinus.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonIndentPlus.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Height = dy;
@@ -87,7 +93,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLeading20.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonLeading30.Bounds = rect;
-			rect.Offset(dx, 0);
+			rect.Offset(dx+5, 0);
 			this.buttonLeadingMinus.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonLeadingPlus.Bounds = rect;
@@ -106,5 +112,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonLeading30;
 		protected IconButton				buttonLeadingMinus;
 		protected IconButton				buttonLeadingPlus;
+		protected IconButton				buttonIndentMinus;
+		protected IconButton				buttonIndentPlus;
 	}
 }

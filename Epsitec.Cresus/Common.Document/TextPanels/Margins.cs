@@ -243,6 +243,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.Defined.ClearRightMarginFirst();
 			this.document.ParagraphWrapper.Defined.ClearRightMarginBody();
 			this.document.ParagraphWrapper.Defined.ClearMarginUnits();
+			this.document.ParagraphWrapper.Defined.ClearIndentationLevel();
 			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 

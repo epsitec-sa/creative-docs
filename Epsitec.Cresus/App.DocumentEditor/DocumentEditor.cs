@@ -2328,6 +2328,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ParagraphLeading30")]
 		[Command ("ParagraphLeadingPlus")]
 		[Command ("ParagraphLeadingMinus")]
+		[Command ("ParagraphIndentPlus")]
+		[Command ("ParagraphIndentMinus")]
 		[Command ("JustifHLeft")]
 		[Command ("JustifHCenter")]
 		[Command ("JustifHRight")]
@@ -3579,6 +3581,8 @@ namespace Epsitec.App.DocumentEditor
 			this.paragraphLeading30State = new CommandState("ParagraphLeading30", this.commandDispatcher);
 			this.paragraphLeadingPlusState = new CommandState("ParagraphLeadingPlus", this.commandDispatcher);
 			this.paragraphLeadingMinusState = new CommandState("ParagraphLeadingMinus", this.commandDispatcher);
+			this.paragraphIndentPlusState = new CommandState("ParagraphIndentPlus", this.commandDispatcher);
+			this.paragraphIndentMinusState = new CommandState("ParagraphIndentMinus", this.commandDispatcher);
 			this.justifHLeftState = new CommandState("JustifHLeft", this.commandDispatcher);
 			this.justifHCenterState = new CommandState("JustifHCenter", this.commandDispatcher);
 			this.justifHRightState = new CommandState("JustifHRight", this.commandDispatcher);
@@ -4217,6 +4221,8 @@ namespace Epsitec.App.DocumentEditor
 				this.paragraphLeading30State.Enable = false;
 				this.paragraphLeadingPlusState.Enable = false;
 				this.paragraphLeadingMinusState.Enable = false;
+				this.paragraphIndentPlusState.Enable = false;
+				this.paragraphIndentMinusState.Enable = false;
 				this.justifHLeftState.Enable = false;
 				this.justifHCenterState.Enable = false;
 				this.justifHRightState.Enable = false;
@@ -5547,6 +5553,8 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					paragraphLeading30State;
 		protected CommandState					paragraphLeadingPlusState;
 		protected CommandState					paragraphLeadingMinusState;
+		protected CommandState					paragraphIndentPlusState;
+		protected CommandState					paragraphIndentMinusState;
 		protected CommandState					justifHLeftState;
 		protected CommandState					justifHCenterState;
 		protected CommandState					justifHRightState;
