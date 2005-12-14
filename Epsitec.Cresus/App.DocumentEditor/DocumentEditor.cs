@@ -2319,6 +2319,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("FontUnderlined")]
 		[Command ("FontOverlined")]
 		[Command ("FontStrikeout")]
+		[Command ("FontSizePlus")]
+		[Command ("FontSizeMinus")]
 		[Command ("ParagraphLeading08")]
 		[Command ("ParagraphLeading10")]
 		[Command ("ParagraphLeading15")]
@@ -3568,6 +3570,8 @@ namespace Epsitec.App.DocumentEditor
 			this.fontUnderlinedState = new CommandState("FontUnderlined", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
 			this.fontOverlinedState = new CommandState("FontOverlined", this.commandDispatcher);
 			this.fontStrikeoutState = new CommandState("FontStrikeout", this.commandDispatcher);
+			this.fontSizePlusState = new CommandState("FontSizePlus", this.commandDispatcher);
+			this.fontSizeMinusState = new CommandState("FontSizeMinus", this.commandDispatcher);
 			this.paragraphLeading08State = new CommandState("ParagraphLeading08", this.commandDispatcher);
 			this.paragraphLeading10State = new CommandState("ParagraphLeading10", this.commandDispatcher);
 			this.paragraphLeading15State = new CommandState("ParagraphLeading15", this.commandDispatcher);
@@ -4204,6 +4208,8 @@ namespace Epsitec.App.DocumentEditor
 				this.fontUnderlinedState.Enable = false;
 				this.fontOverlinedState.Enable = false;
 				this.fontStrikeoutState.Enable = false;
+				this.fontSizePlusState.Enable = false;
+				this.fontSizeMinusState.Enable = false;
 				this.paragraphLeading08State.Enable = false;
 				this.paragraphLeading10State.Enable = false;
 				this.paragraphLeading15State.Enable = false;
@@ -5532,6 +5538,8 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					fontUnderlinedState;
 		protected CommandState					fontOverlinedState;
 		protected CommandState					fontStrikeoutState;
+		protected CommandState					fontSizePlusState;
+		protected CommandState					fontSizeMinusState;
 		protected CommandState					paragraphLeading08State;
 		protected CommandState					paragraphLeading10State;
 		protected CommandState					paragraphLeading15State;

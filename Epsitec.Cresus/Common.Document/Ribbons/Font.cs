@@ -15,11 +15,13 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.Text.Font.Main;
 
-			this.buttonBold       = this.CreateIconButton("FontBold",       Misc.Icon("FontBold"),       Res.Strings.Action.Text.Font.Bold,       true);
-			this.buttonItalic     = this.CreateIconButton("FontItalic",     Misc.Icon("FontItalic"),     Res.Strings.Action.Text.Font.Italic,     true);
-			this.buttonUnderlined = this.CreateIconButton("FontUnderlined", Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, true);
-			this.buttonOverlined  = this.CreateIconButton("FontOverlined",  Misc.Icon("FontOverlined"),  Res.Strings.Action.Text.Font.Overlined,  true);
-			this.buttonStrikeout  = this.CreateIconButton("FontStrikeout",  Misc.Icon("FontStrikeout"),  Res.Strings.Action.Text.Font.Strikeout,  true);
+			this.buttonFontSizeMinus = this.CreateIconButton("FontSizeMinus",  Misc.Icon("FontSizeMinus"),  Res.Strings.Action.Text.Font.SizeMinus,  false);
+			this.buttonFontSizePlus  = this.CreateIconButton("FontSizePlus",   Misc.Icon("FontSizePlus"),   Res.Strings.Action.Text.Font.SizePlus,   false);
+			this.buttonBold          = this.CreateIconButton("FontBold",       Misc.Icon("FontBold"),       Res.Strings.Action.Text.Font.Bold,       true);
+			this.buttonItalic        = this.CreateIconButton("FontItalic",     Misc.Icon("FontItalic"),     Res.Strings.Action.Text.Font.Italic,     true);
+			this.buttonUnderlined    = this.CreateIconButton("FontUnderlined", Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, true);
+			this.buttonOverlined     = this.CreateIconButton("FontOverlined",  Misc.Icon("FontOverlined"),  Res.Strings.Action.Text.Font.Overlined,  true);
+			this.buttonStrikeout     = this.CreateIconButton("FontStrikeout",  Misc.Icon("FontStrikeout"),  Res.Strings.Action.Text.Font.Strikeout,  true);
 
 			this.buttonStyle = new Button(this);
 			this.buttonStyle.Text = "S";
@@ -65,13 +67,21 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonBold.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonItalic.Bounds = rect;
+			rect.Offset(dx+5, 0);
+			this.buttonFontSizeMinus.Bounds = rect;
 			rect.Offset(dx, 0);
+			this.buttonFontSizePlus.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Height = dy;
+			rect.Width = dx;
 			this.buttonUnderlined.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonOverlined.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonStrikeout.Bounds = rect;
 			rect.Offset(dx+5, 0);
+			this.buttonStrikeout.Bounds = rect;
+
+			rect.Offset(dx+100, 0);
 			this.buttonStyle.Bounds = rect;
 		}
 
@@ -113,6 +123,8 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		protected IconButton				buttonFontSizeMinus;
+		protected IconButton				buttonFontSizePlus;
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;

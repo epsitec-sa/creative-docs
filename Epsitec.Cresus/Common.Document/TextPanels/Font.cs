@@ -269,31 +269,6 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		protected void ChangeFontSize(double add, double percents)
-		{
-			double size = this.document.TextWrapper.Defined.FontSize;
-			Text.Properties.SizeUnits units = this.document.TextWrapper.Defined.Units;
-			if ( double.IsNaN(size) )
-			{
-				size = this.document.TextWrapper.Active.FontSize;
-				units = this.document.TextWrapper.Active.Units;
-			}
-
-			if ( units == Common.Text.Properties.SizeUnits.Percent )
-			{
-				size *= percents/100;
-			}
-			else
-			{
-				size += add*Modifier.fontSizeScale;
-			}
-
-			this.document.TextWrapper.SuspendSynchronisations();
-			this.document.TextWrapper.Defined.FontSize = size;
-			this.document.TextWrapper.Defined.Units = units;
-			this.document.TextWrapper.ResumeSynchronisations();
-		}
-
 
 		// Le wrapper associé a changé.
 		protected void HandleWrapperChanged(object sender)
@@ -616,14 +591,14 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
-			this.ChangeFontSize(-1, 80);
+			this.document.Wrappers.ChangeFontSize(-1, 80);
 		}
 
 		private void HandleButtonSizePlusClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
-			this.ChangeFontSize(1, 125);
+			this.document.Wrappers.ChangeFontSize(1, 125);
 		}
 
 		private void HandleGlueValueChanged(object sender)

@@ -139,6 +139,8 @@ namespace Epsitec.Common.Document
 				case "FontUnderlined":  this.ChangeUnderlined();  break;
 				case "FontOverlined":   this.ChangeOverlined();   break;
 				case "FontStrikeout":   this.ChangeStrikeout();   break;
+				case "FontSizePlus":    this.ChangeFontSize(1, 125);  break;
+				case "FontSizeMinus":   this.ChangeFontSize(-1, 80);  break;
 
 				case "ParagraphLeading08":     this.ChangeParagraphLeading(0.8);    break;
 				case "ParagraphLeading10":     this.ChangeParagraphLeading(1.0);    break;
@@ -217,6 +219,32 @@ namespace Epsitec.Common.Document
 
 			this.textWrapper.ResumeSynchronisations();
 		}
+
+		public void ChangeFontSize(double add, double percents)
+		{
+			double size = this.textWrapper.Defined.FontSize;
+			Text.Properties.SizeUnits units = this.textWrapper.Defined.Units;
+			if ( double.IsNaN(size) )
+			{
+				size = this.textWrapper.Active.FontSize;
+				units = this.textWrapper.Active.Units;
+			}
+
+			if ( units == Common.Text.Properties.SizeUnits.Percent )
+			{
+				size *= percents/100;
+			}
+			else
+			{
+				size += add*Modifier.fontSizeScale;
+			}
+
+			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.Defined.FontSize = size;
+			this.textWrapper.Defined.Units = units;
+			this.textWrapper.ResumeSynchronisations();
+		}
+
 
 		protected void ChangeParagraphLeading(double value)
 		{
