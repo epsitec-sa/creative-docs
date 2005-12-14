@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(dx+20, 0);
 			this.buttonClear.Bounds = rect;
 
-			rect.Offset(dx+60, 0);
+			rect.Offset(dx+50, 0);
 			this.buttonStyle.Bounds = rect;
 		}
 

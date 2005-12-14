@@ -546,6 +546,7 @@ namespace Epsitec.Common.Document.Widgets
 					Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
 					double tabPos = this.ScreenToDocument(pos.X);
 					tabPos = tabPos - bbox.Left;
+					tabPos = this.SnapGrid(tabPos);
 					handle = this.editObject.NewTextTab(tabPos, this.tabToCreate);
 					this.draggingOffset = 0.0;
 					this.draggingFirstMove = false;

@@ -93,6 +93,10 @@ namespace Epsitec.Common.Document
 			this.CommandActiveState("FontUnderlined", enabled, underlined);
 			this.CommandActiveState("FontOverlined",  enabled, overlined );
 			this.CommandActiveState("FontStrikeout",  enabled, strikeout );
+
+			this.CommandActiveState("FontSizePlus",  enabled);
+			this.CommandActiveState("FontSizeMinus", enabled);
+			this.CommandActiveState("FontClear",     enabled);
 		}
 
 		// Le wrapper des paragraphes a changé.
@@ -126,6 +130,10 @@ namespace Epsitec.Common.Document
 			this.CommandActiveState("JustifHRight",  enabled, (justif == Text.Wrappers.JustificationMode.AlignRight));
 			this.CommandActiveState("JustifHJustif", enabled, (justif == Text.Wrappers.JustificationMode.JustifyAlignLeft));
 			this.CommandActiveState("JustifHAll",    enabled, (justif == Text.Wrappers.JustificationMode.JustifyJustfy));
+
+			this.CommandActiveState("ParagraphIndentPlus",  enabled);
+			this.CommandActiveState("ParagraphIndentMinus", enabled);
+			this.CommandActiveState("ParagraphClear",       enabled);
 		}
 
 
@@ -308,6 +316,7 @@ namespace Epsitec.Common.Document
 			}
 			double marginFirst = this.paragraphWrapper.Active.LeftMarginFirst;
 			double marginBody  = this.paragraphWrapper.Active.LeftMarginBody;
+			double marginBase  = this.paragraphWrapper.GetUnderlyingMarginsState().LeftMarginBody;
 
 			double distance;
 			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
@@ -323,7 +332,7 @@ namespace Epsitec.Common.Document
 			level = System.Math.Max(level, 0);
 
 			double diff = marginFirst-marginBody;
-			marginBody  = level*distance;
+			marginBody  = marginBase+level*distance;
 			marginFirst = marginBody+diff;
 			marginBody  = System.Math.Max(marginBody,  0);
 			marginFirst = System.Math.Max(marginFirst, 0);
