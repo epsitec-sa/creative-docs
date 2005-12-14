@@ -661,17 +661,23 @@ restart:
 					this.line_y2 = oy;
 					
 					if ((paragraph_line_count == 0) &&
-						(this.frame_y != 0) &&
-						(! continuation))
+						(this.frame_y != 0))
 					{
 						//	A la première ligne du paragraphe, on ajoute l'espace "avant"
 						//	tel que défini par la propriété de "leading". Mais on n'ajoute
 						//	cet espace que si on n'est pas en sommet de frame :
 						
-						oy -= this.line_space_before;
-						oy -= this.line_skip_before;
-						
-						this.line_y2 -= this.line_skip_before;
+						if (! continuation)
+						{
+							oy -= this.line_space_before;
+							oy -= this.line_skip_before;
+							
+							this.line_y2 -= this.line_skip_before;
+						}
+						else
+						{
+							this.line_y2 += this.line_skip_before;
+						}
 					}
 					
 					this.frame_y_line = oy;
