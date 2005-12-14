@@ -702,6 +702,50 @@ namespace Epsitec.Common.Text
 			return (string[]) list.ToArray (typeof (string));
 		}
 		
+		public string FindInsertionTabTag()
+		{
+			//	Trouve le tag de tabulation à utiliser si on presse TAB à
+			//	l'endroit actuel dans le texte.
+			
+			double x;
+			
+			this.GetCursorGeometry (out x);
+			
+			TabList  list = this.TextContext.TabList;
+			string[] tags = this.GetAllTabTags ();
+			
+			double best_dx  = double.PositiveInfinity;
+			string best_tag = null;
+again:			
+			for (int i = 0; i < tags.Length; i++)
+			{
+				double pos = list.GetTabPosition (new Properties.TabProperty (tags[i]));
+				
+				if (pos > x)
+				{
+					double dx = pos - x;
+					
+					if (dx < best_dx)
+					{
+						best_dx  = dx;
+						best_tag = tags[i];
+					}
+				}
+			}
+			
+			if ((best_tag == null) &&
+				(x > 0))
+			{
+				//	Pas trouvé de tag après la position courante. Cherche encore
+				//	à partir du début de la ligne !
+				
+				x = 0;
+				goto again;
+			}
+			
+			return best_tag;
+		}
+
 		
 		public bool RenameTab(string old_tag, string new_tag)
 		{
@@ -1530,6 +1574,15 @@ namespace Epsitec.Common.Text
 			
 			this.ClearCurrentStylesAndProperties ();
 			this.NotifyCursorMoved ();
+		}
+		
+		
+		public bool GetCursorGeometry(out double x)
+		{
+			ITextFrame frame;
+			double y, ascender, descender, angle;
+			
+			return this.GetCursorGeometry (out frame, out x, out y, out ascender, out descender, out angle);
 		}
 		
 		public bool GetCursorGeometry(out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)

@@ -768,7 +768,7 @@ restart_paragraph_layout:
 						
 						double tab_x;
 						double tab_dx;
-						bool   tab_at_line_start = (layout.TextOffset == line_start_offset+1);
+						bool   tab_at_line_start = (!continuation) && (layout.TextOffset == line_start_offset+1);
 						bool   tab_indents;
 						
 						tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, tab_at_line_start, out tab_x, out tab_dx, out tab_indents);
@@ -1333,7 +1333,7 @@ restart_paragraph_layout:
 				d = 1.0;
 			}
 			
-			double x1 = start_of_line ? layout.LineOriginX : layout.LineCurrentX;
+			double x1 = start_of_line ? layout.LineOriginX : (layout.LineCurrentX + 0.001);
 			double x2 = tabs.GetTabPositionInPoints (tab_property);
 			double x3 = layout.LineWidth - layout.RightMargin;
 			

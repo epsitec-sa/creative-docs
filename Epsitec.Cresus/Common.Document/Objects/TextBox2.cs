@@ -471,30 +471,11 @@ namespace Epsitec.Common.Document.Objects
 		// Gestion de la touche tab.
 		protected bool ProcessTabKey()
 		{
-			Text.ITextFrame frame;
-			double cx, cy, ascender, descender, angle;
-			this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
+			string tag = this.textFlow.TextNavigator.FindInsertionTabTag();
+			
+			if ( tag == null )  return false;
 
-			double bestDistance = 1000000;
-			Text.Properties.TabProperty bestTab = null;
-			Text.TabList list = this.document.TextContext.TabList;
-			string[] tags = this.textFlow.TextNavigator.GetAllTabTags();
-			for ( int i=0 ; i<tags.Length ; i++ )
-			{
-				Text.Properties.TabProperty tab = list.GetTabProperty(tags[i]);
-				double pos = list.GetTabPosition(tab);
-				if ( pos > cx )
-				{
-					if ( bestDistance > pos-cx )
-					{
-						bestDistance = pos-cx;
-						bestTab = tab;
-					}
-				}
-			}
-			if ( bestTab == null )  return false;
-
-			this.metaNavigator.Insert(bestTab);
+			this.metaNavigator.Insert(new Text.Properties.TabProperty(tag));
 			return true;
 		}
 

@@ -568,6 +568,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.editor.CurrentDocument.Modifier.EditInsertGlyph(code, glyph, fontFace, fontStyle);
 			}
+			
+			this.editor.Window.MakeFocused();
 		}
 
 
