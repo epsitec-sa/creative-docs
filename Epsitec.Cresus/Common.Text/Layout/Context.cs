@@ -1064,7 +1064,13 @@ restart:
 				StretchProfile glue_profile = new StretchProfile ();
 				
 				this.text_glue = glue_width / glue_count;
-				int fill_count = this.text_profile.TotalCount;	// end - this.text_offset
+				
+				//	Le nombre de caractères à analyser correspond en principe à la
+				//	longueur de la ligne (length), mais si la ligne se termine par
+				//	une marque de fin de ligne, c'est l'info de text_profile qu'il
+				//	faut utiliser.
+				
+				int fill_count = System.Math.Min (length, this.text_profile.TotalCount);
 				
 				this.layout_engine.FillProfile (this, fill_count, glue_profile);
 				

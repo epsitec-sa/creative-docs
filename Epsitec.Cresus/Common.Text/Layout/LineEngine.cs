@@ -600,6 +600,7 @@ advance_next:
 			Unicode.BreakAnalyzer.GetStretchClass (text, offset, length, attributes);
 			
 			bool special_glyphs = BaseEngine.ContainsSpecialGlyphs (text, offset, length);
+			int  extra_glyphs   = 0;
 			
 			System.Diagnostics.Debug.Assert ((special_glyphs == false) || (length == 1));
 			
@@ -613,6 +614,7 @@ advance_next:
 				
 				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.GetHyphen ());
 				int     end  = temp.Length - 1;
+				extra_glyphs = 1;
 				
 				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (temp[end]);
 				
@@ -701,7 +703,7 @@ advance_next:
 				
 				if (context.ShowControlCharacters)
 				{
-					skip_glue_at -= offset + length - profile.TotalCount;
+					skip_glue_at -= offset + length + extra_glyphs - profile.TotalCount;
 				}
 				else
 				{
