@@ -159,6 +159,8 @@
 	<data name="Dialog.Print.Button.Cancel">Fermer</data>
 	<data name="Dialog.Print.Tooltip.Cancel">Fermer sans imprimmer</data>
 	
+	<data name="Dialog.Splash.WorkInProgress">Mise en cache de {0}...</data>
+	
 	<data name="Dialog.Settings.Title">Réglages...</data>
 	<data name="Dialog.Settings.RadioGlobal">Global</data>
 	<data name="Dialog.Settings.RadioDocument">Document</data>

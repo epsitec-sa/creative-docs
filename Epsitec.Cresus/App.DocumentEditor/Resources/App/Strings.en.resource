@@ -189,6 +189,8 @@
 	<data name="Dialog.Settings.TabPage.Move">Movements</data>
 	<data name="Dialog.Settings.TabPage.Misc">Misc.</data>
 	
+	<data name="Dialog.Splash.WorkInProgress">@@Mise en cache de {0}...</data>
+	
 	<data name="Dialog.Update.Title">Update...</data>
 	<data name="Dialog.Update.Version">Version &lt;b&gt;{0}&lt;/b&gt;    Language: English</data>
 	<data name="Dialog.Update.Limit">Free of charge updates until &lt;b&gt;{0}&lt;/b&gt;</data>

@@ -1,6 +1,7 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.OpenType;
 using Epsitec.Common.Document;
 
 namespace Epsitec.App.DocumentEditor.Dialogs
@@ -38,6 +39,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				StaticText image = About.CreateWidgetSplash(this.window.Root, this.editor.InstallType);
 				image.Clicked += new MessageEventHandler(this.HandleSplashImageClicked);
 
+				this.workInProgress = new StaticText(this.window.Root);
+				this.workInProgress.Bounds = new Rectangle(22, 50, 350, 20);
+
+				Common.OpenType.FontIdentityCallback callback = new Common.OpenType.FontIdentityCallback(this.UpdateWorkInProgress);
+				Common.Text.TextContext.InitializeFontCollection(callback);
+
 				this.splashTimer = new Timer();
 				this.splashTimer.TimeElapsed += new EventHandler(this.HandleSplashTimerTimeElapsed);
 				this.splashTimer.Delay = 10.0;
@@ -49,6 +56,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.Show();
 		}
 
+
+		private void UpdateWorkInProgress(Common.OpenType.FontIdentity fid)
+		{
+			string text = string.Format(Res.Strings.Dialog.Splash.WorkInProgress, fid.InvariantFaceName);
+			this.workInProgress.Text = text;
+			this.workInProgress.Invalidate();  // TODO: pas sûr si c'est nécessaire ?
+		}
 
 		private void HandleSplashPaintForeground(object sender, PaintEventArgs e)
 		{
@@ -107,6 +121,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		protected StaticText				workInProgress;
 		protected Timer						splashTimer;
 	}
 }
