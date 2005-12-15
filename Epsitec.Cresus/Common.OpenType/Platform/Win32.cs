@@ -331,14 +331,13 @@ namespace Epsitec.Common.OpenType.Platform
 				if ((name.Length > 0) &&
 					(name[0] != '@') &&
 					(log_font_ex.lfOutPrecision == 3) &&
-					(log_font_ex.elfScript != "OEM/DOS") &&
-					(font_type == NewTextMetricEx.FontType.TrueType))
+					(log_font_ex.elfScript != "OEM/DOS"))
 				{
-					//	Pour le moment, ne conserve que les fontes OpenType purement
-					//	TrueType (on ne sait pas que faire des fontes PostScript).
+					//	On conserve toutes les fontes TrueType et OpenType...
 					
-//-					if (((NewTextMetricEx.Flags.TrueType & flags) != 0) ||
-//-						((NewTextMetricEx.Flags.PostScript & flags) != 0))
+					if (((NewTextMetricEx.Flags.TrueType_OpenType & flags) != 0) ||
+						((NewTextMetricEx.Flags.PostScript_OpenType & flags) != 0) ||
+						(font_type == NewTextMetricEx.FontType.TrueType))
 					{
 						if (this.names.Contains (name) == false)
 						{
