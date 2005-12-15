@@ -437,6 +437,106 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public void SetElements(PathElement[] elements, Point[] points)
+		{
+			System.Diagnostics.Debug.Assert (elements.Length == points.Length);
+			
+			int n = elements.Length;
+			
+			if (n == 0)
+			{
+				this.is_empty = true;
+			}
+			else
+			{
+				this.Clear ();
+				
+				for (int i = 0; i < n; i++)
+				{
+					switch (elements[i] & PathElement.MaskCommand)
+					{
+						case PathElement.MoveTo:
+							this.MoveTo (points[i]);
+							break;
+						case PathElement.LineTo:
+							this.LineTo (points[i]);
+							break;
+						case PathElement.Curve3:
+							this.CurveTo (points[i], points[i+1]);
+							i += 1;
+							break;
+						case PathElement.Curve4:
+							this.CurveTo (points[i], points[i+1], points[i+2]);
+							i += 2;
+							break;
+					}
+					
+					if ((elements[i] & PathElement.FlagClose) != 0)
+					{
+						this.Close ();
+					}
+				}
+			}
+		}
+		
+		
+		public byte[] GetBlobOfElements()
+		{
+			PathElement[] elements;
+			Point[]       points;
+			double[]      values;
+			
+			this.GetElements (out elements, out points);
+			
+			int n = elements.Length;
+			
+			values = new double[2*n];
+			
+			System.Diagnostics.Debug.Assert (System.Buffer.ByteLength (values) == 16*n);
+			
+			byte[] blob = new byte[2+n+16*n];
+			
+			blob[0] = (byte)(n >> 8);
+			blob[1] = (byte)(n & 0xff);
+			
+			if (n > 0)
+			{
+				for (int i = 0; i < n; i++)
+				{
+					blob[2+i] = (byte) elements[i];
+					values[2*i+0] = points[i].X;
+					values[2*i+1] = points[i].Y;
+				}
+				
+				System.Buffer.BlockCopy (values, 0, blob, 2+n, 16*n);
+			}
+			
+			return blob;
+		}
+		
+		public void SetBlobOfElements(byte[] blob)
+		{
+			int n = (blob[0] << 8) | (blob[1]);
+			
+			PathElement[] elements = new PathElement[n];
+			double[]      values   = new double[2*n];
+			Point[]       points   = new Point[n];
+			
+			if (n > 0)
+			{
+				System.Buffer.BlockCopy (blob, 2+n, values, 0, 16*n);
+			}
+			
+			for (int i = 0; i < n; i++)
+			{
+				elements[i] = (PathElement) blob[2+i];
+				points[i].X = values[2*i+0];
+				points[i].Y = values[2*i+1];
+			}
+			
+			this.SetElements (elements, points);
+		}
+		
 
 		public override string ToString()
 		{
@@ -897,7 +997,7 @@ namespace Epsitec.Common.Drawing
 	}
 	
 	[System.Flags]
-	public enum PathElement
+	public enum PathElement : byte
 	{
 		Stop		= 0,
 		MoveTo		= 1,

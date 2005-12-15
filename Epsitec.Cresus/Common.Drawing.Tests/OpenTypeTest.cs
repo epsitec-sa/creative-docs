@@ -167,7 +167,10 @@ namespace Epsitec.Common.OpenType
 			
 			foreach (FontIdentity fid in collection)
 			{
-				count_1++;
+				if (fid != null)
+				{
+					count_1++;
+				}
 			}
 			
 			System.Diagnostics.Debug.WriteLine ("OpenType: Initialize");
@@ -176,7 +179,10 @@ namespace Epsitec.Common.OpenType
 			
 			foreach (FontIdentity fid in collection)
 			{
-				count_2++;
+				if (fid != null)
+				{
+					count_2++;
+				}
 			}
 			
 			System.Console.WriteLine ("In cache: {0}, total: {1}", count_1, count_2);

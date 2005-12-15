@@ -142,6 +142,45 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (rp, rf);
 		}
 		
+		[Test] public void CheckGetElementsSetElements()
+		{
+			Font font = Font.GetFont ("Times New Roman", "Regular");
+			Path path = new Path ();
+			
+			int glyph = font.GetGlyphIndex ('a');
+			
+			path.Append (font, glyph, 0, 0, 100.0);
+			
+			Path copy = new Path ();
+			
+			PathElement[] elements;
+			Point[]       points;
+			
+			path.GetElements (out elements, out points);
+			copy.SetElements (elements, points);
+			
+			Assert.AreEqual (path.ToString (), copy.ToString ());
+		}
+		
+		[Test] public void CheckGetBlobOfElementsSetBlobOfElements()
+		{
+			Font font = Font.GetFont ("Times New Roman", "Regular");
+			Path path = new Path ();
+			
+			int glyph = font.GetGlyphIndex ('a');
+			
+			path.Append (font, glyph, 0, 0, 100.0);
+			
+			Path   copy = new Path ();
+			byte[] blob = path.GetBlobOfElements ();
+			
+			System.Console.Out.WriteLine ("Blob size: {0}", blob.Length);
+			
+			copy.SetBlobOfElements (blob);
+			
+			Assert.AreEqual (path.ToString (), copy.ToString ());
+		}
+		
 		[Test] public void CheckGlyphPathToStringTimes()
 		{
 			Font font = Font.GetFont ("Times New Roman", "Regular");

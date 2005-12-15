@@ -397,15 +397,29 @@ namespace Epsitec.Common.Drawing
 			
 			y -= size;
 			
-			
 			for (int i = 4; i < 64; i += 4)
 			{
-				e.Graphics.Rasterizer.AddGlyph (font, i+0, x + 0, y, size);
+				Path path = new Path ();
+				Path copy = new Path ();
+				
+				path.Append (font, i, x, y, size);
+				
+				PathElement[] elements;
+				Point[]       points;
+			
+				path.GetElements (out elements, out points);
+				copy.SetElements (elements, points);
+				
+				e.Graphics.Rasterizer.AddSurface (copy);
+//				e.Graphics.Rasterizer.AddGlyph (font, i+0, x + 0, y, size);
 				e.Graphics.Rasterizer.AddGlyph (font, i+1, x + 64, y, size);
 				e.Graphics.Rasterizer.AddGlyph (font, i+2, x + 128, y, size);
 				e.Graphics.Rasterizer.AddGlyph (font, i+3, x + 192, y, size);
 				
 				y -= size;
+				
+				path.Dispose ();
+				copy.Dispose ();
 			}
 			
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
