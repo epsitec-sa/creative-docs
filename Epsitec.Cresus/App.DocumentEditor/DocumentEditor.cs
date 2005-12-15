@@ -3405,6 +3405,8 @@ namespace Epsitec.App.DocumentEditor
 		// Initialise toutes les commandes.
 		protected void InitCommands()
 		{
+			this.MakeIconList();
+
 			this.toolSelectState = this.CreateCommandState("ToolSelect", "Select", "ToolSelect", KeyCode.AlphaS);
 			this.toolGlobalState = this.CreateCommandState("ToolGlobal", "Global", "ToolGlobal", KeyCode.AlphaG);
 			this.toolShaperState = this.CreateCommandState("ToolShaper", "Shaper", "ToolShaper", KeyCode.AlphaA);
@@ -3430,9 +3432,9 @@ namespace Epsitec.App.DocumentEditor
 			this.toolDimensionState = this.CreateCommandState("ObjectDimension", "ObjectDimension", "ToolDimension");
 
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierCtrl|KeyCode.AlphaN);
-			this.openState = this.CreateCommandState("Open", Misc.Icon2("Open"), "Open", KeyCode.ModifierCtrl|KeyCode.AlphaO);
+			this.openState = this.CreateCommandState("Open", KeyCode.ModifierCtrl|KeyCode.AlphaO);
 			this.openModelState = this.CreateCommandState("OpenModel");
-			this.saveState = this.CreateCommandState("Save", Misc.Icon2("Save"), "Save", KeyCode.ModifierCtrl|KeyCode.AlphaS);
+			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierCtrl|KeyCode.AlphaS);
 			this.saveAsState = this.CreateCommandState("SaveAs");
 			this.saveModelState = this.CreateCommandState("SaveModel");
 			this.closeState = this.CreateCommandState("Close", null, "Close");
@@ -3440,15 +3442,15 @@ namespace Epsitec.App.DocumentEditor
 			this.forceSaveAllState = this.CreateCommandState("ForceSaveAll");
 			this.nextDocState = this.CreateCommandState("NextDocument", KeyCode.ModifierCtrl|KeyCode.FuncF6);
 			this.prevDocState = this.CreateCommandState("PrevDocument", KeyCode.ModifierCtrl|KeyCode.ModifierShift|KeyCode.FuncF6);
-			this.printState = this.CreateCommandState("Print", Misc.Icon2("Print"), "Print", KeyCode.ModifierCtrl|KeyCode.AlphaP);
+			this.printState = this.CreateCommandState("Print", KeyCode.ModifierCtrl|KeyCode.AlphaP);
 			this.exportState = this.CreateCommandState("Export");
 			this.glyphsState = this.CreateCommandState("Glyphs");
-			this.deleteState = this.CreateCommandState("Delete", Misc.Icon2("Delete"), "Delete", KeyCode.Delete);
-			this.duplicateState = this.CreateCommandState("Duplicate", Misc.Icon2("Duplicate"), "Duplicate", KeyCode.ModifierCtrl|KeyCode.AlphaD);
+			this.deleteState = this.CreateCommandState("Delete", KeyCode.Delete);
+			this.duplicateState = this.CreateCommandState("Duplicate", KeyCode.ModifierCtrl|KeyCode.AlphaD);
 
 			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierCtrl|KeyCode.AlphaX);
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierCtrl|KeyCode.AlphaC);
-			this.pasteState = this.CreateCommandState("Paste", Misc.Icon2("Paste"), "Paste", KeyCode.ModifierCtrl|KeyCode.AlphaV);
+			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierCtrl|KeyCode.AlphaV);
 			
 			this.fontBoldState = this.CreateCommandState("FontBold", true, KeyCode.ModifierCtrl|KeyCode.AlphaB);
 			this.fontItalicState = this.CreateCommandState("FontItalic", true, KeyCode.ModifierCtrl|KeyCode.AlphaI);
@@ -3478,8 +3480,8 @@ namespace Epsitec.App.DocumentEditor
 			
 			this.orderUpOneState = this.CreateCommandState("OrderUpOne", KeyCode.ModifierCtrl|KeyCode.PageUp);
 			this.orderDownOneState = this.CreateCommandState("OrderDownOne", KeyCode.ModifierCtrl|KeyCode.PageDown);
-			this.orderUpAllState = this.CreateCommandState("OrderUpAll", Misc.Icon2("OrderUpAll"), "OrderUpAll", KeyCode.ModifierShift|KeyCode.PageUp);
-			this.orderDownAllState = this.CreateCommandState("OrderDownAll", Misc.Icon2("OrderDownAll"), "OrderDownAll", KeyCode.ModifierShift|KeyCode.PageDown);
+			this.orderUpAllState = this.CreateCommandState("OrderUpAll", KeyCode.ModifierShift|KeyCode.PageUp);
+			this.orderDownAllState = this.CreateCommandState("OrderDownAll", KeyCode.ModifierShift|KeyCode.PageDown);
 			
 			this.moveLeftFreeState = this.CreateCommandState("MoveLeftFree", "MoveHi", "MoveLeft");
 			this.moveRightFreeState = this.CreateCommandState("MoveRightFree", "MoveH", "MoveRight");
@@ -3532,8 +3534,8 @@ namespace Epsitec.App.DocumentEditor
 			this.extractState = this.CreateCommandState("Extract");
 			this.groupState = this.CreateCommandState("Group");
 			this.ungroupState = this.CreateCommandState("Ungroup");
-			this.insideState = this.CreateCommandState("Inside", Misc.Icon2("Inside"), "Inside");
-			this.outsideState = this.CreateCommandState("Outside", Misc.Icon2("Outside"), "Outside");
+			this.insideState = this.CreateCommandState("Inside");
+			this.outsideState = this.CreateCommandState("Outside");
 			this.combineState = this.CreateCommandState("Combine");
 			this.uncombineState = this.CreateCommandState("Uncombine");
 			this.toBezierState = this.CreateCommandState("ToBezier");
@@ -3559,13 +3561,13 @@ namespace Epsitec.App.DocumentEditor
 			this.booleanFrontMinusState = this.CreateCommandState("BooleanFrontMinus");
 			this.booleanBackMinusState = this.CreateCommandState("BooleanBackMinus");
 			
-			this.undoState = this.CreateCommandState("Undo", Misc.Icon2("Undo"), "Undo", KeyCode.ModifierCtrl|KeyCode.AlphaZ);
-			this.redoState = this.CreateCommandState("Redo", Misc.Icon2("Redo"), "Redo", KeyCode.ModifierCtrl|KeyCode.AlphaY);
+			this.undoState = this.CreateCommandState("Undo", KeyCode.ModifierCtrl|KeyCode.AlphaZ);
+			this.redoState = this.CreateCommandState("Redo", KeyCode.ModifierCtrl|KeyCode.AlphaY);
 			this.undoRedoListState = this.CreateCommandState("UndoRedoList");
 			
-			this.deselectAllState = this.CreateCommandState("DeselectAll", Misc.Icon1("DeselectAll"), "DeselectAll", KeyCode.Escape);
-			this.selectAllState = this.CreateCommandState("SelectAll", Misc.Icon1("SelectAll"), "SelectAll", KeyCode.ModifierCtrl|KeyCode.AlphaA);
-			this.selectInvertState = this.CreateCommandState("SelectInvert", Misc.Icon1("SelectInvert"), "SelectInvert");
+			this.deselectAllState = this.CreateCommandState("DeselectAll", KeyCode.Escape);
+			this.selectAllState = this.CreateCommandState("SelectAll", KeyCode.ModifierCtrl|KeyCode.AlphaA);
+			this.selectInvertState = this.CreateCommandState("SelectInvert");
 			this.selectorAutoState = this.CreateCommandState("SelectorAuto");
 			this.selectorIndividualState = this.CreateCommandState("SelectorIndividual");
 			this.selectorScalerState = this.CreateCommandState("SelectorScaler");
@@ -3577,17 +3579,17 @@ namespace Epsitec.App.DocumentEditor
 			this.selectorAdaptText = this.CreateCommandState("SelectorAdaptText");
 			
 			this.hideHalfState = this.CreateCommandState("HideHalf", true);
-			this.hideSelState = this.CreateCommandState("HideSel", Misc.Icon1("HideSel"), "HideSel");
-			this.hideRestState = this.CreateCommandState("HideRest", Misc.Icon1("HideRest"), "HideRest");
-			this.hideCancelState = this.CreateCommandState("HideCancel", Misc.Icon1("HideCancel"), "HideCancel");
+			this.hideSelState = this.CreateCommandState("HideSel");
+			this.hideRestState = this.CreateCommandState("HideRest");
+			this.hideCancelState = this.CreateCommandState("HideCancel");
 			
-			this.zoomMinState = this.CreateCommandState("ZoomMin", Misc.Icon1("ZoomMin"), "ZoomMin", true);
-			this.zoomPageState = this.CreateCommandState("ZoomPage", Misc.Icon1("ZoomPage"), "ZoomPage", true, KeyCode.ModifierCtrl|KeyCode.Digit0);
-			this.zoomPageWidthState = this.CreateCommandState("ZoomPageWidth", Misc.Icon1("ZoomPageWidth"), "ZoomPageWidth", true);
-			this.zoomDefaultState = this.CreateCommandState("ZoomDefault", Misc.Icon1("ZoomDefault"), "ZoomDefault", true);
-			this.zoomSelState = this.CreateCommandState("ZoomSel", Misc.Icon1("ZoomSel"), "ZoomSel");
-			this.zoomSelWidthState = this.CreateCommandState("ZoomSelWidth", Misc.Icon1("ZoomSelWidth"), "ZoomSelWidth");
-			this.zoomPrevState = this.CreateCommandState("ZoomPrev", Misc.Icon1("ZoomPrev"), "ZoomPrev");
+			this.zoomMinState = this.CreateCommandState("ZoomMin", true);
+			this.zoomPageState = this.CreateCommandState("ZoomPage", true, KeyCode.ModifierCtrl|KeyCode.Digit0);
+			this.zoomPageWidthState = this.CreateCommandState("ZoomPageWidth", true);
+			this.zoomDefaultState = this.CreateCommandState("ZoomDefault", true);
+			this.zoomSelState = this.CreateCommandState("ZoomSel");
+			this.zoomSelWidthState = this.CreateCommandState("ZoomSelWidth");
+			this.zoomPrevState = this.CreateCommandState("ZoomPrev");
 			this.zoomSubState = this.CreateCommandState("ZoomSub", KeyCode.Substract);
 			this.zoomAddState = this.CreateCommandState("ZoomAdd", KeyCode.Add);
 			
@@ -3667,7 +3669,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
-			cs.IconName    = command;
+			cs.IconName    = this.ExtendIcon(command);
 			cs.LongCaption = DocumentEditor.GetRes("Action."+command);
 
 			return cs;
@@ -3678,7 +3680,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
-			cs.IconName    = command;
+			cs.IconName    = this.ExtendIcon(command);
 			cs.LongCaption = DocumentEditor.GetRes("Action."+command);
 			cs.Statefull   = statefull;
 
@@ -3690,7 +3692,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
-			cs.IconName    = icon;
+			cs.IconName    = this.ExtendIcon(icon);
 			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip);
 
 			return cs;
@@ -3701,11 +3703,51 @@ namespace Epsitec.App.DocumentEditor
 		{
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
-			cs.IconName    = icon;
+			cs.IconName    = this.ExtendIcon(icon);
 			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip);
 			cs.Statefull   = statefull;
 
 			return cs;
+		}
+
+		// Fouille s'il existe des icônes terminée par "*1.icon" ou "*2.icon" pour donner un nom
+		// mixte, du genre "0.Delete;2.Delete2".
+		protected string ExtendIcon(string icon)
+		{
+			System.Diagnostics.Debug.Assert(this.iconList != null);
+			if ( icon == null )  return null;
+			if ( icon.IndexOf(";") != -1 )  return icon;  // déjà un nom mixte ?
+
+			bool size1 = this.iconList.ContainsKey(icon+"1");
+			bool size2 = this.iconList.ContainsKey(icon+"2");
+
+			if (  size1 && !size2 )  return Misc.Icon1(icon);
+			if ( !size1 &&  size2 )  return Misc.Icon2(icon);
+			if (  size1 &&  size2 )  return Misc.Icon12(icon);
+
+			return icon;
+		}
+
+		// Construit la liste de toutes les icônes existantes.
+		protected void MakeIconList()
+		{
+			System.Text.RegularExpressions.Regex regex = Common.Support.RegexFactory.FromSimpleJoker("*.icon", Common.Support.RegexFactory.Options.IgnoreCase);
+			string[] list = Common.Support.ImageProvider.GetManifestResourceNames(regex);
+			
+			this.iconList = new System.Collections.Hashtable();
+
+			foreach ( string icon in list )
+			{
+				string[] parts = icon.Split('.');  // partage "Epsitec.App.DocumentEditor.Images.Icon.icon"
+				if ( parts.Length >= 2 )
+				{
+					string quick = parts[parts.Length-2];  // prend l'avant-dernière partie (avant le .icon)
+					if ( !this.iconList.ContainsKey(quick) )
+					{
+						this.iconList.Add(quick, quick);
+					}
+				}
+			}
 		}
 
 
@@ -5388,6 +5430,8 @@ namespace Epsitec.App.DocumentEditor
 		protected Dialogs.Settings				dlgSettings;
 		protected Dialogs.Splash				dlgSplash;
 		protected Dialogs.Update				dlgUpdate;
+
+		protected System.Collections.Hashtable	iconList;
 
 		protected CommandState					toolSelectState;
 		protected CommandState					toolGlobalState;
