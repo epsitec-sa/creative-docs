@@ -75,6 +75,17 @@ namespace Epsitec.App.DocumentEditor
 
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive(this.globalSettings.Adorner);
 
+			this.dlgSplash = new Dialogs.Splash(this);
+			
+			if ( this.type != DocumentType.Pictogram &&
+				this.globalSettings.SplashScreen )
+			{
+				this.dlgSplash.Show();
+
+				// Donne l'occasion aux événements d'affichage d'être traités:
+				Window.PumpEvents();
+			}
+			
 			this.dlgAbout     = new Dialogs.About(this);
 			this.dlgDownload  = new Dialogs.Download(this);
 			this.dlgExport    = new Dialogs.Export(this);
@@ -85,7 +96,6 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgPageStack = new Dialogs.PageStack(this);
 			this.dlgPrint     = new Dialogs.Print(this);
 			this.dlgSettings  = new Dialogs.Settings(this);
-			this.dlgSplash    = new Dialogs.Splash(this);
 			this.dlgUpdate    = new Dialogs.Update(this);
 
 			this.dlgGlyphs.Closed    += new EventHandler(this.HandleDlgClosed);
@@ -93,14 +103,6 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgPageStack.Closed += new EventHandler(this.HandleDlgClosed);
 			this.dlgSettings.Closed  += new EventHandler(this.HandleDlgClosed);
 
-			if ( this.type != DocumentType.Pictogram &&
-				 this.globalSettings.SplashScreen )
-			{
-				this.dlgSplash.Show();
-
-				// Donne l'occasion aux événements d'affichage d'être traités:
-				Window.PumpEvents();
-			}
 			this.StartCheck(false);
 			this.InitCommands();
 			this.CreateLayout();

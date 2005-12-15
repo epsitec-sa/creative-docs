@@ -313,6 +313,8 @@ namespace Epsitec.Common.Text
 		
 		public static string[] GetAvailableFontFaces()
 		{
+			TextContext.InitializeFontCollection (null);
+			
 			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
 			
 			foreach (OpenType.FontIdentity id in TextContext.font_collection)
@@ -331,6 +333,8 @@ namespace Epsitec.Common.Text
 		
 		public static OpenType.FontIdentity[] GetAvailableFontIdentities(string face)
 		{
+			TextContext.InitializeFontCollection (null);
+			
 			if (TextContext.font_ids.Contains (face))
 			{
 				System.Collections.ArrayList list = TextContext.font_ids[face] as System.Collections.ArrayList;
@@ -1670,6 +1674,8 @@ namespace Epsitec.Common.Text
 		
 		private static void CreateOrGetFontFromCache(string font_face, string font_style, out OpenType.Font font)
 		{
+			TextContext.InitializeFontCollection (null);
+			
 			string font_full = string.Concat (font_face, "/", font_style);
 			
 			lock (TextContext.font_cache)
