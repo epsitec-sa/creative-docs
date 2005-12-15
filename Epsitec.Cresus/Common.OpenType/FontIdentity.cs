@@ -368,7 +368,12 @@ namespace Epsitec.Common.OpenType
 		{
 			byte[] data_0 = new byte[8];
 			
-			stream.Read (data_0, 0, 8);
+			int read = IO.Reader.Read (stream, data_0, 0, 8);
+			
+			if (read == 0)
+			{
+				return null;
+			}
 			
 			System.Diagnostics.Debug.Assert (data_0[0] == 0);
 			System.Diagnostics.Debug.Assert (data_0[1] == 0);
@@ -381,9 +386,9 @@ namespace Epsitec.Common.OpenType
 			byte[] data_2 = new byte[length_2];
 			byte[] data_3 = new byte[length_3];
 			
-			stream.Read (data_1, 0, length_1);
-			stream.Read (data_2, 0, length_2);
-			stream.Read (data_3, 0, length_3);
+			IO.Reader.Read (stream, data_1, 0, length_1);
+			IO.Reader.Read (stream, data_2, 0, length_2);
+			IO.Reader.Read (stream, data_3, 0, length_3);
 			
 			string   text = System.Text.Encoding.UTF8.GetString (data_1);
 			string[] args = text.Split ('\0');

@@ -922,6 +922,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Helpers\FontPreviewer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Helpers\GroupComparer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

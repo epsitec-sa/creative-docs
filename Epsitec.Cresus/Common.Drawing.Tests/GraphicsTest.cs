@@ -133,6 +133,19 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 
+		[Test] public void CheckFontPreviewer()
+		{
+			Widgets.Helpers.FontPreviewer.Initialize ();
+			
+			Window window = new Window ();
+			window.WindowSize = new Size (800, 1500);
+			
+			window.Text = "CheckFontPreviewer";
+			window.Root.PaintForeground += new PaintEventHandler(FontPreviewer_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+
 		[Test] public void CheckClipping()
 		{
 			Window window = new Window ();
@@ -786,6 +799,36 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.LineCap = CapStyle.Round;
 			
 			e.Graphics.PaintOutline (path);
+		}
+		
+		private void FontPreviewer_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			OpenType.FontCollection collection = OpenType.FontCollection.Default;
+			collection.RefreshCache ();
+			
+			double ox = 10;
+			double oy = 20;
+			double size = 100;
+			
+			string[] fonts = new string[] { "Avant Garde Book BT", "Tahoma", "Palatino Linotype Bold", "Wingdings", "Webdings", "Symbol" };
+			
+			foreach (string font in fonts)
+			{
+				OpenType.FontIdentity fid = collection[font];
+				
+				if (fid != null)
+				{
+					Path path = Widgets.Helpers.FontPreviewer.GetPath (fid, ox, oy, size);
+					
+					e.Graphics.Color = Drawing.Color.FromName ("Black");
+					e.Graphics.PaintSurface (path);
+					
+					oy += size;
+					
+					path.Dispose ();
+				}
+			}
 		}
 		
 		private void Clipping_PaintForeground(object sender, PaintEventArgs e)

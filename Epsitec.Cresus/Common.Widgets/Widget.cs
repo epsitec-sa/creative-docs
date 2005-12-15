@@ -155,7 +155,9 @@ namespace Epsitec.Common.Widgets
 		
 		static Widget()
 		{
-			Drawing.Font.Initialise ();
+			System.Diagnostics.Debug.WriteLine ("Initializing Widget infrastructure.");
+			
+			Helpers.FontPreviewer.Initialize ();
 			
 			Res.Initialise (typeof (Widget), "Common.Widgets");
 			

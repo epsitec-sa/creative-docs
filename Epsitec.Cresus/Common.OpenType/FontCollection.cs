@@ -20,7 +20,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		internal FontIdentity					this[string name]
+		public FontIdentity						this[string name]
 		{
 			get
 			{
@@ -169,10 +169,16 @@ namespace Epsitec.Common.OpenType
 		{
 			//	Retourne true si le contenu du cache a été modifié.
 			
+			System.Diagnostics.Debug.WriteLine ("Loading font collection from cache.");
+			
 			this.LoadFromCache ();
+			
+			System.Diagnostics.Debug.WriteLine ("Done.");
 			
 			if (this.Initialize ())
 			{
+				System.Diagnostics.Debug.WriteLine ("Updating cache on disk.");
+				
 				return this.SaveToCache (callback);
 			}
 			
@@ -211,17 +217,20 @@ namespace Epsitec.Common.OpenType
 			{
 				using (System.IO.FileStream file = new System.IO.FileStream (path, System.IO.FileMode.CreateNew, System.IO.FileAccess.Write))
 				{
-					foreach (FontIdentity fid in this.full_list)
+					using (System.IO.Stream compressor = IO.Compression.CreateDeflateStream(file, 1))
 					{
-						if (callback != null)
+						foreach (FontIdentity fid in this.full_list)
 						{
-							callback (fid);
+							if (callback != null)
+							{
+								callback (fid);
+							}
+						
+							FontIdentity.Serialize (compressor, fid);
 						}
 						
-						FontIdentity.Serialize (file, fid);
+						compressor.Flush ();
 					}
-					
-					file.Flush ();
 				}
 			}
 			catch
@@ -242,11 +251,16 @@ namespace Epsitec.Common.OpenType
 			{
 				using (System.IO.FileStream file = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
 				{
-					while (file.Position < file.Length)
+					string name;
+					using (System.IO.Stream decompressor = IO.Decompression.CreateStream (file, out name))
 					{
-						FontIdentity fid = FontIdentity.Deserialize (file);
+						FontIdentity fid = FontIdentity.Deserialize (decompressor);
 						
-						this.Add (fid.FullName, fid.UniqueFontId, fid);
+						while (fid != null)
+						{
+							this.Add (fid.FullName, fid.UniqueFontId, fid);
+							fid = FontIdentity.Deserialize (decompressor);
+						}
 					}
 				}
 			}

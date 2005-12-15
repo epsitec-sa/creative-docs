@@ -1099,7 +1099,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			byte[] header = new byte[16];
 			
-			stream.Read (header, 0, header.Length);
+			IO.Reader.Read (stream, header, 0, header.Length);
 			
 			if ((header[0] == (byte) ('T')) &&
 				(header[1] == (byte) ('X')) &&
@@ -1125,26 +1125,10 @@ namespace Epsitec.Common.Text.Internal
 					
 					for (int i = 0; i < n; i++)
 					{
-						int read = stream.Read (buffer, 0, count);
+						int read = IO.Reader.Read (stream, buffer, 0, count);
 						
-					again:
 						if (read < count)
 						{
-							//	Il se peut que le Read n'ait pas retourné tout ce
-							//	qui lui a été demandé, sans pour autant que la fin
-							//	ait été atteinte (par ex. lors de décompression).
-
-							//	Dans ce cas, il faut tenter de lire la suite par
-							//	petits morceaux :
-							
-							int more = stream.Read (buffer, read, count-read);
-							
-							if (more != 0)
-							{
-								read += more;
-								goto again;
-							}
-							
 							if ((i < n-1) ||
 								((read % 8) != 0))
 							{

@@ -59,7 +59,18 @@ namespace Epsitec.Common.Drawing
 		
 		public string					FaceName
 		{
-			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Face); }
+			get
+			{
+				string face  = AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Face);
+				string style = this.StyleName;
+				
+				if (face.EndsWith (style))
+				{
+					face = face.Substring (0, face.Length - style.Length).Trim ();
+				}
+				
+				return face;
+			}
 		}
 		
 		public string					StyleName
