@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.OpenType
 {
-	public delegate void FontAccessCallback(FontIdentity fid);
+	public delegate void FontIdentityCallback(FontIdentity fid);
 	
 	/// <summary>
 	/// La classe FontCollection gère une collection de fontes, donnant accès
@@ -28,6 +28,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		
 		public static bool						LoadTTC
 		{
 			get
@@ -40,6 +41,18 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		public static FontCollection			Default
+		{
+			get
+			{
+				if (FontCollection.default_collection == null)
+				{
+					FontCollection.default_collection = new FontCollection ();
+				}
+				
+				return FontCollection.default_collection;
+			}
+		}
 		
 		public bool Initialize()
 		{
@@ -152,7 +165,7 @@ namespace Epsitec.Common.OpenType
 			return this.RefreshCache (null);
 		}
 		
-		public bool RefreshCache(FontAccessCallback callback)
+		public bool RefreshCache(FontIdentityCallback callback)
 		{
 			//	Retourne true si le contenu du cache a été modifié.
 			
@@ -171,7 +184,7 @@ namespace Epsitec.Common.OpenType
 			return this.SaveToCache (null);
 		}
 		
-		public bool SaveToCache(FontAccessCallback callback)
+		public bool SaveToCache(FontIdentityCallback callback)
 		{
 			string app_data_path = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
 			string cache_dir_path = System.IO.Path.Combine (app_data_path, "Epsitec Cache");
@@ -453,7 +466,8 @@ namespace Epsitec.Common.OpenType
 		
 		
 		private static bool						load_ttc;
-		private static string					CacheFileName = "OpenType.FontCollection.1.0.data";
+		private static FontCollection			default_collection;
+		private static string					CacheFileName = "OpenType.FontCollection.1.1.data";
 		
 		private System.Collections.Hashtable	font_hash;
 		private System.Collections.Hashtable	full_hash;

@@ -132,7 +132,7 @@ namespace Epsitec.Common.OpenType
 			FontCollection collection = new FontCollection ();
 			
 			System.Diagnostics.Debug.WriteLine ("OpenType: RefreshCache");
-			bool changed = collection.RefreshCache (new FontAccessCallback (this.FontCallback));
+			bool changed = collection.RefreshCache (new FontIdentityCallback (this.FontCallback));
 			System.Diagnostics.Debug.WriteLine ("done, changed=" + changed);
 		}
 		

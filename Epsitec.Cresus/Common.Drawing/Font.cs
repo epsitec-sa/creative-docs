@@ -233,7 +233,7 @@ namespace Epsitec.Common.Drawing
 				{
 					if (Font.open_type_font_collection == null)
 					{
-						Font.open_type_font_collection = new OpenType.FontCollection ();
+						Font.open_type_font_collection = OpenType.FontCollection.Default;
 						Font.open_type_font_collection.Initialize ();
 					}
 					

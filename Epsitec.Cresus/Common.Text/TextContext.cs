@@ -301,11 +301,11 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public static void InitializeFontCollection(OpenType.FontAccessCallback callback)
+		public static void InitializeFontCollection(OpenType.FontIdentityCallback callback)
 		{
 			if (TextContext.font_collection == null)
 			{
-				TextContext.font_collection = new OpenType.FontCollection ();
+				TextContext.font_collection = OpenType.FontCollection.Default;
 				TextContext.font_collection.RefreshCache (callback);
 				TextContext.font_cache = new System.Collections.Hashtable ();
 			}
