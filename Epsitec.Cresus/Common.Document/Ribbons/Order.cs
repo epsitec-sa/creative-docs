@@ -14,10 +14,10 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.OrderMain;
 
-			this.buttonUpAll   = this.CreateIconButton("OrderUpAll",   Misc.Icon("OrderUpAll2"),   Res.Strings.Action.OrderUpAll);
-			this.buttonDownAll = this.CreateIconButton("OrderDownAll", Misc.Icon("OrderDownAll2"), Res.Strings.Action.OrderDownAll);
-			this.buttonUpOne   = this.CreateIconButton("OrderUpOne",   Misc.Icon("OrderUpOne"),    Res.Strings.Action.OrderUpOne);
-			this.buttonDownOne = this.CreateIconButton("OrderDownOne", Misc.Icon("OrderDownOne"),  Res.Strings.Action.OrderDownOne);
+			this.buttonUpAll   = this.CreateIconButton("OrderUpAll", "2");
+			this.buttonDownAll = this.CreateIconButton("OrderDownAll", "2");
+			this.buttonUpOne   = this.CreateIconButton("OrderUpOne");
+			this.buttonDownOne = this.CreateIconButton("OrderDownOne");
 			
 			this.UpdateClientGeometry();
 		}

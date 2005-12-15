@@ -14,11 +14,11 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.GeometryMain;
 
-			this.buttonCombine   = this.CreateIconButton("Combine",   Misc.Icon("Combine"),   Res.Strings.Action.Combine);
-			this.buttonUncombine = this.CreateIconButton("Uncombine", Misc.Icon("Uncombine"), Res.Strings.Action.Uncombine);
-			this.buttonToBezier  = this.CreateIconButton("ToBezier",  Misc.Icon("ToBezier"),  Res.Strings.Action.ToBezier);
-			this.buttonToPoly    = this.CreateIconButton("ToPoly",    Misc.Icon("ToPoly"),    Res.Strings.Action.ToPoly);
-			this.buttonFragment  = this.CreateIconButton("Fragment",  Misc.Icon("Fragment"),  Res.Strings.Action.Fragment);
+			this.buttonCombine   = this.CreateIconButton("Combine");
+			this.buttonUncombine = this.CreateIconButton("Uncombine");
+			this.buttonToBezier  = this.CreateIconButton("ToBezier");
+			this.buttonToPoly    = this.CreateIconButton("ToPoly");
+			this.buttonFragment  = this.CreateIconButton("Fragment");
 			
 			this.UpdateClientGeometry();
 		}

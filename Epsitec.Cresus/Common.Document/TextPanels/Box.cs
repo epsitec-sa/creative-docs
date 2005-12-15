@@ -18,7 +18,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextBox");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Box.Title);
 
-			this.buttonFrame = this.CreateIconButton(Misc.Icon("FontFrame"), Res.Strings.Action.Text.Font.Frame, new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonFrame = this.CreateIconButton(Misc.Icon("FontFrame"), Res.Strings.Action.FontFrame, new MessageEventHandler(this.HandleButtonClicked));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 

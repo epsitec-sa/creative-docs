@@ -14,10 +14,10 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.MoveMain;
 
-			this.buttonMoveHi = this.CreateIconButton("MoveLeftFree",  Misc.Icon("MoveHi"), Res.Strings.Action.MoveLeft);
-			this.buttonMoveH  = this.CreateIconButton("MoveRightFree", Misc.Icon("MoveH"),  Res.Strings.Action.MoveRight);
-			this.buttonMoveVi = this.CreateIconButton("MoveDownFree",  Misc.Icon("MoveVi"), Res.Strings.Action.MoveDown);
-			this.buttonMoveV  = this.CreateIconButton("MoveUpFree",    Misc.Icon("MoveV"),  Res.Strings.Action.MoveUp);
+			this.buttonMoveHi = this.CreateIconButton("MoveLeftFree");
+			this.buttonMoveH  = this.CreateIconButton("MoveRightFree");
+			this.buttonMoveVi = this.CreateIconButton("MoveDownFree");
+			this.buttonMoveV  = this.CreateIconButton("MoveUpFree");
 			this.CreateFieldMove(ref this.fieldMoveH, Res.Strings.Action.MoveValueX);
 			this.CreateFieldMove(ref this.fieldMoveV, Res.Strings.Action.MoveValueY);
 			

@@ -13,17 +13,16 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Font() : base()
 		{
-			this.title.Text = Res.Strings.Action.Text.Font.Main;
+			this.title.Text = Res.Strings.Action.FontMain;
 
-			this.buttonBold          = this.CreateIconButton("FontBold",       Misc.Icon("FontBold"),       Res.Strings.Action.Text.Font.Bold,       true);
-			this.buttonItalic        = this.CreateIconButton("FontItalic",     Misc.Icon("FontItalic"),     Res.Strings.Action.Text.Font.Italic,     true);
-			this.buttonFontSizeMinus = this.CreateIconButton("FontSizeMinus",  Misc.Icon("FontSizeMinus"),  Res.Strings.Action.Text.Font.SizeMinus,  false);
-			this.buttonFontSizePlus  = this.CreateIconButton("FontSizePlus",   Misc.Icon("FontSizePlus"),   Res.Strings.Action.Text.Font.SizePlus,   false);
-			this.buttonUnderlined    = this.CreateIconButton("FontUnderlined", Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, true);
-			this.buttonOverlined     = this.CreateIconButton("FontOverlined",  Misc.Icon("FontOverlined"),  Res.Strings.Action.Text.Font.Overlined,  true);
-			this.buttonStrikeout     = this.CreateIconButton("FontStrikeout",  Misc.Icon("FontStrikeout"),  Res.Strings.Action.Text.Font.Strikeout,  true);
-
-			this.buttonClear = this.CreateIconButton("FontClear", Misc.Icon("Nothing"), Res.Strings.Action.Text.Font.Clear, false);
+			this.buttonBold          = this.CreateIconButton("FontBold");
+			this.buttonItalic        = this.CreateIconButton("FontItalic");
+			this.buttonFontSizeMinus = this.CreateIconButton("FontSizeMinus");
+			this.buttonFontSizePlus  = this.CreateIconButton("FontSizePlus");
+			this.buttonUnderlined    = this.CreateIconButton("FontUnderlined");
+			this.buttonOverlined     = this.CreateIconButton("FontOverlined");
+			this.buttonStrikeout     = this.CreateIconButton("FontStrikeout");
+			this.buttonClear         = this.CreateIconButton("FontClear");
 
 			this.buttonStyle = new Button(this);
 			this.buttonStyle.Text = "S";

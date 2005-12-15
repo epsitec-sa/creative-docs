@@ -18,9 +18,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextXline");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Xline.Title);
 
-			this.buttonUnderlined = this.CreateIconButton(Misc.Icon("FontUnderlined"), Res.Strings.Action.Text.Font.Underlined, new MessageEventHandler(this.HandleButtonUnderlineClicked));
-			this.buttonOverlined  = this.CreateIconButton(Misc.Icon("FontOverlined"),  Res.Strings.Action.Text.Font.Overlined,  new MessageEventHandler(this.HandleButtonOverlineClicked));
-			this.buttonStrikeout  = this.CreateIconButton(Misc.Icon("FontStrikeout"),  Res.Strings.Action.Text.Font.Strikeout,  new MessageEventHandler(this.HandleButtonStrikeoutClicked));
+			this.buttonUnderlined = this.CreateIconButton(Misc.Icon("FontUnderlined"), Res.Strings.Action.FontUnderlined, new MessageEventHandler(this.HandleButtonUnderlineClicked));
+			this.buttonOverlined  = this.CreateIconButton(Misc.Icon("FontOverlined"),  Res.Strings.Action.FontOverlined,  new MessageEventHandler(this.HandleButtonOverlineClicked));
+			this.buttonStrikeout  = this.CreateIconButton(Misc.Icon("FontStrikeout"),  Res.Strings.Action.FontStrikeout,  new MessageEventHandler(this.HandleButtonStrikeoutClicked));
 
 			this.fieldUnderlinedThickness = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Underlined.Thickness, Res.Strings.TextPanel.Xline.Short.Underlined.Thickness, Res.Strings.TextPanel.Xline.Long.Underlined.Thickness, 0.0,  0.01, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleUnderlinedValueChanged));
 			this.fieldUnderlinedPosition  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Underlined.Position,  Res.Strings.TextPanel.Xline.Short.Underlined.Position,  Res.Strings.TextPanel.Xline.Long.Underlined.Position,  0.0,  0.01, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleUnderlinedValueChanged));

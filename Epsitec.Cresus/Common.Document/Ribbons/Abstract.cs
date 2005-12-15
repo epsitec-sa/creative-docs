@@ -136,56 +136,29 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Crée un bouton.
-		protected IconButton CreateIconButton(string command, string icon, string tooltip)
+		// Crée un bouton pour une commande.
+		protected IconButton CreateIconButton(string command)
 		{
-			return this.CreateIconButton(command, icon, tooltip, false);
+			return this.CreateIconButton(command, "0");
 		}
 
-		protected IconButton CreateIconButton(string command, string icon, string tooltip, bool activable)
+		// Crée un bouton pour une commande, en précisant la taille préférée pour l'icône.
+		protected IconButton CreateIconButton(string command, string iconSize)
 		{
-			IconButton button = new IconButton(command, icon, command);
-			button.SetParent(this);
-
-			if ( activable )
-			{
-				button.ButtonStyle = ButtonStyle.ActivableIcon;
-			}
-
-			button.TabIndex = this.tabIndex++;
-			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(button, tooltip);
-			return button;
-		}
-
-		// Crée un bouton.
-		protected IconButton CreateIconButton(string icon, string tooltip, MessageEventHandler handler)
-		{
-			return this.CreateIconButton(icon, tooltip, handler, true);
-		}
-		
-		protected IconButton CreateIconButton(string icon, string tooltip, MessageEventHandler handler, bool activable)
-		{
+			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
 			IconButton button = new IconButton(this);
 
-			if ( icon.StartsWith("manifest:") )
-			{
-				button.IconName = icon;
-			}
-			else
-			{
-				button.Text = icon;
-			}
+			button.Command = command;
+			button.IconName = Misc.Icon(cs.IconName, iconSize);
 
-			if ( activable )
+			if ( cs.Statefull )
 			{
 				button.ButtonStyle = ButtonStyle.ActivableIcon;
 			}
 
-			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(button, tooltip);
+			ToolTip.Default.SetToolTip(button, cs.LongCaption);
 			return button;
 		}
 

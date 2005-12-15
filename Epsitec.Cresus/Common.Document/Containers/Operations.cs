@@ -31,8 +31,8 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateButton(this.toolBarRot, ref this.buttonRotate270, "Rotate270", Res.Strings.Action.Rotate270, new MessageEventHandler(this.HandleButtonRotate270));
 			this.CreateSeparator(this.toolBarRot);
 			this.CreateFieldRot(this.toolBarRot, ref this.fieldRotate, Res.Strings.Action.RotateValue);
-			this.CreateButton(this.toolBarRot, ref this.buttonRotate,  "Rotate",  Res.Strings.Action.RotateFreeCCW, new MessageEventHandler(this.HandleButtonRotate));
-			this.CreateButton(this.toolBarRot, ref this.buttonRotatei, "Rotatei", Res.Strings.Action.RotateFreeCW,  new MessageEventHandler(this.HandleButtonRotatei));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate,  "RotateFreeCCW", Res.Strings.Action.RotateFreeCCW, new MessageEventHandler(this.HandleButtonRotate));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotatei, "RotateFreeCW",  Res.Strings.Action.RotateFreeCW,  new MessageEventHandler(this.HandleButtonRotatei));
 
 			// Miroir.
 			this.CreateHeader(ref this.boxMirror, ref this.toolBarMirror, Res.Strings.Action.MirrorMain);

@@ -14,12 +14,12 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ActionMain;
 
-			this.buttonSettings = this.CreateIconButton("Settings", Misc.Icon("Settings"), Res.Strings.Action.Settings);
-			this.buttonInfos = this.CreateIconButton("Infos", Misc.Icon("Infos"), Res.Strings.Action.Infos);
-			this.buttonPageStack = this.CreateIconButton("PageStack", Misc.Icon("PageStack"), Res.Strings.Action.PageStack);
-			this.buttonKey = this.CreateIconButton("KeyApplication", Misc.Icon("Key"), Res.Strings.Action.Key);
-			this.buttonUpdate = this.CreateIconButton("UpdateApplication", Misc.Icon("Update"), Res.Strings.Action.Update);
-			this.buttonAbout = this.CreateIconButton("AboutApplication", Misc.Icon("About"), Res.Strings.Action.About);
+			this.buttonSettings  = this.CreateIconButton("Settings");
+			this.buttonInfos     = this.CreateIconButton("Infos");
+			this.buttonPageStack = this.CreateIconButton("PageStack");
+			this.buttonKey       = this.CreateIconButton("KeyApplication");
+			this.buttonUpdate    = this.CreateIconButton("UpdateApplication");
+			this.buttonAbout     = this.CreateIconButton("AboutApplication");
 			
 			this.UpdateClientGeometry();
 		}

@@ -40,10 +40,10 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontSize.IsUnitPercent = true;
 			this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 
-			this.fontColor = this.CreateColorSample(Res.Strings.Action.Text.Font.Color, new MessageEventHandler(this.HandleFieldColorClicked), new EventHandler(this.HandleFieldColorChanged));
+			this.fontColor = this.CreateColorSample(Res.Strings.Action.FontColor, new MessageEventHandler(this.HandleFieldColorClicked), new EventHandler(this.HandleFieldColorChanged));
 
-			this.buttonSizeMinus = this.CreateIconButton(Misc.Icon("FontSizeMinus"), Res.Strings.Action.Text.Font.SizeMinus, new MessageEventHandler(this.HandleButtonSizeMinusClicked), false);
-			this.buttonSizePlus  = this.CreateIconButton(Misc.Icon("FontSizePlus"),  Res.Strings.Action.Text.Font.SizePlus,  new MessageEventHandler(this.HandleButtonSizePlusClicked), false);
+			this.buttonSizeMinus = this.CreateIconButton(Misc.Icon("FontSizeMinus"), Res.Strings.Action.FontSizeMinus, new MessageEventHandler(this.HandleButtonSizeMinusClicked), false);
+			this.buttonSizePlus  = this.CreateIconButton(Misc.Icon("FontSizePlus"),  Res.Strings.Action.FontSizePlus,  new MessageEventHandler(this.HandleButtonSizePlusClicked), false);
 
 			this.fontGlue = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Font.Tooltip.Glue, Res.Strings.TextPanel.Font.Short.Glue, Res.Strings.TextPanel.Font.Long.Glue, -50.0, 200.0, 5.0, new EventHandler(this.HandleGlueValueChanged));
 
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( this.fontFace.Items.Count == 0 )
 			{
-				this.fontFace.Items.Add(Res.Strings.Action.Text.Font.Default);  // par défaut
+				this.fontFace.Items.Add(Res.Strings.Action.FontDefault);  // par défaut
 				Misc.AddFontList(this.fontFace, false);
 			}
 		}

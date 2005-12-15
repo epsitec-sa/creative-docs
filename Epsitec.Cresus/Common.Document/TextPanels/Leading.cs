@@ -24,11 +24,11 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldLeading.IsUnitPercent = true;
 			this.fieldLeading.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 
-			this.buttonLeadingMinus = this.CreateIconButton(Misc.Icon("ParagraphLeadingMinus"),      Res.Strings.TextPanel.Leading.Tooltip.LeadingMinus, new MessageEventHandler(this.HandleButtonLeadingMinusClicked), false);
-			this.buttonLeadingPlus  = this.CreateIconButton(Misc.Icon("ParagraphLeadingPlus"),       Res.Strings.TextPanel.Leading.Tooltip.LeadingPlus,  new MessageEventHandler(this.HandleButtonLeadingPlusClicked), false);
-			this.buttonAlignFirst   = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignFirst"), Res.Strings.TextPanel.Leading.Tooltip.AlignFirst,   new MessageEventHandler(this.HandleButtonAlignFirstClicked));
-			this.buttonAlignAll     = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignAll"),   Res.Strings.TextPanel.Leading.Tooltip.AlignAll,     new MessageEventHandler(this.HandleButtonAlignAllClicked));
-			this.buttonSettings     = this.CreateIconButton(Misc.Icon("Settings"),                   Res.Strings.Action.Settings,                        new MessageEventHandler(this.HandleButtonSettingsClicked), false);
+			this.buttonLeadingMinus = this.CreateIconButton(Misc.Icon("ParagraphLeadingMinus"),      Res.Strings.Action.ParagraphLeadingMinus,         new MessageEventHandler(this.HandleButtonLeadingMinusClicked), false);
+			this.buttonLeadingPlus  = this.CreateIconButton(Misc.Icon("ParagraphLeadingPlus"),       Res.Strings.Action.ParagraphLeadingPlus,          new MessageEventHandler(this.HandleButtonLeadingPlusClicked), false);
+			this.buttonAlignFirst   = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignFirst"), Res.Strings.TextPanel.Leading.Tooltip.AlignFirst, new MessageEventHandler(this.HandleButtonAlignFirstClicked));
+			this.buttonAlignAll     = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignAll"),   Res.Strings.TextPanel.Leading.Tooltip.AlignAll,   new MessageEventHandler(this.HandleButtonAlignAllClicked));
+			this.buttonSettings     = this.CreateIconButton(Misc.Icon("Settings"),                   Res.Strings.Action.Settings,                      new MessageEventHandler(this.HandleButtonSettingsClicked), false);
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 

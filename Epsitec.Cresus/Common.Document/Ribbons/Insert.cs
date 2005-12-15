@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.Text.Insert;
 
-			this.buttonGlyphs = this.CreateIconButton("Glyphs", Misc.Icon("Glyphs"), Res.Strings.Action.Glyphs);
+			this.buttonGlyphs = this.CreateIconButton("Glyphs");
 			
 			this.UpdateClientGeometry();
 		}

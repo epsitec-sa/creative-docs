@@ -14,11 +14,11 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.BooleanMain;
 
-			this.buttonBooleanOr = this.CreateIconButton("BooleanOr", Misc.Icon("BooleanOr"), Res.Strings.Action.BooleanOr);
-			this.buttonBooleanAnd = this.CreateIconButton("BooleanAnd", Misc.Icon("BooleanAnd"), Res.Strings.Action.BooleanAnd);
-			this.buttonBooleanXor = this.CreateIconButton("BooleanXor", Misc.Icon("BooleanXor"), Res.Strings.Action.BooleanXor);
-			this.buttonBooleanFrontMinus = this.CreateIconButton("BooleanFrontMinus", Misc.Icon("BooleanFrontMinus"), Res.Strings.Action.BooleanFrontMinus);
-			this.buttonBooleanBackMinus = this.CreateIconButton("BooleanBackMinus", Misc.Icon("BooleanBackMinus"), Res.Strings.Action.BooleanBackMinus);
+			this.buttonBooleanOr         = this.CreateIconButton("BooleanOr");
+			this.buttonBooleanAnd        = this.CreateIconButton("BooleanAnd");
+			this.buttonBooleanXor        = this.CreateIconButton("BooleanXor");
+			this.buttonBooleanFrontMinus = this.CreateIconButton("BooleanFrontMinus");
+			this.buttonBooleanBackMinus  = this.CreateIconButton("BooleanBackMinus");
 			
 			this.UpdateClientGeometry();
 		}

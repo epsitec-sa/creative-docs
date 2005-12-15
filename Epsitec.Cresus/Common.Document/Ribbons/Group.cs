@@ -14,12 +14,12 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.GroupMain;
 
-			this.buttonGroup   = this.CreateIconButton("Group",   Misc.Icon("Group"),    Res.Strings.Action.Group);
-			this.buttonUngroup = this.CreateIconButton("Ungroup", Misc.Icon("Ungroup"),  Res.Strings.Action.Ungroup);
-			this.buttonMerge   = this.CreateIconButton("Merge",   Misc.Icon("Merge"),    Res.Strings.Action.Merge);
-			this.buttonExtract = this.CreateIconButton("Extract", Misc.Icon("Extract"),  Res.Strings.Action.Extract);
-			this.buttonInside  = this.CreateIconButton("Inside",  Misc.Icon("Inside2"),  Res.Strings.Action.Inside);
-			this.buttonOutside = this.CreateIconButton("Outside", Misc.Icon("Outside2"), Res.Strings.Action.Outside);
+			this.buttonGroup   = this.CreateIconButton("Group");
+			this.buttonUngroup = this.CreateIconButton("Ungroup");
+			this.buttonMerge   = this.CreateIconButton("Merge");
+			this.buttonExtract = this.CreateIconButton("Extract");
+			this.buttonInside  = this.CreateIconButton("Inside", "2");
+			this.buttonOutside = this.CreateIconButton("Outside", "2");
 			
 			this.UpdateClientGeometry();
 		}

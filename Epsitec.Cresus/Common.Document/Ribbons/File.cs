@@ -14,17 +14,17 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.FileMain;
 
-			this.buttonNew = this.CreateIconButton("New", Misc.Icon("New"), Res.Strings.Action.New);
-			this.buttonOpen = this.CreateIconButton("Open", Misc.Icon("Open2"), Res.Strings.Action.Open);
+			this.buttonNew       = this.CreateIconButton("New");
+			this.buttonOpen      = this.CreateIconButton("Open", "2");
 			this.buttonLastFiles = this.CreateMenuButton("", Res.Strings.Action.LastFiles, new MessageEventHandler(this.HandleLastFilesClicked));
-			this.buttonSave = this.CreateIconButton("Save", Misc.Icon("Save2"), Res.Strings.Action.Save);
-			this.buttonSaveAs = this.CreateIconButton("SaveAs", Misc.Icon("SaveAs"), Res.Strings.Action.SaveAs);
-			this.buttonPrint = this.CreateIconButton("Print", Misc.Icon("Print2"), Res.Strings.Action.Print);
-			this.buttonExport = this.CreateIconButton("Export", Misc.Icon("Export"), Res.Strings.Action.Export);
-			this.buttonCloseAll = this.CreateIconButton("CloseAll", Misc.Icon("CloseAll"), Res.Strings.Action.CloseAll);
-			this.separator = new IconSeparator(this);
-			this.buttonOpenModel = this.CreateIconButton("OpenModel", Misc.Icon("OpenModel"), Res.Strings.Action.OpenModel);
-			this.buttonSaveModel = this.CreateIconButton("SaveModel", Misc.Icon("SaveModel"), Res.Strings.Action.SaveModel);
+			this.buttonSave      = this.CreateIconButton("Save", "2");
+			this.buttonSaveAs    = this.CreateIconButton("SaveAs");
+			this.buttonPrint     = this.CreateIconButton("Print", "2");
+			this.buttonExport    = this.CreateIconButton("Export");
+			this.buttonCloseAll  = this.CreateIconButton("CloseAll");
+			this.separator       = new IconSeparator(this);
+			this.buttonOpenModel = this.CreateIconButton("OpenModel");
+			this.buttonSaveModel = this.CreateIconButton("SaveModel");
 			
 			this.UpdateClientGeometry();
 		}

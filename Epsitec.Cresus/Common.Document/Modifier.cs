@@ -265,30 +265,30 @@ namespace Epsitec.Common.Document
 		{
 			switch ( tool )
 			{
-				case "ToolSelect":       return Res.Strings.Tool.Select;
-				case "ToolGlobal":       return Res.Strings.Tool.Global;
-				case "ToolShaper":       return Res.Strings.Tool.Shaper;
-				case "ToolEdit":         return Res.Strings.Tool.Edit;
-				case "ToolZoom":         return Res.Strings.Tool.Zoom;
-				case "ToolHand":         return Res.Strings.Tool.Hand;
-				case "ToolPicker":       return Res.Strings.Tool.Picker;
-				case "ToolHotSpot":      return Res.Strings.Tool.HotSpot;
+				case "ToolSelect":       return Res.Strings.Action.ToolSelect;
+				case "ToolGlobal":       return Res.Strings.Action.ToolGlobal;
+				case "ToolShaper":       return Res.Strings.Action.ToolShaper;
+				case "ToolEdit":         return Res.Strings.Action.ToolEdit;
+				case "ToolZoom":         return Res.Strings.Action.ToolZoom;
+				case "ToolHand":         return Res.Strings.Action.ToolHand;
+				case "ToolPicker":       return Res.Strings.Action.ToolPicker;
+				case "ToolHotSpot":      return Res.Strings.Action.ToolHotSpot;
 
-				case "ObjectLine":       return Res.Strings.Tool.Line;
-				case "ObjectRectangle":  return Res.Strings.Tool.Rectangle;
-				case "ObjectCircle":     return Res.Strings.Tool.Circle;
-				case "ObjectEllipse":    return Res.Strings.Tool.Ellipse;
-				case "ObjectPoly":       return Res.Strings.Tool.Poly;
-				case "ObjectBezier":     return Res.Strings.Tool.Bezier;
-				case "ObjectRegular":    return Res.Strings.Tool.Regular;
-				case "ObjectSurface":    return Res.Strings.Tool.Surface;
-				case "ObjectVolume":     return Res.Strings.Tool.Volume;
-				case "ObjectTextLine":   return Res.Strings.Tool.TextLine;
-				case "ObjectTextBox":    return Res.Strings.Tool.TextBox;
-				case "ObjectTextBox2":   return Res.Strings.Tool.TextBox;
-				case "ObjectArray":      return Res.Strings.Tool.Array;
-				case "ObjectImage":      return Res.Strings.Tool.Image;
-				case "ObjectDimension":  return Res.Strings.Tool.Dimension;
+				case "ObjectLine":       return Res.Strings.Action.ToolLine;
+				case "ObjectRectangle":  return Res.Strings.Action.ToolRectangle;
+				case "ObjectCircle":     return Res.Strings.Action.ToolCircle;
+				case "ObjectEllipse":    return Res.Strings.Action.ToolEllipse;
+				case "ObjectPoly":       return Res.Strings.Action.ToolPoly;
+				case "ObjectBezier":     return Res.Strings.Action.ToolBezier;
+				case "ObjectRegular":    return Res.Strings.Action.ToolRegular;
+				case "ObjectSurface":    return Res.Strings.Action.ToolSurface;
+				case "ObjectVolume":     return Res.Strings.Action.ToolVolume;
+				case "ObjectTextLine":   return Res.Strings.Action.ToolTextLine;
+				case "ObjectTextBox":    return Res.Strings.Action.ToolTextBox;
+				case "ObjectTextBox2":   return Res.Strings.Action.ToolTextBox;
+				case "ObjectArray":      return Res.Strings.Action.ToolArray;
+				case "ObjectImage":      return Res.Strings.Action.ToolImage;
+				case "ObjectDimension":  return Res.Strings.Action.ToolDimension;
 			}
 
 			return "?";

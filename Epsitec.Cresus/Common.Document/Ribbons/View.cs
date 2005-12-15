@@ -14,14 +14,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ViewMain;
 
-			this.buttonPreview = this.CreateIconButton("Preview", Misc.Icon("Preview"), Res.Strings.Action.Preview, true);
-			this.buttonGrid = this.CreateIconButton("Grid", Misc.Icon("Grid"), Res.Strings.Action.Grid, true);
-			this.buttonTextGrid = this.CreateIconButton("TextGrid", Misc.Icon("TextGrid"), Res.Strings.Action.TextGrid, true);
-			this.buttonMagnet = this.CreateIconButton("Magnet", Misc.Icon("Magnet"), Res.Strings.Action.Magnet, true);
-			this.buttonMagnetLayer = this.CreateIconButton("MagnetLayer", Misc.Icon("MagnetLayer"), Res.Strings.Action.MagnetLayer, true);
-			this.buttonRulers = this.CreateIconButton("Rulers", Misc.Icon("Rulers"), Res.Strings.Action.Rulers, true);
-			this.buttonLabels = this.CreateIconButton("Labels", Misc.Icon("Labels"), Res.Strings.Action.Labels, true);
-			this.buttonAggregates = this.CreateIconButton("Aggregates", Misc.Icon("Aggregates"), Res.Strings.Action.Aggregates, true);
+			this.buttonPreview     = this.CreateIconButton("Preview");
+			this.buttonGrid        = this.CreateIconButton("Grid");
+			this.buttonTextGrid    = this.CreateIconButton("TextGrid");
+			this.buttonMagnet      = this.CreateIconButton("Magnet");
+			this.buttonMagnetLayer = this.CreateIconButton("MagnetLayer");
+			this.buttonRulers      = this.CreateIconButton("Rulers");
+			this.buttonLabels      = this.CreateIconButton("Labels");
+			this.buttonAggregates  = this.CreateIconButton("Aggregates");
 			
 			this.UpdateClientGeometry();
 		}

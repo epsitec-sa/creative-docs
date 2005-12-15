@@ -30,6 +30,7 @@ namespace Epsitec.App.DocumentEditor
 			System.Diagnostics.Debug.WriteLine("*** Created Primary Command Dispatcher ***");
 			this.commandDispatcher = new CommandDispatcher("DocumentEditor", CommandDispatcherLevel.Primary);
 			this.commandDispatcher.RegisterController(this);
+			this.commandDispatcher.Focus();
 			this.AttachCommandDispatcher(this.commandDispatcher);
 			
 			this.type = type;
@@ -290,6 +291,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			ToolTip.Default.Behaviour = ToolTipBehaviour.Normal;
 
+#if false
 			this.menu = new HMenu();
 			this.menu.Visibility = false;
 			this.menu.Host = this;
@@ -312,27 +314,27 @@ namespace Epsitec.App.DocumentEditor
 			VMenu fileMenu = new VMenu();
 			fileMenu.Name = "File";
 			fileMenu.Host = this;
-			this.MenuAdd(fileMenu, Misc.Icon("New"), "New", DocumentEditor.GetRes("Action.New"), DocumentEditor.GetShortCut(this.newState));
-			this.MenuAdd(fileMenu, Misc.Icon("Open"), "Open", DocumentEditor.GetRes("Action.Open"), DocumentEditor.GetShortCut(this.openState));
+			this.MenuAdd(fileMenu, "New");
+			this.MenuAdd(fileMenu, "Open");
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.MenuAdd(fileMenu, "", "OpenModel", DocumentEditor.GetRes("Action.OpenModel"), DocumentEditor.GetShortCut(this.openModelState));
+				this.MenuAdd(fileMenu, "OpenModel");
 			}
-			this.MenuAdd(fileMenu, "", "Close", DocumentEditor.GetRes("Action.Close"), DocumentEditor.GetShortCut(this.closeState));
-			this.MenuAdd(fileMenu, "", "CloseAll", DocumentEditor.GetRes("Action.CloseAll"), DocumentEditor.GetShortCut(this.closeAllState));
-			this.MenuAdd(fileMenu, "", "", "", "");
-			this.MenuAdd(fileMenu, Misc.Icon("Save"), "Save", DocumentEditor.GetRes("Action.Save"), DocumentEditor.GetShortCut(this.saveState));
-			this.MenuAdd(fileMenu, Misc.Icon("SaveAs"), "SaveAs", DocumentEditor.GetRes("Action.SaveAs"), DocumentEditor.GetShortCut(this.saveAsState));
+			this.MenuAdd(fileMenu, "Close");
+			this.MenuAdd(fileMenu, "CloseAll");
+			this.MenuAdd(fileMenu, null);
+			this.MenuAdd(fileMenu, "Save");
+			this.MenuAdd(fileMenu, "SaveAs");
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.MenuAdd(fileMenu, "", "SaveModel", DocumentEditor.GetRes("Action.SaveModel"), DocumentEditor.GetShortCut(this.saveModelState));
+				this.MenuAdd(fileMenu, "SaveModel");
 			}
-			this.MenuAdd(fileMenu, "", "", "", "");
-			this.MenuAdd(fileMenu, Misc.Icon("Print"), "Print", DocumentEditor.GetRes("Action.Print"), DocumentEditor.GetShortCut(this.printState));
-			this.MenuAdd(fileMenu, Misc.Icon("Export"), "Export", DocumentEditor.GetRes("Action.Export"), DocumentEditor.GetShortCut(this.exportState));
-			this.MenuAdd(fileMenu, "", "", "", "");
+			this.MenuAdd(fileMenu, null);
+			this.MenuAdd(fileMenu, "Print");
+			this.MenuAdd(fileMenu, "Export");
+			this.MenuAdd(fileMenu, null);
 			this.MenuAdd(fileMenu, "", "SubmenuLastFiles", DocumentEditor.GetRes("Action.LastFiles"), "");
-			this.MenuAdd(fileMenu, "", "", "", "");
+			this.MenuAdd(fileMenu, null);
 			this.MenuAdd(fileMenu, "", "QuitApplication", DocumentEditor.GetRes("Action.Quit"), "");
 			fileMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = fileMenu;
@@ -343,30 +345,30 @@ namespace Epsitec.App.DocumentEditor
 			VMenu editMenu = new VMenu();
 			editMenu.Name = "Edit";
 			editMenu.Host = this;
-			this.MenuAdd(editMenu, Misc.Icon("Undo"), "Undo", DocumentEditor.GetRes("Action.Undo"), DocumentEditor.GetShortCut(this.undoState));
-			this.MenuAdd(editMenu, Misc.Icon("Redo"), "Redo", DocumentEditor.GetRes("Action.Redo"), DocumentEditor.GetShortCut(this.redoState));
-			this.MenuAdd(editMenu, "", "", "", "");
-			this.MenuAdd(editMenu, Misc.Icon("Cut"), "Cut", DocumentEditor.GetRes("Action.Cut"), DocumentEditor.GetShortCut(this.cutState));
-			this.MenuAdd(editMenu, Misc.Icon("Copy"), "Copy", DocumentEditor.GetRes("Action.Copy"), DocumentEditor.GetShortCut(this.copyState));
-			this.MenuAdd(editMenu, Misc.Icon("Paste"), "Paste", DocumentEditor.GetRes("Action.Paste"), DocumentEditor.GetShortCut(this.pasteState));
-			this.MenuAdd(editMenu, "", "", "", "");
-			this.MenuAdd(editMenu, Misc.Icon("Delete"), "Delete", DocumentEditor.GetRes("Action.Delete"), DocumentEditor.GetShortCut(this.deleteState));
-			this.MenuAdd(editMenu, Misc.Icon("Duplicate"), "Duplicate", DocumentEditor.GetRes("Action.Duplicate"), DocumentEditor.GetShortCut(this.duplicateState));
+			this.MenuAdd(editMenu, "Undo");
+			this.MenuAdd(editMenu, "Redo");
+			this.MenuAdd(editMenu, null);
+			this.MenuAdd(editMenu, "Cut");
+			this.MenuAdd(editMenu, "Copy");
+			this.MenuAdd(editMenu, "Paste");
+			this.MenuAdd(editMenu, null);
+			this.MenuAdd(editMenu, "Delete");
+			this.MenuAdd(editMenu, "Duplicate");
 			editMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = editMenu;
 
 			VMenu objMenu = new VMenu();
 			objMenu.Name = "Obj";
 			objMenu.Host = this;
-			this.MenuAdd(objMenu, Misc.Icon("DeselectAll"), "DeselectAll", DocumentEditor.GetRes("Action.DeselectAll"), DocumentEditor.GetShortCut(this.deselectAllState));
-			this.MenuAdd(objMenu, Misc.Icon("SelectAll"), "SelectAll", DocumentEditor.GetRes("Action.SelectAll"), DocumentEditor.GetShortCut(this.selectAllState));
-			this.MenuAdd(objMenu, Misc.Icon("SelectInvert"), "SelectInvert", DocumentEditor.GetRes("Action.SelectInvert"), DocumentEditor.GetShortCut(this.selectInvertState));
-			this.MenuAdd(objMenu, "", "", "", "");
-			this.MenuAdd(objMenu, Misc.Icon("HideSel"), "HideSel", DocumentEditor.GetRes("Action.HideSel"), DocumentEditor.GetShortCut(this.hideSelState));
-			this.MenuAdd(objMenu, Misc.Icon("HideRest"), "HideRest", DocumentEditor.GetRes("Action.HideRest"), DocumentEditor.GetShortCut(this.hideRestState));
-			this.MenuAdd(objMenu, Misc.Icon("HideCancel"), "HideCancel", DocumentEditor.GetRes("Action.HideCancel"), DocumentEditor.GetShortCut(this.hideCancelState));
+			this.MenuAdd(objMenu, "DeselectAll");
+			this.MenuAdd(objMenu, "SelectAll");
+			this.MenuAdd(objMenu, "SelectInvert");
+			this.MenuAdd(objMenu, null);
+			this.MenuAdd(objMenu, "HideSel");
+			this.MenuAdd(objMenu, "HideRest");
+			this.MenuAdd(objMenu, "HideCancel");
 			this.MenuAdd(objMenu, "y/n", "HideHalf", DocumentEditor.GetRes("Action.HideHalf"), "");
-			this.MenuAdd(objMenu, "", "", "", "");
+			this.MenuAdd(objMenu, null);
 			this.MenuAdd(objMenu, Misc.Icon("OrderUpAll"), "SubmenuOrder", DocumentEditor.GetRes("Action.OrderMain"), "");
 			this.MenuAdd(objMenu, Misc.Icon("MoveH"), "SubmenuOper", DocumentEditor.GetRes("Action.OperationMain"), "");
 			this.MenuAdd(objMenu, Misc.Icon("GroupEmpty"), "SubmenuGroup", DocumentEditor.GetRes("Action.GroupMain"), "");
@@ -378,51 +380,51 @@ namespace Epsitec.App.DocumentEditor
 			VMenu orderMenu = new VMenu();
 			orderMenu.Name = "Order";
 			orderMenu.Host = this;
-			this.MenuAdd(orderMenu, Misc.Icon("OrderUpAll"), "OrderUpAll", DocumentEditor.GetRes("Action.OrderUpAll"), DocumentEditor.GetShortCut(this.orderUpAllState));
-			this.MenuAdd(orderMenu, Misc.Icon("OrderUpOne"), "OrderUpOne", DocumentEditor.GetRes("Action.OrderUpOne"), DocumentEditor.GetShortCut(this.orderUpOneState));
-			this.MenuAdd(orderMenu, Misc.Icon("OrderDownOne"), "OrderDownOne", DocumentEditor.GetRes("Action.OrderDownOne"), DocumentEditor.GetShortCut(this.orderDownOneState));
-			this.MenuAdd(orderMenu, Misc.Icon("OrderDownAll"), "OrderDownAll", DocumentEditor.GetRes("Action.OrderDownAll"), DocumentEditor.GetShortCut(this.orderDownAllState));
+			this.MenuAdd(orderMenu, "OrderUpAll");
+			this.MenuAdd(orderMenu, "OrderUpOne");
+			this.MenuAdd(orderMenu, "OrderDownOne");
+			this.MenuAdd(orderMenu, "OrderDownAll");
 			orderMenu.AdjustSize();
 			this.MenuAddSub(objMenu, orderMenu, "SubmenuOrder");
 
 			VMenu operMenu = new VMenu();
 			operMenu.Name = "Oper";
 			operMenu.Host = this;
-			this.MenuAdd(operMenu, Misc.Icon("Rotate90"), "Rotate90", DocumentEditor.GetRes("Action.Rotate90"), DocumentEditor.GetShortCut(this.rotate90State));
-			this.MenuAdd(operMenu, Misc.Icon("Rotate180"), "Rotate180", DocumentEditor.GetRes("Action.Rotate180"), DocumentEditor.GetShortCut(this.rotate180State));
-			this.MenuAdd(operMenu, Misc.Icon("Rotate270"), "Rotate270", DocumentEditor.GetRes("Action.Rotate270"), DocumentEditor.GetShortCut(this.rotate270State));
-			this.MenuAdd(operMenu, "", "", "", "");
-			this.MenuAdd(operMenu, Misc.Icon("MirrorH"), "MirrorH", DocumentEditor.GetRes("Action.MirrorH"), DocumentEditor.GetShortCut(this.mirrorHState));
-			this.MenuAdd(operMenu, Misc.Icon("MirrorV"), "MirrorV", DocumentEditor.GetRes("Action.MirrorV"), DocumentEditor.GetShortCut(this.mirrorVState));
-			this.MenuAdd(operMenu, "", "", "", "");
-			this.MenuAdd(operMenu, Misc.Icon("ScaleDiv2"), "ScaleDiv2", DocumentEditor.GetRes("Action.ScaleDiv2"), DocumentEditor.GetShortCut(this.scaleDiv2State));
-			this.MenuAdd(operMenu, Misc.Icon("ScaleMul2"), "ScaleMul2", DocumentEditor.GetRes("Action.ScaleMul2"), DocumentEditor.GetShortCut(this.scaleMul2State));
+			this.MenuAdd(operMenu, "Rotate90");
+			this.MenuAdd(operMenu, "Rotate180");
+			this.MenuAdd(operMenu, "Rotate270");
+			this.MenuAdd(operMenu, null);
+			this.MenuAdd(operMenu, "MirrorH");
+			this.MenuAdd(operMenu, "MirrorV");
+			this.MenuAdd(operMenu, null);
+			this.MenuAdd(operMenu, "ScaleDiv2");
+			this.MenuAdd(operMenu, "ScaleMul2");
 			operMenu.AdjustSize();
 			this.MenuAddSub(objMenu, operMenu, "SubmenuOper");
 
 			VMenu groupMenu = new VMenu();
 			groupMenu.Name = "Group";
 			groupMenu.Host = this;
-			this.MenuAdd(groupMenu, Misc.Icon("Group"), "Group", DocumentEditor.GetRes("Action.Group"), DocumentEditor.GetShortCut(this.groupState));
-			this.MenuAdd(groupMenu, Misc.Icon("Merge"), "Merge", DocumentEditor.GetRes("Action.Merge"), DocumentEditor.GetShortCut(this.mergeState));
-			this.MenuAdd(groupMenu, Misc.Icon("Extract"), "Extract", DocumentEditor.GetRes("Action.Extract"), DocumentEditor.GetShortCut(this.extractState));
-			this.MenuAdd(groupMenu, Misc.Icon("Ungroup"), "Ungroup", DocumentEditor.GetRes("Action.Ungroup"), DocumentEditor.GetShortCut(this.ungroupState));
-			this.MenuAdd(groupMenu, "", "", "", "");
-			this.MenuAdd(groupMenu, Misc.Icon("Inside"), "Inside", DocumentEditor.GetRes("Action.Inside"), DocumentEditor.GetShortCut(this.insideState));
-			this.MenuAdd(groupMenu, Misc.Icon("Outside"), "Outside", DocumentEditor.GetRes("Action.Outside"), DocumentEditor.GetShortCut(this.outsideState));
+			this.MenuAdd(groupMenu, "Group");
+			this.MenuAdd(groupMenu, "Merge");
+			this.MenuAdd(groupMenu, "Extract");
+			this.MenuAdd(groupMenu, "Ungroup");
+			this.MenuAdd(groupMenu, null);
+			this.MenuAdd(groupMenu, "Inside");
+			this.MenuAdd(groupMenu, "Outside");
 			groupMenu.AdjustSize();
 			this.MenuAddSub(objMenu, groupMenu, "SubmenuGroup");
 
 			VMenu geomMenu = new VMenu();
 			geomMenu.Name = "Geom";
 			geomMenu.Host = this;
-			this.MenuAdd(geomMenu, Misc.Icon("Combine"), "Combine", DocumentEditor.GetRes("Action.Combine"), DocumentEditor.GetShortCut(this.combineState));
-			this.MenuAdd(geomMenu, Misc.Icon("Uncombine"), "Uncombine", DocumentEditor.GetRes("Action.Uncombine"), DocumentEditor.GetShortCut(this.uncombineState));
-			this.MenuAdd(geomMenu, "", "", "", "");
-			this.MenuAdd(geomMenu, Misc.Icon("ToBezier"), "ToBezier", DocumentEditor.GetRes("Action.ToBezier"), DocumentEditor.GetShortCut(this.toBezierState));
-			this.MenuAdd(geomMenu, Misc.Icon("ToPoly"), "ToPoly", DocumentEditor.GetRes("Action.ToPoly"), DocumentEditor.GetShortCut(this.toPolyState));
-			this.MenuAdd(geomMenu, "", "", "", "");
-			this.MenuAdd(geomMenu, Misc.Icon("Fragment"), "Fragment", DocumentEditor.GetRes("Action.Fragment"), DocumentEditor.GetShortCut(this.fragmentState));
+			this.MenuAdd(geomMenu, "Combine");
+			this.MenuAdd(geomMenu, "Uncombine");
+			this.MenuAdd(geomMenu, null);
+			this.MenuAdd(geomMenu, "ToBezier");
+			this.MenuAdd(geomMenu, "ToPoly");
+			this.MenuAdd(geomMenu, null);
+			this.MenuAdd(geomMenu, "Fragment");
 #if DEBUG
 			this.MenuAdd(geomMenu, "", "ToSimplest", DocumentEditor.GetRes("Action.ToSimplest"), "");
 #endif
@@ -432,42 +434,42 @@ namespace Epsitec.App.DocumentEditor
 			VMenu boolMenu = new VMenu();
 			boolMenu.Name = "Bool";
 			boolMenu.Host = this;
-			this.MenuAdd(boolMenu, Misc.Icon("BooleanOr"), "BooleanOr", DocumentEditor.GetRes("Action.BooleanOr"), DocumentEditor.GetShortCut(this.booleanOrState));
-			this.MenuAdd(boolMenu, Misc.Icon("BooleanAnd"), "BooleanAnd", DocumentEditor.GetRes("Action.BooleanAnd"), DocumentEditor.GetShortCut(this.booleanAndState));
-			this.MenuAdd(boolMenu, Misc.Icon("BooleanXor"), "BooleanXor", DocumentEditor.GetRes("Action.BooleanXor"), DocumentEditor.GetShortCut(this.booleanXorState));
-			this.MenuAdd(boolMenu, Misc.Icon("BooleanFrontMinus"), "BooleanFrontMinus", DocumentEditor.GetRes("Action.BooleanFrontMinus"), DocumentEditor.GetShortCut(this.booleanFrontMinusState));
-			this.MenuAdd(boolMenu, Misc.Icon("BooleanBackMinus"), "BooleanBackMinus", DocumentEditor.GetRes("Action.BooleanBackMinus"), DocumentEditor.GetShortCut(this.booleanBackMinusState));
+			this.MenuAdd(boolMenu, "BooleanOr");
+			this.MenuAdd(boolMenu, "BooleanAnd");
+			this.MenuAdd(boolMenu, "BooleanXor");
+			this.MenuAdd(boolMenu, "BooleanFrontMinus");
+			this.MenuAdd(boolMenu, "BooleanBackMinus");
 			boolMenu.AdjustSize();
 			this.MenuAddSub(objMenu, boolMenu, "SubmenuBool");
 
 			VMenu showMenu = new VMenu();
 			showMenu.Name = "Show";
 			showMenu.Host = this;
-			this.MenuAdd(showMenu, Misc.Icon("Preview"), "Preview", DocumentEditor.GetRes("Action.Preview"), DocumentEditor.GetShortCut(this.previewState));
-			this.MenuAdd(showMenu, Misc.Icon("Grid"), "Grid", DocumentEditor.GetRes("Action.Grid"), DocumentEditor.GetShortCut(this.gridState));
-			this.MenuAdd(showMenu, Misc.Icon("Magnet"), "Magnet", DocumentEditor.GetRes("Action.Magnet"), DocumentEditor.GetShortCut(this.magnetState));
+			this.MenuAdd(showMenu, "Preview");
+			this.MenuAdd(showMenu, "Grid");
+			this.MenuAdd(showMenu, "Magnet");
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.MenuAdd(showMenu, Misc.Icon("Rulers"), "Rulers", DocumentEditor.GetRes("Action.Rulers"), DocumentEditor.GetShortCut(this.rulersState));
-				this.MenuAdd(showMenu, Misc.Icon("Labels"), "Labels", DocumentEditor.GetRes("Action.Labels"), DocumentEditor.GetShortCut(this.labelsState));
-				this.MenuAdd(showMenu, Misc.Icon("Aggregates"), "Aggregates", DocumentEditor.GetRes("Action.Aggregates"), DocumentEditor.GetShortCut(this.aggregatesState));
+				this.MenuAdd(showMenu, "Rulers");
+				this.MenuAdd(showMenu, "Labels");
+				this.MenuAdd(showMenu, "Aggregates");
 			}
-			this.MenuAdd(showMenu, "", "", "", "");
-			this.MenuAdd(showMenu, Misc.Icon("ZoomMin"), "ZoomMin", DocumentEditor.GetRes("Action.ZoomMin"), DocumentEditor.GetShortCut(this.zoomMinState));
+			this.MenuAdd(showMenu, null);
+			this.MenuAdd(showMenu, "ZoomMin");
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.MenuAdd(showMenu, Misc.Icon("ZoomPage"), "ZoomPage", DocumentEditor.GetRes("Action.ZoomPage"), DocumentEditor.GetShortCut(this.zoomPageState));
-				this.MenuAdd(showMenu, Misc.Icon("ZoomPageWidth"), "ZoomPageWidth", DocumentEditor.GetRes("Action.ZoomPageWidth"), DocumentEditor.GetShortCut(this.zoomPageWidthState));
+				this.MenuAdd(showMenu, "ZoomPage");
+				this.MenuAdd(showMenu, "ZoomPageWidth");
 			}
-			this.MenuAdd(showMenu, Misc.Icon("ZoomDefault"), "ZoomDefault", DocumentEditor.GetRes("Action.ZoomDefault"), DocumentEditor.GetShortCut(this.zoomDefaultState));
-			this.MenuAdd(showMenu, Misc.Icon("ZoomSel"), "ZoomSel", DocumentEditor.GetRes("Action.ZoomSel"), DocumentEditor.GetShortCut(this.zoomSelState));
+			this.MenuAdd(showMenu, "ZoomDefault");
+			this.MenuAdd(showMenu, "ZoomSel");
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.MenuAdd(showMenu, Misc.Icon("ZoomSelWidth"), "ZoomSelWidth", DocumentEditor.GetRes("Action.ZoomSelWidth"), DocumentEditor.GetShortCut(this.zoomSelState));
+				this.MenuAdd(showMenu, "ZoomSelWidth");
 			}
-			this.MenuAdd(showMenu, Misc.Icon("ZoomPrev"), "ZoomPrev", DocumentEditor.GetRes("Action.ZoomPrev"), DocumentEditor.GetShortCut(this.zoomPrevState));
-			this.MenuAdd(showMenu, Misc.Icon("ZoomSub"), "ZoomSub", DocumentEditor.GetRes("Action.ZoomSub"), DocumentEditor.GetShortCut(this.zoomSubState));
-			this.MenuAdd(showMenu, Misc.Icon("ZoomAdd"), "ZoomAdd", DocumentEditor.GetRes("Action.ZoomAdd"), DocumentEditor.GetShortCut(this.zoomAddState));
+			this.MenuAdd(showMenu, "ZoomPrev");
+			this.MenuAdd(showMenu, "ZoomSub");
+			this.MenuAdd(showMenu, "ZoomAdd");
 			showMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = showMenu;
 
@@ -477,23 +479,23 @@ namespace Epsitec.App.DocumentEditor
 				VMenu arrayMenu = new VMenu();
 				arrayMenu.Name = "Array";
 				arrayMenu.Host = this;
-				this.MenuAdd(arrayMenu, Misc.Icon("ArrayFrame"), "ArrayOutlineFrame", "Modifie le cadre", "");
-				this.MenuAdd(arrayMenu, Misc.Icon("ArrayHoriz"), "ArrayOutlineHoriz", "Modifie l'intérieur horizontal", "");
-				this.MenuAdd(arrayMenu, Misc.Icon("ArrayVerti"), "ArrayOutlineVerti", "Modifie l'intérieur vertical", "");
-				this.MenuAdd(arrayMenu, "", "", "", "");
+				this.MenuAdd(arrayMenu, "ArrayFrame"), ";
+				this.MenuAdd(arrayMenu, "ArrayHoriz"), ";
+				this.MenuAdd(arrayMenu, "ArrayVerti"), ";
+				this.MenuAdd(arrayMenu, null);
 				this.MenuAdd(arrayMenu, "", "", "Assistants", "");
-				this.MenuAdd(arrayMenu, "", "", "", "");
+				this.MenuAdd(arrayMenu, null);
 				this.MenuAdd(arrayMenu, "", "ArrayAddColumnLeft", "Insérer des colonnes à gauche", "");
 				this.MenuAdd(arrayMenu, "", "ArrayAddColumnRight", "Insérer des colonnes à droite", "");
 				this.MenuAdd(arrayMenu, "", "ArrayAddRowTop", "Insérer des lignes en dessus", "");
 				this.MenuAdd(arrayMenu, "", "ArrayAddRowBottom", "Insérer des lignes en dessous", "");
-				this.MenuAdd(arrayMenu, "", "", "", "");
+				this.MenuAdd(arrayMenu, null);
 				this.MenuAdd(arrayMenu, "", "ArrayDelColumn", "Supprimer les colonnes", "");
 				this.MenuAdd(arrayMenu, "", "ArrayDelRow", "Supprimer les lignes", "");
-				this.MenuAdd(arrayMenu, "", "", "", "");
+				this.MenuAdd(arrayMenu, null);
 				this.MenuAdd(arrayMenu, "", "ArrayAlignColumn", "Egaliser les largeurs de colonne", "");
 				this.MenuAdd(arrayMenu, "", "ArrayAlignRow", "Egaliser les hauteurs de ligne", "");
-				this.MenuAdd(arrayMenu, "", "", "", "");
+				this.MenuAdd(arrayMenu, null);
 				this.MenuAdd(arrayMenu, "", "ArraySwapColumn", "Permuter le contenu des colonnes", "");
 				this.MenuAdd(arrayMenu, "", "ArraySwapRow", "Permuter le contenu des lignes", "");
 				arrayMenu.AdjustSize();
@@ -508,7 +510,7 @@ namespace Epsitec.App.DocumentEditor
 					if ( !Objects.Array.CommandLook(j, out text, out name) )  break;
 					if ( name == "" )
 					{
-						this.MenuAdd(arrayLookMenu, "", "", "", "");
+						this.MenuAdd(arrayLookMenu, null);
 					}
 					else
 					{
@@ -523,20 +525,20 @@ namespace Epsitec.App.DocumentEditor
 			VMenu docMenu = new VMenu();
 			docMenu.Name = "Document";
 			docMenu.Host = this;
-			this.MenuAdd(docMenu, Misc.Icon("Settings"), "Settings", DocumentEditor.GetRes("Action.Settings"), DocumentEditor.GetShortCut(this.settingsState));
-			this.MenuAdd(docMenu, Misc.Icon("Infos"), "Infos", DocumentEditor.GetRes("Action.Infos"), DocumentEditor.GetShortCut(this.infosState));
-			this.MenuAdd(docMenu, Misc.Icon("PageStack"), "PageStack", DocumentEditor.GetRes("Action.PageStack"), DocumentEditor.GetShortCut(this.pageStackState));
-			this.MenuAdd(docMenu, Misc.Icon("Glyphs"), "Glyphs", DocumentEditor.GetRes("Action.Glyphs"), DocumentEditor.GetShortCut(this.glyphsState));
-			this.MenuAdd(docMenu, "", "", "", "");
-			this.MenuAdd(docMenu, Misc.Icon("PageNew"), "PageNew", DocumentEditor.GetRes("Action.PageNew"), DocumentEditor.GetShortCut(this.pageNewState));
-			this.MenuAdd(docMenu, Misc.Icon("Up"), "PageUp", DocumentEditor.GetRes("Action.PageUp"), DocumentEditor.GetShortCut(this.pageUpState));
-			this.MenuAdd(docMenu, Misc.Icon("Down"), "PageDown", DocumentEditor.GetRes("Action.PageDown"), DocumentEditor.GetShortCut(this.pageDownState));
-			this.MenuAdd(docMenu, Misc.Icon("DeleteItem"), "PageDelete", DocumentEditor.GetRes("Action.PageDelete"), DocumentEditor.GetShortCut(this.pageDeleteState));
-			this.MenuAdd(docMenu, "", "", "", "");
-			this.MenuAdd(docMenu, Misc.Icon("LayerNew"), "LayerNew", DocumentEditor.GetRes("Action.LayerNew"), DocumentEditor.GetShortCut(this.layerNewSelState));
-			this.MenuAdd(docMenu, Misc.Icon("Up"), "LayerUp", DocumentEditor.GetRes("Action.LayerUp"), DocumentEditor.GetShortCut(this.layerUpState));
-			this.MenuAdd(docMenu, Misc.Icon("Down"), "LayerDown", DocumentEditor.GetRes("Action.LayerDown"), DocumentEditor.GetShortCut(this.layerDownState));
-			this.MenuAdd(docMenu, Misc.Icon("DeleteItem"), "LayerDelete", DocumentEditor.GetRes("Action.LayerDelete"), DocumentEditor.GetShortCut(this.layerDeleteState));
+			this.MenuAdd(docMenu, "Settings");
+			this.MenuAdd(docMenu, "Infos");
+			this.MenuAdd(docMenu, "PageStack");
+			this.MenuAdd(docMenu, "Glyphs");
+			this.MenuAdd(docMenu, null);
+			this.MenuAdd(docMenu, "PageNew");
+			this.MenuAdd(docMenu, "Up");
+			this.MenuAdd(docMenu, "Down");
+			this.MenuAdd(docMenu, "DeleteItem");
+			this.MenuAdd(docMenu, null);
+			this.MenuAdd(docMenu, "LayerNew");
+			this.MenuAdd(docMenu, "Up");
+			this.MenuAdd(docMenu, "Down");
+			this.MenuAdd(docMenu, "DeleteItem");
 			docMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = docMenu;
 
@@ -547,12 +549,12 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(debugMenu, "y/n", "DebugBboxThin", "Show BBoxThin", DocumentEditor.GetShortCut(this.debugBboxThinState));
 			this.MenuAdd(debugMenu, "y/n", "DebugBboxGeom", "Show BBoxGeom", DocumentEditor.GetShortCut(this.debugBboxGeomState));
 			this.MenuAdd(debugMenu, "y/n", "DebugBboxFull", "Show BBoxFull", DocumentEditor.GetShortCut(this.debugBboxFullState));
-			this.MenuAdd(debugMenu, "", "", "", "");
+			this.MenuAdd(debugMenu, null);
 			this.MenuAdd(debugMenu, "", "DebugDirty", "Make dirty", DocumentEditor.GetShortCut(this.debugDirtyState));
-			this.MenuAdd(debugMenu, "", "", "", "");
-			this.MenuAdd(debugMenu, Misc.Icon("SelectTotal"), "SelectTotal", "Full selection required", DocumentEditor.GetShortCut(this.selectTotalState));
-			this.MenuAdd(debugMenu, Misc.Icon("SelectPartial"), "SelectPartial", "Partial selection enabled", DocumentEditor.GetShortCut(this.selectPartialState));
-			this.MenuAdd(debugMenu, "", "", "", "");
+			this.MenuAdd(debugMenu, null);
+			this.MenuAdd(debugMenu, "SelectTotal");
+			this.MenuAdd(debugMenu, "SelectPartial");
+			this.MenuAdd(debugMenu, null);
 			this.MenuAdd(debugMenu, "", "ForceSaveAll", "Save and overwrite all", DocumentEditor.GetShortCut(this.forceSaveAllState));
 			debugMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = debugMenu;
@@ -563,33 +565,34 @@ namespace Epsitec.App.DocumentEditor
 			helpMenu.Host = this;
 			if ( this.installType != InstallType.Freeware )
 			{
-				this.MenuAdd(helpMenu, Misc.Icon("Key"), "KeyApplication", Res.Strings.Menu.Help.Key, DocumentEditor.GetShortCut(this.keyState));
+				this.MenuAdd(helpMenu, "Key");
 			}
-			this.MenuAdd(helpMenu, Misc.Icon("Update"), "UpdateApplication", Res.Strings.Menu.Help.Update, DocumentEditor.GetShortCut(this.updateState));
-			this.MenuAdd(helpMenu, "", "", "", "");
-			this.MenuAdd(helpMenu, Misc.Icon("About"), "AboutApplication", Res.Strings.Menu.Help.About, DocumentEditor.GetShortCut(this.aboutState));
+			this.MenuAdd(helpMenu, "Update");
+			this.MenuAdd(helpMenu, null);
+			this.MenuAdd(helpMenu, "About");
 			helpMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = helpMenu;
+#endif
 
 			this.hToolBar = new HToolBar(this);
 			this.hToolBar.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 #if false
-			this.HToolBarAdd(Misc.Icon("New"), "New", DocumentEditor.GetRes("Action.New"));
-			this.HToolBarAdd(Misc.Icon("Open"), "Open", DocumentEditor.GetRes("Action.Open"));
-			this.HToolBarAdd(Misc.Icon("Save"), "Save", DocumentEditor.GetRes("Action.Save"));
-			this.HToolBarAdd(Misc.Icon("SaveAs"), "SaveAs", DocumentEditor.GetRes("Action.SaveAs"));
-			this.HToolBarAdd(Misc.Icon("Print"), "Print", DocumentEditor.GetRes("Action.Print"));
-			this.HToolBarAdd(Misc.Icon("Export"), "Export", DocumentEditor.GetRes("Action.Export"));
-			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(Misc.Icon("Delete"), "Delete", DocumentEditor.GetRes("Action.Delete"));
-			this.HToolBarAdd(Misc.Icon("Duplicate"), "Duplicate", DocumentEditor.GetRes("Action.Duplicate"));
-			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(Misc.Icon("Cut"), "Cut", DocumentEditor.GetRes("Action.Cut"));
-			this.HToolBarAdd(Misc.Icon("Copy"), "Copy", DocumentEditor.GetRes("Action.Copy"));
-			this.HToolBarAdd(Misc.Icon("Paste"), "Paste", DocumentEditor.GetRes("Action.Paste"));
-			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd("New");
+			this.HToolBarAdd("Open");
+			this.HToolBarAdd("Save");
+			this.HToolBarAdd("SaveAs");
+			this.HToolBarAdd("Print");
+			this.HToolBarAdd("Export");
+			this.HToolBarAdd(null);
+			this.HToolBarAdd("Delete");
+			this.HToolBarAdd("Duplicate");
+			this.HToolBarAdd(null);
+			this.HToolBarAdd("Cut");
+			this.HToolBarAdd("Copy");
+			this.HToolBarAdd("Paste");
+			this.HToolBarAdd(null);
 
-			this.HToolBarAdd(Misc.Icon("Undo"), "Undo", DocumentEditor.GetRes("Action.Undo"));
+			this.HToolBarAdd("Undo");
 
 			GlyphButton undoRedoList = new GlyphButton("UndoRedoList");
 			undoRedoList.Name = "UndoRedoList";
@@ -600,38 +603,38 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(undoRedoList, DocumentEditor.GetRes("Action.UndoRedoList"));
 			this.hToolBar.Items.Add(undoRedoList);
 
-			Widget buttonRedo = this.HToolBarAdd(Misc.Icon("Redo"), "Redo", DocumentEditor.GetRes("Action.Redo"));
+			Widget buttonRedo = this.HToolBarAdd("Redo");
 			buttonRedo.DockMargins = new Margins(-1, 0, 0, 0);
 
-			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd(null);
 
-			this.HToolBarAdd(Misc.Icon("OrderDownAll"), "OrderDownAll", DocumentEditor.GetRes("Action.OrderDownAll"));
-			this.HToolBarAdd(Misc.Icon("OrderDownOne"), "OrderDownOne", DocumentEditor.GetRes("Action.OrderDownOne"));
-			this.HToolBarAdd(Misc.Icon("OrderUpOne"), "OrderUpOne", DocumentEditor.GetRes("Action.OrderUpOne"));
-			this.HToolBarAdd(Misc.Icon("OrderUpAll"), "OrderUpAll", DocumentEditor.GetRes("Action.OrderUpAll"));
-			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(Misc.Icon("Group"), "Group", DocumentEditor.GetRes("Action.Group"));
-			this.HToolBarAdd(Misc.Icon("Merge"), "Merge", DocumentEditor.GetRes("Action.Merge"));
-			this.HToolBarAdd(Misc.Icon("Extract"), "Extract", DocumentEditor.GetRes("Action.Extract"));
-			this.HToolBarAdd(Misc.Icon("Ungroup"), "Ungroup", DocumentEditor.GetRes("Action.Ungroup"));
-			this.HToolBarAdd(Misc.Icon("Inside"), "Inside", DocumentEditor.GetRes("Action.Inside"));
-			this.HToolBarAdd(Misc.Icon("Outside"), "Outside", DocumentEditor.GetRes("Action.Outside"));
-			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(Misc.Icon("Preview"), "Preview", DocumentEditor.GetRes("Action.Preview"));
-			this.HToolBarAdd(Misc.Icon("Grid"), "Grid", DocumentEditor.GetRes("Action.Grid"));
-			this.HToolBarAdd(Misc.Icon("Magnet"), "Magnet", DocumentEditor.GetRes("Action.Magnet"));
-			this.HToolBarAdd(Misc.Icon("Labels"), "Labels", DocumentEditor.GetRes("Action.Labels"));
-			this.HToolBarAdd(Misc.Icon("Aggregates"), "Aggregates", DocumentEditor.GetRes("Action.Aggregates"));
-			this.HToolBarAdd(Misc.Icon("Settings"), "Settings", DocumentEditor.GetRes("Action.Settings"));
-			this.HToolBarAdd(Misc.Icon("Infos"), "Infos", DocumentEditor.GetRes("Action.Infos"));
-			this.HToolBarAdd(Misc.Icon("Glyphs"), "Glyphs", DocumentEditor.GetRes("Action.Glyphs"));
-			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd("OrderDownAll");
+			this.HToolBarAdd("OrderDownOne");
+			this.HToolBarAdd("OrderUpOne");
+			this.HToolBarAdd("OrderUpAll");
+			this.HToolBarAdd(null);
+			this.HToolBarAdd("Group");
+			this.HToolBarAdd("Merge");
+			this.HToolBarAdd("Extract");
+			this.HToolBarAdd("Ungroup");
+			this.HToolBarAdd("Inside");
+			this.HToolBarAdd("Outside");
+			this.HToolBarAdd(null);
+			this.HToolBarAdd("Preview");
+			this.HToolBarAdd("Grid");
+			this.HToolBarAdd("Magnet");
+			this.HToolBarAdd("Labels");
+			this.HToolBarAdd("Aggregates");
+			this.HToolBarAdd("Settings");
+			this.HToolBarAdd("Infos");
+			this.HToolBarAdd("Glyphs");
+			this.HToolBarAdd(null);
 			if ( this.useArray )
 			{
-				this.HToolBarAdd(Misc.Icon("ArrayFrame"), "ArrayOutlineFrame", "Modifie le cadre");
-				this.HToolBarAdd(Misc.Icon("ArrayHoriz"), "ArrayOutlineHoriz", "Modifie l'intérieur horizontal");
-				this.HToolBarAdd(Misc.Icon("ArrayVerti"), "ArrayOutlineVerti", "Modifie l'intérieur vertical");
-				this.HToolBarAdd("", "", "");
+				this.HToolBarAdd("ArrayFrame");
+				this.HToolBarAdd("ArrayHoriz");
+				this.HToolBarAdd("ArrayVerti");
+				this.HToolBarAdd(null);
 			}
 #endif
 
@@ -713,32 +716,32 @@ namespace Epsitec.App.DocumentEditor
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
 			this.info.AnchorMargins = new Margins(0, 22-5, 0, 0);
 
-			this.InfoAdd("", 120, "StatusDocument", "");
+			this.InfoAdd("StatusDocument", 120);
 
-			this.InfoAdd(Misc.Icon("DeselectAll1"), 0, "DeselectAll", DocumentEditor.GetRes("Action.DeselectAll"));
-			this.InfoAdd(Misc.Icon("SelectAll1"), 0, "SelectAll", DocumentEditor.GetRes("Action.SelectAll"));
-			this.InfoAdd(Misc.Icon("SelectInvert1"), 0, "SelectInvert", DocumentEditor.GetRes("Action.SelectInvert"));
-			this.InfoAdd(Misc.Icon("HideSel1"), 0, "HideSel", DocumentEditor.GetRes("Action.HideSel"));
-			this.InfoAdd(Misc.Icon("HideRest1"), 0, "HideRest", DocumentEditor.GetRes("Action.HideRest"));
-			this.InfoAdd(Misc.Icon("HideCancel1"), 0, "HideCancel", DocumentEditor.GetRes("Action.HideCancel"));
+			this.InfoAdd("DeselectAll");
+			this.InfoAdd("SelectAll");
+			this.InfoAdd("SelectInvert");
+			this.InfoAdd("HideSel");
+			this.InfoAdd("HideRest");
+			this.InfoAdd("HideCancel");
 
-			this.InfoAdd("", 120, "StatusObject", "");
+			this.InfoAdd("StatusObject", 120);
 
-			//?this.InfoAdd(Misc.Icon("ZoomMin1"), 0, "ZoomMin", DocumentEditor.GetRes("Action.ZoomMin"));
+			//?this.InfoAdd("ZoomMin");
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.InfoAdd(Misc.Icon("ZoomPage1"), 0, "ZoomPage", DocumentEditor.GetRes("Action.ZoomPage"));
-				this.InfoAdd(Misc.Icon("ZoomPageWidth1"), 0, "ZoomPageWidth", DocumentEditor.GetRes("Action.ZoomPageWidth"));
+				this.InfoAdd("ZoomPage");
+				this.InfoAdd("ZoomPageWidth");
 			}
-			this.InfoAdd(Misc.Icon("ZoomDefault1"), 0, "ZoomDefault", DocumentEditor.GetRes("Action.ZoomDefault"));
-			this.InfoAdd(Misc.Icon("ZoomSel1"), 0, "ZoomSel", DocumentEditor.GetRes("Action.ZoomSel"));
+			this.InfoAdd("ZoomDefault");
+			this.InfoAdd("ZoomSel");
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.InfoAdd(Misc.Icon("ZoomSelWidth1"), 0, "ZoomSelWidth", DocumentEditor.GetRes("Action.ZoomSelWidth"));
+				this.InfoAdd("ZoomSelWidth");
 			}
-			this.InfoAdd(Misc.Icon("ZoomPrev1"), 0, "ZoomPrev", DocumentEditor.GetRes("Action.ZoomPrev"));
+			this.InfoAdd("ZoomPrev");
 
-			StatusField sf = this.InfoAdd("", 55, "StatusZoom", "") as StatusField;
+			StatusField sf = this.InfoAdd("StatusZoom", 55);
 			sf.Clicked += new MessageEventHandler(this.HandleStatusZoomClicked);
 			ToolTip.Default.SetToolTip(sf, Res.Strings.Status.Zoom.Menu);
 
@@ -756,8 +759,8 @@ namespace Epsitec.App.DocumentEditor
 			this.info.Items.Add(slider);
 			ToolTip.Default.SetToolTip(slider, Res.Strings.Status.Zoom.Slider);
 
-			this.InfoAdd("", 110, "StatusMouse", "");
-			this.InfoAdd("", 250, "StatusModif", "");
+			this.InfoAdd("StatusMouse", 110);
+			this.InfoAdd("StatusModif", 250);
 
 			StatusBar infoMisc = new StatusBar(this);
 			infoMisc.Width = 22;
@@ -844,15 +847,16 @@ namespace Epsitec.App.DocumentEditor
 				{
 					if ( first )  // première icône ?
 					{
-						this.HToolBarAdd("", "", "");  // séparateur au début
+						this.HToolBarAdd(null);  // séparateur au début
 						first = false;
 					}
 
-					this.HToolBarAdd(Misc.Icon(cmd), cmd, DocumentEditor.GetRes("Action."+cmd));
+					CommandState cs = this.commandDispatcher.GetCommandState(cmd);
+					this.HToolBarAdd(cs);
 
 					if ( sep )
 					{
-						this.HToolBarAdd("", "", "");  // séparateur après l'icône
+						this.HToolBarAdd(null);  // séparateur après l'icône
 					}
 				}
 			}
@@ -1128,6 +1132,8 @@ namespace Epsitec.App.DocumentEditor
 		// Construit le sous-menu des derniers fichiers ouverts.
 		protected void BuildLastFilenamesMenu()
 		{
+			if ( this.menu == null )  return;
+
 			VMenu lastMenu = new VMenu();
 			lastMenu.Name = "LastFilenames";
 			lastMenu.Host = this;
@@ -1174,6 +1180,22 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Ajoute une icône.
+		protected void MenuAdd(VMenu vmenu, string command)
+		{
+			if ( command == null )
+			{
+				vmenu.Items.Add(new MenuSeparator());
+			}
+			else
+			{
+				CommandState cs = this.commandDispatcher.GetCommandState(command);
+
+				MenuItem item = new MenuItem(cs.Name, Misc.Icon(cs.IconName), cs.LongCaption, DocumentEditor.GetShortCut(cs), cs.Name);
+				vmenu.Items.Add(item);
+			}
+		}
+		
+		// Ajoute une icône.
 		protected void MenuAdd(VMenu vmenu, string icon, string command, string text, string shortcut)
 		{
 			this.MenuAdd(vmenu, icon, command, text, shortcut, command);
@@ -1203,9 +1225,9 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Ajoute une icône.
-		protected Widget HToolBarAdd(string icon, string command, string tooltip)
+		protected Widget HToolBarAdd(CommandState cs)
 		{
-			if ( icon == "" )
+			if ( cs == null )
 			{
 				IconSeparator sep = new IconSeparator();
 				sep.IsHorizontal = true;
@@ -1214,57 +1236,53 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				IconButton button = new IconButton(command, icon, command);
+				IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 				this.hToolBar.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, tooltip);
+				ToolTip.Default.SetToolTip(button, cs.LongCaption);
 				return button;
 			}
 		}
 
 		// Ajoute une icône.
-		protected void VToolBarAdd(CommandState cs)
+		protected Widget VToolBarAdd(CommandState cs)
 		{
 			if ( cs == null )
 			{
 				IconSeparator sep = new IconSeparator();
 				sep.IsHorizontal = false;
 				this.vToolBar.Items.Add(sep);
+				return sep;
 			}
 			else
 			{
-				IconButton button = new IconButton(cs.Name, cs.IconName, cs.Name);
+				IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 				this.vToolBar.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, cs.LongCaption);
-			}
-		}
-
-		// Ajoute une icône.
-		protected Widget InfoAdd(string icon, double width, string command, string tooltip)
-		{
-			return this.InfoAdd(icon, width, command, tooltip, command);
-		}
-		
-		protected Widget InfoAdd(string icon, double width, string command, string tooltip, string name)
-		{
-			if ( icon == "" )
-			{
-				StatusField field = new StatusField();
-				field.Width = width;
-				this.info.Items.Add(field);
-
-				int i = this.info.Children.Count-1;
-				this.info.Items[i].Name = name;
-				return field;
-			}
-			else
-			{
-				IconButton button = new IconButton(command, icon, name);
-				double h = this.info.DefaultHeight-3;
-				button.Size = new Size(h, h);
-				this.info.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, tooltip);
 				return button;
 			}
+		}
+
+		protected StatusField InfoAdd(string name, double width)
+		{
+			StatusField field = new StatusField();
+			field.Width = width;
+			this.info.Items.Add(field);
+
+			int i = this.info.Children.Count-1;
+			this.info.Items[i].Name = name;
+			return field;
+		}
+
+		protected IconButton InfoAdd(string command)
+		{
+			CommandState cs = this.commandDispatcher.GetCommandState(command);
+
+			IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName, "1"), cs.Name);
+			double h = this.info.DefaultHeight-3;
+			button.Size = new Size(h, h);
+			this.info.Items.Add(button);
+			ToolTip.Default.SetToolTip(button, cs.LongCaption);
+			return button;
 		}
 
 
@@ -2716,7 +2734,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectTotal")]
 		void CommandSelectTotal(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "ToolSelect";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.PartialSelect = false;
 		}
@@ -2724,7 +2742,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectPartial")]
 		void CommandSelectPartial(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "ToolSelect";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.PartialSelect = true;
 		}
@@ -2732,7 +2750,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectorAuto")]
 		void CommandSelectorAuto(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "ToolSelect";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.SelectorType = SelectorType.Auto;
 		}
@@ -2740,7 +2758,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectorIndividual")]
 		void CommandSelectorIndividual(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "ToolSelect";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.SelectorType = SelectorType.Individual;
 		}
@@ -2748,7 +2766,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectorScaler")]
 		void CommandSelectorScaler(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "ToolSelect";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.SelectorType = SelectorType.Scaler;
 		}
@@ -2756,7 +2774,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectorStretch")]
 		void CommandSelectorStretch(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "ToolSelect";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.SelectorType = SelectorType.Stretcher;
 		}
@@ -2838,7 +2856,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("HideHalf")]
 		void CommandHideHalf(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "ToolSelect";
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			context.HideHalfActive = !context.HideHalfActive;
 		}
@@ -3385,285 +3403,282 @@ namespace Epsitec.App.DocumentEditor
 		// Initialise toutes les commandes.
 		protected void InitCommands()
 		{
-			CommandDispatcher foo = this.CommandDispatcher;
+			this.toolSelectState = this.CreateCommandState("ToolSelect", "Select", "ToolSelect", KeyCode.AlphaS);
+			this.toolGlobalState = this.CreateCommandState("ToolGlobal", "Global", "ToolGlobal", KeyCode.AlphaG);
+			this.toolShaperState = this.CreateCommandState("ToolShaper", "Shaper", "ToolShaper", KeyCode.AlphaA);
+			this.toolEditState = this.CreateCommandState("ToolEdit", "Edit", "ToolEdit", KeyCode.AlphaE);
+			this.toolZoomState = this.CreateCommandState("ToolZoom", "Zoom", "ToolZoom", KeyCode.AlphaZ);
+			this.toolHandState = this.CreateCommandState("ToolHand", "Hand", "ToolHand", KeyCode.AlphaH);
+			this.toolPickerState = this.CreateCommandState("ToolPicker", "Picker", "ToolPicker", KeyCode.AlphaI);
+			this.toolHotSpotState = this.CreateCommandState("ToolHotSpot", "HotSpot", "ToolHotSpot");
+			this.toolLineState = this.CreateCommandState("ObjectLine", "ObjectLine", "ToolLine", KeyCode.AlphaL);
+			this.toolRectangleState = this.CreateCommandState("ObjectRectangle", "ObjectRectangle", "ToolRectangle", KeyCode.AlphaR);
+			this.toolCircleState = this.CreateCommandState("ObjectCircle", "ObjectCircle", "ToolCircle", KeyCode.AlphaC);
+			this.toolEllipseState = this.CreateCommandState("ObjectEllipse", "ObjectEllipse", "ToolEllipse");
+			this.toolPolyState = this.CreateCommandState("ObjectPoly", "ObjectPoly", "ToolPoly", KeyCode.AlphaP);
+			this.toolBezierState = this.CreateCommandState("ObjectBezier", "ObjectBezier", "ToolBezier", KeyCode.AlphaB);
+			this.toolRegularState = this.CreateCommandState("ObjectRegular", "ObjectRegular", "ToolRegular");
+			this.toolSurfaceState = this.CreateCommandState("ObjectSurface", "ObjectSurface", "ToolSurface");
+			this.toolVolumeState = this.CreateCommandState("ObjectVolume", "ObjectVolume", "ToolVolume");
+			this.toolTextLineState = this.CreateCommandState("ObjectTextLine", "ObjectTextLine", "ToolTextLine");
+			this.toolTextBoxState = this.CreateCommandState("ObjectTextBox", "ObjectTextBox", "ToolTextBox");
+			this.toolTextBox2State = this.CreateCommandState("ObjectTextBox2", "ObjectTextBox", "ToolTextBox", KeyCode.AlphaT);
+			this.toolArrayState = this.CreateCommandState("ObjectArray", "ObjectArray", "ToolArray");
+			this.toolImageState = this.CreateCommandState("ObjectImage", "ObjectImage", "ToolImage");
+			this.toolDimensionState = this.CreateCommandState("ObjectDimension", "ObjectDimension", "ToolDimension");
 
-			this.toolSelectState = this.CreateCommandState("ToolSelect", "Select", "Tool.Select", KeyCode.AlphaS);
-			this.toolGlobalState = this.CreateCommandState("ToolGlobal", "Global", "Tool.Global", KeyCode.AlphaG);
-			this.toolShaperState = this.CreateCommandState("ToolShaper", "Shaper", "Tool.Shaper", KeyCode.AlphaA);
-			this.toolEditState = this.CreateCommandState("ToolEdit", "Edit", "Tool.Edit", KeyCode.AlphaE);
-			this.toolZoomState = this.CreateCommandState("ToolZoom", "Zoom", "Tool.Zoom", KeyCode.AlphaZ);
-			this.toolHandState = this.CreateCommandState("ToolHand", "Hand", "Tool.Hand", KeyCode.AlphaH);
-			this.toolPickerState = this.CreateCommandState("ToolPicker", "Picker", "Tool.Picker", KeyCode.AlphaI);
-			this.toolHotSpotState = this.CreateCommandState("ToolHotSpot", "HotSpot", "Tool.HotSpot");
-			this.toolLineState = this.CreateCommandState("ObjectLine", "ObjectLine", "Tool.Line", KeyCode.AlphaL);
-			this.toolRectangleState = this.CreateCommandState("ObjectRectangle", "ObjectRectangle", "Tool.Rectangle", KeyCode.AlphaR);
-			this.toolCircleState = this.CreateCommandState("ObjectCircle", "ObjectCircle", "Tool.Circle", KeyCode.AlphaC);
-			this.toolEllipseState = this.CreateCommandState("ObjectEllipse", "ObjectEllipse", "Tool.Ellipse");
-			this.toolPolyState = this.CreateCommandState("ObjectPoly", "ObjectPoly", "Tool.Poly", KeyCode.AlphaP);
-			this.toolBezierState = this.CreateCommandState("ObjectBezier", "ObjectBezier", "Tool.Bezier", KeyCode.AlphaB);
-			this.toolRegularState = this.CreateCommandState("ObjectRegular", "ObjectRegular", "Tool.Regular");
-			this.toolSurfaceState = this.CreateCommandState("ObjectSurface", "ObjectSurface", "Tool.Surface");
-			this.toolVolumeState = this.CreateCommandState("ObjectVolume", "ObjectVolume", "Tool.Volume");
-			this.toolTextLineState = this.CreateCommandState("ObjectTextLine", "ObjectTextLine", "Tool.TextLine");
-			this.toolTextBoxState = this.CreateCommandState("ObjectTextBox", "ObjectTextBox", "Tool.TextBox");
-			this.toolTextBox2State = this.CreateCommandState("ObjectTextBox2", "ObjectTextBox", "Tool.TextBox", KeyCode.AlphaT);
-			this.toolArrayState = this.CreateCommandState("ObjectArray", "ObjectArray", "Tool.Array");
-			this.toolImageState = this.CreateCommandState("ObjectImage", "ObjectImage", "Tool.Image");
-			this.toolDimensionState = this.CreateCommandState("ObjectDimension", "ObjectDimension", "Tool.Dimension");
+			this.newState = this.CreateCommandState("New", KeyCode.ModifierCtrl|KeyCode.AlphaN);
+			this.openState = this.CreateCommandState("Open", Misc.Icon2("Open"), "Open", KeyCode.ModifierCtrl|KeyCode.AlphaO);
+			this.openModelState = this.CreateCommandState("OpenModel");
+			this.saveState = this.CreateCommandState("Save", Misc.Icon2("Save"), "Save", KeyCode.ModifierCtrl|KeyCode.AlphaS);
+			this.saveAsState = this.CreateCommandState("SaveAs");
+			this.saveModelState = this.CreateCommandState("SaveModel");
+			this.closeState = this.CreateCommandState("Close", null, "Close");
+			this.closeAllState = this.CreateCommandState("CloseAll");
+			this.forceSaveAllState = this.CreateCommandState("ForceSaveAll");
+			this.nextDocState = this.CreateCommandState("NextDocument", KeyCode.ModifierCtrl|KeyCode.FuncF6);
+			this.prevDocState = this.CreateCommandState("PrevDocument", KeyCode.ModifierCtrl|KeyCode.ModifierShift|KeyCode.FuncF6);
+			this.printState = this.CreateCommandState("Print", Misc.Icon2("Print"), "Print", KeyCode.ModifierCtrl|KeyCode.AlphaP);
+			this.exportState = this.CreateCommandState("Export");
+			this.glyphsState = this.CreateCommandState("Glyphs");
+			this.deleteState = this.CreateCommandState("Delete", Misc.Icon2("Delete"), "Delete", KeyCode.Delete);
+			this.duplicateState = this.CreateCommandState("Duplicate", Misc.Icon2("Duplicate"), "Duplicate", KeyCode.ModifierCtrl|KeyCode.AlphaD);
 
-			this.newState = new CommandState("New", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaN);
-			this.openState = new CommandState("Open", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaO);
-			this.openModelState = new CommandState("OpenModel", this.commandDispatcher);
-			this.saveState = new CommandState("Save", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaS);
-			this.saveAsState = new CommandState("SaveAs", this.commandDispatcher);
-			this.saveModelState = new CommandState("SaveModel", this.commandDispatcher);
-			this.closeState = new CommandState("Close", this.commandDispatcher);
-			this.closeAllState = new CommandState("CloseAll", this.commandDispatcher);
-			this.forceSaveAllState = new CommandState("ForceSaveAll", this.commandDispatcher);
-			this.nextDocState = new CommandState("NextDocument", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.FuncF6);
-			this.prevDocState = new CommandState("PrevDocument", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.ModifierShift|KeyCode.FuncF6);
-			this.printState = new CommandState("Print", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaP);
-			this.exportState = new CommandState("Export", this.commandDispatcher);
-			this.glyphsState = new CommandState("Glyphs", this.commandDispatcher);
-			this.deleteState = new CommandState("Delete", this.commandDispatcher, KeyCode.Delete);
-			this.duplicateState = new CommandState("Duplicate", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaD);
+			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierCtrl|KeyCode.AlphaX);
+			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierCtrl|KeyCode.AlphaC);
+			this.pasteState = this.CreateCommandState("Paste", Misc.Icon2("Paste"), "Paste", KeyCode.ModifierCtrl|KeyCode.AlphaV);
 			
-			this.cutState = new CommandState("Cut", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaX);
-			this.copyState = new CommandState("Copy", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaC);
-			this.pasteState = new CommandState("Paste", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaV);
+			this.fontBoldState = this.CreateCommandState("FontBold", true, KeyCode.ModifierCtrl|KeyCode.AlphaB);
+			this.fontItalicState = this.CreateCommandState("FontItalic", true, KeyCode.ModifierCtrl|KeyCode.AlphaI);
+			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", true, KeyCode.ModifierCtrl|KeyCode.AlphaU);
+			this.fontOverlinedState = this.CreateCommandState("FontOverlined", true);
+			this.fontStrikeoutState = this.CreateCommandState("FontStrikeout", true);
+			this.fontSizePlusState = this.CreateCommandState("FontSizePlus");
+			this.fontSizeMinusState = this.CreateCommandState("FontSizeMinus");
+			this.fontClearState = this.CreateCommandState("FontClear", "Nothing", "FontClear");
+			this.paragraphLeading08State = this.CreateCommandState("ParagraphLeading08", true);
+			this.paragraphLeading10State = this.CreateCommandState("ParagraphLeading10", true);
+			this.paragraphLeading15State = this.CreateCommandState("ParagraphLeading15", true);
+			this.paragraphLeading20State = this.CreateCommandState("ParagraphLeading20", true);
+			this.paragraphLeading30State = this.CreateCommandState("ParagraphLeading30", true);
+			this.paragraphLeadingPlusState = this.CreateCommandState("ParagraphLeadingPlus");
+			this.paragraphLeadingMinusState = this.CreateCommandState("ParagraphLeadingMinus");
+			this.paragraphIndentPlusState = this.CreateCommandState("ParagraphIndentPlus");
+			this.paragraphIndentMinusState = this.CreateCommandState("ParagraphIndentMinus");
+			this.paragraphClearState = this.CreateCommandState("ParagraphClear", "Nothing", "ParagraphClear");
+			this.justifHLeftState = this.CreateCommandState("JustifHLeft", "JustifHLeft", "ParagraphJustifHLeft", true);
+			this.justifHCenterState = this.CreateCommandState("JustifHCenter", "JustifHCenter", "ParagraphJustifHCenter", true);
+			this.justifHRightState = this.CreateCommandState("JustifHRight", "JustifHRight", "ParagraphJustifHRight", true);
+			this.justifHJustifState = this.CreateCommandState("JustifHJustif", "JustifHJustif", "ParagraphJustifHJustif", true);
+			this.justifHAllState = this.CreateCommandState("JustifHAll", "JustifHAll", "ParagraphJustifHAll", true);
 			
-			this.fontBoldState = new CommandState("FontBold", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaB);
-			this.fontItalicState = new CommandState("FontItalic", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaI);
-			this.fontUnderlinedState = new CommandState("FontUnderlined", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaU);
-			this.fontOverlinedState = new CommandState("FontOverlined", this.commandDispatcher);
-			this.fontStrikeoutState = new CommandState("FontStrikeout", this.commandDispatcher);
-			this.fontSizePlusState = new CommandState("FontSizePlus", this.commandDispatcher);
-			this.fontSizeMinusState = new CommandState("FontSizeMinus", this.commandDispatcher);
-			this.fontClearState = new CommandState("FontClear", this.commandDispatcher);
-			this.paragraphLeading08State = new CommandState("ParagraphLeading08", this.commandDispatcher);
-			this.paragraphLeading10State = new CommandState("ParagraphLeading10", this.commandDispatcher);
-			this.paragraphLeading15State = new CommandState("ParagraphLeading15", this.commandDispatcher);
-			this.paragraphLeading20State = new CommandState("ParagraphLeading20", this.commandDispatcher);
-			this.paragraphLeading30State = new CommandState("ParagraphLeading30", this.commandDispatcher);
-			this.paragraphLeadingPlusState = new CommandState("ParagraphLeadingPlus", this.commandDispatcher);
-			this.paragraphLeadingMinusState = new CommandState("ParagraphLeadingMinus", this.commandDispatcher);
-			this.paragraphIndentPlusState = new CommandState("ParagraphIndentPlus", this.commandDispatcher);
-			this.paragraphIndentMinusState = new CommandState("ParagraphIndentMinus", this.commandDispatcher);
-			this.paragraphClearState = new CommandState("ParagraphClear", this.commandDispatcher);
-			this.justifHLeftState = new CommandState("JustifHLeft", this.commandDispatcher);
-			this.justifHCenterState = new CommandState("JustifHCenter", this.commandDispatcher);
-			this.justifHRightState = new CommandState("JustifHRight", this.commandDispatcher);
-			this.justifHJustifState = new CommandState("JustifHJustif", this.commandDispatcher);
-			this.justifHAllState = new CommandState("JustifHAll", this.commandDispatcher);
-			this.fontBoldState.Statefull = true;
-			this.fontItalicState.Statefull = true;
-			this.fontUnderlinedState.Statefull = true;
-			this.fontOverlinedState.Statefull = true;
-			this.fontStrikeoutState.Statefull = true;
-			this.paragraphLeading08State.Statefull = true;
-			this.paragraphLeading10State.Statefull = true;
-			this.paragraphLeading15State.Statefull = true;
-			this.paragraphLeading20State.Statefull = true;
-			this.paragraphLeading30State.Statefull = true;
-			this.justifHLeftState.Statefull = true;
-			this.justifHCenterState.Statefull = true;
-			this.justifHRightState.Statefull = true;
-			this.justifHJustifState.Statefull = true;
-			this.justifHAllState.Statefull = true;
+			this.orderUpOneState = this.CreateCommandState("OrderUpOne", KeyCode.ModifierCtrl|KeyCode.PageUp);
+			this.orderDownOneState = this.CreateCommandState("OrderDownOne", KeyCode.ModifierCtrl|KeyCode.PageDown);
+			this.orderUpAllState = this.CreateCommandState("OrderUpAll", Misc.Icon2("OrderUpAll"), "OrderUpAll", KeyCode.ModifierShift|KeyCode.PageUp);
+			this.orderDownAllState = this.CreateCommandState("OrderDownAll", Misc.Icon2("OrderDownAll"), "OrderDownAll", KeyCode.ModifierShift|KeyCode.PageDown);
 			
-			this.orderUpOneState = new CommandState("OrderUpOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageUp);
-			this.orderDownOneState = new CommandState("OrderDownOne", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.PageDown);
-			this.orderUpAllState = new CommandState("OrderUpAll", this.commandDispatcher, KeyCode.ModifierShift|KeyCode.PageUp);
-			this.orderDownAllState = new CommandState("OrderDownAll", this.commandDispatcher, KeyCode.ModifierShift|KeyCode.PageDown);
+			this.moveLeftFreeState = this.CreateCommandState("MoveLeftFree", "MoveHi", "MoveLeft");
+			this.moveRightFreeState = this.CreateCommandState("MoveRightFree", "MoveH", "MoveRight");
+			this.moveUpFreeState = this.CreateCommandState("MoveUpFree", "MoveV", "MoveUp");
+			this.moveDownFreeState = this.CreateCommandState("MoveDownFree", "MoveVi", "MoveDown");
 			
-			this.moveLeftFreeState = new CommandState("MoveLeftFree", this.commandDispatcher);
-			this.moveRightFreeState = new CommandState("MoveRightFree", this.commandDispatcher);
-			this.moveUpFreeState = new CommandState("MoveUpFree", this.commandDispatcher);
-			this.moveDownFreeState = new CommandState("MoveDownFree", this.commandDispatcher);
+			this.rotate90State = this.CreateCommandState("Rotate90");
+			this.rotate180State = this.CreateCommandState("Rotate180");
+			this.rotate270State = this.CreateCommandState("Rotate270");
+			this.rotateFreeCCWState = this.CreateCommandState("RotateFreeCCW");
+			this.rotateFreeCWState = this.CreateCommandState("RotateFreeCW");
 			
-			this.rotate90State = new CommandState("Rotate90", this.commandDispatcher);
-			this.rotate180State = new CommandState("Rotate180", this.commandDispatcher);
-			this.rotate270State = new CommandState("Rotate270", this.commandDispatcher);
-			this.rotateFreeCCWState = new CommandState("RotateFreeCCW", this.commandDispatcher);
-			this.rotateFreeCWState = new CommandState("RotateFreeCW", this.commandDispatcher);
+			this.mirrorHState = this.CreateCommandState("MirrorH");
+			this.mirrorVState = this.CreateCommandState("MirrorV");
 			
-			this.mirrorHState = new CommandState("MirrorH", this.commandDispatcher);
-			this.mirrorVState = new CommandState("MirrorV", this.commandDispatcher);
+			this.scaleMul2State = this.CreateCommandState("ScaleMul2");
+			this.scaleDiv2State = this.CreateCommandState("ScaleDiv2");
+			this.scaleMulFreeState = this.CreateCommandState("ScaleMulFree");
+			this.scaleDivFreeState = this.CreateCommandState("ScaleDivFree");
 			
-			this.scaleMul2State = new CommandState("ScaleMul2", this.commandDispatcher);
-			this.scaleDiv2State = new CommandState("ScaleDiv2", this.commandDispatcher);
-			this.scaleMulFreeState = new CommandState("ScaleMulFree", this.commandDispatcher);
-			this.scaleDivFreeState = new CommandState("ScaleDivFree", this.commandDispatcher);
+			this.alignLeftState = this.CreateCommandState("AlignLeft");
+			this.alignCenterXState = this.CreateCommandState("AlignCenterX");
+			this.alignRightState = this.CreateCommandState("AlignRight");
+			this.alignTopState = this.CreateCommandState("AlignTop");
+			this.alignCenterYState = this.CreateCommandState("AlignCenterY");
+			this.alignBottomState = this.CreateCommandState("AlignBottom");
+			this.alignGridState = this.CreateCommandState("AlignGrid");
 			
-			this.alignLeftState = new CommandState("AlignLeft", this.commandDispatcher);
-			this.alignCenterXState = new CommandState("AlignCenterX", this.commandDispatcher);
-			this.alignRightState = new CommandState("AlignRight", this.commandDispatcher);
-			this.alignTopState = new CommandState("AlignTop", this.commandDispatcher);
-			this.alignCenterYState = new CommandState("AlignCenterY", this.commandDispatcher);
-			this.alignBottomState = new CommandState("AlignBottom", this.commandDispatcher);
-			this.alignGridState = new CommandState("AlignGrid", this.commandDispatcher);
+			this.shareLeftState = this.CreateCommandState("ShareLeft");
+			this.shareCenterXState = this.CreateCommandState("ShareCenterX");
+			this.shareSpaceXState = this.CreateCommandState("ShareSpaceX");
+			this.shareRightState = this.CreateCommandState("ShareRight");
+			this.shareTopState = this.CreateCommandState("ShareTop");
+			this.shareCenterYState = this.CreateCommandState("ShareCenterY");
+			this.shareSpaceYState = this.CreateCommandState("ShareSpaceY");
+			this.shareBottomState = this.CreateCommandState("ShareBottom");
 			
-			this.shareLeftState = new CommandState("ShareLeft", this.commandDispatcher);
-			this.shareCenterXState = new CommandState("ShareCenterX", this.commandDispatcher);
-			this.shareSpaceXState = new CommandState("ShareSpaceX", this.commandDispatcher);
-			this.shareRightState = new CommandState("ShareRight", this.commandDispatcher);
-			this.shareTopState = new CommandState("ShareTop", this.commandDispatcher);
-			this.shareCenterYState = new CommandState("ShareCenterY", this.commandDispatcher);
-			this.shareSpaceYState = new CommandState("ShareSpaceY", this.commandDispatcher);
-			this.shareBottomState = new CommandState("ShareBottom", this.commandDispatcher);
+			this.adjustWidthState = this.CreateCommandState("AdjustWidth");
+			this.adjustHeightState = this.CreateCommandState("AdjustHeight");
 			
-			this.adjustWidthState = new CommandState("AdjustWidth", this.commandDispatcher);
-			this.adjustHeightState = new CommandState("AdjustHeight", this.commandDispatcher);
+			this.colorToRGBState = this.CreateCommandState("ColorToRGB");
+			this.colorToCMYKState = this.CreateCommandState("ColorToCMYK");
+			this.colorToGrayState = this.CreateCommandState("ColorToGray");
+			this.colorStrokeDarkState = this.CreateCommandState("ColorStrokeDark");
+			this.colorStrokeLightState = this.CreateCommandState("ColorStrokeLight");
+			this.colorFillDarkState = this.CreateCommandState("ColorFillDark");
+			this.colorFillLightState = this.CreateCommandState("ColorFillLight");
 			
-			this.colorToRGBState = new CommandState("ColorToRGB", this.commandDispatcher);
-			this.colorToCMYKState = new CommandState("ColorToCMYK", this.commandDispatcher);
-			this.colorToGrayState = new CommandState("ColorToGray", this.commandDispatcher);
-			this.colorStrokeDarkState = new CommandState("ColorStrokeDark", this.commandDispatcher);
-			this.colorStrokeLightState = new CommandState("ColorStrokeLight", this.commandDispatcher);
-			this.colorFillDarkState = new CommandState("ColorFillDark", this.commandDispatcher);
-			this.colorFillLightState = new CommandState("ColorFillLight", this.commandDispatcher);
-			
-			this.mergeState = new CommandState("Merge", this.commandDispatcher);
-			this.extractState = new CommandState("Extract", this.commandDispatcher);
-			this.groupState = new CommandState("Group", this.commandDispatcher);
-			this.ungroupState = new CommandState("Ungroup", this.commandDispatcher);
-			this.insideState = new CommandState("Inside", this.commandDispatcher);
-			this.outsideState = new CommandState("Outside", this.commandDispatcher);
-			this.combineState = new CommandState("Combine", this.commandDispatcher);
-			this.uncombineState = new CommandState("Uncombine", this.commandDispatcher);
-			this.toBezierState = new CommandState("ToBezier", this.commandDispatcher);
-			this.toPolyState = new CommandState("ToPoly", this.commandDispatcher);
-			this.fragmentState = new CommandState("Fragment", this.commandDispatcher);
+			this.mergeState = this.CreateCommandState("Merge");
+			this.extractState = this.CreateCommandState("Extract");
+			this.groupState = this.CreateCommandState("Group");
+			this.ungroupState = this.CreateCommandState("Ungroup");
+			this.insideState = this.CreateCommandState("Inside", Misc.Icon2("Inside"), "Inside");
+			this.outsideState = this.CreateCommandState("Outside", Misc.Icon2("Outside"), "Outside");
+			this.combineState = this.CreateCommandState("Combine");
+			this.uncombineState = this.CreateCommandState("Uncombine");
+			this.toBezierState = this.CreateCommandState("ToBezier");
+			this.toPolyState = this.CreateCommandState("ToPoly");
+			this.fragmentState = this.CreateCommandState("Fragment");
 
-			this.shaperHandleAddState = new CommandState("ShaperHandleAdd", this.commandDispatcher);
-			this.shaperHandleSubState = new CommandState("ShaperHandleSub", this.commandDispatcher);
-			this.shaperHandleToLineState = new CommandState("ShaperHandleToLine", this.commandDispatcher);
-			this.shaperHandleToCurveState = new CommandState("ShaperHandleToCurve", this.commandDispatcher);
-			this.shaperHandleSymState = new CommandState("ShaperHandleSym", this.commandDispatcher);
-			this.shaperHandleSmoothState = new CommandState("ShaperHandleSmooth", this.commandDispatcher);
-			this.shaperHandleDisState = new CommandState("ShaperHandleDis", this.commandDispatcher);
-			this.shaperHandleInlineState = new CommandState("ShaperHandleInline", this.commandDispatcher);
-			this.shaperHandleFreeState = new CommandState("ShaperHandleFree", this.commandDispatcher);
-			this.shaperHandleSimplyState = new CommandState("ShaperHandleSimply", this.commandDispatcher);
-			this.shaperHandleCornerState = new CommandState("ShaperHandleCorner", this.commandDispatcher);
-			this.shaperHandleContinueState = new CommandState("ShaperHandleContinue", this.commandDispatcher);
-			this.shaperHandleToLineState.Statefull = true;
-			this.shaperHandleToCurveState.Statefull = true;
-			this.shaperHandleSymState.Statefull = true;
-			this.shaperHandleSmoothState.Statefull = true;
-			this.shaperHandleDisState.Statefull = true;
-			this.shaperHandleInlineState.Statefull = true;
-			this.shaperHandleFreeState.Statefull = true;
-			this.shaperHandleSimplyState.Statefull = true;
-			this.shaperHandleCornerState.Statefull = true;
+			this.shaperHandleAddState = this.CreateCommandState("ShaperHandleAdd");
+			this.shaperHandleSubState = this.CreateCommandState("ShaperHandleSub");
+			this.shaperHandleToLineState = this.CreateCommandState("ShaperHandleToLine", true);
+			this.shaperHandleToCurveState = this.CreateCommandState("ShaperHandleToCurve", true);
+			this.shaperHandleSymState = this.CreateCommandState("ShaperHandleSym", true);
+			this.shaperHandleSmoothState = this.CreateCommandState("ShaperHandleSmooth", true);
+			this.shaperHandleDisState = this.CreateCommandState("ShaperHandleDis", true);
+			this.shaperHandleInlineState = this.CreateCommandState("ShaperHandleInline", true);
+			this.shaperHandleFreeState = this.CreateCommandState("ShaperHandleFree", true);
+			this.shaperHandleSimplyState = this.CreateCommandState("ShaperHandleSimply", true);
+			this.shaperHandleCornerState = this.CreateCommandState("ShaperHandleCorner", true);
+			this.shaperHandleContinueState = this.CreateCommandState("ShaperHandleContinue");
 			
-			this.booleanAndState = new CommandState("BooleanAnd", this.commandDispatcher);
-			this.booleanOrState = new CommandState("BooleanOr", this.commandDispatcher);
-			this.booleanXorState = new CommandState("BooleanXor", this.commandDispatcher);
-			this.booleanFrontMinusState = new CommandState("BooleanFrontMinus", this.commandDispatcher);
-			this.booleanBackMinusState = new CommandState("BooleanBackMinus", this.commandDispatcher);
+			this.booleanAndState = this.CreateCommandState("BooleanAnd");
+			this.booleanOrState = this.CreateCommandState("BooleanOr");
+			this.booleanXorState = this.CreateCommandState("BooleanXor");
+			this.booleanFrontMinusState = this.CreateCommandState("BooleanFrontMinus");
+			this.booleanBackMinusState = this.CreateCommandState("BooleanBackMinus");
 			
-			this.undoState = new CommandState("Undo", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaZ);
-			this.redoState = new CommandState("Redo", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaY);
-			this.undoRedoListState = new CommandState("UndoRedoList", this.commandDispatcher);
+			this.undoState = this.CreateCommandState("Undo", Misc.Icon2("Undo"), "Undo", KeyCode.ModifierCtrl|KeyCode.AlphaZ);
+			this.redoState = this.CreateCommandState("Redo", Misc.Icon2("Redo"), "Redo", KeyCode.ModifierCtrl|KeyCode.AlphaY);
+			this.undoRedoListState = this.CreateCommandState("UndoRedoList");
 			
-			this.deselectAllState = new CommandState("DeselectAll", this.commandDispatcher, KeyCode.Escape);
-			this.selectAllState = new CommandState("SelectAll", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.AlphaA);
-			this.selectInvertState = new CommandState("SelectInvert", this.commandDispatcher);
-			this.selectorAutoState = new CommandState("SelectorAuto", this.commandDispatcher);
-			this.selectorIndividualState = new CommandState("SelectorIndividual", this.commandDispatcher);
-			this.selectorScalerState = new CommandState("SelectorScaler", this.commandDispatcher);
-			this.selectorStretchState = new CommandState("SelectorStretch", this.commandDispatcher);
-			this.selectorStretchTypeState = new CommandState("SelectorStretchType", this.commandDispatcher);
-			this.selectTotalState = new CommandState("SelectTotal", this.commandDispatcher);
-			this.selectPartialState = new CommandState("SelectPartial", this.commandDispatcher);
-			this.selectorAdaptLine = new CommandState("SelectorAdaptLine", this.commandDispatcher);
-			this.selectorAdaptText = new CommandState("SelectorAdaptText", this.commandDispatcher);
+			this.deselectAllState = this.CreateCommandState("DeselectAll", Misc.Icon1("DeselectAll"), "DeselectAll", KeyCode.Escape);
+			this.selectAllState = this.CreateCommandState("SelectAll", Misc.Icon1("SelectAll"), "SelectAll", KeyCode.ModifierCtrl|KeyCode.AlphaA);
+			this.selectInvertState = this.CreateCommandState("SelectInvert", Misc.Icon1("SelectInvert"), "SelectInvert");
+			this.selectorAutoState = this.CreateCommandState("SelectorAuto");
+			this.selectorIndividualState = this.CreateCommandState("SelectorIndividual");
+			this.selectorScalerState = this.CreateCommandState("SelectorScaler");
+			this.selectorStretchState = this.CreateCommandState("SelectorStretch");
+			this.selectorStretchTypeState = this.CreateCommandState("SelectorStretchType");
+			this.selectTotalState = this.CreateCommandState("SelectTotal");
+			this.selectPartialState = this.CreateCommandState("SelectPartial");
+			this.selectorAdaptLine = this.CreateCommandState("SelectorAdaptLine");
+			this.selectorAdaptText = this.CreateCommandState("SelectorAdaptText");
 			
-			this.hideHalfState = new CommandState("HideHalf", this.commandDispatcher);
-			this.hideSelState = new CommandState("HideSel", this.commandDispatcher);
-			this.hideRestState = new CommandState("HideRest", this.commandDispatcher);
-			this.hideCancelState = new CommandState("HideCancel", this.commandDispatcher);
+			this.hideHalfState = this.CreateCommandState("HideHalf", true);
+			this.hideSelState = this.CreateCommandState("HideSel", Misc.Icon1("HideSel"), "HideSel");
+			this.hideRestState = this.CreateCommandState("HideRest", Misc.Icon1("HideRest"), "HideRest");
+			this.hideCancelState = this.CreateCommandState("HideCancel", Misc.Icon1("HideCancel"), "HideCancel");
 			
-			this.zoomMinState = new CommandState("ZoomMin", this.commandDispatcher);
-			this.zoomPageState = new CommandState("ZoomPage", this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.Digit0);
-			this.zoomPageWidthState = new CommandState("ZoomPageWidth", this.commandDispatcher);
-			this.zoomDefaultState = new CommandState("ZoomDefault", this.commandDispatcher);
-			this.zoomSelState = new CommandState("ZoomSel", this.commandDispatcher);
-			this.zoomSelWidthState = new CommandState("ZoomSelWidth", this.commandDispatcher);
-			this.zoomPrevState = new CommandState("ZoomPrev", this.commandDispatcher);
-			this.zoomSubState = new CommandState("ZoomSub", this.commandDispatcher, KeyCode.Substract);
-			this.zoomAddState = new CommandState("ZoomAdd", this.commandDispatcher, KeyCode.Add);
+			this.zoomMinState = this.CreateCommandState("ZoomMin", Misc.Icon1("ZoomMin"), "ZoomMin", true);
+			this.zoomPageState = this.CreateCommandState("ZoomPage", Misc.Icon1("ZoomPage"), "ZoomPage", true, KeyCode.ModifierCtrl|KeyCode.Digit0);
+			this.zoomPageWidthState = this.CreateCommandState("ZoomPageWidth", Misc.Icon1("ZoomPageWidth"), "ZoomPageWidth", true);
+			this.zoomDefaultState = this.CreateCommandState("ZoomDefault", Misc.Icon1("ZoomDefault"), "ZoomDefault", true);
+			this.zoomSelState = this.CreateCommandState("ZoomSel", Misc.Icon1("ZoomSel"), "ZoomSel");
+			this.zoomSelWidthState = this.CreateCommandState("ZoomSelWidth", Misc.Icon1("ZoomSelWidth"), "ZoomSelWidth");
+			this.zoomPrevState = this.CreateCommandState("ZoomPrev", Misc.Icon1("ZoomPrev"), "ZoomPrev");
+			this.zoomSubState = this.CreateCommandState("ZoomSub", KeyCode.Substract);
+			this.zoomAddState = this.CreateCommandState("ZoomAdd", KeyCode.Add);
 			
-			this.previewState = new CommandState("Preview", this.commandDispatcher);
-			this.gridState = new CommandState("Grid", this.commandDispatcher);
-			this.textGridState = new CommandState("TextGrid", this.commandDispatcher);
-			this.magnetState = new CommandState("Magnet", this.commandDispatcher);
-			this.magnetLayerState = new CommandState("MagnetLayer", this.commandDispatcher);
-			this.rulersState = new CommandState("Rulers", this.commandDispatcher);
-			this.labelsState = new CommandState("Labels", this.commandDispatcher);
-			this.aggregatesState = new CommandState("Aggregates", this.commandDispatcher);
+			this.previewState = this.CreateCommandState("Preview", true);
+			this.gridState = this.CreateCommandState("Grid", true);
+			this.textGridState = this.CreateCommandState("TextGrid", true);
+			this.magnetState = this.CreateCommandState("Magnet", true);
+			this.magnetLayerState = this.CreateCommandState("MagnetLayer", true);
+			this.rulersState = this.CreateCommandState("Rulers", true);
+			this.labelsState = this.CreateCommandState("Labels", true);
+			this.aggregatesState = this.CreateCommandState("Aggregates", true);
 
-			this.arrayOutlineFrameState = new CommandState("ArrayOutlineFrame", this.commandDispatcher);
-			this.arrayOutlineHorizState = new CommandState("ArrayOutlineHoriz", this.commandDispatcher);
-			this.arrayOutlineVertiState = new CommandState("ArrayOutlineVerti", this.commandDispatcher);
-			this.arrayAddColumnLeftState = new CommandState("ArrayAddColumnLeft", this.commandDispatcher);
-			this.arrayAddColumnRightState = new CommandState("ArrayAddColumnRight", this.commandDispatcher);
-			this.arrayAddRowTopState = new CommandState("ArrayAddRowTop", this.commandDispatcher);
-			this.arrayAddRowBottomState = new CommandState("ArrayAddRowBottom", this.commandDispatcher);
-			this.arrayDelColumnState = new CommandState("ArrayDelColumn", this.commandDispatcher);
-			this.arrayDelRowState = new CommandState("ArrayDelRow", this.commandDispatcher);
-			this.arrayAlignColumnState = new CommandState("ArrayAlignColumn", this.commandDispatcher);
-			this.arrayAlignRowState = new CommandState("ArrayAlignRow", this.commandDispatcher);
-			this.arraySwapColumnState = new CommandState("ArraySwapColumn", this.commandDispatcher);
-			this.arraySwapRowState = new CommandState("ArraySwapRow", this.commandDispatcher);
-			this.arrayLookState = new CommandState("ArrayLook", this.commandDispatcher);
+			this.arrayOutlineFrameState = this.CreateCommandState("ArrayOutlineFrame");
+			this.arrayOutlineHorizState = this.CreateCommandState("ArrayOutlineHoriz");
+			this.arrayOutlineVertiState = this.CreateCommandState("ArrayOutlineVerti");
+			this.arrayAddColumnLeftState = this.CreateCommandState("ArrayAddColumnLeft");
+			this.arrayAddColumnRightState = this.CreateCommandState("ArrayAddColumnRight");
+			this.arrayAddRowTopState = this.CreateCommandState("ArrayAddRowTop");
+			this.arrayAddRowBottomState = this.CreateCommandState("ArrayAddRowBottom");
+			this.arrayDelColumnState = this.CreateCommandState("ArrayDelColumn");
+			this.arrayDelRowState = this.CreateCommandState("ArrayDelRow");
+			this.arrayAlignColumnState = this.CreateCommandState("ArrayAlignColumn");
+			this.arrayAlignRowState = this.CreateCommandState("ArrayAlignRow");
+			this.arraySwapColumnState = this.CreateCommandState("ArraySwapColumn");
+			this.arraySwapRowState = this.CreateCommandState("ArraySwapRow");
+			this.arrayLookState = this.CreateCommandState("ArrayLook");
 
-			this.debugBboxThinState = new CommandState("DebugBboxThin", this.commandDispatcher);
-			this.debugBboxGeomState = new CommandState("DebugBboxGeom", this.commandDispatcher);
-			this.debugBboxFullState = new CommandState("DebugBboxFull", this.commandDispatcher);
-			this.debugDirtyState = new CommandState("DebugDirty", this.commandDispatcher, KeyCode.FuncF12);
+			this.debugBboxThinState = this.CreateCommandState("DebugBboxThin");
+			this.debugBboxGeomState = this.CreateCommandState("DebugBboxGeom");
+			this.debugBboxFullState = this.CreateCommandState("DebugBboxFull");
+			this.debugDirtyState = this.CreateCommandState("DebugDirty", KeyCode.FuncF12);
 
-			this.pagePrevState = new CommandState("PagePrev", this.commandDispatcher, KeyCode.PageUp);
-			this.pageNextState = new CommandState("PageNext", this.commandDispatcher, KeyCode.PageDown);
-			this.pageMenuState = new CommandState("PageMenu", this.commandDispatcher);
-			this.pageNewState = new CommandState("PageNew", this.commandDispatcher);
-			this.pageDuplicateState = new CommandState("PageDuplicate", this.commandDispatcher);
-			this.pageUpState = new CommandState("PageUp", this.commandDispatcher);
-			this.pageDownState = new CommandState("PageDown", this.commandDispatcher);
-			this.pageDeleteState = new CommandState("PageDelete", this.commandDispatcher);
+			this.pagePrevState = this.CreateCommandState("PagePrev", KeyCode.PageUp);
+			this.pageNextState = this.CreateCommandState("PageNext", KeyCode.PageDown);
+			this.pageMenuState = this.CreateCommandState("PageMenu");
+			this.pageNewState = this.CreateCommandState("PageNew");
+			this.pageDuplicateState = this.CreateCommandState("PageDuplicate");
+			this.pageUpState = this.CreateCommandState("PageUp");
+			this.pageDownState = this.CreateCommandState("PageDown");
+			this.pageDeleteState = this.CreateCommandState("PageDelete");
 
-			this.layerPrevState = new CommandState("LayerPrev", this.commandDispatcher);
-			this.layerNextState = new CommandState("LayerNext", this.commandDispatcher);
-			this.layerMenuState = new CommandState("LayerMenu", this.commandDispatcher);
-			this.layerNewState = new CommandState("LayerNew", this.commandDispatcher);
-			this.layerDuplicateState = new CommandState("LayerDuplicate", this.commandDispatcher);
-			this.layerNewSelState = new CommandState("LayerNewSel", this.commandDispatcher);
-			this.layerMergeUpState = new CommandState("LayerMergeUp", this.commandDispatcher);
-			this.layerMergeDownState = new CommandState("LayerMergeDown", this.commandDispatcher);
-			this.layerUpState = new CommandState("LayerUp", this.commandDispatcher);
-			this.layerDownState = new CommandState("LayerDown", this.commandDispatcher);
-			this.layerDeleteState = new CommandState("LayerDelete", this.commandDispatcher);
+			this.layerPrevState = this.CreateCommandState("LayerPrev");
+			this.layerNextState = this.CreateCommandState("LayerNext");
+			this.layerMenuState = this.CreateCommandState("LayerMenu");
+			this.layerNewState = this.CreateCommandState("LayerNew");
+			this.layerDuplicateState = this.CreateCommandState("LayerDuplicate");
+			this.layerNewSelState = this.CreateCommandState("LayerNewSel");
+			this.layerMergeUpState = this.CreateCommandState("LayerMergeUp");
+			this.layerMergeDownState = this.CreateCommandState("LayerMergeDown");
+			this.layerUpState = this.CreateCommandState("LayerUp");
+			this.layerDownState = this.CreateCommandState("LayerDown");
+			this.layerDeleteState = this.CreateCommandState("LayerDelete");
 
-			this.settingsState = new CommandState("Settings", this.commandDispatcher, KeyCode.FuncF5);
-			this.infosState = new CommandState("Infos", this.commandDispatcher);
-			this.aboutState = new CommandState("AboutApplication", this.commandDispatcher);
-			this.pageStackState = new CommandState("PageStack", this.commandDispatcher);
-			this.updateState = new CommandState("UpdateApplication", this.commandDispatcher);
-			this.keyState = new CommandState("KeyApplication", this.commandDispatcher);
+			this.settingsState = this.CreateCommandState("Settings", KeyCode.FuncF5);
+			this.infosState = this.CreateCommandState("Infos");
+			this.aboutState = this.CreateCommandState("AboutApplication", "About", "About");
+			this.pageStackState = this.CreateCommandState("PageStack");
+			this.updateState = this.CreateCommandState("UpdateApplication", "Update", "Update");
+			this.keyState = this.CreateCommandState("KeyApplication", "Key", "Key");
 
-			this.moveLeftNormState   = new CommandState("MoveLeftNorm",   this.commandDispatcher, KeyCode.ArrowLeft);
-			this.moveRightNormState  = new CommandState("MoveRightNorm",  this.commandDispatcher, KeyCode.ArrowRight);
-			this.moveUpNormState     = new CommandState("MoveUpNorm",     this.commandDispatcher, KeyCode.ArrowUp);
-			this.moveDownNormState   = new CommandState("MoveDownNorm",   this.commandDispatcher, KeyCode.ArrowDown);
-			this.moveLeftCtrlState   = new CommandState("MoveLeftCtrl",   this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.ArrowLeft);
-			this.moveRightCtrlState  = new CommandState("MoveRightCtrl",  this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.ArrowRight);
-			this.moveUpCtrlState     = new CommandState("MoveUpCtrl",     this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.ArrowUp);
-			this.moveDownCtrlState   = new CommandState("MoveDownCtrl",   this.commandDispatcher, KeyCode.ModifierCtrl|KeyCode.ArrowDown);
-			this.moveLeftShiftState  = new CommandState("MoveLeftShift",  this.commandDispatcher, KeyCode.ModifierShift|KeyCode.ArrowLeft);
-			this.moveRightShiftState = new CommandState("MoveRightShift", this.commandDispatcher, KeyCode.ModifierShift|KeyCode.ArrowRight);
-			this.moveUpShiftState    = new CommandState("MoveUpShift",    this.commandDispatcher, KeyCode.ModifierShift|KeyCode.ArrowUp);
-			this.moveDownShiftState  = new CommandState("MoveDownShift",  this.commandDispatcher, KeyCode.ModifierShift|KeyCode.ArrowDown);
+			this.moveLeftNormState   = this.CreateCommandState("MoveLeftNorm",   KeyCode.ArrowLeft);
+			this.moveRightNormState  = this.CreateCommandState("MoveRightNorm",  KeyCode.ArrowRight);
+			this.moveUpNormState     = this.CreateCommandState("MoveUpNorm",     KeyCode.ArrowUp);
+			this.moveDownNormState   = this.CreateCommandState("MoveDownNorm",   KeyCode.ArrowDown);
+			this.moveLeftCtrlState   = this.CreateCommandState("MoveLeftCtrl",   KeyCode.ModifierCtrl|KeyCode.ArrowLeft);
+			this.moveRightCtrlState  = this.CreateCommandState("MoveRightCtrl",  KeyCode.ModifierCtrl|KeyCode.ArrowRight);
+			this.moveUpCtrlState     = this.CreateCommandState("MoveUpCtrl",     KeyCode.ModifierCtrl|KeyCode.ArrowUp);
+			this.moveDownCtrlState   = this.CreateCommandState("MoveDownCtrl",   KeyCode.ModifierCtrl|KeyCode.ArrowDown);
+			this.moveLeftShiftState  = this.CreateCommandState("MoveLeftShift",  KeyCode.ModifierShift|KeyCode.ArrowLeft);
+			this.moveRightShiftState = this.CreateCommandState("MoveRightShift", KeyCode.ModifierShift|KeyCode.ArrowRight);
+			this.moveUpShiftState    = this.CreateCommandState("MoveUpShift",    KeyCode.ModifierShift|KeyCode.ArrowUp);
+			this.moveDownShiftState  = this.CreateCommandState("MoveDownShift",  KeyCode.ModifierShift|KeyCode.ArrowDown);
+		}
+
+		// Crée un nouveau CommandState.
+		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
+		{
+			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+
+			cs.IconName    = command;
+			cs.LongCaption = DocumentEditor.GetRes("Action."+command, cs);
+
+			return cs;
+		}
+
+		// Crée un nouveau CommandState.
+		protected CommandState CreateCommandState(string command, bool statefull, params Widgets.Shortcut[] shortcuts)
+		{
+			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+
+			cs.IconName    = command;
+			cs.LongCaption = DocumentEditor.GetRes("Action."+command, cs);
+			cs.Statefull   = statefull;
+
+			return cs;
 		}
 
 		// Crée un nouveau CommandState.
@@ -3671,8 +3686,8 @@ namespace Epsitec.App.DocumentEditor
 		{
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
-			cs.IconName    = Misc.Icon(icon);
-			cs.LongCaption = DocumentEditor.GetRes(tooltip, cs);
+			cs.IconName    = icon;
+			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip, cs);
 
 			return cs;
 		}
@@ -3682,8 +3697,8 @@ namespace Epsitec.App.DocumentEditor
 		{
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
-			cs.IconName    = Misc.Icon(icon);
-			cs.LongCaption = DocumentEditor.GetRes(tooltip, cs);
+			cs.IconName    = icon;
+			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip, cs);
 			cs.Statefull   = statefull;
 
 			return cs;
@@ -3871,17 +3886,19 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Met à jour une commande d'outil.
-		protected void UpdateTool(CommandState cmd, string tool, string currentTool, bool isCreating, bool enabled)
+		protected void UpdateTool(CommandState cs, string currentTool, bool isCreating, bool enabled)
 		{
+			string tool = cs.Name;
+
 			if ( enabled )
 			{
-				cmd.ActiveState = (tool == currentTool) ? ActiveState.Yes : ActiveState.No;;
-				cmd.Enable = (tool == currentTool || tool == "Select" || tool == "Shaper" || !isCreating);
+				cs.ActiveState = (tool == currentTool) ? ActiveState.Yes : ActiveState.No;;
+				cs.Enable = (tool == currentTool || tool == "ToolSelect" || tool == "ToolShaper" || !isCreating);
 			}
 			else
 			{
-				cmd.ActiveState = ActiveState.No;
-				cmd.Enable = false;
+				cs.ActiveState = ActiveState.No;
+				cs.Enable = false;
 			}
 		}
 
@@ -3899,29 +3916,29 @@ namespace Epsitec.App.DocumentEditor
 				enabled = true;
 			}
 
-			this.UpdateTool(this.toolSelectState, "ToolSelect", tool, isCreating, enabled);
-			this.UpdateTool(this.toolGlobalState, "ToolGlobal", tool, isCreating, enabled);
-			this.UpdateTool(this.toolShaperState, "ToolShaper", tool, isCreating, enabled);
-			this.UpdateTool(this.toolEditState, "ToolEdit", tool, isCreating, enabled);
-			this.UpdateTool(this.toolZoomState, "ToolZoom", tool, isCreating, enabled);
-			this.UpdateTool(this.toolHandState, "ToolHand", tool, isCreating, enabled);
-			this.UpdateTool(this.toolPickerState, "ToolPicker", tool, isCreating, enabled);
-			this.UpdateTool(this.toolHotSpotState, "ToolHotSpot", tool, isCreating, enabled);
-			this.UpdateTool(this.toolLineState, "ObjectLine", tool, isCreating, enabled);
-			this.UpdateTool(this.toolRectangleState, "ObjectRectangle", tool, isCreating, enabled);
-			this.UpdateTool(this.toolCircleState, "ObjectCircle", tool, isCreating, enabled);
-			this.UpdateTool(this.toolEllipseState, "ObjectEllipse", tool, isCreating, enabled);
-			this.UpdateTool(this.toolPolyState, "ObjectPoly", tool, isCreating, enabled);
-			this.UpdateTool(this.toolBezierState, "ObjectBezier", tool, isCreating, enabled);
-			this.UpdateTool(this.toolRegularState, "ObjectRegular", tool, isCreating, enabled);
-			this.UpdateTool(this.toolSurfaceState, "ObjectSurface", tool, isCreating, enabled);
-			this.UpdateTool(this.toolVolumeState, "ObjectVolume", tool, isCreating, enabled);
-			this.UpdateTool(this.toolTextLineState, "ObjectTextLine", tool, isCreating, enabled);
-			this.UpdateTool(this.toolTextBoxState, "ObjectTextBox", tool, isCreating, enabled);
-			this.UpdateTool(this.toolTextBox2State, "ObjectTextBox2", tool, isCreating, enabled);
-			this.UpdateTool(this.toolArrayState, "ObjectArray", tool, isCreating, enabled);
-			this.UpdateTool(this.toolImageState, "ObjectImage", tool, isCreating, enabled);
-			this.UpdateTool(this.toolDimensionState, "ObjectDimension", tool, isCreating, enabled);
+			this.UpdateTool(this.toolSelectState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolGlobalState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolShaperState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolEditState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolZoomState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolHandState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolPickerState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolHotSpotState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolLineState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolRectangleState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolCircleState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolEllipseState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolPolyState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolBezierState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolRegularState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolSurfaceState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolVolumeState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolTextLineState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolTextBoxState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolTextBox2State, tool, isCreating, enabled);
+			this.UpdateTool(this.toolArrayState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolImageState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolDimensionState, tool, isCreating, enabled);
 		}
 
 		// Appelé par le document lorsque l'état "enregistrer" a changé.

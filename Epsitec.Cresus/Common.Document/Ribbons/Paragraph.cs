@@ -13,26 +13,26 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Paragraph() : base()
 		{
-			this.title.Text = Res.Strings.Action.Text.Paragraph.Main;
+			this.title.Text = Res.Strings.Action.ParagraphMain;
 
-			this.buttonJustifHLeft   = this.CreateIconButton("JustifHLeft",   Misc.Icon("JustifHLeft"),   Res.Strings.Action.Text.Paragraph.AlignLeft,   true);
-			this.buttonJustifHCenter = this.CreateIconButton("JustifHCenter", Misc.Icon("JustifHCenter"), Res.Strings.Action.Text.Paragraph.AlignCenter, true);
-			this.buttonJustifHRight  = this.CreateIconButton("JustifHRight",  Misc.Icon("JustifHRight"),  Res.Strings.Action.Text.Paragraph.AlignRight,  true);
-			this.buttonJustifHJustif = this.CreateIconButton("JustifHJustif", Misc.Icon("JustifHJustif"), Res.Strings.Action.Text.Paragraph.AlignJustif, true);
-			this.buttonJustifHAll    = this.CreateIconButton("JustifHAll",    Misc.Icon("JustifHAll"),    Res.Strings.Action.Text.Paragraph.AlignAll,    true);
+			this.buttonJustifHLeft   = this.CreateIconButton("JustifHLeft");
+			this.buttonJustifHCenter = this.CreateIconButton("JustifHCenter");
+			this.buttonJustifHRight  = this.CreateIconButton("JustifHRight");
+			this.buttonJustifHJustif = this.CreateIconButton("JustifHJustif");
+			this.buttonJustifHAll    = this.CreateIconButton("JustifHAll");
 
-			this.buttonIndentMinus = this.CreateIconButton("ParagraphIndentMinus", Misc.Icon("ParagraphIndentMinus"), Res.Strings.Action.Text.Paragraph.IndentPlus, false);
-			this.buttonIndentPlus  = this.CreateIconButton("ParagraphIndentPlus",  Misc.Icon("ParagraphIndentPlus"),  Res.Strings.Action.Text.Paragraph.IndentPlus, false);
+			this.buttonIndentMinus   = this.CreateIconButton("ParagraphIndentMinus");
+			this.buttonIndentPlus    = this.CreateIconButton("ParagraphIndentPlus");
 
-			this.buttonLeading08    = this.CreateIconButton("ParagraphLeading08",    Misc.Icon("ParagraphLeading08"),    Res.Strings.Action.Text.Paragraph.Leading08, true);
-			this.buttonLeading10    = this.CreateIconButton("ParagraphLeading10",    Misc.Icon("ParagraphLeading10"),    Res.Strings.Action.Text.Paragraph.Leading10, true);
-			this.buttonLeading15    = this.CreateIconButton("ParagraphLeading15",    Misc.Icon("ParagraphLeading15"),    Res.Strings.Action.Text.Paragraph.Leading15, true);
-			this.buttonLeading20    = this.CreateIconButton("ParagraphLeading20",    Misc.Icon("ParagraphLeading20"),    Res.Strings.Action.Text.Paragraph.Leading20, true);
-			this.buttonLeading30    = this.CreateIconButton("ParagraphLeading30",    Misc.Icon("ParagraphLeading30"),    Res.Strings.Action.Text.Paragraph.Leading30, true);
-			this.buttonLeadingMinus = this.CreateIconButton("ParagraphLeadingMinus", Misc.Icon("ParagraphLeadingMinus"), Res.Strings.TextPanel.Leading.Tooltip.LeadingMinus, false);
-			this.buttonLeadingPlus  = this.CreateIconButton("ParagraphLeadingPlus",  Misc.Icon("ParagraphLeadingPlus"),  Res.Strings.TextPanel.Leading.Tooltip.LeadingPlus,  false);
+			this.buttonLeading08     = this.CreateIconButton("ParagraphLeading08");
+			this.buttonLeading10     = this.CreateIconButton("ParagraphLeading10");
+			this.buttonLeading15     = this.CreateIconButton("ParagraphLeading15");
+			this.buttonLeading20     = this.CreateIconButton("ParagraphLeading20");
+			this.buttonLeading30     = this.CreateIconButton("ParagraphLeading30");
+			this.buttonLeadingMinus  = this.CreateIconButton("ParagraphLeadingMinus");
+			this.buttonLeadingPlus   = this.CreateIconButton("ParagraphLeadingPlus");
 
-			this.buttonClear = this.CreateIconButton("ParagraphClear", Misc.Icon("Nothing"), Res.Strings.Action.Text.Paragraph.Clear, false);
+			this.buttonClear         = this.CreateIconButton("ParagraphClear");
 
 			this.UpdateClientGeometry();
 		}

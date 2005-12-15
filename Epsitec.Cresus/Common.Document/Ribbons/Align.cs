@@ -14,32 +14,32 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.AlignMain;
 
-			this.buttonAlignLeft    = this.CreateIconButton("AlignLeft",    Misc.Icon("AlignLeft"),    Res.Strings.Action.AlignLeft);
-			this.buttonAlignCenterX = this.CreateIconButton("AlignCenterX", Misc.Icon("AlignCenterX"), Res.Strings.Action.AlignCenterX);
-			this.buttonAlignRight   = this.CreateIconButton("AlignRight",   Misc.Icon("AlignRight"),   Res.Strings.Action.AlignRight);
-			this.buttonAlignTop     = this.CreateIconButton("AlignTop",     Misc.Icon("AlignTop"),     Res.Strings.Action.AlignTop);
-			this.buttonAlignCenterY = this.CreateIconButton("AlignCenterY", Misc.Icon("AlignCenterY"), Res.Strings.Action.AlignCenterY);
-			this.buttonAlignBottom  = this.CreateIconButton("AlignBottom",  Misc.Icon("AlignBottom"),  Res.Strings.Action.AlignBottom);
+			this.buttonAlignLeft    = this.CreateIconButton("AlignLeft");
+			this.buttonAlignCenterX = this.CreateIconButton("AlignCenterX");
+			this.buttonAlignRight   = this.CreateIconButton("AlignRight");
+			this.buttonAlignTop     = this.CreateIconButton("AlignTop");
+			this.buttonAlignCenterY = this.CreateIconButton("AlignCenterY");
+			this.buttonAlignBottom  = this.CreateIconButton("AlignBottom");
 
 			this.separator1 = new IconSeparator(this);
 
-			this.buttonShareSpaceX  = this.CreateIconButton("ShareSpaceX",  Misc.Icon("ShareSpaceX"),  Res.Strings.Action.ShareSpaceX);
-			this.buttonShareLeft    = this.CreateIconButton("ShareLeft",    Misc.Icon("ShareLeft"),    Res.Strings.Action.ShareLeft);
-			this.buttonShareCenterX = this.CreateIconButton("ShareCenterX", Misc.Icon("ShareCenterX"), Res.Strings.Action.ShareCenterX);
-			this.buttonShareRight   = this.CreateIconButton("ShareRight",   Misc.Icon("ShareRight"),   Res.Strings.Action.ShareRight);
-			this.buttonShareSpaceY  = this.CreateIconButton("ShareSpaceY",  Misc.Icon("ShareSpaceY"),  Res.Strings.Action.ShareSpaceY);
-			this.buttonShareTop     = this.CreateIconButton("ShareTop",     Misc.Icon("ShareTop"),     Res.Strings.Action.ShareTop);
-			this.buttonShareCenterY = this.CreateIconButton("ShareCenterY", Misc.Icon("ShareCenterY"), Res.Strings.Action.ShareCenterY);
-			this.buttonShareBottom  = this.CreateIconButton("ShareBottom",  Misc.Icon("ShareBottom"),  Res.Strings.Action.ShareBottom);
+			this.buttonShareSpaceX  = this.CreateIconButton("ShareSpaceX");
+			this.buttonShareLeft    = this.CreateIconButton("ShareLeft");
+			this.buttonShareCenterX = this.CreateIconButton("ShareCenterX");
+			this.buttonShareRight   = this.CreateIconButton("ShareRight");
+			this.buttonShareSpaceY  = this.CreateIconButton("ShareSpaceY");
+			this.buttonShareTop     = this.CreateIconButton("ShareTop");
+			this.buttonShareCenterY = this.CreateIconButton("ShareCenterY");
+			this.buttonShareBottom  = this.CreateIconButton("ShareBottom");
 
 			this.separator2 = new IconSeparator(this);
 
-			this.buttonAdjustWidth  = this.CreateIconButton("AdjustWidth",  Misc.Icon("AdjustWidth"),  Res.Strings.Action.AdjustWidth);
-			this.buttonAdjustHeight = this.CreateIconButton("AdjustHeight", Misc.Icon("AdjustHeight"), Res.Strings.Action.AdjustHeight);
+			this.buttonAdjustWidth  = this.CreateIconButton("AdjustWidth");
+			this.buttonAdjustHeight = this.CreateIconButton("AdjustHeight");
 
 			this.separator3 = new IconSeparator(this);
 
-			this.buttonAlignGrid    = this.CreateIconButton("AlignGrid",    Misc.Icon("AlignGrid"),    Res.Strings.Action.AlignGrid);
+			this.buttonAlignGrid    = this.CreateIconButton("AlignGrid");
 			
 			this.UpdateClientGeometry();
 		}
