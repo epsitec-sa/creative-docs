@@ -4,6 +4,11 @@ namespace Epsitec.Common.Support
 {
 	[TestFixture] public class ImageProviderTest
 	{
+		[SetUp] public void Initialise()
+		{
+			Widgets.Widget.Initialise ();
+		}
+		
 		[Test] public void CheckGetImage()
 		{
 			Drawing.Image im1 = Support.Resources.DefaultManager.GetImage ("file:images/open.png");
@@ -13,6 +18,19 @@ namespace Epsitec.Common.Support
 			Assert.IsNotNull (im1);
 			Assert.IsNotNull (im2);
 			Assert.IsNull (im3);
+		}
+		
+		[Test] public void CheckGetManifestResourceNames()
+		{
+			System.Text.RegularExpressions.Regex regex = RegexFactory.FromSimpleJoker ("*.icon", RegexFactory.Options.IgnoreCase);
+			string[] names = ImageProvider.GetManifestResourceNames (regex);
+			
+			int i = 0;
+			
+			foreach (string name in names)
+			{
+				System.Console.Out.WriteLine ("{0}: {1}", ++i, name);
+			}
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx1()

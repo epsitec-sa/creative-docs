@@ -420,6 +420,37 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static string[] GetManifestResourceNames(System.Text.RegularExpressions.Regex regex)
+		{
+			System.Collections.ArrayList list       = new System.Collections.ArrayList ();
+			System.AppDomain             domain     = System.AppDomain.CurrentDomain;
+			System.Reflection.Assembly[] assemblies = domain.GetAssemblies ();
+			
+			for (int i = 0; i < assemblies.Length; i++)
+			{
+				object assembly_object = assemblies[i];
+				
+				if (assembly_object is System.Reflection.Emit.AssemblyBuilder)
+				{
+					//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
+					//	puisqu'elles ont été générées dynamiquement.
+					
+					continue;
+				}
+				
+				foreach (string name in assemblies[i].GetManifestResourceNames ())
+				{
+					if (regex.IsMatch (name))
+					{
+						list.Add (name);
+					}
+				}
+			}
+			
+			return (string[]) list.ToArray (typeof (string));
+		}
+		
+		
 		protected Drawing.Image CreateBitmapFromBundle(ResourceBundle bundle, string image_name)
 		{
 			string field_name = "i." + image_name;
