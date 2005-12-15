@@ -2518,10 +2518,11 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					IconButton button = new IconButton(cmd, Misc.Icon(cmd), cmd);
+					CommandState cs = cd[cmd];
+
+					IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 					
-					CommandState state = cd[cmd];
-					if ( state.Statefull )
+					if ( cs.Statefull )
 					{
 						button.ButtonStyle = ButtonStyle.ActivableIcon;
 					}
@@ -2530,8 +2531,8 @@ namespace Epsitec.Common.Document
 					button.SetParent(line);
 					button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
 
-					string s = Res.Strings.GetString("Action."+cmd);
-					if ( s != null )
+					string s = cs.LongCaption;
+					if ( s != null && s != "" )
 					{
 						ToolTip.Default.SetToolTip(button, s);
 					}
@@ -2829,10 +2830,10 @@ namespace Epsitec.Common.Document
 				if ( list.Contains(cmd) )  return;  // déjà dans la liste ?
 
 				CommandDispatcher cd = this.GetCommandDispatcher();
-				CommandState state = cd[cmd];
-				if ( state != null )
+				CommandState cs = cd[cmd];
+				if ( cs != null )
 				{
-					if ( !state.Enable )  return;
+					if ( !cs.Enable )  return;
 				}
 			}
 
