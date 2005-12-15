@@ -546,16 +546,16 @@ namespace Epsitec.App.DocumentEditor
 			VMenu debugMenu = new VMenu();
 			debugMenu.Name = "Debug";
 			debugMenu.Host = this;
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxThin", "Show BBoxThin", DocumentEditor.GetShortCut(this.debugBboxThinState));
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxGeom", "Show BBoxGeom", DocumentEditor.GetShortCut(this.debugBboxGeomState));
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxFull", "Show BBoxFull", DocumentEditor.GetShortCut(this.debugBboxFullState));
+			this.MenuAdd(debugMenu, "y/n", "DebugBboxThin", "Show BBoxThin", Misc.GetShortCut(this.debugBboxThinState));
+			this.MenuAdd(debugMenu, "y/n", "DebugBboxGeom", "Show BBoxGeom", Misc.GetShortCut(this.debugBboxGeomState));
+			this.MenuAdd(debugMenu, "y/n", "DebugBboxFull", "Show BBoxFull", Misc.GetShortCut(this.debugBboxFullState));
 			this.MenuAdd(debugMenu, null);
-			this.MenuAdd(debugMenu, "", "DebugDirty", "Make dirty", DocumentEditor.GetShortCut(this.debugDirtyState));
+			this.MenuAdd(debugMenu, "", "DebugDirty", "Make dirty", Misc.GetShortCut(this.debugDirtyState));
 			this.MenuAdd(debugMenu, null);
 			this.MenuAdd(debugMenu, "SelectTotal");
 			this.MenuAdd(debugMenu, "SelectPartial");
 			this.MenuAdd(debugMenu, null);
-			this.MenuAdd(debugMenu, "", "ForceSaveAll", "Save and overwrite all", DocumentEditor.GetShortCut(this.forceSaveAllState));
+			this.MenuAdd(debugMenu, "", "ForceSaveAll", "Save and overwrite all", Misc.GetShortCut(this.forceSaveAllState));
 			debugMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = debugMenu;
 #endif
@@ -1190,7 +1190,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				CommandState cs = this.commandDispatcher.GetCommandState(command);
 
-				MenuItem item = new MenuItem(cs.Name, Misc.Icon(cs.IconName), cs.LongCaption, DocumentEditor.GetShortCut(cs), cs.Name);
+				MenuItem item = new MenuItem(cs.Name, Misc.Icon(cs.IconName), cs.LongCaption, Misc.GetShortCut(cs), cs.Name);
 				vmenu.Items.Add(item);
 			}
 		}
@@ -1238,7 +1238,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 				this.hToolBar.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, cs.LongCaption);
+				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
 				return button;
 			}
 		}
@@ -1257,7 +1257,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 				this.vToolBar.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, cs.LongCaption);
+				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
 				return button;
 			}
 		}
@@ -1281,7 +1281,7 @@ namespace Epsitec.App.DocumentEditor
 			double h = this.info.DefaultHeight-3;
 			button.Size = new Size(h, h);
 			this.info.Items.Add(button);
-			ToolTip.Default.SetToolTip(button, cs.LongCaption);
+			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
 			return button;
 		}
 
@@ -3664,7 +3664,7 @@ namespace Epsitec.App.DocumentEditor
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
 			cs.IconName    = command;
-			cs.LongCaption = DocumentEditor.GetRes("Action."+command, cs);
+			cs.LongCaption = DocumentEditor.GetRes("Action."+command);
 
 			return cs;
 		}
@@ -3675,7 +3675,7 @@ namespace Epsitec.App.DocumentEditor
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
 			cs.IconName    = command;
-			cs.LongCaption = DocumentEditor.GetRes("Action."+command, cs);
+			cs.LongCaption = DocumentEditor.GetRes("Action."+command);
 			cs.Statefull   = statefull;
 
 			return cs;
@@ -3687,7 +3687,7 @@ namespace Epsitec.App.DocumentEditor
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
 			cs.IconName    = icon;
-			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip, cs);
+			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip);
 
 			return cs;
 		}
@@ -3698,7 +3698,7 @@ namespace Epsitec.App.DocumentEditor
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
 			cs.IconName    = icon;
-			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip, cs);
+			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip);
 			cs.Statefull   = statefull;
 
 			return cs;
@@ -5319,29 +5319,6 @@ namespace Epsitec.App.DocumentEditor
 
 
 		#region Ressources
-		// Retourne le nom des touches associées à une commande.
-		public static string GetShortCut(CommandState state)
-		{
-			if ( state == null || state.HasShortcuts == false )  return null;
-
-			return state.PreferredShortcut.ToString();
-		}
-
-		// Retourne une ressource string d'après son nom.
-		// La chaîne est suivie éventuellement du nom du raccourci entre ( ).
-		public static string GetRes(string name, CommandState state)
-		{
-			string s = DocumentEditor.GetRes(name);
-			string k = DocumentEditor.GetShortCut(state);
-
-			if ( k != null )
-			{
-				s = string.Format("{0} ({1})", s, k);
-			}
-
-			return s;
-		}
-
 		// Retourne une ressource string d'après son nom.
 		// Si elle n'est pas trouvé dans App.DocumentEditor, elle est
 		// cherchée dans Common.Document !

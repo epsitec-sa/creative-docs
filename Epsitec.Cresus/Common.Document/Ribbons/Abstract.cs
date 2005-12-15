@@ -158,7 +158,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(button, cs.LongCaption);
+			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
 			return button;
 		}
 

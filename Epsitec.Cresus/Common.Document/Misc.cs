@@ -278,6 +278,7 @@ namespace Epsitec.Common.Document
 			return string.Format("<i>{0}</i>", text);
 		}
 
+
 		// Retourne le texte pour mettre une image dans un texte.
 		static public string Image(string icon)
 		{
@@ -351,6 +352,30 @@ namespace Epsitec.Common.Document
 				return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon);
 			}
 		}
+
+		// Retourne le nom des touches associées à une commande.
+		static public string GetShortCut(CommandState cs)
+		{
+			if ( cs == null || cs.HasShortcuts == false )  return null;
+
+			return cs.PreferredShortcut.ToString();
+		}
+
+		// Donne le nom d'une commande, avec le raccourci clavier éventuel entre parenthèses.
+		static public string GetTextWithShortcut(CommandState cs)
+		{
+			string shortcut = Misc.GetShortCut(cs);
+
+			if ( shortcut == null )
+			{
+				return cs.LongCaption;
+			}
+			else
+			{
+				return string.Format("{0} ({1})", cs.LongCaption, shortcut);
+			}
+		}
+
 
 		// Donne le nom complet du fichier.
 		// Si le nom n'existe pas, donne "sans titre".

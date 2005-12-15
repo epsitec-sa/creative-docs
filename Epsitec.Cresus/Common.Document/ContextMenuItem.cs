@@ -71,6 +71,21 @@ namespace Epsitec.Common.Document
 
 		#region StaticMethods
 		// Ajoute une case dans le menu.
+		public static bool MenuAddItem(System.Collections.ArrayList list, string command)
+		{
+			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
+			if ( !cs.Enable )  return false;
+
+			ContextMenuItem item = new ContextMenuItem();
+			item.Command = cs.Name;
+			item.Name = cs.Name;
+			item.Icon = Misc.Icon(cs.IconName);
+			item.Text = cs.LongCaption;  // texte sans le raccourci clavier entre parenthèses
+			list.Add(item);
+			return true;
+		}
+
+		// Ajoute une case dans le menu.
 		public static bool MenuAddItem(System.Collections.ArrayList list, CommandDispatcher cd, string cmd, string icon, string text)
 		{
 			CommandState state = cd[cmd];
