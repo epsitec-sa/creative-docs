@@ -300,24 +300,24 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		private void FillSubscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript, bool def)
 		{
-			xscript.IsDisabled = false;
-			
-			xscript.Scale  = def ? 0 : (double)  this.fieldScale.TextFieldReal.InternalValue;
-			xscript.Offset = def ? 0 : (double) -this.fieldOffset.TextFieldReal.InternalValue;
+			this.document.Wrappers.FillSubscriptDefinition(xscript);
 
-			if ( xscript.Scale  == 0 )  xscript.Scale  =  0.6;
-			if ( xscript.Offset == 0 )  xscript.Offset = -0.15;
+			if ( !def )
+			{
+				xscript.Scale  = (double)  this.fieldScale.TextFieldReal.InternalValue;
+				xscript.Offset = (double) -this.fieldOffset.TextFieldReal.InternalValue;
+			}
 		}
         
 		private void FillSuperscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript, bool def)
 		{
-			xscript.IsDisabled = false;
-			
-			xscript.Scale  = def ? 0 : (double) this.fieldScale.TextFieldReal.InternalValue;
-			xscript.Offset = def ? 0 : (double) this.fieldOffset.TextFieldReal.InternalValue;
+			this.document.Wrappers.FillSuperscriptDefinition(xscript);
 
-			if ( xscript.Scale  == 0 )  xscript.Scale  = 0.6;
-			if ( xscript.Offset == 0 )  xscript.Offset = 0.25;
+			if ( !def )
+			{
+				xscript.Scale  = (double) this.fieldScale.TextFieldReal.InternalValue;
+				xscript.Offset = (double) this.fieldOffset.TextFieldReal.InternalValue;
+			}
 		}
         
 

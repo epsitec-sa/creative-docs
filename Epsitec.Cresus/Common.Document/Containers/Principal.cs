@@ -91,27 +91,32 @@ namespace Epsitec.Common.Document.Containers
 //-			System.Diagnostics.Debug.Assert(this.selectorToolBar.CommandDispatcher != null);
 			
 			this.selectorAuto = new IconButton(Misc.Icon("SelectorAuto"));
+			this.selectorAuto.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorAuto);
 			this.selectorAuto.Command = "SelectorAuto";
 			ToolTip.Default.SetToolTip(this.selectorAuto, Res.Strings.Container.Principal.Button.Auto);
 			
 			this.selectorIndividual = new IconButton(Misc.Icon("SelectorIndividual"));
+			this.selectorIndividual.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorIndividual);
 			this.selectorIndividual.Command = "SelectorIndividual";
 			ToolTip.Default.SetToolTip(this.selectorIndividual, Res.Strings.Container.Principal.Button.Individual);
 			
 			this.selectorScaler = new IconButton(Misc.Icon("SelectorScaler"));
+			this.selectorScaler.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorScaler);
 			this.selectorScaler.Command = "SelectorScaler";
 			ToolTip.Default.SetToolTip(this.selectorScaler, Res.Strings.Container.Principal.Button.Scaler);
 			
 			this.selectorStretch = new IconButton(Misc.Icon("SelectorStretch"));
+			this.selectorStretch.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorStretch);
 			this.selectorStretch.Command = "SelectorStretch";
 			this.selectorStretch.Name = "SelectorStretch";
 			ToolTip.Default.SetToolTip(this.selectorStretch, Res.Strings.Container.Principal.Button.Stretch);
 
 			GlyphButton selectorStretchType = new GlyphButton("SelectorStretchType");
+			selectorStretchType.AutoFocus = false;
 			selectorStretchType.Name = "SelectorStretchType";
 			selectorStretchType.GlyphShape = GlyphShape.ArrowDown;
 			selectorStretchType.ButtonStyle = ButtonStyle.ToolItem;
@@ -123,11 +128,13 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorToolBar.Items.Add(new IconSeparator());
 			
 			this.selectorTotal = new IconButton(Misc.Icon("SelectTotal"));
+			this.selectorTotal.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorTotal);
 			this.selectorTotal.Command = "SelectTotal";
 			ToolTip.Default.SetToolTip(this.selectorTotal, Res.Strings.Container.Principal.Button.Total);
 			
 			this.selectorPartial = new IconButton(Misc.Icon("SelectPartial"));
+			this.selectorPartial.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorPartial);
 			this.selectorPartial.Command = "SelectPartial";
 			ToolTip.Default.SetToolTip(this.selectorPartial, Res.Strings.Container.Principal.Button.Partial);
@@ -135,11 +142,13 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorToolBar.Items.Add(new IconSeparator());
 			
 			this.selectorAdaptLine = new IconButton(Misc.Icon("SelectorAdaptLine"));
+			this.selectorAdaptLine.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorAdaptLine);
 			this.selectorAdaptLine.Command = "SelectorAdaptLine";
 			ToolTip.Default.SetToolTip(this.selectorAdaptLine, Res.Strings.Container.Principal.Button.AdaptLine);
 			
 			this.selectorAdaptText = new IconButton(Misc.Icon("SelectorAdaptText"));
+			this.selectorAdaptText.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorAdaptText);
 			this.selectorAdaptText.Command = "SelectorAdaptText";
 			ToolTip.Default.SetToolTip(this.selectorAdaptText, Res.Strings.Container.Principal.Button.AdaptText);
@@ -170,16 +179,19 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.aggregateCombo, Res.Strings.Container.Principal.Button.AggregateCombo);
 			
 			this.aggregateNew3 = new IconButton(Misc.Icon("AggregateNew3"));
+			this.aggregateNew3.AutoFocus = false;
 			this.aggregateNew3.Pressed += new MessageEventHandler(this.HandleAggregateNew3);
 			this.aggregateToolBar.Items.Add(this.aggregateNew3);
 			ToolTip.Default.SetToolTip(this.aggregateNew3, Res.Strings.Action.AggregateNew3);
 			
 			this.aggregateNewAll = new IconButton(Misc.Icon("AggregateNewAll"));
+			this.aggregateNewAll.AutoFocus = false;
 			this.aggregateNewAll.Pressed += new MessageEventHandler(this.HandleAggregateNewAll);
 			this.aggregateToolBar.Items.Add(this.aggregateNewAll);
 			ToolTip.Default.SetToolTip(this.aggregateNewAll, Res.Strings.Action.AggregateNewAll);
 			
 			this.aggregateFree = new IconButton(Misc.Icon("AggregateFree"));
+			this.aggregateFree.AutoFocus = false;
 			this.aggregateFree.Pressed += new MessageEventHandler(this.HandleAggregateFree);
 			this.aggregateToolBar.Items.Add(this.aggregateFree);
 			ToolTip.Default.SetToolTip(this.aggregateFree, Res.Strings.Action.AggregateFree);
@@ -213,6 +225,7 @@ namespace Epsitec.Common.Document.Containers
 			st.Dock = DockStyle.Left;
 
 			this.textUsual = new IconButton(this.textToolBar);
+			this.textUsual.AutoFocus = false;
 			this.textUsual.IconName = Misc.Icon("TextFilterUsual");
 			this.textUsual.Name = "Usual";
 			this.textUsual.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -221,6 +234,7 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.textUsual, Res.Strings.TextPanel.Filter.Tooltip.Usual);
 
 			this.textFrequently = new IconButton(this.textToolBar);
+			this.textFrequently.AutoFocus = false;
 			this.textFrequently.IconName = Misc.Icon("TextFilterFrequently");
 			this.textFrequently.Name = "Frequently";
 			this.textFrequently.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -229,6 +243,7 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.textFrequently, Res.Strings.TextPanel.Filter.Tooltip.Frequently);
 
 			this.textAll = new IconButton(this.textToolBar);
+			this.textAll.AutoFocus = false;
 			this.textAll.IconName = Misc.Icon("TextFilterAll");
 			this.textAll.Name = "All";
 			this.textAll.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -237,6 +252,7 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.textAll, Res.Strings.TextPanel.Filter.Tooltip.All);
 
 			this.textParagraph = new IconButton(this.textToolBar);
+			this.textParagraph.AutoFocus = false;
 			this.textParagraph.IconName = Misc.Icon("TextFilterParagraph");
 			this.textParagraph.Name = "Paragraph";
 			this.textParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -245,6 +261,7 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.textParagraph, Res.Strings.TextPanel.Filter.Tooltip.Paragraph);
 
 			this.textCharacter = new IconButton(this.textToolBar);
+			this.textCharacter.AutoFocus = false;
 			this.textCharacter.IconName = Misc.Icon("TextFilterCharacter");
 			this.textCharacter.Name = "Character";
 			this.textCharacter.ButtonStyle = ButtonStyle.ActivableIcon;

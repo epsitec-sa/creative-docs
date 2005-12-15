@@ -22,6 +22,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonUnderlined    = this.CreateIconButton("FontUnderlined");
 			this.buttonOverlined     = this.CreateIconButton("FontOverlined");
 			this.buttonStrikeout     = this.CreateIconButton("FontStrikeout");
+			this.buttonSubscript     = this.CreateIconButton("FontSubscript");
+			this.buttonSuperscript   = this.CreateIconButton("FontSuperscript");
 			this.buttonClear         = this.CreateIconButton("FontClear");
 
 			this.buttonStyle = new Button(this);
@@ -81,7 +83,11 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonOverlined.Bounds = rect;
 			rect.Offset(dx+5, 0);
 			this.buttonStrikeout.Bounds = rect;
-			rect.Offset(dx+20, 0);
+			rect.Offset(dx+5, 0);
+			this.buttonSubscript.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonSuperscript.Bounds = rect;
+			rect.Offset(dx+10, 0);
 			this.buttonClear.Bounds = rect;
 
 			rect.Offset(dx+50, 0);
@@ -133,6 +139,8 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonUnderlined;
 		protected IconButton				buttonOverlined;
 		protected IconButton				buttonStrikeout;
+		protected IconButton				buttonSubscript;
+		protected IconButton				buttonSuperscript;
 		protected IconButton				buttonClear;
 
 		protected Button					buttonStyle;

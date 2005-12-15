@@ -21,6 +21,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.extendedButton = new GlyphButton(this);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.GlyphShape = GlyphShape.ArrowDown;
+			this.extendedButton.AutoFocus = false;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabIndex = 0;
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

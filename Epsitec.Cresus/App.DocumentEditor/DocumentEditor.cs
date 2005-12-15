@@ -2200,6 +2200,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("FontUnderlined")]
 		[Command ("FontOverlined")]
 		[Command ("FontStrikeout")]
+		[Command ("FontSubscript")]
+		[Command ("FontSuperscript")]
 		[Command ("FontSizePlus")]
 		[Command ("FontSizeMinus")]
 		[Command ("FontClear")]
@@ -3453,9 +3455,11 @@ namespace Epsitec.App.DocumentEditor
 			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", true, KeyCode.ModifierCtrl|KeyCode.AlphaU);
 			this.fontOverlinedState = this.CreateCommandState("FontOverlined", true);
 			this.fontStrikeoutState = this.CreateCommandState("FontStrikeout", true);
+			this.fontSubscriptState = this.CreateCommandState("FontSubscript", true);
+			this.fontSuperscriptState = this.CreateCommandState("FontSuperscript", true);
 			this.fontSizePlusState = this.CreateCommandState("FontSizePlus");
 			this.fontSizeMinusState = this.CreateCommandState("FontSizeMinus");
-			this.fontClearState = this.CreateCommandState("FontClear", "Nothing", "FontClear");
+			this.fontClearState = this.CreateCommandState("FontClear");
 			this.paragraphLeading08State = this.CreateCommandState("ParagraphLeading08", true);
 			this.paragraphLeading10State = this.CreateCommandState("ParagraphLeading10", true);
 			this.paragraphLeading15State = this.CreateCommandState("ParagraphLeading15", true);
@@ -3465,7 +3469,7 @@ namespace Epsitec.App.DocumentEditor
 			this.paragraphLeadingMinusState = this.CreateCommandState("ParagraphLeadingMinus");
 			this.paragraphIndentPlusState = this.CreateCommandState("ParagraphIndentPlus");
 			this.paragraphIndentMinusState = this.CreateCommandState("ParagraphIndentMinus");
-			this.paragraphClearState = this.CreateCommandState("ParagraphClear", "Nothing", "ParagraphClear");
+			this.paragraphClearState = this.CreateCommandState("ParagraphClear");
 			this.justifHLeftState = this.CreateCommandState("JustifHLeft", "JustifHLeft", "ParagraphJustifHLeft", true);
 			this.justifHCenterState = this.CreateCommandState("JustifHCenter", "JustifHCenter", "ParagraphJustifHCenter", true);
 			this.justifHRightState = this.CreateCommandState("JustifHRight", "JustifHRight", "ParagraphJustifHRight", true);
@@ -4119,6 +4123,8 @@ namespace Epsitec.App.DocumentEditor
 				this.fontUnderlinedState.Enable = false;
 				this.fontOverlinedState.Enable = false;
 				this.fontStrikeoutState.Enable = false;
+				this.fontSubscriptState.Enable = false;
+				this.fontSuperscriptState.Enable = false;
 				this.fontSizePlusState.Enable = false;
 				this.fontSizeMinusState.Enable = false;
 				this.fontClearState.Enable = false;
@@ -5430,6 +5436,8 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					fontUnderlinedState;
 		protected CommandState					fontOverlinedState;
 		protected CommandState					fontStrikeoutState;
+		protected CommandState					fontSubscriptState;
+		protected CommandState					fontSuperscriptState;
 		protected CommandState					fontSizePlusState;
 		protected CommandState					fontSizeMinusState;
 		protected CommandState					fontClearState;

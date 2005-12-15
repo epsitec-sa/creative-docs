@@ -604,16 +604,8 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:ColorToRGB");
 			list.Add("00:ColorToCMYK");
 			list.Add("00:ColorToGray");
-
 			list.Add("00:ColorToGray");
-			list.Add("00:FontBold");
-			list.Add("00:FontItalic");
-			list.Add("00:FontUnderlined");
-			list.Add("00:FontOverlined");
-			list.Add("00:FontStrikeout");
-			list.Add("00:FontSizePlus");
-			list.Add("00:FontSizeMinus");
-			list.Add("00:FontClear");
+
 			list.Add("00:ParagraphLeading08");
 			list.Add("00:ParagraphLeading10");
 			list.Add("00:ParagraphLeading15");
@@ -623,12 +615,21 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:ParagraphLeadingMinus");
 			list.Add("00:ParagraphIndentPlus");
 			list.Add("00:ParagraphIndentMinus");
-			list.Add("00:ParagraphClear");
 			list.Add("00:JustifHLeft");
 			list.Add("00:JustifHCenter");
 			list.Add("00:JustifHRight");
 			list.Add("00:JustifHJustif");
 			list.Add("00:JustifHAll");
+			list.Add("00:ParagraphClear");
+			
+			list.Add("00:FontBold");
+			list.Add("00:FontItalic");
+			list.Add("00:FontUnderlined");
+			list.Add("00:FontOverlined");
+			list.Add("00:FontStrikeout");
+			list.Add("00:FontSizePlus");
+			list.Add("00:FontSizeMinus");
+			list.Add("00:FontClear");
 			
 			list.Add("00:ZoomMin");
 			list.Add("00:ZoomPage");

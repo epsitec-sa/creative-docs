@@ -73,26 +73,32 @@ namespace Epsitec.Common.Document
 		protected void HandleTextWrapperChanged(object sender)
 		{
 			bool enabled = this.IsWrappersAttached;
-			bool bold       = false;
-			bool italic     = false;
-			bool underlined = false;
-			bool overlined  = false;
-			bool strikeout  = false;
+			bool bold        = false;
+			bool italic      = false;
+			bool underlined  = false;
+			bool overlined   = false;
+			bool strikeout   = false;
+			bool subscript   = false;
+			bool superscript = false;
 
 			if ( enabled )
 			{
-				bold       = this.BoldActiveState;
-				italic     = this.ItalicActiveState;
-				underlined = this.UnderlinedActiveState;
-				overlined  = this.OverlinedActiveState;
-				strikeout  = this.StrikeoutActiveState;
+				bold        = this.BoldActiveState;
+				italic      = this.ItalicActiveState;
+				underlined  = this.UnderlinedActiveState;
+				overlined   = this.OverlinedActiveState;
+				strikeout   = this.StrikeoutActiveState;
+				subscript   = this.SubscriptActiveState;
+				superscript = this.SuperscriptActiveState;
 			}
 
-			this.CommandActiveState("FontBold",       enabled, bold      );
-			this.CommandActiveState("FontItalic",     enabled, italic    );
-			this.CommandActiveState("FontUnderlined", enabled, underlined);
-			this.CommandActiveState("FontOverlined",  enabled, overlined );
-			this.CommandActiveState("FontStrikeout",  enabled, strikeout );
+			this.CommandActiveState("FontBold",        enabled, bold       );
+			this.CommandActiveState("FontItalic",      enabled, italic     );
+			this.CommandActiveState("FontUnderlined",  enabled, underlined );
+			this.CommandActiveState("FontOverlined",   enabled, overlined  );
+			this.CommandActiveState("FontStrikeout",   enabled, strikeout  );
+			this.CommandActiveState("FontSubscript",   enabled, subscript  );
+			this.CommandActiveState("FontSuperscript", enabled, superscript);
 
 			this.CommandActiveState("FontSizePlus",  enabled);
 			this.CommandActiveState("FontSizeMinus", enabled);
@@ -147,6 +153,8 @@ namespace Epsitec.Common.Document
 				case "FontUnderlined":  this.ChangeUnderlined();     break;
 				case "FontOverlined":   this.ChangeOverlined();      break;
 				case "FontStrikeout":   this.ChangeStrikeout();      break;
+				case "FontSubscript":   this.ChangeSubscript();      break;
+				case "FontSuperscript": this.ChangeSuperscript();    break;
 				case "FontSizePlus":    this.IncrementFontSize(1);   break;
 				case "FontSizeMinus":   this.IncrementFontSize(-1);  break;
 
@@ -228,6 +236,40 @@ namespace Epsitec.Common.Document
 			{
 				Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.textWrapper.Defined.Strikeout;
 				this.FillStrikeoutDefinition(xline);
+			}
+
+			this.textWrapper.ResumeSynchronisations();
+		}
+
+		protected void ChangeSubscript()
+		{
+			this.textWrapper.SuspendSynchronisations();
+
+			if ( this.SubscriptActiveState )
+			{
+				this.textWrapper.Defined.ClearXscript();
+			}
+			else
+			{
+				Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.textWrapper.Defined.Xscript;
+				this.FillSubscriptDefinition(xscript);
+			}
+
+			this.textWrapper.ResumeSynchronisations();
+		}
+
+		protected void ChangeSuperscript()
+		{
+			this.textWrapper.SuspendSynchronisations();
+
+			if ( this.SuperscriptActiveState )
+			{
+				this.textWrapper.Defined.ClearXscript();
+			}
+			else
+			{
+				Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.textWrapper.Defined.Xscript;
+				this.FillSuperscriptDefinition(xscript);
 			}
 
 			this.textWrapper.ResumeSynchronisations();
@@ -482,6 +524,22 @@ namespace Epsitec.Common.Document
 			xline.DrawStyle      = null;
 		}
 		
+		public void FillSubscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript)
+		{
+			xscript.IsDisabled = false;
+			
+			xscript.Scale  =  0.6;
+			xscript.Offset = -0.15;
+		}
+        
+		public void FillSuperscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript)
+		{
+			xscript.IsDisabled = false;
+			
+			xscript.Scale  = 0.6;
+			xscript.Offset = 0.25;
+		}
+
 		
 		protected bool BoldActiveState
 		{
@@ -571,6 +629,22 @@ namespace Epsitec.Common.Document
 			get
 			{
 				return this.textWrapper.Active.IsStrikeoutDefined;
+			}
+		}
+
+		protected bool SubscriptActiveState
+		{
+			get
+			{
+				return this.textWrapper.Defined.IsXscriptDefined && this.textWrapper.Defined.Xscript.Offset < 0.0;
+			}
+		}
+
+		protected bool SuperscriptActiveState
+		{
+			get
+			{
+				return this.textWrapper.Defined.IsXscriptDefined && this.textWrapper.Defined.Xscript.Offset > 0.0;
 			}
 		}
 

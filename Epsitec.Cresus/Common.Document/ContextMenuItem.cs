@@ -85,24 +85,6 @@ namespace Epsitec.Common.Document
 			return true;
 		}
 
-		// Ajoute une case dans le menu.
-		public static bool MenuAddItem(System.Collections.ArrayList list, CommandDispatcher cd, string cmd, string icon, string text)
-		{
-			CommandState state = cd[cmd];
-			if ( state != null )
-			{
-				if ( !state.Enable )  return false;
-			}
-
-			ContextMenuItem item = new ContextMenuItem();
-			item.Command = cmd;
-			item.Name = cmd;
-			item.Icon = @icon;
-			item.Text = text;
-			list.Add(item);
-			return true;
-		}
-
 		// Ajoute un sous-menu dans le menu.
 		public static bool MenuAddSubmenu(System.Collections.ArrayList list, AbstractMenu submenu, string icon, string text)
 		{

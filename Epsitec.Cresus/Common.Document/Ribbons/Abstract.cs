@@ -150,6 +150,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			button.Command = command;
 			button.IconName = Misc.Icon(cs.IconName, iconSize);
+			button.AutoFocus = false;
 
 			if ( cs.Statefull )
 			{
@@ -169,6 +170,7 @@ namespace Epsitec.Common.Document.Ribbons
 			button.Command = command;
 			button.ButtonStyle = ButtonStyle.ToolItem;
 			button.GlyphShape = GlyphShape.Menu;
+			button.AutoFocus = false;
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

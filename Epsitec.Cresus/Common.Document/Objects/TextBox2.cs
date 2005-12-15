@@ -373,9 +373,18 @@ namespace Epsitec.Common.Document.Objects
 				bool sel = (this.textFlow.TextNavigator.SelectionCount != 0);
 				if ( sel )
 				{
+					this.PutCommands(list, "ParagraphClear");
+					this.PutCommands(list, "FontClear");
+					this.PutCommands(list, "");
 					this.PutCommands(list, "Cut");
 					this.PutCommands(list, "Copy");
 					this.PutCommands(list, "Paste");
+					this.PutCommands(list, "");
+					this.PutCommands(list, "ParagraphIndentMinus");
+					this.PutCommands(list, "ParagraphIndentPlus");
+					this.PutCommands(list, "");
+					this.PutCommands(list, "ParagraphLeadingMinus");
+					this.PutCommands(list, "ParagraphLeadingPlus");
 					this.PutCommands(list, "");
 					this.PutCommands(list, "FontBold");
 					this.PutCommands(list, "FontItalic");
@@ -384,14 +393,11 @@ namespace Epsitec.Common.Document.Objects
 					this.PutCommands(list, "FontOverlined");
 					this.PutCommands(list, "FontStrikeout");
 					this.PutCommands(list, "");
+					this.PutCommands(list, "FontSubscript");
+					this.PutCommands(list, "FontSuperscript");
+					this.PutCommands(list, "");
 					this.PutCommands(list, "FontSizeMinus");
 					this.PutCommands(list, "FontSizePlus");
-					this.PutCommands(list, "");
-					this.PutCommands(list, "ParagraphIndentMinus");
-					this.PutCommands(list, "ParagraphIndentPlus");
-					this.PutCommands(list, "");
-					this.PutCommands(list, "ParagraphLeadingMinus");
-					this.PutCommands(list, "ParagraphLeadingPlus");
 					this.PutCommands(list, "");
 				}
 				else

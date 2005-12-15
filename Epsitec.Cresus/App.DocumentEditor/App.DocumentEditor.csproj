@@ -751,6 +751,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\FontClear.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\FontFeatures.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -1240,6 +1244,10 @@
                 />
                 <File
                     RelPath = "Images\PageStack.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParagraphClear.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

@@ -23,10 +23,12 @@ namespace Epsitec.Common.Document.Panels
 			this.hiliteButton = new GlyphButton(this);
 			this.hiliteButton.ButtonStyle = ButtonStyle.None;
 			this.hiliteButton.GlyphShape = GlyphShape.ArrowRight;
+			this.hiliteButton.AutoFocus = false;
 
 			this.extendedButton = new GlyphButton(this);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.GlyphShape = GlyphShape.ArrowDown;
+			this.extendedButton.AutoFocus = false;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabIndex = 0;
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
