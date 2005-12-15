@@ -285,21 +285,21 @@ namespace Epsitec.Common.Document
 			return string.Format(@"<img src=""{0}""/>", Misc.Icon(icon));
 		}
 
-		// Retourne le nom d'une icône de taille normale + de taille "1".
+		// Retourne le nom d'une icône de taille normale + petite.
 		// Format: "0.Icon;1.Icon1"
 		static public string Icon1(string icon)
 		{
 			return string.Format("0.{0};1.{0}1", icon);
 		}
 
-		// Retourne le nom d'une icône de taille normale + de taille "2".
+		// Retourne le nom d'une icône de taille normale + grande.
 		// Format: "0.Icon;2.Icon2"
 		static public string Icon2(string icon)
 		{
 			return string.Format("0.{0};2.{0}2", icon);
 		}
 
-		// Retourne le nom d'une icône de taille normale + de taille "1" + de taille "2".
+		// Retourne le nom d'une icône de taille normale + petite + grande.
 		// Format: "0.Icon;1.Icon1;2.Icon2"
 		static public string Icon12(string icon)
 		{

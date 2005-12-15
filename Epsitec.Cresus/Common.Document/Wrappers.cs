@@ -92,6 +92,8 @@ namespace Epsitec.Common.Document
 				superscript = this.SuperscriptActiveState;
 			}
 
+			this.CommandActiveState("Glyphs", enabled);
+
 			this.CommandActiveState("FontBold",        enabled, bold       );
 			this.CommandActiveState("FontItalic",      enabled, italic     );
 			this.CommandActiveState("FontUnderlined",  enabled, underlined );

@@ -3718,12 +3718,12 @@ namespace Epsitec.App.DocumentEditor
 			if ( icon == null )  return null;
 			if ( icon.IndexOf(";") != -1 )  return icon;  // déjà un nom mixte ?
 
-			bool size1 = this.iconList.ContainsKey(icon+"1");
-			bool size2 = this.iconList.ContainsKey(icon+"2");
+			bool size1 = this.iconList.ContainsKey(icon+"1");  // existe en petite taille ?
+			bool size2 = this.iconList.ContainsKey(icon+"2");  // existe en grande taille ?
 
-			if (  size1 && !size2 )  return Misc.Icon1(icon);
-			if ( !size1 &&  size2 )  return Misc.Icon2(icon);
-			if (  size1 &&  size2 )  return Misc.Icon12(icon);
+			if (  size1 && !size2 )  return Misc.Icon1(icon);   // normal + petit
+			if ( !size1 &&  size2 )  return Misc.Icon2(icon);   // normal + grand
+			if (  size1 &&  size2 )  return Misc.Icon12(icon);  // normal + petit + grand
 
 			return icon;
 		}
@@ -4128,24 +4128,17 @@ namespace Epsitec.App.DocumentEditor
 				this.selectorAdaptLine.ActiveState = viewer.SelectorAdaptLine ? ActiveState.Yes : ActiveState.No;
 				this.selectorAdaptText.ActiveState = viewer.SelectorAdaptText ? ActiveState.Yes : ActiveState.No;
 
-				Objects.Abstract edit = this.CurrentDocument.Modifier.RetEditObject();
-				if ( edit == null )
-				{
-					this.cutState.Enable = ( totalSelected > 0 && !isCreating );
-					this.copyState.Enable = ( totalSelected > 0 && !isCreating );
-					this.pasteState.Enable = ( !this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating );
-					//?this.fontBoldState.Enable = false;
-					//?this.fontItalicState.Enable = false;
-					//?this.fontUnderlinedState.Enable = false;
-				}
-				else
+				if ( this.CurrentDocument.Wrappers.IsWrappersAttached )  // édition en cours ?
 				{
 					this.cutState.Enable = true;
 					this.copyState.Enable = true;
 					this.pasteState.Enable = true;
-					//?this.fontBoldState.Enable = true;
-					//?this.fontItalicState.Enable = true;
-					//?this.fontUnderlinedState.Enable = true;
+				}
+				else
+				{
+					this.cutState.Enable = ( totalSelected > 0 && !isCreating );
+					this.copyState.Enable = ( totalSelected > 0 && !isCreating );
+					this.pasteState.Enable = ( !this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating );
 				}
 
 				this.CurrentDocument.Dialogs.UpdateInfos();
@@ -4160,6 +4153,7 @@ namespace Epsitec.App.DocumentEditor
 				this.cutState.Enable = false;
 				this.copyState.Enable = false;
 				this.pasteState.Enable = false;
+				this.glyphsState.Enable = false;
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
 				this.fontUnderlinedState.Enable = false;
