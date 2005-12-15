@@ -26,12 +26,7 @@ namespace Epsitec.Common.Text
 			
 			this.markers = new TextContext.DefaultMarkers (this.char_marker);
 			
-			if (TextContext.font_collection == null)
-			{
-				TextContext.font_collection = new OpenType.FontCollection ();
-				TextContext.font_collection.Initialize ();
-				TextContext.font_cache = new System.Collections.Hashtable ();
-			}
+			TextContext.InitializeFontCollection (null);
 			
 			this.CreateDefaultLayout ();
 		}
@@ -305,6 +300,16 @@ namespace Epsitec.Common.Text
 			return null;
 		}
 		
+		
+		public static void InitializeFontCollection(OpenType.FontAccessCallback callback)
+		{
+			if (TextContext.font_collection == null)
+			{
+				TextContext.font_collection = new OpenType.FontCollection ();
+				TextContext.font_collection.RefreshCache (callback);
+				TextContext.font_cache = new System.Collections.Hashtable ();
+			}
+		}
 		
 		public static string[] GetAvailableFontFaces()
 		{

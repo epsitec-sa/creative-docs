@@ -3,6 +3,8 @@
 
 namespace Epsitec.Common.OpenType
 {
+	public delegate void FontAccessCallback(FontIdentity fid);
+	
 	/// <summary>
 	/// La classe FontCollection gère une collection de fontes, donnant accès
 	/// aux fontes individuelles.
@@ -11,6 +13,7 @@ namespace Epsitec.Common.OpenType
 	{
 		public FontCollection()
 		{
+			this.font_hash = new System.Collections.Hashtable ();
 			this.full_hash = new System.Collections.Hashtable ();
 			this.fuid_hash = new System.Collections.Hashtable ();
 			this.full_list = new System.Collections.ArrayList ();
@@ -38,8 +41,21 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public void Initialize()
+		public bool Initialize()
 		{
+			//	Initialise la table des fontes (FontIdentity) en complétant ce qui
+			//	est déjà connu (par ex. parce que chargé via un LoadFromCache).
+			//	Retourne 'true' s'il y a eu du changement.
+			
+			this.changes = 0;
+			
+			System.Collections.Hashtable delete = new System.Collections.Hashtable ();
+			
+			foreach (FontIdentity fid in this.full_list)
+			{
+				delete[fid.OsFontName] = fid;
+			}
+			
 			this.families = Platform.Neutral.GetFontFamilies ();
 			
 			foreach (string family in this.families)
@@ -48,6 +64,15 @@ namespace Epsitec.Common.OpenType
 				
 				foreach (string style in styles)
 				{
+					string os_font_name = FontCollection.GetInternalOsFontName (family, style);
+					
+					delete.Remove (os_font_name);
+					
+					if (this.font_hash.Contains (os_font_name))
+					{
+						continue;
+					}
+					
 					byte[] data_name = Platform.Neutral.LoadFontDataNameTable (family, style);
 					
 					Table_name name_t = null;
@@ -85,11 +110,7 @@ namespace Epsitec.Common.OpenType
 								fid_n.DefineTableName (name_t, name_t_length);
 								fid_n.DefineSystemFontFamilyAndStyle (family, style);
 								
-								if (this.full_hash.ContainsKey (full_name) == false)
-								{
-									this.full_hash[full_name] = fid_n;
-									this.fuid_hash[fuid_name] = fid_n;
-								}
+								this.Add (full_name, fuid_name, fid_n);
 							}
 						}
 					}
@@ -109,25 +130,48 @@ namespace Epsitec.Common.OpenType
 							
 							fid.DefineSystemFontFamilyAndStyle (family, style);
 							
-							this.full_hash[full_name] = fid;
-							this.fuid_hash[fuid_name] = fid;
+							this.Add (full_name, fuid_name, fid);
 						}
 					}
 				}
 			}
 			
-			this.full_list.Clear ();
-			
-			foreach (string name in this.full_hash.Keys)
+			foreach (FontIdentity fid in delete.Values)
 			{
-				this.full_list.Add (this[name]);
+				this.Remove (fid);
 			}
 			
-			this.full_list.Sort (FontIdentity.Comparer);
+			this.RefreshFullList ();
+			
+			return (this.changes > 0);
 		}
 		
 		
-		public void SaveToCache()
+		public bool RefreshCache()
+		{
+			return this.RefreshCache (null);
+		}
+		
+		public bool RefreshCache(FontAccessCallback callback)
+		{
+			//	Retourne true si le contenu du cache a été modifié.
+			
+			this.LoadFromCache ();
+			
+			if (this.Initialize ())
+			{
+				return this.SaveToCache (callback);
+			}
+			
+			return false;
+		}
+		
+		public bool SaveToCache()
+		{
+			return this.SaveToCache (null);
+		}
+		
+		public bool SaveToCache(FontAccessCallback callback)
 		{
 			string app_data_path = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
 			string cache_dir_path = System.IO.Path.Combine (app_data_path, "Epsitec Cache");
@@ -140,31 +184,46 @@ namespace Epsitec.Common.OpenType
 			{
 			}
 			
-			string path = System.IO.Path.Combine (cache_dir_path, "OpenType.FontCollection.data");
+			string path = System.IO.Path.Combine (cache_dir_path, FontCollection.CacheFileName);
 			
 			try
 			{
-				using (System.IO.FileStream file = new System.IO.FileStream (path, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
-				{
-					foreach (FontIdentity fid in this.full_list)
-					{
-						FontIdentity.Serialize (file, fid);
-					}
-					
-					file.Flush ();
-					file.SetLength (file.Length);
-				}
+				System.IO.File.Delete (path);
 			}
 			catch
 			{
 			}
+			
+			try
+			{
+				using (System.IO.FileStream file = new System.IO.FileStream (path, System.IO.FileMode.CreateNew, System.IO.FileAccess.Write))
+				{
+					foreach (FontIdentity fid in this.full_list)
+					{
+						if (callback != null)
+						{
+							callback (fid);
+						}
+						
+						FontIdentity.Serialize (file, fid);
+					}
+					
+					file.Flush ();
+				}
+			}
+			catch
+			{
+				return false;
+			}
+			
+			return true;
 		}
 		
 		public void LoadFromCache()
 		{
 			string app_data_path  = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
 			string cache_dir_path = System.IO.Path.Combine (app_data_path, "Epsitec Cache");
-			string path           = System.IO.Path.Combine (cache_dir_path, "OpenType.FontCollection.data");
+			string path           = System.IO.Path.Combine (cache_dir_path, FontCollection.CacheFileName);
 			
 			try
 			{
@@ -174,13 +233,15 @@ namespace Epsitec.Common.OpenType
 					{
 						FontIdentity fid = FontIdentity.Deserialize (file);
 						
-						System.Diagnostics.Debug.WriteLine ("Deserialized " + fid.LocaleFaceName + " " + fid.LocaleStyleName);
+						this.Add (fid.FullName, fid.UniqueFontId, fid);
 					}
 				}
 			}
 			catch
 			{
 			}
+			
+			this.RefreshFullList ();
 		}
 		
 		
@@ -243,6 +304,7 @@ namespace Epsitec.Common.OpenType
 			return font;
 		}
 		
+		
 		internal Font InternalCreateFont(string face, string style)
 		{
 			//	Pour trouver la fonte correspondante, on se base sur le "hash"
@@ -262,6 +324,7 @@ namespace Epsitec.Common.OpenType
 			
 			return null;
 		}
+		
 		
 		public Font CreateFont(string font)
 		{
@@ -349,12 +412,54 @@ namespace Epsitec.Common.OpenType
 			return string.Join (" ", (string[]) list.ToArray (typeof (string)));
 		}
 		
+		public static string GetInternalOsFontName(string family, string style)
+		{
+			return string.Concat (family, "/", style);
+		}
+		
+		
+		private void Add(string full_name, string fuid_name, FontIdentity fid)
+		{
+			if (this.full_hash.ContainsKey (full_name) == false)
+			{
+				string font_name = fid.OsFontName;
+				
+				this.font_hash[font_name] = fid;
+				this.full_hash[full_name] = fid;
+				this.fuid_hash[fuid_name] = fid;
+				this.changes++;
+			}
+		}
+		
+		private void Remove(FontIdentity fid)
+		{
+			this.font_hash.Remove (fid.OsFontName);
+			this.full_hash.Remove (fid.FullName);
+			this.fuid_hash.Remove (fid.UniqueFontId);
+			this.changes++;
+		}
+		
+		private void RefreshFullList()
+		{
+			this.full_list.Clear ();
+			
+			foreach (string name in this.full_hash.Keys)
+			{
+				this.full_list.Add (this[name]);
+			}
+			
+			this.full_list.Sort (FontIdentity.Comparer);
+		}
+		
 		
 		private static bool						load_ttc;
+		private static string					CacheFileName = "OpenType.FontCollection.1.0.data";
 		
+		private System.Collections.Hashtable	font_hash;
 		private System.Collections.Hashtable	full_hash;
 		private System.Collections.Hashtable	fuid_hash;
 		private System.Collections.ArrayList	full_list;
 		private string[]						families;
+		private int								changes;
 	}
 }

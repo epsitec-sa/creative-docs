@@ -730,8 +730,6 @@ namespace Epsitec.Common.Widgets
 				r.Bottom = rect.Top-14;
 				r.Top = rect.Top;
 				
-				System.Diagnostics.Debug.WriteLine ("Setting close button bounds to " + r.ToString());
-				
 				this.buttonClose.Bounds = r;
 				this.buttonClose.Visibility = true;
 			}

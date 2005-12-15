@@ -127,19 +127,59 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		[Test] public void RefreshCache()
+		{
+			FontCollection collection = new FontCollection ();
+			
+			System.Diagnostics.Debug.WriteLine ("OpenType: RefreshCache");
+			bool changed = collection.RefreshCache (new FontAccessCallback (this.FontCallback));
+			System.Diagnostics.Debug.WriteLine ("done, changed=" + changed);
+		}
+		
+		private void FontCallback(FontIdentity fid)
+		{
+			System.Console.WriteLine (fid.FullName);
+		}
+		
 		[Test] public void SaveToCache()
 		{
 			FontCollection collection = new FontCollection ();
 			
+			System.Diagnostics.Debug.WriteLine ("OpenType: Initialize");
 			collection.Initialize ();
+			System.Diagnostics.Debug.WriteLine ("done");
+			
+			System.Diagnostics.Debug.WriteLine ("OpenType: SaveToCache");
 			collection.SaveToCache ();
+			System.Diagnostics.Debug.WriteLine ("done");
 		}
 		
 		[Test] public void LoadFromCache()
 		{
 			FontCollection collection = new FontCollection ();
 			
+			System.Diagnostics.Debug.WriteLine ("OpenType: LoadFromCache");
 			collection.LoadFromCache ();
+			System.Diagnostics.Debug.WriteLine ("done");
+			
+			int count_1 = 0;
+			int count_2 = 0;
+			
+			foreach (FontIdentity fid in collection)
+			{
+				count_1++;
+			}
+			
+			System.Diagnostics.Debug.WriteLine ("OpenType: Initialize");
+			collection.Initialize ();
+			System.Diagnostics.Debug.WriteLine ("done");
+			
+			foreach (FontIdentity fid in collection)
+			{
+				count_2++;
+			}
+			
+			System.Console.WriteLine ("In cache: {0}, total: {1}", count_1, count_2);
 		}
 	}
 }

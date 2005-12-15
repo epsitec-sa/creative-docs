@@ -150,7 +150,7 @@ namespace Epsitec.Common.OpenType
 				{
 					if (this.font_data == null)
 					{
-						byte[] data = Platform.Neutral.LoadFontData (this.record);
+						byte[] data = Platform.Neutral.LoadFontData (this.Record);
 						
 						this.font_data = data == null ? null : new FontData (data, this.ttc_index);
 					}
@@ -160,11 +160,33 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		internal object							Record
+		{
+			get
+			{
+				if (this.record == null)
+				{
+					this.record = Platform.Neutral.GetFontSystemDescription (this.os_font_family, this.os_font_style);
+				}
+				
+				return this.record;
+			}
+		}
+		
+		internal string							OsFontName
+		{
+			get
+			{
+				return FontCollection.GetInternalOsFontName (this.os_font_family, this.os_font_style);
+			}
+		}
+		
+		
 		public FontWeight						FontWeight
 		{
 			get
 			{
-				return (FontWeight) Platform.Neutral.GetFontWeight (this.record);
+				return (FontWeight) Platform.Neutral.GetFontWeight (this.Record);
 			}
 		}
 		
@@ -172,7 +194,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				if (Platform.Neutral.GetFontItalic (this.record) == 0)
+				if (Platform.Neutral.GetFontItalic (this.Record) == 0)
 				{
 					return FontStyle.Normal;
 				}
@@ -256,7 +278,7 @@ namespace Epsitec.Common.OpenType
 				
 				if (this.font_sizes.Contains (size) == false)
 				{
-					this.font_sizes[size] = new SizeInfo (size, Platform.Neutral.GetFontHandle (this.record, size));
+					this.font_sizes[size] = new SizeInfo (size, Platform.Neutral.GetFontHandle (this.Record, size));
 				}
 			}
 			

@@ -157,11 +157,18 @@ namespace Epsitec.Common.OpenType.Platform
 				public const int	Italic				= 0x00000001;
 				public const int	Bold				= 0x00000020;
 				public const int	Regular				= 0x00000100;
-				public const int	PostScript			= 0x00020000;
-				public const int	TrueType			= 0x00040000;
+				public const int	PostScript_OpenType	= 0x00020000;
+				public const int	TrueType_OpenType	= 0x00040000;
 				public const int	MultipleMaster		= 0x00080000;
 				public const int	Type1				= 0x00100000;
 				public const int	DigitalSignature	= 0x00200000;
+			}
+			
+			public class FontType
+			{
+				public const int	Raster				= 0x01;
+				public const int	Device				= 0x02;
+				public const int	TrueType			= 0x04;
 			}
 		}
 		#endregion
@@ -324,13 +331,14 @@ namespace Epsitec.Common.OpenType.Platform
 				if ((name.Length > 0) &&
 					(name[0] != '@') &&
 					(log_font_ex.lfOutPrecision == 3) &&
-					(log_font_ex.elfScript != "OEM/DOS"))
+					(log_font_ex.elfScript != "OEM/DOS") &&
+					(font_type == NewTextMetricEx.FontType.TrueType))
 				{
 					//	Pour le moment, ne conserve que les fontes OpenType purement
 					//	TrueType (on ne sait pas que faire des fontes PostScript).
 					
-					if (((NewTextMetricEx.Flags.TrueType & flags) != 0) ||
-						((NewTextMetricEx.Flags.PostScript & flags) != 0))
+//-					if (((NewTextMetricEx.Flags.TrueType & flags) != 0) ||
+//-						((NewTextMetricEx.Flags.PostScript & flags) != 0))
 					{
 						if (this.names.Contains (name) == false)
 						{
