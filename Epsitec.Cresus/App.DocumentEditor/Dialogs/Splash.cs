@@ -59,9 +59,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void UpdateWorkInProgress(Common.OpenType.FontIdentity fid)
 		{
-			string text = string.Format(Res.Strings.Dialog.Splash.WorkInProgress, fid.InvariantFaceName);
-			this.workInProgress.Text = text;
-			this.workInProgress.Invalidate();  // TODO: pas sûr si c'est nécessaire ?
+			if ( fid == null )  // liste terminée ?
+			{
+				this.workInProgress.Text = "";  // efface le texte
+			}
+			else
+			{
+				string text = string.Format(Res.Strings.Dialog.Splash.WorkInProgress, fid.InvariantFaceName);
+				this.workInProgress.Text = text;
+			}
 		}
 
 		private void HandleSplashPaintForeground(object sender, PaintEventArgs e)
