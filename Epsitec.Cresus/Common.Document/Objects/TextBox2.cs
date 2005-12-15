@@ -373,9 +373,6 @@ namespace Epsitec.Common.Document.Objects
 				bool sel = (this.textFlow.TextNavigator.SelectionCount != 0);
 				if ( sel )
 				{
-					this.PutCommands(list, "ParagraphClear");
-					this.PutCommands(list, "FontClear");
-					this.PutCommands(list, "");
 					this.PutCommands(list, "Cut");
 					this.PutCommands(list, "Copy");
 					this.PutCommands(list, "Paste");
@@ -398,6 +395,9 @@ namespace Epsitec.Common.Document.Objects
 					this.PutCommands(list, "");
 					this.PutCommands(list, "FontSizeMinus");
 					this.PutCommands(list, "FontSizePlus");
+					this.PutCommands(list, "");
+					this.PutCommands(list, "ParagraphClear");
+					this.PutCommands(list, "FontClear");
 					this.PutCommands(list, "");
 				}
 				else
@@ -2036,6 +2036,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( !this.edited )  return;
 			this.UpdateTextLayout();
+			this.UpdateClipboardCommands();
 			this.document.Notifier.NotifyTextChanged();
 			this.NotifyAreaFlow();
 			this.ChangeObjectEdited();
@@ -2045,6 +2046,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( !this.edited )  return;
 			this.UpdateTextRulers();
+			this.UpdateClipboardCommands();
 			this.document.Notifier.NotifyTextChanged();
 			this.NotifyAreaFlow();
 			this.ChangeObjectEdited();
@@ -2105,6 +2107,16 @@ namespace Epsitec.Common.Document.Objects
 				if ( obj == null )  continue;
 				obj.SetDirtyBbox();
 			}
+		}
+
+		// Met à jour les commandes du clipboard.
+		protected void UpdateClipboardCommands()
+		{
+			bool sel = (this.textFlow.TextNavigator.SelectionCount != 0);
+			CommandDispatcher cd = this.document.CommandDispatcher;
+
+			cd.GetCommandState("Cut").Enable = sel;
+			cd.GetCommandState("Copy").Enable = sel;
 		}
 
 		// Notifie "à repeindre" toute la chaîne des pavés.

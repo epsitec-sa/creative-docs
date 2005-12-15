@@ -4132,9 +4132,9 @@ namespace Epsitec.App.DocumentEditor
 
 				if ( this.CurrentDocument.Wrappers.IsWrappersAttached )  // édition en cours ?
 				{
-					this.cutState.Enable = true;
-					this.copyState.Enable = true;
-					this.pasteState.Enable = true;
+					//?this.cutState.Enable = true;
+					//?this.copyState.Enable = true;
+					//?this.pasteState.Enable = true;
 				}
 				else
 				{
