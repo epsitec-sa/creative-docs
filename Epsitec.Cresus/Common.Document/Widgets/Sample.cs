@@ -166,7 +166,7 @@ namespace Epsitec.Common.Document.Widgets
 			shape.SetPropertySurface(graphics, this.property);
 
 			Drawer drawer = new Drawer(null);
-			drawer.DrawShapes(graphics, null, obj, shape);
+			drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shape);
 
 			graphics.Transform = initial;
 

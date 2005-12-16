@@ -8,18 +8,29 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Drawer
 	{
+		public enum DrawShapesMode
+		{
+			All,			// dessine tout
+			NoText,			// ne dessine pas le texte
+			OnlyText,		// ne dessine que le texte
+		}
+
+
 		public Drawer(Document document)
 		{
 			this.document = document;
 		}
 
 		// Dessine des formes dans n'importe quel IPaintPort.
-		public void DrawShapes(IPaintPort port,
+		// Retourne true si un texte a été sauté en mode NoText.
+		public bool DrawShapes(IPaintPort port,
 							   DrawingContext drawingContext,
 							   Objects.Abstract obj,
+							   DrawShapesMode mode,
 							   params Shape[] shapes)
 		{
 			FillMode iMode = port.FillMode;
+			bool skipText = false;
 
 #if false
 			for ( int i=0 ; i<shapes.Length ; i++ )
@@ -49,7 +60,7 @@ namespace Epsitec.Common.Document
 
 				port.FillMode = shape.FillMode;
 
-				if ( shape.Type == Type.Surface )
+				if ( shape.Type == Type.Surface && mode != DrawShapesMode.OnlyText )
 				{
 					if ( !shape.IsVisible || shape.Path.IsEmpty )  continue;
 
@@ -69,7 +80,7 @@ namespace Epsitec.Common.Document
 					}
 				}
 
-				if ( shape.Type == Type.Stroke )
+				if ( shape.Type == Type.Stroke && mode != DrawShapesMode.OnlyText )
 				{
 					if ( !shape.IsVisible || shape.Path.IsEmpty )  continue;
 
@@ -91,12 +102,18 @@ namespace Epsitec.Common.Document
 
 				if ( shape.Type == Type.Text )
 				{
-					if ( !shape.IsVisible )  continue;
-
-					shape.Object.DrawText(port, drawingContext);
+					if ( mode == DrawShapesMode.NoText )
+					{
+						skipText = true;
+					}
+					else
+					{
+						if ( !shape.IsVisible && mode != DrawShapesMode.OnlyText )  continue;
+						shape.Object.DrawText(port, drawingContext);
+					}
 				}
 
-				if ( shape.Type == Type.Image )
+				if ( shape.Type == Type.Image && mode != DrawShapesMode.OnlyText )
 				{
 					if ( !shape.IsVisible )  continue;
 
@@ -105,6 +122,7 @@ namespace Epsitec.Common.Document
 			}
 
 			port.FillMode = iMode;
+			return skipText;
 		}
 
 		// Dessine un traitillé simple (dash/gap) le long d'un chemin.

@@ -1267,6 +1267,7 @@ namespace Epsitec.Common.Document
 		public double HiliteSize
 		{
 			get { return this.hiliteSize/this.ScaleX; }
+			set { this.hiliteSize = value*this.ScaleX; }
 		}
 
 		// Taille d'une poignée.

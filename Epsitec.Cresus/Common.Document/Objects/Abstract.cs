@@ -2520,21 +2520,35 @@ namespace Epsitec.Common.Document.Objects
 			Shape[] shapes = this.ShapesBuild(port, drawingContext, false);
 			if ( shapes != null )
 			{
-				drawingContext.Drawer.DrawShapes(port, drawingContext, this, shapes);
+				bool skipText = drawingContext.Drawer.DrawShapes(port, drawingContext, this, Drawer.DrawShapesMode.NoText, shapes);
 
 				if ( port is Graphics )
 				{
 					if ( this.IsHilite && drawingContext.IsActive )
 					{
+						double initialHiliteSize = drawingContext.HiliteSize;
+
+						if ( skipText )
+						{
+							drawingContext.HiliteSize = 0.5/drawingContext.ScaleX;
+						}
+
 						Shape.Hilited(port, shapes);
-						drawingContext.Drawer.DrawShapes(port, drawingContext, this, shapes);
+						drawingContext.Drawer.DrawShapes(port, drawingContext, this, Drawer.DrawShapesMode.All, shapes);
+
+						drawingContext.HiliteSize = initialHiliteSize;
 					}
 
 					if ( this.IsOverDash(drawingContext) )
 					{
 						Shape.OverDashed(port, shapes);
-						drawingContext.Drawer.DrawShapes(port, drawingContext, this, shapes);
+						drawingContext.Drawer.DrawShapes(port, drawingContext, this, Drawer.DrawShapesMode.All, shapes);
 					}
+				}
+
+				if ( skipText )
+				{
+					drawingContext.Drawer.DrawShapes(port, drawingContext, this, Drawer.DrawShapesMode.OnlyText, shapes);
 				}
 			}
 
