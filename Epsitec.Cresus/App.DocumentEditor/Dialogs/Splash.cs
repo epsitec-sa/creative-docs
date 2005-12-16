@@ -44,6 +44,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.workInProgress.SetSyncPaint(true);
 
 				this.window.Show();
+				Window.PumpEvents();
 			
 				Common.OpenType.FontIdentityCallback callback = new Common.OpenType.FontIdentityCallback(this.UpdateWorkInProgress);
 				Common.Text.TextContext.InitializeFontCollection(callback);
@@ -56,6 +57,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.splashTimer.Delay = 10.0;
 				
 				this.window.MakeLayeredWindow();
+				Window.PumpEvents();
 			}
 			else
 			{
