@@ -11,8 +11,8 @@
 
 	<data name="Dialog.Settings.SizeDoc">Page size</data>
 	<data name="Dialog.Settings.SizePic">Pictogram size</data>
-	<data name="Dialog.Settings.Grid">Magnetic grid</data>
-	<data name="Dialog.Settings.TextGrid">@@Lignes magnétiques pour le texte</data>
+	<data name="Dialog.Settings.Grid">Magnetic Grid</data>
+	<data name="Dialog.Settings.TextGrid">Baseline Grid, used to align text</data>
 	<data name="Dialog.Settings.Magnet">Magnetic guides</data>
 	<data name="Dialog.Settings.DuplicateMove">Offset for object duplication</data>
 	<data name="Dialog.Settings.ArrowMove">Keyboard arrows move by...</data>
@@ -51,14 +51,14 @@
 	
 	<data name="Dialog.Bool.GridActive">Enable grid</data>
 	<data name="Dialog.Bool.GridShow">Show grid</data>
-	<data name="Dialog.Bool.TextGridShow">@@Lignes visibles</data>
+	<data name="Dialog.Bool.TextGridShow">Show magnetic text lines</data>
 	<data name="Dialog.Bool.GuidesActive">Enable guides</data>
 	<data name="Dialog.Bool.GuidesShow">Show guides</data>
 	<data name="Dialog.Bool.GuidesMouse">Allow guides to be dragged</data>
 	<data name="Dialog.Bool.PreviewActive">Preview as printed</data>
 	<data name="Dialog.Bool.RulersShow">Show rulers</data>
 	<data name="Dialog.Bool.LabelsShow">Show object names</data>
-	<data name="Dialog.Bool.MagnetActive">@@Objets magnétiques</data>
+	<data name="Dialog.Bool.MagnetActive">Magnetize objects</data>
 	<data name="Dialog.Bool.PrintCollate">Collate (1,2,3 - 1,2,3)</data>
 	<data name="Dialog.Bool.PrintReverse">Reverse order</data>
 	<data name="Dialog.Bool.PrintToFile">Print to file</data>
@@ -101,7 +101,7 @@
 	<data name="Dialog.Double.DimensionScale">Scale</data>
 	<data name="Dialog.Double.DimensionDecimal">Number of digits</data>
 
-	<data name="Dialog.Integer.DefaultUnit.Text">Unit of measure</data>
+	<data name="Dialog.Integer.DefaultUnit.Text">Measurment unit</data>
 	<data name="Dialog.Integer.DefaultUnit.Millimeter">Millimeters</data>
 	<data name="Dialog.Integer.DefaultUnit.Centimeter">Centimeters</data>
 	<data name="Dialog.Integer.DefaultUnit.Inch">Inches</data>
@@ -122,7 +122,7 @@
 	<data name="Dialog.Integer.ImageDepth.Text">Colors</data>
 	<data name="Dialog.Integer.ImageDepth.Bit2">Black and white (1-bit)</data>
 	<data name="Dialog.Integer.ImageDepth.Bit8">256 (8-bit)</data>
-	<data name="Dialog.Integer.ImageDepth.Bit16">65 000 (16-bit)</data>
+	<data name="Dialog.Integer.ImageDepth.Bit16">65,536 (16-bit)</data>
 	<data name="Dialog.Integer.ImageDepth.Bit24">16 millions (24-bit)</data>
 	<data name="Dialog.Integer.ImageDepth.Bit32">With transparency (32-bit)</data>
 	<data name="Dialog.Integer.ImageCompression.Text">Compression</data>
@@ -174,7 +174,7 @@
 	<data name="Container.Layers.Header.Name">Name</data>
 	<data name="Container.Layers.Header.Magnet">M</data>
 	<data name="Container.Layers.Header.Show">S</data>
-	<data name="Container.Layers.Tooltip.Show">@@Visibilité du calque</data>
+	<data name="Container.Layers.Tooltip.Show">Layer visibility</data>
 
 	<data name="Container.Pages.Button.Slave">Document page</data>
 	<data name="Container.Pages.Button.Master">Template page</data>
@@ -449,11 +449,11 @@
 	<data name="Panel.Volume.Tooltip.Right">Right side angle</data>
 
 	<data name="TextPanel.Filter.Title">Visible properties</data>
-	<data name="TextPanel.Filter.Tooltip.Usual">@@Attributs courants</data>
-	<data name="TextPanel.Filter.Tooltip.Frequently">@@Attributs fréquents</data>
-	<data name="TextPanel.Filter.Tooltip.All">@@Tous les attributs</data>
-	<data name="TextPanel.Filter.Tooltip.Paragraph">@@Attributs pour les paragraphes</data>
-	<data name="TextPanel.Filter.Tooltip.Character">@@Attributs pour les caractères</data>
+	<data name="TextPanel.Filter.Tooltip.Usual">Basic properties</data>
+	<data name="TextPanel.Filter.Tooltip.Frequently">Frequently used properties</data>
+	<data name="TextPanel.Filter.Tooltip.All">All properties</data>
+	<data name="TextPanel.Filter.Tooltip.Paragraph">Paragraph properties only</data>
+	<data name="TextPanel.Filter.Tooltip.Character">Character properties only</data>
 	
 	<data name="TextPanel.Justif.Title">Layout</data>
 
@@ -462,22 +462,22 @@
 	<data name="TextPanel.Leading.Short.GridStep">S</data>
 	<data name="TextPanel.Leading.Short.GridOffset">O</data>
 	<data name="TextPanel.Leading.Long.Leading">%</data>
-	<data name="TextPanel.Leading.Long.GridStep">@@Espacement vertical</data>
-	<data name="TextPanel.Leading.Long.GridSubdiv">@@Subdivisions</data>
-	<data name="TextPanel.Leading.Long.GridOffset">@@Décalage vertical</data>
-	<data name="TextPanel.Leading.Tooltip.Leading">@@Interligne</data>
-	<data name="TextPanel.Leading.Tooltip.GridStep">@@Espacement vertical des lignes magnétiques</data>
-	<data name="TextPanel.Leading.Tooltip.GridOffset">@@Décalage vertical des lignes magnétiques</data>
-	<data name="TextPanel.Leading.Tooltip.AlignFirst">@@Forcer la première ligne du paragraphe sur une ligne magnétique</data>
-	<data name="TextPanel.Leading.Tooltip.AlignAll">@@Forcer toutes les lignes sur les lignes magnétiques</data>
+	<data name="TextPanel.Leading.Long.GridStep">Vertical spacing</data>
+	<data name="TextPanel.Leading.Long.GridSubdiv">Vertical subdivisions</data>
+	<data name="TextPanel.Leading.Long.GridOffset">Vertical offset</data>
+	<data name="TextPanel.Leading.Tooltip.Leading">Leading</data>
+	<data name="TextPanel.Leading.Tooltip.GridStep">Baseline Grid Vertical spacing</data>
+	<data name="TextPanel.Leading.Tooltip.GridOffset">Baseline Grid Vertical offset</data>
+	<data name="TextPanel.Leading.Tooltip.AlignFirst">Align first line of paragraph on Baseline Grid</data>
+	<data name="TextPanel.Leading.Tooltip.AlignAll">Align full paragraph on Baseline Grid</data>
 
 	<data name="TextPanel.Margins.Title">Padding</data>
 	<data name="TextPanel.Margins.Short.LeftFirst">F</data>
 	<data name="TextPanel.Margins.Short.LeftBody">L</data>
 	<data name="TextPanel.Margins.Short.Right">R</data>
 	<data name="TextPanel.Margins.Long.LeftFirst">First line</data>
-	<data name="TextPanel.Margins.Long.LeftBody">Left indent</data>
-	<data name="TextPanel.Margins.Long.Right">Right indent</data>
+	<data name="TextPanel.Margins.Long.LeftBody">Left Indent</data>
+	<data name="TextPanel.Margins.Long.Right">Right Indent</data>
 
 	<data name="TextPanel.Spaces.Title">Spacing</data>
 	<data name="TextPanel.Spaces.Short.Before">B</data>
@@ -496,13 +496,13 @@
 	<data name="TextPanel.Keep.Long.KeepEnd">Keep end lines</data>
 	<data name="TextPanel.Keep.Tooltip.KeepStart">Lines to keep together at the start of a paragraph</data>
 	<data name="TextPanel.Keep.Tooltip.KeepEnd">Lines to keep together at the end of a paragraph</data>
-	<data name="TextPanel.Keep.Tooltip.StartMode">@@Emplacement du début du paragraphe</data>
-	<data name="TextPanel.Keep.StartMode.Undefined">@@&lt;i&gt;Selon le style sous-jacent&lt;/i&gt;</data>
-	<data name="TextPanel.Keep.StartMode.Anywhere">@@N'importe où</data>
-	<data name="TextPanel.Keep.StartMode.NewFrame">@@Au début d'un pavé</data>
-	<data name="TextPanel.Keep.StartMode.NewPage">@@Au début d'une page</data>
-	<data name="TextPanel.Keep.StartMode.NewOddPage">@@Au début d'une page impaire</data>
-	<data name="TextPanel.Keep.StartMode.NewEvenPage">@@Au début d'une page paire</data>
+	<data name="TextPanel.Keep.Tooltip.StartMode">Start Paragraph at ...</data>
+	<data name="TextPanel.Keep.StartMode.Undefined">&lt;i&gt;Defined by Style&lt;/i&gt;</data>
+	<data name="TextPanel.Keep.StartMode.Anywhere">Anywhere</data>
+	<data name="TextPanel.Keep.StartMode.NewFrame">In a New Frame</data>
+	<data name="TextPanel.Keep.StartMode.NewPage">In a New Page</data>
+	<data name="TextPanel.Keep.StartMode.NewOddPage">In an Odd Page</data>
+	<data name="TextPanel.Keep.StartMode.NewEvenPage">In an Even Page</data>
 
 	<data name="TextPanel.Align.Title">Vertical alignment</data>
 
@@ -510,43 +510,43 @@
 	<data name="TextPanel.Font.Short.Size">S</data>
 	<data name="TextPanel.Font.Short.Glue">G</data>
 	<data name="TextPanel.Font.Long.Size">%</data>
-	<data name="TextPanel.Font.Long.Glue">@@Espacement</data>
+	<data name="TextPanel.Font.Long.Glue">Tracking</data>
 	<data name="TextPanel.Font.Tooltip.Face">Font name</data>
 	<data name="TextPanel.Font.Tooltip.Style">Font style</data>
 	<data name="TextPanel.Font.Tooltip.Features">OpenType features</data>
 	<data name="TextPanel.Font.Tooltip.Size">Font size</data>
-	<data name="TextPanel.Font.Tooltip.Glue">@@Espacement des caractères</data>
+	<data name="TextPanel.Font.Tooltip.Glue">Tracking (space between characters)</data>
 
-	<data name="TextPanel.Xline.Title">@@Traits horizontaux</data>
+	<data name="TextPanel.Xline.Title">Horizontal lines</data>
 	<data name="TextPanel.Xline.Short.Underlined.Thickness">T</data>
 	<data name="TextPanel.Xline.Short.Underlined.Position">P</data>
 	<data name="TextPanel.Xline.Short.Strikeout.Thickness">T</data>
 	<data name="TextPanel.Xline.Short.Strikeout.Position">P</data>
 	<data name="TextPanel.Xline.Short.Overlined.Thickness">T</data>
 	<data name="TextPanel.Xline.Short.Overlined.Position">P</data>
-	<data name="TextPanel.Xline.Long.Underlined.Thickness">@@Epaisseur souligné</data>
-	<data name="TextPanel.Xline.Long.Underlined.Position">@@Position souligné</data>
-	<data name="TextPanel.Xline.Long.Strikeout.Thickness">@@Epaisseur biffé</data>
-	<data name="TextPanel.Xline.Long.Strikeout.Position">@@Position biffé</data>
-	<data name="TextPanel.Xline.Long.Overlined.Thickness">@@Epaisseur surligné</data>
-	<data name="TextPanel.Xline.Long.Overlined.Position">@@Position surligné</data>
-	<data name="TextPanel.Xline.Tooltip.Underlined.Thickness">@@Epaisseur du souligné</data>
-	<data name="TextPanel.Xline.Tooltip.Underlined.Position">@@Position verticale du souligné</data>
-	<data name="TextPanel.Xline.Tooltip.Underlined.Color">@@Couleur du souligné</data>
-	<data name="TextPanel.Xline.Tooltip.Strikeout.Thickness">@@Epaisseur du biffé</data>
-	<data name="TextPanel.Xline.Tooltip.Strikeout.Position">@@Position verticale du biffé</data>
-	<data name="TextPanel.Xline.Tooltip.Strikeout.Color">@@Couleur du biffé</data>
-	<data name="TextPanel.Xline.Tooltip.Overlined.Thickness">@@Epaisseur du surligné</data>
-	<data name="TextPanel.Xline.Tooltip.Overlined.Position">@@Position verticale du surligné</data>
-	<data name="TextPanel.Xline.Tooltip.Overlined.Color">@@Couleur du surligné</data>
+	<data name="TextPanel.Xline.Long.Underlined.Thickness">Underline thickness</data>
+	<data name="TextPanel.Xline.Long.Underlined.Position">Underline position</data>
+	<data name="TextPanel.Xline.Long.Strikeout.Thickness">Strikeout thickness</data>
+	<data name="TextPanel.Xline.Long.Strikeout.Position">Strikeout position</data>
+	<data name="TextPanel.Xline.Long.Overlined.Thickness">Overline thickness</data>
+	<data name="TextPanel.Xline.Long.Overlined.Position">Overline position</data>
+	<data name="TextPanel.Xline.Tooltip.Underlined.Thickness">Underline Thickness</data>
+	<data name="TextPanel.Xline.Tooltip.Underlined.Position">Distance from Baseline to Underline</data>
+	<data name="TextPanel.Xline.Tooltip.Underlined.Color">Underline Color</data>
+	<data name="TextPanel.Xline.Tooltip.Strikeout.Thickness">Strikeout Thickness</data>
+	<data name="TextPanel.Xline.Tooltip.Strikeout.Position">Distance from Baseline to Strikeout</data>
+	<data name="TextPanel.Xline.Tooltip.Strikeout.Color">Strikeout Color</data>
+	<data name="TextPanel.Xline.Tooltip.Overlined.Thickness">Overline Thickness</data>
+	<data name="TextPanel.Xline.Tooltip.Overlined.Position">Distance from top of Text to Overline</data>
+	<data name="TextPanel.Xline.Tooltip.Overlined.Color">Overline Color</data>
 
 	<data name="TextPanel.Xscript.Title">Subscript and superscript</data>
 	<data name="TextPanel.Xscript.Short.Scale">S</data>
 	<data name="TextPanel.Xscript.Short.Offset">O</data>
-	<data name="TextPanel.Xscript.Long.Scale">@@Echelle</data>
-	<data name="TextPanel.Xscript.Long.Offset">@@Décalage</data>
-	<data name="TextPanel.Xscript.Tooltip.Scale">@@Réduction d'échelle</data>
-	<data name="TextPanel.Xscript.Tooltip.Offset">@@Décalage vertical</data>
+	<data name="TextPanel.Xscript.Long.Scale">Scale</data>
+	<data name="TextPanel.Xscript.Long.Offset">Offset</data>
+	<data name="TextPanel.Xscript.Tooltip.Scale">Relative Character Size</data>
+	<data name="TextPanel.Xscript.Tooltip.Offset">Relative Character Offset</data>
 
 	<data name="TextPanel.Box.Title">Frames</data>
 
@@ -558,7 +558,7 @@
 	<data name="TextPanel.Language.List.en">English</data>
 
 	<data name="TextPanel.Clear">Clear property</data>
-	<data name="TextPanel.Units">@@Choix de l'unité</data>
+	<data name="TextPanel.Units">Toggle between Units</data>
 
 	<data name="Property.Abstract.Name">Name</data>
 	<data name="Property.Abstract.LineColor">Line color</data>
@@ -872,8 +872,8 @@
 	<data name="Action.ShaperHandleDis">Cusp</data>
 	<data name="Action.ShaperHandleInline">In line</data>
 	<data name="Action.ShaperHandleFree">Free</data>
-	<data name="Action.ShaperHandleSimply">@@Toujours droit</data>
-	<data name="Action.ShaperHandleCorner">@@Selon la propriété de coin</data>
+	<data name="Action.ShaperHandleSimply">Always normal</data>
+	<data name="Action.ShaperHandleCorner">As defined in Corner Property</data>
 	<data name="Action.ShaperHandleContinue">Extend line</data>
 
 	<data name="Action.Glyphs">Symbols...</data>
@@ -987,11 +987,11 @@
 	<data name="Action.ZoomMenu">Pick a pre-defined zoom value</data>
 	
 	<data name="Action.ViewMain">View</data>
-	<data name="Action.Grid">Magnetic grid</data>
-	<data name="Action.TextGrid">@@Montrer les lignes magnétiques pour le texte</data>
+	<data name="Action.Grid">Enable Magnetic grid</data>
+	<data name="Action.TextGrid">Show Baseline Grid</data>
 	<data name="Action.Preview">Preview as printed</data>
-	<data name="Action.Magnet">@@Objets magnétiques</data>
-	<data name="Action.MagnetLayer">@@Les objets du calque sont magnétiques</data>
+	<data name="Action.Magnet">Magnetize Objects for use as Smart Guides</data>
+	<data name="Action.MagnetLayer">Magnetize Objects in this Layer</data>
 	<data name="Action.Rulers">Rulers</data>
 	<data name="Action.Labels">Display object labels</data>
 	<data name="Action.Aggregates">Display style names</data>
@@ -1019,7 +1019,7 @@
 	<data name="Action.FontUserZ">User style Z</data>
 	<data name="Action.FontColor">Font color</data>
 	<data name="Action.FontDefault">Default</data>
-	<data name="Action.FontClear">@@Effacer tous les attributs de caractère</data>
+	<data name="Action.FontClear">Clear all Character Properties</data>
 	<data name="Action.ParagraphMain">Paragraph</data>
 	<data name="Action.ParagraphJustifHLeft">Left aligned</data>
 	<data name="Action.ParagraphJustifHCenter">Centered</data>
@@ -1034,24 +1034,24 @@
 	<data name="Action.ParagraphAlignLeft">Left aligned</data>
 	<data name="Action.ParagraphAlignCenter">Centered</data>
 	<data name="Action.ParagraphAlignRight">Right aligned</data>
-	<data name="Action.ParagraphAlignJustif">@@Justifié (sans la dernière ligne)</data>
-	<data name="Action.ParagraphAlignAll">@@Justifié (avec la dernière ligne)</data>
-	<data name="Action.ParagraphHyphen">@@Césures dans les mots</data>
-	<data name="Action.ParagraphLeadingMinus">@@Diminuer l'nterligne</data>
-	<data name="Action.ParagraphLeadingPlus">@@Augmenter l'interligne</data>
-	<data name="Action.ParagraphLeading08">@@Interligne serré</data>
-	<data name="Action.ParagraphLeading10">@@Interligne normal</data>
-	<data name="Action.ParagraphLeading15">@@Interligne étendu</data>
-	<data name="Action.ParagraphLeading20">@@Interligne double</data>
-	<data name="Action.ParagraphLeading30">@@Interligne triple</data>
-	<data name="Action.ParagraphClear">@@Effacer tous les attributs de paragraphe</data>
+	<data name="Action.ParagraphAlignJustif">Justify with last line aligned left</data>
+	<data name="Action.ParagraphAlignAll">Justify all lines</data>
+	<data name="Action.ParagraphHyphen">Hyphenate Paragraph</data>
+	<data name="Action.ParagraphLeadingMinus">Decrease leading</data>
+	<data name="Action.ParagraphLeadingPlus">Increase leading</data>
+	<data name="Action.ParagraphLeading08">Compact leading</data>
+	<data name="Action.ParagraphLeading10">Normal leading</data>
+	<data name="Action.ParagraphLeading15">Leading x 1.5</data>
+	<data name="Action.ParagraphLeading20">Leading x 2</data>
+	<data name="Action.ParagraphLeading30">Leading x 3</data>
+	<data name="Action.ParagraphClear">Clear all Paragraph Properties</data>
 	<data name="Action.Text.Insert">Insert</data>
-	<data name="Action.Text.FlowChanged">Flow modification</data>
+	<data name="Action.Text.FlowChanged">Changed text flow</data>
 	<data name="Action.Text.Ruler.Drag">Drag to create a guide</data>
-	<data name="Action.Text.Ruler.HandleLeftFirst">Left margin, first line</data>
-	<data name="Action.Text.Ruler.HandleLeftBody">Left margin, text body</data>
-	<data name="Action.Text.Ruler.HandleFirstBody">Left margin</data>
-	<data name="Action.Text.Ruler.HandleRight">Right margin</data>
+	<data name="Action.Text.Ruler.HandleLeftFirst">Left Padding, first line</data>
+	<data name="Action.Text.Ruler.HandleLeftBody">Left Padding, text body</data>
+	<data name="Action.Text.Ruler.HandleFirstBody">Left Padding</data>
+	<data name="Action.Text.Ruler.HandleRight">Right Padding</data>
 	<data name="Action.Text.Ruler.TabChoice">Select Tab Mark type</data>
 	<data name="Action.Text.Ruler.TabLeft">Normal Tab Mark</data>
 	<data name="Action.Text.Ruler.TabRight">Right Tab Mark</data>

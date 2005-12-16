@@ -40,29 +40,41 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				image.Clicked += new MessageEventHandler(this.HandleSplashImageClicked);
 
 				this.workInProgress = new StaticText(image);
-				this.workInProgress.Bounds = new Rectangle(22, 50, 350, 20);
+				this.workInProgress.Bounds = new Rectangle(140, 50, 250, 20);
+				this.workInProgress.SetSyncPaint(true);
 
+				this.window.Show();
+			
+				Common.OpenType.FontIdentityCallback callback = new Common.OpenType.FontIdentityCallback(this.UpdateWorkInProgress);
+				Common.Text.TextContext.InitializeFontCollection(callback);
+
+				this.workInProgress.Text = "";  // efface le texte
+				this.window.Root.Invalidate();
+				
 				this.splashTimer = new Timer();
 				this.splashTimer.TimeElapsed += new EventHandler(this.HandleSplashTimerTimeElapsed);
 				this.splashTimer.Delay = 10.0;
-				this.splashTimer.Start();
 				
 				this.window.MakeLayeredWindow();
 			}
-
-			this.window.Show();
-			
-			Common.OpenType.FontIdentityCallback callback = new Common.OpenType.FontIdentityCallback(this.UpdateWorkInProgress);
-			Common.Text.TextContext.InitializeFontCollection(callback);
-
-			this.workInProgress.Text = "";  // efface le texte
+			else
+			{
+				this.window.Show();
+			}
 		}
 
-
+		// Démarre le timer pour refermer le dialogue.
+		public void StartTimer()
+		{
+			this.splashTimer.Start();
+		}
+		
+		
 		private void UpdateWorkInProgress(Common.OpenType.FontIdentity fid)
 		{
 			string text = string.Format(Res.Strings.Dialog.Splash.WorkInProgress, fid.InvariantFaceName);
-			this.workInProgress.Text = text;
+			this.workInProgress.Text = string.Concat("<font size=\"80%\">", TextLayout.ConvertToTaggedText(text), "</font>");
+			this.window.Root.Invalidate();
 		}
 
 		private void HandleSplashPaintForeground(object sender, PaintEventArgs e)

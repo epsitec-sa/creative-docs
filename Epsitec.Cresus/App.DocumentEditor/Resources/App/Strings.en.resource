@@ -43,8 +43,8 @@
 	<data name="Status.Objects.Level">Level {0}</data>
 	<data name="Status.Modif.Default">Page: {0}  Layer: {1}</data>
 	<data name="Status.Zoom.Value">{0}%</data>
-	<data name="Status.Zoom.Menu">@@Cliquez pour choisir le zoom dans un menu</data>
-	<data name="Status.Zoom.Slider">@@Choix du zoom</data>
+	<data name="Status.Zoom.Menu">Click to select Zoom in a menu</data>
+	<data name="Status.Zoom.Slider">Select Zoom</data>
 
 	<data name="Dialog.Button.Close">Close</data>
 	<data name="Dialog.Button.OK">OK</data>
@@ -161,9 +161,9 @@
 	<data name="Dialog.Settings.Title">Settings...</data>
 	<data name="Dialog.Settings.RadioGlobal">Global</data>
 	<data name="Dialog.Settings.RadioDocument">Document</data>
-	<data name="Dialog.Settings.TabPage.General">@@Général</data>
-	<data name="Dialog.Settings.TabPage.Periph">@@Périphériques</data>
-	<data name="Dialog.Settings.TabPage.Quick">@@Barre d'icônes</data>
+	<data name="Dialog.Settings.TabPage.General">General</data>
+	<data name="Dialog.Settings.TabPage.Periph">Mouse &amp;amp; Display</data>
+	<data name="Dialog.Settings.TabPage.Quick">Quick Toolbar</data>
 	<data name="Dialog.Settings.Startup">What to do at startup?</data>
 	<data name="Dialog.Settings.Mouse">Mouse settings</data>
 	<data name="Dialog.Settings.Screen">Display settings</data>
@@ -175,21 +175,21 @@
 	<data name="Dialog.Settings.ScreenDpi">Resolution (dpi)</data>
 	<data name="Dialog.Settings.AutoUpdate">Automatically check for updates</data>
 	<data name="Dialog.Settings.AutoChecker">Check once every day</data>
-	<data name="Dialog.Settings.PanelProperties">@@Panneaux des attributs</data>
-	<data name="Dialog.Settings.LabelProperties">@@Attributs détaillés</data>
-	<data name="Dialog.Settings.QuickFirst">@@Commande au début</data>
-	<data name="Dialog.Settings.QuickUp">R@@eculer la commande</data>
-	<data name="Dialog.Settings.QuickDown">@@Avancer la commande</data>
-	<data name="Dialog.Settings.QuickLast">@@Commande à la fin</data>
-	<data name="Dialog.Settings.QuickDefault">@@Commandes par défaut</data>
-	<data name="Dialog.Settings.QuickClear">@@Supprimer toutes les commandes</data>
+	<data name="Dialog.Settings.PanelProperties">Property pannels</data>
+	<data name="Dialog.Settings.LabelProperties">Detailed properties</data>
+	<data name="Dialog.Settings.QuickFirst">Move command to beginning</data>
+	<data name="Dialog.Settings.QuickUp">Move command down</data>
+	<data name="Dialog.Settings.QuickDown">Move command up</data>
+	<data name="Dialog.Settings.QuickLast">Move command to end</data>
+	<data name="Dialog.Settings.QuickDefault">Use predefined set of commands</data>
+	<data name="Dialog.Settings.QuickClear">Remove all commands</data>
 	<data name="Dialog.Settings.TabPage.Format">Format</data>
 	<data name="Dialog.Settings.TabPage.Grid">Grid</data>
 	<data name="Dialog.Settings.TabPage.Guides">Guides</data>
 	<data name="Dialog.Settings.TabPage.Move">Movements</data>
 	<data name="Dialog.Settings.TabPage.Misc">Misc.</data>
 	
-	<data name="Dialog.Splash.WorkInProgress">@@Mise en cache de {0}...</data>
+	<data name="Dialog.Splash.WorkInProgress">Analyzing {0}...</data>
 	
 	<data name="Dialog.Update.Title">Update...</data>
 	<data name="Dialog.Update.Version">Version &lt;b&gt;{0}&lt;/b&gt;    Language: English</data>

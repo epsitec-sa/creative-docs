@@ -1037,7 +1037,7 @@
 	<data name="Action.ParagraphAlignJustif">Justifié (sans la dernière ligne)</data>
 	<data name="Action.ParagraphAlignAll">Justifié (avec la dernière ligne)</data>
 	<data name="Action.ParagraphHyphen">Césures dans les mots</data>
-	<data name="Action.ParagraphLeadingMinus">Diminuer l'nterligne</data>
+	<data name="Action.ParagraphLeadingMinus">Diminuer l'interligne</data>
 	<data name="Action.ParagraphLeadingPlus">Augmenter l'interligne</data>
 	<data name="Action.ParagraphLeading08">Interligne serré</data>
 	<data name="Action.ParagraphLeading10">Interligne normal</data>

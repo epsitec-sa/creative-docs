@@ -81,9 +81,6 @@ namespace Epsitec.App.DocumentEditor
 				this.globalSettings.SplashScreen )
 			{
 				this.dlgSplash.Show();
-
-				// Donne l'occasion aux événements d'affichage d'être traités:
-				Window.PumpEvents();
 			}
 			
 			this.dlgAbout     = new Dialogs.About(this);
@@ -106,6 +103,8 @@ namespace Epsitec.App.DocumentEditor
 			this.StartCheck(false);
 			this.InitCommands();
 			this.CreateLayout();
+			
+			this.dlgSplash.StartTimer();
 
 			this.clipboard = new Document(this.type, DocumentMode.Clipboard, this.installType, this.globalSettings, this.CommandDispatcher);
 			this.clipboard.Name = "Clipboard";
