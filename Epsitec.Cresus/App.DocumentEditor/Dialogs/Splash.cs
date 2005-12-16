@@ -68,7 +68,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		// Démarre le timer pour refermer le dialogue.
 		public void StartTimer()
 		{
-			this.splashTimer.Start();
+			if ( this.splashTimer != null )
+			{
+				this.splashTimer.Start();
+			}
 		}
 		
 		
