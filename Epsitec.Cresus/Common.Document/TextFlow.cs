@@ -290,6 +290,7 @@ namespace Epsitec.Common.Document
 			if ( this.HasActiveTextBox )
 			{
 				this.UpdateTextRulers();
+				this.UpdateClipboardCommands();
 				this.document.Notifier.NotifyTextChanged();
 				this.NotifyAreaFlow();
 				this.ChangeObjectEdited();

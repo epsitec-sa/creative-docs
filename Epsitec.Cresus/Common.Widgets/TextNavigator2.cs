@@ -218,6 +218,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.disable_escape_key == false)
 			{
+				this.EndSelection ();
+			
 				if (this.text_navigator.HasSelection)
 				{
 					this.text_navigator.ClearSelection ();

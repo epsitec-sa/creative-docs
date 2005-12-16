@@ -56,7 +56,6 @@ namespace Epsitec.Common.Document.Objects
 
 			this.metaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
 			this.metaNavigator.TabsChanged += new Support.EventHandler(this.HandleTabsChanged);
-			this.metaNavigator.CursorMoved += new Support.EventHandler(this.HandleCursorMoved);
 			this.metaNavigator.ActiveStyleChanged += new Support.EventHandler(this.HandleStyleChanged);
 
 			this.markerSelected = this.document.TextContext.Markers.Selected;
@@ -948,7 +947,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Constuit les formes de l'objet.
+		// Construit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			Path path = this.PathBuild();
@@ -1369,6 +1368,9 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.edited && !this.hasSelection && this.graphics != null && this.internalOperation == InternalOperation.Painting )
 			{
+				// Peint le curseur uniquement si l'objet est en édition, qu'il n'y a pas
+				// de sélection et que l'on est en train d'afficher à l'écran.
+				
 				Text.ITextFrame frame;
 				double cx, cy, ascender, descender;
 				this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
@@ -1432,7 +1434,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.graphics == null )  return;
 			if ( this.drawingContext == null )  return;
-			if ( this.edited == false )  return;
+			if ( this.textFlow.HasActiveTextBox == false )  return;
 
 			double x1 = tabOrigin;
 			double x2 = tabStop;
@@ -1578,7 +1580,7 @@ namespace Epsitec.Common.Document.Objects
 					}
 				}
 
-				if ( this.edited && selRectList != null && this.graphics != null )
+				if ( this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null )
 				{
 					this.hasSelection = true;
 
@@ -1690,7 +1692,7 @@ namespace Epsitec.Common.Document.Objects
 								}
 							}
 
-							if ( this.edited && isSpace && insecs != null )
+							if ( this.textFlow.HasActiveTextBox && isSpace && insecs != null )
 							{
 								for ( int i=0 ; i<glyphs.Length ; i++ )
 								{
@@ -2003,16 +2005,6 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.ChangeObjectEdited();
 		}
 		
-		private void HandleCursorMoved(object sender)
-		{
-			if ( !this.edited )  return;
-			this.UpdateTextRulers();
-			this.textFlow.UpdateClipboardCommands();
-			this.document.Notifier.NotifyTextChanged();
-			this.textFlow.NotifyAreaFlow();
-			this.textFlow.ChangeObjectEdited();
-		}
-
 		private void HandleStyleChanged(object sender)
 		{
 			if ( !this.edited )  return;
