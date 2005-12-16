@@ -52,6 +52,7 @@
 	<data name="Dialog.Bool.GridActive">Grille active</data>
 	<data name="Dialog.Bool.GridShow">Grille visible</data>
 	<data name="Dialog.Bool.TextGridShow">Lignes visibles</data>
+	<data name="Dialog.Bool.TextShowControlCharacters">Afficher les caractères spéciaux</data>
 	<data name="Dialog.Bool.GuidesActive">Repères actifs</data>
 	<data name="Dialog.Bool.GuidesShow">Repères visibles</data>
 	<data name="Dialog.Bool.GuidesMouse">Déplacements avec la souris</data>
@@ -989,6 +990,7 @@
 	<data name="Action.ViewMain">Vue</data>
 	<data name="Action.Grid">Grille magnétique</data>
 	<data name="Action.TextGrid">Montrer les lignes magnétiques pour le texte</data>
+	<data name="Action.TextShowControlCharacters">Afficher les caractères spéciaux</data>
 	<data name="Action.Preview">Comme imprimé</data>
 	<data name="Action.Magnet">Objets magnétiques</data>
 	<data name="Action.MagnetLayer">Les objets du calque sont magnétiques</data>

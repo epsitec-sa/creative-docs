@@ -630,6 +630,7 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:FontSizePlus");
 			list.Add("00:FontSizeMinus");
 			list.Add("00:FontClear");
+			list.Add("00:TextShowControlCharacters");
 			
 			list.Add("00:ZoomMin");
 			list.Add("00:ZoomPage");

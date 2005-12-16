@@ -44,6 +44,7 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("Settings", "TextGridStep");
 			this.CreateDefaultDouble("Settings", "TextGridSubdiv");
 			this.CreateDefaultDouble("Settings", "TextGridOffset");
+			this.CreateDefaultBool("Settings", "TextShowControlCharacters");
 
 			this.CreateDefaultBool("Settings", "GuidesActive");
 			this.CreateDefaultBool("Settings", "GuidesShow");

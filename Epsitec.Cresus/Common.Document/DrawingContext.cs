@@ -827,6 +827,31 @@ namespace Epsitec.Common.Document
 				}
 			}
 		}
+
+		// Affichage des caractères de contrôle pour le texte.
+		public bool TextShowControlCharacters
+		{
+			get
+			{
+				return this.textShowControlCharacters;
+			}
+
+			set
+			{
+				if ( this.textShowControlCharacters != value )
+				{
+					this.textShowControlCharacters = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyArea();
+						this.document.Notifier.NotifyGridChanged();
+						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
 		#endregion
 
 
@@ -2331,6 +2356,7 @@ namespace Epsitec.Common.Document
 		protected Point							gridSubdiv = new Point(1, 1);
 		protected Point							gridOffset = new Point(0, 0);
 		protected bool							textGridShow = false;
+		protected bool							textShowControlCharacters = true;
 		protected double						textGridStep;
 		protected double						textGridSubdiv;
 		protected double						textGridOffset;

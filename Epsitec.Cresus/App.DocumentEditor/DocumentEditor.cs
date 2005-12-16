@@ -2672,6 +2672,13 @@ namespace Epsitec.App.DocumentEditor
 			context.TextGridShow = !context.TextGridShow;
 		}
 
+		[Command ("TextShowControlCharacters")]
+		void CommandTextShowControlCharacters(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			context.TextShowControlCharacters = !context.TextShowControlCharacters;
+		}
+
 		[Command ("Magnet")]
 		void CommandMagnet(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3597,6 +3604,7 @@ namespace Epsitec.App.DocumentEditor
 			this.previewState = this.CreateCommandState("Preview", true);
 			this.gridState = this.CreateCommandState("Grid", true);
 			this.textGridState = this.CreateCommandState("TextGrid", true);
+			this.textShowControlCharactersState = this.CreateCommandState("TextShowControlCharacters", true);
 			this.magnetState = this.CreateCommandState("Magnet", true);
 			this.magnetLayerState = this.CreateCommandState("MagnetLayer", true);
 			this.rulersState = this.CreateCommandState("Rulers", true);
@@ -3801,7 +3809,6 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.printState.Enable = true;
 				this.exportState.Enable = true;
-				this.glyphsState.Enable = true;
 				this.infosState.Enable = true;
 				this.pageStackState.Enable = true;
 
@@ -3813,7 +3820,6 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.printState.Enable = false;
 				this.exportState.Enable = false;
-				this.glyphsState.Enable = false;
 				this.infosState.Enable = false;
 				this.pageStackState.Enable = false;
 			}
@@ -4155,6 +4161,7 @@ namespace Epsitec.App.DocumentEditor
 				this.copyState.Enable = false;
 				this.pasteState.Enable = false;
 				this.glyphsState.Enable = false;
+				this.textShowControlCharactersState.Enable = false;
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
 				this.fontUnderlinedState.Enable = false;
@@ -4467,14 +4474,19 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				
 				this.gridState.Enable = true;
 				this.gridState.ActiveState = context.GridActive ? ActiveState.Yes : ActiveState.No;
+				
 				this.textGridState.Enable = true;
 				this.textGridState.ActiveState = context.TextGridShow ? ActiveState.Yes : ActiveState.No;
+				
 				this.rulersState.Enable = true;
 				this.rulersState.ActiveState = context.RulersShow ? ActiveState.Yes : ActiveState.No;
+				
 				this.labelsState.Enable = true;
 				this.labelsState.ActiveState = context.LabelsShow ? ActiveState.Yes : ActiveState.No;
+				
 				this.aggregatesState.Enable = true;
 				this.aggregatesState.ActiveState = context.AggregatesShow ? ActiveState.Yes : ActiveState.No;
 			}
@@ -4482,12 +4494,16 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.gridState.Enable = false;
 				this.gridState.ActiveState = ActiveState.No;
+				
 				this.textGridState.Enable = false;
 				this.textGridState.ActiveState = ActiveState.No;
+				
 				this.rulersState.Enable = false;
 				this.rulersState.ActiveState = ActiveState.No;
+				
 				this.labelsState.Enable = false;
 				this.labelsState.ActiveState = ActiveState.No;
+				
 				this.aggregatesState.Enable = false;
 				this.aggregatesState.ActiveState = ActiveState.No;
 			}
@@ -5597,6 +5613,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					previewState;
 		protected CommandState					gridState;
 		protected CommandState					textGridState;
+		protected CommandState					textShowControlCharactersState;
 		protected CommandState					magnetState;
 		protected CommandState					magnetLayerState;
 		protected CommandState					rulersState;

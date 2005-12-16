@@ -52,6 +52,7 @@
 	<data name="Dialog.Bool.GridActive">Enable grid</data>
 	<data name="Dialog.Bool.GridShow">Show grid</data>
 	<data name="Dialog.Bool.TextGridShow">Show magnetic text lines</data>
+	<data name="Dialog.Bool.TextShowControlCharacters">@@Afficher les caractères spéciaux</data>
 	<data name="Dialog.Bool.GuidesActive">Enable guides</data>
 	<data name="Dialog.Bool.GuidesShow">Show guides</data>
 	<data name="Dialog.Bool.GuidesMouse">Allow guides to be dragged</data>
@@ -989,6 +990,7 @@
 	<data name="Action.ViewMain">View</data>
 	<data name="Action.Grid">Enable Magnetic grid</data>
 	<data name="Action.TextGrid">Show Baseline Grid</data>
+	<data name="Action.TextShowControlCharacters">@@Afficher les caractères spéciaux</data>
 	<data name="Action.Preview">Preview as printed</data>
 	<data name="Action.Magnet">Magnetize Objects for use as Smart Guides</data>
 	<data name="Action.MagnetLayer">Magnetize Objects in this Layer</data>

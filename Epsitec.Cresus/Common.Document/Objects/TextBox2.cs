@@ -1364,7 +1364,7 @@ namespace Epsitec.Common.Document.Objects
 				this.redrawArea.MergeWith(ptr);
 			}
 
-			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.edited;
+			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.edited && this.drawingContext != null && this.drawingContext.TextShowControlCharacters;
 			this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
 
 			if ( this.edited && !this.hasSelection && this.graphics != null && this.internalOperation == InternalOperation.Painting )
@@ -1435,6 +1435,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.graphics == null )  return;
 			if ( this.drawingContext == null )  return;
+			if ( this.drawingContext.TextShowControlCharacters == false )  return;
 			if ( this.textFlow.HasActiveTextBox == false )  return;
 
 			double x1 = tabOrigin;
@@ -1446,7 +1447,7 @@ namespace Epsitec.Common.Document.Objects
 			Point p2 = new Point(x2, y);
 			graphics.Align(ref p1);
 			graphics.Align(ref p2);
-			double adjust = 0.5/drawingContext.ScaleX;
+			double adjust = 0.5/this.drawingContext.ScaleX;
 			p1.X += adjust;  p1.Y += adjust;
 			p2.X -= adjust;  p2.Y += adjust;
 			if ( p1.X >= p2.X )  return;
@@ -1467,7 +1468,7 @@ namespace Epsitec.Common.Document.Objects
 				if ( isTabDefined )  color = Drawing.Color.FromBrightness(0.5);
 			}
 			
-			this.graphics.LineWidth = 1.0/drawingContext.ScaleX;
+			this.graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
 			this.graphics.AddLine(p1, p2);
 			this.graphics.AddLine(p2, p2a);
 			this.graphics.AddLine(p2, p2b);
@@ -1693,7 +1694,8 @@ namespace Epsitec.Common.Document.Objects
 								}
 							}
 
-							if ( this.textFlow.HasActiveTextBox && isSpace && insecs != null )
+							if ( this.textFlow.HasActiveTextBox && isSpace && insecs != null &&
+								 this.drawingContext != null && this.drawingContext.TextShowControlCharacters )
 							{
 								for ( int i=0 ; i<glyphs.Length ; i++ )
 								{

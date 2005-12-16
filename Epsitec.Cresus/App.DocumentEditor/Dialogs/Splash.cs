@@ -40,7 +40,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				image.Clicked += new MessageEventHandler(this.HandleSplashImageClicked);
 
 				this.workInProgress = new StaticText(image);
-				this.workInProgress.Bounds = new Rectangle(140, 50, 250, 20);
+				if ( this.editor.InstallType == InstallType.Freeware )
+				{
+					this.workInProgress.Bounds = new Rectangle(140, 50, 250, 20);
+				}
+				else
+				{
+					this.workInProgress.Bounds = new Rectangle(21, 50, 350, 20);
+				}
 				this.workInProgress.SetSyncPaint(true);
 
 				this.window.Show();
@@ -78,7 +85,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void UpdateWorkInProgress(Common.OpenType.FontIdentity fid)
 		{
 			string text = string.Format(Res.Strings.Dialog.Splash.WorkInProgress, fid.InvariantFaceName);
-			this.workInProgress.Text = string.Concat("<font size=\"80%\">", TextLayout.ConvertToTaggedText(text), "</font>");
+			this.workInProgress.Text = string.Concat("<font size=\"90%\">", TextLayout.ConvertToTaggedText(text), "</font>");
 			this.window.Root.Invalidate();
 		}
 

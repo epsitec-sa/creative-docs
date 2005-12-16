@@ -35,6 +35,10 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Bool.TextGridShow;
 					break;
 
+				case "TextShowControlCharacters":
+					this.text = Res.Strings.Dialog.Bool.TextShowControlCharacters;
+					break;
+
 				case "GuidesActive":
 					this.text = Res.Strings.Dialog.Bool.GuidesActive;
 					break;
@@ -138,6 +142,9 @@ namespace Epsitec.Common.Document.Settings
 					case "TextGridShow":
 						return this.document.Modifier.ActiveViewer.DrawingContext.TextGridShow;
 
+					case "TextShowControlCharacters":
+						return this.document.Modifier.ActiveViewer.DrawingContext.TextShowControlCharacters;
+
 					case "GuidesActive":
 						return this.document.Modifier.ActiveViewer.DrawingContext.GuidesActive;
 
@@ -216,6 +223,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "TextGridShow":
 						this.document.Modifier.ActiveViewer.DrawingContext.TextGridShow = value;
+						break;
+
+					case "TextShowControlCharacters":
+						this.document.Modifier.ActiveViewer.DrawingContext.TextShowControlCharacters = value;
 						break;
 
 					case "GuidesActive":

@@ -19,6 +19,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonItalic        = this.CreateIconButton("FontItalic");
 			this.buttonFontSizeMinus = this.CreateIconButton("FontSizeMinus");
 			this.buttonFontSizePlus  = this.CreateIconButton("FontSizePlus");
+			this.buttonShowControl   = this.CreateIconButton("TextShowControlCharacters");
 			this.buttonUnderlined    = this.CreateIconButton("FontUnderlined");
 			this.buttonOverlined     = this.CreateIconButton("FontOverlined");
 			this.buttonStrikeout     = this.CreateIconButton("FontStrikeout");
@@ -74,6 +75,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonFontSizeMinus.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonFontSizePlus.Bounds = rect;
+			rect.Offset(dx+35, 0);
+			this.buttonShowControl.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Height = dy;
@@ -90,7 +93,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(dx+10, 0);
 			this.buttonClear.Bounds = rect;
 
-			rect.Offset(dx+50, 0);
+			rect.Offset(dx+10, 0);
 			this.buttonStyle.Bounds = rect;
 		}
 
@@ -134,6 +137,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected IconButton				buttonFontSizeMinus;
 		protected IconButton				buttonFontSizePlus;
+		protected IconButton				buttonShowControl;
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
