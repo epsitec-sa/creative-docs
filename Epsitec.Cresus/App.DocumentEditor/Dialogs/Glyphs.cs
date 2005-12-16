@@ -245,6 +245,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				// Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
+				buttonOk.Command = "GlyphsInsert";
 				buttonOk.Width = 75;
 				buttonOk.Text = Res.Strings.Dialog.Glyphs.Button.Insert;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;

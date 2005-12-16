@@ -3453,6 +3453,7 @@ namespace Epsitec.App.DocumentEditor
 			this.printState = this.CreateCommandState("Print", KeyCode.ModifierCtrl|KeyCode.AlphaP);
 			this.exportState = this.CreateCommandState("Export");
 			this.glyphsState = this.CreateCommandState("Glyphs");
+			this.glyphsInsertState = this.CreateCommandState("GlyphsInsert");
 			this.deleteState = this.CreateCommandState("Delete", KeyCode.Delete);
 			this.duplicateState = this.CreateCommandState("Duplicate", KeyCode.ModifierCtrl|KeyCode.AlphaD);
 
@@ -4161,6 +4162,7 @@ namespace Epsitec.App.DocumentEditor
 				this.copyState.Enable = false;
 				this.pasteState.Enable = false;
 				this.glyphsState.Enable = false;
+				this.glyphsInsertState.Enable = false;
 				this.textShowControlCharactersState.Enable = false;
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
@@ -5481,6 +5483,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					printState;
 		protected CommandState					exportState;
 		protected CommandState					glyphsState;
+		protected CommandState					glyphsInsertState;
 		protected CommandState					deleteState;
 		protected CommandState					duplicateState;
 		protected CommandState					cutState;
