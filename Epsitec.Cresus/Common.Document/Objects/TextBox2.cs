@@ -91,7 +91,7 @@ namespace Epsitec.Common.Document.Objects
 					this.metaNavigator.TextNavigator = this.textFlow.TextNavigator;
 
 					this.UpdateTextLayout();
-					this.NotifyAreaFlow();
+					this.textFlow.NotifyAreaFlow();
 				}
 			}
 		}
@@ -192,7 +192,7 @@ namespace Epsitec.Common.Document.Objects
 				return;
 			}
 
-			this.NotifyAreaFlow();
+			this.textFlow.NotifyAreaFlow();
 			drawingContext.SnapPos(ref pos);
 
 			if ( Geometry.IsRectangular(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position) )
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 			this.SetDirtyBbox();
 			this.TextInfoModifRect();
-			this.NotifyAreaFlow();
+			this.textFlow.NotifyAreaFlow();
 		}
 
 		// Effectue le déplacement de tout l'objet.
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Document.Objects
 			base.MoveGlobalProcess(selector);
 			this.UpdateGeometry();
 			this.HandlePropertiesUpdate();
-			this.NotifyAreaFlow();
+			this.textFlow.NotifyAreaFlow();
 		}
 
 		// Début de la création d'un objet.
@@ -564,7 +564,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			if ( text == null )  return false;
 			this.metaNavigator.Insert(text);
-			this.NotifyAreaFlow();
+			this.textFlow.NotifyAreaFlow();
 			return true;
 		}
 
@@ -598,7 +598,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Modifier.OpletQueueValidateAction();
-			this.NotifyAreaFlow();
+			this.textFlow.NotifyAreaFlow();
 			return true;
 		}
 
@@ -622,7 +622,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Modifier.OpletQueueValidateAction();
-			this.NotifyAreaFlow();
+			this.textFlow.NotifyAreaFlow();
 			return true;
 		}
 
@@ -917,46 +917,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.edited )
 			{
-				Drawing.Rectangle bbox = this.bboxThin;
-				this.document.HRuler.LimitLow  = bbox.Left;
-				this.document.HRuler.LimitHigh = bbox.Right;
-				this.document.VRuler.LimitLow  = bbox.Bottom;
-				this.document.VRuler.LimitHigh = bbox.Top;
-
-				Text.TextNavigator.TabInfo[] infos = this.textFlow.TextNavigator.GetTabInfos();
-
-				if ( true )
-				{
-					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-					Text.TabList list = this.document.TextContext.TabList;
-					
-					buffer.Append("UpdateTextRulers:");
-					
-					foreach ( Text.TextNavigator.TabInfo info in infos )
-					{
-						Text.Properties.TabProperty tab = list[info.Tag];
-						buffer.AppendFormat(" {0}->{1}/{2}({5}) p={3:0.0} m={4:0.0}", info.Tag, info.Status, info.Class, list.GetTabPositionInPoints(tab), list.GetTabDisposition(tab), list.GetTabUserCount(tab));
-					}
-					
-					System.Diagnostics.Debug.WriteLine(buffer.ToString());
-				}
-
-				Widgets.Tab[] tabs = new Widgets.Tab[infos.Length];
-				for ( int i=0 ; i<infos.Length ; i++ )
-				{
-					Text.TextNavigator.TabInfo info = infos[i] as Text.TextNavigator.TabInfo;
-
-					double pos;
-					TextTabType type;
-					this.GetTextTab(info.Tag, out pos, out type);
-
-					tabs[i].Tag = info.Tag;
-					tabs[i].Pos = bbox.Left+pos;
-					tabs[i].Type = type;
-					tabs[i].Shared = (info.Class == TabClass.Shared);
-					tabs[i].Zombie = (info.Status == TabStatus.Zombie);
-				}
-				this.document.HRuler.Tabs = tabs;
+				this.textFlow.UpdateTextRulers();
 			}
 		}
 		#endregion
@@ -2036,20 +1997,20 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( !this.edited )  return;
 			this.UpdateTextLayout();
-			this.UpdateClipboardCommands();
+			this.textFlow.UpdateClipboardCommands();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow();
-			this.ChangeObjectEdited();
+			this.textFlow.NotifyAreaFlow();
+			this.textFlow.ChangeObjectEdited();
 		}
 		
 		private void HandleCursorMoved(object sender)
 		{
 			if ( !this.edited )  return;
 			this.UpdateTextRulers();
-			this.UpdateClipboardCommands();
+			this.textFlow.UpdateClipboardCommands();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow();
-			this.ChangeObjectEdited();
+			this.textFlow.NotifyAreaFlow();
+			this.textFlow.ChangeObjectEdited();
 		}
 
 		private void HandleStyleChanged(object sender)
@@ -2057,8 +2018,8 @@ namespace Epsitec.Common.Document.Objects
 			if ( !this.edited )  return;
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow();
-			this.ChangeObjectEdited();
+			this.textFlow.NotifyAreaFlow();
+			this.textFlow.ChangeObjectEdited();
 		}
 
 		private void HandleTabsChanged(object sender)
@@ -2067,8 +2028,8 @@ namespace Epsitec.Common.Document.Objects
 			this.UpdateTextRulers();
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow();
-			this.ChangeObjectEdited();
+			this.textFlow.NotifyAreaFlow();
+			this.textFlow.ChangeObjectEdited();
 		}
 
 		// Met à jour après un changement de géométrie de l'objet.
@@ -2109,54 +2070,52 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Met à jour les commandes du clipboard.
-		protected void UpdateClipboardCommands()
+		// Modifie le mode d'édition. Il faut obligatoirement utiliser cet appel
+		// pour modifier this.edited !
+		protected override void SetEdited(bool state)
 		{
-			bool sel = (this.textFlow.TextNavigator.SelectionCount != 0);
-			CommandDispatcher cd = this.document.CommandDispatcher;
+			if ( this.edited == state )  return;
 
-			cd.GetCommandState("Cut").Enable = sel;
-			cd.GetCommandState("Copy").Enable = sel;
-		}
+			this.edited = state;
 
-		// Notifie "à repeindre" toute la chaîne des pavés.
-		public void NotifyAreaFlow()
-		{
-			System.Collections.ArrayList viewers = this.document.Modifier.AttachViewers;
-			UndoableList chain = this.textFlow.Chain;
+			if ( this.document.HRuler == null )  return;
 
-			foreach ( Viewer viewer in viewers )
+			// Pour ne pas cacher une règle qu'on viendrait d'associer à un objet éditable
+			// précédemment (dans la même procédure Viewer.Select par exemple).
+			if ( !this.edited && this.document.HRuler.EditObject != this )  return;
+
+			this.document.HRuler.Edited = this.edited;
+			this.document.VRuler.Edited = this.edited;
+
+			if ( this.edited )
 			{
-				int currentPage = viewer.DrawingContext.CurrentPage;
-				foreach ( Objects.Abstract obj in chain )
+				this.document.HRuler.EditObject = this;
+				this.document.VRuler.EditObject = this;
+				this.document.HRuler.WrappersAttach();
+				this.document.VRuler.WrappersAttach();
+				this.EditWrappersAttach();  // attache l'objet aux différents wrappers
+				
+				this.textFlow.ActiveTextBox = this;
+			}
+			else
+			{
+				this.document.HRuler.EditObject = null;
+				this.document.VRuler.EditObject = null;
+				this.document.HRuler.WrappersDetach();
+				this.document.VRuler.WrappersDetach();
+				this.document.Wrappers.WrappersDetach();
+				
+				if ( this.textFlow.ActiveTextBox == this )
 				{
-					if ( obj == null )  continue;
-					if ( obj.PageNumber != currentPage )  continue;
-
-					this.document.Notifier.NotifyArea(viewer, obj.BoundingBox);
+					this.textFlow.ActiveTextBox = null;
 				}
 			}
-		}
 
-		// Change éventuellement le pavé édité en fonction de la position du curseur.
-		protected void ChangeObjectEdited()
-		{
-			Text.ITextFrame frame;
-			double cx, cy, ascender, descender, angle;
-			this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
+			this.UpdateTextRulers();
 
-			if ( frame != this.textFrame )
-			{
-				foreach ( TextBox2 obj in this.textFlow.Chain )
-				{
-					if ( frame == obj.textFrame )
-					{
-						this.document.Modifier.EditObject(obj);
-						this.autoScrollOneShot = true;
-						return;
-					}
-				}
-			}
+			// Redessine tout, à cause des "poignées" du flux qui peuvent apparaître
+			// ou disparaître.
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 		}
 
 		

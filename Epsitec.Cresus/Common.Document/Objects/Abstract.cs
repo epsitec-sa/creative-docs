@@ -1454,43 +1454,9 @@ namespace Epsitec.Common.Document.Objects
 
 		// Modifie le mode d'édition. Il faut obligatoirement utiliser cet appel
 		// pour modifier this.edited !
-		protected void SetEdited(bool state)
+		protected virtual void SetEdited(bool state)
 		{
-			if ( this.edited == state )  return;
-
-			this.edited = state;
-
-			if ( this.document.HRuler == null )  return;
-
-			// Pour ne pas cacher une règle qu'on viendrait d'associer à un objet éditable
-			// précédemment (dans la même procédure Viewer.Select par exemple).
-			if ( !this.edited && this.document.HRuler.EditObject != this )  return;
-
-			this.document.HRuler.Edited = this.edited;
-			this.document.VRuler.Edited = this.edited;
-
-			if ( this.edited )
-			{
-				this.document.HRuler.EditObject = this;
-				this.document.VRuler.EditObject = this;
-				this.document.HRuler.WrappersAttach();
-				this.document.VRuler.WrappersAttach();
-				this.EditWrappersAttach();  // attache l'objet aux différents wrappers
-			}
-			else
-			{
-				this.document.HRuler.EditObject = null;
-				this.document.VRuler.EditObject = null;
-				this.document.HRuler.WrappersDetach();
-				this.document.VRuler.WrappersDetach();
-				this.document.Wrappers.WrappersDetach();
-			}
-
-			this.UpdateTextRulers();
-
-			// Redessine tout, à cause des "poignées" du flux qui peuvent apparaître
-			// ou disparaître.
-			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+			System.Diagnostics.Debug.Assert(state == false);
 		}
 
 		// Attache l'objet au différents wrappers.
@@ -2860,6 +2826,12 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Permet au scroll de se faire à la prochaine occasion.
+		public void SetAutoScroll()
+		{
+			this.autoScrollOneShot = true;
+		}
+		
 		// Calcule le scroll éventuel nécessaire pour rendre le cursur visible.
 		protected void ComputeAutoScroll(Point c1, Point c2)
 		{

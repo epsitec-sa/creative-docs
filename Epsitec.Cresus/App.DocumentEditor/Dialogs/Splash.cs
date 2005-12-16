@@ -42,9 +42,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.workInProgress = new StaticText(this.window.Root);
 				this.workInProgress.Bounds = new Rectangle(22, 50, 350, 20);
 
-				Common.OpenType.FontIdentityCallback callback = new Common.OpenType.FontIdentityCallback(this.UpdateWorkInProgress);
-				Common.Text.TextContext.InitializeFontCollection(callback);
-
 				this.splashTimer = new Timer();
 				this.splashTimer.TimeElapsed += new EventHandler(this.HandleSplashTimerTimeElapsed);
 				this.splashTimer.Delay = 10.0;
@@ -54,6 +51,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.window.Show();
+			
+			Common.OpenType.FontIdentityCallback callback = new Common.OpenType.FontIdentityCallback(this.UpdateWorkInProgress);
+			Common.Text.TextContext.InitializeFontCollection(callback);
 		}
 
 

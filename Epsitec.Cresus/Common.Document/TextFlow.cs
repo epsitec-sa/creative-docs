@@ -33,6 +33,7 @@ namespace Epsitec.Common.Document
 
 			this.textFitter    = new Text.TextFitter(this.textStory);
 			this.textNavigator = new Text.TextNavigator(this.textFitter);
+			this.textNavigator.CursorMoved += new EventHandler(this.HandleTextNavigatorCursorMoved);
 			
 			this.textStory.TextContext.IsDegradedLayoutEnabled = true;
 			this.textStory.DebugDisableOpletQueue = true;
@@ -137,7 +138,8 @@ namespace Epsitec.Common.Document
 			this.TextFitter.FrameList.Remove(obj.TextFrame);
 
 			obj.UpdateTextLayout();
-			obj.NotifyAreaFlow();
+			
+			this.NotifyAreaFlow();
 
 			obj.NewTextFlow();
 		}
@@ -165,8 +167,136 @@ namespace Epsitec.Common.Document
 				return this.objectsChain;
 			}
 		}
+		
+		// Pavé actuellement en édition.
+		public Objects.TextBox2 ActiveTextBox
+		{
+			get
+			{
+				return this.activeTextBox;
+			}
+			set
+			{
+				if ( this.activeTextBox != value )
+				{
+					this.activeTextBox = value;
+					this.OnActiveTextBoxChanged();
+				}
+			}
+		}
+		
+		// Y a-t-il un pavé en édition ?
+		public bool HasActiveTextBox
+		{
+			get
+			{
+				return this.activeTextBox != null;
+			}
+		}
 
+		// Met à jour les règles pour le texte en édition.
+		public void UpdateTextRulers()
+		{
+			if ( this.HasActiveTextBox )
+			{
+				Drawing.Rectangle bbox = this.activeTextBox.BoundingBoxThin;
+				this.document.HRuler.LimitLow  = bbox.Left;
+				this.document.HRuler.LimitHigh = bbox.Right;
+				this.document.VRuler.LimitLow  = bbox.Bottom;
+				this.document.VRuler.LimitHigh = bbox.Top;
 
+				Text.TextNavigator.TabInfo[] infos = this.TextNavigator.GetTabInfos();
+
+				Widgets.Tab[] tabs = new Widgets.Tab[infos.Length];
+				for ( int i=0 ; i<infos.Length ; i++ )
+				{
+					Text.TextNavigator.TabInfo info = infos[i] as Text.TextNavigator.TabInfo;
+
+					double pos;
+					Drawing.TextTabType type;
+					this.activeTextBox.GetTextTab(info.Tag, out pos, out type);
+
+					tabs[i].Tag = info.Tag;
+					tabs[i].Pos = bbox.Left+pos;
+					tabs[i].Type = type;
+					tabs[i].Shared = (info.Class == TabClass.Shared);
+					tabs[i].Zombie = (info.Status == TabStatus.Zombie);
+				}
+				this.document.HRuler.Tabs = tabs;
+			}
+		}
+		
+		// Met à jour les commandes du clipboard.
+		public void UpdateClipboardCommands()
+		{
+			bool sel = (this.TextNavigator.SelectionCount != 0);
+			CommandDispatcher cd = this.document.CommandDispatcher;
+
+			cd.GetCommandState("Cut").Enable = sel;
+			cd.GetCommandState("Copy").Enable = sel;
+		}
+
+		// Notifie "à repeindre" toute la chaîne des pavés.
+		public void NotifyAreaFlow()
+		{
+			System.Collections.ArrayList viewers = this.document.Modifier.AttachViewers;
+			UndoableList chain = this.Chain;
+
+			foreach ( Viewer viewer in viewers )
+			{
+				int currentPage = viewer.DrawingContext.CurrentPage;
+				foreach ( Objects.Abstract obj in chain )
+				{
+					if ( obj == null )  continue;
+					if ( obj.PageNumber != currentPage )  continue;
+
+					this.document.Notifier.NotifyArea(viewer, obj.BoundingBox);
+				}
+			}
+		}
+
+		
+		// Change éventuellement le pavé édité en fonction de la position du curseur.
+		public void ChangeObjectEdited()
+		{
+			Text.ITextFrame frame;
+			double cx, cy, ascender, descender, angle;
+			this.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
+
+			if ( this.activeTextBox == null || frame != this.activeTextBox.TextFlow )
+			{
+				foreach ( Objects.TextBox2 obj in this.Chain )
+				{
+					if ( frame == obj.TextFrame )
+					{
+						this.document.Modifier.EditObject(obj);
+						if ( this.activeTextBox != null )
+						{
+							this.activeTextBox.SetAutoScroll();
+						}
+						return;
+					}
+				}
+			}
+		}
+		
+		private void OnActiveTextBoxChanged()
+		{
+			System.Diagnostics.Debug.WriteLine(string.Format("ActiveTextBox set to {0}", this.Rank(this.activeTextBox)));
+		}
+		
+		private void HandleTextNavigatorCursorMoved(object sender)
+		{
+			if ( this.HasActiveTextBox )
+			{
+				this.UpdateTextRulers();
+				this.document.Notifier.NotifyTextChanged();
+				this.NotifyAreaFlow();
+				this.ChangeObjectEdited();
+			}
+		}
+
+		
 		#region Serialization
 		// Sérialise l'objet.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -212,6 +342,7 @@ namespace Epsitec.Common.Document
 		protected Text.TextStory				textStory;
 		protected Text.TextFitter				textFitter;
 		protected Text.TextNavigator			textNavigator;
+		protected Objects.TextBox2				activeTextBox;
 		protected UndoableList					objectsChain;
 	}
 }
