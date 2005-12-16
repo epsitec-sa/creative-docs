@@ -39,7 +39,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				StaticText image = About.CreateWidgetSplash(this.window.Root, this.editor.InstallType);
 				image.Clicked += new MessageEventHandler(this.HandleSplashImageClicked);
 
-				this.workInProgress = new StaticText(this.window.Root);
+				this.workInProgress = new StaticText(image);
 				this.workInProgress.Bounds = new Rectangle(22, 50, 350, 20);
 
 				this.splashTimer = new Timer();
@@ -54,20 +54,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			
 			Common.OpenType.FontIdentityCallback callback = new Common.OpenType.FontIdentityCallback(this.UpdateWorkInProgress);
 			Common.Text.TextContext.InitializeFontCollection(callback);
+
+			this.workInProgress.Text = "";  // efface le texte
 		}
 
 
 		private void UpdateWorkInProgress(Common.OpenType.FontIdentity fid)
 		{
-			if ( fid == null )  // liste terminée ?
-			{
-				this.workInProgress.Text = "";  // efface le texte
-			}
-			else
-			{
-				string text = string.Format(Res.Strings.Dialog.Splash.WorkInProgress, fid.InvariantFaceName);
-				this.workInProgress.Text = text;
-			}
+			string text = string.Format(Res.Strings.Dialog.Splash.WorkInProgress, fid.InvariantFaceName);
+			this.workInProgress.Text = text;
 		}
 
 		private void HandleSplashPaintForeground(object sender, PaintEventArgs e)
