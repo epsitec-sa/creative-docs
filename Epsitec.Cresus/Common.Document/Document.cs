@@ -672,6 +672,11 @@ namespace Epsitec.Common.Document
 				this.OldStylesToAggregates();
 			}
 
+			foreach ( TextFlow flow in this.textFlows )
+			{
+				flow.ReadFinalizeTextStory();
+			}
+			
 			Font.FaceInfo[] fonts = Font.Faces;
 			foreach ( Objects.Abstract obj in this.Deep(null) )
 			{
@@ -681,7 +686,7 @@ namespace Epsitec.Common.Document
 
 			foreach ( TextFlow flow in this.textFlows )
 			{
-				flow.ReadFinalize();
+				flow.ReadFinalizeTextObj();
 			}
 			
 #if false

@@ -30,8 +30,6 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.textFrame = new Text.SimpleTextFrame();
 			
-			this.metaNavigator = new TextNavigator2();
-			
 			this.NewTextFlow();
 			this.InitialiseInternals();
 		}
@@ -47,14 +45,9 @@ namespace Epsitec.Common.Document.Objects
 			
 			System.Diagnostics.Debug.Assert(this.textFlow != null);
 			
-			if ( this.metaNavigator == null )
-			{
-				this.metaNavigator = new TextNavigator2();
-			}
-
-			this.metaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
-			this.metaNavigator.TabsChanged += new Support.EventHandler(this.HandleTabsChanged);
-			this.metaNavigator.ActiveStyleChanged += new Support.EventHandler(this.HandleStyleChanged);
+			this.MetaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
+			this.MetaNavigator.TabsChanged += new Support.EventHandler(this.HandleTabsChanged);
+			this.MetaNavigator.ActiveStyleChanged += new Support.EventHandler(this.HandleStyleChanged);
 
 			this.markerSelected = this.document.TextContext.Markers.Selected;
 
@@ -85,7 +78,6 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.InsertOpletTextFlow();
 					this.textFlow = value;
-					this.metaNavigator.TextNavigator = this.textFlow.TextNavigator;
 
 					this.UpdateTextLayout();
 					this.textFlow.NotifyAreaFlow();
@@ -138,6 +130,21 @@ namespace Epsitec.Common.Document.Objects
 			get { return Misc.Icon("ObjectTextBox"); }
 		}
 
+		// MetaNavigator associé au TextFlow.
+		protected TextNavigator2 MetaNavigator
+		{
+			get
+			{
+				if ( this.textFlow == null )
+				{
+					return null;
+				}
+				else
+				{
+					return this.textFlow.MetaNavigator;
+				}
+			}
+		}
 
 		// Détecte si la souris est sur l'objet pour l'éditer.
 		public override DetectEditType DetectEdit(Point pos)
@@ -440,7 +447,7 @@ namespace Epsitec.Common.Document.Objects
 			
 			System.Diagnostics.Debug.WriteLine(string.Format("EditProcessMessage: ppos={0}", ppos));
 			
-			if ( !this.metaNavigator.ProcessMessage(message, ppos, this.TextFrame) )  return false;
+			if ( !this.MetaNavigator.ProcessMessage(message, ppos, this.TextFrame) )  return false;
 
 			if ( message.Type == MessageType.MouseDown )
 			{
@@ -481,7 +488,7 @@ namespace Epsitec.Common.Document.Objects
 			
 			if ( tag == null )  return false;
 
-			this.metaNavigator.Insert(new Text.Properties.TabProperty(tag));
+			this.MetaNavigator.Insert(new Text.Properties.TabProperty(tag));
 			return true;
 		}
 
@@ -523,7 +530,7 @@ namespace Epsitec.Common.Document.Objects
 		public override bool EditCut()
 		{
 			this.EditCopy();
-			this.metaNavigator.Insert("");
+			this.MetaNavigator.DeleteSelection();
 			return true;
 		}
 		
@@ -563,14 +570,14 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 			if ( text == null )  return false;
-			this.metaNavigator.Insert(text);
+			this.MetaNavigator.Insert(text);
 			this.textFlow.NotifyAreaFlow();
 			return true;
 		}
 
 		public override bool EditSelectAll()
 		{
-			this.metaNavigator.SelectAll();
+			this.MetaNavigator.SelectAll();
 			return true;
 		}
 		#endregion
@@ -578,12 +585,12 @@ namespace Epsitec.Common.Document.Objects
 		// Insère un texte dans le pavé en édition.
 		public override bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
-			this.metaNavigator.EndSelection();
+			this.MetaNavigator.EndSelection();
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
 
 			if ( fontFace == "" )
 			{
-				this.metaNavigator.Insert(text);
+				this.MetaNavigator.Insert(text);
 			}
 			else
 			{
@@ -593,7 +600,7 @@ namespace Epsitec.Common.Document.Objects
 					Text.Unicode.Code code = (Text.Unicode.Code) text[i];
 					int glyph = font.GetGlyphIndex(text[i]);
 					Text.Properties.OpenTypeProperty otp = new Text.Properties.OpenTypeProperty(fontFace, fontStyle, glyph);
-					this.metaNavigator.Insert(code, otp);
+					this.MetaNavigator.Insert(code, otp);
 				}
 			}
 
@@ -605,20 +612,20 @@ namespace Epsitec.Common.Document.Objects
 		// Insère un glyphe dans le pavé en édition.
 		public override bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
 		{
-			this.metaNavigator.EndSelection();
+			this.MetaNavigator.EndSelection();
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Alternate);
 
 			if ( fontFace == "" )
 			{
 				string text = code.ToString();
-				this.metaNavigator.Insert(text);
+				this.MetaNavigator.Insert(text);
 			}
 			else
 			{
 				OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
 				Text.Properties.OpenTypeProperty otp = new Text.Properties.OpenTypeProperty(fontFace, fontStyle, glyph);
-				this.metaNavigator.Insert((Text.Unicode.Code)code, otp);
-				this.metaNavigator.SelectInsertedCharacter();
+				this.MetaNavigator.Insert((Text.Unicode.Code)code, otp);
+				this.MetaNavigator.SelectInsertedCharacter();
 			}
 
 			this.document.Modifier.OpletQueueValidateAction();
@@ -710,14 +717,14 @@ namespace Epsitec.Common.Document.Objects
 			Text.TabList list = this.document.TextContext.TabList;
 			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode);
 			Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
-			this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
+			this.MetaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
 			return tab.TabTag;
 		}
 
 		// Supprime un tabulateur du texte.
 		public override void DeleteTextTab(string tag)
 		{
-			this.metaNavigator.RemoveTab(tag);
+			this.MetaNavigator.RemoveTab(tag);
 		}
 
 		// Renomme plusieurs tabulateurs du texte.
@@ -887,7 +894,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( style == null )  return;
 
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
-			Text.TextStyle[] styles = Text.TextStyle.FilterStyles(this.metaNavigator.TextNavigator.TextStyles, Text.TextStyleClass.Paragraph);
+			Text.TextStyle[] styles = Text.TextStyle.FilterStyles(this.MetaNavigator.TextNavigator.TextStyles, Text.TextStyleClass.Paragraph);
 			
 			for ( int i=0 ; i<styles.Length ; i++ )
 			{
@@ -903,7 +910,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			
 			styles = (Text.TextStyle[]) list.ToArray(typeof(Text.TextStyle));
-			this.metaNavigator.SetParagraphStyles(styles);
+			this.MetaNavigator.SetParagraphStyles(styles);
 		}
 
 		// Attache l'objet au différents wrappers.
@@ -1991,8 +1998,6 @@ namespace Epsitec.Common.Document.Objects
 		{
 			System.Diagnostics.Debug.Assert(this.textFlow == flow);
 			
-			this.metaNavigator.TextNavigator = this.textFlow.TextNavigator;
-
 			this.UpdateTextFrame();
 		}
 		#endregion
@@ -2143,7 +2148,6 @@ namespace Epsitec.Common.Document.Objects
 				host.textFlow = this.textFlow;
 				this.textFlow = temp;
 
-				host.metaNavigator.TextNavigator = host.textFlow.TextNavigator;
 				host.UpdateTextLayout();
 			}
 
@@ -2170,7 +2174,6 @@ namespace Epsitec.Common.Document.Objects
 		protected ulong							markerSelected;
 		protected TextFlow						textFlow;
 		protected Text.SimpleTextFrame			textFrame;
-		protected TextNavigator2				metaNavigator;
 		protected IPaintPort					port;
 		protected Graphics						graphics;
 		protected DrawingContext				drawingContext;

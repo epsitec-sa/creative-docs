@@ -16,30 +16,42 @@ namespace Epsitec.Common.Document
 		{
 			this.document = document;
 
-			this.Initialise();
+			this.InitialiseNavigator();
+			this.InitialiseEmptyTextStory();
+			
 			this.objectsChain = new UndoableList(this.document, UndoableListType.ObjectsChain);
 		}
 
-		protected void Initialise()
+		protected void InitialiseNavigator()
 		{
+			Text.TextContext context = this.document.TextContext;
+			
 			if ( this.document.Modifier == null )
 			{
-				this.textStory = new Text.TextStory(this.document.TextContext);
+				this.textStory = new Text.TextStory(context);
 			}
 			else
 			{
-				this.textStory = new Text.TextStory(this.document.Modifier.OpletQueue, this.document.TextContext);
+				this.textStory = new Text.TextStory(this.document.Modifier.OpletQueue, context);
 			}
-
+			
 			this.textFitter    = new Text.TextFitter(this.textStory);
 			this.textNavigator = new Text.TextNavigator(this.textFitter);
-			this.textNavigator.CursorMoved += new EventHandler(this.HandleTextNavigatorCursorMoved);
+			this.metaNavigator = new TextNavigator2();
 			
-			this.textStory.TextContext.IsDegradedLayoutEnabled = true;
-			this.textStory.DebugDisableOpletQueue = true;
+			this.metaNavigator.TextNavigator = this.textNavigator;
+			
+			this.textNavigator.CursorMoved += new EventHandler(this.HandleTextNavigatorCursorMoved);
+		}
+		
+		protected void InitialiseEmptyTextStory()
+		{
+			System.Diagnostics.Debug.Assert(this.textStory.TextLength == 0);
+			
+			this.textStory.DisableOpletQueue();
 			this.textNavigator.Insert(Text.Unicode.Code.EndOfText);
 			this.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 0);
-			this.textStory.DebugDisableOpletQueue = false;
+			this.textStory.EnableOpletQueue();
 		}
 
 
@@ -56,6 +68,11 @@ namespace Epsitec.Common.Document
 		public Text.TextNavigator TextNavigator
 		{
 			get { return this.textNavigator; }
+		}
+
+		public TextNavigator2 MetaNavigator
+		{
+			get { return this.metaNavigator; }
 		}
 
 
@@ -257,24 +274,47 @@ namespace Epsitec.Common.Document
 
 		
 		// Change éventuellement le pavé édité en fonction de la position du curseur.
+		// Si un changement a lieu, des oplets seront créés. Cette méthode ne peut donc
+		// pas être appelée pendant une opération de undo/redo.
 		public void ChangeObjectEdited()
 		{
-			Text.ITextFrame frame;
-			double cx, cy, ascender, descender, angle;
-			this.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
-
-			if ( this.activeTextBox == null || frame != this.activeTextBox.TextFlow )
+			if ( this.textStory.OpletQueue.IsUndoRedoInProgress )
 			{
-				foreach ( Objects.TextBox2 obj in this.Chain )
+				return;
+			}
+			
+			if ( this.textStory.OpletQueue.IsEnabled )
+			{
+				this.textStory.OpletQueue.Disable();
+				
+				try
 				{
-					if ( frame == obj.TextFrame )
+					this.ChangeObjectEdited();
+				}
+				finally
+				{
+					this.textStory.OpletQueue.Enable();
+				}
+			}
+			else
+			{
+				Text.ITextFrame frame;
+				double cx, cy, ascender, descender, angle;
+				this.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
+				
+				if ( this.activeTextBox == null || frame != this.activeTextBox.TextFrame )
+				{
+					foreach ( Objects.TextBox2 obj in this.Chain )
 					{
-						this.document.Modifier.EditObject(obj);
-						if ( this.activeTextBox != null )
+						if ( frame == obj.TextFrame )
 						{
-							this.activeTextBox.SetAutoScroll();
+							this.document.Modifier.EditObject(obj);
+							if ( this.activeTextBox != null )
+							{
+								this.activeTextBox.SetAutoScroll();
+							}
+							return;
 						}
-						return;
 					}
 				}
 			}
@@ -318,12 +358,19 @@ namespace Epsitec.Common.Document
 		}
 
 		// Adapte l'objet après une désérialisation.
-		public void ReadFinalize()
+		public void ReadFinalizeTextStory()
 		{
-			this.Initialise();
+			this.InitialiseNavigator();
+			
+			System.Diagnostics.Debug.Assert(this.textStory != null);
+			System.Diagnostics.Debug.Assert(this.textStory.OpletQueue != null);
+			
 			this.textStory.Deserialize(this.textStoryData);
 			this.textStoryData = null;
-			
+		}
+		
+		public void ReadFinalizeTextObj()
+		{
 			System.Diagnostics.Debug.Assert(this.TextFitter.FrameList.Count == 0);
 			foreach ( Objects.TextBox2 obj in this.objectsChain )
 			{

@@ -1506,6 +1506,7 @@ namespace Epsitec.Common.Document
 			{
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Edit);
 				this.Select(obj, true, false);
+				this.EditProcessMessage(message, mouse);
 				this.document.Modifier.OpletQueueValidateAction();
 			}
 			else
@@ -1517,9 +1518,9 @@ namespace Epsitec.Common.Document
 					this.editFlowSrc = obj;
 					return;
 				}
+				
+				this.EditProcessMessage(message, mouse);
 			}
-
-			this.EditProcessMessage(message, mouse);
 		}
 
 		protected void EditMouseMove(Message message, Point mouse)

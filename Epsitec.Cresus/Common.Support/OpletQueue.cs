@@ -182,6 +182,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public bool								IsUndoRedoInProgress
+		{
+			get
+			{
+				return this.is_undo_redo_in_progress;
+			}
+		}
+		
 		
 		public System.IDisposable BeginAction()
 		{
