@@ -343,6 +343,7 @@ namespace Epsitec.Common.Document
 		protected Text.TextStory				textStory;
 		protected Text.TextFitter				textFitter;
 		protected Text.TextNavigator			textNavigator;
+		protected TextNavigator2				metaNavigator;
 		protected Objects.TextBox2				activeTextBox;
 		protected UndoableList					objectsChain;
 	}

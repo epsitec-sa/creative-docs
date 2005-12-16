@@ -27,7 +27,6 @@ namespace Epsitec.Common.Widgets
 			this.navigator = new TextNavigator2 ();
 			
 			this.navigator.TextNavigator = this.text_navigator;
-			this.navigator.TextFrame     = this.text_frame;
 			
 			this.text_fitter.FrameList.Add (this.text_frame);
 			
@@ -61,7 +60,6 @@ namespace Epsitec.Common.Widgets
 			this.navigator = new TextNavigator2 ();
 			
 			this.navigator.TextNavigator = this.text_navigator;
-			this.navigator.TextFrame     = this.text_frame;
 			
 			this.text_fitter.FrameList.Add (this.text_frame);
 			
@@ -122,7 +120,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
 		{
-			if (this.navigator.ProcessMessage (message, pos))
+			if (this.navigator.ProcessMessage (message, pos, this.text_frame))
 			{
 				this.Invalidate ();
 				return;
@@ -441,7 +439,7 @@ namespace Epsitec.Common.Widgets
 		private ulong							marker_selected;
 		
 		private Support.OpletQueue				oplet_queue;
-		private Common.Text.TextContext				text_context;
+		private Common.Text.TextContext			text_context;
 		private Common.Text.TextStory			text_story;
 		private Common.Text.TextFitter			text_fitter;
 		private Common.Text.TextNavigator		text_navigator;

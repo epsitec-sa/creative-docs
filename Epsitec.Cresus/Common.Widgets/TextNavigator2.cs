@@ -56,20 +56,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Text.ITextFrame					TextFrame
-		{
-			get
-			{
-				return this.text_frame;
-			}
-			set
-			{
-				this.text_frame = value;
-			}
-		}
 		
-		
-		public bool ProcessMessage(Message message, Drawing.Point pos)
+		public bool ProcessMessage(Message message, Drawing.Point pos, Text.ITextFrame frame)
 		{
 			switch (message.Type)
 			{
@@ -80,20 +68,21 @@ namespace Epsitec.Common.Widgets
 					return this.ProcessKeyPress (message);
 				
 				case MessageType.MouseDown:
-					return this.ProcessMouseDown (message, pos);
+					return this.ProcessMouseDown (message, pos, frame);
 				
 				case MessageType.MouseMove:
-					return ( this.is_mouse_dragging && this.ProcessMouseDrag (pos))
-						|| (!this.is_mouse_dragging && this.ProcessMouseMove (pos));
+					return ( this.is_mouse_dragging && this.ProcessMouseDrag (pos, frame))
+						|| (!this.is_mouse_dragging && this.ProcessMouseMove (pos, frame));
 				
 				case MessageType.MouseUp:
-					return this.is_mouse_down && this.ProcessMouseUp (message, pos);
+					return this.is_mouse_down && this.ProcessMouseUp (message, pos, frame);
 			}
 			
 			return false;
 		}
 		
 		
+		#region Specialized Process Methods
 		private bool ProcessKeyDown(Message message)
 		{
 			//	L'événement KeyDown doit être traité pour toutes les touches non
@@ -391,74 +380,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private void PreProcessCursorMove (bool is_shift_pressed)
-		{
-			if (! is_shift_pressed)
-			{
-				this.text_navigator.ClearCurrentStylesAndProperties ();
-			}
-		}
-		
-		private void ClearVerticalMoveCache()
-		{
-			this.initial_x = double.NaN;
-		}
-		
-		private double GetVerticalMoveCache()
-		{
-			//	Si on démarre un déplacement vertical avec les touches haut/bas,
-			//	on désire se souvenir de la position [x] initale, de manière à
-			//	pouvoir sauter des lignes plus courtes en maintenant un déplacement
-			//	avec [x] constant.
-			
-			if (double.IsNaN (this.initial_x))
-			{
-				Text.ITextFrame frame;
-				double cx, cy, ascender, descender, angle;
-					
-				this.text_navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
-				this.initial_x = cx;
-			}
-			
-			return this.initial_x;
-		}
-		
-		private bool ChangeSelectionModeBeforeMove(bool selection, int direction)
-		{
-			//	Commence ou termine une sélection (appelé par ex. lors d'un
-			//	déplacement avec ou sans SHIFT pressé).
-			
-			//	En cas de désélection, positionne le curseur soit au début,
-			//	soit à la fin de la zone sélectionnée, en fonction de la
-			//	direction préférentielle.
-			
-			//	Retourne 'true' si une désélection a eu lieu.
-			
-			if (selection)
-			{
-				if (this.text_navigator.IsSelectionActive == false)
-				{
-					this.text_navigator.StartSelection ();
-				}
-			}
-			else
-			{
-				this.EndSelection ();
-				
-				//	Si une sélection est active, il faut la désactiver en tenant
-				//	compte de la direction de déplacement souhaitée :
-				
-				if (this.text_navigator.HasSelection)
-				{
-					this.text_navigator.ClearSelection (direction);
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
-		
 		private bool ProcessKeyPress(Message message)
 		{
 			Text.Unicode.Code code = (Text.Unicode.Code) message.KeyChar;
@@ -473,7 +394,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private bool ProcessMouseDown(Message message, Drawing.Point pos)
+		private bool ProcessMouseDown(Message message, Drawing.Point pos, Text.ITextFrame frame)
 		{
 			this.ClearVerticalMoveCache ();
 			
@@ -496,11 +417,11 @@ namespace Epsitec.Common.Widgets
 			double cx = pos.X;
 			double cy = pos.Y;
 			
-			if (this.text_navigator.HitTest (this.text_frame, cx, cy, true, out p, out d))
+			if (this.text_navigator.HitTest (frame, cx, cy, true, out p, out d))
 			{
 				this.initial_position = p;
 				
-				this.text_navigator.HitTest (this.text_frame, cx, cy, false, out p, out d);
+				this.text_navigator.HitTest (frame, cx, cy, false, out p, out d);
 				this.text_navigator.MoveTo (p, d);
 				
 				return true;
@@ -510,14 +431,14 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		private bool ProcessMouseDrag(Drawing.Point pos)
+		private bool ProcessMouseDrag(Drawing.Point pos, Text.ITextFrame frame)
 		{
 			int p, d;
 			
 			double cx = pos.X;
 			double cy = pos.Y;
 			
-			if (this.text_navigator.HitTest (this.text_frame, cx, cy, true, out p, out d))
+			if (this.text_navigator.HitTest (frame, cx, cy, true, out p, out d))
 			{
 				if ((this.is_mouse_selecting == false) &&
 					(this.initial_position != p))
@@ -537,7 +458,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
-		private bool ProcessMouseMove(Drawing.Point pos)
+		private bool ProcessMouseMove(Drawing.Point pos, Text.ITextFrame frame)
 		{
 			//	Rien à faire de spécial, la souris se déplace sans aucun bouton
 			//	pressé.
@@ -545,7 +466,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
-		private bool ProcessMouseUp(Message message, Drawing.Point pos)
+		private bool ProcessMouseUp(Message message, Drawing.Point pos, Text.ITextFrame frame)
 		{
 			if (this.text_navigator.IsSelectionActive)
 			{
@@ -578,7 +499,7 @@ namespace Epsitec.Common.Widgets
 			
 			return true;
 		}
-		
+		#endregion
 		
 		public void SelectInsertedCharacter()
 		{
@@ -797,6 +718,74 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		private void PreProcessCursorMove (bool is_shift_pressed)
+		{
+			if (! is_shift_pressed)
+			{
+				this.text_navigator.ClearCurrentStylesAndProperties ();
+			}
+		}
+		
+		private void ClearVerticalMoveCache()
+		{
+			this.initial_x = double.NaN;
+		}
+		
+		private double GetVerticalMoveCache()
+		{
+			//	Si on démarre un déplacement vertical avec les touches haut/bas,
+			//	on désire se souvenir de la position [x] initale, de manière à
+			//	pouvoir sauter des lignes plus courtes en maintenant un déplacement
+			//	avec [x] constant.
+			
+			if (double.IsNaN (this.initial_x))
+			{
+				Text.ITextFrame frame;
+				double cx, cy, ascender, descender, angle;
+					
+				this.text_navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
+				this.initial_x = cx;
+			}
+			
+			return this.initial_x;
+		}
+		
+		private bool ChangeSelectionModeBeforeMove(bool selection, int direction)
+		{
+			//	Commence ou termine une sélection (appelé par ex. lors d'un
+			//	déplacement avec ou sans SHIFT pressé).
+			
+			//	En cas de désélection, positionne le curseur soit au début,
+			//	soit à la fin de la zone sélectionnée, en fonction de la
+			//	direction préférentielle.
+			
+			//	Retourne 'true' si une désélection a eu lieu.
+			
+			if (selection)
+			{
+				if (this.text_navigator.IsSelectionActive == false)
+				{
+					this.text_navigator.StartSelection ();
+				}
+			}
+			else
+			{
+				this.EndSelection ();
+				
+				//	Si une sélection est active, il faut la désactiver en tenant
+				//	compte de la direction de déplacement souhaitée :
+				
+				if (this.text_navigator.HasSelection)
+				{
+					this.text_navigator.ClearSelection (direction);
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		
 		private void HandleTextChanged(object sender)
 		{
 			this.NotifyTextChanged ();
@@ -861,7 +850,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		ActiveStyleChanged;
 		
 		private Text.TextNavigator				text_navigator;
-		private Text.ITextFrame					text_frame;
 		
 		private int								initial_position;
 		private double							initial_x = double.NaN;

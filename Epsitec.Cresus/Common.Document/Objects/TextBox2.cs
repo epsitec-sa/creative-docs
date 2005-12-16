@@ -31,8 +31,7 @@ namespace Epsitec.Common.Document.Objects
 			this.textFrame = new Text.SimpleTextFrame();
 			
 			this.metaNavigator = new TextNavigator2();
-			this.metaNavigator.TextFrame = this.textFrame;
-
+			
 			this.NewTextFlow();
 			this.InitialiseInternals();
 		}
@@ -51,7 +50,6 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.metaNavigator == null )
 			{
 				this.metaNavigator = new TextNavigator2();
-				this.metaNavigator.TextFrame = this.textFrame;
 			}
 
 			this.metaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
@@ -421,7 +419,7 @@ namespace Epsitec.Common.Document.Objects
 				 message.Type == MessageType.KeyPress  ||
 				 message.Type == MessageType.MouseDown )
 			{
-				this.autoScrollOneShot = true;
+				this.SetAutoScroll();
 			}
 
 			if ( message.Type == MessageType.KeyPress )
@@ -439,7 +437,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			Point ppos = this.transform.TransformInverse(pos);
-			if ( !this.metaNavigator.ProcessMessage(message, ppos) )  return false;
+			
+			System.Diagnostics.Debug.WriteLine(string.Format("EditProcessMessage: ppos={0}", ppos));
+			
+			if ( !this.metaNavigator.ProcessMessage(message, ppos, this.TextFrame) )  return false;
 
 			if ( message.Type == MessageType.MouseDown )
 			{
