@@ -877,6 +877,7 @@
 	<data name="Action.ShaperHandleCorner">As defined in Corner Property</data>
 	<data name="Action.ShaperHandleContinue">Extend line</data>
 
+	<data name="Action.Fonts">@@Polices de caractères...</data>
 	<data name="Action.Glyphs">Symbols...</data>
 
 	<data name="Action.HideSel">Hide selection</data>

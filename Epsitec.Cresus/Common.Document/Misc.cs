@@ -84,31 +84,38 @@ namespace Epsitec.Common.Document
 		}
 
 
+		// Donne la liste de tous les OpenType.FontIdentity des fontes connues.
+		static public System.Collections.ArrayList GetFontList(bool enableSymbols)
+		{
+			if ( Misc.fontListWithSymbols == null )
+			{
+				Misc.fontListWithSymbols    = new System.Collections.ArrayList();
+				Misc.fontListWithoutSymbols = new System.Collections.ArrayList();
+
+				foreach( string face in TextContext.GetAvailableFontFaces() )
+				{
+					OpenType.FontIdentity id = Misc.DefaultFontIdentityStyle(face);
+					if ( id != null )
+					{
+						Misc.fontListWithSymbols.Add(id);
+
+						if ( !id.IsSymbolFont )
+						{
+							Misc.fontListWithoutSymbols.Add(id);
+						}
+					}
+				}
+			}
+
+			return enableSymbols ? Misc.fontListWithSymbols : Misc.fontListWithoutSymbols;
+		}
+
 		// Ajoute la liste des fontes dans la liste d'un TextFieldCombo.
 		static public void AddFontList(TextFieldCombo combo, bool enableSymbols)
 		{
-#if false
-			foreach( string face in TextContext.GetAvailableFontFaces() )
+			if ( Misc.fontListCombo == null )
 			{
-				bool add = true;
-				if ( !enableSymbols )
-				{
-					OpenType.FontIdentity[] ids = TextContext.GetAvailableFontIdentities(face);
-					foreach ( OpenType.FontIdentity id in ids )
-					{
-						if ( id.IsSymbolFont )  add = false;
-					}
-				}
-
-				if ( add )
-				{
-					combo.Items.Add(face);
-				}
-			}
-#else
-			if ( Misc.fontList == null )
-			{
-				Misc.fontList = new System.Collections.ArrayList();
+				Misc.fontListCombo = new System.Collections.ArrayList();
 
 				foreach( string face in TextContext.GetAvailableFontFaces() )
 				{
@@ -123,20 +130,27 @@ namespace Epsitec.Common.Document
 						}
 					}
 
-					Misc.fontList.Add((symbol ? "S" : "N") + face);
+					Misc.fontListCombo.Add((symbol ? "S" : "N") + face);
 				}
 			}
 
-			foreach ( string s in Misc.fontList )
+			foreach ( string s in Misc.fontListCombo )
 			{
 				if ( !enableSymbols && s[0] == 'S' )  continue;
 				combo.Items.Add(s.Substring(1));
 			}
-#endif
 		}
 
 		// Cherche le FontStyle par défaut pour un FontFace donné.
 		static public string DefaultFontStyle(string face)
+		{
+			OpenType.FontIdentity id = Misc.DefaultFontIdentityStyle(face);
+			if ( id == null )  return "";
+			return id.InvariantStyleName;
+		}
+
+		// Cherche le FontStyle par défaut pour un FontFace donné.
+		static public OpenType.FontIdentity DefaultFontIdentityStyle(string face)
 		{
 			OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
 
@@ -145,7 +159,7 @@ namespace Epsitec.Common.Document
 				if ( id.FontWeight == OpenType.FontWeight.Normal &&
 					 id.FontStyle  == OpenType.FontStyle.Normal  )
 				{
-					return id.InvariantStyleName;
+					return id;
 				}
 			}
 
@@ -153,7 +167,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( id.FontWeight == OpenType.FontWeight.Normal )
 				{
-					return id.InvariantStyleName;
+					return id;
 				}
 			}
 
@@ -161,16 +175,16 @@ namespace Epsitec.Common.Document
 			{
 				if ( id.FontStyle == OpenType.FontStyle.Normal )
 				{
-					return id.InvariantStyleName;
+					return id;
 				}
 			}
 
 			foreach ( OpenType.FontIdentity id in list )
 			{
-				return id.InvariantStyleName;
+				return id;
 			}
 
-			return "";
+			return null;
 		}
 
 		// Simplifie un style ("Regular !Bold" devient "Bold" par exemple).
@@ -509,6 +523,8 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected static System.Collections.ArrayList		fontList;
+		protected static System.Collections.ArrayList		fontListWithSymbols;
+		protected static System.Collections.ArrayList		fontListWithoutSymbols;
+		protected static System.Collections.ArrayList		fontListCombo;
 	}
 }

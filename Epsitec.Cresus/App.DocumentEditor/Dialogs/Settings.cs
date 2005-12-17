@@ -77,6 +77,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bookQuick.TabTitle = Res.Strings.Dialog.Settings.TabPage.Quick;
 				bookGlobal.Items.Add(bookQuick);
 
+				TabPage bookFonts = new TabPage();
+				bookFonts.Name = "Fonts";
+				bookFonts.TabTitle = Res.Strings.Dialog.Settings.TabPage.Fonts;
+				bookGlobal.Items.Add(bookFonts);
+
 				bookGlobal.ActivePage = bookGeneral;
 
 				TextFieldCombo combo;
@@ -227,6 +232,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.UpdateQuickList(-1);
 				this.UpdateQuickButtons();
 				
+				// Crée l'onglet "fonts".
+				this.fontSelector = new Common.Document.Widgets.FontSelector(bookFonts);
+				this.fontSelector.Height = Common.Document.Widgets.FontSelector.BestHeight(310, false);
+				this.fontSelector.Dock = DockStyle.Top;
+				this.fontSelector.DockMargins = new Margins(10, 10, 10, 0);
+				this.fontSelector.Build(false, null);
+				this.fontSelector.SelectedList(this.globalSettings.QuickFonts);
+
 				// Crée les onglets "document".
 				TabBook bookDoc = new TabBook(this.window.Root);
 				bookDoc.Name = "BookDocument";
@@ -744,6 +757,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int							tabIndex;
 		protected bool							ignoreChange = false;
 		protected CellTable						quickList;
+		protected Common.Document.Widgets.FontSelector fontSelector;
 		protected IconButton					buttonDefault;
 		protected IconButton					buttonClear;
 		protected IconButton					buttonFirst;

@@ -109,6 +109,8 @@
 	<data name="Dialog.ExportPDF.TabPage.Image">Images</data>
 	<data name="Dialog.ExportPDF.TabPage.Publisher">Pré-presse</data>
 
+	<data name="Dialog.Fonts.Title">Choix des polices utilisées</data>
+	
 	<data name="Dialog.Glyphs.Title">Caractères spéciaux</data>
 	<data name="Dialog.Glyphs.TabPage.List">Listes partielles</data>
 	<data name="Dialog.Glyphs.TabPage.Array">Tableaux complets</data>
@@ -167,6 +169,7 @@
 	<data name="Dialog.Settings.TabPage.General">Général</data>
 	<data name="Dialog.Settings.TabPage.Periph">Périphériques</data>
 	<data name="Dialog.Settings.TabPage.Quick">Commandes rapides</data>
+	<data name="Dialog.Settings.TabPage.Fonts">Polices</data>
 	<data name="Dialog.Settings.Startup">Que faire au démarrage du logiciel ?</data>
 	<data name="Dialog.Settings.Mouse">Réglages de la souris</data>
 	<data name="Dialog.Settings.Screen">Réglages de l'écran</data>

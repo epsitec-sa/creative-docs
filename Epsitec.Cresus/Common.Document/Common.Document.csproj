@@ -912,6 +912,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\FontSample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\FontSelector.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\FontWindow.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\HRuler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -45,6 +45,7 @@ namespace Epsitec.Common.Document.Settings
 			this.fineCursor = false;
 			this.fineCursor = false;
 			this.quickCommands = GlobalSettings.DefaultQuickCommands();
+			this.quickFonts = GlobalSettings.DefaultQuickFonts();
 
 			// Suppose que le dossier des exemples est dans le même dossier
 			// que l'application.
@@ -722,11 +723,41 @@ namespace Epsitec.Common.Document.Settings
 		#endregion
 
 
+		#region QuickFonts
+		// Donne la liste des polices rapides.
+		public System.Collections.ArrayList QuickFonts
+		{
+			get
+			{
+				return this.quickFonts;
+			}
+
+			set
+			{
+				this.quickFonts = value;
+			}
+		}
+
+		// Donne la liste des polices rapides par défaut.
+		public static System.Collections.ArrayList DefaultQuickFonts()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+
+			list.Add("Arial");
+			list.Add("Courrier New");
+			list.Add("Tahoma");
+			list.Add("Times New Roman");
+
+			return list;
+		}
+		#endregion
+
+
 		#region Serialization
 		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			info.AddValue("Version", 4);
+			info.AddValue("Version", 5);
 
 			info.AddValue("WindowLocation", this.windowLocation);
 			info.AddValue("WindowSize", this.windowSize);
@@ -752,6 +783,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("DateChecker", this.dateChecker.Ticks);
 
 			info.AddValue("QuickCommands", this.quickCommands);
+			info.AddValue("QuickFonts", this.quickFonts);
 		}
 
 		// Constructeur qui désérialise les réglages.
@@ -798,6 +830,15 @@ namespace Epsitec.Common.Document.Settings
 			{
 				this.quickCommands = GlobalSettings.DefaultQuickCommands();
 			}
+
+			if ( version >= 5 )
+			{
+				this.quickFonts = (System.Collections.ArrayList) info.GetValue("QuickFonts", typeof(System.Collections.ArrayList));
+			}
+			else
+			{
+				this.quickFonts = GlobalSettings.DefaultQuickFonts();
+			}
 		}
 		#endregion
 
@@ -823,6 +864,7 @@ namespace Epsitec.Common.Document.Settings
 		protected bool							autoChecker;
 		protected Common.Types.Date				dateChecker;
 		protected System.Collections.ArrayList	quickCommands;
+		protected System.Collections.ArrayList	quickFonts;
 
 
 		#region WindowBounds

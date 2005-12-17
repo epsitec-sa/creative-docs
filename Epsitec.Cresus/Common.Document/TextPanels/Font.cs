@@ -18,12 +18,13 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextFont");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Font.Title);
 
-			this.fontFace = new TextFieldCombo(this);
+			this.fontFace = new TextField(this);
 			this.fontFace.IsReadOnly = true;
-			this.fontFace.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fontFace.Clicked += new MessageEventHandler(this.HandleFontsClicked);
 			this.fontFace.TabIndex = this.tabIndex++;
 			this.fontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
+			this.buttonFonts = this.CreateComboButton(null, Res.Strings.TextPanel.Font.Tooltip.Face, new MessageEventHandler(this.HandleFontsClicked));
 
 			this.fontStyle = new TextFieldCombo(this);
 			this.fontStyle.IsReadOnly = true;
@@ -72,7 +73,6 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.fontFace.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontStyle.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
@@ -220,12 +220,11 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ignoreChanged = true;
 
-			this.UpdateComboFaceList();
 			this.UpdateComboStyleList(face);
 
 			this.fontFace.Text  = face;
 			this.fontStyle.Text = style;
-			this.ProposalTextFieldCombo(this.fontFace,  !isFace);
+			this.ProposalTextField(this.fontFace,  !isFace);
 			this.ProposalTextFieldCombo(this.fontStyle, !isStyle);
 
 			this.fontSize.IsUnitPercent = (units == Common.Text.Properties.SizeUnits.Percent);
@@ -244,16 +243,6 @@ namespace Epsitec.Common.Document.TextPanels
 			this.checkItalic.ActiveState = italic ? ActiveState.Yes : ActiveState.No;
 			
 			this.ignoreChanged = false;
-		}
-
-		// Met à jour la liste d'un champ éditable pour le nom de la police.
-		protected void UpdateComboFaceList()
-		{
-			if ( this.fontFace.Items.Count == 0 )
-			{
-				this.fontFace.Items.Add(Res.Strings.Action.FontDefault);  // par défaut
-				Misc.AddFontList(this.fontFace, false);
-			}
 		}
 
 		// Met à jour la liste d'un champ éditable pour le style de la police.
@@ -290,10 +279,15 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				Rectangle r = rect;
 				r.Bottom = r.Top-20;
-				this.fontFace.Bounds = r;
-				this.fontFace.Visibility = true;
-				r.Offset(0, -25);
 
+				r.Left = rect.Left;
+				r.Right = rect.Right-19;
+				this.fontFace.Bounds = r;
+				r.Left = rect.Right-20;
+				r.Right = rect.Right;
+				this.buttonFonts.Bounds = r;
+
+				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Width = 69;
 				this.fontSize.Bounds = r;
@@ -343,8 +337,13 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				Rectangle r = rect;
 				r.Bottom = r.Top-20;
+
+				r.Left = rect.Left;
+				r.Right = rect.Right-19;
 				this.fontFace.Bounds = r;
-				this.fontFace.Visibility = true;
+				r.Left = rect.Right-20;
+				r.Right = rect.Right;
+				this.buttonFonts.Bounds = r;
 
 				this.fontSize.Visibility = false;
 				this.fontStyle.Visibility = false;
@@ -478,21 +477,6 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.document.TextWrapper.SuspendSynchronisations();
 
-			if ( sender == this.fontFace )
-			{
-				string face = this.fontFace.Text;
-				if ( face != "" )
-				{
-					this.document.TextWrapper.Defined.FontFace = face;
-					this.document.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
-				}
-				else
-				{
-					this.document.TextWrapper.Defined.ClearFontFace();
-					this.document.TextWrapper.Defined.ClearFontStyle();
-				}
-			}
-
 			if ( sender == this.fontStyle )
 			{
 				string style = this.fontStyle.Text;
@@ -507,6 +491,51 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.document.TextWrapper.ResumeSynchronisations();
+		}
+
+		private void HandleFontsClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.document.TextWrapper.IsAttached )  return;
+
+			Point pos = new Point(0, 0);
+
+			if ( sender is TextField )
+			{
+				TextField field = sender as TextField;
+				pos = field.MapClientToScreen(new Point(0, 0));  // coin sup/gauche pour le selector
+			}
+
+			if ( sender is GlyphButton )
+			{
+				GlyphButton button = sender as GlyphButton;
+				pos = button.MapClientToScreen(new Point(-160, 0));  // coin sup/gauche pour le selector
+			}
+
+			ScreenInfo si = ScreenInfo.Find(pos);
+			Drawing.Rectangle wa = si.WorkingArea;
+			double h = System.Math.Min(pos.Y-wa.Bottom, 500);
+			Size size = new Size(Widgets.FontSelector.BestWidth(), Widgets.FontSelector.BestHeight(h, false));
+			pos.Y -= size.Height;
+
+			if ( pos.X+size.Width > wa.Right )  // dépasse à droite ?
+			{
+				pos.X = wa.Right-size.Width;
+			}
+			
+			string currentface = this.document.TextWrapper.Active.FontFace;
+
+			this.fontSelector = new Widgets.FontWindow(pos, size, false, this.document.GlobalSettings.QuickFonts, this.Window);
+			string newFace = this.fontSelector.Action(currentface);
+			this.fontSelector = null;
+
+			if ( newFace != currentface )
+			{
+				this.document.TextWrapper.SuspendSynchronisations();
+				this.document.TextWrapper.Defined.FontFace = newFace;
+				this.document.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(newFace);
+				this.document.TextWrapper.ResumeSynchronisations();
+			}
 		}
 
 		private void HandleFieldColorClicked(object sender, MessageEventArgs e)
@@ -667,7 +696,8 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		protected TextFieldCombo			fontFace;
+		protected TextField					fontFace;
+		protected GlyphButton				buttonFonts;
 		protected TextFieldCombo			fontStyle;
 		protected IconButton				fontFeatures;
 		protected Widgets.TextFieldLabel	fontSize;
@@ -678,6 +708,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonClear;
 		protected CheckButton				checkBold;
 		protected CheckButton				checkItalic;
+		protected Widgets.FontWindow		fontSelector;
 
 		protected ColorSample				originFieldColor;
 		protected int						originFieldRank = -1;

@@ -275,6 +275,34 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
+		// Crée un bouton pour une commande.
+		protected IconButton CreateIconButton(string command)
+		{
+			return this.CreateIconButton(command, "0");
+		}
+
+		// Crée un bouton pour une commande, en précisant la taille préférée pour l'icône.
+		protected IconButton CreateIconButton(string command, string iconSize)
+		{
+			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
+			IconButton button = new IconButton(this);
+
+			button.Command = command;
+			button.IconName = Misc.Icon(cs.IconName, iconSize);
+			button.AutoFocus = false;
+
+			if ( cs.Statefull )
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+			}
+
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+			return button;
+		}
+
+		
 		// Crée un bouton.
 		protected IconButton CreateIconButton(string icon, string tooltip, MessageEventHandler handler)
 		{
@@ -337,6 +365,23 @@ namespace Epsitec.Common.Document.TextPanels
 			button.IconName = Misc.Icon("Nothing");
 			ToolTip.Default.SetToolTip(button, Res.Strings.TextPanel.Clear);
 			
+			return button;
+		}
+
+		// Crée un bouton "v" pour un menu.
+		protected GlyphButton CreateComboButton(string command, string tooltip, MessageEventHandler handler)
+		{
+			GlyphButton button = new GlyphButton(this);
+
+			button.Command = command;
+			button.ButtonStyle = ButtonStyle.Combo;
+			button.GlyphShape = GlyphShape.ArrowDown;
+			button.AutoFocus = false;
+			button.Clicked += handler;
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(button, tooltip);
+
 			return button;
 		}
 
@@ -461,6 +506,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 		// Modifie le mode d'un TextFieldCombo.
 		protected void ProposalTextFieldCombo(TextFieldCombo field, bool proposal)
+		{
+			field.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
+		}
+
+		// Modifie le mode d'un TextField.
+		protected void ProposalTextField(TextField field, bool proposal)
 		{
 			field.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
 		}

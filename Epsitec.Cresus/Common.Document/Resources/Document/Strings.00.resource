@@ -877,6 +877,7 @@
 	<data name="Action.ShaperHandleCorner">Selon la propriété de coin</data>
 	<data name="Action.ShaperHandleContinue">Prolonger le trait</data>
 
+	<data name="Action.Fonts">Polices de caractères...</data>
 	<data name="Action.Glyphs">Caractères spéciaux...</data>
 
 	<data name="Action.HideSel">Cacher la sélection</data>

@@ -108,6 +108,8 @@
 	<data name="Dialog.ExportPDF.TabPage.Image">Images</data>
 	<data name="Dialog.ExportPDF.TabPage.Publisher">Publishing</data>
 
+	<data name="Dialog.Fonts.Title">@@Choix des polices utilisées</data>
+
 	<data name="Dialog.Glyphs.Title">Symbols</data>
 	<data name="Dialog.Glyphs.TabPage.List">Quick lists</data>
 	<data name="Dialog.Glyphs.TabPage.Array">All available characters</data>
@@ -164,6 +166,7 @@
 	<data name="Dialog.Settings.TabPage.General">General</data>
 	<data name="Dialog.Settings.TabPage.Periph">Mouse &amp;amp; Display</data>
 	<data name="Dialog.Settings.TabPage.Quick">Quick Toolbar</data>
+	<data name="Dialog.Settings.TabPage.Fonts">@@Polices</data>
 	<data name="Dialog.Settings.Startup">What to do at startup?</data>
 	<data name="Dialog.Settings.Mouse">Mouse settings</data>
 	<data name="Dialog.Settings.Screen">Display settings</data>
