@@ -85,6 +85,8 @@ namespace Epsitec.Common.Document
 
 
 		// Crée une liste qui contient les fontes rapides au début.
+		// inList: tous les OpenType.FontIdentity connus
+		// quickFaceNames: string des FaceNames fréquement utilisés, dans n'importe quel ordre
 		static public System.Collections.ArrayList MergeFontList(System.Collections.ArrayList inList, System.Collections.ArrayList quickFaceNames, out int quickCount)
 		{
 			System.Collections.ArrayList outList = new System.Collections.ArrayList();
@@ -93,13 +95,13 @@ namespace Epsitec.Common.Document
 			// Copie la liste en enlevant toutes les fontes rapides.
 			foreach ( Common.OpenType.FontIdentity id in inList )
 			{
-				if ( quickFaceNames.Contains(id.InvariantFaceName) )
+				if ( quickFaceNames.Contains(id.InvariantFaceName) )  // fonte fréquement utilisée ?
 				{
-					begin.Add(id);
+					begin.Add(id);  // begin <- fontes fréquentes dans le même ordre que inList
 				}
 				else
 				{
-					outList.Add(id);
+					outList.Add(id);  // outList <- fontes normales
 				}
 			}
 
@@ -110,14 +112,15 @@ namespace Epsitec.Common.Document
 				outList.Insert(ii++, id);
 			}
 
-			quickCount = begin.Count;
+			quickCount = begin.Count;  // quickCount <- nombre de fontes fréquement utilisées
 			return outList;
 		}
 
 		// Donne la liste de tous les OpenType.FontIdentity des fontes connues.
+		// Cette liste est déjà triée par ordre alphabétique.
 		static public System.Collections.ArrayList GetFontList(bool enableSymbols)
 		{
-			if ( Misc.fontListWithSymbols == null )
+			if ( Misc.fontListWithSymbols == null )  // cache à créer ?
 			{
 				Misc.fontListWithSymbols    = new System.Collections.ArrayList();
 				Misc.fontListWithoutSymbols = new System.Collections.ArrayList();
@@ -127,11 +130,11 @@ namespace Epsitec.Common.Document
 					OpenType.FontIdentity id = Misc.DefaultFontIdentityStyle(face);
 					if ( id != null )
 					{
-						Misc.fontListWithSymbols.Add(id);
+						Misc.fontListWithSymbols.Add(id);  // Misc.fontListWithSymbols <- caractères + symboles
 
 						if ( !id.IsSymbolFont )
 						{
-							Misc.fontListWithoutSymbols.Add(id);
+							Misc.fontListWithoutSymbols.Add(id);  // Misc.fontListWithoutSymbols <- seulement les caractères
 						}
 					}
 				}
@@ -141,6 +144,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Ajoute la liste des fontes dans la liste d'un TextFieldCombo.
+		// TODO: à supprimer prochainement...
 		static public void AddFontList(TextFieldCombo combo, bool enableSymbols)
 		{
 			if ( Misc.fontListCombo == null )

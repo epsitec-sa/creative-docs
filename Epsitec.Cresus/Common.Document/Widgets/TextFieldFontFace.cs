@@ -298,13 +298,13 @@ namespace Epsitec.Common.Document.Widgets
 			bool bottom = true;  // déroule contre le bas
 			if ( pos.Y-area.Bottom < 500 )
 			{
-				bottom = pos.Y > (area.Bottom+area.Top)/2;
+				bottom = pos.Y > (area.Bottom+area.Top)/2;  // choix du sens de déroulement
 			}
 
 			double w = FontSelector.BestWidth();
 			double h = 0;
 
-			if ( pos.X+w > area.Right )
+			if ( pos.X+w > area.Right )  // dépasse à droite ?
 			{
 				pos.X = area.Right-w;
 			}
