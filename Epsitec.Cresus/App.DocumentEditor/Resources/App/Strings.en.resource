@@ -165,8 +165,8 @@
 	<data name="Dialog.Settings.RadioDocument">Document</data>
 	<data name="Dialog.Settings.TabPage.General">General</data>
 	<data name="Dialog.Settings.TabPage.Periph">Mouse &amp;amp; Display</data>
-	<data name="Dialog.Settings.TabPage.Quick">@@Commandes</data>
-	<data name="Dialog.Settings.TabPage.QuickHelp">@@Commandes rapides, en haut de la fenêtre</data>
+	<data name="Dialog.Settings.TabPage.Quick">@@Boutons</data>
+	<data name="Dialog.Settings.TabPage.QuickHelp">@@Boutons rapides, en haut de la fenêtre</data>
 	<data name="Dialog.Settings.TabPage.Fonts">@@Polices</data>
 	<data name="Dialog.Settings.TabPage.FontsHelp">@@Polices fréquemment utilisées, en tête de liste</data>
 	<data name="Dialog.Settings.Startup">What to do at startup?</data>
@@ -189,7 +189,7 @@
 	<data name="Dialog.Settings.QuickDefault">Use predefined set of commands</data>
 	<data name="Dialog.Settings.QuickClear">Remove all commands</data>
 	<data name="Dialog.Settings.FontsDefault">@@Polices les plus courantes</data>
-	<data name="Dialog.Settings.FontsClear">@@Supprimer toutes les polices</data>
+	<data name="Dialog.Settings.FontsClear">@@Aucune police fréquement utilisée</data>
 	<data name="Dialog.Settings.TabPage.Format">Format</data>
 	<data name="Dialog.Settings.TabPage.Grid">Grid</data>
 	<data name="Dialog.Settings.TabPage.Guides">Guides</data>
