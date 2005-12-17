@@ -168,8 +168,10 @@
 	<data name="Dialog.Settings.RadioDocument">Document</data>
 	<data name="Dialog.Settings.TabPage.General">Général</data>
 	<data name="Dialog.Settings.TabPage.Periph">Périphériques</data>
-	<data name="Dialog.Settings.TabPage.Quick">Commandes rapides</data>
+	<data name="Dialog.Settings.TabPage.Quick">Commandes</data>
+	<data name="Dialog.Settings.TabPage.QuickHelp">Commandes rapides, en haut de la fenêtre</data>
 	<data name="Dialog.Settings.TabPage.Fonts">Polices</data>
+	<data name="Dialog.Settings.TabPage.FontsHelp">Polices fréquemment utilisées, en tête de liste</data>
 	<data name="Dialog.Settings.Startup">Que faire au démarrage du logiciel ?</data>
 	<data name="Dialog.Settings.Mouse">Réglages de la souris</data>
 	<data name="Dialog.Settings.Screen">Réglages de l'écran</data>
@@ -189,6 +191,8 @@
 	<data name="Dialog.Settings.QuickLast">Commande à la fin</data>
 	<data name="Dialog.Settings.QuickDefault">Commandes par défaut</data>
 	<data name="Dialog.Settings.QuickClear">Supprimer toutes les commandes</data>
+	<data name="Dialog.Settings.FontsDefault">Polices les plus courantes</data>
+	<data name="Dialog.Settings.FontsClear">Supprimer toutes les polices</data>
 	<data name="Dialog.Settings.TabPage.Format">Format</data>
 	<data name="Dialog.Settings.TabPage.Grid">Grille</data>
 	<data name="Dialog.Settings.TabPage.Guides">Repères</data>

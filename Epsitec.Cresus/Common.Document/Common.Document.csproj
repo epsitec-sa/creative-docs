@@ -922,11 +922,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Widgets\FontWindow.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Widgets\HRuler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -943,6 +938,11 @@
                 />
                 <File
                     RelPath = "Widgets\Sample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\TextFieldFontFace.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

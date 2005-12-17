@@ -45,7 +45,8 @@ namespace Epsitec.Common.Document.Settings
 			this.fineCursor = false;
 			this.fineCursor = false;
 			this.quickCommands = GlobalSettings.DefaultQuickCommands();
-			this.quickFonts = GlobalSettings.DefaultQuickFonts();
+			this.quickFonts = new System.Collections.ArrayList();
+			GlobalSettings.DefaultQuickFonts(this.quickFonts);
 
 			// Suppose que le dossier des exemples est dans le même dossier
 			// que l'application.
@@ -739,16 +740,14 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 		// Donne la liste des polices rapides par défaut.
-		public static System.Collections.ArrayList DefaultQuickFonts()
+		public static void DefaultQuickFonts(System.Collections.ArrayList list)
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			list.Clear();
 
 			list.Add("Arial");
-			list.Add("Courrier New");
+			list.Add("Courier New");
 			list.Add("Tahoma");
 			list.Add("Times New Roman");
-
-			return list;
 		}
 		#endregion
 
@@ -837,7 +836,8 @@ namespace Epsitec.Common.Document.Settings
 			}
 			else
 			{
-				this.quickFonts = GlobalSettings.DefaultQuickFonts();
+				this.quickFonts = new System.Collections.ArrayList();
+				GlobalSettings.DefaultQuickFonts(this.quickFonts);
 			}
 		}
 		#endregion

@@ -31,79 +31,58 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		// Retourne la meilleure hauteur possible, en principe plus petite que la hauteur demandée.
-		public static double BestHeight(double height, bool enableSymbols)
+		public static double BestHeight(double height, int totalLines)
 		{
 			int lines = (int) (height / FontSelector.sampleHeight);
 			if ( lines == 0 )  lines ++;  // au moins une ligne, faut pas pousser
 
-			System.Collections.ArrayList list = Misc.GetFontList(enableSymbols);
-			if ( lines > list.Count )  lines = list.Count;  // il ne sert à rien que la liste soit plus haute
-			
+			lines = System.Math.Min(lines, totalLines);  // pas plus que nécessaire
+
 			return lines*FontSelector.sampleHeight;
 		}
 
 
-		// Peuple le widget seulement lorsqu'il a les dimensions définitives.
-		// Ensuite, il ne devra plus être redimensionné.
-		public void Build(bool enableSymbols, System.Collections.ArrayList quickList)
+		// Liste des OpenType.FontIdentity représentée.
+		public System.Collections.ArrayList FontList
 		{
-			if ( quickList == null )  // liste brutte ?
+			get
 			{
-				this.fontList = Misc.GetFontList(enableSymbols);
-				this.quickLine = -1;
-			}
-			else	// liste des fontes rapides ?
-			{
-				// Copie la liste en enlevant toutes les fontes rapides.
-				System.Collections.ArrayList inList = Misc.GetFontList(enableSymbols);
-				this.fontList = new System.Collections.ArrayList();
-				System.Collections.ArrayList begin = new System.Collections.ArrayList();
-				foreach ( Common.OpenType.FontIdentity id in inList )
-				{
-					if ( quickList.Contains(id.InvariantFaceName) )
-					{
-						begin.Add(id.InvariantFaceName);
-					}
-					else
-					{
-						this.fontList.Add(id);
-					}
-				}
-
-				// Remet les fontes rapides au début.
-				int ii = 0;
-				foreach ( string quick in begin )
-				{
-					this.fontList.Insert(ii++, Misc.DefaultFontIdentityStyle(quick));
-				}
-
-				this.quickLine = begin.Count-1;
+				return this.fontList;
 			}
 
-			Rectangle rect = this.Client.Bounds;
-
-			this.scroller = new VScroller(this);
-			this.scroller.Bounds = new Rectangle(rect.Right-this.scroller.DefaultWidth, rect.Bottom, this.scroller.DefaultWidth, rect.Height);
-			this.scroller.IsInverted = true;  // zéro en haut
-			this.scroller.ValueChanged += new Epsitec.Common.Support.EventHandler(this.ScrollerValueChanged);
-
-			int lines = (int) (this.Height / FontSelector.sampleHeight);
-			this.samples = new Common.Document.Widgets.FontSample[lines];
-
-			rect.Width -= this.scroller.DefaultWidth;
-			rect.Bottom = rect.Top-FontSelector.sampleHeight;
-			for ( int i=0 ; i<lines ; i++ )
+			set
 			{
-				this.samples[i] = new Epsitec.Common.Document.Widgets.FontSample(this);
-				this.samples[i].Bounds = rect;
-
-				rect.Offset(0, -FontSelector.sampleHeight);
+				this.fontList = value;
 			}
-
-			this.UpdateScroller();
-			this.UpdateList();
 		}
 
+		// Nombre de fontes rapides en tête de liste.
+		public int QuickCount
+		{
+			get
+			{
+				return this.quickCount;
+			}
+
+			set
+			{
+				this.quickCount = value;
+			}
+		}
+
+		// Liste des FontFace (string) sélectionné (sélection multiple).
+		public System.Collections.ArrayList SelectedList
+		{
+			get
+			{
+				return this.selectedList;
+			}
+
+			set
+			{
+				this.selectedList = value;
+			}
+		}
 
 		// Police sélectionnée.
 		public string SelectedFontFace
@@ -133,9 +112,32 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public void SelectedList(System.Collections.ArrayList list)
+
+		// Peuple le widget seulement lorsqu'il a les dimensions définitives.
+		// Ensuite, il ne devra plus être redimensionné.
+		public void Build()
 		{
-			this.selectedList = list;
+			Rectangle rect = this.Client.Bounds;
+
+			this.scroller = new VScroller(this);
+			this.scroller.Bounds = new Rectangle(rect.Right-this.scroller.DefaultWidth, rect.Bottom, this.scroller.DefaultWidth, rect.Height);
+			this.scroller.IsInverted = true;  // zéro en haut
+			this.scroller.ValueChanged += new Epsitec.Common.Support.EventHandler(this.ScrollerValueChanged);
+
+			int lines = (int) (this.Height / FontSelector.sampleHeight);
+			this.samples = new Common.Document.Widgets.FontSample[lines];
+
+			rect.Width -= this.scroller.DefaultWidth;
+			rect.Bottom = rect.Top-FontSelector.sampleHeight;
+			for ( int i=0 ; i<lines ; i++ )
+			{
+				this.samples[i] = new Epsitec.Common.Document.Widgets.FontSample(this);
+				this.samples[i].Bounds = rect;
+
+				rect.Offset(0, -FontSelector.sampleHeight);
+			}
+
+			this.UpdateScroller();
 			this.UpdateList();
 		}
 
@@ -285,7 +287,7 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		// Met à jour le contenu de la liste.
-		protected void UpdateList()
+		public void UpdateList()
 		{
 			for ( int i=0 ; i<samples.Length ; i++ )
 			{
@@ -311,7 +313,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.samples[i].SetSelected(false);
 				}
 
-				this.samples[i].Separator = (ii == this.quickLine);
+				this.samples[i].Separator = (ii == this.quickCount-1);
 				this.samples[i].Last      = (i == samples.Length-1);
 			}
 		}
@@ -385,12 +387,12 @@ namespace Epsitec.Common.Document.Widgets
 		protected static readonly double				sampleHeight = 30;
 
 		protected string								fontFace;
+		protected System.Collections.ArrayList			fontList = null;
+		protected int									quickCount = 0;
 		protected System.Collections.ArrayList			selectedList = null;
-		protected System.Collections.ArrayList			fontList;
 		protected Common.Document.Widgets.FontSample[]	samples;
 		protected VScroller								scroller;
 		protected int									firstLine = 0;
-		protected int									quickLine = -1;
 		protected int									selectedLine = 0;
 		protected bool									ignoreChange = false;
 	}

@@ -510,8 +510,8 @@ namespace Epsitec.Common.Document.TextPanels
 			field.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
 		}
 
-		// Modifie le mode d'un TextField.
-		protected void ProposalTextField(TextField field, bool proposal)
+		// Modifie le mode d'un TextFieldFontFace.
+		protected void ProposalTextFieldFontFace(Widgets.TextFieldFontFace field, bool proposal)
 		{
 			field.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
 		}

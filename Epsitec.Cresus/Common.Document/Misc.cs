@@ -84,6 +84,36 @@ namespace Epsitec.Common.Document
 		}
 
 
+		// Crée une liste qui contient les fontes rapides au début.
+		static public System.Collections.ArrayList MergeFontList(System.Collections.ArrayList inList, System.Collections.ArrayList quickFaceNames, out int quickCount)
+		{
+			System.Collections.ArrayList outList = new System.Collections.ArrayList();
+			System.Collections.ArrayList begin   = new System.Collections.ArrayList();
+
+			// Copie la liste en enlevant toutes les fontes rapides.
+			foreach ( Common.OpenType.FontIdentity id in inList )
+			{
+				if ( quickFaceNames.Contains(id.InvariantFaceName) )
+				{
+					begin.Add(id);
+				}
+				else
+				{
+					outList.Add(id);
+				}
+			}
+
+			// Remet les fontes rapides au début.
+			int ii = 0;
+			foreach ( Common.OpenType.FontIdentity id in begin )
+			{
+				outList.Insert(ii++, id);
+			}
+
+			quickCount = begin.Count;
+			return outList;
+		}
+
 		// Donne la liste de tous les OpenType.FontIdentity des fontes connues.
 		static public System.Collections.ArrayList GetFontList(bool enableSymbols)
 		{

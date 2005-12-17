@@ -87,6 +87,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				TextFieldCombo combo;
 				TextFieldSlider field;
 				CheckButton check;
+				HToolBar toolBar;
 				this.tabIndex = 0;
 
 				// Crée l'onglet "general".
@@ -166,62 +167,64 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				Common.Document.Dialogs.CreateSeparator(bookPeriph);
 
 				// Crée l'onglet "quick".
-				HToolBar toolBar = new HToolBar(bookQuick);
+				Common.Document.Dialogs.CreateTitle(bookQuick, Res.Strings.Dialog.Settings.TabPage.QuickHelp);
+
+				toolBar = new HToolBar(bookQuick);
 				toolBar.Dock = DockStyle.Top;
-				toolBar.DockMargins = new Margins(10, 10, 10, -1);
+				toolBar.DockMargins = new Margins(10, 10, 2, -1);
 				toolBar.TabIndex = tabIndex ++;
 				toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
-				this.buttonFirst = new IconButton(Misc.Icon("First"));
-				this.buttonFirst.Clicked += new MessageEventHandler(this.HandleQuickButtonFirst);
-				this.buttonFirst.TabIndex = tabIndex++;
-				this.buttonFirst.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				toolBar.Items.Add(this.buttonFirst);
-				ToolTip.Default.SetToolTip(this.buttonFirst, Res.Strings.Dialog.Settings.QuickFirst);
+				this.buttonQuickFirst = new IconButton(Misc.Icon("First"));
+				this.buttonQuickFirst.Clicked += new MessageEventHandler(this.HandleButtonQuickFirst);
+				this.buttonQuickFirst.TabIndex = tabIndex++;
+				this.buttonQuickFirst.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				toolBar.Items.Add(this.buttonQuickFirst);
+				ToolTip.Default.SetToolTip(this.buttonQuickFirst, Res.Strings.Dialog.Settings.QuickFirst);
 
-				this.buttonUp = new IconButton(Misc.Icon("Up"));
-				this.buttonUp.Clicked += new MessageEventHandler(this.HandleQuickButtonUp);
-				this.buttonUp.TabIndex = tabIndex++;
-				this.buttonUp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				toolBar.Items.Add(this.buttonUp);
-				ToolTip.Default.SetToolTip(this.buttonUp, Res.Strings.Dialog.Settings.QuickUp);
+				this.buttonQuickUp = new IconButton(Misc.Icon("Up"));
+				this.buttonQuickUp.Clicked += new MessageEventHandler(this.HandleButtonQuickUp);
+				this.buttonQuickUp.TabIndex = tabIndex++;
+				this.buttonQuickUp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				toolBar.Items.Add(this.buttonQuickUp);
+				ToolTip.Default.SetToolTip(this.buttonQuickUp, Res.Strings.Dialog.Settings.QuickUp);
 
-				this.buttonDown = new IconButton(Misc.Icon("Down"));
-				this.buttonDown.Clicked += new MessageEventHandler(this.HandleQuickButtonDown);
-				this.buttonDown.TabIndex = tabIndex++;
-				this.buttonDown.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				toolBar.Items.Add(this.buttonDown);
-				ToolTip.Default.SetToolTip(this.buttonDown, Res.Strings.Dialog.Settings.QuickDown);
+				this.buttonQuickDown = new IconButton(Misc.Icon("Down"));
+				this.buttonQuickDown.Clicked += new MessageEventHandler(this.HandleButtonQuickDown);
+				this.buttonQuickDown.TabIndex = tabIndex++;
+				this.buttonQuickDown.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				toolBar.Items.Add(this.buttonQuickDown);
+				ToolTip.Default.SetToolTip(this.buttonQuickDown, Res.Strings.Dialog.Settings.QuickDown);
 
-				this.buttonLast = new IconButton(Misc.Icon("Last"));
-				this.buttonLast.Clicked += new MessageEventHandler(this.HandleQuickButtonLast);
-				this.buttonLast.TabIndex = tabIndex++;
-				this.buttonLast.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				toolBar.Items.Add(this.buttonLast);
-				ToolTip.Default.SetToolTip(this.buttonLast, Res.Strings.Dialog.Settings.QuickLast);
-
-				toolBar.Items.Add(new IconSeparator());
-
-				this.buttonDefault = new IconButton(Misc.Icon("QuickDefault"));
-				this.buttonDefault.Clicked += new MessageEventHandler(this.HandleQuickButtonDefault);
-				this.buttonDefault.TabIndex = tabIndex++;
-				this.buttonDefault.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				toolBar.Items.Add(this.buttonDefault);
-				ToolTip.Default.SetToolTip(this.buttonDefault, Res.Strings.Dialog.Settings.QuickDefault);
+				this.buttonQuickLast = new IconButton(Misc.Icon("Last"));
+				this.buttonQuickLast.Clicked += new MessageEventHandler(this.HandleButtonQuickLast);
+				this.buttonQuickLast.TabIndex = tabIndex++;
+				this.buttonQuickLast.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				toolBar.Items.Add(this.buttonQuickLast);
+				ToolTip.Default.SetToolTip(this.buttonQuickLast, Res.Strings.Dialog.Settings.QuickLast);
 
 				toolBar.Items.Add(new IconSeparator());
 
-				this.buttonClear = new IconButton(Misc.Icon("QuickClear"));
-				this.buttonClear.Clicked += new MessageEventHandler(this.HandleQuickButtonClear);
-				this.buttonClear.TabIndex = tabIndex++;
-				this.buttonClear.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				toolBar.Items.Add(this.buttonClear);
-				ToolTip.Default.SetToolTip(this.buttonClear, Res.Strings.Dialog.Settings.QuickClear);
+				this.buttonQuickDefault = new IconButton(Misc.Icon("QuickDefault"));
+				this.buttonQuickDefault.Clicked += new MessageEventHandler(this.HandleButtonQuickDefault);
+				this.buttonQuickDefault.TabIndex = tabIndex++;
+				this.buttonQuickDefault.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				toolBar.Items.Add(this.buttonQuickDefault);
+				ToolTip.Default.SetToolTip(this.buttonQuickDefault, Res.Strings.Dialog.Settings.QuickDefault);
+
+				toolBar.Items.Add(new IconSeparator());
+
+				this.buttonQuickClear = new IconButton(Misc.Icon("QuickClear"));
+				this.buttonQuickClear.Clicked += new MessageEventHandler(this.HandleButtonQuickClear);
+				this.buttonQuickClear.TabIndex = tabIndex++;
+				this.buttonQuickClear.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				toolBar.Items.Add(this.buttonQuickClear);
+				ToolTip.Default.SetToolTip(this.buttonQuickClear, Res.Strings.Dialog.Settings.QuickClear);
 
 				toolBar.Items.Add(new IconSeparator());
 
 				this.quickList = new CellTable(bookQuick);
-				this.quickList.Height = 280;
+				this.quickList.Height = 259;
 				this.quickList.DefHeight = 21;
 				this.quickList.Dock = DockStyle.Top;
 				this.quickList.StyleH = CellArrayStyle.Stretch | CellArrayStyle.Separator;
@@ -233,12 +236,42 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.UpdateQuickButtons();
 				
 				// Crée l'onglet "fonts".
+				Common.Document.Dialogs.CreateTitle(bookFonts, Res.Strings.Dialog.Settings.TabPage.FontsHelp);
+
+				toolBar = new HToolBar(bookFonts);
+				toolBar.Dock = DockStyle.Top;
+				toolBar.DockMargins = new Margins(10, 10, 2, -1);
+				toolBar.TabIndex = tabIndex ++;
+				toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+				this.buttonFontsDefault = new IconButton(Misc.Icon("QuickDefault"));
+				this.buttonFontsDefault.Clicked += new MessageEventHandler(this.HandleButtonFontsDefault);
+				this.buttonFontsDefault.TabIndex = tabIndex++;
+				this.buttonFontsDefault.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				toolBar.Items.Add(this.buttonFontsDefault);
+				ToolTip.Default.SetToolTip(this.buttonFontsDefault, Res.Strings.Dialog.Settings.FontsDefault);
+
+				toolBar.Items.Add(new IconSeparator());
+
+				this.buttonFontsClear = new IconButton(Misc.Icon("QuickClear"));
+				this.buttonFontsClear.Clicked += new MessageEventHandler(this.HandleButtonFontsClear);
+				this.buttonFontsClear.TabIndex = tabIndex++;
+				this.buttonFontsClear.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				toolBar.Items.Add(this.buttonFontsClear);
+				ToolTip.Default.SetToolTip(this.buttonFontsClear, Res.Strings.Dialog.Settings.FontsClear);
+
+				toolBar.Items.Add(new IconSeparator());
+
 				this.fontSelector = new Common.Document.Widgets.FontSelector(bookFonts);
-				this.fontSelector.Height = Common.Document.Widgets.FontSelector.BestHeight(310, false);
+				this.fontSelector.Height = Common.Document.Widgets.FontSelector.BestHeight(260, 100000);
 				this.fontSelector.Dock = DockStyle.Top;
-				this.fontSelector.DockMargins = new Margins(10, 10, 10, 0);
-				this.fontSelector.Build(false, null);
-				this.fontSelector.SelectedList(this.globalSettings.QuickFonts);
+				this.fontSelector.DockMargins = new Margins(10, 10, 0, 0);
+				this.fontSelector.FontList = Misc.GetFontList(false);
+				this.fontSelector.SelectedList = this.globalSettings.QuickFonts;
+				this.fontSelector.Build();
+				this.fontSelector.SelectionChanged += new EventHandler(this.HandleFontSelectorSelectionChanged);
+
+				this.UpdateFontsButtons();
 
 				// Crée les onglets "document".
 				TabBook bookDoc = new TabBook(this.window.Root);
@@ -527,17 +560,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if ( sel == -1 )
 			{
-				this.buttonFirst.Enable = false;
-				this.buttonUp.Enable = false;
-				this.buttonDown.Enable = false;
-				this.buttonLast.Enable = false;
+				this.buttonQuickFirst.Enable = false;
+				this.buttonQuickUp.Enable = false;
+				this.buttonQuickDown.Enable = false;
+				this.buttonQuickLast.Enable = false;
 			}
 			else
 			{
-				this.buttonFirst.Enable = (sel > 0);
-				this.buttonUp.Enable = (sel > 0);
-				this.buttonDown.Enable = (sel < this.globalSettings.QuickCommands.Count-1);
-				this.buttonLast.Enable = (sel < this.globalSettings.QuickCommands.Count-1);
+				this.buttonQuickFirst.Enable = (sel > 0);
+				this.buttonQuickUp.Enable = (sel > 0);
+				this.buttonQuickDown.Enable = (sel < this.globalSettings.QuickCommands.Count-1);
+				this.buttonQuickLast.Enable = (sel < this.globalSettings.QuickCommands.Count-1);
 			}
 		}
 
@@ -699,7 +732,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.editor.UpdateQuickCommands();
 		}
 
-		private void HandleQuickButtonDefault(object sender, MessageEventArgs e)
+		private void HandleButtonQuickDefault(object sender, MessageEventArgs e)
 		{
 			int sel = this.quickList.SelectedRow;
 
@@ -710,7 +743,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.editor.UpdateQuickCommands();
 		}
 
-		private void HandleQuickButtonClear(object sender, MessageEventArgs e)
+		private void HandleButtonQuickClear(object sender, MessageEventArgs e)
 		{
 			int sel = this.quickList.SelectedRow;
 
@@ -728,28 +761,76 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.editor.UpdateQuickCommands();
 		}
 
-		private void HandleQuickButtonFirst(object sender, MessageEventArgs e)
+		private void HandleButtonQuickFirst(object sender, MessageEventArgs e)
 		{
 			int sel = this.quickList.SelectedRow;
 			this.MoveQuickCommand(sel, 0);
 		}
 
-		private void HandleQuickButtonUp(object sender, MessageEventArgs e)
+		private void HandleButtonQuickUp(object sender, MessageEventArgs e)
 		{
 			int sel = this.quickList.SelectedRow;
 			this.MoveQuickCommand(sel, sel-1);
 		}
 
-		private void HandleQuickButtonDown(object sender, MessageEventArgs e)
+		private void HandleButtonQuickDown(object sender, MessageEventArgs e)
 		{
 			int sel = this.quickList.SelectedRow;
 			this.MoveQuickCommand(sel, sel+1);
 		}
 
-		private void HandleQuickButtonLast(object sender, MessageEventArgs e)
+		private void HandleButtonQuickLast(object sender, MessageEventArgs e)
 		{
 			int sel = this.quickList.SelectedRow;
 			this.MoveQuickCommand(sel, this.globalSettings.QuickCommands.Count-1);
+		}
+		#endregion
+
+
+		#region QuickFonts
+		// Met à jour les boutons des polices rapides.
+		protected void UpdateFontsButtons()
+		{
+			bool def = false;
+			bool clr = false;
+
+			if ( this.globalSettings.QuickFonts.Count == 0 )
+			{
+				def = true;
+				clr = false;
+			}
+			else
+			{
+				clr = true;
+				System.Collections.ArrayList defList = new System.Collections.ArrayList();
+				GlobalSettings.DefaultQuickFonts(defList);
+				foreach ( string font in this.globalSettings.QuickFonts )
+				{
+					if ( !defList.Contains(font) )  def = true;
+				}
+			}
+			
+			this.buttonFontsDefault.Enable = def;
+			this.buttonFontsClear.Enable = clr;
+		}
+
+		private void HandleButtonFontsDefault(object sender, MessageEventArgs e)
+		{
+			GlobalSettings.DefaultQuickFonts(this.globalSettings.QuickFonts);
+			this.UpdateFontsButtons();
+			this.fontSelector.UpdateList();
+		}
+
+		private void HandleButtonFontsClear(object sender, MessageEventArgs e)
+		{
+			this.globalSettings.QuickFonts.Clear();
+			this.UpdateFontsButtons();
+			this.fontSelector.UpdateList();
+		}
+
+		private void HandleFontSelectorSelectionChanged(object sender)
+		{
+			this.UpdateFontsButtons();
 		}
 		#endregion
 
@@ -758,11 +839,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool							ignoreChange = false;
 		protected CellTable						quickList;
 		protected Common.Document.Widgets.FontSelector fontSelector;
-		protected IconButton					buttonDefault;
-		protected IconButton					buttonClear;
-		protected IconButton					buttonFirst;
-		protected IconButton					buttonUp;
-		protected IconButton					buttonDown;
-		protected IconButton					buttonLast;
+		protected IconButton					buttonQuickDefault;
+		protected IconButton					buttonQuickClear;
+		protected IconButton					buttonQuickFirst;
+		protected IconButton					buttonQuickUp;
+		protected IconButton					buttonQuickDown;
+		protected IconButton					buttonQuickLast;
+		protected IconButton					buttonFontsDefault;
+		protected IconButton					buttonFontsClear;
 	}
 }
