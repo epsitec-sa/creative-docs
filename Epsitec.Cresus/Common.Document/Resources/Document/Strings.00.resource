@@ -155,6 +155,13 @@
 	<data name="Dialog.Point.ArrowMoveX">Déplacement horizontal</data>
 	<data name="Dialog.Point.ArrowMoveY">Déplacement vertical</data>
 
+	<data name="Units.Short.Millimeter">mm</data>
+	<data name="Units.Short.Centimeter">cm</data>
+	<data name="Units.Short.Inch">in</data>
+	<data name="Units.Long.Millimeter">millimètres</data>
+	<data name="Units.Long.Centimeter">centimètres</data>
+	<data name="Units.Long.Inch">pouces</data>
+
 	<data name="Container.Guides.RadioGlobal">Globaux</data>
 	<data name="Container.Guides.RadioPage">Page courante</data>
 	<data name="Container.Guides.Header.Type">Type</data>

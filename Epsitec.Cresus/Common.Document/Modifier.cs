@@ -507,21 +507,29 @@ namespace Epsitec.Common.Document
 				case RealUnitType.DimensionMillimeter:
 					this.realScale = 10.0;
 					this.realPrecision = 0.01;
+					this.realShortNameUnitDimension = Res.Strings.Units.Short.Millimeter;
+					this.realLongNameUnitDimension  = Res.Strings.Units.Long.Millimeter;
 					break;
 
 				case RealUnitType.DimensionCentimeter:
 					this.realScale = 100.0;
 					this.realPrecision = 0.001;
+					this.realShortNameUnitDimension = Res.Strings.Units.Short.Centimeter;
+					this.realLongNameUnitDimension  = Res.Strings.Units.Long.Centimeter;
 					break;
 
 				case RealUnitType.DimensionInch:
 					this.realScale = 254.0;
 					this.realPrecision = 0.0001;
+					this.realShortNameUnitDimension = Res.Strings.Units.Short.Inch;
+					this.realLongNameUnitDimension  = Res.Strings.Units.Long.Inch;
 					break;
 
 				default:
 					this.realScale = 1.0;
 					this.realPrecision = 1.0;
+					this.realShortNameUnitDimension = "";
+					this.realLongNameUnitDimension  = "";
 					break;
 			}
 
@@ -537,6 +545,24 @@ namespace Epsitec.Common.Document
 			get
 			{
 				return this.realScale;
+			}
+		}
+
+		// Nom compact de l'unité de dimension.
+		public string ShortNameUnitDimension
+		{
+			get
+			{
+				return this.realShortNameUnitDimension;
+			}
+		}
+
+		// Nom complet de l'unité de dimension.
+		public string LongNameUnitDimension
+		{
+			get
+			{
+				return this.realLongNameUnitDimension;
 			}
 		}
 
@@ -5840,6 +5866,8 @@ namespace Epsitec.Common.Document
 		protected RealUnitType					realUnitDimension;
 		protected double						realScale;
 		protected double						realPrecision;
+		protected string						realShortNameUnitDimension;
+		protected string						realLongNameUnitDimension;
 		protected Point							duplicateMove;
 		protected Point							arrowMove;
 		protected double						arrowMoveMul;

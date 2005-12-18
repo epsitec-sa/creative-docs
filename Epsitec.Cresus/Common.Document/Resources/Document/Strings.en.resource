@@ -155,6 +155,13 @@
 	<data name="Dialog.Point.ArrowMoveX">Horizontal offset</data>
 	<data name="Dialog.Point.ArrowMoveY">Vertical offset</data>
 
+	<data name="Units.Short.Millimeter">mm</data>
+	<data name="Units.Short.Centimeter">cm</data>
+	<data name="Units.Short.Inch">in</data>
+	<data name="Units.Long.Millimeter">millimeters</data>
+	<data name="Units.Long.Centimeter">centimeters</data>
+	<data name="Units.Long.Inch">inches</data>
+
 	<data name="Container.Guides.RadioGlobal">Global</data>
 	<data name="Container.Guides.RadioPage">Current page</data>
 	<data name="Container.Guides.Header.Type">Type</data>

@@ -24,6 +24,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldLeading.IsUnitPercent = true;
 			this.fieldLeading.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 
+			this.buttonLeadingMenu = this.CreateComboButton(null, Res.Strings.TextPanel.Leading.Tooltip.Leading, new MessageEventHandler(this.HandleButtonLeadingMenuClicked));
+
 			this.buttonLeadingMinus = this.CreateIconButton(Misc.Icon("ParagraphLeadingMinus"),      Res.Strings.Action.ParagraphLeadingMinus,         new MessageEventHandler(this.HandleButtonLeadingMinusClicked), false);
 			this.buttonLeadingPlus  = this.CreateIconButton(Misc.Icon("ParagraphLeadingPlus"),       Res.Strings.Action.ParagraphLeadingPlus,          new MessageEventHandler(this.HandleButtonLeadingPlusClicked), false);
 			this.buttonAlignFirst   = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignFirst"), Res.Strings.TextPanel.Leading.Tooltip.AlignFirst, new MessageEventHandler(this.HandleButtonAlignFirstClicked));
@@ -106,14 +108,21 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Left = rect.Left;
 					r.Width = 69;
 					this.fieldLeading.Bounds = r;
+					r.Offset(69, 0);
+					r.Width = 20;
+					this.buttonLeadingMenu.Bounds = r;
+					r.Offset(20, 0);
+					this.buttonLeadingMinus.Bounds = r;
+					r.Offset(20, 0);
+					this.buttonLeadingPlus.Bounds = r;
+
+					r.Left = rect.Right-20;
+					r.Width = 20;
+					this.buttonClear.Bounds = r;
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonLeadingMinus.Bounds = r;
-					r.Offset(20, 0);
-					this.buttonLeadingPlus.Bounds = r;
-					r.Offset(20+10, 0);
 					this.buttonAlignFirst.Bounds = r;
 					this.buttonAlignFirst.Visibility = true;
 					r.Offset(20, 0);
@@ -122,10 +131,6 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Offset(20+5, 0);
 					this.buttonSettings.Bounds = r;
 					this.buttonSettings.Visibility = true;
-
-					r.Left = rect.Right-20;
-					r.Width = 20;
-					this.buttonClear.Bounds = r;
 				}
 				else
 				{
@@ -134,6 +139,8 @@ namespace Epsitec.Common.Document.TextPanels
 					this.fieldLeading.Bounds = r;
 					r.Offset(69, 0);
 					r.Width = 20;
+					this.buttonLeadingMenu.Bounds = r;
+					r.Offset(20, 0);
 					this.buttonLeadingMinus.Bounds = r;
 					r.Offset(20, 0);
 					this.buttonLeadingPlus.Bounds = r;
@@ -165,6 +172,8 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fieldLeading.Bounds = r;
 				r.Offset(69, 0);
 				r.Width = 20;
+				this.buttonLeadingMenu.Bounds = r;
+				r.Offset(20, 0);
 				this.buttonLeadingMinus.Bounds = r;
 				r.Offset(20, 0);
 				this.buttonLeadingPlus.Bounds = r;
@@ -267,6 +276,16 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
+		private void HandleButtonLeadingMenuClicked(object sender, MessageEventArgs e)
+		{
+			Button button = sender as Button;
+			if ( button == null )  return;
+			Point pos = button.MapClientToScreen(new Point(-48, 0));
+			VMenu menu = this.CreateMenu(new MessageEventHandler(this.HandleMenuPressed));
+			menu.Host = this;
+			menu.ShowAsContextMenu(this.Window, pos);
+		}
+
 		private void HandleButtonLeadingMinusClicked(object sender, MessageEventArgs e)
 		{
 			this.document.Wrappers.IncrementParagraphLeading(-1);
@@ -315,8 +334,114 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
+		#region Menu
+		// Construit le menu pour choisir une page.
+		protected VMenu CreateMenu(MessageEventHandler message)
+		{
+			VMenu menu = new VMenu();
+
+			this.AddMenuItem(menu,  "50%", message);
+			this.AddMenuItem(menu,  "80%", message);
+			this.AddMenuItem(menu, "100%", message);
+			this.AddMenuItem(menu, "150%", message);
+			this.AddMenuItem(menu, "200%", message);
+			this.AddMenuItem(menu, "300%", message);
+
+			menu.Items.Add(new MenuSeparator());
+
+			if ( this.document.Modifier.RealUnitDimension == RealUnitType.DimensionInch )
+			{
+				this.AddMenuItem(menu, 0.05*254, message);  // 0.05in
+				this.AddMenuItem(menu, 0.10*254, message);
+				this.AddMenuItem(menu, 0.15*254, message);
+				this.AddMenuItem(menu, 0.20*254, message);
+				this.AddMenuItem(menu, 0.30*254, message);
+				this.AddMenuItem(menu, 0.40*254, message);
+				this.AddMenuItem(menu, 0.50*254, message);
+				this.AddMenuItem(menu, 0.60*254, message);
+				this.AddMenuItem(menu, 0.80*254, message);
+				this.AddMenuItem(menu, 0.10*254, message);
+				this.AddMenuItem(menu, 0.15*254, message);
+				this.AddMenuItem(menu, 0.20*254, message);
+			}
+			else
+			{
+				this.AddMenuItem(menu,  10.0, message);  // 1mm
+				this.AddMenuItem(menu,  20.0, message);
+				this.AddMenuItem(menu,  30.0, message);
+				this.AddMenuItem(menu,  40.0, message);
+				this.AddMenuItem(menu,  60.0, message);
+				this.AddMenuItem(menu,  80.0, message);
+				this.AddMenuItem(menu, 100.0, message);
+				this.AddMenuItem(menu, 150.0, message);
+				this.AddMenuItem(menu, 200.0, message);
+				this.AddMenuItem(menu, 300.0, message);
+				this.AddMenuItem(menu, 400.0, message);
+				this.AddMenuItem(menu, 500.0, message);
+			}
+
+			menu.AdjustSize();
+			return menu;
+		}
+
+		// Ajoute une case au menu.
+		protected void AddMenuItem(VMenu menu, double distance, MessageEventHandler message)
+		{
+			string text = this.document.Modifier.RealToString(distance);
+			string unit = string.Concat(text, " ", this.document.Modifier.ShortNameUnitDimension);
+			this.AddMenuItem(menu, unit, text, message);
+		}
+
+		// Ajoute une case au menu.
+		protected void AddMenuItem(VMenu menu, string text, MessageEventHandler message)
+		{
+			this.AddMenuItem(menu, text, text, message);
+		}
+
+		// Ajoute une case au menu.
+		protected void AddMenuItem(VMenu menu, string text, string name, MessageEventHandler message)
+		{
+			MenuItem item = new MenuItem("", "", text, "", name);
+
+			if ( message != null )
+			{
+				item.Pressed += message;
+			}
+
+			menu.Items.Add(item);
+		}
+
+		private void HandleMenuPressed(object sender, MessageEventArgs e)
+		{
+			MenuItem item = sender as MenuItem;
+			string text = item.Name;
+
+			double leading = 0;
+			Common.Text.Properties.SizeUnits units = Common.Text.Properties.SizeUnits.Points;
+
+			if ( text.EndsWith("%") )
+			{
+				text = text.Substring(0, text.Length-1);
+				leading = double.Parse(text, System.Globalization.CultureInfo.CurrentUICulture) / 100;
+				units = Common.Text.Properties.SizeUnits.Percent;
+			}
+			else
+			{
+				leading = double.Parse(text, System.Globalization.CultureInfo.CurrentUICulture) * this.document.Modifier.RealScale;
+				units = Common.Text.Properties.SizeUnits.Points;
+			}
+
+			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.Defined.Leading = leading;
+			this.document.ParagraphWrapper.Defined.LeadingUnits = units;
+			this.document.ParagraphWrapper.ResumeSynchronisations();
+		}
+		#endregion
+
+		
 		protected Button					buttonUnits;
 		protected Widgets.TextFieldLabel	fieldLeading;
+		protected GlyphButton				buttonLeadingMenu;
 		protected IconButton				buttonLeadingMinus;
 		protected IconButton				buttonLeadingPlus;
 		protected IconButton				buttonAlignFirst;
