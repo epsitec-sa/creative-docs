@@ -225,8 +225,21 @@ namespace Epsitec.Common.Document.Widgets
 
 			if ( message.Type == MessageType.KeyPress )
 			{
-				string start = string.Format("{0}", (char)message.KeyChar);
-				int first = this.StartToRank(start);
+				char key = (char)message.KeyChar;
+				int first = -1;
+
+				if ( (key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') )
+				{
+					string start = string.Format("{0}", key);
+					first = this.StartToRank(start.ToUpper());
+				}
+
+				if ( key >= '1' && key <= '9' )
+				{
+					int i = (int) key-1;
+					first = System.Math.Min(i, this.quickCount-1);
+				}
+
 				if ( first != -1 )
 				{
 					this.FirstLine = first;
@@ -334,7 +347,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected int StartToRank(string start)
 		{
-			for ( int i=0 ; i<this.fontList.Count ; i++ )
+			for ( int i=this.quickCount ; i<this.fontList.Count ; i++ )
 			{
 				Common.OpenType.FontIdentity id = this.fontList[i] as Common.OpenType.FontIdentity;
 				if ( id.InvariantFaceName.StartsWith(start) )  return i;
