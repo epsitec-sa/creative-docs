@@ -314,6 +314,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Menus\FontSizeMenu.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Menus\ZoomMenu.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

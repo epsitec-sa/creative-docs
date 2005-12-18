@@ -614,7 +614,7 @@ namespace Epsitec.Common.Document.TextPanels
 			Button button = sender as Button;
 			if ( button == null )  return;
 			Point pos = button.MapClientToScreen(new Point(-48, 0));
-			VMenu menu = this.CreateMenu(new MessageEventHandler(this.HandleMenuPressed));
+			VMenu menu = this.CreateMenu();
 			menu.Host = this;
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
@@ -701,10 +701,8 @@ namespace Epsitec.Common.Document.TextPanels
 		
 		#region Menu
 		// Construit le menu pour choisir une page.
-		protected VMenu CreateMenu(MessageEventHandler message)
+		protected VMenu CreateMenu()
 		{
-			VMenu menu = new VMenu();
-
 			double size = this.document.TextWrapper.Active.FontSize;
 			Text.Properties.SizeUnits units = this.document.TextWrapper.Active.Units;
 			if ( this.document.TextWrapper.Defined.IsFontSizeDefined )
@@ -714,64 +712,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			bool percent = (units == Common.Text.Properties.SizeUnits.Percent);
 
-			this.AddMenuItem(menu,  "50%", (size == 0.50 && percent), message);
-			this.AddMenuItem(menu,  "75%", (size == 0.75 && percent), message);
-			this.AddMenuItem(menu, "100%", (size == 1.00 && percent), message);
-			this.AddMenuItem(menu, "150%", (size == 1.50 && percent), message);
-			this.AddMenuItem(menu, "200%", (size == 2.00 && percent), message);
-			this.AddMenuItem(menu, "300%", (size == 3.00 && percent), message);
-
-			menu.Items.Add(new MenuSeparator());
-
-			this.AddMenuItem(menu,  8, size, !percent, message);
-			this.AddMenuItem(menu,  9, size, !percent, message);
-			this.AddMenuItem(menu, 10, size, !percent, message);
-			this.AddMenuItem(menu, 11, size, !percent, message);
-			this.AddMenuItem(menu, 12, size, !percent, message);
-			this.AddMenuItem(menu, 14, size, !percent, message);
-			this.AddMenuItem(menu, 16, size, !percent, message);
-			this.AddMenuItem(menu, 20, size, !percent, message);
-			this.AddMenuItem(menu, 26, size, !percent, message);
-			this.AddMenuItem(menu, 36, size, !percent, message);
-			this.AddMenuItem(menu, 48, size, !percent, message);
-			this.AddMenuItem(menu, 72, size, !percent, message);
-
-			menu.AdjustSize();
-			return menu;
-		}
-
-		// Ajoute une case au menu.
-		protected void AddMenuItem(VMenu menu, double value, double current, bool active, MessageEventHandler message)
-		{
-			string text = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-			if ( active )
-			{
-				active = (value*Modifier.fontSizeScale == current);
-			}
-			
-			this.AddMenuItem(menu, text, active, message);
-		}
-
-		// Ajoute une case au menu.
-		protected void AddMenuItem(VMenu menu, string text, bool active, MessageEventHandler message)
-		{
-			string name = text;
-			string icon = Misc.Icon("RadioNo");
-			if ( active )
-			{
-				icon = Misc.Icon("RadioYes");
-				text = Misc.Bold(text);
-			}
-
-			MenuItem item = new MenuItem("", icon, text, "", name);
-
-			if ( message != null )
-			{
-				item.Pressed += message;
-			}
-
-			menu.Items.Add(item);
+			return Menus.FontSizeMenu.CreateFontSizeMenu(size, percent?"%":"", new MessageEventHandler(this.HandleMenuPressed));
 		}
 
 		private void HandleMenuPressed(object sender, MessageEventArgs e)
@@ -785,12 +726,12 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( text.EndsWith("%") )
 			{
 				text = text.Substring(0, text.Length-1);
-				size = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture) / 100;
+				size = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
 				units = Common.Text.Properties.SizeUnits.Percent;
 			}
 			else
 			{
-				size = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture) * Modifier.fontSizeScale;
+				size = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
 
