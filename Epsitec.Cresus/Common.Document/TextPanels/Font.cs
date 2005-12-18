@@ -43,6 +43,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontSize.IsUnitPercent = true;
 			this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 
+			this.buttonSizeMenu = this.CreateComboButton(null, Res.Strings.TextPanel.Font.Tooltip.Size, new MessageEventHandler(this.HandleButtonSizeMenuClicked));
+
 			this.fontColor = this.CreateColorSample(Res.Strings.Action.FontColor, new MessageEventHandler(this.HandleFieldColorClicked), new EventHandler(this.HandleFieldColorChanged));
 
 			this.buttonSizeMinus = this.CreateIconButton(Misc.Icon("FontSizeMinus"), Res.Strings.Action.FontSizeMinus, new MessageEventHandler(this.HandleButtonSizeMinusClicked), false);
@@ -298,6 +300,9 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontSize.Visibility = true;
 				r.Offset(69, 0);
 				r.Width = 20;
+				this.buttonSizeMenu.Bounds = r;
+				this.buttonSizeMenu.Visibility = true;
+				r.Offset(20, 0);
 				this.buttonSizeMinus.Bounds = r;
 				this.buttonSizeMinus.Visibility = true;
 				r.Offset(20, 0);
@@ -353,6 +358,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontStyle.Visibility = false;
 				this.fontFeatures.Visibility = false;
 				this.fontGlue.Visibility = false;
+				this.buttonSizeMenu.Visibility = false;
 				this.buttonSizeMinus.Visibility = false;
 				this.buttonSizePlus.Visibility = false;
 				this.fontColor.Visibility = false;
@@ -603,6 +609,16 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
+		private void HandleButtonSizeMenuClicked(object sender, MessageEventArgs e)
+		{
+			Button button = sender as Button;
+			if ( button == null )  return;
+			Point pos = button.MapClientToScreen(new Point(-48, 0));
+			VMenu menu = this.CreateMenu(new MessageEventHandler(this.HandleMenuPressed));
+			menu.Host = this;
+			menu.ShowAsContextMenu(this.Window, pos);
+		}
+
 		private void HandleButtonSizeMinusClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
@@ -683,6 +699,86 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
+		#region Menu
+		// Construit le menu pour choisir une page.
+		protected VMenu CreateMenu(MessageEventHandler message)
+		{
+			VMenu menu = new VMenu();
+
+			this.AddMenuItem(menu,  "50%", message);
+			this.AddMenuItem(menu,  "75%", message);
+			this.AddMenuItem(menu, "100%", message);
+			this.AddMenuItem(menu, "150%", message);
+			this.AddMenuItem(menu, "200%", message);
+			this.AddMenuItem(menu, "300%", message);
+
+			menu.Items.Add(new MenuSeparator());
+
+			this.AddMenuItem(menu,  8, message);
+			this.AddMenuItem(menu,  9, message);
+			this.AddMenuItem(menu, 10, message);
+			this.AddMenuItem(menu, 11, message);
+			this.AddMenuItem(menu, 12, message);
+			this.AddMenuItem(menu, 14, message);
+			this.AddMenuItem(menu, 16, message);
+			this.AddMenuItem(menu, 20, message);
+			this.AddMenuItem(menu, 26, message);
+			this.AddMenuItem(menu, 36, message);
+			this.AddMenuItem(menu, 48, message);
+			this.AddMenuItem(menu, 72, message);
+
+			menu.AdjustSize();
+			return menu;
+		}
+
+		// Ajoute une case au menu.
+		protected void AddMenuItem(VMenu menu, double value, MessageEventHandler message)
+		{
+			string text = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+			this.AddMenuItem(menu, text, message);
+		}
+
+		// Ajoute une case au menu.
+		protected void AddMenuItem(VMenu menu, string text, MessageEventHandler message)
+		{
+			MenuItem item = new MenuItem("", "", text, "", text);
+
+			if ( message != null )
+			{
+				item.Pressed += message;
+			}
+
+			menu.Items.Add(item);
+		}
+
+		private void HandleMenuPressed(object sender, MessageEventArgs e)
+		{
+			MenuItem item = sender as MenuItem;
+			string text = item.Name;
+
+			double size;
+			Common.Text.Properties.SizeUnits units;
+
+			if ( text.EndsWith("%") )
+			{
+				text = text.Substring(0, text.Length-1);
+				size = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture) / 100;
+				units = Common.Text.Properties.SizeUnits.Percent;
+			}
+			else
+			{
+				size = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture) * Modifier.fontSizeScale;
+				units = Common.Text.Properties.SizeUnits.Points;
+			}
+
+			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.Defined.FontSize = size;
+			this.document.TextWrapper.Defined.Units = units;
+			this.document.TextWrapper.ResumeSynchronisations();
+		}
+		#endregion
+
+		
 		protected Widgets.TextFieldFontFace fontFace;
 		protected IconButton				buttonSettings;
 		protected TextFieldCombo			fontStyle;
@@ -690,6 +786,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected Widgets.TextFieldLabel	fontSize;
 		protected ColorSample				fontColor;
 		protected Widgets.TextFieldLabel	fontGlue;
+		protected GlyphButton				buttonSizeMenu;
 		protected IconButton				buttonSizeMinus;
 		protected IconButton				buttonSizePlus;
 		protected IconButton				buttonClear;

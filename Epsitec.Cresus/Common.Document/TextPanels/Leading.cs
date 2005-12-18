@@ -416,18 +416,18 @@ namespace Epsitec.Common.Document.TextPanels
 			MenuItem item = sender as MenuItem;
 			string text = item.Name;
 
-			double leading = 0;
-			Common.Text.Properties.SizeUnits units = Common.Text.Properties.SizeUnits.Points;
+			double leading;
+			Common.Text.Properties.SizeUnits units;
 
 			if ( text.EndsWith("%") )
 			{
 				text = text.Substring(0, text.Length-1);
-				leading = double.Parse(text, System.Globalization.CultureInfo.CurrentUICulture) / 100;
+				leading = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture) / 100;
 				units = Common.Text.Properties.SizeUnits.Percent;
 			}
 			else
 			{
-				leading = double.Parse(text, System.Globalization.CultureInfo.CurrentUICulture) * this.document.Modifier.RealScale;
+				leading = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture) * this.document.Modifier.RealScale;
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
 
