@@ -116,23 +116,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				fontFaceLabel.Anchor = AnchorStyles.TopLeft;
 				fontFaceLabel.AnchorMargins = new Margins(6, 0, 6+3, 0);
 
-				this.fieldFontFace = new TextFieldCombo(bookArray);
+				this.fieldFontFace = new Common.Document.Widgets.TextFieldFontFace(bookArray);
 				this.fieldFontFace.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
 				this.fieldFontFace.AnchorMargins = new Margins(6+50, 6+20+3, 6, 0);
 				this.fieldFontFace.IsReadOnly = true;
 				this.fieldFontFace.TabIndex = tabIndex++;
 				this.fieldFontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				Misc.AddFontList(this.fieldFontFace, true);
 				this.fieldFontFace.Text = this.fontFace;
-				if ( this.fieldFontFace.SelectedIndex < 0 )
-				{
-					this.fieldFontFace.Text = "Arial";
-				}
-				if ( this.fieldFontFace.SelectedIndex < 0 )
-				{
-					this.fieldFontFace.SelectedIndex = 0;
-				}
-				this.fieldFontFace.SelectedIndexChanged += new EventHandler(this.HandleFontFaceChanged);
+				this.fieldFontFace.OpeningCombo += new CancelEventHandler(this.HandleFontFaceOpeningCombo);
+				this.fieldFontFace.TextChanged += new EventHandler(this.HandleFontFaceChanged);
 
 				StaticText fontStyleLabel = new StaticText(bookArray);
 				fontStyleLabel.Text = Res.Strings.Dialog.Glyphs.FontStyle;
@@ -599,6 +591,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
+			this.ignoreChanged = true;
+
 			this.fontFace = fontFace;
 			this.fieldFontFace.Text = this.fontFace;
 
@@ -610,6 +604,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.array.SelectedIndex = this.array.UnicodeToIndex(this.arrayProofCode);
 			this.array.ShowSelectedCell();
+
+			this.ignoreChanged = false;
 		}
 
 		// Change le style de la police.
@@ -640,9 +636,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateMinusPlus();
 		}
 
+		// Le combo pour les polices va être ouvert.
+		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
+		{
+			int quickCount;
+			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.editor.GlobalSettings.QuickFonts, out quickCount);
+
+			this.fieldFontFace.FontList = fontList;
+			this.fieldFontFace.QuickCount = quickCount;
+		}
+
 		// Police changée.
 		private void HandleFontFaceChanged(object sender)
 		{
+			if ( this.ignoreChanged )  return;
 			this.SetFontFace(this.fieldFontFace.Text);
 		}
 
@@ -661,6 +668,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		// Style de la police changé.
 		private void HandleFontStyleChanged(object sender)
 		{
+			if ( this.ignoreChanged )  return;
 			this.SetFontStyle(this.fieldFontStyle.Text);
 		}
 
@@ -792,30 +800,30 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		protected string			fontFace;
-		protected string			fontStyle;
-		protected readonly int		maxFamiliy = 10;
-		protected int[]				listSelectedIndex;
-		protected int				arrayProofCode = -1;
-		protected bool				ignoreChanged = false;
+		protected string				fontFace;
+		protected string				fontStyle;
+		protected readonly int			maxFamiliy = 10;
+		protected int[]					listSelectedIndex;
+		protected int					arrayProofCode = -1;
+		protected bool					ignoreChanged = false;
 
-		protected TabBook			book;
+		protected TabBook				book;
 
-		protected TextFieldCombo	family;
-		protected ScrollList		list;
+		protected TextFieldCombo		family;
+		protected ScrollList			list;
 
-		protected TextFieldCombo	fieldFontFace;
-		protected TextFieldCombo	fieldFontStyle;
-		protected GlyphButton		currentFont;
-		protected GlyphArray		array;
-		protected TextField			status;
-		protected Button			minus;
-		protected Button			plus;
+		protected Common.Document.Widgets.TextFieldFontFace fieldFontFace;
+		protected TextFieldCombo		fieldFontStyle;
+		protected GlyphButton			currentFont;
+		protected GlyphArray			array;
+		protected TextField				status;
+		protected Button				minus;
+		protected Button				plus;
 
-		protected GlyphArray		alternatesArray;
-		protected TextField			alternatesStatus;
-		protected Button			alternatesMinus;
-		protected Button			alternatesPlus;
-		protected bool				alternatesDirty = true;
+		protected GlyphArray			alternatesArray;
+		protected TextField				alternatesStatus;
+		protected Button				alternatesMinus;
+		protected Button				alternatesPlus;
+		protected bool					alternatesDirty = true;
 	}
 }
