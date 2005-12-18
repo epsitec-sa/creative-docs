@@ -1,7 +1,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Common.Document
+namespace Epsitec.Common.Document.Menus
 {
 	/// <summary>
 	/// La classe ContextMenuItem représente une case du menu contextuel.
