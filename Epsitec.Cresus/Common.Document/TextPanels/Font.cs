@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
 
-			this.buttonSettings = this.CreateIconButton(Misc.Icon("Settings"), Res.Strings.Action.Settings, new MessageEventHandler(this.HandleButtonSettingsClicked), false);
+			this.buttonFilter = this.CreateIconButton("TextFontFilter");
 
 			this.fontStyle = new TextFieldCombo(this);
 			this.fontStyle.IsReadOnly = true;
@@ -36,6 +36,7 @@ namespace Epsitec.Common.Document.TextPanels
 			ToolTip.Default.SetToolTip(this.fontStyle, Res.Strings.TextPanel.Font.Tooltip.Style);
 
 			this.fontFeatures = this.CreateIconButton(Misc.Icon("FontFeatures"), Res.Strings.TextPanel.Font.Tooltip.Features, new MessageEventHandler(this.HandleFeaturesClicked));
+			this.buttonSettings = this.CreateIconButton(Misc.Icon("Settings"), Res.Strings.Action.Settings, new MessageEventHandler(this.HandleButtonSettingsClicked), false);
 
 			this.fontSize = this.CreateTextFieldLabel(Res.Strings.TextPanel.Font.Tooltip.Size, Res.Strings.TextPanel.Font.Short.Size, Res.Strings.TextPanel.Font.Long.Size, 0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, new EventHandler(this.HandleSizeChanged));
 			this.fontSize.SetRangeFontSize();
@@ -291,7 +292,21 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontFace.Bounds = r;
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
+				this.buttonFilter.Bounds = r;
+
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Width = 129;
+				this.fontStyle.Bounds = r;
+				this.fontStyle.Visibility = true;
+				r.Offset(129+5, 0);
+				r.Width = 20;
+				this.fontFeatures.Bounds = r;
+				this.fontFeatures.Visibility = true;
+				r.Left = rect.Right-20;
+				r.Right = rect.Right;
 				this.buttonSettings.Bounds = r;
+				this.buttonSettings.Visibility = true;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -312,16 +327,6 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Width = 40;
 				this.fontColor.Bounds = r;
 				this.fontColor.Visibility = true;
-
-				r.Offset(0, -25);
-				r.Left = rect.Left;
-				r.Width = 129;
-				this.fontStyle.Bounds = r;
-				this.fontStyle.Visibility = true;
-				r.Offset(129+5, 0);
-				r.Width = 20;
-				this.fontFeatures.Bounds = r;
-				this.fontFeatures.Visibility = true;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -352,11 +357,12 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontFace.Bounds = r;
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
-				this.buttonSettings.Bounds = r;
+				this.buttonFilter.Bounds = r;
 
 				this.fontSize.Visibility = false;
 				this.fontStyle.Visibility = false;
 				this.fontFeatures.Visibility = false;
+				this.buttonSettings.Visibility = false;
 				this.fontGlue.Visibility = false;
 				this.buttonSizeMenu.Visibility = false;
 				this.buttonSizeMinus.Visibility = false;
@@ -506,8 +512,10 @@ namespace Epsitec.Common.Document.TextPanels
 		// Le combo pour les polices va être ouvert.
 		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
 		{
+			bool quickOnly = this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
+			string selectedFontFace = this.document.TextWrapper.Active.FontFace;
 			int quickCount;
-			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.document.GlobalSettings.QuickFonts, out quickCount);
+			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.document.GlobalSettings.QuickFonts, quickOnly, selectedFontFace, out quickCount);
 
 			this.fontFace.FontList = fontList;
 			this.fontFace.QuickCount = quickCount;
@@ -613,8 +621,9 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			Button button = sender as Button;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(-48, 0));
+			Point pos = button.MapClientToScreen(new Point(button.Width, 0));
 			VMenu menu = this.CreateMenu();
+			pos.X -= menu.Width;
 			menu.Host = this;
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
@@ -700,7 +709,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		
 		#region Menu
-		// Construit le menu pour choisir une page.
+		// Construit le menu pour choisir une taille.
 		protected VMenu CreateMenu()
 		{
 			double size = this.document.TextWrapper.Active.FontSize;
@@ -744,9 +753,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 		
 		protected Widgets.TextFieldFontFace fontFace;
-		protected IconButton				buttonSettings;
+		protected IconButton				buttonFilter;
 		protected TextFieldCombo			fontStyle;
 		protected IconButton				fontFeatures;
+		protected IconButton				buttonSettings;
 		protected Widgets.TextFieldLabel	fontSize;
 		protected ColorSample				fontColor;
 		protected Widgets.TextFieldLabel	fontGlue;

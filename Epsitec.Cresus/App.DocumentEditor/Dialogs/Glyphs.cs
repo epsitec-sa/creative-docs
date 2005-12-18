@@ -639,8 +639,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		// Le combo pour les polices va être ouvert.
 		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
 		{
+			bool quickOnly = false;
+			if ( this.editor.IsCurrentDocument )
+			{
+				quickOnly = this.editor.CurrentDocument.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
+			}
 			int quickCount;
-			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.editor.GlobalSettings.QuickFonts, out quickCount);
+			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.editor.GlobalSettings.QuickFonts, quickOnly, this.fontFace, out quickCount);
 
 			this.fieldFontFace.FontList = fontList;
 			this.fieldFontFace.QuickCount = quickCount;

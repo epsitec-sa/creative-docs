@@ -852,6 +852,29 @@ namespace Epsitec.Common.Document
 				}
 			}
 		}
+
+		// Affichage réduit des caractères (seulement les caractères rapides).
+		public bool TextFontFilter
+		{
+			get
+			{
+				return this.textFontFilter;
+			}
+
+			set
+			{
+				if ( this.textFontFilter != value )
+				{
+					this.textFontFilter = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyGridChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
 		#endregion
 
 
@@ -2358,6 +2381,7 @@ namespace Epsitec.Common.Document
 		protected Point							gridOffset = new Point(0, 0);
 		protected bool							textGridShow = false;
 		protected bool							textShowControlCharacters = true;
+		protected bool							textFontFilter = true;
 		protected double						textGridStep;
 		protected double						textGridSubdiv;
 		protected double						textGridOffset;

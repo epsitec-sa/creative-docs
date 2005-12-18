@@ -50,7 +50,7 @@ namespace Epsitec.Common.Document.Menus
 			list.Add(fs);
 		}
 
-		// Construit le menu pour choisir une taille.
+		// Construit le menu pour choisir un interligne.
 		public static VMenu CreateLeadingMenu(Document document, double currentValue, string currentUnits, MessageEventHandler message)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList();

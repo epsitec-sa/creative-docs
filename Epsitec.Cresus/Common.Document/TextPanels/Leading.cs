@@ -280,8 +280,9 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			Button button = sender as Button;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(-48, 0));
+			Point pos = button.MapClientToScreen(new Point(button.Width, 0));
 			VMenu menu = this.CreateMenu();
+			pos.X -= menu.Width;
 			menu.Host = this;
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
@@ -335,7 +336,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 
 		#region Menu
-		// Construit le menu pour choisir une page.
+		// Construit le menu pour choisir l'interligne.
 		protected VMenu CreateMenu()
 		{
 			VMenu menu = new VMenu();

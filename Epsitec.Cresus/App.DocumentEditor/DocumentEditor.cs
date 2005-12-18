@@ -2680,6 +2680,13 @@ namespace Epsitec.App.DocumentEditor
 			context.TextShowControlCharacters = !context.TextShowControlCharacters;
 		}
 
+		[Command ("TextFontFilter")]
+		void CommandTextFontFilter(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			context.TextFontFilter = !context.TextFontFilter;
+		}
+
 		[Command ("Magnet")]
 		void CommandMagnet(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3607,6 +3614,7 @@ namespace Epsitec.App.DocumentEditor
 			this.gridState = this.CreateCommandState("Grid", true);
 			this.textGridState = this.CreateCommandState("TextGrid", true);
 			this.textShowControlCharactersState = this.CreateCommandState("TextShowControlCharacters", true);
+			this.textFontFilterState = this.CreateCommandState("TextFontFilter", true);
 			this.magnetState = this.CreateCommandState("Magnet", true);
 			this.magnetLayerState = this.CreateCommandState("MagnetLayer", true);
 			this.rulersState = this.CreateCommandState("Rulers", true);
@@ -4165,6 +4173,7 @@ namespace Epsitec.App.DocumentEditor
 				this.glyphsState.Enable = false;
 				this.glyphsInsertState.Enable = false;
 				this.textShowControlCharactersState.Enable = false;
+				this.textFontFilterState.Enable = false;
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
 				this.fontUnderlinedState.Enable = false;
@@ -4484,6 +4493,9 @@ namespace Epsitec.App.DocumentEditor
 				this.textGridState.Enable = true;
 				this.textGridState.ActiveState = context.TextGridShow ? ActiveState.Yes : ActiveState.No;
 				
+				this.textFontFilterState.Enable = true;
+				this.textFontFilterState.ActiveState = context.TextFontFilter ? ActiveState.Yes : ActiveState.No;
+				
 				this.rulersState.Enable = true;
 				this.rulersState.ActiveState = context.RulersShow ? ActiveState.Yes : ActiveState.No;
 				
@@ -4500,6 +4512,9 @@ namespace Epsitec.App.DocumentEditor
 				
 				this.textGridState.Enable = false;
 				this.textGridState.ActiveState = ActiveState.No;
+				
+				this.textFontFilterState.Enable = false;
+				this.textFontFilterState.ActiveState = ActiveState.No;
 				
 				this.rulersState.Enable = false;
 				this.rulersState.ActiveState = ActiveState.No;
@@ -5618,6 +5633,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					gridState;
 		protected CommandState					textGridState;
 		protected CommandState					textShowControlCharactersState;
+		protected CommandState					textFontFilterState;
 		protected CommandState					magnetState;
 		protected CommandState					magnetLayerState;
 		protected CommandState					rulersState;

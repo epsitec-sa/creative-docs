@@ -87,10 +87,12 @@ namespace Epsitec.Common.Document
 		// Crée une liste qui contient les fontes rapides au début.
 		// inList: tous les OpenType.FontIdentity connus
 		// quickFaceNames: string des FaceNames fréquement utilisés, dans n'importe quel ordre
-		static public System.Collections.ArrayList MergeFontList(System.Collections.ArrayList inList, System.Collections.ArrayList quickFaceNames, out int quickCount)
+		static public System.Collections.ArrayList MergeFontList(System.Collections.ArrayList inList, System.Collections.ArrayList quickFaceNames, bool quickOnly, string selectedFaceName, out int quickCount)
 		{
 			System.Collections.ArrayList outList = new System.Collections.ArrayList();
 			System.Collections.ArrayList begin   = new System.Collections.ArrayList();
+
+			if ( quickFaceNames.Count == 0 )  quickOnly = false;
 
 			// Copie la liste en enlevant toutes les fontes rapides.
 			foreach ( Common.OpenType.FontIdentity id in inList )
@@ -101,7 +103,10 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					outList.Add(id);  // outList <- fontes normales
+					if ( !quickOnly || id.InvariantFaceName == selectedFaceName )
+					{
+						outList.Add(id);  // outList <- fontes normales
+					}
 				}
 			}
 
