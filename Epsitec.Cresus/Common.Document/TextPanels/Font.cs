@@ -26,6 +26,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
 
+			this.buttonSettings = this.CreateIconButton(Misc.Icon("Settings"), Res.Strings.Action.Settings, new MessageEventHandler(this.HandleButtonSettingsClicked), false);
+
 			this.fontStyle = new TextFieldCombo(this);
 			this.fontStyle.IsReadOnly = true;
 			this.fontStyle.TextChanged += new EventHandler(this.HandleFieldChanged);
@@ -283,8 +285,11 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Bottom = r.Top-20;
 
 				r.Left = rect.Left;
-				r.Right = rect.Right;
+				r.Right = rect.Right-20;
 				this.fontFace.Bounds = r;
+				r.Left = rect.Right-20;
+				r.Right = rect.Right;
+				this.buttonSettings.Bounds = r;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -338,8 +343,11 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Bottom = r.Top-20;
 
 				r.Left = rect.Left;
-				r.Right = rect.Right;
+				r.Right = rect.Right-20;
 				this.fontFace.Bounds = r;
+				r.Left = rect.Right-20;
+				r.Right = rect.Right;
+				this.buttonSettings.Bounds = r;
 
 				this.fontSize.Visibility = false;
 				this.fontStyle.Visibility = false;
@@ -512,6 +520,11 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
+		private void HandleButtonSettingsClicked(object sender, MessageEventArgs e)
+		{
+			this.document.Notifier.NotifySettingsShowPage("BookGlobal", "Fonts");
+		}
+
 		private void HandleFieldColorClicked(object sender, MessageEventArgs e)
 		{
 			this.originFieldColor = sender as ColorSample;
@@ -671,6 +684,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		
 		protected Widgets.TextFieldFontFace fontFace;
+		protected IconButton				buttonSettings;
 		protected TextFieldCombo			fontStyle;
 		protected IconButton				fontFeatures;
 		protected Widgets.TextFieldLabel	fontSize;
