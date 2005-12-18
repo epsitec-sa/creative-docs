@@ -340,44 +340,48 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			VMenu menu = new VMenu();
 
-			this.AddMenuItem(menu,  "50%", message);
-			this.AddMenuItem(menu,  "80%", message);
-			this.AddMenuItem(menu, "100%", message);
-			this.AddMenuItem(menu, "150%", message);
-			this.AddMenuItem(menu, "200%", message);
-			this.AddMenuItem(menu, "300%", message);
+			double leading = this.document.ParagraphWrapper.Active.Leading;
+			Common.Text.Properties.SizeUnits units = this.document.ParagraphWrapper.Active.LeadingUnits;
+			bool percent = (units == Common.Text.Properties.SizeUnits.Percent);
+
+			this.AddMenuItem(menu,  "50%", (leading == 0.5 && percent), message);
+			this.AddMenuItem(menu,  "80%", (leading == 0.8 && percent), message);
+			this.AddMenuItem(menu, "100%", (leading == 1.0 && percent), message);
+			this.AddMenuItem(menu, "150%", (leading == 1.5 && percent), message);
+			this.AddMenuItem(menu, "200%", (leading == 2.0 && percent), message);
+			this.AddMenuItem(menu, "300%", (leading == 3.0 && percent), message);
 
 			menu.Items.Add(new MenuSeparator());
 
 			if ( this.document.Modifier.RealUnitDimension == RealUnitType.DimensionInch )
 			{
-				this.AddMenuItem(menu, 0.05*254, message);  // 0.05in
-				this.AddMenuItem(menu, 0.10*254, message);
-				this.AddMenuItem(menu, 0.15*254, message);
-				this.AddMenuItem(menu, 0.20*254, message);
-				this.AddMenuItem(menu, 0.30*254, message);
-				this.AddMenuItem(menu, 0.40*254, message);
-				this.AddMenuItem(menu, 0.50*254, message);
-				this.AddMenuItem(menu, 0.60*254, message);
-				this.AddMenuItem(menu, 0.80*254, message);
-				this.AddMenuItem(menu, 0.10*254, message);
-				this.AddMenuItem(menu, 0.15*254, message);
-				this.AddMenuItem(menu, 0.20*254, message);
+				this.AddMenuItem(menu, 0.05*254, leading, !percent, message);  // 0.05in
+				this.AddMenuItem(menu, 0.10*254, leading, !percent, message);
+				this.AddMenuItem(menu, 0.15*254, leading, !percent, message);
+				this.AddMenuItem(menu, 0.20*254, leading, !percent, message);
+				this.AddMenuItem(menu, 0.30*254, leading, !percent, message);
+				this.AddMenuItem(menu, 0.40*254, leading, !percent, message);
+				this.AddMenuItem(menu, 0.50*254, leading, !percent, message);
+				this.AddMenuItem(menu, 0.60*254, leading, !percent, message);
+				this.AddMenuItem(menu, 0.80*254, leading, !percent, message);
+				this.AddMenuItem(menu, 0.10*254, leading, !percent, message);
+				this.AddMenuItem(menu, 0.15*254, leading, !percent, message);
+				this.AddMenuItem(menu, 0.20*254, leading, !percent, message);
 			}
 			else
 			{
-				this.AddMenuItem(menu,  10.0, message);  // 1mm
-				this.AddMenuItem(menu,  20.0, message);
-				this.AddMenuItem(menu,  30.0, message);
-				this.AddMenuItem(menu,  40.0, message);
-				this.AddMenuItem(menu,  60.0, message);
-				this.AddMenuItem(menu,  80.0, message);
-				this.AddMenuItem(menu, 100.0, message);
-				this.AddMenuItem(menu, 150.0, message);
-				this.AddMenuItem(menu, 200.0, message);
-				this.AddMenuItem(menu, 300.0, message);
-				this.AddMenuItem(menu, 400.0, message);
-				this.AddMenuItem(menu, 500.0, message);
+				this.AddMenuItem(menu,  10.0, leading, !percent, message);  // 1mm
+				this.AddMenuItem(menu,  20.0, leading, !percent, message);
+				this.AddMenuItem(menu,  30.0, leading, !percent, message);
+				this.AddMenuItem(menu,  40.0, leading, !percent, message);
+				this.AddMenuItem(menu,  60.0, leading, !percent, message);
+				this.AddMenuItem(menu,  80.0, leading, !percent, message);
+				this.AddMenuItem(menu, 100.0, leading, !percent, message);
+				this.AddMenuItem(menu, 150.0, leading, !percent, message);
+				this.AddMenuItem(menu, 200.0, leading, !percent, message);
+				this.AddMenuItem(menu, 300.0, leading, !percent, message);
+				this.AddMenuItem(menu, 400.0, leading, !percent, message);
+				this.AddMenuItem(menu, 500.0, leading, !percent, message);
 			}
 
 			menu.AdjustSize();
@@ -385,23 +389,36 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		// Ajoute une case au menu.
-		protected void AddMenuItem(VMenu menu, double distance, MessageEventHandler message)
+		protected void AddMenuItem(VMenu menu, double distance, double current, bool active, MessageEventHandler message)
 		{
 			string text = this.document.Modifier.RealToString(distance);
 			string unit = string.Concat(text, " ", this.document.Modifier.ShortNameUnitDimension);
-			this.AddMenuItem(menu, unit, text, message);
+
+			if ( active )
+			{
+				active = (distance == current);
+			}
+			
+			this.AddMenuItem(menu, unit, text, active, message);
 		}
 
 		// Ajoute une case au menu.
-		protected void AddMenuItem(VMenu menu, string text, MessageEventHandler message)
+		protected void AddMenuItem(VMenu menu, string text, bool active, MessageEventHandler message)
 		{
-			this.AddMenuItem(menu, text, text, message);
+			this.AddMenuItem(menu, text, text, active, message);
 		}
 
 		// Ajoute une case au menu.
-		protected void AddMenuItem(VMenu menu, string text, string name, MessageEventHandler message)
+		protected void AddMenuItem(VMenu menu, string text, string name, bool active, MessageEventHandler message)
 		{
-			MenuItem item = new MenuItem("", "", text, "", name);
+			string icon = Misc.Icon("RadioNo");
+			if ( active )
+			{
+				icon = Misc.Icon("RadioYes");
+				text = Misc.Bold(text);
+			}
+
+			MenuItem item = new MenuItem("", icon, text, "", name);
 
 			if ( message != null )
 			{
