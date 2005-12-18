@@ -999,6 +999,7 @@
 	<data name="Action.Grid">Enable Magnetic grid</data>
 	<data name="Action.TextGrid">Show Baseline Grid</data>
 	<data name="Action.TextShowControlCharacters">@@Afficher les caractères spéciaux</data>
+	<data name="Action.TextFontFilter">@@Seulement les caractères fréquement utilisés</data>
 	<data name="Action.Preview">Preview as printed</data>
 	<data name="Action.Magnet">Magnetize Objects for use as Smart Guides</data>
 	<data name="Action.MagnetLayer">Magnetize Objects in this Layer</data>

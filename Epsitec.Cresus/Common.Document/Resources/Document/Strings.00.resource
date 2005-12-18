@@ -999,6 +999,7 @@
 	<data name="Action.Grid">Grille magnétique</data>
 	<data name="Action.TextGrid">Montrer les lignes magnétiques pour le texte</data>
 	<data name="Action.TextShowControlCharacters">Afficher les caractères spéciaux</data>
+	<data name="Action.TextFontFilter">Seulement les caractères fréquement utilisés</data>
 	<data name="Action.Preview">Comme imprimé</data>
 	<data name="Action.Magnet">Objets magnétiques</data>
 	<data name="Action.MagnetLayer">Les objets du calque sont magnétiques</data>

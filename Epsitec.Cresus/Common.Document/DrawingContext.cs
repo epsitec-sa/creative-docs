@@ -196,6 +196,7 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
+#if false
 				if ( this.zoom != 1.0 )  return false;
 
 				Size cs = this.ContainerSize;
@@ -206,6 +207,9 @@ namespace Epsitec.Common.Document
 
 				return ( System.Math.Abs(this.originX+originX) < 0.00001 &&
 						 System.Math.Abs(this.originY+originY) < 0.00001 );
+#else
+				return ( this.zoom == 1.0 );
+#endif
 			}
 		}
 

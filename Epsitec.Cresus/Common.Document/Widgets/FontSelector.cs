@@ -326,7 +326,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.samples[i].SetSelected(false);
 				}
 
-				this.samples[i].Separator = (ii == this.quickCount-1);
+				this.samples[i].Separator = (ii == this.quickCount-1 && this.quickCount != this.fontList.Count);
 				this.samples[i].Last      = (i == samples.Length-1);
 			}
 		}

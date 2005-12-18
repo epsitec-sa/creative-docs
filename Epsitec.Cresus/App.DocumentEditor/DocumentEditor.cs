@@ -104,6 +104,8 @@ namespace Epsitec.App.DocumentEditor
 			this.StartCheck(false);
 			this.InitCommands();
 			this.CreateLayout();
+
+			Misc.GetFontList(false);  // mise en cache des polices
 			
 			this.dlgSplash.StartTimer();
 
