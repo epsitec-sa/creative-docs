@@ -34,9 +34,9 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		public override void SetDocument(DocumentType type, InstallType install, Settings.GlobalSettings gs, Document document)
+		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
 		{
-			base.SetDocument(type, install, gs, document);
+			base.SetDocument(type, install, debug, gs, document);
 
 			this.AdaptFieldRot(this.fieldRotate);
 		}

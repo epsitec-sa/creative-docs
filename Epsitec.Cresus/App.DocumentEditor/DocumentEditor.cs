@@ -68,6 +68,13 @@ namespace Epsitec.App.DocumentEditor
 				}
 			}
 
+#if DEBUG
+			//?this.debugMode = DebugMode.DebugCommands;
+			this.debugMode = DebugMode.Release;
+#else
+			this.debugMode = DebugMode.Release;
+#endif
+
 			if ( !this.ReadGlobalSettings() )
 			{
 				this.globalSettings = new GlobalSettings();
@@ -109,7 +116,7 @@ namespace Epsitec.App.DocumentEditor
 			
 			this.dlgSplash.StartTimer();
 
-			this.clipboard = new Document(this.type, DocumentMode.Clipboard, this.installType, this.globalSettings, this.CommandDispatcher);
+			this.clipboard = new Document(this.type, DocumentMode.Clipboard, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher);
 			this.clipboard.Name = "Clipboard";
 
 			this.documents = new System.Collections.ArrayList();
@@ -209,6 +216,26 @@ namespace Epsitec.App.DocumentEditor
 				{
 					DocumentInfo di = this.documents[i] as DocumentInfo;
 					di.document.InstallType = this.installType;
+				}
+			}
+		}
+		
+		public DebugMode DebugMode
+		{
+			get
+			{
+				return this.debugMode;
+			}
+
+			set
+			{
+				this.debugMode = value;
+
+				int total = this.documents.Count;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					DocumentInfo di = this.documents[i] as DocumentInfo;
+					di.document.DebugMode = this.debugMode;
 				}
 			}
 		}
@@ -676,9 +703,10 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonMain.Items.Add(new Ribbons.Select());
 			this.ribbonMain.Items.Add(new Ribbons.View());
 			this.ribbonMain.Items.Add(new Ribbons.Action());
-#if DEBUG
-			this.ribbonMain.Items.Add(new Ribbons.Debug());
-#endif
+			if ( this.debugMode == DebugMode.DebugCommands )
+			{
+				this.ribbonMain.Items.Add(new Ribbons.Debug());
+			}
 
 			this.ribbonGeom = new Ribbons.RibbonContainer(this);
 			this.ribbonGeom.Name = "Geom";
@@ -803,8 +831,11 @@ namespace Epsitec.App.DocumentEditor
 			this.VToolBarAdd(this.toolRegularState);
 			this.VToolBarAdd(this.toolSurfaceState);
 			this.VToolBarAdd(this.toolVolumeState);
-			this.VToolBarAdd(this.toolTextLineState);
-			this.VToolBarAdd(this.toolTextBoxState);
+			if ( this.debugMode == DebugMode.DebugCommands )
+			{
+				this.VToolBarAdd(this.toolTextLineState);
+				this.VToolBarAdd(this.toolTextBoxState);
+			}
 			this.VToolBarAdd(this.toolTextBox2State);
 			if ( this.useArray )
 			{
@@ -1057,12 +1088,14 @@ namespace Epsitec.App.DocumentEditor
 			bookTextStyles.Name = "TextStyles";
 			di.bookPanels.Items.Add(bookTextStyles);
 
-#if DEBUG
-			TabPage bookAutos = new TabPage();
-			bookAutos.TabTitle = Res.Strings.TabPage.Autos;
-			bookAutos.Name = "Autos";
-			di.bookPanels.Items.Add(bookAutos);
-#endif
+			TabPage bookAutos = null;
+			if ( this.debugMode == DebugMode.DebugCommands )
+			{
+				bookAutos = new TabPage();
+				bookAutos.TabTitle = Res.Strings.TabPage.Autos;
+				bookAutos.Name = "Autos";
+				di.bookPanels.Items.Add(bookAutos);
+			}
 
 			TabPage bookPages = new TabPage();
 			bookPages.TabTitle = Res.Strings.TabPage.Pages;
@@ -1101,13 +1134,14 @@ namespace Epsitec.App.DocumentEditor
 			di.containerTextStyles.DockMargins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerTextStyles);
 
-#if DEBUG
-			di.containerAutos = new Containers.Autos(document);
-			di.containerAutos.SetParent(bookAutos);
-			di.containerAutos.Dock = DockStyle.Fill;
-			di.containerAutos.DockMargins = new Margins(4, 4, 10, 4);
-			document.Modifier.AttachContainer(di.containerAutos);
-#endif
+			if ( bookAutos != null )
+			{
+				di.containerAutos = new Containers.Autos(document);
+				di.containerAutos.SetParent(bookAutos);
+				di.containerAutos.Dock = DockStyle.Fill;
+				di.containerAutos.DockMargins = new Margins(4, 4, 10, 4);
+				document.Modifier.AttachContainer(di.containerAutos);
+			}
 
 			di.containerPages = new Containers.Pages(document);
 			di.containerPages.SetParent(bookPages);
@@ -4032,11 +4066,12 @@ namespace Epsitec.App.DocumentEditor
 				DocumentInfo di = this.CurrentDocumentInfo;
 
 				di.containerPrincipal.SetDirtyContent();
-#if DEBUG
-				di.containerAutos.SetDirtyContent();
-#endif
 				di.containerStyles.SetDirtyContent();
-				//?di.containerOperations.SetDirtyContent();
+
+				if ( di.containerAutos != null )
+				{
+					di.containerAutos.SetDirtyContent();
+				}
 
 				Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 				int totalSelected  = this.CurrentDocument.Modifier.TotalSelected;
@@ -5073,7 +5108,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.PrepareCloseDocument();
 
-			Document doc = new Document(this.type, DocumentMode.Modify, this.installType, this.globalSettings, this.CommandDispatcher);
+			Document doc = new Document(this.type, DocumentMode.Modify, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher);
 			doc.Name = "Document";
 			doc.Clipboard = this.clipboard;
 
@@ -5116,10 +5151,10 @@ namespace Epsitec.App.DocumentEditor
 				this.CurrentDocument.HRuler = di.hRuler;
 				this.CurrentDocument.VRuler = di.vRuler;
 
-				this.ribbonMain.SetDocument(this.type, this.installType, this.globalSettings, this.CurrentDocument);
-				this.ribbonGeom.SetDocument(this.type, this.installType, this.globalSettings, this.CurrentDocument);
-				this.ribbonOper.SetDocument(this.type, this.installType, this.globalSettings, this.CurrentDocument);
-				this.ribbonText.SetDocument(this.type, this.installType, this.globalSettings, this.CurrentDocument);
+				this.ribbonMain.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, this.CurrentDocument);
+				this.ribbonGeom.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, this.CurrentDocument);
+				this.ribbonOper.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, this.CurrentDocument);
+				this.ribbonText.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, this.CurrentDocument);
 
 				this.CommandStateShake(this.pageNextState);
 				this.CommandStateShake(this.pagePrevState);
@@ -5132,10 +5167,10 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				this.ribbonMain.SetDocument(this.type, this.installType, this.globalSettings, null);
-				this.ribbonGeom.SetDocument(this.type, this.installType, this.globalSettings, null);
-				this.ribbonOper.SetDocument(this.type, this.installType, this.globalSettings, null);
-				this.ribbonText.SetDocument(this.type, this.installType, this.globalSettings, null);
+				this.ribbonMain.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, null);
+				this.ribbonGeom.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, null);
+				this.ribbonOper.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, null);
+				this.ribbonText.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, null);
 
 				this.HandleDocumentChanged();
 				this.HandleMouseChanged();
@@ -5415,6 +5450,7 @@ namespace Epsitec.App.DocumentEditor
 
 		protected DocumentType					type;
 		protected InstallType					installType;
+		protected DebugMode						debugMode;
 		protected bool							useArray;
 		protected bool							firstInitialise;
 		protected Document						clipboard;

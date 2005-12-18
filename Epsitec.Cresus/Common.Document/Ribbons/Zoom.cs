@@ -37,14 +37,14 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		public override void SetDocument(DocumentType type, InstallType install, Settings.GlobalSettings gs, Document document)
+		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
 		{
 			if ( this.document != null )
 			{
 				this.document.Notifier.ZoomChanged -= new SimpleEventHandler(this.HandleZoomChanged);
 			}
 
-			base.SetDocument(type, install, gs, document);
+			base.SetDocument(type, install, debug, gs, document);
 
 			if ( this.document != null )
 			{

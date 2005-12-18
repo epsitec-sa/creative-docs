@@ -31,6 +31,12 @@ namespace Epsitec.Common.Document
 		Freeware,		// version freeware
 	}
 
+	public enum DebugMode
+	{
+		Release,		// pas de debug
+		DebugCommands,	// toutes les commandes de debug
+	}
+
 	/// <summary>
 	/// Summary description for Document.
 	/// </summary>
@@ -45,11 +51,12 @@ namespace Epsitec.Common.Document
 		}
 
 		// Crée un nouveau document vide.
-		public Document(DocumentType type, DocumentMode mode, InstallType installType, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher)
+		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher)
 		{
 			this.type = type;
 			this.mode = mode;
 			this.installType = installType;
+			this.debugMode = debugMode;
 			this.globalSettings = globalSettings;
 			this.commandDispatcher = commandDispatcher;
 
@@ -126,6 +133,13 @@ namespace Epsitec.Common.Document
 		{
 			get { return this.installType; }
 			set { this.installType = value; }
+		}
+
+		// Type de mise au point du logiciel.
+		public DebugMode DebugMode
+		{
+			get { return this.debugMode; }
+			set { this.debugMode = value; }
 		}
 
 		// Réglages globaux.
@@ -1888,6 +1902,7 @@ namespace Epsitec.Common.Document
 		protected DocumentType							type;
 		protected DocumentMode							mode;
 		protected InstallType							installType;
+		protected DebugMode								debugMode;
 		protected Settings.GlobalSettings				globalSettings;
 		protected CommandDispatcher						commandDispatcher;
 		protected string								name;

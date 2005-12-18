@@ -26,10 +26,11 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		public virtual void SetDocument(DocumentType type, InstallType install, Settings.GlobalSettings gs, Document document)
+		public virtual void SetDocument(DocumentType type, InstallType install, DebugMode debugMode, Settings.GlobalSettings gs, Document document)
 		{
 			this.documentType = type;
 			this.installType = install;
+			this.debugMode = debugMode;
 			this.globalSettings = gs;
 			this.document = document;
 		}
@@ -222,6 +223,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected DocumentType				documentType;
 		protected InstallType				installType;
+		protected DebugMode					debugMode;
 		protected Settings.GlobalSettings	globalSettings;
 		protected Document					document;
 		protected TextLayout				title;

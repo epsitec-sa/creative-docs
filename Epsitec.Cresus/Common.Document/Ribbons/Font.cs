@@ -27,9 +27,12 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonSuperscript   = this.CreateIconButton("FontSuperscript");
 			this.buttonClear         = this.CreateIconButton("FontClear");
 
-			this.buttonStyle = new Button(this);
-			this.buttonStyle.Text = "S";
-			this.buttonStyle.Clicked += new MessageEventHandler(this.HandleButtonStyleClicked);
+			if ( this.debugMode == DebugMode.DebugCommands )
+			{
+				this.buttonStyle = new Button(this);
+				this.buttonStyle.Text = "S";
+				this.buttonStyle.Clicked += new MessageEventHandler(this.HandleButtonStyleClicked);
+			}
 
 			this.UpdateClientGeometry();
 		}
@@ -49,7 +52,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 200;
+				if ( this.debugMode == DebugMode.DebugCommands )
+				{
+					return 200;
+				}
+				else
+				{
+					return 160;
+				}
 			}
 		}
 
@@ -93,8 +103,11 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(dx+10, 0);
 			this.buttonClear.Bounds = rect;
 
-			rect.Offset(dx+10, 0);
-			this.buttonStyle.Bounds = rect;
+			if ( this.debugMode == DebugMode.DebugCommands )
+			{
+				rect.Offset(dx+10, 0);
+				this.buttonStyle.Bounds = rect;
+			}
 		}
 
 
