@@ -171,7 +171,7 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( button == null )  return;
 			Point pos = button.MapClientToScreen(new Point(0, 1));
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			VMenu menu = ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
+			VMenu menu = Menus.ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
 			if ( menu == null )  return;
 			menu.Host = this;
 			menu.ShowAsContextMenu(this.Window, pos);

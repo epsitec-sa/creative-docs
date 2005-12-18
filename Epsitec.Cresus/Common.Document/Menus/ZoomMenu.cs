@@ -1,6 +1,6 @@
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Common.Document
+namespace Epsitec.Common.Document.Menus
 {
 	public class ZoomMenu : System.IComparable
 	{

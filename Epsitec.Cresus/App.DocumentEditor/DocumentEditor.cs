@@ -16,6 +16,7 @@ namespace Epsitec.App.DocumentEditor
 	using Objects        = Common.Document.Objects;
 	using Settings       = Common.Document.Settings;
 	using GlobalSettings = Common.Document.Settings.GlobalSettings;
+	using Menus          = Common.Document.Menus;
 
 	/// <summary>
 	/// La classe DocumentEditor représente l'éditeur de document complet.
@@ -1437,7 +1438,7 @@ namespace Epsitec.App.DocumentEditor
 			if ( sf == null )  return;
 			Point pos = sf.MapClientToScreen(new Point(0, sf.Height));
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-			VMenu menu = ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
+			VMenu menu = Menus.ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
 			menu.Host = this;
 			pos.Y += menu.Height;
 			menu.ShowAsContextMenu(this.Window, pos);  // -> commandes "ZoomChange"
