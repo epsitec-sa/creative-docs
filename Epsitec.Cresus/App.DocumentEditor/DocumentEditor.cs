@@ -5216,6 +5216,11 @@ namespace Epsitec.App.DocumentEditor
 			this.currentDocument = -1;
 			this.UseDocument(rank);
 			this.UpdateCloseCommand();
+
+			if ( this.CurrentDocument == null )
+			{
+				this.ActiveRibbon(this.ribbonMain);
+			}
 		}
 
 		// Met à jour l'état de la commande de fermeture.
