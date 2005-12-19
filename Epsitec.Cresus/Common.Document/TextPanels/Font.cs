@@ -498,6 +498,8 @@ namespace Epsitec.Common.Document.TextPanels
 				string style = this.fontStyle.Text;
 				if ( style != "" )
 				{
+					string face = this.document.TextWrapper.Active.FontFace;
+					this.document.TextWrapper.Defined.FontFace = face;
 					this.document.TextWrapper.Defined.FontStyle = style;
 				}
 				else
