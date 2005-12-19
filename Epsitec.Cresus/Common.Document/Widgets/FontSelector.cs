@@ -153,11 +153,8 @@ namespace Epsitec.Common.Document.Widgets
 
 					if ( this.selectedList == null )  // sélection unique ?
 					{
-						if ( this.SelectedFontFace != face )
-						{
-							this.SelectedFontFace = face;
-							this.OnSelectionChanged();
-						}
+						this.SelectedFontFace = face;
+						this.OnSelectionChanged();
 					}
 					else	// sélection multiple ?
 					{
