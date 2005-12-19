@@ -475,6 +475,27 @@ namespace Epsitec.Common.OpenType
 				this.full_list.Add (this[name]);
 			}
 			
+			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+			
+			foreach (FontIdentity fid in this.full_hash.Values)
+			{
+				string face = fid.InvariantFaceName;
+				
+				if (hash.Contains (face))
+				{
+					hash[face] = (int) hash[face] + 1;
+				}
+				else
+				{
+					hash[face] = 1;
+				}
+			}
+			
+			foreach (FontIdentity fid in this.full_hash.Values)
+			{
+				fid.DefineFontStyleCount ((int) hash[fid.InvariantFaceName]);
+			}
+			
 			this.full_list.Sort (FontIdentity.Comparer);
 		}
 		

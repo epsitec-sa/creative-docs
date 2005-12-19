@@ -125,6 +125,14 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public int								FontStyleCount
+		{
+			get
+			{
+				return this.font_style_count;
+			}
+		}
+		
 		public string							FullName
 		{
 			get
@@ -269,6 +277,10 @@ namespace Epsitec.Common.OpenType
 			this.os_font_style  = style;
 		}
 		
+		internal void DefineFontStyleCount(int value)
+		{
+			this.font_style_count = value;
+		}
 		
 		public static System.Collections.IComparer	Comparer
 		{
@@ -570,6 +582,7 @@ namespace Epsitec.Common.OpenType
 		private System.Collections.Hashtable	font_sizes;
 		private string							style_hash;
 		private int								ttc_index;
+		private int								font_style_count;
 		private string							os_font_family;
 		private string							os_font_style;
 		private bool							is_symbol_font;
