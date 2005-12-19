@@ -143,6 +143,13 @@ namespace Epsitec.Common.Text
 				{
 					return this.active_selection_cursor;
 				}
+				else if ((this.selection_cursors != null) &&
+					/**/ (this.selection_cursors.Count >= 2))
+				{
+					int n = this.selection_cursors.Count;
+					
+					return this.selection_cursors[n-1] as ICursor;
+				}
 				else
 				{
 					return this.cursor;
@@ -1694,7 +1701,7 @@ again:
 		
 		public void UpdateCurrentStylesAndProperties()
 		{
-			System.Diagnostics.Debug.WriteLine ("Executing UpdateCurrentStylesAndProperties");
+//-			System.Diagnostics.Debug.WriteLine ("Executing UpdateCurrentStylesAndProperties");
 			
 			TextStyle[] styles;
 			Property[]  properties;
@@ -1821,14 +1828,14 @@ again:
 				{
 					debug_properties.Append ("[none]");
 				}
-				
+#if false				
 				System.Diagnostics.Debug.WriteLine (string.Format ("[{0}:{1}:{2}:{3}] -> {4} + {5}",
 					/**/										   Internal.CharMarker.GetLocalIndex (code),
 					/**/										   Internal.CharMarker.GetExtraIndex (code),
 					/**/										   Internal.CharMarker.GetCoreIndex (code),
 					/**/										   Unicode.Bits.GetUnicodeCode (code),
 					/**/										   debug_styles, debug_properties));
-				
+#endif		
 				int n = 0;
 				
 				for (int i = 0; i < properties.Length; i++)
@@ -3120,6 +3127,7 @@ again:
 				(e.Oplet is TextStory.TextDeleteOplet))
 			{
 				this.UpdateCurrentStylesAndProperties ();
+				this.NotifyCursorMoved ();
 			}
 			
 			if (this.OpletExecuted != null)

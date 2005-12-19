@@ -37,7 +37,10 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			if (state == this.defined_state)
 			{
-				this.SynchronizeFont ();
+				this.SynchronizeFontFace ();
+				this.SynchronizeFontFeatures ();
+				this.SynchronizeFontSize ();
+				this.SynchronizeFontGlue ();
 				this.SynchronizeInvert ();
 				this.SynchronizeXline ();
 				this.SynchronizeXscript ();
@@ -52,6 +55,152 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
+		private void SynchronizeFontFace()
+		{
+			int defines = 0;
+			int changes = 0;
+			
+			string font_face  = null;
+			string font_style = null;
+			
+			if (this.defined_state.IsValueFlagged (State.FontFaceProperty))
+			{
+				changes++;
+			}
+			if (this.defined_state.IsFontFaceDefined)
+			{
+				font_face = this.defined_state.FontFace;
+				defines++;
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.FontStyleProperty))
+			{
+				changes++;
+			}
+			if (this.defined_state.IsFontStyleDefined)
+			{
+				font_style = this.defined_state.FontStyle;
+				defines++;
+			}
+			
+			if (changes > 0)
+			{
+				if (defines > 0)
+				{
+					Property p_font = new Properties.FontProperty (font_face, font_style, null);
+					
+					this.DefineMetaProperty (TextWrapper.FontFace, 0, p_font);
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.FontFace);
+				}
+			}
+		}
+		
+		private void SynchronizeFontFeatures()
+		{
+			int defines = 0;
+			int changes = 0;
+			
+			string[] font_features = new string[0];
+			
+			if (this.defined_state.IsValueFlagged (State.FontFeaturesProperty))
+			{
+				changes++;
+			}
+			if (this.defined_state.IsFontFeaturesDefined)
+			{
+				font_features = this.defined_state.FontFeatures;
+				defines++;
+			}
+			
+			if (changes > 0)
+			{
+				if (defines > 0)
+				{
+					Property p_font = new Properties.FontProperty (null, null, font_features);
+					
+					this.DefineMetaProperty (TextWrapper.FontFeatures, 0, p_font);
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.FontFeatures);
+				}
+			}
+		}
+		
+		private void SynchronizeFontSize()
+		{
+			int defines = 0;
+			int changes = 0;
+			
+			double font_size = double.NaN;
+			
+			Properties.SizeUnits units = Properties.SizeUnits.None;
+			
+			if (this.defined_state.IsValueFlagged (State.FontSizeProperty) ||
+				this.defined_state.IsValueFlagged (State.UnitsProperty))
+			{
+				changes++;
+			}
+			if ((this.defined_state.IsFontSizeDefined) &&
+				(this.defined_state.IsUnitsDefined))
+			{
+				font_size = this.defined_state.FontSize;
+				units     = this.defined_state.Units;
+				defines++;
+			}
+			
+			if (changes > 0)
+			{
+				if (defines > 0)
+				{
+					Property p_size = new Properties.FontSizeProperty (font_size, units, double.NaN);
+					
+					this.DefineMetaProperty (TextWrapper.FontSize, 0, p_size);
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.FontSize);
+				}
+			}
+		}
+		
+		private void SynchronizeFontGlue()
+		{
+			int defines = 0;
+			int changes = 0;
+			
+			double font_glue = double.NaN;
+			
+			if (this.defined_state.IsValueFlagged (State.FontGlueProperty))
+			{
+				changes++;
+			}
+			if (this.defined_state.IsFontGlueDefined)
+			{
+				font_glue = this.defined_state.FontGlue / 2;
+				defines++;
+			}
+			
+			if (changes > 0)
+			{
+				if (defines > 0)
+				{
+					Property p_size = new Properties.FontSizeProperty (double.NaN, Properties.SizeUnits.None, font_glue);
+					
+					this.DefineMetaProperty (TextWrapper.FontGlue, 0, p_size);
+				}
+				else
+				{
+					this.ClearMetaProperty (TextWrapper.FontGlue);
+				}
+			}
+		}
+		
+		
+#if false
 		private void SynchronizeFont()
 		{
 			int defines = 0;
@@ -132,6 +281,7 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 		}
+#endif
 		
 		private void SynchronizeInvert()
 		{
@@ -391,7 +541,10 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			System.Diagnostics.Debug.Assert (state.IsDirty == false);
 			
-			this.UpdateFont (state, active);
+			this.UpdateFontFace (state, active);
+			this.UpdateFontFeatures (state, active);
+			this.UpdateFontSize (state, active);
+			this.UpdateFontGlue (state, active);
 			this.UpdateInvert (state, active);
 			this.UpdateXline (state, active);
 			this.UpdateXscript (state, active);
@@ -405,6 +558,167 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
+		private void UpdateFontFace(State state, bool active)
+		{
+			Properties.FontProperty p_font;
+			
+			if (active)
+			{
+				p_font = this.ReadAccumulatedProperty (Properties.WellKnownType.Font) as Properties.FontProperty;
+			}
+			else
+			{
+				p_font = this.ReadMetaProperty (TextWrapper.FontFace, Properties.WellKnownType.Font) as Properties.FontProperty;
+			}
+			
+			if (p_font != null)
+			{
+				if (p_font.FaceName == null)
+				{
+					state.DefineValue (State.FontFaceProperty);
+				}
+				else
+				{
+					state.DefineValue (State.FontFaceProperty, p_font.FaceName);
+				}
+				
+				if (p_font.StyleName == null)
+				{
+					state.DefineValue (State.FontStyleProperty);
+				}
+				else
+				{
+					string style_name = p_font.StyleName;
+					
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+					
+					foreach (string element in style_name.Split (' '))
+					{
+						if ((element.StartsWith ("!")) ||
+							(element.StartsWith ("-")))
+						{
+							continue;
+						}
+						
+						if (buffer.Length > 0)
+						{
+							buffer.Append (" ");
+						}
+						
+						if (element.StartsWith ("+"))
+						{
+							buffer.Append (element.Substring (1));
+						}
+						else
+						{
+							buffer.Append (element);
+						}
+					}
+					
+					style_name = buffer.ToString ();
+					style_name = OpenType.FontCollection.GetStyleHash (style_name);
+					
+					state.DefineValue (State.FontStyleProperty, style_name.Length == 0 ? "Regular" : style_name);
+				}
+			}
+			else
+			{
+				state.DefineValue (State.FontFaceProperty);
+				state.DefineValue (State.FontStyleProperty);
+			}
+		}
+		
+		private void UpdateFontFeatures(State state, bool active)
+		{
+			Properties.FontProperty p_font;
+			
+			if (active)
+			{
+				p_font = this.ReadAccumulatedProperty (Properties.WellKnownType.Font) as Properties.FontProperty;
+			}
+			else
+			{
+				p_font = this.ReadMetaProperty (TextWrapper.FontFeatures, Properties.WellKnownType.Font) as Properties.FontProperty;
+			}
+			
+			if (p_font != null)
+			{
+				if ((p_font.Features == null) ||
+					(p_font.Features.Length == 0))
+				{
+					state.DefineValue (State.FontFeaturesProperty);
+				}
+				else
+				{
+					state.DefineValue (State.FontFeaturesProperty, p_font.Features);
+				}
+			}
+			else
+			{
+				state.DefineValue (State.FontFeaturesProperty);
+			}
+		}
+		
+		private void UpdateFontSize(State state, bool active)
+		{
+			Properties.FontSizeProperty p_size;
+			
+			if (active)
+			{
+				p_size = this.ReadAccumulatedProperty (Properties.WellKnownType.FontSize) as Properties.FontSizeProperty;
+			}
+			else
+			{
+				p_size = this.ReadMetaProperty (TextWrapper.FontSize, Properties.WellKnownType.FontSize) as Properties.FontSizeProperty;
+			}
+			
+			if ((p_size != null) &&
+				(p_size.Units != Properties.SizeUnits.None))
+			{
+				state.DefineValue (State.UnitsProperty, p_size.Units);
+				
+				if (double.IsNaN (p_size.Size))
+				{
+					state.DefineValue (State.FontSizeProperty);
+				}
+				else
+				{
+					state.DefineValue (State.FontSizeProperty, p_size.Size);
+				}
+			}
+			else
+			{
+				state.DefineValue (State.FontSizeProperty);
+				state.DefineValue (State.UnitsProperty);
+			}
+		}
+		
+		private void UpdateFontGlue(State state, bool active)
+		{
+			Properties.FontSizeProperty p_size;
+			
+			if (active)
+			{
+				p_size = this.ReadAccumulatedProperty (Properties.WellKnownType.FontSize) as Properties.FontSizeProperty;
+			}
+			else
+			{
+				p_size = this.ReadMetaProperty (TextWrapper.FontGlue, Properties.WellKnownType.FontSize) as Properties.FontSizeProperty;
+			}
+			
+			if ((p_size != null) &&
+				(double.IsNaN (p_size.Glue) == false))
+			{
+				state.DefineValue (State.FontGlueProperty, p_size.Glue * 2);
+			}
+			else
+			{
+				state.DefineValue (State.FontGlueProperty);
+			}
+		}
+		
+		
+#if false
 		private void UpdateFont(State state, bool active)
 		{
 			Properties.FontProperty     p_font;
@@ -517,6 +831,7 @@ namespace Epsitec.Common.Text.Wrappers
 				state.DefineValue (State.FontGlueProperty);
 			}
 		}
+#endif		
 		
 		private void UpdateInvert(State state, bool active)
 		{
@@ -1731,7 +2046,11 @@ namespace Epsitec.Common.Text.Wrappers
 		private State								active_state;
 		private State								defined_state;
 		
-		private const string						Font			= "#Tx#Font";
+//		private const string						Font			= "#Tx#Font";
+		private const string						FontFace		= "#Tx#Font";
+		private const string						FontFeatures	= "#Tx#FntFtr";
+		private const string						FontSize		= "#Tx#FntSiz";
+		private const string						FontGlue		= "#Tx#FntGlu";
 		private const string						Color			= "#Tx#Color";
 		private const string						Language		= "#Tx#Lang";
 		private const string						Link			= "#Tx#Link";

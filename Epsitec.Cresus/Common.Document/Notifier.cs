@@ -54,6 +54,7 @@ namespace Epsitec.Common.Document
 			this.selectionChanged = true;
 			this.shaperChanged = true;
 			this.textChanged = true;
+			this.textCursorChanged = true;
 			this.styleChanged = true;
 			this.textStyleChanged = true;
 			this.pagesChanged = true;
@@ -165,6 +166,14 @@ namespace Epsitec.Common.Document
 		{
 			if ( !this.enable )  return;
 			this.textChanged = true;
+			this.NotifyAsync();
+		}
+
+		// Indique que le curseur du texte en édition a changé.
+		public void NotifyTextCursorChanged()
+		{
+			if ( !this.enable )  return;
+			this.textCursorChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -463,6 +472,12 @@ namespace Epsitec.Common.Document
 				this.textChanged = false;
 			}
 
+			if ( this.textCursorChanged )
+			{
+				this.OnTextCursorChanged();
+				this.textCursorChanged = false;
+			}
+
 			if ( this.styleChanged )
 			{
 				this.OnStyleChanged();
@@ -666,6 +681,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnTextCursorChanged()
+		{
+			if ( this.TextCursorChanged != null )  // qq'un écoute ?
+			{
+				this.TextCursorChanged();
+			}
+		}
+
 		protected void OnStyleChanged()
 		{
 			if ( this.StyleChanged != null )  // qq'un écoute ?
@@ -861,6 +884,7 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			SelectionChanged;
 		public event SimpleEventHandler			ShaperChanged;
 		public event SimpleEventHandler			TextChanged;
+		public event SimpleEventHandler			TextCursorChanged;
 		public event SimpleEventHandler			StyleChanged;
 		public event SimpleEventHandler			TextStyleChanged;
 		public event SimpleEventHandler			PagesChanged;
@@ -898,6 +922,7 @@ namespace Epsitec.Common.Document
 		protected bool							selectionChanged;
 		protected bool							shaperChanged;
 		protected bool							textChanged;
+		protected bool							textCursorChanged;
 		protected bool							styleChanged;
 		protected bool							textStyleChanged;
 		protected bool							pagesChanged;

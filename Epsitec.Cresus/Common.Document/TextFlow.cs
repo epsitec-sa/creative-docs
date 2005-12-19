@@ -42,6 +42,7 @@ namespace Epsitec.Common.Document
 			this.metaNavigator.TextNavigator = this.textNavigator;
 			
 			this.textNavigator.CursorMoved += new EventHandler(this.HandleTextNavigatorCursorMoved);
+			this.document.Notifier.TextCursorChanged += new SimpleEventHandler(this.HandleNotifierTextCursorChanged);
 		}
 		
 		protected void InitialiseEmptyTextStory()
@@ -272,6 +273,15 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Signale que le document va exécuter une commande. Cette méthode est
+		// par exemple appelée avant que le UNDO ne soit exécuté.
+		public void NotifyAboutToExecuteCommand()
+		{
+			if ( this.textNavigator != null && this.textNavigator.IsSelectionActive )
+			{
+				this.textNavigator.EndSelection();
+			}
+		}
 		
 		// Change éventuellement le pavé édité en fonction de la position du curseur.
 		// Si un changement a lieu, des oplets seront créés. Cette méthode ne peut donc
@@ -280,6 +290,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.textStory.OpletQueue.IsUndoRedoInProgress )
 			{
+				this.document.Notifier.NotifyTextCursorChanged();
 				return;
 			}
 			
@@ -333,6 +344,14 @@ namespace Epsitec.Common.Document
 				this.UpdateClipboardCommands();
 				this.document.Notifier.NotifyTextChanged();
 				this.NotifyAreaFlow();
+				this.ChangeObjectEdited();
+			}
+		}
+		
+		private void HandleNotifierTextCursorChanged()
+		{
+			if ( this.HasActiveTextBox )
+			{
 				this.ChangeObjectEdited();
 			}
 		}

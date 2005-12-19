@@ -108,7 +108,7 @@
 	<data name="Dialog.ExportPDF.TabPage.Image">Images</data>
 	<data name="Dialog.ExportPDF.TabPage.Publisher">Publishing</data>
 
-	<data name="Dialog.Fonts.Title">@@Choix des polices utilisées</data>
+	<data name="Dialog.Fonts.Title">Preferred fonts</data>
 
 	<data name="Dialog.Glyphs.Title">Symbols</data>
 	<data name="Dialog.Glyphs.TabPage.List">Quick lists</data>
@@ -165,10 +165,10 @@
 	<data name="Dialog.Settings.RadioDocument">Document</data>
 	<data name="Dialog.Settings.TabPage.General">General</data>
 	<data name="Dialog.Settings.TabPage.Periph">Mouse &amp;amp; Display</data>
-	<data name="Dialog.Settings.TabPage.Quick">@@Boutons</data>
-	<data name="Dialog.Settings.TabPage.QuickHelp">@@Boutons rapides, en haut de la fenêtre</data>
-	<data name="Dialog.Settings.TabPage.Fonts">@@Polices</data>
-	<data name="Dialog.Settings.TabPage.FontsHelp">@@Polices fréquemment utilisées, en tête de liste</data>
+	<data name="Dialog.Settings.TabPage.Quick">Buttons</data>
+	<data name="Dialog.Settings.TabPage.QuickHelp">Buttons located in the Quick Commands Toolbar</data>
+	<data name="Dialog.Settings.TabPage.Fonts">Fonts</data>
+	<data name="Dialog.Settings.TabPage.FontsHelp">Preferred fonts, listed before others</data>
 	<data name="Dialog.Settings.Startup">What to do at startup?</data>
 	<data name="Dialog.Settings.Mouse">Mouse settings</data>
 	<data name="Dialog.Settings.Screen">Display settings</data>
@@ -188,8 +188,8 @@
 	<data name="Dialog.Settings.QuickLast">Move command to end</data>
 	<data name="Dialog.Settings.QuickDefault">Use predefined set of commands</data>
 	<data name="Dialog.Settings.QuickClear">Remove all commands</data>
-	<data name="Dialog.Settings.FontsDefault">@@Polices les plus courantes</data>
-	<data name="Dialog.Settings.FontsClear">@@Aucune police fréquement utilisée</data>
+	<data name="Dialog.Settings.FontsDefault">Typical Preferred Font subset</data>
+	<data name="Dialog.Settings.FontsClear">No Preferred Font</data>
 	<data name="Dialog.Settings.TabPage.Format">Format</data>
 	<data name="Dialog.Settings.TabPage.Grid">Grid</data>
 	<data name="Dialog.Settings.TabPage.Guides">Guides</data>

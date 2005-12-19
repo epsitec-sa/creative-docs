@@ -52,7 +52,7 @@
 	<data name="Dialog.Bool.GridActive">Enable grid</data>
 	<data name="Dialog.Bool.GridShow">Show grid</data>
 	<data name="Dialog.Bool.TextGridShow">Show magnetic text lines</data>
-	<data name="Dialog.Bool.TextShowControlCharacters">@@Afficher les caractères spéciaux</data>
+	<data name="Dialog.Bool.TextShowControlCharacters">Display control characters</data>
 	<data name="Dialog.Bool.GuidesActive">Enable guides</data>
 	<data name="Dialog.Bool.GuidesShow">Show guides</data>
 	<data name="Dialog.Bool.GuidesMouse">Allow guides to be dragged</data>
@@ -162,7 +162,7 @@
 	<data name="Units.Long.Centimeter">centimeters</data>
 	<data name="Units.Long.Inch">inches</data>
 
-	<data name="Container.Guides.RadioGlobal">@@Document</data>
+	<data name="Container.Guides.RadioGlobal">Document</data>
 	<data name="Container.Guides.RadioPage">Current page</data>
 	<data name="Container.Guides.Header.Type">Type</data>
 	<data name="Container.Guides.Header.Position">Position</data>
@@ -884,7 +884,7 @@
 	<data name="Action.ShaperHandleCorner">As defined in Corner Property</data>
 	<data name="Action.ShaperHandleContinue">Extend line</data>
 
-	<data name="Action.Fonts">@@Polices de caractères...</data>
+	<data name="Action.Fonts">Fonts...</data>
 	<data name="Action.Glyphs">Symbols...</data>
 
 	<data name="Action.HideSel">Hide selection</data>
@@ -998,11 +998,11 @@
 	<data name="Action.ViewMain">View</data>
 	<data name="Action.Grid">Enable Magnetic grid</data>
 	<data name="Action.TextGrid">Show Baseline Grid</data>
-	<data name="Action.TextShowControlCharacters">@@Afficher les caractères spéciaux</data>
-	<data name="Action.TextFontFilter">@@Seulement les caractères fréquement utilisés</data>
-	<data name="Action.TextInsertQuad">@@Insérer un espace insécable</data>
-	<data name="Action.TextInsertNewFrame">@@Insérer un saut d'objet</data>
-	<data name="Action.TextInsertNewPage">@@Insérer un saut de page</data>
+	<data name="Action.TextShowControlCharacters">Show control characters</data>
+	<data name="Action.TextFontFilter">Show Preferred Fonts only</data>
+	<data name="Action.TextInsertQuad">Insert Non-Breaking Space</data>
+	<data name="Action.TextInsertNewFrame">Insert a Frame Break</data>
+	<data name="Action.TextInsertNewPage">Insert a Page Break</data>
 	<data name="Action.Preview">Preview as printed</data>
 	<data name="Action.Magnet">Magnetize Objects for use as Smart Guides</data>
 	<data name="Action.MagnetLayer">Magnetize Objects in this Layer</data>

@@ -461,6 +461,14 @@ namespace Epsitec.Common.Document
 						this.Notifier.NotifySaveChanged();
 					}
 				}
+				
+				if ( value )
+				{
+					foreach ( TextFlow flow in this.textFlows )
+					{
+						flow.NotifyAboutToExecuteCommand();
+					}
+				}
 			}
 		}
 

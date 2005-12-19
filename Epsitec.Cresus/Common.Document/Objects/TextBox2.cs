@@ -445,7 +445,7 @@ namespace Epsitec.Common.Document.Objects
 
 			Point ppos = this.transform.TransformInverse(pos);
 			
-			System.Diagnostics.Debug.WriteLine(string.Format("EditProcessMessage: ppos={0}", ppos));
+//-			System.Diagnostics.Debug.WriteLine(string.Format("EditProcessMessage: ppos={0}", ppos));
 			
 			if ( !this.MetaNavigator.ProcessMessage(message, ppos, this.TextFrame) )  return false;
 

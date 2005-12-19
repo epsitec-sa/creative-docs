@@ -160,8 +160,6 @@ namespace Epsitec.Common.Document.Widgets
 						this.OnSelectionChanged();
 					}
 				}
-				
-				message.Consumer = this;
 			}
 			else if ( message.Type == MessageType.MouseWheel )
 			{
@@ -173,8 +171,6 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					this.FirstLine = this.FirstLine+3;
 				}
-				
-				message.Consumer = this;
 			}
 			else if ( message.Type == MessageType.KeyDown )
 			{
@@ -314,6 +310,11 @@ namespace Epsitec.Common.Document.Widgets
 					this.SelectedLine = sel;
 				}
 				
+				message.Consumer = this;
+			}
+			
+			if ( message.IsMouseType )
+			{
 				message.Consumer = this;
 			}
 		}
