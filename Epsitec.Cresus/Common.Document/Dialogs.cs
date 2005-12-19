@@ -156,6 +156,22 @@ namespace Epsitec.Common.Document
 				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.ToLinePrecision);
 				this.CreateDouble(container, "ToLinePrecision");
 				Dialogs.CreateSeparator(container);
+
+				// Onglet Fonts:
+				parent = book.FindChild("Fonts");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+
+				this.tabIndex = 0;
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Fonts.Title);
+
+				this.containerFonts = new Containers.Fonts(this.document);
+				this.containerFonts.Dock = DockStyle.Fill;
+				this.containerFonts.DockMargins = new Margins(10, 10, 4, 10);
+				this.containerFonts.SetParent(container);
+				this.containerFonts.TabIndex = this.tabIndex++;
+				this.containerFonts.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			}
 
 			this.UpdateSettings(true);
@@ -1670,6 +1686,7 @@ namespace Epsitec.Common.Document
 				this.DeletePage(parent, "Guides");
 				this.DeletePage(parent, "Move");
 				this.DeletePage(parent, "Misc");
+				this.DeletePage(parent, "Fonts");
 				this.windowSettings = null;
 			}
 
@@ -1863,6 +1880,7 @@ namespace Epsitec.Common.Document
 		protected Window						windowExportPDF;
 		protected Window						windowGlyphs;
 		protected Containers.Guides				containerGuides;
+		protected Containers.Fonts				containerFonts;
 		protected System.Collections.Hashtable	widgetsTable;
 		protected bool							ignoreChanged = false;
 		protected int							tabIndex;

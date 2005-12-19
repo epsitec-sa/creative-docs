@@ -274,6 +274,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Containers\Fonts.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Containers\Guides.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

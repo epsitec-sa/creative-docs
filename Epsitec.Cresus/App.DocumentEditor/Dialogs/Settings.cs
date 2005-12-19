@@ -77,11 +77,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bookQuick.TabTitle = Res.Strings.Dialog.Settings.TabPage.Quick;
 				bookGlobal.Items.Add(bookQuick);
 
-				TabPage bookFonts = new TabPage();
-				bookFonts.Name = "Fonts";
-				bookFonts.TabTitle = Res.Strings.Dialog.Settings.TabPage.Fonts;
-				bookGlobal.Items.Add(bookFonts);
-
 				bookGlobal.ActivePage = bookGeneral;
 
 				TextFieldCombo combo;
@@ -234,44 +229,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.UpdateQuickList(-1);
 				this.UpdateQuickButtons();
-				
-				// Crée l'onglet "fonts".
-				Common.Document.Dialogs.CreateTitle(bookFonts, Res.Strings.Dialog.Settings.TabPage.FontsHelp);
-
-				toolBar = new HToolBar(bookFonts);
-				toolBar.Dock = DockStyle.Top;
-				toolBar.DockMargins = new Margins(10, 10, 2, -1);
-				toolBar.TabIndex = tabIndex ++;
-				toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-
-				this.buttonFontsDefault = new IconButton(Misc.Icon("QuickDefault"));
-				this.buttonFontsDefault.Clicked += new MessageEventHandler(this.HandleButtonFontsDefault);
-				this.buttonFontsDefault.TabIndex = tabIndex++;
-				this.buttonFontsDefault.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				toolBar.Items.Add(this.buttonFontsDefault);
-				ToolTip.Default.SetToolTip(this.buttonFontsDefault, Res.Strings.Dialog.Settings.FontsDefault);
-
-				toolBar.Items.Add(new IconSeparator());
-
-				this.buttonFontsClear = new IconButton(Misc.Icon("QuickClear"));
-				this.buttonFontsClear.Clicked += new MessageEventHandler(this.HandleButtonFontsClear);
-				this.buttonFontsClear.TabIndex = tabIndex++;
-				this.buttonFontsClear.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				toolBar.Items.Add(this.buttonFontsClear);
-				ToolTip.Default.SetToolTip(this.buttonFontsClear, Res.Strings.Dialog.Settings.FontsClear);
-
-				toolBar.Items.Add(new IconSeparator());
-
-				this.fontSelector = new Common.Document.Widgets.FontSelector(bookFonts);
-				this.fontSelector.Height = Common.Document.Widgets.FontSelector.BestHeight(260, 100000);
-				this.fontSelector.Dock = DockStyle.Top;
-				this.fontSelector.DockMargins = new Margins(10, 10, 0, 0);
-				this.fontSelector.FontList = Misc.GetFontList(false);
-				this.fontSelector.SelectedList = this.globalSettings.QuickFonts;
-				this.fontSelector.Build();
-				this.fontSelector.SelectionChanged += new EventHandler(this.HandleFontSelectorSelectionChanged);
-
-				this.UpdateFontsButtons();
 
 				// Crée les onglets "document".
 				TabBook bookDoc = new TabBook(this.window.Root);
@@ -304,6 +261,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bookMisc.Name = "Misc";
 				bookMisc.TabTitle = Res.Strings.Dialog.Settings.TabPage.Misc;
 				bookDoc.Items.Add(bookMisc);
+
+				TabPage bookFonts = new TabPage();
+				bookFonts.Name = "Fonts";
+				bookFonts.TabTitle = Res.Strings.Dialog.Settings.TabPage.Fonts;
+				bookDoc.Items.Add(bookFonts);
 
 				bookDoc.ActivePage = bookFormat;
 
@@ -787,58 +749,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		#endregion
 
 
-		#region QuickFonts
-		// Met à jour les boutons des polices rapides.
-		protected void UpdateFontsButtons()
-		{
-			bool def = false;
-			bool clr = false;
-
-			if ( this.globalSettings.QuickFonts.Count == 0 )
-			{
-				def = true;
-				clr = false;
-			}
-			else
-			{
-				clr = true;
-				System.Collections.ArrayList defList = new System.Collections.ArrayList();
-				GlobalSettings.DefaultQuickFonts(defList);
-				foreach ( string font in this.globalSettings.QuickFonts )
-				{
-					if ( !defList.Contains(font) )  def = true;
-				}
-			}
-			
-			this.buttonFontsDefault.Enable = def;
-			this.buttonFontsClear.Enable = clr;
-		}
-
-		private void HandleButtonFontsDefault(object sender, MessageEventArgs e)
-		{
-			GlobalSettings.DefaultQuickFonts(this.globalSettings.QuickFonts);
-			this.UpdateFontsButtons();
-			this.fontSelector.UpdateList();
-		}
-
-		private void HandleButtonFontsClear(object sender, MessageEventArgs e)
-		{
-			this.globalSettings.QuickFonts.Clear();
-			this.UpdateFontsButtons();
-			this.fontSelector.UpdateList();
-		}
-
-		private void HandleFontSelectorSelectionChanged(object sender)
-		{
-			this.UpdateFontsButtons();
-		}
-		#endregion
-
-
 		protected int							tabIndex;
 		protected bool							ignoreChange = false;
 		protected CellTable						quickList;
-		protected Common.Document.Widgets.FontSelector fontSelector;
 		protected IconButton					buttonQuickDefault;
 		protected IconButton					buttonQuickClear;
 		protected IconButton					buttonQuickFirst;

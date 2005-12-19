@@ -39,6 +39,10 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Bool.TextShowControlCharacters;
 					break;
 
+				case "TextFontFilter":
+					this.text = Res.Strings.Dialog.Bool.TextFontFilter;
+					break;
+
 				case "GuidesActive":
 					this.text = Res.Strings.Dialog.Bool.GuidesActive;
 					break;
@@ -145,6 +149,9 @@ namespace Epsitec.Common.Document.Settings
 					case "TextShowControlCharacters":
 						return this.document.Modifier.ActiveViewer.DrawingContext.TextShowControlCharacters;
 
+					case "TextFontFilter":
+						return this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
+
 					case "GuidesActive":
 						return this.document.Modifier.ActiveViewer.DrawingContext.GuidesActive;
 
@@ -227,6 +234,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "TextShowControlCharacters":
 						this.document.Modifier.ActiveViewer.DrawingContext.TextShowControlCharacters = value;
+						break;
+
+					case "TextFontFilter":
+						this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter = value;
 						break;
 
 					case "GuidesActive":

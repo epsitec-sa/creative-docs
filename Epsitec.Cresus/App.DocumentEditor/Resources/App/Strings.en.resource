@@ -194,6 +194,7 @@
 	<data name="Dialog.Settings.TabPage.Grid">Grid</data>
 	<data name="Dialog.Settings.TabPage.Guides">Guides</data>
 	<data name="Dialog.Settings.TabPage.Move">Movements</data>
+	<data name="Dialog.Settings.TabPage.Fonts">@@Polices</data>
 	<data name="Dialog.Settings.TabPage.Misc">Misc.</data>
 	
 	<data name="Dialog.Splash.WorkInProgress">Analyzing {0}...</data>

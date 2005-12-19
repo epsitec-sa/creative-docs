@@ -517,7 +517,7 @@ namespace Epsitec.Common.Document.TextPanels
 			bool quickOnly = this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
 			string selectedFontFace = this.document.TextWrapper.Active.FontFace;
 			int quickCount;
-			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.document.GlobalSettings.QuickFonts, quickOnly, selectedFontFace, out quickCount);
+			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.document.Settings.QuickFonts, quickOnly, selectedFontFace, out quickCount);
 
 			this.fontFace.FontList = fontList;
 			this.fontFace.QuickCount = quickCount;

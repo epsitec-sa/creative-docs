@@ -197,6 +197,7 @@
 	<data name="Dialog.Settings.TabPage.Grid">Grille</data>
 	<data name="Dialog.Settings.TabPage.Guides">Repères</data>
 	<data name="Dialog.Settings.TabPage.Move">Déplacements</data>
+	<data name="Dialog.Settings.TabPage.Fonts">Polices</data>
 	<data name="Dialog.Settings.TabPage.Misc">Divers</data>
 	
 	<data name="Dialog.Update.Title">Mise à jour...</data>

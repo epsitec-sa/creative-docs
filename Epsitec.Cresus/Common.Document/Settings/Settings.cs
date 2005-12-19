@@ -20,6 +20,9 @@ namespace Epsitec.Common.Document.Settings
 			this.globalGuides = true;
 			this.guides = new UndoableList(this.document, UndoableListType.Guides);
 
+			this.quickFonts = new System.Collections.ArrayList();
+			Settings.DefaultQuickFonts(this.quickFonts);
+
 			this.printInfo = new PrintInfo(document);
 			this.exportPDFInfo = new ExportPDFInfo(document);
 		}
@@ -45,6 +48,7 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("Settings", "TextGridSubdiv");
 			this.CreateDefaultDouble("Settings", "TextGridOffset");
 			this.CreateDefaultBool("Settings", "TextShowControlCharacters");
+			this.CreateDefaultBool("Settings", "TextFontFilter");
 
 			this.CreateDefaultBool("Settings", "GuidesActive");
 			this.CreateDefaultBool("Settings", "GuidesShow");
@@ -372,6 +376,34 @@ namespace Epsitec.Common.Document.Settings
 		#endregion
 
 
+		#region QuickFonts
+		// Liste des polices rapides.
+		public System.Collections.ArrayList QuickFonts
+		{
+			get
+			{
+				return this.quickFonts;
+			}
+
+			set
+			{
+				this.quickFonts = value;
+			}
+		}
+
+		// Donne la liste des polices rapides par défaut.
+		public static void DefaultQuickFonts(System.Collections.ArrayList list)
+		{
+			list.Clear();
+
+			list.Add("Arial");
+			list.Add("Courier New");
+			list.Add("Tahoma");
+			list.Add("Times New Roman");
+		}
+		#endregion
+
+
 		#region Serialization
 		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -379,6 +411,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("Settings", this.settings);
 			info.AddValue("GlobalGuides", this.globalGuides);
 			info.AddValue("GuidesList", this.guides);
+			info.AddValue("QuickFonts", this.quickFonts);
 			info.AddValue("PrintInfo", this.printInfo);
 			info.AddValue("ExportPDFInfo", this.exportPDFInfo);
 		}
@@ -398,6 +431,16 @@ namespace Epsitec.Common.Document.Settings
 			else
 			{
 				this.globalGuides = true;
+			}
+
+			if ( this.document.IsRevisionGreaterOrEqual(1,2,5) )
+			{
+				this.quickFonts = (System.Collections.ArrayList) info.GetValue("QuickFonts", typeof(System.Collections.ArrayList));
+			}
+			else
+			{
+				this.quickFonts = new System.Collections.ArrayList();
+				Settings.DefaultQuickFonts(this.quickFonts);
 			}
 
 			if ( this.document.IsRevisionGreaterOrEqual(1,0,21) )
@@ -423,6 +466,7 @@ namespace Epsitec.Common.Document.Settings
 		protected System.Collections.Hashtable	owners;
 		protected bool							globalGuides;
 		protected UndoableList					guides;
+		protected System.Collections.ArrayList	quickFonts;
 		protected PrintInfo						printInfo;
 		protected ExportPDFInfo					exportPDFInfo;
 	}

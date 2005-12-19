@@ -24,6 +24,9 @@
 	<data name="Dialog.Settings.FirstAction.OpenLastFiles">Ouvrir les derniers documents</data>
 	<data name="Dialog.Settings.MouseWheelAction.Zoom">Loupe</data>
 	<data name="Dialog.Settings.MouseWheelAction.VScroll">Défilement vertical</data>
+	<data name="Dialog.Settings.Fonts.Title">Polices fréquemment utilisées, en tête de liste</data>
+	<data name="Dialog.Settings.Fonts.Default">Polices les plus courantes</data>
+	<data name="Dialog.Settings.Fonts.Clear">Aucune police fréquement utilisée</data>
 	
 	<data name="Dialog.Print.Printer">Choix de l'imprimante</data>
 	<data name="Dialog.Print.Properties">Propriétés</data>
@@ -53,6 +56,7 @@
 	<data name="Dialog.Bool.GridShow">Grille visible</data>
 	<data name="Dialog.Bool.TextGridShow">Lignes visibles</data>
 	<data name="Dialog.Bool.TextShowControlCharacters">Afficher les caractères spéciaux</data>
+	<data name="Dialog.Bool.TextFontFilter">Seulement les caractères fréquement utilisés</data>
 	<data name="Dialog.Bool.GuidesActive">Repères actifs</data>
 	<data name="Dialog.Bool.GuidesShow">Repères visibles</data>
 	<data name="Dialog.Bool.GuidesMouse">Déplacements avec la souris</data>

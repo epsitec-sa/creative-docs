@@ -640,12 +640,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
 		{
 			bool quickOnly = false;
+			System.Collections.ArrayList quickFonts = new System.Collections.ArrayList();;
 			if ( this.editor.IsCurrentDocument )
 			{
-				quickOnly = this.editor.CurrentDocument.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
+				quickOnly  = this.editor.CurrentDocument.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
+				quickFonts = this.editor.CurrentDocument.Settings.QuickFonts;
 			}
 			int quickCount;
-			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.editor.GlobalSettings.QuickFonts, quickOnly, this.fontFace, out quickCount);
+			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), quickFonts, quickOnly, this.fontFace, out quickCount);
 
 			this.fieldFontFace.FontList = fontList;
 			this.fieldFontFace.QuickCount = quickCount;

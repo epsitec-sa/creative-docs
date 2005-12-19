@@ -295,8 +295,10 @@ namespace Epsitec.Common.Document.Widgets
 			ScreenInfo info = ScreenInfo.Find(pos);
 			Drawing.Rectangle area = info.WorkingArea;
 
+			double bestHeight = FontSelector.BestHeight(500, this.fontList.Count);
+
 			bool bottom = true;  // déroule contre le bas
-			if ( pos.Y-area.Bottom < 500 )
+			if ( pos.Y-area.Bottom < bestHeight )
 			{
 				bottom = pos.Y > (area.Bottom+area.Top)/2;  // choix du sens de déroulement
 			}
