@@ -193,8 +193,9 @@ namespace Epsitec.Common.Document.Widgets
 				switch ( message.KeyCode )
 				{
 					case KeyCode.Escape:
+						break;
 					case KeyCode.Return:
-						this.OnCloseNeeded();
+						this.OnSelectionChanged();
 						break;
 					case KeyCode.ArrowUp:
 						this.FirstLine = this.FirstLine-1;
@@ -250,12 +251,14 @@ namespace Epsitec.Common.Document.Widgets
 				
 				char key = (char)message.KeyChar;
 				int first = -1;
+				int sel   = -1;
 
 				if ( (key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') )
 				{
 					this.searchOnTheFly = string.Format("{0}{1}", this.searchOnTheFly, key);
 					this.searchTime = Types.Time.Now;
 					first = this.StartToRank(this.searchOnTheFly.ToUpper());
+					sel = first;
 				}
 				else
 				{
@@ -264,12 +267,19 @@ namespace Epsitec.Common.Document.Widgets
 
 				if ( key >= '1' && key <= '9' )
 				{
-					int i = (int) key-1;
-					first = System.Math.Min(i, this.quickCount-1);
+					int i = (int) key-'1';
+					sel = System.Math.Min(i, this.quickCount-1);
+					first = 0;
 				}
 
 				if ( first != -1 )
 				{
+					if ( sel != -1 )
+					{
+						this.selectedLine = sel;
+						this.fontFace = this.RankToFace(sel);
+						this.UpdateList();
+					}
 					this.FirstLine = first;
 				}
 				
@@ -413,18 +423,6 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		public event Support.EventHandler SelectionChanged;
-
-		
-		// Génère un événement pour dire que la fermeture est nécessaire.
-		protected virtual void OnCloseNeeded()
-		{
-			if ( this.CloseNeeded != null )  // qq'un écoute ?
-			{
-				this.CloseNeeded(this);
-			}
-		}
-
-		public event Support.EventHandler CloseNeeded;
 
 		
 		protected static readonly double				sampleHeight = 30;
