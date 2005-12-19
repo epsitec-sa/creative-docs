@@ -1000,6 +1000,9 @@
 	<data name="Action.TextGrid">Montrer les lignes magnétiques pour le texte</data>
 	<data name="Action.TextShowControlCharacters">Afficher les caractères spéciaux</data>
 	<data name="Action.TextFontFilter">Seulement les caractères fréquement utilisés</data>
+	<data name="Action.TextInsertQuad">Insérer un espace insécable</data>
+	<data name="Action.TextInsertNewFrame">Insérer un saut d'objet</data>
+	<data name="Action.TextInsertNewPage">Insérer un saut de page</data>
 	<data name="Action.Preview">Comme imprimé</data>
 	<data name="Action.Magnet">Objets magnétiques</data>
 	<data name="Action.MagnetLayer">Les objets du calque sont magnétiques</data>

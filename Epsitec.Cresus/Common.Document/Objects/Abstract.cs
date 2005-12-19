@@ -960,6 +960,18 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
+		// Insère un texte dans le pavé en édition.
+		public virtual bool EditInsertText(Text.Unicode.Code code)
+		{
+			return false;
+		}
+
+		// Insère un texte dans le pavé en édition.
+		public virtual bool EditInsertText(Text.Properties.BreakProperty brk)
+		{
+			return false;
+		}
+
 		// Insère un glyphe dans le pavé en édition.
 		public virtual bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
 		{

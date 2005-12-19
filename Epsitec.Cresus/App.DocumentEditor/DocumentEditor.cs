@@ -2724,6 +2724,27 @@ namespace Epsitec.App.DocumentEditor
 			context.TextFontFilter = !context.TextFontFilter;
 		}
 
+		[Command ("TextInsertQuad")]
+		void CommandTextInsertQuad(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentDocument )  return;
+			this.CurrentDocument.Modifier.EditInsertText(Common.Text.Unicode.Code.NoBreakSpace);
+		}
+
+		[Command ("TextInsertNewFrame")]
+		void CommandTextInsertNewFrame(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentDocument )  return;
+			this.CurrentDocument.Modifier.EditInsertText(Common.Text.Properties.BreakProperty.NewFrame);
+		}
+
+		[Command ("TextInsertNewPage")]
+		void CommandTextInsertNewPage(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentDocument )  return;
+			this.CurrentDocument.Modifier.EditInsertText(Common.Text.Properties.BreakProperty.NewPage);
+		}
+
 		[Command ("Magnet")]
 		void CommandMagnet(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3652,6 +3673,9 @@ namespace Epsitec.App.DocumentEditor
 			this.textGridState = this.CreateCommandState("TextGrid", true);
 			this.textShowControlCharactersState = this.CreateCommandState("TextShowControlCharacters", true);
 			this.textFontFilterState = this.CreateCommandState("TextFontFilter", true);
+			this.textInsertQuadState = this.CreateCommandState("TextInsertQuad");
+			this.textInsertNewFrameState = this.CreateCommandState("TextInsertNewFrame");
+			this.textInsertNewPageState = this.CreateCommandState("TextInsertNewPage");
 			this.magnetState = this.CreateCommandState("Magnet", true);
 			this.magnetLayerState = this.CreateCommandState("MagnetLayer", true);
 			this.rulersState = this.CreateCommandState("Rulers", true);
@@ -4212,6 +4236,9 @@ namespace Epsitec.App.DocumentEditor
 				this.glyphsInsertState.Enable = false;
 				this.textShowControlCharactersState.Enable = false;
 				this.textFontFilterState.Enable = false;
+				this.textInsertQuadState.Enable = false;
+				this.textInsertNewFrameState.Enable = false;
+				this.textInsertNewPageState.Enable = false;
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
 				this.fontUnderlinedState.Enable = false;
@@ -5678,6 +5705,9 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					textGridState;
 		protected CommandState					textShowControlCharactersState;
 		protected CommandState					textFontFilterState;
+		protected CommandState					textInsertQuadState;
+		protected CommandState					textInsertNewFrameState;
+		protected CommandState					textInsertNewPageState;
 		protected CommandState					magnetState;
 		protected CommandState					magnetLayerState;
 		protected CommandState					rulersState;

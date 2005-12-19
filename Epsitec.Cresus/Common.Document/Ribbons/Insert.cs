@@ -14,7 +14,10 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.Text.Insert;
 
-			this.buttonGlyphs = this.CreateIconButton("Glyphs");
+			this.buttonNewFrame = this.CreateIconButton("TextInsertNewFrame");
+			this.buttonNewPage  = this.CreateIconButton("TextInsertNewPage");
+			this.buttonQuad     = this.CreateIconButton("TextInsertQuad");
+			this.buttonGlyphs   = this.CreateIconButton("Glyphs");
 			
 			this.UpdateClientGeometry();
 		}
@@ -49,13 +52,27 @@ namespace Epsitec.Common.Document.Ribbons
 			double dy = this.buttonGlyphs.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
+
+			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
+			this.buttonNewFrame.Bounds = rect;
+			rect.Offset(20, 0);
+			this.buttonNewPage.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
+			this.buttonQuad.Bounds = rect;
+			rect.Offset(20, 0);
 			this.buttonGlyphs.Bounds = rect;
 		}
 
 
+		protected IconButton				buttonNewFrame;
+		protected IconButton				buttonNewPage;
+		protected IconButton				buttonQuad;
 		protected IconButton				buttonGlyphs;
 	}
 }

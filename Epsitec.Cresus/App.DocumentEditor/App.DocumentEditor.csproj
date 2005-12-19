@@ -1863,11 +1863,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\TextInsertBoxSep.icon"
+                    RelPath = "Images\TextInsertNewFrame.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\TextInsertPageSep.icon"
+                    RelPath = "Images\TextInsertNewPage.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

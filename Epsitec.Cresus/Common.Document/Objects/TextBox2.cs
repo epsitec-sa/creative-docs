@@ -609,6 +609,32 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
+		// Insère un texte dans le pavé en édition.
+		public override bool EditInsertText(Unicode.Code code)
+		{
+			this.MetaNavigator.EndSelection();
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
+
+			this.MetaNavigator.Insert(code);
+
+			this.document.Modifier.OpletQueueValidateAction();
+			this.textFlow.NotifyAreaFlow();
+			return true;
+		}
+
+		// Insère un texte dans le pavé en édition.
+		public override bool EditInsertText(Text.Properties.BreakProperty brk)
+		{
+			this.MetaNavigator.EndSelection();
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
+
+			this.MetaNavigator.Insert(brk);
+
+			this.document.Modifier.OpletQueueValidateAction();
+			this.textFlow.NotifyAreaFlow();
+			return true;
+		}
+
 		// Insère un glyphe dans le pavé en édition.
 		public override bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
 		{

@@ -96,6 +96,9 @@ namespace Epsitec.Common.Document
 			this.CommandActiveState("Glyphs", enabled);
 			this.CommandActiveState("GlyphsInsert", enabled);
 			this.CommandActiveState("TextShowControlCharacters", enabled);
+			this.CommandActiveState("TextInsertQuad", enabled);
+			this.CommandActiveState("TextInsertNewFrame", enabled);
+			this.CommandActiveState("TextInsertNewPage", enabled);
 
 			this.CommandActiveState("FontBold",        enabled, bold       );
 			this.CommandActiveState("FontItalic",      enabled, italic     );

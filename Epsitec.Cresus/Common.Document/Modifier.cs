@@ -1182,6 +1182,24 @@ namespace Epsitec.Common.Document
 			return editObject.EditInsertText(text, fontFace, fontStyle);
 		}
 
+		// Insère un texte dans le pavé en édition.
+		public bool EditInsertText(Text.Unicode.Code code)
+		{
+			Objects.Abstract editObject = this.RetEditObject();
+			if ( editObject == null )  return false;
+
+			return editObject.EditInsertText(code);
+		}
+
+		// Insère un texte dans le pavé en édition.
+		public bool EditInsertText(Text.Properties.BreakProperty brk)
+		{
+			Objects.Abstract editObject = this.RetEditObject();
+			if ( editObject == null )  return false;
+
+			return editObject.EditInsertText(brk);
+		}
+
 		// Insère un glyphe dans le pavé en édition.
 		public bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
 		{
