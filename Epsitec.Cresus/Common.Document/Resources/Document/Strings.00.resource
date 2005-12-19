@@ -162,7 +162,7 @@
 	<data name="Units.Long.Centimeter">centimètres</data>
 	<data name="Units.Long.Inch">pouces</data>
 
-	<data name="Container.Guides.RadioGlobal">Globaux</data>
+	<data name="Container.Guides.RadioGlobal">Document</data>
 	<data name="Container.Guides.RadioPage">Page courante</data>
 	<data name="Container.Guides.Header.Type">Type</data>
 	<data name="Container.Guides.Header.Position">Position</data>

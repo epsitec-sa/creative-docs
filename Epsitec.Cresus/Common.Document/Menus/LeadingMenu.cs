@@ -33,6 +33,7 @@ namespace Epsitec.Common.Document.Menus
 				if ( that.units == "%" )  return  1;
 			}
 
+			if ( System.Math.Abs(this.value-that.value) < 0.00001 )  return 0;
 			return this.value.CompareTo(that.value);
 		}
 
@@ -68,28 +69,29 @@ namespace Epsitec.Common.Document.Menus
 
 			if ( document.Modifier.RealUnitDimension == RealUnitType.DimensionInch )
 			{
-				LeadingMenu.Add(document, list, 0.05*254, "");  // 0.05in
-				LeadingMenu.Add(document, list, 0.10*254, "");
-				LeadingMenu.Add(document, list, 0.15*254, "");
 				LeadingMenu.Add(document, list, 0.20*254, "");
+				LeadingMenu.Add(document, list, 0.25*254, "");
 				LeadingMenu.Add(document, list, 0.30*254, "");
+				LeadingMenu.Add(document, list, 0.35*254, "");
 				LeadingMenu.Add(document, list, 0.40*254, "");
+				LeadingMenu.Add(document, list, 0.45*254, "");
 				LeadingMenu.Add(document, list, 0.50*254, "");
 				LeadingMenu.Add(document, list, 0.60*254, "");
+				LeadingMenu.Add(document, list, 0.70*254, "");
 				LeadingMenu.Add(document, list, 0.80*254, "");
-				LeadingMenu.Add(document, list, 0.10*254, "");
-				LeadingMenu.Add(document, list, 0.15*254, "");
-				LeadingMenu.Add(document, list, 0.20*254, "");
+				LeadingMenu.Add(document, list, 0.90*254, "");
+				LeadingMenu.Add(document, list, 1.00*254, "");
 			}
 			else
 			{
-				LeadingMenu.Add(document, list,  10.0, "");  // 1mm
-				LeadingMenu.Add(document, list,  20.0, "");
-				LeadingMenu.Add(document, list,  30.0, "");
-				LeadingMenu.Add(document, list,  40.0, "");
+				LeadingMenu.Add(document, list,  40.0, "");  // 4mm
+				LeadingMenu.Add(document, list,  50.0, "");
 				LeadingMenu.Add(document, list,  60.0, "");
+				LeadingMenu.Add(document, list,  70.0, "");
 				LeadingMenu.Add(document, list,  80.0, "");
+				LeadingMenu.Add(document, list,  90.0, "");
 				LeadingMenu.Add(document, list, 100.0, "");
+				LeadingMenu.Add(document, list, 120.0, "");
 				LeadingMenu.Add(document, list, 150.0, "");
 				LeadingMenu.Add(document, list, 200.0, "");
 				LeadingMenu.Add(document, list, 300.0, "");

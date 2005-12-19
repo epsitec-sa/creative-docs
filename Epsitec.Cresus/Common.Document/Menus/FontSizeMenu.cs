@@ -33,6 +33,7 @@ namespace Epsitec.Common.Document.Menus
 				if ( that.units == "%" )  return  1;
 			}
 
+			if ( System.Math.Abs(this.value-that.value) < 0.00001 )  return 0;
 			return this.value.CompareTo(that.value);
 		}
 

@@ -97,17 +97,7 @@ namespace Epsitec.Common.Document.Widgets
 				if ( this.fontFace != value )
 				{
 					this.fontFace = value;
-
-					this.selectedLine = this.FaceToRank(this.fontFace);
-					
-					if ( this.selectedLine < this.firstLine || this.selectedLine >= this.firstLine+this.samples.Length )
-					{
-						this.firstLine = System.Math.Min(this.selectedLine+this.samples.Length/2, this.fontList.Count-1);
-						this.firstLine = System.Math.Max(this.firstLine-(this.samples.Length-1), 0);
-					}
-
-					this.UpdateScroller();
-					this.UpdateList();
+					this.SelectedLine = this.FaceToRank(this.fontFace);
 				}
 			}
 		}
@@ -194,37 +184,88 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					case KeyCode.Escape:
 						break;
+
 					case KeyCode.Return:
 						this.OnSelectionChanged();
 						break;
+
 					case KeyCode.ArrowUp:
-						this.FirstLine = this.FirstLine-1;
+						if ( message.IsCtrlPressed )
+						{
+							this.FirstLine = this.FirstLine-1;
+						}
+						else
+						{
+							this.SelectedLine = this.SelectedLine-1;
+						}
 						break;
+
 					case KeyCode.ArrowDown:
-						this.FirstLine = this.FirstLine+1;
+						if ( message.IsCtrlPressed )
+						{
+							this.FirstLine = this.FirstLine+1;
+						}
+						else
+						{
+							this.SelectedLine = this.SelectedLine+1;
+						}
 						break;
+
 					case KeyCode.PageUp:
-						this.FirstLine = this.FirstLine-this.samples.Length;
+						if ( message.IsCtrlPressed )
+						{
+							this.FirstLine = this.FirstLine-this.samples.Length;
+						}
+						else
+						{
+							this.SelectedLine = this.SelectedLine-this.samples.Length;
+						}
 						break;
+
 					case KeyCode.PageDown:
-						this.FirstLine = this.FirstLine+this.samples.Length;
+						if ( message.IsCtrlPressed )
+						{
+							this.FirstLine = this.FirstLine+this.samples.Length;
+						}
+						else
+						{
+							this.SelectedLine = this.SelectedLine+this.samples.Length;
+						}
 						break;
+
 					case KeyCode.Home:
-						this.FirstLine = 0;
+						if ( message.IsCtrlPressed )
+						{
+							this.FirstLine = 0;
+						}
+						else
+						{
+							this.SelectedLine = 0;
+						}
 						break;
+
 					case KeyCode.End:
-						this.FirstLine = 100000;
+						if ( message.IsCtrlPressed )
+						{
+							this.FirstLine = 100000;
+						}
+						else
+						{
+							this.SelectedLine = 100000;
+						}
 						break;
+
 					case KeyCode.Back:
 						if ( this.searchOnTheFly.Length > 0 )
 						{
 							this.searchOnTheFly = this.searchOnTheFly.Substring(0, this.searchOnTheFly.Length-1);
 							this.searchTime = Types.Time.Now;
-							this.FirstLine = this.StartToRank(this.searchOnTheFly.ToUpper());
+							this.SelectedLine = this.StartToRank(this.searchOnTheFly.ToUpper());
 							message.Consumer = this;
 							ok = false;
 						}
 						break;
+
 					default:
 						ok = false;
 						break;
@@ -232,7 +273,6 @@ namespace Epsitec.Common.Document.Widgets
 				
 				// Indique que l'événement clavier a été consommé, sinon il sera
 				// traité par le parent, son parent, etc.
-				
 				if ( ok )
 				{
 					message.Consumer = this;
@@ -250,15 +290,13 @@ namespace Epsitec.Common.Document.Widgets
 				}
 				
 				char key = (char)message.KeyChar;
-				int first = -1;
-				int sel   = -1;
+				int sel = -1;
 
 				if ( (key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') )
 				{
 					this.searchOnTheFly = string.Format("{0}{1}", this.searchOnTheFly, key);
 					this.searchTime = Types.Time.Now;
-					first = this.StartToRank(this.searchOnTheFly.ToUpper());
-					sel = first;
+					sel = this.StartToRank(this.searchOnTheFly.ToUpper());
 				}
 				else
 				{
@@ -269,21 +307,46 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					int i = (int) key-'1';
 					sel = System.Math.Min(i, this.quickCount-1);
-					first = 0;
 				}
 
-				if ( first != -1 )
+				if ( sel != -1 )
 				{
-					if ( sel != -1 )
-					{
-						this.selectedLine = sel;
-						this.fontFace = this.RankToFace(sel);
-						this.UpdateList();
-					}
-					this.FirstLine = first;
+					this.SelectedLine = sel;
 				}
 				
 				message.Consumer = this;
+			}
+		}
+
+		// Ligne sélectionnée.
+		protected int SelectedLine
+		{
+			get
+			{
+				return this.selectedLine;
+			}
+
+			set
+			{
+				value = System.Math.Max(value, 0);
+				value = System.Math.Min(value, this.fontList.Count-1);
+
+				if ( this.selectedLine != value )
+				{
+					this.selectedLine = value;
+
+					if ( this.selectedLine <  this.firstLine ||
+						 this.selectedLine >= this.firstLine+this.samples.Length )  // sélection cachée ?
+					{
+						int first = this.selectedLine;
+						first = System.Math.Min(first+this.samples.Length/2, this.fontList.Count-1);
+						first = System.Math.Max(first-(this.samples.Length-1), 0);
+						this.firstLine = first;  // montre la sélection
+					}
+
+					this.UpdateScroller();
+					this.UpdateList();
+				}
 			}
 		}
 
@@ -348,7 +411,22 @@ namespace Epsitec.Common.Document.Widgets
 				
 				if ( ii < this.fontList.Count )
 				{
-					this.samples[i].FontIdentity = this.fontList[ii] as Common.OpenType.FontIdentity;
+					Common.OpenType.FontIdentity id = this.fontList[ii] as Common.OpenType.FontIdentity;
+					this.samples[i].FontIdentity = id;
+
+					string face = id.InvariantFaceName;
+					if ( ii < this.quickCount )  // police rapide ?
+					{
+						if ( ii < 9 )  // police rapide avec un raccourci [1]..[9] ?
+						{
+							face = string.Format("{0}: {1}", (ii+1).ToString(System.Globalization.CultureInfo.InvariantCulture), Misc.Bold(face));
+						}
+						else	// police rapide sans raccourci
+						{
+							face = Misc.Bold(face);
+						}
+					}
+					this.samples[i].FontFace = face;
 
 					if ( this.selectedList == null )  // sélection unique ?
 					{
@@ -356,7 +434,7 @@ namespace Epsitec.Common.Document.Widgets
 					}
 					else	// sélection multiple ?
 					{
-						string face = this.samples[i].FontIdentity.InvariantFaceName;
+						face = this.samples[i].FontIdentity.InvariantFaceName;
 						this.samples[i].SetSelected(this.selectedList.Contains(face));
 					}
 				}

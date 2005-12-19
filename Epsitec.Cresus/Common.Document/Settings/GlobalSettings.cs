@@ -633,6 +633,10 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:FontSizeMinus");
 			list.Add("00:FontClear");
 			list.Add("00:TextShowControlCharacters");
+			list.Add("00:TextInsertNewFrame");
+			list.Add("00:TextInsertNewPage");
+			list.Add("00:TextInsertQuad");
+			list.Add("00:Glyphs");
 			
 			list.Add("00:ZoomMin");
 			list.Add("00:ZoomPage");

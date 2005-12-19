@@ -102,13 +102,16 @@ namespace Epsitec.Common.Document
 				if ( quickFaceNames.Contains(id.InvariantFaceName) )  // fonte fréquement utilisée ?
 				{
 					begin.Add(id);  // begin <- fontes fréquentes dans le même ordre que inList
-				}
-				else
-				{
-					if ( !quickOnly || id.InvariantFaceName == selectedFaceName )
+
+					if ( selectedFaceName == id.InvariantFaceName )
 					{
-						outList.Add(id);  // outList <- fontes normales
+						selectedFaceName = null;
 					}
+				}
+
+				if ( !quickOnly || id.InvariantFaceName == selectedFaceName )
+				{
+					outList.Add(id);  // outList <- fontes normales
 				}
 			}
 

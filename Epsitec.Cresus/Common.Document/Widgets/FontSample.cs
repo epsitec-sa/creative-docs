@@ -11,6 +11,10 @@ namespace Epsitec.Common.Document.Widgets
 	{
 		public FontSample()
 		{
+			this.textLayout = new TextLayout();
+			this.textLayout.DefaultFont     = this.DefaultFont;
+			this.textLayout.DefaultFontSize = this.DefaultFontSize;
+			this.textLayout.Alignment       = ContentAlignment.MiddleLeft;
 		}
 
 		public FontSample(Widget embedder) : this()
@@ -34,6 +38,20 @@ namespace Epsitec.Common.Document.Widgets
 					this.fontIdentity = value;
 					this.Invalidate();
 				}
+			}
+		}
+
+		// Nom de la police.
+		public string FontFace
+		{
+			get
+			{
+				return this.textLayout.Text;
+			}
+
+			set
+			{
+				this.textLayout.Text = value;
 			}
 		}
 
@@ -86,11 +104,24 @@ namespace Epsitec.Common.Document.Widgets
 			this.Invalidate();
 		}
 
+		// Met à jour la géométrie.
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry();
+
+			if ( this.textLayout == null )  return;
+
+			Rectangle rect = this.Client.Bounds;
+
+			this.frontier = (rect.Left+rect.Right)/2;
+			this.textLayout.LayoutSize = new Size(this.frontier-5, 20);
+		}
+
 		// Dessine l'échantillon.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
+			Rectangle rect = this.Client.Bounds;
 			double sep = rect.Width*0.5;
 
 			Color backColor = adorner.ColorTextBackground;
@@ -118,37 +149,32 @@ namespace Epsitec.Common.Document.Widgets
 				hiliColor.A = 0.2;
 			}
 
-			rect.Width = sep;
-			graphics.Align(ref rect);
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(backColor);  // dessine le fond
 
-			double ox = 5;
-			double oy = rect.Height*0.25;
-			double size = 10;
+			Rectangle left = rect;
+			left.Width = this.frontier;
+
 			if ( this.fontIdentity != null )
 			{
-				graphics.Color = textColor;
-				graphics.PaintText(ox, oy, this.fontIdentity.InvariantFaceName, Drawing.Font.DefaultFont, size);
-			}
+				// Dessine le nom de la piloce.
+				Point pos = new Point(5, 2);
+				this.textLayout.Paint(pos, graphics, left, textColor, GlyphPaintStyle.Normal);
 
-			rect.Offset(sep, 0);
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(backColor);  // dessine le fond
-
-			ox = sep+5;
-			size = rect.Height*0.75;
-			if ( this.fontIdentity != null )
-			{
+				// Dessine l'échantillon de la police.
+				double ox = this.frontier+5;
+				double oy = rect.Height*0.25;
+				double size = rect.Height*0.75;
 				Path path = Common.Widgets.Helpers.FontPreviewer.GetPath(this.fontIdentity, ox, oy, size);
 				graphics.Color = textColor;
 				graphics.PaintSurface(path);
 				path.Dispose();
 			}
-			
-			graphics.AddLine(rect.BottomLeft, rect.TopLeft);
 
-			rect = this.Client.Bounds;
+			graphics.Align(ref left);
+			left.Deflate(0.5);
+			graphics.AddLine(left.BottomRight, left.TopRight);  // trait vertical de séparation
+
 			rect.Deflate(0.5);
 
 			if ( this.last )
@@ -165,7 +191,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.Separator )
 			{
 				rect.Bottom += 1;
-				graphics.AddLine(rect.BottomLeft, rect.BottomRight);
+				graphics.AddLine(rect.BottomLeft, rect.BottomRight);  // double trait === en bas
 			}
 
 			graphics.RenderSolid(frameColor);  // dessine le cadre
@@ -175,5 +201,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected OpenType.FontIdentity			fontIdentity = null;
 		protected bool							separator = false;
 		protected bool							last = false;
+		protected double						frontier = 0;
+		protected TextLayout					textLayout = null;
 	}
 }
