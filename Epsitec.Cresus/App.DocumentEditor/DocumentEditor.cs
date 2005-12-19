@@ -740,6 +740,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonText.Items.Add(new Ribbons.Paragraph());
 			this.ribbonText.Items.Add(new Ribbons.Font());
 			this.ribbonText.Items.Add(new Ribbons.Clipboard());
+			this.ribbonText.Items.Add(new Ribbons.Undo());
 			this.ribbonText.Items.Add(new Ribbons.Insert());
 
 			this.ribbonActive = this.ribbonMain;
