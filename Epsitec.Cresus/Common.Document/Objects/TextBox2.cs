@@ -1356,8 +1356,6 @@ namespace Epsitec.Common.Document.Objects
 								 this.document.Modifier.ActiveViewer.IsFocused);
 			}
 
-			this.hasSelection = false;
-
 			this.redrawArea = Drawing.Rectangle.Empty;
 			if ( this.drawingContext != null && this.drawingContext.Viewer != null )
 			{
@@ -1371,10 +1369,10 @@ namespace Epsitec.Common.Document.Objects
 				this.redrawArea.MergeWith(ptr);
 			}
 
-			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.edited && this.drawingContext != null && this.drawingContext.TextShowControlCharacters;
+			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.textFlow.HasActiveTextBox && this.drawingContext != null && this.drawingContext.TextShowControlCharacters;
 			this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
 
-			if ( this.edited && !this.hasSelection && this.graphics != null && this.internalOperation == InternalOperation.Painting )
+			if ( this.textFlow.HasActiveTextBox && !this.textFlow.TextNavigator.HasSelection && this.graphics != null && this.internalOperation == InternalOperation.Painting )
 			{
 				// Peint le curseur uniquement si l'objet est en édition, qu'il n'y a pas
 				// de sélection et que l'on est en train d'afficher à l'écran.
@@ -1591,8 +1589,6 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null )
 				{
-					this.hasSelection = true;
-
 					// Dessine les rectangles correspondant à la sélection.
 					foreach ( Drawing.Rectangle rect in selRectList )
 					{
@@ -2169,7 +2165,6 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 		
-		protected bool							hasSelection;
 		protected bool							isActive;
 		protected ulong							markerSelected;
 		protected TextFlow						textFlow;
