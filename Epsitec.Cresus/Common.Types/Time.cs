@@ -175,6 +175,12 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		public static System.TimeSpan operator - (Time t1, Time t2)
+		{
+			return new System.TimeSpan (t1.Ticks - t2.Ticks);
+		}
+		
+		
 		#region INullable Members
 		public bool								IsNull
 		{

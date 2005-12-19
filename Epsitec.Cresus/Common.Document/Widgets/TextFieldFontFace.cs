@@ -344,12 +344,11 @@ namespace Epsitec.Common.Document.Widgets
 			this.fontSelector.SelectionChanged += new Support.EventHandler(this.HandleSelectorSelectionChanged);
 			this.RegisterFilter();
 			this.comboWindow.Root.Children.Add(this.fontSelector);
+			this.comboWindow.WindowAnimationEnded += new Epsitec.Common.Support.EventHandler(this.HandleComboWindowWindowAnimationEnded);
 			this.comboWindow.AnimateShow(Animation.RollDown);
 			
-			this.fontSelector.Focus();
-			
 			this.openText = this.Text;
-			this.OnOpenedCombo ();
+			this.OnComboOpened ();
 		}
 		
 		protected virtual void CloseCombo(bool accept)
@@ -379,7 +378,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.Text = this.openText;
 			}
 			
-			this.OnClosedCombo ();
+			this.OnComboClosed ();
 		}
 
 		
@@ -391,7 +390,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 		
-		protected virtual void OnOpenedCombo()
+		protected virtual void OnComboOpened()
 		{
 			System.Diagnostics.Debug.Assert (this.IsComboOpen == true);
 			this.UpdateButtonVisibility ();
@@ -402,7 +401,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 		
-		protected virtual void OnClosedCombo()
+		protected virtual void OnComboClosed()
 		{
 			System.Diagnostics.Debug.Assert (this.IsComboOpen == false);
 			this.UpdateButtonVisibility ();
@@ -410,6 +409,11 @@ namespace Epsitec.Common.Document.Widgets
 			if (this.ClosedCombo != null)
 			{
 				this.ClosedCombo (this);
+			}
+			
+			if (this.Window != null)
+			{
+				this.Window.RestoreLogicalFocus ();
 			}
 		}
 		
@@ -480,6 +484,13 @@ namespace Epsitec.Common.Document.Widgets
 			}
 
 			this.CloseCombo(true);
+		}
+		
+		private void HandleComboWindowWindowAnimationEnded(object sender)
+		{
+			this.comboWindow.MakeFocused();
+			this.fontSelector.Focus();
+			System.Diagnostics.Debug.WriteLine("Focus set to window...");
 		}
 		
 		

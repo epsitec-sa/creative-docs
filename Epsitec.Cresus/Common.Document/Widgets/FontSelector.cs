@@ -170,9 +170,10 @@ namespace Epsitec.Common.Document.Widgets
 						this.OnSelectionChanged();
 					}
 				}
+				
+				message.Consumer = this;
 			}
-
-			if ( message.Type == MessageType.MouseWheel )
+			else if ( message.Type == MessageType.MouseWheel )
 			{
 				if ( message.Wheel > 0 )
 				{
@@ -182,53 +183,83 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					this.FirstLine = this.FirstLine+3;
 				}
+				
+				message.Consumer = this;
 			}
-
-			if ( message.Type == MessageType.KeyDown )
+			else if ( message.Type == MessageType.KeyDown )
 			{
-				if ( message.KeyCode == KeyCode.Escape ||
-					 message.KeyCode == KeyCode.Return )
+				bool ok = true;
+				
+				switch ( message.KeyCode )
 				{
-					this.OnCloseNeeded();
+					case KeyCode.Escape:
+					case KeyCode.Return:
+						this.OnCloseNeeded();
+						break;
+					case KeyCode.ArrowUp:
+						this.FirstLine = this.FirstLine-1;
+						break;
+					case KeyCode.ArrowDown:
+						this.FirstLine = this.FirstLine+1;
+						break;
+					case KeyCode.PageUp:
+						this.FirstLine = this.FirstLine-this.samples.Length;
+						break;
+					case KeyCode.PageDown:
+						this.FirstLine = this.FirstLine+this.samples.Length;
+						break;
+					case KeyCode.Home:
+						this.FirstLine = 0;
+						break;
+					case KeyCode.End:
+						this.FirstLine = 100000;
+						break;
+					case KeyCode.Back:
+						if ( this.searchOnTheFly.Length > 0 )
+						{
+							this.searchOnTheFly = this.searchOnTheFly.Substring(0, this.searchOnTheFly.Length-1);
+							this.searchTime = Types.Time.Now;
+							this.FirstLine = this.StartToRank(this.searchOnTheFly.ToUpper());
+							message.Consumer = this;
+							ok = false;
+						}
+						break;
+					default:
+						ok = false;
+						break;
 				}
-
-				if ( message.KeyCode == KeyCode.ArrowUp )
+				
+				// Indique que l'événement clavier a été consommé, sinon il sera
+				// traité par le parent, son parent, etc.
+				
+				if ( ok )
 				{
-					this.FirstLine = this.FirstLine-1;
-				}
-				if ( message.KeyCode == KeyCode.ArrowDown )
-				{
-					this.FirstLine = this.FirstLine+1;
-				}
-
-				if ( message.KeyCode == KeyCode.PageUp )
-				{
-					this.FirstLine = this.FirstLine-this.samples.Length;
-				}
-				if ( message.KeyCode == KeyCode.PageDown )
-				{
-					this.FirstLine = this.FirstLine+this.samples.Length;
-				}
-
-				if ( message.KeyCode == KeyCode.Home )
-				{
-					this.FirstLine = 0;
-				}
-				if ( message.KeyCode == KeyCode.End )
-				{
-					this.FirstLine = 100000;
+					message.Consumer = this;
+					this.searchOnTheFly = "";
 				}
 			}
-
-			if ( message.Type == MessageType.KeyPress )
+			else if ( message.Type == MessageType.KeyPress )
 			{
+				System.TimeSpan time = Types.Time.Now - this.searchTime;
+				double timeSeconds = time.TotalSeconds;
+				
+				if ( timeSeconds > 0.8 || timeSeconds < 0 )
+				{
+					this.searchOnTheFly = "";
+				}
+				
 				char key = (char)message.KeyChar;
 				int first = -1;
 
 				if ( (key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') )
 				{
-					string start = string.Format("{0}", key);
-					first = this.StartToRank(start.ToUpper());
+					this.searchOnTheFly = string.Format("{0}{1}", this.searchOnTheFly, key);
+					this.searchTime = Types.Time.Now;
+					first = this.StartToRank(this.searchOnTheFly.ToUpper());
+				}
+				else
+				{
+					this.searchOnTheFly = "";
 				}
 
 				if ( key >= '1' && key <= '9' )
@@ -241,6 +272,8 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					this.FirstLine = first;
 				}
+				
+				message.Consumer = this;
 			}
 		}
 
@@ -347,7 +380,7 @@ namespace Epsitec.Common.Document.Widgets
 			for ( int i=this.quickCount ; i<this.fontList.Count ; i++ )
 			{
 				Common.OpenType.FontIdentity id = this.fontList[i] as Common.OpenType.FontIdentity;
-				if ( id.InvariantFaceName.StartsWith(start) )  return i;
+				if ( id.InvariantFaceName.ToUpper().StartsWith(start) )  return i;
 			}
 			return -1;
 		}
@@ -405,5 +438,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected int									firstLine = 0;
 		protected int									selectedLine = 0;
 		protected bool									ignoreChange = false;
+		protected Types.Time							searchTime;
+		protected string								searchOnTheFly = "";
 	}
 }
