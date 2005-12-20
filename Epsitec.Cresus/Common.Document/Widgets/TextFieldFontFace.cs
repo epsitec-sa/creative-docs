@@ -90,6 +90,18 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public double SampleHeight
+		{
+			get
+			{
+				return this.sampleHeight;
+			}
+			set
+			{
+				this.sampleHeight = value;
+			}
+		}
+
 		public int QuickCount
 		{
 			get
@@ -295,8 +307,7 @@ namespace Epsitec.Common.Document.Widgets
 			ScreenInfo info = ScreenInfo.Find(pos);
 			Drawing.Rectangle area = info.WorkingArea;
 
-			double sampleHeight = 30;
-			double bestHeight = FontSelector.BestHeight(500, this.fontList.Count, sampleHeight);
+			double bestHeight = FontSelector.BestHeight(500, this.fontList.Count, this.sampleHeight);
 
 			bool bottom = true;  // déroule contre le bas
 			if ( pos.Y-area.Bottom < bestHeight )
@@ -315,13 +326,13 @@ namespace Epsitec.Common.Document.Widgets
 			if ( bottom )  // déroule contre le bas ?
 			{
 				h = System.Math.Min(pos.Y-area.Bottom, 500);
-				h = FontSelector.BestHeight(h, this.fontList.Count, sampleHeight);
+				h = FontSelector.BestHeight(h, this.fontList.Count, this.sampleHeight);
 				pos.Y -= h+shadow.Bottom;
 			}
 			else	// déroule contre le haut ?
 			{
 				h = System.Math.Min(area.Top-pos.Y, 500);
-				h = FontSelector.BestHeight(h, this.fontList.Count, sampleHeight);
+				h = FontSelector.BestHeight(h, this.fontList.Count, this.sampleHeight);
 				pos.Y += this.Height;
 			}
 
@@ -329,7 +340,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.fontSelector.Bounds = new Drawing.Rectangle(0, 0, w, h);
 			this.fontSelector.FontList = this.fontList;
 			this.fontSelector.QuickCount = this.quickCount;
-			this.fontSelector.SampleHeight = sampleHeight;
+			this.fontSelector.SampleHeight = this.sampleHeight;
 			this.fontSelector.SelectedFontFace = this.Text;
 			
 			this.comboWindow = new Window();
@@ -535,6 +546,7 @@ namespace Epsitec.Common.Document.Widgets
 		
 		protected GlyphButton					button;
 		protected System.Collections.ArrayList	fontList;
+		protected double						sampleHeight;
 		protected int							quickCount;
 		protected Window						comboWindow;
 		protected FontSelector					fontSelector;

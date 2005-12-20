@@ -520,6 +520,7 @@ namespace Epsitec.Common.Document.TextPanels
 			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.document.Settings.QuickFonts, quickOnly, selectedFontFace, out quickCount);
 
 			this.fontFace.FontList = fontList;
+			this.fontFace.SampleHeight = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
 			this.fontFace.QuickCount = quickCount;
 		}
 
@@ -773,3 +774,4 @@ namespace Epsitec.Common.Document.TextPanels
 		protected int						originFieldRank = -1;
 	}
 }
+

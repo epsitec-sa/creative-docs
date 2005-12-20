@@ -105,6 +105,7 @@
 	<data name="Dialog.Double.ToLinePrecision">Precision</data>
 	<data name="Dialog.Double.DimensionScale">Scale</data>
 	<data name="Dialog.Double.DimensionDecimal">Number of digits</data>
+	<data name="Dialog.Double.TextFontSampleHeight">@@Taille des échantillons</data>
 
 	<data name="Dialog.Integer.DefaultUnit.Text">Measurment unit</data>
 	<data name="Dialog.Integer.DefaultUnit.Millimeter">Millimeters</data>

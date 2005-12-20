@@ -879,6 +879,28 @@ namespace Epsitec.Common.Document
 				}
 			}
 		}
+
+		// Taille des échantillons de caractères pour FontSelector.
+		public double TextFontSampleHeight
+		{
+			get
+			{
+				return this.textFontSampleHeight;
+			}
+
+			set
+			{
+				if ( this.textFontSampleHeight != value )
+				{
+					this.textFontSampleHeight = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
 		#endregion
 
 
@@ -2386,6 +2408,7 @@ namespace Epsitec.Common.Document
 		protected bool							textGridShow = false;
 		protected bool							textShowControlCharacters = true;
 		protected bool							textFontFilter = true;
+		protected double						textFontSampleHeight = 30;
 		protected double						textGridStep;
 		protected double						textGridSubdiv;
 		protected double						textGridOffset;

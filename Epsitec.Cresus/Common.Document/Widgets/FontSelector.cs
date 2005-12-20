@@ -42,6 +42,8 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					this.sampleHeight = value;
 					this.UpdateClientGeometry();
+					this.UpdateScroller();
+					this.UpdateList();
 				}
 			}
 		}
@@ -209,25 +211,28 @@ namespace Epsitec.Common.Document.Widgets
 				if ( pos.X < this.Bounds.Right-this.scroller.Width )
 				{
 					int sel = this.firstLine + (int)((this.Bounds.Height-pos.Y) / this.sampleHeight);
-					string face = this.RankToFace(sel);
+					if ( sel < this.fontList.Count )
+					{
+						string face = this.RankToFace(sel);
 
-					if ( this.selectedList == null )  // sélection unique ?
-					{
-						this.SelectedFontFace = face;
-						this.OnSelectionChanged();
-					}
-					else	// sélection multiple ?
-					{
-						if ( this.selectedList.Contains(face) )
+						if ( this.selectedList == null )  // sélection unique ?
 						{
-							this.selectedList.Remove(face);
+							this.SelectedFontFace = face;
+							this.OnSelectionChanged();
 						}
-						else
+						else	// sélection multiple ?
 						{
-							this.selectedList.Add(face);
+							if ( this.selectedList.Contains(face) )
+							{
+								this.selectedList.Remove(face);
+							}
+							else
+							{
+								this.selectedList.Add(face);
+							}
+							this.UpdateList();
+							this.OnSelectionChanged();
 						}
-						this.UpdateList();
-						this.OnSelectionChanged();
 					}
 				}
 			}

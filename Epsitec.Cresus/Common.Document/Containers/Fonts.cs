@@ -40,6 +40,17 @@ namespace Epsitec.Common.Document.Containers
 
 			toolBar.Items.Add(new IconSeparator());
 
+			this.slider = new HSlider();
+			this.slider.Width = 100;
+			this.slider.DockMargins = new Margins(0, 0, 4, 4);
+			this.slider.MinValue = 20.0M;
+			this.slider.MaxValue = 60.0M;
+			this.slider.SmallChange = 1.0M;
+			this.slider.LargeChange = 10.0M;
+			this.slider.Resolution = 1.0M;
+			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+			this.toolBar.Items.Add(this.slider);
+
 			this.fontSelector = new Widgets.FontSelector(this);
 			this.fontSelector.Dock = DockStyle.Fill;
 			this.fontSelector.FontList = Misc.GetFontList(false);
@@ -52,7 +63,11 @@ namespace Epsitec.Common.Document.Containers
 		// Met à jour la liste des polices rapides.
 		public void UpdateList()
 		{
+			this.ignoreChange = true;
 			this.fontSelector.SelectedList = this.document.Settings.QuickFonts;
+			this.fontSelector.SampleHeight = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
+			this.slider.Value = (decimal) this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
+			this.ignoreChange = false;
 		}
 		
 
@@ -96,6 +111,15 @@ namespace Epsitec.Common.Document.Containers
 			this.fontSelector.UpdateList();
 		}
 
+		private void HandleSliderChanged(object sender)
+		{
+			if ( this.ignoreChange )  return;
+			HSlider slider = sender as HSlider;
+			if ( slider == null )  return;
+			this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight = (double) slider.Value;
+			this.UpdateList();
+		}
+
 		private void HandleFontSelectorSelectionChanged(object sender)
 		{
 			this.UpdateFontsButtons();
@@ -105,6 +129,8 @@ namespace Epsitec.Common.Document.Containers
 		protected HToolBar					toolBar;
 		protected IconButton				buttonDefault;
 		protected IconButton				buttonClear;
+		protected HSlider					slider;
 		protected Widgets.FontSelector		fontSelector;
+		protected bool						ignoreChange = false;
 	}
 }

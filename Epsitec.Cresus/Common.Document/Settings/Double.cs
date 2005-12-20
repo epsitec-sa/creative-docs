@@ -198,6 +198,13 @@ namespace Epsitec.Common.Document.Settings
 					this.factorMaxValue =  0.1;
 					this.factorStep = 0.5;
 					break;
+
+				case "TextFontSampleHeight":
+					this.text = Res.Strings.Dialog.Double.TextFontSampleHeight;
+					this.integer = true;
+					this.factorMinValue = 20;
+					this.factorMaxValue = 60;
+					break;
 			}
 		}
 
@@ -266,6 +273,9 @@ namespace Epsitec.Common.Document.Settings
 
 					case "TextGridOffset":
 						return this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
+
+					case "TextFontSampleHeight":
+						return this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
 				}
 
 				return 0.0;
@@ -353,6 +363,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "TextGridOffset":
 						this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset = value;
+						break;
+
+					case "TextFontSampleHeight":
+						this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight = value;
 						break;
 				}
 			}
