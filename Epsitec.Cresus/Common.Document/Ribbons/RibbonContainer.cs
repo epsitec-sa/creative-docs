@@ -45,6 +45,15 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
+		public void NotifyChanged(string changed)
+		{
+			foreach ( Abstract ribbon in this.Children )
+			{
+				if ( ribbon == null )  continue;
+				ribbon.NotifyChanged(changed);
+			}
+		}
+
 		public void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
 		{
 			foreach ( Abstract ribbon in this.Children )

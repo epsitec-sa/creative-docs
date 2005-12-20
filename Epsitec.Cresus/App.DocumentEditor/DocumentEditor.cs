@@ -2234,6 +2234,10 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.Paste();
 		}
 
+		[Command ("FontQuick1")]
+		[Command ("FontQuick2")]
+		[Command ("FontQuick3")]
+		[Command ("FontQuick4")]
 		[Command ("FontBold")]
 		[Command ("FontItalic")]
 		[Command ("FontUnderlined")]
@@ -3534,6 +3538,10 @@ namespace Epsitec.App.DocumentEditor
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierCtrl|KeyCode.AlphaC);
 			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierCtrl|KeyCode.AlphaV);
 			
+			this.fontQuick1State = this.CreateCommandState("FontQuick1", null, null, true);
+			this.fontQuick2State = this.CreateCommandState("FontQuick2", null, null, true);
+			this.fontQuick3State = this.CreateCommandState("FontQuick3", null, null, true);
+			this.fontQuick4State = this.CreateCommandState("FontQuick4", null, null, true);
 			this.fontBoldState = this.CreateCommandState("FontBold", true, KeyCode.ModifierCtrl|KeyCode.AlphaB);
 			this.fontItalicState = this.CreateCommandState("FontItalic", true, KeyCode.ModifierCtrl|KeyCode.AlphaI);
 			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", true, KeyCode.ModifierCtrl|KeyCode.AlphaU);
@@ -4217,13 +4225,7 @@ namespace Epsitec.App.DocumentEditor
 				this.selectorAdaptLine.ActiveState = viewer.SelectorAdaptLine ? ActiveState.Yes : ActiveState.No;
 				this.selectorAdaptText.ActiveState = viewer.SelectorAdaptText ? ActiveState.Yes : ActiveState.No;
 
-				if ( this.CurrentDocument.Wrappers.IsWrappersAttached )  // édition en cours ?
-				{
-					//?this.cutState.Enable = true;
-					//?this.copyState.Enable = true;
-					//?this.pasteState.Enable = true;
-				}
-				else
+				if ( !this.CurrentDocument.Wrappers.IsWrappersAttached )  // pas édition en cours ?
 				{
 					this.cutState.Enable = ( totalSelected > 0 && !isCreating );
 					this.copyState.Enable = ( totalSelected > 0 && !isCreating );
@@ -4250,6 +4252,10 @@ namespace Epsitec.App.DocumentEditor
 				this.textInsertQuadState.Enable = false;
 				this.textInsertNewFrameState.Enable = false;
 				this.textInsertNewPageState.Enable = false;
+				this.fontQuick1State.Enable = false;
+				this.fontQuick2State.Enable = false;
+				this.fontQuick3State.Enable = false;
+				this.fontQuick4State.Enable = false;
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
 				this.fontUnderlinedState.Enable = false;
@@ -4670,7 +4676,8 @@ namespace Epsitec.App.DocumentEditor
 				
 				this.textFontSampleAbcState.Enable = true;
 				this.textFontSampleAbcState.ActiveState = context.TextFontSampleAbc ? ActiveState.Yes : ActiveState.No;
-				
+
+				this.CurrentDocument.Wrappers.UpdateQuickFonts();
 				this.CurrentDocument.Dialogs.UpdateFonts();
 			}
 			else
@@ -4681,6 +4688,11 @@ namespace Epsitec.App.DocumentEditor
 				this.textFontSampleAbcState.Enable = false;
 				this.textFontSampleAbcState.ActiveState = ActiveState.No;
 			}
+				
+			this.ribbonMain.NotifyChanged("FontsSettingsChanged");
+			this.ribbonGeom.NotifyChanged("FontsSettingsChanged");
+			this.ribbonOper.NotifyChanged("FontsSettingsChanged");
+			this.ribbonText.NotifyChanged("FontsSettingsChanged");
 		}
 
 		// Appelé par le document lorsque les repères ont changé.
@@ -5607,6 +5619,10 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					cutState;
 		protected CommandState					copyState;
 		protected CommandState					pasteState;
+		protected CommandState					fontQuick1State;
+		protected CommandState					fontQuick2State;
+		protected CommandState					fontQuick3State;
+		protected CommandState					fontQuick4State;
 		protected CommandState					fontBoldState;
 		protected CommandState					fontItalicState;
 		protected CommandState					fontUnderlinedState;

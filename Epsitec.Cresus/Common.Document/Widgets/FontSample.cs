@@ -11,10 +11,6 @@ namespace Epsitec.Common.Document.Widgets
 	{
 		public FontSample()
 		{
-			this.textLayout = new TextLayout();
-			this.textLayout.DefaultFont     = this.DefaultFont;
-			this.textLayout.DefaultFontSize = this.DefaultFontSize;
-			this.textLayout.Alignment       = ContentAlignment.MiddleLeft;
 		}
 
 		public FontSample(Widget embedder) : this()
@@ -46,12 +42,27 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			get
 			{
+				if ( this.textLayout == null )  return null;
 				return this.textLayout.Text;
 			}
 
 			set
 			{
-				this.textLayout.Text = value;
+				if ( value == null )
+				{
+					this.textLayout = null;
+				}
+				else
+				{
+					if ( this.textLayout == null )
+					{
+						this.textLayout = new TextLayout();
+						this.textLayout.DefaultFont     = this.DefaultFont;
+						this.textLayout.DefaultFontSize = this.DefaultFontSize;
+						this.textLayout.Alignment       = ContentAlignment.MiddleLeft;
+					}
+					this.textLayout.Text = value;
+				}
 			}
 		}
 
@@ -127,17 +138,22 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.textLayout == null )  return;
-
-			Rectangle rect = this.Client.Bounds;
-
-			this.frontier = 160;
-			this.textLayout.LayoutSize = new Size(this.frontier-5-16, 20);
+			if ( this.textLayout == null )
+			{
+				this.frontier = 0;
+			}
+			else
+			{
+				this.frontier = 160;
+				this.textLayout.LayoutSize = new Size(this.frontier-5-16, 20);
+			}
 		}
 
 		// Dessine l'échantillon.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			this.UpdateClientGeometry();
+
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
@@ -166,68 +182,83 @@ namespace Epsitec.Common.Document.Widgets
 				hiliColor.A = 0.2;
 			}
 
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(backColor);  // dessine le fond
+			if ( this.textLayout != null )
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(backColor);  // dessine le fond
+			}
 
 			Rectangle left = rect;
 			left.Width = this.frontier;
 
 			if ( this.fontIdentity != null )
 			{
-				double ox;
+				double ox = 0;
 				double oy = rect.Height*0.25;
 
-				// Dessine le nom de la police.
-				Point pos = new Point(5, oy-4);
-				this.textLayout.Paint(pos, graphics, left, textColor, GlyphPaintStyle.Normal);
-
-				// Dessine le nombre de variantes.
-				string text = this.fontIdentity.FontStyleCount.ToString();
-				ox = this.frontier-16-1;
-				graphics.PaintText(ox, oy-1, 16, 20, text, this.DefaultFont, this.DefaultFontSize, ContentAlignment.BottomCenter);
-
-				// Dessine l'échantillon de la police.
-				ox = this.frontier+5;
-				Path path;
-				if ( this.sampleAbc )
+				if ( this.textLayout == null )
 				{
-					path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(this.fontIdentity, ox, oy, rect.Height*0.75);
+					ox = this.frontier+2;
 				}
 				else
 				{
-					path = Common.Widgets.Helpers.FontPreviewer.GetPath(this.fontIdentity, ox, oy, rect.Height*0.75);
+					// Dessine le nom de la police.
+					Point pos = new Point(5, oy-4);
+					this.textLayout.Paint(pos, graphics, left, textColor, GlyphPaintStyle.Normal);
+
+					// Dessine le nombre de variantes.
+					string text = this.fontIdentity.FontStyleCount.ToString();
+					ox = this.frontier-16-1;
+					graphics.PaintText(ox, oy-1, 16, 20, text, this.DefaultFont, this.DefaultFontSize, ContentAlignment.BottomCenter);
+
+					ox = this.frontier+5;
+				}
+
+				// Dessine l'échantillon de la police.
+				double size = rect.Height*0.85;
+				Path path;
+				if ( this.sampleAbc )
+				{
+					path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(this.fontIdentity, ox, oy, size);
+				}
+				else
+				{
+					path = Common.Widgets.Helpers.FontPreviewer.GetPath(this.fontIdentity, ox, oy, size);
 				}
 				graphics.Color = textColor;
 				graphics.PaintSurface(path);
 				path.Dispose();
 			}
 
-			graphics.Align(ref left);
-			left.Deflate(0.5);
-			graphics.AddLine(left.BottomRight, left.TopRight);  // trait vertical de séparation
-			left.Width -= 16;
-			graphics.AddLine(left.BottomRight, left.TopRight);
-
-			rect.Deflate(0.5);
-
-			if ( this.last )
+			if ( this.textLayout != null )
 			{
-				graphics.AddRectangle(rect);
-			}
-			else
-			{
-				graphics.AddLine(rect.BottomLeft, rect.TopLeft    );
-				graphics.AddLine(rect.TopLeft,    rect.TopRight   );
-				graphics.AddLine(rect.TopRight,   rect.BottomRight);  // U inversé
-			}
+				graphics.Align(ref left);
+				left.Deflate(0.5);
+				graphics.AddLine(left.BottomRight, left.TopRight);  // trait vertical de séparation
+				left.Width -= 16;
+				graphics.AddLine(left.BottomRight, left.TopRight);
 
-			if ( this.Separator )
-			{
-				rect.Bottom += 1;
-				graphics.AddLine(rect.BottomLeft, rect.BottomRight);  // double trait === en bas
-			}
+				rect.Deflate(0.5);
 
-			graphics.RenderSolid(frameColor);  // dessine le cadre
+				if ( this.last )
+				{
+					graphics.AddRectangle(rect);
+				}
+				else
+				{
+					graphics.AddLine(rect.BottomLeft, rect.TopLeft    );
+					graphics.AddLine(rect.TopLeft,    rect.TopRight   );
+					graphics.AddLine(rect.TopRight,   rect.BottomRight);  // U inversé
+				}
+
+				if ( this.Separator )
+				{
+					rect.Bottom += 1;
+					graphics.AddLine(rect.BottomLeft, rect.BottomRight);  // double trait === en bas
+				}
+
+				graphics.RenderSolid(frameColor);  // dessine le cadre
+			}
 		}
 
 

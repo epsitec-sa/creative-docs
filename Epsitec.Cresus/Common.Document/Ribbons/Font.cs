@@ -15,6 +15,10 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.FontMain;
 
+			this.buttonQuick1        = this.CreateIconButton("FontQuick1");
+			this.buttonQuick2        = this.CreateIconButton("FontQuick2");
+			this.buttonQuick3        = this.CreateIconButton("FontQuick3");
+			this.buttonQuick4        = this.CreateIconButton("FontQuick4");
 			this.buttonBold          = this.CreateIconButton("FontBold");
 			this.buttonItalic        = this.CreateIconButton("FontItalic");
 			this.buttonFontSizeMinus = this.CreateIconButton("FontSizeMinus");
@@ -47,6 +51,15 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		public override void NotifyChanged(string changed)
+		{
+			if ( changed == "FontsSettingsChanged" )
+			{
+				this.UpdateQuickFonts();
+			}
+		}
+
+
 		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
@@ -54,11 +67,11 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				if ( this.debugMode == DebugMode.DebugCommands )
 				{
-					return 200;
+					return 200+76;
 				}
 				else
 				{
-					return 160;
+					return 160+76;
 				}
 			}
 		}
@@ -75,9 +88,24 @@ namespace Epsitec.Common.Document.Ribbons
 			double dy = this.buttonBold.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
+			rect.Width  = 33;
+			rect.Height = 25;
+			rect.Offset(0, 25-1);
+			this.buttonQuick1.Bounds = rect;
+			rect.Offset(33, 0);
+			this.buttonQuick2.Bounds = rect;
+			rect = this.UsefulZone;
+			rect.Width  = 33;
+			rect.Height = 25;
+			rect.Offset(0, 0);
+			this.buttonQuick3.Bounds = rect;
+			rect.Offset(33, 0);
+			this.buttonQuick4.Bounds = rect;
+
+			rect = this.UsefulZone;
 			rect.Height = dy;
 			rect.Width = dx;
-			rect.Offset(0, dy+5);
+			rect.Offset(dx*1.5*2+10, dy+5);
 			this.buttonBold.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonItalic.Bounds = rect;
@@ -91,6 +119,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect = this.UsefulZone;
 			rect.Height = dy;
 			rect.Width = dx;
+			rect.Offset(dx*1.5*2+10, 0);
 			this.buttonUnderlined.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonOverlined.Bounds = rect;
@@ -107,6 +136,61 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				rect.Offset(dx+10, 0);
 				this.buttonStyle.Bounds = rect;
+			}
+		}
+
+
+		// Met à jour les noms des polices rapides.
+		protected void UpdateQuickFonts()
+		{
+			this.UpdateQuickButton(this.buttonQuick1, 0);
+			this.UpdateQuickButton(this.buttonQuick2, 1);
+			this.UpdateQuickButton(this.buttonQuick3, 2);
+			this.UpdateQuickButton(this.buttonQuick4, 3);
+
+			if ( this.document != null )
+			{
+				this.document.Wrappers.UpdateQuickButtons();
+			}
+		}
+
+		// Met à jour un bouton pour une police rapide.
+		protected void UpdateQuickButton(IconButton button, int i)
+		{
+			// Cherche l'identificateur de la police pour ce bouton.
+			OpenType.FontIdentity id = null;
+			if ( this.document != null )
+			{
+				id = this.document.Wrappers.GetQuickFonts(i);
+			}
+
+			// Si le bouton a déjà l'échantillon pour la bonne police, ne fait rien.
+			if ( id != null )
+			{
+				Widgets.FontSample current = button.FindChild("Sample") as Widgets.FontSample;
+				if ( current != null )
+				{
+					if ( current.FontIdentity.InvariantFaceName == id.InvariantFaceName )  return;
+				}
+			}
+
+			// Supprime l'échantillon dans le bouton.
+			foreach ( Widget widget in button.Children.Widgets )
+			{
+				widget.Dispose();
+			}
+
+			// Crée le nouvel échantillon pour le bouton.
+			if ( this.document != null && id != null )
+			{
+				Widgets.FontSample sample = new Widgets.FontSample(button);
+				sample.Name = "Sample";
+				sample.FontIdentity = id;
+				sample.SampleAbc = true;
+				sample.Dock = DockStyle.Fill;
+				sample.DockMargins = new Margins(0, 0, 3, 2);
+
+				ToolTip.Default.SetToolTip(button, id.InvariantFaceName);
 			}
 		}
 
@@ -151,6 +235,10 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonFontSizeMinus;
 		protected IconButton				buttonFontSizePlus;
 		protected IconButton				buttonShowControl;
+		protected IconButton				buttonQuick1;
+		protected IconButton				buttonQuick2;
+		protected IconButton				buttonQuick3;
+		protected IconButton				buttonQuick4;
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
@@ -159,7 +247,6 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonSubscript;
 		protected IconButton				buttonSuperscript;
 		protected IconButton				buttonClear;
-
 		protected Button					buttonStyle;
 	}
 }

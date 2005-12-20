@@ -69,6 +69,58 @@ namespace Epsitec.Common.Document
 			this.HandleParagraphWrapperChanged(null);
 		}
 
+		// Met à jour toutes les polices rapides.
+		public void UpdateQuickFonts()
+		{
+			int quickCount;
+			this.quickFonts = Misc.MergeFontList(Misc.GetFontList(false), this.document.Settings.QuickFonts, true, null, out quickCount);
+		}
+
+		// Donne une police rapide.
+		public OpenType.FontIdentity GetQuickFonts(int rank)
+		{
+			if ( this.quickFonts == null )  return null;
+			if ( rank >= this.quickFonts.Count )  return null;
+			return this.quickFonts[rank] as OpenType.FontIdentity;
+		}
+
+
+		// Met à jour toutes les commandes pour les polices rapides.
+		public void UpdateQuickButtons()
+		{
+			this.UpdateQuickButton(0);
+			this.UpdateQuickButton(1);
+			this.UpdateQuickButton(2);
+			this.UpdateQuickButton(3);
+		}
+
+		// Met à jour une commande pour les polices rapides.
+		public void UpdateQuickButton(int i)
+		{
+			string cmd = string.Format("FontQuick{0}", (i+1).ToString(System.Globalization.CultureInfo.InvariantCulture));
+			CommandState cs = this.document.CommandDispatcher.GetCommandState(cmd);
+			if ( cs == null )  return;
+
+			if ( this.IsWrappersAttached )
+			{
+				OpenType.FontIdentity id = this.GetQuickFonts(i);
+				if ( id == null )
+				{
+					cs.Enable = false;
+				}
+				else
+				{
+					cs.Enable = true;
+					string face = this.textWrapper.Active.FontFace;
+					cs.ActiveState = (face == id.InvariantFaceName) ? ActiveState.Yes : ActiveState.No;
+				}
+			}
+			else
+			{
+				cs.Enable = false;
+			}
+		}
+
 		// Le wrapper du texte a changé.
 		protected void HandleTextWrapperChanged(object sender)
 		{
@@ -111,6 +163,8 @@ namespace Epsitec.Common.Document
 			this.CommandActiveState("FontSizePlus",  enabled);
 			this.CommandActiveState("FontSizeMinus", enabled);
 			this.CommandActiveState("FontClear",     enabled);
+
+			this.UpdateQuickButtons();
 		}
 
 		// Le wrapper des paragraphes a changé.
@@ -156,6 +210,10 @@ namespace Epsitec.Common.Document
 		{
 			switch ( name )
 			{
+				case "FontQuick1":      this.ChangeQuick(0);         break;
+				case "FontQuick2":      this.ChangeQuick(1);         break;
+				case "FontQuick3":      this.ChangeQuick(2);         break;
+				case "FontQuick4":      this.ChangeQuick(3);         break;
 				case "FontBold":        this.ChangeBold();           break;
 				case "FontItalic":      this.ChangeItalic();         break;
 				case "FontUnderlined":  this.ChangeUnderlined();     break;
@@ -186,6 +244,18 @@ namespace Epsitec.Common.Document
 				case "FontClear":       this.FontClear();       break;
 				case "ParagraphClear":  this.ParagraphClear();  break;
 			}
+		}
+
+		protected void ChangeQuick(int i)
+		{
+			OpenType.FontIdentity id = this.GetQuickFonts(i);
+			if ( id == null )  return;
+			string face = id.InvariantFaceName;
+
+			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.Defined.FontFace  = face;
+			this.textWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
+			this.textWrapper.ResumeSynchronisations();
 		}
 
 		protected void ChangeBold()
@@ -548,7 +618,7 @@ namespace Epsitec.Common.Document
 			xscript.Offset = 0.25;
 		}
 
-		
+
 		protected bool BoldActiveState
 		{
 			get
@@ -706,5 +776,6 @@ namespace Epsitec.Common.Document
 		protected Document								document;
 		protected Text.Wrappers.TextWrapper				textWrapper;
 		protected Text.Wrappers.ParagraphWrapper		paragraphWrapper;
+		protected System.Collections.ArrayList			quickFonts;
 	}
 }

@@ -20,8 +20,6 @@ namespace Epsitec.Common.Document.Containers
 
 			int tabIndex = 0;
 
-			this.toolBar.Items.Add(new IconSeparator());
-
 			this.buttonDefault = new IconButton(Misc.Icon("QuickDefault"));
 			this.buttonDefault.Clicked += new MessageEventHandler(this.HandleButtonDefault);
 			this.buttonDefault.TabIndex = tabIndex++;
@@ -133,6 +131,7 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleFontSelectorSelectionChanged(object sender)
 		{
 			this.UpdateFontsButtons();
+			this.document.Notifier.NotifyFontsSettingsChanged();
 		}
 
 		

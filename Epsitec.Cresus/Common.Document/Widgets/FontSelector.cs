@@ -72,11 +72,11 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			if ( sampleAbc )
 			{
-				return 220 + (sampleHeight-20)*1.5;
+				return 220 + (sampleHeight-20)*1.7;
 			}
 			else
 			{
-				return 260 + (sampleHeight-20)*3.5;
+				return 260 + (sampleHeight-20)*4.5;
 			}
 		}
 
@@ -548,6 +548,8 @@ namespace Epsitec.Common.Document.Widgets
 				else
 				{
 					this.samples[i].FontIdentity = null;
+					this.samples[i].FontFace     = null;
+					this.samples[i].SampleAbc    = false;
 					this.samples[i].SetSelected(false);
 				}
 

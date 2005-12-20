@@ -35,6 +35,10 @@ namespace Epsitec.Common.Document.Ribbons
 			this.document = document;
 		}
 
+		public virtual void NotifyChanged(string changed)
+		{
+		}
+
 		
 		// Retourne la largeur standard.
 		public override double DefaultWidth
