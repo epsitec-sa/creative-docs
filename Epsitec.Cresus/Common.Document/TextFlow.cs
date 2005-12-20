@@ -35,6 +35,10 @@ namespace Epsitec.Common.Document
 				this.textStory = new Text.TextStory(this.document.Modifier.OpletQueue, context);
 			}
 			
+			
+			// Il est important de ne pas générer d'oplets pour le undo/redo ici,
+			// car ils interféreraient avec la gestion faite au plus haut niveau.
+			
 			this.textStory.DisableOpletQueue();
 			
 			this.textFitter    = new Text.TextFitter(this.textStory);
@@ -52,6 +56,9 @@ namespace Epsitec.Common.Document
 		protected void InitialiseEmptyTextStory()
 		{
 			System.Diagnostics.Debug.Assert(this.textStory.TextLength == 0);
+			
+			// Il est important de ne pas générer d'oplets pour le undo/redo ici,
+			// car ils interféreraient avec la gestion faite au plus haut niveau.
 			
 			this.textStory.DisableOpletQueue();
 			

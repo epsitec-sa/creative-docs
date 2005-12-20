@@ -443,12 +443,27 @@ namespace Epsitec.Common.Widgets
 				if ((this.is_mouse_selecting == false) &&
 					(this.initial_position != p))
 				{
+					this.EndSelection ();
+					this.text_navigator.ClearSelection ();
+					
 					this.is_mouse_selecting = true;
-					this.text_navigator.StartSelection ();
 				}
 				
 				if (this.is_mouse_selecting)
 				{
+					if (this.text_navigator.IsSelectionActive)
+					{
+						//	Rien à faire, sélection déjà active.
+					}
+					else if (this.text_navigator.HasSelection)
+					{
+						this.text_navigator.ContinueSelection ();
+					}
+					else
+					{
+						this.text_navigator.StartSelection ();
+					}
+					
 					this.text_navigator.MoveTo (p, d);
 				}
 				
@@ -504,6 +519,7 @@ namespace Epsitec.Common.Widgets
 		public void SelectInsertedCharacter()
 		{
 			this.EndSelection ();
+			this.text_navigator.ClearSelection ();
 			
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
 			this.text_navigator.StartSelection ();
@@ -514,6 +530,7 @@ namespace Epsitec.Common.Widgets
 		public void SelectWord()
 		{
 			this.EndSelection ();
+			this.text_navigator.ClearSelection ();
 			
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.WordStart, 0);
 			this.text_navigator.StartSelection ();
@@ -523,6 +540,7 @@ namespace Epsitec.Common.Widgets
 		public void SelectLine()
 		{
 			this.EndSelection ();
+			this.text_navigator.ClearSelection ();
 			
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.LineStart, 0);
 			this.text_navigator.StartSelection ();
@@ -532,6 +550,7 @@ namespace Epsitec.Common.Widgets
 		public void SelectAll()
 		{
 			this.EndSelection ();
+			this.text_navigator.ClearSelection ();
 			
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			this.text_navigator.StartSelection ();
@@ -765,7 +784,14 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.text_navigator.IsSelectionActive == false)
 				{
-					this.text_navigator.StartSelection ();
+					if (this.text_navigator.HasSelection)
+					{
+						this.text_navigator.ContinueSelection ();
+					}
+					else
+					{
+						this.text_navigator.StartSelection ();
+					}
 				}
 			}
 			else

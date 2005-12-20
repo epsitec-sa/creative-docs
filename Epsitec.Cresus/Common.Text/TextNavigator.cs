@@ -484,6 +484,7 @@ namespace Epsitec.Common.Text
 		public void StartSelection()
 		{
 			System.Diagnostics.Debug.Assert (! this.IsSelectionActive);
+			System.Diagnostics.Debug.Assert (! this.HasSelection);
 			
 			Cursors.SelectionCursor c1 = this.NewSelectionCursor ();
 			Cursors.SelectionCursor c2 = this.NewSelectionCursor ();
@@ -501,6 +502,25 @@ namespace Epsitec.Common.Text
 			this.NotifyCursorMoved ();
 		}
 		
+		public void ContinueSelection()
+		{
+			System.Diagnostics.Debug.Assert (! this.IsSelectionActive);
+			System.Diagnostics.Debug.Assert (this.selection_cursors.Count > 1);
+			
+			this.selection_before = this.GetSelectionCursorPositions ();
+			
+			int n = this.selection_cursors.Count;
+			
+			Cursors.SelectionCursor c1 = this.selection_cursors[n-2] as Cursors.SelectionCursor;
+			Cursors.SelectionCursor c2 = this.selection_cursors[n-1] as Cursors.SelectionCursor;
+			
+			System.Diagnostics.Debug.Assert (c1 != null);
+			System.Diagnostics.Debug.Assert (c2 != null);
+			
+			this.active_selection_cursor = c2;
+			this.NotifyCursorMoved ();
+		}
+		
 		public void EndSelection()
 		{
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive);
@@ -509,7 +529,17 @@ namespace Epsitec.Common.Text
 			
 			using (this.story.BeginAction ())
 			{
-				this.InternalInsertDeselectionOplet ();
+				if ((this.selection_before != null) &&
+					(this.selection_before.Length > 0))
+				{
+					this.InternalInsertSelectionOplet (this.selection_before);
+				}
+				else
+				{
+					this.InternalInsertDeselectionOplet ();
+				}
+				
+				this.selection_before = null;
 				this.story.ValidateAction ();
 			}
 			
@@ -3420,6 +3450,7 @@ again:
 		private Cursors.TempCursor				temp_cursor;
 		private Cursors.SelectionCursor			active_selection_cursor;
 		private System.Collections.ArrayList	selection_cursors;
+		private int[]							selection_before;
 		
 		private TextStyle[]						current_styles;
 		private Property[]						current_properties;

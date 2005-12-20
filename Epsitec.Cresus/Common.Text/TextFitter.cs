@@ -202,6 +202,8 @@ namespace Epsitec.Common.Text
 		
 		public void RenderParagraphInTextFrame(ICursor fitter_cursor, ITextRenderer renderer, ITextFrame frame)
 		{
+			System.Diagnostics.Debug.Assert (this.story.HasTextChangeMarks == false);
+			
 			Cursors.FitterCursor cursor = fitter_cursor as Cursors.FitterCursor;
 			
 			if (cursor == null)
@@ -231,6 +233,8 @@ namespace Epsitec.Common.Text
 		
 		public void RenderTextFrame(ITextFrame frame, ITextRenderer renderer)
 		{
+			System.Diagnostics.Debug.Assert (this.story.HasTextChangeMarks == false);
+			
 			int index = this.frame_list.IndexOf (frame);
 			
 			if (index < 0)
@@ -268,6 +272,8 @@ namespace Epsitec.Common.Text
 		
 		public bool HitTestTextFrame(ITextFrame frame, double x, double y, bool skip_invisible, ref int position, ref int direction)
 		{
+			System.Diagnostics.Debug.Assert (this.story.HasTextChangeMarks == false);
+			
 			int index = this.frame_list.IndexOf (frame);
 			
 			if (index < 0)
@@ -312,6 +318,8 @@ namespace Epsitec.Common.Text
 			//	Détermine où se trouve le curseur dans le frame spécifié. La recherche
 			//	se base sur les positions des lignes, dans un premier temps, puis sur
 			//	les informations détaillées de position au sein de la ligne.
+			
+			System.Diagnostics.Debug.Assert (this.story.HasTextChangeMarks == false);
 			
 			Cursors.FitterCursor cursor = fitter_cursor as Cursors.FitterCursor;
 			
@@ -433,15 +441,17 @@ namespace Epsitec.Common.Text
 		
 		public bool GetCursorGeometry(ICursor cursor, out ITextFrame frame, out double x, out double y, out int paragraph_line, out int line_character)
 		{
-			if (this.story.HasTextChangeMarks)
-			{
-				System.Diagnostics.Debug.WriteLine ("Automatically generating marks, cursor geometry needed!");
-				this.GenerateMarks ();
-			}
-			
 			//	Détermine où se trouve le curseur spécifié : frame, position [x;y],
 			//	numéro de ligne dans le paragraphe et numéro de caractère dans la
 			//	ligne.
+			
+			if (this.story.HasTextChangeMarks)
+			{
+				//	Si le texte n'a pas encore été remis en page pour la position
+				//	qui nous intéresse, force un recalcul :
+				
+				this.GenerateMarks ();
+			}
 			
 			//	NB: La position verticale est toujours alignée sur la ligne de base
 			//		de la fonte, sans tenir compte d'un éventuel offset vertical.
