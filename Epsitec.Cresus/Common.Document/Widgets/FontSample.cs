@@ -113,8 +113,8 @@ namespace Epsitec.Common.Document.Widgets
 
 			Rectangle rect = this.Client.Bounds;
 
-			this.frontier = (rect.Left+rect.Right)/2;
-			this.textLayout.LayoutSize = new Size(this.frontier-5, 20);
+			this.frontier = 160;
+			this.textLayout.LayoutSize = new Size(this.frontier-5-16, 20);
 		}
 
 		// Dessine l'échantillon.
@@ -122,7 +122,6 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
-			double sep = rect.Width*0.5;
 
 			Color backColor = adorner.ColorTextBackground;
 			if ( this.IsSelected )
@@ -157,15 +156,21 @@ namespace Epsitec.Common.Document.Widgets
 
 			if ( this.fontIdentity != null )
 			{
+				double ox;
+				double oy = rect.Height*0.25;
+
 				// Dessine le nom de la piloce.
-				Point pos = new Point(5, 2);
+				Point pos = new Point(5, oy-4);
 				this.textLayout.Paint(pos, graphics, left, textColor, GlyphPaintStyle.Normal);
 
+				// Dessine le nombre de variantes.
+				string text = this.fontIdentity.FontStyleCount.ToString();
+				ox = this.frontier-16-1;
+				graphics.PaintText(ox, oy-1, 16, 20, text, this.DefaultFont, this.DefaultFontSize, ContentAlignment.BottomCenter);
+
 				// Dessine l'échantillon de la police.
-				double ox = this.frontier+5;
-				double oy = rect.Height*0.25;
-				double size = rect.Height*0.75;
-				Path path = Common.Widgets.Helpers.FontPreviewer.GetPath(this.fontIdentity, ox, oy, size);
+				ox = this.frontier+5;
+				Path path = Common.Widgets.Helpers.FontPreviewer.GetPath(this.fontIdentity, ox, oy, rect.Height*0.75);
 				graphics.Color = textColor;
 				graphics.PaintSurface(path);
 				path.Dispose();
@@ -174,6 +179,8 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.Align(ref left);
 			left.Deflate(0.5);
 			graphics.AddLine(left.BottomRight, left.TopRight);  // trait vertical de séparation
+			left.Width -= 16;
+			graphics.AddLine(left.BottomRight, left.TopRight);
 
 			rect.Deflate(0.5);
 

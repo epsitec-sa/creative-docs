@@ -50,9 +50,9 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		// Retourne la meilleure largeur.
-		public static double BestWidth()
+		public static double BestWidth(double sampleHeight)
 		{
-			return 300;
+			return 260 + (sampleHeight-20)*3.5;
 		}
 
 		// Retourne la meilleure hauteur possible, en principe plus petite que la hauteur demandée.

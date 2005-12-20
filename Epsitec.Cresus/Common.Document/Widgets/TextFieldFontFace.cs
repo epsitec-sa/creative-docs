@@ -315,7 +315,7 @@ namespace Epsitec.Common.Document.Widgets
 				bottom = pos.Y > (area.Bottom+area.Top)/2;  // choix du sens de déroulement
 			}
 
-			double w = FontSelector.BestWidth();
+			double w = FontSelector.BestWidth(this.sampleHeight);
 			double h = 0;
 
 			if ( pos.X+w > area.Right )  // dépasse à droite ?
