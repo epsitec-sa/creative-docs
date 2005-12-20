@@ -118,12 +118,15 @@ namespace Epsitec.Common.Document
 				this.CreateBool(container, "GuidesMouse");
 				Dialogs.CreateSeparator(container);
 
-				this.containerGuides = new Containers.Guides(this.document);
-				this.containerGuides.Dock = DockStyle.Fill;
-				this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
+				if ( this.containerGuides == null )
+				{
+					this.containerGuides = new Containers.Guides(this.document);
+					this.containerGuides.Dock = DockStyle.Fill;
+					this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
+					this.containerGuides.TabIndex = this.tabIndex++;
+					this.containerGuides.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+				}
 				this.containerGuides.SetParent(container);
-				this.containerGuides.TabIndex = this.tabIndex++;
-				this.containerGuides.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 				// Onglet Move:
 				parent = book.FindChild("Move");
@@ -166,12 +169,15 @@ namespace Epsitec.Common.Document
 				this.tabIndex = 0;
 				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Fonts.Title);
 
-				this.containerFonts = new Containers.Fonts(this.document);
-				this.containerFonts.Dock = DockStyle.Fill;
-				this.containerFonts.DockMargins = new Margins(10, 10, 4, 10);
+				if ( this.containerFonts == null )
+				{
+					this.containerFonts = new Containers.Fonts(this.document);
+					this.containerFonts.Dock = DockStyle.Fill;
+					this.containerFonts.DockMargins = new Margins(10, 10, 4, 10);
+					this.containerFonts.TabIndex = this.tabIndex++;
+					this.containerFonts.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+				}
 				this.containerFonts.SetParent(container);
-				this.containerFonts.TabIndex = this.tabIndex++;
-				this.containerFonts.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			}
 
 			this.UpdateSettings(true);
@@ -1687,6 +1693,9 @@ namespace Epsitec.Common.Document
 
 			if ( this.windowSettings != null )
 			{
+				this.containerGuides.SetParent(null);
+				this.containerFonts.SetParent(null);  // il ne faut pas détruire ces widgets
+
 				Widget parent = this.windowSettings.Root.FindChild("BookDocument");
 				this.DeletePage(parent, "Format");
 				this.DeletePage(parent, "Grid");
