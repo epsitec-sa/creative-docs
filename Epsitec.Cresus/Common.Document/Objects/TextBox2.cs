@@ -381,18 +381,9 @@ namespace Epsitec.Common.Document.Objects
 					this.PutCommands(list, "Copy");
 					this.PutCommands(list, "Paste");
 					this.PutCommands(list, "");
-					this.PutCommands(list, "ParagraphIndentMinus");
-					this.PutCommands(list, "ParagraphIndentPlus");
-					this.PutCommands(list, "");
-					this.PutCommands(list, "ParagraphLeadingMinus");
-					this.PutCommands(list, "ParagraphLeadingPlus");
-					this.PutCommands(list, "");
 					this.PutCommands(list, "FontBold");
 					this.PutCommands(list, "FontItalic");
-					this.PutCommands(list, "");
 					this.PutCommands(list, "FontUnderlined");
-					this.PutCommands(list, "FontOverlined");
-					this.PutCommands(list, "FontStrikeout");
 					this.PutCommands(list, "");
 					this.PutCommands(list, "FontSubscript");
 					this.PutCommands(list, "FontSuperscript");
@@ -400,7 +391,6 @@ namespace Epsitec.Common.Document.Objects
 					this.PutCommands(list, "FontSizeMinus");
 					this.PutCommands(list, "FontSizePlus");
 					this.PutCommands(list, "");
-					this.PutCommands(list, "ParagraphClear");
 					this.PutCommands(list, "FontClear");
 					this.PutCommands(list, "");
 				}
@@ -458,7 +448,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( this.textFlow.TextNavigator.SelectionCount > 0 )
 				{
-					this.document.Modifier.ActiveViewer.OpenMiniBar(pos, true, false);
+					this.document.Modifier.ActiveViewer.OpenMiniBar(pos, false, false);
 				}
 			}
 
