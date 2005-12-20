@@ -360,6 +360,23 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 		
+		// Trouve le TextFrame qui correspond à la coordonnée souris, tout en
+		// calculant la coordonnée transformée correspondante.
+		public ITextFrame FindTextFrame(Drawing.Point pos, out Drawing.Point ppos)
+		{
+			foreach ( Objects.TextBox2 obj in this.objectsChain )
+			{
+				if ( obj.IsInTextFrame(pos, out ppos) )
+				{
+					return obj.TextFrame;
+				}
+			}
+			
+			ppos = Drawing.Point.Empty;
+			
+			return null;
+		}
+		
 		private void OnActiveTextBoxChanged()
 		{
 			System.Diagnostics.Debug.WriteLine(string.Format("ActiveTextBox set to {0}", this.Rank(this.activeTextBox)));

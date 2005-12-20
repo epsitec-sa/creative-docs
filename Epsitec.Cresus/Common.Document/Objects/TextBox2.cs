@@ -433,12 +433,25 @@ namespace Epsitec.Common.Document.Objects
 				return true;
 			}
 
-			Point ppos = this.transform.TransformInverse(pos);
+			Point ppos;
+			ITextFrame frame;
 			
-//-			System.Diagnostics.Debug.WriteLine(string.Format("EditProcessMessage: ppos={0}", ppos));
+			if ( this.IsInTextFrame(pos, out ppos) )
+			{
+				frame = this.textFrame;
+			}
+			else
+			{
+				// Si la souris n'est pas dans notre texte frame, on utilise le text
+				// frame correspondant à sa position (s'il y en a un).
+				
+				frame = this.textFlow.FindTextFrame(pos, out ppos);
+				
+				if ( frame == null )  frame = this.textFrame;
+			}
 			
-			if ( !this.MetaNavigator.ProcessMessage(message, ppos, this.TextFrame) )  return false;
-
+			if ( !this.MetaNavigator.ProcessMessage(message, ppos, frame) )  return false;
+			
 			if ( message.Type == MessageType.MouseDown )
 			{
 				this.document.Modifier.ActiveViewer.CloseMiniBar(false);
@@ -1316,6 +1329,21 @@ namespace Epsitec.Common.Document.Objects
 				this.textFrame.Height  = height;
 				
 				this.textFlow.TextStory.NotifyTextChanged();
+			}
+		}
+		
+		// Détermine si un point se trouve dans le texte frame.
+		public bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
+		{
+			ppos = this.transform.TransformInverse(pos);
+			
+			if ( ppos.X < 0 || ppos.Y < 0 || ppos.X > this.textFrame.Width || ppos.Y > this.textFrame.Height )
+			{
+				return false;
+			}
+			else
+			{
+				return true;
 			}
 		}
 
