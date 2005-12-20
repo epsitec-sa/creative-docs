@@ -159,7 +159,7 @@ namespace Epsitec.Common.Document.Widgets
 				double ox;
 				double oy = rect.Height*0.25;
 
-				// Dessine le nom de la piloce.
+				// Dessine le nom de la police.
 				Point pos = new Point(5, oy-4);
 				this.textLayout.Paint(pos, graphics, left, textColor, GlyphPaintStyle.Normal);
 

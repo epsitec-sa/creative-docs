@@ -200,6 +200,16 @@ namespace Epsitec.Common.Document
 
 			foreach ( OpenType.FontIdentity id in list )
 			{
+				if ( id.InvariantStyleName == "Regular"          &&
+					 id.FontWeight == OpenType.FontWeight.Normal &&
+					 id.FontStyle  == OpenType.FontStyle.Normal  )
+				{
+					return id;
+				}
+			}
+
+			foreach ( OpenType.FontIdentity id in list )
+			{
 				if ( id.FontWeight == OpenType.FontWeight.Normal &&
 					 id.FontStyle  == OpenType.FontStyle.Normal  )
 				{
