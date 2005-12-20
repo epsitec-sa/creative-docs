@@ -190,10 +190,10 @@ namespace Epsitec.Common.Text
 				}
 				
 				this.frame_list.ClearCursorMap ();
+				this.story.ClearTextChangeMarkPositions ();
 				this.Invalidate ();
 			}
 		}
-		
 		
 		public void RenderParagraph(ICursor cursor, ITextRenderer renderer)
 		{
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Text
 		
 		public void RenderTextFrame(ITextFrame frame, ITextRenderer renderer)
 		{
-			System.Diagnostics.Debug.Assert (this.story.HasTextChangeMarks == false);
+			this.GenerateMarksIfNeeded ();
 			
 			int index = this.frame_list.IndexOf (frame);
 			
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Text
 		
 		public bool HitTestTextFrame(ITextFrame frame, double x, double y, bool skip_invisible, ref int position, ref int direction)
 		{
-			System.Diagnostics.Debug.Assert (this.story.HasTextChangeMarks == false);
+			this.GenerateMarksIfNeeded ();
 			
 			int index = this.frame_list.IndexOf (frame);
 			
@@ -319,7 +319,7 @@ namespace Epsitec.Common.Text
 			//	se base sur les positions des lignes, dans un premier temps, puis sur
 			//	les informations détaillées de position au sein de la ligne.
 			
-			System.Diagnostics.Debug.Assert (this.story.HasTextChangeMarks == false);
+			this.GenerateMarksIfNeeded ();
 			
 			Cursors.FitterCursor cursor = fitter_cursor as Cursors.FitterCursor;
 			
@@ -445,13 +445,7 @@ namespace Epsitec.Common.Text
 			//	numéro de ligne dans le paragraphe et numéro de caractère dans la
 			//	ligne.
 			
-			if (this.story.HasTextChangeMarks)
-			{
-				//	Si le texte n'a pas encore été remis en page pour la position
-				//	qui nous intéresse, force un recalcul :
-				
-				this.GenerateMarks ();
-			}
+			this.GenerateMarksIfNeeded ();
 			
 			//	NB: La position verticale est toujours alignée sur la ligne de base
 			//		de la fonte, sans tenir compte d'un éventuel offset vertical.
@@ -1190,6 +1184,16 @@ restart_paragraph_layout:
 			}
 		}
 		
+		
+		private void GenerateMarksIfNeeded()
+		{
+			if (this.story.HasTextChangeMarks)
+			{
+				this.GenerateMarks ();
+				
+				System.Diagnostics.Debug.Assert (this.story.HasTextChangeMarks == false);
+			}
+		}
 		
 		private void RenderElement(ITextRenderer renderer, ITextFrame frame, Cursors.FitterCursor cursor, Cursors.FitterCursor.Element[] elements, int i, Layout.Context layout, double space_after)
 		{
