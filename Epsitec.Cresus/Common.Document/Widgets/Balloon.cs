@@ -111,19 +111,29 @@ namespace Epsitec.Common.Document.Widgets
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate(0.5);
 
-			double m = this.Client.Bounds.Left+this.hot;
-			double h = this.distance;
-			double w = this.distance*0.3;
+			Path path;
 
-			Path path = new Path();
-			path.MoveTo(m, rect.Bottom);
-			path.LineTo(m-w, rect.Bottom+h);
-			path.LineTo(rect.Left, rect.Bottom+h);
-			path.LineTo(rect.Left, rect.Top);
-			path.LineTo(rect.Right, rect.Top);
-			path.LineTo(rect.Right, rect.Bottom+h);
-			path.LineTo(m+w, rect.Bottom+h);
-			path.Close();
+			if ( double.IsNaN(this.hot) )
+			{
+				rect.Bottom += this.distance;
+				path = Path.FromRectangle(rect);
+			}
+			else
+			{
+				double m = this.Client.Bounds.Left+this.hot;
+				double h = this.distance;
+				double w = this.distance*0.3;
+
+				path = new Path();
+				path.MoveTo(m, rect.Bottom);
+				path.LineTo(m-w, rect.Bottom+h);
+				path.LineTo(rect.Left, rect.Bottom+h);
+				path.LineTo(rect.Left, rect.Top);
+				path.LineTo(rect.Right, rect.Top);
+				path.LineTo(rect.Right, rect.Bottom+h);
+				path.LineTo(m+w, rect.Bottom+h);
+				path.Close();
+			}
 
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(this.backgroundColor);

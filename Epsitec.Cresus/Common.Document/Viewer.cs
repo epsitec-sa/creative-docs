@@ -404,7 +404,7 @@ namespace Epsitec.Common.Document
 						{
 							if ( this.miniBar == null )
 							{
-								this.OpenMiniBar(pos, false, true);
+								this.OpenMiniBar(pos, false, true, true);
 							}
 							else
 							{
@@ -1138,7 +1138,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( mb )
 				{
-					this.OpenMiniBar(mouse, true, false);
+					this.OpenMiniBar(mouse, true, false, true);
 				}
 			}
 		}
@@ -1453,7 +1453,7 @@ namespace Epsitec.Common.Document
 				if ( mb )
 				{
 					this.document.Notifier.NotifyShaperChanged();
-					this.OpenMiniBar(mouse, true, false);
+					this.OpenMiniBar(mouse, true, false, true);
 				}
 			}
 		}
@@ -2378,7 +2378,7 @@ namespace Epsitec.Common.Document
 
 		#region MiniBar
 		// Ouvre la mini-palette.
-		public void OpenMiniBar(Point mouse, bool delayed, bool noSelected)
+		public void OpenMiniBar(Point mouse, bool delayed, bool noSelected, bool hot)
 		{
 			this.CloseMiniBar(false);
 
@@ -2422,7 +2422,7 @@ namespace Epsitec.Common.Document
 			Size size = new Size(mx, my);
 			mouse.X -= size.Width/2;
 			this.miniBarRect = new Drawing.Rectangle(mouse, size);
-			this.miniBarHot = size.Width/2;
+			this.miniBarHot = hot ? size.Width/2 : double.NaN;
 
 			Drawing.Rectangle rect = this.MapClientToScreen(this.miniBarRect);
 			if ( rect.Left < wa.Left )  // dépasse à gauche ?

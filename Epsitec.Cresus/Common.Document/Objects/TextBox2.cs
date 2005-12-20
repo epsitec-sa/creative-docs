@@ -457,7 +457,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( this.textFlow.TextNavigator.SelectionCount > 0 )
 				{
-					this.document.Modifier.ActiveViewer.OpenMiniBar(pos, false, false);
+					this.document.Modifier.ActiveViewer.OpenMiniBar(pos, false, false, false);
 				}
 			}
 
