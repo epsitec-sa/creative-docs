@@ -81,6 +81,8 @@ namespace Epsitec.Common.Document.Widgets
 			set
 			{
 				this.selectedList = value;
+				this.UpdateScroller();
+				this.UpdateList();
 			}
 		}
 
@@ -126,9 +128,6 @@ namespace Epsitec.Common.Document.Widgets
 
 				rect.Offset(0, -FontSelector.sampleHeight);
 			}
-
-			this.UpdateScroller();
-			this.UpdateList();
 		}
 
 
@@ -513,7 +512,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected Common.Document.Widgets.FontSample[]	samples;
 		protected VScroller								scroller;
 		protected int									firstLine = 0;
-		protected int									selectedLine = 0;
+		protected int									selectedLine = -1;
 		protected bool									ignoreChange = false;
 		protected Types.Time							searchTime;
 		protected string								searchOnTheFly = "";

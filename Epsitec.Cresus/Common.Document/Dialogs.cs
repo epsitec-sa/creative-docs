@@ -201,6 +201,13 @@ namespace Epsitec.Common.Document
 			if ( this.containerGuides == null )  return;
 			this.containerGuides.SelectGuide = rank;
 		}
+
+		// Appelé lorsque la liste de polices rapides a changé.
+		public void UpdateFonts()
+		{
+			if ( this.containerFonts == null )  return;
+			this.containerFonts.Update();
+		}
 		#endregion
 
 		#region Print

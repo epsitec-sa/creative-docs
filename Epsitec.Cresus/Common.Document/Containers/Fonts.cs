@@ -46,11 +46,17 @@ namespace Epsitec.Common.Document.Containers
 			this.fontSelector.Anchor = AnchorStyles.Bottom;
 			this.fontSelector.AnchorMargins = new Margins(0, 0, 0, 16);
 			this.fontSelector.FontList = Misc.GetFontList(false);
-			this.fontSelector.SelectedList = this.document.Settings.QuickFonts;
 			this.fontSelector.Build();
 			this.fontSelector.SelectionChanged += new EventHandler(this.HandleFontSelectorSelectionChanged);
 		
+			this.Update();
 			this.UpdateFontsButtons();
+		}
+
+		// Met à jour la liste des polices rapides.
+		public void Update()
+		{
+			this.fontSelector.SelectedList = this.document.Settings.QuickFonts;
 		}
 		
 
