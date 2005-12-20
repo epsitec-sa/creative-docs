@@ -110,6 +110,7 @@ namespace Epsitec.Common.Document.Containers
 			Settings.Settings.DefaultQuickFonts(this.fontSelector.SelectedList);
 			this.UpdateFontsButtons();
 			this.fontSelector.UpdateList();
+			this.document.Notifier.NotifyFontsSettingsChanged();
 		}
 
 		private void HandleButtonClear(object sender, MessageEventArgs e)
@@ -117,6 +118,7 @@ namespace Epsitec.Common.Document.Containers
 			this.fontSelector.SelectedList.Clear();
 			this.UpdateFontsButtons();
 			this.fontSelector.UpdateList();
+			this.document.Notifier.NotifyFontsSettingsChanged();
 		}
 
 		private void HandleSliderChanged(object sender)

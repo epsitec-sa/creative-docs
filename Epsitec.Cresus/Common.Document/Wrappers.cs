@@ -69,11 +69,21 @@ namespace Epsitec.Common.Document
 			this.HandleParagraphWrapperChanged(null);
 		}
 
-		// Met à jour toutes les polices rapides.
+
+		// Met à jour toutes les polices rapides, lorsqu'un changement dans les réglages a été fait.
+		// Appelé par DocumentEditor lorsque la notification FontsSettingsChanged est reçue.
 		public void UpdateQuickFonts()
 		{
-			int quickCount;
-			this.quickFonts = Misc.MergeFontList(Misc.GetFontList(false), this.document.Settings.QuickFonts, true, null, out quickCount);
+			System.Collections.ArrayList quickFonts = this.document.Settings.QuickFonts;
+			if ( quickFonts.Count == 0 )
+			{
+				this.quickFonts = null;
+			}
+			else
+			{
+				int quickCount;
+				this.quickFonts = Misc.MergeFontList(Misc.GetFontList(false), quickFonts, true, null, out quickCount);
+			}
 		}
 
 		// Donne une police rapide.
@@ -97,6 +107,7 @@ namespace Epsitec.Common.Document
 		// Met à jour une commande pour les polices rapides.
 		public void UpdateQuickButton(int i)
 		{
+			// Commandes "FontQuick1" à "FontQuick4":
 			string cmd = string.Format("FontQuick{0}", (i+1).ToString(System.Globalization.CultureInfo.InvariantCulture));
 			CommandState cs = this.document.CommandDispatcher.GetCommandState(cmd);
 			if ( cs == null )  return;
@@ -106,18 +117,21 @@ namespace Epsitec.Common.Document
 				OpenType.FontIdentity id = this.GetQuickFonts(i);
 				if ( id == null )
 				{
-					cs.Enable = false;
+					cs.Enable = false;  // pas de police rapide définie pour ce bouton
+					cs.ActiveState = ActiveState.No;
 				}
 				else
 				{
 					cs.Enable = true;
+
 					string face = this.textWrapper.Active.FontFace;
 					cs.ActiveState = (face == id.InvariantFaceName) ? ActiveState.Yes : ActiveState.No;
 				}
 			}
 			else
 			{
-				cs.Enable = false;
+				cs.Enable = false;  // pas de texte en édition
+				cs.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -246,6 +260,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// La commande pour une police rapide a été actionnée.
 		protected void ChangeQuick(int i)
 		{
 			OpenType.FontIdentity id = this.GetQuickFonts(i);
@@ -258,16 +273,19 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
+		// La commande 'gras' a été actionnée.
 		protected void ChangeBold()
 		{
 			this.textWrapper.Defined.InvertBold = !this.textWrapper.Defined.InvertBold;
 		}
 
+		// La commande 'italique' a été actionnée.
 		protected void ChangeItalic()
 		{
 			this.textWrapper.Defined.InvertItalic = !this.textWrapper.Defined.InvertItalic;
 		}
 
+		// La commande 'souligné' a été actionnée.
 		protected void ChangeUnderlined()
 		{
 			this.textWrapper.SuspendSynchronisations();
@@ -285,6 +303,7 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
+		// La commande 'surligné' a été actionnée.
 		protected void ChangeOverlined()
 		{
 			this.textWrapper.SuspendSynchronisations();
@@ -302,6 +321,7 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
+		// La commande 'biffé' a été actionnée.
 		protected void ChangeStrikeout()
 		{
 			this.textWrapper.SuspendSynchronisations();
@@ -319,6 +339,7 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
+		// La commande 'indice' a été actionnée.
 		protected void ChangeSubscript()
 		{
 			this.textWrapper.SuspendSynchronisations();
@@ -336,6 +357,7 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
+		// La commande 'exposant' a été actionnée.
 		protected void ChangeSuperscript()
 		{
 			this.textWrapper.SuspendSynchronisations();
@@ -353,6 +375,7 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
+		// La commande pour changer de taille a été actionnée.
 		public void IncrementFontSize(double delta)
 		{
 			double size = this.textWrapper.Defined.FontSize;
@@ -385,6 +408,7 @@ namespace Epsitec.Common.Document
 		}
 
 
+		// La commande pour changer d'interligne a été actionnée.
 		protected void ChangeParagraphLeading(double value)
 		{
 			this.paragraphWrapper.SuspendSynchronisations();
@@ -393,6 +417,7 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.ResumeSynchronisations();
 		}
 
+		// La commande modifier l'interligne a été actionnée.
 		public void IncrementParagraphLeading(double delta)
 		{
 			if ( !this.paragraphWrapper.IsAttached )  return;
@@ -425,6 +450,7 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.ResumeSynchronisations();
 		}
 
+		// La commande pour modifier l'indentation a été actionnée.
 		protected void IncrementParagraphIndent(int delta)
 		{
 			if ( !this.paragraphWrapper.IsAttached )  return;
@@ -465,11 +491,13 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.ResumeSynchronisations();
 		}
 
+		// La commande pour changer de mode de justification a été actionnée.
 		protected void Justif(Common.Text.Wrappers.JustificationMode justif)
 		{
 			this.document.ParagraphWrapper.Defined.JustificationMode = justif;
 		}
 
+		// La commande pour effacer les définitions de caractère a été actionnée.
 		protected void FontClear()
 		{
 			if ( !this.textWrapper.IsAttached )  return;
@@ -498,6 +526,7 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
+		// La commande pour effacer les définitions de paragraphe a été actionnée.
 		protected void ParagraphClear()
 		{
 			if ( !this.paragraphWrapper.IsAttached )  return;
@@ -619,6 +648,7 @@ namespace Epsitec.Common.Document
 		}
 
 
+		// Donne l'état de la commande 'gras'.
 		protected bool BoldActiveState
 		{
 			get
@@ -649,6 +679,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Donne l'état de la commande 'italique'.
 		protected bool ItalicActiveState
 		{
 			get
@@ -686,6 +717,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Donne l'état de la commande 'souligné'.
 		protected bool UnderlinedActiveState
 		{
 			get
@@ -694,6 +726,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Donne l'état de la commande 'surligné'.
 		protected bool OverlinedActiveState
 		{
 			get
@@ -702,6 +735,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Donne l'état de la commande 'biffé'.
 		protected bool StrikeoutActiveState
 		{
 			get
@@ -710,6 +744,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Donne l'état de la commande 'indice'.
 		protected bool SubscriptActiveState
 		{
 			get
@@ -718,6 +753,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Donne l'état de la commande 'exposant'.
 		protected bool SuperscriptActiveState
 		{
 			get
@@ -745,6 +781,7 @@ namespace Epsitec.Common.Document
 		}
 
 
+		// Cherche la valeur suivante ou précédente dans une liste.
 		protected static double SearchNextValue(double value, double[] list, double delta)
 		{
 			if ( delta > 0 )

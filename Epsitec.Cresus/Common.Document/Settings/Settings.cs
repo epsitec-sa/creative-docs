@@ -400,7 +400,7 @@ namespace Epsitec.Common.Document.Settings
 
 			list.Add("Arial");
 			list.Add("Courier New");
-			list.Add("Tahoma");
+			//?list.Add("Tahoma");
 			list.Add("Times New Roman");
 		}
 		#endregion

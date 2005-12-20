@@ -15,10 +15,13 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.FontMain;
 
-			this.buttonQuick1        = this.CreateIconButton("FontQuick1");
-			this.buttonQuick2        = this.CreateIconButton("FontQuick2");
-			this.buttonQuick3        = this.CreateIconButton("FontQuick3");
+			// Création dans l'ordre inverse, pour que les cadres soient plus jolis
+			// lorsqu'un bouton est disable.
 			this.buttonQuick4        = this.CreateIconButton("FontQuick4");
+			this.buttonQuick3        = this.CreateIconButton("FontQuick3");
+			this.buttonQuick2        = this.CreateIconButton("FontQuick2");
+			this.buttonQuick1        = this.CreateIconButton("FontQuick1");
+
 			this.buttonBold          = this.CreateIconButton("FontBold");
 			this.buttonItalic        = this.CreateIconButton("FontItalic");
 			this.buttonFontSizeMinus = this.CreateIconButton("FontSizeMinus");

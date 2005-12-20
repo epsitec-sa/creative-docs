@@ -88,7 +88,8 @@ namespace Epsitec.Common.Document
 		// En mode quickOnly (liste courte), la police selectedFaceName apparaît même si elle
 		// ne fait pas partie des polices rapides.
 		// inList: tous les OpenType.FontIdentity connus
-		// quickFaceNames: string des FaceNames fréquement utilisés, dans n'importe quel ordre
+		// quickFaceNames: strings des FaceNames fréquement utilisés, dans n'importe quel ordre
+		// outList (liste retournée): OpenType.FontIdentity
 		static public System.Collections.ArrayList MergeFontList(System.Collections.ArrayList inList, System.Collections.ArrayList quickFaceNames, bool quickOnly, string selectedFaceName, out int quickCount)
 		{
 			System.Collections.ArrayList outList = new System.Collections.ArrayList();
