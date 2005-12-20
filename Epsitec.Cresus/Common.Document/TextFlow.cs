@@ -215,7 +215,6 @@ namespace Epsitec.Common.Document
 				if ( this.activeTextBox != value )
 				{
 					this.activeTextBox = value;
-					this.OnActiveTextBoxChanged();
 				}
 			}
 		}
@@ -317,7 +316,6 @@ namespace Epsitec.Common.Document
 					Objects.TextBox2 obj = this.FindMatchingTextBox(frame);
 					
 					System.Diagnostics.Debug.Assert(obj != null);
-					System.Diagnostics.Debug.WriteLine(string.Format("ChangeObjectEdited: obj={0}", obj.DebugId));
 					
 					this.document.Modifier.EditObject(obj);
 					
@@ -399,11 +397,6 @@ namespace Epsitec.Common.Document
 			this.HandleTextNavigatorTabsChanged(null);
 		}
 		
-		
-		private void OnActiveTextBoxChanged()
-		{
-			System.Diagnostics.Debug.WriteLine(string.Format("ActiveTextBox set to {0}", this.Rank(this.activeTextBox)));
-		}
 		
 		private void HandleTextNavigatorCursorMoved(object sender)
 		{

@@ -153,10 +153,12 @@ namespace Epsitec.Common.Text
 				Cursors.FitterCursor           fitter_cursor = text.GetCursorInstance (infos[0].CursorId) as Cursors.FitterCursor;
 				Cursors.FitterCursor.Element[] elements      = fitter_cursor.Elements;
 				
+#if false
 				System.Diagnostics.Debug.WriteLine (string.Format ("Optimized GenerateMarks: {0}/{1}, Cursor[0].pos={2} (n={3})",
 					/**/										   start, end,
 					/**/										   this.story.GetCursorPosition (fitter_cursor),
 					/**/										   infos.Length));
+#endif
 				
 				int n = elements.Length - 1;
 				

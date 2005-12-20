@@ -329,7 +329,7 @@ namespace Epsitec.Common.Text
 				this.SkipOverAutoText (ref p2, 1);
 			}
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Delete from {0} to {1}", p1, p2));
+//-			System.Diagnostics.Debug.WriteLine (string.Format ("Delete from {0} to {1}", p1, p2));
 			
 			this.story.RecycleCursor (temp);
 			
@@ -469,7 +469,7 @@ namespace Epsitec.Common.Text
 					if ((Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, new_pos - old_pos) == false) &&
 						(Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, new_pos - old_pos, 1)))
 					{
-						System.Diagnostics.Debug.WriteLine ("Swap direction (2)");
+//-						System.Diagnostics.Debug.WriteLine ("Swap direction (2)");
 						new_dir = -1;
 					}
 					
@@ -824,7 +824,7 @@ again:
 				if ((pos_1.Length > 0) ||
 					(pos_2.Length > 0))
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Rename tab from {0} to {1}, {2} live, {3} defined", string.Join ("/", old_tags), new_tag, pos_1.Length, pos_2.Length));
+//-					System.Diagnostics.Debug.WriteLine (string.Format ("Rename tab from {0} to {1}, {2} live, {3} defined", string.Join ("/", old_tags), new_tag, pos_1.Length, pos_2.Length));
 					
 					using (this.story.BeginAction ())
 					{
@@ -1828,7 +1828,7 @@ again:
 				
 				offset = 0;
 				
-				System.Diagnostics.Debug.WriteLine ("--> just after AutoText");
+//-				System.Diagnostics.Debug.WriteLine ("--> just after AutoText");
 			}
 			
 			if ((pos > 0) &&
@@ -2225,7 +2225,7 @@ again:
 			
 			Property[] properties = this.accumulated_properties;
 			
-#if DEBUG
+#if false
 			for (int i = 0; i < properties.Length; i++)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1} -- {2}", i, properties[i].GetType ().Name, properties[i].ToString ()));
@@ -2245,7 +2245,7 @@ again:
 			
 			if (mpp != null)
 			{
-				System.Diagnostics.Debug.WriteLine ("Found managed paragraph property.");
+//-				System.Diagnostics.Debug.WriteLine ("Found managed paragraph property.");
 				
 				for (int i = 0; i < styled_text.Length; i++)
 				{
@@ -2265,14 +2265,14 @@ again:
 				
 				if (starts.Count > 0)
 				{
-					System.Diagnostics.Debug.WriteLine ("Handle insertion of new managed paragraphs.");
+//-					System.Diagnostics.Debug.WriteLine ("Handle insertion of new managed paragraphs.");
 					ParagraphManagerList list = story.TextContext.ParagraphManagerList;
 					
 					while (starts.Count > 0)
 					{
 						pos = (int) starts.Pop ();
 						
-						System.Diagnostics.Debug.WriteLine ("--> start at " + pos.ToString ());
+//-						System.Diagnostics.Debug.WriteLine ("--> start at " + pos.ToString ());
 						
 						this.story.SetCursorPosition (this.temp_cursor, pos);
 						
@@ -2821,7 +2821,7 @@ again:
 			if (this.accumulated_properties_fingerprint != fingerprint.ToString ())
 			{
 				this.accumulated_properties_fingerprint = fingerprint.ToString ();
-				System.Diagnostics.Debug.WriteLine (string.Format ("Property Fingerprint: {0}", this.accumulated_properties_fingerprint));
+//-				System.Diagnostics.Debug.WriteLine (string.Format ("Property Fingerprint: {0}", this.accumulated_properties_fingerprint));
 				
 				this.NotifyActiveStyleChanged ();
 			}
@@ -2841,7 +2841,7 @@ again:
 			if (this.accumulated_tab_info_fingerprint != fingerprint.ToString ())
 			{
 				this.accumulated_tab_info_fingerprint = fingerprint.ToString ();
-				System.Diagnostics.Debug.WriteLine (string.Format ("TabInfo Fingerprint: {0}", this.accumulated_tab_info_fingerprint));
+//-				System.Diagnostics.Debug.WriteLine (string.Format ("TabInfo Fingerprint: {0}", this.accumulated_tab_info_fingerprint));
 				
 				this.NotifyTabsChanged ();
 			}

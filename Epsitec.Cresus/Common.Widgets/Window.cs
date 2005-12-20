@@ -993,7 +993,11 @@ namespace Epsitec.Common.Widgets
 			if (!this.is_disposed)
 			{
 				this.is_disposed = true;
-				System.Diagnostics.Debug.WriteLine("Disposing window, still " + Window.DebugAliveWindowsCount + " windows alive");
+				
+				if (Widget.DebugDispose)
+				{
+					System.Diagnostics.Debug.WriteLine("Disposing window, still " + Window.DebugAliveWindowsCount + " windows alive");
+				}
 				
 				this.Dispose (true);
 				System.GC.SuppressFinalize (this);
@@ -1156,7 +1160,11 @@ namespace Epsitec.Common.Widgets
 						
 						if (owner != null)
 						{
-							System.Diagnostics.Debug.WriteLine ("Disposing active window.");
+							if (Widget.DebugDispose)
+							{
+								System.Diagnostics.Debug.WriteLine ("Disposing active window.");
+							}
+							
 							owner.Activate ();
 						}
 					}
@@ -1378,7 +1386,7 @@ namespace Epsitec.Common.Widgets
 				
 		internal void NotifyWindowFocused()
 		{
-			System.Diagnostics.Debug.WriteLine ("Platform Window focused");
+//-			System.Diagnostics.Debug.WriteLine ("Platform Window focused");
 			
 			if (this.window_is_focused == false)
 			{
@@ -1396,7 +1404,7 @@ namespace Epsitec.Common.Widgets
 					this.window_is_focused = true;
 				}
 				
-				System.Diagnostics.Debug.WriteLine ("Window focused");
+//-				System.Diagnostics.Debug.WriteLine ("Window focused");
 				
 				this.OnWindowFocused ();
 			}
@@ -1404,7 +1412,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal void NotifyWindowDefocused()
 		{
-			System.Diagnostics.Debug.WriteLine ("Platform Window de-focused");
+//-			System.Diagnostics.Debug.WriteLine ("Platform Window de-focused");
 			
 			if ((this.window_is_focused == true) &&
 				(this.IsSubmenuOpen == false))
@@ -1423,7 +1431,7 @@ namespace Epsitec.Common.Widgets
 					this.window_is_focused = false;
 				}
 				
-				System.Diagnostics.Debug.WriteLine ("Window de-focused");
+//-				System.Diagnostics.Debug.WriteLine ("Window de-focused");
 				
 				this.OnWindowDefocused ();
 				

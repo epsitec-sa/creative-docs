@@ -121,7 +121,7 @@ namespace Epsitec.Common.Text.Properties
 				}
 			}
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Combined '{0}' with '{1}' --> '{2}'", a.StyleName, b.StyleName, style_name));
+//-			System.Diagnostics.Debug.WriteLine (string.Format ("Combined '{0}' with '{1}' --> '{2}'", a.StyleName, b.StyleName, style_name));
 			
 			System.Collections.ArrayList features = new System.Collections.ArrayList ();
 			

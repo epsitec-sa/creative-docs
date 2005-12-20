@@ -1331,6 +1331,12 @@ namespace Epsitec.Common.Document.Objects
 		// Détermine si un point se trouve dans le texte frame.
 		public bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
 		{
+			if ( this.transform == null )
+			{
+				ppos = Drawing.Point.Empty;
+				return false;
+			}
+			
 			ppos = this.transform.TransformInverse(pos);
 			
 			if ( ppos.X < 0 || ppos.Y < 0 || ppos.X > this.textFrame.Width || ppos.Y > this.textFrame.Height )
