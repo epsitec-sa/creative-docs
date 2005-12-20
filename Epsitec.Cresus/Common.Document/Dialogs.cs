@@ -212,7 +212,7 @@ namespace Epsitec.Common.Document
 		public void UpdateFonts()
 		{
 			if ( this.containerFonts == null )  return;
-			this.containerFonts.Update();
+			this.containerFonts.UpdateList();
 		}
 		#endregion
 

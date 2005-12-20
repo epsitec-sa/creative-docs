@@ -16,11 +16,34 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
+
+			this.scroller = new VScroller(this);
+			this.scroller.IsInverted = true;  // zéro en haut
+			this.scroller.ValueChanged += new Epsitec.Common.Support.EventHandler(this.ScrollerValueChanged);
 		}
 
 		public FontSelector(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
+		}
+
+
+		// Hauteur d'un échantillon.
+		public double SampleHeight
+		{
+			get
+			{
+				return this.sampleHeight;
+			}
+
+			set
+			{
+				if ( this.sampleHeight != value )
+				{
+					this.sampleHeight = value;
+					this.UpdateClientGeometry();
+				}
+			}
 		}
 
 
@@ -31,14 +54,14 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		// Retourne la meilleure hauteur possible, en principe plus petite que la hauteur demandée.
-		public static double BestHeight(double height, int totalLines)
+		public static double BestHeight(double height, int totalLines, double sampleHeight)
 		{
-			int lines = (int) (height / FontSelector.sampleHeight);
+			int lines = (int) (height / sampleHeight);
 			if ( lines == 0 )  lines ++;  // au moins une ligne, faut pas pousser
 
 			lines = System.Math.Min(lines, totalLines);  // pas plus que nécessaire
 
-			return lines*FontSelector.sampleHeight;
+			return lines*sampleHeight;
 		}
 
 
@@ -105,39 +128,87 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Peuple le widget seulement lorsqu'il a les dimensions définitives.
-		// Ensuite, il ne devra plus être redimensionné.
-		public void Build()
+		// Met à jour la géométrie.
+		protected override void UpdateClientGeometry()
 		{
+			base.UpdateClientGeometry();
+
+			if ( this.scroller == null )  return;
+
 			Rectangle rect = this.Client.Bounds;
 
-			this.scroller = new VScroller(this);
-			this.scroller.Bounds = new Rectangle(rect.Right-this.scroller.DefaultWidth, rect.Bottom, this.scroller.DefaultWidth, rect.Height);
-			this.scroller.IsInverted = true;  // zéro en haut
-			this.scroller.ValueChanged += new Epsitec.Common.Support.EventHandler(this.ScrollerValueChanged);
+			// Crée les échantillons, si nécessaire.
+			int lines = (int) (rect.Height/this.sampleHeight);
+			if ( this.samples == null || this.samples.Length != lines )
+			{
+				if ( this.samples != null )
+				{
+					foreach ( Widget widget in this.samples )
+					{
+						widget.Dispose();
+					}
+					this.samples = null;
+				}
 
-			int lines = (int) (this.Height / FontSelector.sampleHeight);
-			this.samples = new Common.Document.Widgets.FontSample[lines];
+				this.samples = new Common.Document.Widgets.FontSample[lines];
 
-			rect.Width -= this.scroller.DefaultWidth;
-			rect.Bottom = rect.Top-FontSelector.sampleHeight;
+				for ( int i=0 ; i<lines ; i++ )
+				{
+					this.samples[i] = new Epsitec.Common.Document.Widgets.FontSample(this);
+				}
+			}
+
+			// Positionne l'ascenseur.
+			Rectangle r = rect;
+			r.Left = r.Right-this.scroller.DefaultWidth;
+			this.scroller.Bounds = r;
+
+			// Positionne les échantillons.
+			r = rect;
+			r.Width -= this.scroller.DefaultWidth;
+			r.Bottom = r.Top-this.sampleHeight;
 			for ( int i=0 ; i<lines ; i++ )
 			{
-				this.samples[i] = new Epsitec.Common.Document.Widgets.FontSample(this);
-				this.samples[i].Bounds = rect;
+				this.samples[i].Bounds = r;
 
-				rect.Offset(0, -FontSelector.sampleHeight);
+				r.Offset(0, -this.sampleHeight);
 			}
 		}
 
+		// Dessine le cadre.
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			Rectangle rect = this.Client.Bounds;
+			rect.Width -= this.scroller.Width;
 
+			Color backColor  = adorner.ColorTextBackground;
+			Color frameColor = adorner.ColorTextFieldBorder(this.IsEnabled);
+
+			if ( this.samples != null )
+			{
+				Rectangle back = rect;
+				back.Height = rect.Height - this.sampleHeight*this.samples.Length;
+				if ( back.Height > 0 )
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(backColor);  // dessine le fond
+				}
+			}
+
+			rect.Deflate(0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(frameColor);  // dessine le cadre
+		}
+
+		// Gestion des événements clavier/souris.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			if ( message.Type == MessageType.MouseDown )
 			{
 				if ( pos.X < this.Bounds.Right-this.scroller.Width )
 				{
-					int sel = this.firstLine + (int)((this.Bounds.Height-pos.Y) / FontSelector.sampleHeight);
+					int sel = this.firstLine + (int)((this.Bounds.Height-pos.Y) / this.sampleHeight);
 					string face = this.RankToFace(sel);
 
 					if ( this.selectedList == null )  // sélection unique ?
@@ -503,8 +574,7 @@ namespace Epsitec.Common.Document.Widgets
 		public event Support.EventHandler SelectionChanged;
 
 		
-		protected static readonly double				sampleHeight = 30;
-
+		protected double								sampleHeight = 30;
 		protected string								fontFace;
 		protected System.Collections.ArrayList			fontList = null;
 		protected int									quickCount = 0;

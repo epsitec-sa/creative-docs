@@ -41,20 +41,16 @@ namespace Epsitec.Common.Document.Containers
 			toolBar.Items.Add(new IconSeparator());
 
 			this.fontSelector = new Widgets.FontSelector(this);
-			this.fontSelector.Width  = 264;
-			this.fontSelector.Height = 240;
-			this.fontSelector.Anchor = AnchorStyles.Bottom;
-			this.fontSelector.AnchorMargins = new Margins(0, 0, 0, 16);
+			this.fontSelector.Dock = DockStyle.Fill;
 			this.fontSelector.FontList = Misc.GetFontList(false);
-			this.fontSelector.Build();
 			this.fontSelector.SelectionChanged += new EventHandler(this.HandleFontSelectorSelectionChanged);
 		
-			this.Update();
+			this.UpdateList();
 			this.UpdateFontsButtons();
 		}
 
 		// Met à jour la liste des polices rapides.
-		public void Update()
+		public void UpdateList()
 		{
 			this.fontSelector.SelectedList = this.document.Settings.QuickFonts;
 		}
