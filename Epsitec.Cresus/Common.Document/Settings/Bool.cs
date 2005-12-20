@@ -43,6 +43,10 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Bool.TextFontFilter;
 					break;
 
+				case "TextFontSampleAbc":
+					this.text = Res.Strings.Dialog.Bool.TextFontSampleAbc;
+					break;
+
 				case "GuidesActive":
 					this.text = Res.Strings.Dialog.Bool.GuidesActive;
 					break;
@@ -152,6 +156,9 @@ namespace Epsitec.Common.Document.Settings
 					case "TextFontFilter":
 						return this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
 
+					case "TextFontSampleAbc":
+						return this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleAbc;
+
 					case "GuidesActive":
 						return this.document.Modifier.ActiveViewer.DrawingContext.GuidesActive;
 
@@ -238,6 +245,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "TextFontFilter":
 						this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter = value;
+						break;
+
+					case "TextFontSampleAbc":
+						this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleAbc = value;
 						break;
 
 					case "GuidesActive":

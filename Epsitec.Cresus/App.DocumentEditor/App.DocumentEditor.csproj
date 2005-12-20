@@ -1855,6 +1855,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\TextFontSampleAbc.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\TextGrid.icon"
                     BuildAction = "EmbeddedResource"
                 />

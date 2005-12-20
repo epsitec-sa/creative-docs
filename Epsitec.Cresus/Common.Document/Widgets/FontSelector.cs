@@ -48,11 +48,36 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Type d'un échantillon.
+		public bool SampleAbc
+		{
+			get
+			{
+				return this.sampleAbc;
+			}
+
+			set
+			{
+				if ( this.sampleAbc != value )
+				{
+					this.sampleAbc = value;
+					this.UpdateList();
+				}
+			}
+		}
+
 
 		// Retourne la meilleure largeur.
-		public static double BestWidth(double sampleHeight)
+		public static double BestWidth(double sampleHeight, bool sampleAbc)
 		{
-			return 260 + (sampleHeight-20)*3.5;
+			if ( sampleAbc )
+			{
+				return 220 + (sampleHeight-20)*1.5;
+			}
+			else
+			{
+				return 260 + (sampleHeight-20)*3.5;
+			}
 		}
 
 		// Retourne la meilleure hauteur possible, en principe plus petite que la hauteur demandée.
@@ -508,6 +533,7 @@ namespace Epsitec.Common.Document.Widgets
 						}
 					}
 					this.samples[i].FontFace = face;
+					this.samples[i].SampleAbc = this.sampleAbc;
 
 					if ( this.selectedList == null )  // sélection unique ?
 					{
@@ -585,6 +611,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		
 		protected double								sampleHeight = 30;
+		protected bool									sampleAbc = false;
 		protected string								fontFace;
 		protected System.Collections.ArrayList			fontList = null;
 		protected int									quickCount = 0;

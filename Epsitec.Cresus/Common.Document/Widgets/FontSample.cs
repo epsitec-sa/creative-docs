@@ -55,6 +55,24 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Type d'un échantillon.
+		public bool SampleAbc
+		{
+			get
+			{
+				return this.sampleAbc;
+			}
+
+			set
+			{
+				if ( this.sampleAbc != value )
+				{
+					this.sampleAbc = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 		// Indique si l'échantillon est suivi d'un séparateur.
 		public bool Separator
 		{
@@ -170,7 +188,15 @@ namespace Epsitec.Common.Document.Widgets
 
 				// Dessine l'échantillon de la police.
 				ox = this.frontier+5;
-				Path path = Common.Widgets.Helpers.FontPreviewer.GetPath(this.fontIdentity, ox, oy, rect.Height*0.75);
+				Path path;
+				if ( this.sampleAbc )
+				{
+					path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(this.fontIdentity, ox, oy, rect.Height*0.75);
+				}
+				else
+				{
+					path = Common.Widgets.Helpers.FontPreviewer.GetPath(this.fontIdentity, ox, oy, rect.Height*0.75);
+				}
 				graphics.Color = textColor;
 				graphics.PaintSurface(path);
 				path.Dispose();
@@ -206,6 +232,7 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		protected OpenType.FontIdentity			fontIdentity = null;
+		protected bool							sampleAbc = false;
 		protected bool							separator = false;
 		protected bool							last = false;
 		protected double						frontier = 0;

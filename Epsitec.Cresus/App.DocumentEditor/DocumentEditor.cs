@@ -2724,6 +2724,13 @@ namespace Epsitec.App.DocumentEditor
 			context.TextFontFilter = !context.TextFontFilter;
 		}
 
+		[Command ("TextFontSampleAbc")]
+		void CommandTextFontSampleAbc(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			context.TextFontSampleAbc = !context.TextFontSampleAbc;
+		}
+
 		[Command ("TextInsertQuad")]
 		void CommandTextInsertQuad(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3673,6 +3680,7 @@ namespace Epsitec.App.DocumentEditor
 			this.textGridState = this.CreateCommandState("TextGrid", true);
 			this.textShowControlCharactersState = this.CreateCommandState("TextShowControlCharacters", true);
 			this.textFontFilterState = this.CreateCommandState("TextFontFilter", true);
+			this.textFontSampleAbcState = this.CreateCommandState("TextFontSampleAbc", true);
 			this.textInsertQuadState = this.CreateCommandState("TextInsertQuad");
 			this.textInsertNewFrameState = this.CreateCommandState("TextInsertNewFrame");
 			this.textInsertNewPageState = this.CreateCommandState("TextInsertNewPage");
@@ -3856,6 +3864,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.MagnetChanged          += new SimpleEventHandler(this.HandleMagnetChanged);
 			this.CurrentDocument.Notifier.PreviewChanged         += new SimpleEventHandler(this.HandlePreviewChanged);
 			this.CurrentDocument.Notifier.SettingsChanged        += new SimpleEventHandler(this.HandleSettingsChanged);
+			this.CurrentDocument.Notifier.FontsSettingsChanged   += new SimpleEventHandler(this.HandleFontsSettingsChanged);
 			this.CurrentDocument.Notifier.GuidesChanged          += new SimpleEventHandler(this.HandleGuidesChanged);
 			this.CurrentDocument.Notifier.HideHalfChanged        += new SimpleEventHandler(this.HandleHideHalfChanged);
 			this.CurrentDocument.Notifier.DebugChanged           += new SimpleEventHandler(this.HandleDebugChanged);
@@ -4237,6 +4246,7 @@ namespace Epsitec.App.DocumentEditor
 				this.glyphsInsertState.Enable = false;
 				this.textShowControlCharactersState.Enable = false;
 				this.textFontFilterState.Enable = false;
+				this.textFontSampleAbcState.Enable = false;
 				this.textInsertQuadState.Enable = false;
 				this.textInsertNewFrameState.Enable = false;
 				this.textInsertNewPageState.Enable = false;
@@ -4559,9 +4569,6 @@ namespace Epsitec.App.DocumentEditor
 				this.textGridState.Enable = true;
 				this.textGridState.ActiveState = context.TextGridShow ? ActiveState.Yes : ActiveState.No;
 				
-				this.textFontFilterState.Enable = true;
-				this.textFontFilterState.ActiveState = context.TextFontFilter ? ActiveState.Yes : ActiveState.No;
-				
 				this.rulersState.Enable = true;
 				this.rulersState.ActiveState = context.RulersShow ? ActiveState.Yes : ActiveState.No;
 				
@@ -4578,9 +4585,6 @@ namespace Epsitec.App.DocumentEditor
 				
 				this.textGridState.Enable = false;
 				this.textGridState.ActiveState = ActiveState.No;
-				
-				this.textFontFilterState.Enable = false;
-				this.textFontFilterState.ActiveState = ActiveState.No;
 				
 				this.rulersState.Enable = false;
 				this.rulersState.ActiveState = ActiveState.No;
@@ -4651,6 +4655,31 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				this.CurrentDocument.Dialogs.UpdateAllSettings();
+			}
+		}
+
+		// Appelé par le document lorsque les réglages de police ont changés.
+		private void HandleFontsSettingsChanged()
+		{
+			if ( this.IsCurrentDocument )
+			{
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				
+				this.textFontFilterState.Enable = true;
+				this.textFontFilterState.ActiveState = context.TextFontFilter ? ActiveState.Yes : ActiveState.No;
+				
+				this.textFontSampleAbcState.Enable = true;
+				this.textFontSampleAbcState.ActiveState = context.TextFontSampleAbc ? ActiveState.Yes : ActiveState.No;
+				
+				this.CurrentDocument.Dialogs.UpdateFonts();
+			}
+			else
+			{
+				this.textFontFilterState.Enable = false;
+				this.textFontFilterState.ActiveState = ActiveState.No;
+				
+				this.textFontSampleAbcState.Enable = false;
+				this.textFontSampleAbcState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -5218,6 +5247,7 @@ namespace Epsitec.App.DocumentEditor
 				this.HandleMagnetChanged();
 				this.HandlePreviewChanged();
 				this.HandleSettingsChanged();
+				this.HandleFontsSettingsChanged();
 				this.HandleGuidesChanged();
 				this.HandleHideHalfChanged();
 				this.HandleDebugChanged();
@@ -5706,6 +5736,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					textGridState;
 		protected CommandState					textShowControlCharactersState;
 		protected CommandState					textFontFilterState;
+		protected CommandState					textFontSampleAbcState;
 		protected CommandState					textInsertQuadState;
 		protected CommandState					textInsertNewFrameState;
 		protected CommandState					textInsertNewPageState;

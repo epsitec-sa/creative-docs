@@ -873,7 +873,30 @@ namespace Epsitec.Common.Document
 
 					if ( this.document.Notifier != null )
 					{
-						this.document.Notifier.NotifyGridChanged();
+						this.document.Notifier.NotifyFontsSettingsChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
+
+		// Echantillons "Abc" à la place de "AaBbYyZz".
+		public bool TextFontSampleAbc
+		{
+			get
+			{
+				return this.textFontSampleAbc;
+			}
+
+			set
+			{
+				if ( this.textFontSampleAbc != value )
+				{
+					this.textFontSampleAbc = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyFontsSettingsChanged();
 						this.document.IsDirtySerialize = true;
 					}
 				}
@@ -2408,6 +2431,7 @@ namespace Epsitec.Common.Document
 		protected bool							textGridShow = false;
 		protected bool							textShowControlCharacters = true;
 		protected bool							textFontFilter = true;
+		protected bool							textFontSampleAbc = false;
 		protected double						textFontSampleHeight = 30;
 		protected double						textGridStep;
 		protected double						textGridSubdiv;

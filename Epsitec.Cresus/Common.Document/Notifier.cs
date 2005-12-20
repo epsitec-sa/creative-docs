@@ -65,6 +65,7 @@ namespace Epsitec.Common.Document
 			this.magnetChanged = true;
 			this.previewChanged = true;
 			this.settingsChanged = true;
+			this.fontsSettingsChanged = true;
 			this.guidesChanged = true;
 			this.hideHalfChanged = true;
 			this.debugChanged = true;
@@ -276,6 +277,14 @@ namespace Epsitec.Common.Document
 		{
 			if ( !this.enable )  return;
 			this.settingsChanged = true;
+			this.NotifyAsync();
+		}
+
+		// Indique que les réglages de police ont changé.
+		public void NotifyFontsSettingsChanged()
+		{
+			if ( !this.enable )  return;
+			this.fontsSettingsChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -550,6 +559,12 @@ namespace Epsitec.Common.Document
 				this.settingsChanged = false;
 			}
 
+			if ( this.fontsSettingsChanged )
+			{
+				this.OnFontsSettingsChanged();
+				this.fontsSettingsChanged = false;
+			}
+
 			if ( this.guidesChanged )
 			{
 				this.OnGuidesChanged();
@@ -785,6 +800,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnFontsSettingsChanged()
+		{
+			if ( this.FontsSettingsChanged != null )  // qq'un écoute ?
+			{
+				this.FontsSettingsChanged();
+			}
+		}
+
 		protected void OnGuidesChanged()
 		{
 			if ( this.GuidesChanged != null )  // qq'un écoute ?
@@ -897,6 +920,7 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			MagnetChanged;
 		public event SimpleEventHandler			PreviewChanged;
 		public event SimpleEventHandler			SettingsChanged;
+		public event SimpleEventHandler			FontsSettingsChanged;
 		public event SimpleEventHandler			GuidesChanged;
 		public event SimpleEventHandler			HideHalfChanged;
 		public event SimpleEventHandler			DebugChanged;
@@ -935,6 +959,7 @@ namespace Epsitec.Common.Document
 		protected bool							magnetChanged;
 		protected bool							previewChanged;
 		protected bool							settingsChanged;
+		protected bool							fontsSettingsChanged;
 		protected bool							guidesChanged;
 		protected bool							hideHalfChanged;
 		protected bool							debugChanged;

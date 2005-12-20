@@ -102,6 +102,19 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public bool SampleAbc
+		{
+			get
+			{
+				return this.sampleAbc;
+			}
+
+			set
+			{
+				this.sampleAbc = value;
+			}
+		}
+
 		public int QuickCount
 		{
 			get
@@ -315,7 +328,7 @@ namespace Epsitec.Common.Document.Widgets
 				bottom = pos.Y > (area.Bottom+area.Top)/2;  // choix du sens de déroulement
 			}
 
-			double w = FontSelector.BestWidth(this.sampleHeight);
+			double w = FontSelector.BestWidth(this.sampleHeight, this.sampleAbc);
 			double h = 0;
 
 			if ( pos.X+w > area.Right )  // dépasse à droite ?
@@ -341,6 +354,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.fontSelector.FontList = this.fontList;
 			this.fontSelector.QuickCount = this.quickCount;
 			this.fontSelector.SampleHeight = this.sampleHeight;
+			this.fontSelector.SampleAbc = this.sampleAbc;
 			this.fontSelector.SelectedFontFace = this.Text;
 			
 			this.comboWindow = new Window();
@@ -547,6 +561,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected GlyphButton					button;
 		protected System.Collections.ArrayList	fontList;
 		protected double						sampleHeight;
+		protected bool							sampleAbc;
 		protected int							quickCount;
 		protected Window						comboWindow;
 		protected FontSelector					fontSelector;

@@ -52,6 +52,14 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Items.Add(this.slider);
 			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Double.TextFontSampleHeight);
 
+			this.buttonAbc = new IconButton(Misc.Icon("TextFontSampleAbc"));
+			this.buttonAbc.Command = "TextFontSampleAbc";
+			this.buttonAbc.DockMargins = new Margins(10, 0, 0, 0);
+			this.buttonAbc.TabIndex = tabIndex++;
+			this.buttonAbc.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.toolBar.Items.Add(this.buttonAbc);
+			ToolTip.Default.SetToolTip(this.buttonAbc, Res.Strings.Dialog.Bool.TextFontSampleAbc);
+
 			this.fontSelector = new Widgets.FontSelector(this);
 			this.fontSelector.Dock = DockStyle.Fill;
 			this.fontSelector.FontList = Misc.GetFontList(false);
@@ -67,6 +75,7 @@ namespace Epsitec.Common.Document.Containers
 			this.ignoreChange = true;
 			this.fontSelector.SelectedList = this.document.Settings.QuickFonts;
 			this.fontSelector.SampleHeight = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
+			this.fontSelector.SampleAbc    = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleAbc;
 			this.slider.Value = (decimal) this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
 			this.ignoreChange = false;
 		}
@@ -131,6 +140,7 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton				buttonDefault;
 		protected IconButton				buttonClear;
 		protected HSlider					slider;
+		protected IconButton				buttonAbc;
 		protected Widgets.FontSelector		fontSelector;
 		protected bool						ignoreChange = false;
 	}

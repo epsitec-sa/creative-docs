@@ -519,9 +519,10 @@ namespace Epsitec.Common.Document.TextPanels
 			int quickCount;
 			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.document.Settings.QuickFonts, quickOnly, selectedFontFace, out quickCount);
 
-			this.fontFace.FontList = fontList;
+			this.fontFace.FontList     = fontList;
+			this.fontFace.QuickCount   = quickCount;
 			this.fontFace.SampleHeight = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
-			this.fontFace.QuickCount = quickCount;
+			this.fontFace.SampleAbc    = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleAbc;
 		}
 
 		private void HandleFontFaceTextChanged(object sender)

@@ -57,6 +57,7 @@
 	<data name="Dialog.Bool.TextGridShow">Lignes visibles</data>
 	<data name="Dialog.Bool.TextShowControlCharacters">Afficher les caractères spéciaux</data>
 	<data name="Dialog.Bool.TextFontFilter">Seulement les caractères fréquement utilisés</data>
+	<data name="Dialog.Bool.TextFontSampleAbc">Afficher 'Abc' au lieu de 'AaBbYyZz'</data>
 	<data name="Dialog.Bool.GuidesActive">Repères actifs</data>
 	<data name="Dialog.Bool.GuidesShow">Repères visibles</data>
 	<data name="Dialog.Bool.GuidesMouse">Déplacements avec la souris</data>

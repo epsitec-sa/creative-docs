@@ -642,18 +642,21 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			bool quickOnly = false;
 			System.Collections.ArrayList quickFonts = new System.Collections.ArrayList();
 			double height = 30;
+			bool abc = false;
 			if ( this.editor.IsCurrentDocument )
 			{
 				quickOnly  = this.editor.CurrentDocument.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
 				quickFonts = this.editor.CurrentDocument.Settings.QuickFonts;
 				height     = this.editor.CurrentDocument.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
+				abc        = this.editor.CurrentDocument.Modifier.ActiveViewer.DrawingContext.TextFontSampleAbc;
 			}
 			int quickCount;
 			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), quickFonts, quickOnly, this.fontFace, out quickCount);
 
-			this.fieldFontFace.FontList = fontList;
+			this.fieldFontFace.FontList     = fontList;
+			this.fieldFontFace.QuickCount   = quickCount;
 			this.fieldFontFace.SampleHeight = height;
-			this.fieldFontFace.QuickCount = quickCount;
+			this.fieldFontFace.SampleAbc    = abc;
 		}
 
 		// Police changée.

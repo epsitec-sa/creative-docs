@@ -57,6 +57,7 @@
 	<data name="Dialog.Bool.TextGridShow">Show magnetic text lines</data>
 	<data name="Dialog.Bool.TextShowControlCharacters">Display control characters</data>
 	<data name="Dialog.Bool.TextFontFilter">Show only Preferred Fonts</data>
+	<data name="Dialog.Bool.TextFontSampleAbc">@@Afficher 'Abc' au lieu de 'AaBbYyZz'</data>
 	<data name="Dialog.Bool.GuidesActive">Enable guides</data>
 	<data name="Dialog.Bool.GuidesShow">Show guides</data>
 	<data name="Dialog.Bool.GuidesMouse">Allow guides to be dragged</data>
