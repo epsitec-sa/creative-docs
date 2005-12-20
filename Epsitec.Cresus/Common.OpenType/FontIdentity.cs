@@ -149,22 +149,41 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public byte[]							AssociatedBlob
+		public byte[]							AssociatedBlob1
 		{
 			get
 			{
-				if (this.blob == null)
+				if (this.blob1 == null)
 				{
 					return new byte[0];
 				}
 				else
 				{
-					return this.blob;
+					return this.blob1;
 				}
 			}
 			set
 			{
-				this.blob = value;
+				this.blob1 = value;
+			}
+		}
+		
+		public byte[]							AssociatedBlob2
+		{
+			get
+			{
+				if (this.blob2 == null)
+				{
+					return new byte[0];
+				}
+				else
+				{
+					return this.blob2;
+				}
+			}
+			set
+			{
+				this.blob2 = value;
 			}
 		}
 		
@@ -350,16 +369,18 @@ namespace Epsitec.Common.OpenType
 			buffer.Append ('\0');
 			buffer.Append (fid.is_symbol_font ? "S" : "s");
 			
-			byte[] data_0 = new byte[8];
+			byte[] data_0 = new byte[10];
 			byte[] data_1 = System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
 			byte[] data_2 = new byte[fid.ot_name_length];
-			byte[] data_3 = fid.AssociatedBlob;
+			byte[] data_3 = fid.AssociatedBlob1;
+			byte[] data_4 = fid.AssociatedBlob2;
 			
 			System.Buffer.BlockCopy (fid.ot_name.BaseData, fid.ot_name.BaseOffset, data_2, 0, fid.ot_name_length);
 			
 			int length_1 = data_1.Length;
 			int length_2 = data_2.Length;
 			int length_3 = data_3.Length;
+			int length_4 = data_4.Length;
 			
 			data_0[0] = 0;
 			data_0[1] = 0;
@@ -369,18 +390,21 @@ namespace Epsitec.Common.OpenType
 			data_0[5] = (byte)(length_2 & 0xff);
 			data_0[6] = (byte)(length_3 >> 8);
 			data_0[7] = (byte)(length_3 & 0xff);
+			data_0[8] = (byte)(length_4 >> 8);
+			data_0[9] = (byte)(length_4 & 0xff);
 			
 			stream.Write (data_0, 0, data_0.Length);
 			stream.Write (data_1, 0, length_1);
 			stream.Write (data_2, 0, length_2);
 			stream.Write (data_3, 0, length_3);
+			stream.Write (data_4, 0, length_4);
 		}
 		
 		public static FontIdentity Deserialize(System.IO.Stream stream)
 		{
-			byte[] data_0 = new byte[8];
+			byte[] data_0 = new byte[10];
 			
-			int read = IO.Reader.Read (stream, data_0, 0, 8);
+			int read = IO.Reader.Read (stream, data_0, 0, 10);
 			
 			if (read == 0)
 			{
@@ -393,14 +417,17 @@ namespace Epsitec.Common.OpenType
 			int length_1 = (data_0[2] << 8) | data_0[3];
 			int length_2 = (data_0[4] << 8) | data_0[5];
 			int length_3 = (data_0[6] << 8) | data_0[7];
+			int length_4 = (data_0[8] << 8) | data_0[9];
 			
 			byte[] data_1 = new byte[length_1];
 			byte[] data_2 = new byte[length_2];
 			byte[] data_3 = new byte[length_3];
+			byte[] data_4 = new byte[length_4];
 			
 			IO.Reader.Read (stream, data_1, 0, length_1);
 			IO.Reader.Read (stream, data_2, 0, length_2);
 			IO.Reader.Read (stream, data_3, 0, length_3);
+			IO.Reader.Read (stream, data_4, 0, length_4);
 			
 			string   text = System.Text.Encoding.UTF8.GetString (data_1);
 			string[] args = text.Split ('\0');
@@ -418,7 +445,8 @@ namespace Epsitec.Common.OpenType
 			fid.ot_name_length = length_2;
 			fid.os_font_family = os_font_family;
 			fid.os_font_style  = os_font_style;
-			fid.blob           = data_3;
+			fid.blob1          = data_3;
+			fid.blob2          = data_4;
 			
 			fid.is_symbol_font         = flags.IndexOf ("S") != -1;
 			fid.is_symbol_font_defined = flags.IndexOfAny (new char[] { 's', 'S' }) != -1;
@@ -587,6 +615,7 @@ namespace Epsitec.Common.OpenType
 		private string							os_font_style;
 		private bool							is_symbol_font;
 		private bool							is_symbol_font_defined;
-		private byte[]							blob;
+		private byte[]							blob1;
+		private byte[]							blob2;
 	}
 }

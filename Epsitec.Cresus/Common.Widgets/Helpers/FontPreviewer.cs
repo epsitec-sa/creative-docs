@@ -20,20 +20,46 @@ namespace Epsitec.Common.Widgets.Helpers
 			Drawing.Font.Initialise ();
 		}
 		
+		
 		public static Drawing.Path GetPath(OpenType.FontIdentity fid, double ox, double oy, double size)
 		{
 			if (fid != null)
 			{
-				if (fid.AssociatedBlob.Length == 0)
+				if (fid.AssociatedBlob1.Length == 0)
 				{
-					FontPreviewer.RefreshBlob (fid);
+					FontPreviewer.RefreshBlob1 (fid);
 				}
-				if (fid.AssociatedBlob.Length > 0)
+				if (fid.AssociatedBlob1.Length > 0)
 				{
 					Drawing.Path path = new Drawing.Path ();
 					Drawing.Path copy = new Drawing.Path ();
 					
-					path.SetBlobOfElements (fid.AssociatedBlob);
+					path.SetBlobOfElements (fid.AssociatedBlob1);
+					copy.Append (path, size, 0, 0, size, ox, oy, size);
+					
+					path.Dispose ();
+					
+					return copy;
+				}
+			}
+			
+			return null;
+		}
+		
+		public static Drawing.Path GetPathAbc(OpenType.FontIdentity fid, double ox, double oy, double size)
+		{
+			if (fid != null)
+			{
+				if (fid.AssociatedBlob2.Length == 0)
+				{
+					FontPreviewer.RefreshBlob2 (fid);
+				}
+				if (fid.AssociatedBlob2.Length > 0)
+				{
+					Drawing.Path path = new Drawing.Path ();
+					Drawing.Path copy = new Drawing.Path ();
+					
+					path.SetBlobOfElements (fid.AssociatedBlob2);
 					copy.Append (path, size, 0, 0, size, ox, oy, size);
 					
 					path.Dispose ();
@@ -48,13 +74,17 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		private static void HandleFontIdentitySerializing(OpenType.FontIdentity fid)
 		{
-			if (fid.AssociatedBlob.Length == 0)
+			if (fid.AssociatedBlob1.Length == 0)
 			{
-				FontPreviewer.RefreshBlob (fid);
+				FontPreviewer.RefreshBlob1 (fid);
+			}
+			if (fid.AssociatedBlob2.Length == 0)
+			{
+				FontPreviewer.RefreshBlob2 (fid);
 			}
 		}
 		
-		private static void RefreshBlob(OpenType.FontIdentity fid)
+		private static void RefreshBlob1(OpenType.FontIdentity fid)
 		{
 			Drawing.Font font = Drawing.Font.GetFont (fid);
 			
@@ -115,7 +145,73 @@ namespace Epsitec.Common.Widgets.Helpers
 						}
 					}
 					
-					fid.AssociatedBlob = path.GetBlobOfElements ();
+					fid.AssociatedBlob1 = path.GetBlobOfElements ();
+				}
+			}
+		}
+		
+		private static void RefreshBlob2(OpenType.FontIdentity fid)
+		{
+			Drawing.Font font = Drawing.Font.GetFont (fid);
+			
+			if (font != null)
+			{
+				using (Drawing.Path path = new Drawing.Path ())
+				{
+					double x = 0;
+					double y = 0;
+					
+					if (fid.IsSymbolFont)
+					{
+						for (int i = 2; i < 100; i++)
+						{
+							double advance = font.GetGlyphAdvance (i);
+							
+							if (advance > 0)
+							{
+								Drawing.Path temp = new Drawing.Path ();
+								
+								temp.Append (font, i, x, y, 1);
+								
+								//	Vérifie si le glyphe dessine quelque chose; si ce n'est
+								//	pas le cas, on passe simplement au suivant sans avancer.
+								
+								if ((temp.IsEmpty) ||
+									(temp.GetBlobOfElements ().Length < 20))
+								{
+									temp.Dispose ();
+									continue;
+								}
+								
+								temp.Dispose ();
+								
+								if (x + advance > 2.0)
+								{
+									break;
+								}
+								
+								path.Append (font, i, x, y, 1);
+								
+								x += advance;
+							}
+						}
+					}
+					else
+					{
+						string sample = "Abc";
+						
+						for (int i = 0; i < sample.Length; i++)
+						{
+							int    glyph   = font.GetGlyphIndex (sample[i]);
+							double advance = font.GetGlyphAdvance (glyph);
+							
+							path.Append (font, glyph, x, y, 1);
+							
+							x += advance;
+						}
+					}
+					
+					fid.AssociatedBlob2 = path.GetBlobOfElements ();
 				}
 			}
 		}

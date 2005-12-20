@@ -502,7 +502,7 @@ namespace Epsitec.Common.OpenType
 		
 		private static bool						load_ttc;
 		private static FontCollection			default_collection;
-		private static string					CacheFileName = "OpenType.FontCollection.1.1.data";
+		private static string					CacheFileName = "OpenType.FontCollection.1.2.data";
 		
 		private System.Collections.Hashtable	font_hash;
 		private System.Collections.Hashtable	full_hash;

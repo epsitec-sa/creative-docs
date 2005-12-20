@@ -824,6 +824,13 @@ namespace Epsitec.Common.Drawing
 					e.Graphics.Color = Drawing.Color.FromName ("Black");
 					e.Graphics.PaintSurface (path);
 					
+					path.Dispose ();
+					
+					path = Widgets.Helpers.FontPreviewer.GetPathAbc (fid, ox, oy + size*fonts.Length, size);
+					
+					e.Graphics.Color = Drawing.Color.FromName ("Black");
+					e.Graphics.PaintSurface (path);
+					
 					oy += size;
 					
 					path.Dispose ();
