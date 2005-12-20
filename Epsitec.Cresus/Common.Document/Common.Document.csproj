@@ -927,6 +927,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\ButtonFontFace.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\FontSample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -17,10 +17,10 @@ namespace Epsitec.Common.Document.Ribbons
 
 			// Création dans l'ordre inverse, pour que les cadres soient plus jolis
 			// lorsqu'un bouton est disable.
-			this.buttonQuick4        = this.CreateIconButton("FontQuick4");
-			this.buttonQuick3        = this.CreateIconButton("FontQuick3");
-			this.buttonQuick2        = this.CreateIconButton("FontQuick2");
-			this.buttonQuick1        = this.CreateIconButton("FontQuick1");
+			this.buttonQuick4        = this.CreateButtonFontFace("FontQuick4");
+			this.buttonQuick3        = this.CreateButtonFontFace("FontQuick3");
+			this.buttonQuick2        = this.CreateButtonFontFace("FontQuick2");
+			this.buttonQuick1        = this.CreateButtonFontFace("FontQuick1");
 
 			this.buttonBold          = this.CreateIconButton("FontBold");
 			this.buttonItalic        = this.CreateIconButton("FontItalic");
@@ -158,42 +158,20 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 		// Met à jour un bouton pour une police rapide.
-		protected void UpdateQuickButton(IconButton button, int i)
+		protected void UpdateQuickButton(Widgets.ButtonFontFace button, int i)
 		{
-			// Cherche l'identificateur de la police pour ce bouton.
-			OpenType.FontIdentity id = null;
-			if ( this.document != null )
+			if ( this.document == null )
 			{
-				id = this.document.Wrappers.GetQuickFonts(i);
+				button.FontIdentity = null;
 			}
-
-			// Si le bouton a déjà l'échantillon pour la bonne police, ne fait rien.
-			if ( id != null )
+			else
 			{
-				Widgets.FontSample current = button.FindChild("Sample") as Widgets.FontSample;
-				if ( current != null )
+				OpenType.FontIdentity id = this.document.Wrappers.GetQuickFonts(i);
+				button.FontIdentity = id;
+				if ( id != null )
 				{
-					if ( current.FontIdentity.InvariantFaceName == id.InvariantFaceName )  return;
+					ToolTip.Default.SetToolTip(button, id.InvariantFaceName);
 				}
-			}
-
-			// Supprime l'échantillon dans le bouton.
-			foreach ( Widget widget in button.Children.Widgets )
-			{
-				widget.Dispose();
-			}
-
-			// Crée le nouvel échantillon pour le bouton.
-			if ( this.document != null && id != null )
-			{
-				Widgets.FontSample sample = new Widgets.FontSample(button);
-				sample.Name = "Sample";
-				sample.FontIdentity = id;
-				sample.SampleAbc = true;
-				sample.Dock = DockStyle.Fill;
-				sample.DockMargins = new Margins(0, 0, 3, 2);
-
-				ToolTip.Default.SetToolTip(button, id.InvariantFaceName);
 			}
 		}
 
@@ -235,13 +213,34 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		// Crée un bouton pour une police.
+		protected Widgets.ButtonFontFace CreateButtonFontFace(string command)
+		{
+			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
+			Widgets.ButtonFontFace button = new Widgets.ButtonFontFace(this);
+
+			button.Command = command;
+			button.AutoFocus = false;
+
+			if ( cs.Statefull )
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+			}
+
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			return button;
+		}
+
+
 		protected IconButton				buttonFontSizeMinus;
 		protected IconButton				buttonFontSizePlus;
 		protected IconButton				buttonShowControl;
-		protected IconButton				buttonQuick1;
-		protected IconButton				buttonQuick2;
-		protected IconButton				buttonQuick3;
-		protected IconButton				buttonQuick4;
+		protected Widgets.ButtonFontFace	buttonQuick1;
+		protected Widgets.ButtonFontFace	buttonQuick2;
+		protected Widgets.ButtonFontFace	buttonQuick3;
+		protected Widgets.ButtonFontFace	buttonQuick4;
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
