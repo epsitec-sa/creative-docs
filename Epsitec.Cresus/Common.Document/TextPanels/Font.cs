@@ -539,7 +539,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleButtonSettingsClicked(object sender, MessageEventArgs e)
 		{
-			this.document.Notifier.NotifySettingsShowPage("BookGlobal", "Fonts");
+			this.document.Notifier.NotifySettingsShowPage("BookDocument", "Fonts");
 		}
 
 		private void HandleFieldColorClicked(object sender, MessageEventArgs e)

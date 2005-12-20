@@ -50,6 +50,7 @@ namespace Epsitec.Common.Document.Containers
 			this.slider.Resolution = 1.0M;
 			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
 			this.toolBar.Items.Add(this.slider);
+			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Double.TextFontSampleHeight);
 
 			this.fontSelector = new Widgets.FontSelector(this);
 			this.fontSelector.Dock = DockStyle.Fill;

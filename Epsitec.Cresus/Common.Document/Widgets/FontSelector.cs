@@ -257,6 +257,11 @@ namespace Epsitec.Common.Document.Widgets
 						break;
 
 					case KeyCode.Return:
+						if ( this.selectedList == null && this.selectedLine != -1 )  // sélection unique ?
+						{
+							string face = this.RankToFace(this.selectedLine);
+							this.SelectedFontFace = face;
+						}
 						this.OnSelectionChanged();
 						break;
 
