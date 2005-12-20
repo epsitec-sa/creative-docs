@@ -2521,18 +2521,44 @@ namespace Epsitec.Common.Document
 				{
 					CommandState cs = cd[cmd];
 
-					IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
-					
-					if ( cs.Statefull )
+					if ( cs.Name.StartsWith("FontQuick") )
 					{
-						button.ButtonStyle = ButtonStyle.ActivableIcon;
+						string num = cs.Name.Substring(9);
+						int i = int.Parse(num);
+						System.Diagnostics.Debug.Assert(i >= 1 && i <= 4);  // "FontQuick1" à "FontQuick4" ?
+						OpenType.FontIdentity id = this.document.Wrappers.GetQuickFonts(i-1);
+
+						Widgets.ButtonFontFace button = new Widgets.ButtonFontFace();
+					
+						if ( cs.Statefull )
+						{
+							button.ButtonStyle = ButtonStyle.ActivableIcon;
+						}
+
+						//?button.Width = 30;
+						button.Command = cs.Name;
+						button.FontIdentity = id;
+						button.Dock = DockStyle.Left;
+						button.SetParent(line);
+						button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
+
+						ToolTip.Default.SetToolTip(button, id.InvariantFaceName);
 					}
+					else
+					{
+						IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
+					
+						if ( cs.Statefull )
+						{
+							button.ButtonStyle = ButtonStyle.ActivableIcon;
+						}
 
-					button.Dock = DockStyle.Left;
-					button.SetParent(line);
-					button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
+						button.Dock = DockStyle.Left;
+						button.SetParent(line);
+						button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
 
-					ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+						ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+					}
 				}
 			}
 			this.miniBarCmds = null;
@@ -2548,7 +2574,7 @@ namespace Epsitec.Common.Document
 
 		private void HandleMiniBarButtonClicked(object sender, MessageEventArgs e)
 		{
-			IconButton button = sender as IconButton;
+			Widget button = sender as Widget;
 			if ( button != null )
 			{
 				if ( button.Name == "OrderUpAll"            ||

@@ -537,12 +537,12 @@ namespace Epsitec.Common.Document.Widgets
 
 					if ( this.selectedList == null )  // sélection unique ?
 					{
-						this.samples[i].SetSelected(ii == this.selectedLine);
+						this.samples[i].ActiveState = (ii == this.selectedLine) ? ActiveState.Yes : ActiveState.No;
 					}
 					else	// sélection multiple ?
 					{
 						face = this.samples[i].FontIdentity.InvariantFaceName;
-						this.samples[i].SetSelected(this.selectedList.Contains(face));
+						this.samples[i].ActiveState = this.selectedList.Contains(face) ? ActiveState.Yes : ActiveState.No;
 					}
 				}
 				else
@@ -550,7 +550,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.samples[i].FontIdentity = null;
 					this.samples[i].FontFace     = null;
 					this.samples[i].SampleAbc    = false;
-					this.samples[i].SetSelected(false);
+					this.samples[i].ActiveState  = ActiveState.No;
 				}
 
 				this.samples[i].Separator = (ii == this.quickCount-1 && this.quickCount != this.fontList.Count);

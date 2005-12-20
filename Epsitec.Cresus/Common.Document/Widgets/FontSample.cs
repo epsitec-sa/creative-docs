@@ -158,7 +158,7 @@ namespace Epsitec.Common.Document.Widgets
 			Rectangle rect = this.Client.Bounds;
 
 			Color backColor = adorner.ColorTextBackground;
-			if ( this.IsSelected )
+			if ( this.ActiveState == ActiveState.Yes )
 			{
 				backColor = adorner.ColorCaption;
 			}
