@@ -853,7 +853,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual ActiveState					ActiveState
+		public ActiveState							ActiveState
 		{
 			get
 			{

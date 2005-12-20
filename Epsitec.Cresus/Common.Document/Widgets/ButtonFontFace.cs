@@ -36,25 +36,16 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-
-		public override ActiveState ActiveState
+		
+		protected override void OnActiveStateChanged()
 		{
-			get
-			{
-				return base.ActiveState;
-			}
-
-			set
-			{
-				base.ActiveState = value;
-				this.sample.ActiveState = value;
-			}
+			base.OnActiveStateChanged ();
+			
+			this.sample.ActiveState = this.ActiveState;
 		}
-
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			//?this.sample.ActiveState = this.ActiveState;
 			base.PaintBackgroundImplementation(graphics, clipRect);
 		}
 
