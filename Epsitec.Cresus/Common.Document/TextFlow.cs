@@ -41,8 +41,8 @@ namespace Epsitec.Common.Document
 			
 			this.metaNavigator.TextNavigator = this.textNavigator;
 			
+			this.textStory.OpletExecuted += new OpletEventHandler(this.HandleTextStoryOpletExecuted);
 			this.textNavigator.CursorMoved += new EventHandler(this.HandleTextNavigatorCursorMoved);
-			this.document.Notifier.TextCursorChanged += new SimpleEventHandler(this.HandleNotifierTextCursorChanged);
 		}
 		
 		protected void InitialiseEmptyTextStory()
@@ -286,46 +286,29 @@ namespace Epsitec.Common.Document
 		// Change éventuellement le pavé édité en fonction de la position du curseur.
 		// Si un changement a lieu, des oplets seront créés. Cette méthode ne peut donc
 		// pas être appelée pendant une opération de undo/redo.
-		public void ChangeObjectEdited()
+		private void ChangeObjectEdited()
 		{
-			if ( this.textStory.OpletQueue.IsUndoRedoInProgress )
-			{
-				this.document.Notifier.NotifyTextCursorChanged();
-				return;
-			}
+			System.Diagnostics.Debug.Assert(this.textStory.OpletQueue.IsUndoRedoInProgress == false);
 			
-			if ( this.textStory.OpletQueue.IsEnabled )
+			Text.ITextFrame frame;
+			double cx, cy, ascender, descender, angle;
+			this.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
+			
+			System.Diagnostics.Debug.WriteLine(string.Format("{0} {1}", (int)cx, (int)cy));
+			
+			if ( this.activeTextBox == null || frame != this.activeTextBox.TextFrame )
 			{
-				this.textStory.OpletQueue.Disable();
-				
-				try
+				foreach ( Objects.TextBox2 obj in this.Chain )
 				{
-					this.ChangeObjectEdited();
-				}
-				finally
-				{
-					this.textStory.OpletQueue.Enable();
-				}
-			}
-			else
-			{
-				Text.ITextFrame frame;
-				double cx, cy, ascender, descender, angle;
-				this.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
-				
-				if ( this.activeTextBox == null || frame != this.activeTextBox.TextFrame )
-				{
-					foreach ( Objects.TextBox2 obj in this.Chain )
+					if ( frame == obj.TextFrame )
 					{
-						if ( frame == obj.TextFrame )
+						System.Diagnostics.Debug.WriteLine(string.Format("ChangeObjectEdited to new object."));
+						this.document.Modifier.EditObject(obj);
+						if ( this.activeTextBox != null )
 						{
-							this.document.Modifier.EditObject(obj);
-							if ( this.activeTextBox != null )
-							{
-								this.activeTextBox.SetAutoScroll();
-							}
-							return;
+							this.activeTextBox.SetAutoScroll();
 						}
+						return;
 					}
 				}
 			}
@@ -344,18 +327,20 @@ namespace Epsitec.Common.Document
 				this.UpdateClipboardCommands();
 				this.document.Notifier.NotifyTextChanged();
 				this.NotifyAreaFlow();
-				this.ChangeObjectEdited();
+//				this.ChangeObjectEdited();
 			}
 		}
 		
-		private void HandleNotifierTextCursorChanged()
+		private void HandleTextStoryOpletExecuted(object sender, OpletEventArgs e)
 		{
-			if ( this.HasActiveTextBox )
+			switch ( e.Event )
 			{
-				this.ChangeObjectEdited();
+				case Common.Support.OpletEvent.AddingOplet:
+					this.ChangeObjectEdited();
+					break;
 			}
 		}
-
+		
 		
 		#region Serialization
 		// Sérialise l'objet.

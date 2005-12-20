@@ -166,6 +166,16 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		
+		public int								PendingOpletCount
+		{
+			get
+			{
+				return this.temp_queue.Count;
+			}
+		}
+		
+		
 		public bool								IsDisabled
 		{
 			get
@@ -321,8 +331,7 @@ namespace Epsitec.Common.Support
 			this.action.Release ();
 
 			if ((this.action == null) ||
-				(this.fence_id <= 0) ||
-				(this.temp_queue.Count == 0))
+				(this.fence_id <= 0))
 			{
 				System.Diagnostics.Debug.Assert (this.action == null);
 				System.Diagnostics.Debug.Assert (this.fence_id == 0);

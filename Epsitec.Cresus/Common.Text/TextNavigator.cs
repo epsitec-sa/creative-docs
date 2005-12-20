@@ -3167,7 +3167,13 @@ again:
 		{
 			System.Diagnostics.Debug.Assert (this.story == sender);
 			
-			this.OnOpletExecuted (e);
+			switch (e.Event)
+			{
+				case Common.Support.OpletEvent.RedoExecuted:
+				case Common.Support.OpletEvent.UndoExecuted:
+					this.OnOpletExecuted (e);
+					break;
+			}
 		}
 		
 		private void HandleStoryTextChanged(object sender)

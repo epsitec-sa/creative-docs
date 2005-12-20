@@ -241,14 +241,7 @@ namespace Epsitec.Common.Text
 		
 		public void Insert(Common.Support.IOplet oplet)
 		{
-			if (this.IsOpletQueueEnabled)
-			{
-				this.oplet_queue.Insert (oplet);
-			}
-			else
-			{
-				oplet.Dispose ();
-			}
+			this.InternalAddOplet (oplet);
 		}
 		
 		public void ValidateAction()
@@ -1077,6 +1070,27 @@ namespace Epsitec.Common.Text
 			{
 				Common.Support.IOplet[] last_oplets = this.oplet_queue.LastActionOplets;
 				
+				this.oplet_queue.BeginAction ();
+				
+				this.NotifyAddingOplet (oplet);
+				
+				//	Vérifie si quelqu'un a généré des oplets en réponse à notre
+				//	événement. Si c'est le cas, on ne peut plus rien fusionner;
+				//	ajoute simplement l'oplet à la liste, puis valide l'action :
+				
+				if (this.oplet_queue.PendingOpletCount > 0)
+				{
+					this.oplet_queue.Insert (oplet);
+					this.NotifyAddedOplet (oplet);
+					this.oplet_queue.ValidateAction ();
+					
+					return;
+				}
+				else
+				{
+					this.oplet_queue.CancelAction ();
+				}
+				
 				if ((last_oplets.Length == 1) &&
 					(this.debug_disable_merge == false))
 				{
@@ -1132,6 +1146,7 @@ namespace Epsitec.Common.Text
 				using (this.oplet_queue.BeginAction ())
 				{
 					this.oplet_queue.Insert (oplet);
+					this.NotifyAddedOplet (oplet);
 					this.oplet_queue.ValidateAction ();
 				}
 			}
@@ -1511,6 +1526,16 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		private void NotifyAddingOplet(Common.Support.IOplet oplet)
+		{
+			this.OnOpletExecuted (new OpletEventArgs (oplet, Common.Support.OpletEvent.AddingOplet));
+		}
+		
+		private void NotifyAddedOplet(Common.Support.IOplet oplet)
+		{
+			this.OnOpletExecuted (new OpletEventArgs (oplet, Common.Support.OpletEvent.AddedOplet));
+		}
 		
 		private void NotifyUndoExecuted(BaseOplet oplet)
 		{

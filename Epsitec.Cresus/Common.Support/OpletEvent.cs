@@ -43,5 +43,7 @@ namespace Epsitec.Common.Support
 	{
 		UndoExecuted,
 		RedoExecuted,
+		AddingOplet,
+		AddedOplet,
 	}
 }

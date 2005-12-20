@@ -2032,7 +2032,7 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.UpdateClipboardCommands();
 			this.document.Notifier.NotifyTextChanged();
 			this.textFlow.NotifyAreaFlow();
-			this.textFlow.ChangeObjectEdited();
+//-			this.textFlow.ChangeObjectEdited();
 		}
 		
 		private void HandleStyleChanged(object sender)
@@ -2041,7 +2041,7 @@ namespace Epsitec.Common.Document.Objects
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
 			this.textFlow.NotifyAreaFlow();
-			this.textFlow.ChangeObjectEdited();
+//-			this.textFlow.ChangeObjectEdited();
 		}
 
 		private void HandleTabsChanged(object sender)
@@ -2051,7 +2051,7 @@ namespace Epsitec.Common.Document.Objects
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
 			this.textFlow.NotifyAreaFlow();
-			this.textFlow.ChangeObjectEdited();
+//-			this.textFlow.ChangeObjectEdited();
 		}
 
 		// Met à jour après un changement de géométrie de l'objet.
