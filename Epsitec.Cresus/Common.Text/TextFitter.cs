@@ -122,8 +122,6 @@ namespace Epsitec.Common.Text
 		
 		public void GenerateMarks()
 		{
-			System.Diagnostics.Debug.WriteLine ("GenerateMarks.");
-			
 			int start = this.story.TextChangeMarkStart;
 			int end   = this.story.TextChangeMarkEnd;
 			
@@ -435,6 +433,12 @@ namespace Epsitec.Common.Text
 		
 		public bool GetCursorGeometry(ICursor cursor, out ITextFrame frame, out double x, out double y, out int paragraph_line, out int line_character)
 		{
+			if (this.story.HasTextChangeMarks)
+			{
+				System.Diagnostics.Debug.WriteLine ("Automatically generating marks, cursor geometry needed!");
+				this.GenerateMarks ();
+			}
+			
 			//	Détermine où se trouve le curseur spécifié : frame, position [x;y],
 			//	numéro de ligne dans le paragraphe et numéro de caractère dans la
 			//	ligne.

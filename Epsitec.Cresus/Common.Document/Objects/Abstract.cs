@@ -157,6 +157,19 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Identificateur utilisé pour le debug.
+		public int DebugId
+		{
+			get
+			{
+				if ( this.debugId == 0 )
+				{
+					this.debugId = Abstract.nextDebugId++;
+				}
+				
+				return this.debugId;
+			}
+		}
 
 		// Direction de l'objet.
 		public double Direction
@@ -3271,16 +3284,16 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Document						document;
 		protected int							uniqueId;
-		protected bool							isHilite = false;
-		protected bool							isHide = false;
-		protected bool							mark = false;
-		protected bool							selected = false;
-		protected bool							edited = false;
-		protected bool							globalSelected = false;
-		protected bool							allSelected = false;
-		protected bool							isCreating = false;
+		protected bool							isHilite;
+		protected bool							isHide;
+		protected bool							mark;
+		protected bool							selected;
+		protected bool							edited;
+		protected bool							globalSelected;
+		protected bool							allSelected;
+		protected bool							isCreating;
 		protected bool							dirtyBbox = true;
-		protected bool							autoScrollOneShot = false;
+		protected bool							autoScrollOneShot;
 		protected Drawing.Rectangle				bboxThin = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxGeom = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxFull = Drawing.Rectangle.Empty;
@@ -3294,7 +3307,7 @@ namespace Epsitec.Common.Document.Objects
 		protected System.Collections.ArrayList	handles = new System.Collections.ArrayList();
 		protected UndoableList					selectedSegments = null;
 		protected UndoableList					objects = null;
-		protected int							totalPropertyHandle = 0;
+		protected int							totalPropertyHandle;
 		protected double						direction = 0.0;
 		protected double						initialDirection = 0.0;
 		protected SurfaceAnchor					surfaceAnchor;
@@ -3302,5 +3315,8 @@ namespace Epsitec.Common.Document.Objects
 
 		protected bool							isDirtyPageNumber = true;
 		protected int							pageNumber = -1;
+		protected int							debugId;
+		
+		private static int						nextDebugId = 1;
 	}
 }

@@ -1592,6 +1592,13 @@ again:
 			return this.GetCursorGeometry (out frame, out x, out y, out ascender, out descender, out angle);
 		}
 		
+		public bool GetCursorGeometry(out ITextFrame frame)
+		{
+			double x, y, ascender, descender, angle;
+			
+			return this.GetCursorGeometry (out frame, out x, out y, out ascender, out descender, out angle);
+		}
+		
 		public bool GetCursorGeometry(out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
 		{
 			return this.GetCursorGeometry (this.ActiveCursor, out frame, out cx, out cy, out ascender, out descender, out angle);

@@ -35,6 +35,8 @@ namespace Epsitec.Common.Document
 				this.textStory = new Text.TextStory(this.document.Modifier.OpletQueue, context);
 			}
 			
+			this.textStory.DisableOpletQueue();
+			
 			this.textFitter    = new Text.TextFitter(this.textStory);
 			this.textNavigator = new Text.TextNavigator(this.textFitter);
 			this.metaNavigator = new TextNavigator2();
@@ -43,6 +45,8 @@ namespace Epsitec.Common.Document
 			
 			this.textStory.OpletExecuted += new OpletEventHandler(this.HandleTextStoryOpletExecuted);
 			this.textNavigator.CursorMoved += new EventHandler(this.HandleTextNavigatorCursorMoved);
+			
+			this.textStory.EnableOpletQueue();
 		}
 		
 		protected void InitialiseEmptyTextStory()
@@ -50,8 +54,10 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.textStory.TextLength == 0);
 			
 			this.textStory.DisableOpletQueue();
+			
 			this.textNavigator.Insert(Text.Unicode.Code.EndOfText);
 			this.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 0);
+			
 			this.textStory.EnableOpletQueue();
 		}
 
@@ -288,30 +294,41 @@ namespace Epsitec.Common.Document
 		// pas être appelée pendant une opération de undo/redo.
 		private void ChangeObjectEdited()
 		{
-			System.Diagnostics.Debug.Assert(this.textStory.OpletQueue.IsUndoRedoInProgress == false);
+			System.Diagnostics.Debug.Assert(!this.textStory.OpletQueue.IsUndoRedoInProgress);
 			
 			Text.ITextFrame frame;
-			double cx, cy, ascender, descender, angle;
-			this.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
 			
-			System.Diagnostics.Debug.WriteLine(string.Format("{0} {1}", (int)cx, (int)cy));
-			
-			if ( this.activeTextBox == null || frame != this.activeTextBox.TextFrame )
+			if ( this.HasActiveTextBox &&
+				 this.TextNavigator.GetCursorGeometry(out frame) )
 			{
-				foreach ( Objects.TextBox2 obj in this.Chain )
+				if ( frame != this.activeTextBox.TextFrame )
 				{
-					if ( frame == obj.TextFrame )
-					{
-						System.Diagnostics.Debug.WriteLine(string.Format("ChangeObjectEdited to new object."));
-						this.document.Modifier.EditObject(obj);
-						if ( this.activeTextBox != null )
-						{
-							this.activeTextBox.SetAutoScroll();
-						}
-						return;
-					}
+					Objects.TextBox2 obj = this.FindMatchingTextBox(frame);
+					
+					System.Diagnostics.Debug.Assert(obj != null);
+					System.Diagnostics.Debug.WriteLine(string.Format("ChangeObjectEdited: obj={0}", obj.DebugId));
+					
+					this.document.Modifier.EditObject(obj);
+					
+					System.Diagnostics.Debug.Assert(this.HasActiveTextBox);
+					
+					this.activeTextBox.SetAutoScroll();
 				}
 			}
+		}
+		
+		// Trouve le pavé correspondant au frame donné.
+		private Objects.TextBox2 FindMatchingTextBox(Text.ITextFrame frame)
+		{
+			foreach ( Objects.TextBox2 obj in this.Chain )
+			{
+				if ( frame == obj.TextFrame )
+				{
+					return obj;
+				}
+			}
+			
+			return null;
 		}
 		
 		private void OnActiveTextBoxChanged()

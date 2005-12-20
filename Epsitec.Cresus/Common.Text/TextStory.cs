@@ -112,6 +112,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public bool								HasTextChangeMarks
+		{
+			get
+			{
+				return this.TextChangeMarkStart < this.TextChangeMarkEnd;
+			}
+		}
+		
 		
 		internal Internal.TextTable				TextTable
 		{
@@ -309,6 +317,8 @@ namespace Epsitec.Common.Text
 			this.text.InsertText (cursor.CursorId, text);
 			this.text_length += length;
 			
+			this.UpdateTextBreakInformation (position, length);
+			
 			if (cursor.Attachment == CursorAttachment.Temporary)
 			{
 				this.InternalAddOplet (new TextInsertOplet (this, position, length));
@@ -322,8 +332,6 @@ namespace Epsitec.Common.Text
 					cursor.Direction = 1;
 				}
 			}
-			
-			this.UpdateTextBreakInformation (position, length);
 		}
 		
 		public void DeleteText(ICursor cursor, int length)
@@ -343,6 +351,8 @@ namespace Epsitec.Common.Text
 			this.text_length -= length;
 			this.undo_length += length;
 			
+			this.UpdateTextBreakInformation (position, 0);
+			
 			if (cursor.Attachment == CursorAttachment.Temporary)
 			{
 				this.InternalAddOplet (new TextDeleteOplet (this, position, length, cursors));
@@ -356,8 +366,6 @@ namespace Epsitec.Common.Text
 					cursor.Direction = 1;
 				}
 			}
-			
-			this.UpdateTextBreakInformation (position, 0);
 		}
 		
 		
@@ -477,9 +485,9 @@ namespace Epsitec.Common.Text
 			int position = this.text.GetCursorPosition (cursor.CursorId) + offset;
 			int written  = this.text.WriteText (cursor.CursorId, offset, length, new_text);
 			
-			this.InternalAddOplet (new TextChangeOplet (this, position, length, old_text));
-			
 			this.UpdateTextBreakInformation (position, length);
+			
+			this.InternalAddOplet (new TextChangeOplet (this, position, length, old_text));
 			
 			return written;
 		}
