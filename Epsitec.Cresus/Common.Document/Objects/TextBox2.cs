@@ -45,10 +45,6 @@ namespace Epsitec.Common.Document.Objects
 			
 			System.Diagnostics.Debug.Assert(this.textFlow != null);
 			
-			this.MetaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
-			this.MetaNavigator.TabsChanged += new Support.EventHandler(this.HandleTabsChanged);
-			this.MetaNavigator.ActiveStyleChanged += new Support.EventHandler(this.HandleStyleChanged);
-
 			this.markerSelected = this.document.TextContext.Markers.Selected;
 
 			this.cursorBox = Drawing.Rectangle.Empty;
@@ -821,7 +817,7 @@ namespace Epsitec.Common.Document.Objects
 				this.textFlow.TextNavigator.RedefineTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
 			}
 			
-			this.HandleTabsChanged(null);  // TODO: devrait être inutile
+			this.textFlow.UpdateTabs();  // TODO: devrait être inutile
 		}
 
 		// Crée tous les panneaux pour l'édition.
@@ -2043,35 +2039,6 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		private void HandleTextChanged(object sender)
-		{
-			if ( !this.edited )  return;
-			this.UpdateTextLayout();
-			this.textFlow.UpdateClipboardCommands();
-			this.document.Notifier.NotifyTextChanged();
-			this.textFlow.NotifyAreaFlow();
-//-			this.textFlow.ChangeObjectEdited();
-		}
-		
-		private void HandleStyleChanged(object sender)
-		{
-			if ( !this.edited )  return;
-			this.UpdateTextLayout();
-			this.document.Notifier.NotifyTextChanged();
-			this.textFlow.NotifyAreaFlow();
-//-			this.textFlow.ChangeObjectEdited();
-		}
-
-		private void HandleTabsChanged(object sender)
-		{
-			if ( !this.edited )  return;
-			this.UpdateTextRulers();
-			this.UpdateTextLayout();
-			this.document.Notifier.NotifyTextChanged();
-			this.textFlow.NotifyAreaFlow();
-//-			this.textFlow.ChangeObjectEdited();
-		}
-
 		// Met à jour après un changement de géométrie de l'objet.
 		public void UpdateGeometry()
 		{
@@ -2096,17 +2063,9 @@ namespace Epsitec.Common.Document.Objects
 		// Met à jour le texte suite à une modification du conteneur.
 		public void UpdateTextLayout()
 		{
-//-			this.textFlow.TextFitter.ClearAllMarks();
-			this.textFlow.TextFitter.GenerateMarks();
-
-//-			this.textFlow.TextStory.NotifyTextChanged();
-
-			// Indique qu'il faudra recalculer les bbox à toute la chaîne des pavés.
-			UndoableList chain = this.textFlow.Chain;
-			foreach ( Objects.Abstract obj in chain )
+			if ( this.edited )
 			{
-				if ( obj == null )  continue;
-				obj.SetDirtyBbox();
+				this.textFlow.UpdateTextLayout();
 			}
 		}
 

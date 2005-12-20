@@ -48,7 +48,11 @@ namespace Epsitec.Common.Document
 			this.metaNavigator.TextNavigator = this.textNavigator;
 			
 			this.textStory.OpletExecuted += new OpletEventHandler(this.HandleTextStoryOpletExecuted);
+			
 			this.textNavigator.CursorMoved += new EventHandler(this.HandleTextNavigatorCursorMoved);
+			this.textNavigator.TextChanged += new Support.EventHandler(this.HandleTextNavigatorTextChanged);
+			this.textNavigator.TabsChanged += new Support.EventHandler(this.HandleTextNavigatorTabsChanged);
+			this.textNavigator.ActiveStyleChanged += new Support.EventHandler(this.HandleTextNavigatorActiveStyleChanged);
 			
 			this.textStory.EnableOpletQueue();
 		}
@@ -377,6 +381,25 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 		
+		
+		public void UpdateTextLayout()
+		{
+			this.textFitter.GenerateMarks();
+
+			// Indique qu'il faudra recalculer les bbox à toute la chaîne des pavés.
+			foreach ( Objects.Abstract obj in this.objectsChain )
+			{
+				if ( obj == null )  continue;
+				obj.SetDirtyBbox();
+			}
+		}
+
+		public void UpdateTabs()
+		{
+			this.HandleTextNavigatorTabsChanged(null);
+		}
+		
+		
 		private void OnActiveTextBoxChanged()
 		{
 			System.Diagnostics.Debug.WriteLine(string.Format("ActiveTextBox set to {0}", this.Rank(this.activeTextBox)));
@@ -395,6 +418,38 @@ namespace Epsitec.Common.Document
 			}
 		}
 		
+		private void HandleTextNavigatorTextChanged(object sender)
+		{
+			if ( this.HasActiveTextBox )
+			{
+				this.UpdateTextLayout();
+				this.UpdateClipboardCommands();
+				this.document.Notifier.NotifyTextChanged();
+				this.NotifyAreaFlow();
+			}
+		}
+		
+		private void HandleTextNavigatorActiveStyleChanged(object sender)
+		{
+			if ( this.HasActiveTextBox )
+			{
+				this.UpdateTextLayout();
+				this.document.Notifier.NotifyTextChanged();
+				this.NotifyAreaFlow();
+			}
+		}
+
+		private void HandleTextNavigatorTabsChanged(object sender)
+		{
+			if ( this.HasActiveTextBox )
+			{
+				this.UpdateTextRulers();
+				this.UpdateTextLayout();
+				this.document.Notifier.NotifyTextChanged();
+				this.NotifyAreaFlow();
+			}
+		}
+
 		private void HandleTextStoryOpletExecuted(object sender, OpletEventArgs e)
 		{
 			switch ( e.Event )
