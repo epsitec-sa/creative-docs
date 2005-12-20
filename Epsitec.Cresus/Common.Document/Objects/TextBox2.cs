@@ -1388,7 +1388,7 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.textFlow.HasActiveTextBox && this.drawingContext != null && this.drawingContext.TextShowControlCharacters;
 			this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
 
-			if ( this.textFlow.HasActiveTextBox && !this.textFlow.TextNavigator.HasSelection && this.graphics != null && this.internalOperation == InternalOperation.Painting )
+			if ( this.textFlow.HasActiveTextBox && !this.textFlow.TextNavigator.HasRealSelection && this.graphics != null && this.internalOperation == InternalOperation.Painting )
 			{
 				// Peint le curseur uniquement si l'objet est en édition, qu'il n'y a pas
 				// de sélection et que l'on est en train d'afficher à l'écran.

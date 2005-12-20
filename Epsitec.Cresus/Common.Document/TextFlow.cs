@@ -306,7 +306,7 @@ namespace Epsitec.Common.Document
 			Text.ITextFrame frame;
 			
 			if ( this.HasActiveTextBox &&
-				 this.TextNavigator.GetCursorGeometry(out frame) )
+				 this.textNavigator.GetCursorGeometry(out frame) )
 			{
 				if ( frame != this.activeTextBox.TextFrame )
 				{
@@ -320,6 +320,28 @@ namespace Epsitec.Common.Document
 					System.Diagnostics.Debug.Assert(this.HasActiveTextBox);
 					
 					this.activeTextBox.SetAutoScroll();
+				}
+			}
+		}
+		
+		private void SynchroniseObjectEdited()
+		{
+			if ( !this.textStory.OpletQueue.IsUndoRedoInProgress )
+			{
+				Text.ITextFrame frame;
+				
+				if ( this.HasActiveTextBox &&
+					 this.textNavigator.IsSelectionActive &&
+					 this.textNavigator.GetCursorGeometry(out frame) )
+				{
+					if ( frame != this.activeTextBox.TextFrame )
+					{
+						// En provoquant une fin de sélection provisoire ici, on force la
+						// génération d'un oplet et l'appel indirect de ChangeObjectEdited
+						// qui va mettre à jour le pavé en édition :
+						
+						this.textNavigator.EndSelection();
+					}
 				}
 			}
 		}
@@ -351,6 +373,7 @@ namespace Epsitec.Common.Document
 				this.UpdateClipboardCommands();
 				this.document.Notifier.NotifyTextChanged();
 				this.NotifyAreaFlow();
+				this.SynchroniseObjectEdited();
 //				this.ChangeObjectEdited();
 			}
 		}

@@ -110,6 +110,27 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public bool								HasRealSelection
+		{
+			get
+			{
+				if (this.selection_cursors != null)
+				{
+					int[] pos = this.GetSelectionCursorPositions ();
+					
+					for (int i = 0; i < pos.Length; i += 2)
+					{
+						if (pos[i+0] != pos[i+1])
+						{
+							return true;
+						}
+					}
+				}
+				
+				return false;
+			}
+		}
+		
 		public int								SelectionCount
 		{
 			get
@@ -562,11 +583,14 @@ namespace Epsitec.Common.Text
 				//	Prend note de la position des curseurs de sélection pour
 				//	pouvoir restaurer la sélection en cas de UNDO :
 				
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				this.InternalClearSelection ();
+				this.UpdateSelectionMarkers ();
+				
 				using (this.story.BeginAction ())
 				{
-					int[]   positions = this.GetSelectionCursorPositions ();
-					Range[] ranges    = Range.CreateSortedRanges (positions);
-					
 					this.InternalInsertSelectionOplet (positions);
 					
 					//	Déplace le curseur de travail au début ou à la fin de la
@@ -581,9 +605,6 @@ namespace Epsitec.Common.Text
 					
 					this.story.ValidateAction ();
 				}
-				
-				this.InternalClearSelection ();
-				this.UpdateSelectionMarkers ();
 			}
 			
 			System.Diagnostics.Debug.Assert (this.HasSelection == false);
@@ -1631,6 +1652,23 @@ again:
 		
 		public bool GetCursorGeometry(out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
 		{
+			if (this.HasSelection)
+			{
+				int[] pos = this.GetSelectionCursorPositions ();
+				int   n   = pos.Length - 2;
+				
+				//	Si une sélection est active, on considère la position avant
+				//	le dernier caractère sélectionné comme référence :
+				
+				if ((n >= 0) &&
+					(pos[n+0] < pos[n+1]))
+				{
+					this.story.SetCursorPosition (this.temp_cursor, pos[n+1] - 1);
+					
+					return this.GetCursorGeometry (this.temp_cursor, out frame, out cx, out cy, out ascender, out descender, out angle);
+				}
+			}
+			
 			return this.GetCursorGeometry (this.ActiveCursor, out frame, out cx, out cy, out ascender, out descender, out angle);
 		}
 		
