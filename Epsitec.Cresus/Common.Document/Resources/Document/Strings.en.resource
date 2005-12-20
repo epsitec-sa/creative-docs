@@ -24,9 +24,9 @@
 	<data name="Dialog.Settings.FirstAction.OpenLastFiles">Open last documents</data>
 	<data name="Dialog.Settings.MouseWheelAction.Zoom">Zoom</data>
 	<data name="Dialog.Settings.MouseWheelAction.VScroll">Scroll page</data>
-	<data name="Dialog.Settings.Fonts.Title">@@Polices fréquemment utilisées, en tête de liste</data>
-	<data name="Dialog.Settings.Fonts.Default">@@Polices les plus courantes</data>
-	<data name="Dialog.Settings.Fonts.Clear">@@Aucune police fréquement utilisée</data>
+	<data name="Dialog.Settings.Fonts.Title">Select your Preferred Fonts in the list:</data>
+	<data name="Dialog.Settings.Fonts.Default">Reset Preferred Font list to default</data>
+	<data name="Dialog.Settings.Fonts.Clear">Clear Preferred Font list</data>
 	
 	<data name="Dialog.Print.Printer">Select printer</data>
 	<data name="Dialog.Print.Properties">Properties</data>
@@ -56,7 +56,7 @@
 	<data name="Dialog.Bool.GridShow">Show grid</data>
 	<data name="Dialog.Bool.TextGridShow">Show magnetic text lines</data>
 	<data name="Dialog.Bool.TextShowControlCharacters">Display control characters</data>
-	<data name="Dialog.Bool.TextFontFilter">@@Seulement les caractères fréquement utilisés</data>
+	<data name="Dialog.Bool.TextFontFilter">Show only Preferred Fonts</data>
 	<data name="Dialog.Bool.GuidesActive">Enable guides</data>
 	<data name="Dialog.Bool.GuidesShow">Show guides</data>
 	<data name="Dialog.Bool.GuidesMouse">Allow guides to be dragged</data>
@@ -105,7 +105,7 @@
 	<data name="Dialog.Double.ToLinePrecision">Precision</data>
 	<data name="Dialog.Double.DimensionScale">Scale</data>
 	<data name="Dialog.Double.DimensionDecimal">Number of digits</data>
-	<data name="Dialog.Double.TextFontSampleHeight">@@Taille des échantillons</data>
+	<data name="Dialog.Double.TextFontSampleHeight">Zoom font samples</data>
 
 	<data name="Dialog.Integer.DefaultUnit.Text">Measurment unit</data>
 	<data name="Dialog.Integer.DefaultUnit.Millimeter">Millimeters</data>
@@ -732,7 +732,7 @@
 	<data name="Action.ToolSurface">2D figures</data>
 	<data name="Action.ToolVolume">3D volumes</data>
 	<data name="Action.ToolTextLine">Text line</data>
-	<data name="Action.ToolTextBox">Text block</data>
+	<data name="Action.ToolTextBox">Text frame</data>
 	<data name="Action.ToolArray">Table</data>
 	<data name="Action.ToolImage">Bitmap image</data>
 	<data name="Action.ToolDimension">Dimension</data>
