@@ -100,6 +100,72 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public IOplet[]							LastActionMinusOneOplets
+		{
+			get
+			{
+				if ((this.action == null) &&
+					(this.live_fence > 0) &&
+					(this.live_index > 0))
+				{
+					int i = this.live_index - 1;
+					int n = 0;
+					
+					IOplet oplet = this.queue[i] as IOplet;
+					
+					System.Diagnostics.Debug.Assert (oplet.IsFence);
+					
+					i--;
+					
+					while (i >= 0)
+					{
+						oplet = this.queue[i] as IOplet;
+						
+						if (oplet.IsFence)
+						{
+							break;
+						}
+						
+						i--;
+					}
+					
+					i--;
+					
+					while (i >= 0)
+					{
+						oplet = this.queue[i] as IOplet;
+						
+						if (oplet.IsFence)
+						{
+							break;
+						}
+						
+						i--;
+						n++;
+					}
+					
+					IOplet[] oplets = new IOplet[n];
+					
+					int j = 0;
+					i++;
+					
+					while (n > 0)
+					{
+						oplets[j] = this.queue[i] as IOplet;
+						
+						i++;
+						j++;
+						
+						n--;
+					}
+					
+					return oplets;
+				}
+				
+				return new IOplet[0];
+			}
+		}
+		
 		public string[]							UndoActionNames
 		{
 			get
@@ -449,6 +515,56 @@ namespace Epsitec.Common.Support
 				this.is_undo_redo_in_progress = false;
 			}
 		}
+		
+		
+		public void PurgeSingleUndo()
+		{
+			if (this.IsDisabled)
+			{
+				return;
+			}
+			
+			if (this.is_undo_redo_in_progress)
+			{
+				throw new System.InvalidOperationException ("Undo/redo in progress.");
+			}
+			if (this.action != null)
+			{
+				throw new System.InvalidOperationException ("Action definition in progress.");
+			}
+			
+			int i = this.live_index;
+			int n = 0;
+			
+			while (i > 0)
+			{
+				i--;
+				
+				IOplet oplet = this.queue[i] as IOplet;
+				
+				if (oplet.IsFence)
+				{
+					if (n > 0)
+					{
+						break;
+					}
+					
+					this.live_fence--;
+					this.fence_count--;
+				}
+				
+				n++;
+				
+				this.queue.RemoveAt (i);
+				oplet.Dispose ();
+			}
+			
+			this.live_index = i+1;
+			
+			System.Diagnostics.Debug.Assert (this.live_index >= 0);
+			System.Diagnostics.Debug.Assert (this.live_fence >= 0);
+		}
+		
 		
 		public void PurgeUndo()
 		{

@@ -448,6 +448,7 @@ namespace Epsitec.Common.Document
 			switch ( e.Event )
 			{
 				case Common.Support.OpletEvent.AddingOplet:
+					System.Diagnostics.Debug.WriteLine(string.Format("Adding oplet of type {0}", e.Oplet.GetType ().Name));
 					this.ChangeObjectEdited();
 					break;
 			}

@@ -257,6 +257,18 @@ namespace Epsitec.Common.Text
 			if (this.IsOpletQueueEnabled)
 			{
 				this.oplet_queue.ValidateAction ();
+				
+				Common.Support.IOplet[] oplets_1 = this.oplet_queue.LastActionOplets;
+				Common.Support.IOplet[] oplets_2 = this.oplet_queue.LastActionMinusOneOplets;
+				
+				if ((oplets_1.Length == 1) &&
+					(oplets_2.Length == 1))
+				{
+					if (this.MergeOplets (oplets_2[0], oplets_1[0]))
+					{
+						this.oplet_queue.PurgeSingleUndo ();
+					}
+				}
 			}
 		}
 		
@@ -1104,48 +1116,10 @@ namespace Epsitec.Common.Text
 				{
 					Common.Support.IOplet last = last_oplets[0];
 					
-					if (last.GetType () == oplet.GetType ())
+					if (this.MergeOplets (last, oplet))
 					{
-						//	L'oplet qui doit être inséré est du même type que celui qui
-						//	a été inséré auparavant. Peut-être peut-on les fusionner ?
-						
-						if (oplet is CursorMoveOplet)
-						{
-							//	Un déplacement du curseur suivant un autre --> on ne
-							//	conserve que la position de départ; pour autant que
-							//	les deux oplets concernent le même curseur.
-							
-							CursorMoveOplet op_1 = oplet as CursorMoveOplet;
-							CursorMoveOplet op_2 = last as CursorMoveOplet;
-							
-							if (op_1.Cursor == op_2.Cursor)
-							{
-								op_1.Dispose ();
-								return;
-							}
-						}
-						else if (oplet is TextInsertOplet)
-						{
-							TextInsertOplet op_1 = oplet as TextInsertOplet;
-							TextInsertOplet op_2 = last as TextInsertOplet;
-							
-							if (op_2.MergeWith (op_1))
-							{
-								op_1.Dispose ();
-								return;
-							}
-						}
-						else if (oplet is TextDeleteOplet)
-						{
-							TextDeleteOplet op_1 = oplet as TextDeleteOplet;
-							TextDeleteOplet op_2 = last as TextDeleteOplet;
-							
-							if (op_2.MergeWith (op_1))
-							{
-								op_1.Dispose ();
-								return;
-							}
-						}
+						oplet.Dispose ();
+						return;
 					}
 				}
 				
@@ -1164,6 +1138,64 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		protected bool MergeOplets(Common.Support.IOplet last, Common.Support.IOplet oplet)
+		{
+			//	Retourne true si l'oplet peut être fusionné avec le précédent.
+			
+			if (last.GetType () == oplet.GetType ())
+			{
+				//	L'oplet qui doit être inséré est du même type que celui qui
+				//	a été inséré auparavant. Peut-être peut-on les fusionner ?
+				
+				if (oplet is CursorMoveOplet)
+				{
+					//	Un déplacement du curseur suivant un autre --> on ne
+					//	conserve que la position de départ; pour autant que
+					//	les deux oplets concernent le même curseur.
+					
+					CursorMoveOplet op_1 = oplet as CursorMoveOplet;
+					CursorMoveOplet op_2 = last as CursorMoveOplet;
+					
+					if (op_1.Cursor == op_2.Cursor)
+					{
+						return true;
+					}
+				}
+				else if (oplet is TextInsertOplet)
+				{
+					TextInsertOplet op_1 = oplet as TextInsertOplet;
+					TextInsertOplet op_2 = last as TextInsertOplet;
+					
+					if (op_2.MergeWith (op_1))
+					{
+						return true;
+					}
+				}
+				else if (oplet is TextDeleteOplet)
+				{
+					TextDeleteOplet op_1 = oplet as TextDeleteOplet;
+					TextDeleteOplet op_2 = last as TextDeleteOplet;
+					
+					if (op_2.MergeWith (op_1))
+					{
+						return true;
+					}
+				}
+				else if (oplet is TextChangeOplet)
+				{
+					TextChangeOplet op_1 = oplet as TextChangeOplet;
+					TextChangeOplet op_2 = last as TextChangeOplet;
+					
+					if (op_2.MergeWith (op_1))
+					{
+						return true;
+					}
+				}
+			}
+			
+			return false;
+		}
 		
 		protected void UpdateTextBreakInformation(int position, int length)
 		{
@@ -2034,6 +2066,17 @@ namespace Epsitec.Common.Text
 				this.length = 0;
 				
 				base.Dispose ();
+			}
+			
+			public bool MergeWith(TextChangeOplet other)
+			{
+				if ((this.position == other.position) &&
+					(this.length == other.length))
+				{
+					return true;
+				}
+				
+				return false;
 			}
 			
 			
