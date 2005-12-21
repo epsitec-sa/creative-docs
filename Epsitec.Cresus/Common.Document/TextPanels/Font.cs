@@ -56,13 +56,13 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
 			this.checkBold = new CheckButton(this);
-			this.checkBold.Text = "Inverser le gras";
+			this.checkBold.Text = Res.Strings.Action.FontInvertBold;
 			this.checkBold.TabIndex = this.tabIndex++;
 			this.checkBold.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.checkBold.ActiveStateChanged += new EventHandler(this.HandleCheckBoldActiveStateChanged);
 
 			this.checkItalic = new CheckButton(this);
-			this.checkItalic.Text = "Inverser l'italique";
+			this.checkItalic.Text = Res.Strings.Action.FontInvertItalic;
 			this.checkItalic.TabIndex = this.tabIndex++;
 			this.checkItalic.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.checkItalic.ActiveStateChanged += new EventHandler(this.HandleCheckItalicActiveStateChanged);
