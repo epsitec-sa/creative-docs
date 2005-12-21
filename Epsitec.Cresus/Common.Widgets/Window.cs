@@ -1553,14 +1553,14 @@ namespace Epsitec.Common.Widgets
 			{
 				this.source      = source;
 				this.command     = source.Command;
-				this.dispatchers = Helpers.VisualTree.GetDispatchers (source);
+				this.dispatchers = Helpers.VisualTree.GetAllDispatchers (source);
 			}
 			
 			public QueueItem(Widget source, CommandState command)
 			{
 				this.source      = source;
 				this.command     = command.Name;
-				this.dispatchers = Helpers.VisualTree.GetDispatchers (source);
+				this.dispatchers = Helpers.VisualTree.GetAllDispatchers (source);
 			}
 			
 			
