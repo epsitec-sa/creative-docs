@@ -57,7 +57,7 @@
 	<data name="Dialog.Bool.TextGridShow">Show magnetic text lines</data>
 	<data name="Dialog.Bool.TextShowControlCharacters">Display control characters</data>
 	<data name="Dialog.Bool.TextFontFilter">Show only Preferred Fonts</data>
-	<data name="Dialog.Bool.TextFontSampleAbc">@@Afficher 'Abc' au lieu de 'AaBbYyZz'</data>
+	<data name="Dialog.Bool.TextFontSampleAbc">Show 'Abc' instead of 'AaBbYyZz'</data>
 	<data name="Dialog.Bool.GuidesActive">Enable guides</data>
 	<data name="Dialog.Bool.GuidesShow">Show guides</data>
 	<data name="Dialog.Bool.GuidesMouse">Allow guides to be dragged</data>
@@ -173,12 +173,12 @@
 	<data name="Container.Guides.Header.Type">Type</data>
 	<data name="Container.Guides.Header.Position">Position</data>
 	<data name="Container.Guides.Undefined">&lt;i&gt;undefined &lt;/i&gt;</data>
-	<data name="Container.Guides.HorizontalBottom">@@Horizontal, depuis le bas</data>
-	<data name="Container.Guides.HorizontalCenter">@@Horizontal, centré</data>
-	<data name="Container.Guides.HorizontalTop">@@Horizontal, depuis le haut</data>
-	<data name="Container.Guides.VerticalLeft">@@Vertical, depuis la gauche</data>
-	<data name="Container.Guides.VerticalCenter">@@Vertical, centré</data>
-	<data name="Container.Guides.VerticalRight">@@Vertical, depuis la droite</data>
+	<data name="Container.Guides.HorizontalBottom">Horizontal, distance from bottom</data>
+	<data name="Container.Guides.HorizontalCenter">Horizontal, distance from center</data>
+	<data name="Container.Guides.HorizontalTop">Horizontal, distance from top</data>
+	<data name="Container.Guides.VerticalLeft">Vertical, distance from left</data>
+	<data name="Container.Guides.VerticalCenter">Vertical, distance from center</data>
+	<data name="Container.Guides.VerticalRight">Vertical, distance from right</data>
 
 	<data name="Container.Layers.Button.Show">Display all</data>
 	<data name="Container.Layers.Button.Dimmed">Fade others</data>

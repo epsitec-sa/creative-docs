@@ -5473,9 +5473,9 @@ namespace Epsitec.App.DocumentEditor
 
 			this.checker = new VersionChecker(typeof(App.DocumentEditor.Application).Assembly);
 
-			string url = "http://www.creativedocs.net/update/check" +
-						 "?software=CreativeDocs&version=" +
-						 this.checker.CurrentVersion;
+			string url = string.Concat(Res.Strings.Dialog.Update.Web2, "/update/check",
+				/**/				   "?software=", Res.Strings.Application.TitleShort, "&version=",
+				/**/				   this.checker.CurrentVersion);
 
 			this.checker.StartCheck(url);
 		}
