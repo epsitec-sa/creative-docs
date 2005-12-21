@@ -1873,6 +1873,7 @@ namespace Epsitec.Common.Document
 		// Détecte l'objet éditable pointé par la souris.
 		protected Objects.Abstract DetectEdit(Point mouse, bool onlyTextBox2, out Objects.DetectEditType handle)
 		{
+			onlyTextBox2 = true;  // l'édition des anciens TextBox et TextLine plante !
 			Objects.Abstract layer = this.drawingContext.RootObject();
 
 			foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
