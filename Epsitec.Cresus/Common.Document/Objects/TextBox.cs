@@ -61,6 +61,16 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		public string SimpleText
+		{
+			//	Donne le texte simple (sans commandes xml). Utilisé pour la conversion vers TextBox2.
+			get
+			{
+				return TextLayout.ConvertToSimpleText(this.textLayout.Text);
+			}
+		}
+
+
 		public override DetectEditType DetectEdit(Point pos)
 		{
 			//	Détecte si la souris est sur l'objet pour l'éditer.

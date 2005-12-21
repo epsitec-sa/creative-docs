@@ -873,6 +873,7 @@
 	<data name="Action.Uncombine">Scinder</data>
 	<data name="Action.ToBezier">Convertir en courbes</data>
 	<data name="Action.ToPoly">Convertir en droites</data>
+	<data name="Action.ToTextBox2">Convertir un ancien texte pour le rendre éditable</data>
 	<data name="Action.ToSimplest">Simplifier (debug)</data>
 	<data name="Action.Fragment">Fragmenter</data>
 	

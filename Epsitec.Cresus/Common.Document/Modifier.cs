@@ -3233,6 +3233,75 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public void ToTextBox2Selection()
+		{
+			//	Converti en TextBox2 tous les TextBox et TextLine sélectionnés.
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.UpdateCounters();
+			this.OpletQueueBeginAction(Res.Strings.Action.ToTextBox2);
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			bool iga = context.GridActive;
+			context.GridActive = false;
+			Objects.Abstract layer = context.RootObject();
+			int total = layer.Objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
+				if ( !obj.IsSelected )  continue;
+
+				if ( obj is Objects.TextBox )
+				{
+					Objects.TextBox  t1 = obj as Objects.TextBox;
+					Objects.TextBox2 t2 = new Objects.TextBox2(this.document, obj);
+					layer.Objects.Add(t2);
+
+					t2.CreateMouseDown(obj.BoundingBoxThin.BottomLeft, context);
+					t2.CreateMouseUp  (obj.BoundingBoxThin.TopRight,   context);
+
+					this.XferProperties(t2, obj);
+
+					string text = t1.SimpleText;
+					string face = t1.PropertyTextFont.FontName;
+					double size = t1.PropertyTextFont.FontSize;
+					t2.EditInsertText(text, face, size);
+					t2.UpdateGeometry();
+					t2.Select(true);
+					this.TotalSelected ++;
+					
+					obj.Mark = true;  // il faudra le détruire
+				}
+
+				if ( obj is Objects.TextLine )
+				{
+					Objects.TextLine t1 = obj as Objects.TextLine;
+					Objects.TextBox2 t2 = new Objects.TextBox2(this.document, obj);
+					layer.Objects.Add(t2);
+
+					Rectangle box = obj.BoundingBoxThin;
+					box.Bottom -= box.Height*0.4;
+					t2.CreateMouseDown(box.BottomLeft, context);
+					t2.CreateMouseUp  (box.TopRight,   context);
+
+					t2.PropertyLineMode.Width = 0;
+					t2.PropertyFillGradient.Color1 = RichColor.Empty;
+
+					string text = TextLayout.ConvertToSimpleText(t1.Content);
+					string face = t1.PropertyTextFont.FontName;
+					double size = t1.PropertyTextFont.FontSize;
+					t2.EditInsertText(text, face, size);
+					t2.UpdateGeometry();
+					t2.Select(true);
+					this.TotalSelected ++;
+					
+					obj.Mark = true;  // il faudra le détruire
+				}
+			}
+			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
+			context.GridActive = iga;
+			this.document.Notifier.NotifySelectionChanged();
+			this.OpletQueueValidateAction();
+		}
+
 		public void ToSimplestSelection()
 		{
 			//	Converti en Bézier tous les objets sélectionnés.

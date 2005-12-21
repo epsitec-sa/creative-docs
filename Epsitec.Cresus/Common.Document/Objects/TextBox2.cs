@@ -596,6 +596,25 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
+		public void EditInsertText(string text, string fontFace, double fontSize)
+		{
+			//	Insère un texte en provenance d'un ancien TextBox ou TextLine.
+			this.EditInsertText(text, "", "");
+
+			this.MetaNavigator.SelectAll();
+
+			this.document.Wrappers.WrappersAttach(this.textFlow);
+			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.Defined.FontFace = fontFace;
+			this.document.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(fontFace);
+			this.document.TextWrapper.Defined.FontSize = fontSize;
+			this.document.TextWrapper.Defined.Units = Text.Properties.SizeUnits.Points;
+			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.Wrappers.WrappersDetach();
+
+			this.textFlow.TextNavigator.ClearSelection();
+		}
+
 		public override bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
 			//	Insère un texte dans le pavé en édition.

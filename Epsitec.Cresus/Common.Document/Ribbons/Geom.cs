@@ -14,11 +14,12 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.GeometryMain;
 
-			this.buttonCombine   = this.CreateIconButton("Combine");
-			this.buttonUncombine = this.CreateIconButton("Uncombine");
-			this.buttonToBezier  = this.CreateIconButton("ToBezier");
-			this.buttonToPoly    = this.CreateIconButton("ToPoly");
-			this.buttonFragment  = this.CreateIconButton("Fragment");
+			this.buttonCombine    = this.CreateIconButton("Combine");
+			this.buttonUncombine  = this.CreateIconButton("Uncombine");
+			this.buttonToBezier   = this.CreateIconButton("ToBezier");
+			this.buttonToPoly     = this.CreateIconButton("ToPoly");
+			this.buttonToTextBox2 = this.CreateIconButton("ToTextBox2");
+			this.buttonFragment   = this.CreateIconButton("Fragment");
 			
 			this.UpdateClientGeometry();
 		}
@@ -37,7 +38,7 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 8 + 22*3;
+				return 8 + 22*4;
 			}
 		}
 
@@ -67,6 +68,8 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(dx, 0);
 			this.buttonToPoly.Bounds = rect;
 			rect.Offset(dx, 0);
+			this.buttonToTextBox2.Bounds = rect;
+			rect.Offset(dx, 0);
 			this.buttonFragment.Bounds = rect;
 		}
 
@@ -75,6 +78,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonUncombine;
 		protected IconButton				buttonToBezier;
 		protected IconButton				buttonToPoly;
+		protected IconButton				buttonToTextBox2;
 		protected IconButton				buttonFragment;
 	}
 }

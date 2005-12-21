@@ -2995,6 +2995,7 @@ namespace Epsitec.Common.Document
 				exist |= Menus.ContextMenuItem.MenuAddItem(listGeom, "Uncombine");
 				exist |= Menus.ContextMenuItem.MenuAddItem(listGeom, "ToBezier");
 				exist |= Menus.ContextMenuItem.MenuAddItem(listGeom, "ToPoly");
+				exist |= Menus.ContextMenuItem.MenuAddItem(listGeom, "ToTextBox2");
 				exist |= Menus.ContextMenuItem.MenuAddItem(listGeom, "Fragment");
 
 				if ( Menus.ContextMenuItem.IsMenuActive(listGeom) )

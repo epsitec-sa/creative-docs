@@ -2640,6 +2640,12 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.ToPolySelection();
 		}
 
+		[Command ("ToTextBox2")]
+		void CommandToTextBox2(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ToTextBox2Selection();
+		}
+
 		[Command ("ToSimplest")]
 		void CommandToSimplest(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3630,6 +3636,7 @@ namespace Epsitec.App.DocumentEditor
 			this.uncombineState = this.CreateCommandState("Uncombine");
 			this.toBezierState = this.CreateCommandState("ToBezier");
 			this.toPolyState = this.CreateCommandState("ToPoly");
+			this.toTextBox2State = this.CreateCommandState("ToTextBox2", "ObjectTextBox", "ToTextBox2");
 			this.fragmentState = this.CreateCommandState("Fragment");
 
 			this.shaperHandleAddState = this.CreateCommandState("ShaperHandleAdd");
@@ -4185,6 +4192,7 @@ namespace Epsitec.App.DocumentEditor
 				this.uncombineState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.toBezierState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.toPolyState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.toTextBox2State.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.fragmentState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.booleanAndState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.booleanOrState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
@@ -4334,6 +4342,7 @@ namespace Epsitec.App.DocumentEditor
 				this.uncombineState.Enable = false;
 				this.toBezierState.Enable = false;
 				this.toPolyState.Enable = false;
+				this.toTextBox2State.Enable = false;
 				this.fragmentState.Enable = false;
 				this.booleanAndState.Enable = false;
 				this.booleanOrState.Enable = false;
@@ -5707,6 +5716,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					uncombineState;
 		protected CommandState					toBezierState;
 		protected CommandState					toPolyState;
+		protected CommandState					toTextBox2State;
 		protected CommandState					fragmentState;
 		protected CommandState					shaperHandleAddState;
 		protected CommandState					shaperHandleSubState;
