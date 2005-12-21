@@ -26,7 +26,7 @@ namespace Epsitec.App.DocumentEditor
 	{
 		public DocumentEditor(DocumentType type)
 		{
-			// On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
+			//	On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
 			
 			System.Diagnostics.Debug.WriteLine("*** Created Primary Command Dispatcher ***");
 			this.commandDispatcher = new CommandDispatcher("DocumentEditor", CommandDispatcherLevel.Primary);
@@ -272,7 +272,7 @@ namespace Epsitec.App.DocumentEditor
 			if ( that.commandDispatcher == null )
 			{
 				System.Diagnostics.Debug.WriteLine("*** Created Primary Command Dispatcher ***");
-				// On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
+				//	On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
 				that.commandDispatcher = new CommandDispatcher("DocumentEditor", CommandDispatcherLevel.Primary);
 				that.commandDispatcher.RegisterController(that);
 			}
@@ -282,9 +282,9 @@ namespace Epsitec.App.DocumentEditor
 #endif
 
 
-		// Appelé lorsque l'application a fini de démarrer.
 		public void Finalize()
 		{
+			//	Appelé lorsque l'application a fini de démarrer.
 			if ( this.askKey )
 			{
 				this.askKey = false;
@@ -862,10 +862,10 @@ namespace Epsitec.App.DocumentEditor
 			this.ActiveRibbon(this.ribbonMain);
 		}
 
-		// Met à jour toutes les icônes de la partie rapide, à droite des choix du ruban actif.
 		public void UpdateQuickCommands()
 		{
-			// Supprime tous les IconButtons.
+			//	Met à jour toutes les icônes de la partie rapide, à droite des choix du ruban actif.
+			//	Supprime tous les IconButtons.
 			foreach ( Widget widget in this.hToolBar.Children.Widgets )
 			{
 				if ( widget is Ribbons.RibbonButton )  continue;
@@ -979,7 +979,7 @@ namespace Epsitec.App.DocumentEditor
 				ToolTip.Default.SetToolTip(di.vRuler, "*");
 			}
 
-			// Bande horizontale qui contient les boutons des pages et l'ascenseur.
+			//	Bande horizontale qui contient les boutons des pages et l'ascenseur.
 			Widget hBand = new Widget(mainViewParent);
 			hBand.Height = sw;
 			hBand.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
@@ -1023,7 +1023,7 @@ namespace Epsitec.App.DocumentEditor
 			di.hScroller.Dock = DockStyle.Fill;
 			di.hScroller.DockMargins = new Margins(2, 0, 0, 0);
 
-			// Bande verticale qui contient les boutons des calques et l'ascenseur.
+			//	Bande verticale qui contient les boutons des calques et l'ascenseur.
 			Widget vBand = new Widget(mainViewParent);
 			vBand.Width = sw;
 			vBand.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
@@ -1168,9 +1168,9 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		#region LastFilenames
-		// Construit le sous-menu des derniers fichiers ouverts.
 		protected void BuildLastFilenamesMenu()
 		{
+			//	Construit le sous-menu des derniers fichiers ouverts.
 			if ( this.menu == null )  return;
 
 			VMenu lastMenu = new VMenu();
@@ -1202,9 +1202,9 @@ namespace Epsitec.App.DocumentEditor
 			return this.menu;
 		}
 
-		// Ajoute un sous-menu dans un menu.
 		protected void MenuAddSub(VMenu menu, VMenu sub, string cmd)
 		{
+			//	Ajoute un sous-menu dans un menu.
 			for ( int i=0 ; i<menu.Items.Count ; i++ )
 			{
 				MenuItem item = menu.Items[i] as MenuItem;
@@ -1218,9 +1218,9 @@ namespace Epsitec.App.DocumentEditor
 			System.Diagnostics.Debug.Assert(false, "MenuAddSub: submenu not found");
 		}
 
-		// Ajoute une icône.
 		protected void MenuAdd(VMenu vmenu, string command)
 		{
+			//	Ajoute une icône.
 			if ( command == null )
 			{
 				vmenu.Items.Add(new MenuSeparator());
@@ -1234,9 +1234,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 		
-		// Ajoute une icône.
 		protected void MenuAdd(VMenu vmenu, string icon, string command, string text, string shortcut)
 		{
+			//	Ajoute une icône.
 			this.MenuAdd(vmenu, icon, command, text, shortcut, command);
 		}
 		
@@ -1263,9 +1263,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Ajoute une icône.
 		protected Widget HToolBarAdd(CommandState cs)
 		{
+			//	Ajoute une icône.
 			if ( cs == null )
 			{
 				IconSeparator sep = new IconSeparator();
@@ -1282,9 +1282,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Ajoute une icône.
 		protected Widget VToolBarAdd(CommandState cs)
 		{
+			//	Ajoute une icône.
 			if ( cs == null )
 			{
 				IconSeparator sep = new IconSeparator();
@@ -1325,9 +1325,9 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		// Le bouton pour activer/désactiver un ruban a été cliqué.
 		private void HandleRibbonClicked(object sender, MessageEventArgs e)
 		{
+			//	Le bouton pour activer/désactiver un ruban a été cliqué.
 			Ribbons.RibbonButton button = sender as Ribbons.RibbonButton;
 			Ribbons.RibbonContainer ribbon = null;
 			if ( button == this.ribbonMainButton )  ribbon = this.ribbonMain;
@@ -1339,9 +1339,9 @@ namespace Epsitec.App.DocumentEditor
 			this.ActiveRibbon(ribbon.IsVisible ? null : ribbon);
 		}
 
-		// Donne le ruban correspondant à un nom.
 		protected Ribbons.RibbonContainer GetRibbon(string name)
 		{
+			//	Donne le ruban correspondant à un nom.
 			if ( name == this.ribbonMain.Name )  return this.ribbonMain;
 			if ( name == this.ribbonGeom.Name )  return this.ribbonGeom;
 			if ( name == this.ribbonOper.Name )  return this.ribbonOper;
@@ -1349,9 +1349,9 @@ namespace Epsitec.App.DocumentEditor
 			return null;
 		}
 
-		// Cherche le dernier ruban utilisé différent d'un nom donné.
 		protected Ribbons.RibbonContainer LastRibbon(string notName)
 		{
+			//	Cherche le dernier ruban utilisé différent d'un nom donné.
 			if ( this.ribbonList == null )  return null;
 
 			for ( int i=this.ribbonList.Count-1 ; i>=0 ; i-- )
@@ -1365,9 +1365,9 @@ namespace Epsitec.App.DocumentEditor
 			return null;
 		}
 
-		// Active un ruban.
 		protected void ActiveRibbon(Ribbons.RibbonContainer active)
 		{
+			//	Active un ruban.
 			this.ribbonActive = active;
 
 			if ( this.ribbonList == null )
@@ -1413,9 +1413,9 @@ namespace Epsitec.App.DocumentEditor
 			this.ResumeLayout();
 		}
 
-		// Retourne la hauteur utilisée par les rubans.
 		protected double RibbonHeight
 		{
+			//	Retourne la hauteur utilisée par les rubans.
 			get
 			{
 				return (this.ribbonActive == null) ? 0 : this.ribbonHeight;
@@ -1423,9 +1423,9 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		// Un dialogue a été fermé.
 		private void HandleDlgClosed(object sender)
 		{
+			//	Un dialogue a été fermé.
 			if ( sender == this.dlgGlyphs )
 			{
 				this.glyphsState.ActiveState = ActiveState.No;
@@ -1527,10 +1527,10 @@ namespace Epsitec.App.DocumentEditor
 
 		
 		#region IO
-		// Affiche le dialogue pour demander s'il faut enregistrer le
-		// document modifié, avant de passer à un autre document.
 		protected Common.Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
 		{
+			//	Affiche le dialogue pour demander s'il faut enregistrer le
+			//	document modifié, avant de passer à un autre document.
 			if ( !this.CurrentDocument.IsDirtySerialize ||
 				 this.CurrentDocument.Modifier.StatisticTotalObjects() == 0 )
 			{
@@ -1552,9 +1552,9 @@ namespace Epsitec.App.DocumentEditor
 			return dialog.Result;
 		}
 
-		// Affiche le dialogue pour signaler la liste de tous les problèmes.
 		protected Common.Dialogs.DialogResult DialogWarnings(CommandDispatcher dispatcher, System.Collections.ArrayList warnings)
 		{
+			//	Affiche le dialogue pour signaler la liste de tous les problèmes.
 			if ( warnings == null || warnings.Count == 0 )  return Common.Dialogs.DialogResult.None;
 
 			this.dlgSplash.Hide();
@@ -1587,9 +1587,9 @@ namespace Epsitec.App.DocumentEditor
 			return dialog.Result;
 		}
 
-		// Affiche le dialogue pour signaler une erreur.
 		public Common.Dialogs.DialogResult DialogError(CommandDispatcher dispatcher, string error)
 		{
+			//	Affiche le dialogue pour signaler une erreur.
 			if ( error == "" )  return Common.Dialogs.DialogResult.None;
 
 			this.dlgSplash.Hide();
@@ -1604,10 +1604,10 @@ namespace Epsitec.App.DocumentEditor
 			return dialog.Result;
 		}
 
-		// Si on a tapé "toto", mais qu'il existe le fichier "Toto",
-		// met le "vrai" nom dans filename.
 		protected static string AdjustFilename(string filename)
 		{
+			//	Si on a tapé "toto", mais qu'il existe le fichier "Toto",
+			//	met le "vrai" nom dans filename.
 			string path = System.IO.Path.GetDirectoryName(filename);
 			string name = System.IO.Path.GetFileName(filename);
 			string[] s;
@@ -1626,11 +1626,11 @@ namespace Epsitec.App.DocumentEditor
 			return filename;
 		}
 
-		// Demande un nom de fichier puis ouvre le fichier.
-		// Affiche l'erreur éventuelle.
-		// Retourne false si le fichier n'a pas été ouvert.
 		protected bool Open(CommandDispatcher dispatcher)
 		{
+			//	Demande un nom de fichier puis ouvre le fichier.
+			//	Affiche l'erreur éventuelle.
+			//	Retourne false si le fichier n'a pas été ouvert.
 			this.dlgSplash.Hide();
 
 			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
@@ -1664,11 +1664,11 @@ namespace Epsitec.App.DocumentEditor
 			return true;
 		}
 
-		// Demande un nom de fichier modèle puis ouvre le fichier.
-		// Affiche l'erreur éventuelle.
-		// Retourne false si le fichier n'a pas été ouvert.
 		protected bool OpenModel(CommandDispatcher dispatcher)
 		{
+			//	Demande un nom de fichier modèle puis ouvre le fichier.
+			//	Affiche l'erreur éventuelle.
+			//	Retourne false si le fichier n'a pas été ouvert.
 			this.dlgSplash.Hide();
 
 			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
@@ -1694,11 +1694,11 @@ namespace Epsitec.App.DocumentEditor
 			return true;
 		}
 
-		// Ouvre un ficher d'après son nom.
-		// Affiche l'erreur éventuelle.
-		// Retourne false si le fichier n'a pas été ouvert.
 		public bool Open(string filename)
 		{
+			//	Ouvre un ficher d'après son nom.
+			//	Affiche l'erreur éventuelle.
+			//	Retourne false si le fichier n'a pas été ouvert.
 			this.MouseShowWait();
 
 			string err = "";
@@ -1712,7 +1712,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				// Cherche si ce nom de fichier est déjà ouvert ?
+				//	Cherche si ce nom de fichier est déjà ouvert ?
 				int total = this.bookDocuments.PageCount;
 				for ( int i=0 ; i<total ; i++ )
 				{
@@ -1746,13 +1746,13 @@ namespace Epsitec.App.DocumentEditor
 			return (err == "");
 		}
 
-		// Demande un nom de fichier puis enregistre le fichier.
-		// Si le document a déjà un nom de fichier et que ask=false,
-		// l'enregistrement est fait directement avec le nom connu.
-		// Affiche l'erreur éventuelle.
-		// Retourne false si le fichier n'a pas été enregistré.
 		protected bool Save(CommandDispatcher dispatcher, bool ask)
 		{
+			//	Demande un nom de fichier puis enregistre le fichier.
+			//	Si le document a déjà un nom de fichier et que ask=false,
+			//	l'enregistrement est fait directement avec le nom connu.
+			//	Affiche l'erreur éventuelle.
+			//	Retourne false si le fichier n'a pas été enregistré.
 			string filename;
 
 			if ( this.CurrentDocument.Filename == "" || ask )
@@ -1798,10 +1798,10 @@ namespace Epsitec.App.DocumentEditor
 			return (err == "");
 		}
 
-		// Demande un nom de fichier modèle puis enregistre le fichier.
-		// Retourne false si le fichier n'a pas été enregistré.
 		protected bool SaveModel(CommandDispatcher dispatcher)
 		{
+			//	Demande un nom de fichier modèle puis enregistre le fichier.
+			//	Retourne false si le fichier n'a pas été enregistré.
 			string filename;
 
 			this.dlgSplash.Hide();
@@ -1832,11 +1832,11 @@ namespace Epsitec.App.DocumentEditor
 			return (err == "");
 		}
 
-		// Fait tout ce qu'il faut pour éventuellement sauvegarder le document
-		// avant de passer à autre chose.
-		// Retourne false si on ne peut pas continuer.
 		protected bool AutoSave(CommandDispatcher dispatcher)
 		{
+			//	Fait tout ce qu'il faut pour éventuellement sauvegarder le document
+			//	avant de passer à autre chose.
+			//	Retourne false si on ne peut pas continuer.
 			Common.Dialogs.DialogResult result = this.DialogSave(dispatcher);
 			if ( result == Common.Dialogs.DialogResult.Yes )
 			{
@@ -1849,11 +1849,11 @@ namespace Epsitec.App.DocumentEditor
 			return true;
 		}
 
-		// Fait tout ce qu'il faut pour éventuellement sauvegarder tous les
-		// documents avant de passer à autre chose.
-		// Retourne false si on ne peut pas continuer.
 		protected bool AutoSaveAll(CommandDispatcher dispatcher)
 		{
+			//	Fait tout ce qu'il faut pour éventuellement sauvegarder tous les
+			//	documents avant de passer à autre chose.
+			//	Retourne false si on ne peut pas continuer.
 			int cd = this.currentDocument;
 
 			int total = this.bookDocuments.PageCount;
@@ -1871,9 +1871,9 @@ namespace Epsitec.App.DocumentEditor
 			return true;
 		}
 
-		// Sauvegarde tous les documents, même ceux qui sont à jour.
 		protected bool ForceSaveAll(CommandDispatcher dispatcher)
 		{
+			//	Sauvegarde tous les documents, même ceux qui sont à jour.
 			int cd = this.currentDocument;
 
 			int total = this.bookDocuments.PageCount;
@@ -2156,9 +2156,9 @@ namespace Epsitec.App.DocumentEditor
 			this.DialogError(this.commandDispatcher, err);
 		}
 
-		// Lit la collection de couleurs à partir d'un fichier.
 		public string PaletteRead(string filename)
 		{
+			//	Lit la collection de couleurs à partir d'un fichier.
 			try
 			{
 				using ( Stream stream = File.OpenRead(filename) )
@@ -2177,9 +2177,9 @@ namespace Epsitec.App.DocumentEditor
 			return "";  // ok
 		}
 
-		// Ecrit la collection de couleurs dans un fichier.
 		public string PaletteWrite(string filename)
 		{
+			//	Ecrit la collection de couleurs dans un fichier.
 			if ( File.Exists(filename) )
 			{
 				File.Delete(filename);
@@ -3033,10 +3033,10 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.ZoomValue(zoom);
 		}
 
-		// Exécute une commande locale à un objet.
 		[Command ("Object")]
 		void CommandObject(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			//	Exécute une commande locale à un objet.
 			Widget widget = e.Source as Widget;
 			this.CurrentDocument.Modifier.ActiveViewer.CommandObject(widget.Name);
 		}
@@ -3262,9 +3262,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Bouton "menu des pages" cliqué.
 		private void HandleQuickPageMenu(object sender, MessageEventArgs e)
 		{
+			//	Bouton "menu des pages" cliqué.
 			Button button = sender as Button;
 			if ( button == null )  return;
 			Point pos = button.MapClientToScreen(new Point(0, button.Height));
@@ -3345,9 +3345,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Bouton "menu des calques" cliqué.
 		private void HandleQuickLayerMenu(object sender, MessageEventArgs e)
 		{
+			//	Bouton "menu des calques" cliqué.
 			Button button = sender as Button;
 			if ( button == null )  return;
 			Point pos = button.MapClientToScreen(new Point(0, button.Height));
@@ -3460,25 +3460,25 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		// Quitte l'application.
 		public void QuitApplication()
 		{
+			//	Quitte l'application.
 			this.WritedGlobalSettings();
 			Window.Quit();
 		}
 
 
-		// Construit le menu pour choisir une page.
 		public VMenu CreatePagesMenu()
 		{
+			//	Construit le menu pour choisir une page.
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			UndoableList pages = this.CurrentDocument.GetObjects;  // liste des pages
 			return Objects.Page.CreateMenu(pages, context.CurrentPage, null);
 		}
 
-		// Construit le menu pour choisir un calque.
 		public VMenu CreateLayersMenu()
 		{
+			//	Construit le menu pour choisir un calque.
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			Objects.Abstract page = context.RootObject(1);
 			UndoableList layers = page.Objects;  // liste des calques
@@ -3487,9 +3487,9 @@ namespace Epsitec.App.DocumentEditor
 
 
 
-		// Initialise toutes les commandes.
 		protected void InitCommands()
 		{
+			//	Initialise toutes les commandes.
 			this.MakeIconList();
 
 			this.toolSelectState = this.CreateCommandState("ToolSelect", "Select", "ToolSelect", KeyCode.AlphaS);
@@ -3760,9 +3760,9 @@ namespace Epsitec.App.DocumentEditor
 			this.moveDownShiftState  = this.CreateCommandState("MoveDownShift",  KeyCode.ModifierShift|KeyCode.ArrowDown);
 		}
 
-		// Crée un nouveau CommandState.
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
 		{
+			//	Crée un nouveau CommandState.
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
 			cs.IconName    = this.ExtendIcon(command);
@@ -3771,9 +3771,9 @@ namespace Epsitec.App.DocumentEditor
 			return cs;
 		}
 
-		// Crée un nouveau CommandState.
 		protected CommandState CreateCommandState(string command, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
+			//	Crée un nouveau CommandState.
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
 			cs.IconName    = this.ExtendIcon(command);
@@ -3783,9 +3783,9 @@ namespace Epsitec.App.DocumentEditor
 			return cs;
 		}
 
-		// Crée un nouveau CommandState.
 		protected CommandState CreateCommandState(string command, string icon, string tooltip, params Widgets.Shortcut[] shortcuts)
 		{
+			//	Crée un nouveau CommandState.
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
 			cs.IconName    = this.ExtendIcon(icon);
@@ -3794,9 +3794,9 @@ namespace Epsitec.App.DocumentEditor
 			return cs;
 		}
 
-		// Crée un nouveau CommandState.
 		protected CommandState CreateCommandState(string command, string icon, string tooltip, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
+			//	Crée un nouveau CommandState.
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
 			cs.IconName    = this.ExtendIcon(icon);
@@ -3806,10 +3806,10 @@ namespace Epsitec.App.DocumentEditor
 			return cs;
 		}
 
-		// Fouille s'il existe des icônes terminée par "*1.icon" ou "*2.icon" pour donner un nom
-		// mixte, du genre "0.Delete;2.Delete2".
 		protected string ExtendIcon(string icon)
 		{
+			//	Fouille s'il existe des icônes terminée par "*1.icon" ou "*2.icon" pour donner un nom
+			//	mixte, du genre "0.Delete;2.Delete2".
 			System.Diagnostics.Debug.Assert(this.iconList != null);
 			if ( icon == null )  return null;
 			if ( icon.IndexOf(";") != -1 )  return icon;  // déjà un nom mixte ?
@@ -3824,9 +3824,9 @@ namespace Epsitec.App.DocumentEditor
 			return icon;
 		}
 
-		// Construit la liste de toutes les icônes existantes.
 		protected void MakeIconList()
 		{
+			//	Construit la liste de toutes les icônes existantes.
 			System.Text.RegularExpressions.Regex regex = Common.Support.RegexFactory.FromSimpleJoker("*.icon", Common.Support.RegexFactory.Options.IgnoreCase);
 			string[] list = Common.Support.ImageProvider.GetManifestResourceNames(regex);
 			
@@ -3847,9 +3847,9 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		// On s'enregistre auprès du document pour tous les événements.
 		protected void ConnectEvents()
 		{
+			//	On s'enregistre auprès du document pour tous les événements.
 			this.CurrentDocument.Notifier.DocumentChanged        += new SimpleEventHandler(this.HandleDocumentChanged);
 			this.CurrentDocument.Notifier.MouseChanged           += new SimpleEventHandler(this.HandleMouseChanged);
 			this.CurrentDocument.Notifier.ModifChanged           += new SimpleEventHandler(this.HandleModifChanged);
@@ -3886,9 +3886,9 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.SettingsShowPage       += new SettingsEventHandler(this.HandleSettingsShowPage);
 		}
 
-		// Appelé par le document lorsque les informations sur le document ont changé.
 		private void HandleDocumentChanged()
 		{
+			//	Appelé par le document lorsque les informations sur le document ont changé.
 			StatusField field = this.info.Items["StatusDocument"] as StatusField;
 			field.Text = this.TextDocument;
 			field.Invalidate();
@@ -3916,10 +3916,10 @@ namespace Epsitec.App.DocumentEditor
 			this.BuildLastFilenamesMenu();
 		}
 
-		// Appelé par le document lorsque la position de la souris a changé.
 		private void HandleMouseChanged()
 		{
-			// TODO: [PA] Parfois, this.info.Items est nul après avoir cliqué la case de fermeture de la fenêtre !
+			//	Appelé par le document lorsque la position de la souris a changé.
+			//	TODO: [PA] Parfois, this.info.Items est nul après avoir cliqué la case de fermeture de la fenêtre !
 			if ( this.info.Items == null )  return;
 
 			StatusField field = this.info.Items["StatusMouse"] as StatusField;
@@ -3949,10 +3949,10 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque le texte des modifications a changé.
 		private void HandleModifChanged()
 		{
-			// TODO: [PA] Parfois, this.info.Items est nul après avoir cliqué la case de fermeture de la fenêtre !
+			//	Appelé par le document lorsque le texte des modifications a changé.
+			//	TODO: [PA] Parfois, this.info.Items est nul après avoir cliqué la case de fermeture de la fenêtre !
 			if ( this.info.Items == null )  return;
 
 			StatusField field = this.info.Items["StatusModif"] as StatusField;
@@ -3960,9 +3960,9 @@ namespace Epsitec.App.DocumentEditor
 			field.Invalidate();
 		}
 
-		// Appelé par le document lorsque l'origine a changé.
 		private void HandleOriginChanged()
 		{
+			//	Appelé par le document lorsque l'origine a changé.
 			this.UpdateScroller();
 
 			if ( this.IsCurrentDocument )
@@ -3983,9 +3983,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque le zoom a changé.
 		private void HandleZoomChanged()
 		{
+			//	Appelé par le document lorsque le zoom a changé.
 			this.UpdateScroller();
 
 			if ( this.IsCurrentDocument )
@@ -4027,9 +4027,9 @@ namespace Epsitec.App.DocumentEditor
 			slider.Enable = this.IsCurrentDocument;
 		}
 
-		// Met à jour une commande d'outil.
 		protected void UpdateTool(CommandState cs, string currentTool, bool isCreating, bool enabled)
 		{
+			//	Met à jour une commande d'outil.
 			string tool = cs.Name;
 
 			if ( enabled )
@@ -4044,9 +4044,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque l'outil a changé.
 		private void HandleToolChanged()
 		{
+			//	Appelé par le document lorsque l'outil a changé.
 			string tool = "";
 			bool isCreating = false;
 			bool enabled = false;
@@ -4083,9 +4083,9 @@ namespace Epsitec.App.DocumentEditor
 			this.UpdateTool(this.toolDimensionState, tool, isCreating, enabled);
 		}
 
-		// Appelé par le document lorsque l'état "enregistrer" a changé.
 		private void HandleSaveChanged()
 		{
+			//	Appelé par le document lorsque l'état "enregistrer" a changé.
 			if ( this.IsCurrentDocument )
 			{
 				this.saveState.Enable = this.CurrentDocument.IsDirtySerialize;
@@ -4101,9 +4101,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque la sélection a changé.
 		private void HandleSelectionChanged()
 		{
+			//	Appelé par le document lorsque la sélection a changé.
 			if ( this.IsCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
@@ -4381,9 +4381,9 @@ namespace Epsitec.App.DocumentEditor
 			field.Invalidate();
 		}
 
-		// Appelé par le document lorsque le modeleur a changé.
 		private void HandleShaperChanged()
 		{
+			//	Appelé par le document lorsque le modeleur a changé.
 			if ( this.IsCurrentDocument &&
 				 this.CurrentDocument.Modifier.IsToolShaper &&
 				 this.CurrentDocument.Modifier.TotalSelected != 0 )
@@ -4407,31 +4407,31 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque le texte en édition a changé.
 		private void HandleTextChanged()
 		{
+			//	Appelé par le document lorsque le texte en édition a changé.
 			this.dlgGlyphs.SetAlternatesDirty();
 		}
 
-		// Appelé par le document lorsqu'un style a changé.
 		private void HandleStyleChanged()
 		{
+			//	Appelé par le document lorsqu'un style a changé.
 			if ( !this.IsCurrentDocument )  return;
 			DocumentInfo di = this.CurrentDocumentInfo;
 			di.containerStyles.SetDirtyContent();
 		}
 
-		// Appelé par le document lorsqu'un style de texte a changé.
 		private void HandleTextStyleChanged()
 		{
+			//	Appelé par le document lorsqu'un style de texte a changé.
 			if ( !this.IsCurrentDocument )  return;
 			DocumentInfo di = this.CurrentDocumentInfo;
 			di.containerTextStyles.SetDirtyContent();
 		}
 
-		// Appelé par le document lorsque les pages ont changé.
 		private void HandlePagesChanged()
 		{
+			//	Appelé par le document lorsque les pages ont changé.
 			if ( this.IsCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
@@ -4475,9 +4475,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque les calques ont changé.
 		private void HandleLayersChanged()
 		{
+			//	Appelé par le document lorsque les calques ont changé.
 			if ( this.IsCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
@@ -4526,27 +4526,27 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsqu'un nom de page a changé.
 		private void HandlePageChanged(Objects.Abstract page)
 		{
+			//	Appelé par le document lorsqu'un nom de page a changé.
 			if ( !this.IsCurrentDocument )  return;
 			DocumentInfo di = this.CurrentDocumentInfo;
 			di.containerPages.SetDirtyObject(page);
 			this.HandleModifChanged();
 		}
 
-		// Appelé par le document lorsqu'un nom de calque a changé.
 		private void HandleLayerChanged(Objects.Abstract layer)
 		{
+			//	Appelé par le document lorsqu'un nom de calque a changé.
 			if ( !this.IsCurrentDocument )  return;
 			DocumentInfo di = this.CurrentDocumentInfo;
 			di.containerLayers.SetDirtyObject(layer);
 			this.HandleModifChanged();
 		}
 
-		// Appelé par le document lorsque l'état des commande undo/redo a changé.
 		private void HandleUndoRedoChanged()
 		{
+			//	Appelé par le document lorsque l'état des commande undo/redo a changé.
 			if ( this.IsCurrentDocument )
 			{
 				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
@@ -4562,9 +4562,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque l'état de la grille a changé.
 		private void HandleGridChanged()
 		{
+			//	Appelé par le document lorsque l'état de la grille a changé.
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
@@ -4609,9 +4609,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque l'état des noms d'attributs a changé.
 		private void HandleLabelPropertiesChanged()
 		{
+			//	Appelé par le document lorsque l'état des noms d'attributs a changé.
 			if ( this.IsCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
@@ -4620,9 +4620,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque l'état des lignes magnétiques a changé.
 		private void HandleMagnetChanged()
 		{
+			//	Appelé par le document lorsque l'état des lignes magnétiques a changé.
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
@@ -4645,9 +4645,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque l'état de l'aperçu a changé.
 		private void HandlePreviewChanged()
 		{
+			//	Appelé par le document lorsque l'état de l'aperçu a changé.
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
@@ -4661,18 +4661,18 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque les réglages ont changé.
 		private void HandleSettingsChanged()
 		{
+			//	Appelé par le document lorsque les réglages ont changé.
 			if ( this.IsCurrentDocument )
 			{
 				this.CurrentDocument.Dialogs.UpdateAllSettings();
 			}
 		}
 
-		// Appelé par le document lorsque les réglages de police ont changés.
 		private void HandleFontsSettingsChanged()
 		{
+			//	Appelé par le document lorsque les réglages de police ont changés.
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
@@ -4701,18 +4701,18 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonText.NotifyChanged("FontsSettingsChanged");
 		}
 
-		// Appelé par le document lorsque les repères ont changé.
 		private void HandleGuidesChanged()
 		{
+			//	Appelé par le document lorsque les repères ont changé.
 			if ( this.IsCurrentDocument )
 			{
 				this.CurrentDocument.Dialogs.UpdateGuides();
 			}
 		}
 
-		// Appelé par le document lorsque l'état de la commande "hide half" a changé.
 		private void HandleHideHalfChanged()
 		{
+			//	Appelé par le document lorsque l'état de la commande "hide half" a changé.
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
@@ -4726,9 +4726,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque l'état des commande de debug a changé.
 		private void HandleDebugChanged()
 		{
+			//	Appelé par le document lorsque l'état des commande de debug a changé.
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
@@ -4752,9 +4752,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé lorsqu'une propriété a changé.
 		private void HandlePropertyChanged(System.Collections.ArrayList propertyList)
 		{
+			//	Appelé lorsqu'une propriété a changé.
 			if ( this.IsCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
@@ -4763,9 +4763,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé lorsqu'un agrégat a changé.
 		private void HandleAggregateChanged(System.Collections.ArrayList aggregateList)
 		{
+			//	Appelé lorsqu'un agrégat a changé.
 			if ( this.IsCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
@@ -4774,9 +4774,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé lorsque la sélection par noms a changé.
 		private void HandleSelNamesChanged()
 		{
+			//	Appelé lorsque la sélection par noms a changé.
 			if ( this.IsCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
@@ -4784,9 +4784,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Appelé par le document lorsque le dessin a changé.
 		private void HandleDrawChanged(Viewer viewer, Drawing.Rectangle rect)
 		{
+			//	Appelé par le document lorsque le dessin a changé.
 			Drawing.Rectangle box = rect;
 
 			if ( viewer.DrawingContext.IsActive )
@@ -4809,27 +4809,27 @@ namespace Epsitec.App.DocumentEditor
 			this.InvalidateDraw(viewer, box);
 		}
 
-		// Appelé par le document lorsque la couleur dans une règle a été cliquée.
 		private void HandleTextRulerColorClicked(TextRuler ruler)
 		{
+			//	Appelé par le document lorsque la couleur dans une règle a été cliquée.
 			if ( !this.IsCurrentDocument )  return;
 
 			DocumentInfo di = this.CurrentDocumentInfo;
 			di.containerPrincipal.TextRulerColorClicked(ruler);
 		}
 
-		// Appelé par le document lorsque la couleur dans une règle a changé.
 		private void HandleTextRulerColorChanged(TextRuler ruler)
 		{
+			//	Appelé par le document lorsque la couleur dans une règle a changé.
 			if ( !this.IsCurrentDocument )  return;
 
 			DocumentInfo di = this.CurrentDocumentInfo;
 			di.containerPrincipal.TextRulerColorChanged(ruler);
 		}
 		
-		// Appelé par le document lorsqu'il faut changer de ruban.
 		private void HandleRibbonCommand(string name)
 		{
+			//	Appelé par le document lorsqu'il faut changer de ruban.
 			Ribbons.RibbonContainer ribbon = this.GetRibbon(name);
 
 			if ( name.Length > 0 && name[0] == '!' )
@@ -4840,9 +4840,9 @@ namespace Epsitec.App.DocumentEditor
 			this.ActiveRibbon(ribbon);
 		}
 		
-		// Appelé par le document lorsqu'il faut afficher une page spécifique du dialoque des réglages.
 		private void HandleSettingsShowPage(string book, string tab)
 		{
+			//	Appelé par le document lorsqu'il faut afficher une page spécifique du dialoque des réglages.
 			this.dlgSplash.Hide();
 
 			if ( this.settingsState.ActiveState == ActiveState.No )
@@ -4855,9 +4855,9 @@ namespace Epsitec.App.DocumentEditor
 		}
 		
 
-		// Invalide une partie de la zone de dessin d'un visualisateur.
 		protected void InvalidateDraw(Viewer viewer, Drawing.Rectangle bbox)
 		{
+			//	Invalide une partie de la zone de dessin d'un visualisateur.
 			if ( bbox.IsEmpty )  return;
 
 			if ( bbox.IsInfinite )
@@ -4874,9 +4874,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Met à jour les ascenseurs.
 		protected void UpdateScroller()
 		{
+			//	Met à jour les ascenseurs.
 			if ( !this.IsCurrentDocument )  return;
 
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
@@ -4927,9 +4927,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Met à jour les règles, après les avoir montrées ou cachées.
 		protected void UpdateRulers()
 		{
+			//	Met à jour les règles, après les avoir montrées ou cachées.
 			if ( !this.IsCurrentDocument )  return;
 
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
@@ -4954,9 +4954,9 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		// Texte pour le document.
 		protected string TextDocument
 		{
+			//	Texte pour le document.
 			get
 			{
 				Document doc = this.CurrentDocument;
@@ -4972,9 +4972,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Texte pour les informations.
 		protected string TextInfoObject
 		{
+			//	Texte pour les informations.
 			get
 			{
 				Document doc = this.CurrentDocument;
@@ -5006,9 +5006,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Texte pour les informations.
 		protected string TextInfoMouse
 		{
+			//	Texte pour les informations.
 			get
 			{
 				Document doc = this.CurrentDocument;
@@ -5031,9 +5031,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Texte pour les informations.
 		protected string TextInfoModif
 		{
+			//	Texte pour les informations.
 			get
 			{
 				Document doc = this.CurrentDocument;
@@ -5064,9 +5064,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Texte pour les informations.
 		protected string TextInfoZoom
 		{
+			//	Texte pour les informations.
 			get
 			{
 				Document doc = this.CurrentDocument;
@@ -5083,9 +5083,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Valeur pour les informations.
 		protected double ValueInfoZoom
 		{
+			//	Valeur pour les informations.
 			get
 			{
 				Document doc = this.CurrentDocument;
@@ -5102,9 +5102,9 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		// Met le sablier.
 		protected void MouseShowWait()
 		{
+			//	Met le sablier.
 			if ( this.MouseCursor != MouseCursor.AsWait )
 			{
 				this.lastMouseCursor = this.MouseCursor;
@@ -5114,18 +5114,18 @@ namespace Epsitec.App.DocumentEditor
 			this.Window.MouseCursor = this.MouseCursor;
 		}
 
-		// Enlève le sablier.
 		protected void MouseHideWait()
 		{
+			//	Enlève le sablier.
 			this.MouseCursor = this.lastMouseCursor;
 			this.Window.MouseCursor = this.MouseCursor;
 		}
 
 
 		#region TabBook
-		// L'onglet pour le document courant a été cliqué.
 		private void HandleBookDocumentsActivePageChanged(object sender)
 		{
+			//	L'onglet pour le document courant a été cliqué.
 			if ( this.ignoreChange )  return;
 
 			int total = this.bookDocuments.PageCount;
@@ -5140,18 +5140,18 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Indique s'il existe un document courant.
 		public bool IsCurrentDocument
 		{
+			//	Indique s'il existe un document courant.
 			get
 			{
 				return ( this.currentDocument >= 0 );
 			}
 		}
 
-		// Retourne le DocumentInfo courant.
 		protected DocumentInfo CurrentDocumentInfo
 		{
+			//	Retourne le DocumentInfo courant.
 			get
 			{
 				if ( this.currentDocument < 0 )  return null;
@@ -5159,9 +5159,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Retourne le Document courant.
 		public Document CurrentDocument
 		{
+			//	Retourne le Document courant.
 			get
 			{
 				if ( this.currentDocument < 0 )  return null;
@@ -5169,19 +5169,19 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Indique si le document en cours est un document vide "sans titre"
-		// pouvant servir de conteneur pour ouvrir un nouveau document.
 		protected bool IsRecyclableDocument()
 		{
+			//	Indique si le document en cours est un document vide "sans titre"
+			//	pouvant servir de conteneur pour ouvrir un nouveau document.
 			if ( !this.IsCurrentDocument )  return false;
 			if ( this.CurrentDocument.IsDirtySerialize )  return false;
 			if ( this.CurrentDocument.Modifier.StatisticTotalObjects() != 0 )  return false;
 			return true;
 		}
 
-		// Crée un nouveau document.
 		protected void CreateDocument()
 		{
+			//	Crée un nouveau document.
 			this.PrepareCloseDocument();
 
 			Document doc = new Document(this.type, DocumentMode.Modify, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher);
@@ -5200,9 +5200,9 @@ namespace Epsitec.App.DocumentEditor
 			this.PrepareOpenDocument();
 		}
 
-		// Utilise un document ouvert.
 		protected void UseDocument(int rank)
 		{
+			//	Utilise un document ouvert.
 			if ( this.ignoreChange )  return;
 
 			this.PrepareCloseDocument();
@@ -5272,9 +5272,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Ferme le document courant.
 		protected void CloseDocument()
 		{
+			//	Ferme le document courant.
 			this.PrepareCloseDocument();
 			int rank = this.currentDocument;
 			if ( rank < 0 )  return;
@@ -5300,9 +5300,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Met à jour l'état de la commande de fermeture.
 		protected void UpdateCloseCommand()
 		{
+			//	Met à jour l'état de la commande de fermeture.
 			DocumentInfo di = this.CurrentDocumentInfo;
 			if ( di != null )
 			{
@@ -5321,25 +5321,25 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Met à jour le nom de l'onglet des documents.
 		protected void UpdateBookDocuments()
 		{
+			//	Met à jour le nom de l'onglet des documents.
 			if ( !this.IsCurrentDocument )  return;
 			TabPage tab = this.bookDocuments.Items[this.currentDocument] as TabPage;
 			tab.TabTitle = Misc.ExtractName(this.CurrentDocument.Filename, this.CurrentDocument.IsDirtySerialize);
 			this.bookDocuments.UpdateAfterChanges();
 		}
 
-		// Préparation avant la fermeture d'un document.
 		protected void PrepareCloseDocument()
 		{
+			//	Préparation avant la fermeture d'un document.
 			if ( !this.IsCurrentDocument )  return;
 			this.CurrentDocument.Dialogs.FlushAll();
 		}
 
-		// Préparation après l'ouverture d'un document.
 		protected void PrepareOpenDocument()
 		{
+			//	Préparation après l'ouverture d'un document.
 			this.dlgExport.Rebuild();
 			this.dlgExportPDF.Rebuild();
 			this.dlgGlyphs.Rebuild();
@@ -5348,9 +5348,9 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgSettings.Rebuild();
 		}
 
-		// Secoue un CommandState pour le forcer à se remettre à jour.
 		protected void CommandStateShake(CommandState state)
 		{
+			//	Secoue un CommandState pour le forcer à se remettre à jour.
 			state.Enable = !state.Enable;
 			state.Enable = !state.Enable;
 		}
@@ -5358,9 +5358,9 @@ namespace Epsitec.App.DocumentEditor
 
 
 		#region GlobalSettings
-		// Lit le fichier des réglages de l'application.
 		protected bool ReadGlobalSettings()
 		{
+			//	Lit le fichier des réglages de l'application.
 			try
 			{
 				using ( Stream stream = File.OpenRead(this.GlobalSettingsFilename) )
@@ -5392,9 +5392,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		// Ecrit le fichier des réglages de l'application.
 		protected bool WritedGlobalSettings()
 		{
+			//	Ecrit le fichier des réglages de l'application.
 			this.globalSettings.IsFullScreen = this.Window.IsFullScreen;
 			this.globalSettings.MainWindow = this.Window.WindowPlacementNormalBounds;
 
@@ -5427,11 +5427,11 @@ namespace Epsitec.App.DocumentEditor
 			return true;
 		}
 
-		// Retourne le nom du fichier des réglages de l'application.
-		// Le dossier est qq chose du genre:
-		// C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus documents\1.0.0.0
 		protected string GlobalSettingsFilename
 		{
+			//	Retourne le nom du fichier des réglages de l'application.
+			//	Le dossier est qq chose du genre:
+			//	C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus documents\1.0.0.0
 			get
 			{
 				string dir = Common.Support.Globals.Directories.UserAppData;
@@ -5455,10 +5455,10 @@ namespace Epsitec.App.DocumentEditor
 
 
 		#region Check
-		// Lance le processus asynchrone qui va se connecter au site web
-		// et regarder s'il y a une version plus récente.
 		protected void StartCheck(bool always)
 		{
+			//	Lance le processus asynchrone qui va se connecter au site web
+			//	et regarder s'il y a une version plus récente.
 			if ( this.installType != InstallType.Freeware )  return;
 			if ( !always && !this.globalSettings.AutoChecker )  return;
 
@@ -5480,10 +5480,10 @@ namespace Epsitec.App.DocumentEditor
 			this.checker.StartCheck(url);
 		}
 
-		// Attend la fin du processus de check et indique si une mise à jour est
-		// disponible.
 		protected void EndCheck(bool always)
 		{
+			//	Attend la fin du processus de check et indique si une mise à jour est
+			//	disponible.
 			if ( this.checker == null )  return;
 
 			while ( !this.checker.IsReady )
@@ -5515,11 +5515,11 @@ namespace Epsitec.App.DocumentEditor
 
 
 		#region Ressources
-		// Retourne une ressource string d'après son nom.
-		// Si elle n'est pas trouvé dans App.DocumentEditor, elle est
-		// cherchée dans Common.Document !
 		public static string GetRes(string name)
 		{
+			//	Retourne une ressource string d'après son nom.
+			//	Si elle n'est pas trouvé dans App.DocumentEditor, elle est
+			//	cherchée dans Common.Document !
 			string s = Res.Strings.GetString(name);
 			if ( s == null )
 			{

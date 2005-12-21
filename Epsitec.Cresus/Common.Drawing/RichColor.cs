@@ -16,9 +16,9 @@
 	/// </summary>
 	public struct RichColor : System.Runtime.Serialization.ISerializable
 	{
-		// Constructeur donnant une couleur RGB quelconque.
 		public RichColor(Color color)
 		{
+			//	Constructeur donnant une couleur RGB quelconque.
 			if ( color.IsEmpty )
 			{
 				this.colorSpace = ColorSpace.RGB;
@@ -43,9 +43,9 @@
 			}
 		}
 
-		// Constructeur donnant une couleur RGB quelconque.
 		public RichColor(double a, double r, double g, double b)
 		{
+			//	Constructeur donnant une couleur RGB quelconque.
 			this.colorSpace = ColorSpace.RGB;
 			this.alpha  = a;
 			this.value1 = r;
@@ -56,9 +56,9 @@
 			this.name = null;
 		}
 
-		// Constructeur donnant une couleur RGB quelconque.
 		public RichColor(double r, double g, double b)
 		{
+			//	Constructeur donnant une couleur RGB quelconque.
 			this.colorSpace = ColorSpace.RGB;
 			this.alpha  = 1.0;
 			this.value1 = r;
@@ -69,9 +69,9 @@
 			this.name = null;
 		}
 
-		// Constructeur donnant une couleur RGB grise.
 		public RichColor(double brightness)
 		{
+			//	Constructeur donnant une couleur RGB grise.
 			this.colorSpace = ColorSpace.RGB;
 			this.alpha  = 1.0;
 			this.value1 = brightness;
@@ -82,9 +82,9 @@
 			this.name = null;
 		}
 
-		// Constructeur donnant une couleur CMYK quelconque.
 		public RichColor(double a, double c, double m, double y, double k)
 		{
+			//	Constructeur donnant une couleur CMYK quelconque.
 			this.colorSpace = ColorSpace.CMYK;
 			this.alpha  = a;
 			this.value1 = c;
@@ -135,9 +135,9 @@
 			}
 		}
 		
-		// Espace de couleur.
 		public ColorSpace ColorSpace
 		{
+			//	Espace de couleur.
 			get
 			{
 				return this.colorSpace;
@@ -170,9 +170,9 @@
 			}
 		}
 
-		// Retourne la couleur de base Color.
 		public Color Basic
 		{
+			//	Retourne la couleur de base Color.
 			get
 			{
 				double r, g, b;
@@ -229,9 +229,9 @@
 		}
 
 
-		// Alpha channel (0=transparent, 1=opaque).
 		public double A
 		{
+			//	Alpha channel (0=transparent, 1=opaque).
 			get
 			{
 				return this.alpha;
@@ -243,9 +243,9 @@
 			}
 		}
 		
-		// Color red (0=nothing, 1=red).
 		public double R
 		{
+			//	Color red (0=nothing, 1=red).
 			get
 			{
 				double r, g, b;
@@ -287,9 +287,9 @@
 			}
 		}
 		
-		// Color green (0=nothing, 1=green).
 		public double G
 		{
+			//	Color green (0=nothing, 1=green).
 			get
 			{
 				double r, g, b;
@@ -331,9 +331,9 @@
 			}
 		}
 		
-		// Color blue (0=nothing, 1=blue).
 		public double B
 		{
+			//	Color blue (0=nothing, 1=blue).
 			get
 			{
 				double r, g, b;
@@ -375,9 +375,9 @@
 			}
 		}
 		
-		// Color cyan (0=nothing, 1=cyan).
 		public double C
 		{
+			//	Color cyan (0=nothing, 1=cyan).
 			get
 			{
 				double c, m, y, k;
@@ -419,9 +419,9 @@
 			}
 		}
 		
-		// Color magenta (0=nothing, 1=magenta).
 		public double M
 		{
+			//	Color magenta (0=nothing, 1=magenta).
 			get
 			{
 				double c, m, y, k;
@@ -463,9 +463,9 @@
 			}
 		}
 		
-		// Color yellow (0=nothing, 1=yellow).
 		public double Y
 		{
+			//	Color yellow (0=nothing, 1=yellow).
 			get
 			{
 				double c, m, y, k;
@@ -507,9 +507,9 @@
 			}
 		}
 		
-		// Color black (0=nothing, 1=black).
 		public double K
 		{
+			//	Color black (0=nothing, 1=black).
 			get
 			{
 				double c, m, y, k;
@@ -551,9 +551,9 @@
 			}
 		}
 		
-		// Color gray (0=k, 1=white).
 		public double Gray
 		{
+			//	Color gray (0=k, 1=white).
 			get
 			{
 				double gray;
@@ -611,9 +611,9 @@
 			}
 		}
 
-		// Change la luminosité d'une couleur.
 		public void ChangeBrightness(double adjust)
 		{
+			//	Change la luminosité d'une couleur.
 			switch ( this.colorSpace )
 			{
 				case ColorSpace.RGB:
@@ -637,9 +637,9 @@
 		}
 		
 
-		// Conversion RGB -> CMYK.
 		private void RGB2CMYK()
 		{
+			//	Conversion RGB -> CMYK.
 			double c, m, y, k;
 			RichColor.RGB2CMYK(this.value1, this.value2, this.value3, out c, out m, out y, out k);
 			this.value1 = c;
@@ -648,9 +648,9 @@
 			this.value4 = k;
 		}
 
-		// Conversion CMYK -> RGB.
 		private void CMYK2RGB()
 		{
+			//	Conversion CMYK -> RGB.
 			double r, g, b;
 			RichColor.CMYK2RGB(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
 			this.value1 = r;
@@ -659,9 +659,9 @@
 			this.value4 = 0.0;
 		}
 
-		// Conversion RGB -> Gray.
 		private void RGB2Gray()
 		{
+			//	Conversion RGB -> Gray.
 			double gray;
 			RichColor.RGB2Gray(this.value1, this.value2, this.value3, out gray);
 			this.value1 = gray;
@@ -670,9 +670,9 @@
 			this.value4 = 0.0;
 		}
 
-		// Conversion Gray -> RGB.
 		private void Gray2RGB()
 		{
+			//	Conversion Gray -> RGB.
 			double r, g, b;
 			RichColor.Gray2RGB(this.value1, out r, out g, out b);
 			this.value1 = r;
@@ -681,9 +681,9 @@
 			this.value4 = 0.0;
 		}
 
-		// Conversion CMYK -> Gray.
 		private void CMYK2Gray()
 		{
+			//	Conversion CMYK -> Gray.
 			double gray;
 			RichColor.CMYK2Gray(this.value1, this.value2, this.value3, this.value4, out gray);
 			this.value1 = gray;
@@ -692,9 +692,9 @@
 			this.value4 = 0.0;
 		}
 
-		// Conversion Gray -> CMYK.
 		private void Gray2CMYK()
 		{
+			//	Conversion Gray -> CMYK.
 			double c, m, y, k;
 			RichColor.Gray2CMYK(this.value1, out c, out m, out y, out k);
 			this.value1 = c;
@@ -860,9 +860,9 @@
 			return color;
 		}
 		
-		// Conversion d'un nom système ou hexa en une couleur.
 		public static RichColor FromName(string name)
 		{
+			//	Conversion d'un nom système ou hexa en une couleur.
 			if ( name.Length > 1 && name[0] == '#' )
 			{
 				return RichColor.FromHexa(name.Remove(0, 1));
@@ -878,9 +878,9 @@
 			return RichColor.FromColor(new Color(color));
 		}
 
-		// Conversion d'une chaîne "FF3300" ou "003300FF" en une couleur.
 		public static RichColor FromHexa(string hexa)
 		{
+			//	Conversion d'une chaîne "FF3300" ou "003300FF" en une couleur.
 			try
 			{
 				if ( hexa.Length == 6 )  // rgb ?
@@ -914,9 +914,9 @@
 			}
 		}
 
-		// Conversion d'une couleur en chaîne "FF3300" ou "003300FF".
 		public static string ToHexa(RichColor color)
 		{
+			//	Conversion d'une couleur en chaîne "FF3300" ou "003300FF".
 			if ( color.colorSpace == ColorSpace.RGB )
 			{
 				int r = (int)(color.value1*255.0+0.5);

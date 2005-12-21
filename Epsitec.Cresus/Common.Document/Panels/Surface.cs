@@ -102,18 +102,18 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.isExtendedSize ? this.LabelHeight+124 : this.LabelHeight+30 );
 			}
 		}
 
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Surface p = this.property as Properties.Surface;
@@ -135,9 +135,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Surface p = this.property as Properties.Surface;
 			if ( p == null )  return;
 
@@ -161,9 +161,9 @@ namespace Epsitec.Common.Document.Panels
 			this.PropertyToWidgets();
 		}
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			Properties.Surface p = this.property as Properties.Surface;
 			if ( p == null )  return;
 
@@ -187,9 +187,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -235,23 +235,23 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Le type a été changé.
 		private void HandleTypeChanged(object sender)
 		{
+			//	Le type a été changé.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
-		// Le bouton "reset" a été cliqué.
 		private void HandleResetButton(object sender, MessageEventArgs e)
 		{
+			//	Le bouton "reset" a été cliqué.
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.SurfaceReset);
 			Properties.Surface p = this.property as Properties.Surface;
 			p.Reset();

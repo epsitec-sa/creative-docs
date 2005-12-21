@@ -220,7 +220,7 @@ namespace Epsitec.Common.Drawing
 
 		public static Color FromHexa(string hexa)
 		{
-			// Conversion d'une chaîne "FF3300" en une couleur.
+			//	Conversion d'une chaîne "FF3300" en une couleur.
 			
 			if (hexa.Length != 6)
 			{
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Drawing
 
 		public static string ToHexa(Color color)
 		{
-			// Conversion d'une couleur en chaîne "FF3300".
+			//	Conversion d'une couleur en chaîne "FF3300".
 			
 			int r = (int)(color.R*255.0+0.5);
 			int g = (int)(color.G*255.0+0.5);
@@ -424,9 +424,9 @@ namespace Epsitec.Common.Drawing
 		
 		public static void ConvertRGBtoHSV(double r, double g, double b, out double h, out double s, out double v)
 		{
-			// H = [0..360]
-			// S = [0..1]
-			// V = [0..1]
+			//	H = [0..360]
+			//	S = [0..1]
+			//	V = [0..1]
 			
 			double min = System.Math.Min(r,System.Math.Min(g,b));
 			v = System.Math.Max(r,System.Math.Max(g,b));

@@ -159,18 +159,18 @@ namespace Epsitec.Common.Document.Settings
 
 
 		#region Serialization
-		// Sérialise le réglage.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise le réglage.
 			base.GetObjectData(info, context);
 			info.AddValue("PrintRange", this.PrintRange);
 			info.AddValue("PrintFrom", this.From);
 			info.AddValue("PrintTo", this.To);
 		}
 
-		// Constructeur qui désérialise le réglage.
 		protected Range(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise le réglage.
 			this.PrintRange = (PrintRange) info.GetValue("PrintRange", typeof(PrintRange));
 			this.From = info.GetInt32("PrintFrom");
 			this.To = info.GetInt32("PrintTo");

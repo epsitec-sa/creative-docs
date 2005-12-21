@@ -48,16 +48,16 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return @"file:images/regular.icon"; }
 		}
 
 
-		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur l'objet.
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle bbox = this.BoundingBox;
@@ -76,9 +76,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return false;
 		}
 
-		// Détecte si l'objet est dans un rectangle.
 		public override bool Detect(Drawing.Rectangle rect, bool all)
 		{
+			//	Détecte si l'objet est dans un rectangle.
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle fullBbox = this.BoundingBox;
@@ -88,9 +88,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, iconContext);
@@ -120,9 +120,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Indique si le déplacement d'une poignée doit se répercuter sur les propriétés.
 		public override bool IsMoveHandlePropertyChanged(int rank)
 		{
+			//	Indique si le déplacement d'une poignée doit se répercuter sur les propriétés.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				return base.IsMoveHandlePropertyChanged(rank);
@@ -130,9 +130,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return ( rank >= 2 );
 		}
 
-		// Retourne la propriété modifiée en déplaçant une poignée.
 		public override AbstractProperty MoveHandleProperty(int rank)
 		{
+			//	Retourne la propriété modifiée en déplaçant une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				return base.MoveHandleProperty(rank);
@@ -142,26 +142,26 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Début de la création d'un objet.
 			iconContext.ConstrainFixStarting(pos);
 			this.HandleAdd(pos, HandleType.Primary);
 			this.HandleAdd(pos, HandleType.Primary);
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			this.dirtyBbox = true;
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Fin de la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
@@ -169,10 +169,10 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateRegularHandle();
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
 		}
@@ -183,9 +183,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateRegularHandle();
 		}
 
-		// Met à jour la poignée pour la profondeur de l'étoile.
 		protected void UpdateRegularHandle()
 		{
+			//	Met à jour la poignée pour la profondeur de l'étoile.
 			if ( this.handles.Count < 2 )  return;
 			PropertyRegular reg = this.PropertyRegular(4);
 			if ( !reg.Star )  // polygone ?
@@ -213,9 +213,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
+			//	Met à jour le rectangle englobant l'objet.
 			Drawing.Path path = this.PathBuild(null);
 			this.bboxThin = path.ComputeBounds();
 
@@ -229,9 +229,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.bboxFull.MergeWith(this.bboxGeom);
 		}
 
-		// Calcule une droite de l'objet.
 		protected bool ComputeLine(int i, out Drawing.Point a, out Drawing.Point b)
 		{
+			//	Calcule une droite de l'objet.
 			int total = this.PropertyRegular(4).NbFaces;
 			Drawing.Point center = this.Handle(0).Position;
 			Drawing.Point corner = this.Handle(1).Position;
@@ -258,9 +258,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Crée le chemin d'un polygone régulier.
 		protected Drawing.Path PathBuild(IconContext iconContext)
 		{
+			//	Crée le chemin d'un polygone régulier.
 			Drawing.Path path = new Drawing.Path();
 			path.DefaultZoom = AbstractProperty.DefaultZoom(iconContext);;
 
@@ -303,9 +303,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Crée le chemin d'un coin.
 		protected void PathCorner(Drawing.Path path, Drawing.Point p1, Drawing.Point s, Drawing.Point p2, PropertyCorner corner)
 		{
+			//	Crée le chemin d'un coin.
 			double l1 = Drawing.Point.Distance(p1, s);
 			double l2 = Drawing.Point.Distance(p2, s);
 			double radius = System.Math.Min(corner.Radius, System.Math.Min(l1,l2)/2);
@@ -316,9 +316,9 @@ namespace Epsitec.Common.Pictogram.Data
 			corner.PathCorner(path, c1,s,c2, radius);
 		}
 
-		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Dessine l'objet.
 			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext, iconObjects);
 
@@ -342,9 +342,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Imprime l'objet.
 		public override void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Imprime l'objet.
 			base.PrintGeometry(port, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 2 )  return;

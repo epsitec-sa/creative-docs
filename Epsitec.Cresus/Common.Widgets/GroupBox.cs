@@ -15,9 +15,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		// Retourne l'alignement par défaut d'un bouton.
 		public override Drawing.ContentAlignment	DefaultAlignment
 		{
+			//	Retourne l'alignement par défaut d'un bouton.
 			get
 			{
 				return Drawing.ContentAlignment.TopLeft;
@@ -88,9 +88,9 @@ namespace Epsitec.Common.Widgets
 			return rect;
 		}
 
-		// Dessine le texte.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			//	Dessine le texte.
 			IAdorner    adorner = Widgets.Adorners.Factory.Active;
 			WidgetState state   = this.PaintState;
 			

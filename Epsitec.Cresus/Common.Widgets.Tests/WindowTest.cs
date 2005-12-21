@@ -586,20 +586,20 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-//		[Test] public void Zzz()
-//		{
-//			Window window = new Window ();
-//			window.Text = "Zzz...";
-//			StaticText text = new StaticText ("Close this window to stop test");
-//			text.Parent = window.Root;
-//			text.Dock   = DockStyle.Fill;
-//			window.WindowSize = new Drawing.Size (200, 80);
-//			window.Show ();
-//			window.Run ();
-		//		}
-
 		private void AlphaTestButtonClicked(object sender, MessageEventArgs e)
 		{
+	//		[Test] public void Zzz()
+	//		{
+	//			Window window = new Window ();
+	//			window.Text = "Zzz...";
+	//			StaticText text = new StaticText ("Close this window to stop test");
+	//			text.Parent = window.Root;
+	//			text.Dock   = DockStyle.Fill;
+	//			window.WindowSize = new Drawing.Size (200, 80);
+	//			window.Show ();
+	//			window.Run ();
+			//		}
+	
 			System.Diagnostics.Debug.WriteLine ("Button clicked.");
 		}
 	}

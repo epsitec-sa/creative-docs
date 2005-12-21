@@ -39,16 +39,16 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectPoly"); }
 		}
 
 
-		// Début du déplacement d'une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -105,9 +105,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.TotalMainHandle )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
@@ -126,9 +126,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Début du déplacement d'une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée d'un segment sélectionné.
 			base.MoveSelectedSegmentStarting(rank, pos, drawingContext);
 
 			this.initialPos = pos;
@@ -147,9 +147,9 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainAddLine(pos, new Point(pos.X-d.Height, pos.Y+d.Width));
 		}
 
-		// Déplace une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée d'un segment sélectionné.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			drawingContext.SnapPos(ref pos);
@@ -166,31 +166,31 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin du déplacement d'une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Fin du déplacement d'une poignée d'un segment sélectionné.
 			base.MoveSelectedSegmentEnding(rank, pos, drawingContext);
 		}
 
 		
-		// Déplace globalement l'objet.
 		public override void MoveGlobalProcess(Selector selector)
 		{
+			//	Déplace globalement l'objet.
 			base.MoveGlobalProcess(selector);
 			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
 
-		// Indique si cet objet peut avoir des segments sélectionnés.
 		public override bool IsSelectedSegmentPossible
 		{
+			//	Indique si cet objet peut avoir des segments sélectionnés.
 			get { return true; }
 		}
 
-		// Donne l'état d'une commande ShaperHandle*.
 		public override bool ShaperHandleState(string family, ref bool enable, System.Collections.ArrayList actives)
 		{
+			//	Donne l'état d'une commande ShaperHandle*.
 			if ( family == "Add" )
 			{
 				enable = (this.selectedSegments != null && this.selectedSegments.Count != 0);
@@ -244,9 +244,9 @@ namespace Epsitec.Common.Document.Objects
 			return base.ShaperHandleState(family, ref enable, actives);
 		}
 
-		// Exécute une commande ShaperHandle*.
 		public override bool ShaperHandleCommand(string cmd)
 		{
+			//	Exécute une commande ShaperHandle*.
 			if ( cmd == "ShaperHandleAdd" )
 			{
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleAdd);
@@ -351,9 +351,9 @@ namespace Epsitec.Common.Document.Objects
 			return base.ShaperHandleCommand(cmd);
 		}
 
-		// Ajoute une poignée sans changer l'aspect.
 		protected void ShaperHandleAdd(Point pos, int rank)
 		{
+			//	Ajoute une poignée sans changer l'aspect.
 			int next = this.NextRank(rank);
 			Point p = Point.Projection(this.Handle(rank).Position, this.Handle(next).Position, pos);
 
@@ -365,13 +365,13 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 		}
 
-		// Supprime une poignée sans trop changer l'aspect.
 		protected void ShaperHandleSub(int rank)
 		{
+			//	Supprime une poignée sans trop changer l'aspect.
 			bool starting = (this.Handle(rank).Type == HandleType.Starting);
 			this.HandleDelete(rank);
 
-			// Il doit toujours y avoir une poignée de départ !
+			//	Il doit toujours y avoir une poignée de départ !
 			if ( starting )
 			{
 				this.Handle(rank).Type = HandleType.Starting;
@@ -379,9 +379,9 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 		}
 
-		// Prolonge la ligne.
 		protected void ShaperHandleContinue(int rank)
 		{
+			//	Prolonge la ligne.
 			HandleType type = this.Handle(rank).Type;
 			this.Handle(rank).Type = HandleType.Primary;
 
@@ -411,10 +411,10 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Détecte si la souris est sur le pourtour de l'objet.
-		// Retourne le rang de la poignée de départ, ou -1
 		protected int DetectOutline(Point pos)
 		{
+			//	Détecte si la souris est sur le pourtour de l'objet.
+			//	Retourne le rang de la poignée de départ, ou -1
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 
 			Shape[] shapes = this.ShapesBuild(null, context, false);
@@ -422,9 +422,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
+			//	Début de la création d'un objet.
 			drawingContext.SnapPos(ref pos);
 
 			if ( this.TotalHandle == 0 )
@@ -451,9 +451,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 
@@ -484,9 +484,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			//	Fin de la création d'un objet.
 			if ( this.TotalHandle == 2 )
 			{
 				double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
@@ -509,9 +509,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Indique si la création de l'objet est terminée.
 		public override bool CreateIsEnding(DrawingContext drawingContext)
 		{
+			//	Indique si la création de l'objet est terminée.
 			if ( this.TotalHandle < 2 )  return false;
 
 			int rank = this.TotalHandle-1;
@@ -533,17 +533,17 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			return ( this.TotalHandle >= 2 );
 		}
 
-		// Termine la création de l'objet. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateEnding(DrawingContext drawingContext)
 		{
+			//	Termine la création de l'objet. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
@@ -560,9 +560,9 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Texte des informations de modification.
 		protected void TextInfoModif(Point mouse, int rank)
 		{
+			//	Texte des informations de modification.
 			if ( this.isCreating )
 			{
 				Point p1, p2;
@@ -603,9 +603,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Retourne un bouton d'action pendant la création.
 		public override bool CreateAction(int rank, out string cmd, out string name, out string text)
 		{
+			//	Retourne un bouton d'action pendant la création.
 			switch ( rank )
 			{
 				case 0:
@@ -660,30 +660,30 @@ namespace Epsitec.Common.Document.Objects
 			return base.CreateAction(rank, out cmd, out name, out text);
 		}
 
-		// Crée l'objet temporaire pour montrer le nouveau segment.
 		protected void AdditionalCreate(Point pos, DrawingContext drawingContext)
 		{
+			//	Crée l'objet temporaire pour montrer le nouveau segment.
 			this.additionalLineExist = true;
 			this.additionalLineP1 = pos;
 			this.additionalLineP2 = pos;
 		}
 
-		// Déplace l'objet temporaire pour montrer le nouveau segment.
 		protected void AdditionalMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace l'objet temporaire pour montrer le nouveau segment.
 			this.additionalLineP2 = pos;
 		}
 
-		// Détruit l'objet temporaire pour montrer le nouveau segment.
 		protected void AdditionalDelete()
 		{
+			//	Détruit l'objet temporaire pour montrer le nouveau segment.
 			this.additionalLineExist = false;
 		}
 
 		
-		// Constuit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Constuit les formes de l'objet.
 			Path pathStart, pathEnd, pathLine;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
 			this.PathBuild(drawingContext,
@@ -709,19 +709,19 @@ namespace Epsitec.Common.Document.Objects
 			Shape[] shapes = new Shape[totalShapes];
 			int i = 0;
 			
-			// Forme de la surface principale.
+			//	Forme de la surface principale.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathLine;
 			shapes[i].SetPropertySurface(port, this.PropertyFillGradient);
 			i ++;
 
-			// Forme du chemin principal.
+			//	Forme du chemin principal.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathLine;
 			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 			i ++;
 
-			// Forme de la surface de départ.
+			//	Forme de la surface de départ.
 			if ( surfaceStart )
 			{
 				shapes[i] = new Shape();
@@ -731,7 +731,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme de la surface d'arrivée.
+			//	Forme de la surface d'arrivée.
 			if ( surfaceEnd )
 			{
 				shapes[i] = new Shape();
@@ -741,7 +741,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme du chemin de départ.
+			//	Forme du chemin de départ.
 			if ( outlineStart )
 			{
 				shapes[i] = new Shape();
@@ -751,7 +751,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme du chemin d'arrivée.
+			//	Forme du chemin d'arrivée.
 			if ( outlineEnd )
 			{
 				shapes[i] = new Shape();
@@ -761,7 +761,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme de la ligne temporaire.
+			//	Forme de la ligne temporaire.
 			if ( this.additionalLineExist )
 			{
 				shapes[i] = new Shape();
@@ -774,12 +774,12 @@ namespace Epsitec.Common.Document.Objects
 			return shapes;
 		}
 
-		// Crée les chemins de l'objet.
 		protected void PathBuild(DrawingContext drawingContext,
 								 out Path pathStart, out bool outlineStart, out bool surfaceStart,
 								 out Path pathEnd,   out bool outlineEnd,   out bool surfaceEnd,
 								 out Path pathLine, bool simplify)
 		{
+			//	Crée les chemins de l'objet.
 			pathStart = new Path();
 			pathEnd   = new Path();
 			pathLine  = new Path();
@@ -928,10 +928,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Cherche le rang précédent, en tenant compte
-		// des ensembles Starting-Primary(s).
 		protected int PrevRank(int rank)
 		{
+			//	Cherche le rang précédent, en tenant compte
+			//	des ensembles Starting-Primary(s).
 			if ( rank == 0 || this.Handle(rank).Type == HandleType.Starting )
 			{
 				do
@@ -944,10 +944,10 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
-		// Cherche le rang suivant, en tenant compte
-		// des ensembles Starting-Primary(s).
 		protected int NextRank(int rank)
 		{
+			//	Cherche le rang suivant, en tenant compte
+			//	des ensembles Starting-Primary(s).
 			rank ++;
 			if ( rank >= this.TotalMainHandle || this.Handle(rank).Type == HandleType.Starting )
 			{
@@ -960,9 +960,9 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
-		// Crée le chemin d'un coin.
 		protected void PathCorner(Path path, Point p1, Point s, Point p2, Properties.Corner corner, bool simply, bool first)
 		{
+			//	Crée le chemin d'un coin.
 			if ( simply )
 			{
 				if ( first )  path.MoveTo(s);
@@ -983,10 +983,10 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region CreateFromPath
-		// Retourne le chemin géométrique de l'objet pour les constructions
-		// magnétiques.
 		public override Path GetMagnetPath()
 		{
+			//	Retourne le chemin géométrique de l'objet pour les constructions
+			//	magnétiques.
 			Path pathStart, pathEnd, pathLine;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
 			this.PathBuild(null,
@@ -997,9 +997,9 @@ namespace Epsitec.Common.Document.Objects
 			return pathLine;
 		}
 
-		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
+			//	Retourne le chemin géométrique de l'objet.
 			if ( rank > 0 )  return null;
 
 			Path pathStart, pathEnd, pathLine;
@@ -1022,9 +1022,9 @@ namespace Epsitec.Common.Document.Objects
 			return pathLine;
 		}
 
-		// Crée un polygone à partir d'un chemin quelconque.
 		public bool CreateFromPath(Path path, int subPath)
 		{
+			//	Crée un polygone à partir d'un chemin quelconque.
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements(out elements, out points);
@@ -1130,9 +1130,9 @@ namespace Epsitec.Common.Document.Objects
 			return bDo;
 		}
 
-		// Finalise la création d'un polygone.
 		public void CreateFinalise()
 		{
+			//	Finalise la création d'un polygone.
 			this.HandlePropertiesCreate();  // crée les poignées des propriétés
 			this.Select(false);
 			this.Select(true);  // pour sélectionner toutes les poignées
@@ -1141,15 +1141,15 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Poly(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 		}
 		#endregion
 

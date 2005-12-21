@@ -127,9 +127,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		// Dessine l'onglet.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			//	Dessine l'onglet.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 		}
 		

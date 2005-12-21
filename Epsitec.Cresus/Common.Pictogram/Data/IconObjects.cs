@@ -61,9 +61,9 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.drawer = value; }
 		}
 
-		// Taille préférentielle de l'icône en pixels.
 		public Drawing.Size Size
 		{
+			//	Taille préférentielle de l'icône en pixels.
 			get
 			{
 				if ( this.currentPattern == 0 )
@@ -84,9 +84,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Taille de la zone de travail en pixels.
 		public Drawing.Size SizeArea
 		{
+			//	Taille de la zone de travail en pixels.
 			get
 			{
 				if ( this.currentPattern == 0 )
@@ -100,9 +100,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Origine de la zone de travail en pixels.
 		public Drawing.Point OriginArea
 		{
+			//	Origine de la zone de travail en pixels.
 			get
 			{
 				if ( this.currentPattern == 0 )
@@ -122,9 +122,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Origine de l'icône en pixels (hot spot).
 		public Drawing.Point Origin
 		{
+			//	Origine de l'icône en pixels (hot spot).
 			get
 			{
 				if ( this.currentPattern == 0 )
@@ -143,14 +143,13 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Collection des styles.
 		public StylesCollection StylesCollection
 		{
+			//	Collection des styles.
 			get { return this.styles; }
 			set { this.styles = value; }
 		}
 		
-		// Liste des objets.
 		[XmlArrayItem("Array",     Type=typeof(ObjectArray))]
 		[XmlArrayItem("Bezier",    Type=typeof(ObjectBezier))]
 		[XmlArrayItem("Circle",    Type=typeof(ObjectCircle))]
@@ -168,6 +167,7 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("TextLine",  Type=typeof(ObjectTextLine))]
 		public UndoList Objects
 		{
+			//	Liste des objets.
 			get { return this.objects; }
 			set { this.objects = value; }
 		}
@@ -230,9 +230,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Retourne le nombre total d'objets.
 		public int TotalCount()
 		{
+			//	Retourne le nombre total d'objets.
 			return this.TotalCount(this.objects);
 		}
 
@@ -254,9 +254,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Retourne le nombre d'objets sélectionnés.
 		public int TotalSelected()
 		{
+			//	Retourne le nombre d'objets sélectionnés.
 			return this.TotalSelected(this.CurrentGroup);
 		}
 
@@ -273,9 +273,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Copie tous les objets sélectionnés et leurs fils dans UndoList.Operations.
 		public void SelectionWillBeChanged()
 		{
+			//	Copie tous les objets sélectionnés et leurs fils dans UndoList.Operations.
 			this.SelectionWillBeChanged(this.CurrentGroup, false);
 		}
 
@@ -297,10 +297,10 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Ajoute les propriétés des objets sélectionnés dans la liste.
-		// Un type de propriété donné n'est qu'une fois dans la liste.
 		public void PropertiesList(System.Collections.ArrayList list)
 		{
+			//	Ajoute les propriétés des objets sélectionnés dans la liste.
+			//	Un type de propriété donné n'est qu'une fois dans la liste.
 			this.PropertiesList(this.CurrentGroup, list, false);
 		}
 
@@ -324,15 +324,15 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Mets une propriété piquée avec la pipette aux objets sélectionnés.
 		public void SetPropertyPicker(AbstractProperty property, ref Drawing.Rectangle bbox)
 		{
+			//	Mets une propriété piquée avec la pipette aux objets sélectionnés.
 			this.SetProperty(this.CurrentGroup, property, ref bbox, false);
 		}
 
-		// Modifie une propriété des objets sélectionnés.
 		public void SetProperty(AbstractProperty property, ref Drawing.Rectangle bbox, bool changeStylesCollection)
 		{
+			//	Modifie une propriété des objets sélectionnés.
 			if ( property.StyleID == 0 )  // propriété indépendante ?
 			{
 				this.SetProperty(this.CurrentGroup, property, ref bbox, false);
@@ -402,9 +402,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Retourne une propriété.
 		public AbstractProperty GetProperty(PropertyType type, AbstractObject objectMemory)
 		{
+			//	Retourne une propriété.
 			return this.GetProperty(this.CurrentGroup, type, objectMemory, false);
 		}
 
@@ -433,9 +433,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Libère les objets sélectionnés du style.
 		public void StyleFree(PropertyType type)
 		{
+			//	Libère les objets sélectionnés du style.
 			this.StyleFree(this.CurrentGroup, type, false);
 		}
 
@@ -462,9 +462,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Libère tous les objets du style.
 		public void StyleFreeAll(AbstractProperty property)
 		{
+			//	Libère tous les objets du style.
 			this.StyleFreeAll(this.CurrentGroup, property);
 		}
 
@@ -492,9 +492,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Utilise un style donné.
 		public void StyleUse(AbstractProperty property)
 		{
+			//	Utilise un style donné.
 			this.StyleUse(this.CurrentGroup, property, false);
 		}
 
@@ -516,9 +516,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Répand un style modifié à tous les objets.
 		public void StyleSpread(AbstractProperty property)
 		{
+			//	Répand un style modifié à tous les objets.
 			this.StyleSpread(this.objects, property);
 		}
 
@@ -538,9 +538,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Retourne la bounding box de tous les objets.
 		public Drawing.Rectangle RetBbox()
 		{
+			//	Retourne la bounding box de tous les objets.
 			return this.RetBbox(this.CurrentGroup);
 		}
 
@@ -557,9 +557,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Retourne la bounding box d'un pattern.
 		public Drawing.Rectangle RetPatternBbox(int rank)
 		{
+			//	Retourne la bounding box d'un pattern.
 			ObjectPattern pattern = this.Pattern(rank);
 			if ( pattern == null )  return Drawing.Rectangle.Empty;
 			return this.RetPatternBbox(pattern.Objects);
@@ -587,9 +587,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Retourne la bounding box des objets sélectionnés.
 		public Drawing.Rectangle RetSelectedBbox()
 		{
+			//	Retourne la bounding box des objets sélectionnés.
 			return this.RetSelectedBbox(this.CurrentGroup);
 		}
 
@@ -608,9 +608,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détecte l'objet pointé par la souris.
 		public AbstractObject Detect(Drawing.Point mouse)
 		{
+			//	Détecte l'objet pointé par la souris.
 			return this.Detect(this.CurrentGroup, mouse);
 		}
 
@@ -627,9 +627,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détecte l'objet pointé par la souris, pour l'édition.
 		public AbstractObject DetectEdit(Drawing.Point mouse)
 		{
+			//	Détecte l'objet pointé par la souris, pour l'édition.
 			return this.DetectEdit(this.CurrentGroup, mouse);
 		}
 
@@ -646,9 +646,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détecte en porfondeur l'objet pointé par la souris.
 		public AbstractObject DeepDetect(Drawing.Point mouse)
 		{
+			//	Détecte en porfondeur l'objet pointé par la souris.
 			return this.DeepDetect(this.CurrentGroup, mouse);
 		}
 
@@ -676,15 +676,15 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détecte la poignée pointée par la souris.
 		public bool DetectHandle(Drawing.Point mouse, out AbstractObject obj, out int rank)
 		{
+			//	Détecte la poignée pointée par la souris.
 			return this.DetectHandle(this.CurrentGroup, mouse, out obj, out rank);
 		}
 
-		// Détecte la poignée pointée par la souris.
 		protected bool DetectHandle(UndoList objects, Drawing.Point mouse, out AbstractObject obj, out int rank)
 		{
+			//	Détecte la poignée pointée par la souris.
 			int total = objects.Count;
 			for ( int index=total-1 ; index>=0 ; index-- )
 			{
@@ -702,9 +702,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Hilite un objet.
 		public void Hilite(AbstractObject item, ref Drawing.Rectangle bbox)
 		{
+			//	Hilite un objet.
 			this.Hilite(this.CurrentGroup, item, ref bbox);
 		}
 
@@ -723,9 +723,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Hilite un objet en profondeur.
 		public void DeepHilite(AbstractObject item, ref Drawing.Rectangle bbox)
 		{
+			//	Hilite un objet en profondeur.
 			this.DeepHilite(this.CurrentGroup, item, ref bbox);
 		}
 
@@ -750,9 +750,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détecte la cellule pointée par la souris.
 		public bool DetectCell(Drawing.Point mouse, out AbstractObject obj, out int rank)
 		{
+			//	Détecte la cellule pointée par la souris.
 			obj = null;
 			rank = -1;
 
@@ -766,9 +766,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Retourne le premier objet sélectionné.
 		public AbstractObject RetFirstSelected()
 		{
+			//	Retourne le premier objet sélectionné.
 			return this.RetFirstSelected(this.CurrentGroup);
 		}
 
@@ -790,10 +790,10 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Sélectionne un objet et désélectionne tous les autres.
-		// Retourne le nombre d'objets sélectionnés.
 		public int Select(AbstractObject item, bool edit, bool add)
 		{
+			//	Sélectionne un objet et désélectionne tous les autres.
+			//	Retourne le nombre d'objets sélectionnés.
 			return this.Select(this.CurrentGroup, item, edit, add);
 		}
 
@@ -829,11 +829,11 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Sélectionne tous les objets dans le rectangle.
-		// all = true  -> toutes les poignées doivent être dans le rectangle
-		// all = false -> une seule poignée doit être dans le rectangle
 		public int Select(Drawing.Rectangle rect, bool add, bool all)
 		{
+			//	Sélectionne tous les objets dans le rectangle.
+			//	all = true  -> toutes les poignées doivent être dans le rectangle
+			//	all = false -> une seule poignée doit être dans le rectangle
 			return this.Select(this.CurrentGroup, rect, add, all);
 		}
 
@@ -886,9 +886,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Indique que tous les objets sélectionnés le sont globalement.
 		public void GlobalSelect(bool global)
 		{
+			//	Indique que tous les objets sélectionnés le sont globalement.
 			this.GlobalSelect(this.CurrentGroup, global);
 		}
 
@@ -903,10 +903,10 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Désélectionne tous les objets, dans toutes les pages et tous les calques.
-		// Retourne le nombre d'objets désélectionnés.
 		public int DeselectAll()
 		{
+			//	Désélectionne tous les objets, dans toutes les pages et tous les calques.
+			//	Retourne le nombre d'objets désélectionnés.
 			return this.DeselectAll(this.objects);
 		}
 
@@ -933,10 +933,10 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Désélectionne tous les objets qui n'ont pas le "undo stamp",
-		// dans toutes les pages et tous les calques.
 		public void DeselectNoUndoStamp()
 		{
+			//	Désélectionne tous les objets qui n'ont pas le "undo stamp",
+			//	dans toutes les pages et tous les calques.
 			this.DeselectNoUndoStamp(this.objects);
 		}
 
@@ -964,9 +964,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Adapte le mode d'édition des propriétés.
 		public void UpdateEditProperties(AbstractObject objectMemory)
 		{
+			//	Adapte le mode d'édition des propriétés.
 			this.UpdateEditProperties(this.CurrentGroup, objectMemory);
 		}
 
@@ -990,9 +990,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Détruit tous les objets sélectionnés.
 		public void DeleteSelection()
 		{
+			//	Détruit tous les objets sélectionnés.
 			this.DeleteSelection(this.CurrentGroup);
 		}
 
@@ -1017,9 +1017,9 @@ namespace Epsitec.Common.Pictogram.Data
 			while ( bDo );
 		}
 
-		// Duplique tous les objets sélectionnés.
 		public void DuplicateSelection(Drawing.Point move)
 		{
+			//	Duplique tous les objets sélectionnés.
 			this.DuplicateSelection(this.CurrentGroup, this.CurrentGroup, move, false);
 		}
 
@@ -1049,9 +1049,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Copie tous les objets sélectionnés dans le bloc-notes.
 		public void CopySelection()
 		{
+			//	Copie tous les objets sélectionnés dans le bloc-notes.
 			this.clipboard.Clear();
 			this.CopySelection(this.CurrentGroup, this.clipboard, false);
 		}
@@ -1077,9 +1077,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Colle tous les objets contenus dans le bloc-notes.
 		public void PasteSelection()
 		{
+			//	Colle tous les objets contenus dans le bloc-notes.
 			this.PasteSelection(this.clipboard, this.CurrentGroup, false);
 			this.StylesCollection.CollectionChanged();  // si PasteAdaptStyles a créé un nouveau style
 		}
@@ -1107,15 +1107,15 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Indique si le bloc-notes est vide.
 		public bool IsEmptyClipboard()
 		{
+			//	Indique si le bloc-notes est vide.
 			return (this.clipboard.Count == 0);
 		}
 
-		// Change l'ordre de tous les objets sélectionnés.
 		public void OrderSelection(int dir)
 		{
+			//	Change l'ordre de tous les objets sélectionnés.
 			this.OrderSelection(this.CurrentGroup, dir);
 		}
 
@@ -1123,7 +1123,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			System.Collections.ArrayList extract = new System.Collections.ArrayList();
 
-			// Extrait tous les objets sélectionnés dans la liste extract.
+			//	Extrait tous les objets sélectionnés dans la liste extract.
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
@@ -1134,10 +1134,10 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 
-			// Supprime les objets sélectionnés de la liste principale.
+			//	Supprime les objets sélectionnés de la liste principale.
 			this.DeleteSelection(objects);
 
-			// Remet les objets extraits au début ou à la fin de la liste principale.
+			//	Remet les objets extraits au début ou à la fin de la liste principale.
 			int i = 0;
 			if ( dir > 0 )  i = objects.Count;
 			foreach ( AbstractObject obj in extract )
@@ -1146,9 +1146,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Associe tous les objets sélectionnés.
 		public void GroupSelection()
 		{
+			//	Associe tous les objets sélectionnés.
 			this.GroupSelection(this.CurrentGroup);
 		}
 
@@ -1156,7 +1156,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			System.Collections.ArrayList extract = new System.Collections.ArrayList();
 
-			// Extrait tous les objets sélectionnés dans la liste extract.
+			//	Extrait tous les objets sélectionnés dans la liste extract.
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -1171,16 +1171,16 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 
-			// Supprime les objets sélectionnés de la liste principale.
+			//	Supprime les objets sélectionnés de la liste principale.
 			this.DeleteSelection(objects);
 
-			// Crée l'objet groupe.
+			//	Crée l'objet groupe.
 			ObjectGroup group = new ObjectGroup();
 			objects.Add(group);
 			group.UpdateDim(bbox);
 			group.Select();
 
-			// Remet les objets extraits dans le groupe.
+			//	Remet les objets extraits dans le groupe.
 			foreach ( AbstractObject obj in extract )
 			{
 				obj.Deselect();
@@ -1188,9 +1188,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Dissocie tous les objets sélectionnés.
 		public void UngroupSelection()
 		{
+			//	Dissocie tous les objets sélectionnés.
 			this.UngroupSelection(this.CurrentGroup);
 		}
 
@@ -1218,9 +1218,9 @@ namespace Epsitec.Common.Pictogram.Data
 			while ( index < total );
 		}
 
-		// Dissocie tous les niveaux des objets sélectionnés.
 		public void UngroupAllSelection()
 		{
+			//	Dissocie tous les niveaux des objets sélectionnés.
 			this.UngroupAllSelection(this.CurrentGroup);
 		}
 
@@ -1251,9 +1251,9 @@ namespace Epsitec.Common.Pictogram.Data
 			while ( bDo );
 		}
 
-		// Retourne le nom du premier groupe sélectionné rencontré.
 		public string GroupName()
 		{
+			//	Retourne le nom du premier groupe sélectionné rencontré.
 			UndoList objects = this.CurrentGroup;
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -1268,9 +1268,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return "";
 		}
 
-		// Spécifie le nom du premier groupe sélectionné rencontré.
 		public void GroupName(string name)
 		{
+			//	Spécifie le nom du premier groupe sélectionné rencontré.
 			UndoList objects = this.CurrentGroup;
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -1286,9 +1286,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Déplace tous les objets sélectionnés.
 		public void MoveSelection(Drawing.Point move, ref Drawing.Rectangle bbox)
 		{
+			//	Déplace tous les objets sélectionnés.
 			this.MoveSelection(this.CurrentGroup, move, ref bbox, false);
 		}
 
@@ -1312,9 +1312,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Déplace globalement tous les objets sélectionnés.
 		public void MoveSelection(GlobalModifierData initial, GlobalModifierData final, ref Drawing.Rectangle bbox)
 		{
+			//	Déplace globalement tous les objets sélectionnés.
 			this.MoveSelection(this.CurrentGroup, initial, final, ref bbox, false);
 		}
 
@@ -1338,9 +1338,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Déplace une poignée d'un objet.
 		public void MoveHandleProcess(AbstractObject obj, int rank, Drawing.Point pos, IconContext iconContext, ref Drawing.Rectangle bbox)
 		{
+			//	Déplace une poignée d'un objet.
 			bbox.MergeWith(obj.BoundingBox);
 			obj.MoveHandleProcess(rank, pos, iconContext);
 			bbox.MergeWith(obj.BoundingBox);
@@ -1356,27 +1356,27 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Cache la sélection.
 		public void HideSelection()
 		{
+			//	Cache la sélection.
 			this.HideObject(this.CurrentGroup, true, false, true);
 		}
 
-		// Cache ce qui n'est pas sélectionné.
 		public void HideRest()
 		{
+			//	Cache ce qui n'est pas sélectionné.
 			this.HideObject(this.objects, false, true, true);
 		}
 
-		// Annule tous les objets cachés (montre tout).
 		public void HideCancel()
 		{
+			//	Annule tous les objets cachés (montre tout).
 			this.HideObject(this.objects, false, false, false);
 		}
 
-		// Cache un objet et tous ses fils.
 		protected void HideObject(UndoList objects, bool onlySelected, bool onlyDeselected, bool hide)
 		{
+			//	Cache un objet et tous ses fils.
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
@@ -1413,9 +1413,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Retourne le nombre d'objets cachés.
 		public int RetTotalHide()
 		{
+			//	Retourne le nombre d'objets cachés.
 			return this.RetTotalHide(this.objects);
 		}
 
@@ -1437,7 +1437,6 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Dessine la géométrie de tous les objets.
 		public void DrawGeometry(Drawing.Graphics graphics,
 								 IconContext iconContext,
 								 IconObjects iconObjects,
@@ -1445,6 +1444,7 @@ namespace Epsitec.Common.Pictogram.Data
 								 Drawing.Rectangle clipRect,
 								 bool showAllLayers)
 		{
+			//	Dessine la géométrie de tous les objets.
 			if ( this.objects.Count == 0 )  return;
 			ObjectPattern pattern = this.objects[this.currentPattern] as ObjectPattern;
 			if ( pattern.Objects.Count == 0 )  return;
@@ -1512,9 +1512,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Dessine les poignées de tous les objets.
 		public void DrawHandle(Drawing.Graphics graphics, IconContext iconContext)
 		{
+			//	Dessine les poignées de tous les objets.
 			this.DrawHandle(this.CurrentGroup, graphics, iconContext);
 		}
 
@@ -1535,9 +1535,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Copie tous les objets.
 		public void CopyTo(UndoList dst)
 		{
+			//	Copie tous les objets.
 			this.CopyTo(this.objects, dst);
 		}
 
@@ -1558,16 +1558,16 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Entre dans un groupe.
 		public void InsideGroup(AbstractObject obj)
 		{
+			//	Entre dans un groupe.
 			this.Select(null, false, false);
 			this.roots.Add(obj);
 		}
 
-		// Sort d'un groupe.
 		public void OutsideGroup()
 		{
+			//	Sort d'un groupe.
 			if ( this.roots.Count <= 3 )  return;
 			this.Select(null, false, false);
 			AbstractObject obj = this.roots[this.roots.Count-1] as AbstractObject;
@@ -1575,16 +1575,16 @@ namespace Epsitec.Common.Pictogram.Data
 			this.Select(obj, false, false);
 		}
 
-		// Indique si on est à la racine.
 		public bool IsInitialGroup()
 		{
+			//	Indique si on est à la racine.
 			return ( this.roots.Count <= 3 );
 		}
 
-		// Retourne la racine courante.
 		[XmlIgnore]
 		public UndoList CurrentGroup
 		{
+			//	Retourne la racine courante.
 			get
 			{
 				if ( this.roots.Count == 0 )
@@ -1599,9 +1599,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Adapte les dimensions de tous les groupes inclus.
 		public void GroupUpdate(ref Drawing.Rectangle bbox)
 		{
+			//	Adapte les dimensions de tous les groupes inclus.
 			this.GroupUpdate(this.CurrentGroup, ref bbox, false);
 		}
 
@@ -1627,9 +1627,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Adapte les dimensions de tous les groupes parents.
 		public void GroupUpdateParents(ref Drawing.Rectangle bbox)
 		{
+			//	Adapte les dimensions de tous les groupes parents.
 			if ( this.roots.Count <= 3 )  return;
 			for ( int i=this.roots.Count-1 ; i>=3 ; i-- )
 			{
@@ -1646,9 +1646,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Adapte toutes les bbox en fonction des patterns.
 		public void UpdatePattern()
 		{
+			//	Adapte toutes les bbox en fonction des patterns.
 			AbstractObject doc = this.objects[0] as AbstractObject;
 			this.UpdatePattern(doc.Objects);
 		}
@@ -1673,9 +1673,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Adapte tous les styles après une suppression de pattern.
 		public void StylesDeletePattern(int rank)
 		{
+			//	Adapte tous les styles après une suppression de pattern.
 			int total = this.styles.TotalProperty;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -1687,9 +1687,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Adapte tous les objets après une suppression de pattern.
 		public void UpdateDeletePattern(int rank)
 		{
+			//	Adapte tous les objets après une suppression de pattern.
 			AbstractObject doc = this.objects[0] as AbstractObject;
 			this.UpdateDeletePattern(doc.Objects, rank);
 		}
@@ -1710,34 +1710,34 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Retourne le nombre total de patterns.
 		public int TotalPatterns()
 		{
+			//	Retourne le nombre total de patterns.
 			return this.objects.Count;
 		}
 
-		// Retourne le nombre total de pages.
 		public int TotalPages()
 		{
+			//	Retourne le nombre total de pages.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectPattern pattern = this.roots[0] as ObjectPattern;
 			System.Diagnostics.Debug.Assert(pattern != null);
 			return pattern.Objects.Count;
 		}
 
-		// Retourne le nombre total de calques dans la page courante.
 		public int TotalLayers()
 		{
+			//	Retourne le nombre total de calques dans la page courante.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectPage page = this.roots[1] as ObjectPage;
 			System.Diagnostics.Debug.Assert(page != null);
 			return page.Objects.Count;
 		}
 
-		// Gestion du pattern en cours.
 		[XmlIgnore]
 		public int CurrentPattern
 		{
+			//	Gestion du pattern en cours.
 			get
 			{
 				return this.currentPattern;
@@ -1757,10 +1757,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Gestion de la page en cours.
 		[XmlIgnore]
 		public int CurrentPage
 		{
+			//	Gestion de la page en cours.
 			get
 			{
 				return this.currentPage;
@@ -1775,10 +1775,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Gestion du calque en cours.
 		[XmlIgnore]
 		public int CurrentLayer
 		{
+			//	Gestion du calque en cours.
 			get
 			{
 				return this.currentLayer;
@@ -1793,17 +1793,17 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Défini la page et le calque.
 		public void SwapPatternPageLayer(ref int rankPattern, ref int rankPage, ref int rankLayer)
 		{
+			//	Défini la page et le calque.
 			Misc.Swap(ref this.currentPattern, ref rankPattern);
 			Misc.Swap(ref this.currentPage,    ref rankPage   );
 			Misc.Swap(ref this.currentLayer,   ref rankLayer  );
 		}
 
-		// Utilise une page et un calque donné.
 		protected void UsePatternPageLayer(int rankPattern, int rankPage, int rankLayer)
 		{
+			//	Utilise une page et un calque donné.
 			ObjectPattern pattern;
 			ObjectPage	  page;
 			ObjectLayer	  layer;
@@ -1866,45 +1866,45 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Donne un pattern.
 		public ObjectPattern Pattern(int rank)
 		{
+			//	Donne un pattern.
 			if ( rank < 0 )  rank = 0;  // traitillé ?
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			System.Diagnostics.Debug.Assert(rank < this.objects.Count);
 			return this.objects[rank] as ObjectPattern;
 		}
 
-		// Donne une page.
 		public ObjectPage Page(int rank)
 		{
+			//	Donne une page.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectPattern pattern = this.roots[0] as ObjectPattern;
 			System.Diagnostics.Debug.Assert(rank < pattern.Objects.Count);
 			return pattern.Objects[rank] as ObjectPage;
 		}
 
-		// Donne un calque de la page courante.
 		public ObjectLayer Layer(int rank)
 		{
+			//	Donne un calque de la page courante.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectPage page = this.roots[1] as ObjectPage;
 			System.Diagnostics.Debug.Assert(rank < page.Objects.Count);
 			return page.Objects[rank] as ObjectLayer;
 		}
 
-		// Donne la transformation de couleur du calque courant.
 		public PropertyModColor LayerModColor()
 		{
+			//	Donne la transformation de couleur du calque courant.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectLayer layer = this.roots[2] as ObjectLayer;
 			System.Diagnostics.Debug.Assert(layer != null);
 			return layer.PropertyModColor(0);
 		}
 
-		// Crée un nouveau pattern (avec une page et un calque) après le rang donné.
 		public void CreatePattern(int rank, bool duplicate)
 		{
+			//	Crée un nouveau pattern (avec une page et un calque) après le rang donné.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectPattern pattern = new ObjectPattern();
 
@@ -1936,9 +1936,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UsePatternPageLayer(rank+1, 0, 0);
 		}
 
-		// Crée une nouvelle page (avec un calque) après le rang donné.
 		public void CreatePage(int rank, bool duplicate)
 		{
+			//	Crée une nouvelle page (avec un calque) après le rang donné.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectPattern pattern = this.roots[0] as ObjectPattern;
 			ObjectPage page = new ObjectPage();
@@ -1959,9 +1959,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UsePatternPageLayer(this.currentPattern, rank+1, 0);
 		}
 
-		// Crée un nouveau calque dans la page courante après le rang donné.
 		public void CreateLayer(int rank, bool duplicate)
 		{
+			//	Crée un nouveau calque dans la page courante après le rang donné.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectPage page = this.roots[1] as ObjectPage;
 			ObjectLayer layer = new ObjectLayer();
@@ -1977,9 +1977,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UsePatternPageLayer(this.currentPattern, this.currentPage, rank+1);
 		}
 
-		// Supprime un pattern.
 		public void DeletePattern(int rank)
 		{
+			//	Supprime un pattern.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			System.Diagnostics.Debug.Assert(this.objects.Count > 1);
 			System.Diagnostics.Debug.Assert(rank < this.objects.Count);
@@ -1997,9 +1997,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.roots[2] = page.Objects[this.currentLayer];
 		}
 
-		// Supprime une page.
 		public void DeletePage(int rank)
 		{
+			//	Supprime une page.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectPattern pattern = this.roots[0] as ObjectPattern;
 			System.Diagnostics.Debug.Assert(pattern.Objects.Count > 1);
@@ -2014,9 +2014,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.roots[2] = page.Objects[this.currentLayer];
 		}
 
-		// Supprime un calque.
 		public void DeleteLayer(int rank)
 		{
+			//	Supprime un calque.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectPage page = this.roots[1] as ObjectPage;
 			System.Diagnostics.Debug.Assert(page.Objects.Count > 1);
@@ -2028,9 +2028,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.roots[2] = page.Objects[this.currentLayer];
 		}
 
-		// Permute deux patterns.
 		public void SwapPattern(int rank1, int rank2)
 		{
+			//	Permute deux patterns.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			System.Diagnostics.Debug.Assert(rank1 < this.objects.Count);
 			System.Diagnostics.Debug.Assert(rank2 < this.objects.Count);
@@ -2040,9 +2040,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.objects.Insert(rank2, temp);
 		}
 
-		// Permute deux pages.
 		public void SwapPage(int rank1, int rank2)
 		{
+			//	Permute deux pages.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectPattern pattern = this.roots[0] as ObjectPattern;
 			System.Diagnostics.Debug.Assert(rank1 < pattern.Objects.Count);
@@ -2053,9 +2053,9 @@ namespace Epsitec.Common.Pictogram.Data
 			pattern.Objects.Insert(rank2, temp);
 		}
 
-		// Permute deux calques.
 		public void SwapLayer(int rank1, int rank2)
 		{
+			//	Permute deux calques.
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			ObjectPage page = this.roots[1] as ObjectPage;
 			System.Diagnostics.Debug.Assert(rank1 < page.Objects.Count);
@@ -2067,9 +2067,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Sauve tous les objets.
 		public bool Write(string filename)
 		{
+			//	Sauve tous les objets.
 			try
 			{
 				XmlSerializer serializer = new XmlSerializer(typeof(IconObjects));
@@ -2084,9 +2084,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Lit tous les objets.
 		public bool Read(string filename)
 		{
+			//	Lit tous les objets.
 			try
 			{
 				using (FileStream fs = new FileStream(filename, FileMode.Open))

@@ -62,18 +62,18 @@ namespace Epsitec.Common.Document.Containers
 			base.Dispose(disposing);
 		}
 
-		// Donne la toolbar pour les sélections.
 		public HToolBar SelectorToolBar
 		{
+			//	Donne la toolbar pour les sélections.
 			get
 			{
 				return this.selectorToolBar;
 			}
 		}
 
-		// Met à jour le bouton de stretch.
 		public void UpdateSelectorStretch()
 		{
+			//	Met à jour le bouton de stretch.
 			IconButton button = this.selectorToolBar.FindChild("SelectorStretch") as IconButton;
 			if ( button == null )  return;
 
@@ -81,9 +81,9 @@ namespace Epsitec.Common.Document.Containers
 			button.IconName = Principal.GetSelectorTypeStretchIcon(type);
 		}
 
-		// Crée la toolbar pour les sélections.
 		protected void CreateSelectorToolBar()
 		{
+			//	Crée la toolbar pour les sélections.
 			this.selectorToolBar = new HToolBar(this);
 			this.selectorToolBar.Dock = DockStyle.Top;
 			this.selectorToolBar.DockMargins = new Margins(0, 0, 0, 5);
@@ -154,9 +154,9 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.selectorAdaptText, Res.Strings.Container.Principal.Button.AdaptText);
 		}
 
-		// Crée la toolbar pour les agrégats.
 		protected void CreateAggregateToolBar()
 		{
+			//	Crée la toolbar pour les agrégats.
 			this.aggregateToolBar = new HToolBar(this);
 			this.aggregateToolBar.Dock = DockStyle.Top;
 			this.aggregateToolBar.DockMargins = new Margins(0, 0, 0, 5);
@@ -197,9 +197,9 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.aggregateFree, Res.Strings.Action.AggregateFree);
 		}
 
-		// Met à jour les boutons des agrégats.
 		protected void UpdateAggregate()
 		{
+			//	Met à jour les boutons des agrégats.
 			string name = this.document.Modifier.AggregateGetSelectedName();
 
 			this.ignoreChanged = true;
@@ -212,9 +212,9 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateFree.Enable = (name != "");
 		}
 
-		// Crée la toolbar pour le texte.
 		protected void CreateTextToolBar()
 		{
+			//	Crée la toolbar pour le texte.
 			this.textToolBar = new HToolBar(this);
 			this.textToolBar.Dock = DockStyle.Top;
 			this.textToolBar.DockMargins = new Margins(0, 0, 0, 5);
@@ -272,9 +272,9 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateText();
 		}
 
-		// Met à jour les boutons de la toolbar du texte.
 		protected void UpdateText()
 		{
+			//	Met à jour les boutons de la toolbar du texte.
 			this.textUsual.ActiveState      = (this.textFilter == "Usual"     ) ? ActiveState.Yes : ActiveState.No;
 			this.textFrequently.ActiveState = (this.textFilter == "Frequently") ? ActiveState.Yes : ActiveState.No;
 			this.textAll.ActiveState        = (this.textFilter == "All"       ) ? ActiveState.Yes : ActiveState.No;
@@ -282,9 +282,9 @@ namespace Epsitec.Common.Document.Containers
 			this.textCharacter.ActiveState  = (this.textFilter == "Character" ) ? ActiveState.Yes : ActiveState.No;
 		}
 
-		// Crée le panneau pour les sélections.
 		protected void CreateSelectorPanel()
 		{
+			//	Crée le panneau pour les sélections.
 			this.selectorPanel = new Panel(this);
 			this.selectorPanel.Dock = DockStyle.Top;
 			this.selectorPanel.DockMargins = new Margins(0, 0, 0, 5);
@@ -309,16 +309,16 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateSelectorGo();
 		}
 
-		// Met à jour le bouton de séleciton.
 		protected void UpdateSelectorGo()
 		{
+			//	Met à jour le bouton de séleciton.
 			this.selectorGo.Enable = (this.selectorName.Text.Length > 0);
 		}
 
 
-		// Met en évidence l'objet survolé par la souris.
 		public override void Hilite(Objects.Abstract hiliteObject)
 		{
+			//	Met en évidence l'objet survolé par la souris.
 			if ( !this.IsVisible )  return;
 
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
@@ -341,9 +341,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 		
-		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
+			//	Effectue la mise à jour du contenu.
 			//?System.Diagnostics.Debug.WriteLine(string.Format("A: DebugAliveWidgetsCount = {0}", Widget.DebugAliveWidgetsCount));
 			Viewer viewer = this.document.Modifier.ActiveViewer;
 			DrawingContext context = viewer.DrawingContext;
@@ -391,7 +391,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.detailButton.SetParent(null);
 
-			// Supprime tous les panneaux ou boutons.
+			//	Supprime tous les panneaux ou boutons.
 			this.scrollable.Panel.SuspendLayout();
 
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
@@ -414,7 +414,7 @@ namespace Epsitec.Common.Document.Containers
 			Widget originColorLastPanel = null;
 			if ( this.document.Modifier.ActiveViewer.IsCreating )
 			{
-				// Crée tous les boutons pour l'objet en cours de création.
+				//	Crée tous les boutons pour l'objet en cours de création.
 				Objects.Abstract layer = context.RootObject();
 				int rank = viewer.CreateRank();
 				Objects.Abstract creatingObject = layer.Objects[rank] as Objects.Abstract;
@@ -442,7 +442,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 			else if ( this.document.Modifier.Tool == "ToolEdit" )
 			{
-				// Crée tous les panneaux des "propriétés" de texte (pour les wrappers).
+				//	Crée tous les panneaux des "propriétés" de texte (pour les wrappers).
 				Objects.Abstract editObject = this.document.Modifier.RetEditObject();
 				if ( editObject != null )
 				{
@@ -467,7 +467,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 			else
 			{
-				// Crée tous les panneaux des propriétés.
+				//	Crée tous les panneaux des propriétés.
 				System.Collections.ArrayList list = new System.Collections.ArrayList();
 				this.document.Modifier.PropertiesList(list);
 
@@ -515,9 +515,9 @@ namespace Epsitec.Common.Document.Containers
 			//?System.Diagnostics.Debug.WriteLine(string.Format("B: DebugAliveWidgetsCount = {0}", Widget.DebugAliveWidgetsCount));
 		}
 
-		// Indique si tous les panneaux pour le texte sont étendus.
 		protected bool IsTextPanelsExtended()
 		{
+			//	Indique si tous les panneaux pour le texte sont étendus.
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
 			{
 				if ( widget is TextPanels.Abstract )
@@ -529,9 +529,9 @@ namespace Epsitec.Common.Document.Containers
 			return true;
 		}
 
-		// Indique si tous les panneaux pour le texte sont réduits.
 		protected bool IsTextPanelsReduced()
 		{
+			//	Indique si tous les panneaux pour le texte sont réduits.
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
 			{
 				if ( widget is TextPanels.Abstract )
@@ -543,9 +543,9 @@ namespace Epsitec.Common.Document.Containers
 			return true;
 		}
 
-		// Etend ou réduit tous les panneaux pour le texte.
 		protected void TextPanelsExtend(bool extend)
 		{
+			//	Etend ou réduit tous les panneaux pour le texte.
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
 			{
 				if ( widget is TextPanels.Abstract )
@@ -556,9 +556,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Effectue la mise à jour des propriétés.
 		protected override void DoUpdateProperties(System.Collections.ArrayList propertyList)
 		{
+			//	Effectue la mise à jour des propriétés.
 			Widget originColorLastPanel = null;
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
 			{
@@ -580,9 +580,9 @@ namespace Epsitec.Common.Document.Containers
 			this.HandleOriginColorChanged(originColorLastPanel, true);
 		}
 
-		// Effectue la mise à jour de la sélection par noms.
 		protected override void DoUpdateSelNames()
 		{
+			//	Effectue la mise à jour de la sélection par noms.
 			if ( this.document.Modifier.Tool == "ToolSelect" ||
 				 this.document.Modifier.Tool == "ToolGlobal" )
 			{
@@ -599,15 +599,15 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Le bouton des détails a été cliqué.
 		private void HandleDetailButtonClicked(object sender, MessageEventArgs e)
 		{
+			//	Le bouton des détails a été cliqué.
 			this.document.Modifier.PropertiesDetail = !this.document.Modifier.PropertiesDetail;
 		}
 
-		// Le widget qui détermine la couleur d'origine a changé.
 		private void HandleOriginColorChanged(object sender)
 		{
+			//	Le widget qui détermine la couleur d'origine a changé.
 			this.HandleOriginColorChanged(sender, false);
 		}
 
@@ -683,9 +683,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// La couleur dans la règle d'un texte a été cliquée.
 		public void TextRulerColorClicked(Common.Widgets.TextRuler ruler)
 		{
+			//	La couleur dans la règle d'un texte a été cliquée.
 			this.originColorPanel = null;
 			this.originColorRuler = ruler;
 			this.originColorRuler.ColorSample.ActiveState = ActiveState.Yes;
@@ -705,9 +705,9 @@ namespace Epsitec.Common.Document.Containers
 			this.ignoreColorChanged = false;
 		}
 
-		// La couleur dans la règle d'un texte a changé.
 		public void TextRulerColorChanged(Common.Widgets.TextRuler ruler)
 		{
+			//	La couleur dans la règle d'un texte a changé.
 			if ( this.originColorRuler == null )  return;
 
 			this.ignoreColorChanged = true;
@@ -715,9 +715,9 @@ namespace Epsitec.Common.Document.Containers
 			this.ignoreColorChanged = false;
 		}
 
-		// Couleur changée dans la roue.
 		private void HandleColorSelectorChanged(object sender)
 		{
+			//	Couleur changée dans la roue.
 			if ( this.ignoreColorChanged )  return;
 
 			if ( this.originColorPanel != null )
@@ -742,9 +742,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Fermer la roue.
 		private void HandleColorSelectorClosed(object sender)
 		{
+			//	Fermer la roue.
 			this.originColorPanel = null;
 			this.originColorTextPanel = null;
 			this.OriginColorRulerDeselect();
@@ -769,9 +769,9 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.BackColor = Color.Empty;
 		}
 
-		// Désélectionne l'origine de couleurs possibles dans la règle.
 		protected void OriginColorRulerDeselect()
 		{
+			//	Désélectionne l'origine de couleurs possibles dans la règle.
 			if ( this.originColorRuler == null )  return;
 
 			this.originColorRuler.ColorSample.ActiveState = ActiveState.No;
@@ -779,15 +779,15 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Texte du nom à sélectionner changé.
 		private void HandleSelectorNameChanged(object sender)
 		{
+			//	Texte du nom à sélectionner changé.
 			this.UpdateSelectorGo();
 		}
 
-		// Combo du texte du nom à sélectionner ouvert.
 		private void HandleSelectorNameOpeningCombo(object sender, CancelEventArgs e)
 		{
+			//	Combo du texte du nom à sélectionner ouvert.
 			this.selectorName.Items.Clear();
 			System.Collections.ArrayList list = this.document.Modifier.SelectNames();
 			foreach ( string name in list )
@@ -796,30 +796,30 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Combo du texte du nom à sélectionner fermé.
 		private void HandleSelectorNameClosedCombo(object sender)
 		{
+			//	Combo du texte du nom à sélectionner fermé.
 			if ( this.ignoreChanged )  return;
 			this.document.Modifier.SelectName(this.selectorName.Text);
 		}
 
-		// Bouton "chercher" actionné.
 		private void HandleSelectorGo(object sender, MessageEventArgs e)
 		{
+			//	Bouton "chercher" actionné.
 			this.document.Modifier.SelectName(this.selectorName.Text);
 		}
 
 
-		// Texte des agrégats changé.
 		private void HandleAggregateComboChanged(object sender)
 		{
+			//	Texte des agrégats changé.
 			if ( this.ignoreChanged )  return;
 			this.document.Modifier.AggregateChangeName(this.aggregateCombo.Text);
 		}
 
-		// Combo des agrégats fermé.
 		private void HandleAggregateClosedCombo(object sender)
 		{
+			//	Combo des agrégats fermé.
 			if ( this.ignoreChanged )  return;
 			int sel = this.aggregateCombo.SelectedIndex;
 			if ( sel == -1 )  return;
@@ -870,9 +870,9 @@ namespace Epsitec.Common.Document.Containers
 
 
 		#region StretchMenu
-		// Construit le menu des types de stretch.
 		public VMenu CreateStretchTypeMenu(MessageEventHandler message)
 		{
+			//	Construit le menu des types de stretch.
 			VMenu menu = new VMenu();
 
 			this.CreateStretchTypeMenu(menu, message, SelectorTypeStretch.Free, Res.Strings.Container.Principal.Menu.Stretch.Free);
@@ -887,10 +887,10 @@ namespace Epsitec.Common.Document.Containers
 			return menu;
 		}
 
-		// Crée une case du menu des actions à refaire/annuler.
 		protected void CreateStretchTypeMenu(VMenu menu, MessageEventHandler message,
 											 SelectorTypeStretch type, string text)
 		{
+			//	Crée une case du menu des actions à refaire/annuler.
 			string icon = Principal.GetSelectorTypeStretchIcon(type);
 			string name = ((int)type).ToString();
 			MenuItem item = new MenuItem("SelectorStretchTypeDo(this.Name)", icon, text, "", name);
@@ -903,9 +903,9 @@ namespace Epsitec.Common.Document.Containers
 			menu.Items.Add(item);
 		}
 
-		// Retourne l'icône à utiliser pour un type de déformation.
 		protected static string GetSelectorTypeStretchIcon(SelectorTypeStretch type)
 		{
+			//	Retourne l'icône à utiliser pour un type de déformation.
 			if ( type == SelectorTypeStretch.Free      )  return Misc.Icon("SelectorStretch");
 			if ( type == SelectorTypeStretch.ParallelH )  return Misc.Icon("SelectorStretchParallelH");
 			if ( type == SelectorTypeStretch.ParallelV )  return Misc.Icon("SelectorStretchParallelV");

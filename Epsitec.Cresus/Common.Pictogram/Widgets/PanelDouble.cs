@@ -36,9 +36,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.label.Text = this.textStyle;
 
@@ -51,9 +51,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.field.Step     = (decimal) p.Step;
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyDouble p = new PropertyDouble();
 			base.GetProperty(p);
 
@@ -65,9 +65,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.field == null )  return;
@@ -85,9 +85,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.field.Bounds = r;
 		}
 		
-		// Une valeur a été changée.
 		private void HandleTextChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			this.OnChanged();
 		}
 

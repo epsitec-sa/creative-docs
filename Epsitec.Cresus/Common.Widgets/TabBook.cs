@@ -319,7 +319,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleTabButton(object sender, MessageEventArgs e)
 		{
-			// Gestion d'un événement lorsqu'un bouton d'onglet est pressé.
+			//	Gestion d'un événement lorsqu'un bouton d'onglet est pressé.
 			if ( !(sender is TabButton) )  return;
 			TabButton button = sender as TabButton;
 
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleScrollButton(object sender)
 		{
-			// Gestion d'un événement lorsqu'un bouton de scroll < > est pressé.
+			//	Gestion d'un événement lorsqu'un bouton de scroll < > est pressé.
 			GlyphButton button = sender as GlyphButton;
 
 			double move = 0;
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected bool ShowSelectedTabButton()
 		{
-			// Scroll les boutons pour rendre entièrement visible l'onglet actif.
+			//	Scroll les boutons pour rendre entièrement visible l'onglet actif.
 			if ( !this.scrollArrow )  return false;
 
 			double begin = 0;
@@ -389,7 +389,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			// Scroll si l'onglet n'est pas entièrement visible.
+			//	Scroll si l'onglet n'est pas entièrement visible.
 			if ( begin < this.TabOffsetMin )  // dépasse à gauche ?
 			{
 				this.scrollOffset = this.scrollOffset+begin-this.TabOffsetMin;
@@ -410,7 +410,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected bool CenterSelectedTabButton()
 		{
-			// Scroll les boutons pour centrer l'onglet actif.
+			//	Scroll les boutons pour centrer l'onglet actif.
 			double pos = 0;
 
 			if ( this.scrollArrow )
@@ -469,7 +469,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateVisiblePages()
 		{
-			// Met à jour la page visible. Toutes les autres sont cachées.
+			//	Met à jour la page visible. Toutes les autres sont cachées.
 			foreach ( TabPage page in this.items )
 			{
 				if ( page == this.ActivePage )  // est-ce la page active ?
@@ -489,15 +489,15 @@ namespace Epsitec.Common.Widgets
 
 		public void UpdateButtons()
 		{
-			// Met à jour les boutons, en faisant disparaître les flèches si nécessaire.
+			//	Met à jour les boutons, en faisant disparaître les flèches si nécessaire.
 			this.UpdateTabButtons();
 			this.UpdateGlyphButtons();
 		}
 
 		public void UpdateAfterChanges()
 		{
-			// Met à jour les boutons après un changement (insertion ou suppression
-			// d'un onglet, ou modification du texte d'un onglet).
+			//	Met à jour les boutons après un changement (insertion ou suppression
+			//	d'un onglet, ou modification du texte d'un onglet).
 			this.UpdateButtons();
 
 			if ( this.CenterSelectedTabButton() )
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateTabButtons()
 		{
-			// Met à jour tous les boutons des onglets.
+			//	Met à jour tous les boutons des onglets.
 			
 			this.scrollTotalWidth = 0;
 			
@@ -560,7 +560,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateGlyphButtons()
 		{
-			// Met à jour les 4 boutons spéciaux.
+			//	Met à jour les 4 boutons spéciaux.
 			if ( this.Arrows == TabBookArrows.Stretch )
 			{
 				this.scrollArrow = false;
@@ -646,7 +646,7 @@ namespace Epsitec.Common.Widgets
 				this.buttonClose.Visibility = false;
 			}
 
-			// Pour détecter le clic sur les flèches en premier.
+			//	Pour détecter le clic sur les flèches en premier.
 			if ( this.isRefreshNeeded )
 			{
 				this.Children.Remove(this.arrowLeft);
@@ -710,7 +710,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			// Dessine le groupe d'onglets.
+			//	Dessine le groupe d'onglets.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;

@@ -144,7 +144,7 @@ namespace Epsitec.Common.Widgets
 		
 		public double							MinimalWidth
 		{
-			// Retourne la largeur minimale d'une règle.
+			//	Retourne la largeur minimale d'une règle.
 			get
 			{
 				return TextRuler.buttonMargin*2 +
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Widgets
 
 		protected double						FixWidth
 		{
-			// Retourne la largeur minimale pour les widgets fixes.
+			//	Retourne la largeur minimale pour les widgets fixes.
 			get
 			{
 				if ( this.listCapability )
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Widgets
 
 		public override double					DefaultWidth
 		{
-			// Retourne la largeur standard d'une règle.
+			//	Retourne la largeur standard d'une règle.
 			get
 			{
 				return 200;
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Widgets
 
 		public override double					DefaultHeight
 		{
-			// Retourne la hauteur standard d'une règle.
+			//	Retourne la hauteur standard d'une règle.
 			get
 			{
 				return TextRuler.zoneSupHeight + (this.tabCapability ? TextRuler.zoneInfHeight : 0.0);
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								ListCapability
 		{
-			// Indique si la règle permet l'utilisation des puces.
+			//	Indique si la règle permet l'utilisation des puces.
 			get
 			{
 				return this.listCapability;
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								TabCapability
 		{
-			// Indique si la règle permet l'édition des tabulateurs.
+			//	Indique si la règle permet l'édition des tabulateurs.
 			get
 			{
 				return this.tabCapability;
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								AllFonts
 		{
-			// Indique si la règle permet l'accès à toutes les fontes.
+			//	Indique si la règle permet l'accès à toutes les fontes.
 			get
 			{
 				return this.allFonts;
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Widgets
 
 		public double							LeftMargin
 		{
-			// Marge de gauche pour la graduation.
+			//	Marge de gauche pour la graduation.
 			get
 			{
 				return this.leftMargin;
@@ -268,7 +268,7 @@ namespace Epsitec.Common.Widgets
 
 		public double							RightMargin
 		{
-			// Marge de droite pour la graduation.
+			//	Marge de droite pour la graduation.
 			get
 			{
 				return this.rightMargin;
@@ -286,7 +286,7 @@ namespace Epsitec.Common.Widgets
 
 		public double							PPM
 		{
-			// Nombre de points/millimètres pour la graduation.
+			//	Nombre de points/millimètres pour la graduation.
 			get
 			{
 				return this.ppm;
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Widgets
 
 		public double							Scale
 		{
-			// Echelle de la graduation.
+			//	Echelle de la graduation.
 			get
 			{
 				return this.scale;
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Widgets
 
 		public string							FontName
 		{
-			// Nom de la fonte.
+			//	Nom de la fonte.
 			get
 			{
 				return this.fontName;
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Widgets
 
 		public double							FontScale
 		{
-			// Echelle de la fonte.
+			//	Echelle de la fonte.
 			get
 			{
 				return this.fontScale;
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.RichColor				FontRichColor
 		{
-			// Couleur de la fonte.
+			//	Couleur de la fonte.
 			get
 			{
 				return this.fontColor;
@@ -416,7 +416,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Color					FontColor
 		{
-			// Couleur de la fonte.
+			//	Couleur de la fonte.
 			get
 			{
 				return this.fontColor.Basic;
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								Bold
 		{
-			// Attribut typographique "gras".
+			//	Attribut typographique "gras".
 			get
 			{
 				return this.bold;
@@ -472,7 +472,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								Italic
 		{
-			// Attribut typographique "italique".
+			//	Attribut typographique "italique".
 			get
 			{
 				return this.italic;
@@ -500,7 +500,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								Underlined
 		{
-			// Attribut typographique "souligné".
+			//	Attribut typographique "souligné".
 			get
 			{
 				return this.underlined;
@@ -528,7 +528,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.TextListType				List
 		{
-			// Attribut typographique "puces".
+			//	Attribut typographique "puces".
 			get
 			{
 				return this.list;
@@ -557,7 +557,7 @@ namespace Epsitec.Common.Widgets
 
 		public void AttachToTextField(AbstractTextField text)
 		{
-			// Lie la règle à un objet TextField quelconque.
+			//	Lie la règle à un objet TextField quelconque.
 			this.textField = text;
 
 			Drawing.Rectangle cb = text.Client.Bounds;
@@ -570,7 +570,7 @@ namespace Epsitec.Common.Widgets
 
 		public void AttachToText(TextNavigator textNavigator)
 		{
-			// Lie la règle à un texte éditable.
+			//	Lie la règle à un texte éditable.
 			if ( this.textNavigator == textNavigator )  return;
 
 			if ( this.textNavigator != null )
@@ -596,7 +596,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void DetachFromText()
 		{
-			// Délie la règle du texte.
+			//	Délie la règle du texte.
 			this.textField = null;
 			this.AttachToText(null);
 		}
@@ -719,7 +719,7 @@ namespace Epsitec.Common.Widgets
 
 		protected string TextManualToolTip(Drawing.Point pos)
 		{
-			// Retourne le texte du tooltip en fonction de la position de la souris.
+			//	Retourne le texte du tooltip en fonction de la position de la souris.
 			string text = "";
 			if ( this.DetectTabZone(pos) )
 			{
@@ -765,7 +765,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void TabChanged()
 		{
-			// Informe d'un changement de tabulateur.
+			//	Informe d'un changement de tabulateur.
 			this.Invalidate();
 			if ( this.textField != null )
 			{
@@ -776,7 +776,7 @@ namespace Epsitec.Common.Widgets
 
 		protected int DetectTabRank(Drawing.Point pos)
 		{
-			// Détecte le rang du tabulateur visé par la souris.
+			//	Détecte le rang du tabulateur visé par la souris.
 			if ( !this.tabCapability )  return -1;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
@@ -797,7 +797,7 @@ namespace Epsitec.Common.Widgets
 
 		protected bool DetectTabZone(Drawing.Point pos)
 		{
-			// Détecte si la souris est dans la zone des tabulateurs.
+			//	Détecte si la souris est dans la zone des tabulateurs.
 			if ( !this.tabCapability )  return false;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
@@ -810,20 +810,20 @@ namespace Epsitec.Common.Widgets
 
 		protected double ScreenToTab(double pos)
 		{
-			// Retourne la position du tabulateur en fonction de la position dans l'interface.
+			//	Retourne la position du tabulateur en fonction de la position dans l'interface.
 			return (pos-this.Client.Bounds.Left-this.leftMargin)/this.scale;
 		}
 
 		protected double TabToScreen(double pos)
 		{
-			// Retourne la position en X dans l'interface en fonction de la position du tabulateur.
+			//	Retourne la position en X dans l'interface en fonction de la position du tabulateur.
 			return (pos*this.scale)+this.Client.Bounds.Left+this.leftMargin;
 		}
 
 
 		private void HandleButtonTabClicked(object sender, MessageEventArgs e)
 		{
-			// Bouton pour choisir le type de tabulateur cliqué.
+			//	Bouton pour choisir le type de tabulateur cliqué.
 			if ( this.silent )  return;
 
 			switch ( this.tabType )
@@ -839,7 +839,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleFieldFontNameChanged(object sender)
 		{
-			// Combo pour le nom de la fonte changé.
+			//	Combo pour le nom de la fonte changé.
 			if ( this.silent )  return;
 			this.FontName = this.ComboSelectedName(this.fieldFontName);
 			this.OnChanged();
@@ -847,7 +847,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleFieldFontScaleChanged(object sender)
 		{
-			// Valeur de l'échelle de la fonte changée.
+			//	Valeur de l'échelle de la fonte changée.
 			if ( this.silent )  return;
 			this.FontScale = (double) this.fieldFontScale.Value / 100;
 			this.OnChanged();
@@ -855,7 +855,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
 		{
-			// Bouton "bold" cliqué.
+			//	Bouton "bold" cliqué.
 			if ( this.silent )  return;
 			this.Bold = !this.Bold;
 			this.OnChanged();
@@ -863,7 +863,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
 		{
-			// Bouton "italique" cliqué.
+			//	Bouton "italique" cliqué.
 			if ( this.silent )  return;
 			this.Italic = !this.Italic;
 			this.OnChanged();
@@ -871,7 +871,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleButtonUnderlinedClicked(object sender, MessageEventArgs e)
 		{
-			// Bouton "souligné" cliqué.
+			//	Bouton "souligné" cliqué.
 			if ( this.silent )  return;
 			this.Underlined = !this.Underlined;
 			this.OnChanged();
@@ -879,7 +879,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleNothingButtonClicked(object sender, MessageEventArgs e)
 		{
-			// Bouton "couleur par défaut" cliqué.
+			//	Bouton "couleur par défaut" cliqué.
 			if ( this.silent )  return;
 			this.FontRichColor = Drawing.RichColor.Empty;
 			this.OnChanged();
@@ -888,14 +888,14 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleFieldFontColorClicked(object sender, MessageEventArgs e)
 		{
-			// Echantillon pour la couleur de la fonte cliqué.
+			//	Echantillon pour la couleur de la fonte cliqué.
 			if ( this.silent )  return;
 			this.OnColorClicked();
 		}
 
 		private void HandleButtonListNumClicked(object sender, MessageEventArgs e)
 		{
-			// Bouton pour la numnérotation cliqué.
+			//	Bouton pour la numnérotation cliqué.
 			if ( this.silent )  return;
 			if ( this.list == Drawing.TextListType.Num )  this.List = Drawing.TextListType.None;
 			else                                          this.List = Drawing.TextListType.Num;
@@ -904,7 +904,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleButtonListFixClicked(object sender, MessageEventArgs e)
 		{
-			// Bouton pour les puces cliqué.
+			//	Bouton pour les puces cliqué.
 			if ( this.silent )  return;
 			if ( this.list == Drawing.TextListType.Fix )  this.List = Drawing.TextListType.None;
 			else                                          this.List = Drawing.TextListType.Fix;
@@ -913,7 +913,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleCursorChanged(object sender)
 		{
-			// Met à jour les widgets de la règle lorsque le texte a changé.
+			//	Met à jour les widgets de la règle lorsque le texte a changé.
 			this.fontName   = this.textNavigator.SelectionFontName;
 			this.fontScale  = this.textNavigator.SelectionFontScale;
 			this.bold       = this.textNavigator.SelectionBold;
@@ -927,7 +927,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateButtons(bool navigation)
 		{
-			// Met à jour les widgets de la règle en fonction des données.
+			//	Met à jour les widgets de la règle en fonction des données.
 			this.silent = true;
 			this.GlyphType(this.buttonTab, this.tabType);
 			this.ComboSelectedName(this.fieldFontName, this.fontName);
@@ -954,13 +954,13 @@ namespace Epsitec.Common.Widgets
 
 		protected void ButtonActive(Button button, bool active)
 		{
-			// Indique si un bouton est actif.
+			//	Indique si un bouton est actif.
 			button.ActiveState = active ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected void GlyphType(GlyphButton button, Drawing.TextTabType type)
 		{
-			// Modifie le glyph d'un bouton.
+			//	Modifie le glyph d'un bouton.
 			switch ( type )
 			{
 				case Drawing.TextTabType.Right:
@@ -987,7 +987,7 @@ namespace Epsitec.Common.Widgets
 
 		protected Drawing.TextTabType GlyphType(GlyphButton button)
 		{
-			// Retourne le glyph d'un bouton.
+			//	Retourne le glyph d'un bouton.
 			switch ( button.GlyphShape )
 			{
 				case Widgets.GlyphShape.TabRight:    return Drawing.TextTabType.Right;
@@ -1001,7 +1001,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void ComboSelectedName(TextFieldCombo combo, string name)
 		{
-			// Modifie le texte d'un combo.
+			//	Modifie le texte d'un combo.
 			if ( name == "" )
 			{
 				combo.SelectedIndex = 0;
@@ -1023,7 +1023,7 @@ namespace Epsitec.Common.Widgets
 
 		protected string ComboSelectedName(TextFieldCombo combo)
 		{
-			// Retourne le texte d'un combo.
+			//	Retourne le texte d'un combo.
 			if ( combo.SelectedIndex <= 0 )  return "";
 			return combo.Items[combo.SelectedIndex] as string;
 		}
@@ -1037,7 +1037,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateGeometry()
 		{
-			// Met à jour la géométrie des widgets de la règle.
+			//	Met à jour la géométrie des widgets de la règle.
 			if ( this.buttonBold == null )  return;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
@@ -1088,7 +1088,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			// Dessine la règle et sa graduation.
+			//	Dessine la règle et sa graduation.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
@@ -1134,7 +1134,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void PaintGrad(Drawing.Graphics graphics)
 		{
-			// Dessine la graduation dans la règle.
+			//	Dessine la graduation dans la règle.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
@@ -1187,7 +1187,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void PaintTab(Drawing.Graphics graphics)
 		{
-			// Dessine les tabulateurs dans la règle.
+			//	Dessine les tabulateurs dans la règle.
 			if ( this.textNavigator == null )  return;
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
@@ -1251,28 +1251,28 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Génère un événement pour dire que la règle a changé.
 		protected void OnChanged()
 		{
+			//	Génère un événement pour dire que la règle a changé.
 			if ( this.Changed != null )  // qq'un écoute ?
 			{
 				this.Changed(this);
 			}
 		}
 		
-		// Génère un événement pour dire que la couleur a été cliquée.
 		protected void OnColorClicked()
 		{
+			//	Génère un événement pour dire que la couleur a été cliquée.
 			if ( this.ColorClicked != null )  // qq'un écoute ?
 			{
 				this.ColorClicked(this);
 			}
 		}
 		
-		// Génère un événement pour dire que la couleur a changé suite à la
-		// navigation dans le texte.
 		protected void OnColorNavigatorChanged()
 		{
+			//	Génère un événement pour dire que la couleur a changé suite à la
+			//	navigation dans le texte.
 			if ( this.ColorNavigatorChanged != null )  // qq'un écoute ?
 			{
 				this.ColorNavigatorChanged(this);

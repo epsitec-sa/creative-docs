@@ -30,9 +30,9 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard.
 			get
 			{
 				return 8 + 22*1.5*2;
@@ -40,9 +40,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonUndo == null )  return;
@@ -65,9 +65,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Bouton pour ouvrir la liste cliqué.
 		private void HandleListClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton pour ouvrir la liste cliqué.
 			if ( this.document.Modifier.ActiveViewer.IsCreating )
 			{
 				return;

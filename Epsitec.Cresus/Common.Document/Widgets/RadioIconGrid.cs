@@ -186,9 +186,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 		
-		// Génère un événement pour dire que la sélection a changé.
 		protected virtual void OnSelectionChanged()
 		{
+			//	Génère un événement pour dire que la sélection a changé.
 			if ( this.SelectionChanged != null )  // qq'un écoute ?
 			{
 				this.SelectionChanged(this);

@@ -70,44 +70,44 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Indique si Drawer a le focus.
 		public bool IsFocused
 		{
+			//	Indique si Drawer a le focus.
 			get { return this.isFocused; }
 			set { this.isFocused = value; }
 		}
 
-		// Mode "aperçu avant impression".
 		public bool PreviewActive
 		{
+			//	Mode "aperçu avant impression".
 			get { return this.previewActive; }
 			set { this.previewActive = value; }
 		}
 
-		// Présence de la grille magnétique.
 		public bool GridActive
 		{
+			//	Présence de la grille magnétique.
 			get { return this.gridActive; }
 			set { this.gridActive = value; }
 		}
 
-		// Pas de la grille magnétique.
 		public Drawing.Point GridStep
 		{
+			//	Pas de la grille magnétique.
 			get { return this.gridStep; }
 			set { this.gridStep = value; }
 		}
 
-		// Force un point sur la grille magnétique.
 		public void SnapGrid(ref Drawing.Point pos)
 		{
+			//	Force un point sur la grille magnétique.
 			if ( !this.gridActive )  return;
 			pos = Drawing.Point.GridAlign(pos, new Drawing.Point(this.gridStep.X/2, this.gridStep.Y/2), this.gridStep);
 		}
 
-		// Force un point sur la grille magnétique.
 		public void SnapGrid(Drawing.Point origin, ref Drawing.Point pos)
 		{
+			//	Force un point sur la grille magnétique.
 			if ( !this.gridActive )  return;
 			pos -= origin;
 			pos = Drawing.Point.GridAlign(pos, new Drawing.Point(0, 0), this.gridStep);
@@ -115,90 +115,90 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Mode caché à moitié (estomper).
 		public bool HideHalfActive
 		{
+			//	Mode caché à moitié (estomper).
 			get { return this.hideHalfActive; }
 			set { this.hideHalfActive = value; }
 		}
 
 
-		// Indique si l'objet Drawer est éditable.
 		public bool IsEditable
 		{
+			//	Indique si l'objet Drawer est éditable.
 			get { return this.isEditable; }
 			set { this.isEditable = value; }
 		}
 
-		// Indique si l'icône est estompée.
 		public bool IsDimmed
 		{
+			//	Indique si l'icône est estompée.
 			get { return this.isDimmed; }
 			set { this.isDimmed = value; }
 		}
 
-		// Indique s'il faut afficher les bbox.
 		public bool IsDrawBoxThin
 		{
+			//	Indique s'il faut afficher les bbox.
 			get { return this.isDrawBoxThin; }
 			set { this.isDrawBoxThin = value; }
 		}
 
-		// Indique s'il faut afficher les bbox.
 		public bool IsDrawBoxGeom
 		{
+			//	Indique s'il faut afficher les bbox.
 			get { return this.isDrawBoxGeom; }
 			set { this.isDrawBoxGeom = value; }
 		}
 
-		// Indique s'il faut afficher les bbox.
 		public bool IsDrawBoxFull
 		{
+			//	Indique s'il faut afficher les bbox.
 			get { return this.isDrawBoxFull; }
 			set { this.isDrawBoxFull = value; }
 		}
 
-		// Taille minimale que doit avoir un objet à sa création.
 		public double MinimalSize
 		{
+			//	Taille minimale que doit avoir un objet à sa création.
 			get { return this.minimalSize/this.scaleX; }
 		}
 
-		// Epaisseur minimale d'un objet pour la détection du coutour.
 		public double MinimalWidth
 		{
+			//	Epaisseur minimale d'un objet pour la détection du coutour.
 			get { return this.minimalWidth/this.scaleX; }
 		}
 
-		// Marge pour fermer un polygone.
 		public double CloseMargin
 		{
+			//	Marge pour fermer un polygone.
 			get { return this.closeMargin/this.scaleX; }
 		}
 
-		// Taille supplémentaire lorsqu'un objet est survolé par la souris.
 		public double HiliteSize
 		{
+			//	Taille supplémentaire lorsqu'un objet est survolé par la souris.
 			get { return this.hiliteSize/this.scaleX; }
 		}
 
-		// Taille d'une poignée.
 		public double HandleSize
 		{
+			//	Taille d'une poignée.
 			get { return this.handleSize/this.scaleX; }
 		}
 
-		// Marge à ajouter à la bbox lors du dessin, pour résoudre le cas des poignées
-		// qui débordent d'un objet avec un trait mince, et du mode Hilite qui augmente
-		// l'épaisseur lors du survol de la souris.
 		public double SelectMarginSize
 		{
+			//	Marge à ajouter à la bbox lors du dessin, pour résoudre le cas des poignées
+			//	qui débordent d'un objet avec un trait mince, et du mode Hilite qui augmente
+			//	l'épaisseur lors du survol de la souris.
 			get { return System.Math.Max(this.handleSize+4, this.hiliteSize)/this.scaleX/2; }
 		}
 
-		// Adapte une couleur en fonction de l'état de l'icône.
 		public Drawing.Color AdaptColor(Drawing.Color color)
 		{
+			//	Adapte une couleur en fonction de l'état de l'icône.
 			if ( this.modifyColor != null )
 			{
 				this.modifyColor(ref color);
@@ -225,9 +225,9 @@ namespace Epsitec.Common.Pictogram.Data
 		public delegate void ModifyColor(ref Drawing.Color color);
 		public ModifyColor modifyColor;
 
-		// Couleur lorsqu'un objet est survolé par la souris.
 		public Drawing.Color HiliteOutlineColor
 		{
+			//	Couleur lorsqu'un objet est survolé par la souris.
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
@@ -235,9 +235,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Couleur lorsqu'un objet est survolé par la souris.
 		public Drawing.Color HiliteSurfaceColor
 		{
+			//	Couleur lorsqu'un objet est survolé par la souris.
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
@@ -246,40 +246,40 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Indique si la touche Ctrl est pressés.
 		public bool IsCtrl
 		{
+			//	Indique si la touche Ctrl est pressés.
 			get { return this.isCtrl; }
 			set { this.isCtrl = value; }
 		}
 
-		// Fixe le point initial pour les contraintes.
 		public void ConstrainFixStarting(Drawing.Point pos)
 		{
+			//	Fixe le point initial pour les contraintes.
 			this.constrainStarting = pos;
 			this.constrainOrigin = pos;
 			this.constrainType = ConstrainType.Normal;
 		}
 
-		// Fixe le point initial pour les contraintes.
 		public void ConstrainFixStarting(Drawing.Point pos, ConstrainType type)
 		{
+			//	Fixe le point initial pour les contraintes.
 			this.constrainStarting = pos;
 			this.constrainOrigin = pos;
 			this.constrainType = type;
 		}
 
-		// Fixe le point initial pour les contraintes.
 		public void ConstrainFixStarting(Drawing.Point origin, Drawing.Point pos, ConstrainType type)
 		{
+			//	Fixe le point initial pour les contraintes.
 			this.constrainStarting = pos;
 			this.constrainOrigin = origin;
 			this.constrainType = type;
 		}
 
-		// Retourne une position éventuellement contrainte.
 		public void ConstrainSnapPos(ref Drawing.Point pos)
 		{
+			//	Retourne une position éventuellement contrainte.
 			if ( this.constrainType == ConstrainType.None || !this.isCtrl )  return;
 
 			if ( this.constrainType == ConstrainType.Normal )
@@ -335,17 +335,17 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Enlève le point initial pour les contraintes.
 		public bool ConstrainDelStarting()
 		{
+			//	Enlève le point initial pour les contraintes.
 			if ( this.constrainType == ConstrainType.None )  return false;
 			this.constrainType = ConstrainType.None;
 			return true;
 		}
 
-		// Dessine les contraintes.
 		public void DrawConstrain(Drawing.Graphics graphics, Drawing.Size size)
 		{
+			//	Dessine les contraintes.
 			if ( this.constrainType == ConstrainType.None || !this.isCtrl )  return;
 
 			graphics.LineWidth = 1.0/this.scaleX;
@@ -383,69 +383,69 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Retourne la couleur pour indiquer une sélection multiple.
 		static public Drawing.Color ColorMulti
 		{
+			//	Retourne la couleur pour indiquer une sélection multiple.
 			get { return Drawing.Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
 		}
 
-		// Retourne la couleur pour indiquer un style.
 		static public Drawing.Color ColorStyle
 		{
+			//	Retourne la couleur pour indiquer un style.
 			get { return Drawing.Color.FromARGB(1.0, 0.0, 0.5, 1.0); }  // bleu
 		}
 
-		// Retourne la couleur pour indiquer un style.
 		static public Drawing.Color ColorStyleBack
 		{
+			//	Retourne la couleur pour indiquer un style.
 			get { return Drawing.Color.FromARGB(0.15, 0.0, 0.5, 1.0); }  // bleu
 		}
 
-		// Retourne la couleur du pourtour d'une poignée.
 		static public Drawing.Color ColorHandleOutline
 		{
+			//	Retourne la couleur du pourtour d'une poignée.
 			get { return Drawing.Color.FromARGB(1.0, 0.0, 0.0, 0.0); }  // noir
 		}
 
-		// Retourne la couleur d'une poignée principale.
 		static public Drawing.Color ColorHandleMain
 		{
+			//	Retourne la couleur d'une poignée principale.
 			get { return Drawing.Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
 		}
 
-		// Retourne la couleur d'une poignée de début/fin.
 		static public Drawing.Color ColorHandleStart
 		{
+			//	Retourne la couleur d'une poignée de début/fin.
 			get { return Drawing.Color.FromARGB(1.0, 0.0, 1.0, 0.0); }  // vert
 		}
 
-		// Retourne la couleur d'une poignée de propriété.
 		static public Drawing.Color ColorHandleProperty
 		{
+			//	Retourne la couleur d'une poignée de propriété.
 			get { return Drawing.Color.FromARGB(1.0, 0.0, 1.0, 1.0); }  // cyan
 		}
 
-		// Retourne la couleur d'une poignée de sélection globale.
 		static public Drawing.Color ColorHandleGlobal
 		{
+			//	Retourne la couleur d'une poignée de sélection globale.
 			get { return Drawing.Color.FromARGB(1.0, 1.0, 1.0, 1.0); }  // blanc
 		}
 
-		// Retourne la couleur pour dessiner une contrainte.
 		static public Drawing.Color ColorConstrain
 		{
+			//	Retourne la couleur pour dessiner une contrainte.
 			get { return Drawing.Color.FromARGB(0.5, 1.0, 0.0, 0.0); }  // rouge
 		}
 
-		// Retourne la couleur du cadre pendant l'édition.
 		static public Drawing.Color ColorFrameEdit
 		{
+			//	Retourne la couleur du cadre pendant l'édition.
 			get { return Drawing.Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
 		}
 
-		// Retourne la couleur des sélections pendant l'édition.
 		static public Drawing.Color ColorSelectEdit
 		{
+			//	Retourne la couleur des sélections pendant l'édition.
 			get { return Drawing.Color.FromARGB(1.0, 1.0, 1.0, 0.0); }  // jaune
 		}
 

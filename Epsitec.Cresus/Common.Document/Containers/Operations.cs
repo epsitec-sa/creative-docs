@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.tabIndex = 0;
 
-			// Déplacement.
+			//	Déplacement.
 			this.CreateHeader(ref this.boxMove, ref this.toolBarMove, Res.Strings.Action.MoveMain);
 			this.CreateFieldMove(this.toolBarMove, ref this.fieldMoveH, Res.Strings.Action.MoveValueX);
 			this.CreateButton(this.toolBarMove, ref this.buttonMoveHi, "MoveHi", Res.Strings.Action.MoveLeft,  new MessageEventHandler(this.HandleButtonMoveHi));
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateButton(this.toolBarMove, ref this.buttonMoveVi, "MoveVi", Res.Strings.Action.MoveDown, new MessageEventHandler(this.HandleButtonMoveVi));
 			this.CreateButton(this.toolBarMove, ref this.buttonMoveV,  "MoveV",  Res.Strings.Action.MoveUp,   new MessageEventHandler(this.HandleButtonMoveV));
 
-			// Rotation.
+			//	Rotation.
 			this.CreateHeader(ref this.boxRot, ref this.toolBarRot, Res.Strings.Action.RotateMain);
 			this.CreateButton(this.toolBarRot, ref this.buttonRotate90,  "Rotate90",  Res.Strings.Action.Rotate90,  new MessageEventHandler(this.HandleButtonRotate90));
 			this.CreateButton(this.toolBarRot, ref this.buttonRotate180, "Rotate180", Res.Strings.Action.Rotate180, new MessageEventHandler(this.HandleButtonRotate180));
@@ -34,12 +34,12 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateButton(this.toolBarRot, ref this.buttonRotate,  "RotateFreeCCW", Res.Strings.Action.RotateFreeCCW, new MessageEventHandler(this.HandleButtonRotate));
 			this.CreateButton(this.toolBarRot, ref this.buttonRotatei, "RotateFreeCW",  Res.Strings.Action.RotateFreeCW,  new MessageEventHandler(this.HandleButtonRotatei));
 
-			// Miroir.
+			//	Miroir.
 			this.CreateHeader(ref this.boxMirror, ref this.toolBarMirror, Res.Strings.Action.MirrorMain);
 			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorH, "MirrorH", Res.Strings.Action.MirrorH, new MessageEventHandler(this.HandleButtonMirrorH));
 			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorV, "MirrorV", Res.Strings.Action.MirrorV, new MessageEventHandler(this.HandleButtonMirrorV));
 
-			// Echelle.
+			//	Echelle.
 			this.CreateHeader(ref this.boxScale, ref this.toolBarScale, Res.Strings.Action.ScaleMain);
 			this.CreateButton(this.toolBarScale, ref this.buttonScaleDiv2, "ScaleDiv2", Res.Strings.Action.ScaleDiv2, new MessageEventHandler(this.HandleButtonScaleDiv2));
 			this.CreateButton(this.toolBarScale, ref this.buttonScaleMul2, "ScaleMul2", Res.Strings.Action.ScaleMul2, new MessageEventHandler(this.HandleButtonScaleMul2));
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateButton(this.toolBarScale, ref this.buttonScaleDivFree, "ScaleDivFree", Res.Strings.Action.ScaleDivFree, new MessageEventHandler(this.HandleButtonScaleDivFree));
 			this.CreateButton(this.toolBarScale, ref this.buttonScaleMulFree, "ScaleMulFree", Res.Strings.Action.ScaleMulFree, new MessageEventHandler(this.HandleButtonScaleMulFree));
 
-			// Alignement.
+			//	Alignement.
 			this.CreateHeader(ref this.boxAlign, ref this.toolBarAlign, Res.Strings.Action.Align);
 			this.CreateButton(this.toolBarAlign, ref this.buttonAlignGrid,    "AlignGrid",    Res.Strings.Action.AlignGrid,    new MessageEventHandler(this.HandleButtonAlignGrid));
 			this.CreateSeparator(this.toolBarAlign);
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateButton(this.toolBarAlign, ref this.buttonAlignCenterY, "AlignCenterY", Res.Strings.Action.AlignCenterY, new MessageEventHandler(this.HandleButtonAlignCenterY));
 			this.CreateButton(this.toolBarAlign, ref this.buttonAlignBottom,  "AlignBottom",  Res.Strings.Action.AlignBottom,  new MessageEventHandler(this.HandleButtonAlignBottom));
 
-			// Distribution.
+			//	Distribution.
 			this.CreateHeader(ref this.boxShare, ref this.toolBarShare, Res.Strings.Action.Share);
 			this.CreateButton(this.toolBarShare, ref this.buttonShareSpaceX,  "ShareSpaceX",  Res.Strings.Action.ShareSpaceX,  new MessageEventHandler(this.HandleButtonShareSpaceX));
 			this.CreateButton(this.toolBarShare, ref this.buttonShareLeft,    "ShareLeft",    Res.Strings.Action.ShareLeft,    new MessageEventHandler(this.HandleButtonShareLeft));
@@ -72,12 +72,12 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateButton(this.toolBarShare, ref this.buttonShareCenterY, "ShareCenterY", Res.Strings.Action.ShareCenterY, new MessageEventHandler(this.HandleButtonShareCenterY));
 			this.CreateButton(this.toolBarShare, ref this.buttonShareBottom,  "ShareBottom",  Res.Strings.Action.ShareBottom,  new MessageEventHandler(this.HandleButtonShareBottom));
 
-			// Ajustements.
+			//	Ajustements.
 			this.CreateHeader(ref this.boxAdjust, ref this.toolBarAdjust, Res.Strings.Action.Adjust);
 			this.CreateButton(this.toolBarAdjust, ref this.buttonAdjustWidth,  "AdjustWidth",  Res.Strings.Action.AdjustWidth,  new MessageEventHandler(this.HandleButtonAdjustWidth));
 			this.CreateButton(this.toolBarAdjust, ref this.buttonAdjustHeight, "AdjustHeight", Res.Strings.Action.AdjustHeight, new MessageEventHandler(this.HandleButtonAdjustHeight));
 
-			// Couleurs.
+			//	Couleurs.
 			this.CreateHeader(ref this.boxColor, ref this.toolBarColor, Res.Strings.Action.Color);
 			this.CreateButton(this.toolBarColor, ref this.buttonColorToRGB,  "ColorToRGB",  Res.Strings.Action.ColorToRGB,  new MessageEventHandler(this.HandleButtonColorToRGB));
 			this.CreateButton(this.toolBarColor, ref this.buttonColorToCMYK, "ColorToCMYK", Res.Strings.Action.ColorToCMYK, new MessageEventHandler(this.HandleButtonColorToCMYK));
@@ -90,9 +90,9 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateButton(this.toolBarColor, ref this.buttonColorFillLight,   "ColorFillLight",   Res.Strings.Action.ColorFillLight,   new MessageEventHandler(this.HandleButtonColorFillLight));
 		}
 
-		// Crée l'en-tête d'un groupe.
 		protected void CreateHeader(ref GroupBox group, ref HToolBar bar, string title)
 		{
+			//	Crée l'en-tête d'un groupe.
 			group = new GroupBox(this);
 			group.Height = 45;
 			group.Text = title;
@@ -107,9 +107,9 @@ namespace Epsitec.Common.Document.Containers
 			bar.TabNavigation = Widget.TabNavigationMode.ForwardTabActive;
 		}
 
-		// Crée un IconButton. 
 		protected void CreateButton(HToolBar bar, ref IconButton button, string icon, string tooltip, MessageEventHandler handler)
 		{
+			//	Crée un IconButton. 
 			button = new IconButton(Misc.Icon(icon));
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
@@ -118,9 +118,9 @@ namespace Epsitec.Common.Document.Containers
 			bar.Items.Add(button);
 		}
 
-		// Crée un champ éditable pour un déplacement.
 		protected void CreateFieldMove(HToolBar bar, ref TextFieldReal field, string tooltip)
 		{
+			//	Crée un champ éditable pour un déplacement.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealDimension(field);
 			field.Width = 50;
@@ -138,9 +138,9 @@ namespace Epsitec.Common.Document.Containers
 			bar.Items.Add(field);
 		}
 
-		// Crée un champ éditable pour une rotation.
 		protected void CreateFieldRot(HToolBar bar, ref TextFieldReal field, string tooltip)
 		{
+			//	Crée un champ éditable pour une rotation.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealAngle(field);
 			field.Width = 50;
@@ -151,9 +151,9 @@ namespace Epsitec.Common.Document.Containers
 			bar.Items.Add(field);
 		}
 
-		// Crée un champ éditable pour une échelle.
 		protected void CreateFieldScale(HToolBar bar, ref TextFieldReal field, string tooltip)
 		{
+			//	Crée un champ éditable pour une échelle.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealScalar(field);
 			field.Width = 50;
@@ -169,9 +169,9 @@ namespace Epsitec.Common.Document.Containers
 			bar.Items.Add(field);
 		}
 
-		// Crée un champ éditable pour une couleur.
 		protected void CreateFieldColor(HToolBar bar, ref TextFieldReal field, string tooltip)
 		{
+			//	Crée un champ éditable pour une couleur.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealPercent(field);
 			field.Width = 50;
@@ -185,16 +185,16 @@ namespace Epsitec.Common.Document.Containers
 			bar.Items.Add(field);
 		}
 
-		// Crée un séparateur.
 		protected void CreateSeparator(HToolBar bar)
 		{
+			//	Crée un séparateur.
 			bar.Items.Add(new IconSeparator());
 		}
 		
 
-		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
+			//	Effectue la mise à jour du contenu.
 			bool enabled  = (this.document.Modifier.TotalSelected > 0);
 			bool enabled2 = (this.document.Modifier.TotalSelected > 1);
 			bool enabled3 = (this.document.Modifier.TotalSelected > 2);

@@ -51,18 +51,18 @@ namespace Epsitec.Common.Document.Objects
 			this.selectBox = Drawing.Rectangle.Empty;
 		}
 
-		// Crée un nouveau TextFlow pour l'objet.
 		public void NewTextFlow()
 		{
+			//	Crée un nouveau TextFlow pour l'objet.
 			TextFlow flow = new TextFlow(this.document);
 			this.document.TextFlows.Add(flow);
 			this.TextFlow = flow;
 			flow.Add(this, null, true);
 		}
 
-		// TextFlow associé à l'objet.
 		public TextFlow TextFlow
 		{
+			//	TextFlow associé à l'objet.
 			get
 			{
 				return this.textFlow;
@@ -81,9 +81,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Donne le TextFrame associé à l'objet.
 		public Text.ITextFrame TextFrame
 		{
+			//	Donne le TextFrame associé à l'objet.
 			get
 			{
 				return this.textFrame;
@@ -120,15 +120,15 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectTextBox"); }
 		}
 
-		// MetaNavigator associé au TextFlow.
 		protected TextNavigator2 MetaNavigator
 		{
+			//	MetaNavigator associé au TextFlow.
 			get
 			{
 				if ( this.textFlow == null )
@@ -142,9 +142,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Détecte si la souris est sur l'objet pour l'éditer.
 		public override DetectEditType DetectEdit(Point pos)
 		{
+			//	Détecte si la souris est sur l'objet pour l'éditer.
 			if ( this.edited )
 			{
 				DetectEditType handle = this.DetectFlowHandle(pos);
@@ -156,9 +156,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Début du déplacement d'une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -183,9 +183,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= 4 )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
@@ -232,25 +232,25 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.NotifyAreaFlow();
 		}
 
-		// Effectue le déplacement de tout l'objet.
 		public override void MoveAllProcess(Point move)
 		{
+			//	Effectue le déplacement de tout l'objet.
 			base.MoveAllProcess(move);
 			this.UpdateGeometry();
 		}
 
-		// Déplace globalement l'objet.
 		public override void MoveGlobalProcess(Selector selector)
 		{
+			//	Déplace globalement l'objet.
 			base.MoveGlobalProcess(selector);
 			this.UpdateGeometry();
 			this.HandlePropertiesUpdate();
 			this.textFlow.NotifyAreaFlow();
 		}
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
+			//	Début de la création d'un objet.
 			drawingContext.ConstrainFlush();
 			drawingContext.ConstrainAddHomo(pos);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
@@ -259,9 +259,9 @@ namespace Epsitec.Common.Document.Objects
 			this.isCreating = true;
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -271,9 +271,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			//	Fin de la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainDelStarting();
 			drawingContext.MagnetClearStarting();
 
-			// Crée les 2 autres poignées dans les coins opposés.
+			//	Crée les 2 autres poignées dans les coins opposés.
 			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
 			Point p1 = rect.BottomLeft;
 			Point p2 = rect.TopRight;
@@ -297,53 +297,53 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
-		// Indique s'il faut sélectionner l'objet après sa création.
 		public override bool EditAfterCreation()
 		{
+			//	Indique s'il faut sélectionner l'objet après sa création.
 			return true;
 		}
 
-		// Ajoute toutes les fontes utilisées par l'objet dans une liste.
 		public override void FillFontFaceList(System.Collections.ArrayList list)
 		{
+			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
 			//?this.textLayout.FillFontFaceList(list);
 		}
 
-		// Ajoute tous les caractères utilisés par l'objet dans une table.
 		public override void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
+			//	Ajoute tous les caractères utilisés par l'objet dans une table.
 			this.charactersTable = table;
 			this.DrawText(port, drawingContext, InternalOperation.CharactersTable);
 			this.charactersTable = null;
 		}
 
-		// Retourne la bounding réelle, en fonction des caractères contenus.
 		public override Drawing.Rectangle RealBoundingBox()
 		{
+			//	Retourne la bounding réelle, en fonction des caractères contenus.
 			this.mergingBoundingBox = Drawing.Rectangle.Empty;
 			this.DrawText(null, null, InternalOperation.RealBoundingBox);
 
 			return this.mergingBoundingBox;
 		}
 
-		// Indique si un objet est éditable.
 		public override bool IsEditable
 		{
+			//	Indique si un objet est éditable.
 			get { return true; }
 		}
 
 
-		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(Objects.Abstract src)
 		{
+			//	Reprend toutes les caractéristiques d'un objet.
 			base.CloneObject(src);
 
 			TextBox2 srcText = src as TextBox2;
@@ -363,9 +363,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Met les commandes pour l'objet dans une liste.
 		public override void PutCommands(System.Collections.ArrayList list)
 		{
+			//	Met les commandes pour l'objet dans une liste.
 			base.PutCommands(list);
 
 			if ( this.document.Modifier.Tool == "ToolEdit" )
@@ -403,9 +403,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Gestion d'un événement pendant l'édition.
 		public override bool EditProcessMessage(Message message, Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			if ( this.transform == null )  return false;
 
 			if ( message.IsKeyType )
@@ -443,8 +443,8 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else
 			{
-				// Si la souris n'est pas dans notre texte frame, on utilise le text
-				// frame correspondant à sa position (s'il y en a un).
+				//	Si la souris n'est pas dans notre texte frame, on utilise le text
+				//	frame correspondant à sa position (s'il y en a un).
 				
 				frame = this.textFlow.FindTextFrame(pos, out ppos);
 				
@@ -469,9 +469,9 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Gestion des événements clavier.
 		protected bool EditProcessKeyPress(Message message)
 		{
+			//	Gestion des événements clavier.
 			if ( message.IsCtrlPressed )
 			{
 				switch ( message.KeyCode )
@@ -485,9 +485,9 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Gestion de la touche tab.
 		protected bool ProcessTabKey()
 		{
+			//	Gestion de la touche tab.
 			string tag = this.textFlow.TextNavigator.FindInsertionTabTag();
 			
 			if ( tag == null )  return false;
@@ -496,9 +496,9 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Détecte la "poignée" du flux de l'objet.
 		protected DetectEditType DetectFlowHandle(Point pos)
 		{
+			//	Détecte la "poignée" du flux de l'objet.
 			DrawingContext drawingContext = this.document.Modifier.ActiveViewer.DrawingContext;
 
 			Point prevP1;
@@ -586,9 +586,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
-		// Insère un texte dans le pavé en édition.
 		public override bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
+			//	Insère un texte dans le pavé en édition.
 			this.MetaNavigator.EndSelection();
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
 
@@ -613,9 +613,9 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Insère un texte dans le pavé en édition.
 		public override bool EditInsertText(Unicode.Code code)
 		{
+			//	Insère un texte dans le pavé en édition.
 			this.MetaNavigator.EndSelection();
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
 
@@ -626,9 +626,9 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Insère un texte dans le pavé en édition.
 		public override bool EditInsertText(Text.Properties.BreakProperty brk)
 		{
+			//	Insère un texte dans le pavé en édition.
 			this.MetaNavigator.EndSelection();
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
 
@@ -639,9 +639,9 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Insère un glyphe dans le pavé en édition.
 		public override bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
 		{
+			//	Insère un glyphe dans le pavé en édition.
 			this.MetaNavigator.EndSelection();
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Alternate);
 
@@ -663,9 +663,9 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Retourne le glyphe du caractère sélectionné.
 		public override bool EditGetSelectedGlyph(out int code, out int glyph, out OpenType.Font font)
 		{
+			//	Retourne le glyphe du caractère sélectionné.
 			code = 0;
 			glyph = 0;
 			font = null;
@@ -716,26 +716,26 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Met à jour le TextFrame en fonction du numéro de la page.
 		protected override void UpdatePageNumber()
 		{
+			//	Met à jour le TextFrame en fonction du numéro de la page.
 			this.textFrame.PageNumber = this.pageNumber+1;
 		}
 
 
 		#region TextFormat
-		// Retourne tous les tags des tabulateurs.
 		public override string[] TextTabTags
 		{
+			//	Retourne tous les tags des tabulateurs.
 			get
 			{
 				return this.textFlow.TextNavigator.GetAllTabTags();
 			}
 		}
 
-		// Crée un nouveau tabulateur dans le texte.
 		public override string NewTextTab(double pos, TextTabType type)
 		{
+			//	Crée un nouveau tabulateur dans le texte.
 			double dispo = 0.0;
 			string dockingMark = Widgets.HRuler.ConvType2Mark(type);
 			TabPositionMode positionMode = TabPositionMode.Absolute;
@@ -751,21 +751,21 @@ namespace Epsitec.Common.Document.Objects
 			return tab.TabTag;
 		}
 
-		// Supprime un tabulateur du texte.
 		public override void DeleteTextTab(string tag)
 		{
+			//	Supprime un tabulateur du texte.
 			this.MetaNavigator.RemoveTab(tag);
 		}
 
-		// Renomme plusieurs tabulateurs du texte.
 		public override bool RenameTextTabs(string[] oldTags, string newTag)
 		{
+			//	Renomme plusieurs tabulateurs du texte.
 			return this.textFlow.TextNavigator.RenameTabs(oldTags, newTag);
 		}
 
-		// Donne un tabulateur du texte.
 		public override void GetTextTab(string tag, out double pos, out TextTabType type)
 		{
+			//	Donne un tabulateur du texte.
 			Text.TabList list = this.document.TextContext.TabList;
 			Text.Properties.TabProperty tab = list.GetTabProperty(tag);
 
@@ -790,9 +790,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Modifie un tabulateur du texte.
 		public override void SetTextTab(ref string tag, double pos, TextTabType type, bool firstChange)
 		{
+			//	Modifie un tabulateur du texte.
 			double dispo = 0.0;
 			string dockingMark = Widgets.HRuler.ConvType2Mark(type);
 			TabPositionMode positionMode = TabPositionMode.Absolute;
@@ -803,10 +803,10 @@ namespace Epsitec.Common.Document.Objects
 			
 			if ( firstChange && Text.TabList.GetTabClass(tag) == Text.TabClass.Auto )
 			{
-				// Les tabulateurs "automatiques" ne sont pas liés à un style. Leur
-				// modification ne doit toucher que le paragraphe courant (ou la
-				// sélection en cours), c'est pourquoi on crée une copie avant de
-				// procéder à des modifications :
+				//	Les tabulateurs "automatiques" ne sont pas liés à un style. Leur
+				//	modification ne doit toucher que le paragraphe courant (ou la
+				//	sélection en cours), c'est pourquoi on crée une copie avant de
+				//	procéder à des modifications :
 				
 				Text.TabList list = this.document.TextContext.TabList;
 				
@@ -825,9 +825,9 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.UpdateTabs();  // TODO: devrait être inutile
 		}
 
-		// Crée tous les panneaux pour l'édition.
 		public override System.Collections.ArrayList CreateTextPanels(string filter)
 		{
+			//	Crée tous les panneaux pour l'édition.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
 			if ( TextPanels.Abstract.IsFilterShow("Justif", filter) )
@@ -893,9 +893,9 @@ namespace Epsitec.Common.Document.Objects
 			return list;
 		}
 
-		// Donne la liste des propriétés.
 		protected Text.Property[] GetTextProperties(bool accumulated)
 		{
+			//	Donne la liste des propriétés.
 			if ( accumulated )
 			{
 				return this.textFlow.TextNavigator.AccumulatedTextProperties;
@@ -906,9 +906,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Indique l'existance d'un style.
 		protected bool IsExistingStyle(string name)
 		{
+			//	Indique l'existance d'un style.
 			Text.TextStyle[] styles = this.textFlow.TextNavigator.TextStyles;
 			foreach ( Text.TextStyle style in styles )
 			{
@@ -917,9 +917,9 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Modifie un style de paragraphe.
 		protected void ApplyParagraphStyle(string name, string exclude, bool state)
 		{
+			//	Modifie un style de paragraphe.
 			Text.TextStyle style = this.document.TextContext.StyleList[name, Text.TextStyleClass.Paragraph];
 			if ( style == null )  return;
 
@@ -943,15 +943,15 @@ namespace Epsitec.Common.Document.Objects
 			this.MetaNavigator.SetParagraphStyles(styles);
 		}
 
-		// Attache l'objet au différents wrappers.
 		protected override void EditWrappersAttach()
 		{
+			//	Attache l'objet au différents wrappers.
 			this.document.Wrappers.WrappersAttach(this.textFlow);
 		}
 
-		// Met à jour les règles pour le texte en édition.
 		protected override void UpdateTextRulers()
 		{
+			//	Met à jour les règles pour le texte en édition.
 			if ( this.edited )
 			{
 				this.textFlow.UpdateTextRulers();
@@ -959,35 +959,35 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
-		// Donne la zone contenant le curseur d'édition.
 		public override Drawing.Rectangle EditCursorBox
 		{
+			//	Donne la zone contenant le curseur d'édition.
 			get
 			{
 				return this.cursorBox;
 			}
 		}
 
-		// Donne la zone contenant le texte sélectionné.
 		public override Drawing.Rectangle EditSelectBox
 		{
+			//	Donne la zone contenant le texte sélectionné.
 			get
 			{
 				return this.selectBox;
 			}
 		}
 
-		// Gestion d'un événement pendant l'édition.
 		public override void EditMouseDownMessage(Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			//?pos = this.transform.TransformInverse(pos);
 			//?this.textNavigator.MouseDownMessage(pos);
 		}
 
 
-		// Construit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Construit les formes de l'objet.
 			Path path = this.PathBuild();
 
 			bool flowHandles = this.edited && drawingContext != null;
@@ -998,19 +998,19 @@ namespace Epsitec.Common.Document.Objects
 			Shape[] shapes = new Shape[totalShapes];
 			int i = 0;
 			
-			// Forme de la surface.
+			//	Forme de la surface.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
 			shapes[i].SetPropertySurface(port, this.PropertyFillGradient);
 			i ++;
 
-			// Trait du rectangle.
+			//	Trait du rectangle.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
 			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 			i ++;
 
-			// Caractères du texte.
+			//	Caractères du texte.
 			shapes[i] = new Shape();
 			shapes[i].SetTextObject(this);
 			i ++;
@@ -1032,7 +1032,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Rectangle complet pour bbox et détection.
+			//	Rectangle complet pour bbox et détection.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
 			shapes[i].Type = Type.Surface;
@@ -1042,9 +1042,9 @@ namespace Epsitec.Common.Document.Objects
 			return shapes;
 		}
 
-		// Crée le chemin de l'objet.
 		protected Path PathBuild()
 		{
+			//	Crée le chemin de l'objet.
 			Point p1 = this.Handle(0).Position;
 			Point p2 = new Point();
 			Point p3 = this.Handle(1).Position;
@@ -1072,9 +1072,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin des "poignées" du flux de l'objet.
 		protected Path PathFlowHandlesStroke(IPaintPort port, DrawingContext drawingContext)
 		{
+			//	Crée le chemin des "poignées" du flux de l'objet.
 			Point prevP1;
 			Point prevP2;
 			Point prevP3;
@@ -1096,9 +1096,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin des "poignées" du flux de l'objet.
 		protected Path PathFlowHandlesSurface(IPaintPort port, DrawingContext drawingContext)
 		{
+			//	Crée le chemin des "poignées" du flux de l'objet.
 			Point prevP1;
 			Point prevP2;
 			Point prevP3;
@@ -1129,9 +1129,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin d'une "poignée" du flux de l'objet.
 		protected void PathFlowIcon(Path path, Point p1, Point p2, Point p3, Point p4, IPaintPort port, DrawingContext drawingContext, bool plus)
 		{
+			//	Crée le chemin d'une "poignée" du flux de l'objet.
 			if ( this.direction%90.0 == 0.0 )
 			{
 				this.Align(ref p1, port);
@@ -1218,9 +1218,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Calcules les 4 coins de la poignée "pavé précédent".
 		protected void CornersFlowPrev(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
 		{
+			//	Calcules les 4 coins de la poignée "pavé précédent".
 			Point c1, c2, c3, c4;
 			this.Corners(out c1, out c2, out c3, out c4);
 
@@ -1231,9 +1231,9 @@ namespace Epsitec.Common.Document.Objects
 			p4 = p3 + (p2-p1);
 		}
 
-		// Calcules les 4 coins de la poignée "pavé suivant".
 		protected void CornersFlowNext(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
 		{
+			//	Calcules les 4 coins de la poignée "pavé suivant".
 			Point c1, c2, c3, c4;
 			this.Corners(out c1, out c2, out c3, out c4);
 
@@ -1255,9 +1255,9 @@ namespace Epsitec.Common.Document.Objects
 			p.Y = y;
 		}
 
-		// Calcules les 4 coins.
 		protected void Corners(out Point p1, out Point p2, out Point p3, out Point p4)
 		{
+			//	Calcules les 4 coins.
 			Point h0, h1, h2, h3;
 
 			if ( this.handles.Count < 4 )
@@ -1312,9 +1312,9 @@ namespace Epsitec.Common.Document.Objects
 #endif
 		}
 
-		// Met à jour le TextFrame en fonction des dimensions du pavé.
 		protected void UpdateTextFrame()
 		{
+			//	Met à jour le TextFrame en fonction des dimensions du pavé.
 			Point p1, p2, p3, p4;
 			this.Corners(out p1, out p2, out p3, out p4);
 			
@@ -1333,9 +1333,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 		
-		// Détermine si un point se trouve dans le texte frame.
 		public bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
 		{
+			//	Détermine si un point se trouve dans le texte frame.
 			if ( this.transform == null )
 			{
 				ppos = Drawing.Point.Empty;
@@ -1354,15 +1354,15 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Dessine le texte du pavé.
 		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
+			//	Dessine le texte du pavé.
 			this.DrawText(port, drawingContext, InternalOperation.Painting);
 		}
 
-		// Effectue une opération quelconque sur le texte du pavé.
 		protected void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)
 		{
+			//	Effectue une opération quelconque sur le texte du pavé.
 			this.internalOperation = op;
 
 			this.cursorBox = Drawing.Rectangle.Empty;
@@ -1425,8 +1425,8 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.textFlow.HasActiveTextBox && !this.textFlow.TextNavigator.HasRealSelection && this.graphics != null && this.internalOperation == InternalOperation.Painting )
 			{
-				// Peint le curseur uniquement si l'objet est en édition, qu'il n'y a pas
-				// de sélection et que l'on est en train d'afficher à l'écran.
+				//	Peint le curseur uniquement si l'objet est en édition, qu'il n'y a pas
+				//	de sélection et que l'on est en train d'afficher à l'écran.
 				
 				Text.ITextFrame frame;
 				double cx, cy, ascender, descender;
@@ -1538,8 +1538,8 @@ namespace Epsitec.Common.Document.Objects
 				System.Diagnostics.Debug.Assert(mapping != null);
 				Text.ITextFrame frame = layout.Frame;
 
-				// Vérifions d'abord que le mapping du texte vers les glyphes est
-				// correct et correspond à quelque chose de valide :
+				//	Vérifions d'abord que le mapping du texte vers les glyphes est
+				//	correct et correspond à quelque chose de valide :
 				int  offset = 0;
 				bool isInSelection = false;
 				double selX = 0;
@@ -1598,10 +1598,10 @@ namespace Epsitec.Common.Document.Objects
 					{
 						if ( (tArray[i] & this.markerSelected) != 0 )
 						{
-							// Le caractère considéré est sélectionné.
+							//	Le caractère considéré est sélectionné.
 							if ( isInSelection == false )
 							{
-								// C'est le premier caractère d'une tranche. Il faut mémoriser son début :
+								//	C'est le premier caractère d'une tranche. Il faut mémoriser son début :
 								double xx = x1 + ((x2 - x1) * i) / numChars;
 								isInSelection = true;
 								selX = xx;
@@ -1611,7 +1611,7 @@ namespace Epsitec.Common.Document.Objects
 						{
 							if ( isInSelection )
 							{
-								// Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
+								//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
 								double xx = x1 + ((x2 - x1) * i) / numChars;
 								isInSelection = false;
 
@@ -1628,7 +1628,7 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( isInSelection )
 				{
-					// Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
+					//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
 					double xx = x2;
 					isInSelection = false;
 
@@ -1640,7 +1640,7 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null )
 				{
-					// Dessine les rectangles correspondant à la sélection.
+					//	Dessine les rectangles correspondant à la sélection.
 					foreach ( Drawing.Rectangle rect in selRectList )
 					{
 						this.graphics.AddFilledRectangle(rect);
@@ -1649,7 +1649,7 @@ namespace Epsitec.Common.Document.Objects
 					this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
 				}
 
-				// Dessine le texte.
+				//	Dessine le texte.
 				this.RenderText(font, size, glyphs, iArray, x, y, sx, sy, RichColor.Parse(color), isSpace);
 			}
 			
@@ -1699,9 +1699,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Marque une tranche sélectionnée.
 		protected void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, double x, double selX)
 		{
+			//	Marque une tranche sélectionnée.
 			if ( this.graphics == null )  return;
 
 			double dx = x - selX;
@@ -1717,9 +1717,9 @@ namespace Epsitec.Common.Document.Objects
 			selRectList.Add(rect);
 		}
 
-		// Effectue le rendu des caractères.
 		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, byte[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
 		{
+			//	Effectue le rendu des caractères.
 			if ( this.internalOperation == InternalOperation.Painting )
 			{
 				if ( this.graphics != null )  // affichage sur écran ?
@@ -1904,8 +1904,8 @@ namespace Epsitec.Common.Document.Objects
 							this.RenderXline(context, xline, starting, ending);  // dessine le trait
 							process.Add(new XlineInfo(xline, color));  // le trait est fait
 							
-							// Cherche encore d'autres occurrences de la même propriété dans
-							// la même ligne...
+							//	Cherche encore d'autres occurrences de la même propriété dans
+							//	la même ligne...
 							
 							starting = null;
 							ending   = null;
@@ -1915,8 +1915,8 @@ namespace Epsitec.Common.Document.Objects
 				}
 				while ( found );
 				
-				// Saute les enregistrements de la ligne courante et reprend tout depuis
-				// le début de la ligne suivante:
+				//	Saute les enregistrements de la ligne courante et reprend tout depuis
+				//	le début de la ligne suivante:
 				
 				while ( lineStart<records.Length )
 				{
@@ -1927,9 +1927,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Dessine un trait souligné, surligné ou biffé.
 		protected void RenderXline(Text.Layout.Context context, Text.Properties.AbstractXlineProperty xline, Text.Layout.XlineRecord starting, Text.Layout.XlineRecord ending)
 		{
+			//	Dessine un trait souligné, surligné ou biffé.
 			if ( ending.X <= starting.X )  return;
 			
 			double y = starting.Y;
@@ -1960,9 +1960,9 @@ namespace Epsitec.Common.Document.Objects
 			this.port.PaintSurface(path);
 		}
 
-		// Cherche si une propriété Xline est déjà dans une liste.
 		protected static bool XlineContains(System.Collections.ArrayList process, Text.Properties.AbstractXlineProperty xline, Text.Properties.FontColorProperty color)
 		{
+			//	Cherche si une propriété Xline est déjà dans une liste.
 			foreach ( XlineInfo existing in process )
 			{
 				if ( Text.Property.CompareEqualContents(existing.Xline, xline) &&
@@ -2006,31 +2006,31 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		// Retourne le chemin géométrique de l'objet pour les constructions
-		// magnétiques.
 		public override Path GetMagnetPath()
 		{
+			//	Retourne le chemin géométrique de l'objet pour les constructions
+			//	magnétiques.
 			return this.PathBuild();
 		}
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 			info.AddValue("TextFlow", this.textFlow);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected TextBox2(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 			this.textFlow = (TextFlow) info.GetValue("TextFlow", typeof(TextFlow));
 		}
 
-		// Vérifie si tous les fichiers existent.
 		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
 		{
+			//	Vérifie si tous les fichiers existent.
 			//?Common.Document.Objects.Abstract.ReadCheckFonts(fonts, warnings, this.textLayout);
 		}
 		
@@ -2050,16 +2050,16 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		// Met à jour après un changement de géométrie de l'objet.
 		public void UpdateGeometry()
 		{
+			//	Met à jour après un changement de géométrie de l'objet.
 			this.UpdateTextFrame();
 			this.UpdateTextLayout();
 		}
 
-		// Met à jour le pavé en fonction des lignes magnétiques.
 		public void UpdateTextGrid(bool notify)
 		{
+			//	Met à jour le pavé en fonction des lignes magnétiques.
 			this.textFrame.GridStep   = this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
 			this.textFrame.GridOffset = this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
 
@@ -2071,27 +2071,27 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Met à jour le texte suite à une modification du conteneur.
 		public void UpdateTextLayout()
 		{
+			//	Met à jour le texte suite à une modification du conteneur.
 			if ( this.edited )
 			{
 				this.textFlow.UpdateTextLayout();
 			}
 		}
 
-		// Modifie le mode d'édition. Il faut obligatoirement utiliser cet appel
-		// pour modifier this.edited !
 		protected override void SetEdited(bool state)
 		{
+			//	Modifie le mode d'édition. Il faut obligatoirement utiliser cet appel
+			//	pour modifier this.edited !
 			if ( this.edited == state )  return;
 
 			this.edited = state;
 
 			if ( this.document.HRuler == null )  return;
 
-			// Pour ne pas cacher une règle qu'on viendrait d'associer à un objet éditable
-			// précédemment (dans la même procédure Viewer.Select par exemple).
+			//	Pour ne pas cacher une règle qu'on viendrait d'associer à un objet éditable
+			//	précédemment (dans la même procédure Viewer.Select par exemple).
 			if ( !this.edited && this.document.HRuler.EditObject != this )  return;
 
 			this.document.HRuler.Edited = this.edited;
@@ -2123,23 +2123,23 @@ namespace Epsitec.Common.Document.Objects
 
 			this.UpdateTextRulers();
 
-			// Redessine tout, à cause des "poignées" du flux qui peuvent apparaître
-			// ou disparaître.
+			//	Redessine tout, à cause des "poignées" du flux qui peuvent apparaître
+			//	ou disparaître.
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 		}
 
 		
 		#region OpletTextFlow
-		// Ajoute un oplet pour mémoriser le flux.
 		protected void InsertOpletTextFlow()
 		{
+			//	Ajoute un oplet pour mémoriser le flux.
 			if ( this.textFlow == null )  return;  // création de l'objet ?
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletTextFlow oplet = new OpletTextFlow(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		// Mémorise le flux de l'objet.
+		//	Mémorise le flux de l'objet.
 		protected class OpletTextFlow : AbstractOplet
 		{
 			public OpletTextFlow(Objects.TextBox2 host)

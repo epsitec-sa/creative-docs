@@ -42,16 +42,16 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.step = value; }
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		[XmlIgnore]
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return false; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyDouble p = property as PropertyDouble;
 			p.Value = this.doubleValue;
@@ -60,9 +60,9 @@ namespace Epsitec.Common.Pictogram.Data
 			p.Step = this.step;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyDouble p = property as PropertyDouble;
@@ -71,9 +71,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelDouble(drawer);
 		}
 

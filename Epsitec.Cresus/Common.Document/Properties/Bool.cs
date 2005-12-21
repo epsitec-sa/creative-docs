@@ -18,9 +18,9 @@ namespace Epsitec.Common.Document.Properties
 			this.boolValue = false;
 		}
 
-		// Valeur de la propriété.
 		public bool BoolValue
 		{
+			//	Valeur de la propriété.
 			get
 			{
 				return this.boolValue;
@@ -37,37 +37,37 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(bool type)
 		{
+			//	Retourne le nom d'un type donné.
 			if ( type )  return Res.Strings.Property.Close.Yes;
 			else         return Res.Strings.Property.Close.No;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(bool type)
 		{
+			//	Retourne l'icône pour un type donné.
 			if ( type )  return "CloseYes";
 			else         return "CloseNo";
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return ( this.type == Type.PolyClose ); }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Bool p = property as Bool;
 			p.boolValue = this.boolValue;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			Bool p = property as Bool;
@@ -76,26 +76,26 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Bool(document);
 		}
 
 
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("BoolValue", this.boolValue);
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected Bool(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			this.boolValue = info.GetBoolean("BoolValue");
 		}
 		#endregion

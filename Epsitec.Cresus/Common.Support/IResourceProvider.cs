@@ -11,26 +11,26 @@ namespace Epsitec.Common.Support
 	{
 		string					Prefix			{ get; }
 		
-		//	Le gestionnaire de ressources utilise ces méthodes pour configurer le
-		//	fournisseur de ressources :
-		
 		void Setup(ResourceManager resource_manager);
 		bool SetupApplication(string application);
 		void SelectLocale(System.Globalization.CultureInfo culture);
+		bool ValidateId(string id);
+		bool Contains(string id);
+		byte[] GetData(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
+		string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture);
+		bool SetData(string id, ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, ResourceSetMode mode);
+		bool Remove(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
+		//	Le gestionnaire de ressources utilise ces méthodes pour configurer le
+		//	fournisseur de ressources :
+		
 		
 		//	Méthodes d'accès aux données (en lecture) :
 		
-		bool ValidateId(string id);
-		bool Contains(string id);
 		
-		byte[] GetData(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
 		
-		string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture);
 		
 		//	Méthodes d'accès en écriture/modification :
 		
-		bool SetData(string id, ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, ResourceSetMode mode);
-		bool Remove(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
 	}
 	
 	/// <summary>

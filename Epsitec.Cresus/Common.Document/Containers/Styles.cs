@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Styles(Document document) : base(document)
 		{
-			// Toolbar principale.
+			//	Toolbar principale.
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Items.Add(this.buttonStyleDelete);
 			ToolTip.Default.SetToolTip(this.buttonStyleDelete, Res.Strings.Action.AggregateStyleDelete);
 
-			// Table des agrégats.
+			//	Table des agrégats.
 			this.list = new Widgets.AggregateList();
 			this.list.Document = this.document;
 			this.list.List = this.document.Aggregates;
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Document.Containers
 			this.list.TabIndex = 2;
 			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			// Roue des couleurs.
+			//	Roue des couleurs.
 			this.colorSelector = new ColorSelector();
 			this.colorSelector.ColorPalette.ColorCollection = this.document.GlobalSettings.ColorCollection;
 			this.colorSelector.HasCloseButton = true;
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.colorSelector.Visibility = false;
 
-			// Conteneur du panneau.
+			//	Conteneur du panneau.
 			this.panelContainer = new Widget(this);
 			this.panelContainer.Height = 0.0;
 			this.panelContainer.Dock = DockStyle.Bottom;
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panelContainer.TabIndex = 99;
 			this.panelContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
-			// Enfants de l'agrégat.
+			//	Enfants de l'agrégat.
 			this.childrens = new Widgets.AggregateList();
 			this.childrens.Document = this.document;
 			this.childrens.HScroller = true;
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarChildrens.Items.Add(this.buttonChildrensDelete);
 			ToolTip.Default.SetToolTip(this.buttonChildrensDelete, Res.Strings.Action.AggregateChildrensDelete);
 
-			// Nom de l'agrégat.
+			//	Nom de l'agrégat.
 			this.toolBarName = new HToolBar(this);
 			this.toolBarName.Dock = DockStyle.Bottom;
 			this.toolBarName.DockMargins = new Margins(0, 0, 0, 0);
@@ -224,9 +224,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 		
 
-		// Met en évidence l'objet survolé par la souris.
 		public override void Hilite(Objects.Abstract hiliteObject)
 		{
+			//	Met en évidence l'objet survolé par la souris.
 			if ( !this.IsVisible )  return;
 
 			if ( this.list.Rows != this.document.Aggregates.Count )
@@ -247,9 +247,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 		
-		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
+			//	Effectue la mise à jour du contenu.
 			this.list.List = this.document.Aggregates;
 			this.list.UpdateContent();
 			this.UpdateAggregateName();
@@ -260,9 +260,9 @@ namespace Epsitec.Common.Document.Containers
 			this.ListShowSelection();
 		}
 
-		// Effectue la mise à jour des agrégats.
 		protected override void DoUpdateAggregates(System.Collections.ArrayList aggregateList)
 		{
+			//	Effectue la mise à jour des agrégats.
 			foreach ( Properties.Aggregate agg in aggregateList )
 			{
 				int row = this.document.Aggregates.IndexOf(agg);
@@ -273,9 +273,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Effectue la mise à jour des propriétés.
 		protected override void DoUpdateProperties(System.Collections.ArrayList propertyList)
 		{
+			//	Effectue la mise à jour des propriétés.
 			if ( this.panel != null )
 			{
 				if ( propertyList.Contains(panel.Property) )
@@ -285,9 +285,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Met à jour les boutons de la toolbar.
 		protected void UpdateToolBar()
 		{
+			//	Met à jour les boutons de la toolbar.
 			int total = this.list.Rows;
 			int sel = this.document.Aggregates.Selected;
 
@@ -316,9 +316,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Met à jour le panneau pour éditer le nom de l'agrégat sélectionné.
 		protected void UpdateAggregateName()
 		{
+			//	Met à jour le panneau pour éditer le nom de l'agrégat sélectionné.
 			Properties.Aggregate agg = this.GetAggregate();
 
 			string text = "";
@@ -332,17 +332,17 @@ namespace Epsitec.Common.Document.Containers
 			this.ignoreChanged = false;
 		}
 
-		// Met à jour les panneaux des enfants selon le mode réduit/étendu.
 		protected void UpdateChildrensExtend()
 		{
+			//	Met à jour les panneaux des enfants selon le mode réduit/étendu.
 			this.buttonChildrensExtend.GlyphShape = this.isChildrensExtended ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
 			this.toolBarChildrens.Visibility = (this.isChildrensExtended);
 			this.childrens.Visibility = (this.isChildrensExtended);
 		}
 
-		// Met à jour les boutons de la toolbar des enfants.
 		protected void UpdateToolBarChildrens()
 		{
+			//	Met à jour les boutons de la toolbar des enfants.
 			int aggSel = this.list.SelectedPropertyRow;
 			int total = this.childrens.Rows;
 			int sel = this.childrens.SelectedPropertyRow;
@@ -353,9 +353,9 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonChildrensDelete.Enable = (sel != -1);
 		}
 
-		// Met à jour le panneau pour éditer les enfants de l'agrégat sélectionné.
 		protected void UpdateAggregateChildrens()
 		{
+			//	Met à jour le panneau pour éditer les enfants de l'agrégat sélectionné.
 			Properties.Aggregate agg = this.GetAggregate();
 
 			if ( agg == null )
@@ -371,9 +371,9 @@ namespace Epsitec.Common.Document.Containers
 			this.childrens.UpdateContent();
 		}
 
-		// Met à jour le panneau pour éditer la propriété sélectionnée.
 		protected void UpdatePanel()
 		{
+			//	Met à jour le panneau pour éditer la propriété sélectionnée.
 			this.colorSelector.Visibility = false;
 			this.colorSelector.BackColor = Color.Empty;
 
@@ -412,9 +412,9 @@ namespace Epsitec.Common.Document.Containers
 			this.panelContainer.ForceLayout();
 		}
 
-		// Montre la ligne sélectionnée dans la liste des agrégats.
 		protected void ListShowSelection()
 		{
+			//	Montre la ligne sélectionnée dans la liste des agrégats.
 			Properties.Aggregate agg = this.GetAggregate();
 			if ( agg != null )
 			{
@@ -425,62 +425,62 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Crée un nouvel agrégat.
 		private void HandleButtonAggregateNewEmpty(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouvel agrégat.
 			int sel = this.document.Aggregates.Selected;
 			if ( sel == -1 )  sel = 10000;
 			this.document.Modifier.AggregateNewEmpty(sel, "", true);
 		}
 
-		// Crée un nouvel agrégat.
 		private void HandleButtonAggregateNew3(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouvel agrégat.
 			int sel = this.document.Aggregates.Selected;
 			if ( sel == -1 )  sel = 10000;
 			this.document.Modifier.AggregateNew3(sel, "", true);
 		}
 
-		// Crée un nouvel agrégat.
 		private void HandleButtonAggregateNewAll(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouvel agrégat.
 			int sel = this.document.Aggregates.Selected;
 			if ( sel == -1 )  sel = 10000;
 			this.document.Modifier.AggregateNewAll(sel, "", true);
 		}
 
-		// Duplique un agrégat.
 		private void HandleButtonAggregateDuplicate(object sender, MessageEventArgs e)
 		{
+			//	Duplique un agrégat.
 			int sel = this.document.Aggregates.Selected;
 			if ( sel == -1 )  sel = 10000;
 			this.document.Modifier.AggregateDuplicate(sel);
 		}
 
-		// Monte d'une ligne l'agrégat sélectionné.
 		private void HandleButtonAggregateUp(object sender, MessageEventArgs e)
 		{
+			//	Monte d'une ligne l'agrégat sélectionné.
 			int sel = this.document.Aggregates.Selected;
 			this.document.Modifier.AggregateSwap(sel, sel-1);
 		}
 
-		// Descend d'une ligne l'agrégat sélectionné.
 		private void HandleButtonAggregateDown(object sender, MessageEventArgs e)
 		{
+			//	Descend d'une ligne l'agrégat sélectionné.
 			int sel = this.document.Aggregates.Selected;
 			this.document.Modifier.AggregateSwap(sel, sel+1);
 		}
 
-		// Supprime l'agrégat sélectionné.
 		private void HandleButtonAggregateDelete(object sender, MessageEventArgs e)
 		{
+			//	Supprime l'agrégat sélectionné.
 			int sel = this.document.Aggregates.Selected;
 			this.document.Modifier.AggregateDelete(sel);
 		}
 
-		// Sélection changée dans la liste.
 		private void HandleAggregatesTableSelectionChanged(object sender)
 		{
+			//	Sélection changée dans la liste.
 			this.list.SelectCell(1, this.list.SelectedRow, true);
 			this.list.SelectCell(2, this.list.SelectedRow, true);
 
@@ -509,16 +509,16 @@ namespace Epsitec.Common.Document.Containers
 			this.ListShowSelection();
 		}
 
-		// Liste double-cliquée.
 		private void HandleAggregatesTableDoubleClicked(object sender, MessageEventArgs e)
 		{
+			//	Liste double-cliquée.
 			this.name.SelectAll();
 			this.name.Focus();
 		}
 
-		// La cellule survolée a changé.
 		private void HandleAggregatesTableFlyOverChanged(object sender)
 		{
+			//	La cellule survolée a changé.
 			int rank = this.list.FlyOverRow;
 
 			Properties.Aggregate agg = null;
@@ -542,9 +542,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Crée un nouvel enfant.
 		private void HandleButtonChildrensNew(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouvel enfant.
 			IconButton button = sender as IconButton;
 			Point pos = button.MapClientToScreen(new Point(0,0));
 			VMenu menu = this.CreateMenuChildrens(pos);
@@ -568,27 +568,27 @@ namespace Epsitec.Common.Document.Containers
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
-		// Enfant en haut.
 		private void HandleButtonChildrensUp(object sender, MessageEventArgs e)
 		{
+			//	Enfant en haut.
 			int sel = this.childrens.SelectedPropertyRow;
 			if ( sel == -1 )  return;
 			Properties.Aggregate agg = this.GetAggregate();
 			this.document.Modifier.AggregateChildrensSwap(agg, sel, sel-1);
 		}
 
-		// Enfant en bas.
 		private void HandleButtonChildrensDown(object sender, MessageEventArgs e)
 		{
+			//	Enfant en bas.
 			int sel = this.childrens.SelectedPropertyRow;
 			if ( sel == -1 )  return;
 			Properties.Aggregate agg = this.GetAggregate();
 			this.document.Modifier.AggregateChildrensSwap(agg, sel, sel+1);
 		}
 
-		// Supprime l'enfant.
 		private void HandleButtonChildrensDelete(object sender, MessageEventArgs e)
 		{
+			//	Supprime l'enfant.
 			int sel = this.childrens.SelectedPropertyRow;
 			if ( sel == -1 )  return;
 			Properties.Aggregate agg = this.GetAggregate();
@@ -596,17 +596,17 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.AggregateChildrensDelete(agg, delAgg);
 		}
 
-		// Etend/réduit le panneau des enfants.
 		private void HandleButtonChildrensExtend(object sender, MessageEventArgs e)
 		{
+			//	Etend/réduit le panneau des enfants.
 			this.isChildrensExtended = !this.isChildrensExtended;
 			this.UpdateChildrensExtend();
 			this.ForceLayout();
 		}
 
-		// Sélection changée dans la liste des enfants.
 		private void HandleAggregatesChildrensSelectionChanged(object sender)
 		{
+			//	Sélection changée dans la liste des enfants.
 			Properties.Aggregate agg = this.GetAggregate();
 			this.document.Modifier.OpletQueueEnable = false;
 			agg.Childrens.Selected = this.childrens.SelectedRow;
@@ -621,9 +621,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Crée une nouvelle propriété.
 		private void HandleButtonStyleNew(object sender, MessageEventArgs e)
 		{
+			//	Crée une nouvelle propriété.
 			IconButton button = sender as IconButton;
 			Point pos = button.MapClientToScreen(new Point(0,0));
 			VMenu menu = this.CreateMenuTypes(pos);
@@ -646,17 +646,17 @@ namespace Epsitec.Common.Document.Containers
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
-		// Supprime la propriété sélectionnée.
 		private void HandleButtonStyleDelete(object sender, MessageEventArgs e)
 		{
+			//	Supprime la propriété sélectionnée.
 			Properties.Aggregate agg = this.GetAggregate();
 			this.document.Modifier.AggregateStyleDelete(agg);
 			this.UpdatePanel();
 		}
 
-		// Le nom de l'agrégat a changé.
 		private void HandleNameTextChanged(object sender)
 		{
+			//	Le nom de l'agrégat a changé.
 			if ( this.ignoreChanged )  return;
 
 			int sel = this.document.Aggregates.Selected;
@@ -672,9 +672,9 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Notifier.NotifyAggregateChanged(agg);
 		}
 
-		// Le contenu du panneau a changé.
 		private void HandlePanelChanged(object sender)
 		{
+			//	Le contenu du panneau a changé.
 			int sel = this.list.SelectedPropertyRow;
 			if ( sel != -1 )
 			{
@@ -690,9 +690,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Le widget qui détermine la couleur d'origine a changé.
 		private void HandleOriginColorChanged(object sender)
 		{
+			//	Le widget qui détermine la couleur d'origine a changé.
 			this.colorSelector.Visibility = true;
 			this.ignoreChanged = true;
 			this.colorSelector.Color = this.panel.OriginColorGet();
@@ -700,16 +700,16 @@ namespace Epsitec.Common.Document.Containers
 			this.panel.OriginColorSelect(this.panel.OriginColorRank());
 		}
 
-		// Couleur changée dans la roue.
 		private void HandleColorSelectorChanged(object sender)
 		{
+			//	Couleur changée dans la roue.
 			if ( this.ignoreChanged )  return;
 			this.panel.OriginColorChange(this.colorSelector.Color);
 		}
 
-		// Fermer la roue.
 		private void HandleColorSelectorClosed(object sender)
 		{
+			//	Fermer la roue.
 			this.panel.OriginColorDeselect();
 
 			this.colorSelector.Visibility = false;
@@ -718,9 +718,9 @@ namespace Epsitec.Common.Document.Containers
 
 
 		#region MenuTypes
-		// Construit le menu pour choisir le style.
 		protected VMenu CreateMenuTypes(Point pos)
 		{
+			//	Construit le menu pour choisir le style.
 			Properties.Aggregate agg = this.GetAggregate();
 			VMenu menu = new VMenu();
 			double back = -1;
@@ -767,9 +767,9 @@ namespace Epsitec.Common.Document.Containers
 
 		
 		#region MenuChildrens
-		// Construit le menu pour choisir un enfant à ajouter.
 		protected VMenu CreateMenuChildrens(Point pos)
 		{
+			//	Construit le menu pour choisir un enfant à ajouter.
 			VMenu menu = new VMenu();
 			Properties.Aggregate currentAgg = this.GetAggregate();
 			int used = 0;
@@ -810,9 +810,9 @@ namespace Epsitec.Common.Document.Containers
 		#endregion
 
 		
-		// Donne l'agrégat sélectionné.
 		protected Properties.Aggregate GetAggregate()
 		{
+			//	Donne l'agrégat sélectionné.
 			int sel = this.document.Aggregates.Selected;
 
 			if ( sel == -1 )  return null;

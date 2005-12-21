@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.PDF
 			this.filter = filter;
 			this.id = id;
 
-			// Crée une fois pour toutes le Drawing.Image associé à cette image.
+			//	Crée une fois pour toutes le Drawing.Image associé à cette image.
 			try
 			{
 				this.drawingImage = Bitmap.FromFile(this.filename);
@@ -27,46 +27,46 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Libère la surface.
 		public void Dispose()
 		{
+			//	Libère la surface.
 			this.drawingImage = null;
 		}
 
-		// Nom de l'image.
 		public string Filename
 		{
+			//	Nom de l'image.
 			get { return this.filename; }
 		}
 
-		// Dimensions de l'image.
 		public Size Size
 		{
+			//	Dimensions de l'image.
 			get { return this.size; }
 		}
 
-		// Filtre de l'image.
 		public bool Filter
 		{
+			//	Filtre de l'image.
 			get { return this.filter; }
 		}
 
-		// Identificateur unique.
 		public int Id
 		{
+			//	Identificateur unique.
 			get { return this.id; }
 		}
 
-		// Donne le Drawing.Image associé.
 		public Drawing.Image DrawingImage
 		{
+			//	Donne le Drawing.Image associé.
 			get { return this.drawingImage; }
 		}
 
 
-		// Cherche une image d'après son nom dans une liste.
 		public static ImageSurface Search(System.Collections.ArrayList list, string filename, Size size, bool filter)
 		{
+			//	Cherche une image d'après son nom dans une liste.
 			foreach ( ImageSurface image in list )
 			{
 				if ( image.filename == filename &&
@@ -79,9 +79,9 @@ namespace Epsitec.Common.Document.PDF
 			return null;
 		}
 
-		// Cherche une image d'après son Drawing.Image.
 		public static ImageSurface Search(System.Collections.ArrayList list, Drawing.Image drim)
 		{
+			//	Cherche une image d'après son Drawing.Image.
 			foreach ( ImageSurface image in list )
 			{
 				if ( image.drawingImage == null )  continue;

@@ -1016,10 +1016,10 @@ namespace Epsitec.Common.OpenType
 	
 	public class Table_cmap : Tables
 	{
-		//	http://partners.adobe.com/public/developer/opentype/index_cmap.html
-		
 		public Table_cmap(byte[] data, int offset) : base (data, offset)
 		{
+			//	http://partners.adobe.com/public/developer/opentype/index_cmap.html
+			
 		}
 		
 		public Table_cmap(TableEntry entry) : base (entry.BaseData, entry.Offset)
@@ -1549,10 +1549,10 @@ namespace Epsitec.Common.OpenType
 	
 	public class Table_hhea : Tables
 	{
-		//	http://partners.adobe.com/public/developer/opentype/index_hhea.html
-		
 		public Table_hhea(byte[] data, int offset) : base (data, offset)
 		{
+			//	http://partners.adobe.com/public/developer/opentype/index_hhea.html
+			
 		}
 		
 		public Table_hhea(TableEntry entry) : base (entry.BaseData, entry.Offset)
@@ -1667,10 +1667,10 @@ namespace Epsitec.Common.OpenType
 	
 	public class Table_hmtx : Tables
 	{
-		//	http://partners.adobe.com/public/developer/opentype/index_hmtx.html
-		
 		public Table_hmtx(byte[] data, int offset) : base (data, offset)
 		{
+			//	http://partners.adobe.com/public/developer/opentype/index_hmtx.html
+			
 		}
 		
 		public Table_hmtx(TableEntry entry) : base (entry.BaseData, entry.Offset)
@@ -1983,11 +1983,11 @@ namespace Epsitec.Common.OpenType
 	
 	public class Table_GDEF : Tables
 	{
-		//	http://partners.adobe.com/public/developer/opentype/index_table_formats5.html
-		//	http://www.microsoft.com/OpenType/OTSpec/gdef.htm
-		
 		public Table_GDEF(byte[] data, int offset) : base (data, offset)
 		{
+			//	http://partners.adobe.com/public/developer/opentype/index_table_formats5.html
+			//	http://www.microsoft.com/OpenType/OTSpec/gdef.htm
+			
 		}
 		
 		public Table_GDEF(TableEntry entry) : base (entry.BaseData, entry.Offset)
@@ -2156,14 +2156,14 @@ namespace Epsitec.Common.OpenType
 	
 	public class Table_GSUB : Tables
 	{
-		//	See http://www.microsoft.com/OpenType/OTSpec/gsub.htm or
-		//	http://partners.adobe.com/public/developer/opentype/index_table_formats1.html
-
-		//	See http://www.microsoft.com/OpenType/OTSpec/chapter2.htm for the common table format
-		//	See http://www.microsoft.com/OpenType/OTSpec/featurelist.htm for 'liga' and others.
-		
 		public Table_GSUB(byte[] data, int offset) : base (data, offset)
 		{
+			//	See http://www.microsoft.com/OpenType/OTSpec/gsub.htm or
+			//	http://partners.adobe.com/public/developer/opentype/index_table_formats1.html
+	
+			//	See http://www.microsoft.com/OpenType/OTSpec/chapter2.htm for the common table format
+			//	See http://www.microsoft.com/OpenType/OTSpec/featurelist.htm for 'liga' and others.
+			
 		}
 		
 		public Table_GSUB(TableEntry entry) : base (entry.BaseData, entry.Offset)
@@ -2954,10 +2954,10 @@ namespace Epsitec.Common.OpenType
 	
 	public class AlternateSubstitution : BaseSubstitution
 	{
-		//	http://partners.adobe.com/public/developer/opentype/index_table_formats1.html#ASF1
-		
 		public AlternateSubstitution(SubstSubTable sub) : base (sub.BaseData, sub.BaseOffset)
 		{
+			//	http://partners.adobe.com/public/developer/opentype/index_table_formats1.html#ASF1
+			
 		}
 		
 		public AlternateSubstitution(byte[] data, int offset) : base (data, offset)

@@ -31,16 +31,16 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return @"file:images/image.icon"; }
 		}
 
 
-		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur l'objet.
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle bbox = this.BoundingBox;
@@ -50,9 +50,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, iconContext);
@@ -72,32 +72,32 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Début de la création d'un objet.
 			iconContext.ConstrainFixStarting(pos, ConstrainType.Square);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			this.dirtyBbox = true;
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Fin de la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			iconContext.ConstrainDelStarting();
 
-			// Crée les 2 autres poignées dans les coins opposés.
+			//	Crée les 2 autres poignées dans les coins opposés.
 			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
 			Drawing.Point p1 = rect.BottomLeft;
 			Drawing.Point p2 = rect.TopRight;
@@ -107,24 +107,24 @@ namespace Epsitec.Common.Pictogram.Data
 			this.HandleAdd(new Drawing.Point(p2.X, p1.Y), HandleType.Primary);  // rang = 3
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
 		}
 
-		// Indique s'il faut sélectionner l'objet après sa création.
 		public override bool SelectAfterCreation()
 		{
+			//	Indique s'il faut sélectionner l'objet après sa création.
 			return true;
 		}
 
 
-		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
+			//	Met à jour le rectangle englobant l'objet.
 			Drawing.Path path = this.PathBuildSurface();
 			this.bboxThin = path.ComputeBounds();
 
@@ -135,9 +135,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.bboxFull = this.bboxThin;
 		}
 
-		// Crée le chemin de l'objet pour dessiner la surface exacte de l'image.
 		protected Drawing.Path PathBuildImage()
 		{
+			//	Crée le chemin de l'objet pour dessiner la surface exacte de l'image.
 			Drawing.Point center;
 			double width, height, angle;
 			this.ImageGeometry(out center, out width, out height, out angle);
@@ -169,9 +169,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Crée le chemin de l'objet pour dessiner sa surface.
 		protected Drawing.Path PathBuildSurface()
 		{
+			//	Crée le chemin de l'objet pour dessiner sa surface.
 			Drawing.Point pbl, pbr, ptl, ptr;
 			this.Corners(out pbl, out pbr, out ptl, out ptr);
 
@@ -184,9 +184,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Crée le chemin de l'objet pour dessiner son pourtour.
 		protected Drawing.Path PathBuildOutline()
 		{
+			//	Crée le chemin de l'objet pour dessiner son pourtour.
 			Drawing.Point pbl, pbr, ptl, ptr;
 			this.Corners(out pbl, out pbr, out ptl, out ptr);
 
@@ -205,9 +205,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Donne les 4 coins du rectangle.
 		protected void Corners(out Drawing.Point pbl, out Drawing.Point pbr, out Drawing.Point ptl, out Drawing.Point ptr)
 		{
+			//	Donne les 4 coins du rectangle.
 			pbl = this.Handle(0).Position;
 			ptr = this.Handle(1).Position;
 
@@ -223,10 +223,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Calcule le centre, les dimensions et l'angle de l'image en fonction
-		// du quadrilatère de l'objet, qui n'est pas forcément rectangulaire.
 		protected void ImageGeometry(out Drawing.Point center, out double width, out double height, out double angle)
 		{
+			//	Calcule le centre, les dimensions et l'angle de l'image en fonction
+			//	du quadrilatère de l'objet, qui n'est pas forcément rectangulaire.
 			Drawing.Point pbl, pbr, ptl, ptr;
 			this.Corners(out pbl, out pbr, out ptl, out ptr);
 
@@ -236,9 +236,9 @@ namespace Epsitec.Common.Pictogram.Data
 			angle  = Drawing.Point.ComputeAngleDeg(pbl, pbr);
 		}
 
-		// Ouvre le bitmap de l'image si nécessaire.
 		protected void OpenBitmapOriginal()
 		{
+			//	Ouvre le bitmap de l'image si nécessaire.
 			PropertyImage image = this.PropertyImage(1);
 			if ( image.Filename == "" )
 			{
@@ -264,9 +264,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Ouvre le bitmap de la variante estompée de l'image si nécessaire.
 		protected void OpenBitmapDimmed(IconContext iconContext)
 		{
+			//	Ouvre le bitmap de la variante estompée de l'image si nécessaire.
 			if ( this.imageOriginal == null )  return;
 			if ( this.imageDimmed != null )  return;
 			if ( !iconContext.IsDimmed )  return;
@@ -297,9 +297,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Dessine l'objet.
 			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext, iconObjects);
 

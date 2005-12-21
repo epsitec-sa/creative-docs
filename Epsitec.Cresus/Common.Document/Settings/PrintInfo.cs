@@ -2,8 +2,8 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Settings
 {
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum PrintCentring
 	{
 		BottomLeft   = 10,
@@ -19,8 +19,8 @@ namespace Epsitec.Common.Document.Settings
 		TopRight     = 32,
 	}
 
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum PrintRange
 	{
 		All     = 0,
@@ -28,8 +28,8 @@ namespace Epsitec.Common.Document.Settings
 		Current = 2,
 	}
 
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum PrintArea
 	{
 		All  = 0,
@@ -260,9 +260,9 @@ namespace Epsitec.Common.Document.Settings
 
 
 		#region Serialization
-		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise les réglages.
 			info.AddValue("Rev", 3);
 			info.AddValue("PrintName", this.printName);
 			info.AddValue("PrintRange", this.printRange);
@@ -287,9 +287,9 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("Target", this.target);
 		}
 
-		// Constructeur qui désérialise les réglages.
 		protected PrintInfo(SerializationInfo info, StreamingContext context)
 		{
+			//	Constructeur qui désérialise les réglages.
 			this.document = Document.ReadDocument;
 			this.Initialise();
 

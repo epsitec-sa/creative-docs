@@ -19,9 +19,9 @@ namespace Epsitec.Common.Document.Properties
 			this.color = Drawing.RichColor.FromBrightness(0.0);
 		}
 
-		// Couleur de la propriété.
 		public Drawing.RichColor ColorValue
 		{
+			//	Couleur de la propriété.
 			get
 			{
 				return this.color;
@@ -38,9 +38,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Indique si une impression complexe est nécessaire.
 		public override bool IsComplexPrinting
 		{
+			//	Indique si une impression complexe est nécessaire.
 			get
 			{
 				if ( this.color.A > 0.0 && this.color.A < 1.0 )  return true;
@@ -48,17 +48,17 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Color p = property as Color;
 			p.color = this.color;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			Color p = property as Color;
@@ -67,17 +67,17 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Color(document);
 		}
 
 
-		// Modifie l'espace des couleurs.
 		public override bool ChangeColorSpace(ColorSpace cs)
 		{
+			//	Modifie l'espace des couleurs.
 			this.NotifyBefore();
 			this.color.ColorSpace = cs;
 			this.NotifyAfter();
@@ -85,9 +85,9 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Modifie les couleurs.
 		public override bool ChangeColor(double adjust, bool stroke)
 		{
+			//	Modifie les couleurs.
 			this.NotifyBefore();
 			this.color.ChangeBrightness(adjust);
 			this.NotifyAfter();
@@ -97,17 +97,17 @@ namespace Epsitec.Common.Document.Properties
 
 		
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("Color", this.color);
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected Color(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			if ( this.document.IsRevisionGreaterOrEqual(1,0,22) )
 			{
 				this.color = (Drawing.RichColor) info.GetValue("Color", typeof(Drawing.RichColor));

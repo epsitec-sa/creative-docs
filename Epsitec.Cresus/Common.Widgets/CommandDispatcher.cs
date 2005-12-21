@@ -29,16 +29,16 @@ namespace Epsitec.Common.Widgets
 			//	parenthèses.
 			
 			string regex_1 = @"\A(?<name>([a-zA-Z](\w|(\.\w))*))" +
-				//                       <---- nom valide ---->
+				//	<---- nom valide ---->
 				/**/       @"\s*\(\s*((((?<arg>(" +
 				/**/                          @"(\""[^\""]{0,}\"")|" +
-				//                              <-- guillemets -->
+				//	<-- guillemets -->
 				/**/                          @"(\'[^\']{0,}\')|" +
-				//                              <-- apostr. -->
+				//	<-- apostr. -->
 				/**/                          @"((\-|\+)?((\d{1,12}(\.\d{0,12})?0*)|(\d{0,12}\.(\d{0,12})?0*)))|" +
-				//                              <----------- valeur décimale avec signe en option ------------>
+				//	<----------- valeur décimale avec signe en option ------------>
 				/**/                          @"([a-zA-Z](\w|(\.\w))*)))" +
-				//                              <---- nom valide ---->
+				//	<---- nom valide ---->
 				/**/                         @"((\s*\,\s*)|(\s*\)\s*\z)))*)|(\)\s*))\z";
 			
 			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;

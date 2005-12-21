@@ -242,8 +242,8 @@ namespace Epsitec.Common.Drawing
 		
 		public class XRun
 		{
-			// Décrit une portion de texte d'une longueur quelconque utilisant
-			// une seule et même typographie.
+			//	Décrit une portion de texte d'une longueur quelconque utilisant
+			//	une seule et même typographie.
 			public int					Start       = 0;  // index début
 			public int					Length      = 0;  // index fin - index début
 			public string				FontName    = "";
@@ -293,10 +293,10 @@ namespace Epsitec.Common.Drawing
 		
 		public class Line
 		{
-			// Décrit une ligne physique pouvant contenir plusieurs typographies
-			// différentes.
 			public Line(string text, double width, int skip)
 			{
+				//	Décrit une ligne physique pouvant contenir plusieurs typographies
+				//	différentes.
 				this.text  = text;
 				this.width = width;
 				this.skip  = skip;

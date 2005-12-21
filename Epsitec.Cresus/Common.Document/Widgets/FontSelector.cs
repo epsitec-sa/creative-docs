@@ -28,9 +28,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Hauteur d'un échantillon.
 		public double SampleHeight
 		{
+			//	Hauteur d'un échantillon.
 			get
 			{
 				return this.sampleHeight;
@@ -48,9 +48,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Type d'un échantillon.
 		public bool SampleAbc
 		{
+			//	Type d'un échantillon.
 			get
 			{
 				return this.sampleAbc;
@@ -67,9 +67,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Retourne la meilleure largeur.
 		public static double BestWidth(double sampleHeight, bool sampleAbc)
 		{
+			//	Retourne la meilleure largeur.
 			if ( sampleAbc )
 			{
 				return 220 + (sampleHeight-20)*1.7;
@@ -80,9 +80,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Retourne la meilleure hauteur possible, en principe plus petite que la hauteur demandée.
 		public static double BestHeight(double height, int totalLines, double sampleHeight)
 		{
+			//	Retourne la meilleure hauteur possible, en principe plus petite que la hauteur demandée.
 			int lines = (int) (height / sampleHeight);
 			if ( lines == 0 )  lines ++;  // au moins une ligne, faut pas pousser
 
@@ -92,9 +92,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Liste des OpenType.FontIdentity représentée.
 		public System.Collections.ArrayList FontList
 		{
+			//	Liste des OpenType.FontIdentity représentée.
 			get
 			{
 				return this.fontList;
@@ -106,9 +106,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Nombre de fontes rapides en tête de liste.
 		public int QuickCount
 		{
+			//	Nombre de fontes rapides en tête de liste.
 			get
 			{
 				return this.quickCount;
@@ -120,9 +120,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Liste des FontFace (string) sélectionné (sélection multiple).
 		public System.Collections.ArrayList SelectedList
 		{
+			//	Liste des FontFace (string) sélectionné (sélection multiple).
 			get
 			{
 				return this.selectedList;
@@ -136,9 +136,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Police sélectionnée.
 		public string SelectedFontFace
 		{
+			//	Police sélectionnée.
 			get
 			{
 				return this.fontFace;
@@ -155,16 +155,16 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.scroller == null )  return;
 
 			Rectangle rect = this.Client.Bounds;
 
-			// Crée les échantillons, si nécessaire.
+			//	Crée les échantillons, si nécessaire.
 			int lines = (int) (rect.Height/this.sampleHeight);
 			double suppl = rect.Height - lines*this.sampleHeight;
 			double supplAll  = (double) ((int) (suppl/lines));  // supplément pour toutes les lignes
@@ -189,12 +189,12 @@ namespace Epsitec.Common.Document.Widgets
 				}
 			}
 
-			// Positionne l'ascenseur.
+			//	Positionne l'ascenseur.
 			Rectangle r = rect;
 			r.Left = r.Right-this.scroller.DefaultWidth;
 			this.scroller.Bounds = r;
 
-			// Positionne les échantillons.
+			//	Positionne les échantillons.
 			double top = rect.Top;
 			for ( int i=0 ; i<lines ; i++ )
 			{
@@ -208,9 +208,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Dessine le cadre.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine le cadre.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 			rect.Width -= this.scroller.Width;
@@ -222,9 +222,9 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(frameColor);  // dessine le cadre
 		}
 
-		// Gestion des événements clavier/souris.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			//	Gestion des événements clavier/souris.
 			if ( message.Type == MessageType.MouseDown )
 			{
 				if ( pos.X < this.Bounds.Right-this.scroller.Width )
@@ -366,8 +366,8 @@ namespace Epsitec.Common.Document.Widgets
 						break;
 				}
 				
-				// Indique que l'événement clavier a été consommé, sinon il sera
-				// traité par le parent, son parent, etc.
+				//	Indique que l'événement clavier a été consommé, sinon il sera
+				//	traité par le parent, son parent, etc.
 				if ( ok )
 				{
 					message.Consumer = this;
@@ -418,9 +418,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Détecte la ligne visée par la souris.
 		protected int Detect(Point pos)
 		{
+			//	Détecte la ligne visée par la souris.
 			for ( int i=0 ; i<this.samples.Length ; i++ )
 			{
 				if ( this.samples[i].Bounds.Contains(pos) )  return this.firstLine+i;
@@ -428,9 +428,9 @@ namespace Epsitec.Common.Document.Widgets
 			return -1;
 		}
 
-		// Ligne sélectionnée.
 		protected int SelectedLine
 		{
+			//	Ligne sélectionnée.
 			get
 			{
 				return this.selectedLine;
@@ -460,9 +460,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Première ligne visible.
 		protected int FirstLine
 		{
+			//	Première ligne visible.
 			get
 			{
 				return this.firstLine;
@@ -484,9 +484,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Met à jour l'ascenseur.
 		protected void UpdateScroller()
 		{
+			//	Met à jour l'ascenseur.
 			this.ignoreChange = true;
 
 			if ( this.samples.Length >= this.fontList.Count )
@@ -512,9 +512,9 @@ namespace Epsitec.Common.Document.Widgets
 			this.ignoreChange = false;
 		}
 
-		// Met à jour le contenu de la liste.
 		public void UpdateList()
 		{
+			//	Met à jour le contenu de la liste.
 			for ( int i=0 ; i<samples.Length ; i++ )
 			{
 				int ii = this.firstLine+i;
@@ -563,9 +563,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// La valeur de l'ascenseur a changé.
 		private void ScrollerValueChanged(object sender)
 		{
+			//	La valeur de l'ascenseur a changé.
 			if ( this.ignoreChange )  return;
 
 			if ( this.firstLine != (int) this.scroller.Value )
@@ -604,9 +604,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Génère un événement pour dire que la fermeture est nécessaire.
 		protected virtual void OnSelectionChanged()
 		{
+			//	Génère un événement pour dire que la fermeture est nécessaire.
 			if ( this.SelectionChanged != null )  // qq'un écoute ?
 			{
 				this.SelectionChanged(this);

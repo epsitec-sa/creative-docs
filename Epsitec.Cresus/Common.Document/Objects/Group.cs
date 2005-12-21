@@ -28,23 +28,23 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectGroup"); }
 		}
 
 
-		// Début du déplacement une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement une poignée.
 			this.InsertOpletGeometry();
 			this.initialBBox = this.BoundingBox.Size;
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
@@ -114,9 +114,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Déplace tous les objets du groupe.
 		protected void MoveHandleSoon(UndoableList objects, Selector selector)
 		{
+			//	Déplace tous les objets du groupe.
 			foreach ( Objects.Abstract obj in this.document.Deep(this) )
 			{
 				obj.MoveGlobalStarting();
@@ -124,10 +124,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Aligne l'objet sur la grille.
-		// On aligne les 4 coins du groupe en stretchant le contenu du groupe.
 		public override void AlignGrid(DrawingContext drawingContext)
 		{
+			//	Aligne l'objet sur la grille.
+			//	On aligne les 4 coins du groupe en stretchant le contenu du groupe.
 			for ( int i=0 ; i<4 ; i++ )
 			{
 				Point pos = this.Handle(i).Position;
@@ -138,9 +138,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		// Met à jour la bbox du groupe.
 		public void UpdateDim(Drawing.Rectangle bbox)
 		{
+			//	Met à jour la bbox du groupe.
 			this.InsertOpletGeometry();
 
 			if ( this.handles.Count == 0 )
@@ -163,9 +163,9 @@ namespace Epsitec.Common.Document.Objects
 			this.dirtyBbox = false;
 		}
 
-		// Constuit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Constuit les formes de l'objet.
 			if ( this.handles.Count == 0 )  return null;
 
 			Path pathCorners = null;
@@ -201,9 +201,9 @@ namespace Epsitec.Common.Document.Objects
 			return shapes;
 		}
 
-		// Crée le chemin d'un rectangle.
 		protected Path PathRectangle()
 		{
+			//	Crée le chemin d'un rectangle.
 			Point p1 = this.Handle(0).Position;
 			Point p2 = this.Handle(2).Position;
 			Point p3 = this.Handle(1).Position;
@@ -219,9 +219,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin des coins d'un rectangle.
 		protected Path PathCorners()
 		{
+			//	Crée le chemin des coins d'un rectangle.
 			Point p1 = this.Handle(0).Position;
 			Point p2 = this.Handle(2).Position;
 			Point p3 = this.Handle(1).Position;
@@ -255,15 +255,15 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Group(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 		}
 		#endregion
 

@@ -47,24 +47,24 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return 30;
 			}
 		}
 
-		// Indique si ce panneau possède 2 hauteurs différentes.
 		public virtual bool IsNormalAndExtended()
 		{
+			//	Indique si ce panneau possède 2 hauteurs différentes.
 			return this.isNormalAndExtended;
 		}
 
-		// Indique si le panneau est réduit (petite hauteur) ou étendu (grande hauteur).
 		public virtual bool ExtendedSize
 		{
+			//	Indique si le panneau est réduit (petite hauteur) ou étendu (grande hauteur).
 			get
 			{
 				return this.extendedSize;
@@ -77,9 +77,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Indique si le panneau représente des propriétés contradictoires.
 		public bool Multi
 		{
+			//	Indique si le panneau représente des propriétés contradictoires.
 			get
 			{
 				return this.multi;
@@ -95,31 +95,31 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Indique si le panneau édite directement un style.
 		public bool StyleDirect
 		{
+			//	Indique si le panneau édite directement un style.
 			get { return this.styleDirect; }
 			set { this.styleDirect = value; }
 		}
 
-		// Indique si le panneau édite directement une propriété de calque.
 		public bool LayoutDirect
 		{
+			//	Indique si le panneau édite directement une propriété de calque.
 			get { return this.layoutDirect; }
 			set { this.layoutDirect = value; }
 		}
 
-		// Indique si le panneau édite directement une propriété d'un motif.
 		public bool PatternDirect
 		{
+			//	Indique si le panneau édite directement une propriété d'un motif.
 			get { return this.patternDirect; }
 			set { this.patternDirect = value; }
 		}
 
 
-		// Propriété -> widget.
 		public virtual void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			this.type                = property.Type;
 			this.text                = property.Text;
 			this.textStyle           = property.TextStyle;
@@ -128,9 +128,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.styleName           = property.StyleName;
 		}
 
-		// Widget -> propriété.
 		public virtual AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			return null;
 		}
 
@@ -141,9 +141,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			property.StyleName = this.styleName;
 		}
 
-		// Retourne le type de la propriété éditée par le panneau.
 		public virtual PropertyType PropertyType
 		{
+			//	Retourne le type de la propriété éditée par le panneau.
 			get
 			{
 				return this.type;
@@ -151,16 +151,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met le focus par défaut dans ce panneau.
 		public virtual bool DefaultFocus()
 		{
+			//	Met le focus par défaut dans ce panneau.
 			return false;
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.extendedButton == null )  return;
@@ -179,37 +179,37 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public virtual void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 		}
 
-		// Sélectionne l'origine de couleur.
 		public virtual void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 		}
 
-		// Retourne le rang de la couleur d'origine.
 		public virtual int OriginColorRank()
 		{
+			//	Retourne le rang de la couleur d'origine.
 			return -1;
 		}
 
-		// Modifie la couleur d'origine.
 		public virtual void OriginColorChange(Drawing.Color color)
 		{
+			//	Modifie la couleur d'origine.
 		}
 
-		// Donne la couleur d'origine.
 		public virtual Drawing.Color OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			return Drawing.Color.FromBrightness(0);
 		}
 
 
-		// Génère un événement pour dire que ça a changé.
 		protected virtual void OnChanged()
 		{
+			//	Génère un événement pour dire que ça a changé.
 			if ( this.Changed != null )  // qq'un écoute ?
 			{
 				this.Changed(this);
@@ -219,7 +219,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler Changed;
 
 
-		// Génère un événement pour dire que la couleur d'origine a changé.
+		//	Génère un événement pour dire que la couleur d'origine a changé.
 		protected virtual void OnOriginColorChanged()
 		{
 			if ( this.OriginColorChanged != null )  // qq'un écoute ?
@@ -231,16 +231,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler OriginColorChanged;
 
 
-		// Le bouton pour étendre/réduire le panneau a été cliqué.
+		//	Le bouton pour étendre/réduire le panneau a été cliqué.
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
 		{
 			this.ExtendedSize = !this.extendedSize;
 			this.OnExtendedChanged();
 		}
 
-		// Le bouton des styles a été cliqué.
 		private void StylesButtonClicked(object sender, MessageEventArgs e)
 		{
+			//	Le bouton des styles a été cliqué.
 			GlyphButton button = sender as GlyphButton;
 			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));
 			VMenu menu = this.Styles.CreateMenu(this.type, this.styleID);
@@ -249,9 +249,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
-		// Génère un événement pour dire que la hauteur a changé.
 		protected virtual void OnExtendedChanged()
 		{
+			//	Génère un événement pour dire que la hauteur a changé.
 			if ( this.ExtendedChanged != null )  // qq'un écoute ?
 			{
 				this.ExtendedChanged(this);
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler ExtendedChanged;
 
 
-		// Retourne la collection des styles.
+		//	Retourne la collection des styles.
 		protected StylesCollection Styles
 		{
 			get { return this.drawer.IconObjects.StylesCollection; }

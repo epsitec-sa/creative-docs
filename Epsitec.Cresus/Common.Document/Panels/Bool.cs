@@ -38,9 +38,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Bool p = this.property as Properties.Bool;
@@ -51,9 +51,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Bool p = this.property as Properties.Bool;
 			if ( p == null )  return;
 
@@ -61,9 +61,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -73,9 +73,9 @@ namespace Epsitec.Common.Document.Panels
 			this.grid.Bounds = rect;
 		}
 		
-		// Le type a été changé.
 		private void HandleTypeChanged(object sender)
 		{
+			//	Le type a été changé.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}

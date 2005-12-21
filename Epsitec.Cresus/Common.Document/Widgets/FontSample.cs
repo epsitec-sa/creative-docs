@@ -19,9 +19,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Police représentée.
 		public OpenType.FontIdentity FontIdentity
 		{
+			//	Police représentée.
 			get
 			{
 				return this.fontIdentity;
@@ -37,9 +37,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Nom de la police.
 		public string FontFace
 		{
+			//	Nom de la police.
 			get
 			{
 				if ( this.textLayout == null )  return null;
@@ -66,9 +66,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Hauteur pour la police.
 		public double FontHeight
 		{
+			//	Hauteur pour la police.
 			get
 			{
 				return this.fontHeight;
@@ -84,9 +84,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Type d'un échantillon.
 		public bool SampleAbc
 		{
+			//	Type d'un échantillon.
 			get
 			{
 				return this.sampleAbc;
@@ -102,9 +102,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Echantillon centré horizontalement.
 		public bool Center
 		{
+			//	Echantillon centré horizontalement.
 			get
 			{
 				return this.center;
@@ -120,9 +120,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Indique si l'échantillon est suivi d'un séparateur.
 		public bool Separator
 		{
+			//	Indique si l'échantillon est suivi d'un séparateur.
 			get
 			{
 				return this.separator;
@@ -138,9 +138,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Indique si l'échantillon est le dernier d'une liste (donc entouré d'un rectangle complet).
 		public bool Last
 		{
+			//	Indique si l'échantillon est le dernier d'une liste (donc entouré d'un rectangle complet).
 			get
 			{
 				return this.last;
@@ -169,9 +169,9 @@ namespace Epsitec.Common.Document.Widgets
 			this.Invalidate();
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.textLayout == null )
@@ -185,9 +185,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Dessine l'échantillon.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine l'échantillon.
 			this.UpdateClientGeometry();
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -238,11 +238,11 @@ namespace Epsitec.Common.Document.Widgets
 				}
 				else
 				{
-					// Dessine le nom de la police.
+					//	Dessine le nom de la police.
 					Point pos = new Point(5, oy-4);
 					this.textLayout.Paint(pos, graphics, left, textColor, GlyphPaintStyle.Normal);
 
-					// Dessine le nombre de variantes.
+					//	Dessine le nombre de variantes.
 					string text = this.fontIdentity.FontStyleCount.ToString();
 					ox = this.frontier-16-1;
 					graphics.PaintText(ox, oy-1, 16, 20, text, this.DefaultFont, this.DefaultFontSize, ContentAlignment.BottomCenter);
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Document.Widgets
 					ox = this.frontier+5;
 				}
 
-				// Dessine l'échantillon de la police.
+				//	Dessine l'échantillon de la police.
 				double size = (this.fontHeight == 0) ? rect.Height*0.85 : this.fontHeight*0.85;
 				Path path;
 				if ( this.sampleAbc )

@@ -20,17 +20,17 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.stringValue = value; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyString p = property as PropertyString;
 			p.String = this.stringValue;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyString p = property as PropertyString;
@@ -39,9 +39,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelString(drawer);
 		}
 

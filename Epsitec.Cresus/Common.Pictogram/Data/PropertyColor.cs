@@ -14,24 +14,24 @@ namespace Epsitec.Common.Pictogram.Data
 			this.color = Drawing.Color.FromBrightness(0.0);
 		}
 
-		// Couleur de la propriété.
 		public Drawing.Color Color
 		{
+			//	Couleur de la propriété.
 			get { return this.color; }
 			set { this.color = value; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyColor p = property as PropertyColor;
 			p.Color = this.color;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyColor p = property as PropertyColor;
@@ -40,16 +40,16 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelColor(drawer);
 		}
 
 
-		// Définition de la couleur pour l'impression.
 		public bool PaintColor(Printing.PrintPort port, IconContext iconContext)
 		{
+			//	Définition de la couleur pour l'impression.
 			if ( !this.color.IsOpaque )  return false;
 
 			port.Color = this.color;

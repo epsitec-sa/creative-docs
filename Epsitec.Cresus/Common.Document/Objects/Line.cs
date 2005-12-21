@@ -40,16 +40,16 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectLine"); }
 		}
 
 
-		// Début du déplacement d'une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -88,9 +88,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= 2 )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
@@ -115,18 +115,18 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Déplace globalement l'objet.
 		public override void MoveGlobalProcess(Selector selector)
 		{
+			//	Déplace globalement l'objet.
 			base.MoveGlobalProcess(selector);
 			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
+			//	Début de la création d'un objet.
 			drawingContext.ConstrainFlush();
 			drawingContext.ConstrainAddHV(pos);
 			if ( this.handles.Count == 0 )
@@ -144,9 +144,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -155,9 +155,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			//	Fin de la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -171,18 +171,18 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
 
-		// Constuit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Constuit les formes de l'objet.
 			Path pathStart, pathEnd, pathLine;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
 			this.PathBuild(drawingContext,
@@ -199,13 +199,13 @@ namespace Epsitec.Common.Document.Objects
 			Shape[] shapes = new Shape[totalShapes];
 			int i = 0;
 			
-			// Forme du chemin principal.
+			//	Forme du chemin principal.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathLine;
 			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 			i ++;
 
-			// Forme de la surface de départ.
+			//	Forme de la surface de départ.
 			if ( surfaceStart )
 			{
 				shapes[i] = new Shape();
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme de la surface d'arrivée.
+			//	Forme de la surface d'arrivée.
 			if ( surfaceEnd )
 			{
 				shapes[i] = new Shape();
@@ -225,7 +225,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme du chemin de départ.
+			//	Forme du chemin de départ.
 			if ( outlineStart )
 			{
 				shapes[i] = new Shape();
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme du chemin d'arrivée.
+			//	Forme du chemin d'arrivée.
 			if ( outlineEnd )
 			{
 				shapes[i] = new Shape();
@@ -248,12 +248,12 @@ namespace Epsitec.Common.Document.Objects
 			return shapes;
 		}
 
-		// Crée les 3 chemins de l'objet.
 		protected void PathBuild(DrawingContext drawingContext,
 								 out Path pathStart, out bool outlineStart, out bool surfaceStart,
 								 out Path pathEnd,   out bool outlineEnd,   out bool surfaceEnd,
 								 out Path pathLine)
 		{
+			//	Crée les 3 chemins de l'objet.
 			pathStart = new Path();
 			pathEnd   = new Path();
 			pathLine  = new Path();
@@ -275,10 +275,10 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Retourne le chemin géométrique de l'objet pour les constructions
-		// magnétiques.
 		public override Path GetMagnetPath()
 		{
+			//	Retourne le chemin géométrique de l'objet pour les constructions
+			//	magnétiques.
 			Path path = new Path();
 
 			path.MoveTo(this.Handle(0).Position);
@@ -287,9 +287,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
+			//	Retourne le chemin géométrique de l'objet.
 			if ( rank > 0 )  return null;
 
 			Path pathStart, pathEnd, pathLine;
@@ -312,9 +312,9 @@ namespace Epsitec.Common.Document.Objects
 			return pathLine;
 		}
 
-		// Crée une ligne à partir de 2 points.
 		public void CreateFromPoints(Point p1, Point p2)
 		{
+			//	Crée une ligne à partir de 2 points.
 			this.HandleAdd(p1, HandleType.Primary);
 			this.HandleAdd(p2, HandleType.Primary);
 			this.SetDirtyBbox();
@@ -322,15 +322,15 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Line(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 		}
 		#endregion
 	}

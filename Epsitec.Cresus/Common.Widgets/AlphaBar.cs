@@ -10,9 +10,9 @@ namespace Epsitec.Common.Widgets
 			this.color = Drawing.Color.FromARGB(0.15, 0,0,0);
 		}
 		
-		// Dessine la barre.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			//	Dessine la barre.
 			Drawing.Rectangle rect  = this.Client.Bounds;
 
 			graphics.AddFilledRectangle(rect);

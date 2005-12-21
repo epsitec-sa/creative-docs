@@ -4,9 +4,9 @@ namespace Epsitec.Common.Document.Menus
 {
 	public class ZoomMenu : System.IComparable
 	{
-		// Constructeur unique.
 		public ZoomMenu(double zoom, string comment)
 		{
+			//	Constructeur unique.
 			this.zoom = zoom;
 
 			if ( comment == "" )
@@ -19,23 +19,23 @@ namespace Epsitec.Common.Document.Menus
 			}
 		}
 
-		// Compare si le facteur de zoom est (presque) égal.
 		public bool Equal(double zoom)
 		{
+			//	Compare si le facteur de zoom est (presque) égal.
 			return ( System.Math.Abs(this.zoom-zoom) < 0.0001 );
 		}
 
-		// Défini par System.IComparable.
 		public int CompareTo(object obj)
 		{
+			//	Défini par System.IComparable.
 			ZoomMenu zm = obj as ZoomMenu;
 			return this.zoom.CompareTo(zm.zoom);
 		}
 
 
-		// Ajoute une entrée dans une liste si elle n'existe pas encore.
 		protected static void Add(System.Collections.ArrayList list, int zoom)
 		{
+			//	Ajoute une entrée dans une liste si elle n'existe pas encore.
 			ZoomMenu.Add(list, zoom/100.0, "");
 		}
 
@@ -49,9 +49,9 @@ namespace Epsitec.Common.Document.Menus
 			list.Add(new ZoomMenu(zoom, comment));
 		}
 
-		// Construit le menu pour changer de zoom.
 		public static VMenu CreateZoomMenu(double currentZoom, double zoomPage, MessageEventHandler message)
 		{
+			//	Construit le menu pour changer de zoom.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
 			ZoomMenu.Add(list, zoomPage, Res.Strings.Menu.Zoom.Page);

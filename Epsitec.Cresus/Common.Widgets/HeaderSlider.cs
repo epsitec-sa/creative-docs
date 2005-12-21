@@ -23,9 +23,9 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		// Type du bouton.
 		public HeaderSliderStyle Style
 		{
+			//	Type du bouton.
 			get
 			{
 				return this.headerSliderStyle;
@@ -41,9 +41,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			//	Gestion d'un événement.
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
@@ -70,9 +70,9 @@ namespace Epsitec.Common.Widgets
 			message.Consumer = this;
 		}
 
-		// Le slider va être déplacé.
 		protected virtual void OnDragStarted(MessageEventArgs e)
 		{
+			//	Le slider va être déplacé.
 			if ( this.DragStarted != null )  // qq'un écoute ?
 			{
 				if ( e != null )
@@ -84,9 +84,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Le slider est déplacé.
 		protected virtual void OnDragMoved(MessageEventArgs e)
 		{
+			//	Le slider est déplacé.
 			if ( this.DragMoved != null )  // qq'un écoute ?
 			{
 				if ( e != null )
@@ -98,9 +98,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Le slider est fini de déplacer.
 		protected virtual void OnDragEnded(MessageEventArgs e)
 		{
+			//	Le slider est fini de déplacer.
 			if ( this.DragEnded != null )  // qq'un écoute ?
 			{
 				if ( e != null )
@@ -113,9 +113,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Dessine le bouton.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			//	Dessine le bouton.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;

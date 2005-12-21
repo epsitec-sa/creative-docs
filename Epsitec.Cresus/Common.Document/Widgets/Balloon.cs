@@ -38,9 +38,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		
-		// Hauteur de la queue.
 		public double Distance
 		{
+			//	Hauteur de la queue.
 			get
 			{
 				return this.distance;
@@ -56,9 +56,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Marge autour des boutons contenus.
 		public double Margin
 		{
+			//	Marge autour des boutons contenus.
 			get
 			{
 				return this.margin;
@@ -75,9 +75,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Position horizontale du point chaud (queue), habituellement au milieu de la largeur.
 		public double Hot
 		{
+			//	Position horizontale du point chaud (queue), habituellement au milieu de la largeur.
 			get
 			{
 				return this.hot;
@@ -89,9 +89,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Distance d'extinction lorsque la souris s'éloigne.
 		public double AwayMargin
 		{
+			//	Distance d'extinction lorsque la souris s'éloigne.
 			get
 			{
 				return this.awayMargin;
@@ -104,9 +104,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Dessine la "bulle" de style bd.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine la "bulle" de style bd.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate(0.5);
@@ -143,9 +143,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Indique si la souris est trop loin de la mini-palette.
 		public bool IsAway(Point mouse)
 		{
+			//	Indique si la souris est trop loin de la mini-palette.
 			Point p1 = this.MapClientToScreen(new Point(0, 0));
 			Point p2 = this.MapClientToScreen(new Point(this.Width, this.Height));
 			Rectangle rect = new Rectangle(p1, p2);
@@ -163,9 +163,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Appelé même lorsque la souris n'est plus sur le widget.
 		private void MessageFilter(object sender, Message message)
 		{
+			//	Appelé même lorsque la souris n'est plus sur le widget.
 			if ( message.Type == MessageType.MouseMove )
 			{
 				Window window = sender as Window;
@@ -179,9 +179,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Génère un événement pour dire que la fermeture est nécessaire.
 		protected virtual void OnCloseNeeded()
 		{
+			//	Génère un événement pour dire que la fermeture est nécessaire.
 			if ( this.CloseNeeded != null )  // qq'un écoute ?
 			{
 				this.CloseNeeded(this);

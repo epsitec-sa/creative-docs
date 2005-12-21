@@ -8,10 +8,10 @@ namespace Epsitec.Common.Pictogram.Data
 	/// </summary>
 	public class UndoList : System.Collections.ArrayList
 	{
-		// Ajoute un objet à la fin de la liste, en mémorisant éventuellement
-		// l'opération dans UndoList.Operations.
 		public override int Add(object value)
 		{
+			//	Ajoute un objet à la fin de la liste, en mémorisant éventuellement
+			//	l'opération dans UndoList.Operations.
 			return this.Add(value, false);
 		}
 
@@ -22,10 +22,10 @@ namespace Epsitec.Common.Pictogram.Data
 			return index;
 		}
 
-		// Ajoute un objet dans la liste, en mémorisant éventuellement
-		// l'opération dans UndoList.Operations.
 		public override void Insert(int index, object value)
 		{
+			//	Ajoute un objet dans la liste, en mémorisant éventuellement
+			//	l'opération dans UndoList.Operations.
 			this.Insert(index, value, false);
 		}
 
@@ -41,10 +41,10 @@ namespace Epsitec.Common.Pictogram.Data
 			base.Insert(index, value);
 		}
 
-		// Supprime un objet de la liste, en mémorisant éventuellement
-		// l'opération dans UndoList.Operations.
 		public override void RemoveAt(int index)
 		{
+			//	Supprime un objet de la liste, en mémorisant éventuellement
+			//	l'opération dans UndoList.Operations.
 			if ( UndoList.Operations != null )  // mémorise l'opération ?
 			{
 				System.Diagnostics.Debug.Assert(UndoList.Beginning);
@@ -56,18 +56,18 @@ namespace Epsitec.Common.Pictogram.Data
 			base.RemoveAt(index);
 		}
 
-		// Indique qu'un objet de la liste sera changé, en mémorisant éventuellement
-		// un copie de l'objet actuel dans UndoList.Operations.
 		public void WillBeChanged(object value)
 		{
+			//	Indique qu'un objet de la liste sera changé, en mémorisant éventuellement
+			//	un copie de l'objet actuel dans UndoList.Operations.
 			int index = this.IndexOf(value);
 			this.WillBeChanged(index);
 		}
 
-		// Indique qu'un objet de la liste sera changé, en mémorisant éventuellement
-		// un copie de l'objet actuel dans UndoList.Operations.
 		public void WillBeChanged(int index)
 		{
+			//	Indique qu'un objet de la liste sera changé, en mémorisant éventuellement
+			//	un copie de l'objet actuel dans UndoList.Operations.
 			if ( UndoList.Operations != null )  // mémorise l'opération ?
 			{
 				System.Diagnostics.Debug.Assert(UndoList.Beginning);
@@ -94,10 +94,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Défait une opération dans une UndoList.
-		// Une prochaine exécution de UndoRedoOperation refera l'opération.
 		public static void UndoRedoOperation(OpletUndoList operation)
 		{
+			//	Défait une opération dans une UndoList.
+			//	Une prochaine exécution de UndoRedoOperation refera l'opération.
 			System.Collections.ArrayList objects = operation.List;
 			int index = operation.Index;
 
@@ -218,15 +218,15 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Si cette liste est définie, toutes les opérations dans toutes les
-		// UndoList y sont mémorisées (instances de la classe OpletUndoList).
+		//	Si cette liste est définie, toutes les opérations dans toutes les
+		//	UndoList y sont mémorisées (instances de la classe OpletUndoList).
 		public static System.Collections.ArrayList	Operations = null;
 		public static bool							Beginning = false;
 		public static bool							SelectAfterCreate = false;
 	}
 
 
-	// Oplet mémorisant divers paramètres.
+	//	Oplet mémorisant divers paramètres.
 	public class OpletMisc : AbstractOplet
 	{
 		public OpletMisc(Widgets.Drawer drawer)
@@ -300,7 +300,7 @@ namespace Epsitec.Common.Pictogram.Data
 	}
 
 
-	// Oplet créé toujours au début.
+	//	Oplet créé toujours au début.
 	public class OpletBeginning : AbstractOplet
 	{
 		public OpletBeginning(Widgets.Drawer drawer, int styleID, string operation)
@@ -354,7 +354,7 @@ namespace Epsitec.Common.Pictogram.Data
 	}
 
 
-	// Oplet créé toujours à la fin.
+	//	Oplet créé toujours à la fin.
 	public class OpletEnding : AbstractOplet
 	{
 		public OpletEnding(Widgets.Drawer drawer, OpletBeginning beginning)

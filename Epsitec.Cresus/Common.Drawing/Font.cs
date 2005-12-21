@@ -573,9 +573,9 @@ namespace Epsitec.Common.Drawing
 		
 		public struct HandleRef
 		{
-			// Methods
 			public HandleRef(object wrapper, System.IntPtr handle)
 			{
+				//	Methods
 				this.m_wrapper = wrapper;
 				this.m_handle = handle;
 			}
@@ -584,11 +584,11 @@ namespace Epsitec.Common.Drawing
 				return value.m_handle;
 			}
 
-			// Properties
 			public System.IntPtr Handle { get { return this.m_handle; } }
 			public object Wrapper { get { return this.m_wrapper; } }
+			//	Properties
 
-			// Fields
+			//	Fields
 			internal System.IntPtr m_handle;
 			internal object m_wrapper;
  		}
@@ -658,7 +658,7 @@ namespace Epsitec.Common.Drawing
 				flag1 = (Marshal.ReadInt16(lf, 28) == 64);
  			}
 			
-			// return new System.Drawing.Font(ptr1, Marshal.ReadByte(lf, 23), flag1);
+			//	return new System.Drawing.Font(ptr1, Marshal.ReadByte(lf, 23), flag1);
  
 			return null;
 		}

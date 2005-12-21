@@ -326,7 +326,7 @@ namespace Epsitec.Common.Support.Implementation
 		
 		public override bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
-			// TODO:  Add FileProvider.Remove implementation
+			//	TODO:  Add FileProvider.Remove implementation
 			throw new ResourceException ("Not implemented");
 		}
 		

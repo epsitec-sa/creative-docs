@@ -41,9 +41,9 @@ namespace Epsitec.Common.Document
 			set { this.finalTopRight = value; }
 		}
 
-		// Transforme un point du système "initial" vers le système "final".
 		public Point Transform(Point pos)
 		{
+			//	Transforme un point du système "initial" vers le système "final".
 			double sx=0.5, sy=0.5;
 
 			if ( this.initialRectangle.Width != 0.0 )
@@ -61,13 +61,13 @@ namespace Epsitec.Common.Document
 			return Point.Scale(bottom, top, sy);
 		}
 
-		// Transformation inverse d'un point du système "final" vers le système "initial".
-		// La forme finale ne doit pas contenir d'angle aigu.
 		public Point Reverse(Point pos)
 		{
+			//	Transformation inverse d'un point du système "final" vers le système "initial".
+			//	La forme finale ne doit pas contenir d'angle aigu.
 			Point[] inter;
 
-			// Intersection entre les 2 horizontales.
+			//	Intersection entre les 2 horizontales.
 			Point h;
 			inter = Geometry.Intersect(this.finalBottomLeft, this.finalBottomRight, this.finalTopLeft, this.finalTopRight);
 			if ( inter == null )  // droites parallèles ?
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document
 			if ( inter == null )  return this.initialRectangle.Center;
 			Point right = inter[0];
 
-			// Intersection entre les 2 verticales.
+			//	Intersection entre les 2 verticales.
 			Point v;
 			inter = Geometry.Intersect(this.finalBottomLeft, this.finalTopLeft, this.finalBottomRight, this.finalTopRight);
 			if ( inter == null )  // droites parallèles ?

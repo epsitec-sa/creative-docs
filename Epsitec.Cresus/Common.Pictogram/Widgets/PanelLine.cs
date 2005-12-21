@@ -281,9 +281,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				if ( this.extendedSize )
@@ -297,9 +297,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.label.Text = this.textStyle;
 
@@ -345,9 +345,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.EnableWidgets();
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyLine p = new PropertyLine();
 			base.GetProperty(p);
 
@@ -499,9 +499,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			if ( this.IsPatternPossible() && this.extendedSize )
 			{
 				bool simply = (this.patternId.SelectedIndex < 2);
@@ -600,9 +600,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttons == null )  return;
@@ -734,28 +734,28 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.separators[4].Bounds = r;
 		}
 
-		// Indique si les traits avec des patterns sont possibles.
 		protected bool IsPatternPossible()
 		{
+			//	Indique si les traits avec des patterns sont possibles.
 			return (this.drawer.IconObjects.CurrentPattern == 0);
 		}
 		
-		// Une valeur a été changée.
 		private void HandleTextChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			this.OnChanged();
 		}
 
-		// Le motif a été changé.
 		private void HandlePatternIdChanged(object sender)
 		{
+			//	Le motif a été changé.
 			this.EnableWidgets();
 			this.OnChanged();
 		}
 
-		// Une valeur a été changée.
 		private void PanelLineClicked(object sender, MessageEventArgs e)
 		{
+			//	Une valeur a été changée.
 			IconButton button = sender as IconButton;
 
 			if ( button == this.buttons[0] )  this.SelectButtonCap = 0;
@@ -769,22 +769,22 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnChanged();
 		}
 
-		// Un bouton à cocher a été changé.
 		private void HandleRndChanged(object sender)
 		{
+			//	Un bouton à cocher a été changé.
 			this.EnableWidgets();
 			this.OnChanged();
 		}
 
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			this.OnChanged();
 		}
 
-		// Le rang a été changé.
 		private void HandleDashRankChanged(object sender)
 		{
+			//	Le rang a été changé.
 			this.dashPen[this.dashRank] = (double) this.fieldDashPen.Value;
 			this.dashGap[this.dashRank] = (double) this.fieldDashGap.Value;
 
@@ -793,9 +793,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnChanged();
 		}
 
-		// Un champ a été changé.
 		private void HandleDashChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChange )  return;
 
 			this.dashPen[this.dashRank] = (double) this.fieldDashPen.Value;

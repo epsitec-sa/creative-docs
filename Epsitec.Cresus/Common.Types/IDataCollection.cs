@@ -8,6 +8,9 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IDataCollection : System.Collections.IEnumerable, System.Collections.ICollection
 	{
+		IDataItem		this[int index]		{ get; }
+		IDataItem		this[string name]	{ get; }
+		int IndexOf(IDataItem item);
 		//	IEnumerable Members:
 		//
 		//	System.Collection.IEnumerator GetEnumerator();
@@ -20,10 +23,7 @@ namespace Epsitec.Common.Types
 		//
 		//	void CopyTo(System.Array array, int index);
 		
-		IDataItem		this[int index]		{ get; }
-		IDataItem		this[string name]	{ get; }
 		
-		int IndexOf(IDataItem item);
 	}
 }
 

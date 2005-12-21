@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (DbRawType.Time, sql_field.RawType);
 			Assert.AreEqual (null, sql_field.AsParameter);
 
-			// place la valeur du résultat (il n'y a pas de contrôle de type ici
+			//	place la valeur du résultat (il n'y a pas de contrôle de type ici
 			sql_field.SetParameterOutResult("abc");
 			Assert.AreEqual ("abc", sql_field.AsParameter);
 

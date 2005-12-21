@@ -75,18 +75,18 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		// Texte explicatif.
 		public string TextX
 		{
+			//	Texte explicatif.
 			get
 			{
 				return this.textX;
 			}
 		}
 
-		// Texte explicatif.
 		public string TextY
 		{
+			//	Texte explicatif.
 			get
 			{
 				return this.textY;
@@ -207,17 +207,17 @@ namespace Epsitec.Common.Document.Settings
 
 
 		#region Serialization
-		// Sérialise le réglage.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise le réglage.
 			base.GetObjectData(info, context);
 			info.AddValue("Link", this.Link);
 			info.AddValue("Value", this.Value);
 		}
 
-		// Constructeur qui désérialise le réglage.
 		protected Point(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise le réglage.
 			this.link = false;
 			this.Value = (Drawing.Point) info.GetValue("Value", typeof(Drawing.Point));
 			this.Initialise();

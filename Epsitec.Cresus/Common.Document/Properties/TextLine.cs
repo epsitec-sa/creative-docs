@@ -74,9 +74,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Donne le petit texte pour les échantillons.
 		public override string SampleText
 		{
+			//	Donne le petit texte pour les échantillons.
 			get
 			{
 				if ( this.horizontal == JustifHorizontal.Left    )  return "|ab |";
@@ -90,15 +90,15 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			TextLine p = property as TextLine;
 			p.horizontal = this.horizontal;
@@ -106,9 +106,9 @@ namespace Epsitec.Common.Document.Properties
 			p.add        = this.add;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			TextLine p = property as TextLine;
@@ -119,18 +119,18 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.TextLine(document);
 		}
 
 
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("Horizontal", this.horizontal);
@@ -138,9 +138,9 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("Add", this.add);
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected TextLine(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			this.horizontal = (JustifHorizontal) info.GetValue("Horizontal", typeof(JustifHorizontal));
 			this.offset = info.GetDouble("Offset");
 			this.add = info.GetDouble("Add");

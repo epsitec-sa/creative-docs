@@ -19,18 +19,18 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Retourne la hauteur standard d'une barre.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard d'une barre.
 			get
 			{
 				return 66;
 			}
 		}
 		
-		// Retourne la hauteur pour le label supérieur.
 		protected double LabelHeight
 		{
+			//	Retourne la hauteur pour le label supérieur.
 			get
 			{
 				return 14;

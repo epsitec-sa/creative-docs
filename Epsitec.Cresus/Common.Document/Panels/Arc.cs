@@ -65,9 +65,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				double h = this.LabelHeight;
@@ -92,9 +92,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Arc p = this.property as Properties.Arc;
@@ -110,9 +110,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Arc p = this.property as Properties.Arc;
 			if ( p == null )  return;
 
@@ -135,9 +135,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			bool enable = (this.SelectButtonType != Properties.ArcType.Full);
 
 			this.fieldStarting.Enable = (this.isExtendedSize && enable);
@@ -147,9 +147,9 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEnding.Visibility = (this.isExtendedSize);
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -186,16 +186,16 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 		
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
-		// Une valeur a été changée.
 		private void HandleTypeChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			if ( this.ignoreChanged )  return;
 			this.SelectButtonType = (Properties.ArcType) this.grid.SelectedValue;
 			this.EnableWidgets();

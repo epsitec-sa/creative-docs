@@ -86,9 +86,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Adapte une couleur.
 		protected void ColorModifier(ref RichColor color)
 		{
+			//	Adapte une couleur.
 			if ( this.adorner != null )
 			{
 				Color basic = color.Basic;

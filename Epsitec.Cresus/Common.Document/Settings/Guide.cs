@@ -5,8 +5,8 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Settings
 {
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum GuideType
 	{
 		None             = 0,
@@ -235,16 +235,16 @@ namespace Epsitec.Common.Document.Settings
 
 		
 		#region Serialization
-		// Sérialise le repère.
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise le repère.
 			info.AddValue("Type", this.type);
 			info.AddValue("Pos", this.position);
 		}
 
-		// Constructeur qui désérialise le repère.
 		protected Guide(SerializationInfo info, StreamingContext context)
 		{
+			//	Constructeur qui désérialise le repère.
 			this.document = Document.ReadDocument;
 			this.type = (GuideType) info.GetValue("Type", typeof(GuideType));
 			this.position = info.GetDouble("Pos");

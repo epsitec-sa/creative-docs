@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 
 		public override double				DefaultHeight
 		{
-			// Retourne la hauteur standard d'une barre.
+			//	Retourne la hauteur standard d'une barre.
 			get
 			{
 				return 28;

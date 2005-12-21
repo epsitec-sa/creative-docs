@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override double DefaultWidth
 		{
-			// Retourne la largeur standard d'une séparation.
+			//	Retourne la largeur standard d'une séparation.
 			get
 			{
 				//?return this.isHorizontal ? this.breadth : 22;
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Widgets
 
 		public override double DefaultHeight
 		{
-			// Retourne la hauteur standard d'une séparation.
+			//	Retourne la hauteur standard d'une séparation.
 			get
 			{
 				//?return this.isHorizontal ? 22 : this.breadth;

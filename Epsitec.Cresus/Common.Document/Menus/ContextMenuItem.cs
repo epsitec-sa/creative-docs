@@ -70,9 +70,9 @@ namespace Epsitec.Common.Document.Menus
 
 
 		#region StaticMethods
-		// Ajoute une case dans le menu.
 		public static bool MenuAddItem(System.Collections.ArrayList list, string command)
 		{
+			//	Ajoute une case dans le menu.
 			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
 			if ( !cs.Enable )  return false;
 
@@ -85,9 +85,9 @@ namespace Epsitec.Common.Document.Menus
 			return true;
 		}
 
-		// Ajoute un sous-menu dans le menu.
 		public static bool MenuAddSubmenu(System.Collections.ArrayList list, AbstractMenu submenu, string icon, string text)
 		{
+			//	Ajoute un sous-menu dans le menu.
 			if ( submenu == null )  return false;
 
 			ContextMenuItem item = new ContextMenuItem();
@@ -98,16 +98,16 @@ namespace Epsitec.Common.Document.Menus
 			return true;
 		}
 
-		// Ajoute un séparateur dans le menu.
 		public static void MenuAddSep(System.Collections.ArrayList list)
 		{
+			//	Ajoute un séparateur dans le menu.
 			ContextMenuItem item = new ContextMenuItem();
 			list.Add(item);  // séparateur
 		}
 
-		// Indique si un futur menu sera actif.
 		public static bool IsMenuActive(System.Collections.ArrayList list)
 		{
+			//	Indique si un futur menu sera actif.
 			foreach ( ContextMenuItem cmi in list )
 			{
 				if ( cmi.submenu != null )  // sous-menu ?
@@ -125,9 +125,9 @@ namespace Epsitec.Common.Document.Menus
 			return false;
 		}
 
-		// Crée le menu.
 		public static void MenuCreate(VMenu menu, System.Collections.ArrayList list)
 		{
+			//	Crée le menu.
 			foreach ( ContextMenuItem cmi in list )
 			{
 				if ( cmi.submenu != null )  // sous-menu ?

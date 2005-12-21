@@ -57,9 +57,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Retourne une position d'une poignée.
 		public Drawing.Point Position(int rank)
 		{
+			//	Retourne une position d'une poignée.
 			if ( rank == 0 )  return this.h1.Position;
 			if ( rank == 1 )  return this.h1.Position;
 			if ( rank == 2 )  return this.h2.Position;
@@ -70,9 +70,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return new Drawing.Point(0, 0);
 		}
 
-		// Détecte si la souris est dans le modificateur.
 		public bool Detect(Drawing.Point mouse, out int rank)
 		{
+			//	Détecte si la souris est dans le modificateur.
 			if ( this.data.Visible )
 			{
 				if ( this.rotate.Detect(mouse) )  { rank = 6;  return true; }
@@ -90,9 +90,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return false;
 		}
 
-		// Met en évidence la poignée survollée.
 		public void HiliteHandle(int rank, IconContext iconContext, ref Drawing.Rectangle bbox)
 		{
+			//	Met en évidence la poignée survollée.
 			this.HiliteHandle(this.h1,     (rank==1), iconContext, ref bbox);
 			this.HiliteHandle(this.h2,     (rank==2), iconContext, ref bbox);
 			this.HiliteHandle(this.h3,     (rank==3), iconContext, ref bbox);
@@ -101,25 +101,25 @@ namespace Epsitec.Common.Pictogram.Data
 			this.HiliteHandle(this.rotate, (rank==6), iconContext, ref bbox);
 		}
 
-		// Met en évidence une poignée.
 		protected void HiliteHandle(Handle handle, bool hilite, IconContext iconContext, ref Drawing.Rectangle bbox)
 		{
+			//	Met en évidence une poignée.
 			if ( handle.IsHilited == hilite )  return;
 			handle.IsHilited = hilite;
 			handle.BoundingBox(iconContext, ref bbox);
 		}
 
-		// Déplace tout le modificateur.
 		public void MoveAll(Drawing.Point move)
 		{
+			//	Déplace tout le modificateur.
 			this.data.P1 += move;
 			this.data.P2 += move;
 			this.UpdateHandle();
 		}
 
-		// Une poignée du modificateur sera déplacée.
 		public void MoveStarting(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Une poignée du modificateur sera déplacée.
 			if ( rank == 0 )  // global ?
 			{
 				iconContext.ConstrainFixStarting(pos);
@@ -146,9 +146,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.moveOffset = pos-this.Position(rank);
 		}
 
-		// Déplace une poignée du modificateur.
 		public void MoveProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplace une poignée du modificateur.
 			if ( rank != 6 )  // pas rotate ?
 			{
 				iconContext.SnapGrid(this.moveStart, ref pos);
@@ -205,9 +205,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Retourne la bbox du modificateur.
 		public Drawing.Rectangle BoundingBox()
 		{
+			//	Retourne la bbox du modificateur.
 			Drawing.Rectangle bbox = new Drawing.Rectangle(this.data.P1, this.data.P2);
 
 			Drawing.Rectangle circle = new Drawing.Rectangle(this.data.Center, this.data.Center);
@@ -217,9 +217,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return bbox;
 		}
 
-		// Met à jour la position des poignées en fonction des données.
 		public void UpdateHandle()
 		{
+			//	Met à jour la position des poignées en fonction des données.
 			this.h1.Position = this.data.P1;
 			this.h2.Position = this.data.P2;
 			this.h3.Position = this.data.P3;
@@ -232,9 +232,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.rotate.Position = this.data.Center + Drawing.Transform.RotatePointDeg(angle, new Drawing.Point(0, radius));
 		}
 
-		// Dessine le modificateur.
 		public void Draw(Drawing.Graphics graphics, IconContext iconContext)
 		{
+			//	Dessine le modificateur.
 			if ( !this.data.Visible )  return;
 
 			Drawing.Rectangle rect = new Drawing.Rectangle(this.data.P1, this.data.P2);
@@ -265,11 +265,11 @@ namespace Epsitec.Common.Pictogram.Data
 			rotate.Draw(graphics, iconContext);
 		}
 
-		// Dessine un cercle complet.
 		protected void PaintCircle(Drawing.Graphics graphics,
 								   Drawing.Point c, double rx, double ry,
 								   Drawing.Color color)
 		{
+			//	Dessine un cercle complet.
 			Drawing.Path path = new Drawing.Path();
 			path.MoveTo(c.X-rx, c.Y);
 			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
@@ -281,9 +281,9 @@ namespace Epsitec.Common.Pictogram.Data
 			graphics.RenderSolid(color);
 		}
 
-		// Calcule l'extrémité gauche ou droite de la flèche.
 		protected Drawing.Point ComputeExtremity(Drawing.Point p1, Drawing.Point p2, double para, double perp, int rank)
 		{
+			//	Calcule l'extrémité gauche ou droite de la flèche.
 			double distPara = Drawing.Point.Distance(p1, p2)*para;
 			double distPerp = Drawing.Point.Distance(p1, p2)*perp;
 			Drawing.Point c = Drawing.Point.Move(p2, p1, distPara);
@@ -418,9 +418,9 @@ namespace Epsitec.Common.Pictogram.Data
 			dest.angle   = this.angle;
 		}
 
-		// Transforme un point.
 		static public Drawing.Point Transform(GlobalModifierData initial, GlobalModifierData final, Drawing.Point pos)
 		{
+			//	Transforme un point.
 			Drawing.Point f = Drawing.Point.ScaleDiv(pos-initial.P1, initial.P2-initial.P1);
 			pos = Drawing.Point.ScaleMul(f, final.P2-final.P1)+final.P1;
 
@@ -434,17 +434,17 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 #if false
-		// Déforme un point dans un quadrillatère quelconque.
-		// s0                       d0         d1
-		//  o----------o             o---------o
-		//  |          |     ---\    |          \
-		//  |          |     ---/    |           \
-		//  o----------o             o------------o
-		//             s2           d3            d2
 		static protected Drawing.Point Deform(Drawing.Point s0, Drawing.Point s2,
 											  Drawing.Point d0, Drawing.Point d1, Drawing.Point d2, Drawing.Point d3,
 											  Drawing.Point p)
 		{
+			//	Déforme un point dans un quadrillatère quelconque.
+			//	s0                       d0         d1
+			//	o----------o             o---------o
+			//	|          |     ---\    |          \
+			//	|          |     ---/    |           \
+			//	o----------o             o------------o
+			//	s2           d3            d2
 			Drawing.Point	q = new Epsitec.Common.Drawing.Point();
 			Drawing.Point	pp = new Epsitec.Common.Drawing.Point();
 

@@ -42,9 +42,9 @@ namespace Epsitec.Common.Document.Ribbons
 			this.AdaptFieldScale(this.fieldScale);
 		}
 
-		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard.
 			get
 			{
 				return 8 + 22*2 + this.separatorWidth + 50;
@@ -52,9 +52,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonScaleDiv2 == null )  return;
@@ -92,9 +92,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Crée un champ éditable pour une échelle.
 		protected void CreateFieldScale(ref TextFieldReal field, string tooltip)
 		{
+			//	Crée un champ éditable pour une échelle.
 			field = new TextFieldReal(this);
 			field.Width = 50;
 			field.TabIndex = this.tabIndex++;
@@ -103,9 +103,9 @@ namespace Epsitec.Common.Document.Ribbons
 			ToolTip.Default.SetToolTip(field, tooltip);
 		}
 
-		// Adapte un champ éditable pour une échelle.
 		protected void AdaptFieldScale(TextFieldReal field)
 		{
+			//	Adapte un champ éditable pour une échelle.
 			if ( this.document == null )
 			{
 				field.Enable = false;

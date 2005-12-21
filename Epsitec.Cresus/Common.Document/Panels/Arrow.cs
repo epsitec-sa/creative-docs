@@ -117,9 +117,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				double h = this.LabelHeight;
@@ -146,9 +146,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Arrow p = this.property as Properties.Arrow;
@@ -168,9 +168,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Arrow p = this.property as Properties.Arrow;
 			if ( p == null )  return;
 
@@ -183,12 +183,12 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			Properties.Arrow p = this.property as Properties.Arrow;
 
-			// Initialise les min/max en fonction du type choisi.
+			//	Initialise les min/max en fonction du type choisi.
 			for ( int j=0 ; j<2 ; j++ )
 			{
 				Properties.ArrowType type = (Properties.ArrowType) this.grid[j].SelectedValue;
@@ -225,9 +225,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -339,9 +339,9 @@ namespace Epsitec.Common.Document.Panels
 			this.swapArrow.Bounds = r;
 		}
 
-		// Retourne le nombre de lignes éditables selon le type.
 		protected int GetTotalTextField(int j)
 		{
+			//	Retourne le nombre de lignes éditables selon le type.
 			Properties.ArrowType type = (Properties.ArrowType) this.grid[j].SelectedValue;
 
 			if ( type == Properties.ArrowType.Right        )  return 0;
@@ -353,9 +353,9 @@ namespace Epsitec.Common.Document.Panels
 			return 3;
 		}
 		
-		// Le type a été changé.
 		private void HandleTypeChanged(object sender)
 		{
+			//	Le type a été changé.
 			if ( this.ignoreChanged )  return;
 
 			if ( this.IsLabelProperties )
@@ -382,7 +382,7 @@ namespace Epsitec.Common.Document.Panels
 				val *= Arrow.TypeFactor(type);
 				this.fieldLength[j].TextFieldReal.InternalValue = (decimal) val;
 
-				// Met les valeurs par défaut correspondant au type choisi.
+				//	Met les valeurs par défaut correspondant au type choisi.
 				bool enableRadius, enable1, enable2;
 				double effect1, min1, max1;
 				double effect2, min2, max2;
@@ -395,10 +395,10 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
-		// Retourne le facteur de réduction selon le type de flèche.
-		// L'idée est de réduire les points par rapport aux flèches.
 		protected static double TypeFactor(Properties.ArrowType type)
 		{
+			//	Retourne le facteur de réduction selon le type de flèche.
+			//	L'idée est de réduire les points par rapport aux flèches.
 			if ( type == Properties.ArrowType.Slash   )  return 0.5;
 			if ( type == Properties.ArrowType.Dot     )  return 0.5;
 			if ( type == Properties.ArrowType.Square  )  return 0.5;
@@ -406,9 +406,9 @@ namespace Epsitec.Common.Document.Panels
 			return 1.0;
 		}
 
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}

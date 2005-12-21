@@ -16,9 +16,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 		}
 
-		// Crée et montre la fenêtre du dialogue.
 		public override void Show()
 		{
+			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -47,7 +47,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buy.Dock = DockStyle.Top;
 				this.buy.DockMargins = new Margins(10, 10, 0, 10);
 
-				// Bouton de fermeture.
+				//	Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
@@ -115,9 +115,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.ShowDialog();
 		}
 
-		// Enregistre la position de la fenêtre du dialogue.
 		public override void Save()
 		{
+			//	Enregistre la position de la fenêtre du dialogue.
 			this.WindowSave("Update");
 		}
 

@@ -151,9 +151,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 		
 
-		// Repère sélectionné.
 		public int SelectGuide
 		{
+			//	Repère sélectionné.
 			get
 			{
 				return this.document.Settings.GuidesSelected;
@@ -174,9 +174,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
+			//	Effectue la mise à jour du contenu.
 			int sel = this.document.Settings.GuidesSelected;
 			if ( sel >= this.document.Settings.GuidesCount )
 			{
@@ -190,9 +190,9 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateEdits();
 		}
 
-		// Met à jour les boutons de la toolbar.
 		protected void UpdateToolBar()
 		{
+			//	Met à jour les boutons de la toolbar.
 			int total = this.document.Settings.GuidesCount;
 			int sel = this.document.Settings.GuidesSelected;
 
@@ -203,9 +203,9 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonDelete.Enable = (sel != -1 && total > 0);
 		}
 
-		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
+			//	Met à jour le contenu de la table.
 			this.radioGlobal.ActiveState =  this.document.Settings.GlobalGuides ? ActiveState.Yes : ActiveState.No;
 			this.radioPage.ActiveState   = !this.document.Settings.GlobalGuides ? ActiveState.Yes : ActiveState.No;
 
@@ -229,9 +229,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Peuple une ligne de la table, si nécessaire.
 		protected void TableFillRow(int row)
 		{
+			//	Peuple une ligne de la table, si nécessaire.
 			for ( int column=0 ; column<this.table.Columns ; column++ )
 			{
 				if ( this.table[column, row].IsEmpty )
@@ -245,9 +245,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Met à jour le contenu d'une ligne de la table.
 		protected void TableUpdateRow(int row)
 		{
+			//	Met à jour le contenu d'une ligne de la table.
 			Settings.Guide guide = this.document.Settings.GuidesGet(row);
 			StaticText st;
 
@@ -271,9 +271,9 @@ namespace Epsitec.Common.Document.Containers
 			this.table.SelectRow(row, row==this.document.Settings.GuidesSelected);
 		}
 
-		// Met à jour les widgets d'édition en fonction de la ligne sélectionnée.
 		protected void UpdateEdits()
 		{
+			//	Met à jour les widgets d'édition en fonction de la ligne sélectionnée.
 			this.ignoreChanged = true;
 
 			int sel = this.document.Settings.GuidesSelected;
@@ -298,9 +298,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Un bouton radio a changé.
 		private void HandleRadioChanged(object sender)
 		{
+			//	Un bouton radio a changé.
 			RadioButton radio = sender as RadioButton;
 			if ( radio == null )  return;
 			if ( radio.ActiveState != ActiveState.Yes )  return;
@@ -309,9 +309,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Crée un nouveau repère.
 		protected void CreateGuide(Settings.GuideType type)
 		{
+			//	Crée un nouveau repère.
 			int sel = this.document.Settings.GuidesSelected+1;
 			string action = (type == Settings.GuideType.HorizontalBottom) ? Res.Strings.Action.GuideNewH : Res.Strings.Action.GuideNewV;
 			this.document.Modifier.OpletQueueBeginAction(action, "ChangeGuide", sel);
@@ -326,21 +326,21 @@ namespace Epsitec.Common.Document.Containers
 			this.editPosition.Focus();
 		}
 
-		// Crée un nouveau repère horizontal.
 		private void HandleButtonNewH(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouveau repère horizontal.
 			this.CreateGuide(Settings.GuideType.HorizontalBottom);
 		}
 
-		// Crée un nouveau repère vertical.
 		private void HandleButtonNewV(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouveau repère vertical.
 			this.CreateGuide(Settings.GuideType.VerticalLeft);
 		}
 
-		// Duplique un repère.
 		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
 		{
+			//	Duplique un repère.
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.GuideDuplicate);
 			int sel = this.document.Settings.GuidesSelected;
 			Settings.Guide guide = new Settings.Guide(this.document);
@@ -353,9 +353,9 @@ namespace Epsitec.Common.Document.Containers
 			this.editPosition.Focus();
 		}
 
-		// Transfère un repère (global <-> local).
 		private void HandleButtonXfer(object sender, MessageEventArgs e)
 		{
+			//	Transfère un repère (global <-> local).
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.GuideXfer);
 			int sel = this.document.Settings.GuidesSelected;
 
@@ -375,9 +375,9 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.OpletQueueValidateAction();
 		}
 
-		// Monte d'une ligne le repère sélectionné.
 		private void HandleButtonUp(object sender, MessageEventArgs e)
 		{
+			//	Monte d'une ligne le repère sélectionné.
 			int sel = this.document.Settings.GuidesSelected;
 			if ( sel < 1 )  return;
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.GuideUp);
@@ -392,9 +392,9 @@ namespace Epsitec.Common.Document.Containers
 			this.editPosition.Focus();
 		}
 
-		// Descend d'une ligne le repère sélectionné.
 		private void HandleButtonDown(object sender, MessageEventArgs e)
 		{
+			//	Descend d'une ligne le repère sélectionné.
 			int sel = this.document.Settings.GuidesSelected;
 			if ( sel > this.document.Settings.GuidesCount-2 )  return;
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.GuideDown);
@@ -409,9 +409,9 @@ namespace Epsitec.Common.Document.Containers
 			this.editPosition.Focus();
 		}
 
-		// Supprime le repère sélectionné.
 		private void HandleButtonDelete(object sender, MessageEventArgs e)
 		{
+			//	Supprime le repère sélectionné.
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.GuideDelete);
 			int sel = this.document.Settings.GuidesSelected;
 			this.document.Settings.GuidesRemoveAt(sel);
@@ -425,18 +425,18 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.OpletQueueValidateAction();
 		}
 
-		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
+			//	Liste cliquée.
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.GuideSelect);
 			this.document.Settings.GuidesSelected = this.table.SelectedRow;
 			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateEdits();
 		}
 
-		// Liste survolée.
 		private void HandleTableFlyOverChanged(object sender)
 		{
+			//	Liste survolée.
 			int rank = this.table.FlyOverRow;
 			int total = this.document.Settings.GuidesCount;
 			for ( int i=0 ; i<total ; i++ )

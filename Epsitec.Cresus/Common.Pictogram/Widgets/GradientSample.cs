@@ -24,9 +24,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 		
 		
-		// Dégradé.
 		public PropertyGradient Gradient
 		{
+			//	Dégradé.
 			get
 			{
 				return this.gradient;
@@ -40,9 +40,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Dessine la couleur.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			//	Dessine la couleur.
 			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Drawing
 		All,
 	}
 	
-	// Alignement d'un tabluateur.
+	//	Alignement d'un tabluateur.
 	public enum TextTabType
 	{
 		None,
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Drawing
 		Indent,
 	}
 	
-	// Points de suite d'un tabulateur.
+	//	Points de suite d'un tabulateur.
 	public enum TextTabLine
 	{
 		None,
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Drawing
 		Full,
 	}
 	
-	// Types des puces.
+	//	Types des puces.
 	public enum TextListType
 	{
 		None,
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Drawing
 		Num,
 	}
 	
-	// Formes des puces.
+	//	Formes des puces.
 	public enum TextListGlyph
 	{
 		Circle,
@@ -169,11 +169,11 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		//	UnderlineThickness
-		//	UnderlineOffset
-		
 		public Font								Font
 		{
+			//	UnderlineThickness
+			//	UnderlineOffset
+			
 			get
 			{
 				return (this.font == null) ? this.parent.Font : this.font;
@@ -521,7 +521,7 @@ namespace Epsitec.Common.Drawing
 
 		public Tab FindTabAfterPosition(double pos)
 		{
-			// Cherche la position du prochain tabulateur après une position donnée.
+			//	Cherche la position du prochain tabulateur après une position donnée.
 			double lastPos = 0.0;
 			double bestDist = 1000000;
 			Tab bestTab = null;

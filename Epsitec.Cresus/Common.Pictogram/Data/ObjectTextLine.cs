@@ -48,9 +48,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return @"file:images/textline.icon"; }
 		}
 
@@ -69,9 +69,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur l'objet.
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle bbox = this.BoundingBox;
@@ -82,11 +82,11 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.DetectTextCurve(pos);
 		}
 
-		// Détecte si l'objet est dans un rectangle.
-		// all = true  -> toutes les poignées doivent être dans le rectangle
-		// all = false -> une seule poignée doit être dans le rectangle
 		public override bool Detect(Drawing.Rectangle rect, bool all)
 		{
+			//	Détecte si l'objet est dans un rectangle.
+			//	all = true  -> toutes les poignées doivent être dans le rectangle
+			//	all = false -> une seule poignée doit être dans le rectangle
 			if ( this.isHide )  return false;
 
 			if ( all )
@@ -99,19 +99,19 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Détecte si la souris est sur le pourtour de l'objet.
-		// Retourne le rank de la poignée de départ, ou -1
 		protected int DetectOutline(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur le pourtour de l'objet.
+			//	Retourne le rank de la poignée de départ, ou -1
 			Drawing.Path path = this.PathBuild();
 			int rank = AbstractObject.DetectOutlineRank(path, this.minimalWidth, pos);
 			if ( rank != -1 )  rank *= 3;
 			return rank;
 		}
 
-		// Détecte si la souris est sur l'objet pour l'éditer.
 		public override bool DetectEdit(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur l'objet pour l'éditer.
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle bbox = this.BoundingBox;
@@ -123,9 +123,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Déplace tout l'objet.
 		public override void MoveAll(Drawing.Point move, bool all)
 		{
+			//	Déplace tout l'objet.
 			int total = this.handles.Count;
 			for ( int i=0 ; i<total ; i+=3 )
 			{
@@ -140,9 +140,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Donne le contenu du menu contextuel.
 		public override void ContextMenu(System.Collections.ArrayList list, Drawing.Point pos, int handleRank)
 		{
+			//	Donne le contenu du menu contextuel.
 			ContextMenuItem item;
 
 			if ( handleRank == -1 )  // sur un segment ?
@@ -259,9 +259,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Exécute une commande du menu contextuel.
 		public override void ContextCommand(string cmd, Drawing.Point pos, int handleRank)
 		{
+			//	Exécute une commande du menu contextuel.
 			int rank = this.DetectOutline(pos);
 
 			if ( cmd == "Line" )
@@ -303,17 +303,17 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Passe le point en mode symétrique.
 		protected void ContextSym(int rank)
 		{
+			//	Passe le point en mode symétrique.
 			this.Handle(rank).ConstrainType = HandleConstrainType.Symmetric;
 			this.MoveSecondary(rank, rank-1, rank+1, this.Handle(rank-1).Position);
 			this.dirtyBbox = true;
 		}
 
-		// Passe le point en mode lisse.
 		protected void ContextSmooth(int rank)
 		{
+			//	Passe le point en mode lisse.
 			this.Handle(rank).ConstrainType = HandleConstrainType.Smooth;
 
 			if ( this.Handle(rank-1).Type == HandleType.Hide || this.Handle(rank+1).Type == HandleType.Hide )
@@ -327,15 +327,15 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Passe le point en mode anguleux.
 		protected void ContextCorner(int rank)
 		{
+			//	Passe le point en mode anguleux.
 			this.Handle(rank).ConstrainType = HandleConstrainType.Corner;
 		}
 
-		// Ajoute une poignée sans changer l'aspect de la courbe.
 		protected void ContextAddHandle(Drawing.Point pos, int rank)
 		{
+			//	Ajoute une poignée sans changer l'aspect de la courbe.
 			for ( int i=0 ; i<3 ; i++ )
 			{
 				Handle handle = new Handle();
@@ -376,9 +376,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Supprime une poignée sans changer l'aspect de la courbe.
 		protected void ContextSubHandle(Drawing.Point pos, int rank)
 		{
+			//	Supprime une poignée sans changer l'aspect de la courbe.
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
@@ -398,9 +398,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Conversion d'un segement en ligne droite.
 		protected void ContextToLine(int rank)
 		{
+			//	Conversion d'un segement en ligne droite.
 			int next = rank+3;
 			if ( next >= this.handles.Count )  next = 0;
 			this.Handle(rank+2).Position = this.Handle(rank+1).Position;
@@ -412,9 +412,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Conversion d'un segement en courbe.
 		protected void ContextToCurve(int rank)
 		{
+			//	Conversion d'un segement en courbe.
 			int next = rank+3;
 			if ( next >= this.handles.Count )  next = 0;
 			this.Handle(rank+2).Position = Drawing.Point.Scale(this.Handle(rank+1).Position, this.Handle(next+1).Position, 0.25);
@@ -427,9 +427,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Adapte le point secondaire s'il est en mode "en ligne".
 		protected void AdaptPrimaryLine(int rankPrimary, int rankSecondary, out int rankExtremity)
 		{
+			//	Adapte le point secondaire s'il est en mode "en ligne".
 			rankExtremity = rankPrimary - (rankSecondary-rankPrimary)*3;
 			if ( rankExtremity < 0 )  rankExtremity = this.handles.Count-2;
 			if ( rankExtremity >= this.handles.Count )  rankExtremity = 1;
@@ -446,9 +446,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Déplace une poignée primaire selon les contraintes.
 		protected void MovePrimary(int rank, Drawing.Point pos)
 		{
+			//	Déplace une poignée primaire selon les contraintes.
 			Drawing.Point move = pos-this.Handle(rank).Position;
 			this.Handle(rank).Position = pos;
 			this.Handle(rank-1).Position += move;
@@ -464,9 +464,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Déplace une poignée secondaire selon les contraintes.
 		protected void MoveSecondary(int rankPrimary, int rankSecondary, int rankOpposite, Drawing.Point pos)
 		{
+			//	Déplace une poignée secondaire selon les contraintes.
 			HandleConstrainType type = this.Handle(rankPrimary).ConstrainType;
 
 			this.Handle(rankSecondary).Position = pos;
@@ -504,9 +504,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Début du déplacement une poignée.
 		public override void MoveHandleStarting(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Début du déplacement une poignée.
 			if ( rank < this.TotalHandle )
 			{
 				pos = this.Handle((rank/3)*3+1).Position;
@@ -514,9 +514,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, iconContext);
@@ -546,9 +546,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Début de la création d'un objet.
 			iconContext.ConstrainFixStarting(pos);
 
 			this.HandleAdd(pos, HandleType.Hide);
@@ -563,9 +563,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.Handle(4).IsSelected = true;
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			this.Handle(3).Position = pos;
@@ -574,9 +574,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Fin de la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			this.Handle(3).Position = pos;
@@ -585,30 +585,30 @@ namespace Epsitec.Common.Pictogram.Data
 			iconContext.ConstrainDelStarting();
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			this.Deselect();
 			double len = Drawing.Point.Distance(this.Handle(1).Position, this.Handle(4).Position);
 			return ( len > this.minimalSize );
 		}
 
-		// Indique s'il faut sélectionner l'objet après sa création.
 		public override bool EditAfterCreation()
 		{
+			//	Indique s'il faut sélectionner l'objet après sa création.
 			return true;
 		}
 
-		// Indique si un objet est éditable.
 		public override bool IsEditable()
 		{
+			//	Indique si un objet est éditable.
 			return true;
 		}
 
-		// Lie l'objet éditable à une règle.
 		public override bool EditRulerLink(TextRuler ruler, IconContext iconContext)
 		{
+			//	Lie l'objet éditable à une règle.
 			ruler.ListCapability = false;
 			ruler.TabCapability = false;
 			ruler.AttachToText(this.textNavigator);
@@ -616,9 +616,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(AbstractObject src)
 		{
+			//	Reprend toutes les caractéristiques d'un objet.
 			base.CloneObject(src);
 
 			ObjectTextLine obj = src as ObjectTextLine;
@@ -627,9 +627,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Gestion d'un événement pendant l'édition.
 		public override bool EditProcessMessage(Message message, Drawing.Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			if ( message.IsMouseType )
 			{
 				int rank = this.DetectTextCurveRank(pos);
@@ -649,9 +649,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Gestion d'un événement pendant l'édition.
 		public override void EditMouseDownMessage(Drawing.Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			int rank = this.DetectTextCurveRank(pos);
 			pos = this.RankToLinearPos(rank);
 			if ( pos == Drawing.Point.Empty )  return;
@@ -660,9 +660,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
+			//	Met à jour le rectangle englobant l'objet.
 			Drawing.Path path = this.PathBuild();
 			this.bboxThin = AbstractObject.ComputeBoundingBox(path);
 			this.BboxTextCurve(ref this.bboxThin);
@@ -672,9 +672,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.bboxFull.MergeWith(this.FullBoundingBox());
 		}
 
-		// Calcule la bbox qui englobe l'objet et les poignées secondaires.
 		protected Drawing.Rectangle FullBoundingBox()
 		{
+			//	Calcule la bbox qui englobe l'objet et les poignées secondaires.
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 			int total = this.TotalHandle;
 			for ( int i=0 ; i<total ; i++ )
@@ -684,9 +684,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return bbox;
 		}
 
-		// Crée le chemin de l'objet.
 		protected Drawing.Path PathBuild()
 		{
+			//	Crée le chemin de l'objet.
 			Drawing.Path path = new Drawing.Path();
 
 			int total = this.handles.Count;
@@ -706,9 +706,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Retourne la longueur totale d'une courbe multiple.
 		protected double GetLength()
 		{
+			//	Retourne la longueur totale d'une courbe multiple.
 			double length = 0.0;
 			int i = 0;
 			do
@@ -741,16 +741,16 @@ namespace Epsitec.Common.Pictogram.Data
 			return length;
 		}
 
-		// Avance le long d'une courbe multiple.
-		// La courbe est fragmentée en 100 morceaux (ObjectTextLine.step = 0.01)
-		// considérés chacuns comme des lignes droites.
-		// Retourne false lorsqu'on arrive à la fin.
-		// Le mode checkEnd = true ne teste pas l'arrivée à la fin, ce qui est
-		// utile en mode JustifHorizontal.Right pour être certain de caser le
-		// dernier caractère. Sans cela, des erreurs d'arrondi font qu'il est
-		// parfois considéré comme hors du tracé.
 		protected bool Advance(double width, bool checkEnd, ref int i, ref double t, ref Drawing.Point pos)
 		{
+			//	Avance le long d'une courbe multiple.
+			//	La courbe est fragmentée en 100 morceaux (ObjectTextLine.step = 0.01)
+			//	considérés chacuns comme des lignes droites.
+			//	Retourne false lorsqu'on arrive à la fin.
+			//	Le mode checkEnd = true ne teste pas l'arrivée à la fin, ce qui est
+			//	utile en mode JustifHorizontal.Right pour être certain de caser le
+			//	dernier caractère. Sans cela, des erreurs d'arrondi font qu'il est
+			//	parfois considéré comme hors du tracé.
 			if ( i >= this.handles.Count-3 )  return false;
 
 			while ( true )
@@ -811,9 +811,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Retourne la largeur d'un caractère.
 		protected static double AdvanceString(Drawing.Font font, string text)
 		{
+			//	Retourne la largeur d'un caractère.
 			System.Diagnostics.Debug.Assert(text.Length == 1);
 			if ( text[0] == TextLayout.CodeEndOfText )
 			{
@@ -825,9 +825,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Retourne la bbox d'un caractère.
 		protected static Drawing.Rectangle AdvanceBounds(Drawing.Font font, string text)
 		{
+			//	Retourne la bbox d'un caractère.
 			System.Diagnostics.Debug.Assert(text.Length == 1);
 			if ( text[0] == TextLayout.CodeEndOfText )
 			{
@@ -839,9 +839,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Initialise l'avance le long des caractères du texte.
 		protected bool AdvanceInit()
 		{
+			//	Initialise l'avance le long des caractères du texte.
 			PropertyTextLine justif = this.PropertyTextLine(1);
 
 			this.textLayout.DefaultFont     = this.PropertyFont(2).GetFont();
@@ -894,7 +894,6 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Avance sur le prochain caractère du texte.
 		protected bool AdvanceNext(out string character,
 								   out Drawing.Font font,
 								   out double fontSize,
@@ -906,6 +905,7 @@ namespace Epsitec.Common.Pictogram.Data
 								   out Drawing.Point pbr,
 								   out double angle)
 		{
+			//	Avance sur le prochain caractère du texte.
 			PropertyTextLine justif = this.PropertyTextLine(1);
 
 			character = "";
@@ -966,10 +966,10 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Conversion d'un rank dans le texte en une position linéaire, c'est-à-dire
-		// une position qui suppose que le texte est droit.
 		protected Drawing.Point RankToLinearPos(int rank)
 		{
+			//	Conversion d'un rank dans le texte en une position linéaire, c'est-à-dire
+			//	une position qui suppose que le texte est droit.
 			Drawing.Point lp = Drawing.Point.Empty;
 			if ( rank == -1 || !this.AdvanceInit() )  return lp;
 
@@ -989,9 +989,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return lp;
 		}
 
-		// Détecte si la souris est sur un caractère du texte le long de la courbe multiple.
 		protected bool DetectTextCurve(Drawing.Point mouse)
 		{
+			//	Détecte si la souris est sur un caractère du texte le long de la courbe multiple.
 			if ( !this.AdvanceInit() )  return false;
 
 			string			character;
@@ -1012,9 +1012,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return false;
 		}
 
-		// Détecte sur quel caractère est la souris le long de la courbe multiple.
 		protected int DetectTextCurveRank(Drawing.Point mouse)
 		{
+			//	Détecte sur quel caractère est la souris le long de la courbe multiple.
 			if ( !this.AdvanceInit() )  return -1;
 
 			string			character;
@@ -1045,9 +1045,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return -1;
 		}
 
-		// Calcule la bbox du texte le long de la courbe multiple.
 		protected void BboxTextCurve(ref Drawing.Rectangle bbox)
 		{
+			//	Calcule la bbox du texte le long de la courbe multiple.
 			if ( !this.AdvanceInit() )  return;
 
 			string			character;
@@ -1065,9 +1065,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Dessine le texte le long de la courbe multiple.
 		protected void HiliteTextCurve(Drawing.Graphics graphics, IconContext iconContext)
 		{
+			//	Dessine le texte le long de la courbe multiple.
 			if ( !this.AdvanceInit() )  return;
 
 			string			character;
@@ -1089,9 +1089,9 @@ namespace Epsitec.Common.Pictogram.Data
 			graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 		}
 
-		// Dessine le texte le long de la courbe multiple.
 		protected void DrawTextCurve(Drawing.IPaintPort port, IconContext iconContext)
 		{
+			//	Dessine le texte le long de la courbe multiple.
 			if ( !this.AdvanceInit() )  return;
 
 			this.textLayout.DrawingScale = iconContext.ScaleX;
@@ -1172,9 +1172,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Dessine l'objet.
 			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext, iconObjects);
 
@@ -1227,9 +1227,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Imprime l'objet.
 		public override void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Imprime l'objet.
 			base.PrintGeometry(port, iconContext, iconObjects);
 
 			int total = this.TotalHandle;

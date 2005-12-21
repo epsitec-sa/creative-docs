@@ -1206,20 +1206,20 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property CommandDispatchersProperty	= Property.RegisterReadOnly ("CommandDispatchers", typeof (CommandDispatcher[]), typeof (Visual), new PropertyMetadata (null, new GetValueOverrideCallback (Visual.GetCommandDispatchersValue), new PropertyInvalidatedCallback (Visual.NotifyCommandDispatchersChanged)));
 		public static readonly Property CommandProperty				= Property.Register ("Command", typeof (string), typeof (Visual), new PropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged)));
 		
-//-		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
-		
-		
 		private int								command_cache_id = -1;
 		private short							visual_serial_id = Visual.next_serial_id++;
 		private short							suspend_layout_counter;
-		
 		protected bool							has_layout_changed;
 		protected bool							have_children_changed;
 		protected byte							currently_updating_layout;
-		
 		private Collections.LayerCollection		layer_collection;
 		private Layouts.Layer					parent_layer;
-		
 		private static short					next_serial_id = 0;
+//-		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
+		
+		
+		
+		
+		
 	}
 }

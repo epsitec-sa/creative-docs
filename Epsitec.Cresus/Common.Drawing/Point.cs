@@ -68,7 +68,7 @@ namespace Epsitec.Common.Drawing
 		
 		internal static double GridAlign(double value, double offset, double step)
 		{
-			// Met une valeur sur la grille la plus proche.
+			//	Met une valeur sur la grille la plus proche.
 			if ( value+offset < 0.0 )
 			{
 				return (double)((int)((value+offset-step/2.0)/step)*step)-offset;
@@ -210,18 +210,18 @@ namespace Epsitec.Common.Drawing
 		
 		public static double ComputeAngleRad(Point c, Point a)
 		{
-			// Calcule l'angle d'un triangle rectangle.
-			// L'angle est anti-horaire (CCW), compris entre 0 et 2*PI.
-			// Pour obtenir un angle horaire (CW), il suffit de passer -y.
+			//	Calcule l'angle d'un triangle rectangle.
+			//	L'angle est anti-horaire (CCW), compris entre 0 et 2*PI.
+			//	Pour obtenir un angle horaire (CW), il suffit de passer -y.
 			//
-			//      ^
-			//      |
-			//    y o----o
-			//      |  / |
-			//      |/)a |
-			//  ----o----o-->
-			//      |    x 
-			//      |
+			//	^
+			//	|
+			//	y o----o
+			//	|  / |
+			//	|/)a |
+			//	----o----o-->
+			//	|    x 
+			//	|
 			
 			return Point.ComputeAngleRad(a.X-c.X, a.Y-c.Y);
 		}

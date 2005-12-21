@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								PossibleSource
 		{
-			// Possibilité d'utiliser ce widget comme origine des couleurs.
+			//	Possibilité d'utiliser ce widget comme origine des couleurs.
 			
 			get
 			{
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Widgets
 
 		public double							MarginSource
 		{
-			// Marge lorsque l'origine des couleurs est affichée.
+			//	Marge lorsque l'origine des couleurs est affichée.
 			
 			get
 			{
@@ -125,16 +125,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		// Lie l'échantillon à une couleur dans une liste.
 		public void AttachColorCollection(Drawing.ColorCollection list, int index)
 		{
+			//	Lie l'échantillon à une couleur dans une liste.
 			this.collectionList = list;
 			this.collectionIndex = index;
 		}
 
-		// Délie l'échantillon.
 		public void DetachColorCollection()
 		{
+			//	Délie l'échantillon.
 			this.collectionList = null;
 			this.collectionIndex = -1;
 		}
@@ -157,9 +157,9 @@ namespace Epsitec.Common.Widgets
 				return base.AboutToGetFocus(dir, mode, out focus);
 			}
 			
-			// Ce n'est pas notre bouton radio qui est allumé. TAB voudrait nous donner le
-			// focus, mais ce n'est pas adéquat; mieux vaut mettre le focus sur le frère qui
-			// est activé :
+			//	Ce n'est pas notre bouton radio qui est allumé. TAB voudrait nous donner le
+			//	focus, mais ce n'est pas adéquat; mieux vaut mettre le focus sur le frère qui
+			//	est activé :
 			
 			if ( sample == null )
 			{
@@ -178,9 +178,9 @@ namespace Epsitec.Common.Widgets
 				return base.FindTabWidgetList(mode);
 			}
 			
-			// On recherche les frères de ce widget, pour déterminer lequel devra être activé par la
-			// pression de la touche TAB. Pour bien faire, il faut supprimer les autres boutons radio
-			// qui appartiennent à notre groupe :
+			//	On recherche les frères de ce widget, pour déterminer lequel devra être activé par la
+			//	pression de la touche TAB. Pour bien faire, il faut supprimer les autres boutons radio
+			//	qui appartiennent à notre groupe :
 			
 			System.Collections.ArrayList list = base.FindTabWidgetList(mode);
 			System.Collections.ArrayList copy = new System.Collections.ArrayList();
@@ -192,8 +192,8 @@ namespace Epsitec.Common.Widgets
 				if ( sample != null &&
 					 sample != this )
 				{
-					// Saute les boutons du même groupe. Ils ne sont pas accessibles par la
-					// touche TAB.
+					//	Saute les boutons du même groupe. Ils ne sont pas accessibles par la
+					//	touche TAB.
 				}
 				else
 				{
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				// Pas utile ici:
+				//	Pas utile ici:
 				return new Drawing.Point(0, 0);
 			}
 		}
@@ -218,18 +218,18 @@ namespace Epsitec.Common.Widgets
 		
 		public bool OnDragBegin(Drawing.Point cursor)
 		{
-			// Crée un échantillon utilisable pour l'opération de drag & drop (il
-			// va représenter visuellement l'échantillon de couleur). On le place
-			// dans un DragWindow et hop.
+			//	Crée un échantillon utilisable pour l'opération de drag & drop (il
+			//	va représenter visuellement l'échantillon de couleur). On le place
+			//	dans un DragWindow et hop.
 			
 			ColorSample widget = new ColorSample();
 			
 			widget.Color = this.Color;
 			
-			// Signale à l'échantillon qui est la cause du drag. On aurait très
-			// bien pu ajouter une variable à ColorSample, mais ça paraît du
-			// gaspillage de mémoire d'avoir cette variable inutilisée pour
-			// tous les ColorSample. Alors on utilise une "propriété" :
+			//	Signale à l'échantillon qui est la cause du drag. On aurait très
+			//	bien pu ajouter une variable à ColorSample, mais ça paraît du
+			//	gaspillage de mémoire d'avoir cette variable inutilisée pour
+			//	tous les ColorSample. Alors on utilise une "propriété" :
 			
 			widget.SetProperty("DragHost", this);
 			
@@ -307,18 +307,18 @@ namespace Epsitec.Common.Widgets
 			return this.Client.Bounds;
 		}
 
-		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			//	Gestion d'un événement.
 			ColorSample dragHost = this.GetProperty("DragHost") as ColorSample;
 			
-			// Est-ce que l'événement clavier est reçu dans un échantillon en
-			// cours de drag dans un DragWindow ? C'est possible, car le focus
-			// clavier change quand on montre le DragWindow.
+			//	Est-ce que l'événement clavier est reçu dans un échantillon en
+			//	cours de drag dans un DragWindow ? C'est possible, car le focus
+			//	clavier change quand on montre le DragWindow.
 			
 			if ( dragHost != null && message.IsKeyType )
 			{
-				// Signalons l'événement clavier à l'auteur du drag :
+				//	Signalons l'événement clavier à l'auteur du drag :
 				
 				dragHost.ProcessMessage(message, pos);
 				return;
@@ -372,9 +372,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Mise à jour après un changement de mode swap d'un drag & drop.
 		protected void UpdateSwapping()
 		{
+			//	Mise à jour après un changement de mode swap d'un drag & drop.
 			if ( this.dragTarget != null )
 			{
 				bool swap = Message.State.IsShiftPressed || Message.State.IsCtrlPressed;
@@ -387,18 +387,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Cherche un widget ColorSample destinataire du drag & drop.
 		protected ColorSample SearchDropTarget(Drawing.Point mouse)
 		{
+			//	Cherche un widget ColorSample destinataire du drag & drop.
 			mouse = this.MapClientToRoot(mouse);
 			Widget root   = this.Window.Root;
 			Widget widget = root.FindChild(mouse, Widget.ChildFindMode.SkipHidden | Widget.ChildFindMode.Deep | Widget.ChildFindMode.SkipDisabled);
 			return widget as ColorSample;
 		}
 
-		// Met en évidence le widget ColorSample destinataire du drag & drop.
 		protected void DragHilite(ColorSample dst, ColorSample src, bool enable)
 		{
+			//	Met en évidence le widget ColorSample destinataire du drag & drop.
 			if ( dst == null || src == null )  return;
 
 			Drawing.RichColor color = enable ? src.Color : Drawing.RichColor.Empty;
@@ -410,9 +410,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Dessine la couleur.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			//	Dessine la couleur.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
@@ -468,9 +468,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Calcule la couleur opposée pour la mise en évidence.
 		protected static Drawing.Color GetOpposite(Drawing.Color color)
 		{
+			//	Calcule la couleur opposée pour la mise en évidence.
 			double h,s,v;
 			color.GetHSV(out h, out s, out v);
 			if ( s < 0.2 )  // gris ou presque ?
@@ -489,9 +489,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Génère un événement pour dire que la couleur a changé.
 		protected virtual void OnChanged()
 		{
+			//	Génère un événement pour dire que la couleur a changé.
 			if ( this.Changed != null )  // qq'un écoute ?
 			{
 				this.Changed(this);

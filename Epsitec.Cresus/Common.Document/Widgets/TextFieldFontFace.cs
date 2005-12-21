@@ -502,7 +502,7 @@ namespace Epsitec.Common.Document.Widgets
 		
 		private void HandleSelectorSelectionChanged(object sender)
 		{
-			// L'utilisateur a cliqué dans la liste pour terminer son choix.
+			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
 			
 			string text = this.fontSelector.SelectedFontFace;
 			if ( this.Text != text )

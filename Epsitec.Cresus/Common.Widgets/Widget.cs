@@ -1064,59 +1064,59 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-//		public int									RootAngle
-//		{
-//			get
-//			{
-//				Widget widget = this;
-//				int    angle  = 0;
-//				
-//				while (widget != null)
-//				{
-//					angle += widget.Client.Angle;
-//					widget = widget.Parent;
-//				}
-//				
-//				return angle % 360;
-//			}
-//		}
-		
-//		public double								RootZoom
-//		{
-//			get
-//			{
-//				Widget widget = this;
-//				double zoom   = 1.0;
-//				
-//				while (widget != null)
-//				{
-//					zoom  *= widget.Client.Zoom;
-//					widget = widget.Parent;
-//				}
-//				
-//				return zoom;
-//			}
-//		}
-		
-//		public Direction							RootDirection
-//		{
-//			get
-//			{
-//				switch (0/*this.RootAngle*/)
-//				{
-//					case 0:		return Direction.Up;
-//					case 90:	return Direction.Left;
-//					case 180:	return Direction.Down;
-//					case 270:	return Direction.Right;
-//				}
-//				
-//				return Direction.None;
-//			}
-//		}
-		
-		
 		public bool									IsEmpty
 		{
+	//		public int									RootAngle
+	//		{
+	//			get
+	//			{
+	//				Widget widget = this;
+	//				int    angle  = 0;
+	//				
+	//				while (widget != null)
+	//				{
+	//					angle += widget.Client.Angle;
+	//					widget = widget.Parent;
+	//				}
+	//				
+	//				return angle % 360;
+	//			}
+	//		}
+			
+	//		public double								RootZoom
+	//		{
+	//			get
+	//			{
+	//				Widget widget = this;
+	//				double zoom   = 1.0;
+	//				
+	//				while (widget != null)
+	//				{
+	//					zoom  *= widget.Client.Zoom;
+	//					widget = widget.Parent;
+	//				}
+	//				
+	//				return zoom;
+	//			}
+	//		}
+			
+	//		public Direction							RootDirection
+	//		{
+	//			get
+	//			{
+	//				switch (0/*this.RootAngle*/)
+	//				{
+	//					case 0:		return Direction.Up;
+	//					case 90:	return Direction.Left;
+	//					case 180:	return Direction.Down;
+	//					case 270:	return Direction.Right;
+	//				}
+	//				
+	//				return Direction.None;
+	//			}
+	//		}
+			
+			
 			get { return this.HasChildren == false; }
 		}
 		
@@ -4632,16 +4632,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-//		protected virtual void OnLayoutUpdate(Layouts.UpdateEventArgs e)
-//		{
-//			if (this.LayoutUpdate != null)
-//			{
-//				this.LayoutUpdate (this, e);
-//			}
-//		}
-		
 		protected virtual void OnPressed(MessageEventArgs e)
 		{
+	//		protected virtual void OnLayoutUpdate(Layouts.UpdateEventArgs e)
+	//		{
+	//			if (this.LayoutUpdate != null)
+	//			{
+	//				this.LayoutUpdate (this, e);
+	//			}
+	//		}
+			
 			if (this.Pressed != null)
 			{
 				if (e != null)

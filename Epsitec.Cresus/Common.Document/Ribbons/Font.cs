@@ -15,8 +15,8 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.FontMain;
 
-			// Création dans l'ordre inverse, pour que les cadres soient plus jolis
-			// lorsqu'un bouton est disable.
+			//	Création dans l'ordre inverse, pour que les cadres soient plus jolis
+			//	lorsqu'un bouton est disable.
 			this.buttonQuick4        = this.CreateButtonFontFace("FontQuick4");
 			this.buttonQuick3        = this.CreateButtonFontFace("FontQuick3");
 			this.buttonQuick2        = this.CreateButtonFontFace("FontQuick2");
@@ -63,9 +63,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard.
 			get
 			{
 				if ( this.debugMode == DebugMode.DebugCommands )
@@ -80,9 +80,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonBold == null )  return;
@@ -143,9 +143,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour les noms des polices rapides.
 		protected void UpdateQuickFonts()
 		{
+			//	Met à jour les noms des polices rapides.
 			this.UpdateQuickButton(this.buttonQuick1, 0);
 			this.UpdateQuickButton(this.buttonQuick2, 1);
 			this.UpdateQuickButton(this.buttonQuick3, 2);
@@ -157,9 +157,9 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-		// Met à jour un bouton pour une police rapide.
 		protected void UpdateQuickButton(Widgets.ButtonFontFace button, int i)
 		{
+			//	Met à jour un bouton pour une police rapide.
 			if ( this.document == null )
 			{
 				button.FontIdentity = null;
@@ -213,9 +213,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Crée un bouton pour une police.
 		protected Widgets.ButtonFontFace CreateButtonFontFace(string command)
 		{
+			//	Crée un bouton pour une police.
 			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
 			Widgets.ButtonFontFace button = new Widgets.ButtonFontFace(this);
 

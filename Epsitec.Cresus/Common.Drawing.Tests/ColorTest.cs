@@ -124,7 +124,7 @@ namespace Epsitec.Common.Drawing
 			Color c1, c2;
 			double h,s,v;
 
-			// rouge
+			//	rouge
 			c1 = Color.FromRGB(1.0, 0.0, 0.0);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// jaune
+			//	jaune
 			c1 = Color.FromRGB(1.0, 1.0, 0.0);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 60.0);
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// vert
+			//	vert
 			c1 = Color.FromRGB(0.0, 1.0, 0.0);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 120.0);
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// cyan
+			//	cyan
 			c1 = Color.FromRGB(0.0, 1.0, 1.0);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 180.0);
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// bleu
+			//	bleu
 			c1 = Color.FromRGB(0.0, 0.0, 1.0);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 240.0);
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// magenta
+			//	magenta
 			c1 = Color.FromRGB(1.0, 0.0, 1.0);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 300.0);
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// rose
+			//	rose
 			c1 = Color.FromRGB(1.0, 0.5, 0.5);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// brun-rouge
+			//	brun-rouge
 			c1 = Color.FromRGB(0.5, 0.0, 0.0);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// brun
+			//	brun
 			c1 = Color.FromRGB(0.5, 0.25, 0.25);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
@@ -205,7 +205,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// gris
+			//	gris
 			c1 = Color.FromRGB(0.5, 0.5, 0.5);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// blanc
+			//	blanc
 			c1 = Color.FromRGB(1.0, 1.0, 1.0);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// noir
+			//	noir
 			c1 = Color.FromRGB(0.0, 0.0, 0.0);
 			c1.GetHSV(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Drawing
 			c2 = Color.FromHSV(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
-			// jaune
+			//	jaune
 			c1 = Color.FromHSV(60+360,1,1);
 			Assert.IsTrue(c1.R == 1.0);
 			Assert.IsTrue(c1.G == 1.0);

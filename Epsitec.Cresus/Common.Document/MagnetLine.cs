@@ -4,7 +4,7 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document
 {
-	// Ligne magnétique détectée.
+	//	Ligne magnétique détectée.
 	public class MagnetLine
 	{
 		public enum Type
@@ -17,9 +17,9 @@ namespace Epsitec.Common.Document
 			Proj,		// projection
 		}
 
-		// Constructeur qui fabrique une ligne magnétique libre et invisible.
 		public MagnetLine(Document document, DrawingContext context, Type type)
 		{
+			//	Constructeur qui fabrique une ligne magnétique libre et invisible.
 			this.document = document;
 			this.context = context;
 			this.type = type;
@@ -30,36 +30,36 @@ namespace Epsitec.Common.Document
 			this.flyOver = false;
 		}
 
-		// Ligne plus utilisée.
 		public void Clear()
 		{
+			//	Ligne plus utilisée.
 			if ( !this.isUsed )  return;
 			this.Invalidate();
 			this.isUsed = false;
 			this.isVisible = false;
 		}
 
-		// Indique si la ligne est utilisée.
 		public bool IsUsed
 		{
+			//	Indique si la ligne est utilisée.
 			get { return this.isUsed; }
 		}
 
-		// Indique s'il s'agit de la ligne principale.
 		public bool IsMain
 		{
+			//	Indique s'il s'agit de la ligne principale.
 			get { return this.type == Type.Main; }
 		}
 
-		// Indique s'il s'agit d'un cercle de distance.
 		public bool IsCircle
 		{
+			//	Indique s'il s'agit d'un cercle de distance.
 			get { return this.type == Type.Circle; }
 		}
 
-		// Indique si la ligne est visible.
 		public bool IsVisible
 		{
+			//	Indique si la ligne est visible.
 			get
 			{
 				return this.isVisible;
@@ -76,10 +76,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Ligne se poursuivant à l'infini, c'est-à-dire au-delà de
-		// p1 et p2 dans les 2 directions.
 		public bool Infinite
 		{
+			//	Ligne se poursuivant à l'infini, c'est-à-dire au-delà de
+			//	p1 et p2 dans les 2 directions.
 			get
 			{
 				return this.infinite;
@@ -96,9 +96,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Flag temporaire.
 		public bool Temp
 		{
+			//	Flag temporaire.
 			get
 			{
 				return this.temp;
@@ -110,9 +110,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Ligne survolée par la souris.
 		public bool FlyOver
 		{
+			//	Ligne survolée par la souris.
 			get
 			{
 				return this.flyOver;
@@ -129,15 +129,15 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Initialise la ligne et rend-la visible.
 		public void Initialise(Point p1, Point p2, bool infinite)
 		{
+			//	Initialise la ligne et rend-la visible.
 			this.Initialise(p1, p2, infinite, true);
 		}
 
-		// Initialise la ligne visible ou invisible.
 		public void Initialise(Point p1, Point p2, bool infinite, bool isVisible)
 		{
+			//	Initialise la ligne visible ou invisible.
 			if ( this.p1 != p1 ||
 				 this.p2 != p2 ||
 				 this.infinite != infinite ||
@@ -154,21 +154,21 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Donne le loint de départ.
 		public Point P1
 		{
+			//	Donne le loint de départ.
 			get { return this.p1; }
 		}
 
-		// Donne le point d'arrivée.
 		public Point P2
 		{
+			//	Donne le point d'arrivée.
 			get { return this.p2; }
 		}
 
-		// Invalide la zone contenant la ligne.
 		protected void Invalidate()
 		{
+			//	Invalide la zone contenant la ligne.
 			if ( !this.isUsed || !this.isVisible )  return;
 
 			if ( this.infinite )
@@ -182,28 +182,28 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Détecte si une position est sur la ligne. La distance doit être
-		// inférieure ou égale à margin.
 		public bool Detect(Point pos, double margin)
 		{
+			//	Détecte si une position est sur la ligne. La distance doit être
+			//	inférieure ou égale à margin.
 			if ( !this.isUsed || !this.isVisible )  return false;
 
 			Point proj = this.Projection(pos);
 			return (Point.Distance(proj, pos) <= margin);
 		}
 
-		// Calcule la distance la plus courte d'un point jusqu'à la ligne.
 		public double Distance(Point pos)
 		{
+			//	Calcule la distance la plus courte d'un point jusqu'à la ligne.
 			if ( !this.isUsed || !this.isVisible )  return 1000000.0;
 
 			Point proj = this.Projection(pos);
 			return Point.Distance(proj, pos);
 		}
 
-		// Calcule la projection d'un point sur la ligne.
 		public Point Projection(Point pos)
 		{
+			//	Calcule la projection d'un point sur la ligne.
 			if ( this.type == Type.Circle )
 			{
 				double radius = Point.Distance(this.p1, this.p2);
@@ -215,11 +215,11 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Calcule l'intersection entre deux lignes magnétiques.
-		// Est capable de trouver les intersections de deux droites, d'une droite
-		// et d'un cercle et de deux cercles.
 		static public Point[] Intersect(MagnetLine line1, MagnetLine line2)
 		{
+			//	Calcule l'intersection entre deux lignes magnétiques.
+			//	Est capable de trouver les intersections de deux droites, d'une droite
+			//	et d'un cercle et de deux cercles.
 			if ( line1.IsCircle && line2.IsCircle )  // 2 cercles ?
 			{
 				double r1 = Point.Distance(line1.p1, line1.p2);
@@ -249,10 +249,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Essaie de pousser une position sur la ligne, si la distance est
-		// inférieure ou égale à margin.
 		public bool Snap(ref Point pos, double margin)
 		{
+			//	Essaie de pousser une position sur la ligne, si la distance est
+			//	inférieure ou égale à margin.
 			if ( !this.isUsed || !this.isVisible )  return false;
 
 			Point proj = this.Projection(pos);
@@ -261,10 +261,10 @@ namespace Epsitec.Common.Document
 			return true;
 		}
 
-		// Compare la géométrie de deux lignes magnétiques.
-		// Les types sont ignorés.
 		public bool Compare(MagnetLine line)
 		{
+			//	Compare la géométrie de deux lignes magnétiques.
+			//	Les types sont ignorés.
 			if ( this.p1.Y == this.p2.Y )  // horizontal ?
 			{
 				if ( line.p1.Y != line.p2.Y )  return false;
@@ -288,9 +288,9 @@ namespace Epsitec.Common.Document
 			return true;
 		}
 
-		// Dessine la ligne.
 		public void Draw(Graphics graphics, double max)
 		{
+			//	Dessine la ligne.
 			if ( !this.isUsed || !this.isVisible )  return;
 
 			Point p1 = this.p1;

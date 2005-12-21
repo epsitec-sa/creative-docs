@@ -95,18 +95,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.extendedSize ? 55 : 30 );
 			}
 		}
 
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.label.Text = this.textStyle;
 
@@ -121,9 +121,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.EnableWidgets();
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyCorner p = new PropertyCorner();
 			base.GetProperty(p);
 
@@ -135,10 +135,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return p;
 		}
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
-			// Initialise les min/max en fonction du type choisi.
+			//	Grise les widgets nécessaires.
+			//	Initialise les min/max en fonction du type choisi.
 			CornerType type = PropertyCorner.ConvType(this.fieldType.SelectedIndex);
 			bool enableRadius, enable1, enable2;
 			double effect1, min1, max1;
@@ -155,9 +155,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldEffect2.SetEnabled(this.extendedSize && enable2);
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldType == null )  return;
@@ -198,10 +198,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldEffect2.Bounds = r;
 		}
 		
-		// Le type a été changé.
 		private void HandleTypeChanged(object sender)
 		{
-			// Met les valeurs par défaut correspondant au type choisi.
+			//	Le type a été changé.
+			//	Met les valeurs par défaut correspondant au type choisi.
 			CornerType type = PropertyCorner.ConvType(this.fieldType.SelectedIndex);
 			bool enableRadius, enable1, enable2;
 			double effect1, min1, max1;
@@ -214,9 +214,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnChanged();
 		}
 
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			this.OnChanged();
 		}
 

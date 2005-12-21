@@ -39,9 +39,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Indique si ce panneau est visible pour un filtre donné.
 		public static bool IsFilterShow(string panel, string filter)
 		{
+			//	Indique si ce panneau est visible pour un filtre donné.
 			if ( panel == "Box" )  return false;  // provisoire...
 			if ( filter == "All" )  return true;
 
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			switch ( panel )
 			{
-				//                         F    U    P    C
+				//	F    U    P    C
 				case "Justif":    return ( F || U || P || o );
 				case "Leading":   return ( F || o || P || o );
 				case "Margins":   return ( o || o || P || o );
@@ -69,36 +69,36 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return this.LabelHeight+30;
 			}
 		}
 
-		// Retourne la marge supérieure.
 		public virtual double TopMargin
 		{
+			//	Retourne la marge supérieure.
 			get
 			{
 				return 0;
 			}
 		}
 
-		// Retourne la hauteur pour le label supérieur.
 		protected double LabelHeight
 		{
+			//	Retourne la hauteur pour le label supérieur.
 			get
 			{
 				return this.IsLabelProperties ? 14 : 0;
 			}
 		}
 
-		// Indique le mode des propriétés.
 		public bool IsLabelProperties
 		{
+			//	Indique le mode des propriétés.
 			get
 			{
 				if ( this.document != null )
@@ -111,15 +111,15 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Indique si ce panneau possède 2 hauteurs différentes.
 		protected virtual bool IsNormalAndExtended()
 		{
+			//	Indique si ce panneau possède 2 hauteurs différentes.
 			return this.isNormalAndExtended;
 		}
 
-		// Indique si le panneau est réduit (petite hauteur) ou étendu (grande hauteur).
 		public bool IsExtendedSize
 		{
+			//	Indique si le panneau est réduit (petite hauteur) ou étendu (grande hauteur).
 			get
 			{
 				return this.isExtendedSize;
@@ -137,9 +137,9 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Indique que la hauteur du panneau a changé.
 		public void HeightChanged()
 		{
+			//	Indique que la hauteur du panneau a changé.
 			double h = this.DefaultHeight;
 			if ( this.Height != h )
 			{
@@ -149,23 +149,23 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Met à jour après un changement du wrapper.
 		protected virtual void UpdateAfterChanging()
 		{
+			//	Met à jour après un changement du wrapper.
 			this.UpdateButtons();
 		}
 
 
-		// Met le focus par défaut dans ce panneau.
 		public virtual bool DefaultFocus()
 		{
+			//	Met le focus par défaut dans ce panneau.
 			return false;
 		}
 
 
-		// Retourne la zone rectangulaire utile pour les widgets.
 		protected Rectangle UsefulZone
 		{
+			//	Retourne la zone rectangulaire utile pour les widgets.
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
@@ -177,9 +177,9 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.extendedButton == null )  return;
@@ -204,46 +204,46 @@ namespace Epsitec.Common.Document.TextPanels
 			this.extendedButton.Bounds = rect;
 		}
 
-		// Met à jour les boutons.
 		protected void UpdateButtons()
 		{
+			//	Met à jour les boutons.
 			this.extendedButton.Visibility = (this.isNormalAndExtended);
 			this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public virtual void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 		}
 
-		// Sélectionne l'origine de couleur.
 		public virtual void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 		}
 
-		// Retourne le rang de la couleur d'origine.
 		public virtual int OriginColorRank()
 		{
+			//	Retourne le rang de la couleur d'origine.
 			return -1;
 		}
 
-		// Modifie la couleur d'origine.
 		public virtual void OriginColorChange(Drawing.RichColor color)
 		{
+			//	Modifie la couleur d'origine.
 		}
 
-		// Donne la couleur d'origine.
 		public virtual Drawing.RichColor OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			return Drawing.RichColor.FromBrightness(0);
 		}
 
 
 		
-		// Le bouton pour étendre/réduire le panneau a été cliqué.
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
 		{
+			//	Le bouton pour étendre/réduire le panneau a été cliqué.
 			this.IsExtendedSize = !this.isExtendedSize;
 		}
 
@@ -275,15 +275,15 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Crée un bouton pour une commande.
 		protected IconButton CreateIconButton(string command)
 		{
+			//	Crée un bouton pour une commande.
 			return this.CreateIconButton(command, "0");
 		}
 
-		// Crée un bouton pour une commande, en précisant la taille préférée pour l'icône.
 		protected IconButton CreateIconButton(string command, string iconSize)
 		{
+			//	Crée un bouton pour une commande, en précisant la taille préférée pour l'icône.
 			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
 			IconButton button = new IconButton(this);
 
@@ -303,9 +303,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		// Crée un bouton.
 		protected IconButton CreateIconButton(string icon, string tooltip, MessageEventHandler handler)
 		{
+			//	Crée un bouton.
 			return this.CreateIconButton(icon, tooltip, handler, true);
 		}
 		
@@ -336,9 +336,9 @@ namespace Epsitec.Common.Document.TextPanels
 			return button;
 		}
 
-		// Modifie l'état d'un bouton à 3 états.
 		protected void ActiveIconButton(IconButton button, bool active, bool defined)
 		{
+			//	Modifie l'état d'un bouton à 3 états.
 			if ( active && defined )
 			{
 				button.ActiveState = ActiveState.Yes;
@@ -353,9 +353,9 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Crée un bouton "x" pour effacer une propriété.
 		protected IconButton CreateClearButton(MessageEventHandler handler)
 		{
+			//	Crée un bouton "x" pour effacer une propriété.
 			IconButton button = new IconButton(this);
 
 			button.AutoFocus = false;
@@ -368,9 +368,9 @@ namespace Epsitec.Common.Document.TextPanels
 			return button;
 		}
 
-		// Crée un bouton "v" pour un menu.
 		protected GlyphButton CreateComboButton(string command, string tooltip, MessageEventHandler handler)
 		{
+			//	Crée un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);
 
 			button.Command = command;
@@ -385,9 +385,9 @@ namespace Epsitec.Common.Document.TextPanels
 			return button;
 		}
 
-		// Crée un TextFieldLabel.
 		protected Widgets.TextFieldLabel CreateTextFieldLabel(string tooltip, string shortText, string longText, double minRange, double maxRange, double step, Widgets.TextFieldLabel.Type type, EventHandler handler)
 		{
+			//	Crée un TextFieldLabel.
 			Widgets.TextFieldLabel field = new Widgets.TextFieldLabel(this, type);
 
 			field.LabelShortText = shortText;
@@ -417,9 +417,9 @@ namespace Epsitec.Common.Document.TextPanels
 			return field;
 		}
 
-		// Crée un TextFieldLabel en %.
 		protected Widgets.TextFieldLabel CreateTextFieldLabelPercent(string tooltip, string shortText, string longText, double minRange, double maxRange, double step, EventHandler handler)
 		{
+			//	Crée un TextFieldLabel en %.
 			Widgets.TextFieldLabel field = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 
 			field.LabelShortText = shortText;
@@ -435,9 +435,9 @@ namespace Epsitec.Common.Document.TextPanels
 			return field;
 		}
 
-		// Modifie la valeur d'un TextFieldReal.
 		protected void SetTextFieldRealValue(TextFieldReal field, double value, Common.Text.Properties.SizeUnits units, bool isDefined, bool disabledIfUndefined)
 		{
+			//	Modifie la valeur d'un TextFieldReal.
 			if ( units == Common.Text.Properties.SizeUnits.Percent )
 			{
 				field.InternalValue = (decimal) value;
@@ -458,9 +458,9 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Donne la valeur d'un TextFieldReal.
 		protected void GetTextFieldRealValue(TextFieldReal field, out double value, out Common.Text.Properties.SizeUnits units, out bool isDefined)
 		{
+			//	Donne la valeur d'un TextFieldReal.
 			if ( field.UnitType == RealUnitType.Percent )
 			{
 				value = (double) field.InternalValue;
@@ -475,9 +475,9 @@ namespace Epsitec.Common.Document.TextPanels
 			isDefined = (field.Text != "");
 		}
 
-		// Modifie la valeur d'un TextFieldReal en %.
 		protected void SetTextFieldRealPercent(TextFieldReal field, double value, bool isDefined, bool disabledIfUndefined)
 		{
+			//	Modifie la valeur d'un TextFieldReal en %.
 			field.InternalValue = (decimal) value;
 
 			if ( disabledIfUndefined )
@@ -491,35 +491,35 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Donne la valeur d'un TextFieldReal en %.
 		protected void GetTextFieldRealPercent(TextFieldReal field, out double value, out bool isDefined)
 		{
+			//	Donne la valeur d'un TextFieldReal en %.
 			value = (double) field.InternalValue;
 			isDefined = (field.Text != "");
 		}
 
-		// Modifie le mode d'un TextFieldLabel.
 		protected void ProposalTextFieldLabel(Widgets.TextFieldLabel field, bool proposal)
 		{
+			//	Modifie le mode d'un TextFieldLabel.
 			field.TextFieldReal.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
 		}
 
-		// Modifie le mode d'un TextFieldCombo.
 		protected void ProposalTextFieldCombo(TextFieldCombo field, bool proposal)
 		{
+			//	Modifie le mode d'un TextFieldCombo.
 			field.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
 		}
 
-		// Modifie le mode d'un TextFieldFontFace.
 		protected void ProposalTextFieldFontFace(Widgets.TextFieldFontFace field, bool proposal)
 		{
+			//	Modifie le mode d'un TextFieldFontFace.
 			field.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
 		}
 
 
-		// Crée un échantilon de couleur.
 		protected ColorSample CreateColorSample(string tooltip, MessageEventHandler handlerClicked, EventHandler handlerChanged)
 		{
+			//	Crée un échantilon de couleur.
 			ColorSample sample = new ColorSample(this);
 
 			sample.PossibleSource = true;
@@ -532,9 +532,9 @@ namespace Epsitec.Common.Document.TextPanels
 			return sample;
 		}
 
-		// Donne la couleur d'un échantillon.
 		protected void SetColorSample(ColorSample sample, string color, bool isDefined, bool disabledIfUndefined)
 		{
+			//	Donne la couleur d'un échantillon.
 			RichColor rc = (color == null) ? RichColor.Empty : RichColor.Parse(color);
 			sample.Color = rc;
 
@@ -544,9 +544,9 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Donne la couleur d'un échantillon.
 		protected string GetColorSample(ColorSample sample)
 		{
+			//	Donne la couleur d'un échantillon.
 			if ( sample.Color.IsEmpty )
 			{
 				return null;
@@ -559,9 +559,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		// Met un texte dans un widget quelconque.
 		public static void SetText(Widget widget, string text)
 		{
+			//	Met un texte dans un widget quelconque.
 			if ( widget.Text != text )
 			{
 				widget.Text = text;
@@ -569,9 +569,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Génère un événement pour dire que la couleur d'origine a changé.
 		protected virtual void OnOriginColorChanged()
 		{
+			//	Génère un événement pour dire que la couleur d'origine a changé.
 			if ( this.OriginColorChanged != null )  // qq'un écoute ?
 			{
 				this.OriginColorChanged(this);
@@ -581,12 +581,12 @@ namespace Epsitec.Common.Document.TextPanels
 		public event EventHandler OriginColorChanged;
 
 		
-		// ATTENTION: Ceci n'est pas propre, mais je ne sais pas comment faire mieux.
-		// Le constructeur de Common.Widget appelle DefaultHeight, qui doit
-		// connaître le document pour déterminer la hauteur (avec LabelHeight).
-		// Comme ce constructeur est appelé avant l'initialisation de this.document,
-		// je n'ai pas trouvé d'autre moyen pour connaître le document que de le
-		// mettre au préalable dans une variable statique !!!
+		//	ATTENTION: Ceci n'est pas propre, mais je ne sais pas comment faire mieux.
+		//	Le constructeur de Common.Widget appelle DefaultHeight, qui doit
+		//	connaître le document pour déterminer la hauteur (avec LabelHeight).
+		//	Comme ce constructeur est appelé avant l'initialisation de this.document,
+		//	je n'ai pas trouvé d'autre moyen pour connaître le document que de le
+		//	mettre au préalable dans une variable statique !!!
 		public static Document				StaticDocument;
 
 		protected Document					document;

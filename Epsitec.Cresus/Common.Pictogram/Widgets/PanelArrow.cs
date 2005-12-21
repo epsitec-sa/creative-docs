@@ -120,18 +120,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.extendedSize ? 110 : 30 );
 			}
 		}
 
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.label.Text = this.textStyle;
 
@@ -149,9 +149,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.EnableWidgets();
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyArrow p = new PropertyArrow();
 			base.GetProperty(p);
 
@@ -166,10 +166,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return p;
 		}
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
-			// Initialise les min/max en fonction du type choisi.
+			//	Grise les widgets nécessaires.
+			//	Initialise les min/max en fonction du type choisi.
 			for ( int j=0 ; j<2 ; j++ )
 			{
 				ArrowType type = PropertyArrow.ConvType(this.fieldType[j].SelectedIndex);
@@ -189,9 +189,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldType == null )  return;
@@ -246,9 +246,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.swapArrow.Bounds = r;
 		}
 		
-		// Le type a été changé.
 		private void HandleTypeChanged(object sender)
 		{
+			//	Le type a été changé.
 			if ( this.ignoreChange )  return;
 
 			if ( !this.extendedSize )
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				if ( this.extendedSize && sender != this.fieldType[j] )  continue;
 
-				// Met les valeurs par défaut correspondant au type choisi.
+				//	Met les valeurs par défaut correspondant au type choisi.
 				ArrowType type = PropertyArrow.ConvType(this.fieldType[j].SelectedIndex);
 				bool enableRadius, enable1, enable2;
 				double effect1, min1, max1;
@@ -276,9 +276,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnChanged();
 		}
 
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChange )  return;
 			this.OnChanged();
 		}

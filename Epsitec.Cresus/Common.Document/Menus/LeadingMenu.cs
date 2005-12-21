@@ -4,9 +4,9 @@ namespace Epsitec.Common.Document.Menus
 {
 	public class LeadingMenu : System.IComparable
 	{
-		// Constructeur unique.
 		public LeadingMenu(Document document, double value, string units)
 		{
+			//	Constructeur unique.
 			this.value = value;
 			this.units = units;
 
@@ -22,9 +22,9 @@ namespace Epsitec.Common.Document.Menus
 			}
 		}
 
-		// Défini par System.IComparable.
 		public int CompareTo(object obj)
 		{
+			//	Défini par System.IComparable.
 			LeadingMenu that = obj as LeadingMenu;
 
 			if ( this.units != that.units )
@@ -38,9 +38,9 @@ namespace Epsitec.Common.Document.Menus
 		}
 
 
-		// Ajoute une entrée dans une liste si elle n'existe pas encore.
 		protected static void Add(Document document, System.Collections.ArrayList list, double value, string units)
 		{
+			//	Ajoute une entrée dans une liste si elle n'existe pas encore.
 			LeadingMenu fs = new LeadingMenu(document, value, units);
 
 			foreach ( LeadingMenu current in list )
@@ -51,9 +51,9 @@ namespace Epsitec.Common.Document.Menus
 			list.Add(fs);
 		}
 
-		// Construit le menu pour choisir un interligne.
 		public static VMenu CreateLeadingMenu(Document document, double currentValue, string currentUnits, MessageEventHandler message)
 		{
+			//	Construit le menu pour choisir un interligne.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
 			LeadingMenu current = new LeadingMenu(document, currentValue, currentUnits);

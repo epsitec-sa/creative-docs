@@ -34,9 +34,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Type de la forme.
 		public Type Type
 		{
+			//	Type de la forme.
 			get
 			{
 				return this.type;
@@ -48,9 +48,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Aspect de la forme.
 		public Aspect Aspect
 		{
+			//	Aspect de la forme.
 			get
 			{
 				return this.aspect;
@@ -62,9 +62,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Chemin associé à la forme.
 		public Path Path
 		{
+			//	Chemin associé à la forme.
 			get
 			{
 				return this.path;
@@ -76,9 +76,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si la forme est ornementale.
 		public bool IsMisc
 		{
+			//	Indique si la forme est ornementale.
 			get
 			{
 				return this.isMisc;
@@ -90,9 +90,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si la forme est visible.
 		public bool IsVisible
 		{
+			//	Indique si la forme est visible.
 			get
 			{
 				return this.isVisible;
@@ -104,9 +104,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si la forme est liée à la suivante.
 		public bool IsLinkWithNext
 		{
+			//	Indique si la forme est liée à la suivante.
 			get
 			{
 				return this.isLinkWithNext;
@@ -118,9 +118,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique le mode de remplissage.
 		public FillMode FillMode
 		{
+			//	Indique le mode de remplissage.
 			get
 			{
 				return this.fillMode;
@@ -132,44 +132,44 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Spécifie l'objet texte.
 		public void SetTextObject(Objects.Abstract obj)
 		{
+			//	Spécifie l'objet texte.
 			this.obj = obj;
 			this.Type = Type.Text;
 			this.IsVisible = true;
 		}
 
-		// Spécifie l'objet image.
 		public void SetImageObject(Objects.Abstract obj)
 		{
+			//	Spécifie l'objet image.
 			this.obj = obj;
 			this.Type = Type.Image;
 			this.IsVisible = true;
 		}
 
-		// Donne l'objet texte.
 		public Objects.Abstract Object
 		{
+			//	Donne l'objet texte.
 			get
 			{
 				return this.obj;
 			}
 		}
 		
-		// Donne la propriété pour une surface.
-		// Type Properties.Gradient ou Properties.Font.
 		public void SetPropertySurface(IPaintPort port, Properties.Abstract surface)
 		{
+			//	Donne la propriété pour une surface.
+			//	Type Properties.Gradient ou Properties.Font.
 			this.propertySurface = surface;
 			this.Type = Type.Surface;
 			this.fillMode = FillMode.EvenOdd;  // mode par défaut pour les surfaces
 			this.PropertyVisibility(port);
 		}
 
-		// Donne les propriétés pour un trait.
 		public void SetPropertyStroke(IPaintPort port, Properties.Line stroke, Properties.Gradient surface)
 		{
+			//	Donne les propriétés pour un trait.
 			this.propertyStroke = stroke;
 			this.propertySurface = surface;
 			this.Type = Type.Stroke;
@@ -193,9 +193,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Met la visibilité définie selon les propriétés.
 		protected void PropertyVisibility(IPaintPort port)
 		{
+			//	Met la visibilité définie selon les propriétés.
 			if ( this.Type == Type.Surface )
 			{
 				if ( this.propertySurface == null )
@@ -221,9 +221,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 		
-		// Met la visibilité définie selon les propriétés.
 		protected void PropertyVisibilityInvert(IPaintPort port)
 		{
+			//	Met la visibilité définie selon les propriétés.
 			if ( this.Type == Type.Surface )
 			{
 				if ( this.propertySurface == null )
@@ -250,9 +250,9 @@ namespace Epsitec.Common.Document
 		}
 		
 
-		// Modifie une liste de formes pour mettre en évidence.
 		public static void Hilited(IPaintPort port, Shape[] shapes)
 		{
+			//	Modifie une liste de formes pour mettre en évidence.
 			foreach ( Shape shape in shapes )
 			{
 				if ( shape == null )  continue;
@@ -296,9 +296,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 		
-		// Modifie une liste de formes pour mettre en pointillé forcé.
 		public static void OverDashed(IPaintPort port, Shape[] shapes)
 		{
+			//	Modifie une liste de formes pour mettre en pointillé forcé.
 			foreach ( Shape shape in shapes )
 			{
 				if ( shape == null )  continue;

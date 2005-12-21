@@ -22,16 +22,16 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return @"file:images/objgroup.icon"; }
 		}
 
 
-		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur l'objet.
 			if ( this.isHide )  return false;
 
 			InsideSurface inside = new InsideSurface(pos, 4);
@@ -43,15 +43,15 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Début du déplacement une poignée.
 		public override void MoveHandleStarting(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Début du déplacement une poignée.
 			this.initialBBox = this.BoundingBox.Size;
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, iconContext);
@@ -121,10 +121,10 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Déplace tous les objets du groupe.
 		protected void MoveHandleSoon(UndoList objects,
 									  GlobalModifierData initial, GlobalModifierData final)
 		{
+			//	Déplace tous les objets du groupe.
 			if ( objects != null && objects.Count != 0 )
 			{
 				foreach ( AbstractObject obj in objects )
@@ -140,9 +140,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Met à jour la bbox du groupe.
 		public void UpdateDim(Drawing.Rectangle bbox)
 		{
+			//	Met à jour la bbox du groupe.
 			if ( this.handles.Count == 0 )
 			{
 				this.HandleAdd(bbox.BottomLeft,  HandleType.Primary);
@@ -162,9 +162,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = false;
 		}
 
-		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
+			//	Met à jour le rectangle englobant l'objet.
 			this.bboxGeom = Drawing.Rectangle.Empty;
 			this.bboxGeom.MergeWith(this.Handle(0).Position);
 			this.bboxGeom.MergeWith(this.Handle(1).Position);
@@ -193,9 +193,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.bboxFull = this.bboxGeom;
 		}
 
-		// Crée le chemin d'un rectangle.
 		protected Drawing.Path PathRectangle(Drawing.Point p1, Drawing.Point p2, Drawing.Point p3, Drawing.Point p4)
 		{
+			//	Crée le chemin d'un rectangle.
 			Drawing.Path path = new Drawing.Path();
 			path.MoveTo(p1);
 			path.LineTo(p2);
@@ -205,9 +205,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Crée le chemin des coins d'un rectangle.
 		protected Drawing.Path PathCorners(Drawing.Point p1, Drawing.Point p2, Drawing.Point p3, Drawing.Point p4)
 		{
+			//	Crée le chemin des coins d'un rectangle.
 			double d12 = Drawing.Point.Distance(p1, p2)*0.25;
 			double d23 = Drawing.Point.Distance(p2, p3)*0.25;
 			double d34 = Drawing.Point.Distance(p3, p4)*0.25;
@@ -234,9 +234,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Dessine l'objet.
 			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext, iconObjects);
 

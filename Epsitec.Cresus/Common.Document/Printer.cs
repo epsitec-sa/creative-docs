@@ -21,19 +21,19 @@ namespace Epsitec.Common.Document
 			this.imageAA = 1.0;
 		}
 
-		// Imprime le document selon les choix faits dans le dialogue Window (dp)
-		// ainsi que dans le dialogue des réglages (PrintInfo).
 		public void Print(Epsitec.Common.Dialogs.Print dp)
 		{
+			//	Imprime le document selon les choix faits dans le dialogue Window (dp)
+			//	ainsi que dans le dialogue des réglages (PrintInfo).
 			PrintEngine printEngine = new PrintEngine();
 			printEngine.Initialise(this, dp);
 			dp.Document.Print(printEngine);
 		}
 
-		// Exporte le document dans un fichier.
 		public string Export(string filename)
 		{
-			// Crée le DrawingContext utilisé pour l'exportation.
+			//	Exporte le document dans un fichier.
+			//	Crée le DrawingContext utilisé pour l'exportation.
 			DrawingContext drawingContext;
 			drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.Size;
@@ -44,9 +44,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Image
-		// Trouve le type d'une image en fonction de l'extension.
 		public static ImageFormat GetImageFormat(string ext)
 		{
+			//	Trouve le type d'une image en fonction de l'extension.
 			switch ( ext.ToLower() )
 			{
 				case "bmp":  return ImageFormat.Bmp;
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document
 				this.pageList = new System.Collections.ArrayList();
 				this.pageCounter = 0;
 
-				// Crée le DrawingContext utilisé pour l'impression.
+				//	Crée le DrawingContext utilisé pour l'impression.
 				this.drawingContext = new DrawingContext(this.document, null);
 				this.drawingContext.ContainerSize = this.document.Size;
 				this.drawingContext.PreviewActive = true;
@@ -163,10 +163,10 @@ namespace Epsitec.Common.Document
 
 				int totalPages = toPage-fromPage+1;
 
-				// Reprend ici tous les choix effectués dans le dialogue Window
-				// de l'impression. Même s'il semble possible de les atteindre
-				// plus tard avec port.PageSettings.PrinterSettings, cela
-				// fonctionne mal.
+				//	Reprend ici tous les choix effectués dans le dialogue Window
+				//	de l'impression. Même s'il semble possible de les atteindre
+				//	plus tard avec port.PageSettings.PrinterSettings, cela
+				//	fonctionne mal.
 				this.paperSize = dp.Document.PrinterSettings.DefaultPageSettings.PaperSize.Size;
 				this.landscape = dp.Document.PrinterSettings.DefaultPageSettings.Landscape;
 
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Document
 					dp.Document.PrinterSettings.Copies = 1;
 				}
 
-				// Calcule la liste des pages à imprimer.
+				//	Calcule la liste des pages à imprimer.
 				if ( justeOneMaster )
 				{
 					for ( int i=0 ; i<copies ; i++ )
@@ -303,12 +303,12 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Imprime la géométrie de tous les objets.
 		protected void PrintGeometry(Printing.PrintPort port,
 									 PrintEngine printEngine,
 									 DrawingContext drawingContext,
 									 int pageNumber)
 		{
+			//	Imprime la géométrie de tous les objets.
 			System.Diagnostics.Debug.Assert(pageNumber >= 0);
 			System.Diagnostics.Debug.Assert(pageNumber < this.document.GetObjects.Count);
 
@@ -402,15 +402,15 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Calcule la liste des calques, y compris ceux des pages maîtres.
-		// Les calques cachés à l'impression ne sont pas mis dans la liste.
 		protected System.Collections.ArrayList ComputeLayers(int pageNumber)
 		{
+			//	Calcule la liste des calques, y compris ceux des pages maîtres.
+			//	Les calques cachés à l'impression ne sont pas mis dans la liste.
 			System.Collections.ArrayList layers = new System.Collections.ArrayList();
 			System.Collections.ArrayList masterList = new System.Collections.ArrayList();
 			this.document.Modifier.ComputeMasterPageList(masterList, pageNumber);
 
-			// Mets d'abord les premiers calques de toutes les pages maîtres.
+			//	Mets d'abord les premiers calques de toutes les pages maîtres.
 			foreach ( Objects.Page master in masterList )
 			{
 				int frontier = master.MasterFirstFrontLayer;
@@ -422,7 +422,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Mets ensuite tous les calques de la page.
+			//	Mets ensuite tous les calques de la page.
 			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
 			{
@@ -430,7 +430,7 @@ namespace Epsitec.Common.Document
 				layers.Add(layer);
 			}
 
-			// Mets finalement les derniers calques de toutes les pages maîtres.
+			//	Mets finalement les derniers calques de toutes les pages maîtres.
 			foreach ( Objects.Page master in masterList )
 			{
 				int frontier = master.MasterFirstFrontLayer;
@@ -446,10 +446,10 @@ namespace Epsitec.Common.Document
 			return layers;
 		}
 
-		// Calcule les zones d'impression.
-		// Les différentes zones n'ont aucune intersection entre elles.
 		protected System.Collections.ArrayList ComputeAreas(int pageNumber)
 		{
+			//	Calcule les zones d'impression.
+			//	Les différentes zones n'ont aucune intersection entre elles.
 			System.Collections.ArrayList areas = new System.Collections.ArrayList();
 			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
 			int rank = 0;
@@ -478,7 +478,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Fusionne toutes les zones qui se chevauchent.
+			//	Fusionne toutes les zones qui se chevauchent.
 			for ( int i=0 ; i<areas.Count ; i++ )
 			{
 				PrintingArea area1 = areas[i] as PrintingArea;
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Document
 				while ( merge );
 			}
 
-			// Supprime toutes les zones ne contenant que des objets simples.
+			//	Supprime toutes les zones ne contenant que des objets simples.
 			if ( this.PrintInfo.PerfectJoin )
 			{
 				for ( int i=0 ; i<areas.Count ; i++ )
@@ -519,8 +519,8 @@ namespace Epsitec.Common.Document
 			return areas;
 		}
 
-		// PrintingArea représente une zone rectangulaire contenant un ou plusieurs
-		// objets complexes.
+		//	PrintingArea représente une zone rectangulaire contenant un ou plusieurs
+		//	objets complexes.
 		protected class PrintingArea
 		{
 			public PrintingArea(Objects.Abstract obj, int rank, bool isLayerComplexPrinting)
@@ -596,9 +596,9 @@ namespace Epsitec.Common.Document
 			protected int				topRank;
 		}
 
-		// Indique si une impression complexe est nécessaire.
 		protected bool IsComplexPrinting(int pageNumber)
 		{
+			//	Indique si une impression complexe est nécessaire.
 			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
 			foreach ( Objects.Layer layer in layers )
 			{
@@ -611,14 +611,14 @@ namespace Epsitec.Common.Document
 			return false;
 		}
 
-		// Imprime la géométrie simple de tous les objets, possible lorsque les
-		// objets n'utilisent ni les dégradés ni la transparence.
 		protected void PrintSimplyGeometry(Printing.PrintPort port,
 										   PrintEngine printEngine,
 										   DrawingContext drawingContext,
 										   int pageNumber,
 										   Point offset)
 		{
+			//	Imprime la géométrie simple de tous les objets, possible lorsque les
+			//	objets n'utilisent ni les dégradés ni la transparence.
 			Transform initialTransform = port.Transform;
 			this.InitSimplyPort(port, printEngine, offset);
 
@@ -643,7 +643,6 @@ namespace Epsitec.Common.Document
 			port.Transform = initialTransform;
 		}
 
-		// Imprime la géométrie composée d'objets simples et de zones complexes.
 		protected void PrintMixGeometry(Printing.PrintPort port,
 										PrintEngine printEngine,
 										DrawingContext drawingContext,
@@ -651,6 +650,7 @@ namespace Epsitec.Common.Document
 										Point offset,
 										System.Collections.ArrayList areas)
 		{
+			//	Imprime la géométrie composée d'objets simples et de zones complexes.
 			Transform initialTransform = port.Transform;
 			this.InitSimplyPort(port, printEngine, offset);
 
@@ -711,8 +711,6 @@ namespace Epsitec.Common.Document
 			port.Transform = initialTransform;
 		}
 
-		// Imprime la géométrie complexe de tous les objets, en utilisant
-		// un bitmap intermédiaire.
 		protected void PrintBitmapGeometry(Printing.PrintPort port,
 										   PrintEngine printEngine,
 										   DrawingContext drawingContext,
@@ -721,6 +719,8 @@ namespace Epsitec.Common.Document
 										   Rectangle clipRect,
 										   Objects.Abstract topObject)
 		{
+			//	Imprime la géométrie complexe de tous les objets, en utilisant
+			//	un bitmap intermédiaire.
 			Transform initialTransform = port.Transform;
 
 			double dpi = this.PrintInfo.Dpi;
@@ -783,13 +783,13 @@ namespace Epsitec.Common.Document
 			port.Transform = initialTransform;
 		}
 
-		// Imprime les zones rectangulaires (pour le debug).
 		protected void PrintAreas(Printing.PrintPort port,
 								  PrintEngine printEngine,
 								  DrawingContext drawingContext,
 								  System.Collections.ArrayList areas,
 								  Point offset)
 		{
+			//	Imprime les zones rectangulaires (pour le debug).
 			Transform initialTransform = port.Transform;
 			this.InitSimplyPort(port, printEngine, offset);
 
@@ -806,21 +806,21 @@ namespace Epsitec.Common.Document
 			port.Transform = initialTransform;
 		}
 
-		// Imprime les traits de coupe.
 		protected void PrintTarget(Printing.PrintPort port,
 								   PrintEngine printEngine,
 								   DrawingContext drawingContext,
 								   Point offset)
 		{
+			//	Imprime les traits de coupe.
 			Transform initialTransform = port.Transform;
 			this.InitSimplyPort(port, printEngine, offset);
 			this.PaintTarget(port, drawingContext);
 			port.Transform = initialTransform;
 		}
 
-		// Dessine les traits de coupe.
 		public void PaintTarget(Drawing.IPaintPort port, DrawingContext drawingContext)
 		{
+			//	Dessine les traits de coupe.
 			if ( port is Printing.PrintPort )
 			{
 				port.LineWidth = 0.1;
@@ -890,9 +890,9 @@ namespace Epsitec.Common.Document
 			this.PaintColorSample(port, rect, Color.FromRGB(1,1,0));  // jaune
 		}
 
-		// Dessine un échantillon de couleur.
 		protected void PaintColorSample(Drawing.IPaintPort port, Rectangle rect, Color color)
 		{
+			//	Dessine un échantillon de couleur.
 			Path path = new Path();
 			path.AppendRectangle(rect);
 
@@ -903,18 +903,18 @@ namespace Epsitec.Common.Document
 			port.PaintOutline(path);
 		}
 
-		// Imprime le warning d'installation.
 		protected void PrintDemo(Printing.PrintPort port, PrintEngine printEngine, Point offset)
 		{
+			//	Imprime le warning d'installation.
 			Transform initialTransform = port.Transform;
 			this.InitSimplyPort(port, printEngine, offset);
 			this.PaintDemo(port);
 			port.Transform = initialTransform;
 		}
 
-		// Desine le warning d'installation.
 		protected void PaintDemo(Drawing.IPaintPort port)
 		{
+			//	Desine le warning d'installation.
 			Size ds = this.document.Size;
 			Path path = new Path();
 
@@ -953,18 +953,18 @@ namespace Epsitec.Common.Document
 			port.PaintOutline(path);
 		}
 
-		// Imprime le warning d'installation.
 		protected void PrintExpired(Printing.PrintPort port, PrintEngine printEngine, Point offset)
 		{
+			//	Imprime le warning d'installation.
 			Transform initialTransform = port.Transform;
 			this.InitSimplyPort(port, printEngine, offset);
 			this.PaintExpired(port);
 			port.Transform = initialTransform;
 		}
 
-		// Dessine le warning d'installation.
 		protected void PaintExpired(Drawing.IPaintPort port)
 		{
+			//	Dessine le warning d'installation.
 			Size ds = this.document.Size;
 			Path path = new Path();
 
@@ -1018,9 +1018,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Initialise le port pour une impression simplifiée.
 		protected void InitSimplyPort(Printing.PrintPort port, PrintEngine printEngine, Point offset)
 		{
+			//	Initialise le port pour une impression simplifiée.
 			double zoom = 1.0;
 			if ( this.PrintInfo.AutoZoom )
 			{
@@ -1043,10 +1043,10 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Exporte la géométrie complexe de tous les objets, en utilisant
-		// un bitmap intermédiaire.
 		protected string ExportGeometry(DrawingContext drawingContext, string filename)
 		{
+			//	Exporte la géométrie complexe de tous les objets, en utilisant
+			//	un bitmap intermédiaire.
 			ImageFormat format = this.imageFormat;
 			double dpi = this.imageDpi;
 			int depth = this.imageDepth;  // 8, 16, 24 ou 32
@@ -1126,9 +1126,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Donne les réglages de l'impression.
 		protected Settings.PrintInfo PrintInfo
 		{
+			//	Donne les réglages de l'impression.
 			get
 			{
 				return this.document.Settings.PrintInfo;

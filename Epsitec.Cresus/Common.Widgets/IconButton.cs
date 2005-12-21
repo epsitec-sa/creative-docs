@@ -39,7 +39,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override double					DefaultWidth
 		{
-			// Retourne la largeur standard d'une icône.
+			//	Retourne la largeur standard d'une icône.
 			get
 			{
 				return 22;
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Widgets
 
 		public override double					DefaultHeight
 		{
-			// Retourne la hauteur standard d'une icône.
+			//	Retourne la hauteur standard d'une icône.
 			get
 			{
 				return 22;

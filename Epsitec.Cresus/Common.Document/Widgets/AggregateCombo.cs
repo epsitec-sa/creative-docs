@@ -46,9 +46,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Ligne éventuelle à exclure.
 		public int ExcludeRank
 		{
+			//	Ligne éventuelle à exclure.
 			get
 			{
 				return this.excludeRank;
@@ -60,9 +60,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Attributs cherchés en profondeur, dans les parents.
 		public bool IsDeep
 		{
+			//	Attributs cherchés en profondeur, dans les parents.
 			get
 			{
 				return this.isDeep;
@@ -74,9 +74,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Première ligne avec <aucun>.
 		public bool IsNoneLine
 		{
+			//	Première ligne avec <aucun>.
 			get
 			{
 				return this.isNoneLine;
@@ -322,10 +322,10 @@ namespace Epsitec.Common.Document.Widgets
 			return true;
 		}
 		
-		// Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
-		// est validée par un clic de souris.
 		protected virtual void ProcessComboActivatedIndex(int sel)
 		{
+			//	Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
+			//	est validée par un clic de souris.
 			sel = this.MapComboListToIndex(sel);
 			if ( sel == -1 )  return;
 			
@@ -550,9 +550,9 @@ namespace Epsitec.Common.Document.Widgets
 			this.OpenCombo();
 		}
 		
-		// L'utilisateur survole la liste.
 		private void HandleListFlyOverChanged(object sender)
 		{
+			//	L'utilisateur survole la liste.
 			int fly = this.list.FlyOverRow;
 			for ( int r=0 ; r<this.list.Rows ; r++ )
 			{
@@ -570,9 +570,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// L'utilisateur a cliqué dans la liste pour terminer son choix.
 		private void HandleListSelectionActivated(object sender)
 		{
+			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
 			this.ProcessComboActivatedIndex(this.list.SelectedRow);
 		}
 

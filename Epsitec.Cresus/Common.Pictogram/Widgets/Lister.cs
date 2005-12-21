@@ -37,9 +37,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		// Liste des objets.
 		public IconObjects IconObjects
 		{
+			//	Liste des objets.
 			get
 			{
 				return this.iconObjects;
@@ -57,9 +57,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			base.Invalidate();
 		}
 
-		// Met à jour le contenu du tableau.
 		public void UpdateContent()
 		{
+			//	Met à jour le contenu du tableau.
 			if ( this.iconObjects == null )  return;
 			if ( !this.IsVisible )  return;
 
@@ -323,9 +323,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Ligne de la table sélectionnée ou déselectionnée.
 		private void TableSelectionChanged(object sender)
 		{
+			//	Ligne de la table sélectionnée ou déselectionnée.
 			for ( int i=0 ; i<this.table.Rows ; i++ )
 			{
 				this.iconObjects[i].Select(this.table.IsCellSelected(i, 0));
@@ -334,9 +334,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnPanelChanged();
 		}
 
-		// Génère un événement pour dire qu'il faut changer les panneaux.
 		protected virtual void OnPanelChanged()
 		{
+			//	Génère un événement pour dire qu'il faut changer les panneaux.
 			if ( this.PanelChanged != null )  // qq'un écoute ?
 			{
 				this.PanelChanged(this);

@@ -90,9 +90,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.table == null )  return;
@@ -123,9 +123,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour tout le panneau.
 		public void UpdateAll(int sel)
 		{
+			//	Met à jour tout le panneau.
 			this.UpdateTable();
 			this.TableSelect(sel, true, false);
 			sel = this.TableSelect();
@@ -141,16 +141,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// La liste des styles a changé.
 		private void HandleStyleListChanged(object sender)
 		{
+			//	La liste des styles a changé.
 			this.UpdateAll(this.TableSelect());
 		}
 
-		// Un style de la collection a changé, suite à la modification
-		// d'un objet qui utilisait un style.
 		private void HandleOneStyleChangedChanged(int styleID)
 		{
+			//	Un style de la collection a changé, suite à la modification
+			//	d'un objet qui utilisait un style.
 			AbstractProperty property = null;
 			int sel = -1;
 			int rows = this.table.Rows;
@@ -170,9 +170,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour les boutons de la toolbar.
 		protected void UpdateToolBar()
 		{
+			//	Met à jour les boutons de la toolbar.
 			int total = this.table.Rows;
 			int sel = this.TableSelect();
 
@@ -182,17 +182,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.buttonDelete.SetEnabled(sel != -1);
 		}
 
-		// Crée une nouvelle propriété.
 		private void HandleButtonNew(object sender, MessageEventArgs e)
 		{
+			//	Crée une nouvelle propriété.
 			IconButton button = sender as IconButton;
 			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, 0));
 			this.CreateMenu(pos);
 		}
 
-		// Duplique une propriété.
 		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
 		{
+			//	Duplique une propriété.
 			int sel = this.TableSelect();
 			AbstractProperty property = this.Styles.GetProperty(sel);
 			this.CommandStyleCreate(property.Type);
@@ -208,9 +208,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdatePanels(newProp);
 		}
 
-		// Monte d'une ligne la propriété sélectionnée.
 		private void HandleButtonUp(object sender, MessageEventArgs e)
 		{
+			//	Monte d'une ligne la propriété sélectionnée.
 			this.drawer.UndoBeginning("StyleUp");
 			int sel = this.TableSelect();
 			this.Styles.SwapProperty(sel, sel-1);
@@ -221,9 +221,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdateToolBar();
 		}
 
-		// Descend d'une ligne la propriété sélectionnée.
 		private void HandleButtonDown(object sender, MessageEventArgs e)
 		{
+			//	Descend d'une ligne la propriété sélectionnée.
 			this.drawer.UndoBeginning("StyleDown");
 			int sel = this.TableSelect();
 			this.Styles.SwapProperty(sel, sel+1);
@@ -234,9 +234,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdateToolBar();
 		}
 
-		// Supprime la propriété sélectionnée.
 		private void HandleButtonDelete(object sender, MessageEventArgs e)
 		{
+			//	Supprime la propriété sélectionnée.
 			int sel = this.TableSelect();
 			AbstractProperty property = this.Styles.GetProperty(sel);
 
@@ -253,9 +253,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
+			//	Met à jour le contenu de la table.
 			int rows = this.Styles.TotalProperty;
 			int initialColumns = this.table.Columns;
 			this.table.SetArraySize(2, rows);
@@ -305,9 +305,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdateToolBar();
 		}
 
-		// Sélectionne une ligne dans la table.
 		protected void TableSelect(int sel, bool showSelect, bool selectText)
 		{
+			//	Sélectionne une ligne dans la table.
 			int total = this.table.Rows;
 			bool exist = false;
 			for ( int i=0 ; i<total ; i++ )
@@ -328,9 +328,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Retourne la ligne sélectionnée dans la table.
 		protected int TableSelect()
 		{
+			//	Retourne la ligne sélectionnée dans la table.
 			int total = this.table.Rows;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -339,9 +339,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return -1;
 		}
 
-		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
+			//	Liste cliquée.
 			int sel = this.TableSelect();
 			if ( sel == -1 )  return;
 			this.TableSelect(sel, false, true);
@@ -349,9 +349,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdateToolBar();
 		}
 
-		// Ligne éditable dans la liste cliquée.
 		private void HandleListTextClicked(object sender, MessageEventArgs e)
 		{
+			//	Ligne éditable dans la liste cliquée.
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
 			this.TableSelect(sel, false, false);
@@ -359,9 +359,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdateToolBar();
 		}
 
-		// Texte de la ligne éditable dans la liste changé.
 		private void HandleListTextChanged(object sender)
 		{
+			//	Texte de la ligne éditable dans la liste changé.
 			if ( this.ignoreListTextChanged )  return;
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
@@ -377,10 +377,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Crée le panneau pour éditer la transformation.
 		protected void UpdatePanels(AbstractProperty property)
 		{
-			// Supprime tous les panneaux, sauf le ColorSelector.
+			//	Crée le panneau pour éditer la transformation.
+			//	Supprime tous les panneaux, sauf le ColorSelector.
 			AbstractPanel panel;
 			int i = 0;
 			while ( i < this.panel.Children.Count )
@@ -401,7 +401,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				}
 			}
 
-			// Crée une fois pour toutes le ColorSelector.
+			//	Crée une fois pour toutes le ColorSelector.
 			if ( this.colorSelector == null )
 			{
 				this.colorSelector = new ColorSelector();
@@ -412,7 +412,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.colorSelector.Parent = this.panel;
 			}
 
-			// Crée le panneau selon le style sélectionné dans la liste.
+			//	Crée le panneau selon le style sélectionné dans la liste.
 			Drawing.Rectangle rect;
 			Widget originColorLastPanel = null;
 			if ( property == null )
@@ -445,7 +445,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.leftHeightUsed = panel.Height;
 			}
 
-			// Positionne le ColorSelector.
+			//	Positionne le ColorSelector.
 			rect = new Drawing.Rectangle();
 			rect.Left   = 0;
 			rect.Right  = this.panel.Width;
@@ -456,9 +456,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.HandleOriginColorChanged(originColorLastPanel, true);
 		}
 
-		// Le contenu d'un panneau a été changé.
 		private void HandlePanelChanged(object sender)
 		{
+			//	Le contenu d'un panneau a été changé.
 			AbstractPanel panel = sender as AbstractPanel;
 			AbstractProperty newProperty = panel.GetProperty();
 
@@ -478,9 +478,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.SetProperty(newProperty, false);
 		}
 
-		// Le widget qui détermine la couleur d'origine a changé.
 		private void HandleOriginColorChanged(object sender)
 		{
+			//	Le widget qui détermine la couleur d'origine a changé.
 			this.HandleOriginColorChanged(sender, false);
 		}
 
@@ -521,9 +521,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Couleur changée dans la roue.
 		private void HandleColorSelectorChanged(object sender)
 		{
+			//	Couleur changée dans la roue.
 			if ( this.ignoreColorChanged || this.originColorPanel == null )  return;
 			this.originColorPanel.OriginColorChange(this.colorSelector.Color);
 
@@ -547,9 +547,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Construit le menu pour choisir le style.
 		protected void CreateMenu(Drawing.Point pos)
 		{
+			//	Construit le menu pour choisir le style.
 			this.contextMenu = new VMenu();
 			this.contextMenu.Host = this;
 
@@ -574,10 +574,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.contextMenu.ShowAsContextMenu(this.Window, pos);
 		}
 
-		// Crée un nouveau style.
-		// Exécuté suite à la commande contenue dans le menu.
 		public void CommandStyleCreate(PropertyType type)
 		{
+			//	Crée un nouveau style.
+			//	Exécuté suite à la commande contenue dans le menu.
 			AbstractProperty property = this.drawer.NewProperty(type);
 			if ( property == null )  return;
 
@@ -593,9 +593,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 		
 
-		// Retourne la collection des styles.
 		protected StylesCollection Styles
 		{
+			//	Retourne la collection des styles.
 			get { return this.drawer.IconObjects.StylesCollection; }
 		}
 

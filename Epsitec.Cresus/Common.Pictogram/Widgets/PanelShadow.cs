@@ -85,9 +85,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.extendedSize ? 55 : 30 );
@@ -95,9 +95,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.label.Text = this.textStyle;
 
@@ -110,9 +110,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldOy.Value     = (decimal) p.Oy;
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyShadow p = new PropertyShadow();
 			base.GetProperty(p);
 
@@ -125,34 +125,34 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 			this.fieldColor.ActiveState = WidgetState.ActiveNo;
 		}
 
-		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 			this.fieldColor.ActiveState = WidgetState.ActiveYes;
 		}
 
-		// Modifie la couleur d'origine.
 		public override void OriginColorChange(Drawing.Color color)
 		{
+			//	Modifie la couleur d'origine.
 			this.fieldColor.Color = color;
 		}
 
-		// Donne la couleur d'origine.
 		public override Drawing.Color OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			return this.fieldColor.Color;
 		}
 
 		
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldColor == null )  return;

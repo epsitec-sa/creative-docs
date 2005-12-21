@@ -12,13 +12,13 @@ namespace Epsitec.Common.Text
 	{
 		string	Name	{ get; }
 		
+		void AttachToParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
+		void DetachFromParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
 		//	En attachant un gestionnaire de paragraphe à un paragraphe donné, il
 		//	est possible de modifier le texte pour y ajouter des caractères marqués
 		//	avec la propriété AutoTextProperty.
 		//
 		//	NB: Le curseur pointe toujours au début du paragraphe.
 		
-		void AttachToParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
-		void DetachFromParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
 	}
 }

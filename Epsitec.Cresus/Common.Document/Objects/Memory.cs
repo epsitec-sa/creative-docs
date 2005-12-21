@@ -30,15 +30,15 @@ namespace Epsitec.Common.Document.Objects
 
 	
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Memory(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 		}
 		#endregion
 	}

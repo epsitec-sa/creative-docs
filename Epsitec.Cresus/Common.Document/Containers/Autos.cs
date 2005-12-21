@@ -30,9 +30,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 		
 
-		// Met en évidence l'objet survolé par la souris.
 		public override void Hilite(Objects.Abstract hiliteObject)
 		{
+			//	Met en évidence l'objet survolé par la souris.
 			if ( !this.IsVisible )  return;
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
@@ -59,18 +59,18 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 		
-		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
+			//	Effectue la mise à jour du contenu.
 			Viewer viewer = this.document.Modifier.ActiveViewer;
 			DrawingContext context = viewer.DrawingContext;
 
 			this.UpdateTable();
 		}
 
-		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
+			//	Met à jour le contenu de la table.
 			int rows = 0;
 			rows += this.document.PropertiesAuto.Count;
 			rows += this.document.PropertiesSel.Count;
@@ -134,9 +134,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Peuple une ligne de la table, si nécessaire.
 		protected void TableFillRow(int row)
 		{
+			//	Peuple une ligne de la table, si nécessaire.
 			if ( this.table[0, row].IsEmpty )
 			{
 				GlyphButton gb = new GlyphButton();
@@ -157,9 +157,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Hilite une ligne de la table.
 		protected void TableHiliteRow(int row, bool hilite)
 		{
+			//	Hilite une ligne de la table.
 			if ( row >= this.table.Rows )  return;
 
 			if ( this.table[0, row].IsHilite != hilite )
@@ -171,9 +171,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// La cellule survolée a changé.
 		private void HandleTableFlyOverChanged(object sender)
 		{
+			//	La cellule survolée a changé.
 			int rank = this.table.FlyOverRow;
 
 			Properties.Abstract property = null;

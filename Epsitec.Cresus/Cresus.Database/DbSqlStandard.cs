@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Database
 					}
 					catch
 					{
-						// en cas d'erreur dans le nombre de guillemets
+						//	en cas d'erreur dans le nombre de guillemets
 						return false;
 					}
 

@@ -56,11 +56,11 @@ namespace Epsitec.Common.Widgets
 
 		public bool							IsInverted
 		{
-			// Inversion du fonctionnement.
-			// Ascenseur vertical:   false -> zéro en bas
-			// Ascenseur vertical:   true  -> zéro en haut
-			// Ascenseur horizontal: false -> zéro à gauche
-			// Ascenseur horizontal: true  -> zéro à droite
+			//	Inversion du fonctionnement.
+			//	Ascenseur vertical:   false -> zéro en bas
+			//	Ascenseur vertical:   true  -> zéro en haut
+			//	Ascenseur horizontal: false -> zéro à gauche
+			//	Ascenseur horizontal: true  -> zéro à droite
 			
 			get
 			{
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Widgets
 		
 		public decimal						SmallChange
 		{
-			// Valeur avancée par les boutons.
+			//	Valeur avancée par les boutons.
 			get
 			{
 				return this.buttonStep;
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Widgets
 		
 		public decimal						LargeChange
 		{
-			// Valeur avancée en cliquant hors de la cabine.
+			//	Valeur avancée en cliquant hors de la cabine.
 			get
 			{
 				return this.pageStep;
@@ -484,10 +484,10 @@ namespace Epsitec.Common.Widgets
 			Widgets.Direction dir   = this.is_vertical ? Direction.Up : Direction.Left;
 			WidgetState       state = this.PaintState;
 			
-			// Dessine le fond.
+			//	Dessine le fond.
 			adorner.PaintSliderBackground (graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetState.Entered, dir);
 			
-			// Dessine la cabine.
+			//	Dessine la cabine.
 			if (this.thumbRect.IsValid && this.IsEnabled)
 			{
 				Drawing.Rectangle rect = this.thumbRect;

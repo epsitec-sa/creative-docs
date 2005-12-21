@@ -31,18 +31,18 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 
-		// Indique si un IconButton en mode ThreeState est 2 pixels plus haut.
 		protected static bool IsThreeState2(Widgets.WidgetState state)
 		{
+			//	Indique si un IconButton en mode ThreeState est 2 pixels plus haut.
 			if ( (state&WidgetState.ThreeState) == 0 )  return false;
 
 			return ( (state&WidgetState.ActiveYes)   != 0 ||
 					 (state&WidgetState.ActiveMaybe) != 0 );
 		}
 
-		// Donne le chemin d'un IconButton en mode ThreeState.
 		protected static Drawing.Path PathThreeState2Frame(Drawing.Rectangle rect, Widgets.WidgetState state)
 		{
+			//	Donne le chemin d'un IconButton en mode ThreeState.
 			Drawing.Path path = new Drawing.Path();
 
 			if ( AbstractAdorner.IsThreeState2(state) )

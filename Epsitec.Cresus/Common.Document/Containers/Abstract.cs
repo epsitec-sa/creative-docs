@@ -21,15 +21,15 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Met en évidence l'objet survolé par la souris.
 		public virtual void Hilite(Objects.Abstract hiliteObject)
 		{
+			//	Met en évidence l'objet survolé par la souris.
 		}
 
 
-		// Appelé par Widget lorsque la visibilité change.
 		protected override void OnIsVisibleChanged(Types.PropertyChangedEventArgs e)
 		{
+			//	Appelé par Widget lorsque la visibilité change.
 			base.OnIsVisibleChanged(e);
 			
 			bool visible = (bool) e.NewValue;
@@ -41,16 +41,16 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Indique qu'il faudra mettre à jour tout le contenu.
 		public void SetDirtyContent()
 		{
+			//	Indique qu'il faudra mettre à jour tout le contenu.
 			this.isDirtyContent = true;
 			this.Update();  // màj immédiate si l'agrégat est visible
 		}
 
-		// Indique qu'il faudra mettre à jour les valeurs contenues.
 		public void SetDirtyProperties(System.Collections.ArrayList propertyList)
 		{
+			//	Indique qu'il faudra mettre à jour les valeurs contenues.
 			this.dirtyProperties.Clear();
 			foreach ( Properties.Abstract property in propertyList )
 			{
@@ -59,9 +59,9 @@ namespace Epsitec.Common.Document.Containers
 			this.Update();  // màj immédiate si l'agrégat est visible
 		}
 
-		// Indique qu'il faudra mettre à jour les valeurs contenues.
 		public void SetDirtyAggregates(System.Collections.ArrayList aggregateList)
 		{
+			//	Indique qu'il faudra mettre à jour les valeurs contenues.
 			this.dirtyAggregates.Clear();
 			foreach ( Properties.Aggregate agg in aggregateList )
 			{
@@ -70,23 +70,23 @@ namespace Epsitec.Common.Document.Containers
 			this.Update();  // màj immédiate si l'agrégat est visible
 		}
 
-		// Indique qu'il faudra mettre à jour un objet.
 		public void SetDirtyObject(Objects.Abstract obj)
 		{
+			//	Indique qu'il faudra mettre à jour un objet.
 			this.dirtyObject = obj;
 			this.Update();  // màj immédiate si l'agrégat est visible
 		}
 
-		// Indique qu'il faudra mettre à jour la sélection par noms.
 		public void SetDirtySelNames()
 		{
+			//	Indique qu'il faudra mettre à jour la sélection par noms.
 			this.isDirtySelNames = true;
 			this.Update();  // màj immédiate si l'agrégat est visible
 		}
 
-		// Met à jour le contenu, si nécessaire.
 		protected void Update()
 		{
+			//	Met à jour le contenu, si nécessaire.
 			if ( !this.IsVisible )  return;
 
 			if ( this.isDirtyContent )
@@ -124,35 +124,35 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Effectue la mise à jour du contenu.
 		protected virtual void DoUpdateContent()
 		{
+			//	Effectue la mise à jour du contenu.
 		}
 
-		// Effectue la mise à jour des propriétés.
 		protected virtual void DoUpdateProperties(System.Collections.ArrayList propertyList)
 		{
+			//	Effectue la mise à jour des propriétés.
 		}
 
-		// Effectue la mise à jour des agrégats.
 		protected virtual void DoUpdateAggregates(System.Collections.ArrayList propertyList)
 		{
+			//	Effectue la mise à jour des agrégats.
 		}
 
-		// Effectue la mise à jour d'un objet.
 		protected virtual void DoUpdateObject(Objects.Abstract obj)
 		{
+			//	Effectue la mise à jour d'un objet.
 		}
 
-		// Effectue la mise à jour de la sélection par noms.
 		protected virtual void DoUpdateSelNames()
 		{
+			//	Effectue la mise à jour de la sélection par noms.
 		}
 
 
-		// Vérifie si une propriété fait référence à un objet.
 		protected static bool IsObjectUseByProperty(Properties.Abstract property, Objects.Abstract hiliteObject)
 		{
+			//	Vérifie si une propriété fait référence à un objet.
 			int total = property.Owners.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{

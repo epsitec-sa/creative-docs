@@ -48,12 +48,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Taille d'une cellule. GlyphArray s'arrange pour que les cellules
-		// soient à peu près carrées. La taille d'une cellule détermine le
-		// nombre de cellules qu'il sera possible de placer horizontalement
-		// et verticalement.
 		public double CellSize
 		{
+			//	Taille d'une cellule. GlyphArray s'arrange pour que les cellules
+			//	soient à peu près carrées. La taille d'une cellule détermine le
+			//	nombre de cellules qu'il sera possible de placer horizontalement
+			//	et verticalement.
 			get
 			{
 				return this.cellSize;
@@ -69,9 +69,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Choix de la fonte.
 		public void SetFont(string fontFace, string fontStyle)
 		{
+			//	Choix de la fonte.
 			if ( this.fontFace != fontFace || this.fontStyle != fontStyle )
 			{
 				this.fontFace = fontFace;
@@ -82,9 +82,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Choix d'une liste de glyphes (caractères alternatifs).
 		public void SetGlyphAlternates(OpenType.Font font, int code, int glyph, ushort[] alternates)
 		{
+			//	Choix d'une liste de glyphes (caractères alternatifs).
 			this.code = code;
 			this.glyphsMode = true;
 
@@ -131,36 +131,36 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 		}
 
-		// Nom de la fonte.
 		public string FontFace
 		{
+			//	Nom de la fonte.
 			get
 			{
 				return this.fontFace;
 			}
 		}
 
-		// Nom du style de la fonte.
 		public string FontStyle
 		{
+			//	Nom du style de la fonte.
 			get
 			{
 				return this.fontStyle;
 			}
 		}
 
-		// Code unicode du glyph.
 		public int Code
 		{
+			//	Code unicode du glyph.
 			get
 			{
 				return this.code;
 			}
 		}
 
-		// Glyph sélectionné à insérer.
 		public int SelectedGlyph
 		{
+			//	Glyph sélectionné à insérer.
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.glyphsMode);
@@ -170,9 +170,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Choix de l'index du glyphe sélectionné.
 		public int SelectedIndex
 		{
+			//	Choix de l'index du glyphe sélectionné.
 			get
 			{
 				return this.selectedIndex;
@@ -189,17 +189,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Retourne le caractère Unicode correspondant à un index.
 		public int IndexToUnicode(int index)
 		{
+			//	Retourne le caractère Unicode correspondant à un index.
 			System.Diagnostics.Debug.Assert(!this.glyphsMode);
 			if ( index < 0 || index >= this.unicodes.Length )  return 0;
 			return this.unicodes[index];
 		}
 
-		// Retourne l'index correspondant à un caractère Unicode.
 		public int UnicodeToIndex(int code)
 		{
+			//	Retourne l'index correspondant à un caractère Unicode.
 			System.Diagnostics.Debug.Assert(!this.glyphsMode);
 			for ( int i=0 ; i<this.unicodes.Length ; i++ )
 			{
@@ -209,9 +209,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Met à jour la liste des glyphes Unicode en fonction de la fonte.
 		protected void UpdateUnicodes()
 		{
+			//	Met à jour la liste des glyphes Unicode en fonction de la fonte.
 			this.unicodes = null;
 
 			Drawing.Font font = GlyphArray.GetFont(this.fontFace, this.fontStyle);
@@ -274,9 +274,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Met à jour la géométrie de l'ascenseur.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie de l'ascenseur.
 			base.UpdateClientGeometry();
 
 			if ( this.scroller != null )
@@ -286,17 +286,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		// Appelé lorsque l'ascenseur est déplacé.
 		private void HandleScrollerValueChanged(object sender)
 		{
+			//	Appelé lorsque l'ascenseur est déplacé.
 			System.Diagnostics.Debug.Assert(this.scroller == sender);
 			this.Invalidate();  // redessine le tableau de glyphes
 		}
 		
 		
-		// Gestion des événements.
 		protected override void ProcessMessage(Message message, Point pos)
 		{
+			//	Gestion des événements.
 			if ( !this.IsEnabled )  return;
 
 			switch ( message.Type )
@@ -336,9 +336,9 @@ namespace Epsitec.Common.Widgets
 			message.Consumer = this;
 		}
 
-		// Gestion d'une touche clavier pressée.
 		protected virtual bool ProcessKeyEvent(Message message)
 		{
+			//	Gestion d'une touche clavier pressée.
 			switch ( message.KeyCode )
 			{
 				case KeyCode.ArrowLeft:   return this.MoveSelectedCell(-1);
@@ -351,9 +351,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Déplace la cellule sélectionnée.
 		protected bool MoveSelectedCell(int move)
 		{
+			//	Déplace la cellule sélectionnée.
 			int sel = this.selectedIndex;
 			if ( sel == -1 )  return false;
 
@@ -378,9 +378,9 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		// Si nécessaire, bouge l'ascenseur pour montrer la cellule sélectionnée.
 		public void ShowSelectedCell()
 		{
+			//	Si nécessaire, bouge l'ascenseur pour montrer la cellule sélectionnée.
 			int sel = this.selectedIndex;
 			if ( sel == -1 )  return;
 
@@ -407,9 +407,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Détection du glyphe visé.
 		protected int Detect(Point pos)
 		{
+			//	Détection du glyphe visé.
 			Rectangle area = this.DrawingArea();
 			if ( !area.Contains(pos) )  return -1;
 
@@ -426,9 +426,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Peinture du widget.
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			//	Peinture du widget.
 			IAdorner    adorner = Widgets.Adorners.Factory.Active;
 			WidgetState state   = this.PaintState;
 			
@@ -438,7 +438,7 @@ namespace Epsitec.Common.Widgets
 			double cellWidth  = this.CellWidth();
 			double cellHeight = this.CellHeight();
 
-			// Dessine les glyphes.
+			//	Dessine les glyphes.
 			if ( this.unicodes != null || this.glyphs != null )
 			{
 				Drawing.Font font = GlyphArray.GetFont(this.fontFace, this.fontStyle);
@@ -498,7 +498,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			// Dessine le quadrillage et le cadre.
+			//	Dessine le quadrillage et le cadre.
 			for ( int x=1 ; x<dx ; x++ )
 			{
 				double posx = System.Math.Floor(area.Left + cellWidth*x) + 0.5;
@@ -518,10 +518,10 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// En fonction de la position de l'ascenseur (0..1), retourne le
-		// premier glyphe visible.
 		protected int First()
 		{
+			//	En fonction de la position de l'ascenseur (0..1), retourne le
+			//	premier glyphe visible.
 			if ( this.unicodes == null && this.glyphs == null )  return 0;
 
 			int dx = this.TotalCellVisibleX();
@@ -547,50 +547,50 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Largeur d'une cellule.
 		protected double CellWidth()
 		{
+			//	Largeur d'une cellule.
 			Rectangle rect = this.DrawingArea();
 			return rect.Width/this.TotalCellVisibleX();
 		}
 
-		// Hauteur d'une cellule.
 		protected double CellHeight()
 		{
+			//	Hauteur d'une cellule.
 			Rectangle rect = this.DrawingArea();
 			return rect.Height/this.TotalCellVisibleY();
 		}
 
-		// Nombre de cellules visibles horizontalement.
 		protected int TotalCellVisibleX()
 		{
+			//	Nombre de cellules visibles horizontalement.
 			Rectangle rect = this.DrawingArea();
 			int total = (int) (rect.Width/this.cellSize);
 			if ( total == 0 )  total++;
 			return total;
 		}
 
-		// Nombre de cellules visibles verticalement.
 		protected int TotalCellVisibleY()
 		{
+			//	Nombre de cellules visibles verticalement.
 			Rectangle rect = this.DrawingArea();
 			int total = (int) (rect.Height/this.cellSize);
 			if ( total == 0 )  total++;
 			return total;
 		}
 
-		// Rectangle où dessiner les cellules.
 		protected Rectangle DrawingArea()
 		{
+			//	Rectangle où dessiner les cellules.
 			Rectangle rect = this.Client.Bounds;
 			rect.Right -= this.scroller.Width+1.0;
 			return rect;
 		}
 
 
-		// Retourne le nombre total de cases.
 		protected int TotalCell
 		{
+			//	Retourne le nombre total de cases.
 			get
 			{
 				if ( this.glyphsMode )  return this.glyphs.Length;
@@ -599,9 +599,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Donne une fonte d'après son nom.
 		protected static Drawing.Font GetFont(string fontFace, string fontStyle)
 		{
+			//	Donne une fonte d'après son nom.
 			Drawing.Font font = Drawing.Font.GetFont(fontFace, fontStyle);
 
 			if ( font == null )
@@ -613,9 +613,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Appelé lorsque le glyphe sélectionné change.
 		protected virtual void OnChangeSelected()
 		{
+			//	Appelé lorsque le glyphe sélectionné change.
 			if ( this.ChangeSelected != null )
 			{
 				this.ChangeSelected(this);

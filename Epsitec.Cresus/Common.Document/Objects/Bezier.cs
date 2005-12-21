@@ -38,17 +38,17 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectBezier"); }
 		}
 
 
-		// Détecte si la souris est sur le pourtour de l'objet.
-		// Retourne le rang de la poignée de départ, ou -1
 		protected int DetectOutline(Point pos)
 		{
+			//	Détecte si la souris est sur le pourtour de l'objet.
+			//	Retourne le rang de la poignée de départ, ou -1
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 
 			Shape[] shapes = this.ShapesBuild(null, context, false);
@@ -57,9 +57,9 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
-		// Déplace tout l'objet.
 		public override void MoveAllProcess(Point move)
 		{
+			//	Déplace tout l'objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			bool allHandle = !this.IsSelected;
@@ -78,9 +78,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Sélectionne toutes les poignées de l'objet dans un rectangle.
 		public override void Select(Drawing.Rectangle rect)
 		{
+			//	Sélectionne toutes les poignées de l'objet dans un rectangle.
 			this.InsertOpletSelection();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 
@@ -125,15 +125,15 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Indique si cet objet peut avoir des segments sélectionnés.
 		public override bool IsSelectedSegmentPossible
 		{
+			//	Indique si cet objet peut avoir des segments sélectionnés.
 			get { return true; }
 		}
 
-		// Donne l'état d'une commande ShaperHandle*.
 		public override bool ShaperHandleState(string family, ref bool enable, System.Collections.ArrayList actives)
 		{
+			//	Donne l'état d'une commande ShaperHandle*.
 			if ( family == "Add" )
 			{
 				enable = (this.selectedSegments != null && this.selectedSegments.Count != 0);
@@ -229,9 +229,9 @@ namespace Epsitec.Common.Document.Objects
 			return base.ShaperHandleState(family, ref enable, actives);
 		}
 
-		// Exécute une commande ShaperHandle*.
 		public override bool ShaperHandleCommand(string cmd)
 		{
+			//	Exécute une commande ShaperHandle*.
 			if ( cmd == "ShaperHandleAdd" )
 			{
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleAdd);
@@ -454,17 +454,17 @@ namespace Epsitec.Common.Document.Objects
 			return base.ShaperHandleCommand(cmd);
 		}
 
-		// Passe le point en mode symétrique.
 		protected void ShaperHandleSym(int rank)
 		{
+			//	Passe le point en mode symétrique.
 			this.Handle(rank).ConstrainType = HandleConstrainType.Symmetric;
 			this.MoveSecondary(rank, rank-1, rank+1, this.Handle(rank-1).Position);
 			this.SetDirtyBbox();
 		}
 
-		// Passe le point en mode lisse.
 		protected void ShaperHandleSmooth(int rank)
 		{
+			//	Passe le point en mode lisse.
 			this.Handle(rank).ConstrainType = HandleConstrainType.Smooth;
 
 			if ( this.Handle(rank-1).Type == HandleType.Hide || this.Handle(rank+1).Type == HandleType.Hide )
@@ -478,15 +478,15 @@ namespace Epsitec.Common.Document.Objects
 			this.SetDirtyBbox();
 		}
 
-		// Passe le point en mode anguleux.
 		protected void ShaperHandleCorner(int rank)
 		{
+			//	Passe le point en mode anguleux.
 			this.Handle(rank).ConstrainType = HandleConstrainType.Corner;
 		}
 
-		// Prolonge la courbe.
 		protected void ShaperHandleContinue(int rank)
 		{
+			//	Prolonge la courbe.
 			HandleType type = this.Handle(rank).Type;
 			this.Handle(rank).Type = HandleType.Primary;
 
@@ -579,9 +579,9 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 		}
 
-		// Ajoute une poignée sans changer l'aspect de la courbe.
 		protected void ShaperHandleAdd(Point pos, int rank)
 		{
+			//	Ajoute une poignée sans changer l'aspect de la courbe.
 			for ( int i=0 ; i<3 ; i++ )
 			{
 				Handle handle = new Handle(this.document);
@@ -622,16 +622,16 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 		}
 
-		// Supprime une poignée sans trop changer l'aspect de la courbe.
 		protected void ShaperHandleSub(int rank)
 		{
+			//	Supprime une poignée sans trop changer l'aspect de la courbe.
 			bool starting = (this.Handle(rank).Type == HandleType.Starting);
 
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
 
-			// Il doit toujours y avoir une poignée de départ !
+			//	Il doit toujours y avoir une poignée de départ !
 			if ( starting )
 			{
 				this.Handle(rank).Type = HandleType.Starting;
@@ -651,9 +651,9 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 		}
 
-		// Conversion d'un segement en ligne droite.
 		protected void ShaperHandleToLine(int rank)
 		{
+			//	Conversion d'un segement en ligne droite.
 			int next = this.NextRank(rank);
 			this.Handle(rank+2).Position = this.Handle(rank+1).Position;
 			this.Handle(next+0).Position = this.Handle(next+1).Position;
@@ -665,9 +665,9 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 		}
 
-		// Conversion d'un segement en courbe.
 		protected void ShaperHandleToCurve(int rank)
 		{
+			//	Conversion d'un segement en courbe.
 			int next = this.NextRank(rank);
 			this.Handle(rank+2).Position = Point.Scale(this.Handle(rank+1).Position, this.Handle(next+1).Position, 0.25);
 			this.Handle(next+0).Position = Point.Scale(this.Handle(next+1).Position, this.Handle(rank+1).Position, 0.25);
@@ -680,9 +680,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Indique si au moins une poignée est sélectionnée par le modeleur.
 		public override bool IsShaperHandleSelected()
 		{
+			//	Indique si au moins une poignée est sélectionnée par le modeleur.
 			int total = this.TotalMainHandle;
 			for ( int i=0 ; i<total ; i+=3 )
 			{
@@ -695,9 +695,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Adapte le point secondaire s'il est en mode "en ligne".
 		protected void AdaptPrimaryLine(int rankPrimary, int rankSecondary, out int rankExtremity)
 		{
+			//	Adapte le point secondaire s'il est en mode "en ligne".
 			if ( rankSecondary > rankPrimary )
 			{
 				rankExtremity = this.PrevRank(rankPrimary-1)+1;
@@ -720,10 +720,10 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 		}
 
-		// Cherche le rang du groupe "sps" précédent, en tenant compte
-		// des ensembles Starting-Primary(s).
 		protected int PrevRank(int rank)
 		{
+			//	Cherche le rang du groupe "sps" précédent, en tenant compte
+			//	des ensembles Starting-Primary(s).
 			System.Diagnostics.Debug.Assert(rank%3 == 0);
 			if ( rank == 0 || this.Handle(rank+1).Type == HandleType.Starting )
 			{
@@ -737,10 +737,10 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
-		// Cherche le rang du groupe "sps" suivant, en tenant compte
-		// des ensembles Starting-Primary(s).
 		protected int NextRank(int rank)
 		{
+			//	Cherche le rang du groupe "sps" suivant, en tenant compte
+			//	des ensembles Starting-Primary(s).
 			System.Diagnostics.Debug.Assert(rank%3 == 0);
 			rank += 3;
 			if ( rank >= this.TotalMainHandle || this.Handle(rank+1).Type == HandleType.Starting )
@@ -754,9 +754,9 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
-		// Déplace une poignée primaire selon les contraintes.
 		protected void MovePrimary(int rank, Point pos)
 		{
+			//	Déplace une poignée primaire selon les contraintes.
 			Point move = pos-this.Handle(rank).Position;
 			this.Handle(rank).Position = pos;
 			this.Handle(rank-1).Position += move;
@@ -772,9 +772,9 @@ namespace Epsitec.Common.Document.Objects
 			this.SetDirtyBbox();
 		}
 
-		// Déplace une poignée secondaire selon les contraintes.
 		protected void MoveSecondary(int rankPrimary, int rankSecondary, int rankOpposite, Point pos)
 		{
+			//	Déplace une poignée secondaire selon les contraintes.
 			HandleConstrainType type = this.Handle(rankPrimary).ConstrainType;
 
 			this.Handle(rankSecondary).Position = pos;
@@ -810,9 +810,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Début du déplacement une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement une poignée.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -878,9 +878,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.TotalMainHandle )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
@@ -914,9 +914,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Début du déplacement d'une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée d'un segment sélectionné.
 			base.MoveSelectedSegmentStarting(rank, pos, drawingContext);
 
 			this.initialPos = pos;
@@ -954,9 +954,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée d'un segment sélectionné.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			drawingContext.SnapPos(ref pos);
@@ -998,16 +998,16 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin du déplacement d'une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Fin du déplacement d'une poignée d'un segment sélectionné.
 			base.MoveSelectedSegmentEnding(rank, pos, drawingContext);
 		}
 
 		
-		// Retourne la liste des positions des poignées sélectionnées par le modeleur.
 		public override void MoveSelectedHandlesStarting(Point mouse, DrawingContext drawingContext)
 		{
+			//	Retourne la liste des positions des poignées sélectionnées par le modeleur.
 			drawingContext.SnapPos(ref mouse);
 			this.moveSelectedHandleStart = mouse;
 
@@ -1053,17 +1053,17 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Déplace globalement l'objet.
 		public override void MoveGlobalProcess(Selector selector)
 		{
+			//	Déplace globalement l'objet.
 			base.MoveGlobalProcess(selector);
 			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Aligne l'objet sur la grille.
 		public override void AlignGrid(DrawingContext drawingContext)
 		{
+			//	Aligne l'objet sur la grille.
 			this.InsertOpletGeometry();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
@@ -1087,9 +1087,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
+			//	Début de la création d'un objet.
 			drawingContext.ConstrainFlush();
 			drawingContext.ConstrainAddHV(pos);
 
@@ -1154,9 +1154,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 
@@ -1196,9 +1196,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			//	Fin de la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			int rank = this.TotalHandle;
@@ -1229,9 +1229,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Indique si la création de l'objet est terminée.
 		public override bool CreateIsEnding(DrawingContext drawingContext)
 		{
+			//	Indique si la création de l'objet est terminée.
 			if ( this.lastPoint )
 			{
 				this.Handle(1).Type = HandleType.Starting;
@@ -1248,17 +1248,17 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			return true;
 		}
 
-		// Termine la création de l'objet. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateEnding(DrawingContext drawingContext)
 		{
+			//	Termine la création de l'objet. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
 
@@ -1272,9 +1272,9 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Texte des informations de modification.
 		protected void TextInfoModif(Point mouse, int rank)
 		{
+			//	Texte des informations de modification.
 			int r1, r2;
 			if ( this.isCreating )
 			{
@@ -1308,9 +1308,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Modifier.TextInfoModif = text;
 		}
 
-		// Retourne un bouton d'action pendant la création.
 		public override bool CreateAction(int rank, out string cmd, out string name, out string text)
 		{
+			//	Retourne un bouton d'action pendant la création.
 			switch ( rank )
 			{
 				case 0:
@@ -1366,9 +1366,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		// Constuit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Constuit les formes de l'objet.
 			Path pathStart, pathEnd, pathLine;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
 			this.PathBuild(drawingContext,
@@ -1394,19 +1394,19 @@ namespace Epsitec.Common.Document.Objects
 			Shape[] shapes = new Shape[totalShapes];
 			int i = 0;
 			
-			// Forme de la surface principale.
+			//	Forme de la surface principale.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathLine;
 			shapes[i].SetPropertySurface(port, this.PropertyFillGradient);
 			i ++;
 
-			// Forme du chemin principal.
+			//	Forme du chemin principal.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathLine;
 			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 			i ++;
 
-			// Forme de la surface de départ.
+			//	Forme de la surface de départ.
 			if ( surfaceStart )
 			{
 				shapes[i] = new Shape();
@@ -1416,7 +1416,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme de la surface d'arrivée.
+			//	Forme de la surface d'arrivée.
 			if ( surfaceEnd )
 			{
 				shapes[i] = new Shape();
@@ -1426,7 +1426,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme du chemin de départ.
+			//	Forme du chemin de départ.
 			if ( outlineStart )
 			{
 				shapes[i] = new Shape();
@@ -1436,7 +1436,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme du chemin d'arrivée.
+			//	Forme du chemin d'arrivée.
 			if ( outlineEnd )
 			{
 				shapes[i] = new Shape();
@@ -1446,7 +1446,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme des traits de support pour les poignées secondaires.
+			//	Forme des traits de support pour les poignées secondaires.
 			if ( support )
 			{
 				Path pathSupport = new Path();
@@ -1471,9 +1471,9 @@ namespace Epsitec.Common.Document.Objects
 			return shapes;
 		}
 
-		// Calcule les points de la droite à une extrémité de la courbe.
 		public void ComputeExtremity(bool start, out Point a, out Point b)
 		{
+			//	Calcule les points de la droite à une extrémité de la courbe.
 			int r1 = start ? 1 : this.TotalMainHandle-2;
 			int r2 = start ? 2 : this.TotalMainHandle-3;
 
@@ -1486,12 +1486,12 @@ namespace Epsitec.Common.Document.Objects
 			b = this.Handle(r2).Position;
 		}
 
-		// Crée les chemins de l'objet.
 		protected void PathBuild(DrawingContext drawingContext,
 								 out Path pathStart, out bool outlineStart, out bool surfaceStart,
 								 out Path pathEnd,   out bool outlineEnd,   out bool surfaceEnd,
 								 out Path pathLine, bool simplify)
 		{
+			//	Crée les chemins de l'objet.
 			pathStart = new Path();
 			pathEnd   = new Path();
 			pathLine  = new Path();
@@ -1553,9 +1553,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Ajoute un segment de courbe ou de droite dans le chemin.
 		protected void PathPutSegment(Path path, int rankS1, int rankS2, Point p2)
 		{
+			//	Ajoute un segment de courbe ou de droite dans le chemin.
 			if ( this.Handle(rankS1).Type == HandleType.Hide &&
 				 this.Handle(rankS2).Type == HandleType.Hide )
 			{
@@ -1569,10 +1569,10 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region CreateFromPath
-		// Retourne le chemin géométrique de l'objet pour les constructions
-		// magnétiques.
 		public override Path GetMagnetPath()
 		{
+			//	Retourne le chemin géométrique de l'objet pour les constructions
+			//	magnétiques.
 			Path pathStart, pathEnd, pathLine;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
 			this.PathBuild(null,
@@ -1583,9 +1583,9 @@ namespace Epsitec.Common.Document.Objects
 			return pathLine;
 		}
 
-		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
+			//	Retourne le chemin géométrique de l'objet.
 			if ( rank > 0 )  return null;
 			Path pathStart, pathEnd, pathLine;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
@@ -1596,9 +1596,9 @@ namespace Epsitec.Common.Document.Objects
 			return pathLine;
 		}
 
-		// Crée une courbe de Bézier à partir d'un chemin quelconque.
 		public bool CreateFromPath(Path path, int subPath)
 		{
+			//	Crée une courbe de Bézier à partir d'un chemin quelconque.
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements(out elements, out points);
@@ -1723,10 +1723,10 @@ namespace Epsitec.Common.Document.Objects
 			return bDo;
 		}
 
-		// Ajuste le chemin.
 		protected void PathAdjust(int firstHandle)
 		{
-			// Transforme les courbes en droite si nécessaire.
+			//	Ajuste le chemin.
+			//	Transforme les courbes en droite si nécessaire.
 			int total = this.TotalMainHandle;
 			for ( int i=firstHandle ; i<total ; i+= 3 )
 			{
@@ -1741,16 +1741,16 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			// Mets les bonnes contraintes aux points principaux.
+			//	Mets les bonnes contraintes aux points principaux.
 			for ( int i=firstHandle ; i<total ; i+= 3 )
 			{
 				this.Handle(i+1).ConstrainType = this.ComputeConstrain(firstHandle, i);
 			}
 		}
 
-		// Devine le type de contrainte.
 		protected HandleConstrainType ComputeConstrain(int firstHandle, int rank)
 		{
+			//	Devine le type de contrainte.
 			Point p = this.Handle(rank+1).Position;
 
 			Point s1 = this.Handle(rank+0).Position;
@@ -1772,10 +1772,10 @@ namespace Epsitec.Common.Document.Objects
 			return Bezier.ComputeConstrain(s1, p, s2);
 		}
 
-		// Devine le type de contrainte en fonction d'un point principal et
-		// des 2 points secondaires de part et d'autre.
 		protected static HandleConstrainType ComputeConstrain(Point s1, Point p, Point s2)
 		{
+			//	Devine le type de contrainte en fonction d'un point principal et
+			//	des 2 points secondaires de part et d'autre.
 			double dx = System.Math.Abs((p.X-s1.X)-(s2.X-p.X));
 			double dy = System.Math.Abs((p.Y-s1.Y)-(s2.Y-p.Y));
 			if ( dx < 0.0001 && dy < 0.0001 )
@@ -1794,9 +1794,9 @@ namespace Epsitec.Common.Document.Objects
 			return HandleConstrainType.Corner;
 		}
 
-		// Crée une courbe de Bézier à partir de 4 points.
 		public void CreateFromPoints(Point p1, Point s1, Point s2, Point p2)
 		{
+			//	Crée une courbe de Bézier à partir de 4 points.
 			this.HandleAdd(p1, HandleType.Hide);
 			this.HandleAdd(p1, HandleType.Starting);
 			this.HandleAdd(s1, HandleType.Bezier);
@@ -1808,9 +1808,9 @@ namespace Epsitec.Common.Document.Objects
 			this.SetDirtyBbox();
 		}
 
-		// Finalise la création d'une courbe de Bézier.
 		public void CreateFinalise()
 		{
+			//	Finalise la création d'une courbe de Bézier.
 			this.HandlePropertiesCreate();  // crée les poignées des propriétés
 			this.Select(false);
 			this.Select(true);  // pour sélectionner toutes les poignées
@@ -1819,15 +1819,15 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Bezier(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 		}
 		#endregion
 

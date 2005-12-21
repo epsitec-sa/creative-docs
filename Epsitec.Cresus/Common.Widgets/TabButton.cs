@@ -21,9 +21,9 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Rectangle(-2, -2, this.Client.Width+2, this.Client.Height+2);
 		}
 
-		// Dessine le bouton.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			//	Dessine le bouton.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;

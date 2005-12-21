@@ -76,18 +76,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.extendedSize ? 80 : 30 );
 			}
 		}
 
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.label.Text = this.textStyle;
 
@@ -100,9 +100,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fontColor.Color = p.FontColor;
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyFont p = new PropertyFont();
 			base.GetProperty(p);
 
@@ -118,9 +118,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// TODO: TextFieldCombo.SelectedName ne marche pas !!!
 		protected void ComboSelectedName(TextFieldCombo combo, string name)
 		{
+			//	TODO: TextFieldCombo.SelectedName ne marche pas !!!
 			int total = combo.Items.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -133,42 +133,42 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// TODO: TextFieldCombo.SelectedName ne marche pas !!!
 		protected string ComboSelectedName(TextFieldCombo combo)
 		{
+			//	TODO: TextFieldCombo.SelectedName ne marche pas !!!
 			if ( combo.SelectedIndex == -1 )  return "";
 			return combo.Items[combo.SelectedIndex] as string;
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 			this.fontColor.ActiveState = WidgetState.ActiveNo;
 		}
 
-		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 			this.fontColor.ActiveState = WidgetState.ActiveYes;
 		}
 
-		// Modifie la couleur d'origine.
 		public override void OriginColorChange(Drawing.Color color)
 		{
+			//	Modifie la couleur d'origine.
 			this.fontColor.Color = color;
 		}
 
-		// Donne la couleur d'origine.
 		public override Drawing.Color OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			return this.fontColor.Color;
 		}
 
 		
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fontName == null )  return;
@@ -208,9 +208,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			this.OnChanged();
 		}
 

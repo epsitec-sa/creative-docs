@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets
 		
 		public HeaderButtonStyle			Style
 		{
-			// Bouton dans en-tête supérieure ou gauche ?
+			//	Bouton dans en-tête supérieure ou gauche ?
 			get
 			{
 				return this.headerButtonStyle;
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Widgets
 
 		public SortMode						SortMode
 		{
-			// Choix pour le triangle du bouton.
+			//	Choix pour le triangle du bouton.
 			get
 			{
 				return this.sortMode;

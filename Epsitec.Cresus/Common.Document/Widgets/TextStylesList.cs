@@ -98,9 +98,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Ligne éventuelle à exclure.
 		public int ExcludeRank
 		{
+			//	Ligne éventuelle à exclure.
 			get
 			{
 				return this.excludeRank;
@@ -112,9 +112,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Attributs cherchés en profondeur, dans les enfants.
 		public bool IsDeep
 		{
+			//	Attributs cherchés en profondeur, dans les enfants.
 			get
 			{
 				return this.isDeep;
@@ -126,9 +126,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Première ligne avec <aucun>.
 		public bool IsNoneLine
 		{
+			//	Première ligne avec <aucun>.
 			get
 			{
 				return this.isNoneLine;
@@ -140,9 +140,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Première colonne pour les mises en évidences.
 		public bool IsHiliteColumn
 		{
+			//	Première colonne pour les mises en évidences.
 			get
 			{
 				return this.isHiliteColumn;
@@ -155,9 +155,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Première colonne pour les numéros d'ordre.
 		public bool IsOrderColumn
 		{
+			//	Première colonne pour les numéros d'ordre.
 			get
 			{
 				return this.isOrderColumn;
@@ -170,9 +170,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Colonne pour les enfants.
 		public bool IsChildrensColumn
 		{
+			//	Colonne pour les enfants.
 			get
 			{
 				return this.isChildrensColumn;
@@ -184,9 +184,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Sélection initiale.
 		public bool IsInitialSelection
 		{
+			//	Sélection initiale.
 			get
 			{
 				return this.isInitialSelection;
@@ -198,9 +198,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Nombre total de colonnes pour les propriétés.
 		public int TotalProperties
 		{
+			//	Nombre total de colonnes pour les propriétés.
 			get
 			{
 				this.UpdateIndex();
@@ -208,9 +208,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Retourne le type de la propriété sélectionnée.
 		public Text.Properties.WellKnownType SelectedProperty
 		{
+			//	Retourne le type de la propriété sélectionnée.
 			get
 			{
 				int row, column;
@@ -221,9 +221,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Retourne le rang de la ligne sélectionné.
 		public int SelectedPropertyRow
 		{
+			//	Retourne le rang de la ligne sélectionné.
 			get
 			{
 				int row, column;
@@ -232,9 +232,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Retourne le rang de la colonne sélectionnée.
 		public int SelectedPropertyColumn
 		{
+			//	Retourne le rang de la colonne sélectionnée.
 			get
 			{
 				int row, column;
@@ -243,9 +243,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Retourne le rang de la ligne/colonne sélectionné.
 		public void GetSelectedRowColumn(out int row, out int column)
 		{
+			//	Retourne le rang de la ligne/colonne sélectionné.
 			int nc = this.NameColumn;
 			int fix = this.FixColumns;
 
@@ -271,9 +271,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Indique si une cellule est utilisée.
 		public bool UsedCell(int row, int column)
 		{
+			//	Indique si une cellule est utilisée.
 			int nc = this.NameColumn;
 			int fix = this.FixColumns;
 			if ( column == nc )  return true;
@@ -285,9 +285,9 @@ namespace Epsitec.Common.Document.Widgets
 			return true;
 		}
 
-		// Met à jour le contenu de la table.
 		public void UpdateContent()
 		{
+			//	Met à jour le contenu de la table.
 			System.Diagnostics.Debug.Assert(this.document != null);
 			System.Diagnostics.Debug.Assert(this.list != null);
 			this.typesDirty = true;
@@ -340,9 +340,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Peuple une ligne de la table, si nécessaire.
 		protected void FillRow(int row)
 		{
+			//	Peuple une ligne de la table, si nécessaire.
 			int nc = this.NameColumn;
 			int fix = this.FixColumns;
 
@@ -402,9 +402,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Met à jour le contenu d'une ligne de la table.
 		public void UpdateRow(int row)
 		{
+			//	Met à jour le contenu d'une ligne de la table.
 			System.Diagnostics.Debug.Assert(this.document != null);
 			System.Diagnostics.Debug.Assert(this.list != null);
 			int rank = this.RowToRank(row);
@@ -477,9 +477,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Hilite une ligne de la table.
 		public void HiliteRow(int row, bool hilite)
 		{
+			//	Hilite une ligne de la table.
 			System.Diagnostics.Debug.Assert(this.list != null);
 			if ( !this.isHiliteColumn )  return;
 
@@ -492,9 +492,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Met à jour la table des types de propriétés.
 		protected void UpdateIndex()
 		{
+			//	Met à jour la table des types de propriétés.
 			if ( !this.typesDirty )  return;
 			this.typesDirty = false;
 
@@ -507,36 +507,36 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Conversion d'un rang d'agrégat en numéro de ligne.
 		public int RankToRow(int rank)
 		{
+			//	Conversion d'un rang d'agrégat en numéro de ligne.
 			if ( this.isNoneLine )  rank ++;
 			if ( this.excludeRank != -1 && rank-1 == this.excludeRank )  return -1;
 			if ( this.excludeRank != -1 && rank > this.excludeRank )  rank --;
 			return rank;
 		}
 
-		// Conversion d'un numéro de ligne en rang d'agrégat.
 		public int RowToRank(int row)
 		{
+			//	Conversion d'un numéro de ligne en rang d'agrégat.
 			if ( this.isNoneLine )  row --;
 			if ( this.excludeRank != -1 && row >= this.excludeRank )  row ++;
 			return row;
 		}
 
 
-		// Retourne le rang de la colonne pour le nom.
 		protected int NameColumn
 		{
+			//	Retourne le rang de la colonne pour le nom.
 			get
 			{
 				return (this.isHiliteColumn || this.IsOrderColumn) ? 1 : 0;
 			}
 		}
 
-		// Retourne le nombre de colonnes initiales fixes.
 		protected int FixColumns
 		{
+			//	Retourne le nombre de colonnes initiales fixes.
 			get
 			{
 				int fix = 1;

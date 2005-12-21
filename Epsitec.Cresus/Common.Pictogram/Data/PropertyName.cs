@@ -20,30 +20,30 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.stringValue = value; }
 		}
 
-		// Détermine le nom de la propriété dans la liste (Lister).
 		public string GetListName()
 		{
+			//	Détermine le nom de la propriété dans la liste (Lister).
 			return this.stringValue;
 		}
 
-		// Indique si cette propriété peut faire l'objet d'un style.
 		[XmlIgnore]
 		public override bool StyleAbility
 		{
+			//	Indique si cette propriété peut faire l'objet d'un style.
 			get { return false; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyName p = property as PropertyName;
 			p.String = this.stringValue;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyName p = property as PropertyName;
@@ -52,9 +52,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelName(drawer);
 		}
 

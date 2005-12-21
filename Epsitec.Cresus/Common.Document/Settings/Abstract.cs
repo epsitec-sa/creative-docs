@@ -19,36 +19,36 @@ namespace Epsitec.Common.Document.Settings
 			this.conditionState = false;
 		}
 
-		// Nom logique.
 		public string Name
 		{
+			//	Nom logique.
 			get
 			{
 				return this.name;
 			}
 		}
 
-		// Texte explicatif.
 		public string Text
 		{
+			//	Texte explicatif.
 			get
 			{
 				return this.text;
 			}
 		}
 
-		// Nom de la condition.
 		public string ConditionName
 		{
+			//	Nom de la condition.
 			get
 			{
 				return this.conditionName;
 			}
 		}
 
-		// Etat de la condition.
 		public bool ConditionState
 		{
+			//	Etat de la condition.
 			get
 			{
 				return this.conditionState;
@@ -57,15 +57,15 @@ namespace Epsitec.Common.Document.Settings
 
 		
 		#region Serialization
-		// Sérialise le réglage.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise le réglage.
 			info.AddValue("Name", this.name);
 		}
 
-		// Constructeur qui désérialise le réglage.
 		protected Abstract(SerializationInfo info, StreamingContext context)
 		{
+			//	Constructeur qui désérialise le réglage.
 			this.document = Document.ReadDocument;
 			this.name = info.GetString("Name");
 		}

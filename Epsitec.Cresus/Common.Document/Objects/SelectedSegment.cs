@@ -47,18 +47,18 @@ namespace Epsitec.Common.Document.Objects
 			this.handle.Type = HandleType.Add;
 		}
 
-		// Rang du segment dans le chemin simplifié (GetMagnetPath) de l'objet.
 		public int Rank
 		{
+			//	Rang du segment dans le chemin simplifié (GetMagnetPath) de l'objet.
 			get
 			{
 				return this.rank;
 			}
 		}
 
-		// Position de la poignée sur le segment.
 		public Point Position
 		{
+			//	Position de la poignée sur le segment.
 			get
 			{
 				return this.handle.Position;
@@ -70,29 +70,29 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Détecte si la souris est sur la poignée.
 		public bool Detect(Point pos)
 		{
+			//	Détecte si la souris est sur la poignée.
 			return this.handle.Detect(pos);
 		}
 
-		// Dessine la poignée sur le segment.
 		public void Draw(Graphics graphics, DrawingContext drawingContext)
 		{
+			//	Dessine la poignée sur le segment.
 			this.handle.Draw(graphics, drawingContext);
 		}
 
 
 		#region OpletGeometry
-		// Ajoute un oplet pour mémoriser la géométrie du segment.
 		protected void InsertOpletGeometry()
 		{
+			//	Ajoute un oplet pour mémoriser la géométrie du segment.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletGeometry oplet = new OpletGeometry(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		// Mémorise toutes les informations sur la géométrie de l'objet.
+		//	Mémorise toutes les informations sur la géométrie de l'objet.
 		protected class OpletGeometry : AbstractOplet
 		{
 			public OpletGeometry(SelectedSegment host)
@@ -126,9 +126,9 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 		
-		// Cherche un segment sélectionné dans une liste.
 		public static int Search(UndoableList list, int rank)
 		{
+			//	Cherche un segment sélectionné dans une liste.
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
 				SelectedSegment ss = list[i] as SelectedSegment;
@@ -137,10 +137,10 @@ namespace Epsitec.Common.Document.Objects
 			return -1;
 		}
 
-		// Retourne un index trié de tous les segments sélectionnés pour que ceux ayant
-		// un rang élévé soient traités en premier.
 		public static int[] Sort(UndoableList list)
 		{
+			//	Retourne un index trié de tous les segments sélectionnés pour que ceux ayant
+			//	un rang élévé soient traités en premier.
 			int[] index = new int[list.Count];
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
@@ -182,9 +182,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Mémorise pour le undo.
 		public static void InsertOpletGeometry(UndoableList list, Objects.Abstract obj)
 		{
+			//	Mémorise pour le undo.
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
 				SelectedSegment ss = list[i] as SelectedSegment;
@@ -192,9 +192,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Mise à jour après un changement de géométrie.
 		public static void Update(UndoableList list, Objects.Abstract obj)
 		{
+			//	Mise à jour après un changement de géométrie.
 			Path path = obj.GetMagnetPath();
 
 			for ( int i=0 ; i<list.Count ; i++ )

@@ -162,9 +162,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				double h = this.LabelHeight;
@@ -199,9 +199,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Line p = this.property as Properties.Line;
@@ -222,9 +222,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Line p = this.property as Properties.Line;
 			if ( p == null )  return;
 
@@ -298,9 +298,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			bool showStandardLength = false;
 			bool enableStandardLength = false;
 			bool showDash = false;
@@ -364,9 +364,9 @@ namespace Epsitec.Common.Document.Panels
 			this.gridJoin.Enable = (capJoin);
 		}
 
-		// Adapte les textes courts ou longs.
 		protected void UpdateShortLongText()
 		{
+			//	Adapte les textes courts ou longs.
 			if ( this.IsLabelProperties )
 			{
 				Abstract.SetText(this.radioDashRank[0], Res.Strings.Panel.Line.Long.Dash1);
@@ -381,9 +381,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -529,30 +529,30 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Une valeur a été changée.
 		private void HandleTextChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
-		// Le bouton "aucun trait" a été cliqué.
 		private void HandleNothingClicked(object sender, MessageEventArgs e)
 		{
+			//	Le bouton "aucun trait" a été cliqué.
 			this.field.TextFieldReal.Value = 0.0M;
 			this.OnChanged();
 		}
 
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
-		// Le type a été changé.
 		private void HandleTypeChanged(object sender)
 		{
+			//	Le type a été changé.
 			if ( this.ignoreChanged )  return;
 
 			if ( sender == this.grid && this.IsLabelProperties )
@@ -564,18 +564,18 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
-		// Le rang a été changé.
 		private void HandleDashRankChanged(object sender)
 		{
+			//	Le rang a été changé.
 			if ( this.ignoreChanged )  return;
 			this.ignoreChanged = true;
 			this.DashToWidget();
 			this.ignoreChanged = false;
 		}
 
-		// Un champ a été changé.
 		private void HandleDashChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}

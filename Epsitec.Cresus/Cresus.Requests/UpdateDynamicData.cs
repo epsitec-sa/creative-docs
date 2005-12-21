@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		//	TODO: à compléter...
-		
 		public override void Execute(ExecutionEngine engine)
 		{
+			//	TODO: à compléter...
+			
 			//	TODO: Exécute...
 		}
 		

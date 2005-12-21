@@ -925,14 +925,14 @@ namespace Epsitec.Common.Designer
 
 			public void ClearProperty(string key)
 			{
-				// TODO:  Add Resource.ClearProperty implementation
+				//	TODO:  Add Resource.ClearProperty implementation
 				
 				throw new System.NotImplementedException ("ClearProperty not implemented.");
 			}
 
 			public void SetProperty(string key, object value)
 			{
-				// TODO:  Add Resource.SetProperty implementation
+				//	TODO:  Add Resource.SetProperty implementation
 				
 				throw new System.NotImplementedException ("SetProperty not implemented.");
 			}

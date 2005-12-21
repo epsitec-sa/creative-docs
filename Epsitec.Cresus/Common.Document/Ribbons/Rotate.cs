@@ -41,9 +41,9 @@ namespace Epsitec.Common.Document.Ribbons
 			this.AdaptFieldRot(this.fieldRotate);
 		}
 
-		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard.
 			get
 			{
 				return 8 + 22*2 + this.separatorWidth + 50;
@@ -51,9 +51,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonRotate90 == null )  return;
@@ -90,9 +90,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Crée un champ éditable pour une rotation.
 		protected TextFieldReal CreateFieldRot(string tooltip)
 		{
+			//	Crée un champ éditable pour une rotation.
 			TextFieldReal field = new TextFieldReal(this);
 			field.Width = 50;
 			field.TabIndex = this.tabIndex++;
@@ -102,9 +102,9 @@ namespace Epsitec.Common.Document.Ribbons
 			return field;
 		}
 
-		// Adapte un champ éditable pour une rotation.
 		protected void AdaptFieldRot(TextFieldReal field)
 		{
+			//	Adapte un champ éditable pour une rotation.
 			if ( this.document == null )
 			{
 				field.Enable = false;

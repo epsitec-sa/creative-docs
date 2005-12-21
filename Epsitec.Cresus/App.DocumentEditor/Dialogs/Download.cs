@@ -16,9 +16,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 		}
 
-		// Spécifie les informations pour la mise à jour.
 		public void SetInfo(string version, string url)
 		{
+			//	Spécifie les informations pour la mise à jour.
 			if ( version.EndsWith(".0") )
 			{
 				version = version.Substring(0, version.Length-2);
@@ -27,9 +27,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.url = url;
 		}
 
-		// Crée et montre la fenêtre du dialogue.
 		public override void Show()
 		{
+			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -77,7 +77,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				url.DockMargins = new Margins(10, 10, 0, 0);
 				url.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
 
-				// Bouton de fermeture.
+				//	Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
@@ -93,9 +93,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.ShowDialog();
 		}
 
-		// Enregistre la position de la fenêtre du dialogue.
 		public override void Save()
 		{
+			//	Enregistre la position de la fenêtre du dialogue.
 			this.WindowSave("Download");
 		}
 

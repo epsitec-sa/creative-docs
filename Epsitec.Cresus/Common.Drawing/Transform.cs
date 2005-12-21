@@ -474,9 +474,9 @@ namespace Epsitec.Common.Drawing
 		
 		public static Point RotatePointRad(Point center, double angle, Point p)
 		{
-			// Fait tourner un point autour d'un centre.
-			// L'angle est exprimé en radians.
-			// Un angle positif est anti-horaire (CCW).
+			//	Fait tourner un point autour d'un centre.
+			//	L'angle est exprimé en radians.
+			//	Un angle positif est anti-horaire (CCW).
 			
 			Point a = new Point();
 			Point b = new Point();
@@ -494,9 +494,9 @@ namespace Epsitec.Common.Drawing
 
 		public static Point RotatePointRad(double angle, Point p)
 		{
-			// Fait tourner un point autour de l'origine.
-			// L'angle est exprimé en radians.
-			// Un angle positif est anti-horaire (CCW).
+			//	Fait tourner un point autour de l'origine.
+			//	L'angle est exprimé en radians.
+			//	Un angle positif est anti-horaire (CCW).
 			
 			Drawing.Point a = new Drawing.Point();
 

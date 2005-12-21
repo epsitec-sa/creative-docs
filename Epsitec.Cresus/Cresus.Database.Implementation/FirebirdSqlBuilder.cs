@@ -472,7 +472,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			if (first_field)
 			{
-				// aucun champ spécifiée !
+				//	aucun champ spécifiée !
 				this.ThrowError (string.Format ("No field specified in SELECT."));
 			}
 
@@ -514,13 +514,13 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			if (first_field)
 			{
-				// aucune table spécifiée !
+				//	aucune table spécifiée !
 				this.ThrowError (string.Format ("No table specified in SELECT."));
 			}
 
 			if (nb_aggregate > 0 && nb_not_aggr > 0)
 			{
-				// ajoute une condition GROUP BY sur les champs non aggregate
+				//	ajoute une condition GROUP BY sur les champs non aggregate
 				this.Append (" GROUP BY ");
 				first_field = true;
 
@@ -616,7 +616,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 			}
 
-			// traite encore les UNION s'il y a lieu
+			//	traite encore les UNION s'il y a lieu
 			if (sql_query.SelectSetQuery != null)
 			{
 				switch (sql_query.SelectSetOp)
@@ -1218,13 +1218,13 @@ namespace Epsitec.Cresus.Database.Implementation
 //?			this.command_type = DbCommandType.NonQuery;
 //			this.command_count++;
 			
-			// TODO:  Add FirebirdSqlBuilder.ExecuteProcedure implementation
+			//	TODO:  Add FirebirdSqlBuilder.ExecuteProcedure implementation
 		}
 
 		
 		public void GetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields)
 		{
-			// TODO:  Add FirebirdSqlBuilder.GetSqlParameters implementation
+			//	TODO:  Add FirebirdSqlBuilder.GetSqlParameters implementation
 #if false
 			FbCommand fb_command = command as FbCommand;
 			
@@ -1253,7 +1253,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		public void SetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields)
 		{
-			// TODO:  Add FirebirdSqlBuilder.SetSqlParameters implementation
+			//	TODO:  Add FirebirdSqlBuilder.SetSqlParameters implementation
 		}
 
 		

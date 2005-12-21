@@ -163,16 +163,16 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Conversion d'une position dans le document en position en pixel dans l'écran.
 		protected double DocumentToScreen(double value)
 		{
+			//	Conversion d'une position dans le document en position en pixel dans l'écran.
 			double scale = (this.ending-this.starting)/this.Client.Bounds.Height;
 			return (value-this.starting)/scale;
 		}
 
-		// Conversion d'une position en pixel dans l'écran en position dans le document.
 		protected double ScreenToDocument(double value)
 		{
+			//	Conversion d'une position en pixel dans l'écran en position dans le document.
 			double scale = (this.ending-this.starting)/this.Client.Bounds.Height;
 			return value*scale + this.starting;
 		}

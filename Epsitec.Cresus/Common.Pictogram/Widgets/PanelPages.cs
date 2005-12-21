@@ -78,17 +78,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour tout le panneau.
 		public void Update()
 		{
+			//	Met à jour tout le panneau.
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPage, true, false);
 			this.UpdateToolBar();
 		}
 
-		// Sélectionne une page.
 		public void PageSelect(int sel)
 		{
+			//	Sélectionne une page.
 			this.drawer.CreateEnding();
 
 			this.drawer.UndoBeginning("PageChange");
@@ -100,9 +100,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Construit le menu pour choisir une page.
 		public VMenu CreateMenu()
 		{
+			//	Construit le menu pour choisir une page.
 			VMenu menu = new VMenu();
 			int total = this.drawer.IconObjects.TotalPages();
 			for ( int i=0 ; i<total ; i++ )
@@ -125,9 +125,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour les boutons de la toolbar.
 		protected void UpdateToolBar()
 		{
+			//	Met à jour les boutons de la toolbar.
 			int total = this.table.Rows;
 			int sel = this.TableSelect();
 
@@ -137,9 +137,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.buttonDelete.SetEnabled(sel != -1 && total > 1);
 		}
 
-		// Crée une nouvelle page.
 		private void HandleButtonNew(object sender, MessageEventArgs e)
 		{
+			//	Crée une nouvelle page.
 			this.drawer.UndoBeginning("PageCreate");
 			this.drawer.IconObjects.CreatePage(this.drawer.IconObjects.CurrentPage, false);
 			this.drawer.UndoValidate();
@@ -150,9 +150,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Duplique une page.
 		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
 		{
+			//	Duplique une page.
 			this.drawer.UndoBeginning("PageDuplicate");
 			this.drawer.IconObjects.CreatePage(this.drawer.IconObjects.CurrentPage, true);
 			this.drawer.UndoValidate();
@@ -163,9 +163,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Monte d'une ligne la page sélectionnée.
 		private void HandleButtonUp(object sender, MessageEventArgs e)
 		{
+			//	Monte d'une ligne la page sélectionnée.
 			this.drawer.UndoBeginning("PageUp");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapPage(sel, sel-1);
@@ -178,9 +178,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Descend d'une ligne la page sélectionnée.
 		private void HandleButtonDown(object sender, MessageEventArgs e)
 		{
+			//	Descend d'une ligne la page sélectionnée.
 			this.drawer.UndoBeginning("PageDown");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapPage(sel, sel+1);
@@ -193,9 +193,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Supprime la page sélectionnée.
 		private void HandleButtonDelete(object sender, MessageEventArgs e)
 		{
+			//	Supprime la page sélectionnée.
 			this.drawer.UndoBeginning("PageDelete");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.DeletePage(sel);
@@ -208,9 +208,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
+			//	Met à jour le contenu de la table.
 			int rows = this.drawer.IconObjects.TotalPages();
 			int initialColumns = this.table.Columns;
 			this.table.SetArraySize(2, rows);
@@ -259,9 +259,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdateToolBar();
 		}
 
-		// Sélectionne une ligne dans la table.
 		protected void TableSelect(int sel, bool showSelect, bool selectText)
 		{
+			//	Sélectionne une ligne dans la table.
 			int total = this.table.Rows;
 			bool exist = false;
 			for ( int i=0 ; i<total ; i++ )
@@ -282,9 +282,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Retourne la ligne sélectionnée dans la table.
 		protected int TableSelect()
 		{
+			//	Retourne la ligne sélectionnée dans la table.
 			int total = this.table.Rows;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -293,9 +293,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return -1;
 		}
 
-		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
+			//	Liste cliquée.
 			int sel = this.TableSelect();
 			if ( sel == -1 )  return;
 			this.TableSelect(sel, false, true);
@@ -308,9 +308,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Ligne éditable dans la liste cliquée.
 		private void HandleListTextClicked(object sender, MessageEventArgs e)
 		{
+			//	Ligne éditable dans la liste cliquée.
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
 
@@ -323,9 +323,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Texte de la ligne éditable dans la liste changé.
 		private void HandleListTextChanged(object sender)
 		{
+			//	Texte de la ligne éditable dans la liste changé.
 			if ( this.ignoreListTextChanged )  return;
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
@@ -334,9 +334,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Génère un événement pour dire qu'il faut changer les objets affichés.
 		protected void OnObjectsChanged()
 		{
+			//	Génère un événement pour dire qu'il faut changer les objets affichés.
 			if ( this.ObjectsChanged != null )  // qq'un écoute ?
 			{
 				this.ObjectsChanged(this);
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler ObjectsChanged;
 
 
-		// Met à jour la géométrie.
+		//	Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();

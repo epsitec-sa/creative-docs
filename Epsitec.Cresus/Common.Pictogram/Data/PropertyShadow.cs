@@ -17,40 +17,40 @@ namespace Epsitec.Common.Pictogram.Data
 			this.oy     = -1.0;
 		}
 
-		// Couleur de l'ombre.
 		public Drawing.Color Color
 		{
+			//	Couleur de l'ombre.
 			get { return this.color; }
 			set { this.color = value; }
 		}
 
-		// Rayon de l'ombre.
 		[XmlAttribute]
 		public double Radius
 		{
+			//	Rayon de l'ombre.
 			get { return this.radius; }
 			set { this.radius = value; }
 		}
 
-		// Offset x de l'ombre.
 		[XmlAttribute]
 		public double Ox
 		{
+			//	Offset x de l'ombre.
 			get { return this.ox; }
 			set { this.ox = value; }
 		}
 
-		// Offset y de l'ombre.
 		[XmlAttribute]
 		public double Oy
 		{
+			//	Offset y de l'ombre.
 			get { return this.oy; }
 			set { this.oy = value; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyShadow p = property as PropertyShadow;
 			p.Color  = this.color;
@@ -59,9 +59,9 @@ namespace Epsitec.Common.Pictogram.Data
 			p.Oy     = this.oy;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyShadow p = property as PropertyShadow;
@@ -73,16 +73,16 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelShadow(drawer);
 		}
 
 
-		// Effectue le rendu d'un chemin flou.
 		public void Render(Drawing.Graphics graphics, IconContext iconContext, Drawing.Path path)
 		{
+			//	Effectue le rendu d'un chemin flou.
 			if ( this.color.A == 0 )  return;
 
 			Drawing.Transform save = graphics.Transform;

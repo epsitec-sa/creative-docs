@@ -467,9 +467,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(StandardDashType type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -485,9 +485,9 @@ namespace Epsitec.Common.Document.Properties
 			return name;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(StandardDashType type)
 		{
+			//	Retourne l'icône pour un type donné.
 			switch ( type )
 			{
 				case StandardDashType.Full:        return "LineFull";
@@ -502,9 +502,9 @@ namespace Epsitec.Common.Document.Properties
 			return "";
 		}
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(CapStyle type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -515,9 +515,9 @@ namespace Epsitec.Common.Document.Properties
 			return name;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(CapStyle type)
 		{
+			//	Retourne l'icône pour un type donné.
 			switch ( type )
 			{
 				case CapStyle.Round:   return "CapRound";
@@ -527,9 +527,9 @@ namespace Epsitec.Common.Document.Properties
 			return "";
 		}
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(JoinStyle type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -540,9 +540,9 @@ namespace Epsitec.Common.Document.Properties
 			return name;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(JoinStyle type)
 		{
+			//	Retourne l'icône pour un type donné.
 			switch ( type )
 			{
 				case JoinStyle.Round:  return "JoinRound";
@@ -552,9 +552,9 @@ namespace Epsitec.Common.Document.Properties
 			return "";
 		}
 
-		// Donne le petit texte pour les échantillons.
 		public override string SampleText
 		{
+			//	Donne le petit texte pour les échantillons.
 			get
 			{
 				return this.document.Modifier.RealToString(this.width);
@@ -562,21 +562,21 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
-		// Indique si le trait est visible.
 		public override bool IsVisible(IPaintPort port)
 		{
+			//	Indique si le trait est visible.
 			return ( this.width != 0.0 );
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Line p = property as Line;
 			p.width = this.width;
@@ -592,9 +592,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			Line p = property as Line;
@@ -613,39 +613,39 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Line(document);
 		}
 
 
-		// Retourne la valeur d'engraissement pour la bbox.
 		public static double InflateBoundingBoxWidth(Shape shape)
 		{
+			//	Retourne la valeur d'engraissement pour la bbox.
 			Line line = shape.PropertyStroke as Line;
 			if ( line == null )  return 0.0;
 			return line.InflateBoundingBoxWidth();
 		}
 
-		// Retourne le facteur d'engraissement pour la bbox.
 		public static double InflateBoundingBoxFactor(Shape shape)
 		{
+			//	Retourne le facteur d'engraissement pour la bbox.
 			Line line = shape.PropertyStroke as Line;
 			if ( line == null )  return 1.0;
 			return line.InflateBoundingBoxFactor();
 		}
 
-		// Retourne la valeur d'engraissement pour la bbox.
 		public double InflateBoundingBoxWidth()
 		{
+			//	Retourne la valeur d'engraissement pour la bbox.
 			return this.width*0.5;
 		}
 
-		// Retourne le facteur d'engraissement pour la bbox.
 		public double InflateBoundingBoxFactor()
 		{
+			//	Retourne le facteur d'engraissement pour la bbox.
 			if ( this.join == JoinStyle.Miter )
 			{
 				return this.Limit;
@@ -660,9 +660,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Retourne l'engraissement approximatif pour une bbox.
 		public static double FatShape(Shape shape)
 		{
+			//	Retourne l'engraissement approximatif pour une bbox.
 			if ( shape.PropertyStroke == null )  return 0.0;
 
 			double value = shape.PropertyStroke.Width*0.5;
@@ -680,9 +680,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Début du déplacement global de la propriété.
 		public override void MoveGlobalStarting()
 		{
+			//	Début du déplacement global de la propriété.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
 
 			this.InsertOpletProperty();
@@ -696,9 +696,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 		
-		// Effectue le déplacement global de la propriété.
 		public override void MoveGlobalProcess(Selector selector)
 		{
+			//	Effectue le déplacement global de la propriété.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
 
 			double scale = selector.GetTransformScale;
@@ -715,9 +715,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		
-		// Donne les valeurs trait/trou d'un traitillé.
 		public void GetPenGap(int i, bool printing, out double pen, out double gap)
 		{
+			//	Donne les valeurs trait/trou d'un traitillé.
 			pen = this.dashPen[i];
 			gap = this.dashGap[i];
 
@@ -729,9 +729,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Exporte en PDF la propriété.
 		public void ExportPDF(PDF.Port port, DrawingContext drawingContext, Objects.Abstract obj)
 		{
+			//	Exporte en PDF la propriété.
 			if ( this.dash )  // traitillé ?
 			{
 				port.SetLineDash(this.width, this.dashPen[0], this.dashGap[0], this.dashPen[1], this.dashGap[1], this.dashPen[2], this.dashGap[2]);
@@ -748,9 +748,9 @@ namespace Epsitec.Common.Document.Properties
 
 		
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("Width", this.width);
@@ -765,9 +765,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected Line(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			this.width = info.GetDouble("Width");
 			this.cap = (CapStyle) info.GetValue("CapStyle", typeof(CapStyle));
 			this.join = (JoinStyle) info.GetValue("JoinStyle", typeof(JoinStyle));

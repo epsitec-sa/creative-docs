@@ -31,9 +31,9 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard.
 			get
 			{
 				return 8 + 22*2;
@@ -41,9 +41,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonGlyphs == null )  return;

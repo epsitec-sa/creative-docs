@@ -60,9 +60,9 @@ namespace Epsitec.Common.Widgets
 			this.textFields = null;
 		}
 
-		// Crée les rubriques dans la base.
 		protected void CreateFields()
 		{
+			//	Crée les rubriques dans la base.
 			TinyDataBase.FieldDesc fd;
 
 			this.db.CreateEmptyFieldDesc(out fd);
@@ -190,9 +190,9 @@ namespace Epsitec.Common.Widgets
 			this.db.CreateFieldDesc(fd);
 		}
 
-		// Crée quelques fiches dans la base.
 		protected void CreateRecords()
 		{
+			//	Crée quelques fiches dans la base.
 			TinyDataBase.Record record;
 
 			this.db.CreateEmptyRecord(out record);
@@ -271,9 +271,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Crée tous les widgets du layout.
 		protected void CreateLayout()
 		{
+			//	Crée tous les widgets du layout.
 			Rectangle rect = this.window.Root.Client.Bounds;
 
 			this.tip = new ToolTip();
@@ -700,9 +700,9 @@ namespace Epsitec.Common.Widgets
 			this.buttonCancel.Size = new Size(this.buttonWidth, this.buttonHeight);
 		}
 
-		// Initialise la table.
 		protected void InitTable()
 		{
+			//	Initialise la table.
 			this.table.TextProviderCallback = new TextProviderCallback(this.FillText);
 			this.table.ColumnCount = this.db.TotalField;
 
@@ -717,18 +717,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Appelé par ScrollArray pour remplir une cellule.
 		protected string FillText(int row, int column)
 		{
+			//	Appelé par ScrollArray pour remplir une cellule.
 			if ( row >= this.db.TotalRecord )  return "";
 			TinyDataBase.Record record = this.db.RetRecord(row);
 			int fieldID = this.db.RetFieldID(column);
 			return this.db.RetFieldInRecord(record, fieldID);
 		}
 
-		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
+			//	Met à jour le contenu de la table.
 			this.table.Clear();
 			this.table.RowCount = this.db.TotalRecord;
 
@@ -742,9 +742,9 @@ namespace Epsitec.Common.Widgets
 			this.table.ShowSelected(ScrollShowMode.Extremity);
 		}
 
-		// Initialise la liste d'une ligne éditable "combo".
 		protected void InitCombo(AbstractTextField tf, string combo)
 		{
+			//	Initialise la liste d'une ligne éditable "combo".
 			TextFieldCombo cb = tf as TextFieldCombo;
 			
 			while ( true )
@@ -757,9 +757,9 @@ namespace Epsitec.Common.Widgets
 			cb.Items.Add(combo);
 		}
 
-		// Choix du mode de tri.
 		protected void SetSort(int field, SortMode mode)
 		{
+			//	Choix du mode de tri.
 			for ( int i=0 ; i<10 ; i++ )
 			{
 				if ( field+i >= this.db.TotalField )  break;
@@ -773,9 +773,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Changement de sélection dans la liste.
 		private void table_SelectedIndexChanged(object sender)
 		{
+			//	Changement de sélection dans la liste.
 			if (this.textFields != null)
 			{
 				this.recordRank = this.table.SelectedIndex;
@@ -785,9 +785,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Changement de tri dans la liste.
 		private void table_SortChanged(object sender)
 		{
+			//	Changement de tri dans la liste.
 			if (this.textFields != null)
 			{
 				int column;
@@ -805,9 +805,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Critère de recherche complété.
 		private void editCrit_TextInserted(object sender)
 		{
+			//	Critère de recherche complété.
 			this.UpdateButton();
 			string crit = this.editCrit.Text;
 			if ( crit.Length == 0 )  return;
@@ -827,9 +827,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Bouton "Chercher" cliqué.
 		private void buttonSearch_Clicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton "Chercher" cliqué.
 			string crit = this.editCrit.Text;
 			string complete;
 			int rank = this.recordRank;
@@ -845,9 +845,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Bouton "Créer" cliqué.
 		private void buttonCreate_Clicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton "Créer" cliqué.
 			this.recordRank = -1;
 			this.recordCreated = true;
 			this.UpdateLayout();
@@ -855,9 +855,9 @@ namespace Epsitec.Common.Widgets
 			this.SetFocus(0);
 		}
 
-		// Bouton "Dupliquer" cliqué.
 		private void buttonDuplicate_Clicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton "Dupliquer" cliqué.
 			TinyDataBase.Record newRecord;
 			this.db.CreateCopyRecord(out newRecord, this.record);
 			this.record = newRecord;
@@ -867,9 +867,9 @@ namespace Epsitec.Common.Widgets
 			this.SetFocus(0);
 		}
 
-		// Bouton "Supprimer" cliqué.
 		private void buttonDelete_Clicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton "Supprimer" cliqué.
 			if ( this.recordRank == -1 )  return;
 			this.db.DeleteRecord(this.recordRank);
 			if ( this.recordRank >= this.db.TotalRecord )
@@ -883,9 +883,9 @@ namespace Epsitec.Common.Widgets
 			this.table.Focus();
 		}
 
-		// Bouton "Valider" cliqué.
 		private void buttonValidate_Clicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton "Valider" cliqué.
 			UpdateRecord();
 			if ( this.recordRank == -1 )
 			{
@@ -902,9 +902,9 @@ namespace Epsitec.Common.Widgets
 			this.table.Focus();
 		}
 
-		// Bouton "Annuler" cliqué.
 		private void buttonCancel_Clicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton "Annuler" cliqué.
 			this.recordCreated = false;
 			this.recordRank = this.table.SelectedIndex;
 			this.UpdateLayout();
@@ -912,16 +912,16 @@ namespace Epsitec.Common.Widgets
 			this.table.Focus();
 		}
 
-		// Texte d'une rubrique changé.
 		private void tf_TextChanged(object sender)
 		{
+			//	Texte d'une rubrique changé.
 			this.recordModified = true;
 			this.UpdateButton();
 		}
 
-		// this.record -> layout
 		protected void UpdateLayout()
 		{
+			//	this.record -> layout
 			if ( this.recordRank == -1 )
 			{
 				this.db.CreateEmptyRecord(out this.record);
@@ -941,9 +941,9 @@ namespace Epsitec.Common.Widgets
 			this.recordModified = false;
 		}
 
-		// layout -> this.record
 		protected void UpdateRecord()
 		{
+			//	layout -> this.record
 			int nbFields = this.db.TotalField;
 			for ( int i=0 ; i<nbFields ; i++ )
 			{
@@ -953,9 +953,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Met à jour tous les boutons.
 		protected void UpdateButton()
 		{
+			//	Met à jour tous les boutons.
 			bool enable;
 
 			enable = !this.recordModified && !this.recordCreated;
@@ -978,18 +978,18 @@ namespace Epsitec.Common.Widgets
 			this.buttonSearch.Enable = (enable);
 		}
 
-		// Met le focus dans une rubrique éditable.
 		protected void SetFocus(int rank)
 		{
+			//	Met le focus dans une rubrique éditable.
 			AbstractTextField tf = this.textFields[rank] as AbstractTextField;
 			tf.SelectAll();
 			tf.Focus();
 		}
 
 
-		// -------------------------------------------------------------------------
 		[Test] public void CheckTinyDataBase()
 		{
+			//	-------------------------------------------------------------------------
 			TinyDataBase mydb;
 			mydb = new TinyDataBase();
 			mydb.Title = "essai";
@@ -1038,7 +1038,7 @@ namespace Epsitec.Common.Widgets
 			mydb.SetSortField(0, 0, SortMode.Down);  // tri par noms
 			mydb.SetSortField(1, 1, SortMode.Down);  // puis par prénoms
 
-			// Dumoulin, Roux, Walz
+			//	Dumoulin, Roux, Walz
 			TinyDataBase.Record r1;
 			r1 = mydb.RetRecord(0);
 			Assert.IsTrue(mydb.RetFieldInRecord(r1, 0) == "Dumoulin");
@@ -1051,14 +1051,14 @@ namespace Epsitec.Common.Widgets
 			r2 = mydb.RetRecord(2);
 			mydb.SetFieldInRecord(r2, 0, "Raboud");  // Walz -> Raboud
 			mydb.SetFieldInRecord(r2, 1, "Yves");  // Michael -> Yves
-			// Dumoulin, Raboud, Roux
+			//	Dumoulin, Raboud, Roux
 			rank = mydb.SetRecord(2, r2);
 			Assert.IsTrue(rank == 1);
 
 			mydb.DeleteRecord(0);  // supprime Dumoulin
 			Assert.IsTrue(mydb.TotalRecord == 2);
 
-			// Raboud, Roux
+			//	Raboud, Roux
 			r1 = mydb.RetRecord(1);
 			Assert.IsTrue(mydb.RetFieldInRecord(r1, 0) == "Roux");
 			r1 = mydb.RetRecord(0);
@@ -1072,7 +1072,7 @@ namespace Epsitec.Common.Widgets
 			mydb.SetSortField(0, 1, SortMode.Down);  // tri par prénoms
 			mydb.SetSortField(1, 0, SortMode.Down);  // puis par noms
 
-			// Roux, Arnaud, Raboud
+			//	Roux, Arnaud, Raboud
 			r1 = mydb.RetRecord(0);
 			Assert.IsTrue(mydb.RetFieldInRecord(r1, 1) == "Daniel");
 			r1 = mydb.RetRecord(1);

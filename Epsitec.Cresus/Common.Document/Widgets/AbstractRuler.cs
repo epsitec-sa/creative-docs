@@ -35,9 +35,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Nombre de points/millimètres pour la graduation.
 		public double PPM
 		{
+			//	Nombre de points/millimètres pour la graduation.
 			get
 			{
 				return this.ppm;
@@ -53,10 +53,10 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Début de la graduation, pour permettre la conversion points écran en
-		// points document et inversément.
 		public double Starting
 		{
+			//	Début de la graduation, pour permettre la conversion points écran en
+			//	points document et inversément.
 			get
 			{
 				return this.starting;
@@ -72,10 +72,10 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Fin de la graduation, pour permettre la conversion points écran en
-		// points document et inversément.
 		public double Ending
 		{
+			//	Fin de la graduation, pour permettre la conversion points écran en
+			//	points document et inversément.
 			get
 			{
 				return this.ending;
@@ -91,9 +91,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Position du marqueur.
 		public double Marker
 		{
+			//	Position du marqueur.
 			get
 			{
 				return this.marker;
@@ -114,9 +114,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Visibilité du marqueur.
 		public bool MarkerVisible
 		{
+			//	Visibilité du marqueur.
 			get
 			{
 				return this.markerVisible;
@@ -137,9 +137,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Edition en cours ?
 		public bool Edited
 		{
+			//	Edition en cours ?
 			get
 			{
 				return this.edited;
@@ -155,9 +155,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Objet en cours d'édition.
 		public Objects.Abstract EditObject
 		{
+			//	Objet en cours d'édition.
 			get
 			{
 				return this.editObject;
@@ -169,19 +169,19 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Attache la règle aux wrappers.
 		public virtual void WrappersAttach()
 		{
+			//	Attache la règle aux wrappers.
 		}
 
-		// Détache la règle des wrappers.
 		public virtual void WrappersDetach()
 		{
+			//	Détache la règle des wrappers.
 		}
 
-		// Limite basse, selon la bbox de l'obet édité.
 		public double LimitLow
 		{
+			//	Limite basse, selon la bbox de l'obet édité.
 			get
 			{
 				return this.limitLow;
@@ -197,9 +197,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Limite haute, selon la bbox de l'obet édité.
 		public double LimitHigh
 		{
+			//	Limite haute, selon la bbox de l'obet édité.
 			get
 			{
 				return this.limitHigh;
@@ -286,9 +286,9 @@ namespace Epsitec.Common.Document.Widgets
 			base.ProcessMessage(message, pos);
 		}
 
-		// Poignée mise en évidence.
 		protected string HiliteHandle
 		{
+			//	Poignée mise en évidence.
 			get
 			{
 				return this.hiliteHandle;
@@ -304,43 +304,43 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Détecte la poignée visé par la souris.
 		protected string DraggingDetect(Point pos)
 		{
+			//	Détecte la poignée visé par la souris.
 			return this.DraggingDetect(pos, null);
 		}
 
-		// Détecte la poignée visé par la souris.
 		protected virtual string DraggingDetect(Point pos, string exclude)
 		{
+			//	Détecte la poignée visé par la souris.
 			return null;
 		}
 
-		// Début du drag d'une poignée.
 		protected virtual void DraggingStart(ref string handle, Point pos)
 		{
+			//	Début du drag d'une poignée.
 		}
 
-		// Déplace une poignée.
 		protected virtual void DraggingMove(ref string handle, Point pos)
 		{
+			//	Déplace une poignée.
 		}
 
-		// Fin du drag d'une poignée.
 		protected virtual void DraggingEnd(ref string handle, Point pos)
 		{
+			//	Fin du drag d'une poignée.
 		}
 
 
-		// Invalide la zone contenant le marqueur.
 		protected virtual void InvalidateBoxMarker()
 		{
+			//	Invalide la zone contenant le marqueur.
 		}
 
 
-		// Donne la couleur pour le fond de la règle.
 		protected Color ColorBackground
 		{
+			//	Donne la couleur pour le fond de la règle.
 			get
 			{
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -356,9 +356,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Donne la couleur pour le fond de la zone éditée de la règle.
 		protected Color ColorBackgroundEdited
 		{
+			//	Donne la couleur pour le fond de la zone éditée de la règle.
 			get
 			{
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -366,9 +366,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Donne la couleur pour le fond des marqueurs des marges.
 		protected Color ColorBackgroundMargins(bool hilite)
 		{
+			//	Donne la couleur pour le fond des marqueurs des marges.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			if ( hilite )
 			{
@@ -388,9 +388,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Donne la couleur pour le bord des marqueurs des marges.
 		protected Color ColorBorderMargins
 		{
+			//	Donne la couleur pour le bord des marqueurs des marges.
 			get
 			{
 				return Color.FromBrightness(0);  // noir
@@ -399,9 +399,9 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		#region Helpers.IToolTipHost
-		// Donne l'objet (string ou widget) pour le tooltip en fonction de la position.
 		public object GetToolTipCaption(Point pos)
 		{
+			//	Donne l'objet (string ou widget) pour le tooltip en fonction de la position.
 			if ( this.edited )  // édition en cours ?
 			{
 				return this.GetTooltipEditedText(pos);
@@ -412,9 +412,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Donne le texte du tooltip d'édition en fonction de la position.
 		protected virtual string GetTooltipEditedText(Point pos)
 		{
+			//	Donne le texte du tooltip d'édition en fonction de la position.
 			return null;  // pas de tooltip
 		}
 		#endregion

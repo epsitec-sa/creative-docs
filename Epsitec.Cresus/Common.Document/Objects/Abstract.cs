@@ -19,12 +19,12 @@ namespace Epsitec.Common.Document.Objects
 	[System.Serializable()]
 	public abstract class Abstract : ISerializable
 	{
-		// Constructeur.
-		// Si document = null, on crée un objet factice, c'est-à-dire
-		// sans propriétés. On utilise un objet factice pour appeler
-		// la méthode ExistingProperty.
 		public Abstract(Document document, Objects.Abstract model)
 		{
+			//	Constructeur.
+			//	Si document = null, on crée un objet factice, c'est-à-dire
+			//	sans propriétés. On utilise un objet factice pour appeler
+			//	la méthode ExistingProperty.
 			this.document = document;
 
 			if ( this.document != null && this.document.Modifier != null )
@@ -58,16 +58,16 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Indique si l'objet a besoin de cette propriété.
 		protected virtual bool ExistingProperty(Properties.Type type)
 		{
+			//	Indique si l'objet a besoin de cette propriété.
 			return false;
 		}
 
-		// Crée toutes les propriétés dont l'objet a besoin. Cette méthode est
-		// appelée par les constructeurs de tous les objets.
 		protected void CreateProperties(Objects.Abstract model, bool floating)
 		{
+			//	Crée toutes les propriétés dont l'objet a besoin. Cette méthode est
+			//	appelée par les constructeurs de tous les objets.
 			System.Diagnostics.Debug.Assert(this.document != null);
 			if ( model != null && model.aggregates != null && model.aggregates.Count != 0 )
 			{
@@ -88,9 +88,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Crée un nouvel objet selon l'outil sélectionné.
 		public static Objects.Abstract CreateObject(Document document, string name, Objects.Abstract model)
 		{
+			//	Crée un nouvel objet selon l'outil sélectionné.
 			Objects.Abstract obj = null;
 			switch ( name )
 			{
@@ -132,16 +132,16 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public virtual string IconName
 		{
+			//	Nom de l'icône.
 			get { return @""; }
 		}
 
 
-		// Nom de l'objet, utilisé pour les pages et les calques.
 		public string Name
 		{
+			//	Nom de l'objet, utilisé pour les pages et les calques.
 			get
 			{
 				return this.name;
@@ -157,9 +157,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Identificateur utilisé pour le debug.
 		public int DebugId
 		{
+			//	Identificateur utilisé pour le debug.
 			get
 			{
 				if ( this.debugId == 0 )
@@ -171,9 +171,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Direction de l'objet.
 		public double Direction
 		{
+			//	Direction de l'objet.
 			get
 			{
 				return this.direction;
@@ -189,9 +189,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Donne la surface.
 		public SurfaceAnchor SurfaceAnchor
 		{
+			//	Donne la surface.
 			get
 			{
 				return this.surfaceAnchor;
@@ -200,9 +200,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region HotSpot
-		// Retourne la position du point chaud.
 		public Point HotSpotPosition
 		{
+			//	Retourne la position du point chaud.
 			get
 			{
 				if ( this.hotSpotRank != -1 && this.hotSpotRank < this.TotalMainHandle )
@@ -217,9 +217,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Utilise le point chaud suivant ou précédent.
 		public void ChangeHotSpot(int dir)
 		{
+			//	Utilise le point chaud suivant ou précédent.
 			for ( int i=0 ; i<1000 ; i++ )
 			{
 				if ( dir > 0 )
@@ -250,27 +250,27 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		// Nombre total de poignées, avec celles des propriétés.
 		public int TotalHandle
 		{
+			//	Nombre total de poignées, avec celles des propriétés.
 			get { return this.handles.Count; }
 		}
 
-		// Nombre total de poignées, sans celles des propriétés.
 		public int TotalMainHandle
 		{
+			//	Nombre total de poignées, sans celles des propriétés.
 			get { return this.handles.Count-this.totalPropertyHandle; }
 		}
 
-		// Nombre total de poignées des propriétés.
 		public int TotalPropertyHandle
 		{
+			//	Nombre total de poignées des propriétés.
 			get { return this.totalPropertyHandle; }
 		}
 
-		// Crée toutes les poignées pour les propriétés.
 		protected void HandlePropertiesCreate()
 		{
+			//	Crée toutes les poignées pour les propriétés.
 			foreach ( Properties.Abstract property in this.properties )
 			{
 				int total = property.TotalHandle(this);
@@ -287,9 +287,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Met à jour toutes les poignées des propriétés.
 		public void HandlePropertiesUpdate()
 		{
+			//	Met à jour toutes les poignées des propriétés.
 			bool sel = this.selected && !this.edited && !this.globalSelected && !this.document.Modifier.IsToolShaper;
 			int total = this.TotalHandle;
 			for ( int i=0 ; i<total ; i++ )
@@ -310,15 +310,15 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Ajoute une poignée.
 		public void HandleAdd(Point pos, HandleType type)
 		{
+			//	Ajoute une poignée.
 			this.HandleAdd(pos, type, HandleConstrainType.Symmetric);
 		}
 
-		// Ajoute une poignée.
 		public void HandleAdd(Point pos, HandleType type, HandleConstrainType constrain)
 		{
+			//	Ajoute une poignée.
 			Handle handle = new Handle(this.document);
 			handle.Position = pos;
 			handle.Type = type;
@@ -327,23 +327,23 @@ namespace Epsitec.Common.Document.Objects
 			this.SetDirtyBbox();
 		}
 
-		// Insère une poignée.
 		public void HandleInsert(int rank, Handle handle)
 		{
+			//	Insère une poignée.
 			this.handles.Insert(rank, handle);
 			this.SetDirtyBbox();
 		}
 
-		// Supprime une poignée.
 		public void HandleDelete(int rank)
 		{
+			//	Supprime une poignée.
 			this.handles.RemoveAt(rank);
 			this.SetDirtyBbox();
 		}
 
-		// Donne la position d'une poignée.
 		public Point GetHandlePosition(int rank)
 		{
+			//	Donne la position d'une poignée.
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
 				System.Diagnostics.Debug.Assert(this.handles[rank] != null);
@@ -353,16 +353,16 @@ namespace Epsitec.Common.Document.Objects
 			return new Point(0,0);
 		}
 
-		// Modifie l'état "survollé" d'une poignée.
 		public void HandleHilite(int rank, bool hilite)
 		{
+			//	Modifie l'état "survollé" d'une poignée.
 			Handle handle = this.Handle(rank);
 			handle.IsHilited = hilite;
 		}
 
-		// Donne une poignée de l'objet.
 		public Handle Handle(int rank)
 		{
+			//	Donne une poignée de l'objet.
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
 				System.Diagnostics.Debug.Assert(this.handles[rank] != null);
@@ -371,9 +371,9 @@ namespace Epsitec.Common.Document.Objects
 			return null;
 		}
 
-		// Détecte la poignée pointée par la souris.
 		public int DetectHandle(Point pos)
 		{
+			//	Détecte la poignée pointée par la souris.
 			int total = this.TotalHandle;
 			double min = 1000000.0;
 			int rank = -1;
@@ -392,9 +392,9 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
-		// Détecte la poignée d'un segment sélectionné pointée par la souris.
 		public int DetectSelectedSegmentHandle(Point pos)
 		{
+			//	Détecte la poignée d'un segment sélectionné pointée par la souris.
 			int rank = -1;
 			if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
 			{
@@ -416,22 +416,22 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
-		// Indique s'il existe un segment sélectionné.
 		public bool IsSelectedSegments()
 		{
+			//	Indique s'il existe un segment sélectionné.
 			return ( this.selectedSegments != null && this.selectedSegments.Count != 0 );
 		}
 
-		// Indique si une poignée est sélectionnée par le modeleur.
 		public bool IsShaperHandleSelected(int rank)
 		{
+			//	Indique si une poignée est sélectionnée par le modeleur.
 			Handle handle = this.Handle(rank);
 			return handle.IsVisible && !handle.IsShaperDeselected;
 		}
 
-		// Indique si au moins une poignée est sélectionnée par le modeleur.
 		public virtual bool IsShaperHandleSelected()
 		{
+			//	Indique si au moins une poignée est sélectionnée par le modeleur.
 			int total = this.TotalHandle;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -443,9 +443,9 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Sélectionne une poignée avec le modeleur.
 		public void SelectHandle(int rank, bool add)
 		{
+			//	Sélectionne une poignée avec le modeleur.
 			if ( !add )
 			{
 				this.SelectedSegmentClear();
@@ -486,9 +486,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Détecte le segment pour le modeleur survolé par la souris.
 		public int ShaperDetectSegment(Point mouse)
 		{
+			//	Détecte le segment pour le modeleur survolé par la souris.
 			if ( !this.IsSelectedSegmentPossible )  return -1;
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
@@ -497,9 +497,9 @@ namespace Epsitec.Common.Document.Objects
 			return Geometry.DetectOutlineRank(path, width, mouse);
 		}
 
-		// Met en évidence un segment pour le modeleur, lorsque l'objet est survolé et sélectionné.
 		public void ShaperHiliteSegment(bool hilite, Point mouse)
 		{
+			//	Met en évidence un segment pour le modeleur, lorsque l'objet est survolé et sélectionné.
 			int hilitedSegment = -1;
 
 			if ( hilite )
@@ -514,10 +514,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Mise en évidence de toutes les poignées pour le modeleur, lorsque l'objet est survolé
-		// sans être sélectionné.
 		public void ShaperHiliteHandles(bool hilite)
 		{
+			//	Mise en évidence de toutes les poignées pour le modeleur, lorsque l'objet est survolé
+			//	sans être sélectionné.
 			int total = this.TotalHandle;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -530,15 +530,15 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Indique si cet objet peut avoir des segments sélectionnés.
 		public virtual bool IsSelectedSegmentPossible
 		{
+			//	Indique si cet objet peut avoir des segments sélectionnés.
 			get { return false; }
 		}
 
-		// Désélectionne tous les segments de l'objet.
 		public void SelectedSegmentClear()
 		{
+			//	Désélectionne tous les segments de l'objet.
 			if ( this.selectedSegments != null )
 			{
 				this.selectedSegments.Clear();
@@ -546,16 +546,16 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Retourne la position de la poignée d'un segment sélectionné.
 		public Point GetSelectedSegmentPosition(int rank)
 		{
+			//	Retourne la position de la poignée d'un segment sélectionné.
 			SelectedSegment ss = this.selectedSegments[rank] as SelectedSegment;
 			return ss.Position;
 		}
 
-		// Sélectionne un segment de l'objet.
 		public int SelectedSegmentAdd(int rank, ref Point pos, bool add)
 		{
+			//	Sélectionne un segment de l'objet.
 			if ( !add )
 			{
 				this.SelectHandle(-1, false);
@@ -580,18 +580,18 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Début du déplacement d'une poignée.
 		public virtual void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée.
 			if ( rank < this.TotalMainHandle )  // poignée de l'objet, pas propriété ?
 			{
 				this.InsertOpletGeometry();
 			}
 		}
 
-		// Déplace une poignée.
 		public virtual void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -613,9 +613,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin du déplacement d'une poignée.
 		public virtual void MoveHandleEnding(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Fin du déplacement d'une poignée.
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
 				drawingContext.MagnetClearStarting();
@@ -624,28 +624,28 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Début du déplacement d'une poignée d'un segment sélectionné.
 		public virtual void MoveSelectedSegmentStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée d'un segment sélectionné.
 			this.InsertOpletGeometry();
 		}
 
-		// Déplace une poignée d'un segment sélectionné.
 		public virtual void MoveSelectedSegmentProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée d'un segment sélectionné.
 		}
 
-		// Fin du déplacement d'une poignée d'un segment sélectionné.
 		public virtual void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Fin du déplacement d'une poignée d'un segment sélectionné.
 			drawingContext.ConstrainDelStarting();
 			drawingContext.MagnetClearStarting();
 		}
 
 
-		// Retourne la liste des positions des poignées sélectionnées par le modeleur.
 		public virtual void MoveSelectedHandlesStarting(Point mouse, DrawingContext drawingContext)
 		{
+			//	Retourne la liste des positions des poignées sélectionnées par le modeleur.
 			drawingContext.SnapPos(ref mouse);
 			this.moveSelectedHandleStart = mouse;
 
@@ -698,9 +698,9 @@ namespace Epsitec.Common.Document.Objects
 			this.moveSelectedHandleList.Add(nh);
 		}
 
-		// Déplace toutes les poignées sélectionnées par le modeleur.
 		public virtual void MoveSelectedHandlesProcess(Point mouse, DrawingContext drawingContext)
 		{
+			//	Déplace toutes les poignées sélectionnées par le modeleur.
 			if ( this.moveSelectedHandleList == null )  return;
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -723,16 +723,16 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin du déplacement de toutes les poignées sélectionnées par le modeleur.
 		public virtual void MoveSelectedHandlesEnding(Point move, DrawingContext drawingContext)
 		{
+			//	Fin du déplacement de toutes les poignées sélectionnées par le modeleur.
 			this.moveSelectedHandleList = null;
 		}
 
 
-		// Déplace un coin tout en conservant une forme rectangulaire.
 		protected void MoveCorner(Point pc, int corner, int left, int right, int opposite)
 		{
+			//	Déplace un coin tout en conservant une forme rectangulaire.
 			if ( Geometry.IsRectangular(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position) )
 			{
 				this.Handle(corner).Position = pc;
@@ -769,17 +769,17 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Début du déplacement de tout l'objet.
 		public virtual void MoveAllStarting()
 		{
+			//	Début du déplacement de tout l'objet.
 			this.InsertOpletGeometry();
 		}
 
-		// Effectue le déplacement de tout l'objet.
-		// Un objet désélectionné est déplacé entièrement, car il s'agit forcément
-		// du fils d'un objet sélectionné.
 		public virtual void MoveAllProcess(Point move)
 		{
+			//	Effectue le déplacement de tout l'objet.
+			//	Un objet désélectionné est déplacé entièrement, car il s'agit forcément
+			//	du fils d'un objet sélectionné.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			bool allHandle = !this.IsSelected;
@@ -797,9 +797,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Début du déplacement global de l'objet.
 		public virtual void MoveGlobalStarting()
 		{
+			//	Début du déplacement global de l'objet.
 			this.InsertOpletGeometry();
 
 			foreach ( Handle handle in this.handles )
@@ -810,11 +810,11 @@ namespace Epsitec.Common.Document.Objects
 			this.initialDirection = this.direction;
 		}
 
-		// Effectue le déplacement global de l'objet.
-		// Un objet désélectionné est déplacé entièrement, car il s'agit forcément
-		// du fils d'un objet sélectionné.
 		public virtual void MoveGlobalProcess(Selector selector)
 		{
+			//	Effectue le déplacement global de l'objet.
+			//	Un objet désélectionné est déplacé entièrement, car il s'agit forcément
+			//	du fils d'un objet sélectionné.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			bool allHandle = !this.IsSelected;
@@ -832,9 +832,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Début du déplacement global des propriétés de l'objet.
 		public virtual void MoveGlobalStartingProperties()
 		{
+			//	Début du déplacement global des propriétés de l'objet.
 			for ( int i=0 ; i<this.properties.Count ; i++ )
 			{
 				Properties.Abstract property = this.properties[i] as Properties.Abstract;
@@ -844,9 +844,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Effectue le déplacement global des propriétés de l'objet.
 		public void MoveGlobalProcessProperties(Selector selector)
 		{
+			//	Effectue le déplacement global des propriétés de l'objet.
 			for ( int i=0 ; i<this.properties.Count ; i++ )
 			{
 				Properties.Abstract property = this.properties[i] as Properties.Abstract;
@@ -856,9 +856,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Aligne l'objet sur la grille.
 		public virtual void AlignGrid(DrawingContext drawingContext)
 		{
+			//	Aligne l'objet sur la grille.
 			this.InsertOpletGeometry();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
@@ -877,18 +877,18 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Texte des informations de modification pour un objet segment de ligne.
 		protected void TextInfoModifLine()
 		{
+			//	Texte des informations de modification pour un objet segment de ligne.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			double angle = Point.ComputeAngleDeg(this.Handle(0).Position, this.Handle(1).Position);
 			string text = string.Format(Res.Strings.Object.Abstract.InfoLine, this.document.Modifier.RealToString(len), this.document.Modifier.AngleToString(angle));
 			this.document.Modifier.TextInfoModif = text;
 		}
 
-		// Texte des informations de modification pour un objet rectangulaire.
 		protected void TextInfoModifRect()
 		{
+			//	Texte des informations de modification pour un objet rectangulaire.
 			double width  = 0.0;
 			double height = 0.0;
 
@@ -923,101 +923,101 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Texte des informations de modification pour un objet circulaire.
 		protected void TextInfoModifCircle()
 		{
+			//	Texte des informations de modification pour un objet circulaire.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			string text = string.Format(Res.Strings.Object.Abstract.InfoCircle, this.document.Modifier.RealToString(len));
 			this.document.Modifier.TextInfoModif = text;
 		}
 
 		
-		// Gestion d'un événement pendant l'édition.
 		public virtual bool EditProcessMessage(Message message, Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			return false;
 		}
 
-		// Gestion d'un événement pendant l'édition.
 		public virtual void EditMouseDownMessage(Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 		}
 
-		// Coupe le texte sélectionné pendant l'édition.
 		public virtual bool EditCut()
 		{
+			//	Coupe le texte sélectionné pendant l'édition.
 			return false;
 		}
 
-		// Copie le texte sélectionné pendant l'édition.
 		public virtual bool EditCopy()
 		{
+			//	Copie le texte sélectionné pendant l'édition.
 			return false;
 		}
 
-		// Colle du texte pendant l'édition.
 		public virtual bool EditPaste()
 		{
+			//	Colle du texte pendant l'édition.
 			return false;
 		}
 
-		// Sélectionne tout le texte pendant l'édition.
 		public virtual bool EditSelectAll()
 		{
+			//	Sélectionne tout le texte pendant l'édition.
 			return false;
 		}
 
-		// Insère un texte dans le pavé en édition.
 		public virtual bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
+			//	Insère un texte dans le pavé en édition.
 			return false;
 		}
 
-		// Insère un texte dans le pavé en édition.
 		public virtual bool EditInsertText(Text.Unicode.Code code)
 		{
+			//	Insère un texte dans le pavé en édition.
 			return false;
 		}
 
-		// Insère un texte dans le pavé en édition.
 		public virtual bool EditInsertText(Text.Properties.BreakProperty brk)
 		{
+			//	Insère un texte dans le pavé en édition.
 			return false;
 		}
 
-		// Insère un glyphe dans le pavé en édition.
 		public virtual bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
 		{
+			//	Insère un glyphe dans le pavé en édition.
 			return false;
 		}
 
-		// Retourne le glyphe du caractère sélectionné.
 		public virtual bool EditGetSelectedGlyph(out int code, out int glyph, out OpenType.Font font)
 		{
+			//	Retourne le glyphe du caractère sélectionné.
 			code = 0;
 			glyph = 0;
 			font = null;
 			return false;
 		}
 
-		// Donne la fonte actullement utilisée.
 		public virtual string EditGetFontName()
 		{
+			//	Donne la fonte actullement utilisée.
 			return "";
 		}
 
-		// Donne la zone contenant le curseur d'édition.
 		public virtual Drawing.Rectangle EditCursorBox
 		{
+			//	Donne la zone contenant le curseur d'édition.
 			get
 			{
 				return Drawing.Rectangle.Empty;
 			}
 		}
 
-		// Donne la zone contenant le texte sélectionné.
 		public virtual Drawing.Rectangle EditSelectBox
 		{
+			//	Donne la zone contenant le texte sélectionné.
 			get
 			{
 				return Drawing.Rectangle.Empty;
@@ -1025,86 +1025,86 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Retourne tous les tags des tabulateurs.
 		public virtual string[] TextTabTags
 		{
+			//	Retourne tous les tags des tabulateurs.
 			get
 			{
 				return null;
 			}
 		}
 
-		// Crée un nouveau tabulateur dans le texte.
 		public virtual string NewTextTab(double pos, TextTabType type)
 		{
+			//	Crée un nouveau tabulateur dans le texte.
 			return null;
 		}
 
-		// Supprime un tabulateur du texte.
 		public virtual void DeleteTextTab(string tag)
 		{
+			//	Supprime un tabulateur du texte.
 		}
 
-		// Renomme un tabulateur du texte.
 		public bool RenameTextTab(string oldTag, string newTag)
 		{
+			//	Renomme un tabulateur du texte.
 			return this.RenameTextTabs(new string[] { oldTag }, newTag);
 		}
 		
-		// Renomme plusieurs tabulateurs du texte.
 		public virtual bool RenameTextTabs(string[] oldTags, string newTag)
 		{
+			//	Renomme plusieurs tabulateurs du texte.
 			return false;
 		}
 		
-		// Donne un tabulateur du texte.
 		public virtual void GetTextTab(string tag, out double pos, out TextTabType type)
 		{
+			//	Donne un tabulateur du texte.
 			pos = 0;
 			type = TextTabType.None;
 		}
 
-		// Modifie un tabulateur du texte.
 		public virtual void SetTextTab(ref string tag, double pos, TextTabType type, bool firstChange)
 		{
+			//	Modifie un tabulateur du texte.
 		}
 
-		// Crée tous les panneaux pour l'édition.
 		public virtual System.Collections.ArrayList CreateTextPanels(string filter)
 		{
+			//	Crée tous les panneaux pour l'édition.
 			return null;
 		}
 
 		
-		// Détecte la cellule pointée par la souris.
 		public virtual int DetectCell(Point pos)
 		{
+			//	Détecte la cellule pointée par la souris.
 			return -1;
 		}
 
-		// Début du déplacement d'une cellule.
 		public virtual void MoveCellStarting(int rank, Point pos,
 											 bool isShift, bool isCtrl, int downCount,
 											 DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une cellule.
 		}
 
-		// Déplace une cellule.
 		public virtual void MoveCellProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une cellule.
 		}
 
 
-		// Indique qu'il faudra refaire les bbox.
 		public void SetDirtyBbox()
 		{
+			//	Indique qu'il faudra refaire les bbox.
 			this.dirtyBbox = true;
 			this.surfaceAnchor.SetDirty();
 		}
 
-		// Rectangle englobant l'objet.
 		public Drawing.Rectangle BoundingBox
 		{
+			//	Rectangle englobant l'objet.
 			get
 			{
 				if ( this.IsSelected || this.isCreating )
@@ -1118,9 +1118,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Rectangle englobant l'objet complet ou partiel.
 		public Drawing.Rectangle BoundingBoxPartial
 		{
+			//	Rectangle englobant l'objet complet ou partiel.
 			get
 			{
 				if ( this.allSelected )
@@ -1149,28 +1149,28 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Rectangle englobant l'objet pour les détections.
 		public Drawing.Rectangle BoundingBoxDetect
 		{
+			//	Rectangle englobant l'objet pour les détections.
 			get
 			{
 				return this.BoundingBoxGeom;
 			}
 		}
 
-		// Rectangle englobant l'objet pour les groupes.
 		public Drawing.Rectangle BoundingBoxGroup
 		{
+			//	Rectangle englobant l'objet pour les groupes.
 			get
 			{
 				return this.BoundingBoxGeom;
 			}
 		}
 
-		// Rectangle englobant la géométrie de l'objet, sans tenir compte
-		// de l'épaisseur des traits.
 		public Drawing.Rectangle BoundingBoxThin
 		{
+			//	Rectangle englobant la géométrie de l'objet, sans tenir compte
+			//	de l'épaisseur des traits.
 			get
 			{
 				if ( this.dirtyBbox )  // est-ce que la bbox n'est plus à jour ?
@@ -1182,10 +1182,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Rectangle englobant la géométrie de l'objet, en tenant compte
-		// de l'épaisseur des traits.
 		public Drawing.Rectangle BoundingBoxGeom
 		{
+			//	Rectangle englobant la géométrie de l'objet, en tenant compte
+			//	de l'épaisseur des traits.
 			get
 			{
 				if ( this.dirtyBbox )  // est-ce que la bbox n'est plus à jour ?
@@ -1197,9 +1197,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Rectangle englobant complet de l'objet, pendant une sélection.
 		public Drawing.Rectangle BoundingBoxFull
 		{
+			//	Rectangle englobant complet de l'objet, pendant une sélection.
 			get
 			{
 				if ( this.dirtyBbox )  // est-ce que la bbox n'est plus à jour ?
@@ -1211,10 +1211,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Calcule les 2 rectangles pour SurfaceAnchor, qui sont les bbox
-		// (thin et geom) de l'objet lorsqu'il n'est pas tourné.
 		public void UpdateSurfaceBox(out Drawing.Rectangle surfThin, out Drawing.Rectangle surfGeom)
 		{
+			//	Calcule les 2 rectangles pour SurfaceAnchor, qui sont les bbox
+			//	(thin et geom) de l'objet lorsqu'il n'est pas tourné.
 			if ( this.direction == 0.0 )
 			{
 				surfThin = this.bboxThin;
@@ -1240,20 +1240,20 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Constuit les formes de l'objet.
 		public virtual Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Constuit les formes de l'objet.
 			return null;
 		}
 
-		// Calcule le rectangle englobant l'objet. Chaque objet se charge de
-		// ce calcul, selon sa géométrie, l'épaisseur de son trait, etc.
-		// Il faut calculer :
-		//	this.bboxThin  boîte selon la géométrie de l'objet, sans les traits
-		//	this.bboxGeom  boîte selon la géométrie de l'objet, avec les traits
-		//	this.bboxFull  boîte complète lorsque l'objet est sélectionné
 		protected void UpdateBoundingBox()
 		{
+			//	Calcule le rectangle englobant l'objet. Chaque objet se charge de
+			//	ce calcul, selon sa géométrie, l'épaisseur de son trait, etc.
+			//	Il faut calculer :
+			//	this.bboxThin  boîte selon la géométrie de l'objet, sans les traits
+			//	this.bboxGeom  boîte selon la géométrie de l'objet, avec les traits
+			//	this.bboxFull  boîte complète lorsque l'objet est sélectionné
 			Shape[] shapes = this.ShapesBuild(null, null, false);
 			this.ComputeBoundingBox(shapes);
 
@@ -1263,9 +1263,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Calcule toutes les bbox de l'objet en fonction des formes.
 		protected void ComputeBoundingBox(params Shape[] shapes)
 		{
+			//	Calcule toutes les bbox de l'objet en fonction des formes.
 			if ( shapes == null )  return;
 
 			this.bboxThin = Drawing.Rectangle.Empty;
@@ -1321,9 +1321,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Agrandit toutes les bbox en fonction d'un point supplémentaire.
 		protected void InflateBoundingBox(Point pos, bool onlyFull)
 		{
+			//	Agrandit toutes les bbox en fonction d'un point supplémentaire.
 			if ( !onlyFull )
 			{
 				this.bboxThin.MergeWith(pos);
@@ -1333,9 +1333,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Etat survolé de l'objet.
 		public bool IsHilite
 		{
+			//	Etat survolé de l'objet.
 			get
 			{
 				return this.isHilite;
@@ -1351,9 +1351,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Etat caché de l'objet.
 		public bool IsHide
 		{
+			//	Etat caché de l'objet.
 			get
 			{
 				return this.isHide;
@@ -1372,34 +1372,34 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Gestion de la marque.
 		public bool Mark
 		{
+			//	Gestion de la marque.
 			get { return this.mark; }
 			set { this.mark = value; }
 		}
 
-		// Sélectionne toutes les poignées de l'objet.
 		public void Select()
 		{
+			//	Sélectionne toutes les poignées de l'objet.
 			this.Select(true, false);
 		}
 
-		// Désélectionne toutes les poignées de l'objet.
 		public void Deselect()
 		{
+			//	Désélectionne toutes les poignées de l'objet.
 			this.Select(false, false);
 		}
 
-		// Sélectionne ou désélectionne toutes les poignées de l'objet.
 		public void Select(bool select)
 		{
+			//	Sélectionne ou désélectionne toutes les poignées de l'objet.
 			this.Select(select, false);
 		}
 
-		// Sélectionne ou désélectionne toutes les poignées de l'objet.
 		public void Select(bool select, bool edit)
 		{
+			//	Sélectionne ou désélectionne toutes les poignées de l'objet.
 			this.InsertOpletSelection();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 
@@ -1434,9 +1434,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifySelectionChanged();
 		}
 
-		// Sélectionne toutes les poignées de l'objet dans un rectangle.
 		public virtual void Select(Drawing.Rectangle rect)
 		{
+			//	Sélectionne toutes les poignées de l'objet dans un rectangle.
 			this.InsertOpletSelection();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 
@@ -1477,26 +1477,26 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifySelectionChanged();
 		}
 
-		// Modifie le mode d'édition. Il faut obligatoirement utiliser cet appel
-		// pour modifier this.edited !
 		protected virtual void SetEdited(bool state)
 		{
+			//	Modifie le mode d'édition. Il faut obligatoirement utiliser cet appel
+			//	pour modifier this.edited !
 			System.Diagnostics.Debug.Assert(state == false);
 		}
 
-		// Attache l'objet au différents wrappers.
 		protected virtual void EditWrappersAttach()
 		{
+			//	Attache l'objet au différents wrappers.
 		}
 
-		// Met à jour les règles pour le texte en édition.
 		protected virtual void UpdateTextRulers()
 		{
+			//	Met à jour les règles pour le texte en édition.
 		}
 
-		// Indique que l'objet est sélectionné globalement (avec Selector).
 		public void GlobalSelect(bool global)
 		{
+			//	Indique que l'objet est sélectionné globalement (avec Selector).
 			this.InsertOpletSelection();
 
 			if ( this.document.Modifier.IsToolShaper )
@@ -1519,57 +1519,57 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
-		// Indique si l'objet est en cours de création.
 		public bool IsCreating
 		{
+			//	Indique si l'objet est en cours de création.
 			get { return this.isCreating; }
 		}
 
-		// Indique si l'objet est sélectionné.
 		public bool IsSelected
 		{
+			//	Indique si l'objet est sélectionné.
 			get { return this.selected; }
 		}
 
-		// Indique si l'objet est sélectionné globalement (avec Selector).
 		public bool IsGlobalSelected
 		{
+			//	Indique si l'objet est sélectionné globalement (avec Selector).
 			get { return this.globalSelected; }
 		}
 
 
-		// Indique si l'objet est éditable.
 		public virtual bool IsEditable
 		{
+			//	Indique si l'objet est éditable.
 			get { return false; }
 		}
 
-		// Indique si l'objet est en cours d'édition.
 		public bool IsEdited
 		{
+			//	Indique si l'objet est en cours d'édition.
 			get { return this.edited; }
 		}
 
-		// Lie l'objet éditable à une règle.
 		public virtual bool EditRulerLink(TextRuler ruler, DrawingContext drawingContext)
 		{
+			//	Lie l'objet éditable à une règle.
 			return false;
 		}
 
 		
-		// Ajoute une nouvelle propriété à l'objet.
-		// Une propriété flottante n'est référencée par personne et elle n'est pas
-		// dans la liste des propriétés du document. ObjectPoly crée un ObjectLine
-		// avec des propriétés flottantes, pendant la création.
 		protected void AddProperty(Properties.Type type, Objects.Abstract model, bool floating)
 		{
+			//	Ajoute une nouvelle propriété à l'objet.
+			//	Une propriété flottante n'est référencée par personne et elle n'est pas
+			//	dans la liste des propriétés du document. ObjectPoly crée un ObjectLine
+			//	avec des propriétés flottantes, pendant la création.
 			if ( model != null )
 			{
 				Properties.Abstract original = model.Property(type);
 				if ( original != null && original.IsStyle )
 				{
-					// L'objet utilise directement la propriété du style, et
-					// surtout pas une copie !
+					//	L'objet utilise directement la propriété du style, et
+					//	surtout pas une copie !
 					original.Owners.Add(this);  // l'objet est un propriétaire de l'original
 					this.properties.Add(original);  // ajoute dans la liste de l'objet
 					return;
@@ -1583,8 +1583,8 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this is Objects.Memory )
 			{
-				// Les propriétés de ObjectMemory sont marquées "IsOnlyForCreation".
-				// De plus, elles ne sont pas dans la liste des propriétés du document.
+				//	Les propriétés de ObjectMemory sont marquées "IsOnlyForCreation".
+				//	De plus, elles ne sont pas dans la liste des propriétés du document.
 				property.IsOnlyForCreation = true;
 				return;
 			}
@@ -1619,21 +1619,21 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Nombre de proriétés.
 		public int TotalProperty
 		{
+			//	Nombre de proriétés.
 			get { return this.properties.Count; }
 		}
 
-		// Indique si une propriété existe.
 		public bool ExistProperty(Properties.Type type)
 		{
+			//	Indique si une propriété existe.
 			return ( this.Property(type) != null );
 		}
 
-		// Change une propriété de l'objet.
 		public void ChangeProperty(Properties.Abstract property)
 		{
+			//	Change une propriété de l'objet.
 			int i = this.PropertyIndex(property.Type);
 			System.Diagnostics.Debug.Assert(i != -1);
 			this.properties[i] = property;
@@ -1644,10 +1644,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Transfert toutes les propriétés d'un ObjectMemory source qui n'existent
-		// pas dans l'objet courant.
 		public void PropertiesXferMemory(Objects.Abstract src)
 		{
+			//	Transfert toutes les propriétés d'un ObjectMemory source qui n'existent
+			//	pas dans l'objet courant.
 			bool ie = this.document.Modifier.OpletQueueEnable;
 			this.document.Modifier.OpletQueueEnable = false;
 
@@ -1664,9 +1664,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Modifier.OpletQueueEnable = ie;
 		}
 
-		// Donne l'index d'une propriété de l'objet.
 		public int PropertyIndex(Properties.Type type)
 		{
+			//	Donne l'index d'une propriété de l'objet.
 			for ( int i=0 ; i<this.properties.Count ; i++ )
 			{
 				Properties.Abstract property = this.properties[i] as Properties.Abstract;
@@ -1675,9 +1675,9 @@ namespace Epsitec.Common.Document.Objects
 			return -1;
 		}
 
-		// Donne une propriété de l'objet.
 		public Properties.Abstract Property(Properties.Type type)
 		{
+			//	Donne une propriété de l'objet.
 			foreach ( Properties.Abstract property in this.properties )
 			{
 				if ( property.Type == type )  return property;
@@ -1685,9 +1685,9 @@ namespace Epsitec.Common.Document.Objects
 			return null;
 		}
 
-		// Retourne la liste de toutes les types utilisant un style.
 		public Properties.Type[] PropertiesStyle()
 		{
+			//	Retourne la liste de toutes les types utilisant un style.
 			int total = 0;
 			foreach ( Properties.Abstract property in this.properties )
 			{
@@ -1824,9 +1824,9 @@ namespace Epsitec.Common.Document.Objects
 			get { return this.Property(Properties.Type.ModColor) as Properties.ModColor; }
 		}
 
-		// Cherche une propriété d'un type donné dans une liste.
 		protected static int PropertySearch(System.Collections.ArrayList list, Properties.Type type)
 		{
+			//	Cherche une propriété d'un type donné dans une liste.
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
 				Properties.Abstract property = list[i] as Properties.Abstract;
@@ -1835,9 +1835,9 @@ namespace Epsitec.Common.Document.Objects
 			return -1;
 		}
 
-		// Ajoute toutes les propriétés de l'objet dans une liste.
 		public void PropertiesList(System.Collections.ArrayList list, bool propertiesDetail)
 		{
+			//	Ajoute toutes les propriétés de l'objet dans une liste.
 			foreach ( Properties.Abstract property in this.properties )
 			{
 				//?if ( propertiesDetail || property.IsStyle )
@@ -1883,9 +1883,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Ajoute toutes les propriétés de l'objet dans une liste.
 		public void PropertiesList(System.Collections.ArrayList list, Objects.Abstract filter)
 		{
+			//	Ajoute toutes les propriétés de l'objet dans une liste.
 			foreach ( Properties.Abstract property in this.properties )
 			{
 				if ( property.Type == Properties.Type.ModColor )  continue;
@@ -1895,15 +1895,15 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Cherche si l'objet utilise une propriété.
 		public bool PropertyExist(Properties.Abstract search)
 		{
+			//	Cherche si l'objet utilise une propriété.
 			return this.properties.Contains(search);
 		}
 
-		// Indique si une impression complexe est nécessaire.
 		public bool IsComplexPrinting
 		{
+			//	Indique si une impression complexe est nécessaire.
 			get
 			{
 				foreach ( Properties.Abstract property in this.properties )
@@ -1914,9 +1914,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Reprend toutes les propriétés d'un objet source.
 		public void PickerProperties(Objects.Abstract model)
 		{
+			//	Reprend toutes les propriétés d'un objet source.
 			if ( this is Objects.Memory )
 			{
 				this.AggregateFree();
@@ -1961,10 +1961,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Modifie la propriété PolyClose de l'objet en cours de création.
-		// Rappel: un objet en cours de création n'est pas sélectionné.
 		public void ChangePropertyPolyClose(bool close)
 		{
+			//	Modifie la propriété PolyClose de l'objet en cours de création.
+			//	Rappel: un objet en cours de création n'est pas sélectionné.
 			Properties.Bool pb = this.PropertyPolyClose;
 			if ( pb == null )  return;
 			if ( pb.BoolValue == close )  return;  // on ne veut rien changer
@@ -2003,9 +2003,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Modifier.OpletQueueEnable = oqe;
 		}
 
-		// Utilise un style donné.
 		public void UseProperty(Properties.Abstract style)
 		{
+			//	Utilise un style donné.
 			Properties.Abstract actual = this.Property(style.Type);
 			if ( actual == null )  return;
 
@@ -2013,9 +2013,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Prend une propriété à un objet désélectionné.
 		protected void PickerProperty(Properties.Abstract property)
 		{
+			//	Prend une propriété à un objet désélectionné.
 			Properties.Abstract src = this.Property(property.Type);
 			if ( src == null )  return;
 
@@ -2027,9 +2027,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Libère un style (style -> propriété).
 		public void FreeProperty(Properties.Abstract search)
 		{
+			//	Libère un style (style -> propriété).
 			for ( int i=0 ; i<this.properties.Count ; i++ )
 			{
 				Properties.Abstract property = this.properties[i] as Properties.Abstract;
@@ -2056,10 +2056,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Détache les propriétés sélectionnées des propriétés désélectionnées.
-		// C'est nécessaire au cas où une propriété est modifiée.
 		protected void SplitProperties()
 		{
+			//	Détache les propriétés sélectionnées des propriétés désélectionnées.
+			//	C'est nécessaire au cas où une propriété est modifiée.
 			for ( int i=0 ; i<this.properties.Count ; i++ )
 			{
 				Properties.Abstract property = this.properties[i] as Properties.Abstract;
@@ -2071,14 +2071,14 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Détache une propriété.
 		protected void SplitProperty(Properties.Abstract property, bool selected)
 		{
+			//	Détache une propriété.
 			Properties.Abstract dst = this.SearchProperty(property, selected);
 			if ( dst == null )  // la propriété détachée sera seule ?
 			{
-				// Crée une nouvelle instance pour la propriété dans son nouvel
-				// état, car elle est seule à être comme cela.
+				//	Crée une nouvelle instance pour la propriété dans son nouvel
+				//	état, car elle est seule à être comme cela.
 				dst = Properties.Abstract.NewProperty(this.document, property.Type);
 				property.CopyTo(dst);
 				dst.IsSelected = selected;  // nouvel état
@@ -2088,9 +2088,9 @@ namespace Epsitec.Common.Document.Objects
 			this.MergeProperty(dst, property);  // fusionne év. à une même propriété
 		}
 
-		// Essaie de fusionner une propriété avec une même.
 		protected void MergeProperty(Properties.Abstract dst, Properties.Abstract src)
 		{
+			//	Essaie de fusionner une propriété avec une même.
 			if ( dst == null )  return;
 
 			src.Owners.Remove(this);
@@ -2103,9 +2103,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Cherche une propriété identique dans une collection du document.
 		protected Properties.Abstract SearchProperty(Properties.Abstract item, bool selected)
 		{
+			//	Cherche une propriété identique dans une collection du document.
 			UndoableList properties = this.document.Modifier.PropertyList(selected);
 			
 			foreach ( Properties.Abstract property in properties )
@@ -2119,18 +2119,18 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Liste des agrégats utilisés par l'objet.
 		public UndoableList Aggregates
 		{
+			//	Liste des agrégats utilisés par l'objet.
 			get
 			{
 				return this.aggregates;
 			}
 		}
 
-		// Ajoute un agrégat au sommet de la liste de l'objet.
 		public void AggregateAdd(Properties.Aggregate agg)
 		{
+			//	Ajoute un agrégat au sommet de la liste de l'objet.
 			this.aggregates.Insert(0, agg);
 
 			if ( agg.IsUsedByObject(this) )
@@ -2142,9 +2142,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Nom de l'agrégat utilisé par l'objet.
 		public string AggregateName
 		{
+			//	Nom de l'agrégat utilisé par l'objet.
 			get
 			{
 				if ( this.aggregates.Count == 0 )  return "";
@@ -2154,9 +2154,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Liste des noms des agrégats utilisés par l'objet.
 		public System.Collections.ArrayList AggregateNames
 		{
+			//	Liste des noms des agrégats utilisés par l'objet.
 			get
 			{
 				System.Collections.ArrayList list = new System.Collections.ArrayList();
@@ -2168,9 +2168,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Adapte l'objet en fonction des changements dans l'agrégat.
 		public void AggregateAdapt(Properties.Aggregate agg)
 		{
+			//	Adapte l'objet en fonction des changements dans l'agrégat.
 			if ( agg.IsUsedByObject(this) )
 			{
 				this.AggregateFree();
@@ -2178,9 +2178,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Utilise toutes les propriétés de la liste d'agrégats.
 		public void AggregateUse()
 		{
+			//	Utilise toutes les propriétés de la liste d'agrégats.
 			if ( this is Objects.Memory )
 			{
 				for ( int i=0 ; i<this.properties.Count ; i++ )
@@ -2215,9 +2215,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Libère toutes les propriétés des agrégats.
 		public void AggregateFree()
 		{
+			//	Libère toutes les propriétés des agrégats.
 			for ( int i=0 ; i<this.properties.Count ; i++ )
 			{
 				Properties.Abstract property = this.properties[i] as Properties.Abstract;
@@ -2225,9 +2225,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Libère toutes les propriétés d'un agrégat donné.
 		public void AggregateFree(Properties.Aggregate agg)
 		{
+			//	Libère toutes les propriétés d'un agrégat donné.
 			for ( int i=0 ; i<this.properties.Count ; i++ )
 			{
 				Properties.Abstract property = this.properties[i] as Properties.Abstract;
@@ -2238,9 +2238,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Libère une propriété.
 		public void AggregateFree(Properties.Abstract property)
 		{
+			//	Libère une propriété.
 			if ( this is Objects.Memory )
 			{
 				if ( property.IsStyle )
@@ -2261,9 +2261,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Libère toutes les propriétés d'un agrégat qui sera détruit.
 		public void AggregateDelete(Properties.Aggregate agg)
 		{
+			//	Libère toutes les propriétés d'un agrégat qui sera détruit.
 			if ( this.aggregates.Contains(agg) )
 			{
 				this.AggregateFree();
@@ -2277,9 +2277,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Détecte si la souris est sur un objet.
 		public bool Detect(Point pos)
 		{
+			//	Détecte si la souris est sur un objet.
 			if ( this.isHide )  return false;
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
@@ -2292,11 +2292,11 @@ namespace Epsitec.Common.Document.Objects
 			return context.Drawer.Detect(pos, context, shapes);
 		}
 
-		// Détecte si l'objet est dans un rectangle.
-		// partial = false -> toutes les poignées doivent être dans le rectangle
-		// partial = true  -> une seule poignée doit être dans le rectangle
 		public virtual bool Detect(Drawing.Rectangle rect, bool partial)
 		{
+			//	Détecte si l'objet est dans un rectangle.
+			//	partial = false -> toutes les poignées doivent être dans le rectangle
+			//	partial = true  -> une seule poignée doit être dans le rectangle
 			if ( this.isHide )  return false;
 
 			if ( partial )
@@ -2323,16 +2323,16 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		// Détecte si la souris est sur l'objet pour l'éditer.
 		public virtual DetectEditType DetectEdit(Point pos)
 		{
+			//	Détecte si la souris est sur l'objet pour l'éditer.
 			return DetectEditType.Out;
 		}
 
 
-		// Met les commandes pour l'objet dans une liste.
 		public virtual void PutCommands(System.Collections.ArrayList list)
 		{
+			//	Met les commandes pour l'objet dans une liste.
 			if ( this.document.Modifier.IsToolShaper )
 			{
 				if ( !this.IsSelectedSegmentPossible )
@@ -2362,15 +2362,15 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Met une commande pour l'objet dans une liste, si nécessaire.
 		protected void PutCommands(System.Collections.ArrayList list, string cmd)
 		{
+			//	Met une commande pour l'objet dans une liste, si nécessaire.
 			this.document.Modifier.ActiveViewer.MiniBarAdd(list, cmd);
 		}
 
-		// Donne l'état d'une commande ShaperHandle*.
 		public virtual bool ShaperHandleState(string family, ref bool enable, System.Collections.ArrayList actives)
 		{
+			//	Donne l'état d'une commande ShaperHandle*.
 			return false;
 		}
 
@@ -2382,57 +2382,57 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Exécute une commande ShaperHandle*.
 		public virtual bool ShaperHandleCommand(string cmd)
 		{
+			//	Exécute une commande ShaperHandle*.
 			return false;
 		}
 
 
-		// Début de la création d'un objet.
 		public virtual void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
+			//	Début de la création d'un objet.
 			drawingContext.ConstrainFlush();
 			drawingContext.ConstrainAddHV(pos);
 			drawingContext.MagnetFixStarting(pos);
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public virtual void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			this.SetDirtyBbox();
 		}
 
-		// Fin de la création d'un objet.
 		public virtual void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			//	Fin de la création d'un objet.
 			drawingContext.ConstrainDelStarting();
 			drawingContext.MagnetClearStarting();
 		}
 
-		// Indique si la création de l'objet est terminée.
 		public virtual bool CreateIsEnding(DrawingContext drawingContext)
 		{
+			//	Indique si la création de l'objet est terminée.
 			return true;
 		}
 
-		// Indique si l'objet peut exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public virtual bool CreateIsExist(DrawingContext drawingContext)
 		{
+			//	Indique si l'objet peut exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			return true;
 		}
 
-		// Termine la création de l'objet. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public virtual bool CreateEnding(DrawingContext drawingContext)
 		{
+			//	Termine la création de l'objet. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			return false;
 		}
 
-		// Retourne un bouton d'action pendant la création.
 		public virtual bool CreateAction(int rank, out string cmd, out string name, out string text)
 		{
+			//	Retourne un bouton d'action pendant la création.
 			cmd  = "";
 			name = "";
 			text = "";
@@ -2444,50 +2444,50 @@ namespace Epsitec.Common.Document.Objects
 			return string.Format("     {0} {1}  {2}", Misc.Image(icon), Misc.Image(openClose), text);
 		}
 
-		// Indique s'il faut sélectionner l'objet après sa création.
 		public virtual bool SelectAfterCreation()
 		{
+			//	Indique s'il faut sélectionner l'objet après sa création.
 			return false;
 		}
 
-		// Indique s'il faut éditer l'objet après sa création.
 		public virtual bool EditAfterCreation()
 		{
+			//	Indique s'il faut éditer l'objet après sa création.
 			return false;
 		}
 
 
-		// Ajoute toutes les fontes utilisées par l'objet dans une liste.
 		public virtual void FillFontFaceList(System.Collections.ArrayList list)
 		{
+			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
 		}
 
-		// Ajoute tous les caractères utilisés par l'objet dans une table.
 		public virtual void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
+			//	Ajoute tous les caractères utilisés par l'objet dans une table.
 		}
 
-		// Retourne la bounding réelle, en fonction des caractères contenus.
 		public virtual Drawing.Rectangle RealBoundingBox()
 		{
+			//	Retourne la bounding réelle, en fonction des caractères contenus.
 			return Drawing.Rectangle.Empty;
 		}
 
 
-		// Crée une instance de l'objet.
 		protected abstract Objects.Abstract CreateNewObject(Document document, Objects.Abstract model);
-
-		// Effectue une copie de l'objet courant.
 		public bool DuplicateObject(Document document, ref Objects.Abstract newObject)
 		{
+			//	Crée une instance de l'objet.
+	
+			//	Effectue une copie de l'objet courant.
 			newObject = this.CreateNewObject(document, this);
 			newObject.CloneObject(this);
 			return true;
 		}
 
-		// Reprend toutes les caractéristiques d'un objet.
 		public virtual void CloneObject(Objects.Abstract src)
 		{
+			//	Reprend toutes les caractéristiques d'un objet.
 			this.handles.Clear();
 			int total = src.TotalHandle;
 			for ( int i=0 ; i<total ; i++ )
@@ -2519,9 +2519,9 @@ namespace Epsitec.Common.Document.Objects
 			this.SplitProperties();
 		}
 
-		// Adapte un objet qui vient d'être copié.
 		public void DuplicateAdapt()
 		{
+			//	Adapte un objet qui vient d'être copié.
 #if false
 			if ( this.properties.Count > 0 )
 			{
@@ -2535,13 +2535,13 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Dessine la géométrie de l'objet.
 		public void DrawGeometry(IPaintPort port, DrawingContext drawingContext)
 		{
-			// Un objet ne doit jamais être sélectionné ET caché !
+			//	Dessine la géométrie de l'objet.
+			//	Un objet ne doit jamais être sélectionné ET caché !
 			System.Diagnostics.Debug.Assert(!this.selected || !this.isHide);
 
-			// Dessine les formes.
+			//	Dessine les formes.
 			Shape[] shapes = this.ShapesBuild(port, drawingContext, false);
 			if ( shapes != null )
 			{
@@ -2581,7 +2581,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				Graphics graphics = port as Graphics;
 
-				// Dessine les segments sélectionnés ou survolés.
+				//	Dessine les segments sélectionnés ou survolés.
 				if ( this.selectedSegments != null || this.hilitedSegment != -1 )
 				{
 					Path path = this.GetMagnetPath();
@@ -2613,7 +2613,7 @@ namespace Epsitec.Common.Document.Objects
 					}
 				}
 
-				// Dessine les bbox en mode debug.
+				//	Dessine les bbox en mode debug.
 				if ( drawingContext.IsDrawBoxThin )
 				{
 					double initialWidth = graphics.LineWidth;
@@ -2649,9 +2649,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Retourne la largeur pour les segments sélectionnés.
 		protected double SelectedSegmentWidth(DrawingContext context, bool detect)
 		{
+			//	Retourne la largeur pour les segments sélectionnés.
 			double width = 0.0;
 			Properties.Line line = this.PropertyLineMode;
 			if ( line != null )
@@ -2661,19 +2661,19 @@ namespace Epsitec.Common.Document.Objects
 			return System.Math.Max(width, detect ? context.MinimalWidth : 3.0/context.ScaleX);
 		}
 
-		// Dessine le texte.
 		public virtual void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
+			//	Dessine le texte.
 		}
 
-		// Dessine l'image.
 		public virtual void DrawImage(IPaintPort port, DrawingContext drawingContext)
 		{
+			//	Dessine l'image.
 		}
 
-		// Dessine le nom de l'objet.
 		public void DrawLabel(Graphics graphics, DrawingContext drawingContext)
 		{
+			//	Dessine le nom de l'objet.
 			if ( this.isHide )  return;
 
 			Properties.Name name = this.PropertyName;
@@ -2733,9 +2733,9 @@ namespace Epsitec.Common.Document.Objects
 			graphics.LineWidth = initialWidth;
 		}
 
-		// Dessine le nom du style.
 		public void DrawAggregate(Graphics graphics, DrawingContext drawingContext)
 		{
+			//	Dessine le nom du style.
 			if ( this.isHide )  return;
 
 			if ( this.aggregates.Count == 0 )  return;
@@ -2795,9 +2795,9 @@ namespace Epsitec.Common.Document.Objects
 			graphics.LineWidth = initialWidth;
 		}
 
-		// Dessine les poignées de l'objet.
 		public virtual void DrawHandle(Graphics graphics, DrawingContext drawingContext)
 		{
+			//	Dessine les poignées de l'objet.
 			if ( this.isHide )  return;
 
 			foreach ( Properties.Abstract property in this.properties )
@@ -2817,9 +2817,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Indique s'il faut dessiner le pointillé forcé lorsqu'il n'y a pas de trait.
 		protected bool IsOverDash(DrawingContext context)
 		{
+			//	Indique s'il faut dessiner le pointillé forcé lorsqu'il n'y a pas de trait.
 			if ( !context.IsActive )
 			{
 				return false;
@@ -2838,9 +2838,9 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Donne la liste des propriétés qui utilisent des surfaces complexes.
 		public System.Collections.ArrayList GetComplexSurfacesPDF(IPaintPort port)
 		{
+			//	Donne la liste des propriétés qui utilisent des surfaces complexes.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
 			foreach ( Properties.Abstract property in this.properties )
@@ -2865,15 +2865,15 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Permet au scroll de se faire à la prochaine occasion.
 		public void SetAutoScroll()
 		{
+			//	Permet au scroll de se faire à la prochaine occasion.
 			this.autoScrollOneShot = true;
 		}
 		
-		// Calcule le scroll éventuel nécessaire pour rendre le cursur visible.
 		protected void ComputeAutoScroll(Point c1, Point c2)
 		{
+			//	Calcule le scroll éventuel nécessaire pour rendre le cursur visible.
 			if ( !this.autoScrollOneShot )  return;
 			this.autoScrollOneShot = false;
 
@@ -2896,29 +2896,29 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Retourne le chemin géométrique de l'objet pour les constructions
-		// magnétiques. Généralement, ce chemin est identique à celui rendu
-		// par GetPath, mais certains objets peuvent retourner un chemin plus
-		// simple (comme Line, Poly, TextLine, TextBox et Dimension).
-		// L'idée est d'ignorer les propriétés Corner et Arrow, par exemple.
 		public virtual Path GetMagnetPath()
 		{
+			//	Retourne le chemin géométrique de l'objet pour les constructions
+			//	magnétiques. Généralement, ce chemin est identique à celui rendu
+			//	par GetPath, mais certains objets peuvent retourner un chemin plus
+			//	simple (comme Line, Poly, TextLine, TextBox et Dimension).
+			//	L'idée est d'ignorer les propriétés Corner et Arrow, par exemple.
 			return this.GetPath(0);
 		}
 
-		// Retourne le chemin géométrique de l'objet.
 		public virtual Path GetPath(int rank)
 		{
+			//	Retourne le chemin géométrique de l'objet.
 			return null;
 		}
 
 
 		#region PageNumber
-		// Donne le numéro de la page à laquelle appartient l'objet.
-		// Le numéro de page est toujours ici l'index 0..n de la page dans le document,
-		// en comptant les pages maîtres comme les autres.
 		public int PageNumber
 		{
+			//	Donne le numéro de la page à laquelle appartient l'objet.
+			//	Le numéro de page est toujours ici l'index 0..n de la page dans le document,
+			//	en comptant les pages maîtres comme les autres.
 			get
 			{
 				if ( this.isDirtyPageNumber )
@@ -2939,29 +2939,29 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Met à jour d'autres éléments de l'objet dépendants du numéro de page.
 		protected virtual void UpdatePageNumber()
 		{
+			//	Met à jour d'autres éléments de l'objet dépendants du numéro de page.
 		}
 
-		// Indique que le numéro de page n'est probablement plus valable.
 		public void SetDirtyPageNumber()
 		{
+			//	Indique que le numéro de page n'est probablement plus valable.
 			this.isDirtyPageNumber = true;
 		}
 		#endregion
 
 
 		#region OpletSelection
-		// Ajoute un oplet pour mémoriser les informations de sélection de l'objet.
 		protected void InsertOpletSelection()
 		{
+			//	Ajoute un oplet pour mémoriser les informations de sélection de l'objet.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletSelection oplet = new OpletSelection(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		// Mémorise toutes les informations de sélection de l'objet.
+		//	Mémorise toutes les informations de sélection de l'objet.
 		protected class OpletSelection : AbstractOplet
 		{
 			public OpletSelection(Objects.Abstract host)
@@ -3045,15 +3045,15 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region OpletGeometry
-		// Ajoute un oplet pour mémoriser la géométrie de l'objet.
 		protected void InsertOpletGeometry()
 		{
+			//	Ajoute un oplet pour mémoriser la géométrie de l'objet.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletGeometry oplet = new OpletGeometry(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		// Mémorise toutes les informations sur la géométrie de l'objet.
+		//	Mémorise toutes les informations sur la géométrie de l'objet.
 		protected class OpletGeometry : AbstractOplet
 		{
 			public OpletGeometry(Objects.Abstract host)
@@ -3110,15 +3110,15 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region OpletName
-		// Ajoute un oplet pour mémoriser le nom de l'objet.
 		protected void InsertOpletName()
 		{
+			//	Ajoute un oplet pour mémoriser le nom de l'objet.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletName oplet = new OpletName(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		// Mémorise le nom de l'objet.
+		//	Mémorise le nom de l'objet.
 		protected class OpletName : AbstractOplet
 		{
 			public OpletName(Objects.Abstract host)
@@ -3159,14 +3159,14 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			info.AddValue("UniqueId", this.uniqueId);
 			info.AddValue("Name", this.name);
 			info.AddValue("Properties", this.properties);
 
-			// Ne sérialise que les poignées des objets, sans celles des propriétés.
+			//	Ne sérialise que les poignées des objets, sans celles des propriétés.
 			System.Collections.ArrayList objHandles = new System.Collections.ArrayList();
 			for ( int i=0 ; i<this.TotalMainHandle ; i++ )
 			{
@@ -3179,9 +3179,9 @@ namespace Epsitec.Common.Document.Objects
 			info.AddValue("Aggregates", this.aggregates);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Abstract(SerializationInfo info, StreamingContext context)
 		{
+			//	Constructeur qui désérialise l'objet.
 			this.document = Document.ReadDocument;
 			this.uniqueId = info.GetInt32("UniqueId");
 			this.name = info.GetString("Name");
@@ -3221,23 +3221,23 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Adapte l'objet après une désérialisation.
 		public virtual void ReadFinalize()
 		{
+			//	Adapte l'objet après une désérialisation.
 			foreach ( Properties.Abstract property in this.properties )
 			{
 				property.Owners.Add(this);
 			}
 		}
 
-		// Vérifie si tous les fichiers existent.
 		public virtual void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
 		{
+			//	Vérifie si tous les fichiers existent.
 		}
 
-		// Vérifie si toutes les fontes d'un TextLayout existent.
 		protected static void ReadCheckFonts(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings, TextLayout textLayout)
 		{
+			//	Vérifie si toutes les fontes d'un TextLayout existent.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			textLayout.FillFontFaceList(list);
 			foreach ( string face in list )
@@ -3253,9 +3253,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Cherche si une fonte existe dans la liste des fontes.
 		protected static bool ReadSearchFont(Font.FaceInfo[] fonts, string face)
 		{
+			//	Cherche si une fonte existe dans la liste des fontes.
 			foreach ( Font.FaceInfo info in fonts )
 			{
 				if ( info.IsLatin )
@@ -3268,9 +3268,9 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		// Taille des "poignées" pour choisir le flux du texte.
 		public static double EditFlowHandleSize
 		{
+			//	Taille des "poignées" pour choisir le flux du texte.
 			get { return 11.0; }
 		}
 

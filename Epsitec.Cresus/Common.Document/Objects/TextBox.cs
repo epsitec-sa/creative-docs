@@ -54,24 +54,24 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectTextBox"); }
 		}
 
 
-		// Détecte si la souris est sur l'objet pour l'éditer.
 		public override DetectEditType DetectEdit(Point pos)
 		{
+			//	Détecte si la souris est sur l'objet pour l'éditer.
 			if ( this.Detect(pos) )  return DetectEditType.Body;
 			return DetectEditType.Out;
 		}
 
 
-		// Début du déplacement d'une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -96,9 +96,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= 4 )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
@@ -144,9 +144,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
+			//	Début de la création d'un objet.
 			drawingContext.ConstrainFlush();
 			drawingContext.ConstrainAddHomo(pos);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
@@ -155,9 +155,9 @@ namespace Epsitec.Common.Document.Objects
 			this.isCreating = true;
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -166,9 +166,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			//	Fin de la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainDelStarting();
 			drawingContext.MagnetClearStarting();
 
-			// Crée les 2 autres poignées dans les coins opposés.
+			//	Crée les 2 autres poignées dans les coins opposés.
 			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
 			Point p1 = rect.BottomLeft;
 			Point p2 = rect.TopRight;
@@ -192,29 +192,29 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
-		// Indique s'il faut sélectionner l'objet après sa création.
 		public override bool EditAfterCreation()
 		{
+			//	Indique s'il faut sélectionner l'objet après sa création.
 			return true;
 		}
 
-		// Ajoute toutes les fontes utilisées par l'objet dans une liste.
 		public override void FillFontFaceList(System.Collections.ArrayList list)
 		{
+			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
 			this.textLayout.FillFontFaceList(list);
 		}
 
-		// Ajoute tous les caractères utilisés par l'objet dans une table.
 		public override void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
+			//	Ajoute tous les caractères utilisés par l'objet dans une table.
 			Point p1 = new Point();
 			Point p2 = new Point();
 			Point p3 = new Point();
@@ -234,15 +234,15 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Indique si un objet est éditable.
 		public override bool IsEditable
 		{
+			//	Indique si un objet est éditable.
 			get { return true; }
 		}
 
-		// Lie l'objet éditable à une règle.
 		public override bool EditRulerLink(TextRuler ruler, DrawingContext drawingContext)
 		{
+			//	Lie l'objet éditable à une règle.
 			ruler.ListCapability = true;
 			ruler.TabCapability = true;
 			ruler.AttachToText(this.textNavigator);
@@ -254,9 +254,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(Objects.Abstract src)
 		{
+			//	Reprend toutes les caractéristiques d'un objet.
 			base.CloneObject(src);
 
 			TextBox obj = src as TextBox;
@@ -267,9 +267,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Gestion d'un événement pendant l'édition.
 		public override bool EditProcessMessage(Message message, Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			if ( this.transform == null )  return false;
 
 			if ( message.Type == MessageType.KeyDown   ||
@@ -289,9 +289,9 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Gestion des événements clavier.
 		protected bool EditProcessKeyPress(Message message)
 		{
+			//	Gestion des événements clavier.
 			if ( message.IsCtrlPressed )
 			{
 				switch ( message.KeyCode )
@@ -362,95 +362,95 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
-		// Insère un glyphe dans le pavé en édition.
 		public override bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
+			//	Insère un glyphe dans le pavé en édition.
 			this.textNavigator.Selection = text;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			return true;
 		}
 
-		// Donne la fonte actullement utilisée.
 		public override string EditGetFontName()
 		{
+			//	Donne la fonte actullement utilisée.
 			return this.textNavigator.SelectionFontName;
 		}
 
 		#region TextFormat
-		// Met en gras pendant l'édition.
 		public bool EditBold()
 		{
+			//	Met en gras pendant l'édition.
 			this.textNavigator.SelectionBold = !this.textNavigator.SelectionBold;
 			return true;
 		}
 
-		// Met en italique pendant l'édition.
 		public bool EditItalic()
 		{
+			//	Met en italique pendant l'édition.
 			this.textNavigator.SelectionItalic = !this.textNavigator.SelectionItalic;
 			return true;
 		}
 
-		// Souligne pendant l'édition.
 		public bool EditUnderlined()
 		{
+			//	Souligne pendant l'édition.
 			this.textNavigator.SelectionUnderlined = !this.textNavigator.SelectionUnderlined;
 			return true;
 		}
 		#endregion
 
-		// Donne la zone contenant le curseur d'édition.
 		public override Drawing.Rectangle EditCursorBox
 		{
+			//	Donne la zone contenant le curseur d'édition.
 			get
 			{
 				return this.cursorBox;
 			}
 		}
 
-		// Donne la zone contenant le texte sélectionné.
 		public override Drawing.Rectangle EditSelectBox
 		{
+			//	Donne la zone contenant le texte sélectionné.
 			get
 			{
 				return this.selectBox;
 			}
 		}
 
-		// Gestion d'un événement pendant l'édition.
 		public override void EditMouseDownMessage(Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			pos = this.transform.TransformInverse(pos);
 			this.textNavigator.MouseDownMessage(pos);
 		}
 
 
-		// Constuit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Constuit les formes de l'objet.
 			Path path = this.PathBuild();
 
 			Shape[] shapes = new Shape[4];
 			int i = 0;
 			
-			// Forme de la surface.
+			//	Forme de la surface.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
 			shapes[i].SetPropertySurface(port, this.PropertyFillGradient);
 			i ++;
 
-			// Trait du rectangle.
+			//	Trait du rectangle.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
 			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 			i ++;
 
-			// Caractères du texte.
+			//	Caractères du texte.
 			shapes[i] = new Shape();
 			shapes[i].SetTextObject(this);
 			i ++;
 
-			// Rectangle complet pour bbox et détection.
+			//	Rectangle complet pour bbox et détection.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
 			shapes[i].Type = Type.Surface;
@@ -460,9 +460,9 @@ namespace Epsitec.Common.Document.Objects
 			return shapes;
 		}
 
-		// Crée le chemin de l'objet.
 		protected Path PathBuild()
 		{
+			//	Crée le chemin de l'objet.
 			Point p1 = this.Handle(0).Position;
 			Point p2 = new Point();
 			Point p3 = this.Handle(1).Position;
@@ -490,9 +490,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Calcules les 4 coins.
 		protected void Corners(ref Point p1, ref Point p2, ref Point p3, ref Point p4)
 		{
+			//	Calcules les 4 coins.
 			switch ( this.PropertyTextJustif.Orientation )
 			{
 				case Properties.JustifOrientation.RightToLeft:  // <-
@@ -522,10 +522,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Initialise TextLayout.
 		protected bool InitTextLayout(ref Point p1, ref Point p2, ref Point p3, ref Point p4,
 									  DrawingContext drawingContext)
 		{
+			//	Initialise TextLayout.
 			this.Corners(ref p1, ref p2, ref p3, ref p4);
 			if ( !this.PropertyTextJustif.DeflateBox(ref p1, ref p2, ref p3, ref p4) )
 			{
@@ -549,9 +549,9 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Dessine le texte du pavé.
 		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
+			//	Dessine le texte du pavé.
 			if ( this.handles.Count < 4 )  return;
 
 			this.cursorBox = Drawing.Rectangle.Empty;
@@ -653,26 +653,26 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Retourne le chemin géométrique de l'objet pour les constructions
-		// magnétiques.
 		public override Path GetMagnetPath()
 		{
+			//	Retourne le chemin géométrique de l'objet pour les constructions
+			//	magnétiques.
 			return this.PathBuild();
 		}
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 			info.AddValue("Text", this.textLayout.Text);
 			info.AddValue("TabArray", this.textLayout.Style.GetTabArray());
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected TextBox(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 			this.Initialise();
 			this.textLayout.Text = info.GetString("Text");
 
@@ -680,9 +680,9 @@ namespace Epsitec.Common.Document.Objects
 			this.textLayout.Style.TabCopyFrom(tabs);
 		}
 
-		// Vérifie si tous les fichiers existent.
 		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
 		{
+			//	Vérifie si tous les fichiers existent.
 			Common.Document.Objects.Abstract.ReadCheckFonts(fonts, warnings, this.textLayout);
 		}
 		#endregion

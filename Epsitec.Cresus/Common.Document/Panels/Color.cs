@@ -34,9 +34,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Color p = this.property as Properties.Color;
@@ -47,9 +47,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Color p = this.property as Properties.Color;
 			if ( p == null )  return;
 
@@ -57,21 +57,21 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 			this.field.ActiveState = ActiveState.No;
 		}
 
-		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 			this.field.ActiveState = ActiveState.Yes;
 		}
 
-		// Modifie la couleur d'origine.
 		public override void OriginColorChange(Drawing.RichColor color)
 		{
+			//	Modifie la couleur d'origine.
 			if ( this.field.Color != color )
 			{
 				this.field.Color = color;
@@ -79,16 +79,16 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Donne la couleur d'origine.
 		public override Drawing.RichColor OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			return this.field.Color;
 		}
 
 		
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.field == null )  return;

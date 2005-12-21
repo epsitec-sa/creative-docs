@@ -125,9 +125,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.extendedSize ? 83 : 30 );
@@ -135,9 +135,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.label.Text = this.textStyle;
 
@@ -173,9 +173,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.EnableWidgets();
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyGradient p = new PropertyGradient();
 			base.GetProperty(p);
 
@@ -205,9 +205,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return p;
 		}
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			int sel = this.listFill.SelectedIndex;
 
 			this.label.SetVisible(!this.extendedSize);
@@ -238,16 +238,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 			this.fieldColor1.ActiveState = WidgetState.ActiveNo;
 			this.fieldColor2.ActiveState = WidgetState.ActiveNo;
 		}
 
-		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 			if ( rank != -1 )
 			{
 				this.originFieldRank = rank;
@@ -260,30 +260,30 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.originFieldColor.ActiveState = WidgetState.ActiveYes;
 		}
 
-		// Retourne le rang de la couleur d'origine.
 		public override int OriginColorRank()
 		{
+			//	Retourne le rang de la couleur d'origine.
 			return this.originFieldRank;
 		}
 
-		// Modifie la couleur d'origine.
 		public override void OriginColorChange(Drawing.Color color)
 		{
+			//	Modifie la couleur d'origine.
 			if ( this.originFieldColor == null )  return;
 			this.originFieldColor.Color = color;
 		}
 
-		// Donne la couleur d'origine.
 		public override Drawing.Color OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			if ( this.originFieldColor == null )  return Drawing.Color.FromBrightness(0);
 			return this.originFieldColor.Color;
 		}
 
 		
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldColor1 == null )  return;

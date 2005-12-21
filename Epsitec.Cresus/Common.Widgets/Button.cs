@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override double			DefaultHeight
 		{
-			// Retourne la hauteur standard d'un bouton.
+			//	Retourne la hauteur standard d'un bouton.
 			get
 			{
 				return this.DefaultFontHeight+10;
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			// Dessine le bouton.
+			//	Dessine le bouton.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;

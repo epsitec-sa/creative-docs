@@ -50,9 +50,9 @@ namespace Epsitec.Common.Document
 			SoapUncompress,		// format de debug
 		}
 
-		// Crée un nouveau document vide.
 		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher)
 		{
+			//	Crée un nouveau document vide.
 			this.type = type;
 			this.mode = mode;
 			this.installType = installType;
@@ -116,67 +116,67 @@ namespace Epsitec.Common.Document
 			//this.ioType = IOType.SoapUncompress;
 		}
 
-		// Type de ce document.
 		public DocumentType Type
 		{
+			//	Type de ce document.
 			get { return this.type; }
 		}
 
-		// Mode de travail pour ce document.
 		public DocumentMode Mode
 		{
+			//	Mode de travail pour ce document.
 			get { return this.mode; }
 		}
 
-		// Type d'installation du logiciel.
 		public InstallType InstallType
 		{
+			//	Type d'installation du logiciel.
 			get { return this.installType; }
 			set { this.installType = value; }
 		}
 
-		// Type de mise au point du logiciel.
 		public DebugMode DebugMode
 		{
+			//	Type de mise au point du logiciel.
 			get { return this.debugMode; }
 			set { this.debugMode = value; }
 		}
 
-		// Réglages globaux.
 		public Settings.GlobalSettings GlobalSettings
 		{
+			//	Réglages globaux.
 			get { return this.globalSettings; }
 		}
 		
-		// CommandDispatcher de l'éditeur.
 		public CommandDispatcher CommandDispatcher
 		{
+			//	CommandDispatcher de l'éditeur.
 			get { return this.commandDispatcher; }
 		}
 		
-		// Nom du document.
 		public string Name
 		{
+			//	Nom du document.
 			get { return this.name; }
 			set { this.name = value; }
 		}
 
-		// Bloc-notes associé.
 		public Document Clipboard
 		{
+			//	Bloc-notes associé.
 			get { return this.clipboard; }
 			set { this.clipboard = value; }
 		}
 
-		// Liste des objets de ce document.
 		public UndoableList GetObjects
 		{
+			//	Liste des objets de ce document.
 			get { return this.objects; }
 		}
 
-		// TextContext de ce document.
 		public Text.TextContext TextContext
 		{
+			//	TextContext de ce document.
 			get
 			{
 				if ( this.textContext == null )
@@ -187,114 +187,114 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Wrapper pour la fonte.
 		public Text.Wrappers.TextWrapper TextWrapper
 		{
+			//	Wrapper pour la fonte.
 			get { return this.wrappers.TextWrapper; }
 		}
 
-		// Wrapper pour le paragraphe.
 		public Text.Wrappers.ParagraphWrapper ParagraphWrapper
 		{
+			//	Wrapper pour le paragraphe.
 			get { return this.wrappers.ParagraphWrapper; }
 		}
 
-		// Indique si les wrappers sont attachés.
 		public bool IsWrappersAttached
 		{
+			//	Indique si les wrappers sont attachés.
 			get
 			{
 				return this.wrappers.IsWrappersAttached;
 			}
 		}
 
-		// Règle horizontale.
 		public Widgets.HRuler HRuler
 		{
+			//	Règle horizontale.
 			get { return this.hRuler; }
 			set { this.hRuler = value; }
 		}
 
-		// Règle verticale.
 		public Widgets.VRuler VRuler
 		{
+			//	Règle verticale.
 			get { return this.vRuler; }
 			set { this.vRuler = value; }
 		}
 
 
-		// Liste des propriétés automatiques de ce document.
 		public UndoableList PropertiesAuto
 		{
+			//	Liste des propriétés automatiques de ce document.
 			get { return this.propertiesAuto; }
 		}
 
-		// Liste des propriétés sélectionnées de ce document.
 		public UndoableList PropertiesSel
 		{
+			//	Liste des propriétés sélectionnées de ce document.
 			get { return this.propertiesSel; }
 		}
 
-		// Liste des aggrégats de ce document.
 		public UndoableList Aggregates
 		{
+			//	Liste des aggrégats de ce document.
 			get { return this.aggregates; }
 		}
 
-		// Liste des flux de textes de ce document.
 		public UndoableList TextFlows
 		{
+			//	Liste des flux de textes de ce document.
 			get { return this.textFlows; }
 		}
 
 
-		// Réglages de ce document.
 		public Settings.Settings Settings
 		{
+			//	Réglages de ce document.
 			get { return this.settings; }
 		}
 
-		// Modificateur éventuel pour ce document.
 		public Modifier Modifier
 		{
+			//	Modificateur éventuel pour ce document.
 			get { return this.modifier; }
 		}
 
-		// Wrappers éventuel pour ce document.
 		public Wrappers Wrappers
 		{
+			//	Wrappers éventuel pour ce document.
 			get { return this.wrappers; }
 		}
 
-		// Notificateur éventuel pour ce document.
 		public Notifier Notifier
 		{
+			//	Notificateur éventuel pour ce document.
 			get { return this.notifier; }
 		}
 
-		// Dialogues éventuels pour ce document.
 		public Dialogs Dialogs
 		{
+			//	Dialogues éventuels pour ce document.
 			get { return this.dialogs; }
 		}
 
-		// Imprimeur pour ce document.
 		public Printer Printer
 		{
+			//	Imprimeur pour ce document.
 			get { return this.printer; }
 			set { this.printer = value; }
 		}
 		
-		// Dialogue d'impression pour ce document.
 		public Common.Dialogs.Print PrintDialog
 		{
+			//	Dialogue d'impression pour ce document.
 			get { return this.printDialog; }
 		}
 
 
-		// Rotation spéciale pour calculer SurfaceAnchor en cours.
 		public bool IsSurfaceRotation
 		{
+			//	Rotation spéciale pour calculer SurfaceAnchor en cours.
 			get
 			{
 				return this.isSurfaceRotation;
@@ -306,9 +306,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Angle de la rotation spéciale pour calculer SurfaceAnchor.
 		public double SurfaceRotationAngle
 		{
+			//	Angle de la rotation spéciale pour calculer SurfaceAnchor.
 			get
 			{
 				return this.surfaceRotationAngle;
@@ -321,9 +321,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Taille du document.
 		public Size Size
 		{
+			//	Taille du document.
 			get
 			{
 				return this.size;
@@ -360,9 +360,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Point chaud du document.
 		public Point HotSpot
 		{
+			//	Point chaud du document.
 			get
 			{
 				return this.hotSpot;
@@ -378,9 +378,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Nom du fichier associé.
 		public string Filename
 		{
+			//	Nom du fichier associé.
 			get
 			{
 				return this.filename;
@@ -400,9 +400,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Nom du dossier d'exportation associé.
 		public string ExportDirectory
 		{
+			//	Nom du dossier d'exportation associé.
 			get
 			{
 				return this.exportDirectory;
@@ -414,9 +414,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Nom du fichier (sans dossier) d'exportation associé.
 		public string ExportFilename
 		{
+			//	Nom du fichier (sans dossier) d'exportation associé.
 			get
 			{
 				return this.exportFilename;
@@ -428,9 +428,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Type du fichier d'exportation associé.
 		public int ExportFilter
 		{
+			//	Type du fichier d'exportation associé.
 			get
 			{
 				return this.exportFilter;
@@ -442,9 +442,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si la sérialisation est nécessaire.
 		public bool IsDirtySerialize
 		{
+			//	Indique si la sérialisation est nécessaire.
 			get
 			{
 				return this.isDirtySerialize;
@@ -472,9 +472,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Ouvre un document existant sur disque.
 		public string Read(string filename)
 		{
+			//	Ouvre un document existant sur disque.
 			if ( this.Modifier != null )
 			{
 				this.Modifier.New();
@@ -509,10 +509,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Ouvre un document sérialisé, soit parce que l'utilisateur veut ouvrir
-		// explicitement un fichier, soit par Engine.
 		public string Read(Stream stream, string directory)
 		{
+			//	Ouvre un document sérialisé, soit parce que l'utilisateur veut ouvrir
+			//	explicitement un fichier, soit par Engine.
 			this.ioDirectory = directory;
 			this.readWarnings = new System.Collections.ArrayList();
 
@@ -522,8 +522,8 @@ namespace Epsitec.Common.Document
 				return Res.Strings.Error.BadFile;
 			}
 
-			// Initialise la variable statique permettant à tous les constructeurs
-			// de connaître le pointeur au document.
+			//	Initialise la variable statique permettant à tous les constructeurs
+			//	de connaître le pointeur au document.
 			Document.ReadDocument = this;
 
 			if ( this.Modifier != null )
@@ -623,9 +623,9 @@ namespace Epsitec.Common.Document
 			return "";
 		}
 
-		// Retourne la liste éventuelle des warnings de lecture.
 		public System.Collections.ArrayList ReadWarnings
 		{
+			//	Retourne la liste éventuelle des warnings de lecture.
 			get
 			{
 				return this.readWarnings;
@@ -638,13 +638,13 @@ namespace Epsitec.Common.Document
 			{
 			}
 			
-			// Retourne un type correspondant à l'application courante, afin
-			// d'accepter de désérialiser un fichier généré par une application
-			// ayant un autre numéro de révision.
-			// Application courante: Version=1.0.1777.18519
-			// Version dans le fichier: Version=1.0.1777.11504
 			public override System.Type BindToType(string assemblyName, string typeName) 
 			{
+				//	Retourne un type correspondant à l'application courante, afin
+				//	d'accepter de désérialiser un fichier généré par une application
+				//	ayant un autre numéro de révision.
+				//	Application courante: Version=1.0.1777.18519
+				//	Version dans le fichier: Version=1.0.1777.11504
 				if ( typeName == "Epsitec.Common.Document.Document" )
 				{
 					int i, j;
@@ -676,12 +676,12 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Utilisé par les constructeurs de désérialisation du genre:
-		// protected Toto(SerializationInfo info, StreamingContext context)
+		//	Utilisé par les constructeurs de désérialisation du genre:
+		//	protected Toto(SerializationInfo info, StreamingContext context)
 		public static Document ReadDocument = null;
 		public static long ReadRevision = 0;
 
-		// Adapte tous les objets après une désérialisation.
+		//	Adapte tous les objets après une désérialisation.
 		protected void ReadFinalize()
 		{
 			if ( this.Modifier != null )
@@ -736,9 +736,9 @@ namespace Epsitec.Common.Document
 		}
 
 		#region OldStylesToAggregates
-		// Adapte les anciens styles en agrégats.
 		protected void OldStylesToAggregates()
 		{
+			//	Adapte les anciens styles en agrégats.
 			foreach ( Objects.Abstract obj in this.Deep(null) )
 			{
 				Properties.Type[] list = obj.PropertiesStyle();
@@ -857,9 +857,9 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-		// Enregistre le document sur disque.
 		public string Write(string filename)
 		{
+			//	Enregistre le document sur disque.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			
 			int undoCount = this.modifier.OpletQueue.UndoActionCount;
@@ -917,9 +917,9 @@ namespace Epsitec.Common.Document
 			return "";
 		}
 
-		// Lit les 8 bytes d'en-tête et vérifie qu'ils contiennent bien "<?icon?>".
 		protected static IOType ReadIdentifier(Stream stream)
 		{
+			//	Lit les 8 bytes d'en-tête et vérifie qu'ils contiennent bien "<?icon?>".
 			byte[] buffer = new byte[8];
 			Common.IO.Reader.Read(stream, buffer, 0, 8);
 			if ( buffer[0] != (byte) '<' )  return IOType.Unknow;
@@ -935,9 +935,9 @@ namespace Epsitec.Common.Document
 			return IOType.Unknow;
 		}
 
-		// Ecrit les 8 bytes d'en-tête "<?icon?>".
 		protected static void WriteIdentifier(Stream stream, IOType type)
 		{
+			//	Ecrit les 8 bytes d'en-tête "<?icon?>".
 			byte[] buffer = new byte[8];
 			buffer[0] = (byte) '<';
 			buffer[1] = (byte) '?';
@@ -953,9 +953,9 @@ namespace Epsitec.Common.Document
 		}
 
 		#region Serialization
-		// Sérialise le document.
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise le document.
 			int revision = 1;
 			int version  = 2;
 			info.AddValue("Revision", revision);
@@ -992,9 +992,9 @@ namespace Epsitec.Common.Document
 			info.AddValue("TextFlows", this.textFlows);
 		}
 
-		// Constructeur qui désérialise le document.
 		protected Document(SerializationInfo info, StreamingContext context)
 		{
+			//	Constructeur qui désérialise le document.
 			this.type = (DocumentType) info.GetValue("Type", typeof(DocumentType));
 			this.name = info.GetString("Name");
 
@@ -1074,24 +1074,24 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le nom du dossier en cours de lecture/écriture.
 		public string IoDirectory
 		{
+			//	Retourne le nom du dossier en cours de lecture/écriture.
 			get { return this.ioDirectory; }
 		}
 
-		// Indique si un fichier est compatible avec une révision/version.
 		public bool IsRevisionGreaterOrEqual(int revision, int version, int subversion)
 		{
+			//	Indique si un fichier est compatible avec une révision/version.
 			long r = ((long)revision<<32) + ((long)version<<16) + (long)subversion;
 			return ( Document.ReadRevision >= r );
 		}
 		#endregion
 
 		
-		// Dessine le document.
 		public void Paint(Graphics graphics, DrawingContext drawingContext, Rectangle clipRect)
 		{
+			//	Dessine le document.
 			if ( drawingContext.RootStackIsEmpty )  return;
 
 			if ( !clipRect.IsInfinite )
@@ -1226,27 +1226,27 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Imprime le document.
 		public void Print(Common.Dialogs.Print dp)
 		{
+			//	Imprime le document.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
 			this.printer.Print(dp);
 		}
 
-		// Exporte le document.
 		public string Export(string filename)
 		{
+			//	Exporte le document.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
 			return this.printer.Export(filename);
 		}
 
-		// Exporte le document.
 		public string ExportPDF(string filename)
 		{
+			//	Exporte le document.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
@@ -1255,9 +1255,9 @@ namespace Epsitec.Common.Document
 
 
 		#region TextContext
-		// Crée le TextContext et les styles par défaut.
 		protected void DefaultTextContext()
 		{
+			//	Crée le TextContext et les styles par défaut.
 			System.Collections.ArrayList properties;
 			Text.TextStyle style;
 
@@ -1359,15 +1359,15 @@ namespace Epsitec.Common.Document
 		}
 
 		
-		// Appelé quand un TextStyle est modifié dans StyleList.
 		private void HandleStyleListStyleRedefined(object sender)
 		{
+			//	Appelé quand un TextStyle est modifié dans StyleList.
 			this.textContext.StyleList.UpdateTextStyles();
 		}
 		
-		// Cherche un tag unique pour le prochain tabulateur interactif à créer.
 		public string SearchTabNextTag()
 		{
+			//	Cherche un tag unique pour le prochain tabulateur interactif à créer.
 			int max = -1;
 			Text.TabList list = this.textContext.TabList;
 			string[] tags = list.GetTabTags();
@@ -1379,9 +1379,9 @@ namespace Epsitec.Common.Document
 			return this.GetTabTag(max+1);
 		}
 
-		// Retourne l'identificateur d'un tabulateur interactif d'après son tag.
 		protected int GetTabId(string tag)
 		{
+			//	Retourne l'identificateur d'un tabulateur interactif d'après son tag.
 			if ( !tag.StartsWith("Ti") )  return -1;
 
 			try
@@ -1394,21 +1394,21 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le tag d'un tabulateur interactif.
 		public string GetTabTag(int id)
 		{
+			//	Retourne le tag d'un tabulateur interactif.
 			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Ti{0}", id);
 		}
 
-		// Liste des styles de texte de ce document.
 		public UndoableList TextStyles
 		{
+			//	Liste des styles de texte de ce document.
 			get
 			{
 				this.modifier.OpletQueueEnable = false;
 				UndoableList list = new UndoableList(this, UndoableListType.TextStylesInsideDocument);
 
-				// TODO: comment obtenir la liste de tous les styles ?
+				//	TODO: comment obtenir la liste de tous les styles ?
 				Text.TextStyle defaultStyle = this.TextContext.StyleList["Default", Text.TextStyleClass.Paragraph];
 				list.Add(defaultStyle);
 
@@ -1419,15 +1419,15 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		#region UniqueId
-		// Retourne le prochain identificateur unique pour les objets.
 		public int GetNextUniqueObjectId()
 		{
+			//	Retourne le prochain identificateur unique pour les objets.
 			return ++this.uniqueObjectId;
 		}
 
-		// Retourne le prochain identificateur unique pour les noms d'agrégats.
 		public int GetNextUniqueAggregateId()
 		{
+			//	Retourne le prochain identificateur unique pour les noms d'agrégats.
 			return ++this.uniqueAggregateId;
 		}
 		#endregion
@@ -1443,7 +1443,7 @@ namespace Epsitec.Common.Document
 			return new FlatEnumerable(this, root, onlySelected);
 		}
 
-		// Enumérateur permettant de parcourir à plat l'arbre des objets.
+		//	Enumérateur permettant de parcourir à plat l'arbre des objets.
 		protected class FlatEnumerable : System.Collections.IEnumerable,
 										 System.Collections.IEnumerator
 		{
@@ -1464,15 +1464,15 @@ namespace Epsitec.Common.Document
 				this.Reset();
 			}
 
-			// Implémentation de IEnumerable:
 			public System.Collections.IEnumerator GetEnumerator()
 			{
+				//	Implémentation de IEnumerable:
 				return this;
 			}
 
-			// Implémentation de IEnumerator:
 			public void Reset()
 			{
+				//	Implémentation de IEnumerator:
 				this.index = -1;
 			}
 
@@ -1529,7 +1529,7 @@ namespace Epsitec.Common.Document
 			return new FlatReverseEnumerable(this, root, onlySelected);
 		}
 
-		// Enumérateur permettant de parcourir à plat depuis la fin l'arbre des objets.
+		//	Enumérateur permettant de parcourir à plat depuis la fin l'arbre des objets.
 		protected class FlatReverseEnumerable : System.Collections.IEnumerable,
 												System.Collections.IEnumerator
 		{
@@ -1550,15 +1550,15 @@ namespace Epsitec.Common.Document
 				this.Reset();
 			}
 
-			// Implémentation de IEnumerable:
 			public System.Collections.IEnumerator GetEnumerator()
 			{
+				//	Implémentation de IEnumerable:
 				return this;
 			}
 
-			// Implémentation de IEnumerator:
 			public void Reset()
 			{
+				//	Implémentation de IEnumerator:
 				this.index = this.list.Count;
 			}
 
@@ -1615,11 +1615,11 @@ namespace Epsitec.Common.Document
 			return new DeepEnumerable(this, root, onlySelected);
 		}
 
-		// Enumérateur permettant de parcourir en profondeur l'arbre des objets.
-		// En mode onlySelected, seuls les objets sélectionnés du premier niveau
-		// sont concernés. Un objet fils d'un objet sélectionné du premier niveau
-		// est toujours considéré comme sélectionné, bien qu'il ne le soit pas
-		// physiquement !
+		//	Enumérateur permettant de parcourir en profondeur l'arbre des objets.
+		//	En mode onlySelected, seuls les objets sélectionnés du premier niveau
+		//	sont concernés. Un objet fils d'un objet sélectionné du premier niveau
+		//	est toujours considéré comme sélectionné, bien qu'il ne le soit pas
+		//	physiquement !
 		protected class DeepEnumerable : System.Collections.IEnumerable,
 										 System.Collections.IEnumerator
 		{
@@ -1631,15 +1631,15 @@ namespace Epsitec.Common.Document
 				this.Reset();
 			}
 
-			// Implémentation de IEnumerable:
 			public System.Collections.IEnumerator GetEnumerator()
 			{
+				//	Implémentation de IEnumerable:
 				return this;
 			}
 
-			// Implémentation de IEnumerator:
 			public void Reset()
 			{
+				//	Implémentation de IEnumerator:
 				this.stack = new System.Collections.Stack();
 
 				UndoableList list = this.document.GetObjects;
@@ -1750,9 +1750,9 @@ namespace Epsitec.Common.Document
 			return new DeepBranchEnumerable(this, root, branch);
 		}
 
-		// Enumérateur permettant de parcourir en profondeur l'arbre des objets.
-		// L'objet rendu est de type DeepBranchEntry. Ceci permet de savoir si
-		// l'on est ou non à l'intérieur d'une branche quelconque.
+		//	Enumérateur permettant de parcourir en profondeur l'arbre des objets.
+		//	L'objet rendu est de type DeepBranchEntry. Ceci permet de savoir si
+		//	l'on est ou non à l'intérieur d'une branche quelconque.
 		protected class DeepBranchEnumerable : System.Collections.IEnumerable,
 											   System.Collections.IEnumerator
 		{
@@ -1764,15 +1764,15 @@ namespace Epsitec.Common.Document
 				this.Reset();
 			}
 
-			// Implémentation de IEnumerable:
 			public System.Collections.IEnumerator GetEnumerator()
 			{
+				//	Implémentation de IEnumerable:
 				return this;
 			}
 
-			// Implémentation de IEnumerator:
 			public void Reset()
 			{
+				//	Implémentation de IEnumerator:
 				this.stack = new System.Collections.Stack();
 
 				UndoableList list = this.document.GetObjects;
@@ -1910,9 +1910,9 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		#region Ressources
-		// Retourne une ressource string d'après son nom.
 		public static string GetRes(string name)
 		{
+			//	Retourne une ressource string d'après son nom.
 			return Res.Strings.GetString(name);
 		}
 		#endregion

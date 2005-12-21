@@ -84,9 +84,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Outil sélectionné dans la palette.
 		public string Tool
 		{
+			//	Outil sélectionné dans la palette.
 			get
 			{
 				return this.tool;
@@ -209,9 +209,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Adapte les rubans à l'outil sélectionné.
 		protected void ToolAdaptRibbon()
 		{
+			//	Adapte les rubans à l'outil sélectionné.
 			if ( this.tool == "ToolEdit" )
 			{
 				this.document.Notifier.NotifyRibbonCommand("Text");
@@ -222,9 +222,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si l'outil sélectionné n'est pas un objet.
 		public bool IsTool
 		{
+			//	Indique si l'outil sélectionné n'est pas un objet.
 			get
 			{
 				if ( this.tool == "ToolSelect"  )  return true;
@@ -239,9 +239,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si l'outil sélectionné est un objet de type "texte".
 		protected bool IsToolText
 		{
+			//	Indique si l'outil sélectionné est un objet de type "texte".
 			get
 			{
 				if ( this.tool == "ObjectTextLine"  )  return true;
@@ -251,18 +251,18 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si l'outil est le modeleur.
 		public bool IsToolShaper
 		{
+			//	Indique si l'outil est le modeleur.
 			get
 			{
 				return this.tool == "ToolShaper";
 			}
 		}
 
-		// Retourne le nom d'un outil.
 		public string ToolName(string tool)
 		{
+			//	Retourne le nom d'un outil.
 			switch ( tool )
 			{
 				case "ToolSelect":       return Res.Strings.Action.ToolSelect;
@@ -318,45 +318,45 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Taille de la zone de travail.
 		public Size SizeArea
 		{
+			//	Taille de la zone de travail.
 			get
 			{
 				return new Size(this.document.Size.Width+this.outsideArea*2.0, this.document.Size.Height+this.outsideArea*2.0);
 			}
 		}
 
-		// Origine de la zone de travail.
 		public Point OriginArea
 		{
+			//	Origine de la zone de travail.
 			get
 			{
 				return new Point(-this.outsideArea, -this.outsideArea);
 			}
 		}
 
-		// Rectangle de la zone de travail.
 		public Rectangle RectangleArea
 		{
+			//	Rectangle de la zone de travail.
 			get
 			{
 				return new Rectangle(this.OriginArea, this.SizeArea);
 			}
 		}
 
-		// Rectangle de la page de travail.
 		public Rectangle PageArea
 		{
+			//	Rectangle de la page de travail.
 			get
 			{
 				return new Rectangle(new Point(0,0), this.document.Size);
 			}
 		}
 
-		// Marges autour de la page physique.
 		public double OutsideArea
 		{
+			//	Marges autour de la page physique.
 			get
 			{
 				return this.outsideArea;
@@ -376,9 +376,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Echelle pour les cotes.
 		public double DimensionScale
 		{
+			//	Echelle pour les cotes.
 			get
 			{
 				return this.dimensionScale;
@@ -396,9 +396,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Nombre de décimales des cotes.
 		public double DimensionDecimal
 		{
+			//	Nombre de décimales des cotes.
 			get
 			{
 				return this.dimensionDecimal;
@@ -417,9 +417,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Texte des informations de modification.
 		public string TextInfoModif
 		{
+			//	Texte des informations de modification.
 			get
 			{
 				return this.textInfoModif;
@@ -435,9 +435,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Appelé lorsque l'onglet a changé.
 		public void TabBookChanged(string name)
 		{
+			//	Appelé lorsque l'onglet a changé.
 			if ( name == "Operations" )
 			{
 				this.bookInitialSelector = SelectorType.None;
@@ -460,9 +460,9 @@ namespace Epsitec.Common.Document
 
 
 		#region RealUnit
-		// Conversion d'une distance en chaîne.
 		public string RealToString(double value)
 		{
+			//	Conversion d'une distance en chaîne.
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				return value.ToString("F1");
@@ -477,15 +477,15 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Conversion d'un angle en chaîne.
 		public string AngleToString(double value)
 		{
+			//	Conversion d'un angle en chaîne.
 			return string.Format("{0}\u00B0", value.ToString("F1"));
 		}
 
-		// Choix de l'unité de dimension par défaut.
 		public RealUnitType RealUnitDimension
 		{
+			//	Choix de l'unité de dimension par défaut.
 			get
 			{
 				return this.realUnitDimension;
@@ -497,9 +497,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Choix de l'unité de dimension par défaut.
 		public void SetRealUnitDimension(RealUnitType unit, bool adapt)
 		{
+			//	Choix de l'unité de dimension par défaut.
 			this.realUnitDimension = unit;
 
 			switch ( this.realUnitDimension )
@@ -539,53 +539,53 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Facteur d'échelle.
 		public double RealScale
 		{
+			//	Facteur d'échelle.
 			get
 			{
 				return this.realScale;
 			}
 		}
 
-		// Nom compact de l'unité de dimension.
 		public string ShortNameUnitDimension
 		{
+			//	Nom compact de l'unité de dimension.
 			get
 			{
 				return this.realShortNameUnitDimension;
 			}
 		}
 
-		// Nom complet de l'unité de dimension.
 		public string LongNameUnitDimension
 		{
+			//	Nom complet de l'unité de dimension.
 			get
 			{
 				return this.realLongNameUnitDimension;
 			}
 		}
 
-		// Adapte un TextFieldReal pour éditer un scalaire.
 		public void AdaptTextFieldRealScalar(TextFieldReal field)
 		{
+			//	Adapte un TextFieldReal pour éditer un scalaire.
 			field.UnitType = RealUnitType.Scalar;
 			field.Step = 1.0M;
 			field.Resolution = 1.0M;
 		}
 
-		// Adapte un TextFieldReal pour éditer un pourcent.
 		public void AdaptTextFieldRealPercent(TextFieldReal field)
 		{
+			//	Adapte un TextFieldReal pour éditer un pourcent.
 			field.UnitType = RealUnitType.Percent;
 			field.Step = 1.0M;
 			field.Resolution = 0.1M;
 			field.TextSuffix = "%";
 		}
 
-		// Adapte un TextFieldReal pour éditer une dimension.
 		public void AdaptTextFieldRealDimension(TextFieldReal field)
 		{
+			//	Adapte un TextFieldReal pour éditer une dimension.
 			field.UnitType = this.realUnitDimension;
 			field.Scale = (decimal) this.realScale;
 
@@ -624,9 +624,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Adapte un TextFieldReal pour éditer une taille de fonte.
 		public void AdaptTextFieldRealFontSize(TextFieldReal field)
 		{
+			//	Adapte un TextFieldReal pour éditer une taille de fonte.
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				field.UnitType = RealUnitType.Scalar;
@@ -647,9 +647,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Adapte un TextFieldReal pour éditer un angle.
 		public void AdaptTextFieldRealAngle(TextFieldReal field)
 		{
+			//	Adapte un TextFieldReal pour éditer un angle.
 			field.UnitType = RealUnitType.AngleDeg;
 			field.InternalMinValue = 0.0M;
 			field.InternalMaxValue = 360.0M;
@@ -658,10 +658,10 @@ namespace Epsitec.Common.Document
 			field.TextSuffix = "\u00B0";  // symbole unicode "degré" (#176)
 		}
 
-		// Modifie tous les widgets de l'application reflétant des dimensions
-		// pour utiliser une autre unité.
 		public void AdaptAllTextFieldReal()
 		{
+			//	Modifie tous les widgets de l'application reflétant des dimensions
+			//	pour utiliser une autre unité.
 			foreach ( Window window in Window.DebugAliveWindows )
 			{
 				if ( window.Root == null )  continue;
@@ -669,9 +669,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Modifie tous les widgets d'un panneau qui sera utilisé.
 		protected void AdaptAllTextFieldReal(Widget parent)
 		{
+			//	Modifie tous les widgets d'un panneau qui sera utilisé.
 			Widget[] widgets = parent.FindAllChildren();
 			foreach ( Widget widget in widgets )
 			{
@@ -698,67 +698,67 @@ namespace Epsitec.Common.Document
 
 
 		#region Viewers
-		// Un seul visualisateur privilégié peut être actif.
 		public Viewer ActiveViewer
 		{
+			//	Un seul visualisateur privilégié peut être actif.
 			get { return this.activeViewer; }
 			set { this.activeViewer = value; }
 		}
 
-		// Attache un nouveau visualisateur à ce document.
 		public void AttachViewer(Viewer viewer)
 		{
+			//	Attache un nouveau visualisateur à ce document.
 			this.attachViewers.Add(viewer);
 		}
 
-		// Détache un visualisateur de ce document.
 		public void DetachViewer(Viewer viewer)
 		{
+			//	Détache un visualisateur de ce document.
 			this.attachViewers.Remove(viewer);
 		}
 
-		// Liste des visualisateurs attachés au document.
 		public System.Collections.ArrayList	AttachViewers
 		{
+			//	Liste des visualisateurs attachés au document.
 			get { return this.attachViewers; }
 		}
 		#endregion
 
 
 		#region Containers
-		// Attache un nouveau conteneur à ce document.
 		public void AttachContainer(Containers.Abstract container)
 		{
+			//	Attache un nouveau conteneur à ce document.
 			this.attachContainers.Add(container);
 		}
 
-		// Détache un conteneur de ce document.
 		public void DetachContainer(Containers.Abstract container)
 		{
+			//	Détache un conteneur de ce document.
 			this.attachContainers.Remove(container);
 		}
 
-		// Met en évidence l'objet survolé par la souris.
 		public void ContainerHilite(Objects.Abstract obj)
 		{
+			//	Met en évidence l'objet survolé par la souris.
 			foreach ( Containers.Abstract container in this.attachContainers )
 			{
 				container.Hilite(obj);
 			}
 		}
 
-		// Indique quel est le container actif (visible).
 		public Containers.Abstract ActiveContainer
 		{
+			//	Indique quel est le container actif (visible).
 			get { return this.activeContainer; }
 			set { this.activeContainer = value; }
 		}
 		#endregion
 
 
-		// Vide le document de tous ses objets.
 		public void New()
 		{
+			//	Vide le document de tous ses objets.
 			this.ActiveViewer.CreateEnding(false, false);
 			this.OpletQueueEnable = false;
 
@@ -816,15 +816,15 @@ namespace Epsitec.Common.Document
 
 
 		#region Counters
-		// Indique qu'il faudra mettre à jour tous les compteurs.
 		public void DirtyCounters()
 		{
+			//	Indique qu'il faudra mettre à jour tous les compteurs.
 			this.dirtyCounters = true;
 		}
 
-		// Met à jour tous les compteurs.
 		public void UpdateCounters()
 		{
+			//	Met à jour tous les compteurs.
 			if ( !this.dirtyCounters )  return;
 
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -855,9 +855,9 @@ namespace Epsitec.Common.Document
 			this.dirtyCounters = false;
 		}
 
-		// Retourne le nombre total d'objets, y compris les objets cachés.
 		public int TotalObjects
 		{
+			//	Retourne le nombre total d'objets, y compris les objets cachés.
 			get
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -866,9 +866,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le nombre d'objets sélectionnés.
 		public int TotalSelected
 		{
+			//	Retourne le nombre d'objets sélectionnés.
 			get
 			{
 				if ( this.dirtyCounters )  this.UpdateCounters();
@@ -881,9 +881,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le nombre d'objets cachés dans le calque courant.
 		public int TotalHide
 		{
+			//	Retourne le nombre d'objets cachés dans le calque courant.
 			get
 			{
 				if ( this.dirtyCounters )  this.UpdateCounters();
@@ -897,9 +897,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le nombre d'objets cachés dans toute la page.
 		public int TotalPageHide
 		{
+			//	Retourne le nombre d'objets cachés dans toute la page.
 			get
 			{
 				if ( this.dirtyCounters )  this.UpdateCounters();
@@ -907,9 +907,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Est-ce que le calque courant contient des noms d'objets ?
 		public bool NamesExist
 		{
+			//	Est-ce que le calque courant contient des noms d'objets ?
 			get
 			{
 				return this.namesExist;
@@ -928,9 +928,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Statistic
-		// Retourne un texte multi-lignes de statistiques sur le document.
 		public string Statistic(bool fonts, bool images)
 		{
+			//	Retourne un texte multi-lignes de statistiques sur le document.
 			string t1 = "<font size=\"120%\"><b>";
 			string t2 = " :</b></font><br/><br/>";
 			string chip = "<list type=\"fix\" width=\"1.5\"/>";
@@ -1023,9 +1023,9 @@ namespace Epsitec.Common.Document
 			return builder.ToString();
 		}
 
-		// Construit la liste de toutes les fontes utilisées.
 		protected System.Collections.ArrayList StatisticFonts()
 		{
+			//	Construit la liste de toutes les fontes utilisées.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			foreach ( Objects.Abstract obj in this.document.Deep(null) )
 			{
@@ -1044,9 +1044,9 @@ namespace Epsitec.Common.Document
 			return list;
 		}
 
-		// Construit la liste de toutes les images utilisées.
 		protected System.Collections.ArrayList StatisticImages()
 		{
+			//	Construit la liste de toutes les images utilisées.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			foreach ( Objects.Abstract obj in this.document.Deep(null) )
 			{
@@ -1063,16 +1063,16 @@ namespace Epsitec.Common.Document
 			return list;
 		}
 
-		// Retourne le nombre total de pages.
 		public int StatisticTotalPages()
 		{
+			//	Retourne le nombre total de pages.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			return context.TotalPages();
 		}
 
-		// Retourne le nombre total de calques.
 		public int StatisticTotalLayers()
 		{
+			//	Retourne le nombre total de calques.
 			int total = 0;
 			foreach ( Objects.Abstract obj in this.document.Deep(null) )
 			{
@@ -1081,9 +1081,9 @@ namespace Epsitec.Common.Document
 			return total;
 		}
 
-		// Retourne le nombre total d'objets.
 		public int StatisticTotalObjects()
 		{
+			//	Retourne le nombre total d'objets.
 			int total = 0;
 			foreach ( Objects.Abstract obj in this.document.Deep(null) )
 			{
@@ -1095,9 +1095,9 @@ namespace Epsitec.Common.Document
 			return total;
 		}
 
-		// Retourne le nombre total d'objets complexes (dégradés ou transparents).
 		public int StatisticTotalComplex()
 		{
+			//	Retourne le nombre total d'objets complexes (dégradés ou transparents).
 			int total = 0;
 			foreach ( Objects.Abstract obj in this.document.Deep(null) )
 			{
@@ -1109,9 +1109,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Selection
-		// Retourne la bbox des objets sélectionnés.
 		public Rectangle SelectedBbox
 		{
+			//	Retourne la bbox des objets sélectionnés.
 			get
 			{
 				Rectangle bbox = Rectangle.Empty;
@@ -1125,9 +1125,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne la bbox mince des objets sélectionnés.
 		public Rectangle SelectedBboxThin
 		{
+			//	Retourne la bbox mince des objets sélectionnés.
 			get
 			{
 				Rectangle bbox = Rectangle.Empty;
@@ -1141,9 +1141,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le seul objet sélectionné.
 		public Objects.Abstract RetOnlySelectedObject()
 		{
+			//	Retourne le seul objet sélectionné.
 			if ( this.TotalSelected != 1 )  return null;
 
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -1157,9 +1157,9 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
-		// Retourne le premier objet sélectionné.
 		public Objects.Abstract RetFirstSelectedObject()
 		{
+			//	Retourne le premier objet sélectionné.
 			if ( this.TotalSelected == 0 )  return null;
 
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -1173,45 +1173,45 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
-		// Insère un texte dans le pavé en édition.
 		public bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
+			//	Insère un texte dans le pavé en édition.
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
 			return editObject.EditInsertText(text, fontFace, fontStyle);
 		}
 
-		// Insère un texte dans le pavé en édition.
 		public bool EditInsertText(Text.Unicode.Code code)
 		{
+			//	Insère un texte dans le pavé en édition.
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
 			return editObject.EditInsertText(code);
 		}
 
-		// Insère un texte dans le pavé en édition.
 		public bool EditInsertText(Text.Properties.BreakProperty brk)
 		{
+			//	Insère un texte dans le pavé en édition.
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
 			return editObject.EditInsertText(brk);
 		}
 
-		// Insère un glyphe dans le pavé en édition.
 		public bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
 		{
+			//	Insère un glyphe dans le pavé en édition.
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
 			return editObject.EditInsertGlyph(code, glyph, fontFace, fontStyle);
 		}
 
-		// Donne la fonte actullement utilisée.
 		public void EditGetFont(out string fontFace, out string fontStyle)
 		{
+			//	Donne la fonte actullement utilisée.
 			if ( this.document.IsWrappersAttached )
 			{
 				fontFace = this.document.TextWrapper.Defined.FontFace;
@@ -1241,9 +1241,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le seul objet en édition.
 		public Objects.Abstract RetEditObject()
 		{
+			//	Retourne le seul objet en édition.
 			if ( this.tool != "ToolEdit" )  return null;
 			if ( this.TotalSelected != 1 )  return null;
 
@@ -1258,9 +1258,9 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
-		// Supprime tous les segments sélectionnés des objets sélectionnés.
 		protected void SelectedSegmentClear()
 		{
+			//	Supprime tous les segments sélectionnés des objets sélectionnés.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
@@ -1269,17 +1269,17 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Désélectionne tous les objets.
 		public void DeselectAllCmd()
 		{
+			//	Désélectionne tous les objets.
 			if ( this.ActiveViewer.EditFlowTerminate() )  return;
 
 			this.DeselectAll();
 		}
 
-		// Désélectionne tous les objets.
 		public void DeselectAll()
 		{
+			//	Désélectionne tous les objets.
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.DeselectAll) )
 			{
@@ -1301,9 +1301,9 @@ namespace Epsitec.Common.Document
 			this.FlushMoveAfterDuplicate();
 		}
 
-		// Sélectionne tous les objets.
 		public void SelectAll()
 		{
+			//	Sélectionne tous les objets.
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.SelectAll) )
 			{
 				this.ActiveViewer.CreateEnding(false, false);
@@ -1330,9 +1330,9 @@ namespace Epsitec.Common.Document
 			this.FlushMoveAfterDuplicate();
 		}
 
-		// Inverse la sélection.
 		public void InvertSelection()
 		{
+			//	Inverse la sélection.
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.SelectInvert) )
 			{
 				this.ActiveViewer.CreateEnding(false, false);
@@ -1366,10 +1366,10 @@ namespace Epsitec.Common.Document
 			this.FlushMoveAfterDuplicate();
 		}
 
-		// Retourne la liste de tous les objets ayant un nom dans la page
-		// et la calque courant.
 		public System.Collections.ArrayList SelectNames()
 		{
+			//	Retourne la liste de tous les objets ayant un nom dans la page
+			//	et la calque courant.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -1389,9 +1389,9 @@ namespace Epsitec.Common.Document
 			return list;
 		}
 
-		// Sélectionne d'après un nom d'objet.
 		public void SelectName(string name)
 		{
+			//	Sélectionne d'après un nom d'objet.
 			if ( name == "" )  return;
 			
 			System.Text.RegularExpressions.Regex regex = Support.RegexFactory.FromSimpleJoker(name);
@@ -1447,16 +1447,16 @@ namespace Epsitec.Common.Document
 
 
 		#region Delete, Duplicate and Clipboard
-		// Supprime tous les objets sélectionnés.
 		public void DeleteSelection()
 		{
+			//	Supprime tous les objets sélectionnés.
 			this.DeleteSelection(false);
 		}
 
-		// Supprime tous les objets sélectionnés.
-		// Si onlyMark=true, on ne détruit que les objets marqués.
 		public void DeleteSelection(bool onlyMark)
 		{
+			//	Supprime tous les objets sélectionnés.
+			//	Si onlyMark=true, on ne détruit que les objets marqués.
 			this.document.IsDirtySerialize = true;
 
 			if ( this.ActiveViewer.IsCreating )
@@ -1495,9 +1495,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Détruit les objets fils éventuels.
 		protected void DeleteGroup(Objects.Abstract group)
 		{
+			//	Détruit les objets fils éventuels.
 			if ( group.Objects != null )
 			{
 				bool bDo = false;
@@ -1517,9 +1517,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Supprime toutes les marques des objets sélectionnés.
 		protected void ClearMarks()
 		{
+			//	Supprime toutes les marques des objets sélectionnés.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
@@ -1528,9 +1528,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Choix du déplacement des objets dupliqués.
 		public Point DuplicateMove
 		{
+			//	Choix du déplacement des objets dupliqués.
 			get
 			{
 				return this.duplicateMove;
@@ -1548,9 +1548,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Choix du déplacement des objets avec les touches flèches.
 		public Point ArrowMove
 		{
+			//	Choix du déplacement des objets avec les touches flèches.
 			get
 			{
 				return this.arrowMove;
@@ -1567,9 +1567,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Choix du multiplicateur avec Shift.
 		public double ArrowMoveMul
 		{
+			//	Choix du multiplicateur avec Shift.
 			get
 			{
 				return this.arrowMoveMul;
@@ -1586,9 +1586,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Choix du diviseur avec Ctrl.
 		public double ArrowMoveDiv
 		{
+			//	Choix du diviseur avec Ctrl.
 			get
 			{
 				return this.arrowMoveDiv;
@@ -1605,25 +1605,25 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Annule le déplacement après un duplique.
 		public void FlushMoveAfterDuplicate()
 		{
+			//	Annule le déplacement après un duplique.
 			this.lastOperIsDuplicate = false;
 			this.moveAfterDuplicate = new Point(0,0);
 		}
 
-		// Ajoute un déplacement effectué après un duplique.
 		public void AddMoveAfterDuplicate(Point move)
 		{
+			//	Ajoute un déplacement effectué après un duplique.
 			if ( this.lastOperIsDuplicate )
 			{
 				this.moveAfterDuplicate += move;
 			}
 		}
 
-		// Réglage "répète le dernier déplacement".
 		public bool RepeatDuplicateMove
 		{
+			//	Réglage "répète le dernier déplacement".
 			get
 			{
 				return this.repeatDuplicateMove;
@@ -1635,9 +1635,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Donne le déplacement effectif à utiliser pour la commande "dupliquer".
 		public Point EffectiveDuplicateMove
 		{
+			//	Donne le déplacement effectif à utiliser pour la commande "dupliquer".
 			get
 			{
 				if ( !this.repeatDuplicateMove || this.moveAfterDuplicate.IsEmpty )
@@ -1651,9 +1651,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Duplique tous les objets sélectionnés.
 		public void DuplicateSelection(Point move)
 		{
+			//	Duplique tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -1675,9 +1675,9 @@ namespace Epsitec.Common.Document
 			this.moveAfterDuplicate = move;
 		}
 
-		// Coupe tous les objets sélectionnés dans le bloc-notes.
 		public void CutSelection()
 		{
+			//	Coupe tous les objets sélectionnés dans le bloc-notes.
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject != null )
 			{
@@ -1702,9 +1702,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Copie tous les objets sélectionnés dans le bloc-notes.
 		public void CopySelection()
 		{
+			//	Copie tous les objets sélectionnés dans le bloc-notes.
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject != null )
 			{
@@ -1727,9 +1727,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Colle le contenu du bloc-notes.
 		public void Paste()
 		{
+			//	Colle le contenu du bloc-notes.
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject != null )
 			{
@@ -1754,10 +1754,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Duplique d'un document dans un autre.
 		protected void Duplicate(Document srcDoc, Document dstDoc,
 								 Point move, bool onlySelected)
 		{
+			//	Duplique d'un document dans un autre.
 			DrawingContext srcContext = srcDoc.Modifier.ActiveViewer.DrawingContext;
 			UndoableList srcList = srcContext.RootObject().Objects;
 
@@ -1767,11 +1767,11 @@ namespace Epsitec.Common.Document
 			Modifier.Duplicate(srcDoc, dstDoc, srcList, dstList, false, move, onlySelected);
 		}
 
-		// Copie tous les objets d'une liste source dans une liste destination.
 		protected static void Duplicate(Document srcDoc, Document dstDoc,
 										UndoableList srcList, UndoableList dstList,
 										bool deselect, Point move, bool onlySelected)
 		{
+			//	Copie tous les objets d'une liste source dans une liste destination.
 			srcDoc.Modifier.UpdateCounters();
 			dstDoc.Modifier.UpdateCounters();
 			int total = srcList.Count;
@@ -1811,9 +1811,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si le bloc-notes est vide.
 		public bool IsClipboardEmpty()
 		{
+			//	Indique si le bloc-notes est vide.
 			if ( this.document.Clipboard == null )  return true;
 			return ( this.document.Clipboard.Modifier.TotalObjects == 0 );
 		}
@@ -1821,9 +1821,9 @@ namespace Epsitec.Common.Document
 
 
 		#region TextFormat
-		// Modifie le flux.
 		public void TextFlowChange(Objects.TextBox2 obj, Objects.TextBox2 parent, bool after)
 		{
+			//	Modifie le flux.
 			using ( this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.FlowChanged) )
 			{
 				if ( parent == null )
@@ -1840,9 +1840,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Edite n'importe quel objet, en changeant de page si nécessaire.
 		public void EditObject(Objects.Abstract edit)
 		{
+			//	Edite n'importe quel objet, en changeant de page si nécessaire.
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Edit);
 
 			int page = edit.PageNumber;
@@ -1859,9 +1859,9 @@ namespace Epsitec.Common.Document
 
 
 		#region UndoRedo
-		// Annule les dernières actions.
 		public void Undo(int number)
 		{
+			//	Annule les dernières actions.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 			this.ActiveViewer.CreateEnding(false, false);
@@ -1882,9 +1882,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea();
 		}
 
-		// Refait les dernières actions.
 		public void Redo(int number)
 		{
+			//	Refait les dernières actions.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 			this.ActiveViewer.CreateEnding(false, false);
@@ -1905,14 +1905,14 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea();
 		}
 
-		// Construit le menu des actions à refaire/annuler.
 		public VMenu CreateUndoRedoMenu(MessageEventHandler message)
 		{
+			//	Construit le menu des actions à refaire/annuler.
 			string[] undoNames = this.opletQueue.UndoActionNames;
 			string[] redoNames = this.opletQueue.RedoActionNames;
 
-			// Pour des raisons historiques, le menu est construit à l'envers,
-			// c'est-à-dire la dernière action au début du menu (en haut).
+			//	Pour des raisons historiques, le menu est construit à l'envers,
+			//	c'est-à-dire la dernière action au début du menu (en haut).
 			//	-
 			//	| redo
 			//	-
@@ -1928,7 +1928,7 @@ namespace Epsitec.Common.Document
 
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
-			// Met éventuellement la dernière action à refaire.
+			//	Met éventuellement la dernière action à refaire.
 			if ( start < all-1 )
 			{
 				int todo = -redoNames.Length;
@@ -1942,7 +1942,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Met les actions à refaire puis à celles à annuler.
+			//	Met les actions à refaire puis à celles à annuler.
 			for ( int i=start ; i>start-total ; i-- )
 			{
 				if ( i >= undoNames.Length )  // redo ?
@@ -1971,7 +1971,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Met éventuellement la dernière action à annuler.
+			//	Met éventuellement la dernière action à annuler.
 			if ( start-total >= 0 )
 			{
 				if ( start-total > 0 )
@@ -1984,8 +1984,8 @@ namespace Epsitec.Common.Document
 				this.CreateUndoRedoMenu(list, message, 1, 1, action, todo);
 			}
 
-			// Génère le menu à l'envers, c'est-à-dire la première action au
-			// début du menu (en haut).
+			//	Génère le menu à l'envers, c'est-à-dire la première action au
+			//	début du menu (en haut).
 			VMenu menu = new VMenu();
 			for ( int i=list.Count-1 ; i>=0 ; i-- )
 			{
@@ -1995,10 +1995,10 @@ namespace Epsitec.Common.Document
 			return menu;
 		}
 
-		// Crée une case du menu des actions à refaire/annuler.
 		protected void CreateUndoRedoMenu(System.Collections.ArrayList list, MessageEventHandler message,
 										  int active, int rank, string action, int todo)
 		{
+			//	Crée une case du menu des actions à refaire/annuler.
 			string icon = "";
 			if ( active == 1 )  icon = Misc.Icon("ActiveNo");
 			if ( active == 2 )  icon = Misc.Icon("ActiveCurrent");
@@ -2018,9 +2018,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Order
-		// Met dessus tous les objets sélectionnés.
 		public void OrderUpOneSelection()
 		{
+			//	Met dessus tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -2033,9 +2033,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Met dessous tous les objets sélectionnés.
 		public void OrderDownOneSelection()
 		{
+			//	Met dessous tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -2048,9 +2048,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Met au premier plan tous les objets sélectionnés.
 		public void OrderUpAllSelection()
 		{
+			//	Met au premier plan tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -2063,9 +2063,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Met à l'arrière plan tous les objets sélectionnés.
 		public void OrderDownAllSelection()
 		{
+			//	Met à l'arrière plan tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -2100,9 +2100,9 @@ namespace Epsitec.Common.Document
 			this.OrderSelection(dir, iDst, total);
 		}
 
-		// Retourne l'index du premier objet sélectionné.
 		protected int OrderFirstSelected()
 		{
+			//	Retourne l'index du premier objet sélectionné.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 
@@ -2118,9 +2118,9 @@ namespace Epsitec.Common.Document
 			return -1;
 		}
 
-		// Retourne l'index du dernier objet sélectionné.
 		protected int OrderLastSelected()
 		{
+			//	Retourne l'index du dernier objet sélectionné.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 
@@ -2181,44 +2181,44 @@ namespace Epsitec.Common.Document
 
 
 		#region Operations
-		// Distance du déplacement horizontal.
 		public double MoveDistanceH
 		{
+			//	Distance du déplacement horizontal.
 			get { return this.moveDistance.X; }
 			set { this.moveDistance.X = value; }
 		}
 
-		// Distance du déplacement vertical.
 		public double MoveDistanceV
 		{
+			//	Distance du déplacement vertical.
 			get { return this.moveDistance.Y; }
 			set { this.moveDistance.Y = value; }
 		}
 
-		// Angle de rotation.
 		public double RotateAngle
 		{
+			//	Angle de rotation.
 			get { return this.rotateAngle; }
 			set { this.rotateAngle = value; }
 		}
 
-		// Facteur d'échelle pour les agrandissement/réductions.
 		public double ScaleFactor
 		{
+			//	Facteur d'échelle pour les agrandissement/réductions.
 			get { return this.scaleFactor; }
 			set { this.scaleFactor = value; }
 		}
 
-		// Facteur d'ajustement de couleur.
 		public double ColorAdjust
 		{
+			//	Facteur d'ajustement de couleur.
 			get { return this.colorAdjust; }
 			set { this.colorAdjust = value; }
 		}
 
-		// Déplace tous les objets sélectionnés.
 		public void MoveSelection(Point dir, int alter)
 		{
+			//	Déplace tous les objets sélectionnés.
 			if ( this.tool == "ToolEdit" )  return;
 
 			Point move = Point.ScaleMul(this.arrowMove, dir);
@@ -2255,9 +2255,9 @@ namespace Epsitec.Common.Document
 			this.TerminateOper();
 		}
 
-		// Déplace tous les objets sélectionnés.
 		public void MoveSelection(Point move)
 		{
+			//	Déplace tous les objets sélectionnés.
 			if ( this.tool == "ToolEdit" )  return;
 			string name = string.Format(Res.Strings.Action.Move, this.RealToString(move.X), this.RealToString(move.Y));
 			this.PrepareOper(name);
@@ -2265,9 +2265,9 @@ namespace Epsitec.Common.Document
 			this.TerminateOper();
 		}
 
-		// Tourne tous les objets sélectionnés.
 		public void RotateSelection(double angle)
 		{
+			//	Tourne tous les objets sélectionnés.
 			if ( this.tool == "ToolEdit" )  return;
 			string name = string.Format(Res.Strings.Action.Rotate, this.AngleToString(angle));
 			this.PrepareOper(name);
@@ -2275,9 +2275,9 @@ namespace Epsitec.Common.Document
 			this.TerminateOper();
 		}
 
-		// Miroir de tous les objets sélectionnés. 
 		public void MirrorSelection(bool horizontal)
 		{
+			//	Miroir de tous les objets sélectionnés. 
 			if ( this.tool == "ToolEdit" )  return;
 			string name = horizontal ? Res.Strings.Action.MirrorH : Res.Strings.Action.MirrorV;
 			this.PrepareOper(name);
@@ -2285,9 +2285,9 @@ namespace Epsitec.Common.Document
 			this.TerminateOper();
 		}
 
-		// Mise à l'échelle de tous les objets sélectionnés.
 		public void ScaleSelection(double scale)
 		{
+			//	Mise à l'échelle de tous les objets sélectionnés.
 			if ( this.tool == "ToolEdit" )  return;
 			string name = "";
 			if ( scale > 1.0 )
@@ -2303,9 +2303,9 @@ namespace Epsitec.Common.Document
 			this.TerminateOper();
 		}
 
-		// Prépare pour l'opération.
 		protected void PrepareOper(string name)
 		{
+			//	Prépare pour l'opération.
 			this.document.IsDirtySerialize = true;
 			this.OpletQueueBeginAction(name);
 
@@ -2325,9 +2325,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.EnableSelectionChanged = true;
 		}
 
-		// Termine l'opération.
 		protected void TerminateOper()
 		{
+			//	Termine l'opération.
 			this.document.Notifier.EnableSelectionChanged = false;
 
 			if ( this.operInitialSelector != SelectorType.None )
@@ -2344,9 +2344,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Align and Share
-		// Aligne sur la grille tous les objets sélectionnés.
 		public void AlignGridSelection()
 		{
+			//	Aligne sur la grille tous les objets sélectionnés.
 			this.OpletQueueBeginAction(Res.Strings.Action.AlignGrid);
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
@@ -2357,9 +2357,9 @@ namespace Epsitec.Common.Document
 			this.OpletQueueValidateAction();
 		}
 
-		// Aligne tous les objets sélectionnés.
 		public void AlignSelection(int dir, bool horizontal)
 		{
+			//	Aligne tous les objets sélectionnés.
 			this.OpletQueueBeginAction(Res.Strings.Action.Align);
 			Rectangle globalBox = this.SelectedBbox;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -2386,9 +2386,9 @@ namespace Epsitec.Common.Document
 			this.OpletQueueValidateAction();
 		}
 
-		// Distribue tous les objets sélectionnés.
 		public void ShareSelection(int dir, bool horizontal)
 		{
+			//	Distribue tous les objets sélectionnés.
 			System.Collections.ArrayList list = this.ShareSortedList(dir, horizontal);
 			ShareObject first = list[0] as ShareObject;
 			ShareObject last = list[list.Count-1] as ShareObject;
@@ -2443,9 +2443,9 @@ namespace Epsitec.Common.Document
 			this.OpletQueueValidateAction();
 		}
 
-		// Distribue les espaces entre tous les objets sélectionnés.
 		public void SpaceSelection(bool horizontal)
 		{
+			//	Distribue les espaces entre tous les objets sélectionnés.
 			System.Collections.ArrayList list = this.ShareSortedList(0, horizontal);
 			ShareObject first = list[0] as ShareObject;
 			int total = list.Count;
@@ -2487,9 +2487,9 @@ namespace Epsitec.Common.Document
 			this.OpletQueueValidateAction();
 		}
 
-		// Début du déplacement d'un objet isolé ou d'un groupe.
 		protected void MoveAllStarting(Objects.Abstract group)
 		{
+			//	Début du déplacement d'un objet isolé ou d'un groupe.
 			group.MoveAllStarting();
 
 			if ( group is Objects.Group )
@@ -2501,9 +2501,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Effectue le déplacement d'un objet isolé ou d'un groupe.
 		protected void MoveAllProcess(Objects.Abstract group, Point move)
 		{
+			//	Effectue le déplacement d'un objet isolé ou d'un groupe.
 			group.MoveAllProcess(move);
 
 			if ( group is Objects.Group )
@@ -2515,10 +2515,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Construit la liste triée de tous les objets à distribuer,
-		// de gauche à droite ou de bas en haut.
 		protected System.Collections.ArrayList ShareSortedList(int dir, bool horizontal)
 		{
+			//	Construit la liste triée de tous les objets à distribuer,
+			//	de gauche à droite ou de bas en haut.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
@@ -2531,10 +2531,10 @@ namespace Epsitec.Common.Document
 			return list;
 		}
 
-		// Cette classe représente un objet à distribuer, essentiellement
-		// représentée par la position de référence de l'objet. Selon dir et
-		// horizontal, il peut s'agir de la position x ou y d'une extrémité
-		// ou du centre de l'objet.
+		//	Cette classe représente un objet à distribuer, essentiellement
+		//	représentée par la position de référence de l'objet. Selon dir et
+		//	horizontal, il peut s'agir de la position x ou y d'une extrémité
+		//	ou du centre de l'objet.
 		protected class ShareObject : System.IComparable
 		{
 			public ShareObject(Objects.Abstract obj, int dir, bool horizontal)
@@ -2580,9 +2580,9 @@ namespace Epsitec.Common.Document
 			protected double				position;
 		}
 
-		// Ajuste tous les objets sélectionnés.
 		public void AdjustSelection(bool horizontal)
 		{
+			//	Ajuste tous les objets sélectionnés.
 			this.OpletQueueBeginAction(Res.Strings.Action.Adjust);
 			Rectangle globalBox = this.SelectedBbox;
 			Selector selector = new Selector(this.document);
@@ -2590,7 +2590,7 @@ namespace Epsitec.Common.Document
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
-				// A chaque itération, l'objet tend vers la bonne largeur.
+				//	A chaque itération, l'objet tend vers la bonne largeur.
 				for ( int i=0 ; i<10 ; i++ )
 				{
 					Rectangle objBox = obj.BoundingBoxGeom;
@@ -2618,10 +2618,10 @@ namespace Epsitec.Common.Document
 
 
 		#region Color
-		// Ajuste la couleur de tous les objets sélectionnés, y compris à l'intérieur
-		// des groupes.
 		public void ColorSelection(ColorSpace cs)
 		{
+			//	Ajuste la couleur de tous les objets sélectionnés, y compris à l'intérieur
+			//	des groupes.
 			this.OpletQueueBeginAction(Res.Strings.Action.Color);
 			this.DeepSelect(true);
 
@@ -2638,10 +2638,10 @@ namespace Epsitec.Common.Document
 			this.OpletQueueValidateAction();
 		}
 
-		// Ajuste la couleur de tous les objets sélectionnés, y compris à l'intérieur
-		// des groupes.
 		public void ColorSelection(double adjust, bool stroke)
 		{
+			//	Ajuste la couleur de tous les objets sélectionnés, y compris à l'intérieur
+			//	des groupes.
 			if ( adjust == 0.0 )  return;
 
 			this.OpletQueueBeginAction(Res.Strings.Action.Color);
@@ -2660,9 +2660,9 @@ namespace Epsitec.Common.Document
 			this.OpletQueueValidateAction();
 		}
 
-		// Sélectionne en profondeur tous les objets déjà sélectionnés.
 		protected void DeepSelect(bool select)
 		{
+			//	Sélectionne en profondeur tous les objets déjà sélectionnés.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
@@ -2681,9 +2681,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Group
-		// Fusionne tous les objets sélectionnés.
 		public void MergeSelection()
 		{
+			//	Fusionne tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -2697,9 +2697,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Extrait tous les objets sélectionnés du groupe.
 		public void ExtractSelection()
 		{
+			//	Extrait tous les objets sélectionnés du groupe.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -2712,9 +2712,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Groupe tous les objets sélectionnés.
 		public void GroupSelection()
 		{
+			//	Groupe tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -2727,9 +2727,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Sépare tous les objets sélectionnés.
 		public void UngroupSelection()
 		{
+			//	Sépare tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -2749,7 +2749,7 @@ namespace Epsitec.Common.Document
 			Objects.Abstract layer = context.RootObject();
 			System.Collections.ArrayList extract = new System.Collections.ArrayList();
 
-			// Extrait tous les objets sélectionnés dans la liste extract.
+			//	Extrait tous les objets sélectionnés dans la liste extract.
 			Rectangle bbox = Rectangle.Empty;
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
@@ -2757,8 +2757,8 @@ namespace Epsitec.Common.Document
 				bbox.MergeWith(obj.BoundingBoxGroup);
 			}
 
-			// Supprime les objets sélectionnés de la liste principale, sans
-			// supprimer les propriétés.
+			//	Supprime les objets sélectionnés de la liste principale, sans
+			//	supprimer les propriétés.
 			this.UpdateCounters();
 			bool bDo = false;
 			do
@@ -2774,14 +2774,14 @@ namespace Epsitec.Common.Document
 			}
 			while ( bDo );
 
-			// Crée l'objet groupe.
+			//	Crée l'objet groupe.
 			Objects.Group group = new Objects.Group(this.document, null);
 			layer.Objects.Add(group);
 			group.UpdateDim(bbox);
 			group.Select();
 			this.TotalSelected ++;
 
-			// Remet les objets extraits dans le groupe.
+			//	Remet les objets extraits dans le groupe.
 			foreach ( Objects.Abstract obj in extract )
 			{
 				obj.Deselect();
@@ -2842,9 +2842,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.ActiveViewer);
 		}
 
-		// Entre dans tous les objets sélectionnés.
 		public void InsideSelection()
 		{
+			//	Entre dans tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Inside) )
@@ -2867,9 +2867,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Sort de tous les objets sélectionnés.
 		public void OutsideSelection()
 		{
+			//	Sort de tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Outside) )
@@ -2904,9 +2904,9 @@ namespace Epsitec.Common.Document
 			return bbox;
 		}
 
-		// Adapte les dimensions de tous les groupes fils.
 		public void GroupUpdateChildrens()
 		{
+			//	Adapte les dimensions de tous les groupes fils.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Deep(layer) )
@@ -2922,9 +2922,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Adapte les dimensions de tous les groupes parents.
 		public void GroupUpdateParents()
 		{
+			//	Adapte les dimensions de tous les groupes parents.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			if ( context.RootStackIsBase )  return;
 
@@ -2945,9 +2945,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Combine and Fragment
-		// Choix du diviseur avec Ctrl.
 		public double ToLinePrecision
 		{
+			//	Choix du diviseur avec Ctrl.
 			get
 			{
 				return this.toLinePrecision;
@@ -2964,9 +2964,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Combine tous les objets sélectionnés.
 		public void CombineSelection()
 		{
+			//	Combine tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.Combine);
@@ -3024,9 +3024,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Sépare tous les objets sélectionnés.
 		public void UncombineSelection()
 		{
+			//	Sépare tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.Uncombine);
@@ -3094,9 +3094,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Converti en Bézier tous les objets sélectionnés.
 		public void ToBezierSelection()
 		{
+			//	Converti en Bézier tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.ToBezier);
@@ -3151,9 +3151,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Converti en polygone tous les objets sélectionnés.
 		public void ToPolySelection()
 		{
+			//	Converti en polygone tous les objets sélectionnés.
 			double precision = this.ToLinePrecision*0.19+0.01;  // 0.01 .. 0.2
 
 			if ( this.ActiveViewer.IsCreating )  return;
@@ -3217,9 +3217,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Converti en Bézier tous les objets sélectionnés.
 		public void ToSimplestSelection()
 		{
+			//	Converti en Bézier tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.ToSimplest);
@@ -3276,9 +3276,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Fragmente tous les objets sélectionnés.
 		public void FragmentSelection()
 		{
+			//	Fragmente tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.Fragment);
@@ -3311,9 +3311,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Fragmente un objet.
 		protected bool FragmentObject(Objects.Abstract obj)
 		{
+			//	Fragmente un objet.
 			for ( int rank=0 ; rank<100 ; rank++ )
 			{
 				Path path = obj.GetPath(rank);
@@ -3376,9 +3376,9 @@ namespace Epsitec.Common.Document
 			return false;
 		}
 
-		// Crée un fragment de ligne droite.
 		protected bool FragmentCreateLine(Point p1, Point p2, Objects.Abstract model)
 		{
+			//	Crée un fragment de ligne droite.
 			if ( p1 == p2 )  return false;
 			Objects.Line line = new Objects.Line(this.document, model);
 			line.CreateFromPoints(p1, p2);
@@ -3392,9 +3392,9 @@ namespace Epsitec.Common.Document
 			return true;
 		}
 
-		// Crée un fragment de ligne courbe.
 		protected bool FragmentCreateBezier(Point p1, Point s1, Point s2, Point p2, Objects.Abstract model)
 		{
+			//	Crée un fragment de ligne courbe.
 			if ( p1 == p2 )  return false;
 			Objects.Bezier bezier = new Objects.Bezier(this.document, model);
 			bezier.CreateFromPoints(p1, s1, s2, p2);
@@ -3412,10 +3412,10 @@ namespace Epsitec.Common.Document
 			return true;
 		}
 
-		// Reprend éventuellement quelques propriétés à l'objet model pour
-		// un objet polygone ou bézier.
 		protected void XferProperties(Objects.Abstract obj, Objects.Abstract model)
 		{
+			//	Reprend éventuellement quelques propriétés à l'objet model pour
+			//	un objet polygone ou bézier.
 			if ( model is Objects.TextLine )
 			{
 				obj.PropertyFillGradient.FillType = Properties.GradientFillType.None;
@@ -3424,9 +3424,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Simplifie un objet.
 		protected void Simplify(Objects.Abstract obj)
 		{
+			//	Simplifie un objet.
 			Properties.Arrow arrow = obj.PropertyArrow;
 			if ( arrow != null )
 			{
@@ -3444,9 +3444,9 @@ namespace Epsitec.Common.Document
 
 
 		#region ShaperHandle
-		// Met à jour toutes les commandes pour le modeleur.
 		public void ShaperHandleUpdate(CommandDispatcher cd)
 		{
+			//	Met à jour toutes les commandes pour le modeleur.
 			if ( this.IsToolShaper && this.TotalSelected != 0 )
 			{
 				bool enable;
@@ -3514,9 +3514,9 @@ namespace Epsitec.Common.Document
 			cd.GetCommandState(cmd).ActiveState = actives.Contains(active) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
 		}
 
-		// Effectue une commande du modeleur sur une poignée.
 		public void ShaperHandleCommand(string cmd)
 		{
+			//	Effectue une commande du modeleur sur une poignée.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
@@ -3528,9 +3528,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Booolean
-		// Opérations booléenne sur tous les objets sélectionnés.
 		public void BooleanSelection(Drawing.PathOperation op)
 		{
+			//	Opérations booléenne sur tous les objets sélectionnés.
 			double precision = this.ToLinePrecision*0.19+0.01;  // 0.01 .. 0.2
 
 			if ( this.ActiveViewer.IsCreating )  return;
@@ -3617,9 +3617,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Hide
-		// Cache tous les objets sélectionnés du calque courant.
 		public void HideSelection()
 		{
+			//	Cache tous les objets sélectionnés du calque courant.
 			if ( this.ActiveViewer.IsCreating )  return;
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.HideSel) )
@@ -3646,9 +3646,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Cache tous les objets non sélectionnés du calque courant.
 		public void HideRest()
 		{
+			//	Cache tous les objets non sélectionnés du calque courant.
 			if ( this.ActiveViewer.IsCreating )  return;
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.HideRest) )
@@ -3670,9 +3670,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Cache un objet et tous ses fils.
 		protected void HideObjectAndSoons(Objects.Abstract obj)
 		{
+			//	Cache un objet et tous ses fils.
 			obj.IsHide = true;
 
 			if ( obj.Objects != null && obj.Objects.Count > 0 )
@@ -3686,9 +3686,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Vend visible tous les objets cachés de la page (donc dans tous les calques).
 		public void HideCancel()
 		{
+			//	Vend visible tous les objets cachés de la page (donc dans tous les calques).
 			if ( this.ActiveViewer.IsCreating )  return;
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.HideCancel) )
@@ -3711,9 +3711,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Page
-		// Commence un changement de page.
 		public void InitiateChangingPage()
 		{
+			//	Commence un changement de page.
 			int rank = this.ActiveViewer.DrawingContext.CurrentPage;
 			if ( rank < this.document.GetObjects.Count )
 			{
@@ -3725,18 +3725,18 @@ namespace Epsitec.Common.Document
 			this.ActiveViewer.ClearHilite();
 		}
 
-		// Termine un changement de page.
 		public void TerminateChangingPage(int rank)
 		{
+			//	Termine un changement de page.
 			Objects.Page page = this.document.GetObjects[rank] as Objects.Page;
 			int layer = page.CurrentLayer;
 			this.ActiveViewer.DrawingContext.PageLayer(rank, layer);
 			this.DirtyCounters();
 		}
 
-		// Crée une nouvelle page.
 		public void PageNew(int rank, string name)
 		{
+			//	Crée une nouvelle page.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -3766,9 +3766,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Duplique une nouvelle page.
 		public void PageDuplicate(int rank, string name)
 		{
+			//	Duplique une nouvelle page.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -3809,9 +3809,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Supprime une page.
 		public void PageDelete(int rank)
 		{
+			//	Supprime une page.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -3843,9 +3843,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Permute deux pages.
 		public void PageSwap(int rank1, int rank2)
 		{
+			//	Permute deux pages.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -3873,25 +3873,25 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le nom court d'une page ("n" ou "Mn").
 		public string PageShortName(int rank)
 		{
+			//	Retourne le nom court d'une page ("n" ou "Mn").
 			UndoableList pages = this.document.GetObjects;
 			Objects.Page page = pages[rank] as Objects.Page;
 			return page.ShortName;
 		}
 
-		// Retourne le nom d'une page.
 		public string PageName(int rank)
 		{
+			//	Retourne le nom d'une page.
 			UndoableList pages = this.document.GetObjects;
 			Objects.Page page = pages[rank] as Objects.Page;
 			return page.Name;
 		}
 
-		// Change le nom d'une page.
 		public void PageName(int rank, string name)
 		{
+			//	Change le nom d'une page.
 			this.document.IsDirtySerialize = true;
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageName, "ChangePageName") )
 			{
@@ -3905,9 +3905,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le nombre total de pages imprimables.
 		public int PrintableTotalPages()
 		{
+			//	Retourne le nombre total de pages imprimables.
 			UndoableList pages = this.document.GetObjects;
 			int total = pages.Count;
 			int printable = 0;
@@ -3923,9 +3923,9 @@ namespace Epsitec.Common.Document
 			return printable;
 		}
 
-		// Retourne le rang d'une page imprimable.
 		public int PrintablePageRank(int index)
 		{
+			//	Retourne le rang d'une page imprimable.
 			UndoableList pages = this.document.GetObjects;
 			int total = pages.Count;
 			int rank = 0;
@@ -3942,9 +3942,9 @@ namespace Epsitec.Common.Document
 			return -1;
 		}
 
-		// Met à jour après une suppression de page.
 		protected void UpdatePageDelete(Objects.Page deletedPage)
 		{
+			//	Met à jour après une suppression de page.
 			UndoableList pages = this.document.GetObjects;
 			int total = pages.Count;
 			for ( int i=0 ; i<total ; i++ )
@@ -3959,17 +3959,17 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Met à jour tout ce qu'il faut après un changement de page (création d'une
-		// nouvelle page, suppression d'une page, etc.).
 		public void UpdatePageAfterChanging()
 		{
+			//	Met à jour tout ce qu'il faut après un changement de page (création d'une
+			//	nouvelle page, suppression d'une page, etc.).
 			this.UpdatePageShortNames();
 			this.UpdatePageNumbers();
 		}
 
-		// Met à jour tous les noms courts des pages ("n" ou "Mn").
 		public void UpdatePageShortNames()
 		{
+			//	Met à jour tous les noms courts des pages ("n" ou "Mn").
 			UndoableList pages = this.document.GetObjects;
 			int total = pages.Count;
 			int slaveNumber = 0;
@@ -3993,9 +3993,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Met à jour les numéros de page de tous les objets du document.
 		public void UpdatePageNumbers()
 		{
+			//	Met à jour les numéros de page de tous les objets du document.
 			int total = this.document.GetObjects.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -4007,9 +4007,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Génère la liste des pages maîtres à utiliser pour une page donnée.
 		public void ComputeMasterPageList(System.Collections.ArrayList masterPageList, int pageNumber)
 		{
+			//	Génère la liste des pages maîtres à utiliser pour une page donnée.
 			masterPageList.Clear();
 			Objects.Page currentPage = this.document.GetObjects[pageNumber] as Objects.Page;
 
@@ -4121,15 +4121,15 @@ namespace Epsitec.Common.Document
 			public bool				Master;
 		}
 
-		// Retourne les informations qui résument la structure d'une page.
 		public System.Collections.ArrayList GetPageStackInfos(int pageNumber)
 		{
+			//	Retourne les informations qui résument la structure d'une page.
 			System.Collections.ArrayList infos = new System.Collections.ArrayList();
 
 			System.Collections.ArrayList masterList = new System.Collections.ArrayList();
 			this.ComputeMasterPageList(masterList, pageNumber);
 
-			// Mets d'abord les premiers calques de toutes les pages maîtres.
+			//	Mets d'abord les premiers calques de toutes les pages maîtres.
 			foreach ( Objects.Page master in masterList )
 			{
 				int frontier = master.MasterFirstFrontLayer;
@@ -4148,7 +4148,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Mets ensuite tous les calques de la page.
+			//	Mets ensuite tous les calques de la page.
 			Objects.Page page = this.document.GetObjects[pageNumber] as Objects.Page;
 			int rl = -1;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
@@ -4165,7 +4165,7 @@ namespace Epsitec.Common.Document
 				infos.Add(info);
 			}
 
-			// Mets finalement les derniers calques de toutes les pages maîtres.
+			//	Mets finalement les derniers calques de toutes les pages maîtres.
 			foreach ( Objects.Page master in masterList )
 			{
 				int frontier = master.MasterFirstFrontLayer;
@@ -4191,24 +4191,24 @@ namespace Epsitec.Common.Document
 
 
 		#region Layer
-		// Commence un changement de calque.
 		public void InitiateChangingLayer()
 		{
+			//	Commence un changement de calque.
 			this.DeselectAll();
 			this.ActiveViewer.ClearHilite();
 		}
 
-		// Termine un changement de calque.
 		public void TerminateChangingLayer(int rank)
 		{
+			//	Termine un changement de calque.
 			int page = this.ActiveViewer.DrawingContext.CurrentPage;
 			this.ActiveViewer.DrawingContext.PageLayer(page, rank);
 			this.DirtyCounters();
 		}
 
-		// Crée un nouveau calque.
 		public void LayerNew(int rank, string name)
 		{
+			//	Crée un nouveau calque.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -4216,7 +4216,7 @@ namespace Epsitec.Common.Document
 			{
 				this.InitiateChangingLayer();
 
-				// Liste des calques:
+				//	Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count);
@@ -4234,9 +4234,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Crée un nouveau calque contenant les objets sélectionnés.
 		public void LayerNewSel(int rank, string name)
 		{
+			//	Crée un nouveau calque contenant les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -4244,7 +4244,7 @@ namespace Epsitec.Common.Document
 			{
 				this.InsertOpletDirtyCounters();
 
-				// Liste des calques:
+				//	Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
@@ -4278,9 +4278,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Duplique un calque.
 		public void LayerDuplicate(int rank, string name)
 		{
+			//	Duplique un calque.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -4288,7 +4288,7 @@ namespace Epsitec.Common.Document
 			{
 				this.InitiateChangingLayer();
 
-				// Liste des calques:
+				//	Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
@@ -4319,9 +4319,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Supprime un calque.
 		public void LayerDelete(int rank)
 		{
+			//	Supprime un calque.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -4329,7 +4329,7 @@ namespace Epsitec.Common.Document
 			{
 				this.InitiateChangingLayer();
 
-				// Liste des calques:
+				//	Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 				if ( list.Count <= 1 )  return;  // il doit rester un calque
 				rank = System.Math.Max(rank, 0);
@@ -4351,9 +4351,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Fusionne deux calques.
 		public void LayerMerge(int rankSrc, int rankDst)
 		{
+			//	Fusionne deux calques.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -4361,7 +4361,7 @@ namespace Epsitec.Common.Document
 			{
 				this.InitiateChangingLayer();
 
-				// Liste des calques:
+				//	Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 				rankSrc = System.Math.Max(rankSrc, 0);
 				rankSrc = System.Math.Min(rankSrc, list.Count-1);
@@ -4400,9 +4400,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Permute deux calques.
 		public void LayerSwap(int rank1, int rank2)
 		{
+			//	Permute deux calques.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -4410,7 +4410,7 @@ namespace Epsitec.Common.Document
 			{
 				this.InitiateChangingLayer();
 
-				// Liste des calques:
+				//	Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 				rank1 = System.Math.Max(rank1, 0);
 				rank1 = System.Math.Min(rank1, list.Count-1);
@@ -4430,17 +4430,17 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le nom d'un calque.
 		public string LayerName(int rank)
 		{
+			//	Retourne le nom d'un calque.
 			UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 			Objects.Layer layer = list[rank] as Objects.Layer;
 			return layer.Name;
 		}
 
-		// Change le nom d'un calque.
 		public void LayerName(int rank, string name)
 		{
+			//	Change le nom d'un calque.
 			this.document.IsDirtySerialize = true;
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerName, "ChangeLayerName") )
 			{
@@ -4456,9 +4456,9 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		#region MagnetLayer
-		// Change l'état "objets magnétiques" d'un calque.
 		public void MagnetLayerInvert(int rank)
 		{
+			//	Change l'état "objets magnétiques" d'un calque.
 			this.document.IsDirtySerialize = true;
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerChangeMagnet) )
 			{
@@ -4472,18 +4472,18 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Donne l'état "objets magnétiques" d'un calque.
 		public bool MagnetLayerState(int rank)
 		{
+			//	Donne l'état "objets magnétiques" d'un calque.
 			UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 			Objects.Layer layer = list[rank] as Objects.Layer;
 			return layer.Magnet;
 		}
 
-		// Détecte sur quel segment de droite est la souris.
 		public bool MagnetLayerDetect(Point pos, Point filterP1, Point filterP2,
 									  out Point p1, out Point p2)
 		{
+			//	Détecte sur quel segment de droite est la souris.
 			double width = this.ActiveViewer.DrawingContext.MagnetMargin;
 			double min = 1000000.0;
 			p1 = new Point(0,0);
@@ -4527,9 +4527,9 @@ namespace Epsitec.Common.Document
 			return ( min < 1000000.0 );
 		}
 
-		// Génère la liste des calques magnétiques à utiliser pour une page donnée.
 		public void ComputeMagnetLayerList(System.Collections.ArrayList magnetLayerList, int pageNumber)
 		{
+			//	Génère la liste des calques magnétiques à utiliser pour une page donnée.
 			magnetLayerList.Clear();
 			Objects.Page page = this.document.GetObjects[pageNumber] as Objects.Page;
 			int rank = 0;
@@ -4547,9 +4547,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Properties
-		// Mode de représentation pour le panneau des propriétés.
 		public bool PropertiesDetail
 		{
+			//	Mode de représentation pour le panneau des propriétés.
 			get
 			{
 				return this.propertiesDetail;
@@ -4565,18 +4565,18 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si on est en mode "détail" avec plus d'un objet sélectionné.
 		public bool PropertiesDetailMany
 		{
+			//	Indique si on est en mode "détail" avec plus d'un objet sélectionné.
 			get
 			{
 				return (this.propertiesDetail && this.TotalSelected > 1);
 			}
 		}
 
-		// Ajoute une nouvelle propriété.
 		public void PropertyAdd(Properties.Abstract property)
 		{
+			//	Ajoute une nouvelle propriété.
 			this.PropertyList(property).Add(property);
 
 			if ( property.IsStyle )
@@ -4585,9 +4585,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Supprime une propriété.
 		public void PropertyRemove(Properties.Abstract property)
 		{
+			//	Supprime une propriété.
 			this.PropertyList(property).Remove(property);
 
 			if ( property.IsStyle )
@@ -4596,9 +4596,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Donne la liste à utiliser pour une propriété.
 		public UndoableList PropertyList(Properties.Abstract property)
 		{
+			//	Donne la liste à utiliser pour une propriété.
 			return this.PropertyList(property.IsSelected);
 		}
 
@@ -4614,10 +4614,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Ajoute toutes les propriétés des objets sélectionnés dans une liste.
-		// Tient compte du mode propertiesDetail.
 		public void PropertiesList(System.Collections.ArrayList list)
 		{
+			//	Ajoute toutes les propriétés des objets sélectionnés dans une liste.
+			//	Tient compte du mode propertiesDetail.
 			this.OpletQueueEnable = false;
 			list.Clear();
 
@@ -4636,8 +4636,8 @@ namespace Epsitec.Common.Document
 			}
 			else	// choix d'un objet à créer ?
 			{
-				// Crée un objet factice (document = null), c'est-à-dire sans
-				// propriétés, qui servira juste de filtre pour objectMemory.
+				//	Crée un objet factice (document = null), c'est-à-dire sans
+				//	propriétés, qui servira juste de filtre pour objectMemory.
 				Objects.Abstract dummy = Objects.Abstract.CreateObject(null, this.tool, null);
 				this.ObjectMemoryTool.PropertiesList(list, dummy);
 				dummy.Dispose();
@@ -4647,10 +4647,10 @@ namespace Epsitec.Common.Document
 			this.OpletQueueEnable = true;
 		}
 
-		// Ajoute le détail de toutes les propriétés des objets sélectionnés
-		// dans une liste, en vue d'une modifications des couleurs.
 		protected void PropertiesListDeep(System.Collections.ArrayList list)
 		{
+			//	Ajoute le détail de toutes les propriétés des objets sélectionnés
+			//	dans une liste, en vue d'une modifications des couleurs.
 			this.OpletQueueEnable = false;
 			list.Clear();
 
@@ -4667,9 +4667,9 @@ namespace Epsitec.Common.Document
 
 
 		#region IsPropertiesExtended
-		// Indique si le panneau d'une propriété doit être étendu.
 		public bool IsPropertiesExtended(Properties.Type type)
 		{
+			//	Indique si le panneau d'une propriété doit être étendu.
 			int i=0;
 			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
 			{
@@ -4682,9 +4682,9 @@ namespace Epsitec.Common.Document
 			return false;
 		}
 
-		// Indique si le panneau d'une propriété doit être étendu.
 		public void IsPropertiesExtended(Properties.Type type, bool extended)
 		{
+			//	Indique si le panneau d'une propriété doit être étendu.
 			int i=0;
 			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
 			{
@@ -4708,9 +4708,9 @@ namespace Epsitec.Common.Document
 
 
 		#region IsTextPanelExtended
-		// Indique si un panneau pour le texte est étendu ou pas.
 		public bool IsTextPanelExtended(TextPanels.Abstract panel)
 		{
+			//	Indique si un panneau pour le texte est étendu ou pas.
 			if ( this.tableTextPanelExtended == null )
 			{
 				this.tableTextPanelExtended = new System.Collections.Hashtable();
@@ -4729,9 +4729,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Modifie l'état étendu ou pas d'un panneau pour le texte.
 		public void IsTextPanelExtended(TextPanels.Abstract panel, bool extended)
 		{
+			//	Modifie l'état étendu ou pas d'un panneau pour le texte.
 			if ( this.tableTextPanelExtended == null )
 			{
 				this.tableTextPanelExtended = new System.Collections.Hashtable();
@@ -4752,9 +4752,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Zoom
-		// Montre les objets sélectionnés si nécessaire.
 		protected void ShowSelection()
 		{
+			//	Montre les objets sélectionnés si nécessaire.
 			if ( this.TotalSelected == 0 )  return;
 
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -4772,9 +4772,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Zoom sur les objets sélectionnés.
 		public void ZoomSel()
 		{
+			//	Zoom sur les objets sélectionnés.
 			Rectangle bbox = this.SelectedBbox;
 			if ( bbox.IsEmpty )  return;
 			if ( this.document.Type == DocumentType.Pictogram )
@@ -4788,9 +4788,9 @@ namespace Epsitec.Common.Document
 			this.ZoomChange(bbox.BottomLeft, bbox.TopRight);
 		}
 
-		// Zoom sur la largeur des objets sélectionnés.
 		public void ZoomSelWidth()
 		{
+			//	Zoom sur la largeur des objets sélectionnés.
 			Rectangle bbox = this.SelectedBbox;
 			if ( bbox.IsEmpty )  return;
 			if ( this.document.Type == DocumentType.Pictogram )
@@ -4804,9 +4804,9 @@ namespace Epsitec.Common.Document
 			this.ZoomChangeWidth(bbox.BottomLeft, bbox.TopRight);
 		}
 
-		// Change le zoom d'un certain facteur pour agrandir une zone rectangulaire.
 		public void ZoomChange(Point p1, Point p2)
 		{
+			//	Change le zoom d'un certain facteur pour agrandir une zone rectangulaire.
 			Viewer viewer = this.ActiveViewer;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
@@ -4817,9 +4817,9 @@ namespace Epsitec.Common.Document
 			this.ZoomChange(factor, (p1+p2)/2);
 		}
 
-		// Change le zoom d'un certain facteur pour agrandir une zone rectangulaire.
 		public void ZoomChangeWidth(Point p1, Point p2)
 		{
+			//	Change le zoom d'un certain facteur pour agrandir une zone rectangulaire.
 			Viewer viewer = this.ActiveViewer;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
@@ -4828,16 +4828,16 @@ namespace Epsitec.Common.Document
 			this.ZoomChange(factor, (p1+p2)/2);
 		}
 
-		// Change le zoom d'un certain facteur, avec centrage au milieu du dessin.
 		public void ZoomChange(double factor)
 		{
+			//	Change le zoom d'un certain facteur, avec centrage au milieu du dessin.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			this.ZoomChange(factor, context.Center);
 		}
 
-		// Change le zoom d'un certain facteur, avec centrage quelconque.
 		public void ZoomChange(double factor, Point center)
 		{
+			//	Change le zoom d'un certain facteur, avec centrage quelconque.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
 			double newZoom = context.Zoom*factor;
@@ -4849,15 +4849,15 @@ namespace Epsitec.Common.Document
 			context.ZoomAndCenter(newZoom, center);
 		}
 
-		// Force une valeur de zoom.
 		public void ZoomValue(double value)
 		{
+			//	Force une valeur de zoom.
 			this.ZoomValue(value, true);
 		}
 
-		// Force une valeur de zoom.
 		public void ZoomValue(double value, bool memorize)
 		{
+			//	Force une valeur de zoom.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
 			value = System.Math.Max(value, this.ZoomMin);
@@ -4872,15 +4872,15 @@ namespace Epsitec.Common.Document
 			context.ZoomAndCenter(value, context.Center);
 		}
 
-		// Retourne le nombre de zoom mémorisés.
 		public int ZoomMemorizeCount
 		{
+			//	Retourne le nombre de zoom mémorisés.
 			get { return this.zoomHistory.Count; }
 		}
 
-		// Mémorise le zoom actuel.
 		public void ZoomMemorize()
 		{
+			//	Mémorise le zoom actuel.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
 			ZoomHistory.ZoomElement item = new ZoomHistory.ZoomElement();
@@ -4889,9 +4889,9 @@ namespace Epsitec.Common.Document
 			this.zoomHistory.Add(item);
 		}
 
-		// Revient au niveau de zoom précédent.
 		public void ZoomPrev()
 		{
+			//	Revient au niveau de zoom précédent.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
 			ZoomHistory.ZoomElement item = this.zoomHistory.Remove();
@@ -4899,9 +4899,9 @@ namespace Epsitec.Common.Document
 			context.ZoomAndCenter(item.Zoom, item.Center);
 		}
 
-		// Retourne le zoom minimal.
 		public double ZoomMin
 		{
+			//	Retourne le zoom minimal.
 			get
 			{
 				if ( this.document.Type == DocumentType.Pictogram )
@@ -4917,9 +4917,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le zoom maximal.
 		public double ZoomMax
 		{
+			//	Retourne le zoom maximal.
 			get
 			{
 				if ( this.document.Type == DocumentType.Pictogram )
@@ -4936,9 +4936,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Aggregates
-		// Retourne le nom de l'agrégat sélectionné.
 		public string AggregateGetSelectedName()
 		{
+			//	Retourne le nom de l'agrégat sélectionné.
 			string name = "";
 			this.aggregateUsed = -1;
 
@@ -4981,12 +4981,12 @@ namespace Epsitec.Common.Document
 		}
 
 #if false
-		// Cherche un agrégat d'après son nom. Rien ne garantit que plusieurs
-		// agrégats n'aient pas des noms identiques, mais c'est le seul moyen
-		// de retrouver un agrégat à partir du nom choisi par l'utilisateur dans
-		// le TextFieldCombo du panneau principal !
 		public Properties.Aggregate AggregateSearch22(string name)
 		{
+			//	Cherche un agrégat d'après son nom. Rien ne garantit que plusieurs
+			//	agrégats n'aient pas des noms identiques, mais c'est le seul moyen
+			//	de retrouver un agrégat à partir du nom choisi par l'utilisateur dans
+			//	le TextFieldCombo du panneau principal !
 			UndoableList aggregates = this.document.Aggregates;
 			foreach ( Properties.Aggregate agg in aggregates )
 			{
@@ -5010,9 +5010,9 @@ namespace Epsitec.Common.Document
 		}
 #endif
 
-		// Crée un nouvel agrégat vide.
 		public void AggregateNewEmpty(int rank, string name, bool putToList)
 		{
+			//	Crée un nouvel agrégat vide.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5036,9 +5036,9 @@ namespace Epsitec.Common.Document
 			this.AggregateUse(agg);
 		}
 
-		// Crée un nouvel agrégat avec seulement 3 propriétés.
 		public void AggregateNew3(int rank, string name, bool putToList)
 		{
+			//	Crée un nouvel agrégat avec seulement 3 propriétés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5062,9 +5062,9 @@ namespace Epsitec.Common.Document
 			this.AggregateUse(agg);
 		}
 
-		// Crée un nouvel agrégat avec toutes les propriétés.
 		public void AggregateNewAll(int rank, string name, bool putToList)
 		{
+			//	Crée un nouvel agrégat avec toutes les propriétés.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5101,9 +5101,9 @@ namespace Epsitec.Common.Document
 			this.AggregateUse(agg);
 		}
 
-		// Crée un nouvel agrégat avec seulement 3 propriétés, pas encore référencé.
 		protected Properties.Aggregate AggregateCreate(string name, bool three)
 		{
+			//	Crée un nouvel agrégat avec seulement 3 propriétés, pas encore référencé.
 			this.OpletQueueEnable = false;
 
 			Properties.Aggregate agg = new Properties.Aggregate(this.document);
@@ -5132,10 +5132,10 @@ namespace Epsitec.Common.Document
 			return agg;
 		}
 
-		// Crée un nouvel agrégat avec toutes les propriétés d'un objet modèle,
-		// pas encore référencé.
 		protected Properties.Aggregate AggregateCreate(string name, Objects.Abstract model)
 		{
+			//	Crée un nouvel agrégat avec toutes les propriétés d'un objet modèle,
+			//	pas encore référencé.
 			this.OpletQueueEnable = false;
 
 			Properties.Aggregate agg = new Properties.Aggregate(this.document);
@@ -5160,10 +5160,10 @@ namespace Epsitec.Common.Document
 			return agg;
 		}
 
-		// Crée une nouvelle propriété pour un agrégat. Dans Aggregate.Styles,
-		// les propriétés sont toujours selon l'ordre Properties.Abstract.SortOrder !
 		protected Properties.Abstract AggregateCreateProperty(Properties.Aggregate agg, Objects.Abstract model, Properties.Type type)
 		{
+			//	Crée une nouvelle propriété pour un agrégat. Dans Aggregate.Styles,
+			//	les propriétés sont toujours selon l'ordre Properties.Abstract.SortOrder !
 			Properties.Abstract style = Properties.Abstract.NewProperty(this.document, type);
 
 			if ( model != null )
@@ -5192,9 +5192,9 @@ namespace Epsitec.Common.Document
 			return style;
 		}
 
-		// Utilise un agrégat.
 		public void AggregateUse(Properties.Aggregate agg)
 		{
+			//	Utilise un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5237,9 +5237,9 @@ namespace Epsitec.Common.Document
 			this.aggregateUsed = this.document.Aggregates.IndexOf(agg);
 		}
 
-		// Ajoute l'agrégat dans la liste du document, si nécessaire.
 		public void AggregateToDocument(Properties.Aggregate agg)
 		{
+			//	Ajoute l'agrégat dans la liste du document, si nécessaire.
 			UndoableList list = this.document.Aggregates;
 			int index = list.IndexOf(agg);
 			if ( index == -1 )
@@ -5255,9 +5255,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Libère les objets sélectionnés des agrégats.
 		public void AggregateFree()
 		{
+			//	Libère les objets sélectionnés des agrégats.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5293,9 +5293,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Libère tous les objets coupés ou copiés des agrégats.
 		protected void AggregateFreeAll()
 		{
+			//	Libère tous les objets coupés ou copiés des agrégats.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, false) )
@@ -5305,9 +5305,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Duplique un agrégat.
 		public void AggregateDuplicate(int rank)
 		{
+			//	Duplique un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5329,9 +5329,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Supprime un agrégat.
 		public void AggregateDelete(int rank)
 		{
+			//	Supprime un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5372,9 +5372,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Permute deux agrégats.
 		public void AggregateSwap(int rank1, int rank2)
 		{
+			//	Permute deux agrégats.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5396,9 +5396,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Change le nom d'un agrégat.
 		public void AggregateChangeName(string name)
 		{
+			//	Change le nom d'un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
 			if ( name == "..." )  return;
 			this.document.IsDirtySerialize = true;
@@ -5427,9 +5427,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Crée un nouveau style dans un agrégat.
 		public void AggregateStyleNew(Properties.Aggregate agg, Properties.Type type)
 		{
+			//	Crée un nouveau style dans un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5458,9 +5458,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Supprime le style sélectionné d'un agrégat.
 		public void AggregateStyleDelete(Properties.Aggregate agg)
 		{
+			//	Supprime le style sélectionné d'un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
 			if ( agg.Styles.Selected == -1 )  return;
 			this.document.IsDirtySerialize = true;
@@ -5489,9 +5489,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Ajoute un enfant à un agrégat.
 		public void AggregateChildrensNew(Properties.Aggregate agg, Properties.Aggregate newAgg)
 		{
+			//	Ajoute un enfant à un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5516,9 +5516,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Permute deux enfants.
 		public void AggregateChildrensSwap(Properties.Aggregate agg, int rank1, int rank2)
 		{
+			//	Permute deux enfants.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5546,9 +5546,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Supprime un enfant à un agrégat.
 		public void AggregateChildrensDelete(Properties.Aggregate agg, Properties.Aggregate delAgg)
 		{
+			//	Supprime un enfant à un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -5575,9 +5575,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Reprend les propriétés d'un objet modèle.
 		public void AggregatePicker(Objects.Abstract model)
 		{
+			//	Reprend les propriétés d'un objet modèle.
 			if ( this.TotalSelected == 0 )
 			{
 				this.OpletQueueEnable = false;
@@ -5607,24 +5607,24 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Donne le prochain nom unique d'agrégat.
 		protected string GetNextAggregateName()
 		{
+			//	Donne le prochain nom unique d'agrégat.
 			return string.Format(Res.Strings.Aggregate.Name, this.document.GetNextUniqueAggregateId());
 		}
 		#endregion
 
 
 		#region OpletTool
-		// Ajoute un oplet pour mémoriser l'outil.
 		protected void InsertOpletTool()
 		{
+			//	Ajoute un oplet pour mémoriser l'outil.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletTool oplet = new OpletTool(this.document);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		// Mémorise l'outil.
+		//	Mémorise l'outil.
 		protected class OpletTool : AbstractOplet
 		{
 			public OpletTool(Document host)
@@ -5662,15 +5662,15 @@ namespace Epsitec.Common.Document
 
 
 		#region OpletSize
-		// Ajoute un oplet pour mémoriser les dimensions du document.
 		public void InsertOpletSize()
 		{
+			//	Ajoute un oplet pour mémoriser les dimensions du document.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletSize oplet = new OpletSize(this.document);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		// Mémorise les dimensions.
+		//	Mémorise les dimensions.
 		protected class OpletSize : AbstractOplet
 		{
 			public OpletSize(Document host)
@@ -5712,9 +5712,9 @@ namespace Epsitec.Common.Document
 
 
 		#region OpletDirtyCounters
-		// Ajoute un oplet pour indiquer que les compteurs devront être mis à jour.
 		public void InsertOpletDirtyCounters()
 		{
+			//	Ajoute un oplet pour indiquer que les compteurs devront être mis à jour.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletDirtyCounters oplet = new OpletDirtyCounters(this.document);
 			this.document.Modifier.OpletQueue.Insert(oplet);
@@ -5750,17 +5750,17 @@ namespace Epsitec.Common.Document
 
 
 		#region OpletQueue
-		// Vide toutes les queues.
 		public void OpletQueuePurge()
 		{
+			//	Vide toutes les queues.
 			this.opletQueue.PurgeUndo();
 			this.opletQueue.PurgeRedo();
 			this.opletLastCmd = "";
 		}
 
-		// Détermine si les actions seront annulables ou non.
 		public bool OpletQueueEnable
 		{
+			//	Détermine si les actions seront annulables ou non.
 			get
 			{
 				return this.opletQueue.IsEnabled && !this.opletSkip;
@@ -5776,9 +5776,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Début d'une zone annulable.
 		public System.IDisposable OpletQueueBeginAction(string name)
 		{
+			//	Début d'une zone annulable.
 			return this.OpletQueueBeginAction(name, "", 0);
 		}
 
@@ -5813,15 +5813,15 @@ namespace Epsitec.Common.Document
 			return this.opletQueue.BeginAction(name);
 		}
 
-		// Nomme une action annulable.
 		public void OpletQueueNameAction(string name)
 		{
+			//	Nomme une action annulable.
 			this.opletQueue.DefineActionName(name);
 		}
 
-		// Fin d'une zone annulable.
 		public void OpletQueueValidateAction()
 		{
+			//	Fin d'une zone annulable.
 			this.opletLevel --;
 			if ( this.opletLevel > 0 )  return;
 
@@ -5836,9 +5836,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Fin d'une zone annulable.
 		public void OpletQueueCancelAction()
 		{
+			//	Fin d'une zone annulable.
 			this.opletLevel --;
 			if ( this.opletLevel > 0 )  return;
 

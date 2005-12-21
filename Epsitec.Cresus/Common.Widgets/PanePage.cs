@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 		
 		[Bundle]	public double				PaneRelativeSize
 		{
-			// Largeur ou hauteur relative du panneau.
+			//	Largeur ou hauteur relative du panneau.
 			get
 			{
 				return this.paneRelativeSize;
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Widgets
 
 		[Bundle]	public double				PaneAbsoluteSize
 		{
-			// Largeur ou hauteur absolue (en points) du panneau.
+			//	Largeur ou hauteur absolue (en points) du panneau.
 			get
 			{
 				return this.paneAbsoluteSize;
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Widgets
 
 		[Bundle]	public double				PaneMinSize
 		{
-			// Largeur ou hauteur minimale du panneau en points.
+			//	Largeur ou hauteur minimale du panneau en points.
 			get
 			{
 				return this.paneMinSize;
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Widgets
 
 		[Bundle]	public double				PaneMaxSize
 		{
-			// Largeur ou hauteur maximale du panneau en points.
+			//	Largeur ou hauteur maximale du panneau en points.
 			get
 			{
 				return this.paneMaxSize;
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Widgets
 
 		[Bundle]	public double				PaneHideSize
 		{
-			// Largeur ou hauteur maximale en dessous de laquelle le contenu est caché.
+			//	Largeur ou hauteur maximale en dessous de laquelle le contenu est caché.
 			get
 			{
 				return this.paneHideSize;
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Widgets
 
 		[Bundle]	public double				PaneElasticity
 		{
-			// Elasticité du panneau (0=fixe, 1=élastique).
+			//	Elasticité du panneau (0=fixe, 1=élastique).
 			get
 			{
 				return this.paneElasticity;
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Widgets
 
 		[Bundle]	public bool					PaneToggle
 		{
-			// Mode du panneau.
+			//	Mode du panneau.
 			get
 			{
 				return this.paneToggle;
@@ -174,7 +174,7 @@ namespace Epsitec.Common.Widgets
 
 		public PaneButton						PaneButton
 		{
-			// Retourne le bouton associé.
+			//	Retourne le bouton associé.
 			get
 			{
 				return this.paneButton;
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Widgets
 		
 		public GlyphButton						GlyphButton
 		{
-			// Retourne le bouton associé.
+			//	Retourne le bouton associé.
 			get
 			{
 				return this.glyphButton;
@@ -192,7 +192,7 @@ namespace Epsitec.Common.Widgets
 		
 		public PaneBook							Book
 		{
-			// Retourne le PaneBook parent.
+			//	Retourne le PaneBook parent.
 			get
 			{
 				PaneBook book = this.Parent as PaneBook;
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								IsDirty
 		{
-			// Indique si le PanePage doit être recalculé.
+			//	Indique si le PanePage doit être recalculé.
 			get
 			{
 				return this.isDirty;
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Widgets
 		
 		public int								Rank
 		{
-			// Rang facultatif du panneau.
+			//	Rang facultatif du panneau.
 			get
 			{
 				return this.rank;

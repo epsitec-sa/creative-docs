@@ -18,9 +18,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Document associé.
 		public Document Document
 		{
+			//	Document associé.
 			get
 			{
 				return this.document;
@@ -32,9 +32,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Propriété représentée.
 		public Properties.Abstract Property
 		{
+			//	Propriété représentée.
 			get
 			{
 				return this.property;
@@ -46,9 +46,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Affiche "..." au lieu de la croix si la propriété n'existe pas.
 		public bool Dots
 		{
+			//	Affiche "..." au lieu de la croix si la propriété n'existe pas.
 			get
 			{
 				return this.dots;
@@ -61,9 +61,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Dessine l'échantillon.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine l'échantillon.
 			if ( this.document == null )  return;
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;

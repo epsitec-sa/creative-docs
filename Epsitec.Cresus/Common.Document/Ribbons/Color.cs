@@ -43,9 +43,9 @@ namespace Epsitec.Common.Document.Ribbons
 			this.AdaptFieldColor(this.fieldColor);
 		}
 
-		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard.
 			get
 			{
 				return 8 + 22*2 + this.separatorWidth + 22*2 + 5 + 50;
@@ -53,9 +53,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonColorToRGB == null )  return;
@@ -94,9 +94,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Crée un champ éditable pour une couleur.
 		protected void CreateFieldColor(ref TextFieldReal field, string tooltip)
 		{
+			//	Crée un champ éditable pour une couleur.
 			field = new TextFieldReal(this);
 			field.Width = 50;
 			field.TabIndex = tabIndex++;
@@ -105,9 +105,9 @@ namespace Epsitec.Common.Document.Ribbons
 			ToolTip.Default.SetToolTip(field, tooltip);
 		}
 
-		// Adapte un champ éditable pour une couleur.
 		protected void AdaptFieldColor(TextFieldReal field)
 		{
+			//	Adapte un champ éditable pour une couleur.
 			if ( this.document == null )
 			{
 				field.Enable = false;

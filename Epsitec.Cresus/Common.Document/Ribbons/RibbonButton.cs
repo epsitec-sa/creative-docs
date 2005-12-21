@@ -74,16 +74,16 @@ namespace Epsitec.Common.Document.Ribbons
 			this.AdjustSize(ref this.mainTextSize);
 		}
 
-		// Ajuste des dimensions d'un TextLayout.
 		protected void AdjustSize(ref Drawing.Size size)
 		{
+			//	Ajuste des dimensions d'un TextLayout.
 			size.Width  = System.Math.Ceiling(size.Width);
 			size.Height = System.Math.Ceiling(size.Height);
 		}
 
-		// Retourne les dimensions requises en fonction du contenu.
 		public Drawing.Size RequiredSize
 		{
+			//	Retourne les dimensions requises en fonction du contenu.
 			get
 			{
 				Drawing.Size size = new Drawing.Size(0, 0);
@@ -93,17 +93,17 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-		// Met à jour la géométrie de la case du menu.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie de la case du menu.
 			base.UpdateClientGeometry();
 
 			if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
 		}
 
-		// Dessine la case.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			//	Dessine la case.
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;

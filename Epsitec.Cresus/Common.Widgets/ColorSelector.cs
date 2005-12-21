@@ -289,9 +289,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Met tout à jour après un changement de couleur.
 		protected void UpdateColors()
 		{
+			//	Met tout à jour après un changement de couleur.
 			System.Diagnostics.Debug.Assert(this.suspendColorEvents == true);
 			this.ColorToFieldsRGB();
 			this.ColorToFieldsHSV();
@@ -304,9 +304,9 @@ namespace Epsitec.Common.Widgets
 			this.OnChanged();
 		}
 
-		// Met à jour les boutons pour l'espace de couleur.
 		protected void UpdateColorSpace()
 		{
+			//	Met à jour les boutons pour l'espace de couleur.
 			Drawing.ColorSpace cs = this.color.ColorSpace;
 
 			this.buttonRGB .ActiveState = (cs == Drawing.ColorSpace.RGB ) ? ActiveState.Yes : ActiveState.No;
@@ -314,9 +314,9 @@ namespace Epsitec.Common.Widgets
 			this.buttonGray.ActiveState = (cs == Drawing.ColorSpace.Gray) ? ActiveState.Yes : ActiveState.No;
 		}
 
-		// Couleur -> textes éditables.
 		protected void ColorToFieldsRGB()
 		{
+			//	Couleur -> textes éditables.
 			double a,r,g,b;
 			this.color.Basic.GetARGB(out a, out r, out g, out b);
 		
@@ -326,9 +326,9 @@ namespace Epsitec.Common.Widgets
 			this.fields[3].Value = (decimal) System.Math.Floor(a*255+0.5);
 		}
 
-		// Couleur -> textes éditables.
 		protected void ColorToFieldsHSV()
 		{
+			//	Couleur -> textes éditables.
 			double h,s,v;
 			this.circle.GetHSV(out h, out s, out v);
 		
@@ -339,9 +339,9 @@ namespace Epsitec.Common.Widgets
 			this.ColoriseSliders();
 		}
 
-		// Couleur -> textes éditables.
 		protected void ColorToFieldsCMYK()
 		{
+			//	Couleur -> textes éditables.
 			double a = this.color.A;
 			double c = this.color.C;
 			double m = this.color.M;
@@ -355,9 +355,9 @@ namespace Epsitec.Common.Widgets
 			this.fields[10].Value = (decimal) System.Math.Floor(k*100+0.5);
 		}
 
-		// Couleur -> textes éditables.
 		protected void ColorToFieldsGray()
 		{
+			//	Couleur -> textes éditables.
 			double a = this.color.A;
 			double g = this.color.Gray;
 		
@@ -365,9 +365,9 @@ namespace Epsitec.Common.Widgets
 			this.fields[11].Value = (decimal) System.Math.Floor(g*100+0.5);
 		}
 
-		// Couleur -> textes éditables.
 		protected void ColorToFieldsHexa()
 		{
+			//	Couleur -> textes éditables.
 			double a,r,g,b;
 			this.color.Basic.GetARGB(out a, out r, out g, out b);
 
@@ -384,9 +384,9 @@ namespace Epsitec.Common.Widgets
 			this.fieldHexa.SelectAll();
 		}
 
-		// Textes éditables RGB -> couleur.
 		protected void FieldsRGBToColor()
 		{
+			//	Textes éditables RGB -> couleur.
 			double r = (double) this.fields[0].Value/255;
 			double g = (double) this.fields[1].Value/255;
 			double b = (double) this.fields[2].Value/255;
@@ -406,9 +406,9 @@ namespace Epsitec.Common.Widgets
 			this.suspendColorEvents = isc;
 		}
 
-		// Textes éditables HSV -> couleur.
 		protected void FieldsHSVToColor()
 		{
+			//	Textes éditables HSV -> couleur.
 			double h = (double) this.fields[4].Value;
 			double s = (double) this.fields[5].Value/100;
 			double v = (double) this.fields[6].Value/100;
@@ -427,9 +427,9 @@ namespace Epsitec.Common.Widgets
 			this.suspendColorEvents = isc;
 		}
 
-		// Textes éditables CMYK -> couleur.
 		protected void FieldsCMYKToColor()
 		{
+			//	Textes éditables CMYK -> couleur.
 			double a = (double) this.fields[ 3].Value/255;
 			double c = (double) this.fields[ 7].Value/100;
 			double m = (double) this.fields[ 8].Value/100;
@@ -450,9 +450,9 @@ namespace Epsitec.Common.Widgets
 			this.suspendColorEvents = isc;
 		}
 
-		// Textes éditables Gray -> couleur.
 		protected void FieldsGrayToColor()
 		{
+			//	Textes éditables Gray -> couleur.
 			double a = (double) this.fields[ 3].Value/255;
 			double g = (double) this.fields[11].Value/100;
 
@@ -470,9 +470,9 @@ namespace Epsitec.Common.Widgets
 			this.suspendColorEvents = isc;
 		}
 
-		// Textes éditables Hexa -> couleur.
 		protected void FieldsHexaToColor()
 		{
+			//	Textes éditables Hexa -> couleur.
 			double r = 0;
 			double g = 0;
 			double b = 0;
@@ -526,9 +526,9 @@ namespace Epsitec.Common.Widgets
 			this.suspendColorEvents = isc;
 		}
 
-		// Colorise certains sliders en fonction de la couleur définie.
 		protected void ColoriseSliders()
 		{
+			//	Colorise certains sliders en fonction de la couleur définie.
 			double h,s,v;
 			this.circle.GetHSV(out h, out s, out v);
 			Drawing.Color saturated = Drawing.Color.FromHSV(h,1,1);
@@ -545,9 +545,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fields == null )  return;
@@ -821,9 +821,9 @@ namespace Epsitec.Common.Widgets
 			this.Color = new Drawing.RichColor(this.picker.HotColor);
 		}
 		
-		// La valeur alpha a été changée.
 		private void HandleTextAlphaChanged(object sender)
 		{
+			//	La valeur alpha a été changée.
 			if ( !this.suspendColorEvents )
 			{
 				if ( this.Color.ColorSpace == Drawing.ColorSpace.RGB  )
@@ -843,54 +843,54 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Une valeur RGB a été changée.
 		private void HandleTextRGBChanged(object sender)
 		{
+			//	Une valeur RGB a été changée.
 			if ( !this.suspendColorEvents )
 			{
 				this.FieldsRGBToColor();
 			}
 		}
 
-		// Une valeur HSV a été changée.
 		private void HandleTextHSVChanged(object sender)
 		{
+			//	Une valeur HSV a été changée.
 			if ( !this.suspendColorEvents )
 			{
 				this.FieldsHSVToColor();
 			}
 		}
 
-		// Une valeur CMYK a été changée.
 		private void HandleTextCMYKChanged(object sender)
 		{
+			//	Une valeur CMYK a été changée.
 			if ( !this.suspendColorEvents )
 			{
 				this.FieldsCMYKToColor();
 			}
 		}
 
-		// Une valeur Gray a été changée.
 		private void HandleTextGrayChanged(object sender)
 		{
+			//	Une valeur Gray a été changée.
 			if ( !this.suspendColorEvents )
 			{
 				this.FieldsGrayToColor();
 			}
 		}
 
-		// Une valeur Hexa a été changée.
 		private void HandleTextHexaChanged(object sender)
 		{
+			//	Une valeur Hexa a été changée.
 			if ( !this.suspendColorEvents )
 			{
 				this.FieldsHexaToColor();
 			}
 		}
 
-		// Couleur dans le cercle changée.
 		private void HandleCircleChanged(object sender)
 		{
+			//	Couleur dans le cercle changée.
 			if ( !this.suspendColorEvents )
 			{
 				bool isc = this.suspendColorEvents;
@@ -908,16 +908,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Couleur dans palette cliquée.
 		private void HandlePaletteExport(object sender)
 		{
+			//	Couleur dans palette cliquée.
 			this.Color = this.palette.Color;
 			this.OnChanged();
 		}
 
-		// Couleur dans palette cliquée.
 		private void HandlePaletteImport(object sender)
 		{
+			//	Couleur dans palette cliquée.
 			this.palette.Color = this.Color;
 		}
 
@@ -944,9 +944,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		// Génère un événement pour dire ça a changé.
 		protected virtual void OnChanged()
 		{
+			//	Génère un événement pour dire ça a changé.
 			if ( this.Changed != null )  // qq'un écoute ?
 			{
 				this.Changed(this);
@@ -962,9 +962,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		// Conversion d'une chaîne hexadécimale en un entier.
 		static protected int ParseHexa(string hexa)
 		{
+			//	Conversion d'une chaîne hexadécimale en un entier.
 			int i = 0;
 
 			try

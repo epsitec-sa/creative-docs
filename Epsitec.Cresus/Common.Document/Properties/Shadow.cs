@@ -22,9 +22,9 @@ namespace Epsitec.Common.Document.Properties
 			this.oy     = -1.0;
 		}
 
-		// Couleur de l'ombre.
 		public Drawing.RichColor Color
 		{
+			//	Couleur de l'ombre.
 			get
 			{
 				return this.color;
@@ -41,9 +41,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Rayon de l'ombre.
 		public double Radius
 		{
+			//	Rayon de l'ombre.
 			get
 			{
 				return this.radius;
@@ -60,9 +60,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Offset x de l'ombre.
 		public double Ox
 		{
+			//	Offset x de l'ombre.
 			get
 			{
 				return this.ox;
@@ -79,9 +79,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Offset y de l'ombre.
 		public double Oy
 		{
+			//	Offset y de l'ombre.
 			get
 			{
 				return this.oy;
@@ -98,9 +98,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Shadow p = property as Shadow;
 			p.color  = this.color;
@@ -109,9 +109,9 @@ namespace Epsitec.Common.Document.Properties
 			p.oy     = this.oy;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			Shadow p = property as Shadow;
@@ -123,17 +123,17 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Shadow(document);
 		}
 
 
-		// Effectue le rendu d'un chemin flou.
 		public void Render(Graphics graphics, DrawingContext drawingContext, Path path)
 		{
+			//	Effectue le rendu d'un chemin flou.
 			if ( this.color.A == 0 )  return;
 
 			Transform save = graphics.Transform;
@@ -156,9 +156,9 @@ namespace Epsitec.Common.Document.Properties
 
 
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("Color", this.color);
@@ -167,9 +167,9 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("Oy", this.oy);
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected Shadow(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			if ( this.document.IsRevisionGreaterOrEqual(1,0,22) )
 			{
 				this.color = (Drawing.RichColor) info.GetValue("Color", typeof(Drawing.RichColor));

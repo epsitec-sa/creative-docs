@@ -55,9 +55,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				double h = this.LabelHeight;
@@ -93,17 +93,17 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 			this.underlinedColor.ActiveState = ActiveState.No;
 			this.overlinedColor.ActiveState  = ActiveState.No;
 			this.strikeoutColor.ActiveState  = ActiveState.No;
 		}
 
-		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 			if ( rank != -1 )
 			{
 				this.originFieldRank = rank;
@@ -117,15 +117,15 @@ namespace Epsitec.Common.Document.TextPanels
 			this.originFieldColor.ActiveState = ActiveState.Yes;
 		}
 
-		// Retourne le rang de la couleur d'origine.
 		public override int OriginColorRank()
 		{
+			//	Retourne le rang de la couleur d'origine.
 			return this.originFieldRank;
 		}
 
-		// Modifie la couleur d'origine.
 		public override void OriginColorChange(Drawing.RichColor color)
 		{
+			//	Modifie la couleur d'origine.
 			if ( this.originFieldColor == null )  return;
 			
 			if ( this.originFieldColor.Color != color )
@@ -135,16 +135,16 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Donne la couleur d'origine.
 		public override Drawing.RichColor OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			if ( this.originFieldColor == null )  return Drawing.RichColor.FromBrightness(0.0);
 			return this.originFieldColor.Color;
 		}
 
-		// Donne la couleur au wrapper.
 		protected void ColorToWrapper(ColorSample sample)
 		{
+			//	Donne la couleur au wrapper.
 			if ( sample == this.underlinedColor )
 			{
 				this.document.TextWrapper.SuspendSynchronisations();
@@ -171,16 +171,16 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		// Le wrapper associé a changé.
 		protected void HandleWrapperChanged(object sender)
 		{
+			//	Le wrapper associé a changé.
 			this.UpdateAfterChanging();
 		}
 
 		
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonUnderlined == null )  return;
@@ -388,9 +388,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Met à jour après un changement du wrapper.
 		protected override void UpdateAfterChanging()
 		{
+			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
 			bool underlined   = this.document.TextWrapper.Active.IsUnderlineDefined;
@@ -478,16 +478,16 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.document.TextWrapper.SuspendSynchronisations();
 			
-			// Cycle entre divers états:
+			//	Cycle entre divers états:
 			//
-			// (A1) Soulignement hérité du style actif
-			// (A2) Pas de soulignement (forcé par un disable local)
-			// (A3) Soulignement défini localement
+			//	(A1) Soulignement hérité du style actif
+			//	(A2) Pas de soulignement (forcé par un disable local)
+			//	(A3) Soulignement défini localement
 			//
-			// ou si aucun soulignement n'est défini dans le style actif:
+			//	ou si aucun soulignement n'est défini dans le style actif:
 			//
-			// (B1) Pas de soulignement
-			// (B2) Soulignement défini localement
+			//	(B1) Pas de soulignement
+			//	(B2) Soulignement défini localement
 			
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Underline;
 			
@@ -496,30 +496,30 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( this.document.TextWrapper.Active.Underline.IsDisabled &&
 					 this.document.TextWrapper.Active.Underline.IsEmpty == false )
 				{
-					// (A2)
+					//	(A2)
 					this.FillUnderlineDefinition(xline, false);  // --> (A3)
 					
 					if ( xline.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Underline) )
 					{
-						// L'état défini par notre souligné local est identique à celui hérité
-						// par le style actif; utilise celui du style dans ce cas.
+						//	L'état défini par notre souligné local est identique à celui hérité
+						//	par le style actif; utilise celui du style dans ce cas.
 						this.document.TextWrapper.Defined.ClearUnderline();  // --> (A1)
 					}
 				}
 				else if ( this.document.TextWrapper.Defined.IsUnderlineDefined )
 				{
-					// (A3) ou (B2)
+					//	(A3) ou (B2)
 					this.document.TextWrapper.Defined.ClearUnderline();  // --> (A1) ou (B1)
 				}
 				else
 				{
-					// (A1)
+					//	(A1)
 					xline.IsDisabled = true;  // --> (A2)
 				}
 			}
 			else
 			{
-				// (B1)
+				//	(B1)
 				this.FillUnderlineDefinition(xline, true);  // --> (B2)
 			}
 			
@@ -533,16 +533,16 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.document.TextWrapper.SuspendSynchronisations();
 			
-			// Cycle entre divers états:
+			//	Cycle entre divers états:
 			//
-			// (A1) Soulignement hérité du style actif
-			// (A2) Pas de soulignement (forcé par un disable local)
-			// (A3) Soulignement défini localement
+			//	(A1) Soulignement hérité du style actif
+			//	(A2) Pas de soulignement (forcé par un disable local)
+			//	(A3) Soulignement défini localement
 			//
-			// ou si aucun soulignement n'est défini dans le style actif:
+			//	ou si aucun soulignement n'est défini dans le style actif:
 			//
-			// (B1) Pas de soulignement
-			// (B2) Soulignement défini localement
+			//	(B1) Pas de soulignement
+			//	(B2) Soulignement défini localement
 			
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Overline;
 			
@@ -551,30 +551,30 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( this.document.TextWrapper.Active.Overline.IsDisabled &&
 					 this.document.TextWrapper.Active.Overline.IsEmpty == false )
 				{
-					// (A2)
+					//	(A2)
 					this.FillOverlineDefinition(xline, false);  // --> (A3)
 					
 					if ( xline.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Overline) )
 					{
-						// L'état défini par notre souligné local est identique à celui hérité
-						// par le style actif; utilise celui du style dans ce cas.
+						//	L'état défini par notre souligné local est identique à celui hérité
+						//	par le style actif; utilise celui du style dans ce cas.
 						this.document.TextWrapper.Defined.ClearOverline();  // --> (A1)
 					}
 				}
 				else if ( this.document.TextWrapper.Defined.IsOverlineDefined )
 				{
-					// (A3) ou (B2)
+					//	(A3) ou (B2)
 					this.document.TextWrapper.Defined.ClearOverline();  // --> (A1) ou (B1)
 				}
 				else
 				{
-					// (A1)
+					//	(A1)
 					xline.IsDisabled = true;  // --> (A2)
 				}
 			}
 			else
 			{
-				// (B1)
+				//	(B1)
 				this.FillOverlineDefinition(xline, true);  // --> (B2)
 			}
 			
@@ -588,16 +588,16 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.document.TextWrapper.SuspendSynchronisations();
 			
-			// Cycle entre divers états:
+			//	Cycle entre divers états:
 			//
-			// (A1) Soulignement hérité du style actif
-			// (A2) Pas de soulignement (forcé par un disable local)
-			// (A3) Soulignement défini localement
+			//	(A1) Soulignement hérité du style actif
+			//	(A2) Pas de soulignement (forcé par un disable local)
+			//	(A3) Soulignement défini localement
 			//
-			// ou si aucun soulignement n'est défini dans le style actif:
+			//	ou si aucun soulignement n'est défini dans le style actif:
 			//
-			// (B1) Pas de soulignement
-			// (B2) Soulignement défini localement
+			//	(B1) Pas de soulignement
+			//	(B2) Soulignement défini localement
 			
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Strikeout;
 			
@@ -606,30 +606,30 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( this.document.TextWrapper.Active.Strikeout.IsDisabled &&
 					 this.document.TextWrapper.Active.Strikeout.IsEmpty == false )
 				{
-					// (A2)
+					//	(A2)
 					this.FillStrikeoutDefinition(xline, false);  // --> (A3)
 					
 					if ( xline.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Strikeout) )
 					{
-						// L'état défini par notre souligné local est identique à celui hérité
-						// par le style actif; utilise celui du style dans ce cas.
+						//	L'état défini par notre souligné local est identique à celui hérité
+						//	par le style actif; utilise celui du style dans ce cas.
 						this.document.TextWrapper.Defined.ClearStrikeout();  // --> (A1)
 					}
 				}
 				else if ( this.document.TextWrapper.Defined.IsStrikeoutDefined )
 				{
-					// (A3) ou (B2)
+					//	(A3) ou (B2)
 					this.document.TextWrapper.Defined.ClearStrikeout();  // --> (A1) ou (B1)
 				}
 				else
 				{
-					// (A1)
+					//	(A1)
 					xline.IsDisabled = true;  // --> (A2)
 				}
 			}
 			else
 			{
-				// (B1)
+				//	(B1)
 				this.FillStrikeoutDefinition(xline, true);  // --> (B2)
 			}
 			
@@ -744,9 +744,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Donne une signature unique en fonction du type de contenu.
 		protected string Signature
 		{
+			//	Donne une signature unique en fonction du type de contenu.
 			get
 			{
 				string signature = "";

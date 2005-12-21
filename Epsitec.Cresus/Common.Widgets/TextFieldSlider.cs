@@ -32,7 +32,7 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Color				Color
 		{
-			// Couleur du slider.
+			//	Couleur du slider.
 			get
 			{
 				return this.slider.Color;
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnValueChanged()
 		{
-			// Valeur numérique éditée.
+			//	Valeur numérique éditée.
 			base.OnValueChanged ();
 			
 			if (this.Text != "")

@@ -55,9 +55,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Comportement lorsque la frontière est déplacée.
 		[ Support.Bundle ("behaviour") ] public PaneBookBehaviour PaneBehaviour
 		{
+			//	Comportement lorsque la frontière est déplacée.
 			get
 			{
 				return this.paneBehaviour;
@@ -143,9 +143,9 @@ namespace Epsitec.Common.Widgets
 			this.IsDirty = false;
 		}
 		
-		// Adapte les panneaux après un changement de géométrie.
 		protected void UpdateGeometryPages()
 		{
+			//	Adapte les panneaux après un changement de géométrie.
 			if ( this.items == null )  return;
 
 			this.windowSize = this.RetWindowSize();
@@ -157,9 +157,9 @@ namespace Epsitec.Common.Widgets
 			this.UpdateAbsoluteSizes();
 		}
 
-		// Assigne les tailles absolues.
 		protected bool AbsoluteUpdate()
 		{
+			//	Assigne les tailles absolues.
 			int count = this.items.Count;
 			for ( int i=0 ; i<count ; i++ )
 			{
@@ -186,9 +186,9 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		// Stretch les panneaux selon leurs élasticités.
 		protected void StretchPages()
 		{
+			//	Stretch les panneaux selon leurs élasticités.
 			if ( this.lastWindowSize.Width == 0 )  return;
 
 			double lastSize = ( this.type == PaneBookStyle.LeftRight ) ? this.lastWindowSize.Width : this.lastWindowSize.Height;
@@ -218,10 +218,10 @@ namespace Epsitec.Common.Widgets
 			this.totalRelativeSize = this.RetTotalRelativeSize();
 		}
 
-		// Vérifie si un ou plusieurs panneaux sont en-dessous de la taille
-		// minimale, ou en dessus de la taille maximale.
 		protected void CheckMinMax()
 		{
+			//	Vérifie si un ou plusieurs panneaux sont en-dessous de la taille
+			//	minimale, ou en dessus de la taille maximale.
 			int count = this.items.Count;
 			double minOverflow = 0;
 			double maxOverflow = 0;
@@ -274,9 +274,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Met à jour la géométrie de tous les panneaux et boutons.
 		protected void UpdatePaneButtons()
 		{
+			//	Met à jour la géométrie de tous les panneaux et boutons.
 			if ( this.items == null )  return;
 
 			this.windowSize = this.RetWindowSize();
@@ -377,9 +377,9 @@ namespace Epsitec.Common.Widgets
 			this.OnPaneSizeChanged();
 		}
 
-		// Met à jour les tailles absolues en fonction des tailles relatives.
 		protected void UpdateAbsoluteSizes()
 		{
+			//	Met à jour les tailles absolues en fonction des tailles relatives.
 			int count = this.items.Count;
 			for ( int i=0 ; i<count ; i++ )
 			{
@@ -390,9 +390,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Appelé lorsque le slider va être déplacé.
 		protected void HandleSliderDragStarted(object sender, MessageEventArgs e)
 		{
+			//	Appelé lorsque le slider va être déplacé.
 			if ( !(sender is PaneButton) )  return;
 			PaneButton button = sender as PaneButton;
 			int index = this.SearchPage(button);
@@ -439,9 +439,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Appelé lorsque le slider est déplacé.
 		protected void HandleSliderDragMoved(object sender, MessageEventArgs e)
 		{
+			//	Appelé lorsque le slider est déplacé.
 			if ( !(sender is PaneButton) )  return;
 			PaneButton button = sender as PaneButton;
 			int index = this.SearchPage(button);
@@ -485,9 +485,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Appelé lorsque le slider est fini de déplacer.
 		protected void HandleSliderDragEnded(object sender, MessageEventArgs e)
 		{
+			//	Appelé lorsque le slider est fini de déplacer.
 			if ( !(sender is PaneButton) )  return;
 			PaneButton button = sender as PaneButton;
 			int index = this.SearchPage(button);
@@ -523,9 +523,9 @@ namespace Epsitec.Common.Widgets
 			this.UpdateAbsoluteSizes();
 		}
 
-		// Bouton flèche cliqué.
 		private void HandleGlyphButtonClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton flèche cliqué.
 			if ( !(sender is GlyphButton) )  return;
 			GlyphButton button = sender as GlyphButton;
 			int index = this.SearchPage(button);
@@ -544,9 +544,9 @@ namespace Epsitec.Common.Widgets
 			this.UpdateAbsoluteSizes();
 		}
 
-		// Déplace le rectangle provisoire.
 		protected void SetSizeAlpha(int index, double size)
 		{
+			//	Déplace le rectangle provisoire.
 			size = System.Math.Max(size, this.sliderDragMin);
 			size = System.Math.Min(size, this.sliderDragMax);
 
@@ -577,24 +577,24 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Retourne la taille actuelle.
 		protected double RetSize(int index)
 		{
+			//	Retourne la taille actuelle.
 			PanePage page = this.items[index];
 			return page.PaneRelativeSize/this.totalRelativeSize*this.windowSize;
 		}
 
-		// Modifie la taille.
 		protected void SetSizeMinMax(int index, double size)
 		{
+			//	Modifie la taille.
 			size = System.Math.Max(size, this.sliderDragMin);
 			size = System.Math.Min(size, this.sliderDragMax);
 			this.SetSize(index, size);
 		}
 
-		// Modifie la taille.
 		protected void SetSize(int index, double size)
 		{
+			//	Modifie la taille.
 			PanePage page = this.items[index];
 
 			if ( index < this.items.Count-1 )
@@ -610,18 +610,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Modifie la taille.
 		protected void SetSizeBase(int index, double size)
 		{
+			//	Modifie la taille.
 			PanePage page = this.items[index];
 			size = System.Math.Max(size, page.PaneMinSize);
 			size = System.Math.Min(size, page.PaneMaxSize);
 			page.PaneRelativeSize = size*this.totalRelativeSize/this.windowSize;
 		}
 
-		// Retourne la taille minimale possible.
 		protected double RetMinSize(int index)
 		{
+			//	Retourne la taille minimale possible.
 			PanePage page = this.items[index];
 			double min = page.PaneMinSize;
 
@@ -635,9 +635,9 @@ namespace Epsitec.Common.Widgets
 			return min;
 		}
 
-		// Retourne la taille maximale possible.
 		protected double RetMaxSize(int index)
 		{
+			//	Retourne la taille maximale possible.
 			PanePage page = this.items[index];
 			double max = page.PaneMaxSize;
 
@@ -651,9 +651,9 @@ namespace Epsitec.Common.Widgets
 			return max;
 		}
 
-		// Cherche l'index de la page correspondant à un bouton.
 		protected int SearchPage(PaneButton button)
 		{
+			//	Cherche l'index de la page correspondant à un bouton.
 			int count = this.items.Count;
 			for ( int i=0 ; i<count ; i++ )
 			{
@@ -663,9 +663,9 @@ namespace Epsitec.Common.Widgets
 			return -1;
 		}
 
-		// Cherche l'index de la page correspondant à un bouton.
 		protected int SearchPage(GlyphButton button)
 		{
+			//	Cherche l'index de la page correspondant à un bouton.
 			int count = this.items.Count;
 			for ( int i=0 ; i<count ; i++ )
 			{
@@ -676,9 +676,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Retourne la largeur ou la hauteur maximale exploitable.
 		protected double RetWindowSize()
 		{
+			//	Retourne la largeur ou la hauteur maximale exploitable.
 			double total;
 			if ( this.type == PaneBookStyle.LeftRight )
 			{
@@ -695,9 +695,9 @@ namespace Epsitec.Common.Widgets
 			return total;
 		}
 
-		// Retourne la somme de toutes les largeurs relatives.
 		protected double RetTotalRelativeSize()
 		{
+			//	Retourne la somme de toutes les largeurs relatives.
 			if ( this.items == null )  return 1;
 
 			int count = this.items.Count;
@@ -728,9 +728,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Génère un événement pour dire qu'une taille a changé.
 		protected virtual void OnPaneSizeChanged()
 		{
+			//	Génère un événement pour dire qu'une taille a changé.
 			if ( this.PaneSizeChanged != null )  // qq'un écoute ?
 			{
 				this.PaneSizeChanged(this);
@@ -741,7 +741,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler PaneSizeChanged;
 
 		
-		// Dessine le groupe de panneaux.
+		//	Dessine le groupe de panneaux.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
@@ -750,9 +750,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Indique si le PaneBook doit être recalculé.
 		public bool IsDirty
 		{
+			//	Indique si le PaneBook doit être recalculé.
 			get
 			{
 				if ( this.items == null )  return false;

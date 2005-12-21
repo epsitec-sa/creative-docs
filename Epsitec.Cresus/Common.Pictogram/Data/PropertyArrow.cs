@@ -192,17 +192,17 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détermine le nom de la propriété dans la liste (Lister).
 		public string GetListName()
 		{
+			//	Détermine le nom de la propriété dans la liste (Lister).
 			return PropertyArrow.GetName(this.arrowType[0]) + ", " +
 				   PropertyArrow.GetName(this.arrowType[1]);
 		}
 
-		// Cherche le type correspondant à un index donné.
-		// Ceci détermine l'ordre dans le TextFieldCombo du panneau.
 		public static ArrowType ConvType(int index)
 		{
+			//	Cherche le type correspondant à un index donné.
+			//	Ceci détermine l'ordre dans le TextFieldCombo du panneau.
 			ArrowType type = ArrowType.None;
 			switch ( index )
 			{
@@ -220,9 +220,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return type;
 		}
 
-		// Cherche le rang d'un type donné.
 		public static int ConvType(ArrowType type)
 		{
+			//	Cherche le rang d'un type donné.
 			for ( int i=0 ; i<100 ; i++ )
 			{
 				ArrowType t = PropertyArrow.ConvType(i);
@@ -232,9 +232,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return -1;
 		}
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(ArrowType type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -252,11 +252,11 @@ namespace Epsitec.Common.Pictogram.Data
 			return name;
 		}
 
-		// Retourne les valeurs par défaut et les min/max pour un type donné.
 		public static void GetFieldsParam(ArrowType type, out bool enableLength,
 										  out bool enable1, out double effect1, out double min1, out double max1,
 										  out bool enable2, out double effect2, out double min2, out double max2)
 		{
+			//	Retourne les valeurs par défaut et les min/max pour un type donné.
 			enableLength = true;
 			enable1 = true;  effect1 = 0.50;  min1 = 0.00;  max1 = 2.00;
 			enable2 = true;  effect2 = 0.50;  min2 = 0.00;  max2 = 2.00;
@@ -306,16 +306,16 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		[XmlIgnore]
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyArrow p = property as PropertyArrow;
 			for ( int j=0 ; j<2 ; j++ )
@@ -327,9 +327,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyArrow p = property as PropertyArrow;
@@ -343,19 +343,19 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelArrow(drawer);
 		}
 
 
-		// Crée le chemin à l'extrémité p1, et retourne pp1, le remplaçant de p1.
 		public Drawing.Point PathExtremity(Drawing.Path path, int extremity,
 										   double width, Drawing.CapStyle cap,
 										   Drawing.Point p1, Drawing.Point p2,
 										   out bool outline, out bool surface)
 		{
+			//	Crée le chemin à l'extrémité p1, et retourne pp1, le remplaçant de p1.
 			outline = false;
 			surface = false;
 			if ( this.arrowType[extremity] == ArrowType.Right )  return p1;
@@ -489,10 +489,10 @@ namespace Epsitec.Common.Pictogram.Data
 			return p1;
 		}
 
-		// Calcule l'effet limite parallèlement à p1-p2.
 		protected double LimitPara(int extremity, double width,
 								   Drawing.Point p1, Drawing.Point p2)
 		{
+			//	Calcule l'effet limite parallèlement à p1-p2.
 			double len = this.length[extremity];
 			double ef1 = this.effect1[extremity];
 			Drawing.Point pa = PropertyArrow.Extremity(p1, p2, len, len*ef1);
@@ -502,10 +502,10 @@ namespace Epsitec.Common.Pictogram.Data
 			return (width/2)/d;
 		}
 
-		// Calcule l'extrémité gauche ou droite d'une flèche.
 		static protected Drawing.Point Extremity(Drawing.Point p1, Drawing.Point p2,
 												 double distPara, double distPerp)
 		{
+			//	Calcule l'extrémité gauche ou droite d'une flèche.
 			Drawing.Point c = Drawing.Point.Move(p1, p2, distPara);
 			Drawing.Point p = Drawing.Point.Move(c, c+p2-p1, System.Math.Abs(distPerp));
 			double angle = (distPerp > 0) ? 90 : -90;

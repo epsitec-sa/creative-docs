@@ -133,18 +133,18 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Retourne la largeur standard d'une icône.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard d'une icône.
 			get
 			{
 				return 22;
 			}
 		}
 
-		// Retourne la hauteur standard d'une icône.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard d'une icône.
 			get
 			{
 				return 22;
@@ -152,9 +152,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Position horizontale du marqueur vertical.
 		public double MarkerVertical
 		{
+			//	Position horizontale du marqueur vertical.
 			get
 			{
 				return this.markerVertical;
@@ -170,9 +170,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Position verticale du marqueur horizontal.
 		public double MarkerHorizontal
 		{
+			//	Position verticale du marqueur horizontal.
 			get
 			{
 				return this.markerHorizontal;
@@ -189,9 +189,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Retourne le rectangle correspondant à la zone visible dans le Viewer.
 		public Rectangle RectangleDisplayed
 		{
+			//	Retourne le rectangle correspondant à la zone visible dans le Viewer.
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
@@ -201,23 +201,23 @@ namespace Epsitec.Common.Document
 
 		
 		#region AutoScroll
-		// Démarre le timer pour l'auto-scroll.
 		protected void AutoScrollTimerStart(Message message)
 		{
+			//	Démarre le timer pour l'auto-scroll.
 			if ( this.document.Modifier.Tool == "ToolHand" )  return;
 			this.autoScrollTimer.Start();
 		}
 
-		// Stoppe le timer pour l'auto-scroll.
 		protected void AutoScrollTimerStop()
 		{
+			//	Stoppe le timer pour l'auto-scroll.
 			this.autoScrollTimer.Suspend();
 		}
 
-		// Appelé lorsque le timer arrive à échéance.
-		// Effectue éventuellement un scroll si la souris est proche des bords.
 		protected void HandleAutoScrollTimeElapsed(object sender)
 		{
+			//	Appelé lorsque le timer arrive à échéance.
+			//	Effectue éventuellement un scroll si la souris est proche des bords.
 			if ( this.mouseDragging && this.zoomShift )  return;
 			if ( this.mouseDragging && this.guideInteractive != -1 )  return;
 
@@ -261,10 +261,10 @@ namespace Epsitec.Common.Document
 			this.DispatchDummyMouseMoveEvent();
 		}
 
-		// Retourne le rectangle correspondant à la zone visible dans le Viewer
-		// dans laquelle il faut scroller.
 		public Rectangle ScrollRectangle
 		{
+			//	Retourne le rectangle correspondant à la zone visible dans le Viewer
+			//	dans laquelle il faut scroller.
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
@@ -280,9 +280,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Effectue un scroll automatique.
 		public void AutoScroll(Point move)
 		{
+			//	Effectue un scroll automatique.
 			if ( move.X == 0.0 && move.Y == 0.0 )  return;
 
 			Point origin = new Point(this.drawingContext.OriginX, this.drawingContext.OriginY);
@@ -296,17 +296,17 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Point pos)
 		{
+			//	Gestion d'un événement.
 			//?System.Diagnostics.Debug.WriteLine(string.Format("Message: {0}", message.Type));
 			if ( !this.IsActiveViewer )  return;
 
 			Modifier modifier = this.document.Modifier;
 			if ( modifier == null )  return;
 
-			// Après un MouseUp, on reçoit toujours un MouseMove inutile,
-			// qui est filtré ici !!!
+			//	Après un MouseUp, on reçoit toujours un MouseMove inutile,
+			//	qui est filtré ici !!!
 			if ( message.Type == MessageType.MouseMove &&
 				 this.lastMessageType == MessageType.MouseUp &&
 				 pos == this.mousePosWidget )
@@ -449,9 +449,9 @@ namespace Epsitec.Common.Document
 			this.UseMouseCursor();
 		}
 
-		// Gestion d'un bouton de la souris pressé.
 		protected void ProcessMouseDown(Message message, Point pos)
 		{
+			//	Gestion d'un bouton de la souris pressé.
 			Modifier modifier = this.document.Modifier;
 
 			if ( modifier.Tool == "ToolSelect" )
@@ -492,9 +492,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Gestion d'un déplacement de la souris pressé.
 		protected void ProcessMouseMove(Message message, Point pos)
 		{
+			//	Gestion d'un déplacement de la souris pressé.
 			Modifier modifier = this.document.Modifier;
 
 			if ( this.guideInteractive != -1 )
@@ -543,9 +543,9 @@ namespace Epsitec.Common.Document
 			this.UpdateMouseCursor(message);
 		}
 
-		// Gestion d'un bouton de la souris relâché.
 		protected void ProcessMouseUp(Message message, Point pos)
 		{
+			//	Gestion d'un bouton de la souris relâché.
 			Modifier modifier = this.document.Modifier;
 
 			if ( this.guideInteractive != -1 )
@@ -592,9 +592,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Action lorsque la molette est actionnée.
 		protected void ProcessMouseWheel(int wheel, Point pos)
 		{
+			//	Action lorsque la molette est actionnée.
 			if ( this.document.GlobalSettings.MouseWheelAction == Settings.MouseWheelAction.Zoom )
 			{
 				double zoom = this.document.GlobalSettings.DefaultZoom;
@@ -727,9 +727,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifySelectionChanged();
 		}
 
-		// Si nécessaire, termine la création en cours.
 		public void CreateEnding(bool delete, bool close)
 		{
+			//	Si nécessaire, termine la création en cours.
 			if ( this.createRank == -1 )  return;
 
 			Objects.Abstract layer = this.drawingContext.RootObject();
@@ -763,18 +763,18 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifySelectionChanged();
 		}
 
-		// Indique s'il existe un objet en cours de création.
 		public bool IsCreating
 		{
+			//	Indique s'il existe un objet en cours de création.
 			get
 			{
 				return ( this.createRank != -1 );
 			}
 		}
 
-		// Retourne le rang de l'objet en cours de création.
 		public int CreateRank()
 		{
+			//	Retourne le rang de l'objet en cours de création.
 			return this.createRank;
 		}
 		#endregion
@@ -909,7 +909,7 @@ namespace Epsitec.Common.Document
 
 			if ( this.mouseDragging )  // bouton souris pressé ?
 			{
-				// Duplique le ou les objets sélectionnés ?
+				//	Duplique le ou les objets sélectionnés ?
 				if ( this.ctrlDown && !this.ctrlDuplicate &&
 					 (this.moveGlobal != -1 || (this.moveObject != null && this.moveHandle == -1)) )
 				{
@@ -918,7 +918,7 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.DuplicateAndMove);
 
-						// Remet la sélection à la position de départ:
+						//	Remet la sélection à la position de départ:
 						if ( this.moveGlobal != -1 )  // déplace le modificateur global ?
 						{
 							this.selector.MoveProcess(this.moveGlobal, this.moveStart, this.drawingContext);
@@ -1143,9 +1143,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Change le point chaud.
 		protected bool NextHotSpot()
 		{
+			//	Change le point chaud.
 			if ( this.moveObject == null )  return false;
 
 			if ( this.drawingContext.IsCtrl )
@@ -1171,9 +1171,9 @@ namespace Epsitec.Common.Document
 			return true;
 		}
 
-		// Met à jour la poignée spéciale "hot spot".
 		protected void UpdateHotSpot()
 		{
+			//	Met à jour la poignée spéciale "hot spot".
 			if ( this.moveObject == null || this.moveHandle != -1 )  return;
 			if ( this.document.Modifier.IsToolShaper )  return;
 			this.hotSpotHandle.IsVisible = (this.drawingContext.IsCtrl || this.drawingContext.MagnetActiveAndExist);
@@ -1825,23 +1825,23 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		// Trouve le CommandDispatcher associé au document
 		protected CommandDispatcher GetCommandDispatcher()
 		{
+			//	Trouve le CommandDispatcher associé au document
 			return this.document.CommandDispatcher;
 		}
 		
-		// Détecte l'objet pointé par la souris.
 		protected Objects.Abstract Detect(Point mouse, bool selectFirst)
 		{
+			//	Détecte l'objet pointé par la souris.
 			System.Collections.ArrayList list = this.Detects(mouse, selectFirst);
 			if ( list.Count == 0 )  return null;
 			return list[0] as Objects.Abstract;
 		}
 
-		// Détecte les objets pointés par la souris.
 		protected System.Collections.ArrayList Detects(Point mouse, bool selectFirst)
 		{
+			//	Détecte les objets pointés par la souris.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			Objects.Abstract layer = this.drawingContext.RootObject();
 
@@ -1870,9 +1870,9 @@ namespace Epsitec.Common.Document
 			return list;
 		}
 
-		// Détecte l'objet éditable pointé par la souris.
 		protected Objects.Abstract DetectEdit(Point mouse, bool onlyTextBox2, out Objects.DetectEditType handle)
 		{
+			//	Détecte l'objet éditable pointé par la souris.
 			onlyTextBox2 = true;  // l'édition des anciens TextBox et TextLine plante !
 			Objects.Abstract layer = this.drawingContext.RootObject();
 
@@ -1898,9 +1898,9 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
-		// Détecte la poignée pointée par la souris.
 		protected bool DetectHandle(Point mouse, out Objects.Abstract detect, out int rank)
 		{
+			//	Détecte la poignée pointée par la souris.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			double min = 1000000.0;
 			Objects.Abstract best = null;
@@ -1925,9 +1925,9 @@ namespace Epsitec.Common.Document
 			return ( detect != null );
 		}
 
-		// Détecte la poignée d'un segment sélectionné pointée par la souris.
 		protected bool DetectSelectedSegmentHandle(Point mouse, out Objects.Abstract detect, out int rank)
 		{
+			//	Détecte la poignée d'un segment sélectionné pointée par la souris.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			double min = 1000000.0;
 			Objects.Abstract best = null;
@@ -1952,16 +1952,16 @@ namespace Epsitec.Common.Document
 			return ( detect != null );
 		}
 
-		// Annule le hilite des objets.
 		public void ClearHilite()
 		{
+			//	Annule le hilite des objets.
 			this.Hilite(null);
 			this.ShaperHilite(null, Point.Empty);
 		}
 
-		// Hilite un objet.
 		protected void Hilite(Objects.Abstract item)
 		{
+			//	Hilite un objet.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
@@ -1972,9 +1972,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Hilite un objet pour le modeleur.
 		protected void ShaperHilite(Objects.Abstract item, Point mouse)
 		{
+			//	Hilite un objet pour le modeleur.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
@@ -1989,9 +1989,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Adapte les objets sélectionnés à l'outil modeleur.
 		public void SelectToShaper()
 		{
+			//	Adapte les objets sélectionnés à l'outil modeleur.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
@@ -2003,9 +2003,9 @@ namespace Epsitec.Common.Document
 			this.selector.Handles = false;
 		}
 
-		// Survolle une poignée.
 		protected void HiliteHandle(Objects.Abstract obj, int rank)
 		{
+			//	Survolle une poignée.
 			if ( this.hiliteHandleObject != null )
 			{
 				this.hiliteHandleObject.HandleHilite(this.hiliteHandleRank, false);
@@ -2020,9 +2020,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Mode de sélection.
 		public SelectorType SelectorType
 		{
+			//	Mode de sélection.
 			get
 			{
 				return this.selector.TypeChoice;
@@ -2040,9 +2040,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Mode de sélection.
 		public SelectorTypeStretch SelectorTypeStretch
 		{
+			//	Mode de sélection.
 			get
 			{
 				return this.selector.TypeStretch;
@@ -2061,9 +2061,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Mode de sélection partiel (objets élastiques).
 		public bool PartialSelect
 		{
+			//	Mode de sélection partiel (objets élastiques).
 			get
 			{
 				return this.partialSelect;
@@ -2079,9 +2079,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Adapte les traits lors d'un zoom ou d'une rotation.
 		public bool SelectorAdaptLine
 		{
+			//	Adapte les traits lors d'un zoom ou d'une rotation.
 			get
 			{
 				return this.selectorAdaptLine;
@@ -2097,9 +2097,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Adapte les textes (Font et Justif) lors d'un zoom ou d'une rotation.
 		public bool SelectorAdaptText
 		{
+			//	Adapte les textes (Font et Justif) lors d'un zoom ou d'une rotation.
 			get
 			{
 				return this.selectorAdaptText;
@@ -2115,9 +2115,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Met à jour le selector en fonction des objets sélectionnés.
 		public void UpdateSelector()
 		{
+			//	Met à jour le selector en fonction des objets sélectionnés.
 			this.UpdateSelector(this.document.Modifier.SelectedBbox);
 		}
 
@@ -2161,16 +2161,16 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Initialise le rectangle du selector.
 		protected void SelectorInitialize(Drawing.Rectangle rect, double angle)
 		{
+			//	Initialise le rectangle du selector.
 			rect.Inflate(5.0/this.drawingContext.ScaleX);
 			this.selector.Initialize(rect, angle);
 		}
 
-		// Donne l'angle de ou des objets sélectionnés.
 		protected double GetSelectedAngle()
 		{
+			//	Donne l'angle de ou des objets sélectionnés.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
@@ -2179,9 +2179,9 @@ namespace Epsitec.Common.Document
 			return 0.0;
 		}
 
-		// Indique si tous les objets sélectionnés le sont globalement.
 		protected void GlobalSelectedUpdate(bool global)
 		{
+			//	Indique si tous les objets sélectionnés le sont globalement.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
@@ -2189,9 +2189,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Sélectionne l'objet directement dessous l'objet déjà sélectionné.
 		protected void SelectOther(Point mouse, Objects.Abstract actual)
 		{
+			//	Sélectionne l'objet directement dessous l'objet déjà sélectionné.
 			System.Collections.ArrayList list = this.Detects(mouse, false);
 			if ( list.Count == 0 )  return;
 
@@ -2205,9 +2205,9 @@ namespace Epsitec.Common.Document
 			this.Select(obj, false, false);
 		}
 
-		// Sélectionne un objet et désélectionne tous les autres.
 		public void Select(Objects.Abstract item, bool edit, bool add)
 		{
+			//	Sélectionne un objet et désélectionne tous les autres.
 			this.document.Modifier.UpdateCounters();
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
@@ -2234,11 +2234,11 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Sélectionne tous les objets dans le rectangle.
-		// partial = false -> toutes les poignées doivent être dans le rectangle
-		// partial = true  -> une seule poignée doit être dans le rectangle
 		protected void Select(Rectangle rect, bool add, bool partial)
 		{
+			//	Sélectionne tous les objets dans le rectangle.
+			//	partial = false -> toutes les poignées doivent être dans le rectangle
+			//	partial = true  -> une seule poignée doit être dans le rectangle
 			this.document.Modifier.UpdateCounters();
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
@@ -2280,9 +2280,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Début du déplacement de tous les objets sélectionnés.
 		protected void MoveAllStarting()
 		{
+			//	Début du déplacement de tous les objets sélectionnés.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
 			{
@@ -2290,9 +2290,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Effectue le déplacement de tous les objets sélectionnés.
 		protected void MoveAllProcess(Point move)
 		{
+			//	Effectue le déplacement de tous les objets sélectionnés.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
 			{
@@ -2302,9 +2302,9 @@ namespace Epsitec.Common.Document
 			this.document.Modifier.AddMoveAfterDuplicate(move);
 		}
 
-		// Début du déplacement global de tous les objets sélectionnés.
 		public void MoveGlobalStarting()
 		{
+			//	Début du déplacement global de tous les objets sélectionnés.
 			this.selector.InitialBBoxThin = this.document.Modifier.SelectedBboxThin;
 			this.selector.FinalToInitialData();
 
@@ -2316,9 +2316,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Effectue le déplacement global de tous les objets sélectionnés.
 		public void MoveGlobalProcess(Selector selector)
 		{
+			//	Effectue le déplacement global de tous les objets sélectionnés.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
 			{
@@ -2327,9 +2327,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Dessine les noms de tous les objets.
 		public void DrawLabels(Graphics graphics)
 		{
+			//	Dessine les noms de tous les objets.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
@@ -2337,9 +2337,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Dessine les noms de tous les styles.
 		public void DrawAggregates(Graphics graphics)
 		{
+			//	Dessine les noms de tous les styles.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
@@ -2347,9 +2347,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Dessine les poignées de tous les objets.
 		public void DrawHandles(Graphics graphics)
 		{
+			//	Dessine les poignées de tous les objets.
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
@@ -2360,16 +2360,16 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Retourne la position de la souris.
 		public bool MousePos(out Point pos)
 		{
+			//	Retourne la position de la souris.
 			pos = this.mousePos;
 			return this.mousePosValid;
 		}
 
-		// Indique si on est dans le viewer actif.
 		protected bool IsActiveViewer
 		{
+			//	Indique si on est dans le viewer actif.
 			get
 			{
 				return ( this == this.document.Modifier.ActiveViewer );
@@ -2378,9 +2378,9 @@ namespace Epsitec.Common.Document
 
 
 		#region MiniBar
-		// Ouvre la mini-palette.
 		public void OpenMiniBar(Point mouse, bool delayed, bool noSelected, bool hot)
 		{
+			//	Ouvre la mini-palette.
 			this.CloseMiniBar(false);
 
 			System.Collections.ArrayList cmds = this.MiniBarCommands(noSelected);
@@ -2440,16 +2440,16 @@ namespace Epsitec.Common.Document
 			this.miniBarTimer.Start();
 		}
 
-		// Appelé lorsque le timer arrive à échéance.
 		protected void HandleMiniBarTimeElapsed(object sender)
 		{
+			//	Appelé lorsque le timer arrive à échéance.
 			this.miniBarTimer.Suspend();
 			this.CreateMiniBar();
 		}
 
-		// Crée la mini-palette.
 		protected void CreateMiniBar()
 		{
+			//	Crée la mini-palette.
 			Point mouse;
 			if ( !this.MousePos(out mouse) )
 			{
@@ -2564,9 +2564,9 @@ namespace Epsitec.Common.Document
 			this.miniBar.Show();
 		}
 
-		// Appelé lorsque la souris s'est éloignée est que la fermeture est nécessaire.
 		private void HandleMiniBarCloseNeeded(object sender)
 		{
+			//	Appelé lorsque la souris s'est éloignée est que la fermeture est nécessaire.
 			this.CloseMiniBar(true);
 		}
 
@@ -2616,9 +2616,9 @@ namespace Epsitec.Common.Document
 			this.CloseMiniBar(false);
 		}
 
-		// Ferme la mini-palette.
 		public void CloseMiniBar(bool fadeout)
 		{
+			//	Ferme la mini-palette.
 			this.miniBarTimer.Suspend();
 
 			if ( this.miniBar != null )
@@ -2642,17 +2642,17 @@ namespace Epsitec.Common.Document
 			}
 		}
 		
-		// Quand l'animation de fermeture de la mini-palette est terminée, il faut
-		// encore supprimer la fenêtre, pour éviter qu'elle ne traîne ad eternum.
 		private void HandleMiniBarWindowAnimationEnded(object sender)
 		{
+			//	Quand l'animation de fermeture de la mini-palette est terminée, il faut
+			//	encore supprimer la fenêtre, pour éviter qu'elle ne traîne ad eternum.
 			Window miniBar = sender as Window;
 			miniBar.AsyncDispose();
 		}
 
-		// Retourne la liste des commandes pour la mini-palette.
 		protected System.Collections.ArrayList MiniBarCommands(bool noSelected)
 		{
+			//	Retourne la liste des commandes pour la mini-palette.
 			this.document.Notifier.GenerateEvents();
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
@@ -2749,8 +2749,8 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Essaie différentes largeurs de justifications, pour retenir la meilleure,
-			// c'est-à-dire celle qui a le moins de déchets (place perdue sur la dernière ligne).
+			//	Essaie différentes largeurs de justifications, pour retenir la meilleure,
+			//	c'est-à-dire celle qui a le moins de déchets (place perdue sur la dernière ligne).
 			double bestScraps = 10000;
 			double bestHope = 8*22;
 			int linesRequired = this.MiniBarCount(list)/8 + 1;
@@ -2773,9 +2773,9 @@ namespace Epsitec.Common.Document
 			return list;
 		}
 
-		// Compte le nombre de commandes dans une liste.
 		protected int MiniBarCount(System.Collections.ArrayList list)
 		{
+			//	Compte le nombre de commandes dans une liste.
 			int count = 0;
 			foreach ( string cmd in list )
 			{
@@ -2784,11 +2784,11 @@ namespace Epsitec.Common.Document
 			return count;
 		}
 
-		// Justifie la mini-palette, en remplaçant certains séparateurs ("") par une marque
-		// de fin de ligne ("#").
-		// Retourne le nombre de lignes nécessaires.
 		protected int MiniBarJustifDo(System.Collections.ArrayList list, double widthHope)
 		{
+			//	Justifie la mini-palette, en remplaçant certains séparateurs ("") par une marque
+			//	de fin de ligne ("#").
+			//	Retourne le nombre de lignes nécessaires.
 			double width = 0;
 			int lines = 1;
 			for ( int i=0 ; i<list.Count ; i++ )
@@ -2817,9 +2817,9 @@ namespace Epsitec.Common.Document
 			return lines;
 		}
 
-		// Supprime la justification de la mini-palette.
 		protected void MiniBarJustifClear(System.Collections.ArrayList list)
 		{
+			//	Supprime la justification de la mini-palette.
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
 				string cmd = list[i] as string;
@@ -2832,10 +2832,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne la longueur inutilisée la plus grande. Il s'agit généralement de la place
-		// perdue à la fin de la dernière ligne.
 		protected double MiniBarJustifScraps(System.Collections.ArrayList list)
 		{
+			//	Retourne la longueur inutilisée la plus grande. Il s'agit généralement de la place
+			//	perdue à la fin de la dernière ligne.
 			double shortestLine = 10000;
 			double longestLine = 0;
 			double width = 0;
@@ -2858,9 +2858,9 @@ namespace Epsitec.Common.Document
 			return longestLine-shortestLine;
 		}
 
-		// Retourne la largeur du widget d'une commande.
 		protected double MiniBarCommandWidth(string cmd)
 		{
+			//	Retourne la largeur du widget d'une commande.
 			if ( cmd == "" )  // séparateur ?
 			{
 				return 12;
@@ -2876,11 +2876,11 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Ajoute une commande dans la liste pour la mini-palette.
-		// Une commande n'est qu'une seule fois dans la liste.
-		// Si la commande est disable (selon le CommandDispatcher), elle n'est pas ajoutée.
 		public void MiniBarAdd(System.Collections.ArrayList list, string cmd)
 		{
+			//	Ajoute une commande dans la liste pour la mini-palette.
+			//	Une commande n'est qu'une seule fois dans la liste.
+			//	Si la commande est disable (selon le CommandDispatcher), elle n'est pas ajoutée.
 			if ( cmd == "" )  // séparateur ?
 			{
 				if ( list.Count == 0 )  return;
@@ -2906,15 +2906,15 @@ namespace Epsitec.Common.Document
 
 
 		#region ContextMenu
-		// Construit le menu contextuel.
 		protected void ContextMenu(Point mouse, bool globalMenu)
 		{
+			//	Construit le menu contextuel.
 			this.ClearHilite();
 
 			int nbSel = this.document.Modifier.TotalSelected;
 			bool exist;
 
-			// Construit le sous-menu "ordre".
+			//	Construit le sous-menu "ordre".
 			if ( globalMenu || nbSel == 0 )
 			{
 				this.contextMenuOrder = null;
@@ -2942,7 +2942,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Construit le sous-menu "opérations".
+			//	Construit le sous-menu "opérations".
 			if ( globalMenu || nbSel == 0 )
 			{
 				this.contextMenuOper = null;
@@ -2979,7 +2979,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Construit le sous-menu "géométrie".
+			//	Construit le sous-menu "géométrie".
 			if ( globalMenu || nbSel == 0 )
 			{
 				this.contextMenuGeom = null;
@@ -3008,7 +3008,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Construit le sous-menu "booléen".
+			//	Construit le sous-menu "booléen".
 			if ( globalMenu || nbSel == 0 )
 			{
 				this.contextMenuBool = null;
@@ -3037,7 +3037,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Construit le menu principal.
+			//	Construit le menu principal.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			if ( globalMenu || nbSel == 0 )
 			{
@@ -3135,9 +3135,9 @@ namespace Epsitec.Common.Document
 			this.contextMenu.ShowAsContextMenu(this.Window, mouse);
 		}
 
-		// Exécute une commande locale à un objet.
 		public void CommandObject(string cmd)
 		{
+			//	Exécute une commande locale à un objet.
 			if ( cmd == "CreateEnding" )
 			{
 				this.CreateEnding(false, false);
@@ -3193,31 +3193,31 @@ namespace Epsitec.Common.Document
 
 
 		#region TextRuler
-		// Appelé lorsque la règle est changée.
 		private void HandleRulerChanged(object sender)
 		{
+			//	Appelé lorsque la règle est changée.
 			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
 			if ( editObject == null )  return;
 			this.document.Notifier.NotifyArea(editObject.BoundingBox);
 		}
 
-		// Appelé lorsque la couleur dans la règle est cliquée.
 		private void HandleRulerColorClicked(object sender)
 		{
+			//	Appelé lorsque la couleur dans la règle est cliquée.
 			Common.Widgets.TextRuler ruler = sender as Common.Widgets.TextRuler;
 			this.document.Notifier.NotifyTextRulerColorClicked(ruler);
 		}
 
-		// Appelé lorsque la couleur dans la règle a changé suite à une navigation.
 		private void HandleRulerColorNavigatorChanged(object sender)
 		{
+			//	Appelé lorsque la couleur dans la règle a changé suite à une navigation.
 			Common.Widgets.TextRuler ruler = sender as Common.Widgets.TextRuler;
 			this.document.Notifier.NotifyTextRulerColorChanged(ruler);
 		}
 
-		// Positionne la règle en fonction de l'éventuel objet en cours d'édition.
 		public void UpdateRulerGeometry()
 		{
+			//	Positionne la règle en fonction de l'éventuel objet en cours d'édition.
 			if ( this.textRuler == null )  return;
 
 			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
@@ -3259,9 +3259,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Cache la règle.
 		protected void HideRuler()
 		{
+			//	Cache la règle.
 			if ( this.textRuler.IsVisible )
 			{
 				Rectangle rect = this.ScreenToInternal(this.textRuler.Bounds);
@@ -3275,9 +3275,9 @@ namespace Epsitec.Common.Document
 
 
 		#region MouseCursor
-		// Adapte le sprite de la souris en fonction des touches Shift et Ctrl.
 		protected void UpdateMouseCursor(Message message)
 		{
+			//	Adapte le sprite de la souris en fonction des touches Shift et Ctrl.
 			if ( this.mouseCursorType == MouseCursorType.Arrow       ||
 				 this.mouseCursorType == MouseCursorType.ArrowDup    ||
 				 this.mouseCursorType == MouseCursorType.ArrowPlus   ||
@@ -3364,15 +3364,15 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Change le sprite de la souris.
 		protected void ChangeMouseCursor(MouseCursorType cursor)
 		{
+			//	Change le sprite de la souris.
 			this.mouseCursorType = cursor;
 		}
 
-		// Utilise le bon sprite pour la souris.
 		protected void UseMouseCursor()
 		{
+			//	Utilise le bon sprite pour la souris.
 			MouseCursorType cursor = this.mouseCursorType;
 			if ( this.document.GlobalSettings.FineCursor )
 			{
@@ -3504,9 +3504,9 @@ namespace Epsitec.Common.Document
 			this.mouseCursorTypeUse = cursor;
 		}
 
-		// Choix du sprite de la souris.
 		protected void MouseCursorImage(ref Image image, string name)
 		{
+			//	Choix du sprite de la souris.
 			if ( image == null )
 			{
 				image = Support.Resources.DefaultManager.GetImage(name);
@@ -3518,9 +3518,9 @@ namespace Epsitec.Common.Document
 
 
 		#region GuideInteractive
-		// Détecte le guide pointé par la souris.
 		protected bool GuideDetect(Point pos, out int rank)
 		{
+			//	Détecte le guide pointé par la souris.
 			if ( !this.drawingContext.GuidesMouse ||
 				 !this.drawingContext.GuidesShow  )
 			{
@@ -3556,16 +3556,16 @@ namespace Epsitec.Common.Document
 			return false;
 		}
 
-		// Indique si un guide est horizontal.
 		protected bool GuideIsHorizontal(int rank)
 		{
+			//	Indique si un guide est horizontal.
 			Settings.Guide guide = this.document.Settings.GuidesGet(rank);
 			return guide.IsHorizontal;
 		}
 
-		// Met en évidence le guide survolé par la souris.
 		protected void GuideHilite(int rank)
 		{
+			//	Met en évidence le guide survolé par la souris.
 			if ( !this.drawingContext.GuidesMouse ||
 				 !this.drawingContext.GuidesShow  )  return;
 
@@ -3588,9 +3588,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Début de l'insertion interactive d'un guide (drag depuis une règle).
 		public void GuideInteractiveStart(bool horizontal)
 		{
+			//	Début de l'insertion interactive d'un guide (drag depuis une règle).
 			if ( this.document.Modifier.RetEditObject() != null )  return;
 
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.GuideCreateAndMove);
@@ -3607,12 +3607,12 @@ namespace Epsitec.Common.Document
 			this.ChangeMouseCursor(horizontal ? MouseCursorType.HSplit : MouseCursorType.VSplit);
 		}
 
-		// Positionne un guide interactif.
 		public void GuideInteractiveMove(Point pos, bool isAlt)
 		{
+			//	Positionne un guide interactif.
 			if ( this.guideInteractive == -1 )  return;
 
-			// Ne pas utiliser SnapGrid pour ignorer les repères !
+			//	Ne pas utiliser SnapGrid pour ignorer les repères !
 			if ( this.drawingContext.GridActive ^ isAlt )
 			{
 				this.drawingContext.SnapGridForce(ref pos);
@@ -3631,15 +3631,15 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this);
 		}
 
-		// Termine le déplacement d'un guide interactif.
 		public void GuideInteractiveEnd()
 		{
+			//	Termine le déplacement d'un guide interactif.
 			if ( this.guideInteractive == -1 )  return;
 
 			Size size = this.document.Size;
 			Settings.Guide guide = this.document.Settings.GuidesGet(this.guideInteractive);
 
-			// Supprime le repère s'il est tiré hors de la vue.
+			//	Supprime le repère s'il est tiré hors de la vue.
 			Rectangle rd = this.RectangleDisplayed;
 			double pos = guide.AbsolutePosition;
 			if ( guide.IsHorizontal )
@@ -3692,9 +3692,9 @@ namespace Epsitec.Common.Document
 
 		
 		#region DialogError
-		// Affiche le dialogue pour signaler une erreur.
 		public void DialogError(string error)
 		{
+			//	Affiche le dialogue pour signaler une erreur.
 			if ( error == "" )  return;
 
 			string title = Res.Strings.Dialog.Title;
@@ -3709,9 +3709,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Drawing
-		// Dessine la grille magnétique dessous.
 		protected void DrawGridBackground(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine la grille magnétique dessous.
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
 
@@ -3722,7 +3722,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.document.Type == DocumentType.Graphic )
 				{
-					// Dessine la "page".
+					//	Dessine la "page".
 					Rectangle rect = this.document.Modifier.PageArea;
 					graphics.Align(ref rect);
 					rect.Offset(ix, iy);
@@ -3738,9 +3738,9 @@ namespace Epsitec.Common.Document
 			graphics.LineWidth = initialWidth;
 		}
 
-		// Dessine la grille magnétique dessus.
 		protected void DrawGridForeground(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine la grille magnétique dessus.
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
 
@@ -3755,7 +3755,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.document.Type == DocumentType.Graphic )
 				{
-					// Dessine la "page".
+					//	Dessine la "page".
 					Rectangle rect = this.document.Modifier.PageArea;
 					graphics.Align(ref rect);
 					rect.Offset(ix, iy);
@@ -3775,7 +3775,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.document.Type == DocumentType.Graphic )
 				{
-					// Dessine la "page".
+					//	Dessine la "page".
 					Rectangle rect = this.document.Modifier.PageArea;
 					graphics.Align(ref rect);
 					rect.Offset(ix, iy);
@@ -3792,7 +3792,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				// Dessine la grille.
+				//	Dessine la grille.
 				if ( this.drawingContext.GridShow )
 				{
 					double s = System.Math.Min(this.drawingContext.GridStep.X*this.drawingContext.ScaleX,
@@ -3802,7 +3802,7 @@ namespace Epsitec.Common.Document
 					Point origin = this.document.Modifier.OriginArea;
 					origin = Point.GridAlign(origin, -this.drawingContext.GridOffset, this.drawingContext.GridStep);
 
-					// Dessine les traits verticaux.
+					//	Dessine les traits verticaux.
 					double step = this.drawingContext.GridStep.X*mul;
 					int subdiv = (int) this.drawingContext.GridSubdiv.X;
 					int rank = subdiv-(int)(-this.document.Modifier.OriginArea.X/step);
@@ -3828,7 +3828,7 @@ namespace Epsitec.Common.Document
 						rank ++;
 					}
 
-					// Dessine les traits horizontaux.
+					//	Dessine les traits horizontaux.
 					step = this.drawingContext.GridStep.Y*mul;
 					subdiv = (int) this.drawingContext.GridSubdiv.Y;
 					rank = subdiv-(int)(-this.document.Modifier.OriginArea.Y/step);
@@ -3855,7 +3855,7 @@ namespace Epsitec.Common.Document
 					}
 				}
 
-				// Dessine la grille pour le texte.
+				//	Dessine la grille pour le texte.
 				if ( this.drawingContext.TextGridShow )
 				{
 					double s = this.drawingContext.TextGridStep*this.drawingContext.ScaleY;
@@ -3864,7 +3864,7 @@ namespace Epsitec.Common.Document
 					Point origin = this.document.Modifier.OriginArea;
 					origin = Point.GridAlign(origin, new Point(0, -this.drawingContext.TextGridOffset), new Point(0, this.drawingContext.TextGridStep));
 
-					// Dessine les traits horizontaux.
+					//	Dessine les traits horizontaux.
 					double step = this.drawingContext.TextGridStep*mul;
 					int subdiv = (int) this.drawingContext.TextGridSubdiv;
 					int rank = subdiv-(int)(-this.document.Modifier.OriginArea.Y/step);
@@ -3891,7 +3891,7 @@ namespace Epsitec.Common.Document
 					}
 				}
 
-				// Dessine les repères.
+				//	Dessine les repères.
 				if ( this.drawingContext.GuidesShow )
 				{
 					Objects.Page page = this.document.GetObjects[this.drawingContext.CurrentPage] as Objects.Page;
@@ -3908,10 +3908,10 @@ namespace Epsitec.Common.Document
 					this.DrawGuides(graphics, this.document.Settings.GuidesListGlobal, this.document.Settings.GlobalGuides);
 				}
 
-				// Dessine les marqueurs
+				//	Dessine les marqueurs
 				this.DrawMarker(graphics);
 
-				// Dessine la cible.
+				//	Dessine la cible.
 				if ( this.IsActiveViewer )
 				{
 					if ( this.document.Type == DocumentType.Pictogram )
@@ -3942,9 +3942,9 @@ namespace Epsitec.Common.Document
 			graphics.LineWidth = initialWidth;
 		}
 
-		// Dessine tous les repères d'une liste.
 		protected void DrawGuides(Graphics graphics, UndoableList guides, bool editable)
 		{
+			//	Dessine tous les repères d'une liste.
 			double ix = 0.5/this.drawingContext.ScaleX;
 			double iy = 0.5/this.drawingContext.ScaleY;
 			Rectangle rd = this.RectangleDisplayed;
@@ -3991,9 +3991,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Dessine toutes les marques.
 		protected void DrawMarker(Graphics graphics)
 		{
+			//	Dessine toutes les marques.
 			double ix = 0.5/this.drawingContext.ScaleX;
 			double iy = 0.5/this.drawingContext.ScaleY;
 			Rectangle rd = this.RectangleDisplayed;
@@ -4021,9 +4021,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Dessine le hotspot.
 		public void DrawHotSpot(Graphics graphics)
 		{
+			//	Dessine le hotspot.
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
 
@@ -4055,16 +4055,16 @@ namespace Epsitec.Common.Document
 			graphics.LineWidth = initialWidth;
 		}
 
-		// Dessine le document.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine le document.
 			if ( this.Window.IsSizeMoveInProgress )
 			{
 				return;
 			}
 			
-			// Ignore une zone de repeinture d'un pixel à gauche ou en haut,
-			// à cause des règles qui chevauchent Viewer.
+			//	Ignore une zone de repeinture d'un pixel à gauche ou en haut,
+			//	à cause des règles qui chevauchent Viewer.
 			if ( clipRect.Right == 1              ||  // un pixel à gauche ?
 				 clipRect.Bottom == this.Height-1 )   // un pixel en haut ?
 			{
@@ -4126,51 +4126,51 @@ namespace Epsitec.Common.Document
 			graphics.ScaleTransform(scale.X, scale.Y, 0, 0);
 			graphics.TranslateTransform(this.drawingContext.OriginX, this.drawingContext.OriginY);
 
-			// Dessine la grille magnétique dessous.
+			//	Dessine la grille magnétique dessous.
 			this.DrawGridBackground(graphics, clipRect);
 
-			// Dessine les géométries.
+			//	Dessine les géométries.
 			this.document.Paint(graphics, this.drawingContext, clipRect);
 
-			// Dessine la grille magnétique dessus.
+			//	Dessine la grille magnétique dessus.
 			this.DrawGridForeground(graphics, clipRect);
 
-			// Dessine les noms de objets.
+			//	Dessine les noms de objets.
 			if ( this.IsActiveViewer && this.drawingContext.LabelsShow && !this.drawingContext.PreviewActive )
 			{
 				this.DrawLabels(graphics);
 			}
 
-			// Dessine les noms de styles.
+			//	Dessine les noms de styles.
 			if ( this.IsActiveViewer && this.drawingContext.AggregatesShow && !this.drawingContext.PreviewActive )
 			{
 				this.DrawAggregates(graphics);
 			}
 
-			// Dessine les poignées.
+			//	Dessine les poignées.
 			if ( this.IsActiveViewer )
 			{
 				this.DrawHandles(graphics);
 			}
 
-			// Dessine le hotspot.
+			//	Dessine le hotspot.
 			if ( this.IsActiveViewer && this.document.Modifier.Tool == "ToolHotSpot" )
 			{
 				this.DrawHotSpot(graphics);
 			}
 
-			// Dessine le rectangle de modification.
+			//	Dessine le rectangle de modification.
 			this.selector.Draw(graphics, this.drawingContext);
 			this.zoomer.Draw(graphics, this.drawingContext);
 
-			// Dessine les contraintes.
+			//	Dessine les contraintes.
 			this.drawingContext.DrawConstrain(graphics, this.document.Modifier.SizeArea);
 			this.drawingContext.DrawMagnet(graphics, this.document.Modifier.SizeArea);
 
 			graphics.Transform = save;
 			graphics.LineWidth = initialWidth;
 
-			// Dessine le cadre.
+			//	Dessine le cadre.
 			Rectangle rect = new Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
@@ -4184,9 +4184,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Gère l'invalidation en fonction de la raison.
 		public override void Invalidate(InvalidateReason reason)
 		{
+			//	Gère l'invalidation en fonction de la raison.
 			if ( reason != InvalidateReason.FocusedChanged )
 			{
 				base.Invalidate(reason);
@@ -4224,9 +4224,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 		
-		// Appelé lorsque la vue prend le focus.
 		protected void HandleFocused()
 		{
+			//	Appelé lorsque la vue prend le focus.
 			Objects.Abstract edit = this.document.Modifier.RetEditObject();
 			if ( edit != null )
 			{
@@ -4234,9 +4234,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Appelé lorsque la vue perd le focus.
 		protected void HandleDefocused()
 		{
+			//	Appelé lorsque la vue perd le focus.
 			Objects.Abstract edit = this.document.Modifier.RetEditObject();
 			if ( edit != null )
 			{
@@ -4244,9 +4244,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Salit tous les visualisateurs.
 		public void DirtyAllViews()
 		{
+			//	Salit tous les visualisateurs.
 			foreach ( Viewer viewer in this.document.Modifier.AttachViewers )
 			{
 				viewer.debugDirty = true;
@@ -4257,9 +4257,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Convert
-		// Conversion d'un rectangle écran -> rectangle interne.
 		public Rectangle ScreenToInternal(Rectangle rect)
 		{
+			//	Conversion d'un rectangle écran -> rectangle interne.
 			if ( !rect.IsInfinite )
 			{
 				rect.BottomLeft = this.ScreenToInternal(rect.BottomLeft);
@@ -4268,17 +4268,17 @@ namespace Epsitec.Common.Document
 			return rect;
 		}
 
-		// Conversion d'une coordonnée écran -> coordonnée interne.
 		public Point ScreenToInternal(Point pos)
 		{
+			//	Conversion d'une coordonnée écran -> coordonnée interne.
 			pos.X = pos.X/this.drawingContext.ScaleX - this.drawingContext.OriginX;
 			pos.Y = pos.Y/this.drawingContext.ScaleY - this.drawingContext.OriginY;
 			return pos;
 		}
 
-		// Conversion d'un rectangle interne -> rectangle écran.
 		public Rectangle InternalToScreen(Rectangle rect)
 		{
+			//	Conversion d'un rectangle interne -> rectangle écran.
 			if ( !rect.IsInfinite )
 			{
 				rect.BottomLeft = this.InternalToScreen(rect.BottomLeft);
@@ -4287,9 +4287,9 @@ namespace Epsitec.Common.Document
 			return rect;
 		}
 
-		// Conversion d'une coordonnée interne -> coordonnée écran.
 		public Point InternalToScreen(Point pos)
 		{
+			//	Conversion d'une coordonnée interne -> coordonnée écran.
 			pos.X = (pos.X+this.drawingContext.OriginX)*this.drawingContext.ScaleX;
 			pos.Y = (pos.Y+this.drawingContext.OriginY)*this.drawingContext.ScaleY;
 			return pos;
@@ -4298,22 +4298,22 @@ namespace Epsitec.Common.Document
 
 
 		#region RedrawArea
-		// Vide la zone de redessin.
 		public void RedrawAreaFlush()
 		{
+			//	Vide la zone de redessin.
 			this.redrawArea = Rectangle.Empty;
 		}
 
-		// Agrandit la zone de redessin.
 		public void RedrawAreaMerge(Rectangle rect)
 		{
+			//	Agrandit la zone de redessin.
 			if ( rect.IsEmpty )  return;
 			this.redrawArea.MergeWith(rect);
 		}
 
-		// Retourne la zone de redessin.
 		public Rectangle RedrawArea
 		{
+			//	Retourne la zone de redessin.
 			get { return this.redrawArea; }
 		}
 		#endregion

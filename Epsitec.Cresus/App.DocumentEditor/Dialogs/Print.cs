@@ -16,9 +16,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 		}
 
-		// Crée et montre la fenêtre du dialogue.
 		public override void Show()
 		{
+			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -30,7 +30,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowPrintCloseClicked);
 
-				// Crée les onglets.
+				//	Crée les onglets.
 				TabBook bookDoc = new TabBook(this.window.Root);
 				bookDoc.Name = "Book";
 				bookDoc.Arrows = TabBookArrows.Stretch;
@@ -54,7 +54,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				bookDoc.ActivePage = bookPrinter;
 
-				// Boutons de fermeture.
+				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
 				buttonOk.Width = 75;
 				buttonOk.Text = Res.Strings.Dialog.Print.Button.OK;
@@ -86,23 +86,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.ShowDialog();
 		}
 
-		// Enregistre la position de la fenêtre du dialogue.
 		public override void Save()
 		{
+			//	Enregistre la position de la fenêtre du dialogue.
 			this.WindowSave("Print");
 		}
 
-		// Reconstruit le dialogue.
 		public override void Rebuild()
 		{
+			//	Reconstruit le dialogue.
 			if ( !this.editor.IsCurrentDocument )  return;
 			if ( this.window == null )  return;
 			this.editor.CurrentDocument.Dialogs.BuildPrint(this.window);
 		}
 
-		// Met à jour le dialogue lorsque les pages ont changé.
 		public void UpdatePages()
 		{
+			//	Met à jour le dialogue lorsque les pages ont changé.
 			this.editor.CurrentDocument.Dialogs.UpdatePrintPages();
 		}
 

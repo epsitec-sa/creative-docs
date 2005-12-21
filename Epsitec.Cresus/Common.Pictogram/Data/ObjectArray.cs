@@ -64,17 +64,17 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return @"file:images/array.icon"; }
 		}
 
 
-		// Nombre de colonnes.
 		[XmlAttribute]
 		public int Columns
 		{
+			//	Nombre de colonnes.
 			get
 			{
 				return this.columns;
@@ -91,10 +91,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Nombre de lignes.
 		[XmlAttribute]
 		public int Rows
 		{
+			//	Nombre de lignes.
 			get
 			{
 				return this.rows;
@@ -118,18 +118,18 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.cells = value; }
 		}
 
-		// Accède à une cellule du tableau.
 		protected ArrayCell Cell(int c, int r)
 		{
+			//	Accède à une cellule du tableau.
 			System.Diagnostics.Debug.Assert(c >= 0 && c <= this.columns);
 			System.Diagnostics.Debug.Assert(r >= 0 && r <= this.rows);
 			return this.cells[c+r*(this.columns+1)] as ArrayCell;
 		}
 
 
-		// Sélectionne ou désélectionne toutes les poignées de l'objet.
 		public override void Select(bool select, bool edit)
 		{
+			//	Sélectionne ou désélectionne toutes les poignées de l'objet.
 			base.Select(select, edit);
 			this.DeselectAllCells();
 			if ( select && edit )
@@ -150,9 +150,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Choix du mode de modification.
 		public bool OutlineFrame
 		{
+			//	Choix du mode de modification.
 			get { return this.outlineFrame; }
 		}
 
@@ -167,10 +167,10 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Ajoute toutes les propriétés de l'objet dans une liste.
-		// Un type de propriété donné n'est qu'une fois dans la liste.
 		public override void PropertiesList(System.Collections.ArrayList list, bool firstLevel)
 		{
+			//	Ajoute toutes les propriétés de l'objet dans une liste.
+			//	Un type de propriété donné n'est qu'une fois dans la liste.
 			this.PropertyAllList(list, this.Property(0));
 
 			foreach ( AbstractProperty property in this.properties )
@@ -219,9 +219,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.PropertyAllList(list, this.Property(5));
 		}
 
-		// Cherche une propriété d'après son type.
 		protected override AbstractProperty SearchProperty(PropertyType type)
 		{
+			//	Cherche une propriété d'après son type.
 			if ( type == PropertyType.Name     )  return this.Property(0);
 			if ( type == PropertyType.TextFont )  return this.Property(5);
 
@@ -245,9 +245,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return null;
 		}
 
-		// Cherche si une propriété est liée à un style.
 		public override bool IsLinkProperty(AbstractProperty property)
 		{
+			//	Cherche si une propriété est liée à un style.
 			if ( property.StyleID == 0 )  return false;
 
 			for ( int c=0 ; c<this.columns+1 ; c++ )
@@ -267,9 +267,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return false;
 		}
 
-		// Retourne une copie d'une propriété.
 		public override AbstractProperty GetProperty(PropertyType type)
 		{
+			//	Retourne une copie d'une propriété.
 			if ( type == PropertyType.Name     ||
 				 type == PropertyType.TextFont )
 			{
@@ -323,9 +323,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return copy;
 		}
 
-		// Modifie une propriété.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Modifie une propriété.
 			this.onlyBase = true;
 			base.SetProperty(property);
 			this.onlyBase = false;
@@ -371,10 +371,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Indique si une cellule est sélectionnée, soit si elle est directement
-		// sélectionnée, ou si elle utilise le même style que la propriété modifiée.
 		protected bool PropertySelected(AbstractProperty property, int c, int r, OutlinePos pos)
 		{
+			//	Indique si une cellule est sélectionnée, soit si elle est directement
+			//	sélectionnée, ou si elle utilise le même style que la propriété modifiée.
 			if ( this.selected )
 			{
 				if ( this.Cell(c,r).Selected && this.PropertyOutline(c,r, pos) )  return true;
@@ -407,9 +407,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return ( actual.StyleID == property.StyleID );
 		}
 
-		// Regarde si un trait autour de la cellule fait partie de la sélection.
 		protected bool PropertyOutline(int c, int r, OutlinePos pos)
 		{
+			//	Regarde si un trait autour de la cellule fait partie de la sélection.
 			if ( this.outlineFrame )
 			{
 				switch ( pos  )
@@ -442,16 +442,16 @@ namespace Epsitec.Common.Pictogram.Data
 			return false;
 		}
 
-		// Donne une propriété d'un trait autour de la cellule, si elle est sélectionnée.
 		protected AbstractProperty GetPropertySel(PropertyType type, int c, int r, OutlinePos pos)
 		{
+			//	Donne une propriété d'un trait autour de la cellule, si elle est sélectionnée.
 			if ( !this.PropertyOutline(c,r, pos) )  return null;
 			return this.GetProperty(type, c,r, pos);
 		}
 
-		// Donne une propriété d'un trait autour de la cellule.
 		protected AbstractProperty GetProperty(PropertyType type, int c, int r, OutlinePos pos)
 		{
+			//	Donne une propriété d'un trait autour de la cellule.
 			switch ( pos  )
 			{
 				case OutlinePos.Left:    return this.Cell(c+0,r+0).Property(type, 0);
@@ -462,9 +462,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return null;
 		}
 
-		// Modifie une propriété d'un trait autour de la cellule.
 		protected void SetProperty(AbstractProperty property, int c, int r, OutlinePos pos)
 		{
+			//	Modifie une propriété d'un trait autour de la cellule.
 			switch ( pos  )
 			{
 				case OutlinePos.Left:    this.Cell(c+0,r+0).SetProperty(property, 0);  break;
@@ -474,9 +474,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Reprend toutes les propriétés d'un objet source.
 		public override void CloneProperties(AbstractObject src)
 		{
+			//	Reprend toutes les propriétés d'un objet source.
 			if ( src == null )  return;
 			base.CloneProperties(src);
 
@@ -497,15 +497,15 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Adapte les styles de l'objet collé, qui peut provenir d'un autre fichier,
-		// donc d'une autre collection de styles. On se base sur le nom des styles
-		// (StyleName) pour faire la correspondance.
-		// Si on trouve un nom identique -> le style de l'objet collé est modifié
-		// en fonction du style existant.
-		// Si on ne trouve pas un nom identique -> on crée un nouveau style, en
-		// modifiant bien entendu l'identificateur (StyleID) de l'objet collé.
 		public override void PasteAdaptStyles(StylesCollection stylesCollection)
 		{
+			//	Adapte les styles de l'objet collé, qui peut provenir d'un autre fichier,
+			//	donc d'une autre collection de styles. On se base sur le nom des styles
+			//	(StyleName) pour faire la correspondance.
+			//	Si on trouve un nom identique -> le style de l'objet collé est modifié
+			//	en fonction du style existant.
+			//	Si on ne trouve pas un nom identique -> on crée un nouveau style, en
+			//	modifiant bien entendu l'identificateur (StyleID) de l'objet collé.
 			for ( int c=0 ; c<this.columns+1 ; c++ )
 			{
 				for ( int r=0 ; r<this.rows+1 ; r++ )
@@ -535,9 +535,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur l'objet.
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle bbox = this.BoundingBox;
@@ -548,9 +548,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return AbstractObject.DetectSurface(path, pos);
 		}
 
-		// Détecte si la souris est sur l'objet pour l'éditer.
 		public override bool DetectEdit(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur l'objet pour l'éditer.
 			if ( this.isHide )  return false;
 
 			this.cellToHilite = this.DetectCell(pos);
@@ -558,9 +558,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, iconContext);
@@ -645,25 +645,25 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Déplace tout l'objet.
 		public override void MoveAll(Drawing.Point move, bool all)
 		{
+			//	Déplace tout l'objet.
 			base.MoveAll(move, all);
 			this.UpdateHandle();
 		}
 
 
-		// Déplace globalement l'objet.
 		public override void MoveGlobal(GlobalModifierData initial, GlobalModifierData final, bool all)
 		{
+			//	Déplace globalement l'objet.
 			base.MoveGlobal(initial, final, all);
 			this.UpdateHandle();
 		}
 
 
-		// Retourne les noms des assistants.
 		public static bool CommandLook(int rank, out string text, out string name)
 		{
+			//	Retourne les noms des assistants.
 			switch ( rank )
 			{
 				case  0:  text = "Numéros";              name = "Num";      return true;
@@ -682,9 +682,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return false;
 		}
 
-		// Indique l'état des commandes.
 		public bool EnabledAddColumnLeft
 		{
+			//	Indique l'état des commandes.
 			get
 			{
 				int c1,r1, c2,r2;
@@ -778,9 +778,9 @@ namespace Epsitec.Common.Pictogram.Data
 			get { return this.RetSelectedRect(); }
 		}
 
-		// Exécute une commande.
 		public void ExecuteCommand(string cmd, string arg)
 		{
+			//	Exécute une commande.
 			int c1,r1, c2,r2;
 			this.RetSelectedRect(out c1, out r1, out c2, out r2);
 
@@ -862,9 +862,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.cellToEdit = c + r*(this.columns+1);
 		}
 
-		// Insère des colonnes avant la colonne spécifiée.
 		protected void InsertColumnLeft(int rank, int total, bool duplicate)
 		{
+			//	Insère des colonnes avant la colonne spécifiée.
 			int ranksrc = rank;
 			int rankdst = rank;
 			for ( int t=0 ; t<total ; t++ )
@@ -889,9 +889,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Insère des colonnes après la colonne spécifiée.
 		protected void InsertColumnRight(int rank, int total, bool duplicate)
 		{
+			//	Insère des colonnes après la colonne spécifiée.
 			int ranksrc = rank+(total-1);
 			int rankdst = rank+total;
 			for ( int t=0 ; t<total ; t++ )
@@ -915,9 +915,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Insère des lignes avant la ligne spécifiée.
 		protected void InsertRowBottom(int rank, int total, bool duplicate)
 		{
+			//	Insère des lignes avant la ligne spécifiée.
 			int ranksrc = rank;
 			int rankdst = rank;
 			for ( int t=0 ; t<total ; t++ )
@@ -944,9 +944,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Insère des lignes après la ligne spécifiée.
 		protected void InsertRowTop(int rank, int total, bool duplicate)
 		{
+			//	Insère des lignes après la ligne spécifiée.
 			int ranksrc = rank+(total-1);
 			int rankdst = rank+total;
 			for ( int t=0 ; t<total ; t++ )
@@ -970,9 +970,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Supprime une colonne.
 		protected void DeleteColumn(int rank, int total)
 		{
+			//	Supprime une colonne.
 			while ( total > 0 )
 			{
 				for ( int r=this.rows ; r>=0 ; r-- )
@@ -987,9 +987,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Supprime une ligne.
 		protected void DeleteRow(int rank, int total)
 		{
+			//	Supprime une ligne.
 			while ( total > 0 )
 			{
 				for ( int c=this.columns ; c>=0 ; c-- )
@@ -1004,9 +1004,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Aligne les largeurs des colonnes.
 		protected void AlignColumn(int rank, int total)
 		{
+			//	Aligne les largeurs des colonnes.
 			double start;
 			if ( rank == 0 )  start = 0;
 			else              start = this.widths[rank-1];
@@ -1026,9 +1026,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Aligne les hauteurs des lignes.
 		protected void AlignRow(int rank, int total)
 		{
+			//	Aligne les hauteurs des lignes.
 			double start;
 			if ( rank == 0 )  start = 0;
 			else              start = this.heights[rank-1];
@@ -1048,9 +1048,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Permute les colonnes.
 		protected void SwapColumn(int rank, int total, int r1, int r2)
 		{
+			//	Permute les colonnes.
 			int cc = rank+total-1;
 			for ( int c=rank ; c<rank+total/2 ; c++ )
 			{
@@ -1065,9 +1065,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Permute les lignes.
 		protected void SwapRow(int rank, int total, int c1, int c2)
 		{
+			//	Permute les lignes.
 			int rr = rank+total-1;
 			for ( int r=rank ; r<rank+total/2 ; r++ )
 			{
@@ -1082,9 +1082,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Met le look à la sélection.
 		protected void LookHeader1()
 		{
+			//	Met le look à la sélection.
 			int c1,r1, c2,r2;
 			if ( !this.RetSelectedRect(out c1, out r1, out c2, out r2) )  return;
 
@@ -1108,9 +1108,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Met le look à la sélection.
 		protected void LookHeader2()
 		{
+			//	Met le look à la sélection.
 			int c1,r1, c2,r2;
 			if ( !this.RetSelectedRect(out c1, out r1, out c2, out r2) )  return;
 
@@ -1142,9 +1142,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Met le look à la sélection.
 		protected void LookAlter1()
 		{
+			//	Met le look à la sélection.
 			int c1,r1, c2,r2;
 			if ( !this.RetSelectedRect(out c1, out r1, out c2, out r2) )  return;
 
@@ -1162,9 +1162,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Met le look à la sélection.
 		protected void LookAlter2()
 		{
+			//	Met le look à la sélection.
 			int c1,r1, c2,r2;
 			if ( !this.RetSelectedRect(out c1, out r1, out c2, out r2) )  return;
 
@@ -1182,9 +1182,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Retourne la chaîne d'une série.
 		protected static string Serie(string arg, int rank)
 		{
+			//	Retourne la chaîne d'une série.
 			switch ( arg )
 			{
 				case "Num":
@@ -1224,9 +1224,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return "";
 		}
 
-		// Met le look à la sélection.
 		protected void LookSerie(string arg)
 		{
+			//	Met le look à la sélection.
 			int c1,r1, c2,r2;
 			if ( !this.RetSelectedRect(out c1, out r1, out c2, out r2) )  return;
 
@@ -1240,16 +1240,16 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Indique si la zone sélectionnée est rectangulaire.
 		protected bool RetSelectedRect()
 		{
+			//	Indique si la zone sélectionnée est rectangulaire.
 			int c1,r1, c2,r2;
 			return this.RetSelectedRect(out c1, out r1, out c2, out r2);
 		}
 
-		// Retourne la zone rectangulaire sélectionnée.
 		protected bool RetSelectedRect(out int c1, out int r1, out int c2, out int r2)
 		{
+			//	Retourne la zone rectangulaire sélectionnée.
 			c1 = r1 = c2 = r2 = -1;
 			int total = (this.columns+1) * (this.rows+1);
 
@@ -1285,9 +1285,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détecte la cellule pointée par la souris.
 		public override int DetectCell(Drawing.Point pos)
 		{
+			//	Détecte la cellule pointée par la souris.
 			for ( int c=0 ; c<this.columns ; c++ )
 			{
 				for ( int r=0 ; r<this.rows ; r++ )
@@ -1303,11 +1303,11 @@ namespace Epsitec.Common.Pictogram.Data
 			return -1;
 		}
 
-		// Début du déplacement d'une cellule.
 		public override void MoveCellStarting(int rank, Drawing.Point pos,
 											  bool isShift, bool isCtrl, int downCount,
 											  IconContext iconContext)
 		{
+			//	Début du déplacement d'une cellule.
 			if ( rank == -1 )  return;
 			int c = rank%(this.columns+1);
 			int r = rank/(this.columns+1);
@@ -1345,11 +1345,11 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Déplace une cellule.
 		public override void MoveCellProcess(int rank, Drawing.Point pos,
 											 bool isShift, bool isCtrl,
 											 IconContext iconContext)
 		{
+			//	Déplace une cellule.
 			if ( rank == -1 )  return;
 			int c = rank%(this.columns+1);
 			int r = rank/(this.columns+1);
@@ -1373,9 +1373,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Début de la création d'un objet.
 			if ( this.draftStep == 0 )  // choix taille d'une cellule ?
 			{
 				iconContext.ConstrainFixStarting(pos, ConstrainType.Square);
@@ -1384,18 +1384,18 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			this.dirtyBbox = true;
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Fin de la création d'un objet.
 			if ( this.draftStep == 0 )  // choix taille d'une cellule ?
 			{
 				Drawing.Point p0 = this.Handle(0).Position;
@@ -1417,7 +1417,7 @@ namespace Epsitec.Common.Pictogram.Data
 				this.InitHeights();
 				this.InitCells(this.Cell(0,0));
 
-				// Crée les 2 autres poignées dans les coins opposés.
+				//	Crée les 2 autres poignées dans les coins opposés.
 				Drawing.Point pp1 = this.DraftP1();
 				Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, pp1);
 				Drawing.Point p1 = rect.BottomLeft;
@@ -1434,36 +1434,36 @@ namespace Epsitec.Common.Pictogram.Data
 			this.draftStep ++;  // passe à la phase suivante
 		}
 
-		// Indique si la création de l'objet est terminée.
 		public override bool CreateIsEnding(IconContext iconContext)
 		{
+			//	Indique si la création de l'objet est terminée.
 			if ( this.draftCellWidth == 0 || this.draftCellHeight == 0 )  return true;
 			return (this.draftStep >= 2);
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
 			return ( rect.Width > this.minimalSize && rect.Height > this.minimalSize );
 		}
 
-		// Indique s'il faut sélectionner l'objet après sa création.
 		public override bool EditAfterCreation()
 		{
+			//	Indique s'il faut sélectionner l'objet après sa création.
 			return true;
 		}
 
-		// Indique si un objet est éditable.
 		public override bool IsEditable()
 		{
+			//	Indique si un objet est éditable.
 			return true;
 		}
 
-		// Lie l'objet éditable à une règle.
 		public override bool EditRulerLink(TextRuler ruler, IconContext iconContext)
 		{
+			//	Lie l'objet éditable à une règle.
 			if ( this.cellToEdit == -1 )  return false;
 			int c = this.cellToEdit%(this.columns+1);
 			int r = this.cellToEdit/(this.columns+1);
@@ -1490,9 +1490,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Gestion d'un événement pendant l'édition.
 		public override bool EditProcessMessage(Message message, Drawing.Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			if ( this.cellToEdit == -1 )  return false;
 			int c = this.cellToEdit%(this.columns+1);
 			int r = this.cellToEdit/(this.columns+1);
@@ -1542,9 +1542,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Gestion d'un événement pendant l'édition.
 		public override void EditMouseDownMessage(Drawing.Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			if ( this.cellToEdit == -1 )  return;
 			int c = this.cellToEdit%(this.columns+1);
 			int r = this.cellToEdit/(this.columns+1);
@@ -1558,9 +1558,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Met à jour les poignées pour les largeurs/hauteurs.
 		protected void UpdateHandle()
 		{
+			//	Met à jour les poignées pour les largeurs/hauteurs.
 			this.columnStart = this.Handle(2).Position;
 			this.columnEnd   = this.Handle(1).Position;
 			this.columnWidth = Drawing.Point.Distance(this.columnStart, this.columnEnd);
@@ -1573,13 +1573,13 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.columnWidth != 0 )  total += this.columns-1;
 			if ( this.rowHeight   != 0 )  total += this.rows-1;
 
-			// Supprime les poignées en trop.
+			//	Supprime les poignées en trop.
 			while ( this.handles.Count > total )
 			{
 				this.HandleDelete(this.handles.Count-1);
 			}
 
-			// Ajoute les poignées manquantes.
+			//	Ajoute les poignées manquantes.
 			while ( this.handles.Count < total )
 			{
 				this.HandleAdd(new Drawing.Point(0,0), HandleType.Secondary);
@@ -1589,10 +1589,10 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 
-			// Positionne la poignée centrale de déplacement global.
+			//	Positionne la poignée centrale de déplacement global.
 			this.Handle(4).Position = (this.Handle(0).Position+this.Handle(1).Position)/2;
 
-			// Positionne les poignées pour les largeurs de colonnes.
+			//	Positionne les poignées pour les largeurs de colonnes.
 			for ( int i=0 ; i<this.columns-1 ; i++ )
 			{
 				int rank = this.RankColumnHandle(i);
@@ -1600,7 +1600,7 @@ namespace Epsitec.Common.Pictogram.Data
 				this.Handle(rank).Position = Drawing.Point.Move(this.columnStart, this.columnEnd, this.columnWidth*this.widths[i]);
 			}
 
-			// Positionne les poignées pour les hauteurs de lignes.
+			//	Positionne les poignées pour les hauteurs de lignes.
 			for ( int i=0 ; i<this.rows-1 ; i++ )
 			{
 				int rank = this.RankRowHandle(i);
@@ -1608,7 +1608,7 @@ namespace Epsitec.Common.Pictogram.Data
 				this.Handle(rank).Position = Drawing.Point.Move(this.rowStart, this.rowEnd, this.rowHeight*this.heights[i]);
 			}
 
-			// Positionne les cellules.
+			//	Positionne les cellules.
 			for ( int c=0 ; c<this.columns+1 ; c++ )
 			{
 				for ( int r=0 ; r<this.rows+1 ; r++ )
@@ -1621,9 +1621,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Met à jour les largeurs/hauteurs en fonction des poignées.
 		protected void UpdateWidthsHeights()
 		{
+			//	Met à jour les largeurs/hauteurs en fonction des poignées.
 			this.columnStart = this.Handle(2).Position;
 			this.columnEnd   = this.Handle(1).Position;
 			this.columnWidth = Drawing.Point.Distance(this.columnStart, this.columnEnd);
@@ -1649,16 +1649,16 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Retourne le rang d'une poignée secondaire de colonne.
 		protected int RankColumnHandle(int index)
 		{
+			//	Retourne le rang d'une poignée secondaire de colonne.
 			if ( this.columnWidth == 0 )  return -1;
 			return 4+1+index;
 		}
 
-		// Retourne le rang d'une poignée secondaire de ligne.
 		protected int RankRowHandle(int index)
 		{
+			//	Retourne le rang d'une poignée secondaire de ligne.
 			if ( this.rowHeight == 0 )  return -1;
 			int rank = 4+1;
 			if ( this.columnWidth != 0 )  rank += this.columns-1;
@@ -1666,9 +1666,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Retourne l'épaisseur de trait maximale.
 		protected double MaxWidth()
 		{
+			//	Retourne l'épaisseur de trait maximale.
 			double max = 0;
 			for ( int c=0 ; c<=this.columns ; c++ )
 			{
@@ -1681,9 +1681,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return max;
 		}
 
-		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
+			//	Met à jour le rectangle englobant l'objet.
 			Drawing.Path path = this.PathBuild();
 			this.bboxThin = path.ComputeBounds();
 
@@ -1702,21 +1702,21 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Désélectionne toutes les cellules.
 		protected void DeselectAllCells()
 		{
+			//	Désélectionne toutes les cellules.
 			this.SelectAllCells(false);
 		}
 
-		// Sélectionne toutes les cellules.
 		protected void SelectAllCells()
 		{
+			//	Sélectionne toutes les cellules.
 			this.SelectAllCells(true);
 		}
 
-		// Sélectionne toutes les cellules.
 		protected void SelectAllCells(bool selected)
 		{
+			//	Sélectionne toutes les cellules.
 			for ( int c=0 ; c<=this.columns ; c++ )
 			{
 				for ( int r=0 ; r<=this.rows ; r++ )
@@ -1733,17 +1733,17 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Indique si une cellule est sélecitonnée.
 		protected bool IsSelectCell(int c, int r)
 		{
+			//	Indique si une cellule est sélecitonnée.
 			if ( c < 0 || c >= this.columns )  return false;
 			if ( r < 0 || r >= this.rows    )  return false;
 			return this.Cell(c,r).Selected;
 		}
 
-		// Initialise la table des largeurs.
 		protected void InitWidths()
 		{
+			//	Initialise la table des largeurs.
 			this.widths = new double[this.columns-1];
 			double v = 0;
 			for ( int i=0 ; i<this.columns-1 ; i++ )
@@ -1753,9 +1753,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Initialise la table des hauteurs.
 		protected void InitHeights()
 		{
+			//	Initialise la table des hauteurs.
 			this.heights = new double[this.rows-1];
 			double v = 0;
 			for ( int i=0 ; i<this.rows-1 ; i++ )
@@ -1765,9 +1765,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Initialise les cellules.
 		protected void InitCells()
 		{
+			//	Initialise les cellules.
 			this.cells.Clear();
 
 			for ( int c=0 ; c<this.columns+1 ; c++ )
@@ -1779,9 +1779,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Initialise les cellules d'après une cellule modèle.
 		protected void InitCells(ArrayCell model)
 		{
+			//	Initialise les cellules d'après une cellule modèle.
 			this.cells.Clear();
 
 			for ( int c=0 ; c<this.columns+1 ; c++ )
@@ -1793,9 +1793,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Initialise une nouvelle cellule.
 		protected ArrayCell NewCell()
 		{
+			//	Initialise une nouvelle cellule.
 			ArrayCell cell = new ArrayCell();
 			cell.Selected = false;
 
@@ -1820,9 +1820,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return cell;
 		}
 
-		// Initialise une nouvelle cellule d'après une cellule modèle.
 		protected ArrayCell NewCell(ArrayCell model)
 		{
+			//	Initialise une nouvelle cellule d'après une cellule modèle.
 			ArrayCell cell = new ArrayCell();
 			cell.Selected = false;
 
@@ -1850,9 +1850,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(AbstractObject src)
 		{
+			//	Reprend toutes les caractéristiques d'un objet.
 			base.CloneObject(src);
 
 			ObjectArray array = src as ObjectArray;
@@ -1888,9 +1888,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Calcule le nombre de colonnes pendant la création.
 		protected int DraftColumns()
 		{
+			//	Calcule le nombre de colonnes pendant la création.
 			Drawing.Point p0 = this.Handle(0).Position;
 			Drawing.Point p1 = this.Handle(1).Position;
 			int total = (int)((p1.X-p0.X)/this.draftCellWidth);
@@ -1899,9 +1899,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return total;
 		}
 
-		// Calcule le nombre de lignes pendant la création.
 		protected int DraftRows()
 		{
+			//	Calcule le nombre de lignes pendant la création.
 			Drawing.Point p0 = this.Handle(0).Position;
 			Drawing.Point p1 = this.Handle(1).Position;
 			int total = (int)((p1.Y-p0.Y)/this.draftCellHeight);
@@ -1910,9 +1910,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return total;
 		}
 
-		// Calcule le point p1' pendant la création.
 		protected Drawing.Point DraftP1()
 		{
+			//	Calcule le point p1' pendant la création.
 			Drawing.Point p0 = this.Handle(0).Position;
 			Drawing.Point p1 = this.Handle(1).Position;
 			Drawing.Point p = p0;
@@ -1921,9 +1921,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return p;
 		}
 
-		// Dessine les dimensions du tableau.
 		protected void DrawDraftDim(Drawing.Graphics graphics, IconContext iconContext)
 		{
+			//	Dessine les dimensions du tableau.
 			Drawing.Point p0 = this.Handle(0).Position;
 			Drawing.Point p1 = new Drawing.Point(p0.X+this.draftCellWidth, p0.Y+this.draftCellHeight);
 			string text = string.Format(" {0} x {1} ", this.DraftColumns(), this.DraftRows());
@@ -1942,9 +1942,9 @@ namespace Epsitec.Common.Pictogram.Data
 			graphics.RenderSolid(Drawing.Color.FromBrightness(0));
 		}
 
-		// Dessine un brouillon du tableau (pendant la création).
 		protected void DrawDraft(Drawing.Graphics graphics, IconContext iconContext)
 		{
+			//	Dessine un brouillon du tableau (pendant la création).
 			ArrayCell cell = this.Cell(0,0);  // prend la 1ère cellule comme attributs
 
 			double initialWidth = graphics.LineWidth;
@@ -2002,11 +2002,11 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Calcule le point à l'intersection d'une ligne et d'une colonne.
-		// c: [0..this.columns+1]
-		// r: [0..this.rows+1]
 		protected Drawing.Point CrossDot(int c, int r)
 		{
+			//	Calcule le point à l'intersection d'une ligne et d'une colonne.
+			//	c: [0..this.columns+1]
+			//	r: [0..this.rows+1]
 			Drawing.Point p0,p1,p2,p3, p03,p21, p;
 
 			p0 = this.Handle(0).Position;
@@ -2067,9 +2067,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return p;
 		}
 
-		// Crée le chemin de l'objet.
 		protected Drawing.Path PathBuild()
 		{
+			//	Crée le chemin de l'objet.
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = new Drawing.Point();
 			Drawing.Point p3 = this.Handle(1).Position;
@@ -2097,9 +2097,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Retourne les 4 coins d'une cellule en fonction de son orientation.
 		protected void CellCorners(int c, int r, out Drawing.Point pbl, out Drawing.Point pbr, out Drawing.Point ptl, out Drawing.Point ptr)
 		{
+			//	Retourne les 4 coins d'une cellule en fonction de son orientation.
 			switch ( this.Cell(c,r).TextJustif.Orientation )
 			{
 				case JustifOrientation.RightToLeft:  // <-
@@ -2129,9 +2129,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Dessine le texte d'une cellule.
 		protected void DrawCellText(Drawing.IPaintPort port, IconContext iconContext, int c, int r)
 		{
+			//	Dessine le texte d'une cellule.
 			TextLayout textLayout = this.Cell(c,r).TextLayout;
 			TextNavigator textNavigator = this.Cell(c,r).TextNavigator;
 
@@ -2228,9 +2228,9 @@ namespace Epsitec.Common.Pictogram.Data
 			port.Transform = ot;
 		}
 
-		// Dessine le fond d'une cellule.
 		protected void DrawCellSurface(Drawing.IPaintPort port, IconContext iconContext, int c, int r)
 		{
+			//	Dessine le fond d'une cellule.
 			Drawing.Path path = new Drawing.Path();
 			path.MoveTo(this.Cell(c,r).BottomLeft);
 			path.LineTo(this.Cell(c,r).TopLeft);
@@ -2250,9 +2250,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Dessine les traits d'une cellule.
 		protected void DrawCellOutline(Drawing.IPaintPort port, IconContext iconContext, IconObjects iconObjects, int c, int r)
 		{
+			//	Dessine les traits d'une cellule.
 			PropertyLine line;
 			PropertyColor color;
 
@@ -2291,9 +2291,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Dessine la mise en évidence d'une cellule.
 		protected void DrawCellHilite(Drawing.Graphics graphics, IconContext iconContext, int c, int r)
 		{
+			//	Dessine la mise en évidence d'une cellule.
 			Drawing.Point pbl, pbr, ptl, ptr;
 			pbl = this.Cell(c,r).BottomLeft;
 			pbr = this.Cell(c,r).BottomRight;
@@ -2322,9 +2322,9 @@ namespace Epsitec.Common.Pictogram.Data
 			graphics.LineCap = initialCap;
 		}
 
-		// Dessine la cellule en édition.
 		protected void DrawCellEdit(Drawing.Graphics graphics, IconContext iconContext, int c, int r)
 		{
+			//	Dessine la cellule en édition.
 			Drawing.Point pbl, pbr, ptl, ptr;
 			pbl = this.Cell(c,r).BottomLeft;
 			pbr = this.Cell(c,r).BottomRight;
@@ -2341,9 +2341,9 @@ namespace Epsitec.Common.Pictogram.Data
 			graphics.RenderSolid(IconContext.ColorFrameEdit);
 		}
 
-		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Dessine l'objet.
 			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext, iconObjects);
 
@@ -2355,7 +2355,7 @@ namespace Epsitec.Common.Pictogram.Data
 				return;
 			}
 
-			// Dessine tous fonds de cellules.
+			//	Dessine tous fonds de cellules.
 			for ( int c=0 ; c<this.columns ; c++ )
 			{
 				for ( int r=0 ; r<this.rows ; r++ )
@@ -2364,7 +2364,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 
-			// Dessine tous les textes des cellules.
+			//	Dessine tous les textes des cellules.
 			for ( int c=0 ; c<this.columns ; c++ )
 			{
 				for ( int r=0 ; r<this.rows ; r++ )
@@ -2373,7 +2373,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 
-			// Dessine tous les traits des cellules.
+			//	Dessine tous les traits des cellules.
 			for ( int c=0 ; c<this.columns+1 ; c++ )
 			{
 				for ( int r=0 ; r<this.rows+1 ; r++ )
@@ -2402,7 +2402,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				if ( this.selected )  // tableau sélectionné ?
 				{
-					// Dessine les cellules en évidence.
+					//	Dessine les cellules en évidence.
 					for ( int c=0 ; c<this.columns ; c++ )
 					{
 						for ( int r=0 ; r<this.rows ; r++ )
@@ -2414,7 +2414,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 				else	// tableau non sélectionné ?
 				{
-					// Dessine la mise en évidence complète.
+					//	Dessine la mise en évidence complète.
 					if ( this.IsHilite )
 					{
 						Drawing.Path path = this.PathBuild();
@@ -2426,14 +2426,14 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Imprime l'objet.
 		public override void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Imprime l'objet.
 			base.PrintGeometry(port, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 2 )  return;
 
-			// Imprime tous fonds de cellules.
+			//	Imprime tous fonds de cellules.
 			for ( int c=0 ; c<this.columns ; c++ )
 			{
 				for ( int r=0 ; r<this.rows ; r++ )
@@ -2442,7 +2442,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 
-			// Imprime tous les textes des cellules.
+			//	Imprime tous les textes des cellules.
 			for ( int c=0 ; c<this.columns ; c++ )
 			{
 				for ( int r=0 ; r<this.rows ; r++ )
@@ -2451,7 +2451,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 
-			// Imprime tous les traits des cellules.
+			//	Imprime tous les traits des cellules.
 			for ( int c=0 ; c<this.columns+1 ; c++ )
 			{
 				for ( int r=0 ; r<this.rows+1 ; r++ )
@@ -2462,11 +2462,11 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Arrange un objet après sa désérialisation. Il faut supprimer les
-		// premières cellules crées dans le constructeur, pour laisser celles
-		// qui ont été désérialisées prendre leurs places.
 		public override void ArrangeAfterRead()
 		{
+			//	Arrange un objet après sa désérialisation. Il faut supprimer les
+			//	premières cellules crées dans le constructeur, pour laisser celles
+			//	qui ont été désérialisées prendre leurs places.
 			base.ArrangeAfterRead();
 
 			int total = (this.columns+1) * (this.rows+1);

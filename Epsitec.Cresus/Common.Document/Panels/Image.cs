@@ -85,18 +85,18 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.isExtendedSize ? this.LabelHeight+120 : this.LabelHeight+55 );
 			}
 		}
 
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Image p = this.property as Properties.Image;
@@ -114,9 +114,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Image p = this.property as Properties.Image;
 			if ( p == null )  return;
 
@@ -128,9 +128,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldFilename == null )  return;
@@ -171,16 +171,16 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonFilter.Visibility = (this.isExtendedSize);
 		}
 		
-		// Une valeur a été changée.
 		private void HandleTextChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
-		// Une valeur a été changée.
 		private void HandleButtonActiveStateChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			this.OnChanged();
 		}
 

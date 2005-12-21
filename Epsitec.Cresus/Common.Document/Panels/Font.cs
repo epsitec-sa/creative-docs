@@ -74,9 +74,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				double h = this.LabelHeight;
@@ -101,9 +101,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Font p = this.property as Properties.Font;
@@ -119,9 +119,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Font p = this.property as Properties.Font;
 			if ( p == null )  return;
 
@@ -135,9 +135,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// TODO: TextFieldCombo.SelectedName ne marche pas !!!
 		protected void ComboSelectedName(TextFieldCombo combo, string name)
 		{
+			//	TODO: TextFieldCombo.SelectedName ne marche pas !!!
 			int total = combo.Items.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -150,29 +150,29 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// TODO: TextFieldCombo.SelectedName ne marche pas !!!
 		protected string ComboSelectedName(TextFieldCombo combo)
 		{
+			//	TODO: TextFieldCombo.SelectedName ne marche pas !!!
 			if ( combo.SelectedIndex == -1 )  return "";
 			return combo.Items[combo.SelectedIndex] as string;
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 			this.fontColor.ActiveState = ActiveState.No;
 		}
 
-		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 			this.fontColor.ActiveState = ActiveState.Yes;
 		}
 
-		// Modifie la couleur d'origine.
 		public override void OriginColorChange(Drawing.RichColor color)
 		{
+			//	Modifie la couleur d'origine.
 			if ( this.fontColor.Color != color )
 			{
 				this.fontColor.Color = color;
@@ -180,16 +180,16 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Donne la couleur d'origine.
 		public override Drawing.RichColor OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			return this.fontColor.Color;
 		}
 
 		
-		// Adapte les textes courts ou longs.
 		protected void UpdateShortLongText()
 		{
+			//	Adapte les textes courts ou longs.
 			if ( this.IsLabelProperties )
 			{
 				this.labelColor.Text = Res.Strings.Panel.Font.Long.Color + " ";
@@ -200,9 +200,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fontName == null )  return;
@@ -275,9 +275,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}

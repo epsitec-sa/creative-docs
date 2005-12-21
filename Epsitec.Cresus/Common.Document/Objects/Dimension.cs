@@ -44,16 +44,16 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectDimension"); }
 		}
 
 
-		// Début du déplacement d'une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -119,9 +119,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= 5 )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
@@ -258,18 +258,18 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Déplace globalement l'objet.
 		public override void MoveGlobalProcess(Selector selector)
 		{
+			//	Déplace globalement l'objet.
 			base.MoveGlobalProcess(selector);
 			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
+			//	Début de la création d'un objet.
 			if ( this.creatingPhase == 0 )
 			{
 				drawingContext.ConstrainFlush();
@@ -282,9 +282,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			if ( this.creatingPhase == 0 )
@@ -313,9 +313,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			//	Fin de la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 
@@ -344,9 +344,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Modifier.TextInfoModif = "";
 		}
 
-		// Indique si la création de l'objet est terminée.
 		public override bool CreateIsEnding(DrawingContext drawingContext)
 		{
+			//	Indique si la création de l'objet est terminée.
 			if ( this.creatingPhase < 2 )
 			{
 				return !this.CreateIsExist(drawingContext);
@@ -363,18 +363,18 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
-		// Termine la création de l'objet. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateEnding(DrawingContext drawingContext)
 		{
+			//	Termine la création de l'objet. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
@@ -390,9 +390,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Ajoute toutes les fontes utilisées par l'objet dans une liste.
 		public override void FillFontFaceList(System.Collections.ArrayList list)
 		{
+			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
 			string fontName = this.PropertyTextFont.GetFont().FaceName;
 
 			if ( !list.Contains(fontName) )
@@ -401,9 +401,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Ajoute tous les caractères utilisés par l'objet dans une table.
 		public override void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
+			//	Ajoute tous les caractères utilisés par l'objet dans une table.
 			Properties.Font propFont = this.PropertyTextFont;
 			Drawing.Font font = propFont.GetFont();
 			double fontSize = propFont.FontSize;
@@ -426,9 +426,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		// Conversion d'une longueur en chaîne.
 		protected string ToString(double value)
 		{
+			//	Conversion d'une longueur en chaîne.
 			value *= this.document.Modifier.DimensionScale;
 			double precision = 1.0/System.Math.Pow(10.0, this.document.Modifier.DimensionDecimal);
 
@@ -439,9 +439,9 @@ namespace Epsitec.Common.Document.Objects
 			return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
 		}
 
-		// Retourne le texte à mettre sur la cote.
 		protected string GetText
 		{
+			//	Retourne le texte à mettre sur la cote.
 			get
 			{
 				Properties.Dimension dimension = this.PropertyDimension;
@@ -461,9 +461,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Constuit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Constuit les formes de l'objet.
 			Path pathStart, pathEnd, pathLine, pathSupport, pathText;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
 			this.PathBuild(drawingContext,
@@ -480,13 +480,13 @@ namespace Epsitec.Common.Document.Objects
 			Shape[] shapes = new Shape[totalShapes];
 			int i = 0;
 			
-			// Forme du chemin principal.
+			//	Forme du chemin principal.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathLine;
 			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 			i ++;
 
-			// Forme de la surface de départ.
+			//	Forme de la surface de départ.
 			if ( surfaceStart )
 			{
 				shapes[i] = new Shape();
@@ -495,7 +495,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme de la surface d'arrivée.
+			//	Forme de la surface d'arrivée.
 			if ( surfaceEnd )
 			{
 				shapes[i] = new Shape();
@@ -504,7 +504,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme du chemin de départ.
+			//	Forme du chemin de départ.
 			if ( outlineStart )
 			{
 				shapes[i] = new Shape();
@@ -513,7 +513,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme du chemin d'arrivée.
+			//	Forme du chemin d'arrivée.
 			if ( outlineEnd )
 			{
 				shapes[i] = new Shape();
@@ -522,18 +522,18 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Forme des traits de support.
+			//	Forme des traits de support.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathSupport;
 			shapes[i].SetPropertyStroke(port, this.PropertyLineDimension, this.PropertyLineColor);
 			i ++;
 
-			// Caractères du texte.
+			//	Caractères du texte.
 			shapes[i] = new Shape();
 			shapes[i].SetTextObject(this);
 			i ++;
 
-			// Caractères du texte pour bbox et détection
+			//	Caractères du texte pour bbox et détection
 			shapes[i] = new Shape();
 			shapes[i].Path = pathText;
 			shapes[i].Type = Type.Surface;
@@ -543,12 +543,12 @@ namespace Epsitec.Common.Document.Objects
 			return shapes;
 		}
 
-		// Crée les 3 chemins de l'objet.
 		protected void PathBuild(DrawingContext drawingContext,
 								 out Path pathStart, out bool outlineStart, out bool surfaceStart,
 								 out Path pathEnd,   out bool outlineEnd,   out bool surfaceEnd,
 								 out Path pathLine, out Path pathSupport, out Path pathText)
 		{
+			//	Crée les 3 chemins de l'objet.
 			pathStart   = new Path();
 			pathEnd     = new Path();
 			pathLine    = new Path();
@@ -767,10 +767,10 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Retourne le chemin géométrique de l'objet pour les constructions
-		// magnétiques.
 		public override Path GetMagnetPath()
 		{
+			//	Retourne le chemin géométrique de l'objet pour les constructions
+			//	magnétiques.
 			Path path = new Path();
 
 			path.MoveTo(this.Handle(0).Position);
@@ -785,9 +785,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
+			//	Retourne le chemin géométrique de l'objet.
 			if ( rank > 0 )  return null;
 
 			Path pathStart, pathEnd, pathLine, pathSupport, pathText;
@@ -813,18 +813,18 @@ namespace Epsitec.Common.Document.Objects
 			return pathLine;
 		}
 
-		// Crée une ligne à partir de 2 points.
 		public void CreateFromPoints(Point p1, Point p2)
 		{
+			//	Crée une ligne à partir de 2 points.
 			this.HandleAdd(p1, HandleType.Primary);
 			this.HandleAdd(p2, HandleType.Primary);
 			this.SetDirtyBbox();
 		}
 
 
-		// Indique si la cote et les 2 traits de supports sont à angles droits.
 		protected bool IsRight
 		{
+			//	Indique si la cote et les 2 traits de supports sont à angles droits.
 			get
 			{
 				return ( Geometry.IsRight(this.Handle(1).Position, this.Handle(0).Position, this.Handle(2).Position) &&
@@ -833,9 +833,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Dessine le texte de la cote.
 		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
+			//	Dessine le texte de la cote.
 			Path pathStart = new Path();
 			Path pathEnd   = new Path();
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
@@ -951,15 +951,15 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Dimension(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 		}
 		#endregion
 

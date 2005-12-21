@@ -97,9 +97,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				double h = this.LabelHeight;
@@ -124,9 +124,9 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Retourne la marge supérieure.
 		public override double TopMargin
 		{
+			//	Retourne la marge supérieure.
 			get
 			{
 				return 5;
@@ -134,15 +134,15 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 			this.fontColor.ActiveState = ActiveState.No;
 		}
 
-		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 			if ( rank != -1 )
 			{
 				this.originFieldRank = rank;
@@ -154,15 +154,15 @@ namespace Epsitec.Common.Document.TextPanels
 			this.originFieldColor.ActiveState = ActiveState.Yes;
 		}
 
-		// Retourne le rang de la couleur d'origine.
 		public override int OriginColorRank()
 		{
+			//	Retourne le rang de la couleur d'origine.
 			return this.originFieldRank;
 		}
 
-		// Modifie la couleur d'origine.
 		public override void OriginColorChange(Drawing.RichColor color)
 		{
+			//	Modifie la couleur d'origine.
 			if ( this.originFieldColor == null )  return;
 			
 			if ( this.originFieldColor.Color != color )
@@ -172,16 +172,16 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Donne la couleur d'origine.
 		public override Drawing.RichColor OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			if ( this.originFieldColor == null )  return Drawing.RichColor.FromBrightness(0.0);
 			return this.originFieldColor.Color;
 		}
 
-		// Donne la couleur au wrapper.
 		protected void ColorToWrapper(ColorSample sample)
 		{
+			//	Donne la couleur au wrapper.
 			string color = this.GetColorSample(sample);
 
 			if ( color == null )
@@ -195,9 +195,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		// Met à jour après un changement du wrapper.
 		protected override void UpdateAfterChanging()
 		{
+			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
 			string face = this.document.TextWrapper.Active.FontFace;
@@ -252,9 +252,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ignoreChanged = false;
 		}
 
-		// Met à jour la liste d'un champ éditable pour le style de la police.
 		protected void UpdateComboStyleList(string face)
 		{
+			//	Met à jour la liste d'un champ éditable pour le style de la police.
 			this.fontStyle.Items.Clear();  // vide la liste
 			if ( face == null )  return;
 
@@ -266,16 +266,16 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Le wrapper associé a changé.
 		protected void HandleWrapperChanged(object sender)
 		{
+			//	Le wrapper associé a changé.
 			this.UpdateAfterChanging();
 		}
 
 		
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fontFace == null )  return;
@@ -376,9 +376,9 @@ namespace Epsitec.Common.Document.TextPanels
 
 
 		#region FeaturesMenu
-		// Appelé lors du clic sur le bouton "OpenType" pour ouvrir le menu.
 		private void HandleFeaturesClicked(object sender, MessageEventArgs e)
 		{
+			//	Appelé lors du clic sur le bouton "OpenType" pour ouvrir le menu.
 			IconButton button = sender as IconButton;
 			if ( button == null )  return;
 
@@ -393,9 +393,9 @@ namespace Epsitec.Common.Document.TextPanels
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
-		// Construit le menu des variantes OpenType (features).
 		protected VMenu BuildFeaturesMenu(string face, string style, string[] features)
 		{
+			//	Construit le menu des variantes OpenType (features).
 			OpenType.Font font = TextContext.GetFont(face, style);
 			if ( font == null )  return null;
 			string[] supported = font.GetSupportedFeatures();
@@ -425,9 +425,9 @@ namespace Epsitec.Common.Document.TextPanels
 			return menu;
 		}
 
-		// Crée une case du menu des variantes OpenType (features).
 		protected void BuildFeaturesMenu(VMenu menu, OpenType.Font font, string text, string feature, bool active, bool valid, MessageEventHandler message)
 		{
+			//	Crée une case du menu des variantes OpenType (features).
 			OpenType.LookupTable[] tables = font.GetLookupTables(feature);
 			foreach ( OpenType.LookupTable table in tables )
 			{
@@ -444,9 +444,9 @@ namespace Epsitec.Common.Document.TextPanels
 			menu.Items.Add(item);
 		}
 
-		// Appelé lors du choix dans le menu.
 		private void HandleFeaturesMenu(object sender, MessageEventArgs e)
 		{
+			//	Appelé lors du choix dans le menu.
 			MenuItem item = sender as MenuItem;
 			if ( item == null )  return;
 
@@ -486,9 +486,9 @@ namespace Epsitec.Common.Document.TextPanels
 		#endregion
 
 		
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 
 			this.document.TextWrapper.SuspendSynchronisations();
@@ -511,9 +511,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
-		// Le combo pour les polices va être ouvert.
 		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
 		{
+			//	Le combo pour les polices va être ouvert.
 			bool quickOnly = this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
 			string selectedFontFace = this.document.TextWrapper.Active.FontFace;
 			int quickCount;
@@ -713,9 +713,9 @@ namespace Epsitec.Common.Document.TextPanels
 
 		
 		#region Menu
-		// Construit le menu pour choisir une taille.
 		protected VMenu CreateMenu()
 		{
+			//	Construit le menu pour choisir une taille.
 			double size = this.document.TextWrapper.Active.FontSize;
 			Text.Properties.SizeUnits units = this.document.TextWrapper.Active.Units;
 			if ( this.document.TextWrapper.Defined.IsFontSizeDefined )

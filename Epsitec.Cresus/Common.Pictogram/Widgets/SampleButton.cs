@@ -26,9 +26,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 		
 		
-		// Retourne la hauteur standard d'un bouton.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard d'un bouton.
 			get
 			{
 				return this.DefaultFontHeight+10;
@@ -45,9 +45,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			get { return this.iconObjects; }
 		}
 
-		// Dessine le bouton.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			//	Dessine le bouton.
 			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);

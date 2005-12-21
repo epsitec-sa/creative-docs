@@ -69,9 +69,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Retourne l'index d'un caractère dans la fonte.
 		public int GetUnicodeIndex(int unicode)
 		{
+			//	Retourne l'index d'un caractère dans la fonte.
 			for ( int i=0 ; i<this.characters.Count ; i++ )
 			{
 				CharacterList cl = this.characters[i] as CharacterList;
@@ -80,9 +80,9 @@ namespace Epsitec.Common.Document.PDF
 			return -1;
 		}
 
-		// Retourne l'index d'un caractère dans la fonte.
 		public int GetGlyphIndex(ushort glyph)
 		{
+			//	Retourne l'index d'un caractère dans la fonte.
 			for ( int i=0 ; i<this.characters.Count ; i++ )
 			{
 				CharacterList cl = this.characters[i] as CharacterList;
@@ -121,9 +121,9 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		// Crée les fontes d'après les caractères.
 		public static void CreateFonts(System.Collections.Hashtable fonts, System.Collections.Hashtable characters)
 		{
+			//	Crée les fontes d'après les caractères.
 			int id = 0;
 			foreach ( System.Collections.DictionaryEntry dict in characters )
 			{

@@ -25,55 +25,55 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Wrapper pour la fonte.
 		public Text.Wrappers.TextWrapper TextWrapper
 		{
+			//	Wrapper pour la fonte.
 			get { return this.textWrapper; }
 		}
 
-		// Wrapper pour le paragraphe.
 		public Text.Wrappers.ParagraphWrapper ParagraphWrapper
 		{
+			//	Wrapper pour le paragraphe.
 			get { return this.paragraphWrapper; }
 		}
 
 
-		// Indique si les wrappers sont attachés.
 		public bool IsWrappersAttached
 		{
+			//	Indique si les wrappers sont attachés.
 			get
 			{
 				return this.textWrapper.IsAttached;
 			}
 		}
 
-		// Attache tous les wrappers à un texte.
 		public void WrappersAttach(TextFlow textFlow)
 		{
+			//	Attache tous les wrappers à un texte.
 			this.textWrapper.Attach(textFlow.TextNavigator);
 			this.paragraphWrapper.Attach(textFlow.TextNavigator);
 		}
 
-		// Détache tous les wrappers.
 		public void WrappersDetach()
 		{
+			//	Détache tous les wrappers.
 			this.textWrapper.Detach();
 			this.paragraphWrapper.Detach();
 		}
 
 
-		// Met à jour toutes les commandes.
 		public void UpdateCommands()
 		{
+			//	Met à jour toutes les commandes.
 			this.HandleTextWrapperChanged(null);
 			this.HandleParagraphWrapperChanged(null);
 		}
 
 
-		// Met à jour toutes les polices rapides, lorsqu'un changement dans les réglages a été fait.
-		// Appelé par DocumentEditor lorsque la notification FontsSettingsChanged est reçue.
 		public void UpdateQuickFonts()
 		{
+			//	Met à jour toutes les polices rapides, lorsqu'un changement dans les réglages a été fait.
+			//	Appelé par DocumentEditor lorsque la notification FontsSettingsChanged est reçue.
 			System.Collections.ArrayList quickFonts = this.document.Settings.QuickFonts;
 			if ( quickFonts.Count == 0 )
 			{
@@ -86,28 +86,28 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Donne une police rapide.
 		public OpenType.FontIdentity GetQuickFonts(int rank)
 		{
+			//	Donne une police rapide.
 			if ( this.quickFonts == null )  return null;
 			if ( rank >= this.quickFonts.Count )  return null;
 			return this.quickFonts[rank] as OpenType.FontIdentity;
 		}
 
 
-		// Met à jour toutes les commandes pour les polices rapides.
 		public void UpdateQuickButtons()
 		{
+			//	Met à jour toutes les commandes pour les polices rapides.
 			this.UpdateQuickButton(0);
 			this.UpdateQuickButton(1);
 			this.UpdateQuickButton(2);
 			this.UpdateQuickButton(3);
 		}
 
-		// Met à jour une commande pour les polices rapides.
 		public void UpdateQuickButton(int i)
 		{
-			// Commandes "FontQuick1" à "FontQuick4":
+			//	Met à jour une commande pour les polices rapides.
+			//	Commandes "FontQuick1" à "FontQuick4":
 			string cmd = string.Format("FontQuick{0}", (i+1).ToString(System.Globalization.CultureInfo.InvariantCulture));
 			CommandState cs = this.document.CommandDispatcher.GetCommandState(cmd);
 			if ( cs == null )  return;
@@ -135,9 +135,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Le wrapper du texte a changé.
 		protected void HandleTextWrapperChanged(object sender)
 		{
+			//	Le wrapper du texte a changé.
 			bool enabled = this.IsWrappersAttached;
 			bool bold        = false;
 			bool italic      = false;
@@ -181,9 +181,9 @@ namespace Epsitec.Common.Document
 			this.UpdateQuickButtons();
 		}
 
-		// Le wrapper des paragraphes a changé.
 		protected void HandleParagraphWrapperChanged(object sender)
 		{
+			//	Le wrapper des paragraphes a changé.
 			bool enabled = this.IsWrappersAttached;
 			double leading = 0.0;
 			Common.Text.Wrappers.JustificationMode justif = Text.Wrappers.JustificationMode.Unknown;
@@ -219,9 +219,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Exécute une commande.
 		public void ExecuteCommand(string name)
 		{
+			//	Exécute une commande.
 			switch ( name )
 			{
 				case "FontQuick1":      this.ChangeQuick(0);         break;
@@ -260,9 +260,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// La commande pour une police rapide a été actionnée.
 		protected void ChangeQuick(int i)
 		{
+			//	La commande pour une police rapide a été actionnée.
 			OpenType.FontIdentity id = this.GetQuickFonts(i);
 			if ( id == null )  return;
 			string face = id.InvariantFaceName;
@@ -273,21 +273,21 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
-		// La commande 'gras' a été actionnée.
 		protected void ChangeBold()
 		{
+			//	La commande 'gras' a été actionnée.
 			this.textWrapper.Defined.InvertBold = !this.textWrapper.Defined.InvertBold;
 		}
 
-		// La commande 'italique' a été actionnée.
 		protected void ChangeItalic()
 		{
+			//	La commande 'italique' a été actionnée.
 			this.textWrapper.Defined.InvertItalic = !this.textWrapper.Defined.InvertItalic;
 		}
 
-		// La commande 'souligné' a été actionnée.
 		protected void ChangeUnderlined()
 		{
+			//	La commande 'souligné' a été actionnée.
 			this.textWrapper.SuspendSynchronisations();
 
 			if ( this.textWrapper.Active.IsUnderlineDefined )
@@ -303,9 +303,9 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
-		// La commande 'surligné' a été actionnée.
 		protected void ChangeOverlined()
 		{
+			//	La commande 'surligné' a été actionnée.
 			this.textWrapper.SuspendSynchronisations();
 
 			if ( this.textWrapper.Active.IsOverlineDefined )
@@ -321,9 +321,9 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
-		// La commande 'biffé' a été actionnée.
 		protected void ChangeStrikeout()
 		{
+			//	La commande 'biffé' a été actionnée.
 			this.textWrapper.SuspendSynchronisations();
 
 			if ( this.textWrapper.Active.IsStrikeoutDefined )
@@ -339,9 +339,9 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
-		// La commande 'indice' a été actionnée.
 		protected void ChangeSubscript()
 		{
+			//	La commande 'indice' a été actionnée.
 			this.textWrapper.SuspendSynchronisations();
 
 			if ( this.SubscriptActiveState )
@@ -357,9 +357,9 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
-		// La commande 'exposant' a été actionnée.
 		protected void ChangeSuperscript()
 		{
+			//	La commande 'exposant' a été actionnée.
 			this.textWrapper.SuspendSynchronisations();
 
 			if ( this.SuperscriptActiveState )
@@ -375,9 +375,9 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
-		// La commande pour changer de taille a été actionnée.
 		public void IncrementFontSize(double delta)
 		{
+			//	La commande pour changer de taille a été actionnée.
 			double size = this.textWrapper.Defined.FontSize;
 			Text.Properties.SizeUnits units = this.textWrapper.Defined.Units;
 			if ( double.IsNaN(size) )
@@ -408,18 +408,18 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// La commande pour changer d'interligne a été actionnée.
 		protected void ChangeParagraphLeading(double value)
 		{
+			//	La commande pour changer d'interligne a été actionnée.
 			this.paragraphWrapper.SuspendSynchronisations();
 			this.paragraphWrapper.Defined.Leading = value;
 			this.paragraphWrapper.Defined.LeadingUnits = Text.Properties.SizeUnits.Percent;
 			this.paragraphWrapper.ResumeSynchronisations();
 		}
 
-		// La commande modifier l'interligne a été actionnée.
 		public void IncrementParagraphLeading(double delta)
 		{
+			//	La commande modifier l'interligne a été actionnée.
 			if ( !this.paragraphWrapper.IsAttached )  return;
 
 			double leading = this.paragraphWrapper.Active.Leading;
@@ -450,9 +450,9 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.ResumeSynchronisations();
 		}
 
-		// La commande pour modifier l'indentation a été actionnée.
 		protected void IncrementParagraphIndent(int delta)
 		{
+			//	La commande pour modifier l'indentation a été actionnée.
 			if ( !this.paragraphWrapper.IsAttached )  return;
 
 			int level = 0;
@@ -491,15 +491,15 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.ResumeSynchronisations();
 		}
 
-		// La commande pour changer de mode de justification a été actionnée.
 		protected void Justif(Common.Text.Wrappers.JustificationMode justif)
 		{
+			//	La commande pour changer de mode de justification a été actionnée.
 			this.document.ParagraphWrapper.Defined.JustificationMode = justif;
 		}
 
-		// La commande pour effacer les définitions de caractère a été actionnée.
 		protected void FontClear()
 		{
+			//	La commande pour effacer les définitions de caractère a été actionnée.
 			if ( !this.textWrapper.IsAttached )  return;
 
 			this.textWrapper.SuspendSynchronisations();
@@ -526,9 +526,9 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronisations();
 		}
 
-		// La commande pour effacer les définitions de paragraphe a été actionnée.
 		protected void ParagraphClear()
 		{
+			//	La commande pour effacer les définitions de paragraphe a été actionnée.
 			if ( !this.paragraphWrapper.IsAttached )  return;
 
 			this.paragraphWrapper.SuspendSynchronisations();
@@ -648,9 +648,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Donne l'état de la commande 'gras'.
 		protected bool BoldActiveState
 		{
+			//	Donne l'état de la commande 'gras'.
 			get
 			{
 				string face  = this.textWrapper.Defined.FontFace;
@@ -679,9 +679,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Donne l'état de la commande 'italique'.
 		protected bool ItalicActiveState
 		{
+			//	Donne l'état de la commande 'italique'.
 			get
 			{
 				string face  = this.textWrapper.Defined.FontFace;
@@ -717,45 +717,45 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Donne l'état de la commande 'souligné'.
 		protected bool UnderlinedActiveState
 		{
+			//	Donne l'état de la commande 'souligné'.
 			get
 			{
 				return this.textWrapper.Active.IsUnderlineDefined;
 			}
 		}
 
-		// Donne l'état de la commande 'surligné'.
 		protected bool OverlinedActiveState
 		{
+			//	Donne l'état de la commande 'surligné'.
 			get
 			{
 				return this.textWrapper.Active.IsOverlineDefined;
 			}
 		}
 
-		// Donne l'état de la commande 'biffé'.
 		protected bool StrikeoutActiveState
 		{
+			//	Donne l'état de la commande 'biffé'.
 			get
 			{
 				return this.textWrapper.Active.IsStrikeoutDefined;
 			}
 		}
 
-		// Donne l'état de la commande 'indice'.
 		protected bool SubscriptActiveState
 		{
+			//	Donne l'état de la commande 'indice'.
 			get
 			{
 				return this.textWrapper.Defined.IsXscriptDefined && this.textWrapper.Defined.Xscript.Offset < 0.0;
 			}
 		}
 
-		// Donne l'état de la commande 'exposant'.
 		protected bool SuperscriptActiveState
 		{
+			//	Donne l'état de la commande 'exposant'.
 			get
 			{
 				return this.textWrapper.Defined.IsXscriptDefined && this.textWrapper.Defined.Xscript.Offset > 0.0;
@@ -763,17 +763,17 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Modifie l'état d'une commande.
 		protected void CommandActiveState(string name, bool enabled)
 		{
+			//	Modifie l'état d'une commande.
 			CommandState cs = this.document.CommandDispatcher.GetCommandState(name);
 			System.Diagnostics.Debug.Assert(cs != null);
 			cs.Enable = enabled;
 		}
 
-		// Modifie l'état d'une commande.
 		protected void CommandActiveState(string name, bool enabled, bool state)
 		{
+			//	Modifie l'état d'une commande.
 			CommandState cs = this.document.CommandDispatcher.GetCommandState(name);
 			System.Diagnostics.Debug.Assert(cs != null);
 			cs.Enable = enabled;
@@ -781,9 +781,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Cherche la valeur suivante ou précédente dans une liste.
 		protected static double SearchNextValue(double value, double[] list, double delta)
 		{
+			//	Cherche la valeur suivante ou précédente dans une liste.
 			if ( delta > 0 )
 			{
 				for ( int i=0 ; i<list.Length ; i++ )

@@ -66,16 +66,16 @@ namespace Epsitec.Common.Document.Settings
 
 
 		#region Serialization
-		// Sérialise le réglage.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise le réglage.
 			base.GetObjectData(info, context);
 			info.AddValue("Value", this.Value);
 		}
 
-		// Constructeur qui désérialise le réglage.
 		protected String(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise le réglage.
 			this.Value = info.GetString("Value");
 			this.Initialise();
 		}

@@ -73,12 +73,12 @@ namespace Epsitec.Common.Widgets
 		
 		public TextProviderCallback				TextProviderCallback
 		{
-			// Spécifie le délégué pour remplir les cellules.
-			// En mode sans FillText, la liste est remplie à l'avance avec SetText.
-			// Une copie de tous les strings est alors contenue dans this.array.
-			// En mode FillText, c'est ScrollArray qui demande le contenu de chaque
-			// cellule au fur et à mesure à l'aide du délégué FillText. Ce mode
-			// est particulièrement efficace pour de grandes quantités de données.
+			//	Spécifie le délégué pour remplir les cellules.
+			//	En mode sans FillText, la liste est remplie à l'avance avec SetText.
+			//	Une copie de tous les strings est alors contenue dans this.array.
+			//	En mode FillText, c'est ScrollArray qui demande le contenu de chaque
+			//	cellule au fur et à mesure à l'aide du délégué FillText. Ce mode
+			//	est particulièrement efficace pour de grandes quantités de données.
 			
 			get
 			{
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Widgets
 
 		public double							HorizontalOffset
 		{
-			// Offset horizontal.
+			//	Offset horizontal.
 			get
 			{
 				return this.offset;

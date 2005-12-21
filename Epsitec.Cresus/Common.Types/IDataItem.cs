@@ -9,6 +9,7 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IDataItem : INameCaption, System.ICloneable
 	{
+		DataItemClasses		Classes	{ get; }
 		//	INameCaption Members:
 		//
 		//	string	Name		{ get; }
@@ -19,7 +20,6 @@ namespace Epsitec.Common.Types
 		//
 		//	object Clone();
 		
-		DataItemClasses		Classes	{ get; }
 	}
 	
 	[System.Flags]

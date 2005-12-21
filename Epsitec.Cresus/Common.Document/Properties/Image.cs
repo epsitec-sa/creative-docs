@@ -138,9 +138,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Donne le petit texte pour les échantillons.
 		public override string SampleText
 		{
+			//	Donne le petit texte pour les échantillons.
 			get
 			{
 				return Misc.ExtractName(this.filename);
@@ -148,15 +148,15 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Image p = property as Image;
 			p.filename = this.filename;
@@ -167,9 +167,9 @@ namespace Epsitec.Common.Document.Properties
 			p.reload   = this.reload;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			Image p = property as Image;
@@ -183,21 +183,21 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Image(document);
 		}
 
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
-			// Si le dossier d'accès à l'image est le même que le dossier dans
-			// lequel est sérialisé le fichier, sérialise juste le nom (relatif).
+			//	Si le dossier d'accès à l'image est le même que le dossier dans
+			//	lequel est sérialisé le fichier, sérialise juste le nom (relatif).
 			string filename = this.filename;
 			if ( filename != "" &&
 				 this.document.IoDirectory != "" &&
@@ -213,9 +213,9 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("Filter", this.filter);
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected Image(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			this.filename = info.GetString("Filename");
 			this.mirrorH = info.GetBoolean("MirrorH");
 			this.mirrorV = info.GetBoolean("MirrorV");
@@ -230,9 +230,9 @@ namespace Epsitec.Common.Document.Properties
 				this.filter = true;
 			}
 
-			// Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
-			// ajoute le nom du dossier dans lequel est désérialisé le fichier
-			// (pour le rendre absolu).
+			//	Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
+			//	ajoute le nom du dossier dans lequel est désérialisé le fichier
+			//	(pour le rendre absolu).
 			if ( this.filename != "" &&
 				 this.document.IoDirectory != "" &&
 				 System.IO.Path.GetDirectoryName(this.filename) == "" )

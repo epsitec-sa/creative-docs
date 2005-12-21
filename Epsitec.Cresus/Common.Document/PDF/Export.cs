@@ -63,9 +63,9 @@ namespace Epsitec.Common.Document.PDF
 			this.document = document;
 		}
 
-		// Exporte le document dans un fichier.
 		public string FileExport(string filename)
 		{
+			//	Exporte le document dans un fichier.
 			Settings.ExportPDFInfo info = this.document.Settings.ExportPDFInfo;
 			this.colorConversion = info.ColorConversion;
 			this.imageCompression = info.ImageCompression;
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Document.PDF
 			Port port = new Port(this.complexSurfaces, this.imageSurfaces, info.TextCurve ? null : this.fontList);
 			port.PushColorModifier(new ColorModifier(this.FinalOutputColorModifier));
 
-			// Crée le DrawingContext utilisé pour l'exportation.
+			//	Crée le DrawingContext utilisé pour l'exportation.
 			DrawingContext drawingContext;
 			drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.Size;
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Document.PDF
 
 			this.FoundComplexSurfaces(port, drawingContext, from, to);
 
-			// Crée et ouvre le fichier.
+			//	Crée et ouvre le fichier.
 			Writer writer;
 			try
 			{
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Document.PDF
 				return e.Message;
 			}
 
-			// Objet racine du document.
+			//	Objet racine du document.
 			writer.WriteObjectDef("Root");
 			writer.WriteString("<< /Type /Catalog /Outlines ");
 			writer.WriteObjectRef("HeaderOutlines");
@@ -148,11 +148,11 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteObjectRef("HeaderPages");
 			writer.WriteLine(">> endobj");
 
-			// Objet outlines.
+			//	Objet outlines.
 			writer.WriteObjectDef("HeaderOutlines");
 			writer.WriteLine("<< /Type /Outlines /Count 0 >> endobj");
 
-			// Objet décrivant le format de la page.
+			//	Objet décrivant le format de la page.
 			double pageWidth  = this.document.Size.Width;
 			double pageHeight = this.document.Size.Height;
 			Point pageOffset = new Point(0.0, 0.0);
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteString(Port.StringValue(pageHeight*Export.mm2in));
 			writer.WriteLine("] endobj");
 
-			// Objet donnant la liste des pages.
+			//	Objet donnant la liste des pages.
 			writer.WriteObjectDef("HeaderPages");
 			writer.WriteString("<< /Type /Pages /Kids [ ");
 			for ( int page=from ; page<=to ; page++ )
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 			writer.WriteLine(string.Format("] /Count {0} >> endobj", total));
 
-			// Un objet pour chaque page.
+			//	Un objet pour chaque page.
 			for ( int page=from ; page<=to ; page++ )
 			{
 				writer.WriteObjectDef(Export.NamePage(page));
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Document.PDF
 				writer.WriteLine(">> endobj");
 			}
 
-			// Un objet pour les ressources de chaque page.
+			//	Un objet pour les ressources de chaque page.
 			for ( int page=from ; page<=to ; page++ )
 			{
 				writer.WriteObjectDef(Export.NameResources(page));
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Document.PDF
 				writer.WriteLine(">> endobj");
 			}
 
-			// Crée les objets de définition.
+			//	Crée les objets de définition.
 			this.CreateComplexSurface(writer, port, drawingContext);
 			this.CreateImageSurface(writer, port);
 
@@ -302,12 +302,12 @@ namespace Epsitec.Common.Document.PDF
 				this.CreateFont(writer);
 			}
 
-			// Un objet pour le contenu de chaque page.
+			//	Un objet pour le contenu de chaque page.
 			for ( int page=from ; page<=to ; page++ )
 			{
 				port.Reset();
 
-				// Matrice de transformation globale:
+				//	Matrice de transformation globale:
 				Transform gt = port.Transform;
 				gt.Translate(pageOffset);  // translation si débord
 				gt.Scale(Export.mm2in);  // unité = 0.1mm
@@ -401,9 +401,9 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		// Modification finale d'une couleur en fonction du mode de sortie.
 		protected void FinalOutputColorModifier(ref RichColor color)
 		{
+			//	Modification finale d'une couleur en fonction du mode de sortie.
 			if ( this.colorConversion == PDF.ColorConversion.ToRGB )
 			{
 				color.ColorSpace = ColorSpace.RGB;
@@ -419,9 +419,9 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		// Dessine les traits de coupe.
 		protected void DrawTarget(Port port, Settings.ExportPDFInfo info)
 		{
+			//	Dessine les traits de coupe.
 			if ( !info.Target )  return;
 
 			double width  = this.document.Size.Width;
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Document.PDF
 
 			Path path = new Path();
 
-			// Traits horizontaux.
+			//	Traits horizontaux.
 			path.MoveTo(0.0-debord, 0.0);
 			path.LineTo(0.0-debord-length, 0.0);
 
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Document.PDF
 			path.MoveTo(width+debord, height);
 			path.LineTo(width+debord+length, height);
 
-			// Traits verticaux.
+			//	Traits verticaux.
 			path.MoveTo(0.0, 0.0-debord);
 			path.LineTo(0.0, 0.0-debord-length);
 
@@ -464,9 +464,9 @@ namespace Epsitec.Common.Document.PDF
 
 
 		#region ComplexSurface
-		// Trouve toutes les surfaces complexes dans toutes les pages.
 		protected void FoundComplexSurfaces(Port port, DrawingContext drawingContext, int from, int to)
 		{
+			//	Trouve toutes les surfaces complexes dans toutes les pages.
 			int id = 1;
 			for ( int page=from ; page<=to ; page++ )
 			{
@@ -537,9 +537,9 @@ namespace Epsitec.Common.Document.PDF
 			FontList.CreateFonts(this.fontList, this.characterList);
 		}
 
-		// Calcule le nombre de surfaces complexes dans une page.
 		protected int TotalComplexSurface(int page)
 		{
+			//	Calcule le nombre de surfaces complexes dans une page.
 			int total = 0;
 			for ( int i=0 ; i<this.complexSurfaces.Count ; i++ )
 			{
@@ -549,9 +549,9 @@ namespace Epsitec.Common.Document.PDF
 			return total;
 		}
 
-		// Donne une surface complexe.
 		protected ComplexSurface GetComplexSurface(int page, int index)
 		{
+			//	Donne une surface complexe.
 			int ip = 0;
 			for ( int i=0 ; i<this.complexSurfaces.Count ; i++ )
 			{
@@ -565,10 +565,10 @@ namespace Epsitec.Common.Document.PDF
 			return null;
 		}
 
-		// Crée toutes les surfaces complexes.
 		protected void CreateComplexSurface(Writer writer, Port port, DrawingContext drawingContext)
 		{
-			// Crée le ExtGState numéro 0, pour annuler une transparence.
+			//	Crée toutes les surfaces complexes.
+			//	Crée le ExtGState numéro 0, pour annuler une transparence.
 			writer.WriteObjectDef(Export.NameComplexSurface(0, TypeComplexSurface.ExtGState));
 			writer.WriteLine("<< /CA 1 /ca 1 >> endobj");
 
@@ -618,9 +618,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Crée une surface transparente unie.
 		protected void CreateComplexSurfaceTransparencyRegular(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
+			//	Crée une surface transparente unie.
 			if ( cs.IsSmooth )
 			{
 				this.CreateComplexSurfaceTransparencyGradientOrSmooth(writer, port, drawingContext, cs);
@@ -643,9 +643,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Crée deux surfaces transparentes unies pour un motif.
 		protected void CreateComplexSurfaceTransparencyPattern(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
+			//	Crée deux surfaces transparentes unies pour un motif.
 			double a1 = 1.0;
 			double a2 = 1.0;
 			if ( cs.Fill is Properties.Gradient )
@@ -665,9 +665,9 @@ namespace Epsitec.Common.Document.PDF
 			this.CreateComplexSurfaceAlpha(writer, a2, cs.Id, TypeComplexSurface.ExtGStateP2);
 		}
 
-		// Crée un ExtGState pour une transparence unie.
 		protected void CreateComplexSurfaceAlpha(Writer writer, double alpha, int id, TypeComplexSurface type)
 		{
+			//	Crée un ExtGState pour une transparence unie.
 			writer.WriteObjectDef(Export.NameComplexSurface(id, type));
 			Port port = new Port();
 			port.PutCommand("<< /CA ");  // voir [*] page 192
@@ -678,9 +678,9 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine(port.GetPDF());
 		}
 
-		// Engraisse une bbox en fonction d'une surface floue.
 		public static void SurfaceInflate(ComplexSurface cs, ref Rectangle bbox)
 		{
+			//	Engraisse une bbox en fonction d'une surface floue.
 			if ( cs.Fill is Properties.Gradient )
 			{
 				Properties.Gradient surface = cs.Fill as Properties.Gradient;
@@ -703,19 +703,19 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Crée une surface dégradée transparente et/ou floue.
 		protected void CreateComplexSurfaceTransparencyGradientOrSmooth(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
+			//	Crée une surface dégradée transparente et/ou floue.
 			Objects.Abstract obj = cs.Object;
 			SurfaceAnchor sa = obj.SurfaceAnchor;
 
-			// ExtGState.
+			//	ExtGState.
 			writer.WriteObjectDef(Export.NameComplexSurface(cs.Id, TypeComplexSurface.ExtGState));
 			writer.WriteString("<< /SMask << /S /Luminosity /G ");  // voir [*] page 521
 			writer.WriteObjectRef(Export.NameComplexSurface(cs.Id, TypeComplexSurface.XObject));
 			writer.WriteLine(">> >> endobj");
 
-			// XObject.
+			//	XObject.
 			Rectangle bbox = sa.BoundingBox;
 			Export.SurfaceInflate(cs, ref bbox);
 
@@ -786,22 +786,22 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Crée une surface floue.
 		protected void CreateComplexSurfaceSmooth(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
+			//	Crée une surface floue.
 			Objects.Abstract obj = cs.Object;
 			SurfaceAnchor sa = obj.SurfaceAnchor;
 
 			Properties.Gradient surface = cs.Fill as Properties.Gradient;
 			Properties.Line     stroke  = cs.Stroke;
 
-			// ExtGStateSmooth.
+			//	ExtGStateSmooth.
 			writer.WriteObjectDef(Export.NameComplexSurface(cs.Id, TypeComplexSurface.ExtGStateSmooth));
 			writer.WriteString("<< /SMask << /S /Luminosity /G ");  // voir [*] page 521
 			writer.WriteObjectRef(Export.NameComplexSurface(cs.Id, TypeComplexSurface.XObjectSmooth));
 			writer.WriteLine(">> >> endobj");
 
-			// XObjectSmooth.
+			//	XObjectSmooth.
 			Rectangle bbox = sa.BoundingBox;
 			Export.SurfaceInflate(cs, ref bbox);
 
@@ -861,9 +861,9 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine("endstream endobj");
 		}
 
-		// Crée une surface dégradée transparente.
 		protected void CreateComplexSurfaceOpaqueGradient(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
+			//	Crée une surface dégradée transparente.
 			if ( cs.IsSmooth )
 			{
 				this.CreateComplexSurfaceTransparencyGradientOrSmooth(writer, port, drawingContext, cs);
@@ -875,9 +875,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Calcule la matrice de transformation pour une surface dégradée.
 		protected void MatrixComplexSurfaceGradient(ComplexSurface cs)
 		{
+			//	Calcule la matrice de transformation pour une surface dégradée.
 			Properties.Gradient gradient = cs.Fill as Properties.Gradient;
 			if ( gradient == null )  return;
 
@@ -920,17 +920,17 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Crée une surface dégradée.
-		// Si nbColors == 0  ->  canal alpha
-		// Si nbColors == 1  ->  espace Gray
-		// Si nbColors == 3  ->  espace RGB
-		// Si nbColors == 4  ->  espace CMYK
 		protected void CreateComplexSurfaceGradient(Writer writer,
 													Port port,
 													DrawingContext drawingContext,
 													ComplexSurface cs,
 													int nbColors)
 		{
+			//	Crée une surface dégradée.
+			//	Si nbColors == 0  ->  canal alpha
+			//	Si nbColors == 1  ->  espace Gray
+			//	Si nbColors == 3  ->  espace RGB
+			//	Si nbColors == 4  ->  espace CMYK
 			Properties.Gradient gradient = cs.Fill as Properties.Gradient;
 			Objects.Abstract obj = cs.Object;
 			SurfaceAnchor sa = obj.SurfaceAnchor;
@@ -945,7 +945,7 @@ namespace Epsitec.Common.Document.PDF
 			{
 				writer.WriteObjectDef(Export.NameComplexSurface(cs.Id, tcs));
 
-				// Axial shading, voir [*] page 279
+				//	Axial shading, voir [*] page 279
 				port.PutCommand("<< /ShadingType 2 /Coords [0 -1 0 1] ");
 
 				if ( nbColors <= 1 )  port.PutCommand("/ColorSpace /DeviceGray ");
@@ -993,13 +993,13 @@ namespace Epsitec.Common.Document.PDF
 
 				if ( gradient.FillType == Properties.GradientFillType.Linear )
 				{
-					// Axial shading, voir [*] page 279
+					//	Axial shading, voir [*] page 279
 					port.PutCommand("<< /ShadingType 2 /Coords [0 -1 0 1] ");
 				}
 
 				if ( gradient.FillType == Properties.GradientFillType.Circle )
 				{
-					// Radial shading, voir [*] page 280
+					//	Radial shading, voir [*] page 280
 					port.PutCommand("<< /ShadingType 3 /Coords [0 0 0 0 0 1] ");
 				}
 
@@ -1009,7 +1009,7 @@ namespace Epsitec.Common.Document.PDF
 
 				if ( gradient.Middle == 0.0 && gradient.Repeat == 1 )
 				{
-					// Exponential interpolation function, voir [*] page 146
+					//	Exponential interpolation function, voir [*] page 146
 					port.PutCommand("/Function << /FunctionType 2 /Domain [0 1] /C0 [");
 					RichColor c1 = port.GetFinalColor(gradient.Color1);
 					RichColor c2 = port.GetFinalColor(gradient.Color2);
@@ -1050,7 +1050,7 @@ namespace Epsitec.Common.Document.PDF
 			if ( gradient.FillType == Properties.GradientFillType.Diamond ||
 				 gradient.FillType == Properties.GradientFillType.Conic   )
 			{
-				// Calcule le domaine (pfff...).
+				//	Calcule le domaine (pfff...).
 				double w = sa.Width;
 				double h = sa.Height;
 				Point p1 = new Point((0.0-gradient.Cx)*w, (0.0-gradient.Cy)*h);
@@ -1090,7 +1090,7 @@ namespace Epsitec.Common.Document.PDF
 
 				writer.WriteObjectDef(Export.NameComplexSurface(cs.Id, tcs));
 
-				// Function-based shading, voir [*] page 178
+				//	Function-based shading, voir [*] page 178
 				port.PutCommand("<< /ShadingType 1 ");
 				if ( nbColors <= 1 )  port.PutCommand("/ColorSpace /DeviceGray ");
 				if ( nbColors == 3 )  port.PutCommand("/ColorSpace /DeviceRGB ");
@@ -1121,7 +1121,7 @@ namespace Epsitec.Common.Document.PDF
 				}
 				writer.WriteLine("] >> endobj");
 
-				// Génère les fonctions pour les couleurs.
+				//	Génère les fonctions pour les couleurs.
 				string[] fonctions = new string[totalColors];
 				RichColor c1 = port.GetFinalColor(gradient.Color1);
 				RichColor c2 = port.GetFinalColor(gradient.Color2);
@@ -1188,7 +1188,7 @@ namespace Epsitec.Common.Document.PDF
 						}
 					}
 					writer.WriteObjectDef(Export.NameFunction(cs.Id, ft));
-					// PostScript calculator function, voir [*] page 148
+					//	PostScript calculator function, voir [*] page 148
 					writer.WriteLine(string.Format("<< /FunctionType 4 /Range [0 1] {0} {1} >>", domain, Port.StringLength(fonctions[i].Length)));
 					writer.WriteLine("stream");
 					writer.WriteLine(fonctions[i]);
@@ -1197,19 +1197,19 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Génère la fonction de calcul des couleurs intermédiaires, sur la base
-		// d'une table de 3x256 valeurs 8 bits.
-		// Si nbColors == 0  ->  canal alpha
-		// Si nbColors == 1  ->  espace Gray
-		// Si nbColors == 3  ->  espace RGB
-		// Si nbColors == 4  ->  espace CMYK
-		// Sampled function, voir [*] page 142
 		protected static void FunctionColorSampled(Writer writer,
 												   Port port,
 												   DrawingContext drawingContext,
 												   ComplexSurface cs,
 												   int nbColors)
 		{
+			//	Génère la fonction de calcul des couleurs intermédiaires, sur la base
+			//	d'une table de 3x256 valeurs 8 bits.
+			//	Si nbColors == 0  ->  canal alpha
+			//	Si nbColors == 1  ->  espace Gray
+			//	Si nbColors == 3  ->  espace RGB
+			//	Si nbColors == 4  ->  espace CMYK
+			//	Sampled function, voir [*] page 142
 			Properties.Gradient gradient = cs.Fill as Properties.Gradient;
 			RichColor c1 = port.GetFinalColor(gradient.Color1);
 			RichColor c2 = port.GetFinalColor(gradient.Color2);
@@ -1271,16 +1271,16 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine("endstream endobj");
 		}
 
-		// Retourne la fonction permettant de calculer une couleur fondamentale
-		// d'un dégradé en diamant. En entrés, la pile contient x et y [-1..1].
-		// En sortie, elle contient la couleur [0..1]. Avec une répétition de 1,
-		// la fonction est la suivante:
-		//   f(c) = max(|x|,|y|)
-		// PostScript calculator function, voir [*] page 148
 		protected static string FunctionGradientDiamond(Properties.Gradient gradient,
 														double colorStart,
 														double colorEnd)
 		{
+			//	Retourne la fonction permettant de calculer une couleur fondamentale
+			//	d'un dégradé en diamant. En entrés, la pile contient x et y [-1..1].
+			//	En sortie, elle contient la couleur [0..1]. Avec une répétition de 1,
+			//	la fonction est la suivante:
+			//	f(c) = max(|x|,|y|)
+			//	PostScript calculator function, voir [*] page 148
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			builder.Append("{ ");
 
@@ -1307,16 +1307,16 @@ namespace Epsitec.Common.Document.PDF
 			return builder.ToString();
 		}
 
-		// Retourne la fonction permettant de calculer une couleur fondamentale
-		// d'un dégradé conique. En entrés, la pile contient x et y [-1..1].
-		// En sortie, elle contient la couleur [0..1]. Avec une répétition de 1,
-		// la fonction est la suivante:
-		//   f(c) = (360-atan(x,y))/360
-		// PostScript calculator function, voir [*] page 148
 		protected static string FunctionGradientConic(Properties.Gradient gradient,
 													  double colorStart,
 													  double colorEnd)
 		{
+			//	Retourne la fonction permettant de calculer une couleur fondamentale
+			//	d'un dégradé conique. En entrés, la pile contient x et y [-1..1].
+			//	En sortie, elle contient la couleur [0..1]. Avec une répétition de 1,
+			//	la fonction est la suivante:
+			//	f(c) = (360-atan(x,y))/360
+			//	PostScript calculator function, voir [*] page 148
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			builder.Append("{ ");
 
@@ -1357,12 +1357,12 @@ namespace Epsitec.Common.Document.PDF
 			return builder.ToString();
 		}
 
-		// Ajoute une modification du nombre [0..1] sur la pile pour tenir compte
-		// du point milieu (voir Properties.Gradient.GetProgressColorFactor).
-		// Si M>0:  P=1-(1-P)^(1+M)
-		// Si M<0:  P=P^(1-M)
 		protected static void FunctionMiddleAdjust(System.Text.StringBuilder builder, Properties.Gradient gradient)
 		{
+			//	Ajoute une modification du nombre [0..1] sur la pile pour tenir compte
+			//	du point milieu (voir Properties.Gradient.GetProgressColorFactor).
+			//	Si M>0:  P=1-(1-P)^(1+M)
+			//	Si M<0:  P=P^(1-M)
 			if ( gradient.Middle > 0.0 )
 			{
 				builder.Append("1 exch sub ");
@@ -1377,10 +1377,10 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Ajoute une modification du nombre [0..1] sur la pile pour tenir compte
-		// de la couleur.
 		protected static void FunctionColorAdjust(System.Text.StringBuilder builder, double colorStart, double colorEnd)
 		{
+			//	Ajoute une modification du nombre [0..1] sur la pile pour tenir compte
+			//	de la couleur.
 			if ( colorEnd-colorStart != 1.0 )
 			{
 				builder.Append(Port.StringValue(colorEnd-colorStart, 3));
@@ -1393,9 +1393,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Crée une surface opaque contenant un motif.
 		protected void CreateComplexSurfaceOpaquePattern(Writer writer, Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
+			//	Crée une surface opaque contenant un motif.
 			Properties.Gradient surface = cs.Fill as Properties.Gradient;
 			Objects.Abstract obj = cs.Object;
 			SurfaceAnchor sa = obj.SurfaceAnchor;
@@ -1419,11 +1419,11 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine("endstream endobj");
 		}
 
-		// Détermine le nombre de couleurs (1, 3 ou 4) à utiliser pour une surface
-		// complexe. C'est la première couleur qui fait foi. La deuxième sera
-		// convertie dans l'espace de couleur de la première, au besoin.
 		protected int ComplexSurfaceGradientNbColors(Port port, DrawingContext drawingContext, ComplexSurface cs)
 		{
+			//	Détermine le nombre de couleurs (1, 3 ou 4) à utiliser pour une surface
+			//	complexe. C'est la première couleur qui fait foi. La deuxième sera
+			//	convertie dans l'espace de couleur de la première, au besoin.
 			Properties.Gradient gradient = cs.Fill as Properties.Gradient;
 			RichColor color = port.GetFinalColor(gradient.Color1);
 
@@ -1437,9 +1437,9 @@ namespace Epsitec.Common.Document.PDF
 			return 3;
 		}
 
-		// Libère toutes les surfaces complexes.
 		protected void FlushComplexSurface()
 		{
+			//	Libère toutes les surfaces complexes.
 			foreach ( ComplexSurface cs in this.complexSurfaces )
 			{
 				cs.Dispose();
@@ -1451,9 +1451,9 @@ namespace Epsitec.Common.Document.PDF
 
 
 		#region Images
-		// Crée toutes les images.
 		protected void CreateImageSurface(Writer writer, Port port)
 		{
+			//	Crée toutes les images.
 			foreach ( ImageSurface image in this.imageSurfaces )
 			{
 				if ( image.DrawingImage == null )  continue;
@@ -1465,11 +1465,11 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Crée une image.
 		protected bool CreateImageSurface(Writer writer, Port port, ImageSurface image,
 										  TypeComplexSurface baseType, TypeComplexSurface maskType)
 		{
-			// Création d'une instance de Magick.Image à partir du nom de fichier.
+			//	Crée une image.
+			//	Création d'une instance de Magick.Image à partir du nom de fichier.
 			byte[] imageData;
 			using ( System.IO.FileStream file = System.IO.File.OpenRead(image.Filename) )
 			{
@@ -1488,8 +1488,8 @@ namespace Epsitec.Common.Document.PDF
 
 			bool useMask = false;
 
-			// Mise à l'échelle éventuelle de l'image selon les choix de l'utilisateur.
-			// Une image sans filtrage n'est jamais mise à l'échelle !
+			//	Mise à l'échelle éventuelle de l'image selon les choix de l'utilisateur.
+			//	Une image sans filtrage n'est jamais mise à l'échelle !
 			double currentDpiX = magick.Width *254.0/image.Size.Width;
 			double currentDpiY = magick.Height*254.0/image.Size.Height;
 
@@ -1519,7 +1519,7 @@ namespace Epsitec.Common.Document.PDF
 				resizeRequired = true;
 			}
 
-			// Choix du mode de compression possible.
+			//	Choix du mode de compression possible.
 			ImageCompression compression = this.imageCompression;
 
 			if ( baseType == TypeComplexSurface.XObject &&
@@ -1529,7 +1529,7 @@ namespace Epsitec.Common.Document.PDF
 				compression = ImageCompression.ZIP;  // utilise la compression sans pertes
 			}
 
-			// Génération de l'en-tête.
+			//	Génération de l'en-tête.
 			writer.WriteObjectDef(Export.NameComplexSurface(image.Id, baseType));
 			writer.WriteString("<< /Subtype /Image ");
 
@@ -1804,9 +1804,9 @@ namespace Epsitec.Common.Document.PDF
 			return buffer;
 		}
 
-		// Libère toutes les images.
 		protected void FlushImageSurface()
 		{
+			//	Libère toutes les images.
 			foreach ( ImageSurface image in this.imageSurfaces )
 			{
 				image.Dispose();
@@ -1818,9 +1818,9 @@ namespace Epsitec.Common.Document.PDF
 
 
 		#region Fonts
-		// Crée toutes les fontes.
 		protected void CreateFont(Writer writer)
 		{
+			//	Crée toutes les fontes.
 			foreach ( System.Collections.DictionaryEntry dict in this.fontList )
 			{
 				FontList font = dict.Key as FontList;
@@ -1846,9 +1846,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Crée l'objet de base d'une fonte.
 		protected void CreateFontBase(Writer writer, FontList font, int fontPage, int count)
 		{
+			//	Crée l'objet de base d'une fonte.
 			Rectangle bbox = font.CharacterBBox;
 
 			writer.WriteObjectDef(Export.NameFont(font.Id, fontPage, TypeFont.Base));
@@ -1872,9 +1872,9 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine(">> endobj");
 		}
 		
-		// Crée l'objet Encoding d'une fonte.
 		protected void CreateFontEncoding(Writer writer, FontList font, int fontPage, int count)
 		{
+			//	Crée l'objet Encoding d'une fonte.
 			writer.WriteObjectDef(Export.NameFont(font.Id, fontPage, TypeFont.Encoding));
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
@@ -1891,9 +1891,9 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine(builder.ToString());
 		}
 		
-		// Crée l'objet CharProcs d'une fonte.
 		protected void CreateFontCharProcs(Writer writer, FontList font, int fontPage, int count)
 		{
+			//	Crée l'objet CharProcs d'une fonte.
 			writer.WriteObjectDef(Export.NameFont(font.Id, fontPage, TypeFont.CharProcs));
 			writer.WriteString("<< ");
 
@@ -1908,9 +1908,9 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine(">> endobj");
 		}
 		
-		// Crée l'objet "table des chasses" d'une fonte.
 		protected void CreateFontWidths(Writer writer, FontList font, int fontPage, int count)
 		{
+			//	Crée l'objet "table des chasses" d'une fonte.
 			writer.WriteObjectDef(Export.NameFont(font.Id, fontPage, TypeFont.Widths));
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
@@ -1928,11 +1928,11 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine(builder.ToString());
 		}
 		
-		// Crée l'objet ToUnicode d'une fonte, qui permet de retrouver les codes
-		// des caractères lors d'une copie depuis Acrobat dans le clipboard.
-		// Voir [*] pages 420 à 446.
 		protected void CreateFontToUnicode(Writer writer, FontList font, int fontPage, int count)
 		{
+			//	Crée l'objet ToUnicode d'une fonte, qui permet de retrouver les codes
+			//	des caractères lors d'une copie depuis Acrobat dans le clipboard.
+			//	Voir [*] pages 420 à 446.
 			writer.WriteObjectDef(Export.NameFont(font.Id, fontPage, TypeFont.ToUnicode));
 
 			string fontName = font.DrawingFont.FaceName;
@@ -1973,9 +1973,9 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine("endstream endobj");
 		}
 		
-		// Crée tous les objets des caractères d'une fonte.
 		protected void CreateFontCharacters(Writer writer, FontList font, int fontPage, int count)
 		{
+			//	Crée tous les objets des caractères d'une fonte.
 			int firstChar = fontPage*Export.charPerFont;
 			for ( int i=0 ; i<count ; i++ )
 			{
@@ -1984,9 +1984,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 		
-		// Crée l'objet d'un caractère d'une fonte.
 		protected void CreateFontCharacter(Writer writer, FontList font, int fontPage, CharacterList cl)
 		{
+			//	Crée l'objet d'un caractère d'une fonte.
 			Font drawingFont = font.DrawingFont;
 			Drawing.Transform ft = drawingFont.SyntheticTransform;
 			int glyph;
@@ -2016,9 +2016,9 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine("endstream endobj");
 		}
 		
-		// Libère toutes les fontes.
 		protected void FlushFont()
 		{
+			//	Libère toutes les fontes.
 			foreach ( System.Collections.DictionaryEntry dict in this.characterList )
 			{
 				CharacterList ch = dict.Key as CharacterList;
@@ -2038,15 +2038,15 @@ namespace Epsitec.Common.Document.PDF
 		#endregion
 
 		
-		// Calcule la liste des calques, y compris ceux des pages maîtres.
-		// Les calques cachés à l'impression ne sont pas mis dans la liste.
 		protected System.Collections.ArrayList ComputeLayers(int pageNumber)
 		{
+			//	Calcule la liste des calques, y compris ceux des pages maîtres.
+			//	Les calques cachés à l'impression ne sont pas mis dans la liste.
 			System.Collections.ArrayList layers = new System.Collections.ArrayList();
 			System.Collections.ArrayList masterList = new System.Collections.ArrayList();
 			this.document.Modifier.ComputeMasterPageList(masterList, pageNumber);
 
-			// Mets d'abord les premiers calques de toutes les pages maîtres.
+			//	Mets d'abord les premiers calques de toutes les pages maîtres.
 			foreach ( Objects.Page master in masterList )
 			{
 				int frontier = master.MasterFirstFrontLayer;
@@ -2058,7 +2058,7 @@ namespace Epsitec.Common.Document.PDF
 				}
 			}
 
-			// Mets ensuite tous les calques de la page.
+			//	Mets ensuite tous les calques de la page.
 			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
 			{
@@ -2066,7 +2066,7 @@ namespace Epsitec.Common.Document.PDF
 				layers.Add(layer);
 			}
 
-			// Mets finalement les derniers calques de toutes les pages maîtres.
+			//	Mets finalement les derniers calques de toutes les pages maîtres.
 			foreach ( Objects.Page master in masterList )
 			{
 				int frontier = master.MasterFirstFrontLayer;
@@ -2083,7 +2083,7 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		// Constante pour conversion dixièmes de millimètres -> 72ème de pouce
+		//	Constante pour conversion dixièmes de millimètres -> 72ème de pouce
 		protected static readonly double		mm2in = 7.2/25.4;
 		public static readonly int				charPerFont = 256;
 

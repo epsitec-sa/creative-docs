@@ -73,18 +73,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.extendedSize ? 100 : 55 );
 			}
 		}
 
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.label.Text = this.textStyle;
 
@@ -98,9 +98,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.buttonHomo   .ActiveState = p.Homo    ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyImage p = new PropertyImage();
 			base.GetProperty(p);
 
@@ -112,9 +112,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldFilename == null )  return;
@@ -154,15 +154,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.buttonHomo.SetVisible(this.extendedSize);
 		}
 		
-		// Une valeur a été changée.
 		private void HandleTextChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			this.OnChanged();
 		}
 
-		// Une valeur a été changée.
 		private void ButtonActiveStateChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			this.OnChanged();
 		}
 

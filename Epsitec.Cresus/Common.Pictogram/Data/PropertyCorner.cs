@@ -87,16 +87,16 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.effect2 = value; }
 		}
 
-		// Détermine le nom de la propriété dans la liste (Lister).
 		public string GetListName()
 		{
+			//	Détermine le nom de la propriété dans la liste (Lister).
 			return PropertyCorner.GetName(this.cornerType);
 		}
 
-		// Cherche le type correspondant à un index donné.
-		// Ceci détermine l'ordre dans le TextFieldCombo du panneau.
 		public static CornerType ConvType(int index)
 		{
+			//	Cherche le type correspondant à un index donné.
+			//	Ceci détermine l'ordre dans le TextFieldCombo du panneau.
 			CornerType type = CornerType.None;
 			switch ( index )
 			{
@@ -119,9 +119,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return type;
 		}
 
-		// Cherche le rang d'un type donné.
 		public static int ConvType(CornerType type)
 		{
+			//	Cherche le rang d'un type donné.
 			for ( int i=0 ; i<100 ; i++ )
 			{
 				CornerType t = PropertyCorner.ConvType(i);
@@ -131,9 +131,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return -1;
 		}
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(CornerType type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -156,11 +156,11 @@ namespace Epsitec.Common.Pictogram.Data
 			return name;
 		}
 
-		// Retourne les valeurs par défaut et les min/max pour un type donné.
 		public static void GetFieldsParam(CornerType type, out bool enableRadius,
 										  out bool enable1, out double effect1, out double min1, out double max1,
 										  out bool enable2, out double effect2, out double min2, out double max2)
 		{
+			//	Retourne les valeurs par défaut et les min/max pour un type donné.
 			enableRadius = true;
 			enable1 = true;  effect1 = 0.5;  min1 = -1.0;  max1 = 2.0;
 			enable2 = true;  effect2 = 0.5;  min2 = -1.0;  max2 = 2.0;
@@ -230,16 +230,16 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		[XmlIgnore]
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyCorner p = property as PropertyCorner;
 			p.CornerType = this.cornerType;
@@ -248,9 +248,9 @@ namespace Epsitec.Common.Pictogram.Data
 			p.Effect2    = this.effect2;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyCorner p = property as PropertyCorner;
@@ -262,23 +262,23 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelCorner(drawer);
 		}
 
 
-		// Crée le chemin d'un coin.
-		// Le rayon donné est plus petit ou égal à this.radius et correspond à la
-		// distance p1/c ou p2/c.
-		//	o p1
-		//	|
-		//	| c
-		//	o-----o p2
 		public void PathCorner(Drawing.Path path, Drawing.Point p1, Drawing.Point c, Drawing.Point p2, double radius)
 		{
-			// Paramètres passés à PathDot:
+			//	Crée le chemin d'un coin.
+			//	Le rayon donné est plus petit ou égal à this.radius et correspond à la
+			//	distance p1/c ou p2/c.
+			//	o p1
+			//	|
+			//	| c
+			//	o-----o p2
+			//	Paramètres passés à PathDot:
 			this.p1 = p1;
 			this.c  = c;
 			this.p2 = p2;
@@ -392,9 +392,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Calcule un point d'un coin.
 		protected Drawing.Point PathDot(double f1, double f2)
 		{
+			//	Calcule un point d'un coin.
 			Drawing.Point pp1 = Drawing.Point.Move(this.c, this.p1, f1*this.r);
 			Drawing.Point pp2 = Drawing.Point.Move(this.c, this.p2, f2*this.r);
 			return pp1+pp2-this.c;

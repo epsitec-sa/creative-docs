@@ -40,32 +40,32 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Mode de remplissage du dégradé.
 		[XmlAttribute]
 		public GradientFill Fill
 		{
+			//	Mode de remplissage du dégradé.
 			get { return this.fill; }
 			set { this.fill = value; }
 		}
 
-		// Couleur 1 du dégradé.
 		public Drawing.Color Color1
 		{
+			//	Couleur 1 du dégradé.
 			get { return this.color1; }
 			set { this.color1 = value; }
 		}
 
-		// Couleur 2 du dégradé.
 		public Drawing.Color Color2
 		{
+			//	Couleur 2 du dégradé.
 			get { return this.color2; }
 			set { this.color2 = value; }
 		}
 
-		// Angle du dégradé.
 		[XmlAttribute]
 		public double Angle
 		{
+			//	Angle du dégradé.
 			get { return this.angle; }
 
 			set
@@ -76,42 +76,42 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Centre x du dégradé.
 		[XmlAttribute]
 		public double Cx
 		{
+			//	Centre x du dégradé.
 			get { return this.cx; }
 			set { this.cx = value; }
 		}
 
-		// Centre y du dégradé.
 		[XmlAttribute]
 		public double Cy
 		{
+			//	Centre y du dégradé.
 			get { return this.cy; }
 			set { this.cy = value; }
 		}
 
-		// Echelle x du dégradé.
 		[XmlAttribute]
 		public double Sx
 		{
+			//	Echelle x du dégradé.
 			get { return this.sx; }
 			set { this.sx = value; }
 		}
 
-		// Echelle y du dégradé.
 		[XmlAttribute]
 		public double Sy
 		{
+			//	Echelle y du dégradé.
 			get { return this.sy; }
 			set { this.sy = value; }
 		}
 
-		// Nombre de répétitions.
 		[XmlAttribute]
 		public int Repeat
 		{
+			//	Nombre de répétitions.
 			get { return this.repeat; }
 
 			set
@@ -122,10 +122,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Point milieu des couleurs.
 		[XmlAttribute]
 		public double Middle
 		{
+			//	Point milieu des couleurs.
 			get { return this.middle; }
 
 			set
@@ -136,10 +136,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Rayon du flou.
 		[XmlAttribute]
 		public double Smooth
 		{
+			//	Rayon du flou.
 			get { return this.smooth; }
 
 			set
@@ -150,18 +150,18 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		[XmlIgnore]
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }  // (*)
 		}
-		// (*)	Doit rendre "true" à cause de BoundingBox, lorsque this.fill passe
-		//		de GradientFill.None à autre chose, et inversément.
-
-		// Indique si le dégradé est visible.
 		public bool IsVisible()
 		{
+			//	(*)	Doit rendre "true" à cause de BoundingBox, lorsque this.fill passe
+			//		de GradientFill.None à autre chose, et inversément.
+	
+			//	Indique si le dégradé est visible.
 			if ( this.fill == GradientFill.None )
 			{
 				return ( this.color1.A > 0 );
@@ -172,9 +172,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyGradient p = property as PropertyGradient;
 			p.Fill   = this.fill;
@@ -190,9 +190,9 @@ namespace Epsitec.Common.Pictogram.Data
 			p.Smooth = this.smooth;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyGradient p = property as PropertyGradient;
@@ -211,16 +211,16 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelGradient(drawer);
 		}
 
 
-		// Calcule le facteur de progression dans la couleur [0..1].
 		protected double GetFactor(double progress)
 		{
+			//	Calcule le facteur de progression dans la couleur [0..1].
 			if ( this.repeat > 1 )
 			{
 				int i = (int)(progress*this.repeat);
@@ -236,10 +236,10 @@ namespace Epsitec.Common.Pictogram.Data
 			return progress;
 		}
 
-		// Effectue le rendu du chemin courant avec le dégradé.
 		public void Render(Drawing.Graphics graphics, IconContext iconContext,
 						   Drawing.Path path, Drawing.Rectangle bbox)
 		{
+			//	Effectue le rendu du chemin courant avec le dégradé.
 			if ( bbox.IsSurfaceZero )  return;
 
 			Drawing.Graphics mask = null;
@@ -381,16 +381,16 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Calcule la bbox pour la représentation du dégradé.
 		public Drawing.Rectangle BoundingBoxGeom(Drawing.Rectangle bbox)
 		{
+			//	Calcule la bbox pour la représentation du dégradé.
 			bbox.Inflate(this.smooth);
 			return bbox;
 		}
 
-		// Calcule la bbox pour la représentation du dégradé.
 		public Drawing.Rectangle BoundingBoxFull(Drawing.Rectangle bbox)
 		{
+			//	Calcule la bbox pour la représentation du dégradé.
 			if ( this.fill != GradientFill.None )
 			{
 				Drawing.Point center = this.Handle(0, bbox).Position;
@@ -410,9 +410,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Nombre de poignées.
 		public override int TotalHandle
 		{
+			//	Nombre de poignées.
 			get
 			{
 				//return this.IsHandleVisible() ? this.handles.Count : 0;
@@ -422,9 +422,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Donne une poignée de la propriété.
 		public override Handle Handle(int rank, Drawing.Rectangle bbox)
 		{
+			//	Donne une poignée de la propriété.
 			Handle handle = this.handles[rank] as Handle;
 
 			Drawing.Point center = new Drawing.Point();
@@ -455,16 +455,16 @@ namespace Epsitec.Common.Pictogram.Data
 			return handle;
 		}
 
-		// Début du déplacement d'une poignée de la propriété.
 		public override void MoveHandleStarting(int rank, Drawing.Point pos, Drawing.Rectangle bbox, IconContext iconContext)
 		{
+			//	Début du déplacement d'une poignée de la propriété.
 			pos = this.Handle(0, bbox).Position;
 			iconContext.ConstrainFixStarting(pos);
 		}
 
-		// Déplace une poignée de la propriété.
 		public override void MoveHandleProcess(int rank, Drawing.Point pos, Drawing.Rectangle bbox, IconContext iconContext)
 		{
+			//	Déplace une poignée de la propriété.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 
@@ -491,18 +491,18 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Indique si les poignées sont visibles.
 		public override bool IsHandleVisible()
 		{
+			//	Indique si les poignées sont visibles.
 			if ( !this.extendedSize )  return false;
 			if ( !this.editProperties )  return false;
 			if ( this.fill == GradientFill.None )  return false;
 			return true;
 		}
 
-		// Calcule l'extrémité gauche ou droite de la flèche.
 		protected Drawing.Point ComputeExtremity(Drawing.Point p1, Drawing.Point p2, double para, double perp, int rank)
 		{
+			//	Calcule l'extrémité gauche ou droite de la flèche.
 			double distPara = Drawing.Point.Distance(p1, p2)*para;
 			double distPerp = Drawing.Point.Distance(p1, p2)*perp;
 			Drawing.Point c = Drawing.Point.Move(p2, p1, distPara);
@@ -511,9 +511,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return Drawing.Transform.RotatePointDeg(c, angle, p);
 		}
 
-		// Dessine les traits de construction avant les poignées.
 		public override void DrawEdit(Drawing.Graphics graphics, IconContext iconContext, Drawing.Rectangle bbox)
 		{
+			//	Dessine les traits de construction avant les poignées.
 			if ( !this.IsHandleVisible() )  return;
 
 			Drawing.Point center = this.Handle(0, bbox).Position;
@@ -560,9 +560,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Définition de la couleur pour l'impression.
 		public bool PaintColor(Printing.PrintPort port, IconContext iconContext)
 		{
+			//	Définition de la couleur pour l'impression.
 			if ( !this.color1.IsOpaque )  return false;
 
 			port.Color = this.color1;

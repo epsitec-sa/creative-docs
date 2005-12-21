@@ -28,9 +28,9 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard.
 			get
 			{
 				return 8 + 40;
@@ -38,9 +38,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonOthers == null )  return;
@@ -56,9 +56,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Bouton pour ouvrir le menu des autres opérations.
 		private void HandleOthersClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton pour ouvrir le menu des autres opérations.
 			GlyphButton button = sender as GlyphButton;
 			if ( button == null )  return;
 			Point pos = button.MapClientToScreen(new Point(0, 1));
@@ -68,9 +68,9 @@ namespace Epsitec.Common.Document.Ribbons
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
-		// Construit le sous-menu des autres opérations.
 		protected VMenu BuildOthersMenu()
 		{
+			//	Construit le sous-menu des autres opérations.
 			VMenu menu = new VMenu();
 
 			this.MenuAdd(menu, "y/n", "DebugBboxThin", "Show BBoxThin", "");

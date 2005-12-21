@@ -4,8 +4,8 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum ArrowType
 	{
 		None          = 0,
@@ -298,9 +298,9 @@ namespace Epsitec.Common.Document.Properties
 
 
 #if false
-		// Donne le petit texte pour les échantillons.
 		public override string SampleText
 		{
+			//	Donne le petit texte pour les échantillons.
 			get
 			{
 				return Arrow.GetName(this.arrowType[0]) + ", " +
@@ -309,9 +309,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 #endif
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(ArrowType type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -329,9 +329,9 @@ namespace Epsitec.Common.Document.Properties
 			return name;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(ArrowType type)
 		{
+			//	Retourne l'icône pour un type donné.
 			switch ( type )
 			{
 				case ArrowType.Right:          return "ArrowRight";
@@ -348,11 +348,11 @@ namespace Epsitec.Common.Document.Properties
 			return "";
 		}
 
-		// Retourne les valeurs par défaut et les min/max pour un type donné.
 		public void GetFieldsParam(ArrowType type, out bool enableLength,
 								   out bool enable1, out double effect1, out double min1, out double max1,
 								   out bool enable2, out double effect2, out double min2, out double max2)
 		{
+			//	Retourne les valeurs par défaut et les min/max pour un type donné.
 			enableLength = true;
 			enable1 = true;  effect1 = 0.50;  min1 = 0.00;  max1 = 2.00;
 			enable2 = true;  effect2 = 0.50;  min2 = 0.00;  max2 = 2.00;
@@ -410,22 +410,22 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 
-		// Nombre de poignées.
 		public override int TotalHandle(Objects.Abstract obj)
 		{
+			//	Nombre de poignées.
 			return 2;
 		}
 
-		// Indique si une poignée est visible.
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
+			//	Indique si une poignée est visible.
 			if ( !this.document.Modifier.IsPropertiesExtended(this.type) )
 			{
 				return false;
@@ -434,9 +434,9 @@ namespace Epsitec.Common.Document.Properties
 			return (this.arrowType[rank] != ArrowType.Right);
 		}
 		
-		// Retourne la position d'une poignée.
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
+			//	Retourne la position d'une poignée.
 			Point pos = new Point();
 
 			if ( obj is Objects.Line )
@@ -482,9 +482,9 @@ namespace Epsitec.Common.Document.Properties
 			return pos;
 		}
 
-		// Modifie la position d'une poignée.
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
+			//	Modifie la position d'une poignée.
 			int r1 = 0;
 
 			if ( obj is Objects.Line )
@@ -522,9 +522,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 		
 		
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Arrow p = property as Arrow;
 			for ( int j=0 ; j<2 ; j++ )
@@ -536,9 +536,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			Arrow p = property as Arrow;
@@ -552,20 +552,20 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Arrow(document);
 		}
 
 
-		// Crée le chemin à l'extrémité p1, et retourne pp1, le remplaçant de p1.
 		public Point PathExtremity(Path path, int extremity,
 								   double width, CapStyle cap,
 								   Point p1, Point p2, bool simplify,
 								   out bool outline, out bool surface)
 		{
+			//	Crée le chemin à l'extrémité p1, et retourne pp1, le remplaçant de p1.
 			outline = false;
 			surface = false;
 			if ( simplify )  return p1;
@@ -700,10 +700,10 @@ namespace Epsitec.Common.Document.Properties
 			return p1;
 		}
 
-		// Calcule l'effet limite parallèlement à p1-p2.
 		protected double LimitPara(int extremity, double width,
 								   Point p1, Point p2)
 		{
+			//	Calcule l'effet limite parallèlement à p1-p2.
 			double len = this.length[extremity];
 			double ef1 = this.effect1[extremity];
 			Point pa = Arrow.Extremity(p1, p2, len, len*ef1);
@@ -713,10 +713,10 @@ namespace Epsitec.Common.Document.Properties
 			return (width/2)/d;
 		}
 
-		// Calcule l'extrémité gauche ou droite d'une flèche.
 		static protected Point Extremity(Point p1, Point p2,
 												 double distPara, double distPerp)
 		{
+			//	Calcule l'extrémité gauche ou droite d'une flèche.
 			Point c = Point.Move(p1, p2, distPara);
 			Point p = Point.Move(c, c+p2-p1, System.Math.Abs(distPerp));
 			double angle = (distPerp > 0) ? 90 : -90;
@@ -725,9 +725,9 @@ namespace Epsitec.Common.Document.Properties
 
 
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("ArrowType", this.arrowType, typeof(ArrowType[]));
@@ -740,9 +740,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected Arrow(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			this.arrowType = (ArrowType[]) info.GetValue("ArrowType", typeof(ArrowType[]));
 			if ( this.arrowType[0] != ArrowType.Right ||
 				 this.arrowType[1] != ArrowType.Right )

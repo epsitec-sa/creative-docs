@@ -77,16 +77,16 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.n = value; }
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		[XmlIgnore]
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return false; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyModColor p = property as PropertyModColor;
 			p.H = this.h;
@@ -99,9 +99,9 @@ namespace Epsitec.Common.Pictogram.Data
 			p.N = this.n;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyModColor p = property as PropertyModColor;
@@ -117,16 +117,16 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelModColor(drawer);
 		}
 
 
-		// Modifie une couleur.
 		public void ModifyColor(ref Drawing.Color color)
 		{
+			//	Modifie une couleur.
 #if false
 			if ( this.h != 0.0 || this.s != 0.0 )  // teinte ou saturation ?
 			{

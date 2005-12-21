@@ -67,9 +67,9 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateFontsButtons();
 		}
 
-		// Met à jour la liste des polices rapides.
 		public void UpdateList()
 		{
+			//	Met à jour la liste des polices rapides.
 			this.ignoreChange = true;
 			this.fontSelector.SelectedList = this.document.Settings.QuickFonts;
 			this.fontSelector.SampleHeight = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
@@ -79,9 +79,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 		
 
-		// Met à jour les boutons des polices rapides.
 		protected void UpdateFontsButtons()
 		{
+			//	Met à jour les boutons des polices rapides.
 			bool def = false;
 			bool clr = false;
 

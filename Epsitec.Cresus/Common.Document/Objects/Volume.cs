@@ -39,16 +39,16 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectVolume"); }
 		}
 
 
-		// Début du déplacement d'une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -73,9 +73,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= 4 )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
@@ -97,9 +97,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
+			//	Début de la création d'un objet.
 			drawingContext.ConstrainFlush();
 			drawingContext.ConstrainAddHomo(pos);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
@@ -108,9 +108,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -119,9 +119,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			//	Fin de la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			drawingContext.SnapPos(ref pos);
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document.Objects
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
 
-			// Crée les 2 autres poignées dans les coins opposés.
+			//	Crée les 2 autres poignées dans les coins opposés.
 			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
 			Point p1 = rect.BottomLeft;
 			Point p2 = rect.TopRight;
@@ -145,18 +145,18 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
 		
-		// Constuit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Constuit les formes de l'objet.
 			Paths paths = this.PathBuild(drawingContext);
 			Shape[] shapes = new Shape[paths.Count*2];
 
@@ -178,9 +178,9 @@ namespace Epsitec.Common.Document.Objects
 			return shapes;
 		}
 
-		// Crée les chemins de l'objet.
 		protected Paths PathBuild(DrawingContext drawingContext)
 		{
+			//	Crée les chemins de l'objet.
 			Point p1 = this.Handle(0).Position;
 			Point p2 = new Point();
 			Point p3 = this.Handle(1).Position;
@@ -203,9 +203,9 @@ namespace Epsitec.Common.Document.Objects
 			return this.PathVolume(drawingContext, p1, p2, p3, p4);
 		}
 
-		// Crée les chemins d'un volume quelconque.
 		protected Paths PathVolume(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée les chemins d'un volume quelconque.
 			Paths paths = new Paths(this);
 
 			switch ( this.PropertyVolume.VolumeType )
@@ -231,9 +231,9 @@ namespace Epsitec.Common.Document.Objects
 			return paths;
 		}
 
-		// Crée les chemins d'une boîte.
 		protected void PathBox(ref Paths paths, DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée les chemins d'une boîte.
 			Properties.Volume pf = this.PropertyVolume;
 			Point p14 = Point.Scale(p1,p4, pf.Rapport);
 			Point p23 = Point.Scale(p3,p2, pf.Rapport);
@@ -306,9 +306,9 @@ namespace Epsitec.Common.Document.Objects
 			paths.BackRight.Close();
 		}
 
-		// Crée les chemins d'une pyramide.
 		protected void PathPyramid(ref Paths paths, DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée les chemins d'une pyramide.
 			Properties.Volume pf = this.PropertyVolume;
 			Point p14 = Point.Scale(p1,p4, pf.Rapport);
 			Point p23 = Point.Scale(p3,p2, 0.5);
@@ -361,9 +361,9 @@ namespace Epsitec.Common.Document.Objects
 			paths.Bottom.Close();
 		}
 
-		// Crée les chemins d'un cylindre.
 		protected void PathCylinder(ref Paths paths, DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée les chemins d'un cylindre.
 			double d12 = Point.Distance(p1, p2);
 			double d23 = Point.Distance(p2, p3);
 			double d34 = Point.Distance(p3, p4);
@@ -429,9 +429,9 @@ namespace Epsitec.Common.Document.Objects
 			paths.Bottom.Close();
 		}
 
-		// Ajoute le chemin d'une ellipse.
 		protected void PathEllipse(Path path, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Ajoute le chemin d'une ellipse.
 			Point p12 = Point.Scale(p1,p2, 0.5);
 			Point p23 = Point.Scale(p2,p3, 0.5);
 			Point p34 = Point.Scale(p3,p4, 0.5);
@@ -446,9 +446,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
+			//	Retourne le chemin géométrique de l'objet.
 			if ( rank > 0 )  return null;
 			Paths paths = this.PathBuild(null);
 			Path path = new Path();
@@ -463,20 +463,20 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Volume(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 		}
 		#endregion
 
 
-		// Gestion des chemins.
+		//	Gestion des chemins.
 		protected class Paths
 		{
 			public Paths(Objects.Abstract obj)

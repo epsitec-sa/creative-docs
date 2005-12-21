@@ -59,22 +59,22 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Détermine le nom de la propriété dans la liste (Lister).
 		public string GetListName()
 		{
+			//	Détermine le nom de la propriété dans la liste (Lister).
 			return string.Format("{0}", this.nbFaces);
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		[XmlIgnore]
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyRegular p = property as PropertyRegular;
 			p.NbFaces = this.nbFaces;
@@ -82,9 +82,9 @@ namespace Epsitec.Common.Pictogram.Data
 			p.Deep    = this.deep;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyRegular p = property as PropertyRegular;
@@ -95,9 +95,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelRegular(drawer);
 		}
 

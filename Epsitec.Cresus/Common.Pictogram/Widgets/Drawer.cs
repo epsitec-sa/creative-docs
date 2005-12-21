@@ -42,18 +42,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Retourne la largeur standard d'une icône.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard d'une icône.
 			get
 			{
 				return 22;
 			}
 		}
 
-		// Retourne la hauteur standard d'une icône.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard d'une icône.
 			get
 			{
 				return 22;
@@ -61,16 +61,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Indique si l'icône est active.
 		public bool IsIconActive
 		{
+			//	Indique si l'icône est active.
 			get { return this.isActive; }
 			set { this.isActive = value; }
 		}
 
-		// Indique si l'icône est éditable.
 		public bool IsIconEditable
 		{
+			//	Indique si l'icône est éditable.
 			get
 			{
 				return this.isEditable;
@@ -83,9 +83,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Facteur de zoom de la loupe.
 		public double Zoom
 		{
+			//	Facteur de zoom de la loupe.
 			get
 			{
 				return this.iconContext.Zoom;
@@ -107,9 +107,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Origine X selon l'ascenseur horizontal.
 		public double OriginX
 		{
+			//	Origine X selon l'ascenseur horizontal.
 			get
 			{
 				return this.iconContext.OriginX;
@@ -127,9 +127,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Origine Y selon l'ascenseur vertical.
 		public double OriginY
 		{
+			//	Origine Y selon l'ascenseur vertical.
 			get
 			{
 				return this.iconContext.OriginY;
@@ -147,49 +147,49 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Objet global.
 		public IconObjects IconObjects
 		{
+			//	Objet global.
 			get { return this.iconObjects; }
 			set { this.iconObjects = value; }
 		}
 
-		// Modificateur global.
 		public GlobalModifier GlobalModifier
 		{
+			//	Modificateur global.
 			get { return this.globalModifier; }
 		}
 
-		// Liste des objets.
 		public UndoList Objects
 		{
+			//	Liste des objets.
 			get { return this.iconObjects.Objects; }
 			set { this.iconObjects.Objects = value; }
 		}
 
-		// Objet en cours d'édition.
 		public AbstractObject EditObject
 		{
+			//	Objet en cours d'édition.
 			get { return this.editObject; }
 		}
 
-		// Permute l'objet en cours d'édition (pour undo).
 		public void SwapEditObject(ref AbstractObject obj)
 		{
+			//	Permute l'objet en cours d'édition (pour undo).
 			AbstractObject temp = this.editObject;
 			this.editObject = obj;
 			obj = temp;
 		}
 
-		// Ajoute un widget SampleButton qui représente la même icone.
 		public void AddClone(Widget widget)
 		{
+			//	Ajoute un widget SampleButton qui représente la même icone.
 			this.clones.Add(widget);
 		}
 
-		// Texte pour les informations.
 		public string TextInfoObject
 		{
+			//	Texte pour les informations.
 			get
 			{
 				string text;
@@ -198,9 +198,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Texte pour les informations.
 		public string TextInfoMouse
 		{
+			//	Texte pour les informations.
 			get
 			{
 				string text;
@@ -209,9 +209,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Texte pour les informations.
 		public string TextInfoZoom
 		{
+			//	Texte pour les informations.
 			get
 			{
 				string text;
@@ -220,9 +220,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Indique quel est l'objet en cours de création.
 		public AbstractObject CreatingObject
 		{
+			//	Indique quel est l'objet en cours de création.
 			get
 			{
 				if ( this.createRank == -1 )  return null;
@@ -230,9 +230,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Appelé lorsqu'on change de page ou de calque.
 		public void PageOrLayerChanged()
 		{
+			//	Appelé lorsqu'on change de page ou de calque.
 			this.rankLastCreated = -1;
 			this.hiliteHandleObject = null;
 			this.editObject = null;
@@ -241,9 +241,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.globalModifier.Visible = false;
 		}
 
-		// Nom de l'outil sélectionné.
 		public string SelectedTool
 		{
+			//	Nom de l'outil sélectionné.
 			get
 			{
 				return this.selectedTool;
@@ -336,9 +336,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Permute l'outil (pour le undo).
 		public void SwapTool(ref string tool)
 		{
+			//	Permute l'outil (pour le undo).
 			if ( tool == this.selectedTool )  return;
 
 			string temp = this.selectedTool;
@@ -348,9 +348,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MouseTool();
 		}
 
-		// Utilise le bon sprite de la souris, selon l'outil sélectionné.
 		protected void MouseTool()
 		{
+			//	Utilise le bon sprite de la souris, selon l'outil sélectionné.
 			if ( this.selectedTool == "Select" )
 			{
 				this.MouseCursor = MouseCursor.AsArrow;
@@ -373,9 +373,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Choix du sprite de la souris.
 		protected void MouseCursorImage(ref Drawing.Image image, string name)
 		{
+			//	Choix du sprite de la souris.
 			if ( image == null )
 			{
 				image = Support.Resources.DefaultManager.GetImage(name);
@@ -385,27 +385,27 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Appelé lorsque la souris est sortie du widget.
 		private void HandleMouseExited(object sender, MessageEventArgs e)
 		{
+			//	Appelé lorsque la souris est sortie du widget.
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 			this.iconObjects.Hilite(null, ref bbox);
 			this.HiliteHandle(null, -1, ref bbox);
 			this.InvalidateAll(bbox);
 		}
 
-		// Appelé lorsque la règle est changée.
 		private void HandleRulerChanged(object sender)
 		{
+			//	Appelé lorsque la règle est changée.
 			if ( this.editObject == null )  return;
 
 			Drawing.Rectangle bbox = this.editObject.BoundingBox;
 			this.InvalidateAll(bbox);
 		}
 
-		// Indique si l'outil sélectionné n'est pas un objet.
 		protected bool IsTool()
 		{
+			//	Indique si l'outil sélectionné n'est pas un objet.
 			if ( this.selectedTool == "Select" )  return true;
 			if ( this.selectedTool == "Edit"   )  return true;
 			if ( this.selectedTool == "Zoom"   )  return true;
@@ -415,10 +415,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Retourne la liste des propriétés en fonction du ou des objets sélectionnés.
-		// Un type de propriété donné n'est qu'une fois dans la liste.
 		public System.Collections.ArrayList PropertiesList()
 		{
+			//	Retourne la liste des propriétés en fonction du ou des objets sélectionnés.
+			//	Un type de propriété donné n'est qu'une fois dans la liste.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
 			if ( this.IsTool() )
@@ -435,23 +435,23 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return list;
 		}
 
-		// Mémorise l'état étendu d'une propriété.
 		public void SetPropertyExtended(PropertyType type, bool extended)
 		{
+			//	Mémorise l'état étendu d'une propriété.
 			this.objectMemory.SetPropertyExtended(type, extended);
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.InvalidateAll();
 		}
 
-		// Retourne l'état étendu d'une propriété.
 		public bool GetPropertyExtended(PropertyType type)
 		{
+			//	Retourne l'état étendu d'une propriété.
 			return this.objectMemory.GetPropertyExtended(type);
 		}
 
-		// Modifie une propriété.
 		public void SetProperty(AbstractProperty property, bool changeStylesCollection)
 		{
+			//	Modifie une propriété.
 			if ( this.IsTool() || property.StyleID != 0 )
 			{
 				if ( changeStylesCollection )
@@ -477,9 +477,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.objectMemory.SetProperty(property);  // mémorise les changements
 		}
 
-		// Retourne une propriété.
 		public AbstractProperty GetProperty(PropertyType type)
 		{
+			//	Retourne une propriété.
 			if ( this.IsTool() )
 			{
 				return this.iconObjects.GetProperty(type, this.objectMemory);
@@ -490,15 +490,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Retourne une nouvelle propriété.
 		public AbstractProperty NewProperty(PropertyType type)
 		{
+			//	Retourne une nouvelle propriété.
 			return this.objectMemory.GetProperty(type);
 		}
 
-		// Fabrique un nouveau style d'un type donné.
 		public int StyleMake(PropertyType type)
 		{
+			//	Fabrique un nouveau style d'un type donné.
 			AbstractProperty property = this.NewProperty(type);
 			if ( property == null )  return -1;
 			int sel = this.iconObjects.StylesCollection.CreateProperty(property);
@@ -507,9 +507,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return sel;
 		}
 
-		// Libère les objets sélectionnés du style.
 		public void StyleFree(PropertyType type)
 		{
+			//	Libère les objets sélectionnés du style.
 			if ( this.IsTool() )
 			{
 				this.iconObjects.StyleFree(type);
@@ -524,9 +524,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Libère tous les objets du style.
 		public void StyleFreeAll(AbstractProperty property)
 		{
+			//	Libère tous les objets du style.
 			this.iconObjects.StyleFreeAll(property);
 
 			if ( this.newObject != null &&
@@ -540,9 +540,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Libère tous les styles.
 		public void StyleFreeAll()
 		{
+			//	Libère tous les styles.
 			int total = this.objectMemory.TotalProperty;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -554,9 +554,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.newObject = null;
 		}
 
-		// Utilise un style donné.
 		public void StyleUse(int rank)
 		{
+			//	Utilise un style donné.
 			AbstractProperty property = this.iconObjects.StylesCollection.GetProperty(rank);
 
 			if ( this.IsTool() )
@@ -571,9 +571,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.objectMemory.SetProperty(property);  // mémorise les changements
 		}
 
-		// Adapte tout après la destruction d'un pattern.
 		public void AdaptDeletePattern(int rank)
 		{
+			//	Adapte tout après la destruction d'un pattern.
 			if ( this.newObject != null )
 			{
 				this.newObject.DeletePattern(rank);
@@ -584,9 +584,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Initialise toutes les commandes.
 		public void InitCommands(CommandDispatcher commandDispatcher)
 		{
+			//	Initialise toutes les commandes.
 			this.commandDispatcher = commandDispatcher;
 
 			this.saveState = new CommandState("Save", this.commandDispatcher);
@@ -643,9 +643,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.debugBboxFullState = new CommandState("DebugBboxFull", this.commandDispatcher);
 		}
 
-		// Met à jour toutes les commandes (dans les menus, les barres, etc.).
 		public void UpdateCommands()
 		{
+			//	Met à jour toutes les commandes (dans les menus, les barres, etc.).
 			Widget[] toolWidgets = Widget.FindAllCommandWidgets("SelectTool", this.commandDispatcher);
 			foreach ( Widget widget in toolWidgets )
 			{
@@ -1216,9 +1216,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Crée un nouvel objet selon l'outil sélectionné.
 		protected AbstractObject CreateObject()
 		{
+			//	Crée un nouvel objet selon l'outil sélectionné.
 			AbstractObject obj = null;
 			switch ( this.selectedTool )
 			{
@@ -1253,9 +1253,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return pos;
 		}
 
-		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			//	Gestion d'un événement.
 			if ( !this.isEditable )  return;
 
 			pos = this.ScreenToIcon(pos);
@@ -1391,8 +1391,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 				case MessageType.KeyDown:
 					if ( message.IsAltPressed )
 					{
-						// Il ne faut jamais manger les pressions de touches avec ALT, car elles sont
-						// utilisées par les raccourcis clavier globaux.
+						//	Il ne faut jamais manger les pressions de touches avec ALT, car elles sont
+						//	utilisées par les raccourcis clavier globaux.
 						return;
 					}
 					if ( message.KeyCode == KeyCode.ControlKey )
@@ -1428,9 +1428,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Construit le menu contextuel.
 		protected void ContextMenu(Drawing.Point mouse, bool globalMenu)
 		{
+			//	Construit le menu contextuel.
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 			this.iconObjects.Hilite(null, ref bbox);
 			this.InvalidateAll(bbox);
@@ -1519,9 +1519,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.contextMenu.ShowAsContextMenu(this.Window, mouse);
 		}
 
-		// Ajoute une case dans le menu.
 		protected void MenuAddItem(System.Collections.ArrayList list, string cmd, string icon, string text)
 		{
+			//	Ajoute une case dans le menu.
 			CommandDispatcher.CommandState state = this.commandDispatcher[cmd];
 			if ( state != null )
 			{
@@ -1536,17 +1536,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 			list.Add(item);
 		}
 
-		// Ajoute un séparateur dans le menu.
 		protected void MenuAddSep(System.Collections.ArrayList list)
 		{
+			//	Ajoute un séparateur dans le menu.
 			ContextMenuItem item = new ContextMenuItem();
 			list.Add(item);  // séparateur
 		}
 
-		// Exécute une commande locale à un objet.
 		[Command ("Object")]
 		void CommandObject(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			//	Exécute une commande locale à un objet.
 			Widget widget = e.Source as Widget;
 			if ( widget.Name == "CreateEnding" )
 			{
@@ -1966,18 +1966,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Zoom sur les objets sélectionnés.
 		protected void ZoomSel()
 		{
+			//	Zoom sur les objets sélectionnés.
 			Drawing.Rectangle bbox = this.iconObjects.RetSelectedBbox();
 			if ( bbox.IsEmpty )  return;
 			bbox.Inflate(2);
 			this.ZoomChange(bbox.BottomLeft, bbox.TopRight);
 		}
 
-		// Change le zoom d'un certain facteur pour agrandir une zone rectangulaire.
 		protected void ZoomChange(Drawing.Point p1, Drawing.Point p2)
 		{
+			//	Change le zoom d'un certain facteur pour agrandir une zone rectangulaire.
 			if ( p1.X == p2.X || p1.Y == p2.Y )  return;
 			double fx = this.Width/(System.Math.Abs(p1.X-p2.X)*this.iconContext.ScaleX);
 			double fy = this.Height/(System.Math.Abs(p1.Y-p2.Y)*this.iconContext.ScaleY);
@@ -1985,18 +1985,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.ZoomChange(factor, (p1+p2)/2);
 		}
 
-		// Change le zoom d'un certain facteur, avec centrage au centre du dessin.
 		protected void ZoomChange(double factor)
 		{
+			//	Change le zoom d'un certain facteur, avec centrage au centre du dessin.
 			Drawing.Point center = new Drawing.Point();
 			center.X = -this.OriginX+(this.IconObjects.Size.Width/this.Zoom)/2;
 			center.Y = -this.OriginY+(this.IconObjects.Size.Height/this.Zoom)/2;
 			this.ZoomChange(factor, center);
 		}
 
-		// Change le zoom d'un certain facteur, avec centrage quelconque.
 		protected void ZoomChange(double factor, Drawing.Point center)
 		{
+			//	Change le zoom d'un certain facteur, avec centrage quelconque.
 			double newZoom = this.Zoom*factor;
 			newZoom = System.Math.Max(newZoom, this.ZoomMin);
 			newZoom = System.Math.Min(newZoom, this.ZoomMax);
@@ -2013,9 +2013,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OriginY = -origin.Y;
 		}
 
-		// Mémorise le zoom actuel.
 		protected void ZoomMemorize()
 		{
+			//	Mémorise le zoom actuel.
 			ZoomHistory.ZoomElement item = new ZoomHistory.ZoomElement();
 			item.zoom = this.Zoom;
 			item.ox   = this.OriginX;
@@ -2023,9 +2023,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.zoomHistory.Add(item);
 		}
 
-		// Revient au niveau de zoom précédent.
 		protected void ZoomPrev()
 		{
+			//	Revient au niveau de zoom précédent.
 			ZoomHistory.ZoomElement item = this.zoomHistory.Remove();
 			if ( item == null )  return;
 			this.Zoom    = item.zoom;
@@ -2033,9 +2033,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OriginY = item.oy;
 		}
 
-		// Retourne le zoom minimal.
 		protected double ZoomMin
 		{
+			//	Retourne le zoom minimal.
 			get
 			{
 				double x = this.IconObjects.SizeArea.Width/this.IconObjects.Size.Width;
@@ -2044,9 +2044,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Retourne le zoom maximal.
 		protected double ZoomMax
 		{
+			//	Retourne le zoom maximal.
 			get
 			{
 				return 8.0;
@@ -2110,10 +2110,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 		}
 
-		// Modifie toutes les propriétés des objets sélectionnés en fonction
-		// d'un objet quelconque (seed).
 		protected void PickerProperties(Drawing.Point mouse, AbstractObject seed, ref Drawing.Rectangle bbox)
 		{
+			//	Modifie toutes les propriétés des objets sélectionnés en fonction
+			//	d'un objet quelconque (seed).
 			if ( seed == null )  return;
 
 			int total = seed.TotalProperty;
@@ -2141,9 +2141,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Survolle une poignée.
 		protected void HiliteHandle(AbstractObject obj, int rank, ref Drawing.Rectangle bbox)
 		{
+			//	Survolle une poignée.
 			if ( hiliteHandleObject != null &&
 				 hiliteHandleObject.Handle(hiliteHandleRank).IsHilited == true )
 			{
@@ -2163,9 +2163,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Sélectionne un objet et désélectionne tous les autres.
 		protected int Select(AbstractObject obj, bool edit, bool add)
 		{
+			//	Sélectionne un objet et désélectionne tous les autres.
 			int nb = this.iconObjects.Select(obj, edit, add);
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.globalModifier.Visible = false;
@@ -2173,9 +2173,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return nb;
 		}
 
-		// Sélectionne tous les objets dans le rectangle.
 		protected int Select(Drawing.Rectangle rect, bool add)
 		{
+			//	Sélectionne tous les objets dans le rectangle.
 			int nb = this.iconObjects.Select(rect, add, !this.selectModePartial);
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.globalModifier.Visible = false;
@@ -2184,16 +2184,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Entre dans le groupe sélectionné.
 		protected void InsideSelection()
 		{
+			//	Entre dans le groupe sélectionné.
 			AbstractObject obj = this.iconObjects.RetFirstSelected();
 			this.iconObjects.InsideGroup(obj);
 		}
 
-		// Sort du groupe en cours.
 		protected void OutsideSelection()
 		{
+			//	Sort du groupe en cours.
 			this.iconObjects.DeselectAll();
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.rankLastCreated = -1;
@@ -2203,18 +2203,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 		}
 
-		// Désélectionne tous les objets.
 		protected void DeselectAll()
 		{
+			//	Désélectionne tous les objets.
 			this.UndoBeginning("DeselectAll");
 			this.UndoSelectionWillBeChanged();
 			int nb = this.iconObjects.DeselectAll();
 			this.UndoValidate(nb > 0);
 		}
 
-		// Modifie la sélection courante.
 		protected void ChangeSelection(string cmd)
 		{
+			//	Modifie la sélection courante.
 			this.UndoBeginning("ChangeSelection");
 
 			bool validate = false;
@@ -2372,9 +2372,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Vide la liste des annulations.
 		protected void UndoFlush()
 		{
+			//	Vide la liste des annulations.
 			if ( IconEditor.OpletQueue != null )
 			{
 				IconEditor.OpletQueue.PurgeUndo();
@@ -2383,9 +2383,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.zoomHistory.Clear();
 		}
 
-		// Indique que l'on va modifier l'icône.
 		public void UndoBeginning(string operation)
 		{
+			//	Indique que l'on va modifier l'icône.
 			this.UndoBeginning(operation, null, 0, PropertyType.None, 0);
 		}
 
@@ -2425,9 +2425,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			UndoList.Operations.Add(om);
 		}
 
-		// Mémorise tous les objets sélectionnés et leurs fils.
 		public void UndoSelectionWillBeChanged()
 		{
+			//	Mémorise tous les objets sélectionnés et leurs fils.
 			System.Diagnostics.Debug.Assert(UndoList.Beginning);
 			System.Diagnostics.Debug.WriteLine("UndoSelectionWillBeChanged");
 			if ( IconEditor.OpletQueue == null )  return;
@@ -2436,16 +2436,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects.SelectionWillBeChanged();
 		}
 
-		// Valide ou annule le dernier UndoBeginning.
 		public void UndoValidate(bool validate)
 		{
+			//	Valide ou annule le dernier UndoBeginning.
 			if ( validate )  this.UndoValidate();
 			else             this.UndoCancel();
 		}
 
-		// Valide le dernier UndoBeginning.
 		public void UndoValidate()
 		{
+			//	Valide le dernier UndoBeginning.
 			System.Diagnostics.Debug.Assert(UndoList.Beginning);
 			UndoList.Beginning = false;
 
@@ -2475,9 +2475,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnCommandChanged();
 		}
 
-		// Annule le dernier UndoBeginning.
 		public void UndoCancel()
 		{
+			//	Annule le dernier UndoBeginning.
 			System.Diagnostics.Debug.Assert(UndoList.Beginning);
 			UndoList.Beginning = false;
 
@@ -2490,9 +2490,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.undoInProgress = false;
 		}
 
-		// Remet le dessin dans son état précédent.
 		protected bool UndoRestore()
 		{
+			//	Remet le dessin dans son état précédent.
 			System.Diagnostics.Debug.Assert(!UndoList.Beginning);
 			if ( IconEditor.OpletQueue == null )  return false;
 			if ( !IconEditor.OpletQueue.CanUndo )  return false;
@@ -2500,9 +2500,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return true;
 		}
 
-		// Annule la dernière annulation.
 		protected bool RedoRestore()
 		{
+			//	Annule la dernière annulation.
 			System.Diagnostics.Debug.Assert(!UndoList.Beginning);
 			if ( IconEditor.OpletQueue == null )  return false;
 			if ( !IconEditor.OpletQueue.CanRedo )  return false;
@@ -2510,17 +2510,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return true;
 		}
 
-		// Effectue quelques petites opérations, toujours au début d'un
-		// undo ou d'un redo.
 		public void UndoInitialWork()
 		{
+			//	Effectue quelques petites opérations, toujours au début d'un
+			//	undo ou d'un redo.
 			UndoList.SelectAfterCreate = false;
 		}
 
-		// Effectue quelques petites opérations, toujours à la fin d'un
-		// undo ou d'un redo.
 		public void UndoFinalWork(int styleID)
 		{
+			//	Effectue quelques petites opérations, toujours à la fin d'un
+			//	undo ou d'un redo.
 			this.iconObjects.DeselectNoUndoStamp();
 
 			if ( styleID != 0 )
@@ -2546,9 +2546,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour les tailles des SampleButton.
 		protected void UpdateSizeSamples()
 		{
+			//	Met à jour les tailles des SampleButton.
 			foreach ( Widget widget in this.clones )
 			{
 				SampleButton sample = widget as SampleButton;
@@ -2560,9 +2560,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Invalide la zone ainsi que celles des clones.
 		public void InvalidateAll(Drawing.Rectangle bbox)
 		{
+			//	Invalide la zone ainsi que celles des clones.
 			if ( bbox.IsEmpty )  return;
 
 			this.UpdateRulerGeometry();
@@ -2583,9 +2583,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Invalide la zone ainsi que celles des clones.
 		public void InvalidateAll()
 		{
+			//	Invalide la zone ainsi que celles des clones.
 			this.UpdateRulerGeometry();
 			this.Invalidate();
 
@@ -2595,10 +2595,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Invalide la zone de dessin. Il faut appeler cette méthode à la
-		// place de this.Invalidate() pour positionner correctement la règle.
 		public void InvalidateDraw()
 		{
+			//	Invalide la zone de dessin. Il faut appeler cette méthode à la
+			//	place de this.Invalidate() pour positionner correctement la règle.
 			this.UpdateRulerGeometry();
 			this.Invalidate();
 		}
@@ -2610,9 +2610,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdateRulerGeometry();
 		}
 
-		// Positionne la règle en fonction de l'éventuel objet en cours d'édition.
 		protected void UpdateRulerGeometry()
 		{
+			//	Positionne la règle en fonction de l'éventuel objet en cours d'édition.
 			if ( this.textRuler == null )  return;
 
 			if ( this.editObject == null )
@@ -2654,9 +2654,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Dessine la grille magnétique dessous.
 		protected void DrawGridBackground(Drawing.Graphics graphics)
 		{
+			//	Dessine la grille magnétique dessous.
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/this.iconContext.ScaleX;
 
@@ -2714,9 +2714,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			graphics.LineWidth = initialWidth;
 		}
 
-		// Dessine la grille magnétique dessus.
 		protected void DrawGridForeground(Drawing.Graphics graphics)
 		{
+			//	Dessine la grille magnétique dessus.
 			if ( !this.iconContext.GridActive )  return;
 
 			double ix = 0.5/this.iconContext.ScaleX;
@@ -2737,9 +2737,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			graphics.RenderSolid(Drawing.Color.FromBrightness(0.9));
 		}
 
-		// Dessine l'icône.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			//	Dessine l'icône.
 			//?Drawing.Rectangle clip = graphics.SaveClippingRectangle();
 			//?graphics.ResetClippingRectangle();
 			//?graphics.SetClippingRectangle(this.InnerBounds);
@@ -2768,13 +2768,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 			clipRect.BottomLeft = this.ScreenToIcon(clipRect.BottomLeft);
 			clipRect.TopRight   = this.ScreenToIcon(clipRect.TopRight);
 
-			// Dessine la grille magnétique.
+			//	Dessine la grille magnétique.
 			if ( this.isEditable )
 			{
 				//?this.DrawGridBackground(graphics);
 			}
 
-			// Dessine les géométries.
+			//	Dessine les géométries.
 #if true
 			this.iconContext.IsFocused = this.IsFocused;
 			this.iconObjects.DrawGeometry(graphics, this.iconContext, this.iconObjects, adorner, clipRect, false);
@@ -2786,20 +2786,20 @@ namespace Epsitec.Common.Pictogram.Widgets
 			System.Diagnostics.Debug.WriteLine(string.Format("DrawGeometry: {0} us/object @ 1.7GHz", cycles/1700/Drawer.totalObjectDraw));
 #endif
 
-			// Dessine la grille magnétique.
+			//	Dessine la grille magnétique.
 			if ( this.isEditable && !this.iconContext.PreviewActive )
 			{
 				//?this.DrawGridForeground(graphics);
 				this.DrawGridBackground(graphics);
 			}
 
-			// Dessine les poignées.
+			//	Dessine les poignées.
 			if ( this.isEditable )
 			{
 				this.iconObjects.DrawHandle(graphics, this.iconContext);
 			}
 
-			// Dessine le rectangle de sélection.
+			//	Dessine le rectangle de sélection.
 			if ( this.isEditable && this.selectRect )
 			{
 				Drawing.Rectangle rSelect = new Drawing.Rectangle(this.selectRectP1, this.selectRectP2);
@@ -2809,10 +2809,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 				graphics.RenderSolid(this.iconContext.HiliteOutlineColor);
 			}
 
-			// Dessine le rectangle de modification.
+			//	Dessine le rectangle de modification.
 			this.globalModifier.Draw(graphics, iconContext);
 
-			// Dessine les contraintes.
+			//	Dessine les contraintes.
 			if ( this.isEditable )
 			{
 				this.iconContext.DrawConstrain(graphics, this.iconObjects.SizeArea);
@@ -2822,7 +2822,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			graphics.LineWidth = initialWidth;
 			//?graphics.RestoreClippingRectangle(clip);
 
-			// Dessine le cadre.
+			//	Dessine le cadre.
 			if ( this.isEditable )
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
@@ -2835,16 +2835,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 		static public int totalObjectDraw = 0;
 
 
-		// Imprime l'icône.
+		//	Imprime l'icône.
 		public void Print(Dialogs.Print dp)
 		{
 			this.iconPrinter.Print(dp, this.iconContext);
 		}
 
 
-		// Génère un événement pour dire qu'il faut changer les panneaux.
 		protected virtual void OnPanelChanged()
 		{
+			//	Génère un événement pour dire qu'il faut changer les panneaux.
 			if ( this.PanelChanged != null )  // qq'un écoute ?
 			{
 				this.PanelChanged(this);
@@ -2854,7 +2854,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler PanelChanged;
 
 
-		// Génère un événement pour dire qu'il faut changer l'état d'une commande.
+		//	Génère un événement pour dire qu'il faut changer l'état d'une commande.
 		protected virtual void OnCommandChanged()
 		{
 			if ( this.CommandChanged != null )  // qq'un écoute ?
@@ -2865,7 +2865,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		public event EventHandler CommandChanged;
 
-		// Génère un événement pour dire qu'il faut changer les commandes et les panneaux.
+		//	Génère un événement pour dire qu'il faut changer les commandes et les panneaux.
 		protected virtual void OnAllChanged()
 		{
 			if ( this.AllChanged != null )  // qq'un écoute ?
@@ -2876,7 +2876,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		public event EventHandler AllChanged;
 
-		// Génère un événement pour dire qu'il faut changer les ascenseurs.
+		//	Génère un événement pour dire qu'il faut changer les ascenseurs.
 		protected virtual void OnScrollerChanged()
 		{
 			if ( this.ScrollerChanged != null )  // qq'un écoute ?
@@ -2887,7 +2887,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		public event EventHandler ScrollerChanged;
 
-		// Génère un événement pour dire qu'il faut changer les informations.
+		//	Génère un événement pour dire qu'il faut changer les informations.
 		public virtual void OnInfoDocumentChanged()
 		{
 			if ( this.InfoDocumentChanged != null )  // qq'un écoute ?
@@ -2898,7 +2898,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		public event EventHandler InfoDocumentChanged;
 
-		// Génère un événement pour dire qu'il faut changer les informations.
+		//	Génère un événement pour dire qu'il faut changer les informations.
 		protected virtual void OnInfoObjectChanged()
 		{
 			if ( this.InfoObjectChanged != null )  // qq'un écoute ?
@@ -2909,7 +2909,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		public event EventHandler InfoObjectChanged;
 
-		// Génère un événement pour dire qu'il faut changer les informations.
+		//	Génère un événement pour dire qu'il faut changer les informations.
 		protected virtual void OnInfoMouseChanged()
 		{
 			if ( this.InfoMouseChanged != null )  // qq'un écoute ?
@@ -2920,7 +2920,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		public event EventHandler InfoMouseChanged;
 
-		// Génère un événement pour dire qu'il faut changer les informations.
+		//	Génère un événement pour dire qu'il faut changer les informations.
 		protected virtual void OnInfoZoomChanged()
 		{
 			if ( this.InfoZoomChanged != null )  // qq'un écoute ?
@@ -2932,7 +2932,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler InfoZoomChanged;
 
 
-		// Génère un événement pour dire qu'il faut utiliser le panneau des propriétés.
+		//	Génère un événement pour dire qu'il faut utiliser le panneau des propriétés.
 		protected virtual void OnUsePropertiesPanel()
 		{
 			if ( this.UsePropertiesPanel != null )  // qq'un écoute ?
@@ -2944,7 +2944,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler UsePropertiesPanel;
 
 
-		// Génère un événement pour dire que la page ou le calque a changé.
+		//	Génère un événement pour dire que la page ou le calque a changé.
 		protected virtual void OnPageLayerChanged()
 		{
 			if ( this.PageLayerChanged != null )  // qq'un écoute ?

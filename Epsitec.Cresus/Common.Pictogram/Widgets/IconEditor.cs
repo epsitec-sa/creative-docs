@@ -77,7 +77,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				if ( this.commandDispatcher == null )
 				{
-					// On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
+					//	On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
 					this.commandDispatcher = new Support.CommandDispatcher("IconEditor");
 					this.commandDispatcher.RegisterController(this);
 				}
@@ -544,27 +544,27 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.OriginY = (double) (-this.vScroller.Value);
 		}
 
-		// Bouton "page précédente" cliqué.
 		private void HandleQuickPagePrev(object sender, MessageEventArgs e)
 		{
+			//	Bouton "page précédente" cliqué.
 			if ( this.drawer.IconObjects.CurrentPage > 0 )
 			{
 				this.panelPages.PageSelect(this.drawer.IconObjects.CurrentPage-1);
 			}
 		}
 
-		// Bouton "page suivante" cliqué.
 		private void HandleQuickPageNext(object sender, MessageEventArgs e)
 		{
+			//	Bouton "page suivante" cliqué.
 			if ( this.drawer.IconObjects.CurrentPage < this.drawer.IconObjects.TotalPages()-1 )
 			{
 				this.panelPages.PageSelect(this.drawer.IconObjects.CurrentPage+1);
 			}
 		}
 
-		// Bouton "menu des pages" cliqué.
 		private void HandleQuickPageMenu(object sender, MessageEventArgs e)
 		{
+			//	Bouton "menu des pages" cliqué.
 			Button button = sender as Button;
 			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));
 			VMenu menu = this.panelPages.CreateMenu();
@@ -580,27 +580,27 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.panelPages.PageSelect(sel);
 		}
 
-		// Bouton "calque précédent" cliqué.
 		private void HandleQuickLayerPrev(object sender, MessageEventArgs e)
 		{
+			//	Bouton "calque précédent" cliqué.
 			if ( this.drawer.IconObjects.CurrentLayer > 0 )
 			{
 				this.panelLayers.LayerSelect(this.drawer.IconObjects.CurrentLayer-1);
 			}
 		}
 
-		// Bouton "calque suivant" cliqué.
 		private void HandleQuickLayerNext(object sender, MessageEventArgs e)
 		{
+			//	Bouton "calque suivant" cliqué.
 			if ( this.drawer.IconObjects.CurrentLayer < this.drawer.IconObjects.TotalLayers()-1 )
 			{
 				this.panelLayers.LayerSelect(this.drawer.IconObjects.CurrentLayer+1);
 			}
 		}
 
-		// Bouton "menu des calques" cliqué.
 		private void HandleQuickLayerMenu(object sender, MessageEventArgs e)
 		{
+			//	Bouton "menu des calques" cliqué.
 			Button button = sender as Button;
 			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));
 			VMenu menu = this.panelLayers.CreateMenu();
@@ -616,9 +616,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.panelLayers.LayerSelect(sel);
 		}
 
-		// Met à jour les boutons pour les pages et les calques.
 		protected void UpdatePagesLayers()
 		{
+			//	Met à jour les boutons pour les pages et les calques.
 			int cp = this.drawer.IconObjects.CurrentPage;
 			int tp = this.drawer.IconObjects.TotalPages();
 			this.quickPagePrev.SetEnabled(cp > 0);
@@ -634,9 +634,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.quickLayerMenu.Text = ((char)('A'+(tl-cl-1))).ToString();
 		}
 
-		// Ajoute une icône.
 		protected void MenuAdd(VMenu vmenu, string icon, string command, string text, string shortcut)
 		{
+			//	Ajoute une icône.
 			this.MenuAdd(vmenu, icon, command, text, shortcut, command);
 		}
 		
@@ -663,9 +663,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Ajoute une icône.
 		protected void HToolBarAdd(string icon, string command, string tooltip)
 		{
+			//	Ajoute une icône.
 			if ( icon == "" )
 			{
 				IconSeparator sep = new IconSeparator();
@@ -680,9 +680,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Ajoute une icône.
 		protected void VToolBarAdd(string icon, string command, string tooltip)
 		{
+			//	Ajoute une icône.
 			this.VToolBarAdd(icon, command, tooltip, command);
 		}
 
@@ -702,9 +702,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Ajoute une icône.
 		protected void InfoAdd(string icon, double width, string command, string tooltip)
 		{
+			//	Ajoute une icône.
 			this.InfoAdd(icon, width, command, tooltip, command);
 		}
 		
@@ -813,12 +813,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdatePagesLayers();
 		}
 
-		// Met à jour les panneaux des propriétés de droite en fonction de l'objet.
 		protected void UpdatePanels()
 		{
+			//	Met à jour les panneaux des propriétés de droite en fonction de l'objet.
 			if ( this.panel == null )  return;
 
-			// Supprime tous les panneaux, sauf le ColorSelector.
+			//	Supprime tous les panneaux, sauf le ColorSelector.
 			AbstractPanel panel;
 			int i = 0;
 			while ( i < this.panel.Children.Count )
@@ -840,7 +840,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				}
 			}
 
-			// Crée une fois pour toutes le ColorSelector.
+			//	Crée une fois pour toutes le ColorSelector.
 			if ( this.colorSelector == null )
 			{
 				this.colorSelector = new ColorSelector();
@@ -851,7 +851,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.colorSelector.Parent = this.panel;
 			}
 
-			// Crée tous les panneaux.
+			//	Crée tous les panneaux.
 			Widget originColorLastPanel = null;
 
 			AbstractObject creatingObject = this.drawer.CreatingObject;
@@ -913,9 +913,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.HandleDrawerInfoZoomChanged(null);
 		}
 
-		// Repositionne tous les panels.
 		protected void GeometryPanels()
 		{
+			//	Repositionne tous les panels.
 			if ( this.colorSelector == null )  return;
 
 			Drawing.Rectangle rect = new Drawing.Rectangle();
@@ -966,7 +966,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			this.leftHeightUsed = this.panel.Height-posy;
 
-			// Positionne le ColorSelector.
+			//	Positionne le ColorSelector.
 			rect.Left   = 0;
 			rect.Right  = this.panel.Width;
 			rect.Bottom = 0;
@@ -974,27 +974,27 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.colorSelector.Bounds = rect;
 		}
 
-		// Le contenu d'un panneau a été changé.
 		private void HandlePanelChanged(object sender)
 		{
+			//	Le contenu d'un panneau a été changé.
 			AbstractPanel panel = sender as AbstractPanel;
 			AbstractProperty property = panel.GetProperty();
 			this.drawer.SetProperty(property, true);
 			panel.Multi = false;
 		}
 
-		// La hauteur d'un panneau a été changée.
 		private void HandleExtendedChanged(object sender)
 		{
+			//	La hauteur d'un panneau a été changée.
 			AbstractPanel panel = sender as AbstractPanel;
 			AbstractProperty property = panel.GetProperty();
 			this.drawer.SetPropertyExtended(property.Type, panel.ExtendedSize);
 			this.UpdatePanels();
 		}
 
-		// Le widget qui détermine la couleur d'origine a changé.
 		private void HandleOriginColorChanged(object sender)
 		{
+			//	Le widget qui détermine la couleur d'origine a changé.
 			this.HandleOriginColorChanged(sender, false);
 		}
 
@@ -1040,9 +1040,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Couleur changée dans la roue.
 		private void HandleColorSelectorChanged(object sender)
 		{
+			//	Couleur changée dans la roue.
 			if ( this.ignoreColorChanged || this.originColorPanel == null )  return;
 			this.originColorPanel.OriginColorChange(this.colorSelector.Color);
 
@@ -1322,10 +1322,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.Invalidate();
 		}
 
-		// TODO: pourquoi cette méthode ne peut pas être directement dans PanelStyles ?
 		[Command ("StyleCreate")]
 		void CommandStyleCreate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			//	TODO: pourquoi cette méthode ne peut pas être directement dans PanelStyles ?
 			PropertyType type = AbstractProperty.TypeName(e.CommandArgs[0]);
 			this.panelStyles.CommandStyleCreate(type);
 		}

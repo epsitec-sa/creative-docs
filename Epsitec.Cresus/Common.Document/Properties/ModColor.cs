@@ -170,9 +170,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Effectue toutes les notifications après un changement.
 		protected override void NotifyAfter(bool oplet)
 		{
+			//	Effectue toutes les notifications après un changement.
 			System.Diagnostics.Debug.Assert(this.owners.Count == 1);
 			Objects.Abstract obj = this.owners[0] as Objects.Abstract;  // objet calque
 			this.document.Notifier.NotifyLayerChanged(obj);
@@ -180,9 +180,9 @@ namespace Epsitec.Common.Document.Properties
 			this.document.IsDirtySerialize = true;
 		}
 
-		// Indique si une impression complexe est nécessaire.
 		public override bool IsComplexPrinting
 		{
+			//	Indique si une impression complexe est nécessaire.
 			get
 			{
 				if ( this.a != 0.0 )  return true;
@@ -190,15 +190,15 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return false; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			ModColor p = property as ModColor;
 			p.h = this.h;
@@ -211,9 +211,9 @@ namespace Epsitec.Common.Document.Properties
 			p.n = this.n;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			ModColor p = property as ModColor;
@@ -229,17 +229,17 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.ModColor(document);
 		}
 
 
-		// Modifie une couleur.
 		public void ModifyColor(ref Drawing.RichColor color)
 		{
+			//	Modifie une couleur.
 			if ( this.h == 0.0 &&
 				 this.s == 0.0 &&
 				 this.v == 0.0 &&
@@ -284,8 +284,8 @@ namespace Epsitec.Common.Document.Properties
 
 			basic = basic.ClipToRange();
 
-			// Si une couleur Gray est devenue non grise, change l'espace de
-			// couleur en RGB.
+			//	Si une couleur Gray est devenue non grise, change l'espace de
+			//	couleur en RGB.
 			if ( color.ColorSpace == ColorSpace.Gray )
 			{
 				if ( basic.R != basic.G || basic.G != basic.B || basic.B != basic.R )
@@ -300,9 +300,9 @@ namespace Epsitec.Common.Document.Properties
 
 
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("H", this.h);
@@ -315,9 +315,9 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("N", this.n);
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected ModColor(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			this.h = info.GetDouble("H");
 			this.s = info.GetDouble("S");
 			this.v = info.GetDouble("V");

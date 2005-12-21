@@ -52,9 +52,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(AbstractObject src)
 		{
+			//	Reprend toutes les caractéristiques d'un objet.
 			base.CloneObject(src);
 			ObjectLayer layer = src as ObjectLayer;
 			this.actif     = layer.actif;

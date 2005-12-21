@@ -121,9 +121,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				double h = this.LabelHeight;
@@ -148,9 +148,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Dimension p = this.property as Properties.Dimension;
@@ -172,9 +172,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Dimension p = this.property as Properties.Dimension;
 			if ( p == null )  return;
 
@@ -190,18 +190,18 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			this.addLength.Visibility = (this.isExtendedSize);
 			this.outLength.Visibility = (this.isExtendedSize);
 			this.fontOffset.Visibility = (this.isExtendedSize);
 			this.dimensionText.Visibility = (this.isExtendedSize);
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.gridForm == null )  return;
@@ -270,16 +270,16 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 		
-		// Un bouton a été cliqué.
 		private void HandleTypeChanged(object sender)
 		{
+			//	Un bouton a été cliqué.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
-		// Un bouton a été cliqué.
 		private void HandleRotateTextClicked(object sender, MessageEventArgs e)
 		{
+			//	Un bouton a été cliqué.
 			if ( this.ignoreChanged )  return;
 
 			IconButton button = sender as IconButton;
@@ -288,16 +288,16 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
-		// Un champ a été changé.
 		private void HandleCheckChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 			this.EnableWidgets();
 			this.OnChanged();

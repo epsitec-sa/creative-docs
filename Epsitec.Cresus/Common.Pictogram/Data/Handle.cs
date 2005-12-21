@@ -32,57 +32,57 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 		}
 
-		// Position de la poignée.
 		public Drawing.Point Position
 		{
+			//	Position de la poignée.
 			get { return this.position; }
 			set { this.position = value; }
 		}
 
-		// Type de la poignée.
 		[XmlAttribute]
 		public HandleType Type
 		{
+			//	Type de la poignée.
 			get { return this.type; }
 			set { this.type = value; }
 		}
 
-		// Type de la poignée.
 		[XmlAttribute]
 		public HandleConstrainType ConstrainType
 		{
+			//	Type de la poignée.
 			get { return this.constrainType; }
 			set { this.constrainType = value; }
 		}
 
-		// Etat "sélectionné" de la poignée.
 		[XmlIgnore]
 		public bool IsSelected
 		{
+			//	Etat "sélectionné" de la poignée.
 			get { return this.isSelected; }
 			set { this.isSelected = value; }
 		}
 
-		// Etat "survolé" de la poignée.
 		[XmlIgnore]
 		public bool IsHilited
 		{
+			//	Etat "survolé" de la poignée.
 			get { return this.isHilited; }
 			set { this.isHilited = value; }
 		}
 
-		// Etat "sélectionné global" de la poignée.
 		[XmlIgnore]
 		public bool IsGlobalSelected
 		{
+			//	Etat "sélectionné global" de la poignée.
 			get { return this.isGlobalSelected; }
 			set { this.isGlobalSelected = value; }
 		}
 
 
-		// Copie la poignée courante dans une poignée destination.
 		public void CopyTo(Handle dst)
 		{
+			//	Copie la poignée courante dans une poignée destination.
 			dst.Position         = this.Position;
 			dst.Type             = this.Type;
 			dst.ConstrainType    = this.ConstrainType;
@@ -92,9 +92,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détecte si la souris est dans la poignée.
 		public bool Detect(Drawing.Point pos)
 		{
+			//	Détecte si la souris est dans la poignée.
 			if ( !this.isSelected || this.isGlobalSelected )  return false;
 			if ( this.type == HandleType.Hide )  return false;
 			if ( this.scaleX == 0 || this.scaleY == 0 )  return false;
@@ -107,18 +107,18 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Tient compte de la bbox d'une poignée.
 		public void BoundingBox(IconContext iconContext, ref Drawing.Rectangle bbox)
 		{
+			//	Tient compte de la bbox d'une poignée.
 			Drawing.Rectangle rect = new Drawing.Rectangle(this.position, Drawing.Size.Empty);
 			//rect.Inflate(iconContext.HandleSize/2);  // inutile, fait par Drawer.InvalidateAll
 			bbox.MergeWith(rect);
 		}
 
 
-		// Dessine la poignée.
 		public void Draw(Drawing.Graphics graphics, IconContext iconContext)
 		{
+			//	Dessine la poignée.
 			if ( !this.isSelected )  return;
 
 			this.scaleX = iconContext.ScaleX;
@@ -265,11 +265,11 @@ namespace Epsitec.Common.Pictogram.Data
 			graphics.LineWidth = initialWidth;
 		}
 
-		// Dessine un cercle complet.
 		protected void PaintCircle(Drawing.Graphics graphics,
 								   Drawing.Rectangle rect,
 								   Drawing.Color color)
 		{
+			//	Dessine un cercle complet.
 			Drawing.Point c = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 			double rx = rect.Width/2;
 			double ry = rect.Height/2;

@@ -35,9 +35,9 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 		}
 
-		// Crée une nouvelle propriété.
 		static public AbstractProperty NewProperty(PropertyType type)
 		{
+			//	Crée une nouvelle propriété.
 			AbstractProperty property = null;
 			switch ( type )
 			{
@@ -63,9 +63,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return property;
 		}
 
-		// Retourne le nom d'un type de propriété.
 		static public string TypeName(PropertyType type)
 		{
+			//	Retourne le nom d'un type de propriété.
 			switch ( type )
 			{
 				case PropertyType.Name:             return "Name";
@@ -88,9 +88,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return "";
 		}
 
-		// Retourne le type de propriété d'après son nom.
 		static public PropertyType TypeName(string typeName)
 		{
+			//	Retourne le type de propriété d'après son nom.
 			switch ( typeName )
 			{
 				case "Name":             return PropertyType.Name;
@@ -114,34 +114,34 @@ namespace Epsitec.Common.Pictogram.Data
 			return PropertyType.None;
 		}
 
-		// Type de la propriété.
 		[XmlAttribute]
 		public PropertyType Type
 		{
+			//	Type de la propriété.
 			get { return this.type; }
 			set { this.type = value; }
 		}
 
-		// Type de la propriété.
 		[XmlAttribute]
 		public string StyleName
 		{
+			//	Type de la propriété.
 			get { return this.styleName; }
 			set { this.styleName = value; }
 		}
 
-		// Style de la propriété (0 = pas un style).
 		[XmlAttribute]
 		public int StyleID
 		{
+			//	Style de la propriété (0 = pas un style).
 			get { return this.styleID; }
 			set { this.styleID = value; }
 		}
 
-		// Intensité pour le fond du panneau.
 		[XmlIgnore]
 		public double BackgroundIntensity
 		{
+			//	Intensité pour le fond du panneau.
 			get
 			{
 				switch ( this.type )
@@ -167,10 +167,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Nom de la propriété.
 		[XmlIgnore]
 		public string Text
 		{
+			//	Nom de la propriété.
 			get
 			{
 				switch ( this.type )
@@ -196,10 +196,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Nom de la propriété ou du style si c'en est un.
 		[XmlIgnore]
 		public string TextStyle
 		{
+			//	Nom de la propriété ou du style si c'en est un.
 			get
 			{
 				if ( this.styleName == "" )
@@ -213,47 +213,47 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Mode de déploiement du panneau associé.
 		[XmlIgnore]
 		public bool ExtendedSize
 		{
+			//	Mode de déploiement du panneau associé.
 			get { return this.extendedSize; }
 			set { this.extendedSize = value; }
 		}
 
-		// Représentation de plusieurs propriétés contradictoires.
 		[XmlIgnore]
 		public bool Multi
 		{
+			//	Représentation de plusieurs propriétés contradictoires.
 			get { return this.multi; }
 			set { this.multi = value; }
 		}
 
-		// Indique s'il faut éditer les propriétés.
 		[XmlIgnore]
 		public bool EditProperties
 		{
+			//	Indique s'il faut éditer les propriétés.
 			get { return this.editProperties; }
 			set { this.editProperties = value; }
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		[XmlIgnore]
 		public virtual bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return false; }
 		}
 
-		// Indique si cette propriété peut faire l'objet d'un style.
 		[XmlIgnore]
 		public virtual bool StyleAbility
 		{
+			//	Indique si cette propriété peut faire l'objet d'un style.
 			get { return true; }
 		}
 
-		// Effectue une copie de la propriété.
 		public virtual void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			property.type           = this.type;
 			property.multi          = this.multi;
 			property.styleName      = this.styleName;
@@ -261,18 +261,18 @@ namespace Epsitec.Common.Pictogram.Data
 			property.editProperties = this.editProperties;
 		}
 
-		// Compare deux propriétés.
 		public virtual bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( property.type      != this.type      )  return false;
 			if ( property.styleName != this.styleName )  return false;
 			if ( property.styleID   != this.styleID   )  return false;
 			return true;
 		}
 
-		// Cherche une propriété de même type dans une liste.
 		public AbstractProperty Search(System.Collections.ArrayList list)
 		{
+			//	Cherche une propriété de même type dans une liste.
 			foreach ( AbstractProperty property in list )
 			{
 				if ( property.Type == this.type )  return property;
@@ -280,51 +280,51 @@ namespace Epsitec.Common.Pictogram.Data
 			return null;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public virtual AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return null;
 		}
 
 
-		// Nombre de poignées.
 		public virtual int TotalHandle
 		{
+			//	Nombre de poignées.
 			get { return this.handles.Count; }
 		}
 
-		// Donne une poignée de la propriété.
 		public virtual Handle Handle(int rank, Drawing.Rectangle bbox)
 		{
+			//	Donne une poignée de la propriété.
 			return null;
 		}
 
-		// Début du déplacement d'une poignée de la propriété.
 		public virtual void MoveHandleStarting(int rank, Drawing.Point pos, Drawing.Rectangle bbox, IconContext iconContext)
 		{
+			//	Début du déplacement d'une poignée de la propriété.
 			iconContext.ConstrainFixStarting(pos);
 		}
 
-		// Déplace une poignée de la propriété.
 		public virtual void MoveHandleProcess(int rank, Drawing.Point pos, Drawing.Rectangle bbox, IconContext iconContext)
 		{
+			//	Déplace une poignée de la propriété.
 		}
 
-		// Indique si les poignées sont visibles.
 		public virtual bool IsHandleVisible()
 		{
+			//	Indique si les poignées sont visibles.
 			return false;
 		}
 
-		// Dessine les traits de construction avant les poignées.
 		public virtual void DrawEdit(Drawing.Graphics graphics, IconContext iconContext, Drawing.Rectangle bbox)
 		{
+			//	Dessine les traits de construction avant les poignées.
 		}
 
 
-		// Initialise le zoom par défaut d'un chemin.
 		static public double DefaultZoom(IconContext iconContext)
 		{
+			//	Initialise le zoom par défaut d'un chemin.
 			if ( iconContext == null )
 			{
 				return 2.0;
@@ -336,11 +336,11 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Génère un événement pour dire que la propriété a changé.
-		// En fait, ce sont les objets qui vont écouter cet événement, pour
-		// éventuellement modifier les poignées qui reflètent les propriétés.
 		protected virtual void OnChanged()
 		{
+			//	Génère un événement pour dire que la propriété a changé.
+			//	En fait, ce sont les objets qui vont écouter cet événement, pour
+			//	éventuellement modifier les poignées qui reflètent les propriétés.
 			if ( this.Changed != null )  // qq'un écoute ?
 			{
 				this.Changed(this);

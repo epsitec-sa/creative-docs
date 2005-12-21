@@ -3,8 +3,8 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum HandleType
 	{
 		Primary   = 0,		// poignée principale
@@ -38,9 +38,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document = document;
 		}
 
-		// Position de la poignée.
 		public Point Position
 		{
+			//	Position de la poignée.
 			get
 			{
 				if ( this.document.IsSurfaceRotation )
@@ -64,9 +64,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Position initiale de la poignée.
 		public Point InitialPosition
 		{
+			//	Position initiale de la poignée.
 			get
 			{
 				return this.initialPosition;
@@ -78,9 +78,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Type de la poignée.
 		public HandleType Type
 		{
+			//	Type de la poignée.
 			get
 			{
 				return this.type;
@@ -96,9 +96,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Type de la contrainte de la poignée.
 		public HandleConstrainType ConstrainType
 		{
+			//	Type de la contrainte de la poignée.
 			get
 			{
 				return this.constrainType;
@@ -114,9 +114,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Modifie l'état d'une poignée.
 		public void Modify(bool isVisible, bool isGlobalSelected, bool isShaperDeselected)
 		{
+			//	Modifie l'état d'une poignée.
 			if ( this.isVisible          != isVisible          ||
 				 this.isGlobalSelected   != isGlobalSelected   ||
 				 this.isShaperDeselected != isShaperDeselected )
@@ -129,9 +129,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Etat "visible" de la poignée.
 		public bool IsVisible
 		{
+			//	Etat "visible" de la poignée.
 			get
 			{
 				return this.isVisible;
@@ -148,9 +148,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Etat "survolé" de la poignée.
 		public bool IsHilited
 		{
+			//	Etat "survolé" de la poignée.
 			get
 			{
 				return this.isHilited;
@@ -166,9 +166,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Etat "sélectionné global" de la poignée.
 		public bool IsGlobalSelected
 		{
+			//	Etat "sélectionné global" de la poignée.
 			get
 			{
 				return this.isGlobalSelected;
@@ -184,9 +184,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Etat "modeleur désélectionné" de la poignée.
 		public bool IsShaperDeselected
 		{
+			//	Etat "modeleur désélectionné" de la poignée.
 			get
 			{
 				return this.isShaperDeselected;
@@ -202,9 +202,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Type de la propriété liée à la poignée.
 		public Properties.Type PropertyType
 		{
+			//	Type de la propriété liée à la poignée.
 			get
 			{
 				return this.propertyType;
@@ -216,9 +216,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Rang de la poignée dans la propriété.
 		public int PropertyRank
 		{
+			//	Rang de la poignée dans la propriété.
 			get
 			{
 				return this.propertyRank;
@@ -230,18 +230,18 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Notifie un changement de la poignée.
 		protected void NotifyArea()
 		{
+			//	Notifie un changement de la poignée.
 			if ( this.document.Notifier == null )  return;
 			if ( !this.isVisible )  return;
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
 
-		// Copie la poignée courante dans une poignée destination.
 		public void CopyTo(Handle dst)
 		{
+			//	Copie la poignée courante dans une poignée destination.
 			dst.position           = this.position;
 			dst.initialPosition    = this.initialPosition;
 			dst.type               = this.type;
@@ -254,18 +254,18 @@ namespace Epsitec.Common.Document.Objects
 			dst.propertyRank       = this.propertyRank;
 		}
 
-		// Permute les informations de sélections entre 2 poignées.
 		public void SwapSelection(Handle h)
 		{
+			//	Permute les informations de sélections entre 2 poignées.
 			Misc.Swap(ref this.isVisible,          ref h.isVisible         );
 			Misc.Swap(ref this.isGlobalSelected,   ref h.isGlobalSelected  );
 			Misc.Swap(ref this.isShaperDeselected, ref h.isShaperDeselected);
 		}
 
 
-		// Détecte si la souris est dans la poignée.
 		public bool Detect(Point pos)
 		{
+			//	Détecte si la souris est dans la poignée.
 			if ( !this.isVisible || this.isGlobalSelected )  return false;
 			if ( this.type == HandleType.Hide )  return false;
 
@@ -296,12 +296,12 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Retourne la bbox d'une poignée.
-		// Il n'est pas nécessaire de tenir compte des dimensions de la poignée,
-		// car la zone à repeindre est toujours engraissée en conséquence juste
-		// avant le Invalidate !
 		public Drawing.Rectangle BoundingBox
 		{
+			//	Retourne la bbox d'une poignée.
+			//	Il n'est pas nécessaire de tenir compte des dimensions de la poignée,
+			//	car la zone à repeindre est toujours engraissée en conséquence juste
+			//	avant le Invalidate !
 			get
 			{
 				if ( this.isVisible )
@@ -316,9 +316,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Dessine la poignée.
 		public void Draw(Graphics graphics, DrawingContext context)
 		{
+			//	Dessine la poignée.
 			if ( !this.isVisible )  return;
 
 			double scaleX     = context.ScaleX;
@@ -500,9 +500,9 @@ namespace Epsitec.Common.Document.Objects
 			graphics.LineWidth = initialWidth;
 		}
 
-		// Dessine un cercle complet.
 		protected void PaintCircle(Graphics graphics, Drawing.Rectangle rect, Color color, DrawingContext context)
 		{
+			//	Dessine un cercle complet.
 			double rx = rect.Width/2;
 			double ry = rect.Height/2;
 			Path path = new Path();
@@ -511,9 +511,9 @@ namespace Epsitec.Common.Document.Objects
 			graphics.RenderSolid(this.Adapt(color, context));
 		}
 
-		// Dessine un cercle complet.
 		protected void PaintTriangle(Graphics graphics, Drawing.Rectangle rect, Color color, DrawingContext context)
 		{
+			//	Dessine un cercle complet.
 			Path path = new Path();
 			path.MoveTo((rect.Left+rect.Right)/2, rect.Top);
 			path.LineTo(rect.Left, rect.Bottom);
@@ -523,9 +523,9 @@ namespace Epsitec.Common.Document.Objects
 			graphics.RenderSolid(this.Adapt(color, context));
 		}
 
-		// Adapte une couleur au mode d'aperçu avant impression.
 		protected Color Adapt(Color color, DrawingContext context)
 		{
+			//	Adapte une couleur au mode d'aperçu avant impression.
 			if ( context.PreviewActive )
 			{
 				//?color = Color.FromBrightness(color.GetBrightness());
@@ -536,17 +536,17 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Serialization
-		// Sérialise la poignée.
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la poignée.
 			info.AddValue("Position", this.position);
 			info.AddValue("Type", this.type);
 			info.AddValue("ConstrainType", this.constrainType);
 		}
 
-		// Constructeur qui désérialise la poignée.
 		protected Handle(SerializationInfo info, StreamingContext context)
 		{
+			//	Constructeur qui désérialise la poignée.
 			this.document = Document.ReadDocument;
 			this.position = (Point) info.GetValue("Position", typeof(Point));
 			this.type = (HandleType) info.GetValue("Type", typeof(HandleType));

@@ -105,9 +105,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.isExtendedSize ? this.LabelHeight+79 : this.LabelHeight+30 );
@@ -115,9 +115,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.ModColor p = this.property as Properties.ModColor;
@@ -138,9 +138,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.ModColor p = this.property as Properties.ModColor;
 			if ( p == null )  return;
 
@@ -155,9 +155,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			for ( int i=0 ; i<7 ; i++ )
 			{
 				this.fieldArray[i].Visibility = (this.isExtendedSize);
@@ -167,9 +167,9 @@ namespace Epsitec.Common.Document.Panels
 			this.reset.Visibility = (this.isExtendedSize);
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldArray == null )  return;
@@ -204,9 +204,9 @@ namespace Epsitec.Common.Document.Panels
 			this.reset.Bounds = r;
 		}
 		
-		// Couleur -> sliders.
 		protected void ColoriseSliders()
 		{
+			//	Couleur -> sliders.
 			double h = (double) this.fieldArray[0].TextFieldReal.InternalValue;
 			Drawing.Color saturated = Drawing.Color.FromHSV(h,1,1);
 			
@@ -215,9 +215,9 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldArray[2].TextFieldReal.Color = saturated;
 		}
 
-		// Une valeur a été changée.
 		private void HandleValueChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			if ( this.ignoreChanged )  return;
 			this.ColoriseSliders();
 			this.OnChanged();

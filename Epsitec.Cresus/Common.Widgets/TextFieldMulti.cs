@@ -118,8 +118,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ScrollVertical(double dist)
 		{
-			// Décale le texte vers le haut (+) ou le bas (-), lorsque la
-			// souris dépasse pendant une sélection.
+			//	Décale le texte vers le haut (+) ou le bas (-), lorsque la
+			//	souris dépasse pendant une sélection.
 			this.scrollOffset.Y += dist;
 			Drawing.Point end = this.TextLayout.FindTextEnd();
 			double min = System.Math.Min(end.Y, AbstractTextField.Infinity-this.realSize.Height);
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateScroller()
 		{
-			// Met à jour l'asceuseur en fonction de this.scrollOffset.
+			//	Met à jour l'asceuseur en fonction de this.scrollOffset.
 			if ( this.scroller == null )  return;
 
 			Drawing.Point end = this.TextLayout.FindTextEnd();

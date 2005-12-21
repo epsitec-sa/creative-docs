@@ -4,8 +4,8 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum JustifHorizontal
 	{
 		None    = 0,
@@ -181,9 +181,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Donne le petit texte pour les échantillons.
 		public override string SampleText
 		{
+			//	Donne le petit texte pour les échantillons.
 			get
 			{
 				if ( this.horizontal == JustifHorizontal.Left    )  return "|ab |";
@@ -196,9 +196,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(JustifHorizontal type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -212,9 +212,9 @@ namespace Epsitec.Common.Document.Properties
 			return name;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(JustifHorizontal type)
 		{
+			//	Retourne l'icône pour un type donné.
 			switch ( type )
 			{
 				case JustifHorizontal.Left:      return "JustifHLeft";
@@ -227,9 +227,9 @@ namespace Epsitec.Common.Document.Properties
 			return "";
 		}
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(JustifVertical type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -240,9 +240,9 @@ namespace Epsitec.Common.Document.Properties
 			return name;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(JustifVertical type)
 		{
+			//	Retourne l'icône pour un type donné.
 			switch ( type )
 			{
 				case JustifVertical.Top:     return "JustifVTop";
@@ -252,9 +252,9 @@ namespace Epsitec.Common.Document.Properties
 			return "";
 		}
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(JustifOrientation type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -266,9 +266,9 @@ namespace Epsitec.Common.Document.Properties
 			return name;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(JustifOrientation type)
 		{
+			//	Retourne l'icône pour un type donné.
 			switch ( type )
 			{
 				case JustifOrientation.LeftToRight:  return "JustifOLR";
@@ -280,15 +280,15 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Justif p = property as Justif;
 			p.horizontal  = this.horizontal;
@@ -299,9 +299,9 @@ namespace Epsitec.Common.Document.Properties
 			p.offsetV     = this.offsetV;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			Justif p = property as Justif;
@@ -315,18 +315,18 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Justif(document);
 		}
 
 
-		// Diminue la boîte qui contient le texte en fonction des marges.
-		// Retourne false si elle est trop petite.
 		public bool DeflateBox(ref Point pbl, ref Point pbr, ref Point ptl, ref Point ptr)
 		{
+			//	Diminue la boîte qui contient le texte en fonction des marges.
+			//	Retourne false si elle est trop petite.
 			double mh = this.marginH;
 			double mv = this.marginV;
 
@@ -353,9 +353,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Début du déplacement global de la propriété.
 		public override void MoveGlobalStarting()
 		{
+			//	Début du déplacement global de la propriété.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
 
 			this.InsertOpletProperty();
@@ -364,9 +364,9 @@ namespace Epsitec.Common.Document.Properties
 			this.initialMarginV = this.marginV;
 		}
 		
-		// Effectue le déplacement global de la propriété.
 		public override void MoveGlobalProcess(Selector selector)
 		{
+			//	Effectue le déplacement global de la propriété.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
 
 			double scale = selector.GetTransformScale;
@@ -378,9 +378,9 @@ namespace Epsitec.Common.Document.Properties
 
 		
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("Horizontal", this.horizontal);
@@ -391,9 +391,9 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("OffsetV", this.offsetV);
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected Justif(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			this.horizontal = (JustifHorizontal) info.GetValue("Horizontal", typeof(JustifHorizontal));
 			this.vertical = (JustifVertical) info.GetValue("Vertical", typeof(JustifVertical));
 			this.orientation = (JustifOrientation) info.GetValue("Orientation", typeof(JustifOrientation));

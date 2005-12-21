@@ -36,9 +36,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.list.Add(text);
 		}
 
-		// Détermine le nom de la propriété dans la liste (Lister).
 		public string GetListName()
 		{
+			//	Détermine le nom de la propriété dans la liste (Lister).
 			return this.list[this.choice] as string;
 		}
 
@@ -48,9 +48,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyList p = property as PropertyList;
 
@@ -63,9 +63,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyList p = property as PropertyList;
@@ -74,9 +74,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelList(drawer);
 		}
 

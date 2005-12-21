@@ -8,13 +8,13 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public interface ISqlValidator
 	{
-		//	Vérification de la validité de noms et de valeurs SQL :
-		
 		bool ValidateName(string value);
 		bool ValidateQualifiedName(string value);
 		bool ValidateString(string value);
 		bool ValidateNumber(string value);
-		
 		void ThrowError(string message);
+		//	Vérification de la validité de noms et de valeurs SQL :
+		
+		
 	}
 }

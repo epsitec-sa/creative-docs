@@ -126,9 +126,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Largeur par défaut.
 		public override double DefaultWidth
 		{
+			//	Largeur par défaut.
 			get
 			{
 				return TextFieldLabel.ShortWidth;
@@ -136,9 +136,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Spécifie les bornes pour une dimension.
 		public void SetRangeDimension(Document document, double min, double max, double step)
 		{
+			//	Spécifie les bornes pour une dimension.
 			this.textFieldReal.FactorMinRange = (decimal) min;
 			this.textFieldReal.FactorMaxRange = (decimal) max;
 			this.textFieldReal.FactorStep     = (decimal) step;
@@ -146,9 +146,9 @@ namespace Epsitec.Common.Document.Widgets
 			document.Modifier.AdaptTextFieldRealDimension(this.textFieldReal);
 		}
 
-		// Spécifie les bornes pour une taille de fonte.
 		public void SetRangeFontSize()
 		{
+			//	Spécifie les bornes pour une taille de fonte.
 			this.textFieldReal.UnitType = RealUnitType.Scalar;
 			this.textFieldReal.Scale = (decimal) Modifier.fontSizeScale;
 			this.textFieldReal.InternalMinValue = 1.0M;
@@ -157,9 +157,9 @@ namespace Epsitec.Common.Document.Widgets
 			this.textFieldReal.Resolution = 0.1M;
 		}
 
-		// Spécifie les bornes pour une valeur en pourcents.
 		public void SetRangePercents(Document document, double min, double max, double step)
 		{
+			//	Spécifie les bornes pour une valeur en pourcents.
 			TextFieldReal field = (this.type == Type.TextFieldUnit) ? this.textFieldPercent : this.textFieldReal;
 
 			document.Modifier.AdaptTextFieldRealPercent(field);
@@ -170,9 +170,9 @@ namespace Epsitec.Common.Document.Widgets
 			field.Resolution = 1.0M;
 		}
 
-		// Indique l'unité en cours pour le type TextFieldUnit.
 		public bool IsUnitPercent
 		{
+			//	Indique l'unité en cours pour le type TextFieldUnit.
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.type == Type.TextFieldUnit);
@@ -199,9 +199,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Texte court du label.
 		public string LabelShortText
 		{
+			//	Texte court du label.
 			get
 			{
 				return this.labelShortText;
@@ -213,9 +213,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Texte long du label.
 		public string LabelLongText
 		{
+			//	Texte long du label.
 			get
 			{
 				return this.labelLongText;
@@ -227,9 +227,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Visibilité du label.
 		public bool LabelVisibility
 		{
+			//	Visibilité du label.
 			get
 			{
 				return this.labelVisibility;
@@ -241,9 +241,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Donne le widget pour le texte.
 		public TextField TextField
 		{
+			//	Donne le widget pour le texte.
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.textFieldSimple != null);
@@ -251,9 +251,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Donne le widget pour le texte.
 		public TextFieldReal TextFieldReal
 		{
+			//	Donne le widget pour le texte.
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.textFieldReal != null);
@@ -268,9 +268,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Donne le widget pour le texte (dimension).
 		public TextFieldReal TextFieldReal1
 		{
+			//	Donne le widget pour le texte (dimension).
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.type == Type.TextFieldUnit);
@@ -278,9 +278,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Donne le widget pour le texte (pourcents).
 		public TextFieldReal TextFieldReal2
 		{
+			//	Donne le widget pour le texte (pourcents).
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.type == Type.TextFieldUnit);
@@ -288,9 +288,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Donne le widget pour choisir l'unité.
 		public Button ButtonUnit
 		{
+			//	Donne le widget pour choisir l'unité.
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.buttonUnit != null);
@@ -298,9 +298,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Largeur en mode court.
 		public static double ShortWidth
 		{
+			//	Largeur en mode court.
 			get
 			{
 				return TextFieldLabel.DefaultLabelWidth +
@@ -309,27 +309,27 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Largeur par défaut du label.
 		public static double DefaultLabelWidth
 		{
+			//	Largeur par défaut du label.
 			get
 			{
 				return 10;
 			}
 		}
 
-		// Largeur par défaut de la marge entre le label et le texte.
 		public static double DefaultMarginWidth
 		{
+			//	Largeur par défaut de la marge entre le label et le texte.
 			get
 			{
 				return 2;
 			}
 		}
 
-		// Largeur par défaut du texte.
 		public static double DefaultTextWidth
 		{
+			//	Largeur par défaut du texte.
 			get
 			{
 				return 48;

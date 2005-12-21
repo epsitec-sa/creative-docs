@@ -52,9 +52,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return @"file:images/textbox.icon"; }
 		}
 
@@ -73,9 +73,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur l'objet.
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle bbox = this.BoundingBox;
@@ -92,9 +92,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détecte si la souris est sur l'objet pour l'éditer.
 		public override bool DetectEdit(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur l'objet pour l'éditer.
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle bbox = this.BoundingBox;
@@ -105,9 +105,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, iconContext);
@@ -149,32 +149,32 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Début de la création d'un objet.
 			iconContext.ConstrainFixStarting(pos, ConstrainType.Square);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			this.dirtyBbox = true;
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Fin de la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			iconContext.ConstrainDelStarting();
 
-			// Crée les 2 autres poignées dans les coins opposés.
+			//	Crée les 2 autres poignées dans les coins opposés.
 			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
 			Drawing.Point p1 = rect.BottomLeft;
 			Drawing.Point p2 = rect.TopRight;
@@ -184,30 +184,30 @@ namespace Epsitec.Common.Pictogram.Data
 			this.HandleAdd(new Drawing.Point(p2.X, p1.Y), HandleType.Primary);  // rang = 3
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
 		}
 
-		// Indique s'il faut sélectionner l'objet après sa création.
 		public override bool EditAfterCreation()
 		{
+			//	Indique s'il faut sélectionner l'objet après sa création.
 			return true;
 		}
 
 
-		// Indique si un objet est éditable.
 		public override bool IsEditable()
 		{
+			//	Indique si un objet est éditable.
 			return true;
 		}
 
-		// Lie l'objet éditable à une règle.
 		public override bool EditRulerLink(TextRuler ruler, IconContext iconContext)
 		{
+			//	Lie l'objet éditable à une règle.
 			ruler.TabCapability = true;
 			ruler.AttachToText(this.textNavigator);
 
@@ -218,9 +218,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(AbstractObject src)
 		{
+			//	Reprend toutes les caractéristiques d'un objet.
 			base.CloneObject(src);
 
 			ObjectTextBox obj = src as ObjectTextBox;
@@ -229,9 +229,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Gestion d'un événement pendant l'édition.
 		public override bool EditProcessMessage(Message message, Drawing.Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			if ( this.transform == null )  return false;
 
 			pos = this.transform.TransformInverse(pos);
@@ -239,17 +239,17 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Gestion d'un événement pendant l'édition.
 		public override void EditMouseDownMessage(Drawing.Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			pos = this.transform.TransformInverse(pos);
 			this.textNavigator.MouseDownMessage(pos);
 		}
 
 
-		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
+			//	Met à jour le rectangle englobant l'objet.
 			Drawing.Path path = this.PathBuild();
 			this.bboxThin = path.ComputeBounds();
 
@@ -262,9 +262,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.bboxFull.MergeWith(this.bboxGeom);
 		}
 
-		// Crée le chemin de l'objet.
 		protected Drawing.Path PathBuild()
 		{
+			//	Crée le chemin de l'objet.
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = new Drawing.Point();
 			Drawing.Point p3 = this.Handle(1).Position;
@@ -292,9 +292,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Dessine le texte du pavé.
 		protected void DrawText(Drawing.IPaintPort port, IconContext iconContext)
 		{
+			//	Dessine le texte du pavé.
 			Drawing.Point p1, p2, p3, p4;
 			switch ( this.PropertyJustif(4).Orientation )
 			{
@@ -408,9 +408,9 @@ namespace Epsitec.Common.Pictogram.Data
 			port.Transform = ot;
 		}
 
-		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Dessine l'objet.
 			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext, iconObjects);
 
@@ -445,9 +445,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Imprime l'objet.
 		public override void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Imprime l'objet.
 			base.PrintGeometry(port, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 2 )  return;

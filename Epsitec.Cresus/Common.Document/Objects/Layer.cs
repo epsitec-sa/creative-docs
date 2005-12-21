@@ -4,8 +4,8 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum LayerType
 	{
 		None   = 0,		// aucun
@@ -14,8 +14,8 @@ namespace Epsitec.Common.Document.Objects
 		Hide   = 3,		// caché complètement
 	}
 
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum LayerPrint
 	{
 		None   = 0,		// aucun
@@ -105,9 +105,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(Objects.Abstract src)
 		{
+			//	Reprend toutes les caractéristiques d'un objet.
 			base.CloneObject(src);
 			Layer layer = src as Layer;
 			this.layerType = layer.layerType;
@@ -116,9 +116,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Retourne la chaîne pour nommer la position d'un calque.
 		public static string LayerPositionName(int rank, int total)
 		{
+			//	Retourne la chaîne pour nommer la position d'un calque.
 			if ( total == 1 )
 			{
 				return Res.Strings.Layer.PositionName.Unique;
@@ -140,17 +140,17 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Retourne le nom court d'un calque en fonction de son rang.
 		public static string ShortName(int rank)
 		{
+			//	Retourne le nom court d'un calque en fonction de son rang.
 			return ((char)('A'+rank)).ToString();
 		}
 
 		
 		#region Menu
-		// Construit le menu pour choisir un calque.
 		public static VMenu CreateMenu(UndoableList layers, int currentLayer, MessageEventHandler message)
 		{
+			//	Construit le menu pour choisir un calque.
 			int total = layers.Count;
 			VMenu menu = new VMenu();
 			for ( int i=0 ; i<total ; i++ )
@@ -191,15 +191,15 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		#region OpletType
-		// Ajoute un oplet pour mémoriser le type du calque.
 		protected void InsertOpletType()
 		{
+			//	Ajoute un oplet pour mémoriser le type du calque.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletType oplet = new OpletType(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		// Mémorise le nom de l'objet.
+		//	Mémorise le nom de l'objet.
 		protected class OpletType : AbstractOplet
 		{
 			public OpletType(Layer host)
@@ -247,9 +247,9 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 
 			info.AddValue("LayerType", this.layerType);
@@ -261,9 +261,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Layer(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 			this.layerType = (LayerType) info.GetValue("LayerType", typeof(LayerType));
 
 			if ( this.document.Type != DocumentType.Pictogram )

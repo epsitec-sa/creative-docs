@@ -117,7 +117,7 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				// TODO
+				//	TODO
 				throw new System.InvalidOperationException("Not implemented !");
 			}
 		}
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				// TODO
+				//	TODO
 				throw new System.InvalidOperationException("Not implemented !");
 			}
 		}
@@ -201,9 +201,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Donne la liste de couleurs à lier avec la palette.
 		public Drawing.ColorCollection			ColorCollection
 		{
+			//	Donne la liste de couleurs à lier avec la palette.
 			get
 			{
 				return this.colorCollection;
@@ -241,10 +241,10 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		// Détermine quel widget il faut activer, en fonction de la
-		// ligne et de la colonne où l'on se trouve.
 		public bool Navigate(ColorSample sample, KeyCode key)
 		{
+			//	Détermine quel widget il faut activer, en fonction de la
+			//	ligne et de la colonne où l'on se trouve.
 			ColorSample dest;
 
 			switch ( key )
@@ -332,9 +332,9 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
-		// Sélectionne un échantillon.
 		protected void SelectSample(ColorSample sample, bool import)
 		{
+			//	Sélectionne un échantillon.
 			for ( int i=0 ; i<this.nbTotal ; i++ )
 			{
 				if ( this.palette[i] == sample )
@@ -354,9 +354,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.palette == null )  return;
@@ -405,9 +405,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		// Bouton des options cliqué.
 		private void HandleButtonOptionClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton des options cliqué.
 			GlyphButton button = sender as GlyphButton;
 
 			VMenu menu = new VMenu();
@@ -428,33 +428,33 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Couleur dans la palette cliquée.
 		private void HandleColorClicked(object sender, MessageEventArgs e)
 		{
+			//	Couleur dans la palette cliquée.
 			ColorSample cs = sender as ColorSample;
 			bool import = ( e != null && (e.Message.IsShiftPressed || e.Message.IsCtrlPressed) );
 			this.SelectSample(cs, import);
 		}
 
 		
-		// La collection de couleurs a changé.
 		private void HandleColorCollectionChanged(object sender)
 		{
+			//	La collection de couleurs a changé.
 			this.Invalidate();
 		}
 
-		// Génère un événement pour dire qu'on exporte une couleur.
 		protected virtual void OnExport()
 		{
+			//	Génère un événement pour dire qu'on exporte une couleur.
 			if ( this.Export != null )  // qq'un écoute ?
 			{
 				this.Export(this);
 			}
 		}
 
-		// Génère un événement pour dire qu'on importe une couleur.
 		protected virtual void OnImport()
 		{
+			//	Génère un événement pour dire qu'on importe une couleur.
 			if ( this.Import != null )  // qq'un écoute ?
 			{
 				this.Import(this);

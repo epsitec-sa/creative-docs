@@ -27,9 +27,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		// Crée et montre la fenêtre du dialogue.
 		public override void Show()
 		{
+			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -47,7 +47,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				resize.AnchorMargins = new Margins(0, 0, 0, 0);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				// Crée les onglets.
+				//	Crée les onglets.
 				this.book = new TabBook(this.window.Root);
 				this.book.Arrows = TabBookArrows.Stretch;
 				this.book.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
@@ -71,7 +71,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.book.ActivePage = bookList;
 
-				// Onglet List.
+				//	Onglet List.
 				int tabIndex = 0;
 
 				StaticText label = new StaticText(bookList);
@@ -107,7 +107,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.UpdateList();
 
-				// Onglet Array.
+				//	Onglet Array.
 				tabIndex = 0;
 
 				StaticText fontFaceLabel = new StaticText(bookArray);
@@ -190,7 +190,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.plus.Clicked += new MessageEventHandler(this.HandlePlusClicked);
 				ToolTip.Default.SetToolTip(this.plus, Res.Strings.Dialog.Glyphs.Tooltip.ArrayPlus);
 
-				// Onglet Alternates.
+				//	Onglet Alternates.
 				tabIndex = 0;
 
 				label = new StaticText(bookAlternates);
@@ -235,7 +235,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.alternatesPlus.Clicked += new MessageEventHandler(this.HandlePlusClicked);
 				ToolTip.Default.SetToolTip(this.alternatesPlus, Res.Strings.Dialog.Glyphs.Tooltip.ArrayPlus);
 
-				// Boutons de fermeture.
+				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
 				buttonOk.Command = "GlyphsInsert";
 				buttonOk.Width = 75;
@@ -263,30 +263,30 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.editor.CurrentDocument.Dialogs.BuildGlyphs(this.window);
 		}
 
-		// Enregistre la position de la fenêtre du dialogue.
 		public override void Save()
 		{
+			//	Enregistre la position de la fenêtre du dialogue.
 			this.WindowSave("Glyphs");
 		}
 
-		// Reconstruit le dialogue.
 		public override void Rebuild()
 		{
+			//	Reconstruit le dialogue.
 			if ( !this.editor.IsCurrentDocument )  return;
 			if ( this.window == null )  return;
 			this.editor.CurrentDocument.Dialogs.BuildGlyphs(this.window);
 		}
 
-		// Indique que l'onglet "caractères alternatifs" n'est plus à jour.
 		public void SetAlternatesDirty()
 		{
+			//	Indique que l'onglet "caractères alternatifs" n'est plus à jour.
 			this.alternatesDirty = true;
 			this.UpdateAlternates();
 		}
 
-		// Met à jour l'onglet "caractères alternatifs".
 		protected void UpdateAlternates()
 		{
+			//	Met à jour l'onglet "caractères alternatifs".
 			if ( this.window == null )  return;
 			if ( this.book.ActivePage.Name != "Alternates" )  return;
 			if ( !this.alternatesDirty )  return;
@@ -339,9 +339,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		// Met à jour la liste des glyphs selon la famille choisie.
 		protected void UpdateList()
 		{
+			//	Met à jour la liste des glyphs selon la famille choisie.
 			int family = this.family.SelectedIndex;
 
 			this.ignoreChanged = true;
@@ -365,9 +365,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.ignoreChanged = false;
 		}
 
-		// Donne la liste des caractères Unicode d'une famille.
 		protected int[] UnicodeList(int family)
 		{
+			//	Donne la liste des caractères Unicode d'une famille.
 			if ( family == 0 )  return UnicodeTypo;
 			if ( family == 1 )  return UnicodeSpace;
 			if ( family == 2 )  return UnicodeBusiness;
@@ -501,7 +501,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		};
 
 
-		// Met à jour les boutons -/+.
+		//	Met à jour les boutons -/+.
 		protected void UpdateMinusPlus()
 		{
 			if ( this.book.ActivePage.Name == "List" )  return;
@@ -511,9 +511,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.Plus.Enable = (size < 48.0);
 		}
 
-		// Insère le glyphe selon l'onglet actif dans le texte en édition.
 		protected void EditInsert()
 		{
+			//	Insère le glyphe selon l'onglet actif dans le texte en édition.
 			if ( !this.editor.IsCurrentDocument )  return;
 
 			if ( this.book.ActivePage.Name == "List" )
@@ -567,9 +567,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		// Met à jour le TextFieldCombo des styles de police.
 		protected void UpdateFontStyle()
 		{
+			//	Met à jour le TextFieldCombo des styles de police.
 			this.fieldFontStyle.Items.Clear();  // vide la liste
 
 			Common.OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(this.fontFace);
@@ -579,9 +579,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		// Change la police.
 		protected void SetFontFace(string fontFace)
 		{
+			//	Change la police.
 			if ( this.array.SelectedIndex != -1 )
 			{
 				int code = this.array.IndexToUnicode(this.array.SelectedIndex);
@@ -608,9 +608,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.ignoreChanged = false;
 		}
 
-		// Change le style de la police.
 		protected void SetFontStyle(string fontStyle)
 		{
+			//	Change le style de la police.
 			if ( this.array.SelectedIndex != -1 )
 			{
 				int code = this.array.IndexToUnicode(this.array.SelectedIndex);
@@ -629,16 +629,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.array.ShowSelectedCell();
 		}
 
-		// L'onglet actif a changé.
 		private void HandleBookActivePageChanged(object sender)
 		{
+			//	L'onglet actif a changé.
 			this.UpdateAlternates();
 			this.UpdateMinusPlus();
 		}
 
-		// Le combo pour les polices va être ouvert.
 		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
 		{
+			//	Le combo pour les polices va être ouvert.
 			bool quickOnly = false;
 			System.Collections.ArrayList quickFonts = new System.Collections.ArrayList();
 			double height = 30;
@@ -659,16 +659,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldFontFace.SampleAbc    = abc;
 		}
 
-		// Police changée.
 		private void HandleFontFaceChanged(object sender)
 		{
+			//	Police changée.
 			if ( this.ignoreChanged )  return;
 			this.SetFontFace(this.fieldFontFace.Text);
 		}
 
-		// Bouton "<-" cliqué.
 		private void HandleCurrentFontClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton "<-" cliqué.
 			if ( !this.editor.IsCurrentDocument )  return;
 
 			string fontFace, fontStyle;
@@ -678,31 +678,31 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.SetFontStyle(fontStyle);
 		}
 
-		// Style de la police changé.
 		private void HandleFontStyleChanged(object sender)
 		{
+			//	Style de la police changé.
 			if ( this.ignoreChanged )  return;
 			this.SetFontStyle(this.fieldFontStyle.Text);
 		}
 
-		// Famille changée.
 		private void HandleFamilyChanged(object sender)
 		{
+			//	Famille changée.
 			this.UpdateList();
 		}
 
-		// Le glyphe dans la liste est sélectionné.
 		private void HandleGlyphSelected(object sender)
 		{
+			//	Le glyphe dans la liste est sélectionné.
 			if ( this.ignoreChanged )  return;
 
 			int family = this.family.SelectedIndex;
 			this.listSelectedIndex[family] = this.list.SelectedIndex;
 		}
 
-		// Le glyphe dans le tableau est sélectionné.
 		private void HandleArraySelected(object sender)
 		{
+			//	Le glyphe dans le tableau est sélectionné.
 			string text = "";
 			if ( this.Array.SelectedIndex != -1 )
 			{
@@ -724,9 +724,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.Status.Text = text;
 		}
 
-		// Le glyphe est double-cliqué.
 		private void HandleDoubleClicked(object sender, MessageEventArgs e)
 		{
+			//	Le glyphe est double-cliqué.
 			this.EditInsert();
 		}
 
@@ -768,9 +768,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		// Donne le tableau en fonction de l'onglet actif.
 		protected GlyphArray Array
 		{
+			//	Donne le tableau en fonction de l'onglet actif.
 			get
 			{
 				if ( this.book.ActivePage.Name == "Array"      )  return this.array;
@@ -779,9 +779,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		// Donne le statuts en fonction de l'onglet actif.
 		protected TextField Status
 		{
+			//	Donne le statuts en fonction de l'onglet actif.
 			get
 			{
 				if ( this.book.ActivePage.Name == "Array"      )  return this.status;
@@ -790,9 +790,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		// Donne le bouton "-" en fonction de l'onglet actif.
 		protected Button Minus
 		{
+			//	Donne le bouton "-" en fonction de l'onglet actif.
 			get
 			{
 				if ( this.book.ActivePage.Name == "Array"      )  return this.minus;
@@ -801,9 +801,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		// Donne le bouton "+" en fonction de l'onglet actif.
 		protected Button Plus
 		{
+			//	Donne le bouton "+" en fonction de l'onglet actif.
 			get
 			{
 				if ( this.book.ActivePage.Name == "Array"      )  return this.plus;

@@ -84,9 +84,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Indique si une impression complexe est nécessaire.
 		public override bool IsComplexPrinting
 		{
+			//	Indique si une impression complexe est nécessaire.
 			get
 			{
 				if ( this.fontColor.A > 0.0 && this.fontColor.A < 1.0 )  return true;
@@ -94,15 +94,15 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Font p = property as Font;
 			p.fontName  = this.fontName;
@@ -110,9 +110,9 @@ namespace Epsitec.Common.Document.Properties
 			p.fontColor = this.fontColor;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			Font p = property as Font;
@@ -123,24 +123,24 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Font(document);
 		}
 
 
-		// Retourne la fonte à utiliser.
 		public Drawing.Font GetFont()
 		{
+			//	Retourne la fonte à utiliser.
 			return Misc.GetFont(this.fontName);
 		}
 
 
-		// Début du déplacement global de la propriété.
 		public override void MoveGlobalStarting()
 		{
+			//	Début du déplacement global de la propriété.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
 
 			this.InsertOpletProperty();
@@ -148,9 +148,9 @@ namespace Epsitec.Common.Document.Properties
 			this.initialFontSize = this.fontSize;
 		}
 		
-		// Effectue le déplacement global de la propriété.
 		public override void MoveGlobalProcess(Selector selector)
 		{
+			//	Effectue le déplacement global de la propriété.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
 
 			double scale = selector.GetTransformScale;
@@ -160,9 +160,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		
-		// Donne le type PDF de la surface complexe.
 		public override PDF.Type TypeComplexSurfacePDF(IPaintPort port)
 		{
+			//	Donne le type PDF de la surface complexe.
 			Drawing.Color c = port.GetFinalColor(this.fontColor.Basic);
 
 			if ( c.A == 0.0 )
@@ -179,9 +179,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Modifie l'espace des couleurs.
 		public override bool ChangeColorSpace(ColorSpace cs)
 		{
+			//	Modifie l'espace des couleurs.
 			this.NotifyBefore();
 			this.fontColor.ColorSpace = cs;
 			this.NotifyAfter();
@@ -189,9 +189,9 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Modifie les couleurs.
 		public override bool ChangeColor(double adjust, bool stroke)
 		{
+			//	Modifie les couleurs.
 			if ( stroke )  return false;
 
 			this.NotifyBefore();
@@ -203,9 +203,9 @@ namespace Epsitec.Common.Document.Properties
 
 		
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("FontName", this.fontName);
@@ -213,9 +213,9 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("FontColor", this.fontColor);
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected Font(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			this.fontName = info.GetString("FontName");
 			this.fontSize = info.GetDouble("FontSize");
 

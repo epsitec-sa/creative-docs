@@ -24,12 +24,12 @@ namespace Epsitec.Common.Document.PDF
 	/// </summary>
 	public class Writer
 	{
-		// Constructeur qui reçoit le nom du fichier.
-		// En fait, le fichier n'est écrit qu'au moment du Flush().
-		// Il n'est pas nécessaire de se soucier du "%PDF-1.4" en début de fichier,
-		// ni des tables "xref..startxref..%%EOF" en fin de fichier.
 		public Writer(string filename)
 		{
+			//	Constructeur qui reçoit le nom du fichier.
+			//	En fait, le fichier n'est écrit qu'au moment du Flush().
+			//	Il n'est pas nécessaire de se soucier du "%PDF-1.4" en début de fichier,
+			//	ni des tables "xref..startxref..%%EOF" en fin de fichier.
 			this.filename = filename;
 			this.parts = new System.Collections.ArrayList();
 			this.dictionary = new System.Collections.Hashtable();
@@ -37,22 +37,22 @@ namespace Epsitec.Common.Document.PDF
 			this.flushed = false;
 		}
 
-		// Ecrit une définition d'objet sous la forme "n 0 obj".
-		// L'objet racine doit être nommé "Root" et être le premier défini et référencé.
 		public void WriteObjectDef(string objectName)
 		{
+			//	Ecrit une définition d'objet sous la forme "n 0 obj".
+			//	L'objet racine doit être nommé "Root" et être le premier défini et référencé.
 			this.WriteObject(objectName, " 0 obj ", "D");  // définition
 		}
 
-		// Ecrit une référence à un objet sous la forme "n 0 R".
 		public void WriteObjectRef(string objectName)
 		{
+			//	Ecrit une référence à un objet sous la forme "n 0 R".
 			this.WriteObject(objectName, " 0 R ", "R");  // référence
 		}
 
-		// Ecrit une définition ou une référence d'objet.
 		protected void WriteObject(string objectName, string ending, string type)
 		{
+			//	Ecrit une définition ou une référence d'objet.
 			System.Diagnostics.Debug.Assert(!this.flushed);
 
 			if ( !this.dictionary.ContainsKey(objectName) )
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document.PDF
 
 			if ( type == "D" )  // définition ?
 			{
-				// On vérifie qu'un objet n'est pas défini 2 fois:
+				//	On vérifie qu'un objet n'est pas défini 2 fois:
 				Object obj = this.dictionary[objectName] as Object;
 				System.Diagnostics.Debug.Assert(obj != null);
 				System.Diagnostics.Debug.Assert(!obj.Defined, "PDF.Writer: Attempt to redefine a object");
@@ -75,31 +75,31 @@ namespace Epsitec.Common.Document.PDF
 			this.WriteString(ending);
 		}
 
-		// Ecrit une string suivie d'une fin de ligne.
 		public void WriteLine(string line)
 		{
+			//	Ecrit une string suivie d'une fin de ligne.
 			line += "\r\n";
 			this.WriteString(line);
 		}
 
-		// Ecrit juste une string telle quelle.
 		public void WriteString(string text)
 		{
+			//	Ecrit juste une string telle quelle.
 			System.Diagnostics.Debug.Assert(!this.flushed);
 			this.parts.Add(string.Format("F{0}", text));  // texte fixe
 		}
 
-		// Ecrit effectivement le fichier.
-		// Les objectName sont remplacés par des numéros.
-		// Les tables "xref..startxref..%%EOF" en fin de fichier sont créées.
 		public void Flush()
 		{
+			//	Ecrit effectivement le fichier.
+			//	Les objectName sont remplacés par des numéros.
+			//	Les tables "xref..startxref..%%EOF" en fin de fichier sont créées.
 			System.Diagnostics.Debug.Assert(!this.flushed);
 
 			this.FileOpen(this.filename);
 			this.FileWriteLine("%PDF-1.4");
 
-			// Ecrit toutes les parties fixes ou variables.
+			//	Ecrit toutes les parties fixes ou variables.
 			foreach ( string part in this.parts )
 			{
 				if ( part[0] == 'F' )  // texte fixe ?
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Document.PDF
 				}
 			}
 
-			// Ecrit l'objet xref final.
+			//	Ecrit l'objet xref final.
 			int startXref = this.streamOffset;
 			this.FileWriteLine(string.Format("xref 0 {0}", Writer.ToString(this.dictionary.Count+1)));
 			this.FileWriteLine("0000000000 65535 f");
@@ -144,9 +144,9 @@ namespace Epsitec.Common.Document.PDF
 			this.flushed = true;
 		}
 
-		// Cherche un objet dans le dictionnaire d'après son identificateur.
 		protected Object DictionarySearch(int id)
 		{
+			//	Cherche un objet dans le dictionnaire d'après son identificateur.
 			foreach ( Object obj in this.dictionary.Values )
 			{
 				if ( obj.Id == id )  return obj;
@@ -156,50 +156,50 @@ namespace Epsitec.Common.Document.PDF
 
 
 
-		// Ouvre le fichier PDF.
 		protected void FileOpen(string filename)
 		{
+			//	Ouvre le fichier PDF.
 			this.streamIO = new System.IO.FileStream(filename, System.IO.FileMode.CreateNew);
 			this.streamOffset = 0;
 		}
 
-		// Ecrit une string suivie d'une fin de ligne.
 		protected void FileWriteLine(string line)
 		{
+			//	Ecrit une string suivie d'une fin de ligne.
 			line += "\r\n";
 			this.FileWriteString(line);
 		}
 
-		// Ecrit juste une string telle quelle.
 		protected void FileWriteString(string text)
 		{
+			//	Ecrit juste une string telle quelle.
 			System.Text.Encoding e = System.Text.Encoding.GetEncoding(1252);
 			byte[] array = e.GetBytes(text);
 			this.streamIO.Write(array, 0, array.Length);
 			this.streamOffset += array.Length;
 		}
 
-		// Ferme le fichier PDF.
 		protected void FileClose()
 		{
+			//	Ferme le fichier PDF.
 			this.streamIO.Close();
 		}
 
 
-		// Conversion d'un entier en chaîne.
 		protected static string ToString(int value)
 		{
+			//	Conversion d'un entier en chaîne.
 			return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
 		}
 
-		// Conversion d'un entier en chaîne.
 		protected static string ToStringD10(int value)
 		{
+			//	Conversion d'un entier en chaîne.
 			return value.ToString("D10", System.Globalization.CultureInfo.InvariantCulture);
 		}
 
 
-		// Objet PDF.
+		//	Objet PDF.
 		protected class Object
 		{
 			public Object(int id, int offset)

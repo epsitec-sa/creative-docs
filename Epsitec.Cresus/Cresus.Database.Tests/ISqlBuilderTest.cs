@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Database
 			SqlColumn sql_col_c = new SqlColumn ("C", DbRawType.Int32);
 			
 			sql_table.Columns.Add (sql_col_a);
-		// 	sql_table.Columns.Add (sql_col_b);		// volontairement omis pour provoquer l'exception !
+		//	sql_table.Columns.Add (sql_col_b);		// volontairement omis pour provoquer l'exception !
 			sql_table.Columns.Add (sql_col_c);
 			
 			sql_table.PrimaryKey = new SqlColumn[] { sql_col_a, sql_col_b };
@@ -128,9 +128,9 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void Check05InsertTableColumns()
 		{
-			// doit être fait après CheckInsertTable
-			// et avant CheckRemoveTable
-			// pour que la table existe déjà
+			//	doit être fait après CheckInsertTable
+			//	et avant CheckRemoveTable
+			//	pour que la table existe déjà
 
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -162,9 +162,9 @@ namespace Epsitec.Cresus.Database
 
 		[Test] public void Check06RemoveTableColumns()
 		{
-			// doit être fait après CheckInsertTable et après CheckInsertTableColumns
-			// et avant CheckRemoveTable
-			// pour que la table existe déjà
+			//	doit être fait après CheckInsertTable et après CheckInsertTableColumns
+			//	et avant CheckRemoveTable
+			//	pour que la table existe déjà
 
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -197,8 +197,8 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void Check07InsertData()
 		{
-			// doit être fait après CheckRemoveTableColumns
-			// pour que la table existe dans le bon état
+			//	doit être fait après CheckRemoveTableColumns
+			//	pour que la table existe dans le bon état
 
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -240,8 +240,8 @@ namespace Epsitec.Cresus.Database
 
 		[Test] public void Check07InsertDataMore()
 		{
-			// doit être fait après CheckRemoveTableColumns
-			// pour que la table existe dans le bon état
+			//	doit être fait après CheckRemoveTableColumns
+			//	pour que la table existe dans le bon état
 
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -301,8 +301,8 @@ namespace Epsitec.Cresus.Database
 
 		[Test] public void Check08RemoveData()
 		{
-			// doit être fait après CheckInsertData
-			// pour que la table existe dans le bon état
+			//	doit être fait après CheckInsertData
+			//	pour que la table existe dans le bon état
 
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -444,7 +444,7 @@ namespace Epsitec.Cresus.Database
 			sql_builder.AutoClear = true;
 			System.Data.IDbCommand command;
 
-			// supprime la table si jamais
+			//	supprime la table si jamais
 			
 			sql_builder.RemoveTable ("FbTestArrayTable");
 			

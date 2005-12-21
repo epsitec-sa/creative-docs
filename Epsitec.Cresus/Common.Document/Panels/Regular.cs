@@ -70,18 +70,18 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.isExtendedSize ? this.LabelHeight+55 : this.LabelHeight+30 );
 			}
 		}
 
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Regular p = this.property as Properties.Regular;
@@ -97,9 +97,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Regular p = this.property as Properties.Regular;
 			if ( p == null )  return;
 
@@ -108,16 +108,16 @@ namespace Epsitec.Common.Document.Panels
 			p.Deep = (double) this.fieldDeep.TextFieldReal.InternalValue/100;
 		}
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			bool star = (this.grid.SelectedValue == 1);
 			this.fieldDeep.Enable = (this.isExtendedSize && star);
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.grid == null )  return;
@@ -164,16 +164,16 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 		
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
-		// Un champ a été changé.
 		private void HandleTypeChanged(object sender)
 		{
+			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 			this.EnableWidgets();
 			this.OnChanged();

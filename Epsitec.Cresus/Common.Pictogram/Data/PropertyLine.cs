@@ -67,11 +67,11 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		[XmlAttribute("PI")]
-		// 0	= trait normal
-		// -1	= traitillé
-		// 1..n	= motif
 		public int PatternId
 		{
+			//	0	= trait normal
+			//	-1	= traitillé
+			//	1..n	= motif
 			get { return this.patternId; }
 			set { this.patternId = value; }
 		}
@@ -247,16 +247,16 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dashGap[rank] = value;
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		[XmlIgnore]
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyLine p = property as PropertyLine;
 			p.Width        = this.width;
@@ -283,9 +283,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyLine p = property as PropertyLine;
@@ -314,16 +314,16 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelLine(drawer);
 		}
 
 
-		// Engraisse la bbox selon le trait.
 		public void InflateBoundingBox(ref Drawing.Rectangle bbox)
 		{
+			//	Engraisse la bbox selon le trait.
 			if ( this.patternId <= 0 )  // trait simple ou traitillé ?
 			{
 				if ( this.join == Drawing.JoinStyle.MiterRevert )
@@ -346,9 +346,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Effectue un graphics.Rasterizer.AddOutline.
 		public void AddOutline(Drawing.Graphics graphics, Drawing.Path path, double addWidth)
 		{
+			//	Effectue un graphics.Rasterizer.AddOutline.
 			if ( this.patternId <= 0 )  // trait simple ou traitillé ?
 			{
 				graphics.Rasterizer.AddOutline(path, this.width+addWidth, this.cap, this.join, this.limit);
@@ -359,9 +359,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Effectue un port.PaintOutline.
 		public void PaintOutline(Printing.PrintPort port, IconContext iconContext, Drawing.Path path)
 		{
+			//	Effectue un port.PaintOutline.
 			if ( this.patternId == 0 )  // trait simple ?
 			{
 				port.LineWidth = this.width;
@@ -403,9 +403,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Cherche le pattern à utiliser d'après son identificateur.
 		static protected ObjectPattern SearchPattern(IconObjects iconObjects, int id)
 		{
+			//	Cherche le pattern à utiliser d'après son identificateur.
 			int total = iconObjects.TotalPatterns();
 			for ( int i=1 ; i<total ; i++ )
 			{
@@ -415,7 +415,6 @@ namespace Epsitec.Common.Pictogram.Data
 			return null;
 		}
 
-		// Dessine le pattern le long d'une droite.
 		protected void DrawPatternLine(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects,
 									   ObjectPattern pattern,
 									   System.Random rndMove,
@@ -427,6 +426,7 @@ namespace Epsitec.Common.Pictogram.Data
 									   ref int page,
 									   Drawing.Point p1, Drawing.Point p2)
 		{
+			//	Dessine le pattern le long d'une droite.
 			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 
 			double len = Drawing.Point.Distance(p1,p2);
@@ -503,7 +503,6 @@ namespace Epsitec.Common.Pictogram.Data
 			advance -= len;
 		}
 
-		// Dessine le pattern le long d'une courbe.
 		protected void DrawPatternCurve(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects,
 										ObjectPattern pattern,
 										System.Random rndMove,
@@ -515,6 +514,7 @@ namespace Epsitec.Common.Pictogram.Data
 										ref int page,
 										Drawing.Point p1, Drawing.Point s1, Drawing.Point s2, Drawing.Point p2)
 		{
+			//	Dessine le pattern le long d'une courbe.
 			Drawing.Point pos = p1;
 			int total = (int)(1.0/PropertyLine.step);
 			for ( int rank=1 ; rank<=100 ; rank ++ )
@@ -526,10 +526,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Dessine le pattern le long d'un chemin.
 		protected void DrawPattern(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects,
 								   ObjectPattern pattern, Drawing.Path path)
 		{
+			//	Dessine le pattern le long d'un chemin.
 			Drawing.PathElement[] elements;
 			Drawing.Point[] points;
 			path.GetElements(out elements, out points);
@@ -589,9 +589,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Dessine le trait le long d'un chemin.
 		public void DrawPath(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects, Drawing.Path path, Drawing.Color color)
 		{
+			//	Dessine le trait le long d'un chemin.
 			if ( this.width == 0.0 )  return;
 			if ( path.IsEmpty )  return;
 
@@ -636,17 +636,17 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Adapte le trait après la destruction d'un pattern.
 		public bool AdaptDeletePattern(int rank)
 		{
+			//	Adapte le trait après la destruction d'un pattern.
 			if ( this.patternId != rank )  return false;
 			this.patternId = 0;
 			return true;
 		}
 
-		// Adapte le trait après la destruction de tous les patterns.
 		public bool AdaptDeletePattern()
 		{
+			//	Adapte le trait après la destruction de tous les patterns.
 			if ( this.patternId <= 0 )  return false;  // trait simple ou traitillé ?
 			this.patternId = 0;
 			return true;

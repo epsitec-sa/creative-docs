@@ -19,35 +19,35 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window = null;
 		}
 
-		// Crée et montre la fenêtre du dialogue.
 		public virtual void Show()
 		{
+			//	Crée et montre la fenêtre du dialogue.
 		}
 
-		// Cache la fenêtre du dialogue.
 		public virtual void Hide()
 		{
+			//	Cache la fenêtre du dialogue.
 			if ( this.window != null )
 			{
 				this.window.Hide();
 			}
 		}
 
-		// Enregistre la position de la fenêtre du dialogue.
 		public virtual void Save()
 		{
+			//	Enregistre la position de la fenêtre du dialogue.
 		}
 
-		// Reconstruit le dialogue.
 		public virtual void Rebuild()
 		{
+			//	Reconstruit le dialogue.
 		}
 
 
-		// Initialise la fenêtre, à partir de la taille intérieure,
-		// c'est-à-dire sans le cadre.
 		protected void WindowInit(string name, double dx, double dy)
 		{
+			//	Initialise la fenêtre, à partir de la taille intérieure,
+			//	c'est-à-dire sans le cadre.
 			this.WindowInit(name, dx, dy, false);
 		}
 
@@ -80,16 +80,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		// Sauve la fenêtre.
 		protected void WindowSave(string name)
 		{
+			//	Sauve la fenêtre.
 			if ( this.window == null )  return;
 			this.globalSettings.SetWindowBounds(name, this.window.WindowLocation, this.window.ClientSize);
 		}
 
-		// Donne les frontières de l'application.
 		protected Rectangle CurrentBounds
 		{
+			//	Donne les frontières de l'application.
 			get
 			{
 				if ( this.editor.Window == null )

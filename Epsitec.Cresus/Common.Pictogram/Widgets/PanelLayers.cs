@@ -121,9 +121,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour tout le panneau.
 		public void Update()
 		{
+			//	Met à jour tout le panneau.
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentLayer, true, false);
 			this.UpdateToolBar();
@@ -131,9 +131,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdatePanels();
 		}
 
-		// Sélectionne un calque.
 		public void LayerSelect(int sel)
 		{
+			//	Sélectionne un calque.
 			this.drawer.CreateEnding();
 
 			this.drawer.UndoBeginning("LayerChange");
@@ -147,9 +147,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Construit le menu pour choisir un calque.
 		public VMenu CreateMenu()
 		{
+			//	Construit le menu pour choisir un calque.
 			VMenu menu = new VMenu();
 			int total = this.drawer.IconObjects.TotalLayers();
 			for ( int i=0 ; i<total ; i++ )
@@ -181,9 +181,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour les boutons de la toolbar.
 		protected void UpdateToolBar()
 		{
+			//	Met à jour les boutons de la toolbar.
 			int total = this.table.Rows;
 			int sel = this.TableSelect();
 
@@ -193,9 +193,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.buttonDelete.SetEnabled(sel != -1 && total > 1);
 		}
 
-		// Crée un nouveau calque.
 		private void HandleButtonNew(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouveau calque.
 			this.drawer.UndoBeginning("LayerCreate");
 			this.drawer.IconObjects.CreateLayer(this.drawer.IconObjects.CurrentLayer, false);
 			this.drawer.UndoValidate();
@@ -208,9 +208,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Duplique un calque.
 		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
 		{
+			//	Duplique un calque.
 			this.drawer.UndoBeginning("LayerDuplicate");
 			this.drawer.IconObjects.CreateLayer(this.drawer.IconObjects.CurrentLayer, true);
 			this.drawer.UndoValidate();
@@ -223,9 +223,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Monte d'une ligne le calque sélectionné.
 		private void HandleButtonUp(object sender, MessageEventArgs e)
 		{
+			//	Monte d'une ligne le calque sélectionné.
 			this.drawer.UndoBeginning("LayerUp");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapLayer(sel, sel+1);
@@ -238,9 +238,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Descend d'une ligne le calque sélectionné.
 		private void HandleButtonDown(object sender, MessageEventArgs e)
 		{
+			//	Descend d'une ligne le calque sélectionné.
 			this.drawer.UndoBeginning("LayerDown");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapLayer(sel, sel-1);
@@ -254,9 +254,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Supprime le calque sélectionné.
 		private void HandleButtonDelete(object sender, MessageEventArgs e)
 		{
+			//	Supprime le calque sélectionné.
 			this.drawer.UndoBeginning("LayerDelete");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.DeleteLayer(sel);
@@ -271,9 +271,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Retourne la chaîne pour nommer la position d'un calque.
 		protected string LayerPosition(int rank)
 		{
+			//	Retourne la chaîne pour nommer la position d'un calque.
 			int total = this.drawer.IconObjects.TotalLayers();
 			if ( total == 1 )
 			{
@@ -296,9 +296,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
+			//	Met à jour le contenu de la table.
 			int rows = this.drawer.IconObjects.TotalLayers();
 			int initialColumns = this.table.Columns;
 			this.table.SetArraySize(3, rows);
@@ -360,9 +360,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdateToolBar();
 		}
 
-		// Sélectionne une ligne dans la table.
 		protected void TableSelect(int sel, bool showSelect, bool selectText)
 		{
+			//	Sélectionne une ligne dans la table.
 			int total = this.table.Rows;
 			sel = total-sel-1;
 			bool exist = false;
@@ -384,9 +384,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Retourne la ligne sélectionnée dans la table.
 		protected int TableSelect()
 		{
+			//	Retourne la ligne sélectionnée dans la table.
 			int total = this.table.Rows;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -395,9 +395,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return -1;
 		}
 
-		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
+			//	Liste cliquée.
 			int sel = this.TableSelect();
 			if ( sel == -1 )  return;
 			this.TableSelect(sel, false, true);
@@ -412,9 +412,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Ligne éditable dans la liste cliquée.
 		private void HandleListTextClicked(object sender, MessageEventArgs e)
 		{
+			//	Ligne éditable dans la liste cliquée.
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
 			
@@ -429,9 +429,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Texte de la ligne éditable dans la liste changé.
 		private void HandleListTextChanged(object sender)
 		{
+			//	Texte de la ligne éditable dans la liste changé.
 			if ( this.ignoreListTextChanged )  return;
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
@@ -440,9 +440,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Un bouton radio a été cliqué.
 		private void HandleRadioClicked(object sender, MessageEventArgs e)
 		{
+			//	Un bouton radio a été cliqué.
 			RadioButton radio = sender as RadioButton;
 			LayerType type = LayerType.None;
 			if ( radio.Name == "RadioShow"   )  type = LayerType.Show;
@@ -454,9 +454,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.InvalidateAll();
 		}
 
-		// Met à jour les boutons radio.
 		private void UpdateRadio()
 		{
+			//	Met à jour les boutons radio.
 			int sel = this.TableSelect();
 			ObjectLayer layer = this.drawer.IconObjects.Layer(sel);
 			LayerType type = layer.Type;
@@ -466,9 +466,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Un bouton a été cliqué.
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
+			//	Un bouton a été cliqué.
 			Button button = sender as Button;
 			LayerType type = LayerType.None;
 			if ( button.Name == "ButtonShow"   )  type = LayerType.Show;
@@ -485,10 +485,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Crée le panneau pour le calque sélectionné.
 		protected void UpdatePanels()
 		{
-			// Supprime tous les panneaux.
+			//	Crée le panneau pour le calque sélectionné.
+			//	Supprime tous les panneaux.
 			AbstractPanel panel;
 			int i = 0;
 			while ( i < this.panel.Children.Count )
@@ -501,7 +501,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.panel.Children.RemoveAt(i);
 			}
 
-			// Crée le panneau pour le calque.
+			//	Crée le panneau pour le calque.
 			PropertyModColor modColor = this.drawer.IconObjects.LayerModColor();
 
 			panel = new PanelModColor(this.drawer);
@@ -519,9 +519,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			panel.Parent = this.panel;
 		}
 
-		// Le contenu du panneau a été changé.
 		private void HandlePanelChanged(object sender)
 		{
+			//	Le contenu du panneau a été changé.
 			AbstractPanel panel = sender as AbstractPanel;
 
 			int sel = this.TableSelect();
@@ -531,9 +531,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Génère un événement pour dire qu'il faut changer les objets affichés.
 		protected void OnObjectsChanged()
 		{
+			//	Génère un événement pour dire qu'il faut changer les objets affichés.
 			if ( this.ObjectsChanged != null )  // qq'un écoute ?
 			{
 				this.ObjectsChanged(this);
@@ -543,7 +543,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler ObjectsChanged;
 
 
-		// Met à jour la géométrie.
+		//	Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();

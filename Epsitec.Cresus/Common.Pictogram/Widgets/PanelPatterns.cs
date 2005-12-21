@@ -96,17 +96,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour tout le panneau.
 		public void Update()
 		{
+			//	Met à jour tout le panneau.
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPattern, true, false);
 			this.UpdateToolBar();
 		}
 
-		// Sélectionne un pattern.
 		public void PatternSelect(int sel)
 		{
+			//	Sélectionne un pattern.
 			this.drawer.CreateEnding();
 
 			this.drawer.UndoBeginning("PatternChange");
@@ -119,9 +119,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour les boutons de la toolbar.
 		protected void UpdateToolBar()
 		{
+			//	Met à jour les boutons de la toolbar.
 			int total = this.table.Rows;
 			int sel = this.TableSelect();
 
@@ -131,9 +131,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.buttonDelete.SetEnabled(sel != -1 && total != 0);
 		}
 
-		// Bouton radio cliqué.
 		private void HandleRadio(object sender, MessageEventArgs e)
 		{
+			//	Bouton radio cliqué.
 			RadioButton radio = sender as RadioButton;
 			int sel = (radio == this.radioDocument) ? 0:this.lastSelectedPattern;
 			this.TableSelect(sel, true, false);
@@ -144,9 +144,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.OnInfoDocumentChanged();
 		}
 
-		// Crée un nouveau pattern.
 		private void HandleButtonNew(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouveau pattern.
 			this.drawer.UndoBeginning("PatternCreate");
 			this.drawer.IconObjects.CreatePattern(this.drawer.IconObjects.CurrentPattern, false);
 			this.drawer.UndoValidate();
@@ -158,9 +158,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.OnInfoDocumentChanged();
 		}
 
-		// Duplique un pattern.
 		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
 		{
+			//	Duplique un pattern.
 			this.drawer.UndoBeginning("PatternDuplicate");
 			this.drawer.IconObjects.CreatePattern(this.drawer.IconObjects.CurrentPattern, true);
 			this.drawer.UndoValidate();
@@ -172,9 +172,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.OnInfoDocumentChanged();
 		}
 
-		// Monte d'une ligne le pattern sélectionné.
 		private void HandleButtonUp(object sender, MessageEventArgs e)
 		{
+			//	Monte d'une ligne le pattern sélectionné.
 			this.drawer.UndoBeginning("PatternUp");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapPattern(sel, sel-1);
@@ -187,9 +187,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Descend d'une ligne le pattern sélectionné.
 		private void HandleButtonDown(object sender, MessageEventArgs e)
 		{
+			//	Descend d'une ligne le pattern sélectionné.
 			this.drawer.UndoBeginning("PatternDown");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapPattern(sel, sel+1);
@@ -202,9 +202,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Supprime le pattern sélectionné.
 		private void HandleButtonDelete(object sender, MessageEventArgs e)
 		{
+			//	Supprime le pattern sélectionné.
 			this.drawer.UndoBeginning("PatternDelete");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.DeletePattern(sel);
@@ -219,9 +219,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
+			//	Met à jour le contenu de la table.
 			int rows = this.drawer.IconObjects.TotalPatterns();
 			int initialColumns = this.table.Columns;
 			this.table.SetArraySize(2, rows-1);
@@ -270,9 +270,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdateToolBar();
 		}
 
-		// Sélectionne une ligne dans la table.
 		protected void TableSelect(int sel, bool showSelect, bool selectText)
 		{
+			//	Sélectionne une ligne dans la table.
 			this.radioDocument.ActiveState = (sel == 0) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.radioPattern .ActiveState = (sel != 0) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 
@@ -301,9 +301,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( sel != 0 )  this.lastSelectedPattern = sel;
 		}
 
-		// Retourne la ligne sélectionnée dans la table.
 		protected int TableSelect()
 		{
+			//	Retourne la ligne sélectionnée dans la table.
 			if ( this.radioDocument.ActiveState == WidgetState.ActiveYes )
 			{
 				return 0;
@@ -317,9 +317,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return -1;
 		}
 
-		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
+			//	Liste cliquée.
 			int sel = this.TableSelect();
 			if ( sel == -1 )  return;
 			this.TableSelect(sel, false, true);
@@ -332,9 +332,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Ligne éditable dans la liste cliquée.
 		private void HandleListTextClicked(object sender, MessageEventArgs e)
 		{
+			//	Ligne éditable dans la liste cliquée.
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
 
@@ -347,9 +347,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnObjectsChanged();
 		}
 
-		// Texte de la ligne éditable dans la liste changé.
 		private void HandleListTextChanged(object sender)
 		{
+			//	Texte de la ligne éditable dans la liste changé.
 			if ( this.ignoreListTextChanged )  return;
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
@@ -358,9 +358,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Génère un événement pour dire qu'il faut changer les objets affichés.
 		protected void OnObjectsChanged()
 		{
+			//	Génère un événement pour dire qu'il faut changer les objets affichés.
 			if ( this.ObjectsChanged != null )  // qq'un écoute ?
 			{
 				this.ObjectsChanged(this);
@@ -370,7 +370,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler ObjectsChanged;
 
 
-		// Met à jour la géométrie.
+		//	Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();

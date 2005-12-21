@@ -415,25 +415,25 @@ namespace Epsitec.Common.Widgets
 			
 			if ( orgValue == roundValue )
 			{
-				// La valeur d'origine était déjà parfaitement alignée sur une frontière (step),
-				// on peut donc simplement passer au pas suivant :
+				//	La valeur d'origine était déjà parfaitement alignée sur une frontière (step),
+				//	on peut donc simplement passer au pas suivant :
 				roundValue += delta * this.Step;
 			}
 			else
 			{
-				// L'arrondi vers zéro suffit dans les cas suivants :
-				//  o  13 =>  10,  13 - 10 =>  10   orgValue > 0, delta < 0
-				//  o -13 => -10, -13 + 10 => -10   orgValue < 0, delta > 0
-				// en supposant un pas de 10.
+				//	L'arrondi vers zéro suffit dans les cas suivants :
+				//	o  13 =>  10,  13 - 10 =>  10   orgValue > 0, delta < 0
+				//	o -13 => -10, -13 + 10 => -10   orgValue < 0, delta > 0
+				//	en supposant un pas de 10.
 				
 				if ( (orgValue < 0 && delta > 0) ||
 					 (orgValue > 0 && delta < 0) )
 				{
-					// La valeur arrondie fait l'affaire.
+					//	La valeur arrondie fait l'affaire.
 				}
 				else
 				{
-					// Il faut encore ajouter l'incrément.
+					//	Il faut encore ajouter l'incrément.
 					roundValue += delta * this.Step;
 				}
 			}
@@ -441,9 +441,9 @@ namespace Epsitec.Common.Widgets
 			this.SetValue(roundValue);
 		}
 
-		// Modifie une valeur en envoyant l'événement AcceptEdition si nécessaire.
 		protected void SetValue(decimal value)
 		{
+			//	Modifie une valeur en envoyant l'événement AcceptEdition si nécessaire.
 			if ( this.Value != value )
 			{
 				if ( this.StartEdition() )

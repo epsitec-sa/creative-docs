@@ -38,9 +38,9 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard.
 			get
 			{
 				return 8 + 22*1.5*3 + 4 + 22*2 + this.separatorWidth + 22;
@@ -48,9 +48,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonNew == null )  return;
@@ -100,9 +100,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Bouton pour ouvrir le menu des derniers fichiers cliqué.
 		private void HandleLastFilesClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton pour ouvrir le menu des derniers fichiers cliqué.
 			GlyphButton button = sender as GlyphButton;
 			if ( button == null )  return;
 			Point pos = button.MapClientToScreen(new Point(0, 1));
@@ -112,9 +112,9 @@ namespace Epsitec.Common.Document.Ribbons
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
-		// Construit le sous-menu des derniers fichiers ouverts.
 		protected VMenu BuildLastFilenamesMenu()
 		{
+			//	Construit le sous-menu des derniers fichiers ouverts.
 			int total = this.globalSettings.LastFilenameCount;
 			if ( total == 0 )  return null;
 

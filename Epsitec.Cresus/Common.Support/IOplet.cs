@@ -12,8 +12,8 @@ namespace Epsitec.Common.Support
 		IOplet Undo();
 		IOplet Redo();
 		
+		bool	IsFence		{ get; }
 //		void Dispose();
 		
-		bool	IsFence		{ get; }
 	}
 }

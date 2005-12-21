@@ -82,9 +82,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.isExtendedSize ? this.LabelHeight+55 : this.LabelHeight+30 );
@@ -92,9 +92,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Shadow p = this.property as Properties.Shadow;
@@ -110,9 +110,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Shadow p = this.property as Properties.Shadow;
 			if ( p == null )  return;
 
@@ -123,34 +123,34 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 			this.fieldColor.ActiveState = ActiveState.No;
 		}
 
-		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 			this.fieldColor.ActiveState = ActiveState.Yes;
 		}
 
-		// Modifie la couleur d'origine.
 		public override void OriginColorChange(Drawing.RichColor color)
 		{
+			//	Modifie la couleur d'origine.
 			this.fieldColor.Color = color;
 		}
 
-		// Donne la couleur d'origine.
 		public override Drawing.RichColor OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			return this.fieldColor.Color;
 		}
 
 		
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldColor == null )  return;

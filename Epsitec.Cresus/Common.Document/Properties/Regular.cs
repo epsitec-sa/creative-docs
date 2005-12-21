@@ -78,9 +78,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Donne le petit texte pour les échantillons.
 		public override string SampleText
 		{
+			//	Donne le petit texte pour les échantillons.
 			get
 			{
 				string text = string.Format("{0}", this.nbFaces);
@@ -89,37 +89,37 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(bool type)
 		{
+			//	Retourne le nom d'un type donné.
 			if ( type )  return Res.Strings.Property.Regular.Star;
 			else         return Res.Strings.Property.Regular.Norm;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(bool type)
 		{
+			//	Retourne l'icône pour un type donné.
 			if ( type )  return "RegularStar";
 			else         return "RegularNorm";
 		}
 
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 
-		// Nombre de poignées.
 		public override int TotalHandle(Objects.Abstract obj)
 		{
+			//	Nombre de poignées.
 			return 1;
 		}
 
-		// Indique si une poignée est visible.
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
+			//	Indique si une poignée est visible.
 			if ( !this.document.Modifier.IsPropertiesExtended(this.type) )
 			{
 				return false;
@@ -128,15 +128,15 @@ namespace Epsitec.Common.Document.Properties
 			return this.star;
 		}
 		
-		// Retourne la position d'une poignée.
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
+			//	Retourne la position d'une poignée.
 			return Point.Scale(obj.Handle(1).Position, obj.Handle(0).Position, this.deep);
 		}
 
-		// Modifie la position d'une poignée.
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
+			//	Modifie la position d'une poignée.
 			double d1 = Point.Distance(obj.Handle(1).Position, obj.Handle(0).Position);
 			double d2 = Point.Distance(obj.Handle(1).Position, pos);
 			if ( d1 == 0.0 )  this.Deep = 0.0;
@@ -146,9 +146,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 		
 		
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Regular p = property as Regular;
 			p.nbFaces = this.nbFaces;
@@ -156,9 +156,9 @@ namespace Epsitec.Common.Document.Properties
 			p.deep    = this.deep;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			Regular p = property as Regular;
@@ -169,18 +169,18 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Regular(document);
 		}
 
 
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("NbFaces", this.nbFaces);
@@ -191,9 +191,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected Regular(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			this.nbFaces = info.GetInt32("NbFaces");
 			this.star = info.GetBoolean("Star");
 			if ( this.star )

@@ -316,14 +316,14 @@ namespace Epsitec.Common.Widgets
 		{
 			int offsetError;
 
-			// Textes tordus mais corrects.
+			//	Textes tordus mais corrects.
 			Assert.IsTrue(TextLayout.CheckSyntax("<a href=\"x\">Link</a>", out offsetError));
 			Assert.IsTrue(TextLayout.CheckSyntax("<b><i></b></i>", out offsetError));
 			Assert.IsTrue(TextLayout.CheckSyntax("Première<br/>Deuxième", out offsetError));
 			Assert.IsTrue(TextLayout.CheckSyntax("<img src=\"x\"/>", out offsetError));
 			Assert.IsTrue(TextLayout.CheckSyntax("A&lt;&amp;&gt;.&quot;&#160;", out offsetError));
 
-			// Textes faux qui doivent être rejetés.
+			//	Textes faux qui doivent être rejetés.
 			Assert.IsTrue(!TextLayout.CheckSyntax("<bold", out offsetError));
 			Assert.IsTrue(!TextLayout.CheckSyntax("&quot", out offsetError));
 			Assert.IsTrue(!TextLayout.CheckSyntax("<b>bold", out offsetError));

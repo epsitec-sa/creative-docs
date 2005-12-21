@@ -166,9 +166,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Fixe le départ pour un rectangle de sélection simple (sans poignées).
 		public void FixStarting(Point pos)
 		{
+			//	Fixe le départ pour un rectangle de sélection simple (sans poignées).
 			this.OpletQueueInsert();
 			this.finalData.P1 = pos;
 			this.finalData.P2 = pos;
@@ -181,9 +181,9 @@ namespace Epsitec.Common.Document
 			this.Handles = false;
 		}
 
-		// Fixe l'arrivée pour un rectangle de sélection simple (sans poignées).
 		public void FixEnding(Point pos)
 		{
+			//	Fixe l'arrivée pour un rectangle de sélection simple (sans poignées).
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.finalData.P2 = pos;
 			this.finalData.P3 = new Point(this.finalData.P1.X, this.finalData.P2.Y);
@@ -194,9 +194,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
-		// Initialise le sélectionneur complexe (avec poignées).
 		public void Initialize(Rectangle rect, double angle)
 		{
+			//	Initialise le sélectionneur complexe (avec poignées).
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.OpletQueueInsert();
 			this.finalData.P1 = rect.BottomLeft;
@@ -211,10 +211,10 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
-		// Initialise le sélectionneur pour effectuer une mise à l'échelle rapide
-		// (c'est-à-dire non interactif).
 		public void QuickScale(Rectangle rInitial, Rectangle rFinal)
 		{
+			//	Initialise le sélectionneur pour effectuer une mise à l'échelle rapide
+			//	(c'est-à-dire non interactif).
 			this.initialData.P1 = rInitial.BottomLeft;
 			this.initialData.P2 = rInitial.TopRight;
 			this.initialData.P3 = rInitial.TopLeft;
@@ -231,9 +231,9 @@ namespace Epsitec.Common.Document
 			this.finalData.Angle = 0.0;
 		}
 
-		// Retourne une position d'une poignée.
 		public Point Position(int rank)
 		{
+			//	Retourne une position d'une poignée.
 			if ( rank == 0 )  return this.h1.Position;
 			if ( rank == 1 )  return this.h1.Position;
 			if ( rank == 2 )  return this.h2.Position;
@@ -244,9 +244,9 @@ namespace Epsitec.Common.Document
 			return new Point(0, 0);
 		}
 
-		// Détecte si la souris est dans le modificateur.
 		public bool Detect(Point mouse, bool global, out int rank)
 		{
+			//	Détecte si la souris est dans le modificateur.
 			if ( this.finalData.Visible )
 			{
 				if ( this.finalData.TypeInUse == SelectorType.Scaler )
@@ -274,9 +274,9 @@ namespace Epsitec.Common.Document
 			return false;
 		}
 
-		// Met en évidence la poignée survollée.
 		public void HiliteHandle(int rank)
 		{
+			//	Met en évidence la poignée survollée.
 			this.h1.IsHilited     = (rank==1);
 			this.h2.IsHilited     = (rank==2);
 			this.h3.IsHilited     = (rank==3);
@@ -285,9 +285,9 @@ namespace Epsitec.Common.Document
 			this.rotate.IsHilited = (rank==6);
 		}
 
-		// Nomme l'action pour les undo/redo.
 		public void MoveNameAction(int rank)
 		{
+			//	Nomme l'action pour les undo/redo.
 			if ( rank == 0 )  // global ?
 			{
 				this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.Selector.Move);
@@ -313,9 +313,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Une poignée du modificateur sera déplacée.
 		public void MoveStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Une poignée du modificateur sera déplacée.
 			this.OpletQueueInsert();
 
 			drawingContext.ConstrainFlush();
@@ -348,9 +348,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
-		// Déplace une poignée du modificateur.
 		public void MoveProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée du modificateur.
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 
 			if ( rank != 6 )  // pas rotate ?
@@ -437,9 +437,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
-		// Déplace un coin.
 		protected void MoveCorner(int rank, Point pos)
 		{
+			//	Déplace un coin.
 			Point move = pos-this.finalData.GetCorner(rank);
 			this.finalData.SetCorner(rank, pos);
 
@@ -509,15 +509,15 @@ namespace Epsitec.Common.Document
 			return -1;
 		}
 
-		// Fin du déplacement.
 		public void MoveEnding(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Fin du déplacement.
 			this.document.Modifier.TextInfoModif = "";
 		}
 
-		// Génère le texte d'information.
 		protected void MoveTextInfoModif(int rank)
 		{
+			//	Génère le texte d'information.
 			string text = "";
 
 			if ( rank == 0 )  // tout ?
@@ -553,9 +553,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Effectue une opération de miroir.
 		public void OperMirror(bool horizontal)
 		{
+			//	Effectue une opération de miroir.
 			this.OpletQueueInsert();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
@@ -579,9 +579,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
-		// Effectue une opération de déplacement.
 		public void OperMove(Point move)
 		{
+			//	Effectue une opération de déplacement.
 			this.OpletQueueInsert();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
@@ -592,9 +592,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
-		// Effectue une opération de mise à l'échelle.
 		public void OperScale(double scale)
 		{
+			//	Effectue une opération de mise à l'échelle.
 			this.OpletQueueInsert();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
@@ -606,9 +606,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
-		// Effectue une opération de rotation.
 		public void OperRotate(double angle)
 		{
+			//	Effectue une opération de rotation.
 			this.OpletQueueInsert();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
@@ -619,9 +619,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Retourne la bbox du modificateur.
 		public Rectangle BoundingBox
 		{
+			//	Retourne la bbox du modificateur.
 			get
 			{
 				if ( !this.finalData.Visible )  return Rectangle.Empty;
@@ -639,9 +639,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Met à jour l'état des poignées en fonction des données.
 		protected void UpdateHandleVisible()
 		{
+			//	Met à jour l'état des poignées en fonction des données.
 			bool visible = this.Visible && this.Handles;
 			this.h1.IsVisible = visible;
 			this.h2.IsVisible = visible;
@@ -667,9 +667,9 @@ namespace Epsitec.Common.Document
 			this.rotate.IsVisible = visible;
 		}
 
-		// Met à jour la position des poignées en fonction des données.
 		protected void UpdateHandlePos()
 		{
+			//	Met à jour la position des poignées en fonction des données.
 			this.h1.Position = this.finalData.P1;
 			this.h2.Position = this.finalData.P2;
 			this.h3.Position = this.finalData.P3;
@@ -682,9 +682,9 @@ namespace Epsitec.Common.Document
 			this.rotate.Position = this.finalData.Center + Transform.RotatePointDeg(angle, new Point(0, radius));
 		}
 
-		// Dessine le modificateur.
 		public void Draw(Graphics graphics, DrawingContext drawingContext)
 		{
+			//	Dessine le modificateur.
 			if ( !this.finalData.Visible )  return;
 
 			Point p1 = this.finalData.P1;
@@ -781,9 +781,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Dessine un traitillé pour le modificateur.
 		protected void DrawDashLine(Graphics graphics, DrawingContext drawingContext, Point p1, Point p2)
 		{
+			//	Dessine un traitillé pour le modificateur.
 			graphics.Align(ref p1);
 			graphics.Align(ref p2);
 			p1.X += 0.5/drawingContext.ScaleX;
@@ -797,9 +797,9 @@ namespace Epsitec.Common.Document
 			Drawer.DrawPathDash(graphics, drawingContext, path, 1.0, 5.0, 5.0, drawingContext.HiliteOutlineColor);
 		}
 
-		// Calcule l'extrémité gauche ou droite de la flèche.
 		protected Point ComputeExtremity(Point p1, Point p2, double para, double perp, int rank)
 		{
+			//	Calcule l'extrémité gauche ou droite de la flèche.
 			double distPara = Point.Distance(p1, p2)*para;
 			double distPerp = Point.Distance(p1, p2)*perp;
 			Point c = Point.Move(p2, p1, distPara);
@@ -808,10 +808,10 @@ namespace Epsitec.Common.Document
 			return Transform.RotatePointDeg(c, angle, p);
 		}
 
-		// Lors d'une déformation, la forme finale ne doit jamais contenir d'angle
-		// aigu, car Stretcher.Reverse ne s'en sort pas dans ce as.
 		protected bool IsCorrectGeometry()
 		{
+			//	Lors d'une déformation, la forme finale ne doit jamais contenir d'angle
+			//	aigu, car Stretcher.Reverse ne s'en sort pas dans ce as.
 			if ( this.finalData.TypeInUse != SelectorType.Stretcher )  return true;
 
 			InsideSurface i;
@@ -844,9 +844,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Transforme un point.
 		public Point DotTransform(Point pos)
 		{
+			//	Transforme un point.
 			double sx=0.5, sy=0.5;
 
 			if ( this.initialData.P1.X != this.initialData.P2.X )
@@ -868,18 +868,18 @@ namespace Epsitec.Common.Document
 					 this.initialData.P4.X == this.initialData.P2.X &&
 					 this.initialData.P4.Y == this.initialData.P1.Y )
 				{
-					// Si la forme initiale est rectangulaire, il suffit d'une
-					// simple transformation normale dans la forme de destination.
+					//	Si la forme initiale est rectangulaire, il suffit d'une
+					//	simple transformation normale dans la forme de destination.
 					s.InitialRectangle = new Rectangle(this.initialData.P1, this.initialData.P2);
 					this.finalData.ToStretcher(s);
 					pos = s.Transform(pos);
 				}
 				else
 				{
-					// Si la forme initiale est quelconque, il faut d'abord effectuer
-					// une transformation inverse dans un rectangle arbitraire unité,
-					// puis ensuite effectuer une transformation normale de ce
-					// rectangle dans la forme de destination.
+					//	Si la forme initiale est quelconque, il faut d'abord effectuer
+					//	une transformation inverse dans un rectangle arbitraire unité,
+					//	puis ensuite effectuer une transformation normale de ce
+					//	rectangle dans la forme de destination.
 					s.InitialRectangle = new Rectangle(0, 0, 1, 1);
 					this.initialData.ToStretcher(s);
 					pos = s.Reverse(pos);
@@ -903,27 +903,27 @@ namespace Epsitec.Common.Document
 			return pos;
 		}
 
-		// Retourne l'angle de rotation.
 		public double GetTransformAngle
 		{
+			//	Retourne l'angle de rotation.
 			get
 			{
 				return this.finalData.Angle-this.initialData.Angle;
 			}
 		}
 
-		// Retourne le facteur de mise à l'échelle moyen.
 		public double GetTransformScale
 		{
+			//	Retourne le facteur de mise à l'échelle moyen.
 			get
 			{
 				return (this.GetTransformScaleX+this.GetTransformScaleY)/2.0;
 			}
 		}
 
-		// Retourne le facteur de mise à l'échelle horizontal.
 		public double GetTransformScaleX
 		{
+			//	Retourne le facteur de mise à l'échelle horizontal.
 			get
 			{
 				double di = this.initialData.P2.X-this.initialData.P1.X;
@@ -932,9 +932,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le facteur de mise à l'échelle vertical.
 		public double GetTransformScaleY
 		{
+			//	Retourne le facteur de mise à l'échelle vertical.
 			get
 			{
 				double di = this.initialData.P2.Y-this.initialData.P1.Y;

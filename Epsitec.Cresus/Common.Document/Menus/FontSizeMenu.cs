@@ -4,9 +4,9 @@ namespace Epsitec.Common.Document.Menus
 {
 	public class FontSizeMenu : System.IComparable
 	{
-		// Constructeur unique.
 		public FontSizeMenu(double value, string units)
 		{
+			//	Constructeur unique.
 			this.value = value;
 			this.units = units;
 
@@ -22,9 +22,9 @@ namespace Epsitec.Common.Document.Menus
 			}
 		}
 
-		// Défini par System.IComparable.
 		public int CompareTo(object obj)
 		{
+			//	Défini par System.IComparable.
 			FontSizeMenu that = obj as FontSizeMenu;
 
 			if ( this.units != that.units )
@@ -38,9 +38,9 @@ namespace Epsitec.Common.Document.Menus
 		}
 
 
-		// Ajoute une entrée dans une liste si elle n'existe pas encore.
 		protected static void Add(System.Collections.ArrayList list, double value, string units)
 		{
+			//	Ajoute une entrée dans une liste si elle n'existe pas encore.
 			FontSizeMenu fs = new FontSizeMenu(value, units);
 
 			foreach ( FontSizeMenu current in list )
@@ -51,9 +51,9 @@ namespace Epsitec.Common.Document.Menus
 			list.Add(fs);
 		}
 
-		// Construit le menu pour choisir une taille.
 		public static VMenu CreateFontSizeMenu(double currentValue, string currentUnits, MessageEventHandler message)
 		{
+			//	Construit le menu pour choisir une taille.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
 			FontSizeMenu current = new FontSizeMenu(currentValue, currentUnits);

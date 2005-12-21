@@ -81,9 +81,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Zoom
-		// Retourne l'origine horizontale minimale.
 		public double MinOriginX
 		{
+			//	Retourne l'origine horizontale minimale.
 			get
 			{
 				Size size = this.document.Size;
@@ -101,9 +101,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne l'origine verticale minimale.
 		public double MinOriginY
 		{
+			//	Retourne l'origine verticale minimale.
 			get
 			{
 				Size size = this.document.Size;
@@ -121,9 +121,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne l'origine horizontale maximale.
 		public double MaxOriginX
 		{
+			//	Retourne l'origine horizontale maximale.
 			get
 			{
 				Size area = this.document.Modifier.SizeArea;
@@ -138,9 +138,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne l'origine verticale maximale.
 		public double MaxOriginY
 		{
+			//	Retourne l'origine verticale maximale.
 			get
 			{
 				Size area = this.document.Modifier.SizeArea;
@@ -156,9 +156,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Spécifie l'origine de la zone visible.
 		public void Origin(Point origin)
 		{
+			//	Spécifie l'origine de la zone visible.
 			this.Origin(origin.X, origin.Y);
 		}
 
@@ -178,9 +178,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le centre de la zone visible.
 		public Point Center
 		{
+			//	Retourne le centre de la zone visible.
 			get
 			{
 				Point center = new Point();
@@ -191,9 +191,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Vérifie si on utilise le zoom 100% centré.
 		public bool IsZoomDefault
 		{
+			//	Vérifie si on utilise le zoom 100% centré.
 			get
 			{
 #if false
@@ -213,9 +213,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Vérifie si on utilise le zoom pleine page centré.
 		public bool IsZoomPage
 		{
+			//	Vérifie si on utilise le zoom pleine page centré.
 			get
 			{
 				if ( System.Math.Abs(this.zoom-this.ZoomPage) > 0.00001 )  return false;
@@ -231,9 +231,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Vérifie si on utilise le zoom pleine page centré.
 		public bool IsZoomPageWidth
 		{
+			//	Vérifie si on utilise le zoom pleine page centré.
 			get
 			{
 				if ( System.Math.Abs(this.zoom-this.ZoomPageWidth) > 0.00001 )  return false;
@@ -247,9 +247,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le zoom pleine page.
 		public double ZoomPage
 		{
+			//	Retourne le zoom pleine page.
 			get
 			{
 				if ( this.document.Type == DocumentType.Pictogram )
@@ -269,9 +269,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le zoom largeur page.
 		public double ZoomPageWidth
 		{
+			//	Retourne le zoom largeur page.
 			get
 			{
 				if ( this.document.Type == DocumentType.Pictogram )
@@ -290,27 +290,27 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Remet le zoom pleine page et le centre par défaut.
 		public void ZoomPageAndCenter()
 		{
+			//	Remet le zoom pleine page et le centre par défaut.
 			this.ZoomAndCenter(this.ZoomPage, this.document.Size.Width/2, this.document.Size.Height/2);
 		}
 
-		// Remet le zoom largeur page et le centre par défaut.
 		public void ZoomPageWidthAndCenter()
 		{
+			//	Remet le zoom largeur page et le centre par défaut.
 			this.ZoomAndCenter(this.ZoomPageWidth, this.document.Size.Width/2, this.document.Size.Height/2);
 		}
 
-		// Remet le zoom 100% et le centre par défaut.
 		public void ZoomDefaultAndCenter()
 		{
+			//	Remet le zoom 100% et le centre par défaut.
 			this.ZoomAndCenter(1.0, this.document.Size.Width/2, this.document.Size.Height/2);
 		}
 
-		// Spécifie le zoom et le centre de la zone visible.
 		public void ZoomAndCenter(double zoom, Point center)
 		{
+			//	Spécifie le zoom et le centre de la zone visible.
 			this.ZoomAndCenter(zoom, center.X, center.Y);
 		}
 
@@ -349,9 +349,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Zoom courant.
 		public double Zoom
 		{
+			//	Zoom courant.
 			get
 			{
 				return this.zoom;
@@ -372,9 +372,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Origine horizontale de la zone visible.
 		public double OriginX
 		{
+			//	Origine horizontale de la zone visible.
 			get
 			{
 				return this.originX;
@@ -395,9 +395,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Origine verticale de la zone visible.
 		public double OriginY
 		{
+			//	Origine verticale de la zone visible.
 			get
 			{
 				return this.originY;
@@ -419,11 +419,11 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-		// Taille du conteneur, qui peut être un viewer ou une taille fixe.
-		// Si le viewer existe, il est inutile d'appeler ContainerSize.set
-		// Si le viewer n'existe pas, il faut appeler ContainerSize.set
 		public Size ContainerSize
 		{
+			//	Taille du conteneur, qui peut être un viewer ou une taille fixe.
+			//	Si le viewer existe, il est inutile d'appeler ContainerSize.set
+			//	Si le viewer n'existe pas, il faut appeler ContainerSize.set
 			set
 			{
 				System.Diagnostics.Debug.Assert(this.viewer == null);
@@ -443,9 +443,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Echelles à utiliser pour le dessin pour un zoom donné.
 		protected Point ScaleForZoom(double zoom)
 		{
+			//	Echelles à utiliser pour le dessin pour un zoom donné.
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				Size size = this.ContainerSize;
@@ -462,38 +462,38 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Echelles à utiliser pour le dessin.
 		public Point Scale
 		{
+			//	Echelles à utiliser pour le dessin.
 			get
 			{
 				return this.ScaleForZoom(this.zoom);
 			}
 		}
 
-		// Echelle horizontale à utiliser pour le dessin.
 		public double ScaleX
 		{
+			//	Echelle horizontale à utiliser pour le dessin.
 			get { return this.Scale.X; }
 		}
 
-		// Echelle verticale à utiliser pour le dessin.
 		public double ScaleY
 		{
+			//	Echelle verticale à utiliser pour le dessin.
 			get { return this.Scale.Y; }
 		}
 
 
-		// Mode de dessin pour les calques.
 		public LayerDrawingMode LayerDrawingMode
 		{
+			//	Mode de dessin pour les calques.
 			get { return this.layerDrawingMode; }
 			set { this.layerDrawingMode = value; }
 		}
 
-		// Mode "comme imprimé".
 		public bool PreviewActive
 		{
+			//	Mode "comme imprimé".
 			get
 			{
 				return this.previewActive;
@@ -516,9 +516,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Grid
-		// Action de la grille magnétique.
 		public bool GridActive
 		{
+			//	Action de la grille magnétique.
 			get
 			{
 				return this.gridActive;
@@ -540,9 +540,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Affichage de la grille magnétique.
 		public bool GridShow
 		{
+			//	Affichage de la grille magnétique.
 			get
 			{
 				return this.gridShow;
@@ -565,9 +565,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Pas de la grille magnétique.
 		public Point GridStep
 		{
+			//	Pas de la grille magnétique.
 			get
 			{
 				return this.gridStep;
@@ -590,9 +590,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Subdivisions de la grille magnétique.
 		public Point GridSubdiv
 		{
+			//	Subdivisions de la grille magnétique.
 			get
 			{
 				return this.gridSubdiv;
@@ -615,9 +615,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Décalage de la grille magnétique.
 		public Point GridOffset
 		{
+			//	Décalage de la grille magnétique.
 			get
 			{
 				return this.gridOffset;
@@ -640,9 +640,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Force la longueur d'un vecteur sur la grille magnétique, si nécessaire.
 		public void SnapGridVectorLength(ref Point vector)
 		{
+			//	Force la longueur d'un vecteur sur la grille magnétique, si nécessaire.
 			double d = Point.Distance(new Point(0,0), vector);
 			if ( d == 0 )  return;
 			Point pd = new Point(d, 0);
@@ -654,21 +654,21 @@ namespace Epsitec.Common.Document
 			vector.Y *= sd/d;
 		}
 
-		// Force un point sur la grille magnétique, si nécessaire.
 		public void SnapGrid(ref Point pos)
 		{
+			//	Force un point sur la grille magnétique, si nécessaire.
 			this.SnapGrid(ref pos, this.SnapGridOffset, Rectangle.Empty);
 		}
 
-		// Force un point sur la grille magnétique, si nécessaire.
 		public void SnapGrid(ref Point pos, Rectangle box)
 		{
+			//	Force un point sur la grille magnétique, si nécessaire.
 			this.SnapGrid(ref pos, this.SnapGridOffset, box);
 		}
 
-		// Force un point sur la grille magnétique, si nécessaire.
 		public void SnapGrid(ref Point pos, Point offset, Rectangle box)
 		{
+			//	Force un point sur la grille magnétique, si nécessaire.
 			bool snapX, snapY;
 
 			if ( !this.gridActive ^ this.isAlt )
@@ -685,21 +685,21 @@ namespace Epsitec.Common.Document
 			if ( snapY )  pos.Y = guidePos.Y;
 		}
 
-		// Force un point sur la grille magnétique, toujours.
 		public void SnapGridForce(ref Point pos)
 		{
+			//	Force un point sur la grille magnétique, toujours.
 			pos = Point.GridAlign(pos, this.SnapGridOffset, this.gridStep);
 		}
 
-		// Force un point sur la grille magnétique, toujours.
 		public void SnapGridForce(ref Point pos, Point offset)
 		{
+			//	Force un point sur la grille magnétique, toujours.
 			pos = Point.GridAlign(pos, offset, this.gridStep);
 		}
 
-		// Retourne l'offset standard pour la grille magnétique.
 		protected Point SnapGridOffset
 		{
+			//	Retourne l'offset standard pour la grille magnétique.
 			get
 			{
 				Point offset = new Point(0.0, 0.0);
@@ -714,9 +714,9 @@ namespace Epsitec.Common.Document
 
 
 		#region TextGrid
-		// Affichage de la grille magnétique pour le texte.
 		public bool TextGridShow
 		{
+			//	Affichage de la grille magnétique pour le texte.
 			get
 			{
 				return this.textGridShow;
@@ -739,9 +739,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Pas de la grille magnétique pour le texte.
 		public double TextGridStep
 		{
+			//	Pas de la grille magnétique pour le texte.
 			get
 			{
 				return this.textGridStep;
@@ -765,9 +765,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Subdivisions de la grille magnétique pour le texte.
 		public double TextGridSubdiv
 		{
+			//	Subdivisions de la grille magnétique pour le texte.
 			get
 			{
 				return this.textGridSubdiv;
@@ -790,9 +790,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Décalage de la grille magnétique pour le texte.
 		public double TextGridOffset
 		{
+			//	Décalage de la grille magnétique pour le texte.
 			get
 			{
 				return this.textGridOffset;
@@ -816,9 +816,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Met à jour tous les pavés du document lorsque les lignes magnétiques ont changé.
 		protected void UpdateAllTextForTextGrid()
 		{
+			//	Met à jour tous les pavés du document lorsque les lignes magnétiques ont changé.
 			foreach ( TextFlow flow in this.document.TextFlows )
 			{
 				foreach ( Objects.TextBox2 obj in flow.Chain )
@@ -832,9 +832,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Affichage des caractères de contrôle pour le texte.
 		public bool TextShowControlCharacters
 		{
+			//	Affichage des caractères de contrôle pour le texte.
 			get
 			{
 				return this.textShowControlCharacters;
@@ -857,9 +857,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Affichage réduit des caractères (seulement les caractères rapides).
 		public bool TextFontFilter
 		{
+			//	Affichage réduit des caractères (seulement les caractères rapides).
 			get
 			{
 				return this.textFontFilter;
@@ -880,9 +880,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Echantillons "Abc" à la place de "AaBbYyZz".
 		public bool TextFontSampleAbc
 		{
+			//	Echantillons "Abc" à la place de "AaBbYyZz".
 			get
 			{
 				return this.textFontSampleAbc;
@@ -903,9 +903,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Taille des échantillons de caractères pour FontSelector.
 		public double TextFontSampleHeight
 		{
+			//	Taille des échantillons de caractères pour FontSelector.
 			get
 			{
 				return this.textFontSampleHeight;
@@ -928,9 +928,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Ruler
-		// Affichage des règles graduées.
 		public bool RulersShow
 		{
+			//	Affichage des règles graduées.
 			get
 			{
 				return this.rulersShow;
@@ -955,9 +955,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Labels
-		// Affichage des noms de objets.
 		public bool LabelsShow
 		{
+			//	Affichage des noms de objets.
 			get
 			{
 				return this.labelsShow;
@@ -982,9 +982,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Aggregates
-		// Affichage des noms de styles.
 		public bool AggregatesShow
 		{
+			//	Affichage des noms de styles.
 			get
 			{
 				return this.aggregatesShow;
@@ -1009,9 +1009,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Guides
-		// Action des repères magnétiques.
 		public bool GuidesActive
 		{
+			//	Action des repères magnétiques.
 			get
 			{
 				return this.guidesActive;
@@ -1032,9 +1032,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Affichage des repères magnétiques.
 		public bool GuidesShow
 		{
+			//	Affichage des repères magnétiques.
 			get
 			{
 				return this.guidesShow;
@@ -1056,9 +1056,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Déplacement avec la souris des repères magnétiques.
 		public bool GuidesMouse
 		{
+			//	Déplacement avec la souris des repères magnétiques.
 			get
 			{
 				return this.guidesMouse;
@@ -1078,9 +1078,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Force un point sur un repère magnétique.
 		protected void SnapGuides(ref Point pos, Rectangle box, out bool snapX, out bool snapY)
 		{
+			//	Force un point sur un repère magnétique.
 			snapX = false;
 			snapY = false;
 			if ( !this.guidesActive ^ this.isAlt )  return;
@@ -1099,9 +1099,9 @@ namespace Epsitec.Common.Document
 			this.SnapGuides(this.document.Settings.GuidesListGlobal, ref pos, box, ref snapX, ref snapY);
 		}
 
-		// Force un point sur un repère magnétique d'une liste.
 		protected void SnapGuides(UndoableList guides, ref Point pos, Rectangle box, ref bool snapX, ref bool snapY)
 		{
+			//	Force un point sur un repère magnétique d'une liste.
 			if ( snapX && snapY )  return;
 
 			int total = guides.Count;
@@ -1179,9 +1179,9 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		// Mode caché à moitié (estomper).
 		public bool HideHalfActive
 		{
+			//	Mode caché à moitié (estomper).
 			get
 			{
 				return this.hideHalfActive;
@@ -1203,18 +1203,18 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Indique si le viewer associé à ce contexte est actif.
 		public bool IsActive
 		{
+			//	Indique si le viewer associé à ce contexte est actif.
 			get
 			{
 				return ( this.viewer != null && this.viewer == this.document.Modifier.ActiveViewer );
 			}
 		}
 
-		// Indique si l'icône est estompée.
 		public bool IsDimmed
 		{
+			//	Indique si l'icône est estompée.
 			get
 			{
 				return this.isDimmed;
@@ -1235,9 +1235,9 @@ namespace Epsitec.Common.Document
 		}
 
 		#region DrawBox
-		// Indique s'il faut afficher les bbox.
 		public bool IsDrawBoxThin
 		{
+			//	Indique s'il faut afficher les bbox.
 			get
 			{
 				return this.isDrawBoxThin;
@@ -1258,9 +1258,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique s'il faut afficher les bbox.
 		public bool IsDrawBoxGeom
 		{
+			//	Indique s'il faut afficher les bbox.
 			get
 			{
 				return this.isDrawBoxGeom;
@@ -1281,9 +1281,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique s'il faut afficher les bbox.
 		public bool IsDrawBoxFull
 		{
+			//	Indique s'il faut afficher les bbox.
 			get
 			{
 				return this.isDrawBoxFull;
@@ -1305,67 +1305,67 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-		// Taille minimale que doit avoir un objet à sa création.
 		public double MinimalSize
 		{
+			//	Taille minimale que doit avoir un objet à sa création.
 			get { return this.minimalSize/this.ScaleX; }
 		}
 
-		// Epaisseur minimale d'un objet pour la détection du coutour.
 		public double MinimalWidth
 		{
+			//	Epaisseur minimale d'un objet pour la détection du coutour.
 			get { return this.minimalWidth/this.ScaleX; }
 		}
 
-		// Marge pour fermer un polygone.
 		public double CloseMargin
 		{
+			//	Marge pour fermer un polygone.
 			get { return this.closeMargin/this.ScaleX; }
 		}
 
-		// Marge magnétique d'un repère.
 		public double GuideMargin
 		{
+			//	Marge magnétique d'un repère.
 			get { return this.guideMargin/this.ScaleX; }
 		}
 
-		// Marge magnétique des constructions.
 		public double MagnetMargin
 		{
+			//	Marge magnétique des constructions.
 			get { return this.magnetMargin/this.ScaleX; }
 		}
 
-		// Taille supplémentaire lorsqu'un objet est survolé par la souris.
 		public double HiliteSize
 		{
+			//	Taille supplémentaire lorsqu'un objet est survolé par la souris.
 			get { return this.hiliteSize/this.ScaleX; }
 			set { this.hiliteSize = value*this.ScaleX; }
 		}
 
-		// Taille d'une poignée.
 		public double HandleSize
 		{
+			//	Taille d'une poignée.
 			get { return this.handleSize/this.ScaleX; }
 		}
 
-		// Taille de la zone à redessiner d'une poignée.
 		public double HandleRedrawSize
 		{
+			//	Taille de la zone à redessiner d'une poignée.
 			get { return (this.handleSize+1.0)/this.ScaleX; }
 		}
 
-		// Marge à ajouter à la bbox lors du dessin, pour résoudre le cas des poignées
-		// qui débordent d'un objet avec un trait mince, et du mode Hilite qui augmente
-		// l'épaisseur lors du survol de la souris.
 		public double SelectMarginSize
 		{
+			//	Marge à ajouter à la bbox lors du dessin, pour résoudre le cas des poignées
+			//	qui débordent d'un objet avec un trait mince, et du mode Hilite qui augmente
+			//	l'épaisseur lors du survol de la souris.
 			get { return System.Math.Max(this.handleSize+4, this.hiliteSize)/this.ScaleX/2; }
 		}
 
 
-		// Estompe une couleur.
 		public void DimmedColor(ref RichColor color)
 		{
+			//	Estompe une couleur.
 			if ( this.isDimmed )
 			{
 				double alpha = color.A;
@@ -1378,9 +1378,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Couleur lorsqu'un objet est survolé par la souris.
 		public Color HiliteOutlineColor
 		{
+			//	Couleur lorsqu'un objet est survolé par la souris.
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
@@ -1394,9 +1394,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Couleur lorsqu'un objet est survolé par la souris.
 		public Color HiliteSurfaceColor
 		{
+			//	Couleur lorsqu'un objet est survolé par la souris.
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
@@ -1412,9 +1412,9 @@ namespace Epsitec.Common.Document
 
 
 		#region SuperShift
-		// Indique si la touche Shift est pressée.
 		public bool IsShift
 		{
+			//	Indique si la touche Shift est pressée.
 			get
 			{
 				return this.isShift;
@@ -1426,9 +1426,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si la touche Ctrl est pressée.
 		public bool IsCtrl
 		{
+			//	Indique si la touche Ctrl est pressée.
 			get
 			{
 				return this.isCtrl;
@@ -1444,9 +1444,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si la touche Alt est pressée.
 		public bool IsAlt
 		{
+			//	Indique si la touche Alt est pressée.
 			get
 			{
 				return this.isAlt; 
@@ -1461,9 +1461,9 @@ namespace Epsitec.Common.Document
 
 
 		#region Magnet
-		// Action des lignes magnétiques.
 		public bool MagnetActive
 		{
+			//	Action des lignes magnétiques.
 			get
 			{
 				return this.magnetActive;
@@ -1485,31 +1485,31 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique s'il existe des lignes magnétiques activées.
 		public bool MagnetActiveAndExist
 		{
+			//	Indique s'il existe des lignes magnétiques activées.
 			get
 			{
 				return (this.magnetActive && this.magnetLayerList.Count > 0);
 			}
 		}
 
-		// Annule le point de départ.
 		public void MagnetClearStarting()
 		{
+			//	Annule le point de départ.
 			this.isMagnetStarting = false;
 		}
 
-		// Fixe le point de départ.
 		public void MagnetFixStarting(Point pos)
 		{
+			//	Fixe le point de départ.
 			this.isMagnetStarting = true;
 			this.magnetStarting = pos;
 		}
 
-		// Retourne une position éventuellement contrainte.
 		public bool MagnetSnapPos(ref Point pos)
 		{
+			//	Retourne une position éventuellement contrainte.
 			if ( !this.magnetActive )  return false;
 
 			if ( this.isCtrl )
@@ -1636,13 +1636,13 @@ namespace Epsitec.Common.Document
 					this.magnetLineMain.Initialise(p1, p2, true);
 					first = this.magnetLineMain;
 
-					// Ajoute le segment au départ.
+					//	Ajoute le segment au départ.
 					Point pp1 = Point.Move(p1, p2, this.MagnetMargin);
 					Point pb1 = Transform.RotatePointDeg(p1,  90, pp1);
 					Point pb2 = Transform.RotatePointDeg(p1, -90, pp1);
 					this.magnetLineBegin.Initialise(pb1, pb2, false);
 
-					// Ajoute le segment à l'arrivée.
+					//	Ajoute le segment à l'arrivée.
 					Point pp2 = Point.Move(p2, p1, this.MagnetMargin);
 					Point pe1 = Transform.RotatePointDeg(p2,  90, pp2);
 					Point pe2 = Transform.RotatePointDeg(p2, -90, pp2);
@@ -1660,7 +1660,7 @@ namespace Epsitec.Common.Document
 					}
 					else
 					{
-						// Ajoute le segment au milieu.
+						//	Ajoute le segment au milieu.
 						Point m = Point.Scale(p1, p2, 0.5);
 						Point n = Point.Move(m, p2, this.MagnetMargin);
 						Point pm1 = Transform.RotatePointDeg(m,  90, n);
@@ -1719,9 +1719,9 @@ namespace Epsitec.Common.Document
 			return false;
 		}
 
-		// Enlève le point initial pour les lignes magnétiques.
 		public void MagnetDelStarting()
 		{
+			//	Enlève le point initial pour les lignes magnétiques.
 			this.magnetLineMain.Clear();
 			this.magnetLineBegin.Clear();
 			this.magnetLineEnd.Clear();
@@ -1731,9 +1731,9 @@ namespace Epsitec.Common.Document
 			this.magnetLineProj.Clear();
 		}
 
-		// Dessine les lignes magnétiques.
 		public void DrawMagnet(Graphics graphics, Size size)
 		{
+			//	Dessine les lignes magnétiques.
 			if ( !this.magnetActive )  return;
 			if ( this.isCtrl )  return;
 
@@ -1750,16 +1750,16 @@ namespace Epsitec.Common.Document
 
 
 		#region Constrain
-		// Efface toutes les contraintes.
 		public void ConstrainFlush()
 		{
+			//	Efface toutes les contraintes.
 			this.constrainList.Clear();
 		}
 
-		// Ajoute 4 contraintes pour former un rectangle HV.
-		// p1 et p2 sont 2 coins opposés quelconques du rectangle.
 		public void ConstrainAddRect(Point p1, Point p2)
 		{
+			//	Ajoute 4 contraintes pour former un rectangle HV.
+			//	p1 et p2 sont 2 coins opposés quelconques du rectangle.
 			Point p3 = new Point(p1.X, p2.Y);
 			Point p4 = new Point(p2.X, p1.Y);
 			this.ConstrainAddLine(p1, p3);
@@ -1768,51 +1768,51 @@ namespace Epsitec.Common.Document
 			this.ConstrainAddLine(p4, p1);
 		}
 
-		// Ajoute des contraintes pour déplacer le sommet d'un rectangle.
 		public void ConstrainAddRect(Point corner, Point opp, Point left, Point right)
 		{
+			//	Ajoute des contraintes pour déplacer le sommet d'un rectangle.
 			this.ConstrainAddLine(corner, opp);
 			this.ConstrainAddLine(corner, left);
 			this.ConstrainAddLine(corner, right);
 		}
 
-		// Ajoute un centre de rotation pour les contraintes, permettant des
-		// rotations multiples de 45 degrés.
 		public void ConstrainAddCenter(Point pos)
 		{
+			//	Ajoute un centre de rotation pour les contraintes, permettant des
+			//	rotations multiples de 45 degrés.
 			this.ConstrainAddHV(pos);
 			this.ConstrainAddHomo(pos);
 		}
 
-		// Ajoute une croix de zoom à 45 degrés pour les contraintes.
 		public void ConstrainAddHomo(Point pos)
 		{
+			//	Ajoute une croix de zoom à 45 degrés pour les contraintes.
 			this.ConstrainAddLine(pos, new Point(pos.X+1.0, pos.Y+1.0));
 			this.ConstrainAddLine(pos, new Point(pos.X+1.0, pos.Y-1.0));
 		}
 
-		// Ajoute une contrainte horizontale et verticale (+).
 		public void ConstrainAddHV(Point pos)
 		{
+			//	Ajoute une contrainte horizontale et verticale (+).
 			this.ConstrainAddHorizontal(pos.Y);
 			this.ConstrainAddVertical(pos.X);
 		}
 
-		// Ajoute une contrainte horizontale (-).
 		public void ConstrainAddHorizontal(double y)
 		{
+			//	Ajoute une contrainte horizontale (-).
 			this.ConstrainAddLine(new Point(0.0, y), new Point(1.0, y));
 		}
 
-		// Ajoute une contrainte verticale (|).
 		public void ConstrainAddVertical(double x)
 		{
+			//	Ajoute une contrainte verticale (|).
 			this.ConstrainAddLine(new Point(x, 0.0), new Point(x, 1.0));
 		}
 
-		// Ajoute une contrainte quelconque.
 		public void ConstrainAddLine(Point p1, Point p2)
 		{
+			//	Ajoute une contrainte quelconque.
 			if ( p1 == p2 )  return;
 
 			MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Constrain);
@@ -1827,9 +1827,9 @@ namespace Epsitec.Common.Document
 			this.constrainList.Add(line);
 		}
 
-		// Ajoute une contrainte de distance (circulaire).
 		public void ConstrainAddCircle(Point center, Point ext)
 		{
+			//	Ajoute une contrainte de distance (circulaire).
 			if ( center == ext )  return;
 
 			MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Circle);
@@ -1839,25 +1839,25 @@ namespace Epsitec.Common.Document
 			this.constrainList.Add(line);
 		}
 
-		// Retourne une position éventuellement contrainte, d'abord sur une
-		// contrainte magnétique, sinon sur la grille.
 		public void SnapPos(ref Point pos)
 		{
+			//	Retourne une position éventuellement contrainte, d'abord sur une
+			//	contrainte magnétique, sinon sur la grille.
 			if ( this.ConstrainSnapPos(ref pos) )  return;
 			this.SnapGrid(ref pos);
 		}
 
-		// Retourne une position éventuellement contrainte, en fonction du nombre
-		// quelconque de contraintes existantes.
 		public bool ConstrainSnapPos(ref Point pos)
 		{
+			//	Retourne une position éventuellement contrainte, en fonction du nombre
+			//	quelconque de contraintes existantes.
 			if ( !this.isCtrl )
 			{
 				return this.MagnetSnapPos(ref pos);
 			}
 
-			// Met toutes les lignes proches dans une table avec les distances
-			// respectives.
+			//	Met toutes les lignes proches dans une table avec les distances
+			//	respectives.
 			double margin = this.MagnetMargin*2.0;
 			int detect = 0;
 			MagnetLine[] table = new MagnetLine[10];
@@ -1877,9 +1877,9 @@ namespace Epsitec.Common.Document
 			bool snap = false;
 			if ( detect >= 2 )
 			{
-				// Trie les lignes détectées, afin d'avoir la plus proche en premier.
-				// Bubble sort peu efficace, mais c'est sans grande importance vu
-				// le petit nombre de lignes à trier (<10).
+				//	Trie les lignes détectées, afin d'avoir la plus proche en premier.
+				//	Bubble sort peu efficace, mais c'est sans grande importance vu
+				//	le petit nombre de lignes à trier (<10).
 				bool more;
 				do
 				{
@@ -1902,7 +1902,7 @@ namespace Epsitec.Common.Document
 				}
 				while ( more );
 
-				// Calcule l'intersection entre les 2 lignes les plus proches.
+				//	Calcule l'intersection entre les 2 lignes les plus proches.
 				Point[] inter = MagnetLine.Intersect(table[0], table[1]);
 				if ( inter != null )
 				{
@@ -1923,8 +1923,8 @@ namespace Epsitec.Common.Document
 						table[1].Temp = true;
 						snap = true;
 
-						// S'il existe plus de 2 lignes faisant partie de
-						// l'intersection, on les ajoute ici (pour faire joli).
+						//	S'il existe plus de 2 lignes faisant partie de
+						//	l'intersection, on les ajoute ici (pour faire joli).
 						for ( int i=2 ; i<detect ; i++ )
 						{
 							if ( dist[i] <= margin && table[i].Distance(pos) < 0.0001 )
@@ -1936,8 +1936,8 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Si on n'a pas trouvé d'intersection, ajuste la position sur la
-			// ligne la plus proche (projection).
+			//	Si on n'a pas trouvé d'intersection, ajuste la position sur la
+			//	ligne la plus proche (projection).
 			if ( !snap && detect >= 1 )
 			{
 				table[0].Snap(ref pos, margin);
@@ -1945,8 +1945,8 @@ namespace Epsitec.Common.Document
 				snap = true;
 			}
 
-			// Modifie la propriété FlyOver une seule fois, pour éviter de redessiner
-			// inutilement des grandes zones.
+			//	Modifie la propriété FlyOver une seule fois, pour éviter de redessiner
+			//	inutilement des grandes zones.
 			foreach ( MagnetLine line in this.constrainList )
 			{
 				line.FlyOver = line.Temp;
@@ -1955,9 +1955,9 @@ namespace Epsitec.Common.Document
 			return snap;
 		}
 
-		// Modifie les contraintes suite à la pression de la touche espace.
 		public void ConstrainSpacePressed()
 		{
+			//	Modifie les contraintes suite à la pression de la touche espace.
 			int visible = 0;
 			foreach ( MagnetLine line in this.constrainList )
 			{
@@ -1980,27 +1980,27 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Met à jour les contraintes en fonction de la touche Ctrl.
 		protected void ConstrainUpdateCtrl()
 		{
+			//	Met à jour les contraintes en fonction de la touche Ctrl.
 			foreach ( MagnetLine line in this.constrainList )
 			{
 				line.IsVisible = this.isCtrl;
 			}
 		}
 
-		// Enlève le point initial pour les contraintes.
 		public void ConstrainDelStarting()
 		{
+			//	Enlève le point initial pour les contraintes.
 			foreach ( MagnetLine line in this.constrainList )
 			{
 				line.Clear();
 			}
 		}
 
-		// Dessine les contraintes.
 		public void DrawConstrain(Graphics graphics, Size size)
 		{
+			//	Dessine les contraintes.
 			if ( !this.isCtrl )  return;
 
 			double max = System.Math.Max(size.Width, size.Height);
@@ -2013,81 +2013,81 @@ namespace Epsitec.Common.Document
 
 
 		#region GetColors
-		// Retourne la couleur pour indiquer une sélection multiple.
 		static public Color ColorMulti
 		{
+			//	Retourne la couleur pour indiquer une sélection multiple.
 			get { return Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
 		}
 
-		// Retourne la couleur pour indiquer une sélection multiple.
 		static public Color ColorMultiBack
 		{
+			//	Retourne la couleur pour indiquer une sélection multiple.
 			get { return Color.FromARGB(0.15, 1.0, 0.0, 0.0); }  // rouge
 		}
 
-		// Retourne la couleur pour indiquer un style.
 		static public Color ColorStyle
 		{
+			//	Retourne la couleur pour indiquer un style.
 			get { return Color.FromARGB(0.3, 1.0, 0.75, 0.0); }  // orange
 		}
 
-		// Retourne la couleur pour indiquer un style.
 		static public Color ColorStyleBack
 		{
+			//	Retourne la couleur pour indiquer un style.
 			get { return Color.FromARGB(0.15, 1.0, 0.75, 0.0); }  // orange
 		}
 
-		// Retourne la couleur du pourtour d'une poignée.
 		static public Color ColorHandleOutline
 		{
+			//	Retourne la couleur du pourtour d'une poignée.
 			get { return Color.FromARGB(1.0, 0.0, 0.0, 0.0); }  // noir
 		}
 
-		// Retourne la couleur d'une poignée principale.
 		static public Color ColorHandleMain
 		{
+			//	Retourne la couleur d'une poignée principale.
 			get { return Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
 		}
 
-		// Retourne la couleur d'un segment sélectionné.
 		static public Color ColorSelectedSegment
 		{
+			//	Retourne la couleur d'un segment sélectionné.
 			get { return Color.FromARGB(0.5, 1.0, 0.0, 0.0); }  // rouge
 		}
 
-		// Retourne la couleur d'une poignée de début/fin.
 		static public Color ColorHandleStart
 		{
+			//	Retourne la couleur d'une poignée de début/fin.
 			get { return Color.FromARGB(1.0, 0.0, 1.0, 0.0); }  // vert
 		}
 
-		// Retourne la couleur d'une poignée de propriété.
 		static public Color ColorHandleProperty
 		{
+			//	Retourne la couleur d'une poignée de propriété.
 			get { return Color.FromARGB(1.0, 0.0, 1.0, 1.0); }  // cyan
 		}
 
-		// Retourne la couleur d'une poignée de sélection globale.
 		static public Color ColorHandleGlobal
 		{
+			//	Retourne la couleur d'une poignée de sélection globale.
 			get { return Color.FromARGB(1.0, 1.0, 1.0, 1.0); }  // blanc
 		}
 
-		// Retourne la couleur pour dessiner une contrainte.
 		static public Color ColorConstrain
 		{
+			//	Retourne la couleur pour dessiner une contrainte.
 			get { return Color.FromARGB(0.5, 1.0, 0.0, 0.0); }  // rouge
 		}
 
-		// Retourne la couleur du cadre pendant l'édition.
 		static public Color ColorFrameEdit
 		{
+			//	Retourne la couleur du cadre pendant l'édition.
 			get { return Color.FromARGB(1.0, 0.0, 0.7, 1.0); }  // bleu
 		}
 
-		// Retourne la couleur du curseur pendant l'édition.
 		static public Color ColorCursorEdit(bool active)
 		{
+			//	Retourne la couleur du curseur pendant l'édition.
 			if ( active )
 			{
 				return Color.FromARGB(1.0, 0.0, 0.0, 1.0);  // bleu
@@ -2098,9 +2098,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne la couleur des sélections pendant l'édition.
 		static public Color ColorSelectEdit(bool active)
 		{
+			//	Retourne la couleur des sélections pendant l'édition.
 			if ( active )
 			{
 				return Color.FromARGB(1.0, 0.73, 0.81, 0.98);  // bleu
@@ -2111,56 +2111,56 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne la couleur du fond d'un tabulateur supprimé.
 		static public Color ColorTabZombie
 		{
+			//	Retourne la couleur du fond d'un tabulateur supprimé.
 			get { return Color.FromARGB(1.0, 1.0, 0.4, 0.0); }  // rouge-orange
 		}
 		#endregion
 
 
 		#region RootStack
-		// Donne toute la pile.
 		public System.Collections.ArrayList RootStack
 		{
+			//	Donne toute la pile.
 			get { return this.rootStack; }
 			set { this.rootStack = value; }
 		}
 
-		// Vide toute la pile.
 		public void RootStackClear()
 		{
+			//	Vide toute la pile.
 			this.rootStack.Clear();
 		}
 
-		// Indique si la pile est vide.
 		public bool RootStackIsEmpty
 		{
+			//	Indique si la pile est vide.
 			get { return (this.rootStack.Count < 2); }  // au moins page.calque ?
 		}
 
-		// Indique si on est à la racine (donc dans page.calque).
 		public bool RootStackIsBase
 		{
+			//	Indique si on est à la racine (donc dans page.calque).
 			get { return (this.rootStack.Count == 2); }
 		}
 
-		// Retourne la profondeur.
 		public int RootStackDeep
 		{
+			//	Retourne la profondeur.
 			get { return this.rootStack.Count; }
 		}
 
-		// Ajoute un nouvel élément.
 		public void RootStackPush(int index)
 		{
+			//	Ajoute un nouvel élément.
 			this.InsertOpletRootStack();
 			this.rootStack.Add(index);
 		}
 
-		// Retire le dernier élément.
 		public int RootStackPop()
 		{
+			//	Retire le dernier élément.
 			if ( this.rootStack.Count == 0 )  return -1;
 			this.InsertOpletRootStack();
 			int index = (int) this.rootStack[this.rootStack.Count-1];
@@ -2168,16 +2168,16 @@ namespace Epsitec.Common.Document
 			return index;
 		}
 
-		// Retourne l'objet racine le plus profond.
-		// Il s'agira d'un calque ou d'un groupe.
 		public Objects.Abstract RootObject()
 		{
+			//	Retourne l'objet racine le plus profond.
+			//	Il s'agira d'un calque ou d'un groupe.
 			return this.RootObject(1000);
 		}
 
-		// Retourne l'objet racine à une profondeur donnée.
 		public Objects.Abstract RootObject(int deepMax)
 		{
+			//	Retourne l'objet racine à une profondeur donnée.
 			UndoableList list = this.document.GetObjects;
 			Objects.Abstract obj = null;
 			int deep = System.Math.Min(this.rootStack.Count, deepMax);
@@ -2194,16 +2194,16 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Spécifie une page et un calque.
 		public void PageLayer(int page, int layer)
 		{
+			//	Spécifie une page et un calque.
 			this.InsertOpletRootStack();
 			this.InternalPageLayer(page, layer);
 		}
 
-		// Spécifie une page et un calque.
 		public void InternalPageLayer(int page, int layer)
 		{
+			//	Spécifie une page et un calque.
 			bool ie = this.document.Modifier.OpletQueueEnable;
 			this.document.Modifier.OpletQueueEnable = false;
 			this.RootStackClear();
@@ -2213,22 +2213,22 @@ namespace Epsitec.Common.Document
 			this.document.Modifier.OpletQueueEnable = ie;
 		}
 
-		// Retourne le nombre total de pages.
 		public int TotalPages()
 		{
+			//	Retourne le nombre total de pages.
 			return this.document.GetObjects.Count;
 		}
 
-		// Retourne le nombre total de calques.
 		public int TotalLayers()
 		{
+			//	Retourne le nombre total de calques.
 			Objects.Abstract page = this.RootObject(1);
 			return page.Objects.Count;
 		}
 
-		// Page courante.
 		public int CurrentPage
 		{
+			//	Page courante.
 			get
 			{
 				System.Diagnostics.Debug.Assert(!this.RootStackIsEmpty);
@@ -2268,9 +2268,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Calque courant.
 		public int CurrentLayer
 		{
+			//	Calque courant.
 			get
 			{
 				System.Diagnostics.Debug.Assert(!this.RootStackIsEmpty);
@@ -2307,43 +2307,43 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Donne la liste des pages maître à utiliser.
 		public System.Collections.ArrayList MasterPageList
 		{
+			//	Donne la liste des pages maître à utiliser.
 			get { return this.masterPageList; }
 		}
 
-		// Donne la liste des calques magnétiques à utiliser.
 		public System.Collections.ArrayList MagnetLayerList
 		{
+			//	Donne la liste des calques magnétiques à utiliser.
 			get { return this.magnetLayerList; }
 		}
 
-		// Met à jour masterPageList et magnetLayerList après un changement de page.
 		public void UpdateAfterPageChanged()
 		{
+			//	Met à jour masterPageList et magnetLayerList après un changement de page.
 			this.document.Modifier.ComputeMasterPageList(this.masterPageList, this.CurrentPage);
 			this.document.Modifier.ComputeMagnetLayerList(this.magnetLayerList, this.CurrentPage);
 		}
 
-		// Met à jour magnetLayerList après un changement de page.
 		public void UpdateAfterLayerChanged()
 		{
+			//	Met à jour magnetLayerList après un changement de page.
 			this.document.Modifier.ComputeMagnetLayerList(this.magnetLayerList, this.CurrentPage);
 		}
 		#endregion
 
 		#region OpletRootStack
-		// Ajoute un oplet pour mémoriser les informations de sélection de l'objet.
 		protected void InsertOpletRootStack()
 		{
+			//	Ajoute un oplet pour mémoriser les informations de sélection de l'objet.
 			if ( this.document.Modifier == null )  return;
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletRootStack oplet = new OpletRootStack(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		// Mémorise tout le RootStack.
+		//	Mémorise tout le RootStack.
 		protected class OpletRootStack : AbstractOplet
 		{
 			public OpletRootStack(DrawingContext host)
@@ -2363,7 +2363,7 @@ namespace Epsitec.Common.Document
 			{
 				System.Collections.ArrayList temp = new System.Collections.ArrayList();
 
-				// this.host.rootStack -> temp
+				//	this.host.rootStack -> temp
 				int total = this.host.rootStack.Count;
 				for ( int i=0 ; i<total ; i++ )
 				{
@@ -2371,7 +2371,7 @@ namespace Epsitec.Common.Document
 					temp.Add(index);
 				}
 
-				// this.rootStack -> this.host.rootStack
+				//	this.rootStack -> this.host.rootStack
 				this.host.rootStack.Clear();
 				total = this.rootStack.Count;
 				for ( int i=0 ; i<total ; i++ )
@@ -2380,7 +2380,7 @@ namespace Epsitec.Common.Document
 					this.host.rootStack.Add(index);
 				}
 
-				// temp -> this.rootStack
+				//	temp -> this.rootStack
 				this.rootStack.Clear();
 				total = temp.Count;
 				for ( int i=0 ; i<total ; i++ )

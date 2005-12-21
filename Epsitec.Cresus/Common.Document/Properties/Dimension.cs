@@ -176,9 +176,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Donne le petit texte pour les échantillons.
 		public override string SampleText
 		{
+			//	Donne le petit texte pour les échantillons.
 			get
 			{
 				if ( this.dimensionForm == DimensionForm.Inside  )  return "<-->";
@@ -187,9 +187,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(DimensionForm type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -200,9 +200,9 @@ namespace Epsitec.Common.Document.Properties
 			return name;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(DimensionForm type)
 		{
+			//	Retourne l'icône pour un type donné.
 			switch ( type )
 			{
 				case DimensionForm.Auto:     return "DimensionAuto";
@@ -212,9 +212,9 @@ namespace Epsitec.Common.Document.Properties
 			return "";
 		}
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(DimensionJustif type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -226,9 +226,9 @@ namespace Epsitec.Common.Document.Properties
 			return name;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(DimensionJustif type)
 		{
+			//	Retourne l'icône pour un type donné.
 			switch ( type )
 			{
 				case DimensionJustif.CenterOrLeft:   return "DimensionCenterOrLeft";
@@ -240,15 +240,15 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Dimension p = property as Dimension;
 			p.dimensionJustif = this.dimensionJustif;
@@ -260,9 +260,9 @@ namespace Epsitec.Common.Document.Properties
 			p.rotateText      = this.rotateText;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			Dimension p = property as Dimension;
@@ -277,18 +277,18 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Dimension(document);
 		}
 
 
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("DimensionJustif", this.dimensionJustif);
@@ -300,9 +300,9 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("RotateText", this.rotateText);
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected Dimension(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			this.dimensionJustif = (DimensionJustif) info.GetValue("DimensionJustif", typeof(DimensionJustif));
 			this.dimensionForm = (DimensionForm) info.GetValue("DimensionForm", typeof(DimensionForm));
 			this.addLength = info.GetDouble("AddLength");

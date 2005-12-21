@@ -21,14 +21,14 @@ namespace Epsitec.Common.Document
 			this.document = document;
 		}
 
-		// Dessine des formes dans n'importe quel IPaintPort.
-		// Retourne true si un texte a été sauté en mode NoText.
 		public bool DrawShapes(IPaintPort port,
 							   DrawingContext drawingContext,
 							   Objects.Abstract obj,
 							   DrawShapesMode mode,
 							   params Shape[] shapes)
 		{
+			//	Dessine des formes dans n'importe quel IPaintPort.
+			//	Retourne true si un texte a été sauté en mode NoText.
 			FillMode iMode = port.FillMode;
 			bool skipText = false;
 
@@ -125,10 +125,10 @@ namespace Epsitec.Common.Document
 			return skipText;
 		}
 
-		// Dessine un traitillé simple (dash/gap) le long d'un chemin.
 		public static void DrawPathDash(Graphics graphics, DrawingContext drawingContext, Path path,
 										double width, double dash, double gap, Drawing.Color color)
 		{
+			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
 			if ( path.IsEmpty )  return;
 
 			DashedPath dp = new DashedPath();
@@ -151,11 +151,11 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Détecte si la souris est sur une forme.
 		public bool Detect(Point pos,
 						   DrawingContext drawingContext,
 						   params Shape[] shapes)
 		{
+			//	Détecte si la souris est sur une forme.
 			foreach ( Shape shape in shapes )
 			{
 				if ( shape == null ||
@@ -184,12 +184,12 @@ namespace Epsitec.Common.Document
 			return false;
 		}
 
-		// Détecte si la souris est sur le pourtour d'une forme.
-		// Retourne le rang de la poignée de départ, ou -1
 		public int DetectOutline(Point pos,
 								 DrawingContext drawingContext,
 								 params Shape[] shapes)
 		{
+			//	Détecte si la souris est sur le pourtour d'une forme.
+			//	Retourne le rang de la poignée de départ, ou -1
 			foreach ( Shape shape in shapes )
 			{
 				if ( shape == null ||
@@ -215,21 +215,21 @@ namespace Epsitec.Common.Document
 
 
 		#region Graphics
-		// Dessine une surface à l'écran ou dans un bitmap.
 		protected void DrawSurface(Graphics port,
 								   DrawingContext drawingContext,
 								   Shape shape,
 								   Objects.Abstract obj)
 		{
+			//	Dessine une surface à l'écran ou dans un bitmap.
 			this.DrawShape(port, drawingContext, shape, obj);
 		}
 
-		// Dessine un chemin à l'écran ou dans un bitmap.
 		protected void DrawStroke(Graphics port,
 								  DrawingContext drawingContext,
 								  Shape shape,
 								  Objects.Abstract obj)
 		{
+			//	Dessine un chemin à l'écran ou dans un bitmap.
 			Properties.Line stroke = shape.PropertyStroke;
 
 			if ( shape.Aspect != Aspect.Hilited    &&
@@ -272,12 +272,12 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Dessine une forme à l'écran ou dans un bitmap.
 		protected void DrawShape(Graphics port,
 								 DrawingContext drawingContext,
 								 Shape shape,
 								 Objects.Abstract obj)
 		{
+			//	Dessine une forme à l'écran ou dans un bitmap.
 			SurfaceAnchor sa = obj.SurfaceAnchor;
 			if ( sa.IsSurfaceZero && shape.Aspect != Aspect.Support )  return;
 
@@ -566,9 +566,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Effectue le rendu d'une zone quelconque contenant un motif.
 		public static void RenderMotif(IPaintPort port, DrawingContext drawingContext, Objects.Abstract obj, Path path, SurfaceAnchor sa, Properties.Gradient surface)
 		{
+			//	Effectue le rendu d'une zone quelconque contenant un motif.
 			switch ( surface.FillType )
 			{
 				case Properties.GradientFillType.Hatch:
@@ -585,9 +585,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Effectue le rendu d'une zone quelconque hachurée.
 		protected static void RenderHatch(IPaintPort port, DrawingContext drawingContext, Objects.Abstract obj, Path path, SurfaceAnchor sa, Properties.Gradient surface)
 		{
+			//	Effectue le rendu d'une zone quelconque hachurée.
 			Drawing.RichColor initialColor = port.RichColor;
 
 			RichColor c1 = surface.Color1;
@@ -638,9 +638,9 @@ namespace Epsitec.Common.Document
 			port.RichColor = initialColor;
 		}
 
-		// Effectue le rendu d'une zone quelconque de points.
 		protected static void RenderDots(IPaintPort port, DrawingContext drawingContext, Objects.Abstract obj, Path path, SurfaceAnchor sa, Properties.Gradient surface)
 		{
+			//	Effectue le rendu d'une zone quelconque de points.
 			Drawing.RichColor initialColor = port.RichColor;
 
 			RichColor c1 = surface.Color1;
@@ -700,9 +700,9 @@ namespace Epsitec.Common.Document
 			port.RichColor = initialColor;
 		}
 
-		// Effectue le rendu d'une zone quelconque de carrés.
 		protected static void RenderSquares(IPaintPort port, DrawingContext drawingContext, Objects.Abstract obj, Path path, SurfaceAnchor sa, Properties.Gradient surface)
 		{
+			//	Effectue le rendu d'une zone quelconque de carrés.
 			Drawing.RichColor initialColor = port.RichColor;
 
 			RichColor c1 = surface.Color1;
@@ -775,10 +775,10 @@ namespace Epsitec.Common.Document
 			port.RichColor = color;
 		}
 
-		// Calcule le rectangle le plus petit possible qui sera rempli par le motif.
-		// L'offset permet à deux objets proches d'avoir des hachures jointives.
 		protected static void MinRectMotif(Properties.Gradient surface, SurfaceAnchor sa, int i, out Point p1, out Point p2, out Point p3, out Point p4, out double offset)
 		{
+			//	Calcule le rectangle le plus petit possible qui sera rempli par le motif.
+			//	L'offset permet à deux objets proches d'avoir des hachures jointives.
 			Rectangle bbox = sa.BoundingBox;
 
 			double b = Math.ClipAngleDeg(sa.Direction+surface.GetHatchAngle(i));
@@ -823,22 +823,22 @@ namespace Epsitec.Common.Document
 
 		
 		#region Printer
-		// Dessine une surface sur l'imprimante.
 		protected void DrawSurface(Printing.PrintPort port,
 								   DrawingContext drawingContext,
 								   Shape shape,
 								   Objects.Abstract obj)
 		{
+			//	Dessine une surface sur l'imprimante.
 			if ( !this.PrinterSurface(port, drawingContext, shape) )  return;
 			port.PaintSurface(shape.Path);
 		}
 
-		// Dessine un chemin sur l'imprimante.
 		protected void DrawStroke(Printing.PrintPort port,
 								  DrawingContext drawingContext,
 								  Shape shape,
 								  Objects.Abstract obj)
 		{
+			//	Dessine un chemin sur l'imprimante.
 			if ( !this.PrinterSurface(port, drawingContext, shape) )  return;
 
 			Properties.Line stroke = shape.PropertyStroke;
@@ -877,11 +877,11 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Choix de la couleur de la surface.
 		protected bool PrinterSurface(Printing.PrintPort port,
 									  DrawingContext drawingContext,
 									  Shape shape)
 		{
+			//	Choix de la couleur de la surface.
 			Color color = Color.Empty;
 			if ( shape.PropertySurface is Properties.Gradient )
 			{
@@ -902,24 +902,24 @@ namespace Epsitec.Common.Document
 
 
 		#region PDF
-		// Dessine une surface dans un fichier PDF.
 		protected void DrawSurface(PDF.Port port,
 								   DrawingContext drawingContext,
 								   Shape shape,
 								   Objects.Abstract obj)
 		{
+			//	Dessine une surface dans un fichier PDF.
 			if ( shape.PropertySurface == null )  return;
 			this.PDFSetSurface(port, drawingContext, obj, shape.PropertySurface);
 			port.PaintSurface(shape.Path);
 		}
 
 		
-		// Dessine un chemin dans un fichier PDF.
 		protected void DrawStroke(PDF.Port port,
 								  DrawingContext drawingContext,
 								  Shape shape,
 								  Objects.Abstract obj)
 		{
+			//	Dessine un chemin dans un fichier PDF.
 			if ( shape.PropertySurface == null || shape.PropertyStroke == null )  return;
 
 			Properties.Gradient gradient = shape.PropertySurface as Properties.Gradient;
@@ -974,12 +974,12 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Initialise le port en fonction de la surface.
 		protected void PDFSetSurface(PDF.Port port,
 									 DrawingContext drawingContext,
 									 Objects.Abstract obj,
 									 Properties.Abstract surface)
 		{
+			//	Initialise le port en fonction de la surface.
 			PDF.Type type = surface.TypeComplexSurfacePDF(port);
 			bool isSmooth = surface.IsSmoothSurfacePDF(port);
 
@@ -1006,12 +1006,12 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Initialise le port en fonction du trait.
 		protected void PDFSetStroke(PDF.Port port,
 									DrawingContext drawingContext,
 									Objects.Abstract obj,
 									Properties.Line stroke)
 		{
+			//	Initialise le port en fonction du trait.
 			if ( stroke.Dash )  // traitillé ?
 			{
 				port.SetLineDash(stroke.Width, stroke.GetDashPen(0), stroke.GetDashGap(0), stroke.GetDashPen(1), stroke.GetDashGap(1), stroke.GetDashPen(2), stroke.GetDashGap(2));

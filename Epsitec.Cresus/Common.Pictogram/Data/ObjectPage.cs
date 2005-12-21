@@ -32,9 +32,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(AbstractObject src)
 		{
+			//	Reprend toutes les caractéristiques d'un objet.
 			base.CloneObject(src);
 			ObjectPage page = src as ObjectPage;
 			this.name = page.name;

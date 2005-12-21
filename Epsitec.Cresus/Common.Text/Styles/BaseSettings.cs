@@ -380,8 +380,8 @@ namespace Epsitec.Common.Text.Styles
 			//	plus d'indices possibles avant de passer à la comparaison.
 			
 			///////////////////////////////////////////////////////////////////
-			//  NB: contenu identique n'implique pas que le CoreIndex ou les //
-			//      réglages sont identiques !                               //
+			//	NB: contenu identique n'implique pas que le CoreIndex ou les //
+			//	réglages sont identiques !                               //
 			///////////////////////////////////////////////////////////////////
 			
 			if (a == b)

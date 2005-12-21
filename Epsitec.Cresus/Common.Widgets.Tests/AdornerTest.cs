@@ -543,7 +543,7 @@ namespace Epsitec.Common.Widgets
 			Rectangle inside = tab.Client.Bounds;
 			inside.Deflate (tab.InternalPadding);
 
-			// Crée l'onglet 1.
+			//	Crée l'onglet 1.
 			TabPage page1 = new TabPage();
 //			page1.Bounds = inside;
 			page1.TabTitle = "<m>P</m>remier";
@@ -614,7 +614,7 @@ namespace Epsitec.Common.Widgets
 			combofix.ButtonShowCondition = ShowCondition.Always;
 			page1.Children.Add(combofix);
 
-			// Crée l'onglet 2.
+			//	Crée l'onglet 2.
 			TabPage page2 = new TabPage();
 //			page2.Bounds = inside;
 			page2.TabTitle = "<m>D</m>euxième";
@@ -662,7 +662,7 @@ namespace Epsitec.Common.Widgets
 			table.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			page2.Children.Add(table);
 
-			// Crée l'onglet 3.
+			//	Crée l'onglet 3.
 			TabPage page3 = new TabPage();
 			page3.Bounds = inside;
 			page3.TabTitle = "<m>T</m>roisième";
@@ -727,7 +727,7 @@ namespace Epsitec.Common.Widgets
 			page3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page3);
 
-			// Crée l'onglet 4.
+			//	Crée l'onglet 4.
 			TabPage page4 = new TabPage();
 			page4.Bounds = inside;
 			page4.TabTitle = "<m>Q</m>uatrième";
@@ -743,7 +743,7 @@ namespace Epsitec.Common.Widgets
 			text_up_down.TextChanged += new EventHandler (this.HandleTextUpDownTextChanged);
 			
 
-			// Crée l'onglet 5.
+			//	Crée l'onglet 5.
 			TabPage page5 = new TabPage();
 			page5.Bounds = inside;
 			page5.TabTitle = "<m>C</m>inquième";
@@ -751,7 +751,7 @@ namespace Epsitec.Common.Widgets
 			page5.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page5);
 
-			// Crée l'onglet 6.
+			//	Crée l'onglet 6.
 			TabPage page6 = new TabPage();
 			page6.Bounds = inside;
 			page6.TabTitle = "<m>S</m>ixième";
@@ -1152,7 +1152,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(tb);
 			this.tabBook = tb;
 
-			// Crée l'onglet 1.
+			//	Crée l'onglet 1.
 			TabPage page1 = new TabPage();
 			page1.Name = "p1";
 			page1.TabTitle = "<m>P</m>remier";
@@ -1182,7 +1182,7 @@ namespace Epsitec.Common.Widgets
 			multi.AnchorMargins = new Margins(10, 10, 20, 40);
 			page1.Children.Add(multi);
 
-			// Crée l'onglet 2.
+			//	Crée l'onglet 2.
 			TabPage page2 = new TabPage();
 			page2.Name = "p2";
 			page2.TabTitle = "<m>D</m>euxième";
@@ -1199,7 +1199,7 @@ namespace Epsitec.Common.Widgets
 			scrollv.LargeChange = 2;
 			page2.Children.Add(scrollv);
 
-			// Crée l'onglet 3.
+			//	Crée l'onglet 3.
 			TabPage page3 = new TabPage();
 			page3.Name = "p3";
 			page3.TabTitle = "<m>T</m>roisième";
@@ -1212,7 +1212,7 @@ namespace Epsitec.Common.Widgets
 			st.Text = "<b>Onglet</b> volontairement <i>vide</i> !";
 			page3.Children.Add(st);
 
-			// Crée l'onglet 4.
+			//	Crée l'onglet 4.
 			TabPage page4 = new TabPage();
 			page4.Name = "p4";
 			page4.TabTitle = "<m>L</m>ook";
@@ -1227,7 +1227,7 @@ namespace Epsitec.Common.Widgets
 			link.Text = "Voir sur <a href=\"www.epsitec.ch\">www.epsitec.ch</a> !";
 			page4.Children.Add(link);
 
-			// Crée l'onglet 5.
+			//	Crée l'onglet 5.
 			TabPage page5 = new TabPage();
 			page5.Name = "p5";
 			page5.TabTitle = "<m>A</m>dd";
@@ -1243,19 +1243,19 @@ namespace Epsitec.Common.Widgets
 			page5.Children.Add(add);
 
 #if true
-			// Crée l'onglet 6.
+			//	Crée l'onglet 6.
 			TabPage page6 = new TabPage();
 			page6.Name = "p6";
 			page6.TabTitle = "Titre long";
 			tb.Items.Add(page6);
 
-			// Crée l'onglet 7.
+			//	Crée l'onglet 7.
 			TabPage page7 = new TabPage();
 			page7.Name = "p7";
 			page7.TabTitle = "Titre assez long";
 			tb.Items.Add(page7);
 
-			// Crée l'onglet 8.
+			//	Crée l'onglet 8.
 			TabPage page8 = new TabPage();
 			page8.Name = "p8";
 			page8.TabTitle = "Titre encore plus long";
@@ -1585,9 +1585,9 @@ namespace Epsitec.Common.Widgets
 
 
 		
-		// Crée la liste pour changer de look.
 		protected void CreateListLook(Widget parent, double mx, double my, ToolTip tooltip, int tab)
 		{
+			//	Crée la liste pour changer de look.
 			ScrollList sl = new ScrollList();
 			
 			sl.SetParent (parent);
@@ -1698,7 +1698,7 @@ namespace Epsitec.Common.Widgets
 			button4.Text = "P4";
 			p4.Children.Add(button4);
 
-			// -----
+			//	-----
 			PaneBook bookv = new PaneBook();
 			bookv.Location = new Point(0, 0);
 			bookv.Size = p2.Size;

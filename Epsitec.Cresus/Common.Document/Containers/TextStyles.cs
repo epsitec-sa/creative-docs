@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public TextStyles(Document document) : base(document)
 		{
-			// Toolbar principale.
+			//	Toolbar principale.
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Items.Add(this.buttonStyleDelete);
 			ToolTip.Default.SetToolTip(this.buttonStyleDelete, Res.Strings.Action.AggregateStyleDelete);
 
-			// Table des styles de texte.
+			//	Table des styles de texte.
 			this.list = new Widgets.TextStylesList();
 			this.list.Document = this.document;
 			this.list.List = this.document.Aggregates;
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Document.Containers
 			this.list.TabIndex = 2;
 			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			// Roue des couleurs.
+			//	Roue des couleurs.
 			this.colorSelector = new ColorSelector();
 			this.colorSelector.ColorPalette.ColorCollection = this.document.GlobalSettings.ColorCollection;
 			this.colorSelector.HasCloseButton = true;
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.colorSelector.Visibility = false;
 
-			// Conteneur du panneau.
+			//	Conteneur du panneau.
 			this.panelContainer = new Widget(this);
 			this.panelContainer.Height = 0.0;
 			this.panelContainer.Dock = DockStyle.Bottom;
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panelContainer.TabIndex = 99;
 			this.panelContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
-			// Nom de l'agrégat.
+			//	Nom de l'agrégat.
 			this.toolBarName = new HToolBar(this);
 			this.toolBarName.Dock = DockStyle.Bottom;
 			this.toolBarName.DockMargins = new Margins(0, 0, 0, 0);
@@ -150,9 +150,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 		
 
-		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
+			//	Effectue la mise à jour du contenu.
 			this.list.List = this.document.TextStyles;
 			this.list.UpdateContent();
 			this.UpdateAggregateName();
@@ -161,9 +161,9 @@ namespace Epsitec.Common.Document.Containers
 			this.ListShowSelection();
 		}
 
-		// Met à jour les boutons de la toolbar.
 		protected void UpdateToolBar()
 		{
+			//	Met à jour les boutons de la toolbar.
 			int total = this.list.Rows;
 			int sel = this.list.SelectedPropertyRow;
 
@@ -189,9 +189,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Met à jour le panneau pour éditer le nom de l'agrégat sélectionné.
 		protected void UpdateAggregateName()
 		{
+			//	Met à jour le panneau pour éditer le nom de l'agrégat sélectionné.
 			Common.Text.TextStyle style = this.GetStyle();
 
 			string text = "";
@@ -205,16 +205,16 @@ namespace Epsitec.Common.Document.Containers
 			this.ignoreChanged = false;
 		}
 
-		// Met à jour le panneau pour éditer la propriété sélectionnée.
 		protected void UpdatePanel()
 		{
+			//	Met à jour le panneau pour éditer la propriété sélectionnée.
 			this.colorSelector.Visibility = false;
 			this.colorSelector.BackColor = Color.Empty;
 		}
 
-		// Montre la ligne sélectionnée dans la liste des agrégats.
 		protected void ListShowSelection()
 		{
+			//	Montre la ligne sélectionnée dans la liste des agrégats.
 			Common.Text.TextStyle style = this.GetStyle();
 			if ( style != null )
 			{
@@ -225,62 +225,62 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Crée un nouvel agrégat.
 		private void HandleButtonAggregateNewEmpty(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouvel agrégat.
 			int sel = this.document.Aggregates.Selected;
 			if ( sel == -1 )  sel = 10000;
 			this.document.Modifier.AggregateNewEmpty(sel, "", true);
 		}
 
-		// Crée un nouvel agrégat.
 		private void HandleButtonAggregateNew3(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouvel agrégat.
 			int sel = this.document.Aggregates.Selected;
 			if ( sel == -1 )  sel = 10000;
 			this.document.Modifier.AggregateNew3(sel, "", true);
 		}
 
-		// Crée un nouvel agrégat.
 		private void HandleButtonAggregateNewAll(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouvel agrégat.
 			int sel = this.document.Aggregates.Selected;
 			if ( sel == -1 )  sel = 10000;
 			this.document.Modifier.AggregateNewAll(sel, "", true);
 		}
 
-		// Duplique un agrégat.
 		private void HandleButtonAggregateDuplicate(object sender, MessageEventArgs e)
 		{
+			//	Duplique un agrégat.
 			int sel = this.document.Aggregates.Selected;
 			if ( sel == -1 )  sel = 10000;
 			this.document.Modifier.AggregateDuplicate(sel);
 		}
 
-		// Monte d'une ligne l'agrégat sélectionné.
 		private void HandleButtonAggregateUp(object sender, MessageEventArgs e)
 		{
+			//	Monte d'une ligne l'agrégat sélectionné.
 			int sel = this.document.Aggregates.Selected;
 			this.document.Modifier.AggregateSwap(sel, sel-1);
 		}
 
-		// Descend d'une ligne l'agrégat sélectionné.
 		private void HandleButtonAggregateDown(object sender, MessageEventArgs e)
 		{
+			//	Descend d'une ligne l'agrégat sélectionné.
 			int sel = this.document.Aggregates.Selected;
 			this.document.Modifier.AggregateSwap(sel, sel+1);
 		}
 
-		// Supprime l'agrégat sélectionné.
 		private void HandleButtonAggregateDelete(object sender, MessageEventArgs e)
 		{
+			//	Supprime l'agrégat sélectionné.
 			int sel = this.document.Aggregates.Selected;
 			this.document.Modifier.AggregateDelete(sel);
 		}
 
-		// Sélection changée dans la liste.
 		private void HandleStylesTableSelectionChanged(object sender)
 		{
+			//	Sélection changée dans la liste.
 			this.list.SelectCell(1, this.list.SelectedRow, true);
 			this.list.SelectCell(2, this.list.SelectedRow, true);
 
@@ -290,35 +290,35 @@ namespace Epsitec.Common.Document.Containers
 			this.ListShowSelection();
 		}
 
-		// Liste double-cliquée.
 		private void HandleStylesTableDoubleClicked(object sender, MessageEventArgs e)
 		{
+			//	Liste double-cliquée.
 			this.name.SelectAll();
 			this.name.Focus();
 		}
 
-		// La cellule survolée a changé.
 		private void HandleStylesTableFlyOverChanged(object sender)
 		{
+			//	La cellule survolée a changé.
 		}
 
 
-		// Crée une nouvelle propriété.
 		private void HandleButtonStyleNew(object sender, MessageEventArgs e)
 		{
+			//	Crée une nouvelle propriété.
 		}
 
-		// Supprime la propriété sélectionnée.
 		private void HandleButtonStyleDelete(object sender, MessageEventArgs e)
 		{
+			//	Supprime la propriété sélectionnée.
 			Common.Text.TextStyle style = this.GetStyle();
-			// TODO: à faire
+			//	TODO: à faire
 			this.UpdatePanel();
 		}
 
-		// Le nom de l'agrégat a changé.
 		private void HandleNameTextChanged(object sender)
 		{
+			//	Le nom de l'agrégat a changé.
 			if ( this.ignoreChanged )  return;
 
 			int sel = this.document.Aggregates.Selected;
@@ -334,9 +334,9 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Notifier.NotifyAggregateChanged(agg);
 		}
 
-		// Le contenu du panneau a changé.
 		private void HandlePanelChanged(object sender)
 		{
+			//	Le contenu du panneau a changé.
 			int sel = this.list.SelectedPropertyRow;
 			if ( sel != -1 )
 			{
@@ -352,9 +352,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Le widget qui détermine la couleur d'origine a changé.
 		private void HandleOriginColorChanged(object sender)
 		{
+			//	Le widget qui détermine la couleur d'origine a changé.
 			this.colorSelector.Visibility = true;
 			this.ignoreChanged = true;
 			this.colorSelector.Color = this.panel.OriginColorGet();
@@ -362,16 +362,16 @@ namespace Epsitec.Common.Document.Containers
 			this.panel.OriginColorSelect(this.panel.OriginColorRank());
 		}
 
-		// Couleur changée dans la roue.
 		private void HandleColorSelectorChanged(object sender)
 		{
+			//	Couleur changée dans la roue.
 			if ( this.ignoreChanged )  return;
 			this.panel.OriginColorChange(this.colorSelector.Color);
 		}
 
-		// Fermer la roue.
 		private void HandleColorSelectorClosed(object sender)
 		{
+			//	Fermer la roue.
 			this.panel.OriginColorDeselect();
 
 			this.colorSelector.Visibility = false;
@@ -379,9 +379,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Donne le style sélectionné.
 		protected Text.TextStyle GetStyle()
 		{
+			//	Donne le style sélectionné.
 			int sel = this.list.SelectedPropertyRow;
 			if ( sel == -1 )  return null;
 			return this.list.List[sel] as Text.TextStyle;

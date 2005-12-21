@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override double DefaultHeight
 		{
-			// Retourne la hauteur standard.
+			//	Retourne la hauteur standard.
 			get
 			{
 				return this.DefaultFontHeight+6;

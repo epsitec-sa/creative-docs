@@ -68,12 +68,12 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Imprime la géométrie de tous les objets.
 		protected void PrintGeometry(Printing.PrintPort port,
 									 IconContext iconContext,
 									 int pageNumber,
 									 bool showAllLayers)
 		{
+			//	Imprime la géométrie de tous les objets.
 			if ( this.iconObjects.Objects.Count == 0 )  return;
 			ObjectPattern pattern = this.iconObjects.Objects[0] as ObjectPattern;
 			if ( pattern.Objects.Count == 0 )  return;

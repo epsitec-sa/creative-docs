@@ -4,8 +4,8 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum MasterType
 	{
 		Slave    = 0,	// page normale
@@ -15,8 +15,8 @@ namespace Epsitec.Common.Document.Objects
 		None     = 4,	// page modèle appliquée à la demande
 	}
 
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum MasterUse
 	{
 		Never    = 0,	// n'utilise jamais de page modèle
@@ -56,9 +56,9 @@ namespace Epsitec.Common.Document.Objects
 			return new Page(document, model);
 		}
 
-		// Rang du calque courant.
 		public int CurrentLayer
 		{
+			//	Rang du calque courant.
 			get
 			{
 				return this.currentLayer;
@@ -70,10 +70,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Rang de la page (0..n). Les pages normales et les pages maîtres
-		// ont chacune un rang indépendant commençant à zéro.
 		public int Rank
 		{
+			//	Rang de la page (0..n). Les pages normales et les pages maîtres
+			//	ont chacune un rang indépendant commençant à zéro.
 			get
 			{
 				return this.rank;
@@ -85,9 +85,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Nom court automatique de la page ("n" ou "Mn").
 		public string ShortName
 		{
+			//	Nom court automatique de la page ("n" ou "Mn").
 			get
 			{
 				return this.shortName;
@@ -99,10 +99,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Type de la page maître. Le type Slave indique qu'il s'agit d'une
-		// page normale.
 		public MasterType MasterType
 		{
+			//	Type de la page maître. Le type Slave indique qu'il s'agit d'une
+			//	page normale.
 			get
 			{
 				return this.masterType;
@@ -122,9 +122,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Pour une page normale, indique quelle page maître il faut utiliser.
 		public MasterUse MasterUse
 		{
+			//	Pour une page normale, indique quelle page maître il faut utiliser.
 			get
 			{
 				return this.masterUse;
@@ -143,9 +143,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Si MasterUse = Specific, donne directement la page maître à utiliser.
 		public Page MasterPageToUse
 		{
+			//	Si MasterUse = Specific, donne directement la page maître à utiliser.
 			get
 			{
 				return this.masterPageToUse;
@@ -164,9 +164,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Indique s'il faut utiliser les guides des pages maîtres.
 		public bool MasterGuides
 		{
+			//	Indique s'il faut utiliser les guides des pages maîtres.
 			get
 			{
 				return this.masterGuides;
@@ -185,9 +185,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Indique si l'application s'arrête à la prochaine page modèle.
 		public bool MasterAutoStop
 		{
+			//	Indique si l'application s'arrête à la prochaine page modèle.
 			get
 			{
 				return this.masterAutoStop;
@@ -206,9 +206,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Indique si la page modèle utilise elle-même une page modèle.
 		public bool MasterSpecific
 		{
+			//	Indique si la page modèle utilise elle-même une page modèle.
 			get
 			{
 				return this.masterSpecific;
@@ -227,14 +227,14 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Pour une page maître, retourne le rang du premier calque qui sera
-		// à l'avant.
-		// - S'il n'y a qu'un calque, il vient derrière.
-		// - S'il y a 2 calques, le premier vient derrière et le dernier devant.
-		// - S'il y a 3 calques, 1-2 derrière et 3 devant
-		// - S'il y a 4 calques, 1-2 derrière et 3-4 devant
 		public int MasterFirstFrontLayer
 		{
+			//	Pour une page maître, retourne le rang du premier calque qui sera
+			//	à l'avant.
+			//	- S'il n'y a qu'un calque, il vient derrière.
+			//	- S'il y a 2 calques, le premier vient derrière et le dernier devant.
+			//	- S'il y a 3 calques, 1-2 derrière et 3 devant
+			//	- S'il y a 4 calques, 1-2 derrière et 3-4 devant
 			get
 			{
 				int totalLayer = this.objects.Count;
@@ -242,9 +242,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Liste de repères pour cette page.
 		public UndoableList Guides
 		{
+			//	Liste de repères pour cette page.
 			get
 			{
 				return this.guides;
@@ -257,9 +257,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(Objects.Abstract src)
 		{
+			//	Reprend toutes les caractéristiques d'un objet.
 			base.CloneObject(src);
 			Page page = src as Page;
 
@@ -281,9 +281,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Menu
-		// Construit le menu pour choisir une page.
 		public static VMenu CreateMenu(UndoableList pages, int currentPage, MessageEventHandler message)
 		{
+			//	Construit le menu pour choisir une page.
 			int total = pages.Count;
 			bool slave = true;
 			VMenu menu = new VMenu();
@@ -323,15 +323,15 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		#region OpletType
-		// Ajoute un oplet pour mémoriser les types de la page.
 		protected void InsertOpletType()
 		{
+			//	Ajoute un oplet pour mémoriser les types de la page.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletType oplet = new OpletType(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		// Mémorise le nom de l'objet.
+		//	Mémorise le nom de l'objet.
 		protected class OpletType : AbstractOplet
 		{
 			public OpletType(Page host)
@@ -393,9 +393,9 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 
 			if ( this.document.Type != DocumentType.Pictogram )
@@ -410,9 +410,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Page(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 			bool master = false;
 			this.masterAutoStop = false;
 			this.masterSpecific = false;

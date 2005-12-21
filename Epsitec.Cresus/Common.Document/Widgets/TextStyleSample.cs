@@ -20,9 +20,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Document associé.
 		public Document Document
 		{
+			//	Document associé.
 			get
 			{
 				return this.document;
@@ -34,9 +34,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Type de l'échantillon.
 		public Text.Properties.WellKnownType Type
 		{
+			//	Type de l'échantillon.
 			get
 			{
 				return this.type;
@@ -48,9 +48,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Style représenté.
 		public Text.TextStyle TextStyle
 		{
+			//	Style représenté.
 			get
 			{
 				return this.textStyle;
@@ -62,9 +62,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Affiche "..." au lieu de la croix si la propriété n'existe pas.
 		public bool Dots
 		{
+			//	Affiche "..." au lieu de la croix si la propriété n'existe pas.
 			get
 			{
 				return this.dots;
@@ -77,9 +77,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Dessine l'échantillon.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine l'échantillon.
 			if ( this.document == null )  return;
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;

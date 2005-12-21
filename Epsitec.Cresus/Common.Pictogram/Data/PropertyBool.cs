@@ -13,39 +13,39 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 		}
 
-		// Valeur de la propriété.
 		[XmlAttribute]
 		public bool Bool
 		{
+			//	Valeur de la propriété.
 			get { return this.boolValue; }
 			set { this.boolValue = value; }
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		[XmlIgnore]
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return ( this.type == PropertyType.PolyClose ); }
 		}
 
-		// Indique si cette propriété peut faire l'objet d'un style.
 		[XmlIgnore]
 		public override bool StyleAbility
 		{
+			//	Indique si cette propriété peut faire l'objet d'un style.
 			get { return false; }
 		}
 
-		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			PropertyBool p = property as PropertyBool;
 			p.Bool = this.boolValue;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			PropertyBool p = property as PropertyBool;
@@ -54,9 +54,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			return new PanelBool(drawer);
 		}
 

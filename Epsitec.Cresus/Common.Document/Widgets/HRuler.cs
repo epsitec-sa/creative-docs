@@ -42,25 +42,25 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Attache la règle aux wrappers.
 		public override void WrappersAttach()
 		{
+			//	Attache la règle aux wrappers.
 			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.document.ParagraphWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
 //-			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 		}
 
-		// Détache la règle des wrappers.
 		public override void WrappersDetach()
 		{
+			//	Détache la règle des wrappers.
 			this.document.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
 			this.document.ParagraphWrapper.Active.Changed -= new EventHandler(this.HandleWrapperChanged);
 //-			this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 		}
 
-		// Le wrapper associé a changé.
 		protected void HandleWrapperChanged(object sender)
 		{
+			//	Le wrapper associé a changé.
 			if ( this.editObject == null )  return;
 
 			double leftFirst, leftBody, right;
@@ -98,9 +98,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		
-		// Liste des tabulateurs.
 		public Tab[] Tabs
 		{
+			//	Liste des tabulateurs.
 			get
 			{
 				return this.tabs;
@@ -117,9 +117,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Invalide la zone contenant le marqueur.
 		protected override void InvalidateBoxMarker()
 		{
+			//	Invalide la zone contenant le marqueur.
 			if ( !this.markerVisible )  return;
 
 			Rectangle rect = this.Client.Bounds;
@@ -134,9 +134,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Dessine la graduation.
 		protected void PaintGrad(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine la graduation.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
@@ -197,9 +197,9 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(adorner.ColorText(this.PaintState));
 		}
 
-		// Dessine le marqueur de position de la souris.
 		protected void PaintMarker(Graphics graphics)
 		{
+			//	Dessine le marqueur de position de la souris.
 			if ( !this.markerVisible )  return;
 
 			if ( this.marker < this.starting ||
@@ -224,9 +224,9 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(adorner.ColorTextFieldBorder(this.IsEnabled));
 		}
 
-		// Dessine la marge gauche pour la première ligne.
 		protected void PaintMarginLeftFirst(Graphics graphics, bool hilite)
 		{
+			//	Dessine la marge gauche pour la première ligne.
 			if ( !this.edited )  return;
 
 			if ( this.marginLeftFirst < this.starting ||
@@ -255,9 +255,9 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(this.ColorBorderMargins);
 		}
 
-		// Dessine la marge gauche pour le corps du texte.
 		protected void PaintMarginLeftBody(Graphics graphics, bool hilite)
 		{
+			//	Dessine la marge gauche pour le corps du texte.
 			if ( !this.edited )  return;
 
 			if ( this.marginLeftBody < this.starting ||
@@ -287,9 +287,9 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(this.ColorBorderMargins);
 		}
 
-		// Dessine la marge droite.
 		protected void PaintMarginRight(Graphics graphics, bool hilite)
 		{
+			//	Dessine la marge droite.
 			if ( !this.edited )  return;
 
 			if ( this.marginRight < this.starting ||
@@ -318,9 +318,9 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(this.ColorBorderMargins);
 		}
 
-		// Dessine tous les tabulateurs.
 		protected void PaintTabs(Graphics graphics)
 		{
+			//	Dessine tous les tabulateurs.
 			if ( !this.edited )  return;
 			if ( this.tabs == null || this.tabs.Length == 0 )  return;
 
@@ -392,9 +392,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Dessine le "bouton" pour choisir le type de tabulateur.
 		protected void PaintTabChoice(Graphics graphics)
 		{
+			//	Dessine le "bouton" pour choisir le type de tabulateur.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
@@ -417,9 +417,9 @@ namespace Epsitec.Common.Document.Widgets
 			adorner.PaintGlyph(graphics, rect, Common.Widgets.WidgetState.Enabled, glyph, Common.Widgets.PaintTextStyle.Button);
 		}
 		
-		// Dessine toute la règle.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine toute la règle.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			
 			Rectangle rect = this.Client.Bounds;
@@ -453,9 +453,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Détecte les tabulateurs visés par la souris.
 		protected string[] DetectTabs(Point pos, string exclude)
 		{
+			//	Détecte les tabulateurs visés par la souris.
 			int total = 0;
 			for ( int i=0 ; i<this.tabs.Length ; i++ )
 			{
@@ -485,9 +485,9 @@ namespace Epsitec.Common.Document.Widgets
 			return list;
 		}
 
-		// Détecte la poignée visée par la souris.
 		protected override string DraggingDetect(Point pos, string exclude)
 		{
+			//	Détecte la poignée visée par la souris.
 			if ( !this.edited )  return null;
 			if ( this.editObject == null )  return null;
 
@@ -509,9 +509,9 @@ namespace Epsitec.Common.Document.Widgets
 			return null;
 		}
 
-		// Détecte si la souris est sur une poignée.
 		protected bool DetectHandle(string handle, Point pos)
 		{
+			//	Détecte si la souris est sur une poignée.
 			double posx = this.GetHandleHorizontalPos(handle);
 			if ( pos.X < posx-5 || pos.X > posx+5 )  return false;
 
@@ -522,9 +522,9 @@ namespace Epsitec.Common.Document.Widgets
 			return true;
 		}
 
-		// Début du drag d'une poignée.
 		protected override void DraggingStart(ref string handle, Point pos)
 		{
+			//	Début du drag d'une poignée.
 			this.draggingTabToDelete = null;
 			this.draggingTabDest = null;
 			this.draggingFirstMove = true;
@@ -559,9 +559,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Déplace une poignée.
 		protected override void DraggingMove(ref string handle, Point pos)
 		{
+			//	Déplace une poignée.
 			if ( handle == null )  return;
 
 			pos.X += this.draggingOffset;
@@ -599,9 +599,9 @@ namespace Epsitec.Common.Document.Widgets
 			this.document.Modifier.ActiveViewer.MarkerVertical = (this.draggingTabToDelete == null) ? pos.X : double.NaN;
 		}
 
-		// Fin du drag d'une poignée.
 		protected override void DraggingEnd(ref string handle, Point pos)
 		{
+			//	Fin du drag d'une poignée.
 			if ( handle == null )  return;
 
 			this.document.Modifier.ActiveViewer.MarkerVertical = double.NaN;
@@ -627,15 +627,15 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Donne la position d'un tabulateur.
 		protected double GetHandleHorizontalPos(Tab tab)
 		{
+			//	Donne la position d'un tabulateur.
 			return this.DocumentToScreen(tab.Pos);
 		}
 
-		// Donne la position d'une poignée quelconque (marge ou tabulateur).
 		protected double GetHandleHorizontalPos(string handle)
 		{
+			//	Donne la position d'une poignée quelconque (marge ou tabulateur).
 			if ( handle == "LeftFirst" )  return this.DocumentToScreen(this.marginLeftFirst);
 			if ( handle == "LeftBody"  )  return this.DocumentToScreen(this.marginLeftBody);
 			if ( handle == "FirstBody" )  return this.DocumentToScreen(this.marginLeftBody);
@@ -645,9 +645,9 @@ namespace Epsitec.Common.Document.Widgets
 			return this.DocumentToScreen(tab.Pos);
 		}
 
-		// Modifie la position d'une poignée quelconque (marge ou tabulateur).
 		protected void SetHandleHorizontalPos(ref string handle, Point pos)
 		{
+			//	Modifie la position d'une poignée quelconque (marge ou tabulateur).
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
 
 			Tab tab = this.GetTab(handle);
@@ -729,9 +729,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Indique si un tag ou un handle correspond à un tabulateur.
 		protected bool IsTab(string tag)
 		{
+			//	Indique si un tag ou un handle correspond à un tabulateur.
 			foreach ( Tab tab in this.tabs )
 			{
 				if ( tab.Tag == tag )  return true;
@@ -739,9 +739,9 @@ namespace Epsitec.Common.Document.Widgets
 			return false;
 		}
 
-		// Donne un tabulateur Tab d'après son tag ou handle.
 		protected Tab GetTab(string tag)
 		{
+			//	Donne un tabulateur Tab d'après son tag ou handle.
 			foreach ( Tab tab in this.tabs )
 			{
 				if ( tab.Tag == tag )  return tab;
@@ -749,9 +749,9 @@ namespace Epsitec.Common.Document.Widgets
 			return this.invalidTab;
 		}
 
-		// Conversion d'une position relative dans le texte selon la grille.
 		protected double SnapGrid(double value)
 		{
+			//	Conversion d'une position relative dans le texte selon la grille.
 			if ( this.document == null )  return value;
 
 			Point pos = new Point(value, 0);
@@ -760,25 +760,25 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Conversion d'une position dans le document en position en pixel dans l'écran.
 		protected double DocumentToScreen(double value)
 		{
+			//	Conversion d'une position dans le document en position en pixel dans l'écran.
 			double scale = (this.ending-this.starting)/this.Client.Bounds.Width;
 			return (value-this.starting)/scale;
 		}
 
-		// Conversion d'une position en pixel dans l'écran en position dans le document.
 		protected double ScreenToDocument(double value)
 		{
+			//	Conversion d'une position en pixel dans l'écran en position dans le document.
 			double scale = (this.ending-this.starting)/this.Client.Bounds.Width;
 			return value*scale + this.starting;
 		}
 
 
-		// Compare deux listes de tabulateurs.
-		// Retourne true si les deux listes sont équivalentes (même contenu).
 		protected static bool TabCompare(Tab[] list1, Tab[] list2)
 		{
+			//	Compare deux listes de tabulateurs.
+			//	Retourne true si les deux listes sont équivalentes (même contenu).
 			if ( list1 == null && list2 == null )  return true;
 			if ( list1 == null && list2 != null )  return false;
 			if ( list1 != null && list2 == null )  return false;
@@ -795,9 +795,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Donne le texte du tooltip d'édition en fonction de la position.
 		protected override string GetTooltipEditedText(Point pos)
 		{
+			//	Donne le texte du tooltip d'édition en fonction de la position.
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
 			double x = this.ScreenToDocument(pos.X) - bbox.Left;
 
@@ -851,9 +851,9 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		#region Conversions
-		// Conversion d'un type de tabulateur en icône à mettre dans la règle.
 		protected static Common.Widgets.GlyphShape ConvType2Glyph(TextTabType type)
 		{
+			//	Conversion d'un type de tabulateur en icône à mettre dans la règle.
 			switch ( type )
 			{
 				case Drawing.TextTabType.Left:    return Common.Widgets.GlyphShape.TabLeft;
@@ -864,9 +864,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Conversion d'un type de tabulateur en texte clair du genre "Tabulateur sur point (.)".
 		protected static string ConvType2String(TextTabType type)
 		{
+			//	Conversion d'un type de tabulateur en texte clair du genre "Tabulateur sur point (.)".
 			switch ( type )
 			{
 				case Drawing.TextTabType.Left:    return Res.Strings.Action.Text.Ruler.TabLeft;
@@ -882,22 +882,22 @@ namespace Epsitec.Common.Document.Widgets
 			return string.Format(Res.Strings.Action.Text.Ruler.TabDecimal, text, sample);
 		}
 
-		// Conversion d'un type de tabulateur en nom interne.
 		protected static string ConvType2Name(TextTabType type)
 		{
+			//	Conversion d'un type de tabulateur en nom interne.
 			return type.ToString();
 		}
 
-		// Conversion d'un nom interne en type de tabulateur.
 		protected static TextTabType ConvName2Type(string name)
 		{
+			//	Conversion d'un nom interne en type de tabulateur.
 			if ( name == null )  return TextTabType.None;
 			return (TextTabType) System.Enum.Parse(typeof(TextTabType), name);
 		}
 
-		// Conversion d'un type de tabulateur en marque à utiliser pour les tabulateurs décimaux (dockingMark).
 		public static string ConvType2Mark(TextTabType type)
 		{
+			//	Conversion d'un type de tabulateur en marque à utiliser pour les tabulateurs décimaux (dockingMark).
 			switch ( type )
 			{
 				case Drawing.TextTabType.DecimalDot:       return ".";
@@ -938,9 +938,9 @@ namespace Epsitec.Common.Document.Widgets
 			return null;
 		}
 
-		// Conversion d'une marque de tabulateur décimal (dockingMark) en type de tabulateur.
 		public static TextTabType ConvMark2Type(string mark)
 		{
+			//	Conversion d'une marque de tabulateur décimal (dockingMark) en type de tabulateur.
 			switch ( mark )
 			{
 				case ".":  return Drawing.TextTabType.DecimalDot;
@@ -981,9 +981,9 @@ namespace Epsitec.Common.Document.Widgets
 			return Drawing.TextTabType.None;
 		}
 
-		// Conversion d'un type de tabulateur en tag xml "image" à mettre dans un texte.
 		protected static string ConvType2Image(TextTabType type)
 		{
+			//	Conversion d'un type de tabulateur en tag xml "image" à mettre dans un texte.
 			switch ( type )
 			{
 				case Drawing.TextTabType.Left:    return Misc.Image("TabLeft");
@@ -997,9 +997,9 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		#region Menu
-		// Crée le menu pour choisir un tabulateur.
 		protected VMenu CreateMenu(MessageEventHandler message)
 		{
+			//	Crée le menu pour choisir un tabulateur.
 			VMenu menuMath = new VMenu();
 			this.CreateMenu(menuMath, TextTabType.DecimalAdd,  message);
 			this.CreateMenu(menuMath, TextTabType.DecimalSub,  message);
@@ -1063,9 +1063,9 @@ namespace Epsitec.Common.Document.Widgets
 			return menu;
 		}
 
-		// Crée une case du menu pour choisir un tabulateur.
 		protected void CreateMenu(VMenu menu, TextTabType type, MessageEventHandler message)
 		{
+			//	Crée une case du menu pour choisir un tabulateur.
 			string text = HRuler.ConvType2String(type);
 			string name = HRuler.ConvType2Name(type);
 			string icon = Misc.Icon("RadioNo");
@@ -1086,9 +1086,9 @@ namespace Epsitec.Common.Document.Widgets
 			menu.Items.Add(item);
 		}
 
-		// Crée un case pour un sous-menu.
 		protected void CreateMenu(VMenu menu, VMenu subMenu, string text)
 		{
+			//	Crée un case pour un sous-menu.
 			string icon = Misc.Icon("RadioNo");
 			foreach ( MenuItem subItem in subMenu.Items )
 			{
@@ -1106,9 +1106,9 @@ namespace Epsitec.Common.Document.Widgets
 			menu.Items.Add(item);
 		}
 
-		// Appelé lorsqu'une case du menu est pressée.
 		private void HandleMenuPressed(object sender, MessageEventArgs e)
 		{
+			//	Appelé lorsqu'une case du menu est pressée.
 			MenuItem item = sender as MenuItem;
 			this.tabToCreate = HRuler.ConvName2Type(item.Name);
 			this.Invalidate();

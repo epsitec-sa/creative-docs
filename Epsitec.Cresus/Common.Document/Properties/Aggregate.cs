@@ -19,9 +19,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Nom de l'agrégat.
 		public string AggregateName
 		{
+			//	Nom de l'agrégat.
 			get
 			{
 				return this.aggregateName;
@@ -37,34 +37,34 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Liste des styles de l'agrégat.
 		public UndoableList Styles
 		{
+			//	Liste des styles de l'agrégat.
 			get
 			{
 				return this.styles;
 			}
 		}
 
-		// Liste des fils de l'agrégat.
 		public UndoableList Childrens
 		{
+			//	Liste des fils de l'agrégat.
 			get
 			{
 				return this.childrens;
 			}
 		}
 
-		// Donne une propriété de l'agrégat.
 		public Properties.Abstract Property(Properties.Type type, bool deep)
 		{
+			//	Donne une propriété de l'agrégat.
 			if ( deep )  return this.PropertyDeep(type);
 			else         return this.Property(type);
 		}
 
-		// Donne une propriété de l'agrégat.
 		public Properties.Abstract Property(Properties.Type type)
 		{
+			//	Donne une propriété de l'agrégat.
 			foreach ( Properties.Abstract property in this.styles )
 			{
 				if ( property.Type == type )  return property;
@@ -72,9 +72,9 @@ namespace Epsitec.Common.Document.Properties
 			return null;
 		}
 
-		// Donne une propriété de l'agrégat ou de l'un des agrégats enfants.
 		public Properties.Abstract PropertyDeep(Properties.Type type)
 		{
+			//	Donne une propriété de l'agrégat ou de l'un des agrégats enfants.
 			return this.PropertyDeep(type, 0);
 		}
 		
@@ -96,15 +96,15 @@ namespace Epsitec.Common.Document.Properties
 			return null;
 		}
 
-		// Indique si l'agrégat contient une propriété.
 		public bool Contains(Properties.Abstract property)
 		{
+			//	Indique si l'agrégat contient une propriété.
 			return this.styles.Contains(property);
 		}
 
-		// Vérifie si un objet utilise cet agrégat.
 		public bool IsUsedByObject(Objects.Abstract obj)
 		{
+			//	Vérifie si un objet utilise cet agrégat.
 			return this.IsUsedByObject(obj, 0);
 		}
 		
@@ -131,17 +131,17 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Copie tout l'agrégat.
 		public void CopyTo(Aggregate dst)
 		{
+			//	Copie tout l'agrégat.
 			dst.aggregateName = this.aggregateName;
 			this.styles.CopyTo(dst.styles);
 			this.childrens.CopyTo(dst.childrens);
 		}
 
-		// Duplique tout l'agrégat.
 		public void DuplicateTo(Aggregate dst)
 		{
+			//	Duplique tout l'agrégat.
 			dst.aggregateName = this.aggregateName;
 			this.childrens.CopyTo(dst.childrens);
 
@@ -154,9 +154,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Donne un identificateur unique pour une propriété.
 		public static int UniqueId(UndoableList aggregates, Properties.Abstract property)
 		{
+			//	Donne un identificateur unique pour une propriété.
 			int id = (int) property.Type;
 
 			if ( property.IsStyle )
@@ -182,15 +182,15 @@ namespace Epsitec.Common.Document.Properties
 
 
 		#region OpletAggregate
-		// Ajoute un oplet pour mémoriser l'agrégat.
 		protected void InsertOpletAggregate()
 		{
+			//	Ajoute un oplet pour mémoriser l'agrégat.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
 			OpletAggregate oplet = new OpletAggregate(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		// Mémorise l'agrégat.
+		//	Mémorise l'agrégat.
 		protected class OpletAggregate : AbstractOplet
 		{
 			public OpletAggregate(Aggregate host)
@@ -227,17 +227,17 @@ namespace Epsitec.Common.Document.Properties
 
 		
 		#region Serialization
-		// Sérialise l'agrégat.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'agrégat.
 			info.AddValue("AggregateName", this.aggregateName);
 			info.AddValue("Styles", this.styles);
 			info.AddValue("Childrens", this.childrens);
 		}
 
-		// Constructeur qui désérialise l'agrégat.
 		protected Aggregate(SerializationInfo info, StreamingContext context)
 		{
+			//	Constructeur qui désérialise l'agrégat.
 			this.document = Document.ReadDocument;
 			this.aggregateName = info.GetString("AggregateName");
 			this.styles = (UndoableList) info.GetValue("Styles", typeof(UndoableList));

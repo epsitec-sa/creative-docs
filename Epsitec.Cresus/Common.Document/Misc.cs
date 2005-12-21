@@ -9,9 +9,9 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Misc
 	{
-		// Conversion d'une chaîne en nombre réel.
 		static public void ConvertStringToDouble(out double value, out Text.Properties.SizeUnits units, string text, double min, double max, double defaultValue)
 		{
+			//	Conversion d'une chaîne en nombre réel.
 			if ( text == "" )
 			{
 				value = 0;
@@ -30,9 +30,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Conversion d'une chaîne en nombre réel.
 		static public double ConvertStringToDouble(string text, double min, double max, double defaultValue)
 		{
+			//	Conversion d'une chaîne en nombre réel.
 			double value = defaultValue;
 				
 			if ( text != "" )
@@ -54,9 +54,9 @@ namespace Epsitec.Common.Document
 			return value;
 		}
 
-		// Conversion d'un nombre réel en chaîne.
 		static public string ConvertDoubleToString(double value, Text.Properties.SizeUnits units, double fracDigits)
 		{
+			//	Conversion d'un nombre réel en chaîne.
 			if ( units == Text.Properties.SizeUnits.Percent )
 			{
 				return Misc.ConvertDoubleToString(value, fracDigits) + "%";
@@ -70,9 +70,9 @@ namespace Epsitec.Common.Document
 			return "";
 		}
 
-		// Conversion d'un nombre réel en chaîne.
 		static public string ConvertDoubleToString(double value, double fracDigits)
 		{
+			//	Conversion d'un nombre réel en chaîne.
 			if ( fracDigits > 0 )
 			{
 				return value.ToString(string.Format("F{0}", fracDigits));
@@ -84,20 +84,20 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Crée une liste qui contient les fontes rapides au début.
-		// En mode quickOnly (liste courte), la police selectedFaceName apparaît même si elle
-		// ne fait pas partie des polices rapides.
-		// inList: tous les OpenType.FontIdentity connus
-		// quickFaceNames: strings des FaceNames fréquement utilisés, dans n'importe quel ordre
-		// outList (liste retournée): OpenType.FontIdentity
 		static public System.Collections.ArrayList MergeFontList(System.Collections.ArrayList inList, System.Collections.ArrayList quickFaceNames, bool quickOnly, string selectedFaceName, out int quickCount)
 		{
+			//	Crée une liste qui contient les fontes rapides au début.
+			//	En mode quickOnly (liste courte), la police selectedFaceName apparaît même si elle
+			//	ne fait pas partie des polices rapides.
+			//	inList: tous les OpenType.FontIdentity connus
+			//	quickFaceNames: strings des FaceNames fréquement utilisés, dans n'importe quel ordre
+			//	outList (liste retournée): OpenType.FontIdentity
 			System.Collections.ArrayList outList = new System.Collections.ArrayList();
 			System.Collections.ArrayList begin   = new System.Collections.ArrayList();
 
 			if ( quickFaceNames.Count == 0 )  quickOnly = false;
 
-			// Copie la liste en enlevant toutes les fontes rapides.
+			//	Copie la liste en enlevant toutes les fontes rapides.
 			foreach ( Common.OpenType.FontIdentity id in inList )
 			{
 				if ( quickFaceNames.Contains(id.InvariantFaceName) )  // fonte fréquement utilisée ?
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			// Remet les fontes rapides au début.
+			//	Remet les fontes rapides au début.
 			int ii = 0;
 			foreach ( Common.OpenType.FontIdentity id in begin )
 			{
@@ -127,10 +127,10 @@ namespace Epsitec.Common.Document
 			return outList;
 		}
 
-		// Donne la liste de tous les OpenType.FontIdentity des fontes connues.
-		// Cette liste est déjà triée par ordre alphabétique.
 		static public System.Collections.ArrayList GetFontList(bool enableSymbols)
 		{
+			//	Donne la liste de tous les OpenType.FontIdentity des fontes connues.
+			//	Cette liste est déjà triée par ordre alphabétique.
 			if ( Misc.fontListWithSymbols == null )  // cache à créer ?
 			{
 				Misc.fontListWithSymbols    = new System.Collections.ArrayList();
@@ -154,10 +154,10 @@ namespace Epsitec.Common.Document
 			return enableSymbols ? Misc.fontListWithSymbols : Misc.fontListWithoutSymbols;
 		}
 
-		// Ajoute la liste des fontes dans la liste d'un TextFieldCombo.
-		// TODO: à supprimer prochainement...
 		static public void AddFontList(TextFieldCombo combo, bool enableSymbols)
 		{
+			//	Ajoute la liste des fontes dans la liste d'un TextFieldCombo.
+			//	TODO: à supprimer prochainement...
 			if ( Misc.fontListCombo == null )
 			{
 				Misc.fontListCombo = new System.Collections.ArrayList();
@@ -186,17 +186,17 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Cherche le FontStyle par défaut pour un FontFace donné.
 		static public string DefaultFontStyle(string face)
 		{
+			//	Cherche le FontStyle par défaut pour un FontFace donné.
 			OpenType.FontIdentity id = Misc.DefaultFontIdentityStyle(face);
 			if ( id == null )  return "";
 			return id.InvariantStyleName;
 		}
 
-		// Cherche le FontStyle par défaut pour un FontFace donné.
 		static public OpenType.FontIdentity DefaultFontIdentityStyle(string face)
 		{
+			//	Cherche le FontStyle par défaut pour un FontFace donné.
 			OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
 
 			foreach ( OpenType.FontIdentity id in list )
@@ -241,17 +241,17 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
-		// Simplifie un style ("Regular !Bold" devient "Bold" par exemple).
 		static public string SimplifyFontStyle(string style)
 		{
+			//	Simplifie un style ("Regular !Bold" devient "Bold" par exemple).
 			string simple = OpenType.FontCollection.GetStyleHash(style);
 			if ( simple != "" )  return simple;
 			return style;
 		}
 
-		// Donne une fonte d'après son nom.
 		static public Font GetFont(string fontName)
 		{
+			//	Donne une fonte d'après son nom.
 			Font font = Font.GetFont(fontName, "Regular");
 
 			if ( font == null )
@@ -262,9 +262,9 @@ namespace Epsitec.Common.Document
 			return font;
 		}
 
-		// Retourne le nom d'un caractère Unicode ou du glyph d'une fonte de symboles.
 		static public string GetUnicodeName(int code, string fontFace, string fontStyle)
 		{
+			//	Retourne le nom d'un caractère Unicode ou du glyph d'une fonte de symboles.
 			Common.OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
 			if ( font != null && font.FontIdentity.IsSymbolFont )
 			{
@@ -275,9 +275,9 @@ namespace Epsitec.Common.Document
 			return Misc.GetUnicodeName(code);
 		}
 
-		// Retourne le nom d'un caractère Unicode.
 		static public string GetUnicodeName(int code)
 		{
+			//	Retourne le nom d'un caractère Unicode.
 			if ( code == 0 )  return "";
 
 			string text = TextBreak.GetUnicodeName(code);
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Document
 
 			if ( !minus )  // aucune minuscule dans le texte ?
 			{
-				// Première lettre en majuscule, le reste en minuscules.
+				//	Première lettre en majuscule, le reste en minuscules.
 				text = string.Format("{0}{1}", text.Substring(0, 1).ToUpper(), text.Substring(1, text.Length-1).ToLower());
 			}
 
@@ -302,9 +302,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Donne la liste des "features" communs à toutes les fontes.
 		static public string[] DefaultFeatures()
 		{
+			//	Donne la liste des "features" communs à toutes les fontes.
 			string[] list = new string[2];
 			int i=0;
 			list[i++] = "liga";
@@ -312,18 +312,18 @@ namespace Epsitec.Common.Document
 			return list;
 		}
 
-		// Donne le texte descriptif pour une "feature" OpenType.
 		static public string GetFeatureText(string feature)
 		{
+			//	Donne le texte descriptif pour une "feature" OpenType.
 			string text = Res.Strings.GetString("Text", string.Format("Features_{0}", feature));
 			if ( text != null )  return text;
 
 			return string.Format(Res.Strings.Text.FeaturesUnknow, feature.ToUpper());
 		}
 
-		// Retourne true si text est dans list.
 		static public bool IsInsideList(string[] list, string text)
 		{
+			//	Retourne true si text est dans list.
 			if ( list == null )  return false;
 
 			for ( int i=0 ; i<list.Length ; i++ )
@@ -334,55 +334,55 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Retourne le texte en gras.
 		static public string Bold(string text)
 		{
+			//	Retourne le texte en gras.
 			return string.Format("<b>{0}</b>", text);
 		}
 
-		// Retourne le texte en italique.
 		static public string Italic(string text)
 		{
+			//	Retourne le texte en italique.
 			return string.Format("<i>{0}</i>", text);
 		}
 
 
-		// Retourne le texte pour mettre une image dans un texte.
 		static public string Image(string icon)
 		{
+			//	Retourne le texte pour mettre une image dans un texte.
 			return string.Format(@"<img src=""{0}""/>", Misc.Icon(icon));
 		}
 
-		// Retourne le nom d'une icône de taille normale + petite.
-		// Format: "0.Icon;1.Icon1"
 		static public string Icon1(string icon)
 		{
+			//	Retourne le nom d'une icône de taille normale + petite.
+			//	Format: "0.Icon;1.Icon1"
 			return string.Format("0.{0};1.{0}1", icon);
 		}
 
-		// Retourne le nom d'une icône de taille normale + grande.
-		// Format: "0.Icon;2.Icon2"
 		static public string Icon2(string icon)
 		{
+			//	Retourne le nom d'une icône de taille normale + grande.
+			//	Format: "0.Icon;2.Icon2"
 			return string.Format("0.{0};2.{0}2", icon);
 		}
 
-		// Retourne le nom d'une icône de taille normale + petite + grande.
-		// Format: "0.Icon;1.Icon1;2.Icon2"
 		static public string Icon12(string icon)
 		{
+			//	Retourne le nom d'une icône de taille normale + petite + grande.
+			//	Format: "0.Icon;1.Icon1;2.Icon2"
 			return string.Format("0.{0};1.{0}1;2.{0}2", icon);
 		}
 
-		// Retourne le nom complet d'une icône, avec préférence pour la taille par défaut.
 		static public string Icon(string icon)
 		{
+			//	Retourne le nom complet d'une icône, avec préférence pour la taille par défaut.
 			return Misc.Icon(icon, "0");
 		}
 
-		// Retourne le nom complet d'une icône, avec préférence pour une taille donnée.
 		static public string Icon(string icon, string size)
 		{
+			//	Retourne le nom complet d'une icône, avec préférence pour une taille donnée.
 			System.Diagnostics.Debug.Assert(size.Length == 1);
 			if ( icon == null )  return null;
 
@@ -400,9 +400,9 @@ namespace Epsitec.Common.Document
 			return Misc.IconBase(icon);
 		}
 
-		// Retourne le nom complet d'une icône.
 		static protected string IconBase(string icon)
 		{
+			//	Retourne le nom complet d'une icône.
 			if ( icon == "FontBold"       ||
 				 icon == "FontItalic"     ||
 				 icon == "FontUnderlined" ||
@@ -421,17 +421,17 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le nom des touches associées à une commande.
 		static public string GetShortCut(CommandState cs)
 		{
+			//	Retourne le nom des touches associées à une commande.
 			if ( cs == null || cs.HasShortcuts == false )  return null;
 
 			return cs.PreferredShortcut.ToString();
 		}
 
-		// Donne le nom d'une commande, avec le raccourci clavier éventuel entre parenthèses.
 		static public string GetTextWithShortcut(CommandState cs)
 		{
+			//	Donne le nom d'une commande, avec le raccourci clavier éventuel entre parenthèses.
 			string shortcut = Misc.GetShortCut(cs);
 
 			if ( shortcut == null )
@@ -445,11 +445,11 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Donne le nom complet du fichier.
-		// Si le nom n'existe pas, donne "sans titre".
-		// Si le fichier doit être sérialisé, donne le nom en gras.
 		static public string FullName(string filename, bool dirtySerialize)
 		{
+			//	Donne le nom complet du fichier.
+			//	Si le nom n'existe pas, donne "sans titre".
+			//	Si le fichier doit être sérialisé, donne le nom en gras.
 			string name = "";
 			if ( dirtySerialize )  name += "<b>";
 
@@ -466,11 +466,11 @@ namespace Epsitec.Common.Document
 			return name;
 		}
 
-		// Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
-		// Si le nom n'existe pas, donne "sans titre".
-		// Si le fichier doit être sérialisé, donne le nom en gras.
 		static public string ExtractName(string filename, bool dirtySerialize)
 		{
+			//	Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
+			//	Si le nom n'existe pas, donne "sans titre".
+			//	Si le fichier doit être sérialisé, donne le nom en gras.
 			string name = "";
 			if ( dirtySerialize )  name += "<b>";
 
@@ -487,33 +487,33 @@ namespace Epsitec.Common.Document
 			return name;
 		}
 
-		// Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
-		// "c:\rep\abc.txt" devient "abc".
 		static public string ExtractName(string filename)
 		{
+			//	Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
+			//	"c:\rep\abc.txt" devient "abc".
 			return System.IO.Path.GetFileNameWithoutExtension(filename);
 		}
 
-		// Indique si un fichier utilise une extension donnée.
 		static public bool IsExtension(string filename, string ext)
 		{
+			//	Indique si un fichier utilise une extension donnée.
 			return filename.ToLower().EndsWith(ext);
 		}
 
-		// Retourne la copie d'un nom.
-		// "Bidon"              ->  "Copie de Bidon"
-		// "Copie de Bidon"     ->  "Copie (2) de Bidon"
-		// "Copie (2) de Bidon" ->  "Copie (3) de Bidon"
 		static public string CopyName(string name)
 		{
+			//	Retourne la copie d'un nom.
+			//	"Bidon"              ->  "Copie de Bidon"
+			//	"Copie de Bidon"     ->  "Copie (2) de Bidon"
+			//	"Copie (2) de Bidon" ->  "Copie (3) de Bidon"
 			return Misc.CopyName(name, Res.Strings.Misc.Copy, Res.Strings.Misc.CopyOf);
 		}
 
-		// Retourne la copie d'un nom.
-		// copy = "Copie" ou "Copy"
-		// of = "de" ou "of"
 		static public string CopyName(string name, string copy, string of)
 		{
+			//	Retourne la copie d'un nom.
+			//	copy = "Copie" ou "Copy"
+			//	of = "de" ou "of"
 			if ( name == "" )
 			{
 				return copy;
@@ -540,9 +540,9 @@ namespace Epsitec.Common.Document
 			return string.Concat(copy, " ", of, " ", name);
 		}
 
-		// Permute deux variables.
 		static public void Swap(ref bool a, ref bool b)
 		{
+			//	Permute deux variables.
 			bool t = a;
 			a = b;
 			b = t;

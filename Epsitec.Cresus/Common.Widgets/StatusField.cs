@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override double DefaultWidth
 		{
-			// Retourne la largeur standard.
+			//	Retourne la largeur standard.
 			get
 			{
 				return 120;
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets
 
 		public override double DefaultHeight
 		{
-			// Retourne la hauteur standard.
+			//	Retourne la hauteur standard.
 			get
 			{
 				return this.DefaultFontHeight;
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.ContentAlignment DefaultAlignment
 		{
-			// Retourne l'alignement par défaut d'un bouton.
+			//	Retourne l'alignement par défaut d'un bouton.
 			get
 			{
 				return Drawing.ContentAlignment.MiddleLeft;
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Widgets
 #if false	//#fix
 		public override Drawing.Size PreferredSize
 		{
-			// Retourne les dimensions minimales pour représenter le texte.
+			//	Retourne les dimensions minimales pour représenter le texte.
 			get
 			{
 				return this.TextLayout.SingleLineSize;
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			// Dessine le texte.
+			//	Dessine le texte.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			if ( this.TextLayout == null )  return;

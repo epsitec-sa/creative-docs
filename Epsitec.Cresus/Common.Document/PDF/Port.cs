@@ -39,10 +39,10 @@ namespace Epsitec.Common.Document.PDF
 			this.Reset();
 		}
 
-		// Réinitialise le port, mais surtout pas le stack des modificateurs
-		// de couleurs.
 		public void Reset()
 		{
+			//	Réinitialise le port, mais surtout pas le stack des modificateurs
+			//	de couleurs.
 			this.colorForce = ColorForce.Default;
 			this.defaultDecimals = 2;
 			this.LineWidth = 1.0;
@@ -67,23 +67,23 @@ namespace Epsitec.Common.Document.PDF
 		}
 		
 		
-		// Force un espace de couleur.
 		public ColorForce ColorForce
 		{
+			//	Force un espace de couleur.
 			get { return this.colorForce; }
 			set { this.colorForce = value; }
 		}
 
-		// Indique le nombre de décimales par défaut.
 		public int DefaultDecimals
 		{
+			//	Indique le nombre de décimales par défaut.
 			get { return this.defaultDecimals; }
 			set { this.defaultDecimals = value; }
 		}
 
-		// Spécifie un trait continu.
 		public double LineWidth
 		{
+			//	Spécifie un trait continu.
 			get { return this.lineWidth; }
 
 			set
@@ -93,9 +93,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Spécifie un traitillé.
 		public void SetLineDash(double width, double pen1, double gap1, double pen2, double gap2, double pen3, double gap3)
 		{
+			//	Spécifie un traitillé.
 			this.lineWidth = width;
 			this.lineDash = true;
 			this.lineDashPen1 = pen1;
@@ -604,11 +604,11 @@ namespace Epsitec.Common.Document.PDF
 		
 		
 		#region PaintImage
-		// Cette classe implémente une version restreinte de PaintImage.
-		// La position et les dimensions de l'image doivent être définies par
-		// une transformation, et le rectangle doit être égal à (0,0,1,1).
 		public void PaintImage(Image bitmap, Rectangle fill)
 		{
+			//	Cette classe implémente une version restreinte de PaintImage.
+			//	La position et les dimensions de l'image doivent être définies par
+			//	une transformation, et le rectangle doit être égal à (0,0,1,1).
 			this.PaintImage(bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, 0, 0, bitmap.Width, bitmap.Height);
 		}
 		
@@ -652,18 +652,18 @@ namespace Epsitec.Common.Document.PDF
 		#endregion
 		
 		
-		// Donne tout le texte PDF généré.
 		public string GetPDF()
 		{
+			//	Donne tout le texte PDF généré.
 			string s = this.stringBuilder.ToString();
 			this.Reset();
 			return s;
 		}
 
-		// Initialise tous les paramètres graphiques à des valeurs différentes
-		// des valeurs utilisées par la suite, ou aux valeurs par défaut.
 		protected void Init()
 		{
+			//	Initialise tous les paramètres graphiques à des valeurs différentes
+			//	des valeurs utilisées par la suite, ou aux valeurs par défaut.
 			this.stringBuilder = new System.Text.StringBuilder();
 			this.currentWidth = -1.0;
 			this.currentCap = (CapStyle) 999;
@@ -680,9 +680,9 @@ namespace Epsitec.Common.Document.PDF
 			this.currentTransform = new Transform();
 		}
 
-		// Spécifie la couleur de trait.
 		protected void SetStrokeColor(RichColor color)
 		{
+			//	Spécifie la couleur de trait.
 			if ( this.currentStrokeColor != color || this.currentComplexSurfaceId != this.complexSurfaceId )
 			{
 				if ( this.currentComplexSurfaceId != -1 )
@@ -715,9 +715,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Spécifie la couleur de surface.
 		protected void SetFillColor(RichColor color)
 		{
+			//	Spécifie la couleur de surface.
 			this.SearchComplexSurfaceByColor();
 
 			if ( this.currentFillColor != color || this.currentComplexSurfaceId != this.complexSurfaceId )
@@ -769,9 +769,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Rempli la surface du chemin défini.
 		protected void DoFill(Path path)
 		{
+			//	Rempli la surface du chemin défini.
 			this.SearchComplexSurfaceByColor();
 
 			if ( this.complexSurfaceId == -1 || this.complexType != TypeComplexSurface.ExtGState )
@@ -843,12 +843,12 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// S'il n'existe pas d'identificateur de surface complexe connu et que
-		// la couleur est transparente, cherche un identificateur d'après la couleur.
-		// C'est le cas des textes transparents, qui définissent les couleurs avec
-		// port.Color au lieu de port.SetColoredComplexSurface !
 		protected void SearchComplexSurfaceByColor()
 		{
+			//	S'il n'existe pas d'identificateur de surface complexe connu et que
+			//	la couleur est transparente, cherche un identificateur d'après la couleur.
+			//	C'est le cas des textes transparents, qui définissent les couleurs avec
+			//	port.Color au lieu de port.SetColoredComplexSurface !
 			if ( this.complexSurfaceId != -1 )  return;
 			if ( this.color.A == 1.0 )  return;
 
@@ -857,9 +857,9 @@ namespace Epsitec.Common.Document.PDF
 			this.complexSurfaceId = id;
 		}
 
-		// Spécifie l'épaisseur des traits.
 		protected void SetWidth(double width)
 		{
+			//	Spécifie l'épaisseur des traits.
 			if ( this.currentWidth != width )
 			{
 				this.currentWidth = width;
@@ -869,16 +869,16 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Spécifie l'extrémité des traits.
 		protected void SetCap(CapStyle cap)
 		{
+			//	Spécifie l'extrémité des traits.
 			if ( this.currentCap != cap )
 			{
 				this.currentCap = cap;
 
 				switch ( cap )
 				{
-					// Line cap style, voir [*] page 186 et 189
+					//	Line cap style, voir [*] page 186 et 189
 					case CapStyle.Butt:    this.PutCommand("0 J ");  break;
 					case CapStyle.Round:   this.PutCommand("1 J ");  break;
 					case CapStyle.Square:  this.PutCommand("2 J ");  break;
@@ -886,16 +886,16 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Spécifie les coins des traits.
 		protected void SetJoin(JoinStyle join)
 		{
+			//	Spécifie les coins des traits.
 			if ( this.currentJoin != join )
 			{
 				this.currentJoin = join;
 
 				switch ( join )
 				{
-					// Line join style, voir [*] page 186 et 189
+					//	Line join style, voir [*] page 186 et 189
 					case JoinStyle.MiterRevert:
 					case JoinStyle.Miter:  this.PutCommand("0 j ");  break;
 					case JoinStyle.Round:  this.PutCommand("1 j ");  break;
@@ -904,9 +904,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Spécifie le mode de traitillé.
 		protected void SetDash(bool dash, double pen1, double gap1, double pen2, double gap2, double pen3, double gap3)
 		{
+			//	Spécifie le mode de traitillé.
 			if ( this.currentDash != dash ||
 				 this.currentPen1 != pen1 ||
 				 this.currentGap1 != gap1 ||
@@ -925,7 +925,7 @@ namespace Epsitec.Common.Document.PDF
 
 				if ( dash )
 				{
-					// Line dash pattern, voir [*] page 188 et 189
+					//	Line dash pattern, voir [*] page 188 et 189
 					this.PutCommand("[");
 					this.PutValue(pen1);
 					this.PutValue(gap1);
@@ -948,9 +948,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Spécifie la limite pour JoinMiter.
 		protected void SetLimit(double limit)
 		{
+			//	Spécifie la limite pour JoinMiter.
 			if ( this.currentLimit != limit )
 			{
 				this.currentLimit = limit;
@@ -960,15 +960,15 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Spécifie la matrice de transformation.
 		protected void SetTransform(Transform transform)
 		{
+			//	Spécifie la matrice de transformation.
 			if ( this.currentTransform != transform )
 			{
 				Transform t = Transform.Inverse(this.currentTransform);
 				t.MultiplyByPostfix(transform);
 
-				// Attention: inversion de XY et YX !
+				//	Attention: inversion de XY et YX !
 				this.PutValue(t.XX, -1);
 				this.PutValue(t.YX, -1);  // xy
 				this.PutValue(t.XY, -1);  // yx
@@ -981,9 +981,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Met un chemin quelconque.
 		public void PutPath(Path path)
 		{
+			//	Met un chemin quelconque.
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements(out elements, out points);
@@ -1047,9 +1047,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Met une matrice de transformation.
 		public void PutTransform(Transform matrix)
 		{
+			//	Met une matrice de transformation.
 			if ( matrix.XX != 1.0 ||
 				 matrix.XY != 0.0 ||
 				 matrix.YX != 0.0 ||
@@ -1057,7 +1057,7 @@ namespace Epsitec.Common.Document.PDF
 				 matrix.TX != 0.0 ||
 				 matrix.TY != 0.0 )  // autre que matrice identité ?
 			{
-				// Attention: inversion de XY et YX !
+				//	Attention: inversion de XY et YX !
 				this.PutValue(matrix.XX, -1);
 				this.PutValue(matrix.YX, -1);  // xy
 				this.PutValue(matrix.XY, -1);  // yx
@@ -1068,10 +1068,10 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Met un espace de couleur de trait.
-		// Stroking color, voir [*] page 257
 		protected void PutStrokingColorSpace(RichColor color)
 		{
+			//	Met un espace de couleur de trait.
+			//	Stroking color, voir [*] page 257
 			if ( this.colorForce == ColorForce.Nothing )  return;
 			if ( this.colorForce != ColorForce.Default )  return;
 
@@ -1080,10 +1080,10 @@ namespace Epsitec.Common.Document.PDF
 			if ( color.ColorSpace == ColorSpace.Gray )  this.PutCommand("/DeviceGray CS ");
 		}
 
-		// Met un espace de couleur de trait.
-		// Stroking color, voir [*] page 257
 		protected void PutFillingColorSpace(RichColor color)
 		{
+			//	Met un espace de couleur de trait.
+			//	Stroking color, voir [*] page 257
 			if ( this.colorForce == ColorForce.Nothing )  return;
 			if ( this.colorForce != ColorForce.Default )  return;
 
@@ -1092,10 +1092,10 @@ namespace Epsitec.Common.Document.PDF
 			if ( color.ColorSpace == ColorSpace.Gray )  this.PutCommand("/DeviceGray cs ");
 		}
 
-		// Met une couleur de trait.
-		// Stroking color, voir [*] page 258
 		protected void PutStrokingColor(RichColor color)
 		{
+			//	Met une couleur de trait.
+			//	Stroking color, voir [*] page 258
 			if ( this.colorForce == ColorForce.Nothing )  return;
 
 			this.PutColor(color);
@@ -1105,10 +1105,10 @@ namespace Epsitec.Common.Document.PDF
 			if ( this.colorForce == ColorForce.Gray    )  this.PutCommand("G ");
 		}
 
-		// Met une couleur de surface.
-		// Fill color, voir [*] page 258
 		protected void PutFillingColor(RichColor color)
 		{
+			//	Met une couleur de surface.
+			//	Fill color, voir [*] page 258
 			if ( this.colorForce == ColorForce.Nothing )  return;
 
 			this.PutColor(color);
@@ -1118,9 +1118,9 @@ namespace Epsitec.Common.Document.PDF
 			if ( this.colorForce == ColorForce.Gray    )  this.PutCommand("g ");
 		}
 
-		// Met une couleur (sans alpha).
 		public void PutColor(RichColor color)
 		{
+			//	Met une couleur (sans alpha).
 			ColorSpace cs = color.ColorSpace;
 			if ( this.colorForce == ColorForce.RGB  )  cs = ColorSpace.RGB;
 			if ( this.colorForce == ColorForce.CMYK )  cs = ColorSpace.CMYK;
@@ -1147,36 +1147,36 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Met un point.
 		public void PutPoint(Point pos)
 		{
+			//	Met un point.
 			this.PutValue(pos.X);
 			this.PutValue(pos.Y);
 		}
 
-		// Met une valeur avec 2 décimales.
 		public void PutValue(double num)
 		{
+			//	Met une valeur avec 2 décimales.
 			this.PutValue(num, this.defaultDecimals);
 		}
 
-		// Met une valeur.
 		public void PutValue(double num, int decimals)
 		{
+			//	Met une valeur.
 			this.stringBuilder.Append(Port.StringValue(num, decimals));
 			this.stringBuilder.Append(" ");
 		}
 
-		// Met un entier.
 		public void PutInt(int num)
 		{
+			//	Met un entier.
 			this.stringBuilder.Append(num.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			this.stringBuilder.Append(" ");
 		}
 
-		// Met un buffer binaire en codage ASCII85 (voir [*] page 45).
 		public void PutASCII85(byte[] buffer)
 		{
+			//	Met un buffer binaire en codage ASCII85 (voir [*] page 45).
 			byte[] ascii85 = Magick.Ascii85.EncodeBytes(buffer, 75);
 			buffer = null;
 
@@ -1187,9 +1187,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Met une fin de ligne.
 		public void PutEOL()
 		{
+			//	Met une fin de ligne.
 			int len = this.stringBuilder.Length;
 			if ( len == 0 )  return;
 
@@ -1201,9 +1201,9 @@ namespace Epsitec.Common.Document.PDF
 			this.stringBuilder.Append("\r\n");
 		}
 
-		// Met une commande de remplissage.
 		protected void PutCommandFill()
 		{
+			//	Met une commande de remplissage.
 			if ( this.fillMode == FillMode.NonZero )
 			{
 				this.PutCommand("f ");  // nonzero fill, voir [*] page 202
@@ -1214,9 +1214,9 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Met une commande de tracé.
 		protected void PutCommandStroke()
 		{
+			//	Met une commande de tracé.
 			if ( this.fillMode == FillMode.NonZero )
 			{
 				this.PutCommand("W ");  // nonzero stroke, voir [*] page 205
@@ -1227,40 +1227,40 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		// Met une commande quelconque.
 		public void PutCommand(string cmd)
 		{
+			//	Met une commande quelconque.
 			this.stringBuilder.Append(cmd);
 		}
 
 
-		// Met une commande "/BBox [x0 y0 x1 y1]".
 		public static string StringBBox(Rectangle bbox)
 		{
+			//	Met une commande "/BBox [x0 y0 x1 y1]".
 			return Port.StringBBox("/BBox", bbox);
 		}
 
-		// Met une commande "cmd [x0 y0 x1 y1]".
 		public static string StringBBox(string cmd, Rectangle bbox)
 		{
+			//	Met une commande "cmd [x0 y0 x1 y1]".
 			return string.Format("{0} [{1} {2} {3} {4}] ", cmd, Port.StringValue(bbox.Left), Port.StringValue(bbox.Bottom), Port.StringValue(bbox.Right), Port.StringValue(bbox.Top));
 		}
 
-		// Met une commande "/Length x".
 		public static string StringLength(int length)
 		{
+			//	Met une commande "/Length x".
 			return string.Format("/Length {0}", length);
 		}
 
-		// Met une valeur avec 2 décimales.
 		public static string StringValue(double num)
 		{
+			//	Met une valeur avec 2 décimales.
 			return Port.StringValue(num, 2);
 		}
 
-		// Met une valeur.
 		public static string StringValue(double num, int decimals)
 		{
+			//	Met une valeur.
 			if ( decimals == -1 )  // précision automatique ?
 			{
 				double log = System.Math.Log10(System.Math.Abs(num));
@@ -1288,9 +1288,9 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		// Cherche la surface complexe à utiliser pour un objet et une propriété.
 		public int SearchComplexSurface(Objects.Abstract obj, Properties.Abstract property)
 		{
+			//	Cherche la surface complexe à utiliser pour un objet et une propriété.
 			if ( this.complexSurfaceList == null )  return -1;
 
 			foreach ( ComplexSurface cs in this.complexSurfaceList )
@@ -1303,9 +1303,9 @@ namespace Epsitec.Common.Document.PDF
 			return -1;
 		}
 
-		// Cherche la surface complexe d'après son identificateur.
 		protected ComplexSurface GetComplexSurface(int id)
 		{
+			//	Cherche la surface complexe d'après son identificateur.
 			if ( this.complexSurfaceList == null )  return null;
 
 			foreach ( ComplexSurface cs in this.complexSurfaceList )
@@ -1318,9 +1318,9 @@ namespace Epsitec.Common.Document.PDF
 			return null;
 		}
 
-		// Cherche la surface complexe à utiliser pour une couleur transparente.
 		protected int SearchComplexColor(RichColor color)
 		{
+			//	Cherche la surface complexe à utiliser pour une couleur transparente.
 			if ( this.complexSurfaceList == null )  return -1;
 
 			foreach ( ComplexSurface cs in this.complexSurfaceList )
@@ -1338,9 +1338,9 @@ namespace Epsitec.Common.Document.PDF
 			return -1;
 		}
 
-		// Cherche l'image à utiliser.
 		public ImageSurface SearchImageSurface(string filename, Size size, bool filter)
 		{
+			//	Cherche l'image à utiliser.
 			if ( this.imageSurfaceList == null )  return null;
 			return ImageSurface.Search(this.imageSurfaceList, filename, size, filter);
 		}

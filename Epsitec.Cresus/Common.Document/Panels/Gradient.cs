@@ -207,9 +207,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				double h = this.LabelHeight;
@@ -250,9 +250,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Propriété -> widgets.
 		protected override void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			base.PropertyToWidgets();
 
 			Properties.Gradient p = this.property as Properties.Gradient;
@@ -279,9 +279,9 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = false;
 		}
 
-		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 			Properties.Gradient p = this.property as Properties.Gradient;
 			if ( p == null )  return;
 
@@ -346,9 +346,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Donne l'angle.
 		protected double GetAngle()
 		{
+			//	Donne l'angle.
 			Properties.Gradient p = this.property as Properties.Gradient;
 			Properties.GradientFillType type = (Properties.GradientFillType) this.grid.SelectedValue;
 
@@ -362,9 +362,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Change l'angle.
 		protected void SetAngle(double angle)
 		{
+			//	Change l'angle.
 			Properties.Gradient p = this.property as Properties.Gradient;
 			Properties.GradientFillType type = (Properties.GradientFillType) this.grid.SelectedValue;
 
@@ -381,9 +381,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			bool color2 = false;
 			bool showReset = false;
 			bool enableReset = false;
@@ -511,16 +511,16 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public override void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 			this.fieldColor1.ActiveState = ActiveState.No;
 			this.fieldColor2.ActiveState = ActiveState.No;
 		}
 
-		// Sélectionne l'origine de couleur.
 		public override void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 			if ( rank != -1 )
 			{
 				this.originFieldRank = rank;
@@ -533,15 +533,15 @@ namespace Epsitec.Common.Document.Panels
 			this.originFieldColor.ActiveState = ActiveState.Yes;
 		}
 
-		// Retourne le rang de la couleur d'origine.
 		public override int OriginColorRank()
 		{
+			//	Retourne le rang de la couleur d'origine.
 			return this.originFieldRank;
 		}
 
-		// Modifie la couleur d'origine.
 		public override void OriginColorChange(Drawing.RichColor color)
 		{
+			//	Modifie la couleur d'origine.
 			if ( this.originFieldColor == null )  return;
 			
 			if ( this.originFieldColor.Color != color )
@@ -551,17 +551,17 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Donne la couleur d'origine.
 		public override Drawing.RichColor OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			if ( this.originFieldColor == null )  return Drawing.RichColor.FromBrightness(0.0);
 			return this.originFieldColor.Color;
 		}
 
 		
-		// Adapte les textes courts ou longs.
 		protected void UpdateShortLongText()
 		{
+			//	Adapte les textes courts ou longs.
 			if ( this.IsLabelProperties )
 			{
 				Abstract.SetText(this.radioHatchRank[0], Res.Strings.Panel.Gradient.Long.Hatch1);
@@ -574,9 +574,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldColor1 == null )  return;
@@ -839,17 +839,17 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
-		// Le bouton "aucune couleur" a été cliqué.
 		private void HandleNothingClicked(object sender, MessageEventArgs e)
 		{
+			//	Le bouton "aucune couleur" a été cliqué.
 			this.grid.SelectedValue = (int) Properties.GradientFillType.None;
 			this.fieldColor1.Color = Drawing.RichColor.FromARGB(0, 1,1,1);
 			this.OnChanged();
 		}
 
-		// Le type a été changé.
 		private void HandleTypeChanged(object sender)
 		{
+			//	Le type a été changé.
 			if ( this.ignoreChanged )  return;
 
 			this.HandleReset(null, null);
@@ -870,9 +870,9 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
-		// Le rang a été changé.
 		private void HandleHatchRankChanged(object sender)
 		{
+			//	Le rang a été changé.
 			if ( this.ignoreChanged )  return;
 			this.ignoreChanged = true;
 			this.HatchToWidget();

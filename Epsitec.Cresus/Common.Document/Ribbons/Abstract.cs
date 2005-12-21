@@ -40,27 +40,27 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 		
-		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard.
 			get
 			{
 				return 8 + 22*2;
 			}
 		}
 
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return this.LabelHeight + 8 + 22 + 5 + 22;
 			}
 		}
 
-		// Retourne la hauteur pour le label supérieur.
 		protected double LabelHeight
 		{
+			//	Retourne la hauteur pour le label supérieur.
 			get
 			{
 				return 14;
@@ -68,9 +68,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Retourne la zone rectangulaire utile pour les widgets.
 		protected Rectangle UsefulZone
 		{
+			//	Retourne la zone rectangulaire utile pour les widgets.
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
@@ -80,44 +80,44 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public virtual void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 		}
 
-		// Sélectionne l'origine de couleur.
 		public virtual void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 		}
 
-		// Retourne le rang de la couleur d'origine.
 		public virtual int OriginColorRank()
 		{
+			//	Retourne le rang de la couleur d'origine.
 			return -1;
 		}
 
-		// Modifie la couleur d'origine.
 		public virtual void OriginColorChange(Drawing.RichColor color)
 		{
+			//	Modifie la couleur d'origine.
 		}
 
-		// Donne la couleur d'origine.
 		public virtual Drawing.RichColor OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			return Drawing.RichColor.FromBrightness(0);
 		}
 
 
-		// Génère un événement pour dire que la couleur d'origine a changé.
 		protected virtual void OnOriginColorChanged()
 		{
+			//	Génère un événement pour dire que la couleur d'origine a changé.
 			if ( this.OriginColorChanged != null )  // qq'un écoute ?
 			{
 				this.OriginColorChanged(this);
@@ -141,15 +141,15 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Crée un bouton pour une commande.
 		protected IconButton CreateIconButton(string command)
 		{
+			//	Crée un bouton pour une commande.
 			return this.CreateIconButton(command, "0");
 		}
 
-		// Crée un bouton pour une commande, en précisant la taille préférée pour l'icône.
 		protected IconButton CreateIconButton(string command, string iconSize)
 		{
+			//	Crée un bouton pour une commande, en précisant la taille préférée pour l'icône.
 			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
 			IconButton button = new IconButton(this);
 
@@ -168,9 +168,9 @@ namespace Epsitec.Common.Document.Ribbons
 			return button;
 		}
 
-		// Crée un bouton "v" pour un menu.
 		protected GlyphButton CreateMenuButton(string command, string tooltip, MessageEventHandler handler)
 		{
+			//	Crée un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);
 			button.Command = command;
 			button.ButtonStyle = ButtonStyle.ToolItem;
@@ -184,9 +184,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Ajoute une icône.
 		protected void MenuAdd(VMenu vmenu, string icon, string command, string text, string shortcut)
 		{
+			//	Ajoute une icône.
 			this.MenuAdd(vmenu, icon, command, text, shortcut, command);
 		}
 		
@@ -214,9 +214,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Donne l'objet en cours d'édition, s'il existe.
 		protected Objects.Abstract EditObject
 		{
+			//	Donne l'objet en cours d'édition, s'il existe.
 			get
 			{
 				if ( this.document == null )  return null;

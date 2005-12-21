@@ -113,8 +113,8 @@ namespace Epsitec.Common.Widgets
 					if ( Message.State.LastWindow == this.Window &&
 					     this.IsEntered )
 					{
-						// Ne changeons l'aspect de la souris que si actuellement le curseur se trouve
-						// dans la zone éditable; si la souris se trouve sur un bouton, on ne fait rien.
+						//	Ne changeons l'aspect de la souris que si actuellement le curseur se trouve
+						//	dans la zone éditable; si la souris se trouve sur un bouton, on ne fait rien.
 						
 						this.UpdateMouseCursor(this.MapRootToClient(Message.State.LastPosition));
 					}
@@ -336,9 +336,9 @@ namespace Epsitec.Common.Widgets
 
 		public double							ScrollZone
 		{
-			// Amplitude de la zone dans laquelle le curseur provoque un scroll.
-			// Avec 0.0, le texte ne scrolle que lorsque le curseur arrive aux extrémités.
-			// Avec 1.0, le texte scrolle tout le temps (curseur au milieu).
+			//	Amplitude de la zone dans laquelle le curseur provoque un scroll.
+			//	Avec 0.0, le texte ne scrolle que lorsque le curseur arrive aux extrémités.
+			//	Avec 1.0, le texte scrolle tout le temps (curseur au milieu).
 			get
 			{
 				return this.scrollZone;
@@ -527,15 +527,15 @@ namespace Epsitec.Common.Widgets
 
 		protected override void DisposeTextLayout()
 		{
-			// Ne fait rien, on veut s'assurer que le TextLayout associé avec le
-			// TextField n'est jamais détruit du vivant du TextField.
+			//	Ne fait rien, on veut s'assurer que le TextLayout associé avec le
+			//	TextField n'est jamais détruit du vivant du TextField.
 			this.TextLayout.Text = "";
 		}
 
 		
 		public void SelectAll()
 		{
-			// Sélectione tous les caractères.
+			//	Sélectione tous les caractères.
 			this.Cursor = 0;
 			this.SelectAll(false);
 		}
@@ -660,7 +660,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected static void HandleFlashTimer(object source)
 		{
-			// Gère le temps écoulé pour faire clignoter un curseur.
+			//	Gère le temps écoulé pour faire clignoter un curseur.
 			TextField.showCursor = !TextField.showCursor;
 			
 			if ( TextField.blinking != null )
@@ -672,13 +672,13 @@ namespace Epsitec.Common.Widgets
 		
 		protected void FlashCursor()
 		{
-			// Fait clignoter le curseur.
+			//	Fait clignoter le curseur.
 			this.Invalidate();
 		}
 
 		protected void ResetCursor()
 		{
-			// Allume le curseur au prochain affichage.
+			//	Allume le curseur au prochain affichage.
 			if ( this.IsFocused && TextField.flashTimer != null )
 			{
 				double delay = SystemInformation.CursorBlinkDelay;
@@ -692,7 +692,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			// Gestion d'un événement.
+			//	Gestion d'un événement.
 			if ( this.copyPasteBehavior.ProcessMessage(message, pos) )
 			{
 				return;
@@ -825,8 +825,8 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.IsReadOnly == false )
 			{
-				// Un clic dans la ligne éditable doit mettre le focus sur celle-ci, quel que
-				// soit le type de gestion de focus actif (AutoFocus, etc.).
+				//	Un clic dans la ligne éditable doit mettre le focus sur celle-ci, quel que
+				//	soit le type de gestion de focus actif (AutoFocus, etc.).
 				
 				this.Focus();
 			}
@@ -836,7 +836,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
-			// Gestion d'une touche pressée avec KeyDown dans le texte.
+			//	Gestion d'une touche pressée avec KeyDown dans le texte.
 			return this.navigator.ProcessMessage(message, pos);
 		}
 
@@ -919,39 +919,39 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu.ShowAsContextMenu(this, mouse);
 		}
 
-//		private void HandleContextMenuAccepted(object sender, MenuEventArgs e)
-//		{
-//			if ( e.MenuItem.Name == "Cut" )
-//			{
-//				this.copyPasteBehavior.ProcessCopy();
-//				this.copyPasteBehavior.ProcessDelete();
-//			}
-//
-//			if ( e.MenuItem.Name == "Copy" )
-//			{
-//				this.copyPasteBehavior.ProcessCopy();
-//			}
-//
-//			if ( e.MenuItem.Name == "Paste" )
-//			{
-//				this.copyPasteBehavior.ProcessPaste();
-//			}
-//
-//			if ( e.MenuItem.Name == "Delete" )
-//			{
-//				this.copyPasteBehavior.ProcessDelete();
-//			}
-//
-//			if ( e.MenuItem.Name == "SelectAll" )
-//			{
-//				this.copyPasteBehavior.ProcessSelectAll();
-//			}
-//
-//			this.contextMenu = null;
-//		}
-
 		private void HandleContextMenuRejected(object sender)
 		{
+	//		private void HandleContextMenuAccepted(object sender, MenuEventArgs e)
+	//		{
+	//			if ( e.MenuItem.Name == "Cut" )
+	//			{
+	//				this.copyPasteBehavior.ProcessCopy();
+	//				this.copyPasteBehavior.ProcessDelete();
+	//			}
+	//
+	//			if ( e.MenuItem.Name == "Copy" )
+	//			{
+	//				this.copyPasteBehavior.ProcessCopy();
+	//			}
+	//
+	//			if ( e.MenuItem.Name == "Paste" )
+	//			{
+	//				this.copyPasteBehavior.ProcessPaste();
+	//			}
+	//
+	//			if ( e.MenuItem.Name == "Delete" )
+	//			{
+	//				this.copyPasteBehavior.ProcessDelete();
+	//			}
+	//
+	//			if ( e.MenuItem.Name == "SelectAll" )
+	//			{
+	//				this.copyPasteBehavior.ProcessSelectAll();
+	//			}
+	//
+	//			this.contextMenu = null;
+	//		}
+	
 			this.contextMenu = null;
 		}
 		#endregion
@@ -1095,11 +1095,11 @@ namespace Epsitec.Common.Widgets
 			int from = this.CursorFrom;
 			int to   = this.CursorTo;
 			
-			// En réaffectant les positions de curseurs, on force implicitement une vérification sur
-			// les positions maximales tolérées (grâce à TextNavigator).
+			//	En réaffectant les positions de curseurs, on force implicitement une vérification sur
+			//	les positions maximales tolérées (grâce à TextNavigator).
 			this.navigator.SetCursors(from, to);
 			
-			// Génère un événement pour dire que le texte a changé (tout changement).
+			//	Génère un événement pour dire que le texte a changé (tout changement).
 			this.ResetCursor();
 			this.CursorScroll(false);
 			this.Invalidate();
@@ -1301,8 +1301,8 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void ScrollHorizontal(double dist)
 		{
-			// Décale le texte vers la droite (+) ou la gauche (-), lorsque la
-			// souris dépasse pendant une sélection.
+			//	Décale le texte vers la droite (+) ou la gauche (-), lorsque la
+			//	souris dépasse pendant une sélection.
 			if ( this.textFieldStyle == TextFieldStyle.Multi )  return;
 
 			this.scrollOffset.X += dist;
@@ -1322,8 +1322,8 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void ScrollVertical(double dist)
 		{
-			// Décale le texte vers le haut (+) ou le bas (-), lorsque la
-			// souris dépasse pendant une sélection.
+			//	Décale le texte vers le haut (+) ou le bas (-), lorsque la
+			//	souris dépasse pendant une sélection.
 		}
 
 		
@@ -1331,9 +1331,9 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( AbstractTextField.flashTimerStarted == false )
 			{
-				// Il faut enregistrer le timer; on ne peut pas le faire avant que le
-				// premier TextField ne s'affiche, car sinon les WinForms semblent se
-				// mélanger les pinceaux :
+				//	Il faut enregistrer le timer; on ne peut pas le faire avant que le
+				//	premier TextField ne s'affiche, car sinon les WinForms semblent se
+				//	mélanger les pinceaux :
 				TextField.flashTimer = new Timer();
 				TextField.flashTimer.TimeElapsed += new Support.EventHandler(TextField.HandleFlashTimer);
 				TextField.flashTimerStarted = true;
@@ -1341,7 +1341,7 @@ namespace Epsitec.Common.Widgets
 				this.ResetCursor();
 			}
 			
-			// Dessine le texte en cours d'édition :
+			//	Dessine le texte en cours d'édition :
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
@@ -1362,13 +1362,13 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.BackColor.IsTransparent )
 			{
-				// Ne peint pas le fond de la ligne éditable si celle-ci a un fond
-				// explicitement défini comme "transparent".
+				//	Ne peint pas le fond de la ligne éditable si celle-ci a un fond
+				//	explicitement défini comme "transparent".
 			}
 			else
 			{
-				// Ne reproduit pas l'état sélectionné si on peint nous-même le fond
-				// de la ligne éditable.
+				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond
+				//	de la ligne éditable.
 				state &= ~WidgetState.Selected;
 				adorner.PaintTextFieldBackground(graphics, rFill, state, this.textFieldStyle, this.textDisplayMode, this.navigator.IsReadOnly&&!this.isCombo);
 			}
@@ -1403,10 +1403,10 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					// Un morceau de texte a été sélectionné. Peint en plusieurs étapes :
-					// - Peint tout le texte normalement
-					// - Peint les rectangles de sélection
-					// - Peint tout le texte en mode sélectionné, avec clipping
+					//	Un morceau de texte a été sélectionné. Peint en plusieurs étapes :
+					//	- Peint tout le texte normalement
+					//	- Peint les rectangles de sélection
+					//	- Peint tout le texte en mode sélectionné, avec clipping
 					
 					TextLayout.SelectedArea[] areas = this.TextLayout.FindTextRange(pos, from, to);
 					if ( areas.Length == 0 )
@@ -1440,7 +1440,7 @@ namespace Epsitec.Common.Widgets
 				
 				if ( !this.navigator.IsReadOnly && visibleCursor )
 				{
-					// Dessine le curseur :
+					//	Dessine le curseur :
 					Drawing.Point p1, p2;
 					if ( this.TextLayout.FindTextCursor(this.navigator.Context, out p1, out p2) )
 					{

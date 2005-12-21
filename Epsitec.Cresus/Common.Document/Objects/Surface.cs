@@ -37,16 +37,16 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectSurface"); }
 		}
 
 
-		// Début du déplacement d'une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -71,9 +71,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= 4 )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
@@ -95,9 +95,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
+			//	Début de la création d'un objet.
 			drawingContext.ConstrainFlush();
 			drawingContext.ConstrainAddHomo(pos);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
@@ -106,9 +106,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -117,9 +117,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			//	Fin de la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			drawingContext.SnapPos(ref pos);
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document.Objects
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
 
-			// Crée les 2 autres poignées dans les coins opposés.
+			//	Crée les 2 autres poignées dans les coins opposés.
 			Point p1 = this.Handle(0).Position;
 			Point p2 = this.Handle(1).Position;
 			this.HandleAdd(new Point(p1.X, p2.Y), HandleType.Primary);  // rang = 2
@@ -140,25 +140,25 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
 		
-		// Constuit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Constuit les formes de l'objet.
 			Path surface, outline;
 			this.PathBuild(null, out surface, out outline);
 			Shape[] shapes = new Shape[2];
 
 			Properties.SurfaceType type = this.PropertySurface.SurfaceType;
 
-			// Forme de la surface.
+			//	Forme de la surface.
 			shapes[0] = new Shape();
 			shapes[0].Path = surface;
 			shapes[0].SetPropertySurface(port, this.PropertyFillGradient);
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Document.Objects
 				shapes[0].FillMode = FillMode.NonZero;
 			}
 
-			// Forme du chemin.
+			//	Forme du chemin.
 			shapes[1] = new Shape();
 			shapes[1].Path = outline;
 			shapes[1].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
@@ -177,9 +177,9 @@ namespace Epsitec.Common.Document.Objects
 			return shapes;
 		}
 
-		// Crée les chemins de l'objet.
 		protected void PathBuild(DrawingContext drawingContext, out Path surface, out Path outline)
 		{
+			//	Crée les chemins de l'objet.
 			Point p1 = this.Handle(0).Position;
 			Point p2 = new Point();
 			Point p3 = this.Handle(1).Position;
@@ -201,9 +201,9 @@ namespace Epsitec.Common.Document.Objects
 			this.PathSurface(drawingContext, p1, p2, p3, p4, out surface, out outline);
 		}
 
-		// Crée le chemin d'une surface quelconque.
 		protected void PathSurface(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4, out Path surface, out Path outline)
 		{
+			//	Crée le chemin d'une surface quelconque.
 			surface = null;
 			outline = null;
 
@@ -262,9 +262,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Crée le chemin d'un quadrilatère.
 		protected Path PathQuadri(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée le chemin d'un quadrilatère.
 			Properties.Surface pf = this.PropertySurface;
 			Point p12 = Point.Scale(p1,p2, pf.GetFactor(0));
 			Point p23 = Point.Scale(p2,p3, pf.GetFactor(1));
@@ -281,9 +281,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin d'un trapèze haut.
 		protected Path PathTrapezeT(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée le chemin d'un trapèze haut.
 			Properties.Surface pf = this.PropertySurface;
 			Point p23 = Point.Scale(p2,p3, pf.GetFactor(1));
 			Point p32 = Point.Scale(p3,p2, pf.GetFactor(1));
@@ -298,9 +298,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin d'un trapèze bas.
 		protected Path PathTrapezeB(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée le chemin d'un trapèze bas.
 			Properties.Surface pf = this.PropertySurface;
 			Point p14 = Point.Scale(p1,p4, pf.GetFactor(3));
 			Point p41 = Point.Scale(p4,p1, pf.GetFactor(3));
@@ -315,9 +315,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin d'un trapèze gauche.
 		protected Path PathTrapezeL(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée le chemin d'un trapèze gauche.
 			Properties.Surface pf = this.PropertySurface;
 			Point p12 = Point.Scale(p1,p2, pf.GetFactor(0));
 			Point p21 = Point.Scale(p2,p1, pf.GetFactor(0));
@@ -332,9 +332,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin d'un trapèze droite.
 		protected Path PathTrapezeR(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée le chemin d'un trapèze droite.
 			Properties.Surface pf = this.PropertySurface;
 			Point p34 = Point.Scale(p3,p4, pf.GetFactor(2));
 			Point p43 = Point.Scale(p4,p3, pf.GetFactor(2));
@@ -349,9 +349,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin d'une grille.
 		protected Path PathGrid(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée le chemin d'une grille.
 			Properties.Surface pf = this.PropertySurface;
 			int nx = pf.GetScalar(0);
 			int ny = pf.GetScalar(1);
@@ -378,9 +378,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin d'un rectangle.
 		protected Path PathRectangle(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée le chemin d'un rectangle.
 			Path path = new Path();
 			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
 
@@ -393,9 +393,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin d'un damier.
 		protected Path PathPattern(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée le chemin d'un damier.
 			Properties.Surface pf = this.PropertySurface;
 			int nx = pf.GetScalar(0);
 			int ny = pf.GetScalar(1);
@@ -432,9 +432,9 @@ namespace Epsitec.Common.Document.Objects
 			return Point.Scale(p14,p23, sy);
 		}
 
-		// Crée le chemin d'un anneau.
 		protected Path PathRing(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée le chemin d'un anneau.
 			Properties.Surface pf = this.PropertySurface;
 			double r = pf.GetFactor(0);
 
@@ -451,9 +451,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin d'une spirale.
 		protected Path PathSpiral(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Crée le chemin d'une spirale.
 #if false  // système utilisé dans les version <= 1.0.19
 			Properties.Surface pf = this.PropertySurface;
 			int n = pf.GetScalar(0);
@@ -541,9 +541,9 @@ namespace Epsitec.Common.Document.Objects
 #endif
 		}
 
-		// Dégraisse un quadrilatère quelconque.
 		protected void ScaleQuadri(double r, ref Point p1, ref Point p2, ref Point p3, ref Point p4)
 		{
+			//	Dégraisse un quadrilatère quelconque.
 			Point p12 = Point.Scale(p1,p2, r);
 			Point p21 = Point.Scale(p2,p1, r);
 			Point p34 = Point.Scale(p3,p4, r);
@@ -555,9 +555,9 @@ namespace Epsitec.Common.Document.Objects
 			p4 = Point.Scale(p43,p12, r);
 		}
 
-		// Ajoute le chemin d'une ellipse.
 		protected void PathEllipse(Path path, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Ajoute le chemin d'une ellipse.
 			Point p12 = Point.Scale(p1,p2, 0.5);
 			Point p23 = Point.Scale(p2,p3, 0.5);
 			Point p34 = Point.Scale(p3,p4, 0.5);
@@ -571,9 +571,9 @@ namespace Epsitec.Common.Document.Objects
 			path.Close();
 		}
 
-		// Ajoute le chemin d'un quart d'arc en spirale.
 		protected void PathArcSpiral(Path path, Point center, Point current, Point corner, Point next, double r1, double r2)
 		{
+			//	Ajoute le chemin d'un quart d'arc en spirale.
 			double exp = this.PropertySurface.GetFactor(2);
 			r1 = this.Expo(r1, exp);
 			r2 = this.Expo(r2, exp);
@@ -584,10 +584,10 @@ namespace Epsitec.Common.Document.Objects
 			path.ArcTo(b, c);
 		}
 
-		// Place un point du système de coordonnées -1..1 dans le système défini
-		// par le quadrilatère p1;p2;p3;p4.
 		protected Point PlacePointToQuadri(Point p, Point p1, Point p2, Point p3, Point p4)
 		{
+			//	Place un point du système de coordonnées -1..1 dans le système défini
+			//	par le quadrilatère p1;p2;p3;p4.
 			p.X = p.X*0.5 + 0.5;
 			p.Y = p.Y*0.5 + 0.5;  // 0..1
 
@@ -612,9 +612,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
+			//	Retourne le chemin géométrique de l'objet.
 			if ( rank > 0 )  return null;
 			Path surface, outline;
 			this.PathBuild(null, out surface, out outline);
@@ -623,15 +623,15 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Surface(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 		}
 		#endregion
 	}

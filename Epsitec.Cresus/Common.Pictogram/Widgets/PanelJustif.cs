@@ -124,18 +124,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.extendedSize ? 80 : 30 );
 			}
 		}
 
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.label.Text = this.textStyle;
 
@@ -152,9 +152,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.EnableWidgets();
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyJustif p = new PropertyJustif();
 			base.GetProperty(p);
 
@@ -239,9 +239,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			for ( int i=5 ; i<5+3+4 ; i++ )
 			{
 				this.buttons[i].SetVisible(this.extendedSize);
@@ -275,9 +275,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttons == null )  return;
@@ -338,15 +338,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldOffsetV.Bounds = r;
 		}
 		
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			this.OnChanged();
 		}
 
-		// Une valeur a été changée.
 		private void PanelJustifClicked(object sender, MessageEventArgs e)
 		{
+			//	Une valeur a été changée.
 			IconButton button = sender as IconButton;
 
 			if ( button == this.buttons[0] )  this.SelectButtonHorizontal = JustifHorizontal.Left;

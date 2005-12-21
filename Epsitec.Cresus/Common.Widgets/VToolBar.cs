@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 
 		public override double				DefaultWidth
 		{
-			// Retourne la largeur standard d'une barre.
+			//	Retourne la largeur standard d'une barre.
 			get
 			{
 				return 28;

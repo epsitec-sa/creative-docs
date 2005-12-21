@@ -171,7 +171,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetCursors(int from, int to, bool after)
 		{
-			// Modifie les deux curseurs en même temps.
+			//	Modifie les deux curseurs en même temps.
 			int len = this.textLayout.MaxTextIndex;
 			
 			from = System.Math.Max(from, 0);
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								SelectionWaved
 		{
-			// Attribut typographique "ondulé" des caractères sélectionnés.
+			//	Attribut typographique "ondulé" des caractères sélectionnés.
 			get
 			{
 				return this.textLayout.IsSelectionWaved(this.context);
@@ -473,9 +473,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Gestion d'une touche pressée avec KeyDown dans le texte.
 		protected bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
+			//	Gestion d'une touche pressée avec KeyDown dans le texte.
 			this.InitialMemorize();
 
 			if ( this.IsMultiLine )
@@ -542,7 +542,7 @@ namespace Epsitec.Common.Widgets
 				
 					case KeyCode.PageUp:
 					case KeyCode.PageDown:
-						// TODO: gérer PageUp et PageDown...
+						//	TODO: gérer PageUp et PageDown...
 						return true;
 				}
 			}
@@ -609,9 +609,9 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		// Gestion d'une touche pressée avec KeyPress dans le texte.
 		protected bool ProcessKeyPress(int key)
 		{
+			//	Gestion d'une touche pressée avec KeyPress dans le texte.
 			if ( this.isReadOnly )  return false;
 			this.InitialMemorize();
 
@@ -638,9 +638,9 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		// Appelé lorsque le bouton de la souris est pressé.
 		protected bool ProcessBeginPress(Drawing.Point pos)
 		{
+			//	Appelé lorsque le bouton de la souris est pressé.
 			int index;
 			bool after;
 			this.mouseSelZone = false;
@@ -661,9 +661,9 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		// Appelé lorsque la souris est déplacée, bouton pressé.
 		protected void ProcessMovePress(Drawing.Point pos)
 		{
+			//	Appelé lorsque la souris est déplacée, bouton pressé.
 			int index;
 			bool after;
 			if ( this.textLayout.DetectIndex(pos, true, out index, out after) )
@@ -679,9 +679,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Appelé lorsque le bouton de la souris est relâché.
 		protected void ProcessEndPress(Drawing.Point pos, int downCount)
 		{
+			//	Appelé lorsque le bouton de la souris est relâché.
 			this.InitialMemorize();
 
 			if ( this.IsNumeric )
@@ -729,9 +729,9 @@ namespace Epsitec.Common.Widgets
 			Tab,
 		}
 
-		// Mémorise l'état actuel complet du texte, pour permettre l'annulation.
 		protected void UndoMemorise(UndoType type)
 		{
+			//	Mémorise l'état actuel complet du texte, pour permettre l'annulation.
 			this.OnAboutToChange ();
 			
 			if ( this.undoQueue == null )  return;
@@ -774,9 +774,9 @@ namespace Epsitec.Common.Widgets
 
 		protected class TextOplet : Support.AbstractOplet
 		{
-			// Effectue une copie du texte et du contexte.
 			public TextOplet(TextNavigator navigator, UndoType type)
 			{
+				//	Effectue une copie du texte et du contexte.
 				this.host = navigator;
 				this.type = type;
 				this.textCopy = string.Copy(this.host.textLayout.InternalText);
@@ -794,10 +794,10 @@ namespace Epsitec.Common.Widgets
 				get { return this.type; }
 			}
 
-			// Permute le texte et le contexte contenus par l'hôte avec ceux
-			// contenus dans TextOplet.
 			protected void Swap()
 			{
+				//	Permute le texte et le contexte contenus par l'hôte avec ceux
+				//	contenus dans TextOplet.
 				string undoText = string.Copy(this.textCopy);
 				string redoText = string.Copy(this.host.textLayout.InternalText);
 				this.host.textLayout.Text = undoText;
@@ -864,18 +864,18 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Mémorise l'état avant une opération quelconque sur le texte.
 		protected void InitialMemorize()
 		{
+			//	Mémorise l'état avant une opération quelconque sur le texte.
 			this.iCursorFrom  = this.context.CursorFrom;
 			this.iCursorTo    = this.context.CursorTo;
 			this.iCursorAfter = this.context.CursorAfter;
 			this.iTextLength  = this.textLayout.Text.Length;
 		}
 
-		// Génère un événement pour dire que des caractères ont été insérés.
 		protected void OnTextInserted(bool always)
 		{
+			//	Génère un événement pour dire que des caractères ont été insérés.
 			if ( !always && this.iTextLength == this.textLayout.Text.Length )  return;
 
 			if ( this.TextInserted != null )  // qq'un écoute ?
@@ -886,7 +886,7 @@ namespace Epsitec.Common.Widgets
 
 		public event EventHandler TextInserted;
 
-		// Génère un événement pour dire que des caractères ont été détruits.
+		//	Génère un événement pour dire que des caractères ont été détruits.
 		protected void OnTextDeleted(bool always)
 		{
 			if ( !always && this.iTextLength == this.textLayout.Text.Length )  return;
@@ -898,9 +898,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Génère un événement pour dire que le curseur a bougé.
 		protected void OnCursorChanged(bool always)
 		{
+			//	Génère un événement pour dire que le curseur a bougé.
 			if ( !always                                       &&
 				 this.iCursorFrom  == this.context.CursorFrom  &&
 				 this.iCursorTo    == this.context.CursorTo    &&
@@ -913,9 +913,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Génère un événement pour dire que le curseur a scrollé.
 		protected void OnCursorScrolled()
 		{
+			//	Génère un événement pour dire que le curseur a scrollé.
 			if ( this.CursorScrolled != null )  // qq'un écoute ?
 			{
 				this.CursorScrolled(this);
@@ -923,9 +923,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Génère un événement pour dire que le style a changé.
 		protected void OnStyleChanged()
 		{
+			//	Génère un événement pour dire que le style a changé.
 			if ( this.StyleChanged != null )  // qq'un écoute ?
 			{
 				this.StyleChanged(this);

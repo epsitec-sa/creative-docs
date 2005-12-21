@@ -108,9 +108,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.extendedSize ? 99 : 30 );
@@ -118,9 +118,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 
 			PropertyModColor p = property as PropertyModColor;
@@ -138,9 +138,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.EnableWidgets();
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyModColor p = new PropertyModColor();
 			base.GetProperty(p);
 
@@ -156,9 +156,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			for ( int i=0 ; i<7 ; i++ )
 			{
 				this.labelArray[i].SetVisible(this.extendedSize);
@@ -168,9 +168,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.reset.SetVisible(this.extendedSize);
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldArray == null )  return;
@@ -211,9 +211,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.reset.Bounds = r;
 		}
 		
-		// Couleur -> sliders.
 		protected void ColoriseSliders()
 		{
+			//	Couleur -> sliders.
 			double h = (double) this.fieldArray[0].Value;
 			Drawing.Color saturated = Drawing.Color.FromHSV(h,1,1);
 			
@@ -222,9 +222,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldArray[2].Color = saturated;
 		}
 
-		// Une valeur a été changée.
 		private void HandleTextChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			this.ColoriseSliders();
 			this.OnChanged();
 		}

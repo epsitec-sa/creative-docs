@@ -111,9 +111,9 @@ namespace Epsitec.Common.Document.Settings
 
 
 		#region Serialization
-		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise les réglages.
 			info.AddValue("Rev", 4);
 			info.AddValue("PageRange", this.pageRange);
 			info.AddValue("PageFrom", this.pageFrom);
@@ -130,9 +130,9 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("ImageMaxDpi", this.imageMaxDpi);
 		}
 
-		// Constructeur qui désérialise les réglages.
 		protected ExportPDFInfo(SerializationInfo info, StreamingContext context)
 		{
+			//	Constructeur qui désérialise les réglages.
 			this.document = Document.ReadDocument;
 			this.Initialise();
 

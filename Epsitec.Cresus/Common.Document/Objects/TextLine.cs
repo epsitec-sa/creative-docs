@@ -62,9 +62,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectTextLine"); }
 		}
 
@@ -83,11 +83,11 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		// Détecte si l'objet est dans un rectangle.
-		// all = true  -> toutes les poignées doivent être dans le rectangle
-		// all = false -> une seule poignée doit être dans le rectangle
 		public override bool Detect(Drawing.Rectangle rect, bool all)
 		{
+			//	Détecte si l'objet est dans un rectangle.
+			//	all = true  -> toutes les poignées doivent être dans le rectangle
+			//	all = false -> une seule poignée doit être dans le rectangle
 			if ( this.isHide )  return false;
 
 			if ( all )
@@ -100,10 +100,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Détecte si la souris est sur le pourtour de l'objet.
-		// Retourne le rank de la poignée de départ, ou -1
 		protected int DetectOutline(Point pos)
 		{
+			//	Détecte si la souris est sur le pourtour de l'objet.
+			//	Retourne le rank de la poignée de départ, ou -1
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 
 			Shape[] shapes = this.ShapesBuild(null, context, false);
@@ -112,9 +112,9 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
-		// Détecte si la souris est sur l'objet pour l'éditer.
 		public override DetectEditType DetectEdit(Point pos)
 		{
+			//	Détecte si la souris est sur l'objet pour l'éditer.
 			if ( this.isHide )  return DetectEditType.Out;
 
 			Drawing.Rectangle bbox = this.BoundingBox;
@@ -129,9 +129,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Déplace tout l'objet.
 		public override void MoveAllProcess(Point move)
 		{
+			//	Déplace tout l'objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			bool allHandle = !this.IsSelected;
@@ -151,15 +151,15 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Indique si cet objet peut avoir des segments sélectionnés.
 		public override bool IsSelectedSegmentPossible
 		{
+			//	Indique si cet objet peut avoir des segments sélectionnés.
 			get { return true; }
 		}
 
-		// Donne l'état d'une commande ShaperHandle*.
 		public override bool ShaperHandleState(string family, ref bool enable, System.Collections.ArrayList actives)
 		{
+			//	Donne l'état d'une commande ShaperHandle*.
 			if ( family == "Add" )
 			{
 				enable = (this.selectedSegments != null && this.selectedSegments.Count != 0);
@@ -255,9 +255,9 @@ namespace Epsitec.Common.Document.Objects
 			return base.ShaperHandleState(family, ref enable, actives);
 		}
 
-		// Exécute une commande ShaperHandle*.
 		public override bool ShaperHandleCommand(string cmd)
 		{
+			//	Exécute une commande ShaperHandle*.
 			if ( cmd == "ShaperHandleAdd" )
 			{
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleAdd);
@@ -480,17 +480,17 @@ namespace Epsitec.Common.Document.Objects
 			return base.ShaperHandleCommand(cmd);
 		}
 
-		// Passe le point en mode symétrique.
 		protected void ShaperHandleSym(int rank)
 		{
+			//	Passe le point en mode symétrique.
 			this.Handle(rank).ConstrainType = HandleConstrainType.Symmetric;
 			this.MoveSecondary(rank, rank-1, rank+1, this.Handle(rank-1).Position);
 			this.SetDirtyBbox();
 		}
 
-		// Passe le point en mode lisse.
 		protected void ShaperHandleSmooth(int rank)
 		{
+			//	Passe le point en mode lisse.
 			this.Handle(rank).ConstrainType = HandleConstrainType.Smooth;
 
 			if ( this.Handle(rank-1).Type == HandleType.Hide || this.Handle(rank+1).Type == HandleType.Hide )
@@ -504,15 +504,15 @@ namespace Epsitec.Common.Document.Objects
 			this.SetDirtyBbox();
 		}
 
-		// Passe le point en mode anguleux.
 		protected void ShaperHandleCorner(int rank)
 		{
+			//	Passe le point en mode anguleux.
 			this.Handle(rank).ConstrainType = HandleConstrainType.Corner;
 		}
 
-		// Prolonge la courbe.
 		protected void ShaperHandleContinue(int rank)
 		{
+			//	Prolonge la courbe.
 			HandleType type = this.Handle(rank).Type;
 			this.Handle(rank).Type = HandleType.Primary;
 
@@ -604,9 +604,9 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 		}
 
-		// Ajoute une poignée sans changer l'aspect de la courbe.
 		protected void ShaperHandleAdd(Point pos, int rank)
 		{
+			//	Ajoute une poignée sans changer l'aspect de la courbe.
 			for ( int i=0 ; i<3 ; i++ )
 			{
 				Handle handle = new Handle(this.document);
@@ -647,9 +647,9 @@ namespace Epsitec.Common.Document.Objects
 			this.SetDirtyBbox();
 		}
 
-		// Supprime une poignée sans changer l'aspect de la courbe.
 		protected void ShaperHandleSub(int rank)
 		{
+			//	Supprime une poignée sans changer l'aspect de la courbe.
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
@@ -669,9 +669,9 @@ namespace Epsitec.Common.Document.Objects
 			this.SetDirtyBbox();
 		}
 
-		// Conversion d'un segement en ligne droite.
 		protected void ShaperHandleToLine(int rank)
 		{
+			//	Conversion d'un segement en ligne droite.
 			int next = rank+3;
 			if ( next >= this.handles.Count )  next = 0;
 			this.Handle(rank+2).Position = this.Handle(rank+1).Position;
@@ -683,9 +683,9 @@ namespace Epsitec.Common.Document.Objects
 			this.SetDirtyBbox();
 		}
 
-		// Conversion d'un segement en courbe.
 		protected void ShaperHandleToCurve(int rank)
 		{
+			//	Conversion d'un segement en courbe.
 			int next = rank+3;
 			if ( next >= this.handles.Count )  next = 0;
 			this.Handle(rank+2).Position = Point.Scale(this.Handle(rank+1).Position, this.Handle(next+1).Position, 0.25);
@@ -698,9 +698,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Adapte le point secondaire s'il est en mode "en ligne".
 		protected void AdaptPrimaryLine(int rankPrimary, int rankSecondary, out int rankExtremity)
 		{
+			//	Adapte le point secondaire s'il est en mode "en ligne".
 			rankExtremity = rankPrimary - (rankSecondary-rankPrimary)*3;
 			if ( rankExtremity < 0 )  rankExtremity = this.handles.Count-2;
 			if ( rankExtremity >= this.handles.Count )  rankExtremity = 1;
@@ -717,10 +717,10 @@ namespace Epsitec.Common.Document.Objects
 			this.SetDirtyBbox();
 		}
 
-		// Cherche le rang du groupe "sps" précédent, en tenant compte
-		// des ensembles Starting-Primary(s).
 		protected int PrevRank(int rank)
 		{
+			//	Cherche le rang du groupe "sps" précédent, en tenant compte
+			//	des ensembles Starting-Primary(s).
 			System.Diagnostics.Debug.Assert(rank%3 == 0);
 			if ( rank == 0 || this.Handle(rank+1).Type == HandleType.Starting )
 			{
@@ -734,10 +734,10 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
-		// Cherche le rang du groupe "sps" suivant, en tenant compte
-		// des ensembles Starting-Primary(s).
 		protected int NextRank(int rank)
 		{
+			//	Cherche le rang du groupe "sps" suivant, en tenant compte
+			//	des ensembles Starting-Primary(s).
 			System.Diagnostics.Debug.Assert(rank%3 == 0);
 			rank += 3;
 			if ( rank >= this.TotalMainHandle || this.Handle(rank+1).Type == HandleType.Starting )
@@ -751,9 +751,9 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
-		// Déplace une poignée primaire selon les contraintes.
 		protected void MovePrimary(int rank, Point pos)
 		{
+			//	Déplace une poignée primaire selon les contraintes.
 			Point move = pos-this.Handle(rank).Position;
 			this.Handle(rank).Position = pos;
 			this.Handle(rank-1).Position += move;
@@ -769,9 +769,9 @@ namespace Epsitec.Common.Document.Objects
 			this.SetDirtyBbox();
 		}
 
-		// Déplace une poignée secondaire selon les contraintes.
 		protected void MoveSecondary(int rankPrimary, int rankSecondary, int rankOpposite, Point pos)
 		{
+			//	Déplace une poignée secondaire selon les contraintes.
 			HandleConstrainType type = this.Handle(rankPrimary).ConstrainType;
 
 			this.Handle(rankSecondary).Position = pos;
@@ -807,9 +807,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Début du déplacement une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement une poignée.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -865,9 +865,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
@@ -899,9 +899,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Début du déplacement d'une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée d'un segment sélectionné.
 			base.MoveSelectedSegmentStarting(rank, pos, drawingContext);
 
 			this.initialPos = pos;
@@ -923,9 +923,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée d'un segment sélectionné.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			drawingContext.SnapPos(ref pos);
@@ -967,16 +967,16 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin du déplacement d'une poignée d'un segment sélectionné.
 		public override void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Fin du déplacement d'une poignée d'un segment sélectionné.
 			base.MoveSelectedSegmentEnding(rank, pos, drawingContext);
 		}
 
 		
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
+			//	Début de la création d'un objet.
 			drawingContext.ConstrainFlush();
 			drawingContext.ConstrainAddHV(pos);
 
@@ -995,9 +995,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(3).Position = pos;
@@ -1008,9 +1008,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			//	Fin de la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(3).Position = pos;
@@ -1023,30 +1023,30 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			this.Deselect();
 			double len = Point.Distance(this.Handle(1).Position, this.Handle(4).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
-		// Indique s'il faut sélectionner l'objet après sa création.
 		public override bool EditAfterCreation()
 		{
+			//	Indique s'il faut sélectionner l'objet après sa création.
 			return true;
 		}
 
-		// Ajoute toutes les fontes utilisées par l'objet dans une liste.
 		public override void FillFontFaceList(System.Collections.ArrayList list)
 		{
+			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
 			this.textLayout.FillFontFaceList(list);
 		}
 
-		// Ajoute tous les caractères utilisés par l'objet dans une table.
 		public override void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
+			//	Ajoute tous les caractères utilisés par l'objet dans une table.
 			this.textLayout.DefaultFont      = this.PropertyTextFont.GetFont();
 			this.textLayout.DefaultFontSize  = this.PropertyTextFont.FontSize;
 			this.textLayout.DefaultRichColor = this.PropertyTextFont.FontColor;
@@ -1064,15 +1064,15 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Indique si un objet est éditable.
 		public override bool IsEditable
 		{
+			//	Indique si un objet est éditable.
 			get { return true; }
 		}
 
-		// Lie l'objet éditable à une règle.
 		public override bool EditRulerLink(TextRuler ruler, DrawingContext drawingContext)
 		{
+			//	Lie l'objet éditable à une règle.
 			ruler.ListCapability = false;
 			ruler.TabCapability = false;
 			ruler.AttachToText(this.textNavigator);
@@ -1080,9 +1080,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(Objects.Abstract src)
 		{
+			//	Reprend toutes les caractéristiques d'un objet.
 			base.CloneObject(src);
 
 			TextLine obj = src as TextLine;
@@ -1091,9 +1091,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		// Gestion d'un événement pendant l'édition.
 		public override bool EditProcessMessage(Message message, Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			if ( message.Type == MessageType.KeyDown   ||
 				 message.Type == MessageType.KeyPress  ||
 				 message.Type == MessageType.MouseDown )
@@ -1125,9 +1125,9 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Gestion des événements clavier.
 		protected bool EditProcessKeyPress(Message message)
 		{
+			//	Gestion des événements clavier.
 			if ( message.IsCtrlPressed )
 			{
 				switch ( message.KeyCode )
@@ -1198,64 +1198,64 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
-		// Insère un glyphe dans le pavé en édition.
 		public override bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
+			//	Insère un glyphe dans le pavé en édition.
 			this.textNavigator.Selection = text;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			return true;
 		}
 
-		// Donne la fonte actullement utilisée.
 		public override string EditGetFontName()
 		{
+			//	Donne la fonte actullement utilisée.
 			return this.textNavigator.SelectionFontName;
 		}
 
 		#region TextFormat
-		// Met en gras pendant l'édition.
 		public bool EditBold()
 		{
+			//	Met en gras pendant l'édition.
 			this.textNavigator.SelectionBold = !this.textNavigator.SelectionBold;
 			return true;
 		}
 
-		// Met en italique pendant l'édition.
 		public bool EditItalic()
 		{
+			//	Met en italique pendant l'édition.
 			this.textNavigator.SelectionItalic = !this.textNavigator.SelectionItalic;
 			return true;
 		}
 
-		// Souligne pendant l'édition.
 		public bool EditUnderlined()
 		{
+			//	Souligne pendant l'édition.
 			this.textNavigator.SelectionUnderlined = !this.textNavigator.SelectionUnderlined;
 			return true;
 		}
 		#endregion
 
-		// Donne la zone contenant le curseur d'édition.
 		public override Drawing.Rectangle EditCursorBox
 		{
+			//	Donne la zone contenant le curseur d'édition.
 			get
 			{
 				return this.cursorBox;
 			}
 		}
 
-		// Donne la zone contenant le texte sélectionné.
 		public override Drawing.Rectangle EditSelectBox
 		{
+			//	Donne la zone contenant le texte sélectionné.
 			get
 			{
 				return this.selectBox;
 			}
 		}
 
-		// Gestion d'un événement pendant l'édition.
 		public override void EditMouseDownMessage(Point pos)
 		{
+			//	Gestion d'un événement pendant l'édition.
 			int rank = this.DetectTextCurveRank(pos);
 			pos = this.RankToLinearPos(rank);
 			if ( pos == Point.Empty )  return;
@@ -1264,9 +1264,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		// Calcule la bbox qui englobe l'objet et les poignées secondaires.
 		protected Drawing.Rectangle FullBoundingBox()
 		{
+			//	Calcule la bbox qui englobe l'objet et les poignées secondaires.
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 			int total = this.TotalHandle;
 			for ( int i=0 ; i<total ; i++ )
@@ -1276,9 +1276,9 @@ namespace Epsitec.Common.Document.Objects
 			return bbox;
 		}
 
-		// Constuit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Constuit les formes de l'objet.
 			Path pathLine = this.PathBuild();
 			Path pathHilite = null;
 			Path pathSupport = null;
@@ -1317,7 +1317,7 @@ namespace Epsitec.Common.Document.Objects
 			Shape[] shapes = new Shape[totalShapes];
 			int i = 0;
 			
-			// Rectangles des caractères survolés.
+			//	Rectangles des caractères survolés.
 			if ( pathHilite != null )
 			{
 				shapes[i] = new Shape();
@@ -1327,18 +1327,18 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 			
-			// Chemin pointillé.
+			//	Chemin pointillé.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathLine;
 			shapes[i].Type = Type.Stroke;
 			i ++;
 
-			// Caractères du texte.
+			//	Caractères du texte.
 			shapes[i] = new Shape();
 			shapes[i].SetTextObject(this);
 			i ++;
 
-			// Traits de support si chemin courbe.
+			//	Traits de support si chemin courbe.
 			if ( pathSupport != null )
 			{
 				shapes[i] = new Shape();
@@ -1348,7 +1348,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			// Rectangles des caractères pour bbox et détection.
+			//	Rectangles des caractères pour bbox et détection.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathBbox;
 			shapes[i].Type = Type.Surface;
@@ -1358,9 +1358,9 @@ namespace Epsitec.Common.Document.Objects
 			return shapes;
 		}
 
-		// Crée le chemin de l'objet.
 		protected Path PathBuild()
 		{
+			//	Crée le chemin de l'objet.
 			Path path = new Path();
 
 			int total = this.handles.Count;
@@ -1380,9 +1380,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Retourne la longueur totale d'une courbe multiple.
 		protected double GetLength()
 		{
+			//	Retourne la longueur totale d'une courbe multiple.
 			double length = 0.0;
 			int i = 0;
 			do
@@ -1415,16 +1415,16 @@ namespace Epsitec.Common.Document.Objects
 			return length;
 		}
 
-		// Avance le long d'une courbe multiple.
-		// La courbe est fragmentée en 100 morceaux (TextLine.step = 0.01)
-		// considérés chacuns comme des lignes droites.
-		// Retourne false lorsqu'on arrive à la fin.
-		// Le mode checkEnd = true ne teste pas l'arrivée à la fin, ce qui est
-		// utile en mode JustifHorizontal.Right pour être certain de caser le
-		// dernier caractère. Sans cela, des erreurs d'arrondi font qu'il est
-		// parfois considéré comme hors du tracé.
 		protected bool Advance(double width, bool checkEnd, ref int i, ref double t, ref Point pos)
 		{
+			//	Avance le long d'une courbe multiple.
+			//	La courbe est fragmentée en 100 morceaux (TextLine.step = 0.01)
+			//	considérés chacuns comme des lignes droites.
+			//	Retourne false lorsqu'on arrive à la fin.
+			//	Le mode checkEnd = true ne teste pas l'arrivée à la fin, ce qui est
+			//	utile en mode JustifHorizontal.Right pour être certain de caser le
+			//	dernier caractère. Sans cela, des erreurs d'arrondi font qu'il est
+			//	parfois considéré comme hors du tracé.
 			if ( i >= this.handles.Count-3 )  return false;
 
 			while ( true )
@@ -1485,9 +1485,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Retourne la largeur d'un caractère.
 		protected double AdvanceString(Font font, string text)
 		{
+			//	Retourne la largeur d'un caractère.
 			System.Diagnostics.Debug.Assert(text.Length == 1);
 			if ( text[0] == TextLayout.CodeEndOfText )
 			{
@@ -1499,9 +1499,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Retourne la bbox d'un caractère.
 		protected Drawing.Rectangle AdvanceBounds(Font font, string text)
 		{
+			//	Retourne la bbox d'un caractère.
 			System.Diagnostics.Debug.Assert(text.Length == 1);
 			if ( text[0] == TextLayout.CodeEndOfText )
 			{
@@ -1513,9 +1513,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Initialise l'avance le long des caractères du texte.
 		protected bool AdvanceInit()
 		{
+			//	Initialise l'avance le long des caractères du texte.
 			Properties.TextLine justif = this.PropertyTextLine;
 
 			this.textLayout.DefaultFont      = this.PropertyTextFont.GetFont();
@@ -1568,7 +1568,6 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Avance sur le prochain caractère du texte.
 		protected bool AdvanceNext(out string character,
 								   out Font font,
 								   out double fontSize,
@@ -1580,6 +1579,7 @@ namespace Epsitec.Common.Document.Objects
 								   out Point pbr,
 								   out double angle)
 		{
+			//	Avance sur le prochain caractère du texte.
 			Properties.TextLine justif = this.PropertyTextLine;
 
 			character = "";
@@ -1640,10 +1640,10 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Conversion d'un rank dans le texte en une position linéaire, c'est-à-dire
-		// une position qui suppose que le texte est droit.
 		protected Point RankToLinearPos(int rank)
 		{
+			//	Conversion d'un rank dans le texte en une position linéaire, c'est-à-dire
+			//	une position qui suppose que le texte est droit.
 			Point lp = Point.Empty;
 			if ( rank == -1 || !this.AdvanceInit() )  return lp;
 
@@ -1663,9 +1663,9 @@ namespace Epsitec.Common.Document.Objects
 			return lp;
 		}
 
-		// Détecte si la souris est sur un caractère du texte le long de la courbe multiple.
 		protected bool DetectTextCurve(Point mouse)
 		{
+			//	Détecte si la souris est sur un caractère du texte le long de la courbe multiple.
 			if ( !this.AdvanceInit() )  return false;
 
 			string	character;
@@ -1686,9 +1686,9 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Détecte sur quel caractère est la souris le long de la courbe multiple.
 		protected int DetectTextCurveRank(Point mouse)
 		{
+			//	Détecte sur quel caractère est la souris le long de la courbe multiple.
 			if ( !this.AdvanceInit() )  return -1;
 
 			string	character;
@@ -1719,9 +1719,9 @@ namespace Epsitec.Common.Document.Objects
 			return -1;
 		}
 
-		// Calcule la bbox du texte le long de la courbe multiple.
 		protected void BboxTextCurve(ref Drawing.Rectangle bbox)
 		{
+			//	Calcule la bbox du texte le long de la courbe multiple.
 			if ( !this.AdvanceInit() )  return;
 
 			string	character;
@@ -1739,9 +1739,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Donne le chemin du texte le long de la courbe multiple.
 		protected Path HiliteTextCurve()
 		{
+			//	Donne le chemin du texte le long de la courbe multiple.
 			if ( !this.AdvanceInit() )  return null;
 
 			Path path = new Path();
@@ -1764,9 +1764,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Construit le chemin réel d'un seul caractère.
 		protected Path OneRealPathCurve(int rank)
 		{
+			//	Construit le chemin réel d'un seul caractère.
 			if ( !this.AdvanceInit() )  return null;
 
 			string	character;
@@ -1798,9 +1798,9 @@ namespace Epsitec.Common.Document.Objects
 			return null;
 		}
 
-		// Dessine le texte le long de la courbe multiple.
 		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
+			//	Dessine le texte le long de la courbe multiple.
 			this.cursorBox = Drawing.Rectangle.Empty;
 			this.selectBox = Drawing.Rectangle.Empty;
 
@@ -1909,39 +1909,39 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Retourne le chemin géométrique de l'objet pour les constructions
-		// magnétiques.
 		public override Path GetMagnetPath()
 		{
+			//	Retourne le chemin géométrique de l'objet pour les constructions
+			//	magnétiques.
 			Path path = this.PathBuild();
 			return path;
 		}
 
-		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
+			//	Retourne le chemin géométrique de l'objet.
 			return this.OneRealPathCurve(rank);
 		}
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 			info.AddValue("Text", this.textLayout.Text);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected TextLine(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 			this.Initialise();
 			this.textLayout.Text = info.GetString("Text");
 		}
 
-		// Vérifie si tous les fichiers existent.
 		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
 		{
+			//	Vérifie si tous les fichiers existent.
 			Common.Document.Objects.Abstract.ReadCheckFonts(fonts, warnings, this.textLayout);
 		}
 		#endregion

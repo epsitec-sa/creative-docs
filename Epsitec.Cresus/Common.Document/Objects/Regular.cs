@@ -38,16 +38,16 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectRegular"); }
 		}
 
 
-		// Début du déplacement une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement une poignée.
 			base.MoveHandleStarting(rank, pos, drawingContext);
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -77,9 +77,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= 2 )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
@@ -107,9 +107,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
+			//	Début de la création d'un objet.
 			drawingContext.ConstrainFlush();
 			drawingContext.ConstrainAddHV(pos);
 			this.HandleAdd(pos, HandleType.Primary);
@@ -118,9 +118,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -129,9 +129,9 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			//	Fin de la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
@@ -145,27 +145,27 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > drawingContext.MinimalSize );
 		}
 
 
-		// Constuit les formes de l'objet.
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			//	Constuit les formes de l'objet.
 			Path path = this.PathBuild(drawingContext, simplify);
 			Shape[] shapes = new Shape[2];
 
-			// Forme de la surface.
+			//	Forme de la surface.
 			shapes[0] = new Shape();
 			shapes[0].Path = path;
 			shapes[0].SetPropertySurface(port, this.PropertyFillGradient);
 
-			// Forme du chemin.
+			//	Forme du chemin.
 			shapes[1] = new Shape();
 			shapes[1].Path = path;
 			shapes[1].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
@@ -173,9 +173,9 @@ namespace Epsitec.Common.Document.Objects
 			return shapes;
 		}
 
-		// Calcule les points pour les poignées de la propriété PropertyCorner.
 		public void ComputeCorners(out Point a, out Point b)
 		{
+			//	Calcule les points pour les poignées de la propriété PropertyCorner.
 			Point t;
 
 			Properties.Regular pr = this.PropertyRegular;
@@ -191,9 +191,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Calcule une droite de l'objet.
 		protected bool ComputeLine(int i, out Point a, out Point b)
 		{
+			//	Calcule une droite de l'objet.
 			int total = this.PropertyRegular.NbFaces;
 			Point center = this.Handle(0).Position;
 			Point corner = this.Handle(1).Position;
@@ -220,9 +220,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Crée le chemin d'un polygone régulier.
 		protected Path PathBuild(DrawingContext drawingContext, bool simplify)
 		{
+			//	Crée le chemin d'un polygone régulier.
 			Path path = new Path();
 			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);;
 
@@ -265,9 +265,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Crée le chemin d'un coin.
 		protected void PathCorner(Path path, Point p1, Point s, Point p2, Properties.Corner corner)
 		{
+			//	Crée le chemin d'un coin.
 			double l1 = Point.Distance(p1, s);
 			double l2 = Point.Distance(p2, s);
 			double radius = System.Math.Min(corner.Radius, System.Math.Min(l1,l2)/2);
@@ -279,31 +279,31 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Retourne le chemin géométrique de l'objet pour les constructions
-		// magnétiques.
 		public override Path GetMagnetPath()
 		{
+			//	Retourne le chemin géométrique de l'objet pour les constructions
+			//	magnétiques.
 			return this.PathBuild(null, true);
 		}
 
-		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
+			//	Retourne le chemin géométrique de l'objet.
 			if ( rank > 0 )  return null;
 			return this.PathBuild(null, false);
 		}
 
 
 		#region Serialization
-		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 		}
 
-		// Constructeur qui désérialise l'objet.
 		protected Regular(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise l'objet.
 		}
 		#endregion
 	}

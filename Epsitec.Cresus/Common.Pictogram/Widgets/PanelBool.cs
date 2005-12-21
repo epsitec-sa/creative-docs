@@ -32,9 +32,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.button.Text = this.textStyle;
 
@@ -44,9 +44,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.button.ActiveState = p.Bool ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyBool p = new PropertyBool();
 			base.GetProperty(p);
 
@@ -55,9 +55,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.button == null )  return;
@@ -68,9 +68,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.button.Bounds = rect;
 		}
 		
-		// Une valeur a été changée.
 		private void ButtonActiveStateChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			this.OnChanged();
 		}
 

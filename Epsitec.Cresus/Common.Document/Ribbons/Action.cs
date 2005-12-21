@@ -40,9 +40,9 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonKey.Visibility = (this.installType != InstallType.Freeware);
 		}
 
-		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
+			//	Retourne la largeur standard.
 			get
 			{
 				return 8 + 22*3;
@@ -50,9 +50,9 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.buttonSettings == null )  return;

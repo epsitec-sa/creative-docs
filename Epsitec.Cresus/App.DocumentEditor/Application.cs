@@ -16,8 +16,8 @@ namespace Epsitec.App.DocumentEditor
 			
 			Res.Initialise(typeof(Application), "App");
 			
-			// Il faut indiquer ci-après la date de diffusion du logiciel, qui doit
-			// être mise à jour chaque fois que l'on génère un nouveau CD :
+			//	Il faut indiquer ci-après la date de diffusion du logiciel, qui doit
+			//	être mise à jour chaque fois que l'on génère un nouveau CD :
 			Common.Support.SerialAlgorithm.SetProductBuildDate(new System.DateTime(2005, 1, 20));
 			Common.Support.SerialAlgorithm.SetProductGenerationNumber(1, 0);
 			

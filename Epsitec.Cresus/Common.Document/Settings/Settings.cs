@@ -27,11 +27,11 @@ namespace Epsitec.Common.Document.Settings
 			this.exportPDFInfo = new ExportPDFInfo(document);
 		}
 
-		// Crée tous les réglages par défaut, si nécessaire.
-		// Il est possible d'en ajouter de nouveaux tout en restant compatible
-		// avec les anciens fichiers sérialisés.
 		protected void CreateDefault()
 		{
+			//	Crée tous les réglages par défaut, si nécessaire.
+			//	Il est possible d'en ajouter de nouveaux tout en restant compatible
+			//	avec les anciens fichiers sérialisés.
 			this.owners = new System.Collections.Hashtable();
 
 			this.CreateDefaultPoint("Settings", "PageSize");
@@ -174,58 +174,58 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		// Spécifie quel est le dialogue propriétaire d'un réglage.
 		protected void SetOwnerDialog(string dialog, string name)
 		{
+			//	Spécifie quel est le dialogue propriétaire d'un réglage.
 			if ( dialog == "" )  return;
 			this.owners.Add(name, dialog);
 		}
 
-		// Indique à quel dialogue appartient un réglage.
 		public string GetOwnerDialog(string name)
 		{
+			//	Indique à quel dialogue appartient un réglage.
 			string dialog = this.owners[name] as string;
 			if ( dialog == null )  return "";
 			return dialog;
 		}
 
 
-		// Donne les réglages de l'impression.
 		public PrintInfo PrintInfo
 		{
+			//	Donne les réglages de l'impression.
 			get { return this.printInfo; }
 		}
 
-		// Donne les réglages de la publication PDF.
 		public ExportPDFInfo ExportPDFInfo
 		{
+			//	Donne les réglages de la publication PDF.
 			get { return this.exportPDFInfo; }
 		}
 
-		// Remets tous les réglages par défaut.
 		public void Reset()
 		{
+			//	Remets tous les réglages par défaut.
 			this.GuidesReset();
 		}
 
-		// Nombre total de réglages.
 		public int Count
 		{
+			//	Nombre total de réglages.
 			get
 			{
 				return this.settings.Count;
 			}
 		}
 
-		// Donne un réglage d'après son index.
 		public Abstract Get(int index)
 		{
+			//	Donne un réglage d'après son index.
 			return this.settings[index] as Abstract;
 		}
 
-		// Donne un réglage d'après son nom.
 		public Abstract Get(string name)
 		{
+			//	Donne un réglage d'après son nom.
 			foreach ( Abstract settings in this.settings )
 			{
 				if ( settings.Name == name )  return settings;
@@ -235,9 +235,9 @@ namespace Epsitec.Common.Document.Settings
 
 
 		#region Guides
-		// Utilise le guides globaux ou locaux à la page courante.
 		public bool GlobalGuides
 		{
+			//	Utilise le guides globaux ou locaux à la page courante.
 			get
 			{
 				return this.globalGuides;
@@ -254,18 +254,18 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		// Nombre total de guides.
 		public int GuidesCount
 		{
+			//	Nombre total de guides.
 			get
 			{
 				return this.GuidesList.Count;
 			}
 		}
 
-		// Guide sélectionné.
 		public int GuidesSelected
 		{
+			//	Guide sélectionné.
 			get
 			{
 				return this.GuidesList.Selected;
@@ -277,9 +277,9 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		// Supprime tous les guides.
 		public void GuidesReset()
 		{
+			//	Supprime tous les guides.
 			this.globalGuides = true;
 			this.guides.Clear();
 			this.document.Notifier.NotifyGuidesChanged();
@@ -287,15 +287,15 @@ namespace Epsitec.Common.Document.Settings
 			this.document.IsDirtySerialize = true;
 		}
 
-		// Donne un guide.
 		public Guide GuidesGet(int index)
 		{
+			//	Donne un guide.
 			return this.GuidesList[index] as Guide;
 		}
 
-		// Ajoute un nouveau guide.
 		public int GuidesAdd(Guide guide)
 		{
+			//	Ajoute un nouveau guide.
 			int index = this.GuidesList.Add(guide);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
@@ -303,9 +303,9 @@ namespace Epsitec.Common.Document.Settings
 			return index;
 		}
 
-		// Ajoute un nouveau guide dans l'autre (global/local) liste.
 		public int GuidesAddOther(Guide guide)
 		{
+			//	Ajoute un nouveau guide dans l'autre (global/local) liste.
 			int index = this.GuidesListOther.Add(guide);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
@@ -313,27 +313,27 @@ namespace Epsitec.Common.Document.Settings
 			return index;
 		}
 
-		// Ajoute un nouveau guide.
 		public void GuidesInsert(int index, Guide guide)
 		{
+			//	Ajoute un nouveau guide.
 			this.GuidesList.Insert(index, guide);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 			this.document.IsDirtySerialize = true;
 		}
 
-		// Supprime un guide.
 		public void GuidesRemoveAt(int index)
 		{
+			//	Supprime un guide.
 			this.GuidesList.RemoveAt(index);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 			this.document.IsDirtySerialize = true;
 		}
 
-		// Retourne la liste des repères.
 		protected UndoableList GuidesList
 		{
+			//	Retourne la liste des repères.
 			get
 			{
 				if ( this.globalGuides )
@@ -349,9 +349,9 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		// Retourne l'autre (global/local) liste des repères.
 		protected UndoableList GuidesListOther
 		{
+			//	Retourne l'autre (global/local) liste des repères.
 			get
 			{
 				if ( !this.globalGuides )
@@ -367,9 +367,9 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		// Retourne la liste des repères globaux.
 		public UndoableList GuidesListGlobal
 		{
+			//	Retourne la liste des repères globaux.
 			get
 			{
 				return this.guides;
@@ -379,9 +379,9 @@ namespace Epsitec.Common.Document.Settings
 
 
 		#region QuickFonts
-		// Liste des polices rapides.
 		public System.Collections.ArrayList QuickFonts
 		{
+			//	Liste des polices rapides.
 			get
 			{
 				return this.quickFonts;
@@ -393,9 +393,9 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		// Donne la liste des polices rapides par défaut.
 		public static void DefaultQuickFonts(System.Collections.ArrayList list)
 		{
+			//	Donne la liste des polices rapides par défaut.
 			list.Clear();
 
 			list.Add("Arial");
@@ -407,9 +407,9 @@ namespace Epsitec.Common.Document.Settings
 
 
 		#region Serialization
-		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise les réglages.
 			info.AddValue("Settings", this.settings);
 			info.AddValue("GlobalGuides", this.globalGuides);
 			info.AddValue("GuidesList", this.guides);
@@ -418,9 +418,9 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("ExportPDFInfo", this.exportPDFInfo);
 		}
 
-		// Constructeur qui désérialise les réglages.
 		protected Settings(SerializationInfo info, StreamingContext context)
 		{
+			//	Constructeur qui désérialise les réglages.
 			this.document = Document.ReadDocument;
 			this.settings = (System.Collections.ArrayList) info.GetValue("Settings", typeof(System.Collections.ArrayList));
 			this.guides = (UndoableList) info.GetValue("GuidesList", typeof(UndoableList));
@@ -455,9 +455,9 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		// Adapte l'objet après une désérialisation.
 		public void ReadFinalize()
 		{
+			//	Adapte l'objet après une désérialisation.
 			this.CreateDefault();
 		}
 		#endregion

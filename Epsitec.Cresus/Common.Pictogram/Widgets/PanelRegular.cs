@@ -65,18 +65,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.extendedSize ? 55 : 30 );
 			}
 		}
 
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.label.Text = this.textStyle;
 
@@ -90,9 +90,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.EnableWidgets();
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyRegular p = new PropertyRegular();
 			base.GetProperty(p);
 
@@ -103,18 +103,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return p;
 		}
 
-		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			//	Grise les widgets nécessaires.
 			this.checkStar.SetEnabled(this.extendedSize);
 
 			bool star = ( this.checkStar.ActiveState == WidgetState.ActiveYes );
 			this.fieldDeep.SetEnabled(this.extendedSize && star);
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldNbFaces == null )  return;
@@ -146,15 +146,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldDeep.Bounds = r;
 		}
 		
-		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
+			//	Un champ a été changé.
 			this.OnChanged();
 		}
 
-		// Un champ a été changé.
 		private void HandleCheckChanged(object sender)
 		{
+			//	Un champ a été changé.
 			this.EnableWidgets();
 			this.OnChanged();
 		}

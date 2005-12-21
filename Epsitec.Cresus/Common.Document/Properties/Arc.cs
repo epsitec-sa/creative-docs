@@ -4,8 +4,8 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
-	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
-	// sous peine de plantée lors de la désérialisation.
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
 	public enum ArcType
 	{
 		Full  = 0,
@@ -86,9 +86,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 #if false
-		// Donne le petit texte pour les échantillons.
 		public override string SampleText
 		{
+			//	Donne le petit texte pour les échantillons.
 			get
 			{
 				string a1 = this.document.Modifier.AngleToString(this.startingAngle);
@@ -98,9 +98,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 #endif
 
-		// Retourne le nom d'un type donné.
 		public static string GetName(ArcType type)
 		{
+			//	Retourne le nom d'un type donné.
 			string name = "";
 			switch ( type )
 			{
@@ -112,9 +112,9 @@ namespace Epsitec.Common.Document.Properties
 			return name;
 		}
 
-		// Retourne l'icône pour un type donné.
 		public static string GetIconText(ArcType type)
 		{
+			//	Retourne l'icône pour un type donné.
 			switch ( type )
 			{
 				case ArcType.Full:   return "ArcFull";
@@ -125,29 +125,29 @@ namespace Epsitec.Common.Document.Properties
 			return "";
 		}
 
-		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
+			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
 			get { return true; }
 		}
 
 
-		// Début du déplacement d'une poignée.
 		public override void MoveHandleStarting(Objects.Abstract obj, int rank, Point pos, DrawingContext drawingContext)
 		{
+			//	Début du déplacement d'une poignée.
 			Point center = obj.Handle(0).Position;
 			drawingContext.ConstrainAddCenter(center);
 		}
 		
-		// Nombre de poignées.
 		public override int TotalHandle(Objects.Abstract obj)
 		{
+			//	Nombre de poignées.
 			return 2;
 		}
 
-		// Indique si une poignée est visible.
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
+			//	Indique si une poignée est visible.
 			if ( !this.document.Modifier.IsPropertiesExtended(this.type) )
 			{
 				return false;
@@ -156,9 +156,9 @@ namespace Epsitec.Common.Document.Properties
 			return (this.arcType != ArcType.Full);
 		}
 		
-		// Retourne la position d'une poignée.
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
+			//	Retourne la position d'une poignée.
 			Point pos = new Point();
 
 			if ( obj is Objects.Circle )
@@ -194,9 +194,9 @@ namespace Epsitec.Common.Document.Properties
 			return pos;
 		}
 
-		// Modifie la position d'une poignée.
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
+			//	Modifie la position d'une poignée.
 			if ( obj is Objects.Circle )
 			{
 				Objects.Circle circle = obj as Objects.Circle;
@@ -231,9 +231,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Crée le chemin d'une ellipse inscrite dans un rectangle.
 		public Path PathEllipse(Rectangle rect)
 		{
+			//	Crée le chemin d'une ellipse inscrite dans un rectangle.
 			Stretcher stretcher = new Stretcher();
 			stretcher.InitialRectangle = rect;
 			stretcher.FinalBottomLeft = rect.BottomLeft;
@@ -275,9 +275,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 		
 		
-		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
+			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Arc p = property as Arc;
 			p.arcType       = this.arcType;
@@ -285,9 +285,9 @@ namespace Epsitec.Common.Document.Properties
 			p.endingAngle   = this.endingAngle;
 		}
 
-		// Compare deux propriétés.
 		public override bool Compare(Abstract property)
 		{
+			//	Compare deux propriétés.
 			if ( !base.Compare(property) )  return false;
 
 			Arc p = property as Arc;
@@ -298,18 +298,18 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
-		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Arc(document);
 		}
 
 
 		#region Serialization
-		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise la propriété.
 			base.GetObjectData(info, context);
 
 			info.AddValue("ArcType", this.arcType);
@@ -320,9 +320,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Constructeur qui désérialise la propriété.
 		protected Arc(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			//	Constructeur qui désérialise la propriété.
 			this.arcType = (ArcType) info.GetValue("ArcType", typeof(ArcType));
 			if ( this.arcType != ArcType.Full )
 			{

@@ -44,16 +44,16 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return @"file:images/rectangle.icon"; }
 		}
 
 
-		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur l'objet.
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle bbox = this.BoundingBox;
@@ -73,9 +73,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, iconContext);
@@ -114,9 +114,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Indique si le déplacement d'une poignée doit se répercuter sur les propriétés.
 		public override bool IsMoveHandlePropertyChanged(int rank)
 		{
+			//	Indique si le déplacement d'une poignée doit se répercuter sur les propriétés.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				return base.IsMoveHandlePropertyChanged(rank);
@@ -124,9 +124,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return ( rank >= 4 );
 		}
 
-		// Retourne la propriété modifiée en déplaçant une poignée.
 		public override AbstractProperty MoveHandleProperty(int rank)
 		{
+			//	Retourne la propriété modifiée en déplaçant une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				return base.MoveHandleProperty(rank);
@@ -135,32 +135,32 @@ namespace Epsitec.Common.Pictogram.Data
 			return null;
 		}
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Début de la création d'un objet.
 			iconContext.ConstrainFixStarting(pos, ConstrainType.Square);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			this.dirtyBbox = true;
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Fin de la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			iconContext.ConstrainDelStarting();
 
-			// Crée les 2 autres poignées dans les coins opposés.
+			//	Crée les 2 autres poignées dans les coins opposés.
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
 			this.HandleAdd(new Drawing.Point(p1.X, p2.Y), HandleType.Primary);  // rang = 2
@@ -169,10 +169,10 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateCornerHandle();
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
 		}
@@ -182,20 +182,20 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateCornerHandle();
 		}
 
-		// Met à jour les poignées pour les coins.
-		//	  2   7          8   1
-		//	   o--o----------o--o
-		//	   |                |
-		//	 6 o                o 9
-		//	   |                |
-		//	   |                |
-		//	   |                |
-		//	 5 o                o 10
-		//	   |                |
-		//	   o--o----------o--o
-		//	  0   4          11  3
 		protected void UpdateCornerHandle()
 		{
+			//	Met à jour les poignées pour les coins.
+			//	  2   7          8   1
+			//	   o--o----------o--o
+			//	   |                |
+			//	 6 o                o 9
+			//	   |                |
+			//	   |                |
+			//	   |                |
+			//	 5 o                o 10
+			//	   |                |
+			//	   o--o----------o--o
+			//	  0   4          11  3
 			if ( this.handles.Count < 4 )  return;
 			PropertyCorner corner = this.PropertyCorner(4);
 			if ( corner.CornerType == CornerType.Right )
@@ -263,9 +263,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
+			//	Met à jour le rectangle englobant l'objet.
 			Drawing.Path path = this.PathBuild(null);
 			this.bboxThin = AbstractObject.ComputeBoundingBox(path);
 
@@ -284,9 +284,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.bboxFull.MergeWith(this.PropertyGradient(3).BoundingBoxFull(this.bboxThin));
 		}
 
-		// Crée le chemin de l'objet.
 		protected Drawing.Path PathBuild(IconContext iconContext)
 		{
+			//	Crée le chemin de l'objet.
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = new Drawing.Point();
 			Drawing.Point p3 = this.Handle(1).Position;
@@ -309,9 +309,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.PathCornerRectangle(iconContext, p1, p2, p3, p4, corner);
 		}
 
-		// Crée le chemin d'un rectangle à coins quelconques.
 		protected Drawing.Path PathCornerRectangle(IconContext iconContext, Drawing.Point p1, Drawing.Point p2, Drawing.Point p3, Drawing.Point p4, PropertyCorner corner)
 		{
+			//	Crée le chemin d'un rectangle à coins quelconques.
 			double d12 = Drawing.Point.Distance(p1, p2);
 			double d23 = Drawing.Point.Distance(p2, p3);
 			double d34 = Drawing.Point.Distance(p3, p4);
@@ -360,9 +360,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Dessine l'objet.
 			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext, iconObjects);
 
@@ -386,9 +386,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Imprime l'objet.
 		public override void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Imprime l'objet.
 			base.PrintGeometry(port, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 2 )  return;

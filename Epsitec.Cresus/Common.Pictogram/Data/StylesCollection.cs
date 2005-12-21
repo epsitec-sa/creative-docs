@@ -17,7 +17,6 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 		}
 
-		// Collection de tous les styles.
 		[XmlArrayItem("Bool",     Type=typeof(PropertyBool))]
 		[XmlArrayItem("Color",    Type=typeof(PropertyColor))]
 		[XmlArrayItem("Double",   Type=typeof(PropertyDouble))]
@@ -33,57 +32,58 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("ModColor", Type=typeof(PropertyModColor))]
 		public UndoList Styles
 		{
+			//	Collection de tous les styles.
 			get { return this.styles; }
 			set { this.styles = value; }
 		}
 
-		// Donne un identificateur non encore utilisé.
 		[XmlIgnore]
 		public int NextID
 		{
+			//	Donne un identificateur non encore utilisé.
 			get { return this.nextID; }
 			set { this.nextID = value; }
 		}
 
-		// Supprime tous les styles.
 		public void ClearProperty()
 		{
+			//	Supprime tous les styles.
 			this.nextID = 1;
 			this.styles.Clear();
 			this.OnStyleListChanged();
 		}
 
-		// Retourne le nombre de styles.
 		public int TotalProperty
 		{
+			//	Retourne le nombre de styles.
 			get { return this.styles.Count; }
 		}
 
-		// Ajoute un nouveau style.
 		public int AddProperty(AbstractProperty property)
 		{
+			//	Ajoute un nouveau style.
 			return this.styles.Add(property);
 		}
 
-		// Retourne un style existant.
 		public AbstractProperty GetProperty(int index)
 		{
+			//	Retourne un style existant.
 			System.Diagnostics.Debug.Assert(index >= 0 && index < this.styles.Count);
 			return this.styles[index] as AbstractProperty;
 		}
 
-		// Crée un nouveau style et retourne son rank.
 		public int CreateProperty(AbstractProperty property)
 		{
+			//	Crée un nouveau style et retourne son rank.
 			int id = this.nextID ++;
 			property.StyleName = string.Format("{0} {1}", property.Text, id);
 			property.StyleID = id;
 			return this.AddProperty(property);
 		}
 
-		// Supprime un style existant.
 		public void RemoveProperty(int index)
 		{
+			//	Supprime un style existant.
 			System.Diagnostics.Debug.Assert(index >= 0 && index < this.styles.Count);
 			this.styles.RemoveAt(index);
 			if ( this.styles.Count == 0 )
@@ -92,9 +92,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Permute deux styles existants.
 		public void SwapProperty(int i, int j)
 		{
+			//	Permute deux styles existants.
 			System.Diagnostics.Debug.Assert(i >= 0 && i < this.styles.Count);
 			System.Diagnostics.Debug.Assert(j >= 0 && j < this.styles.Count);
 			
@@ -103,9 +103,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.styles.Insert(j, temp);
 		}
 
-		// Change un style après une modification d'une propriété d'un objet.
 		public void ChangeProperty(AbstractProperty property)
 		{
+			//	Change un style après une modification d'une propriété d'un objet.
 			foreach ( AbstractProperty p in this.styles )
 			{
 				if ( p.StyleID == property.StyleID )
@@ -118,9 +118,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Cherche une propriété d'après son nom et ayant le même type.
 		public AbstractProperty SearchProperty(AbstractProperty property)
 		{
+			//	Cherche une propriété d'après son nom et ayant le même type.
 			foreach ( AbstractProperty search in this.styles )
 			{
 				if ( search.Type      == property.Type      &&
@@ -129,9 +129,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return null;
 		}
 
-		// Initialise le prochain identificateur.
 		public void InitNextID()
 		{
+			//	Initialise le prochain identificateur.
 			int max = 0;
 			foreach ( AbstractProperty property in this.styles )
 			{
@@ -140,9 +140,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.nextID = max+1;
 		}
 
-		// Copie toute la collection.
 		public void CopyTo(StylesCollection dst)
 		{
+			//	Copie toute la collection.
 			dst.styles.Clear();
 			foreach ( AbstractProperty srcProp in this.styles )
 			{
@@ -154,23 +154,23 @@ namespace Epsitec.Common.Pictogram.Data
 			dst.nextID = this.nextID;
 		}
 
-		// Signale que la collection a changé.
 		public void CollectionChanged()
 		{
+			//	Signale que la collection a changé.
 			this.OnStyleListChanged();
 		}
 
-		// Indique qu'une propriété va changer, pour le undo.
 		public void UndoWillBeChanged(AbstractProperty property)
 		{
+			//	Indique qu'une propriété va changer, pour le undo.
 			if ( property.StyleID == 0 )  return;
 			this.styles.WillBeChanged(property.StyleID-1);
 		}
 
 
-		// Construit le menu des styles.
 		public VMenu CreateMenu(PropertyType type, int styleID)
 		{
+			//	Construit le menu des styles.
 			VMenu menu = new VMenu();
 			MenuItem item;
 
@@ -212,9 +212,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Génère un événement pour dire que la liste de styles a changé.
 		protected void OnStyleListChanged()
 		{
+			//	Génère un événement pour dire que la liste de styles a changé.
 			if ( this.StyleListChanged != null )  // qq'un écoute ?
 			{
 				this.StyleListChanged(this);
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public event EventHandler StyleListChanged;
 
 
-		// Génère un événement pour dire qu'un style de la collection a changé.
+		//	Génère un événement pour dire qu'un style de la collection a changé.
 		protected void OnOneStyleChanged(int styleID)
 		{
 			if ( this.OneStyleChanged != null )  // qq'un écoute ?

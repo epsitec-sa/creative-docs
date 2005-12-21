@@ -6,9 +6,9 @@ namespace Epsitec.Common.Document
 {
 	public class SurfaceAnchor
 	{
-		// Constructeur d'une surface liée à un document.
 		public SurfaceAnchor(Document document, Objects.Abstract obj)
 		{
+			//	Constructeur d'une surface liée à un document.
 			this.document = document;
 			this.obj = obj;
 			this.dirty = true;
@@ -17,9 +17,9 @@ namespace Epsitec.Common.Document
 			this.lineUse = false;
 		}
 
-		// Constructeur d'une surface simple rectangulaire indépendante d'un objet.
 		public SurfaceAnchor(Rectangle box)
 		{
+			//	Constructeur d'une surface simple rectangulaire indépendante d'un objet.
 			this.document = null;
 			this.obj = null;
 			this.dirty = false;
@@ -28,25 +28,25 @@ namespace Epsitec.Common.Document
 			this.lineUse = false;
 		}
 
-		// Force la surface à utiliser.
 		public void SetSurface(Rectangle rect)
 		{
+			//	Force la surface à utiliser.
 			this.surfaceThin = rect;
 			this.surfaceGeom = rect;
 			this.dirty = false;
 		}
 
 
-		// Indique que l'objet a été modifié.
 		public void SetDirty()
 		{
+			//	Indique que l'objet a été modifié.
 			this.dirty = true;
 		}
 
-		// Indique s'il faut tenir compte de l'épaisseur du trait lors
-		// des conversions ToAbs et ToRel.
 		public bool LineUse
 		{
+			//	Indique s'il faut tenir compte de l'épaisseur du trait lors
+			//	des conversions ToAbs et ToRel.
 			get
 			{
 				return this.lineUse;
@@ -58,9 +58,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Indique si la surface est nulle.
 		public bool IsSurfaceZero
 		{
+			//	Indique si la surface est nulle.
 			get
 			{
 				this.Update();
@@ -68,18 +68,18 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le centre de la surface.
 		public Point Center
 		{
+			//	Retourne le centre de la surface.
 			get
 			{
 				return this.ToAbs(new Point(0.5, 0.5));
 			}
 		}
 
-		// Retourne la largeur.
 		public double Width
 		{
+			//	Retourne la largeur.
 			get
 			{
 				this.Update();
@@ -87,9 +87,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne la hauteur.
 		public double Height
 		{
+			//	Retourne la hauteur.
 			get
 			{
 				this.Update();
@@ -97,9 +97,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne la direction de l'objet lié.
 		public double Direction
 		{
+			//	Retourne la direction de l'objet lié.
 			get
 			{
 				if ( this.obj == null )
@@ -113,9 +113,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le rayon à utiliser pour la poignée des rotations.
 		public double RotateRadius
 		{
+			//	Retourne le rayon à utiliser pour la poignée des rotations.
 			get
 			{
 				this.Update();
@@ -123,9 +123,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne la bbox rectangulaire qui inclu les 4 coins.
 		public Rectangle BoundingBox
 		{
+			//	Retourne la bbox rectangulaire qui inclu les 4 coins.
 			get
 			{
 				Rectangle box = Rectangle.Empty;
@@ -137,9 +137,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Conversion d'une coordonnée relative en coordonnée absolue.
 		public Point ToAbs(Point rel)
 		{
+			//	Conversion d'une coordonnée relative en coordonnée absolue.
 			this.Update();
 
 			Rectangle surface = this.Surface;
@@ -156,9 +156,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Conversion d'une coordonnée absolue en coordonnée relative.
 		public Point ToRel(Point abs)
 		{
+			//	Conversion d'une coordonnée absolue en coordonnée relative.
 			this.Update();
 
 			if ( this.obj != null )
@@ -189,9 +189,9 @@ namespace Epsitec.Common.Document
 			return abs;
 		}
 
-		// Retourne la surface rectangulaire à utiliser.
 		protected Rectangle Surface
 		{
+			//	Retourne la surface rectangulaire à utiliser.
 			get
 			{
 				if ( this.lineUse )
@@ -205,9 +205,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Met à jour les surfaces en fonction de l'objet.
 		protected void Update()
 		{
+			//	Met à jour les surfaces en fonction de l'objet.
 			if ( !this.dirty || this.obj == null )  return;
 
 			this.obj.UpdateSurfaceBox(out this.surfaceThin, out this.surfaceGeom);

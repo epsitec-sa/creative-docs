@@ -24,24 +24,24 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Etat du notificateur.
 		public bool Enable
 		{
+			//	Etat du notificateur.
 			get { return this.enable; }
 			set { this.enable = value; }
 		}
 
-		// Etat du notificateur.
 		public bool EnableSelectionChanged
 		{
+			//	Etat du notificateur.
 			get { return this.enableSelectionChanged; }
 			set { this.enableSelectionChanged = value; }
 		}
 
 
-		// Indique que tout a changé.
 		public void NotifyAllChanged()
 		{
+			//	Indique que tout a changé.
 			if ( !this.enable )  return;
 
 			this.documentChanged = true;
@@ -74,9 +74,9 @@ namespace Epsitec.Common.Document
 			this.NotifyArea();
 		}
 
-		// Indique que la création d'un objet à débuté ou s'est terminée.
 		public void NotifyCreateChanged()
 		{
+			//	Indique que la création d'un objet à débuté ou s'est terminée.
 			if ( !this.enable )  return;
 
 			this.toolChanged = true;
@@ -89,114 +89,114 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Indique que les informations sur le document ont changé.
-		// Nom du document, taille, etc.
 		public void NotifyDocumentChanged()
 		{
+			//	Indique que les informations sur le document ont changé.
+			//	Nom du document, taille, etc.
 			if ( !this.enable )  return;
 			this.documentChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que la position de la souris a changé.
 		public void NotifyMouseChanged()
 		{
+			//	Indique que la position de la souris a changé.
 			if ( !this.enable )  return;
 			this.mouseChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que le texte des modifications a changé.
 		public void NotifyModifChanged()
 		{
+			//	Indique que le texte des modifications a changé.
 			if ( !this.enable )  return;
 			this.modifChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que l'origine a changé.
 		public void NotifyOriginChanged()
 		{
+			//	Indique que l'origine a changé.
 			if ( !this.enable )  return;
 			this.originChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que le zoom a changé.
 		public void NotifyZoomChanged()
 		{
+			//	Indique que le zoom a changé.
 			if ( !this.enable )  return;
 			this.zoomChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que l'outil sélectionné a changé.
 		public void NotifyToolChanged()
 		{
+			//	Indique que l'outil sélectionné a changé.
 			if ( !this.enable )  return;
 			this.toolChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que le bouton "enregistrer" a changé.
 		public void NotifySaveChanged()
 		{
+			//	Indique que le bouton "enregistrer" a changé.
 			if ( !this.enable )  return;
 			this.saveChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les objets sélectionnés ont changé.
 		public void NotifySelectionChanged()
 		{
+			//	Indique que les objets sélectionnés ont changé.
 			if ( !this.enable || !this.enableSelectionChanged )  return;
 			this.selectionChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les objets pour le modeleur ont changé.
 		public void NotifyShaperChanged()
 		{
+			//	Indique que les objets pour le modeleur ont changé.
 			if ( !this.enable )  return;
 			this.shaperChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que le texte en édition a changé.
 		public void NotifyTextChanged()
 		{
+			//	Indique que le texte en édition a changé.
 			if ( !this.enable )  return;
 			this.textChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que le curseur du texte en édition a changé.
 		public void NotifyTextCursorChanged()
 		{
+			//	Indique que le curseur du texte en édition a changé.
 			if ( !this.enable )  return;
 			this.textCursorChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les styles ont changé.
 		public void NotifyStyleChanged()
 		{
+			//	Indique que les styles ont changé.
 			if ( !this.enable )  return;
 			this.styleChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les styles des textes ont changé.
 		public void NotifyTextStyleChanged()
 		{
+			//	Indique que les styles des textes ont changé.
 			if ( !this.enable )  return;
 			this.textStyleChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les pages ont changé.
 		public void NotifyPagesChanged()
 		{
+			//	Indique que les pages ont changé.
 			if ( !this.enable )  return;
 			this.pagesChanged = true;
 
@@ -208,114 +208,114 @@ namespace Epsitec.Common.Document
 			this.NotifyAsync();
 		}
 
-		// Indique que les calques ont changé.
 		public void NotifyLayersChanged()
 		{
+			//	Indique que les calques ont changé.
 			if ( !this.enable )  return;
 			this.layersChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique qu'une page a changé.
 		public void NotifyPageChanged(Objects.Abstract page)
 		{
+			//	Indique qu'une page a changé.
 			if ( !this.enable )  return;
 			this.pageObject = page;
 			this.NotifyAsync();
 		}
 
-		// Indique qu'un calque a changé.
 		public void NotifyLayerChanged(Objects.Abstract layer)
 		{
+			//	Indique qu'un calque a changé.
 			if ( !this.enable )  return;
 			this.layerObject = layer;
 			this.NotifyAsync();
 		}
 
-		// Indique que les commandes undo/redo ont changé.
 		public void NotifyUndoRedoChanged()
 		{
+			//	Indique que les commandes undo/redo ont changé.
 			if ( !this.enable )  return;
 			this.undoRedoChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les commandes pour la grille ont changé.
 		public void NotifyGridChanged()
 		{
+			//	Indique que les commandes pour la grille ont changé.
 			if ( !this.enable )  return;
 			this.gridChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les commandes pour les noms d'attributs ont changé.
 		public void NotifyLabelPropertiesChanged()
 		{
+			//	Indique que les commandes pour les noms d'attributs ont changé.
 			if ( !this.enable )  return;
 			this.labelPropertiesChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les commandes pour les lignes magnétiques ont changé.
 		public void NotifyMagnetChanged()
 		{
+			//	Indique que les commandes pour les lignes magnétiques ont changé.
 			if ( !this.enable )  return;
 			this.magnetChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que la commande aperçu a changé.
 		public void NotifyPreviewChanged()
 		{
+			//	Indique que la commande aperçu a changé.
 			if ( !this.enable )  return;
 			this.previewChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les réglages ont changé.
 		public void NotifySettingsChanged()
 		{
+			//	Indique que les réglages ont changé.
 			if ( !this.enable )  return;
 			this.settingsChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les réglages de police ont changé.
 		public void NotifyFontsSettingsChanged()
 		{
+			//	Indique que les réglages de police ont changé.
 			if ( !this.enable )  return;
 			this.fontsSettingsChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les repères ont changé.
 		public void NotifyGuidesChanged()
 		{
+			//	Indique que les repères ont changé.
 			if ( !this.enable )  return;
 			this.guidesChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que la commande estompé a changé.
 		public void NotifyHideHalfChanged()
 		{
+			//	Indique que la commande estompé a changé.
 			if ( !this.enable )  return;
 			this.hideHalfChanged = true;
 			this.NotifyAsync();
 		}
 
-		// Indique que les commandes pour le debug ont changé.
 		public void NotifyDebugChanged()
 		{
+			//	Indique que les commandes pour le debug ont changé.
 			if ( !this.enable )  return;
 			this.debugChanged = true;
 			this.NotifyAsync();
 		}
 
 
-		// Indique qu'une propriété a changé.
 		public void NotifyPropertyChanged(Properties.Abstract property)
 		{
+			//	Indique qu'une propriété a changé.
 			if ( !this.enable )  return;
 			if ( !this.propertyList.Contains(property) )
 			{
@@ -324,9 +324,9 @@ namespace Epsitec.Common.Document
 			this.NotifyAsync();
 		}
 
-		// Indique qu'un aggrégat a changé.
 		public void NotifyAggregateChanged(Properties.Aggregate agg)
 		{
+			//	Indique qu'un aggrégat a changé.
 			if ( !this.enable )  return;
 			if ( !this.aggregateList.Contains(agg) )
 			{
@@ -335,26 +335,26 @@ namespace Epsitec.Common.Document
 			this.NotifyAsync();
 		}
 
-		// Indique que la sélection par noms a changé.
 		public void NotifySelNamesChanged()
 		{
+			//	Indique que la sélection par noms a changé.
 			if ( !this.enable )  return;
 			this.selNamesChanged = true;
 			this.NotifyAsync();
 		}
 
 
-		// Agrandit au maximum la zone de redessin de tous les visualisateurs.
 		public void NotifyArea()
 		{
+			//	Agrandit au maximum la zone de redessin de tous les visualisateurs.
 			if ( !this.enable )  return;
 			this.NotifyArea(Rectangle.Infinite);
 		}
 
-		// Agrandit la zone de redessin de tous les visualisateurs.
-		// Les unités pour le rectangle sont internes.
 		public void NotifyArea(Rectangle rect)
 		{
+			//	Agrandit la zone de redessin de tous les visualisateurs.
+			//	Les unités pour le rectangle sont internes.
 			if ( !this.enable )  return;
 			if ( rect.IsEmpty )  return;
 			foreach ( Viewer viewer in this.document.Modifier.AttachViewers )
@@ -363,27 +363,27 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Agrandit au maximum la zone de redessin d'un visualisateur.
 		public void NotifyArea(Viewer viewer)
 		{
+			//	Agrandit au maximum la zone de redessin d'un visualisateur.
 			if ( !this.enable )  return;
 			this.NotifyArea(viewer, Rectangle.Infinite);
 		}
 
-		// Agrandit la zone de redessin d'un visualisateur.
-		// Les unités pour le rectangle sont internes.
 		public void NotifyArea(Viewer viewer, Rectangle rect)
 		{
+			//	Agrandit la zone de redessin d'un visualisateur.
+			//	Les unités pour le rectangle sont internes.
 			if ( !this.enable )  return;
 			if ( viewer == null || rect.IsEmpty )  return;
 			viewer.RedrawAreaMerge(rect);
 			this.NotifyAsync();
 		}
 
-		// Notifie qu'il faudra faire le GenerateEvents lorsque Windows
-		// aura le temps.
 		protected void NotifyAsync()
 		{
+			//	Notifie qu'il faudra faire le GenerateEvents lorsque Windows
+			//	aura le temps.
 			if ( this.document.Modifier.ActiveViewer == null )  return;
 			Window window = this.document.Modifier.ActiveViewer.Window;
 			if ( window == null )  return;
@@ -391,36 +391,36 @@ namespace Epsitec.Common.Document
 		}
 
 		
-		// Indique que la couleur dans une règle a été cliquée.
 		public void NotifyTextRulerColorClicked(Common.Widgets.TextRuler ruler)
 		{
+			//	Indique que la couleur dans une règle a été cliquée.
 			this.OnTextRulerColorClicked(ruler);
 		}
 
-		// Indique que la couleur du texte dans une règle a changé.
 		public void NotifyTextRulerColorChanged(Common.Widgets.TextRuler ruler)
 		{
+			//	Indique que la couleur du texte dans une règle a changé.
 			this.OnTextRulerColorChanged(ruler);
 		}
 
 
-		// Indique qu'on ruban doit changer.
 		public void NotifyRibbonCommand(string name)
 		{
+			//	Indique qu'on ruban doit changer.
 			this.OnRibbonCommand(name);
 		}
 
-		// Indique qu'il faut afficher une page du dialogue des commandes.
 		public void NotifySettingsShowPage(string book, string tab)
 		{
+			//	Indique qu'il faut afficher une page du dialogue des commandes.
 			this.OnSettingsShowPage(book, tab);
 		}
 
 		
-		// Génère tous les événements pour informer des changements, en fonction
-		// des NotifyXYZ fait précédemment.
 		public void GenerateEvents()
 		{
+			//	Génère tous les événements pour informer des changements, en fonction
+			//	des NotifyXYZ fait précédemment.
 			if ( this.documentChanged )
 			{
 				this.OnDocumentChanged();

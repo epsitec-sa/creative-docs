@@ -39,9 +39,9 @@ namespace Epsitec.Common.Document.PDF
 			this.matrix   = new Transform();  // matrice identité
 		}
 
-		// Libère la surface.
 		public void Dispose()
 		{
+			//	Libère la surface.
 			this.layer    = null;
 			this.obj      = null;
 			this.fill     = null;
@@ -49,63 +49,63 @@ namespace Epsitec.Common.Document.PDF
 			this.matrix   = null;
 		}
 
-		// Numéro de la page (1..n).
 		public int Page
 		{
+			//	Numéro de la page (1..n).
 			get { return this.page; }
 		}
 
-		// Calque contenant cette surface.
 		public Objects.Layer Layer
 		{
+			//	Calque contenant cette surface.
 			get { return this.layer; }
 		}
 
-		// Objet utilisant cette surface.
 		public Objects.Abstract Object
 		{
+			//	Objet utilisant cette surface.
 			get { return this.obj; }
 		}
 
-		// Propriété ayant généré cette surface (Gradient ou Font).
 		public Properties.Abstract Fill
 		{
+			//	Propriété ayant généré cette surface (Gradient ou Font).
 			get { return this.fill; }
 		}
 
-		// Propriété ayant généré cette surface.
 		public Properties.Line Stroke
 		{
+			//	Propriété ayant généré cette surface.
 			get { return this.stroke; }
 		}
 
-		// Type de la surface.
 		public Type Type
 		{
+			//	Type de la surface.
 			get { return this.type; }
 		}
 
-		// Surface floue ?
 		public bool IsSmooth
 		{
+			//	Surface floue ?
 			get { return this.isSmooth; }
 		}
 
-		// Rang dans l'objet (0..n).
 		public int Rank
 		{
+			//	Rang dans l'objet (0..n).
 			get { return this.rank; }
 		}
 
-		// Identificateur unique.
 		public int Id
 		{
+			//	Identificateur unique.
 			get { return this.id; }
 		}
 
-		// Matrice de transformation.
 		public Transform Matrix
 		{
+			//	Matrice de transformation.
 			get { return this.matrix; }
 			set { this.matrix = value; }
 		}

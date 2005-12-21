@@ -17,9 +17,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 		}
 
-		// Crée et montre la fenêtre du dialogue.
 		public override void Show()
 		{
+			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
 				double dx = 400;
@@ -72,9 +72,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		// Démarre le timer pour refermer le dialogue.
 		public void StartTimer()
 		{
+			//	Démarre le timer pour refermer le dialogue.
 			if ( this.splashTimer != null )
 			{
 				this.splashTimer.Start();

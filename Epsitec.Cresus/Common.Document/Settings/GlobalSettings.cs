@@ -46,8 +46,8 @@ namespace Epsitec.Common.Document.Settings
 			this.fineCursor = false;
 			this.quickCommands = GlobalSettings.DefaultQuickCommands();
 
-			// Suppose que le dossier des exemples est dans le même dossier
-			// que l'application.
+			//	Suppose que le dossier des exemples est dans le même dossier
+			//	que l'application.
 			string dir = Support.Globals.Directories.Executable;
 			this.initialDirectory = dir + @"\Samples";
 
@@ -60,10 +60,10 @@ namespace Epsitec.Common.Document.Settings
 			this.dateChecker = this.dateChecker.AddDays(-1);
 		}
 
-		// Met tous les fichiers d'exemples dans la liste des 10 premiers
-		// fichiers récents.
 		public void Initialise(DocumentType type)
 		{
+			//	Met tous les fichiers d'exemples dans la liste des 10 premiers
+			//	fichiers récents.
 			string ext = "";
 			if ( type == DocumentType.Pictogram )
 			{
@@ -88,16 +88,16 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
-		// Fenêtre principale de l'application.
 		public Drawing.Rectangle MainWindow
 		{
+			//	Fenêtre principale de l'application.
 			get
 			{
 				Drawing.Rectangle rect = new Rectangle(this.windowLocation, this.windowSize);
 				if ( this.windowLocation.IsEmpty )
 				{
-					// Lors de la première exécution, met l'application au centre
-					// de la fenêtre.
+					//	Lors de la première exécution, met l'application au centre
+					//	de la fenêtre.
 					ScreenInfo si = ScreenInfo.Find(new Drawing.Point(0,0));
 					Rectangle area = si.WorkingArea;
 					rect = new Rectangle(area.Center-rect.Size/2, area.Center+rect.Size/2);
@@ -126,9 +126,9 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
-		// Ajoute une définition de fenêtre.
 		public void SetWindowBounds(string name, Drawing.Point location, Drawing.Size size)
 		{
+			//	Ajoute une définition de fenêtre.
 			WindowBounds wb = this.windowBounds[name] as WindowBounds;
 			if ( wb == null )
 			{
@@ -142,9 +142,9 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		// Cherche une définition de fenêtre.
 		public bool GetWindowBounds(string name, ref Drawing.Point location, ref Drawing.Size size)
 		{
+			//	Cherche une définition de fenêtre.
 			WindowBounds wb = this.windowBounds[name] as WindowBounds;
 			if ( wb == null )  return false;
 			location = wb.Location;
@@ -389,10 +389,10 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
-		// Adapte un rectangle pour qu'il entre dans l'écran, si possible
-		// sans modifier ses dimensions. Utilisé pour les dialogues.
 		public static Drawing.Rectangle WindowClip(Drawing.Rectangle rect)
 		{
+			//	Adapte un rectangle pour qu'il entre dans l'écran, si possible
+			//	sans modifier ses dimensions. Utilisé pour les dialogues.
 			ScreenInfo si = ScreenInfo.Find(rect.Center);
 			Rectangle area = si.WorkingArea;
 
@@ -501,12 +501,12 @@ namespace Epsitec.Common.Document.Settings
 
 
 		#region QuickCommands
-		// Donne la liste des commandes rapides sous la forme "US:Name".
-		// U -> '1' si utilisé
-		// S -> '1' si séparateur après
-		// Name -> nom de la commande
 		public System.Collections.ArrayList QuickCommands
 		{
+			//	Donne la liste des commandes rapides sous la forme "US:Name".
+			//	U -> '1' si utilisé
+			//	S -> '1' si séparateur après
+			//	Name -> nom de la commande
 			get
 			{
 				return this.quickCommands;
@@ -518,9 +518,9 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		// Donne la liste des commandes rapides par défaut.
 		public static System.Collections.ArrayList DefaultQuickCommands()
 		{
+			//	Donne la liste des commandes rapides par défaut.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
 			list.Add("10:New");
@@ -661,10 +661,10 @@ namespace Epsitec.Common.Document.Settings
 			return list;
 		}
 
-		// Met à jour la liste des commandes rapides en fonction d'éventuelles commandes qui n'y
-		// seraient pas encore.
 		protected void UpdateQuickCommands()
 		{
+			//	Met à jour la liste des commandes rapides en fonction d'éventuelles commandes qui n'y
+			//	seraient pas encore.
 			System.Collections.ArrayList all = GlobalSettings.DefaultQuickCommands();
 
 			for ( int i=0 ; i<all.Count ; i++ )
@@ -698,27 +698,27 @@ namespace Epsitec.Common.Document.Settings
 			return -1;
 		}
 
-		// Donne la commande étendue à partir de ses composantes.
 		public static string QuickXcmd(bool used, bool sep, string cmd)
 		{
+			//	Donne la commande étendue à partir de ses composantes.
 			return string.Format("{0}{1}:{2}", used?"1":"0", sep?"1":"0", cmd);
 		}
 
-		// Indique si une commande est utilisée (visible dans la barre d'icônes).
 		public static bool QuickUsed(string xcmd)
 		{
+			//	Indique si une commande est utilisée (visible dans la barre d'icônes).
 			return xcmd[0] == '1';
 		}
 
-		// Indique si une commande est suivie d'un séparateur.
 		public static bool QuickSep(string xcmd)
 		{
+			//	Indique si une commande est suivie d'un séparateur.
 			return xcmd[1] == '1';
 		}
 
-		// Donne le nom d'une commande.
 		public static string QuickCmd(string xcmd)
 		{
+			//	Donne le nom d'une commande.
 			int index = xcmd.IndexOf(":");
 			if ( index == -1 )  return "";
 			return xcmd.Substring(index+1);
@@ -727,9 +727,9 @@ namespace Epsitec.Common.Document.Settings
 
 
 		#region Serialization
-		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			//	Sérialise les réglages.
 			info.AddValue("Version", 5);
 
 			info.AddValue("WindowLocation", this.windowLocation);
@@ -758,9 +758,9 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("QuickCommands", this.quickCommands);
 		}
 
-		// Constructeur qui désérialise les réglages.
 		protected GlobalSettings(SerializationInfo info, StreamingContext context) : this()
 		{
+			//	Constructeur qui désérialise les réglages.
 			int version = info.GetInt32("Version");
 
 			this.windowLocation = (Drawing.Point) info.GetValue("WindowLocation", typeof(Drawing.Point));
@@ -851,16 +851,16 @@ namespace Epsitec.Common.Document.Settings
 				set { this.size = value; }
 			}
 
-			// Sérialise les réglages.
 			public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 			{
+				//	Sérialise les réglages.
 				info.AddValue("Location", this.location);
 				info.AddValue("Size", this.size);
 			}
 
-			// Constructeur qui désérialise les réglages.
 			protected WindowBounds(SerializationInfo info, StreamingContext context)
 			{
+				//	Constructeur qui désérialise les réglages.
 				this.location = (Drawing.Point) info.GetValue("Location", typeof(Drawing.Point));
 				this.size = (Drawing.Size) info.GetValue("Size", typeof(Drawing.Size));
 			}

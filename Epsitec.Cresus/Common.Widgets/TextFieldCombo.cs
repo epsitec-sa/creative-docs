@@ -309,9 +309,9 @@ namespace Epsitec.Common.Widgets
 		{
 			sel = this.MapComboListToIndex(sel);
 			
-			// Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
-			// est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
-			// qui est appelée à chaque changement "visuel".
+			//	Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
+			//	est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
+			//	qui est appelée à chaque changement "visuel".
 			
 			if ( sel == -1 )  return;
 			
@@ -354,8 +354,8 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			// Cherche le nom suivant ou précédent dans la comboList, même si elle
-			// n'est pas "déroulée".
+			//	Cherche le nom suivant ou précédent dans la comboList, même si elle
+			//	n'est pas "déroulée".
 			
 			int		sel;
 			bool	exact;
@@ -564,14 +564,14 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleScrollListSelectionActivated(object sender)
 		{
-			// L'utilisateur a cliqué dans la liste pour terminer son choix.
+			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
 			
 			this.ProcessComboActivatedIndex(this.scrollList.SelectedIndex);
 		}
 		
 		private void HandleScrollerSelectedIndexChanged(object sender)
 		{
-			// L'utilisateur a simplement déplacé la souris dans la liste.
+			//	L'utilisateur a simplement déplacé la souris dans la liste.
 			
 			this.ProcessComboSelectedIndex(this.scrollList.SelectedIndex);
 		}
@@ -680,7 +680,7 @@ namespace Epsitec.Common.Widgets
 
 		public string								SelectedName
 		{
-			// Nom de la ligne sélectionnée, null si aucune.
+			//	Nom de la ligne sélectionnée, null si aucune.
 			get
 			{
 				int index = this.SelectedIndex;

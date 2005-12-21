@@ -51,27 +51,27 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return this.LabelHeight+30;
 			}
 		}
 
-		// Retourne la hauteur pour le label supérieur.
 		protected double LabelHeight
 		{
+			//	Retourne la hauteur pour le label supérieur.
 			get
 			{
 				return (this.IsLabelProperties || this is ModColor) ? 14 : 0;
 			}
 		}
 
-		// Indique le mode des propriétés.
 		public bool IsLabelProperties
 		{
+			//	Indique le mode des propriétés.
 			get
 			{
 				if ( this.document != null )
@@ -84,15 +84,15 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Indique si ce panneau possède 2 hauteurs différentes.
 		protected virtual bool IsNormalAndExtended()
 		{
+			//	Indique si ce panneau possède 2 hauteurs différentes.
 			return this.isNormalAndExtended;
 		}
 
-		// Indique si le panneau est réduit (petite hauteur) ou étendu (grande hauteur).
 		public bool IsExtendedSize
 		{
+			//	Indique si le panneau est réduit (petite hauteur) ou étendu (grande hauteur).
 			get
 			{
 				return this.isExtendedSize;
@@ -109,9 +109,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Indique que la hauteur du panneau a changé.
 		public void HeightChanged()
 		{
+			//	Indique que la hauteur du panneau a changé.
 			double h = this.DefaultHeight;
 			if ( this.Height != h )
 			{
@@ -120,23 +120,23 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Indique si le panneau édite directement un style.
 		public bool IsStyleDirect
 		{
+			//	Indique si le panneau édite directement un style.
 			get { return this.isStyleDirect; }
 			set { this.isStyleDirect = value; }
 		}
 
-		// Indique si le panneau édite directement une propriété de calque.
 		public bool IsLayoutDirect
 		{
+			//	Indique si le panneau édite directement une propriété de calque.
 			get { return this.isLayoutDirect; }
 			set { this.isLayoutDirect = value; }
 		}
 
-		// Indique si la souris montre un objet.
 		public bool IsObjectHilite
 		{
+			//	Indique si la souris montre un objet.
 			get
 			{
 				return this.isObjectHilite;
@@ -152,9 +152,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Etat survolé du panneau.
 		public bool IsHilite
 		{
+			//	Etat survolé du panneau.
 			get
 			{
 				return this.isHilite;
@@ -172,9 +172,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// La souris est entrée dans le panneau.
 		private void HandleMouseEntered(object sender, MessageEventArgs e)
 		{
+			//	La souris est entrée dans le panneau.
 			if ( !this.document.Modifier.PropertiesDetailMany )  return;
 			if ( this.property == null )  return;
 
@@ -187,9 +187,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// La souris est sortie du panneau.
 		private void HandleMouseExited(object sender, MessageEventArgs e)
 		{
+			//	La souris est sortie du panneau.
 			if ( !this.document.Modifier.PropertiesDetailMany )  return;
 			if ( this.property == null )  return;
 
@@ -203,9 +203,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Choix de la propriété éditée par le panneau.
 		public Properties.Abstract Property
 		{
+			//	Choix de la propriété éditée par le panneau.
 			get
 			{
 				return this.property;
@@ -224,34 +224,34 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Met à jour toutes les valeurs du panneau.
 		public void UpdateValues()
 		{
+			//	Met à jour toutes les valeurs du panneau.
 			this.PropertyToWidgets();
 		}
 
-		// Propriété -> widgets.
 		protected virtual void PropertyToWidgets()
 		{
+			//	Propriété -> widgets.
 			this.UpdateButtons();
 		}
 
-		// Widgets -> propriété.
 		protected virtual void WidgetsToProperty()
 		{
+			//	Widgets -> propriété.
 		}
 
 
-		// Met le focus par défaut dans ce panneau.
 		public virtual bool DefaultFocus()
 		{
+			//	Met le focus par défaut dans ce panneau.
 			return false;
 		}
 
 
-		// Retourne la zone rectangulaire utile pour les widgets.
 		protected Rectangle UsefulZone
 		{
+			//	Retourne la zone rectangulaire utile pour les widgets.
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
@@ -263,9 +263,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.extendedButton == null )  return;
@@ -293,9 +293,9 @@ namespace Epsitec.Common.Document.Panels
 			this.UpdateButtons();
 		}
 
-		// Met à jour les boutons.
 		protected void UpdateButtons()
 		{
+			//	Met à jour les boutons.
 			if ( this.isObjectHilite )
 			{
 				this.fixIcon.Visibility = false;
@@ -312,37 +312,37 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Désélectionne toutes les origines de couleurs possibles.
 		public virtual void OriginColorDeselect()
 		{
+			//	Désélectionne toutes les origines de couleurs possibles.
 		}
 
-		// Sélectionne l'origine de couleur.
 		public virtual void OriginColorSelect(int rank)
 		{
+			//	Sélectionne l'origine de couleur.
 		}
 
-		// Retourne le rang de la couleur d'origine.
 		public virtual int OriginColorRank()
 		{
+			//	Retourne le rang de la couleur d'origine.
 			return -1;
 		}
 
-		// Modifie la couleur d'origine.
 		public virtual void OriginColorChange(Drawing.RichColor color)
 		{
+			//	Modifie la couleur d'origine.
 		}
 
-		// Donne la couleur d'origine.
 		public virtual Drawing.RichColor OriginColorGet()
 		{
+			//	Donne la couleur d'origine.
 			return Drawing.RichColor.FromBrightness(0);
 		}
 
 
-		// Génère un événement pour dire que ça a changé.
 		protected virtual void OnChanged()
 		{
+			//	Génère un événement pour dire que ça a changé.
 			if ( this.ignoreChanged )  return;
 
 			if ( this.property != null )
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Document.Panels
 		public event EventHandler Changed;
 
 
-		// Génère un événement pour dire que la couleur d'origine a changé.
+		//	Génère un événement pour dire que la couleur d'origine a changé.
 		protected virtual void OnOriginColorChanged()
 		{
 			if ( this.OriginColorChanged != null )  // qq'un écoute ?
@@ -375,7 +375,7 @@ namespace Epsitec.Common.Document.Panels
 		public event EventHandler OriginColorChanged;
 
 
-		// Le bouton pour étendre/réduire le panneau a été cliqué.
+		//	Le bouton pour étendre/réduire le panneau a été cliqué.
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
 		{
 			this.IsExtendedSize = !this.isExtendedSize;
@@ -445,9 +445,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// Met un texte dans un widget quelconque.
 		public static void SetText(Widget widget, string text)
 		{
+			//	Met un texte dans un widget quelconque.
 			if ( widget.Text != text )
 			{
 				widget.Text = text;
@@ -455,12 +455,12 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		// ATTENTION: Ceci n'est pas propre, mais je ne sais pas comment faire mieux.
-		// Le constructeur de Common.Widget appelle DefaultHeight, qui doit
-		// connaître le document pour déterminer la hauteur (avec LabelHeight).
-		// Comme ce constructeur est appelé avant l'initialisation de this.document,
-		// je n'ai pas trouvé d'autre moyen pour connaître le document que de le
-		// mettre au préalable dans une variable statique !!!
+		//	ATTENTION: Ceci n'est pas propre, mais je ne sais pas comment faire mieux.
+		//	Le constructeur de Common.Widget appelle DefaultHeight, qui doit
+		//	connaître le document pour déterminer la hauteur (avec LabelHeight).
+		//	Comme ce constructeur est appelé avant l'initialisation de this.document,
+		//	je n'ai pas trouvé d'autre moyen pour connaître le document que de le
+		//	mettre au préalable dans une variable statique !!!
 		public static Document				StaticDocument;
 
 		protected Document					document;

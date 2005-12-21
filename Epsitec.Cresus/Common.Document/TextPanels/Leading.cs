@@ -54,9 +54,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				double h = this.LabelHeight;
@@ -82,16 +82,16 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Le wrapper associé a changé.
 		protected void HandleWrapperChanged(object sender)
 		{
+			//	Le wrapper associé a changé.
 			this.UpdateAfterChanging();
 		}
 
 		
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldLeading == null )  return;
@@ -189,9 +189,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Met à jour après un changement du wrapper.
 		protected override void UpdateAfterChanging()
 		{
+			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
 			double leading = this.document.ParagraphWrapper.Active.Leading;
@@ -336,9 +336,9 @@ namespace Epsitec.Common.Document.TextPanels
 
 
 		#region Menu
-		// Construit le menu pour choisir l'interligne.
 		protected VMenu CreateMenu()
 		{
+			//	Construit le menu pour choisir l'interligne.
 			VMenu menu = new VMenu();
 
 			double leading = this.document.ParagraphWrapper.Active.Leading;

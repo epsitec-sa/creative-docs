@@ -16,9 +16,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 		}
 
-		// Crée et montre la fenêtre du dialogue.
 		public override void Show()
 		{
+			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -117,7 +117,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.key4.TabIndex = this.tabIndex++;
 				this.key4.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				// Bouton OK.
+				//	Bouton OK.
 				this.buttonOK = new Button(this.window.Root);
 				this.buttonOK.Width = 75;
 				this.buttonOK.Text = Res.Strings.Dialog.Button.OK;
@@ -128,7 +128,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonOK.TabIndex = this.tabIndex++;
 				this.buttonOK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				// Bouton annuler.
+				//	Bouton annuler.
 				this.buttonCancel = new Button(this.window.Root);
 				this.buttonCancel.Width = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
@@ -148,9 +148,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.ShowDialog();
 		}
 
-		// Enregistre la position de la fenêtre du dialogue.
 		public override void Save()
 		{
+			//	Enregistre la position de la fenêtre du dialogue.
 			this.WindowSave("Key");
 		}
 

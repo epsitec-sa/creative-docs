@@ -96,7 +96,7 @@ namespace Epsitec.Common.Widgets
 
 		public int								FirstVisibleRow
 		{
-			// Première ligne visible.
+			//	Première ligne visible.
 			get
 			{
 				return this.firstLine;
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void ShowSelected(ScrollShowMode mode)
 		{
-			// Rend la ligne sélectionnée visible.
+			//	Rend la ligne sélectionnée visible.
 			
 			if ( this.selectedLine == -1 ) return;
 			if ( this.selectedLine >= this.firstLine && this.selectedLine <  this.firstLine+this.visibleLines ) return;
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Widgets
 		
 		public double LineHeight
 		{
-			// Hauteur d'une ligne.
+			//	Hauteur d'une ligne.
 
 			get
 			{
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool AdjustHeight(ScrollAdjustMode mode)
 		{
-			// Ajuste la hauteur pour afficher pile un nombre entier de lignes.
+			//	Ajuste la hauteur pour afficher pile un nombre entier de lignes.
 			
 			double h = this.Client.Height-ScrollList.TextOffsetY*2;
 			int count = (int)(h/this.lineHeight);
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool AdjustHeightToContent(ScrollAdjustMode mode, double min_height, double max_height)
 		{
-			// Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
+			//	Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
 			
 			double h = this.lineHeight*this.items.Count+ScrollList.TextOffsetY*2;
 			double hope = h;
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			// Gestion d'un événement.
+			//	Gestion d'un événement.
 			
 			switch ( message.Type )
 			{
@@ -332,7 +332,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual  bool MouseSelect(Drawing.Point pos)
 		{
-			// Sélectionne la ligne selon la souris.
+			//	Sélectionne la ligne selon la souris.
 			
 			double y = this.Client.Height-pos.Y-1-ScrollList.TextOffsetY;
 			double x = pos.X-this.margins.Left;
@@ -360,7 +360,7 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 			
-			// Gestion d'une touche pressée avec KeyDown dans la liste.
+			//	Gestion d'une touche pressée avec KeyDown dans la liste.
 			
 			int sel = this.SelectedIndex;
 			
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateScroller()
 		{
-			// Met à jour l'ascenseur en fonction de la liste.
+			//	Met à jour l'ascenseur en fonction de la liste.
 			
 			int total = this.items.Count;
 			if ( total <= this.visibleLines )
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnSelectedIndexChanged()
 		{
-			// Génère un événement pour dire que la sélection dans la liste a changé.
+			//	Génère un événement pour dire que la sélection dans la liste a changé.
 			
 			if ( this.SelectedIndexChanged != null )  // qq'un écoute ?
 			{
@@ -546,7 +546,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnSelectionActivated()
 		{
-			// Génère un événement pour dire que la sélection a été validée
+			//	Génère un événement pour dire que la sélection a été validée
 			
 			if ( this.SelectionActivated != null )
 			{
@@ -672,7 +672,7 @@ namespace Epsitec.Common.Widgets
 		
 		public string							SelectedName
 		{
-			// Nom de la ligne sélectionnée, null si aucune.
+			//	Nom de la ligne sélectionnée, null si aucune.
 			get
 			{
 				if ( this.selectedLine == -1 )
@@ -710,7 +710,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleScrollerValueChanged(object sender)
 		{
-			// Appelé lorsque l'ascenseur a bougé.
+			//	Appelé lorsque l'ascenseur a bougé.
 			
 			this.FirstVisibleRow = (int)(this.scroller.DoubleValue + 0.5);
 		}

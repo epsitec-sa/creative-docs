@@ -91,13 +91,13 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		//	Les marques de changement qui sont activées dans le texte à la moindre
-		//	modification sont toujours situées dans une plage comprise entre 'start'
-		//	et 'end'. La version permet de savoir quand les marques ont changé pour
-		//	la dernière fois.
-		
 		public int								TextChangeMarkStart
 		{
+			//	Les marques de changement qui sont activées dans le texte à la moindre
+			//	modification sont toujours situées dans une plage comprise entre 'start'
+			//	et 'end'. La version permet de savoir quand les marques ont changé pour
+			//	la dernière fois.
+			
 			get
 			{
 				return System.Math.Min (this.text_change_mark_start, this.TextLength);

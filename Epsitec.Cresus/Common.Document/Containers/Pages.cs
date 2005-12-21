@@ -74,7 +74,7 @@ namespace Epsitec.Common.Document.Containers
 			this.table.TabIndex = 2;
 			this.table.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			// --- Début panelMisc
+			//	--- Début panelMisc
 			this.buttonPageStack = new Button(this);
 			this.buttonPageStack.Dock = DockStyle.Bottom;
 			this.buttonPageStack.DockMargins = new Margins(0, 0, 0, 0);
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioMaster.Index = 2;
 			this.radioMaster.TabIndex = 2;
 			this.radioMaster.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			// --- Fin panelMisc
+			//	--- Fin panelMisc
 			
 			this.extendedButton = new GlyphButton(this);
 			this.extendedButton.Dock = DockStyle.Bottom;
@@ -300,35 +300,35 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateExtended();
 		}
 		
-		// Synchronise avec l'état de la commande.
-		// TODO: devrait être inutile, à supprimer donc !!!
 		protected void Synchro(Widget widget)
 		{
+			//	Synchronise avec l'état de la commande.
+			//	TODO: devrait être inutile, à supprimer donc !!!
 #if false //#fix
 			widget.Enable = (this.toolBar.CommandDispatcher[widget.Command].Enabled);
 #endif
 		}
 
 
-		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
+			//	Effectue la mise à jour du contenu.
 			this.UpdateTable();
 			this.UpdatePanel();
 		}
 
-		// Effectue la mise à jour d'un objet.
 		protected override void DoUpdateObject(Objects.Abstract obj)
 		{
+			//	Effectue la mise à jour d'un objet.
 			Objects.Page page = obj as Objects.Page;
 			UndoableList pages = this.document.GetObjects;
 			int rank = pages.IndexOf(obj);
 			this.TableUpdateRow(rank, page);
 		}
 
-		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
+			//	Met à jour le contenu de la table.
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			int sel = context.CurrentPage;
 
@@ -354,9 +354,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Peuple une ligne de la table, si nécessaire.
 		protected void TableFillRow(int row)
 		{
+			//	Peuple une ligne de la table, si nécessaire.
 			for ( int column=0 ; column<this.table.Columns ; column++ )
 			{
 				if ( this.table[column, row].IsEmpty )
@@ -370,9 +370,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Met à jour le contenu d'une ligne de la table.
 		protected void TableUpdateRow(int row, Objects.Page page)
 		{
+			//	Met à jour le contenu d'une ligne de la table.
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			StaticText st;
 
@@ -385,9 +385,9 @@ namespace Epsitec.Common.Document.Containers
 			this.table.SelectRow(row, row==context.CurrentPage);
 		}
 
-		// Met à jour le panneau pour éditer la propriété sélectionnée.
 		protected void UpdatePanel()
 		{
+			//	Met à jour le panneau pour éditer la propriété sélectionnée.
 			this.UpdatePageName();
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
@@ -435,9 +435,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Met à jour le panneau pour éditer le nom de la page sélectionnée.
 		protected void UpdatePageName()
 		{
+			//	Met à jour le panneau pour éditer le nom de la page sélectionnée.
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			int sel = context.CurrentPage;
 			string text = this.document.Modifier.PageName(sel);
@@ -448,24 +448,24 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
+			//	Liste cliquée.
 			if ( this.table.SelectedRow == -1 )  return;
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			context.CurrentPage = this.table.SelectedRow;
 		}
 
-		// Liste double-cliquée.
 		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
 		{
+			//	Liste double-cliquée.
 			this.name.SelectAll();
 			this.name.Focus();
 		}
 
-		// Le nom de la page a changé.
 		private void HandleNameTextChanged(object sender)
 		{
+			//	Le nom de la page a changé.
 			if ( this.ignoreChanged )  return;
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
@@ -477,25 +477,25 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Le bouton pour étendre/réduire le panneau a été cliqué.
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
 		{
+			//	Le bouton pour étendre/réduire le panneau a été cliqué.
 			this.isExtended = !this.isExtended;
 			this.UpdateExtended();
 		}
 
-		// Met à jour l'état réduit/étendu du panneau.
 		protected void UpdateExtended()
 		{
+			//	Met à jour l'état réduit/étendu du panneau.
 			this.extendedButton.GlyphShape = this.isExtended ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
 
 			this.panelMisc.Visibility = (this.isExtended);
 			this.buttonPageStack.Visibility = (this.isExtended);
 		}
 
-		// Un bouton radio a été cliqué.
 		private void HandleRadioChanged(object sender)
 		{
+			//	Un bouton radio a été cliqué.
 			RadioButton radio = sender as RadioButton;
 			if ( radio == null )  return;
 			if ( radio.ActiveState != ActiveState.Yes )  return;
@@ -549,9 +549,9 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.OpletQueueValidateAction();
 		}
 
-		// Un bouton à cocher a été cliqué.
 		private void HandleCheckClicked(object sender, MessageEventArgs e)
 		{
+			//	Un bouton à cocher a été cliqué.
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChangeStatus);
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
@@ -577,9 +577,9 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.OpletQueueValidateAction();
 		}
 
-		// Combo ouvert.
 		private void HandleOpeningCombo(object sender, CancelEventArgs e)
 		{
+			//	Combo ouvert.
 			TextFieldCombo field = sender as TextFieldCombo;
 			field.Items.Clear();
 
@@ -598,9 +598,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		// Combo fermé.
 		private void HandleClosedCombo(object sender)
 		{
+			//	Combo fermé.
 			if ( this.ignoreChanged )  return;
 			TextFieldCombo field = sender as TextFieldCombo;
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;

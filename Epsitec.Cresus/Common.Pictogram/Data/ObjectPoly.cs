@@ -52,16 +52,16 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Nom de l'icône.
 		public override string IconName
 		{
+			//	Nom de l'icône.
 			get { return @"file:images/poly.icon"; }
 		}
 
 
-		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur l'objet.
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle bbox = this.BoundingBox;
@@ -94,9 +94,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplace une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, iconContext);
@@ -128,9 +128,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Indique si le déplacement d'une poignée doit se répercuter sur les propriétés.
 		public override bool IsMoveHandlePropertyChanged(int rank)
 		{
+			//	Indique si le déplacement d'une poignée doit se répercuter sur les propriétés.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				return base.IsMoveHandlePropertyChanged(rank);
@@ -138,9 +138,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return ( rank >= this.TotalHandlePrimary );
 		}
 
-		// Retourne la propriété modifiée en déplaçant une poignée.
 		public override AbstractProperty MoveHandleProperty(int rank)
 		{
+			//	Retourne la propriété modifiée en déplaçant une poignée.
 			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
 				return base.MoveHandleProperty(rank);
@@ -150,17 +150,17 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Déplace globalement l'objet.
 		public override void MoveGlobal(GlobalModifierData initial, GlobalModifierData final, bool all)
 		{
+			//	Déplace globalement l'objet.
 			base.MoveGlobal(initial, final, all);
 			this.UpdateHandle();
 		}
 
 
-		// Donne le contenu du menu contextuel.
 		public override void ContextMenu(System.Collections.ArrayList list, Drawing.Point pos, int handleRank)
 		{
+			//	Donne le contenu du menu contextuel.
 			ContextMenuItem item;
 
 			if ( handleRank == -1 )
@@ -217,9 +217,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Exécute une commande du menu contextuel.
 		public override void ContextCommand(string cmd, Drawing.Point pos, int handleRank)
 		{
+			//	Exécute une commande du menu contextuel.
 			if ( cmd == "HandleAdd" )
 			{
 				int rank = this.DetectOutline(pos);
@@ -254,10 +254,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Détecte si la souris est sur le pourtour de l'objet.
-		// Retourne le rank de la poignée de départ, ou -1
 		protected int DetectOutline(Drawing.Point pos)
 		{
+			//	Détecte si la souris est sur le pourtour de l'objet.
+			//	Retourne le rank de la poignée de départ, ou -1
 			PropertyCorner corner = this.PropertyCorner(6);
 			CornerType type = corner.CornerType;
 			corner.CornerType = CornerType.Right;
@@ -277,9 +277,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Début de la création d'un objet.
 		public override void CreateMouseDown(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Début de la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 
@@ -298,9 +298,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.mouseDown = true;
 		}
 
-		// Déplacement pendant la création d'un objet.
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplacement pendant la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 
@@ -327,9 +327,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.dirtyBbox = true;
 		}
 
-		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Fin de la création d'un objet.
 			iconContext.ConstrainSnapPos(ref pos);
 			iconContext.SnapGrid(ref pos);
 			int rank = this.TotalHandle-1;
@@ -339,9 +339,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.TempCreate(pos, iconContext);
 		}
 
-		// Indique si la création de l'objet est terminée.
 		public override bool CreateIsEnding(IconContext iconContext)
 		{
+			//	Indique si la création de l'objet est terminée.
 			if ( this.TotalHandle < 2 )  return false;
 
 			int rank = this.TotalHandle-1;
@@ -359,17 +359,17 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
+			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			return ( this.TotalHandle >= 2 );
 		}
 
-		// Termine la création de l'objet. Retourne false si l'objet ne peut
-		// pas exister et doit être détruit.
 		public override bool CreateEnding(IconContext iconContext)
 		{
+			//	Termine la création de l'objet. Retourne false si l'objet ne peut
+			//	pas exister et doit être détruit.
 			if ( this.TotalHandle < 2 )  return false;
 
 			this.TempDelete();
@@ -380,9 +380,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		// Retourne un bouton d'action pendant la création.
 		public override bool CreateAction(int rank, out string cmd, out string name, out string text)
 		{
+			//	Retourne un bouton d'action pendant la création.
 			if ( rank == 0 )
 			{
 				cmd  = "Object";
@@ -400,9 +400,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return base.CreateAction(rank, out cmd, out name, out text);
 		}
 
-		// Crée l'objet temporaire pour montrer le nouveau segment.
 		protected void TempCreate(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Crée l'objet temporaire pour montrer le nouveau segment.
 			this.TempDelete();
 
 			this.tempLine = new ObjectLine();
@@ -427,18 +427,18 @@ namespace Epsitec.Common.Pictogram.Data
 			this.tempLine.CreateMouseDown(pos, iconContext);
 		}
 
-		// Déplace l'objet temporaire pour montrer le nouveau segment.
 		protected void TempMove(Drawing.Point pos, IconContext iconContext)
 		{
+			//	Déplace l'objet temporaire pour montrer le nouveau segment.
 			if ( this.tempLine != null )
 			{
 				this.tempLine.CreateMouseMove(pos, iconContext);
 			}
 		}
 
-		// Détruit l'objet temporaire pour montrer le nouveau segment.
 		protected void TempDelete()
 		{
+			//	Détruit l'objet temporaire pour montrer le nouveau segment.
 			this.tempLine = null;
 		}
 
@@ -448,9 +448,9 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Met à jour les poignées pour les profondeurs des flèches.
 		protected void UpdateHandle()
 		{
+			//	Met à jour les poignées pour les profondeurs des flèches.
 			int total = this.TotalHandlePrimary;
 			if ( total < 2 )  return;
 
@@ -465,13 +465,13 @@ namespace Epsitec.Common.Pictogram.Data
 			int r2 = this.HandleArrowRank(1);
 			total += ((r1==-1)?0:1) + ((r2==-1)?0:1);
 
-			// Supprime les poignées en trop.
+			//	Supprime les poignées en trop.
 			while ( this.handles.Count > total )
 			{
 				this.HandleDelete(this.handles.Count-1);
 			}
 
-			// Ajoute les poignées manquantes.
+			//	Ajoute les poignées manquantes.
 			while ( this.handles.Count < total )
 			{
 				this.HandleAdd(pp1, HandleType.Secondary);
@@ -490,9 +490,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Retourne le rang d'une poignée secondaire.
 		protected int HandleArrowRank(int extremity)
 		{
+			//	Retourne le rang d'une poignée secondaire.
 			if ( this.PropertyArrow(3).GetArrowType(extremity) == ArrowType.Right )  return -1;
 
 			int total = this.TotalHandlePrimary;
@@ -508,9 +508,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
+			//	Met à jour le rectangle englobant l'objet.
 			Drawing.Path pathStart;  bool outlineStart, surfaceStart;
 			Drawing.Path pathEnd;    bool outlineEnd,   surfaceEnd;
 			Drawing.Path pathLine;
@@ -551,11 +551,11 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Retourne le nombre de poignées principales.
-		// Ne compte pas les 1 ou 2 poignées secondaires à la fin, utilisées
-		// pour PropertyArrow.
 		protected int TotalHandlePrimary
 		{
+			//	Retourne le nombre de poignées principales.
+			//	Ne compte pas les 1 ou 2 poignées secondaires à la fin, utilisées
+			//	pour PropertyArrow.
 			get
 			{
 				int total = this.handles.Count;
@@ -567,12 +567,12 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Crée les chemins de l'objet.
 		protected void PathBuild(IconContext iconContext,
 								 out Drawing.Path pathStart, out bool outlineStart, out bool surfaceStart,
 								 out Drawing.Path pathEnd,   out bool outlineEnd,   out bool surfaceEnd,
 								 out Drawing.Path pathLine)
 		{
+			//	Crée les chemins de l'objet.
 			pathStart = new Drawing.Path();
 			pathEnd   = new Drawing.Path();
 			pathLine  = new Drawing.Path();
@@ -681,9 +681,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Crée le chemin d'un coin.
 		protected void PathCorner(Drawing.Path path, Drawing.Point p1, Drawing.Point s, Drawing.Point p2, PropertyCorner corner, bool simply)
 		{
+			//	Crée le chemin d'un coin.
 			if ( simply )
 			{
 				if ( path.IsEmpty )  path.MoveTo(s);
@@ -702,9 +702,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Dessine l'objet.
 			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext, iconObjects);
 
@@ -784,9 +784,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Imprime l'objet.
 		public override void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
 		{
+			//	Imprime l'objet.
 			base.PrintGeometry(port, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 1 )  return;

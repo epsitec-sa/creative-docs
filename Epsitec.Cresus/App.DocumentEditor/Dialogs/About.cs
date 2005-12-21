@@ -16,9 +16,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 		}
 
-		// Crée et montre la fenêtre du dialogue.
 		public override void Show()
 		{
+			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -32,7 +32,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				About.CreateWidgetSplash(this.window.Root, this.editor.InstallType);
 
-				// Bouton de fermeture.
+				//	Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
@@ -56,16 +56,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.ShowDialog();
 		}
 
-		// Enregistre la position de la fenêtre du dialogue.
 		public override void Save()
 		{
+			//	Enregistre la position de la fenêtre du dialogue.
 			this.WindowSave("About");
 		}
 
 
-		// Crée les widgets pour l'image de bienvenue.
 		public static StaticText CreateWidgetSplash(Widget parent, InstallType type)
 		{
+			//	Crée les widgets pour l'image de bienvenue.
 			double y = parent.Height-200;
 
 			string res;
@@ -154,9 +154,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return image;
 		}
 
-		// Donne le numéro de version.
 		public static string GetVersion()
 		{
+			//	Donne le numéro de version.
 			string version = typeof(Document).Assembly.FullName.Split(',')[1].Split('=')[1];
 			if ( version.EndsWith(".0") )
 			{
@@ -165,9 +165,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return version;
 		}
 
-		// Lit la clé d'installation.
 		protected static string GetKey()
 		{
+			//	Lit la clé d'installation.
 			string key = Common.Support.SerialAlgorithm.ReadSerial();
 
 			if ( key != null && key.Length == 24 )

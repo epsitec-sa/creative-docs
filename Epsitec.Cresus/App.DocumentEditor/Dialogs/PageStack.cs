@@ -17,9 +17,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 		}
 
-		// Crée et montre la fenêtre du dialogue.
 		public override void Show()
 		{
+			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -76,7 +76,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.table.Dock = DockStyle.Fill;
 				this.table.DockMargins = new Margins(6, 6, 6, 34);
 
-				// Bouton de fermeture.
+				//	Bouton de fermeture.
 				double posx = 6;
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
@@ -89,7 +89,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 
-				// Bouton d'aide.
+				//	Bouton d'aide.
 				posx += buttonClose.Width+6;
 				Button buttonHelp = new Button(this.window.Root);
 				buttonHelp.Width = 75;
@@ -138,7 +138,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pageNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.pageNext, DocumentEditor.GetRes("Action.PageNext"));
 
-				// Bouton page courante.
+				//	Bouton page courante.
 				posx += pageNext.Width+8;
 				this.buttonCurrent = new Button(this.window.Root);
 				this.buttonCurrent.Width = 100;
@@ -156,32 +156,32 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.Show();
 		}
 
-		// Enregistre la position de la fenêtre du dialogue.
 		public override void Save()
 		{
+			//	Enregistre la position de la fenêtre du dialogue.
 			this.WindowSave("PageStack");
 		}
 
-		// Reconstruit le dialogue.
 		public override void Rebuild()
 		{
+			//	Reconstruit le dialogue.
 			if ( !this.editor.IsCurrentDocument )  return;
 			if ( this.window == null )  return;
 			this.UpdateTable();
 		}
 
-		// Met à jour le contenu de la table.
 		public void Update()
 		{
+			//	Met à jour le contenu de la table.
 			if ( this.window == null )  return;
 			if ( !this.window.IsVisible )  return;
 			this.UpdateTable();
 		}
 
 
-		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
+			//	Met à jour le contenu de la table.
 			System.Collections.ArrayList infos;
 			if ( this.editor.IsCurrentDocument )
 			{
@@ -262,9 +262,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		// Peuple une ligne de la table, si nécessaire.
 		protected void TableFillRow(int row)
 		{
+			//	Peuple une ligne de la table, si nécessaire.
 			for ( int column=0 ; column<this.table.Columns ; column++ )
 			{
 				if ( this.table[column, row].IsEmpty )
@@ -301,9 +301,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			menu.ShowAsContextMenu(button.Window, pos);
 		}
 
-		// Construit le menu pour choisir une page.
 		public VMenu CreatePagesMenu()
 		{
+			//	Construit le menu pour choisir une page.
 			UndoableList pages = this.editor.CurrentDocument.GetObjects;  // liste des pages
 			MessageEventHandler message = new MessageEventHandler(this.HandleMenuPressed);
 			return Objects.Page.CreateMenu(pages, this.showedPage, message);

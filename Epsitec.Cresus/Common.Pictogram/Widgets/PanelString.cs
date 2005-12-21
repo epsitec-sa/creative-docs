@@ -46,18 +46,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{
+			//	Retourne la hauteur standard.
 			get
 			{
 				return ( this.extendedSize ? 80 : 30 );
 			}
 		}
 
-		// Indique si le panneau est réduit (petite hauteur) ou étendu (grande hauteur).
 		public override bool ExtendedSize
 		{
+			//	Indique si le panneau est réduit (petite hauteur) ou étendu (grande hauteur).
 			get
 			{
 				return this.extendedSize;
@@ -84,9 +84,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
+			//	Propriété -> widget.
 			base.SetProperty(property);
 			this.label.Text = this.textStyle;
 
@@ -103,9 +103,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Widget -> propriété.
 		public override AbstractProperty GetProperty()
 		{
+			//	Widget -> propriété.
 			PropertyString p = new PropertyString();
 			base.GetProperty(p);
 
@@ -121,9 +121,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
 			if ( this.fieldSingle == null )  return;
@@ -146,9 +146,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldMulti.SetVisible(this.extendedSize);
 		}
 		
-		// Une valeur a été changée.
 		private void HandleTextChanged(object sender)
 		{
+			//	Une valeur a été changée.
 			this.OnChanged();
 		}
 
