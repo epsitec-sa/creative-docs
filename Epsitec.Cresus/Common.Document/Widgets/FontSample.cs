@@ -66,6 +66,24 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Hauteur pour la police.
+		public double FontHeight
+		{
+			get
+			{
+				return this.fontHeight;
+			}
+
+			set
+			{
+				if ( this.fontHeight != value )
+				{
+					this.fontHeight = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 		// Type d'un échantillon.
 		public bool SampleAbc
 		{
@@ -233,7 +251,7 @@ namespace Epsitec.Common.Document.Widgets
 				}
 
 				// Dessine l'échantillon de la police.
-				double size = rect.Height*0.85;
+				double size = (this.fontHeight == 0) ? rect.Height*0.85 : this.fontHeight*0.85;
 				Path path;
 				if ( this.sampleAbc )
 				{
@@ -295,6 +313,7 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		protected OpenType.FontIdentity			fontIdentity = null;
+		protected double						fontHeight = 0;
 		protected bool							sampleAbc = false;
 		protected bool							center = false;
 		protected bool							separator = false;

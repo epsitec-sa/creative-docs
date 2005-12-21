@@ -166,6 +166,10 @@ namespace Epsitec.Common.Document.Widgets
 
 			// Crée les échantillons, si nécessaire.
 			int lines = (int) (rect.Height/this.sampleHeight);
+			double suppl = rect.Height - lines*this.sampleHeight;
+			double supplAll  = (double) ((int) (suppl/lines));  // supplément pour toutes les lignes
+			double supplLast = (double) ((int) (suppl%lines));  // supplément pour la dernière ligne
+
 			if ( this.samples == null || this.samples.Length != lines )
 			{
 				if ( this.samples != null )
@@ -191,14 +195,16 @@ namespace Epsitec.Common.Document.Widgets
 			this.scroller.Bounds = r;
 
 			// Positionne les échantillons.
-			r = rect;
-			r.Width -= this.scroller.DefaultWidth;
-			r.Bottom = r.Top-this.sampleHeight;
+			double top = rect.Top;
 			for ( int i=0 ; i<lines ; i++ )
 			{
+				double h = this.sampleHeight+supplAll;
+				if ( i == lines-1 )  h += supplLast;  // dernière ligne ?
+				r = new Rectangle(rect.Left, top-h, rect.Width-this.scroller.Width, h);
 				this.samples[i].Bounds = r;
+				this.samples[i].FontHeight = this.sampleHeight;
 
-				r.Offset(0, -this.sampleHeight);
+				top -= h;
 			}
 		}
 
@@ -209,19 +215,7 @@ namespace Epsitec.Common.Document.Widgets
 			Rectangle rect = this.Client.Bounds;
 			rect.Width -= this.scroller.Width;
 
-			Color backColor  = adorner.ColorTextBackground;
 			Color frameColor = adorner.ColorTextFieldBorder(this.IsEnabled);
-
-			if ( this.samples != null )
-			{
-				Rectangle back = rect;
-				back.Height = rect.Height - this.sampleHeight*this.samples.Length;
-				if ( back.Height > 0 )
-				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(backColor);  // dessine le fond
-				}
-			}
 
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
@@ -235,7 +229,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				if ( pos.X < this.Bounds.Right-this.scroller.Width )
 				{
-					int sel = this.firstLine + (int)((this.Bounds.Height-pos.Y) / this.sampleHeight);
+					int sel = this.Detect(pos);
 					if ( sel < this.fontList.Count )
 					{
 						string face = this.RankToFace(sel);
@@ -422,6 +416,16 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				message.Consumer = this;
 			}
+		}
+
+		// Détecte la ligne visée par la souris.
+		protected int Detect(Point pos)
+		{
+			for ( int i=0 ; i<this.samples.Length ; i++ )
+			{
+				if ( this.samples[i].Bounds.Contains(pos) )  return this.firstLine+i;
+			}
+			return -1;
 		}
 
 		// Ligne sélectionnée.
