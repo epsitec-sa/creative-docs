@@ -404,7 +404,7 @@ namespace Epsitec.Common.Document
 						{
 							if ( this.miniBar == null )
 							{
-								this.OpenMiniBar(pos, false, true, true);
+								this.OpenMiniBar(pos, false, true, true, 0);
 							}
 							else
 							{
@@ -1138,7 +1138,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( mb )
 				{
-					this.OpenMiniBar(mouse, true, false, true);
+					this.OpenMiniBar(mouse, true, false, true, 0);
 				}
 			}
 		}
@@ -1453,7 +1453,7 @@ namespace Epsitec.Common.Document
 				if ( mb )
 				{
 					this.document.Notifier.NotifyShaperChanged();
-					this.OpenMiniBar(mouse, true, false, true);
+					this.OpenMiniBar(mouse, true, false, true, 0);
 				}
 			}
 		}
@@ -2378,7 +2378,7 @@ namespace Epsitec.Common.Document
 
 
 		#region MiniBar
-		public void OpenMiniBar(Point mouse, bool delayed, bool noSelected, bool hot)
+		public void OpenMiniBar(Point mouse, bool delayed, bool noSelected, bool hot, double distance)
 		{
 			//	Ouvre la mini-palette.
 			this.CloseMiniBar(false);
@@ -2387,6 +2387,7 @@ namespace Epsitec.Common.Document
 			if ( cmds == null || cmds.Count == 0 )  return;
 
 			Widgets.Balloon frame = new Widgets.Balloon();
+			this.miniBarDistance = (distance == 0) ? frame.Distance : distance;
 
 			mouse = this.InternalToScreen(mouse);
 			mouse.Y ++;  // pour ne pas être sur le pixel visé par la souris
@@ -2413,7 +2414,7 @@ namespace Epsitec.Common.Document
 			maxWidth = System.Math.Max(maxWidth, width);
 
 			double mx = maxWidth + frame.Margin*2 + 1;
-			double my = 22*this.miniBarLines + frame.Margin*(this.miniBarLines-1) + frame.Margin*2 + frame.Distance;
+			double my = 22*this.miniBarLines + frame.Margin*(this.miniBarLines-1) + frame.Margin*2 + this.miniBarDistance;
 			Size size = new Size(mx, my);
 			mouse.X -= size.Width/2;
 			this.miniBarRect = new Drawing.Rectangle(mouse, size);
@@ -2471,6 +2472,7 @@ namespace Epsitec.Common.Document
 
 			this.miniBarBalloon = new Widgets.Balloon();
 			this.miniBarBalloon.Hot = this.miniBarHot;
+			this.miniBarBalloon.Distance = this.miniBarDistance;
 			this.miniBarBalloon.SetParent(this.miniBar.Root);
 			this.miniBarBalloon.Anchor = AnchorStyles.All;
 			this.miniBarBalloon.CloseNeeded += new EventHandler(this.HandleMiniBarCloseNeeded);
@@ -4375,6 +4377,7 @@ namespace Epsitec.Common.Document
 		protected int							miniBarLines;
 		protected Drawing.Rectangle				miniBarRect;
 		protected double						miniBarHot;
+		protected double						miniBarDistance;
 		protected Window						miniBar = null;
 		protected Widgets.Balloon				miniBarBalloon = null;
 		protected VMenu							contextMenu;

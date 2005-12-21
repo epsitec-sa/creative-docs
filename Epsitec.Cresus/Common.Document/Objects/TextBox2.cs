@@ -462,7 +462,15 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( this.textFlow.TextNavigator.SelectionCount > 0 )
 				{
-					this.document.Modifier.ActiveViewer.OpenMiniBar(pos, false, false, false);
+					double distance = 0;
+					Drawing.Rectangle selbox = this.EditSelectBox;
+					if ( !selbox.IsEmpty )
+					{
+						selbox = this.document.Modifier.ActiveViewer.InternalToScreen(selbox);
+						Point mouse = this.document.Modifier.ActiveViewer.InternalToScreen(pos);
+						distance = System.Math.Max(selbox.Top-mouse.Y, 0);
+					}
+					this.document.Modifier.ActiveViewer.OpenMiniBar(pos, false, false, false, distance);
 				}
 			}
 
@@ -1644,7 +1652,11 @@ namespace Epsitec.Common.Document.Objects
 					foreach ( Drawing.Rectangle rect in selRectList )
 					{
 						this.graphics.AddFilledRectangle(rect);
-						this.selectBox.MergeWith(rect);
+
+						Point c1 = this.transform.TransformDirect(rect.BottomLeft);
+						Point c2 = this.transform.TransformDirect(rect.TopRight);
+						this.selectBox.MergeWith(c1);
+						this.selectBox.MergeWith(c2);
 					}
 					this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
 				}
