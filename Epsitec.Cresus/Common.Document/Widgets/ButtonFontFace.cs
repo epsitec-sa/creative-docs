@@ -13,6 +13,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			this.sample = new FontSample(this);
 			this.sample.SampleAbc = true;
+			this.sample.Center = true;
 			this.sample.Dock = DockStyle.Fill;
 			this.sample.DockMargins = new Margins(0, 0, 3, 2);
 		}

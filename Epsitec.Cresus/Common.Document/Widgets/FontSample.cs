@@ -84,6 +84,24 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Echantillon centré horizontalement.
+		public bool Center
+		{
+			get
+			{
+				return this.center;
+			}
+
+			set
+			{
+				if ( this.center != value )
+				{
+					this.center = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 		// Indique si l'échantillon est suivi d'un séparateur.
 		public bool Separator
 		{
@@ -225,9 +243,23 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					path = Common.Widgets.Helpers.FontPreviewer.GetPath(this.fontIdentity, ox, oy, size);
 				}
+
+				double sx = 0;
+				if ( this.center )
+				{
+					Rectangle bounds = path.ComputeBounds();
+					sx = (rect.Width-bounds.Width)/2-ox;
+					graphics.TranslateTransform(sx, 0);
+				}
+
 				graphics.Color = textColor;
 				graphics.PaintSurface(path);
 				path.Dispose();
+
+				if ( this.center )
+				{
+					graphics.TranslateTransform(-sx, 0);
+				}
 			}
 
 			if ( this.textLayout != null )
@@ -264,6 +296,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected OpenType.FontIdentity			fontIdentity = null;
 		protected bool							sampleAbc = false;
+		protected bool							center = false;
 		protected bool							separator = false;
 		protected bool							last = false;
 		protected double						frontier = 0;
