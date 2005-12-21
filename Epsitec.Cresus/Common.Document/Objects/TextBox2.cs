@@ -462,15 +462,17 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( this.textFlow.TextNavigator.SelectionCount > 0 )
 				{
+					Viewer viewer = this.document.Modifier.ActiveViewer;
 					double distance = 0;
 					Drawing.Rectangle selbox = this.EditSelectBox;
 					if ( !selbox.IsEmpty )
 					{
-						selbox = this.document.Modifier.ActiveViewer.InternalToScreen(selbox);
-						Point mouse = this.document.Modifier.ActiveViewer.InternalToScreen(pos);
-						distance = System.Math.Max(selbox.Top-mouse.Y, 0);
+						selbox = viewer.InternalToScreen(selbox);
+						double top = System.Math.Min(selbox.Top, viewer.Height-2);
+						Point mouse = viewer.InternalToScreen(pos);
+						distance = System.Math.Max(top-mouse.Y, 0);
 					}
-					this.document.Modifier.ActiveViewer.OpenMiniBar(pos, false, false, false, distance);
+					viewer.OpenMiniBar(pos, false, false, false, distance);
 				}
 			}
 
