@@ -2386,8 +2386,6 @@ namespace Epsitec.Common.Document
 			if ( cmds == null || cmds.Count == 0 )  return;
 
 			Widgets.Balloon frame = new Widgets.Balloon();
-			IconButton button = new IconButton();
-			IconSeparator sep = new IconSeparator();
 
 			mouse = this.InternalToScreen(mouse);
 			mouse.Y ++;  // pour ne pas être sur le pixel visé par la souris
@@ -2400,25 +2398,21 @@ namespace Epsitec.Common.Document
 			double width = 0;
 			foreach ( string cmd in cmds )
 			{
-				if ( cmd == "" )  // séparateur ?
-				{
-					width += sep.DefaultWidth;
-				}
-				else if ( cmd == "#" )  // fin de ligne ?
+				if ( cmd == "#" )  // fin de ligne ?
 				{
 					maxWidth = System.Math.Max(maxWidth, width);
 					width = 0;
 					this.miniBarLines ++;
 				}
-				else
+				else	// commande ou séparateur ?
 				{
-					width += button.DefaultWidth;
+					width += this.MiniBarCommandWidth(cmd);
 				}
 			}
 			maxWidth = System.Math.Max(maxWidth, width);
 
 			double mx = maxWidth + frame.Margin*2 + 1;
-			double my = button.DefaultHeight*this.miniBarLines + frame.Margin*(this.miniBarLines-1) + frame.Margin*2 + frame.Distance;
+			double my = 22*this.miniBarLines + frame.Margin*(this.miniBarLines-1) + frame.Margin*2 + frame.Distance;
 			Size size = new Size(mx, my);
 			mouse.X -= size.Width/2;
 			this.miniBarRect = new Drawing.Rectangle(mouse, size);
@@ -2510,6 +2504,7 @@ namespace Epsitec.Common.Document
 				if ( cmd == "" )  // séparateur ?
 				{
 					IconSeparator sep = new IconSeparator();
+					sep.Width = this.MiniBarCommandWidth(cmd);
 					sep.Dock = DockStyle.Left;
 					sep.SetParent(line);
 				}
@@ -2535,7 +2530,7 @@ namespace Epsitec.Common.Document
 							button.ButtonStyle = ButtonStyle.ActivableIcon;
 						}
 
-						//?button.Width = 30;
+						button.Width = this.MiniBarCommandWidth(cmd);
 						button.Command = cs.Name;
 						button.Name = cs.Name;
 						button.FontIdentity = id;
@@ -2554,6 +2549,7 @@ namespace Epsitec.Common.Document
 							button.ButtonStyle = ButtonStyle.ActivableIcon;
 						}
 
+						button.Width = this.MiniBarCommandWidth(cmd);
 						button.Dock = DockStyle.Left;
 						button.SetParent(line);
 						button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
@@ -2754,14 +2750,14 @@ namespace Epsitec.Common.Document
 
 			// Essaie différentes largeurs de justifications, pour retenir la meilleure,
 			// c'est-à-dire celle qui a le moins de déchets (place perdue sur la dernière ligne).
-			int bestScraps = 1000;
-			int bestHope = 8;
+			double bestScraps = 10000;
+			double bestHope = 8*22;
 			int linesRequired = this.MiniBarCount(list)/8 + 1;
-			for ( int hope=2 ; hope<=16 ; hope++ )
+			for ( double hope=2*22 ; hope<=16*22 ; hope+=22 )
 			{
 				if ( this.MiniBarJustifDo(list, hope) == linesRequired )
 				{
-					int scraps = this.MiniBarJustifScraps(list);
+					double scraps = this.MiniBarJustifScraps(list);
 					if ( bestScraps > scraps )
 					{
 						bestScraps = scraps;
@@ -2790,33 +2786,34 @@ namespace Epsitec.Common.Document
 		// Justifie la mini-palette, en remplaçant certains séparateurs ("") par une marque
 		// de fin de ligne ("#").
 		// Retourne le nombre de lignes nécessaires.
-		protected int MiniBarJustifDo(System.Collections.ArrayList list, int hope)
+		protected int MiniBarJustifDo(System.Collections.ArrayList list, double widthHope)
 		{
-			int count = this.MiniBarCount(list);
-			if ( count < hope )  return 1;
-
-			int inlineCount = 0;
-			int lineCount = 1;
+			double width = 0;
+			int lines = 1;
 			for ( int i=0 ; i<list.Count ; i++ )
 			{
 				string cmd = list[i] as string;
 
 				if ( cmd == "" )  // séparateur ?
 				{
-					if ( inlineCount >= hope )
+					if ( width >= widthHope )
 					{
 						list.RemoveAt(i);     // supprime le séparateur...
 						list.Insert(i, "#");  // ...et remplace-le par une marque de fin de ligne
-						inlineCount = 0;
-						lineCount ++;
+						width = 0;
+						lines ++;
+					}
+					else
+					{
+						width += this.MiniBarCommandWidth(cmd);
 					}
 				}
 				else	// commande ?
 				{
-					inlineCount ++;
+					width += this.MiniBarCommandWidth(cmd);
 				}
 			}
-			return lineCount;
+			return lines;
 		}
 
 		// Supprime la justification de la mini-palette.
@@ -2836,31 +2833,46 @@ namespace Epsitec.Common.Document
 
 		// Retourne la longueur inutilisée la plus grande. Il s'agit généralement de la place
 		// perdue à la fin de la dernière ligne.
-		protected int MiniBarJustifScraps(System.Collections.ArrayList list)
+		protected double MiniBarJustifScraps(System.Collections.ArrayList list)
 		{
-			int shortestLine = 1000;
-			int longestLine = 0;
-			int index = 0;
+			double shortestLine = 10000;
+			double longestLine = 0;
+			double width = 0;
 			foreach ( string cmd in list )
 			{
-				if ( cmd == "" )  // séparateur ?
+				if ( cmd == "#" )  // fin de ligne ?
 				{
+					shortestLine = System.Math.Min(shortestLine, width);
+					longestLine  = System.Math.Max(longestLine,  width);
+					width = 0;
 				}
-				else if ( cmd == "#" )  // fin de ligne ?
+				else	// commande ou séparateur ?
 				{
-					shortestLine = System.Math.Min(shortestLine, index);
-					longestLine  = System.Math.Max(longestLine,  index);
-					index = 0;
-				}
-				else	// commande ?
-				{
-					index ++;
+					width += this.MiniBarCommandWidth(cmd);
 				}
 			}
-			shortestLine = System.Math.Min(shortestLine, index);
-			longestLine  = System.Math.Max(longestLine,  index);
+			shortestLine = System.Math.Min(shortestLine, width);
+			longestLine  = System.Math.Max(longestLine,  width);
 
 			return longestLine-shortestLine;
+		}
+
+		// Retourne la largeur du widget d'une commande.
+		protected double MiniBarCommandWidth(string cmd)
+		{
+			if ( cmd == "" )  // séparateur ?
+			{
+				return 12;
+			}
+			else if ( cmd == "#" )  // fin de ligne ?
+			{
+				return 0;
+			}
+			else	// commande ?
+			{
+				if ( cmd.StartsWith("FontQuick") )  return 30;
+				return 22;
+			}
 		}
 
 		// Ajoute une commande dans la liste pour la mini-palette.
