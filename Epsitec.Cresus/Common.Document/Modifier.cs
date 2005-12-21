@@ -17,6 +17,7 @@ namespace Epsitec.Common.Document
 			this.tool = "ToolSelect";
 			this.zoomHistory = new ZoomHistory();
 			this.opletQueue = new OpletQueue();
+			this.isUndoRedoInProgress = false;
 			this.CreateObjectMemory();
 
 			if ( this.document.Type == DocumentType.Pictogram )
@@ -212,6 +213,8 @@ namespace Epsitec.Common.Document
 		protected void ToolAdaptRibbon()
 		{
 			//	Adapte les rubans à l'outil sélectionné.
+			if ( this.IsUndoRedoInProgress )  return;
+
 			if ( this.tool == "ToolEdit" )
 			{
 				this.document.Notifier.NotifyRibbonCommand("Text");
@@ -1859,6 +1862,15 @@ namespace Epsitec.Common.Document
 
 
 		#region UndoRedo
+		public bool IsUndoRedoInProgress
+		{
+			//	Indique si une opération undo/redo est en cours.
+			get
+			{
+				return this.isUndoRedoInProgress;
+			}
+		}
+
 		public void Undo(int number)
 		{
 			//	Annule les dernières actions.
@@ -1866,10 +1878,12 @@ namespace Epsitec.Common.Document
 			this.document.IsDirtySerialize = true;
 			this.ActiveViewer.CreateEnding(false, false);
 
+			this.isUndoRedoInProgress = true;
 			for ( int i=0 ; i<number ; i++ )
 			{
 				this.opletQueue.UndoAction();
 			}
+			this.isUndoRedoInProgress = false;
 
 			this.opletLastCmd = "";
 			this.opletLastId = 0;
@@ -1889,10 +1903,12 @@ namespace Epsitec.Common.Document
 			this.document.IsDirtySerialize = true;
 			this.ActiveViewer.CreateEnding(false, false);
 
+			this.isUndoRedoInProgress = true;
 			for ( int i=0 ; i<number ; i++ )
 			{
 				this.opletQueue.RedoAction();
 			}
+			this.isUndoRedoInProgress = false;
 
 			this.opletLastCmd = "";
 			this.opletLastId = 0;
@@ -5873,6 +5889,7 @@ namespace Epsitec.Common.Document
 		protected bool							opletCreate;
 		protected string						opletLastCmd;
 		protected int							opletLastId;
+		protected bool							isUndoRedoInProgress;
 		protected Objects.Memory				objectMemory;
 		protected Objects.Memory				objectMemoryText;
 		protected Properties.Abstract			menuProperty;
