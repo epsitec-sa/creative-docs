@@ -84,73 +84,73 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public bool SampleAbc
+		public bool IsSampleAbc
 		{
 			//	Type d'un échantillon.
 			get
 			{
-				return this.sampleAbc;
+				return this.isSampleAbc;
 			}
 
 			set
 			{
-				if ( this.sampleAbc != value )
+				if ( this.isSampleAbc != value )
 				{
-					this.sampleAbc = value;
+					this.isSampleAbc = value;
 					this.Invalidate();
 				}
 			}
 		}
 
-		public bool Center
+		public bool IsCenter
 		{
 			//	Echantillon centré horizontalement.
 			get
 			{
-				return this.center;
+				return this.isCenter;
 			}
 
 			set
 			{
-				if ( this.center != value )
+				if ( this.isCenter != value )
 				{
-					this.center = value;
+					this.isCenter = value;
 					this.Invalidate();
 				}
 			}
 		}
 
-		public bool Separator
+		public bool IsSeparator
 		{
 			//	Indique si l'échantillon est suivi d'un séparateur.
 			get
 			{
-				return this.separator;
+				return this.isSeparator;
 			}
 			
 			set
 			{
-				if ( this.separator != value )
+				if ( this.isSeparator != value )
 				{
-					this.separator = value;
+					this.isSeparator = value;
 					this.Invalidate();
 				}
 			}
 		}
 
-		public bool Last
+		public bool IsLast
 		{
 			//	Indique si l'échantillon est le dernier d'une liste (donc entouré d'un rectangle complet).
 			get
 			{
-				return this.last;
+				return this.isLast;
 			}
 			
 			set
 			{
-				if ( this.last != value )
+				if ( this.isLast != value )
 				{
-					this.last = value;
+					this.isLast = value;
 					this.Invalidate();
 				}
 			}
@@ -253,7 +253,7 @@ namespace Epsitec.Common.Document.Widgets
 				//	Dessine l'échantillon de la police.
 				double size = (this.fontHeight == 0) ? rect.Height*0.85 : this.fontHeight*0.85;
 				Path path;
-				if ( this.sampleAbc )
+				if ( this.isSampleAbc )
 				{
 					path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(this.fontIdentity, ox, oy, size);
 				}
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Document.Widgets
 				}
 
 				double sx = 0;
-				if ( this.center )
+				if ( this.isCenter )
 				{
 					Rectangle bounds = path.ComputeBounds();
 					sx = (rect.Width-bounds.Width)/2-ox;
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Document.Widgets
 				graphics.PaintSurface(path);
 				path.Dispose();
 
-				if ( this.center )
+				if ( this.isCenter )
 				{
 					graphics.TranslateTransform(-sx, 0);
 				}
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Document.Widgets
 
 				rect.Deflate(0.5);
 
-				if ( this.last )
+				if ( this.isLast )
 				{
 					graphics.AddRectangle(rect);
 				}
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Document.Widgets
 					graphics.AddLine(rect.TopRight,   rect.BottomRight);  // U inversé
 				}
 
-				if ( this.Separator )
+				if ( this.isSeparator )
 				{
 					rect.Bottom += 1;
 					graphics.AddLine(rect.BottomLeft, rect.BottomRight);  // double trait === en bas
@@ -314,10 +314,10 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected OpenType.FontIdentity			fontIdentity = null;
 		protected double						fontHeight = 0;
-		protected bool							sampleAbc = false;
-		protected bool							center = false;
-		protected bool							separator = false;
-		protected bool							last = false;
+		protected bool							isSampleAbc = false;
+		protected bool							isCenter = false;
+		protected bool							isSeparator = false;
+		protected bool							isLast = false;
 		protected double						frontier = 0;
 		protected TextLayout					textLayout = null;
 	}

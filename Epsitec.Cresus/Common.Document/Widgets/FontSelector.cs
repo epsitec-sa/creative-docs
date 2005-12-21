@@ -537,7 +537,7 @@ namespace Epsitec.Common.Document.Widgets
 						}
 					}
 					this.samples[i].FontFace = face;
-					this.samples[i].SampleAbc = this.sampleAbc;
+					this.samples[i].IsSampleAbc = this.sampleAbc;
 
 					if ( this.selectedList == null )  // sélection unique ?
 					{
@@ -553,12 +553,12 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					this.samples[i].FontIdentity = null;
 					this.samples[i].FontFace     = null;
-					this.samples[i].SampleAbc    = false;
+					this.samples[i].IsSampleAbc  = false;
 					this.samples[i].ActiveState  = ActiveState.No;
 				}
 
-				this.samples[i].Separator = (ii == this.quickCount-1 && this.quickCount != this.fontList.Count);
-				this.samples[i].Last      = (i == samples.Length-1);
+				this.samples[i].IsSeparator = (ii == this.quickCount-1 && this.quickCount != this.fontList.Count);
+				this.samples[i].IsLast      = (i == samples.Length-1);
 			}
 		}
 
