@@ -2537,6 +2537,7 @@ namespace Epsitec.Common.Document
 
 						//?button.Width = 30;
 						button.Command = cs.Name;
+						button.Name = cs.Name;
 						button.FontIdentity = id;
 						button.Dock = DockStyle.Left;
 						button.SetParent(line);
@@ -2577,16 +2578,42 @@ namespace Epsitec.Common.Document
 			Widget button = sender as Widget;
 			if ( button != null )
 			{
-				if ( button.Name == "OrderUpAll"            ||
-					 button.Name == "OrderUpOne"            ||
-					 button.Name == "OrderDownOne"          ||
-					 button.Name == "OrderDownAll"          ||
-					 button.Name == "FontSizeMinus"         ||
-					 button.Name == "FontSizePlus"          ||
-					 button.Name == "ParagraphIndentMinus"  ||
-					 button.Name == "ParagraphIndentPlus"   ||
-					 button.Name == "ParagraphLeadingMinus" ||
-					 button.Name == "ParagraphLeadingPlus"  )  return;
+				if (
+					button.Name == "OrderUpAll" ||
+					button.Name == "OrderUpOne" ||
+					button.Name == "OrderDownOne" ||
+					button.Name == "OrderDownAll" ||
+
+					button.Name == "FontQuick1" ||
+					button.Name == "FontQuick2" ||
+					button.Name == "FontQuick3" ||
+					button.Name == "FontQuick4" ||
+					button.Name == "FontBold" ||
+					button.Name == "FontItalic" ||
+					button.Name == "FontUnderlined" ||
+					button.Name == "FontOverlined" ||
+					button.Name == "FontStrikeout" ||
+					button.Name == "FontSubscript" ||
+					button.Name == "FontSuperscript" ||
+					button.Name == "FontSizePlus" ||
+					button.Name == "FontSizeMinus" ||
+					button.Name == "FontClear" ||
+					button.Name == "ParagraphLeading08" ||
+					button.Name == "ParagraphLeading10" ||
+					button.Name == "ParagraphLeading15" ||
+					button.Name == "ParagraphLeading20" ||
+					button.Name == "ParagraphLeading30" ||
+					button.Name == "ParagraphLeadingPlus" ||
+					button.Name == "ParagraphLeadingMinus" ||
+					button.Name == "ParagraphIndentPlus" ||
+					button.Name == "ParagraphIndentMinus" ||
+					button.Name == "ParagraphClear" ||
+					button.Name == "JustifHLeft" ||
+					button.Name == "JustifHCenter" ||
+					button.Name == "JustifHRight" ||
+					button.Name == "JustifHJustif" ||
+					button.Name == "JustifHAll"
+					)  return;
 			}
 
 			this.CloseMiniBar(false);
