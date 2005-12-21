@@ -3522,7 +3522,7 @@ namespace Epsitec.App.DocumentEditor
 			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierCtrl|KeyCode.AlphaS);
 			this.saveAsState = this.CreateCommandState("SaveAs");
 			this.saveModelState = this.CreateCommandState("SaveModel");
-			this.closeState = this.CreateCommandState("Close", null, "Close");
+			this.closeState = this.CreateCommandState("Close", null, "Close", KeyCode.ModifierCtrl|KeyCode.FuncF4);
 			this.closeAllState = this.CreateCommandState("CloseAll");
 			this.forceSaveAllState = this.CreateCommandState("ForceSaveAll");
 			this.nextDocState = this.CreateCommandState("NextDocument", KeyCode.ModifierCtrl|KeyCode.FuncF6);
@@ -5274,6 +5274,7 @@ namespace Epsitec.App.DocumentEditor
 			if ( rank < 0 )  return;
 
 			DocumentInfo di = this.CurrentDocumentInfo;
+			this.currentDocument = -1;
 			this.documents.RemoveAt(rank);
 			this.ignoreChange = true;
 			this.bookDocuments.Items.RemoveAt(rank);
@@ -5284,7 +5285,6 @@ namespace Epsitec.App.DocumentEditor
 			{
 				rank = this.bookDocuments.PageCount-1;
 			}
-			this.currentDocument = -1;
 			this.UseDocument(rank);
 			this.UpdateCloseCommand();
 
