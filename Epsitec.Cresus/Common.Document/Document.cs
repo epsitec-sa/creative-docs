@@ -861,17 +861,20 @@ namespace Epsitec.Common.Document
 		public string Write(string filename)
 		{
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
-			this.Modifier.DeselectAll();
-
-			this.ioDirectory = System.IO.Path.GetDirectoryName(filename);
-
-			if ( File.Exists(filename) )
-			{
-				File.Delete(filename);
-			}
-
+			
+			int undoCount = this.modifier.OpletQueue.UndoActionCount;
+			
 			try
 			{
+				this.Modifier.DeselectAll();
+
+				this.ioDirectory = System.IO.Path.GetDirectoryName(filename);
+
+				if ( File.Exists(filename) )
+				{
+					File.Delete(filename);
+				}
+
 				using ( Stream stream = File.OpenWrite(filename) )
 				{
 					Document.WriteIdentifier(stream, this.ioType);
@@ -884,7 +887,7 @@ namespace Epsitec.Common.Document
 						formatter.Serialize(compressor, this);
 						compressor.Close();
 					}
-					if ( this.ioType == IOType.SoapUncompress )
+					else if ( this.ioType == IOType.SoapUncompress )
 					{
 						SoapFormatter formatter = new SoapFormatter();
 						formatter.Serialize(stream, this);
@@ -894,6 +897,15 @@ namespace Epsitec.Common.Document
 			catch ( System.Exception e )
 			{
 				return e.Message;
+			}
+			finally
+			{
+				while ( undoCount < this.modifier.OpletQueue.UndoActionCount )
+				{
+					this.modifier.OpletQueue.UndoAction();
+				}
+				
+				this.modifier.OpletQueue.PurgeRedo();
 			}
 
 			if ( Misc.IsExtension(filename, ".crdoc") ||
@@ -909,7 +921,7 @@ namespace Epsitec.Common.Document
 		protected static IOType ReadIdentifier(Stream stream)
 		{
 			byte[] buffer = new byte[8];
-			stream.Read(buffer, 0, 8);
+			Common.IO.Reader.Read(stream, buffer, 0, 8);
 			if ( buffer[0] != (byte) '<' )  return IOType.Unknow;
 			if ( buffer[1] != (byte) '?' )  return IOType.Unknow;
 			if ( buffer[2] != (byte) 'i' )  return IOType.Unknow;
