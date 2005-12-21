@@ -1034,8 +1034,8 @@
 	<data name="Action.FontSizeMinus">Smaller font</data>
 	<data name="Action.FontBold">Bold</data>
 	<data name="Action.FontItalic">Italic</data>
-	<data name="Action.FontInvertBold">@@Inverser le gras</data>
-	<data name="Action.FontInvertItalic">@@Inverser l'italique</data>
+	<data name="Action.FontInvertBold">Invert Bold</data>
+	<data name="Action.FontInvertItalic">Invert Italic</data>
 	<data name="Action.FontUnderlined">Underlined</data>
 	<data name="Action.FontOverlined">Overlined</data>
 	<data name="Action.FontStrikeout">Strikethrough</data>
