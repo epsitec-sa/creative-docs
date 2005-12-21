@@ -166,12 +166,12 @@ namespace Epsitec.Common.Document.Settings
 		{
 			switch ( type )
 			{
-				case GuideType.HorizontalBottom:  return "Horizontal, depuis le bas";
-				case GuideType.HorizontalCenter:  return "Horizontal, centré";
-				case GuideType.HorizontalTop:     return "Horizontal, depuis le haut";
-				case GuideType.VerticalLeft:      return "Vertical, depuis la gauche";
-				case GuideType.VerticalCenter:    return "Vertical, centré";
-				case GuideType.VerticalRight:     return "Vertical, depuis la droite";
+				case GuideType.HorizontalBottom:  return Res.Strings.Container.Guides.HorizontalBottom;
+				case GuideType.HorizontalCenter:  return Res.Strings.Container.Guides.HorizontalCenter;
+				case GuideType.HorizontalTop:     return Res.Strings.Container.Guides.HorizontalTop;
+				case GuideType.VerticalLeft:      return Res.Strings.Container.Guides.VerticalLeft;
+				case GuideType.VerticalCenter:    return Res.Strings.Container.Guides.VerticalCenter;
+				case GuideType.VerticalRight:     return Res.Strings.Container.Guides.VerticalRight;
 			}
 			return "?";
 		}

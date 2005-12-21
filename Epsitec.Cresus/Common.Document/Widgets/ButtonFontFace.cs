@@ -39,14 +39,8 @@ namespace Epsitec.Common.Document.Widgets
 		
 		protected override void OnActiveStateChanged()
 		{
-			base.OnActiveStateChanged ();
-			
+			base.OnActiveStateChanged();
 			this.sample.ActiveState = this.ActiveState;
-		}
-
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-			base.PaintBackgroundImplementation(graphics, clipRect);
 		}
 
 

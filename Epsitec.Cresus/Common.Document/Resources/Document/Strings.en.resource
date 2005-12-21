@@ -173,6 +173,12 @@
 	<data name="Container.Guides.Header.Type">Type</data>
 	<data name="Container.Guides.Header.Position">Position</data>
 	<data name="Container.Guides.Undefined">&lt;i&gt;undefined &lt;/i&gt;</data>
+	<data name="Container.Guides.HorizontalBottom">@@Horizontal, depuis le bas</data>
+	<data name="Container.Guides.HorizontalCenter">@@Horizontal, centré</data>
+	<data name="Container.Guides.HorizontalTop">@@Horizontal, depuis le haut</data>
+	<data name="Container.Guides.VerticalLeft">@@Vertical, depuis la gauche</data>
+	<data name="Container.Guides.VerticalCenter">@@Vertical, centré</data>
+	<data name="Container.Guides.VerticalRight">@@Vertical, depuis la droite</data>
 
 	<data name="Container.Layers.Button.Show">Display all</data>
 	<data name="Container.Layers.Button.Dimmed">Fade others</data>
