@@ -4583,6 +4583,9 @@ namespace Epsitec.App.DocumentEditor
 				
 				this.aggregatesState.Enable = true;
 				this.aggregatesState.ActiveState = context.AggregatesShow ? ActiveState.Yes : ActiveState.No;
+
+				this.textShowControlCharactersState.Enable = true;
+				this.textShowControlCharactersState.ActiveState = context.TextShowControlCharacters ? ActiveState.Yes : ActiveState.No;
 			}
 			else
 			{
@@ -4600,6 +4603,9 @@ namespace Epsitec.App.DocumentEditor
 				
 				this.aggregatesState.Enable = false;
 				this.aggregatesState.ActiveState = ActiveState.No;
+
+				this.textShowControlCharactersState.Enable = false;
+				this.textShowControlCharactersState.ActiveState = ActiveState.No;
 			}
 		}
 
