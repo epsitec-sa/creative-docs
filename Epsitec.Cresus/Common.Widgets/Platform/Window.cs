@@ -1835,13 +1835,24 @@ namespace Epsitec.Common.Widgets.Platform
 			data.WriteText (buffer.ToString ());
 			Support.Clipboard.SetData (data);
 			
-			string message = "Une erreur interne s'est produite. Veuillez SVP envoyer un mail avec la\n" +
-							 "description de ce que vous étiez en train de faire au moment où ce message\n" + 
-							 "est apparu et collez y (CTRL+V) le contenu du presse-papiers.\n\n" +
-							 "Envoyez s'il-vous-plaît ces informations à bugs@opac.ch\n\n" +
-							 "Merci pour votre aide.";
+			string msg_fr = "Une erreur interne s'est produite. Veuillez SVP envoyer un mail avec la\n" +
+							"description de ce que vous étiez en train de faire au moment où ce message\n" + 
+							"est apparu et collez y (CTRL+V) le contenu du presse-papiers.\n\n" +
+							"Envoyez s'il-vous-plaît ces informations à bugs@opac.ch\n\n" +
+							"Merci pour votre aide.";
 			
-			System.Windows.Forms.MessageBox.Show (null, message, "Erreur interne");
+			string msg_en = "An internal error occurred. Please send an e-mail with a short description\n" +
+							"of what you were doing when this message appeared and include (press CTRL+V)\n" +
+							"contents of the clipboard, which contains useful debugging information.\n\n" +
+							"Please send these informations to bugs@opac.ch\n\n" +
+							"Thank you very much for your help.";
+			
+			bool is_french = (System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "fr");
+			
+			string title   = is_french ? "Erreur interne" : "Internal error";
+			string message = is_french ? msg_fr : msg_en;
+			
+			System.Windows.Forms.MessageBox.Show (null, message, title);
 		}
 		
 		
