@@ -15,44 +15,6 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public override void DefineZoom(double zoom)
-		{
-			//	Le zoom de l'appelant ne joue aucun rôle... La définition de
-			//	l'image est fixe.
-		}
-		
-		public override void DefineColor(Drawing.Color color)
-		{
-		}
-		
-		public override void DefineAdorner(object adorner)
-		{
-		}
-		
-		public override void MergeTransform(Transform transform)
-		{
-			//	Fusionne la transformation spécifiée avec la transformation propre à l'image
-			//	(changement d'échelle pour que la taille logique soit respectée).
-			
-			if (this.bitmap != null)
-			{
-				//	Il se peut que le bitmap définisse une échelle interne (la taille logique ne
-				//	correspond pas à la taille exprimée en pixels). Dans ce cas, il faut modifier
-				//	la matrice de transformation pour que le dessin ait la taille logique, et pas
-				//	la taille physique :
-					
-				double sx = this.PixelWidth / this.Width;
-				double sy = this.PixelHeight / this.Height;
-					
-				if ((sx != 1) &&
-					(sy != 1))
-				{
-					transform.Scale (1/sx, 1/sy);
-				}
-			}
-		}
-		
-		
 		public override Bitmap					BitmapImage
 		{
 			get
@@ -157,6 +119,44 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public override void DefineZoom(double zoom)
+		{
+			//	Le zoom de l'appelant ne joue aucun rôle... La définition de
+			//	l'image est fixe.
+		}
+		
+		public override void DefineColor(Drawing.Color color)
+		{
+		}
+		
+		public override void DefineAdorner(object adorner)
+		{
+		}
+		
+		public override void MergeTransform(Transform transform)
+		{
+			//	Fusionne la transformation spécifiée avec la transformation propre à l'image
+			//	(changement d'échelle pour que la taille logique soit respectée).
+			
+			if (this.bitmap != null)
+			{
+				//	Il se peut que le bitmap définisse une échelle interne (la taille logique ne
+				//	correspond pas à la taille exprimée en pixels). Dans ce cas, il faut modifier
+				//	la matrice de transformation pour que le dessin ait la taille logique, et pas
+				//	la taille physique :
+					
+				double sx = this.PixelWidth / this.Width;
+				double sy = this.PixelHeight / this.Height;
+					
+				if ((sx != 1) &&
+					(sy != 1))
+				{
+					transform.Scale (1/sx, 1/sy);
+				}
+			}
+		}
+		
+		
 		public bool LockBits()
 		{
 			lock (this)
@@ -237,6 +237,79 @@ namespace Epsitec.Common.Drawing
 				this.UnlockBits ();
 			}
 		}
+		
+		
+		public byte[] Save(ImageFormat format, int depth, int quality, ImageCompression compression)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			if (format == ImageFormat.Jpeg)
+			{
+				System.Drawing.Imaging.Encoder          encoder   = System.Drawing.Imaging.Encoder.Quality;
+				System.Drawing.Imaging.EncoderParameter parameter = new System.Drawing.Imaging.EncoderParameter (encoder, (long)(quality));
+				
+				list.Add (parameter);
+			}
+			
+			if (format == ImageFormat.Tiff)
+			{
+				System.Drawing.Imaging.EncoderValue value = System.Drawing.Imaging.EncoderValue.CompressionNone;
+				
+				switch (compression)
+				{
+					case ImageCompression.Lzw:			value = System.Drawing.Imaging.EncoderValue.CompressionLZW;		break;
+					case ImageCompression.FaxGroup3:	value = System.Drawing.Imaging.EncoderValue.CompressionCCITT3;	break;
+					case ImageCompression.FaxGroup4:	value = System.Drawing.Imaging.EncoderValue.CompressionCCITT4;	break;
+					case ImageCompression.Rle:			value = System.Drawing.Imaging.EncoderValue.CompressionRle;		break;
+				}
+				
+				System.Drawing.Imaging.Encoder          encoder   = System.Drawing.Imaging.Encoder.Compression;
+				System.Drawing.Imaging.EncoderParameter parameter = new System.Drawing.Imaging.EncoderParameter (encoder, (long)(value));
+				
+				list.Add (parameter);
+			}
+			
+			if ((format == ImageFormat.Bmp) ||
+				(format == ImageFormat.Png) ||
+				(format == ImageFormat.Tiff))
+			{
+				System.Drawing.Imaging.Encoder          encoder   = System.Drawing.Imaging.Encoder.ColorDepth;
+				System.Drawing.Imaging.EncoderParameter parameter = new System.Drawing.Imaging.EncoderParameter (encoder, (long)(depth));
+				
+				list.Add (parameter);
+			}
+			
+			if (format == ImageFormat.WindowsIcon)
+			{
+				System.IO.MemoryStream stream = new System.IO.MemoryStream ();
+				System.Drawing.Icon icon = System.Drawing.Icon.FromHandle (this.NativeBitmap.GetHicon ());
+				icon.Save (stream);
+				stream.Close ();
+				icon.Dispose ();
+				
+				return stream.ToArray ();
+			}
+			
+			System.Drawing.Imaging.ImageCodecInfo    encoder_info    = Bitmap.GetCodecInfo (format);
+			System.Drawing.Imaging.EncoderParameters encoder_params  = new System.Drawing.Imaging.EncoderParameters (list.Count);
+			
+			for (int i = 0; i < list.Count; i++)
+			{
+				encoder_params.Param[i] = list[i] as System.Drawing.Imaging.EncoderParameter;
+			}
+			
+			if (encoder_info != null)
+			{
+				System.IO.MemoryStream stream = new System.IO.MemoryStream ();
+				this.NativeBitmap.Save (stream, encoder_info, encoder_params);
+				stream.Close ();
+				
+				return stream.ToArray ();
+			}
+			
+			return null;
+		}
+		
 		
 		public override Image GetImageForPaintStyle(GlyphPaintStyle style)
 		{
@@ -634,76 +707,6 @@ namespace Epsitec.Common.Drawing
 			return null;
 		}
 		
-		public byte[] Save(ImageFormat format, int depth, int quality, ImageCompression compression)
-		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			if (format == ImageFormat.Jpeg)
-			{
-				System.Drawing.Imaging.Encoder          encoder   = System.Drawing.Imaging.Encoder.Quality;
-				System.Drawing.Imaging.EncoderParameter parameter = new System.Drawing.Imaging.EncoderParameter (encoder, (long)(quality));
-				
-				list.Add (parameter);
-			}
-			
-			if (format == ImageFormat.Tiff)
-			{
-				System.Drawing.Imaging.EncoderValue value = System.Drawing.Imaging.EncoderValue.CompressionNone;
-				
-				switch (compression)
-				{
-					case ImageCompression.Lzw:			value = System.Drawing.Imaging.EncoderValue.CompressionLZW;		break;
-					case ImageCompression.FaxGroup3:	value = System.Drawing.Imaging.EncoderValue.CompressionCCITT3;	break;
-					case ImageCompression.FaxGroup4:	value = System.Drawing.Imaging.EncoderValue.CompressionCCITT4;	break;
-					case ImageCompression.Rle:			value = System.Drawing.Imaging.EncoderValue.CompressionRle;		break;
-				}
-				
-				System.Drawing.Imaging.Encoder          encoder   = System.Drawing.Imaging.Encoder.Compression;
-				System.Drawing.Imaging.EncoderParameter parameter = new System.Drawing.Imaging.EncoderParameter (encoder, (long)(value));
-				
-				list.Add (parameter);
-			}
-			
-			if ((format == ImageFormat.Bmp) ||
-				(format == ImageFormat.Png) ||
-				(format == ImageFormat.Tiff))
-			{
-				System.Drawing.Imaging.Encoder          encoder   = System.Drawing.Imaging.Encoder.ColorDepth;
-				System.Drawing.Imaging.EncoderParameter parameter = new System.Drawing.Imaging.EncoderParameter (encoder, (long)(depth));
-				
-				list.Add (parameter);
-			}
-			
-			if (format == ImageFormat.WindowsIcon)
-			{
-				System.IO.MemoryStream stream = new System.IO.MemoryStream ();
-				System.Drawing.Icon icon = System.Drawing.Icon.FromHandle (this.NativeBitmap.GetHicon ());
-				icon.Save (stream);
-				stream.Close ();
-				icon.Dispose ();
-				
-				return stream.ToArray ();
-			}
-			
-			System.Drawing.Imaging.ImageCodecInfo    encoder_info    = Bitmap.GetCodecInfo (format);
-			System.Drawing.Imaging.EncoderParameters encoder_params  = new System.Drawing.Imaging.EncoderParameters (list.Count);
-			
-			for (int i = 0; i < list.Count; i++)
-			{
-				encoder_params.Param[i] = list[i] as System.Drawing.Imaging.EncoderParameter;
-			}
-			
-			if (encoder_info != null)
-			{
-				System.IO.MemoryStream stream = new System.IO.MemoryStream ();
-				this.NativeBitmap.Save (stream, encoder_info, encoder_params);
-				stream.Close ();
-				
-				return stream.ToArray ();
-			}
-			
-			return null;
-		}
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -727,7 +730,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		
+		#region ImageSeed Class
 		private class ImageSeed
 		{
 			public ImageSeed(int r, int g, int b, long id)
@@ -766,7 +769,7 @@ namespace Epsitec.Common.Drawing
 			private int							r, g, b;
 			private long						id;
 		}
-		
+		#endregion
 		
 		protected System.Drawing.Bitmap			bitmap;
 		protected int							bitmap_dx;

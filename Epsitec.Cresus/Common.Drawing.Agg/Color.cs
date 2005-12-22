@@ -47,57 +47,57 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		[XmlAttribute] public double	R
+		[XmlAttribute] public double			R
 		{
 			get { return this.r; }
 			set { this.r = value; }
 		}
 		
-		[XmlAttribute] public double	G
+		[XmlAttribute] public double			G
 		{
 			get { return this.g; }
 			set { this.g = value; }
 		}
 		
-		[XmlAttribute] public double	B
+		[XmlAttribute] public double			B
 		{
 			get { return this.b; }
 			set { this.b = value; }
 		}
 		
-		[XmlAttribute] public double	A
+		[XmlAttribute] public double			A
 		{
 			get { return this.a; }
 			set { this.a = value; }
 		}
 		
 		
-		public bool						IsEmpty
+		public bool								IsEmpty
 		{
 			get { return this.is_empty; }
 		}
 		
-		public bool						IsValid
+		public bool								IsValid
 		{
 			get { return !this.is_empty; }
 		}
 		
-		public bool						IsTransparent
+		public bool								IsTransparent
 		{
 			get { return !this.is_empty && (this.a == 0.0); }
 		}
 		
-		public bool						IsOpaque
+		public bool								IsOpaque
 		{
 			get { return !this.is_empty && (this.a == 1.0); }
 		}
 		
-		public bool						IsVisible
+		public bool								IsVisible
 		{
 			get { return !this.is_empty && (this.a != 0.0); }
 		}
 		
-		public bool						IsInRange
+		public bool								IsInRange
 		{
 			get
 			{
@@ -108,7 +108,8 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public static Color				Empty
+		
+		public static Color						Empty
 		{
 			get
 			{
@@ -118,7 +119,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public static Color				Transparent
+		public static Color						Transparent
 		{
 			get
 			{
@@ -145,13 +146,6 @@ namespace Epsitec.Common.Drawing
 			return Color.GetBrightness (this.r, this.g, this.b);
 		}
 		
-		public static double GetBrightness(double r, double g, double b)
-		{
-			//	Calcule la luminosité de la couleur.
-			
-			return r*0.30 + g*0.59 + b*0.11;
-		}
-		
 		public void GetHSV(out double h, out double s, out double v)
 		{
 			Color.ConvertRGBtoHSV (this.r, this.g, this.b, out h, out s, out v);
@@ -163,6 +157,14 @@ namespace Epsitec.Common.Drawing
 			r = this.R;
 			g = this.G;
 			b = this.B;
+		}
+		
+		
+		public static double GetBrightness(double r, double g, double b)
+		{
+			//	Calcule la luminosité de la couleur.
+			
+			return r*0.30 + g*0.59 + b*0.11;
 		}
 		
 		
@@ -241,6 +243,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		
 		public static string ToHexa(Color color)
 		{
 			//	Conversion d'une couleur en chaîne "FF3300".
@@ -252,27 +255,20 @@ namespace Epsitec.Common.Drawing
 		}
 
 		
+		public override string ToString()
+		{
+			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{{R={0:0.00},G={1:0.00},B={2:0.00},A={3:0.00}}}", this.r, this.g, this.b, this.a);
+		}
+		
+		
 		public override bool Equals(object obj)
 		{
-			if ((obj == null) ||
-				(obj.GetType () != typeof (Color)))
-			{
-				return false;
-			}
-			
-			Color color = (Color) obj;
-			
-			return this == color;
+			return (obj is Color) && (this == (Color) obj);
 		}
 		
 		public override int GetHashCode()
 		{
 			return base.GetHashCode ();
-		}
-		
-		public override string ToString()
-		{
-			return System.String.Format ("{{R={0:0.00},G={1:0.00},B={2:0.00},A={3:0.00}}}", this.r, this.g, this.b, this.a);
 		}
 		
 		
@@ -499,10 +495,11 @@ namespace Epsitec.Common.Drawing
 		}
 		#endregion
 		
-		public const int				ColorComponentDigits = 4;
-		public const double				ColorComponentDelta  = (1.0 / 65535.0) / 2.0;
+		public const int						ColorComponentDigits = 4;
+		public const double						ColorComponentDelta  = (1.0 / 65535.0) / 2.0;
 		
-		private double					r, g, b, a;
-		private bool					is_empty;
+		private double							r, g, b;
+		private double							a;
+		private bool							is_empty;
 	}
 }

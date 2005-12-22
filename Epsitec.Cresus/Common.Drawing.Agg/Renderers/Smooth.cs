@@ -16,7 +16,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
-		public Pixmap					Pixmap
+		public Pixmap							Pixmap
 		{
 			get
 			{
@@ -39,23 +39,16 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
-		public System.IntPtr			Handle
+		public System.IntPtr					Handle
 		{
 			get { return this.agg_ren; }
 		}
 		
-		protected void SetTransform(Transform value)
-		{
-			this.AssertAttached ();
-			
-			this.transform = new Transform (value);
-			AntiGrain.Renderer.Smooth.Setup (this.agg_ren, this.r1, this.r2, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
-		}
-		
-		public Color						Color
+		public Color							Color
 		{
 			set { this.SetColor (value); }
 		}
+		
 		
 		public void SetColor(Color color)
 		{
@@ -63,13 +56,11 @@ namespace Epsitec.Common.Drawing.Renderers
 			AntiGrain.Renderer.Smooth.Color (this.agg_ren, color.R, color.G, color.B, color.A);
 		}
 		
-		
 		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
 		{
 			this.AssertAttached ();
 			AntiGrain.Renderer.Smooth.SetAlphaMask (this.agg_ren, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
 		}
-		
 		
 		public void SetParameters(double r1, double r2)
 		{
@@ -82,6 +73,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 		
+		
 		public void AddPath(Drawing.Path path)
 		{
 			this.SetTransform (graphics.Transform);
@@ -90,12 +82,14 @@ namespace Epsitec.Common.Drawing.Renderers
 			AntiGrain.Renderer.Smooth.AddPath (this.agg_ren, path.Handle);
 		}
 		
+		
+		#region IDisposable Members
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
-		
+		#endregion
 		
 		protected virtual void Dispose(bool disposing)
 		{
@@ -109,6 +103,14 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 			
 			this.Detach ();
+		}
+		
+		protected void SetTransform(Transform value)
+		{
+			this.AssertAttached ();
+			
+			this.transform = new Transform (value);
+			AntiGrain.Renderer.Smooth.Setup (this.agg_ren, this.r1, this.r2, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 		}
 		
 		protected virtual void AssertAttached()
@@ -140,11 +142,11 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
-		
-		private Graphics				graphics;
-		private System.IntPtr			agg_ren;
-		private Pixmap					pixmap;
-		private Transform				transform = new Transform ();
-		private	double					r1, r2;
+		private Graphics						graphics;
+		private System.IntPtr					agg_ren;
+		private Pixmap							pixmap;
+		private Transform						transform = new Transform ();
+		private	double							r1;
+		private double							r2;
 	}
 }

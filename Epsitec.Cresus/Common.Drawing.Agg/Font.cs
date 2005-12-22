@@ -52,12 +52,12 @@ namespace Epsitec.Common.Drawing
 		}
 		#endregion
 		
-		public System.IntPtr			Handle
+		public System.IntPtr					Handle
 		{
 			get { return this.handle; }
 		}
 		
-		public string					FaceName
+		public string							FaceName
 		{
 			get
 			{
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public string					StyleName
+		public string							StyleName
 		{
 			get
 			{
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public bool						IsStyleBold
+		public bool								IsStyleBold
 		{
 			get
 			{
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public bool						IsStyleItalic
+		public bool								IsStyleItalic
 		{
 			get
 			{
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public bool						IsStyleRegular
+		public bool								IsStyleRegular
 		{
 			get
 			{
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public bool						IsSingleFontInFace
+		public bool								IsSingleFontInFace
 		{
 			get
 			{
@@ -138,17 +138,17 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public string					LocalStyleName
+		public string							LocalStyleName
 		{
 			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.StyleUserLocale); }
 		}
 		
-		public string					OpticalName
+		public string							OpticalName
 		{
 			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Optical); }
 		}
 		
-		public string					UniqueName
+		public string							UniqueName
 		{
 			get
 			{
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public string					FullName
+		public string							FullName
 		{
 			get
 			{
@@ -184,32 +184,32 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double					Ascender
+		public double							Ascender
 		{
 			get { return AntiGrain.Font.Face.GetMetrics (this.handle, 1); }
 		}
 		
-		public double					Descender
+		public double							Descender
 		{
 			get { return AntiGrain.Font.Face.GetMetrics (this.handle, 2); }
 		}
 		
-		public double					LineHeight
+		public double							LineHeight
 		{
 			get { return AntiGrain.Font.Face.GetMetrics (this.handle, 3); }
 		}
 		
-		public bool						IsSynthetic
+		public bool								IsSynthetic
 		{
 			get { return this.synthetic_mode != SyntheticFontMode.None; }
 		}
 		
-		public SyntheticFontMode		SyntheticFontMode
+		public SyntheticFontMode				SyntheticFontMode
 		{
 			get { return this.synthetic_mode; }
 		}
 		
-		public Transform				SyntheticTransform
+		public Transform						SyntheticTransform
 		{
 			get
 			{
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double					CaretSlope
+		public double							CaretSlope
 		{
 			get
 			{
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public OpenType.Font			OpenTypeFont
+		public OpenType.Font					OpenTypeFont
 		{
 			get
 			{
@@ -839,7 +839,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static int				Count
+		public static int						Count
 		{
 			get
 			{
@@ -848,7 +848,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public static Font				DefaultFont
+		public static Font						DefaultFont
 		{
 			get
 			{
@@ -861,7 +861,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public static double			DefaultFontSize
+		public static double					DefaultFontSize
 		{
 			get
 			{
@@ -869,12 +869,12 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public static double			DefaultObliqueAngle
+		public static double					DefaultObliqueAngle
 		{
 			get { return 20.0; }
 		}
 		
-		public static Font.FaceInfo[]	Faces
+		public static Font.FaceInfo[]			Faces
 		{
 			get
 			{
@@ -1278,12 +1278,18 @@ namespace Epsitec.Common.Drawing
 		
 		enum NameId
 		{
-			None, Face = 1, Style = 2, StyleUserLocale = 3, Optical = 4, Unique = 5
+			None,
+			Face			= 1,
+			Style			= 2,
+			StyleUserLocale	= 3,
+			Optical			= 4,
+			Unique			= 5
 		}
 	}
 	
 	public enum SyntheticFontMode
 	{
-		None, Oblique
+		None,
+		Oblique
 	}
 }

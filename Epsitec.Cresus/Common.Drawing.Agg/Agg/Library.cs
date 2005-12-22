@@ -16,11 +16,13 @@ namespace Epsitec.Common.Drawing.Agg
 		}
 		
 		
+		#region IDisposable Members
 		public void Dispose()
 		{
 			this.Dispose (true);
 			GC.SuppressFinalize (this);
 		}
+		#endregion
 		
 		protected virtual void Dispose(bool disposing)
 		{
@@ -31,6 +33,13 @@ namespace Epsitec.Common.Drawing.Agg
 			Library.instance = null;
 			AntiGrain.Interface.ShutDown ();
 		}
+		
+		
+		public static void TrapZeroPointer()
+		{
+			AntiGrain.Interface.DebugTrapZeroPointer ();
+		}
+		
 		
 		public static Library		Current
 		{
@@ -56,11 +65,6 @@ namespace Epsitec.Common.Drawing.Agg
 			}
 		}
 		
-		
-		public static void TrapZeroPointer()
-		{
-			AntiGrain.Interface.DebugTrapZeroPointer ();
-		}
 		
 		static Library				instance = new Library ();
 	}

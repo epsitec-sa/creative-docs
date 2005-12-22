@@ -28,7 +28,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
-		public Pixmap					Pixmap
+		public Pixmap							Pixmap
 		{
 			get
 			{
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 		
-		public GradientFill				Fill
+		public GradientFill						Fill
 		{
 			get
 			{
@@ -67,12 +67,12 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 		
-		public System.IntPtr			Handle
+		public System.IntPtr					Handle
 		{
 			get { return this.agg_ren; }
 		}
 		
-		public Transform				Transform
+		public Transform						Transform
 		{
 			get
 			{
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 		
-		public Transform				InternalTransform
+		public Transform						InternalTransform
 		{
 			get { return this.int_transform; }
 		}
@@ -226,10 +226,10 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		
 		
-		private System.IntPtr			agg_ren;
-		private Pixmap					pixmap;
-		private GradientFill			fill			= GradientFill.None;
-		private Transform				transform		= new Transform ();
-		private Transform				int_transform	= new Transform ();
+		private System.IntPtr					agg_ren;
+		private Pixmap							pixmap;
+		private GradientFill					fill			= GradientFill.None;
+		private Transform						transform		= new Transform ();
+		private Transform						int_transform	= new Transform ();
 	}
 }

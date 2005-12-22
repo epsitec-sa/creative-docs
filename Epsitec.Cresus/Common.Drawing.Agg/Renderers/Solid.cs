@@ -15,7 +15,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
-		public Pixmap						Pixmap
+		public Pixmap							Pixmap
 		{
 			get
 			{
@@ -37,12 +37,12 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 		
-		public System.IntPtr				Handle
+		public System.IntPtr					Handle
 		{
 			get { return this.agg_ren; }
 		}
 		
-		public Color						Color
+		public Color							Color
 		{
 			get
 			{
@@ -167,8 +167,8 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
-		private Color						color;
-		private System.IntPtr				agg_ren;
-		private Pixmap						pixmap;
+		private Color							color;
+		private System.IntPtr					agg_ren;
+		private Pixmap							pixmap;
 	}
 }

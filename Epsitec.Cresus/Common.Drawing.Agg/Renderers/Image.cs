@@ -216,12 +216,13 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		
 		
-		private System.IntPtr			agg_ren;
-		private Pixmap					pixmap;
-		private Drawing.Image			image;
-		private Drawing.Bitmap			bitmap;
-		private bool					bitmap_needs_unlock;
-		private Transform				transform		= new Transform ();
-		private Transform				int_transform	= new Transform ();
+		private System.IntPtr					agg_ren;
+		private Pixmap							pixmap;
+		private Drawing.Image					image;
+		private Drawing.Bitmap					bitmap;
+		private bool							bitmap_needs_unlock;
+		
+		private Transform						transform		= new Transform ();
+		private Transform						int_transform	= new Transform ();
 	}
 }
