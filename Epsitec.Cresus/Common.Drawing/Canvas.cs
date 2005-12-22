@@ -5,6 +5,12 @@ namespace Epsitec.Common.Drawing
 	/// </summary>
 	public class Canvas : Image
 	{
+		static Canvas()
+		{
+			Bitmap.CanvasFactory = new Canvas.Factory ();
+		}
+		
+		
 		internal Canvas(byte[] data)
 		{
 			this.data = new byte[data.Length];
@@ -30,6 +36,7 @@ namespace Epsitec.Common.Drawing
 			this.effects     = original.effects;
 			this.paint_style = style;
 		}
+		
 		
 		public override void DefineZoom(double zoom)
 		{
@@ -343,6 +350,16 @@ namespace Epsitec.Common.Drawing
 			protected System.Collections.Hashtable hash;
 		}
 		
+		protected class Factory : ICanvasFactory
+		{
+			#region ICanvasFactory Members
+			public Image CreateCanvas(byte[] data)
+			{
+				return new Canvas (data);
+			}
+			#endregion
+		}
+
 		
 		protected bool							is_disposed;
 		protected bool							is_geom_ok;
