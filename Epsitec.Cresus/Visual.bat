@@ -1,3 +1,4 @@
+rem Script pour l'environnement chez Daniel
 
 subst S: D:\Cresus > NUL:
 
