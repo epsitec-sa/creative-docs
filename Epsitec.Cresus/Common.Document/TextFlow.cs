@@ -48,6 +48,7 @@ namespace Epsitec.Common.Document
 			this.metaNavigator.TextNavigator = this.textNavigator;
 			
 			this.textStory.OpletExecuted += new OpletEventHandler(this.HandleTextStoryOpletExecuted);
+			this.textStory.RenamingOplet += new Text.TextStory.RenamingCallback(this.HandleTextStoryRenamingOplet);
 			
 			this.textNavigator.CursorMoved += new EventHandler(this.HandleTextNavigatorCursorMoved);
 			this.textNavigator.TextChanged += new Support.EventHandler(this.HandleTextNavigatorTextChanged);
@@ -451,6 +452,38 @@ namespace Epsitec.Common.Document
 					System.Diagnostics.Debug.WriteLine(string.Format("Adding oplet of type {0}", e.Oplet.GetType ().Name));
 					this.ChangeObjectEdited();
 					break;
+			}
+		}
+		
+		private void HandleTextStoryRenamingOplet(string name, ref string output)
+		{
+			//	Quand TextStory valide un ou plusieurs oplets et qu'il n'y a aucun
+			//	nom défini, ce call-back est appelé, permettant de fournir un nom
+			//	qui a un sens pour l'utilisateur.
+			
+			if ( name.IndexOf("TextDelete") >= 0 )
+			{
+				output = Res.Strings.Action.Text.Edit.DeleteText;
+			}
+			else if ( name.IndexOf("TextInsert") >= 0 )
+			{
+				output = Res.Strings.Action.Text.Edit.InsertText;
+			}
+			else if ( name.IndexOf("CursorMove") >= 0 )
+			{
+				output = Res.Strings.Action.Text.Edit.MoveCursor;
+			}
+			else if ( name.IndexOf("DefineSelection") >= 0 )
+			{
+				output = Res.Strings.Action.Text.Edit.DefineSelection;
+			}
+			else if ( name.IndexOf("ClearSelection") >= 0 )
+			{
+				output = Res.Strings.Action.Text.Edit.ClearSelection;
+			}
+			else if ( name.IndexOf("TextChange") >= 0 )
+			{
+				output = Res.Strings.Action.Text.Edit.ChangeText;
 			}
 		}
 		

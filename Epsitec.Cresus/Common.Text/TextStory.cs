@@ -289,6 +289,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
 		public void ApplyAutomaticOpletName()
 		{
 			if (this.oplet_queue.LastActionName == null)
@@ -308,10 +309,22 @@ namespace Epsitec.Common.Text
 						buffer.Append (oplet.GetType ().Name.Replace ("Oplet", ""));
 					}
 					
-					this.oplet_queue.DefineLastActionName (buffer.ToString ());
+					string name = buffer.ToString ();
+					
+					if (this.RenamingOplet != null)
+					{
+						string result = name;
+						
+						this.RenamingOplet (name, ref result);
+						
+						name = result;
+					}
+					
+					this.oplet_queue.DefineLastActionName (name);
 				}
 			}
 		}
+		
 		
 		public int GetCursorPosition(ICursor cursor)
 		{
@@ -2259,10 +2272,12 @@ namespace Epsitec.Common.Text
 		#endregion
 		
 		public delegate bool CodeCallback(ulong code);
-		
+		public delegate void RenamingCallback(string name, ref string output);
+
 		
 		public event OpletEventHandler			OpletExecuted;
 		public event EventHandler				TextChanged;
+		public event RenamingCallback			RenamingOplet;
 		
 		
 		private Internal.TextTable				text;

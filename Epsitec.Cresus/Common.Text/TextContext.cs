@@ -1352,8 +1352,6 @@ namespace Epsitec.Common.Text
 		
 		public void GetBreak(ulong code, out Properties.BreakProperty property)
 		{
-			System.Diagnostics.Debug.WriteLine ("GetBreak: " + code.ToString ("X", System.Globalization.CultureInfo.InvariantCulture));
-			
 			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
 			Styles.CoreSettings  core_settings  = this.style_list[code];
