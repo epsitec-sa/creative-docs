@@ -1,13 +1,18 @@
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Drawing.Platform
 {
 	/// <summary>
-	/// Summary description for ImageDisabler.
+	/// The ImageDisabler class provides access to Windows image converter,
+	/// which produces a disabled representation of a given icon.
 	/// </summary>
-	public class ImageDisabler
+	public sealed class ImageDisabler
 	{
 		private ImageDisabler()
 		{
 		}
+		
 		
 		public static void Paint(System.Drawing.Bitmap src_bitmap, System.Drawing.Bitmap dst_bitmap, System.Drawing.Color color)
 		{

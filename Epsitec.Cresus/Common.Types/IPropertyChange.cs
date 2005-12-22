@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -10,6 +10,6 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IPropertyChange
 	{
-		event Support.PropertyChangedEventHandler		PropertyChanged;
+		event PropertyChangedEventHandler		PropertyChanged;
 	}
 }

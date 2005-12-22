@@ -70,17 +70,17 @@ namespace Epsitec.Cresus.Database.Settings
 			Epsitec.Common.Support.ObjectDictMapper.CopyFromDict (this, this.dict);
 		}
 		
-		protected void NotifyPropertyChanged(string name)
+		protected void NotifyPropertyChanged(string name, object old_value, object new_value)
 		{
 			if (this.PropertyChanged != null)
 			{
-				this.PropertyChanged (this, new Epsitec.Common.Support.PropertyChangedEventArgs (name));
+				this.PropertyChanged (this, new Epsitec.Common.Types.PropertyChangedEventArgs (name, old_value, new_value));
 			}
 		}
 		
 		
 		#region IPropertyChange Members
-		public event Epsitec.Common.Support.PropertyChangedEventHandler PropertyChanged;
+		public event Epsitec.Common.Types.PropertyChangedEventHandler PropertyChanged;
 		#endregion
 		
 		private DbDict							dict;

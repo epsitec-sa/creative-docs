@@ -33,8 +33,12 @@ namespace Epsitec.Cresus.Database.Settings
 			{
 				if (this.customer_licence != value)
 				{
+					object old_value = this.customer_licence;
+					object new_value = value;
+					
 					this.customer_licence = value;
-					this.NotifyPropertyChanged ("CustomerLicence");
+					
+					this.NotifyPropertyChanged ("CustomerLicence", old_value, new_value);
 				}
 			}
 		}
@@ -49,8 +53,12 @@ namespace Epsitec.Cresus.Database.Settings
 			{
 				if (this.customer_id != value)
 				{
+					object old_value = this.customer_id;
+					object new_value = value;
+					
 					this.customer_id = value;
-					this.NotifyPropertyChanged ("CustomerId");
+					
+					this.NotifyPropertyChanged ("CustomerId", old_value, new_value);
 				}
 			}
 		}

@@ -10,6 +10,14 @@ namespace Epsitec.Common.Types
 		public PropertyChangedEventArgs(Property property, object old_value, object new_value)
 		{
 			this.property = property;
+			this.property_name = property.Name;
+			this.old_value = old_value;
+			this.new_value = new_value;
+		}
+		
+		public PropertyChangedEventArgs(string property_name, object old_value, object new_value)
+		{
+			this.property_name = property_name;
 			this.old_value = old_value;
 			this.new_value = new_value;
 		}
@@ -20,6 +28,14 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.property;
+			}
+		}
+		
+		public string							PropertyName
+		{
+			get
+			{
+				return this.property_name;
 			}
 		}
 		
@@ -40,6 +56,7 @@ namespace Epsitec.Common.Types
 		
 		
 		private Property						property;
+		private string							property_name;
 		private object							old_value;
 		private object							new_value;
 	}

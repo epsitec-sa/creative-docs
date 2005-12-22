@@ -33,8 +33,12 @@ namespace Epsitec.Cresus.Database.Settings
 			{
 				if (this.client_id != value)
 				{
+					object old_value = this.client_id;
+					object new_value = value;
+					
 					this.client_id = value;
-					this.NotifyPropertyChanged ("ClientId");
+					
+					this.NotifyPropertyChanged ("ClientId", old_value, new_value);
 				}
 			}
 		}
@@ -49,8 +53,12 @@ namespace Epsitec.Cresus.Database.Settings
 			{
 				if (this.is_server != value)
 				{
+					object old_value = this.is_server;
+					object new_value = value;
+					
 					this.is_server = value;
-					this.NotifyPropertyChanged ("IsServer");
+					
+					this.NotifyPropertyChanged ("IsServer", old_value, new_value);
 				}
 			}
 		}
@@ -65,8 +73,12 @@ namespace Epsitec.Cresus.Database.Settings
 			{
 				if (this.sync_log_id != value)
 				{
+					object old_value = this.sync_log_id;
+					object new_value = value;
+					
 					this.sync_log_id = value;
-					this.NotifyPropertyChanged ("SyncLogId");
+					
+					this.NotifyPropertyChanged ("SyncLogId", old_value, new_value);
 				}
 			}
 		}

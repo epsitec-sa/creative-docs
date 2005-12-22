@@ -1,7 +1,13 @@
+//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.IO
 {
 	/// <summary>
-	/// La classe Reader permet de lire la quantité de données demandée, en plusieurs
+	/// The Reader class retries a Read until the required amount of data has
+	/// been read or the end of the stream has been reached. This hack is needed
+	/// since the decompressing streams Read method may return less than what
+	/// was requested, even if the end of the stream has not yet been reached.
 	/// fois si nécessaire.
 	/// </summary>
 	public sealed class Reader
