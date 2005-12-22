@@ -1,10 +1,10 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+ï»¿//	Copyright Â© 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// La classe Navigator gère les déplacements au sein d'un texte.
+	/// La classe Navigator gÃ¨re les dÃ©placements au sein d'un texte.
 	/// </summary>
 	public sealed class Navigator
 	{
@@ -45,6 +45,11 @@ namespace Epsitec.Common.Text.Internal
 			return Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (code));
 		}
 		
+		public static bool IsParagraphSeparator(int code)
+		{
+			return Navigator.IsParagraphSeparator ((Unicode.Code) code);
+		}
+		
 		
 		public static bool IsEndOfText(TextStory story, ICursor cursor, int offset)
 		{
@@ -73,72 +78,126 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool IsWordStart(TextStory story, ICursor cursor, int offset)
 		{
-			Unicode.Code code_0 = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset));
-			Unicode.Code code_1 = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset - 1));
+			int code_0 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset));
+			int code_1 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset - 1));
 			
-			if (code_1 == Unicode.Code.Null)
+			if (code_1 == 0)
 			{
 				return true;
 			}
 			
-			if (! Navigator.IsWordSeparator (code_0) &&
-				Navigator.IsWordSeparator (code_1))
+			CodeClass class_0 = Navigator.GetCodeClass (code_0);
+			CodeClass class_1 = Navigator.GetCodeClass (code_1);
+			
+			if (class_1 == CodeClass.ParagraphSeparator)
 			{
 				return true;
 			}
 			
-			return false;
+			if (class_0 != class_1)
+			{
+				if (class_0 == CodeClass.Space)
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+			else
+			{
+				return false;
+			}
 		}
 		
 		public static bool IsWordEnd(TextStory story, ICursor cursor, int offset)
 		{
-			Unicode.Code code_0 = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset));
-			Unicode.Code code_1 = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset - 1));
+			int code_0 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset));
+			int code_1 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset - 1));
 			
-			if (code_0 == Unicode.Code.Null)
+			if (code_0 == 0)
 			{
 				return true;
 			}
 			
-			if (Navigator.IsWordSeparator (code_0) &&
-				! Navigator.IsWordSeparator (code_1))
+			CodeClass class_0 = Navigator.GetCodeClass (code_0);
+			CodeClass class_1 = Navigator.GetCodeClass (code_1);
+			
+			if (class_0 == CodeClass.ParagraphSeparator)
 			{
 				return true;
 			}
 			
-			return false;
-		}
-		
-		public static bool IsWordSeparator(Unicode.Code code)
-		{
-			if ((int) code > 65535)
+			if (class_0 != class_1)
+			{
+				if (class_1 == CodeClass.Space)
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+			else
 			{
 				return false;
 			}
-			
-			//	TODO: améliorer cette liste... UNICODE doit certainement avoir pensé
-			//	à la question.
-			
-			switch ((char) code)
-			{
-				case ' ':
-				case '!':
-				case '\"':
-				case '#':	case '$':	case '%':	case '&':
-				case '(':	case ')':	case '*':	case '+':
-				case ',':	case '-':	case '.':	case ':':	case ';':
-				case '/':	case '<':	case '=':	case '>':	case '?':
-				case '[':	case '\\':	case ']':
-				case '{':	case '|':	case '}':
-					return true;
-			}
-			
-			return Navigator.IsParagraphSeparator (code);
 		}
 		
-		public static bool IsWordSeparator(ulong code)
+		
+		private enum CodeClass
 		{
-			return Navigator.IsWordSeparator (Unicode.Bits.GetUnicodeCode (code));
+			Space,
+			Alphanumeric,
+			Punctuation,
+			ParagraphSeparator
+		}
+		
+		private static CodeClass GetCodeClass(int code)
+		{
+			if (Navigator.IsParagraphSeparator (code))
+			{
+				return CodeClass.ParagraphSeparator;
+			}
+			
+			if (Unicode.DefaultBreakAnalyzer.IsSpace (code))
+			{
+				return CodeClass.Space;
+			}
+			
+			//	TODO: amÃ©liorer cette liste... UNICODE doit certainement avoir pensÃ©
+			//	Ã  la question.
+			
+			switch (code)
+			{
+				case '!':	case 'Â¡':	case 'â€¼':
+				case '\"':	case 'Â«':	case 'Â»':	case 'â€¹':	case 'â€º':
+				case 'â€˜':	case 'â€™':	case 'â€š':	case 'â€›':
+				case 'â€œ':	case 'â€':	case 'â€':
+				
+				case '#':	case '%':	case 'â€°':	case '&':
+				case '(':	case ')':
+				case '*':	case '+':	case '-':	case 'Â±':	case 'Â·':	case 'Ã—':	case 'Ã·':
+				case ',':	case '.':	case ':':	case ';':	case 'â€¦':
+				case '/':	case '<':	case '=':	case '>':	case '?':	case 'Â¿':
+				case '[':	case '\\':	case ']':
+				case '{':	case '|':	case 'Â¦':	case '}':
+
+				case '$':	case 'Â£':	case 'â‚¬':	case 'Â¢':	case 'Â¤':	case 'Â¥':
+				case '~':	case '^':	case 'Â´':	case '`':	case 'Â¯':	case 'Â¨':	case 'Â¸':
+				case 'Â°':	case 'Â§':	case 'Â¬':
+				case 'â€²':	case 'â€³':				//	prime, double prime
+				case '@':	case '_':
+				case 'â€“':	case 'â€”':	case 'â€•':	//	dashes
+				case 'â€ ':	case 'â€¡':
+				case 'â€¢':
+					
+					return CodeClass.Punctuation;
+			}
+			
+			return CodeClass.Alphanumeric;
 		}
 		
 		
@@ -146,8 +205,8 @@ namespace Epsitec.Common.Text.Internal
 		{
 			if (direction > 0)
 			{
-				//	C'est forcément une fin de ligne en cas de "hit", puisque
-				//	début et fin sont confondus et que la direction seule permet
+				//	C'est forcÃ©ment une fin de ligne en cas de "hit", puisque
+				//	dÃ©but et fin sont confondus et que la direction seule permet
 				//	de les discriminer.
 				
 				return false;
@@ -167,9 +226,9 @@ namespace Epsitec.Common.Text.Internal
 				{
 					Cursors.FitterCursor fitter_cursor = text.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
 					
-					//	Vérifie où il y a des débuts de lignes dans le paragraphe mis
-					//	en page. La dernière position correspond à la fin du paragraphe
-					//	et doit donc être ignorée :
+					//	VÃ©rifie oÃ¹ il y a des dÃ©buts de lignes dans le paragraphe mis
+					//	en page. La derniÃ¨re position correspond Ã  la fin du paragraphe
+					//	et doit donc Ãªtre ignorÃ©e :
 					
 					int[] positions = fitter_cursor.GetLineStartPositions (text);
 					
@@ -194,8 +253,8 @@ namespace Epsitec.Common.Text.Internal
 		{
 			if (direction < 0)
 			{
-				//	C'est forcément un début de ligne en cas de "hit", puisque
-				//	début et fin sont confondus et que la direction seule permet
+				//	C'est forcÃ©ment un dÃ©but de ligne en cas de "hit", puisque
+				//	dÃ©but et fin sont confondus et que la direction seule permet
 				//	de les discriminer.
 				
 				return false;
@@ -218,10 +277,10 @@ namespace Epsitec.Common.Text.Internal
 				{
 					Cursors.FitterCursor fitter_cursor = text.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
 					
-					//	Vérifie où il y a des débuts de lignes dans le paragraphe mis
-					//	en page. La première position correspond au début du paragraphe
+					//	VÃ©rifie oÃ¹ il y a des dÃ©buts de lignes dans le paragraphe mis
+					//	en page. La premiÃ¨re position correspond au dÃ©but du paragraphe
 					//	et n'est donc pas une fin de ligne, par contre tous les autres
-					//	débuts de lignes correspondent à la fin de la ligne précédente :
+					//	dÃ©buts de lignes correspondent Ã  la fin de la ligne prÃ©cÃ©dente :
 					
 					int[] positions = fitter_cursor.GetLineStartPositions (text);
 					
@@ -268,9 +327,9 @@ namespace Epsitec.Common.Text.Internal
 			
 			int begin;
 			
-			//	'start' est le début du groupe de paragraphes liés, en prenant
+			//	'start' est le dÃ©but du groupe de paragraphes liÃ©s, en prenant
 			//	toujours un paragraphe de plus.
-			//	'begin' est le début du paragraphe actuel.
+			//	'begin' est le dÃ©but du paragraphe actuel.
 			
 			start = pos + Navigator.GetParagraphGroupStartOffset (story, temp, 1);
 			begin = pos + Navigator.GetParagraphStartOffset (story, temp);
@@ -284,9 +343,9 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static int GetParagraphStartOffset(TextStory story, ICursor cursor)
 		{
-			//	Retourne l'offset au début du paragraphe. L'offset est négatif
-			//	ou nul, dans tous les cas, et correspond à une distance relative
-			//	entre la position courante et le premier caractère du paragraphe.
+			//	Retourne l'offset au dÃ©but du paragraphe. L'offset est nÃ©gatif
+			//	ou nul, dans tous les cas, et correspond Ã  une distance relative
+			//	entre la position courante et le premier caractÃ¨re du paragraphe.
 			
 			TextStory.CodeCallback callback = new TextStory.CodeCallback (Navigator.IsParagraphSeparator);
 			
@@ -298,11 +357,11 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static int GetParagraphGroupStartOffset(TextStory story, ICursor cursor, int skip)
 		{
-			//	Retourne l'offset au début du groupe de paragraphes, en sautant
-			//	le nombre de paragraphes indiqué et en suivant les paragraphes
-			//	liés (Keep).
+			//	Retourne l'offset au dÃ©but du groupe de paragraphes, en sautant
+			//	le nombre de paragraphes indiquÃ© et en suivant les paragraphes
+			//	liÃ©s (Keep).
 			
-			//	Cf. GetParagraphStartOffset pour les détails.
+			//	Cf. GetParagraphStartOffset pour les dÃ©tails.
 			
 			TextStory.CodeCallback callback = new TextStory.CodeCallback (new ParagraphGroupStartFinder (story.TextContext, skip).Check);
 			
@@ -338,8 +397,8 @@ namespace Epsitec.Common.Text.Internal
 						return false;
 					}
 					
-					//	Vérifie si le dernier code rencontré correspond à un paragraphe
-					//	lié avec le précédent :
+					//	VÃ©rifie si le dernier code rencontrÃ© correspond Ã  un paragraphe
+					//	liÃ© avec le prÃ©cÃ©dent :
 					
 					Properties.KeepProperty keep;
 					
@@ -348,8 +407,8 @@ namespace Epsitec.Common.Text.Internal
 					if ((keep != null) &&
 						(keep.KeepWithPreviousParagraph == Properties.ThreeState.True))
 					{
-						//	Paragraphe actuel lié au précédent : on doit encore
-						//	sauter un paragraphe de plus pour arriver au début
+						//	Paragraphe actuel liÃ© au prÃ©cÃ©dent : on doit encore
+						//	sauter un paragraphe de plus pour arriver au dÃ©but
 						//	du groupe.
 						
 						return false;
@@ -360,7 +419,7 @@ namespace Epsitec.Common.Text.Internal
 					if ((keep != null) &&
 						(keep.KeepWithNextParagraph == Properties.ThreeState.True))
 					{
-						//	Paragraphe précédent lié au courant : continue la
+						//	Paragraphe prÃ©cÃ©dent liÃ© au courant : continue la
 						//	recherche.
 						
 						return false;
@@ -382,7 +441,7 @@ namespace Epsitec.Common.Text.Internal
 		public static int GetParagraphEndLength(TextStory story, ICursor cursor)
 		{
 			//	Retourne la longueur du paragraphe depuis la position courante
-			//	jusqu'à sa fin, y compris le caractère de terminaison.
+			//	jusqu'Ã  sa fin, y compris le caractÃ¨re de terminaison.
 			
 			TextStory.CodeCallback callback = new TextStory.CodeCallback (Navigator.IsParagraphSeparator);
 			
@@ -395,8 +454,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static int GetRunStartOffset(TextStory story, ICursor cursor, Property property)
 		{
-			//	Retourne l'offset au début du texte auquel est appliquée la
-			//	propriété passée en entrée.
+			//	Retourne l'offset au dÃ©but du texte auquel est appliquÃ©e la
+			//	propriÃ©tÃ© passÃ©e en entrÃ©e.
 			
 			Navigator.PropertyFinder finder = new PropertyFinder (story.StyleList, property, story.ReadChar (cursor));
 			TextStory.CodeCallback callback = new TextStory.CodeCallback (finder.MissingProperty);
@@ -409,8 +468,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static int GetRunEndLength(TextStory story, ICursor cursor, Property property)
 		{
-			//	Retourne la longueur du texte auquel est appliquée la propriété
-			//	passée en entrée.
+			//	Retourne la longueur du texte auquel est appliquÃ©e la propriÃ©tÃ©
+			//	passÃ©e en entrÃ©e.
 			
 			Navigator.PropertyFinder finder = new PropertyFinder (story.StyleList, property, story.ReadChar (cursor));
 			TextStory.CodeCallback callback = new TextStory.CodeCallback (finder.MissingProperty);
@@ -424,8 +483,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool GetFlattenedProperties(TextStory story, ICursor cursor, int offset, out Property[] properties)
 		{
-			//	Retourne toutes les propriétés (fusionnées, telles que stockées
-			//	dans le texte) pour la position indiquée.
+			//	Retourne toutes les propriÃ©tÃ©s (fusionnÃ©es, telles que stockÃ©es
+			//	dans le texte) pour la position indiquÃ©e.
 			
 			return Navigator.GetFlattenedProperties (story, story.ReadChar (cursor, offset), out properties);
 		}
@@ -446,8 +505,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool GetFlattenedPropertiesExcludingStylesAndProperties(TextStory story, ICursor cursor, int offset, out Property[] properties)
 		{
-			//	Retourne toutes les propriétés (fusionnées, telles que stockées
-			//	dans le texte) pour la position indiquée.
+			//	Retourne toutes les propriÃ©tÃ©s (fusionnÃ©es, telles que stockÃ©es
+			//	dans le texte) pour la position indiquÃ©e.
 			
 			ulong code = story.ReadChar (cursor, offset);
 			
@@ -476,8 +535,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool GetManagedParagraphProperties(TextStory story, ulong code, out Properties.ManagedParagraphProperty[] properties)
 		{
-			//	Crée la liste (triée) des propriétés de type ManagedParagraphProperty
-			//	qui décrivent le paragraphe actuel.
+			//	CrÃ©e la liste (triÃ©e) des propriÃ©tÃ©s de type ManagedParagraphProperty
+			//	qui dÃ©crivent le paragraphe actuel.
 			
 			Property[] props;
 			
@@ -498,12 +557,12 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static void HandleManagedParagraphPropertiesChange(TextStory story, ICursor cursor, int offset, Properties.ManagedParagraphProperty[] old_properties, Properties.ManagedParagraphProperty[] new_properties)
 		{
-			//	Gère le passage d'un jeu de propriétés ManagedParagraphProperty à
+			//	GÃ¨re le passage d'un jeu de propriÃ©tÃ©s ManagedParagraphProperty Ã 
 			//	un autre (old_properties --> new_properties).
 			
-			//	Pour chaque propriété qui disparaît, le gestionnaire correspondant
-			//	sera appelé (DetachFromParagaph); de même, pour chaque propriété
-			//	nouvelle, c'est AttachToParagraph qui sera appelé.
+			//	Pour chaque propriÃ©tÃ© qui disparaÃ®t, le gestionnaire correspondant
+			//	sera appelÃ© (DetachFromParagaph); de mÃªme, pour chaque propriÃ©tÃ©
+			//	nouvelle, c'est AttachToParagraph qui sera appelÃ©.
 			
 			System.Diagnostics.Debug.Assert (Navigator.IsParagraphStart (story, cursor, offset));
 			
@@ -549,8 +608,8 @@ namespace Epsitec.Common.Text.Internal
 					}
 				}
 				
-				//	Cette ancienne propriété n'a pas d'équivalent dans la liste des
-				//	nouvelles propriétés.
+				//	Cette ancienne propriÃ©tÃ© n'a pas d'Ã©quivalent dans la liste des
+				//	nouvelles propriÃ©tÃ©s.
 				
 				list[old_properties[i].ManagerName].DetachFromParagraph (story, cursor, old_properties[i]);
 				
@@ -568,8 +627,8 @@ namespace Epsitec.Common.Text.Internal
 					}
 				}
 				
-				//	Cette nouvelle propriété n'a pas d'équivalent dans la liste des
-				//	anciennes propriétés.
+				//	Cette nouvelle propriÃ©tÃ© n'a pas d'Ã©quivalent dans la liste des
+				//	anciennes propriÃ©tÃ©s.
 				
 				list[new_properties[i].ManagerName].AttachToParagraph (story, cursor, new_properties[i]);
 				
@@ -581,8 +640,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool GetParagraphStyles(TextStory story, ICursor cursor, int offset, out TextStyle[] styles)
 		{
-			//	Retourne les styles de paragraphe attachés au paragraphe à la
-			//	position indiquée.
+			//	Retourne les styles de paragraphe attachÃ©s au paragraphe Ã  la
+			//	position indiquÃ©e.
 			
 			ulong code = story.ReadChar (cursor, offset);
 			
@@ -615,8 +674,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool GetParagraphProperties(TextStory story, ICursor cursor, int offset, out Property[] properties)
 		{
-			//	Retourne les propriétés attachées au paragraphe de la position
-			//	indiquée, en excluant les propriétés dérivées à partir des
+			//	Retourne les propriÃ©tÃ©s attachÃ©es au paragraphe de la position
+			//	indiquÃ©e, en excluant les propriÃ©tÃ©s dÃ©rivÃ©es Ã  partir des
 			//	styles.
 			
 			ulong code = story.ReadChar (cursor, offset);
@@ -746,8 +805,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			story.ReadText (cursor, offset_start, length, text);
 			
-			//	Détermine l'état des propriétés "ManagedParagraph" qui déterminent
-			//	si/comment un paragraphe est géré (liste à puces, etc.) et dont tout
+			//	DÃ©termine l'Ã©tat des propriÃ©tÃ©s "ManagedParagraph" qui dÃ©terminent
+			//	si/comment un paragraphe est gÃ©rÃ© (liste Ã  puces, etc.) et dont tout
 			//	changement requiert une gestion explicite.
 			
 			Properties.ManagedParagraphProperty[] old_props;
@@ -759,8 +818,8 @@ namespace Epsitec.Common.Text.Internal
 			int   start = 0;
 			int   count = 0;
 			
-			//	Change le style par tranches (une tranche partage exactement le même
-			//	ensemble de styles et propriétés) pour être plus efficace :
+			//	Change le style par tranches (une tranche partage exactement le mÃªme
+			//	ensemble de styles et propriÃ©tÃ©s) pour Ãªtre plus efficace :
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -780,14 +839,14 @@ namespace Epsitec.Common.Text.Internal
 				}
 			}
 			
-			//	Change encore le style de la dernière (ou de l'unique) tranche :
+			//	Change encore le style de la derniÃ¨re (ou de l'unique) tranche :
 			
 			Navigator.SetParagraphStyles (story, text, code, start, count, styles);
 			Navigator.GetManagedParagraphProperties (story, text[0], out new_props);
 			
 			story.WriteText (cursor, offset_start, text);
 			
-			//	Finalement, gère encore les changements de propriétés "ManagedParagraph"
+			//	Finalement, gÃ¨re encore les changements de propriÃ©tÃ©s "ManagedParagraph"
 			//	afin d'ajouter ou de supprimer les textes automatiques :
 			
 			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, offset_start, old_props, new_props);
@@ -795,12 +854,12 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static void SetSymbolStyles(TextStory story, ICursor cursor, int length, params TextStyle[] styles)
 		{
-			//	Définit les styles à utiliser pour les caractères spécifiés. Remplace
-			//	tous les styles de symboles précédemment appliqués.
+			//	DÃ©finit les styles Ã  utiliser pour les caractÃ¨res spÃ©cifiÃ©s. Remplace
+			//	tous les styles de symboles prÃ©cÃ©demment appliquÃ©s.
 			
 			if (length == 0)
 			{
-				//	Aucun caractère n'est affecté par la modification; ne fait
+				//	Aucun caractÃ¨re n'est affectÃ© par la modification; ne fait
 				//	rien du tout.
 				
 				return;
@@ -819,8 +878,8 @@ namespace Epsitec.Common.Text.Internal
 			int   start = 0;
 			int   count = 0;
 			
-			//	Change le style par tranches (une tranche partage exactement le même
-			//	ensemble de styles et propriétés) pour être plus efficace :
+			//	Change le style par tranches (une tranche partage exactement le mÃªme
+			//	ensemble de styles et propriÃ©tÃ©s) pour Ãªtre plus efficace :
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -840,7 +899,7 @@ namespace Epsitec.Common.Text.Internal
 				}
 			}
 			
-			//	Change encore le style de la dernière (ou de l'unique) tranche :
+			//	Change encore le style de la derniÃ¨re (ou de l'unique) tranche :
 			
 			Navigator.SetSymbolStyles (story, text, code, start, count, styles);
 			
@@ -849,12 +908,12 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static void SetTextStyles(TextStory story, ICursor cursor, int length, params TextStyle[] styles)
 		{
-			//	Définit les styles à utiliser pour les caractères spécifiés. Remplace tous
-			//	les styles de texte précédemment appliqués.
+			//	DÃ©finit les styles Ã  utiliser pour les caractÃ¨res spÃ©cifiÃ©s. Remplace tous
+			//	les styles de texte prÃ©cÃ©demment appliquÃ©s.
 			
 			if (length == 0)
 			{
-				//	Aucun caractère n'est affecté par la modification; ne fait
+				//	Aucun caractÃ¨re n'est affectÃ© par la modification; ne fait
 				//	rien du tout.
 				
 				return;
@@ -873,8 +932,8 @@ namespace Epsitec.Common.Text.Internal
 			int   start = 0;
 			int   count = 0;
 			
-			//	Change le style par tranches (une tranche partage exactement le même
-			//	ensemble de styles et propriétés) pour être plus efficace :
+			//	Change le style par tranches (une tranche partage exactement le mÃªme
+			//	ensemble de styles et propriÃ©tÃ©s) pour Ãªtre plus efficace :
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -894,7 +953,7 @@ namespace Epsitec.Common.Text.Internal
 				}
 			}
 			
-			//	Change encore le style de la dernière (ou de l'unique) tranche :
+			//	Change encore le style de la derniÃ¨re (ou de l'unique) tranche :
 			
 			Navigator.SetTextStyles (story, text, code, start, count, styles);
 			
@@ -906,7 +965,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			if (length == 0)
 			{
-				//	Aucun caractère n'est affecté par la modification; ne fait
+				//	Aucun caractÃ¨re n'est affectÃ© par la modification; ne fait
 				//	rien du tout.
 				
 				return;
@@ -925,8 +984,8 @@ namespace Epsitec.Common.Text.Internal
 			int   start = 0;
 			int   count = 0;
 			
-			//	Change le style par tranches (une tranche partage exactement le même
-			//	ensemble de styles et propriétés) pour être plus efficace :
+			//	Change le style par tranches (une tranche partage exactement le mÃªme
+			//	ensemble de styles et propriÃ©tÃ©s) pour Ãªtre plus efficace :
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -946,7 +1005,7 @@ namespace Epsitec.Common.Text.Internal
 				}
 			}
 			
-			//	Change encore le style de la dernière (ou de l'unique) tranche :
+			//	Change encore le style de la derniÃ¨re (ou de l'unique) tranche :
 			
 			Navigator.SetTextProperties (story, text, code, start, count, properties, mode);
 			
@@ -957,7 +1016,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			if (length == 0)
 			{
-				//	Aucun caractère n'est affecté par la modification; ne fait
+				//	Aucun caractÃ¨re n'est affectÃ© par la modification; ne fait
 				//	rien du tout.
 				
 				return;
@@ -976,8 +1035,8 @@ namespace Epsitec.Common.Text.Internal
 			int   start = 0;
 			int   count = 0;
 			
-			//	Change le style par tranches (une tranche partage exactement le même
-			//	ensemble de styles et propriétés) pour être plus efficace :
+			//	Change le style par tranches (une tranche partage exactement le mÃªme
+			//	ensemble de styles et propriÃ©tÃ©s) pour Ãªtre plus efficace :
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -997,7 +1056,7 @@ namespace Epsitec.Common.Text.Internal
 				}
 			}
 			
-			//	Change encore le style de la dernière (ou de l'unique) tranche :
+			//	Change encore le style de la derniÃ¨re (ou de l'unique) tranche :
 			
 			Navigator.SetMetaProperties (story, text, code, start, count, meta_properties, mode);
 			
@@ -1026,7 +1085,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (length == 0)
 			{
-				//	Aucun caractère n'est affecté par la modification; ne fait
+				//	Aucun caractÃ¨re n'est affectÃ© par la modification; ne fait
 				//	rien du tout.
 				
 				return;
@@ -1042,8 +1101,8 @@ namespace Epsitec.Common.Text.Internal
 			int   start = 0;
 			int   count = 0;
 			
-			//	Change le style par tranches (une tranche partage exactement le même
-			//	ensemble de styles et propriétés) pour être plus efficace :
+			//	Change le style par tranches (une tranche partage exactement le mÃªme
+			//	ensemble de styles et propriÃ©tÃ©s) pour Ãªtre plus efficace :
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -1063,7 +1122,7 @@ namespace Epsitec.Common.Text.Internal
 				}
 			}
 			
-			//	Change encore le style de la dernière (ou de l'unique) tranche :
+			//	Change encore le style de la derniÃ¨re (ou de l'unique) tranche :
 			
 			Navigator.SetParagraphProperties (story, text, code, start, count, properties, mode);
 			
@@ -1073,7 +1132,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private static void SetParagraphStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] paragraph_styles)
 		{
-			//	Change le style de paragraphe pour une tranche donnée.
+			//	Change le style de paragraphe pour une tranche donnÃ©e.
 			
 			if (length == 0)
 			{
@@ -1088,8 +1147,8 @@ namespace Epsitec.Common.Text.Internal
 			context.GetProperties (code, out properties);
 			context.GetStyles (code, out old_styles);
 			
-			//	Crée la table des styles à utiliser en retirant les anciens styles
-			//	de paragraphe et en insérant les nouveaux à la place :
+			//	CrÃ©e la table des styles Ã  utiliser en retirant les anciens styles
+			//	de paragraphe et en insÃ©rant les nouveaux Ã  la place :
 			
 			int n_para_styles  = Properties.StylesProperty.CountMatchingStyles (old_styles, TextStyleClass.Paragraph);
 			int n_other_styles = old_styles.Length - n_para_styles;
@@ -1106,7 +1165,7 @@ namespace Epsitec.Common.Text.Internal
 				}
 			}
 			
-			//	Crée la table des propriétés à utiliser :
+			//	CrÃ©e la table des propriÃ©tÃ©s Ã  utiliser :
 			
 			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (new_styles, Property.Filter (properties, Properties.PropertyFilter.NonUniformOnly));
 			
@@ -1124,8 +1183,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		private static void SetTextProperties(TextStory story, ulong[] text, ulong code, int offset, int length, Property[] text_properties, Properties.ApplyMode mode)
 		{
-			//	Modifie les propriétés du texte en utilisant celles passées en
-			//	entrée, en se basant sur le mode de combinaison spécifié.
+			//	Modifie les propriÃ©tÃ©s du texte en utilisant celles passÃ©es en
+			//	entrÃ©e, en se basant sur le mode de combinaison spÃ©cifiÃ©.
 			
 			if ((length == 0) ||
 				(mode == Properties.ApplyMode.None))
@@ -1138,7 +1197,7 @@ namespace Epsitec.Common.Text.Internal
 			TextStyle[] current_styles;
 			Property[]  current_properties;
 			
-			//	Récupère d'abord les styles et les propriétés courantes :
+			//	RÃ©cupÃ¨re d'abord les styles et les propriÃ©tÃ©s courantes :
 			
 			context.GetStyles (code, out current_styles);
 			context.GetProperties (code, out current_properties);
@@ -1154,8 +1213,8 @@ namespace Epsitec.Common.Text.Internal
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (text_properties) == false);
 			
 			//	Dans un premier temps, on conserve tous les styles et ne garde que les
-			//	propriétés associées directement au paragraphe. Les autres propriétés
-			//	vont devoir être filtrées :
+			//	propriÃ©tÃ©s associÃ©es directement au paragraphe. Les autres propriÃ©tÃ©s
+			//	vont devoir Ãªtre filtrÃ©es :
 			
 			System.Collections.ArrayList all_styles = new System.Collections.ArrayList ();
 			System.Collections.ArrayList all_properties = new System.Collections.ArrayList ();
@@ -1180,8 +1239,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		private static void SetMetaProperties(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] meta_properties, Properties.ApplyMode mode)
 		{
-			//	Modifie les méta propriétés du texte en utilisant celles passées en
-			//	entrée, en se basant sur le mode de combinaison spécifié.
+			//	Modifie les mÃ©ta propriÃ©tÃ©s du texte en utilisant celles passÃ©es en
+			//	entrÃ©e, en se basant sur le mode de combinaison spÃ©cifiÃ©.
 			
 			if ((length == 0) ||
 				(mode == Properties.ApplyMode.None))
@@ -1194,7 +1253,7 @@ namespace Epsitec.Common.Text.Internal
 			TextStyle[] current_styles;
 			Property[]  current_properties;
 			
-			//	Récupère d'abord les styles et les propriétés courantes :
+			//	RÃ©cupÃ¨re d'abord les styles et les propriÃ©tÃ©s courantes :
 			
 			context.GetStyles (code, out current_styles);
 			context.GetProperties (code, out current_properties);
@@ -1225,8 +1284,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		private static void SetParagraphProperties(TextStory story, ulong[] text, ulong code, int offset, int length, Property[] paragraph_properties, Properties.ApplyMode mode)
 		{
-			//	Modifie les propriétés du paragraphe en utilisant celles passées en
-			//	entrée, en se basant sur le mode de combinaison spécifié.
+			//	Modifie les propriÃ©tÃ©s du paragraphe en utilisant celles passÃ©es en
+			//	entrÃ©e, en se basant sur le mode de combinaison spÃ©cifiÃ©.
 			
 			if ((length == 0) ||
 				(mode == Properties.ApplyMode.None))
@@ -1239,7 +1298,7 @@ namespace Epsitec.Common.Text.Internal
 			TextStyle[] current_styles;
 			Property[]  current_properties;
 			
-			//	Récupère d'abord les styles et les propriétés courantes :
+			//	RÃ©cupÃ¨re d'abord les styles et les propriÃ©tÃ©s courantes :
 			
 			context.GetStyles (code, out current_styles);
 			context.GetProperties (code, out current_properties);
@@ -1255,8 +1314,8 @@ namespace Epsitec.Common.Text.Internal
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (paragraph_properties) == false);
 			
 			//	Dans un premier temps, on ne conserve tous les styles et que les
-			//	propriétés associés directement au paragraphe. Les autres propriétés
-			//	vont devoir être filtrées :
+			//	propriÃ©tÃ©s associÃ©s directement au paragraphe. Les autres propriÃ©tÃ©s
+			//	vont devoir Ãªtre filtrÃ©es :
 			
 			System.Collections.ArrayList all_styles = new System.Collections.ArrayList ();
 			System.Collections.ArrayList all_properties = new System.Collections.ArrayList ();
@@ -1283,7 +1342,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private static void SetSymbolStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] character_styles)
 		{
-			//	Remplace les styles de symboles par ceux passés en entrée.
+			//	Remplace les styles de symboles par ceux passÃ©s en entrÃ©e.
 			
 			if (length == 0)
 			{
@@ -1295,7 +1354,7 @@ namespace Epsitec.Common.Text.Internal
 			TextStyle[] current_styles;
 			Property[]  current_properties;
 			
-			//	Récupère d'abord les styles et les propriétés associées au texte
+			//	RÃ©cupÃ¨re d'abord les styles et les propriÃ©tÃ©s associÃ©es au texte
 			//	actuel :
 			
 			context.GetStyles (code, out current_styles);
@@ -1304,8 +1363,8 @@ namespace Epsitec.Common.Text.Internal
 			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
 			
-			//	Ne conserve que les styles associés directement au paragraphe et
-			//	au texte. En fait, on supprime les styles liés aux symboles :
+			//	Ne conserve que les styles associÃ©s directement au paragraphe et
+			//	au texte. En fait, on supprime les styles liÃ©s aux symboles :
 			
 			TextStyle[] filtered_styles = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph, TextStyleClass.Text, TextStyleClass.MetaProperty);
 			TextStyle[] all_styles      = new TextStyle[filtered_styles.Length + character_styles.Length];
@@ -1329,7 +1388,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private static void SetTextStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] text_styles)
 		{
-			//	Remplace les styles de texte par ceux passés en entrée.
+			//	Remplace les styles de texte par ceux passÃ©s en entrÃ©e.
 			
 			if (length == 0)
 			{
@@ -1341,7 +1400,7 @@ namespace Epsitec.Common.Text.Internal
 			TextStyle[] current_styles;
 			Property[]  current_properties;
 			
-			//	Récupère d'abord les styles et les propriétés associées au texte
+			//	RÃ©cupÃ¨re d'abord les styles et les propriÃ©tÃ©s associÃ©es au texte
 			//	actuel :
 			
 			context.GetStyles (code, out current_styles);
@@ -1350,8 +1409,8 @@ namespace Epsitec.Common.Text.Internal
 			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
 			
-			//	Ne conserve que les styles associés directement au paragraphe et
-			//	aux symboles. En fait, on supprime les styles liés au texte :
+			//	Ne conserve que les styles associÃ©s directement au paragraphe et
+			//	aux symboles. En fait, on supprime les styles liÃ©s au texte :
 			
 			TextStyle[] filtered_styles = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph, TextStyleClass.Symbol, TextStyleClass.MetaProperty);
 			TextStyle[] all_styles      = new TextStyle[filtered_styles.Length + text_styles.Length];
@@ -1405,9 +1464,9 @@ namespace Epsitec.Common.Text.Internal
 		
 		private static System.Collections.ICollection CombineOverwrite(Property[] a, Property[] b)
 		{
-			//	Un overwrite écrase toutes les propriétés source, sauf si la source
-			//	contient des propriétés avec affinité PropertyAffinity.Symbol; dans
-			//	ce cas, la propriété survit à l'overwrite...
+			//	Un overwrite Ã©crase toutes les propriÃ©tÃ©s source, sauf si la source
+			//	contient des propriÃ©tÃ©s avec affinitÃ© PropertyAffinity.Symbol; dans
+			//	ce cas, la propriÃ©tÃ© survit Ã  l'overwrite...
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -1421,9 +1480,9 @@ namespace Epsitec.Common.Text.Internal
 			
 			foreach (Property p in b)
 			{
-				//	Si des propriétés ont survécu au filtrage ci-dessus, elles sont
-				//	tout de même des candidates au remplacement si des propriétés
-				//	de la même classe sont insérées.
+				//	Si des propriÃ©tÃ©s ont survÃ©cu au filtrage ci-dessus, elles sont
+				//	tout de mÃªme des candidates au remplacement si des propriÃ©tÃ©s
+				//	de la mÃªme classe sont insÃ©rÃ©es.
 				
 				for (int i = 0; i < list.Count; )
 				{
@@ -1458,7 +1517,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			foreach (Property p in b)
 			{
-				//	Vérifie si cette propriété existe dans la liste. Si oui, on
+				//	VÃ©rifie si cette propriÃ©tÃ© existe dans la liste. Si oui, on
 				//	doit la supprimer.
 				
 				for (int i = 0; i < list.Count; )
@@ -1504,7 +1563,7 @@ namespace Epsitec.Common.Text.Internal
 
 		private static System.Collections.ICollection CombineOverwrite(TextStyle[] a, TextStyle[] b)
 		{
-			//	Un overwrite écrase toutes les propriétés source.
+			//	Un overwrite Ã©crase toutes les propriÃ©tÃ©s source.
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -1595,12 +1654,12 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (this.styles[code].Contains (code, this.property))
 				{
-					this.code = code;	//	propriété trouvée, continue...
+					this.code = code;	//	propriÃ©tÃ© trouvÃ©e, continue...
 					return false;
 				}
 				else
 				{
-					return true;		//	propriété manquante, arrête ici
+					return true;		//	propriÃ©tÃ© manquante, arrÃªte ici
 				}
 			}
 			
