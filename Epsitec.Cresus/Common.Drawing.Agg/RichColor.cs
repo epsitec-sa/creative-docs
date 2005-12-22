@@ -1,10 +1,13 @@
-﻿namespace Epsitec.Common.Drawing
+﻿//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+namespace Epsitec.Common.Drawing
 {
 	public enum ColorSpace
 	{
 		None = 0,
-		RGB  = 1,
-		CMYK = 2,
+		Rgb  = 1,
+		Cmyk = 2,
 		Gray = 3,
 	}
 
@@ -19,9 +22,9 @@
 		public RichColor(Color color)
 		{
 			//	Constructeur donnant une couleur RGB quelconque.
-			if ( color.IsEmpty )
+			if (color.IsEmpty)
 			{
-				this.colorSpace = ColorSpace.RGB;
+				this.colorSpace = ColorSpace.Rgb;
 				this.alpha  = 1.0;
 				this.value1 = 0.0;
 				this.value2 = 0.0;
@@ -32,7 +35,7 @@
 			}
 			else
 			{
-				this.colorSpace = ColorSpace.RGB;
+				this.colorSpace = ColorSpace.Rgb;
 				this.alpha  = color.A;
 				this.value1 = color.R;
 				this.value2 = color.G;
@@ -46,7 +49,7 @@
 		public RichColor(double a, double r, double g, double b)
 		{
 			//	Constructeur donnant une couleur RGB quelconque.
-			this.colorSpace = ColorSpace.RGB;
+			this.colorSpace = ColorSpace.Rgb;
 			this.alpha  = a;
 			this.value1 = r;
 			this.value2 = g;
@@ -59,7 +62,7 @@
 		public RichColor(double r, double g, double b)
 		{
 			//	Constructeur donnant une couleur RGB quelconque.
-			this.colorSpace = ColorSpace.RGB;
+			this.colorSpace = ColorSpace.Rgb;
 			this.alpha  = 1.0;
 			this.value1 = r;
 			this.value2 = g;
@@ -72,7 +75,7 @@
 		public RichColor(double brightness)
 		{
 			//	Constructeur donnant une couleur RGB grise.
-			this.colorSpace = ColorSpace.RGB;
+			this.colorSpace = ColorSpace.Rgb;
 			this.alpha  = 1.0;
 			this.value1 = brightness;
 			this.value2 = brightness;
@@ -85,7 +88,7 @@
 		public RichColor(double a, double c, double m, double y, double k)
 		{
 			//	Constructeur donnant une couleur CMYK quelconque.
-			this.colorSpace = ColorSpace.CMYK;
+			this.colorSpace = ColorSpace.Cmyk;
 			this.alpha  = a;
 			this.value1 = c;
 			this.value2 = m;
@@ -95,7 +98,8 @@
 			this.name = null;
 		}
 
-		public bool IsEmpty
+		
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -103,7 +107,7 @@
 			}
 		}
 		
-		public bool IsValid
+		public bool								IsValid
 		{
 			get
 			{
@@ -111,7 +115,7 @@
 			}
 		}
 		
-		public bool IsTransparent
+		public bool								IsTransparent
 		{
 			get
 			{
@@ -119,7 +123,7 @@
 			}
 		}
 		
-		public bool IsOpaque
+		public bool								IsOpaque
 		{
 			get
 			{
@@ -127,7 +131,7 @@
 			}
 		}
 		
-		public bool IsVisible
+		public bool								IsVisible
 		{
 			get
 			{
@@ -135,7 +139,7 @@
 			}
 		}
 		
-		public ColorSpace ColorSpace
+		public ColorSpace						ColorSpace
 		{
 			//	Espace de couleur.
 			get
@@ -145,24 +149,24 @@
 
 			set
 			{
-				if ( this.colorSpace != value )
+				if (this.colorSpace != value)
 				{
-					if ( this.colorSpace == ColorSpace.RGB )
+					if (this.colorSpace == ColorSpace.Rgb)
 					{
-						if ( value == ColorSpace.CMYK )  this.RGB2CMYK();
-						if ( value == ColorSpace.Gray )  this.RGB2Gray();
+						if (value == ColorSpace.Cmyk)  this.RgbToCmyk();
+						if (value == ColorSpace.Gray)  this.RgbToGray();
 					}
 
-					if ( this.colorSpace == ColorSpace.CMYK )
+					if (this.colorSpace == ColorSpace.Cmyk)
 					{
-						if ( value == ColorSpace.RGB  )  this.CMYK2RGB();
-						if ( value == ColorSpace.Gray )  this.CMYK2Gray();
+						if (value == ColorSpace.Rgb )  this.CmykToRgb();
+						if (value == ColorSpace.Gray)  this.CmykToGray();
 					}
 
-					if ( this.colorSpace == ColorSpace.Gray )
+					if (this.colorSpace == ColorSpace.Gray)
 					{
-						if ( value == ColorSpace.RGB  )  this.Gray2RGB();
-						if ( value == ColorSpace.CMYK )  this.Gray2CMYK();
+						if (value == ColorSpace.Rgb )  this.GrayToRgb();
+						if (value == ColorSpace.Cmyk)  this.GrayToCmyk();
 					}
 
 					this.colorSpace = value;
@@ -170,23 +174,23 @@
 			}
 		}
 
-		public Color Basic
+		public Color							Basic
 		{
 			//	Retourne la couleur de base Color.
 			get
 			{
 				double r, g, b;
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						return Color.FromARGB(this.alpha, this.value1, this.value2, this.value3);
 
-					case ColorSpace.CMYK:
-						RichColor.CMYK2RGB(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
+					case ColorSpace.Cmyk:
+						RichColor.CmykToRgb(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
 						return Color.FromARGB(this.alpha, r, g, b);
 
 					case ColorSpace.Gray:
-						RichColor.Gray2RGB(this.value1, out r, out g, out b);
+						RichColor.GrayToRgb(this.value1, out r, out g, out b);
 						return Color.FromARGB(this.alpha, r, g, b);
 				}
 
@@ -195,9 +199,9 @@
 
 			set
 			{
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						this.alpha  = value.A;
 						this.value1 = value.R;
 						this.value2 = value.G;
@@ -205,9 +209,9 @@
 						this.value4 = 0.0;
 						break;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						double c, m, y, k;
-						RichColor.RGB2CMYK(value.R, value.G, value.B, out c, out m, out y, out k);
+						RichColor.RgbToCmyk(value.R, value.G, value.B, out c, out m, out y, out k);
 						this.alpha  = value.A;
 						this.value1 = c;
 						this.value2 = m;
@@ -217,7 +221,7 @@
 
 					case ColorSpace.Gray:
 						double gray;
-						RichColor.RGB2Gray(value.R, value.G, value.B, out gray);
+						RichColor.RgbToGray(value.R, value.G, value.B, out gray);
 						this.alpha  = value.A;
 						this.value1 = gray;
 						this.value2 = 0.0;
@@ -229,7 +233,7 @@
 		}
 
 
-		public double A
+		public double							A
 		{
 			//	Alpha channel (0=transparent, 1=opaque).
 			get
@@ -243,23 +247,23 @@
 			}
 		}
 		
-		public double R
+		public double							R
 		{
 			//	Color red (0=nothing, 1=red).
 			get
 			{
 				double r, g, b;
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						return this.value1;
 
-					case ColorSpace.CMYK:
-						RichColor.CMYK2RGB(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
+					case ColorSpace.Cmyk:
+						RichColor.CmykToRgb(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
 						return r;
 
 					case ColorSpace.Gray:
-						RichColor.Gray2RGB(this.value1, out r, out g, out b);
+						RichColor.GrayToRgb(this.value1, out r, out g, out b);
 						return r;
 				}
 				return 0.0;
@@ -267,17 +271,17 @@
 			
 			set
 			{
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						this.value1 = value;
 						break;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						double r, g, b;
-						RichColor.CMYK2RGB(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
+						RichColor.CmykToRgb(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
 						r = value;
-						RichColor.RGB2CMYK(r, g, b, out this.value1, out this.value2, out this.value3, out this.value4);
+						RichColor.RgbToCmyk(r, g, b, out this.value1, out this.value2, out this.value3, out this.value4);
 						break;
 
 					case ColorSpace.Gray:
@@ -287,23 +291,23 @@
 			}
 		}
 		
-		public double G
+		public double							G
 		{
 			//	Color green (0=nothing, 1=green).
 			get
 			{
 				double r, g, b;
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						return this.value2;
 
-					case ColorSpace.CMYK:
-						RichColor.CMYK2RGB(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
+					case ColorSpace.Cmyk:
+						RichColor.CmykToRgb(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
 						return g;
 
 					case ColorSpace.Gray:
-						RichColor.Gray2RGB(this.value1, out r, out g, out b);
+						RichColor.GrayToRgb(this.value1, out r, out g, out b);
 						return g;
 				}
 				return 0.0;
@@ -311,17 +315,17 @@
 			
 			set
 			{
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						this.value2 = value;
 						break;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						double r, g, b;
-						RichColor.CMYK2RGB(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
+						RichColor.CmykToRgb(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
 						g = value;
-						RichColor.RGB2CMYK(r, g, b, out this.value1, out this.value2, out this.value3, out this.value4);
+						RichColor.RgbToCmyk(r, g, b, out this.value1, out this.value2, out this.value3, out this.value4);
 						break;
 
 					case ColorSpace.Gray:
@@ -331,23 +335,23 @@
 			}
 		}
 		
-		public double B
+		public double							B
 		{
 			//	Color blue (0=nothing, 1=blue).
 			get
 			{
 				double r, g, b;
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						return this.value3;
 
-					case ColorSpace.CMYK:
-						RichColor.CMYK2RGB(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
+					case ColorSpace.Cmyk:
+						RichColor.CmykToRgb(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
 						return b;
 
 					case ColorSpace.Gray:
-						RichColor.Gray2RGB(this.value1, out r, out g, out b);
+						RichColor.GrayToRgb(this.value1, out r, out g, out b);
 						return b;
 				}
 				return 0.0;
@@ -355,17 +359,17 @@
 			
 			set
 			{
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						this.value3 = value;
 						break;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						double r, g, b;
-						RichColor.CMYK2RGB(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
+						RichColor.CmykToRgb(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
 						b = value;
-						RichColor.RGB2CMYK(r, g, b, out this.value1, out this.value2, out this.value3, out this.value4);
+						RichColor.RgbToCmyk(r, g, b, out this.value1, out this.value2, out this.value3, out this.value4);
 						break;
 
 					case ColorSpace.Gray:
@@ -375,23 +379,23 @@
 			}
 		}
 		
-		public double C
+		public double							C
 		{
 			//	Color cyan (0=nothing, 1=cyan).
 			get
 			{
 				double c, m, y, k;
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
-						RichColor.RGB2CMYK(this.value1, this.value2, this.value3, out c, out m, out y, out k);
+					case ColorSpace.Rgb:
+						RichColor.RgbToCmyk(this.value1, this.value2, this.value3, out c, out m, out y, out k);
 						return c;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						return this.value1;
 
 					case ColorSpace.Gray:
-						RichColor.Gray2CMYK(this.value1, out c, out m, out y, out k);
+						RichColor.GrayToCmyk(this.value1, out c, out m, out y, out k);
 						return c;
 				}
 				return 0.0;
@@ -399,16 +403,16 @@
 			
 			set
 			{
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						double c, m, y, k;
-						RichColor.RGB2CMYK(this.value1, this.value2, this.value3, out c, out m, out y, out k);
+						RichColor.RgbToCmyk(this.value1, this.value2, this.value3, out c, out m, out y, out k);
 						c = value;
-						RichColor.CMYK2RGB(c, m, y, k, out this.value1, out this.value2, out this.value3);
+						RichColor.CmykToRgb(c, m, y, k, out this.value1, out this.value2, out this.value3);
 						break;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						this.value1 = value;
 						break;
 
@@ -419,23 +423,23 @@
 			}
 		}
 		
-		public double M
+		public double							M
 		{
 			//	Color magenta (0=nothing, 1=magenta).
 			get
 			{
 				double c, m, y, k;
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
-						RichColor.RGB2CMYK(this.value1, this.value2, this.value3, out c, out m, out y, out k);
+					case ColorSpace.Rgb:
+						RichColor.RgbToCmyk(this.value1, this.value2, this.value3, out c, out m, out y, out k);
 						return m;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						return this.value2;
 
 					case ColorSpace.Gray:
-						RichColor.Gray2CMYK(this.value1, out c, out m, out y, out k);
+						RichColor.GrayToCmyk(this.value1, out c, out m, out y, out k);
 						return m;
 				}
 				return 0.0;
@@ -443,16 +447,16 @@
 			
 			set
 			{
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						double c, m, y, k;
-						RichColor.RGB2CMYK(this.value1, this.value2, this.value3, out c, out m, out y, out k);
+						RichColor.RgbToCmyk(this.value1, this.value2, this.value3, out c, out m, out y, out k);
 						m = value;
-						RichColor.CMYK2RGB(c, m, y, k, out this.value1, out this.value2, out this.value3);
+						RichColor.CmykToRgb(c, m, y, k, out this.value1, out this.value2, out this.value3);
 						break;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						this.value2 = value;
 						break;
 
@@ -463,23 +467,23 @@
 			}
 		}
 		
-		public double Y
+		public double							Y
 		{
 			//	Color yellow (0=nothing, 1=yellow).
 			get
 			{
 				double c, m, y, k;
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
-						RichColor.RGB2CMYK(this.value1, this.value2, this.value3, out c, out m, out y, out k);
+					case ColorSpace.Rgb:
+						RichColor.RgbToCmyk(this.value1, this.value2, this.value3, out c, out m, out y, out k);
 						return y;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						return this.value3;
 
 					case ColorSpace.Gray:
-						RichColor.Gray2CMYK(this.value1, out c, out m, out y, out k);
+						RichColor.GrayToCmyk(this.value1, out c, out m, out y, out k);
 						return y;
 				}
 				return 0.0;
@@ -487,16 +491,16 @@
 			
 			set
 			{
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						double c, m, y, k;
-						RichColor.RGB2CMYK(this.value1, this.value2, this.value3, out c, out m, out y, out k);
+						RichColor.RgbToCmyk(this.value1, this.value2, this.value3, out c, out m, out y, out k);
 						y = value;
-						RichColor.CMYK2RGB(c, m, y, k, out this.value1, out this.value2, out this.value3);
+						RichColor.CmykToRgb(c, m, y, k, out this.value1, out this.value2, out this.value3);
 						break;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						this.value3 = value;
 						break;
 
@@ -507,23 +511,23 @@
 			}
 		}
 		
-		public double K
+		public double							K
 		{
 			//	Color black (0=nothing, 1=black).
 			get
 			{
 				double c, m, y, k;
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
-						RichColor.RGB2CMYK(this.value1, this.value2, this.value3, out c, out m, out y, out k);
+					case ColorSpace.Rgb:
+						RichColor.RgbToCmyk(this.value1, this.value2, this.value3, out c, out m, out y, out k);
 						return k;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						return this.value4;
 
 					case ColorSpace.Gray:
-						RichColor.Gray2CMYK(this.value1, out c, out m, out y, out k);
+						RichColor.GrayToCmyk(this.value1, out c, out m, out y, out k);
 						return k;
 				}
 				return 0.0;
@@ -531,16 +535,16 @@
 			
 			set
 			{
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						double c, m, y, k;
-						RichColor.RGB2CMYK(this.value1, this.value2, this.value3, out c, out m, out y, out k);
+						RichColor.RgbToCmyk(this.value1, this.value2, this.value3, out c, out m, out y, out k);
 						k = value;
-						RichColor.CMYK2RGB(c, m, y, k, out this.value1, out this.value2, out this.value3);
+						RichColor.CmykToRgb(c, m, y, k, out this.value1, out this.value2, out this.value3);
 						break;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						this.value4 = value;
 						break;
 
@@ -551,20 +555,20 @@
 			}
 		}
 		
-		public double Gray
+		public double							Gray
 		{
 			//	Color gray (0=k, 1=white).
 			get
 			{
 				double gray;
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
-						RichColor.RGB2Gray(this.value1, this.value2, this.value3, out gray);
+					case ColorSpace.Rgb:
+						RichColor.RgbToGray(this.value1, this.value2, this.value3, out gray);
 						return gray;
 
-					case ColorSpace.CMYK:
-						RichColor.CMYK2Gray(this.value1, this.value2, this.value3, this.value4, out gray);
+					case ColorSpace.Cmyk:
+						RichColor.CmykToGray(this.value1, this.value2, this.value3, this.value4, out gray);
 						return gray;
 
 					case ColorSpace.Gray:
@@ -575,15 +579,15 @@
 			
 			set
 			{
-				switch ( this.colorSpace )
+				switch (this.colorSpace)
 				{
-					case ColorSpace.RGB:
+					case ColorSpace.Rgb:
 						this.value1 = value;
 						this.value2 = value;
 						this.value3 = value;
 						break;
 
-					case ColorSpace.CMYK:
+					case ColorSpace.Cmyk:
 						this.value1 = 0.0;
 						this.value2 = 0.0;
 						this.value3 = 0.0;
@@ -598,7 +602,7 @@
 		}
 
 		
-		public string Name
+		public string							Name
 		{
 			get
 			{
@@ -611,23 +615,35 @@
 			}
 		}
 
+		
+		public static RichColor					Empty
+		{
+			get
+			{
+				RichColor c = new RichColor();
+				c.isEmpty = true;
+				return c;
+			}
+		}
+		
+		
 		public void ChangeBrightness(double adjust)
 		{
 			//	Change la luminosité d'une couleur.
-			switch ( this.colorSpace )
+			switch (this.colorSpace)
 			{
-				case ColorSpace.RGB:
+				case ColorSpace.Rgb:
 					this.value1 = Epsitec.Common.Math.Clip(this.value1+adjust);
 					this.value2 = Epsitec.Common.Math.Clip(this.value2+adjust);
 					this.value3 = Epsitec.Common.Math.Clip(this.value3+adjust);
 					break;
 
-				case ColorSpace.CMYK:
-					this.CMYK2RGB();
+				case ColorSpace.Cmyk:
+					this.CmykToRgb();
 					this.value1 = Epsitec.Common.Math.Clip(this.value1+adjust);
 					this.value2 = Epsitec.Common.Math.Clip(this.value2+adjust);
 					this.value3 = Epsitec.Common.Math.Clip(this.value3+adjust);
-					this.RGB2CMYK();
+					this.RgbToCmyk();
 					break;
 
 				case ColorSpace.Gray:
@@ -637,74 +653,74 @@
 		}
 		
 
-		private void RGB2CMYK()
+		private void RgbToCmyk()
 		{
 			//	Conversion RGB -> CMYK.
 			double c, m, y, k;
-			RichColor.RGB2CMYK(this.value1, this.value2, this.value3, out c, out m, out y, out k);
+			RichColor.RgbToCmyk(this.value1, this.value2, this.value3, out c, out m, out y, out k);
 			this.value1 = c;
 			this.value2 = m;
 			this.value3 = y;
 			this.value4 = k;
 		}
 
-		private void CMYK2RGB()
+		private void CmykToRgb()
 		{
 			//	Conversion CMYK -> RGB.
 			double r, g, b;
-			RichColor.CMYK2RGB(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
+			RichColor.CmykToRgb(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
 			this.value1 = r;
 			this.value2 = g;
 			this.value3 = b;
 			this.value4 = 0.0;
 		}
 
-		private void RGB2Gray()
+		private void RgbToGray()
 		{
 			//	Conversion RGB -> Gray.
 			double gray;
-			RichColor.RGB2Gray(this.value1, this.value2, this.value3, out gray);
+			RichColor.RgbToGray(this.value1, this.value2, this.value3, out gray);
 			this.value1 = gray;
 			this.value2 = 0.0;
 			this.value3 = 0.0;
 			this.value4 = 0.0;
 		}
 
-		private void Gray2RGB()
+		private void GrayToRgb()
 		{
 			//	Conversion Gray -> RGB.
 			double r, g, b;
-			RichColor.Gray2RGB(this.value1, out r, out g, out b);
+			RichColor.GrayToRgb(this.value1, out r, out g, out b);
 			this.value1 = r;
 			this.value2 = g;
 			this.value3 = b;
 			this.value4 = 0.0;
 		}
 
-		private void CMYK2Gray()
+		private void CmykToGray()
 		{
 			//	Conversion CMYK -> Gray.
 			double gray;
-			RichColor.CMYK2Gray(this.value1, this.value2, this.value3, this.value4, out gray);
+			RichColor.CmykToGray(this.value1, this.value2, this.value3, this.value4, out gray);
 			this.value1 = gray;
 			this.value2 = 0.0;
 			this.value3 = 0.0;
 			this.value4 = 0.0;
 		}
 
-		private void Gray2CMYK()
+		private void GrayToCmyk()
 		{
 			//	Conversion Gray -> CMYK.
 			double c, m, y, k;
-			RichColor.Gray2CMYK(this.value1, out c, out m, out y, out k);
+			RichColor.GrayToCmyk(this.value1, out c, out m, out y, out k);
 			this.value1 = c;
 			this.value2 = m;
 			this.value3 = y;
 			this.value4 = k;
 		}
 
-		static public void RGB2CMYK(double r, double g, double b,
-									out double c, out double m, out double y, out double k)
+		
+		static public void RgbToCmyk(double r, double g, double b, out double c, out double m, out double y, out double k)
 		{
 			c = Epsitec.Common.Math.Clip(1.0-r);
 			m = Epsitec.Common.Math.Clip(1.0-g);
@@ -717,8 +733,7 @@
 			y -= k;
 		}
 
-		static public void CMYK2RGB(double c, double m, double y, double k,
-									out double r, out double g, out double b)
+		static public void CmykToRgb(double c, double m, double y, double k, out double r, out double g, out double b)
 		{
 			c += k;
 			m += k;
@@ -729,30 +744,27 @@
 			b = Epsitec.Common.Math.Clip(1.0-y);
 		}
 
-		static private void RGB2Gray(double r, double g, double b,
-									 out double gray)
+		
+		static public void RgbToGray(double r, double g, double b, out double gray)
 		{
 			gray = Color.GetBrightness(r, g, b);
 		}
 
-		static private void Gray2RGB(double gray,
-									 out double r, out double g, out double b)
+		static public void GrayToRgb(double gray, out double r, out double g, out double b)
 		{
 			r = gray;
 			g = gray;
 			b = gray;
 		}
 
-		static private void CMYK2Gray(double c, double m, double y, double k,
-									  out double gray)
+		static public void CmykToGray(double c, double m, double y, double k, out double gray)
 		{
 			double r, g, b;
-			RichColor.CMYK2RGB(c, m, y, k, out r, out g, out b);
+			RichColor.CmykToRgb(c, m, y, k, out r, out g, out b);
 			gray = Color.GetBrightness(r, g, b);
 		}
 
-		static private void Gray2CMYK(double gray,
-									  out double c, out double m, out double y, out double k)
+		static public void GrayToCmyk(double gray, out double c, out double m, out double y, out double k)
 		{
 			c = 0.0;
 			m = 0.0;
@@ -761,16 +773,6 @@
 		}
 
 
-		public static RichColor Empty
-		{
-			get
-			{
-				RichColor c = new RichColor();
-				c.isEmpty = true;
-				return c;
-			}
-		}
-		
 		public static RichColor FromColor(Color color)
 		{
 			return new RichColor(color.A, color.R, color.G, color.B);
@@ -819,7 +821,7 @@
 		{
 			RichColor color = new RichColor();
 
-			color.colorSpace = ColorSpace.CMYK;
+			color.colorSpace = ColorSpace.Cmyk;
 			color.alpha  = 1.0;
 			color.value1 = c;
 			color.value2 = m;
@@ -863,14 +865,14 @@
 		public static RichColor FromName(string name)
 		{
 			//	Conversion d'un nom système ou hexa en une couleur.
-			if ( name.Length > 1 && name[0] == '#' )
+			if (name.Length > 1 && name[0] == '#')
 			{
 				return RichColor.FromHexa(name.Remove(0, 1));
 			}
 			
 			System.Drawing.Color color = System.Drawing.Color.FromName(name);
 			
-			if ( color.IsEmpty )
+			if (color.IsEmpty)
 			{
 				return RichColor.Empty;
 			}
@@ -883,7 +885,7 @@
 			//	Conversion d'une chaîne "FF3300" ou "003300FF" en une couleur.
 			try
 			{
-				if ( hexa.Length == 6 )  // rgb ?
+				if (hexa.Length == 6)  // rgb ?
 				{
 					byte r = System.Convert.ToByte(hexa.Substring(0, 2), 16);
 					byte g = System.Convert.ToByte(hexa.Substring(2, 2), 16);
@@ -891,7 +893,7 @@
 					return RichColor.FromRGB(r/255.0, g/255.0, b/255.0);
 				}
 
-				if ( hexa.Length == 8 )  // cmyk ?
+				if (hexa.Length == 8)  // cmyk ?
 				{
 					byte c = System.Convert.ToByte(hexa.Substring(0, 2), 16);
 					byte m = System.Convert.ToByte(hexa.Substring(2, 2), 16);
@@ -900,7 +902,7 @@
 					return RichColor.FromCMYK(c/255.0, m/255.0, y/255.0, k/255.0);
 				}
 
-				if ( hexa.Length == 2 )  // gray ?
+				if (hexa.Length == 2)  // gray ?
 				{
 					byte g = System.Convert.ToByte(hexa.Substring(0, 2), 16);
 					return RichColor.FromGray(g/255.0);
@@ -914,10 +916,11 @@
 			}
 		}
 
+		
 		public static string ToHexa(RichColor color)
 		{
 			//	Conversion d'une couleur en chaîne "FF3300" ou "003300FF".
-			if ( color.colorSpace == ColorSpace.RGB )
+			if (color.colorSpace == ColorSpace.Rgb)
 			{
 				int r = (int)(color.value1*255.0+0.5);
 				int g = (int)(color.value2*255.0+0.5);
@@ -925,7 +928,7 @@
 				return r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
 			}
 
-			if ( color.colorSpace == ColorSpace.CMYK )
+			if (color.colorSpace == ColorSpace.Cmyk)
 			{
 				int c = (int)(color.value1*255.0+0.5);
 				int m = (int)(color.value2*255.0+0.5);
@@ -934,7 +937,7 @@
 				return c.ToString("X2") + m.ToString("X2") + y.ToString("X2") + k.ToString("X2");
 			}
 
-			if ( color.colorSpace == ColorSpace.Gray )
+			if (color.colorSpace == ColorSpace.Gray)
 			{
 				int g = (int)(color.value1*255.0+0.5);
 				return g.ToString("X2");
@@ -943,7 +946,7 @@
 			return "??";
 		}
 
-
+		
 		public static bool IsRichColor(string value)
 		{
 			//	Détermine si la string code une couleur riche qui peut être lue au
@@ -1042,7 +1045,7 @@
 						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "αG;{0};{1}", Color.DoubleToColorComponent (color.A), Color.DoubleToColorComponent (color.Gray));
 					}
 				
-				case ColorSpace.RGB:
+				case ColorSpace.Rgb:
 					if (color.IsOpaque)
 					{
 						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "RGB;{0};{1};{2}", Color.DoubleToColorComponent (color.R), Color.DoubleToColorComponent (color.G), Color.DoubleToColorComponent (color.B));
@@ -1052,7 +1055,7 @@
 						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "αRGB;{0};{1};{2};{3}", Color.DoubleToColorComponent (color.A), Color.DoubleToColorComponent (color.R), Color.DoubleToColorComponent (color.G), Color.DoubleToColorComponent (color.B));
 					}
 				
-				case ColorSpace.CMYK:
+				case ColorSpace.Cmyk:
 					if (color.IsOpaque)
 					{
 						return string.Format (System.Globalization.CultureInfo.InvariantCulture, "CMYK;{0};{1};{2};{3}", Color.DoubleToColorComponent (color.C), Color.DoubleToColorComponent (color.M), Color.DoubleToColorComponent (color.Y), Color.DoubleToColorComponent (color.K));
@@ -1070,20 +1073,20 @@
 		
 		public static bool operator == (RichColor a, RichColor b)
 		{
-			if ( a.isEmpty && b.isEmpty )  return true;
-			if ( a.isEmpty || b.isEmpty )  return false;
+			if (a.isEmpty && b.isEmpty)  return true;
+			if (a.isEmpty || b.isEmpty)  return false;
 			
-			if ( a.colorSpace != b.colorSpace )  return false;
+			if (a.colorSpace != b.colorSpace)  return false;
 
-			switch ( a.colorSpace )
+			switch (a.colorSpace)
 			{
-				case ColorSpace.RGB:
+				case ColorSpace.Rgb:
 					return Math.Equal (a.alpha,  b.alpha,  Color.ColorComponentDelta)
 						&& Math.Equal (a.value1, b.value1, Color.ColorComponentDelta)
 						&& Math.Equal (a.value2, b.value2, Color.ColorComponentDelta)
 						&& Math.Equal (a.value3, b.value3, Color.ColorComponentDelta);
 
-				case ColorSpace.CMYK:
+				case ColorSpace.Cmyk:
 					return Math.Equal (a.alpha,  b.alpha,  Color.ColorComponentDelta)
 						&& Math.Equal (a.value1, b.value1, Color.ColorComponentDelta)
 						&& Math.Equal (a.value2, b.value2, Color.ColorComponentDelta)
@@ -1103,37 +1106,32 @@
 		}
 		
 
+		public override string ToString()
+		{
+			switch (this.colorSpace)
+			{
+				case ColorSpace.Rgb:
+					return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{{R={0:0.00},G={1:0.00},B={2:0.00},A={3:0.00}}}", this.value1, this.value2, this.value3, this.alpha);
+
+				case ColorSpace.Cmyk:
+					return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{{C={0:0.00},M={1:0.00},Y={2:0.00},K={3:0.00},A={4:0.00}}}", this.value1, this.value2, this.value3, this.value4, this.alpha);
+
+				case ColorSpace.Gray:
+					return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{{G={0:0.00},A={1:0.00}}}", this.value1, this.alpha);
+			}
+
+			return "?";
+		}
+		
+		
 		public override bool Equals(object obj)
 		{
-			if ( obj == null || obj.GetType() != typeof(RichColor) )
-			{
-				return false;
-			}
-			
-			RichColor color = (RichColor) obj;
-			return this == color;
+			return (obj is RichColor) && (this == (RichColor) obj);
 		}
 		
 		public override int GetHashCode()
 		{
 			return base.GetHashCode();
-		}
-		
-		public override string ToString()
-		{
-			switch ( this.colorSpace )
-			{
-				case ColorSpace.RGB:
-					return System.String.Format ("{{R={0:0.00},G={1:0.00},B={2:0.00},A={3:0.00}}}", this.value1, this.value2, this.value3, this.alpha);
-
-				case ColorSpace.CMYK:
-					return System.String.Format ("{{C={0:0.00},M={1:0.00},Y={2:0.00},K={3:0.00},A={4:0.00}}}", this.value1, this.value2, this.value3, this.value4, this.alpha);
-
-				case ColorSpace.Gray:
-					return System.String.Format ("{{G={0:0.00},A={1:0.00}}}", this.value1, this.alpha);
-			}
-
-			return "?";
 		}
 		
 
@@ -1226,7 +1224,6 @@
 		}
 		#endregion
 
-		
 		private ColorSpace					colorSpace;
 		private double						alpha;
 		private double						value1;  // red or cyan or gray

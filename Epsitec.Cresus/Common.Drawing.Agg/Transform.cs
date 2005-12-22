@@ -1,12 +1,12 @@
-//	Copyright � 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+﻿//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
-	/// La classe Transform repr�sente une transformation 2D (matrice 2x2 et vecteur de
-	/// translation). Elle supporte les op�rations telles que la translation simple, la
-	/// rotation, le changement d'�chelle, ainsi que leur combinaison.
+	/// La classe Transform représente une transformation 2D (matrice 2x2 et vecteur de
+	/// translation). Elle supporte les opérations telles que la translation simple, la
+	/// rotation, le changement d'échelle, ainsi que leur combinaison.
 	/// </summary>
 	public class Transform : System.IComparable
 	{
@@ -35,14 +35,14 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public bool					OnlyTranslate
+		public bool								OnlyTranslate
 		{
 			get
 			{
-				if ((this.xx == 1.0) &&
-					(this.yy == 1.0) &&
-					(this.xy == 0.0) &&
-					(this.yx == 0.0))
+				if ((Transform.IsOne (this.xx)) &&
+					(Transform.IsOne (this.yy)) &&
+					(Transform.IsZero (this.xy)) &&
+					(Transform.IsZero (this.yx)))
 				{
 					return true;
 				}
@@ -51,9 +51,13 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double				XX
+		
+		public double							XX
 		{
-			get { return this.xx; }
+			get
+			{
+				return this.xx;
+			}
 			set
 			{
 				if (this.xx != value)
@@ -64,9 +68,12 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double				XY
+		public double							XY
 		{
-			get { return this.xy; }
+			get
+			{
+				return this.xy;
+			}
 			set
 			{
 				if (this.xy != value)
@@ -77,9 +84,12 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double				YX
+		public double							YX
 		{
-			get { return this.yx; }
+			get
+			{
+				return this.yx;
+			}
 			set
 			{
 				if (this.yx != value)
@@ -90,9 +100,12 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double				YY
+		public double							YY
 		{
-			get { return this.yy; }
+			get
+			{
+				return this.yy;
+			}
 			set
 			{
 				if (this.yy != value)
@@ -103,9 +116,12 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double				TX
+		public double							TX
 		{
-			get { return this.tx; }
+			get
+			{
+				return this.tx;
+			}
 			set
 			{
 				if (this.tx != value)
@@ -116,9 +132,12 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double				TY
+		public double							TY
 		{
-			get { return this.ty; }
+			get
+			{
+				return this.ty;
+			}
 			set
 			{
 				if (this.ty != value)
@@ -132,9 +151,9 @@ namespace Epsitec.Common.Drawing
 		
 		public double GetZoom()
 		{
-			//	D�termine le zoom approximatif en vigueur dans la transformation actuelle.
-			//	Calcule la longueur d'un segment diagonal [1 1] apr�s transformation pour
-			//	conna�tre ce zoom.
+			//	Détermine le zoom approximatif en vigueur dans la transformation actuelle.
+			//	Calcule la longueur d'un segment diagonal [1 1] après transformation pour
+			//	connaître ce zoom.
 			
 			double a = this.xx + this.xy;
 			double b = this.yx + this.yy;
@@ -154,7 +173,7 @@ namespace Epsitec.Common.Drawing
 			return pt;
 		}
 		
-		public void TransformDirect(ref double px, ref double py)
+		public void  TransformDirect(ref double px, ref double py)
 		{
 			double x = px;
 			double y = py;
@@ -178,7 +197,7 @@ namespace Epsitec.Common.Drawing
 			return pt;
 		}
 		
-		public void TransformInverse(ref double px, ref double py)
+		public void  TransformInverse(ref double px, ref double py)
 		{
 			double det = this.xx * this.yy - this.xy * this.yx;
 			
@@ -200,6 +219,7 @@ namespace Epsitec.Common.Drawing
 			this.yx = 0;
 			this.yy = 1;
 			this.ty = 0;
+			
 			this.OnChanged ();
 		}
 		
@@ -211,6 +231,7 @@ namespace Epsitec.Common.Drawing
 			this.yx = model.yx;
 			this.yy = model.yy;
 			this.ty = model.ty;
+			
 			this.OnChanged ();
 		}
 		
@@ -250,12 +271,12 @@ namespace Epsitec.Common.Drawing
 		
 		public void Round()
 		{
-			Round (ref this.xx);
-			Round (ref this.xy);
-			Round (ref this.yx);
-			Round (ref this.yy);
-			Round (ref this.tx);
-			Round (ref this.ty);
+			Transform.Round (ref this.xx);
+			Transform.Round (ref this.xy);
+			Transform.Round (ref this.yx);
+			Transform.Round (ref this.yy);
+			Transform.Round (ref this.tx);
+			Transform.Round (ref this.ty);
 			
 			this.OnChanged ();
 		}
@@ -377,8 +398,9 @@ namespace Epsitec.Common.Drawing
 		public static Transform FromRotationDeg(double angle)
 		{
 			double alpha = Math.DegToRad (angle);
-			double sin   = System.Math.Sin (alpha);
-			double cos   = System.Math.Cos (alpha);
+			
+			double sin = System.Math.Sin (alpha);
+			double cos = System.Math.Cos (alpha);
 			
 			return new Transform (cos, -sin, sin, cos, 0, 0);
 		}
@@ -390,7 +412,7 @@ namespace Epsitec.Common.Drawing
 		
 		public static Transform FromRotationDeg(double angle, double cx, double cy)
 		{
-			Transform m = FromRotationDeg (angle);
+			Transform m = Transform.FromRotationDeg (angle);
 			
 			m.tx = cx - m.xx * cx - m.xy * cy;
 			m.ty = cy - m.yx * cx - m.yy * cy;
@@ -400,8 +422,8 @@ namespace Epsitec.Common.Drawing
 		
 		public static Transform FromRotationRad(double angle)
 		{
-			double sin   = System.Math.Sin (angle);
-			double cos   = System.Math.Cos (angle);
+			double sin = System.Math.Sin (angle);
+			double cos = System.Math.Cos (angle);
 			
 			return new Transform (cos, -sin, sin, cos, 0, 0);
 		}
@@ -413,7 +435,7 @@ namespace Epsitec.Common.Drawing
 		
 		public static Transform FromRotationRad(double angle, double cx, double cy)
 		{
-			Transform m = FromRotationRad (angle);
+			Transform m = Transform.FromRotationRad (angle);
 			
 			m.tx = cx - m.xx * cx - m.xy * cy;
 			m.ty = cy - m.yx * cx - m.yy * cy;
@@ -475,7 +497,7 @@ namespace Epsitec.Common.Drawing
 		public static Point RotatePointRad(Point center, double angle, Point p)
 		{
 			//	Fait tourner un point autour d'un centre.
-			//	L'angle est exprim� en radians.
+			//	L'angle est exprimé en radians.
 			//	Un angle positif est anti-horaire (CCW).
 			
 			Point a = new Point();
@@ -483,25 +505,32 @@ namespace Epsitec.Common.Drawing
 
 			a.X = p.X-center.X;
 			a.Y = p.Y-center.Y;
+			
+			double sin = System.Math.Sin (angle);
+			double cos = System.Math.Cos (angle);
 
-			b.X = a.X*System.Math.Cos(angle) - a.Y*System.Math.Sin(angle);
-			b.Y = a.X*System.Math.Sin(angle) + a.Y*System.Math.Cos(angle);
+			b.X = a.X * cos - a.Y * sin;
+			b.Y = a.X * sin + a.Y * cos;
 
 			b.X += center.X;
 			b.Y += center.Y;
+			
 			return b;
 		}
 
 		public static Point RotatePointRad(double angle, Point p)
 		{
 			//	Fait tourner un point autour de l'origine.
-			//	L'angle est exprim� en radians.
+			//	L'angle est exprimé en radians.
 			//	Un angle positif est anti-horaire (CCW).
 			
 			Drawing.Point a = new Drawing.Point();
 
-			a.X = p.X*System.Math.Cos(angle) - p.Y*System.Math.Sin(angle);
-			a.Y = p.X*System.Math.Sin(angle) + p.Y*System.Math.Cos(angle);
+			double sin = System.Math.Sin (angle);
+			double cos = System.Math.Cos (angle);
+
+			a.X = p.X * cos - p.Y * sin;
+			a.Y = p.X * sin + p.Y * cos;
 
 			return a;
 		}
@@ -517,14 +546,11 @@ namespace Epsitec.Common.Drawing
 		}
 
 
-		
-		
-		protected static readonly double epsilon = 0.00001;
-		
+		#region Comparison Support
 		public static bool Equal(double a, double b)
 		{
-			double delta = a - b;
-			return (delta < epsilon) && (delta > -epsilon);
+			double δ = a - b;
+			return (δ < Transform.ε) && (δ > -Transform.ε);
 		}
 		
 		public static bool Equal(Point a, Point b)
@@ -544,25 +570,28 @@ namespace Epsitec.Common.Drawing
 		
 		public static bool IsZero(double a)
 		{
-			return (a < epsilon) && (a > -epsilon);
+			return (a < Transform.ε) && (a > -Transform.ε);
 		}
 		
 		public static bool IsOne(double a)
 		{
-			return (a < 1+epsilon) && (a > 1-epsilon);
+			return (a < 1+Transform.ε) && (a > 1-Transform.ε);
 		}
 		
 		public static void Round(ref double a)
 		{
-			if (IsZero (a))
+			if (Transform.IsZero (a))
+			{
 				a = 0;
-			else if (IsOne (a))
+			}
+			else if (Transform.IsOne (a))
+			{
 				a = 1;
+			}
 		}
-		
+		#endregion
 		
 		#region IComparable Members
-		
 		public int CompareTo(object obj)
 		{
 			if (obj is Transform)
@@ -573,6 +602,7 @@ namespace Epsitec.Common.Drawing
 				{
 					return 1;
 				}
+				
 				if (Transform.Equal (this.XX, t.XX) &&
 					Transform.Equal (this.XY, t.XY) &&
 					Transform.Equal (this.YX, t.YX) &&
@@ -582,6 +612,7 @@ namespace Epsitec.Common.Drawing
 				{
 					return 0;
 				}
+				
 				if ((this.XX < t.XX) ||
 					((this.XX == t.XX) &&
 					 ((this.XY < t.XY) ||
@@ -596,12 +627,14 @@ namespace Epsitec.Common.Drawing
 				{
 					return -1;
 				}
-				return 1;
+				else
+				{
+					return 1;
+				}
 			}
 			
 			throw new System.ArgumentException ("object is not a Transform");
 		}
-		
 		#endregion
 		
 		public static bool operator ==(Transform a, Transform b)
@@ -659,26 +692,7 @@ namespace Epsitec.Common.Drawing
 		
 		public override bool Equals(object obj)
 		{
-			if (obj is Transform)
-			{
-				Transform t = obj as Transform;
-				
-				if (t == null)
-				{
-					return false;
-				}
-				if (Transform.Equal (this.XX, t.XX) &&
-					Transform.Equal (this.XY, t.XY) &&
-					Transform.Equal (this.YX, t.YX) &&
-					Transform.Equal (this.YY, t.YY) &&
-					Transform.Equal (this.TX, t.TX) &&
-					Transform.Equal (this.TY, t.TY))
-				{
-					return true;
-				}
-			}
-			
-			return false;
+			return this == (obj as Transform);
 		}
 		
 		public bool EqualsStrictly(object obj)
@@ -714,17 +728,17 @@ namespace Epsitec.Common.Drawing
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			buffer.Append ("[ ");
-			buffer.Append (this.XX.ToString ());
+			buffer.Append (this.XX.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ");
-			buffer.Append (this.XY.ToString ());
+			buffer.Append (this.XY.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ");
-			buffer.Append (this.YX.ToString ());
+			buffer.Append (this.YX.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ");
-			buffer.Append (this.YY.ToString ());
+			buffer.Append (this.YY.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ");
-			buffer.Append (this.TX.ToString ());
+			buffer.Append (this.TX.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ");
-			buffer.Append (this.TY.ToString ());
+			buffer.Append (this.TY.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ]");
 			
 			return buffer.ToString ();
@@ -737,11 +751,13 @@ namespace Epsitec.Common.Drawing
 				this.Changed (this);
 			}
 		}
-
 		
-		public event Support.EventHandler	Changed;
 		
-		private double						xx, xy, yx, yy;
-		private double						tx, ty;
+		public event Support.EventHandler		Changed;
+		
+		private static readonly double			ε = 0.00001;
+		
+		private double							xx, xy, yx, yy;
+		private double							tx, ty;
 	}
 }

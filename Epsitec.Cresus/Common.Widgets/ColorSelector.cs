@@ -187,7 +187,7 @@ namespace Epsitec.Common.Widgets
 			this.buttonRGB.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceRGB.icon";
 			this.buttonRGB.TabIndex = 21;
 			this.buttonRGB.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.buttonRGB, Res.Strings.ColorSelector.ColorSpace.RGB);
+			ToolTip.Default.SetToolTip(this.buttonRGB, Res.Strings.ColorSelector.ColorSpace.Rgb);
 
 			this.buttonCMYK = new IconButton(this);
 			this.buttonCMYK.AutoRadio = true;
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Widgets
 			this.buttonCMYK.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceCMYK.icon";
 			this.buttonCMYK.TabIndex = 21;
 			this.buttonCMYK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.buttonCMYK, Res.Strings.ColorSelector.ColorSpace.CMYK);
+			ToolTip.Default.SetToolTip(this.buttonCMYK, Res.Strings.ColorSelector.ColorSpace.Cmyk);
 
 			this.buttonGray = new IconButton(this);
 			this.buttonGray.AutoRadio = true;
@@ -309,8 +309,8 @@ namespace Epsitec.Common.Widgets
 			//	Met à jour les boutons pour l'espace de couleur.
 			Drawing.ColorSpace cs = this.color.ColorSpace;
 
-			this.buttonRGB .ActiveState = (cs == Drawing.ColorSpace.RGB ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonCMYK.ActiveState = (cs == Drawing.ColorSpace.CMYK) ? ActiveState.Yes : ActiveState.No;
+			this.buttonRGB .ActiveState = (cs == Drawing.ColorSpace.Rgb ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonCMYK.ActiveState = (cs == Drawing.ColorSpace.Cmyk) ? ActiveState.Yes : ActiveState.No;
 			this.buttonGray.ActiveState = (cs == Drawing.ColorSpace.Gray) ? ActiveState.Yes : ActiveState.No;
 		}
 
@@ -567,12 +567,12 @@ namespace Epsitec.Common.Widgets
 
 			switch ( this.Color.ColorSpace )
 			{
-				case Drawing.ColorSpace.RGB:
+				case Drawing.ColorSpace.Rgb:
 					visibleFieldsCMYK = false;
 					visibleFieldsGray = false;
 					break;
 
-				case Drawing.ColorSpace.CMYK:
+				case Drawing.ColorSpace.Cmyk:
 					visibleFieldsRGB  = false;
 					visibleFieldsGray = false;
 					break;
@@ -826,12 +826,12 @@ namespace Epsitec.Common.Widgets
 			//	La valeur alpha a été changée.
 			if ( !this.suspendColorEvents )
 			{
-				if ( this.Color.ColorSpace == Drawing.ColorSpace.RGB  )
+				if ( this.Color.ColorSpace == Drawing.ColorSpace.Rgb  )
 				{
 					this.FieldsRGBToColor();
 				}
 			
-				if ( this.Color.ColorSpace == Drawing.ColorSpace.CMYK )
+				if ( this.Color.ColorSpace == Drawing.ColorSpace.Cmyk )
 				{
 					this.FieldsCMYKToColor();
 				}
@@ -930,8 +930,8 @@ namespace Epsitec.Common.Widgets
 		{
 			switch( this.colorSpaceController.ActiveIndex )
 			{
-				case 1: this.color.ColorSpace = Drawing.ColorSpace.RGB;		break;
-				case 2: this.color.ColorSpace = Drawing.ColorSpace.CMYK;	break;
+				case 1: this.color.ColorSpace = Drawing.ColorSpace.Rgb;		break;
+				case 2: this.color.ColorSpace = Drawing.ColorSpace.Cmyk;	break;
 				case 3: this.color.ColorSpace = Drawing.ColorSpace.Gray;	break;
 			}
 			

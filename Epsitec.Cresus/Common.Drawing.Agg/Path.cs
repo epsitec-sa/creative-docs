@@ -15,32 +15,32 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public System.IntPtr			Handle
+		public System.IntPtr					Handle
 		{
 			get { return this.agg_path; }
 		}
 		
-		public bool						ContainsCurves
+		public bool								ContainsCurves
 		{
 			get { return this.has_curve; }
 		}
 		
-		public bool						IsEmpty
+		public bool								IsEmpty
 		{
 			get { return this.is_empty; }
 		}
 		
-		public bool						IsValid
+		public bool								IsValid
 		{
 			get { return ! this.is_empty; }
 		}
 		
-		public bool						IsCurrentPointValid
+		public bool								IsCurrentPointValid
 		{
 			get { return this.has_current_point; }
 		}
 		
-		public Point					CurrentPoint
+		public Point							CurrentPoint
 		{
 			get
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double					DefaultZoom
+		public double							DefaultZoom
 		{
 			get
 			{
@@ -765,12 +765,13 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		#region IDisposable Members
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
-		
+		#endregion
 		
 		protected virtual void Dispose(bool disposing)
 		{
@@ -909,6 +910,13 @@ namespace Epsitec.Common.Drawing
 		}
 
 		
+		internal void InternalCreateNonEmpty()
+		{
+			this.CreateOnTheFly ();
+			this.is_empty = false;
+		}
+		
+		
 		//	Le paramètre kappa permet de calculer la position des points secondaires d'une courbe de Bézier
 		//	pour simuler un quart de cercle.
 		//
@@ -918,14 +926,6 @@ namespace Epsitec.Common.Drawing
 		
 		public const double				Kappa = 0.552284749828;
 		
-		
-		internal void InternalCreateNonEmpty()
-		{
-			this.CreateOnTheFly ();
-			this.is_empty = false;
-		}
-		
-		
 		protected System.IntPtr			agg_path;
 		protected double				default_zoom = 1.0;
 		
@@ -933,67 +933,6 @@ namespace Epsitec.Common.Drawing
 		private bool					is_empty = true;
 		private Point					current_point = Point.Empty;
 		private bool					has_current_point = false;
-	}
-	
-	public class DashedPath : Path
-	{
-		public DashedPath()
-		{
-		}
-		
-		
-		public double					DashOffset
-		{
-			get
-			{
-				return this.start;
-			}
-			set
-			{
-				this.CreateOnTheFly ();
-				this.start = value;
-				AntiGrain.Path.SetDashOffset (this.agg_path, this.start);
-			}
-		}
-		
-		
-		public void ResetDash()
-		{
-			this.CreateOnTheFly ();
-			AntiGrain.Path.ResetDash (this.agg_path);
-		}
-		
-		public void AddDash(double dash_length, double gap_length)
-		{
-			this.CreateOnTheFly ();
-			AntiGrain.Path.AddDash (this.agg_path, dash_length, gap_length);
-		}
-		
-		
-		
-		public Path GenerateDashedPath()
-		{
-			return this.GenerateDashedPath (this.default_zoom);
-		}
-		
-		public Path GenerateDashedPath(double approximation_zoom)
-		{
-			if (this.IsEmpty)
-			{
-				return null;
-			}
-			
-			Path path = new Path ();
-			
-			this.CreateOnTheFly ();
-			path.InternalCreateNonEmpty ();
-			
-			AntiGrain.Path.AppendDashedPath (path.Handle, this.agg_path, approximation_zoom);
-			
-			return path;
-		}
-		
-		private double					start;
 	}
 	
 	[System.Flags]
@@ -1017,6 +956,10 @@ namespace Epsitec.Common.Drawing
 	
 	public enum PathOperation
 	{
-		Or = 0, And = 1, Xor = 2, AMinusB = 3, BMinusA = 4
+		Or		= 0,
+		And		= 1,
+		Xor		= 2,
+		AMinusB = 3,
+		BMinusA = 4
 	}
 }

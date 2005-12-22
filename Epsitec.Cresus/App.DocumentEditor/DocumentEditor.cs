@@ -2537,13 +2537,13 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ColorToRGB")]
 		void CommandColorToRGB(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.ColorSelection(ColorSpace.RGB);
+			this.CurrentDocument.Modifier.ColorSelection(ColorSpace.Rgb);
 		}
 
 		[Command ("ColorToCMYK")]
 		void CommandColorToCMYK(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.ColorSelection(ColorSpace.CMYK);
+			this.CurrentDocument.Modifier.ColorSelection(ColorSpace.Cmyk);
 		}
 
 		[Command ("ColorToGray")]

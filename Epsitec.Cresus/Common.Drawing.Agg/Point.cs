@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -29,31 +29,32 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		[XmlAttribute] public double	X
+		[XmlAttribute] public double			X
 		{
 			get { return this.x; }
 			set { this.x = value; }
 		}
 		
-		[XmlAttribute] public double	Y
+		[XmlAttribute] public double			Y
 		{
 			get { return this.y; }
 			set { this.y = value; }
 		}
 		
 		
-		public bool						IsEmpty
+		public bool								IsEmpty
 		{
 			get { return this.x == 0 && this.y == 0; }
 		}
 		
 		
-		public static readonly Point 	Empty;
+		public static readonly Point 			Empty;
 		
 		public Size ToSize()
 		{
 			return new Size (this.x, this.y);
 		}
+		
 		
 		public static Point GridAlign(Point point, double offset, double step)
 		{
@@ -69,7 +70,7 @@ namespace Epsitec.Common.Drawing
 		internal static double GridAlign(double value, double offset, double step)
 		{
 			//	Met une valeur sur la grille la plus proche.
-			if ( value+offset < 0.0 )
+			if (value+offset < 0.0)
 			{
 				return (double)((int)((value+offset-step/2.0)/step)*step)-offset;
 			}
@@ -79,6 +80,12 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		
+		public override string ToString()
+		{
+			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1}]", this.x, this.y);
+		}
+		
 		
 		public override bool Equals(object obj)
 		{
@@ -93,19 +100,9 @@ namespace Epsitec.Common.Drawing
 			return Point.Equals (this, p);
 		}
 		
-		public static   bool Equals(Point a, Point b)
-		{
-			return (a.x == b.x) && (a.y == b.y);
-		}
-		
 		public override int GetHashCode()
 		{
 			return base.GetHashCode ();
-		}
-		
-		public override string ToString()
-		{
-			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1}]", this.x, this.y);
 		}
 		
 		
@@ -228,7 +225,11 @@ namespace Epsitec.Common.Drawing
 
 		public static double ComputeAngleRad(double x, double y)
 		{
-			if ( x == 0.0 && y == 0.0 )  return 0.0;
+			if ((x == 0.0) && (y == 0.0))
+			{
+				return 0.0;
+			}
+			
 			return System.Math.Atan2 (y, x);
 		}
 		
@@ -437,7 +438,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		
+		#region Converter Class
 		public class Converter : AbstractStringConverter
 		{
 			public override object ParseString(string value)
@@ -461,8 +462,9 @@ namespace Epsitec.Common.Drawing
 				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", arg1, arg2);
 			}
 		}
+		#endregion
 		
-		
-		private double					x, y;
+		private double							x;
+		private double							y;
 	}
 }

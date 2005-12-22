@@ -1,3 +1,6 @@
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Drawing
 {
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
@@ -18,70 +21,63 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		[XmlAttribute] public double	Left
+		[XmlAttribute] public double			Left
 		{
 			get { return this.left; }
 			set { this.left = value; }
 		}
 		
-		[XmlAttribute] public double	Right
+		[XmlAttribute] public double			Right
 		{
 			get { return this.right; }
 			set { this.right = value; }
 		}
 		
-		[XmlAttribute] public double	Top
+		[XmlAttribute] public double			Top
 		{
 			get { return this.top; }
 			set { this.top = value; }
 		}
 		
-		[XmlAttribute] public double	Bottom
+		[XmlAttribute] public double			Bottom
 		{
 			get { return this.bottom; }
 			set { this.bottom = value; }
 		}
 		
 		
-		public double					Width
+		public double							Width
 		{
 			get { return this.left + this.right; }
 		}
 		
-		public double					Height
+		public double							Height
 		{
 			get { return this.top + this.bottom; }
 		}
 		
-		public Size						Size
+		public Size								Size
 		{
 			get { return new Size (this.Width, this.Height); }
 		}
 		
 		
-		public static readonly Margins	Zero = new Margins(0, 0, 0, 0);
+		public static readonly Margins			Zero = new Margins(0, 0, 0, 0);
+		
+		public override string ToString()
+		{
+			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}", this.left, this.right, this.top, this.bottom);
+		}
+		
 		
 		public override bool Equals(object obj)
 		{
-			if ((obj == null) &&
-				(obj.GetType () != typeof (Margins)))
-			{
-				return false;
-			}
-			
-			Margins m = (Margins) obj;
-			
-			return (m.left == this.left) && (m.right == this.right) && (m.top == this.top) && (m.bottom == this.bottom);
+			return (obj is Margins) && (this == (Margins) obj);
 		}
 		
 		public override int GetHashCode()
 		{
 			return base.GetHashCode ();
-		}
-		
-		public override string ToString()
-		{
-			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}", this.left, this.right, this.top, this.bottom);
 		}
 		
 		
@@ -150,6 +146,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		#region Converter Class
 		public class Converter : AbstractStringConverter
 		{
 			public override object ParseString(string value)
@@ -175,12 +172,11 @@ namespace Epsitec.Common.Drawing
 				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}", arg1, arg2, arg3, arg4);
 			}
 		}
+		#endregion
 		
-		
-		
-		private double					left;
-		private double					right;
-		private double					top;
-		private double					bottom;
+		private double							left;
+		private double							right;
+		private double							top;
+		private double							bottom;
 	}
 }

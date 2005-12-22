@@ -79,7 +79,7 @@ namespace Epsitec.Common.Document.PDF
 			this.fontList        = new System.Collections.Hashtable();
 
 			Port port = new Port(this.complexSurfaces, this.imageSurfaces, info.TextCurve ? null : this.fontList);
-			port.PushColorModifier(new ColorModifier(this.FinalOutputColorModifier));
+			port.PushColorModifier(new ColorModifierCallback(this.FinalOutputColorModifier));
 
 			//	Crée le DrawingContext utilisé pour l'exportation.
 			DrawingContext drawingContext;
@@ -317,9 +317,9 @@ namespace Epsitec.Common.Document.PDF
 				foreach ( Objects.Layer layer in layers )
 				{
 					Properties.ModColor modColor = layer.PropertyModColor;
-					port.PushColorModifier(new ColorModifier(modColor.ModifyColor));
+					port.PushColorModifier(new ColorModifierCallback(modColor.ModifyColor));
 					drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
-					port.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
+					port.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
 
 					foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 					{
@@ -406,11 +406,11 @@ namespace Epsitec.Common.Document.PDF
 			//	Modification finale d'une couleur en fonction du mode de sortie.
 			if ( this.colorConversion == PDF.ColorConversion.ToRGB )
 			{
-				color.ColorSpace = ColorSpace.RGB;
+				color.ColorSpace = ColorSpace.Rgb;
 			}
 			else if ( this.colorConversion == PDF.ColorConversion.ToCMYK )
 			{
-				color.ColorSpace = ColorSpace.CMYK;
+				color.ColorSpace = ColorSpace.Cmyk;
 			}
 			else if ( this.colorConversion == PDF.ColorConversion.ToGray )
 			{
@@ -474,9 +474,9 @@ namespace Epsitec.Common.Document.PDF
 				foreach ( Objects.Layer layer in layers )
 				{
 					Properties.ModColor modColor = layer.PropertyModColor;
-					port.PushColorModifier(new ColorModifier(modColor.ModifyColor));
+					port.PushColorModifier(new ColorModifierCallback(modColor.ModifyColor));
 					drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
-					port.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
+					port.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
 
 					foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 					{
@@ -578,9 +578,9 @@ namespace Epsitec.Common.Document.PDF
 
 				Objects.Layer layer = cs.Layer;
 				Properties.ModColor modColor = layer.PropertyModColor;
-				port.PushColorModifier(new ColorModifier(modColor.ModifyColor));
+				port.PushColorModifier(new ColorModifierCallback(modColor.ModifyColor));
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
-				port.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
+				port.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
 
 				cs.Object.SurfaceAnchor.LineUse = cs.Fill.IsStrokingGradient;
 				this.MatrixComplexSurfaceGradient(cs);
@@ -962,13 +962,13 @@ namespace Epsitec.Common.Document.PDF
 				}
 				if ( nbColors == 3 )  // rgb ?
 				{
-					c1.ColorSpace = ColorSpace.RGB;
-					c2.ColorSpace = ColorSpace.RGB;
+					c1.ColorSpace = ColorSpace.Rgb;
+					c2.ColorSpace = ColorSpace.Rgb;
 				}
 				if ( nbColors == 4 )  // cmyk ?
 				{
-					c1.ColorSpace = ColorSpace.CMYK;
-					c2.ColorSpace = ColorSpace.CMYK;
+					c1.ColorSpace = ColorSpace.Cmyk;
+					c2.ColorSpace = ColorSpace.Cmyk;
 				}
 				if ( nbColors == 0 )  port.PutValue(c1.A, 3);
 				else                  port.PutColor(c1);
@@ -1020,13 +1020,13 @@ namespace Epsitec.Common.Document.PDF
 					}
 					if ( nbColors == 3 )  // rgb ?
 					{
-						c1.ColorSpace = ColorSpace.RGB;
-						c2.ColorSpace = ColorSpace.RGB;
+						c1.ColorSpace = ColorSpace.Rgb;
+						c2.ColorSpace = ColorSpace.Rgb;
 					}
 					if ( nbColors == 4 )  // cmyk ?
 					{
-						c1.ColorSpace = ColorSpace.CMYK;
-						c2.ColorSpace = ColorSpace.CMYK;
+						c1.ColorSpace = ColorSpace.Cmyk;
+						c2.ColorSpace = ColorSpace.Cmyk;
 					}
 					if ( nbColors == 0 )  port.PutValue(c1.A, 3);
 					else                  port.PutColor(c1);
@@ -1432,7 +1432,7 @@ namespace Epsitec.Common.Document.PDF
 				color = port.GetFinalColor(gradient.Color2);
 			}
 
-			if ( color.ColorSpace == ColorSpace.CMYK )  return 4;
+			if ( color.ColorSpace == ColorSpace.Cmyk )  return 4;
 			if ( color.ColorSpace == ColorSpace.Gray )  return 1;
 			return 3;
 		}
@@ -1547,15 +1547,15 @@ namespace Epsitec.Common.Document.PDF
 				{
 					switch ( magick.ColorSpace )
 					{
-						case Magick.ColorSpace.GRAY:
+						case Magick.ColorSpace.Gray:
 							writer.WriteString("/ColorSpace /DeviceGray ");
 							break;
 						
-						case Magick.ColorSpace.RGB:
+						case Magick.ColorSpace.Rgb:
 							writer.WriteString("/ColorSpace /DeviceRGB ");
 							break;
 						
-						case Magick.ColorSpace.CMYK:
+						case Magick.ColorSpace.Cmyk:
 							if ( compression == ImageCompression.JPEG )
 							{
 								writer.WriteString("/ColorSpace /DeviceRGB ");
@@ -1613,7 +1613,7 @@ namespace Epsitec.Common.Document.PDF
 					
 					copy.Depth = 8;
 					copy.ImageType = Magick.ImageType.TrueColor;
-					copy.ColorSpace = Magick.ColorSpace.RGB;
+					copy.ColorSpace = Magick.ColorSpace.Rgb;
 
 					int width  = copy.Width;
 					int height = copy.Height;
@@ -1631,8 +1631,8 @@ namespace Epsitec.Common.Document.PDF
 					copy.ModifyEnd();
 				}
 				
-				copy.CompressionType = Magick.Compression.JPEG;
-				copy.ColorSpace      = isGray ? Magick.ColorSpace.GRAY : Magick.ColorSpace.RGB;
+				copy.CompressionType = Magick.Compression.Jpeg;
+				copy.ColorSpace      = isGray ? Magick.ColorSpace.Gray : Magick.ColorSpace.Rgb;
 				copy.ImageType       = isGray ? Magick.ImageType.Grayscale : Magick.ImageType.TrueColor;
 				copy.MagickFormat    = "JPEG";
 				copy.Quality         = (int) (this.jpegQuality*100.0);
@@ -1682,9 +1682,9 @@ namespace Epsitec.Common.Document.PDF
 					}
 					else
 					{
-						if ( magick.ColorSpace == Magick.ColorSpace.GRAY )  bpp = 1;
-						if ( magick.ColorSpace == Magick.ColorSpace.RGB  )  bpp = 3;
-						if ( magick.ColorSpace == Magick.ColorSpace.CMYK )  bpp = 4;
+						if ( magick.ColorSpace == Magick.ColorSpace.Gray )  bpp = 1;
+						if ( magick.ColorSpace == Magick.ColorSpace.Rgb  )  bpp = 3;
+						if ( magick.ColorSpace == Magick.ColorSpace.Cmyk )  bpp = 4;
 					}
 				}
 				else
@@ -1788,7 +1788,7 @@ namespace Epsitec.Common.Document.PDF
 			
 			copy.Depth      = 8;
 			copy.ImageType  = Magick.ImageType.TrueColor;
-			copy.ColorSpace = Magick.ColorSpace.RGB;
+			copy.ColorSpace = Magick.ColorSpace.Rgb;
 
 			if ( dx != magick.Width || dy != magick.Height )
 			{

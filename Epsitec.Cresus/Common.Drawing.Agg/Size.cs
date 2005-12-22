@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -29,54 +29,63 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		[XmlAttribute] public double	Width
+		[XmlAttribute] public double			Width
 		{
-			get { return this.width; }
-			set { this.width = value; }
+			get
+			{
+				return this.width;
+			}
+			set
+			{
+				this.width = value;
+			}
 		}
 		
-		[XmlAttribute] public double	Height
+		[XmlAttribute] public double			Height
 		{
-			get { return this.height; }
-			set { this.height = value; }
+			get
+			{
+				return this.height;
+			}
+			set
+			{
+				this.height = value;
+			}
 		}
 		
 		
-		public bool						IsEmpty
+		public bool								IsEmpty
 		{
-			get { return this.width <= 0 && this.height <= 0; }
+			get
+			{
+				return (this.width <= 0) && (this.height <= 0);
+			}
 		}
 		
 		
-		public static readonly Size		Empty;
-		public static readonly Size		Infinite = new Drawing.Size (1000000, 1000000);
+		public static readonly Size				Empty;
+		public static readonly Size				Infinite = new Drawing.Size (1000000, 1000000);
 		
 		public Point ToPoint()
 		{
 			return new Point (this.width, this.height);
 		}
 		
+		
+		public override string ToString()
+		{
+			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1}]", this.width, this.height);
+		}
+		
+		
 		public override bool Equals(object obj)
 		{
-			if ((obj == null) &&
-				(obj.GetType () != typeof (Size)))
-			{
-				return false;
-			}
-			
-			Size s = (Size) obj;
-			
-			return (s.width == this.width) && (s.height == this.height);
+			return (obj is Size) && (this == (Size) obj);
 		}
 		
 		public override int GetHashCode()
 		{
 			return base.GetHashCode ();
-		}
-		
-		public override string ToString()
-		{
-			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1}]", this.width, this.height);
 		}
 		
 		
@@ -164,6 +173,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		#region Converter Class
 		public class Converter : AbstractStringConverter
 		{
 			public override object ParseString(string value)
@@ -187,8 +197,10 @@ namespace Epsitec.Common.Drawing
 				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", arg1, arg2);
 			}
 		}
+		#endregion
 		
 		
-		private double					width, height;
+		private double							width;
+		private double							height;
 	}
 }

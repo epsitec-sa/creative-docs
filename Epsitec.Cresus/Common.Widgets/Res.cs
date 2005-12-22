@@ -63,9 +63,9 @@ namespace Epsitec.Common.Widgets
 				public static string ShortYellow { get { return GetText ("Strings", "ColorSelector", "ShortYellow"); } }
 				public sealed class ColorSpace
 				{
-					public static string CMYK { get { return GetText ("Strings", "ColorSelector", "ColorSpace", "CMYK"); } }
+					public static string Cmyk { get { return GetText ("Strings", "ColorSelector", "ColorSpace", "Cmak"); } }
 					public static string Gray { get { return GetText ("Strings", "ColorSelector", "ColorSpace", "Gray"); } }
-					public static string RGB { get { return GetText ("Strings", "ColorSelector", "ColorSpace", "RGB"); } }
+					public static string Rgb { get { return GetText ("Strings", "ColorSelector", "ColorSpace", "Rgb"); } }
 				}
 			}
 			

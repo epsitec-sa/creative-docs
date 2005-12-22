@@ -1,7 +1,10 @@
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitle("Tests for Epsitec Common Drawing")]
+[assembly: AssemblyTitle("Epsitec Common Drawing / High level AGG wrapper")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EPSITEC SA")]

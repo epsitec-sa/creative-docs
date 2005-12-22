@@ -68,7 +68,7 @@ namespace Epsitec.Common.Document
 					this.adorner = adornerObject as Common.Widgets.IAdorner;
 					this.glyphPaintStyle = style;
 					this.uniqueColor = color;
-					graphics.PushColorModifier(new ColorModifier(this.ColorModifier));
+					graphics.PushColorModifier(new ColorModifierCallback(this.ColorModifier));
 
 					context.ContainerSize = size;
 					context.PreviewActive = true;

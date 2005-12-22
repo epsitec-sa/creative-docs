@@ -6,8 +6,8 @@ namespace Epsitec.Common.Document.PDF
 	{
 		Default,		// color space selon RichColor.ColorSpace
 		Nothing,		// aucune commande de couleur
-		RGB,			// force le color space RGB
-		CMYK,			// force le color space CMYK
+		Rgb,			// force le color space RGB
+		Cmyk,			// force le color space CMYK
 		Gray,			// force le color space Gray
 	}
 
@@ -217,14 +217,14 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 		
-		public void PushColorModifier(ColorModifier method)
+		public void PushColorModifier(ColorModifierCallback method)
 		{
 			this.stackColorModifier.Push(method);
 		}
 
-		public ColorModifier PopColorModifier()
+		public ColorModifierCallback PopColorModifier()
 		{
-			return this.stackColorModifier.Pop() as ColorModifier;
+			return this.stackColorModifier.Pop() as ColorModifierCallback;
 		}
 
 		public System.Collections.Stack StackColorModifier
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public RichColor GetFinalColor(RichColor color)
 		{
-			foreach ( ColorModifier method in this.stackColorModifier )
+			foreach ( ColorModifierCallback method in this.stackColorModifier )
 			{
 				method(ref color);
 			}
@@ -253,7 +253,7 @@ namespace Epsitec.Common.Document.PDF
 			if ( this.stackColorModifier.Count == 0 )  return color;
 
 			RichColor rich = RichColor.FromColor(color);
-			foreach ( ColorModifier method in this.stackColorModifier )
+			foreach ( ColorModifierCallback method in this.stackColorModifier )
 			{
 				method(ref rich);
 			}
@@ -1075,8 +1075,8 @@ namespace Epsitec.Common.Document.PDF
 			if ( this.colorForce == ColorForce.Nothing )  return;
 			if ( this.colorForce != ColorForce.Default )  return;
 
-			if ( color.ColorSpace == ColorSpace.RGB  )  this.PutCommand("/DeviceRGB CS ");
-			if ( color.ColorSpace == ColorSpace.CMYK )  this.PutCommand("/DeviceCMYK CS ");
+			if ( color.ColorSpace == ColorSpace.Rgb  )  this.PutCommand("/DeviceRGB CS ");
+			if ( color.ColorSpace == ColorSpace.Cmyk )  this.PutCommand("/DeviceCMYK CS ");
 			if ( color.ColorSpace == ColorSpace.Gray )  this.PutCommand("/DeviceGray CS ");
 		}
 
@@ -1087,8 +1087,8 @@ namespace Epsitec.Common.Document.PDF
 			if ( this.colorForce == ColorForce.Nothing )  return;
 			if ( this.colorForce != ColorForce.Default )  return;
 
-			if ( color.ColorSpace == ColorSpace.RGB  )  this.PutCommand("/DeviceRGB cs ");
-			if ( color.ColorSpace == ColorSpace.CMYK )  this.PutCommand("/DeviceCMYK cs ");
+			if ( color.ColorSpace == ColorSpace.Rgb  )  this.PutCommand("/DeviceRGB cs ");
+			if ( color.ColorSpace == ColorSpace.Cmyk )  this.PutCommand("/DeviceCMYK cs ");
 			if ( color.ColorSpace == ColorSpace.Gray )  this.PutCommand("/DeviceGray cs ");
 		}
 
@@ -1100,8 +1100,8 @@ namespace Epsitec.Common.Document.PDF
 
 			this.PutColor(color);
 			if ( this.colorForce == ColorForce.Default )  this.PutCommand("SC ");
-			if ( this.colorForce == ColorForce.RGB     )  this.PutCommand("RG ");
-			if ( this.colorForce == ColorForce.CMYK    )  this.PutCommand("K ");
+			if ( this.colorForce == ColorForce.Rgb     )  this.PutCommand("RG ");
+			if ( this.colorForce == ColorForce.Cmyk    )  this.PutCommand("K ");
 			if ( this.colorForce == ColorForce.Gray    )  this.PutCommand("G ");
 		}
 
@@ -1113,8 +1113,8 @@ namespace Epsitec.Common.Document.PDF
 
 			this.PutColor(color);
 			if ( this.colorForce == ColorForce.Default )  this.PutCommand("sc ");
-			if ( this.colorForce == ColorForce.RGB     )  this.PutCommand("rg ");
-			if ( this.colorForce == ColorForce.CMYK    )  this.PutCommand("k ");
+			if ( this.colorForce == ColorForce.Rgb     )  this.PutCommand("rg ");
+			if ( this.colorForce == ColorForce.Cmyk    )  this.PutCommand("k ");
 			if ( this.colorForce == ColorForce.Gray    )  this.PutCommand("g ");
 		}
 
@@ -1122,18 +1122,18 @@ namespace Epsitec.Common.Document.PDF
 		{
 			//	Met une couleur (sans alpha).
 			ColorSpace cs = color.ColorSpace;
-			if ( this.colorForce == ColorForce.RGB  )  cs = ColorSpace.RGB;
-			if ( this.colorForce == ColorForce.CMYK )  cs = ColorSpace.CMYK;
+			if ( this.colorForce == ColorForce.Rgb  )  cs = ColorSpace.Rgb;
+			if ( this.colorForce == ColorForce.Cmyk )  cs = ColorSpace.Cmyk;
 			if ( this.colorForce == ColorForce.Gray )  cs = ColorSpace.Gray;
 
-			if ( cs == ColorSpace.RGB )
+			if ( cs == ColorSpace.Rgb )
 			{
 				this.PutValue(color.R, 3);
 				this.PutValue(color.G, 3);
 				this.PutValue(color.B, 3);
 			}
 
-			if ( cs == ColorSpace.CMYK )
+			if ( cs == ColorSpace.Cmyk )
 			{
 				this.PutValue(color.C, 3);
 				this.PutValue(color.M, 3);

@@ -1,4 +1,7 @@
-﻿namespace Epsitec.Common
+﻿//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+namespace Epsitec.Common
 {
 	public class Math
 	{
@@ -47,6 +50,7 @@
 		{
 			return angle * 180.0 / System.Math.PI;
 		}
+		
 		
 		public static bool Equal(double a, double b, double δ)
 		{

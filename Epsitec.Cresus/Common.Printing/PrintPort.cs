@@ -202,14 +202,14 @@ namespace Epsitec.Common.Printing
 		}
 		
 		
-		public void PushColorModifier(Drawing.ColorModifier method)
+		public void PushColorModifier(Drawing.ColorModifierCallback method)
 		{
 			this.stackColorModifier.Push(method);
 		}
 
-		public Drawing.ColorModifier PopColorModifier()
+		public Drawing.ColorModifierCallback PopColorModifier()
 		{
-			return this.stackColorModifier.Pop() as Drawing.ColorModifier;
+			return this.stackColorModifier.Pop() as Drawing.ColorModifierCallback;
 		}
 
 		public System.Collections.Stack			StackColorModifier
@@ -226,7 +226,7 @@ namespace Epsitec.Common.Printing
 
 		public Drawing.RichColor GetFinalColor(Drawing.RichColor color)
 		{
-			foreach ( Drawing.ColorModifier method in this.stackColorModifier )
+			foreach ( Drawing.ColorModifierCallback method in this.stackColorModifier )
 			{
 				method(ref color);
 			}
@@ -238,7 +238,7 @@ namespace Epsitec.Common.Printing
 			if ( this.stackColorModifier.Count == 0 )  return color;
 
 			Drawing.RichColor rich = Drawing.RichColor.FromColor(color);
-			foreach ( Drawing.ColorModifier method in this.stackColorModifier )
+			foreach ( Drawing.ColorModifierCallback method in this.stackColorModifier )
 			{
 				method(ref rich);
 			}

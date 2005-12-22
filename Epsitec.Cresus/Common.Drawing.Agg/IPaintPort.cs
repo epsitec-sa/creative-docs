@@ -3,10 +3,11 @@
 
 namespace Epsitec.Common.Drawing
 {
-	public delegate void ColorModifier(ref RichColor color);
+	public delegate void ColorModifierCallback(ref RichColor color);
 
 	/// <summary>
-	/// Summary description for IPaintPort.
+	/// The IPaintPort interface is used for the Graphics class, but also for
+	/// printing (see Common.Printing project).
 	/// </summary>
 	public interface IPaintPort
 	{
@@ -22,9 +23,8 @@ namespace Epsitec.Common.Drawing
 		FillMode	FillMode			{ get; set; }
 		bool		FilterImage			{ get; set; }
 		
-		void PushColorModifier(ColorModifier method);
-		ColorModifier PopColorModifier();
-		System.Collections.Stack StackColorModifier { get; set; }
+		void PushColorModifier(ColorModifierCallback method);
+		ColorModifierCallback PopColorModifier();
 
 		RichColor GetFinalColor(RichColor color);
 		Color GetFinalColor(Color color);

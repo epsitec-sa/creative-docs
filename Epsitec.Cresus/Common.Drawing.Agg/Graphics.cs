@@ -13,6 +13,7 @@ namespace Epsitec.Common.Drawing
 			Font.Initialise ();
 		}
 		
+		
 		public Graphics()
 		{
 			this.ResetLineStyle ();
@@ -20,7 +21,7 @@ namespace Epsitec.Common.Drawing
 			this.pixmap     = new Pixmap ();
 			this.rasterizer = new Common.Drawing.Rasterizer ();
 			this.transform  = new Transform ();
-			this.stackColorModifier = new System.Collections.Stack();
+			this.color_modifier_stack = new System.Collections.Stack();
 			
 			this.solid_renderer    = new Common.Drawing.Renderers.Solid ();
 			this.image_renderer    = new Common.Drawing.Renderers.Image ();
@@ -36,6 +37,157 @@ namespace Epsitec.Common.Drawing
 		~ Graphics()
 		{
 			this.Dispose (false);
+		}
+		
+		
+		public double							LineWidth
+		{
+			get { return this.line_width; }
+			set { this.line_width = value; }
+		}
+		
+		public JoinStyle						LineJoin
+		{
+			get { return this.line_join; }
+			set { this.line_join = value; }
+		}
+		
+		public CapStyle							LineCap
+		{
+			get { return this.line_cap; }
+			set { this.line_cap = value; }
+		}
+		
+		public double							LineMiterLimit
+		{
+			get { return this.line_miter_limit; }
+			set { this.line_miter_limit = value; }
+		}
+
+		public Rectangle						ClipBounds
+		{
+			get
+			{
+				return this.SaveClippingRectangle ();
+			}
+		}
+		
+		public RichColor						RichColor
+		{
+			get
+			{
+				return RichColor.FromColor (this.original_color);
+			}
+			set
+			{
+				this.original_color = value.Basic;
+				this.FinalColor = this.GetFinalColor (value.Basic);
+			}
+		}
+		
+		public Color							Color
+		{
+			get
+			{
+				return this.original_color;
+			}
+			set
+			{
+				this.original_color = value;
+				this.FinalColor = this.GetFinalColor (value);
+			}
+		}
+
+		public RichColor						FinalRichColor
+		{
+			get
+			{
+				return RichColor.FromColor(this.FinalColor);
+			}
+			set
+			{
+				this.FinalColor = value.Basic;
+			}
+		}
+		
+		public Color							FinalColor
+		{
+			get
+			{
+				return this.SolidRenderer.Color;
+			}
+			set
+			{
+				this.SolidRenderer.Color = value;
+			}
+		}
+
+		public bool								FilterImage
+		{
+			get
+			{
+				return this.filter_image;
+			}
+			set
+			{
+				this.filter_image = value;
+			}
+		}
+		
+		
+		public FillMode							FillMode
+		{
+			get
+			{
+				return this.Rasterizer.FillMode;
+			}
+			set
+			{
+				this.Rasterizer.FillMode = value;
+			}
+		}
+
+		public Drawing.Rasterizer				Rasterizer
+		{
+			get { return this.rasterizer; }
+		}
+		
+		public Drawing.Transform				Transform
+		{
+			get
+			{
+				return new Transform (this.transform);
+			}
+			set
+			{
+				this.transform.Reset (value);
+				this.rasterizer.Transform = this.transform;
+			}
+		}
+		
+		public Drawing.Pixmap					Pixmap
+		{
+			get { return this.pixmap; }
+		}
+		
+		public Renderers.Solid					SolidRenderer
+		{
+			get { return this.solid_renderer; }
+		}
+		
+		public Renderers.Image					ImageRenderer
+		{
+			get { return this.image_renderer; }
+		}
+		
+		public Renderers.Gradient				GradientRenderer
+		{
+			get { return this.gradient_renderer; }
+		}
+		
+		public Renderers.Smooth					SmoothRenderer
+		{
+			get { return this.smooth_renderer; }
 		}
 		
 		
@@ -66,208 +218,12 @@ namespace Epsitec.Common.Drawing
 			this.rasterizer.Render (this.gradient_renderer);
 		}
 		
-		
 		public void ResetLineStyle()
 		{
 			this.LineWidth      = 1.0;
 			this.LineJoin       = JoinStyle.Miter;
 			this.LineCap        = CapStyle.Square;
 			this.LineMiterLimit = 4.0;
-		}
-		
-		
-		public double						LineWidth
-		{
-			get { return this.line_width; }
-			set { this.line_width = value; }
-		}
-		
-		public JoinStyle					LineJoin
-		{
-			get { return this.line_join; }
-			set { this.line_join = value; }
-		}
-		
-		public CapStyle						LineCap
-		{
-			get { return this.line_cap; }
-			set { this.line_cap = value; }
-		}
-		
-		public double						LineMiterLimit
-		{
-			get { return this.line_miter_limit; }
-			set { this.line_miter_limit = value; }
-		}
-
-		public Rectangle					ClipBounds
-		{
-			get
-			{
-				return this.SaveClippingRectangle ();
-			}
-		}
-		
-		public RichColor					RichColor
-		{
-			get
-			{
-				return RichColor.FromColor(this.originalColor);
-			}
-			set
-			{
-				this.originalColor = value.Basic;
-				this.FinalColor = this.GetFinalColor(value.Basic);
-			}
-		}
-		
-		public Color						Color
-		{
-			get
-			{
-				return this.originalColor;
-			}
-			set
-			{
-				this.originalColor = value;
-				this.FinalColor = this.GetFinalColor(value);
-			}
-		}
-
-		public RichColor					FinalRichColor
-		{
-			get
-			{
-				return RichColor.FromColor(this.FinalColor);
-			}
-			set
-			{
-				this.FinalColor = value.Basic;
-			}
-		}
-		
-		public Color						FinalColor
-		{
-			get
-			{
-				return this.SolidRenderer.Color;
-			}
-			set
-			{
-				this.SolidRenderer.Color = value;
-			}
-		}
-
-		public bool							FilterImage
-		{
-			get
-			{
-				return this.filter_image;
-			}
-			set
-			{
-				this.filter_image = value;
-			}
-		}
-		
-		
-		public void PushColorModifier(ColorModifier method)
-		{
-			this.stackColorModifier.Push(method);
-		}
-
-		public ColorModifier PopColorModifier()
-		{
-			return this.stackColorModifier.Pop() as ColorModifier;
-		}
-
-		public System.Collections.Stack		StackColorModifier
-		{
-			get
-			{
-				return this.stackColorModifier;
-			}
-			set
-			{
-				this.stackColorModifier = value;
-			}
-		}
-
-		public RichColor GetFinalColor(RichColor color)
-		{
-			foreach ( ColorModifier method in this.stackColorModifier )
-			{
-				method(ref color);
-			}
-			return color;
-		}
-		
-		public Color GetFinalColor(Color color)
-		{
-			if ( this.stackColorModifier.Count == 0 )  return color;
-
-			RichColor rich = RichColor.FromColor(color);
-			foreach ( ColorModifier method in this.stackColorModifier )
-			{
-				method(ref rich);
-			}
-			return rich.Basic;
-		}
-
-		
-		public FillMode						FillMode
-		{
-			get
-			{
-				return this.Rasterizer.FillMode;
-			}
-			set
-			{
-				this.Rasterizer.FillMode = value;
-			}
-		}
-
-		public Drawing.Rasterizer			Rasterizer
-		{
-			get { return this.rasterizer; }
-		}
-		
-		public Drawing.Transform			Transform
-		{
-			get
-			{
-				return new Transform (this.transform);
-			}
-			set
-			{
-				this.transform.Reset (value);
-				this.rasterizer.Transform = this.transform;
-			}
-		}
-		
-		public Drawing.Pixmap				Pixmap
-		{
-			get { return this.pixmap; }
-		}
-		
-		public Renderers.Solid				SolidRenderer
-		{
-			get { return this.solid_renderer; }
-		}
-		
-		public Renderers.Image				ImageRenderer
-		{
-			get { return this.image_renderer; }
-		}
-		
-		public Renderers.Gradient			GradientRenderer
-		{
-			get { return this.gradient_renderer; }
-		}
-		
-		public Renderers.Smooth				SmoothRenderer
-		{
-			get { return this.smooth_renderer; }
 		}
 		
 		
@@ -292,6 +248,45 @@ namespace Epsitec.Common.Drawing
 			return mask;
 		}
 		
+		
+		public void PushColorModifier(ColorModifierCallback method)
+		{
+			this.color_modifier_stack.Push (method);
+		}
+
+		public ColorModifierCallback PopColorModifier()
+		{
+			return this.color_modifier_stack.Pop () as ColorModifierCallback;
+		}
+
+		
+		public RichColor GetFinalColor(RichColor color)
+		{
+			foreach (ColorModifierCallback method in this.color_modifier_stack)
+			{
+				method (ref color);
+			}
+			
+			return color;
+		}
+		
+		public Color GetFinalColor(Color color)
+		{
+			if (this.color_modifier_stack.Count == 0)
+			{
+				return color;
+			}
+			
+			RichColor rich = RichColor.FromColor (color);
+			
+			foreach (ColorModifierCallback method in this.color_modifier_stack)
+			{
+				method (ref rich);
+			}
+			
+			return rich.Basic;
+		}
+
 		
 		public void PaintOutline(Path path)
 		{
@@ -1036,7 +1031,7 @@ namespace Epsitec.Common.Drawing
 		private double						clip_x1, clip_y1, clip_x2, clip_y2;
 		private bool						has_clip_rect;
 
-		private Color						originalColor;
-		private System.Collections.Stack	stackColorModifier;
+		private Color						original_color;
+		private System.Collections.Stack	color_modifier_stack;
 	}
 }

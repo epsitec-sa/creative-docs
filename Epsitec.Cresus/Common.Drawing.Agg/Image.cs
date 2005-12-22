@@ -1,3 +1,6 @@
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
@@ -37,49 +40,51 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public virtual Size				Size
+		public virtual Size						Size
 		{
 			get { return this.size; }
 		}
 		
-		public double					Width
+		public double							Width
 		{
 			get { return this.Size.Width; }
 		}
 		
-		public double					Height
+		public double							Height
 		{
 			get { return this.Size.Height; }
 		}
 		
-		public virtual Point			Origin
+		public virtual Point					Origin
 		{
 			//	0 < origin < size: l'origine est dans l'image
 			
 			get { return this.origin; }
 		}
 		
-		public virtual bool				IsOriginDefined
+		
+		public virtual bool						IsOriginDefined
 		{
 			get { return this.is_origin_defined; }
 		}
 		
-		public bool						IsEmpty
+		public bool								IsEmpty
 		{
 			get { return this.Size.IsEmpty; }
 		}
 		
-		public abstract Bitmap			BitmapImage
+		
+		public abstract Bitmap					BitmapImage
 		{
 			get;
 		}
 		
-		public long						UniqueId
+		public long								UniqueId
 		{
 			get { return this.unique_id; }
 		}
 		
-		public double					DpiX
+		public double							DpiX
 		{
 			get
 			{
@@ -87,7 +92,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double					DpiY
+		public double							DpiY
 		{
 			get
 			{
@@ -96,7 +101,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static readonly Image	Empty;
+		public static readonly Image			Empty;
 		
 		~Image()
 		{
@@ -127,14 +132,14 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		internal bool					is_origin_defined;
-		internal double					dpi_x;
-		internal double					dpi_y;
+		internal bool							is_origin_defined;
+		internal double							dpi_x;
+		internal double							dpi_y;
 		
-		protected Size					size;
-		protected Point					origin;
-		protected long					unique_id;
+		protected Size							size;
+		protected Point							origin;
+		protected long							unique_id;
 		
-		private static long				unique_id_seed;
+		private static long						unique_id_seed = 1;
 	}
 }

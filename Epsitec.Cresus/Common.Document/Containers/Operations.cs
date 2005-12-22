@@ -425,12 +425,12 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonColorToRGB(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.ColorSelection(ColorSpace.RGB);
+			this.document.Modifier.ColorSelection(ColorSpace.Rgb);
 		}
 
 		private void HandleButtonColorToCMYK(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.ColorSelection(ColorSpace.CMYK);
+			this.document.Modifier.ColorSelection(ColorSpace.Cmyk);
 		}
 
 		private void HandleButtonColorToGray(object sender, MessageEventArgs e)

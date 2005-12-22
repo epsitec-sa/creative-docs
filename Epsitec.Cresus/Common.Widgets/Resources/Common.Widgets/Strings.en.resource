@@ -45,8 +45,8 @@
 	<data name="ColorSelector.LongHexa">HTML Color (hexa RGB)</data>
 	<data name="ColorSelector.Picker">Color Picker</data>
 	<data name="ColorSelector.Close">Close this pannel</data>
-	<data name="ColorSelector.ColorSpace.RGB">RGB Color Mode</data>
-	<data name="ColorSelector.ColorSpace.CMYK">CMYK Color Mode</data>
+	<data name="ColorSelector.ColorSpace.Rgb">RGB Color Mode</data>
+	<data name="ColorSelector.ColorSpace.Cmyk">CMYK Color Mode</data>
 	<data name="ColorSelector.ColorSpace.Gray">Grayscale Mode</data>
 
 	<data name="Dialog.Button.Yes">&lt;m&gt;Y&lt;/m&gt;es</data>

@@ -221,6 +221,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		#region RawData Class
 		public class RawData : System.IDisposable
 		{
 			public RawData(Pixmap pixmap)
@@ -440,6 +441,7 @@ namespace Epsitec.Common.Drawing
 			protected System.Drawing.Bitmap		bm;
 			protected BitmapData				bm_data;
 		}
+		#endregion
 		
 		protected System.IntPtr					agg_buffer;
 		protected System.Drawing.Size			size;

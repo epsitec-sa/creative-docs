@@ -88,15 +88,15 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static readonly Rectangle Empty    = new Rectangle (0, 0, -1, -1);
-		public static readonly Rectangle Infinite = new Rectangle (-1000000000, -1000000000, 2000000000, 2000000000);
+		public static readonly Rectangle		Empty    = new Rectangle (0, 0, -1, -1);
+		public static readonly Rectangle		Infinite = new Rectangle (-1000000000, -1000000000, 2000000000, 2000000000);
 		
-		public bool						IsEmpty
+		public bool								IsEmpty
 		{
 			get { return (this.x2 < this.x1) || (this.y2 < this.y1); }
 		}
 		
-		public bool						IsInfinite
+		public bool								IsInfinite
 		{
 			get
 			{
@@ -104,81 +104,81 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public bool						IsSurfaceZero
+		public bool								IsSurfaceZero
 		{
 			get { return (this.x2 <= this.x1) || (this.y2 <= this.y1); }
 		}
 		
-		public bool						IsValid
+		public bool								IsValid
 		{
 			get { return (this.x2 >= this.x1) && (this.y2 >= this.y1); }
 		}
 		
 		
-		[XmlIgnore] public Point		Location
+		[XmlIgnore] public Point				Location
 		{
 			get { return new Point (this.x1, this.y1); }
 			set { double dx = this.Width; double dy = this.Height; this.x1 = value.X; this.y1 = value.Y; this.x2 = this.x1 + dx; this.y2 = this.y1 + dy; }
 		}
 
-		[XmlIgnore] public Size			Size
+		[XmlIgnore] public Size					Size
 		{
 			get { return new Size (this.x2 - this.x1, this.y2 - this.y1); }
 			set { this.x2 = this.x1 + value.Width; this.y2 = this.y1 + value.Height; }
 		}
 		
 		
-		[XmlAttribute] public double	X
+		[XmlAttribute] public double			X
 		{
 			get { return this.x1; }
 			set { double dx = this.Width; this.x1 = value; this.x2 = value + dx; }
 		}
 		
-		[XmlAttribute] public double	Y
+		[XmlAttribute] public double			Y
 		{
 			get { return this.y1; }
 			set { double dy = this.Height; this.y1 = value; this.y2 = value + dy; }
 		}
 		
-		[XmlAttribute] public double	Width
+		[XmlAttribute] public double			Width
 		{
 			get { return this.x2 - this.x1; }
 			set { this.x2 = this.x1 + value; }
 		}
 		
-		[XmlAttribute] public double	Height
+		[XmlAttribute] public double			Height
 		{
 			get { return this.y2 - this.y1; }
 			set { this.y2 = this.y1 + value; }
 		}
 		
 		
-		[XmlIgnore] public double		Left
+		[XmlIgnore] public double				Left
 		{
 			get { return this.x1; }
 			set { this.x1 = value; }
 		}
 		
-		[XmlIgnore] public double		Right
+		[XmlIgnore] public double				Right
 		{
 			get { return this.x2; }
 			set { this.x2 = value; }
 		}
 		
-		[XmlIgnore] public double		Bottom
+		[XmlIgnore] public double				Bottom
 		{
 			get { return this.y1; }
 			set { this.y1 = value; }
 		}
 		
-		[XmlIgnore] public double		Top
+		[XmlIgnore] public double				Top
 		{
 			get { return this.y2; }
 			set { this.y2 = value; }
 		}
 		
 		
-		[XmlIgnore] public Point		BottomLeft
+		[XmlIgnore] public Point				BottomLeft
 		{
 			get { return new Point (this.x1, this.y1); }
 			set
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		[XmlIgnore] public Point		BottomRight
+		[XmlIgnore] public Point				BottomRight
 		{
 			get { return new Point (this.x2, this.y1); }
 			set
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		[XmlIgnore] public Point		TopRight
+		[XmlIgnore] public Point				TopRight
 		{
 			get { return new Point (this.x2, this.y2); }
 			set
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		[XmlIgnore] public Point		TopLeft
+		[XmlIgnore] public Point				TopLeft
 		{
 			get { return new Point (this.x1, this.y2); }
 			set
@@ -219,12 +219,12 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public Point					Center
+		public Point							Center
 		{
 			get { return new Point ((this.x1 + this.x2) / 2, (this.y1 + this.y2) / 2); }
 		}
 		
-		public double					Surface
+		public double							Surface
 		{
 			get
 			{
@@ -786,17 +786,16 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public override string ToString()
+		{
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1};{2};{3}]",
+				this.X, this.Y, this.Width, this.Height);
+		}
+
+		
 		public override bool Equals(object obj)
 		{
-			if ((obj == null) &&
-				(obj.GetType () != typeof (Rectangle)))
-			{
-				return false;
-			}
-			
-			Rectangle r = (Rectangle) obj;
-			
-			return (r.x1 == this.x1) && (r.x2 == this.x2) && (r.y1 == this.y1) && (r.y2 == this.y2);
+			return (obj is Rectangle) && (this == (Rectangle) obj);
 		}
 		
 		public override int GetHashCode()
@@ -804,13 +803,8 @@ namespace Epsitec.Common.Drawing
 			return base.GetHashCode ();
 		}
 		
-		public override string ToString()
-		{
-			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1};{2};{3}]",
-								  this.X, this.Y, this.Width, this.Height);
-		}
-
 		
+		#region Converter Class
 		public class Converter : AbstractStringConverter
 		{
 			public override object ParseString(string value)
@@ -836,7 +830,7 @@ namespace Epsitec.Common.Drawing
 				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}", arg1, arg2, arg3, arg4);
 			}
 		}
-		
+		#endregion
 		
 		private double					x1, y1;
 		private double					x2, y2;

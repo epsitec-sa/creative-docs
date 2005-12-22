@@ -1157,8 +1157,8 @@ namespace Epsitec.Common.Document
 					if ( layer.Print == Objects.LayerPrint.Hide )  continue;
 
 					Properties.ModColor modColor = layer.PropertyModColor;
-					graphics.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
-					graphics.PushColorModifier(new ColorModifier(modColor.ModifyColor));
+					graphics.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
+					graphics.PushColorModifier(new ColorModifierCallback(modColor.ModifyColor));
 					drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
 
 					foreach ( Objects.Abstract obj in this.Deep(layer) )
@@ -1206,8 +1206,8 @@ namespace Epsitec.Common.Document
 					}
 
 					Properties.ModColor modColor = layer.PropertyModColor;
-					graphics.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
-					graphics.PushColorModifier(new ColorModifier(modColor.ModifyColor));
+					graphics.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
+					graphics.PushColorModifier(new ColorModifierCallback(modColor.ModifyColor));
 
 					foreach ( DeepBranchEntry entry in this.DeepBranch(layer, branch) )
 					{

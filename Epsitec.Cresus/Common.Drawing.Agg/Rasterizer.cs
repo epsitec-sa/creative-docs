@@ -38,7 +38,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		internal FillMode				FillMode
+		internal FillMode						FillMode
 		{
 			get
 			{
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double					Gamma
+		public double							Gamma
 		{
 			get
 			{
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public Transform				Transform
+		public Transform						Transform
 		{
 			get
 			{
@@ -316,12 +316,9 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		
-		
-		
-		private FillMode						fill_mode = FillMode.NonZero;
-		private double							gamma     = 1.0;
-		private Transform						transform = new Transform ();
-		private System.IntPtr					agg_ras;
+		private FillMode							fill_mode = FillMode.NonZero;
+		private double								gamma     = 1.0;
+		private Transform							transform = new Transform ();
+		private System.IntPtr						agg_ras;
 	}
 }

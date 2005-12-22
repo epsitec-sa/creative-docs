@@ -626,9 +626,9 @@ namespace Epsitec.Common.Document
 			foreach ( Objects.Layer layer in layers )
 			{
 				Properties.ModColor modColor = layer.PropertyModColor;
-				port.PushColorModifier(new ColorModifier(modColor.ModifyColor));
+				port.PushColorModifier(new ColorModifierCallback(modColor.ModifyColor));
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
-				port.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
+				port.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
@@ -658,9 +658,9 @@ namespace Epsitec.Common.Document
 			foreach ( Objects.Layer layer in layers )
 			{
 				Properties.ModColor modColor = layer.PropertyModColor;
-				port.PushColorModifier(new ColorModifier(modColor.ModifyColor));
+				port.PushColorModifier(new ColorModifierCallback(modColor.ModifyColor));
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
-				port.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
+				port.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
 				bool isLayerComplexPrinting = modColor.IsComplexPrinting;
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
@@ -756,9 +756,9 @@ namespace Epsitec.Common.Document
 			foreach ( Objects.Layer layer in layers )
 			{
 				Properties.ModColor modColor = layer.PropertyModColor;
-				port.PushColorModifier(new ColorModifier(modColor.ModifyColor));
+				port.PushColorModifier(new ColorModifierCallback(modColor.ModifyColor));
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
-				port.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
+				port.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
@@ -1076,9 +1076,9 @@ namespace Epsitec.Common.Document
 			foreach ( Objects.Layer layer in layers )
 			{
 				Properties.ModColor modColor = layer.PropertyModColor;
-				gfx.PushColorModifier(new ColorModifier(modColor.ModifyColor));
+				gfx.PushColorModifier(new ColorModifierCallback(modColor.ModifyColor));
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
-				gfx.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
+				gfx.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{

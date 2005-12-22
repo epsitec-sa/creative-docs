@@ -45,8 +45,8 @@
 	<data name="ColorSelector.LongHexa">Couleur HTML (RVB hexadécimal)</data>
 	<data name="ColorSelector.Picker">Pipette-loupe</data>
 	<data name="ColorSelector.Close">Fermer ce panneau</data>
-	<data name="ColorSelector.ColorSpace.RGB">Couleurs RVB</data>
-	<data name="ColorSelector.ColorSpace.CMYK">Couleurs CMJN</data>
+	<data name="ColorSelector.ColorSpace.Rgb">Couleurs RVB</data>
+	<data name="ColorSelector.ColorSpace.Cmyk">Couleurs CMJN</data>
 	<data name="ColorSelector.ColorSpace.Gray">Niveaux de gris</data>
 
 	<data name="Dialog.Button.Yes">&lt;m&gt;O&lt;/m&gt;ui</data>

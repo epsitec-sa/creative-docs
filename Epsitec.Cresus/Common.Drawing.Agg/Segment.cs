@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -39,30 +39,30 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public SegmentOrientation		Orientation
+		public SegmentOrientation				Orientation
 		{
 			get { return this.orientation; }
 			set { this.orientation = value; }
 		}
 		
-		public Drawing.Point			Location
+		public Drawing.Point					Location
 		{
 			get { return this.location; }
 			set { this.location = value; }
 		}
 		
-		public double					Length
+		public double							Length
 		{
 			get { return this.length; }
 			set { this.length = value; }
 		}
 		
-		public Drawing.Point			P1
+		public Drawing.Point					P1
 		{
 			get { return this.location; }
 		}
 		
-		public Drawing.Point			P2
+		public Drawing.Point					P2
 		{
 			get
 			{
@@ -85,20 +85,10 @@ namespace Epsitec.Common.Drawing
 			return string.Format ("[{0}:{1}:{2}:{3}]", this.location.X, this.location.Y, this.length, this.orientation);
 		}
 
+		
 		public override bool Equals(object obj)
 		{
-			if (obj is Segment)
-			{
-				Segment s = (Segment) obj;
-				return (this == s);
-			}
-			
-			return false;
-		}
-		
-		public static   bool Equals(Segment a, Segment b)
-		{
-			return (a.orientation == b.orientation) && (a.location == b.location) && (a.length == b.length);
+			return (obj is Segment) && (this == (Segment)obj);
 		}
 		
 		public override int GetHashCode()
@@ -152,6 +142,7 @@ namespace Epsitec.Common.Drawing
 			return SegmentOrientation.Invalid;
 		}
 		
+		
 		public static bool CompareAlignment(Segment a, Segment b)
 		{
 			if (a.Orientation == b.Orientation)
@@ -181,8 +172,8 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		private SegmentOrientation		orientation;
-		private Drawing.Point			location;
-		private double					length;
+		private SegmentOrientation				orientation;
+		private Drawing.Point					location;
+		private double							length;
 	}
 }
