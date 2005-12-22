@@ -233,11 +233,107 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public string							LastActionName
+		{
+			get
+			{
+				if (this.live_fence > 0)
+				{
+					System.Diagnostics.Debug.Assert (this.live_index > 0);
+					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
+				
+					int i = this.live_index - 1;
+				
+					IOplet      oplet = this.queue[i] as IOplet;
+					Types.IName fence = oplet as Types.IName;
+				
+					System.Diagnostics.Debug.Assert (oplet.IsFence);
+					System.Diagnostics.Debug.Assert (fence != null);
+				
+					return fence.Name;
+				}
+			
+				return null;
+			}
+		}
+		
+		public MergeMode						LastActionMergeMode
+		{
+			get
+			{
+				if (this.live_fence > 0)
+				{
+					System.Diagnostics.Debug.Assert (this.live_index > 0);
+					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
+				
+					int i = this.live_index - 1;
+				
+					IOplet oplet = this.queue[i] as IOplet;
+					Fence  fence = oplet as Fence;
+				
+					System.Diagnostics.Debug.Assert (oplet.IsFence);
+				
+					return fence == null ? MergeMode.Automatic : fence.MergeMode;
+				}
+			
+				return MergeMode.None;
+			}
+		}
+		
+		public MergeMode						LastActionMinusOneMergeMode
+		{
+			get
+			{
+				if (this.live_fence > 1)
+				{
+					System.Diagnostics.Debug.Assert (this.live_index > 0);
+					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
+				
+					int i = this.live_index;
+					int n = 0;
+				
+					while (i > 0)
+					{
+						i--;
+					
+						IOplet oplet = this.queue[i] as IOplet;
+					
+						if (oplet.IsFence)
+						{
+							if (n++ == 1)
+							{
+								Fence  fence = oplet as Fence;
+								return fence == null ? MergeMode.Automatic : fence.MergeMode;
+							}
+						}
+					}
+				}
+			
+				return MergeMode.None;
+			}
+		}
+		
+		
 		public int								PendingOpletCount
 		{
 			get
 			{
 				return this.temp_queue.Count;
+			}
+		}
+		
+		public MergeMode						PendingMergeMode
+		{
+			get
+			{
+				if (this.action == null)
+				{
+					return MergeMode.None;
+				}
+				else
+				{
+					return this.action.MergeMode;
+				}
 			}
 		}
 		
@@ -274,6 +370,11 @@ namespace Epsitec.Common.Support
 		
 		public System.IDisposable BeginAction(string name)
 		{
+			return this.BeginAction (name, MergeMode.Automatic);
+		}
+
+		public System.IDisposable BeginAction(string name, MergeMode mode)
+		{
 			if (this.IsDisabled)
 			{
 				return null;
@@ -291,8 +392,9 @@ namespace Epsitec.Common.Support
 			
 			System.Diagnostics.Debug.Assert (this.CanRedo == false);
 			
-			return new AutoActionCleanup (this, name);
+			return new AutoActionCleanup (this, name, mode);
 		}
+		
 		
 		public void Insert(IOplet oplet)
 		{
@@ -310,6 +412,7 @@ namespace Epsitec.Common.Support
 			this.temp_queue.Add (oplet);
 		}
 		
+		
 		public void DefineActionName(string name)
 		{
 			if (this.IsDisabled)
@@ -326,7 +429,41 @@ namespace Epsitec.Common.Support
 			this.action.Name = name;
 		}
 		
+		public void DefineLastActionName(string name)
+		{
+			if (this.live_fence > 0)
+			{
+				System.Diagnostics.Debug.Assert (this.live_index > 0);
+				System.Diagnostics.Debug.Assert (this.queue.Count > 0);
+				
+				int i = this.live_index - 1;
+				
+				IOplet oplet = this.queue[i] as IOplet;
+				Fence  fence = oplet as Fence;
+				
+				System.Diagnostics.Debug.Assert (oplet.IsFence);
+				
+				this.queue[i] = new Fence (name, fence == null ? MergeMode.Automatic : fence.MergeMode);
+				
+				oplet.Dispose ();
+			}
+		}
+		
+		
+		
+		public enum MergeMode
+		{
+			None,
+			Automatic,
+			Disabled
+		}
+		
 		public void ValidateAction()
+		{
+			this.ValidateAction (MergeMode.Automatic);
+		}
+		
+		public void ValidateAction(MergeMode mode)
 		{
 			if (this.IsDisabled)
 			{
@@ -337,6 +474,11 @@ namespace Epsitec.Common.Support
 				(this.action == null))
 			{
 				throw new System.InvalidOperationException ("BeginAction/ValidateAction mismatch.");
+			}
+			
+			if (this.action.MergeMode == MergeMode.Disabled)
+			{
+				mode = MergeMode.Disabled;
 			}
 			
 			this.action.Release ();
@@ -356,7 +498,7 @@ namespace Epsitec.Common.Support
 					//	ajoutés; une insertion vide ne va pas apparaître dans la queue !
 					
 					this.queue.AddRange (this.temp_queue);
-					this.queue.Add (new Fence (this.temp_name));
+					this.queue.Add (new Fence (this.temp_name, mode));
 					this.temp_queue.Clear ();
 					
 					this.fence_count++;
@@ -730,7 +872,7 @@ namespace Epsitec.Common.Support
 		
 		protected class AutoActionCleanup : System.IDisposable
 		{
-			public AutoActionCleanup(OpletQueue queue, string name)
+			public AutoActionCleanup(OpletQueue queue, string name, MergeMode mode)
 			{
 				queue.fence_id++;
 				
@@ -739,6 +881,7 @@ namespace Epsitec.Common.Support
 				this.link     = queue.action;
 				this.depth    = queue.temp_queue.Count;
 				this.name     = name;
+				this.mode     = mode;
 				
 				queue.action = this;
 			}
@@ -769,6 +912,28 @@ namespace Epsitec.Common.Support
 				get
 				{
 					return this.depth;
+				}
+			}
+			
+			public MergeMode					MergeMode
+			{
+				get
+				{
+					if (this.link == null)
+					{
+						return this.mode;
+					}
+					else
+					{
+						if (this.link.MergeMode == MergeMode.Disabled)
+						{
+							return MergeMode.Disabled;
+						}
+						else
+						{
+							return this.mode;
+						}
+					}
 				}
 			}
 			
@@ -806,13 +971,19 @@ namespace Epsitec.Common.Support
 			protected AutoActionCleanup			link;
 			protected int						depth;
 			protected string					name;
+			protected MergeMode					mode;
 		}
 		
 		protected class Fence : IOplet, Types.IName
 		{
-			public Fence(string name)
+			public Fence(string name) : this (name, MergeMode.Automatic)
+			{
+			}
+			
+			public Fence(string name, MergeMode mode)
 			{
 				this.name = name;
+				this.mode = mode;
 			}
 			
 			
@@ -832,6 +1003,14 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
+			public MergeMode					MergeMode
+			{
+				get
+				{
+					return this.mode;
+				}
+			}
+
 			
 			public IOplet Undo()
 			{
@@ -849,6 +1028,7 @@ namespace Epsitec.Common.Support
 			
 			
 			protected string					name;
+			protected MergeMode					mode;
 		}
 		
 		

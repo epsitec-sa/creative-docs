@@ -623,7 +623,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Insère un texte dans le pavé en édition.
 			this.MetaNavigator.EndSelection();
-			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
+			this.document.Modifier.OpletQueueBeginActionNoMerge(Res.Strings.Action.Text.Glyphs.Insert);
 
 			if ( fontFace == "" )
 			{
@@ -650,7 +650,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Insère un texte dans le pavé en édition.
 			this.MetaNavigator.EndSelection();
-			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
+			this.document.Modifier.OpletQueueBeginActionNoMerge(Res.Strings.Action.Text.Glyphs.Insert);
 
 			this.MetaNavigator.Insert(code);
 
@@ -663,7 +663,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Insère un texte dans le pavé en édition.
 			this.MetaNavigator.EndSelection();
-			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
+			this.document.Modifier.OpletQueueBeginActionNoMerge(Res.Strings.Action.Text.Glyphs.Insert);
 
 			this.MetaNavigator.Insert(brk);
 
@@ -676,7 +676,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Insère un glyphe dans le pavé en édition.
 			this.MetaNavigator.EndSelection();
-			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Alternate);
+			this.document.Modifier.OpletQueueBeginActionNoMerge(Res.Strings.Action.Text.Glyphs.Alternate);
 
 			if ( fontFace == "" )
 			{

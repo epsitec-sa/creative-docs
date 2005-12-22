@@ -5880,6 +5880,43 @@ namespace Epsitec.Common.Document
 			if ( cmd == this.opletLastCmd && id == this.opletLastId )
 			{
 				if ( cmd == "ChangeProperty"      ||
+					cmd == "ChangePageName"      ||
+					cmd == "ChangeLayerName"     ||
+					cmd == "ChangeAggregateName" ||
+					cmd == "ChangeGuide"         ||
+					cmd == "ChangeDocSize"       )
+				{
+					this.opletSkip = true;
+					return null;
+				}
+			}
+
+			this.opletCreate = (cmd == "Create");
+			this.opletLastCmd = cmd;
+			this.opletLastId = id;
+
+			return this.opletQueue.BeginAction(name);
+		}
+
+		public System.IDisposable OpletQueueBeginActionNoMerge(string name)
+		{
+			//	Début d'une zone annulable.
+			return this.OpletQueueBeginActionNoMerge(name, "", 0);
+		}
+
+		public System.IDisposable OpletQueueBeginActionNoMerge(string name, string cmd)
+		{
+			return this.OpletQueueBeginActionNoMerge(name, cmd, 0);
+		}
+
+		public System.IDisposable OpletQueueBeginActionNoMerge(string name, string cmd, int id)
+		{
+			this.opletLevel ++;
+			if ( this.opletLevel > 1 )  return null;
+
+			if ( cmd == this.opletLastCmd && id == this.opletLastId )
+			{
+				if ( cmd == "ChangeProperty"      ||
 					 cmd == "ChangePageName"      ||
 					 cmd == "ChangeLayerName"     ||
 					 cmd == "ChangeAggregateName" ||
@@ -5895,7 +5932,7 @@ namespace Epsitec.Common.Document
 			this.opletLastCmd = cmd;
 			this.opletLastId = id;
 
-			return this.opletQueue.BeginAction(name);
+			return this.opletQueue.BeginAction(name, Common.Support.OpletQueue.MergeMode.Disabled);
 		}
 
 		public void OpletQueueNameAction(string name)

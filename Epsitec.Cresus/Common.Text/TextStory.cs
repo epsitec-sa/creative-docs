@@ -257,6 +257,16 @@ namespace Epsitec.Common.Text
 			if (this.IsOpletQueueEnabled)
 			{
 				this.oplet_queue.ValidateAction ();
+				this.ApplyAutomaticOpletName ();
+				
+				Common.Support.OpletQueue.MergeMode merge_1 = this.oplet_queue.LastActionMergeMode;
+				Common.Support.OpletQueue.MergeMode merge_2 = this.oplet_queue.LastActionMinusOneMergeMode;
+				
+				if ((merge_1 == Common.Support.OpletQueue.MergeMode.Disabled) ||
+					(merge_2 == Common.Support.OpletQueue.MergeMode.Disabled))
+				{
+					return;
+				}
 				
 				Common.Support.IOplet[] oplets_1 = this.oplet_queue.LastActionOplets;
 				Common.Support.IOplet[] oplets_2 = this.oplet_queue.LastActionMinusOneOplets;
@@ -279,6 +289,29 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public void ApplyAutomaticOpletName()
+		{
+			if (this.oplet_queue.LastActionName == null)
+			{
+				Common.Support.IOplet[] oplets = this.FindTextOplets (this.oplet_queue.LastActionOplets);
+				
+				if (oplets.Length > 0)
+				{
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+					
+					foreach (Common.Support.IOplet oplet in oplets)
+					{
+						if (buffer.Length > 0)
+						{
+							buffer.Append ("_");
+						}
+						buffer.Append (oplet.GetType ().Name.Replace ("Oplet", ""));
+					}
+					
+					this.oplet_queue.DefineLastActionName (buffer.ToString ());
+				}
+			}
+		}
 		
 		public int GetCursorPosition(ICursor cursor)
 		{
@@ -1096,6 +1129,8 @@ namespace Epsitec.Common.Text
 			if (this.IsOpletQueueEnabled)
 			{
 				Common.Support.IOplet[] last_oplets = this.oplet_queue.LastActionOplets;
+				bool enable_merge = (this.oplet_queue.LastActionMergeMode != Common.Support.OpletQueue.MergeMode.Disabled) &&
+					/**/            (this.oplet_queue.PendingMergeMode != Common.Support.OpletQueue.MergeMode.Disabled);
 				
 				this.oplet_queue.BeginAction ();
 				
@@ -1110,6 +1145,7 @@ namespace Epsitec.Common.Text
 					this.oplet_queue.Insert (oplet);
 					this.NotifyAddedOplet (oplet);
 					this.oplet_queue.ValidateAction ();
+					this.ApplyAutomaticOpletName ();
 					
 					return;
 				}
@@ -1119,7 +1155,8 @@ namespace Epsitec.Common.Text
 				}
 				
 				if ((last_oplets.Length == 1) &&
-					(this.debug_disable_merge == false))
+					(this.debug_disable_merge == false) &&
+					(enable_merge))
 				{
 					Common.Support.IOplet last = last_oplets[0];
 					
@@ -1137,6 +1174,7 @@ namespace Epsitec.Common.Text
 					this.oplet_queue.Insert (oplet);
 					this.NotifyAddedOplet (oplet);
 					this.oplet_queue.ValidateAction ();
+					this.ApplyAutomaticOpletName ();
 				}
 			}
 			else
@@ -1145,6 +1183,25 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		protected Common.Support.IOplet[] FindTextOplets(System.Collections.ICollection oplets)
+		{
+			//	Trouve tous les oplets qui appartiennent au projet Common.Text
+			//	parmi la liste passée en entrée.
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			System.Reflection.Assembly assembly = this.GetType ().Assembly;
+			
+			foreach (Common.Support.IOplet oplet in oplets)
+			{
+				if (oplet.GetType ().Assembly == assembly)
+				{
+					list.Add (oplet);
+				}
+			}
+			
+			return (Common.Support.IOplet[]) list.ToArray (typeof (Common.Support.IOplet));
+		}
 		
 		protected bool MergeOplets(Common.Support.IOplet last, Common.Support.IOplet oplet)
 		{
