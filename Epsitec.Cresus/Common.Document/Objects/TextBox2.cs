@@ -583,14 +583,12 @@ namespace Epsitec.Common.Document.Objects
 			string text = data.ReadTextLayout();
 			if ( text == null )
 			{
-				text = data.ReadHtmlFragment();
+				text = data.ReadText();
 				if ( text != null )
 				{
-					text = Support.Clipboard.ConvertHtmlToSimpleXml(text);
-				}
-				else
-				{
-					text = data.ReadText();
+					text = text.Replace("\r\n", "\u2029");		//	ParagraphSeparator
+					text = text.Replace("\n", "\u2028");		//	LineSeparator
+					text = text.Replace("\r", "\u2028");		//	LineSeparator
 				}
 			}
 			if ( text == null )  return false;

@@ -611,7 +611,29 @@ namespace Epsitec.Common.Widgets
 		public bool Insert(string text)
 		{
 			this.DeleteSelection ();
-			this.text_navigator.Insert (text);
+			
+			string[] fragments = text.Split ('\t');
+			
+			this.text_navigator.Insert (fragments[0]);
+			
+			for (int i = 1; i < fragments.Length; i++)
+			{
+				string tag = this.text_navigator.FindInsertionTabTag ();
+				
+				if (tag == null)
+				{
+					this.text_navigator.Insert (" ");
+				}
+				else
+				{
+					this.text_navigator.Insert (Text.Unicode.Code.HorizontalTab, new Text.Properties.TabProperty (tag));
+				}
+				
+				if (fragments[i].Length > 0)
+				{
+					this.text_navigator.Insert (fragments[i]);
+				}
+			}
 			
 			return true;
 		}
