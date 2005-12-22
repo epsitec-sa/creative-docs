@@ -517,6 +517,67 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public void MergeLastActions()
+		{
+			if (this.IsDisabled)
+			{
+				return;
+			}
+			
+			if (this.is_undo_redo_in_progress)
+			{
+				throw new System.InvalidOperationException ("Undo/redo in progress.");
+			}
+			if (this.action != null)
+			{
+				throw new System.InvalidOperationException ("Action definition in progress.");
+			}
+			
+			if (this.live_fence < 2)
+			{
+				return;
+			}
+			
+			int i = this.live_index;
+			int n = 0;
+			
+			System.Collections.Stack temp = new System.Collections.Stack ();
+			
+			while (i > 0)
+			{
+				i--;
+				
+				IOplet oplet = this.queue[i] as IOplet;
+				
+				if (oplet.IsFence)
+				{
+					if (n > 0)
+					{
+						this.queue.RemoveAt (i);
+						break;
+					}
+					
+					this.live_fence--;
+					this.fence_count--;
+				}
+				
+				n++;
+				
+				temp.Push (oplet);
+				this.queue.RemoveAt (i);
+			}
+			
+			while (temp.Count > 0)
+			{
+				this.queue.Insert (i++, temp.Pop ());
+			}
+			
+			this.live_index = i;
+			
+			System.Diagnostics.Debug.Assert (this.live_index >= 0);
+			System.Diagnostics.Debug.Assert (this.live_fence >= 0);
+		}
+		
 		public void PurgeSingleUndo()
 		{
 			if (this.IsDisabled)
@@ -531,6 +592,10 @@ namespace Epsitec.Common.Support
 			if (this.action != null)
 			{
 				throw new System.InvalidOperationException ("Action definition in progress.");
+			}
+			if (this.live_fence < 1)
+			{
+				return;
 			}
 			
 			int i = this.live_index;
@@ -559,7 +624,7 @@ namespace Epsitec.Common.Support
 				oplet.Dispose ();
 			}
 			
-			this.live_index = i+1;
+			this.live_index = (i == 0) ? 0 : (i+1);
 			
 			System.Diagnostics.Debug.Assert (this.live_index >= 0);
 			System.Diagnostics.Debug.Assert (this.live_fence >= 0);

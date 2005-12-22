@@ -184,6 +184,82 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (0, queue.RedoActionNames.Length);
 		}
 
+		[Test] public void CheckPurgeSingleUndo()
+		{
+			OpletQueue queue = new OpletQueue ();
+			
+			using (queue.BeginAction ("a"))
+			{
+				queue.Insert (this.CreateOplet ("A1"));
+				queue.Insert (this.CreateOplet ("A2"));
+				queue.ValidateAction ();
+			}
+			
+			using (queue.BeginAction ("b"))
+			{
+				queue.Insert (this.CreateOplet ("B1"));
+				queue.Insert (this.CreateOplet ("B2"));
+				queue.Insert (this.CreateOplet ("B3"));
+				queue.ValidateAction ();
+			}
+			
+			Assert.AreEqual (2, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+			
+			queue.PurgeSingleUndo ();
+			
+			Assert.AreEqual (1, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+			
+			queue.PurgeSingleUndo ();
+			
+			Assert.AreEqual (0, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+		}
+
+		[Test] public void CheckMergeLastActions()
+		{
+			OpletQueue queue = new OpletQueue ();
+			
+			using (queue.BeginAction ("a"))
+			{
+				queue.Insert (this.CreateOplet ("A1"));
+				queue.Insert (this.CreateOplet ("A2"));
+				queue.ValidateAction ();
+			}
+			
+			using (queue.BeginAction ("b"))
+			{
+				queue.Insert (this.CreateOplet ("B1"));
+				queue.Insert (this.CreateOplet ("B2"));
+				queue.Insert (this.CreateOplet ("B3"));
+				queue.ValidateAction ();
+			}
+			
+			Assert.AreEqual (2, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+			
+			queue.MergeLastActions ();
+			
+			IOplet[] oplets = queue.LastActionOplets;
+			
+			Assert.IsNotNull (oplets);
+			Assert.AreEqual (5, oplets.Length);
+			Assert.AreEqual ("A1", (oplets[0] as NamedOplet).Name);
+			Assert.AreEqual ("A2", (oplets[1] as NamedOplet).Name);
+			Assert.AreEqual ("B1", (oplets[2] as NamedOplet).Name);
+			Assert.AreEqual ("B2", (oplets[3] as NamedOplet).Name);
+			Assert.AreEqual ("B3", (oplets[4] as NamedOplet).Name);
+			
+			Assert.AreEqual (1, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+			
+			queue.PurgeSingleUndo ();
+			
+			Assert.AreEqual (0, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+		}
+
 		[Test] public void CheckHistory()
 		{
 			OpletQueue queue = new OpletQueue ();
