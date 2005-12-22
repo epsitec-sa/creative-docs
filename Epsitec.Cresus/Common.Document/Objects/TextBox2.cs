@@ -601,18 +601,22 @@ namespace Epsitec.Common.Document.Objects
 			//	Insère un texte en provenance d'un ancien TextBox ou TextLine.
 			this.EditInsertText(text, "", "");
 
+			this.EditWrappersAttach();  // attache l'objet aux différents wrappers
+			this.textFlow.ActiveTextBox = this;
+
 			this.MetaNavigator.SelectAll();
 
-			this.document.Wrappers.WrappersAttach(this.textFlow);
 			this.document.TextWrapper.SuspendSynchronisations();
 			this.document.TextWrapper.Defined.FontFace = fontFace;
 			this.document.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(fontFace);
 			this.document.TextWrapper.Defined.FontSize = fontSize;
 			this.document.TextWrapper.Defined.Units = Text.Properties.SizeUnits.Points;
 			this.document.TextWrapper.ResumeSynchronisations();
-			this.document.Wrappers.WrappersDetach();
 
 			this.textFlow.TextNavigator.ClearSelection();
+
+			this.document.Wrappers.WrappersDetach();
+			this.textFlow.ActiveTextBox = null;
 		}
 
 		public override bool EditInsertText(string text, string fontFace, string fontStyle)
@@ -2122,10 +2126,6 @@ namespace Epsitec.Common.Document.Objects
 			this.edited = state;
 
 			if ( this.document.HRuler == null )  return;
-
-			//	Pour ne pas cacher une règle qu'on viendrait d'associer à un objet éditable
-			//	précédemment (dans la même procédure Viewer.Select par exemple).
-			if ( !this.edited && this.document.HRuler.EditObject != this )  return;
 
 			this.document.HRuler.Edited = this.edited;
 			this.document.VRuler.Edited = this.edited;

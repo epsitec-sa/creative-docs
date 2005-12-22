@@ -2210,24 +2210,60 @@ namespace Epsitec.Common.Document
 			//	Sélectionne un objet et désélectionne tous les autres.
 			this.document.Modifier.UpdateCounters();
 			Objects.Abstract layer = this.drawingContext.RootObject();
-			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
+
+			if ( edit )
 			{
-				if ( obj == item )
+				// Désélectionne tous les objets pour éventuellement masquer les règles
+				// de l'objet en édition.
+				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 				{
-					if ( !obj.IsSelected || obj.IsEdited != edit )
+					if ( obj != item )
 					{
-						obj.Select(true, edit);
-						this.document.Modifier.TotalSelected ++;
+						if ( !add )
+						{
+							if ( obj.IsSelected )
+							{
+								obj.Deselect();
+								this.document.Modifier.TotalSelected --;
+							}
+						}
 					}
 				}
-				else
+
+				// Sélectionne et édite l'objet demandé et montre sa zone dans les règles.
+				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 				{
-					if ( !add )
+					if ( obj == item )
 					{
-						if ( obj.IsSelected )
+						if ( !obj.IsSelected || obj.IsEdited != edit )
 						{
-							obj.Deselect();
-							this.document.Modifier.TotalSelected --;
+							obj.Select(true, edit);
+							this.document.Modifier.TotalSelected ++;
+						}
+					}
+				}
+			}
+			else
+			{
+				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
+				{
+					if ( obj == item )
+					{
+						if ( !obj.IsSelected || obj.IsEdited != edit )
+						{
+							obj.Select(true, edit);
+							this.document.Modifier.TotalSelected ++;
+						}
+					}
+					else
+					{
+						if ( !add )
+						{
+							if ( obj.IsSelected )
+							{
+								obj.Deselect();
+								this.document.Modifier.TotalSelected --;
+							}
 						}
 					}
 				}
