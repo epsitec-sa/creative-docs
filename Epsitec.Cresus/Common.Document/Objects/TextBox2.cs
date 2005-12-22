@@ -19,6 +19,16 @@ namespace Epsitec.Common.Document.Objects
 			RealBoundingBox,
 		}
 
+		protected enum SpaceType
+		{
+			None,				// ce n'est pas un espace
+			BreakSpace,			// espace sécable
+			NoBreakSpace,		// espace insécable
+			NewFrame,			// saut au prochain pavé
+			NewPage,			// saut à la prochaine page
+		}
+
+
 		public TextBox2(Document document, Objects.Abstract model) : base(document, model)
 		{
 			if ( this.document == null )  return;  // objet factice ?
@@ -1351,12 +1361,12 @@ namespace Epsitec.Common.Document.Objects
 			Point p1, p2, p3, p4;
 			this.Corners(out p1, out p2, out p3, out p4);
 			
-			double width = Point.Distance(p1, p2);
+			double width  = Point.Distance(p1, p2);
 			double height = Point.Distance(p1, p3);
 			
-			if ( this.textFrame.Width != width ||
-				 this.textFrame.Height != height ||
-				 this.textFrame.OriginY != p4.Y )
+			if ( this.textFrame.Width   != width  ||
+				 this.textFrame.Height  != height ||
+				 this.textFrame.OriginY != p4.Y   )
 			{
 				this.textFrame.OriginY = p4.Y;
 				this.textFrame.Width   = width;
@@ -1563,7 +1573,7 @@ namespace Epsitec.Common.Document.Objects
 			this.graphics.AddLine(p2, p2b);
 			this.graphics.RenderSolid(color);
 		}
-			
+		
 		public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
 		{
 			if ( this.internalOperation == InternalOperation.Painting )
@@ -1586,7 +1596,7 @@ namespace Epsitec.Common.Document.Objects
 				ushort[] gArray;  // glyphes
 				ulong[]  tArray;  // textes
 
-				byte[]   iArray = new byte[glyphs.Length];  // insécables
+				SpaceType[] iArray = new SpaceType[glyphs.Length];
 				int ii = 0;
 				bool isSpace = false;
 
@@ -1607,23 +1617,38 @@ namespace Epsitec.Common.Document.Objects
 							isSpace = true;  // contient au moins un espace
 							if ( code == 0xA0 || code == 0x2007 || code == 0x200D || code == 0x202F || code == 0x2060 )
 							{
-								iArray[ii++] = 2;  // espace insécable
+								iArray[ii++] = SpaceType.NoBreakSpace;  // espace insécable
 							}
 							else
 							{
-								iArray[ii++] = 1;  // espace sécable
+								iArray[ii++] = SpaceType.BreakSpace;  // espace sécable
+							}
+						}
+						else if ( code == 0x0C )  // saut ?
+						{
+							isSpace = true;  // contient au moins un espace
+
+							Text.Properties.BreakProperty prop;
+							this.document.TextContext.GetBreak(tArray[0], out prop);
+							if ( prop.ParagraphStartMode == Text.Properties.ParagraphStartMode.NewFrame )
+							{
+								iArray[ii++] = SpaceType.NewFrame;
+							}
+							else
+							{
+								iArray[ii++] = SpaceType.NewPage;
 							}
 						}
 						else
 						{
-							iArray[ii++] = 0;  // pas un espace
+							iArray[ii++] = SpaceType.None;  // pas un espace
 						}
 					}
 					else
 					{
 						for ( int i=0 ; i<numGlyphs ; i++ )
 						{
-							iArray[ii++] = 0;  // pas un espace
+							iArray[ii++] = SpaceType.None;  // pas un espace
 						}
 					}
 
@@ -1754,7 +1779,7 @@ namespace Epsitec.Common.Document.Objects
 			selRectList.Add(rect);
 		}
 
-		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, byte[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
+		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
 		{
 			//	Effectue le rendu des caractères.
 			if ( this.internalOperation == InternalOperation.Painting )
@@ -1792,13 +1817,28 @@ namespace Epsitec.Common.Document.Objects
 								{
 									double width = font.GetGlyphWidth(glyphs[i], size);
 									double oy = font.GetAscender(size)*0.3;
-									if ( insecs[i] == 1 )  // espace sécable ?
+
+									if ( insecs[i] == SpaceType.BreakSpace )  // espace sécable ?
 									{
 										this.graphics.AddFilledCircle(x[i]+width/2, y[i]+oy, size*0.05);
 									}
-									if ( insecs[i] == 2 )  // espace insécable ?
+
+									if ( insecs[i] == SpaceType.NoBreakSpace )  // espace insécable ?
 									{
 										this.graphics.AddCircle(x[i]+width/2, y[i]+oy, size*0.08);
+									}
+
+									if ( insecs[i] == SpaceType.NewFrame ||
+										 insecs[i] == SpaceType.NewPage  )  // saut ?
+									{
+										Point p1 = new Point(x[i],                 y[i]+oy);
+										Point p2 = new Point(this.textFrame.Width, y[i]+oy);
+										Path path = Path.FromLine(p1, p2);
+
+										double w    = (insecs[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
+										double dash = (insecs[i] == SpaceType.NewFrame) ? 0.0 : 8.0;
+										double gap  = (insecs[i] == SpaceType.NewFrame) ? 3.0 : 2.0;
+										Drawer.DrawPathDash(this.graphics, this.drawingContext, path, w, dash, gap, color.Basic);
 									}
 								}
 							}
