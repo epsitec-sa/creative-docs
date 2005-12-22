@@ -449,6 +449,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public void DisableMerge()
+		{
+			if (this.action != null)
+			{
+				this.action.DefineMergeMode (MergeMode.Disabled);
+			}
+		}
 		
 		
 		public enum MergeMode
@@ -937,6 +944,11 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
+			
+			public void DefineMergeMode(MergeMode mode)
+			{
+				this.mode = mode;
+			}
 			
 			public void Release()
 			{
