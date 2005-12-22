@@ -127,12 +127,12 @@ namespace Epsitec.Common.Drawing
 		
 		public static bool operator ==(Margins a, Margins b)
 		{
-			return a.Equals (b);
+			return (a.left == b.left) && (a.right == b.right) && (a.top == b.top) && (a.bottom == b.bottom);
 		}
 		
 		public static bool operator !=(Margins a, Margins b)
 		{
-			return !a.Equals (b);
+			return (a.left != b.left) || (a.right != b.right) || (a.top != b.top) || (a.bottom != b.bottom);
 		}
 		
 		public static Margins operator -(Margins a)
