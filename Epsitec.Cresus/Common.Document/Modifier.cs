@@ -5900,11 +5900,11 @@ namespace Epsitec.Common.Document
 			if ( cmd == this.opletLastCmd && id == this.opletLastId )
 			{
 				if ( cmd == "ChangeProperty"      ||
-					cmd == "ChangePageName"      ||
-					cmd == "ChangeLayerName"     ||
-					cmd == "ChangeAggregateName" ||
-					cmd == "ChangeGuide"         ||
-					cmd == "ChangeDocSize"       )
+					 cmd == "ChangePageName"      ||
+					 cmd == "ChangeLayerName"     ||
+					 cmd == "ChangeAggregateName" ||
+					 cmd == "ChangeGuide"         ||
+					 cmd == "ChangeDocSize"       )
 				{
 					this.opletSkip = true;
 					return null;

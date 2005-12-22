@@ -50,6 +50,13 @@ namespace Epsitec.Common.Document
 			PageWidth,		// zoom sur la largeur de la page
 		}
 
+		public enum MiniBarDelayed
+		{
+			Immediately,
+			Delayed,
+			DoubleClick,
+		}
+
 
 		public Viewer(Document document)
 		{
@@ -405,7 +412,7 @@ namespace Epsitec.Common.Document
 						{
 							if ( this.miniBar == null )
 							{
-								this.OpenMiniBar(pos, 0, true, true, 0);
+								this.OpenMiniBar(pos, MiniBarDelayed.Immediately, true, true, 0);
 							}
 							else
 							{
@@ -1139,7 +1146,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( mb )
 				{
-					this.OpenMiniBar(mouse, 1, false, true, 0);
+					this.OpenMiniBar(mouse, MiniBarDelayed.Delayed, false, true, 0);
 				}
 			}
 		}
@@ -1454,7 +1461,7 @@ namespace Epsitec.Common.Document
 				if ( mb )
 				{
 					this.document.Notifier.NotifyShaperChanged();
-					this.OpenMiniBar(mouse, 1, false, true, 0);
+					this.OpenMiniBar(mouse, MiniBarDelayed.Delayed, false, true, 0);
 				}
 			}
 		}
@@ -2415,7 +2422,7 @@ namespace Epsitec.Common.Document
 
 
 		#region MiniBar
-		public void OpenMiniBar(Point mouse, int delayed, bool noSelected, bool hot, double distance)
+		public void OpenMiniBar(Point mouse, MiniBarDelayed delayed, bool noSelected, bool hot, double distance)
 		{
 			//	Ouvre la mini-palette.
 			this.CloseMiniBar(false);
@@ -2476,9 +2483,9 @@ namespace Epsitec.Common.Document
 
 			switch ( delayed )
 			{
-				case 1:   this.miniBarTimer.Delay = 0.2;  break;
-				case 2:   this.miniBarTimer.Delay = SystemInformation.DoubleClickDelay;  break;
-				default:  this.miniBarTimer.Delay = 0.01;  break;
+				case MiniBarDelayed.Delayed:      this.miniBarTimer.Delay = 0.2;  break;
+				case MiniBarDelayed.DoubleClick:  this.miniBarTimer.Delay = SystemInformation.DoubleClickDelay;  break;
+				default:                          this.miniBarTimer.Delay = 0.01;  break;
 			}
 			this.miniBarTimer.Start();
 		}

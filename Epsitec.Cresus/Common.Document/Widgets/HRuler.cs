@@ -326,6 +326,9 @@ namespace Epsitec.Common.Document.Widgets
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
+			double limitLow  = this.DocumentToScreen(this.limitLow);
+			double limitHigh = this.DocumentToScreen(this.limitHigh);
+
 			for ( int pass=1 ; pass<=3 ; pass++ )
 			{
 				if ( pass == 2 && this.draggingTabDest == null )  continue;
@@ -365,7 +368,10 @@ namespace Epsitec.Common.Document.Widgets
 
 					if ( pass == 1 )
 					{
-						graphics.AddFilledRectangle(rect);
+						Rectangle r = rect;
+						r.Left  = System.Math.Max(r.Left,  limitLow);
+						r.Right = System.Math.Min(r.Right, limitHigh);
+						graphics.AddFilledRectangle(r);
 						graphics.RenderSolid(colorBack);
 					}
 					else if ( pass == 2 )
@@ -544,19 +550,20 @@ namespace Epsitec.Common.Document.Widgets
 				else	// pose un nouveau tabulateur ?
 				{
 					Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
-					double tabPos = this.ScreenToDocument(pos.X);
-					tabPos = tabPos - bbox.Left;
-					tabPos = this.SnapGrid(tabPos);
-					handle = this.editObject.NewTextTab(tabPos, this.tabToCreate);
+					double x = this.MouseToText(pos, bbox);
+
+					handle = this.editObject.NewTextTab(x, this.tabToCreate);
 					this.draggingOffset = 0.0;
 					this.draggingFirstMove = false;
 				}
 			}
-			else	// déplace un tabulateur existant ?
+			else	// déplace un tabulateur ou une marge existant ?
 			{
 				double initial = this.GetHandleHorizontalPos(handle);
 				this.draggingOffset = initial - pos.X;
 			}
+
+			this.GetMargins(out this.draggingInitialFirst, out this.draggingInitialBody, out this.draggingInitialRight);
 		}
 
 		protected override void DraggingMove(ref string handle, Point pos)
@@ -586,7 +593,14 @@ namespace Epsitec.Common.Document.Widgets
 				else
 				{
 					this.draggingTabToDelete = null;
-					this.draggingTabDest = this.DraggingDetect(pos, handle);
+					string dest = this.DraggingDetect(pos, handle);
+					if ( dest != "LeftFirst" &&
+						 dest != "LeftBody"  &&
+						 dest != "FirstBody" &&
+						 dest != "Right"     )
+					{
+						this.draggingTabDest = dest;
+					}
 				}
 			}
 
@@ -649,67 +663,46 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			//	Modifie la position d'une poignée quelconque (marge ou tabulateur).
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
+			double x = this.MouseToText(pos, bbox);
 
 			Tab tab = this.GetTab(handle);
 			if ( tab.Tag == null )
 			{
 				if ( handle == "LeftFirst" )
 				{
-					double leftFirst = this.ScreenToDocument(pos.X);
-					leftFirst = leftFirst - bbox.Left;
-					leftFirst = this.SnapGrid(leftFirst);
-					leftFirst = System.Math.Max(leftFirst, 0);
-
 					this.document.ParagraphWrapper.SuspendSynchronisations();
-					this.document.ParagraphWrapper.Defined.LeftMarginFirst = leftFirst;
+					this.document.ParagraphWrapper.Defined.LeftMarginFirst = x;
 					this.document.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
 					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
 
 				if ( handle == "LeftBody" )
 				{
-					double leftBody = this.ScreenToDocument(pos.X);
-					leftBody = leftBody - bbox.Left;
-					leftBody = this.SnapGrid(leftBody);
-					leftBody = System.Math.Max(leftBody, 0);
-
 					this.document.ParagraphWrapper.SuspendSynchronisations();
-					this.document.ParagraphWrapper.Defined.LeftMarginBody = leftBody;
+					this.document.ParagraphWrapper.Defined.LeftMarginBody = x;
 					this.document.ParagraphWrapper.Defined.MarginUnits    = Common.Text.Properties.SizeUnits.Points;
 					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
 
 				if ( handle == "FirstBody" )
 				{
-					double initialLeftFirst, initialLeftBody, initialRight;
-					this.GetMargins(out initialLeftFirst, out initialLeftBody, out initialRight);
-
-					double leftBody = this.ScreenToDocument(pos.X);
-					leftBody = leftBody - bbox.Left;
-					leftBody = this.SnapGrid(leftBody);
-					leftBody = System.Math.Max(leftBody, 0);
-
-					double leftFirst = initialLeftFirst + (leftBody-initialLeftBody);
-					leftFirst = this.SnapGrid(leftFirst);
-					leftFirst = System.Math.Max(leftFirst, 0);
+					double xf = x+(this.draggingInitialFirst-this.draggingInitialBody);
+					xf = System.Math.Max(xf, 0);
+					xf = System.Math.Min(xf, bbox.Width);
 
 					this.document.ParagraphWrapper.SuspendSynchronisations();
-					this.document.ParagraphWrapper.Defined.LeftMarginFirst = leftFirst;
-					this.document.ParagraphWrapper.Defined.LeftMarginBody  = leftBody;
+					this.document.ParagraphWrapper.Defined.LeftMarginFirst = xf;
+					this.document.ParagraphWrapper.Defined.LeftMarginBody  = x;
 					this.document.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
 					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
 
 				if ( handle == "Right" )
 				{
-					double right = this.ScreenToDocument(pos.X);
-					right = bbox.Right - right;
-					right = this.SnapGrid(right);
-					right = System.Math.Max(right, 0);
-
+					x = bbox.Width-x;
 					this.document.ParagraphWrapper.SuspendSynchronisations();
-					this.document.ParagraphWrapper.Defined.RightMarginFirst = right;
-					this.document.ParagraphWrapper.Defined.RightMarginBody  = right;
+					this.document.ParagraphWrapper.Defined.RightMarginFirst = x;
+					this.document.ParagraphWrapper.Defined.RightMarginBody  = x;
 					this.document.ParagraphWrapper.Defined.MarginUnits      = Common.Text.Properties.SizeUnits.Points;
 					this.document.ParagraphWrapper.ResumeSynchronisations();
 				}
@@ -719,13 +712,7 @@ namespace Epsitec.Common.Document.Widgets
 				double tabPos;
 				TextTabType type;
 				this.editObject.GetTextTab(handle, out tabPos, out type);
-				
-				tabPos = this.ScreenToDocument(pos.X);
-				tabPos = tabPos - bbox.Left;
-				tabPos = this.SnapGrid(tabPos);
-				tabPos = System.Math.Max(tabPos, 0);
-				
-				this.editObject.SetTextTab(ref handle, tabPos, type, this.draggingFirstMove);
+				this.editObject.SetTextTab(ref handle, x, type, this.draggingFirstMove);
 			}
 		}
 
@@ -747,6 +734,16 @@ namespace Epsitec.Common.Document.Widgets
 				if ( tab.Tag == tag )  return tab;
 			}
 			return this.invalidTab;
+		}
+
+		protected double MouseToText(Point mouse, Drawing.Rectangle bbox)
+		{
+			//	Conversion de la position de la souris en une position relative au texte.
+			double x = this.ScreenToDocument(mouse.X);
+			x = this.SnapGrid(x)-bbox.Left;
+			x = System.Math.Max(x, 0);
+			x = System.Math.Min(x, bbox.Width);
+			return x;
 		}
 
 		protected double SnapGrid(double value)
@@ -799,14 +796,41 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			//	Donne le texte du tooltip d'édition en fonction de la position.
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
-			double x = this.ScreenToDocument(pos.X) - bbox.Left;
+			double x = this.MouseToText(pos, bbox);
 
 			if ( this.isDragging )  // déplacement en cours ?
 			{
 				if ( this.draggingTabDest == null )
 				{
-					x = System.Math.Max(this.SnapGrid(x), 0);
-					return this.document.Modifier.RealToString(x);
+					if ( this.draggingHandle == "Right" )
+					{
+						string vp = this.document.Modifier.RealToString(x);
+						string vn = this.document.Modifier.RealToString(x-bbox.Width);
+						string w  = this.document.Modifier.RealToString(x-this.draggingInitialBody);
+						return string.Format(Res.Strings.Action.Text.Ruler.HandleMoveRight, vp, vn, w);
+					}
+					else if ( this.draggingHandle == "LeftFirst" ||
+							  this.draggingHandle == "LeftBody"  ||
+							  this.draggingHandle == "FirstBody" )
+					{
+						string v = this.document.Modifier.RealToString(x);
+						string w = this.document.Modifier.RealToString(bbox.Width-this.draggingInitialRight-x);
+						return string.Format(Res.Strings.Action.Text.Ruler.HandleMoveLeft, v, w);
+					}
+					else	// tabulateur ?
+					{
+						if ( this.draggingInitialBody == 0 )
+						{
+							return this.document.Modifier.RealToString(x);
+						}
+						else
+						{
+							string a = this.document.Modifier.RealToString(x);
+							string r = this.document.Modifier.RealToString(x-this.draggingInitialBody);
+							if ( !r.StartsWith("-") )  r = string.Concat("+", r);
+							return string.Format("{0} ({1})", a, r);
+						}
+					}
 				}
 				else
 				{
@@ -821,14 +845,12 @@ namespace Epsitec.Common.Document.Widgets
 				return Res.Strings.Action.Text.Ruler.TabChoice;
 			}
 			
-			string handle = this.DraggingDetect(pos);
+			if ( this.draggingHandle == "LeftFirst" )  return Res.Strings.Action.Text.Ruler.HandleLeftFirst;
+			if ( this.draggingHandle == "LeftBody"  )  return Res.Strings.Action.Text.Ruler.HandleLeftBody;
+			if ( this.draggingHandle == "FirstBody" )  return Res.Strings.Action.Text.Ruler.HandleFirstBody;
+			if ( this.draggingHandle == "Right"     )  return Res.Strings.Action.Text.Ruler.HandleRight;
 
-			if ( handle == "LeftFirst" )  return Res.Strings.Action.Text.Ruler.HandleLeftFirst;
-			if ( handle == "LeftBody"  )  return Res.Strings.Action.Text.Ruler.HandleLeftBody;
-			if ( handle == "FirstBody" )  return Res.Strings.Action.Text.Ruler.HandleFirstBody;
-			if ( handle == "Right"     )  return Res.Strings.Action.Text.Ruler.HandleRight;
-
-			Tab tab = this.GetTab(handle);
+			Tab tab = this.GetTab(this.draggingHandle);
 			if ( tab.Tag != null )
 			{
 				if ( tab.Zombie )
@@ -1124,6 +1146,9 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected Drawing.TextTabType		tabToCreate = Drawing.TextTabType.Left;
 		protected double					draggingOffset = 0.0;
+		protected double					draggingInitialFirst = 0.0;
+		protected double					draggingInitialBody = 0.0;
+		protected double					draggingInitialRight = 0.0;
 		protected string					draggingTabToDelete = null;
 		protected string					draggingTabDest = null;
 		protected bool						draggingFirstMove = false;

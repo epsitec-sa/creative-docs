@@ -1087,6 +1087,8 @@
 	<data name="Action.Text.Ruler.HandleLeftBody">Marge gauche de corps de texte</data>
 	<data name="Action.Text.Ruler.HandleFirstBody">Marge gauche</data>
 	<data name="Action.Text.Ruler.HandleRight">Marge droite</data>
+	<data name="Action.Text.Ruler.HandleMoveLeft">{0}, largeur={1}</data>
+	<data name="Action.Text.Ruler.HandleMoveRight">{0} ({1}), largeur={2}</data>
 	<data name="Action.Text.Ruler.TabChoice">Choix du tabulateur</data>
 	<data name="Action.Text.Ruler.TabLeft">Tabulateur normal</data>
 	<data name="Action.Text.Ruler.TabRight">Tabulateur droite</data>

@@ -1087,6 +1087,8 @@
 	<data name="Action.Text.Ruler.HandleLeftBody">Left Padding, text body</data>
 	<data name="Action.Text.Ruler.HandleFirstBody">Left Padding</data>
 	<data name="Action.Text.Ruler.HandleRight">Right Padding</data>
+	<data name="Action.Text.Ruler.HandleMoveLeft">{0}, width={1}</data>
+	<data name="Action.Text.Ruler.HandleMoveRight">{0} ({1}), width={2}</data>
 	<data name="Action.Text.Ruler.TabChoice">Select Tab Mark type</data>
 	<data name="Action.Text.Ruler.TabLeft">Normal Tab Mark</data>
 	<data name="Action.Text.Ruler.TabRight">Right Tab Mark</data>

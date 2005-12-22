@@ -482,8 +482,8 @@ namespace Epsitec.Common.Document.Objects
 						Point mouse = viewer.InternalToScreen(pos);
 						distance = System.Math.Max(top-mouse.Y, 0);
 					}
-					bool delayed = (message.ButtonDownCount > 1);
-					viewer.OpenMiniBar(pos, 2, false, false, distance);
+					Viewer.MiniBarDelayed delayed = (message.ButtonDownCount > 1) ? Viewer.MiniBarDelayed.DoubleClick : Viewer.MiniBarDelayed.Immediately;
+					viewer.OpenMiniBar(pos, delayed, false, false, distance);
 				}
 			}
 

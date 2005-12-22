@@ -264,6 +264,7 @@ namespace Epsitec.Common.Document.Widgets
 						if ( this.isDragging )
 						{
 							this.DraggingEnd(ref this.draggingHandle, pos);
+							this.draggingHandle = null;
 							this.isDragging = false;
 							message.Consumer = this;
 							return;
