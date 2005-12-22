@@ -633,7 +633,7 @@ namespace Epsitec.Common.Widgets
 				
 				int time_new   = message.TickCount;
 				int time_delta = time_new - Message.state.button_down_time;
-				int time_max   = SystemInformation.DoubleClickDelay;
+				int time_max   = (int)(SystemInformation.DoubleClickDelay * 1000);
 				int down_count = 1;
 				
 				if ((time_delta < time_max) && (time_delta > 0) && (Message.state.button_down_id == message.button))

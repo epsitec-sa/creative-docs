@@ -187,9 +187,12 @@ namespace Epsitec.Common.Widgets
 			get { return System.Windows.Forms.SystemInformation.RightAlignedMenus; }
 		}
 		
-		public static int				DoubleClickDelay
+		public static double			DoubleClickDelay
 		{
-			get { return System.Windows.Forms.SystemInformation.DoubleClickTime; }
+			get
+			{
+				return System.Windows.Forms.SystemInformation.DoubleClickTime / 1000.0;
+			}
 		}
 		
 		public static int				DoubleClickRadius2
