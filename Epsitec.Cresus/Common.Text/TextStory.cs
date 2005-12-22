@@ -269,6 +269,13 @@ namespace Epsitec.Common.Text
 						this.oplet_queue.PurgeSingleUndo ();
 					}
 				}
+				else if (oplets_1.Length == 1)
+				{
+					if (this.MergeOplets (oplets_2[oplets_2.Length-1], oplets_1[0]))
+					{
+						this.oplet_queue.PurgeSingleUndo ();
+					}
+				}
 			}
 		}
 		
@@ -1191,6 +1198,13 @@ namespace Epsitec.Common.Text
 					{
 						return true;
 					}
+				}
+				else if (oplet is TextNavigator.DefineSelectionOplet)
+				{
+					//	Deux sélections sont toujours combinables; on prend la
+					//	première comme référence.
+					
+					return true;
 				}
 			}
 			

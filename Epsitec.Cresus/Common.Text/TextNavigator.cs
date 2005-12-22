@@ -553,7 +553,7 @@ namespace Epsitec.Common.Text
 				if ((this.selection_before != null) &&
 					(this.selection_before.Length > 0))
 				{
-					this.InternalInsertSelectionOplet (this.selection_before);
+					this.InternalInsertDeselectionOplet (this.selection_before);
 				}
 				else
 				{
@@ -2930,6 +2930,11 @@ again:
 			this.story.Insert (new ClearSelectionOplet (this, positions));
 		}
 		
+		private void InternalInsertDeselectionOplet(int[] positions)
+		{
+			this.story.Insert (new DefineSelectionOplet (this, positions));
+		}
+		
 		private void InternalInsertDeselectionOplet()
 		{
 			this.story.Insert (new DefineSelectionOplet (this));
@@ -3371,19 +3376,36 @@ again:
 		/// La classe DefineSelectionOplet permet de gérer l'annulation de la
 		/// définition d'une sélection.
 		/// </summary>
-		protected class DefineSelectionOplet : Common.Support.AbstractOplet
+		internal class DefineSelectionOplet : Common.Support.AbstractOplet
 		{
 			public DefineSelectionOplet(TextNavigator navigator)
 			{
 				this.navigator = navigator;
 			}
 			
+			public DefineSelectionOplet(TextNavigator navigator, int[] positions)
+			{
+				this.navigator = navigator;
+				this.positions = positions;
+			}
+			
 			
 			public override Epsitec.Common.Support.IOplet Undo()
 			{
+				int[] old = this.positions;
+				
 				this.positions = this.navigator.GetSelectionCursorPositions ();
 				
-				this.navigator.InternalClearSelection ();
+				if ((old == null) ||
+					(old.Length == 0))
+				{
+					this.navigator.InternalClearSelection ();
+				}
+				else
+				{
+					this.navigator.InternalDefineSelection (old);
+				}
+				
 				this.navigator.UpdateSelectionMarkers ();
 				
 				this.navigator.NotifyUndoExecuted (this);
@@ -3393,7 +3415,20 @@ again:
 			
 			public override Epsitec.Common.Support.IOplet Redo()
 			{
-				this.navigator.InternalDefineSelection (this.positions);
+				int[] old = this.positions;
+				
+				this.positions = this.navigator.GetSelectionCursorPositions ();
+				
+				if ((old == null) ||
+					(old.Length == 0))
+				{
+					this.navigator.InternalClearSelection ();
+				}
+				else
+				{
+					this.navigator.InternalDefineSelection (old);
+				}
+				
 				this.navigator.UpdateSelectionMarkers ();
 				
 				this.navigator.NotifyRedoExecuted (this);
