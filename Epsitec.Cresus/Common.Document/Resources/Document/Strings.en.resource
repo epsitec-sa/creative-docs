@@ -873,7 +873,7 @@
 	<data name="Action.Uncombine">Split</data>
 	<data name="Action.ToBezier">Convert to curves</data>
 	<data name="Action.ToPoly">Convert to lines</data>
-	<data name="Action.ToTextBox2">@@Convertir un ancien texte pour le rendre éditable</data>
+	<data name="Action.ToTextBox2">Convert old text objects to make them editable</data>
 	<data name="Action.ToSimplest">Simplify (debug)</data>
 	<data name="Action.Fragment">Explode</data>
 	
