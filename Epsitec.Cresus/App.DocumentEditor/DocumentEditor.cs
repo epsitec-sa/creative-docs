@@ -4134,6 +4134,12 @@ namespace Epsitec.App.DocumentEditor
 				SelectorType sType = viewer.SelectorType;
 				Objects.Abstract one = this.CurrentDocument.Modifier.RetOnlySelectedObject();
 
+				bool isOldText = false;
+				if ( this.CurrentDocument.ContainOldText )
+				{
+					isOldText = this.CurrentDocument.Modifier.IsSelectedOldText();
+				}
+
 				this.newState.Enable = true;
 				this.openState.Enable = true;
 				this.openModelState.Enable = true;
@@ -4192,7 +4198,7 @@ namespace Epsitec.App.DocumentEditor
 				this.uncombineState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.toBezierState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.toPolyState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.toTextBox2State.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.toTextBox2State.Enable = ( totalSelected > 0 && !isCreating && !isEdit && isOldText );
 				this.fragmentState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.booleanAndState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.booleanOrState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );

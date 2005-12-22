@@ -1144,6 +1144,26 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public bool IsSelectedOldText()
+		{
+			//	Retourne true si un ancien objet TextBox ou TextLine est sélectionné.
+			if ( this.TotalSelected == 0 )  return false;
+
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			int total = layer.Objects.Count;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Objects.Abstract obj = layer.Objects[i] as Objects.Abstract;
+				if ( obj.IsSelected )
+				{
+					if ( obj is Objects.TextBox  )  return true;
+					if ( obj is Objects.TextLine )  return true;
+				}
+			}
+			return false;
+		}
+
 		public Objects.Abstract RetOnlySelectedObject()
 		{
 			//	Retourne le seul objet sélectionné.
@@ -3278,7 +3298,7 @@ namespace Epsitec.Common.Document
 					layer.Objects.Add(t2);
 
 					Rectangle box = obj.BoundingBoxThin;
-					box.Bottom -= box.Height*0.4;
+					box.Bottom -= box.Height*0.5;
 					t2.CreateMouseDown(box.BottomLeft, context);
 					t2.CreateMouseUp  (box.TopRight,   context);
 

@@ -89,6 +89,7 @@ namespace Epsitec.Common.Document
 			this.surfaceRotationAngle = 0.0;
 			this.uniqueObjectId = 0;
 			this.uniqueAggregateId = 0;
+			this.containOldText = false;
 
 			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
 
@@ -699,11 +700,17 @@ namespace Epsitec.Common.Document
 				flow.ReadFinalizeTextStory();
 			}
 			
+			this.containOldText = false;
 			Font.FaceInfo[] fonts = Font.Faces;
 			foreach ( Objects.Abstract obj in this.Deep(null) )
 			{
 				obj.ReadFinalize();
 				obj.ReadCheckWarnings(fonts, this.readWarnings);
+
+				if ( (obj is Objects.TextBox) || (obj is Objects.TextLine) )
+				{
+					this.containOldText = true;
+				}
 			}
 
 			foreach ( TextFlow flow in this.textFlows )
@@ -733,6 +740,12 @@ namespace Epsitec.Common.Document
 				this.Modifier.OpletQueueEnable = true;
 				this.Modifier.OpletQueuePurge();
 			}
+		}
+
+		public bool ContainOldText
+		{
+			//	Indique si le document contient un ou plusieurs anciens objets TextBox ou TextLine.
+			get { return this.containOldText; }
 		}
 
 		#region OldStylesToAggregates
@@ -1960,5 +1973,6 @@ namespace Epsitec.Common.Document
 		protected Text.TextContext						textContext;
 		protected Widgets.HRuler						hRuler;
 		protected Widgets.VRuler						vRuler;
+		protected bool									containOldText;
 	}
 }

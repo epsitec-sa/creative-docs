@@ -2745,6 +2745,8 @@ namespace Epsitec.Common.Document
 					this.MiniBarAdd(list, "Inside");
 					this.MiniBarAdd(list, "Outside");
 					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "ToTextBox2");
+					this.MiniBarAdd(list, "");
 #if false
 					this.MiniBarAdd(list, "Rotate90");
 					this.MiniBarAdd(list, "Rotate180");
