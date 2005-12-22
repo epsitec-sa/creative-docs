@@ -23,8 +23,8 @@ namespace Epsitec.Common.IO
 			{
 				//	Premier essai: trouve le type exact correspondant à ce qui est
 				//	demandé par la désérialisation.
-				
-				type = System.Type.GetType (full_name);
+
+				type = GenericDeserializationBinder.SafeGetType (full_name);
 				
 				if (type == null)
 				{
@@ -51,7 +51,19 @@ namespace Epsitec.Common.IO
 			
 			return type;
 		}
-		
+
+		private static System.Type SafeGetType(string name)
+		{
+			try
+			{
+				return System.Type.GetType(name);
+			}
+			catch (System.IO.FileLoadException)
+			{
+			}
+			
+			return null;
+		}
 		
 		protected virtual System.Type FindReplacementType(string assembly_name, string type_name)
 		{
@@ -62,7 +74,7 @@ namespace Epsitec.Common.IO
 				if (assembly.FullName.StartsWith (prefix))
 				{
 					string full_name = string.Concat (type_name, ", ", assembly.FullName);
-					return System.Type.GetType (full_name);
+					return GenericDeserializationBinder.SafeGetType (full_name);
 				}
 			}
 			
