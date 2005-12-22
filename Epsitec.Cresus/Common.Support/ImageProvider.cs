@@ -467,7 +467,7 @@ namespace Epsitec.Common.Support
 				byte[] image_data = bundle["image.data"].AsBinary;
 				string image_args = bundle["image.size"].AsString;
 				
-				Drawing.Size size = Drawing.Size.Parse (image_args, System.Globalization.CultureInfo.InvariantCulture);
+				Drawing.Size size = Drawing.Size.Parse (image_args);
 				
 				cache = Drawing.Bitmap.FromData (image_data, Drawing.Point.Empty, size);
 				
@@ -489,13 +489,13 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("Invalid image specification for '{0}', {1} arguments", image_name, args.Length));
 				}
 				
-				Drawing.Point rect_pos = Drawing.Point.Parse (args[0] + ";" + args[1], System.Globalization.CultureInfo.InvariantCulture);
-				Drawing.Size  rect_siz = Drawing.Size.Parse (args[2] + ";" + args[3], System.Globalization.CultureInfo.InvariantCulture);
+				Drawing.Point rect_pos = Drawing.Point.Parse (args[0] + ";" + args[1]);
+				Drawing.Size  rect_siz = Drawing.Size.Parse (args[2] + ";" + args[3]);
 				Drawing.Point origin   = Drawing.Point.Empty;
 				
 				if (args.Length >= 6)
 				{
-					origin = Drawing.Point.Parse (args[4] + ";" + args[5], System.Globalization.CultureInfo.InvariantCulture);
+					origin = Drawing.Point.Parse (args[4] + ";" + args[5]);
 				}
 				
 				return Drawing.Bitmap.FromLargerImage (cache, new Drawing.Rectangle (rect_pos, rect_siz), origin);

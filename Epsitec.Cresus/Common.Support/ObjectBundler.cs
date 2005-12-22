@@ -822,7 +822,7 @@ namespace Epsitec.Common.Support
 								//	être remplacés par "*" (ce qui signifie: utiliser la valeur par défaut)
 								
 								Drawing.Size def_size = (Drawing.Size) prop_info.GetValue (obj, null);
-								prop_info.SetValue (obj, Drawing.Size.Parse (str_value, System.Globalization.CultureInfo.InvariantCulture, def_size), null);
+								prop_info.SetValue (obj, Drawing.Size.Parse (str_value, def_size), null);
 								ok = true;
 							}
 							else if (prop_type == typeof (Drawing.Point))
@@ -832,7 +832,7 @@ namespace Epsitec.Common.Support
 								//	être remplacés par "*" (ce qui signifie: utiliser la valeur par défaut)
 								
 								Drawing.Point def_point = (Drawing.Point) prop_info.GetValue (obj, null);
-								prop_info.SetValue (obj, Drawing.Point.Parse (str_value, System.Globalization.CultureInfo.InvariantCulture, def_point), null);
+								prop_info.SetValue (obj, Drawing.Point.Parse (str_value, def_point), null);
 								ok = true;
 							}
 							else if (prop_type == typeof (Drawing.Rectangle))
@@ -842,7 +842,7 @@ namespace Epsitec.Common.Support
 								//	peuvent être remplacés par "*" (valeur par défaut).
 								
 								Drawing.Rectangle def_rect = (Drawing.Rectangle) prop_info.GetValue (obj, null);
-								prop_info.SetValue (obj, Drawing.Rectangle.Parse (str_value, System.Globalization.CultureInfo.InvariantCulture, def_rect), null);
+								prop_info.SetValue (obj, Drawing.Rectangle.Parse (str_value, def_rect), null);
 								ok = true;
 							}
 							else if (prop_type == typeof (Drawing.Margins))
@@ -852,7 +852,7 @@ namespace Epsitec.Common.Support
 								//	peuvent être remplacés par "*" (ce qui signifie: utiliser la valeur par défaut)
 								
 								Drawing.Margins def_margins = (Drawing.Margins) prop_info.GetValue (obj, null);
-								prop_info.SetValue (obj, Drawing.Margins.Parse (str_value, System.Globalization.CultureInfo.InvariantCulture, def_margins), null);
+								prop_info.SetValue (obj, Drawing.Margins.Parse (str_value, def_margins), null);
 								ok = true;
 							}
 							else if (prop_type == typeof (bool))

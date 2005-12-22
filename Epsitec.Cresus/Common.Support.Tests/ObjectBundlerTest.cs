@@ -345,7 +345,7 @@ namespace Epsitec.Common.Support
 					bool sw = (def_value.Width == cur_value.Width);
 					bool sh = (def_value.Height == cur_value.Height);
 					
-					e.PropertyData = Drawing.Size.Converter.ToString (cur_value, System.Globalization.CultureInfo.InvariantCulture, sw, sh);
+					e.PropertyData = Drawing.Size.Converter.ToString (cur_value, sw, sh);
 				}
 			}
 		}

@@ -22,9 +22,9 @@ namespace Epsitec.Common.Drawing
 		[Test] public void CheckPointToStringParse()
 		{
 			Point pt1 = new Point (10, 20);
-			Point pt2 = Point.Parse ("10;20", System.Globalization.CultureInfo.InvariantCulture);
-			Point pt3 = Point.Parse ("*;30", System.Globalization.CultureInfo.InvariantCulture, pt1);
-			Point pt4 = Point.Parse ("40;*", System.Globalization.CultureInfo.InvariantCulture, pt1);
+			Point pt2 = Point.Parse ("10;20");
+			Point pt3 = Point.Parse ("*;30", pt1);
+			Point pt4 = Point.Parse ("40;*", pt1);
 			
 			Assert.AreEqual (pt1, pt2);
 			Assert.AreEqual (new Point (10, 30), pt3);
@@ -35,9 +35,9 @@ namespace Epsitec.Common.Drawing
 		[Test] public void CheckSizeToStringParse()
 		{
 			Size sz1 = new Size (10, 20);
-			Size sz2 = Size.Parse ("10;20", System.Globalization.CultureInfo.InvariantCulture);
-			Size sz3 = Size.Parse ("*;30", System.Globalization.CultureInfo.InvariantCulture, sz1);
-			Size sz4 = Size.Parse ("40;*", System.Globalization.CultureInfo.InvariantCulture, sz1);
+			Size sz2 = Size.Parse ("10;20");
+			Size sz3 = Size.Parse ("*;30", sz1);
+			Size sz4 = Size.Parse ("40;*", sz1);
 			
 			Assert.AreEqual (sz1, sz2);
 			Assert.AreEqual (new Size (10, 30), sz3);

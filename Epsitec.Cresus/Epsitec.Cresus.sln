@@ -195,6 +195,10 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.CreativeDocs", "X.S
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing.Agg", "Common.Drawing.Agg\Common.Drawing.Agg.csproj", "{7D73AD35-D078-4B4C-AF30-434C6A377058}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -391,6 +395,10 @@ Global
 		{E96EECAF-5BB4-49F0-9F8C-29113C9FFD74}.Release.ActiveCfg = Release
 		{C189739F-7419-4C54-A870-215A538C10C5}.Debug.ActiveCfg = Debug
 		{C189739F-7419-4C54-A870-215A538C10C5}.Release.ActiveCfg = Release
+		{7D73AD35-D078-4B4C-AF30-434C6A377058}.Debug.ActiveCfg = Debug|.NET
+		{7D73AD35-D078-4B4C-AF30-434C6A377058}.Debug.Build.0 = Debug|.NET
+		{7D73AD35-D078-4B4C-AF30-434C6A377058}.Release.ActiveCfg = Release|.NET
+		{7D73AD35-D078-4B4C-AF30-434C6A377058}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\AntiGrain.NET.dll = External\AntiGrain.NET.dll

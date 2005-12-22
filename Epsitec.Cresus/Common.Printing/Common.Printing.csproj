@@ -99,6 +99,11 @@
                     Project = "{EAF258A4-E107-4466-A3E1-9FC072557940}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Common.Drawing.Agg"
+                    Project = "{7D73AD35-D078-4B4C-AF30-434C6A377058}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

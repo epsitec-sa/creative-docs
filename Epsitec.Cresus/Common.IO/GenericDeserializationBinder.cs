@@ -34,6 +34,17 @@ namespace Epsitec.Common.IO
 					type = this.FindReplacementType (assembly_name, type_name);
 				}
 				
+				if (type == null)
+				{
+					//	Troisième essai: trouve le type équivalent dans une autre
+					//	assembly, avec une heuristique maison.
+					
+					if (assembly_name.IndexOf ("Common.Drawing") >= 0)
+					{
+						type = this.FindReplacementType (assembly_name.Replace ("Common.Drawing", "Common.Drawing.Agg"), type_name);
+					}
+				}
+				
 				System.Diagnostics.Debug.Assert (type != null);
 				GenericDeserializationBinder.type_cache[full_name] = type;
 			}
