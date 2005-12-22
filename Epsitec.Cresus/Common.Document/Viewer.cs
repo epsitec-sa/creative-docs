@@ -335,6 +335,7 @@ namespace Epsitec.Common.Document
 				case MessageType.MouseDown:
 					this.document.IsDirtySerialize = true;
 					this.AutoScrollTimerStart(message);
+					this.RestartMiniBar();
 					this.ProcessMouseDown(message, pos);
 					this.mouseDragging = true;
 					break;
@@ -404,7 +405,7 @@ namespace Epsitec.Common.Document
 						{
 							if ( this.miniBar == null )
 							{
-								this.OpenMiniBar(pos, false, true, true, 0);
+								this.OpenMiniBar(pos, 0, true, true, 0);
 							}
 							else
 							{
@@ -1138,7 +1139,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( mb )
 				{
-					this.OpenMiniBar(mouse, true, false, true, 0);
+					this.OpenMiniBar(mouse, 1, false, true, 0);
 				}
 			}
 		}
@@ -1453,7 +1454,7 @@ namespace Epsitec.Common.Document
 				if ( mb )
 				{
 					this.document.Notifier.NotifyShaperChanged();
-					this.OpenMiniBar(mouse, true, false, true, 0);
+					this.OpenMiniBar(mouse, 1, false, true, 0);
 				}
 			}
 		}
@@ -2414,7 +2415,7 @@ namespace Epsitec.Common.Document
 
 
 		#region MiniBar
-		public void OpenMiniBar(Point mouse, bool delayed, bool noSelected, bool hot, double distance)
+		public void OpenMiniBar(Point mouse, int delayed, bool noSelected, bool hot, double distance)
 		{
 			//	Ouvre la mini-palette.
 			this.CloseMiniBar(false);
@@ -2473,8 +2474,23 @@ namespace Epsitec.Common.Document
 
 			this.miniBarCmds = cmds;
 
-			this.miniBarTimer.Delay = delayed ? 0.2 : 0.01;
+			switch ( delayed )
+			{
+				case 1:   this.miniBarTimer.Delay = 0.2;  break;
+				case 2:   this.miniBarTimer.Delay = SystemInformation.DoubleClickDelay;  break;
+				default:  this.miniBarTimer.Delay = 0.01;  break;
+			}
 			this.miniBarTimer.Start();
+		}
+
+		protected void RestartMiniBar()
+		{
+			if ( this.miniBarCmds != null )
+			{
+				this.miniBarTimer.Stop();
+				this.miniBarTimer.Delay = SystemInformation.DoubleClickDelay;
+				this.miniBarTimer.Start();
+			}
 		}
 
 		protected void HandleMiniBarTimeElapsed(object sender)

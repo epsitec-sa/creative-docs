@@ -482,7 +482,8 @@ namespace Epsitec.Common.Document.Objects
 						Point mouse = viewer.InternalToScreen(pos);
 						distance = System.Math.Max(top-mouse.Y, 0);
 					}
-					viewer.OpenMiniBar(pos, false, false, false, distance);
+					bool delayed = (message.ButtonDownCount > 1);
+					viewer.OpenMiniBar(pos, 2, false, false, distance);
 				}
 			}
 
@@ -1406,8 +1407,11 @@ namespace Epsitec.Common.Document.Objects
 			//	Effectue une opération quelconque sur le texte du pavé.
 			this.internalOperation = op;
 
-			this.cursorBox = Drawing.Rectangle.Empty;
-			this.selectBox = Drawing.Rectangle.Empty;
+			if ( this.internalOperation == InternalOperation.Painting )
+			{
+				this.cursorBox = Drawing.Rectangle.Empty;
+				this.selectBox = Drawing.Rectangle.Empty;
+			}
 
 			Point p1, p2, p3, p4;
 			this.Corners(out p1, out p2, out p3, out p4);
@@ -1468,7 +1472,6 @@ namespace Epsitec.Common.Document.Objects
 			{
 				//	Peint le curseur uniquement si l'objet est en édition, qu'il n'y a pas
 				//	de sélection et que l'on est en train d'afficher à l'écran.
-				
 				Text.ITextFrame frame;
 				double cx, cy, ascender, descender;
 				this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);

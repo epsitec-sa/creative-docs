@@ -805,7 +805,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				if ( this.draggingTabDest == null )
 				{
-					x = this.SnapGrid(x);
+					x = System.Math.Max(this.SnapGrid(x), 0);
 					return this.document.Modifier.RealToString(x);
 				}
 				else
