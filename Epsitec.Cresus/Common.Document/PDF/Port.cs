@@ -1016,8 +1016,7 @@ namespace Epsitec.Common.Document.PDF
 						p1 = points[i];
 						p2 = points[i++];
 						p3 = points[i++];
-						p1 = Point.Scale(current, p1, 2.0/3.0);
-						p2 = Point.Scale(p3,      p2, 2.0/3.0);
+						Geometry.BezierS1ToS2(current, ref p1, ref p2, p3);
 						current = p3;
 						this.PutPoint(p1);
 						this.PutPoint(p2);

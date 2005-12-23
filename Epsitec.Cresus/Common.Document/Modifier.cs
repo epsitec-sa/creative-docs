@@ -3439,7 +3439,7 @@ namespace Epsitec.Common.Document
 			Path[] paths = obj.GetPaths();
 			if ( paths == null )
 			{
-				return true;
+				return false;
 			}
 			else
 			{
@@ -3474,10 +3474,12 @@ namespace Epsitec.Common.Document
 								break;
 
 							case PathElement.Curve3:
-								p1 = points[i++];
+								p1 = points[i];
 								p2 = points[i++];
-								this.FragmentCreateBezier(current, p1, p1, p2, obj);
-								current = p2;
+								p3 = points[i++];
+								Geometry.BezierS1ToS2(current, ref p1, ref p2, p3);
+								this.FragmentCreateBezier(current, p1, p2, p3, obj);
+								current = p3;
 								break;
 
 							case PathElement.Curve4:
@@ -3499,7 +3501,7 @@ namespace Epsitec.Common.Document
 					}
 				}
 			}
-			return false;
+			return true;
 		}
 
 		protected bool FragmentCreateLine(Point p1, Point p2, Objects.Abstract model)

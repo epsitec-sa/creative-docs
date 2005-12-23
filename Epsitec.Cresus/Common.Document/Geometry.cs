@@ -74,17 +74,19 @@ namespace Epsitec.Common.Document
 						break;
 
 					case PathElement.Curve3:
-						p1 = points[i++];
+						p1 = points[i];
 						p2 = points[i++];
+						p3 = points[i++];
+						Geometry.BezierS1ToS2(current, ref p1, ref p2, p3);
 						if ( --rank < 0 )
 						{
 							pp1 = current;
 							ss1 = p1;
-							ss2 = p1;
-							pp2 = p2;
+							ss2 = p2;
+							pp2 = p3;
 							return Objects.SelectedSegment.Type.Curve;
 						}
-						current = p2;
+						current = p3;
 						break;
 
 					case PathElement.Curve4:
@@ -182,8 +184,7 @@ namespace Epsitec.Common.Document
 						p1 = points[i];
 						p2 = points[i++];
 						p3 = points[i++];
-						p1 = Point.Scale(current, p1, 2.0/3.0);
-						p2 = Point.Scale(p3,      p2, 2.0/3.0);
+						Geometry.BezierS1ToS2(current, ref p1, ref p2, p3);
 						if ( Point.DetectBezier(current,p1,p2,p3, pos, width) )
 						{
 							bp1 = current;
@@ -304,8 +305,7 @@ namespace Epsitec.Common.Document
 						p1 = points[i];
 						p2 = points[i++];
 						p3 = points[i++];
-						p1 = Point.Scale(current, p1, 2.0/3.0);
-						p2 = Point.Scale(p3,      p2, 2.0/3.0);
+						Geometry.BezierS1ToS2(current, ref p1, ref p2, p3);
 						surf.AddBezier(current, p1, p2, p3);
 						current = p3;
 						break;
@@ -402,8 +402,7 @@ namespace Epsitec.Common.Document
 						p1 = points[i];
 						p2 = points[i++];
 						p3 = points[i++];
-						p1 = Point.Scale(current, p1, 2.0/3.0);
-						p2 = Point.Scale(p3,      p2, 2.0/3.0);
+						Geometry.BezierS1ToS2(current, ref p1, ref p2, p3);
 						Geometry.BoundingBoxAddBezier(ref bbox, current,p1,p2,p3);
 						current = p3;
 						break;
@@ -438,6 +437,15 @@ namespace Epsitec.Common.Document
 				bbox.MergeWith(Point.FromBezier(p1, s1, s2, p2, t));
 			}
 #endif
+		}
+
+		public static void BezierS1ToS2(Point p1, ref Point s1, ref Point s2, Point p2)
+		{
+			//	Convertit une courbe de Bézier définie par un seul point secondaire en
+			//	une courbe "traditionnelle" définie par deux points secondaires.
+			//	Il s'agit ici d'une approximation empyrique !
+			s1 = Point.Scale(p1, s1, 2.0/3.0);
+			s2 = Point.Scale(p2, s2, 2.0/3.0);
 		}
 
 
