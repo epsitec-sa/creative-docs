@@ -3018,32 +3018,35 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
 				if ( !obj.IsSelected )  continue;
 
-				for ( int rank=0 ; rank<100 ; rank++ )
+				Path[] paths = obj.GetPaths();
+				if ( paths == null )
 				{
-					Path path = obj.GetPath(rank);
-					if ( path == null )
+					error = true;
+				}
+				else
+				{
+					foreach ( Path path in paths )
 					{
-						if ( rank == 0 )  error = true;
-						break;
-					}
+						if ( path.HasZeroElements )  continue;
 
-					if ( bezier == null )
-					{
-						bezier = new Objects.Bezier(this.document, obj);
-						layer.Objects.Add(bezier);
-						bezier.Select(true);
-						this.XferProperties(bezier, obj);
-						this.TotalSelected ++;
-					}
+						if ( bezier == null )
+						{
+							bezier = new Objects.Bezier(this.document, obj);
+							layer.Objects.Add(bezier);
+							bezier.Select(true);
+							this.XferProperties(bezier, obj);
+							this.TotalSelected ++;
+						}
 			
-					if ( bezier.CreateFromPath(path, -1) )
-					{
-						obj.Mark = true;  // il faudra le détruire
-					}
-					else
-					{
-						obj.Mark = false;  // il ne faudra pas le détruire
-						error = true;
+						if ( bezier.CreateFromPath(path, -1) )
+						{
+							obj.Mark = true;  // il faudra le détruire
+						}
+						else
+						{
+							obj.Mark = false;  // il ne faudra pas le détruire
+							error = true;
+						}
 					}
 				}
 			}
@@ -3077,46 +3080,49 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
 				if ( !obj.IsSelected )  continue;
 
-				for ( int rank=0 ; rank<100 ; rank++ )
+				Path[] paths = obj.GetPaths();
+				if ( paths == null )
 				{
-					Path path = obj.GetPath(rank);
-					if ( path == null )
+					error = true;
+				}
+				else
+				{
+					foreach ( Path path in paths )
 					{
-						if ( rank == 0 )  error = true;
-						break;
-					}
+						if ( path.HasZeroElements )  continue;
 
-					Objects.Bezier first = null;
-					for ( int i=0 ; i<100 ; i++ )
-					{
-						Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
-						layer.Objects.Add(bezier);
-						bezier.Select(true);
-						this.XferProperties(bezier, obj);
-						this.TotalSelected ++;
-						if ( first == null )  first = bezier;
-
-						if ( bezier.CreateFromPath(path, i) )
+						Objects.Bezier first = null;
+						for ( int i=0 ; i<100 ; i++ )
 						{
-							bezier.CreateFinalise();
-							this.Simplify(bezier);
-							this.document.Notifier.NotifyArea(bezier.BoundingBox);
-							obj.Mark = true;  // il faudra le détruire
-						}
-						else
-						{
-							layer.Objects.Remove(bezier);
-							this.TotalSelected --;
+							Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
+							layer.Objects.Add(bezier);
+							bezier.Select(true);
+							this.XferProperties(bezier, obj);
+							this.TotalSelected ++;
+							if ( first == null )  first = bezier;
 
-							if ( i == 1 )  // un seul objet créé ?
+							if ( bezier.CreateFromPath(path, i) )
 							{
-								layer.Objects.Remove(first);
-								this.TotalSelected --;
-								obj.Mark = false;  // il ne faudra pas le détruire
-								error = true;
+								bezier.CreateFinalise();
+								this.Simplify(bezier);
+								this.document.Notifier.NotifyArea(bezier.BoundingBox);
+								obj.Mark = true;  // il faudra le détruire
 							}
+							else
+							{
+								layer.Objects.Remove(bezier);
+								this.TotalSelected --;
 
-							break;
+								if ( i == 1 )  // un seul objet créé ?
+								{
+									layer.Objects.Remove(first);
+									this.TotalSelected --;
+									obj.Mark = false;  // il ne faudra pas le détruire
+									error = true;
+								}
+
+								break;
+							}
 						}
 					}
 				}
@@ -3147,34 +3153,37 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
 				if ( !obj.IsSelected )  continue;
 
-				for ( int rank=0 ; rank<100 ; rank++ )
+				Path[] paths = obj.GetPaths();
+				if ( paths == null )
 				{
-					Path path = obj.GetPath(rank);
-					if ( path == null )
+					error = true;
+				}
+				else
+				{
+					foreach ( Path path in paths )
 					{
-						if ( rank == 0 )  error = true;
-						break;
-					}
+						if ( path.HasZeroElements )  continue;
 
-					Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
-					layer.Objects.Add(bezier);
-					bezier.Select(true);
-					this.XferProperties(bezier, obj);
-					this.TotalSelected ++;
+						Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
+						layer.Objects.Add(bezier);
+						bezier.Select(true);
+						this.XferProperties(bezier, obj);
+						this.TotalSelected ++;
 
-					if ( bezier.CreateFromPath(path, -1) )
-					{
-						bezier.CreateFinalise();
-						this.Simplify(bezier);
-						this.document.Notifier.NotifyArea(bezier.BoundingBox);
-						obj.Mark = true;  // il faudra le détruire
-					}
-					else
-					{
-						obj.Mark = false;  // il ne faudra pas le détruire
-						layer.Objects.Remove(bezier);
-						this.TotalSelected --;
-						error = true;
+						if ( bezier.CreateFromPath(path, -1) )
+						{
+							bezier.CreateFinalise();
+							this.Simplify(bezier);
+							this.document.Notifier.NotifyArea(bezier.BoundingBox);
+							obj.Mark = true;  // il faudra le détruire
+						}
+						else
+						{
+							obj.Mark = false;  // il ne faudra pas le détruire
+							layer.Objects.Remove(bezier);
+							this.TotalSelected --;
+							error = true;
+						}
 					}
 				}
 			}
@@ -3206,41 +3215,44 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
 				if ( !obj.IsSelected )  continue;
 
-				for ( int rank=0 ; rank<100 ; rank++ )
+				Path[] paths = obj.GetPaths();
+				if ( paths == null )
 				{
-					Path path = obj.GetPath(rank);
-					if ( path == null )
+					error = true;
+				}
+				else
+				{
+					foreach ( Path path in paths )
 					{
-						if ( rank == 0 )  error = true;
-						break;
-					}
+						if ( path.HasZeroElements )  continue;
 
-					Path p = path;
-					if ( precision != 0 )
-					{
-						p = new Path();
-						p.Append(path, precision, 0.0);
-					}
+						Path p = path;
+						if ( precision != 0 )
+						{
+							p = new Path();
+							p.Append(path, precision, 0.0);
+						}
 
-					Objects.Poly poly = new Objects.Poly(this.document, obj);
-					layer.Objects.Add(poly);
-					poly.Select(true);
-					this.XferProperties(poly, obj);
-					this.TotalSelected ++;
+						Objects.Poly poly = new Objects.Poly(this.document, obj);
+						layer.Objects.Add(poly);
+						poly.Select(true);
+						this.XferProperties(poly, obj);
+						this.TotalSelected ++;
 
-					if ( poly.CreateFromPath(p, -1) )
-					{
-						poly.CreateFinalise();
-						this.Simplify(poly);
-						this.document.Notifier.NotifyArea(poly.BoundingBox);
-						obj.Mark = true;  // il faudra le détruire
-					}
-					else
-					{
-						obj.Mark = false;  // il ne faudra pas le détruire
-						layer.Objects.Remove(poly);
-						this.TotalSelected --;
-						error = true;
+						if ( poly.CreateFromPath(p, -1) )
+						{
+							poly.CreateFinalise();
+							this.Simplify(poly);
+							this.document.Notifier.NotifyArea(poly.BoundingBox);
+							obj.Mark = true;  // il faudra le détruire
+						}
+						else
+						{
+							obj.Mark = false;  // il ne faudra pas le détruire
+							layer.Objects.Remove(poly);
+							this.TotalSelected --;
+							error = true;
+						}
 					}
 				}
 			}
@@ -3339,36 +3351,39 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
 				if ( !obj.IsSelected )  continue;
 
-				for ( int rank=0 ; rank<100 ; rank++ )
+				Path[] paths = obj.GetPaths();
+				if ( paths == null )
 				{
-					Path path = obj.GetPath(rank);
-					if ( path == null )
+					error = true;
+				}
+				else
+				{
+					foreach ( Path path in paths )
 					{
-						if ( rank == 0 )  error = true;
-						break;
-					}
+						if ( path.HasZeroElements )  continue;
 
-					Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
-					layer.Objects.Add(bezier);
-					bezier.Select(true);
-					this.XferProperties(bezier, obj);
-					this.TotalSelected ++;
+						Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
+						layer.Objects.Add(bezier);
+						bezier.Select(true);
+						this.XferProperties(bezier, obj);
+						this.TotalSelected ++;
 
-					Path simplyPath = Geometry.PathToCurve(path);
+						Path simplyPath = Geometry.PathToCurve(path);
 
-					if ( bezier.CreateFromPath(simplyPath, -1) )
-					{
-						bezier.CreateFinalise();
-						this.Simplify(bezier);
-						this.document.Notifier.NotifyArea(bezier.BoundingBox);
-						obj.Mark = true;  // il faudra le détruire
-					}
-					else
-					{
-						obj.Mark = false;  // il ne faudra pas le détruire
-						layer.Objects.Remove(bezier);
-						this.TotalSelected --;
-						error = true;
+						if ( bezier.CreateFromPath(simplyPath, -1) )
+						{
+							bezier.CreateFinalise();
+							this.Simplify(bezier);
+							this.document.Notifier.NotifyArea(bezier.BoundingBox);
+							obj.Mark = true;  // il faudra le détruire
+						}
+						else
+						{
+							obj.Mark = false;  // il ne faudra pas le détruire
+							layer.Objects.Remove(bezier);
+							this.TotalSelected --;
+							error = true;
+						}
 					}
 				}
 			}
@@ -3421,62 +3436,66 @@ namespace Epsitec.Common.Document
 		protected bool FragmentObject(Objects.Abstract obj)
 		{
 			//	Fragmente un objet.
-			for ( int rank=0 ; rank<100 ; rank++ )
+			Path[] paths = obj.GetPaths();
+			if ( paths == null )
 			{
-				Path path = obj.GetPath(rank);
-				if ( path == null )
+				return true;
+			}
+			else
+			{
+				foreach ( Path path in paths )
 				{
-					return (rank != 0);
-				}
+					if ( path.HasZeroElements )  continue;
 
-				PathElement[] elements;
-				Point[] points;
-				path.GetElements(out elements, out points);
-				if ( elements.Length > 100 )  return false;
+					PathElement[] elements;
+					Point[] points;
+					path.GetElements(out elements, out points);
+					if ( elements.Length > 100 )  return false;
 
-				Point start = new Point(0, 0);
-				Point current = new Point(0, 0);
-				Point p1 = new Point(0, 0);
-				Point p2 = new Point(0, 0);
-				Point p3 = new Point(0, 0);
-				int i = 0;
-				while ( i < elements.Length )
-				{
-					switch ( elements[i] & PathElement.MaskCommand )
+					Point start = new Point(0, 0);
+					Point current = new Point(0, 0);
+					Point p1 = new Point(0, 0);
+					Point p2 = new Point(0, 0);
+					Point p3 = new Point(0, 0);
+					int i = 0;
+					while ( i < elements.Length )
 					{
-						case PathElement.MoveTo:
-							current = points[i++];
-							start = current;
-							break;
+						switch ( elements[i] & PathElement.MaskCommand )
+						{
+							case PathElement.MoveTo:
+								current = points[i++];
+								start = current;
+								break;
 
-						case PathElement.LineTo:
-							p1 = points[i++];
-							this.FragmentCreateLine(current, p1, obj);
-							current = p1;
-							break;
+							case PathElement.LineTo:
+								p1 = points[i++];
+								this.FragmentCreateLine(current, p1, obj);
+								current = p1;
+								break;
 
-						case PathElement.Curve3:
-							p1 = points[i++];
-							p2 = points[i++];
-							this.FragmentCreateBezier(current, p1, p1, p2, obj);
-							current = p2;
-							break;
+							case PathElement.Curve3:
+								p1 = points[i++];
+								p2 = points[i++];
+								this.FragmentCreateBezier(current, p1, p1, p2, obj);
+								current = p2;
+								break;
 
-						case PathElement.Curve4:
-							p1 = points[i++];
-							p2 = points[i++];
-							p3 = points[i++];
-							this.FragmentCreateBezier(current, p1, p2, p3, obj);
-							current = p3;
-							break;
+							case PathElement.Curve4:
+								p1 = points[i++];
+								p2 = points[i++];
+								p3 = points[i++];
+								this.FragmentCreateBezier(current, p1, p2, p3, obj);
+								current = p3;
+								break;
 
-						default:
-							if ( (elements[i] & PathElement.FlagClose) != 0 )
-							{
-								this.FragmentCreateLine(current, start, obj);
-							}
-							i ++;
-							break;
+							default:
+								if ( (elements[i] & PathElement.FlagClose) != 0 )
+								{
+									this.FragmentCreateLine(current, start, obj);
+								}
+								i ++;
+								break;
+						}
 					}
 				}
 			}
@@ -3527,6 +3546,14 @@ namespace Epsitec.Common.Document
 			{
 				obj.PropertyFillGradient.FillType = Properties.GradientFillType.None;
 				obj.PropertyFillGradient.Color1 = model.PropertyTextFont.FontColor;
+				obj.PropertyLineMode.Width = 0.0;
+			}
+
+			if ( model is Objects.TextLine2 ||
+				 model is Objects.TextBox2  )
+			{
+				obj.PropertyFillGradient.FillType = Properties.GradientFillType.None;
+				obj.PropertyFillGradient.Color1 = RichColor.FromBrightness(0);  // noir
 				obj.PropertyLineMode.Width = 0.0;
 			}
 		}
@@ -3665,28 +3692,31 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = layer.Objects[ii] as Objects.Abstract;
 				if ( !obj.IsSelected )  continue;
 
-				for ( int rank=0 ; rank<100 ; rank++ )
+				Path[] paths = obj.GetPaths();
+				if ( paths == null )
 				{
-					Path path = obj.GetPath(rank);
-					if ( path == null )
+					error = true;
+				}
+				else
+				{
+					foreach ( Path path in paths )
 					{
-						if ( rank == 0 )  error = true;
-						break;
-					}
+						if ( path.HasZeroElements )  continue;
 
-					if ( model == null )
-					{
-						model = obj;
-						pathResult.Append(path, precision, 0.0);
-					}
-					else
-					{
-						Path pathLight = new Path();
-						pathLight.Append(path, precision, 0.0);
-						pathResult = Drawing.Path.Combine(pathResult, pathLight, oper);
-					}
+						if ( model == null )
+						{
+							model = obj;
+							pathResult.Append(path, precision, 0.0);
+						}
+						else
+						{
+							Path pathLight = new Path();
+							pathLight.Append(path, precision, 0.0);
+							pathResult = Drawing.Path.Combine(pathResult, pathLight, oper);
+						}
 
-					obj.Mark = true;  // il faudra le détruire
+						obj.Mark = true;  // il faudra le détruire
+					}
 				}
 			}
 

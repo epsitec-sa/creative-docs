@@ -453,6 +453,33 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public bool								HasZeroElements
+		{
+			get
+			{
+				if (this.is_empty)
+				{
+					return true;
+				}
+				else
+				{
+					this.CreateOnTheFly ();
+				
+					int n = AntiGrain.Path.ElemCount (this.agg_path);
+					if (n == 0)  return true;
+					if (n != 1)  return false;
+				
+					int[]    e = new int[n];
+					double[] x = new double[n];
+					double[] y = new double[n];
+				
+					AntiGrain.Path.ElemGet (this.agg_path, n, e, x, y);
+					PathElement element = (PathElement) e[0];
+					return (element == PathElement.Stop);
+				}
+			}
+		}
+
 		public void GetElements(out PathElement[] elements, out Point[] points)
 		{
 			if (this.is_empty)

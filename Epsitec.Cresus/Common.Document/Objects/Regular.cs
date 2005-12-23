@@ -286,10 +286,9 @@ namespace Epsitec.Common.Document.Objects
 			return this.PathBuild(null, true);
 		}
 
-		public override Path GetPath(int rank)
+		protected override Path GetPath()
 		{
 			//	Retourne le chemin géométrique de l'objet.
-			if ( rank > 0 )  return null;
 			return this.PathBuild(null, false);
 		}
 

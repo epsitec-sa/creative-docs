@@ -2903,18 +2903,24 @@ namespace Epsitec.Common.Document.Objects
 			//	par GetPath, mais certains objets peuvent retourner un chemin plus
 			//	simple (comme Line, Poly, TextLine, TextBox et Dimension).
 			//	L'idée est d'ignorer les propriétés Corner et Arrow, par exemple.
-			return this.GetPath(0);
-		}
-
-		public virtual Path GetPath(int rank)
-		{
-			//	Retourne le chemin géométrique de l'objet.
-			return null;
+			return this.GetPath();
 		}
 
 		public virtual Path[] GetPaths()
 		{
 			//	Retourne les chemins géométriques de l'objet.
+			//	Si l'objet retourne plus d'un chemin, il faut surcharger cette méthode !
+			Path path = this.GetPath();
+			if ( path == null )  return null;
+
+			Path[] paths = new Path[1];
+			paths[0] = path;
+			return paths;
+		}
+
+		protected virtual Path GetPath()
+		{
+			//	Retourne le chemin géométrique de l'objet.
 			return null;
 		}
 

@@ -2208,21 +2208,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		public override Path GetPath(int rank)
-		{
-			//	Retourne le chemin géométrique de l'objet.
-			Graphics port = new Graphics();
-			Drawing.PathAccumulationRasterizer rasterizer = new PathAccumulationRasterizer();
-			port.ReplaceRasterizer(rasterizer);
-
-			this.DrawText(port, null, InternalOperation.GetPath);
-
-			Path[] paths = rasterizer.GetPaths();
-			if ( paths == null )  return null;
-			if ( rank >= paths.Length )  return null;
-			return paths[rank];
-		}
-
 		public override Path[] GetPaths()
 		{
 			//	Retourne les chemins géométriques de l'objet.

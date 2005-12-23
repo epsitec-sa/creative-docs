@@ -446,10 +446,9 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public override Path GetPath(int rank)
+		protected override Path GetPath()
 		{
 			//	Retourne le chemin géométrique de l'objet.
-			if ( rank > 0 )  return null;
 			Paths paths = this.PathBuild(null);
 			Path path = new Path();
 			for ( int i=0 ; i<paths.Count ; i++ )

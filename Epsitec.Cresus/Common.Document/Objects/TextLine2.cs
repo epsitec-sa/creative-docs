@@ -1917,12 +1917,6 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		public override Path GetPath(int rank)
-		{
-			//	Retourne le chemin géométrique de l'objet.
-			return this.OneRealPathCurve(rank);
-		}
-
 
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
