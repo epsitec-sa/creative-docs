@@ -1,16 +1,16 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitle("EPSITEC Crésus Documents")]
+[assembly: AssemblyTitle("Epsitec Common Document / CrDoc Document Engine")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Epsitec")]
-[assembly: AssemblyProduct("Crésus Documents")]
+[assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("Copyright © 2002-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
-[assembly: AssemblyVersion("1.4.9.0")]
+[assembly: AssemblyVersion("1.5.0.0")]
 
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile(@"..\..\..\Epsitec.Cresus.snk")]
