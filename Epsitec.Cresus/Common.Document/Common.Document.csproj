@@ -439,6 +439,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Objects\TextLine2.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Objects\Volume.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

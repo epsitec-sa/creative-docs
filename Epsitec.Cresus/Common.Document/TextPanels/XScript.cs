@@ -227,6 +227,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillSubscriptDefinition(xscript, true);
 			}
 			
+			this.document.TextWrapper.DefineOperationName("FontSubscript", Res.Strings.Action.FontSubscript);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -272,6 +273,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillSuperscriptDefinition(xscript, true);
 			}
 			
+			this.document.TextWrapper.DefineOperationName("FontSuperscript", Res.Strings.Action.FontSuperscript);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -284,6 +286,7 @@ namespace Epsitec.Common.Document.TextPanels
 			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
 			if ( xscript.Offset < 0 )  this.FillSubscriptDefinition(xscript, false);
 			if ( xscript.Offset > 0 )  this.FillSuperscriptDefinition(xscript, false);
+			this.document.TextWrapper.DefineOperationName("FontXscript", Res.Strings.TextPanel.Xscript.Title);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -294,6 +297,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.document.TextWrapper.SuspendSynchronisations();
 			this.document.TextWrapper.Defined.ClearXscript();
+			this.document.TextWrapper.DefineOperationName("FontXscriptClear", Res.Strings.TextPanel.Clear);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 

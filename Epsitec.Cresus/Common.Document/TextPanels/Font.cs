@@ -184,6 +184,8 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Donne la couleur au wrapper.
 			string color = this.GetColorSample(sample);
 
+			this.document.TextWrapper.SuspendSynchronisations();
+
 			if ( color == null )
 			{
 				this.document.TextWrapper.Defined.ClearColor();
@@ -192,6 +194,9 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.document.TextWrapper.Defined.Color = color;
 			}
+			
+			this.document.TextWrapper.DefineOperationName("FontColor", Res.Strings.Action.FontColor);
+			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
 		
@@ -481,7 +486,10 @@ namespace Epsitec.Common.Document.TextPanels
 				newFeatures[features.Length] = cmd;
 			}
 
+			this.document.TextWrapper.SuspendSynchronisations();
 			this.document.TextWrapper.Defined.FontFeatures = newFeatures;
+			this.document.TextWrapper.DefineOperationName("FontFeatures", Res.Strings.Action.FontFeatures);
+			this.document.TextWrapper.ResumeSynchronisations();
 		}
 		#endregion
 
@@ -506,6 +514,7 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					this.document.TextWrapper.Defined.ClearFontStyle();
 				}
+				this.document.TextWrapper.DefineOperationName("FontStyle", Res.Strings.Action.FontStyle);
 			}
 
 			this.document.TextWrapper.ResumeSynchronisations();
@@ -535,6 +544,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.SuspendSynchronisations();
 			this.document.TextWrapper.Defined.FontFace = face;
 			this.document.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
+			this.document.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -589,6 +599,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.SuspendSynchronisations();
 			this.document.TextWrapper.Defined.FontSize = value;
 			this.document.TextWrapper.Defined.Units = units;
+			this.document.TextWrapper.DefineOperationName("FontSize", Res.Strings.Action.FontSize);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -618,6 +629,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.document.TextWrapper.Defined.ClearUnits();
 			}
 
+			this.document.TextWrapper.DefineOperationName("FontSize", Res.Strings.Action.FontSize);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -655,6 +667,8 @@ namespace Epsitec.Common.Document.TextPanels
 			bool isDefined;
 			this.GetTextFieldRealPercent(this.fontGlue.TextFieldReal, out value, out isDefined);
 
+			this.document.TextWrapper.SuspendSynchronisations();
+
 			if ( isDefined )
 			{
 				this.document.TextWrapper.Defined.FontGlue = value;
@@ -663,6 +677,9 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.document.TextWrapper.Defined.ClearFontGlue();
 			}
+
+			this.document.TextWrapper.DefineOperationName("FontGlue", Res.Strings.TextPanel.Font.Tooltip.Glue);
+			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleCheckBoldActiveStateChanged(object sender)
@@ -675,7 +692,10 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.document.TextWrapper.Defined.InvertBold != value ||
 				 this.document.TextWrapper.Defined.IsInvertBoldDefined == false )
 			{
+				this.document.TextWrapper.SuspendSynchronisations();
 				this.document.TextWrapper.Defined.InvertBold = value;
+				this.document.TextWrapper.DefineOperationName("FontBold", Res.Strings.Action.FontBold);
+				this.document.TextWrapper.ResumeSynchronisations();
 			}
 		}
 
@@ -689,7 +709,10 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.document.TextWrapper.Defined.InvertItalic != value ||
 				 this.document.TextWrapper.Defined.IsInvertItalicDefined == false )
 			{
+				this.document.TextWrapper.SuspendSynchronisations();
 				this.document.TextWrapper.Defined.InvertItalic = value;
+				this.document.TextWrapper.DefineOperationName("FontItalic", Res.Strings.Action.FontItalic);
+				this.document.TextWrapper.ResumeSynchronisations();
 			}
 		}
 
@@ -708,6 +731,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.Defined.ClearInvertBold();
 			this.document.TextWrapper.Defined.ClearInvertItalic();
 			this.document.TextWrapper.Defined.ClearColor();
+			this.document.TextWrapper.DefineOperationName("FontFaceClear", Res.Strings.TextPanel.Clear);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -751,6 +775,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.SuspendSynchronisations();
 			this.document.TextWrapper.Defined.FontSize = size;
 			this.document.TextWrapper.Defined.Units = units;
+			this.document.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 		#endregion

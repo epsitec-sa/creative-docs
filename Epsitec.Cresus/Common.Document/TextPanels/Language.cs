@@ -161,6 +161,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonHyphen.ActiveState = (this.buttonHyphen.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
 			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.Yes);
 
+			this.document.TextWrapper.SuspendSynchronisations();
+
 			if ( hyphen )
 			{
 				this.document.TextWrapper.Defined.LanguageHyphenation = 1.0;
@@ -169,6 +171,9 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.document.TextWrapper.Defined.LanguageHyphenation = 0.0;
 			}
+
+			this.document.TextWrapper.DefineOperationName("TextLanguageHyphen", Res.Strings.Action.ParagraphHyphen);
+			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleLanguageChanged(object sender)
@@ -188,6 +193,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.document.TextWrapper.Defined.ClearLanguageLocale();
 			}
 			
+			this.document.TextWrapper.DefineOperationName("TextLanguage", Res.Strings.TextPanel.Language.Title);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -199,6 +205,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.SuspendSynchronisations();
 			this.document.TextWrapper.Defined.ClearLanguageHyphenation();
 			this.document.TextWrapper.Defined.ClearLanguageLocale();
+			this.document.TextWrapper.DefineOperationName("TextLanguageClear", Res.Strings.TextPanel.Clear);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 

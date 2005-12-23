@@ -837,6 +837,7 @@ namespace Epsitec.App.DocumentEditor
 				this.VToolBarAdd(this.toolTextLineState);
 				this.VToolBarAdd(this.toolTextBoxState);
 			}
+			//?this.VToolBarAdd(this.toolTextLine2State);
 			this.VToolBarAdd(this.toolTextBox2State);
 			if ( this.useArray )
 			{
@@ -1513,6 +1514,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ObjectSurface")]
 		[Command ("ObjectVolume")]
 		[Command ("ObjectTextLine")]
+		[Command ("ObjectTextLine2")]
 		[Command ("ObjectTextBox")]
 		[Command ("ObjectTextBox2")]
 		[Command ("ObjectArray")]
@@ -3516,6 +3518,7 @@ namespace Epsitec.App.DocumentEditor
 			this.toolSurfaceState = this.CreateCommandState("ObjectSurface", "ObjectSurface", "ToolSurface");
 			this.toolVolumeState = this.CreateCommandState("ObjectVolume", "ObjectVolume", "ToolVolume");
 			this.toolTextLineState = this.CreateCommandState("ObjectTextLine", "ObjectTextLine", "ToolTextLine");
+			this.toolTextLine2State = this.CreateCommandState("ObjectTextLine2", "ObjectTextLine", "ToolTextLine");
 			this.toolTextBoxState = this.CreateCommandState("ObjectTextBox", "ObjectTextBox", "ToolTextBox");
 			this.toolTextBox2State = this.CreateCommandState("ObjectTextBox2", "ObjectTextBox", "ToolTextBox", KeyCode.AlphaT);
 			this.toolArrayState = this.CreateCommandState("ObjectArray", "ObjectArray", "ToolArray");
@@ -4083,6 +4086,7 @@ namespace Epsitec.App.DocumentEditor
 			this.UpdateTool(this.toolSurfaceState, tool, isCreating, enabled);
 			this.UpdateTool(this.toolVolumeState, tool, isCreating, enabled);
 			this.UpdateTool(this.toolTextLineState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolTextLine2State, tool, isCreating, enabled);
 			this.UpdateTool(this.toolTextBoxState, tool, isCreating, enabled);
 			this.UpdateTool(this.toolTextBox2State, tool, isCreating, enabled);
 			this.UpdateTool(this.toolArrayState, tool, isCreating, enabled);
@@ -5615,6 +5619,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					toolSurfaceState;
 		protected CommandState					toolVolumeState;
 		protected CommandState					toolTextLineState;
+		protected CommandState					toolTextLine2State;
 		protected CommandState					toolTextBoxState;
 		protected CommandState					toolTextBox2State;
 		protected CommandState					toolArrayState;

@@ -144,6 +144,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.document.TextWrapper.SuspendSynchronisations();
 			this.document.TextWrapper.Defined.ClearTextBox();
+			this.document.TextWrapper.DefineOperationName("TextBoxClear", Res.Strings.TextPanel.Clear);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 

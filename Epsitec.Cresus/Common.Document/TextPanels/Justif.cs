@@ -134,6 +134,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.buttonAlignJustif == button )  justif = Common.Text.Wrappers.JustificationMode.JustifyAlignLeft;
 			if ( this.buttonAlignAll    == button )  justif = Common.Text.Wrappers.JustificationMode.JustifyJustfy;
 
+			this.document.ParagraphWrapper.SuspendSynchronisations();
+
 			if ( justif == Common.Text.Wrappers.JustificationMode.Unknown )
 			{
 				this.document.ParagraphWrapper.Defined.ClearJustificationMode();
@@ -142,6 +144,9 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.document.ParagraphWrapper.Defined.JustificationMode = justif;
 			}
+
+			this.document.ParagraphWrapper.DefineOperationName("ParagraphJustif", Res.Strings.Action.ParagraphJustif);
+			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleHyphenClicked(object sender, MessageEventArgs e)
@@ -150,7 +155,11 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
 			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.No);
+
+			this.document.ParagraphWrapper.SuspendSynchronisations();
 			this.document.ParagraphWrapper.Defined.Hyphenation = hyphen;
+			this.document.ParagraphWrapper.DefineOperationName("ParagraphHyphen", Res.Strings.Action.ParagraphHyphen);
+			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -161,6 +170,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.SuspendSynchronisations();
 			this.document.ParagraphWrapper.Defined.ClearJustificationMode();
 			this.document.ParagraphWrapper.Defined.ClearHyphenation();
+			this.document.ParagraphWrapper.DefineOperationName("ParagraphJustifClear", Res.Strings.TextPanel.Clear);
 			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 

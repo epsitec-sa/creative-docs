@@ -271,7 +271,11 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
 			bool value = (this.buttonKeepNext.ActiveState == ActiveState.No);
+
+			this.document.ParagraphWrapper.SuspendSynchronisations();
 			this.document.ParagraphWrapper.Defined.KeepWithNextParagraph = value;
+			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
+			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleButtonKeepPrevClicked(object sender, MessageEventArgs e)
@@ -280,7 +284,11 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
 			bool value = (this.buttonKeepPrev.ActiveState == ActiveState.No);
+
+			this.document.ParagraphWrapper.SuspendSynchronisations();
 			this.document.ParagraphWrapper.Defined.KeepWithPreviousParagraph = value;
+			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
+			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleKeepStartChanged(object sender)
@@ -294,6 +302,8 @@ namespace Epsitec.Common.Document.TextPanels
 			double value = (double) field.InternalValue;
 			bool isDefined = field.Text != "";
 
+			this.document.ParagraphWrapper.SuspendSynchronisations();
+
 			if ( isDefined )
 			{
 				this.document.ParagraphWrapper.Defined.KeepStartLines = (int) value;
@@ -302,6 +312,9 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.document.ParagraphWrapper.Defined.ClearKeepStartLines();
 			}
+
+			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
+			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 		
 		private void HandleKeepEndChanged(object sender)
@@ -315,6 +328,8 @@ namespace Epsitec.Common.Document.TextPanels
 			double value = (double) field.InternalValue;
 			bool isDefined = field.Text != "";
 
+			this.document.ParagraphWrapper.SuspendSynchronisations();
+
 			if ( isDefined )
 			{
 				this.document.ParagraphWrapper.Defined.KeepEndLines = (int) value;
@@ -323,6 +338,9 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.document.ParagraphWrapper.Defined.ClearKeepEndLines();
 			}
+
+			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
+			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 		
 		private void HandleStartModeChanged(object sender)
@@ -330,6 +348,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 
 			Common.Text.Properties.ParagraphStartMode mode = Keep.StringToMode(this.fieldStartMode.Text);
+
+			this.document.ParagraphWrapper.SuspendSynchronisations();
 
 			if ( mode == Common.Text.Properties.ParagraphStartMode.Undefined )
 			{
@@ -339,6 +359,9 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.document.ParagraphWrapper.Defined.ParagraphStartMode = mode;
 			}
+
+			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
+			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -352,6 +375,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.Defined.ClearKeepStartLines();
 			this.document.ParagraphWrapper.Defined.ClearKeepEndLines();
 			this.document.ParagraphWrapper.Defined.ClearParagraphStartMode();
+			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeepClear", Res.Strings.TextPanel.Clear);
 			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 

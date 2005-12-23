@@ -150,6 +150,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.document.TextWrapper.SuspendSynchronisations();
 				Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Underline;
 				this.FillUnderlineDefinition(xline, false);
+				this.document.TextWrapper.DefineOperationName("FontXline", Res.Strings.TextPanel.Xline.Title);
 				this.document.TextWrapper.ResumeSynchronisations();
 			}
 
@@ -158,6 +159,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.document.TextWrapper.SuspendSynchronisations();
 				Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Overline;
 				this.FillOverlineDefinition(xline, false);
+				this.document.TextWrapper.DefineOperationName("FontXline", Res.Strings.TextPanel.Xline.Title);
 				this.document.TextWrapper.ResumeSynchronisations();
 			}
 
@@ -166,6 +168,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.document.TextWrapper.SuspendSynchronisations();
 				Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Strikeout;
 				this.FillStrikeoutDefinition(xline, false);
+				this.document.TextWrapper.DefineOperationName("FontXline", Res.Strings.TextPanel.Xline.Title);
 				this.document.TextWrapper.ResumeSynchronisations();
 			}
 		}
@@ -523,6 +526,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillUnderlineDefinition(xline, true);  // --> (B2)
 			}
 			
+			this.document.TextWrapper.DefineOperationName("FontUnderlined", Res.Strings.Action.FontUnderlined);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 		
@@ -578,6 +582,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillOverlineDefinition(xline, true);  // --> (B2)
 			}
 			
+			this.document.TextWrapper.DefineOperationName("FontOverlined", Res.Strings.Action.FontOverlined);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 		
@@ -633,6 +638,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillStrikeoutDefinition(xline, true);  // --> (B2)
 			}
 			
+			this.document.TextWrapper.DefineOperationName("FontStrikeout", Res.Strings.Action.FontStrikeout);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 		
@@ -644,6 +650,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.SuspendSynchronisations();
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Underline;
 			this.FillUnderlineDefinition(xline, false);
+			this.document.TextWrapper.DefineOperationName("FontUnderlined", Res.Strings.Action.FontUnderlined);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -655,6 +662,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.SuspendSynchronisations();
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Overline;
 			this.FillOverlineDefinition(xline, false);
+			this.document.TextWrapper.DefineOperationName("FontOverlined", Res.Strings.Action.FontOverlined);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -666,6 +674,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.SuspendSynchronisations();
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Strikeout;
 			this.FillStrikeoutDefinition(xline, false);
+			this.document.TextWrapper.DefineOperationName("FontStrikeout", Res.Strings.Action.FontStrikeout);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 
@@ -703,6 +712,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.TextWrapper.Defined.ClearUnderline();
 			this.document.TextWrapper.Defined.ClearOverline();
 			this.document.TextWrapper.Defined.ClearStrikeout();
+			this.document.TextWrapper.DefineOperationName("FontXlineClear", Res.Strings.TextPanel.Clear);
 			this.document.TextWrapper.ResumeSynchronisations();
 		}
 

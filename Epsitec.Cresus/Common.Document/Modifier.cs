@@ -248,6 +248,7 @@ namespace Epsitec.Common.Document
 			get
 			{
 				if ( this.tool == "ObjectTextLine"  )  return true;
+				if ( this.tool == "ObjectTextLine2" )  return true;
 				if ( this.tool == "ObjectTextBox"   )  return true;
 				if ( this.tool == "ObjectTextBox2"  )  return true;
 				return false;
@@ -287,6 +288,7 @@ namespace Epsitec.Common.Document
 				case "ObjectSurface":    return Res.Strings.Action.ToolSurface;
 				case "ObjectVolume":     return Res.Strings.Action.ToolVolume;
 				case "ObjectTextLine":   return Res.Strings.Action.ToolTextLine;
+				case "ObjectTextLine2":  return Res.Strings.Action.ToolTextLine;
 				case "ObjectTextBox":    return Res.Strings.Action.ToolTextBox;
 				case "ObjectTextBox2":   return Res.Strings.Action.ToolTextBox;
 				case "ObjectArray":      return Res.Strings.Action.ToolArray;

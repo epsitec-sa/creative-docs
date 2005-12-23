@@ -1050,6 +1050,7 @@
 	<data name="Action.FontDefault">Auto</data>
 	<data name="Action.FontClear">Effacer tous les attributs de caractère</data>
 	<data name="Action.ParagraphMain">Paragraphe</data>
+	<data name="Action.ParagraphJustif">Modifier la justification</data>
 	<data name="Action.ParagraphJustifHLeft">Justification à gauche</data>
 	<data name="Action.ParagraphJustifHCenter">Justification centrée</data>
 	<data name="Action.ParagraphJustifHRight">Justification à droite</data>
@@ -1058,6 +1059,7 @@
 	<data name="Action.ParagraphBulletRound">Puces</data>
 	<data name="Action.ParagraphBulletNumeric">Numérotation 1..</data>
 	<data name="Action.ParagraphBulletAlpha">Numérotation A..</data>
+	<data name="Action.ParagraphIndent">Modifier le retrait</data>
 	<data name="Action.ParagraphIndentPlus">Augmenter le retrait</data>
 	<data name="Action.ParagraphIndentMinus">Diminuer le retrait</data>
 	<data name="Action.ParagraphAlignLeft">Aligné à gauche</data>
@@ -1066,6 +1068,7 @@
 	<data name="Action.ParagraphAlignJustif">Justifié (sans la dernière ligne)</data>
 	<data name="Action.ParagraphAlignAll">Justifié (avec la dernière ligne)</data>
 	<data name="Action.ParagraphHyphen">Césures dans les mots</data>
+	<data name="Action.ParagraphLeading">Modifier l'interligne</data>
 	<data name="Action.ParagraphLeadingMinus">Diminuer l'interligne</data>
 	<data name="Action.ParagraphLeadingPlus">Augmenter l'interligne</data>
 	<data name="Action.ParagraphLeading08">Interligne serré</data>

@@ -229,6 +229,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.document.ParagraphWrapper.Defined.ClearMarginUnits();
 			}
 
+			this.document.ParagraphWrapper.DefineOperationName("ParagraphMargins", Res.Strings.TextPanel.Margins.Title);
 			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
@@ -244,6 +245,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.Defined.ClearRightMarginBody();
 			this.document.ParagraphWrapper.Defined.ClearMarginUnits();
 			this.document.ParagraphWrapper.Defined.ClearIndentationLevel();
+			this.document.ParagraphWrapper.DefineOperationName("ParagraphMarginsClear", Res.Strings.TextPanel.Clear);
 			this.document.ParagraphWrapper.ResumeSynchronisations();
 		}
 
