@@ -59,7 +59,7 @@ namespace Epsitec.Common.Drawing
 				Path temp1 = new Path ();
 				Path temp2 = new Path ();
 				temp1.Append (path, this.transform, this.approximation);
-				temp2.Append (temp1, width, cap, join, miter_limit, this.approximation);
+				temp2.Append (temp1, width, cap, join, miter_limit, this.approximation, false);
 				this.list.Add (temp2);
 				temp1.Dispose ();
 			}
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Drawing
 		
 		
 		
-		private double							approximation = 1;
+		private double							approximation = 0;
 		private System.Collections.ArrayList	list = new System.Collections.ArrayList();
 	}
 }
