@@ -3025,6 +3025,8 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
+					if ( this.TooMany(paths.Length) )  continue;
+
 					foreach ( Path path in paths )
 					{
 						if ( path.HasZeroElements )  continue;
@@ -3087,6 +3089,8 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
+					if ( this.TooMany(paths.Length) )  continue;
+
 					foreach ( Path path in paths )
 					{
 						if ( path.HasZeroElements )  continue;
@@ -3160,6 +3164,8 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
+					if ( this.TooMany(paths.Length) )  continue;
+
 					foreach ( Path path in paths )
 					{
 						if ( path.HasZeroElements )  continue;
@@ -3222,6 +3228,8 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
+					if ( this.TooMany(paths.Length) )  continue;
+
 					foreach ( Path path in paths )
 					{
 						if ( path.HasZeroElements )  continue;
@@ -3358,6 +3366,8 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
+					if ( this.TooMany(paths.Length) )  continue;
+
 					foreach ( Path path in paths )
 					{
 						if ( path.HasZeroElements )  continue;
@@ -3443,6 +3453,8 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
+				if ( this.TooMany(paths.Length) )  return false;
+
 				foreach ( Path path in paths )
 				{
 					if ( path.HasZeroElements )  continue;
@@ -3720,6 +3732,8 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
+					if ( this.TooMany(paths.Length) )  continue;
+
 					foreach ( Path path in paths )
 					{
 						if ( path.HasZeroElements )  continue;
@@ -3770,6 +3784,14 @@ namespace Epsitec.Common.Document
 				string message = Res.Strings.Error.Boolean;
 				this.ActiveViewer.DialogError(message);
 			}
+		}
+
+		protected bool TooMany(int total)
+		{
+			if ( total < 100 )  return false;
+
+			string question = string.Format(Res.Strings.Question.ManyObjects, total);
+			return !this.ActiveViewer.DialogYesNo(question);
 		}
 		#endregion
 

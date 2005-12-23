@@ -249,6 +249,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Images\Question.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\StartDesigner.icon"
                     BuildAction = "EmbeddedResource"
                 />

@@ -3769,6 +3769,19 @@ namespace Epsitec.Common.Document
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 		}
+
+		public bool DialogYesNo(string question)
+		{
+			//	Affiche un dialogue pour poser une question oui/non.
+			string title = Res.Strings.Dialog.Title;
+			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
+			string message = question;
+
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNo(title, icon, message, null, null, this.GetCommandDispatcher());
+			dialog.Owner = this.Window;
+			dialog.OpenDialog();
+			return (dialog.Result == Common.Dialogs.DialogResult.Yes);
+		}
 		#endregion
 
 

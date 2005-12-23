@@ -1265,6 +1265,8 @@
 	<data name="Aggregates.NoneLine">&lt;i&gt;Aucun&lt;/i&gt;</data>
 	<data name="Aggregate.Name">Style {0}</data>
 
+	<data name="Question.ManyObjects">Voulez-vous vraiment traiter {0} objets ?</data>
+	
 	<data name="Error.BadFile">Type de fichier incorrect.</data>
 	<data name="Error.BadImage">Format d'image inconnu.</data>
 	<data name="Error.NoBitmap">Pas de bitmap.</data>
