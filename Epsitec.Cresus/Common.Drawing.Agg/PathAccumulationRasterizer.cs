@@ -67,32 +67,38 @@ namespace Epsitec.Common.Drawing
 		
 		public override void AddGlyph(Font font, int glyph, double x, double y, double scale)
 		{
-			Path temp = new Path ();
-			temp.Append (font, glyph, x, y, scale);
-			this.AddSurface (temp);
-			temp.Dispose ();
+			if (glyph < 0xfff0)
+			{
+				Path temp = new Path ();
+				temp.Append (font, glyph, x, y, scale);
+				this.AddSurface (temp);
+				temp.Dispose ();
+			}
 		}
 		
 		public override void AddGlyph(Font font, int glyph, double x, double y, double scale, double sx, double sy)
 		{
-			if ((sx == 1.0) &&
-				(sy == 1.0))
+			if (glyph < 0xfff0)
 			{
-				this.AddGlyph (font, glyph, x, y, scale);
-			}
-			else
-			{
-				Transform ft = font.SyntheticTransform;
-				
-				ft.TX = x;
-				ft.TY = y;
-				
-				ft.MultiplyByPostfix (Transform.FromScale (sx * scale, sy * scale));
-				
-				Path temp = new Path ();
-				temp.Append (font, glyph, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
-				this.AddSurface (temp);
-				temp.Dispose ();
+				if ((sx == 1.0) &&
+					(sy == 1.0))
+				{
+					this.AddGlyph (font, glyph, x, y, scale);
+				}
+				else
+				{
+					Transform ft = font.SyntheticTransform;
+					
+					ft.TX = x;
+					ft.TY = y;
+					
+					ft.MultiplyByPostfix (Transform.FromScale (sx * scale, sy * scale));
+					
+					Path temp = new Path ();
+					temp.Append (font, glyph, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
+					this.AddSurface (temp);
+					temp.Dispose ();
+				}
 			}
 		}
 		

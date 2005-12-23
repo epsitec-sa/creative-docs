@@ -329,7 +329,10 @@ namespace Epsitec.Common.Drawing
 				ty = ft.TY;
 			}
 			
-			AntiGrain.Path.AppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, 0);
+			if (glyph < 0xfff0)
+			{
+				AntiGrain.Path.AppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, 0);
+			}
 		}
 		
 		public void Append(Font font, int glyph, double xx, double xy, double yx, double yy, double tx, double ty, double bold_width)
@@ -352,7 +355,10 @@ namespace Epsitec.Common.Drawing
 				ty = ft.TY;
 			}
 			
-			AntiGrain.Path.AppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, bold_width);
+			if (glyph < 0xfff0)
+			{
+				AntiGrain.Path.AppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, bold_width);
+			}
 		}
 		
 		
