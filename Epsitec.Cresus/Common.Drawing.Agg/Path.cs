@@ -530,6 +530,14 @@ namespace Epsitec.Common.Drawing
 			
 			int n = elements.Length;
 			
+			if (n > 0xfff0)
+			{
+				//	Just in case... We wouldn't want to overflow the
+				//	size stored in the header (unsigned 16-bit value).
+				
+				n = 0;
+			}
+			
 			values = new double[2*n];
 			
 			System.Diagnostics.Debug.Assert (System.Buffer.ByteLength (values) == 16*n);
@@ -556,7 +564,16 @@ namespace Epsitec.Common.Drawing
 		
 		public void SetBlobOfElements(byte[] blob)
 		{
-			int n = (blob[0] << 8) | (blob[1]);
+			int n   = (blob[0] << 8) | (blob[1]);
+			int len = 2+n+16*n;
+			
+			if (blob.Length != len)
+			{
+				//	Aboid crashing if we get a blob which was messed up by the
+				//	caller (size of blob must match size based on element count).
+				
+				return;
+			}
 			
 			PathElement[] elements = new PathElement[n];
 			double[]      values   = new double[2*n];

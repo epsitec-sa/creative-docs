@@ -382,6 +382,16 @@ namespace Epsitec.Common.OpenType
 			int length_3 = data_3.Length;
 			int length_4 = data_4.Length;
 			
+			if (length_3 > 0xfff0)
+			{
+				length_3 = 0;
+			}
+			
+			if (length_4 > 0xfff0)
+			{
+				length_4 = 0;
+			}
+			
 			data_0[0] = 0;
 			data_0[1] = 0;
 			data_0[2] = (byte)(length_1 >> 8);

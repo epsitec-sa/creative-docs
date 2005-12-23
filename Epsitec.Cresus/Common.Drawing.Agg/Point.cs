@@ -89,15 +89,7 @@ namespace Epsitec.Common.Drawing
 		
 		public override bool Equals(object obj)
 		{
-			if ((obj == null) &&
-				(obj.GetType () != typeof (Point)))
-			{
-				return false;
-			}
-			
-			Point p = (Point) obj;
-			
-			return Point.Equals (this, p);
+			return (obj is Point) && (this == (Point) obj);
 		}
 		
 		public override int GetHashCode()
