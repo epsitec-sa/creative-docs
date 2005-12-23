@@ -9,6 +9,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			public sealed class Application
 			{
+				public static string SoftName { get { return GetText ("Strings", "Application", "SoftName"); } }
 				public static string TitleDoc { get { return GetText ("Strings", "Application", "TitleDoc"); } }
 				public static string TitlePic { get { return GetText ("Strings", "Application", "TitlePic"); } }
 				public static string TitleShort { get { return GetText ("Strings", "Application", "TitleShort"); } }

@@ -2,6 +2,7 @@
 <!-- Ressources pour le projet App.DocumentEditor -->
 
 <bundle type="String">
+	<data name="Application.SoftName">CreativeDocs</data>
 	<data name="Application.TitleDoc">Creative Docs .NET</data>
 	<data name="Application.TitlePic">Creative Pict .NET</data>
 	<data name="Application.TitleTxt">Creative Text .NET</data>

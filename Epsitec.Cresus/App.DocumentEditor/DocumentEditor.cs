@@ -5493,7 +5493,7 @@ namespace Epsitec.App.DocumentEditor
 			this.checker = new VersionChecker(typeof(App.DocumentEditor.Application).Assembly);
 
 			string url = string.Concat(Res.Strings.Dialog.Update.Web2, "/update/check",
-				/**/				   "?software=", Res.Strings.Application.TitleShort, "&version=",
+				/**/				   "?software=", Res.Strings.Application.SoftName, "&version=",
 				/**/				   this.checker.CurrentVersion);
 
 			this.checker.StartCheck(url);

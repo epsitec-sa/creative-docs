@@ -2,6 +2,7 @@
 <!-- Ressources pour le projet App.DocumentEditor -->
 
 <bundle type="String">
+	<data name="Application.SoftName">Cresus_Documents</data>
 	<data name="Application.TitleDoc">Crésus Documents</data>
 	<data name="Application.TitlePic">Crésus Pictogrammes</data>
 	<data name="Application.TitleTxt">Crésus Textes</data>
