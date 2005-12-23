@@ -491,7 +491,12 @@ namespace Epsitec.Common.Drawing
 		public static Image FromManifestResource(string resource_name, System.Reflection.Assembly assembly)
 		{
 			Image bitmap = Bitmap.FromManifestResource (resource_name, assembly, new Point (0, 0));
-			bitmap.is_origin_defined = false;
+			
+			if (bitmap != null)
+			{
+				bitmap.is_origin_defined = false;
+			}
+			
 			return bitmap;
 		}
 		

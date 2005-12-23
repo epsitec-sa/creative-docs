@@ -22,11 +22,11 @@ namespace Epsitec.App.DocumentEditor
 			Common.Support.SerialAlgorithm.SetProductGenerationNumber(1, 0);
 			
 			Widget.Initialise();
+			Epsitec.Common.Document.Engine.Initialise();
 			
 			Common.Support.ImageProvider.Default.EnableLongLifeCache = true;
 			Common.Support.ImageProvider.Default.PrefillManifestIconCache();
 
-			Epsitec.Common.Document.Engine.Initialise();
 			//Application.application = new Application(DocumentType.Pictogram);
 			Application.application = new Application(DocumentType.Graphic);
 			Application.application.MainWindow.Run();
