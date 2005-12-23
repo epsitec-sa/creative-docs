@@ -845,12 +845,14 @@ namespace Epsitec.Common.Document.Widgets
 				return Res.Strings.Action.Text.Ruler.TabChoice;
 			}
 			
-			if ( this.draggingHandle == "LeftFirst" )  return Res.Strings.Action.Text.Ruler.HandleLeftFirst;
-			if ( this.draggingHandle == "LeftBody"  )  return Res.Strings.Action.Text.Ruler.HandleLeftBody;
-			if ( this.draggingHandle == "FirstBody" )  return Res.Strings.Action.Text.Ruler.HandleFirstBody;
-			if ( this.draggingHandle == "Right"     )  return Res.Strings.Action.Text.Ruler.HandleRight;
+			string handle = this.DraggingDetect(pos);
 
-			Tab tab = this.GetTab(this.draggingHandle);
+			if ( handle == "LeftFirst" )  return Res.Strings.Action.Text.Ruler.HandleLeftFirst;
+			if ( handle == "LeftBody"  )  return Res.Strings.Action.Text.Ruler.HandleLeftBody;
+			if ( handle == "FirstBody" )  return Res.Strings.Action.Text.Ruler.HandleFirstBody;
+			if ( handle == "Right"     )  return Res.Strings.Action.Text.Ruler.HandleRight;
+
+			Tab tab = this.GetTab(handle);
 			if ( tab.Tag != null )
 			{
 				if ( tab.Zombie )
