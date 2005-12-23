@@ -262,7 +262,8 @@ namespace Epsitec.Common.Text
 			if (this.IsOpletQueueEnabled)
 			{
 				this.oplet_queue.ValidateAction ();
-				this.ApplyAutomaticOpletName ();
+				
+				bool force = false;
 				
 				Common.Support.OpletQueue.MergeMode merge_1 = this.oplet_queue.LastActionMergeMode;
 				Common.Support.OpletQueue.MergeMode merge_2 = this.oplet_queue.LastActionMinusOneMergeMode;
@@ -270,34 +271,89 @@ namespace Epsitec.Common.Text
 				if ((merge_1 == Common.Support.OpletQueue.MergeMode.Disabled) ||
 					(merge_2 == Common.Support.OpletQueue.MergeMode.Disabled))
 				{
-					return;
+					//	On ne fusionne pas !
 				}
-				
-				Common.Support.IOplet[] oplets_1 = this.oplet_queue.LastActionOplets;
-				Common.Support.IOplet[] oplets_2 = this.oplet_queue.LastActionMinusOneOplets;
-				
-				if ((oplets_1.Length == 1) &&
-					(oplets_2.Length == 1))
+				else
 				{
-					if (this.MergeOplets (oplets_2[0], oplets_1[0]))
+					Common.Support.IOplet[] oplets_1 = this.oplet_queue.LastActionOplets;
+					Common.Support.IOplet[] oplets_2 = this.oplet_queue.LastActionMinusOneOplets;
+					
+					if ((oplets_1.Length == 1) &&
+						(oplets_2.Length == 1))
 					{
-						this.oplet_queue.PurgeSingleUndo ();
+						if (this.MergeOplets (oplets_2[0], oplets_1[0]))
+						{
+							this.oplet_queue.PurgeSingleUndo ();
+						}
+					}
+					else if (oplets_1.Length == 1)
+					{
+						if (this.MergeOplets (oplets_2[oplets_2.Length-1], oplets_1[0]))
+						{
+							this.oplet_queue.PurgeSingleUndo ();
+						}
 					}
 				}
-				else if (oplets_1.Length == 1)
-				{
-					if (this.MergeOplets (oplets_2[oplets_2.Length-1], oplets_1[0]))
-					{
-						this.oplet_queue.PurgeSingleUndo ();
-					}
-				}
+				
+				this.ApplyAutomaticOpletName (force);
 			}
 		}
 		
 		
+		public void GetOpletsText(System.Collections.ICollection raw_oplets, out string inserted, out string deleted)
+		{
+			Common.Support.IOplet[] text_oplets = this.FindTextOplets (raw_oplets);
+			
+			System.Text.StringBuilder insert = new System.Text.StringBuilder ();
+			System.Text.StringBuilder delete = new System.Text.StringBuilder ();
+			
+			foreach (Common.Support.IOplet oplet in text_oplets)
+			{
+				if (oplet is TextInsertOplet)
+				{
+					TextInsertOplet ti = oplet as TextInsertOplet;
+					insert.Append (ti.ExtractText ());
+				}
+				else if (oplet is TextDeleteOplet)
+				{
+					TextDeleteOplet td = oplet as TextDeleteOplet;
+					delete.Append (td.ExtractText ());
+				}
+			}
+			
+			inserted = TextStory.CleanUp (insert.ToString ());
+			deleted  = TextStory.CleanUp (delete.ToString ());
+		}
+		
+		
+		private static string CleanUp(string value)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			foreach (char c in value.Trim ())
+			{
+				if (Unicode.DefaultBreakAnalyzer.IsControl (c))
+				{
+					//	Saute les caractères de contrôle.
+				}
+				else if (c >= ' ')
+				{
+					buffer.Append (c);
+				}
+			}
+
+			return buffer.ToString ();
+		}
+		
 		public void ApplyAutomaticOpletName()
 		{
-			if (this.oplet_queue.LastActionName == null)
+			this.ApplyAutomaticOpletName (false);
+		}
+		
+		public void ApplyAutomaticOpletName(bool force)
+		{
+			if ((this.oplet_queue.LastActionName == null) ||
+				(force))
 			{
 				Common.Support.IOplet[] oplets = this.FindTextOplets (this.oplet_queue.LastActionOplets);
 				
@@ -1181,6 +1237,7 @@ namespace Epsitec.Common.Text
 					if (this.MergeOplets (last, oplet))
 					{
 						oplet.Dispose ();
+						this.ApplyAutomaticOpletName (true);
 						return;
 					}
 				}
@@ -1803,6 +1860,18 @@ namespace Epsitec.Common.Text
 				return false;
 			}
 			
+			public string ExtractText()
+			{
+				ulong[] buffer = new ulong[this.length];
+				this.story.ReadText (this.position, this.length, buffer);
+				
+				string text;
+				
+				TextConverter.ConvertToString (buffer, out text);
+				
+				return text;
+			}
+			
 			
 			public override Common.Support.IOplet Undo()
 			{
@@ -1976,6 +2045,20 @@ namespace Epsitec.Common.Text
 				return false;
 			}
 			
+			public string ExtractText()
+			{
+				int undo_start = this.story.text_length + 1;
+				int undo_end   = undo_start + this.story.undo_length;
+				
+				ulong[] buffer = new ulong[this.length];
+				this.story.ReadText (undo_end - this.length, this.length, buffer);
+				
+				string text;
+				
+				TextConverter.ConvertToString (buffer, out text);
+				
+				return text;
+			}
 			
 			public override Common.Support.IOplet Undo()
 			{

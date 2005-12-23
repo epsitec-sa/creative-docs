@@ -1078,8 +1078,8 @@
 	<data name="Action.ParagraphLeading30">Leading x 3</data>
 	<data name="Action.ParagraphClear">Clear all Paragraph Properties</data>
 	<data name="Action.Text.Insert">Insert</data>
-	<data name="Action.Text.Edit.InsertText">Insert characters</data>
-	<data name="Action.Text.Edit.DeleteText">Delete characters</data>
+	<data name="Action.Text.Edit.InsertText">Insert "{0}"</data>
+	<data name="Action.Text.Edit.DeleteText">Delete "{0}"</data>
 	<data name="Action.Text.Edit.ChangeText">Change characters</data>
 	<data name="Action.Text.Edit.MoveCursor">Move cursor</data>
 	<data name="Action.Text.Edit.DefineSelection">Select characters</data>

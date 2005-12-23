@@ -449,7 +449,6 @@ namespace Epsitec.Common.Document
 			switch ( e.Event )
 			{
 				case Common.Support.OpletEvent.AddingOplet:
-					System.Diagnostics.Debug.WriteLine(string.Format("Adding oplet of type {0}", e.Oplet.GetType ().Name));
 					this.ChangeObjectEdited();
 					break;
 			}
@@ -463,11 +462,33 @@ namespace Epsitec.Common.Document
 			
 			if ( name.IndexOf("TextDelete") >= 0 )
 			{
-				output = Res.Strings.Action.Text.Edit.DeleteText;
+				string format = Res.Strings.Action.Text.Edit.DeleteText;
+				string insert;
+				string delete;
+				
+				this.textStory.GetOpletsText(this.textStory.OpletQueue.LastActionOplets, out insert, out delete);
+				
+				if ( delete.Length > 20 )
+				{
+					delete = string.Concat(delete.Substring(0, 18), "...");
+				}
+				
+				output = string.Format(System.Globalization.CultureInfo.InvariantCulture, format, delete);
 			}
 			else if ( name.IndexOf("TextInsert") >= 0 )
 			{
-				output = Res.Strings.Action.Text.Edit.InsertText;
+				string format = Res.Strings.Action.Text.Edit.InsertText;
+				string insert;
+				string delete;
+				
+				this.textStory.GetOpletsText(this.textStory.OpletQueue.LastActionOplets, out insert, out delete);
+				
+				if ( insert.Length > 20 )
+				{
+					insert = string.Concat(insert.Substring(0, 18), "...");
+				}
+				
+				output = string.Format(System.Globalization.CultureInfo.InvariantCulture, format, insert);
 			}
 			else if ( name.IndexOf("CursorMove") >= 0 )
 			{
