@@ -237,9 +237,14 @@ namespace Epsitec.Common.Text
 		
 		public System.IDisposable BeginAction()
 		{
+			return this.BeginAction (null);
+		}
+		
+		public System.IDisposable BeginAction(string name)
+		{
 			if (this.IsOpletQueueEnabled)
 			{
-				return this.oplet_queue.BeginAction ();
+				return this.oplet_queue.BeginAction (name);
 			}
 			else
 			{
@@ -320,7 +325,7 @@ namespace Epsitec.Common.Text
 						name = result;
 					}
 					
-					this.oplet_queue.DefineLastActionName (name);
+					this.oplet_queue.ChangeLastActionName (name);
 				}
 			}
 		}

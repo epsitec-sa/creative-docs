@@ -67,6 +67,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public TextStory						TextStory
+		{
+			get
+			{
+				return this.story;
+			}
+		}
+		
 		
 		public Property[]						AccumulatedTextProperties
 		{

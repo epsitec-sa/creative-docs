@@ -65,6 +65,30 @@ namespace Epsitec.Common.Text.Wrappers
 			this.suspend_synchronisations++;
 		}
 		
+		public void DefineOperationName(string name, string caption)
+		{
+			//	Définit un nom d'opération (name = nom interne, caption = nom qui
+			//	sera attaché à l'oplet dans OpletQueue, lequel sera visible par
+			//	l'utilisateur).
+			
+			if ((this.navigator != null) &&
+				(this.navigator.TextStory != null) &&
+				(this.navigator.TextStory.OpletQueue != null))
+			{
+				Common.Support.OpletQueue queue = this.navigator.TextStory.OpletQueue;
+				
+				if ((this.last_op_name != name) &&
+					(name != null) &&
+					(name.Length > 0))
+				{
+					queue.DisableMerge ();
+				}
+			}
+			
+			this.last_op_name = name;
+			this.last_op_caption = caption;
+		}
+		
 		public void ResumeSynchronisations()
 		{
 			System.Diagnostics.Debug.Assert (this.suspend_synchronisations > 0);
@@ -78,15 +102,20 @@ namespace Epsitec.Common.Text.Wrappers
 				{
 					this.navigator.SuspendNotifications ();
 					
-					foreach (AbstractState state in this.states)
+					using (this.navigator.TextStory.BeginAction (this.last_op_caption))
 					{
-						foreach (StateProperty property in state.GetPendingProperties ())
+						foreach (AbstractState state in this.states)
 						{
-							state.NotifyChanged (property, id);
-							this.InternalSynchronize (state, property);
+							foreach (StateProperty property in state.GetPendingProperties ())
+							{
+								state.NotifyChanged (property, id);
+								this.InternalSynchronize (state, property);
+							}
+							
+							state.ClearPendingProperties ();
 						}
 						
-						state.ClearPendingProperties ();
+						this.navigator.TextStory.ValidateAction ();
 					}
 					
 					this.navigator.ResumeNotifications ();
@@ -402,6 +431,9 @@ namespace Epsitec.Common.Text.Wrappers
 		private StyleList						style_list;
 		private TextStyle						style;
 		private System.Collections.ArrayList	states;
+		
+		private string							last_op_name;
+		private string							last_op_caption;
 		
 		private int								suspend_synchronisations;
 		private int								change_id = 1;

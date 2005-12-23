@@ -326,7 +326,11 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.action == null)
+				if (this.disable_merge)
+				{
+					return MergeMode.Disabled;
+				}
+				else if (this.action == null)
 				{
 					return MergeMode.None;
 				}
@@ -429,7 +433,7 @@ namespace Epsitec.Common.Support
 			this.action.Name = name;
 		}
 		
-		public void DefineLastActionName(string name)
+		public void ChangeLastActionName(string name)
 		{
 			if (this.live_fence > 0)
 			{
@@ -449,21 +453,28 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		
 		public void DisableMerge()
 		{
 			if (this.action != null)
 			{
 				this.action.DefineMergeMode (MergeMode.Disabled);
 			}
+			else
+			{
+				this.disable_merge = true;
+			}
 		}
 		
 		
+		#region MergeMode Enumeration
 		public enum MergeMode
 		{
 			None,
 			Automatic,
 			Disabled
 		}
+		#endregion
 		
 		public void ValidateAction()
 		{
@@ -504,6 +515,22 @@ namespace Epsitec.Common.Support
 					//	N'insère un élément dans la liste que si des oplets seront effectivement
 					//	ajoutés; une insertion vide ne va pas apparaître dans la queue !
 					
+					if (this.disable_merge)
+					{
+						if (this.live_index > 0)
+						{
+							//	Empêche la fusion de cette série d'oplets avec la série précédente;
+							//	il faut donc marquer la séquence précédente :
+							
+							Fence fence = this.queue[this.live_index-1] as Fence;
+							
+							if (fence != null)
+							{
+								fence.MergeMode = MergeMode.Disabled;
+							}
+						}
+					}
+					
 					this.queue.AddRange (this.temp_queue);
 					this.queue.Add (new Fence (this.temp_name, mode));
 					this.temp_queue.Clear ();
@@ -513,6 +540,8 @@ namespace Epsitec.Common.Support
 					this.live_fence = this.fence_count;
 					this.live_index = this.queue.Count;
 				}
+				
+				this.disable_merge = false;
 			}
 		}
 		
@@ -1021,6 +1050,10 @@ namespace Epsitec.Common.Support
 				{
 					return this.mode;
 				}
+				set
+				{
+					this.mode = value;
+				}
 			}
 
 			
@@ -1056,6 +1089,7 @@ namespace Epsitec.Common.Support
 		protected int							fence_id;
 		
 		protected bool							is_undo_redo_in_progress;
+		protected bool							disable_merge;
 		
 		private int								disable_count;
 	}
