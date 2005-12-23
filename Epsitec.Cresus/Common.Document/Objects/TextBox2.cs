@@ -15,6 +15,7 @@ namespace Epsitec.Common.Document.Objects
 		protected enum InternalOperation
 		{
 			Painting,
+			GetPath,
 			CharactersTable,
 			RealBoundingBox,
 		}
@@ -1716,6 +1717,11 @@ namespace Epsitec.Common.Document.Objects
 				this.RenderText(font, size, glyphs, iArray, x, y, sx, sy, RichColor.Parse(color), isSpace);
 			}
 			
+			if ( this.internalOperation == InternalOperation.GetPath )
+			{
+				this.RenderText(font, size, glyphs, null, x, y, sx, sy, RichColor.Empty, false);
+			}
+
 			if ( this.internalOperation == InternalOperation.CharactersTable )
 			{
 				int[]    cArray;
@@ -1787,66 +1793,59 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( this.graphics != null )  // affichage sur écran ?
 				{
-					if ( font.FontManagerType == OpenType.FontManagerType.System )
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+					if ( drawingFont != null )
 					{
-						Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color.Basic);
-					}
-					else
-					{
-						Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-						if ( drawingFont != null )
+						if ( sy == null )
 						{
-							if ( sy == null )
+							this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
+						}
+						else
+						{
+							for ( int i=0 ; i<glyphs.Length ; i++ )
 							{
-								this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
-							}
-							else
-							{
-								for ( int i=0 ; i<glyphs.Length ; i++ )
+								if ( glyphs[i] < 0xffff )
 								{
-									if ( glyphs[i] < 0xffff )
-									{
-										this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
-									}
-								}
-							}
-
-							if ( this.textFlow.HasActiveTextBox && isSpace && insecs != null &&
-								 this.drawingContext != null && this.drawingContext.TextShowControlCharacters )
-							{
-								for ( int i=0 ; i<glyphs.Length ; i++ )
-								{
-									double width = font.GetGlyphWidth(glyphs[i], size);
-									double oy = font.GetAscender(size)*0.3;
-
-									if ( insecs[i] == SpaceType.BreakSpace )  // espace sécable ?
-									{
-										this.graphics.AddFilledCircle(x[i]+width/2, y[i]+oy, size*0.05);
-									}
-
-									if ( insecs[i] == SpaceType.NoBreakSpace )  // espace insécable ?
-									{
-										this.graphics.AddCircle(x[i]+width/2, y[i]+oy, size*0.08);
-									}
-
-									if ( insecs[i] == SpaceType.NewFrame ||
-										 insecs[i] == SpaceType.NewPage  )  // saut ?
-									{
-										Point p1 = new Point(x[i],                 y[i]+oy);
-										Point p2 = new Point(this.textFrame.Width, y[i]+oy);
-										Path path = Path.FromLine(p1, p2);
-
-										double w    = (insecs[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
-										double dash = (insecs[i] == SpaceType.NewFrame) ? 0.0 : 8.0;
-										double gap  = (insecs[i] == SpaceType.NewFrame) ? 3.0 : 2.0;
-										Drawer.DrawPathDash(this.graphics, this.drawingContext, path, w, dash, gap, color.Basic);
-									}
+									this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
 								}
 							}
 						}
-				
-						this.graphics.RenderSolid(color.Basic);
+
+						if ( this.textFlow.HasActiveTextBox && isSpace && insecs != null &&
+							 this.drawingContext != null && this.drawingContext.TextShowControlCharacters )
+						{
+							for ( int i=0 ; i<glyphs.Length ; i++ )
+							{
+								double width = font.GetGlyphWidth(glyphs[i], size);
+								double oy = font.GetAscender(size)*0.3;
+
+								if ( insecs[i] == SpaceType.BreakSpace )  // espace sécable ?
+								{
+									this.graphics.AddFilledCircle(x[i]+width/2, y[i]+oy, size*0.05);
+								}
+
+								if ( insecs[i] == SpaceType.NoBreakSpace )  // espace insécable ?
+								{
+									this.graphics.AddCircle(x[i]+width/2, y[i]+oy, size*0.08);
+								}
+
+								if ( insecs[i] == SpaceType.NewFrame ||
+									 insecs[i] == SpaceType.NewPage  )  // saut ?
+								{
+									Point p1 = new Point(x[i],                 y[i]+oy);
+									Point p2 = new Point(this.textFrame.Width, y[i]+oy);
+									Path path = Path.FromLine(p1, p2);
+
+									double w    = (insecs[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
+									double dash = (insecs[i] == SpaceType.NewFrame) ? 0.0 : 8.0;
+									double gap  = (insecs[i] == SpaceType.NewFrame) ? 3.0 : 2.0;
+									Drawer.DrawPathDash(this.graphics, this.drawingContext, path, w, dash, gap, color.Basic);
+								}
+							}
+						}
 					}
+			
+					this.graphics.RenderSolid(color.Basic);
 				}
 				else if ( this.port is Printing.PrintPort )  // impression ?
 				{
@@ -1862,6 +1861,12 @@ namespace Epsitec.Common.Document.Objects
 					pdfPort.RichColor = color;
 					pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
 				}
+			}
+
+			if ( this.internalOperation == InternalOperation.GetPath )
+			{
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+				this.graphics.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
 			}
 
 			if ( this.internalOperation == InternalOperation.RealBoundingBox )
@@ -2200,6 +2205,34 @@ namespace Epsitec.Common.Document.Objects
 			//	Redessine tout, à cause des "poignées" du flux qui peuvent apparaître
 			//	ou disparaître.
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+		}
+
+		
+		public override Path GetPath(int rank)
+		{
+			//	Retourne le chemin géométrique de l'objet.
+			Graphics port = new Graphics();
+			Drawing.PathAccumulationRasterizer rasterizer = new PathAccumulationRasterizer();
+			port.ReplaceRasterizer(rasterizer);
+
+			this.DrawText(port, null, InternalOperation.GetPath);
+
+			Path[] paths = rasterizer.GetPaths();
+			if ( paths == null )  return null;
+			if ( rank >= paths.Length )  return null;
+			return paths[rank];
+		}
+
+		public override Path[] GetPaths()
+		{
+			//	Retourne les chemins géométriques de l'objet.
+			Graphics port = new Graphics();
+			Drawing.PathAccumulationRasterizer rasterizer = new PathAccumulationRasterizer();
+			port.ReplaceRasterizer(rasterizer);
+
+			this.DrawText(port, null, InternalOperation.GetPath);
+
+			return rasterizer.GetPaths();
 		}
 
 		

@@ -2912,6 +2912,12 @@ namespace Epsitec.Common.Document.Objects
 			return null;
 		}
 
+		public virtual Path[] GetPaths()
+		{
+			//	Retourne les chemins géométriques de l'objet.
+			return null;
+		}
+
 
 		#region PageNumber
 		public int PageNumber
