@@ -52,7 +52,11 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public void SetColor(Color color)
 		{
-			this.AssertAttached ();
+			if (this.agg_ren == System.IntPtr.Zero)
+			{
+				return;
+			}
+			
 			AntiGrain.Renderer.Smooth.Color (this.agg_ren, color.R, color.G, color.B, color.A);
 		}
 		
@@ -69,7 +73,11 @@ namespace Epsitec.Common.Drawing.Renderers
 			{
 				this.r1 = r1;
 				this.r2 = r2;
-				this.AssertAttached ();
+				
+				if (this.agg_ren == System.IntPtr.Zero)
+				{
+					return;
+				}
 			}
 		}
 		
@@ -107,7 +115,10 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		protected void SetTransform(Transform value)
 		{
-			this.AssertAttached ();
+			if (this.agg_ren == System.IntPtr.Zero)
+			{
+				return;
+			}
 			
 			this.transform = new Transform (value);
 			AntiGrain.Renderer.Smooth.Setup (this.agg_ren, this.r1, this.r2, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);

@@ -265,6 +265,11 @@ namespace Epsitec.Common.Drawing
 			this.Append (path, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY, approximation_zoom);
 		}
 		
+		public void Append(Path path, Transform transform, double approximation_zoom, double bold_width)
+		{
+			this.Append (path, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY, approximation_zoom, bold_width);
+		}
+		
 		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty, double approximation_zoom)
 		{
 			this.CreateOnTheFly ();
@@ -304,6 +309,21 @@ namespace Epsitec.Common.Drawing
 			this.CreateOnTheFly ();
 			this.has_curve = true;
 			this.is_empty  = false;
+			
+			if (font.IsSynthetic)
+			{
+				Transform ft = font.SyntheticTransform;
+				
+				ft.MultiplyBy (new Transform (xx, xy, yx, yy, tx, ty));
+				
+				xx = ft.XX;
+				xy = ft.XY;
+				yx = ft.YX;
+				yy = ft.YY;
+				tx = ft.TX;
+				ty = ft.TY;
+			}
+			
 			AntiGrain.Path.AppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, 0);
 		}
 		
@@ -312,6 +332,21 @@ namespace Epsitec.Common.Drawing
 			this.CreateOnTheFly ();
 			this.has_curve = true;
 			this.is_empty  = false;
+			
+			if (font.IsSynthetic)
+			{
+				Transform ft = font.SyntheticTransform;
+				
+				ft.MultiplyBy (new Transform (xx, xy, yx, yy, tx, ty));
+				
+				xx = ft.XX;
+				xy = ft.XY;
+				yx = ft.YX;
+				yy = ft.YY;
+				tx = ft.TX;
+				ty = ft.TY;
+			}
+			
 			AntiGrain.Path.AppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, bold_width);
 		}
 		

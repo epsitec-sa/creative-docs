@@ -74,13 +74,21 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public void ClearARGB(double a, double r, double g, double b)
 		{
-			this.AssertAttached ();
+			if (this.agg_ren == System.IntPtr.Zero)
+			{
+				return;
+			}
+			
 			AntiGrain.Renderer.Solid.Clear (this.agg_ren, r, g, b, a);
 		}
 		
 		public void Clear4Colors(int x, int y, int dx, int dy, Color c1, Color c2, Color c3, Color c4)
 		{
-			this.AssertAttached ();
+			if (this.agg_ren == System.IntPtr.Zero)
+			{
+				return;
+			}
+
 			AntiGrain.Renderer.Special.Fill4Colors (this.agg_ren, x, y, dx, dy, c1.R, c1.G, c1.B, c2.R, c2.G, c2.B, c3.R, c3.G, c3.B, c4.R, c4.G, c4.B);
 		}
 		
@@ -104,14 +112,22 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public void SetColorARGB(double a, double r, double g, double b)
 		{
-			this.AssertAttached ();
+			if (this.agg_ren == System.IntPtr.Zero)
+			{
+				return;
+			}
+
 			AntiGrain.Renderer.Solid.Color (this.agg_ren, r, g, b, a);
 		}
 		
 		
 		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
 		{
-			this.AssertAttached ();
+			if (this.agg_ren == System.IntPtr.Zero)
+			{
+				return;
+			}
+
 			AntiGrain.Renderer.Solid.SetAlphaMask (this.agg_ren, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
 		}
 		

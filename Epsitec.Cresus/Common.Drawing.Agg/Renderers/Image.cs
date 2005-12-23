@@ -113,7 +113,11 @@ namespace Epsitec.Common.Drawing.Renderers
 				//	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
 				//	Graphics.UpdateTransform...
 				
-				this.AssertAttached ();
+				if (this.agg_ren == System.IntPtr.Zero)
+				{
+					return;
+				}
+				
 				this.transform     = new Transform (value);
 				this.int_transform = new Transform (value);
 				this.OnTransformUpdating ();

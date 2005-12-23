@@ -122,6 +122,16 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 
+		[Test] public void CheckPathAccumulationRasterizer()
+		{
+			Window window = new Window ();
+			
+			window.Text = "PathAccumulationRasterizer";
+			window.Root.PaintForeground += new PaintEventHandler(PathAccumulationRasterizer_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+
 		[Test] public void CheckPathAppend()
 		{
 			Window window = new Window ();
@@ -742,6 +752,11 @@ namespace Epsitec.Common.Drawing
 			double cx = root.Client.Width / 2;
 			double cy = root.Client.Height / 2;
 			
+			Transform t = e.Graphics.Transform;
+			
+			e.Graphics.RotateTransformDeg (15, cx, cy);
+			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
+			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
@@ -774,6 +789,64 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
 			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+			
+			e.Graphics.Transform = t;
+		}
+		
+		private void PathAccumulationRasterizer_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = root.Client.Width / 2;
+			double cy = root.Client.Height / 2;
+			
+			PathAccumulationRasterizer r = new PathAccumulationRasterizer ();
+			Graphics g = new Graphics ();
+			g.ReplaceRasterizer (r);
+			
+			g.RotateTransformDeg (15, cx, cy);
+			g.ScaleTransform (1.2, 1.2, 0, 0);
+			
+			g.AddLine (cx, cy-5, cx, cy+5);
+			g.AddLine (cx-5, cy, cx+5, cy);
+			g.RenderSolid (Color.FromBrightness (0));
+			
+			Path path1 = new Path ();
+			Path path2 = new Path ();
+			Font font  = Font.GetFont ("Times New Roman", "Regular");
+			
+			path1.MoveTo (10, 10);
+			path1.LineTo (10, 110);
+			path1.LineTo (110, 60);
+			path1.Close ();
+			path1.MoveTo (20, 25);
+			path1.LineTo (95, 60);
+			path1.LineTo (20, 95);
+			path1.Close ();
+			
+			path2.MoveTo (210, 10);
+			path2.LineTo (210, 110);
+			path2.LineTo (310, 60);
+			path2.Close ();
+			path2.MoveTo (220, 25);
+			path2.LineTo (220, 95);
+			path2.LineTo (295, 60);
+			path2.Close ();
+			
+			g.FillMode = FillMode.NonZero;
+			g.Rasterizer.AddSurface (path1);
+			g.Rasterizer.AddSurface (path2);
+			g.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
+			g.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
+			g.RenderSolid (Color.FromRGB (1, 0, 0));
+			
+			foreach (Path path in r.GetPaths ())
+			{
+				e.Graphics.Rasterizer.AddSurface (path);
+				System.Console.WriteLine (path.ToString ());
+			}
+			
+			e.Graphics.RenderSolid (Color.FromRGB (0, 0, 1));
 		}
 		
 		private void PathAppend_PaintForeground(object sender, PaintEventArgs e)

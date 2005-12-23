@@ -96,13 +96,23 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
             </References>
         </Build>
         <Files>
             <Include>
+                <File
+                    RelPath = "AbstractRasterizer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "AbstractStringConverter.cs"
                     SubType = "Code"
@@ -119,6 +129,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "CapStyle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Color.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -130,6 +145,11 @@
                 />
                 <File
                     RelPath = "DashedPath.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FillMode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -179,6 +199,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "JoinStyle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Margins.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -190,6 +215,11 @@
                 />
                 <File
                     RelPath = "Path.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PathAccumulationRasterizer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

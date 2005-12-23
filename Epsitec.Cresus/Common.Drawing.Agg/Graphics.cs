@@ -21,6 +21,7 @@ namespace Epsitec.Common.Drawing
 			this.pixmap     = new Pixmap ();
 			this.rasterizer = new Common.Drawing.Rasterizer ();
 			this.transform  = new Transform ();
+			
 			this.color_modifier_stack = new System.Collections.Stack();
 			
 			this.solid_renderer    = new Common.Drawing.Renderers.Solid ();
@@ -34,12 +35,6 @@ namespace Epsitec.Common.Drawing
 			this.rasterizer.Gamma = 1.2;
 		}
 
-		~ Graphics()
-		{
-			this.Dispose (false);
-		}
-		
-		
 		public double							LineWidth
 		{
 			get { return this.line_width; }
@@ -147,9 +142,12 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public Drawing.Rasterizer				Rasterizer
+		public Drawing.AbstractRasterizer		Rasterizer
 		{
-			get { return this.rasterizer; }
+			get
+			{
+				return this.rasterizer;
+			}
 		}
 		
 		public Drawing.Transform				Transform
@@ -188,6 +186,13 @@ namespace Epsitec.Common.Drawing
 		public Renderers.Smooth					SmoothRenderer
 		{
 			get { return this.smooth_renderer; }
+		}
+		
+		
+		public void ReplaceRasterizer(AbstractRasterizer rasterizer)
+		{
+			this.rasterizer = rasterizer;
+			this.rasterizer.Transform = this.transform;
 		}
 		
 		
@@ -1020,7 +1025,7 @@ namespace Epsitec.Common.Drawing
 		private double						line_miter_limit;
 		
 		private Pixmap						pixmap;
-		private Rasterizer					rasterizer;
+		private AbstractRasterizer			rasterizer;
 		private Transform					transform;
 		
 		private Renderers.Solid				solid_renderer;

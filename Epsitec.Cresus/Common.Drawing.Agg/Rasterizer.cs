@@ -3,30 +3,12 @@
 
 namespace Epsitec.Common.Drawing
 {
-	public enum CapStyle
-	{
-		Butt   = 0,
-		Square = 1,
-		Round  = 2
-	}
-	
-	public enum JoinStyle
-	{
-		Miter = 0,
-		MiterRevert = 1,
-		MiterRound = 4,
-		Round = 2,
-		Bevel = 3,
-	}
-	
-	public enum FillMode
-	{
-		EvenOdd		= 1,
-		NonZero		= 2
-	}
-	
-	
-	public class Rasterizer : System.IDisposable
+	/// <summary>
+	/// The rasterizer transforms paths and glyphs into coverage information
+	/// in AGG. This coverage information is then used by the renderer to
+	/// produce actual pixels.
+	/// </summary>
+	public class Rasterizer : AbstractRasterizer
 	{
 		public Rasterizer()
 		{
@@ -38,80 +20,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		internal FillMode						FillMode
-		{
-			get
-			{
-				return this.fill_mode;
-			}
-			set
-			{
-				if (this.fill_mode != value)
-				{
-					this.fill_mode = value;
-					this.SyncFillMode ();
-				}
-			}
-		}
-		
-		public double							Gamma
-		{
-			get
-			{
-				return this.gamma;
-			}
-			set
-			{
-				if (this.gamma != value)
-				{
-					this.gamma = value;
-					this.SyncGamma ();
-				}
-			}
-		}
-		
-		public Transform						Transform
-		{
-			get
-			{
-				return this.transform;
-			}
-			set
-			{
-				if (value == null)
-				{
-					throw new System.NullReferenceException ("Rasterizer.Transform");
-				}
-				
-				if (this.transform != value)
-				{
-					this.transform = new Transform (value);
-					this.SyncTransform ();
-				}
-			}
-		}
-		
-		
-		protected void SyncFillMode()
-		{
-			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.FillingRule (this.agg_ras, (int) this.fill_mode);
-		}
-		
-		protected void SyncGamma()
-		{
-			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.Gamma (this.agg_ras, this.gamma);
-		}
-		
-		protected void SyncTransform()
-		{
-			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.SetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
-		}
-		
-		
-		internal void SetClipBox(double x1, double y1, double x2, double y2)
+		public override void SetClipBox(double x1, double y1, double x2, double y2)
 		{
 			//	The clip box is specified in destination pixel coordinates (without any transform
 			//	matrix).
@@ -119,14 +28,14 @@ namespace Epsitec.Common.Drawing
 			AntiGrain.Rasterizer.SetClipBox (this.agg_ras, x1, y1, x2, y2);
 		}
 		
-		internal void ResetClipBox()
+		public override void ResetClipBox()
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Rasterizer.ResetClipBox (this.agg_ras);
 		}
 		
 		
-		public void AddSurface(Path path)
+		public override void AddSurface(Path path)
 		{
 			if (path != null)
 			{
@@ -135,12 +44,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public void AddOutline(Path path)
-		{
-			this.AddOutline (path, 1);
-		}
-		
-		public void AddOutline(Path path, double width)
+		public override void AddOutline(Path path, double width)
 		{
 			if (path != null)
 			{
@@ -149,12 +53,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public void AddOutline(Path path, double width, CapStyle cap, JoinStyle join)
-		{
-			this.AddOutline (path, width, cap, join, 4.0);
-		}
-
-		public void AddOutline(Path path, double width, CapStyle cap, JoinStyle join, double miter_limit)
+		public override void AddOutline(Path path, double width, CapStyle cap, JoinStyle join, double miter_limit)
 		{
 			if (path != null)
 			{
@@ -163,7 +62,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public void AddGlyph(Font font, int glyph, double x, double y, double scale)
+		public override void AddGlyph(Font font, int glyph, double x, double y, double scale)
 		{
 			this.CreateOnTheFly ();
 			
@@ -191,7 +90,7 @@ namespace Epsitec.Common.Drawing
 			AntiGrain.Rasterizer.AddGlyph(this.agg_ras, font.Handle, glyph, x, y, scale);
 		}
 		
-		public void AddGlyph(Font font, int glyph, double x, double y, double scale, double sx, double sy)
+		public override void AddGlyph(Font font, int glyph, double x, double y, double scale, double sx, double sy)
 		{
 			if ((sx == 1.0) &&
 				(sy == 1.0))
@@ -215,74 +114,22 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public void AddGlyphs(Font font, double scale, ushort[] glyphs, double[] x, double[] y, double[] sx)
-		{
-			if (font.IsSynthetic)
-			{
-				if (sx == null)
-				{
-					for (int i = 0; i < glyphs.Length; i++)
-					{
-						this.AddGlyph (font, glyphs[i], x[i], y[i], scale);
-					}
-				}
-				else
-				{
-					for (int i = 0; i < glyphs.Length; i++)
-					{
-						this.AddGlyph (font, glyphs[i], x[i], y[i], scale, sx[i], 1.0);
-					}
-				}
-			}
-			else
-			{
-				this.CreateOnTheFly ();
-				AntiGrain.Rasterizer.AddGlyphs (this.agg_ras, font.Handle, scale, glyphs, x, y, sx);
-			}
-		}
 		
-		public double AddText(Font font, string text, double x, double y, double scale)
-		{
-			this.CreateOnTheFly ();
-			
-			if (font.IsSynthetic)
-			{
-				Transform font_transform = font.SyntheticTransform;
-				
-				font_transform.Scale (scale);
-				
-				font_transform.TX = x;
-				font_transform.TY = y;
-				
-				switch (font.SyntheticFontMode)
-				{
-					case SyntheticFontMode.Oblique:
-						return AntiGrain.Rasterizer.AddText (this.agg_ras, font.Handle, text, 0, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
-					
-					default:
-						break;
-				}
-			}
-			
-			return AntiGrain.Rasterizer.AddText (this.agg_ras, font.Handle, text, 0, scale, 0, 0, scale, x, y);
-		}
-		
-		
-		public void Render(Renderers.Solid renderer)
+		public override void Render(Renderers.Solid renderer)
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Rasterizer.RenderSolid (this.agg_ras, renderer.Handle);
 			AntiGrain.Rasterizer.Clear (this.agg_ras);
 		}
 		
-		public void Render(Renderers.Image renderer)
+		public override void Render(Renderers.Image renderer)
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Rasterizer.RenderImage (this.agg_ras, renderer.Handle);
 			AntiGrain.Rasterizer.Clear (this.agg_ras);
 		}
 		
-		public void Render(Renderers.Gradient renderer)
+		public override void Render(Renderers.Gradient renderer)
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Rasterizer.RenderGradient (this.agg_ras, renderer.Handle);
@@ -290,16 +137,42 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		#region IDisposable Members
-		public void Dispose()
+		protected override void SyncFillMode()
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
+			this.CreateOnTheFly ();
+			AntiGrain.Rasterizer.FillingRule (this.agg_ras, (int) this.fill_mode);
 		}
-		#endregion
 		
-		protected virtual void Dispose(bool disposing)
+		protected override void SyncGamma()
 		{
+			this.CreateOnTheFly ();
+			AntiGrain.Rasterizer.Gamma (this.agg_ras, this.gamma);
+		}
+		
+		protected override void SyncTransform()
+		{
+			this.CreateOnTheFly ();
+			AntiGrain.Rasterizer.SetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
+		}
+		
+		
+		protected override void AddPlainGlyphs(Font font, double scale, ushort[] glyphs, double[] x, double[] y, double[] sx)
+		{
+			this.CreateOnTheFly ();
+			AntiGrain.Rasterizer.AddGlyphs (this.agg_ras, font.Handle, scale, glyphs, x, y, sx);
+		}
+		
+		protected override double AddPlainText(Font font, string text, double xx, double xy, double yx, double yy, double tx, double ty)
+		{
+			this.CreateOnTheFly ();
+			return AntiGrain.Rasterizer.AddText (this.agg_ras, font.Handle, text, 0, xx, xy, yx, yy, tx, ty);
+		}
+		
+		
+		protected override void Dispose(bool disposing)
+		{
+			//	Free unmanaged resources :
+			
 			if (this.agg_ras != System.IntPtr.Zero)
 			{
 				AntiGrain.Rasterizer.Delete (this.agg_ras);
@@ -307,7 +180,8 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		protected void CreateOnTheFly()
+		
+		private void CreateOnTheFly()
 		{
 			if (this.agg_ras == System.IntPtr.Zero)
 			{
@@ -316,9 +190,6 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		private FillMode							fill_mode = FillMode.NonZero;
-		private double								gamma     = 1.0;
-		private Transform							transform = new Transform ();
-		private System.IntPtr						agg_ras;
+		private System.IntPtr					agg_ras;
 	}
 }
