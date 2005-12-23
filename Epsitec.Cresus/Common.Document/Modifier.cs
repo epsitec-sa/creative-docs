@@ -3512,6 +3512,7 @@ namespace Epsitec.Common.Document
 			line.CreateFromPoints(p1, p2);
 			line.Select(true);
 			this.TotalSelected ++;
+			this.VisibilityForce(line);
 
 			Objects.Abstract layer = this.ActiveViewer.DrawingContext.RootObject();
 			layer.Objects.Add(line);
@@ -3532,6 +3533,7 @@ namespace Epsitec.Common.Document
 			bezier.PropertyFillGradient.FillType = Properties.GradientFillType.None;
 			bezier.PropertyFillGradient.Color1 = RichColor.FromARGB(0, 1,1,1);
 			bezier.PropertyPolyClose.BoolValue = false;
+			this.VisibilityForce(bezier);
 
 			Objects.Abstract layer = this.ActiveViewer.DrawingContext.RootObject();
 			layer.Objects.Add(bezier);
@@ -3574,6 +3576,23 @@ namespace Epsitec.Common.Document
 			if ( corner != null )
 			{
 				corner.CornerType = Properties.CornerType.Right;
+			}
+		}
+
+		protected void VisibilityForce(Objects.Abstract obj)
+		{
+			//	Force un objet à être visible, c'est-à-dire à avoir un trait d'épaisseur non nulle.
+			Properties.Line line = obj.PropertyLineMode;
+			if ( line == null )  return;
+			if ( line.Width != 0.0 )  return;
+
+			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+			{
+				line.Width = 1.0;  // 0.1mm
+			}
+			else
+			{
+				line.Width = 1.27;  // 0.05in
 			}
 		}
 		#endregion
