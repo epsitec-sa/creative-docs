@@ -1050,7 +1050,7 @@
 	<data name="Action.FontDefault">Default</data>
 	<data name="Action.FontClear">Clear all Character Properties</data>
 	<data name="Action.ParagraphMain">Paragraph</data>
-	<data name="Action.ParagraphJustif">@@Modifier la justification</data>
+	<data name="Action.ParagraphJustif">Change alignment</data>
 	<data name="Action.ParagraphJustifHLeft">Left aligned</data>
 	<data name="Action.ParagraphJustifHCenter">Centered</data>
 	<data name="Action.ParagraphJustifHRight">Right aligned</data>
@@ -1059,7 +1059,7 @@
 	<data name="Action.ParagraphBulletRound">Bullet list</data>
 	<data name="Action.ParagraphBulletNumeric">Numbered list 1..</data>
 	<data name="Action.ParagraphBulletAlpha">Alphabetical list A..</data>
-	<data name="Action.ParagraphIndent">@@Modifier le retrait</data>
+	<data name="Action.ParagraphIndent">Change indentation</data>
 	<data name="Action.ParagraphIndentPlus">Increase indentation level</data>
 	<data name="Action.ParagraphIndentMinus">Decrease indentation level</data>
 	<data name="Action.ParagraphAlignLeft">Left aligned</data>
@@ -1068,7 +1068,7 @@
 	<data name="Action.ParagraphAlignJustif">Justify with last line aligned left</data>
 	<data name="Action.ParagraphAlignAll">Justify all lines</data>
 	<data name="Action.ParagraphHyphen">Hyphenate Paragraph</data>
-	<data name="Action.ParagraphLeading">@@Modifier l'interligne</data>
+	<data name="Action.ParagraphLeading">Change leading</data>
 	<data name="Action.ParagraphLeadingMinus">Decrease leading</data>
 	<data name="Action.ParagraphLeadingPlus">Increase leading</data>
 	<data name="Action.ParagraphLeading08">Compact leading</data>
