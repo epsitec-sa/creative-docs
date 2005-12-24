@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ActionMain;
 
-			this.buttonSettings  = this.CreateIconButton("Settings");
+			this.buttonSettings  = this.CreateIconButton("Settings", "2");
 			this.buttonInfos     = this.CreateIconButton("Infos");
 			this.buttonPageStack = this.CreateIconButton("PageStack");
 			this.buttonKey       = this.CreateIconButton("KeyApplication");
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 8 + 22*3;
+				return 8 + 22*1.5 + 4 + 22*3;
 			}
 		}
 
@@ -61,11 +61,15 @@ namespace Epsitec.Common.Document.Ribbons
 			double dy = this.buttonSettings.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
+			rect.Width  = dx*1.5;
+			rect.Height = dy*1.5;
+			rect.Offset(0, dy*0.5);
+			this.buttonSettings.Bounds = rect;
+
+			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(0, dy+5);
-			this.buttonSettings.Bounds = rect;
-			rect.Offset(dx, 0);
+			rect.Offset(dx*1.5+4, dy+5);
 			this.buttonInfos.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonPageStack.Bounds = rect;
@@ -73,6 +77,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
+			rect.Offset(dx*1.5+4, 0);
 			this.buttonKey.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonUpdate.Bounds = rect;

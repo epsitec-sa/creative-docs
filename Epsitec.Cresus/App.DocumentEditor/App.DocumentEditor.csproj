@@ -1616,6 +1616,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Settings2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Shaper.icon"
                     BuildAction = "EmbeddedResource"
                 />
