@@ -2194,14 +2194,17 @@ namespace Epsitec.Common.Document
 
 			bool many = false;
 			int totalSelected = this.document.Modifier.TotalSelected;
-			if ( global && totalSelected > 20 )
+			if ( global && totalSelected > 20 )  // plus de 20 objets sélectionnés globalement ?
 			{
 				int totalHandle = 0;
 				foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 				{
 					totalHandle += obj.TotalMainHandle;
 				}
-				if ( totalHandle > totalSelected*5 )  many = true;
+				if ( totalHandle > totalSelected*5 || totalHandle > 200 )
+				{
+					many = true;
+				}
 			}
 
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )

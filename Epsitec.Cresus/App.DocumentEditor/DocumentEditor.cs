@@ -4134,7 +4134,7 @@ namespace Epsitec.App.DocumentEditor
 				int totalObjects   = this.CurrentDocument.Modifier.TotalObjects;
 				bool isCreating    = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
 				bool isBase        = viewer.DrawingContext.RootStackIsBase;
-				bool isEdit        = this.CurrentDocument.Modifier.Tool == "Edit";
+				bool isEdit        = this.CurrentDocument.Modifier.Tool == "ToolEdit";
 				SelectorType sType = viewer.SelectorType;
 				Objects.Abstract one = this.CurrentDocument.Modifier.RetOnlySelectedObject();
 

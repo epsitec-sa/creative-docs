@@ -3071,6 +3071,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Ajoute un oplet pour mémoriser la géométrie de l'objet.
 			if ( !this.document.Modifier.OpletQueueEnable )  return;
+			System.Diagnostics.Debug.WriteLine("InsertOpletGeometry");
 			OpletGeometry oplet = new OpletGeometry(this);
 			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
