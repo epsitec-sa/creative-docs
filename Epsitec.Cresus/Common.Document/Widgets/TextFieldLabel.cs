@@ -152,7 +152,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.textFieldReal.UnitType = RealUnitType.Scalar;
 			this.textFieldReal.Scale = (decimal) Modifier.fontSizeScale;
 			this.textFieldReal.InternalMinValue = 1.0M;
-			this.textFieldReal.InternalMaxValue = (decimal) (72*Modifier.fontSizeScale);
+			this.textFieldReal.InternalMaxValue = (decimal) (240*Modifier.fontSizeScale);
 			this.textFieldReal.Step = 1.0M;
 			this.textFieldReal.Resolution = 0.1M;
 		}

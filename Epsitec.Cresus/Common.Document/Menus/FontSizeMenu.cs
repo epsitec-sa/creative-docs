@@ -67,18 +67,23 @@ namespace Epsitec.Common.Document.Menus
 			FontSizeMenu.Add(list, 2.00, "%");
 			FontSizeMenu.Add(list, 3.00, "%");
 
-			FontSizeMenu.Add(list,  8*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  9*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 10*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 11*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 12*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 14*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 16*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 20*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 26*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 36*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 48*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 72*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,   8*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,   9*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,  10*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,  11*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,  12*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,  14*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,  16*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,  20*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,  26*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,  36*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,  48*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,  72*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,  96*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list, 120*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list, 144*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list, 192*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list, 240*Modifier.fontSizeScale, "");
 
 			list.Sort();
 
