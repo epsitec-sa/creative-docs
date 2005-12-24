@@ -1085,10 +1085,14 @@ namespace Epsitec.App.DocumentEditor
 			bookStyles.Name = "Styles";
 			di.bookPanels.Items.Add(bookStyles);
 
-			TabPage bookTextStyles = new TabPage();
-			bookTextStyles.TabTitle = Res.Strings.TabPage.TextStyles;
-			bookTextStyles.Name = "TextStyles";
-			di.bookPanels.Items.Add(bookTextStyles);
+			TabPage bookTextStyles = null;
+			if ( this.debugMode == DebugMode.DebugCommands )
+			{
+				bookTextStyles = new TabPage();
+				bookTextStyles.TabTitle = Res.Strings.TabPage.TextStyles;
+				bookTextStyles.Name = "TextStyles";
+				di.bookPanels.Items.Add(bookTextStyles);
+			}
 
 			TabPage bookAutos = null;
 			if ( this.debugMode == DebugMode.DebugCommands )
@@ -1130,11 +1134,14 @@ namespace Epsitec.App.DocumentEditor
 			di.containerStyles.DockMargins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerStyles);
 
-			di.containerTextStyles = new Containers.TextStyles(document);
-			di.containerTextStyles.SetParent(bookTextStyles);
-			di.containerTextStyles.Dock = DockStyle.Fill;
-			di.containerTextStyles.DockMargins = new Margins(4, 4, 10, 4);
-			document.Modifier.AttachContainer(di.containerTextStyles);
+			if ( bookTextStyles != null )
+			{
+				di.containerTextStyles = new Containers.TextStyles(document);
+				di.containerTextStyles.SetParent(bookTextStyles);
+				di.containerTextStyles.Dock = DockStyle.Fill;
+				di.containerTextStyles.DockMargins = new Margins(4, 4, 10, 4);
+				document.Modifier.AttachContainer(di.containerTextStyles);
+			}
 
 			if ( bookAutos != null )
 			{
@@ -4445,7 +4452,10 @@ namespace Epsitec.App.DocumentEditor
 			//	Appelé par le document lorsqu'un style de texte a changé.
 			if ( !this.IsCurrentDocument )  return;
 			DocumentInfo di = this.CurrentDocumentInfo;
-			di.containerTextStyles.SetDirtyContent();
+			if ( di.containerTextStyles != null )
+			{
+				di.containerTextStyles.SetDirtyContent();
+			}
 		}
 
 		private void HandlePagesChanged()
