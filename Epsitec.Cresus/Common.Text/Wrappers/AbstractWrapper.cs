@@ -46,7 +46,9 @@ namespace Epsitec.Common.Text.Wrappers
 			this.style      = style;
 			this.style_list = this.context.StyleList;
 			
-			//	TODO: attache au styliste
+			this.style_list.StyleAdded += new Common.Support.EventHandler (this.HandleStyleListStyleAdded);
+			this.style_list.StyleRemoved += new Common.Support.EventHandler (this.HandleStyleListStyleRemoved);
+			this.style_list.StyleRedefined += new Common.Support.EventHandler (this.HandleStyleListStyleRedefined);
 			
 			this.UpdateAll ();
 			this.NotifyChanged ();
@@ -130,6 +132,7 @@ namespace Epsitec.Common.Text.Wrappers
 			this.UpdateState (true);
 		}
 		
+		
 		private void InternalDetach()
 		{
 			if (this.navigator != null)
@@ -139,7 +142,9 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			if (this.style_list != null)
 			{
-				//	TODO: détache du styliste
+				this.style_list.StyleAdded -= new Common.Support.EventHandler (this.HandleStyleListStyleAdded);
+				this.style_list.StyleRemoved -= new Common.Support.EventHandler (this.HandleStyleListStyleRemoved);
+				this.style_list.StyleRedefined -= new Common.Support.EventHandler (this.HandleStyleListStyleRedefined);
 			}
 			
 			this.navigator  = null;
@@ -155,6 +160,19 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 
 		private void HandleNavigatorCursorMoved(object sender)
+		{
+			this.UpdateAll ();
+		}
+		
+		private void HandleStyleListStyleAdded(object sender)
+		{
+		}
+		
+		private void HandleStyleListStyleRemoved(object sender)
+		{
+		}
+		
+		private void HandleStyleListStyleRedefined(object sender)
 		{
 			this.UpdateAll ();
 		}

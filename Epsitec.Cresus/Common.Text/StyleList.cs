@@ -216,10 +216,13 @@ namespace Epsitec.Common.Text
 			
 			System.Diagnostics.Debug.Assert (this.text_style_list.Contains (style));
 			
-			using (queue.BeginAction ())
+			if (queue != null)
 			{
-				queue.Insert (new RedefineOplet (this, style));
-				queue.ValidateAction ();
+				using (queue.BeginAction ())
+				{
+					queue.Insert (new RedefineOplet (this, style));
+					queue.ValidateAction ();
+				}
 			}
 			
 			this.PreRedefine (style);
