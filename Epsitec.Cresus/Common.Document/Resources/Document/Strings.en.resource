@@ -719,7 +719,7 @@
 	<data name="Misc.Extract">Extract</data>
 	<data name="Misc.ExtractOf">of</data>
 
-	<data name="Action.ActionMain">Action</data>
+	<data name="Action.ActionMain">Config.</data>
 
 	<data name="Action.ToolSelect">Select</data>
 	<data name="Action.ToolGlobal">Selection rectangle</data>
@@ -1265,7 +1265,7 @@
 	<data name="Aggregates.NoneLine">&lt;i&gt;None&lt;/i&gt;</data>
 	<data name="Aggregate.Name">Style {0}</data>
 
-	<data name="Question.ManyObjects">@@Voulez-vous vraiment traiter {0} objets ?</data>
+	<data name="Question.ManyObjects">Do you really want to transform {0} objects?</data>
 
 	<data name="Error.BadFile">Incorrect file type.</data>
 	<data name="Error.BadImage">Unrecognized image format.</data>

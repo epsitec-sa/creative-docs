@@ -82,7 +82,7 @@
 	<data name="Dialog.About.Copyright">© 2002-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud</data>
 	<data name="Dialog.About.Demo">Demo</data>
 	<data name="Dialog.About.Expired">Expired</data>
-	<data name="Dialog.About.Freeware">Beta Test</data>
+	<data name="Dialog.About.Freeware">Evaluation</data>
 
 	<data name="Dialog.Download.Title">Check for Updates</data>
 	<data name="Dialog.Download.UpToDate">Your application is up-to-date.</data>
