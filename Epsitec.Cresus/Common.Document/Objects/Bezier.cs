@@ -92,24 +92,24 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( rect.Contains(this.Handle(i+1).Position) )
 				{
-					this.Handle(i+0).Modify(true, false, false);
-					this.Handle(i+1).Modify(true, false, false);
-					this.Handle(i+2).Modify(true, false, false);
+					this.Handle(i+0).Modify(true, false, false, false);
+					this.Handle(i+1).Modify(true, false, false, false);
+					this.Handle(i+2).Modify(true, false, false, false);
 					sel += 3;
 				}
 				else
 				{
 					if ( shaper )
 					{
-						this.Handle(i+0).Modify(true, false, true);
-						this.Handle(i+1).Modify(true, false, true);
-						this.Handle(i+2).Modify(true, false, true);
+						this.Handle(i+0).Modify(true, false, false, true);
+						this.Handle(i+1).Modify(true, false, false, true);
+						this.Handle(i+2).Modify(true, false, false, true);
 					}
 					else
 					{
-						this.Handle(i+0).Modify(false, false, false);
-						this.Handle(i+1).Modify(false, false, false);
-						this.Handle(i+2).Modify(false, false, false);
+						this.Handle(i+0).Modify(false, false, false, false);
+						this.Handle(i+1).Modify(false, false, false, false);
+						this.Handle(i+2).Modify(false, false, false, false);
 					}
 				}
 			}

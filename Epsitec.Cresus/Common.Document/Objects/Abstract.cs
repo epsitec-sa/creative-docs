@@ -302,7 +302,7 @@ namespace Epsitec.Common.Document.Objects
 					bool isVisible = property.IsHandleVisible(this, handle.PropertyRank) && sel;
 					bool isGlobalSelected = this.globalSelected && handle.IsVisible;
 					bool isShaperDeselected = false;
-					handle.Modify(isVisible, isGlobalSelected, isShaperDeselected);
+					handle.Modify(isVisible, isGlobalSelected, false, isShaperDeselected);
 
 					handle.Position = property.GetHandlePosition(this, handle.PropertyRank);
 					this.SetDirtyBbox();
@@ -526,7 +526,7 @@ namespace Epsitec.Common.Document.Objects
 				if ( handle.Type == HandleType.Secondary )  continue;
 				if ( handle.Type == HandleType.Bezier )  continue;
 
-				handle.Modify(hilite, false, hilite);
+				handle.Modify(hilite, false, false, hilite);
 			}
 		}
 
@@ -1419,11 +1419,11 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( shaper )
 				{
-					handle.Modify(select, false, select);
+					handle.Modify(select, false, false, select);
 				}
 				else
 				{
-					handle.Modify(select && !edit, false, false);
+					handle.Modify(select && !edit, false, false, false);
 				}
 			}
 			this.SelectedSegmentClear();
@@ -1451,18 +1451,18 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( rect.Contains(handle.Position) )
 				{
-					handle.Modify(true, false, false);
+					handle.Modify(true, false, false, false);
 					sel ++;
 				}
 				else
 				{
 					if ( shaper )
 					{
-						handle.Modify(true, false, true);
+						handle.Modify(true, false, false, true);
 					}
 					else
 					{
-						handle.Modify(false, false, false);
+						handle.Modify(false, false, false, false);
 					}
 				}
 			}
@@ -1494,7 +1494,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Met à jour les règles pour le texte en édition.
 		}
 
-		public void GlobalSelect(bool global)
+		public void GlobalSelect(bool global, bool many)
 		{
 			//	Indique que l'objet est sélectionné globalement (avec Selector).
 			this.InsertOpletSelection();
@@ -1502,6 +1502,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.document.Modifier.IsToolShaper )
 			{
 				global = true;
+				many = false;
 			}
 
 			int total = this.TotalHandle;
@@ -1510,8 +1511,17 @@ namespace Epsitec.Common.Document.Objects
 				Handle handle = this.Handle(i);
 				if ( handle.PropertyType != Properties.Type.None )  break;
 
-				handle.IsGlobalSelected = handle.IsVisible && global;
-				handle.IsShaperDeselected = false;
+				if ( many )
+				{
+					handle.IsGlobalSelected = false;
+					handle.IsManySelected = handle.IsVisible && global;
+				}
+				else
+				{
+					handle.IsGlobalSelected = handle.IsVisible && global;
+					handle.IsManySelected = false;
+					handle.IsShaperDeselected = false;
+				}
 			}
 			this.globalSelected = global;
 			this.HandlePropertiesUpdate();

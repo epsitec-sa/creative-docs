@@ -114,16 +114,18 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public void Modify(bool isVisible, bool isGlobalSelected, bool isShaperDeselected)
+		public void Modify(bool isVisible, bool isGlobalSelected, bool isManySelected, bool isShaperDeselected)
 		{
 			//	Modifie l'état d'une poignée.
 			if ( this.isVisible          != isVisible          ||
 				 this.isGlobalSelected   != isGlobalSelected   ||
+				 this.isManySelected     != isManySelected     ||
 				 this.isShaperDeselected != isShaperDeselected )
 			{
 				this.NotifyArea();
 				this.isVisible          = isVisible;
 				this.isGlobalSelected   = isGlobalSelected;
+				this.isManySelected     = isManySelected;
 				this.isShaperDeselected = isShaperDeselected;
 				this.NotifyArea();
 			}
@@ -179,6 +181,24 @@ namespace Epsitec.Common.Document.Objects
 				if ( this.isGlobalSelected != value )
 				{
 					this.isGlobalSelected = value;
+					this.NotifyArea();
+				}
+			}
+		}
+
+		public bool IsManySelected
+		{
+			//	Etat "sélectionné global avec beaucoup d'objets" de la poignée (caché).
+			get
+			{
+				return this.isManySelected;
+			}
+
+			set
+			{
+				if ( this.isManySelected != value )
+				{
+					this.isManySelected = value;
 					this.NotifyArea();
 				}
 			}
@@ -249,6 +269,7 @@ namespace Epsitec.Common.Document.Objects
 			dst.isVisible          = this.isVisible;
 			dst.isHilited          = this.isHilited;
 			dst.isGlobalSelected   = this.isGlobalSelected;
+			dst.isManySelected     = this.isManySelected;
 			dst.isShaperDeselected = this.isShaperDeselected;
 			dst.propertyType       = this.propertyType;
 			dst.propertyRank       = this.propertyRank;
@@ -259,6 +280,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Permute les informations de sélections entre 2 poignées.
 			Misc.Swap(ref this.isVisible,          ref h.isVisible         );
 			Misc.Swap(ref this.isGlobalSelected,   ref h.isGlobalSelected  );
+			Misc.Swap(ref this.isManySelected,     ref h.isManySelected    );
 			Misc.Swap(ref this.isShaperDeselected, ref h.isShaperDeselected);
 		}
 
@@ -266,7 +288,7 @@ namespace Epsitec.Common.Document.Objects
 		public bool Detect(Point pos)
 		{
 			//	Détecte si la souris est dans la poignée.
-			if ( !this.isVisible || this.isGlobalSelected )  return false;
+			if ( !this.isVisible || this.isGlobalSelected || this.isManySelected )  return false;
 			if ( this.type == HandleType.Hide )  return false;
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
@@ -320,6 +342,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Dessine la poignée.
 			if ( !this.isVisible )  return;
+			if ( this.isManySelected )  return;
 
 			double scaleX     = context.ScaleX;
 			double scaleY     = context.ScaleY;
@@ -563,6 +586,7 @@ namespace Epsitec.Common.Document.Objects
 		protected bool						isVisible = false;
 		protected bool						isHilited = false;
 		protected bool						isGlobalSelected = false;
+		protected bool						isManySelected = false;
 		protected bool						isShaperDeselected = false;
 		protected Properties.Type			propertyType = Properties.Type.None;
 		protected int						propertyRank;

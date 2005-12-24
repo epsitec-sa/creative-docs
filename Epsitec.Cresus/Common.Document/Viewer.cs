@@ -870,7 +870,7 @@ namespace Epsitec.Common.Document
 
 								if ( this.selector.Visible && this.drawingContext.IsShift )
 								{
-									obj.GlobalSelect(true);
+									obj.GlobalSelect(true, false);
 									this.SelectorInitialize(this.document.Modifier.SelectedBbox, 0.0);
 								}
 							}
@@ -2191,9 +2191,22 @@ namespace Epsitec.Common.Document
 		{
 			//	Indique si tous les objets sélectionnés le sont globalement.
 			Objects.Abstract layer = this.drawingContext.RootObject();
+
+			bool many = false;
+			int totalSelected = this.document.Modifier.TotalSelected;
+			if ( global && totalSelected > 20 )
+			{
+				int totalHandle = 0;
+				foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+				{
+					totalHandle += obj.TotalMainHandle;
+				}
+				if ( totalHandle > totalSelected*5 )  many = true;
+			}
+
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
-				obj.GlobalSelect(global);
+				obj.GlobalSelect(global, many);
 			}
 		}
 
