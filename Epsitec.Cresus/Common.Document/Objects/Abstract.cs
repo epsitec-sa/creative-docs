@@ -443,6 +443,21 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
+		public virtual int TotalShaperHandleSelected()
+		{
+			//	Donne le nombre de poignées sélectionnées par le modeleur.
+			int count = 0;
+			int total = this.TotalHandle;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Handle handle = this.Handle(i);
+				if ( !handle.IsVisible )  continue;
+
+				if ( !handle.IsShaperDeselected )  count ++;
+			}
+			return count;
+		}
+
 		public void SelectHandle(int rank, bool add)
 		{
 			//	Sélectionne une poignée avec le modeleur.

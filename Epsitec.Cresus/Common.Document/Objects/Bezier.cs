@@ -161,7 +161,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( family == "Sub" )
 			{
-				enable = (this.TotalMainHandle > 2*3 && this.IsShaperHandleSelected());
+				enable = (this.TotalMainHandle/3-this.TotalShaperHandleSelected() >= 2 && this.IsShaperHandleSelected());
 				return true;
 			}
 
@@ -694,6 +694,20 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
+		public override int TotalShaperHandleSelected()
+		{
+			//	Donne le nombre de poignées sélectionnées par le modeleur.
+			int count = 0;
+			int total = this.TotalHandle;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				Handle handle = this.Handle(i+1);
+				if ( !handle.IsVisible )  continue;
+
+				if ( !handle.IsShaperDeselected )  count ++;
+			}
+			return count;
+		}
 
 		protected void AdaptPrimaryLine(int rankPrimary, int rankSecondary, out int rankExtremity)
 		{

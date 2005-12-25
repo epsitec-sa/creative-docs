@@ -218,7 +218,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( family == "Sub" )
 			{
-				enable = (this.TotalMainHandle > 2 && this.IsShaperHandleSelected());
+				enable = (this.TotalMainHandle-this.TotalShaperHandleSelected() >= 2 && this.IsShaperHandleSelected());
 				return true;
 			}
 
