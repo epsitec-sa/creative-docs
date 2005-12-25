@@ -1404,6 +1404,7 @@ namespace Epsitec.Common.Document
 
 			if ( this.selector.Visible && !this.selector.Handles )
 			{
+				mb = true;
 				double len = Point.Distance(mouse, this.moveStart);
 				if ( isRight && len <= this.drawingContext.MinimalSize )
 				{

@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document
 			this.center.Type = Objects.HandleType.Center;
 			this.rotate.Type = Objects.HandleType.Rotate;
 
-			this.isTranslate = true;
+			this.isTranslate = true;  // jusqu'à demande contraire, c'est une translation
 		}
 
 		public SelectorType TypeChoice
@@ -108,6 +108,7 @@ namespace Epsitec.Common.Document
 
 		public bool IsTranslate
 		{
+			//	Indique si la transformation définie est une simple translation (déplacement).
 			get
 			{
 				return this.isTranslate;
@@ -386,7 +387,7 @@ namespace Epsitec.Common.Document
 			{
 				pos -= this.moveOffset;
 				drawingContext.ConstrainSnapPos(ref pos);
-				this.isTranslate = false;
+				this.isTranslate = false;  // ce n'est plus une translation
 			}
 
 			if ( rank == 0 )  // tout ?
