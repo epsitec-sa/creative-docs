@@ -2630,7 +2630,7 @@ namespace Epsitec.Common.Document.Objects
 					graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
 					graphics.AddRectangle(this.BoundingBoxThin);
-					graphics.RenderSolid(Color.FromARGB(0.5, 0,1,1));
+					graphics.RenderSolid(Color.FromARGB(0.5, 0,0.5,1));  // bleu
 
 					graphics.LineWidth = initialWidth;
 				}
@@ -2641,7 +2641,7 @@ namespace Epsitec.Common.Document.Objects
 					graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
 					graphics.AddRectangle(this.BoundingBoxGeom);
-					graphics.RenderSolid(Color.FromARGB(0.5, 0,1,0));
+					graphics.RenderSolid(Color.FromARGB(0.5, 0,1,0));  // vert
 
 					graphics.LineWidth = initialWidth;
 				}
@@ -2652,7 +2652,7 @@ namespace Epsitec.Common.Document.Objects
 					graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
 					graphics.AddRectangle(this.BoundingBoxFull);
-					graphics.RenderSolid(Color.FromARGB(0.5, 1,1,0));
+					graphics.RenderSolid(Color.FromARGB(0.5, 1,0.5,0));  // orange
 
 					graphics.LineWidth = initialWidth;
 				}

@@ -135,7 +135,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(dx+10, 0);
 			this.buttonClear.Bounds = rect;
 
-			if ( this.debugMode == DebugMode.DebugCommands )
+			if ( this.buttonStyle != null )
 			{
 				rect.Offset(dx+10, 0);
 				this.buttonStyle.Bounds = rect;

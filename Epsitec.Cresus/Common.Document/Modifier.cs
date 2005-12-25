@@ -1901,10 +1901,12 @@ namespace Epsitec.Common.Document
 			this.ActiveViewer.CreateEnding(false, false);
 
 			this.isUndoRedoInProgress = true;
+			this.AccumulateStarting();
 			for ( int i=0 ; i<number ; i++ )
 			{
 				this.opletQueue.UndoAction();
 			}
+			this.AccumulateEnding();
 			this.isUndoRedoInProgress = false;
 
 			this.opletLastCmd = "";
@@ -1926,10 +1928,12 @@ namespace Epsitec.Common.Document
 			this.ActiveViewer.CreateEnding(false, false);
 
 			this.isUndoRedoInProgress = true;
+			this.AccumulateStarting();
 			for ( int i=0 ; i<number ; i++ )
 			{
 				this.opletQueue.RedoAction();
 			}
+			this.AccumulateEnding();
 			this.isUndoRedoInProgress = false;
 
 			this.opletLastCmd = "";
@@ -2051,6 +2055,35 @@ namespace Epsitec.Common.Document
 			}
 
 			list.Add(item);
+		}
+
+		protected void AccumulateStarting()
+		{
+			//	Début de l'accumulation des objets dont on a modifié les propriétés.
+			//	Voir la remarque dans Properties.Abstract.NotifyAfter !
+			System.Diagnostics.Debug.Assert(this.accumulateObjects == null);
+			this.accumulateObjects = new System.Collections.Hashtable();
+		}
+
+		public void AccumulateObject(Objects.Abstract obj)
+		{
+			//	Accumulation d'un objet dont on a modifié les propriétés.
+			System.Diagnostics.Debug.Assert(this.accumulateObjects != null);
+			if ( this.accumulateObjects.ContainsKey(obj) )  return;
+			this.accumulateObjects.Add(obj, null);
+		}
+
+		protected void AccumulateEnding()
+		{
+			//	Fin de l'accumulation des objets dont on a modifié les propriétés.
+			//	Indique qu'il faudra recalculer la bbox de tous les objets accumulés.
+			System.Diagnostics.Debug.Assert(this.accumulateObjects != null);
+			foreach ( Objects.Abstract obj in this.accumulateObjects.Keys )
+			{
+				obj.HandlePropertiesUpdate();
+				obj.SetDirtyBbox();
+			}
+			this.accumulateObjects = null;
 		}
 		#endregion
 
@@ -6121,6 +6154,7 @@ namespace Epsitec.Common.Document
 		protected double						dimensionScale;
 		protected double						dimensionDecimal;
 		protected int							aggregateUsed;
+		protected System.Collections.Hashtable	accumulateObjects;
 
 		public static readonly double			fontSizeScale = 3.5;  // empyrique !
 	}

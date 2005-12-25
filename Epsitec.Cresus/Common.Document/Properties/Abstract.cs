@@ -582,22 +582,20 @@ namespace Epsitec.Common.Document.Properties
 		protected virtual void NotifyBefore(bool oplet)
 		{
 			if ( this.isOnlyForCreation )  return;
+			if ( !oplet )  return;
 
-			if ( oplet )  this.InsertOpletProperty();
+			this.InsertOpletProperty();
 
 			int total = this.owners.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
 				if ( this.isMulti )
 				{
-					if ( oplet )
-					{
-						//	Normalement, un propriétaire est un Objects.Abstract.
-						//	Mais une propriété "isMulti" contient une liste de propriétaires
-						//	de type Abstract !
-						Abstract realProp = this.owners[i] as Abstract;
-						realProp.NotifyBefore(oplet);
-					}
+					//	Normalement, un propriétaire est un Objects.Abstract.
+					//	Mais une propriété "isMulti" contient une liste de propriétaires
+					//	de type Abstract !
+					Abstract realProp = this.owners[i] as Abstract;
+					realProp.NotifyBefore(oplet);
 				}
 				else
 				{
@@ -635,19 +633,35 @@ namespace Epsitec.Common.Document.Properties
 				else
 				{
 					Objects.Abstract obj = this.owners[i] as Objects.Abstract;
-					obj.HandlePropertiesUpdate();
 
-					if ( this.AlterBoundingBox )
+					if ( oplet )
 					{
-						obj.SetDirtyBbox();
-					}
+						obj.HandlePropertiesUpdate();
 
-					if ( this.isStyle )
+						if ( this.AlterBoundingBox )
+						{
+							obj.SetDirtyBbox();
+						}
+
+						if ( this.isStyle )
+						{
+							this.document.Notifier.NotifyPropertyChanged(this);
+						}
+
+						this.document.Notifier.NotifyArea(obj.BoundingBox);
+					}
+					else
 					{
-						this.document.Notifier.NotifyPropertyChanged(this);
+						// Il ne faut surtout pas recalculer les bbox ici, car le nombre de recalculs
+						// serait beaucoup trop important. Si deux objets A et B utilisent la même
+						// propriété P, le NotifyAfter fait pour la propriété de l'objet A va demander
+						// de recalculer les bbox des objets l'utilisant, soit A et B. De même pour
+						// l'objet B !
+						// A la place, le Modifier.AccumulateObject garde la trace de tous les objets
+						// modifiés, pour les traiter globalement et une seule fois, lors du
+						// Modifier.AccumulateEnding.
+						this.document.Modifier.AccumulateObject(obj);
 					}
-
-					this.document.Notifier.NotifyArea(obj.BoundingBox);
 				}
 			}
 
@@ -724,6 +738,7 @@ namespace Epsitec.Common.Document.Properties
 					this.host.document.Notifier.NotifyStyleChanged();
 					this.host.document.Notifier.NotifySelectionChanged();
 				}
+
 				this.host.NotifyAfter(false);
 			}
 
