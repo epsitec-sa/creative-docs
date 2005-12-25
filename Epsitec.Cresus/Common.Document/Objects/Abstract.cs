@@ -783,16 +783,36 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			bool allHandle = !this.IsSelected;
+			bool global = true;
 			foreach ( Handle handle in this.handles )
 			{
-				if ( allHandle || handle.IsVisible )
+				if ( handle.Type == HandleType.Property )
 				{
 					handle.Position += move;
 				}
+				else
+				{
+					if ( allHandle || handle.IsVisible )
+					{
+						handle.Position += move;
+					}
+					else
+					{
+						global = false;
+					}
+				}
+			}
+
+			if ( global )
+			{
+				this.MoveBbox(move);
+			}
+			else
+			{
+				this.SetDirtyBbox();
 			}
 
 			this.HandlePropertiesUpdate();
-			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -818,17 +838,49 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			bool allHandle = !this.IsSelected;
+			bool global = true;
+			bool firstHandle = true;
+			Point move = new Point(0,0);
 			foreach ( Handle handle in this.handles )
 			{
-				if ( allHandle || handle.IsVisible )
+				if ( handle.Type == HandleType.Property )
 				{
 					handle.Position = selector.DotTransform(handle.InitialPosition);
+				}
+				else
+				{
+					if ( allHandle || handle.IsVisible )
+					{
+						if ( firstHandle )
+						{
+							Point initial = handle.Position;
+							handle.Position = selector.DotTransform(handle.InitialPosition);
+							move = handle.Position-initial;
+							firstHandle = false;
+						}
+						else
+						{
+							handle.Position = selector.DotTransform(handle.InitialPosition);
+						}
+					}
+					else
+					{
+						global = false;
+					}
 				}
 			}
 
 			this.direction = this.initialDirection + selector.GetTransformAngle;
 
-			this.SetDirtyBbox();
+			if ( global && !firstHandle && selector.IsTranslate )
+			{
+				this.MoveBbox(move);
+			}
+			else
+			{
+				this.SetDirtyBbox();
+			}
+
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -1094,6 +1146,17 @@ namespace Epsitec.Common.Document.Objects
 			//	Déplace une cellule.
 		}
 
+
+		protected void MoveBbox(Point move)
+		{
+			//	Déplace toutes les bbox de l'objet.
+			if ( this.dirtyBbox )  return;
+
+			this.bboxThin.Offset(move);
+			this.bboxGeom.Offset(move);
+			this.bboxFull.Offset(move);
+			this.surfaceAnchor.Move(move);
+		}
 
 		public void SetDirtyBbox()
 		{
@@ -1427,8 +1490,8 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 			this.SelectedSegmentClear();
-			this.HandlePropertiesUpdate();
 			this.SetDirtyBbox();
+			this.HandlePropertiesUpdate();
 
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Notifier.NotifySelectionChanged();

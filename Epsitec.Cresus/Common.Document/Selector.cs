@@ -48,6 +48,8 @@ namespace Epsitec.Common.Document
 
 			this.center.Type = Objects.HandleType.Center;
 			this.rotate.Type = Objects.HandleType.Rotate;
+
+			this.isTranslate = true;
 		}
 
 		public SelectorType TypeChoice
@@ -101,6 +103,14 @@ namespace Epsitec.Common.Document
 					this.finalData.TypeStretch = value;
 					this.UpdateHandleVisible();
 				}
+			}
+		}
+
+		public bool IsTranslate
+		{
+			get
+			{
+				return this.isTranslate;
 			}
 		}
 
@@ -376,6 +386,7 @@ namespace Epsitec.Common.Document
 			{
 				pos -= this.moveOffset;
 				drawingContext.ConstrainSnapPos(ref pos);
+				this.isTranslate = false;
 			}
 
 			if ( rank == 0 )  // tout ?
@@ -1264,5 +1275,6 @@ namespace Epsitec.Common.Document
 		protected Point				moveStart;
 		protected Point				moveOffset;
 		protected Rectangle			initialBBoxThin;
+		protected bool				isTranslate;
 	}
 }

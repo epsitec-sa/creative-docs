@@ -37,6 +37,15 @@ namespace Epsitec.Common.Document
 		}
 
 
+		public void Move(Point move)
+		{
+			//	Déplace la surface.
+			if ( this.dirty )  return;
+
+			this.surfaceThin.Offset(move);
+			this.surfaceGeom.Offset(move);
+		}
+
 		public void SetDirty()
 		{
 			//	Indique que l'objet a été modifié.
