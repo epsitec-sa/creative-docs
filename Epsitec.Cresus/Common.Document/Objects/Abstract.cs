@@ -1337,7 +1337,11 @@ namespace Epsitec.Common.Document.Objects
 
 			for ( int i=0 ; i<this.TotalHandle ; i++ )
 			{
-				this.InflateBoundingBox(this.Handle(i).Position, true);
+				Handle handle = this.handles[i] as Handle;
+				if ( handle.Type != HandleType.Property || handle.IsVisible )
+				{
+					this.InflateBoundingBox(this.Handle(i).Position, true);
+				}
 			}
 		}
 
