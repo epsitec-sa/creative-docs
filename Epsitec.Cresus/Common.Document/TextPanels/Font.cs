@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 				else	// panneau réduit ?
 				{
-					h += 30;
+					h += 30+25+25;
 				}
 
 				return h;
@@ -298,12 +298,12 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
 				this.buttonFilter.Bounds = r;
+				this.buttonFilter.Visibility = true;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Width = 129;
 				this.fontStyle.Bounds = r;
-				this.fontStyle.Visibility = true;
 				r.Offset(129+5, 0);
 				r.Width = 20;
 				this.fontFeatures.Bounds = r;
@@ -317,21 +317,16 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Left = rect.Left;
 				r.Width = 69;
 				this.fontSize.Bounds = r;
-				this.fontSize.Visibility = true;
 				r.Offset(69, 0);
 				r.Width = 20;
 				this.buttonSizeMenu.Bounds = r;
-				this.buttonSizeMenu.Visibility = true;
 				r.Offset(20, 0);
 				this.buttonSizeMinus.Bounds = r;
-				this.buttonSizeMinus.Visibility = true;
 				r.Offset(20, 0);
 				this.buttonSizePlus.Bounds = r;
-				this.buttonSizePlus.Visibility = true;
 				r.Left = rect.Right-40;
 				r.Width = 40;
 				this.fontColor.Bounds = r;
-				this.fontColor.Visibility = true;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -341,7 +336,6 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Left = rect.Right-20;
 				r.Width = 20;
 				this.buttonClear.Bounds = r;
-				this.buttonClear.Visibility = true;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -358,22 +352,36 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Bottom = r.Top-20;
 
 				r.Left = rect.Left;
-				r.Right = rect.Right-20;
-				this.fontFace.Bounds = r;
-				r.Left = rect.Right-20;
 				r.Right = rect.Right;
-				this.buttonFilter.Bounds = r;
+				this.fontFace.Bounds = r;
 
-				this.fontSize.Visibility = false;
-				this.fontStyle.Visibility = false;
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Right = rect.Right-25;
+				this.fontStyle.Bounds = r;
+				r.Left = rect.Right-20;
+				r.Width = 20;
+				this.buttonClear.Bounds = r;
+
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Width = 69;
+				this.fontSize.Bounds = r;
+				r.Offset(69, 0);
+				r.Width = 20;
+				this.buttonSizeMenu.Bounds = r;
+				r.Offset(20, 0);
+				this.buttonSizeMinus.Bounds = r;
+				r.Offset(20, 0);
+				this.buttonSizePlus.Bounds = r;
+				r.Left = rect.Right-40;
+				r.Width = 40;
+				this.fontColor.Bounds = r;
+
+				this.buttonFilter.Visibility = false;
 				this.fontFeatures.Visibility = false;
 				this.buttonSettings.Visibility = false;
 				this.fontGlue.Visibility = false;
-				this.buttonSizeMenu.Visibility = false;
-				this.buttonSizeMinus.Visibility = false;
-				this.buttonSizePlus.Visibility = false;
-				this.fontColor.Visibility = false;
-				this.buttonClear.Visibility = false;
 				this.checkBold.Visibility = false;
 				this.checkItalic.Visibility = false;
 			}

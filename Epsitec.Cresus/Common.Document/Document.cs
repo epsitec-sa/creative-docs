@@ -1280,7 +1280,7 @@ namespace Epsitec.Common.Document
 
 			string black = RichColor.ToString(RichColor.FromBrightness(0));
 
-			double fontSize = (this.type == DocumentType.Pictogram) ? 1.0 : 12.0;
+			double fontSize = (this.type == DocumentType.Pictogram) ? 1.2 : 12.0;
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty("Arial", Misc.DefaultFontStyle("Arial")));
