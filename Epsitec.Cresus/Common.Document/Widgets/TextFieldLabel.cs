@@ -153,14 +153,14 @@ namespace Epsitec.Common.Document.Widgets
 			this.textFieldReal.Scale = (decimal) Modifier.fontSizeScale;
 			if ( document.Type == DocumentType.Pictogram )
 			{
-				this.textFieldReal.InternalMinValue = 0.1M;
-				this.textFieldReal.InternalMaxValue = (decimal) (24*Modifier.fontSizeScale);
+				this.textFieldReal.InternalMinValue = (decimal) ( 0.1*Modifier.fontSizeScale);
+				this.textFieldReal.InternalMaxValue = (decimal) (24.0*Modifier.fontSizeScale);
 				this.textFieldReal.Step = 0.1M;
 				this.textFieldReal.Resolution = 0.01M;
 			}
 			else
 			{
-				this.textFieldReal.InternalMinValue = 1.0M;
+				this.textFieldReal.InternalMinValue = (decimal) (  1*Modifier.fontSizeScale);
 				this.textFieldReal.InternalMaxValue = (decimal) (240*Modifier.fontSizeScale);
 				this.textFieldReal.Step = 1.0M;
 				this.textFieldReal.Resolution = 0.1M;
