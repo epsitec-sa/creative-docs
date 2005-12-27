@@ -3147,11 +3147,13 @@ namespace Epsitec.Common.Document
 							}
 							else
 							{
+								bezier.Dispose();
 								layer.Objects.Remove(bezier);
 								this.TotalSelected --;
 
 								if ( i == 1 )  // un seul objet créé ?
 								{
+									first.Dispose();
 									layer.Objects.Remove(first);
 									this.TotalSelected --;
 									obj.Mark = false;  // il ne faudra pas le détruire
@@ -3219,6 +3221,7 @@ namespace Epsitec.Common.Document
 						else
 						{
 							obj.Mark = false;  // il ne faudra pas le détruire
+							bezier.Dispose();
 							layer.Objects.Remove(bezier);
 							this.TotalSelected --;
 							error = true;
@@ -3290,6 +3293,7 @@ namespace Epsitec.Common.Document
 						else
 						{
 							obj.Mark = false;  // il ne faudra pas le détruire
+							poly.Dispose();
 							layer.Objects.Remove(poly);
 							this.TotalSelected --;
 							error = true;
@@ -3423,6 +3427,7 @@ namespace Epsitec.Common.Document
 						else
 						{
 							obj.Mark = false;  // il ne faudra pas le détruire
+							bezier.Dispose();
 							layer.Objects.Remove(bezier);
 							this.TotalSelected --;
 							error = true;
@@ -3803,6 +3808,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
+				bezier.Dispose();
 				layer.Objects.Remove(bezier);
 				this.TotalSelected --;
 				this.ClearMarks();
