@@ -76,16 +76,6 @@ namespace Epsitec.Common.Document
 			this.mouseDragging = false;
 			this.RedrawAreaFlush();
 
-			this.textRuler = new TextRuler(this);
-			this.textRuler.Visibility = false;
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.textRuler.AllFonts = false;
-			}
-			this.textRuler.Changed += new EventHandler(this.HandleRulerChanged);
-			this.textRuler.ColorClicked += new EventHandler(this.HandleRulerColorClicked);
-			this.textRuler.ColorNavigatorChanged += new EventHandler(this.HandleRulerColorNavigatorChanged);
-
 			this.hotSpotHandle = new Objects.Handle(this.document);
 			this.hotSpotHandle.Type = Objects.HandleType.Center;
 
@@ -101,10 +91,6 @@ namespace Epsitec.Common.Document
 		{
 			if ( disposing )
 			{
-				this.textRuler.Changed -= new EventHandler(this.HandleRulerChanged);
-				this.textRuler.ColorClicked -= new EventHandler(this.HandleRulerColorClicked);
-				this.textRuler.ColorNavigatorChanged -= new EventHandler(this.HandleRulerColorNavigatorChanged);
-
 				this.autoScrollTimer.TimeElapsed -= new EventHandler(this.HandleAutoScrollTimeElapsed);
 				this.autoScrollTimer.Dispose();
 				this.autoScrollTimer = null;
@@ -231,13 +217,6 @@ namespace Epsitec.Common.Document
 			Point mouse = this.mousePosWidget;
 
 			Rectangle view = this.Client.Bounds;
-			if ( this.textRuler != null && this.textRuler.IsVisible )
-			{
-				if ( this.textRuler.Top == view.Top )  // règle tout en haut ?
-				{
-					view.Top -= this.textRuler.Height;  // sous la règle
-				}
-			}
 			//?view.Deflate(10);
 			if ( view.Contains(mouse) )  return;
 
@@ -275,13 +254,6 @@ namespace Epsitec.Common.Document
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
-				if ( this.textRuler != null && this.textRuler.IsVisible )
-				{
-					if ( this.textRuler.Top == rect.Top )  // règle tout en haut ?
-					{
-						rect.Top -= this.textRuler.Height;  // sous la règle
-					}
-				}
 				rect.Deflate(5);  // ch'tite marge
 				return ScreenToInternal(rect);
 			}
@@ -3273,91 +3245,8 @@ namespace Epsitec.Common.Document
 			if ( this.drawingContext == null )  return;
 			Point center = this.drawingContext.Center;
 			base.UpdateClientGeometry();
-			this.UpdateRulerGeometry();
 			this.drawingContext.ZoomAndCenter(this.drawingContext.Zoom, center);
 		}
-
-
-		#region TextRuler
-		private void HandleRulerChanged(object sender)
-		{
-			//	Appelé lorsque la règle est changée.
-			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
-			if ( editObject == null )  return;
-			this.document.Notifier.NotifyArea(editObject.BoundingBox);
-		}
-
-		private void HandleRulerColorClicked(object sender)
-		{
-			//	Appelé lorsque la couleur dans la règle est cliquée.
-			Common.Widgets.TextRuler ruler = sender as Common.Widgets.TextRuler;
-			this.document.Notifier.NotifyTextRulerColorClicked(ruler);
-		}
-
-		private void HandleRulerColorNavigatorChanged(object sender)
-		{
-			//	Appelé lorsque la couleur dans la règle a changé suite à une navigation.
-			Common.Widgets.TextRuler ruler = sender as Common.Widgets.TextRuler;
-			this.document.Notifier.NotifyTextRulerColorChanged(ruler);
-		}
-
-		public void UpdateRulerGeometry()
-		{
-			//	Positionne la règle en fonction de l'éventuel objet en cours d'édition.
-			if ( this.textRuler == null )  return;
-
-			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
-			if ( editObject == null )
-			{
-				this.HideRuler();
-			}
-			else
-			{
-				if ( editObject.EditRulerLink(this.textRuler, this.drawingContext) )
-				{
-					Rectangle editRect = editObject.BoundingBoxThin;
-					Rectangle rulerRect = new Rectangle();
-					Point p1 = this.InternalToScreen(editRect.TopLeft);
-					Point p2 = this.InternalToScreen(editRect.TopRight);
-					rulerRect.BottomLeft = p1;
-					rulerRect.Width = System.Math.Max(p2.X-p1.X, this.textRuler.MinimalWidth);
-					rulerRect.Height = this.textRuler.DefaultHeight;
-					rulerRect.RoundFloor();
-					if ( rulerRect.Top > this.Height )
-					{
-						rulerRect.Offset(0, this.Height-rulerRect.Top);
-					}
-					this.textRuler.Bounds = rulerRect;
-
-					if ( p2.X-p1.X < this.textRuler.MinimalWidth )
-					{
-						this.textRuler.RightMargin += this.textRuler.MinimalWidth-(p2.X-p1.X);
-					}
-
-					this.textRuler.PPM = this.document.Modifier.RealScale;
-					this.textRuler.Scale = this.drawingContext.ScaleX;
-					this.textRuler.Visibility = true;
-				}
-				else
-				{
-					this.HideRuler();
-				}
-			}
-		}
-
-		protected void HideRuler()
-		{
-			//	Cache la règle.
-			if ( this.textRuler.IsVisible )
-			{
-				Rectangle rect = this.ScreenToInternal(this.textRuler.Bounds);
-				this.document.Notifier.NotifyArea(this, rect);
-			}
-
-			this.textRuler.Visibility = false;
-			this.textRuler.DetachFromText();
-		}
-		#endregion
 
 
 		#region MouseCursor
@@ -4448,7 +4337,6 @@ namespace Epsitec.Common.Document
 		protected int							hiliteHandleRank = -1;
 		protected int							createRank = -1;
 		protected bool							debugDirty;
-		protected TextRuler						textRuler;
 		protected Timer							autoScrollTimer;
 		protected int							guideInteractive = -1;
 		protected bool							guideCreate = false;

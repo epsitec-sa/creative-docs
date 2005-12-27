@@ -3897,8 +3897,6 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.AggregateChanged       += new AggregateEventHandler(this.HandleAggregateChanged);
 			this.CurrentDocument.Notifier.SelNamesChanged        += new SimpleEventHandler(this.HandleSelNamesChanged);
 			this.CurrentDocument.Notifier.DrawChanged            += new RedrawEventHandler(this.HandleDrawChanged);
-			this.CurrentDocument.Notifier.TextRulerColorClicked  += new TextRulerColorEventHandler(this.HandleTextRulerColorClicked);
-			this.CurrentDocument.Notifier.TextRulerColorChanged  += new TextRulerColorEventHandler(this.HandleTextRulerColorChanged);
 			this.CurrentDocument.Notifier.RibbonCommand          += new RibbonEventHandler(this.HandleRibbonCommand);
 			this.CurrentDocument.Notifier.SettingsShowPage       += new SettingsEventHandler(this.HandleSettingsShowPage);
 		}
@@ -4838,24 +4836,6 @@ namespace Epsitec.App.DocumentEditor
 			this.InvalidateDraw(viewer, box);
 		}
 
-		private void HandleTextRulerColorClicked(TextRuler ruler)
-		{
-			//	Appelé par le document lorsque la couleur dans une règle a été cliquée.
-			if ( !this.IsCurrentDocument )  return;
-
-			DocumentInfo di = this.CurrentDocumentInfo;
-			di.containerPrincipal.TextRulerColorClicked(ruler);
-		}
-
-		private void HandleTextRulerColorChanged(TextRuler ruler)
-		{
-			//	Appelé par le document lorsque la couleur dans une règle a changé.
-			if ( !this.IsCurrentDocument )  return;
-
-			DocumentInfo di = this.CurrentDocumentInfo;
-			di.containerPrincipal.TextRulerColorChanged(ruler);
-		}
-		
 		private void HandleRibbonCommand(string name)
 		{
 			//	Appelé par le document lorsqu'il faut changer de ruban.

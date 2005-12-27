@@ -30,11 +30,6 @@ namespace Epsitec.Common.Widgets
 			this.CreateBigText();
 		}
 		
-		[Test] public void CheckAdornerTextRuler()
-		{
-			this.CreateTextRuler();
-		}
-		
 		
 		void RecursiveDisable(Widget widget, bool top_level)
 		{
@@ -1049,91 +1044,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		private Window CreateTextRuler()
-		{
-			Document.Engine.Initialise ();
-			Window window = new Window();
-			
-			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckAdornerTextRuler";
-
-			TextFieldMulti	multi = new TextFieldMulti();
-			TextRuler		ruler = new TextRuler();
-			StaticText		stats = new StaticText();
-			StaticText		tags  = new StaticText();
-			StaticText		final = new StaticText();
-			
-			multi.Name = "Multi";
-			multi.MaxChar = 10000;
-			
-			//?string s = "Voilà <w color=\"#00ff00\" id=\"1\">un</w> <i>texte</i> <b>multi-fontes</b>.";
-			string s = "Voilà un <i>texte</i> <b>multi-fontes</b>.";
-			multi.Text = s;
-
-			multi.Alignment = Drawing.ContentAlignment.TopLeft;
-			multi.TextLayout.JustifMode = TextJustifMode.AllButLast;
-			//?multi.Alignment = Drawing.ContentAlignment.TopRight;
-			//?multi.TextLayout.JustifMode = TextJustifMode.None;
-			multi.TextLayout.ShowLineBreak = true;
-			multi.TextLayout.ShowTab = true;
-			multi.ScrollZone = 0.2;
-			multi.Anchor = AnchorStyles.All;
-			multi.AnchorMargins = new Margins(10, 10, 10+ruler.DefaultHeight, 26+46+46);
-			multi.SetParent (window.Root);
-			multi.SetProperty("stats", stats);
-			multi.SetProperty("tags", tags);
-			multi.SetProperty("final", final);
-			multi.SelectionChanged += new EventHandler(this.HandleMultiSelectionOrCursorChanged2);
-			multi.CursorChanged    += new EventHandler(this.HandleMultiSelectionOrCursorChanged2);
-			multi.TextChanged      += new EventHandler(this.HandleMultiSelectionOrCursorChanged2);
-			this.bigText = multi;
-			
-			ruler.Anchor = AnchorStyles.TopLeft|AnchorStyles.LeftAndRight;
-			ruler.AnchorMargins = new Margins(10, 10, 10, 0);
-			ruler.AttachToTextField(multi);
-			ruler.SetParent (window.Root);
-			ruler.Changed += new EventHandler(this.HandleMultiSelectionOrCursorChanged2);
-			
-			stats.Height = 26;
-			stats.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
-			stats.AnchorMargins = new Margins(10, 10, 0, 46+46);
-			stats.SetParent (window.Root);
-
-			tags.Height = 46;
-			tags.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
-			tags.AnchorMargins = new Margins(10, 10, 0, 46);
-//-			tags.SetClientZoom(0.85);
-			tags.SetParent (window.Root);
-
-			final.Height = 46;
-			final.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
-			final.AnchorMargins = new Margins(10, 10, 0, 0);
-//-			final.SetClientZoom(0.85);
-			final.SetParent (window.Root);
-
-			window.FocusedWidget = multi;
-			window.Show();
-			
-			return window;
-		}
-		
-		private void HandleMultiSelectionOrCursorChanged2(object sender)
-		{
-			TextFieldMulti	text = this.bigText;
-			StaticText		stats = text.GetProperty("stats") as StaticText;
-			StaticText		tags  = text.GetProperty("tags") as StaticText;
-			StaticText		final = text.GetProperty("final") as StaticText;
-			
-			stats.Text = string.Format("from={0},  to={1},  after={2},  prepare={3}:{4}+{5}",
-										text.CursorFrom, text.CursorTo,
-										text.CursorAfter,
-										text.TextNavigator.Context.PrepareOffset,
-										text.TextNavigator.Context.PrepareLength1,
-										text.TextNavigator.Context.PrepareLength2);
-			tags.Text = TextLayout.ConvertToTaggedText(text.TextLayout.InternalText);
-			final.Text = TextLayout.ConvertToTaggedText(text.TextLayout.Text);
-		}
-
 
 		[Test] public void CheckAdornerTab1()
 		{

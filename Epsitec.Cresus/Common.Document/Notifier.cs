@@ -9,7 +9,6 @@ namespace Epsitec.Common.Document
 	public delegate void PropertyEventHandler(System.Collections.ArrayList propertyList);
 	public delegate void AggregateEventHandler(System.Collections.ArrayList aggregateList);
 	public delegate void RedrawEventHandler(Viewer viewer, Rectangle rect);
-	public delegate void TextRulerColorEventHandler(Common.Widgets.TextRuler ruler);
 	public delegate void RibbonEventHandler(string name);
 	public delegate void SettingsEventHandler(string book, string tab);
 
@@ -391,19 +390,6 @@ namespace Epsitec.Common.Document
 		}
 
 		
-		public void NotifyTextRulerColorClicked(Common.Widgets.TextRuler ruler)
-		{
-			//	Indique que la couleur dans une règle a été cliquée.
-			this.OnTextRulerColorClicked(ruler);
-		}
-
-		public void NotifyTextRulerColorChanged(Common.Widgets.TextRuler ruler)
-		{
-			//	Indique que la couleur du texte dans une règle a changé.
-			this.OnTextRulerColorChanged(ruler);
-		}
-
-
 		public void NotifyRibbonCommand(string name)
 		{
 			//	Indique qu'on ruban doit changer.
@@ -605,10 +591,6 @@ namespace Epsitec.Common.Document
 			{
 				if ( !viewer.RedrawArea.IsEmpty )
 				{
-					if ( viewer == this.document.Modifier.ActiveViewer )
-					{
-						viewer.UpdateRulerGeometry();
-					}
 					this.OnDrawChanged(viewer, viewer.RedrawArea);
 					viewer.RedrawAreaFlush();
 				}
@@ -864,22 +846,6 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void OnTextRulerColorClicked(Common.Widgets.TextRuler ruler)
-		{
-			if ( this.TextRulerColorClicked != null )  // qq'un écoute ?
-			{
-				this.TextRulerColorClicked(ruler);
-			}
-		}
-
-		protected void OnTextRulerColorChanged(Common.Widgets.TextRuler ruler)
-		{
-			if ( this.TextRulerColorChanged != null )  // qq'un écoute ?
-			{
-				this.TextRulerColorChanged(ruler);
-			}
-		}
-
 		protected void OnRibbonCommand(string name)
 		{
 			if ( this.RibbonCommand != null )  // qq'un écoute ?
@@ -928,8 +894,6 @@ namespace Epsitec.Common.Document
 		public event AggregateEventHandler		AggregateChanged;
 		public event SimpleEventHandler			SelNamesChanged;
 		public event RedrawEventHandler			DrawChanged;
-		public event TextRulerColorEventHandler	TextRulerColorClicked;
-		public event TextRulerColorEventHandler	TextRulerColorChanged;
 		public event RibbonEventHandler			RibbonCommand;
 		public event SettingsEventHandler		SettingsShowPage;
 

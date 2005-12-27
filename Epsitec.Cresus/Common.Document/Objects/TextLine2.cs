@@ -1070,15 +1070,6 @@ namespace Epsitec.Common.Document.Objects
 			get { return true; }
 		}
 
-		public override bool EditRulerLink(TextRuler ruler, DrawingContext drawingContext)
-		{
-			//	Lie l'objet éditable à une règle.
-			ruler.ListCapability = false;
-			ruler.TabCapability = false;
-			ruler.AttachToText(this.textNavigator);
-			return true;
-		}
-
 
 		public override void CloneObject(Objects.Abstract src)
 		{

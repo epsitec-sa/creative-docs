@@ -1642,12 +1642,6 @@ namespace Epsitec.Common.Document.Objects
 			get { return this.edited; }
 		}
 
-		public virtual bool EditRulerLink(TextRuler ruler, DrawingContext drawingContext)
-		{
-			//	Lie l'objet éditable à une règle.
-			return false;
-		}
-
 		
 		protected void AddProperty(Properties.Type type, Objects.Abstract model, bool floating)
 		{
