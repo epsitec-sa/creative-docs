@@ -1278,24 +1278,18 @@ namespace Epsitec.Common.Document
 			this.textContext.IsDegradedLayoutEnabled = true;
 			this.textContext.IsPropertiesPropertyEnabled = false;
 
-			Text.TabList tabs = this.textContext.TabList;
-
-			//?Text.Properties.TabProperty t1 = tabs.NewTab("T1", 100, Text.Properties.SizeUnits.Points, 0.0, null);
-			//?Text.Properties.TabProperty t2 = tabs.NewTab("T2", 400, Text.Properties.SizeUnits.Points, 0.0, null);
-
 			string black = RichColor.ToString(RichColor.FromBrightness(0));
 
+			double fontSize = (this.type == DocumentType.Pictogram) ? 1.0 : 12.0;
+
 			properties = new System.Collections.ArrayList();
-			//?properties.Add(new Text.Properties.FontProperty("Palatino Linotype", "Italic", "liga", "dlig", "kern"));
 			properties.Add(new Text.Properties.FontProperty("Arial", Misc.DefaultFontStyle("Arial")));
-			properties.Add(new Text.Properties.FontSizeProperty(12.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
+			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
 			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 			properties.Add(new Text.Properties.FontColorProperty(black));
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
-//-			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", black));
-			//?aproperties.Add(new Text.Properties.TabsProperty(t1, t2));
 			style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
 			this.textContext.DefaultStyle = style;
 
@@ -1307,9 +1301,6 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.FontProperty(null, "!Italic"));
 			this.textContext.StyleList.NewMetaProperty("Italic", "X-Italic", 1, properties);
 			
-//			this.textContext.StyleList.NewMetaProperty("Bold", "Bold", new Text.Properties.FontBoldProperty ());
-//			this.textContext.StyleList.NewMetaProperty("Italic", "Italic", new Text.Properties.FontItalicProperty ());
-
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", black));
 			this.textContext.StyleList.NewMetaProperty("Underlined", "Underlined", 0, properties);
@@ -1341,6 +1332,8 @@ namespace Epsitec.Common.Document
 			Text.ParagraphManagers.ItemListManager.Parameters items1 = new Text.ParagraphManagers.ItemListManager.Parameters();
 			Text.ParagraphManagers.ItemListManager.Parameters items2 = new Text.ParagraphManagers.ItemListManager.Parameters();
 			Text.ParagraphManagers.ItemListManager.Parameters items3 = new Text.ParagraphManagers.ItemListManager.Parameters();
+
+			Text.TabList tabs = this.textContext.TabList;
 
 			items1.Generator = generator1;
 			items1.TabItem   = tabs.NewTab("T1-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);

@@ -2171,27 +2171,34 @@ namespace Epsitec.Common.Document.Objects
 
 			this.edited = state;
 
-			if ( this.document.HRuler == null )  return;
-
-			this.document.HRuler.Edited = this.edited;
-			this.document.VRuler.Edited = this.edited;
+			if ( this.document.HRuler != null )
+			{
+				this.document.HRuler.Edited = this.edited;
+				this.document.VRuler.Edited = this.edited;
+			}
 
 			if ( this.edited )
 			{
-				this.document.HRuler.EditObject = this;
-				this.document.VRuler.EditObject = this;
-				this.document.HRuler.WrappersAttach();
-				this.document.VRuler.WrappersAttach();
+				if ( this.document.HRuler != null )
+				{
+					this.document.HRuler.EditObject = this;
+					this.document.VRuler.EditObject = this;
+					this.document.HRuler.WrappersAttach();
+					this.document.VRuler.WrappersAttach();
+				}
 				this.EditWrappersAttach();  // attache l'objet aux différents wrappers
 				
 				this.textFlow.ActiveTextBox = this;
 			}
 			else
 			{
-				this.document.HRuler.EditObject = null;
-				this.document.VRuler.EditObject = null;
-				this.document.HRuler.WrappersDetach();
-				this.document.VRuler.WrappersDetach();
+				if ( this.document.HRuler != null )
+				{
+					this.document.HRuler.EditObject = null;
+					this.document.VRuler.EditObject = null;
+					this.document.HRuler.WrappersDetach();
+					this.document.VRuler.WrappersDetach();
+				}
 				this.document.Wrappers.WrappersDetach();
 				
 				if ( this.textFlow.ActiveTextBox == this )

@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document.Menus
 			list.Add(fs);
 		}
 
-		public static VMenu CreateFontSizeMenu(double currentValue, string currentUnits, MessageEventHandler message)
+		public static VMenu CreateFontSizeMenu(double currentValue, string currentUnits, double factor, MessageEventHandler message)
 		{
 			//	Construit le menu pour choisir une taille.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
@@ -67,23 +67,23 @@ namespace Epsitec.Common.Document.Menus
 			FontSizeMenu.Add(list, 2.00, "%");
 			FontSizeMenu.Add(list, 3.00, "%");
 
-			FontSizeMenu.Add(list,   8*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,   9*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  10*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  11*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  12*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  14*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  16*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  20*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  26*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  36*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  48*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  72*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list,  96*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 120*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 144*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 192*Modifier.fontSizeScale, "");
-			FontSizeMenu.Add(list, 240*Modifier.fontSizeScale, "");
+			FontSizeMenu.Add(list,   8*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,   9*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,  10*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,  11*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,  12*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,  14*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,  16*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,  20*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,  26*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,  36*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,  48*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,  72*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list,  96*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list, 120*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list, 144*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list, 192*Modifier.fontSizeScale*factor, "");
+			FontSizeMenu.Add(list, 240*Modifier.fontSizeScale*factor, "");
 
 			list.Sort();
 

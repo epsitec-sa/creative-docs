@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonSettings = this.CreateIconButton(Misc.Icon("Settings"), Res.Strings.Action.Settings, new MessageEventHandler(this.HandleButtonSettingsClicked), false);
 
 			this.fontSize = this.CreateTextFieldLabel(Res.Strings.TextPanel.Font.Tooltip.Size, Res.Strings.TextPanel.Font.Short.Size, Res.Strings.TextPanel.Font.Long.Size, 0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, new EventHandler(this.HandleSizeChanged));
-			this.fontSize.SetRangeFontSize();
+			this.fontSize.SetRangeFontSize(this.document);
 			this.fontSize.SetRangePercents(this.document, 25.0, 400.0, 10.0);
 			this.fontSize.IsUnitPercent = true;
 			this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
@@ -749,7 +749,8 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			bool percent = (units == Common.Text.Properties.SizeUnits.Percent);
 
-			return Menus.FontSizeMenu.CreateFontSizeMenu(size, percent?"%":"", new MessageEventHandler(this.HandleMenuPressed));
+			double factor = (this.document.Type == DocumentType.Pictogram) ? 0.1 : 1.0;
+			return Menus.FontSizeMenu.CreateFontSizeMenu(size, percent?"%":"", factor, new MessageEventHandler(this.HandleMenuPressed));
 		}
 
 		private void HandleMenuPressed(object sender, MessageEventArgs e)

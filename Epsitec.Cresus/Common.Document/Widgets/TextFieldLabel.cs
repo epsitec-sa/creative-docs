@@ -146,15 +146,25 @@ namespace Epsitec.Common.Document.Widgets
 			document.Modifier.AdaptTextFieldRealDimension(this.textFieldReal);
 		}
 
-		public void SetRangeFontSize()
+		public void SetRangeFontSize(Document document)
 		{
 			//	Spécifie les bornes pour une taille de fonte.
 			this.textFieldReal.UnitType = RealUnitType.Scalar;
 			this.textFieldReal.Scale = (decimal) Modifier.fontSizeScale;
-			this.textFieldReal.InternalMinValue = 1.0M;
-			this.textFieldReal.InternalMaxValue = (decimal) (240*Modifier.fontSizeScale);
-			this.textFieldReal.Step = 1.0M;
-			this.textFieldReal.Resolution = 0.1M;
+			if ( document.Type == DocumentType.Pictogram )
+			{
+				this.textFieldReal.InternalMinValue = 0.1M;
+				this.textFieldReal.InternalMaxValue = (decimal) (24*Modifier.fontSizeScale);
+				this.textFieldReal.Step = 0.1M;
+				this.textFieldReal.Resolution = 0.01M;
+			}
+			else
+			{
+				this.textFieldReal.InternalMinValue = 1.0M;
+				this.textFieldReal.InternalMaxValue = (decimal) (240*Modifier.fontSizeScale);
+				this.textFieldReal.Step = 1.0M;
+				this.textFieldReal.Resolution = 0.1M;
+			}
 		}
 
 		public void SetRangePercents(Document document, double min, double max, double step)

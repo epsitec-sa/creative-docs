@@ -232,6 +232,8 @@ namespace Epsitec.Common.Document
 		public void UpdateTextRulers()
 		{
 			//	Met à jour les règles pour le texte en édition.
+			if ( this.document.HRuler == null )  return;
+
 			if ( this.HasActiveTextBox )
 			{
 				Drawing.Rectangle bbox = this.activeTextBox.BoundingBoxThin;

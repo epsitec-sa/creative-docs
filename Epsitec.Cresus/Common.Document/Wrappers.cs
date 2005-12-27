@@ -407,8 +407,16 @@ namespace Epsitec.Common.Document
 			{
 				size /= Modifier.fontSizeScale;
 
-				double[] list = {8,9,10,11,12,14,16,18,20,22,24,26,28,36,48,72,96,120,144,192,240};
-				size = Wrappers.SearchNextValue(size, list, delta);
+				if ( this.document.Type == DocumentType.Pictogram )
+				{
+					double[] list = {0.8,0.9,1.0,1.1,1.2,1.4,1.6,1.8,2.0,2.2,2.4,2.6,2.8,3.6,4.8,7.2,9.6,12.0,14.4,19.2,24.0};
+					size = Wrappers.SearchNextValue(size, list, delta);
+				}
+				else
+				{
+					double[] list = {8,9,10,11,12,14,16,18,20,22,24,26,28,36,48,72,96,120,144,192,240};
+					size = Wrappers.SearchNextValue(size, list, delta);
+				}
 
 				size *= Modifier.fontSizeScale;
 			}
