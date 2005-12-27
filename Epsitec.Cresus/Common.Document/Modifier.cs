@@ -3128,7 +3128,6 @@ namespace Epsitec.Common.Document
 					{
 						if ( path.HasZeroElements )  continue;
 
-						Objects.Bezier first = null;
 						for ( int i=0 ; i<100 ; i++ )
 						{
 							Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
@@ -3136,7 +3135,6 @@ namespace Epsitec.Common.Document
 							bezier.Select(true);
 							this.XferProperties(bezier, obj);
 							this.TotalSelected ++;
-							if ( first == null )  first = bezier;
 
 							if ( bezier.CreateFromPath(path, i) )
 							{
@@ -3151,11 +3149,8 @@ namespace Epsitec.Common.Document
 								layer.Objects.Remove(bezier);
 								this.TotalSelected --;
 
-								if ( i == 1 )  // un seul objet créé ?
+								if ( i == 0 )  // aucun objet créé ?
 								{
-									first.Dispose();
-									layer.Objects.Remove(first);
-									this.TotalSelected --;
 									obj.Mark = false;  // il ne faudra pas le détruire
 									error = true;
 								}
