@@ -412,7 +412,7 @@ namespace Epsitec.Common.Document
 						{
 							if ( this.miniBar == null )
 							{
-								this.OpenMiniBar(pos, MiniBarDelayed.Immediately, true, true, 0);
+								this.OpenMiniBar(pos, MiniBarDelayed.Immediately, true, false, 0);
 							}
 							else
 							{
@@ -1065,12 +1065,14 @@ namespace Epsitec.Common.Document
 			this.HiliteHandle(null, -1);
 
 			bool mb = true;
+			bool hot = true;
 			if ( this.moveAccept )  mb = false;
 			if ( this.moveHandle != -1 && !Point.Equals(mouse, this.moveStart) )  mb = false;
 			if ( this.moveGlobal != -1 )  mb = false;
 
 			if ( this.selector.Visible && !this.selector.Handles )
 			{
+				hot = false;
 				double len = Point.Distance(mouse, this.moveStart);
 				if ( isRight && len <= this.drawingContext.MinimalSize )
 				{
@@ -1146,7 +1148,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( mb )
 				{
-					this.OpenMiniBar(mouse, MiniBarDelayed.Delayed, false, true, 0);
+					this.OpenMiniBar(mouse, MiniBarDelayed.Delayed, false, hot, 0);
 				}
 			}
 		}
@@ -1400,11 +1402,13 @@ namespace Epsitec.Common.Document
 			}
 
 			bool mb = true;
+			bool hot = true;
 			if ( !Point.Equals(mouse, this.moveStart) )  mb = false;
 
 			if ( this.selector.Visible && !this.selector.Handles )
 			{
 				mb = true;
+				hot = false;
 				double len = Point.Distance(mouse, this.moveStart);
 				if ( isRight && len <= this.drawingContext.MinimalSize )
 				{
@@ -1462,7 +1466,7 @@ namespace Epsitec.Common.Document
 				if ( mb )
 				{
 					this.document.Notifier.NotifyShaperChanged();
-					this.OpenMiniBar(mouse, MiniBarDelayed.Delayed, false, true, 0);
+					this.OpenMiniBar(mouse, MiniBarDelayed.Delayed, false, hot, 0);
 				}
 			}
 		}
@@ -2449,6 +2453,7 @@ namespace Epsitec.Common.Document
 
 			Widgets.Balloon frame = new Widgets.Balloon();
 			this.miniBarDistance = (distance == 0) ? frame.Distance : distance;
+			if ( !hot && distance == 0 )  this.miniBarDistance = 0;
 
 			mouse = this.InternalToScreen(mouse);
 			mouse.Y ++;  // pour ne pas être sur le pixel visé par la souris
