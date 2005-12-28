@@ -19,6 +19,24 @@ namespace Epsitec.Common.Document.Objects
 	[System.Serializable()]
 	public abstract class Abstract : ISerializable
 	{
+		protected enum InternalOperation
+		{
+			Painting,
+			GetPath,
+			CharactersTable,
+			RealBoundingBox,
+		}
+
+		protected enum SpaceType
+		{
+			None,				// ce n'est pas un espace
+			BreakSpace,			// espace sécable
+			NoBreakSpace,		// espace insécable
+			NewFrame,			// saut au prochain pavé
+			NewPage,			// saut à la prochaine page
+		}
+
+
 		public Abstract(Document document, Objects.Abstract model)
 		{
 			//	Constructeur.
@@ -57,6 +75,33 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+
+		public virtual void NewTextFlow()
+		{
+			//	Crée un nouveau TextFlow pour l'objet.
+		}
+
+		public virtual TextFlow TextFlow
+		{
+			//	TextFlow associé à l'objet.
+			get
+			{
+				return null;
+			}
+
+			set
+			{
+			}
+		}
+
+		public virtual Text.ITextFrame TextFrame
+		{
+			//	Donne le TextFrame associé à l'objet.
+			get
+			{
+				return null;
+			}
+		}
 
 		protected virtual bool ExistingProperty(Properties.Type type)
 		{
@@ -104,6 +149,7 @@ namespace Epsitec.Common.Document.Objects
 				case "ObjectSurface":    obj = new Surface(document, model);    break;
 				case "ObjectVolume":     obj = new Volume(document, model);     break;
 				case "ObjectTextLine":   obj = new TextLine(document, model);   break;
+				case "ObjectTextLine2":  obj = new TextLine2(document, model);  break;
 				case "ObjectTextBox":    obj = new TextBox(document, model);    break;
 				case "ObjectTextBox2":   obj = new TextBox2(document, model);   break;
 				case "ObjectImage":      obj = new Image(document, model);      break;
@@ -1065,12 +1111,6 @@ namespace Epsitec.Common.Document.Objects
 			glyph = 0;
 			font = null;
 			return false;
-		}
-
-		public virtual string EditGetFontName()
-		{
-			//	Donne la fonte actullement utilisée.
-			return "";
 		}
 
 		public virtual Drawing.Rectangle EditCursorBox
@@ -3364,6 +3404,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 			return false;
 		}
+
+		public virtual void ReadFinalizeFlowReady(TextFlow flow)
+		{
+		}
 		#endregion
 
 
@@ -3378,6 +3422,19 @@ namespace Epsitec.Common.Document.Objects
 		{
 			public int				rank;
 			public Point			position;
+		}
+
+
+		public virtual bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
+		{
+			//	Détermine si un point se trouve dans le texte frame.
+			ppos = Drawing.Point.Empty;
+			return false;
+		}
+
+		public virtual void UpdateTextLayout()
+		{
+			//	Met à jour le texte suite à une modification du conteneur.
 		}
 
 

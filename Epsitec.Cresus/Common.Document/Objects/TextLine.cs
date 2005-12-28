@@ -1197,12 +1197,6 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		public override string EditGetFontName()
-		{
-			//	Donne la fonte actullement utilisée.
-			return this.textNavigator.SelectionFontName;
-		}
-
 		#region TextFormat
 		public bool EditBold()
 		{

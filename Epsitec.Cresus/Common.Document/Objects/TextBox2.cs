@@ -12,24 +12,6 @@ namespace Epsitec.Common.Document.Objects
 	[System.Serializable()]
 	public class TextBox2 : Objects.Abstract, Text.ITextRenderer
 	{
-		protected enum InternalOperation
-		{
-			Painting,
-			GetPath,
-			CharactersTable,
-			RealBoundingBox,
-		}
-
-		protected enum SpaceType
-		{
-			None,				// ce n'est pas un espace
-			BreakSpace,			// espace sécable
-			NoBreakSpace,		// espace insécable
-			NewFrame,			// saut au prochain pavé
-			NewPage,			// saut à la prochaine page
-		}
-
-
 		public TextBox2(Document document, Objects.Abstract model) : base(document, model)
 		{
 			if ( this.document == null )  return;  // objet factice ?
@@ -62,7 +44,7 @@ namespace Epsitec.Common.Document.Objects
 			this.selectBox = Drawing.Rectangle.Empty;
 		}
 
-		public void NewTextFlow()
+		public override void NewTextFlow()
 		{
 			//	Crée un nouveau TextFlow pour l'objet.
 			TextFlow flow = new TextFlow(this.document);
@@ -71,7 +53,7 @@ namespace Epsitec.Common.Document.Objects
 			flow.Add(this, null, true);
 		}
 
-		public TextFlow TextFlow
+		public override TextFlow TextFlow
 		{
 			//	TextFlow associé à l'objet.
 			get
@@ -92,7 +74,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public Text.ITextFrame TextFrame
+		public override Text.ITextFrame TextFrame
 		{
 			//	Donne le TextFrame associé à l'objet.
 			get
@@ -960,32 +942,6 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		protected void ApplyParagraphStyle(string name, string exclude, bool state)
-		{
-			//	Modifie un style de paragraphe.
-			Text.TextStyle style = this.document.TextContext.StyleList[name, Text.TextStyleClass.Paragraph];
-			if ( style == null )  return;
-
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
-			Text.TextStyle[] styles = Text.TextStyle.FilterStyles(this.MetaNavigator.TextNavigator.TextStyles, Text.TextStyleClass.Paragraph);
-			
-			for ( int i=0 ; i<styles.Length ; i++ )
-			{
-				if ( exclude.Length == 0 || !styles[i].Name.StartsWith(exclude) )
-				{
-					list.Add(styles[i]);
-				}
-			}
-			
-			if ( state )
-			{
-				list.Add(style);
-			}
-			
-			styles = (Text.TextStyle[]) list.ToArray(typeof(Text.TextStyle));
-			this.MetaNavigator.SetParagraphStyles(styles);
-		}
-
 		protected override void EditWrappersAttach()
 		{
 			//	Attache l'objet au différents wrappers.
@@ -1376,7 +1332,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 		
-		public bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
+		public override bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
 		{
 			//	Détermine si un point se trouve dans le texte frame.
 			if ( this.transform == null )
@@ -1519,16 +1475,6 @@ namespace Epsitec.Common.Document.Objects
 		
 		public void RenderStartLine(Text.Layout.Context context)
 		{
-#if false
-			double ox = context.LineCurrentX;
-			double oy = context.LineBaseY;
-			double dx = context.TextWidth;
-			
-			this.graphics.LineWidth = 0.3;
-			this.graphics.AddLine(ox, oy, ox + dx, oy);
-			this.graphics.RenderSolid(Drawing.Color.FromName("Green"));
-#endif
-			
 			context.DisableSimpleRendering();
 		}
 		
@@ -2124,7 +2070,7 @@ namespace Epsitec.Common.Document.Objects
 			this.InitialiseInternals();
 		}
 		
-		public void ReadFinalizeFlowReady(TextFlow flow)
+		public override void ReadFinalizeFlowReady(TextFlow flow)
 		{
 			System.Diagnostics.Debug.Assert(this.textFlow == flow);
 			
@@ -2154,7 +2100,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public void UpdateTextLayout()
+		public override void UpdateTextLayout()
 		{
 			//	Met à jour le texte suite à une modification du conteneur.
 			if ( this.edited )

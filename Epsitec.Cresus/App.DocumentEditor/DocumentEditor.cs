@@ -834,7 +834,7 @@ namespace Epsitec.App.DocumentEditor
 			this.VToolBarAdd(this.toolVolumeState);
 			//this.VToolBarAdd(this.toolTextLineState);
 			//this.VToolBarAdd(this.toolTextBoxState);
-			//?this.VToolBarAdd(this.toolTextLine2State);
+			this.VToolBarAdd(this.toolTextLine2State);
 			this.VToolBarAdd(this.toolTextBox2State);
 			if ( this.useArray )
 			{

@@ -1,6 +1,7 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Text;
 using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
@@ -20,27 +21,69 @@ namespace Epsitec.Common.Document.Objects
 
 		protected void Initialise()
 		{
-			this.textLayout = new TextLayout();
-			this.textNavigator = new TextNavigator(this.textLayout);
-			this.textNavigator.StyleChanged += new EventHandler(this.HandleTextChanged);
-			this.textNavigator.TextInserted += new EventHandler(this.HandleTextChanged);
-			this.textNavigator.TextDeleted  += new EventHandler(this.HandleTextChanged);
-			this.textLayout.BreakMode = TextBreakMode.Hyphenate;
-			this.textLayout.LayoutSize = new Size(1000000, 1000000);
-			this.textLayout.Alignment = ContentAlignment.BottomLeft;
-			if ( this.document.Modifier != null )
+			this.textFrame = new Text.SimpleTextFrame();
+			
+			this.NewTextFlow();
+			this.InitialiseInternals();
+		}
+
+		protected void InitialiseInternals()
+		{
+			if ( this.textFrame == null )
 			{
-				this.textNavigator.OpletQueue = this.document.Modifier.OpletQueue;
+				this.textFrame = new Text.SimpleTextFrame();
 			}
+
+			System.Diagnostics.Debug.Assert(this.textFlow != null);
+			
+			this.markerSelected = this.document.TextContext.Markers.Selected;
+
 			this.cursorBox = Drawing.Rectangle.Empty;
 			this.selectBox = Drawing.Rectangle.Empty;
+		}
+
+		public override void NewTextFlow()
+		{
+			//	Crée un nouveau TextFlow pour l'objet.
+			TextFlow flow = new TextFlow(this.document);
+			this.document.TextFlows.Add(flow);
+			this.TextFlow = flow;
+			flow.Add(this, null, true);
+		}
+
+		public override TextFlow TextFlow
+		{
+			//	TextFlow associé à l'objet.
+			get
+			{
+				return this.textFlow;
+			}
+
+			set
+			{
+				if ( this.textFlow != value )
+				{
+					this.InsertOpletTextFlow();
+					this.textFlow = value;
+
+					this.UpdateTextLayout();
+					this.textFlow.NotifyAreaFlow();
+				}
+			}
+		}
+
+		public override Text.ITextFrame TextFrame
+		{
+			//	Donne le TextFrame associé à l'objet.
+			get
+			{
+				return this.textFrame;
+			}
 		}
 
 		protected override bool ExistingProperty(Properties.Type type)
 		{
 			if ( type == Properties.Type.Name )  return true;
-			if ( type == Properties.Type.TextLine )  return true;
-			if ( type == Properties.Type.TextFont )  return true;
 			return false;
 		}
 
@@ -51,11 +94,14 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void Dispose()
 		{
-			if ( this.document != null )
+			if ( this.textFlow != null )
 			{
-				this.textNavigator.StyleChanged -= new EventHandler(this.HandleTextChanged);
-				this.textNavigator.TextInserted -= new EventHandler(this.HandleTextChanged);
-				this.textNavigator.TextDeleted  -= new EventHandler(this.HandleTextChanged);
+				this.textFlow.Remove(this);  // objet seul dans son propre flux
+
+				if ( this.textFlow.Count == 1 )  // est-on le dernier et seul utilisateur ?
+				{
+					this.document.TextFlows.Remove(this.textFlow);
+				}
 			}
 
 			base.Dispose();
@@ -68,17 +114,19 @@ namespace Epsitec.Common.Document.Objects
 			get { return Misc.Icon("ObjectTextLine"); }
 		}
 
-
-		public string Content
+		protected TextNavigator2 MetaNavigator
 		{
+			//	MetaNavigator associé au TextFlow.
 			get
 			{
-				return this.textLayout.Text;
-			}
-
-			set
-			{
-				this.textLayout.Text = value;
+				if ( this.textFlow == null )
+				{
+					return null;
+				}
+				else
+				{
+					return this.textFlow.MetaNavigator;
+				}
 			}
 		}
 
@@ -124,7 +172,7 @@ namespace Epsitec.Common.Document.Objects
 			Shape[] shapes = this.ShapesBuild(null, context, false);
 			if ( context.Drawer.DetectOutline(pos, context, shapes) != -1 )  return DetectEditType.Body;
 
-			if ( this.DetectTextCurve(pos) )  return DetectEditType.Body;
+			//?if ( this.DetectTextCurve(pos) )  return DetectEditType.Body;
 			return DetectEditType.Out;
 		}
 
@@ -148,6 +196,14 @@ namespace Epsitec.Common.Document.Objects
 
 			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		public override void MoveGlobalProcess(Selector selector)
+		{
+			//	Déplace globalement l'objet.
+			base.MoveGlobalProcess(selector);
+			this.UpdateGeometry();
+			this.textFlow.NotifyAreaFlow();
 		}
 
 
@@ -187,7 +243,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( family == "Sub" )
 			{
-				enable = (this.TotalMainHandle > 2*3 && this.IsShaperHandleSelected());
+				enable = (this.TotalMainHandle/3-this.TotalShaperHandleSelected() >= 2 && this.IsShaperHandleSelected());
 				return true;
 			}
 
@@ -698,6 +754,35 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		public override bool IsShaperHandleSelected()
+		{
+			//	Indique si au moins une poignée est sélectionnée par le modeleur.
+			int total = this.TotalMainHandle;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				Handle handle = this.Handle(i+1);
+				if ( !handle.IsVisible )  continue;
+
+				if ( !handle.IsShaperDeselected )  return true;
+			}
+			return false;
+		}
+
+		public override int TotalShaperHandleSelected()
+		{
+			//	Donne le nombre de poignées sélectionnées par le modeleur.
+			int count = 0;
+			int total = this.TotalHandle;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				Handle handle = this.Handle(i+1);
+				if ( !handle.IsVisible )  continue;
+
+				if ( !handle.IsShaperDeselected )  count ++;
+			}
+			return count;
+		}
+
 		protected void AdaptPrimaryLine(int rankPrimary, int rankSecondary, out int rankExtremity)
 		{
 			//	Adapte le point secondaire s'il est en mode "en ligne".
@@ -875,6 +960,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
+			this.textFlow.NotifyAreaFlow();
 			drawingContext.SnapPos(ref pos);
 
 			if ( this.Handle(rank).Type == HandleType.Starting ||
@@ -893,9 +979,12 @@ namespace Epsitec.Common.Document.Objects
 					this.MoveSecondary(rank-1, rank, rank-2, pos);
 				}
 			}
+
+			this.UpdateGeometry();
 			this.SetDirtyBbox();
 			this.TextInfoModifLine();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
+			this.textFlow.NotifyAreaFlow();
 		}
 
 
@@ -1041,27 +1130,15 @@ namespace Epsitec.Common.Document.Objects
 		public override void FillFontFaceList(System.Collections.ArrayList list)
 		{
 			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
-			this.textLayout.FillFontFaceList(list);
+			//?this.textLayout.FillFontFaceList(list);
 		}
 
 		public override void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
 			//	Ajoute tous les caractères utilisés par l'objet dans une table.
-			this.textLayout.DefaultFont      = this.PropertyTextFont.GetFont();
-			this.textLayout.DefaultFontSize  = this.PropertyTextFont.FontSize;
-			this.textLayout.DefaultRichColor = this.PropertyTextFont.FontColor;
-			TextLayout.OneCharStructure[] fix = this.textLayout.ComputeStructure();
-
-			foreach ( TextLayout.OneCharStructure oneChar in fix )
-			{
-				if ( oneChar == null )  continue;
-
-				PDF.CharacterList cl = new PDF.CharacterList(oneChar);
-				if ( !table.ContainsKey(cl) )
-				{
-					table.Add(cl, null);
-				}
-			}
+			this.charactersTable = table;
+			this.DrawText(port, drawingContext, InternalOperation.CharactersTable);
+			this.charactersTable = null;
 		}
 
 		public override bool IsEditable
@@ -1076,15 +1153,71 @@ namespace Epsitec.Common.Document.Objects
 			//	Reprend toutes les caractéristiques d'un objet.
 			base.CloneObject(src);
 
-			TextLine2 obj = src as TextLine2;
-			this.textLayout.Text = obj.textLayout.Text;
-			obj.textNavigator.Context.CopyTo(this.textNavigator.Context);
+			TextLine2 srcText = src as TextLine2;
+			System.Diagnostics.Debug.Assert(srcText != null);
+
+			if ( srcText.textFlow.Count == 1 ||  // objet solitaire ?
+				 srcText.document != this.document )
+			{
+				this.textFlow.MergeWith(srcText.textFlow);  // copie le texte
+			}
+			else	// objet d'une chaîne ?
+			{
+				srcText.textFlow.Add(this, srcText, true);  // met dans la chaîne
+			}
+
+			this.UpdateGeometry();
+		}
+
+		
+		public override void PutCommands(System.Collections.ArrayList list)
+		{
+			//	Met les commandes pour l'objet dans une liste.
+			base.PutCommands(list);
+
+			if ( this.document.Modifier.Tool == "ToolEdit" )
+			{
+				bool sel = (this.textFlow.TextNavigator.SelectionCount != 0);
+				if ( sel )
+				{
+					this.PutCommands(list, "Cut");
+					this.PutCommands(list, "Copy");
+					this.PutCommands(list, "Paste");
+					this.PutCommands(list, "");
+					this.PutCommands(list, "FontQuick1");
+					this.PutCommands(list, "FontQuick2");
+					this.PutCommands(list, "FontQuick3");
+					this.PutCommands(list, "FontQuick4");
+					this.PutCommands(list, "");
+					this.PutCommands(list, "FontBold");
+					this.PutCommands(list, "FontItalic");
+					this.PutCommands(list, "FontUnderlined");
+					this.PutCommands(list, "");
+					this.PutCommands(list, "FontSubscript");
+					this.PutCommands(list, "FontSuperscript");
+					this.PutCommands(list, "");
+					this.PutCommands(list, "FontSizeMinus");
+					this.PutCommands(list, "FontSizePlus");
+					this.PutCommands(list, "");
+					this.PutCommands(list, "FontClear");
+					this.PutCommands(list, "");
+				}
+				else
+				{
+					this.PutCommands(list, "Paste");
+				}
+			}
 		}
 
 		
 		public override bool EditProcessMessage(Message message, Point pos)
 		{
 			//	Gestion d'un événement pendant l'édition.
+			if ( message.IsKeyType )
+			{
+				this.document.Modifier.ActiveViewer.CloseMiniBar(false);
+			}
+
 			if ( message.Type == MessageType.KeyDown   ||
 				 message.Type == MessageType.KeyPress  ||
 				 message.Type == MessageType.MouseDown )
@@ -1097,22 +1230,36 @@ namespace Epsitec.Common.Document.Objects
 				if ( this.EditProcessKeyPress(message) )  return true;
 			}
 
-			if ( message.IsMouseType )
-			{
-				int rank = this.DetectTextCurveRank(pos);
-				pos = this.RankToLinearPos(rank);
-				if ( pos == Point.Empty )  return false;
-			}
-
 			if ( message.Type == MessageType.KeyDown )
 			{
 				if ( message.KeyCode == KeyCode.Return ||
 					 message.KeyCode == KeyCode.Tab    )  return false;
 			}
 
-			if ( !this.textNavigator.ProcessMessage(message, pos) )  return false;
+			Point ppos;
+			ITextFrame frame;
+			
+			if ( this.IsInTextFrame(pos, out ppos) )
+			{
+				frame = this.textFrame;
+			}
+			else
+			{
+				//	Si la souris n'est pas dans notre texte frame, on utilise le text
+				//	frame correspondant à sa position (s'il y en a un).
+				
+				frame = this.textFlow.FindTextFrame(pos, out ppos);
+				
+				if ( frame == null )  frame = this.textFrame;
+			}
+			
+			if ( !this.MetaNavigator.ProcessMessage(message, ppos, frame) )  return false;
+			
+			if ( message.Type == MessageType.MouseDown )
+			{
+				this.document.Modifier.ActiveViewer.CloseMiniBar(false);
+			}
 
-			this.SetDirtyBbox();
 			return true;
 		}
 
@@ -1126,9 +1273,6 @@ namespace Epsitec.Common.Document.Objects
 					case KeyCode.AlphaX:  return this.EditCut();
 					case KeyCode.AlphaC:  return this.EditCopy();
 					case KeyCode.AlphaV:  return this.EditPaste();
-					case KeyCode.AlphaB:  return this.EditBold();
-					case KeyCode.AlphaI:  return this.EditItalic();
-					case KeyCode.AlphaU:  return this.EditUnderlined();
 					case KeyCode.AlphaA:  return this.EditSelectAll();
 				}
 			}
@@ -1138,22 +1282,24 @@ namespace Epsitec.Common.Document.Objects
 		#region CopyPaste
 		public override bool EditCut()
 		{
-			string text = this.textNavigator.Selection;
-			if ( text == "" )  return false;
-			Support.Clipboard.WriteData data = new Support.Clipboard.WriteData();
-			data.WriteHtmlFragment(text);
-			data.WriteTextLayout(text);
-			Support.Clipboard.SetData(data);
-			this.textNavigator.Selection = "";
-			this.document.Notifier.NotifyArea(this.BoundingBox);
+			this.EditCopy();
+			this.MetaNavigator.DeleteSelection();
 			return true;
 		}
 		
 		public override bool EditCopy()
 		{
-			string text = this.textNavigator.Selection;
+			string[] texts = this.textFlow.TextNavigator.GetSelectedTexts();
+			if ( texts == null || texts.Length == 0 )  return false;
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			foreach ( string part in texts )
+			{
+				builder.Append(part);
+			}
+			string text = builder.ToString();
+
 			Support.Clipboard.WriteData data = new Support.Clipboard.WriteData();
-			if ( text == "" )  return false;
 			data.WriteHtmlFragment(text);
 			data.WriteTextLayout(text);
 			Support.Clipboard.SetData(data);
@@ -1163,66 +1309,273 @@ namespace Epsitec.Common.Document.Objects
 		public override bool EditPaste()
 		{
 			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
-			string html = data.ReadTextLayout();
-			if ( html == null )
+			string text = data.ReadTextLayout();
+			if ( text == null )
 			{
-				html = data.ReadHtmlFragment();
-				if ( html != null )
+				text = data.ReadText();
+				if ( text != null )
 				{
-					html = Support.Clipboard.ConvertHtmlToSimpleXml(html);
-				}
-				else
-				{
-					html = TextLayout.ConvertToTaggedText(data.ReadText());
+					text = text.Replace("\r\n", "\u2029");		//	ParagraphSeparator
+					text = text.Replace("\n", "\u2028");		//	LineSeparator
+					text = text.Replace("\r", "\u2028");		//	LineSeparator
 				}
 			}
-			if ( html == null )  return false;
-			this.textNavigator.Selection = html;
-			this.document.Notifier.NotifyArea(this.BoundingBox);
+			if ( text == null )  return false;
+			this.MetaNavigator.Insert(text);
+			this.textFlow.NotifyAreaFlow();
 			return true;
 		}
 
 		public override bool EditSelectAll()
 		{
-			this.textLayout.SelectAll(this.textNavigator.Context);
+			this.MetaNavigator.SelectAll();
 			return true;
 		}
 		#endregion
 
 		public override bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
-			//	Insère un glyphe dans le pavé en édition.
-			this.textNavigator.Selection = text;
-			this.document.Notifier.NotifyArea(this.BoundingBox);
+			//	Insère un texte dans le pavé en édition.
+			this.MetaNavigator.EndSelection();
+			this.document.Modifier.OpletQueueBeginActionNoMerge(Res.Strings.Action.Text.Glyphs.Insert);
+
+			if ( fontFace == "" )
+			{
+				this.MetaNavigator.Insert(text);
+			}
+			else
+			{
+				for ( int i=0 ; i<text.Length ; i++ )
+				{
+					OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
+					Text.Unicode.Code code = (Text.Unicode.Code) text[i];
+					int glyph = font.GetGlyphIndex(text[i]);
+					Text.Properties.OpenTypeProperty otp = new Text.Properties.OpenTypeProperty(fontFace, fontStyle, glyph);
+					this.MetaNavigator.Insert(code, otp);
+				}
+			}
+
+			this.document.Modifier.OpletQueueValidateAction();
+			this.textFlow.NotifyAreaFlow();
 			return true;
 		}
 
-		public override string EditGetFontName()
+		public override bool EditInsertText(Unicode.Code code)
 		{
-			//	Donne la fonte actullement utilisée.
-			return this.textNavigator.SelectionFontName;
+			//	Insère un texte dans le pavé en édition.
+			this.MetaNavigator.EndSelection();
+			this.document.Modifier.OpletQueueBeginActionNoMerge(Res.Strings.Action.Text.Glyphs.Insert);
+
+			this.MetaNavigator.Insert(code);
+
+			this.document.Modifier.OpletQueueValidateAction();
+			this.textFlow.NotifyAreaFlow();
+			return true;
 		}
+
+		public override bool EditInsertText(Text.Properties.BreakProperty brk)
+		{
+			//	Insère un texte dans le pavé en édition.
+			this.MetaNavigator.EndSelection();
+			this.document.Modifier.OpletQueueBeginActionNoMerge(Res.Strings.Action.Text.Glyphs.Insert);
+
+			this.MetaNavigator.Insert(brk);
+
+			this.document.Modifier.OpletQueueValidateAction();
+			this.textFlow.NotifyAreaFlow();
+			return true;
+		}
+
+		public override bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
+		{
+			//	Insère un glyphe dans le pavé en édition.
+			this.MetaNavigator.EndSelection();
+			this.document.Modifier.OpletQueueBeginActionNoMerge(Res.Strings.Action.Text.Glyphs.Alternate);
+
+			if ( fontFace == "" )
+			{
+				string text = code.ToString();
+				this.MetaNavigator.Insert(text);
+			}
+			else
+			{
+				OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
+				Text.Properties.OpenTypeProperty otp = new Text.Properties.OpenTypeProperty(fontFace, fontStyle, glyph);
+				this.MetaNavigator.Insert((Text.Unicode.Code)code, otp);
+				this.MetaNavigator.SelectInsertedCharacter();
+			}
+
+			this.document.Modifier.OpletQueueValidateAction();
+			this.textFlow.NotifyAreaFlow();
+			return true;
+		}
+
+		public override bool EditGetSelectedGlyph(out int code, out int glyph, out OpenType.Font font)
+		{
+			//	Retourne le glyphe du caractère sélectionné.
+			code = 0;
+			glyph = 0;
+			font = null;
+
+			int n = this.textFlow.TextNavigator.SelectionCount;
+			if ( n != 1 )  return false;
+
+			ulong[] sel = this.textFlow.TextNavigator.GetRawSelection(0);
+			if ( sel.Length != 1 )  return false;
+
+			code = Unicode.Bits.GetCode(sel[0]);
+
+			Text.Properties.OpenTypeProperty otp;
+			this.document.TextContext.GetOpenType(sel[0], out otp);
+
+			string face = this.document.TextWrapper.Defined.FontFace;
+			if ( face == null )
+			{
+				face = this.document.TextWrapper.Active.FontFace;
+				if ( face == null )
+				{
+					face = "";
+				}
+			}
+
+			string style = this.document.TextWrapper.Defined.FontStyle;
+			if ( style == null )
+			{
+				style = this.document.TextWrapper.Active.FontStyle;
+				if ( style == null )
+				{
+					style = "";
+				}
+			}
+
+			font = TextContext.GetFont(face, style);
+
+			if ( otp == null )
+			{
+				glyph = font.GetGlyphIndex(code);
+			}
+			else
+			{
+				glyph = otp.GlyphIndex;
+			}
+
+			return true;
+		}
+
+
+		protected override void UpdatePageNumber()
+		{
+			//	Met à jour le TextFrame en fonction du numéro de la page.
+			this.textFrame.PageNumber = this.pageNumber+1;
+		}
+
 
 		#region TextFormat
-		public bool EditBold()
+		public override System.Collections.ArrayList CreateTextPanels(string filter)
 		{
-			//	Met en gras pendant l'édition.
-			this.textNavigator.SelectionBold = !this.textNavigator.SelectionBold;
-			return true;
+			//	Crée tous les panneaux pour l'édition.
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+
+			if ( TextPanels.Abstract.IsFilterShow("Justif", filter) )
+			{
+				TextPanels.Justif justif = new TextPanels.Justif(this.document);
+				list.Add(justif);
+			}
+
+			if ( TextPanels.Abstract.IsFilterShow("Leading", filter) )
+			{
+				TextPanels.Leading leading = new TextPanels.Leading(this.document);
+				list.Add(leading);
+			}
+
+			if ( TextPanels.Abstract.IsFilterShow("Margins", filter) )
+			{
+				TextPanels.Margins margins = new TextPanels.Margins(this.document);
+				list.Add(margins);
+			}
+
+			if ( TextPanels.Abstract.IsFilterShow("Spaces", filter) )
+			{
+				TextPanels.Spaces spaces = new TextPanels.Spaces(this.document);
+				list.Add(spaces);
+			}
+
+			if ( TextPanels.Abstract.IsFilterShow("Keep", filter) )
+			{
+				TextPanels.Keep keep = new TextPanels.Keep(this.document);
+				list.Add(keep);
+			}
+
+			if ( TextPanels.Abstract.IsFilterShow("Font", filter) )
+			{
+				TextPanels.Font font = new TextPanels.Font(this.document);
+				list.Add(font);
+			}
+
+			if ( TextPanels.Abstract.IsFilterShow("Xline", filter) )
+			{
+				TextPanels.Xline xline = new TextPanels.Xline(this.document);
+				list.Add(xline);
+			}
+
+			if ( TextPanels.Abstract.IsFilterShow("Xscript", filter) )
+			{
+				TextPanels.Xscript xscript = new TextPanels.Xscript(this.document);
+				list.Add(xscript);
+			}
+
+			if ( TextPanels.Abstract.IsFilterShow("Box", filter) )
+			{
+				TextPanels.Box box = new TextPanels.Box(this.document);
+				list.Add(box);
+			}
+
+			if ( TextPanels.Abstract.IsFilterShow("Language", filter) )
+			{
+				TextPanels.Language language = new TextPanels.Language(this.document);
+				list.Add(language);
+			}
+
+			return list;
 		}
 
-		public bool EditItalic()
+		protected Text.Property[] GetTextProperties(bool accumulated)
 		{
-			//	Met en italique pendant l'édition.
-			this.textNavigator.SelectionItalic = !this.textNavigator.SelectionItalic;
-			return true;
+			//	Donne la liste des propriétés.
+			if ( accumulated )
+			{
+				return this.textFlow.TextNavigator.AccumulatedTextProperties;
+			}
+			else
+			{
+				return this.textFlow.TextNavigator.TextProperties;
+			}
 		}
 
-		public bool EditUnderlined()
+		protected bool IsExistingStyle(string name)
 		{
-			//	Souligne pendant l'édition.
-			this.textNavigator.SelectionUnderlined = !this.textNavigator.SelectionUnderlined;
-			return true;
+			//	Indique l'existance d'un style.
+			Text.TextStyle[] styles = this.textFlow.TextNavigator.TextStyles;
+			foreach ( Text.TextStyle style in styles )
+			{
+				if ( style.Name == name )  return true;
+			}
+			return false;
+		}
+
+		protected override void EditWrappersAttach()
+		{
+			//	Attache l'objet au différents wrappers.
+			this.document.Wrappers.WrappersAttach(this.textFlow);
+		}
+
+		protected override void UpdateTextRulers()
+		{
+			//	Met à jour les règles pour le texte en édition.
+			if ( this.edited )
+			{
+				this.textFlow.UpdateTextRulers();
+			}
 		}
 		#endregion
 
@@ -1247,11 +1600,10 @@ namespace Epsitec.Common.Document.Objects
 		public override void EditMouseDownMessage(Point pos)
 		{
 			//	Gestion d'un événement pendant l'édition.
-			int rank = this.DetectTextCurveRank(pos);
-			pos = this.RankToLinearPos(rank);
-			if ( pos == Point.Empty )  return;
-
-			this.textNavigator.MouseDownMessage(pos);
+			//?int rank = this.DetectTextCurveRank(pos);
+			//?pos = this.RankToLinearPos(rank);
+			//?if ( pos == Point.Empty )  return;
+			//?this.textNavigator.MouseDownMessage(pos);
 		}
 
 		
@@ -1273,7 +1625,7 @@ namespace Epsitec.Common.Document.Objects
 			Path pathLine = this.PathBuild();
 			Path pathHilite = null;
 			Path pathSupport = null;
-			Path pathBbox = this.HiliteTextCurve();
+			Path pathBbox = null;
 
 			if ( this.IsHilite &&
 				 drawingContext != null &&
@@ -1406,497 +1758,738 @@ namespace Epsitec.Common.Document.Objects
 			return length;
 		}
 
-		protected bool Advance(double width, bool checkEnd, ref int i, ref double t, ref Point pos)
+
+		protected void UpdateTextFrame()
 		{
-			//	Avance le long d'une courbe multiple.
-			//	La courbe est fragmentée en 100 morceaux (TextLine2.step = 0.01)
-			//	considérés chacuns comme des lignes droites.
-			//	Retourne false lorsqu'on arrive à la fin.
-			//	Le mode checkEnd = true ne teste pas l'arrivée à la fin, ce qui est
-			//	utile en mode JustifHorizontal.Right pour être certain de caser le
-			//	dernier caractère. Sans cela, des erreurs d'arrondi font qu'il est
-			//	parfois considéré comme hors du tracé.
-			if ( i >= this.handles.Count-3 )  return false;
-
-			while ( true )
+			//	Met à jour le TextFrame en fonction des dimensions du pavé.
+			double width  = this.GetLength();
+			double height = 1000000;
+			
+			if ( this.textFrame.Width   != width  ||
+				 this.textFrame.Height  != height )
 			{
-				Point p1 = this.Handle(i+1).Position;
-				Point s1 = this.Handle(i+2).Position;
-				Point s2 = this.Handle(i+3).Position;
-				Point p2 = this.Handle(i+4).Position;
-
-				if ( this.Handle(i+2).Type == HandleType.Hide )  // droite ?
-				{
-					double d = Point.Distance(p1,p2);
-					double t2 = (t*d+width)/d;
-					if ( t2 <= 1.0 )
-					{
-						t = t2;
-						pos = Point.Scale(p1,p2, t);
-						return true;
-					}
-					width -= (1.0-t)*d;
-				}
-				else	// courbe ?
-				{
-					pos = Point.FromBezier(p1,s1,s2,p2, t);
-					double t1 = t;
-					double t2 = t;
-					double l1 = 0.0;
-					double l2 = 0.0;
-					Point next1, next2;
-					next1 = pos;
-					while ( true )
-					{
-						t2 = System.Math.Min(t2+TextLine2.step, 1.0);
-						next2 = Point.FromBezier(p1,s1,s2,p2, t2);  // segment suivant
-						l2 += Point.Distance(next1, next2);
-						if ( l2 >= width )  // a-t-on trop avancé ?
-						{
-							t = t1+(t2-t1)*(width-l1)/(l2-l1);  // approximation linéaire
-							pos = Point.Move(next1, next2, width-l1);
-							return true;
-						}
-						if ( t2 >= 1.0 )  break;  // fin de cette portion de courbe ?
-						t1 = t2;
-						l1 = l2;
-						next1 = next2;
-					}
-					width -= l2;
-				}
-
-				i += 3;  // portion de courbe suivante
-				if ( i >= this.handles.Count-3 )  // dernière portion dépassée ?
-				{
-					if ( checkEnd )  return false;
-					pos = p2;
-					return true;
-				}
-				t = 0.0;
+				this.textFrame.OriginX = 0;
+				this.textFrame.OriginY = 0;
+				this.textFrame.Width   = width;
+				this.textFrame.Height  = height;
+				
+				this.textFlow.TextStory.NotifyTextChanged();
 			}
 		}
-
-		protected double AdvanceString(Font font, string text)
+		
+		public override bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
 		{
-			//	Retourne la largeur d'un caractère.
-			System.Diagnostics.Debug.Assert(text.Length == 1);
-			if ( text[0] == TextLayout.CodeEndOfText )
+			//	Détermine si un point se trouve dans le texte frame.
+			if ( this.transform == null )
 			{
-				return (this.advanceCharArray.Length <= 1) ? 1.0 : 0.000001;
+				ppos = Drawing.Point.Empty;
+				return false;
 			}
-			else
-			{
-				return font.GetTextAdvance(text);
-			}
-		}
-
-		protected Drawing.Rectangle AdvanceBounds(Font font, string text)
-		{
-			//	Retourne la bbox d'un caractère.
-			System.Diagnostics.Debug.Assert(text.Length == 1);
-			if ( text[0] == TextLayout.CodeEndOfText )
-			{
-				return new Drawing.Rectangle(0, font.Descender, 0.000001, font.Ascender-font.Descender);
-			}
-			else
-			{
-				return font.GetGlyphBounds(font.GetGlyphIndex(text[0]));
-			}
-		}
-
-		protected bool AdvanceInit()
-		{
-			//	Initialise l'avance le long des caractères du texte.
-			Properties.TextLine justif = this.PropertyTextLine;
-
-			this.textLayout.DefaultFont      = this.PropertyTextFont.GetFont();
-			this.textLayout.DefaultFontSize  = this.PropertyTextFont.FontSize;
-			this.textLayout.DefaultRichColor = this.PropertyTextFont.FontColor;
-			this.advanceCharArray = this.textLayout.ComputeStructure();
-
-			double width = 0;
-			this.advanceMaxAscender = 0;
-			for ( int i=0 ; i<this.advanceCharArray.Length ; i++ )
-			{
-				string s = new string(this.advanceCharArray[i].Character, 1);
-				width += this.AdvanceString(this.advanceCharArray[i].Font, s)*this.advanceCharArray[i].FontSize;
-				width += justif.Add*this.advanceCharArray[i].FontSize;
-
-				this.advanceMaxAscender = System.Math.Max(this.advanceMaxAscender, this.advanceCharArray[i].Font.Ascender*this.advanceCharArray[i].FontSize);
-			}
-
-			this.advanceRank = 0;
-			this.advanceIndex = 0;
-			this.advanceBzt = 0.0;
-			this.advanceP1 = this.Handle(1).Position;
-			this.advanceP2 = this.advanceP1;
-			this.advanceLastTop    = Point.Empty;
-			this.advanceLastBottom = Point.Empty;
-			this.advanceCheckEnd = true;
-			this.advanceFactor = 1.0;
-
-			if ( justif.Horizontal == Properties.JustifHorizontal.Center )
-			{
-				double length = this.GetLength();
-				width = System.Math.Max((length-width)/2, 0.0);
-				this.Advance(width, true, ref this.advanceIndex, ref this.advanceBzt, ref this.advanceP1);
-				this.advanceCheckEnd = (width == 0.0);
-			}
-			if ( justif.Horizontal == Properties.JustifHorizontal.Right )
-			{
-				double length = this.GetLength();
-				width = System.Math.Max(length-width, 0.0);
-				this.Advance(width, true, ref this.advanceIndex, ref this.advanceBzt, ref this.advanceP1);
-				this.advanceCheckEnd = (width == 0.0);
-			}
-			if ( justif.Horizontal == Properties.JustifHorizontal.Stretch )
-			{
-				double length = this.GetLength();
-				this.advanceFactor = length/width;
-				this.advanceCheckEnd = false;
-			}
-
-			return true;
-		}
-
-		protected bool AdvanceNext(out string character,
-								   out Font font,
-								   out double fontSize,
-								   out RichColor fontColor,
-								   out Point pos,
-								   out Point ptl,
-								   out Point pbl,
-								   out Point ptr,
-								   out Point pbr,
-								   out double angle)
-		{
-			//	Avance sur le prochain caractère du texte.
-			Properties.TextLine justif = this.PropertyTextLine;
-
-			character = "";
-			font = null;
-			fontSize = 0;
-			fontColor = RichColor.Empty;
-			pos = new Point();
-			ptl = new Point();
-			pbl = new Point();
-			ptr = new Point();
-			pbr = new Point();
-			angle = 0;
-
-			int i = this.advanceRank++;
-			if ( i >= this.advanceCharArray.Length )  return false;
-
-			character = new string(this.advanceCharArray[i].Character, 1);
-			font = this.advanceCharArray[i].Font;
-			fontSize = this.advanceCharArray[i].FontSize * this.advanceFactor;
-			fontColor = this.advanceCharArray[i].FontColor;
-
-			this.advanceWidth = this.AdvanceString(font, character)*fontSize;
-			this.advanceWidth += justif.Add*fontSize;
-			if ( !this.Advance(this.advanceWidth, this.advanceCheckEnd, ref this.advanceIndex, ref this.advanceBzt, ref this.advanceP2) )
+			
+			ppos = this.transform.TransformInverse(pos);
+			
+			if ( ppos.X < 0 || ppos.Y < 0 || ppos.X > this.textFrame.Width || ppos.Y > this.textFrame.Height )
 			{
 				return false;
 			}
-
-			pos = this.advanceP1;
-			if ( justif.Offset > 0.0 )
+			else
 			{
-				pos = Point.Move(this.advanceP1, this.advanceP2, this.advanceMaxAscender*justif.Offset);
-				pos = Transform.RotatePointDeg(this.advanceP1, -90, pos);
+				return true;
 			}
+		}
+		
+		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
+		{
+			//	Dessine le texte du pavé.
+			this.DrawText(port, drawingContext, InternalOperation.Painting);
+		}
 
-			angle = Point.ComputeAngleDeg(this.advanceP1, this.advanceP2);
+		protected void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)
+		{
+			//	Effectue une opération quelconque sur le texte du pavé.
+			this.internalOperation = op;
 
-			Drawing.Rectangle gb = this.AdvanceBounds(font, character);
-			gb.Top    = font.Ascender;
-			gb.Bottom = font.Descender;
-			gb.Scale(fontSize);
-			gb.Offset(pos);
-			pbl = Transform.RotatePointDeg(pos, angle, gb.BottomLeft);
-			pbr = Transform.RotatePointDeg(pos, angle, gb.BottomRight);
-			ptl = Transform.RotatePointDeg(pos, angle, gb.TopLeft);
-			ptr = Transform.RotatePointDeg(pos, angle, gb.TopRight);
-
-			if ( !this.advanceLastTop.IsEmpty )
+			if ( this.internalOperation == InternalOperation.Painting )
 			{
-				ptl = Point.Projection(this.advanceLastTop, this.advanceLastBottom, ptl);
-				pbl = Point.Projection(this.advanceLastTop, this.advanceLastBottom, pbl);
+				this.cursorBox = Drawing.Rectangle.Empty;
+				this.selectBox = Drawing.Rectangle.Empty;
 			}
+		}
 
-			this.advanceP1 = this.advanceP2;
-			this.advanceLastTop    = ptr;
-			this.advanceLastBottom = pbr;
 
+		#region ITextRenderer Members
+		public bool IsFrameAreaVisible(Text.ITextFrame frame, double x, double y, double width, double height)
+		{
 			return true;
 		}
-
-		protected Point RankToLinearPos(int rank)
+		
+		public void RenderStartParagraph(Text.Layout.Context context)
 		{
-			//	Conversion d'un rank dans le texte en une position linéaire, c'est-à-dire
-			//	une position qui suppose que le texte est droit.
-			Point lp = Point.Empty;
-			if ( rank == -1 || !this.AdvanceInit() )  return lp;
+		}
+		
+		public void RenderStartLine(Text.Layout.Context context)
+		{
+			context.DisableSimpleRendering();
+		}
+		
+		public void RenderTab(Text.Layout.Context layout, string tag, double tabOrigin, double tabStop, ulong tabCode, bool isTabDefined)
+		{
+			if ( this.graphics == null )  return;
+			if ( this.drawingContext == null )  return;
+			if ( this.drawingContext.TextShowControlCharacters == false )  return;
+			if ( this.textFlow.HasActiveTextBox == false )  return;
 
-			lp.X = 0.00001;  // pour feinter Point.IsEmpty !
-			lp.Y = 0.00001;
-			string	character;
-			Font	font;
-			double	fontSize;
-			RichColor fontColor;
-			Point	pos, ptl, pbl, ptr, pbr;
-			double	angle;
-			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
+			double x1 = tabOrigin;
+			double x2 = tabStop;
+			double y  = layout.LineBaseY + layout.LineAscender*0.3;
+			double a  = System.Math.Min(layout.LineAscender*0.3, (x2-x1)*0.5);
+
+			Point p1 = new Point(x1, y);
+			Point p2 = new Point(x2, y);
+			graphics.Align(ref p1);
+			graphics.Align(ref p2);
+			double adjust = 0.5/this.drawingContext.ScaleX;
+			p1.X += adjust;  p1.Y += adjust;
+			p2.X -= adjust;  p2.Y += adjust;
+			if ( p1.X >= p2.X )  return;
+
+			Point p2a = new Point(p2.X-a, p2.Y-a*0.75);
+			Point p2b = new Point(p2.X-a, p2.Y+a*0.75);
+
+			Color color = isTabDefined ? Drawing.Color.FromBrightness(0.8) : DrawingContext.ColorTabZombie;
+			
+			if ( (tabCode & this.markerSelected) != 0 )  // tabulateur sélectionné ?
 			{
-				if ( rank == this.advanceRank-1 )  return lp;
-				lp.X += this.advanceWidth / this.advanceFactor;
+				Drawing.Rectangle rect = new Drawing.Rectangle(x1, layout.LineY1, x2-x1, layout.LineY2-layout.LineY1);
+				graphics.Align(ref rect);
+				
+				this.graphics.AddFilledRectangle(rect);
+				this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
+
+				if ( isTabDefined )  color = Drawing.Color.FromBrightness(0.5);
 			}
-			return lp;
+			
+			this.graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
+			this.graphics.AddLine(p1, p2);
+			this.graphics.AddLine(p2, p2a);
+			this.graphics.AddLine(p2, p2b);
+			this.graphics.RenderSolid(color);
+		}
+		
+		public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
+		{
+			if ( this.internalOperation == InternalOperation.Painting )
+			{
+				System.Diagnostics.Debug.Assert(mapping != null);
+				Text.ITextFrame frame = layout.Frame;
+
+				//	Vérifions d'abord que le mapping du texte vers les glyphes est
+				//	correct et correspond à quelque chose de valide :
+				int  offset = 0;
+				bool isInSelection = false;
+				double selX = 0;
+
+				System.Collections.ArrayList selRectList = null;
+
+				double x1 = 0;
+				double x2 = 0;
+
+				int[]    cArray;  // unicodes
+				ushort[] gArray;  // glyphes
+				ulong[]  tArray;  // textes
+
+				SpaceType[] iArray = new SpaceType[glyphs.Length];
+				int ii = 0;
+				bool isSpace = false;
+
+				while ( mapping.GetNextMapping(out cArray, out gArray, out tArray) )
+				{
+					int numChars  = cArray.Length;
+					int numGlyphs = gArray.Length;
+					System.Diagnostics.Debug.Assert(numChars == 1 || numGlyphs == 1);
+
+					x1 = x[offset+0];
+					x2 = x[offset+numGlyphs];
+
+					if ( numChars == 1 && numGlyphs == 1 )
+					{
+						int code = cArray[0];
+						if ( code == 0x20 || code == 0xA0 || code == 0x202F || (code >= 0x2000 && code <= 0x200F) )  // espace ?
+						{
+							isSpace = true;  // contient au moins un espace
+							if ( code == 0xA0 || code == 0x2007 || code == 0x200D || code == 0x202F || code == 0x2060 )
+							{
+								iArray[ii++] = SpaceType.NoBreakSpace;  // espace insécable
+							}
+							else
+							{
+								iArray[ii++] = SpaceType.BreakSpace;  // espace sécable
+							}
+						}
+						else if ( code == 0x0C )  // saut ?
+						{
+							isSpace = true;  // contient au moins un espace
+
+							Text.Properties.BreakProperty prop;
+							this.document.TextContext.GetBreak(tArray[0], out prop);
+							if ( prop.ParagraphStartMode == Text.Properties.ParagraphStartMode.NewFrame )
+							{
+								iArray[ii++] = SpaceType.NewFrame;
+							}
+							else
+							{
+								iArray[ii++] = SpaceType.NewPage;
+							}
+						}
+						else
+						{
+							iArray[ii++] = SpaceType.None;  // pas un espace
+						}
+					}
+					else
+					{
+						for ( int i=0 ; i<numGlyphs ; i++ )
+						{
+							iArray[ii++] = SpaceType.None;  // pas un espace
+						}
+					}
+
+					for ( int i=0 ; i<numChars ; i++ )
+					{
+						if ( (tArray[i] & this.markerSelected) != 0 )
+						{
+							//	Le caractère considéré est sélectionné.
+							if ( isInSelection == false )
+							{
+								//	C'est le premier caractère d'une tranche. Il faut mémoriser son début :
+								double xx = x1 + ((x2 - x1) * i) / numChars;
+								isInSelection = true;
+								selX = xx;
+							}
+						}
+						else
+						{
+							if ( isInSelection )
+							{
+								//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
+								double xx = x1 + ((x2 - x1) * i) / numChars;
+								isInSelection = false;
+
+								if ( xx > selX )
+								{
+									this.MarkSel(layout, ref selRectList, xx, selX);
+								}
+							}
+						}
+					}
+
+					offset += numGlyphs;
+				}
+
+				if ( isInSelection )
+				{
+					//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
+					double xx = x2;
+					isInSelection = false;
+
+					if ( xx > selX )
+					{
+						this.MarkSel(layout, ref selRectList, xx, selX);
+					}
+				}
+
+				if ( this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null )
+				{
+					//	Dessine les rectangles correspondant à la sélection.
+					foreach ( Drawing.Rectangle rect in selRectList )
+					{
+						this.graphics.AddFilledRectangle(rect);
+
+						Point c1 = this.transform.TransformDirect(rect.BottomLeft);
+						Point c2 = this.transform.TransformDirect(rect.TopRight);
+						this.selectBox.MergeWith(c1);
+						this.selectBox.MergeWith(c2);
+					}
+					this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
+				}
+
+				//	Dessine le texte.
+				this.RenderText(font, size, glyphs, iArray, x, y, sx, sy, RichColor.Parse(color), isSpace);
+			}
+			
+			if ( this.internalOperation == InternalOperation.GetPath )
+			{
+				this.RenderText(font, size, glyphs, null, x, y, sx, sy, RichColor.Empty, false);
+			}
+
+			if ( this.internalOperation == InternalOperation.CharactersTable )
+			{
+				int[]    cArray;
+				ushort[] gArray;
+				ulong[]  tArray;
+				while ( mapping.GetNextMapping(out cArray, out gArray, out tArray) )
+				{
+					int numChars  = cArray.Length;
+					int numGlyphs = gArray.Length;
+					System.Diagnostics.Debug.Assert(numChars == 1 || numGlyphs == 1);
+
+					for ( int i=0 ; i<numGlyphs ; i++ )
+					{
+						if ( gArray[i] >= 0xffff )  continue;
+
+						PDF.CharacterList cl;
+						if ( numChars == 1 )
+						{
+							if ( i == 1 )  // TODO: césure gérée de façon catastrophique !
+							{
+								cl = new PDF.CharacterList(gArray[i], (int)'-', font);
+							}
+							else
+							{
+								cl = new PDF.CharacterList(gArray[i], cArray[0], font);
+							}
+						}
+						else
+						{
+							cl = new PDF.CharacterList(gArray[i], cArray, font);
+						}
+
+						if ( !this.charactersTable.ContainsKey(cl) )
+						{
+							this.charactersTable.Add(cl, null);
+						}
+					}
+				}
+			}
+
+			if ( this.internalOperation == InternalOperation.RealBoundingBox )
+			{
+				this.RenderText(font, size, glyphs, null, x, y, sx, sy, RichColor.Empty, false);
+			}
 		}
 
-		protected bool DetectTextCurve(Point mouse)
+		protected void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, double x, double selX)
 		{
-			//	Détecte si la souris est sur un caractère du texte le long de la courbe multiple.
-			if ( !this.AdvanceInit() )  return false;
+			//	Marque une tranche sélectionnée.
+			if ( this.graphics == null )  return;
 
-			string	character;
-			Font	font;
-			double	fontSize;
-			RichColor fontColor;
-			Point	pos, ptl, pbl, ptr, pbr;
-			double	angle;
-			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
+			double dx = x - selX;
+			double dy = layout.LineY2 - layout.LineY1;
+			Drawing.Rectangle rect = new Drawing.Rectangle(selX, layout.LineY1, dx, dy);
+			graphics.Align(ref rect);
+
+			if ( selRectList == null )
 			{
-				InsideSurface inside = new InsideSurface(mouse, 4);
-				inside.AddLine(pbl, pbr);
-				inside.AddLine(pbr, ptr);
-				inside.AddLine(ptr, ptl);
-				inside.AddLine(ptl, pbl);
-				if ( inside.IsInside() )  return true;
+				selRectList = new System.Collections.ArrayList();
+			}
+
+			selRectList.Add(rect);
+		}
+
+		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
+		{
+			//	Effectue le rendu des caractères.
+			if ( this.internalOperation == InternalOperation.Painting )
+			{
+				if ( this.graphics != null )  // affichage sur écran ?
+				{
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+					if ( drawingFont != null )
+					{
+						if ( sy == null )
+						{
+							this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
+						}
+						else
+						{
+							for ( int i=0 ; i<glyphs.Length ; i++ )
+							{
+								if ( glyphs[i] < 0xffff )
+								{
+									this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+								}
+							}
+						}
+
+						if ( this.textFlow.HasActiveTextBox && isSpace && insecs != null &&
+							this.drawingContext != null && this.drawingContext.TextShowControlCharacters )
+						{
+							for ( int i=0 ; i<glyphs.Length ; i++ )
+							{
+								double width = font.GetGlyphWidth(glyphs[i], size);
+								double oy = font.GetAscender(size)*0.3;
+
+								if ( insecs[i] == SpaceType.BreakSpace )  // espace sécable ?
+								{
+									this.graphics.AddFilledCircle(x[i]+width/2, y[i]+oy, size*0.05);
+								}
+
+								if ( insecs[i] == SpaceType.NoBreakSpace )  // espace insécable ?
+								{
+									this.graphics.AddCircle(x[i]+width/2, y[i]+oy, size*0.08);
+								}
+
+								if ( insecs[i] == SpaceType.NewFrame ||
+									insecs[i] == SpaceType.NewPage  )  // saut ?
+								{
+									Point p1 = new Point(x[i],                 y[i]+oy);
+									Point p2 = new Point(this.textFrame.Width, y[i]+oy);
+									Path path = Path.FromLine(p1, p2);
+
+									double w    = (insecs[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
+									double dash = (insecs[i] == SpaceType.NewFrame) ? 0.0 : 8.0;
+									double gap  = (insecs[i] == SpaceType.NewFrame) ? 3.0 : 2.0;
+									Drawer.DrawPathDash(this.graphics, this.drawingContext, path, w, dash, gap, color.Basic);
+								}
+							}
+						}
+					}
+			
+					this.graphics.RenderSolid(color.Basic);
+				}
+				else if ( this.port is Printing.PrintPort )  // impression ?
+				{
+					Printing.PrintPort printPort = port as Printing.PrintPort;
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+					printPort.RichColor = color;
+					printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+				}
+				else if ( this.port is PDF.Port )  // exportation PDF ?
+				{
+					PDF.Port pdfPort = port as PDF.Port;
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+					pdfPort.RichColor = color;
+					pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+				}
+			}
+
+			if ( this.internalOperation == InternalOperation.GetPath )
+			{
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+				this.graphics.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+			}
+
+			if ( this.internalOperation == InternalOperation.RealBoundingBox )
+			{
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+				if ( drawingFont != null )
+				{
+					for ( int i=0 ; i<glyphs.Length ; i++ )
+					{
+						if ( glyphs[i] < 0xffff )
+						{
+							Drawing.Rectangle bounds = drawingFont.GetGlyphBounds(glyphs[i], size);
+
+							if ( sx != null )  bounds.Scale(sx[i], 1.0);
+							if ( sy != null )  bounds.Scale(1.0, sy[i]);
+
+							bounds.Offset(x[i], y[i]);
+
+							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomLeft));
+							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomRight));
+							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopLeft));
+							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopRight));
+						}
+					}
+				}
+			}
+		}
+
+		public void Render(Text.Layout.Context layout, Text.IGlyphRenderer glyphRenderer, string color, double x, double y, bool isLastRun)
+		{
+			glyphRenderer.RenderGlyph(layout.Frame, x, y);
+		}
+		
+		public void RenderEndLine(Text.Layout.Context context)
+		{
+		}
+		
+		public void RenderEndParagraph(Text.Layout.Context context)
+		{
+			if ( this.internalOperation != InternalOperation.Painting )  return;
+
+			Text.Layout.XlineRecord[] records = context.XlineRecords;
+			if ( records.Length == 0 )  return;
+
+			System.Collections.ArrayList process = new System.Collections.ArrayList();
+			
+			for ( int lineStart=0 ; lineStart<records.Length ; )
+			{
+				bool found;
+				
+				do
+				{
+					Text.Properties.AbstractXlineProperty xline = null;
+					Text.Properties.FontColorProperty color = null;
+					
+					Text.Layout.XlineRecord starting = null;
+					Text.Layout.XlineRecord ending   = null;
+
+					found = false;
+					
+					for ( int i=lineStart ; i<records.Length ; i++ )
+					{
+						if ( records[i].Type == Text.Layout.XlineRecord.RecordType.LineEnd )
+						{
+							if ( starting != null )
+							{
+								System.Diagnostics.Debug.Assert(xline != null);
+								
+								ending = records[i];
+								found  = true;
+								this.RenderXline(context, xline, starting, ending);  // dessine le trait
+								process.Add(new XlineInfo(xline, color));  // le trait est fait
+							}
+							break;
+						}
+						
+						ending = records[i];
+						
+						for ( int j=0 ; j<records[i].Xlines.Length ; j++ )
+						{
+							if ( xline == null )  // cherche le début ?
+							{
+								if ( TextLine2.XlineContains(process, records[i].Xlines[j], records[i].TextColor) )  continue;
+
+								xline    = records[i].Xlines[j];
+								color    = records[i].TextColor;
+								starting = records[i];
+								ending   = null;  // la fin ne peut pas être dans ce record
+								break;
+							}
+							else if ( starting == null )	// cherche un autre début ?
+							{
+								if ( !Text.Property.CompareEqualContents(xline, records[i].Xlines[j]) ||
+									!Text.Property.CompareEqualContents(color, records[i].TextColor) )
+								{
+									continue;
+								}
+								
+								starting = records[i];
+								ending   = null;  // la fin ne peut pas être dans ce record
+								break;
+							}
+							else	// cherche la fin ?
+							{
+								if ( Text.Property.CompareEqualContents(xline, records[i].Xlines[j]) &&
+									Text.Property.CompareEqualContents(color, records[i].TextColor) )
+								{
+									ending = null;  // la fin ne peut pas être dans ce record
+									break;
+								}
+							}
+						}
+						
+						if ( starting != null && ending != null )  // fin trouvée ?
+						{
+							System.Diagnostics.Debug.Assert(xline != null);
+							
+							this.RenderXline(context, xline, starting, ending);  // dessine le trait
+							process.Add(new XlineInfo(xline, color));  // le trait est fait
+							
+							//	Cherche encore d'autres occurrences de la même propriété dans
+							//	la même ligne...
+							
+							starting = null;
+							ending   = null;
+							found    = true;
+						}
+					}
+				}
+				while ( found );
+				
+				//	Saute les enregistrements de la ligne courante et reprend tout depuis
+				//	le début de la ligne suivante:
+				
+				while ( lineStart<records.Length )
+				{
+					if ( records[lineStart++].Type == Text.Layout.XlineRecord.RecordType.LineEnd )  break;
+				}
+				
+				process.Clear();
+			}
+		}
+
+		protected void RenderXline(Text.Layout.Context context, Text.Properties.AbstractXlineProperty xline, Text.Layout.XlineRecord starting, Text.Layout.XlineRecord ending)
+		{
+			//	Dessine un trait souligné, surligné ou biffé.
+			if ( ending.X <= starting.X )  return;
+			
+			double y = starting.Y;
+
+			if ( xline.WellKnownType == Text.Properties.WellKnownType.Underline )
+			{
+				y -= xline.Position;
+			}
+			if ( xline.WellKnownType == Text.Properties.WellKnownType.Overline )
+			{
+				y += context.LineAscender;
+				y -= xline.Position;
+			}
+			if ( xline.WellKnownType == Text.Properties.WellKnownType.Strikeout )
+			{
+				y += xline.Position;
+			}
+
+			Path path = Path.FromRectangle(starting.X, y-xline.Thickness/2, ending.X-starting.X, xline.Thickness);
+
+			string color = xline.DrawStyle;
+			if ( color == null )  // couleur par défaut (comme le texte) ?
+			{
+				color = starting.TextColor.TextColor;
+			}
+			this.port.RichColor = RichColor.Parse(color);
+
+			this.port.PaintSurface(path);
+		}
+
+		protected static bool XlineContains(System.Collections.ArrayList process, Text.Properties.AbstractXlineProperty xline, Text.Properties.FontColorProperty color)
+		{
+			//	Cherche si une propriété Xline est déjà dans une liste.
+			foreach ( XlineInfo existing in process )
+			{
+				if ( Text.Property.CompareEqualContents(existing.Xline, xline) &&
+					Text.Property.CompareEqualContents(existing.Color, color) )
+				{
+					return true;
+				}
 			}
 			return false;
 		}
-
-		protected int DetectTextCurveRank(Point mouse)
+		
+		private class XlineInfo
 		{
-			//	Détecte sur quel caractère est la souris le long de la courbe multiple.
-			if ( !this.AdvanceInit() )  return -1;
-
-			string	character;
-			Font	font;
-			double	fontSize;
-			RichColor fontColor;
-			Point	pos, ptl, pbl, ptr, pbr;
-			double	angle;
-			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
+			public XlineInfo(Text.Properties.AbstractXlineProperty xline, Text.Properties.FontColorProperty color)
 			{
-				Point ptm = (ptl+ptr)/2;
-				Point pbm = (pbl+pbr)/2;
-
-				InsideSurface inside = new InsideSurface(mouse, 4);
-				inside.AddLine(pbl, pbm);
-				inside.AddLine(pbm, ptm);
-				inside.AddLine(ptm, ptl);
-				inside.AddLine(ptl, pbl);
-				if ( inside.IsInside() )  return this.advanceRank-1;  // dans la moitié gauche ?
-
-				inside = new InsideSurface(mouse, 4);
-				inside.AddLine(pbm, pbr);
-				inside.AddLine(pbr, ptr);
-				inside.AddLine(ptr, ptm);
-				inside.AddLine(ptm, pbm);
-				if ( inside.IsInside() )  return this.advanceRank;  // dans la moitié droite ?
+				this.xline = xline;
+				this.color = color;
 			}
-			return -1;
+			
+			
+			public Text.Properties.AbstractXlineProperty Xline
+			{
+				get
+				{
+					return this.xline;
+				}
+			}
+			
+			public Text.Properties.FontColorProperty Color
+			{
+				get
+				{
+					return this.color;
+				}
+			}
+			
+			
+			Text.Properties.AbstractXlineProperty	xline;
+			Text.Properties.FontColorProperty		color;
+		}
+		#endregion
+
+
+		#region Serialization
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			//	Sérialise l'objet.
+			base.GetObjectData(info, context);
+			info.AddValue("TextFlow", this.textFlow);
 		}
 
-		protected void BboxTextCurve(ref Drawing.Rectangle bbox)
+		protected TextLine2(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			//	Calcule la bbox du texte le long de la courbe multiple.
-			if ( !this.AdvanceInit() )  return;
+			//	Constructeur qui désérialise l'objet.
+			this.textFlow = (TextFlow) info.GetValue("TextFlow", typeof(TextFlow));
+		}
 
-			string	character;
-			Font	font;
-			double	fontSize;
-			RichColor fontColor;
-			Point	pos, ptl, pbl, ptr, pbr;
-			double	angle;
-			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
+		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
+		{
+			//	Vérifie si tous les fichiers existent.
+			//?Common.Document.Objects.Abstract.ReadCheckFonts(fonts, warnings, this.textLayout);
+		}
+		
+		public override void ReadFinalize()
+		{
+			base.ReadFinalize ();
+			
+			this.InitialiseInternals();
+		}
+		
+		public override void ReadFinalizeFlowReady(TextFlow flow)
+		{
+			System.Diagnostics.Debug.Assert(this.textFlow == flow);
+			
+			this.UpdateTextFrame();
+		}
+		#endregion
+
+		
+		public void UpdateGeometry()
+		{
+			//	Met à jour après un changement de géométrie de l'objet.
+			this.UpdateTextFrame();
+			this.UpdateTextLayout();
+		}
+
+		public override void UpdateTextLayout()
+		{
+			//	Met à jour le texte suite à une modification du conteneur.
+			if ( this.edited )
 			{
-				bbox.MergeWith(pbl);
-				bbox.MergeWith(pbr);
-				bbox.MergeWith(ptl);
-				bbox.MergeWith(ptr);
+				this.textFlow.UpdateTextLayout();
 			}
 		}
 
-		protected Path HiliteTextCurve()
+		protected override void SetEdited(bool state)
 		{
-			//	Donne le chemin du texte le long de la courbe multiple.
-			if ( !this.AdvanceInit() )  return null;
+			//	Modifie le mode d'édition. Il faut obligatoirement utiliser cet appel
+			//	pour modifier this.edited !
+			if ( this.edited == state )  return;
 
-			Path path = new Path();
+			this.edited = state;
 
-			string	character;
-			Font	font;
-			double	fontSize;
-			RichColor fontColor;
-			Point	pos, ptl, pbl, ptr, pbr;
-			double	angle;
-			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
+			if ( this.document.HRuler != null )
 			{
-				path.MoveTo(pbl);
-				path.LineTo(pbr);
-				path.LineTo(ptr);
-				path.LineTo(ptl);
-				path.Close();
+				this.document.HRuler.Edited = this.edited;
+				this.document.VRuler.Edited = this.edited;
 			}
 
-			return path;
-		}
-
-		protected Path OneRealPathCurve(int rank)
-		{
-			//	Construit le chemin réel d'un seul caractère.
-			if ( !this.AdvanceInit() )  return null;
-
-			string	character;
-			Font	font;
-			double	fontSize;
-			RichColor fontColor;
-			Point	pos, ptl, pbl, ptr, pbr;
-			double	angle;
-
-			int i = 0;
-			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
+			if ( this.edited )
 			{
-				if ( i == rank && character[0] != TextLayout.CodeEndOfText )
+				if ( this.document.HRuler != null )
 				{
-					int glyph = font.GetGlyphIndex(character[0]);
-
-					Transform transform = new Transform();
-					transform.Scale(fontSize);
-					transform.RotateDeg(angle);
-					transform.Translate(pos);
-
-					Path path = new Path();
-					path.Append(font, glyph, transform);
-					return path;
+					this.document.HRuler.EditObject = this;
+					this.document.VRuler.EditObject = this;
+					this.document.HRuler.WrappersAttach();
+					this.document.VRuler.WrappersAttach();
 				}
-
-				i ++;
-			}
-			return null;
-		}
-
-		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
-		{
-			//	Dessine le texte le long de la courbe multiple.
-			this.cursorBox = Drawing.Rectangle.Empty;
-			this.selectBox = Drawing.Rectangle.Empty;
-
-			if ( !this.AdvanceInit() )  return;
-
-			this.textLayout.DrawingScale = drawingContext.ScaleX;
-
-			int cursorFrom = System.Math.Min(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
-			int cursorTo   = System.Math.Max(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
-			Point lastTop    = Point.Empty;
-			Point lastBottom = Point.Empty;
-
-			string	character;
-			Font	font;
-			double	fontSize;
-			RichColor fontColor;
-			Point	pos, ptl, pbl, ptr, pbr;
-			double	angle;
-			Point   c1 = new Point(0,0);
-			Point   c2 = new Point(0,0);
-
-			bool active = true;
-			if ( this.document.Modifier != null )
-			{
-				active = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext &&
-						  this.document.Modifier.ActiveViewer.IsFocused);
-			}
-
-			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
-			{
-				int rank = this.advanceRank-1;
-
-				if ( port is Graphics &&
-					 this.edited &&
-					 cursorFrom != cursorTo && rank >= cursorFrom && rank < cursorTo )
-				{
-					Graphics graphics = port as Graphics;
-					Path path = new Path();
-					path.MoveTo(pbl);
-					path.LineTo(pbr);
-					path.LineTo(ptr);
-					path.LineTo(ptl);
-					path.Close();
-					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(DrawingContext.ColorSelectEdit(active));
-
-					this.selectBox.MergeWith(pbl);
-					this.selectBox.MergeWith(pbr);
-					this.selectBox.MergeWith(ptr);
-					this.selectBox.MergeWith(ptl);
-				}
-
-				if ( character[0] != TextLayout.CodeEndOfText )
-				{
-					Transform ot = port.Transform;
-					port.RotateTransformDeg(angle, pos.X, pos.Y);
-
-					port.RichColor = fontColor;
-					port.PaintText(pos.X, pos.Y, character, font, fontSize);
-					
-					port.Transform = ot;
-				}
-
-				if ( port is Graphics &&
-					 this.edited &&
-					 rank == this.textNavigator.Context.CursorTo )
-				{
-					Graphics graphics = port as Graphics;
-					graphics.LineWidth = 1.0/drawingContext.ScaleX;
-					graphics.AddLine(ptl, pbl);
-					graphics.RenderSolid(DrawingContext.ColorCursorEdit(active));
-					c1 = ptl;
-					c2 = pbl;
-				}
+				this.EditWrappersAttach();  // attache l'objet aux différents wrappers
 				
-				lastTop    = ptr;
-				lastBottom = pbr;
+				this.textFlow.ActiveTextBox = this;
 			}
-
-			if ( port is Graphics &&
-				 this.edited &&
-				 this.advanceRank-1 == this.textNavigator.Context.CursorTo )
+			else
 			{
-				Graphics graphics = port as Graphics;
-				graphics.LineWidth = 1.0/drawingContext.ScaleX;
-				graphics.AddLine(lastTop, lastBottom);
-				graphics.RenderSolid(DrawingContext.ColorCursorEdit(active));
-				c1 = lastTop;
-				c2 = lastBottom;
+				if ( this.document.HRuler != null )
+				{
+					this.document.HRuler.EditObject = null;
+					this.document.VRuler.EditObject = null;
+					this.document.HRuler.WrappersDetach();
+					this.document.VRuler.WrappersDetach();
+				}
+				this.document.Wrappers.WrappersDetach();
+				
+				if ( this.textFlow.ActiveTextBox == this )
+				{
+					this.textFlow.ActiveTextBox = null;
+				}
 			}
 
-			if ( c1.X != 0.0 || c1.Y != 0.0 || c2.X != 0.0 || c2.Y != 0.0 )
-			{
-				this.ComputeAutoScroll(c1, c2);
-				this.cursorBox.MergeWith(c1);
-				this.cursorBox.MergeWith(c2);
-				this.selectBox.MergeWith(c1);
-				this.selectBox.MergeWith(c2);
-			}
-		}
+			this.UpdateTextRulers();
 
-
-		private void HandleTextChanged(object sender)
-		{
-			this.SetDirtyBbox();
+			//	Redessine tout, à cause des "poignées" du flux qui peuvent apparaître
+			//	ou disparaître.
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 		}
 
 
@@ -1909,48 +2502,84 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		#region Serialization
-		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		#region OpletTextFlow
+		protected void InsertOpletTextFlow()
 		{
-			//	Sérialise l'objet.
-			base.GetObjectData(info, context);
-			info.AddValue("Text", this.textLayout.Text);
+			//	Ajoute un oplet pour mémoriser le flux.
+			if ( this.textFlow == null )  return;  // création de l'objet ?
+			if ( !this.document.Modifier.OpletQueueEnable )  return;
+			OpletTextFlow oplet = new OpletTextFlow(this);
+			this.document.Modifier.OpletQueue.Insert(oplet);
 		}
 
-		protected TextLine2(SerializationInfo info, StreamingContext context) : base(info, context)
+		//	Mémorise le flux de l'objet.
+		protected class OpletTextFlow : AbstractOplet
 		{
-			//	Constructeur qui désérialise l'objet.
-			this.Initialise();
-			this.textLayout.Text = info.GetString("Text");
-		}
+			public OpletTextFlow(Objects.TextLine2 host)
+			{
+				System.Diagnostics.Debug.Assert(host.textFlow != null);
+				this.host = host;
+				this.textFlow = host.textFlow;
+			}
 
-		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
-		{
-			//	Vérifie si tous les fichiers existent.
-			Common.Document.Objects.Abstract.ReadCheckFonts(fonts, warnings, this.textLayout);
+			protected void Swap()
+			{
+				System.Diagnostics.Debug.Assert(host.textFlow != null);
+				System.Diagnostics.Debug.Assert(this.textFlow != null);
+
+				TextFlow temp = host.textFlow;
+				host.textFlow = this.textFlow;
+				this.textFlow = temp;
+
+				host.UpdateTextLayout();
+			}
+
+			public override IOplet Undo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			public override IOplet Redo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			protected Objects.TextLine2				host;
+			protected TextFlow						textFlow;
 		}
 		#endregion
 
 		
-		protected TextLayout				textLayout;
-		protected TextNavigator				textNavigator;
+		protected bool							isActive;
+		protected ulong							markerSelected;
+		protected TextFlow						textFlow;
+		protected Text.SimpleTextFrame			textFrame;
+		protected IPaintPort					port;
+		protected Graphics						graphics;
+		protected DrawingContext				drawingContext;
+		protected Transform						transform;
+		protected Drawing.Rectangle				redrawArea;
+		protected Drawing.Rectangle				cursorBox;
+		protected Drawing.Rectangle				selectBox;
+		protected InternalOperation				internalOperation = InternalOperation.Painting;
+		protected System.Collections.Hashtable	charactersTable = null;
+		protected Drawing.Rectangle				mergingBoundingBox;
 
-		protected Common.Widgets.TextLayout.OneCharStructure[] advanceCharArray;
-		protected int						advanceRank;
-		protected int						advanceIndex;
-		protected double					advanceBzt;
-		protected double					advanceWidth;
-		protected Point						advanceP1;
-		protected Point						advanceP2;
-		protected Point						advanceLastTop;
-		protected Point						advanceLastBottom;
-		protected bool						advanceCheckEnd;
-		protected double					advanceFactor;
-		protected double					advanceMaxAscender;
-		protected Drawing.Rectangle			cursorBox;
-		protected Drawing.Rectangle			selectBox;
-		protected Point						initialPos;
+		protected int							advanceRank;
+		protected int							advanceIndex;
+		protected double						advanceBzt;
+		protected double						advanceWidth;
+		protected Point							advanceP1;
+		protected Point							advanceP2;
+		protected Point							advanceLastTop;
+		protected Point							advanceLastBottom;
+		protected bool							advanceCheckEnd;
+		protected double						advanceFactor;
+		protected double						advanceMaxAscender;
+		protected Point							initialPos;
 
-		protected static readonly double	step = 0.01;
+		protected static readonly double		step = 0.01;
 	}
 }
