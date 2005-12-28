@@ -1,5 +1,6 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
@@ -44,6 +45,10 @@ namespace Epsitec.Common.Document.Objects
 			this.masterAutoStop = false;
 			this.masterSpecific = false;
 			this.masterGuides = true;
+			this.pageSize = Size.Empty;
+			this.hotSpot = Point.Empty;
+			this.glyphOrigin = Point.Empty;
+			this.glyphSize = Size.Empty;
 		}
 
 		protected override bool ExistingProperty(Properties.Type type)
@@ -257,6 +262,63 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		public Size PageSize
+		{
+			//	Taille de la page. Si Empty, c'est la taille globale qui est utilisée.
+			get
+			{
+				return this.pageSize;
+			}
+
+			set
+			{
+				this.pageSize = value;
+			}
+		}
+
+		public Point HotSpot
+		{
+			//	Position du point chaud, uniquement pour Pictogram.
+			get
+			{
+				return this.hotSpot;
+			}
+
+			set
+			{
+				this.hotSpot = value;
+			}
+		}
+
+		public Point GlyphOrigin
+		{
+			//	Origine du glyphe lorsqu'il est dans un texte, uniquement pour Pictogram.
+			get
+			{
+				return this.glyphOrigin;
+			}
+
+			set
+			{
+				this.glyphOrigin = value;
+			}
+		}
+
+		public Size GlyphSize
+		{
+			//	Taille du glyphe lorsqu'il est dans un texte, uniquement pour Pictogram.
+			get
+			{
+				return this.glyphSize;
+			}
+
+			set
+			{
+				this.glyphSize = value;
+			}
+		}
+
+
 		public override void CloneObject(Objects.Abstract src)
 		{
 			//	Reprend toutes les caractéristiques d'un objet.
@@ -398,7 +460,13 @@ namespace Epsitec.Common.Document.Objects
 			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 
-			if ( this.document.Type != DocumentType.Pictogram )
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				info.AddValue("HotSpot", this.hotSpot);
+				info.AddValue("GlyphOrigin", this.glyphOrigin);
+				info.AddValue("GlyphSize", this.glyphSize);
+			}
+			else
 			{
 				info.AddValue("MasterType", this.masterType);
 				info.AddValue("MasterUse", this.masterUse);
@@ -407,6 +475,7 @@ namespace Epsitec.Common.Document.Objects
 				info.AddValue("MasterSpecific", this.masterSpecific);
 				info.AddValue("MasterGuides", this.masterGuides);
 				info.AddValue("GuidesList", this.guides);
+				info.AddValue("PageSize", this.pageSize);
 			}
 		}
 
@@ -418,7 +487,16 @@ namespace Epsitec.Common.Document.Objects
 			this.masterSpecific = false;
 			this.masterGuides = true;
 
-			if ( this.document.Type != DocumentType.Pictogram )
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				if ( this.document.IsRevisionGreaterOrEqual(1,5,1) )
+				{
+					this.hotSpot = (Point) info.GetValue("HotSpot", typeof(Point));
+					this.glyphOrigin = (Point) info.GetValue("GlyphOrigin", typeof(Point));
+					this.glyphSize = (Size) info.GetValue("GlyphSize", typeof(Size));
+				}
+			}
+			else
 			{
 				if ( this.document.IsRevisionGreaterOrEqual(1,0,9) )
 				{
@@ -438,6 +516,11 @@ namespace Epsitec.Common.Document.Objects
 				if ( this.document.IsRevisionGreaterOrEqual(1,0,11) )
 				{
 					this.masterGuides = info.GetBoolean("MasterGuides");
+				}
+
+				if ( this.document.IsRevisionGreaterOrEqual(1,5,1) )
+				{
+					this.pageSize = (Size) info.GetValue("PageSize", typeof(Size));
 				}
 			}
 
@@ -462,5 +545,9 @@ namespace Epsitec.Common.Document.Objects
 		protected bool					masterSpecific;
 		protected bool					masterGuides;
 		protected UndoableList			guides;
+		protected Size					pageSize;
+		protected Point					hotSpot;
+		protected Point					glyphOrigin;
+		protected Size					glyphSize;
 	}
 }
