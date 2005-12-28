@@ -294,7 +294,14 @@ namespace Epsitec.Common.Document.Objects
 
 			set
 			{
-				this.pageSize = value;
+				if ( this.pageSize != value )
+				{
+					this.InsertOpletType();
+					this.pageSize = value;
+					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
+					this.document.Notifier.NotifyArea();
+					this.document.IsDirtySerialize = true;
+				}
 			}
 		}
 
@@ -308,7 +315,14 @@ namespace Epsitec.Common.Document.Objects
 
 			set
 			{
-				this.hotSpot = value;
+				if ( this.hotSpot != value )
+				{
+					this.InsertOpletType();
+					this.hotSpot = value;
+					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
+					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+					this.document.IsDirtySerialize = true;
+				}
 			}
 		}
 
@@ -322,7 +336,14 @@ namespace Epsitec.Common.Document.Objects
 
 			set
 			{
-				this.glyphOrigin = value;
+				if ( this.glyphOrigin != value )
+				{
+					this.InsertOpletType();
+					this.glyphOrigin = value;
+					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
+					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+					this.document.IsDirtySerialize = true;
+				}
 			}
 		}
 
@@ -336,7 +357,14 @@ namespace Epsitec.Common.Document.Objects
 
 			set
 			{
-				this.glyphSize = value;
+				if ( this.glyphSize != value )
+				{
+					this.InsertOpletType();
+					this.glyphSize = value;
+					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
+					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+					this.document.IsDirtySerialize = true;
+				}
 			}
 		}
 
@@ -355,6 +383,10 @@ namespace Epsitec.Common.Document.Objects
 			this.masterAutoStop  = page.masterAutoStop;
 			this.masterSpecific  = page.masterSpecific;
 			this.masterGuides    = page.masterGuides;
+			this.pageSize        = page.pageSize;
+			this.hotSpot         = page.hotSpot;
+			this.glyphOrigin     = page.glyphOrigin;
+			this.glyphSize       = page.glyphSize;
 
 			this.guides.Clear();
 			foreach ( Settings.Guide guide in page.guides )
@@ -427,6 +459,10 @@ namespace Epsitec.Common.Document.Objects
 				this.masterAutoStop = host.masterAutoStop;
 				this.masterSpecific = host.masterSpecific;
 				this.masterGuides = host.masterGuides;
+				this.pageSize = host.pageSize;
+				this.hotSpot = host.hotSpot;
+				this.glyphOrigin = host.glyphOrigin;
+				this.glyphSize = host.glyphSize;
 			}
 
 			protected void Swap()
@@ -451,6 +487,11 @@ namespace Epsitec.Common.Document.Objects
 				Misc.Swap(ref host.masterAutoStop, ref this.masterAutoStop);
 				Misc.Swap(ref host.masterSpecific, ref this.masterSpecific);
 				Misc.Swap(ref host.masterGuides, ref this.masterGuides);
+
+				Misc.Swap(ref host.pageSize, ref this.pageSize);
+				Misc.Swap(ref host.hotSpot, ref this.hotSpot);
+				Misc.Swap(ref host.glyphOrigin, ref this.glyphOrigin);
+				Misc.Swap(ref host.glyphSize, ref this.glyphSize);
 			}
 
 			public override IOplet Undo()
@@ -472,6 +513,10 @@ namespace Epsitec.Common.Document.Objects
 			protected bool					masterAutoStop;
 			protected bool					masterSpecific;
 			protected bool					masterGuides;
+			protected Size					pageSize;
+			protected Point					hotSpot;
+			protected Point					glyphOrigin;
+			protected Size					glyphSize;
 		}
 		#endregion
 

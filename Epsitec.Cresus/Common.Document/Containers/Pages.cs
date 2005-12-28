@@ -590,6 +590,8 @@ namespace Epsitec.Common.Document.Containers
 		{
 			if ( this.ignoreChanged )  return;
 
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Container.Pages.Size.Label, "SpecialPageSize");
+
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 
@@ -598,11 +600,15 @@ namespace Epsitec.Common.Document.Containers
 			page.PageSize = size;
 
 			this.UpdateTable();
+			this.document.Notifier.NotifyPagesChanged();
+			this.document.Modifier.OpletQueueValidateAction();
 		}
 
 		private void HandlePageHeightEditionAccepted(object sender)
 		{
 			if ( this.ignoreChanged )  return;
+
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Container.Pages.Size.Label, "SpecialPageSize");
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
@@ -612,10 +618,14 @@ namespace Epsitec.Common.Document.Containers
 			page.PageSize = size;
 
 			this.UpdateTable();
+			this.document.Notifier.NotifyPagesChanged();
+			this.document.Modifier.OpletQueueValidateAction();
 		}
 
 		private void HandlePageSwapClicked(object sender, MessageEventArgs e)
 		{
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Container.Pages.Size.Swap);
+
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 
@@ -626,18 +636,26 @@ namespace Epsitec.Common.Document.Containers
 				size.Height = this.document.Size.Width;
 			}
 			page.PageSize = size;
+
 			this.UpdatePanel();
 			this.UpdateTable();
+			this.document.Notifier.NotifyPagesChanged();
+			this.document.Modifier.OpletQueueValidateAction();
 		}
 
 		private void HandlePageClearClicked(object sender, MessageEventArgs e)
 		{
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Container.Pages.Size.Clear);
+
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 
 			page.PageSize = new Size(0,0);
+
 			this.UpdatePanel();
 			this.UpdateTable();
+			this.document.Notifier.NotifyPagesChanged();
+			this.document.Modifier.OpletQueueValidateAction();
 		}
 
 		private void HandleRadioChanged(object sender)

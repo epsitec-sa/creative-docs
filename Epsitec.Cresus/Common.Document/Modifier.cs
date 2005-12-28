@@ -6013,7 +6013,8 @@ namespace Epsitec.Common.Document
 					 cmd == "ChangeLayerName"     ||
 					 cmd == "ChangeAggregateName" ||
 					 cmd == "ChangeGuide"         ||
-					 cmd == "ChangeDocSize"       )
+					 cmd == "ChangeDocSize"       ||
+					 cmd == "SpecialPageSize"     )
 				{
 					this.opletSkip = true;
 					return null;
