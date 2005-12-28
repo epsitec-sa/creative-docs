@@ -87,10 +87,81 @@ namespace Epsitec.Common.Document.Containers
 			this.panelMisc = new Widget(this);
 			this.panelMisc.Dock = DockStyle.Bottom;
 			this.panelMisc.DockMargins = new Margins(0, 0, 5, 0);
-			this.panelMisc.Height = 160;
+			this.panelMisc.Height = 186;
 			this.panelMisc.TabIndex = 99;
 			this.panelMisc.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
+
+			this.pageSizeGroup = new Widget(this.panelMisc);
+			this.pageSizeGroup.Dock = DockStyle.Bottom;
+			this.pageSizeGroup.DockMargins = new Margins(0, 0, 0, 4);
+			this.pageSizeGroup.Height = 22;
+			this.pageSizeGroup.TabIndex = 3;
+			this.pageSizeGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+			StaticText labelSize = new StaticText(this.pageSizeGroup);
+			labelSize.Text = Res.Strings.Container.Pages.Size.Label;
+			labelSize.Alignment = ContentAlignment.MiddleRight;
+			labelSize.Width = 94;
+			labelSize.Dock = DockStyle.Left;
+			labelSize.DockMargins = new Margins(0, 4, 0, 0);
+
+			this.pageSizeWidth = new TextFieldReal(this.pageSizeGroup);
+			this.pageSizeWidth.Width = 54;
+			this.pageSizeWidth.Dock = DockStyle.Left;
+			this.pageSizeWidth.DockMargins = new Margins(0, 0, 0, 0);
+			this.pageSizeWidth.FactorMinRange = 0.01M;
+			this.pageSizeWidth.FactorMaxRange = 1.0M;
+			this.pageSizeWidth.FactorStep     = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.pageSizeWidth);
+			this.pageSizeWidth.TabIndex = 1;
+			this.pageSizeWidth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.pageSizeWidth.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			this.pageSizeWidth.AutoSelectOnFocus = true;
+			this.pageSizeWidth.SwallowEscape = true;
+			this.pageSizeWidth.SwallowReturn = true;
+			this.pageSizeWidth.EditionAccepted += new EventHandler(this.HandlePageWidthEditionAccepted);
+			ToolTip.Default.SetToolTip(this.pageSizeWidth, Res.Strings.Container.Pages.Size.Width);
+
+			this.pageSizeSwap = new IconButton(this.pageSizeGroup);
+			this.pageSizeSwap.Width = 12;
+			this.pageSizeSwap.AutoFocus = false;
+			this.pageSizeSwap.IconName = Misc.Icon("SwapDataV");
+			this.pageSizeSwap.Dock = DockStyle.Left;
+			this.pageSizeSwap.DockMargins = new Margins(0, 0, 0, 0);
+			this.pageSizeSwap.TabIndex = 2;
+			this.pageSizeSwap.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.pageSizeSwap.Clicked += new MessageEventHandler(this.HandlePageSwapClicked);
+			ToolTip.Default.SetToolTip(this.pageSizeSwap, Res.Strings.Container.Pages.Size.Swap);
+
+			this.pageSizeHeight = new TextFieldReal(this.pageSizeGroup);
+			this.pageSizeHeight.Width = 54;
+			this.pageSizeHeight.Dock = DockStyle.Left;
+			this.pageSizeHeight.DockMargins = new Margins(0, 0, 0, 0);
+			this.pageSizeHeight.FactorMinRange = 0.01M;
+			this.pageSizeHeight.FactorMaxRange = 1.0M;
+			this.pageSizeHeight.FactorStep     = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.pageSizeHeight);
+			this.pageSizeHeight.TabIndex = 3;
+			this.pageSizeHeight.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.pageSizeHeight.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			this.pageSizeHeight.AutoSelectOnFocus = true;
+			this.pageSizeHeight.SwallowEscape = true;
+			this.pageSizeHeight.SwallowReturn = true;
+			this.pageSizeHeight.EditionAccepted += new EventHandler(this.HandlePageHeightEditionAccepted);
+			ToolTip.Default.SetToolTip(this.pageSizeHeight, Res.Strings.Container.Pages.Size.Height);
+
+			this.pageSizeClear = new IconButton(this.pageSizeGroup);
+			this.pageSizeClear.AutoFocus = false;
+			this.pageSizeClear.IconName = Misc.Icon("Nothing");
+			this.pageSizeClear.Dock = DockStyle.Left;
+			this.pageSizeClear.DockMargins = new Margins(0, 0, 0, 0);
+			this.pageSizeClear.TabIndex = 4;
+			this.pageSizeClear.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.pageSizeClear.Clicked += new MessageEventHandler(this.HandlePageClearClicked);
+			ToolTip.Default.SetToolTip(this.pageSizeClear, Res.Strings.Container.Pages.Size.Clear);
+
+			
 			this.radioMasterGroup = new GroupBox(this.panelMisc);
 			this.radioMasterGroup.Dock = DockStyle.Bottom;
 			this.radioMasterGroup.DockMargins = new Margins(0, 0, 0, 4);
@@ -380,18 +451,40 @@ namespace Epsitec.Common.Document.Containers
 			st.Text = page.ShortName;
 
 			st = this.table[1, row].Children[0] as StaticText;
-			st.Text = page.Name;
+			st.Text = page.LongName;
 
 			this.table.SelectRow(row, row==context.CurrentPage);
 		}
 
 		protected void UpdatePanel()
 		{
-			//	Met à jour le panneau pour éditer la propriété sélectionnée.
+			//	Met à jour le panneau pour éditer la page sélectionnée.
 			this.UpdatePageName();
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
+
+			Size size = page.PageSize;
+
+			bool widthDefined = true;
+			if ( size.Width == 0 )
+			{
+				size.Width = this.document.Size.Width;
+				widthDefined = false;
+			}
+
+			bool heightDefined = true;
+			if ( size.Height == 0 )
+			{
+				size.Height = this.document.Size.Height;
+				heightDefined = false;
+			}
+
+			this.pageSizeWidth.InternalValue = (decimal) size.Width;
+			this.pageSizeWidth.TextDisplayMode = widthDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+
+			this.pageSizeHeight.InternalValue = (decimal) size.Height;
+			this.pageSizeHeight.TextDisplayMode = heightDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
 
 			this.radioSlave.ActiveState  = (page.MasterType == Objects.MasterType.Slave) ? ActiveState.Yes : ActiveState.No;
 			this.radioMaster.ActiveState = (page.MasterType != Objects.MasterType.Slave) ? ActiveState.Yes : ActiveState.No;
@@ -491,6 +584,60 @@ namespace Epsitec.Common.Document.Containers
 
 			this.panelMisc.Visibility = (this.isExtended);
 			this.buttonPageStack.Visibility = (this.isExtended);
+		}
+
+		private void HandlePageWidthEditionAccepted(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			Objects.Page page = context.RootObject(1) as Objects.Page;
+
+			Size size = page.PageSize;
+			size.Width = (double) this.pageSizeWidth.InternalValue;
+			page.PageSize = size;
+
+			this.UpdateTable();
+		}
+
+		private void HandlePageHeightEditionAccepted(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			Objects.Page page = context.RootObject(1) as Objects.Page;
+
+			Size size = page.PageSize;
+			size.Height = (double) this.pageSizeHeight.InternalValue;
+			page.PageSize = size;
+
+			this.UpdateTable();
+		}
+
+		private void HandlePageSwapClicked(object sender, MessageEventArgs e)
+		{
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			Objects.Page page = context.RootObject(1) as Objects.Page;
+
+			Size size = new Size(page.PageSize.Height, page.PageSize.Width);
+			if ( size.Width == 0 && size.Height == 0 )
+			{
+				size.Width  = this.document.Size.Height;
+				size.Height = this.document.Size.Width;
+			}
+			page.PageSize = size;
+			this.UpdatePanel();
+			this.UpdateTable();
+		}
+
+		private void HandlePageClearClicked(object sender, MessageEventArgs e)
+		{
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			Objects.Page page = context.RootObject(1) as Objects.Page;
+
+			page.PageSize = new Size(0,0);
+			this.UpdatePanel();
+			this.UpdateTable();
 		}
 
 		private void HandleRadioChanged(object sender)
@@ -622,44 +769,50 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		protected HToolBar				toolBar;
-		protected IconButton			buttonNew;
-		protected IconButton			buttonDuplicate;
-		protected IconButton			buttonUp;
-		protected IconButton			buttonDown;
-		protected IconButton			buttonDelete;
-		protected CellTable				table;
-		protected HToolBar				toolBarName;
-		protected TextField				name;
-		protected GlyphButton			extendedButton;
-		protected Widget				panelMisc;
+		protected HToolBar					toolBar;
+		protected IconButton				buttonNew;
+		protected IconButton				buttonDuplicate;
+		protected IconButton				buttonUp;
+		protected IconButton				buttonDown;
+		protected IconButton				buttonDelete;
+		protected CellTable					table;
+		protected HToolBar					toolBarName;
+		protected TextField					name;
+		protected GlyphButton				extendedButton;
+		protected Widget					panelMisc;
 
-		protected Widget				radioGroup;
-		protected RadioButton			radioSlave;
-		protected RadioButton			radioMaster;
+		protected Widget					pageSizeGroup;
+		protected TextFieldReal				pageSizeWidth;
+		protected TextFieldReal				pageSizeHeight;
+		protected IconButton				pageSizeSwap;
+		protected IconButton				pageSizeClear;
 
-		protected GroupBox				radioMasterGroup;
-		protected RadioButton			radioAll;
-		protected RadioButton			radioEven;
-		protected RadioButton			radioOdd;
-		protected RadioButton			radioNone;
-		protected CheckButton			checkAutoStop;
-		protected Widget				specificGroup;
-		protected CheckButton			checkSpecific;
-		protected TextFieldCombo		specificMasterPage;
+		protected Widget					radioGroup;
+		protected RadioButton				radioSlave;
+		protected RadioButton				radioMaster;
 
-		protected GroupBox				radioSlaveGroup;
-		protected Widget				radioGroupLeft;
-		protected Widget				radioGroupRight;
-		protected RadioButton			radioNever;
-		protected RadioButton			radioDefault;
-		protected RadioButton			radioSpecific;
-		protected CheckButton			checkGuides;
-		protected TextFieldCombo		specificSlavePage;
+		protected GroupBox					radioMasterGroup;
+		protected RadioButton				radioAll;
+		protected RadioButton				radioEven;
+		protected RadioButton				radioOdd;
+		protected RadioButton				radioNone;
+		protected CheckButton				checkAutoStop;
+		protected Widget					specificGroup;
+		protected CheckButton				checkSpecific;
+		protected TextFieldCombo			specificMasterPage;
+	
+		protected GroupBox					radioSlaveGroup;
+		protected Widget					radioGroupLeft;
+		protected Widget					radioGroupRight;
+		protected RadioButton				radioNever;
+		protected RadioButton				radioDefault;
+		protected RadioButton				radioSpecific;
+		protected CheckButton				checkGuides;
+		protected TextFieldCombo			specificSlavePage;
 
-		protected Button				buttonPageStack;
+		protected Button					buttonPageStack;
 
-		protected bool					isExtended = false;
-		protected bool					ignoreChanged = false;
+		protected bool						isExtended = false;
+		protected bool						ignoreChanged = false;
 	}
 }

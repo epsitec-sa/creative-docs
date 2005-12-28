@@ -213,6 +213,11 @@
 	<data name="Container.Pages.Button.MasterSpecific">Include this template</data>
 	<data name="Container.Pages.Header.Number">#</data>
 	<data name="Container.Pages.Header.Name">Name</data>
+	<data name="Container.Pages.Size.Label">@@Dimensions page</data>
+	<data name="Container.Pages.Size.Width">@@Largeur de cette page</data>
+	<data name="Container.Pages.Size.Height">@@Hauteur de cette page</data>
+	<data name="Container.Pages.Size.Swap">@@Portrait - paysage</data>
+	<data name="Container.Pages.Size.Clear">@@Dimensions standards</data>
 
 	<data name="Container.Principal.Button.Detail">Details</data>
 	<data name="Container.Principal.Button.Auto">Automatic selection</data>

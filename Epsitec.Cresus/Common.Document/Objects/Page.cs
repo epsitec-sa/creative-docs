@@ -45,10 +45,10 @@ namespace Epsitec.Common.Document.Objects
 			this.masterAutoStop = false;
 			this.masterSpecific = false;
 			this.masterGuides = true;
-			this.pageSize = Size.Empty;
+			this.pageSize = new Size(0,0);
 			this.hotSpot = Point.Empty;
 			this.glyphOrigin = Point.Empty;
-			this.glyphSize = Size.Empty;
+			this.glyphSize = new Size(0,0);
 		}
 
 		protected override bool ExistingProperty(Properties.Type type)
@@ -101,6 +101,28 @@ namespace Epsitec.Common.Document.Objects
 			set
 			{
 				this.shortName = value;
+			}
+		}
+
+		public string LongName
+		{
+			//	Nom de la page suivi éventuellement du format.
+			get
+			{
+				string text = this.Name;
+				if ( this.PageSize.Width != 0 && this.PageSize.Height == 0 )
+				{
+					text = string.Format("{0} ({1}x...)", text, this.document.Modifier.RealToString(this.PageSize.Width));
+				}
+				if ( this.PageSize.Width == 0 && this.PageSize.Height != 0 )
+				{
+					text = string.Format("{0} (...x{1})", text, this.document.Modifier.RealToString(this.PageSize.Height));
+				}
+				if ( this.PageSize.Width != 0 && this.PageSize.Height != 0 )
+				{
+					text = string.Format("{0} ({1}x{2})", text, this.document.Modifier.RealToString(this.PageSize.Width), this.document.Modifier.RealToString(this.PageSize.Height));
+				}
+				return text;
 			}
 		}
 
@@ -278,7 +300,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Point HotSpot
 		{
-			//	Position du point chaud, uniquement pour Pictogram.
+			//	Position du point chaud de l'icône, uniquement pour Pictogram.
 			get
 			{
 				return this.hotSpot;
@@ -358,7 +380,7 @@ namespace Epsitec.Common.Document.Objects
 					menu.Items.Add(new MenuSeparator());
 				}
 
-				string name = string.Format("{0}: {1}", page.ShortName, page.Name);
+				string name = string.Format("{0}: {1}", page.ShortName, page.LongName);
 
 				string icon = Misc.Icon("RadioNo");
 				if ( i == currentPage )

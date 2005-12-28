@@ -373,7 +373,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void UpdatePanel()
 		{
-			//	Met à jour le panneau pour éditer la propriété sélectionnée.
+			//	Met à jour le panneau pour éditer le calque sélectionné.
 			this.UpdateLayerName();
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
