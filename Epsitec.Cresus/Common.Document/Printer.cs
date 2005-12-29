@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document
 			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = true;
 
-			return this.ExportGeometry(drawingContext, filename);
+			return this.ExportGeometry(drawingContext, filename, this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage);
 		}
 
 
@@ -260,7 +260,9 @@ namespace Epsitec.Common.Document
 
 				if ( this.printer.PrintInfo.AutoLandscape )
 				{
-					settings.Landscape = (this.document.DocumentSize.Width > this.document.DocumentSize.Height);
+					int page = (int) this.pageList[this.pageCounter];
+					Size pageSize = this.document.GetPageSize(page);
+					settings.Landscape = (pageSize.Width > pageSize.Height);
 				}
 			}
 			
@@ -313,6 +315,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(pageNumber < this.document.GetObjects.Count);
 
 			printEngine.Landscape = port.PageSettings.Landscape;
+			Size pageSize = this.document.GetPageSize(pageNumber);
 
 			Point offset = new Point(0, 0);
 			if ( !this.PrintInfo.AutoZoom )
@@ -335,14 +338,14 @@ namespace Epsitec.Common.Document
 					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleCenter ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.TopCenter    )
 				{
-					offset.X = (pw-this.document.DocumentSize.Width)/2.0;
+					offset.X = (pw-pageSize.Width)/2.0;
 				}
 
 				if ( this.PrintInfo.Centring == Settings.PrintCentring.BottomRight ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleRight ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.TopRight    )
 				{
-					offset.X = pw-this.document.DocumentSize.Width-this.PrintInfo.Margins;
+					offset.X = pw-pageSize.Width-this.PrintInfo.Margins;
 				}
 
 				if ( this.PrintInfo.Centring == Settings.PrintCentring.BottomLeft   ||
@@ -356,14 +359,14 @@ namespace Epsitec.Common.Document
 					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleCenter ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleRight  )
 				{
-					offset.Y = (ph-this.document.DocumentSize.Height)/2.0;
+					offset.Y = (ph-pageSize.Height)/2.0;
 				}
 
 				if ( this.PrintInfo.Centring == Settings.PrintCentring.TopLeft   ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.TopCenter ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.TopRight  )
 				{
-					offset.Y = ph-this.document.DocumentSize.Height-this.PrintInfo.Margins;
+					offset.Y = ph-pageSize.Height-this.PrintInfo.Margins;
 				}
 			}
 
@@ -373,7 +376,7 @@ namespace Epsitec.Common.Document
 			}
 			else if ( this.PrintInfo.ForceComplex )
 			{
-				Rectangle clipRect = new Rectangle(0, 0, this.document.DocumentSize.Width, this.document.DocumentSize.Height);
+				Rectangle clipRect = new Rectangle(0, 0, pageSize.Width, pageSize.Height);
 				this.PrintBitmapGeometry(port, printEngine, drawingContext, pageNumber, offset, clipRect, null);
 			}
 			else
@@ -383,22 +386,22 @@ namespace Epsitec.Common.Document
 
 				if ( this.PrintInfo.DebugArea )
 				{
-					this.PrintAreas(port, printEngine, drawingContext, areas, offset);
+					this.PrintAreas(port, printEngine, drawingContext, areas, offset, pageNumber);
 				}
 			}
 
 			if ( this.PrintInfo.Target )
 			{
-				this.PrintTarget(port, printEngine, drawingContext, offset);
+				this.PrintTarget(port, printEngine, drawingContext, offset, pageNumber);
 			}
 
 			if ( this.document.InstallType == InstallType.Demo )
 			{
-				this.PrintDemo(port, printEngine, offset);
+				this.PrintDemo(port, printEngine, offset, pageNumber);
 			}
 			if ( this.document.InstallType == InstallType.Expired )
 			{
-				this.PrintExpired(port, printEngine, offset);
+				this.PrintExpired(port, printEngine, offset, pageNumber);
 			}
 		}
 
@@ -620,7 +623,7 @@ namespace Epsitec.Common.Document
 			//	Imprime la géométrie simple de tous les objets, possible lorsque les
 			//	objets n'utilisent ni les dégradés ni la transparence.
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, printEngine, offset);
+			this.InitSimplyPort(port, printEngine, offset, pageNumber);
 
 			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
 			foreach ( Objects.Layer layer in layers )
@@ -652,7 +655,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Imprime la géométrie composée d'objets simples et de zones complexes.
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, printEngine, offset);
+			this.InitSimplyPort(port, printEngine, offset, pageNumber);
 
 			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
 			foreach ( Objects.Layer layer in layers )
@@ -734,8 +737,8 @@ namespace Epsitec.Common.Document
 				{
 					Misc.Swap(ref pw, ref ph);
 				}
-				double zoomH = pw / this.document.DocumentSize.Width;
-				double zoomV = ph / this.document.DocumentSize.Height;
+				double zoomH = pw / this.document.GetPageSize(pageNumber).Width;
+				double zoomV = ph / this.document.GetPageSize(pageNumber).Height;
 				autoZoom = System.Math.Min(zoomH, zoomV);
 			}
 
@@ -787,11 +790,12 @@ namespace Epsitec.Common.Document
 								  PrintEngine printEngine,
 								  DrawingContext drawingContext,
 								  System.Collections.ArrayList areas,
-								  Point offset)
+								  Point offset,
+								  int pageNumber)
 		{
 			//	Imprime les zones rectangulaires (pour le debug).
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, printEngine, offset);
+			this.InitSimplyPort(port, printEngine, offset, pageNumber);
 
 			port.LineWidth = 0.1;
 			port.Color = Color.FromRGB(1,0,0);  // rouge
@@ -809,16 +813,17 @@ namespace Epsitec.Common.Document
 		protected void PrintTarget(Printing.PrintPort port,
 								   PrintEngine printEngine,
 								   DrawingContext drawingContext,
-								   Point offset)
+								   Point offset,
+								   int pageNumber)
 		{
 			//	Imprime les traits de coupe.
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, printEngine, offset);
-			this.PaintTarget(port, drawingContext);
+			this.InitSimplyPort(port, printEngine, offset, pageNumber);
+			this.PaintTarget(port, drawingContext, pageNumber);
 			port.Transform = initialTransform;
 		}
 
-		public void PaintTarget(Drawing.IPaintPort port, DrawingContext drawingContext)
+		public void PaintTarget(Drawing.IPaintPort port, DrawingContext drawingContext, int pageNumber)
 		{
 			//	Dessine les traits de coupe.
 			if ( port is Printing.PrintPort )
@@ -832,7 +837,7 @@ namespace Epsitec.Common.Document
 
 			port.Color = Color.FromBrightness(0);  // noir
 
-			Size ds = this.document.DocumentSize;
+			Size ds = this.document.GetPageSize(pageNumber);
 			double db = this.PrintInfo.Debord;
 			double len = 50.0;  // longueur des traits de coupe = 5mm
 
@@ -903,19 +908,19 @@ namespace Epsitec.Common.Document
 			port.PaintOutline(path);
 		}
 
-		protected void PrintDemo(Printing.PrintPort port, PrintEngine printEngine, Point offset)
+		protected void PrintDemo(Printing.PrintPort port, PrintEngine printEngine, Point offset, int pageNumber)
 		{
 			//	Imprime le warning d'installation.
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, printEngine, offset);
-			this.PaintDemo(port);
+			this.InitSimplyPort(port, printEngine, offset, pageNumber);
+			this.PaintDemo(port, pageNumber);
 			port.Transform = initialTransform;
 		}
 
-		protected void PaintDemo(Drawing.IPaintPort port)
+		protected void PaintDemo(Drawing.IPaintPort port, int pageNumber)
 		{
 			//	Desine le warning d'installation.
-			Size ds = this.document.DocumentSize;
+			Size ds = this.document.GetPageSize(pageNumber);
 			Path path = new Path();
 
 			path.MoveTo(Printer.Conv(ds,  2,4));
@@ -953,19 +958,19 @@ namespace Epsitec.Common.Document
 			port.PaintOutline(path);
 		}
 
-		protected void PrintExpired(Printing.PrintPort port, PrintEngine printEngine, Point offset)
+		protected void PrintExpired(Printing.PrintPort port, PrintEngine printEngine, Point offset, int pageNumber)
 		{
 			//	Imprime le warning d'installation.
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, printEngine, offset);
-			this.PaintExpired(port);
+			this.InitSimplyPort(port, printEngine, offset, pageNumber);
+			this.PaintExpired(port, pageNumber);
 			port.Transform = initialTransform;
 		}
 
-		protected void PaintExpired(Drawing.IPaintPort port)
+		protected void PaintExpired(Drawing.IPaintPort port, int pageNumber)
 		{
 			//	Dessine le warning d'installation.
-			Size ds = this.document.DocumentSize;
+			Size ds = this.document.GetPageSize(pageNumber);
 			Path path = new Path();
 
 			path.MoveTo(Printer.Conv(ds,  2,2));
@@ -1018,7 +1023,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void InitSimplyPort(Printing.PrintPort port, PrintEngine printEngine, Point offset)
+		protected void InitSimplyPort(Printing.PrintPort port, PrintEngine printEngine, Point offset, int pageNumber)
 		{
 			//	Initialise le port pour une impression simplifiée.
 			double zoom = 1.0;
@@ -1030,8 +1035,8 @@ namespace Epsitec.Common.Document
 				{
 					Misc.Swap(ref pw, ref ph);
 				}
-				double zoomH = pw / this.document.DocumentSize.Width;
-				double zoomV = ph / this.document.DocumentSize.Height;
+				double zoomH = pw / this.document.GetPageSize(pageNumber).Width;
+				double zoomV = ph / this.document.GetPageSize(pageNumber).Height;
 				zoom = System.Math.Min(zoomH, zoomV);
 			}
 			else
@@ -1043,7 +1048,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected string ExportGeometry(DrawingContext drawingContext, string filename)
+		protected string ExportGeometry(DrawingContext drawingContext, string filename, int pageNumber)
 		{
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire.
@@ -1058,15 +1063,17 @@ namespace Epsitec.Common.Document
 				return Res.Strings.Error.BadImage;
 			}
 
+			Size pageSize = this.document.GetPageSize(pageNumber);
+
 			Graphics gfx = new Graphics();
-			int dx = (int) ((this.document.DocumentSize.Width/10.0)*(dpi/25.4));
-			int dy = (int) ((this.document.DocumentSize.Height/10.0)*(dpi/25.4));
+			int dx = (int) ((pageSize.Width/10.0)*(dpi/25.4));
+			int dy = (int) ((pageSize.Height/10.0)*(dpi/25.4));
 			gfx.SetPixmapSize(dx, dy);
 			gfx.SolidRenderer.ClearARGB((depth==32)?0:1, 1,1,1);
 			gfx.Rasterizer.Gamma = this.imageAA;
 
-			double zoomH = dx / this.document.DocumentSize.Width;
-			double zoomV = dy / this.document.DocumentSize.Height;
+			double zoomH = dx / pageSize.Width;
+			double zoomV = dy / pageSize.Height;
 			double zoom = System.Math.Min(zoomH, zoomV);
 			gfx.TranslateTransform(0, dy);
 			gfx.ScaleTransform(zoom, -zoom, 0, 0);
@@ -1092,11 +1099,11 @@ namespace Epsitec.Common.Document
 
 			if ( this.document.InstallType == InstallType.Demo )
 			{
-				this.PaintDemo(gfx);
+				this.PaintDemo(gfx, pageNumber);
 			}
 			if ( this.document.InstallType == InstallType.Expired )
 			{
-				this.PaintExpired(gfx);
+				this.PaintExpired(gfx, pageNumber);
 			}
 
 			Bitmap bitmap = Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;

@@ -3774,7 +3774,7 @@ namespace Epsitec.Common.Document
 					if ( this.document.Settings.PrintInfo.Target   &&
 						!this.document.Settings.PrintInfo.AutoZoom )
 					{
-						this.document.Printer.PaintTarget(graphics, this.drawingContext);
+						this.document.Printer.PaintTarget(graphics, this.drawingContext, this.drawingContext.CurrentPage);
 					}
 				}
 			}
