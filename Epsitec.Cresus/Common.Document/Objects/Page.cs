@@ -529,6 +529,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
+				info.AddValue("PageSize", this.pageSize);
 				info.AddValue("HotSpot", this.hotSpot);
 				info.AddValue("GlyphOrigin", this.glyphOrigin);
 				info.AddValue("GlyphSize", this.glyphSize);
@@ -558,6 +559,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( this.document.IsRevisionGreaterOrEqual(1,5,1) )
 				{
+					this.pageSize = (Size) info.GetValue("PageSize", typeof(Size));
 					this.hotSpot = (Point) info.GetValue("HotSpot", typeof(Point));
 					this.glyphOrigin = (Point) info.GetValue("GlyphOrigin", typeof(Point));
 					this.glyphSize = (Size) info.GetValue("GlyphSize", typeof(Size));
