@@ -153,32 +153,19 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine("<< /Type /Outlines /Count 0 >> endobj");
 
 			//	Objet décrivant le format de la page.
-			double pageWidth  = this.document.DocumentSize.Width;
-			double pageHeight = this.document.DocumentSize.Height;
 			Point pageOffset = new Point(0.0, 0.0);
 
 			if ( info.Debord > 0.0 )
 			{
-				pageWidth  += info.Debord*2.0;
-				pageHeight += info.Debord*2.0;
 				pageOffset.X += info.Debord;
 				pageOffset.Y += info.Debord;
 			}
 
 			if ( info.Target )  // traits de coupe ?
 			{
-				pageWidth  += info.TargetLength*2.0;
-				pageHeight += info.TargetLength*2.0;
 				pageOffset.X += info.TargetLength;
 				pageOffset.Y += info.TargetLength;
 			}
-
-			writer.WriteObjectDef("HeaderFormat");
-			writer.WriteString("[0 0 ");
-			writer.WriteString(Port.StringValue(pageWidth*Export.mm2in));
-			writer.WriteString(" ");
-			writer.WriteString(Port.StringValue(pageHeight*Export.mm2in));
-			writer.WriteLine("] endobj");
 
 			//	Objet donnant la liste des pages.
 			writer.WriteObjectDef("HeaderPages");
@@ -192,12 +179,34 @@ namespace Epsitec.Common.Document.PDF
 			//	Un objet pour chaque page.
 			for ( int page=from ; page<=to ; page++ )
 			{
+				Objects.Page objPage = this.document.GetObjects[page-1] as Objects.Page;
+
+				double pageWidth  = this.document.DocumentSize.Width;
+				double pageHeight = this.document.DocumentSize.Height;
+
+				if ( objPage.PageSize.Width  != 0 )  pageWidth  = objPage.PageSize.Width;
+				if ( objPage.PageSize.Height != 0 )  pageHeight = objPage.PageSize.Height;
+
+				if ( info.Debord > 0.0 )
+				{
+					pageWidth  += info.Debord*2.0;
+					pageHeight += info.Debord*2.0;
+				}
+
+				if ( info.Target )  // traits de coupe ?
+				{
+					pageWidth  += info.TargetLength*2.0;
+					pageHeight += info.TargetLength*2.0;
+				}
+
 				writer.WriteObjectDef(Export.NamePage(page));
 				writer.WriteString("<< /Type /Page /Parent ");
 				writer.WriteObjectRef("HeaderPages");
-				writer.WriteString("/MediaBox ");
-				writer.WriteObjectRef("HeaderFormat");
-				writer.WriteString("/Resources ");
+				writer.WriteString("/MediaBox [0 0 ");
+				writer.WriteString(Port.StringValue(pageWidth*Export.mm2in));
+				writer.WriteString(" ");
+				writer.WriteString(Port.StringValue(pageHeight*Export.mm2in));
+				writer.WriteString("] /Resources ");
 				writer.WriteObjectRef(Export.NameResources(page));
 				writer.WriteString("/Contents ");
 				writer.WriteObjectRef(Export.NameContent(page));
@@ -332,7 +341,7 @@ namespace Epsitec.Common.Document.PDF
 					port.PopColorModifier();
 				}
 
-				this.DrawTarget(port, info);  // traits de coupe
+				this.DrawTarget(port, info, page);  // traits de coupe
 
 				string pdf = port.GetPDF();
 				writer.WriteObjectDef(Export.NameContent(page));
@@ -419,13 +428,19 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		protected void DrawTarget(Port port, Settings.ExportPDFInfo info)
+		protected void DrawTarget(Port port, Settings.ExportPDFInfo info, int page)
 		{
 			//	Dessine les traits de coupe.
 			if ( !info.Target )  return;
 
+			Objects.Page objPage = this.document.GetObjects[page-1] as Objects.Page;
+
 			double width  = this.document.DocumentSize.Width;
 			double height = this.document.DocumentSize.Height;
+
+			if ( objPage.PageSize.Width  != 0 )  width  = objPage.PageSize.Width;
+			if ( objPage.PageSize.Height != 0 )  height = objPage.PageSize.Height;
+
 			double debord = info.Debord;
 			double length = info.TargetLength;
 
