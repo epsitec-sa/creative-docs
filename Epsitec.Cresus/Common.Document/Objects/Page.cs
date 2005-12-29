@@ -144,24 +144,24 @@ namespace Epsitec.Common.Document.Objects
 				string width;
 				if ( this.PageSize.Width == 0 )
 				{
-					width = Misc.Italic(this.document.Modifier.RealToString(this.document.DocumentSize.Width));
+					width = this.document.Modifier.RealToString(this.document.DocumentSize.Width);
 				}
 				else
 				{
-					width = this.document.Modifier.RealToString(this.PageSize.Width);
+					width = Misc.Bold(this.document.Modifier.RealToString(this.PageSize.Width));
 				}
 
 				string height;
 				if ( this.PageSize.Height == 0 )
 				{
-					height = Misc.Italic(this.document.Modifier.RealToString(this.document.DocumentSize.Height));
+					height = this.document.Modifier.RealToString(this.document.DocumentSize.Height);
 				}
 				else
 				{
-					height = this.document.Modifier.RealToString(this.PageSize.Height);
+					height = Misc.Bold(this.document.Modifier.RealToString(this.PageSize.Height));
 				}
 				
-				return string.Format("{0}  ( {1} x {2} )", text, width, height);
+				return string.Format("{0} ({1}x{2})", text, width, height);
 			}
 		}
 
