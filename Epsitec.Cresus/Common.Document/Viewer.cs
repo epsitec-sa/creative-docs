@@ -3611,7 +3611,7 @@ namespace Epsitec.Common.Document
 			//	Termine le déplacement d'un guide interactif.
 			if ( this.guideInteractive == -1 )  return;
 
-			Size size = this.document.Size;
+			Size size = this.document.PageSize;
 			Settings.Guide guide = this.document.Settings.GuidesGet(this.guideInteractive);
 
 			//	Supprime le repère s'il est tiré hors de la vue.
@@ -3904,7 +3904,7 @@ namespace Epsitec.Common.Document
 				{
 					if ( this.document.Type == DocumentType.Pictogram )
 					{
-						Rectangle rect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
+						Rectangle rect = new Rectangle(0, 0, this.document.PageSize.Width, this.document.PageSize.Height);
 						graphics.Align(ref rect);
 						rect.Offset(ix, iy);
 						graphics.AddRectangle(rect);
@@ -3915,13 +3915,13 @@ namespace Epsitec.Common.Document
 						rect.Offset(ix, iy);
 						graphics.AddRectangle(rect);
 
-						double cx = this.document.Size.Width/2;
-						double cy = this.document.Size.Height/2;
+						double cx = this.document.PageSize.Width/2;
+						double cy = this.document.PageSize.Height/2;
 						graphics.Align(ref cx, ref cy);
 						cx += ix;
 						cy += iy;
-						graphics.AddLine(cx, 0, cx, this.document.Size.Height);
-						graphics.AddLine(0, cy, this.document.Size.Width, cy);
+						graphics.AddLine(cx, 0, cx, this.document.PageSize.Height);
+						graphics.AddLine(0, cy, this.document.PageSize.Width, cy);
 						graphics.RenderSolid(Color.FromARGB(0.4, 0.5,0.5,0.5));
 					}
 				}

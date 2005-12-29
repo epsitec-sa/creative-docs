@@ -469,14 +469,14 @@ namespace Epsitec.Common.Document.Containers
 			bool widthDefined = true;
 			if ( size.Width == 0 )
 			{
-				size.Width = this.document.Size.Width;
+				size.Width = this.document.DocumentSize.Width;
 				widthDefined = false;
 			}
 
 			bool heightDefined = true;
 			if ( size.Height == 0 )
 			{
-				size.Height = this.document.Size.Height;
+				size.Height = this.document.DocumentSize.Height;
 				heightDefined = false;
 			}
 
@@ -599,7 +599,7 @@ namespace Epsitec.Common.Document.Containers
 			size.Width = (double) this.pageSizeWidth.InternalValue;
 			page.PageSize = size;
 
-			this.UpdateTable();
+			this.document.Modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
 			this.document.Notifier.NotifyPagesChanged();
 			this.document.Modifier.OpletQueueValidateAction();
 		}
@@ -617,7 +617,7 @@ namespace Epsitec.Common.Document.Containers
 			size.Height = (double) this.pageSizeHeight.InternalValue;
 			page.PageSize = size;
 
-			this.UpdateTable();
+			this.document.Modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
 			this.document.Notifier.NotifyPagesChanged();
 			this.document.Modifier.OpletQueueValidateAction();
 		}
@@ -632,13 +632,12 @@ namespace Epsitec.Common.Document.Containers
 			Size size = new Size(page.PageSize.Height, page.PageSize.Width);
 			if ( size.Width == 0 && size.Height == 0 )
 			{
-				size.Width  = this.document.Size.Height;
-				size.Height = this.document.Size.Width;
+				size.Width  = this.document.DocumentSize.Height;
+				size.Height = this.document.DocumentSize.Width;
 			}
 			page.PageSize = size;
 
-			this.UpdatePanel();
-			this.UpdateTable();
+			this.document.Modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
 			this.document.Notifier.NotifyPagesChanged();
 			this.document.Modifier.OpletQueueValidateAction();
 		}
@@ -652,8 +651,7 @@ namespace Epsitec.Common.Document.Containers
 
 			page.PageSize = new Size(0,0);
 
-			this.UpdatePanel();
-			this.UpdateTable();
+			this.document.Modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
 			this.document.Notifier.NotifyPagesChanged();
 			this.document.Modifier.OpletQueueValidateAction();
 		}

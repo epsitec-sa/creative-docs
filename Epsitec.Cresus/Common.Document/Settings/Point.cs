@@ -100,7 +100,7 @@ namespace Epsitec.Common.Document.Settings
 				switch ( this.name )
 				{
 					case "PageSize":
-						return new Drawing.Point(this.document.Size.Width, this.document.Size.Height);
+						return new Drawing.Point(this.document.DocumentSize.Width, this.document.DocumentSize.Height);
 
 					case "GridStep":
 						return this.document.Modifier.ActiveViewer.DrawingContext.GridStep;
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Document.Settings
 				switch ( this.name )
 				{
 					case "PageSize":
-						this.document.Size = new Size(value.X, value.Y);
+						this.document.DocumentSize = new Size(value.X, value.Y);
 						break;
 
 					case "GridStep":

@@ -4972,7 +4972,7 @@ namespace Epsitec.App.DocumentEditor
 				}
 				else
 				{
-					Size size = doc.Size;
+					Size size = doc.DocumentSize;
 					return string.Format(Res.Strings.Status.Document.Format, doc.Modifier.RealToString(size.Width), doc.Modifier.RealToString(size.Height));
 				}
 			}

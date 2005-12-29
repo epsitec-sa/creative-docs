@@ -50,7 +50,7 @@ namespace Epsitec.Common.Document
 				
 				if ( doc.Read(stream, "") == "" )
 				{
-					size   = doc.Size;
+					size   = doc.DocumentSize;
 					origin = doc.HotSpot;
 				}
 			}

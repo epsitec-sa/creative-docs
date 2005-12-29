@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document
 			//	Crée le DrawingContext utilisé pour l'exportation.
 			DrawingContext drawingContext;
 			drawingContext = new DrawingContext(this.document, null);
-			drawingContext.ContainerSize = this.document.Size;
+			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = true;
 
 			return this.ExportGeometry(drawingContext, filename);
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Document
 
 				//	Crée le DrawingContext utilisé pour l'impression.
 				this.drawingContext = new DrawingContext(this.document, null);
-				this.drawingContext.ContainerSize = this.document.Size;
+				this.drawingContext.ContainerSize = this.document.DocumentSize;
 				this.drawingContext.PreviewActive = true;
 
 				Settings.PrintInfo pi = this.document.Settings.PrintInfo;
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Document
 
 				if ( this.printer.PrintInfo.AutoLandscape )
 				{
-					settings.Landscape = (this.document.Size.Width > this.document.Size.Height);
+					settings.Landscape = (this.document.DocumentSize.Width > this.document.DocumentSize.Height);
 				}
 			}
 			
@@ -335,14 +335,14 @@ namespace Epsitec.Common.Document
 					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleCenter ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.TopCenter    )
 				{
-					offset.X = (pw-this.document.Size.Width)/2.0;
+					offset.X = (pw-this.document.DocumentSize.Width)/2.0;
 				}
 
 				if ( this.PrintInfo.Centring == Settings.PrintCentring.BottomRight ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleRight ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.TopRight    )
 				{
-					offset.X = pw-this.document.Size.Width-this.PrintInfo.Margins;
+					offset.X = pw-this.document.DocumentSize.Width-this.PrintInfo.Margins;
 				}
 
 				if ( this.PrintInfo.Centring == Settings.PrintCentring.BottomLeft   ||
@@ -356,14 +356,14 @@ namespace Epsitec.Common.Document
 					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleCenter ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleRight  )
 				{
-					offset.Y = (ph-this.document.Size.Height)/2.0;
+					offset.Y = (ph-this.document.DocumentSize.Height)/2.0;
 				}
 
 				if ( this.PrintInfo.Centring == Settings.PrintCentring.TopLeft   ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.TopCenter ||
 					 this.PrintInfo.Centring == Settings.PrintCentring.TopRight  )
 				{
-					offset.Y = ph-this.document.Size.Height-this.PrintInfo.Margins;
+					offset.Y = ph-this.document.DocumentSize.Height-this.PrintInfo.Margins;
 				}
 			}
 
@@ -373,7 +373,7 @@ namespace Epsitec.Common.Document
 			}
 			else if ( this.PrintInfo.ForceComplex )
 			{
-				Rectangle clipRect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
+				Rectangle clipRect = new Rectangle(0, 0, this.document.DocumentSize.Width, this.document.DocumentSize.Height);
 				this.PrintBitmapGeometry(port, printEngine, drawingContext, pageNumber, offset, clipRect, null);
 			}
 			else
@@ -734,8 +734,8 @@ namespace Epsitec.Common.Document
 				{
 					Misc.Swap(ref pw, ref ph);
 				}
-				double zoomH = pw / this.document.Size.Width;
-				double zoomV = ph / this.document.Size.Height;
+				double zoomH = pw / this.document.DocumentSize.Width;
+				double zoomV = ph / this.document.DocumentSize.Height;
 				autoZoom = System.Math.Min(zoomH, zoomV);
 			}
 
@@ -832,7 +832,7 @@ namespace Epsitec.Common.Document
 
 			port.Color = Color.FromBrightness(0);  // noir
 
-			Size ds = this.document.Size;
+			Size ds = this.document.DocumentSize;
 			double db = this.PrintInfo.Debord;
 			double len = 50.0;  // longueur des traits de coupe = 5mm
 
@@ -915,7 +915,7 @@ namespace Epsitec.Common.Document
 		protected void PaintDemo(Drawing.IPaintPort port)
 		{
 			//	Desine le warning d'installation.
-			Size ds = this.document.Size;
+			Size ds = this.document.DocumentSize;
 			Path path = new Path();
 
 			path.MoveTo(Printer.Conv(ds,  2,4));
@@ -965,7 +965,7 @@ namespace Epsitec.Common.Document
 		protected void PaintExpired(Drawing.IPaintPort port)
 		{
 			//	Dessine le warning d'installation.
-			Size ds = this.document.Size;
+			Size ds = this.document.DocumentSize;
 			Path path = new Path();
 
 			path.MoveTo(Printer.Conv(ds,  2,2));
@@ -1030,8 +1030,8 @@ namespace Epsitec.Common.Document
 				{
 					Misc.Swap(ref pw, ref ph);
 				}
-				double zoomH = pw / this.document.Size.Width;
-				double zoomV = ph / this.document.Size.Height;
+				double zoomH = pw / this.document.DocumentSize.Width;
+				double zoomV = ph / this.document.DocumentSize.Height;
 				zoom = System.Math.Min(zoomH, zoomV);
 			}
 			else
@@ -1059,14 +1059,14 @@ namespace Epsitec.Common.Document
 			}
 
 			Graphics gfx = new Graphics();
-			int dx = (int) ((this.document.Size.Width/10.0)*(dpi/25.4));
-			int dy = (int) ((this.document.Size.Height/10.0)*(dpi/25.4));
+			int dx = (int) ((this.document.DocumentSize.Width/10.0)*(dpi/25.4));
+			int dy = (int) ((this.document.DocumentSize.Height/10.0)*(dpi/25.4));
 			gfx.SetPixmapSize(dx, dy);
 			gfx.SolidRenderer.ClearARGB((depth==32)?0:1, 1,1,1);
 			gfx.Rasterizer.Gamma = this.imageAA;
 
-			double zoomH = dx / this.document.Size.Width;
-			double zoomV = dy / this.document.Size.Height;
+			double zoomH = dx / this.document.DocumentSize.Width;
+			double zoomV = dy / this.document.DocumentSize.Height;
 			double zoom = System.Math.Min(zoomH, zoomV);
 			gfx.TranslateTransform(0, dy);
 			gfx.ScaleTransform(zoom, -zoom, 0, 0);

@@ -322,9 +322,9 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public Size Size
+		public Size DocumentSize
 		{
-			//	Taille du document.
+			//	Taille globale de toutes les pages du document.
 			get
 			{
 				return this.size;
@@ -350,6 +350,26 @@ namespace Epsitec.Common.Document
 						this.IsDirtySerialize = true;
 					}
 				}
+			}
+		}
+
+		public Size PageSize
+		{
+			//	Taille de la page courante du document.
+			get
+			{
+				Size size = this.size;
+
+				if ( this.modifier != null && this.modifier.ActiveViewer != null )
+				{
+					int rank = this.modifier.ActiveViewer.DrawingContext.CurrentPage;
+					Objects.Page page = this.GetObjects[rank] as Objects.Page;
+
+					if ( page.PageSize.Width  != 0 )  size.Width  = page.PageSize.Width;
+					if ( page.PageSize.Height != 0 )  size.Height = page.PageSize.Height;
+				}
+
+				return size;
 			}
 		}
 

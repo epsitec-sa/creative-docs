@@ -84,7 +84,7 @@ namespace Epsitec.Common.Document.PDF
 			//	Crée le DrawingContext utilisé pour l'exportation.
 			DrawingContext drawingContext;
 			drawingContext = new DrawingContext(this.document, null);
-			drawingContext.ContainerSize = this.document.Size;
+			drawingContext.ContainerSize = this.document.DocumentSize;
 			drawingContext.PreviewActive = true;
 
 			int max = this.document.Modifier.PrintableTotalPages();
@@ -153,8 +153,8 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine("<< /Type /Outlines /Count 0 >> endobj");
 
 			//	Objet décrivant le format de la page.
-			double pageWidth  = this.document.Size.Width;
-			double pageHeight = this.document.Size.Height;
+			double pageWidth  = this.document.DocumentSize.Width;
+			double pageHeight = this.document.DocumentSize.Height;
 			Point pageOffset = new Point(0.0, 0.0);
 
 			if ( info.Debord > 0.0 )
@@ -424,8 +424,8 @@ namespace Epsitec.Common.Document.PDF
 			//	Dessine les traits de coupe.
 			if ( !info.Target )  return;
 
-			double width  = this.document.Size.Width;
-			double height = this.document.Size.Height;
+			double width  = this.document.DocumentSize.Width;
+			double height = this.document.DocumentSize.Height;
 			double debord = info.Debord;
 			double length = info.TargetLength;
 

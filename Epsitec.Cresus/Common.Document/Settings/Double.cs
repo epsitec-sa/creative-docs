@@ -456,8 +456,8 @@ namespace Epsitec.Common.Document.Settings
 			if ( this.name == "ImageDpi" )
 			{
 				double dpi = this.document.Printer.ImageDpi;
-				int dx = (int) ((this.document.Size.Width/10.0)*(dpi/25.4));
-				int dy = (int) ((this.document.Size.Height/10.0)*(dpi/25.4));
+				int dx = (int) ((this.document.PageSize.Width/10.0)*(dpi/25.4));
+				int dy = (int) ((this.document.PageSize.Height/10.0)*(dpi/25.4));
 				text = string.Format("{0} x {1} pixels", dx, dy);
 			}
 

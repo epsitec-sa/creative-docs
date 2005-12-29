@@ -98,7 +98,7 @@ namespace Epsitec.Common.Document.Settings
 		{
 			get
 			{
-				Size size = this.document.Size;
+				Size size = this.document.PageSize;
 				switch ( this.type )
 				{
 					case GuideType.VerticalLeft:
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Document.Settings
 
 			set
 			{
-				Size size = this.document.Size;
+				Size size = this.document.PageSize;
 				switch ( this.type )
 				{
 					case GuideType.VerticalLeft:

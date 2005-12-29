@@ -1251,7 +1251,7 @@ namespace Epsitec.Common.Document
 			{
 				Dialogs.SwapSize(ref size);
 			}
-			this.document.Size = size;
+			this.document.DocumentSize = size;
 		}
 
 		private void HandlePaperActiveStateChanged(object sender, MessageEventArgs e)
@@ -1260,13 +1260,13 @@ namespace Epsitec.Common.Document
 			RadioButton radio = sender as RadioButton;
 			if ( radio == null )  return;
 
-			Size size = this.document.Size;
+			Size size = this.document.DocumentSize;
 			if ( radio.Name == "PaperFormat.Portrait" )
 			{
 				if ( size.Width > size.Height )
 				{
 					Dialogs.SwapSize(ref size);
-					this.document.Size = size;
+					this.document.DocumentSize = size;
 				}
 			}
 			else
@@ -1274,7 +1274,7 @@ namespace Epsitec.Common.Document
 				if ( size.Width < size.Height )
 				{
 					Dialogs.SwapSize(ref size);
-					this.document.Size = size;
+					this.document.DocumentSize = size;
 				}
 			}
 		}
@@ -1287,11 +1287,11 @@ namespace Epsitec.Common.Document
 			TextFieldCombo combo = this.WidgetsTableSearch("PaperFormat", "") as TextFieldCombo;
 			if ( combo != null )
 			{
-				combo.SelectedIndex = Dialogs.PaperSizeToRank(this.document.Size);
+				combo.SelectedIndex = Dialogs.PaperSizeToRank(this.document.DocumentSize);
 			}
 
 			RadioButton radio;
-			bool portrait = (this.document.Size.Width <= this.document.Size.Height);
+			bool portrait = (this.document.DocumentSize.Width <= this.document.DocumentSize.Height);
 
 			radio = this.WidgetsTableSearch("PaperFormat.Portrait", "") as RadioButton;
 			if ( radio != null )

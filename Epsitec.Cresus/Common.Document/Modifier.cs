@@ -328,7 +328,7 @@ namespace Epsitec.Common.Document
 			//	Taille de la zone de travail.
 			get
 			{
-				return new Size(this.document.Size.Width+this.outsideArea*2.0, this.document.Size.Height+this.outsideArea*2.0);
+				return new Size(this.document.PageSize.Width+this.outsideArea*2.0, this.document.PageSize.Height+this.outsideArea*2.0);
 			}
 		}
 
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Document
 			//	Rectangle de la page de travail.
 			get
 			{
-				return new Rectangle(new Point(0,0), this.document.Size);
+				return new Rectangle(new Point(0,0), this.document.PageSize);
 			}
 		}
 
@@ -965,7 +965,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 			
-			info = string.Format(Res.Strings.Statistic.Size, chip, this.RealToString(this.document.Size.Width), this.RealToString(this.document.Size.Height));
+			info = string.Format(Res.Strings.Statistic.Size, chip, this.RealToString(this.document.PageSize.Width), this.RealToString(this.document.PageSize.Height));
 			builder.Append(info);
 			builder.Append(br);
 			
@@ -5120,8 +5120,8 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.document.Type == DocumentType.Pictogram )
 				{
-					double x = this.SizeArea.Width/this.document.Size.Width;
-					double y = this.SizeArea.Height/this.document.Size.Height;
+					double x = this.SizeArea.Width/this.document.PageSize.Width;
+					double y = this.SizeArea.Height/this.document.PageSize.Height;
 					return 1.0/System.Math.Min(x,y);
 				}
 				else
@@ -5890,14 +5890,14 @@ namespace Epsitec.Common.Document
 			public OpletSize(Document host)
 			{
 				this.host = host;
-				this.documentSize = this.host.Size;
+				this.documentSize = this.host.DocumentSize;
 				this.outsideArea = this.host.Modifier.outsideArea;
 			}
 
 			protected void Swap()
 			{
 				Size temp = this.documentSize;
-				this.documentSize = this.host.Size;
+				this.documentSize = this.host.DocumentSize;
 				this.host.InternalSize = temp;
 
 				Misc.Swap(ref this.outsideArea, ref this.host.Modifier.outsideArea);
