@@ -27,8 +27,8 @@ namespace Epsitec.App.DocumentEditor
 			Common.Support.ImageProvider.Default.EnableLongLifeCache = true;
 			Common.Support.ImageProvider.Default.PrefillManifestIconCache();
 
-			//Application.application = new Application(DocumentType.Pictogram);
-			Application.application = new Application(DocumentType.Graphic);
+			Application.application = new Application(DocumentType.Pictogram);
+			//Application.application = new Application(DocumentType.Graphic);
 			Application.application.MainWindow.Run();
 		}
 		

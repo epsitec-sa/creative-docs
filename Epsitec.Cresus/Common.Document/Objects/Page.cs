@@ -49,6 +49,7 @@ namespace Epsitec.Common.Document.Objects
 			this.hotSpot = Point.Empty;
 			this.glyphOrigin = Point.Empty;
 			this.glyphSize = new Size(0,0);
+			this.language = null;
 		}
 
 		protected override bool ExistingProperty(Properties.Type type)
@@ -407,6 +408,25 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		public string Language
+		{
+			//	Langue de la page, uniquement pour Pictogram.
+			get
+			{
+				return this.language;
+			}
+
+			set
+			{
+				if ( this.language != value )
+				{
+					this.InsertOpletType();
+					this.language = value;
+					this.document.IsDirtySerialize = true;
+				}
+			}
+		}
+
 
 		public override void CloneObject(Objects.Abstract src)
 		{
@@ -426,6 +446,7 @@ namespace Epsitec.Common.Document.Objects
 			this.hotSpot         = page.hotSpot;
 			this.glyphOrigin     = page.glyphOrigin;
 			this.glyphSize       = page.glyphSize;
+			this.language        = page.language;
 
 			this.guides.Clear();
 			foreach ( Settings.Guide guide in page.guides )
@@ -502,6 +523,7 @@ namespace Epsitec.Common.Document.Objects
 				this.hotSpot = host.hotSpot;
 				this.glyphOrigin = host.glyphOrigin;
 				this.glyphSize = host.glyphSize;
+				this.language = host.language;
 			}
 
 			protected void Swap()
@@ -531,6 +553,10 @@ namespace Epsitec.Common.Document.Objects
 				Misc.Swap(ref host.hotSpot, ref this.hotSpot);
 				Misc.Swap(ref host.glyphOrigin, ref this.glyphOrigin);
 				Misc.Swap(ref host.glyphSize, ref this.glyphSize);
+
+				string l = host.language;
+				host.language = this.language;
+				this.language = l;
 			}
 
 			public override IOplet Undo()
@@ -556,6 +582,7 @@ namespace Epsitec.Common.Document.Objects
 			protected Point					hotSpot;
 			protected Point					glyphOrigin;
 			protected Size					glyphSize;
+			protected string				language;
 		}
 		#endregion
 
@@ -572,6 +599,7 @@ namespace Epsitec.Common.Document.Objects
 				info.AddValue("HotSpot", this.hotSpot);
 				info.AddValue("GlyphOrigin", this.glyphOrigin);
 				info.AddValue("GlyphSize", this.glyphSize);
+				info.AddValue("Language", this.language);
 			}
 			else
 			{
@@ -602,6 +630,7 @@ namespace Epsitec.Common.Document.Objects
 					this.hotSpot = (Point) info.GetValue("HotSpot", typeof(Point));
 					this.glyphOrigin = (Point) info.GetValue("GlyphOrigin", typeof(Point));
 					this.glyphSize = (Size) info.GetValue("GlyphSize", typeof(Size));
+					this.language = info.GetString("Language");
 				}
 			}
 			else
@@ -657,5 +686,6 @@ namespace Epsitec.Common.Document.Objects
 		protected Point					hotSpot;
 		protected Point					glyphOrigin;
 		protected Size					glyphSize;
+		protected string				language;
 	}
 }
