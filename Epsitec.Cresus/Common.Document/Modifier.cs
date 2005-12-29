@@ -4292,12 +4292,7 @@ namespace Epsitec.Common.Document
 		protected void ComputeMasterPageList(System.Collections.ArrayList masterPageList, Objects.Page master, Size currentSize)
 		{
 			if ( masterPageList.Contains(master) )  return;
-
-			Size masterSize = this.document.DocumentSize;
-			if ( master.PageSize.Width  != 0 )  masterSize.Width  = master.PageSize.Width;
-			if ( master.PageSize.Height != 0 )  masterSize.Height = master.PageSize.Height;
-
-			if ( masterSize != currentSize )  return;
+			if ( this.document.GetPageSize(master) != currentSize )  return;  // pas la même taille ?
 
 			masterPageList.Add(master);
 

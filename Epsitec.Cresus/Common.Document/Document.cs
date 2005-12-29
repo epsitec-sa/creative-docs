@@ -358,30 +358,37 @@ namespace Epsitec.Common.Document
 			//	Taille de la page courante du document.
 			get
 			{
-				Size size = this.size;
+				int pageNumber = -1;
 
 				if ( this.modifier != null && this.modifier.ActiveViewer != null )
 				{
-					int rank = this.modifier.ActiveViewer.DrawingContext.CurrentPage;
-					Objects.Page page = this.GetObjects[rank] as Objects.Page;
-
-					if ( page.PageSize.Width  != 0 )  size.Width  = page.PageSize.Width;
-					if ( page.PageSize.Height != 0 )  size.Height = page.PageSize.Height;
+					pageNumber = this.modifier.ActiveViewer.DrawingContext.CurrentPage;
 				}
 
-				return size;
+				return this.GetPageSize(pageNumber);
 			}
 		}
 
 		public Size GetPageSize(int pageNumber)
 		{
 			//	Taille d'une page du document.
+			Objects.Page page = null;
+
+			if ( pageNumber != -1 )
+			{
+				page = this.GetObjects[pageNumber] as Objects.Page;
+			}
+
+			return this.GetPageSize(page);
+		}
+
+		public Size GetPageSize(Objects.Page page)
+		{
+			//	Taille d'une page du document.
 			Size size = this.size;
 
-			if ( this.modifier != null && this.modifier.ActiveViewer != null )
+			if ( page != null )
 			{
-				Objects.Page page = this.GetObjects[pageNumber] as Objects.Page;
-
 				if ( page.PageSize.Width  != 0 )  size.Width  = page.PageSize.Width;
 				if ( page.PageSize.Height != 0 )  size.Height = page.PageSize.Height;
 			}

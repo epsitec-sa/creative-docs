@@ -87,11 +87,12 @@ namespace Epsitec.Common.Document.PDF
 			drawingContext.ContainerSize = this.document.DocumentSize;
 			drawingContext.PreviewActive = true;
 
-			int max = this.document.Modifier.PrintableTotalPages();
-
-			Settings.PrintRange range = info.PageRange;
+			int max  = this.document.Modifier.PrintableTotalPages();
 			int from = 1;
 			int to   = max;
+			bool justeOneMaster = false;
+
+			Settings.PrintRange range = info.PageRange;
 
 			if ( range == Settings.PrintRange.FromTo )
 			{
@@ -111,8 +112,10 @@ namespace Epsitec.Common.Document.PDF
 				{
 					from = cp;
 					to   = cp;
+					justeOneMaster = true;
 				}
 			}
+
 			from = System.Math.Min(from, max);
 			to   = System.Math.Min(to,   max);
 
@@ -122,7 +125,26 @@ namespace Epsitec.Common.Document.PDF
 			}
 			int total = to-from+1;
 
-			this.FoundComplexSurfaces(port, drawingContext, from, to);
+			//	Calcule la liste des pages à imprimer.
+			this.pageList = new System.Collections.ArrayList();
+
+			if ( justeOneMaster )
+			{
+				this.pageList.Add(from);
+			}
+			else
+			{
+				for ( int page=from ; page<=to ; page++ )
+				{
+					int rank = this.document.Modifier.PrintablePageRank(page-1);
+					if ( rank != -1 )
+					{
+						this.pageList.Add(rank);
+					}
+				}
+			}
+
+			this.FoundComplexSurfaces(port, drawingContext);
 
 			//	Crée et ouvre le fichier.
 			Writer writer;
@@ -170,16 +192,16 @@ namespace Epsitec.Common.Document.PDF
 			//	Objet donnant la liste des pages.
 			writer.WriteObjectDef("HeaderPages");
 			writer.WriteString("<< /Type /Pages /Kids [ ");
-			for ( int page=from ; page<=to ; page++ )
+			foreach ( int page in this.pageList )
 			{
 				writer.WriteObjectRef(Export.NamePage(page));
 			}
 			writer.WriteLine(string.Format("] /Count {0} >> endobj", total));
 
 			//	Un objet pour chaque page.
-			for ( int page=from ; page<=to ; page++ )
+			foreach ( int page in this.pageList )
 			{
-				Size pageSize = this.document.GetPageSize(page-1);
+				Size pageSize = this.document.GetPageSize(page);
 
 				if ( info.Debord > 0.0 )
 				{
@@ -208,7 +230,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 
 			//	Un objet pour les ressources de chaque page.
-			for ( int page=from ; page<=to ; page++ )
+			foreach ( int page in this.pageList )
 			{
 				writer.WriteObjectDef(Export.NameResources(page));
 				writer.WriteString("<< /ProcSet [/PDF /Text /ImageB /ImageC] ");
@@ -306,7 +328,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 
 			//	Un objet pour le contenu de chaque page.
-			for ( int page=from ; page<=to ; page++ )
+			foreach ( int page in this.pageList )
 			{
 				port.Reset();
 
@@ -316,7 +338,7 @@ namespace Epsitec.Common.Document.PDF
 				gt.Scale(Export.mm2in);  // unité = 0.1mm
 				port.Transform = gt;
 
-				System.Collections.ArrayList layers = this.ComputeLayers(page-1);
+				System.Collections.ArrayList layers = this.ComputeLayers(page);
 				foreach ( Objects.Layer layer in layers )
 				{
 					Properties.ModColor modColor = layer.PropertyModColor;
@@ -427,7 +449,7 @@ namespace Epsitec.Common.Document.PDF
 			//	Dessine les traits de coupe.
 			if ( !info.Target )  return;
 
-			Size pageSize = this.document.GetPageSize(page-1);
+			Size pageSize = this.document.GetPageSize(page);
 			double width  = pageSize.Width;
 			double height = pageSize.Height;
 			double debord = info.Debord;
@@ -468,13 +490,13 @@ namespace Epsitec.Common.Document.PDF
 
 
 		#region ComplexSurface
-		protected void FoundComplexSurfaces(Port port, DrawingContext drawingContext, int from, int to)
+		protected void FoundComplexSurfaces(Port port, DrawingContext drawingContext)
 		{
 			//	Trouve toutes les surfaces complexes dans toutes les pages.
 			int id = 1;
-			for ( int page=from ; page<=to ; page++ )
+			foreach ( int page in this.pageList )
 			{
-				System.Collections.ArrayList layers = this.ComputeLayers(page-1);
+				System.Collections.ArrayList layers = this.ComputeLayers(page);
 				foreach ( Objects.Layer layer in layers )
 				{
 					Properties.ModColor modColor = layer.PropertyModColor;
@@ -2101,5 +2123,6 @@ namespace Epsitec.Common.Document.PDF
 		protected double						jpegQuality;
 		protected double						imageMinDpi;
 		protected double						imageMaxDpi;
+		protected System.Collections.ArrayList	pageList;
 	}
 }
