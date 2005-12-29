@@ -353,6 +353,20 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public Size[] PageSizes
+		{
+			//	Donne la taille de toutes les pages.
+			get
+			{
+				Size[] sizes = new Size[this.objects.Count];
+				for ( int i=0 ; i<this.objects.Count ; i++ )
+				{
+					sizes[i] = this.GetPageSize(i);
+				}
+				return sizes;
+			}
+		}
+
 		public Size PageSize
 		{
 			//	Taille de la page courante du document.
@@ -1034,6 +1048,11 @@ namespace Epsitec.Common.Document
 				info.AddValue("ObjectMemoryText", this.modifier.ObjectMemoryText);
 
 				info.AddValue("RootStack", this.modifier.ActiveViewer.DrawingContext.RootStack);
+
+				byte[] textContextData = this.textContext == null ? null : this.textContext.Serialize();
+				info.AddValue("TextContextData", textContextData);
+
+				info.AddValue("TextFlows", this.textFlows);
 			}
 
 			info.AddValue("UniqueObjectId", this.uniqueObjectId);
@@ -1041,11 +1060,6 @@ namespace Epsitec.Common.Document
 			info.AddValue("Objects", this.objects);
 			info.AddValue("Properties", this.propertiesAuto);
 			info.AddValue("Aggregates", this.aggregates);
-
-			byte[] textContextData = this.textContext == null ? null : this.textContext.Serialize();
-			info.AddValue("TextContextData", textContextData);
-
-			info.AddValue("TextFlows", this.textFlows);
 		}
 
 		protected Document(SerializationInfo info, StreamingContext context)
@@ -1058,6 +1072,9 @@ namespace Epsitec.Common.Document
 			{
 				this.size = (Size) info.GetValue("Size", typeof(Size));
 				this.hotSpot = (Point) info.GetValue("HotSpot", typeof(Point));
+
+				this.textContext = null;
+				this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
 			}
 			else
 			{
@@ -1095,6 +1112,23 @@ namespace Epsitec.Common.Document
 				{
 					this.readRootStack = null;
 				}
+
+				if ( this.IsRevisionGreaterOrEqual(1,2,3) )
+				{
+					byte[] textContextData = (byte[]) info.GetValue("TextContextData", typeof(byte[]));
+				
+					if ( textContextData != null )
+					{
+						this.DefaultTextContext();
+						this.textContext.Deserialize(textContextData);
+					}
+
+					this.textFlows = (UndoableList) info.GetValue("TextFlows", typeof(UndoableList));
+				}
+				else
+				{
+					this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
+				}
 			}
 
 			this.uniqueObjectId = info.GetInt32("UniqueObjectId");
@@ -1110,23 +1144,6 @@ namespace Epsitec.Common.Document
 			{
 				this.aggregates = new UndoableList(Document.ReadDocument, UndoableListType.AggregatesInsideDocument);
 				this.uniqueAggregateId = 0;
-			}
-
-			if ( this.IsRevisionGreaterOrEqual(1,2,3) )
-			{
-				byte[] textContextData = (byte[]) info.GetValue("TextContextData", typeof(byte[]));
-				
-				if ( textContextData != null )
-				{
-					this.DefaultTextContext();
-					this.textContext.Deserialize(textContextData);
-				}
-
-				this.textFlows = (UndoableList) info.GetValue("TextFlows", typeof(UndoableList));
-			}
-			else
-			{
-				this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
 			}
 		}
 

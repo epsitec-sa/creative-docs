@@ -2454,7 +2454,7 @@ namespace Epsitec.Common.Widgets
 					int more = System.Math.Min(5, length);
 					endOffset += length;
 					string startOfTag = this.text.Substring(beginOffset, more);
-					//	|<-5->|
+					//                 |<-5->|
 					if ( startOfTag != "<br/>" &&
 						 startOfTag != "<tab/" &&
 						 startOfTag != "<list" &&
@@ -2504,7 +2504,7 @@ namespace Epsitec.Common.Widgets
 					endOffset += length;
 					int more = System.Math.Min(5, length);
 					string startOfTag = this.text.Substring(beginOffset, more);
-					//	|<-5->|
+					//                 |<-5->|
 					if ( startOfTag == "<br/>" ||
 						 startOfTag == "<tab/" ||
 						 startOfTag == "<list" ||

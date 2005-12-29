@@ -38,6 +38,23 @@ namespace Epsitec.Common.Document
 			
 			return false;
 		}
+
+		public Size[] GetSizes(byte[] data)
+		{
+			Size[] sizes = null;
+
+			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
+			{
+				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly, InstallType.Full, DebugMode.Release, null, null);
+			
+				if ( doc.Read(stream, "") == "" )
+				{
+					sizes = doc.PageSizes;
+				}
+			}
+
+			return sizes;
+		}
 		
 		public void GetSizeAndOrigin(byte[] data, out Size size, out Point origin)
 		{

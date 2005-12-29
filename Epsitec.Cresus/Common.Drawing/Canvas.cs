@@ -15,14 +15,30 @@ namespace Epsitec.Common.Drawing
 		{
 			this.data = new byte[data.Length];
 			data.CopyTo (this.data, 0);
-			
-			this.effects = new EffectTable ();
-			
-			this.effects[GlyphPaintStyle.Normal]   = new Canvas (this, GlyphPaintStyle.Normal);
-			this.effects[GlyphPaintStyle.Disabled] = new Canvas (this, GlyphPaintStyle.Disabled);
-			this.effects[GlyphPaintStyle.Selected] = new Canvas (this, GlyphPaintStyle.Selected);
-			this.effects[GlyphPaintStyle.Entered]  = new Canvas (this, GlyphPaintStyle.Entered);
-			this.effects[GlyphPaintStyle.Shadow]   = new Canvas (this, GlyphPaintStyle.Shadow);
+
+			ICanvasEngine engine = Canvas.FindEngine (this.data);
+			System.Diagnostics.Debug.Assert (engine != null);
+			Size[] sizes = engine.GetSizes (this.data);
+			System.Diagnostics.Debug.Assert (sizes != null && sizes.Length > 0);
+
+			this.sizeTable = new SizeTable ();
+			this.defaultSize = Size.Empty;
+			foreach ( Size size in sizes )
+			{
+				if ( this.defaultSize.IsEmpty )
+				{
+					this.defaultSize = size;
+				}
+
+				EffectTable effects = new EffectTable ();
+				effects[GlyphPaintStyle.Normal]   = new Canvas (this, GlyphPaintStyle.Normal);
+				effects[GlyphPaintStyle.Disabled] = new Canvas (this, GlyphPaintStyle.Disabled);
+				effects[GlyphPaintStyle.Selected] = new Canvas (this, GlyphPaintStyle.Selected);
+				effects[GlyphPaintStyle.Entered]  = new Canvas (this, GlyphPaintStyle.Entered);
+				effects[GlyphPaintStyle.Shadow]   = new Canvas (this, GlyphPaintStyle.Shadow);
+
+				this.sizeTable[size] = effects;
+			}
 			
 			Canvas.global_icon_cache.Add (this);
 		}
@@ -33,7 +49,7 @@ namespace Epsitec.Common.Drawing
 			//	les données avec le modèle original...
 			
 			this.data        = original.data;
-			this.effects     = original.effects;
+			this.sizeTable   = original.sizeTable;
 			this.paint_style = style;
 		}
 		
@@ -67,7 +83,9 @@ namespace Epsitec.Common.Drawing
 		
 		public override Image GetImageForPaintStyle(GlyphPaintStyle style)
 		{
-			return this.effects[style];
+			EffectTable effects = this.sizeTable[this.defaultSize];
+			System.Diagnostics.Debug.Assert (effects != null);
+			return effects[style];
 		}
 		
 		
@@ -248,8 +266,26 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		protected class SizeTable
+		{
+			//	Collection de EffectTable, accessibles par une clé Size.
+			public SizeTable()
+			{
+				this.hash = new System.Collections.Hashtable ();
+			}
+
+			public EffectTable			this[Size key]
+			{
+				get { return this.hash[key] as EffectTable; }
+				set { this.hash[key] = value; }
+			}
+
+			protected System.Collections.Hashtable hash;
+		}
+
 		protected class EffectTable : System.Collections.IDictionary
 		{
+			//	Collection de Canevas, accessibles par une clé GlyphPaintStyle.
 			public EffectTable()
 			{
 				this.hash = new System.Collections.Hashtable ();
@@ -365,7 +401,8 @@ namespace Epsitec.Common.Drawing
 		protected bool							is_geom_ok;
 		
 		protected GlyphPaintStyle				paint_style = GlyphPaintStyle.Invalid;
-		protected EffectTable					effects;
+		protected Size							defaultSize;
+		protected SizeTable						sizeTable;
 		protected byte[]						data;
 		protected double						zoom = 1.0;
 		protected Drawing.Color					color = Drawing.Color.Empty;
