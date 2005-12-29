@@ -39,7 +39,6 @@
 	<data name="TabPage.Layers">Calques</data>
 	<data name="TabPage.Operations">Op</data>
 
-	<data name="Status.Document.Format">Format {0}x{1}</data>
 	<data name="Status.Objects.Select">Sélection</data>
 	<data name="Status.Objects.Level">Niveau {0}</data>
 	<data name="Status.Modif.Default">Page: {0}  Calque: {1}</data>

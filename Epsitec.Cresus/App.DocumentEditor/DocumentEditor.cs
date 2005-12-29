@@ -749,8 +749,6 @@ namespace Epsitec.App.DocumentEditor
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
 			this.info.AnchorMargins = new Margins(0, 22-5, 0, 0);
 
-			this.InfoAdd("StatusDocument", 120);
-
 			this.InfoAdd("DeselectAll");
 			this.InfoAdd("SelectAll");
 			this.InfoAdd("SelectInvert");
@@ -793,7 +791,7 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(slider, Res.Strings.Status.Zoom.Slider);
 
 			this.InfoAdd("StatusMouse", 110);
-			this.InfoAdd("StatusModif", 250);
+			this.InfoAdd("StatusModif", 300);
 
 			StatusBar infoMisc = new StatusBar(this);
 			infoMisc.Width = 22;
@@ -3901,10 +3899,6 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleDocumentChanged()
 		{
 			//	Appelé par le document lorsque les informations sur le document ont changé.
-			StatusField field = this.info.Items["StatusDocument"] as StatusField;
-			field.Text = this.TextDocument;
-			field.Invalidate();
-
 			if ( this.IsCurrentDocument )
 			{
 				this.printState.Enable = true;
@@ -4960,24 +4954,6 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		protected string TextDocument
-		{
-			//	Texte pour le document.
-			get
-			{
-				Document doc = this.CurrentDocument;
-				if ( doc == null )
-				{
-					return " ";
-				}
-				else
-				{
-					Size size = doc.DocumentSize;
-					return string.Format(Res.Strings.Status.Document.Format, doc.Modifier.RealToString(size.Width), doc.Modifier.RealToString(size.Height));
-				}
-			}
-		}
-
 		protected string TextInfoObject
 		{
 			//	Texte pour les informations.
@@ -5057,8 +5033,7 @@ namespace Epsitec.App.DocumentEditor
 						Objects.Page page = this.CurrentDocument.GetObjects[cp] as Objects.Page;
 						Objects.Layer layer = page.Objects[cl] as Objects.Layer;
 
-						string sp = page.Name;
-						if ( sp == "" )  sp = page.ShortName;
+						string sp = page.InfoName;
 
 						string sl = layer.Name;
 						if ( sl == "" )  sl = Objects.Layer.ShortName(cl);

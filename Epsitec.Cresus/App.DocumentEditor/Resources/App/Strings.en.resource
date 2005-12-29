@@ -39,7 +39,6 @@
 	<data name="TabPage.Layers">Layers</data>
 	<data name="TabPage.Operations">Op</data>
 
-	<data name="Status.Document.Format">{0}x{1} format</data>
 	<data name="Status.Objects.Select">Selection</data>
 	<data name="Status.Objects.Level">Level {0}</data>
 	<data name="Status.Modif.Default">Page: {0}  Layer: {1}</data>

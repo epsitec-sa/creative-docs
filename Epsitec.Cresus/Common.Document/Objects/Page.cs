@@ -110,19 +110,58 @@ namespace Epsitec.Common.Document.Objects
 			get
 			{
 				string text = this.Name;
+
 				if ( this.PageSize.Width != 0 && this.PageSize.Height == 0 )
 				{
 					text = string.Format("{0} ({1}x...)", text, this.document.Modifier.RealToString(this.PageSize.Width));
 				}
+				
 				if ( this.PageSize.Width == 0 && this.PageSize.Height != 0 )
 				{
 					text = string.Format("{0} (...x{1})", text, this.document.Modifier.RealToString(this.PageSize.Height));
 				}
+				
 				if ( this.PageSize.Width != 0 && this.PageSize.Height != 0 )
 				{
 					text = string.Format("{0} ({1}x{2})", text, this.document.Modifier.RealToString(this.PageSize.Width), this.document.Modifier.RealToString(this.PageSize.Height));
 				}
+				
 				return text;
+			}
+		}
+
+		public string InfoName
+		{
+			//	Texte d'information sur la page en cours.
+			get
+			{
+				string text = this.Name;
+				if ( text == "" )
+				{
+					text = this.ShortName;
+				}
+
+				string width;
+				if ( this.PageSize.Width == 0 )
+				{
+					width = Misc.Italic(this.document.Modifier.RealToString(this.document.DocumentSize.Width));
+				}
+				else
+				{
+					width = this.document.Modifier.RealToString(this.PageSize.Width);
+				}
+
+				string height;
+				if ( this.PageSize.Height == 0 )
+				{
+					height = Misc.Italic(this.document.Modifier.RealToString(this.document.DocumentSize.Height));
+				}
+				else
+				{
+					height = this.document.Modifier.RealToString(this.PageSize.Height);
+				}
+				
+				return string.Format("{0}  ( {1} x {2} )", text, width, height);
 			}
 		}
 
