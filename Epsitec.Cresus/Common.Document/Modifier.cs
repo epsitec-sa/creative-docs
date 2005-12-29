@@ -4226,6 +4226,7 @@ namespace Epsitec.Common.Document
 			//	Génère la liste des pages maîtres à utiliser pour une page donnée.
 			masterPageList.Clear();
 			Objects.Page currentPage = this.document.GetObjects[pageNumber] as Objects.Page;
+			Size currentSize = this.document.GetPageSize(pageNumber);
 
 			if ( currentPage.MasterType == Objects.MasterType.Slave )
 			{
@@ -4234,7 +4235,7 @@ namespace Epsitec.Common.Document
 					if ( currentPage.MasterPageToUse != null &&
 						 currentPage.MasterPageToUse.MasterType != Objects.MasterType.Slave )
 					{
-						this.ComputeMasterPageList(masterPageList, currentPage.MasterPageToUse);
+						this.ComputeMasterPageList(masterPageList, currentPage.MasterPageToUse, currentSize);
 					}
 				}
 
@@ -4252,14 +4253,14 @@ namespace Epsitec.Common.Document
 
 						if ( page.MasterType == Objects.MasterType.All )
 						{
-							this.ComputeMasterPageList(masterPageList, page);
+							this.ComputeMasterPageList(masterPageList, page, currentSize);
 						}
 
 						if ( page.MasterType == Objects.MasterType.Even )
 						{
 							if ( currentPage.Rank%2 != 0 )
 							{
-								this.ComputeMasterPageList(masterPageList, page);
+								this.ComputeMasterPageList(masterPageList, page, currentSize);
 							}
 						}
 
@@ -4267,7 +4268,7 @@ namespace Epsitec.Common.Document
 						{
 							if ( currentPage.Rank%2 == 0 )
 							{
-								this.ComputeMasterPageList(masterPageList, page);
+								this.ComputeMasterPageList(masterPageList, page, currentSize);
 							}
 						}
 					}
@@ -4280,7 +4281,7 @@ namespace Epsitec.Common.Document
 					if ( currentPage.MasterPageToUse != null &&
 						 currentPage.MasterPageToUse.MasterType != Objects.MasterType.Slave )
 					{
-						this.ComputeMasterPageList(masterPageList, currentPage.MasterPageToUse);
+						this.ComputeMasterPageList(masterPageList, currentPage.MasterPageToUse, currentSize);
 					}
 				}
 			}
@@ -4288,9 +4289,15 @@ namespace Epsitec.Common.Document
 			masterPageList.Reverse();
 		}
 
-		protected void ComputeMasterPageList(System.Collections.ArrayList masterPageList, Objects.Page master)
+		protected void ComputeMasterPageList(System.Collections.ArrayList masterPageList, Objects.Page master, Size currentSize)
 		{
 			if ( masterPageList.Contains(master) )  return;
+
+			Size masterSize = this.document.DocumentSize;
+			if ( master.PageSize.Width  != 0 )  masterSize.Width  = master.PageSize.Width;
+			if ( master.PageSize.Height != 0 )  masterSize.Height = master.PageSize.Height;
+
+			if ( masterSize != currentSize )  return;
 
 			masterPageList.Add(master);
 
@@ -4299,7 +4306,7 @@ namespace Epsitec.Common.Document
 				if ( master.MasterPageToUse != null &&
 					 master.MasterPageToUse.MasterType != Objects.MasterType.Slave )
 				{
-					this.ComputeMasterPageList(masterPageList, master.MasterPageToUse);
+					this.ComputeMasterPageList(masterPageList, master.MasterPageToUse, currentSize);
 				}
 			}
 		}

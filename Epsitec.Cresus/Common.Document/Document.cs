@@ -373,6 +373,22 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public Size GetPageSize(int pageNumber)
+		{
+			//	Taille d'une page du document.
+			Size size = this.size;
+
+			if ( this.modifier != null && this.modifier.ActiveViewer != null )
+			{
+				Objects.Page page = this.GetObjects[pageNumber] as Objects.Page;
+
+				if ( page.PageSize.Width  != 0 )  size.Width  = page.PageSize.Width;
+				if ( page.PageSize.Height != 0 )  size.Height = page.PageSize.Height;
+			}
+
+			return size;
+		}
+
 		public Size InternalSize
 		{
 			set

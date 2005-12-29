@@ -179,33 +179,27 @@ namespace Epsitec.Common.Document.PDF
 			//	Un objet pour chaque page.
 			for ( int page=from ; page<=to ; page++ )
 			{
-				Objects.Page objPage = this.document.GetObjects[page-1] as Objects.Page;
-
-				double pageWidth  = this.document.DocumentSize.Width;
-				double pageHeight = this.document.DocumentSize.Height;
-
-				if ( objPage.PageSize.Width  != 0 )  pageWidth  = objPage.PageSize.Width;
-				if ( objPage.PageSize.Height != 0 )  pageHeight = objPage.PageSize.Height;
+				Size pageSize = this.document.GetPageSize(page-1);
 
 				if ( info.Debord > 0.0 )
 				{
-					pageWidth  += info.Debord*2.0;
-					pageHeight += info.Debord*2.0;
+					pageSize.Width  += info.Debord*2.0;
+					pageSize.Height += info.Debord*2.0;
 				}
 
 				if ( info.Target )  // traits de coupe ?
 				{
-					pageWidth  += info.TargetLength*2.0;
-					pageHeight += info.TargetLength*2.0;
+					pageSize.Width  += info.TargetLength*2.0;
+					pageSize.Height += info.TargetLength*2.0;
 				}
 
 				writer.WriteObjectDef(Export.NamePage(page));
 				writer.WriteString("<< /Type /Page /Parent ");
 				writer.WriteObjectRef("HeaderPages");
 				writer.WriteString("/MediaBox [0 0 ");
-				writer.WriteString(Port.StringValue(pageWidth*Export.mm2in));
+				writer.WriteString(Port.StringValue(pageSize.Width*Export.mm2in));
 				writer.WriteString(" ");
-				writer.WriteString(Port.StringValue(pageHeight*Export.mm2in));
+				writer.WriteString(Port.StringValue(pageSize.Height*Export.mm2in));
 				writer.WriteString("] /Resources ");
 				writer.WriteObjectRef(Export.NameResources(page));
 				writer.WriteString("/Contents ");
@@ -433,14 +427,9 @@ namespace Epsitec.Common.Document.PDF
 			//	Dessine les traits de coupe.
 			if ( !info.Target )  return;
 
-			Objects.Page objPage = this.document.GetObjects[page-1] as Objects.Page;
-
-			double width  = this.document.DocumentSize.Width;
-			double height = this.document.DocumentSize.Height;
-
-			if ( objPage.PageSize.Width  != 0 )  width  = objPage.PageSize.Width;
-			if ( objPage.PageSize.Height != 0 )  height = objPage.PageSize.Height;
-
+			Size pageSize = this.document.GetPageSize(page-1);
+			double width  = pageSize.Width;
+			double height = pageSize.Height;
 			double debord = info.Debord;
 			double length = info.TargetLength;
 
