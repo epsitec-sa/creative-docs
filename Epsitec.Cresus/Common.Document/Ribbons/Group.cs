@@ -18,8 +18,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonUngroup = this.CreateIconButton("Ungroup");
 			this.buttonMerge   = this.CreateIconButton("Merge");
 			this.buttonExtract = this.CreateIconButton("Extract");
-			this.buttonInside  = this.CreateIconButton("Inside", "2");
-			this.buttonOutside = this.CreateIconButton("Outside", "2");
+			this.buttonInside  = this.CreateIconButton("Inside", "Big");
+			this.buttonOutside = this.CreateIconButton("Outside", "Big");
 			
 			this.UpdateClientGeometry();
 		}

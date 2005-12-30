@@ -278,7 +278,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton CreateIconButton(string command)
 		{
 			//	Crée un bouton pour une commande.
-			return this.CreateIconButton(command, "0");
+			return this.CreateIconButton(command, "Normal");
 		}
 
 		protected IconButton CreateIconButton(string command, string iconSize)
@@ -289,16 +289,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			button.Command = command;
 			button.IconName = Misc.Icon(cs.IconName);
-
-			if ( iconSize == "1" )
-			{
-				button.PreferredIconSize = new Size(14, 14);
-			}
-			if ( iconSize == "2" )
-			{
-				button.PreferredIconSize = new Size(31, 31);
-			}
-			
+			button.PreferredIconSize = Misc.IconPreferredSize(iconSize);
 			button.AutoFocus = false;
 
 			if ( cs.Statefull )

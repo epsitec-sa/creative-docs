@@ -353,6 +353,14 @@ namespace Epsitec.Common.Document
 			return string.Format(@"<img src=""{0}""/>", Misc.Icon(icon));
 		}
 
+		static public Size IconPreferredSize(string iconSize)
+		{
+			//	Retourne la taille préférée pour uen icône.
+			if ( iconSize == "Little" )  return new Size(14, 14);
+			if ( iconSize == "Big"    )  return new Size(31, 31);
+			return new Size(20, 20);
+		}
+
 		static public string Icon(string icon)
 		{
 			//	Retourne le nom complet d'une icône.

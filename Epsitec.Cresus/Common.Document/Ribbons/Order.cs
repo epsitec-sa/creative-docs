@@ -14,8 +14,8 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.OrderMain;
 
-			this.buttonUpAll   = this.CreateIconButton("OrderUpAll", "2");
-			this.buttonDownAll = this.CreateIconButton("OrderDownAll", "2");
+			this.buttonUpAll   = this.CreateIconButton("OrderUpAll", "Big");
+			this.buttonDownAll = this.CreateIconButton("OrderDownAll", "Big");
 			this.buttonUpOne   = this.CreateIconButton("OrderUpOne");
 			this.buttonDownOne = this.CreateIconButton("OrderDownOne");
 			

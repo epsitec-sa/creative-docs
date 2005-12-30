@@ -1322,7 +1322,7 @@ namespace Epsitec.App.DocumentEditor
 			CommandState cs = this.commandDispatcher.GetCommandState(command);
 
 			IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
-			button.PreferredIconSize = new Size(14, 14);
+			button.PreferredIconSize = Misc.IconPreferredSize("Little");
 			double h = this.info.DefaultHeight-3;
 			button.Size = new Size(h, h);
 			this.info.Items.Add(button);
