@@ -355,7 +355,7 @@ namespace Epsitec.Common.Document
 
 		static public Size IconPreferredSize(string iconSize)
 		{
-			//	Retourne la taille préférée pour uen icône.
+			//	Retourne la taille préférée pour une icône.
 			if ( iconSize == "Little" )  return new Size(14, 14);
 			if ( iconSize == "Big"    )  return new Size(31, 31);
 			return new Size(20, 20);

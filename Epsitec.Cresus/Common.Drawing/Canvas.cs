@@ -107,8 +107,8 @@ namespace Epsitec.Common.Drawing
 			//	Cherche l'image correspondant le mieux possible à une clé.
 			System.Diagnostics.Debug.Assert(this.keys != null);
 
-			//	Cherche une image correspondant le mieux possible à la taille demandée.
-			if ( key.Size.Width != 0 && key.Size.Height != 0 )
+			//	Cherche une image correspondant le mieux possible à la langue et à la taille demandée.
+			if ( (key.Size.Width != 0 && key.Size.Height != 0) || key.Language != null )
 			{
 				double min = 1000000;
 				Canvas best = null;
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Drawing
 				{
 					IconKey k = dict.Key as IconKey;
 
-					double delta = Canvas.Delta(key.Size, k.Size);
+					double delta = Canvas.Delta(key, k);
 					if ( delta < min )
 					{
 						min = delta;
@@ -141,6 +141,43 @@ namespace Epsitec.Common.Drawing
 			throw new System.ArgumentException("GetImageForIconKey");
 		}
 
+		protected static double Delta(IconKey search, IconKey candidate)
+		{
+			//	Calcule une valeur 'delta' aussi petite que possible lorsque le candidat
+			//	est bon, et même nulle si le candidat est parfait. A l'inverse, la valeur
+			//	est grande si le candidat est mauvais.
+			double delta = 0;
+
+			if ( search.Language != null )  // cherche une langue précise ?
+			{
+				if ( candidate.Language == null )
+				{
+					delta += 5000;
+				}
+				else
+				{
+					if ( search.Language != candidate.Language )
+					{
+						delta += 10000;
+					}
+				}
+			}
+
+			if ( search.Size.Width != 0 && search.Size.Height != 0 )  // cherche une taille précise ?
+			{
+				if ( candidate.Size.Width != 0 && candidate.Size.Height != 0 )
+				{
+					delta += Canvas.Delta(search.Size, candidate.Size);
+				}
+				else
+				{
+					delta += 100;
+				}
+			}
+
+			return delta;
+		}
+		
 		protected static double Delta(Size s1, Size s2)
 		{
 			return System.Math.Abs(s1.Width-s2.Width) + System.Math.Abs(s1.Height-s2.Height);
