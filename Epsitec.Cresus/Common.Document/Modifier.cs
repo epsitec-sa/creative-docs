@@ -6016,7 +6016,8 @@ namespace Epsitec.Common.Document
 					 cmd == "ChangeAggregateName" ||
 					 cmd == "ChangeGuide"         ||
 					 cmd == "ChangeDocSize"       ||
-					 cmd == "SpecialPageSize"     )
+					 cmd == "SpecialPageSize"     ||
+					 cmd == "SpecialPageLanguage" )
 				{
 					this.opletSkip = true;
 					return null;

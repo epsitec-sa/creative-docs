@@ -109,6 +109,8 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateText()
 		{
+			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
+			//	suivi des différentes préférences (taille et langue).
 			if ( this.iconName == null ||
 				 this.iconName == ""   )
 			{
@@ -142,12 +144,6 @@ namespace Epsitec.Common.Widgets
 
 				this.Text = builder.ToString();
 			}
-		}
-
-		public void Toto(string iconName, Drawing.Size size)
-		{
-			this.iconName = iconName;
-			this.Text = string.Format(@"<img src=""{0}"" dx=""{1}"" dy=""{2}""/>", iconName, size.Width, size.Height);
 		}
 
 		
