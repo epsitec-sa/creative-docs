@@ -39,9 +39,9 @@ namespace Epsitec.Common.Document
 			return false;
 		}
 
-		public Size[] GetSizes(byte[] data)
+		public Canvas.IconKey[] GetIconKeys(byte[] data)
 		{
-			Size[] sizes = null;
+			Canvas.IconKey[] keys = null;
 
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
@@ -49,11 +49,11 @@ namespace Epsitec.Common.Document
 			
 				if ( doc.Read(stream, "") == "" )
 				{
-					sizes = doc.PageSizes;
+					keys = doc.IconKeys;
 				}
 			}
 
-			return sizes;
+			return keys;
 		}
 		
 		public void GetSizeAndOrigin(byte[] data, out Size size, out Point origin)
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 		
-		public void Paint(Graphics graphics, Size size, byte[] data, GlyphPaintStyle style, Color color, object adornerObject)
+		public void Paint(Graphics graphics, Size size, byte[] data, GlyphPaintStyle style, Color color, int page, object adornerObject)
 		{
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Document
 					context.ContainerSize = size;
 					context.PreviewActive = true;
 					context.LayerDrawingMode = LayerDrawingMode.ShowInactive;
-					context.RootStackPush(0);  // première page
+					context.RootStackPush(page);  // première page
 					context.RootStackPush(0);  // premier calque
 
 					Point scale = context.Scale;

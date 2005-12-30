@@ -80,13 +80,39 @@ namespace Epsitec.Common.Document
 		}
 
 
+		protected Size PageSize
+		{
+			//	Taille de la page courante du document.
+			//	Il ne faut pas utiliser Document.PageSize dans DrawingContext, car les icônes
+			//	n'ont pas de Modifier !
+			get
+			{
+				Size size = this.document.DocumentSize;
+
+				if ( !this.RootStackIsEmpty )
+				{
+					int pageNumber = this.CurrentPage;
+					Objects.Page page = this.document.GetObjects[pageNumber] as Objects.Page;
+
+					if ( page != null )
+					{
+						if ( page.PageSize.Width  != 0 )  size.Width  = page.PageSize.Width;
+						if ( page.PageSize.Height != 0 )  size.Height = page.PageSize.Height;
+					}
+				}
+
+				return size;
+			}
+		}
+
+
 		#region Zoom
 		public double MinOriginX
 		{
 			//	Retourne l'origine horizontale minimale.
 			get
 			{
-				Size size = this.document.PageSize;
+				Size size = this.PageSize;
 				Size area = this.document.Modifier.SizeArea;
 				Size container = this.ContainerSize/this.ScaleX;
 				
@@ -106,7 +132,7 @@ namespace Epsitec.Common.Document
 			//	Retourne l'origine verticale minimale.
 			get
 			{
-				Size size = this.document.PageSize;
+				Size size = this.PageSize;
 				Size area = this.document.Modifier.SizeArea;
 				Size container = this.ContainerSize/this.ScaleY;
 				
@@ -221,7 +247,7 @@ namespace Epsitec.Common.Document
 				if ( System.Math.Abs(this.zoom-this.ZoomPage) > 0.00001 )  return false;
 
 				Size cs = this.ContainerSize;
-				Size size = this.document.PageSize;
+				Size size = this.PageSize;
 				Point scale = this.ScaleForZoom(this.zoom);
 				double originX = size.Width/2 - (cs.Width/scale.X)/2;
 				double originY = size.Height/2 - (cs.Height/scale.Y)/2;
@@ -239,7 +265,7 @@ namespace Epsitec.Common.Document
 				if ( System.Math.Abs(this.zoom-this.ZoomPageWidth) > 0.00001 )  return false;
 
 				Size cs = this.ContainerSize;
-				Size size = this.document.PageSize;
+				Size size = this.PageSize;
 				Point scale = this.ScaleForZoom(this.zoom);
 				double originX = size.Width/2 - (cs.Width/scale.X)/2;
 
@@ -260,7 +286,7 @@ namespace Epsitec.Common.Document
 				{
 					Size cs = this.ContainerSize;
 					if ( cs.Width <= 0.0 || cs.Height <= 0.0 )  return 1.0;
-					Size size = this.document.PageSize;
+					Size size = this.PageSize;
 					double zx = cs.Width/size.Width;
 					double zy = cs.Height/size.Height;
 					double dpi = this.document.GlobalSettings.ScreenDpi;
@@ -282,7 +308,7 @@ namespace Epsitec.Common.Document
 				{
 					Size cs = this.ContainerSize;
 					if ( cs.Width <= 0.0 || cs.Height <= 0.0 )  return 1.0;
-					Size size = this.document.PageSize;
+					Size size = this.PageSize;
 					double zx = cs.Width/size.Width;
 					double dpi = this.document.GlobalSettings.ScreenDpi;
 					return zx*2.54*(96.0/dpi);
@@ -293,19 +319,19 @@ namespace Epsitec.Common.Document
 		public void ZoomPageAndCenter()
 		{
 			//	Remet le zoom pleine page et le centre par défaut.
-			this.ZoomAndCenter(this.ZoomPage, this.document.PageSize.Width/2, this.document.PageSize.Height/2);
+			this.ZoomAndCenter(this.ZoomPage, this.PageSize.Width/2, this.PageSize.Height/2);
 		}
 
 		public void ZoomPageWidthAndCenter()
 		{
 			//	Remet le zoom largeur page et le centre par défaut.
-			this.ZoomAndCenter(this.ZoomPageWidth, this.document.PageSize.Width/2, this.document.PageSize.Height/2);
+			this.ZoomAndCenter(this.ZoomPageWidth, this.PageSize.Width/2, this.PageSize.Height/2);
 		}
 
 		public void ZoomDefaultAndCenter()
 		{
 			//	Remet le zoom 100% et le centre par défaut.
-			this.ZoomAndCenter(1.0, this.document.PageSize.Width/2, this.document.PageSize.Height/2);
+			this.ZoomAndCenter(1.0, this.PageSize.Width/2, this.PageSize.Height/2);
 		}
 
 		public void ZoomAndCenter(double zoom, Point center)
@@ -449,8 +475,8 @@ namespace Epsitec.Common.Document
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				Size size = this.ContainerSize;
-				double sx = zoom*size.Width/this.document.PageSize.Width;
-				double sy = zoom*size.Height/this.document.PageSize.Height;
+				double sx = zoom*size.Width/this.PageSize.Width;
+				double sy = zoom*size.Height/this.PageSize.Height;
 				double scale = System.Math.Min(sx, sy);
 				return new Point(scale, scale);
 			}
@@ -2251,14 +2277,14 @@ namespace Epsitec.Common.Document
 					}
 					else
 					{
-						Size oldSize = this.document.PageSize;
+						Size oldSize = this.PageSize;
 
 						this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChange);
 						this.document.Modifier.InitiateChangingPage();
 						this.document.Modifier.TerminateChangingPage(newPage);
 						this.document.Modifier.OpletQueueValidateAction();
 
-						Size newSize = this.document.PageSize;
+						Size newSize = this.PageSize;
 						if ( oldSize != newSize )
 						{
 							this.ZoomAndCenter(this.zoom, newSize.Width/2, newSize.Height/2);

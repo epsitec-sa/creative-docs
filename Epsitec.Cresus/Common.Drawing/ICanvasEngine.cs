@@ -7,8 +7,8 @@ namespace Epsitec.Common.Drawing
 	public interface ICanvasEngine
 	{
 		bool IsDataCompatible(byte[] data);
-		Size[] GetSizes(byte[] data);
+		Canvas.IconKey[] GetIconKeys(byte[] data);
 		void GetSizeAndOrigin(byte[] data, out Drawing.Size size, out Drawing.Point origin);
-		void Paint(Drawing.Graphics graphics, Drawing.Size size, byte[] data, GlyphPaintStyle style, Drawing.Color color, object adorner);
+		void Paint(Drawing.Graphics graphics, Drawing.Size size, byte[] data, GlyphPaintStyle style, Drawing.Color color, int page, object adorner);
 	}
 }

@@ -82,6 +82,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public void Toto(string iconName, Drawing.Size size)
+		{
+			this.iconName = iconName;
+			this.Text = string.Format(@"<img src=""{0}"" dx=""{1}"" dy=""{2}""/>", iconName, size.Width, size.Height);
+		}
+
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{

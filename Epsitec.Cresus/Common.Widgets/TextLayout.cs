@@ -1533,7 +1533,7 @@ namespace Epsitec.Common.Widgets
 				if ( block.IsImage )
 				{
 					Drawing.Image image = block.Image;
-					
+
 					if ( image.IsPaintStyleDefined(paintStyle) )
 					{
 						image = image.GetImageForPaintStyle(paintStyle);
@@ -3658,6 +3658,26 @@ namespace Epsitec.Common.Widgets
 									System.Diagnostics.Debug.WriteLine (string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 //-									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 								}
+
+								if ( image is Drawing.Canvas )
+								{
+									Drawing.Canvas canvas = image as Drawing.Canvas;
+									Drawing.Canvas.IconKey key = new Drawing.Canvas.IconKey();
+
+									if ( parameters.ContainsKey("dx") )
+									{
+										string s = (string)parameters["dx"];
+										key.Size.Width = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+									}
+
+									if ( parameters.ContainsKey("dy") )
+									{
+										string s = (string)parameters["dy"];
+										key.Size.Height = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+									}
+
+									image = canvas.GetImageForIconKey(key);
+								}
 							
 								buffer.Append(TextLayout.CodeObject);
 								currentIndex ++;
@@ -3927,7 +3947,7 @@ noText:
 							
 								if ( image.IsOriginDefined )
 								{
-									block.ImageAscender  = image.Height - image.Origin.Y;
+									block.ImageAscender  = dy - image.Origin.Y;
 									block.ImageDescender = -image.Origin.Y;
 								}
 								else

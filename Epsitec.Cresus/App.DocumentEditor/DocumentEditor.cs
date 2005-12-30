@@ -935,6 +935,7 @@ namespace Epsitec.App.DocumentEditor
 				document.Modifier.ActiveViewer = viewer;
 				document.Modifier.AttachViewer(viewer);
 
+#if false
 				Viewer frame1 = new Viewer(document);
 				frame1.SetParent(rightPane);
 				frame1.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
@@ -948,6 +949,7 @@ namespace Epsitec.App.DocumentEditor
 				frame2.AnchorMargins = new Margins(wm, wm, 6+wm+30, wm);
 				frame2.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
 				document.Modifier.AttachViewer(frame2);
+#endif
 			}
 			else
 			{
@@ -3822,6 +3824,8 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Fouille s'il existe des icônes terminée par "*1.icon" ou "*2.icon" pour donner un nom
 			//	mixte, du genre "0.Delete;2.Delete2".
+			return icon;  //??
+
 			System.Diagnostics.Debug.Assert(this.iconList != null);
 			if ( icon == null )  return null;
 			if ( icon.IndexOf(";") != -1 )  return icon;  // déjà un nom mixte ?

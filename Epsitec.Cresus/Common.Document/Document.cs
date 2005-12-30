@@ -353,17 +353,24 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public Size[] PageSizes
+		public Canvas.IconKey[] IconKeys
 		{
-			//	Donne la taille de toutes les pages.
+			//	Donne les clés pour les icônes de toutes les pages.
 			get
 			{
-				Size[] sizes = new Size[this.objects.Count];
+				Canvas.IconKey[] keys = new Canvas.IconKey[this.objects.Count];
 				for ( int i=0 ; i<this.objects.Count ; i++ )
 				{
-					sizes[i] = this.GetPageSize(i);
+					Objects.Page page = this.objects[i] as Objects.Page;
+					
+					Canvas.IconKey key = new Canvas.IconKey();
+					key.Size = this.GetPageSize(page);
+					key.Language = page.Language;
+					key.PageRank = i;
+
+					keys[i] = key;
 				}
-				return sizes;
+				return keys;
 			}
 		}
 
