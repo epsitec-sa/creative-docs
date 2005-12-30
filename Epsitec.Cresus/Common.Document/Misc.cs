@@ -365,22 +365,7 @@ namespace Epsitec.Common.Document
 		static public string Icon(string icon)
 		{
 			//	Retourne le nom complet d'une icône.
-			if ( icon == "FontBold"       ||
-				 icon == "FontItalic"     ||
-				 icon == "FontUnderlined" ||
-				 icon == "FontOverlined"  )
-			{
-				string language = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-				if ( language != "fr" && language != "en" && language != "de" )
-				{
-					language = "en";
-				}
-				return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}-{1}.icon", icon, language);
-			}
-			else
-			{
-				return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon);
-			}
+			return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon);
 		}
 
 		static public string GetShortCut(CommandState cs)

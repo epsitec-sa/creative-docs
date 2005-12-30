@@ -153,9 +153,14 @@ namespace Epsitec.Common.Document.Ribbons
 			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
 			IconButton button = new IconButton(this);
 
+			if ( command == "FontBold" )
+			{
+				int i=123;
+			}
 			button.Command = command;
 			button.IconName = Misc.Icon(cs.IconName);
 			button.PreferredIconSize = Misc.IconPreferredSize(iconSize);
+			button.PreferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 			button.AutoFocus = false;
 
 			if ( cs.Statefull )
