@@ -154,7 +154,17 @@ namespace Epsitec.Common.Document.Ribbons
 			IconButton button = new IconButton(this);
 
 			button.Command = command;
-			button.IconName = Misc.Icon(cs.IconName, iconSize);
+			button.IconName = Misc.Icon(cs.IconName);
+
+			if ( iconSize == "1" )
+			{
+				button.PreferredIconSize = new Size(14, 14);
+			}
+			if ( iconSize == "2" )
+			{
+				button.PreferredIconSize = new Size(31, 31);
+			}
+
 			button.AutoFocus = false;
 
 			if ( cs.Statefull )

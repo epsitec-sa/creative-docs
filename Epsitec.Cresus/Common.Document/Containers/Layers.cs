@@ -302,7 +302,8 @@ namespace Epsitec.Common.Document.Containers
 					{
 						IconButton ib = new IconButton();
 						ib.Name = row.ToString();
-						ib.IconName = Misc.Icon("MagnetLayer1");
+						ib.IconName = Misc.Icon("MagnetLayer");
+						ib.PreferredIconSize = new Size(15, 15);
 						ib.ButtonStyle = ButtonStyle.ActivableIcon;
 						ib.Dock = DockStyle.Fill;
 						ib.DockMargins = new Margins(-1, -1, -1, -1);

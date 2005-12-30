@@ -68,17 +68,79 @@ namespace Epsitec.Common.Widgets
 				if ( this.iconName != value )
 				{
 					this.iconName = value;
-					
-					if ( this.iconName == null ||
-						 this.iconName == ""   )
-					{
-						this.Text = null;
-					}
-					else
-					{
-						this.Text = @"<img src=""" + this.iconName + @"""/>";
-					}
+					this.UpdateText();
 				}
+			}
+		}
+
+		public Drawing.Size						PreferredIconSize
+		{
+			get
+			{
+				return this.preferredIconSize;
+			}
+
+			set
+			{
+				if ( this.preferredIconSize != value )
+				{
+					this.preferredIconSize = value;
+					this.UpdateText();
+				}
+			}
+		}
+
+		public string							PreferredIconLanguage
+		{
+			get
+			{
+				return this.preferredIconLanguage;
+			}
+
+			set
+			{
+				if ( this.preferredIconLanguage != value )
+				{
+					this.preferredIconLanguage = value;
+					this.UpdateText();
+				}
+			}
+		}
+
+		protected void UpdateText()
+		{
+			if ( this.iconName == null ||
+				 this.iconName == ""   )
+			{
+				this.Text = null;
+			}
+			else
+			{
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				builder.Append(@"<img src=""");
+				builder.Append(this.iconName);
+				builder.Append(@"""");
+
+				if ( !this.preferredIconSize.IsEmpty )
+				{
+					builder.Append(@" dx=""");
+					builder.Append(this.preferredIconSize.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					builder.Append(@""" dy=""");
+					builder.Append(this.preferredIconSize.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					builder.Append(@"""");
+				}
+
+				if ( this.preferredIconLanguage != null )
+				{
+					builder.Append(@" language=""");
+					builder.Append(this.preferredIconLanguage);
+					builder.Append(@"""");
+				}
+
+				builder.Append(@"/>");
+
+				this.Text = builder.ToString();
 			}
 		}
 
@@ -151,6 +213,8 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected string						iconName;
+		protected string						iconName = null;
+		protected Drawing.Size					preferredIconSize = Drawing.Size.Empty;
+		protected string						preferredIconLanguage = null;
 	}
 }

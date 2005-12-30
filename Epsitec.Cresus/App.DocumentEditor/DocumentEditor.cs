@@ -1321,7 +1321,8 @@ namespace Epsitec.App.DocumentEditor
 		{
 			CommandState cs = this.commandDispatcher.GetCommandState(command);
 
-			IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName, "1"), cs.Name);
+			IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
+			button.PreferredIconSize = new Size(14, 14);
 			double h = this.info.DefaultHeight-3;
 			button.Size = new Size(h, h);
 			this.info.Items.Add(button);
@@ -3779,7 +3780,7 @@ namespace Epsitec.App.DocumentEditor
 			//	Crée un nouveau CommandState.
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
-			cs.IconName    = this.ExtendIcon(command);
+			cs.IconName    = command;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+command);
 
 			return cs;
@@ -3790,7 +3791,7 @@ namespace Epsitec.App.DocumentEditor
 			//	Crée un nouveau CommandState.
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
-			cs.IconName    = this.ExtendIcon(command);
+			cs.IconName    = command;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+command);
 			cs.Statefull   = statefull;
 
@@ -3802,7 +3803,7 @@ namespace Epsitec.App.DocumentEditor
 			//	Crée un nouveau CommandState.
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
-			cs.IconName    = this.ExtendIcon(icon);
+			cs.IconName    = icon;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip);
 
 			return cs;
@@ -3813,31 +3814,11 @@ namespace Epsitec.App.DocumentEditor
 			//	Crée un nouveau CommandState.
 			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
 
-			cs.IconName    = this.ExtendIcon(icon);
+			cs.IconName    = icon;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip);
 			cs.Statefull   = statefull;
 
 			return cs;
-		}
-
-		protected string ExtendIcon(string icon)
-		{
-			//	Fouille s'il existe des icônes terminée par "*1.icon" ou "*2.icon" pour donner un nom
-			//	mixte, du genre "0.Delete;2.Delete2".
-			return icon;  //??
-
-			System.Diagnostics.Debug.Assert(this.iconList != null);
-			if ( icon == null )  return null;
-			if ( icon.IndexOf(";") != -1 )  return icon;  // déjà un nom mixte ?
-
-			bool size1 = this.iconList.ContainsKey(icon+"1");  // existe en petite taille ?
-			bool size2 = this.iconList.ContainsKey(icon+"2");  // existe en grande taille ?
-
-			if (  size1 && !size2 )  return Misc.Icon1(icon);   // normal + petit
-			if ( !size1 &&  size2 )  return Misc.Icon2(icon);   // normal + grand
-			if (  size1 &&  size2 )  return Misc.Icon12(icon);  // normal + petit + grand
-
-			return icon;
 		}
 
 		protected void MakeIconList()

@@ -353,54 +353,7 @@ namespace Epsitec.Common.Document
 			return string.Format(@"<img src=""{0}""/>", Misc.Icon(icon));
 		}
 
-		static public string Icon1(string icon)
-		{
-			//	Retourne le nom d'une icône de taille normale + petite.
-			//	Format: "0.Icon;1.Icon1"
-			return string.Format("0.{0};1.{0}1", icon);
-		}
-
-		static public string Icon2(string icon)
-		{
-			//	Retourne le nom d'une icône de taille normale + grande.
-			//	Format: "0.Icon;2.Icon2"
-			return string.Format("0.{0};2.{0}2", icon);
-		}
-
-		static public string Icon12(string icon)
-		{
-			//	Retourne le nom d'une icône de taille normale + petite + grande.
-			//	Format: "0.Icon;1.Icon1;2.Icon2"
-			return string.Format("0.{0};1.{0}1;2.{0}2", icon);
-		}
-
 		static public string Icon(string icon)
-		{
-			//	Retourne le nom complet d'une icône, avec préférence pour la taille par défaut.
-			return Misc.Icon(icon, "0");
-		}
-
-		static public string Icon(string icon, string size)
-		{
-			//	Retourne le nom complet d'une icône, avec préférence pour une taille donnée.
-			System.Diagnostics.Debug.Assert(size.Length == 1);
-			if ( icon == null )  return null;
-
-			if ( icon.IndexOf(";") != -1 )
-			{
-				string[] list = icon.Split(';');
-				foreach ( string var in list )
-				{
-					if ( var[1] == '.' && var[0] == size[0] )
-					{
-						return Misc.IconBase(var.Substring(2));
-					}
-				}
-			}
-			return Misc.IconBase(icon);
-		}
-
-		static protected string IconBase(string icon)
 		{
 			//	Retourne le nom complet d'une icône.
 			if ( icon == "FontBold"       ||

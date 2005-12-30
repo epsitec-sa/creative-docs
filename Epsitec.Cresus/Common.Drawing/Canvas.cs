@@ -321,6 +321,7 @@ namespace Epsitec.Common.Drawing
 
 		public class IconKey
 		{
+			//	Informations sur l'icône contenue dans une page du document.
 			public Size				Size = new Size(0, 0);
 			public string			Language = null;
 			public int				PageRank = -1;
@@ -328,6 +329,7 @@ namespace Epsitec.Common.Drawing
 
 		protected class KeyTable : System.Collections.IDictionary
 		{
+			//	Collection de Canevas, accessibles par une clé IconKey.
 			public KeyTable()
 			{
 				this.hash = new System.Collections.Hashtable();
