@@ -22,7 +22,7 @@ namespace Epsitec.Common.Drawing
 			System.Diagnostics.Debug.Assert(iks != null && iks.Length > 0);
 
 			this.debugDeep = 0;
-			this.defaultKey = iks[0];
+			this.firstPageKey = iks[0];  // clé pour la première page
 
 			this.keys = new KeyTable();
 			foreach ( IconKey ik in iks )
@@ -104,29 +104,46 @@ namespace Epsitec.Common.Drawing
 
 		public Image GetImageForIconKey(IconKey key)
 		{
+			//	Cherche l'image correspondant le mieux possible à une clé.
 			System.Diagnostics.Debug.Assert(this.keys != null);
 
-			foreach ( System.Collections.DictionaryEntry dict in this.keys )
+			//	Cherche une image correspondant le mieux possible à la taille demandée.
+			if ( key.Size.Width != 0 && key.Size.Height != 0 )
 			{
-				IconKey k = dict.Key as IconKey;
-
-				if ( key.Size == k.Size )
+				double min = 1000000;
+				Canvas best = null;
+				foreach ( System.Collections.DictionaryEntry dict in this.keys )
 				{
-					return dict.Value as Canvas;
+					IconKey k = dict.Key as IconKey;
+
+					double delta = Canvas.Delta(key.Size, k.Size);
+					if ( delta < min )
+					{
+						min = delta;
+						best = dict.Value as Canvas;
+					}
 				}
+				if ( best != null )  return best;
 			}
 
-			if ( this.defaultKey != null )
+			//	Cherche l'image correspondant à la clé de la première page.
+			if ( this.firstPageKey != null )
 			{
-				return this.keys[this.defaultKey];
+				return this.keys[this.firstPageKey];
 			}
 
+			//	En désespoir de cause, retourne n'importe quelle image.
 			foreach ( System.Collections.DictionaryEntry dict in this.keys )
 			{
 				return dict.Value as Canvas;
 			}
 
-			return null;
+			throw new System.ArgumentException("GetImageForIconKey");
+		}
+
+		protected static double Delta(Size s1, Size s2)
+		{
+			return System.Math.Abs(s1.Width-s2.Width) + System.Math.Abs(s1.Height-s2.Height);
 		}
 		
 		public override Image GetImageForPaintStyle(GlyphPaintStyle style)
@@ -546,7 +563,7 @@ namespace Epsitec.Common.Drawing
 		protected bool							isDisposed;
 		protected bool							isGeomOk;
 		
-		protected IconKey						defaultKey = null;
+		protected IconKey						firstPageKey = null;
 		protected IconKey						key = null;
 		protected KeyTable						keys;
 
