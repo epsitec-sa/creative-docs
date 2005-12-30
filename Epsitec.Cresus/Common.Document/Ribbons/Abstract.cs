@@ -156,7 +156,6 @@ namespace Epsitec.Common.Document.Ribbons
 			button.Command = command;
 			button.IconName = Misc.Icon(cs.IconName);
 			button.PreferredIconSize = Misc.IconPreferredSize(iconSize);
-			button.PreferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 			button.AutoFocus = false;
 
 			if ( cs.Statefull )

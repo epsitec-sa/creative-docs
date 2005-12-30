@@ -109,23 +109,41 @@ namespace Epsitec.Common.Drawing
 			//	Cherche l'image correspondant le mieux possible à une clé.
 			System.Diagnostics.Debug.Assert(this.keys != null);
 
+			if ( this.keys.Count == 2 )
+			{
+				int i=123;
+			}
+
 			//	Cherche une image correspondant le mieux possible à la langue et à la taille demandée.
 			if ( (key.Size.Width != 0 && key.Size.Height != 0) || key.Language != null )
 			{
 				double min = 1000000;
 				Canvas best = null;
+				bool first = true;
+				bool diff = false;
+				double last = 0;
 				foreach ( System.Collections.DictionaryEntry dict in this.keys )
 				{
 					IconKey candidate = dict.Key as IconKey;
-
 					double delta = Canvas.Delta(key, candidate);
+
 					if ( delta < min )
 					{
 						min = delta;
 						best = dict.Value as Canvas;
 					}
+
+					if ( first )
+					{
+						last = delta;
+						first = false;
+					}
+					else
+					{
+						if ( last != delta )  diff = true;
+					}
 				}
-				if ( best != null )  return best;
+				if ( diff && best != null )  return best;
 			}
 
 			//	Cherche l'image correspondant à la clé de la première page.
@@ -150,9 +168,9 @@ namespace Epsitec.Common.Drawing
 			//	est grande si le candidat est mauvais.
 			double delta = 0;
 
-			if ( search.Language != null )  // cherche une langue précise ?
+			if ( search.Language != null && search.Language != "" )  // cherche une langue précise ?
 			{
-				if ( candidate.Language == null )
+				if ( candidate.Language == null || candidate.Language == "" )
 				{
 					delta += 5000;
 				}

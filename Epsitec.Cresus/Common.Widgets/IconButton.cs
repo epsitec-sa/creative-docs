@@ -124,7 +124,7 @@ namespace Epsitec.Common.Widgets
 				builder.Append(this.iconName);
 				builder.Append(@"""");
 
-				if ( !this.preferredIconSize.IsEmpty )
+				if ( this.preferredIconSize.Width != 0 && this.preferredIconSize.Height != 0 )
 				{
 					builder.Append(@" dx=""");
 					builder.Append(this.preferredIconSize.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Widgets
 					builder.Append(@"""");
 				}
 
-				if ( this.preferredIconLanguage != null )
+				if ( this.preferredIconLanguage != null && this.preferredIconLanguage != "" )
 				{
 					builder.Append(@" language=""");
 					builder.Append(this.preferredIconLanguage);
@@ -211,6 +211,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected string						iconName = null;
 		protected Drawing.Size					preferredIconSize = Drawing.Size.Empty;
-		protected string						preferredIconLanguage = null;
+		protected string						preferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 	}
 }

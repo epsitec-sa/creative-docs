@@ -2605,7 +2605,6 @@ namespace Epsitec.Common.Document
 							button.ButtonStyle = ButtonStyle.ActivableIcon;
 						}
 
-						button.PreferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 						button.Width = this.MiniBarCommandWidth(cmd);
 						button.Dock = DockStyle.Left;
 						button.SetParent(line);
