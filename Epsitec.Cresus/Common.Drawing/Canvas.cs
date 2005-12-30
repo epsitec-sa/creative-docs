@@ -68,6 +68,7 @@ namespace Epsitec.Common.Drawing
 
 		public int DebugDeep
 		{
+			//	Profondeur 0..2 pour la mise au point.
 			get
 			{
 				return this.debugDeep;
@@ -102,6 +103,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+
 		public Image GetImageForIconKey(IconKey key)
 		{
 			//	Cherche l'image correspondant le mieux possible à une clé.
@@ -114,9 +116,9 @@ namespace Epsitec.Common.Drawing
 				Canvas best = null;
 				foreach ( System.Collections.DictionaryEntry dict in this.keys )
 				{
-					IconKey k = dict.Key as IconKey;
+					IconKey candidate = dict.Key as IconKey;
 
-					double delta = Canvas.Delta(key, k);
+					double delta = Canvas.Delta(key, candidate);
 					if ( delta < min )
 					{
 						min = delta;
@@ -183,8 +185,10 @@ namespace Epsitec.Common.Drawing
 			return System.Math.Abs(s1.Width-s2.Width) + System.Math.Abs(s1.Height-s2.Height);
 		}
 		
+
 		public override Image GetImageForPaintStyle(GlyphPaintStyle style)
 		{
+			//	Cherche l'image correspondant à un style.
 			System.Diagnostics.Debug.Assert(this.effects != null);
 			return this.effects[style];
 		}
@@ -226,6 +230,7 @@ namespace Epsitec.Common.Drawing
 		
 		public override Size			Size
 		{
+			//	Taille de l'image, selon les préférences.
 			get
 			{
 				this.ValidateGeometry();
@@ -261,6 +266,7 @@ namespace Epsitec.Common.Drawing
 		
 		protected void ValidateCache()
 		{
+			//	Met le bitmap de l'image en cache, à la taille selon les préférences.
 			if ( this.cache == null )
 			{
 				Size size = this.Size;
@@ -354,7 +360,6 @@ namespace Epsitec.Common.Drawing
 		protected override void Dispose(bool disposing)
 		{
 			System.Diagnostics.Debug.Assert(this.isDisposed == false);
-			
 			this.isDisposed = true;
 			
 			if ( disposing )
@@ -383,7 +388,8 @@ namespace Epsitec.Common.Drawing
 
 		protected class KeyTable : System.Collections.IDictionary
 		{
-			//	Collection de Canevas, accessibles par une clé IconKey.
+			//	Collection de Canvas, accessibles par une clé IconKey.
+			//	Les Canvas de cette collection on un debugDeep = 1.
 			public KeyTable()
 			{
 				this.hash = new System.Collections.Hashtable();
@@ -485,7 +491,8 @@ namespace Epsitec.Common.Drawing
 
 		protected class EffectTable : System.Collections.IDictionary
 		{
-			//	Collection de Canevas, accessibles par une clé GlyphPaintStyle.
+			//	Collection de Canvas, accessibles par une clé GlyphPaintStyle.
+			//	Les Canvas de cette collection on un debugDeep = 2.
 			public EffectTable()
 			{
 				this.hash = new System.Collections.Hashtable ();
@@ -615,6 +622,6 @@ namespace Epsitec.Common.Drawing
 		protected int							debugDeep = -1;
 		
 		static ICanvasEngine[]					engines = new ICanvasEngine[0];
-		static System.Collections.ArrayList		globalIconCache = new System.Collections.ArrayList ();
+		static System.Collections.ArrayList		globalIconCache = new System.Collections.ArrayList();
 	}
 }

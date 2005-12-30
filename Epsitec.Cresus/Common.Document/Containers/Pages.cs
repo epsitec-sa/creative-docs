@@ -510,13 +510,22 @@ namespace Epsitec.Common.Document.Containers
 
 			this.ignoreChanged = true;
 
-			this.pageSizeWidth.InternalValue = (decimal) size.Width;
-			this.pageSizeWidth.TextDisplayMode = widthDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+			if ( this.pageSizeWidth != null )
+			{
+				this.pageSizeWidth.InternalValue = (decimal) size.Width;
+				this.pageSizeWidth.TextDisplayMode = widthDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+			}
 
-			this.languageField.Text = language;
+			if ( this.pageSizeHeight != null )
+			{
+				this.pageSizeHeight.InternalValue = (decimal) size.Height;
+				this.pageSizeHeight.TextDisplayMode = heightDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+			}
 
-			this.pageSizeHeight.InternalValue = (decimal) size.Height;
-			this.pageSizeHeight.TextDisplayMode = heightDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+			if ( this.languageField != null )
+			{
+				this.languageField.Text = language;
+			}
 
 			this.radioSlave.ActiveState  = (page.MasterType == Objects.MasterType.Slave) ? ActiveState.Yes : ActiveState.No;
 			this.radioMaster.ActiveState = (page.MasterType != Objects.MasterType.Slave) ? ActiveState.Yes : ActiveState.No;

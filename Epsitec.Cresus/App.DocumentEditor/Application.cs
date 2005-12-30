@@ -18,7 +18,7 @@ namespace Epsitec.App.DocumentEditor
 			
 			//	Il faut indiquer ci-après la date de diffusion du logiciel, qui doit
 			//	être mise à jour chaque fois que l'on génère un nouveau CD :
-			Common.Support.SerialAlgorithm.SetProductBuildDate(new System.DateTime(2005, 1, 20));
+			Common.Support.SerialAlgorithm.SetProductBuildDate(new System.DateTime(2005, 12, 31));
 			Common.Support.SerialAlgorithm.SetProductGenerationNumber(1, 0);
 			
 			Widget.Initialise();
@@ -27,8 +27,8 @@ namespace Epsitec.App.DocumentEditor
 			Common.Support.ImageProvider.Default.EnableLongLifeCache = true;
 			Common.Support.ImageProvider.Default.PrefillManifestIconCache();
 
-			Application.application = new Application(DocumentType.Pictogram);
-			//Application.application = new Application(DocumentType.Graphic);
+			//Application.application = new Application(DocumentType.Pictogram);
+			Application.application = new Application(DocumentType.Graphic);
 			Application.application.MainWindow.Run();
 		}
 		
