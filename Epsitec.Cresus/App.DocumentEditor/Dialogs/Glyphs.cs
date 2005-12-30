@@ -651,7 +651,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				abc        = this.editor.CurrentDocument.Modifier.ActiveViewer.DrawingContext.TextFontSampleAbc;
 			}
 			int quickCount;
-			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), quickFonts, quickOnly, this.fontFace, out quickCount);
+			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(true), quickFonts, quickOnly, this.fontFace, out quickCount);
 
 			this.fieldFontFace.FontList     = fontList;
 			this.fieldFontFace.QuickCount   = quickCount;
