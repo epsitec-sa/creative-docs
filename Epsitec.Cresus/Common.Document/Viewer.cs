@@ -312,11 +312,14 @@ namespace Epsitec.Common.Document
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
-					this.document.IsDirtySerialize = true;
-					this.AutoScrollTimerStart(message);
-					this.RestartMiniBar();
-					this.ProcessMouseDown(message, pos);
-					this.mouseDragging = true;
+					if ( !this.mouseDragging )
+					{
+						this.document.IsDirtySerialize = true;
+						this.AutoScrollTimerStart(message);
+						this.RestartMiniBar();
+						this.ProcessMouseDown(message, pos);
+						this.mouseDragging = true;
+					}
 					break;
 				
 				case MessageType.MouseMove:
