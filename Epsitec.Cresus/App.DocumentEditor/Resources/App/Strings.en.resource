@@ -116,7 +116,7 @@
 	<data name="Dialog.Glyphs.TabPage.Alternates">Alternates</data>
 	<data name="Dialog.Glyphs.Button.Insert">Insert</data>
 	<data name="Dialog.Glyphs.Tooltip.Insert">Insert symbol/character in text</data>
-	<data name="Dialog.Glyphs.Tooltip.ArrayMinus">Smaller preview</data>
+	<data name="Dialog.Glyphs.Tooltip.ArraySize">@@Taille de l'aperçu</data>
 	<data name="Dialog.Glyphs.Tooltip.ArrayPlus">Larger preview</data>
 	<data name="Dialog.Glyphs.Tooltip.CurrentFont">Synchronize with active font</data>
 	<data name="Dialog.Glyphs.FontFace">Font</data>

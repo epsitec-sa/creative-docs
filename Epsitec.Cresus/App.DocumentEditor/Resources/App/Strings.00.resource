@@ -117,8 +117,7 @@
 	<data name="Dialog.Glyphs.TabPage.Alternates">Alternatives</data>
 	<data name="Dialog.Glyphs.Button.Insert">Insérer</data>
 	<data name="Dialog.Glyphs.Tooltip.Insert">Insérer dans le texte</data>
-	<data name="Dialog.Glyphs.Tooltip.ArrayMinus">Aperçu plus petit</data>
-	<data name="Dialog.Glyphs.Tooltip.ArrayPlus">Aperçu plus grand</data>
+	<data name="Dialog.Glyphs.Tooltip.ArraySize">Taille de l'aperçu</data>
 	<data name="Dialog.Glyphs.Tooltip.CurrentFont">Récupérer la police en cours</data>
 	<data name="Dialog.Glyphs.FontFace">Police</data>
 	<data name="Dialog.Glyphs.FontStyle">Variante</data>

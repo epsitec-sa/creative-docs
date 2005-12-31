@@ -109,11 +109,6 @@ namespace Epsitec.Common.Drawing
 			//	Cherche l'image correspondant le mieux possible à une clé.
 			System.Diagnostics.Debug.Assert(this.keys != null);
 
-			if ( this.keys.Count == 2 )
-			{
-				int i=123;
-			}
-
 			//	Cherche une image correspondant le mieux possible à la langue et à la taille demandée.
 			if ( (key.Size.Width != 0 && key.Size.Height != 0) || key.Language != null )
 			{

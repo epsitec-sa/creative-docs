@@ -165,30 +165,24 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.status = new TextField(bookArray);
 				this.status.Anchor = AnchorStyles.Bottom|AnchorStyles.LeftAndRight;
-				this.status.AnchorMargins = new Margins(6, 4+20+20+6, 0, 6);
+				this.status.AnchorMargins = new Margins(6, 4+80+6, 0, 6);
 				this.status.IsReadOnly = true;
 
-				this.minus = new Button(bookArray);
-				this.minus.Text = "\u2212";  // caractère "moins"
-				this.minus.Width = 20;
-				this.minus.Height = 20;
-				this.minus.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
-				this.minus.AnchorMargins = new Margins(6, 20+6, 0, 6);
-				this.minus.TabIndex = tabIndex++;
-				this.minus.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.minus.Clicked += new MessageEventHandler(this.HandleMinusClicked);
-				ToolTip.Default.SetToolTip(this.minus, Res.Strings.Dialog.Glyphs.Tooltip.ArrayMinus);
-
-				this.plus = new Button(bookArray);
-				this.plus.Text = "+";
-				this.plus.Width = 20;
-				this.plus.Height = 20;
-				this.plus.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
-				this.plus.AnchorMargins = new Margins(6, 6, 0, 6);
-				this.plus.TabIndex = tabIndex++;
-				this.plus.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.plus.Clicked += new MessageEventHandler(this.HandlePlusClicked);
-				ToolTip.Default.SetToolTip(this.plus, Res.Strings.Dialog.Glyphs.Tooltip.ArrayPlus);
+				this.slider = new HSlider(bookArray);
+				this.slider.Width = 80;
+				this.slider.Height = 14;
+				this.slider.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
+				this.slider.AnchorMargins = new Margins(6, 6, 0, 9);
+				this.slider.TabIndex = tabIndex++;
+				this.slider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.slider.MinValue = 20.0M;
+				this.slider.MaxValue = 50.0M;
+				this.slider.SmallChange = 1.0M;
+				this.slider.LargeChange = 10.0M;
+				this.slider.Resolution = 1.0M;
+				this.slider.Value = (decimal) this.array.CellSize;
+				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Glyphs.Tooltip.ArraySize);
 
 				//	Onglet Alternates.
 				tabIndex = 0;
@@ -204,36 +198,30 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.alternatesArray.TabIndex = tabIndex++;
 				this.alternatesArray.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.alternatesArray.SelectedIndex = -1;
-				this.alternatesArray.CellSize = 48.828125;  // taille max
+				this.alternatesArray.CellSize = 50;  // taille max
 				this.alternatesArray.DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
 				this.alternatesArray.ChangeSelected += new EventHandler(this.HandleArraySelected);
 
 				this.alternatesStatus = new TextField(bookAlternates);
 				this.alternatesStatus.Anchor = AnchorStyles.Bottom|AnchorStyles.LeftAndRight;
-				this.alternatesStatus.AnchorMargins = new Margins(6, 4+20+20+6, 0, 6);
+				this.alternatesStatus.AnchorMargins = new Margins(6, 4+80+6, 0, 6);
 				this.alternatesStatus.IsReadOnly = true;
 
-				this.alternatesMinus = new Button(bookAlternates);
-				this.alternatesMinus.Text = "\u2212";  // caractère "moins"
-				this.alternatesMinus.Width = 20;
-				this.alternatesMinus.Height = 20;
-				this.alternatesMinus.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
-				this.alternatesMinus.AnchorMargins = new Margins(6, 20+6, 0, 6);
-				this.alternatesMinus.TabIndex = tabIndex++;
-				this.alternatesMinus.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.alternatesMinus.Clicked += new MessageEventHandler(this.HandleMinusClicked);
-				ToolTip.Default.SetToolTip(this.alternatesMinus, Res.Strings.Dialog.Glyphs.Tooltip.ArrayMinus);
-
-				this.alternatesPlus = new Button(bookAlternates);
-				this.alternatesPlus.Text = "+";
-				this.alternatesPlus.Width = 20;
-				this.alternatesPlus.Height = 20;
-				this.alternatesPlus.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
-				this.alternatesPlus.AnchorMargins = new Margins(6, 6, 0, 6);
-				this.alternatesPlus.TabIndex = tabIndex++;
-				this.alternatesPlus.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.alternatesPlus.Clicked += new MessageEventHandler(this.HandlePlusClicked);
-				ToolTip.Default.SetToolTip(this.alternatesPlus, Res.Strings.Dialog.Glyphs.Tooltip.ArrayPlus);
+				this.alternatesSlider = new HSlider(bookAlternates);
+				this.alternatesSlider.Width = 80;
+				this.alternatesSlider.Height = 14;
+				this.alternatesSlider.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
+				this.alternatesSlider.AnchorMargins = new Margins(6, 6, 0, 9);
+				this.alternatesSlider.TabIndex = tabIndex++;
+				this.alternatesSlider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.alternatesSlider.MinValue = 20.0M;
+				this.alternatesSlider.MaxValue = 50.0M;
+				this.alternatesSlider.SmallChange = 1.0M;
+				this.alternatesSlider.LargeChange = 10.0M;
+				this.alternatesSlider.Resolution = 1.0M;
+				this.alternatesSlider.Value = (decimal) this.alternatesArray.CellSize;
+				this.alternatesSlider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				ToolTip.Default.SetToolTip(this.alternatesSlider, Res.Strings.Dialog.Glyphs.Tooltip.ArraySize);
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
@@ -501,16 +489,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		};
 
 
-		//	Met à jour les boutons -/+.
-		protected void UpdateMinusPlus()
-		{
-			if ( this.book.ActivePage.Name == "List" )  return;
-
-			double size = this.Array.CellSize;
-			this.Minus.Enable = (size > 20.0);
-			this.Plus.Enable = (size < 48.0);
-		}
-
 		protected void EditInsert()
 		{
 			//	Insère le glyphe selon l'onglet actif dans le texte en édition.
@@ -633,7 +611,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	L'onglet actif a changé.
 			this.UpdateAlternates();
-			this.UpdateMinusPlus();
 		}
 
 		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
@@ -730,22 +707,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.EditInsert();
 		}
 
-		private void HandleMinusClicked(object sender, MessageEventArgs e)
+		private void HandleSliderChanged(object sender)
 		{
-			double size = this.Array.CellSize;
-			size = System.Math.Max(20.0, size/1.25);
-			this.Array.CellSize = size;
-
-			this.UpdateMinusPlus();
-		}
-
-		private void HandlePlusClicked(object sender, MessageEventArgs e)
-		{
-			double size = this.Array.CellSize;
-			size = System.Math.Min(48.828125, size*1.25);
-			this.Array.CellSize = size;
-
-			this.UpdateMinusPlus();
+			HSlider slider = sender as HSlider;
+			if ( slider == null )  return;
+			this.Array.CellSize = (double) slider.Value;
 		}
 
 		private void HandleWindowCloseClicked(object sender)
@@ -790,53 +756,29 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected Button Minus
-		{
-			//	Donne le bouton "-" en fonction de l'onglet actif.
-			get
-			{
-				if ( this.book.ActivePage.Name == "Array"      )  return this.minus;
-				if ( this.book.ActivePage.Name == "Alternates" )  return this.alternatesMinus;
-				return null;
-			}
-		}
 
-		protected Button Plus
-		{
-			//	Donne le bouton "+" en fonction de l'onglet actif.
-			get
-			{
-				if ( this.book.ActivePage.Name == "Array"      )  return this.plus;
-				if ( this.book.ActivePage.Name == "Alternates" )  return this.alternatesPlus;
-				return null;
-			}
-		}
+		protected string					fontFace;
+		protected string					fontStyle;
+		protected readonly int				maxFamiliy = 10;
+		protected int[]						listSelectedIndex;
+		protected int						arrayProofCode = -1;
+		protected bool						ignoreChanged = false;
 
+		protected TabBook					book;
 
-		protected string				fontFace;
-		protected string				fontStyle;
-		protected readonly int			maxFamiliy = 10;
-		protected int[]					listSelectedIndex;
-		protected int					arrayProofCode = -1;
-		protected bool					ignoreChanged = false;
-
-		protected TabBook				book;
-
-		protected TextFieldCombo		family;
-		protected ScrollList			list;
+		protected TextFieldCombo			family;
+		protected ScrollList				list;
 
 		protected Common.Document.Widgets.TextFieldFontFace fieldFontFace;
-		protected TextFieldCombo		fieldFontStyle;
-		protected GlyphButton			currentFont;
-		protected GlyphArray			array;
-		protected TextField				status;
-		protected Button				minus;
-		protected Button				plus;
+		protected TextFieldCombo			fieldFontStyle;
+		protected GlyphButton				currentFont;
+		protected GlyphArray				array;
+		protected TextField					status;
+		protected HSlider					slider;
 
-		protected GlyphArray			alternatesArray;
-		protected TextField				alternatesStatus;
-		protected Button				alternatesMinus;
-		protected Button				alternatesPlus;
-		protected bool					alternatesDirty = true;
+		protected GlyphArray				alternatesArray;
+		protected TextField					alternatesStatus;
+		protected HSlider					alternatesSlider;
+		protected bool						alternatesDirty = true;
 	}
 }
