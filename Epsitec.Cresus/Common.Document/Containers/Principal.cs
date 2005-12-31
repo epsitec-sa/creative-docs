@@ -416,7 +416,7 @@ namespace Epsitec.Common.Document.Containers
 			{
 				//	Crée tous les boutons pour l'objet en cours de création.
 				Objects.Abstract layer = context.RootObject();
-				int rank = viewer.CreateRank();
+				int rank = viewer.CreateRank;
 				Objects.Abstract creatingObject = layer.Objects[rank] as Objects.Abstract;
 				double topMargin = 50;
 				for ( int i=0 ; i<100 ; i++ )

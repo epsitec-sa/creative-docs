@@ -4080,9 +4080,10 @@ namespace Epsitec.App.DocumentEditor
 			//	Appelé par le document lorsque l'état "enregistrer" a changé.
 			if ( this.IsCurrentDocument )
 			{
-				this.saveState.Enable = this.CurrentDocument.IsDirtySerialize;
-				this.saveAsState.Enable = true;
-				this.saveModelState.Enable = true;
+				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
+				this.saveState.Enable = !isCreating && this.CurrentDocument.IsDirtySerialize;
+				this.saveAsState.Enable = !isCreating;
+				this.saveModelState.Enable = !isCreating;
 				this.UpdateBookDocuments();
 			}
 			else

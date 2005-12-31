@@ -622,7 +622,7 @@ namespace Epsitec.Common.Document
 
 				this.document.Modifier.OpletQueueEnable = false;
 				Objects.Abstract layer = this.drawingContext.RootObject();
-				this.createRank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
+				this.CreateRank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
 			}
 
 			if ( this.createRank != -1 )
@@ -669,7 +669,7 @@ namespace Epsitec.Common.Document
 					layer.Objects.RemoveAt(this.createRank);
 
 					this.document.Modifier.OpletQueueEnable = true;
-					this.createRank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
+					this.CreateRank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
 					this.document.Modifier.GroupUpdateParents();
 					this.document.Modifier.OpletQueueValidateAction();
 
@@ -691,7 +691,7 @@ namespace Epsitec.Common.Document
 					obj.Dispose();
 					this.document.Modifier.OpletQueueCancelAction();  // annule les propriétés
 				}
-				this.createRank = -1;
+				this.CreateRank = -1;
 			}
 
 			if ( selectAfterCreation )
@@ -726,7 +726,7 @@ namespace Epsitec.Common.Document
 				layer.Objects.RemoveAt(this.createRank);
 
 				this.document.Modifier.OpletQueueEnable = true;
-				this.createRank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
+				this.CreateRank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
 				this.document.Modifier.GroupUpdateParents();
 				this.document.Modifier.OpletQueueValidateAction();
 			}
@@ -738,7 +738,7 @@ namespace Epsitec.Common.Document
 				obj.Dispose();
 				this.document.Modifier.OpletQueueCancelAction();  // annule les propriétés
 			}
-			this.createRank = -1;
+			this.CreateRank = -1;
 			this.document.Notifier.NotifyCreateChanged();
 			this.document.Notifier.NotifySelectionChanged();
 		}
@@ -752,10 +752,22 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public int CreateRank()
+		public int CreateRank
 		{
-			//	Retourne le rang de l'objet en cours de création.
-			return this.createRank;
+			//	Rang de l'objet en cours de création.
+			get
+			{
+				return this.createRank;
+			}
+
+			set
+			{
+				if ( this.createRank != value )
+				{
+					this.createRank = value;
+					this.document.Notifier.NotifySaveChanged();
+				}
+			}
 		}
 		#endregion
 
