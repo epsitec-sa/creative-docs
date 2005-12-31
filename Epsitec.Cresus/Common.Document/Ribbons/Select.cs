@@ -14,8 +14,8 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.SelectMain;
 
-			this.buttonDelete    = this.CreateIconButton("Delete", "Big");
-			this.buttonDuplicate = this.CreateIconButton("Duplicate", "Big");
+			this.buttonDelete    = this.CreateIconButton("Delete", "Large");
+			this.buttonDuplicate = this.CreateIconButton("Duplicate", "Large");
 
 			this.separatorV = new IconSeparator(this);
 			this.separatorH = new IconSeparator(this);

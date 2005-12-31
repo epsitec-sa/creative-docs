@@ -135,7 +135,7 @@ namespace Epsitec.Common.Widgets
 
 				if ( this.preferredIconLanguage != null && this.preferredIconLanguage != "" )
 				{
-					builder.Append(@" language=""");
+					builder.Append(@" lang=""");
 					builder.Append(this.preferredIconLanguage);
 					builder.Append(@"""");
 				}

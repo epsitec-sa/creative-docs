@@ -15,11 +15,11 @@ namespace Epsitec.Common.Document.Ribbons
 			this.title.Text = Res.Strings.Action.FileMain;
 
 			this.buttonNew       = this.CreateIconButton("New");
-			this.buttonOpen      = this.CreateIconButton("Open", "Big");
+			this.buttonOpen      = this.CreateIconButton("Open", "Large");
 			this.buttonLastFiles = this.CreateMenuButton("", Res.Strings.Action.LastFiles, new MessageEventHandler(this.HandleLastFilesClicked));
-			this.buttonSave      = this.CreateIconButton("Save", "Big");
+			this.buttonSave      = this.CreateIconButton("Save", "Large");
 			this.buttonSaveAs    = this.CreateIconButton("SaveAs");
-			this.buttonPrint     = this.CreateIconButton("Print", "Big");
+			this.buttonPrint     = this.CreateIconButton("Print", "Large");
 			this.buttonExport    = this.CreateIconButton("Export");
 			this.buttonCloseAll  = this.CreateIconButton("CloseAll");
 			this.separator       = new IconSeparator(this);

@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonCut   = this.CreateIconButton("Cut");
 			this.buttonCopy  = this.CreateIconButton("Copy");
-			this.buttonPaste = this.CreateIconButton("Paste", "Big");
+			this.buttonPaste = this.CreateIconButton("Paste", "Large");
 			
 			this.UpdateClientGeometry();
 		}

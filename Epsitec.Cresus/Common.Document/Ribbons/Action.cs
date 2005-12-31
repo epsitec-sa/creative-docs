@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ActionMain;
 
-			this.buttonSettings  = this.CreateIconButton("Settings", "Big");
+			this.buttonSettings  = this.CreateIconButton("Settings", "Large");
 			this.buttonInfos     = this.CreateIconButton("Infos");
 			this.buttonPageStack = this.CreateIconButton("PageStack");
 			this.buttonKey       = this.CreateIconButton("KeyApplication");

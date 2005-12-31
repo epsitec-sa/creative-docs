@@ -357,8 +357,8 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne la taille préférée pour une icône. Si la taille réelle de l'icône n'est
 			//	pas exactement identique, ce n'est pas important. Drawing.Canvas cherche au mieux.
-			if ( iconSize == "Little" )  return new Size(14, 14);
-			if ( iconSize == "Big"    )  return new Size(31, 31);
+			if ( iconSize == "Small" )  return new Size(14, 14);
+			if ( iconSize == "Large" )  return new Size(31, 31);
 			return new Size(20, 20);
 		}
 

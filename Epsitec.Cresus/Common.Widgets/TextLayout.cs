@@ -3676,9 +3676,9 @@ namespace Epsitec.Common.Widgets
 										key.Size.Height = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
 									}
 
-									if ( parameters.ContainsKey("language") )
+									if ( parameters.ContainsKey("lang") )
 									{
-										key.Language = (string)parameters["language"];
+										key.Language = (string)parameters["lang"];
 									}
 
 									image = canvas.GetImageForIconKey(key);  // cherche la meilleure image
