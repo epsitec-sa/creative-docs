@@ -95,7 +95,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public void Add(Objects.Abstract obj, Objects.Abstract parent, bool after)
+		public void Add(Objects.AbstractText obj, Objects.AbstractText parent, bool after)
 		{
 			//	Ajoute un pavé de texte dans la chaîne de l'objet parent.
 			//	Si le pavé obj fait déjà partie d'une autre chaîne, toute sa chaîne est ajoutée
@@ -123,12 +123,12 @@ namespace Epsitec.Common.Document
 				//	de l'objet à ajouter (il peut faire partie d'une autre chaîne).
 				TextFlow srcFlow = obj.TextFlow;
 				System.Collections.ArrayList srcChain = new System.Collections.ArrayList();
-				foreach ( Objects.Abstract listObj in srcFlow.Chain )
+				foreach ( Objects.AbstractText listObj in srcFlow.Chain )
 				{
 					srcChain.Add(listObj);
 				}
 
-				foreach ( Objects.Abstract listObj in srcChain )
+				foreach ( Objects.AbstractText listObj in srcChain )
 				{
 					listObj.TextFlow.Remove(listObj);
 				}
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Document
 
 				//	Ajoute toute la chaîne initiale à la chaîne de l'objet parent.
 				if ( after )  index ++;
-				foreach ( Objects.Abstract listObj in srcChain )
+				foreach ( Objects.AbstractText listObj in srcChain )
 				{
 					this.objectsChain.Insert(index, listObj);
 					this.TextFitter.FrameList.InsertAt(index, listObj.TextFrame);
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Document
 			this.textNavigator.Insert(texts[0]);
 		}
 
-		public void Remove(Objects.Abstract obj)
+		public void Remove(Objects.AbstractText obj)
 		{
 			//	Supprime un pavé de texte de la chaîne. Le pavé sera alors solitaire.
 			//	Le texte lui-même reste dans la chaîne initiale.
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public int Rank(Objects.Abstract obj)
+		public int Rank(Objects.AbstractText obj)
 		{
 			//	Rang d'un pavé de texte dans la chaîne.
 			return this.objectsChain.IndexOf(obj);
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 		
-		public Objects.Abstract ActiveTextBox
+		public Objects.AbstractText ActiveTextBox
 		{
 			//	Pavé actuellement en édition.
 			get
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Document
 			foreach ( Viewer viewer in viewers )
 			{
 				int currentPage = viewer.DrawingContext.CurrentPage;
-				foreach ( Objects.Abstract obj in chain )
+				foreach ( Objects.AbstractText obj in chain )
 				{
 					if ( obj == null )  continue;
 					if ( obj.PageNumber != currentPage )  continue;
@@ -316,7 +316,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( frame != this.activeTextBox.TextFrame )
 				{
-					Objects.Abstract obj = this.FindMatchingTextBox(frame);
+					Objects.AbstractText obj = this.FindMatchingTextBox(frame);
 					
 					System.Diagnostics.Debug.Assert(obj != null);
 					
@@ -351,10 +351,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 		
-		private Objects.Abstract FindMatchingTextBox(Text.ITextFrame frame)
+		private Objects.AbstractText FindMatchingTextBox(Text.ITextFrame frame)
 		{
 			//	Trouve le pavé correspondant au frame donné.
-			foreach ( Objects.Abstract obj in this.Chain )
+			foreach ( Objects.AbstractText obj in this.Chain )
 			{
 				if ( frame == obj.TextFrame )
 				{
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Trouve le TextFrame qui correspond à la coordonnée souris, tout en
 			//	calculant la coordonnée transformée correspondante.
-			foreach ( Objects.Abstract obj in this.objectsChain )
+			foreach ( Objects.AbstractText obj in this.objectsChain )
 			{
 				if ( obj.IsInTextFrame(pos, out ppos) )
 				{
@@ -388,7 +388,7 @@ namespace Epsitec.Common.Document
 			this.textFitter.GenerateMarks();
 
 			//	Indique qu'il faudra recalculer les bbox à toute la chaîne des pavés.
-			foreach ( Objects.Abstract obj in this.objectsChain )
+			foreach ( Objects.AbstractText obj in this.objectsChain )
 			{
 				if ( obj == null )  continue;
 				obj.SetDirtyBbox();
@@ -545,7 +545,7 @@ namespace Epsitec.Common.Document
 		public void ReadFinalizeTextObj()
 		{
 			System.Diagnostics.Debug.Assert(this.TextFitter.FrameList.Count == 0);
-			foreach ( Objects.Abstract obj in this.objectsChain )
+			foreach ( Objects.AbstractText obj in this.objectsChain )
 			{
 				System.Diagnostics.Debug.Assert(obj.TextFrame != null);
 				this.textFitter.FrameList.Add(obj.TextFrame);
@@ -564,7 +564,7 @@ namespace Epsitec.Common.Document
 		protected Text.TextFitter				textFitter;
 		protected Text.TextNavigator			textNavigator;
 		protected TextNavigator2				metaNavigator;
-		protected Objects.Abstract				activeTextBox;
+		protected Objects.AbstractText			activeTextBox;
 		protected UndoableList					objectsChain;
 	}
 }

@@ -1619,7 +1619,7 @@ namespace Epsitec.Common.Document
 
 		protected bool EditProcessMessage(Message message, Point pos)
 		{
-			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+			Objects.AbstractText editObject = this.document.Modifier.RetEditObject();
 			if ( editObject == null )  return false;
 
 #if false
@@ -4230,7 +4230,7 @@ namespace Epsitec.Common.Document
 		protected void HandleFocused()
 		{
 			//	Appelé lorsque la vue prend le focus.
-			Objects.Abstract edit = this.document.Modifier.RetEditObject();
+			Objects.AbstractText edit = this.document.Modifier.RetEditObject();
 			if ( edit != null )
 			{
 				this.document.Notifier.NotifyArea(this, edit.EditSelectBox);
@@ -4240,7 +4240,7 @@ namespace Epsitec.Common.Document
 		protected void HandleDefocused()
 		{
 			//	Appelé lorsque la vue perd le focus.
-			Objects.Abstract edit = this.document.Modifier.RetEditObject();
+			Objects.AbstractText edit = this.document.Modifier.RetEditObject();
 			if ( edit != null )
 			{
 				this.document.Notifier.NotifyArea(this, edit.EditSelectBox);

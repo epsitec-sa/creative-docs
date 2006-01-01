@@ -19,24 +19,6 @@ namespace Epsitec.Common.Document.Objects
 	[System.Serializable()]
 	public abstract class Abstract : ISerializable
 	{
-		protected enum InternalOperation
-		{
-			Painting,
-			GetPath,
-			CharactersTable,
-			RealBoundingBox,
-		}
-
-		protected enum SpaceType
-		{
-			None,				// ce n'est pas un espace
-			BreakSpace,			// espace sécable
-			NoBreakSpace,		// espace insécable
-			NewFrame,			// saut au prochain pavé
-			NewPage,			// saut à la prochaine page
-		}
-
-
 		public Abstract(Document document, Objects.Abstract model)
 		{
 			//	Constructeur.
@@ -75,33 +57,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-
-		public virtual void NewTextFlow()
-		{
-			//	Crée un nouveau TextFlow pour l'objet.
-		}
-
-		public virtual TextFlow TextFlow
-		{
-			//	TextFlow associé à l'objet.
-			get
-			{
-				return null;
-			}
-
-			set
-			{
-			}
-		}
-
-		public virtual Text.ITextFrame TextFrame
-		{
-			//	Donne le TextFrame associé à l'objet.
-			get
-			{
-				return null;
-			}
-		}
 
 		protected virtual bool ExistingProperty(Properties.Type type)
 		{
@@ -1044,145 +999,7 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Modifier.TextInfoModif = text;
 		}
 
-		
-		public virtual bool EditProcessMessage(Message message, Point pos)
-		{
-			//	Gestion d'un événement pendant l'édition.
-			return false;
-		}
 
-		public virtual void EditMouseDownMessage(Point pos)
-		{
-			//	Gestion d'un événement pendant l'édition.
-		}
-
-		public virtual bool EditCut()
-		{
-			//	Coupe le texte sélectionné pendant l'édition.
-			return false;
-		}
-
-		public virtual bool EditCopy()
-		{
-			//	Copie le texte sélectionné pendant l'édition.
-			return false;
-		}
-
-		public virtual bool EditPaste()
-		{
-			//	Colle du texte pendant l'édition.
-			return false;
-		}
-
-		public virtual bool EditSelectAll()
-		{
-			//	Sélectionne tout le texte pendant l'édition.
-			return false;
-		}
-
-		public virtual bool EditInsertText(string text, string fontFace, string fontStyle)
-		{
-			//	Insère un texte dans le pavé en édition.
-			return false;
-		}
-
-		public virtual bool EditInsertText(Text.Unicode.Code code)
-		{
-			//	Insère un texte dans le pavé en édition.
-			return false;
-		}
-
-		public virtual bool EditInsertText(Text.Properties.BreakProperty brk)
-		{
-			//	Insère un texte dans le pavé en édition.
-			return false;
-		}
-
-		public virtual bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
-		{
-			//	Insère un glyphe dans le pavé en édition.
-			return false;
-		}
-
-		public virtual bool EditGetSelectedGlyph(out int code, out int glyph, out OpenType.Font font)
-		{
-			//	Retourne le glyphe du caractère sélectionné.
-			code = 0;
-			glyph = 0;
-			font = null;
-			return false;
-		}
-
-		public virtual Drawing.Rectangle EditCursorBox
-		{
-			//	Donne la zone contenant le curseur d'édition.
-			get
-			{
-				return Drawing.Rectangle.Empty;
-			}
-		}
-
-		public virtual Drawing.Rectangle EditSelectBox
-		{
-			//	Donne la zone contenant le texte sélectionné.
-			get
-			{
-				return Drawing.Rectangle.Empty;
-			}
-		}
-
-
-		public virtual string[] TextTabTags
-		{
-			//	Retourne tous les tags des tabulateurs.
-			get
-			{
-				return null;
-			}
-		}
-
-		public virtual string NewTextTab(double pos, TextTabType type)
-		{
-			//	Crée un nouveau tabulateur dans le texte.
-			return null;
-		}
-
-		public virtual void DeleteTextTab(string tag)
-		{
-			//	Supprime un tabulateur du texte.
-		}
-
-		public bool RenameTextTab(string oldTag, string newTag)
-		{
-			//	Renomme un tabulateur du texte.
-			return this.RenameTextTabs(new string[] { oldTag }, newTag);
-		}
-		
-		public virtual bool RenameTextTabs(string[] oldTags, string newTag)
-		{
-			//	Renomme plusieurs tabulateurs du texte.
-			return false;
-		}
-		
-		public virtual void GetTextTab(string tag, out double pos, out TextTabType type)
-		{
-			//	Donne un tabulateur du texte.
-			pos = 0;
-			type = TextTabType.None;
-		}
-
-		public virtual void SetTextTab(ref string tag, double pos, TextTabType type, bool firstChange)
-		{
-			//	Modifie un tabulateur du texte.
-		}
-
-		public virtual System.Collections.ArrayList CreateTextPanels(string filter)
-		{
-			//	Crée tous les panneaux pour l'édition.
-			return null;
-		}
-
-		
 		public virtual int DetectCell(Point pos)
 		{
 			//	Détecte la cellule pointée par la souris.
@@ -2600,11 +2417,11 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		//	Crée une instance de l'objet.
 		protected abstract Objects.Abstract CreateNewObject(Document document, Objects.Abstract model);
+
 		public bool DuplicateObject(Document document, ref Objects.Abstract newObject)
 		{
-			//	Crée une instance de l'objet.
-	
 			//	Effectue une copie de l'objet courant.
 			newObject = this.CreateNewObject(document, this);
 			newObject.CloneObject(this);
@@ -3424,18 +3241,6 @@ namespace Epsitec.Common.Document.Objects
 			public Point			position;
 		}
 
-
-		public virtual bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
-		{
-			//	Détermine si un point se trouve dans le texte frame.
-			ppos = Drawing.Point.Empty;
-			return false;
-		}
-
-		public virtual void UpdateTextLayout()
-		{
-			//	Met à jour le texte suite à une modification du conteneur.
-		}
 
 
 		protected Document						document;

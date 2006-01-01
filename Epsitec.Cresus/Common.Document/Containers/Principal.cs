@@ -443,7 +443,7 @@ namespace Epsitec.Common.Document.Containers
 			else if ( this.document.Modifier.Tool == "ToolEdit" )
 			{
 				//	Crée tous les panneaux des "propriétés" de texte (pour les wrappers).
-				Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+				Objects.AbstractText editObject = this.document.Modifier.RetEditObject();
 				if ( editObject != null )
 				{
 					TextPanels.Abstract.StaticDocument = this.document;

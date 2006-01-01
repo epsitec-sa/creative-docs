@@ -155,7 +155,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public Objects.Abstract EditObject
+		public Objects.AbstractText EditObject
 		{
 			//	Objet en cours d'édition.
 			get
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected double					marker = 0.0;
 		protected bool						markerVisible = false;
 		protected bool						edited = false;
-		protected Objects.Abstract			editObject = null;
+		protected Objects.AbstractText		editObject = null;
 		protected double					limitLow = 0.0;
 		protected double					limitHigh = 0.0;
 		protected Rectangle					invalidateBox;

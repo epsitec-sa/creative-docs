@@ -111,7 +111,7 @@ namespace Epsitec.Common.Document
 					this.OpletQueueBeginAction(name);
 					this.InsertOpletTool();
 
-					Objects.Abstract editObject = this.RetEditObject();
+					Objects.AbstractText editObject = this.RetEditObject();
 
 					if ( this.tool == "ToolHotSpot" || value == "ToolHotSpot" )
 					{
@@ -1201,7 +1201,7 @@ namespace Epsitec.Common.Document
 		public bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
 			//	Insère un texte dans le pavé en édition.
-			Objects.Abstract editObject = this.RetEditObject();
+			Objects.AbstractText editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
 			return editObject.EditInsertText(text, fontFace, fontStyle);
@@ -1210,7 +1210,7 @@ namespace Epsitec.Common.Document
 		public bool EditInsertText(Text.Unicode.Code code)
 		{
 			//	Insère un texte dans le pavé en édition.
-			Objects.Abstract editObject = this.RetEditObject();
+			Objects.AbstractText editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
 			return editObject.EditInsertText(code);
@@ -1219,7 +1219,7 @@ namespace Epsitec.Common.Document
 		public bool EditInsertText(Text.Properties.BreakProperty brk)
 		{
 			//	Insère un texte dans le pavé en édition.
-			Objects.Abstract editObject = this.RetEditObject();
+			Objects.AbstractText editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
 			return editObject.EditInsertText(brk);
@@ -1228,7 +1228,7 @@ namespace Epsitec.Common.Document
 		public bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
 		{
 			//	Insère un glyphe dans le pavé en édition.
-			Objects.Abstract editObject = this.RetEditObject();
+			Objects.AbstractText editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
 			return editObject.EditInsertGlyph(code, glyph, fontFace, fontStyle);
@@ -1266,7 +1266,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public Objects.Abstract RetEditObject()
+		public Objects.AbstractText RetEditObject()
 		{
 			//	Retourne le seul objet en édition.
 			if ( this.tool != "ToolEdit" )  return null;
@@ -1278,7 +1278,7 @@ namespace Epsitec.Common.Document
 			for ( int i=0 ; i<total ; i++ )
 			{
 				Objects.Abstract obj = layer.Objects[i] as Objects.Abstract;
-				if ( obj.IsSelected && obj.IsEdited )  return obj;
+				if ( obj.IsSelected && obj.IsEdited )  return obj as Objects.AbstractText;
 			}
 			return null;
 		}
@@ -1703,7 +1703,7 @@ namespace Epsitec.Common.Document
 		public void CutSelection()
 		{
 			//	Coupe tous les objets sélectionnés dans le bloc-notes.
-			Objects.Abstract editObject = this.RetEditObject();
+			Objects.AbstractText editObject = this.RetEditObject();
 			if ( editObject != null )
 			{
 				if ( editObject.EditCut() )  return;
@@ -1730,7 +1730,7 @@ namespace Epsitec.Common.Document
 		public void CopySelection()
 		{
 			//	Copie tous les objets sélectionnés dans le bloc-notes.
-			Objects.Abstract editObject = this.RetEditObject();
+			Objects.AbstractText editObject = this.RetEditObject();
 			if ( editObject != null )
 			{
 				if ( editObject.EditCopy() )  return;
@@ -1755,7 +1755,7 @@ namespace Epsitec.Common.Document
 		public void Paste()
 		{
 			//	Colle le contenu du bloc-notes.
-			Objects.Abstract editObject = this.RetEditObject();
+			Objects.AbstractText editObject = this.RetEditObject();
 			if ( editObject != null )
 			{
 				if ( editObject.EditPaste() )  return;
