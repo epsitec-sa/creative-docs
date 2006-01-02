@@ -18,15 +18,18 @@ namespace Epsitec.Common.Document.Objects
 			GetPath,
 			CharactersTable,
 			RealBoundingBox,
+			RealSelectPath,
 		}
 
-		protected enum SpaceType
+		[System.Flags] protected enum SpaceType
 		{
-			None,				// ce n'est pas un espace
-			BreakSpace,			// espace sécable
-			NoBreakSpace,		// espace insécable
-			NewFrame,			// saut au prochain pavé
-			NewPage,			// saut à la prochaine page
+			None         = 0x00000001,		// ce n'est pas un espace
+			BreakSpace   = 0x00000002,		// espace sécable
+			NoBreakSpace = 0x00000003,		// espace insécable
+			NewFrame     = 0x00000004,		// saut au prochain pavé
+			NewPage      = 0x00000005,		// saut à la prochaine page
+
+			Selected     = 0x00001000,		// caractère sélectionné
 		}
 
 
@@ -42,21 +45,14 @@ namespace Epsitec.Common.Document.Objects
 			return null;
 		}
 
-		protected void Initialise()
+		protected virtual void Initialise()
 		{
-			this.textFrame = new Text.SimpleTextFrame();
-			
 			this.NewTextFlow();
 			this.InitialiseInternals();
 		}
 		
-		protected void InitialiseInternals()
+		protected virtual void InitialiseInternals()
 		{
-			if ( this.textFrame == null )
-			{
-				this.textFrame = new Text.SimpleTextFrame();
-			}
-
 			this.UpdateTextGrid(false);
 			
 			System.Diagnostics.Debug.Assert(this.textFlow != null);
@@ -790,6 +786,43 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
+		protected static bool XlineContains(System.Collections.ArrayList process, Text.Properties.AbstractXlineProperty xline, Text.Properties.FontColorProperty color)
+		{
+			//	Cherche si une propriété Xline est déjà dans une liste.
+			foreach ( XlineInfo existing in process )
+			{
+				if ( Text.Property.CompareEqualContents(existing.Xline, xline) &&
+					 Text.Property.CompareEqualContents(existing.Color, color) )
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		protected class XlineInfo
+		{
+			public XlineInfo(Text.Properties.AbstractXlineProperty xline, Text.Properties.FontColorProperty color)
+			{
+				this.xline = xline;
+				this.color = color;
+			}
+			
+			public Text.Properties.AbstractXlineProperty Xline
+			{
+				get { return this.xline; }
+			}
+			
+			public Text.Properties.FontColorProperty Color
+			{
+				get { return this.color; }
+			}
+			
+			protected Text.Properties.AbstractXlineProperty		xline;
+			protected Text.Properties.FontColorProperty			color;
+		}
+
+		
 		public override Path[] GetPaths()
 		{
 			//	Retourne les chemins géométriques de l'objet.
@@ -876,14 +909,12 @@ namespace Epsitec.Common.Document.Objects
 		public override void ReadFinalize()
 		{
 			base.ReadFinalize();
-			
 			this.InitialiseInternals();
 		}
 		
 		public override void ReadFinalizeFlowReady(TextFlow flow)
 		{
 			System.Diagnostics.Debug.Assert(this.textFlow == flow);
-			
 			this.UpdateTextFrame();
 		}
 		#endregion

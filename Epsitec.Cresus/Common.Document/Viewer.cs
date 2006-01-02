@@ -679,9 +679,9 @@ namespace Epsitec.Common.Document
 					selectAfterCreation = obj.SelectAfterCreation();
 					editAfterCreation = obj.EditAfterCreation();
 
-					if ( this.editFlowAfterCreate != null && obj is Objects.TextBox2 )
+					if ( this.editFlowAfterCreate != null && obj is Objects.AbstractText )
 					{
-						this.document.Modifier.TextFlowChange(obj as Objects.TextBox2, this.editFlowAfterCreate, true);
+						this.document.Modifier.TextFlowChange(obj as Objects.AbstractText, this.editFlowAfterCreate, true);
 						this.editFlowAfterCreate = null;
 					}
 				}
@@ -1488,11 +1488,14 @@ namespace Epsitec.Common.Document
 
 			if ( this.editFlowSelect != Objects.DetectEditType.Out )
 			{
-				Objects.TextBox2 edit = this.DetectEdit(mouse, true, out handle) as Objects.TextBox2;
+				Objects.AbstractText edit = this.DetectEdit(mouse, out handle) as Objects.AbstractText;
 				if ( edit == null )
 				{
-					edit = this.editFlowSrc as Objects.TextBox2;
-					this.document.Modifier.Tool = "ObjectTextBox2";
+					edit = this.editFlowSrc as Objects.AbstractText;
+
+					if ( edit is Objects.TextBox2  )  this.document.Modifier.Tool = "ObjectTextBox2";
+					if ( edit is Objects.TextLine2 )  this.document.Modifier.Tool = "ObjectTextLine2";
+
 					this.editFlowAfterCreate = edit;
 					this.CreateMouseDown(mouse);
 				}
@@ -1500,7 +1503,7 @@ namespace Epsitec.Common.Document
 			}
 
 			this.EditFlowReset();
-			Objects.Abstract obj = this.DetectEdit(mouse, false, out handle);
+			Objects.Abstract obj = this.DetectEdit(mouse, out handle);
 
 			if ( obj != this.document.Modifier.RetEditObject() )
 			{
@@ -1536,7 +1539,7 @@ namespace Epsitec.Common.Document
 			if ( this.editFlowSelect != Objects.DetectEditType.Out )
 			{
 				Objects.DetectEditType handle;
-				Objects.Abstract obj = this.DetectEdit(mouse, true, out handle);
+				Objects.Abstract obj = this.DetectEdit(mouse, out handle);
 				this.Hilite(obj);
 
 				if ( obj == null )
@@ -1565,7 +1568,7 @@ namespace Epsitec.Common.Document
 			else	// bouton souris relâché ?
 			{
 				Objects.DetectEditType handle;
-				Objects.Abstract obj = this.DetectEdit(mouse, false, out handle);
+				Objects.Abstract obj = this.DetectEdit(mouse, out handle);
 				this.Hilite(obj);
 
 				if ( handle == Objects.DetectEditType.HandleFlowPrev ||
@@ -1594,11 +1597,11 @@ namespace Epsitec.Common.Document
 				this.Hilite(null);
 
 				Objects.DetectEditType handle;
-				Objects.TextBox2 obj = this.DetectEdit(mouse, true, out handle) as Objects.TextBox2;
+				Objects.AbstractText obj = this.DetectEdit(mouse, out handle) as Objects.AbstractText;
 				if ( obj != null )
 				{
 					bool after = (this.editFlowSelect == Objects.DetectEditType.HandleFlowNext);
-					Objects.TextBox2 edit = this.editFlowSrc as Objects.TextBox2;
+					Objects.AbstractText edit = this.editFlowSrc as Objects.AbstractText;
 					System.Diagnostics.Debug.Assert(edit != null);
 
 					if ( obj == edit )
@@ -1870,15 +1873,14 @@ namespace Epsitec.Common.Document
 			return list;
 		}
 
-		protected Objects.Abstract DetectEdit(Point mouse, bool onlyTextBox2, out Objects.DetectEditType handle)
+		protected Objects.Abstract DetectEdit(Point mouse, out Objects.DetectEditType handle)
 		{
 			//	Détecte l'objet éditable pointé par la souris.
-			onlyTextBox2 = true;  // l'édition des anciens TextBox et TextLine plante !
 			Objects.Abstract layer = this.drawingContext.RootObject();
 
 			foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
 			{
-				if ( onlyTextBox2 && !(obj is Objects.TextBox2) )  continue;
+				if ( !(obj is Objects.AbstractText) )  continue;
 				if ( !obj.IsSelected )  continue;
 
 				handle = obj.DetectEdit(mouse);
@@ -1887,7 +1889,7 @@ namespace Epsitec.Common.Document
 
 			foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
 			{
-				if ( onlyTextBox2 && !(obj is Objects.TextBox2) )  continue;
+				if ( !(obj is Objects.AbstractText) )  continue;
 				if ( obj.IsSelected )  continue;
 
 				handle = obj.DetectEdit(mouse);
@@ -4370,7 +4372,7 @@ namespace Epsitec.Common.Document
 		protected Objects.DetectEditType		editFlowPress = Objects.DetectEditType.Out;
 		protected Objects.DetectEditType		editFlowSelect = Objects.DetectEditType.Out;
 		protected Objects.Abstract				editFlowSrc = null;
-		protected Objects.TextBox2				editFlowAfterCreate = null;
+		protected Objects.AbstractText			editFlowAfterCreate = null;
 
 		protected Timer							miniBarTimer;
 		protected System.Collections.ArrayList	miniBarCmds = null;

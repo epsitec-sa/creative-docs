@@ -28,6 +28,22 @@ namespace Epsitec.Common.Document.Objects
 			return new TextLine2(document, model);
 		}
 
+		protected override void Initialise()
+		{
+			this.textFrame = new Text.SingleLineTextFrame();
+			base.Initialise();
+		}
+		
+		protected override void InitialiseInternals()
+		{
+			if ( this.textFrame == null )
+			{
+				this.textFrame = new Text.SingleLineTextFrame();
+			}
+
+			base.InitialiseInternals();
+		}
+
 
 		public override string IconName
 		{
@@ -75,9 +91,8 @@ namespace Epsitec.Common.Document.Objects
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Shape[] shapes = this.ShapesBuild(null, context, false);
-			if ( context.Drawer.DetectOutline(pos, context, shapes) != -1 )  return DetectEditType.Body;
+			if ( context.Drawer.Detect(pos, context, shapes) )  return DetectEditType.Body;
 
-			//?if ( this.DetectTextCurve(pos) )  return DetectEditType.Body;
 			return DetectEditType.Out;
 		}
 
@@ -88,6 +103,7 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			bool allHandle = !this.IsSelected;
+			bool global = true;
 			int total = this.handles.Count;
 			for ( int i=0 ; i<total ; i+=3 )
 			{
@@ -97,9 +113,23 @@ namespace Epsitec.Common.Document.Objects
 					this.Handle(i+1).Position += move;
 					this.Handle(i+2).Position += move;
 				}
+				else
+				{
+					global = false;
+				}
 			}
 
-			this.SetDirtyBbox();
+			if ( global )
+			{
+				this.MoveBbox(move);
+			}
+			else
+			{
+				this.SetDirtyBbox();
+			}
+
+			this.HandlePropertiesUpdate();
+			this.UpdateGeometry();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -997,6 +1027,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(3).Position = pos;
 			this.Handle(4).Position = pos;
 			this.Handle(5).Position = pos;
+			this.UpdateGeometry();
 			this.SetDirtyBbox();
 			this.TextInfoModifLine();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -1033,6 +1064,25 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		public override Drawing.Rectangle RealBoundingBox()
+		{
+			//	Retourne la bounding réelle, en fonction des caractères contenus.
+			this.mergingBoundingBox = Drawing.Rectangle.Empty;
+			this.DrawText(null, null, InternalOperation.RealBoundingBox);
+
+			return this.mergingBoundingBox;
+		}
+		
+		protected Path RealSelectPath()
+		{
+			//	Retourne le chemin de tous les caractères sélectionnés.
+			this.realSelectPath = new Path();
+			this.DrawText(null, null, InternalOperation.RealSelectPath);
+
+			return this.realSelectPath;
+		}
+		
+		
 		public override bool EditProcessMessage(Message message, Point pos)
 		{
 			//	Gestion d'un événement pendant l'édition.
@@ -1082,6 +1132,25 @@ namespace Epsitec.Common.Document.Objects
 				this.document.Modifier.ActiveViewer.CloseMiniBar(false);
 			}
 
+			if ( message.Type == MessageType.MouseUp )
+			{
+				if ( this.textFlow.TextNavigator.SelectionCount > 0 )
+				{
+					Viewer viewer = this.document.Modifier.ActiveViewer;
+					double distance = 0;
+					Drawing.Rectangle selbox = this.EditSelectBox;
+					if ( !selbox.IsEmpty )
+					{
+						selbox = viewer.InternalToScreen(selbox);
+						double top = System.Math.Min(selbox.Top, viewer.Height-2);
+						Point mouse = viewer.InternalToScreen(pos);
+						distance = System.Math.Max(top-mouse.Y, 0);
+					}
+					Viewer.MiniBarDelayed delayed = (message.ButtonDownCount > 1) ? Viewer.MiniBarDelayed.DoubleClick : Viewer.MiniBarDelayed.Immediately;
+					viewer.OpenMiniBar(pos, delayed, false, false, distance);
+				}
+			}
+
 			return true;
 		}
 
@@ -1105,10 +1174,6 @@ namespace Epsitec.Common.Document.Objects
 		public override void EditMouseDownMessage(Point pos)
 		{
 			//	Gestion d'un événement pendant l'édition.
-			//?int rank = this.DetectTextCurveRank(pos);
-			//?pos = this.RankToLinearPos(rank);
-			//?if ( pos == Point.Empty )  return;
-			//?this.textNavigator.MouseDownMessage(pos);
 		}
 
 		
@@ -1130,7 +1195,7 @@ namespace Epsitec.Common.Document.Objects
 			Path pathLine = this.PathBuild();
 			Path pathHilite = null;
 			Path pathSupport = null;
-			Path pathBbox = null;
+			Path pathBbox = this.RealSelectPath();
 
 			if ( this.IsHilite &&
 				 drawingContext != null &&
@@ -1300,12 +1365,20 @@ namespace Epsitec.Common.Document.Objects
 			);
 		}
 
-		protected Point Transform(double position)
+		protected void Transform(double position, out Point posXY, out double angle)
 		{
 			//	Transforme une position le long de la courbe en position x;y.
 			if ( position <= 0 )
 			{
-				return this.Handle(1).Position;
+				Point p1 = this.Handle(1).Position;
+				Point p2 = this.Handle(2).Position;
+				if ( this.Handle(2).Type == HandleType.Hide )  // droite ?
+				{
+					p2 = this.Handle(4).Position;
+				}
+				posXY = p1;
+				angle = Point.ComputeAngleDeg(p1, p2);
+				return;
 			}
 
 			double length = 0.0;
@@ -1324,7 +1397,9 @@ namespace Epsitec.Common.Document.Objects
 
 					if ( position <= length )
 					{
-						return Point.Move(p1, p2, position-last);
+						posXY = Point.Move(p1, p2, position-last);
+						angle = Point.ComputeAngleDeg(p1, p2);
+						return;
 					}
 				}
 				else	// courbe ?
@@ -1340,7 +1415,9 @@ namespace Epsitec.Common.Document.Objects
 
 						if ( position <= length )
 						{
-							return Point.Move(pos, next, position-last);
+							posXY = Point.Move(pos, next, position-last);
+							angle = Point.ComputeAngleDeg(pos, next);
+							return;
 						}
 
 						pos = next;
@@ -1350,7 +1427,17 @@ namespace Epsitec.Common.Document.Objects
 			}
 			while ( i < this.handles.Count-3 );
 
-			return this.Handle(this.handles.Count-2).Position;
+			if ( true )
+			{
+				Point p1 = this.Handle(this.handles.Count-2).Position;
+				Point p2 = this.Handle(this.handles.Count-3).Position;
+				if ( this.Handle(this.handles.Count-3).Type == HandleType.Hide )  // droite ?
+				{
+					p2 = this.Handle(this.handles.Count-5).Position;
+				}
+				posXY = p1;
+				angle = Point.ComputeAngleDeg(p1, p2);
+			}
 		}
 
 		protected double GetLength()
@@ -1392,9 +1479,8 @@ namespace Epsitec.Common.Document.Objects
 		protected override void UpdateTextFrame()
 		{
 			//	Met à jour le TextFrame en fonction des dimensions du pavé.
-			double width = this.GetLength();
-			
 			Text.SingleLineTextFrame frame = this.textFrame as Text.SingleLineTextFrame;
+			double width = this.GetLength();
 
 			if ( frame.Width != width )
 			{
@@ -1406,13 +1492,15 @@ namespace Epsitec.Common.Document.Objects
 		public override bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
 		{
 			//	Détermine si un point se trouve dans le texte frame.
-			double plin = this.Transform(pos);
-			Point pcurve  = this.Transform(plin);
+			double lin = this.Transform(pos);
+			Point curve;
+			double angle;
+			this.Transform(lin, out curve, out angle);
 
-			double d = Point.Distance(pos, pcurve);
+			double d = Point.Distance(pos, curve);
 			if ( d < 100.0 )  // moins de 1cm ? (TODO: faire mieux !!!)
 			{
-				ppos = new Point(plin, 0);
+				ppos = new Point(lin, 0);
 				return true;
 			}
 			else
@@ -1446,6 +1534,37 @@ namespace Epsitec.Common.Document.Objects
 
 			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.textFlow.HasActiveTextBox && this.drawingContext != null && this.drawingContext.TextShowControlCharacters;
 			this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
+
+			if ( this.textFlow.HasActiveTextBox && !this.textFlow.TextNavigator.HasRealSelection && this.graphics != null && this.internalOperation == InternalOperation.Painting )
+			{
+				//	Peint le curseur uniquement si l'objet est en édition, qu'il n'y a pas
+				//	de sélection et que l'on est en train d'afficher à l'écran.
+				Text.ITextFrame frame;
+				double cx, cy, ascender, descender, cursorAngle;
+				this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out cursorAngle);
+				cursorAngle *= 180.0/System.Math.PI;  // en degrés
+				cursorAngle -= 90.0;
+			
+				if ( frame == this.textFrame )
+				{
+					Point center;
+					double angle;
+					this.Transform(cx, out center, out angle);
+					// cursorAngle permet de pencher le curseur sur de l'italique.
+					Point c1 = Drawing.Transform.RotatePointDeg(center, angle+cursorAngle, new Point(center.X, center.Y+ascender));
+					Point c2 = Drawing.Transform.RotatePointDeg(center, angle+cursorAngle, new Point(center.X, center.Y+descender));
+
+					this.graphics.LineWidth = 1.0/drawingContext.ScaleX;
+					this.graphics.AddLine(c1, c2);
+					this.graphics.RenderSolid(DrawingContext.ColorCursorEdit(this.isActive));
+
+					this.ComputeAutoScroll(c1, c2);
+					this.cursorBox.MergeWith(c1);
+					this.cursorBox.MergeWith(c2);
+					this.selectBox.MergeWith(c1);
+					this.selectBox.MergeWith(c2);
+				}
+			}
 
 			this.port = null;
 			this.graphics = null;
@@ -1521,15 +1640,6 @@ namespace Epsitec.Common.Document.Objects
 
 				//	Vérifions d'abord que le mapping du texte vers les glyphes est
 				//	correct et correspond à quelque chose de valide :
-				int  offset = 0;
-				bool isInSelection = false;
-				double selX = 0;
-
-				System.Collections.ArrayList selRectList = null;
-
-				double x1 = 0;
-				double x2 = 0;
-
 				int[]    cArray;  // unicodes
 				ushort[] gArray;  // glyphes
 				ulong[]  tArray;  // textes
@@ -1544,22 +1654,21 @@ namespace Epsitec.Common.Document.Objects
 					int numGlyphs = gArray.Length;
 					System.Diagnostics.Debug.Assert(numChars == 1 || numGlyphs == 1);
 
-					x1 = x[offset+0];
-					x2 = x[offset+numGlyphs];
-
 					if ( numChars == 1 && numGlyphs == 1 )
 					{
+						iArray[ii] = ( (tArray[0] & this.markerSelected) == 0 ) ? 0 : SpaceType.Selected;
+
 						int code = cArray[0];
 						if ( code == 0x20 || code == 0xA0 || code == 0x202F || (code >= 0x2000 && code <= 0x200F) )  // espace ?
 						{
 							isSpace = true;  // contient au moins un espace
 							if ( code == 0xA0 || code == 0x2007 || code == 0x200D || code == 0x202F || code == 0x2060 )
 							{
-								iArray[ii++] = SpaceType.NoBreakSpace;  // espace insécable
+								iArray[ii++] |= SpaceType.NoBreakSpace;  // espace insécable
 							}
 							else
 							{
-								iArray[ii++] = SpaceType.BreakSpace;  // espace sécable
+								iArray[ii++] |= SpaceType.BreakSpace;  // espace sécable
 							}
 						}
 						else if ( code == 0x0C )  // saut ?
@@ -1570,83 +1679,26 @@ namespace Epsitec.Common.Document.Objects
 							this.document.TextContext.GetBreak(tArray[0], out prop);
 							if ( prop.ParagraphStartMode == Text.Properties.ParagraphStartMode.NewFrame )
 							{
-								iArray[ii++] = SpaceType.NewFrame;
+								iArray[ii++] |= SpaceType.NewFrame;
 							}
 							else
 							{
-								iArray[ii++] = SpaceType.NewPage;
+								iArray[ii++] |= SpaceType.NewPage;
 							}
 						}
 						else
 						{
-							iArray[ii++] = SpaceType.None;  // pas un espace
+							iArray[ii++] |= SpaceType.None;  // pas un espace
 						}
 					}
 					else
 					{
 						for ( int i=0 ; i<numGlyphs ; i++ )
 						{
-							iArray[ii++] = SpaceType.None;  // pas un espace
+							iArray[ii] = ( (tArray[i] & this.markerSelected) == 0 ) ? 0 : SpaceType.Selected;
+							iArray[ii++] |= SpaceType.None;  // pas un espace
 						}
 					}
-
-					for ( int i=0 ; i<numChars ; i++ )
-					{
-						if ( (tArray[i] & this.markerSelected) != 0 )
-						{
-							//	Le caractère considéré est sélectionné.
-							if ( isInSelection == false )
-							{
-								//	C'est le premier caractère d'une tranche. Il faut mémoriser son début :
-								double xx = x1 + ((x2 - x1) * i) / numChars;
-								isInSelection = true;
-								selX = xx;
-							}
-						}
-						else
-						{
-							if ( isInSelection )
-							{
-								//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
-								double xx = x1 + ((x2 - x1) * i) / numChars;
-								isInSelection = false;
-
-								if ( xx > selX )
-								{
-									this.MarkSel(layout, ref selRectList, xx, selX);
-								}
-							}
-						}
-					}
-
-					offset += numGlyphs;
-				}
-
-				if ( isInSelection )
-				{
-					//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
-					double xx = x2;
-					isInSelection = false;
-
-					if ( xx > selX )
-					{
-						this.MarkSel(layout, ref selRectList, xx, selX);
-					}
-				}
-
-				if ( this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null )
-				{
-					//	Dessine les rectangles correspondant à la sélection.
-					foreach ( Drawing.Rectangle rect in selRectList )
-					{
-						this.graphics.AddFilledRectangle(rect);
-
-						Point c1 = this.transform.TransformDirect(rect.BottomLeft);
-						Point c2 = this.transform.TransformDirect(rect.TopRight);
-						this.selectBox.MergeWith(c1);
-						this.selectBox.MergeWith(c2);
-					}
-					this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
 				}
 
 				//	Dessine le texte.
@@ -1702,24 +1754,11 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.RenderText(font, size, glyphs, null, x, y, sx, sy, RichColor.Empty, false);
 			}
-		}
 
-		protected void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, double x, double selX)
-		{
-			//	Marque une tranche sélectionnée.
-			if ( this.graphics == null )  return;
-
-			double dx = x - selX;
-			double dy = layout.LineY2 - layout.LineY1;
-			Drawing.Rectangle rect = new Drawing.Rectangle(selX, layout.LineY1, dx, dy);
-			graphics.Align(ref rect);
-
-			if ( selRectList == null )
+			if ( this.internalOperation == InternalOperation.RealSelectPath )
 			{
-				selRectList = new System.Collections.ArrayList();
+				this.RenderText(font, size, glyphs, null, x, y, sx, sy, RichColor.Empty, false);
 			}
-
-			selRectList.Add(rect);
 		}
 
 		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
@@ -1732,18 +1771,69 @@ namespace Epsitec.Common.Document.Objects
 					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 					if ( drawingFont != null )
 					{
-						if ( sy == null )
+						// Dessine les quadrilatères des caractères sélectionnés.
+						if ( this.textFlow.HasActiveTextBox )
 						{
-							this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
-						}
-						else
-						{
+							double ascender  = drawingFont.Ascender*size;
+							double descender = drawingFont.Descender*size;
+
+							bool selExist = false;
 							for ( int i=0 ; i<glyphs.Length ; i++ )
 							{
 								if ( glyphs[i] < 0xffff )
 								{
-									this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+									if ( (insecs[i] & SpaceType.Selected) == 0 )  continue;
+
+									Point p1, p2;
+									double a1, a2;
+									this.Transform(x[i+0], out p1, out a1);
+									this.Transform(x[i+1], out p2, out a2);
+									p1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+y[i]));
+									p2 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+y[i]));
+
+									Point c1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+ascender));
+									Point c2 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+descender));
+									Point c3 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+descender));
+									Point c4 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+ascender));
+
+									Path path = new Path();
+									path.MoveTo(c1);
+									path.LineTo(c2);
+									path.LineTo(c3);
+									path.LineTo(c4);
+									path.Close();
+									this.graphics.Rasterizer.AddSurface(path);
+
+									this.selectBox.MergeWith(c1);
+									this.selectBox.MergeWith(c2);
+									this.selectBox.MergeWith(c3);
+									this.selectBox.MergeWith(c4);
+
+									selExist = true;
 								}
+							}
+
+							if ( selExist )
+							{
+								this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
+							}
+						}
+
+						// Dessine les caractères.
+						for ( int i=0 ; i<glyphs.Length ; i++ )
+						{
+							if ( glyphs[i] < 0xffff )
+							{
+								Point pos;
+								double angle;
+								this.Transform(x[i], out pos, out angle);
+								pos = Drawing.Transform.RotatePointDeg(pos, angle, new Point(pos.X, pos.Y+y[i]));
+
+								Transform initial = this.graphics.Transform;
+								this.graphics.TranslateTransform(pos.X, pos.Y);
+								this.graphics.RotateTransformDeg(angle, 0, 0);
+								this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], 0, 0, size, (sx == null) ? 1.0 : sx[i], (sy == null) ? 1.0 : sy[i]);
+								this.graphics.Transform = initial;
 							}
 						}
 
@@ -1754,35 +1844,48 @@ namespace Epsitec.Common.Document.Objects
 							{
 								double width = font.GetGlyphWidth(glyphs[i], size);
 								double oy = font.GetAscender(size)*0.3;
+								SpaceType type = insecs[i] & ~SpaceType.Selected;
+								if ( type == 0 )  continue;
 
-								if ( insecs[i] == SpaceType.BreakSpace )  // espace sécable ?
+								Point pos;
+								double angle;
+								this.Transform(x[i], out pos, out angle);
+								pos = Drawing.Transform.RotatePointDeg(pos, angle, new Point(pos.X, pos.Y+y[i]));
+
+								Transform initial = this.graphics.Transform;
+								this.graphics.TranslateTransform(pos.X, pos.Y);
+								this.graphics.RotateTransformDeg(angle, 0, 0);
+
+								if ( type == SpaceType.BreakSpace )  // espace sécable ?
 								{
-									this.graphics.AddFilledCircle(x[i]+width/2, y[i]+oy, size*0.05);
+									this.graphics.AddFilledCircle(width/2, oy, size*0.05);
 								}
 
-								if ( insecs[i] == SpaceType.NoBreakSpace )  // espace insécable ?
+								if ( type == SpaceType.NoBreakSpace )  // espace insécable ?
 								{
-									this.graphics.AddCircle(x[i]+width/2, y[i]+oy, size*0.08);
+									this.graphics.AddCircle(width/2, oy, size*0.08);
 								}
 
-								if ( insecs[i] == SpaceType.NewFrame ||
-									 insecs[i] == SpaceType.NewPage  )  // saut ?
+								if ( type == SpaceType.NewFrame ||
+									 type == SpaceType.NewPage  )  // saut ?
 								{
 									Text.SingleLineTextFrame frame = this.textFrame as Text.SingleLineTextFrame;
-									Point p1 = new Point(x[i],        y[i]+oy);
-									Point p2 = new Point(frame.Width, y[i]+oy);
+									Point p1 = new Point(0,           oy);
+									Point p2 = new Point(frame.Width, oy);
 									Path path = Path.FromLine(p1, p2);
 
-									double w    = (insecs[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
-									double dash = (insecs[i] == SpaceType.NewFrame) ? 0.0 : 8.0;
-									double gap  = (insecs[i] == SpaceType.NewFrame) ? 3.0 : 2.0;
+									double w    = (type == SpaceType.NewFrame) ? 0.8 : 0.5;
+									double dash = (type == SpaceType.NewFrame) ? 0.0 : 8.0;
+									double gap  = (type == SpaceType.NewFrame) ? 3.0 : 2.0;
 									Drawer.DrawPathDash(this.graphics, this.drawingContext, path, w, dash, gap, color.Basic);
 								}
+
+								this.graphics.Transform = initial;
 							}
 						}
-					}
 			
-					this.graphics.RenderSolid(color.Basic);
+						this.graphics.RenderSolid(color.Basic);
+					}
 				}
 				else if ( this.port is Printing.PrintPort )  // impression ?
 				{
@@ -1811,21 +1914,78 @@ namespace Epsitec.Common.Document.Objects
 				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 				if ( drawingFont != null )
 				{
+					double ascender  = drawingFont.Ascender*size;
+					double descender = drawingFont.Descender*size;
+
 					for ( int i=0 ; i<glyphs.Length ; i++ )
 					{
 						if ( glyphs[i] < 0xffff )
 						{
+							Point p1, p2;
+							double a1, a2;
+							this.Transform(x[i+0], out p1, out a1);
+							this.Transform(x[i+1], out p2, out a2);
+							p1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+y[i]));
+							p2 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+y[i]));
+							
 							Drawing.Rectangle bounds = drawingFont.GetGlyphBounds(glyphs[i], size);
 
 							if ( sx != null )  bounds.Scale(sx[i], 1.0);
 							if ( sy != null )  bounds.Scale(1.0, sy[i]);
 
-							bounds.Offset(x[i], y[i]);
+							Point c1 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.BottomLeft);
+							Point c2 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.TopLeft);
+							Point c3 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.BottomRight);
+							Point c4 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.TopRight);
 
-							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomLeft));
-							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomRight));
-							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopLeft));
-							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopRight));
+							this.mergingBoundingBox.MergeWith(c1);
+							this.mergingBoundingBox.MergeWith(c2);
+							this.mergingBoundingBox.MergeWith(c3);
+							this.mergingBoundingBox.MergeWith(c4);
+
+							c1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+descender));
+							c2 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+ascender));
+							c3 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+descender));
+							c4 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+ascender));
+
+							this.mergingBoundingBox.MergeWith(c1);
+							this.mergingBoundingBox.MergeWith(c2);
+							this.mergingBoundingBox.MergeWith(c3);
+							this.mergingBoundingBox.MergeWith(c4);
+						}
+					}
+				}
+			}
+
+			if ( this.internalOperation == InternalOperation.RealSelectPath )
+			{
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+				if ( drawingFont != null )
+				{
+					double ascender  = drawingFont.Ascender*size;
+					double descender = drawingFont.Descender*size;
+
+					for ( int i=0 ; i<glyphs.Length ; i++ )
+					{
+						if ( glyphs[i] < 0xffff )
+						{
+							Point p1, p2;
+							double a1, a2;
+							this.Transform(x[i+0], out p1, out a1);
+							this.Transform(x[i+1], out p2, out a2);
+							p1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+y[i]));
+							p2 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+y[i]));
+							
+							Point c1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+descender));
+							Point c2 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+ascender));
+							Point c3 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+descender));
+							Point c4 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+ascender));
+
+							this.realSelectPath.MoveTo(c1);
+							this.realSelectPath.LineTo(c2);
+							this.realSelectPath.LineTo(c4);
+							this.realSelectPath.LineTo(c3);
+							this.realSelectPath.Close();
 						}
 					}
 				}
@@ -1897,7 +2057,7 @@ namespace Epsitec.Common.Document.Objects
 							else if ( starting == null )	// cherche un autre début ?
 							{
 								if ( !Text.Property.CompareEqualContents(xline, records[i].Xlines[j]) ||
-									!Text.Property.CompareEqualContents(color, records[i].TextColor) )
+									 !Text.Property.CompareEqualContents(color, records[i].TextColor) )
 								{
 									continue;
 								}
@@ -1909,7 +2069,7 @@ namespace Epsitec.Common.Document.Objects
 							else	// cherche la fin ?
 							{
 								if ( Text.Property.CompareEqualContents(xline, records[i].Xlines[j]) &&
-									Text.Property.CompareEqualContents(color, records[i].TextColor) )
+									 Text.Property.CompareEqualContents(color, records[i].TextColor) )
 								{
 									ending = null;  // la fin ne peut pas être dans ce record
 									break;
@@ -1979,50 +2139,6 @@ namespace Epsitec.Common.Document.Objects
 
 			this.port.PaintSurface(path);
 		}
-
-		protected static bool XlineContains(System.Collections.ArrayList process, Text.Properties.AbstractXlineProperty xline, Text.Properties.FontColorProperty color)
-		{
-			//	Cherche si une propriété Xline est déjà dans une liste.
-			foreach ( XlineInfo existing in process )
-			{
-				if ( Text.Property.CompareEqualContents(existing.Xline, xline) &&
-					Text.Property.CompareEqualContents(existing.Color, color) )
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		
-		private class XlineInfo
-		{
-			public XlineInfo(Text.Properties.AbstractXlineProperty xline, Text.Properties.FontColorProperty color)
-			{
-				this.xline = xline;
-				this.color = color;
-			}
-			
-			
-			public Text.Properties.AbstractXlineProperty Xline
-			{
-				get
-				{
-					return this.xline;
-				}
-			}
-			
-			public Text.Properties.FontColorProperty Color
-			{
-				get
-				{
-					return this.color;
-				}
-			}
-			
-			
-			Text.Properties.AbstractXlineProperty	xline;
-			Text.Properties.FontColorProperty		color;
-		}
 		#endregion
 
 
@@ -2043,19 +2159,9 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		protected int							advanceRank;
-		protected int							advanceIndex;
-		protected double						advanceBzt;
-		protected double						advanceWidth;
-		protected Point							advanceP1;
-		protected Point							advanceP2;
-		protected Point							advanceLastTop;
-		protected Point							advanceLastBottom;
-		protected bool							advanceCheckEnd;
-		protected double						advanceFactor;
-		protected double						advanceMaxAscender;
 		protected Point							initialPos;
+		protected Path							realSelectPath;
 
-		protected static readonly double		step = 1/100;  // une courbe de Bézier est décomposée en 100 segments
+		protected static readonly double		step = 1.0/100.0;  // une courbe de Bézier est décomposée en 100 segments
 	}
 }

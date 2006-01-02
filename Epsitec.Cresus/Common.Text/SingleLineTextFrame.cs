@@ -61,26 +61,19 @@ namespace Epsitec.Common.Text
 			//
 			//	détermine la position exacte de la ligne ainsi que la largeur
 			//	disponible et la position suggérée pour la prochaine ligne.
-			
-			double line_dy = leading;
-			double text_dy = ascender - descender;
-			double filler  = line_dy - text_dy;
-			
-			double y_top = y_dist;
-			double y_bot = y_top - line_dy;
-			
-			ox    = 0;
-			oy    = y_top - ascender - filler / 2;
-			width = this.width;
-			next_y_dist = -1000000;
 
-			if ( oy < -1000000 )
+			ox    = 0;
+			oy    = 0;
+			width = this.width;
+			next_y_dist = -1;
+
+			if ( y_dist == 0 )  // première ligne ?
 			{
-				return false;
+				return true;
 			}
 			else
 			{
-				return true;
+				return false;
 			}
 		}
 		

@@ -63,6 +63,7 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			bool allHandle = !this.IsSelected;
+			bool global = true;
 			int total = this.TotalMainHandle;
 			for ( int i=0 ; i<total ; i+=3 )
 			{
@@ -72,9 +73,22 @@ namespace Epsitec.Common.Document.Objects
 					this.Handle(i+1).Position += move;
 					this.Handle(i+2).Position += move;
 				}
+				else
+				{
+					global = false;
+				}
 			}
+
+			if ( global )
+			{
+				this.MoveBbox(move);
+			}
+			else
+			{
+				this.SetDirtyBbox();
+			}
+
 			this.HandlePropertiesUpdate();
-			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 

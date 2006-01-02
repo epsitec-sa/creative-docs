@@ -31,6 +31,22 @@ namespace Epsitec.Common.Document.Objects
 			return new TextBox2(document, model);
 		}
 
+		protected override void Initialise()
+		{
+			this.textFrame = new Text.SimpleTextFrame();
+			base.Initialise();
+		}
+		
+		protected override void InitialiseInternals()
+		{
+			if ( this.textFrame == null )
+			{
+				this.textFrame = new Text.SimpleTextFrame();
+			}
+
+			base.InitialiseInternals();
+		}
+
 
 		public override string IconName
 		{
@@ -694,14 +710,14 @@ namespace Epsitec.Common.Document.Objects
 		protected override void UpdateTextFrame()
 		{
 			//	Met à jour le TextFrame en fonction des dimensions du pavé.
+			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
+			
 			Point p1, p2, p3, p4;
 			this.Corners(out p1, out p2, out p3, out p4);
 			
 			double width  = Point.Distance(p1, p2);
 			double height = Point.Distance(p1, p3);
 
-			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
-			
 			if ( frame.Width   != width  ||
 				 frame.Height  != height ||
 				 frame.OriginY != p4.Y   )
@@ -1129,7 +1145,7 @@ namespace Epsitec.Common.Document.Objects
 							{
 								if ( glyphs[i] < 0xffff )
 								{
-									this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+									this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, (sx == null) ? 1.0 : sx[i], (sy == null) ? 1.0 : sy[i]);
 								}
 							}
 						}
@@ -1366,59 +1382,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.port.PaintSurface(path);
 		}
-
-		protected static bool XlineContains(System.Collections.ArrayList process, Text.Properties.AbstractXlineProperty xline, Text.Properties.FontColorProperty color)
-		{
-			//	Cherche si une propriété Xline est déjà dans une liste.
-			foreach ( XlineInfo existing in process )
-			{
-				if ( Text.Property.CompareEqualContents(existing.Xline, xline) &&
-					 Text.Property.CompareEqualContents(existing.Color, color) )
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		
-		private class XlineInfo
-		{
-			public XlineInfo(Text.Properties.AbstractXlineProperty xline, Text.Properties.FontColorProperty color)
-			{
-				this.xline = xline;
-				this.color = color;
-			}
-			
-			
-			public Text.Properties.AbstractXlineProperty Xline
-			{
-				get
-				{
-					return this.xline;
-				}
-			}
-			
-			public Text.Properties.FontColorProperty Color
-			{
-				get
-				{
-					return this.color;
-				}
-			}
-			
-			
-			Text.Properties.AbstractXlineProperty	xline;
-			Text.Properties.FontColorProperty		color;
-		}
 		#endregion
-
-
-		public override Path GetMagnetPath()
-		{
-			//	Retourne le chemin géométrique de l'objet pour les constructions
-			//	magnétiques.
-			return this.PathBuild();
-		}
 
 
 		public override void UpdateTextGrid(bool notify)
@@ -1437,6 +1401,13 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
+		public override Path GetMagnetPath()
+		{
+			//	Retourne le chemin géométrique de l'objet pour les constructions
+			//	magnétiques.
+			return this.PathBuild();
+		}
+
 		public override Path[] GetPaths()
 		{
 			//	Retourne les chemins géométriques de l'objet.

@@ -1846,7 +1846,7 @@ namespace Epsitec.Common.Document
 
 
 		#region TextFormat
-		public void TextFlowChange(Objects.TextBox2 obj, Objects.TextBox2 parent, bool after)
+		public void TextFlowChange(Objects.AbstractText obj, Objects.AbstractText parent, bool after)
 		{
 			//	Modifie le flux.
 			using ( this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.FlowChanged) )
