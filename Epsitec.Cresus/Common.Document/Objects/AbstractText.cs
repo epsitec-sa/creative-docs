@@ -892,7 +892,7 @@ namespace Epsitec.Common.Document.Objects
 		protected bool							isActive;
 		protected ulong							markerSelected;
 		protected TextFlow						textFlow;
-		protected Text.SimpleTextFrame			textFrame;
+		protected Text.ITextFrame				textFrame;
 		protected IPaintPort					port;
 		protected Graphics						graphics;
 		protected DrawingContext				drawingContext;

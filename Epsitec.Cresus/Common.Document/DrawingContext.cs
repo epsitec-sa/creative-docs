@@ -847,9 +847,9 @@ namespace Epsitec.Common.Document
 			//	Met à jour tous les pavés du document lorsque les lignes magnétiques ont changé.
 			foreach ( TextFlow flow in this.document.TextFlows )
 			{
-				foreach ( Objects.TextBox2 obj in flow.Chain )
+				foreach ( Objects.AbstractText obj in flow.Chain )
 				{
-					Text.SimpleTextFrame frame = obj.TextFrame as Text.SimpleTextFrame;
+					Text.ITextFrame frame = obj.TextFrame as Text.ITextFrame;
 					if ( frame != null )
 					{
 						obj.UpdateTextGrid(true);

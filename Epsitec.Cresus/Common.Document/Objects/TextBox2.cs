@@ -260,7 +260,6 @@ namespace Epsitec.Common.Document.Objects
 			{
 				//	Si la souris n'est pas dans notre texte frame, on utilise le text
 				//	frame correspondant à sa position (s'il y en a un).
-				
 				frame = this.textFlow.FindTextFrame(pos, out ppos);
 				
 				if ( frame == null )  frame = this.textFrame;
@@ -700,14 +699,16 @@ namespace Epsitec.Common.Document.Objects
 			
 			double width  = Point.Distance(p1, p2);
 			double height = Point.Distance(p1, p3);
+
+			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
 			
-			if ( this.textFrame.Width   != width  ||
-				 this.textFrame.Height  != height ||
-				 this.textFrame.OriginY != p4.Y   )
+			if ( frame.Width   != width  ||
+				 frame.Height  != height ||
+				 frame.OriginY != p4.Y   )
 			{
-				this.textFrame.OriginY = p4.Y;
-				this.textFrame.Width   = width;
-				this.textFrame.Height  = height;
+				frame.OriginY = p4.Y;
+				frame.Width   = width;
+				frame.Height  = height;
 				
 				this.textFlow.TextStory.NotifyTextChanged();
 			}
@@ -724,7 +725,8 @@ namespace Epsitec.Common.Document.Objects
 			
 			ppos = this.transform.TransformInverse(pos);
 			
-			if ( ppos.X < 0 || ppos.Y < 0 || ppos.X > this.textFrame.Width || ppos.Y > this.textFrame.Height )
+			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
+			if ( ppos.X < 0 || ppos.Y < 0 || ppos.X > frame.Width || ppos.Y > frame.Height )
 			{
 				return false;
 			}
@@ -1153,8 +1155,9 @@ namespace Epsitec.Common.Document.Objects
 								if ( insecs[i] == SpaceType.NewFrame ||
 									 insecs[i] == SpaceType.NewPage  )  // saut ?
 								{
-									Point p1 = new Point(x[i],                 y[i]+oy);
-									Point p2 = new Point(this.textFrame.Width, y[i]+oy);
+									Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
+									Point p1 = new Point(x[i],        y[i]+oy);
+									Point p2 = new Point(frame.Width, y[i]+oy);
 									Path path = Path.FromLine(p1, p2);
 
 									double w    = (insecs[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
@@ -1421,8 +1424,9 @@ namespace Epsitec.Common.Document.Objects
 		public override void UpdateTextGrid(bool notify)
 		{
 			//	Met à jour le pavé en fonction des lignes magnétiques.
-			this.textFrame.GridStep   = this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
-			this.textFrame.GridOffset = this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
+			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
+			frame.GridStep   = this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
+			frame.GridOffset = this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;
 
 			if ( notify )
 			{

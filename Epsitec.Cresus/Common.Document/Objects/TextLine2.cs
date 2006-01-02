@@ -1070,7 +1070,6 @@ namespace Epsitec.Common.Document.Objects
 			{
 				//	Si la souris n'est pas dans notre texte frame, on utilise le text
 				//	frame correspondant à sa position (s'il y en a un).
-				
 				frame = this.textFlow.FindTextFrame(pos, out ppos);
 				
 				if ( frame == null )  frame = this.textFrame;
@@ -1271,13 +1270,15 @@ namespace Epsitec.Common.Document.Objects
 			double width  = this.GetLength();
 			double height = 1000000;
 			
-			if ( this.textFrame.Width   != width  ||
-				 this.textFrame.Height  != height )
+			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
+
+			if ( frame.Width   != width  ||
+				 frame.Height  != height )
 			{
-				this.textFrame.OriginX = 0;
-				this.textFrame.OriginY = 0;
-				this.textFrame.Width   = width;
-				this.textFrame.Height  = height;
+				frame.OriginX = 0;
+				frame.OriginY = 0;
+				frame.Width   = width;
+				frame.Height  = height;
 				
 				this.textFlow.TextStory.NotifyTextChanged();
 			}
@@ -1294,7 +1295,8 @@ namespace Epsitec.Common.Document.Objects
 			
 			ppos = this.transform.TransformInverse(pos);
 			
-			if ( ppos.X < 0 || ppos.Y < 0 || ppos.X > this.textFrame.Width || ppos.Y > this.textFrame.Height )
+			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
+			if ( ppos.X < 0 || ppos.Y < 0 || ppos.X > frame.Width || ppos.Y > frame.Height )
 			{
 				return false;
 			}
@@ -1632,8 +1634,9 @@ namespace Epsitec.Common.Document.Objects
 								if ( insecs[i] == SpaceType.NewFrame ||
 									insecs[i] == SpaceType.NewPage  )  // saut ?
 								{
-									Point p1 = new Point(x[i],                 y[i]+oy);
-									Point p2 = new Point(this.textFrame.Width, y[i]+oy);
+									Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
+									Point p1 = new Point(x[i],        y[i]+oy);
+									Point p2 = new Point(frame.Width, y[i]+oy);
 									Path path = Path.FromLine(p1, p2);
 
 									double w    = (insecs[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
