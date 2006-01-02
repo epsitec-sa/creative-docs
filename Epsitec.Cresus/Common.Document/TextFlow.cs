@@ -378,7 +378,6 @@ namespace Epsitec.Common.Document
 			}
 			
 			ppos = Drawing.Point.Empty;
-			
 			return null;
 		}
 		

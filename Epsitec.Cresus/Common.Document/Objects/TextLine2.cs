@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Objects
 	/// La classe TextLine2 est la classe de l'objet graphique "texte simple".
 	/// </summary>
 	[System.Serializable()]
-	public class TextLine2 : Objects.AbstractText
+	public class TextLine2 : Objects.AbstractText, Text.ITextRenderer
 	{
 		public TextLine2(Document document, Objects.Abstract model) : base(document, model)
 		{
@@ -1231,10 +1231,9 @@ namespace Epsitec.Common.Document.Objects
 		protected double Transform(Point position)
 		{
 			//	Transforme une position x;y en position le long de la courbe.
-#if true
 			double length = 0.0;
 			double min = 1000000;
-			double best = -1;
+			double best = 0;
 			int i = 0;
 			do
 			{
@@ -1286,49 +1285,19 @@ namespace Epsitec.Common.Document.Objects
 			}
 			while ( i < this.handles.Count-3 );
 
-			if ( best == -1 )  return 0;
 			return best;
-#else
-			//	C'est la tansformation inverse (d -> x;y) qui est utilisée pour
-			//	une recherche approximative par bissection. Donc, ce n'est ni
-			//	rapide ni précis !
-			double min = 0.0;
-			double max = this.GetLength();
-			for ( int i=20 ; i>=0 ; i-- )
-			{
-				double mid = (min+max)/2;
-				double d1 = Point.Distance(this.Transform((min+mid)/2), pos);
-				double d2 = Point.Distance(this.Transform((mid+max)/2), pos);
-				double d;
-				
-				if ( d1 < d2 )
-				{
-					d = d1;
-					max = mid;
-				}
-				else
-				{
-					d = d2;
-					min = mid;
-				}
-
-				if ( d < 0.00001 || i == 0 )
-				{
-					return (min+max)/2;
-				}
-			}
-			return 0;
-#endif
 		}
 
 		protected static bool Contains(Point p, Point p1, Point p2)
 		{
 			//	Retourne true si p est le long de p1-p2.
-			double x1 = System.Math.Min(p1.X, p2.X);
-			double x2 = System.Math.Max(p1.X, p2.X);
-			double y1 = System.Math.Min(p1.Y, p2.Y);
-			double y2 = System.Math.Max(p1.Y, p2.Y);
-			return ( p.X >= x1 && p.X <= x2 && p.Y >= y1 && p.Y <= y2 );
+			return
+			(
+				p.X >= System.Math.Min(p1.X, p2.X) &&
+				p.X <= System.Math.Max(p1.X, p2.X) &&
+				p.Y >= System.Math.Min(p1.Y, p2.Y) &&
+				p.Y <= System.Math.Max(p1.Y, p2.Y)
+			);
 		}
 
 		protected Point Transform(double position)
@@ -1423,14 +1392,13 @@ namespace Epsitec.Common.Document.Objects
 		protected override void UpdateTextFrame()
 		{
 			//	Met à jour le TextFrame en fonction des dimensions du pavé.
-			double width  = this.GetLength();
+			double width = this.GetLength();
 			
 			Text.SingleLineTextFrame frame = this.textFrame as Text.SingleLineTextFrame;
 
 			if ( frame.Width != width )
 			{
 				frame.Width = width;
-				
 				this.textFlow.TextStory.NotifyTextChanged();
 			}
 		}
@@ -1438,15 +1406,20 @@ namespace Epsitec.Common.Document.Objects
 		public override bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
 		{
 			//	Détermine si un point se trouve dans le texte frame.
-			if ( this.transform == null )
+			double plin = this.Transform(pos);
+			Point pcurve  = this.Transform(plin);
+
+			double d = Point.Distance(pos, pcurve);
+			if ( d < 100.0 )  // moins de 1cm ? (TODO: faire mieux !!!)
+			{
+				ppos = new Point(plin, 0);
+				return true;
+			}
+			else
 			{
 				ppos = Drawing.Point.Empty;
 				return false;
 			}
-			
-			ppos = this.transform.TransformInverse(pos);
-			
-			return false;
 		}
 		
 		protected override void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)
@@ -1459,6 +1432,24 @@ namespace Epsitec.Common.Document.Objects
 				this.cursorBox = Drawing.Rectangle.Empty;
 				this.selectBox = Drawing.Rectangle.Empty;
 			}
+
+			this.port = port;
+			this.graphics = port as Graphics;
+			this.drawingContext = drawingContext;
+
+			this.isActive = true;
+			if ( this.document.Modifier != null )
+			{
+				this.isActive = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext &&
+								 this.document.Modifier.ActiveViewer.IsFocused);
+			}
+
+			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.textFlow.HasActiveTextBox && this.drawingContext != null && this.drawingContext.TextShowControlCharacters;
+			this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
+
+			this.port = null;
+			this.graphics = null;
+			this.drawingContext = null;
 		}
 
 
@@ -1757,7 +1748,7 @@ namespace Epsitec.Common.Document.Objects
 						}
 
 						if ( this.textFlow.HasActiveTextBox && isSpace && insecs != null &&
-							this.drawingContext != null && this.drawingContext.TextShowControlCharacters )
+							 this.drawingContext != null && this.drawingContext.TextShowControlCharacters )
 						{
 							for ( int i=0 ; i<glyphs.Length ; i++ )
 							{
@@ -1775,7 +1766,7 @@ namespace Epsitec.Common.Document.Objects
 								}
 
 								if ( insecs[i] == SpaceType.NewFrame ||
-									insecs[i] == SpaceType.NewPage  )  // saut ?
+									 insecs[i] == SpaceType.NewPage  )  // saut ?
 								{
 									Text.SingleLineTextFrame frame = this.textFrame as Text.SingleLineTextFrame;
 									Point p1 = new Point(x[i],        y[i]+oy);
@@ -2065,6 +2056,6 @@ namespace Epsitec.Common.Document.Objects
 		protected double						advanceMaxAscender;
 		protected Point							initialPos;
 
-		protected static readonly double		step = 0.01;
+		protected static readonly double		step = 1/100;  // une courbe de Bézier est décomposée en 100 segments
 	}
 }

@@ -118,13 +118,27 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.fieldFontFace = new Common.Document.Widgets.TextFieldFontFace(bookArray);
 				this.fieldFontFace.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
-				this.fieldFontFace.AnchorMargins = new Margins(6+50, 6+20+3, 6, 0);
+				this.fieldFontFace.AnchorMargins = new Margins(6+50, 6+20+21+3, 6, 0);
 				this.fieldFontFace.IsReadOnly = true;
 				this.fieldFontFace.TabIndex = tabIndex++;
 				this.fieldFontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fieldFontFace.Text = this.fontFace;
 				this.fieldFontFace.OpeningCombo += new CancelEventHandler(this.HandleFontFaceOpeningCombo);
 				this.fieldFontFace.TextChanged += new EventHandler(this.HandleFontFaceChanged);
+
+				this.buttonFilter = new IconButton(bookArray);
+				this.buttonFilter.Width = 21;
+				this.buttonFilter.Height = 21;
+				this.buttonFilter.Command = "TextFontFilter";
+				this.buttonFilter.IconName = Misc.Icon("TextFontFilter");
+				this.buttonFilter.PreferredIconSize = Misc.IconPreferredSize("Normal");
+				this.buttonFilter.AutoFocus = false;
+				this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
+				this.buttonFilter.Anchor = AnchorStyles.Top|AnchorStyles.Right;
+				this.buttonFilter.AnchorMargins = new Margins(6+50, 6+20+3, 6, 0);
+				this.buttonFilter.TabIndex = tabIndex++;
+				this.buttonFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip(this.buttonFilter, DocumentEditor.GetRes("Action.TextFontFilter"));
 
 				StaticText fontStyleLabel = new StaticText(bookArray);
 				fontStyleLabel.Text = Res.Strings.Dialog.Glyphs.FontStyle;
@@ -134,7 +148,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.fieldFontStyle = new TextFieldCombo(bookArray);
 				this.fieldFontStyle.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
-				this.fieldFontStyle.AnchorMargins = new Margins(6+50, 6+20+3, 6+20+4, 0);
+				this.fieldFontStyle.AnchorMargins = new Margins(6+50, 6+20+21+3, 6+20+4, 0);
 				this.fieldFontStyle.IsReadOnly = true;
 				this.fieldFontStyle.TabIndex = tabIndex++;
 				this.fieldFontStyle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -770,6 +784,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected ScrollList				list;
 
 		protected Common.Document.Widgets.TextFieldFontFace fieldFontFace;
+		protected IconButton				buttonFilter;
 		protected TextFieldCombo			fieldFontStyle;
 		protected GlyphButton				currentFont;
 		protected GlyphArray				array;
