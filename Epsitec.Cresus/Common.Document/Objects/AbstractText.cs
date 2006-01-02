@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Objects
 	/// La classe AbstractText est la classe de base pour tous les objets texte.
 	/// </summary>
 	[System.Serializable()]
-	public class AbstractText : Objects.Abstract
+	public abstract class AbstractText : Objects.Abstract
 	{
 		protected enum InternalOperation
 		{
