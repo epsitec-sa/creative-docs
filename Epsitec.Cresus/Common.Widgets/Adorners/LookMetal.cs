@@ -2342,7 +2342,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				case TextDisplayMode.Default:   return Drawing.Color.Empty;
 				case TextDisplayMode.Defined:   return Drawing.Color.FromRGB(223.0/255.0, 240.0/255.0, 255.0/255.0);
-				case TextDisplayMode.Proposal:  return Drawing.Color.FromRGB(255.0/255.0, 238.0/255.0, 209.0/255.0);
+				case TextDisplayMode.Proposal:  return Drawing.Color.FromRGB(251.0/255.0, 234.0/255.0, 175.0/255.0);
 			}
 			return Drawing.Color.Empty;
 		}
