@@ -1268,17 +1268,12 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Met à jour le TextFrame en fonction des dimensions du pavé.
 			double width  = this.GetLength();
-			double height = 1000000;
 			
-			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
+			Text.SingleLineTextFrame frame = this.textFrame as Text.SingleLineTextFrame;
 
-			if ( frame.Width   != width  ||
-				 frame.Height  != height )
+			if ( frame.Width != width )
 			{
-				frame.OriginX = 0;
-				frame.OriginY = 0;
-				frame.Width   = width;
-				frame.Height  = height;
+				frame.Width = width;
 				
 				this.textFlow.TextStory.NotifyTextChanged();
 			}
@@ -1295,15 +1290,7 @@ namespace Epsitec.Common.Document.Objects
 			
 			ppos = this.transform.TransformInverse(pos);
 			
-			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
-			if ( ppos.X < 0 || ppos.Y < 0 || ppos.X > frame.Width || ppos.Y > frame.Height )
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+			return false;
 		}
 		
 		protected override void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)
@@ -1634,7 +1621,7 @@ namespace Epsitec.Common.Document.Objects
 								if ( insecs[i] == SpaceType.NewFrame ||
 									insecs[i] == SpaceType.NewPage  )  // saut ?
 								{
-									Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
+									Text.SingleLineTextFrame frame = this.textFrame as Text.SingleLineTextFrame;
 									Point p1 = new Point(x[i],        y[i]+oy);
 									Point p2 = new Point(frame.Width, y[i]+oy);
 									Path path = Path.FromLine(p1, p2);

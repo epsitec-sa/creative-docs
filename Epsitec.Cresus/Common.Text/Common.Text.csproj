@@ -249,6 +249,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "SingleLineTextFrame.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "StyleList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
