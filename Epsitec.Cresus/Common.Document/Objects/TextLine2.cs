@@ -1228,6 +1228,162 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
+		protected double Transform(Point position)
+		{
+			//	Transforme une position x;y en position le long de la courbe.
+#if true
+			double length = 0.0;
+			double min = 1000000;
+			double best = -1;
+			int i = 0;
+			do
+			{
+				Point p1 = this.Handle(i+1).Position;
+				Point s1 = this.Handle(i+2).Position;
+				Point s2 = this.Handle(i+3).Position;
+				Point p2 = this.Handle(i+4).Position;
+
+				if ( this.Handle(i+2).Type == HandleType.Hide )  // droite ?
+				{
+					Point p = Point.Projection(p1, p2, position);
+					if ( TextLine2.Contains(p, p1, p2) )
+					{
+						double d = Point.Distance(p, position);
+						if ( d < min )
+						{
+							min = d;
+							best = length + Point.Distance(p1, p);
+						}
+					}
+
+					length += Point.Distance(p1,p2);
+				}
+				else	// courbe ?
+				{
+					Point pos = p1;
+					int total = (int)(1.0/TextLine2.step);
+					for ( int rank=1 ; rank<=total ; rank ++ )
+					{
+						double t = TextLine2.step*rank;
+						Point next = Point.FromBezier(p1,s1,s2,p2, t);
+
+						Point p = Point.Projection(pos, next, position);
+						if ( TextLine2.Contains(p, pos, next) )
+						{
+							double d = Point.Distance(p, position);
+							if ( d < min )
+							{
+								min = d;
+								best = length + Point.Distance(pos, p);
+							}
+						}
+
+						length += Point.Distance(pos, next);
+						pos = next;
+					}
+				}
+				i += 3;  // courbe suivante
+			}
+			while ( i < this.handles.Count-3 );
+
+			if ( best == -1 )  return 0;
+			return best;
+#else
+			//	C'est la tansformation inverse (d -> x;y) qui est utilisée pour
+			//	une recherche approximative par bissection. Donc, ce n'est ni
+			//	rapide ni précis !
+			double min = 0.0;
+			double max = this.GetLength();
+			for ( int i=20 ; i>=0 ; i-- )
+			{
+				double mid = (min+max)/2;
+				double d1 = Point.Distance(this.Transform((min+mid)/2), pos);
+				double d2 = Point.Distance(this.Transform((mid+max)/2), pos);
+				double d;
+				
+				if ( d1 < d2 )
+				{
+					d = d1;
+					max = mid;
+				}
+				else
+				{
+					d = d2;
+					min = mid;
+				}
+
+				if ( d < 0.00001 || i == 0 )
+				{
+					return (min+max)/2;
+				}
+			}
+			return 0;
+#endif
+		}
+
+		protected static bool Contains(Point p, Point p1, Point p2)
+		{
+			//	Retourne true si p est le long de p1-p2.
+			double x1 = System.Math.Min(p1.X, p2.X);
+			double x2 = System.Math.Max(p1.X, p2.X);
+			double y1 = System.Math.Min(p1.Y, p2.Y);
+			double y2 = System.Math.Max(p1.Y, p2.Y);
+			return ( p.X >= x1 && p.X <= x2 && p.Y >= y1 && p.Y <= y2 );
+		}
+
+		protected Point Transform(double position)
+		{
+			//	Transforme une position le long de la courbe en position x;y.
+			if ( position <= 0 )
+			{
+				return this.Handle(1).Position;
+			}
+
+			double length = 0.0;
+			int i = 0;
+			do
+			{
+				Point p1 = this.Handle(i+1).Position;
+				Point s1 = this.Handle(i+2).Position;
+				Point s2 = this.Handle(i+3).Position;
+				Point p2 = this.Handle(i+4).Position;
+
+				if ( this.Handle(i+2).Type == HandleType.Hide )  // droite ?
+				{
+					double last = length;
+					length += Point.Distance(p1, p2);
+
+					if ( position <= length )
+					{
+						return Point.Move(p1, p2, position-last);
+					}
+				}
+				else	// courbe ?
+				{
+					Point pos = p1;
+					int total = (int)(1.0/TextLine2.step);
+					for ( int rank=1 ; rank<=total ; rank ++ )
+					{
+						double t = TextLine2.step*rank;
+						Point next = Point.FromBezier(p1,s1,s2,p2, t);
+						double last = length;
+						length += Point.Distance(pos, next);
+
+						if ( position <= length )
+						{
+							return Point.Move(pos, next, position-last);
+						}
+
+						pos = next;
+					}
+				}
+				i += 3;  // courbe suivante
+			}
+			while ( i < this.handles.Count-3 );
+
+			return this.Handle(this.handles.Count-2).Position;
+		}
+
 		protected double GetLength()
 		{
 			//	Retourne la longueur totale d'une courbe multiple.
