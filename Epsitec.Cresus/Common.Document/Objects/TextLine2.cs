@@ -1774,17 +1774,17 @@ namespace Epsitec.Common.Document.Objects
 			double y  = layout.LineBaseY + layout.LineAscender*0.3;
 			double a  = System.Math.Min(layout.LineAscender*0.3, (x2-x1)*0.5);
 
-			Point p1 = new Point(x1, y);
-			Point p2 = new Point(x2, y);
-			graphics.Align(ref p1);
-			graphics.Align(ref p2);
-			double adjust = 0.5/this.drawingContext.ScaleX;
-			p1.X += adjust;  p1.Y += adjust;
-			p2.X -= adjust;  p2.Y += adjust;
-			if ( p1.X >= p2.X )  return;
+			Point p1, p2;
+			double a1, a2;
+			this.Transform(x1, out p1, out a1);
+			this.Transform(x2, out p2, out a2);
 
-			Point p2a = new Point(p2.X-a, p2.Y-a*0.75);
-			Point p2b = new Point(p2.X-a, p2.Y+a*0.75);
+			p1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+y));
+			p2 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+y));
+
+			double aa = Point.ComputeAngleDeg(p2, p1);
+			Point p2a = Drawing.Transform.RotatePointDeg(p2, aa+30, new Point(p2.X+a, p2.Y));
+			Point p2b = Drawing.Transform.RotatePointDeg(p2, aa-30, new Point(p2.X+a, p2.Y));
 
 			Color color = isTabDefined ? Drawing.Color.FromBrightness(0.8) : DrawingContext.ColorTabZombie;
 			
