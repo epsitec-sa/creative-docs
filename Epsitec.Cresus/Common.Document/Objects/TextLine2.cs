@@ -1772,15 +1772,17 @@ namespace Epsitec.Common.Document.Objects
 						{
 							if ( glyphs[i] < 0xffff )
 							{
+								double width = x[i+1] - x[i];  // largeur du glyph
+
 								Point pos;
 								double angle;
-								this.Transform(x[i], out pos, out angle);
+								this.Transform(x[i]+width/2, out pos, out angle);
 								pos = Drawing.Transform.RotatePointDeg(pos, angle, new Point(pos.X, pos.Y+y[i]));
 
 								Transform initial = this.graphics.Transform;
 								this.graphics.TranslateTransform(pos.X, pos.Y);
 								this.graphics.RotateTransformDeg(angle, 0, 0);
-								this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], 0, 0, size, (sx == null) ? 1.0 : sx[i], (sy == null) ? 1.0 : sy[i]);
+								this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], -width/2, 0, size, (sx == null) ? 1.0 : sx[i], (sy == null) ? 1.0 : sy[i]);
 								this.graphics.Transform = initial;
 							}
 						}
