@@ -752,9 +752,14 @@ namespace Epsitec.Common.Document.Objects
 		protected void AdaptPrimaryLine(int rankPrimary, int rankSecondary, out int rankExtremity)
 		{
 			//	Adapte le point secondaire s'il est en mode "en ligne".
-			rankExtremity = rankPrimary - (rankSecondary-rankPrimary)*3;
-			if ( rankExtremity < 0 )  rankExtremity = this.handles.Count-2;
-			if ( rankExtremity >= this.handles.Count )  rankExtremity = 1;
+			if ( rankSecondary > rankPrimary )
+			{
+				rankExtremity = this.PrevRank(rankPrimary-1)+1;
+			}
+			else
+			{
+				rankExtremity = this.NextRank(rankPrimary-1)+1;
+			}
 
 			if ( this.Handle(rankPrimary).ConstrainType != HandleConstrainType.Smooth )  return;
 			int rankOpposite = rankPrimary - (rankSecondary-rankPrimary);
@@ -766,6 +771,7 @@ namespace Epsitec.Common.Document.Objects
 			pos = Point.Symmetry(this.Handle(rankPrimary).Position, pos);
 			this.Handle(rankSecondary).Position = pos;
 			this.SetDirtyBbox();
+			this.HandlePropertiesUpdate();
 		}
 
 		protected int PrevRank(int rank)
@@ -1485,7 +1491,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 				i += 3;  // courbe suivante
 			}
-			while ( i < this.handles.Count-3 );
+			while ( i < this.TotalMainHandle-3 );
 
 			return best;
 		}
@@ -1562,7 +1568,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 				i += 3;  // courbe suivante
 			}
-			while ( i < this.handles.Count-3 );
+			while ( i < this.TotalMainHandle-3 );
 
 			if ( true )  // à la fin ?
 			{
@@ -1608,7 +1614,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 				i += 3;  // courbe suivante
 			}
-			while ( i < this.handles.Count-3 );
+			while ( i < this.TotalMainHandle-3 );
 
 			return length;
 		}
