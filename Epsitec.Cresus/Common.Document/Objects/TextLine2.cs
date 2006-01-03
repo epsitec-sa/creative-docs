@@ -1210,6 +1210,7 @@ namespace Epsitec.Common.Document.Objects
 			double length = 0.0;
 			double min = 1000000;
 			double best = 0;
+			Point lastProjection = Point.Empty;
 			int i = 0;
 			do
 			{
@@ -1230,6 +1231,20 @@ namespace Epsitec.Common.Document.Objects
 							best = length + Point.Distance(p1, p);
 						}
 					}
+					else if ( !lastProjection.IsEmpty )
+					{
+						Point pp = Point.Projection(p1, p2, lastProjection);
+						if ( TextLine2.Contains(pp, p1, p2) )
+						{
+							double d = Point.Distance(pp, lastProjection);
+							if ( d < min )
+							{
+								min = d;
+								best = length + Point.Distance(p1, pp);
+							}
+						}
+					}
+					lastProjection = p;
 
 					length += Point.Distance(p1,p2);
 				}
@@ -1252,6 +1267,20 @@ namespace Epsitec.Common.Document.Objects
 								best = length + Point.Distance(pos, p);
 							}
 						}
+						else if ( !lastProjection.IsEmpty )
+						{
+							Point pp = Point.Projection(pos, next, lastProjection);
+							if ( TextLine2.Contains(pp, pos, next) )
+							{
+								double d = Point.Distance(pp, lastProjection);
+								if ( d < min )
+								{
+									min = d;
+									best = length + Point.Distance(pos, pp);
+								}
+							}
+						}
+						lastProjection = p;
 
 						length += Point.Distance(pos, next);
 						pos = next;
@@ -1440,14 +1469,12 @@ namespace Epsitec.Common.Document.Objects
 		public override bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
 		{
 			//	Détermine si un point se trouve dans le texte frame.
-			double lin = this.Transform(pos);
-			Point curve;
-			double angle;
-			this.Transform(lin, out curve, out angle);
-
-			double d = Point.Distance(pos, curve);
-			if ( d < 100.0 )  // moins de 1cm ? (TODO: faire mieux !!!)
+			if ( this.Detect(pos) )
 			{
+				double lin = this.Transform(pos);
+				Point curve;
+				double angle;
+				this.Transform(lin, out curve, out angle);
 				ppos = new Point(lin, 0);
 				return true;
 			}
@@ -1651,6 +1678,8 @@ namespace Epsitec.Common.Document.Objects
 
 					double x1 = x[offset+0];
 					double x2 = x[offset+numGlyphs];
+					double yy = y[offset];
+					offset += numGlyphs;
 
 					for ( int i=0 ; i<numChars ; i++ )
 					{
@@ -1658,11 +1687,9 @@ namespace Epsitec.Common.Document.Objects
 						{
 							double ww = (x2-x1)/numChars;
 							double xx = x1 + ww*i;
-							this.MarkSel(drawingFont, size, ref selRectList, xx, ww, y[offset]);
+							this.MarkSel(drawingFont, size, ref selRectList, xx, ww, yy);
 						}
 					}
-
-					offset += numGlyphs;
 				}
 
 				if ( this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null )
@@ -1758,14 +1785,13 @@ namespace Epsitec.Common.Document.Objects
 
 		protected void MarkSel(Drawing.Font drawingFont, double size, ref System.Collections.ArrayList selRectList, double x, double w, double y)
 		{
-			//	Marque une tranche sélectionnée.
+			//	Marque un caractère sélectionné.
 			if ( this.graphics == null )  return;
 
 			double ascender  = drawingFont.Ascender*size;
 			double descender = drawingFont.Descender*size;
 
-			double dy = ascender-descender;
-			Drawing.Rectangle rect = new Drawing.Rectangle(x, y+descender, w, dy);
+			Drawing.Rectangle rect = new Drawing.Rectangle(x, y+descender, w, ascender-descender);
 			graphics.Align(ref rect);
 
 			if ( selRectList == null )

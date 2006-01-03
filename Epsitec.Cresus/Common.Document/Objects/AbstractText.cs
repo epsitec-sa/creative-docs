@@ -61,7 +61,7 @@ namespace Epsitec.Common.Document.Objects
 			this.selectBox = Drawing.Rectangle.Empty;
 		}
 
-		public virtual void NewTextFlow()
+		public void NewTextFlow()
 		{
 			//	Crée un nouveau TextFlow pour l'objet.
 			TextFlow flow = new TextFlow(this.document);
@@ -70,7 +70,24 @@ namespace Epsitec.Common.Document.Objects
 			flow.Add(this, null, true);
 		}
 
-		public virtual TextFlow TextFlow
+
+		public override void Dispose()
+		{
+			if ( this.textFlow != null )
+			{
+				this.textFlow.Remove(this);  // objet seul dans son propre flux
+
+				if ( this.textFlow.Count == 1 )  // est-on le dernier et seul utilisateur ?
+				{
+					this.document.TextFlows.Remove(this.textFlow);
+				}
+			}
+
+			base.Dispose();
+		}
+
+
+		public TextFlow TextFlow
 		{
 			//	TextFlow associé à l'objet.
 			get
@@ -91,37 +108,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public virtual Text.ITextFrame TextFrame
-		{
-			//	Donne le TextFrame associé à l'objet.
-			get
-			{
-				return this.textFrame;
-			}
-		}
-
-		public override void Dispose()
-		{
-			if ( this.textFlow != null )
-			{
-				this.textFlow.Remove(this);  // objet seul dans son propre flux
-
-				if ( this.textFlow.Count == 1 )  // est-on le dernier et seul utilisateur ?
-				{
-					this.document.TextFlows.Remove(this.textFlow);
-				}
-			}
-
-			base.Dispose();
-		}
-
-
-		public override string IconName
-		{
-			//	Nom de l'icône.
-			get { return Misc.Icon("ObjectTextBox"); }
-		}
-
 		protected TextNavigator2 MetaNavigator
 		{
 			//	MetaNavigator associé au TextFlow.
@@ -136,6 +122,22 @@ namespace Epsitec.Common.Document.Objects
 					return this.textFlow.MetaNavigator;
 				}
 			}
+		}
+
+		public Text.ITextFrame TextFrame
+		{
+			//	Donne le TextFrame associé à l'objet.
+			get
+			{
+				return this.textFrame;
+			}
+		}
+
+
+		public override string IconName
+		{
+			//	Nom de l'icône.
+			get { return Misc.Icon("ObjectTextBox"); }
 		}
 
 
