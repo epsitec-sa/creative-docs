@@ -1894,7 +1894,7 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null )
 				{
-					//	Dessine les rectangles correspondant à la sélection.
+					//	Dessine les rectangles correspondant à la sélection (un par caractère).
 					foreach ( Drawing.Rectangle rect in selRectList )
 					{
 						Point p1, p2;
@@ -2321,7 +2321,22 @@ namespace Epsitec.Common.Document.Objects
 				y += xline.Position;
 			}
 
-			Path path = Path.FromRectangle(starting.X, y-xline.Thickness/2, ending.X-starting.X, xline.Thickness);
+			Point p1, p2;
+			double a1, a2;
+			this.Transform(starting.X, out p1, out a1);
+			this.Transform(ending.X,   out p2, out a2);
+
+			Point c1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+y-xline.Thickness/2));
+			Point c2 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+y+xline.Thickness/2));
+			Point c3 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+y-xline.Thickness/2));
+			Point c4 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+y+xline.Thickness/2));
+
+			Path path = new Path();
+			path.MoveTo(c1);
+			path.LineTo(c2);
+			path.LineTo(c4);
+			path.LineTo(c3);
+			path.Close();
 
 			string color = xline.DrawStyle;
 			if ( color == null )  // couleur par défaut (comme le texte) ?
