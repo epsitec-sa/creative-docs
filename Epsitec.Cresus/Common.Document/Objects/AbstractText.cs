@@ -21,15 +21,13 @@ namespace Epsitec.Common.Document.Objects
 			RealSelectPath,
 		}
 
-		[System.Flags] protected enum SpaceType
+		protected enum SpaceType
 		{
-			None         = 0x00000001,		// ce n'est pas un espace
-			BreakSpace   = 0x00000002,		// espace sécable
-			NoBreakSpace = 0x00000003,		// espace insécable
-			NewFrame     = 0x00000004,		// saut au prochain pavé
-			NewPage      = 0x00000005,		// saut à la prochaine page
-
-			Selected     = 0x00001000,		// caractère sélectionné
+			None,			// ce n'est pas un espace
+			BreakSpace,		// espace sécable
+			NoBreakSpace,	// espace insécable
+			NewFrame,		// saut au prochain pavé
+			NewPage,		// saut à la prochaine page
 		}
 
 

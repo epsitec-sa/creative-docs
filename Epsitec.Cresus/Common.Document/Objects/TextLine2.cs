@@ -1588,6 +1588,10 @@ namespace Epsitec.Common.Document.Objects
 
 				//	Vérifions d'abord que le mapping du texte vers les glyphes est
 				//	correct et correspond à quelque chose de valide :
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+				System.Collections.ArrayList selRectList = null;
+				int offset = 0;
+
 				int[]    cArray;  // unicodes
 				ushort[] gArray;  // glyphes
 				ulong[]  tArray;  // textes
@@ -1604,19 +1608,17 @@ namespace Epsitec.Common.Document.Objects
 
 					if ( numChars == 1 && numGlyphs == 1 )
 					{
-						iArray[ii] = ( (tArray[0] & this.markerSelected) == 0 ) ? 0 : SpaceType.Selected;
-
 						int code = cArray[0];
 						if ( code == 0x20 || code == 0xA0 || code == 0x202F || (code >= 0x2000 && code <= 0x200F) )  // espace ?
 						{
 							isSpace = true;  // contient au moins un espace
 							if ( code == 0xA0 || code == 0x2007 || code == 0x200D || code == 0x202F || code == 0x2060 )
 							{
-								iArray[ii++] |= SpaceType.NoBreakSpace;  // espace insécable
+								iArray[ii++] = SpaceType.NoBreakSpace;  // espace insécable
 							}
 							else
 							{
-								iArray[ii++] |= SpaceType.BreakSpace;  // espace sécable
+								iArray[ii++] = SpaceType.BreakSpace;  // espace sécable
 							}
 						}
 						else if ( code == 0x0C )  // saut ?
@@ -1627,26 +1629,71 @@ namespace Epsitec.Common.Document.Objects
 							this.document.TextContext.GetBreak(tArray[0], out prop);
 							if ( prop.ParagraphStartMode == Text.Properties.ParagraphStartMode.NewFrame )
 							{
-								iArray[ii++] |= SpaceType.NewFrame;
+								iArray[ii++] = SpaceType.NewFrame;
 							}
 							else
 							{
-								iArray[ii++] |= SpaceType.NewPage;
+								iArray[ii++] = SpaceType.NewPage;
 							}
 						}
 						else
 						{
-							iArray[ii++] |= SpaceType.None;  // pas un espace
+							iArray[ii++] = SpaceType.None;  // pas un espace
 						}
 					}
 					else
 					{
 						for ( int i=0 ; i<numGlyphs ; i++ )
 						{
-							iArray[ii] = ( (tArray[0] & this.markerSelected) == 0 ) ? 0 : SpaceType.Selected;
-							iArray[ii++] |= SpaceType.None;  // pas un espace
+							iArray[ii++] = SpaceType.None;  // pas un espace
 						}
 					}
+
+					double x1 = x[offset+0];
+					double x2 = x[offset+numGlyphs];
+
+					for ( int i=0 ; i<numChars ; i++ )
+					{
+						if ( (tArray[i] & this.markerSelected) != 0 )
+						{
+							double ww = (x2-x1)/numChars;
+							double xx = x1 + ww*i;
+							this.MarkSel(drawingFont, size, ref selRectList, xx, ww, y[offset]);
+						}
+					}
+
+					offset += numGlyphs;
+				}
+
+				if ( this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null )
+				{
+					//	Dessine les rectangles correspondant à la sélection.
+					foreach ( Drawing.Rectangle rect in selRectList )
+					{
+						Point p1, p2;
+						double a1, a2;
+						this.Transform(rect.Left,  out p1, out a1);
+						this.Transform(rect.Right, out p2, out a2);
+
+						Point c1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+rect.Bottom));
+						Point c2 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+rect.Top));
+						Point c3 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+rect.Top));
+						Point c4 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+rect.Bottom));
+
+						Path path = new Path();
+						path.MoveTo(c1);
+						path.LineTo(c2);
+						path.LineTo(c3);
+						path.LineTo(c4);
+						path.Close();
+						this.graphics.Rasterizer.AddSurface(path);
+
+						this.selectBox.MergeWith(c1);
+						this.selectBox.MergeWith(c2);
+						this.selectBox.MergeWith(c3);
+						this.selectBox.MergeWith(c4);
+					}
+					this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
 				}
 
 				//	Dessine le texte.
@@ -1709,6 +1756,26 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		protected void MarkSel(Drawing.Font drawingFont, double size, ref System.Collections.ArrayList selRectList, double x, double w, double y)
+		{
+			//	Marque une tranche sélectionnée.
+			if ( this.graphics == null )  return;
+
+			double ascender  = drawingFont.Ascender*size;
+			double descender = drawingFont.Descender*size;
+
+			double dy = ascender-descender;
+			Drawing.Rectangle rect = new Drawing.Rectangle(x, y+descender, w, dy);
+			graphics.Align(ref rect);
+
+			if ( selRectList == null )
+			{
+				selRectList = new System.Collections.ArrayList();
+			}
+
+			selRectList.Add(rect);
+		}
+
 		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
 		{
 			//	Effectue le rendu des caractères.
@@ -1719,54 +1786,6 @@ namespace Epsitec.Common.Document.Objects
 					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 					if ( drawingFont != null )
 					{
-						// Dessine les quadrilatères des caractères sélectionnés.
-						if ( this.textFlow.HasActiveTextBox )
-						{
-							double ascender  = drawingFont.Ascender*size;
-							double descender = drawingFont.Descender*size;
-
-							bool selExist = false;
-							for ( int i=0 ; i<glyphs.Length ; i++ )
-							{
-								if ( glyphs[i] < 0xffff )
-								{
-									if ( (insecs[i] & SpaceType.Selected) == 0 )  continue;
-
-									Point p1, p2;
-									double a1, a2;
-									this.Transform(x[i+0], out p1, out a1);
-									this.Transform(x[i+1], out p2, out a2);
-									p1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+y[i]));
-									p2 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+y[i]));
-
-									Point c1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+ascender));
-									Point c2 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+descender));
-									Point c3 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+descender));
-									Point c4 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+ascender));
-
-									Path path = new Path();
-									path.MoveTo(c1);
-									path.LineTo(c2);
-									path.LineTo(c3);
-									path.LineTo(c4);
-									path.Close();
-									this.graphics.Rasterizer.AddSurface(path);
-
-									this.selectBox.MergeWith(c1);
-									this.selectBox.MergeWith(c2);
-									this.selectBox.MergeWith(c3);
-									this.selectBox.MergeWith(c4);
-
-									selExist = true;
-								}
-							}
-
-							if ( selExist )
-							{
-								this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
-							}
-						}
-
 						// Dessine les caractères.
 						for ( int i=0 ; i<glyphs.Length ; i++ )
 						{
@@ -1794,8 +1813,6 @@ namespace Epsitec.Common.Document.Objects
 							{
 								double width = font.GetGlyphWidth(glyphs[i], size);
 								double oy = font.GetAscender(size)*0.3;
-								SpaceType type = insecs[i] & ~SpaceType.Selected;
-								if ( type == 0 )  continue;
 
 								Point pos;
 								double angle;
@@ -1806,27 +1823,27 @@ namespace Epsitec.Common.Document.Objects
 								this.graphics.TranslateTransform(pos.X, pos.Y);
 								this.graphics.RotateTransformDeg(angle, 0, 0);
 
-								if ( type == SpaceType.BreakSpace )  // espace sécable ?
+								if ( insecs[i] == SpaceType.BreakSpace )  // espace sécable ?
 								{
 									this.graphics.AddFilledCircle(width/2, oy, size*0.05);
 								}
 
-								if ( type == SpaceType.NoBreakSpace )  // espace insécable ?
+								if ( insecs[i] == SpaceType.NoBreakSpace )  // espace insécable ?
 								{
 									this.graphics.AddCircle(width/2, oy, size*0.08);
 								}
 
-								if ( type == SpaceType.NewFrame ||
-									 type == SpaceType.NewPage  )  // saut ?
+								if ( insecs[i] == SpaceType.NewFrame ||
+									 insecs[i] == SpaceType.NewPage  )  // saut ?
 								{
 									Text.SingleLineTextFrame frame = this.textFrame as Text.SingleLineTextFrame;
 									Point p1 = new Point(0,           oy);
 									Point p2 = new Point(frame.Width, oy);
 									Path path = Path.FromLine(p1, p2);
 
-									double w    = (type == SpaceType.NewFrame) ? 0.8 : 0.5;
-									double dash = (type == SpaceType.NewFrame) ? 0.0 : 8.0;
-									double gap  = (type == SpaceType.NewFrame) ? 3.0 : 2.0;
+									double w    = (insecs[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
+									double dash = (insecs[i] == SpaceType.NewFrame) ? 0.0 : 8.0;
+									double gap  = (insecs[i] == SpaceType.NewFrame) ? 3.0 : 2.0;
 									Drawer.DrawPathDash(this.graphics, this.drawingContext, path, w, dash, gap, color.Basic);
 								}
 
