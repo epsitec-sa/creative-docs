@@ -240,7 +240,7 @@ namespace Epsitec.Common.Document.Objects
 			shapes[i].SetPropertySurface(port, this.PropertyFillGradient);
 			i ++;
 
-			//	Trait du rectangle.
+			//	Traits du rectangle.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
 			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);

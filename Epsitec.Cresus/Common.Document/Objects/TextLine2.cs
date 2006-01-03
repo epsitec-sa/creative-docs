@@ -19,6 +19,8 @@ namespace Epsitec.Common.Document.Objects
 		protected override bool ExistingProperty(Properties.Type type)
 		{
 			if ( type == Properties.Type.Name )  return true;
+			if ( type == Properties.Type.LineMode )  return true;
+			if ( type == Properties.Type.LineColor )  return true;
 			return false;
 		}
 
@@ -89,7 +91,7 @@ namespace Epsitec.Common.Document.Objects
 
 			bool allHandle = !this.IsSelected;
 			bool global = true;
-			int total = this.handles.Count;
+			int total = this.TotalMainHandle;
 			for ( int i=0 ; i<total ; i+=3 )
 			{
 				if ( allHandle || this.Handle(i+1).IsVisible )
@@ -118,12 +120,50 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
-		public override void MoveGlobalProcess(Selector selector)
+		public override void Select(Drawing.Rectangle rect)
 		{
-			//	Déplace globalement l'objet.
-			base.MoveGlobalProcess(selector);
-			this.UpdateGeometry();
-			this.textFlow.NotifyAreaFlow();
+			//	Sélectionne toutes les poignées de l'objet dans un rectangle.
+			this.InsertOpletSelection();
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+
+			bool shaper = this.document.Modifier.IsToolShaper;
+
+			int sel = 0;
+			int total = this.TotalMainHandle;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				if ( rect.Contains(this.Handle(i+1).Position) )
+				{
+					this.Handle(i+0).Modify(true, false, false, false);
+					this.Handle(i+1).Modify(true, false, false, false);
+					this.Handle(i+2).Modify(true, false, false, false);
+					sel += 3;
+				}
+				else
+				{
+					if ( shaper )
+					{
+						this.Handle(i+0).Modify(true, false, false, true);
+						this.Handle(i+1).Modify(true, false, false, true);
+						this.Handle(i+2).Modify(true, false, false, true);
+					}
+					else
+					{
+						this.Handle(i+0).Modify(false, false, false, false);
+						this.Handle(i+1).Modify(false, false, false, false);
+						this.Handle(i+2).Modify(false, false, false, false);
+					}
+				}
+			}
+			this.selected = ( sel > 0 );
+			this.edited = false;
+			this.globalSelected = false;
+			this.allSelected = (sel == total);
+			this.HandlePropertiesUpdate();
+			this.SplitProperties();
+
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+			this.document.Notifier.NotifySelectionChanged();
 		}
 
 
@@ -152,7 +192,7 @@ namespace Epsitec.Common.Document.Objects
 						if ( !this.Handle(i+1).IsVisible )  continue;
 						if ( this.Handle(i+1).IsShaperDeselected )  continue;
 						if ( this.Handle(i+1).Type == HandleType.Starting ||
-							this.Handle(this.NextRank(i)+1).Type == HandleType.Starting )
+							 this.Handle(this.NextRank(i)+1).Type == HandleType.Starting )
 						{
 							enable = true;
 						}
@@ -177,9 +217,9 @@ namespace Epsitec.Common.Document.Objects
 						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
 						int rank = ss.Rank*3+2;
 						string state = (this.Handle(rank).Type == HandleType.Hide) ? "ToLine" : "ToCurve";
-					{
-						Abstract.ShaperHandleStateAdd(actives, state);
-					}
+						{
+							Abstract.ShaperHandleStateAdd(actives, state);
+						}
 					}
 				}
 				return true;
@@ -593,9 +633,8 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			int prev = rank+0;
-			int curr = rank+3;
-			int next = rank+6;
-			if ( next >= this.handles.Count )  next = 0;
+			int curr = this.NextRank(rank);
+			int next = this.NextRank(curr);
 
 			if ( this.Handle(prev+2).Type == HandleType.Hide && this.Handle(next+0).Type == HandleType.Hide )
 			{
@@ -626,14 +665,20 @@ namespace Epsitec.Common.Document.Objects
 		protected void ShaperHandleSub(int rank)
 		{
 			//	Supprime une poignée sans changer l'aspect de la courbe.
+			bool starting = (this.Handle(rank).Type == HandleType.Starting);
+
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
 
-			int prev = rank-4;
-			if ( prev < 0 )  prev = this.handles.Count-3;
-			int next = rank-1;
-			if ( next >= this.handles.Count )  next = 0;
+			//	Il doit toujours y avoir une poignée de départ !
+			if ( starting )
+			{
+				this.Handle(rank).Type = HandleType.Starting;
+			}
+
+			int prev = this.PrevRank(rank-1);
+			int next = this.NextRank(prev);
 
 			if ( this.Handle(prev+2).Type == HandleType.Hide || this.Handle(next+0).Type == HandleType.Hide )
 			{
@@ -643,13 +688,13 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 			this.SetDirtyBbox();
+			this.HandlePropertiesUpdate();
 		}
 
 		protected void ShaperHandleToLine(int rank)
 		{
 			//	Conversion d'un segement en ligne droite.
-			int next = rank+3;
-			if ( next >= this.handles.Count )  next = 0;
+			int next = this.NextRank(rank);
 			this.Handle(rank+2).Position = this.Handle(rank+1).Position;
 			this.Handle(next+0).Position = this.Handle(next+1).Position;
 			this.Handle(rank+2).Type = HandleType.Hide;
@@ -657,13 +702,13 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(rank+1).ConstrainType = HandleConstrainType.Corner;
 			this.Handle(next+1).ConstrainType = HandleConstrainType.Corner;
 			this.SetDirtyBbox();
+			this.HandlePropertiesUpdate();
 		}
 
 		protected void ShaperHandleToCurve(int rank)
 		{
 			//	Conversion d'un segement en courbe.
-			int next = rank+3;
-			if ( next >= this.handles.Count )  next = 0;
+			int next = this.NextRank(rank);
 			this.Handle(rank+2).Position = Point.Scale(this.Handle(rank+1).Position, this.Handle(next+1).Position, 0.25);
 			this.Handle(next+0).Position = Point.Scale(this.Handle(next+1).Position, this.Handle(rank+1).Position, 0.25);
 			this.Handle(rank+2).Type = HandleType.Bezier;
@@ -671,6 +716,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(rank+1).ConstrainType = HandleConstrainType.Corner;
 			this.Handle(next+1).ConstrainType = HandleConstrainType.Corner;
 			this.SetDirtyBbox();
+			this.HandlePropertiesUpdate();
 		}
 
 
@@ -873,7 +919,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
 			//	Déplace une poignée.
-			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			if ( rank >= this.TotalMainHandle )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
 				return;
@@ -983,6 +1029,89 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
+		public override void MoveSelectedHandlesStarting(Point mouse, DrawingContext drawingContext)
+		{
+			//	Retourne la liste des positions des poignées sélectionnées par le modeleur.
+			drawingContext.SnapPos(ref mouse);
+			this.moveSelectedHandleStart = mouse;
+
+			this.moveSelectedHandleList = new System.Collections.ArrayList();
+			int total = this.TotalMainHandle;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				if ( !this.Handle(i+1).IsVisible )  continue;
+
+				if ( !this.Handle(i+1).IsShaperDeselected )
+				{
+					this.MoveSelectedHandlesAdd(i+0);
+					this.MoveSelectedHandlesAdd(i+1);
+					this.MoveSelectedHandlesAdd(i+2);
+				}
+			}
+
+			if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
+			{
+				foreach ( SelectedSegment ss in this.selectedSegments )
+				{
+					this.MoveSelectedHandlesAdd((ss.Rank+0)*3+0);
+					this.MoveSelectedHandlesAdd((ss.Rank+0)*3+1);
+					this.MoveSelectedHandlesAdd((ss.Rank+0)*3+2);
+					this.MoveSelectedHandlesAdd((ss.Rank+1)*3+0);
+					this.MoveSelectedHandlesAdd((ss.Rank+1)*3+1);
+					this.MoveSelectedHandlesAdd((ss.Rank+1)*3+2);
+				}
+			}
+
+			if ( this.moveSelectedHandleList.Count == 0 )
+			{
+				this.moveSelectedHandleList = null;
+				return;
+			}
+
+			this.InsertOpletGeometry();
+
+			if ( this.selectedSegments != null )
+			{
+				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
+			}
+		}
+
+
+		public override void MoveGlobalProcess(Selector selector)
+		{
+			//	Déplace globalement l'objet.
+			base.MoveGlobalProcess(selector);
+			this.HandlePropertiesUpdate();
+			this.UpdateGeometry();
+			this.textFlow.NotifyAreaFlow();
+		}
+		
+		public override void AlignGrid(DrawingContext drawingContext)
+		{
+			//	Aligne l'objet sur la grille.
+			this.InsertOpletGeometry();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+
+			int total = this.handles.Count;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				if ( this.Handle(i+1).IsVisible )
+				{
+					Point pos = this.Handle(i+1).Position;
+					drawingContext.SnapGridForce(ref pos);
+					Point move = pos-this.Handle(i+1).Position;
+					this.Handle(i+0).Position += move;
+					this.Handle(i+1).Position += move;
+					this.Handle(i+2).Position += move;
+				}
+			}
+
+			this.HandlePropertiesUpdate();
+			this.SetDirtyBbox();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
 			//	Début de la création d'un objet.
@@ -1068,21 +1197,88 @@ namespace Epsitec.Common.Document.Objects
 		}
 		
 
-		protected Drawing.Rectangle FullBoundingBox()
-		{
-			//	Calcule la bbox qui englobe l'objet et les poignées secondaires.
-			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
-			int total = this.TotalHandle;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				bbox.MergeWith(this.Handle(i).Position);
-			}
-			return bbox;
-		}
-
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			//	Constuit les formes de l'objet.
+			Path path = this.PathBuild();
+
+			bool flowHandles = this.edited && drawingContext != null;
+
+			int totalShapes = 3;
+			if ( flowHandles )  totalShapes += 2;
+
+			bool support = false;
+			if ( (this.IsSelected || this.isCreating) &&
+				 drawingContext != null && drawingContext.IsActive &&
+				 !this.IsGlobalSelected )
+			{
+				support = true;
+				totalShapes ++;
+			}
+
+			Shape[] shapes = new Shape[totalShapes];
+			int i = 0;
+			
+			//	Traits de la courbe.
+			shapes[i] = new Shape();
+			shapes[i].Path = path;
+			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+			i ++;
+
+			//	Caractères du texte.
+			shapes[i] = new Shape();
+			shapes[i].SetTextObject(this);
+			i ++;
+
+			if ( flowHandles )
+			{
+				shapes[i] = new Shape();
+				shapes[i].Path = this.PathFlowHandlesStroke(port, drawingContext);
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].Aspect = Aspect.Support;
+				shapes[i].IsVisible = true;
+				i ++;
+
+				shapes[i] = new Shape();
+				shapes[i].Path = this.PathFlowHandlesSurface(port, drawingContext);
+				shapes[i].SetPropertySurface(port, this.PropertyLineColor);
+				shapes[i].Aspect = Aspect.Support;
+				shapes[i].IsVisible = true;
+				i ++;
+			}
+
+			//	Rectangle complet pour bbox et détection.
+			shapes[i] = new Shape();
+			shapes[i].Path = this.RealSelectPath();
+			shapes[i].Type = Type.Surface;
+			shapes[i].Aspect = Aspect.InvisibleBox;
+			i ++;
+
+			//	Forme des traits de support pour les poignées secondaires.
+			if ( support )
+			{
+				Path pathSupport = new Path();
+				int total = this.TotalMainHandle;
+				for ( int j=0 ; j<total ; j+=3 )
+				{
+					if ( !this.Handle(j+1).IsVisible )  continue;
+					pathSupport.MoveTo(this.Handle(j+1).Position);
+					pathSupport.LineTo(this.Handle(j+0).Position);
+					pathSupport.MoveTo(this.Handle(j+1).Position);
+					pathSupport.LineTo(this.Handle(j+2).Position);
+				}
+
+				shapes[i] = new Shape();
+				shapes[i].Path = pathSupport;
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].Aspect = Aspect.Support;
+				shapes[i].IsVisible = true;
+				i ++;
+			}
+
+			return shapes;
+
+#if false
 			bool flowHandles = this.edited && drawingContext != null;
 
 			Path pathLine = this.PathBuild();
@@ -1180,6 +1376,7 @@ namespace Epsitec.Common.Document.Objects
 			i ++;
 
 			return shapes;
+#endif
 		}
 
 		protected Path PathBuild()
@@ -1187,7 +1384,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Crée le chemin de l'objet.
 			Path path = new Path();
 
-			int total = this.handles.Count;
+			int total = this.TotalMainHandle;
 			if ( total < 6 )  return path;
 
 			for ( int i=0 ; i<total ; i+=3 )
@@ -1206,10 +1403,10 @@ namespace Epsitec.Common.Document.Objects
 
 		protected double Transform(Point position)
 		{
-			//	Transforme une position x;y en position le long de la courbe.
+			//	Transforme une position x;y en position le long de la courbe (2D -> 1D).
 			double length = 0.0;
 			double min = 1000000;
-			double best = 0;
+			double best = double.NaN;
 			Point lastProjection = Point.Empty;
 			int i = 0;
 			do
@@ -1307,8 +1504,8 @@ namespace Epsitec.Common.Document.Objects
 
 		protected void Transform(double position, out Point posXY, out double angle)
 		{
-			//	Transforme une position le long de la courbe en position x;y.
-			if ( position <= 0 )
+			//	Transforme une position le long de la courbe en position x;y (1D -> 2D).
+			if ( position <= 0 )  // au début ?
 			{
 				Point p1 = this.Handle(1).Position;
 				Point p2 = this.Handle(2).Position;
@@ -1367,13 +1564,14 @@ namespace Epsitec.Common.Document.Objects
 			}
 			while ( i < this.handles.Count-3 );
 
-			if ( true )
+			if ( true )  // à la fin ?
 			{
-				Point p1 = this.Handle(this.handles.Count-2).Position;
-				Point p2 = this.Handle(this.handles.Count-3).Position;
-				if ( this.Handle(this.handles.Count-3).Type == HandleType.Hide )  // droite ?
+				int total = this.TotalMainHandle;
+				Point p1 = this.Handle(total-2).Position;
+				Point p2 = this.Handle(total-3).Position;
+				if ( this.Handle(total-3).Type == HandleType.Hide )  // droite ?
 				{
-					p2 = this.Handle(this.handles.Count-5).Position;
+					p2 = this.Handle(total-5).Position;
 				}
 				posXY = p1;
 				angle = Point.ComputeAngleDeg(p1, p2);
@@ -1437,11 +1635,12 @@ namespace Epsitec.Common.Document.Objects
 		protected override void CornersFlowNext(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
 		{
 			//	Calcules les 4 coins de la poignée "pavé suivant".
-			Point pp1 = this.Handle(this.handles.Count-2).Position;
-			Point pp2 = this.Handle(this.handles.Count-3).Position;
-			if ( this.Handle(this.handles.Count-3).Type == HandleType.Hide )  // droite ?
+			int total = this.TotalMainHandle;
+			Point pp1 = this.Handle(total-2).Position;
+			Point pp2 = this.Handle(total-3).Position;
+			if ( this.Handle(total-3).Type == HandleType.Hide )  // droite ?
 			{
-				pp2 = this.Handle(this.handles.Count-5).Position;
+				pp2 = this.Handle(total-5).Position;
 			}
 			double d = AbstractText.EditFlowHandleSize/drawingContext.ScaleX;
 
@@ -1472,17 +1671,18 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.Detect(pos) )
 			{
 				double lin = this.Transform(pos);
-				Point curve;
-				double angle;
-				this.Transform(lin, out curve, out angle);
-				ppos = new Point(lin, 0);
-				return true;
+				if ( !double.IsNaN(lin) )
+				{
+					Point curve;
+					double angle;
+					this.Transform(lin, out curve, out angle);
+					ppos = new Point(lin, 0);
+					return true;
+				}
 			}
-			else
-			{
-				ppos = Drawing.Point.Empty;
-				return false;
-			}
+
+			ppos = Drawing.Point.Empty;
+			return false;
 		}
 		
 		protected override void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)

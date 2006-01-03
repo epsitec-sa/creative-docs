@@ -155,7 +155,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public virtual bool EditProcessMessage(Message message, Point pos)
+		public bool EditProcessMessage(Message message, Point pos)
 		{
 			//	Gestion d'un événement pendant l'édition.
 			if ( message.IsKeyType )
@@ -256,7 +256,7 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		public virtual void EditMouseDownMessage(Point pos)
+		public void EditMouseDownMessage(Point pos)
 		{
 			//	Gestion d'un événement pendant l'édition.
 		}

@@ -3036,9 +3036,9 @@ namespace Epsitec.Common.Document.Objects
 
 				Misc.Swap(ref this.direction, ref host.direction);
 
-				if ( this.host is TextBox2 )
+				if ( this.host is AbstractText )
 				{
-					TextBox2 text = this.host as TextBox2;
+					AbstractText text = this.host as AbstractText;
 					text.UpdateGeometry();
 				}
 
