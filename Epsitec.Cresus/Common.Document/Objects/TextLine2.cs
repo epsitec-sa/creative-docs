@@ -1253,11 +1253,11 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			//	Rectangle complet pour bbox et détection.
+			//	Rectangles des caractères pour détection.
 			shapes[i] = new Shape();
 			shapes[i].Path = this.RealSelectPath();
 			shapes[i].Type = Type.Surface;
-			shapes[i].Aspect = Aspect.InvisibleBox;
+			shapes[i].Aspect = Aspect.OnlyDetect;
 			i ++;
 
 			//	Forme des traits de support pour les poignées secondaires.

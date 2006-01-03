@@ -21,6 +21,7 @@ namespace Epsitec.Common.Document
 		Support,		// trait de support des points secondaires d'une courbe de Bézier
 		Additional,		// objet additionnel pour le polygone quelconque
 		InvisibleBox,	// utile juste pour calculer la bbox et pour la détection
+		OnlyDetect,		// utile juste pour la détection
 	}
 
 	/// <summary>
@@ -257,6 +258,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( shape == null )  continue;
 				if ( shape.Aspect == Aspect.InvisibleBox )  continue;
+				if ( shape.Aspect == Aspect.OnlyDetect )  continue;
 
 				if ( shape.Aspect == Aspect.Support )
 				{
@@ -303,6 +305,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( shape == null )  continue;
 				if ( shape.Aspect == Aspect.InvisibleBox )  continue;
+				if ( shape.Aspect == Aspect.OnlyDetect )  continue;
 
 				if ( shape.Aspect == Aspect.Support )
 				{

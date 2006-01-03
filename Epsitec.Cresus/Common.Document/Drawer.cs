@@ -56,7 +56,9 @@ namespace Epsitec.Common.Document
 
 			foreach ( Shape shape in shapes )
 			{
-				if ( shape == null || shape.Aspect == Aspect.InvisibleBox )  continue;
+				if ( shape == null ||
+					 shape.Aspect == Aspect.InvisibleBox ||
+					 shape.Aspect == Aspect.OnlyDetect )  continue;
 
 				port.FillMode = shape.FillMode;
 
