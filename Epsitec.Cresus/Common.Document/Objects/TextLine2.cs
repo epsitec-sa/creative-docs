@@ -81,21 +81,6 @@ namespace Epsitec.Common.Document.Objects
 			return rank;
 		}
 
-		public override DetectEditType DetectEdit(Point pos)
-		{
-			//	Détecte si la souris est sur l'objet pour l'éditer.
-			if ( this.isHide )  return DetectEditType.Out;
-
-			Drawing.Rectangle bbox = this.BoundingBox;
-			if ( !bbox.Contains(pos) )  return DetectEditType.Out;
-
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			Shape[] shapes = this.ShapesBuild(null, context, false);
-			if ( context.Drawer.Detect(pos, context, shapes) )  return DetectEditType.Body;
-
-			return DetectEditType.Out;
-		}
-
 
 		public override void MoveAllProcess(Point move)
 		{
@@ -1098,6 +1083,8 @@ namespace Epsitec.Common.Document.Objects
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			//	Constuit les formes de l'objet.
+			bool flowHandles = this.edited && drawingContext != null;
+
 			Path pathLine = this.PathBuild();
 			Path pathHilite = null;
 			Path pathSupport = null;
@@ -1132,6 +1119,7 @@ namespace Epsitec.Common.Document.Objects
 			int totalShapes = 3;
 			if ( pathHilite  != null )  totalShapes ++;
 			if ( pathSupport != null )  totalShapes ++;
+			if ( flowHandles         )  totalShapes += 2;
 
 			Shape[] shapes = new Shape[totalShapes];
 			int i = 0;
@@ -1164,6 +1152,23 @@ namespace Epsitec.Common.Document.Objects
 				shapes[i].Path = pathSupport;
 				shapes[i].Type = Type.Stroke;
 				shapes[i].Aspect = Aspect.Support;
+				i ++;
+			}
+
+			if ( flowHandles )
+			{
+				shapes[i] = new Shape();
+				shapes[i].Path = this.PathFlowHandlesStroke(port, drawingContext);
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].Aspect = Aspect.Support;
+				shapes[i].IsVisible = true;
+				i ++;
+
+				shapes[i] = new Shape();
+				shapes[i].Path = this.PathFlowHandlesSurface(port, drawingContext);
+				shapes[i].SetPropertySurface(port, this.PropertyLineColor);
+				shapes[i].Aspect = Aspect.Support;
+				shapes[i].IsVisible = true;
 				i ++;
 			}
 
@@ -1382,6 +1387,43 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		#region FlowHandles
+		protected override void CornersFlowPrev(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
+		{
+			//	Calcules les 4 coins de la poignée "pavé précédent".
+			Point pp1 = this.Handle(1).Position;
+			Point pp2 = this.Handle(2).Position;
+			if ( this.Handle(2).Type == HandleType.Hide )  // droite ?
+			{
+				pp2 = this.Handle(4).Position;
+			}
+			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
+
+			p2 = pp1;
+			p1 = Point.Move(pp1, pp2, -d);
+			p4 = p2 + new Point(p1.Y-p2.Y, p2.X-p1.X);
+			p3 = p4 + (p1-p2);
+		}
+
+		protected override void CornersFlowNext(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
+		{
+			//	Calcules les 4 coins de la poignée "pavé suivant".
+			Point pp1 = this.Handle(this.handles.Count-2).Position;
+			Point pp2 = this.Handle(this.handles.Count-3).Position;
+			if ( this.Handle(this.handles.Count-3).Type == HandleType.Hide )  // droite ?
+			{
+				pp2 = this.Handle(this.handles.Count-5).Position;
+			}
+			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
+
+			p1 = pp1;
+			p2 = Point.Move(pp1, pp2, -d);
+			p3 = p1 + new Point(p1.Y-p2.Y, p2.X-p1.X);
+			p4 = p3 + (p2-p1);
+		}
+		#endregion
+
+		
 		protected override void UpdateTextFrame()
 		{
 			//	Met à jour le TextFrame en fonction des dimensions du pavé.

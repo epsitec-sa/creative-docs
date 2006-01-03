@@ -54,19 +54,6 @@ namespace Epsitec.Common.Document.Objects
 			get { return Misc.Icon("ObjectTextBox"); }
 		}
 
-		public override DetectEditType DetectEdit(Point pos)
-		{
-			//	Détecte si la souris est sur l'objet pour l'éditer.
-			if ( this.edited )
-			{
-				DetectEditType handle = this.DetectFlowHandle(pos);
-				if ( handle != DetectEditType.Out )  return handle;
-			}
-
-			if ( this.Detect(pos) )  return DetectEditType.Body;
-			return DetectEditType.Out;
-		}
-
 
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
@@ -234,41 +221,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		protected DetectEditType DetectFlowHandle(Point pos)
-		{
-			//	Détecte la "poignée" du flux de l'objet.
-			DrawingContext drawingContext = this.document.Modifier.ActiveViewer.DrawingContext;
-
-			Point prevP1;
-			Point prevP2;
-			Point prevP3;
-			Point prevP4;
-			this.CornersFlowPrev(out prevP1, out prevP2, out prevP3, out prevP4, drawingContext);
-
-			InsideSurface surf = new InsideSurface(pos, 4);
-			surf.AddLine(prevP1, prevP2);
-			surf.AddLine(prevP2, prevP4);
-			surf.AddLine(prevP4, prevP3);
-			surf.AddLine(prevP3, prevP1);
-			if ( surf.IsInside() )  return DetectEditType.HandleFlowPrev;
-
-			Point nextP1;
-			Point nextP2;
-			Point nextP3;
-			Point nextP4;
-			this.CornersFlowNext(out nextP1, out nextP2, out nextP3, out nextP4, drawingContext);
-
-			surf = new InsideSurface(pos, 4);
-			surf.AddLine(nextP1, nextP2);
-			surf.AddLine(nextP2, nextP4);
-			surf.AddLine(nextP4, nextP3);
-			surf.AddLine(nextP3, nextP1);
-			if ( surf.IsInside() )  return DetectEditType.HandleFlowNext;
-
-			return DetectEditType.Out;
-		}
-
-
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			//	Construit les formes de l'objet.
@@ -356,153 +308,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		protected Path PathFlowHandlesStroke(IPaintPort port, DrawingContext drawingContext)
-		{
-			//	Crée le chemin des "poignées" du flux de l'objet.
-			Point prevP1;
-			Point prevP2;
-			Point prevP3;
-			Point prevP4;
-			this.CornersFlowPrev(out prevP1, out prevP2, out prevP3, out prevP4, drawingContext);
 
-			Point nextP1;
-			Point nextP2;
-			Point nextP3;
-			Point nextP4;
-			this.CornersFlowNext(out nextP1, out nextP2, out nextP3, out nextP4, drawingContext);
-
-			int count = this.textFlow.Count;
-			int rank = this.textFlow.Rank(this);
-
-			Path path = new Path();
-			this.PathFlowIcon(path, prevP1, prevP2, prevP3, prevP4, port, drawingContext, rank == 0);
-			this.PathFlowIcon(path, nextP1, nextP2, nextP3, nextP4, port, drawingContext, rank == count-1);
-			return path;
-		}
-
-		protected Path PathFlowHandlesSurface(IPaintPort port, DrawingContext drawingContext)
-		{
-			//	Crée le chemin des "poignées" du flux de l'objet.
-			Point prevP1;
-			Point prevP2;
-			Point prevP3;
-			Point prevP4;
-			this.CornersFlowPrev(out prevP1, out prevP2, out prevP3, out prevP4, drawingContext);
-
-			Point nextP1;
-			Point nextP2;
-			Point nextP3;
-			Point nextP4;
-			this.CornersFlowNext(out nextP1, out nextP2, out nextP3, out nextP4, drawingContext);
-
-			int count = this.textFlow.Count;
-			int rank = this.textFlow.Rank(this);
-
-			Path path = new Path();
-
-			if ( rank > 0 )
-			{
-				this.PathNumber(path, prevP1, prevP2, prevP3, prevP4, rank-1, false);
-			}
-
-			if ( rank < count-1 )
-			{
-				this.PathNumber(path, nextP1, nextP2, nextP3, nextP4, rank+1, true);
-			}
-
-			return path;
-		}
-
-		protected void PathFlowIcon(Path path, Point p1, Point p2, Point p3, Point p4, IPaintPort port, DrawingContext drawingContext, bool plus)
-		{
-			//	Crée le chemin d'une "poignée" du flux de l'objet.
-			if ( this.direction%90.0 == 0.0 )
-			{
-				this.Align(ref p1, port);
-				this.Align(ref p2, port);
-				this.Align(ref p3, port);
-				this.Align(ref p4, port);
-
-				double adjust = 0.5/drawingContext.ScaleX;
-				p1.X += adjust;  p1.Y += adjust;
-				p2.X -= adjust;  p2.Y += adjust;
-				p3.X += adjust;  p3.Y -= adjust;
-				p4.X -= adjust;  p4.Y -= adjust;
-			}
-
-			path.MoveTo(p1);
-			path.LineTo(p2);
-			path.LineTo(p4);
-			path.LineTo(p3);
-			path.Close();
-
-			if ( plus )  // icône "+" ?
-			{
-				path.MoveTo(this.PointFlowIcon(p1, p2, p3, p4, 0.25, 0.50));
-				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.75, 0.50));
-				path.MoveTo(this.PointFlowIcon(p1, p2, p3, p4, 0.50, 0.25));
-				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.50, 0.75));
-			}
-			else	// icône "v" ?
-			{
-				path.MoveTo(this.PointFlowIcon(p1, p2, p3, p4, 0.25, 0.65));
-				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.50, 0.35));
-				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.75, 0.65));
-			}
-		}
-
-		protected Point PointFlowIcon(Point p1, Point p2, Point p3, Point p4, double dx, double dy)
-		{
-			Point x1 = Point.Scale(p1, p2, dx);
-			Point x2 = Point.Scale(p3, p4, dx);
-			return Point.Scale(x1, x2, dy);
-		}
-
-		protected void PathNumber(Path path, Point p1, Point p2, Point p3, Point p4, int number, bool rightToLeft)
-		{
-			number ++;  // 1..n
-			string text = number.ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-			Font font = Font.DefaultFont;
-			double fontSize = Point.Distance(p1, p3)*0.8;
-
-			double textWidth = 0.0;
-			for ( int i=0 ; i<text.Length ; i++ )
-			{
-				textWidth += font.GetCharAdvance(text[i])*fontSize;
-			}
-
-			double advance = 0;
-			double offset = 0;
-			double angle = Point.ComputeAngleDeg(p1, p2);
-			Point center = p1;
-
-			if ( rightToLeft )
-			{
-				advance -= textWidth + fontSize*0.3;
-				offset = fontSize*0.1;
-			}
-			else
-			{
-				advance += Point.Distance(p1, p2) + fontSize*0.3;
-				offset = fontSize*0.4;
-			}
-
-			for ( int i=0 ; i<text.Length ; i++ )
-			{
-				Transform transform = new Transform();
-				transform.Scale(fontSize);
-				transform.RotateDeg(angle);
-				transform.Translate(center+Transform.RotatePointDeg(angle, new Point(advance, offset)));
-
-				int glyph = font.GetGlyphIndex(text[i]);
-				path.Append(font, glyph, transform);
-
-				advance += font.GetCharAdvance(text[i])*fontSize;
-			}
-		}
-
-		protected void CornersFlowPrev(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
+		#region FlowHandles
+		protected override void CornersFlowPrev(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
 		{
 			//	Calcules les 4 coins de la poignée "pavé précédent".
 			Point c1, c2, c3, c4;
@@ -515,7 +323,7 @@ namespace Epsitec.Common.Document.Objects
 			p4 = p3 + (p2-p1);
 		}
 
-		protected void CornersFlowNext(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
+		protected override void CornersFlowNext(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
 		{
 			//	Calcules les 4 coins de la poignée "pavé suivant".
 			Point c1, c2, c3, c4;
@@ -527,17 +335,8 @@ namespace Epsitec.Common.Document.Objects
 			p2 = Point.Move(c2, c4, -d);
 			p1 = p2 + (p3-p4);
 		}
+		#endregion
 
-		protected void Align(ref Point p, IPaintPort port)
-		{
-			double x = p.X;
-			double y = p.Y;
-		
-			port.Align(ref x, ref y);
-		
-			p.X = x;
-			p.Y = y;
-		}
 
 		protected void Corners(out Point p1, out Point p2, out Point p3, out Point p4)
 		{
