@@ -234,109 +234,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public override bool EditProcessMessage(Message message, Point pos)
-		{
-			//	Gestion d'un événement pendant l'édition.
-			if ( this.transform == null )  return false;
-
-			if ( message.IsKeyType )
-			{
-				this.document.Modifier.ActiveViewer.CloseMiniBar(false);
-			}
-
-			if ( message.Type == MessageType.KeyDown   ||
-				 message.Type == MessageType.KeyPress  ||
-				 message.Type == MessageType.MouseDown )
-			{
-				this.SetAutoScroll();
-			}
-
-			if ( message.Type == MessageType.KeyPress )
-			{
-				if ( this.EditProcessKeyPress(message) )  return true;
-			}
-
-			if ( message.KeyCodeOnly == KeyCode.Tab )
-			{
-				if ( message.Type == MessageType.KeyDown )
-				{
-					this.ProcessTabKey();
-				}
-				return true;
-			}
-
-			Point ppos;
-			ITextFrame frame;
-			
-			if ( this.IsInTextFrame(pos, out ppos) )
-			{
-				frame = this.textFrame;
-			}
-			else
-			{
-				//	Si la souris n'est pas dans notre texte frame, on utilise le text
-				//	frame correspondant à sa position (s'il y en a un).
-				frame = this.textFlow.FindTextFrame(pos, out ppos);
-				
-				if ( frame == null )  frame = this.textFrame;
-			}
-			
-			if ( !this.MetaNavigator.ProcessMessage(message, ppos, frame) )  return false;
-			
-			if ( message.Type == MessageType.MouseDown )
-			{
-				this.document.Modifier.ActiveViewer.CloseMiniBar(false);
-			}
-
-			if ( message.Type == MessageType.MouseUp )
-			{
-				if ( this.textFlow.TextNavigator.SelectionCount > 0 )
-				{
-					Viewer viewer = this.document.Modifier.ActiveViewer;
-					double distance = 0;
-					Drawing.Rectangle selbox = this.EditSelectBox;
-					if ( !selbox.IsEmpty )
-					{
-						selbox = viewer.InternalToScreen(selbox);
-						double top = System.Math.Min(selbox.Top, viewer.Height-2);
-						Point mouse = viewer.InternalToScreen(pos);
-						distance = System.Math.Max(top-mouse.Y, 0);
-					}
-					Viewer.MiniBarDelayed delayed = (message.ButtonDownCount > 1) ? Viewer.MiniBarDelayed.DoubleClick : Viewer.MiniBarDelayed.Immediately;
-					viewer.OpenMiniBar(pos, delayed, false, false, distance);
-				}
-			}
-
-			return true;
-		}
-
-		protected bool EditProcessKeyPress(Message message)
-		{
-			//	Gestion des événements clavier.
-			if ( message.IsCtrlPressed )
-			{
-				switch ( message.KeyCode )
-				{
-					case KeyCode.AlphaX:  return this.EditCut();
-					case KeyCode.AlphaC:  return this.EditCopy();
-					case KeyCode.AlphaV:  return this.EditPaste();
-					case KeyCode.AlphaA:  return this.EditSelectAll();
-				}
-			}
-			return false;
-		}
-
-		protected bool ProcessTabKey()
-		{
-			//	Gestion de la touche tab.
-			string tag = this.textFlow.TextNavigator.FindInsertionTabTag();
-			
-			if ( tag == null )  return false;
-
-			this.MetaNavigator.Insert(new Text.Properties.TabProperty(tag));
-			return true;
-		}
-
 		protected DetectEditType DetectFlowHandle(Point pos)
 		{
 			//	Détecte la "poignée" du flux de l'objet.
@@ -369,14 +266,6 @@ namespace Epsitec.Common.Document.Objects
 			if ( surf.IsInside() )  return DetectEditType.HandleFlowNext;
 
 			return DetectEditType.Out;
-		}
-
-
-		public override void EditMouseDownMessage(Point pos)
-		{
-			//	Gestion d'un événement pendant l'édition.
-			//?pos = this.transform.TransformInverse(pos);
-			//?this.textNavigator.MouseDownMessage(pos);
 		}
 
 
