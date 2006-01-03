@@ -2169,7 +2169,39 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.internalOperation == InternalOperation.GetPath )
 			{
 				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-				this.graphics.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+					
+				for ( int i=0 ; i<glyphs.Length ; i++ )
+				{
+					if ( glyphs[i] < 0xffff )
+					{
+						double width = x[i+1] - x[i];  // largeur du glyph
+
+						Point pos;
+						double angle;
+						this.Transform(x[i]+width/2, out pos, out angle);
+						pos = Drawing.Transform.RotatePointDeg(pos, angle, new Point(pos.X, pos.Y+y[i]));
+
+						Transform initial = this.graphics.Transform;
+						this.graphics.TranslateTransform(pos.X, pos.Y);
+						this.graphics.RotateTransformDeg(angle, 0, 0);
+
+						ushort[] oneGlyph = new ushort[1];
+						double[] oneX = new double[1];
+						double[] oneY = new double[1];
+						double[] oneSx = new double[1];
+						double[] oneSy = new double[1];
+
+						oneGlyph[0] = glyphs[i];
+						oneX[0] = -width/2;
+						oneY[0] = 0;
+						oneSx[0] = (sx == null) ? 1.0 : sx[i];
+						oneSy[0] = (sy == null) ? 1.0 : sy[i];
+
+						this.graphics.PaintGlyphs(drawingFont, size, oneGlyph, oneX, oneY, oneSx, oneSy);
+
+						this.graphics.Transform = initial;
+					}
+				}
 			}
 
 			if ( this.internalOperation == InternalOperation.RealBoundingBox )
