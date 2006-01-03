@@ -3228,13 +3228,6 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		public static double EditFlowHandleSize
-		{
-			//	Taille des "poignées" pour choisir le flux du texte.
-			get { return 11.0; }
-		}
-
-
 		protected struct MoveSelectedHandle
 		{
 			public int				rank;

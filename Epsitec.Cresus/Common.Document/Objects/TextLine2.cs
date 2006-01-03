@@ -1397,7 +1397,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				pp2 = this.Handle(4).Position;
 			}
-			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
+			double d = AbstractText.EditFlowHandleSize/drawingContext.ScaleX;
 
 			p2 = pp1;
 			p1 = Point.Move(pp1, pp2, -d);
@@ -1414,7 +1414,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				pp2 = this.Handle(this.handles.Count-5).Position;
 			}
-			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
+			double d = AbstractText.EditFlowHandleSize/drawingContext.ScaleX;
 
 			p1 = pp1;
 			p2 = Point.Move(pp1, pp2, -d);
@@ -1643,7 +1643,7 @@ namespace Epsitec.Common.Document.Objects
 					{
 						for ( int i=0 ; i<numGlyphs ; i++ )
 						{
-							iArray[ii] = ( (tArray[i] & this.markerSelected) == 0 ) ? 0 : SpaceType.Selected;
+							iArray[ii] = ( (tArray[0] & this.markerSelected) == 0 ) ? 0 : SpaceType.Selected;
 							iArray[ii++] |= SpaceType.None;  // pas un espace
 						}
 					}

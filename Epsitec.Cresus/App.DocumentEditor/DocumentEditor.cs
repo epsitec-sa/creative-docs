@@ -4800,7 +4800,7 @@ namespace Epsitec.App.DocumentEditor
 				double inflate;
 				if ( di.hRuler != null && di.hRuler.Edited )  // édition en cours ?
 				{
-					inflate = Objects.Abstract.EditFlowHandleSize/viewer.DrawingContext.ScaleX;
+					inflate = Objects.AbstractText.EditFlowHandleSize/viewer.DrawingContext.ScaleX;
 				}
 				else
 				{

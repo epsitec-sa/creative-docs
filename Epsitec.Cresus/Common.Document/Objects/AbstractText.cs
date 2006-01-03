@@ -848,7 +848,18 @@ namespace Epsitec.Common.Document.Objects
 		protected void PathFlowIcon(Path path, Point p1, Point p2, Point p3, Point p4, IPaintPort port, DrawingContext drawingContext, bool plus)
 		{
 			//	Crée le chemin d'une "poignée" du flux de l'objet.
-			if ( this.direction%90.0 == 0.0 && this is TextBox2 )
+			double angle = 0;
+
+			if ( this is TextBox2 )
+			{
+				angle = this.direction;
+			}
+			if ( this is TextLine2 )
+			{
+				angle = Point.ComputeAngleDeg(p1, p2);
+			}
+
+			if ( angle%90.0 == 0.0 )
 			{
 				this.Align(ref p1, port);
 				this.Align(ref p2, port);
@@ -857,9 +868,9 @@ namespace Epsitec.Common.Document.Objects
 
 				double adjust = 0.5/drawingContext.ScaleX;
 				p1.X += adjust;  p1.Y += adjust;
-				p2.X -= adjust;  p2.Y += adjust;
-				p3.X += adjust;  p3.Y -= adjust;
-				p4.X -= adjust;  p4.Y -= adjust;
+				p2.X += adjust;  p2.Y += adjust;
+				p3.X += adjust;  p3.Y += adjust;
+				p4.X += adjust;  p4.Y += adjust;
 			}
 
 			path.MoveTo(p1);
@@ -875,7 +886,7 @@ namespace Epsitec.Common.Document.Objects
 				path.MoveTo(this.PointFlowIcon(p1, p2, p3, p4, 0.50, 0.25));
 				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.50, 0.75));
 			}
-			else	// icône "v" ?
+			else	// icône flèche ?
 			{
 				if ( this is TextBox2 )  // "v" ?
 				{
@@ -986,6 +997,12 @@ namespace Epsitec.Common.Document.Objects
 		
 			p.X = x;
 			p.Y = y;
+		}
+
+		public static double EditFlowHandleSize
+		{
+			//	Taille des "poignées" pour choisir le flux du texte.
+			get { return 10.0; }
 		}
 		#endregion
 		

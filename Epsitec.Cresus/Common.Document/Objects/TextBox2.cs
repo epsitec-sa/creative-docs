@@ -316,7 +316,7 @@ namespace Epsitec.Common.Document.Objects
 			Point c1, c2, c3, c4;
 			this.Corners(out c1, out c2, out c3, out c4);
 
-			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
+			double d = AbstractText.EditFlowHandleSize/drawingContext.ScaleX;
 			p1 = c3;
 			p2 = Point.Move(c3, c4,  d);
 			p3 = Point.Move(c3, c1, -d);
@@ -329,7 +329,7 @@ namespace Epsitec.Common.Document.Objects
 			Point c1, c2, c3, c4;
 			this.Corners(out c1, out c2, out c3, out c4);
 
-			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
+			double d = AbstractText.EditFlowHandleSize/drawingContext.ScaleX;
 			p4 = c2;
 			p3 = Point.Move(c2, c1,  d);
 			p2 = Point.Move(c2, c4, -d);
