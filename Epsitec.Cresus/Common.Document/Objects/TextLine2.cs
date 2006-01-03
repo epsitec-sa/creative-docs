@@ -2083,16 +2083,80 @@ namespace Epsitec.Common.Document.Objects
 				else if ( this.port is Printing.PrintPort )  // impression ?
 				{
 					Printing.PrintPort printPort = port as Printing.PrintPort;
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 					printPort.RichColor = color;
-					printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+					
+					for ( int i=0 ; i<glyphs.Length ; i++ )
+					{
+						if ( glyphs[i] < 0xffff )
+						{
+							double width = x[i+1] - x[i];  // largeur du glyph
+
+							Point pos;
+							double angle;
+							this.Transform(x[i]+width/2, out pos, out angle);
+							pos = Drawing.Transform.RotatePointDeg(pos, angle, new Point(pos.X, pos.Y+y[i]));
+
+							Transform initial = printPort.Transform;
+							printPort.TranslateTransform(pos.X, pos.Y);
+							printPort.RotateTransformDeg(angle, 0, 0);
+
+							ushort[] oneGlyph = new ushort[1];
+							double[] oneX = new double[1];
+							double[] oneY = new double[1];
+							double[] oneSx = new double[1];
+							double[] oneSy = new double[1];
+
+							oneGlyph[0] = glyphs[i];
+							oneX[0] = -width/2;
+							oneY[0] = 0;
+							oneSx[0] = (sx == null) ? 1.0 : sx[i];
+							oneSy[0] = (sy == null) ? 1.0 : sy[i];
+
+							printPort.PaintGlyphs(drawingFont, size, oneGlyph, oneX, oneY, oneSx, oneSy);
+
+							printPort.Transform = initial;
+						}
+					}
 				}
 				else if ( this.port is PDF.Port )  // exportation PDF ?
 				{
 					PDF.Port pdfPort = port as PDF.Port;
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 					pdfPort.RichColor = color;
-					pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+					
+					for ( int i=0 ; i<glyphs.Length ; i++ )
+					{
+						if ( glyphs[i] < 0xffff )
+						{
+							double width = x[i+1] - x[i];  // largeur du glyph
+
+							Point pos;
+							double angle;
+							this.Transform(x[i]+width/2, out pos, out angle);
+							pos = Drawing.Transform.RotatePointDeg(pos, angle, new Point(pos.X, pos.Y+y[i]));
+
+							Transform initial = pdfPort.Transform;
+							pdfPort.TranslateTransform(pos.X, pos.Y);
+							pdfPort.RotateTransformDeg(angle, 0, 0);
+
+							ushort[] oneGlyph = new ushort[1];
+							double[] oneX = new double[1];
+							double[] oneY = new double[1];
+							double[] oneSx = new double[1];
+							double[] oneSy = new double[1];
+
+							oneGlyph[0] = glyphs[i];
+							oneX[0] = -width/2;
+							oneY[0] = 0;
+							oneSx[0] = (sx == null) ? 1.0 : sx[i];
+							oneSy[0] = (sy == null) ? 1.0 : sy[i];
+
+							pdfPort.PaintGlyphs(drawingFont, size, oneGlyph, oneX, oneY, oneSx, oneSy);
+
+							pdfPort.Transform = initial;
+						}
+					}
 				}
 			}
 
