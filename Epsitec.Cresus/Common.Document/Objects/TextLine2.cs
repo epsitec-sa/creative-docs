@@ -1189,7 +1189,6 @@ namespace Epsitec.Common.Document.Objects
 			//	Retourne la bounding réelle, en fonction des caractères contenus.
 			this.mergingBoundingBox = Drawing.Rectangle.Empty;
 			this.DrawText(null, null, InternalOperation.RealBoundingBox);
-
 			return this.mergingBoundingBox;
 		}
 		
@@ -1198,7 +1197,6 @@ namespace Epsitec.Common.Document.Objects
 			//	Retourne le chemin de tous les caractères sélectionnés.
 			this.realSelectPath = new Path();
 			this.DrawText(null, null, InternalOperation.RealSelectPath);
-
 			return this.realSelectPath;
 		}
 		
@@ -1253,7 +1251,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 			}
 
-			//	Rectangles des caractères pour détection.
+			//	Rectangles des caractères seulement pour la détection.
 			shapes[i] = new Shape();
 			shapes[i].Path = this.RealSelectPath();
 			shapes[i].Type = Type.Surface;
@@ -1579,8 +1577,8 @@ namespace Epsitec.Common.Document.Objects
 				{
 					p2 = this.Handle(total-5).Position;
 				}
-				posXY = p1;
-				angle = Point.ComputeAngleDeg(p1, p2);
+				posXY = Point.Move(p1, p2, length-position);
+				angle = Point.ComputeAngleDeg(p2, p1);
 			}
 		}
 
