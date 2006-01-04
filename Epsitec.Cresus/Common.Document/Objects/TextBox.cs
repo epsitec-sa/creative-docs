@@ -247,7 +247,7 @@ namespace Epsitec.Common.Document.Objects
 		public override bool IsEditable
 		{
 			//	Indique si un objet est éditable.
-			get { return true; }
+			get { return false; }
 		}
 
 
