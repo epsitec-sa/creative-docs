@@ -1163,6 +1163,26 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(5).Position = pos;
 			drawingContext.ConstrainDelStarting();
 			drawingContext.MagnetClearStarting();
+
+			if ( !this.CreateIsExist(drawingContext) )  // clic (presque) sans bouger ?
+			{
+				Drawing.Rectangle box = this.document.Modifier.ActiveViewer.GuidesSearchBox(pos);
+
+				pos = this.Handle(0).Position;
+				pos.X = box.Left;
+				this.Handle(0).Position = pos;
+				this.Handle(1).Position = pos;
+				this.Handle(2).Position = pos;
+
+				pos = this.Handle(3).Position;
+				pos.X = box.Right;
+				this.Handle(3).Position = pos;
+				this.Handle(4).Position = pos;
+				this.Handle(5).Position = pos;
+			}
+			this.UpdateGeometry();
+			this.SetDirtyBbox();
+
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
 			this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -1172,7 +1192,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
 			//	pas exister et doit être détruit.
-			this.Deselect();
+			//?this.Deselect();
 			double len = Point.Distance(this.Handle(1).Position, this.Handle(4).Position);
 			return ( len > drawingContext.MinimalSize );
 		}

@@ -4262,6 +4262,121 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region GuidesSearchBox
+		public Drawing.Rectangle GuidesSearchBox(Point pos)
+		{
+			//	Cherche la boîte délimitée par des repères, autour d'une position.
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+
+			Objects.Page page = this.document.GetObjects[this.drawingContext.CurrentPage] as Objects.Page;
+			if ( page.MasterGuides && this.drawingContext.MasterPageList.Count > 0 )
+			{
+				foreach ( Objects.Page masterPage in this.drawingContext.MasterPageList )
+				{
+					this.GuidesSearchAdd(list, masterPage.Guides);
+				}
+			}
+
+			this.GuidesSearchAdd(list, page.Guides);
+			this.GuidesSearchAdd(list, this.document.Settings.GuidesListGlobal);
+
+			double minX = this.GuidesSearchBest(list, pos.X, true,  false);
+			double maxX = this.GuidesSearchBest(list, pos.X, false, false);
+			double minY = this.GuidesSearchBest(list, pos.Y, true,  true );
+			double maxY = this.GuidesSearchBest(list, pos.Y, false, true );
+
+			Size size = this.document.PageSize;
+			double mx = 0;
+			double my = 0;
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				mx = 1.0;
+				my = 1.0;
+			}
+			else
+			{
+				if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				{
+					mx = 100.0;  // 10mm
+					my = 100.0;
+				}
+				else
+				{
+					mx = 127.0;  // 0.5in
+					my = 127.0;
+				}
+			}
+			mx = System.Math.Min(mx, size.Width*0.25);
+			my = System.Math.Min(my, size.Height*0.25);
+
+			if ( double.IsNaN(minX) )  minX = mx;
+			if ( double.IsNaN(maxX) )  maxX = size.Width-mx;
+			if ( double.IsNaN(minY) )  minY = my;
+			if ( double.IsNaN(maxY) )  maxY = size.Height-my;
+
+			return new Drawing.Rectangle(minX, minY, maxX-minX, maxY-minY);
+		}
+
+		protected void GuidesSearchAdd(System.Collections.ArrayList list, UndoableList guides)
+		{
+			//	Ajoute tous les guides dans une liste unique.
+			int total = guides.Count;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Settings.Guide guide = guides[i] as Settings.Guide;
+				list.Add(guide);
+			}
+		}
+
+		protected double GuidesSearchBest(System.Collections.ArrayList list, double pos, bool isMin, bool isHorizontal)
+		{
+			//	Cherche le guide le plus proche.
+			double best = double.NaN;
+
+			foreach ( Settings.Guide guide in list )
+			{
+				if ( isHorizontal != guide.IsHorizontal )  continue;
+				double gp = guide.AbsolutePosition;
+
+				if ( isMin )  // à gauche/en bas ?
+				{
+					if ( pos < gp )  continue;
+
+					if ( double.IsNaN(best) )
+					{
+						best = gp;
+					}
+					else
+					{
+						if ( best < gp )
+						{
+							best = gp;
+						}
+					}
+				}
+				else	// à droite/en haut ?
+				{
+					if ( pos > gp )  continue;
+
+					if ( double.IsNaN(best) )
+					{
+						best = gp;
+					}
+					else
+					{
+						if ( best > gp )
+						{
+							best = gp;
+						}
+					}
+				}
+			}
+
+			return best;
+		}
+		#endregion
+
+
 		#region Convert
 		public Rectangle ScreenToInternal(Rectangle rect)
 		{

@@ -182,6 +182,13 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainDelStarting();
 			drawingContext.MagnetClearStarting();
 
+			if ( !this.CreateIsExist(drawingContext) )  // clic (presque) sans bouger ?
+			{
+				Drawing.Rectangle box = this.document.Modifier.ActiveViewer.GuidesSearchBox(pos);
+				this.Handle(0).Position = box.BottomLeft;
+				this.Handle(1).Position = box.TopRight;
+			}
+
 			//	Crée les 2 autres poignées dans les coins opposés.
 			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
 			Point p1 = rect.BottomLeft;
@@ -190,6 +197,8 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(1).Position = p2;
 			this.HandleAdd(new Point(p1.X, p2.Y), HandleType.Primary);  // rang = 2
 			this.HandleAdd(new Point(p2.X, p1.Y), HandleType.Primary);  // rang = 3
+			this.UpdateGeometry();
+			this.SetDirtyBbox();
 
 			this.HandlePropertiesCreate();
 			this.HandlePropertiesUpdate();
