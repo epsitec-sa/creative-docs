@@ -50,6 +50,7 @@ namespace Epsitec.Common.Document.Objects
 			this.glyphOrigin = Point.Empty;
 			this.glyphSize = new Size(0,0);
 			this.language = null;
+			this.pageStyle = null;
 		}
 
 		protected override bool ExistingProperty(Properties.Type type)
@@ -427,6 +428,25 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		public string PageStyle
+		{
+			//	Style de la page, uniquement pour Pictogram.
+			get
+			{
+				return this.pageStyle;
+			}
+
+			set
+			{
+				if ( this.pageStyle != value )
+				{
+					this.InsertOpletType();
+					this.pageStyle = value;
+					this.document.IsDirtySerialize = true;
+				}
+			}
+		}
+
 
 		public override void CloneObject(Objects.Abstract src)
 		{
@@ -447,6 +467,7 @@ namespace Epsitec.Common.Document.Objects
 			this.glyphOrigin     = page.glyphOrigin;
 			this.glyphSize       = page.glyphSize;
 			this.language        = page.language;
+			this.pageStyle       = page.pageStyle;
 
 			this.guides.Clear();
 			foreach ( Settings.Guide guide in page.guides )
@@ -524,6 +545,7 @@ namespace Epsitec.Common.Document.Objects
 				this.glyphOrigin = host.glyphOrigin;
 				this.glyphSize = host.glyphSize;
 				this.language = host.language;
+				this.pageStyle = host.pageStyle;
 			}
 
 			protected void Swap()
@@ -557,6 +579,10 @@ namespace Epsitec.Common.Document.Objects
 				string l = host.language;
 				host.language = this.language;
 				this.language = l;
+
+				string s = host.pageStyle;
+				host.pageStyle = this.pageStyle;
+				this.pageStyle = s;
 			}
 
 			public override IOplet Undo()
@@ -583,6 +609,7 @@ namespace Epsitec.Common.Document.Objects
 			protected Point					glyphOrigin;
 			protected Size					glyphSize;
 			protected string				language;
+			protected string				pageStyle;
 		}
 		#endregion
 
@@ -600,6 +627,7 @@ namespace Epsitec.Common.Document.Objects
 				info.AddValue("GlyphOrigin", this.glyphOrigin);
 				info.AddValue("GlyphSize", this.glyphSize);
 				info.AddValue("Language", this.language);
+				info.AddValue("PageStyle", this.pageStyle);
 			}
 			else
 			{
@@ -631,6 +659,10 @@ namespace Epsitec.Common.Document.Objects
 					this.glyphOrigin = (Point) info.GetValue("GlyphOrigin", typeof(Point));
 					this.glyphSize = (Size) info.GetValue("GlyphSize", typeof(Size));
 					this.language = info.GetString("Language");
+				}
+				if ( this.document.IsRevisionGreaterOrEqual(1,5,2) )
+				{
+					this.pageStyle = info.GetString("PageStyle");
 				}
 			}
 			else
@@ -687,5 +719,6 @@ namespace Epsitec.Common.Document.Objects
 		protected Point					glyphOrigin;
 		protected Size					glyphSize;
 		protected string				language;
+		protected string				pageStyle;
 	}
 }
