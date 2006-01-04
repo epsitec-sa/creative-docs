@@ -110,7 +110,7 @@ namespace Epsitec.Common.Drawing
 			System.Diagnostics.Debug.Assert(this.keys != null);
 
 			//	Cherche une image correspondant le mieux possible à la langue et à la taille demandée.
-			if ( (key.Size.Width != 0 && key.Size.Height != 0) || key.Language != null )
+			if ( (key.Size.Width != 0 && key.Size.Height != 0) || key.Language != null || key.Style != null )
 			{
 				double min = 1000000;
 				Canvas best = null;
@@ -162,6 +162,21 @@ namespace Epsitec.Common.Drawing
 			//	est bon, et même nulle si le candidat est parfait. A l'inverse, la valeur
 			//	est grande si le candidat est mauvais.
 			double delta = 0;
+
+			if ( search.Style != null && search.Style != "" )  // cherche un style précis ?
+			{
+				if ( candidate.Style == null || candidate.Style == "" )
+				{
+					delta += 50000;
+				}
+				else
+				{
+					if ( search.Style != candidate.Style )
+					{
+						delta += 100000;
+					}
+				}
+			}
 
 			if ( search.Language != null && search.Language != "" )  // cherche une langue précise ?
 			{
@@ -396,6 +411,7 @@ namespace Epsitec.Common.Drawing
 			//	Informations sur l'icône contenue dans une page du document.
 			public Size				Size = new Size(0, 0);
 			public string			Language = null;
+			public string			Style = null;
 			public int				PageRank = -1;
 		}
 

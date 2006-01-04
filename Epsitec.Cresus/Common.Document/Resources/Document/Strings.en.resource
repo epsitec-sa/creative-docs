@@ -219,6 +219,7 @@
 	<data name="Container.Pages.Size.Swap">@@Portrait - paysage</data>
 	<data name="Container.Pages.Size.Clear">@@Dimensions standards</data>
 	<data name="Container.Pages.Language.Label">@@Langue page</data>
+	<data name="Container.Pages.Style.Label">@@Style page</data>
 
 	<data name="Container.Principal.Button.Detail">Details</data>
 	<data name="Container.Principal.Button.Auto">Automatic selection</data>

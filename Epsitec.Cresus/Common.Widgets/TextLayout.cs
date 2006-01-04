@@ -3681,6 +3681,11 @@ namespace Epsitec.Common.Widgets
 										key.Language = (string)parameters["lang"];
 									}
 
+									if ( parameters.ContainsKey("style") )
+									{
+										key.Style = (string)parameters["style"];
+									}
+
 									image = canvas.GetImageForIconKey(key);  // cherche la meilleure image
 								}
 							

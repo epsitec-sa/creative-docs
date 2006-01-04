@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panelMisc = new Widget(this);
 			this.panelMisc.Dock = DockStyle.Bottom;
 			this.panelMisc.DockMargins = new Margins(0, 0, 5, 0);
-			this.panelMisc.Height = (this.document.Type == DocumentType.Pictogram) ? 186+24 : 186;
+			this.panelMisc.Height = (this.document.Type == DocumentType.Pictogram) ? 186+24+24 : 186;
 			this.panelMisc.TabIndex = 99;
 			this.panelMisc.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -117,6 +117,30 @@ namespace Epsitec.Common.Document.Containers
 				this.languageField.Dock = DockStyle.Left;
 				this.languageField.DockMargins = new Margins(0, 0, 0, 0);
 				this.languageField.TextChanged += new EventHandler(this.HandleLanguageChanged);
+
+			
+				this.styleGroup = new Widget(this.panelMisc);
+				this.styleGroup.Dock = DockStyle.Bottom;
+				this.styleGroup.DockMargins = new Margins(0, 0, 0, 4);
+				this.styleGroup.Height = 20;
+				this.styleGroup.TabIndex = 4;
+				this.styleGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+				StaticText labelStyle = new StaticText(this.styleGroup);
+				labelStyle.Text = Res.Strings.Container.Pages.Style.Label;
+				labelStyle.Alignment = ContentAlignment.MiddleRight;
+				labelStyle.Width = 94;
+				labelStyle.Dock = DockStyle.Left;
+				labelStyle.DockMargins = new Margins(0, 4, 0, 0);
+
+				this.styleField = new TextFieldCombo(this.styleGroup);
+				this.styleField.Width = 120;
+				this.styleField.Items.Add("");
+				this.styleField.Items.Add("Normal");
+				this.styleField.Items.Add("Cursor");
+				this.styleField.Dock = DockStyle.Left;
+				this.styleField.DockMargins = new Margins(0, 0, 0, 0);
+				this.styleField.TextChanged += new EventHandler(this.HandleStyleChanged);
 			}
 
 			this.pageSizeGroup = new Widget(this.panelMisc);
@@ -493,6 +517,7 @@ namespace Epsitec.Common.Document.Containers
 
 			Size size = page.PageSize;
 			string language = page.Language;
+			string style = page.PageStyle;
 
 			bool widthDefined = true;
 			if ( size.Width == 0 )
@@ -525,6 +550,11 @@ namespace Epsitec.Common.Document.Containers
 			if ( this.languageField != null )
 			{
 				this.languageField.Text = language;
+			}
+
+			if ( this.styleField != null )
+			{
+				this.styleField.Text = style;
 			}
 
 			this.radioSlave.ActiveState  = (page.MasterType == Objects.MasterType.Slave) ? ActiveState.Yes : ActiveState.No;
@@ -639,6 +669,22 @@ namespace Epsitec.Common.Document.Containers
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 
 			page.Language = this.languageField.Text;
+
+			this.document.Modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
+			this.document.Notifier.NotifyPagesChanged();
+			this.document.Modifier.OpletQueueValidateAction();
+		}
+
+		private void HandleStyleChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Container.Pages.Style.Label, "SpecialPageStyle");
+
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			Objects.Page page = context.RootObject(1) as Objects.Page;
+
+			page.PageStyle = this.styleField.Text;
 
 			this.document.Modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
 			this.document.Notifier.NotifyPagesChanged();
@@ -864,6 +910,9 @@ namespace Epsitec.Common.Document.Containers
 
 		protected Widget					languageGroup;
 		protected TextFieldCombo			languageField;
+
+		protected Widget					styleGroup;
+		protected TextFieldCombo			styleField;
 
 		protected Widget					radioGroup;
 		protected RadioButton				radioSlave;

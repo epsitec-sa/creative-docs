@@ -107,6 +107,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public string							PreferredIconStyle
+		{
+			get
+			{
+				return this.preferredIconStyle;
+			}
+
+			set
+			{
+				if ( this.preferredIconStyle != value )
+				{
+					this.preferredIconStyle = value;
+					this.UpdateText();
+				}
+			}
+		}
+
 		protected void UpdateText()
 		{
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
@@ -137,6 +154,13 @@ namespace Epsitec.Common.Widgets
 				{
 					builder.Append(@" lang=""");
 					builder.Append(this.preferredIconLanguage);
+					builder.Append(@"""");
+				}
+
+				if ( this.preferredIconStyle != null && this.preferredIconStyle != "" )
+				{
+					builder.Append(@" style=""");
+					builder.Append(this.preferredIconStyle);
 					builder.Append(@"""");
 				}
 
@@ -212,5 +236,6 @@ namespace Epsitec.Common.Widgets
 		protected string						iconName = null;
 		protected Drawing.Size					preferredIconSize = Drawing.Size.Empty;
 		protected string						preferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+		protected string						preferredIconStyle = null;
 	}
 }

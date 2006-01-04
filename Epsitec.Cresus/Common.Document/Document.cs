@@ -366,6 +366,7 @@ namespace Epsitec.Common.Document
 					Canvas.IconKey key = new Canvas.IconKey();
 					key.Size     = this.GetPageSize(page);
 					key.Language = page.Language;
+					key.Style    = page.PageStyle;
 					key.PageRank = i;
 
 					keys[i] = key;

@@ -1164,10 +1164,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\Outside2.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "Images\PageNew.icon"
                     BuildAction = "EmbeddedResource"
                 />
