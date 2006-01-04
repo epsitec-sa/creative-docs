@@ -369,15 +369,18 @@ namespace Epsitec.Common.Document
 		{
 			//	Trouve le TextFrame qui correspond à la coordonnée souris, tout en
 			//	calculant la coordonnée transformée correspondante.
+			Drawing.Point transform = Drawing.Point.Empty;
 			foreach ( Objects.AbstractText obj in this.objectsChain )
 			{
 				if ( obj.IsInTextFrame(pos, out ppos) )
 				{
 					return obj.TextFrame;
 				}
+
+				transform = ppos;
 			}
 			
-			ppos = Drawing.Point.Empty;
+			ppos = transform;
 			return null;
 		}
 		

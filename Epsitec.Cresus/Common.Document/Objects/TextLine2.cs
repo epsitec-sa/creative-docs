@@ -1568,7 +1568,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			while ( i < this.TotalMainHandle-3 );
 
-			if ( true )  // à la fin ?
+			if ( true )  // à la fin ou même plus loin ?
 			{
 				int total = this.TotalMainHandle;
 				Point p1 = this.Handle(total-2).Position;
@@ -1672,21 +1672,20 @@ namespace Epsitec.Common.Document.Objects
 		public override bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
 		{
 			//	Détermine si un point se trouve dans le texte frame.
-			if ( this.Detect(pos) )
+			double lin = this.Transform(pos);
+			if ( double.IsNaN(lin) )
 			{
-				double lin = this.Transform(pos);
-				if ( !double.IsNaN(lin) )
-				{
-					Point curve;
-					double angle;
-					this.Transform(lin, out curve, out angle);
-					ppos = new Point(lin, 0);
-					return true;
-				}
+				ppos = Drawing.Point.Empty;
 			}
-
-			ppos = Drawing.Point.Empty;
-			return false;
+			else
+			{
+				Point curve;
+				double angle;
+				this.Transform(lin, out curve, out angle);
+				ppos = new Point(lin, 0);
+			}
+			
+			return this.Detect(pos);
 		}
 		
 		protected override void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)
