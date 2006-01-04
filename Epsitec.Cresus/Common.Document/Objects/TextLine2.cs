@@ -2457,6 +2457,14 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
+		public void CreateFinalise()
+		{
+			//	Finalise la création d'une courbe de Bézier.
+			this.HandlePropertiesCreate();  // crée les poignées des propriétés
+			this.Select(false);
+			this.Select(true);  // pour sélectionner toutes les poignées
+		}
+
 
 		#region Serialization
 		protected TextLine2(SerializationInfo info, StreamingContext context) : base(info, context)

@@ -3073,7 +3073,7 @@ namespace Epsitec.Common.Document
 							this.TotalSelected ++;
 						}
 			
-						if ( bezier.CreateFromPath(path, -1) )
+						if ( bezier.CreateBezierFromPath(path, -1) )
 						{
 							obj.Mark = true;  // il faudra le détruire
 						}
@@ -3136,7 +3136,7 @@ namespace Epsitec.Common.Document
 							this.XferProperties(bezier, obj);
 							this.TotalSelected ++;
 
-							if ( bezier.CreateFromPath(path, i) )
+							if ( bezier.CreateBezierFromPath(path, i) )
 							{
 								bezier.CreateFinalise();
 								this.Simplify(bezier);
@@ -3206,7 +3206,7 @@ namespace Epsitec.Common.Document
 						this.XferProperties(bezier, obj);
 						this.TotalSelected ++;
 
-						if ( bezier.CreateFromPath(path, -1) )
+						if ( bezier.CreateBezierFromPath(path, -1) )
 						{
 							bezier.CreateFinalise();
 							this.Simplify(bezier);
@@ -3278,7 +3278,7 @@ namespace Epsitec.Common.Document
 						this.XferProperties(poly, obj);
 						this.TotalSelected ++;
 
-						if ( poly.CreateFromPath(p, -1) )
+						if ( poly.CreatePolyFromPath(p, -1) )
 						{
 							poly.CreateFinalise();
 							this.Simplify(poly);
@@ -3347,17 +3347,16 @@ namespace Epsitec.Common.Document
 
 				if ( obj is Objects.TextLine )
 				{
-					Objects.TextLine t1 = obj as Objects.TextLine;
-					Objects.TextBox2 t2 = new Objects.TextBox2(this.document, obj);
+					Objects.TextLine  t1 = obj as Objects.TextLine;
+					Objects.TextLine2 t2 = new Objects.TextLine2(this.document, obj);
 					layer.Objects.Add(t2);
 
-					Rectangle box = obj.BoundingBoxThin;
-					box.Bottom -= box.Height*0.5;
-					t2.CreateMouseDown(box.BottomLeft, context);
-					t2.CreateMouseUp  (box.TopRight,   context);
+					Path path = t1.GetMagnetPath();
+					t2.CreateBezierFromPath(path, -1);
+					t2.CreateFinalise();
+					this.Simplify(t2);
 
 					t2.PropertyLineMode.Width = 0;
-					t2.PropertyFillGradient.Color1 = RichColor.Empty;
 
 					string text = TextLayout.ConvertToSimpleText(t1.Content);
 					string face = t1.PropertyTextFont.FontName;
@@ -3412,7 +3411,7 @@ namespace Epsitec.Common.Document
 
 						Path simplyPath = Geometry.PathToCurve(path);
 
-						if ( bezier.CreateFromPath(simplyPath, -1) )
+						if ( bezier.CreateBezierFromPath(simplyPath, -1) )
 						{
 							bezier.CreateFinalise();
 							this.Simplify(bezier);
@@ -3794,7 +3793,7 @@ namespace Epsitec.Common.Document
 			this.XferProperties(bezier, model);
 			this.TotalSelected ++;
 
-			if ( bezier.CreateFromPath(pathResult, -1) )
+			if ( bezier.CreateBezierFromPath(pathResult, -1) )
 			{
 				bezier.CreateFinalise();
 				this.Simplify(bezier);

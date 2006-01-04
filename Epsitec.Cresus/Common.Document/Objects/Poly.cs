@@ -982,7 +982,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		#region CreateFromPath
 		public override Path GetMagnetPath()
 		{
 			//	Retourne le chemin géométrique de l'objet pour les constructions
@@ -1020,113 +1019,6 @@ namespace Epsitec.Common.Document.Objects
 			return pathLine;
 		}
 
-		public bool CreateFromPath(Path path, int subPath)
-		{
-			//	Crée un polygone à partir d'un chemin quelconque.
-			PathElement[] elements;
-			Point[] points;
-			path.GetElements(out elements, out points);
-			if ( elements.Length > 1000 )  return false;
-
-			int firstHandle = this.TotalMainHandle;
-			Point start = new Point(0, 0);
-			Point current = new Point(0, 0);
-			Point p1 = new Point(0, 0);
-			Point p2 = new Point(0, 0);
-			Point p3 = new Point(0, 0);
-			bool close = false;
-			bool bDo = false;
-			int subRank = -1;
-			int i = 0;
-			while ( i < elements.Length )
-			{
-				switch ( elements[i] & PathElement.MaskCommand )
-				{
-					case PathElement.MoveTo:
-						subRank ++;
-						current = points[i++];
-						firstHandle = this.TotalMainHandle;
-						if ( subPath == -1 || subPath == subRank )
-						{
-							this.HandleAdd(current, HandleType.Starting);
-							bDo = true;
-						}
-						start = current;
-						break;
-
-					case PathElement.LineTo:
-						p1 = points[i++];
-						if ( subPath == -1 || subPath == subRank )
-						{
-							if ( Geometry.Compare(p1, start) )
-							{
-								close = true;
-								firstHandle = this.TotalMainHandle;
-							}
-							else
-							{
-								this.HandleAdd(p1, HandleType.Primary);
-								bDo = true;
-							}
-						}
-						current = p1;
-						break;
-
-					case PathElement.Curve3:
-						p1 = points[i];
-						p2 = points[i++];
-						p3 = points[i++];
-						Geometry.BezierS1ToS2(current, ref p1, ref p2, p3);
-						if ( subPath == -1 || subPath == subRank )
-						{
-							if ( Geometry.Compare(p3, start) )
-							{
-								close = true;
-								firstHandle = this.TotalMainHandle;
-							}
-							else
-							{
-								this.HandleAdd(p3, HandleType.Primary);
-								bDo = true;
-							}
-						}
-						current = p3;
-						break;
-
-					case PathElement.Curve4:
-						p1 = points[i++];
-						p2 = points[i++];
-						p3 = points[i++];
-						if ( subPath == -1 || subPath == subRank )
-						{
-							if ( Geometry.Compare(p3, start) )
-							{
-								close = true;
-								firstHandle = this.TotalMainHandle;
-							}
-							else
-							{
-								this.HandleAdd(p3, HandleType.Primary);
-								bDo = true;
-							}
-						}
-						current = p3;
-						break;
-
-					default:
-						if ( (elements[i] & PathElement.FlagClose) != 0 )
-						{
-							close = true;
-						}
-						i ++;
-						break;
-				}
-			}
-			this.PropertyPolyClose.BoolValue = close;
-
-			return bDo;
-		}
-
 		public void CreateFinalise()
 		{
 			//	Finalise la création d'un polygone.
@@ -1134,7 +1026,6 @@ namespace Epsitec.Common.Document.Objects
 			this.Select(false);
 			this.Select(true);  // pour sélectionner toutes les poignées
 		}
-		#endregion
 
 
 		#region Serialization
