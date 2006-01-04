@@ -2127,7 +2127,8 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.document.Modifier.IsToolShaper )  return;
 
-			if ( this.document.Modifier.TotalSelected == 0 )
+			if ( this.document.Modifier.TotalSelected == 0 ||
+				 this.document.Modifier.IsToolEdit )
 			{
 				this.selector.Visible = false;
 				this.selector.Handles = false;

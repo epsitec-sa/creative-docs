@@ -378,7 +378,7 @@ namespace Epsitec.Common.Document.Containers
 				this.selectorPanel.Hide();
 			}
 
-			if ( this.document.Modifier.Tool == "ToolEdit" )
+			if ( this.document.Modifier.IsToolEdit )
 			{
 				this.textToolBar.Show();
 			}
@@ -440,7 +440,7 @@ namespace Epsitec.Common.Document.Containers
 					topMargin = (cmd == "") ? 20 : 4;
 				}
 			}
-			else if ( this.document.Modifier.Tool == "ToolEdit" )
+			else if ( this.document.Modifier.IsToolEdit )
 			{
 				//	Crée tous les panneaux des "propriétés" de texte (pour les wrappers).
 				Objects.AbstractText editObject = this.document.Modifier.RetEditObject();

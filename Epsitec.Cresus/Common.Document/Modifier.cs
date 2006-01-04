@@ -183,6 +183,7 @@ namespace Epsitec.Common.Document
 								if ( sel.IsEditable )
 								{
 									sel.Select(true, true);
+									this.ActiveViewer.UpdateSelector();
 								}
 								else
 								{
@@ -215,7 +216,7 @@ namespace Epsitec.Common.Document
 			//	Adapte les rubans à l'outil sélectionné.
 			if ( this.IsUndoRedoInProgress )  return;
 
-			if ( this.tool == "ToolEdit" )
+			if ( this.IsToolEdit )
 			{
 				this.document.Notifier.NotifyRibbonCommand("Text");
 			}
@@ -252,6 +253,15 @@ namespace Epsitec.Common.Document
 				if ( this.tool == "ObjectTextBox"   )  return true;
 				if ( this.tool == "ObjectTextBox2"  )  return true;
 				return false;
+			}
+		}
+
+		public bool IsToolEdit
+		{
+			//	Indique si l'outil est l'éditeur.
+			get
+			{
+				return this.tool == "ToolEdit";
 			}
 		}
 
@@ -1269,7 +1279,7 @@ namespace Epsitec.Common.Document
 		public Objects.AbstractText RetEditObject()
 		{
 			//	Retourne le seul objet en édition.
-			if ( this.tool != "ToolEdit" )  return null;
+			if ( !this.IsToolEdit )  return null;
 			if ( this.TotalSelected != 1 )  return null;
 
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -2290,7 +2300,7 @@ namespace Epsitec.Common.Document
 		public void MoveSelection(Point dir, int alter)
 		{
 			//	Déplace tous les objets sélectionnés.
-			if ( this.tool == "ToolEdit" )  return;
+			if ( this.IsToolEdit )  return;
 
 			Point move = Point.ScaleMul(this.arrowMove, dir);
 
@@ -2329,7 +2339,7 @@ namespace Epsitec.Common.Document
 		public void MoveSelection(Point move)
 		{
 			//	Déplace tous les objets sélectionnés.
-			if ( this.tool == "ToolEdit" )  return;
+			if ( this.IsToolEdit )  return;
 			string name = string.Format(Res.Strings.Action.Move, this.RealToString(move.X), this.RealToString(move.Y));
 			this.PrepareOper(name);
 			this.ActiveViewer.Selector.OperMove(move);
@@ -2339,7 +2349,7 @@ namespace Epsitec.Common.Document
 		public void RotateSelection(double angle)
 		{
 			//	Tourne tous les objets sélectionnés.
-			if ( this.tool == "ToolEdit" )  return;
+			if ( this.IsToolEdit )  return;
 			string name = string.Format(Res.Strings.Action.Rotate, this.AngleToString(angle));
 			this.PrepareOper(name);
 			this.ActiveViewer.Selector.OperRotate(angle);
@@ -2349,7 +2359,7 @@ namespace Epsitec.Common.Document
 		public void MirrorSelection(bool horizontal)
 		{
 			//	Miroir de tous les objets sélectionnés. 
-			if ( this.tool == "ToolEdit" )  return;
+			if ( this.IsToolEdit )  return;
 			string name = horizontal ? Res.Strings.Action.MirrorH : Res.Strings.Action.MirrorV;
 			this.PrepareOper(name);
 			this.ActiveViewer.Selector.OperMirror(horizontal);
@@ -2359,7 +2369,7 @@ namespace Epsitec.Common.Document
 		public void ScaleSelection(double scale)
 		{
 			//	Mise à l'échelle de tous les objets sélectionnés.
-			if ( this.tool == "ToolEdit" )  return;
+			if ( this.IsToolEdit )  return;
 			string name = "";
 			if ( scale > 1.0 )
 			{

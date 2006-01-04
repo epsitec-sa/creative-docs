@@ -310,7 +310,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Met les commandes pour l'objet dans une liste.
 			base.PutCommands(list);
 
-			if ( this.document.Modifier.Tool == "ToolEdit" )
+			if ( this.document.Modifier.IsToolEdit )
 			{
 				bool sel = (this.textFlow.TextNavigator.SelectionCount != 0);
 				if ( sel )

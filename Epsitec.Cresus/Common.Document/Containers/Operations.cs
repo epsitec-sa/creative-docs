@@ -199,7 +199,7 @@ namespace Epsitec.Common.Document.Containers
 			bool enabled2 = (this.document.Modifier.TotalSelected > 1);
 			bool enabled3 = (this.document.Modifier.TotalSelected > 2);
 
-			if ( this.document.Modifier.Tool == "ToolEdit" )
+			if ( this.document.Modifier.IsToolEdit )
 			{
 				enabled  = false;
 				enabled2 = false;
