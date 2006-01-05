@@ -2268,7 +2268,7 @@ namespace Epsitec.Common.Document
 
 			if ( edit )
 			{
-				if ( !item.IsEditable )  return;
+				if ( item != null && !item.IsEditable )  return;
 
 				// Désélectionne tous les objets pour éventuellement masquer les règles
 				// de l'objet en édition.

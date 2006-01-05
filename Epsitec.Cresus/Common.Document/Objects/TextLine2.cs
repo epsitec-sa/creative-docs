@@ -1605,39 +1605,46 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		protected double GetLength()
+		protected double GetLength
 		{
 			//	Retourne la longueur totale d'une courbe multiple.
-			double length = 0.0;
-			int i = 0;
-			do
+			get
 			{
-				Point p1 = this.Handle(i+1).Position;
-				Point s1 = this.Handle(i+2).Position;
-				Point s2 = this.Handle(i+3).Position;
-				Point p2 = this.Handle(i+4).Position;
-
-				if ( this.Handle(i+2).Type == HandleType.Hide )  // droite ?
+				if ( this.isDirtyLength )
 				{
-					length += Point.Distance(p1,p2);
-				}
-				else	// courbe ?
-				{
-					Point pos = p1;
-					int total = (int)(1.0/TextLine2.step);
-					for ( int rank=1 ; rank<=total ; rank ++ )
+					this.isDirtyLength = false;
+					this.length = 0.0;
+					int i = 0;
+					do
 					{
-						double t = TextLine2.step*rank;
-						Point next = Point.FromBezier(p1,s1,s2,p2, t);
-						length += Point.Distance(pos, next);
-						pos = next;
-					}
-				}
-				i += 3;  // courbe suivante
-			}
-			while ( i < this.TotalMainHandle-3 );
+						Point p1 = this.Handle(i+1).Position;
+						Point s1 = this.Handle(i+2).Position;
+						Point s2 = this.Handle(i+3).Position;
+						Point p2 = this.Handle(i+4).Position;
 
-			return length;
+						if ( this.Handle(i+2).Type == HandleType.Hide )  // droite ?
+						{
+							this.length += Point.Distance(p1,p2);
+						}
+						else	// courbe ?
+						{
+							Point pos = p1;
+							int total = (int)(1.0/TextLine2.step);
+							for ( int rank=1 ; rank<=total ; rank ++ )
+							{
+								double t = TextLine2.step*rank;
+								Point next = Point.FromBezier(p1,s1,s2,p2, t);
+								this.length += Point.Distance(pos, next);
+								pos = next;
+							}
+						}
+						i += 3;  // courbe suivante
+					}
+					while ( i < this.TotalMainHandle-3 );
+				}
+
+				return this.length;
+			}
 		}
 
 		public override double WithForHRuler
@@ -1645,7 +1652,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Donne la largeur à utiliser pour la règle horizontale.
 			get
 			{
-				return this.GetLength();
+				return this.GetLength;
 			}
 		}
 
@@ -1692,7 +1699,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Met à jour le TextFrame en fonction des dimensions du pavé.
 			Text.SingleLineTextFrame frame = this.textFrame as Text.SingleLineTextFrame;
-			double width = this.GetLength();
+			double width = this.GetLength;
 
 			if ( frame.Width != width )
 			{
@@ -2481,6 +2488,14 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
+		public override void UpdateGeometry()
+		{
+			//	Met à jour après un changement de géométrie de l'objet.
+			this.isDirtyLength = true;
+			base.UpdateGeometry();
+		}
+
+
 		public override Path GetMagnetPath()
 		{
 			//	Retourne le chemin géométrique de l'objet pour les constructions
@@ -2508,6 +2523,8 @@ namespace Epsitec.Common.Document.Objects
 
 		protected Point							initialPos;
 		protected Path							realSelectPath;
+		protected bool							isDirtyLength = true;
+		protected double						length;
 
 		protected static readonly double		step = 1.0/100.0;  // une courbe de Bézier est décomposée en 100 segments
 	}
