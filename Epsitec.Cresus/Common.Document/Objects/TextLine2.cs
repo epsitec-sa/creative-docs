@@ -1667,7 +1667,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				pp2 = this.Handle(4).Position;
 			}
-			double d = AbstractText.EditFlowHandleSize/drawingContext.ScaleX;
+			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
 
 			p2 = pp1;
 			p1 = Point.Move(pp1, pp2, -d);
@@ -1685,7 +1685,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				pp2 = this.Handle(total-5).Position;
 			}
-			double d = AbstractText.EditFlowHandleSize/drawingContext.ScaleX;
+			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
 
 			p1 = pp1;
 			p2 = Point.Move(pp1, pp2, -d);

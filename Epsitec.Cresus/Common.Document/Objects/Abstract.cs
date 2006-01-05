@@ -1142,7 +1142,16 @@ namespace Epsitec.Common.Document.Objects
 					this.UpdateBoundingBox();  // on la recalcule
 					this.dirtyBbox = false;  // elle est de nouveau à jour
 				}
-				return this.bboxFull;
+
+				Drawing.Rectangle box = this.bboxFull;
+
+				if ( this.edited )  // édition en cours ?
+				{
+					double sx = this.document.Modifier.ActiveViewer.DrawingContext.ScaleX;
+					box.Inflate(Abstract.EditFlowHandleSize*1.42/sx);
+				}
+
+				return box;
 			}
 		}
 
@@ -3545,6 +3554,11 @@ namespace Epsitec.Common.Document.Objects
 			public Point			position;
 		}
 
+		protected static double EditFlowHandleSize
+		{
+			//	Taille des "poignées" pour choisir le flux du texte.
+			get { return 10.0; }
+		}
 
 
 		protected Document						document;

@@ -4795,18 +4795,7 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( viewer.DrawingContext.IsActive )
 			{
-				DocumentInfo di = this.CurrentDocumentInfo;
-
-				double inflate;
-				if ( di.hRuler != null && di.hRuler.Edited )  // édition en cours ?
-				{
-					inflate = Objects.AbstractText.EditFlowHandleSize/viewer.DrawingContext.ScaleX;
-				}
-				else
-				{
-					inflate = viewer.DrawingContext.HandleRedrawSize/2;
-				}
-				box.Inflate(inflate);
+				box.Inflate(viewer.DrawingContext.HandleRedrawSize/2);
 			}
 
 			box = viewer.InternalToScreen(box);

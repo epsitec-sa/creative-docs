@@ -1003,12 +1003,6 @@ namespace Epsitec.Common.Document.Objects
 			p.X = x;
 			p.Y = y;
 		}
-
-		public static double EditFlowHandleSize
-		{
-			//	Taille des "poignées" pour choisir le flux du texte.
-			get { return 10.0; }
-		}
 		#endregion
 		
 		
@@ -1137,7 +1131,7 @@ namespace Epsitec.Common.Document.Objects
 
 			//	Redessine tout, à cause des "poignées" du flux qui peuvent apparaître
 			//	ou disparaître.
-			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+			//?this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 		}
 
 		
