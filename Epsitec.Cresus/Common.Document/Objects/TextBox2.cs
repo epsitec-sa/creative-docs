@@ -185,8 +185,14 @@ namespace Epsitec.Common.Document.Objects
 			if ( !this.CreateIsExist(drawingContext) )  // clic (presque) sans bouger ?
 			{
 				Drawing.Rectangle box = this.document.Modifier.ActiveViewer.GuidesSearchBox(pos);
-				this.Handle(0).Position = box.BottomLeft;
-				this.Handle(1).Position = box.TopRight;
+				if ( !box.IsEmpty )
+				{
+					if ( this.document.Modifier.ActiveViewer.IsFreeForNewTextBox2(box, this) )
+					{
+						this.Handle(0).Position = box.BottomLeft;
+						this.Handle(1).Position = box.TopRight;
+					}
+				}
 			}
 
 			//	Crée les 2 autres poignées dans les coins opposés.

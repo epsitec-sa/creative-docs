@@ -1484,6 +1484,7 @@ namespace Epsitec.Common.Document
 
 		protected void EditMouseDown(Message message, Point mouse, int downCount)
 		{
+			this.editPosPress = Point.Empty;
 			Objects.DetectEditType handle;
 
 			if ( this.editFlowSelect != Objects.DetectEditType.Out )
@@ -1514,6 +1515,11 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
+				if ( obj == null )
+				{
+					this.editPosPress = mouse;
+				}
+
 				if ( handle == Objects.DetectEditType.HandleFlowPrev ||
 					 handle == Objects.DetectEditType.HandleFlowNext )
 				{
@@ -1615,6 +1621,36 @@ namespace Epsitec.Common.Document
 				}
 				this.editFlowSelect = Objects.DetectEditType.Out;
 				return;
+			}
+
+			//	S'il n'y avait initialement aucun objet en édition et qu'on a cliqué sans bouger,
+			//	essayer de créer et d'éditer un nouveau TextBox2 ici.
+			if ( !this.editPosPress.IsEmpty && Point.Distance(mouse, this.editPosPress) <= this.drawingContext.MinimalSize )
+			{
+				Drawing.Rectangle box = this.GuidesSearchBox(this.editPosPress);
+				if ( box.IsEmpty )  return;
+				if ( !this.IsFreeForNewTextBox2(box, null) )  return;
+
+				string name = string.Format(Res.Strings.Action.ObjectCreate, this.document.Modifier.ToolName("ObjectTextBox2"));
+				this.document.Modifier.OpletQueueBeginAction(name, "CreateAuto");
+
+				Objects.TextBox2 t2 = Objects.Abstract.CreateObject(this.document, "ObjectTextBox2", this.document.Modifier.ObjectMemoryText) as Objects.TextBox2;
+				Objects.Abstract layer = this.drawingContext.RootObject();
+				layer.Objects.Add(t2);
+				t2.CreateMouseDown(this.editPosPress, this.drawingContext);
+				t2.CreateMouseUp  (this.editPosPress, this.drawingContext);
+				if ( t2.CreateIsExist(this.drawingContext) )
+				{
+					this.Select(t2, true, false);
+					this.document.Modifier.GroupUpdateParents();
+				}
+				else
+				{
+					t2.Dispose();
+					layer.Objects.Remove(t2);
+				}
+
+				this.document.Modifier.OpletQueueValidateAction();
 			}
 
 			this.EditProcessMessage(message, mouse);
@@ -2232,6 +2268,8 @@ namespace Epsitec.Common.Document
 
 			if ( edit )
 			{
+				if ( !item.IsEditable )  return;
+
 				// Désélectionne tous les objets pour éventuellement masquer les règles
 				// de l'objet en édition.
 				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
@@ -4263,6 +4301,20 @@ namespace Epsitec.Common.Document
 
 
 		#region GuidesSearchBox
+		public bool IsFreeForNewTextBox2(Drawing.Rectangle box, Objects.Abstract exclude)
+		{
+			//	Vérifie qu'une zone rectangulaire n'empiète sur aucun TextBox2 existant.
+			Objects.Abstract page = this.drawingContext.RootObject(1);
+			foreach ( Objects.Abstract obj in this.document.Deep(page) )
+			{
+				if ( obj is Objects.TextBox2 && obj != exclude )
+				{
+					if ( obj.BoundingBoxThin.IntersectsWith(box) )  return false;
+				}
+			}
+			return true;
+		}
+
 		public Drawing.Rectangle GuidesSearchBox(Point pos)
 		{
 			//	Cherche la boîte délimitée par des repères, autour d'une position.
@@ -4314,7 +4366,14 @@ namespace Epsitec.Common.Document
 			if ( double.IsNaN(minY) )  minY = my;
 			if ( double.IsNaN(maxY) )  maxY = size.Height-my;
 
-			return new Drawing.Rectangle(minX, minY, maxX-minX, maxY-minY);
+			if ( minX >= maxX || minY >= maxY )
+			{
+				return Drawing.Rectangle.Empty;
+			}
+			else
+			{
+				return new Drawing.Rectangle(minX, minY, maxX-minX, maxY-minY);
+			}
 		}
 
 		protected void GuidesSearchAdd(System.Collections.ArrayList list, UndoableList guides)
@@ -4489,6 +4548,7 @@ namespace Epsitec.Common.Document
 		protected Objects.DetectEditType		editFlowSelect = Objects.DetectEditType.Out;
 		protected Objects.Abstract				editFlowSrc = null;
 		protected Objects.AbstractText			editFlowAfterCreate = null;
+		protected Point							editPosPress = Point.Empty;
 
 		protected Timer							miniBarTimer;
 		protected System.Collections.ArrayList	miniBarCmds = null;

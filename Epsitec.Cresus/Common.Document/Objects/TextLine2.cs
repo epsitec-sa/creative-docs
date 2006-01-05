@@ -1168,17 +1168,20 @@ namespace Epsitec.Common.Document.Objects
 			{
 				Drawing.Rectangle box = this.document.Modifier.ActiveViewer.GuidesSearchBox(pos);
 
-				pos = this.Handle(0).Position;
-				pos.X = box.Left;
-				this.Handle(0).Position = pos;
-				this.Handle(1).Position = pos;
-				this.Handle(2).Position = pos;
+				if ( !box.IsEmpty )
+				{
+					pos = this.Handle(0).Position;
+					pos.X = box.Left;
+					this.Handle(0).Position = pos;
+					this.Handle(1).Position = pos;
+					this.Handle(2).Position = pos;
 
-				pos = this.Handle(3).Position;
-				pos.X = box.Right;
-				this.Handle(3).Position = pos;
-				this.Handle(4).Position = pos;
-				this.Handle(5).Position = pos;
+					pos = this.Handle(3).Position;
+					pos.X = box.Right;
+					this.Handle(3).Position = pos;
+					this.Handle(4).Position = pos;
+					this.Handle(5).Position = pos;
+				}
 			}
 			this.UpdateGeometry();
 			this.SetDirtyBbox();
