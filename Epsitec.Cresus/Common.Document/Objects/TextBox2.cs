@@ -909,20 +909,27 @@ namespace Epsitec.Common.Document.Objects
 				{
 					for ( int i=0 ; i<glyphs.Length ; i++ )
 					{
+						Drawing.Rectangle bounds;
+
 						if ( glyphs[i] < 0xffff )
 						{
-							Drawing.Rectangle bounds = drawingFont.GetGlyphBounds(glyphs[i], size);
-
-							if ( sx != null )  bounds.Scale(sx[i], 1.0);
-							if ( sy != null )  bounds.Scale(1.0, sy[i]);
-
-							bounds.Offset(x[i], y[i]);
-
-							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomLeft));
-							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomRight));
-							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopLeft));
-							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopRight));
+							bounds = drawingFont.GetGlyphBounds(glyphs[i], size);
 						}
+						else
+						{
+							bounds = drawingFont.GetCharBounds((int)Unicode.Code.EndOfText);
+							bounds.Scale(size);
+						}
+
+						if ( sx != null )  bounds.Scale(sx[i], 1.0);
+						if ( sy != null )  bounds.Scale(1.0, sy[i]);
+
+						bounds.Offset(x[i], y[i]);
+
+						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomLeft));
+						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomRight));
+						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopLeft));
+						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopRight));
 					}
 				}
 			}

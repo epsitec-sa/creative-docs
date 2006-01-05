@@ -2247,40 +2247,47 @@ namespace Epsitec.Common.Document.Objects
 
 					for ( int i=0 ; i<glyphs.Length ; i++ )
 					{
+						Point p1, p2;
+						double a1, a2;
+						this.Transform(x[i+0], out p1, out a1);
+						this.Transform(x[i+1], out p2, out a2);
+						p1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+y[i]));
+						p2 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+y[i]));
+						
+						Drawing.Rectangle bounds;
+
 						if ( glyphs[i] < 0xffff )
 						{
-							Point p1, p2;
-							double a1, a2;
-							this.Transform(x[i+0], out p1, out a1);
-							this.Transform(x[i+1], out p2, out a2);
-							p1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+y[i]));
-							p2 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+y[i]));
-							
-							Drawing.Rectangle bounds = drawingFont.GetGlyphBounds(glyphs[i], size);
-
-							if ( sx != null )  bounds.Scale(sx[i], 1.0);
-							if ( sy != null )  bounds.Scale(1.0, sy[i]);
-
-							Point c1 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.BottomLeft);
-							Point c2 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.TopLeft);
-							Point c3 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.BottomRight);
-							Point c4 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.TopRight);
-
-							this.mergingBoundingBox.MergeWith(c1);
-							this.mergingBoundingBox.MergeWith(c2);
-							this.mergingBoundingBox.MergeWith(c3);
-							this.mergingBoundingBox.MergeWith(c4);
-
-							c1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+descender));
-							c2 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+ascender));
-							c3 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+descender));
-							c4 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+ascender));
-
-							this.mergingBoundingBox.MergeWith(c1);
-							this.mergingBoundingBox.MergeWith(c2);
-							this.mergingBoundingBox.MergeWith(c3);
-							this.mergingBoundingBox.MergeWith(c4);
+							bounds = drawingFont.GetGlyphBounds(glyphs[i], size);
 						}
+						else
+						{
+							bounds = drawingFont.GetCharBounds((int)Unicode.Code.EndOfText);
+							bounds.Scale(size);
+						}
+
+						if ( sx != null )  bounds.Scale(sx[i], 1.0);
+						if ( sy != null )  bounds.Scale(1.0, sy[i]);
+
+						Point c1 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.BottomLeft);
+						Point c2 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.TopLeft);
+						Point c3 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.BottomRight);
+						Point c4 = Drawing.Transform.RotatePointDeg(p1, a1, p1+bounds.TopRight);
+
+						this.mergingBoundingBox.MergeWith(c1);
+						this.mergingBoundingBox.MergeWith(c2);
+						this.mergingBoundingBox.MergeWith(c3);
+						this.mergingBoundingBox.MergeWith(c4);
+
+						c1 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+descender));
+						c2 = Drawing.Transform.RotatePointDeg(p1, a1, new Point(p1.X, p1.Y+ascender));
+						c3 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+descender));
+						c4 = Drawing.Transform.RotatePointDeg(p2, a2, new Point(p2.X, p2.Y+ascender));
+
+						this.mergingBoundingBox.MergeWith(c1);
+						this.mergingBoundingBox.MergeWith(c2);
+						this.mergingBoundingBox.MergeWith(c3);
+						this.mergingBoundingBox.MergeWith(c4);
 					}
 				}
 			}
