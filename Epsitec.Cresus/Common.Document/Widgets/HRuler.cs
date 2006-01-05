@@ -67,9 +67,10 @@ namespace Epsitec.Common.Document.Widgets
 			this.GetMargins(out leftFirst, out leftBody, out right);
 
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
-			leftFirst = bbox.Left  + leftFirst;
-			leftBody  = bbox.Left  + leftBody;
-			right     = bbox.Right - right;
+			double width = this.editObject.WithForHRuler;
+			leftFirst = bbox.Left + leftFirst;
+			leftBody  = bbox.Left + leftBody;
+			right     = bbox.Left+width - right;
 
 			if ( this.marginLeftFirst != leftFirst )
 			{
@@ -549,8 +550,7 @@ namespace Epsitec.Common.Document.Widgets
 				}
 				else	// pose un nouveau tabulateur ?
 				{
-					Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
-					double x = this.MouseToText(pos, bbox);
+					double x = this.MouseToText(pos);
 
 					handle = this.editObject.NewTextTab(x, this.tabToCreate);
 					this.draggingOffset = 0.0;
@@ -662,8 +662,8 @@ namespace Epsitec.Common.Document.Widgets
 		protected void SetHandleHorizontalPos(ref string handle, Point pos)
 		{
 			//	Modifie la position d'une poignée quelconque (marge ou tabulateur).
-			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
-			double x = this.MouseToText(pos, bbox);
+			double width = this.editObject.WithForHRuler;
+			double x = this.MouseToText(pos);
 
 			Tab tab = this.GetTab(handle);
 			if ( tab.Tag == null )
@@ -688,7 +688,7 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					double xf = x+(this.draggingInitialFirst-this.draggingInitialBody);
 					xf = System.Math.Max(xf, 0);
-					xf = System.Math.Min(xf, bbox.Width);
+					xf = System.Math.Min(xf, width);
 
 					this.document.ParagraphWrapper.SuspendSynchronisations();
 					this.document.ParagraphWrapper.Defined.LeftMarginFirst = xf;
@@ -699,7 +699,7 @@ namespace Epsitec.Common.Document.Widgets
 
 				if ( handle == "Right" )
 				{
-					x = bbox.Width-x;
+					x = width-x;
 					this.document.ParagraphWrapper.SuspendSynchronisations();
 					this.document.ParagraphWrapper.Defined.RightMarginFirst = x;
 					this.document.ParagraphWrapper.Defined.RightMarginBody  = x;
@@ -736,13 +736,16 @@ namespace Epsitec.Common.Document.Widgets
 			return this.invalidTab;
 		}
 
-		protected double MouseToText(Point mouse, Drawing.Rectangle bbox)
+		protected double MouseToText(Point mouse)
 		{
 			//	Conversion de la position de la souris en une position relative au texte.
+			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
+			double width = this.editObject.WithForHRuler;
+
 			double x = this.ScreenToDocument(mouse.X);
 			x = this.SnapGrid(x)-bbox.Left;
 			x = System.Math.Max(x, 0);
-			x = System.Math.Min(x, bbox.Width);
+			x = System.Math.Min(x, width);
 			return x;
 		}
 
@@ -795,8 +798,8 @@ namespace Epsitec.Common.Document.Widgets
 		protected override string GetTooltipEditedText(Point pos)
 		{
 			//	Donne le texte du tooltip d'édition en fonction de la position.
-			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
-			double x = this.MouseToText(pos, bbox);
+			double width = this.editObject.WithForHRuler;
+			double x = this.MouseToText(pos);
 
 			if ( this.isDragging )  // déplacement en cours ?
 			{
@@ -805,7 +808,7 @@ namespace Epsitec.Common.Document.Widgets
 					if ( this.draggingHandle == "Right" )
 					{
 						string vp = this.document.Modifier.RealToString(x);
-						string vn = this.document.Modifier.RealToString(x-bbox.Width);
+						string vn = this.document.Modifier.RealToString(x-width);
 						string w  = this.document.Modifier.RealToString(x-this.draggingInitialBody);
 						return string.Format(Res.Strings.Action.Text.Ruler.HandleMoveRight, vp, vn, w);
 					}
@@ -814,7 +817,7 @@ namespace Epsitec.Common.Document.Widgets
 							  this.draggingHandle == "FirstBody" )
 					{
 						string v = this.document.Modifier.RealToString(x);
-						string w = this.document.Modifier.RealToString(bbox.Width-this.draggingInitialRight-x);
+						string w = this.document.Modifier.RealToString(width-this.draggingInitialRight-x);
 						return string.Format(Res.Strings.Action.Text.Ruler.HandleMoveLeft, v, w);
 					}
 					else	// tabulateur ?
@@ -865,7 +868,7 @@ namespace Epsitec.Common.Document.Widgets
 				}
 			}
 
-			if ( x >= 0.0 && x <= bbox.Width )
+			if ( x >= 0.0 && x <= width )
 			{
 				return Res.Strings.Action.Text.Ruler.TabCreate;
 			}

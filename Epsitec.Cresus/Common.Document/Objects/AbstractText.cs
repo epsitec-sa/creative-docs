@@ -768,6 +768,15 @@ namespace Epsitec.Common.Document.Objects
 				this.textFlow.UpdateTextRulers();
 			}
 		}
+
+		public virtual double WithForHRuler
+		{
+			//	Donne la largeur à utiliser pour la règle horizontale.
+			get
+			{
+				return this.BoundingBoxThin.Width;
+			}
+		}
 		#endregion
 
 

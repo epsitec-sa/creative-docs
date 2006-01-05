@@ -1640,6 +1640,15 @@ namespace Epsitec.Common.Document.Objects
 			return length;
 		}
 
+		public override double WithForHRuler
+		{
+			//	Donne la largeur à utiliser pour la règle horizontale.
+			get
+			{
+				return this.GetLength();
+			}
+		}
+
 
 		#region FlowHandles
 		protected override void CornersFlowPrev(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)

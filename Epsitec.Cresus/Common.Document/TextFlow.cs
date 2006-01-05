@@ -237,8 +237,9 @@ namespace Epsitec.Common.Document
 			if ( this.HasActiveTextBox )
 			{
 				Drawing.Rectangle bbox = this.activeTextBox.BoundingBoxThin;
+				double width = this.activeTextBox.WithForHRuler;
 				this.document.HRuler.LimitLow  = bbox.Left;
-				this.document.HRuler.LimitHigh = bbox.Right;
+				this.document.HRuler.LimitHigh = bbox.Left+width;
 				this.document.VRuler.LimitLow  = bbox.Bottom;
 				this.document.VRuler.LimitHigh = bbox.Top;
 
