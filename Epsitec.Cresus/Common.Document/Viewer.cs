@@ -23,6 +23,7 @@ namespace Epsitec.Common.Document
 			ShaperMulti,
 			Hand,
 			IBeam,
+			IBeamCreate,
 			HSplit,
 			VSplit,
 			Cross,
@@ -1577,14 +1578,21 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = this.DetectEdit(mouse, out handle);
 				this.Hilite(obj);
 
-				if ( handle == Objects.DetectEditType.HandleFlowPrev ||
-					 handle == Objects.DetectEditType.HandleFlowNext )
+				if ( obj == null && !this.document.Wrappers.IsWrappersAttached )
 				{
-					this.ChangeMouseCursor(MouseCursorType.TextFlow);
+					this.ChangeMouseCursor(MouseCursorType.IBeamCreate);
 				}
 				else
 				{
-					this.ChangeMouseCursor(MouseCursorType.IBeam);
+					if ( handle == Objects.DetectEditType.HandleFlowPrev ||
+						 handle == Objects.DetectEditType.HandleFlowNext )
+					{
+						this.ChangeMouseCursor(MouseCursorType.TextFlow);
+					}
+					else
+					{
+						this.ChangeMouseCursor(MouseCursorType.IBeam);
+					}
 				}
 			}
 		}
@@ -3463,7 +3471,11 @@ namespace Epsitec.Common.Document
 					break;
 
 				case MouseCursorType.IBeam:
-					this.MouseCursor = MouseCursor.AsIBeam;
+					this.MouseCursorImage(ref this.mouseCursorIBeam, Misc.Icon("IBeam"));
+					break;
+
+				case MouseCursorType.IBeamCreate:
+					this.MouseCursorImage(ref this.mouseCursorIBeamCreate, Misc.Icon("IBeamCreate"));
 					break;
 
 				case MouseCursorType.HSplit:
@@ -4588,6 +4600,8 @@ namespace Epsitec.Common.Document
 		protected Image							mouseCursorHand = null;
 		protected Image							mouseCursorPicker = null;
 		protected Image							mouseCursorPickerEmpty = null;
+		protected Image							mouseCursorIBeam = null;
+		protected Image							mouseCursorIBeamCreate = null;
 		protected Image							mouseCursorTextFlow = null;
 		protected Image							mouseCursorTextFlowCreate = null;
 		protected Image							mouseCursorTextFlowAdd = null;

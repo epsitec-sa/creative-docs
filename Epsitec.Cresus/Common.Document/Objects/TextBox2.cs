@@ -1088,6 +1088,8 @@ namespace Epsitec.Common.Document.Objects
 		public override void UpdateTextGrid(bool notify)
 		{
 			//	Met à jour le pavé en fonction des lignes magnétiques.
+			if ( this.document.Modifier == null )  return;
+
 			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
 			frame.GridStep   = this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;
 			frame.GridOffset = this.document.Modifier.ActiveViewer.DrawingContext.TextGridOffset;

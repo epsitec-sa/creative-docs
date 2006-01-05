@@ -872,6 +872,14 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\IBeam.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\IBeamCreate.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Import.icon"
                     BuildAction = "EmbeddedResource"
                 />
