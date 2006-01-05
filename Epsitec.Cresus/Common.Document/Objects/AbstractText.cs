@@ -184,21 +184,17 @@ namespace Epsitec.Common.Document.Objects
 				return true;
 			}
 
-			Point ppos;
-			ITextFrame frame;
-			
-			if ( this.IsInTextFrame(pos, out ppos) )
-			{
-				frame = this.textFrame;
-			}
-			else
+			Objects.AbstractText obj = this;
+			if ( !this.IsInTextFrame(pos) )
 			{
 				//	Si la souris n'est pas dans notre texte frame, on utilise le text
 				//	frame correspondant à sa position (s'il y en a un).
-				frame = this.textFlow.FindTextFrame(pos, out ppos);
-				
-				if ( frame == null )  frame = this.textFrame;
+				obj = this.textFlow.FindInTextFrame(pos);
+				if ( obj == null )  obj = this;
 			}
+			ITextFrame frame = obj.textFrame;
+			Point ppos = obj.ConvertInTextFrame(pos);
+			//?System.Diagnostics.Debug.WriteLine(string.Format("name={0} pos={1};{2}", obj.PropertyName.String, ppos.X, ppos.Y));
 			
 			if ( !this.MetaNavigator.ProcessMessage(message, ppos, frame) )  return false;
 			
@@ -1040,11 +1036,16 @@ namespace Epsitec.Common.Document.Objects
 			//	Met à jour le TextFrame en fonction des dimensions du pavé.
 		}
 		
-		public virtual bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
+		public virtual bool IsInTextFrame(Drawing.Point pos)
 		{
 			//	Détermine si un point se trouve dans le texte frame.
-			ppos = Drawing.Point.Empty;
-			return false;
+			return this.Detect(pos);
+		}
+
+		public virtual Drawing.Point ConvertInTextFrame(Drawing.Point pos)
+		{
+			//	Calcule la coordonnée transformée dans le texte frame.
+			return pos;
 		}
 
 		public override void DrawText(IPaintPort port, DrawingContext drawingContext)

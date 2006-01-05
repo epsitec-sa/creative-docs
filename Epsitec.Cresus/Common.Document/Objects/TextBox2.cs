@@ -433,27 +433,17 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 		
-		public override bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
+		public override Drawing.Point ConvertInTextFrame(Drawing.Point pos)
 		{
-			//	Détermine si un point se trouve dans le texte frame.
-			if ( this.transform == null )
+			//	Calcule la coordonnée transformée dans le texte frame.
+			if ( this.transform != null )
 			{
-				ppos = Drawing.Point.Empty;
-				return false;
+				pos = this.transform.TransformInverse(pos);
 			}
-			
-			ppos = this.transform.TransformInverse(pos);
-			
-			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
-			if ( ppos.X < 0 || ppos.Y < 0 || ppos.X > frame.Width || ppos.Y > frame.Height )
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+
+			return pos;
 		}
+
 
 		protected override void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)
 		{

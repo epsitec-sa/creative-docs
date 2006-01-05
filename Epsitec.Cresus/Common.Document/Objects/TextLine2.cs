@@ -1708,25 +1708,22 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 		
-		public override bool IsInTextFrame(Drawing.Point pos, out Drawing.Point ppos)
+		public override Drawing.Point ConvertInTextFrame(Drawing.Point pos)
 		{
-			//	Détermine si un point se trouve dans le texte frame.
+			//	Calcule la coordonnée transformée dans le texte frame.
 			double lin = this.Transform(pos);
-			if ( double.IsNaN(lin) )
-			{
-				ppos = Drawing.Point.Empty;
-			}
-			else
+			if ( !double.IsNaN(lin) )
 			{
 				Point curve;
 				double angle;
 				this.Transform(lin, out curve, out angle);
-				ppos = new Point(lin, 0);
+				pos = new Point(lin, 0);
 			}
 			
-			return this.Detect(pos);
+			return pos;
 		}
-		
+
+
 		protected override void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)
 		{
 			//	Effectue une opération quelconque sur le texte du pavé.

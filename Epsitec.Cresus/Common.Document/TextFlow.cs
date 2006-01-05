@@ -318,11 +318,9 @@ namespace Epsitec.Common.Document
 				if ( frame != this.activeTextBox.TextFrame )
 				{
 					Objects.AbstractText obj = this.FindMatchingTextBox(frame);
-					
 					System.Diagnostics.Debug.Assert(obj != null);
 					
 					this.document.Modifier.EditObject(obj);
-					
 					System.Diagnostics.Debug.Assert(this.HasActiveTextBox);
 					
 					this.activeTextBox.SetAutoScroll();
@@ -355,7 +353,7 @@ namespace Epsitec.Common.Document
 		private Objects.AbstractText FindMatchingTextBox(Text.ITextFrame frame)
 		{
 			//	Trouve le pavé correspondant au frame donné.
-			foreach ( Objects.AbstractText obj in this.Chain )
+			foreach ( Objects.AbstractText obj in this.objectsChain )
 			{
 				if ( frame == obj.TextFrame )
 				{
@@ -366,22 +364,17 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 		
-		public ITextFrame FindTextFrame(Drawing.Point pos, out Drawing.Point ppos)
+		public Objects.AbstractText FindInTextFrame(Drawing.Point pos)
 		{
-			//	Trouve le TextFrame qui correspond à la coordonnée souris, tout en
-			//	calculant la coordonnée transformée correspondante.
-			Drawing.Point transform = Drawing.Point.Empty;
+			//	Trouve le TextFrame qui correspond à la coordonnée souris.
 			foreach ( Objects.AbstractText obj in this.objectsChain )
 			{
-				if ( obj.IsInTextFrame(pos, out ppos) )
+				if ( obj.IsInTextFrame(pos) )
 				{
-					return obj.TextFrame;
+					return obj;
 				}
-
-				transform = ppos;
 			}
 			
-			ppos = transform;
 			return null;
 		}
 		
