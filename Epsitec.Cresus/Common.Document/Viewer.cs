@@ -4439,13 +4439,18 @@ namespace Epsitec.Common.Document
 			double minY = this.GuidesSearchBest(list, pos.Y, true,  true );
 			double maxY = this.GuidesSearchBest(list, pos.Y, false, true );
 
+			list.Clear();
+			list = null;
+
 			Size size = this.document.PageSize;
 			double mx = 0;
 			double my = 0;
+			double min = 0;
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				mx = 1.0;
 				my = 1.0;
+				min = 1.0;  // largeur/hauteur minimale
 			}
 			else
 			{
@@ -4453,11 +4458,13 @@ namespace Epsitec.Common.Document
 				{
 					mx = 100.0;  // 10mm
 					my = 100.0;
+					min = 100.0;  // largeur/hauteur minimale
 				}
 				else
 				{
 					mx = 127.0;  // 0.5in
 					my = 127.0;
+					min = 127.0;  // largeur/hauteur minimale
 				}
 			}
 			mx = System.Math.Min(mx, size.Width*0.25);
@@ -4468,7 +4475,6 @@ namespace Epsitec.Common.Document
 			if ( double.IsNaN(minY) )  minY = my;
 			if ( double.IsNaN(maxY) )  maxY = size.Height-my;
 
-			double min = 100.0;  // largeur/hauteur minimale
 			if ( maxX-minX >= min && maxY-minY >= min )
 			{
 				Drawing.Rectangle box = new Drawing.Rectangle(minX, minY, maxX-minX, maxY-minY);

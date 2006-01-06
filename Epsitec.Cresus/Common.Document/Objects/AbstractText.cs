@@ -73,6 +73,11 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void Dispose()
 		{
+			if ( this.IsEdited )
+			{
+				this.Select(true, false);  // termine proprement l'édition
+			}
+
 			if ( this.textFlow != null )
 			{
 				this.textFlow.Remove(this);  // objet seul dans son propre flux
