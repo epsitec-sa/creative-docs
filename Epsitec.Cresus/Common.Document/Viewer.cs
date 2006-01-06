@@ -644,12 +644,19 @@ namespace Epsitec.Common.Document
 			this.drawingContext.MagnetSnapPos(ref mouse);
 			//this.drawingContext.SnapGrid(ref mouse);
 
-			if ( this.createRank == -1 )  return;
+			if ( this.createRank == -1 )
+			{
+				this.EditCreateRect(mouse);
+			}
+			else
+			{
+				this.ClearEditCreateRect();
 
-			Objects.Abstract layer = this.drawingContext.RootObject();
-			Objects.Abstract obj = layer.Objects[this.createRank] as Objects.Abstract;
+				Objects.Abstract layer = this.drawingContext.RootObject();
+				Objects.Abstract obj = layer.Objects[this.createRank] as Objects.Abstract;
 
-			obj.CreateMouseMove(mouse, this.drawingContext);
+				obj.CreateMouseMove(mouse, this.drawingContext);
+			}
 		}
 
 		protected void CreateMouseUp(Point mouse)
@@ -1568,32 +1575,42 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
+			Objects.Abstract editObj = null;
+			Objects.DetectEditType editHandle;
+
 			if ( this.mouseDragging )  // bouton souris pressé ?
 			{
 				this.EditProcessMessage(message, mouse);
 			}
 			else	// bouton souris relâché ?
 			{
-				Objects.DetectEditType handle;
-				Objects.Abstract obj = this.DetectEdit(mouse, out handle);
-				this.Hilite(obj);
+				editObj = this.DetectEdit(mouse, out editHandle);
+				this.Hilite(editObj);
 
-				if ( obj == null && !this.document.Wrappers.IsWrappersAttached )
+				if ( editHandle == Objects.DetectEditType.HandleFlowPrev ||
+					 editHandle == Objects.DetectEditType.HandleFlowNext )
 				{
-					this.ChangeMouseCursor(MouseCursorType.IBeamCreate);
+					this.ChangeMouseCursor(MouseCursorType.TextFlow);
 				}
 				else
 				{
-					if ( handle == Objects.DetectEditType.HandleFlowPrev ||
-						 handle == Objects.DetectEditType.HandleFlowNext )
-					{
-						this.ChangeMouseCursor(MouseCursorType.TextFlow);
-					}
-					else
-					{
-						this.ChangeMouseCursor(MouseCursorType.IBeam);
-					}
+					this.ChangeMouseCursor(MouseCursorType.IBeam);
 				}
+			}
+
+			// Cherche le rectangle créable pour l'édition.
+			if ( !this.mouseDragging && editObj == null && !this.document.Wrappers.IsWrappersAttached )
+			{
+				this.EditCreateRect(mouse);
+			}
+			else
+			{
+				this.ClearEditCreateRect();
+			}
+
+			if ( !this.editCreateRect.IsEmpty )
+			{
+				this.ChangeMouseCursor(MouseCursorType.IBeamCreate);
 			}
 		}
 
@@ -2458,6 +2475,34 @@ namespace Epsitec.Common.Document
 			}
 
 			this.hotSpotHandle.Draw(graphics, this.drawingContext);
+		}
+
+		public void DrawEditCreateRect(Graphics graphics)
+		{
+			//	Dessine le rectangle créable pour l'édition.
+			if ( this.editCreateRect.IsEmpty )  return;
+
+			double initialWidth = graphics.LineWidth;
+			graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
+
+			Drawing.Rectangle rect = this.editCreateRect;
+			graphics.Align(ref rect);
+			rect.Offset(0.5/this.drawingContext.ScaleX, 0.5/this.drawingContext.ScaleX);
+
+			Path path = null;
+
+			if ( rect.Height == 0 )
+			{
+				path = Path.FromLine(rect.BottomLeft, rect.BottomRight);
+			}
+			else
+			{
+				rect.Deflate(1.0/this.drawingContext.ScaleX);
+				path = Path.FromRectangle(rect);
+			}
+
+			Drawer.DrawPathDash(graphics, this.drawingContext, path, 1.0, 4.0, 5.0, Color.FromBrightness(0.6));
+			graphics.LineWidth = initialWidth;
 		}
 
 
@@ -4203,6 +4248,12 @@ namespace Epsitec.Common.Document
 				this.DrawAggregates(graphics);
 			}
 
+			//	Dessine le rectangle créable pour l'édition.
+			if ( this.IsActiveViewer )
+			{
+				this.DrawEditCreateRect(graphics);
+			}
+
 			//	Dessine les poignées.
 			if ( this.IsActiveViewer )
 			{
@@ -4313,6 +4364,45 @@ namespace Epsitec.Common.Document
 
 
 		#region GuidesSearchBox
+		public void ClearEditCreateRect()
+		{
+			//	Supprime le rectangle créable pour l'édition.
+			if ( this.editCreateRect.IsEmpty )  return;
+			this.editCreateRect = Drawing.Rectangle.Empty;
+			this.document.Notifier.NotifyArea(this);
+		}
+
+		protected void EditCreateRect(Point pos)
+		{
+			//	Met en évidence le rectangle créable pour l'édition.
+			Drawing.Rectangle rect = Drawing.Rectangle.Empty;
+
+			if ( this.document.Modifier.IsToolEdit || this.document.Modifier.IsToolText )
+			{
+				Drawing.Rectangle box = this.GuidesSearchBox(pos);
+				if ( !box.IsEmpty )
+				{
+					if ( this.document.Modifier.Tool != "ObjectTextBox2" ||
+						 this.IsFreeForNewTextBox2(box, null) )
+					{
+						rect = box;
+
+						if ( this.document.Modifier.Tool == "ObjectTextLine2" )
+						{
+							rect.Bottom = pos.Y;
+							rect.Top    = pos.Y;
+						}
+					}
+				}
+			}
+
+			if ( this.editCreateRect != rect )
+			{
+				this.editCreateRect = rect;
+				this.document.Notifier.NotifyArea(this);
+			}
+		}
+
 		public bool IsFreeForNewTextBox2(Drawing.Rectangle box, Objects.Abstract exclude)
 		{
 			//	Vérifie qu'une zone rectangulaire n'empiète sur aucun TextBox2 existant.
@@ -4378,14 +4468,17 @@ namespace Epsitec.Common.Document
 			if ( double.IsNaN(minY) )  minY = my;
 			if ( double.IsNaN(maxY) )  maxY = size.Height-my;
 
-			if ( minX >= maxX || minY >= maxY )
+			double min = 100.0;  // largeur/hauteur minimale
+			if ( maxX-minX >= min && maxY-minY >= min )
 			{
-				return Drawing.Rectangle.Empty;
+				Drawing.Rectangle box = new Drawing.Rectangle(minX, minY, maxX-minX, maxY-minY);
+				if ( box.Contains(pos) )
+				{
+					return box;
+				}
 			}
-			else
-			{
-				return new Drawing.Rectangle(minX, minY, maxX-minX, maxY-minY);
-			}
+
+			return Drawing.Rectangle.Empty;
 		}
 
 		protected void GuidesSearchAdd(System.Collections.ArrayList list, UndoableList guides)
@@ -4561,6 +4654,7 @@ namespace Epsitec.Common.Document
 		protected Objects.Abstract				editFlowSrc = null;
 		protected Objects.AbstractText			editFlowAfterCreate = null;
 		protected Point							editPosPress = Point.Empty;
+		protected Drawing.Rectangle				editCreateRect = Drawing.Rectangle.Empty;
 
 		protected Timer							miniBarTimer;
 		protected System.Collections.ArrayList	miniBarCmds = null;

@@ -105,6 +105,7 @@ namespace Epsitec.Common.Document
 					}
 
 					this.ActiveViewer.ClearHilite();
+					this.ActiveViewer.ClearEditCreateRect();
 
 					bool isCreate = this.opletCreate;
 					string name = string.Format(Res.Strings.Action.ChangeTool, this.ToolName(value));
@@ -243,7 +244,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected bool IsToolText
+		public bool IsToolText
 		{
 			//	Indique si l'outil sélectionné est un objet de type "texte".
 			get
@@ -3946,6 +3947,7 @@ namespace Epsitec.Common.Document
 
 			this.DeselectAll();
 			this.ActiveViewer.ClearHilite();
+			this.ActiveViewer.ClearEditCreateRect();
 		}
 
 		public void TerminateChangingPage(int rank)
