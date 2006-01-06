@@ -4390,7 +4390,7 @@ namespace Epsitec.Common.Document
 						if ( this.document.Modifier.Tool == "ObjectTextLine2" )
 						{
 							rect.Bottom = pos.Y;
-							rect.Top    = pos.Y;
+							rect.Top    = pos.Y;  // juste une ligne horizontale
 						}
 					}
 				}
