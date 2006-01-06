@@ -838,6 +838,15 @@ namespace Epsitec.Common.Document
 			this.dirtyCounters = true;
 		}
 
+		public bool IsDirtyCounters
+		{
+			//	Indique s'il faudra mettre à jour tous les compteurs.
+			get
+			{
+				return this.dirtyCounters;
+			}
+		}
+
 		public void UpdateCounters()
 		{
 			//	Met à jour tous les compteurs.

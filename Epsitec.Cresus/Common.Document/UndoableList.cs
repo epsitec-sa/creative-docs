@@ -267,8 +267,10 @@ namespace Epsitec.Common.Document
 					Objects.Abstract obj = operation.Object as Objects.Abstract;
 					if ( obj.IsSelected )
 					{
-						//document.Modifier.DirtyCounters();
-						document.Modifier.TotalSelected += incSelect;
+						if ( !document.Modifier.IsDirtyCounters )
+						{
+							document.Modifier.TotalSelected += incSelect;
+						}
 					}
 					document.Notifier.NotifyArea(obj.BoundingBox);
 					document.Notifier.NotifySelectionChanged();
