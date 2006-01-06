@@ -1514,6 +1514,11 @@ namespace Epsitec.Common.Document.Objects
 			}
 			while ( i < this.TotalMainHandle-3 );
 
+			if ( !double.IsNaN(best) && best == 0.0 )
+			{
+				best = 0.001;  // TODO: améliore grandement la sélection entre 2 TextLine2 !
+			}
+
 			return best;
 		}
 
