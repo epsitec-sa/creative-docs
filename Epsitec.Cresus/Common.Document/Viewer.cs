@@ -4382,7 +4382,7 @@ namespace Epsitec.Common.Document
 				Drawing.Rectangle box = this.GuidesSearchBox(pos);
 				if ( !box.IsEmpty )
 				{
-					if ( this.document.Modifier.Tool != "ObjectTextBox2" ||
+					if ( this.document.Modifier.Tool == "ObjectTextLine2" ||
 						 this.IsFreeForNewTextBox2(box, null) )
 					{
 						rect = box;
