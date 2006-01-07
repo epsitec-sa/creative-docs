@@ -516,6 +516,16 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		public void MoveTo(Text.TextNavigator.Target target, int count, int direction, bool shift)
+		{
+			this.PreProcessCursorMove (shift);
+			this.ClearVerticalMoveCache ();
+			this.ChangeSelectionModeBeforeMove (shift, direction);
+			
+			this.text_navigator.MoveTo (target, count);
+		}
+		
+		
 		public void SelectInsertedCharacter()
 		{
 			this.EndSelection ();

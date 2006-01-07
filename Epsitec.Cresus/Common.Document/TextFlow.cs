@@ -158,15 +158,14 @@ namespace Epsitec.Common.Document
 			{
 				src.textNavigator.ClearSelection();
 			}
-
 			src.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);
 			src.textNavigator.StartSelection();
 			src.textNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
 			src.textNavigator.EndSelection();
 			string[] texts = src.textNavigator.GetSelectedTexts();
 
-			this.textNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
-			this.textNavigator.Insert(texts[0]);
+			this.metaNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1, 1, false);
+			this.metaNavigator.Insert(texts[0]);
 		}
 
 		public void Remove(Objects.AbstractText obj)
