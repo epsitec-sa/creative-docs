@@ -38,7 +38,8 @@ namespace Epsitec.Common.Document
 			Picker,
 			PickerEmpty,
 			TextFlow,
-			TextFlowCreate,
+			TextFlowCreateBox,
+			TextFlowCreateLine,
 			TextFlowAdd,
 			TextFlowRemove,
 			Fine,
@@ -1558,7 +1559,14 @@ namespace Epsitec.Common.Document
 
 				if ( obj == null )
 				{
-					this.ChangeMouseCursor(MouseCursorType.TextFlowCreate);
+					if ( this.editFlowSrc is Objects.TextLine2 )
+					{
+						this.ChangeMouseCursor(MouseCursorType.TextFlowCreateLine);
+					}
+					else
+					{
+						this.ChangeMouseCursor(MouseCursorType.TextFlowCreateBox);
+					}
 				}
 				else
 				{
@@ -3567,8 +3575,12 @@ namespace Epsitec.Common.Document
 					this.MouseCursorImage(ref this.mouseCursorTextFlow, Misc.Icon("TextFlow"));
 					break;
 
-				case MouseCursorType.TextFlowCreate:
-					this.MouseCursorImage(ref this.mouseCursorTextFlowCreate, Misc.Icon("TextFlowCreate"));
+				case MouseCursorType.TextFlowCreateBox:
+					this.MouseCursorImage(ref this.mouseCursorTextFlowCreateBox, Misc.Icon("TextFlowCreateBox"));
+					break;
+
+				case MouseCursorType.TextFlowCreateLine:
+					this.MouseCursorImage(ref this.mouseCursorTextFlowCreateLine, Misc.Icon("TextFlowCreateLine"));
 					break;
 
 				case MouseCursorType.TextFlowAdd:
@@ -4703,7 +4715,8 @@ namespace Epsitec.Common.Document
 		protected Image							mouseCursorIBeam = null;
 		protected Image							mouseCursorIBeamCreate = null;
 		protected Image							mouseCursorTextFlow = null;
-		protected Image							mouseCursorTextFlowCreate = null;
+		protected Image							mouseCursorTextFlowCreateBox = null;
+		protected Image							mouseCursorTextFlowCreateLine = null;
 		protected Image							mouseCursorTextFlowAdd = null;
 		protected Image							mouseCursorTextFlowRemove = null;
 		protected Image							mouseCursorFine = null;

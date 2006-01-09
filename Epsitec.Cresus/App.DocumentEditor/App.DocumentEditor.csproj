@@ -1752,7 +1752,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\TextFlowCreate.icon"
+                    RelPath = "Images\TextFlowCreateBox.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TextFlowCreateLine.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
