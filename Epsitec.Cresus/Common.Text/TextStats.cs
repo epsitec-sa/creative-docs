@@ -17,6 +17,12 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void Clear()
+		{
+			this.properties = null;
+		}
+		
+		
 		public OpenType.FontName[] GetFontUse()
 		{
 			PropertyWrapper[] wrappers = this.GetPropertyUsage (Properties.WellKnownType.Font);
