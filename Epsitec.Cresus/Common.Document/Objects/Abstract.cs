@@ -1145,6 +1145,11 @@ namespace Epsitec.Common.Document.Objects
 
 				Drawing.Rectangle box = this.bboxFull;
 
+				if ( this is TextBox2 || this is TextLine2 )
+				{
+					box = Drawing.Rectangle.Union(box, this.bboxLast);
+				}
+
 				if ( this.edited )  // édition en cours ?
 				{
 					double sx = this.document.Modifier.ActiveViewer.DrawingContext.ScaleX;
@@ -1216,6 +1221,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Calcule toutes les bbox de l'objet en fonction des formes.
 			if ( shapes == null )  return;
 
+			this.bboxLast = this.bboxFull;
 			this.bboxThin = Drawing.Rectangle.Empty;
 			this.bboxGeom = Drawing.Rectangle.Empty;
 
@@ -3576,6 +3582,7 @@ namespace Epsitec.Common.Document.Objects
 		protected Drawing.Rectangle				bboxThin = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxGeom = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxFull = Drawing.Rectangle.Empty;
+		protected Drawing.Rectangle				bboxLast = Drawing.Rectangle.Empty;
 		protected int							hotSpotRank = -1;
 		protected int							hilitedSegment = -1;
 		protected Point							moveSelectedHandleStart;
