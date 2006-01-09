@@ -56,6 +56,7 @@ namespace Epsitec.Common.Widgets
 					this.isDragging = true;
 					this.initialPos = this.MapClientToScreen(pos);
 					this.initialBounds = this.Window.WindowBounds;
+					this.Window.PlatformWindow.StartSizeMove ();
 					message.Consumer = this;
 					break;
 
@@ -66,12 +67,24 @@ namespace Epsitec.Common.Widgets
 						Drawing.Point move = this.MapClientToScreen(pos)-this.initialPos;
 						rect.BottomRight += move;
 						this.Window.WindowBounds = rect;
+						
+						this.Window.PlatformWindow.Update ();
+						
+						if (this.Window.Owner != null)
+						{
+							this.Window.Owner.PlatformWindow.Update ();
+						}
+						
 						message.Consumer = this;
 					}
 					break;
 
 				case MessageType.MouseUp:
-					this.isDragging = false;
+					if (this.isDragging)
+					{
+						this.Window.PlatformWindow.StopSizeMove ();
+						this.isDragging = false;
+					}
 					message.Consumer = this;
 					break;
 			}

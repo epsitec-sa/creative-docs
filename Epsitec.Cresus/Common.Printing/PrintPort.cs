@@ -34,7 +34,6 @@ namespace Epsitec.Common.Printing
 		public PrintPort(System.Drawing.Graphics graphics, int dx, int dy)
 		{
 			this.graphics = graphics;
-			this.settings = settings;
 			this.brush    = System.Drawing.Brushes.Black;
 			this.pen      = new System.Drawing.Pen (this.brush, 1.0f);
 			

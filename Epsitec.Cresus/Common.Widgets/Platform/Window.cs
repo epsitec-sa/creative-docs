@@ -607,7 +607,9 @@ namespace Epsitec.Common.Widgets.Platform
 					this.form_bounds_set = true;
 					this.on_resize_event = true;
 					
-					this.Bounds        = this.form_bounds;
+					Win32Api.MoveWindow (this.Handle, ox, oy, dx, dy, true);
+					
+//					this.Bounds        = this.form_bounds;
 					this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 				}
 			}
@@ -1003,8 +1005,8 @@ namespace Epsitec.Common.Widgets.Platform
 					this.Size = this.form_bounds.Size;
 				}
 				else if ((this.form_bounds_set) &&
-					(this.form_bounds.Size == this.Size) &&
-					(this.on_resize_event == false))
+					     (this.form_bounds.Size == this.Size) &&
+					     (this.on_resize_event == false))
 				{
 					//	Rien à faire, car la taille correspond à la dernière taille mémorisée.
 				}
@@ -1220,6 +1222,19 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 		
 		
+		internal void StartSizeMove()
+		{
+			this.IsSizeMoveInProgress = true;
+			this.disable_sync_paint++;
+		}
+		
+		internal void StopSizeMove()
+		{
+			this.IsSizeMoveInProgress = false;
+			this.disable_sync_paint--;
+		}
+		
+		
 		internal static void SendSynchronizeCommandCache()
 		{
 			Window.is_sync_requested = true;
@@ -1380,14 +1395,12 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				if (msg.Msg == Win32Const.WM_ENTERSIZEMOVE)
 				{
-					this.IsSizeMoveInProgress = true;
-					this.disable_sync_paint++;
+					this.StartSizeMove ();
 				}
 				
 				if (msg.Msg == Win32Const.WM_EXITSIZEMOVE)
 				{
-					this.IsSizeMoveInProgress = false;
-					this.disable_sync_paint--;
+					this.StopSizeMove ();
 				}
 				
 				if (this.WndProcFiltering (ref msg))
