@@ -149,6 +149,14 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void Reset(System.Collections.ICollection frames)
+		{
+			this.frames.Clear ();
+			this.frames.AddRange (frames);
+			this.ClearCursorMap ();
+		}
+		
+		
 		private void HandleInsertion(ITextFrame frame)
 		{
 			this.ClearCursorMap ();

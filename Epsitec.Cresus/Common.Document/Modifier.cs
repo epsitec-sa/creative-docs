@@ -1852,16 +1852,58 @@ namespace Epsitec.Common.Document
 			{
 				if ( parent == null )
 				{
+					TextFlow flow = obj.TextFlow;
+					
+					this.document.Modifier.OpletQueue.Insert(new TextFlowChangeOplet(flow));
 					obj.TextFlow.Remove(obj);
+					this.document.Modifier.OpletQueue.Insert(new TextFlowChangeOplet(flow));
 				}
 				else
 				{
+					TextFlow flow1 = obj.TextFlow;
+					TextFlow flow2 = parent.TextFlow;
+					
+					this.document.Modifier.OpletQueue.Insert(new TextFlowChangeOplet(flow1));
+					this.document.Modifier.OpletQueue.Insert(new TextFlowChangeOplet(flow2));
+					
 					parent.TextFlow.Add(obj, parent, after);
+					
 					this.EditObject(obj);
+					
+					this.document.Modifier.OpletQueue.Insert(new TextFlowChangeOplet(flow1));
+					this.document.Modifier.OpletQueue.Insert(new TextFlowChangeOplet(flow2));
 				}
-
+				
 				this.document.Modifier.OpletQueueValidateAction();
 			}
+		}
+		
+		private class TextFlowChangeOplet : AbstractOplet
+		{
+			public TextFlowChangeOplet(TextFlow flow)
+			{
+				this.flow = flow;
+			}
+			
+			public override IOplet Redo()
+			{
+				if ( this.flow != null )
+				{
+					this.flow.RebuildFrameList();
+				}
+				return this;
+			}
+			
+			public override IOplet Undo()
+			{
+				if ( this.flow != null )
+				{
+					this.flow.RebuildFrameList();
+				}
+				return this;
+			}
+			
+			private TextFlow					flow;
 		}
 
 		public void EditObject(Objects.Abstract edit)

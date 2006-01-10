@@ -145,6 +145,8 @@ namespace Epsitec.Common.Document
 					index ++;
 				}
 			}
+			
+			this.textStory.NotifyTextChanged();
 		}
 
 		public void MergeWith(TextFlow src)
@@ -172,7 +174,8 @@ namespace Epsitec.Common.Document
 			if ( this.objectsChain.Count == 1 )  return;
 
 			this.objectsChain.Remove(obj);
-			this.TextFitter.FrameList.Remove(obj.TextFrame);
+			this.textFitter.FrameList.Remove(obj.TextFrame);
+			this.textStory.NotifyTextChanged();
 
 			obj.UpdateTextLayout();
 			
@@ -180,7 +183,20 @@ namespace Epsitec.Common.Document
 
 			obj.NewTextFlow();
 		}
-
+		
+		public void RebuildFrameList()
+		{
+			System.Collections.ArrayList list = new	System.Collections.ArrayList();
+			
+			foreach ( Objects.AbstractText obj in this.objectsChain )
+			{
+				list.Add(obj.TextFrame);
+			}
+			
+			this.textFitter.FrameList.Reset(list);
+			this.textStory.NotifyTextChanged();
+		}
+		
 		public int Count
 		{
 			//	Nombre de pavés de texte dans la chaîne.
