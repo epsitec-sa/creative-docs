@@ -402,6 +402,15 @@ namespace Epsitec.Common.Document.TextPanels
 			Point pos = button.MapClientToScreen(new Point(0, 1));
 			VMenu menu = this.BuildFeaturesMenu(face, style, features);
 			if ( menu == null )  return;
+
+			ScreenInfo info = ScreenInfo.Find(pos);
+			Drawing.Rectangle area = info.WorkingArea;
+			
+			if ( pos.X+menu.Width > area.Right )  // dépasse à droite ?
+			{
+				pos.X -= pos.X+menu.Width-area.Right;
+			}
+
 			menu.Host = this;
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
