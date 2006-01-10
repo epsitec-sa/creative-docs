@@ -780,6 +780,8 @@
 	<data name="Action.Paste">Paste</data>
 	<data name="Action.Delete">Delete</data>
 	<data name="Action.Duplicate">Duplicate</data>
+	<data name="Action.ReplaceMain">@@Remplacer</data>
+	<data name="Action.Replace">@@Chercher et remplacer...</data>
 
 	<data name="Action.DocumentSize">Document size</data>
 	<data name="Action.ChangeTool">Select tool &quot;{0}&quot;</data>

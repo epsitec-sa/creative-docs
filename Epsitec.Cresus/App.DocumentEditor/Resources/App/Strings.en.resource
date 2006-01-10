@@ -160,6 +160,12 @@
 	<data name="Dialog.Print.Button.Cancel">Close</data>
 	<data name="Dialog.Print.Tooltip.Cancel">Close without printing</data>
 	
+	<data name="Dialog.Replace.Title">@@Chercher et remplacer...</data>
+	<data name="Dialog.Replace.Button.Find">@@Chercher</data>
+	<data name="Dialog.Replace.Button.Replace">@@Remplacer</data>
+	<data name="Dialog.Replace.Label.Find">@@Chercher</data>
+	<data name="Dialog.Replace.Label.Replace">@@Remplacer par</data>
+	
 	<data name="Dialog.Settings.Title">Settings...</data>
 	<data name="Dialog.Settings.RadioGlobal">Global</data>
 	<data name="Dialog.Settings.RadioDocument">Document</data>

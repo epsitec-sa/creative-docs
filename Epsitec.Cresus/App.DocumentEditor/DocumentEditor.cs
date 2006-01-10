@@ -100,12 +100,14 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgKey       = new Dialogs.Key(this);
 			this.dlgPageStack = new Dialogs.PageStack(this);
 			this.dlgPrint     = new Dialogs.Print(this);
+			this.dlgReplace   = new Dialogs.Replace(this);
 			this.dlgSettings  = new Dialogs.Settings(this);
 			this.dlgUpdate    = new Dialogs.Update(this);
 
 			this.dlgGlyphs.Closed    += new EventHandler(this.HandleDlgClosed);
 			this.dlgInfos.Closed     += new EventHandler(this.HandleDlgClosed);
 			this.dlgPageStack.Closed += new EventHandler(this.HandleDlgClosed);
+			this.dlgReplace.Closed   += new EventHandler(this.HandleDlgClosed);
 			this.dlgSettings.Closed  += new EventHandler(this.HandleDlgClosed);
 
 			this.StartCheck(false);
@@ -741,6 +743,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonText.Items.Add(new Ribbons.Font());
 			this.ribbonText.Items.Add(new Ribbons.Clipboard());
 			this.ribbonText.Items.Add(new Ribbons.Undo());
+			this.ribbonText.Items.Add(new Ribbons.Replace());
 			this.ribbonText.Items.Add(new Ribbons.Insert());
 
 			this.ribbonActive = this.ribbonMain;
@@ -1451,6 +1454,11 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.settingsState.ActiveState = ActiveState.No;
 			}
+
+			if ( sender == this.dlgReplace )
+			{
+				this.replaceState.ActiveState = ActiveState.No;
+			}
 		}
 
 		private void HandleHScrollerValueChanged(object sender)
@@ -2082,6 +2090,23 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.dlgGlyphs.Hide();
 				this.glyphsState.ActiveState = ActiveState.No;
+			}
+		}
+
+		[Command ("Replace")]
+		void CommandReplace(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.dlgReplace.Hide();
+
+			if ( this.replaceState.ActiveState == ActiveState.No )
+			{
+				this.dlgReplace.Show();
+				this.replaceState.ActiveState = ActiveState.Yes;
+			}
+			else
+			{
+				this.dlgReplace.Hide();
+				this.replaceState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -3545,6 +3570,7 @@ namespace Epsitec.App.DocumentEditor
 			this.exportState = this.CreateCommandState("Export");
 			this.glyphsState = this.CreateCommandState("Glyphs");
 			this.glyphsInsertState = this.CreateCommandState("GlyphsInsert");
+			this.replaceState = this.CreateCommandState("Replace");
 			this.deleteState = this.CreateCommandState("Delete", KeyCode.Delete);
 			this.duplicateState = this.CreateCommandState("Duplicate", KeyCode.ModifierCtrl|KeyCode.AlphaD);
 
@@ -4246,6 +4272,7 @@ namespace Epsitec.App.DocumentEditor
 				this.pasteState.Enable = false;
 				this.glyphsState.Enable = false;
 				this.glyphsInsertState.Enable = false;
+				this.replaceState.Enable = false;
 				this.textShowControlCharactersState.Enable = false;
 				this.textFontFilterState.Enable = false;
 				this.textFontSampleAbcState.Enable = false;
@@ -5301,6 +5328,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgGlyphs.Rebuild();
 			this.dlgInfos.Rebuild();
 			this.dlgPrint.Rebuild();
+			this.dlgReplace.Rebuild();
 			this.dlgSettings.Rebuild();
 		}
 
@@ -5363,6 +5391,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgKey.Save();
 			this.dlgPageStack.Save();
 			this.dlgPrint.Save();
+			this.dlgReplace.Save();
 			this.dlgSettings.Save();
 			this.dlgUpdate.Save();
 
@@ -5532,6 +5561,7 @@ namespace Epsitec.App.DocumentEditor
 		protected Dialogs.Key					dlgKey;
 		protected Dialogs.PageStack				dlgPageStack;
 		protected Dialogs.Print					dlgPrint;
+		protected Dialogs.Replace				dlgReplace;
 		protected Dialogs.Settings				dlgSettings;
 		protected Dialogs.Splash				dlgSplash;
 		protected Dialogs.Update				dlgUpdate;
@@ -5577,6 +5607,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					exportState;
 		protected CommandState					glyphsState;
 		protected CommandState					glyphsInsertState;
+		protected CommandState					replaceState;
 		protected CommandState					deleteState;
 		protected CommandState					duplicateState;
 		protected CommandState					cutState;

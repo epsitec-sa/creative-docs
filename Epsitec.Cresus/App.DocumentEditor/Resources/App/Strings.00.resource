@@ -160,7 +160,11 @@
 	<data name="Dialog.Print.Button.Cancel">Fermer</data>
 	<data name="Dialog.Print.Tooltip.Cancel">Fermer sans imprimmer</data>
 	
-	<data name="Dialog.Splash.WorkInProgress">Analyse {0}...</data>
+	<data name="Dialog.Replace.Title">Chercher et remplacer...</data>
+	<data name="Dialog.Replace.Button.Find">Chercher</data>
+	<data name="Dialog.Replace.Button.Replace">Remplacer</data>
+	<data name="Dialog.Replace.Label.Find">Chercher</data>
+	<data name="Dialog.Replace.Label.Replace">Remplacer par</data>
 	
 	<data name="Dialog.Settings.Title">Réglages...</data>
 	<data name="Dialog.Settings.RadioGlobal">Global</data>
@@ -198,6 +202,8 @@
 	<data name="Dialog.Settings.TabPage.Move">Déplacements</data>
 	<data name="Dialog.Settings.TabPage.Fonts">Polices</data>
 	<data name="Dialog.Settings.TabPage.Misc">Divers</data>
+	
+	<data name="Dialog.Splash.WorkInProgress">Analyse {0}...</data>
 	
 	<data name="Dialog.Update.Title">Mise à jour...</data>
 	<data name="Dialog.Update.Version">Version &lt;b&gt;{0}&lt;/b&gt;    Langue: français</data>

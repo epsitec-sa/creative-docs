@@ -634,6 +634,7 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:TextInsertNewFrame");
 			list.Add("00:TextInsertNewPage");
 			list.Add("00:TextInsertQuad");
+			list.Add("00:Replace");
 			list.Add("00:Glyphs");
 			
 			list.Add("00:ZoomMin");

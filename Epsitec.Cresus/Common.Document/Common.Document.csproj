@@ -767,6 +767,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Ribbons\Replace.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Ribbons\RibbonButton.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

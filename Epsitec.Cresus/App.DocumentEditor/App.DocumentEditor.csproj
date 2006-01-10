@@ -253,6 +253,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Dialogs\Replace.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Dialogs\Settings.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1393,6 +1398,10 @@
                 />
                 <File
                     RelPath = "Images\RegularStar.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Replace.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
