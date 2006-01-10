@@ -119,6 +119,34 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 		
+		public static Window[] FindFromPosition(Drawing.Point pos)
+		{
+			System.Collections.ArrayList list = new	System.Collections.ArrayList ();
+			
+			for (int i = 0; i < Window.windows.Count; )
+			{
+				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				
+				Window target = weak_ref.Target as Window;
+				
+				if ((target == null) || (target.IsDisposed))
+				{
+					Window.windows.RemoveAt (i);
+				}
+				else
+				{
+					if (target.WindowBounds.Contains (pos))
+					{
+						list.Add (target);
+					}
+					
+					i++;
+				}
+			}
+			
+			return (Window[]) list.ToArray (typeof (Window));
+		}
+		
 		public static Window FindFromText(string text)
 		{
 			for (int i = 0; i < Window.windows.Count; )

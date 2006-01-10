@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.modifiers = Message.state.modifiers;
 			
-			this.cursor = Message.state.cursor;
+			this.cursor = Message.state.window_cursor;
 			this.button = MouseButtons.None;
 		}
 		
@@ -579,7 +579,7 @@ namespace Epsitec.Common.Widgets
 					message = new Message ();
 					
 					message.type   = MessageType.MouseLeave;
-					message.cursor = Message.state.cursor;
+					message.cursor = Message.state.window_cursor;
 					break;
 			}
 			
@@ -619,7 +619,8 @@ namespace Epsitec.Common.Widgets
 				message.wheel  = e.Delta;
 				
 				Message.state.window = form.HostingWidgetWindow;
-				Message.state.cursor = message.cursor;
+				Message.state.window_cursor = message.cursor;
+				Message.state.screen_cursor = Message.State.window == null ? Drawing.Point.Empty : Message.State.window.MapWindowToScreen (message.cursor);
 			}
 			
 			//	Gère les clics multiples, en tenant compte des réglages de l'utilisateur.
@@ -774,6 +775,19 @@ namespace Epsitec.Common.Widgets
 			return message;
 		}
 		
+		internal static Message CreateDummyMouseMoveEvent(Drawing.Point pos)
+		{
+			Message message = new Message ();
+			
+			message.type                = MessageType.MouseMove;
+			message.cursor              = pos;
+			message.filter_no_children  = false;
+			message.filter_only_focused = false;
+			message.filter_only_on_hit  = true;
+			
+			return message;
+		}
+		
 		internal static Message CreateDummyMouseUpEvent(MouseButtons button, Drawing.Point pos)
 		{
 			Message message = new Message ();
@@ -882,7 +896,12 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Point				LastPosition
 		{
-			get { return this.cursor; }
+			get { return this.window_cursor; }
+		}
+		
+		public Drawing.Point				LastScreenPosition
+		{
+			get { return this.screen_cursor; }
 		}
 		
 		public Window						LastWindow
@@ -910,7 +929,8 @@ namespace Epsitec.Common.Widgets
 		internal int						button_down_time;
 		internal int						button_down_x;
 		internal int						button_down_y;
-		internal Drawing.Point				cursor;
+		internal Drawing.Point				window_cursor;
+		internal Drawing.Point				screen_cursor;
 		internal Window						window;
 		internal Window						window_mouse_down;
 		#endregion

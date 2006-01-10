@@ -439,6 +439,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				if (MenuBehavior.menu_count == 0)
 				{
 					MenuBehavior.UnregisterFilter ();
+					MenuBehavior.GenerateDummyMouseMoveEvent ();
 				}
 			}
 		}
@@ -1094,6 +1095,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			Window.ApplicationDeactivated -= new Support.EventHandler (MenuBehavior.HandleApplicationDeactivated);
 			Window.MessageFilter          -= new MessageHandler (MenuBehavior.MessageFilter);
+		}
+		
+		private static void GenerateDummyMouseMoveEvent()
+		{
+			Drawing.Point pos = Message.State.LastScreenPosition;
+			Window[]  windows = Window.FindFromPosition (pos);
+			
+			foreach (Window window in windows)
+			{
+				window.DispatchMessage (Message.CreateDummyMouseMoveEvent (window.MapScreenToWindow (pos)));
+			}
 		}
 		
 		
