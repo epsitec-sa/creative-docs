@@ -261,22 +261,25 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					path = Common.Widgets.Helpers.FontPreviewer.GetPath(this.fontIdentity, ox, oy, size);
 				}
-
-				double sx = 0;
-				if ( this.isCenter )
+				
+				if ( path != null )
 				{
-					Rectangle bounds = path.ComputeBounds();
-					sx = (rect.Width-bounds.Width)/2-ox;
-					graphics.TranslateTransform(sx, 0);
-				}
+					double sx = 0;
+					if ( this.isCenter )
+					{
+						Rectangle bounds = path.ComputeBounds();
+						sx = (rect.Width-bounds.Width)/2-ox;
+						graphics.TranslateTransform(sx, 0);
+					}
 
-				graphics.Color = textColor;
-				graphics.PaintSurface(path);
-				path.Dispose();
+					graphics.Color = textColor;
+					graphics.PaintSurface(path);
+					path.Dispose();
 
-				if ( this.isCenter )
-				{
-					graphics.TranslateTransform(-sx, 0);
+					if ( this.isCenter )
+					{
+						graphics.TranslateTransform(-sx, 0);
+					}
 				}
 			}
 
