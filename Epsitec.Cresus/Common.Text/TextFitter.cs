@@ -349,6 +349,19 @@ namespace Epsitec.Common.Text
 			
 			for (int i = 0; i < elements.Length; i++)
 			{
+				int frame_index = elements[i].FrameIndex;
+				
+				//	N'analyse que les éléments qui correspondent au frame qui nous
+				//	intéresse :
+				
+				if ((frame_index < 0) ||
+					(frame_index >= this.frame_list.Count) ||
+					(this.frame_list[frame_index] != frame))
+				{
+					line_offset += elements[i].Length;
+					continue;
+				}
+				
 				double l_yb = elements[i].LineBaseY;
 				double l_y1 = System.Math.Min (elements[i].LineY1 - dy_after, l_yb + elements[i].LineDescender);
 				double l_y2 = System.Math.Max (elements[i].LineY2, l_yb + elements[i].LineAscender);
