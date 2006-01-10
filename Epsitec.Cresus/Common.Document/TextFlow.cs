@@ -440,6 +440,8 @@ namespace Epsitec.Common.Document
 		public static void ReadCheckWarnings(UndoableList textFlows, System.Collections.ArrayList warnings)
 		{
 			//	Vérifie que toutes les polices existent après l'ouverture d'un document.
+			if ( textFlows.Count == 0 )  return;
+
 			System.Collections.ArrayList fontList = Misc.GetFontList(true);
 			System.Collections.ArrayList existingList = new System.Collections.ArrayList();
 			foreach ( OpenType.FontIdentity id in fontList )

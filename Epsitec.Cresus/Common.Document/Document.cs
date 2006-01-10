@@ -778,7 +778,10 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			TextFlow.ReadCheckWarnings(this.textFlows, this.readWarnings);
+			if ( this.type != DocumentType.Pictogram )
+			{
+				TextFlow.ReadCheckWarnings(this.textFlows, this.readWarnings);
+			}
 
 			foreach ( TextFlow flow in this.textFlows )
 			{
