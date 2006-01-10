@@ -270,6 +270,7 @@
 	<data name="Object.Button.CreateAndSelect">Validate and select</data>
 	<data name="Object.Button.CreateAndShaper">Validate and shaper</data>
 
+	<data name="Object.Text.Error">@@La police &lt;b&gt;{0}&lt;/b&gt; n'existe pas.</data>
 	<data name="Object.Image.Error">File &lt;b&gt;{0}&lt;/b&gt; does not exist.</data>
 
 	<data name="Panel.Abstract.Extend">Expand or Collapse pannel</data>

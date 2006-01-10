@@ -3526,7 +3526,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( !Abstract.ReadSearchFont(fonts, face) )
 				{
-					string message = string.Format("La fonte <b>{0}</b> n'existe pas.", face);
+					string message = string.Format(Res.Strings.Object.Text.Error, face);
 					if ( !warnings.Contains(message) )
 					{
 						warnings.Add(message);

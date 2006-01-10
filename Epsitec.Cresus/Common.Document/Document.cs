@@ -778,6 +778,8 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			TextFlow.ReadCheckWarnings(this.textFlows, this.readWarnings);
+
 			foreach ( TextFlow flow in this.textFlows )
 			{
 				flow.ReadFinalizeTextObj();

@@ -436,6 +436,30 @@ namespace Epsitec.Common.Document
 
 			return list;
 		}
+
+		public static void ReadCheckWarnings(UndoableList textFlows, System.Collections.ArrayList warnings)
+		{
+			//	Vérifie que toutes les polices existent après l'ouverture d'un document.
+			System.Collections.ArrayList fontList = Misc.GetFontList(true);
+			System.Collections.ArrayList existingList = new System.Collections.ArrayList();
+			foreach ( OpenType.FontIdentity id in fontList )
+			{
+				existingList.Add(id.InvariantFaceName);
+			}
+
+			System.Collections.ArrayList documentList = TextFlow.StatisticFonts(textFlows);
+			foreach ( string face in documentList )
+			{
+				if ( !existingList.Contains(face) )
+				{
+					string message = string.Format(Res.Strings.Object.Text.Error, face);
+					if ( !warnings.Contains(message) )
+					{
+						warnings.Add(message);
+					}
+				}
+			}
+		}
 		
 
 		private void HandleTextNavigatorCursorMoved(object sender)

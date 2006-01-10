@@ -270,6 +270,7 @@
 	<data name="Object.Button.CreateAndSelect">Terminer et sélectionner</data>
 	<data name="Object.Button.CreateAndShaper">Terminer et modeler</data>
 
+	<data name="Object.Text.Error">La police &lt;b&gt;{0}&lt;/b&gt; n'existe pas.</data>
 	<data name="Object.Image.Error">Le fichier &lt;b&gt;{0}&lt;/b&gt; n'existe pas.</data>
 
 	<data name="Panel.Abstract.Extend">Etend ou réduit le panneau</data>

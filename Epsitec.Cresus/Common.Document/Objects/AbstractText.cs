@@ -1257,7 +1257,6 @@ namespace Epsitec.Common.Document.Objects
 		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
 		{
 			//	Vérifie si tous les fichiers existent.
-			//?Common.Document.Objects.Abstract.ReadCheckFonts(fonts, warnings, this.textLayout);
 		}
 		
 		public override void ReadFinalize()
