@@ -2698,6 +2698,12 @@ namespace Epsitec.Common.OpenType
 					
 					return null;
 				
+				case LookupType.Multiple:
+					
+					//	TODO: ...
+					
+					return null;
+				
 				default:
 					throw new System.NotSupportedException (string.Format ("LookupType {0} not supported.", this.LookupType));
 			}
