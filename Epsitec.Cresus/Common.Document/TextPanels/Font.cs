@@ -406,6 +406,12 @@ namespace Epsitec.Common.Document.TextPanels
 			ScreenInfo info = ScreenInfo.Find(pos);
 			Drawing.Rectangle area = info.WorkingArea;
 			
+			if ( pos.Y-menu.Height < area.Bottom )  // dépasse en bas ?
+			{
+				pos = button.MapClientToScreen(new Drawing.Point(0, button.Height-1));
+				pos.Y += menu.Height;  // déroule contre le haut ?
+			}
+
 			if ( pos.X+menu.Width > area.Right )  // dépasse à droite ?
 			{
 				pos.X -= pos.X+menu.Width-area.Right;
