@@ -35,10 +35,8 @@ namespace Epsitec.Common.Document
 				this.textStory = new Text.TextStory(this.document.Modifier.OpletQueue, context);
 			}
 			
-			
 			//	Il est important de ne pas générer d'oplets pour le undo/redo ici,
 			//	car ils interféreraient avec la gestion faite au plus haut niveau.
-			
 			this.textStory.DisableOpletQueue();
 			
 			this.textFitter    = new Text.TextFitter(this.textStory);
@@ -64,7 +62,6 @@ namespace Epsitec.Common.Document
 			
 			//	Il est important de ne pas générer d'oplets pour le undo/redo ici,
 			//	car ils interféreraient avec la gestion faite au plus haut niveau.
-			
 			this.textStory.DisableOpletQueue();
 			
 			this.textNavigator.Insert(Text.Unicode.Code.EndOfText);
@@ -306,7 +303,7 @@ namespace Epsitec.Common.Document
 				this.textNavigator.EndSelection();
 			}
 		}
-		
+
 		private void ChangeObjectEdited()
 		{
 			//	Change éventuellement le pavé édité en fonction de la position du curseur.
@@ -401,6 +398,30 @@ namespace Epsitec.Common.Document
 		}
 		
 		
+		public static System.Collections.ArrayList StatisticFonts(UndoableList textFlows)
+		{
+			//	Retourne une liste contenant tous les noms des polices utilisées dans
+			//	tous les TextFlows du document.
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+
+			foreach ( TextFlow flow in textFlows )
+			{
+				Text.TextStats stats = new TextStats(flow.textStory);
+				OpenType.FontName[] fontNames = stats.GetFontUse();
+
+				foreach ( OpenType.FontName fontName in fontNames )
+				{
+					if ( !list.Contains(fontName.FaceName) )
+					{
+						list.Add(fontName.FaceName);
+					}
+				}
+			}
+
+			return list;
+		}
+		
+
 		private void HandleTextNavigatorCursorMoved(object sender)
 		{
 			if ( this.HasActiveTextBox )
