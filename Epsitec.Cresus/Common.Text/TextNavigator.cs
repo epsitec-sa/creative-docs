@@ -88,6 +88,7 @@ namespace Epsitec.Common.Text
 		
 		public int								CursorPosition
 		{
+			//	Donne la position du curseur, comprise en 0 et TextLength.
 			get
 			{
 				return this.story.GetCursorPosition (this.ActiveCursor);
@@ -96,6 +97,12 @@ namespace Epsitec.Common.Text
 		
 		public int								CursorDirection
 		{
+			//	Donne la "direction" du curseur, c'est-à-dire:
+			//	-1 = on est arrivé en marche arrière
+			//	0 = on est arrivé par un clic souris
+			//	1 = on est arrivé en marche avant
+			//	Par exemple, lorsque le curseur est à cheval entre des caractères normaux et
+			//	gras, la direction détermine la typographie active.
 			get
 			{
 				return this.story.GetCursorDirection (this.ActiveCursor);
@@ -104,6 +111,8 @@ namespace Epsitec.Common.Text
 		
 		public bool								IsSelectionActive
 		{
+			//	Une sélection active est une sélection pour laquelle on a fait un StartSelection
+			//	mais pas encore le EndSelection.
 			get
 			{
 				return this.active_selection_cursor == null ? false : true;
@@ -112,6 +121,8 @@ namespace Epsitec.Common.Text
 		
 		public bool								HasSelection
 		{
+			//	Indique s'il existe une sélection. Après un EndSelection, la sélection existe toujours.
+			//	Après un ClearSelection, la sélection n'existe plus.
 			get
 			{
 				return this.selection_cursors == null ? false : true;
@@ -120,6 +131,7 @@ namespace Epsitec.Common.Text
 		
 		public bool								HasRealSelection
 		{
+			//	Comme HasSelection, mais en plus, la sélection doit comporter au moins un caractère.
 			get
 			{
 				if (this.selection_cursors != null)
@@ -141,6 +153,9 @@ namespace Epsitec.Common.Text
 		
 		public int								SelectionCount
 		{
+			//	Nombre de sélections en cours. 0 indique qu'il n'y a aucune sélection.
+			//	1 indique qu'il existe une sélection normale. Un nombre plus grand que 1
+			//	correspond à une sélection multiple discontinue.
 			get
 			{
 				if (this.selection_cursors == null)
@@ -512,6 +527,10 @@ namespace Epsitec.Common.Text
 		
 		public void StartSelection()
 		{
+			//	Débute une sélection simple.
+			//	IsSelectionActive retourne true
+			//	HasSelection retourne true
+			//	HasRealSelection retourne false
 			System.Diagnostics.Debug.Assert (! this.IsSelectionActive);
 			System.Diagnostics.Debug.Assert (! this.HasSelection);
 			
@@ -533,6 +552,10 @@ namespace Epsitec.Common.Text
 		
 		public void ContinueSelection()
 		{
+			//	Permet de continuer une sélection. Il faudra donc de nouveau utiliser EndSelection.
+			//	IsSelectionActive retourne true
+			//	HasSelection retourne true
+			//	HasRealSelection retourne true ou false
 			System.Diagnostics.Debug.Assert (! this.IsSelectionActive);
 			System.Diagnostics.Debug.Assert (this.selection_cursors.Count > 1);
 			
@@ -552,6 +575,10 @@ namespace Epsitec.Common.Text
 		
 		public void EndSelection()
 		{
+			//	Termine la sélection simple.
+			//	IsSelectionActive retourne false
+			//	HasSelection retourne true
+			//	HasRealSelection retourne true ou false
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive);
 			
 			this.active_selection_cursor = null;
@@ -582,6 +609,10 @@ namespace Epsitec.Common.Text
 		
 		public void ClearSelection(int direction)
 		{
+			//	Supprime la sélection si elle existe. Le EndSelection doit avoir été fait.
+			//	IsSelectionActive retourne false
+			//	HasSelection retourne false
+			//	HasRealSelection retourne false
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
 			
 			//	Désélectionne tout le texte.
