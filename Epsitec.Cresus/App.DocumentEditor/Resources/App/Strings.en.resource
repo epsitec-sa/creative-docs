@@ -165,6 +165,9 @@
 	<data name="Dialog.Replace.Action.Replace">Replace &quot;{0}&quot; with &quot;{1}&quot;</data>
 	<data name="Dialog.Replace.Button.Find">Find</data>
 	<data name="Dialog.Replace.Button.Replace">Replace</data>
+	<data name="Dialog.Replace.Button.EqualMaj">@@Respecter la casse</data>
+	<data name="Dialog.Replace.Button.EqualAccent">@@Respecter les accents</data>
+	<data name="Dialog.Replace.Button.WholeWord">@@Mot entier</data>
 	<data name="Dialog.Replace.Label.Find">Find what:</data>
 	<data name="Dialog.Replace.Label.Replace">Replace with:</data>
 	<data name="Dialog.Replace.Error.NoDocument">There is no current document.</data>

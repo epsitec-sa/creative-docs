@@ -488,7 +488,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static bool FindText(Document document, ref TextFlow textFlow, string find, bool skipFirst)
+		public static bool FindText(Document document, ref TextFlow textFlow, string find, bool skipFirst, bool ignoreMaj, bool ignoreAccent, bool wholeWord)
 		{
 			//	Cherche la prochaine occurence d'un texte dans un TextFlow ou dans le prochain TextFlow.
 			TextFlow startingFlow = textFlow;
@@ -507,7 +507,7 @@ namespace Epsitec.Common.Document
 					first = false;
 				}
 				string text = textFlow.textStory.GetDebugText();
-				int i = text.IndexOf(find, position);
+				int i = Misc.IndexOf(text, find, position, ignoreMaj, ignoreAccent, wholeWord);
 				if ( i == -1 )
 				{
 					if ( last )

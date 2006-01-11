@@ -334,6 +334,96 @@ namespace Epsitec.Common.Document
 		}
 
 
+		static public int IndexOf(string text, string value, int startIndex, bool ignoreMaj, bool ignoreAccent, bool wholeWord)
+		{
+			return Misc.IndexOf(text, value, startIndex, text.Length-value.Length-startIndex, ignoreMaj, ignoreAccent, wholeWord);
+		}
+
+		static public int IndexOf(string text, string value, int startIndex, int count, bool ignoreMaj, bool ignoreAccent, bool wholeWord)
+		{
+			//	Cherche l'index de 'value' dans 'text' (un peu comme string.IndexOf), mais avec quelques
+			//	options supplémentaires.
+			if ( text.Length < value.Length )  return -1;
+
+			if ( ignoreMaj )
+			{
+				text = text.ToLower();
+				value = value.ToLower();
+			}
+
+			if ( ignoreAccent )
+			{
+				System.Text.StringBuilder builder;
+				
+				builder = new System.Text.StringBuilder(text.Length);
+				for ( int i=0 ; i<text.Length ; i++ )
+				{
+					builder.Append(Misc.RemoveAccent(text[i]));
+				}
+				text = builder.ToString();
+
+				builder = new System.Text.StringBuilder(value.Length);
+				for ( int i=0 ; i<value.Length ; i++ )
+				{
+					builder.Append(Misc.RemoveAccent(value[i]));
+				}
+				value = builder.ToString();
+			}
+
+			return text.IndexOf(value, startIndex, count);
+		}
+
+		static protected char RemoveAccent(char c)
+		{
+			//	Retourne le même caractère sans accent (é -> e).
+			string sa = c.ToString();
+			string sb = sa.ToLower();
+			c = sb[0];
+
+			switch ( c )
+			{
+				case 'á':
+				case 'à':
+				case 'â':
+				case 'ä':
+				case 'ã':  c = 'a';  break;
+
+				case 'ç':  c = 'c';  break;
+
+				case 'é':
+				case 'è':
+				case 'ê':
+				case 'ë':  c = 'e';  break;
+
+				case 'í':
+				case 'ì':
+				case 'î':
+				case 'ï':  c = 'i';  break;
+
+				case 'ñ':  c = 'n';  break;
+
+				case 'ó':
+				case 'ò':
+				case 'ô':
+				case 'ö':
+				case 'õ':  c = 'o';  break;
+
+				case 'ú':
+				case 'ù':
+				case 'û':
+				case 'ü':  c = 'u';  break;
+			}
+
+			if ( sa != sb )
+			{
+				sa = c.ToString();
+				sb = sa.ToUpper();
+				c = sb[0];
+			}
+
+			return c;
+		}
+
 		static public string Resume(string text)
 		{
 			//	Retourne une version résumée à environ 20 caractères au maximum.

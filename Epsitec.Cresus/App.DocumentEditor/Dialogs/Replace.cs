@@ -26,7 +26,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("Replace", 400, 120);
+				this.WindowInit("Replace", 400, 170);
 				this.window.Text = Res.Strings.Dialog.Replace.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
@@ -61,6 +61,30 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldReplace.AnchorMargins = new Margins(90, 0, 40, 0);
 				this.fieldReplace.TabIndex = this.tabIndex++;
 				this.fieldReplace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.checkEqualMaj = new CheckButton(this.window.Root);
+				this.checkEqualMaj.Text = Res.Strings.Dialog.Replace.Button.EqualMaj;
+				this.checkEqualMaj.Width = 200;
+				this.checkEqualMaj.Anchor = AnchorStyles.TopLeft;
+				this.checkEqualMaj.AnchorMargins = new Margins(10, 0, 72+18*0, 0);
+				this.checkEqualMaj.TabIndex = this.tabIndex++;
+				this.checkEqualMaj.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.checkEqualAccent = new CheckButton(this.window.Root);
+				this.checkEqualAccent.Text = Res.Strings.Dialog.Replace.Button.EqualAccent;
+				this.checkEqualAccent.Width = 200;
+				this.checkEqualAccent.Anchor = AnchorStyles.TopLeft;
+				this.checkEqualAccent.AnchorMargins = new Margins(10, 0, 72+18*1, 0);
+				this.checkEqualAccent.TabIndex = this.tabIndex++;
+				this.checkEqualAccent.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.checkWholeWord = new CheckButton(this.window.Root);
+				this.checkWholeWord.Text = Res.Strings.Dialog.Replace.Button.WholeWord;
+				this.checkWholeWord.Width = 200;
+				this.checkWholeWord.Anchor = AnchorStyles.TopLeft;
+				this.checkWholeWord.AnchorMargins = new Margins(10, 0, 72+18*2, 0);
+				this.checkWholeWord.TabIndex = this.tabIndex++;
+				this.checkWholeWord.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				//	Bouton Chercher.
 				this.buttonFind = new Button(this.window.Root);
@@ -123,7 +147,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			combo.Items.Insert(0, text);  // insère au début de la liste
 		}
 
-		protected bool Find(bool skipFirst, string find, string replace)
+		protected bool Find(bool skipFirst, string find, string replace, bool ignoreMaj, bool ignoreAccent, bool wholeWord)
 		{
 			if ( find == "" )
 			{
@@ -166,7 +190,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				textFlow = edit.TextFlow;  // démarre la recherche dans l'objet édité
 			}
 
-			if ( !TextFlow.FindText(document, ref textFlow, find, skipFirst) )
+			if ( !TextFlow.FindText(document, ref textFlow, find, skipFirst, ignoreMaj, ignoreAccent, wholeWord) )
 			{
 				document.Modifier.OpletQueueValidateAction();
 				this.editor.DialogError(this.editor.CommandDispatcher, Res.Strings.Dialog.Replace.Error.NotFound);
@@ -205,14 +229,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.ComboMemorise(this.fieldFind);
 			this.ComboMemorise(this.fieldReplace);
-			this.Find(true, this.fieldFind.Text, null);
+
+			bool ignoreMaj    = (this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No);
+			bool ignoreAccent = (this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No);
+			bool wholeWord    = (this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes);
+			this.Find(true, this.fieldFind.Text, null, ignoreMaj, ignoreAccent, wholeWord);
 		}
 
 		private void HandleButtonReplaceClicked(object sender, MessageEventArgs e)
 		{
 			this.ComboMemorise(this.fieldFind);
 			this.ComboMemorise(this.fieldReplace);
-			this.Find(false, this.fieldFind.Text, this.fieldReplace.Text);
+
+			bool ignoreMaj    = (this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No);
+			bool ignoreAccent = (this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No);
+			bool wholeWord    = (this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes);
+			this.Find(false, this.fieldFind.Text, this.fieldReplace.Text, ignoreMaj, ignoreAccent, wholeWord);
 		}
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
@@ -226,6 +258,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int					tabIndex;
 		protected TextFieldCombo		fieldFind;
 		protected TextFieldCombo		fieldReplace;
+		protected CheckButton			checkEqualMaj;
+		protected CheckButton			checkEqualAccent;
+		protected CheckButton			checkWholeWord;
 		protected Button				buttonFind;
 		protected Button				buttonReplace;
 		protected Button				buttonClose;
