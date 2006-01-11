@@ -45,6 +45,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldFind.Width = 400-100;
 				this.fieldFind.Anchor = AnchorStyles.TopLeft;
 				this.fieldFind.AnchorMargins = new Margins(90, 0, 10, 0);
+				this.fieldFind.TabIndex = this.tabIndex++;
+				this.fieldFind.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				StaticText labelReplace = new StaticText(this.window.Root);
 				labelReplace.Text = Res.Strings.Dialog.Replace.Label.Replace;
@@ -57,6 +59,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldReplace.Width = 400-100;
 				this.fieldReplace.Anchor = AnchorStyles.TopLeft;
 				this.fieldReplace.AnchorMargins = new Margins(90, 0, 40, 0);
+				this.fieldReplace.TabIndex = this.tabIndex++;
+				this.fieldReplace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				//	Bouton Chercher.
 				this.buttonFind = new Button(this.window.Root);
@@ -93,6 +97,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.window.Show();
+
+			this.fieldFind.SelectAll();
+			this.fieldFind.Focus();
 		}
 
 		public override void Save()
@@ -172,6 +179,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if ( replace != null )
 			{
+				textFlow.TextNavigator.Delete();  // supprime la chaîne cherchée
+				textFlow.TextNavigator.Insert(replace);  // insère la chaîne de remplacement
+
+				int pos = textFlow.TextNavigator.CursorPosition;
+				textFlow.TextNavigator.MoveTo(pos-replace.Length, 1);
+				textFlow.TextNavigator.StartSelection();  // sélectionne la chaîne de remplacement
+				textFlow.TextNavigator.MoveTo(pos, 1);
+				textFlow.TextNavigator.EndSelection();
 			}
 
 			document.Modifier.OpletQueueValidateAction();

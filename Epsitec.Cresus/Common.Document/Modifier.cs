@@ -1287,7 +1287,7 @@ namespace Epsitec.Common.Document
 			//	Edite l'objet demandé, en changeant de page et de calque si nécessaire.
 			if ( edit == this.RetEditObject() )  // déjà en cours d'édition ?
 			{
-				edit.SetAutoScroll();
+				edit.SetAutoScroll();  // montre le cureur
 				return;
 			}
 
@@ -1306,7 +1306,7 @@ namespace Epsitec.Common.Document
 
 			this.Tool = "ToolEdit";
 			this.ActiveViewer.Select(edit, true, false);
-			edit.SetAutoScroll();
+			edit.SetAutoScroll();  // montre le cureur
 
 			this.OpletQueueValidateAction();
 		
