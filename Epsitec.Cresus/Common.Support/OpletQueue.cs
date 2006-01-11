@@ -366,6 +366,22 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public bool								IsActionDefinitionInProgress
+		{
+			get
+			{
+				if ((this.fence_id <= 0) ||
+					(this.action == null))
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+		
 		
 		public System.IDisposable BeginAction()
 		{

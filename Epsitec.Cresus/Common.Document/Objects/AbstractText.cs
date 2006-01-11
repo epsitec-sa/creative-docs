@@ -80,8 +80,22 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.textFlow != null )
 			{
-				this.textFlow.Remove(this);  // objet seul dans son propre flux
-
+				if ( this.document.Modifier.OpletQueue.IsActionDefinitionInProgress )
+				{
+					//	Génère des informations pour pouvoir faire un undo/redo
+					//	du changement dans le flux de texte.
+					
+					TextFlow flow = this.textFlow;
+					
+					this.document.Modifier.OpletQueue.Insert(new Modifier.TextFlowChangeOplet(flow));
+					this.textFlow.Remove(this);
+					this.document.Modifier.OpletQueue.Insert(new Modifier.TextFlowChangeOplet(flow));
+				}
+				else
+				{
+					this.textFlow.Remove(this);  // objet seul dans son propre flux
+				}
+				
 				if ( this.textFlow.Count == 1 )  // est-on le dernier et seul utilisateur ?
 				{
 					this.document.TextFlows.Remove(this.textFlow);

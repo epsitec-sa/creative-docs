@@ -725,6 +725,42 @@ namespace Epsitec.Common.Text
 			return texts;
 		}
 		
+		public ulong[] GetSelectedLowLevelText(int range)
+		{
+			//	Retourne le texte sélectionné (au format interne) correspondant
+			//	à la sélection 'range'.
+			//	S'il n'y en a pas, retourne un tableau vide.
+			
+			if ((this.selection_cursors == null) ||
+				(range * 2 >= this.selection_cursors.Count) ||
+				(range < 0))
+			{
+				return new ulong[0];
+			}
+			else
+			{
+				int[] positions = this.GetSelectionCursorPositions ();
+				
+				int p1 = positions[range*2+0];
+				int p2 = positions[range*2+1];
+				
+				ICursor c1 = this.selection_cursors[range*2+0] as ICursor;
+				ICursor c2 = this.selection_cursors[range*2+1] as ICursor;
+				
+				if (p1 > p2)
+				{
+					int     pp = p1; p1 = p2; p2 = pp;
+					ICursor cc = c1; c1 = c2; c2 = cc;
+				}
+				
+				ulong[] buffer = new ulong[p2-p1];
+				
+				this.story.ReadText (c1, p2-p1, buffer);
+				
+				return buffer;
+			}
+		}
+		
 		
 		public TabInfo[] GetTabInfos()
 		{

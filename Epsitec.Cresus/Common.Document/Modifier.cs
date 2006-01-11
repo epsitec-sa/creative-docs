@@ -1878,7 +1878,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 		
-		private class TextFlowChangeOplet : AbstractOplet
+		public class TextFlowChangeOplet : AbstractOplet
 		{
 			public TextFlowChangeOplet(TextFlow flow)
 			{

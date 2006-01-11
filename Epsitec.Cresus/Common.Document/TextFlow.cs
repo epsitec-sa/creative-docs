@@ -11,7 +11,14 @@ namespace Epsitec.Common.Document
 	[System.Serializable()]
 	public class TextFlow : ISerializable
 	{
-		public TextFlow(Document document)
+		private TextFlow()
+		{
+			//	Constructeur commun pour le constructeur standard et pour celui
+			//	utilisé par la désérialisation. Ce point d'entrée commun est
+			//	uniquement utilisé pour le debug.
+		}
+		
+		public TextFlow(Document document) : this()
 		{
 			//	Crée un nouveau flux pour un seul pavé.
 			this.document = document;
@@ -22,6 +29,7 @@ namespace Epsitec.Common.Document
 			this.objectsChain = new UndoableList(this.document, UndoableListType.ObjectsChain);
 		}
 
+		
 		protected void InitialiseNavigator()
 		{
 			Text.TextContext context = this.document.TextContext;
@@ -161,10 +169,30 @@ namespace Epsitec.Common.Document
 			src.textNavigator.StartSelection();
 			src.textNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
 			src.textNavigator.EndSelection();
-			string[] texts = src.textNavigator.GetSelectedTexts();
-
-			this.metaNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1, 1, false);
-			this.metaNavigator.Insert(texts[0]);
+			
+			if (src.textStory.TextContext == this.textStory.TextContext)
+			{
+				//	Si les TextContext sont compatibles, on travaille directement
+				//	avec le texte de bas niveau (format 64-bit) :
+				
+				ulong[] text = src.textNavigator.GetSelectedLowLevelText(0);
+				
+				this.metaNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1, 1, false);
+				this.metaNavigator.DeleteSelection();
+				
+				this.textStory.InsertText(this.textNavigator.ActiveCursor, text);
+			}
+			else
+			{
+				//	Les TextContext sont différents; il faudrait passer par une
+				//	représentation "portable"; comme elle n'existe pas pour le
+				//	moment, on se contente de copier juste le texte :
+				
+				string[] texts = src.textNavigator.GetSelectedTexts();
+				
+				this.metaNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1, 1, false);
+				this.metaNavigator.Insert(texts[0]);
+			}
 		}
 
 		public void Remove(Objects.AbstractText obj)
@@ -584,7 +612,7 @@ namespace Epsitec.Common.Document
 			info.AddValue("TextStoryData", textStoryData);
 		}
 
-		protected TextFlow(SerializationInfo info, StreamingContext context)
+		protected TextFlow(SerializationInfo info, StreamingContext context) : this()
 		{
 			//	Constructeur qui désérialise l'objet.
 			this.document = Document.ReadDocument;
