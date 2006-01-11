@@ -161,7 +161,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Fusionne le texte d'un flux source à la fin du flux courant.
 			//	TODO: gérer les tabulateurs, les styles, etc.
-			src.textNavigator.ResetSelection();
+			src.metaNavigator.ClearSelection();
 			src.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);
 			src.textNavigator.StartSelection();
 			src.textNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
@@ -498,7 +498,7 @@ namespace Epsitec.Common.Document
 
 			while ( true )
 			{
-				textFlow.textNavigator.ResetSelection();
+				textFlow.metaNavigator.ClearSelection();
 
 				int position = textFlow.textNavigator.CursorPosition;
 				if ( first )

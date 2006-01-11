@@ -157,7 +157,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( edit == null )  // aucun objet en édition ?
 			{
 				textFlow = document.TextFlows[0] as TextFlow;
-				textFlow.TextNavigator.ResetSelection();
+				textFlow.MetaNavigator.ClearSelection();
 				textFlow.TextNavigator.MoveTo(0, 1);  // démarre la recherche au début du premier TextFlow
 				skipFirst = false;
 			}

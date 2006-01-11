@@ -568,6 +568,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public void ClearSelection()
+		{
+			this.EndSelection ();
+			this.text_navigator.ClearSelection ();
+		}
+		
+		
 		public bool Insert(Text.Unicode.Code code, Text.Properties.OpenTypeProperty ot_property)
 		{
 			if (code > Text.Unicode.Code.Invalid)

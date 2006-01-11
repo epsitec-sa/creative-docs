@@ -161,15 +161,15 @@
 	<data name="Dialog.Print.Tooltip.Cancel">Close without printing</data>
 	
 	<data name="Dialog.Replace.Title">Find and Replace...</data>
-	<data name="Dialog.Replace.Action.Find">@@Chercher &quot;{0}&quot;</data>
-	<data name="Dialog.Replace.Action.Replace">@@Remplacer &quot;{0}&quot; par &quot;{1}&quot;</data>
+	<data name="Dialog.Replace.Action.Find">Find &quot;{0}&quot;</data>
+	<data name="Dialog.Replace.Action.Replace">Replace &quot;{0}&quot; with &quot;{1}&quot;</data>
 	<data name="Dialog.Replace.Button.Find">Find</data>
 	<data name="Dialog.Replace.Button.Replace">Replace</data>
 	<data name="Dialog.Replace.Label.Find">Find what:</data>
 	<data name="Dialog.Replace.Label.Replace">Replace with:</data>
-	<data name="Dialog.Replace.Error.NoDocument">@@Il n'existe aucun document ouvert.</data>
-	<data name="Dialog.Replace.Error.NoText">@@Le document ne contient aucun texte.</data>
-	<data name="Dialog.Replace.Error.NotFound">@@Le texte recherché n'existe pas dans ce document.</data>
+	<data name="Dialog.Replace.Error.NoDocument">There is no current document.</data>
+	<data name="Dialog.Replace.Error.NoText">There is no text in the current document.</data>
+	<data name="Dialog.Replace.Error.NotFound">The text cannot be found in the current document.</data>
 	
 	<data name="Dialog.Settings.Title">Settings...</data>
 	<data name="Dialog.Settings.RadioGlobal">Global</data>
