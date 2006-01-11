@@ -213,13 +213,13 @@
 	<data name="Container.Pages.Button.MasterSpecific">Include this template</data>
 	<data name="Container.Pages.Header.Number">#</data>
 	<data name="Container.Pages.Header.Name">Name</data>
-	<data name="Container.Pages.Size.Label">@@Dimensions page</data>
-	<data name="Container.Pages.Size.Width">@@Largeur de cette page</data>
-	<data name="Container.Pages.Size.Height">@@Hauteur de cette page</data>
-	<data name="Container.Pages.Size.Swap">@@Portrait - paysage</data>
-	<data name="Container.Pages.Size.Clear">@@Dimensions standards</data>
-	<data name="Container.Pages.Language.Label">@@Langue page</data>
-	<data name="Container.Pages.Style.Label">@@Style page</data>
+	<data name="Container.Pages.Size.Label">Page geometry</data>
+	<data name="Container.Pages.Size.Width">Width of current page</data>
+	<data name="Container.Pages.Size.Height">Height of current page</data>
+	<data name="Container.Pages.Size.Swap">Swap between portrait and landscape</data>
+	<data name="Container.Pages.Size.Clear">Reset to Default Geometry</data>
+	<data name="Container.Pages.Language.Label">Page language</data>
+	<data name="Container.Pages.Style.Label">Page style</data>
 
 	<data name="Container.Principal.Button.Detail">Details</data>
 	<data name="Container.Principal.Button.Auto">Automatic selection</data>
@@ -270,7 +270,7 @@
 	<data name="Object.Button.CreateAndSelect">Validate and select</data>
 	<data name="Object.Button.CreateAndShaper">Validate and shaper</data>
 
-	<data name="Object.Text.Error">@@La police &lt;b&gt;{0}&lt;/b&gt; n'existe pas.</data>
+	<data name="Object.Text.Error">The font &lt;b&gt;{0}&lt;/b&gt; cannot be found.</data>
 	<data name="Object.Image.Error">File &lt;b&gt;{0}&lt;/b&gt; does not exist.</data>
 
 	<data name="Panel.Abstract.Extend">Expand or Collapse pannel</data>
@@ -780,8 +780,8 @@
 	<data name="Action.Paste">Paste</data>
 	<data name="Action.Delete">Delete</data>
 	<data name="Action.Duplicate">Duplicate</data>
-	<data name="Action.ReplaceMain">@@Remplacer</data>
-	<data name="Action.Replace">@@Chercher et remplacer...</data>
+	<data name="Action.ReplaceMain">Replace</data>
+	<data name="Action.Replace">Find and Replace...</data>
 
 	<data name="Action.DocumentSize">Document size</data>
 	<data name="Action.ChangeTool">Select tool &quot;{0}&quot;</data>

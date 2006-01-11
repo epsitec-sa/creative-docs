@@ -116,7 +116,7 @@
 	<data name="Dialog.Glyphs.TabPage.Alternates">Alternates</data>
 	<data name="Dialog.Glyphs.Button.Insert">Insert</data>
 	<data name="Dialog.Glyphs.Tooltip.Insert">Insert symbol/character in text</data>
-	<data name="Dialog.Glyphs.Tooltip.ArraySize">@@Taille de l'aperçu</data>
+	<data name="Dialog.Glyphs.Tooltip.ArraySize">Size of preview</data>
 	<data name="Dialog.Glyphs.Tooltip.ArrayPlus">Larger preview</data>
 	<data name="Dialog.Glyphs.Tooltip.CurrentFont">Synchronize with active font</data>
 	<data name="Dialog.Glyphs.FontFace">Font</data>
@@ -160,11 +160,11 @@
 	<data name="Dialog.Print.Button.Cancel">Close</data>
 	<data name="Dialog.Print.Tooltip.Cancel">Close without printing</data>
 	
-	<data name="Dialog.Replace.Title">@@Chercher et remplacer...</data>
-	<data name="Dialog.Replace.Button.Find">@@Chercher</data>
-	<data name="Dialog.Replace.Button.Replace">@@Remplacer</data>
-	<data name="Dialog.Replace.Label.Find">@@Chercher</data>
-	<data name="Dialog.Replace.Label.Replace">@@Remplacer par</data>
+	<data name="Dialog.Replace.Title">Find and Replace...</data>
+	<data name="Dialog.Replace.Button.Find">Find</data>
+	<data name="Dialog.Replace.Button.Replace">Replace</data>
+	<data name="Dialog.Replace.Label.Find">Find what:</data>
+	<data name="Dialog.Replace.Label.Replace">Replace with:</data>
 	
 	<data name="Dialog.Settings.Title">Settings...</data>
 	<data name="Dialog.Settings.RadioGlobal">Global</data>

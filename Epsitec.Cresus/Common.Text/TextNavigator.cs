@@ -534,6 +534,18 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (! this.IsSelectionActive);
 			System.Diagnostics.Debug.Assert (! this.HasSelection);
 			
+			this.StartDisjointSelection ();
+			
+			System.Diagnostics.Debug.Assert (this.selection_cursors.Count == 2);
+		}
+		
+		public void StartDisjointSelection()
+		{
+			//	Débute une sélection disjointe. Cette méthode peut être appelée
+			//	même lorsqu'une sélection est déjà définie.
+			
+			System.Diagnostics.Debug.Assert (! this.IsSelectionActive);
+			
 			Cursors.SelectionCursor c1 = this.NewSelectionCursor ();
 			Cursors.SelectionCursor c2 = this.NewSelectionCursor ();
 			
