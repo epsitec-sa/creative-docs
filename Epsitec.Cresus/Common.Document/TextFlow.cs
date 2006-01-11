@@ -161,10 +161,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Fusionne le texte d'un flux source à la fin du flux courant.
 			//	TODO: gérer les tabulateurs, les styles, etc.
-			if ( src.textNavigator.HasSelection )
-			{
-				src.textNavigator.ClearSelection();
-			}
+			src.textNavigator.ResetSelection();
 			src.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);
 			src.textNavigator.StartSelection();
 			src.textNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
@@ -365,7 +362,7 @@ namespace Epsitec.Common.Document
 					Objects.AbstractText obj = this.FindMatchingTextBox(frame);
 					System.Diagnostics.Debug.Assert(obj != null);
 					
-					this.document.Modifier.EditObject(obj);
+					this.document.Modifier.SetEditObject(obj);
 					System.Diagnostics.Debug.Assert(this.HasActiveTextBox);
 					
 					this.activeTextBox.SetAutoScroll();
@@ -490,7 +487,74 @@ namespace Epsitec.Common.Document
 				}
 			}
 		}
-		
+
+		public static bool FindText(Document document, ref TextFlow textFlow, string find, bool skipFirst)
+		{
+			//	Cherche la prochaine occurence d'un texte dans un TextFlow ou dans le prochain TextFlow.
+			TextFlow startingFlow = textFlow;
+			int startingPos = textFlow.textNavigator.CursorPosition;
+			bool first = true;
+			bool last = false;
+
+			while ( true )
+			{
+				textFlow.textNavigator.ResetSelection();
+
+				int position = textFlow.textNavigator.CursorPosition;
+				if ( first )
+				{
+					if ( skipFirst )  position ++;
+					first = false;
+				}
+				string text = textFlow.textStory.GetDebugText();
+				int i = text.IndexOf(find, position);
+				if ( i == -1 )
+				{
+					if ( last )
+					{
+						textFlow.textNavigator.MoveTo(startingPos, 1);
+						return false;
+					}
+				}
+				else
+				{
+					if ( last && i >= startingPos )
+					{
+						textFlow.textNavigator.MoveTo(startingPos, 1);
+						return false;
+					}
+
+					textFlow.textNavigator.MoveTo(i, 1);
+					textFlow.textNavigator.StartSelection();
+					textFlow.textNavigator.MoveTo(i+find.Length, 1);
+					textFlow.textNavigator.EndSelection();
+					return true;
+				}
+
+				textFlow.textNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
+
+				i = document.TextFlows.IndexOf(textFlow);
+				i ++;
+				if ( i >= document.TextFlows.Count )  i = 0;
+				textFlow = document.TextFlows[i] as TextFlow;
+				if ( textFlow == startingFlow )
+				{
+					last = true;
+				}
+				textFlow.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);
+			}
+		}
+
+		public static Objects.AbstractText FindObject(Document document, TextFlow textFlow)
+		{
+			//	Cherche l'objet dans lequel est le curseur.
+			Text.ITextFrame frame;
+			textFlow.textNavigator.GetCursorGeometry(out frame);
+			if ( frame == null )  return null;
+
+			return textFlow.FindMatchingTextBox(frame);
+		}
+
 
 		private void HandleTextNavigatorCursorMoved(object sender)
 		{
@@ -560,13 +624,7 @@ namespace Epsitec.Common.Document
 				string delete;
 				
 				this.textStory.GetOpletsText(this.textStory.OpletQueue.LastActionOplets, out insert, out delete);
-				
-				if ( delete.Length > 20 )
-				{
-					delete = string.Concat(delete.Substring(0, 18), "...");
-				}
-				
-				output = string.Format(System.Globalization.CultureInfo.InvariantCulture, format, delete);
+				output = string.Format(System.Globalization.CultureInfo.InvariantCulture, format, Misc.Resume(delete));
 			}
 			else if ( name.IndexOf("TextInsert") >= 0 )
 			{
@@ -575,13 +633,7 @@ namespace Epsitec.Common.Document
 				string delete;
 				
 				this.textStory.GetOpletsText(this.textStory.OpletQueue.LastActionOplets, out insert, out delete);
-				
-				if ( insert.Length > 20 )
-				{
-					insert = string.Concat(insert.Substring(0, 18), "...");
-				}
-				
-				output = string.Format(System.Globalization.CultureInfo.InvariantCulture, format, insert);
+				output = string.Format(System.Globalization.CultureInfo.InvariantCulture, format, Misc.Resume(insert));
 			}
 			else if ( name.IndexOf("CursorMove") >= 0 )
 			{

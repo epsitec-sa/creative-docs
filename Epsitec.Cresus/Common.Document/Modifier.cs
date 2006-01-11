@@ -1282,6 +1282,36 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
+		public void SetEditObject(Objects.AbstractText edit)
+		{
+			//	Edite l'objet demandé, en changeant de page et de calque si nécessaire.
+			if ( edit == this.RetEditObject() )  // déjà en cours d'édition ?
+			{
+				edit.SetAutoScroll();
+				return;
+			}
+
+			this.OpletQueueBeginAction(Res.Strings.Action.Edit);
+
+			if ( this.ActiveViewer.DrawingContext.CurrentPage != edit.PageNumber )
+			{
+				this.ActiveViewer.DrawingContext.CurrentPage = edit.PageNumber;
+			}
+
+			int layer = this.GetLayerRank(edit);
+			if ( this.ActiveViewer.DrawingContext.CurrentLayer != layer )
+			{
+				this.ActiveViewer.DrawingContext.CurrentLayer = layer;
+			}
+
+			this.Tool = "ToolEdit";
+			this.ActiveViewer.Select(edit, true, false);
+			edit.SetAutoScroll();
+
+			this.OpletQueueValidateAction();
+		
+		}
+
 		protected void SelectedSegmentClear()
 		{
 			//	Supprime tous les segments sélectionnés des objets sélectionnés.
@@ -1868,7 +1898,7 @@ namespace Epsitec.Common.Document
 					
 					parent.TextFlow.Add(obj, parent, after);
 					
-					this.EditObject(obj);
+					this.SetEditObject(obj);
 					
 					this.document.Modifier.OpletQueue.Insert(new TextFlowChangeOplet(flow1));
 					this.document.Modifier.OpletQueue.Insert(new TextFlowChangeOplet(flow2));
@@ -1904,22 +1934,6 @@ namespace Epsitec.Common.Document
 			}
 			
 			private TextFlow					flow;
-		}
-
-		public void EditObject(Objects.Abstract edit)
-		{
-			//	Edite n'importe quel objet, en changeant de page si nécessaire.
-			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Edit);
-
-			int page = edit.PageNumber;
-			if ( this.ActiveViewer.DrawingContext.CurrentPage != page )
-			{
-				this.ActiveViewer.DrawingContext.CurrentPage = page;
-			}
-			
-			this.document.Modifier.ActiveViewer.Select(edit, true, false);
-			
-			this.document.Modifier.OpletQueueValidateAction();
 		}
 		#endregion
 
@@ -4709,6 +4723,21 @@ namespace Epsitec.Common.Document
 				this.document.Notifier.NotifyLayerChanged(layer);
 				this.OpletQueueValidateAction();
 			}
+		}
+
+		protected int GetLayerRank(Objects.Abstract search)
+		{
+			//	Indique le numéro du calque auquel appartient un objet.
+			UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
+			for ( int rank=0 ; rank<list.Count ; rank++ )
+			{
+				Objects.Layer layer = list[rank] as Objects.Layer;
+				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
+				{
+					if ( obj == search )  return rank;
+				}
+			}
+			return -1;
 		}
 		#endregion
 

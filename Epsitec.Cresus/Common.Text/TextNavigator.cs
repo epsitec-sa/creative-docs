@@ -525,6 +525,20 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void ResetSelection()
+		{
+			//	Supprime une sélection, quel que soit l'état initial.
+			if (this.IsSelectionActive)
+			{
+				this.EndSelection ();
+			}
+
+			if (this.HasSelection)
+			{
+				this.ClearSelection ();
+			}
+		}
+
 		public void StartSelection()
 		{
 			//	Débute une sélection simple.

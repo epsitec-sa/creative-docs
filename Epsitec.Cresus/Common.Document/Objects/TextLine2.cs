@@ -1754,7 +1754,7 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.textFlow.HasActiveTextBox && this.drawingContext != null && this.drawingContext.TextShowControlCharacters;
 			this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
 
-			if ( this.textFlow.HasActiveTextBox && !this.textFlow.TextNavigator.HasRealSelection && this.graphics != null && this.internalOperation == InternalOperation.Painting )
+			if ( this.textFlow.HasActiveTextBox && this.graphics != null && this.internalOperation == InternalOperation.Painting )
 			{
 				//	Peint le curseur uniquement si l'objet est en édition, qu'il n'y a pas
 				//	de sélection et que l'on est en train d'afficher à l'écran.
@@ -1773,9 +1773,12 @@ namespace Epsitec.Common.Document.Objects
 					Point c1 = Drawing.Transform.RotatePointDeg(center, angle+cursorAngle, new Point(center.X, center.Y+ascender));
 					Point c2 = Drawing.Transform.RotatePointDeg(center, angle+cursorAngle, new Point(center.X, center.Y+descender));
 
-					this.graphics.LineWidth = 1.0/drawingContext.ScaleX;
-					this.graphics.AddLine(c1, c2);
-					this.graphics.RenderSolid(DrawingContext.ColorCursorEdit(this.isActive));
+					if ( !this.textFlow.TextNavigator.HasRealSelection )
+					{
+						this.graphics.LineWidth = 1.0/drawingContext.ScaleX;
+						this.graphics.AddLine(c1, c2);
+						this.graphics.RenderSolid(DrawingContext.ColorCursorEdit(this.isActive));
+					}
 
 					this.ComputeAutoScroll(c1, c2);
 					this.cursorBox.MergeWith(c1);

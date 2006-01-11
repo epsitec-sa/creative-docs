@@ -4272,7 +4272,6 @@ namespace Epsitec.App.DocumentEditor
 				this.pasteState.Enable = false;
 				this.glyphsState.Enable = false;
 				this.glyphsInsertState.Enable = false;
-				this.replaceState.Enable = false;
 				this.textShowControlCharactersState.Enable = false;
 				this.textFontFilterState.Enable = false;
 				this.textFontSampleAbcState.Enable = false;

@@ -165,6 +165,9 @@
 	<data name="Dialog.Replace.Button.Replace">Replace</data>
 	<data name="Dialog.Replace.Label.Find">Find what:</data>
 	<data name="Dialog.Replace.Label.Replace">Replace with:</data>
+	<data name="Dialog.Replace.Error.NoDocument">@@Il n'existe aucun document ouvert.</data>
+	<data name="Dialog.Replace.Error.NoText">@@Le document ne contient aucun texte.</data>
+	<data name="Dialog.Replace.Error.NotFound">@@Le texte recherché n'existe pas dans ce document.</data>
 	
 	<data name="Dialog.Settings.Title">Settings...</data>
 	<data name="Dialog.Settings.RadioGlobal">Global</data>

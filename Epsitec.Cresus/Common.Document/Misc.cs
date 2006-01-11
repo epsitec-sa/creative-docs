@@ -334,6 +334,19 @@ namespace Epsitec.Common.Document
 		}
 
 
+		static public string Resume(string text)
+		{
+			//	Retourne une version résumée à environ 20 caractères au maximum.
+			if ( text.Length > 20 )
+			{
+				return string.Concat(text.Substring(0, 18), "...");
+			}
+			else
+			{
+				return text;
+			}
+		}
+
 		static public string Bold(string text)
 		{
 			//	Retourne le texte en gras.

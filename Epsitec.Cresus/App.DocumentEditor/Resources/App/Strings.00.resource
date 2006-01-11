@@ -161,10 +161,15 @@
 	<data name="Dialog.Print.Tooltip.Cancel">Fermer sans imprimmer</data>
 	
 	<data name="Dialog.Replace.Title">Chercher et remplacer...</data>
+	<data name="Dialog.Replace.Action.Find">Chercher &quot;{0}&quot;</data>
+	<data name="Dialog.Replace.Action.Replace">Remplacer &quot;{0}&quot; par &quot;{1}&quot;</data>
 	<data name="Dialog.Replace.Button.Find">Chercher</data>
 	<data name="Dialog.Replace.Button.Replace">Remplacer</data>
 	<data name="Dialog.Replace.Label.Find">Chercher</data>
 	<data name="Dialog.Replace.Label.Replace">Remplacer par</data>
+	<data name="Dialog.Replace.Error.NoDocument">Il n'existe aucun document ouvert.</data>
+	<data name="Dialog.Replace.Error.NoText">Le document ne contient aucun texte.</data>
+	<data name="Dialog.Replace.Error.NotFound">Le texte recherché n'existe pas dans ce document.</data>
 	
 	<data name="Dialog.Settings.Title">Réglages...</data>
 	<data name="Dialog.Settings.RadioGlobal">Global</data>
