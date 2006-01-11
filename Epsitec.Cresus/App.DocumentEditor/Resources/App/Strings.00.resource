@@ -215,6 +215,7 @@
 	<data name="Dialog.Update.Web1">Web:</data>
 	<data name="Dialog.Update.Web2">http://www.epsitec.ch/cresus/documents/download-f.php</data>
 	<data name="Dialog.Update.Web3">www.epsitec.ch</data>
+	<data name="Dialog.Update.Web4">http://www.epsitec.ch/update/check</data>
 	<data name="Dialog.Update.Mail1">Mail:</data>
 	<data name="Dialog.Update.Mail2">mailto:epsitec@epsitec.ch</data>
 	<data name="Dialog.Update.Mail3">epsitec@epsitec.ch</data>

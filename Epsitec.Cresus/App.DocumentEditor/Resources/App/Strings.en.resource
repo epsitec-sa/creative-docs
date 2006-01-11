@@ -215,6 +215,7 @@
 	<data name="Dialog.Update.Web1">Web:</data>
 	<data name="Dialog.Update.Web2">http://www.creativedocs.net</data>
 	<data name="Dialog.Update.Web3">www.creativedocs.net</data>
+	<data name="Dialog.Update.Web4">http://www.creativedocs.net/update/check</data>
 	<data name="Dialog.Update.Mail1">E-mail:</data>
 	<data name="Dialog.Update.Mail2">mailto:info@creativedocs.net</data>
 	<data name="Dialog.Update.Mail3">info@creativedocs.net</data>

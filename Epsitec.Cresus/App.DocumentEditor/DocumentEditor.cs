@@ -5458,7 +5458,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.checker = new VersionChecker(typeof(App.DocumentEditor.Application).Assembly);
 
-			string url = string.Concat(Res.Strings.Dialog.Update.Web2, "/update/check",
+			string url = string.Concat(Res.Strings.Dialog.Update.Web4,
 				/**/				   "?software=", Res.Strings.Application.SoftName, "&version=",
 				/**/				   this.checker.CurrentVersion);
 
