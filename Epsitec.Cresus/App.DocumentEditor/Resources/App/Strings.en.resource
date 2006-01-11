@@ -161,6 +161,8 @@
 	<data name="Dialog.Print.Tooltip.Cancel">Close without printing</data>
 	
 	<data name="Dialog.Replace.Title">Find and Replace...</data>
+	<data name="Dialog.Replace.Action.Find">@@Chercher &quot;{0}&quot;</data>
+	<data name="Dialog.Replace.Action.Replace">@@Remplacer &quot;{0}&quot; par &quot;{1}&quot;</data>
 	<data name="Dialog.Replace.Button.Find">Find</data>
 	<data name="Dialog.Replace.Button.Replace">Replace</data>
 	<data name="Dialog.Replace.Label.Find">Find what:</data>
