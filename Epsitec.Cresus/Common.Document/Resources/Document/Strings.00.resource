@@ -1088,8 +1088,8 @@
 	<data name="Action.ParagraphLeading30">Interligne triple</data>
 	<data name="Action.ParagraphClear">Effacer tous les attributs de paragraphe</data>
 	<data name="Action.Text.Insert">Insertion</data>
-	<data name="Action.Text.Edit.InsertText">Insertion de caractères</data>
-	<data name="Action.Text.Edit.DeleteText">Suppression de caractères</data>
+	<data name="Action.Text.Edit.InsertText">Insertion de "{0}"</data>
+	<data name="Action.Text.Edit.DeleteText">Suppression de "{0}"</data>
 	<data name="Action.Text.Edit.ChangeText">Modification de caractères</data>
 	<data name="Action.Text.Edit.MoveCursor">Déplacement du curseur</data>
 	<data name="Action.Text.Edit.DefineSelection">Sélection de caractères</data>
