@@ -560,8 +560,8 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:Merge");
 			list.Add("00:Extract");
 			list.Add("00:Ungroup");
-			list.Add("10:Inside");
-			list.Add("11:Outside");
+			list.Add("00:Inside");
+			list.Add("00:Outside");
 
 			list.Add("00:Rotate90");
 			list.Add("00:Rotate180");

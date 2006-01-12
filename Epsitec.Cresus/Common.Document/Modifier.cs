@@ -4095,6 +4095,8 @@ namespace Epsitec.Common.Document
 				textFlow.TextNavigator.StartSelection();  // sélectionne la chaîne de remplacement
 				textFlow.TextNavigator.MoveTo(pos, 1);
 				textFlow.TextNavigator.EndSelection();
+
+				this.document.IsDirtySerialize = true;
 			}
 
 			this.OpletQueueValidateAction();
