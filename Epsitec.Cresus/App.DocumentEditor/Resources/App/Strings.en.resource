@@ -165,9 +165,9 @@
 	<data name="Dialog.Replace.Button.Replace">Replace</data>
 	<data name="Dialog.Replace.Button.EqualMaj">Match case</data>
 	<data name="Dialog.Replace.Button.EqualAccent">Match accents</data>
-	<data name="Dialog.Replace.Button.WholeWord">Whole word</data>
-	<data name="Dialog.Replace.Button.Reverse">@@En arrière</data>
-	<data name="Dialog.Replace.Button.Normal">@@En avant</data>
+	<data name="Dialog.Replace.Button.WholeWord">Match whole word only</data>
+	<data name="Dialog.Replace.Button.Reverse">Search up</data>
+	<data name="Dialog.Replace.Button.Normal">Search down</data>
 	<data name="Dialog.Replace.Label.Find">Find what:</data>
 	<data name="Dialog.Replace.Label.Replace">Replace with:</data>
 	
