@@ -147,74 +147,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			combo.Items.Insert(0, text);  // insère au début de la liste
 		}
 
-		protected bool Find(bool skipFirst, string find, string replace, bool ignoreMaj, bool ignoreAccent, bool wholeWord)
+		protected bool Find(bool skipFirst, string find, string replace, Misc.StringSearch mode)
 		{
-			if ( find == "" )
-			{
-				return false;
-			}
-			
 			Document document = this.editor.CurrentDocument;
-			if ( document == null )
-			{
-				this.editor.DialogError(this.editor.CommandDispatcher, Res.Strings.Dialog.Replace.Error.NoDocument);
-				return false;
-			}
-
-			if ( document.TextFlows.Count == 0 )
-			{
-				this.editor.DialogError(this.editor.CommandDispatcher, Res.Strings.Dialog.Replace.Error.NoText);
-				return false;
-			}
-			
-			if ( replace == null )
-			{
-				document.Modifier.OpletQueueBeginAction(string.Format(Res.Strings.Dialog.Replace.Action.Find, Misc.Resume(find)));
-			}
-			else
-			{
-				document.Modifier.OpletQueueBeginAction(string.Format(Res.Strings.Dialog.Replace.Action.Replace, Misc.Resume(find, 10), Misc.Resume(replace, 10)));
-			}
-
-			TextFlow textFlow = null;
-			Objects.AbstractText edit = document.Modifier.RetEditObject();
-			if ( edit == null )  // aucun objet en édition ?
-			{
-				textFlow = document.TextFlows[0] as TextFlow;
-				textFlow.MetaNavigator.ClearSelection();
-				textFlow.TextNavigator.MoveTo(0, 1);  // démarre la recherche au début du premier TextFlow
-				skipFirst = false;
-			}
-			else	// il existe un objet en édition ?
-			{
-				textFlow = edit.TextFlow;  // démarre la recherche dans l'objet édité
-			}
-
-			if ( !TextFlow.FindText(document, ref textFlow, find, skipFirst, ignoreMaj, ignoreAccent, wholeWord) )
-			{
-				document.Modifier.OpletQueueValidateAction();
-				this.editor.DialogError(this.editor.CommandDispatcher, Res.Strings.Dialog.Replace.Error.NotFound);
-				return false;
-			}
-
-			edit = TextFlow.FindObject(document, textFlow);
-			System.Diagnostics.Debug.Assert(edit != null);
-			document.Modifier.SetEditObject(edit);  // édite l'objet trouvé
-
-			if ( replace != null )
-			{
-				textFlow.TextNavigator.Delete();  // supprime la chaîne cherchée
-				textFlow.TextNavigator.Insert(replace);  // insère la chaîne de remplacement
-
-				int pos = textFlow.TextNavigator.CursorPosition;
-				textFlow.TextNavigator.MoveTo(pos-replace.Length, 1);
-				textFlow.TextNavigator.StartSelection();  // sélectionne la chaîne de remplacement
-				textFlow.TextNavigator.MoveTo(pos, 1);
-				textFlow.TextNavigator.EndSelection();
-			}
-
-			document.Modifier.OpletQueueValidateAction();
-			return true;
+			if ( document == null )  return false;
+			return document.Modifier.Replace(skipFirst, find, replace, mode);
 		}
 
 
@@ -230,10 +167,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.ComboMemorise(this.fieldFind);
 			this.ComboMemorise(this.fieldReplace);
 
-			bool ignoreMaj    = (this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No);
-			bool ignoreAccent = (this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No);
-			bool wholeWord    = (this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes);
-			this.Find(true, this.fieldFind.Text, null, ignoreMaj, ignoreAccent, wholeWord);
+			Misc.StringSearch mode = 0;
+			if ( this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreMaj;
+			if ( this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreAccent;
+			if ( this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes)  mode |= Misc.StringSearch.WholeWord;
+			this.Find(true, this.fieldFind.Text, null, mode);
 		}
 
 		private void HandleButtonReplaceClicked(object sender, MessageEventArgs e)
@@ -241,10 +179,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.ComboMemorise(this.fieldFind);
 			this.ComboMemorise(this.fieldReplace);
 
-			bool ignoreMaj    = (this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No);
-			bool ignoreAccent = (this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No);
-			bool wholeWord    = (this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes);
-			this.Find(false, this.fieldFind.Text, this.fieldReplace.Text, ignoreMaj, ignoreAccent, wholeWord);
+			Misc.StringSearch mode = 0;
+			if ( this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreMaj;
+			if ( this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreAccent;
+			if ( this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes)  mode |= Misc.StringSearch.WholeWord;
+			this.Find(false, this.fieldFind.Text, this.fieldReplace.Text, mode);
 		}
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)

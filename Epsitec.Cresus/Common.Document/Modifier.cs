@@ -3978,6 +3978,130 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region Find and Replace
+		public bool Replace(bool skipFirst, string find, string replace, Misc.StringSearch mode)
+		{
+			//	
+			if ( find == "" )
+			{
+				return false;
+			}
+			
+			if ( this.document.TextFlows.Count == 0 )
+			{
+				this.ActiveViewer.DialogError(Res.Strings.Error.NoText);
+				return false;
+			}
+			
+			if ( replace == null )
+			{
+				this.OpletQueueBeginAction(string.Format(Res.Strings.Action.UndoFind, Misc.Resume(find)));
+			}
+			else
+			{
+				this.OpletQueueBeginAction(string.Format(Res.Strings.Action.UndoReplace, Misc.Resume(find, 10), Misc.Resume(replace, 10)));
+			}
+
+			TextFlow textFlow = null;
+			Objects.AbstractText edit = this.RetEditObject();
+			if ( edit == null )  // aucun objet en édition ?
+			{
+				textFlow = this.document.TextFlows[0] as TextFlow;
+				textFlow.MetaNavigator.ClearSelection();
+				textFlow.TextNavigator.MoveTo(0, 1);  // démarre la recherche au début du premier TextFlow
+				skipFirst = false;
+			}
+			else	// il existe un objet en édition ?
+			{
+				textFlow = edit.TextFlow;  // démarre la recherche dans l'objet édité
+			}
+
+			if ( !Modifier.FindText(this.document, ref textFlow, find, skipFirst, mode) )
+			{
+				this.OpletQueueValidateAction();
+				this.ActiveViewer.DialogError(Res.Strings.Error.NotFound);
+				return false;
+			}
+
+			edit = textFlow.FindObject();
+			System.Diagnostics.Debug.Assert(edit != null);
+			this.SetEditObject(edit);  // édite l'objet trouvé
+
+			if ( replace != null )
+			{
+				textFlow.TextNavigator.Delete();  // supprime la chaîne cherchée
+				textFlow.TextNavigator.Insert(replace);  // insère la chaîne de remplacement
+
+				int pos = textFlow.TextNavigator.CursorPosition;
+				textFlow.TextNavigator.MoveTo(pos-replace.Length, 1);
+				textFlow.TextNavigator.StartSelection();  // sélectionne la chaîne de remplacement
+				textFlow.TextNavigator.MoveTo(pos, 1);
+				textFlow.TextNavigator.EndSelection();
+			}
+
+			this.OpletQueueValidateAction();
+			return true;
+		}
+
+		protected static bool FindText(Document document, ref TextFlow textFlow, string find, bool skipFirst, Misc.StringSearch mode)
+		{
+			//	Cherche la prochaine occurence d'un texte dans un TextFlow ou dans le prochain TextFlow.
+			TextFlow startingFlow = textFlow;
+			int startingPos = textFlow.TextNavigator.CursorPosition;
+			bool first = true;
+			bool last = false;
+
+			while ( true )
+			{
+				textFlow.MetaNavigator.ClearSelection();
+
+				int position = textFlow.TextNavigator.CursorPosition;
+				if ( first )
+				{
+					if ( skipFirst )  position ++;
+					first = false;
+				}
+				string text = textFlow.TextStory.GetDebugText();
+				int i = Misc.IndexOf(text, find, position, mode);
+				if ( i == -1 )
+				{
+					if ( last )
+					{
+						textFlow.TextNavigator.MoveTo(startingPos, 1);
+						return false;
+					}
+				}
+				else
+				{
+					if ( last && i >= startingPos )
+					{
+						textFlow.TextNavigator.MoveTo(startingPos, 1);
+						return false;
+					}
+
+					textFlow.TextNavigator.MoveTo(i, 1);
+					textFlow.TextNavigator.StartSelection();
+					textFlow.TextNavigator.MoveTo(i+find.Length, 1);
+					textFlow.TextNavigator.EndSelection();
+					return true;
+				}
+
+				textFlow.TextNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
+
+				i = document.TextFlows.IndexOf(textFlow);
+				i ++;
+				if ( i >= document.TextFlows.Count )  i = 0;
+				textFlow = document.TextFlows[i] as TextFlow;
+				if ( textFlow == startingFlow )
+				{
+					last = true;
+				}
+				textFlow.TextNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);
+			}
+		}
+		#endregion
+
+
 		#region Page
 		public void InitiateChangingPage()
 		{

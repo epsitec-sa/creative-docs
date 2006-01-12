@@ -782,6 +782,8 @@
 	<data name="Action.Duplicate">Duplicate</data>
 	<data name="Action.ReplaceMain">Find</data>
 	<data name="Action.Replace">Find and Replace...</data>
+	<data name="Action.UndoFind">Find &quot;{0}&quot;</data>
+	<data name="Action.UndoReplace">Replace &quot;{0}&quot; with &quot;{1}&quot;</data>
 
 	<data name="Action.DocumentSize">Document size</data>
 	<data name="Action.ChangeTool">Select tool &quot;{0}&quot;</data>
@@ -1287,5 +1289,7 @@
 	<data name="Error.ToPoly">One or more objects could not be converted to lines.</data>
 	<data name="Error.Fragment">One or more objects could not be exploded.</data>
 	<data name="Error.Boolean">Impossible operation.</data>
+	<data name="Error.NoText">There is no text in the current document.</data>
+	<data name="Error.NotFound">The text cannot be found in the current document.</data>
 
 </bundle>

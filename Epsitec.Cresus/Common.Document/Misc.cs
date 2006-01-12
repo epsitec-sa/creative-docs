@@ -9,6 +9,13 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Misc
 	{
+		[System.Flags] public enum StringSearch
+		{
+			IgnoreMaj    = 0x00000001,
+			IgnoreAccent = 0x00000002,
+			WholeWord    = 0x00000004,
+		}
+
 		static public void ConvertStringToDouble(out double value, out Text.Properties.SizeUnits units, string text, double min, double max, double defaultValue)
 		{
 			//	Conversion d'une chaîne en nombre réel.
@@ -334,24 +341,24 @@ namespace Epsitec.Common.Document
 		}
 
 
-		static public int IndexOf(string text, string value, int startIndex, bool ignoreMaj, bool ignoreAccent, bool wholeWord)
+		static public int IndexOf(string text, string value, int startIndex, StringSearch mode)
 		{
-			return Misc.IndexOf(text, value, startIndex, text.Length-value.Length-startIndex, ignoreMaj, ignoreAccent, wholeWord);
+			return Misc.IndexOf(text, value, startIndex, text.Length-value.Length-startIndex, mode);
 		}
 
-		static public int IndexOf(string text, string value, int startIndex, int count, bool ignoreMaj, bool ignoreAccent, bool wholeWord)
+		static public int IndexOf(string text, string value, int startIndex, int count, StringSearch mode)
 		{
 			//	Cherche l'index de 'value' dans 'text' (un peu comme string.IndexOf), mais avec quelques
 			//	options supplémentaires.
 			if ( text.Length < value.Length )  return -1;
 
-			if ( ignoreMaj )
+			if ( (mode&StringSearch.IgnoreMaj) != 0 )
 			{
 				text = text.ToLower();
 				value = value.ToLower();
 			}
 
-			if ( ignoreAccent )
+			if ( (mode&StringSearch.IgnoreAccent) != 0 )
 			{
 				System.Text.StringBuilder builder;
 				

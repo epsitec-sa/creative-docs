@@ -392,6 +392,16 @@ namespace Epsitec.Common.Document
 			}
 		}
 		
+		public Objects.AbstractText FindObject()
+		{
+			//	Cherche l'objet dans lequel est le curseur.
+			Text.ITextFrame frame;
+			this.textNavigator.GetCursorGeometry(out frame);
+			if ( frame == null )  return null;
+
+			return this.FindMatchingTextBox(frame);
+		}
+
 		private Objects.AbstractText FindMatchingTextBox(Text.ITextFrame frame)
 		{
 			//	Trouve le pavé correspondant au frame donné.
@@ -486,73 +496,6 @@ namespace Epsitec.Common.Document
 					}
 				}
 			}
-		}
-
-		public static bool FindText(Document document, ref TextFlow textFlow, string find, bool skipFirst, bool ignoreMaj, bool ignoreAccent, bool wholeWord)
-		{
-			//	Cherche la prochaine occurence d'un texte dans un TextFlow ou dans le prochain TextFlow.
-			TextFlow startingFlow = textFlow;
-			int startingPos = textFlow.textNavigator.CursorPosition;
-			bool first = true;
-			bool last = false;
-
-			while ( true )
-			{
-				textFlow.metaNavigator.ClearSelection();
-
-				int position = textFlow.textNavigator.CursorPosition;
-				if ( first )
-				{
-					if ( skipFirst )  position ++;
-					first = false;
-				}
-				string text = textFlow.textStory.GetDebugText();
-				int i = Misc.IndexOf(text, find, position, ignoreMaj, ignoreAccent, wholeWord);
-				if ( i == -1 )
-				{
-					if ( last )
-					{
-						textFlow.textNavigator.MoveTo(startingPos, 1);
-						return false;
-					}
-				}
-				else
-				{
-					if ( last && i >= startingPos )
-					{
-						textFlow.textNavigator.MoveTo(startingPos, 1);
-						return false;
-					}
-
-					textFlow.textNavigator.MoveTo(i, 1);
-					textFlow.textNavigator.StartSelection();
-					textFlow.textNavigator.MoveTo(i+find.Length, 1);
-					textFlow.textNavigator.EndSelection();
-					return true;
-				}
-
-				textFlow.textNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
-
-				i = document.TextFlows.IndexOf(textFlow);
-				i ++;
-				if ( i >= document.TextFlows.Count )  i = 0;
-				textFlow = document.TextFlows[i] as TextFlow;
-				if ( textFlow == startingFlow )
-				{
-					last = true;
-				}
-				textFlow.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);
-			}
-		}
-
-		public static Objects.AbstractText FindObject(Document document, TextFlow textFlow)
-		{
-			//	Cherche l'objet dans lequel est le curseur.
-			Text.ITextFrame frame;
-			textFlow.textNavigator.GetCursorGeometry(out frame);
-			if ( frame == null )  return null;
-
-			return textFlow.FindMatchingTextBox(frame);
 		}
 
 

@@ -782,6 +782,8 @@
 	<data name="Action.Duplicate">Dupliquer</data>
 	<data name="Action.ReplaceMain">Remplacer</data>
 	<data name="Action.Replace">Chercher et remplacer...</data>
+	<data name="Action.UndoFind">Chercher &quot;{0}&quot;</data>
+	<data name="Action.UndoReplace">Remplacer &quot;{0}&quot; par &quot;{1}&quot;</data>
 
 	<data name="Action.DocumentSize">Taille du document</data>
 	<data name="Action.ChangeTool">Choix de l'outil &quot;{0}&quot;</data>
@@ -1287,5 +1289,7 @@
 	<data name="Error.ToPoly">Un ou plusieurs objets n'ont pas pu être convertis en droites.</data>
 	<data name="Error.Fragment">Un ou plusieurs objets n'ont pas pu être fragmentés.</data>
 	<data name="Error.Boolean">Opération impossible.</data>
+	<data name="Error.NoText">Le document ne contient aucun texte.</data>
+	<data name="Error.NotFound">Le texte recherché n'existe pas dans ce document.</data>
 
 </bundle>
