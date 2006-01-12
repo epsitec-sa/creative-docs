@@ -3979,11 +3979,13 @@ namespace Epsitec.Common.Document
 
 
 		#region Find and Replace
-		public bool Replace(bool skipFirst, string find, string replace, Misc.StringSearch mode)
+		public bool Replace(string find, string replace, Misc.StringSearch mode)
 		{
-			//	
+			//	Effectue une recherche ou un remplacement dans un objet texte du document.
+			//	Pour une simple recherche, 'replace' doit être null.
 			if ( find == "" )
 			{
+				this.ActiveViewer.DialogError(Res.Strings.Error.NotFound);
 				return false;
 			}
 			
@@ -4003,17 +4005,18 @@ namespace Epsitec.Common.Document
 			}
 
 			TextFlow textFlow = null;
+			bool skipFirst = false;
 			Objects.AbstractText edit = this.RetEditObject();
 			if ( edit == null )  // aucun objet en édition ?
 			{
 				textFlow = this.document.TextFlows[0] as TextFlow;
 				textFlow.MetaNavigator.ClearSelection();
 				textFlow.TextNavigator.MoveTo(0, 1);  // démarre la recherche au début du premier TextFlow
-				skipFirst = false;
 			}
 			else	// il existe un objet en édition ?
 			{
 				textFlow = edit.TextFlow;  // démarre la recherche dans l'objet édité
+				if ( textFlow.TextNavigator.HasRealSelection )  skipFirst = true;
 			}
 
 			if ( !Modifier.FindText(this.document, ref textFlow, find, skipFirst, mode) )

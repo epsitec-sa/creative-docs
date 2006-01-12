@@ -343,7 +343,7 @@ namespace Epsitec.Common.Document
 
 		static public int IndexOf(string text, string value, int startIndex, StringSearch mode)
 		{
-			return Misc.IndexOf(text, value, startIndex, text.Length-value.Length-startIndex, mode);
+			return Misc.IndexOf(text, value, startIndex, text.Length-startIndex, mode);
 		}
 
 		static public int IndexOf(string text, string value, int startIndex, int count, StringSearch mode)
@@ -352,37 +352,77 @@ namespace Epsitec.Common.Document
 			//	options supplémentaires.
 			if ( text.Length < value.Length )  return -1;
 
-			if ( (mode&StringSearch.IgnoreMaj) != 0 )
+			if ( (mode&StringSearch.IgnoreMaj) != 0 )  // maj = min ?
 			{
 				text = text.ToLower();
 				value = value.ToLower();
 			}
 
-			if ( (mode&StringSearch.IgnoreAccent) != 0 )
+			if ( (mode&StringSearch.IgnoreAccent) != 0 )  // é = e ?
 			{
-				System.Text.StringBuilder builder;
-				
-				builder = new System.Text.StringBuilder(text.Length);
-				for ( int i=0 ; i<text.Length ; i++ )
-				{
-					builder.Append(Misc.RemoveAccent(text[i]));
-				}
-				text = builder.ToString();
-
-				builder = new System.Text.StringBuilder(value.Length);
-				for ( int i=0 ; i<value.Length ; i++ )
-				{
-					builder.Append(Misc.RemoveAccent(value[i]));
-				}
-				value = builder.ToString();
+				text = Misc.RemoveAccent(text);
+				value = Misc.RemoveAccent(value);
 			}
 
-			return text.IndexOf(value, startIndex, count);
+			if ( (mode&StringSearch.WholeWord) != 0 )  // mot entier ?
+			{
+				int length = startIndex+count;
+				while ( true )
+				{
+					startIndex = text.IndexOf(value, startIndex, count);
+					if ( startIndex == -1 )  return -1;
+					if ( Misc.IsWholeWord(text, startIndex, value.Length) )  return startIndex;
+					startIndex ++;
+					count = length-startIndex;
+					if ( count <= 0 )  return -1;
+				}
+			}
+			else
+			{
+				return text.IndexOf(value, startIndex, count);
+			}
+		}
+
+		static protected bool IsWholeWord(string text, int index, int count)
+		{
+			//	Vérifie si un mot et précédé et suivi d'un caractère séparateur de mots.
+			if ( index > 0 )
+			{
+				if ( !Misc.IsWordSeparator(text[index-1]) )  return false;
+			}
+
+			if ( index+count < text.Length )
+			{
+				if ( !Misc.IsWordSeparator(text[index+count]) )  return false;
+			}
+
+			return true;
+		}
+
+		static protected bool IsWordSeparator(char c)
+		{
+			//	Vérifie si un caractère est un séparateur de mots.
+			c = System.Char.ToLower(c);
+			return ( c < 'a' || c > 'z' );
+		}
+
+		static protected string RemoveAccent(string s)
+		{
+			//	Retourne la même chaîne sans accent (é -> e).
+			System.Text.StringBuilder builder;
+				
+			builder = new System.Text.StringBuilder(s.Length);
+			for ( int i=0 ; i<s.Length ; i++ )
+			{
+				builder.Append(Misc.RemoveAccent(s[i]));
+			}
+			return builder.ToString();
 		}
 
 		static protected char RemoveAccent(char c)
 		{
 			//	Retourne le même caractère sans accent (é -> e).
+			//	TODO: traiter tous les accents unicode ?
 			char lower = System.Char.ToLower(c);
 			char cc = lower;
 
@@ -428,6 +468,7 @@ namespace Epsitec.Common.Document
 			return cc;
 		}
 
+
 		static public string Resume(string text)
 		{
 			//	Retourne une version résumée à environ 20 caractères au maximum.
@@ -447,6 +488,7 @@ namespace Epsitec.Common.Document
 				return text;
 			}
 		}
+
 
 		static public string Bold(string text)
 		{

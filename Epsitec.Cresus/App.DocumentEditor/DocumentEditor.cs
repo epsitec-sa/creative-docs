@@ -3570,7 +3570,7 @@ namespace Epsitec.App.DocumentEditor
 			this.exportState = this.CreateCommandState("Export");
 			this.glyphsState = this.CreateCommandState("Glyphs");
 			this.glyphsInsertState = this.CreateCommandState("GlyphsInsert");
-			this.replaceState = this.CreateCommandState("Replace");
+			this.replaceState = this.CreateCommandState("Replace", KeyCode.ModifierCtrl|KeyCode.AlphaF);
 			this.deleteState = this.CreateCommandState("Delete", KeyCode.Delete);
 			this.duplicateState = this.CreateCommandState("Duplicate", KeyCode.ModifierCtrl|KeyCode.AlphaD);
 

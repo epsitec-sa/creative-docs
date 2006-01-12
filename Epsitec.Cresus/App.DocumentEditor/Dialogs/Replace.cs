@@ -145,13 +145,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			combo.Items.Insert(0, text);  // insère au début de la liste
+
+			if ( combo.Items.Count > 15 )  // liste trop longue ?
+			{
+				combo.Items.RemoveAt(combo.Items.Count-1);  // supprime le plus ancien
+			}
 		}
 
-		protected bool Find(bool skipFirst, string find, string replace, Misc.StringSearch mode)
+		protected bool Find(string find, string replace, Misc.StringSearch mode)
 		{
 			Document document = this.editor.CurrentDocument;
 			if ( document == null )  return false;
-			return document.Modifier.Replace(skipFirst, find, replace, mode);
+			return document.Modifier.Replace(find, replace, mode);
 		}
 
 
@@ -171,7 +176,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreMaj;
 			if ( this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreAccent;
 			if ( this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes)  mode |= Misc.StringSearch.WholeWord;
-			this.Find(true, this.fieldFind.Text, null, mode);
+			this.Find(this.fieldFind.Text, null, mode);
 		}
 
 		private void HandleButtonReplaceClicked(object sender, MessageEventArgs e)
@@ -183,7 +188,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreMaj;
 			if ( this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreAccent;
 			if ( this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes)  mode |= Misc.StringSearch.WholeWord;
-			this.Find(false, this.fieldFind.Text, this.fieldReplace.Text, mode);
+			this.Find(this.fieldFind.Text, this.fieldReplace.Text, mode);
 		}
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
