@@ -251,6 +251,8 @@ namespace Epsitec.Common.Document.Containers
 			this.textAll.Clicked += new MessageEventHandler(this.HandleFilterTextClicked);
 			ToolTip.Default.SetToolTip(this.textAll, Res.Strings.TextPanel.Filter.Tooltip.All);
 
+			this.textToolBar.Items.Add(new IconSeparator());
+
 			this.textParagraph = new IconButton(this.textToolBar);
 			this.textParagraph.AutoFocus = false;
 			this.textParagraph.IconName = Misc.Icon("TextFilterParagraph");

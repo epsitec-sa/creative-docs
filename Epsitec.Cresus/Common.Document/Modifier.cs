@@ -4009,9 +4009,18 @@ namespace Epsitec.Common.Document
 			Objects.AbstractText edit = this.RetEditObject();
 			if ( edit == null )  // aucun objet en édition ?
 			{
-				textFlow = this.document.TextFlows[0] as TextFlow;
-				textFlow.MetaNavigator.ClearSelection();
-				textFlow.TextNavigator.MoveTo(0, 1);  // démarre la recherche au début du premier TextFlow
+				if ( (mode&Misc.StringSearch.EndToStart) != 0 )  // en arrière ?
+				{
+					textFlow = this.document.TextFlows[this.document.TextFlows.Count-1] as TextFlow;
+					textFlow.MetaNavigator.ClearSelection();
+					textFlow.TextNavigator.MoveTo(Text.TextNavigator.Target.WordEnd, 1);  // démarre la recherche à la fin du dernier TextFlow
+				}
+				else
+				{
+					textFlow = this.document.TextFlows[0] as TextFlow;
+					textFlow.MetaNavigator.ClearSelection();
+					textFlow.TextNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);  // démarre la recherche au début du premier TextFlow
+				}
 			}
 			else	// il existe un objet en édition ?
 			{
@@ -4049,57 +4058,92 @@ namespace Epsitec.Common.Document
 		protected static bool TextFind(Document document, ref TextFlow textFlow, string find, bool skipFirst, Misc.StringSearch mode)
 		{
 			//	Cherche la prochaine occurence d'un texte dans un TextFlow ou dans le prochain TextFlow.
-			TextFlow startingFlow = textFlow;
-			int startingPos = textFlow.TextNavigator.CursorPosition;
-			bool first = true;
+			TextFlow initialFlow = textFlow;
 			bool last = false;
 
-			while ( true )
+			if ( (mode&Misc.StringSearch.EndToStart) != 0 )  // en arrière ?
 			{
-				textFlow.MetaNavigator.ClearSelection();
+				int startPosition = 0;
+				int endPosition   = textFlow.TextNavigator.CursorPosition;  // première partie du premier flux
+				if ( skipFirst )  endPosition --;
 
-				int position = textFlow.TextNavigator.CursorPosition;
-				if ( first )
+				while ( true )
 				{
-					if ( skipFirst )  position ++;
-					first = false;
-				}
-				string text = textFlow.TextStory.GetDebugText();
-				int i = Misc.IndexOf(text, find, position, mode);
-				if ( i == -1 )
-				{
-					if ( last )
+					string text = textFlow.TextStory.GetDebugText();
+					int i = Misc.IndexOf(text, find, endPosition, endPosition-startPosition+1, mode);
+					if ( i == -1 && last )  // pas trouvé dans le dernier flux ?
 					{
-						textFlow.TextNavigator.MoveTo(startingPos, 1);
 						return false;
 					}
-				}
-				else
-				{
-					if ( last && i >= startingPos )
+					if ( i != -1 )  // trouvé ?
 					{
-						textFlow.TextNavigator.MoveTo(startingPos, 1);
-						return false;
+						textFlow.MetaNavigator.ClearSelection();
+						textFlow.TextNavigator.MoveTo(i+find.Length, 1);
+						textFlow.TextNavigator.StartSelection();
+						textFlow.TextNavigator.MoveTo(i, 1);
+						textFlow.TextNavigator.EndSelection();
+						return true;
 					}
 
-					textFlow.TextNavigator.MoveTo(i, 1);
-					textFlow.TextNavigator.StartSelection();
-					textFlow.TextNavigator.MoveTo(i+find.Length, 1);
-					textFlow.TextNavigator.EndSelection();
-					return true;
+					i = document.TextFlows.IndexOf(textFlow);
+					i --;  if ( i < 0 )  i = document.TextFlows.Count-1;
+					textFlow = document.TextFlows[i] as TextFlow;  // flux précédent
+
+					if ( textFlow == initialFlow )  // revenu dans le flux initial ?
+					{
+						last = true;
+						startPosition = textFlow.TextNavigator.CursorPosition;
+						endPosition   = textFlow.TextNavigator.TextLength;  // deuxième partie du premier flux
+						startPosition -= find.Length;
+					}
+					else
+					{
+						startPosition = 0;
+						endPosition   = textFlow.TextNavigator.TextLength;  // tout le flux
+					}
 				}
+			}
+			else	// en avant ?
+			{
+				int startPosition = textFlow.TextNavigator.CursorPosition;
+				int endPosition   = textFlow.TextNavigator.TextLength;  // deuxième partie du premier flux
+				if ( skipFirst )  startPosition ++;
 
-				textFlow.TextNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
-
-				i = document.TextFlows.IndexOf(textFlow);
-				i ++;
-				if ( i >= document.TextFlows.Count )  i = 0;
-				textFlow = document.TextFlows[i] as TextFlow;
-				if ( textFlow == startingFlow )
+				while ( true )
 				{
-					last = true;
+					string text = textFlow.TextStory.GetDebugText();
+					int i = Misc.IndexOf(text, find, startPosition, endPosition-startPosition, mode);
+					if ( i == -1 && last )  // pas trouvé dans le dernier flux ?
+					{
+						return false;
+					}
+					if ( i != -1 )  // trouvé ?
+					{
+						textFlow.MetaNavigator.ClearSelection();
+						textFlow.TextNavigator.MoveTo(i, 1);
+						textFlow.TextNavigator.StartSelection();
+						textFlow.TextNavigator.MoveTo(i+find.Length, 1);
+						textFlow.TextNavigator.EndSelection();
+						return true;
+					}
+
+					i = document.TextFlows.IndexOf(textFlow);
+					i ++;  if ( i >= document.TextFlows.Count )  i = 0;
+					textFlow = document.TextFlows[i] as TextFlow;  // flux suivant
+
+					if ( textFlow == initialFlow )  // revenu dans le flux initial ?
+					{
+						last = true;
+						startPosition = 0;
+						endPosition   = textFlow.TextNavigator.CursorPosition;  // première partie du premier flux
+						endPosition += find.Length;
+					}
+					else
+					{
+						startPosition = 0;
+						endPosition   = textFlow.TextNavigator.TextLength;  // tout le flux
+					}
 				}
-				textFlow.TextNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);
 			}
 		}
 		#endregion

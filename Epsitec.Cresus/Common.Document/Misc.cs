@@ -11,10 +11,12 @@ namespace Epsitec.Common.Document
 	{
 		[System.Flags] public enum StringSearch
 		{
-			IgnoreMaj    = 0x00000001,
-			IgnoreAccent = 0x00000002,
-			WholeWord    = 0x00000004,
+			IgnoreMaj    = 0x00000001,	// m = M
+			IgnoreAccent = 0x00000002,	// é = e
+			WholeWord    = 0x00000004,	// mot entier
+			EndToStart   = 0x00000008,	// sens inverse (en arrière)
 		}
+
 
 		static public void ConvertStringToDouble(out double value, out Text.Properties.SizeUnits units, string text, double min, double max, double defaultValue)
 		{
@@ -343,14 +345,36 @@ namespace Epsitec.Common.Document
 
 		static public int IndexOf(string text, string value, int startIndex, StringSearch mode)
 		{
-			return Misc.IndexOf(text, value, startIndex, text.Length-startIndex, mode);
+			int count;
+			if ( (mode&StringSearch.EndToStart) != 0 )  // en arrière ?
+			{
+				count = startIndex;
+			}
+			else	// en avant ?
+			{
+				count = text.Length-startIndex;
+			}
+
+			return Misc.IndexOf(text, value, startIndex, count, mode);
 		}
 
 		static public int IndexOf(string text, string value, int startIndex, int count, StringSearch mode)
 		{
 			//	Cherche l'index de 'value' dans 'text' (un peu comme string.IndexOf), mais avec quelques
 			//	options supplémentaires.
-			if ( text.Length < value.Length )  return -1;
+			//	Lorsqu'on recule (StringSearch.EndToStart), startIndex est à la fin et count est positif.
+			if ( (mode&StringSearch.EndToStart) != 0 )  // en arrière ?
+			{
+				startIndex = System.Math.Min(startIndex, text.Length);
+				count = System.Math.Min(count, startIndex+1);
+			}
+			else	// en avant ?
+			{
+				startIndex = System.Math.Max(startIndex, 0);
+				count = System.Math.Min(count, text.Length-startIndex);
+			}
+
+			if ( count <= 0 || text.Length < value.Length )  return -1;
 
 			if ( (mode&StringSearch.IgnoreMaj) != 0 )  // maj = min ?
 			{
@@ -366,20 +390,43 @@ namespace Epsitec.Common.Document
 
 			if ( (mode&StringSearch.WholeWord) != 0 )  // mot entier ?
 			{
-				int length = startIndex+count;
-				while ( true )
+				if ( (mode&StringSearch.EndToStart) != 0 )  // en arrière ?
 				{
-					startIndex = text.IndexOf(value, startIndex, count);
-					if ( startIndex == -1 )  return -1;
-					if ( Misc.IsWholeWord(text, startIndex, value.Length) )  return startIndex;
-					startIndex ++;
-					count = length-startIndex;
-					if ( count <= 0 )  return -1;
+					int begin = startIndex-count+1;
+					while ( true )
+					{
+						startIndex = text.LastIndexOf(value, startIndex, count);
+						if ( startIndex == -1 )  return -1;
+						if ( Misc.IsWholeWord(text, startIndex, value.Length) )  return startIndex;
+						startIndex --;
+						count = startIndex-begin+1;
+						if ( startIndex < 0 )  return -1;
+					}
+				}
+				else	// en avant ?
+				{
+					int length = startIndex+count;
+					while ( true )
+					{
+						startIndex = text.IndexOf(value, startIndex, count);
+						if ( startIndex == -1 )  return -1;
+						if ( Misc.IsWholeWord(text, startIndex, value.Length) )  return startIndex;
+						startIndex ++;
+						count = length-startIndex;
+						if ( count <= 0 )  return -1;
+					}
 				}
 			}
 			else
 			{
-				return text.IndexOf(value, startIndex, count);
+				if ( (mode&StringSearch.EndToStart) != 0 )  // en arrière ?
+				{
+					return text.LastIndexOf(value, startIndex, count);
+				}
+				else	// en avant ?
+				{
+					return text.IndexOf(value, startIndex, count);
+				}
 			}
 		}
 

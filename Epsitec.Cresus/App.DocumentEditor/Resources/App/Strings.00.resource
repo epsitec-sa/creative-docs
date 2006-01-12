@@ -166,6 +166,8 @@
 	<data name="Dialog.Replace.Button.EqualMaj">Respecter la casse</data>
 	<data name="Dialog.Replace.Button.EqualAccent">Respecter les accents</data>
 	<data name="Dialog.Replace.Button.WholeWord">Mot entier</data>
+	<data name="Dialog.Replace.Button.Reverse">En arrière</data>
+	<data name="Dialog.Replace.Button.Normal">En avant</data>
 	<data name="Dialog.Replace.Label.Find">Chercher</data>
 	<data name="Dialog.Replace.Label.Replace">Remplacer par</data>
 	

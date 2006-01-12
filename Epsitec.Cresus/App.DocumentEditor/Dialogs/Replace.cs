@@ -64,7 +64,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.checkEqualMaj = new CheckButton(this.window.Root);
 				this.checkEqualMaj.Text = Res.Strings.Dialog.Replace.Button.EqualMaj;
-				this.checkEqualMaj.Width = 200;
+				this.checkEqualMaj.Width = 150;
 				this.checkEqualMaj.Anchor = AnchorStyles.TopLeft;
 				this.checkEqualMaj.AnchorMargins = new Margins(10, 0, 72+18*0, 0);
 				this.checkEqualMaj.TabIndex = this.tabIndex++;
@@ -72,7 +72,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.checkEqualAccent = new CheckButton(this.window.Root);
 				this.checkEqualAccent.Text = Res.Strings.Dialog.Replace.Button.EqualAccent;
-				this.checkEqualAccent.Width = 200;
+				this.checkEqualAccent.Width = 150;
 				this.checkEqualAccent.Anchor = AnchorStyles.TopLeft;
 				this.checkEqualAccent.AnchorMargins = new Margins(10, 0, 72+18*1, 0);
 				this.checkEqualAccent.TabIndex = this.tabIndex++;
@@ -80,11 +80,28 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.checkWholeWord = new CheckButton(this.window.Root);
 				this.checkWholeWord.Text = Res.Strings.Dialog.Replace.Button.WholeWord;
-				this.checkWholeWord.Width = 200;
+				this.checkWholeWord.Width = 150;
 				this.checkWholeWord.Anchor = AnchorStyles.TopLeft;
 				this.checkWholeWord.AnchorMargins = new Margins(10, 0, 72+18*2, 0);
 				this.checkWholeWord.TabIndex = this.tabIndex++;
 				this.checkWholeWord.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.radioReverse = new RadioButton(this.window.Root, "Direction", 0);
+				this.radioReverse.Text = Res.Strings.Dialog.Replace.Button.Reverse;
+				this.radioReverse.Width = 80;
+				this.radioReverse.Anchor = AnchorStyles.TopLeft;
+				this.radioReverse.AnchorMargins = new Margins(210, 0, 72+18*0, 0);
+				this.radioReverse.TabIndex = this.tabIndex++;
+				this.radioReverse.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.radioNormal = new RadioButton(this.window.Root, "Direction", 1);
+				this.radioNormal.ActiveState = Common.Widgets.ActiveState.Yes;
+				this.radioNormal.Text = Res.Strings.Dialog.Replace.Button.Normal;
+				this.radioNormal.Width = 80;
+				this.radioNormal.Anchor = AnchorStyles.TopLeft;
+				this.radioNormal.AnchorMargins = new Margins(210+90, 0, 72+18*0, 0);
+				this.radioNormal.TabIndex = this.tabIndex++;
+				this.radioNormal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				//	Bouton Chercher.
 				this.buttonFind = new Button(this.window.Root);
@@ -177,6 +194,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreMaj;
 			if ( this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreAccent;
 			if ( this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes)  mode |= Misc.StringSearch.WholeWord;
+			if ( this.radioReverse    .ActiveState == Common.Widgets.ActiveState.Yes)  mode |= Misc.StringSearch.EndToStart;
 
 			string replace = null;
 			if ( sender == this.buttonReplace )
@@ -205,6 +223,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected CheckButton			checkEqualMaj;
 		protected CheckButton			checkEqualAccent;
 		protected CheckButton			checkWholeWord;
+		protected RadioButton			radioReverse;
+		protected RadioButton			radioNormal;
 		protected Button				buttonFind;
 		protected Button				buttonReplace;
 		protected Button				buttonClose;
