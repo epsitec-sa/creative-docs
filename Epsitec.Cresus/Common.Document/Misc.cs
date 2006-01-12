@@ -376,60 +376,64 @@ namespace Epsitec.Common.Document
 		static protected char RemoveAccent(char c)
 		{
 			//	Retourne le même caractère sans accent (é -> e).
-			string sa = c.ToString();
-			string sb = sa.ToLower();
-			c = sb[0];
+			char lower = System.Char.ToLower(c);
+			char cc = lower;
 
-			switch ( c )
+			switch ( cc )
 			{
 				case 'á':
 				case 'à':
 				case 'â':
 				case 'ä':
-				case 'ã':  c = 'a';  break;
+				case 'ã':  cc = 'a';  break;
 
-				case 'ç':  c = 'c';  break;
+				case 'ç':  cc = 'c';  break;
 
 				case 'é':
 				case 'è':
 				case 'ê':
-				case 'ë':  c = 'e';  break;
+				case 'ë':  cc = 'e';  break;
 
 				case 'í':
 				case 'ì':
 				case 'î':
-				case 'ï':  c = 'i';  break;
+				case 'ï':  cc = 'i';  break;
 
-				case 'ñ':  c = 'n';  break;
+				case 'ñ':  cc = 'n';  break;
 
 				case 'ó':
 				case 'ò':
 				case 'ô':
 				case 'ö':
-				case 'õ':  c = 'o';  break;
+				case 'õ':  cc = 'o';  break;
 
 				case 'ú':
 				case 'ù':
 				case 'û':
-				case 'ü':  c = 'u';  break;
+				case 'ü':  cc = 'u';  break;
 			}
 
-			if ( sa != sb )
+			if ( lower != c )  // a-t-on utilisé une majuscule transformée en minuscule ?
 			{
-				sa = c.ToString();
-				sb = sa.ToUpper();
-				c = sb[0];
+				cc = System.Char.ToUpper(cc);  // remet en majuscule
 			}
 
-			return c;
+			return cc;
 		}
 
 		static public string Resume(string text)
 		{
 			//	Retourne une version résumée à environ 20 caractères au maximum.
-			if ( text.Length > 20 )
+			return Misc.Resume(text, 20);
+		}
+		
+		static public string Resume(string text, int max)
+		{
+			//	Retourne une version résumée à environ 'max' caractères au maximum.
+			System.Diagnostics.Debug.Assert(max > 2);
+			if ( text.Length > max )
 			{
-				return string.Concat(text.Substring(0, 18), "...");
+				return string.Concat(text.Substring(0, max-2), "...");
 			}
 			else
 			{

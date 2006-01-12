@@ -173,7 +173,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			else
 			{
-				document.Modifier.OpletQueueBeginAction(string.Format(Res.Strings.Dialog.Replace.Action.Replace, Misc.Resume(find), Misc.Resume(replace)));
+				document.Modifier.OpletQueueBeginAction(string.Format(Res.Strings.Dialog.Replace.Action.Replace, Misc.Resume(find, 10), Misc.Resume(replace, 10)));
 			}
 
 			TextFlow textFlow = null;
