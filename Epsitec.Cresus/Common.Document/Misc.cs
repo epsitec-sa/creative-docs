@@ -435,22 +435,19 @@ namespace Epsitec.Common.Document
 			//	Vérifie si un mot et précédé et suivi d'un caractère séparateur de mots.
 			if ( index > 0 )
 			{
-				if ( !Misc.IsWordSeparator(text[index-1]) )  return false;
+				char c1 = text[index-1];
+				char c2 = text[index];
+				if ( !Text.Unicode.IsWordStart(c2, c1) )  return false;
 			}
 
 			if ( index+count < text.Length )
 			{
-				if ( !Misc.IsWordSeparator(text[index+count]) )  return false;
+				char c1 = text[index+count-1];
+				char c2 = text[index+count];
+				if ( !Text.Unicode.IsWordEnd(c2, c1) )  return false;
 			}
 
 			return true;
-		}
-
-		static protected bool IsWordSeparator(char c)
-		{
-			//	Vérifie si un caractère est un séparateur de mots.
-			c = System.Char.ToLower(c);
-			return ( c < 'a' || c > 'z' );
 		}
 
 		static protected string RemoveAccent(string s)

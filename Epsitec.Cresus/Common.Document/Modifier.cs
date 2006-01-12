@@ -3979,6 +3979,48 @@ namespace Epsitec.Common.Document
 
 
 		#region Text Find and Replace
+		public string GetSelectedWord()
+		{
+			//	Retourne le mot actuellement sélectionné.
+			Objects.AbstractText edit = this.RetEditObject();
+			if ( edit == null )  return null;
+
+			if ( edit.TextFlow.TextNavigator.HasRealSelection )
+			{
+				string[] texts = edit.TextFlow.TextNavigator.GetSelectedTexts();
+				return texts[0];
+			}
+
+			int pos = edit.TextFlow.TextNavigator.CursorPosition;
+			string text = edit.TextFlow.TextStory.GetDebugText();
+			int length = text.Length-1;  // ignore le EOT à la fin
+			if ( length <= 0 )  return null;
+
+			int start = pos;
+			if ( start >= length )  start --;
+			while ( start > 0 )
+			{
+				char c1 = text[start-1];
+				char c2 = text[start];
+				if ( Text.Unicode.IsWordStart(c2, c1) )  break;
+				start --;
+			}
+
+			int end = pos;
+			if ( end > 0 )  end --;
+			while ( end < length-1 )
+			{
+				char c1 = text[end];
+				char c2 = text[end+1];
+				if ( Text.Unicode.IsWordEnd(c2, c1) )  break;
+				end ++;
+			}
+
+			if ( start > end )  return null;
+
+			return text.Substring(start, end-start+1);
+		}
+
 		public bool TextReplace(string find, string replace, Misc.StringSearch mode)
 		{
 			//	Effectue une recherche ou un remplacement dans un objet texte du document.
@@ -4035,9 +4077,11 @@ namespace Epsitec.Common.Document
 				return false;
 			}
 
-			edit = textFlow.FindObject();
-			System.Diagnostics.Debug.Assert(edit != null);
-			this.SetEditObject(edit);  // édite l'objet trouvé
+			edit = textFlow.FindObject();  // cherche l'objet contenant le texte trouvé
+			if ( edit != null )
+			{
+				this.SetEditObject(edit);  // édite l'objet trouvé
+			}
 
 			if ( replace != null )
 			{
@@ -4080,7 +4124,7 @@ namespace Epsitec.Common.Document
 						textFlow.MetaNavigator.ClearSelection();
 						textFlow.TextNavigator.MoveTo(i+find.Length, 1);
 						textFlow.TextNavigator.StartSelection();
-						textFlow.TextNavigator.MoveTo(i, 1);
+						textFlow.TextNavigator.MoveTo(i, 1);  // le curseur est au début du mot
 						textFlow.TextNavigator.EndSelection();
 						return true;
 					}
@@ -4122,7 +4166,7 @@ namespace Epsitec.Common.Document
 						textFlow.MetaNavigator.ClearSelection();
 						textFlow.TextNavigator.MoveTo(i, 1);
 						textFlow.TextNavigator.StartSelection();
-						textFlow.TextNavigator.MoveTo(i+find.Length, 1);
+						textFlow.TextNavigator.MoveTo(i+find.Length, 1);  // le curseur est à la fin du mot
 						textFlow.TextNavigator.EndSelection();
 						return true;
 					}

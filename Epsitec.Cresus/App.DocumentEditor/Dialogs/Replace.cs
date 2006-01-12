@@ -5,6 +5,7 @@ using Epsitec.Common.Document;
 
 namespace Epsitec.App.DocumentEditor.Dialogs
 {
+	using Widgets        = Common.Widgets;
 	using Objects        = Common.Document.Objects;
 	using GlobalSettings = Common.Document.Settings.GlobalSettings;
 
@@ -88,20 +89,21 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.radioReverse = new RadioButton(this.window.Root, "Direction", 0);
 				this.radioReverse.Text = Res.Strings.Dialog.Replace.Button.Reverse;
-				this.radioReverse.Width = 80;
+				this.radioReverse.Width = 90;
 				this.radioReverse.Anchor = AnchorStyles.TopLeft;
-				this.radioReverse.AnchorMargins = new Margins(210, 0, 72+18*0, 0);
+				this.radioReverse.AnchorMargins = new Margins(200, 0, 72+18*0, 0);
 				this.radioReverse.TabIndex = this.tabIndex++;
 				this.radioReverse.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.radioNormal = new RadioButton(this.window.Root, "Direction", 1);
-				this.radioNormal.ActiveState = Common.Widgets.ActiveState.Yes;
 				this.radioNormal.Text = Res.Strings.Dialog.Replace.Button.Normal;
-				this.radioNormal.Width = 80;
+				this.radioNormal.Width = 90;
 				this.radioNormal.Anchor = AnchorStyles.TopLeft;
-				this.radioNormal.AnchorMargins = new Margins(210+90, 0, 72+18*0, 0);
+				this.radioNormal.AnchorMargins = new Margins(200+100, 0, 72+18*0, 0);
 				this.radioNormal.TabIndex = this.tabIndex++;
 				this.radioNormal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.Mode = Misc.StringSearch.IgnoreMaj | Misc.StringSearch.IgnoreAccent;
 
 				//	Bouton Chercher.
 				this.buttonFind = new Button(this.window.Root);
@@ -151,6 +153,58 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		public string FindText
+		{
+			//	Texte cherché.
+			get
+			{
+				return this.fieldFind.Text;
+			}
+
+			set
+			{
+				if ( this.fieldFind.Text != value )
+				{
+					this.fieldFind.Text = value;
+					this.ComboMemorise(this.fieldFind);
+				}
+			}
+		}
+
+		public Misc.StringSearch Mode
+		{
+			//	Mode de recherche.
+			get
+			{
+				Misc.StringSearch mode = 0;
+				if ( !this.GetActiveState(this.checkEqualMaj)    )  mode |= Misc.StringSearch.IgnoreMaj;
+				if ( !this.GetActiveState(this.checkEqualAccent) )  mode |= Misc.StringSearch.IgnoreAccent;
+				if (  this.GetActiveState(this.checkWholeWord)   )  mode |= Misc.StringSearch.WholeWord;
+				if (  this.GetActiveState(this.radioReverse)     )  mode |= Misc.StringSearch.EndToStart;
+				return mode;
+			}
+
+			set
+			{
+				this.SetActiveState(this.checkEqualMaj,    (value&Misc.StringSearch.IgnoreMaj   ) == 0);
+				this.SetActiveState(this.checkEqualAccent, (value&Misc.StringSearch.IgnoreAccent) == 0);
+				this.SetActiveState(this.checkWholeWord,   (value&Misc.StringSearch.WholeWord   ) != 0);
+				this.SetActiveState(this.radioReverse,     (value&Misc.StringSearch.EndToStart  ) != 0);
+				this.SetActiveState(this.radioNormal,      (value&Misc.StringSearch.EndToStart  ) == 0);
+			}
+		}
+
+		protected bool GetActiveState(AbstractButton button)
+		{
+			return (button.ActiveState == Widgets.ActiveState.Yes);
+		}
+
+		protected void SetActiveState(AbstractButton button, bool active)
+		{
+			button.ActiveState = active ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
+		}
+
+
 		protected void ComboMemorise(TextFieldCombo combo)
 		{
 			//	Gère la liste d'un combo pour conserver les derniers textes tapés.
@@ -190,19 +244,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.ComboMemorise(this.fieldFind);
 			this.ComboMemorise(this.fieldReplace);
 
-			Misc.StringSearch mode = 0;
-			if ( this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreMaj;
-			if ( this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreAccent;
-			if ( this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes)  mode |= Misc.StringSearch.WholeWord;
-			if ( this.radioReverse    .ActiveState == Common.Widgets.ActiveState.Yes)  mode |= Misc.StringSearch.EndToStart;
-
 			string replace = null;
 			if ( sender == this.buttonReplace )
 			{
 				replace = this.fieldReplace.Text;
 			}
 
-			if ( this.Find(this.fieldFind.Text, replace, mode) )
+			if ( this.Find(this.fieldFind.Text, replace, this.Mode) )
 			{
 				this.editor.Window.MakeFocused();
 				this.editor.Window.RestoreLogicalFocus();

@@ -2102,6 +2102,34 @@ namespace Epsitec.App.DocumentEditor
 			this.replaceState.ActiveState = ActiveState.Yes;
 		}
 
+		[Command ("FindNext")]
+		[Command ("FindPrev")]
+		[Command ("FindDefNext")]
+		[Command ("FindDefPrev")]
+		void CommandFind(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentDocument )  return;
+
+			bool isPrev = (e.CommandName == "FindPrev" || e.CommandName == "FindDefPrev");
+			bool isDef = (e.CommandName == "FindDefNext" || e.CommandName == "FindDefPrev");
+
+			if ( isDef )
+			{
+				string word = this.CurrentDocument.Modifier.GetSelectedWord();
+				if ( word != null )
+				{
+					this.dlgReplace.FindText = word;
+				}
+			}
+
+			Misc.StringSearch mode = this.dlgReplace.Mode;
+			mode &= ~Misc.StringSearch.EndToStart;
+			if ( isPrev )  mode |= Misc.StringSearch.EndToStart;
+			this.dlgReplace.Mode = mode;
+
+			this.CurrentDocument.Modifier.TextReplace(this.dlgReplace.FindText, null, mode);
+		}
+
 		#region PaletteIO
 		[Command ("NewPaletteDefault")]
 		void CommandNewPaletteDefault()
@@ -3563,6 +3591,10 @@ namespace Epsitec.App.DocumentEditor
 			this.glyphsState = this.CreateCommandState("Glyphs");
 			this.glyphsInsertState = this.CreateCommandState("GlyphsInsert");
 			this.replaceState = this.CreateCommandState("Replace", KeyCode.ModifierCtrl|KeyCode.AlphaF);
+			this.findNextState = this.CreateCommandState("FindNext", KeyCode.FuncF3);
+			this.findPrevState = this.CreateCommandState("FindPrev", KeyCode.ModifierShift|KeyCode.FuncF3);
+			this.findDefNextState = this.CreateCommandState("FindDefNext", KeyCode.ModifierCtrl|KeyCode.FuncF3);
+			this.findDefPrevState = this.CreateCommandState("FindDefPrev", KeyCode.ModifierCtrl|KeyCode.ModifierShift|KeyCode.FuncF3);
 			this.deleteState = this.CreateCommandState("Delete", KeyCode.Delete);
 			this.duplicateState = this.CreateCommandState("Duplicate", KeyCode.ModifierCtrl|KeyCode.AlphaD);
 
@@ -5599,6 +5631,10 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					glyphsState;
 		protected CommandState					glyphsInsertState;
 		protected CommandState					replaceState;
+		protected CommandState					findNextState;
+		protected CommandState					findPrevState;
+		protected CommandState					findDefNextState;
+		protected CommandState					findDefPrevState;
 		protected CommandState					deleteState;
 		protected CommandState					duplicateState;
 		protected CommandState					cutState;
