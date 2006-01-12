@@ -333,7 +333,7 @@ namespace Epsitec.Common.Text
 			//	passés en entrée. Utilisé pour déterminer la position d'une fin de
 			//	mot (le mot finit par 'c' et est précédé par 'c_before').
 			
-			return Internal.Navigator.IsWordStart (c, c_before);
+			return Internal.Navigator.IsWordEnd (c, c_before);
 		}
 		
 		
