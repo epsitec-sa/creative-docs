@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Wrappers
@@ -114,27 +114,15 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			if (this.suspend_synchronisations == 0)
 			{
-				if (this.navigator != null)
+				switch (this.attachment)
 				{
-					this.navigator.SuspendNotifications ();
+					case Attachment.Text:
+						this.SynchronizeText (id);
+						break;
 					
-					using (this.navigator.TextStory.BeginAction (this.last_op_caption))
-					{
-						foreach (AbstractState state in this.states)
-						{
-							foreach (StateProperty property in state.GetPendingProperties ())
-							{
-								state.NotifyChanged (property, id);
-								this.InternalSynchronize (state, property);
-							}
-							
-							state.ClearPendingProperties ();
-						}
-						
-						this.navigator.TextStory.ValidateAction ();
-					}
-					
-					this.navigator.ResumeNotifications ();
+					case Attachment.Style:
+						this.SynchronizeStyle (id);
+						break;
 				}
 			}
 		}
@@ -144,6 +132,54 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			this.UpdateState (false);
 			this.UpdateState (true);
+		}
+		
+		
+		private void SynchronizeText(int id)
+		{
+			System.Diagnostics.Debug.Assert (this.navigator != null);
+			System.Diagnostics.Debug.Assert (this.style_list != null);
+			
+			this.navigator.SuspendNotifications ();
+			
+			using (this.navigator.TextStory.BeginAction (this.last_op_caption))
+			{
+				foreach (AbstractState state in this.states)
+				{
+					foreach (StateProperty property in state.GetPendingProperties ())
+					{
+						state.NotifyChanged (property, id);
+						this.InternalSynchronize (state, property);
+					}
+					
+					state.ClearPendingProperties ();
+				}
+				
+				this.navigator.TextStory.ValidateAction ();
+			}
+			
+			this.navigator.ResumeNotifications ();
+		}
+		
+		private void SynchronizeStyle(int id)
+		{
+			System.Diagnostics.Debug.Assert (this.style != null);
+			System.Diagnostics.Debug.Assert (this.style_list != null);
+			
+			//	TODO: OpletQueue.BeginAction
+			
+			foreach (AbstractState state in this.states)
+			{
+				foreach (StateProperty property in state.GetPendingProperties ())
+				{
+					state.NotifyChanged (property, id);
+					this.InternalSynchronize (state, property);
+				}
+				
+				state.ClearPendingProperties ();
+			}
+			
+			//	TODO: OpletQueue.ValidateAction
 		}
 		
 		
@@ -222,9 +258,9 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
-		protected void ClearMetaProperty(string meta, Property template_property)
+		protected void ClearUniformMetaProperty(string meta)
 		{
-			TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, template_property);
+			TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, new Property[0]);
 			
 			if (this.navigator != null)
 			{
@@ -233,7 +269,7 @@ namespace Epsitec.Common.Text.Wrappers
 					this.navigator.EndSelection ();
 				}
 				
-				this.navigator.SetMetaProperties (Properties.ApplyMode.Clear, style);
+				this.navigator.SetMetaProperties (Properties.ApplyMode.ClearUniform, style);
 			}
 		}
 		

@@ -318,6 +318,25 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		public static bool IsWordStart(char c, char c_before)
+		{
+			//	Retourne true si une frontière de mot se trouve entre les caractères
+			//	passés en entrée. Utilisé pour déterminer la position d'un début de
+			//	mot (le mot commence par 'c' et est précédé par 'c_before').
+			
+			return Internal.Navigator.IsWordStart (c, c_before);
+		}
+		
+		public static bool IsWordEnd(char c, char c_before)
+		{
+			//	Retourne true si une frontière de mot se trouve entre les caractères
+			//	passés en entrée. Utilisé pour déterminer la position d'une fin de
+			//	mot (le mot finit par 'c' et est précédé par 'c_before').
+			
+			return Internal.Navigator.IsWordStart (c, c_before);
+		}
+		
+		
 		public static BreakAnalyzer				DefaultBreakAnalyzer
 		{
 			get

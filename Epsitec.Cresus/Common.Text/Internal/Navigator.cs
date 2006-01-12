@@ -1,4 +1,4 @@
-﻿//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+﻿//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
@@ -80,7 +80,12 @@ namespace Epsitec.Common.Text.Internal
 		{
 			int code_0 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset));
 			int code_1 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset - 1));
-			
+			 
+			return Navigator.IsWordStart (code_0, code_1);
+		}
+		
+		public static bool IsWordStart(int code_0, int code_1)
+		{
 			if (code_1 == 0)
 			{
 				return true;
@@ -115,7 +120,12 @@ namespace Epsitec.Common.Text.Internal
 		{
 			int code_0 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset));
 			int code_1 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset - 1));
-			
+			 
+			return Navigator.IsWordEnd (code_0, code_1);
+		}
+		
+		public static bool IsWordEnd(int code_0, int code_1)
+		{
 			if (code_0 == 0)
 			{
 				return true;
@@ -147,6 +157,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		#region CodeClass Enumeration
 		private enum CodeClass
 		{
 			Space,
@@ -154,6 +165,7 @@ namespace Epsitec.Common.Text.Internal
 			Punctuation,
 			ParagraphSeparator
 		}
+		#endregion
 		
 		private static CodeClass GetCodeClass(int code)
 		{

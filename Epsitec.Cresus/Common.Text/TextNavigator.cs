@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -1471,12 +1471,20 @@ again:
 			
 			bool is_uniform = false;
 			
-			foreach (TextStyle style in meta_properties)
+			if (mode == Properties.ApplyMode.ClearUniform)
 			{
-				if (style.RequiresUniformParagraph)
+				is_uniform = true;
+				mode       = Properties.ApplyMode.Clear;
+			}
+			else
+			{
+				foreach (TextStyle style in meta_properties)
 				{
-					is_uniform = true;
-					break;
+					if (style.RequiresUniformParagraph)
+					{
+						is_uniform = true;
+						break;
+					}
 				}
 			}
 			

@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
@@ -13,6 +13,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		Set,									//	écrase les réglages courants
 		Clear,									//	efface les réglages courants
+		ClearUniform,							//	comme Clear, mais force un paragraphe uniforme
 		Combine,								//	combine avec les réglages courants
 		
 		Overwrite,								//	écrase les réglages et supprime en plus les autres propriétés
