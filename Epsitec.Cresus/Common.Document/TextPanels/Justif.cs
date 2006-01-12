@@ -134,7 +134,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.buttonAlignJustif == button )  justif = Common.Text.Wrappers.JustificationMode.JustifyAlignLeft;
 			if ( this.buttonAlignAll    == button )  justif = Common.Text.Wrappers.JustificationMode.JustifyJustfy;
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( justif == Common.Text.Wrappers.JustificationMode.Unknown )
 			{
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphJustif", Res.Strings.Action.ParagraphJustif);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleHyphenClicked(object sender, MessageEventArgs e)
@@ -156,10 +156,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.No);
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 			this.document.ParagraphWrapper.Defined.Hyphenation = hyphen;
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphHyphen", Res.Strings.Action.ParagraphHyphen);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -167,11 +167,11 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 			this.document.ParagraphWrapper.Defined.ClearJustificationMode();
 			this.document.ParagraphWrapper.Defined.ClearHyphenation();
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphJustifClear", Res.Strings.TextPanel.Clear);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 

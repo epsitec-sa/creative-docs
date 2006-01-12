@@ -178,7 +178,7 @@ namespace Epsitec.Common.Document.TextPanels
 			double value = (double) field.InternalValue;
 			bool isDefined = field.Text != "";
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( field == this.fieldLeftMarginFirst.TextFieldReal )
 			{
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphMargins", Res.Strings.TextPanel.Margins.Title);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -238,7 +238,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 			this.document.ParagraphWrapper.Defined.ClearLeftMarginFirst();
 			this.document.ParagraphWrapper.Defined.ClearLeftMarginBody();
 			this.document.ParagraphWrapper.Defined.ClearRightMarginFirst();
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.ParagraphWrapper.Defined.ClearMarginUnits();
 			this.document.ParagraphWrapper.Defined.ClearIndentationLevel();
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphMarginsClear", Res.Strings.TextPanel.Clear);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 

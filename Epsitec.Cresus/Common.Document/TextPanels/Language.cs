@@ -161,7 +161,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonHyphen.ActiveState = (this.buttonHyphen.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
 			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.Yes);
 
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 
 			if ( hyphen )
 			{
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.document.TextWrapper.DefineOperationName("TextLanguageHyphen", Res.Strings.Action.ParagraphHyphen);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleLanguageChanged(object sender)
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 
 			string language = Language.LanguageLongToShort(this.fieldLanguage.Text);
 			if ( language != "" )
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			
 			this.document.TextWrapper.DefineOperationName("TextLanguage", Res.Strings.TextPanel.Language.Title);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -202,11 +202,11 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			this.document.TextWrapper.Defined.ClearLanguageHyphenation();
 			this.document.TextWrapper.Defined.ClearLanguageLocale();
 			this.document.TextWrapper.DefineOperationName("TextLanguageClear", Res.Strings.TextPanel.Clear);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 

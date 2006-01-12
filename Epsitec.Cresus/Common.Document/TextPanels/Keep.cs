@@ -272,10 +272,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 			bool value = (this.buttonKeepNext.ActiveState == ActiveState.No);
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 			this.document.ParagraphWrapper.Defined.KeepWithNextParagraph = value;
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleButtonKeepPrevClicked(object sender, MessageEventArgs e)
@@ -285,10 +285,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 			bool value = (this.buttonKeepPrev.ActiveState == ActiveState.No);
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 			this.document.ParagraphWrapper.Defined.KeepWithPreviousParagraph = value;
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleKeepStartChanged(object sender)
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Document.TextPanels
 			double value = (double) field.InternalValue;
 			bool isDefined = field.Text != "";
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 		
 		private void HandleKeepEndChanged(object sender)
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Document.TextPanels
 			double value = (double) field.InternalValue;
 			bool isDefined = field.Text != "";
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
@@ -340,7 +340,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 		
 		private void HandleStartModeChanged(object sender)
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			Common.Text.Properties.ParagraphStartMode mode = Keep.StringToMode(this.fieldStartMode.Text);
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( mode == Common.Text.Properties.ParagraphStartMode.Undefined )
 			{
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -369,14 +369,14 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 			this.document.ParagraphWrapper.Defined.ClearKeepWithNextParagraph();
 			this.document.ParagraphWrapper.Defined.ClearKeepWithPreviousParagraph();
 			this.document.ParagraphWrapper.Defined.ClearKeepStartLines();
 			this.document.ParagraphWrapper.Defined.ClearKeepEndLines();
 			this.document.ParagraphWrapper.Defined.ClearParagraphStartMode();
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeepClear", Res.Strings.TextPanel.Clear);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		

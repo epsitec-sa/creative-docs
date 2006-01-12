@@ -425,12 +425,12 @@ namespace Epsitec.Common.Document.Objects
 
 			this.MetaNavigator.SelectAll();
 
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			this.document.TextWrapper.Defined.FontFace = fontFace;
 			this.document.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(fontFace);
 			this.document.TextWrapper.Defined.FontSize = fontSize;
 			this.document.TextWrapper.Defined.Units = Text.Properties.SizeUnits.Points;
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 
 			this.textFlow.TextNavigator.ClearSelection();
 

@@ -190,7 +190,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 			
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			
 			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
 			
@@ -228,7 +228,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			
 			this.document.TextWrapper.DefineOperationName("FontSubscript", Res.Strings.Action.FontSubscript);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleButtonSuperscriptClicked(object sender, MessageEventArgs e)
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 			
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			
 			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
 			
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			
 			this.document.TextWrapper.DefineOperationName("FontSuperscript", Res.Strings.Action.FontSuperscript);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleScaleOffsetChanged(object sender)
@@ -282,12 +282,12 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
 			if ( xscript.Offset < 0 )  this.FillSubscriptDefinition(xscript, false);
 			if ( xscript.Offset > 0 )  this.FillSuperscriptDefinition(xscript, false);
 			this.document.TextWrapper.DefineOperationName("FontXscript", Res.Strings.TextPanel.Xscript.Title);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -295,10 +295,10 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			this.document.TextWrapper.Defined.ClearXscript();
 			this.document.TextWrapper.DefineOperationName("FontXscriptClear", Res.Strings.TextPanel.Clear);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 		

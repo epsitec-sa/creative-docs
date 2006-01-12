@@ -161,7 +161,7 @@ namespace Epsitec.Common.Document.TextPanels
 			double value = (double) field.InternalValue;
 			bool isDefined = field.Text != "";
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphSpaces", Res.Strings.TextPanel.Spaces.Title);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 		
 		private void HandleAfterChanged(object sender)
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Document.TextPanels
 			double value = (double) field.InternalValue;
 			bool isDefined = field.Text != "";
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
@@ -203,7 +203,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphSpaces", Res.Strings.TextPanel.Spaces.Title);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 		
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -211,13 +211,13 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 			this.document.ParagraphWrapper.Defined.ClearSpaceBefore();
 			this.document.ParagraphWrapper.Defined.ClearSpaceBeforeUnits();
 			this.document.ParagraphWrapper.Defined.ClearSpaceAfter();
 			this.document.ParagraphWrapper.Defined.ClearSpaceAfterUnits();
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphSpacesClear", Res.Strings.TextPanel.Clear);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 

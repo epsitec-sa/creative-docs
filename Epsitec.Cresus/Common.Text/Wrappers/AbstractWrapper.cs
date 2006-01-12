@@ -76,7 +76,7 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
-		public void SuspendSynchronisations()
+		public void SuspendSynchronizations()
 		{
 			this.suspend_synchronisations++;
 		}
@@ -105,15 +105,16 @@ namespace Epsitec.Common.Text.Wrappers
 			this.last_op_caption = caption;
 		}
 		
-		public void ResumeSynchronisations()
+		public void ResumeSynchronizations()
 		{
 			System.Diagnostics.Debug.Assert (this.suspend_synchronisations > 0);
 			
 			this.suspend_synchronisations--;
-			int id = this.change_id++;
 			
 			if (this.suspend_synchronisations == 0)
 			{
+				int id = this.change_id++;
+				
 				switch (this.attachment)
 				{
 					case Attachment.Text:
@@ -230,10 +231,10 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		protected void DefineMetaProperty(string meta, int priority, params Property[] properties)
 		{
-			TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, priority, properties);
-			
-			if (this.navigator != null)
+			if (this.attachment == Attachment.Text)
 			{
+				TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, priority, properties);
+				
 				if (this.navigator.IsSelectionActive)
 				{
 					this.navigator.EndSelection ();
@@ -241,14 +242,17 @@ namespace Epsitec.Common.Text.Wrappers
 				
 				this.navigator.SetMetaProperties (Properties.ApplyMode.Set, style);
 			}
+			else if (this.attachment == Attachment.Style)
+			{
+			}
 		}
 		
 		protected void ClearMetaProperty(string meta)
 		{
-			TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, new Property[0]);
-			
-			if (this.navigator != null)
+			if (this.attachment == Attachment.Text)
 			{
+				TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, new Property[0]);
+				
 				if (this.navigator.IsSelectionActive)
 				{
 					this.navigator.EndSelection ();
@@ -256,14 +260,17 @@ namespace Epsitec.Common.Text.Wrappers
 				
 				this.navigator.SetMetaProperties (Properties.ApplyMode.Clear, style);
 			}
+			else if (this.attachment == Attachment.Style)
+			{
+			}
 		}
 		
 		protected void ClearUniformMetaProperty(string meta)
 		{
-			TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, new Property[0]);
-			
-			if (this.navigator != null)
+			if (this.attachment == Attachment.Text)
 			{
+				TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, new Property[0]);
+				
 				if (this.navigator.IsSelectionActive)
 				{
 					this.navigator.EndSelection ();
@@ -271,15 +278,21 @@ namespace Epsitec.Common.Text.Wrappers
 				
 				this.navigator.SetMetaProperties (Properties.ApplyMode.ClearUniform, style);
 			}
+			else if (this.attachment == Attachment.Style)
+			{
+			}
 		}
 		
 		protected Property ReadProperty(Properties.WellKnownType type)
 		{
 			Property[] properties = null;
 			
-			if (this.navigator != null)
+			if (this.attachment == Attachment.Text)
 			{
 				properties = this.navigator.TextProperties;
+			}
+			else if (this.attachment == Attachment.Style)
+			{
 			}
 			
 			if ((properties != null) &&
@@ -301,9 +314,12 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			Property[] properties = null;
 			
-			if (this.navigator != null)
+			if (this.attachment == Attachment.Text)
 			{
 				properties = this.navigator.AccumulatedTextProperties;
+			}
+			else if (this.attachment == Attachment.Style)
+			{
 			}
 			
 			if ((properties != null) &&
@@ -325,9 +341,12 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			Property[] properties = null;
 			
-			if (this.navigator != null)
+			if (this.attachment == Attachment.Text)
 			{
 				properties = this.navigator.AccumulatedTextProperties;
+			}
+			else if (this.attachment == Attachment.Style)
+			{
 			}
 			
 			if ((properties != null) &&
@@ -353,9 +372,12 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			TextStyle[] styles = null;
 			
-			if (this.navigator != null)
+			if (this.attachment == Attachment.Text)
 			{
 				styles = this.navigator.TextStyles;
+			}
+			else if (this.attachment == Attachment.Style)
+			{
 			}
 			
 			if ((styles != null) &&
@@ -395,9 +417,12 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			TextStyle[] styles = null;
 			
-			if (this.navigator != null)
+			if (this.attachment == Attachment.Text)
 			{
 				styles = this.navigator.TextStyles;
+			}
+			else if (this.attachment == Attachment.Style)
+			{
 			}
 			
 			if ((styles != null) &&
@@ -419,9 +444,12 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			TextStyle[] styles = null;
 			
-			if (this.navigator != null)
+			if (this.attachment == Attachment.Text)
 			{
 				styles = this.navigator.TextStyles;
+			}
+			else if (this.attachment == Attachment.Style)
+			{
 			}
 			
 			if ((styles != null) &&
@@ -478,14 +506,13 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 				else
 				{
-					state.NotifyChanged (property, id);
+					//	La logique de synchronisation se trouve dans ResumeSynchronizations
+					//	et on ne veut pas la répliquer ici. On triche donc pour forcer une
+					//	paire suspend/resume :
 					
-					if (this.navigator != null)
-					{
-						this.navigator.SuspendNotifications ();
-						this.InternalSynchronize (state, property);
-						this.navigator.ResumeNotifications ();
-					}
+					this.SuspendSynchronizations ();
+					state.AddPendingProperty (property);
+					this.ResumeSynchronizations ();
 				}
 			}
 		}

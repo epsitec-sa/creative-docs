@@ -689,7 +689,7 @@ namespace Epsitec.Cresus.Database
 			Services.RoamingClientTool.CreateDatabase (service, operation, "roaming");
 		}
 		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check19ReplicationAndSynchronisation()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check19ReplicationAndSynchronization()
 		{
 			Remoting.IRequestExecutionService service = Services.Engine.GetRemoteRequestExecutionService ("localhost", 1234);
 			

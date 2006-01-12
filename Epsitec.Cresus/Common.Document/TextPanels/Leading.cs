@@ -241,11 +241,11 @@ namespace Epsitec.Common.Document.TextPanels
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 			this.document.ParagraphWrapper.Defined.Leading = value;
 			this.document.ParagraphWrapper.Defined.LeadingUnits = units;
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleLeadingChanged(object sender)
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Document.TextPanels
 			bool isDefined;
 			this.GetTextFieldRealValue(field, out value, out units, out isDefined);
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleButtonLeadingMenuClicked(object sender, MessageEventArgs e)
@@ -329,12 +329,12 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.ParagraphWrapper.IsAttached )  return;
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 			this.document.ParagraphWrapper.Defined.ClearLeading();
 			this.document.ParagraphWrapper.Defined.ClearLeadingUnits();
 			this.document.ParagraphWrapper.Defined.ClearAlignMode();
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphLeadingClear", Res.Strings.TextPanel.Clear);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 
@@ -371,11 +371,11 @@ namespace Epsitec.Common.Document.TextPanels
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
 
-			this.document.ParagraphWrapper.SuspendSynchronisations();
+			this.document.ParagraphWrapper.SuspendSynchronizations();
 			this.document.ParagraphWrapper.Defined.Leading = leading;
 			this.document.ParagraphWrapper.Defined.LeadingUnits = units;
 			this.document.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
-			this.document.ParagraphWrapper.ResumeSynchronisations();
+			this.document.ParagraphWrapper.ResumeSynchronizations();
 		}
 		#endregion
 

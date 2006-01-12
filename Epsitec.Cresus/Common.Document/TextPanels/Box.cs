@@ -142,10 +142,10 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			this.document.TextWrapper.Defined.ClearTextBox();
 			this.document.TextWrapper.DefineOperationName("TextBoxClear", Res.Strings.TextPanel.Clear);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 		

@@ -670,18 +670,18 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				if ( handle == "LeftFirst" )
 				{
-					this.document.ParagraphWrapper.SuspendSynchronisations();
+					this.document.ParagraphWrapper.SuspendSynchronizations();
 					this.document.ParagraphWrapper.Defined.LeftMarginFirst = x;
 					this.document.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphWrapper.ResumeSynchronisations();
+					this.document.ParagraphWrapper.ResumeSynchronizations();
 				}
 
 				if ( handle == "LeftBody" )
 				{
-					this.document.ParagraphWrapper.SuspendSynchronisations();
+					this.document.ParagraphWrapper.SuspendSynchronizations();
 					this.document.ParagraphWrapper.Defined.LeftMarginBody = x;
 					this.document.ParagraphWrapper.Defined.MarginUnits    = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphWrapper.ResumeSynchronisations();
+					this.document.ParagraphWrapper.ResumeSynchronizations();
 				}
 
 				if ( handle == "FirstBody" )
@@ -690,21 +690,21 @@ namespace Epsitec.Common.Document.Widgets
 					xf = System.Math.Max(xf, 0);
 					xf = System.Math.Min(xf, width);
 
-					this.document.ParagraphWrapper.SuspendSynchronisations();
+					this.document.ParagraphWrapper.SuspendSynchronizations();
 					this.document.ParagraphWrapper.Defined.LeftMarginFirst = xf;
 					this.document.ParagraphWrapper.Defined.LeftMarginBody  = x;
 					this.document.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphWrapper.ResumeSynchronisations();
+					this.document.ParagraphWrapper.ResumeSynchronizations();
 				}
 
 				if ( handle == "Right" )
 				{
 					x = width-x;
-					this.document.ParagraphWrapper.SuspendSynchronisations();
+					this.document.ParagraphWrapper.SuspendSynchronizations();
 					this.document.ParagraphWrapper.Defined.RightMarginFirst = x;
 					this.document.ParagraphWrapper.Defined.RightMarginBody  = x;
 					this.document.ParagraphWrapper.Defined.MarginUnits      = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphWrapper.ResumeSynchronisations();
+					this.document.ParagraphWrapper.ResumeSynchronizations();
 				}
 			}
 			else	// tabulateur ?

@@ -147,29 +147,29 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Donne la couleur au wrapper.
 			if ( sample == this.underlinedColor )
 			{
-				this.document.TextWrapper.SuspendSynchronisations();
+				this.document.TextWrapper.SuspendSynchronizations();
 				Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Underline;
 				this.FillUnderlineDefinition(xline, false);
 				this.document.TextWrapper.DefineOperationName("FontXline", Res.Strings.TextPanel.Xline.Title);
-				this.document.TextWrapper.ResumeSynchronisations();
+				this.document.TextWrapper.ResumeSynchronizations();
 			}
 
 			if ( sample == this.overlinedColor )
 			{
-				this.document.TextWrapper.SuspendSynchronisations();
+				this.document.TextWrapper.SuspendSynchronizations();
 				Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Overline;
 				this.FillOverlineDefinition(xline, false);
 				this.document.TextWrapper.DefineOperationName("FontXline", Res.Strings.TextPanel.Xline.Title);
-				this.document.TextWrapper.ResumeSynchronisations();
+				this.document.TextWrapper.ResumeSynchronizations();
 			}
 
 			if ( sample == this.strikeoutColor )
 			{
-				this.document.TextWrapper.SuspendSynchronisations();
+				this.document.TextWrapper.SuspendSynchronizations();
 				Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Strikeout;
 				this.FillStrikeoutDefinition(xline, false);
 				this.document.TextWrapper.DefineOperationName("FontXline", Res.Strings.TextPanel.Xline.Title);
-				this.document.TextWrapper.ResumeSynchronisations();
+				this.document.TextWrapper.ResumeSynchronizations();
 			}
 		}
 
@@ -479,7 +479,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 			
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			
 			//	Cycle entre divers états:
 			//
@@ -527,7 +527,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			
 			this.document.TextWrapper.DefineOperationName("FontUnderlined", Res.Strings.Action.FontUnderlined);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 		
 		private void HandleButtonOverlineClicked(object sender, MessageEventArgs e)
@@ -535,7 +535,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 			
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			
 			//	Cycle entre divers états:
 			//
@@ -583,7 +583,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			
 			this.document.TextWrapper.DefineOperationName("FontOverlined", Res.Strings.Action.FontOverlined);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 		
 		private void HandleButtonStrikeoutClicked(object sender, MessageEventArgs e)
@@ -591,7 +591,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 			
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			
 			//	Cycle entre divers états:
 			//
@@ -639,7 +639,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			
 			this.document.TextWrapper.DefineOperationName("FontStrikeout", Res.Strings.Action.FontStrikeout);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 		
 		private void HandleUnderlinedValueChanged(object sender)
@@ -647,11 +647,11 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Underline;
 			this.FillUnderlineDefinition(xline, false);
 			this.document.TextWrapper.DefineOperationName("FontUnderlined", Res.Strings.Action.FontUnderlined);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleOverlinedValueChanged(object sender)
@@ -659,11 +659,11 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Overline;
 			this.FillOverlineDefinition(xline, false);
 			this.document.TextWrapper.DefineOperationName("FontOverlined", Res.Strings.Action.FontOverlined);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleStrikeoutValueChanged(object sender)
@@ -671,11 +671,11 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.document.TextWrapper.Defined.Strikeout;
 			this.FillStrikeoutDefinition(xline, false);
 			this.document.TextWrapper.DefineOperationName("FontStrikeout", Res.Strings.Action.FontStrikeout);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleSampleColorClicked(object sender, MessageEventArgs e)
@@ -708,12 +708,12 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronisations();
+			this.document.TextWrapper.SuspendSynchronizations();
 			this.document.TextWrapper.Defined.ClearUnderline();
 			this.document.TextWrapper.Defined.ClearOverline();
 			this.document.TextWrapper.Defined.ClearStrikeout();
 			this.document.TextWrapper.DefineOperationName("FontXlineClear", Res.Strings.TextPanel.Clear);
-			this.document.TextWrapper.ResumeSynchronisations();
+			this.document.TextWrapper.ResumeSynchronizations();
 		}
 
 		

@@ -267,35 +267,35 @@ namespace Epsitec.Common.Document
 			if ( id == null )  return;
 			string face = id.InvariantFaceName;
 
-			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.SuspendSynchronizations();
 			this.textWrapper.Defined.FontFace  = face;
 			this.textWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
 			this.textWrapper.DefineOperationName(name, face);
-			this.textWrapper.ResumeSynchronisations();
+			this.textWrapper.ResumeSynchronizations();
 		}
 
 		protected void ChangeBold()
 		{
 			//	La commande 'gras' a été actionnée.
-			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.SuspendSynchronizations();
 			this.textWrapper.Defined.InvertBold = !this.textWrapper.Defined.InvertBold;
 			this.textWrapper.DefineOperationName("FontBold", Res.Strings.Action.FontBold);
-			this.textWrapper.ResumeSynchronisations();
+			this.textWrapper.ResumeSynchronizations();
 		}
 
 		protected void ChangeItalic()
 		{
 			//	La commande 'italique' a été actionnée.
-			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.SuspendSynchronizations();
 			this.textWrapper.Defined.InvertItalic = !this.textWrapper.Defined.InvertItalic;
 			this.textWrapper.DefineOperationName("FontItalic", Res.Strings.Action.FontItalic);
-			this.textWrapper.ResumeSynchronisations();
+			this.textWrapper.ResumeSynchronizations();
 		}
 
 		protected void ChangeUnderlined()
 		{
 			//	La commande 'souligné' a été actionnée.
-			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.SuspendSynchronizations();
 
 			if ( this.textWrapper.Active.IsUnderlineDefined )
 			{
@@ -308,13 +308,13 @@ namespace Epsitec.Common.Document
 			}
 
 			this.textWrapper.DefineOperationName("FontUnderlined", Res.Strings.Action.FontUnderlined);
-			this.textWrapper.ResumeSynchronisations();
+			this.textWrapper.ResumeSynchronizations();
 		}
 
 		protected void ChangeOverlined()
 		{
 			//	La commande 'surligné' a été actionnée.
-			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.SuspendSynchronizations();
 
 			if ( this.textWrapper.Active.IsOverlineDefined )
 			{
@@ -327,13 +327,13 @@ namespace Epsitec.Common.Document
 			}
 
 			this.textWrapper.DefineOperationName("FontOverlined", Res.Strings.Action.FontOverlined);
-			this.textWrapper.ResumeSynchronisations();
+			this.textWrapper.ResumeSynchronizations();
 		}
 
 		protected void ChangeStrikeout()
 		{
 			//	La commande 'biffé' a été actionnée.
-			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.SuspendSynchronizations();
 
 			if ( this.textWrapper.Active.IsStrikeoutDefined )
 			{
@@ -346,13 +346,13 @@ namespace Epsitec.Common.Document
 			}
 
 			this.textWrapper.DefineOperationName("FontStrikeout", Res.Strings.Action.FontStrikeout);
-			this.textWrapper.ResumeSynchronisations();
+			this.textWrapper.ResumeSynchronizations();
 		}
 
 		protected void ChangeSubscript()
 		{
 			//	La commande 'indice' a été actionnée.
-			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.SuspendSynchronizations();
 
 			if ( this.SubscriptActiveState )
 			{
@@ -365,13 +365,13 @@ namespace Epsitec.Common.Document
 			}
 
 			this.textWrapper.DefineOperationName("FontSubscript", Res.Strings.Action.FontSubscript);
-			this.textWrapper.ResumeSynchronisations();
+			this.textWrapper.ResumeSynchronizations();
 		}
 
 		protected void ChangeSuperscript()
 		{
 			//	La commande 'exposant' a été actionnée.
-			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.SuspendSynchronizations();
 
 			if ( this.SuperscriptActiveState )
 			{
@@ -384,7 +384,7 @@ namespace Epsitec.Common.Document
 			}
 
 			this.textWrapper.DefineOperationName("FontSuperscript", Res.Strings.Action.FontSuperscript);
-			this.textWrapper.ResumeSynchronisations();
+			this.textWrapper.ResumeSynchronizations();
 		}
 
 		public void IncrementFontSize(double delta)
@@ -421,22 +421,22 @@ namespace Epsitec.Common.Document
 				size *= Modifier.fontSizeScale;
 			}
 
-			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.SuspendSynchronizations();
 			this.textWrapper.Defined.FontSize = size;
 			this.textWrapper.Defined.Units = units;
 			this.textWrapper.DefineOperationName("FontFontSize", Res.Strings.Action.FontSize);
-			this.textWrapper.ResumeSynchronisations();
+			this.textWrapper.ResumeSynchronizations();
 		}
 
 
 		protected void ChangeParagraphLeading(double value)
 		{
 			//	La commande pour changer d'interligne a été actionnée.
-			this.paragraphWrapper.SuspendSynchronisations();
+			this.paragraphWrapper.SuspendSynchronizations();
 			this.paragraphWrapper.Defined.Leading = value;
 			this.paragraphWrapper.Defined.LeadingUnits = Text.Properties.SizeUnits.Percent;
 			this.paragraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
-			this.paragraphWrapper.ResumeSynchronisations();
+			this.paragraphWrapper.ResumeSynchronizations();
 		}
 
 		public void IncrementParagraphLeading(double delta)
@@ -466,11 +466,11 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			this.paragraphWrapper.SuspendSynchronisations();
+			this.paragraphWrapper.SuspendSynchronizations();
 			this.paragraphWrapper.Defined.Leading = leading;
 			this.paragraphWrapper.Defined.LeadingUnits = units;
 			this.paragraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
-			this.paragraphWrapper.ResumeSynchronisations();
+			this.paragraphWrapper.ResumeSynchronizations();
 		}
 
 		protected void IncrementParagraphIndent(int delta)
@@ -506,22 +506,22 @@ namespace Epsitec.Common.Document
 			marginBody  = System.Math.Max(marginBody,  0);
 			marginFirst = System.Math.Max(marginFirst, 0);
 
-			this.paragraphWrapper.SuspendSynchronisations();
+			this.paragraphWrapper.SuspendSynchronizations();
 			this.paragraphWrapper.Defined.IndentationLevel = level;
 			this.paragraphWrapper.Defined.LeftMarginFirst = marginFirst;
 			this.paragraphWrapper.Defined.LeftMarginBody  = marginBody;
 			this.paragraphWrapper.Defined.MarginUnits = Common.Text.Properties.SizeUnits.Points;
 			this.paragraphWrapper.DefineOperationName("ParagraphIndent", Res.Strings.Action.ParagraphIndent);
-			this.paragraphWrapper.ResumeSynchronisations();
+			this.paragraphWrapper.ResumeSynchronizations();
 		}
 
 		protected void Justif(Common.Text.Wrappers.JustificationMode justif)
 		{
 			//	La commande pour changer de mode de justification a été actionnée.
-			this.paragraphWrapper.SuspendSynchronisations();
+			this.paragraphWrapper.SuspendSynchronizations();
 			this.paragraphWrapper.Defined.JustificationMode = justif;
 			this.paragraphWrapper.DefineOperationName("ParagraphJustif", Res.Strings.Action.ParagraphJustif);
-			this.paragraphWrapper.ResumeSynchronisations();
+			this.paragraphWrapper.ResumeSynchronizations();
 		}
 
 		protected void FontClear()
@@ -529,7 +529,7 @@ namespace Epsitec.Common.Document
 			//	La commande pour effacer les définitions de caractère a été actionnée.
 			if ( !this.textWrapper.IsAttached )  return;
 
-			this.textWrapper.SuspendSynchronisations();
+			this.textWrapper.SuspendSynchronizations();
 			this.textWrapper.Defined.ClearFontFace();
 			this.textWrapper.Defined.ClearFontStyle();
 			this.textWrapper.Defined.ClearFontSize();
@@ -551,7 +551,7 @@ namespace Epsitec.Common.Document
 			this.textWrapper.Defined.ClearConditions();
 			this.textWrapper.Defined.ClearUserTags();
 			this.textWrapper.DefineOperationName("FontClear", Res.Strings.Action.FontClear);
-			this.textWrapper.ResumeSynchronisations();
+			this.textWrapper.ResumeSynchronizations();
 		}
 
 		protected void ParagraphClear()
@@ -559,7 +559,7 @@ namespace Epsitec.Common.Document
 			//	La commande pour effacer les définitions de paragraphe a été actionnée.
 			if ( !this.paragraphWrapper.IsAttached )  return;
 
-			this.paragraphWrapper.SuspendSynchronisations();
+			this.paragraphWrapper.SuspendSynchronizations();
 			this.paragraphWrapper.Defined.ClearJustificationMode();
 			this.paragraphWrapper.Defined.ClearHyphenation();
 			this.paragraphWrapper.Defined.ClearLeftMarginFirst();
@@ -581,7 +581,7 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.Defined.ClearKeepWithPreviousParagraph();
 			this.paragraphWrapper.Defined.ClearParagraphStartMode();
 			this.paragraphWrapper.DefineOperationName("ParagraphClear", Res.Strings.Action.ParagraphClear);
-			this.paragraphWrapper.ResumeSynchronisations();
+			this.paragraphWrapper.ResumeSynchronizations();
 		}
 
 
