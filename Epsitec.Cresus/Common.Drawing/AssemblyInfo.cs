@@ -10,7 +10,7 @@ using System.Security.Permissions;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EPSITEC SA")]
 [assembly: AssemblyProduct("Crésus")]
-[assembly: AssemblyCopyright("Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
+[assembly: AssemblyCopyright("Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

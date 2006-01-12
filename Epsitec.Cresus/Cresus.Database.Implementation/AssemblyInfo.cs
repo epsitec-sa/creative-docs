@@ -14,7 +14,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EPSITEC SA")]
 [assembly: AssemblyProduct("Crésus")]
-[assembly: AssemblyCopyright("Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
+[assembly: AssemblyCopyright("Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

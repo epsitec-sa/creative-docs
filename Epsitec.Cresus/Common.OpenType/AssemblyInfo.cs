@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Epsitec")]
 [assembly: AssemblyProduct("OpenType Engine")]
-[assembly: AssemblyCopyright("Copyright © 2005, Pierre Arnaud, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
+[assembly: AssemblyCopyright("Copyright © 2005-2006, Pierre Arnaud, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
