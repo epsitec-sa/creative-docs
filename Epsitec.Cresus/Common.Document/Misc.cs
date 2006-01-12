@@ -348,7 +348,7 @@ namespace Epsitec.Common.Document
 			int count;
 			if ( (mode&StringSearch.EndToStart) != 0 )  // en arrière ?
 			{
-				count = startIndex;
+				count = startIndex+1;
 			}
 			else	// en avant ?
 			{
@@ -362,7 +362,10 @@ namespace Epsitec.Common.Document
 		{
 			//	Cherche l'index de 'value' dans 'text' (un peu comme string.IndexOf), mais avec quelques
 			//	options supplémentaires.
-			//	Lorsqu'on recule (StringSearch.EndToStart), startIndex est à la fin et count est positif.
+			//	Lorsqu'on recule (StringSearch.EndToStart), 'startIndex' est à la fin (sur le premier
+			//	caractère cherché) et 'count' est positif (mais compte de droite à gauche).
+			//	Cette façon absurde de procéder est celle de string.LastIndexOf !
+			//	TODO: optimiser la vitesse !
 			if ( (mode&StringSearch.EndToStart) != 0 )  // en arrière ?
 			{
 				startIndex = System.Math.Min(startIndex, text.Length);

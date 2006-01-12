@@ -1282,7 +1282,7 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
-		public void SetEditObject(Objects.AbstractText edit)
+		public void SetEditObject(Objects.AbstractText edit, bool changeTool)
 		{
 			//	Edite l'objet demandé, en changeant de page et de calque si nécessaire.
 			if ( edit == this.RetEditObject() )  // déjà en cours d'édition ?
@@ -1304,12 +1304,14 @@ namespace Epsitec.Common.Document
 				this.ActiveViewer.DrawingContext.CurrentLayer = layer;
 			}
 
-			this.Tool = "ToolEdit";
+			if ( changeTool )
+			{
+				this.Tool = "ToolEdit";
+			}
 			this.ActiveViewer.Select(edit, true, false);
 			edit.SetAutoScroll();  // montre le cureur
 
 			this.OpletQueueValidateAction();
-		
 		}
 
 		protected void SelectedSegmentClear()
@@ -1898,7 +1900,7 @@ namespace Epsitec.Common.Document
 					
 					parent.TextFlow.Add(obj, parent, after);
 					
-					this.SetEditObject(obj);
+					this.SetEditObject(obj, false);
 					
 					this.document.Modifier.OpletQueue.Insert(new TextFlowChangeOplet(flow1));
 					this.document.Modifier.OpletQueue.Insert(new TextFlowChangeOplet(flow2));
@@ -4080,7 +4082,7 @@ namespace Epsitec.Common.Document
 			edit = textFlow.FindObject();  // cherche l'objet contenant le texte trouvé
 			if ( edit != null )
 			{
-				this.SetEditObject(edit);  // édite l'objet trouvé
+				this.SetEditObject(edit, true);  // édite l'objet trouvé
 			}
 
 			if ( replace != null )

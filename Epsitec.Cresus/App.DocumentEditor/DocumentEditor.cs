@@ -2113,19 +2113,17 @@ namespace Epsitec.App.DocumentEditor
 			bool isPrev = (e.CommandName == "FindPrev" || e.CommandName == "FindDefPrev");
 			bool isDef = (e.CommandName == "FindDefNext" || e.CommandName == "FindDefPrev");
 
-			if ( isDef )
+			if ( isDef )  // Ctrl-F3 ?
 			{
-				string word = this.CurrentDocument.Modifier.GetSelectedWord();
-				if ( word != null )
-				{
-					this.dlgReplace.FindText = word;
-				}
+				string word = this.CurrentDocument.Modifier.GetSelectedWord();  // mot actuellement sélectionné
+				if ( word == null )  return;
+				this.dlgReplace.FindText = word;  // il devient le critère de recherche
 			}
 
 			Misc.StringSearch mode = this.dlgReplace.Mode;
 			mode &= ~Misc.StringSearch.EndToStart;
-			if ( isPrev )  mode |= Misc.StringSearch.EndToStart;
-			this.dlgReplace.Mode = mode;
+			if ( isPrev )  mode |= Misc.StringSearch.EndToStart;  // Shift-F3 ?
+			this.dlgReplace.Mode = mode;  // modifie juste la direction de la recherche
 
 			this.CurrentDocument.Modifier.TextReplace(this.dlgReplace.FindText, null, mode);
 		}

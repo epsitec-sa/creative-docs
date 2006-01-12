@@ -1551,6 +1551,9 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
+			Objects.Abstract editObj = null;
+			Objects.DetectEditType editHandle;
+
 			if ( this.editFlowSelect != Objects.DetectEditType.Out )
 			{
 				Objects.DetectEditType handle;
@@ -1580,29 +1583,27 @@ namespace Epsitec.Common.Document
 						this.ChangeMouseCursor(MouseCursorType.TextFlowAdd);
 					}
 				}
-				return;
 			}
-
-			Objects.Abstract editObj = null;
-			Objects.DetectEditType editHandle;
-
-			if ( this.mouseDragging )  // bouton souris pressé ?
+			else
 			{
-				this.EditProcessMessage(message, mouse);
-			}
-			else	// bouton souris relâché ?
-			{
-				editObj = this.DetectEdit(mouse, out editHandle);
-				this.Hilite(editObj);
-
-				if ( editHandle == Objects.DetectEditType.HandleFlowPrev ||
-					 editHandle == Objects.DetectEditType.HandleFlowNext )
+				if ( this.mouseDragging )  // bouton souris pressé ?
 				{
-					this.ChangeMouseCursor(MouseCursorType.TextFlow);
+					this.EditProcessMessage(message, mouse);
 				}
-				else
+				else	// bouton souris relâché ?
 				{
-					this.ChangeMouseCursor(MouseCursorType.IBeam);
+					editObj = this.DetectEdit(mouse, out editHandle);
+					this.Hilite(editObj);
+
+					if ( editHandle == Objects.DetectEditType.HandleFlowPrev ||
+						editHandle == Objects.DetectEditType.HandleFlowNext )
+					{
+						this.ChangeMouseCursor(MouseCursorType.TextFlow);
+					}
+					else
+					{
+						this.ChangeMouseCursor(MouseCursorType.IBeam);
+					}
 				}
 			}
 

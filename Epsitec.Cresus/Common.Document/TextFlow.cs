@@ -362,7 +362,7 @@ namespace Epsitec.Common.Document
 					Objects.AbstractText obj = this.FindMatchingTextBox(frame);
 					System.Diagnostics.Debug.Assert(obj != null);
 					
-					this.document.Modifier.SetEditObject(obj);
+					this.document.Modifier.SetEditObject(obj, false);
 					System.Diagnostics.Debug.Assert(this.HasActiveTextBox);
 					
 					this.activeTextBox.SetAutoScroll();
