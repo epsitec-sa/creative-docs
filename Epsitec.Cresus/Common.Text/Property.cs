@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -52,6 +52,27 @@ namespace Epsitec.Common.Text
 			get
 			{
 				return false;
+			}
+		}
+		
+		
+		internal string								InternalName
+		{
+			get
+			{
+				return this.internal_name;
+			}
+			set
+			{
+				if (value == "")
+				{
+					value = null;
+				}
+				
+				if (this.internal_name != value)
+				{
+					this.internal_name = value;
+				}
 			}
 		}
 		
@@ -290,6 +311,14 @@ namespace Epsitec.Common.Text
 			
 			buffer.Append ("{");
 			buffer.Append (prop_name);
+			
+			if ((property.internal_name != null) &&
+				(property.internal_name.Length > 0))
+			{
+				buffer.Append (",");
+				buffer.Append (property.internal_name);
+			}
+			
 			buffer.Append (":");
 			
 			property.SerializeToText (buffer);
@@ -313,6 +342,15 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (sep_pos > pos);
 			
 			string prop_name = text.Substring (pos+1, sep_pos - pos - 1);
+			string intl_name = null;
+			
+			if (prop_name.IndexOf (',') > 0)
+			{
+				string[] split = prop_name.Split (',');
+				
+				prop_name = split[0];
+				intl_name = split[1];
+			}
 			
 			Property template = Property.templates[prop_name] as Property;
 			
@@ -332,6 +370,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			property = template.EmptyClone ();
+			property.internal_name = intl_name;
 			
 			sep_pos++;
 			
@@ -428,6 +467,7 @@ namespace Epsitec.Common.Text
 		
 		
 		private int								contents_signature;
+		private string							internal_name;
 		
 		static System.Collections.Hashtable		templates = new System.Collections.Hashtable ();
 	}

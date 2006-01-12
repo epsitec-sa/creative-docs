@@ -244,6 +244,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				
 			}
 		}
 		
@@ -262,6 +263,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				
 			}
 		}
 		
@@ -280,6 +282,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				
 			}
 		}
 		
@@ -293,6 +296,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				
 			}
 			
 			if ((properties != null) &&
@@ -320,6 +324,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				
 			}
 			
 			if ((properties != null) &&
@@ -347,6 +352,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				
 			}
 			
 			if ((properties != null) &&
@@ -378,6 +384,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				
 			}
 			
 			if ((styles != null) &&
@@ -423,6 +430,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				
 			}
 			
 			if ((styles != null) &&
@@ -450,6 +458,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				
 			}
 			
 			if ((styles != null) &&
