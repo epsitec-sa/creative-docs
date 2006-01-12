@@ -780,7 +780,7 @@
 	<data name="Action.Paste">Paste</data>
 	<data name="Action.Delete">Delete</data>
 	<data name="Action.Duplicate">Duplicate</data>
-	<data name="Action.ReplaceMain">Replace</data>
+	<data name="Action.ReplaceMain">Find</data>
 	<data name="Action.Replace">Find and Replace...</data>
 
 	<data name="Action.DocumentSize">Document size</data>
