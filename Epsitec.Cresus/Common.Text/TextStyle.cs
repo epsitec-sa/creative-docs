@@ -195,14 +195,14 @@ namespace Epsitec.Common.Text
 		{
 			//	Ignore le nom dans le calcul de la signature. C'est voulu !
 			
-			checksum.Update ((int) this.text_style_class);
+			checksum.UpdateValue ((int) this.text_style_class);
 			
 			if ((this.parent_styles != null) &&
 				(this.parent_styles.Length > 0))
 			{
 				foreach (TextStyle style in this.parent_styles)
 				{
-					checksum.Update (style.GetContentsSignature ());
+					checksum.UpdateValue (style.GetContentsSignature ());
 				}
 			}
 			

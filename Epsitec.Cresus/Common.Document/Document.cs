@@ -1364,35 +1364,8 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
 			style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
-			this.textContext.DefaultStyle = style;
-
-			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));
-			this.textContext.StyleList.NewMetaProperty("Bold", "X-Bold", 1, properties);
-
-			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.FontProperty(null, "!Italic"));
-			this.textContext.StyleList.NewMetaProperty("Italic", "X-Italic", 1, properties);
 			
-			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", black));
-			this.textContext.StyleList.NewMetaProperty("Underlined", "Underlined", 0, properties);
-			
-			this.textContext.StyleList.NewMetaProperty("Subscript", "SuperScript", new Text.Properties.FontXscriptProperty (0.6, -0.15));
-			this.textContext.StyleList.NewMetaProperty("Superscript", "SuperScript", new Text.Properties.FontXscriptProperty (0.6, 0.25));
-
-			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));
-			this.textContext.StyleList.NewMetaProperty("UserX", "UserX", 0, properties);
-
-			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.FontProperty(null, "!Italic"));
-			this.textContext.StyleList.NewMetaProperty("UserY", "UserY", 0, properties);
-
-			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", black));
-			this.textContext.StyleList.NewMetaProperty("UserZ", "UserZ", 0, properties);
-
+			#region Experimental Code
 			
 			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("bullet-1");
 			Text.Generator generator2 = this.textContext.GeneratorList.NewGenerator("num-1");
@@ -1410,30 +1383,29 @@ namespace Epsitec.Common.Document
 
 			items1.Generator = generator1;
 			items1.TabItem   = tabs.NewTab("T1-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
-			items1.TabBody   = tabs.NewTab("T1-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
+			items1.TabBody   = tabs.NewTab("T1-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.AbsoluteIndent);
 			
 			items2.Generator = generator2;
-			items2.TabItem   = tabs.NewTab("T2-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
-			items2.TabBody   = tabs.NewTab("T2-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
+			items2.TabItem   = tabs.NewTab("T2-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.LeftRelative);
+			items2.TabBody   = tabs.NewTab("T2-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.LeftRelativeIndent);
 			
 			items3.Generator = generator3;
-			items3.TabItem   = tabs.NewTab("T3-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
-			items3.TabBody   = tabs.NewTab("T3-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
+			items3.TabItem   = tabs.NewTab("T3-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.LeftRelative);
+			items3.TabBody   = tabs.NewTab("T3-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.LeftRelativeIndent);
 			
 			Text.Properties.ManagedParagraphProperty itemList1 = new Text.Properties.ManagedParagraphProperty("ItemList", items1.Save());
 			Text.Properties.ManagedParagraphProperty itemList2 = new Text.Properties.ManagedParagraphProperty("ItemList", items2.Save());
 			Text.Properties.ManagedParagraphProperty itemList3 = new Text.Properties.ManagedParagraphProperty("ItemList", items3.Save());
 			
-			this.textContext.StyleList.NewTextStyle("BulletRound",   Text.TextStyleClass.Paragraph, itemList1);
-			this.textContext.StyleList.NewTextStyle("BulletNumeric", Text.TextStyleClass.Paragraph, itemList2);
-			this.textContext.StyleList.NewTextStyle("BulletAlpha",   Text.TextStyleClass.Paragraph, itemList3);
-
-
-			this.textContext.StyleList.NewMetaProperty("AlignLeft",   "Align", new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 0.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
-			this.textContext.StyleList.NewMetaProperty("AlignCenter", "Align", new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 0.5, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
-			this.textContext.StyleList.NewMetaProperty("AlignRight",  "Align", new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 1.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
-			this.textContext.StyleList.NewMetaProperty("AlignJustif", "Align", new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 1.0, 0.0, 0.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
+			Text.TextStyle[] baseStyles = new Text.TextStyle[] { style };
 			
+			this.textContext.StyleList.NewTextStyle("BulletRound",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
+			this.textContext.StyleList.NewTextStyle("BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2 }, baseStyles);
+			this.textContext.StyleList.NewTextStyle("BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3 }, baseStyles);
+
+			#endregion
+			
+			this.textContext.DefaultStyle = style;
 			this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
 		}
 
