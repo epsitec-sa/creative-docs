@@ -848,6 +848,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Wrappers\Attachment.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Wrappers\JustificationMode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

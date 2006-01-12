@@ -22,6 +22,14 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		public Attachment						Attachment
+		{
+			get
+			{
+				return this.attachment;
+			}
+		}
+		
 		
 		public void Attach(Text.TextNavigator navigator)
 		{
@@ -33,6 +41,8 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			this.navigator.TextChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextChanged);
 			this.navigator.CursorMoved += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorMoved);
+			
+			this.attachment = Attachment.Text;
 			
 			this.UpdateAll ();
 			this.NotifyChanged ();
@@ -50,6 +60,8 @@ namespace Epsitec.Common.Text.Wrappers
 			this.style_list.StyleRemoved += new Common.Support.EventHandler (this.HandleStyleListStyleRemoved);
 			this.style_list.StyleRedefined += new Common.Support.EventHandler (this.HandleStyleListStyleRedefined);
 			
+			this.attachment = Attachment.Style;
+			
 			this.UpdateAll ();
 			this.NotifyChanged ();
 		}
@@ -57,6 +69,8 @@ namespace Epsitec.Common.Text.Wrappers
 		public void Detach()
 		{
 			this.InternalDetach ();
+			
+			this.attachment = Attachment.None;
 			
 			this.NotifyChanged ();
 		}
@@ -444,6 +458,7 @@ namespace Epsitec.Common.Text.Wrappers
 		internal abstract void InternalSynchronize(AbstractState state, StateProperty property);
 		internal abstract void UpdateState(bool active);
 		
+		private Attachment						attachment;
 		private TextContext						context;
 		private TextNavigator					navigator;
 		private StyleList						style_list;
