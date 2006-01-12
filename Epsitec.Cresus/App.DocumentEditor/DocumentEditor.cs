@@ -2096,18 +2096,10 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Replace")]
 		void CommandReplace(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.dlgReplace.Hide();
+			this.dlgSplash.Hide();
 
-			if ( this.replaceState.ActiveState == ActiveState.No )
-			{
-				this.dlgReplace.Show();
-				this.replaceState.ActiveState = ActiveState.Yes;
-			}
-			else
-			{
-				this.dlgReplace.Hide();
-				this.replaceState.ActiveState = ActiveState.No;
-			}
+			this.dlgReplace.Show();
+			this.replaceState.ActiveState = ActiveState.Yes;
 		}
 
 		#region PaletteIO

@@ -93,7 +93,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonFind.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonFind.Anchor = AnchorStyles.BottomLeft;
 				this.buttonFind.AnchorMargins = new Margins(10, 0, 0, 10);
-				this.buttonFind.Clicked += new MessageEventHandler(this.HandleButtonFindClicked);
+				this.buttonFind.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonFind.TabIndex = this.tabIndex++;
 				this.buttonFind.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -104,7 +104,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonReplace.Text = Res.Strings.Dialog.Replace.Button.Replace;
 				this.buttonReplace.Anchor = AnchorStyles.BottomLeft;
 				this.buttonReplace.AnchorMargins = new Margins(10+75+10, 0, 0, 10);
-				this.buttonReplace.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
+				this.buttonReplace.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonReplace.TabIndex = this.tabIndex++;
 				this.buttonReplace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -122,6 +122,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.window.Show();
 
+			this.window.MakeFocused();
 			this.fieldFind.SelectAll();
 			this.fieldFind.Focus();
 		}
@@ -156,7 +157,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			Document document = this.editor.CurrentDocument;
 			if ( document == null )  return false;
-			return document.Modifier.Replace(find, replace, mode);
+			return document.Modifier.TextReplace(find, replace, mode);
 		}
 
 
@@ -167,7 +168,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.OnClosed();
 		}
 
-		private void HandleButtonFindClicked(object sender, MessageEventArgs e)
+		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			this.ComboMemorise(this.fieldFind);
 			this.ComboMemorise(this.fieldReplace);
@@ -176,19 +177,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreMaj;
 			if ( this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreAccent;
 			if ( this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes)  mode |= Misc.StringSearch.WholeWord;
-			this.Find(this.fieldFind.Text, null, mode);
-		}
 
-		private void HandleButtonReplaceClicked(object sender, MessageEventArgs e)
-		{
-			this.ComboMemorise(this.fieldFind);
-			this.ComboMemorise(this.fieldReplace);
+			string replace = null;
+			if ( sender == this.buttonReplace )
+			{
+				replace = this.fieldReplace.Text;
+			}
 
-			Misc.StringSearch mode = 0;
-			if ( this.checkEqualMaj   .ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreMaj;
-			if ( this.checkEqualAccent.ActiveState == Common.Widgets.ActiveState.No )  mode |= Misc.StringSearch.IgnoreAccent;
-			if ( this.checkWholeWord  .ActiveState == Common.Widgets.ActiveState.Yes)  mode |= Misc.StringSearch.WholeWord;
-			this.Find(this.fieldFind.Text, this.fieldReplace.Text, mode);
+			if ( this.Find(this.fieldFind.Text, replace, mode) )
+			{
+				this.editor.Window.MakeFocused();
+				this.editor.Window.RestoreLogicalFocus();
+			}
 		}
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)

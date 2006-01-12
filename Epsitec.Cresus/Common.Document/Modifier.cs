@@ -3978,8 +3978,8 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		#region Find and Replace
-		public bool Replace(string find, string replace, Misc.StringSearch mode)
+		#region Text Find and Replace
+		public bool TextReplace(string find, string replace, Misc.StringSearch mode)
 		{
 			//	Effectue une recherche ou un remplacement dans un objet texte du document.
 			//	Pour une simple recherche, 'replace' doit être null.
@@ -4016,10 +4016,10 @@ namespace Epsitec.Common.Document
 			else	// il existe un objet en édition ?
 			{
 				textFlow = edit.TextFlow;  // démarre la recherche dans l'objet édité
-				if ( textFlow.TextNavigator.HasRealSelection )  skipFirst = true;
+				if ( replace == null && textFlow.TextNavigator.HasRealSelection )  skipFirst = true;
 			}
 
-			if ( !Modifier.FindText(this.document, ref textFlow, find, skipFirst, mode) )
+			if ( !Modifier.TextFind(this.document, ref textFlow, find, skipFirst, mode) )
 			{
 				this.OpletQueueValidateAction();
 				this.ActiveViewer.DialogError(Res.Strings.Error.NotFound);
@@ -4046,7 +4046,7 @@ namespace Epsitec.Common.Document
 			return true;
 		}
 
-		protected static bool FindText(Document document, ref TextFlow textFlow, string find, bool skipFirst, Misc.StringSearch mode)
+		protected static bool TextFind(Document document, ref TextFlow textFlow, string find, bool skipFirst, Misc.StringSearch mode)
 		{
 			//	Cherche la prochaine occurence d'un texte dans un TextFlow ou dans le prochain TextFlow.
 			TextFlow startingFlow = textFlow;
