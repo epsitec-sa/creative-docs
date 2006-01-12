@@ -100,6 +100,35 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public Property[]						StyleProperties
+		{
+			get
+			{
+				if (this.style_properties != null)
+				{
+					return (Property[]) this.style_properties.Clone ();
+				}
+				else
+				{
+					return new Property[0];
+				}
+			}
+		}
+		
+		public TextStyle[]						ParentStyles
+		{
+			get
+			{
+				if (this.parent_styles != null)
+				{
+					return (TextStyle[]) this.parent_styles.Clone ();
+				}
+				else
+				{
+					return new TextStyle[0];
+				}
+			}
+		}
 		
 		public static System.Collections.IComparer	Comparer
 		{

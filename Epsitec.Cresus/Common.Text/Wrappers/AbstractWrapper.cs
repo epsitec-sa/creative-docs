@@ -33,11 +33,19 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public void Attach(Text.TextNavigator navigator)
 		{
+			//	Attache le wrapper au navigateur. Ceci permet d'accéder aux réglages
+			//	d'une sélection de texte ou aux réglages associés à la position cou-
+			//	rante du curseur dans le texte.
+			
+			//	Attachment => Attachment.Text
+			
 			this.InternalDetach ();
 			
-			this.navigator  = navigator;
-			this.context    = this.navigator.TextContext;
-			this.style_list = this.context.StyleList;
+			this.navigator   = navigator;
+			this.story       = this.navigator.TextStory;
+			this.context     = this.navigator.TextContext;
+			this.style_list  = this.context.StyleList;
+			this.oplet_queue = this.story.OpletQueue;
 			
 			this.navigator.TextChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextChanged);
 			this.navigator.CursorMoved += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorMoved);
@@ -48,13 +56,30 @@ namespace Epsitec.Common.Text.Wrappers
 			this.NotifyChanged ();
 		}
 		
-		public void Attach(Text.TextContext context, Text.TextStyle style)
+		public void Attach(Text.TextStyle style, Text.TextContext context, Common.Support.OpletQueue oplet_queue)
+		{
+			//	Attache le wrapper à un style. Ceci permet de modifier le style en
+			//	spécifiant des réglages pour ses diverses propriétés.
+			
+			//	Attachment => Attachment.Style
+			
+			//	Crée un TextStory temporaire (uniquement utilisé pour simplifier
+			//	la gestion du undo/redo) dans le code de synchronisation :
+			
+			TextStory story = new TextStory (oplet_queue, context);
+			
+			this.Attach (style, story);
+		}
+		
+		public void Attach(Text.TextStyle style, Text.TextStory story)
 		{
 			this.InternalDetach ();
 			
-			this.context    = context;
-			this.style      = style;
-			this.style_list = this.context.StyleList;
+			this.story       = story;
+			this.context     = this.story.TextContext;
+			this.style       = style;
+			this.style_list  = this.context.StyleList;
+			this.oplet_queue = this.story.OpletQueue;
 			
 			this.style_list.StyleAdded += new Common.Support.EventHandler (this.HandleStyleListStyleAdded);
 			this.style_list.StyleRemoved += new Common.Support.EventHandler (this.HandleStyleListStyleRemoved);
@@ -68,9 +93,11 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public void Detach()
 		{
-			this.InternalDetach ();
+			//	Détache le wrapper de sa source.
 			
-			this.attachment = Attachment.None;
+			//	Attachment => Attachment.None
+			
+			this.InternalDetach ();
 			
 			this.NotifyChanged ();
 		}
@@ -87,17 +114,13 @@ namespace Epsitec.Common.Text.Wrappers
 			//	sera attaché à l'oplet dans OpletQueue, lequel sera visible par
 			//	l'utilisateur).
 			
-			if ((this.navigator != null) &&
-				(this.navigator.TextStory != null) &&
-				(this.navigator.TextStory.OpletQueue != null))
+			if (this.oplet_queue != null)
 			{
-				Common.Support.OpletQueue queue = this.navigator.TextStory.OpletQueue;
-				
 				if ((this.last_op_name != name) &&
 					(name != null) &&
 					(name.Length > 0))
 				{
-					queue.DisableMerge ();
+					this.oplet_queue.DisableMerge ();
 				}
 			}
 			
@@ -143,7 +166,7 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			this.navigator.SuspendNotifications ();
 			
-			using (this.navigator.TextStory.BeginAction (this.last_op_caption))
+			using (this.story.BeginAction (this.last_op_caption))
 			{
 				foreach (AbstractState state in this.states)
 				{
@@ -156,7 +179,7 @@ namespace Epsitec.Common.Text.Wrappers
 					state.ClearPendingProperties ();
 				}
 				
-				this.navigator.TextStory.ValidateAction ();
+				this.story.ValidateAction ();
 			}
 			
 			this.navigator.ResumeNotifications ();
@@ -167,20 +190,21 @@ namespace Epsitec.Common.Text.Wrappers
 			System.Diagnostics.Debug.Assert (this.style != null);
 			System.Diagnostics.Debug.Assert (this.style_list != null);
 			
-			//	TODO: OpletQueue.BeginAction
-			
-			foreach (AbstractState state in this.states)
+			using (this.story.BeginAction (this.last_op_caption))
 			{
-				foreach (StateProperty property in state.GetPendingProperties ())
+				foreach (AbstractState state in this.states)
 				{
-					state.NotifyChanged (property, id);
-					this.InternalSynchronize (state, property);
+					foreach (StateProperty property in state.GetPendingProperties ())
+					{
+						state.NotifyChanged (property, id);
+						this.InternalSynchronize (state, property);
+					}
+					
+					state.ClearPendingProperties ();
 				}
 				
-				state.ClearPendingProperties ();
+				this.story.ValidateAction ();
 			}
-			
-			//	TODO: OpletQueue.ValidateAction
 		}
 		
 		
@@ -198,10 +222,14 @@ namespace Epsitec.Common.Text.Wrappers
 				this.style_list.StyleRedefined -= new Common.Support.EventHandler (this.HandleStyleListStyleRedefined);
 			}
 			
-			this.navigator  = null;
-			this.style      = null;
-			this.style_list = null;
-			this.context    = null;
+			this.story       = null;
+			this.navigator   = null;
+			this.style       = null;
+			this.style_list  = null;
+			this.oplet_queue = null;
+			this.context     = null;
+			
+			this.attachment  = Attachment.None;
 		}
 		
 		
@@ -244,31 +272,34 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				System.Diagnostics.Debug.Assert (this.style != null);
+				System.Diagnostics.Debug.Assert (this.style_list != null);
 				
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				TextStyle[] parent_styles = this.style.ParentStyles;
+				
+				list.AddRange (this.style.StyleProperties);
+				
+				AbstractWrapper.RemoveStyleMetaProperties (list, meta);
+				AbstractWrapper.InsertStyleMetaProperties (list, meta, priority, properties);
+				
+				this.style_list.RedefineTextStyle (this.oplet_queue, style, list, parent_styles);
 			}
 		}
 		
 		protected void ClearMetaProperty(string meta)
 		{
-			if (this.attachment == Attachment.Text)
-			{
-				TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, new Property[0]);
-				
-				if (this.navigator.IsSelectionActive)
-				{
-					this.navigator.EndSelection ();
-				}
-				
-				this.navigator.SetMetaProperties (Properties.ApplyMode.Clear, style);
-			}
-			else if (this.attachment == Attachment.Style)
-			{
-				
-			}
+			this.ClearMetaProperty (meta, Properties.ApplyMode.Clear);
 		}
 		
 		protected void ClearUniformMetaProperty(string meta)
 		{
+			this.ClearMetaProperty (meta, Properties.ApplyMode.ClearUniform);
+		}
+		
+		
+		private void ClearMetaProperty(string meta, Properties.ApplyMode mode)
+		{
 			if (this.attachment == Attachment.Text)
 			{
 				TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, new Property[0]);
@@ -278,41 +309,60 @@ namespace Epsitec.Common.Text.Wrappers
 					this.navigator.EndSelection ();
 				}
 				
-				this.navigator.SetMetaProperties (Properties.ApplyMode.ClearUniform, style);
+				this.navigator.SetMetaProperties (mode, style);
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				System.Diagnostics.Debug.Assert (this.style != null);
+				System.Diagnostics.Debug.Assert (this.style_list != null);
 				
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				TextStyle[] parent_styles = this.style.ParentStyles;
+				
+				list.AddRange (this.style.StyleProperties);
+				
+				AbstractWrapper.RemoveStyleMetaProperties (list, meta);
+				
+				this.style_list.RedefineTextStyle (this.oplet_queue, style, list, parent_styles);
 			}
 		}
 		
-		protected Property ReadProperty(Properties.WellKnownType type)
+		
+		private static void RemoveStyleMetaProperties(System.Collections.ArrayList list, string name)
 		{
-			Property[] properties = null;
-			
-			if (this.attachment == Attachment.Text)
+			for (int i = 0; i < list.Count; )
 			{
-				properties = this.navigator.TextProperties;
-			}
-			else if (this.attachment == Attachment.Style)
-			{
+				Property p = list[i] as Property;
 				
-			}
-			
-			if ((properties != null) &&
-				(properties.Length > 0))
-			{
-				for (int i = 0; i < properties.Length; i++)
+				if (p.InternalName == name)
 				{
-					if (properties[i].WellKnownType == type)
-					{
-						return properties[i];
-					}
+					list.RemoveAt (i);
+					continue;
+				}
+
+				i++;
+			}
+		}
+		
+		private static void InsertStyleMetaProperties(System.Collections.ArrayList list, string name, int priority, Property[] properties)
+		{
+			for (int i = 0; i < properties.Length; i++)
+			{
+				Property p = properties[i];
+				
+				p.InternalName = name;
+				
+				if (priority == 0)
+				{
+					list.Insert (i, p);
+				}
+				else
+				{
+					list.Add (p);
 				}
 			}
-			
-			return null;
 		}
+		
 		
 		protected Property ReadAccumulatedProperty(Properties.WellKnownType type)
 		{
@@ -324,7 +374,12 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				Styles.PropertyContainer.Accumulator accumulator = new Styles.PropertyContainer.Accumulator ();
 				
+				accumulator.SkipSymbolProperties = true;
+				accumulator.Accumulate (this.story.FlattenStylesAndProperties (new TextStyle[1] { this.style }, new Property[0]));
+				
+				properties = accumulator.AccumulatedProperties;
 			}
 			
 			if ((properties != null) &&
@@ -352,7 +407,12 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				Styles.PropertyContainer.Accumulator accumulator = new Styles.PropertyContainer.Accumulator ();
 				
+				accumulator.SkipSymbolProperties = true;
+				accumulator.Accumulate (this.story.FlattenStylesAndProperties (new TextStyle[1] { this.style }, new Property[0]));
+				
+				properties = accumulator.AccumulatedProperties;
 			}
 			
 			if ((properties != null) &&
@@ -384,7 +444,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else if (this.attachment == Attachment.Style)
 			{
-				
+				styles = this.style.ParentStyles;
 			}
 			
 			if ((styles != null) &&
@@ -422,25 +482,32 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		protected Property ReadMetaProperty(string meta, Properties.WellKnownType type)
 		{
-			TextStyle[] styles = null;
-			
 			if (this.attachment == Attachment.Text)
 			{
-				styles = this.navigator.TextStyles;
+				TextStyle[] styles = this.navigator.TextStyles;
+				
+				if ((styles != null) &&
+					(styles.Length > 0))
+				{
+					foreach (TextStyle style in styles)
+					{
+						if (style.MetaId == meta)
+						{
+							return style[type];
+						}
+					}
+				}
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				Property[] properties = this.style.StyleProperties;
 				
-			}
-			
-			if ((styles != null) &&
-				(styles.Length > 0))
-			{
-				foreach (TextStyle style in styles)
+				foreach (Property property in properties)
 				{
-					if (style.MetaId == meta)
+					if ((property.InternalName == meta) &&
+						(property.WellKnownType == type))
 					{
-						return style[type];
+						return property;
 					}
 				}
 			}
@@ -450,26 +517,40 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		protected Property[] ReadMetaProperties(string meta, Properties.WellKnownType type)
 		{
-			TextStyle[] styles = null;
-			
 			if (this.attachment == Attachment.Text)
 			{
-				styles = this.navigator.TextStyles;
+				TextStyle[] styles = this.navigator.TextStyles;
+				
+				if ((styles != null) &&
+					(styles.Length > 0))
+				{
+					foreach (TextStyle style in styles)
+					{
+						if (style.MetaId == meta)
+						{
+							return style.FindProperties (type);
+						}
+					}
+				}
 			}
 			else if (this.attachment == Attachment.Style)
 			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
 				
-			}
-			
-			if ((styles != null) &&
-				(styles.Length > 0))
-			{
-				foreach (TextStyle style in styles)
+				Property[] properties = this.style.StyleProperties;
+				
+				foreach (Property property in properties)
 				{
-					if (style.MetaId == meta)
+					if ((property.InternalName == meta) &&
+						(property.WellKnownType == type))
 					{
-						return style.FindProperties (type);
+						list.Add (property);
 					}
+				}
+				
+				if (list.Count > 0)
+				{
+					return (Property[]) list.ToArray (typeof (Property));
 				}
 			}
 			
@@ -531,8 +612,10 @@ namespace Epsitec.Common.Text.Wrappers
 		internal abstract void UpdateState(bool active);
 		
 		private Attachment						attachment;
+		private TextStory						story;
 		private TextContext						context;
 		private TextNavigator					navigator;
+		private Common.Support.OpletQueue		oplet_queue;
 		private StyleList						style_list;
 		private TextStyle						style;
 		private System.Collections.ArrayList	states;
