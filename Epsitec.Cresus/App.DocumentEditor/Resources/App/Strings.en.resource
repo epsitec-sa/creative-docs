@@ -78,7 +78,7 @@
 	<data name="Dialog.About.Version">Version</data>
 	<data name="Dialog.About.Language">Language: English</data>
 	<data name="Dialog.About.Key">Serial number</data>
-	<data name="Dialog.About.Copyright">© 2002-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud</data>
+	<data name="Dialog.About.Copyright">© 2002-2006 EPSITEC SA, Daniel Roux, Pierre Arnaud</data>
 	<data name="Dialog.About.Demo">Demo</data>
 	<data name="Dialog.About.Expired">Expired</data>
 	<data name="Dialog.About.Freeware">Evaluation</data>
