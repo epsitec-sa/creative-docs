@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
@@ -7,6 +7,8 @@ namespace Epsitec.Common.Text.Properties
 	/// La classe AutoTextProperty permet de décrire un morceau de texte
 	/// généré automatiquement (avec styles particuliers); comparer avec
 	/// GeneratorProperty qui génère aussi du texte.
+	/// Attention: cette propriété requiert un traitement spécial de la part
+	/// de TextContext.GetPropertiesQuickAndDirty.
 	/// </summary>
 	public class AutoTextProperty : Property
 	{

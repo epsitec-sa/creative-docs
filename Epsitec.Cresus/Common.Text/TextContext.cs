@@ -1061,7 +1061,8 @@ namespace Epsitec.Common.Text
 						list.Add (tabs);
 					}
 				}
-				else if (property.WellKnownType == Properties.WellKnownType.Generator)
+				else if ((property.WellKnownType == Properties.WellKnownType.Generator) ||
+					/**/ (property.WellKnownType == Properties.WellKnownType.AutoText))
 				{
 					//	Ces propriétés ne peuvent jamais faire partie d'un style que
 					//	l'utilisateur peut appliquer; elles sont générées uniquement
