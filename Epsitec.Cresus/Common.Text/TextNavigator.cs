@@ -2963,6 +2963,8 @@ again:
 		
 		private void InternalSetCursor(int new_pos, int new_dir)
 		{
+//-			System.Diagnostics.Debug.WriteLine (string.Format ("Pos: {0}, dir: {1}\n{2}", new_pos, new_dir, this.story.GetDebugAllStyledText ()));
+			
 			this.story.SetCursorPosition (this.temp_cursor, new_pos, new_dir);
 
 			if (Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0))

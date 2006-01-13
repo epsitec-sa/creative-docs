@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -1028,7 +1028,7 @@ namespace Epsitec.Common.Text
 			//	- Un style ne fait pas référence à des propriétés LocalSettings.
 			//
 			//	- Les propriétés PropertyType.CoreSettings et ExtraSettings sont
-			//	  toujours  enrobées dans une méta-propriété (donc un TextStyle).
+			//	  toujours enrobées dans une méta-propriété (donc un TextStyle).
 			//
 			//	- TabsProperty doit être adaptée (catégorie des ExtraSettings)
 			//	  pour ne garder que les taquets locaux (TabClass.Auto).
@@ -1060,6 +1060,14 @@ namespace Epsitec.Common.Text
 					{
 						list.Add (tabs);
 					}
+				}
+				else if (property.WellKnownType == Properties.WellKnownType.Generator)
+				{
+					//	Ces propriétés ne peuvent jamais faire partie d'un style que
+					//	l'utilisateur peut appliquer; elles sont générées uniquement
+					//	par les "managed paragraphs" :
+					
+					list.Add (property);
 				}
 			}
 #else

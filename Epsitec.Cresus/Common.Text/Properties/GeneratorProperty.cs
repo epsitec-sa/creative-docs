@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
@@ -6,6 +6,9 @@ namespace Epsitec.Common.Text.Properties
 	/// <summary>
 	/// La classe GeneratorProperty définit un lien entre un fragment de texte
 	/// et un générateur (qui produit du texte "automatique").
+	/// 
+	/// Attention, cette propriété requiert un traitement spécial de la part
+	/// de TextContext.GetPropertiesQuickAndDirty.
 	/// </summary>
 	public class GeneratorProperty : Property
 	{

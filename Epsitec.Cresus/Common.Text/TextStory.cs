@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -736,6 +736,13 @@ namespace Epsitec.Common.Text
 			}
 			
 			return buffer.ToString ();
+		}
+		
+		public string GetDebugAllStyledText()
+		{
+			ulong[] buffer = new ulong[this.TextLength];
+			this.ReadText (0, buffer.Length, buffer);
+			return this.GetDebugStyledText (buffer);
 		}
 		
 		public string GetDebugStyledText(ulong[] text)
