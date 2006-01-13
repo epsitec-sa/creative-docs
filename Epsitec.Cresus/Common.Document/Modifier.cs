@@ -3993,6 +3993,7 @@ namespace Epsitec.Common.Document
 				return texts[0];
 			}
 
+			//	Si aucun mot n'est sélectionné, cherche le mot où est le curseur.
 			int pos = edit.TextFlow.TextNavigator.CursorPosition;
 			string text = edit.TextFlow.TextStory.GetDebugText();
 			int length = text.Length-1;  // ignore le EOT à la fin
@@ -4118,7 +4119,7 @@ namespace Epsitec.Common.Document
 				while ( true )
 				{
 					string text = textFlow.TextStory.GetDebugText();
-					int i = Misc.IndexOf(text, find, endPosition, endPosition-startPosition+1, mode);
+					int i = Misc.IndexOf(text, find, endPosition-1, endPosition-startPosition+1, mode);
 					if ( i == -1 && last )  // pas trouvé dans le dernier flux ?
 					{
 						return false;

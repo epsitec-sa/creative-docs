@@ -2125,6 +2125,8 @@ namespace Epsitec.App.DocumentEditor
 			if ( isPrev )  mode |= Misc.StringSearch.EndToStart;  // Shift-F3 ?
 			this.dlgReplace.Mode = mode;  // modifie juste la direction de la recherche
 
+			this.dlgReplace.MemoriseTexts();
+
 			this.CurrentDocument.Modifier.TextReplace(this.dlgReplace.FindText, null, mode);
 		}
 
@@ -3177,16 +3179,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("UpdateApplication")]
 		void CommandUpdateApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( this.installType == InstallType.Freeware )
-			{
-				this.StartCheck(true);
-				this.EndCheck(true);
-			}
-			else
-			{
-				this.dlgSplash.Hide();
-				this.dlgUpdate.Show();
-			}
+			this.StartCheck(true);
+			this.EndCheck(true);
 		}
 
 		[Command ("AboutApplication")]
@@ -5465,7 +5459,6 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Lance le processus asynchrone qui va se connecter au site web
 			//	et regarder s'il y a une version plus récente.
-			if ( this.installType != InstallType.Freeware )  return;
 			if ( !always && !this.globalSettings.AutoChecker )  return;
 
 			if ( !always )

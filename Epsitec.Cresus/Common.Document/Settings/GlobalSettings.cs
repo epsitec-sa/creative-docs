@@ -28,7 +28,7 @@ namespace Epsitec.Common.Document.Settings
 		public GlobalSettings()
 		{
 			this.windowLocation = new Drawing.Point(0, 0);
-			this.windowSize = new Drawing.Size(830, 580);
+			this.windowSize = new Drawing.Size(830, 620);
 			this.isFullScreen = false;
 			this.windowBounds = new System.Collections.Hashtable();
 
@@ -551,8 +551,8 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:HideCancel");
 			list.Add("00:HideHalf");
 
-			list.Add("10:OrderUpAll");
-			list.Add("11:OrderDownAll");
+			list.Add("00:OrderUpAll");
+			list.Add("00:OrderDownAll");
 			list.Add("00:OrderUpOne");
 			list.Add("00:OrderDownOne");
 

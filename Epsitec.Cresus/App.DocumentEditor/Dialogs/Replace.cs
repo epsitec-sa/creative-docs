@@ -214,6 +214,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		public void MemoriseTexts()
+		{
+			//	Mémorise les textes de recherche et de remplacement.
+			if ( this.fieldFind == null )  return;
+
+			this.ComboMemorise(this.fieldFind);
+			this.ComboMemorise(this.fieldReplace);
+		}
+
+
 		protected void UpdateWidgets()
 		{
 			//	Met à jour les widgets en fonction des variables.
@@ -224,13 +234,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( this.fieldFind.Text != this.findText )
 			{
 				this.fieldFind.Text = this.findText;
-				this.ComboMemorise(this.fieldFind);
 			}
 
 			if ( this.fieldReplace.Text != this.replaceText )
 			{
 				this.fieldReplace.Text = this.replaceText;
-				this.ComboMemorise(this.fieldReplace);
 			}
 
 			this.SetActiveState(this.checkEqualMaj,    (this.mode&Misc.StringSearch.IgnoreMaj   ) == 0);
@@ -309,8 +317,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			this.ComboMemorise(this.fieldFind);
-			this.ComboMemorise(this.fieldReplace);
+			this.MemoriseTexts();
 
 			string replace = null;
 			if ( sender == this.buttonReplace )
