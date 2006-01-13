@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -112,12 +112,18 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void CleanupTimerIfNeeded()
 		{
-			if (this.timer != null)
+			System.Windows.Forms.Timer timer = this.timer;
+			
+			//	Work on a copy of the timer variable, since the internal field
+			//	could change inexpectedly (this has been observed by YR).
+			
+			this.timer = null;
+			
+			if (timer != null)
 			{
-				this.timer.Stop ();
-				this.timer.Tick -= new System.EventHandler (this.HandleTimerTick);
-				this.timer.Dispose ();
-				this.timer = null;
+				timer.Stop ();
+				timer.Tick -= new System.EventHandler (this.HandleTimerTick);
+				timer.Dispose ();
 			}
 		}
 		
