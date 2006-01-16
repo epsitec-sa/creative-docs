@@ -1,6 +1,7 @@
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Text;
 
 namespace Epsitec.Common.Document.Containers
 {
@@ -41,9 +42,8 @@ namespace Epsitec.Common.Document.Containers
 			this.paragraphList.MinSize = new Size(10, 87);
 			this.paragraphList.Dock = DockStyle.Fill;
 			this.paragraphList.DockMargins = new Margins(0, 0, 0, 0);
-			//?this.paragraphList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
-			//?this.paragraphList.FlyOverChanged += new EventHandler(this.HandleStylesTableFlyOverChanged);
-			//?this.paragraphList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
+			this.paragraphList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
+			this.paragraphList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
 			this.paragraphList.TabIndex = 2;
 			this.paragraphList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -378,48 +378,79 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonAggregateNewAll.Visibility = (this.category == "Graphic");
 			this.buttonStyleNew.Visibility = (this.category == "Graphic");
 			this.buttonStyleDelete.Visibility = (this.category == "Graphic");
+
+			this.UpdateAggregateName();
 		}
 
 		protected void UpdateToolBar()
 		{
 			//	Met à jour les boutons de la toolbar.
-			int total = this.graphicList.Rows;
-			int sel = this.document.Aggregates.Selected;
-
-			this.buttonAggregateNewAll.Enable = (!this.document.Modifier.IsTool || this.document.Modifier.TotalSelected > 0);
-			this.buttonAggregateUp.Enable = (sel != -1 && sel > 0);
-			this.buttonAggregateDuplicate.Enable = (sel != -1);
-			this.buttonAggregateDown.Enable = (sel != -1 && sel < total-1);
-			this.buttonAggregateDelete.Enable = (sel != -1);
-
-			Properties.Type type = Properties.Type.None;
-			bool enableDelete = false;
-			Properties.Aggregate agg = this.GetAggregate();
-			if ( agg != null )
+			if ( this.category == "Graphic" )
 			{
-				type = this.graphicList.SelectedProperty;
-				if ( type != Properties.Type.None )
+				int total = this.graphicList.Rows;
+				int sel = this.document.Aggregates.Selected;
+
+				this.buttonAggregateNewAll.Enable = (!this.document.Modifier.IsTool || this.document.Modifier.TotalSelected > 0);
+				this.buttonAggregateUp.Enable = (sel != -1 && sel > 0);
+				this.buttonAggregateDuplicate.Enable = (sel != -1);
+				this.buttonAggregateDown.Enable = (sel != -1 && sel < total-1);
+				this.buttonAggregateDelete.Enable = (sel != -1);
+
+				Properties.Type type = Properties.Type.None;
+				bool enableDelete = false;
+				Properties.Aggregate agg = this.GetAggregate();
+				if ( agg != null )
 				{
-					if ( agg.Property(type) != null )
+					type = this.graphicList.SelectedProperty;
+					if ( type != Properties.Type.None )
 					{
-						enableDelete = true;
+						if ( agg.Property(type) != null )
+						{
+							enableDelete = true;
+						}
 					}
 				}
+				this.buttonStyleNew.Enable = (sel != -1);
+				this.buttonStyleDelete.Enable = (enableDelete);
 			}
-			this.buttonStyleNew.Enable = (sel != -1);
-			this.buttonStyleDelete.Enable = (enableDelete);
+
+			if ( this.category == "Paragraph" )
+			{
+				int total = this.paragraphList.Rows;
+				int sel = this.document.TextStyles.Selected;
+
+				this.buttonAggregateUp.Enable = (sel != -1 && sel > 0);
+				this.buttonAggregateDuplicate.Enable = (sel != -1);
+				this.buttonAggregateDown.Enable = (sel != -1 && sel < total-1);
+				this.buttonAggregateDelete.Enable = (sel != -1);
+			}
 		}
 
 
 		protected void UpdateAggregateName()
 		{
 			//	Met à jour le panneau pour éditer le nom de l'agrégat sélectionné.
-			Properties.Aggregate agg = this.GetAggregate();
-
 			string text = "";
-			if ( agg != null )
+
+			if ( this.category == "Graphic" )
 			{
-				text = agg.AggregateName;
+				Properties.Aggregate agg = this.GetAggregate();
+
+				if ( agg != null )
+				{
+					text = agg.AggregateName;
+				}
+			}
+
+			if ( this.category == "Paragraph" )
+			{
+				int sel = this.document.TextStyles.Selected;
+
+				if ( sel != -1 )
+				{
+					Common.Text.TextStyle style = this.document.TextStyles[sel] as Common.Text.TextStyle;
+					text = style.Name;
+				}
 			}
 
 			this.ignoreChanged = true;
@@ -438,152 +469,237 @@ namespace Epsitec.Common.Document.Containers
 		protected void UpdateChildrensToolBar()
 		{
 			//	Met à jour les boutons de la toolbar des enfants.
-			int aggSel = this.graphicList.SelectedPropertyRow;
-			int total = this.childrens.Rows;
-			int sel = this.childrens.SelectedPropertyRow;
+			if ( this.category == "Graphic" )
+			{
+				int aggSel = this.graphicList.SelectedPropertyRow;
+				int total = this.childrens.Rows;
+				int sel = this.childrens.SelectedPropertyRow;
 
-			this.buttonChildrensNew.Enable = (aggSel != -1);
-			this.buttonChildrensUp.Enable = (sel != -1 && sel > 0);
-			this.buttonChildrensDown.Enable = (sel != -1 && sel < total-1);
-			this.buttonChildrensDelete.Enable = (sel != -1);
+				this.buttonChildrensNew.Enable = (aggSel != -1);
+				this.buttonChildrensUp.Enable = (sel != -1 && sel > 0);
+				this.buttonChildrensDown.Enable = (sel != -1 && sel < total-1);
+				this.buttonChildrensDelete.Enable = (sel != -1);
+			}
+
+			if ( this.category == "Paragraph" )
+			{
+			}
 		}
 
 		protected void UpdateAggregateChildrens()
 		{
 			//	Met à jour le panneau pour éditer les enfants de l'agrégat sélectionné.
-			Properties.Aggregate agg = this.GetAggregate();
-
-			if ( agg == null )
+			if ( this.category == "Graphic" )
 			{
-				this.childrens.List = null;
-			}
-			else
-			{
-				this.childrens.List = agg.Childrens;
-				this.childrens.SelectRow(agg.Childrens.Selected, true);
+				Properties.Aggregate agg = this.GetAggregate();
+
+				if ( agg == null )
+				{
+					this.childrens.List = null;
+				}
+				else
+				{
+					this.childrens.List = agg.Childrens;
+					this.childrens.SelectRow(agg.Childrens.Selected, true);
+				}
+
+				this.childrens.UpdateContent();
 			}
 
-			this.childrens.UpdateContent();
+			if ( this.category == "Paragraph" )
+			{
+			}
 		}
 
 		protected void UpdatePanel()
 		{
 			//	Met à jour le panneau pour éditer la propriété sélectionnée.
-			this.colorSelector.Visibility = false;
-			this.colorSelector.BackColor = Color.Empty;
-
-			if ( this.panel != null )
+			if ( this.category == "Graphic" )
 			{
-				this.panel.Changed -= new EventHandler(this.HandlePanelChanged);
-				this.panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
-				this.panel.Dispose();
-				this.panel = null;
-				this.panelContainer.Height = 0.0;
+				this.colorSelector.Visibility = false;
+				this.colorSelector.BackColor = Color.Empty;
+
+				if ( this.panel != null )
+				{
+					this.panel.Changed -= new EventHandler(this.HandlePanelChanged);
+					this.panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
+					this.panel.Dispose();
+					this.panel = null;
+					this.panelContainer.Height = 0.0;
+					this.panelContainer.ForceLayout();
+				}
+
+				Properties.Aggregate agg = this.GetAggregate();
+				if ( agg == null )  return;
+
+				Properties.Type type = this.graphicList.SelectedProperty;
+				if ( type == Properties.Type.None )  return;
+
+				Properties.Abstract property = agg.Property(type);
+				if ( property == null )  return;
+
+				this.panel = property.CreatePanel(this.document);
+				if ( this.panel == null )  return;
+
+				this.panel.Property = property;
+				this.panel.IsExtendedSize = true;
+				this.panel.IsLayoutDirect = true;
+				this.panel.Changed += new EventHandler(this.HandlePanelChanged);
+				this.panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
+				this.panel.SetParent(this.panelContainer);
+				this.panel.Dock = DockStyle.Fill;
+				this.panel.TabIndex = 1;
+				this.panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+				this.panelContainer.Height = this.panel.DefaultHeight;
 				this.panelContainer.ForceLayout();
 			}
 
-			Properties.Aggregate agg = this.GetAggregate();
-			if ( agg == null )  return;
-
-			Properties.Type type = this.graphicList.SelectedProperty;
-			if ( type == Properties.Type.None )  return;
-
-			Properties.Abstract property = agg.Property(type);
-			if ( property == null )  return;
-
-			this.panel = property.CreatePanel(this.document);
-			if ( this.panel == null )  return;
-
-			this.panel.Property = property;
-			this.panel.IsExtendedSize = true;
-			this.panel.IsLayoutDirect = true;
-			this.panel.Changed += new EventHandler(this.HandlePanelChanged);
-			this.panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
-			this.panel.SetParent(this.panelContainer);
-			this.panel.Dock = DockStyle.Fill;
-			this.panel.TabIndex = 1;
-			this.panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.panelContainer.Height = this.panel.DefaultHeight;
-			this.panelContainer.ForceLayout();
+			if ( this.category == "Paragraph" )
+			{
+			}
 		}
 
 		protected void GraphicListShowSelection()
 		{
 			//	Montre la ligne sélectionnée dans la liste des agrégats.
-			Properties.Aggregate agg = this.GetAggregate();
-			if ( agg != null )
+			if ( this.category == "Graphic" )
 			{
-				int row, column;
-				this.graphicList.GetSelectedRowColumn(out row, out column);
-				this.graphicList.ShowCell(row, column);
+				Properties.Aggregate agg = this.GetAggregate();
+				if ( agg != null )
+				{
+					int row, column;
+					this.graphicList.GetSelectedRowColumn(out row, out column);
+					this.graphicList.ShowCell(row, column);
+				}
+			}
+
+			if ( this.category == "Paragraph" )
+			{
 			}
 		}
 
 
+		protected string Category
+		{
+			get
+			{
+				return this.category;
+			}
+
+			set
+			{
+				if ( this.category != value )
+				{
+					this.category = value;
+					this.UpdateCategory();
+				}
+			}
+		}
+
 		private void HandleCategoryChanged(object sender)
 		{
-			RadioButton button = sender as RadioButton;
-			this.category = button.Name;
-			this.UpdateCategory();
+			if ( this.categoryGraphic  .ActiveState == ActiveState.Yes )  this.Category = "Graphic";
+			if ( this.categoryParagraph.ActiveState == ActiveState.Yes )  this.Category = "Paragraph";
+			if ( this.categoryCharacter.ActiveState == ActiveState.Yes )  this.Category = "Character";
 		}
 
 
 		private void HandleButtonAggregateNewEmpty(object sender, MessageEventArgs e)
 		{
 			//	Crée un nouvel agrégat.
-			int sel = this.document.Aggregates.Selected;
-			if ( sel == -1 )  sel = 10000;
-			this.document.Modifier.AggregateNewEmpty(sel, "", true);
+			if ( this.category == "Graphic" )
+			{
+				int sel = this.document.Aggregates.Selected;
+				if ( sel == -1 )  sel = 10000;
+				this.document.Modifier.AggregateNewEmpty(sel, "", true);
+			}
+
+			if ( this.category == "Paragraph" )
+			{
+				string black = RichColor.ToString(RichColor.FromBrightness(0));
+				double fontSize = (this.document.Type == DocumentType.Pictogram) ? 1.2 : 12.0;
+
+				System.Collections.ArrayList properties = new System.Collections.ArrayList();
+				properties.Add(new Text.Properties.FontProperty("Arial", Misc.DefaultFontStyle("Arial")));
+				properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale, Common.Text.Properties.SizeUnits.Points));
+				properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Common.Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Common.Text.Properties.ThreeState.True));
+				properties.Add(new Text.Properties.FontColorProperty(black));
+				properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
+				properties.Add(new Text.Properties.LeadingProperty(1.0, Common.Text.Properties.SizeUnits.PercentNotCombining, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, Common.Text.Properties.SizeUnits.Points, Common.Text.Properties.AlignMode.None));
+				properties.Add(new Text.Properties.KeepProperty(1, 1, Common.Text.Properties.ParagraphStartMode.Anywhere, Common.Text.Properties.ThreeState.False, Common.Text.Properties.ThreeState.False));
+				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle("New style", Common.Text.TextStyleClass.Paragraph, properties);
+
+				//?this.document.TextContext.StyleList.Add(style);
+			}
 		}
 
 		private void HandleButtonAggregateNew3(object sender, MessageEventArgs e)
 		{
 			//	Crée un nouvel agrégat.
-			int sel = this.document.Aggregates.Selected;
-			if ( sel == -1 )  sel = 10000;
-			this.document.Modifier.AggregateNew3(sel, "", true);
+			if ( this.category == "Graphic" )
+			{
+				int sel = this.document.Aggregates.Selected;
+				if ( sel == -1 )  sel = 10000;
+				this.document.Modifier.AggregateNew3(sel, "", true);
+			}
 		}
 
 		private void HandleButtonAggregateNewAll(object sender, MessageEventArgs e)
 		{
 			//	Crée un nouvel agrégat.
-			int sel = this.document.Aggregates.Selected;
-			if ( sel == -1 )  sel = 10000;
-			this.document.Modifier.AggregateNewAll(sel, "", true);
+			if ( this.category == "Graphic" )
+			{
+				int sel = this.document.Aggregates.Selected;
+				if ( sel == -1 )  sel = 10000;
+				this.document.Modifier.AggregateNewAll(sel, "", true);
+			}
 		}
 
 		private void HandleButtonAggregateDuplicate(object sender, MessageEventArgs e)
 		{
 			//	Duplique un agrégat.
-			int sel = this.document.Aggregates.Selected;
-			if ( sel == -1 )  sel = 10000;
-			this.document.Modifier.AggregateDuplicate(sel);
+			if ( this.category == "Graphic" )
+			{
+				int sel = this.document.Aggregates.Selected;
+				if ( sel == -1 )  sel = 10000;
+				this.document.Modifier.AggregateDuplicate(sel);
+			}
 		}
 
 		private void HandleButtonAggregateUp(object sender, MessageEventArgs e)
 		{
 			//	Monte d'une ligne l'agrégat sélectionné.
-			int sel = this.document.Aggregates.Selected;
-			this.document.Modifier.AggregateSwap(sel, sel-1);
+			if ( this.category == "Graphic" )
+			{
+				int sel = this.document.Aggregates.Selected;
+				this.document.Modifier.AggregateSwap(sel, sel-1);
+			}
 		}
 
 		private void HandleButtonAggregateDown(object sender, MessageEventArgs e)
 		{
 			//	Descend d'une ligne l'agrégat sélectionné.
-			int sel = this.document.Aggregates.Selected;
-			this.document.Modifier.AggregateSwap(sel, sel+1);
+			if ( this.category == "Graphic" )
+			{
+				int sel = this.document.Aggregates.Selected;
+				this.document.Modifier.AggregateSwap(sel, sel+1);
+			}
 		}
 
 		private void HandleButtonAggregateDelete(object sender, MessageEventArgs e)
 		{
 			//	Supprime l'agrégat sélectionné.
-			int sel = this.document.Aggregates.Selected;
-			this.document.Modifier.AggregateDelete(sel);
+			if ( this.category == "Graphic" )
+			{
+				int sel = this.document.Aggregates.Selected;
+				this.document.Modifier.AggregateDelete(sel);
+			}
 		}
 
 		private void HandleAggregatesTableSelectionChanged(object sender)
 		{
 			//	Sélection changée dans la liste.
+			System.Diagnostics.Debug.Assert(this.category == "Graphic");
 			this.graphicList.SelectCell(1, this.graphicList.SelectedRow, true);
 			this.graphicList.SelectCell(2, this.graphicList.SelectedRow, true);
 
@@ -615,6 +731,7 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleAggregatesTableDoubleClicked(object sender, MessageEventArgs e)
 		{
 			//	Liste double-cliquée.
+			System.Diagnostics.Debug.Assert(this.category == "Graphic");
 			this.name.SelectAll();
 			this.name.Focus();
 		}
@@ -622,6 +739,7 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleAggregatesTableFlyOverChanged(object sender)
 		{
 			//	La cellule survolée a changé.
+			System.Diagnostics.Debug.Assert(this.category == "Graphic");
 			int rank = this.graphicList.FlyOverRow;
 
 			Properties.Aggregate agg = null;
@@ -643,6 +761,29 @@ namespace Epsitec.Common.Document.Containers
 			{
 				this.graphicList.HiliteRow(i, i==rank);
 			}
+		}
+
+		private void HandleStylesTableSelectionChanged(object sender)
+		{
+			//	Sélection changée dans la liste.
+			System.Diagnostics.Debug.Assert(this.category == "Paragraph");
+			this.paragraphList.SelectCell(1, this.paragraphList.SelectedRow, true);
+			this.paragraphList.SelectCell(2, this.paragraphList.SelectedRow, true);
+
+			if ( this.document.TextStyles.Selected != this.paragraphList.SelectedPropertyRow )
+			{
+				this.document.Modifier.OpletQueueEnable = false;
+				this.document.TextStyles.Selected = this.paragraphList.SelectedPropertyRow;
+				this.document.Modifier.OpletQueueEnable = true;
+			}
+		}
+
+		private void HandleStylesTableDoubleClicked(object sender, MessageEventArgs e)
+		{
+			//	Liste double-cliquée.
+			System.Diagnostics.Debug.Assert(this.category == "Paragraph");
+			this.name.SelectAll();
+			this.name.Focus();
 		}
 
 		private void HandleButtonChildrensNew(object sender, MessageEventArgs e)
@@ -727,6 +868,7 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleButtonStyleNew(object sender, MessageEventArgs e)
 		{
 			//	Crée une nouvelle propriété.
+			System.Diagnostics.Debug.Assert(this.category == "Graphic");
 			IconButton button = sender as IconButton;
 			Point pos = button.MapClientToScreen(new Point(0,0));
 			VMenu menu = this.CreateMenuTypes(pos);
@@ -752,6 +894,7 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleButtonStyleDelete(object sender, MessageEventArgs e)
 		{
 			//	Supprime la propriété sélectionnée.
+			System.Diagnostics.Debug.Assert(this.category == "Graphic");
 			Properties.Aggregate agg = this.GetAggregate();
 			this.document.Modifier.AggregateStyleDelete(agg);
 			this.UpdatePanel();
@@ -762,17 +905,24 @@ namespace Epsitec.Common.Document.Containers
 			//	Le nom de l'agrégat a changé.
 			if ( this.ignoreChanged )  return;
 
-			int sel = this.document.Aggregates.Selected;
-			if ( sel == -1 )  return;
+			if ( this.category == "Graphic" )
+			{
+				int sel = this.document.Aggregates.Selected;
+				if ( sel == -1 )  return;
 
-			Properties.Aggregate agg = this.document.Aggregates[sel] as Properties.Aggregate;
+				Properties.Aggregate agg = this.document.Aggregates[sel] as Properties.Aggregate;
 
-			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
-			agg.AggregateName = this.name.Text;
-			this.document.Modifier.OpletQueueValidateAction();
-			this.document.IsDirtySerialize = true;
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
+				agg.AggregateName = this.name.Text;
+				this.document.Modifier.OpletQueueValidateAction();
+				this.document.IsDirtySerialize = true;
 
-			this.document.Notifier.NotifyAggregateChanged(agg);
+				this.document.Notifier.NotifyAggregateChanged(agg);
+			}
+
+			if ( this.category == "Paragraph" )
+			{
+			}
 		}
 
 		private void HandlePanelChanged(object sender)

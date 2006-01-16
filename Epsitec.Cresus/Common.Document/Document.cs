@@ -1344,18 +1344,14 @@ namespace Epsitec.Common.Document
 		protected void DefaultTextContext()
 		{
 			//	Crée le TextContext et les styles par défaut.
-			System.Collections.ArrayList properties;
-			Text.TextStyle style;
-
 			this.textContext = new Text.TextContext();
 			this.textContext.IsDegradedLayoutEnabled = true;
 			this.textContext.IsPropertiesPropertyEnabled = false;
 
 			string black = RichColor.ToString(RichColor.FromBrightness(0));
-
 			double fontSize = (this.type == DocumentType.Pictogram) ? 1.2 : 12.0;
 
-			properties = new System.Collections.ArrayList();
+			System.Collections.ArrayList properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty("Arial", Misc.DefaultFontStyle("Arial")));
 			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
 			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
@@ -1363,7 +1359,7 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
-			style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
+			Text.TextStyle style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
 			
 			#region Experimental Code
 			
@@ -1456,6 +1452,7 @@ namespace Epsitec.Common.Document
 			//	Liste des styles de texte de ce document.
 			get
 			{
+				bool ioqe = this.modifier.OpletQueueEnable;
 				this.modifier.OpletQueueEnable = false;
 				UndoableList list = new UndoableList(this, UndoableListType.TextStylesInsideDocument);
 
@@ -1463,7 +1460,7 @@ namespace Epsitec.Common.Document
 				Text.TextStyle defaultStyle = this.TextContext.StyleList["Default", Text.TextStyleClass.Paragraph];
 				list.Add(defaultStyle);
 
-				this.modifier.OpletQueueEnable = true;
+				this.modifier.OpletQueueEnable = ioqe;
 				return list;
 			}
 		}
