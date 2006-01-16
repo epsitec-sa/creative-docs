@@ -275,6 +275,9 @@
 
 	<data name="Panel.Abstract.Extend">Expand or Collapse pannel</data>
 
+	<data name="Panel.AggregateCategory.Graphic">@@Graphique</data>
+	<data name="Panel.AggregateCategory.Paragraph">@@Paragraphe</data>
+	<data name="Panel.AggregateCategory.Character">@@Caractère</data>
 	<data name="Panel.AggregateName.Label.Name">Style name</data>
 	<data name="Panel.AggregateName.Tooltip.Name">Style name</data>
 	<data name="Panel.AggregateChildrens.Label.Name">Base styles</data>

@@ -314,11 +314,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Containers\TextStyles.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Menus\ContextMenuItem.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

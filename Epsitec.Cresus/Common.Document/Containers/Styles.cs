@@ -12,99 +12,40 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Styles(Document document) : base(document)
 		{
-			//	Toolbar principale.
-			this.toolBar = new HToolBar(this);
-			this.toolBar.Dock = DockStyle.Top;
-			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
-			this.toolBar.TabIndex = 1;
-			this.toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-
-			int index = 0;
-
-			this.buttonAggregateNewEmpty = new IconButton(Misc.Icon("AggregateNewEmpty"));
-			this.buttonAggregateNewEmpty.Clicked += new MessageEventHandler(this.HandleButtonAggregateNewEmpty);
-			this.buttonAggregateNewEmpty.TabIndex = index++;
-			this.buttonAggregateNewEmpty.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBar.Items.Add(this.buttonAggregateNewEmpty);
-			ToolTip.Default.SetToolTip(this.buttonAggregateNewEmpty, Res.Strings.Action.AggregateNewEmpty);
-
-			this.buttonAggregateNew3 = new IconButton(Misc.Icon("AggregateNew3"));
-			this.buttonAggregateNew3.Clicked += new MessageEventHandler(this.HandleButtonAggregateNew3);
-			this.buttonAggregateNew3.TabIndex = index++;
-			this.buttonAggregateNew3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBar.Items.Add(this.buttonAggregateNew3);
-			ToolTip.Default.SetToolTip(this.buttonAggregateNew3, Res.Strings.Action.AggregateNew3);
-
-			this.buttonAggregateNewAll = new IconButton(Misc.Icon("AggregateNewAll"));
-			this.buttonAggregateNewAll.Clicked += new MessageEventHandler(this.HandleButtonAggregateNewAll);
-			this.buttonAggregateNewAll.TabIndex = index++;
-			this.buttonAggregateNewAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBar.Items.Add(this.buttonAggregateNewAll);
-			ToolTip.Default.SetToolTip(this.buttonAggregateNewAll, Res.Strings.Action.AggregateNewAll);
-
-			this.buttonAggregateDuplicate = new IconButton(Misc.Icon("AggregateDuplicate"));
-			this.buttonAggregateDuplicate.Clicked += new MessageEventHandler(this.HandleButtonAggregateDuplicate);
-			this.buttonAggregateDuplicate.TabIndex = index++;
-			this.buttonAggregateDuplicate.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBar.Items.Add(this.buttonAggregateDuplicate);
-			ToolTip.Default.SetToolTip(this.buttonAggregateDuplicate, Res.Strings.Action.AggregateDuplicate);
-
-			this.toolBar.Items.Add(new IconSeparator());
-
-			this.buttonAggregateUp = new IconButton(Misc.Icon("AggregateUp"));
-			this.buttonAggregateUp.Clicked += new MessageEventHandler(this.HandleButtonAggregateUp);
-			this.buttonAggregateUp.TabIndex = index++;
-			this.buttonAggregateUp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBar.Items.Add(this.buttonAggregateUp);
-			ToolTip.Default.SetToolTip(this.buttonAggregateUp, Res.Strings.Action.AggregateUp);
-
-			this.buttonAggregateDown = new IconButton(Misc.Icon("AggregateDown"));
-			this.buttonAggregateDown.Clicked += new MessageEventHandler(this.HandleButtonAggregateDown);
-			this.buttonAggregateDown.TabIndex = index++;
-			this.buttonAggregateDown.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBar.Items.Add(this.buttonAggregateDown);
-			ToolTip.Default.SetToolTip(this.buttonAggregateDown, Res.Strings.Action.AggregateDown);
-
-			this.toolBar.Items.Add(new IconSeparator());
-
-			this.buttonAggregateDelete = new IconButton(Misc.Icon("AggregateDelete"));
-			this.buttonAggregateDelete.Clicked += new MessageEventHandler(this.HandleButtonAggregateDelete);
-			this.buttonAggregateDelete.TabIndex = index++;
-			this.buttonAggregateDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBar.Items.Add(this.buttonAggregateDelete);
-			ToolTip.Default.SetToolTip(this.buttonAggregateDelete, Res.Strings.Action.AggregateDelete);
-
-			this.toolBar.Items.Add(new IconSeparator());
-
-			this.buttonStyleNew = new IconButton(Misc.Icon("AggregateStyleNew"));
-			this.buttonStyleNew.Clicked += new MessageEventHandler(this.HandleButtonStyleNew);
-			this.buttonStyleNew.TabIndex = index++;
-			this.buttonStyleNew.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBar.Items.Add(this.buttonStyleNew);
-			ToolTip.Default.SetToolTip(this.buttonStyleNew, Res.Strings.Action.AggregateStyleNew);
-
-			this.buttonStyleDelete = new IconButton(Misc.Icon("AggregateStyleDelete"));
-			this.buttonStyleDelete.Clicked += new MessageEventHandler(this.HandleButtonStyleDelete);
-			this.buttonStyleDelete.TabIndex = index++;
-			this.buttonStyleDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBar.Items.Add(this.buttonStyleDelete);
-			ToolTip.Default.SetToolTip(this.buttonStyleDelete, Res.Strings.Action.AggregateStyleDelete);
+			this.CreateCategoryGroup();
+			this.CreateAggregateToolBar();
 
 			//	Table des agrégats.
-			this.list = new Widgets.AggregateList();
-			this.list.Document = this.document;
-			this.list.List = this.document.Aggregates;
-			this.list.HScroller = true;
-			this.list.VScroller = true;
-			this.list.SetParent(this);
-			this.list.MinSize = new Size(10, 87);
-			this.list.Dock = DockStyle.Fill;
-			this.list.DockMargins = new Margins(0, 0, 0, 0);
-			this.list.FinalSelectionChanged += new EventHandler(this.HandleAggregatesTableSelectionChanged);
-			this.list.FlyOverChanged += new EventHandler(this.HandleAggregatesTableFlyOverChanged);
-			this.list.DoubleClicked += new MessageEventHandler(this.HandleAggregatesTableDoubleClicked);
-			this.list.TabIndex = 2;
-			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.graphicList = new Widgets.AggregateList();
+			this.graphicList.Document = this.document;
+			this.graphicList.List = this.document.Aggregates;
+			this.graphicList.HScroller = true;
+			this.graphicList.VScroller = true;
+			this.graphicList.SetParent(this);
+			this.graphicList.MinSize = new Size(10, 87);
+			this.graphicList.Dock = DockStyle.Fill;
+			this.graphicList.DockMargins = new Margins(0, 0, 0, 0);
+			this.graphicList.FinalSelectionChanged += new EventHandler(this.HandleAggregatesTableSelectionChanged);
+			this.graphicList.FlyOverChanged += new EventHandler(this.HandleAggregatesTableFlyOverChanged);
+			this.graphicList.DoubleClicked += new MessageEventHandler(this.HandleAggregatesTableDoubleClicked);
+			this.graphicList.TabIndex = 2;
+			this.graphicList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			//	Table des styles de texte.
+			this.paragraphList = new Widgets.TextStylesList();
+			this.paragraphList.Document = this.document;
+			this.paragraphList.List = this.document.Aggregates;
+			this.paragraphList.HScroller = true;
+			this.paragraphList.VScroller = true;
+			this.paragraphList.SetParent(this);
+			this.paragraphList.MinSize = new Size(10, 87);
+			this.paragraphList.Dock = DockStyle.Fill;
+			this.paragraphList.DockMargins = new Margins(0, 0, 0, 0);
+			//?this.paragraphList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
+			//?this.paragraphList.FlyOverChanged += new EventHandler(this.HandleStylesTableFlyOverChanged);
+			//?this.paragraphList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
+			this.paragraphList.TabIndex = 2;
+			this.paragraphList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Roue des couleurs.
 			this.colorSelector = new ColorSelector();
@@ -143,62 +84,202 @@ namespace Epsitec.Common.Document.Containers
 			this.childrens.TabIndex = 98;
 			this.childrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.toolBarChildrens = new HToolBar(this);
-			this.toolBarChildrens.Dock = DockStyle.Bottom;
-			this.toolBarChildrens.DockMargins = new Margins(0, 0, 0, 0);
-			this.toolBarChildrens.TabIndex = 97;
-			this.toolBarChildrens.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.CreateChildrensToolBar();
+			this.CreateNameToolBar();
+
+			this.UpdateChildrensExtend();
+
+			this.category = "Graphic";
+			this.UpdateCategory();
+		}
+
+		protected void CreateCategoryGroup()
+		{
+			//	Crée les boutons radio pour le choix de la catégorie.
+			this.categoryContainer = new Widget(this);
+			this.categoryContainer.Height = 20;
+			this.categoryContainer.Dock = DockStyle.Top;
+			this.categoryContainer.DockMargins = new Margins(0, 0, 0, 5);
+			this.categoryContainer.TabIndex = 1;
+			this.categoryContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+			this.index = 0;
+
+			this.categoryGraphic = new RadioButton(this.categoryContainer, "Category", 0);
+			this.categoryGraphic.ActiveState = ActiveState.Yes;
+			this.categoryGraphic.Name = "Graphic";
+			this.categoryGraphic.Text = Res.Strings.Panel.AggregateCategory.Graphic;
+			this.categoryGraphic.Width = 80;
+			this.categoryGraphic.Dock = DockStyle.Left;
+			this.categoryGraphic.DockMargins = new Margins(0, 0, 0, 0);
+			this.categoryGraphic.TabIndex = this.index++;
+			this.categoryGraphic.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.categoryGraphic.ActiveStateChanged += new EventHandler(this.HandleCategoryChanged);
+
+			this.categoryParagraph = new RadioButton(this.categoryContainer, "Category", 1);
+			this.categoryParagraph.Name = "Paragraph";
+			this.categoryParagraph.Text = Res.Strings.Panel.AggregateCategory.Paragraph;
+			this.categoryParagraph.Width = 80;
+			this.categoryParagraph.Dock = DockStyle.Left;
+			this.categoryParagraph.DockMargins = new Margins(0, 0, 0, 0);
+			this.categoryParagraph.TabIndex = this.index++;
+			this.categoryParagraph.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.categoryParagraph.ActiveStateChanged += new EventHandler(this.HandleCategoryChanged);
+
+			this.categoryCharacter = new RadioButton(this.categoryContainer, "Category", 2);
+			this.categoryCharacter.Name = "Character";
+			this.categoryCharacter.Text = Res.Strings.Panel.AggregateCategory.Character;
+			this.categoryCharacter.Width = 80;
+			this.categoryCharacter.Dock = DockStyle.Left;
+			this.categoryCharacter.DockMargins = new Margins(0, 0, 0, 0);
+			this.categoryCharacter.TabIndex = this.index++;
+			this.categoryCharacter.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.categoryCharacter.ActiveStateChanged += new EventHandler(this.HandleCategoryChanged);
+		}
+
+		protected void CreateAggregateToolBar()
+		{
+			//	Crée la toolbar principale.
+			this.aggregateToolBar = new HToolBar(this);
+			this.aggregateToolBar.Dock = DockStyle.Top;
+			this.aggregateToolBar.DockMargins = new Margins(0, 0, 0, -1);
+			this.aggregateToolBar.TabIndex = 1;
+			this.aggregateToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+			this.index = 0;
+
+			this.buttonAggregateNewEmpty = new IconButton(Misc.Icon("AggregateNewEmpty"));
+			this.buttonAggregateNewEmpty.Clicked += new MessageEventHandler(this.HandleButtonAggregateNewEmpty);
+			this.buttonAggregateNewEmpty.TabIndex = this.index++;
+			this.buttonAggregateNewEmpty.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.aggregateToolBar.Items.Add(this.buttonAggregateNewEmpty);
+			ToolTip.Default.SetToolTip(this.buttonAggregateNewEmpty, Res.Strings.Action.AggregateNewEmpty);
+
+			this.buttonAggregateNew3 = new IconButton(Misc.Icon("AggregateNew3"));
+			this.buttonAggregateNew3.Clicked += new MessageEventHandler(this.HandleButtonAggregateNew3);
+			this.buttonAggregateNew3.TabIndex = this.index++;
+			this.buttonAggregateNew3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.aggregateToolBar.Items.Add(this.buttonAggregateNew3);
+			ToolTip.Default.SetToolTip(this.buttonAggregateNew3, Res.Strings.Action.AggregateNew3);
+
+			this.buttonAggregateNewAll = new IconButton(Misc.Icon("AggregateNewAll"));
+			this.buttonAggregateNewAll.Clicked += new MessageEventHandler(this.HandleButtonAggregateNewAll);
+			this.buttonAggregateNewAll.TabIndex = this.index++;
+			this.buttonAggregateNewAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.aggregateToolBar.Items.Add(this.buttonAggregateNewAll);
+			ToolTip.Default.SetToolTip(this.buttonAggregateNewAll, Res.Strings.Action.AggregateNewAll);
+
+			this.buttonAggregateDuplicate = new IconButton(Misc.Icon("AggregateDuplicate"));
+			this.buttonAggregateDuplicate.Clicked += new MessageEventHandler(this.HandleButtonAggregateDuplicate);
+			this.buttonAggregateDuplicate.TabIndex = this.index++;
+			this.buttonAggregateDuplicate.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.aggregateToolBar.Items.Add(this.buttonAggregateDuplicate);
+			ToolTip.Default.SetToolTip(this.buttonAggregateDuplicate, Res.Strings.Action.AggregateDuplicate);
+
+			this.aggregateToolBar.Items.Add(new IconSeparator());
+
+			this.buttonAggregateUp = new IconButton(Misc.Icon("AggregateUp"));
+			this.buttonAggregateUp.Clicked += new MessageEventHandler(this.HandleButtonAggregateUp);
+			this.buttonAggregateUp.TabIndex = this.index++;
+			this.buttonAggregateUp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.aggregateToolBar.Items.Add(this.buttonAggregateUp);
+			ToolTip.Default.SetToolTip(this.buttonAggregateUp, Res.Strings.Action.AggregateUp);
+
+			this.buttonAggregateDown = new IconButton(Misc.Icon("AggregateDown"));
+			this.buttonAggregateDown.Clicked += new MessageEventHandler(this.HandleButtonAggregateDown);
+			this.buttonAggregateDown.TabIndex = this.index++;
+			this.buttonAggregateDown.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.aggregateToolBar.Items.Add(this.buttonAggregateDown);
+			ToolTip.Default.SetToolTip(this.buttonAggregateDown, Res.Strings.Action.AggregateDown);
+
+			this.aggregateToolBar.Items.Add(new IconSeparator());
+
+			this.buttonAggregateDelete = new IconButton(Misc.Icon("AggregateDelete"));
+			this.buttonAggregateDelete.Clicked += new MessageEventHandler(this.HandleButtonAggregateDelete);
+			this.buttonAggregateDelete.TabIndex = this.index++;
+			this.buttonAggregateDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.aggregateToolBar.Items.Add(this.buttonAggregateDelete);
+			ToolTip.Default.SetToolTip(this.buttonAggregateDelete, Res.Strings.Action.AggregateDelete);
+
+			this.aggregateToolBar.Items.Add(new IconSeparator());
+
+			this.buttonStyleNew = new IconButton(Misc.Icon("AggregateStyleNew"));
+			this.buttonStyleNew.Clicked += new MessageEventHandler(this.HandleButtonStyleNew);
+			this.buttonStyleNew.TabIndex = this.index++;
+			this.buttonStyleNew.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.aggregateToolBar.Items.Add(this.buttonStyleNew);
+			ToolTip.Default.SetToolTip(this.buttonStyleNew, Res.Strings.Action.AggregateStyleNew);
+
+			this.buttonStyleDelete = new IconButton(Misc.Icon("AggregateStyleDelete"));
+			this.buttonStyleDelete.Clicked += new MessageEventHandler(this.HandleButtonStyleDelete);
+			this.buttonStyleDelete.TabIndex = this.index++;
+			this.buttonStyleDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.aggregateToolBar.Items.Add(this.buttonStyleDelete);
+			ToolTip.Default.SetToolTip(this.buttonStyleDelete, Res.Strings.Action.AggregateStyleDelete);
+		}
+
+		protected void CreateChildrensToolBar()
+		{
+			//	Crée la toolbar pour le choix des enfants.
+			this.childrensToolBar = new HToolBar(this);
+			this.childrensToolBar.Dock = DockStyle.Bottom;
+			this.childrensToolBar.DockMargins = new Margins(0, 0, 0, 0);
+			this.childrensToolBar.TabIndex = 97;
+			this.childrensToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
 			st.Width = 80;
 			st.Text = Res.Strings.Panel.AggregateChildrens.Label.Name;
-			this.toolBarChildrens.Items.Add(st);
+			this.childrensToolBar.Items.Add(st);
 
-			index = 0;
+			this.index = 0;
 
 			this.buttonChildrensNew = new IconButton(Misc.Icon("AggregateChildrensNew"));
 			this.buttonChildrensNew.Clicked += new MessageEventHandler(this.HandleButtonChildrensNew);
-			this.buttonChildrensNew.TabIndex = index++;
+			this.buttonChildrensNew.TabIndex = this.index++;
 			this.buttonChildrensNew.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBarChildrens.Items.Add(this.buttonChildrensNew);
+			this.childrensToolBar.Items.Add(this.buttonChildrensNew);
 			ToolTip.Default.SetToolTip(this.buttonChildrensNew, Res.Strings.Action.AggregateChildrensNew);
 
-			this.toolBarChildrens.Items.Add(new IconSeparator());
+			this.childrensToolBar.Items.Add(new IconSeparator());
 
 			this.buttonChildrensUp = new IconButton(Misc.Icon("Up"));
 			this.buttonChildrensUp.Clicked += new MessageEventHandler(this.HandleButtonChildrensUp);
-			this.buttonChildrensUp.TabIndex = index++;
+			this.buttonChildrensUp.TabIndex = this.index++;
 			this.buttonChildrensUp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBarChildrens.Items.Add(this.buttonChildrensUp);
+			this.childrensToolBar.Items.Add(this.buttonChildrensUp);
 			ToolTip.Default.SetToolTip(this.buttonChildrensUp, Res.Strings.Action.AggregateChildrensUp);
 
 			this.buttonChildrensDown = new IconButton(Misc.Icon("Down"));
 			this.buttonChildrensDown.Clicked += new MessageEventHandler(this.HandleButtonChildrensDown);
-			this.buttonChildrensDown.TabIndex = index++;
+			this.buttonChildrensDown.TabIndex = this.index++;
 			this.buttonChildrensDown.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBarChildrens.Items.Add(this.buttonChildrensDown);
+			this.childrensToolBar.Items.Add(this.buttonChildrensDown);
 			ToolTip.Default.SetToolTip(this.buttonChildrensDown, Res.Strings.Action.AggregateChildrensDown);
 
-			this.toolBarChildrens.Items.Add(new IconSeparator());
+			this.childrensToolBar.Items.Add(new IconSeparator());
 
 			this.buttonChildrensDelete = new IconButton(Misc.Icon("DeleteItem"));
 			this.buttonChildrensDelete.Clicked += new MessageEventHandler(this.HandleButtonChildrensDelete);
-			this.buttonChildrensDelete.TabIndex = index++;
+			this.buttonChildrensDelete.TabIndex = this.index++;
 			this.buttonChildrensDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBarChildrens.Items.Add(this.buttonChildrensDelete);
+			this.childrensToolBar.Items.Add(this.buttonChildrensDelete);
 			ToolTip.Default.SetToolTip(this.buttonChildrensDelete, Res.Strings.Action.AggregateChildrensDelete);
+		}
 
-			//	Nom de l'agrégat.
-			this.toolBarName = new HToolBar(this);
-			this.toolBarName.Dock = DockStyle.Bottom;
-			this.toolBarName.DockMargins = new Margins(0, 0, 0, 0);
-			this.toolBarName.TabIndex = 96;
-			this.toolBarName.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+		protected void CreateNameToolBar()
+		{
+			//	Crée la toolbar pour le nom de l'agrégat.
+			this.nameToolBar = new HToolBar(this);
+			this.nameToolBar.Dock = DockStyle.Bottom;
+			this.nameToolBar.DockMargins = new Margins(0, 0, 0, 0);
+			this.nameToolBar.TabIndex = 96;
+			this.nameToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
-			st = new StaticText();
+			StaticText st = new StaticText();
 			st.Width = 80;
 			st.Text = Res.Strings.Panel.AggregateName.Label.Name;
-			this.toolBarName.Items.Add(st);
+			this.nameToolBar.Items.Add(st);
 
 			this.name = new TextField();
 			this.name.Width = 135;
@@ -206,10 +287,10 @@ namespace Epsitec.Common.Document.Containers
 			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
 			this.name.TabIndex = 1;
 			this.name.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toolBarName.Items.Add(this.name);
+			this.nameToolBar.Items.Add(this.name);
 			ToolTip.Default.SetToolTip(this.name, Res.Strings.Panel.AggregateName.Tooltip.Name);
 
-			this.buttonChildrensExtend = new GlyphButton(this.toolBarName);
+			this.buttonChildrensExtend = new GlyphButton(this.nameToolBar);
 			this.buttonChildrensExtend.ButtonStyle = ButtonStyle.Icon;
 			this.buttonChildrensExtend.GlyphShape = GlyphShape.ArrowUp;
 			this.buttonChildrensExtend.Width = 12;
@@ -219,30 +300,28 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonChildrensExtend.TabIndex = 2;
 			this.buttonChildrensExtend.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonChildrensExtend, Res.Strings.Panel.Abstract.Extend);
-
-			this.UpdateChildrensExtend();
 		}
-		
+
 
 		public override void Hilite(Objects.Abstract hiliteObject)
 		{
 			//	Met en évidence l'objet survolé par la souris.
 			if ( !this.IsVisible )  return;
 
-			if ( this.list.Rows != this.document.Aggregates.Count )
+			if ( this.graphicList.Rows != this.document.Aggregates.Count )
 			{
 				this.SetDirtyContent();
 				this.Update();
 			}
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			this.list.HiliteColor = context.HiliteSurfaceColor;
+			this.graphicList.HiliteColor = context.HiliteSurfaceColor;
 
 			for ( int i=0 ; i<this.document.Aggregates.Count ; i++ )
 			{
 				Properties.Aggregate agg = this.document.Aggregates[i] as Properties.Aggregate;
 				bool hilite = (hiliteObject != null && hiliteObject.Aggregates.Contains(agg));
-				this.list.HiliteRow(i, hilite);
+				this.graphicList.HiliteRow(i, hilite);
 			}
 		}
 
@@ -250,14 +329,18 @@ namespace Epsitec.Common.Document.Containers
 		protected override void DoUpdateContent()
 		{
 			//	Effectue la mise à jour du contenu.
-			this.list.List = this.document.Aggregates;
-			this.list.UpdateContent();
+			this.graphicList.List = this.document.Aggregates;
+			this.graphicList.UpdateContent();
+
+			this.paragraphList.List = this.document.TextStyles;
+			this.paragraphList.UpdateContent();
+			
 			this.UpdateAggregateName();
 			this.UpdateAggregateChildrens();
-			this.UpdateToolBarChildrens();
+			this.UpdateChildrensToolBar();
 			this.UpdateToolBar();
 			this.UpdatePanel();
-			this.ListShowSelection();
+			this.GraphicListShowSelection();
 		}
 
 		protected override void DoUpdateAggregates(System.Collections.ArrayList aggregateList)
@@ -268,7 +351,7 @@ namespace Epsitec.Common.Document.Containers
 				int row = this.document.Aggregates.IndexOf(agg);
 				if ( row != -1 )
 				{
-					this.list.UpdateRow(row);
+					this.graphicList.UpdateRow(row);
 				}
 			}
 		}
@@ -285,10 +368,22 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
+		protected void UpdateCategory()
+		{
+			//	Met à jour la catégorie.
+			this.graphicList.Visibility = (this.category == "Graphic");
+			this.paragraphList.Visibility = (this.category == "Paragraph");
+
+			this.buttonAggregateNew3.Visibility = (this.category == "Graphic");
+			this.buttonAggregateNewAll.Visibility = (this.category == "Graphic");
+			this.buttonStyleNew.Visibility = (this.category == "Graphic");
+			this.buttonStyleDelete.Visibility = (this.category == "Graphic");
+		}
+
 		protected void UpdateToolBar()
 		{
 			//	Met à jour les boutons de la toolbar.
-			int total = this.list.Rows;
+			int total = this.graphicList.Rows;
 			int sel = this.document.Aggregates.Selected;
 
 			this.buttonAggregateNewAll.Enable = (!this.document.Modifier.IsTool || this.document.Modifier.TotalSelected > 0);
@@ -302,7 +397,7 @@ namespace Epsitec.Common.Document.Containers
 			Properties.Aggregate agg = this.GetAggregate();
 			if ( agg != null )
 			{
-				type = this.list.SelectedProperty;
+				type = this.graphicList.SelectedProperty;
 				if ( type != Properties.Type.None )
 				{
 					if ( agg.Property(type) != null )
@@ -336,14 +431,14 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Met à jour les panneaux des enfants selon le mode réduit/étendu.
 			this.buttonChildrensExtend.GlyphShape = this.isChildrensExtended ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
-			this.toolBarChildrens.Visibility = (this.isChildrensExtended);
+			this.childrensToolBar.Visibility = (this.isChildrensExtended);
 			this.childrens.Visibility = (this.isChildrensExtended);
 		}
 
-		protected void UpdateToolBarChildrens()
+		protected void UpdateChildrensToolBar()
 		{
 			//	Met à jour les boutons de la toolbar des enfants.
-			int aggSel = this.list.SelectedPropertyRow;
+			int aggSel = this.graphicList.SelectedPropertyRow;
 			int total = this.childrens.Rows;
 			int sel = this.childrens.SelectedPropertyRow;
 
@@ -390,7 +485,7 @@ namespace Epsitec.Common.Document.Containers
 			Properties.Aggregate agg = this.GetAggregate();
 			if ( agg == null )  return;
 
-			Properties.Type type = this.list.SelectedProperty;
+			Properties.Type type = this.graphicList.SelectedProperty;
 			if ( type == Properties.Type.None )  return;
 
 			Properties.Abstract property = agg.Property(type);
@@ -412,16 +507,24 @@ namespace Epsitec.Common.Document.Containers
 			this.panelContainer.ForceLayout();
 		}
 
-		protected void ListShowSelection()
+		protected void GraphicListShowSelection()
 		{
 			//	Montre la ligne sélectionnée dans la liste des agrégats.
 			Properties.Aggregate agg = this.GetAggregate();
 			if ( agg != null )
 			{
 				int row, column;
-				this.list.GetSelectedRowColumn(out row, out column);
-				this.list.ShowCell(row, column);
+				this.graphicList.GetSelectedRowColumn(out row, out column);
+				this.graphicList.ShowCell(row, column);
 			}
+		}
+
+
+		private void HandleCategoryChanged(object sender)
+		{
+			RadioButton button = sender as RadioButton;
+			this.category = button.Name;
+			this.UpdateCategory();
 		}
 
 
@@ -481,20 +584,20 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleAggregatesTableSelectionChanged(object sender)
 		{
 			//	Sélection changée dans la liste.
-			this.list.SelectCell(1, this.list.SelectedRow, true);
-			this.list.SelectCell(2, this.list.SelectedRow, true);
+			this.graphicList.SelectCell(1, this.graphicList.SelectedRow, true);
+			this.graphicList.SelectCell(2, this.graphicList.SelectedRow, true);
 
-			if ( this.document.Aggregates.Selected != this.list.SelectedPropertyRow )
+			if ( this.document.Aggregates.Selected != this.graphicList.SelectedPropertyRow )
 			{
 				this.document.Modifier.OpletQueueEnable = false;
-				this.document.Aggregates.Selected = this.list.SelectedPropertyRow;
+				this.document.Aggregates.Selected = this.graphicList.SelectedPropertyRow;
 				this.document.Modifier.OpletQueueEnable = true;
 			}
 
 			Properties.Aggregate agg = this.GetAggregate();
 			if ( agg != null )
 			{
-				Properties.Type type = this.list.SelectedProperty;
+				Properties.Type type = this.graphicList.SelectedProperty;
 				Properties.Abstract property = agg.Property(type);
 				this.document.Modifier.OpletQueueEnable = false;
 				agg.Styles.Selected = agg.Styles.IndexOf(property);
@@ -505,8 +608,8 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdatePanel();
 			this.UpdateAggregateName();
 			this.UpdateAggregateChildrens();
-			this.UpdateToolBarChildrens();
-			this.ListShowSelection();
+			this.UpdateChildrensToolBar();
+			this.GraphicListShowSelection();
 		}
 
 		private void HandleAggregatesTableDoubleClicked(object sender, MessageEventArgs e)
@@ -519,7 +622,7 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleAggregatesTableFlyOverChanged(object sender)
 		{
 			//	La cellule survolée a changé.
-			int rank = this.list.FlyOverRow;
+			int rank = this.graphicList.FlyOverRow;
 
 			Properties.Aggregate agg = null;
 			if ( rank != -1 )
@@ -534,11 +637,11 @@ namespace Epsitec.Common.Document.Containers
 				obj.IsHilite = (agg != null && obj.Aggregates.Contains(agg));
 			}
 
-			this.list.HiliteColor = context.HiliteSurfaceColor;
+			this.graphicList.HiliteColor = context.HiliteSurfaceColor;
 			int total = this.document.Aggregates.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
-				this.list.HiliteRow(i, i==rank);
+				this.graphicList.HiliteRow(i, i==rank);
 			}
 		}
 
@@ -617,7 +720,7 @@ namespace Epsitec.Common.Document.Containers
 				this.childrens.SelectCell(i, this.childrens.SelectedRow, true);
 			}
 
-			this.UpdateToolBarChildrens();
+			this.UpdateChildrensToolBar();
 		}
 
 
@@ -675,10 +778,10 @@ namespace Epsitec.Common.Document.Containers
 		private void HandlePanelChanged(object sender)
 		{
 			//	Le contenu du panneau a changé.
-			int sel = this.list.SelectedPropertyRow;
+			int sel = this.graphicList.SelectedPropertyRow;
 			if ( sel != -1 )
 			{
-				this.list.UpdateRow(sel);
+				this.graphicList.UpdateRow(sel);
 
 				double h = this.panel.DefaultHeight;
 				if ( h != this.panelContainer.Height )
@@ -822,7 +925,13 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		protected HToolBar					toolBar;
+		protected Widget					categoryContainer;
+		protected RadioButton				categoryGraphic;
+		protected RadioButton				categoryParagraph;
+		protected RadioButton				categoryCharacter;
+		protected string					category;
+
+		protected HToolBar					aggregateToolBar;
 		protected IconButton				buttonAggregateNewEmpty;
 		protected IconButton				buttonAggregateNew3;
 		protected IconButton				buttonAggregateNewAll;
@@ -832,20 +941,26 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton				buttonAggregateDelete;
 		protected IconButton				buttonStyleNew;
 		protected IconButton				buttonStyleDelete;
-		protected Widgets.AggregateList		list;
-		protected HToolBar					toolBarName;
+
+		protected Widgets.AggregateList		graphicList;
+		protected Widgets.TextStylesList	paragraphList;
+
+		protected HToolBar					nameToolBar;
 		protected TextField					name;
-		protected HToolBar					toolBarChildrens;
+
+		protected HToolBar					childrensToolBar;
 		protected IconButton				buttonChildrensNew;
 		protected IconButton				buttonChildrensUp;
 		protected IconButton				buttonChildrensDown;
 		protected IconButton				buttonChildrensDelete;
 		protected GlyphButton				buttonChildrensExtend;
+
 		protected Widgets.AggregateList		childrens;
 		protected Widget					panelContainer;
 		protected Panels.Abstract			panel;
 		protected ColorSelector				colorSelector;
 
+		protected int						index;
 		protected bool						isChildrensExtended = false;
 		protected bool						ignoreChanged = false;
 	}

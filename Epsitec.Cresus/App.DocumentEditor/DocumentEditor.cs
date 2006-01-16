@@ -69,8 +69,8 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 #if DEBUG
-			//this.debugMode = DebugMode.DebugCommands;
-			this.debugMode = DebugMode.Release;
+			this.debugMode = DebugMode.DebugCommands;
+			//this.debugMode = DebugMode.Release;
 #else
 			this.debugMode = DebugMode.Release;
 #endif
@@ -1085,15 +1085,6 @@ namespace Epsitec.App.DocumentEditor
 			bookStyles.Name = "Styles";
 			di.bookPanels.Items.Add(bookStyles);
 
-			TabPage bookTextStyles = null;
-			if ( this.debugMode == DebugMode.DebugCommands )
-			{
-				bookTextStyles = new TabPage();
-				bookTextStyles.TabTitle = Res.Strings.TabPage.TextStyles;
-				bookTextStyles.Name = "TextStyles";
-				di.bookPanels.Items.Add(bookTextStyles);
-			}
-
 			TabPage bookAutos = null;
 			if ( this.debugMode == DebugMode.DebugCommands )
 			{
@@ -1133,15 +1124,6 @@ namespace Epsitec.App.DocumentEditor
 			di.containerStyles.Dock = DockStyle.Fill;
 			di.containerStyles.DockMargins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerStyles);
-
-			if ( bookTextStyles != null )
-			{
-				di.containerTextStyles = new Containers.TextStyles(document);
-				di.containerTextStyles.SetParent(bookTextStyles);
-				di.containerTextStyles.Dock = DockStyle.Fill;
-				di.containerTextStyles.DockMargins = new Margins(4, 4, 10, 4);
-				document.Modifier.AttachContainer(di.containerTextStyles);
-			}
 
 			if ( bookAutos != null )
 			{
@@ -4469,10 +4451,6 @@ namespace Epsitec.App.DocumentEditor
 			//	Appelé par le document lorsqu'un style de texte a changé.
 			if ( !this.IsCurrentDocument )  return;
 			DocumentInfo di = this.CurrentDocumentInfo;
-			if ( di.containerTextStyles != null )
-			{
-				di.containerTextStyles.SetDirtyContent();
-			}
 		}
 
 		private void HandlePagesChanged()
@@ -5844,7 +5822,6 @@ namespace Epsitec.App.DocumentEditor
 			public TabBook						bookPanels;
 			public Containers.Principal			containerPrincipal;
 			public Containers.Styles			containerStyles;
-			public Containers.TextStyles		containerTextStyles;
 			public Containers.Autos				containerAutos;
 			public Containers.Pages				containerPages;
 			public Containers.Layers			containerLayers;
@@ -5862,7 +5839,6 @@ namespace Epsitec.App.DocumentEditor
 				if ( this.bookPanels != null )  this.bookPanels.Dispose();
 				if ( this.containerPrincipal != null )  this.containerPrincipal.Dispose();
 				if ( this.containerStyles != null )  this.containerStyles.Dispose();
-				if ( this.containerTextStyles != null )  this.containerTextStyles.Dispose();
 				if ( this.containerAutos != null )  this.containerAutos.Dispose();
 				if ( this.containerPages != null )  this.containerPages.Dispose();
 				if ( this.containerLayers != null )  this.containerLayers.Dispose();

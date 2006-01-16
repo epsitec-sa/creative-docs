@@ -275,6 +275,9 @@
 
 	<data name="Panel.Abstract.Extend">Etend ou réduit le panneau</data>
 
+	<data name="Panel.AggregateCategory.Graphic">Graphique</data>
+	<data name="Panel.AggregateCategory.Paragraph">Paragraphe</data>
+	<data name="Panel.AggregateCategory.Character">Caractère</data>
 	<data name="Panel.AggregateName.Label.Name">Nom du style</data>
 	<data name="Panel.AggregateName.Tooltip.Name">Nom du style</data>
 	<data name="Panel.AggregateChildrens.Label.Name">Styles de base</data>
