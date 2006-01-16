@@ -426,12 +426,14 @@ namespace Epsitec.Common.Document.Properties
 		public static bool StyleAbility(Type type)
 		{
 			//	Indique si cette propriété peut faire l'objet d'un style.
-			return ( type != Type.None      &&
-					 type != Type.Name      &&
-					 type != Type.Shadow    &&
-					 type != Type.BackColor &&
-					 type != Type.ModColor  &&
-					 type != Type.PolyClose );
+			return ( type != Type.None       &&
+					 type != Type.Name       &&
+					 type != Type.Shadow     &&
+					 type != Type.BackColor  &&
+					 type != Type.ModColor   &&
+					 type != Type.PolyClose  &&
+					 type != Type.TextJustif &&
+					 type != Type.TextLine   );
 		}
 
 		public void PickerProperty(Abstract model)

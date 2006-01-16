@@ -20,6 +20,8 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( type == Properties.Type.None )  return false;
 			if ( type == Properties.Type.Shadow )  return false;
+			if ( type == Properties.Type.TextJustif )  return false;
+			if ( type == Properties.Type.TextLine )  return false;
 			return true;
 		}
 
