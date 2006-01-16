@@ -681,6 +681,47 @@ namespace Epsitec.Common.Text
 			this.get_language_last_property      = property;
 		}
 		
+		
+		public IParagraphManager GetParagraphManager(ulong code)
+		{
+			Properties.ManagedParagraphProperty mpp;
+			
+			if ((code != 0) &&
+				(this.GetManagedParagraph (code, out mpp)))
+			{
+				return this.p_manager_list[mpp.ManagerName];
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		
+		public bool GetManagedParagraph(ulong code, out Properties.ManagedParagraphProperty property)
+		{
+			int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
+			long current_style_version = this.style_list.Version;
+			
+			if ((this.get_managed_paragraph_last_style_version == current_style_version) &&
+				(this.get_managed_paragraph_last_style_index   == current_style_index))
+			{
+				property = this.get_managed_paragraph_last_property;
+				
+				return property != null;
+			}
+			
+			Styles.CoreSettings core_settings  = this.style_list[code];
+			
+			property = core_settings[Properties.WellKnownType.ManagedParagraph] as Properties.ManagedParagraphProperty;
+			
+			this.get_managed_paragraph_last_style_version = current_style_version;
+			this.get_managed_paragraph_last_style_index   = current_style_index;
+			this.get_managed_paragraph_last_property      = property;
+			
+			return property != null;
+		}
+		
 		public bool GetAutoText(ulong code, out Properties.AutoTextProperty property)
 		{
 			code = Internal.CharMarker.ExtractCoreAndSettings (code);
@@ -1783,6 +1824,10 @@ namespace Epsitec.Common.Text
 		private long							get_language_last_style_version;
 		private ulong							get_language_last_code;
 		private Properties.LanguageProperty		get_language_last_property;
+
+		private long							get_managed_paragraph_last_style_version;
+		private int								get_managed_paragraph_last_style_index;
+		private Properties.ManagedParagraphProperty get_managed_paragraph_last_property;
 		
 		private long							get_auto_text_last_style_version;
 		private ulong							get_auto_text_last_code;

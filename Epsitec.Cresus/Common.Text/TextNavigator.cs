@@ -330,10 +330,15 @@ namespace Epsitec.Common.Text
 		
 		public void Delete(int move)
 		{
+			//	Détruit un caractère en avant ou en arrière. Et juste un seul
+			//	caractère !
+			
+			System.Diagnostics.Debug.Assert (move != 0);
+			System.Diagnostics.Debug.Assert (move == System.Math.Sign (move));
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
 			
 			int p1 = this.story.GetCursorPosition (this.cursor);
-			int p2 = p1 + move;
+			int p2;
 			int d2;
 			
 			Cursors.TempCursor temp = new Cursors.TempCursor ();
@@ -342,7 +347,29 @@ namespace Epsitec.Common.Text
 			this.story.SetCursorPosition (temp, p1);
 			
 			this.MoveCursor (temp, move, out p2, out d2);
+			this.story.SetCursorPosition (temp, p2, d2);
 			
+			if ((move == -1) &&
+				(Internal.Navigator.IsParagraphStart (this.story, temp, 0)))
+			{
+				//	L'utilisateur a pressé BACKSPACE dans un paragraphe et le
+				//	curseur se trouve maintenant en début de ligne. Si c'est un
+				//	paragraphe géré, cela peut impliquer que l'on veut supprimer
+				//	l'aspect "géré" (detach) du paragraphe :
+				
+				IParagraphManager manager = this.GetParagraphManager (temp);
+				
+				if (manager != null)
+				{
+					this.RemoveParagraphManager (temp);
+					this.story.RecycleCursor (temp);
+					return;
+				}
+			}
+			
+			this.AdjustCursor (temp, System.Math.Sign (move), ref p2, ref d2);
+			
+#if false
 			if (Internal.Navigator.IsParagraphStart (this.story, temp, p2 - p1))
 			{
 				//	Le curseur n'a pas le droit de se trouver en début de paragraphe
@@ -351,8 +378,7 @@ namespace Epsitec.Common.Text
 				
 				this.SkipOverAutoText (ref p2, 1);
 			}
-			
-//-			System.Diagnostics.Debug.WriteLine (string.Format ("Delete from {0} to {1}", p1, p2));
+#endif
 			
 			this.story.RecycleCursor (temp);
 			
@@ -405,6 +431,7 @@ namespace Epsitec.Common.Text
 					this.DeleteText (temp, p2-p1);
 				}
 				
+#if false
 				if (Internal.Navigator.IsParagraphStart (this.story, this.ActiveCursor, 0))
 				{
 					//	Le curseur n'a pas le droit de se trouver en début de paragraphe
@@ -418,6 +445,7 @@ namespace Epsitec.Common.Text
 						this.story.SetCursorPosition (this.ActiveCursor, pos);
 					}
 				}
+#endif
 			}
 			finally
 			{
@@ -429,6 +457,7 @@ namespace Epsitec.Common.Text
 		
 		public void MoveTo(int position, int direction)
 		{
+			this.AdjustCursor (this.temp_cursor, System.Math.Sign (direction), ref position, ref direction);
 			this.InternalSetCursor (position, direction);
 		}
 		
@@ -442,48 +471,60 @@ namespace Epsitec.Common.Text
 			int new_pos;
 			int new_dir;
 			
+			int direction = 0;
+			
 			switch (target)
 			{
 				case Target.CharacterNext:
 					this.MoveCursor (this.ActiveCursor, count, out new_pos, out new_dir);
+					direction = 1;
 					break;
 				
 				case Target.CharacterPrevious:
 					this.MoveCursor (this.ActiveCursor, -count, out new_pos, out new_dir);
+					direction = -1;
 					break;
 				
 				case Target.TextStart:
-					new_pos = 0;
-					new_dir = -1;
+					new_pos   = 0;
+					new_dir   = -1;
+					direction = -1;
 					break;
 				
 				case Target.TextEnd:
-					new_pos = this.TextLength;
-					new_dir = 1;
+					new_pos   = this.TextLength;
+					new_dir   = 1;
+					direction = 1;
 					break;
 					
 				case Target.ParagraphStart:
 					this.MoveCursor (this.ActiveCursor, count, -1, new MoveCallback (this.IsParagraphStart), out new_pos, out new_dir);
+					direction = -1;
 					break;
 				
 				case Target.ParagraphEnd:
 					this.MoveCursor (this.ActiveCursor, count, 1, new MoveCallback (this.IsParagraphEnd), out new_pos, out new_dir);
+					direction = 1;
 					break;
 				
 				case Target.LineStart:
 					this.MoveCursor (this.ActiveCursor, count, -1, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
+					direction = -1;
 					break;
 				
 				case Target.LineEnd:
 					this.MoveCursor (this.ActiveCursor, count, 1, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
+					direction = 1;
 					break;
 				
 				case Target.WordStart:
 					this.MoveCursor (this.ActiveCursor, count, -1, new MoveCallback (this.IsWordStart), out new_pos, out new_dir);
+					direction = -1;
 					break;
 				
 				case Target.WordEnd:
 					this.MoveCursor (this.ActiveCursor, count, 1, new MoveCallback (this.IsWordEnd), out new_pos, out new_dir);
+					direction = 1;
 					
 					//	Si en marche avant, on arrive à la fin d'une ligne qui n'est pas
 					//	une fin de paragraphe, alors il faut changer la direction, afin
@@ -505,6 +546,7 @@ namespace Epsitec.Common.Text
 			if ((old_pos != new_pos) ||
 				(old_dir != new_dir))
 			{
+				this.AdjustCursor (this.temp_cursor, direction, ref new_pos, ref new_dir);
 				this.InternalSetCursor (new_pos, new_dir);
 			}
 		}
@@ -2925,7 +2967,11 @@ again:
 			
 			for (int i = 0; i < this.accumulated_properties.Length; i++)
 			{
+				//	Vérifie qu'aucune propriété AutoText ou Generator n'est venue
+				//	se glisser dans la liste des propriétés accumulées :
+				
 				System.Diagnostics.Debug.Assert (this.accumulated_properties[i].WellKnownType != Properties.WellKnownType.AutoText);
+				System.Diagnostics.Debug.Assert (this.accumulated_properties[i].WellKnownType != Properties.WellKnownType.Generator);
 				
 				fingerprint.Append (this.accumulated_properties[i].ToString ());
 			}
@@ -2959,6 +3005,7 @@ again:
 			}
 		}
 		
+		
 		private int FindNextParagraphStart(int pos)
 		{
 			this.story.SetCursorPosition (this.temp_cursor, pos);
@@ -2977,12 +3024,69 @@ again:
 		}
 		
 		
+		private void AdjustCursor(ICursor temp, int original_direction, ref int pos, ref int dir)
+		{
+			//	Ajuste la position du curseur pour éviter de placer celui-ci à
+			//	des endroits "impossibles" (par ex. avant une puce).
+			
+			this.story.SetCursorPosition (temp, pos);
+			
+			//	Les "managed paragraphs" ont toute une logique intégrée qui peut
+			//	déterminer si un curseur est positionné de manière correcte, ou
+			//	non :
+			
+			IParagraphManager manager = this.GetParagraphManager (temp);
+			
+			if (manager != null)
+			{
+				//	TODO: donner l'occasion au manager de modifier la position du curseur
+			}
+		}
+		
+		private IParagraphManager GetParagraphManager(ICursor cursor)
+		{
+			return this.story.TextContext.GetParagraphManager (this.story.ReadChar (cursor));
+		}
+		
+		private void RemoveParagraphManager(ICursor cursor)
+		{
+			//	Transforme le paragraphe courant (managed paragraph) en un para-
+			//	graphe standard. Cela implique qu'il faut changer de style !
+			
+			this.SetParagraphStyles (this.TextContext.StyleList["Default", TextStyleClass.Paragraph]);
+		}
+		
+		private Properties.ManagedParagraphProperty GetManagedParagraphProperty(ICursor cursor)
+		{
+			Properties.ManagedParagraphProperty mpp;
+			ulong code = this.story.ReadChar (cursor);
+			
+			if (code != 0)
+			{
+				this.story.TextContext.GetManagedParagraph (code, out mpp);
+			}
+			else
+			{
+				mpp = null;
+			}
+			
+			return mpp;
+		}
+		
 		private void InternalSetCursor(int new_pos, int new_dir)
 		{
+			//	Positionne le curseur à l'endroit spécifié, en utilisant la
+			//	direction d'approche indiquée.
+			
+			//	L'appelant doit avoir appelé AdjustCursor avant d'appeler la
+			//	méthode InternalSetCursor afin de garantir que le curseur est
+			//	positionné correctement par rapport à d'éventuels textes auto-
+			//	matiques.
+			
 //-			System.Diagnostics.Debug.WriteLine (string.Format ("Pos: {0}, dir: {1}\n{2}", new_pos, new_dir, this.story.GetDebugAllStyledText ()));
 			
 			this.story.SetCursorPosition (this.temp_cursor, new_pos, new_dir);
-
+#if false
 			if (Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0))
 			{
 				//	Le curseur n'a pas le droit de se trouver en début de paragraphe
@@ -2994,7 +3098,7 @@ again:
 					new_dir = -1;
 				}
 			}
-			
+#endif
 			if (Internal.Navigator.IsEndOfText (this.story, this.temp_cursor, -1))
 			{
 				//	Le curseur est au-delà de la fin du texte; il faut le ramener
