@@ -1402,6 +1402,8 @@ namespace Epsitec.Common.Document
 			#endregion
 			
 			this.textContext.DefaultStyle = style;
+			this.textContext.StyleList.StyleMap.SetRank(style, 0);
+
 			this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
 		}
 
@@ -1412,56 +1414,12 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.UpdateTextStyles();
 		}
 		
-		public string SearchTabNextTag()
-		{
-			//	Cherche un tag unique pour le prochain tabulateur interactif à créer.
-			int max = -1;
-			Text.TabList list = this.textContext.TabList;
-			string[] tags = list.GetTabTags();
-			foreach ( string tag in tags )
-			{
-				int id = this.GetTabId(tag);
-				if ( max < id )  max = id;
-			}
-			return this.GetTabTag(max+1);
-		}
-
-		protected int GetTabId(string tag)
-		{
-			//	Retourne l'identificateur d'un tabulateur interactif d'après son tag.
-			if ( !tag.StartsWith("Ti") )  return -1;
-
-			try
-			{
-				return int.Parse(tag.Substring(2), System.Globalization.CultureInfo.InvariantCulture);
-			}
-			catch
-			{
-				return -1;
-			}
-		}
-
-		public string GetTabTag(int id)
-		{
-			//	Retourne le tag d'un tabulateur interactif.
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Ti{0}", id);
-		}
-
-		public UndoableList TextStyles
+		public Text.TextStyle[] TextStyles
 		{
 			//	Liste des styles de texte de ce document.
 			get
 			{
-				bool ioqe = this.modifier.OpletQueueEnable;
-				this.modifier.OpletQueueEnable = false;
-				UndoableList list = new UndoableList(this, UndoableListType.TextStylesInsideDocument);
-
-				//	TODO: comment obtenir la liste de tous les styles ?
-				Text.TextStyle defaultStyle = this.TextContext.StyleList["Default", Text.TextStyleClass.Paragraph];
-				list.Add(defaultStyle);
-
-				this.modifier.OpletQueueEnable = ioqe;
-				return list;
+				return this.textContext.StyleList.StyleMap.GetSortedStyles();
 			}
 		}
 		#endregion

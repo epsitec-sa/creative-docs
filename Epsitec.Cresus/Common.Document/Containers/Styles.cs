@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Containers
 			this.graphicList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Table des styles de texte.
-			this.paragraphList = new Widgets.TextStylesList();
+			this.paragraphList = new Widgets.AggregateList();
 			this.paragraphList.Document = this.document;
 			this.paragraphList.List = this.document.Aggregates;
 			this.paragraphList.HScroller = true;
@@ -64,9 +64,17 @@ namespace Epsitec.Common.Document.Containers
 			this.panelContainer = new Widget(this);
 			this.panelContainer.Height = 0.0;
 			this.panelContainer.Dock = DockStyle.Bottom;
-			this.panelContainer.DockMargins = new Margins(0, 0, 5, 0);
+			this.panelContainer.DockMargins = new Margins(0, 0, 0, 0);
 			this.panelContainer.TabIndex = 99;
 			this.panelContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+			//	Sélectionneur.
+			this.selectorToolBar = new HToolBar(this);
+			this.selectorToolBar.Height = 24;
+			this.selectorToolBar.Dock = DockStyle.Bottom;
+			this.selectorToolBar.DockMargins = new Margins(0, 0, 5, -1);
+			this.selectorToolBar.TabIndex = 97;
+			this.selectorToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			//	Enfants de l'agrégat.
 			this.childrens = new Widgets.AggregateList();
@@ -81,7 +89,7 @@ namespace Epsitec.Common.Document.Containers
 			this.childrens.Dock = DockStyle.Bottom;
 			this.childrens.DockMargins = new Margins(0, 0, 0, 0);
 			this.childrens.FinalSelectionChanged += new EventHandler(this.HandleAggregatesChildrensSelectionChanged);
-			this.childrens.TabIndex = 98;
+			this.childrens.TabIndex = 96;
 			this.childrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.CreateChildrensToolBar();
@@ -224,7 +232,7 @@ namespace Epsitec.Common.Document.Containers
 			this.childrensToolBar = new HToolBar(this);
 			this.childrensToolBar.Dock = DockStyle.Bottom;
 			this.childrensToolBar.DockMargins = new Margins(0, 0, 0, 0);
-			this.childrensToolBar.TabIndex = 97;
+			this.childrensToolBar.TabIndex = 95;
 			this.childrensToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
@@ -273,7 +281,7 @@ namespace Epsitec.Common.Document.Containers
 			this.nameToolBar = new HToolBar(this);
 			this.nameToolBar.Dock = DockStyle.Bottom;
 			this.nameToolBar.DockMargins = new Margins(0, 0, 0, 0);
-			this.nameToolBar.TabIndex = 96;
+			this.nameToolBar.TabIndex = 94;
 			this.nameToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
@@ -332,13 +340,14 @@ namespace Epsitec.Common.Document.Containers
 			this.graphicList.List = this.document.Aggregates;
 			this.graphicList.UpdateContent();
 
-			this.paragraphList.List = this.document.TextStyles;
+			//?this.paragraphList.List = this.document.TextStyles;
 			this.paragraphList.UpdateContent();
 			
 			this.UpdateAggregateName();
 			this.UpdateAggregateChildrens();
 			this.UpdateChildrensToolBar();
 			this.UpdateToolBar();
+			this.UpdateSelector();
 			this.UpdatePanel();
 			this.GraphicListShowSelection();
 		}
@@ -380,6 +389,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonStyleDelete.Visibility = (this.category == "Graphic");
 
 			this.UpdateAggregateName();
+			this.UpdateSelector();
 		}
 
 		protected void UpdateToolBar()
@@ -401,7 +411,7 @@ namespace Epsitec.Common.Document.Containers
 				Properties.Aggregate agg = this.GetAggregate();
 				if ( agg != null )
 				{
-					type = this.graphicList.SelectedProperty;
+					type = this.GetSelectorGraphic();
 					if ( type != Properties.Type.None )
 					{
 						if ( agg.Property(type) != null )
@@ -417,7 +427,8 @@ namespace Epsitec.Common.Document.Containers
 			if ( this.category == "Paragraph" )
 			{
 				int total = this.paragraphList.Rows;
-				int sel = this.document.TextStyles.Selected;
+				//?int sel = this.document.TextStyles.Selected;
+				int sel = -1;
 
 				this.buttonAggregateUp.Enable = (sel != -1 && sel > 0);
 				this.buttonAggregateDuplicate.Enable = (sel != -1);
@@ -426,6 +437,90 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
+
+		protected void UpdateSelector()
+		{
+			//	Met à jour le sélectionneur du panneau.
+			foreach ( Widget widget in this.selectorToolBar.Children.Widgets )
+			{
+				widget.Dispose();  // supprime tous les boutons existants
+			}
+
+			if ( this.category == "Graphic" )
+			{
+				Properties.Aggregate agg = this.GetAggregate();
+				if ( agg != null )
+				{
+					Properties.Type[] table = new Properties.Type[100];
+					int total = 0;
+					foreach ( Properties.Abstract property in agg.Styles )
+					{
+						int order = Properties.Abstract.SortOrder(property.Type);
+						if ( table[order] == 0 )
+						{
+							table[order] = property.Type;
+							total ++;
+						}
+					}
+
+					for ( int i=0 ; i<100 ; i++ )
+					{
+						if ( table[i] != 0 )
+						{
+							string name = Properties.Abstract.TypeName(table[i]);
+							string icon = Properties.Abstract.IconText(table[i]);
+							string text = Properties.Abstract.Text(table[i]);
+
+							this.UpdateSelectorAdd(name, icon, text);
+						}
+					}
+				}
+			}
+
+			if ( this.category == "Paragraph" )
+			{
+				this.UpdateSelectorAdd("TextJustif", "TextJustif", Res.Strings.TextPanel.Justif.Title);
+				this.UpdateSelectorAdd("TextLeading", "TextLeading", Res.Strings.TextPanel.Leading.Title);
+				this.UpdateSelectorAdd("TextMargins", "TextMargins", Res.Strings.TextPanel.Margins.Title);
+				this.UpdateSelectorAdd("TextSpaces", "TextSpaces", Res.Strings.TextPanel.Spaces.Title);
+				this.UpdateSelectorAdd("TextKeep", "TextKeep", Res.Strings.TextPanel.Keep.Title);
+				this.selectorToolBar.Items.Add(new IconSeparator());
+				this.UpdateSelectorAdd("TextFont", "TextFont", Res.Strings.TextPanel.Font.Title);
+				this.UpdateSelectorAdd("TextLanguage", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+			}
+
+			if ( this.category == "Character" )
+			{
+				this.UpdateSelectorAdd("TextFont", "TextFont", Res.Strings.TextPanel.Font.Title);
+				this.UpdateSelectorAdd("TextXline", "TextXline", Res.Strings.TextPanel.Xline.Title);
+				this.UpdateSelectorAdd("TextXscript", "TextXscript", Res.Strings.TextPanel.Xscript.Title);
+				this.UpdateSelectorAdd("TextLanguage", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+			}
+		}
+
+		protected Properties.Type GetSelectorGraphic()
+		{
+			foreach ( Widget widget in this.selectorToolBar.Children.Widgets )
+			{
+				if ( widget.ActiveState == ActiveState.Yes )
+				{
+					return Properties.Abstract.TypeName(widget.Name);
+				}
+			}
+			return Properties.Type.None;
+		}
+
+		protected void UpdateSelectorAdd(string name, string icon, string text)
+		{
+			IconButton button = new IconButton(Misc.Icon(icon));
+			button.Name = name;
+			button.Width = 16;
+			button.Height = 16;
+			button.Clicked += new MessageEventHandler(this.HandleSelectorClicked);
+			ToolTip.Default.SetToolTip(button, text);
+
+			this.selectorToolBar.Items.Add(button);
+		}
 
 		protected void UpdateAggregateName()
 		{
@@ -444,7 +539,8 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == "Paragraph" )
 			{
-				int sel = this.document.TextStyles.Selected;
+				//?int sel = this.document.TextStyles.Selected;
+				int sel = -1;
 
 				if ( sel != -1 )
 				{
@@ -532,7 +628,7 @@ namespace Epsitec.Common.Document.Containers
 				Properties.Aggregate agg = this.GetAggregate();
 				if ( agg == null )  return;
 
-				Properties.Type type = this.graphicList.SelectedProperty;
+				Properties.Type type = this.GetSelectorGraphic();
 				if ( type == Properties.Type.None )  return;
 
 				Properties.Abstract property = agg.Property(type);
@@ -603,6 +699,17 @@ namespace Epsitec.Common.Document.Containers
 			if ( this.categoryCharacter.ActiveState == ActiveState.Yes )  this.Category = "Character";
 		}
 
+		private void HandleSelectorClicked(object sender, MessageEventArgs e)
+		{
+			IconButton button = sender as IconButton;
+
+			foreach ( Widget widget in this.selectorToolBar.Children.Widgets )
+			{
+				widget.ActiveState = (widget == button) ? ActiveState.Yes : ActiveState.No;
+			}
+
+			this.UpdatePanel();
+		}
 
 		private void HandleButtonAggregateNewEmpty(object sender, MessageEventArgs e)
 		{
@@ -713,7 +820,7 @@ namespace Epsitec.Common.Document.Containers
 			Properties.Aggregate agg = this.GetAggregate();
 			if ( agg != null )
 			{
-				Properties.Type type = this.graphicList.SelectedProperty;
+				Properties.Type type = this.GetSelectorGraphic();
 				Properties.Abstract property = agg.Property(type);
 				this.document.Modifier.OpletQueueEnable = false;
 				agg.Styles.Selected = agg.Styles.IndexOf(property);
@@ -721,6 +828,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 
 			this.UpdateToolBar();
+			this.UpdateSelector();
 			this.UpdatePanel();
 			this.UpdateAggregateName();
 			this.UpdateAggregateChildrens();
@@ -767,15 +875,6 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Sélection changée dans la liste.
 			System.Diagnostics.Debug.Assert(this.category == "Paragraph");
-			this.paragraphList.SelectCell(1, this.paragraphList.SelectedRow, true);
-			this.paragraphList.SelectCell(2, this.paragraphList.SelectedRow, true);
-
-			if ( this.document.TextStyles.Selected != this.paragraphList.SelectedPropertyRow )
-			{
-				this.document.Modifier.OpletQueueEnable = false;
-				this.document.TextStyles.Selected = this.paragraphList.SelectedPropertyRow;
-				this.document.Modifier.OpletQueueEnable = true;
-			}
 		}
 
 		private void HandleStylesTableDoubleClicked(object sender, MessageEventArgs e)
@@ -897,6 +996,7 @@ namespace Epsitec.Common.Document.Containers
 			System.Diagnostics.Debug.Assert(this.category == "Graphic");
 			Properties.Aggregate agg = this.GetAggregate();
 			this.document.Modifier.AggregateStyleDelete(agg);
+			this.UpdateSelector();
 			this.UpdatePanel();
 		}
 
@@ -1015,6 +1115,7 @@ namespace Epsitec.Common.Document.Containers
 			Properties.Aggregate agg = this.GetAggregate();
 			Properties.Type type = Properties.Abstract.TypeName(item.Name);
 			this.document.Modifier.AggregateStyleNew(agg, type);
+			this.UpdateSelector();
 		}
 		#endregion
 
@@ -1093,10 +1194,12 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton				buttonStyleDelete;
 
 		protected Widgets.AggregateList		graphicList;
-		protected Widgets.TextStylesList	paragraphList;
+		protected Widgets.AggregateList		paragraphList;
 
 		protected HToolBar					nameToolBar;
 		protected TextField					name;
+
+		protected HToolBar					selectorToolBar;
 
 		protected HToolBar					childrensToolBar;
 		protected IconButton				buttonChildrensNew;
