@@ -1596,6 +1596,7 @@ again:
 				
 				this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
 				
+				this.RefreshFilterCurrentProperties ();
 				this.RefreshAccumulatedStylesAndProperties ();
 			}
 			
@@ -1642,6 +1643,7 @@ again:
 				
 				this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
 				
+				this.RefreshFilterCurrentProperties ();
 				this.RefreshAccumulatedStylesAndProperties ();
 			}
 			
@@ -2040,9 +2042,10 @@ again:
 				}
 			}
 			
-			this.current_styles      = styles;
-			this.current_properties  = properties;
+			this.current_styles     = styles;
+			this.current_properties = properties;
 			
+			this.RefreshFilterCurrentProperties ();
 			this.RefreshAccumulatedStylesAndProperties ();
 		}
 		
@@ -2107,7 +2110,7 @@ again:
 				direction = -1;
 			}
 			
-			TextContext            context    = this.TextContext;
+			TextContext        context    = this.TextContext;
 			Internal.TextTable text_table = this.story.TextTable;
 			StyleList          style_list = context.StyleList;
 			
@@ -2130,7 +2133,7 @@ again:
 				
 				//	Déplace le curseur dans la direction choisie, puis vérifie si
 				//	l'on n'a pas atterri dans un fragment de texte marqué comme
-				//	étant un texte automatique ou un texte produit par un générateur.
+				//	étant un texte automatique.
 				
 				System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == pos);
 				
@@ -2158,29 +2161,16 @@ again:
 					break;
 				}
 				
-				//	Gère le déplacement par-dessus des sections AutoText/Generator
-				//	qui nécessitent des traitements particuliers :
+				//	Gère le déplacement par-dessus des sections AutoText qui
+				//	doivent être traitées comme indivisibles :
 				
-				Properties.AutoTextProperty  auto_text_property;
-				Properties.GeneratorProperty generator_property;
+				Properties.AutoTextProperty auto_text_property;
 				
 				pos += direction;
 				
 				if (context.GetAutoText (code, out auto_text_property))
 				{
 					int skip = this.SkipOverProperty (this.temp_cursor, auto_text_property, direction);
-					
-					//	Un texte automatique compte comme zéro caractère dans nos
-					//	déplacements.
-					
-					this.story.MoveCursor (this.temp_cursor, skip);
-					
-					pos   += skip;
-					moved += 0;
-				}
-				else if (context.GetGenerator (code, out generator_property))
-				{
-					int skip = this.SkipOverProperty (this.temp_cursor, generator_property, direction);
 					
 					//	Un texte produit par un générateur compte comme un caractère
 					//	unique.
@@ -2550,6 +2540,7 @@ again:
 			this.current_styles     = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
 			this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
 			
+			this.RefreshFilterCurrentProperties ();
 			this.RefreshAccumulatedStylesAndProperties ();
 		}
 		
@@ -2892,13 +2883,38 @@ again:
 		}
 		
 		
+		private void RefreshFilterCurrentProperties ()
+		{
+			System.Diagnostics.Debug.Assert (this.current_properties != null);
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (Property property in this.current_properties)
+			{
+				switch (property.WellKnownType)
+				{
+					case Properties.WellKnownType.AutoText:
+					case Properties.WellKnownType.Generator:
+						break;
+					default:
+						list.Add (property);
+						break;
+				}
+			}
+			
+			if (list.Count < this.current_properties.Length)
+			{
+				this.current_properties = (Property[]) list.ToArray (typeof (Property));
+			}
+		}
+		
 		private void RefreshAccumulatedStylesAndProperties()
 		{
 			Styles.PropertyContainer.Accumulator current_accumulator = new Styles.PropertyContainer.Accumulator ();
 			
 			current_accumulator.SkipSymbolProperties = true;
 			current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
-			
+
 			this.accumulated_properties = current_accumulator.AccumulatedProperties;
 			
 			//	Génère une "empreinte" des styles et propriétés actifs, ce qui va

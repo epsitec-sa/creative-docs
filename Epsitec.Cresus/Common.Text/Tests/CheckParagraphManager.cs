@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
@@ -11,7 +11,88 @@ namespace Epsitec.Common.Text.Tests
 	{
 		public static void RunTests()
 		{
+			CheckParagraphManager.TestNavigation ();
 			CheckParagraphManager.TestAttachDetach ();
+		}
+		
+		private static void TestNavigation()
+		{
+			TextStory     story     = new TextStory ();
+			TextNavigator navigator = new TextNavigator (story);
+			
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			
+			properties.Clear ();
+			properties.Add (new Properties.FontProperty ("Verdana", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties.Add (new Properties.LeadingProperty (14.0, Properties.SizeUnits.Points, Properties.AlignMode.None));
+			properties.Add (new Properties.MarginsProperty (5.0, 5.0, 5.0, 5.0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Properties.ThreeState.True));
+			
+			story.TextContext.DefaultStyle = story.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
+			
+			navigator.Insert ("Abcdef");
+			navigator.MoveTo (3, 1);
+			
+			ulong[] text1;
+			ulong[] text2;
+			
+			Properties.AutoTextProperty at;
+			Properties.AutoTextProperty at1 = new Epsitec.Common.Text.Properties.AutoTextProperty ("NX");
+			Properties.AutoTextProperty at2 = new Epsitec.Common.Text.Properties.AutoTextProperty ("NN");
+			Properties.AutoTextProperty at3 = new Epsitec.Common.Text.Properties.AutoTextProperty ("NN");
+			
+			//	Deux propriétés AutoText identiques ne le sont jamais (à cause de
+			//	leur identificateur unique) :
+			
+			Debug.Assert.IsFalse (Property.CompareEqualContents (at2, at3));
+			
+			story.ConvertToStyledText ("X", story.TextContext.DefaultStyle, new Property[] { at1 }, out text1);
+			story.ConvertToStyledText ("12", story.TextContext.DefaultStyle, new Property[] { at2 }, out text2);
+			
+			story.InsertText (navigator.ActiveCursor, text1);
+			story.InsertText (navigator.ActiveCursor, text2);
+			
+			//	Le texte est maintenant "Abc" + "X" + "12" + "def" avec les
+			//	fragments "X" -> at1 et "12" -> at2.
+			
+			Debug.Assert.Equals ("AbcX12def", story.GetDebugText ());
+			Debug.Assert.Equals (6, navigator.CursorPosition);
+			
+			navigator.MoveTo (TextNavigator.Target.CharacterNext, 1);
+			Debug.Assert.Equals (7, navigator.CursorPosition);
+			
+			navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
+			Debug.Assert.Equals (6, navigator.CursorPosition);
+			
+			//	On recule d'un caractère, mais on en saute 2 à cause de 'at2'.
+			
+			navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
+			Debug.Assert.Equals (4, navigator.CursorPosition);
+			Debug.Assert.IsTrue (story.TextContext.GetAutoText (story.ReadChar (navigator.ActiveCursor), out at));
+			Debug.Assert.IsTrue (Property.CompareEqualContents (at, at2));
+			
+			//	On recule d'un caractère et on en saute effectivement 1, même
+			//	si 'at1' décore "X" (vérifie que le code de navigation est OK).
+			
+			navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
+			Debug.Assert.Equals (3, navigator.CursorPosition);
+			Debug.Assert.IsTrue (story.TextContext.GetAutoText (story.ReadChar (navigator.ActiveCursor), out at));
+			Debug.Assert.IsTrue (Property.CompareEqualContents (at, at1));
+			
+			navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
+			Debug.Assert.Equals (2, navigator.CursorPosition);
+			
+			navigator.MoveTo (TextNavigator.Target.CharacterNext, 2);
+			Debug.Assert.Equals (4, navigator.CursorPosition);
+
+			//	On se trouve à cheval entre "X" et "12". Les propriétés visibles
+			//	par le navigateur ne reflètent jamais AutoText, car une insertion
+			//	à ce point insère du texte normal !
+			
+			foreach (Property property in navigator.AccumulatedTextProperties)
+			{
+				Debug.Assert.IsFalse (property.WellKnownType == Properties.WellKnownType.AutoText);
+			}
 		}
 		
 		private static void TestAttachDetach()
