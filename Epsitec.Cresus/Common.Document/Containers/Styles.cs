@@ -670,9 +670,8 @@ namespace Epsitec.Common.Document.Containers
 				Properties.Aggregate agg = this.GetAggregate();
 				if ( agg != null )
 				{
-					int row, column;
-					this.graphicList.GetSelectedRowColumn(out row, out column);
-					this.graphicList.ShowCell(row, column);
+					int row = this.graphicList.SelectedPropertyRow;
+					this.graphicList.ShowCell(row, 0);
 				}
 			}
 
@@ -1093,11 +1092,13 @@ namespace Epsitec.Common.Document.Containers
 				}
 				back = Properties.Abstract.BackgroundIntensity(type);
 
+				bool enable = (!this.MenuTypesExist(agg.Styles, type));
+				string active = Misc.Image(enable ? "ActiveNo" : "ActiveYes");
 				string icon = Misc.Image(Properties.Abstract.IconText(type));
 				string text = Properties.Abstract.Text(type);
-				string line = string.Format("{0}   {1}", icon, text);
+				string line = string.Format("{0} {1}   {2}", active, icon, text);
 				MenuItem item = new MenuItem("StyleNew", "", line, "", Properties.Abstract.TypeName(type));
-				item.Enable = (!this.MenuTypesExist(agg.Styles, type));
+				item.Enable = enable;
 				item.Pressed += new MessageEventHandler(this.HandleMenuTypesPressed);
 				menu.Items.Add(item);
 			}

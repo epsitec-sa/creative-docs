@@ -20,7 +20,8 @@ namespace Epsitec.Common.Document.Widgets
 			this.StyleV |= CellArrayStyle.Separator;
 			this.StyleV |= CellArrayStyle.SelectCell;
 
-			this.DefHeight = 16;
+			this.DefHeight = 32;
+			this.headerHeight = 16;
 		}
 
 		public Document Document

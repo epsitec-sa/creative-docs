@@ -20,7 +20,8 @@ namespace Epsitec.Common.Document.Widgets
 			this.StyleV |= CellArrayStyle.Separator;
 			this.StyleV |= CellArrayStyle.SelectCell;
 
-			this.DefHeight = 16;
+			this.DefHeight = 32;
+			this.headerHeight = 16;
 		}
 
 		public Document Document
@@ -198,92 +199,22 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public int TotalProperties
-		{
-			//	Nombre total de colonnes pour les propriétés.
-			get
-			{
-				this.UpdateIndex();
-				return this.types.Length;
-			}
-		}
-
-		public Properties.Type SelectedProperty
-		{
-			//	Retourne le type de la propriété sélectionnée.
-			get
-			{
-				int row, column;
-				this.GetSelectedRowColumn(out row, out column);
-				if ( row == -1 || column == -1 )  return Properties.Type.None;
-
-				return this.types[column-this.FixColumns];
-			}
-		}
-
 		public int SelectedPropertyRow
 		{
 			//	Retourne le rang de la ligne sélectionné.
 			get
 			{
-				int row, column;
-				this.GetSelectedRowColumn(out row, out column);
-				return row;
-			}
-		}
+				int nc = this.NameColumn;
 
-		public int SelectedPropertyColumn
-		{
-			//	Retourne le rang de la colonne sélectionnée.
-			get
-			{
-				int row, column;
-				this.GetSelectedRowColumn(out row, out column);
-				return column;
-			}
-		}
-
-		public void GetSelectedRowColumn(out int row, out int column)
-		{
-			//	Retourne le rang de la ligne/colonne sélectionné.
-			int nc = this.NameColumn;
-			int fix = this.FixColumns;
-
-			row = -1;
-			column = -1;
-			for ( int i=0 ; i<this.Rows ; i++ )
-			{
-				if ( this.IsCellSelected(i, nc) )
+				for ( int i=0 ; i<this.Rows ; i++ )
 				{
-					row = i;
-					break;
+					if ( this.IsCellSelected(i, nc) )
+					{
+						return i;
+					}
 				}
+				return -1;
 			}
-			if ( row == -1 )  return;
-
-			for ( int i=fix ; i<this.Columns ; i++ )
-			{
-				if ( this.IsCellSelected(row, i) )
-				{
-					column = i;
-					break;
-				}
-			}
-		}
-
-		public bool UsedCell(int row, int column)
-		{
-			//	Indique si une cellule est utilisée.
-			int nc = this.NameColumn;
-			int fix = this.FixColumns;
-			if ( column == nc )  return true;
-			if ( column < fix )  return false;
-
-			this.UpdateIndex();
-			int rank = this.RowToRank(row);
-			if ( rank == -1 )  return false;  // ligne "aucun" ?
-			Properties.Aggregate agg = this.list[rank] as Properties.Aggregate;
-			return (agg.Property(this.types[column-fix], this.isDeep) != null);
 		}
 
 		public void UpdateContent()
@@ -292,12 +223,11 @@ namespace Epsitec.Common.Document.Widgets
 			System.Diagnostics.Debug.Assert(this.document != null);
 			System.Diagnostics.Debug.Assert(this.list != null);
 			this.typesDirty = true;
-			this.UpdateIndex();
 
 			int fix = this.FixColumns;
 			int rows = this.list.Count;
 			int initialColumns = this.Columns;
-			this.SetArraySize(fix+this.types.Length, rows);
+			this.SetArraySize(fix+1, rows);
 			int i;
 
 			if ( initialColumns != this.Columns )
@@ -305,13 +235,9 @@ namespace Epsitec.Common.Document.Widgets
 				i = 0;
 				if ( this.isHiliteColumn )     this.SetWidthColumn(i++,  12);
 				if ( this.isOrderColumn )      this.SetWidthColumn(i++,  20);
-				                               this.SetWidthColumn(i++, 125);
+				                               this.SetWidthColumn(i++, 125);  // noms
 				if ( this.isChildrensColumn )  this.SetWidthColumn(i++,  20);
-
-				for ( i=0 ; i<this.types.Length ; i++ )
-				{
-					this.SetWidthColumn(fix+i, 20);
-				}
+				                               this.SetWidthColumn(i++,  60);  // échantillons
 			}
 
 			i = 0;
@@ -326,12 +252,6 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				this.SetHeaderTextH(i, Misc.Image("AggregateChildrens"));
 				ToolTip.Default.SetToolTip(this.FindButtonH(i), Res.Strings.Panel.AggregateChildrens.Label.Name);
-			}
-
-			for ( i=0 ; i<this.types.Length ; i++ )
-			{
-				this.SetHeaderTextH(fix+i, Misc.Image(Properties.Abstract.IconText(this.types[i])));
-				ToolTip.Default.SetToolTip(this.FindButtonH(fix+i), Properties.Abstract.Text(this.types[i]));
 			}
 
 			for ( i=0 ; i<rows ; i++ )
@@ -391,15 +311,12 @@ namespace Epsitec.Common.Document.Widgets
 				}
 			}
 
-			for ( int i=0 ; i<this.types.Length ; i++ )  // colonnes des attributs
+			if ( this[fix, row].IsEmpty )
 			{
-				if ( this[fix+i, row].IsEmpty )
-				{
-					Sample sm = new Sample();
-					sm.Document = this.document;
-					sm.Dock = DockStyle.Fill;
-					this[fix+i, row].Insert(sm);
-				}
+				Sample sm = new Sample();
+				sm.Document = this.document;
+				sm.Dock = DockStyle.Fill;
+				this[fix, row].Insert(sm);
 			}
 		}
 
@@ -455,39 +372,25 @@ namespace Epsitec.Common.Document.Widgets
 				this.SelectCell(fix-1, row, selected);
 			}
 
-			this.UpdateIndex();
-			for ( int i=0 ; i<this.types.Length ; i++ )  // colonnes des attributs
+			sm = this[fix, row].Children[0] as Sample;
+			if ( agg == null )
 			{
-				sm = this[fix+i, row].Children[0] as Sample;
-				bool selectedColumn = false;
-				if ( agg == null )
+				sm.Property = null;
+			}
+			else
+			{
+				if ( this.isDeep )
 				{
-					sm.Property = null;
+					//?sm.Property = agg.Property(this.types[i], true);
 				}
 				else
 				{
-					if ( this.isDeep )
-					{
-						sm.Property = agg.Property(this.types[i], true);
-					}
-					else
-					{
-						sm.Property = agg.Property(this.types[i], false);
-						sm.Dots = (agg.Property(this.types[i], true) != null);
-					}
-
-					if ( selected )
-					{
-						int index = agg.Styles.IndexOf(sm.Property);
-						if ( index != -1 && index == agg.Styles.Selected )
-						{
-							selectedColumn = true;
-						}
-					}
+					//?sm.Property = agg.Property(this.types[i], false);
+					//?sm.Dots = (agg.Property(this.types[i], true) != null);
 				}
-				this.SelectCell(fix+i, row, selectedColumn);
-				sm.Invalidate();
 			}
+			this.SelectCell(fix, row, selected);
+			sm.Invalidate();
 		}
 
 		public void HiliteRow(int row, bool hilite)
@@ -501,36 +404,6 @@ namespace Epsitec.Common.Document.Widgets
 				this[0, row].IsHilite = hilite;
 				GlyphButton gb = this[0, row].Children[0] as GlyphButton;
 				gb.GlyphShape = hilite ? GlyphShape.ArrowRight : GlyphShape.None;
-			}
-		}
-
-
-		protected void UpdateIndex()
-		{
-			//	Met à jour la table des types de propriétés.
-			if ( !this.typesDirty )  return;
-			this.typesDirty = false;
-
-			Properties.Type[] table = new Properties.Type[100];
-			int total = 0;
-			foreach ( Properties.Aggregate agg in this.list )
-			{
-				foreach ( Properties.Abstract property in agg.Styles )
-				{
-					int order = Properties.Abstract.SortOrder(property.Type);
-					if ( table[order] == 0 )
-					{
-						table[order] = property.Type;
-						total ++;
-					}
-				}
-			}
-
-			this.types = new Properties.Type[total];
-			int j = 0;
-			for ( int i=0 ; i<100 ; i++ )
-			{
-				if ( table[i] != 0 )  this.types[j++] = table[i];
 			}
 		}
 
@@ -586,6 +459,5 @@ namespace Epsitec.Common.Document.Widgets
 		protected bool							isChildrensColumn = true;
 		protected bool							isInitialSelection = true;
 		protected bool							typesDirty = true;
-		protected Properties.Type[]				types;
 	}
 }

@@ -373,9 +373,9 @@ namespace Epsitec.Common.Document.Widgets
 			this.list.IsChildrensColumn = false;
 			this.list.IsInitialSelection = false;
 			this.list.UpdateContent();
-			double width = 126+this.list.TotalProperties*20+margins.Left+margins.Right;
+			double width = 126+60+margins.Left+margins.Right;
 
-			double h = this.document.Aggregates.Count*16+17+margins.Bottom+margins.Top;
+			double h = this.document.Aggregates.Count*32+17+margins.Bottom+margins.Top;
 			Point pos = this.MapClientToScreen(new Point(0, 1));
 			ScreenInfo info = ScreenInfo.Find(pos);
 			Rectangle area = info.WorkingArea;
@@ -560,7 +560,7 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					for ( int c=0 ; c<this.list.Columns ; c++ )
 					{
-						this.list.SelectCell(c, r, this.list.UsedCell(r, c));
+						//?this.list.SelectCell(c, r, this.list.UsedCell(r, c));
 					}
 				}
 				else	// autre ligne ?

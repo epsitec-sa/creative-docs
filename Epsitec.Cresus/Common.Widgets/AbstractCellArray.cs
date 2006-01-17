@@ -190,6 +190,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public double HeaderHeight
+		{
+			//	Choix de la hauteur de l'en-tête.
+			get
+			{
+				return this.headerHeight;
+			}
+
+			set
+			{
+				this.headerHeight = value;
+			}
+		}
+		
 		public int Columns
 		{
 			//	Donne le nombre total de colonnes.
