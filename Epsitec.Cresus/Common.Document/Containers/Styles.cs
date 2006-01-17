@@ -13,6 +13,23 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Styles(Document document) : base(document)
 		{
+			this.mainBook = new PaneBook(this);
+			this.mainBook.PaneBookStyle = PaneBookStyle.BottomTop;
+			this.mainBook.PaneBehaviour = PaneBookBehaviour.FollowMe;
+			this.mainBook.Dock = DockStyle.Fill;
+
+			this.topPage = new PanePage();
+			this.topPage.PaneRelativeSize = 40;
+			this.topPage.PaneMinSize = 155;
+			this.topPage.PaneElasticity = 0.5;
+			this.mainBook.Items.Add(this.topPage);
+
+			this.bottomPage = new PanePage();
+			this.bottomPage.PaneRelativeSize = 60;
+			this.bottomPage.PaneMinSize = 100;
+			this.bottomPage.PaneElasticity = 0.5;
+			this.mainBook.Items.Add(this.bottomPage);
+
 			this.CreateCategoryGroup();
 			this.CreateAggregateToolBar();
 
@@ -22,10 +39,9 @@ namespace Epsitec.Common.Document.Containers
 			this.graphicList.List = this.document.Aggregates;
 			this.graphicList.HScroller = true;
 			this.graphicList.VScroller = true;
-			this.graphicList.SetParent(this);
+			this.graphicList.SetParent(this.topPage);
 			this.graphicList.MinSize = new Size(10, 87);
-			this.graphicList.Height = 167;
-			this.graphicList.Dock = DockStyle.Top;
+			this.graphicList.Dock = DockStyle.Fill;
 			this.graphicList.DockMargins = new Margins(0, 0, 0, 0);
 			this.graphicList.FinalSelectionChanged += new EventHandler(this.HandleAggregatesTableSelectionChanged);
 			this.graphicList.FlyOverChanged += new EventHandler(this.HandleAggregatesTableFlyOverChanged);
@@ -39,10 +55,9 @@ namespace Epsitec.Common.Document.Containers
 			this.paragraphList.List = this.document.Aggregates;
 			this.paragraphList.HScroller = true;
 			this.paragraphList.VScroller = true;
-			this.paragraphList.SetParent(this);
+			this.paragraphList.SetParent(this.topPage);
 			this.paragraphList.MinSize = new Size(10, 87);
-			this.paragraphList.Height = 167;
-			this.paragraphList.Dock = DockStyle.Top;
+			this.paragraphList.Dock = DockStyle.Fill;
 			this.paragraphList.DockMargins = new Margins(0, 0, 0, 0);
 			this.paragraphList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
 			this.paragraphList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
@@ -60,7 +75,7 @@ namespace Epsitec.Common.Document.Containers
 			this.childrens.IsHiliteColumn = false;
 			this.childrens.IsOrderColumn = true;
 			this.childrens.IsChildrensColumn = false;
-			this.childrens.SetParent(this);
+			this.childrens.SetParent(this.bottomPage);
 			this.childrens.Height = 87;
 			this.childrens.Dock = DockStyle.Top;
 			this.childrens.DockMargins = new Margins(0, 0, 0, 0);
@@ -69,7 +84,7 @@ namespace Epsitec.Common.Document.Containers
 			this.childrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Sélectionneur.
-			this.selectorToolBar = new Widget(this);
+			this.selectorToolBar = new Widget(this.bottomPage);
 			this.selectorToolBar.Height = 16+8;
 			this.selectorToolBar.Dock = DockStyle.Top;
 			this.selectorToolBar.DockMargins = new Margins(0, 0, 5, 0);
@@ -77,7 +92,7 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			//	Conteneur du panneau.
-			this.panelContainer = new Widget(this);
+			this.panelContainer = new Widget(this.bottomPage);
 			this.panelContainer.Height = 0.0;
 			this.panelContainer.Dock = DockStyle.Top;
 			this.panelContainer.DockMargins = new Margins(0, 0, 0, 0);
@@ -90,7 +105,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.HasCloseButton = true;
 			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
 			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
-			this.colorSelector.SetParent(this);
+			this.colorSelector.SetParent(this.bottomPage);
 			this.colorSelector.Dock = DockStyle.Top;
 			this.colorSelector.DockMargins = new Margins(0, 0, 5, 0);
 			this.colorSelector.TabIndex = 100;
@@ -106,7 +121,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void CreateCategoryGroup()
 		{
 			//	Crée les boutons radio pour le choix de la catégorie.
-			this.categoryContainer = new Widget(this);
+			this.categoryContainer = new Widget(this.topPage);
 			this.categoryContainer.Height = 20;
 			this.categoryContainer.Dock = DockStyle.Top;
 			this.categoryContainer.DockMargins = new Margins(0, 0, 0, 5);
@@ -150,7 +165,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void CreateAggregateToolBar()
 		{
 			//	Crée la toolbar principale.
-			this.aggregateToolBar = new HToolBar(this);
+			this.aggregateToolBar = new HToolBar(this.topPage);
 			this.aggregateToolBar.Dock = DockStyle.Top;
 			this.aggregateToolBar.DockMargins = new Margins(0, 0, 0, -1);
 			this.aggregateToolBar.TabIndex = 1;
@@ -231,7 +246,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void CreateChildrensToolBar()
 		{
 			//	Crée la toolbar pour le choix des enfants.
-			this.childrensToolBar = new HToolBar(this);
+			this.childrensToolBar = new HToolBar(this.bottomPage);
 			this.childrensToolBar.Dock = DockStyle.Top;
 			this.childrensToolBar.DockMargins = new Margins(0, 0, 0, 0);
 			this.childrensToolBar.TabIndex = 95;
@@ -280,7 +295,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void CreateNameToolBar()
 		{
 			//	Crée la toolbar pour le nom de l'agrégat.
-			this.nameToolBar = new HToolBar(this);
+			this.nameToolBar = new HToolBar(this.bottomPage);
 			this.nameToolBar.Dock = DockStyle.Top;
 			this.nameToolBar.DockMargins = new Margins(0, 0, 0, 0);
 			this.nameToolBar.TabIndex = 94;
@@ -1229,6 +1244,10 @@ namespace Epsitec.Common.Document.Containers
 			return this.document.Aggregates[sel] as Properties.Aggregate;
 		}
 
+
+		protected PaneBook					mainBook;
+		protected PanePage					topPage;
+		protected PanePage					bottomPage;
 
 		protected Widget					categoryContainer;
 		protected RadioButton				categoryGraphic;
