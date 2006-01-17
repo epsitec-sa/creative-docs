@@ -507,7 +507,7 @@ namespace Epsitec.Common.Text
 						
 						if ((position >= line_start) &&
 							(  (position < line_end)
-							|| ((position == line_end) && (direction >= 0) && (! elements[i].IsTabulation))
+							|| ((position == line_end) && (direction >= 0) && (! elements[i].IsTabulation) && (! Internal.Navigator.IsAfterLineBreak (this.story, fitter_cursor, position - paragraph_start)))
 							|| ((position == line_end) && (line_length == 0))
 							|| ((position == line_end) && (line_end == this.story.TextLength)) ))
 						{

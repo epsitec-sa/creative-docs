@@ -261,6 +261,18 @@ namespace Epsitec.Common.Text.Internal
 			return false;
 		}
 		
+		public static bool IsAfterLineBreak(TextStory story, ICursor cursor, int offset)
+		{
+			if (Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset-1)) == Unicode.Code.LineSeparator)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		public static bool IsLineEnd(TextStory story, TextFitter fitter, ICursor cursor, int offset, int direction)
 		{
 			if (direction < 0)
@@ -277,11 +289,11 @@ namespace Epsitec.Common.Text.Internal
 				return true;
 			}
 			
-			offset += story.GetCursorPosition (cursor);
+			int start = story.GetCursorPosition (cursor) + offset;
 			
 			Internal.TextTable text   = story.TextTable;
 			CursorInfo.Filter  filter = Cursors.FitterCursor.GetFitterFilter (fitter);
-			CursorInfo[]       infos  = text.FindCursorsBefore (offset + 1, filter);
+			CursorInfo[]       infos  = text.FindCursorsBefore (start + 1, filter);
 			
 			if (infos.Length > 0)
 			{
@@ -298,11 +310,11 @@ namespace Epsitec.Common.Text.Internal
 					
 					for (int j = 1; j < positions.Length; j++)
 					{
-						if (positions[j] == offset)
+						if (positions[j] == start)
 						{
 							return true;
 						}
-						if (positions[j] > offset)
+						if (positions[j] > start)
 						{
 							break;
 						}

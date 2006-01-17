@@ -438,6 +438,8 @@ namespace Epsitec.Common.Text
 			int new_pos;
 			int new_dir;
 			
+			bool fix_dir = false;
+			
 			Direction direction = Direction.None;
 			
 			switch (target)
@@ -445,6 +447,7 @@ namespace Epsitec.Common.Text
 				case Target.CharacterNext:
 					this.MoveCursor (this.ActiveCursor, count, out new_pos, out new_dir);
 					direction = Direction.Forward;
+					fix_dir   = true;
 					break;
 				
 				case Target.CharacterPrevious:
@@ -492,22 +495,27 @@ namespace Epsitec.Common.Text
 				case Target.WordEnd:
 					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsWordEnd), out new_pos, out new_dir);
 					direction = Direction.Forward;
-					
-					//	Si en marche avant, on arrive à la fin d'une ligne qui n'est pas
-					//	une fin de paragraphe, alors il faut changer la direction, afin
-					//	que le curseur apparaisse au début de la igne suivante :
-					
-					if ((Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, new_pos - old_pos) == false) &&
-						(Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, new_pos - old_pos, 1)))
-					{
-//-						System.Diagnostics.Debug.WriteLine ("Swap direction (2)");
-						new_dir = -1;
-					}
-					
+					fix_dir   = true;
 					break;
 					
 				default:
 					throw new System.NotSupportedException (string.Format ("Target {0} not supported", target));
+			}
+			
+			if ((fix_dir) &&
+				(new_dir == 1))
+			{
+				//	Si en marche avant, on arrive à la fin d'une ligne qui n'est pas
+				//	une fin de paragraphe, alors il faut changer la direction, afin
+				//	que le curseur apparaisse au début de la ligne suivante :
+				
+				this.story.SetCursorPosition (this.temp_cursor, new_pos);
+				
+				if ((Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, 0) == false) &&
+					(Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, 0, 1)))
+				{
+					new_dir = -1;
+				}
 			}
 			
 			if ((old_pos != new_pos) ||
