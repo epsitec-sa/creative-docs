@@ -1679,6 +1679,11 @@ again:
 			{
 				if (this.fitter.HitTestTextFrame (frame, cx, cy, skip_invisible, ref position, ref direction))
 				{
+					//	Vérifie encore si le curseur ne se trouve pas dans un
+					//	fragment de texte automatique (texte auto. d'une liste
+					//	par exemple). Si c'est le cas, il faut déplacer le
+					//	curseur après le texte automatique.
+					
 					this.story.SetCursorPosition (this.temp_cursor, position, direction);
 					
 					if (this.GetParagraphManager (this.temp_cursor) != null)
@@ -3438,6 +3443,15 @@ process_ranges:
 				if (p1 > p2)
 				{
 					int pp = p1; p1 = p2; p2 = pp;
+				}
+				
+				//	La position p1 dénote le début de la sélection et p2 sa fin.
+				//	On va encore procéder à quelques ajustements pour tenir compte
+				//	correctement des textes automatiques.
+				
+				if (this.SkipOverAutoText (ref p2, Direction.Backward))
+				{
+					this.SkipOverAutoText (ref p1, Direction.Backward);
 				}
 					
 				this.story.ChangeMarkers (p1, p2-p1, marker, true);
