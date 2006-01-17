@@ -130,6 +130,15 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public TextStyle						NextStyle
+		{
+			get
+			{
+				return this.next_style;
+			}
+		}
+		
+		
 		public static System.Collections.IComparer	Comparer
 		{
 			get
@@ -154,6 +163,11 @@ namespace Epsitec.Common.Text
 			this.is_flagged = value;
 		}
 		
+		internal void DefineNextStyle(TextStyle next_style)
+		{
+			this.next_style = next_style;
+		}
+		
 		
 		internal void Clear()
 		{
@@ -162,6 +176,7 @@ namespace Epsitec.Common.Text
 			
 			this.parent_styles = null;
 			this.style_properties = null;
+			this.next_style = null;
 			this.Invalidate ();
 		}
 		
@@ -271,6 +286,11 @@ namespace Epsitec.Common.Text
 				properties = this.style_properties;
 			}
 			
+			int n_styles;
+			
+			n_styles  = this.parent_styles == null ? 0 : this.parent_styles.Length;
+			n_styles += this.next_style == null ? 0 : 1;
+			
 			buffer.Append (SerializerSupport.SerializeString (this.name));
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeString (this.meta_id));
@@ -279,7 +299,7 @@ namespace Epsitec.Common.Text
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeEnum (this.TextStyleClass));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeInt (this.parent_styles == null ? 0 : this.parent_styles.Length));
+			buffer.Append (SerializerSupport.SerializeInt (n_styles));
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeInt (properties == null ? 0 : properties.Length));
 			
@@ -292,6 +312,17 @@ namespace Epsitec.Common.Text
 					buffer.Append ("/");
 					buffer.Append (SerializerSupport.SerializeString (StyleList.GetFullName (parent.Name, parent.TextStyleClass)));
 				}
+			}
+
+			//	S'il y a un style de paragraphe suivant chaîné à ce style, on le
+			//	sérialise en utilisant le même principe que pour les styles parents,
+			//	avec un préfixe "=>" :
+			
+			if (this.next_style != null)
+			{
+				string name = string.Concat ("=>", StyleList.GetFullName (this.next_style.Name, this.next_style.TextStyleClass));
+				buffer.Append ("/");
+				buffer.Append (SerializerSupport.SerializeString (name));
 			}
 			
 			if (properties != null)
@@ -362,9 +393,20 @@ namespace Epsitec.Common.Text
 				if ((this.parent_styles != null) &&
 					(this.parent_styles.Length > 0))
 				{
-					TextStyle[] parent_styles = new TextStyle[this.parent_styles.Length];
+					int    n         = this.parent_styles.Length;
+					string last_name = this.parent_styles[n-1] as string;
 					
-					for (int i = 0; i < this.parent_styles.Length; i++)
+					if (last_name.StartsWith ("=>"))
+					{
+						this.next_style = list.GetTextStyle (last_name.Substring (2));
+						this.next_style.DeserializeFixups (list);
+						
+						n--;
+					}
+					
+					TextStyle[] parent_styles = new TextStyle[n];
+					
+					for (int i = 0; i < parent_styles.Length; i++)
 					{
 						parent_styles[i] = list.GetTextStyle (this.parent_styles[i] as string);
 						
@@ -543,6 +585,7 @@ namespace Epsitec.Common.Text
 		private string							meta_id;
 		private TextStyleClass					text_style_class;
 		private object[]						parent_styles;
+		private TextStyle						next_style;
 		private Property[]						style_properties;
 		
 		private bool							is_flagged;

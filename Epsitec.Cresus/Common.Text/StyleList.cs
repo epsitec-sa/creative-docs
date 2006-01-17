@@ -231,6 +231,32 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void SetNextStyle(Common.Support.OpletQueue queue, TextStyle style, TextStyle next_style)
+		{
+			if (style.NextStyle == next_style)
+			{
+				return;
+			}
+			
+			if (queue != null)
+			{
+				using (queue.BeginAction ())
+				{
+					queue.Insert (new SetNextStyleOplet (this, style, next_style));
+					queue.ValidateAction ();
+				}
+			}
+			
+			if (next_style == null)
+			{
+				style.DefineNextStyle (next_style);
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (style.TextStyleClass == next_style.TextStyleClass);
+			}
+		}
+		
 		public void RecycleTextStyle(TextStyle style)
 		{
 			this.Detach (style);
@@ -768,6 +794,41 @@ namespace Epsitec.Common.Text
 			private StyleList					stylist;
 			private TextStyle					style;
 			private string						state;
+		}
+		#endregion
+		
+		#region SetNextStyleOplet Class
+		private class SetNextStyleOplet : Common.Support.AbstractOplet
+		{
+			public SetNextStyleOplet(StyleList stylist, TextStyle style, TextStyle next_style)
+			{
+				this.stylist = stylist;
+				this.style   = style;
+				this.next    = next_style;
+			}
+			
+
+			public override Common.Support.IOplet Undo()
+			{
+				TextStyle new_next = this.next;
+				TextStyle old_next = this.style.NextStyle;
+				
+				this.style.DefineNextStyle (new_next);
+				
+				this.next = old_next;
+				
+				return this;
+			}
+			
+			public override Common.Support.IOplet Redo()
+			{
+				return this.Undo ();
+			}
+			
+			
+			private StyleList					stylist;
+			private TextStyle					style;
+			private TextStyle					next;
 		}
 		#endregion
 		
