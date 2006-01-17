@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
@@ -135,12 +135,12 @@ namespace Epsitec.Common.Text.Tests
 			generator.Add (Generator.CreateSequence (Generator.SequenceType.Numeric, "", "."));
 			generator.Add (Generator.CreateSequence (Generator.SequenceType.Alphabetic));
 			
-			int count1 = generator.UpdateAllFields (story, System.Globalization.CultureInfo.CurrentCulture);
-			int count2 = generator.UpdateAllFields (story, System.Globalization.CultureInfo.CurrentCulture);
+			int count1 = generator.UpdateAllFields (story, null, System.Globalization.CultureInfo.CurrentCulture);
+			int count2 = generator.UpdateAllFields (story, null, System.Globalization.CultureInfo.CurrentCulture);
 			
 			generator.StartVector = new int[] { 8, 12 };
 			
-			int count3 = generator.UpdateAllFields (story, System.Globalization.CultureInfo.CurrentCulture);
+			int count3 = generator.UpdateAllFields (story, null, System.Globalization.CultureInfo.CurrentCulture);
 			
 			Debug.Assert.IsTrue (count1 == 5);
 			Debug.Assert.IsTrue (count2 == 0);

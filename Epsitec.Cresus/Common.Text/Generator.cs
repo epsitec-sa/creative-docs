@@ -100,11 +100,11 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public int UpdateAllFields(TextStory story, System.Globalization.CultureInfo culture)
+		public int UpdateAllFields(TextStory story, Properties.ManagedParagraphProperty property, System.Globalization.CultureInfo culture)
 		{
 			TextProcessor    processor = new TextProcessor (story);
 			Generator.Series series    = this.NewSeries (culture);
-			TextUpdater      updater   = new TextUpdater (story, this, series);
+			TextUpdater      updater   = new TextUpdater (story, this, property, series);
 			
 			processor.Process (new TextProcessor.Iterator (updater.Iterate));
 			
@@ -164,14 +164,15 @@ namespace Epsitec.Common.Text
 		#region TextUpdater Class
 		class TextUpdater
 		{
-			public TextUpdater(TextStory story, Generator generator, Generator.Series series)
+			public TextUpdater(TextStory story, Generator generator, Properties.ManagedParagraphProperty property, Generator.Series series)
 			{
 				this.story      = story;
 				this.context    = story.TextContext;
 				this.text       = story.TextTable;
 				this.generator  = generator;
+				this.mpp        = property;
 				this.series     = series;
-				this.enumerator = new GeneratorEnumerator (story, this.generator.Name);
+				this.enumerator = new GeneratorEnumerator (story, this.mpp, this.generator.Name);
 			}
 			
 			
@@ -193,6 +194,11 @@ namespace Epsitec.Common.Text
 					Cursors.TempCursor cursor = this.enumerator.Cursor;
 					Internal.CursorId  id     = cursor.CursorId;
 					int                pos    = this.text.GetCursorPosition (id);
+					
+					if (this.enumerator.RestartGenerator)
+					{
+						this.series.Restart ();
+					}
 					
 					if (pos < this.story.TextLength)
 					{
@@ -239,6 +245,7 @@ namespace Epsitec.Common.Text
 			private TextContext					context;
 			private Internal.TextTable			text;
 			private Generator					generator;
+			Properties.ManagedParagraphProperty mpp;
 			private Generator.Series			series;
 			private GeneratorEnumerator			enumerator;
 			private int							count;
@@ -256,6 +263,12 @@ namespace Epsitec.Common.Text
 				this.culture   = culture;
 			}
 			
+			
+			public void Restart()
+			{
+				this.vector = this.generator.StartVector;
+				this.level  = -1;
+			}
 			
 			public string GetNextText(int level)
 			{

@@ -935,7 +935,7 @@ namespace Epsitec.Common.Drawing
 //					this.painter.TextStory.OpletQueue.UndoAction ();					//	remet 'bbb' tel quel
 					navigator.Dispose ();
 					
-					generator.UpdateAllFields (this.painter.TextStory, System.Globalization.CultureInfo.CurrentCulture);
+					generator.UpdateAllFields (this.painter.TextStory, null, System.Globalization.CultureInfo.CurrentCulture);
 				}
 				
 				this.painter.TextStory.RecycleCursor (cursor);

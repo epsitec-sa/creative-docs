@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.ParagraphManagers
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			Internal.Navigator.Insert (story, cursor, "X", null, props_2);
 			Internal.Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props_3);
 			
-			p.Generator.UpdateAllFields (story, context.Culture);
+			p.Generator.UpdateAllFields (story, property, context.Culture);
 		}
 		
 		public override void DetachFromParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property)
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			
 			story.DeleteText (cursor, length);
 			
-			p.Generator.UpdateAllFields (story, context.Culture);
+			p.Generator.UpdateAllFields (story, property, context.Culture);
 		}
 		
 		public override void RefreshParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property)
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			System.Diagnostics.Debug.Assert (Internal.Navigator.IsParagraphStart (story, cursor, 0));
 			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, property));
 			
-			p.Generator.UpdateAllFields (story, context.Culture);
+			p.Generator.UpdateAllFields (story, property, context.Culture);
 		}
 		
 		

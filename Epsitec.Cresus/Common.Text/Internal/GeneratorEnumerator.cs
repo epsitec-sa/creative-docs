@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
@@ -9,9 +9,10 @@ namespace Epsitec.Common.Text.Internal
 	/// </summary>
 	public class GeneratorEnumerator : System.IDisposable, System.Collections.IEnumerator, System.Collections.IEnumerable
 	{
-		public GeneratorEnumerator(TextStory story, string generator)
+		public GeneratorEnumerator(TextStory story, Properties.ManagedParagraphProperty property, string generator)
 		{
 			this.story      = story;
+			this.property   = property;
 			this.generator  = generator;
 			this.style_list = this.story.StyleList;
 			
@@ -22,9 +23,11 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.at_start_of_text = true;
 			this.at_end_of_text   = false;
+			
+			this.state = State.None;
 		}
 		
-		public GeneratorEnumerator(TextStory story, Properties.GeneratorProperty generator) : this (story, generator.Generator)
+		public GeneratorEnumerator(TextStory story, Properties.GeneratorProperty generator) : this (story, null, generator.Generator)
 		{
 		}
 		
@@ -34,6 +37,15 @@ namespace Epsitec.Common.Text.Internal
 			get
 			{
 				return this.cursor;
+			}
+		}
+		
+		public bool								RestartGenerator
+		{
+			get
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Generator: {0}", this.state));
+				return this.state == State.Restarted;
 			}
 		}
 		
@@ -84,20 +96,79 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (this.failure_cache.Contains (code))
 				{
+					if (this.property != null)
+					{
+						this.Process (this.failure_cache[code] as Properties.ManagedParagraphProperty);
+					}
+					
 					continue;
 				}
+				
+				//	Le code n'a pas encore été classé dans la catégorie de ceux
+				//	qui ne correspondent pas à notre générateur, c'est donc un
+				//	candidat sérieux :
 				
 				Properties.GeneratorProperty generator = this.GetGeneratorProperty (code);
 				
 				if (generator != null)
 				{
+					switch (this.state)
+					{
+						case State.RestartPending:	this.state = State.Restarted;	break;
+						case State.Restarted:		this.state = State.Continue;	break;
+						default:					this.state = State.Continue;	break;
+					}
+					
 					return true;
 				}
 				
-				this.failure_cache[code] = this.generator;
+				if (this.property != null)
+				{
+					Properties.ManagedParagraphProperty managed = this.GetManagedParagraphProperty (code);
+					
+					this.Process (managed);
+					this.failure_cache[code] = managed;
+				}
+				else
+				{
+					this.failure_cache[code] = null;
+				}
 			}
 		}
 		
+		private void Process(Properties.ManagedParagraphProperty property)
+		{
+			if ((this.state == State.Continue) ||
+				(this.state == State.Restarted))
+			{
+				if (property == null)
+				{
+					this.state = State.RestartPending;
+				}
+				else
+				{
+					//	Evolue-t-on actuellement dans un paragraphe géré par le
+					//	même paragraph manager que celui qui nous intéresse ?
+						
+					if (Property.CompareEqualContents (this.property, property))
+					{
+						//	OK.
+					}
+					else
+					{
+						this.state = State.RestartPending;
+					}
+				}
+			}
+		}
+		
+		
+		public Properties.ManagedParagraphProperty GetManagedParagraphProperty(ulong code)
+		{
+			Styles.CoreSettings core = this.style_list[code];
+			
+			return core[Properties.WellKnownType.ManagedParagraph] as Properties.ManagedParagraphProperty;
+		}
 		
 		public Properties.GeneratorProperty GetGeneratorProperty(ulong code)
 		{
@@ -151,6 +222,8 @@ namespace Epsitec.Common.Text.Internal
 		{
 			this.story.SetCursorPosition (this.cursor, 0);
 			
+			this.state = State.None;
+			
 			this.at_start_of_text = true;
 			this.at_end_of_text   = false;
 		}
@@ -166,7 +239,7 @@ namespace Epsitec.Common.Text.Internal
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			Internal.TextTable           text = story.TextTable;
 			
-			using (GeneratorEnumerator ge = new GeneratorEnumerator (story, generator))
+			using (GeneratorEnumerator ge = new GeneratorEnumerator (story, null, generator))
 			{
 				foreach (ICursor model in ge)
 				{
@@ -200,13 +273,22 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
+		private enum State
+		{
+			None,
+			Continue,							//	continue la séquence normalement
+			RestartPending,						//	il faudra reprendre au début
+			Restarted							//	on vient de reprendre au début
+		}
 		
 		private TextStory						story;
 		private StyleList						style_list;
+		Properties.ManagedParagraphProperty		property;
 		private string							generator;
 		private System.Collections.Hashtable	failure_cache;
 		private Cursors.TempCursor				cursor;
 		private bool							at_start_of_text;
 		private bool							at_end_of_text;
+		private State							state;
 	}
 }
