@@ -327,6 +327,12 @@ namespace Epsitec.Common.Text
 						this.DeleteText (c1, p2-p1);
 					}
 					
+					int pos = this.story.GetCursorPosition (this.cursor);
+					int dir = this.story.GetCursorDirection (this.cursor);
+					
+					this.AdjustCursor (this.cursor, Direction.Forward, ref pos, ref dir);
+					this.story.SetCursorPosition (this.cursor, pos, dir);
+					
 					this.story.ValidateAction ();
 				}
 				
@@ -413,6 +419,13 @@ namespace Epsitec.Common.Text
 				using (this.story.BeginAction ())
 				{
 					this.DeleteText (temp, p2-p1);
+					
+					int pos = this.story.GetCursorPosition (this.cursor);
+					int dir = this.story.GetCursorDirection (this.cursor);
+					
+					this.AdjustCursor (this.cursor, Direction.Forward, ref pos, ref dir);
+					this.story.SetCursorPosition (this.cursor, pos, dir);
+					
 					this.story.ValidateAction ();
 				}
 				
