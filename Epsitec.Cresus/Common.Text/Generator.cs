@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -219,7 +219,7 @@ namespace Epsitec.Common.Text
 						//	Compte combien de textes ont été modifiés pendant cette
 						//	opération :
 						
-						if (this.story.ReplaceText (cursor, length, text))
+						if (this.story.UndoableReplaceText (cursor, length, text))
 						{
 							this.count++;
 						}

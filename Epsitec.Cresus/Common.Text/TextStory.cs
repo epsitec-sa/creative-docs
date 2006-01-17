@@ -495,6 +495,52 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal bool UndoableReplaceText(ICursor cursor, int length, string simple_text)
+		{
+			System.Diagnostics.Debug.Assert (length > 0);
+			System.Diagnostics.Debug.Assert (simple_text.Length > 0);
+			
+			ulong[] data = new ulong[length];
+			ulong[] text;
+			
+			this.ReadText (cursor, length, data);
+			
+			ulong code = data[0] & ~ Unicode.Bits.FullCodeMask;
+			
+			TextConverter.ConvertFromString (simple_text, out text);
+			
+			for (int i = 0; i < text.Length; i++)
+			{
+				text[i] |= code;
+			}
+			
+			bool change = false;
+			
+			if (data.Length == text.Length)
+			{
+				for (int i = 0; i < text.Length; i++)
+				{
+					if (data[i] != text[i])
+					{
+						change = true;
+						break;
+					}
+				}
+			}
+			else
+			{
+				change = true;
+			}
+			
+			if (change)
+			{
+				this.DeleteText (cursor, length);
+				this.InsertText (cursor, text);
+			}
+			
+			return change;
+		}
+		
 		internal bool ReplaceText(ICursor cursor, int length, ulong[] text)
 		{
 			//	Remplace le texte sans mettre à jour les informations de undo
