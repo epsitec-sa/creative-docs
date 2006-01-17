@@ -195,7 +195,7 @@ namespace Epsitec.Common.Document.TextPanels
 			rect = this.Client.Bounds;
 			rect.Left += 1;
 			rect.Width = this.extendedZoneWidth;
-			rect.Top -= this.IsLabelProperties ? 2 : 8;
+			rect.Top -= this.IsLabelProperties ? 3 : 9;
 			rect.Bottom = rect.Top-13;
 			this.fixIcon.Bounds = rect;
 

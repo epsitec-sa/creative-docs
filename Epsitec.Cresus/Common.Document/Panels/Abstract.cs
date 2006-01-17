@@ -281,7 +281,7 @@ namespace Epsitec.Common.Document.Panels
 			rect = this.Client.Bounds;
 			rect.Left += 1;
 			rect.Width = this.extendedZoneWidth;
-			rect.Top -= (this.IsLabelProperties || this is ModColor) ? 2 : 8;
+			rect.Top -= (this.IsLabelProperties || this is ModColor) ? 3 : 9;
 			rect.Bottom = rect.Top-13;
 			this.fixIcon.Bounds = rect;
 			this.hiliteButton.Bounds = rect;

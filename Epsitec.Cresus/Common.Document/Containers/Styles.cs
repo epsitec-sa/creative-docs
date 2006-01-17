@@ -69,10 +69,10 @@ namespace Epsitec.Common.Document.Containers
 			this.panelContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			//	Sélectionneur.
-			this.selectorToolBar = new HToolBar(this);
-			this.selectorToolBar.Height = 24;
+			this.selectorToolBar = new Widget(this);
+			this.selectorToolBar.Height = 16+8;
 			this.selectorToolBar.Dock = DockStyle.Bottom;
-			this.selectorToolBar.DockMargins = new Margins(0, 0, 5, -1);
+			this.selectorToolBar.DockMargins = new Margins(0, 0, 5, 0);
 			this.selectorToolBar.TabIndex = 97;
 			this.selectorToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -484,7 +484,6 @@ namespace Epsitec.Common.Document.Containers
 				this.UpdateSelectorAdd("TextMargins", "TextMargins", Res.Strings.TextPanel.Margins.Title);
 				this.UpdateSelectorAdd("TextSpaces", "TextSpaces", Res.Strings.TextPanel.Spaces.Title);
 				this.UpdateSelectorAdd("TextKeep", "TextKeep", Res.Strings.TextPanel.Keep.Title);
-				this.selectorToolBar.Items.Add(new IconSeparator());
 				this.UpdateSelectorAdd("TextFont", "TextFont", Res.Strings.TextPanel.Font.Title);
 				this.UpdateSelectorAdd("TextLanguage", "TextLanguage", Res.Strings.TextPanel.Language.Title);
 			}
@@ -512,14 +511,15 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void UpdateSelectorAdd(string name, string icon, string text)
 		{
-			IconButton button = new IconButton(Misc.Icon(icon));
+			Widgets.IconMarkButton button = new Widgets.IconMarkButton(this.selectorToolBar);
 			button.Name = name;
+			button.IconName = Misc.Icon(icon);
 			button.Width = 16;
-			button.Height = 16;
+			button.Height = 16+8;
+			button.AutoFocus = false;
+			button.Dock = DockStyle.Left;
 			button.Clicked += new MessageEventHandler(this.HandleSelectorClicked);
 			ToolTip.Default.SetToolTip(button, text);
-
-			this.selectorToolBar.Items.Add(button);
 		}
 
 		protected void UpdateAggregateName()
@@ -701,11 +701,9 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleSelectorClicked(object sender, MessageEventArgs e)
 		{
-			IconButton button = sender as IconButton;
-
 			foreach ( Widget widget in this.selectorToolBar.Children.Widgets )
 			{
-				widget.ActiveState = (widget == button) ? ActiveState.Yes : ActiveState.No;
+				widget.ActiveState = (widget == sender) ? ActiveState.Yes : ActiveState.No;
 			}
 
 			this.UpdatePanel();
@@ -1199,7 +1197,7 @@ namespace Epsitec.Common.Document.Containers
 		protected HToolBar					nameToolBar;
 		protected TextField					name;
 
-		protected HToolBar					selectorToolBar;
+		protected Widget					selectorToolBar;
 
 		protected HToolBar					childrensToolBar;
 		protected IconButton				buttonChildrensNew;
