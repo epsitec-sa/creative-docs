@@ -2523,6 +2523,30 @@ process_ranges:
 			
 			this.RefreshFilterCurrentProperties ();
 			this.RefreshAccumulatedStylesAndProperties ();
+			
+			//	Si le paragraphe courant est "managed", il faut lui donner la
+			//	possibilité d'être mis à jour si on a détruit une fin de para-
+			//	graphe.
+			
+			if (count > 0)
+			{
+				Property[] mpps = Property.Filter (this.accumulated_properties, Properties.WellKnownType.ManagedParagraph);
+				
+				if (mpps.Length > 0)
+				{
+					Properties.ManagedParagraphProperty mpp = mpps[0] as Properties.ManagedParagraphProperty;
+					
+					ParagraphManagerList list = this.story.TextContext.ParagraphManagerList;
+					IParagraphManager manager = list[mpp.ManagerName];
+					
+					System.Diagnostics.Debug.Assert (manager != null, string.Format ("Cannot find ParagraphManager '{0}'", mpp.ManagerName));
+					
+					this.story.SetCursorPosition (this.temp_cursor, this.CursorPosition);
+					this.story.MoveCursor (this.temp_cursor, Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor));
+					
+					manager.RefreshParagraph (this.story, this.temp_cursor, mpp);
+				}
+			}
 		}
 		
 		
@@ -2749,8 +2773,11 @@ process_ranges:
 			{
 				return true;
 			}
-			
 			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.temp_cursor, offset, (int) direction))
+			{
+				return true;
+			}
+			if (Internal.Navigator.IsAfterLineBreak (this.story, this.temp_cursor, offset))
 			{
 				return true;
 			}
@@ -2764,8 +2791,11 @@ process_ranges:
 			{
 				return true;
 			}
-			
 			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, offset, (int) direction))
+			{
+				return true;
+			}
+			if (Internal.Navigator.IsAfterLineBreak (this.story, this.temp_cursor, offset+1))
 			{
 				return true;
 			}
@@ -3097,7 +3127,7 @@ process_ranges:
 				
 				if (starts.Count > 0)
 				{
-					ParagraphManagerList list = story.TextContext.ParagraphManagerList;
+					ParagraphManagerList list = this.story.TextContext.ParagraphManagerList;
 					IParagraphManager manager = list[mpp.ManagerName];
 					
 					System.Diagnostics.Debug.Assert (manager != null, string.Format ("Cannot find ParagraphManager '{0}'", mpp.ManagerName));
