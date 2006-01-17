@@ -136,7 +136,7 @@ namespace Epsitec.Common.Text
 			{
 				if (this.selection_cursors != null)
 				{
-					int[] pos = this.GetSelectionCursorPositions ();
+					int[] pos = this.GetAdjustedSelectionCursorPositions ();
 					
 					for (int i = 0; i < pos.Length; i += 2)
 					{
@@ -691,23 +691,15 @@ namespace Epsitec.Common.Text
 				throw new System.ArgumentOutOfRangeException ("index", index, "Index out of range");
 			}
 			
-			int[] positions = this.GetSelectionCursorPositions ();
+			int[] positions = this.GetAdjustedSelectionCursorPositions ();
 			
 			int p1 = positions[index*2+0];
 			int p2 = positions[index*2+1];
 			
-			ICursor c1 = this.selection_cursors[index*2+0] as ICursor;
-			ICursor c2 = this.selection_cursors[index*2+1] as ICursor;
-			
-			if (p1 > p2)
-			{
-				int     pp = p1; p1 = p2; p2 = pp;
-				ICursor cc = c1; c1 = c2; c2 = cc;
-			}
-			
 			ulong[] buffer = new ulong[p2-p1];
 			
-			this.story.ReadText (c1, p2-p1, buffer);
+			this.story.SetCursorPosition (this.temp_cursor, p1);
+			this.story.ReadText (this.temp_cursor, p2-p1, buffer);
 			
 			return buffer;
 		}
@@ -725,71 +717,31 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				int[] positions = this.GetSelectionCursorPositions ();
+				texts = new string[this.SelectionCount];
 				
-				texts = new string[positions.Length / 2];
-				
-				for (int i = 0; i < positions.Length; i += 2)
+				for (int i = 0; i < texts.Length; i++)
 				{
-					int p1 = positions[i+0];
-					int p2 = positions[i+1];
-					
-					ICursor c1 = this.selection_cursors[i+0] as ICursor;
-					ICursor c2 = this.selection_cursors[i+1] as ICursor;
-					
-					if (p1 > p2)
-					{
-						int     pp = p1; p1 = p2; p2 = pp;
-						ICursor cc = c1; c1 = c2; c2 = cc;
-					}
-					
-					string  text;
-					ulong[] buffer = new ulong[p2-p1];
-					
-					this.story.ReadText (c1, p2-p1, buffer);
-					
-					TextConverter.ConvertToString (buffer, out text);
-					
-					texts[i/2] = text;
+					TextConverter.ConvertToString (this.GetRawSelection (i), out texts[i]);
 				}
 			}
 			
 			return texts;
 		}
 		
-		public ulong[] GetSelectedLowLevelText(int range)
+		public ulong[] GetSelectedLowLevelText(int index)
 		{
 			//	Retourne le texte sélectionné (au format interne) correspondant
-			//	à la sélection 'range'.
+			//	à la tranche sélectionnée 'index'.
 			//	S'il n'y en a pas, retourne un tableau vide.
 			
 			if ((this.selection_cursors == null) ||
-				(range * 2 >= this.selection_cursors.Count) ||
-				(range < 0))
+				(index >= this.SelectionCount))
 			{
 				return new ulong[0];
 			}
 			else
 			{
-				int[] positions = this.GetSelectionCursorPositions ();
-				
-				int p1 = positions[range*2+0];
-				int p2 = positions[range*2+1];
-				
-				ICursor c1 = this.selection_cursors[range*2+0] as ICursor;
-				ICursor c2 = this.selection_cursors[range*2+1] as ICursor;
-				
-				if (p1 > p2)
-				{
-					int     pp = p1; p1 = p2; p2 = pp;
-					ICursor cc = c1; c1 = c2; c2 = cc;
-				}
-				
-				ulong[] buffer = new ulong[p2-p1];
-				
-				this.story.ReadText (c1, p2-p1, buffer);
-				
-				return buffer;
+				return this.GetRawSelection (index);
 			}
 		}
 		
@@ -1033,7 +985,7 @@ again:
 			
 			if (this.HasSelection)
 			{
-				int[]   positions = this.GetSelectionCursorPositions ();
+				int[]   positions = this.GetAdjustedSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
 				foreach (Range range in ranges)
@@ -1094,7 +1046,7 @@ again:
 			
 			if (this.HasSelection)
 			{
-				int[]   positions = this.GetSelectionCursorPositions ();
+				int[]   positions = this.GetAdjustedSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
 				foreach (Range range in ranges)
@@ -1184,7 +1136,7 @@ again:
 			
 			if (this.HasSelection)
 			{
-				int[]   positions = this.GetSelectionCursorPositions ();
+				int[]   positions = this.GetAdjustedSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
 				foreach (Range range in ranges)
@@ -1220,7 +1172,7 @@ again:
 			
 			if (this.HasSelection)
 			{
-				int[]   positions = this.GetSelectionCursorPositions ();
+				int[]   positions = this.GetAdjustedSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
 				foreach (Range range in ranges)
@@ -1329,7 +1281,7 @@ again:
 			
 			if (this.HasSelection)
 			{
-				int[]   positions = this.GetSelectionCursorPositions ();
+				int[]   positions = this.GetAdjustedSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
 				using (this.story.BeginAction ())
@@ -1349,7 +1301,7 @@ again:
 							//	avoir modifié le texte (insertion de puces, par ex.), on doit
 							//	redemander les positions :
 							
-							positions = this.GetSelectionCursorPositions ();
+							positions = this.GetAdjustedSelectionCursorPositions ();
 						}
 					}
 					
@@ -1389,7 +1341,7 @@ again:
 			
 			if (this.HasSelection)
 			{
-				int[]   positions = this.GetSelectionCursorPositions ();
+				int[]   positions = this.GetAdjustedSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
 				using (this.story.BeginAction ())
@@ -1439,7 +1391,7 @@ again:
 			
 			if (this.HasSelection)
 			{
-				int[]   positions = this.GetSelectionCursorPositions ();
+				int[]   positions = this.GetAdjustedSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
 				using (this.story.BeginAction ())
@@ -1509,7 +1461,7 @@ again:
 			
 			if (this.HasSelection)
 			{
-				int[]   positions = this.GetSelectionCursorPositions ();
+				int[]   positions = this.GetAdjustedSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
 				using (this.story.BeginAction ())
@@ -1532,7 +1484,7 @@ again:
 								//	avoir modifié le texte (insertion de puces, par ex.), on doit
 								//	redemander les positions :
 								
-								positions = this.GetSelectionCursorPositions ();
+								positions = this.GetAdjustedSelectionCursorPositions ();
 							}
 						}
 						else
@@ -1581,7 +1533,7 @@ again:
 			
 			if (this.HasSelection)
 			{
-				int[]   positions = this.GetSelectionCursorPositions ();
+				int[]   positions = this.GetAdjustedSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
 				using (this.story.BeginAction ())
@@ -1635,7 +1587,7 @@ again:
 			
 			if (this.HasSelection)
 			{
-				int[]   positions = this.GetSelectionCursorPositions ();
+				int[]   positions = this.GetAdjustedSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
 				using (this.story.BeginAction ())
@@ -1786,7 +1738,7 @@ again:
 		{
 			if (this.HasSelection)
 			{
-				int[] pos = this.GetSelectionCursorPositions ();
+				int[] pos = this.GetAdjustedSelectionCursorPositions ();
 				int   n   = pos.Length - 2;
 				
 				//	Si une sélection est active, on considère la position avant
@@ -3433,27 +3385,15 @@ process_ranges:
 			
 			this.story.ChangeAllMarkers (marker, false);
 			
-			int[] positions = this.GetSelectionCursorPositions ();
+			int[] positions = this.GetAdjustedSelectionCursorPositions ();
 			
 			for (int i = 0; i < positions.Length; i += 2)
 			{
 				int p1 = positions[i+0];
 				int p2 = positions[i+1];
 				
-				if (p1 > p2)
-				{
-					int pp = p1; p1 = p2; p2 = pp;
-				}
+				System.Diagnostics.Debug.Assert (p1 <= p2);
 				
-				//	La position p1 dénote le début de la sélection et p2 sa fin.
-				//	On va encore procéder à quelques ajustements pour tenir compte
-				//	correctement des textes automatiques.
-				
-				if (this.SkipOverAutoText (ref p2, Direction.Backward))
-				{
-					this.SkipOverAutoText (ref p1, Direction.Backward);
-				}
-					
 				this.story.ChangeMarkers (p1, p2-p1, marker, true);
 			}
 		}
@@ -3484,6 +3424,37 @@ process_ranges:
 			return positions;
 		}
 
+		private int[] GetAdjustedSelectionCursorPositions()
+		{
+			int[] positions = this.GetSelectionCursorPositions ();
+			
+			for (int i = 0; i < positions.Length; i += 2)
+			{
+				int p1 = positions[i+0];
+				int p2 = positions[i+1];
+				
+				if (p2 < p1)
+				{
+					p1 = positions[i+1];
+					p2 = positions[i+0];
+				}
+				
+				//	La position p1 dénote le début de la sélection et p2 sa fin.
+				//	Procède à quelques ajustements pour tenir compte correctement
+				//	des textes automatiques.
+				
+				if (this.SkipOverAutoText (ref p2, Direction.Backward))
+				{
+					this.SkipOverAutoText (ref p1, Direction.Backward);
+				}
+				
+				positions[i+0] = p1;
+				positions[i+1] = p2;
+			}
+			
+			return positions;
+		}
+		
 		
 		protected virtual void OnCursorMoved()
 		{
