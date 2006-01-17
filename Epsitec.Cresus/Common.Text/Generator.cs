@@ -187,7 +187,8 @@ namespace Epsitec.Common.Text
 			{
 				if (this.enumerator.MoveNext ())
 				{
-					Properties.GeneratorProperty property;
+					Properties.GeneratorProperty generator_property;
+					Properties.MarginsProperty   margins_property;
 					
 					Cursors.TempCursor cursor = this.enumerator.Cursor;
 					Internal.CursorId  id     = cursor.CursorId;
@@ -201,15 +202,16 @@ namespace Epsitec.Common.Text
 						//	qui permet ensuite de déterminer la longueur du texte
 						//	à remplacer :
 						
-						property = this.enumerator.GetGeneratorProperty (code);
+						generator_property = this.enumerator.GetGeneratorProperty (code);
 						
-						System.Diagnostics.Debug.Assert (property != null);
-						System.Diagnostics.Debug.Assert (property.Generator == this.generator.Name);
+						this.story.TextContext.GetMargins (code, out margins_property);
 						
-						int    length = this.context.GetTextEndDistance (this.story, cursor, property);
-						int    level  = property.Level;
+						System.Diagnostics.Debug.Assert (generator_property != null);
+						System.Diagnostics.Debug.Assert (generator_property.Generator == this.generator.Name);
+						System.Diagnostics.Debug.Assert (margins_property != null);
 						
-						//	TODO: ajouter la gestion du niveau lié à l'indentation de la marge
+						int    length = this.context.GetTextEndDistance (this.story, cursor, generator_property);
+						int    level  = System.Math.Max (generator_property.Level, margins_property.Level);
 						
 						string text = this.series.GetNextText (level);
 						
@@ -219,7 +221,7 @@ namespace Epsitec.Common.Text
 						//	Compte combien de textes ont été modifiés pendant cette
 						//	opération :
 						
-						if (this.story.UndoableReplaceText (cursor, length, text))
+						if (this.story.ReplaceText (cursor, length, text))
 						{
 							this.count++;
 						}

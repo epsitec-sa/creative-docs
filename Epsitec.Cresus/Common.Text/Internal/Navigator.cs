@@ -589,8 +589,14 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (offset != 0)
 			{
+				//	Cette méthode travaille toujours avec un offset nul. Si ce
+				//	n'est pas le cas au départ, on crée un curseur temporaire
+				//	qui satisfait à cette condition :
+				
 				Cursors.TempCursor temp_cursor = new Cursors.TempCursor ();
+				
 				story.NewCursor (temp_cursor);
+				story.SetCursorPosition (temp_cursor, story.GetCursorPosition (cursor) + offset);
 				
 				try
 				{
@@ -612,40 +618,50 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < n_old; i++)
 			{
+				bool same = false;
+				
 				for (int j = 0; j < n_new; j++)
 				{
 					if (Property.CompareEqualContents (old_properties[i], new_properties[j]))
 					{
-						goto next_old;
+						same = true;
+						break;
 					}
 				}
 				
 				//	Cette ancienne propriété n'a pas d'équivalent dans la liste des
 				//	nouvelles propriétés.
 				
-				list[old_properties[i].ManagerName].DetachFromParagraph (story, cursor, old_properties[i]);
-				
-			next_old:
-				continue;
+				if (! same)
+				{
+					list[old_properties[i].ManagerName].DetachFromParagraph (story, cursor, old_properties[i]);
+				}
 			}
 			
 			for (int i = 0; i < n_new; i++)
 			{
+				bool same = false;
+				
 				for (int j = 0; j < n_old; j++)
 				{
 					if (Property.CompareEqualContents (new_properties[i], old_properties[j]))
 					{
-						goto next_old;
+						same = true;
+						break;
 					}
 				}
 				
 				//	Cette nouvelle propriété n'a pas d'équivalent dans la liste des
 				//	anciennes propriétés.
 				
-				list[new_properties[i].ManagerName].AttachToParagraph (story, cursor, new_properties[i]);
-				
-			next_old:
-				continue;
+				if (same)
+				{
+					list[new_properties[i].ManagerName].RefreshParagraph (story, cursor, new_properties[i]);
+				}
+				else
+				{
+					list[new_properties[i].ManagerName].AttachToParagraph (story, cursor, new_properties[i]);
+				}
 			}
 		}
 		
@@ -861,7 +877,7 @@ namespace Epsitec.Common.Text.Internal
 			int pos = story.GetCursorPosition (cursor);
 			story.WriteText (cursor, offset_start, text);
 			story.SetCursorPosition (cursor, pos);
-
+			
 			//	Finalement, gère encore les changements de propriétés "ManagedParagraph"
 			//	afin d'ajouter ou de supprimer les textes automatiques :
 			
@@ -1028,6 +1044,26 @@ namespace Epsitec.Common.Text.Internal
 			story.WriteText (cursor, offset_start, text);
 		}
 		
+		public static void SetParagraphMetaProperties(TextStory story, ICursor cursor, Properties.ApplyMode mode, params TextStyle[] meta_properties)
+		{
+			int length = Navigator.GetParagraphEndLength (story, cursor);
+			int pos    = story.GetCursorPosition (cursor);
+			
+			Properties.ManagedParagraphProperty[] old_props;
+			Properties.ManagedParagraphProperty[] new_props;
+			
+			Navigator.GetManagedParagraphProperties (story, story.ReadChar (cursor), out old_props);
+			Navigator.SetMetaProperties (story, cursor, length, mode, meta_properties);
+			
+			story.SetCursorPosition (cursor, pos);
+			
+			Navigator.GetManagedParagraphProperties (story, story.ReadChar (cursor), out new_props);
+			
+			//	Met encore à jour les managed paragraphs (si nécessaire) :
+			
+			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, 0, old_props, new_props);
+		}
+		
 		public static void SetMetaProperties(TextStory story, ICursor cursor, int length, Properties.ApplyMode mode, params TextStyle[] meta_properties)
 		{
 			if (length == 0)
@@ -1113,6 +1149,11 @@ namespace Epsitec.Common.Text.Internal
 			
 			story.ReadText (cursor, offset_start, length, text);
 			
+			Properties.ManagedParagraphProperty[] old_props;
+			Properties.ManagedParagraphProperty[] new_props;
+			
+			Navigator.GetManagedParagraphProperties (story, text[0], out old_props);
+			
 			ulong code  = 0;
 			int   start = 0;
 			int   count = 0;
@@ -1141,8 +1182,15 @@ namespace Epsitec.Common.Text.Internal
 			//	Change encore le style de la dernière (ou de l'unique) tranche :
 			
 			Navigator.SetParagraphProperties (story, text, code, start, count, properties, mode);
+			Navigator.GetManagedParagraphProperties (story, text[0], out new_props);
 			
+			int pos = story.GetCursorPosition (cursor);
 			story.WriteText (cursor, offset_start, text);
+			story.SetCursorPosition (cursor, pos);
+			
+			//	Met encore à jour les managed paragraphs (si nécessaire) :
+			
+			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, offset_start, old_props, new_props);
 		}
 		
 		

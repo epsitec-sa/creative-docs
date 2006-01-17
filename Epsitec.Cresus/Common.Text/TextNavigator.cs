@@ -2870,9 +2870,7 @@ process_ranges:
 			
 			this.story.SetCursorPosition (this.temp_cursor, pos + start);
 			
-			int length = Internal.Navigator.GetParagraphEndLength (this.story, this.temp_cursor);
-			
-			Internal.Navigator.SetMetaProperties (this.story, this.temp_cursor, length, mode, meta_properties);
+			Internal.Navigator.SetParagraphMetaProperties (this.story, this.temp_cursor, mode, meta_properties);
 		}
 		
 		

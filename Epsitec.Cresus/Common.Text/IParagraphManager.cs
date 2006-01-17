@@ -14,6 +14,8 @@ namespace Epsitec.Common.Text
 		
 		void AttachToParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
 		void DetachFromParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
+		void RefreshParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
+		
 		//	En attachant un gestionnaire de paragraphe à un paragraphe donné, il
 		//	est possible de modifier le texte pour y ajouter des caractères marqués
 		//	avec la propriété AutoTextProperty.

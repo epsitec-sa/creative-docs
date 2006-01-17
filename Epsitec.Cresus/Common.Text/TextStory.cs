@@ -495,8 +495,13 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		internal bool UndoableReplaceText(ICursor cursor, int length, string simple_text)
+		public bool ReplaceText(ICursor cursor, int length, string simple_text)
 		{
+			//	Cette méthode permet de remplace un texte par un autre, sur place,
+			//	en conservant les mêmes attributs typographiques.
+			//	Retourne true en cas de modification.
+			//	Contrairement à InPlaceReplaceText, cette méthode est annulable.
+			
 			System.Diagnostics.Debug.Assert (length > 0);
 			System.Diagnostics.Debug.Assert (simple_text.Length > 0);
 			
@@ -541,7 +546,7 @@ namespace Epsitec.Common.Text
 			return change;
 		}
 		
-		internal bool ReplaceText(ICursor cursor, int length, ulong[] text)
+		internal bool InPlaceReplaceText(ICursor cursor, int length, ulong[] text)
 		{
 			//	Remplace le texte sans mettre à jour les informations de undo
 			//	et de redo. Retourne true si une modification a eu lieu.
@@ -562,7 +567,7 @@ namespace Epsitec.Common.Text
 			return changed;
 		}
 		
-		internal bool ReplaceText(ICursor cursor, int length, string simple_text)
+		internal bool InPlaceReplaceText(ICursor cursor, int length, string simple_text)
 		{
 			int position = this.text.GetCursorPosition (cursor.CursorId);
 			

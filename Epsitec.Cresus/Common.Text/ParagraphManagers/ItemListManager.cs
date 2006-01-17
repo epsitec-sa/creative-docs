@@ -72,6 +72,21 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			p.Generator.UpdateAllFields (story, context.Culture);
 		}
 		
+		public override void RefreshParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property)
+		{
+			TextContext context = story.TextContext;
+			
+			Parameters p = new Parameters (context, property.ManagerParameters);
+			
+			//	Le curseur est positionné au début (brut) du paragraphe, juste
+			//	après la fin du paragraphe précédent.
+			
+			System.Diagnostics.Debug.Assert (Internal.Navigator.IsParagraphStart (story, cursor, 0));
+			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, property));
+			
+			p.Generator.UpdateAllFields (story, context.Culture);
+		}
+		
 		
 		public class Parameters
 		{
