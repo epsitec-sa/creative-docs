@@ -409,7 +409,13 @@ namespace Epsitec.Common.Text
 			if (p2 > p1)
 			{
 				this.story.SetCursorPosition (temp, p1);
-				this.DeleteText (temp, p2-p1);
+				
+				using (this.story.BeginAction ())
+				{
+					this.DeleteText (temp, p2-p1);
+					this.story.ValidateAction ();
+				}
+				
 				this.NotifyTextChanged ();
 			}
 			
