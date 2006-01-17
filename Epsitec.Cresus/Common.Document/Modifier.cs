@@ -5964,16 +5964,21 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void AggregateStyleDelete(Properties.Aggregate agg)
+		public void AggregateStyleDelete(Properties.Aggregate agg, Properties.Type type)
 		{
 			//	Supprime le style sélectionné d'un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
-			if ( agg.Styles.Selected == -1 )  return;
+			if ( type == Properties.Type.None )  return;
+
+			Properties.Abstract property = agg.Property(type);
+			if ( property == null )  return;
+			int rank = agg.Styles.IndexOf(property);
+			if ( rank == -1 )  return;
+			
 			this.document.IsDirtySerialize = true;
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateStyleDelete) )
 			{
-				int rank = agg.Styles.Selected;
 				agg.Styles.RemoveAt(rank);
 
 				rank = System.Math.Min(rank, agg.Styles.Count-1);

@@ -213,24 +213,6 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public int SelectedPropertyRow
-		{
-			//	Retourne le rang de la ligne sélectionné.
-			get
-			{
-				int nc = this.NameColumn;
-
-				for ( int i=0 ; i<this.Rows ; i++ )
-				{
-					if ( this.IsCellSelected(i, nc) )
-					{
-						return i;
-					}
-				}
-				return -1;
-			}
-		}
-
 		public void UpdateContent()
 		{
 			//	Met à jour le contenu de la table.
