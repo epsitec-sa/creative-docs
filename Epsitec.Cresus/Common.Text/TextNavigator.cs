@@ -381,7 +381,7 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			this.AdjustCursor (temp, move, ref p2, ref d2);
+			this.AdjustCursor (temp, direction, ref p2, ref d2);
 			
 			System.Diagnostics.Debug.Assert (p1 >= 0);
 			System.Diagnostics.Debug.Assert (p1 <= this.story.TextLength);
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Text
 		
 		public void MoveTo(int position, int direction)
 		{
-			this.AdjustCursor (this.temp_cursor, System.Math.Sign (direction), ref position, ref direction);
+			this.AdjustCursor (this.temp_cursor, (Direction) System.Math.Sign (direction), ref position, ref direction);
 			this.InternalSetCursor (position, direction);
 		}
 		
@@ -432,60 +432,60 @@ namespace Epsitec.Common.Text
 			int new_pos;
 			int new_dir;
 			
-			int direction = 0;
+			Direction direction = Direction.None;
 			
 			switch (target)
 			{
 				case Target.CharacterNext:
 					this.MoveCursor (this.ActiveCursor, count, out new_pos, out new_dir);
-					direction = 1;
+					direction = Direction.Forward;
 					break;
 				
 				case Target.CharacterPrevious:
 					this.MoveCursor (this.ActiveCursor, -count, out new_pos, out new_dir);
-					direction = -1;
+					direction = Direction.Backward;
 					break;
 				
 				case Target.TextStart:
 					new_pos   = 0;
 					new_dir   = -1;
-					direction = -1;
+					direction = Direction.Backward;
 					break;
 				
 				case Target.TextEnd:
 					new_pos   = this.TextLength;
 					new_dir   = 1;
-					direction = 1;
+					direction = Direction.Forward;
 					break;
 					
 				case Target.ParagraphStart:
 					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsParagraphStart), out new_pos, out new_dir);
-					direction = -1;
+					direction = Direction.Backward;
 					break;
 				
 				case Target.ParagraphEnd:
 					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsParagraphEnd), out new_pos, out new_dir);
-					direction = 1;
+					direction = Direction.Forward;
 					break;
 				
 				case Target.LineStart:
 					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
-					direction = -1;
+					direction = Direction.Backward;
 					break;
 				
 				case Target.LineEnd:
 					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
-					direction = 1;
+					direction = Direction.Forward;
 					break;
 				
 				case Target.WordStart:
 					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsWordStart), out new_pos, out new_dir);
-					direction = -1;
+					direction = Direction.Backward;
 					break;
 				
 				case Target.WordEnd:
 					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsWordEnd), out new_pos, out new_dir);
-					direction = 1;
+					direction = Direction.Forward;
 					
 					//	Si en marche avant, on arrive à la fin d'une ligne qui n'est pas
 					//	une fin de paragraphe, alors il faut changer la direction, afin
@@ -2969,10 +2969,15 @@ process_ranges:
 		}
 		
 		
-		private void AdjustCursor(ICursor temp, int original_direction, ref int pos, ref int dir)
+		private void AdjustCursor(ICursor temp, Direction direction, ref int pos, ref int dir)
 		{
 			//	Ajuste la position du curseur pour éviter de placer celui-ci à
 			//	des endroits "impossibles" (par ex. avant une puce).
+			
+			if (direction == Direction.None)
+			{
+				direction = Direction.Forward;
+			}
 			
 			if (pos < 0)
 			{
@@ -2991,9 +2996,26 @@ process_ranges:
 			
 			IParagraphManager manager = this.GetParagraphManager (temp);
 			
-			if (manager != null)
+			if ((manager != null) &&
+				(Internal.Navigator.IsParagraphStart (this.story, temp, 0)))
 			{
-				//	TODO: donner l'occasion au manager de modifier la position du curseur
+				switch (direction)
+				{
+					case Direction.Forward:
+						this.SkipOverAutoText (ref pos, Direction.Forward);
+						break;
+					
+					case Direction.Backward:
+						if (pos > 0)
+						{
+							pos--;
+						}
+						else
+						{
+							this.SkipOverAutoText (ref pos, Direction.Forward);
+						}
+						break;
+				}
 			}
 		}
 		
