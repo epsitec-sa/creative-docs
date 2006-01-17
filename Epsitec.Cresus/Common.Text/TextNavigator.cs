@@ -1679,6 +1679,16 @@ again:
 			{
 				if (this.fitter.HitTestTextFrame (frame, cx, cy, skip_invisible, ref position, ref direction))
 				{
+					this.story.SetCursorPosition (this.temp_cursor, position, direction);
+					
+					if (this.GetParagraphManager (this.temp_cursor) != null)
+					{
+						if (this.SkipOverAutoText (ref position, Direction.Forward))
+						{
+							direction = 1;
+						}
+					}
+					
 					return true;
 				}
 				
