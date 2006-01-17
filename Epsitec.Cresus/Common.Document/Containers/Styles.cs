@@ -24,7 +24,8 @@ namespace Epsitec.Common.Document.Containers
 			this.graphicList.VScroller = true;
 			this.graphicList.SetParent(this);
 			this.graphicList.MinSize = new Size(10, 87);
-			this.graphicList.Dock = DockStyle.Fill;
+			this.graphicList.Height = 167;
+			this.graphicList.Dock = DockStyle.Top;
 			this.graphicList.DockMargins = new Margins(0, 0, 0, 0);
 			this.graphicList.FinalSelectionChanged += new EventHandler(this.HandleAggregatesTableSelectionChanged);
 			this.graphicList.FlyOverChanged += new EventHandler(this.HandleAggregatesTableFlyOverChanged);
@@ -40,41 +41,16 @@ namespace Epsitec.Common.Document.Containers
 			this.paragraphList.VScroller = true;
 			this.paragraphList.SetParent(this);
 			this.paragraphList.MinSize = new Size(10, 87);
-			this.paragraphList.Dock = DockStyle.Fill;
+			this.paragraphList.Height = 167;
+			this.paragraphList.Dock = DockStyle.Top;
 			this.paragraphList.DockMargins = new Margins(0, 0, 0, 0);
 			this.paragraphList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
 			this.paragraphList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
 			this.paragraphList.TabIndex = 2;
 			this.paragraphList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			//	Roue des couleurs.
-			this.colorSelector = new ColorSelector();
-			this.colorSelector.ColorPalette.ColorCollection = this.document.GlobalSettings.ColorCollection;
-			this.colorSelector.HasCloseButton = true;
-			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
-			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
-			this.colorSelector.SetParent(this);
-			this.colorSelector.Dock = DockStyle.Bottom;
-			this.colorSelector.DockMargins = new Margins(0, 0, 5, 0);
-			this.colorSelector.TabIndex = 100;
-			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.colorSelector.Visibility = false;
-
-			//	Conteneur du panneau.
-			this.panelContainer = new Widget(this);
-			this.panelContainer.Height = 0.0;
-			this.panelContainer.Dock = DockStyle.Bottom;
-			this.panelContainer.DockMargins = new Margins(0, 0, 0, 0);
-			this.panelContainer.TabIndex = 99;
-			this.panelContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-
-			//	Sélectionneur.
-			this.selectorToolBar = new Widget(this);
-			this.selectorToolBar.Height = 16+8;
-			this.selectorToolBar.Dock = DockStyle.Bottom;
-			this.selectorToolBar.DockMargins = new Margins(0, 0, 5, 0);
-			this.selectorToolBar.TabIndex = 97;
-			this.selectorToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.CreateNameToolBar();
+			this.CreateChildrensToolBar();
 
 			//	Enfants de l'agrégat.
 			this.childrens = new Widgets.AggregateList();
@@ -86,14 +62,40 @@ namespace Epsitec.Common.Document.Containers
 			this.childrens.IsChildrensColumn = false;
 			this.childrens.SetParent(this);
 			this.childrens.Height = 87;
-			this.childrens.Dock = DockStyle.Bottom;
+			this.childrens.Dock = DockStyle.Top;
 			this.childrens.DockMargins = new Margins(0, 0, 0, 0);
 			this.childrens.FinalSelectionChanged += new EventHandler(this.HandleAggregatesChildrensSelectionChanged);
 			this.childrens.TabIndex = 96;
 			this.childrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.CreateChildrensToolBar();
-			this.CreateNameToolBar();
+			//	Sélectionneur.
+			this.selectorToolBar = new Widget(this);
+			this.selectorToolBar.Height = 16+8;
+			this.selectorToolBar.Dock = DockStyle.Top;
+			this.selectorToolBar.DockMargins = new Margins(0, 0, 5, 0);
+			this.selectorToolBar.TabIndex = 97;
+			this.selectorToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+			//	Conteneur du panneau.
+			this.panelContainer = new Widget(this);
+			this.panelContainer.Height = 0.0;
+			this.panelContainer.Dock = DockStyle.Top;
+			this.panelContainer.DockMargins = new Margins(0, 0, 0, 0);
+			this.panelContainer.TabIndex = 99;
+			this.panelContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			
+			//	Roue des couleurs.
+			this.colorSelector = new ColorSelector();
+			this.colorSelector.ColorPalette.ColorCollection = this.document.GlobalSettings.ColorCollection;
+			this.colorSelector.HasCloseButton = true;
+			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
+			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
+			this.colorSelector.SetParent(this);
+			this.colorSelector.Dock = DockStyle.Top;
+			this.colorSelector.DockMargins = new Margins(0, 0, 5, 0);
+			this.colorSelector.TabIndex = 100;
+			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.colorSelector.Visibility = false;
 
 			this.UpdateChildrensExtend();
 
@@ -230,7 +232,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Crée la toolbar pour le choix des enfants.
 			this.childrensToolBar = new HToolBar(this);
-			this.childrensToolBar.Dock = DockStyle.Bottom;
+			this.childrensToolBar.Dock = DockStyle.Top;
 			this.childrensToolBar.DockMargins = new Margins(0, 0, 0, 0);
 			this.childrensToolBar.TabIndex = 95;
 			this.childrensToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
@@ -279,7 +281,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Crée la toolbar pour le nom de l'agrégat.
 			this.nameToolBar = new HToolBar(this);
-			this.nameToolBar.Dock = DockStyle.Bottom;
+			this.nameToolBar.Dock = DockStyle.Top;
 			this.nameToolBar.DockMargins = new Margins(0, 0, 0, 0);
 			this.nameToolBar.TabIndex = 94;
 			this.nameToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
@@ -603,29 +605,33 @@ namespace Epsitec.Common.Document.Containers
 		protected void UpdatePanel()
 		{
 			//	Met à jour le panneau pour éditer la propriété sélectionnée.
-			this.colorSelector.Visibility = false;
-			this.colorSelector.BackColor = Color.Empty;
-
-			if ( this.panel != null )
-			{
-				this.panel.Changed -= new EventHandler(this.HandlePanelChanged);
-				this.panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
-				this.panel.Dispose();
-				this.panel = null;
-				this.panelContainer.Height = 0.0;
-				this.panelContainer.ForceLayout();
-			}
-
 			if ( this.category == "Graphic" )
 			{
-				Properties.Aggregate agg = this.GetAggregate();
-				if ( agg == null )  return;
+				Properties.Abstract property = this.PropertyPanel();
+				if ( property == null )
+				{
+					this.ClosePanel();
+					return;
+				}
 
-				Properties.Type type = Properties.Abstract.TypeName(this.selectorName);
-				if ( type == Properties.Type.None )  return;
+				if ( this.panel != null && this.panel.Property.Type == property.Type )
+				{
+					this.panel.Property = property;
+					this.panelContainer.Height = this.panel.DefaultHeight;
+					this.panelContainer.ForceLayout();
 
-				Properties.Abstract property = agg.Property(type);
-				if ( property == null )  return;
+					if ( this.colorSelector.Visibility )
+					{
+						this.ignoreChanged = true;
+						this.colorSelector.Color = this.panel.OriginColorGet();
+						this.ignoreChanged = false;
+						this.panel.OriginColorSelect(this.panel.OriginColorRank());
+					}
+
+					return;
+				}
+
+				this.ClosePanel();
 
 				this.panel = property.CreatePanel(this.document);
 				if ( this.panel == null )  return;
@@ -645,6 +651,41 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == "Paragraph" )
 			{
+				this.ClosePanel();
+			}
+
+			if ( this.category == "Character" )
+			{
+				this.ClosePanel();
+			}
+		}
+
+		protected Properties.Abstract PropertyPanel()
+		{
+			//	Cherche la propriété pour le panneau.
+			Properties.Aggregate agg = this.GetAggregate();
+			if ( agg == null )  return null;
+
+			Properties.Type type = Properties.Abstract.TypeName(this.selectorName);
+			if ( type == Properties.Type.None )  return null;
+
+			return agg.Property(type);
+		}
+
+		protected void ClosePanel()
+		{
+			//	Ferme le panneau pour la propriété et la roue des couleurs.
+			this.colorSelector.Visibility = false;
+			this.colorSelector.BackColor = Color.Empty;
+
+			if ( this.panel != null )
+			{
+				this.panel.Changed -= new EventHandler(this.HandlePanelChanged);
+				this.panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
+				this.panel.Dispose();
+				this.panel = null;
+				this.panelContainer.Height = 0.0;
+				this.panelContainer.ForceLayout();
 			}
 		}
 
