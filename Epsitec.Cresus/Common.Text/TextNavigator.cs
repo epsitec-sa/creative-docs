@@ -2428,29 +2428,35 @@ again:
 						goto process_ranges;
 					}
 				}
-
-				this.story.SetCursorPosition (this.temp_cursor, start);
-				
-				IParagraphManager manager = this.GetParagraphManager (this.temp_cursor);
-				
-				if (manager != null)
+				else
 				{
-					//	TODO: on va supprimer le début d'un paragraphe qui contient
-					//	du texte automatique pour le fusionner ensuite avec le premier
-					//	paragraphe...
+					//	Nous allons devoir procéder à une fusion d'un fragment de
+					//	paragraphe précédent avec ce paragraphe-ci. Si c'est un
+					//	managed paragraph, on commence par le transformer en un
+					//	paragraphe normal; ça simplifie ensuite la fusion.
 					
-					ICursor temp = new Cursors.TempCursor ();
+					this.story.SetCursorPosition (this.temp_cursor, start);
 					
-					this.story.NewCursor (temp);
-					this.story.SetCursorPosition (temp, fence);
+					IParagraphManager manager = this.GetParagraphManager (this.temp_cursor);
 					
-					//	ATTENTION: cet appel modifie la position du curseur temp_cursor !
-					
-					this.SetParagraphStyles (start, new TextStyle[] { this.TextContext.StyleList["Default", TextStyleClass.Paragraph] });
-					
-					fence = this.story.GetCursorPosition (temp);
-					this.story.RecycleCursor (temp);
-				}			
+					if (manager != null)
+					{
+						ICursor temp = new Cursors.TempCursor ();
+						
+						this.story.NewCursor (temp);
+						this.story.SetCursorPosition (temp, fence);
+						
+						//	Modifie la paragraphe final pour en faire un paragraphe
+						//	normal (supprime donc le texte automatique).
+						
+						//	ATTENTION: cet appel modifie la position du curseur temp_cursor !
+						
+						this.SetParagraphStyles (start, new TextStyle[] { this.TextContext.StyleList["Default", TextStyleClass.Paragraph] });
+						
+						fence = this.story.GetCursorPosition (temp);
+						this.story.RecycleCursor (temp);
+					}
+				}
 				
 				Range.Merge (ranges, new Range (start, fence - start));
 			}
