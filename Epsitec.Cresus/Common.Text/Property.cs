@@ -378,6 +378,38 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public static Property[] Filter(System.Collections.ICollection properties, Properties.WellKnownType type)
+		{
+			int count = 0;
+			
+			foreach (Property property in properties)
+			{
+				if (property.WellKnownType == type)
+				{
+					count++;
+				}
+			}
+			
+			Property[] filtered = new Property[count];
+			
+			if (count > 0)
+			{
+				int index = 0;
+				
+				foreach (Property property in properties)
+				{
+					if (property.WellKnownType == type)
+					{
+						filtered[index++] = property;
+					}
+				}
+				
+				System.Diagnostics.Debug.Assert (index == count);
+			}
+			
+			return filtered;
+		}
+		
 		public static Property[] Filter(System.Collections.ICollection properties, Properties.PropertyFilter filter)
 		{
 			switch (filter)

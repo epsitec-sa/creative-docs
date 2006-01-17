@@ -210,6 +210,15 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		#region Direction Enumeration
+		public enum Direction
+		{
+			Backward	= -1,
+			None		= 0,
+			Forward		= 1,
+		}
+		#endregion
+		
 		public void Insert(Unicode.Code code)
 		{
 			if (code == Unicode.Code.HorizontalTab)
@@ -328,10 +337,13 @@ namespace Epsitec.Common.Text
 			this.NotifyTextChanged ();
 		}
 		
-		public void Delete(int move)
+		public void Delete(Direction direction)
 		{
-			//	Détruit un caractère en avant ou en arrière. Et juste un seul
-			//	caractère !
+			//	Détruit un caractère (un et un seul) en avant ou en arrière,
+			//	ce qui correspond à l'action exécutée en cas de pression des
+			//	touches Back et Delete.
+			
+			int move = (int) direction;
 			
 			System.Diagnostics.Debug.Assert (move != 0);
 			System.Diagnostics.Debug.Assert (move == System.Math.Sign (move));
@@ -349,55 +361,33 @@ namespace Epsitec.Common.Text
 			this.MoveCursor (temp, move, out p2, out d2);
 			this.story.SetCursorPosition (temp, p2, d2);
 			
-			if ((move == -1) &&
-				(Internal.Navigator.IsParagraphStart (this.story, temp, 0)))
+			if ((direction == Direction.Backward) &&
+				(Internal.Navigator.IsParagraphStart (this.story, temp, 0)) &&
+				(this.GetParagraphManager (temp) != null))
 			{
-				//	L'utilisateur a pressé BACKSPACE dans un paragraphe et le
-				//	curseur se trouve maintenant en début de ligne. Si c'est un
-				//	paragraphe géré, cela peut impliquer que l'on veut supprimer
-				//	l'aspect "géré" (detach) du paragraphe :
+				//	L'utilisateur a pressé 'Back' dans un paragraphe, ce qui a
+				//	déplacé le curseur en début de ligne. Si c'est un paragraphe
+				//	"géré", il faut supprimer le paragraph manager (par ex. si
+				//	on presse 'Back' immédiatement après une puce).
 				
-				IParagraphManager manager = this.GetParagraphManager (temp);
+				this.story.RecycleCursor (temp);
 				
-				if (manager != null)
+				using (this.story.BeginAction ())
 				{
-					this.RemoveParagraphManager (temp);
-					this.story.RecycleCursor (temp);
-					return;
+					this.RemoveParagraphManager ();
+					this.story.ValidateAction ();
 				}
-			}
-			
-			this.AdjustCursor (temp, System.Math.Sign (move), ref p2, ref d2);
-			
-#if false
-			if (Internal.Navigator.IsParagraphStart (this.story, temp, p2 - p1))
-			{
-				//	Le curseur n'a pas le droit de se trouver en début de paragraphe
-				//	si celui-ci commence par du texte automatique, car on n'a pas le
-				//	droit d'insérer de texte avant celui-ci.
 				
-				this.SkipOverAutoText (ref p2, 1);
+				return;
 			}
-#endif
 			
-			this.story.RecycleCursor (temp);
+			this.AdjustCursor (temp, move, ref p2, ref d2);
 			
-			if (p1 < 0)
-			{
-				p1 = 0;
-			}
-			if (p1 > this.story.TextLength)
-			{
-				p1 = this.story.TextLength;
-			}
-			if (p2 < 0)
-			{
-				p2 = 0;
-			}
-			if (p2 > this.story.TextLength)
-			{
-				p2 = this.story.TextLength;
-			}
+			System.Diagnostics.Debug.Assert (p1 >= 0);
+			System.Diagnostics.Debug.Assert (p1 <= this.story.TextLength);
+			
+			System.Diagnostics.Debug.Assert (p2 >= 0);
+			System.Diagnostics.Debug.Assert (p2 <= this.story.TextLength);
 			
 			if (p2 < p1)
 			{
@@ -405,54 +395,25 @@ namespace Epsitec.Common.Text
 				p1 = p2;
 				p2 = pp;
 			}
+		
+			this.story.SetCursorPosition (temp, p2);
 			
-			if (p1 == p2)
+			if (Internal.Navigator.IsEndOfText (this.story, temp, -1))
 			{
-				return;
+				//	La position du texte est telle que le curseur se trouve après
+				//	la marque de fin de texte. Corrige sa position :
+				
+				p2 -= 1;
 			}
 			
-			this.story.NewCursor (temp);
-			
-			try
+			if (p2 > p1)
 			{
-				this.story.SetCursorPosition (temp, p2);
-				
-				if (Internal.Navigator.IsEndOfText (this.story, temp, -1))
-				{
-					//	La position du texte est telle que le curseur se trouve après
-					//	la marque de fin de texte. Corrige sa position :
-					
-					p2 -= 1;
-				}
-				
-				if (p2 > p1)
-				{
-					this.story.SetCursorPosition (temp, p1);
-					this.DeleteText (temp, p2-p1);
-				}
-				
-#if false
-				if (Internal.Navigator.IsParagraphStart (this.story, this.ActiveCursor, 0))
-				{
-					//	Le curseur n'a pas le droit de se trouver en début de paragraphe
-					//	si celui-ci commence par du texte automatique, car on n'a pas le
-					//	droit d'insérer de texte avant celui-ci.
-				
-					int pos = this.story.GetCursorPosition (this.ActiveCursor);
-					
-					if (this.SkipOverAutoText (ref pos, 1))
-					{
-						this.story.SetCursorPosition (this.ActiveCursor, pos);
-					}
-				}
-#endif
-			}
-			finally
-			{
-				this.story.RecycleCursor (temp);
+				this.story.SetCursorPosition (temp, p1);
+				this.DeleteText (temp, p2-p1);
+				this.NotifyTextChanged ();
 			}
 			
-			this.NotifyTextChanged ();
+			this.story.RecycleCursor (temp);
 		}
 		
 		public void MoveTo(int position, int direction)
@@ -498,32 +459,32 @@ namespace Epsitec.Common.Text
 					break;
 					
 				case Target.ParagraphStart:
-					this.MoveCursor (this.ActiveCursor, count, -1, new MoveCallback (this.IsParagraphStart), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsParagraphStart), out new_pos, out new_dir);
 					direction = -1;
 					break;
 				
 				case Target.ParagraphEnd:
-					this.MoveCursor (this.ActiveCursor, count, 1, new MoveCallback (this.IsParagraphEnd), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsParagraphEnd), out new_pos, out new_dir);
 					direction = 1;
 					break;
 				
 				case Target.LineStart:
-					this.MoveCursor (this.ActiveCursor, count, -1, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
 					direction = -1;
 					break;
 				
 				case Target.LineEnd:
-					this.MoveCursor (this.ActiveCursor, count, 1, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
 					direction = 1;
 					break;
 				
 				case Target.WordStart:
-					this.MoveCursor (this.ActiveCursor, count, -1, new MoveCallback (this.IsWordStart), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsWordStart), out new_pos, out new_dir);
 					direction = -1;
 					break;
 				
 				case Target.WordEnd:
-					this.MoveCursor (this.ActiveCursor, count, 1, new MoveCallback (this.IsWordEnd), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsWordEnd), out new_pos, out new_dir);
 					direction = 1;
 					
 					//	Si en marche avant, on arrive à la fin d'une ligne qui n'est pas
@@ -570,9 +531,12 @@ namespace Epsitec.Common.Text
 		public void StartSelection()
 		{
 			//	Débute une sélection simple.
-			//	IsSelectionActive retourne true
-			//	HasSelection retourne true
-			//	HasRealSelection retourne false
+			
+			//	A partir d'ici :
+			//	- IsSelectionActive retourne true
+			//	- HasSelection retourne true
+			//	- HasRealSelection retourne false
+			
 			System.Diagnostics.Debug.Assert (! this.IsSelectionActive);
 			System.Diagnostics.Debug.Assert (! this.HasSelection);
 			
@@ -606,10 +570,14 @@ namespace Epsitec.Common.Text
 		
 		public void ContinueSelection()
 		{
-			//	Permet de continuer une sélection. Il faudra donc de nouveau utiliser EndSelection.
-			//	IsSelectionActive retourne true
-			//	HasSelection retourne true
-			//	HasRealSelection retourne true ou false
+			//	Continue une sélection (terminée avec EndSelection). Il faudra
+			//	donc de nouveau utiliser EndSelection.
+			
+			//	A partir d'ici :
+			//	- IsSelectionActive retourne true
+			//	- HasSelection retourne true
+			//	- HasRealSelection retourne true ou false
+			
 			System.Diagnostics.Debug.Assert (! this.IsSelectionActive);
 			System.Diagnostics.Debug.Assert (this.selection_cursors.Count > 1);
 			
@@ -630,9 +598,12 @@ namespace Epsitec.Common.Text
 		public void EndSelection()
 		{
 			//	Termine la sélection simple.
-			//	IsSelectionActive retourne false
-			//	HasSelection retourne true
-			//	HasRealSelection retourne true ou false
+
+			//	A partir d'ici :
+			//	- IsSelectionActive retourne false
+			//	- HasSelection retourne true
+			//	- HasRealSelection retourne true ou false
+			
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive);
 			
 			this.active_selection_cursor = null;
@@ -659,15 +630,15 @@ namespace Epsitec.Common.Text
 		
 		public void ClearSelection()
 		{
-			this.ClearSelection (0);
+			this.ClearSelection (Direction.None);
 		}
 		
-		public void ClearSelection(int direction)
+		public void ClearSelection(Direction direction)
 		{
-			//	Supprime la sélection si elle existe. Le EndSelection doit avoir été fait.
-			//	IsSelectionActive retourne false
-			//	HasSelection retourne false
-			//	HasRealSelection retourne false
+			//	Supprime la sélection si elle existe. Le EndSelection doit avoir
+			//	été fait.
+			//	NB: Ceci ne détruit pas le texte sélectionné.
+			
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
 			
 			//	Désélectionne tout le texte.
@@ -690,11 +661,11 @@ namespace Epsitec.Common.Text
 					//	Déplace le curseur de travail au début ou à la fin de la
 					//	tranche sélectionnée, en fonction de la direction :
 					
-					if ((direction != 0) &&
+					if ((direction != Direction.None) &&
 						(ranges.Length > 0))
 					{
-						int pos = (direction < 0) ? ranges[0].Start : ranges[ranges.Length-1].End;
-						this.story.SetCursorPosition (this.cursor, pos, direction);
+						int pos = (direction == Direction.Backward) ? ranges[0].Start : ranges[ranges.Length-1].End;
+						this.story.SetCursorPosition (this.cursor, pos, (int) direction);
 					}
 					
 					this.story.ValidateAction ();
@@ -1740,7 +1711,7 @@ again:
 				
 				if (direction < 0)
 				{
-					this.MoveCursor (temp, 0, -1, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
+					this.MoveCursor (temp, 0, Direction.Backward, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
 					this.story.SetCursorPosition (temp, new_pos, new_dir);
 					this.MoveCursor (temp, -1, out new_pos, out new_dir);
 					this.story.SetCursorPosition (temp, new_pos, new_dir);
@@ -1753,7 +1724,7 @@ again:
 				}
 				else
 				{
-					this.MoveCursor (temp, 0, 1, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
+					this.MoveCursor (temp, 0, Direction.Forward, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
 					this.story.SetCursorPosition (temp, new_pos, new_dir);
 					this.MoveCursor (temp, 1, out new_pos, out new_dir);
 					this.story.SetCursorPosition (temp, new_pos, new_dir);
@@ -2135,8 +2106,12 @@ again:
 		}
 		
 		
-		protected bool MoveCursor(ICursor cursor, int distance, out int new_pos, out int new_dir)
+		private bool MoveCursor(ICursor cursor, int distance, out int new_pos, out int new_dir)
 		{
+			//	Déplace le curseur sur la distance indiquée. Saute les textes
+			//	automatiques et ajuste la direction pour gérer correctement
+			//	les fins de paragraphes.
+			
 			int count;
 			int direction;
 			int moved = 0;
@@ -2181,6 +2156,9 @@ again:
 				
 				ulong code;
 				
+				//	En fonction de la direction de déplacement, il faut lire le
+				//	caractère avant/après le déplacement :
+				
 				if (direction > 0)
 				{
 					code = this.story.ReadChar (this.temp_cursor);
@@ -2204,18 +2182,31 @@ again:
 				}
 				
 				//	Gère le déplacement par-dessus des sections AutoText qui
-				//	doivent être traitées comme indivisibles :
+				//	doivent être traitées comme indivisibles; idem pour les
+				//	générateurs :
 				
-				Properties.AutoTextProperty auto_text_property;
+				Properties.AutoTextProperty  auto_text_property;
+				Properties.GeneratorProperty generator_property;
+				
+				Property property_to_skip = null;
 				
 				pos += direction;
 				
 				if (context.GetAutoText (code, out auto_text_property))
 				{
-					int skip = this.SkipOverProperty (this.temp_cursor, auto_text_property, direction);
+					property_to_skip = auto_text_property;
+				}
+				else if (context.GetGenerator (code, out generator_property))
+				{
+					property_to_skip = generator_property;
+				}
+				
+				if (property_to_skip != null)
+				{
+					int skip = this.SkipOverProperty (this.temp_cursor, property_to_skip, direction);
 					
-					//	Un texte produit par un générateur compte comme un caractère
-					//	unique.
+					//	Un texte produit par un générateur (ou un texte automatique)
+					//	compte comme un caractère unique pour la navigation.
 					
 					this.story.MoveCursor (this.temp_cursor, skip);
 					
@@ -2249,29 +2240,32 @@ again:
 			return moved > 0;
 		}
 		
-		protected bool MoveCursor(ICursor cursor, int count, int direction, MoveCallback callback, out int new_pos, out int new_dir)
+		private bool MoveCursor(ICursor cursor, int count, Direction direction, MoveCallback callback, out int new_pos, out int new_dir)
 		{
+			//	Déplace le curseur en sautant le nombre d'éléments indiqué. Le
+			//	callback permet de déterminer quand un élément est atteint.
+			
 			int moved   = 0;
 			int old_pos = this.story.GetCursorPosition (cursor);
 			int old_dir = this.story.GetCursorDirection (cursor);
 			
-			TextContext            context    = this.TextContext;
+			TextContext        context    = this.TextContext;
 			Internal.TextTable text_table = this.story.TextTable;
 			StyleList          style_list = context.StyleList;
 			
 			System.Diagnostics.Debug.Assert (count >= 0);
-			System.Diagnostics.Debug.Assert ((direction == -1) || (direction == 1));
+			System.Diagnostics.Debug.Assert ((direction == Direction.Backward) || (direction == Direction.Forward));
 			
 			this.story.SetCursorPosition (this.temp_cursor, old_pos);
 			
-			if (direction > 0)
+			if (direction == Direction.Forward)
 			{
 				int dir = old_dir;
 				int max = this.story.TextLength - old_pos;
 				
 				for (int i = 0; i < max; i++)
 				{
-					if (callback (i, dir))
+					if (callback (i, (Direction) dir))
 					{
 						if (count-- == 0)
 						{
@@ -2294,7 +2288,7 @@ again:
 				
 				for (int i = 0; i < max; i++)
 				{
-					if (callback (-i, dir))
+					if (callback (-i, (Direction) dir))
 					{
 						if (count-- == 0)
 						{
@@ -2312,7 +2306,7 @@ again:
 			}
 			
 			new_pos = old_pos + moved;
-			new_dir = direction;
+			new_dir = (int) direction;
 			
 			if ((new_pos != old_pos) ||
 				(new_dir != old_dir))
@@ -2326,91 +2320,16 @@ again:
 		}
 		
 		
-		protected void InsertText(string text)
+		private void InsertText(string text)
 		{
-			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
-			
-			ulong[] styled_text;
-			
-			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
-			
-			System.Collections.Stack starts = new System.Collections.Stack ();
-			
-			int pos = this.story.GetCursorPosition (this.cursor);
-			
-			if ((Internal.Navigator.IsEndOfText (this.story, this.cursor, 0)) &&
-				(Internal.Navigator.IsParagraphStart (this.story, this.cursor, 0)))
+			using (this.story.BeginAction ())
 			{
-				starts.Push (pos);
-			}
-			
-			this.story.ConvertToStyledText (text, this.current_styles, this.current_properties, out styled_text);
-			this.story.InsertText (this.cursor, styled_text);
-			
-			//	Si le texte inséré contient un saut de paragraphe et que le style
-			//	en cours fait référence à un gestionnaire de paragraphe nécessitant
-			//	l'ajout de texte automatique, il faut encore générer le texte auto.
-			
-			Property[] properties = this.accumulated_properties;
-			
-#if false
-			for (int i = 0; i < properties.Length; i++)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1} -- {2}", i, properties[i].GetType ().Name, properties[i].ToString ()));
-			}
-#endif
-			
-			Properties.ManagedParagraphProperty mpp = null;
-			
-			for (int i = 0; i < properties.Length; i++)
-			{
-				if (properties[i] is Properties.ManagedParagraphProperty)
-				{
-					mpp = properties[i] as Properties.ManagedParagraphProperty;
-					break;
-				}
-			}
-			
-			if (mpp != null)
-			{
-//-				System.Diagnostics.Debug.WriteLine ("Found managed paragraph property.");
-				
-				for (int i = 0; i < styled_text.Length; i++)
-				{
-					if (Internal.Navigator.IsParagraphSeparator (styled_text[i]))
-					{
-						//	Ne génère pas un changement de style de paragraphe si le texte se
-						//	termine par un paragraphe vide.
-						
-						int start = pos + i + 1;
-						
-						if (start < this.story.TextLength)
-						{
-							starts.Push (pos + i + 1);
-						}
-					}
-				}
-				
-				if (starts.Count > 0)
-				{
-//-					System.Diagnostics.Debug.WriteLine ("Handle insertion of new managed paragraphs.");
-					ParagraphManagerList list = story.TextContext.ParagraphManagerList;
-					
-					while (starts.Count > 0)
-					{
-						pos = (int) starts.Pop ();
-						
-//-						System.Diagnostics.Debug.WriteLine ("--> start at " + pos.ToString ());
-						
-						this.story.SetCursorPosition (this.temp_cursor, pos);
-						
-						list[mpp.ManagerName].AttachToParagraph (this.story, this.temp_cursor, mpp);
-					}
-				}
+				this.InternalInsertText (text);
+				this.story.ValidateAction ();
 			}
 		}
 		
-		protected void DeleteText(ICursor cursor, int length)
+		private void DeleteText(ICursor cursor, int length)
 		{
 			//	Supprime le fragment de texte; il faut traiter spécialement la
 			//	destruction des fins de paragraphes, car elle provoque le change-
@@ -2439,40 +2358,32 @@ again:
 				
 				if (Internal.Navigator.IsParagraphSeparator (text[i]))
 				{
-					//	Vérifie si l'on détruit un paragraphe complet (avec un
-					//	éventuel texte automatique au début)
+					//	Vérifie si l'on détruit un paragraphe complet, à savoir
+					//	si le départ de la sélection est sur une marque de début
+					//	de paragraphe.
 					
 					count++;
 					
-					if (this.SkipOverAutoText (ref start, -1))
-					{
-						//	Le début de la tranche à détruire ne contenait pas le
-						//	texte automatique. Nous devons étendre la sélection pour
-						//	englober le texte automatique.
-						
-						this.story.SetCursorPosition (this.temp_cursor, start);
-						
-						System.Diagnostics.Debug.Assert (count == 1);
-						System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == start);
-						System.Diagnostics.Debug.Assert (this.IsParagraphStart (0, -1));
-					}
-					else
-					{
-						//	Il n'y avait aucun texte automatique. Mais comme effet
-						//	de bord, SkipOverAutoText a positionnée le curseur
-						//	temporaire :
-						
-						System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == start);
-					}
+					this.story.SetCursorPosition (this.temp_cursor, start);
 					
 					Range range;
 					
-					if (this.IsParagraphStart (0, 1))
+					if (this.IsParagraphStart (0, Direction.Forward))
 					{
 						//	C'est un paragraphe complet qui est sélectionné. On le
 						//	détruira sans autre forme de procès.
 						
 						range = new Range (start, pos+i - start + 1);
+						
+						IParagraphManager manager = this.GetParagraphManager (this.temp_cursor);
+						
+						if (manager != null)
+						{
+							//	TODO: on va supprimer un paragraphe appartenant à un
+							//	paragraph manager particulier; il faut en tenir compte
+							//	pour le undo/redo, la re-numérotation et les marques
+							//	de début de séquence.
+						}
 					}
 					else
 					{
@@ -2496,27 +2407,55 @@ again:
 			{
 				//	Il reste encore un fragment de début de paragraphe à détruire :
 				
-				Range.Merge (ranges, new Range (start, end - start));
-			}
-			
-			if (! fix_up)
-			{
-				//	Le premier paragraphe est sélectionné dans son entier. Cela
-				//	implique que si la fin de la sélection arrive au début d'un
-				//	paragraphe contenant du texte automatique, il faut déplacer
-				//	la fin après la fin du paragraphe précédent, mais avant le
-				//	texte automatique du paragraphe en cours (sinon on supprime
-				//	du texte automatique qu'il faut conserver).
-				
-				if (this.SkipOverAutoText (ref fence, -1))
+				if (! fix_up)
 				{
-					this.story.SetCursorPosition (this.temp_cursor, fence);
+					//	Le premier paragraphe est sélectionné dans son entier (ou
+					//	il n'y a pas de premier paragraphe).
+					//	Cela implique que si la fin de la sélection arrive au début
+					//	d'un paragraphe contenant du texte automatique (sans inclure
+					//	autre chose que tu texte automatique), il faut déplacer la
+					//	fin après la fin du paragraphe précédent, mais avant le
+					//	texte automatique du paragraphe en cours (sinon on supprime
+					//	du texte automatique qu'il faut conserver).
+				
+					if (this.SkipOverAutoText (ref fence, Direction.Backward))
+					{
+						this.story.SetCursorPosition (this.temp_cursor, fence);
 					
-					System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == fence);
-					System.Diagnostics.Debug.Assert (this.IsParagraphStart (0, -1));
+						System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == fence);
+						System.Diagnostics.Debug.Assert (this.IsParagraphStart (0, Direction.Backward));
+						
+						goto process_ranges;
+					}
 				}
+
+				this.story.SetCursorPosition (this.temp_cursor, start);
+				
+				IParagraphManager manager = this.GetParagraphManager (this.temp_cursor);
+				
+				if (manager != null)
+				{
+					//	TODO: on va supprimer le début d'un paragraphe qui contient
+					//	du texte automatique pour le fusionner ensuite avec le premier
+					//	paragraphe...
+					
+					ICursor temp = new Cursors.TempCursor ();
+					
+					this.story.NewCursor (temp);
+					this.story.SetCursorPosition (temp, fence);
+					
+					//	ATTENTION: cet appel modifie la position du curseur temp_cursor !
+					
+					this.SetParagraphStyles (start, new TextStyle[] { this.TextContext.StyleList["Default", TextStyleClass.Paragraph] });
+					
+					fence = this.story.GetCursorPosition (temp);
+					this.story.RecycleCursor (temp);
+				}			
+				
+				Range.Merge (ranges, new Range (start, fence - start));
 			}
 			
+process_ranges:
 			while (ranges.Count > 0)
 			{
 				Range range = ranges.Pop () as Range;
@@ -2534,7 +2473,7 @@ again:
 			{
 				//	La destruction a combiné le début du premier paragraphe avec
 				//	la fin du dernier paragraphe. Il faut donc appliquer les ré-
-				//	glages associés au début à la fin aussi :
+				//	glages associés au début, à la fin aussi :
 				
 				TextStyle[] styles;
 				Property[]  props;
@@ -2765,17 +2704,17 @@ again:
 		}
 		#endregion
 		
-		protected bool IsParagraphStart(int offset, int direction)
+		protected bool IsParagraphStart(int offset, Direction direction)
 		{
 			return Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, offset);
 		}
 		
-		protected bool IsParagraphEnd(int offset, int direction)
+		protected bool IsParagraphEnd(int offset, Direction direction)
 		{
 			return Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset);
 		}
 		
-		protected bool IsWordStart(int offset, int direction)
+		protected bool IsWordStart(int offset, Direction direction)
 		{
 			//	Si nous sommes à la fin d'un paragraphe, nous considérons que
 			//	c'est une frontière de mot :
@@ -2788,7 +2727,7 @@ again:
 			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
 		}
 		
-		protected bool IsWordEnd(int offset, int direction)
+		protected bool IsWordEnd(int offset, Direction direction)
 		{
 			//	Si nous sommes à la fin d'un paragraphe nous sommes déjà à
 			//	une fin de mot :
@@ -2804,14 +2743,14 @@ again:
 			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
 		}
 		
-		protected bool IsLineStart(int offset, int direction)
+		protected bool IsLineStart(int offset, Direction direction)
 		{
 			if (this.IsParagraphStart (offset, direction))
 			{
 				return true;
 			}
 			
-			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.temp_cursor, offset, direction))
+			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.temp_cursor, offset, (int) direction))
 			{
 				return true;
 			}
@@ -2819,14 +2758,14 @@ again:
 			return false;
 		}
 		
-		protected bool IsLineEnd(int offset, int direction)
+		protected bool IsLineEnd(int offset, Direction direction)
 		{
 			if (this.IsParagraphEnd (offset, direction))
 			{
 				return true;
 			}
 			
-			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, offset, direction))
+			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, offset, (int) direction))
 			{
 				return true;
 			}
@@ -3029,6 +2968,15 @@ again:
 			//	Ajuste la position du curseur pour éviter de placer celui-ci à
 			//	des endroits "impossibles" (par ex. avant une puce).
 			
+			if (pos < 0)
+			{
+				pos = 0;
+			}
+			if (pos > this.story.TextLength)
+			{
+				pos = this.story.TextLength;
+			}
+			
 			this.story.SetCursorPosition (temp, pos);
 			
 			//	Les "managed paragraphs" ont toute une logique intégrée qui peut
@@ -3048,10 +2996,11 @@ again:
 			return this.story.TextContext.GetParagraphManager (this.story.ReadChar (cursor));
 		}
 		
-		private void RemoveParagraphManager(ICursor cursor)
+		private void RemoveParagraphManager()
 		{
 			//	Transforme le paragraphe courant (managed paragraph) en un para-
-			//	graphe standard. Cela implique qu'il faut changer de style !
+			//	graphe standard. Cela implique qu'il faut remettre le style par
+			//	défaut.
 			
 			this.SetParagraphStyles (this.TextContext.StyleList["Default", TextStyleClass.Paragraph]);
 		}
@@ -3073,6 +3022,79 @@ again:
 			return mpp;
 		}
 		
+		
+		private void InternalInsertText(string text)
+		{
+			//	Insère un texte en utilisant les réglages (propriétés et styles)
+			//	courants.
+			
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			System.Diagnostics.Debug.Assert (this.HasSelection == false);
+			
+			ulong[] styled_text;
+			
+			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
+			
+			System.Collections.Stack starts = new System.Collections.Stack ();
+			
+			int pos = this.story.GetCursorPosition (this.cursor);
+			
+			if ((Internal.Navigator.IsEndOfText (this.story, this.cursor, 0)) &&
+				(Internal.Navigator.IsParagraphStart (this.story, this.cursor, 0)))
+			{
+				starts.Push (pos);
+			}
+			
+			this.story.ConvertToStyledText (text, this.current_styles, this.current_properties, out styled_text);
+			this.story.InsertText (this.cursor, styled_text);
+			
+			//	Si le texte inséré contient un saut de paragraphe et que le style
+			//	en cours fait référence à un gestionnaire de paragraphe nécessitant
+			//	l'ajout de texte automatique, il faut encore générer le texte auto.
+			
+			Property[] properties = this.accumulated_properties;
+			Property[] mpps = Property.Filter (properties, Properties.WellKnownType.ManagedParagraph);
+			
+			if (mpps.Length > 0)
+			{
+				Properties.ManagedParagraphProperty mpp = mpps[0] as Properties.ManagedParagraphProperty;
+				
+				for (int i = 0; i < styled_text.Length; i++)
+				{
+					if (Internal.Navigator.IsParagraphSeparator (styled_text[i]))
+					{
+						int start = pos + i + 1;
+						
+						if (start < this.story.TextLength)
+						{
+							//	Ne génère un changement de style de paragraphe que si
+							//	le texte ne se termine pas par un paragraphe vide.
+							
+							starts.Push (start);
+						}
+					}
+				}
+				
+				if (starts.Count > 0)
+				{
+					ParagraphManagerList list = story.TextContext.ParagraphManagerList;
+					IParagraphManager manager = list[mpp.ManagerName];
+					
+					System.Diagnostics.Debug.Assert (manager != null, string.Format ("Cannot find ParagraphManager '{0}'", mpp.ManagerName));
+					
+					while (starts.Count > 0)
+					{
+						pos = (int) starts.Pop ();
+						
+						this.story.SetCursorPosition (this.temp_cursor, pos);
+						
+						manager.AttachToParagraph (this.story, this.temp_cursor, mpp);
+					}
+				}
+			}
+		}
+		
+		
 		private void InternalSetCursor(int new_pos, int new_dir)
 		{
 			//	Positionne le curseur à l'endroit spécifié, en utilisant la
@@ -3093,7 +3115,7 @@ again:
 				//	si celui-ci commence par du texte automatique, car on n'a pas le
 				//	droit d'insérer de texte avant celui-ci.
 				
-				if (this.SkipOverAutoText (ref new_pos, 1))
+				if (this.SkipOverAutoText (ref new_pos, Direction.Forward))
 				{
 					new_dir = -1;
 				}
@@ -3244,7 +3266,7 @@ again:
 			return 0;
 		}
 		
-		protected bool SkipOverAutoText(ref int pos, int direction)
+		protected bool SkipOverAutoText(ref int pos, Direction direction)
 		{
 			//	Saute le texte automatique et place le curseur temporaire avant/après
 			//	celui-ci. Si aucun texte automatique n'existe, le curseur temporaire
@@ -3252,7 +3274,7 @@ again:
 			
 			bool hit = false;
 			
-			if (direction > 0)
+			if (direction == Direction.Forward)
 			{
 				for (;;)
 				{
@@ -3285,7 +3307,7 @@ again:
 					hit  = true;
 				}
 			}
-			else if (direction < 0)
+			else if (direction == Direction.Backward)
 			{
 				for (;;)
 				{
@@ -3727,7 +3749,7 @@ again:
 		}
 		#endregion
 		
-		protected delegate bool MoveCallback(int offset, int direction);
+		protected delegate bool MoveCallback(int offset, Direction direction);
 		
 		public event OpletEventHandler			OpletExecuted;
 		public event EventHandler				TextChanged;

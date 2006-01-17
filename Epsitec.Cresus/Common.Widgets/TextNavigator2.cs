@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -25,8 +25,6 @@ namespace Epsitec.Common.Widgets
 		
 		public Text.TextNavigator				TextNavigator
 		{
-			//	Provisoire...
-			
 			get
 			{
 				return this.text_navigator;
@@ -229,7 +227,7 @@ namespace Epsitec.Common.Widgets
 				return true;
 			}
 			
-			this.text_navigator.Delete (-1);
+			this.text_navigator.Delete (Text.TextNavigator.Direction.Backward);
 			return true;
 		}
 		
@@ -243,7 +241,7 @@ namespace Epsitec.Common.Widgets
 				return true;
 			}
 			
-			this.text_navigator.Delete (1);
+			this.text_navigator.Delete (Text.TextNavigator.Direction.Forward);
 			return true;
 		}
 		
@@ -261,7 +259,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ClearVerticalMoveCache ();
-			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, -1);
+			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Backward);
 			
 			if (message.IsCtrlPressed)
 			{
@@ -279,7 +277,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ClearVerticalMoveCache ();
-			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, 1);
+			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Forward);
 			
 			if (message.IsCtrlPressed)
 			{
@@ -298,7 +296,7 @@ namespace Epsitec.Common.Widgets
 			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ClearVerticalMoveCache ();
 			
-			if (this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, -1))
+			if (this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Backward))
 			{
 				if (message.IsCtrlPressed == false)
 				{
@@ -323,7 +321,7 @@ namespace Epsitec.Common.Widgets
 			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ClearVerticalMoveCache ();
 			
-			if (this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, 1))
+			if (this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Forward))
 			{
 				if (message.IsCtrlPressed == false)
 				{
@@ -346,7 +344,7 @@ namespace Epsitec.Common.Widgets
 		private bool ProcessUpArrowKey(Message message)
 		{
 			this.PreProcessCursorMove (message.IsShiftPressed);
-			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, -1);
+			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Backward);
 			
 			if (message.IsCtrlPressed)
 			{
@@ -364,7 +362,7 @@ namespace Epsitec.Common.Widgets
 		private bool ProcessDownArrowKey(Message message)
 		{
 			this.PreProcessCursorMove (message.IsShiftPressed);
-			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, 1);
+			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Forward);
 			
 			if (message.IsCtrlPressed)
 			{
@@ -518,9 +516,11 @@ namespace Epsitec.Common.Widgets
 		
 		public void MoveTo(Text.TextNavigator.Target target, int count, int direction, bool shift)
 		{
+			Text.TextNavigator.Direction dir = (Text.TextNavigator.Direction) System.Math.Sign (direction);
+			
 			this.PreProcessCursorMove (shift);
 			this.ClearVerticalMoveCache ();
-			this.ChangeSelectionModeBeforeMove (shift, direction);
+			this.ChangeSelectionModeBeforeMove (shift, dir);
 			
 			this.text_navigator.MoveTo (target, count);
 		}
@@ -808,7 +808,7 @@ namespace Epsitec.Common.Widgets
 			return this.initial_x;
 		}
 		
-		private bool ChangeSelectionModeBeforeMove(bool selection, int direction)
+		private bool ChangeSelectionModeBeforeMove(bool selection, Text.TextNavigator.Direction direction)
 		{
 			//	Commence ou termine une sélection (appelé par ex. lors d'un
 			//	déplacement avec ou sans SHIFT pressé).

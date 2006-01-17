@@ -856,8 +856,12 @@ namespace Epsitec.Common.Text.Internal
 			Navigator.SetParagraphStyles (story, text, code, start, count, styles);
 			Navigator.GetManagedParagraphProperties (story, text[0], out new_props);
 			
-			story.WriteText (cursor, offset_start, text);
+			System.Diagnostics.Debug.Assert (cursor.Attachment == CursorAttachment.Temporary);
 			
+			int pos = story.GetCursorPosition (cursor);
+			story.WriteText (cursor, offset_start, text);
+			story.SetCursorPosition (cursor, pos);
+
 			//	Finalement, gère encore les changements de propriétés "ManagedParagraph"
 			//	afin d'ajouter ou de supprimer les textes automatiques :
 			

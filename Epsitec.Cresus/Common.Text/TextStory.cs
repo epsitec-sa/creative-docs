@@ -1847,6 +1847,8 @@ namespace Epsitec.Common.Text
 			{
 				this.position = position;
 				this.length   = length;
+				
+				this.RememberText ();
 			}
 			
 			public TextInsertOplet(TextStory story, int position, int length, ICursor cursor, int direction) : this (story, position, length)
@@ -1869,14 +1871,7 @@ namespace Epsitec.Common.Text
 			
 			public string ExtractText()
 			{
-				ulong[] buffer = new ulong[this.length];
-				this.story.ReadText (this.position, this.length, buffer);
-				
-				string text;
-				
-				TextConverter.ConvertToString (buffer, out text);
-				
-				return text;
+				return this.text;
 			}
 			
 			
@@ -1990,6 +1985,17 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			private void RememberText()
+			{
+				//	Génère le texte simple qui représente ce qui a été inséré.
+				
+				ulong[] buffer = new ulong[this.length];
+				this.story.ReadText (this.position, this.length, buffer);
+				
+				TextConverter.ConvertToString (buffer, out this.text);
+			}
+			
+			
 			private readonly ICursor			cursor;
 			
 			private int							position;
@@ -1997,6 +2003,7 @@ namespace Epsitec.Common.Text
 			private int							length;
 			
 			private CursorInfo[]				cursors;
+			private string						text;
 		}
 		#endregion
 		
@@ -2008,6 +2015,8 @@ namespace Epsitec.Common.Text
 				this.position = position;
 				this.length   = length;
 				this.cursors  = cursors;
+				
+				this.RememberText ();
 			}
 			
 			public TextDeleteOplet(TextStory story, int position, int length, CursorInfo[] cursors, ICursor cursor, int direction) : this (story, position, length, cursors)
@@ -2054,18 +2063,9 @@ namespace Epsitec.Common.Text
 			
 			public string ExtractText()
 			{
-				int undo_start = this.story.text_length + 1;
-				int undo_end   = undo_start + this.story.undo_length;
-				
-				ulong[] buffer = new ulong[this.length];
-				this.story.ReadText (undo_end - this.length, this.length, buffer);
-				
-				string text;
-				
-				TextConverter.ConvertToString (buffer, out text);
-				
-				return text;
+				return this.text;
 			}
+			
 			
 			public override Common.Support.IOplet Undo()
 			{
@@ -2178,12 +2178,27 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			private void RememberText()
+			{
+				//	Génère le texte simple qui représente ce qui a été détruit.
+				
+				int undo_start = this.story.text_length + 1;
+				int undo_end   = undo_start + this.story.undo_length;
+				
+				ulong[] buffer = new ulong[this.length];
+				this.story.ReadText (undo_end - this.length, this.length, buffer);
+				
+				TextConverter.ConvertToString (buffer, out this.text);
+			}
+			
+			
 			private readonly ICursor			cursor;
 			
 			private int							position;
 			private int							direction;
 			private int							length;
 			private CursorInfo[]				cursors;
+			private string						text;
 		}
 		#endregion
 		
