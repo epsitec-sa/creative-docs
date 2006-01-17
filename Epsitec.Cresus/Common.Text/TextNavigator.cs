@@ -2318,7 +2318,25 @@ again:
 		{
 			using (this.story.BeginAction ())
 			{
-				this.InternalInsertText (text);
+				string[] args = text.Split ((char) Unicode.Code.ParagraphSeparator);
+				int      last = args.Length-1;
+				
+				for (int i = 0; i < last; i++)
+				{
+					this.InternalInsertText (string.Concat (args[i], System.Char.ToString ((char) Unicode.Code.ParagraphSeparator)));
+					
+					if ((this.current_styles != null) &&
+						(this.current_styles.Length > 0) &&
+						(this.current_styles[0].NextStyle != null) &&
+						(this.current_styles[0].NextStyle != this.current_styles[0]) &&
+						(Internal.Navigator.IsParagraphEnd (this.story, this.cursor, 0)))
+					{
+						this.SetParagraphStyles (this.current_styles[0].NextStyle);
+					}
+				}
+				
+				this.InternalInsertText (args[last]);
+				
 				this.story.ValidateAction ();
 			}
 		}
@@ -3080,6 +3098,11 @@ process_ranges:
 			
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
 			System.Diagnostics.Debug.Assert (this.HasSelection == false);
+			
+			if (text.Length == 0)
+			{
+				return;
+			}
 			
 			ulong[] styled_text;
 			

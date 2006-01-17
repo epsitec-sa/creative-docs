@@ -254,6 +254,7 @@ namespace Epsitec.Common.Text
 			else
 			{
 				System.Diagnostics.Debug.Assert (style.TextStyleClass == next_style.TextStyleClass);
+				style.DefineNextStyle (next_style);
 			}
 		}
 		

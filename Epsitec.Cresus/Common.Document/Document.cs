@@ -1362,6 +1362,20 @@ namespace Epsitec.Common.Document
 			Text.TextStyle style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
 			
 			#region Experimental Code
+
+#if false
+			properties.Clear ();
+			properties.Add(new Text.Properties.FontProperty("Arial Black", Misc.DefaultFontStyle("Arial Black")));
+			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale*1.5, Text.Properties.SizeUnits.Points));
+			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
+			properties.Add(new Text.Properties.FontColorProperty(black));
+			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
+			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
+			Text.TextStyle title = this.textContext.StyleList.NewTextStyle("Title", Text.TextStyleClass.Paragraph, properties);
+			
+			this.textContext.StyleList.SetNextStyle(null, title, style);
+#endif
 			
 			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("bullet-1");
 			Text.Generator generator2 = this.textContext.GeneratorList.NewGenerator("num-1");
