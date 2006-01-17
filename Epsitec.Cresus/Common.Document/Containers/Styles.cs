@@ -15,17 +15,17 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.mainBook = new PaneBook(this);
 			this.mainBook.PaneBookStyle = PaneBookStyle.BottomTop;
-			this.mainBook.PaneBehaviour = PaneBookBehaviour.FollowMe;
+			this.mainBook.PaneBehaviour = PaneBookBehaviour.Draft;
 			this.mainBook.Dock = DockStyle.Fill;
 
 			this.topPage = new PanePage();
-			this.topPage.PaneRelativeSize = 40;
-			this.topPage.PaneMinSize = 155;
+			this.topPage.PaneRelativeSize = 60;
+			this.topPage.PaneMinSize = 155;  // minimun pour avoir 2 styles dans la liste
 			this.topPage.PaneElasticity = 0.5;
 			this.mainBook.Items.Add(this.topPage);
 
 			this.bottomPage = new PanePage();
-			this.bottomPage.PaneRelativeSize = 60;
+			this.bottomPage.PaneRelativeSize = 40;
 			this.bottomPage.PaneMinSize = 100;
 			this.bottomPage.PaneElasticity = 0.5;
 			this.mainBook.Items.Add(this.bottomPage);
