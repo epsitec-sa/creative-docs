@@ -411,7 +411,7 @@ namespace Epsitec.Common.Document.Containers
 				Properties.Aggregate agg = this.GetAggregate();
 				if ( agg != null )
 				{
-					type = this.GetSelectorGraphic();
+					type = Properties.Abstract.TypeName(this.SelectorName);
 					if ( type != Properties.Type.None )
 					{
 						if ( agg.Property(type) != null )
@@ -463,6 +463,9 @@ namespace Epsitec.Common.Document.Containers
 						}
 					}
 
+					double width = System.Math.Floor(this.selectorToolBar.Width/total);
+					width = System.Math.Min(width, 16);
+
 					for ( int i=0 ; i<100 ; i++ )
 					{
 						if ( table[i] != 0 )
@@ -471,7 +474,7 @@ namespace Epsitec.Common.Document.Containers
 							string icon = Properties.Abstract.IconText(table[i]);
 							string text = Properties.Abstract.Text(table[i]);
 
-							this.UpdateSelectorAdd(name, icon, text);
+							this.UpdateSelectorAdd(width, name, icon, text);
 						}
 					}
 				}
@@ -479,47 +482,51 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == "Paragraph" )
 			{
-				this.UpdateSelectorAdd("TextJustif", "TextJustif", Res.Strings.TextPanel.Justif.Title);
-				this.UpdateSelectorAdd("TextLeading", "TextLeading", Res.Strings.TextPanel.Leading.Title);
-				this.UpdateSelectorAdd("TextMargins", "TextMargins", Res.Strings.TextPanel.Margins.Title);
-				this.UpdateSelectorAdd("TextSpaces", "TextSpaces", Res.Strings.TextPanel.Spaces.Title);
-				this.UpdateSelectorAdd("TextKeep", "TextKeep", Res.Strings.TextPanel.Keep.Title);
-				this.UpdateSelectorAdd("TextFont", "TextFont", Res.Strings.TextPanel.Font.Title);
-				this.UpdateSelectorAdd("TextLanguage", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+				this.UpdateSelectorAdd(16, "TextJustif", "TextJustif", Res.Strings.TextPanel.Justif.Title);
+				this.UpdateSelectorAdd(16, "TextLeading", "TextLeading", Res.Strings.TextPanel.Leading.Title);
+				this.UpdateSelectorAdd(16, "TextMargins", "TextMargins", Res.Strings.TextPanel.Margins.Title);
+				this.UpdateSelectorAdd(16, "TextSpaces", "TextSpaces", Res.Strings.TextPanel.Spaces.Title);
+				this.UpdateSelectorAdd(16, "TextKeep", "TextKeep", Res.Strings.TextPanel.Keep.Title);
+				this.UpdateSelectorAdd(16, "TextFont", "TextFont", Res.Strings.TextPanel.Font.Title);
+				this.UpdateSelectorAdd(16, "TextLanguage", "TextLanguage", Res.Strings.TextPanel.Language.Title);
 			}
 
 			if ( this.category == "Character" )
 			{
-				this.UpdateSelectorAdd("TextFont", "TextFont", Res.Strings.TextPanel.Font.Title);
-				this.UpdateSelectorAdd("TextXline", "TextXline", Res.Strings.TextPanel.Xline.Title);
-				this.UpdateSelectorAdd("TextXscript", "TextXscript", Res.Strings.TextPanel.Xscript.Title);
-				this.UpdateSelectorAdd("TextLanguage", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+				this.UpdateSelectorAdd(16, "TextFont", "TextFont", Res.Strings.TextPanel.Font.Title);
+				this.UpdateSelectorAdd(16, "TextXline", "TextXline", Res.Strings.TextPanel.Xline.Title);
+				this.UpdateSelectorAdd(16, "TextXscript", "TextXscript", Res.Strings.TextPanel.Xscript.Title);
+				this.UpdateSelectorAdd(16, "TextLanguage", "TextLanguage", Res.Strings.TextPanel.Language.Title);
 			}
 		}
 
-		protected Properties.Type GetSelectorGraphic()
-		{
-			foreach ( Widget widget in this.selectorToolBar.Children.Widgets )
-			{
-				if ( widget.ActiveState == ActiveState.Yes )
-				{
-					return Properties.Abstract.TypeName(widget.Name);
-				}
-			}
-			return Properties.Type.None;
-		}
-
-		protected void UpdateSelectorAdd(string name, string icon, string text)
+		protected void UpdateSelectorAdd(double width, string name, string icon, string text)
 		{
 			Widgets.IconMarkButton button = new Widgets.IconMarkButton(this.selectorToolBar);
 			button.Name = name;
 			button.IconName = Misc.Icon(icon);
-			button.Width = 16;
+			button.Width = width;
 			button.Height = 16+8;
 			button.AutoFocus = false;
 			button.Dock = DockStyle.Left;
 			button.Clicked += new MessageEventHandler(this.HandleSelectorClicked);
 			ToolTip.Default.SetToolTip(button, text);
+		}
+
+		protected string SelectorName
+		{
+			//	Retourne le nom du bouton pour choisir le panneau sélectionné.
+			get
+			{
+				foreach ( Widget widget in this.selectorToolBar.Children.Widgets )
+				{
+					if ( widget.ActiveState == ActiveState.Yes )
+					{
+						return widget.Name;
+					}
+				}
+				return null;
+			}
 		}
 
 		protected void UpdateAggregateName()
@@ -628,7 +635,7 @@ namespace Epsitec.Common.Document.Containers
 				Properties.Aggregate agg = this.GetAggregate();
 				if ( agg == null )  return;
 
-				Properties.Type type = this.GetSelectorGraphic();
+				Properties.Type type = Properties.Abstract.TypeName(this.SelectorName);
 				if ( type == Properties.Type.None )  return;
 
 				Properties.Abstract property = agg.Property(type);
@@ -818,7 +825,7 @@ namespace Epsitec.Common.Document.Containers
 			Properties.Aggregate agg = this.GetAggregate();
 			if ( agg != null )
 			{
-				Properties.Type type = this.GetSelectorGraphic();
+				Properties.Type type = Properties.Abstract.TypeName(this.SelectorName);
 				Properties.Abstract property = agg.Property(type);
 				this.document.Modifier.OpletQueueEnable = false;
 				agg.Styles.Selected = agg.Styles.IndexOf(property);
