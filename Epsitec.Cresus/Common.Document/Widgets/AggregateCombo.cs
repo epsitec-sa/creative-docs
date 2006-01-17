@@ -361,6 +361,9 @@ namespace Epsitec.Common.Document.Widgets
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Margins margins = adorner.GeometryArrayMargins;
 
+			double width = 116+128+margins.Left+margins.Right;
+			double h = this.document.Aggregates.Count*32+17+margins.Bottom+margins.Top;
+
 			this.list = new AggregateList();
 			this.list.Document = this.document;
 			this.list.List = this.document.Aggregates;
@@ -372,10 +375,9 @@ namespace Epsitec.Common.Document.Widgets
 			this.list.IsHiliteColumn = false;
 			this.list.IsChildrensColumn = false;
 			this.list.IsInitialSelection = false;
+			this.list.FixWidth = width;
 			this.list.UpdateContent();
-			double width = 126+60+margins.Left+margins.Right;
 
-			double h = this.document.Aggregates.Count*32+17+margins.Bottom+margins.Top;
 			Point pos = this.MapClientToScreen(new Point(0, 1));
 			ScreenInfo info = ScreenInfo.Find(pos);
 			Rectangle area = info.WorkingArea;

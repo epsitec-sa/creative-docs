@@ -18,7 +18,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.StyleV |= CellArrayStyle.ScrollNorm;
 			this.StyleV |= CellArrayStyle.Separator;
-			this.StyleV |= CellArrayStyle.SelectCell;
+			this.StyleV |= CellArrayStyle.SelectLine;
 
 			this.DefHeight = 32;
 			this.headerHeight = 16;
@@ -199,6 +199,20 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public double FixWidth
+		{
+			//	Largeur fixe pour toutes les colonnes.
+			get
+			{
+				return this.fixWidth;
+			}
+
+			set
+			{
+				this.fixWidth = value;
+			}
+		}
+
 		public int SelectedPropertyRow
 		{
 			//	Retourne le rang de la ligne sélectionné.
@@ -232,12 +246,35 @@ namespace Epsitec.Common.Document.Widgets
 
 			if ( initialColumns != this.Columns )
 			{
+				double widthUsed = 0;
 				i = 0;
-				if ( this.isHiliteColumn )     this.SetWidthColumn(i++,  12);
-				if ( this.isOrderColumn )      this.SetWidthColumn(i++,  20);
-				                               this.SetWidthColumn(i++, 125);  // noms
-				if ( this.isChildrensColumn )  this.SetWidthColumn(i++,  20);
-				                               this.SetWidthColumn(i++,  60);  // échantillons
+				if ( this.isHiliteColumn )
+				{
+					this.SetWidthColumn(i++, 12);
+					widthUsed += 12;
+				}
+
+				if ( this.isOrderColumn )
+				{
+					this.SetWidthColumn(i++, 20);
+					widthUsed += 20;
+				}
+				
+				this.SetWidthColumn(i++, 115);  // noms
+				widthUsed += 115;
+				
+				if ( this.isChildrensColumn )
+				{
+					this.SetWidthColumn(i++, 20);
+					widthUsed += 20;
+				}
+
+				double w = 128;
+				if ( this.fixWidth != 0 )  // largeur fixe pour toutes les colonnes ?
+				{
+					w = this.fixWidth-widthUsed-7;  // largeur restante
+				}
+				this.SetWidthColumn(i++, w);  // échantillons
 			}
 
 			i = 0;
@@ -373,22 +410,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 
 			sm = this[fix, row].Children[0] as Sample;
-			if ( agg == null )
-			{
-				sm.Property = null;
-			}
-			else
-			{
-				if ( this.isDeep )
-				{
-					//?sm.Property = agg.Property(this.types[i], true);
-				}
-				else
-				{
-					//?sm.Property = agg.Property(this.types[i], false);
-					//?sm.Dots = (agg.Property(this.types[i], true) != null);
-				}
-			}
+			sm.Aggregate = agg;
 			this.SelectCell(fix, row, selected);
 			sm.Invalidate();
 		}
@@ -452,6 +474,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected Document						document;
 		protected UndoableList					list;
 		protected int							excludeRank = -1;
+		protected double						fixWidth = 0;
 		protected bool							isDeep = false;
 		protected bool							isNoneLine = false;
 		protected bool							isHiliteColumn = true;

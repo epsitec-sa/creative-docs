@@ -18,7 +18,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.StyleV |= CellArrayStyle.ScrollNorm;
 			this.StyleV |= CellArrayStyle.Separator;
-			this.StyleV |= CellArrayStyle.SelectCell;
+			this.StyleV |= CellArrayStyle.SelectLine;
 
 			this.DefHeight = 32;
 			this.headerHeight = 16;
