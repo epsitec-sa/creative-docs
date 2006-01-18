@@ -182,7 +182,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.textContext == null )
 				{
-					this.DefaultTextContext();
+					this.CreateDefaultTextContext();
 				}
 				return this.textContext;
 			}
@@ -1132,7 +1132,7 @@ namespace Epsitec.Common.Document
 				
 					if ( textContextData != null )
 					{
-						this.DefaultTextContext();
+						this.CreateDefaultTextContext();
 						this.textContext.Deserialize(textContextData);
 					}
 
@@ -1341,7 +1341,7 @@ namespace Epsitec.Common.Document
 
 
 		#region TextContext
-		protected void DefaultTextContext()
+		protected void CreateDefaultTextContext()
 		{
 			//	Crée le TextContext et les styles par défaut.
 			this.textContext = new Text.TextContext();
@@ -1384,7 +1384,7 @@ namespace Epsitec.Common.Document
 			
 			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant,   "", "", Text.Generator.Casing.Default, "\u25CF"));
 			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric,    "", "."));
-			generator3.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Alphabetic, "", ")", Text.Generator.Casing.Upper));
+			generator3.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Alphabetic, "", ")", Text.Generator.Casing.Lower));
 			
 			Text.ParagraphManagers.ItemListManager.Parameters items1 = new Text.ParagraphManagers.ItemListManager.Parameters();
 			Text.ParagraphManagers.ItemListManager.Parameters items2 = new Text.ParagraphManagers.ItemListManager.Parameters();
@@ -1408,11 +1408,13 @@ namespace Epsitec.Common.Document
 			Text.Properties.ManagedParagraphProperty itemList2 = new Text.Properties.ManagedParagraphProperty("ItemList", items2.Save());
 			Text.Properties.ManagedParagraphProperty itemList3 = new Text.Properties.ManagedParagraphProperty("ItemList", items3.Save());
 			
+			Text.Properties.ManagedInfoProperty contInfo = new Epsitec.Common.Text.Properties.ManagedInfoProperty("ItemList", "cont");
+			
 			Text.TextStyle[] baseStyles = new Text.TextStyle[] { style };
 			
 			this.textContext.StyleList.NewTextStyle("BulletRound",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
 			this.textContext.StyleList.NewTextStyle("BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2 }, baseStyles);
-			this.textContext.StyleList.NewTextStyle("BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3 }, baseStyles);
+			this.textContext.StyleList.NewTextStyle("BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, contInfo }, baseStyles);
 
 			#endregion
 			

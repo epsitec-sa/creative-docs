@@ -722,6 +722,22 @@ namespace Epsitec.Common.Text
 			return property != null;
 		}
 		
+		public void GetManagedInfo(ulong code, string name, out Properties.ManagedInfoProperty property)
+		{
+			Styles.CoreSettings  core_settings  = this.style_list[code];
+			Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
+			
+			if (extra_settings == null)
+			{
+				property = null;
+			}
+			else
+			{
+				property = Properties.ManagedInfoProperty.Find (extra_settings.GetProperties (), name);
+			}
+		}
+		
+		
 		public bool GetAutoText(ulong code, out Properties.AutoTextProperty property)
 		{
 			code = Internal.CharMarker.ExtractCoreAndSettings (code);

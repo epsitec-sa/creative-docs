@@ -188,17 +188,14 @@ namespace Epsitec.Common.Text
 			{
 				if (this.enumerator.MoveNext ())
 				{
-					Properties.GeneratorProperty generator_property;
-					Properties.MarginsProperty   margins_property;
+					Properties.GeneratorProperty   generator_property;
+					Properties.MarginsProperty     margins_property;
+					Properties.ManagedInfoProperty m_info_property;
 					
-					Cursors.TempCursor cursor = this.enumerator.Cursor;
-					Internal.CursorId  id     = cursor.CursorId;
-					int                pos    = this.text.GetCursorPosition (id);
-					
-					if (this.enumerator.RestartGenerator)
-					{
-						this.series.Restart ();
-					}
+					TextContext        context = this.story.TextContext;
+					Cursors.TempCursor cursor  = this.enumerator.Cursor;
+					Internal.CursorId  id      = cursor.CursorId;
+					int                pos     = this.text.GetCursorPosition (id);
 					
 					if (pos < this.story.TextLength)
 					{
@@ -210,7 +207,43 @@ namespace Epsitec.Common.Text
 						
 						generator_property = this.enumerator.GetGeneratorProperty (code);
 						
-						this.story.TextContext.GetMargins (code, out margins_property);
+						context.GetMargins (code, out margins_property);
+						context.GetManagedInfo (code, this.mpp.ManagerName, out m_info_property);
+						
+						if ((m_info_property != null) &&
+							(m_info_property.ManagerInfo != "auto"))
+						{
+							//	Mode spécifique :
+							//
+							//	- "cont" -----> continue indépendamment du contexte
+							//	- "set ..." --> reprend avec le numéro spécifié
+							
+							string mode = m_info_property.ManagerInfo;
+							
+							if (mode == "cont")
+							{
+								//	Continue normalement la séquence, indépendamment
+								//	des recommendations de l'énumérateur.
+							}
+							else if (mode.StartsWith ("set "))
+							{
+								//	TODO: réinitialiser le vecteur de départ
+							}
+							else
+							{
+								throw new System.NotSupportedException (string.Format ("ManagerInfo '{0}' not supported", mode));
+							}
+						}
+						else
+						{
+							//	Mode automatique : recommence la numérotation comme
+							//	recommandé par l'énumérateur...
+							
+							if (this.enumerator.RestartGenerator)
+							{
+								this.series.Restart ();
+							}
+						}
 						
 						System.Diagnostics.Debug.Assert (generator_property != null);
 						System.Diagnostics.Debug.Assert (generator_property.Generator == this.generator.Name);

@@ -609,6 +609,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\ManagedInfoProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\ManagedParagraphProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

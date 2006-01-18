@@ -65,6 +65,7 @@ namespace Epsitec.Common.Text.Wrappers
 				this.SynchronizeMargins ();
 				this.SynchronizeLeading ();
 				this.SynchronizeKeep ();
+				this.SynchronizeManaged ();
 				
 				this.defined_state.ClearValueFlags ();
 			}
@@ -379,6 +380,41 @@ namespace Epsitec.Common.Text.Wrappers
 				else
 				{
 					this.ClearUniformMetaProperty (ParagraphWrapper.Keep);
+				}
+			}
+		}
+		
+		private void SynchronizeManaged()
+		{
+			int defines = 0;
+			int changes = 0;
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			if (this.defined_state.IsValueFlagged (State.ItemListInfoProperty))
+			{
+				changes++;
+			}
+			if (this.defined_state.IsItemListInfoDefined)
+			{
+				string name = "ItemList";
+				string info = this.defined_state.ItemListInfo;
+				
+				list.Add (new Properties.ManagedInfoProperty (name, info));
+				
+				defines++;
+			}
+			
+			if (changes > 0)
+			{
+				if (defines > 0)
+				{
+					Property[] props = (Property[]) list.ToArray (typeof (Property));
+					this.DefineMetaProperty (ParagraphWrapper.Managed, 0, props);
+				}
+				else
+				{
+					this.ClearUniformMetaProperty (ParagraphWrapper.Managed);
 				}
 			}
 		}
@@ -955,6 +991,19 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			
+			public string							ItemListInfo
+			{
+				get
+				{
+					return (string) this.GetValue (State.ItemListInfoProperty);
+				}
+				set
+				{
+					this.SetValue (State.ItemListInfoProperty, value);
+				}
+			}
+			
+			
 			public bool								IsJustificationModeDefined
 			{
 				get
@@ -1118,6 +1167,15 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			
+			public bool								IsItemListInfoDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.ItemListInfoProperty);
+				}
+			}
+			
+			
 			public void ClearJustificationMode()
 			{
 				this.ClearValue (State.JustificationModeProperty);
@@ -1221,6 +1279,12 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			
+			public void ClearItemListInfo()
+			{
+				this.ClearValue (State.ItemListInfoProperty);
+			}
+			
+			
 			#region State Properties
 			public static readonly StateProperty	JustificationModeProperty = new StateProperty (typeof (State), "JustificationMode", JustificationMode.Unknown);
 			public static readonly StateProperty	HyphenationProperty = new StateProperty (typeof (State), "Hyphenation", false);
@@ -1240,6 +1304,7 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	KeepStartLinesProperty = new StateProperty (typeof (State), "KeepStartLines", 0);
 			public static readonly StateProperty	KeepEndLinesProperty = new StateProperty (typeof (State), "KeepEndLines", 0);
 			public static readonly StateProperty	ParagraphStartModeProperty = new StateProperty (typeof (State), "ParagraphStartMode", Properties.ParagraphStartMode.Undefined);
+			public static readonly StateProperty	ItemListInfoProperty = new StateProperty (typeof (State), "ItemListInfo", null);
 			public static readonly StateProperty	KeepWithNextParagraphProperty = new StateProperty (typeof (State), "KeepWithNextParagraph", false);
 			public static readonly StateProperty	KeepWithPreviousParagraphProperty = new StateProperty (typeof (State), "KeepWithPreviousParagraph", false);
 			#endregion
@@ -1252,5 +1317,6 @@ namespace Epsitec.Common.Text.Wrappers
 		private const string						Margins = "#Pa#Margins";
 		private const string						Leading = "#Pa#Leading";
 		private const string						Keep	= "#Pa#Keep";
+		private const string						Managed = "#Pa#Managed";
 	}
 }
