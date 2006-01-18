@@ -89,7 +89,8 @@ namespace Epsitec.Common.Document
 			this.surfaceRotationAngle = 0.0;
 			this.uniqueObjectId = 0;
 			this.uniqueAggregateId = 0;
-			this.uniqueTextStyleId = 0;
+			this.uniqueParagraphStyleId = 0;
+			this.uniqueCharacterStyleId = 0;
 			this.containOldText = false;
 
 			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
@@ -653,7 +654,8 @@ namespace Epsitec.Common.Document
 			this.textContext = doc.textContext; 
 			this.uniqueObjectId = doc.uniqueObjectId;
 			this.uniqueAggregateId = doc.uniqueAggregateId;
-			this.uniqueTextStyleId = doc.uniqueTextStyleId;
+			this.uniqueParagraphStyleId = doc.uniqueParagraphStyleId;
+			this.uniqueCharacterStyleId = doc.uniqueCharacterStyleId;
 			
 			if ( this.type == DocumentType.Pictogram )
 			{
@@ -1072,7 +1074,8 @@ namespace Epsitec.Common.Document
 
 			info.AddValue("UniqueObjectId", this.uniqueObjectId);
 			info.AddValue("UniqueAggregateId", this.uniqueAggregateId);
-			info.AddValue("UniqueTextStyleId", this.uniqueTextStyleId);
+			info.AddValue("UniqueParagraphStyleId", this.uniqueParagraphStyleId);
+			info.AddValue("UniqueCharacterStyleId", this.uniqueCharacterStyleId);
 			info.AddValue("Objects", this.objects);
 			info.AddValue("Properties", this.propertiesAuto);
 			info.AddValue("Aggregates", this.aggregates);
@@ -1164,11 +1167,13 @@ namespace Epsitec.Common.Document
 
 			if ( this.IsRevisionGreaterOrEqual(1,6,2) )
 			{
-				this.uniqueTextStyleId = info.GetInt32("UniqueTextStyleId");
+				this.uniqueParagraphStyleId = info.GetInt32("UniqueParagraphStyleId");
+				this.uniqueCharacterStyleId = info.GetInt32("UniqueCharacterStyleId");
 			}
 			else
 			{
-				this.uniqueTextStyleId = 0;
+				this.uniqueParagraphStyleId = 0;
+				this.uniqueCharacterStyleId = 0;
 			}
 		}
 
@@ -1481,10 +1486,16 @@ namespace Epsitec.Common.Document
 			return ++this.uniqueAggregateId;
 		}
 
-		public int GetNextUniqueTextStyleId()
+		public int GetNextUniqueParagraphStyleId()
 		{
-			//	Retourne le prochain identificateur unique pour les noms de style de texte.
-			return ++this.uniqueTextStyleId;
+			//	Retourne le prochain identificateur unique pour les noms de style de paragraphe.
+			return ++this.uniqueParagraphStyleId;
+		}
+
+		public int GetNextUniqueCharacterStyleId()
+		{
+			//	Retourne le prochain identificateur unique pour les noms de style de caractère.
+			return ++this.uniqueCharacterStyleId;
 		}
 		#endregion
 
@@ -2013,7 +2024,8 @@ namespace Epsitec.Common.Document
 		protected double								surfaceRotationAngle;
 		protected int									uniqueObjectId = 0;
 		protected int									uniqueAggregateId = 0;
-		protected int									uniqueTextStyleId = 0;
+		protected int									uniqueParagraphStyleId = 0;
+		protected int									uniqueCharacterStyleId = 0;
 		protected int									selectedTextStyle = 0;
 		protected Text.TextContext						textContext;
 		protected Widgets.HRuler						hRuler;

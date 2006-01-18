@@ -797,7 +797,7 @@ namespace Epsitec.Common.Document.Containers
 				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(null, Common.Text.TextStyleClass.Paragraph, properties);
 
 				this.document.SelectedTextStyle ++;
-				this.document.TextContext.StyleList.StyleMap.SetCaption(style, this.document.Modifier.GetNextTextStyleName);
+				this.document.TextContext.StyleList.StyleMap.SetCaption(style, this.document.Modifier.GetNextParagraphStyleName);
 				this.document.TextContext.StyleList.StyleMap.SetRank(style, this.document.SelectedTextStyle);
 
 				this.SetDirtyContent();
@@ -860,8 +860,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank1);
 
 				this.document.SelectedTextStyle = sel-1;
-				this.document.Notifier.NotifyTextStyleChanged(style1);
-				this.document.Notifier.NotifyTextStyleChanged(style2);
+				this.SetDirtyContent();
 			}
 		}
 
@@ -888,8 +887,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank1);
 
 				this.document.SelectedTextStyle = sel+1;
-				this.document.Notifier.NotifyTextStyleChanged(style1);
-				this.document.Notifier.NotifyTextStyleChanged(style2);
+				this.SetDirtyContent();
 			}
 		}
 

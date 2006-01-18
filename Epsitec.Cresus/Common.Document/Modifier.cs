@@ -6121,16 +6121,25 @@ namespace Epsitec.Common.Document
 			//	Donne le prochain nom unique d'agrégat.
 			get
 			{
-				return string.Format(Res.Strings.Aggregate.Name, this.document.GetNextUniqueAggregateId());
+				return string.Format(Res.Strings.Style.Aggregate.Name, this.document.GetNextUniqueAggregateId());
 			}
 		}
 
-		public string GetNextTextStyleName
+		public string GetNextParagraphStyleName
 		{
-			//	Donne le prochain nom unique de style de texte.
+			//	Donne le prochain nom unique de style de paragraphe.
 			get
 			{
-				return string.Format(Res.Strings.Aggregate.Name, this.document.GetNextUniqueTextStyleId());
+				return string.Format(Res.Strings.Style.Paragraph.Name, this.document.GetNextUniqueParagraphStyleId());
+			}
+		}
+
+		public string GetNextCharacterStyleName
+		{
+			//	Donne le prochain nom unique de style de caractère.
+			get
+			{
+				return string.Format(Res.Strings.Style.Character.Name, this.document.GetNextUniqueCharacterStyleId());
 			}
 		}
 		#endregion
