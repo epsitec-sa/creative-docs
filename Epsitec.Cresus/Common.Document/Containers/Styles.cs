@@ -933,7 +933,7 @@ namespace Epsitec.Common.Document.Containers
 				int rank2 = this.document.TextContext.StyleList.StyleMap.GetRank(style2);
 
 				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank2);
-				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank1);
+				this.document.TextContext.StyleList.StyleMap.SetRank(style2, rank1);
 
 				this.document.SelectedParagraphStyle = sel-1;
 				this.SetDirtyContent();
@@ -950,7 +950,7 @@ namespace Epsitec.Common.Document.Containers
 				int rank2 = this.document.TextContext.StyleList.StyleMap.GetRank(style2);
 
 				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank2);
-				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank1);
+				this.document.TextContext.StyleList.StyleMap.SetRank(style2, rank1);
 
 				this.document.SelectedCharacterStyle = sel-1;
 				this.SetDirtyContent();
@@ -977,7 +977,7 @@ namespace Epsitec.Common.Document.Containers
 				int rank2 = this.document.TextContext.StyleList.StyleMap.GetRank(style2);
 
 				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank2);
-				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank1);
+				this.document.TextContext.StyleList.StyleMap.SetRank(style2, rank1);
 
 				this.document.SelectedParagraphStyle = sel+1;
 				this.SetDirtyContent();
@@ -994,7 +994,7 @@ namespace Epsitec.Common.Document.Containers
 				int rank2 = this.document.TextContext.StyleList.StyleMap.GetRank(style2);
 
 				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank2);
-				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank1);
+				this.document.TextContext.StyleList.StyleMap.SetRank(style2, rank1);
 
 				this.document.SelectedCharacterStyle = sel+1;
 				this.SetDirtyContent();
