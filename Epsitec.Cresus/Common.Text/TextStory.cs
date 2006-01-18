@@ -286,7 +286,8 @@ namespace Epsitec.Common.Text
 							this.oplet_queue.PurgeSingleUndo ();
 						}
 					}
-					else if (oplets_1.Length == 1)
+					else if ((oplets_1.Length == 1) &&
+						/**/ (oplets_2.Length > 0))
 					{
 						if (this.MergeOplets (oplets_2[oplets_2.Length-1], oplets_1[0]))
 						{
