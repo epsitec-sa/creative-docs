@@ -1003,6 +1003,9 @@ again:
 		#region Private Tabulator Manipulation Methods
 		private string[] GetParagraphTabTags()
 		{
+			//	Retourne les tabulateurs définis dans un paragraphe en se basant
+			//	sur la propriété TabsProperty.
+			
 			System.Collections.ArrayList tabs_list = new System.Collections.ArrayList ();
 			System.Collections.ArrayList tags_list = new System.Collections.ArrayList ();
 			
@@ -1065,6 +1068,9 @@ again:
 		
 		private string[] GetTextTabTags()
 		{
+			//	Retourne la liste des tabulateurs en se basant sur les marques
+			//	de tabulation elles-mêmes.
+			
 			System.Collections.ArrayList tags_list = new System.Collections.ArrayList ();
 			
 			int length = 0;
@@ -1127,7 +1133,10 @@ again:
 			if (length > 0)
 			{
 				ulong[] text = new ulong[length];
+				
 				this.story.ReadText (start, length, text);
+				
+				TextContext context = this.TextContext;
 				
 				for (int i = 0; i < length; i++)
 				{
@@ -1137,15 +1146,25 @@ again:
 						//	analysant la propriété attachée :
 						
 						Properties.TabProperty property;
+						Properties.AutoTextProperty auto_text;
 						
-						this.TextContext.GetTab (text[i], out property);
+						ulong code = text[i];
+						
+						context.GetTab (code, out property);
+						context.GetAutoText (code, out auto_text);
 						
 						System.Diagnostics.Debug.Assert (property != null);
 						System.Diagnostics.Debug.Assert (property.TabTag != null);
 						
-						if (list.Contains (property.TabTag) == false)
+						if (auto_text == null)
 						{
-							list.Add (property.TabTag);
+							//	Evite de lister les tabulateurs qui sont le résultat
+							//	d'un texte automatique.
+							
+							if (list.Contains (property.TabTag) == false)
+							{
+								list.Add (property.TabTag);
+							}
 						}
 					}
 				}
