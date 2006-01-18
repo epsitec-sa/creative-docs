@@ -70,6 +70,17 @@ namespace Epsitec.Common.Document.Containers
 			this.Update();  // màj immédiate si l'agrégat est visible
 		}
 
+		public void SetDirtyTextStyles(System.Collections.ArrayList textStyleList)
+		{
+			//	Indique qu'il faudra mettre à jour les valeurs contenues.
+			this.dirtyTextStyles.Clear();
+			foreach ( Text.TextStyle textStyle in textStyleList )
+			{
+				this.dirtyTextStyles.Add(textStyle);
+			}
+			this.Update();  // màj immédiate si le style est visible
+		}
+
 		public void SetDirtyObject(Objects.Abstract obj)
 		{
 			//	Indique qu'il faudra mettre à jour un objet.
@@ -95,6 +106,7 @@ namespace Epsitec.Common.Document.Containers
 				this.isDirtyContent = false;  // propre
 				this.dirtyProperties.Clear();  // les propriétés sont forcément aussi à jour
 				this.dirtyAggregates.Clear();  // les propriétés sont forcément aussi à jour
+				this.dirtyTextStyles.Clear();  // les propriétés sont forcément aussi à jour
 				this.dirtyObject = null;
 				this.isDirtySelNames = false;
 			}
@@ -109,6 +121,12 @@ namespace Epsitec.Common.Document.Containers
 			{
 				this.DoUpdateAggregates(this.dirtyAggregates);
 				this.dirtyAggregates.Clear();  // propre
+			}
+
+			if ( this.dirtyTextStyles.Count > 0 )
+			{
+				this.DoUpdateTextStyles(this.dirtyTextStyles);
+				this.dirtyTextStyles.Clear();  // propre
 			}
 
 			if ( this.dirtyObject != null )
@@ -139,6 +157,11 @@ namespace Epsitec.Common.Document.Containers
 			//	Effectue la mise à jour des agrégats.
 		}
 
+		protected virtual void DoUpdateTextStyles(System.Collections.ArrayList textStyleList)
+		{
+			//	Effectue la mise à jour des styles de texte.
+		}
+
 		protected virtual void DoUpdateObject(Objects.Abstract obj)
 		{
 			//	Effectue la mise à jour d'un objet.
@@ -167,6 +190,7 @@ namespace Epsitec.Common.Document.Containers
 		protected bool							isDirtyContent;
 		protected System.Collections.ArrayList	dirtyProperties = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	dirtyAggregates = new System.Collections.ArrayList();
+		protected System.Collections.ArrayList	dirtyTextStyles = new System.Collections.ArrayList();
 		protected Objects.Abstract				dirtyObject = null;
 		protected bool							isDirtySelNames;
 	}

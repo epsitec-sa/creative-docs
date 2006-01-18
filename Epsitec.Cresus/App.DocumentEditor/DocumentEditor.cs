@@ -3882,7 +3882,6 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.ShaperChanged          += new SimpleEventHandler(this.HandleShaperChanged);
 			this.CurrentDocument.Notifier.TextChanged            += new SimpleEventHandler(this.HandleTextChanged);
 			this.CurrentDocument.Notifier.StyleChanged           += new SimpleEventHandler(this.HandleStyleChanged);
-			this.CurrentDocument.Notifier.TextStyleChanged       += new SimpleEventHandler(this.HandleTextStyleChanged);
 			this.CurrentDocument.Notifier.PagesChanged           += new SimpleEventHandler(this.HandlePagesChanged);
 			this.CurrentDocument.Notifier.LayersChanged          += new SimpleEventHandler(this.HandleLayersChanged);
 			this.CurrentDocument.Notifier.PageChanged            += new ObjectEventHandler(this.HandlePageChanged);
@@ -3899,6 +3898,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.DebugChanged           += new SimpleEventHandler(this.HandleDebugChanged);
 			this.CurrentDocument.Notifier.PropertyChanged        += new PropertyEventHandler(this.HandlePropertyChanged);
 			this.CurrentDocument.Notifier.AggregateChanged       += new AggregateEventHandler(this.HandleAggregateChanged);
+			this.CurrentDocument.Notifier.TextStyleChanged       += new TextStyleEventHandler(this.HandleTextStyleChanged);
 			this.CurrentDocument.Notifier.SelNamesChanged        += new SimpleEventHandler(this.HandleSelNamesChanged);
 			this.CurrentDocument.Notifier.DrawChanged            += new RedrawEventHandler(this.HandleDrawChanged);
 			this.CurrentDocument.Notifier.RibbonCommand          += new RibbonEventHandler(this.HandleRibbonCommand);
@@ -4446,13 +4446,6 @@ namespace Epsitec.App.DocumentEditor
 			di.containerStyles.SetDirtyContent();
 		}
 
-		private void HandleTextStyleChanged()
-		{
-			//	Appelé par le document lorsqu'un style de texte a changé.
-			if ( !this.IsCurrentDocument )  return;
-			DocumentInfo di = this.CurrentDocumentInfo;
-		}
-
 		private void HandlePagesChanged()
 		{
 			//	Appelé par le document lorsque les pages ont changé.
@@ -4795,6 +4788,16 @@ namespace Epsitec.App.DocumentEditor
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerPrincipal.SetDirtyAggregates(aggregateList);
 				di.containerStyles.SetDirtyAggregates(aggregateList);
+			}
+		}
+
+		private void HandleTextStyleChanged(System.Collections.ArrayList textStyleList)
+		{
+			//	Appelé lorsqu'un agrégat a changé.
+			if ( this.IsCurrentDocument )
+			{
+				DocumentInfo di = this.CurrentDocumentInfo;
+				di.containerStyles.SetDirtyTextStyles(textStyleList);
 			}
 		}
 
@@ -5232,7 +5235,6 @@ namespace Epsitec.App.DocumentEditor
 				this.HandleSaveChanged();
 				this.HandleSelectionChanged();
 				this.HandleStyleChanged();
-				this.HandleTextStyleChanged();
 				this.HandlePagesChanged();
 				this.HandleLayersChanged();
 				this.HandleUndoRedoChanged();

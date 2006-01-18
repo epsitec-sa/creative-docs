@@ -89,6 +89,7 @@ namespace Epsitec.Common.Document
 			this.surfaceRotationAngle = 0.0;
 			this.uniqueObjectId = 0;
 			this.uniqueAggregateId = 0;
+			this.uniqueTextStyleId = 0;
 			this.containOldText = false;
 
 			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
@@ -652,6 +653,7 @@ namespace Epsitec.Common.Document
 			this.textContext = doc.textContext; 
 			this.uniqueObjectId = doc.uniqueObjectId;
 			this.uniqueAggregateId = doc.uniqueAggregateId;
+			this.uniqueTextStyleId = doc.uniqueTextStyleId;
 			
 			if ( this.type == DocumentType.Pictogram )
 			{
@@ -1070,6 +1072,7 @@ namespace Epsitec.Common.Document
 
 			info.AddValue("UniqueObjectId", this.uniqueObjectId);
 			info.AddValue("UniqueAggregateId", this.uniqueAggregateId);
+			info.AddValue("UniqueTextStyleId", this.uniqueTextStyleId);
 			info.AddValue("Objects", this.objects);
 			info.AddValue("Properties", this.propertiesAuto);
 			info.AddValue("Aggregates", this.aggregates);
@@ -1157,6 +1160,15 @@ namespace Epsitec.Common.Document
 			{
 				this.aggregates = new UndoableList(Document.ReadDocument, UndoableListType.AggregatesInsideDocument);
 				this.uniqueAggregateId = 0;
+			}
+
+			if ( this.IsRevisionGreaterOrEqual(1,6,2) )
+			{
+				this.uniqueTextStyleId = info.GetInt32("UniqueTextStyleId");
+			}
+			else
+			{
+				this.uniqueTextStyleId = 0;
 			}
 		}
 
@@ -1420,6 +1432,7 @@ namespace Epsitec.Common.Document
 			
 			this.textContext.DefaultStyle = style;
 			this.textContext.StyleList.StyleMap.SetRank(style, 0);
+			this.textContext.StyleList.StyleMap.SetCaption(style, "Base");
 
 			this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
 		}
@@ -1436,7 +1449,21 @@ namespace Epsitec.Common.Document
 			//	Liste des styles de texte de ce document.
 			get
 			{
-				return this.textContext.StyleList.StyleMap.GetSortedStyles();
+				return this.TextContext.StyleList.StyleMap.GetSortedStyles();
+			}
+		}
+
+		public int SelectedTextStyle
+		{
+			//	Style de texte sélectionné.
+			get
+			{
+				return this.selectedTextStyle;
+			}
+
+			set
+			{
+				this.selectedTextStyle = value;
 			}
 		}
 		#endregion
@@ -1452,6 +1479,12 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne le prochain identificateur unique pour les noms d'agrégats.
 			return ++this.uniqueAggregateId;
+		}
+
+		public int GetNextUniqueTextStyleId()
+		{
+			//	Retourne le prochain identificateur unique pour les noms de style de texte.
+			return ++this.uniqueTextStyleId;
 		}
 		#endregion
 
@@ -1980,6 +2013,8 @@ namespace Epsitec.Common.Document
 		protected double								surfaceRotationAngle;
 		protected int									uniqueObjectId = 0;
 		protected int									uniqueAggregateId = 0;
+		protected int									uniqueTextStyleId = 0;
+		protected int									selectedTextStyle = 0;
 		protected Text.TextContext						textContext;
 		protected Widgets.HRuler						hRuler;
 		protected Widgets.VRuler						vRuler;

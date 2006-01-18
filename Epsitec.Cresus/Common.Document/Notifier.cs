@@ -8,6 +8,7 @@ namespace Epsitec.Common.Document
 	public delegate void ObjectEventHandler(Objects.Abstract obj);
 	public delegate void PropertyEventHandler(System.Collections.ArrayList propertyList);
 	public delegate void AggregateEventHandler(System.Collections.ArrayList aggregateList);
+	public delegate void TextStyleEventHandler(System.Collections.ArrayList textStyleList);
 	public delegate void RedrawEventHandler(Viewer viewer, Rectangle rect);
 	public delegate void RibbonEventHandler(string name);
 	public delegate void SettingsEventHandler(string book, string tab);
@@ -55,7 +56,6 @@ namespace Epsitec.Common.Document
 			this.textChanged = true;
 			this.textCursorChanged = true;
 			this.styleChanged = true;
-			this.textStyleChanged = true;
 			this.pagesChanged = true;
 			this.layersChanged = true;
 			this.undoRedoChanged = true;
@@ -182,14 +182,6 @@ namespace Epsitec.Common.Document
 			//	Indique que les styles ont changé.
 			if ( !this.enable )  return;
 			this.styleChanged = true;
-			this.NotifyAsync();
-		}
-
-		public void NotifyTextStyleChanged()
-		{
-			//	Indique que les styles des textes ont changé.
-			if ( !this.enable )  return;
-			this.textStyleChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -330,6 +322,17 @@ namespace Epsitec.Common.Document
 			if ( !this.aggregateList.Contains(agg) )
 			{
 				this.aggregateList.Add(agg);
+			}
+			this.NotifyAsync();
+		}
+
+		public void NotifyTextStyleChanged(Text.TextStyle textStyle)
+		{
+			//	Indique qu'un style de texte a changé.
+			if ( !this.enable )  return;
+			if ( !this.textStyleList.Contains(textStyle) )
+			{
+				this.textStyleList.Add(textStyle);
 			}
 			this.NotifyAsync();
 		}
@@ -479,12 +482,6 @@ namespace Epsitec.Common.Document
 				this.styleChanged = false;
 			}
 
-			if ( this.textStyleChanged )
-			{
-				this.OnTextStyleChanged();
-				this.textStyleChanged = false;
-			}
-
 			if ( this.pagesChanged )
 			{
 				this.OnPagesChanged();
@@ -579,6 +576,12 @@ namespace Epsitec.Common.Document
 			{
 				this.OnAggregateChanged(this.aggregateList);
 				this.aggregateList.Clear();
+			}
+
+			if ( this.textStyleList.Count > 0 )
+			{
+				this.OnTextStyleChanged(this.textStyleList);
+				this.textStyleList.Clear();
 			}
 
 			if ( this.selNamesChanged )
@@ -691,14 +694,6 @@ namespace Epsitec.Common.Document
 			if ( this.StyleChanged != null )  // qq'un écoute ?
 			{
 				this.StyleChanged();
-			}
-		}
-
-		protected void OnTextStyleChanged()
-		{
-			if ( this.TextStyleChanged != null )  // qq'un écoute ?
-			{
-				this.TextStyleChanged();
 			}
 		}
 
@@ -830,6 +825,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnTextStyleChanged(System.Collections.ArrayList textStyleList)
+		{
+			if ( this.TextStyleChanged != null )  // qq'un écoute ?
+			{
+				this.TextStyleChanged(textStyleList);
+			}
+		}
+
 		protected void OnSelNamesChanged()
 		{
 			if ( this.SelNamesChanged != null )  // qq'un écoute ?
@@ -875,7 +878,6 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			TextChanged;
 		public event SimpleEventHandler			TextCursorChanged;
 		public event SimpleEventHandler			StyleChanged;
-		public event SimpleEventHandler			TextStyleChanged;
 		public event SimpleEventHandler			PagesChanged;
 		public event SimpleEventHandler			LayersChanged;
 		public event ObjectEventHandler			PageChanged;
@@ -892,6 +894,7 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			DebugChanged;
 		public event PropertyEventHandler		PropertyChanged;
 		public event AggregateEventHandler		AggregateChanged;
+		public event TextStyleEventHandler		TextStyleChanged;
 		public event SimpleEventHandler			SelNamesChanged;
 		public event RedrawEventHandler			DrawChanged;
 		public event RibbonEventHandler			RibbonCommand;
@@ -912,7 +915,6 @@ namespace Epsitec.Common.Document
 		protected bool							textChanged;
 		protected bool							textCursorChanged;
 		protected bool							styleChanged;
-		protected bool							textStyleChanged;
 		protected bool							pagesChanged;
 		protected bool							layersChanged;
 		protected Objects.Abstract				pageObject;
@@ -929,6 +931,7 @@ namespace Epsitec.Common.Document
 		protected bool							debugChanged;
 		protected System.Collections.ArrayList	propertyList = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	aggregateList = new System.Collections.ArrayList();
+		protected System.Collections.ArrayList	textStyleList = new System.Collections.ArrayList();
 		protected bool							selNamesChanged;
 	}
 }

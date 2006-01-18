@@ -1972,7 +1972,6 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifySelectionChanged();
 			this.document.Notifier.NotifyTextChanged();
 			this.document.Notifier.NotifyStyleChanged();
-			this.document.Notifier.NotifyTextStyleChanged();
 			this.document.Notifier.NotifyUndoRedoChanged();
 			this.document.Notifier.NotifyArea();
 		}
@@ -1999,7 +1998,6 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifySelectionChanged();
 			this.document.Notifier.NotifyTextChanged();
 			this.document.Notifier.NotifyStyleChanged();
-			this.document.Notifier.NotifyTextStyleChanged();
 			this.document.Notifier.NotifyUndoRedoChanged();
 			this.document.Notifier.NotifyArea();
 		}
@@ -5616,7 +5614,7 @@ namespace Epsitec.Common.Document
 
 			if ( name == "" )
 			{
-				name = this.GetNextAggregateName();  // nom unique
+				name = this.GetNextAggregateName;  // nom unique
 			}
 			agg.AggregateName = name;
 
@@ -5648,7 +5646,7 @@ namespace Epsitec.Common.Document
 
 			if ( name == "" )
 			{
-				name = this.GetNextAggregateName();  // nom unique
+				name = this.GetNextAggregateName;  // nom unique
 			}
 			agg.AggregateName = name;
 
@@ -6118,10 +6116,22 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected string GetNextAggregateName()
+		protected string GetNextAggregateName
 		{
 			//	Donne le prochain nom unique d'agrégat.
-			return string.Format(Res.Strings.Aggregate.Name, this.document.GetNextUniqueAggregateId());
+			get
+			{
+				return string.Format(Res.Strings.Aggregate.Name, this.document.GetNextUniqueAggregateId());
+			}
+		}
+
+		public string GetNextTextStyleName
+		{
+			//	Donne le prochain nom unique de style de texte.
+			get
+			{
+				return string.Format(Res.Strings.Aggregate.Name, this.document.GetNextUniqueTextStyleId());
+			}
 		}
 		#endregion
 

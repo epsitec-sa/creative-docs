@@ -1,6 +1,7 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Text;
 
 namespace Epsitec.Common.Document.Widgets
 {
@@ -14,9 +15,9 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		public UndoableList List
+		public Text.TextStyle[] List
 		{
-			//	Liste des aggrégats représentés dans la liste.
+			//	Liste des styles de texte représentés dans la liste.
 			get
 			{
 				return this.list;
@@ -35,7 +36,7 @@ namespace Epsitec.Common.Document.Widgets
 			get
 			{
 				if ( this.list == null )  return 0;
-				return this.list.Count;
+				return this.list.Length;
 			}
 		}
 
@@ -50,7 +51,7 @@ namespace Epsitec.Common.Document.Widgets
 				}
 				else
 				{
-					return this.list.Selected;
+					return this.document.SelectedTextStyle;
 				}
 			}
 		}
@@ -64,23 +65,14 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else
 			{
-				Properties.Aggregate agg = this.list[rank] as Properties.Aggregate;
-				return agg.AggregateName;
+				Text.TextStyle style = this.list[rank];
+				return this.document.TextContext.StyleList.StyleMap.GetCaption(style);
 			}
 		}
 
 		protected override string ListChildrensCount(int rank)
 		{
 			//	Nombre d'enfants d'une ligne de la liste.
-			if ( rank != -1 && this.list != null )
-			{
-				Properties.Aggregate agg = this.list[rank] as Properties.Aggregate;
-				int count = agg.Childrens.Count;
-				if ( count != 0 )
-				{
-					return count.ToString();
-				}
-			}
 			return "";
 		}
 
@@ -97,17 +89,17 @@ namespace Epsitec.Common.Document.Widgets
 
 			if ( rank == -1 || this.list == null )
 			{
-				sm.Aggregate = null;
+				sm.TextStyle = null;
 			}
 			else
 			{
-				sm.Aggregate = this.list[rank] as Properties.Aggregate;
+				sm.TextStyle = this.list[rank];
 			}
 
 			sm.Invalidate();
 		}
 
 
-		protected UndoableList					list;
+		protected Text.TextStyle[]				list;
 	}
 }
