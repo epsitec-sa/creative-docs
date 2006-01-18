@@ -1375,6 +1375,7 @@ namespace Epsitec.Common.Document
 			Text.TextStyle title = this.textContext.StyleList.NewTextStyle("Title", Text.TextStyleClass.Paragraph, properties);
 			
 			this.textContext.StyleList.SetNextStyle(null, title, style);
+			style = title;
 #endif
 			
 			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("bullet-1");
