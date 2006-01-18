@@ -5614,7 +5614,7 @@ namespace Epsitec.Common.Document
 
 			if ( name == "" )
 			{
-				name = this.GetNextAggregateName;  // nom unique
+				name = this.GetNextTextStyleName(StyleCategory.Graphic);  // nom unique
 			}
 			agg.AggregateName = name;
 
@@ -5646,7 +5646,7 @@ namespace Epsitec.Common.Document
 
 			if ( name == "" )
 			{
-				name = this.GetNextAggregateName;  // nom unique
+				name = this.GetNextTextStyleName(StyleCategory.Graphic);  // nom unique
 			}
 			agg.AggregateName = name;
 
@@ -6116,26 +6116,19 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected string GetNextAggregateName
-		{
-			//	Donne le prochain nom unique d'agrégat.
-			get
-			{
-				return string.Format(Res.Strings.Style.Aggregate.Name, this.document.GetNextUniqueAggregateId());
-			}
-		}
-
 		public string GetNextTextStyleName(StyleCategory category)
 		{
-			//	Donne le prochain nom unique de style de paragraphe ou de caractère.
-			if ( category == StyleCategory.Paragraph )
+			//	Donne le prochain nom unique d'un style.
+			switch ( category )
 			{
-				return string.Format(Res.Strings.Style.Paragraph.Name, this.document.GetNextUniqueParagraphStyleId());
-			}
-
-			if ( category == StyleCategory.Character )
-			{
-				return string.Format(Res.Strings.Style.Character.Name, this.document.GetNextUniqueCharacterStyleId());
+				case StyleCategory.Graphic:
+					return string.Format(Res.Strings.Style.Aggregate.Name, this.document.GetNextUniqueAggregateId());
+				
+				case StyleCategory.Paragraph:
+					return string.Format(Res.Strings.Style.Paragraph.Name, this.document.GetNextUniqueParagraphStyleId());
+				
+				case StyleCategory.Character:
+					return string.Format(Res.Strings.Style.Character.Name, this.document.GetNextUniqueCharacterStyleId());
 			}
 			
 			throw new System.ArgumentException("GetNextTextStyleName(" + category.ToString() + ")");

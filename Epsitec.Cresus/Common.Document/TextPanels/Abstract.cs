@@ -39,6 +39,22 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
+		public static Abstract Create(string name, Document document)
+		{
+			//	Crée un nouveau panneau.
+			if ( name == "Justif"   )  return new Justif(document);
+			if ( name == "Leading"  )  return new Leading(document);
+			if ( name == "Margins"  )  return new Margins(document);
+			if ( name == "Spaces"   )  return new Spaces(document);
+			if ( name == "Keep"     )  return new Keep(document);
+			if ( name == "Font"     )  return new Font(document);
+			if ( name == "Xline"    )  return new Xline(document);
+			if ( name == "Xscript"  )  return new Xscript(document);
+			if ( name == "Box"      )  return new Box(document);
+			if ( name == "Language" )  return new Language(document);
+			return null;
+		}
+		
 		public static bool IsFilterShow(string panel, string filter)
 		{
 			//	Indique si ce panneau est visible pour un filtre donné.
@@ -263,6 +279,19 @@ namespace Epsitec.Common.Document.TextPanels
 			Drawing.Color color = Drawing.Color.FromARGB(1.0-this.backgroundIntensity, 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
 #endif
 			graphics.RenderSolid(color);
+
+			if ( false )
+			{
+				Rectangle part = rect;
+				part.Width = this.extendedZoneWidth;
+				graphics.AddFilledRectangle(part);
+				graphics.RenderSolid(DrawingContext.ColorStyle);
+
+				part.Left = rect.Left+this.extendedZoneWidth;
+				part.Right = rect.Right;
+				graphics.AddFilledRectangle(part);
+				graphics.RenderSolid(DrawingContext.ColorStyleBack);
+			}
 
 			rect.Deflate(0.5, 0.5);
 			graphics.AddLine(rect.Left, rect.Bottom-0.5, rect.Left, rect.Top-0.5);

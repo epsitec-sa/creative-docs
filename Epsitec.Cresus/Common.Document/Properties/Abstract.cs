@@ -97,8 +97,19 @@ namespace Epsitec.Common.Document.Properties
 		static public Type TypeName(string typeName)
 		{
 			//	Retourne le type de propriété d'après son nom.
-			if ( typeName == null )  return Type.None;
-			return (Type) System.Enum.Parse(typeof(Type), typeName);
+			if ( typeName == null )
+			{
+				return Type.None;
+			}
+
+			try
+			{
+				return (Type) System.Enum.Parse(typeof(Type), typeName);
+			}
+			catch
+			{
+				return Type.None;
+			}
 		}
 
 		static public int SortOrder(Type type)

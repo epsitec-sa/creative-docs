@@ -682,64 +682,23 @@ namespace Epsitec.Common.Document.Objects
 			//	Crée tous les panneaux pour l'édition.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
-			if ( TextPanels.Abstract.IsFilterShow("Justif", filter) )
+			string[] names =
 			{
-				TextPanels.Justif justif = new TextPanels.Justif(this.document);
-				list.Add(justif);
-			}
+				"Justif", "Leading", "Margins", "Spaces", "Keep",	// paragraphe
+				"Font", "Xline", "Xscript", "Box", "Language"		// caractère
+			};
 
-			if ( TextPanels.Abstract.IsFilterShow("Leading", filter) )
+			foreach ( string name in names )
 			{
-				TextPanels.Leading leading = new TextPanels.Leading(this.document);
-				list.Add(leading);
-			}
+				if ( TextPanels.Abstract.IsFilterShow(name, filter) )
+				{
+					TextPanels.Abstract panel = TextPanels.Abstract.Create(name, this.document);
 
-			if ( TextPanels.Abstract.IsFilterShow("Margins", filter) )
-			{
-				TextPanels.Margins margins = new TextPanels.Margins(this.document);
-				list.Add(margins);
-			}
-
-			if ( TextPanels.Abstract.IsFilterShow("Spaces", filter) )
-			{
-				TextPanels.Spaces spaces = new TextPanels.Spaces(this.document);
-				list.Add(spaces);
-			}
-
-			if ( TextPanels.Abstract.IsFilterShow("Keep", filter) )
-			{
-				TextPanels.Keep keep = new TextPanels.Keep(this.document);
-				list.Add(keep);
-			}
-
-			if ( TextPanels.Abstract.IsFilterShow("Font", filter) )
-			{
-				TextPanels.Font font = new TextPanels.Font(this.document);
-				list.Add(font);
-			}
-
-			if ( TextPanels.Abstract.IsFilterShow("Xline", filter) )
-			{
-				TextPanels.Xline xline = new TextPanels.Xline(this.document);
-				list.Add(xline);
-			}
-
-			if ( TextPanels.Abstract.IsFilterShow("Xscript", filter) )
-			{
-				TextPanels.Xscript xscript = new TextPanels.Xscript(this.document);
-				list.Add(xscript);
-			}
-
-			if ( TextPanels.Abstract.IsFilterShow("Box", filter) )
-			{
-				TextPanels.Box box = new TextPanels.Box(this.document);
-				list.Add(box);
-			}
-
-			if ( TextPanels.Abstract.IsFilterShow("Language", filter) )
-			{
-				TextPanels.Language language = new TextPanels.Language(this.document);
-				list.Add(language);
+					if ( panel != null )
+					{
+						list.Add(panel);
+					}
+				}
 			}
 
 			return list;

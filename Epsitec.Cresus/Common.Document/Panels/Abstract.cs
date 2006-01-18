@@ -120,13 +120,6 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		public bool IsStyleDirect
-		{
-			//	Indique si le panneau édite directement un style.
-			get { return this.isStyleDirect; }
-			set { this.isStyleDirect = value; }
-		}
-
 		public bool IsLayoutDirect
 		{
 			//	Indique si le panneau édite directement une propriété de calque.
@@ -307,7 +300,7 @@ namespace Epsitec.Common.Document.Panels
 				this.hiliteButton.Visibility = false;
 			}
 
-			this.extendedButton.Visibility = (this.isNormalAndExtended && !this.isStyleDirect && !this.isLayoutDirect);
+			this.extendedButton.Visibility = (this.isNormalAndExtended && !this.isLayoutDirect);
 			this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 		}
 
@@ -413,7 +406,7 @@ namespace Epsitec.Common.Document.Panels
 				graphics.RenderSolid(DrawingContext.ColorMultiBack);
 			}
 
-			if ( (this.property != null && this.property.IsStyle) || this.isStyleDirect )
+			if ( this.property != null && this.property.IsStyle )
 			{
 				Rectangle part = rect;
 				part.Width = this.extendedZoneWidth;
@@ -474,7 +467,6 @@ namespace Epsitec.Common.Document.Panels
 		protected StaticText				fixIcon;
 		protected GlyphButton				hiliteButton;
 		protected GlyphButton				extendedButton;
-		protected bool						isStyleDirect = false;
 		protected bool						isLayoutDirect = false;
 		protected bool						isHilite = false;
 		protected bool						isObjectHilite = false;

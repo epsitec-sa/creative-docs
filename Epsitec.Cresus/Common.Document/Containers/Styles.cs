@@ -539,22 +539,28 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == StyleCategory.Paragraph )
 			{
-				this.UpdateSelectorAdd(16, "TextJustif", "TextJustif", Res.Strings.TextPanel.Justif.Title);
-				this.UpdateSelectorAdd(16, "TextLeading", "TextLeading", Res.Strings.TextPanel.Leading.Title);
-				this.UpdateSelectorAdd(16, "TextMargins", "TextMargins", Res.Strings.TextPanel.Margins.Title);
-				this.UpdateSelectorAdd(16, "TextSpaces", "TextSpaces", Res.Strings.TextPanel.Spaces.Title);
-				this.UpdateSelectorAdd(16, "TextKeep", "TextKeep", Res.Strings.TextPanel.Keep.Title);
-				this.UpdateSelectorAdd(16, "TextFont", "TextFont", Res.Strings.TextPanel.Font.Title);
-				this.UpdateSelectorAdd(16, "TextXline", "TextXline", Res.Strings.TextPanel.Xline.Title);
-				this.UpdateSelectorAdd(16, "TextLanguage", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+				if ( this.document.GetSelectedTextStyle(this.category) != -1 )
+				{
+					this.UpdateSelectorAdd(16, "Justif",   "TextJustif",   Res.Strings.TextPanel.Justif.Title);
+					this.UpdateSelectorAdd(16, "Leading",  "TextLeading",  Res.Strings.TextPanel.Leading.Title);
+					this.UpdateSelectorAdd(16, "Margins",  "TextMargins",  Res.Strings.TextPanel.Margins.Title);
+					this.UpdateSelectorAdd(16, "Spaces",   "TextSpaces",   Res.Strings.TextPanel.Spaces.Title);
+					this.UpdateSelectorAdd(16, "Keep",     "TextKeep",     Res.Strings.TextPanel.Keep.Title);
+					this.UpdateSelectorAdd(16, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
+					this.UpdateSelectorAdd(16, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
+					this.UpdateSelectorAdd(16, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+				}
 			}
 
 			if ( this.category == StyleCategory.Character )
 			{
-				this.UpdateSelectorAdd(16, "TextFont", "TextFont", Res.Strings.TextPanel.Font.Title);
-				this.UpdateSelectorAdd(16, "TextXline", "TextXline", Res.Strings.TextPanel.Xline.Title);
-				this.UpdateSelectorAdd(16, "TextXscript", "TextXscript", Res.Strings.TextPanel.Xscript.Title);
-				this.UpdateSelectorAdd(16, "TextLanguage", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+				if ( this.document.GetSelectedTextStyle(this.category) != -1 )
+				{
+					this.UpdateSelectorAdd(16, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
+					this.UpdateSelectorAdd(16, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
+					this.UpdateSelectorAdd(16, "Xscript",  "TextXscript",  Res.Strings.TextPanel.Xscript.Title);
+					this.UpdateSelectorAdd(16, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+				}
 			}
 		}
 
@@ -566,6 +572,7 @@ namespace Epsitec.Common.Document.Containers
 			button.Width = width;
 			button.Height = 16+8;
 			button.AutoFocus = false;
+			button.ButtonStyle = ButtonStyle.ActivableIcon;
 			button.Dock = DockStyle.Left;
 			button.ActiveState = (name == this.selectorName) ? ActiveState.Yes : ActiveState.No;
 			button.Clicked += new MessageEventHandler(this.HandleSelectorClicked);
@@ -705,18 +712,34 @@ namespace Epsitec.Common.Document.Containers
 				this.panel.Dock = DockStyle.Fill;
 				this.panel.TabIndex = 1;
 				this.panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
 				this.panelContainer.Height = this.panel.DefaultHeight;
 				this.panelContainer.ForceLayout();
 			}
 
-			if ( this.category == StyleCategory.Paragraph )
+			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
 			{
 				this.ClosePanel();
-			}
 
-			if ( this.category == StyleCategory.Character )
-			{
-				this.ClosePanel();
+				TextPanels.Abstract.StaticDocument = this.document;
+				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.selectorName, this.document);
+				if ( panel == null )  return;
+
+				this.textPanel = panel;
+				this.textPanel.IsExtendedSize = true;
+				this.textPanel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
+				this.textPanel.SetParent(this.panelContainer);
+				this.textPanel.Dock = DockStyle.Fill;
+				this.textPanel.TabIndex = 1;
+				this.textPanel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+				this.panelContainer.Height = this.textPanel.DefaultHeight;
+				this.panelContainer.ForceLayout();
+
+				int sel = this.document.GetSelectedTextStyle(this.category);
+				Common.Text.TextStyle style = this.TextStyleList.List[sel];
+				this.document.Wrappers.TextWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
+				this.document.Wrappers.ParagraphWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
 			}
 		}
 
@@ -744,9 +767,20 @@ namespace Epsitec.Common.Document.Containers
 				this.panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
 				this.panel.Dispose();
 				this.panel = null;
-				this.panelContainer.Height = 0.0;
-				this.panelContainer.ForceLayout();
 			}
+
+			if ( this.textPanel != null )
+			{
+				this.document.Wrappers.TextWrapper.Detach();
+				this.document.Wrappers.ParagraphWrapper.Detach();
+
+				this.textPanel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
+				this.textPanel.Dispose();
+				this.textPanel = null;
+			}
+				
+			this.panelContainer.Height = 0.0;
+			this.panelContainer.ForceLayout();
 		}
 
 		protected void ShowSelection()
@@ -1344,11 +1378,12 @@ namespace Epsitec.Common.Document.Containers
 
 		protected Widgets.TextStylesList TextStyleList
 		{
+			//	Donne le widget pour la liste des styles selon la catégorie actuelle.
 			get
 			{
 				if ( this.category == StyleCategory.Paragraph )  return this.paragraphList;
 				if ( this.category == StyleCategory.Character )  return this.characterList;
-				throw new System.ArgumentException("TextStyleList("+this.category+")");
+				throw new System.ArgumentException("TextStyleList(" + this.category.ToString() + ")");
 			}
 		}
 
@@ -1394,6 +1429,7 @@ namespace Epsitec.Common.Document.Containers
 		protected Widgets.AggregateList		childrens;
 		protected Widget					panelContainer;
 		protected Panels.Abstract			panel;
+		protected TextPanels.Abstract		textPanel;
 		protected ColorSelector				colorSelector;
 
 		protected int						index;
