@@ -417,21 +417,24 @@ namespace Epsitec.Common.Text
 			string[] args = TabList.UnpackFromAttribute (attribute);
 			double offset = 0;
 			
-			for (int i = 0; i < args.Length; i++)
+			if (level >= 0)
 			{
-				if (args[i] != null)
+				for (int i = 0; i < args.Length; i++)
 				{
-					if (args[i].StartsWith (TabList.LevelMultiplier))
+					if (args[i] != null)
 					{
-						string value = args[i].Substring (TabList.LevelMultiplier.Length);
-						offset = TabList.GetLevelOffsetFromMultiplier (level, value);
-						break;
-					}
-					else if (args[i].StartsWith (TabList.LevelTable))
-					{
-						string value = args[i].Substring (TabList.LevelTable.Length);
-						offset = TabList.GetLevelOffsetFromTable (level, value);
-						break;
+						if (args[i].StartsWith (TabList.LevelMultiplier))
+						{
+							string value = args[i].Substring (TabList.LevelMultiplier.Length);
+							offset = TabList.GetLevelOffsetFromMultiplier (level, value);
+							break;
+						}
+						else if (args[i].StartsWith (TabList.LevelTable))
+						{
+							string value = args[i].Substring (TabList.LevelTable.Length);
+							offset = TabList.GetLevelOffsetFromTable (level, value);
+							break;
+						}
 					}
 				}
 			}

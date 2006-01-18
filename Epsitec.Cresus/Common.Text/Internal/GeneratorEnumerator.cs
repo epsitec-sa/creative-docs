@@ -44,7 +44,6 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Generator: {0}", this.state));
 				return this.state == State.Restarted;
 			}
 		}

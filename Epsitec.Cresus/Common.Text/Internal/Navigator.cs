@@ -712,6 +712,41 @@ namespace Epsitec.Common.Text.Internal
 			return true;
 		}
 		
+		public static bool GetUniformMetaProperties(TextStory story, ICursor cursor, int offset, out TextStyle[] styles)
+		{
+			//	Retourne les méta propriétés attachées au paragraphe à la position
+			//	indiquée.
+			
+			ulong code = story.ReadChar (cursor, offset);
+			
+			if (code == 0)
+			{
+				styles = null;
+				return false;
+			}
+			
+			Text.TextContext context = story.TextContext;
+			
+			TextStyle[] all_styles;
+			
+			context.GetStyles (code, out all_styles);
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			for (int i = 0; i < all_styles.Length; i++)
+			{
+				if ((all_styles[i].TextStyleClass == TextStyleClass.MetaProperty) &&
+					(all_styles[i].RequiresUniformParagraph))
+				{
+					list.Add (all_styles[i]);
+				}
+			}
+			
+			styles = (TextStyle[]) list.ToArray (typeof (TextStyle));
+			
+			return true;
+		}
+		
 		public static bool GetParagraphProperties(TextStory story, ICursor cursor, int offset, out Property[] properties)
 		{
 			//	Retourne les propriétés attachées au paragraphe de la position
@@ -786,9 +821,11 @@ namespace Epsitec.Common.Text.Internal
 			int offset = Navigator.GetParagraphStartOffset (story, cursor);
 			
 			TextStyle[] paragraph_styles;
+			TextStyle[] paragraph_meta;
 			Property[]  paragraph_properties;
 			
 			if ((Navigator.GetParagraphStyles (story, cursor, offset, out paragraph_styles)) &&
+				(Navigator.GetUniformMetaProperties (story, cursor, offset, out paragraph_meta)) &&
 				(Navigator.GetParagraphProperties (story, cursor, offset, out paragraph_properties)))
 			{
 				System.Collections.ArrayList all_styles     = new System.Collections.ArrayList ();
@@ -799,6 +836,8 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (styles != null) all_styles.AddRange (styles);
 				if (properties != null) all_properties.AddRange (properties);
+				
+				all_styles.AddRange (paragraph_meta);
 				
 				ulong[] text;
 				
