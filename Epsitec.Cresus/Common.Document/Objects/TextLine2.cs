@@ -1809,12 +1809,13 @@ namespace Epsitec.Common.Document.Objects
 			context.DisableSimpleRendering();
 		}
 		
-		public void RenderTab(Text.Layout.Context layout, string tag, double tabOrigin, double tabStop, ulong tabCode, bool isTabDefined)
+		public void RenderTab(Text.Layout.Context layout, string tag, double tabOrigin, double tabStop, ulong tabCode, bool isTabDefined, bool isTabAuto)
 		{
 			if ( this.graphics == null )  return;
 			if ( this.drawingContext == null )  return;
 			if ( this.drawingContext.TextShowControlCharacters == false )  return;
 			if ( this.textFlow.HasActiveTextBox == false )  return;
+			if ( isTabAuto )  return;
 
 			double x1 = tabOrigin;
 			double x2 = tabStop;
