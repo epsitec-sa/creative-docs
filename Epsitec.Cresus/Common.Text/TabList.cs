@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -396,6 +396,82 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public static string PackToAttribute()
+		{
+			return SerializerSupport.SerializeStringArray (new string[0]);
+		}
+		
+		public static string PackToAttribute(params string[] values)
+		{
+			return SerializerSupport.SerializeStringArray (values);
+		}
+		
+		public static string[] UnpackFromAttribute(string value)
+		{
+			return SerializerSupport.DeserializeStringArray (value);
+		}
+		
+		
+		public static double GetLevelOffset(int level, string attribute)
+		{
+			string[] args = TabList.UnpackFromAttribute (attribute);
+			double offset = 0;
+			
+			for (int i = 0; i < args.Length; i++)
+			{
+				if (args[i] != null)
+				{
+					if (args[i].StartsWith (TabList.LevelMultiplier))
+					{
+						string value = args[i].Substring (TabList.LevelMultiplier.Length);
+						offset = TabList.GetLevelOffsetFromMultiplier (level, value);
+						break;
+					}
+					else if (args[i].StartsWith (TabList.LevelTable))
+					{
+						string value = args[i].Substring (TabList.LevelTable.Length);
+						offset = TabList.GetLevelOffsetFromTable (level, value);
+						break;
+					}
+				}
+			}
+			
+			return offset;
+		}
+		
+		
+		private static double GetLevelOffsetFromMultiplier(int level, string value)
+		{
+			if (level == 0)
+			{
+				return 0;
+			}
+			else
+			{
+				double               multiplier;
+				Properties.SizeUnits units;
+				
+				Properties.UnitsTools.DeserializeSizeUnits (value, out multiplier, out units);
+				
+				return Properties.UnitsTools.ConvertToPoints (multiplier, units) * level;
+			}
+		}
+		
+		private static double GetLevelOffsetFromTable(int level, string value)
+		{
+			string[] args = value.Split (';');
+			
+			level = System.Math.Min (level, args.Length-1);
+			
+			double               offset;
+			Properties.SizeUnits units;
+			
+			Properties.UnitsTools.DeserializeSizeUnits (args[level], out offset, out units);
+			
+			return Properties.UnitsTools.ConvertToPoints (offset, units);
+		}
+		
+		
 		#region TabRecord Class
 		private class TabRecord : IContentsSignature, IContentsComparer
 		{
@@ -712,5 +788,8 @@ namespace Epsitec.Common.Text
 		
 		private const string					AutoTagPrefix = "#A#";
 		private const string					SharedTagPrefix = "#S#";
+		
+		private const string					LevelMultiplier = "LevelMultiplier:";
+		private const string					LevelTable = "LevelTable:";
 	}
 }

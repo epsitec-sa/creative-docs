@@ -189,8 +189,8 @@ namespace Epsitec.Common.Text
 				if (this.enumerator.MoveNext ())
 				{
 					Properties.GeneratorProperty   generator_property;
-					Properties.MarginsProperty     margins_property;
-					Properties.ManagedInfoProperty m_info_property;
+					Properties.MarginsProperty     margins_property = null;
+					Properties.ManagedInfoProperty m_info_property  = null;
 					
 					TextContext        context = this.story.TextContext;
 					Cursors.TempCursor cursor  = this.enumerator.Cursor;
@@ -208,7 +208,11 @@ namespace Epsitec.Common.Text
 						generator_property = this.enumerator.GetGeneratorProperty (code);
 						
 						context.GetMargins (code, out margins_property);
-						context.GetManagedInfo (code, this.mpp.ManagerName, out m_info_property);
+						
+						if (this.mpp != null)
+						{
+							context.GetManagedInfo (code, this.mpp.ManagerName, out m_info_property);
+						}
 						
 						if ((m_info_property != null) &&
 							(m_info_property.ManagerInfo != "auto"))
@@ -247,10 +251,9 @@ namespace Epsitec.Common.Text
 						
 						System.Diagnostics.Debug.Assert (generator_property != null);
 						System.Diagnostics.Debug.Assert (generator_property.Generator == this.generator.Name);
-						System.Diagnostics.Debug.Assert (margins_property != null);
 						
 						int    length = this.context.GetTextEndDistance (this.story, cursor, generator_property);
-						int    level  = System.Math.Max (generator_property.Level, margins_property.Level);
+						int    level  = System.Math.Max (generator_property.Level, margins_property == null ? 0 : margins_property.Level);
 						
 						string text = this.series.GetNextText (level);
 						

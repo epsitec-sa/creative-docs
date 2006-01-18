@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
@@ -160,10 +160,13 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.LeadingProperty (0.0, Properties.SizeUnits.Points, Properties.AlignMode.Undefined));
 			properties.Add (new Properties.MarginsProperty (10.0, 10.0, Properties.SizeUnits.Millimeters));
 			
-			story.SetCursorPosition (cursor, 2);
-			Internal.Navigator.SetParagraphStyles (story, cursor, style2);
-			Internal.Navigator.SetParagraphStyles (story, cursor, style1, style2);
-			Internal.Navigator.SetParagraphStyles (story, cursor, style2);
+			ICursor temp = new Cursors.TempCursor ();
+			
+			story.NewCursor (temp);
+			story.SetCursorPosition (temp, 2);
+			Internal.Navigator.SetParagraphStyles (story, temp, style2);
+			Internal.Navigator.SetParagraphStyles (story, temp, style1, style2);
+			Internal.Navigator.SetParagraphStyles (story, temp, style2);
 			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);

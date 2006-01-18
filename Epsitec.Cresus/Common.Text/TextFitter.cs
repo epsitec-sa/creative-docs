@@ -1391,6 +1391,8 @@ restart_paragraph_layout:
 					throw new System.NotSupportedException (string.Format ("Tab position mode {0} not supported", tabs.GetTabPositionMode (tab_property)));
 			}
 			
+			//	
+			
 			//	Gestion de l'indentation du paragraphe après la marque de tabulation :
 			
 			switch (tabs.GetTabPositionMode (tab_property))

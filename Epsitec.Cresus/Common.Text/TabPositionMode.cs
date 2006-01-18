@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -9,10 +9,10 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public enum TabPositionMode
 	{
-		Absolute			= 0,				//	position absolue
-		AbsoluteIndent		= 1,				//	position absolue, indente toutes les lignes
+		Absolute				= 0,			//	position absolue
+		AbsoluteIndent			= 1,			//	position absolue, indente toutes les lignes
 		
-		LeftRelative		= 2,				//	position relative à la marge de gauche
-		LeftRelativeIndent	= 3,				//	position relative, indente toutes les lignes
+		LeftRelative			= 2,			//	position relative à la marge de gauche
+		LeftRelativeIndent		= 3,			//	position relative, indente toutes les lignes
 	}
 }

@@ -134,7 +134,7 @@ namespace Epsitec.Common.Text.Properties
 			return null;
 		}
 		
-		public static ManagedInfoProperty[] FilterManagedInfoProperties(System.Collections.ICollection properties)
+		public static ManagedInfoProperty[] Filter(System.Collections.ICollection properties)
 		{
 			int count = 0;
 			

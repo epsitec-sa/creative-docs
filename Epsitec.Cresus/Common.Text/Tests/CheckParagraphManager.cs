@@ -148,34 +148,37 @@ namespace Epsitec.Common.Text.Tests
 			
 			//	Crée la liste à puces :
 			
-			story.SetCursorPosition (cursor, 2);
-			Internal.Navigator.SetParagraphStyles (story, cursor, style2);
+			ICursor temp = new Cursors.TempCursor ();
+			
+			story.NewCursor (temp);
+			story.SetCursorPosition (temp, 2);
+			Internal.Navigator.SetParagraphStyles (story, temp, style2);
 			
 			Properties.ManagedParagraphProperty[] mpp;
 			
 			Debug.Assert.IsTrue (story.TextLength == 1+2+1+4);
-			Debug.Assert.IsTrue (Internal.Navigator.GetManagedParagraphProperties (story, cursor, 0, out mpp));
+			Debug.Assert.IsTrue (Internal.Navigator.GetManagedParagraphProperties (story, temp, 0, out mpp));
 			Debug.Assert.IsTrue (mpp.Length == 1);
 			Debug.Assert.IsTrue (mpp[0].ManagerName == "ItemList");
 			
 			text = new ulong[story.TextLength];
-			story.SetCursorPosition (cursor, 0);
-			story.ReadText (cursor, story.TextLength, text);
+			story.SetCursorPosition (temp, 0);
+			story.ReadText (temp, story.TextLength, text);
 			
 			System.Diagnostics.Debug.WriteLine ("After SetParagraphStylesAndProperties (style2) :");
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 			
 			//	Supprime la liste à puces :
 			
-			story.SetCursorPosition (cursor, 1);
-			Internal.Navigator.SetParagraphStyles (story, cursor, style1);
+			story.SetCursorPosition (temp, 1);
+			Internal.Navigator.SetParagraphStyles (story, temp, style1);
 			
-			Debug.Assert.IsTrue (Internal.Navigator.GetManagedParagraphProperties (story, cursor, 0, out mpp));
+			Debug.Assert.IsTrue (Internal.Navigator.GetManagedParagraphProperties (story, temp, 0, out mpp));
 			Debug.Assert.IsTrue (mpp.Length == 0);
 			
 			text = new ulong[story.TextLength];
-			story.SetCursorPosition (cursor, 0);
-			story.ReadText (cursor, story.TextLength, text);
+			story.SetCursorPosition (temp, 0);
+			story.ReadText (temp, story.TextLength, text);
 			
 			System.Diagnostics.Debug.WriteLine ("After SetParagraphStylesAndProperties (style1) :");
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));

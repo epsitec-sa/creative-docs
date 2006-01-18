@@ -311,7 +311,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (113, navigator.CursorPosition);
 			Assert.AreEqual (-1, navigator.CursorDirection);
 			
-			navigator.StartSelection ();
+			navigator.StartDisjointSelection ();
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
 			navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
 			navigator.EndSelection ();

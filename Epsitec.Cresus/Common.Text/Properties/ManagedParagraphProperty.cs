@@ -142,7 +142,7 @@ namespace Epsitec.Common.Text.Properties
 			return null;
 		}
 		
-		public static ManagedParagraphProperty[] FilterManagedParagraphProperties(System.Collections.ICollection properties)
+		public static ManagedParagraphProperty[] Filter(System.Collections.ICollection properties)
 		{
 			int count = 0;
 			

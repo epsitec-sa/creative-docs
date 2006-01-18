@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
@@ -10,12 +10,13 @@ namespace Epsitec.Common.Text.Tests
 	{
 		public static void RunTests()
 		{
-//			CheckTextFitter.TestSimpleTextFrame ();
-//			CheckTextFitter.TestFit ();
-//			CheckTextFitter.TestFitTabs1 ();
-//			CheckTextFitter.TestFitTabs2 ();
-//			CheckTextFitter.TestFitTabs3 ();
-//			CheckTextFitter.TestFitTabs4 ();
+			CheckTextFitter.TestSimpleTextFrame ();
+			CheckTextFitter.TestFit ();
+			CheckTextFitter.TestFitTabs1 ();
+			CheckTextFitter.TestFitTabs2 ();
+			CheckTextFitter.TestFitTabs3 ();
+			CheckTextFitter.TestFitTabs4 ();
+			CheckTextFitter.TestTabs ();
 			CheckTextFitter.TestCursorGeometry ();
 		}
 		
@@ -125,7 +126,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			TextFitter fitter = new TextFitter (story);
 			
-			for (int i = 0; i < 320; i++)
+			for (int i = 0; i < 330; i++)
 			{
 				SimpleTextFrame frame = new SimpleTextFrame (1000, 1400);
 				frame.PageNumber = i;
@@ -538,6 +539,47 @@ namespace Epsitec.Common.Text.Tests
 					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineStartX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
 				}
 			}
+		}
+		
+		private static void TestTabs()
+		{
+			TextStory story = new TextStory ();
+			TabList   tabs  = story.TextContext.TabList;
+			
+			string p1 = TabList.PackToAttribute ();
+			string p2 = TabList.PackToAttribute ("a", "b;/\\", "c");
+			
+			string[] u1 = TabList.UnpackFromAttribute (p1);
+			string[] u2 = TabList.UnpackFromAttribute (p2);
+			
+			Debug.Assert.IsTrue (u1.Length == 0);
+			Debug.Assert.IsTrue (u2.Length == 3);
+			Debug.Assert.IsTrue (u2[0] == "a");
+			Debug.Assert.IsTrue (u2[1] == "b;/\\");
+			Debug.Assert.IsTrue (u2[2] == "c");
+			
+			string a1 = TabList.PackToAttribute ("Dummy", "LevelMultiplier:10 mm");
+			string a2 = TabList.PackToAttribute ("Dummy", "LevelTable:10 mm;50 pt;2.54 in");
+			
+			double v1_0 = TabList.GetLevelOffset (0, a1);
+			double v1_1 = TabList.GetLevelOffset (1, a1);
+			double v1_2 = TabList.GetLevelOffset (2, a1);
+			double v1_3 = TabList.GetLevelOffset (3, a1);
+			
+			Debug.Assert.Equals (0,   (int)(v1_0*10));
+			Debug.Assert.Equals (283, (int)(v1_1*10));
+			Debug.Assert.Equals (566, (int)(v1_2*10));
+			Debug.Assert.Equals (850, (int)(v1_3*10));
+			
+			double v2_0 = TabList.GetLevelOffset (0, a2);
+			double v2_1 = TabList.GetLevelOffset (1, a2);
+			double v2_2 = TabList.GetLevelOffset (2, a2);
+			double v2_3 = TabList.GetLevelOffset (3, a2);
+			
+			Debug.Assert.Equals ( 283, (int)(v2_0*10));
+			Debug.Assert.Equals ( 500, (int)(v2_1*10));
+			Debug.Assert.Equals (1828, (int)(v2_2*10));
+			Debug.Assert.Equals (1828, (int)(v2_3*10));
 		}
 		
 		private static void TestCursorGeometry()

@@ -566,7 +566,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (Navigator.GetFlattenedProperties (story, code, out props))
 			{
-				properties = Properties.ManagedParagraphProperty.FilterManagedParagraphProperties (props);
+				properties = Properties.ManagedParagraphProperty.Filter (props);
 				
 				System.Array.Sort (properties, Properties.ManagedParagraphProperty.Comparer);
 				

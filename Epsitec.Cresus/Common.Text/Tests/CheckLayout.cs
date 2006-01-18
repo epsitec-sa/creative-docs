@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Tests
@@ -87,11 +87,13 @@ namespace Epsitec.Common.Text.Tests
 			status  = context.Fit (ref breaks, 0);
 			context.DefineTextOffset (breaks[0].Offset);
 			
+			System.Diagnostics.Debug.WriteLine ("CheckLayout: " + context.LineHeight.ToString ());
+			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 28);
 			Debug.Assert.IsTrue (context.FrameIndex == 0);
-			Debug.Assert.IsTrue (context.LineHeight > 14.3998);
-			Debug.Assert.IsTrue (context.LineHeight < 14.4000);
+			Debug.Assert.IsTrue (context.LineHeight > 16.0874);
+			Debug.Assert.IsTrue (context.LineHeight < 16.0876);
 			
 			status  = context.Fit (ref breaks, 1);
 			context.DefineTextOffset (breaks[0].Offset);
@@ -99,8 +101,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 62);
 			Debug.Assert.IsTrue (context.FrameIndex == 1);
-			Debug.Assert.IsTrue (context.LineHeight > 19.1999);
-			Debug.Assert.IsTrue (context.LineHeight < 19.2001);
+			Debug.Assert.IsTrue (context.LineHeight > 21.4499);
+			Debug.Assert.IsTrue (context.LineHeight < 21.4501);
 			
 			status  = context.Fit (ref breaks, 2);
 			context.DefineTextOffset (breaks[0].Offset);
@@ -108,8 +110,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 95);
 			Debug.Assert.IsTrue (context.FrameIndex == 1);
-			Debug.Assert.IsTrue (context.LineHeight > 14.3998);
-			Debug.Assert.IsTrue (context.LineHeight < 14.4000);
+			Debug.Assert.IsTrue (context.LineHeight > 16.0874);
+			Debug.Assert.IsTrue (context.LineHeight < 16.0876);
 			
 			status  = context.Fit (ref breaks, 3);
 			context.DefineTextOffset (breaks[0].Offset);
@@ -117,8 +119,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 131);
 			Debug.Assert.IsTrue (context.FrameIndex == 1);
-			Debug.Assert.IsTrue (context.LineHeight > 14.3998);
-			Debug.Assert.IsTrue (context.LineHeight < 14.4000);
+			Debug.Assert.IsTrue (context.LineHeight > 16.0874);
+			Debug.Assert.IsTrue (context.LineHeight < 16.0876);
 			
 			status  = context.Fit (ref breaks, 4);
 			context.DefineTextOffset (breaks[0].Offset);
@@ -126,8 +128,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (status == Layout.Status.OkFitEnded);
 			Debug.Assert.IsTrue (breaks[0].Offset == 149);
 			Debug.Assert.IsTrue (context.FrameIndex == 1);
-			Debug.Assert.IsTrue (context.LineHeight > 14.3998);
-			Debug.Assert.IsTrue (context.LineHeight < 14.4000);
+			Debug.Assert.IsTrue (context.LineHeight > 16.0874);
+			Debug.Assert.IsTrue (context.LineHeight < 16.0876);
 			
 			status  = context.Fit (ref breaks, 4);
 			
@@ -138,7 +140,7 @@ namespace Epsitec.Common.Text.Tests
 			//	autant en largeur qu'en hauteur :
 			
 			frame_0.Width = 300;
-			frame_0.Height = 20;
+			frame_0.Height = 22;
 			
 			context.DefineTextOffset (0);
 			context.SelectFrame (0, 0);
@@ -165,20 +167,20 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 28);
 			Debug.Assert.IsTrue (context.FrameIndex == 1);
-			Debug.Assert.IsTrue (context.LineHeight > 14.3998);
-			Debug.Assert.IsTrue (context.LineHeight < 14.4000);
+			Debug.Assert.IsTrue (context.LineHeight > 21.4499);
+			Debug.Assert.IsTrue (context.LineHeight < 21.4501);
 			
 			status  = context.Fit (ref breaks, 0);
 			context.DefineTextOffset (breaks[0].Offset);
 			
-			Debug.Assert.IsTrue (context.LineHeight > 19.1999);
-			Debug.Assert.IsTrue (context.LineHeight < 19.2001);
+			Debug.Assert.IsTrue (context.LineHeight > 21.4499);
+			Debug.Assert.IsTrue (context.LineHeight < 21.4501);
 			
 			status  = context.Fit (ref breaks, 0);
 			context.DefineTextOffset (breaks[0].Offset);
 			
-			Debug.Assert.IsTrue (context.LineHeight > 14.3998);
-			Debug.Assert.IsTrue (context.LineHeight < 14.4000);
+			Debug.Assert.IsTrue (context.LineHeight > 16.0874);
+			Debug.Assert.IsTrue (context.LineHeight < 16.0876);
 		}
 		
 		private static void TestLineEngine()

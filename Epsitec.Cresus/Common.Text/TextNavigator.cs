@@ -190,9 +190,13 @@ namespace Epsitec.Common.Text
 				else if ((this.selection_cursors != null) &&
 					/**/ (this.selection_cursors.Count >= 2))
 				{
+#if true
+					return this.cursor;
+#else
 					int n = this.selection_cursors.Count;
 					
 					return this.selection_cursors[n-1] as ICursor;
+#endif
 				}
 				else
 				{
@@ -2548,11 +2552,11 @@ process_ranges:
 			
 			if (count > 0)
 			{
-				Property[] mpps = Property.Filter (this.accumulated_properties, Properties.WellKnownType.ManagedParagraph);
+				Properties.ManagedParagraphProperty[] mpps = Properties.ManagedParagraphProperty.Filter (this.accumulated_properties);
 				
 				if (mpps.Length > 0)
 				{
-					Properties.ManagedParagraphProperty mpp = mpps[0] as Properties.ManagedParagraphProperty;
+					Properties.ManagedParagraphProperty mpp = mpps[0];
 					
 					ParagraphManagerList list = this.story.TextContext.ParagraphManagerList;
 					IParagraphManager manager = list[mpp.ManagerName];
@@ -3125,12 +3129,11 @@ process_ranges:
 			//	en cours fait référence à un gestionnaire de paragraphe nécessitant
 			//	l'ajout de texte automatique, il faut encore générer le texte auto.
 			
-			Property[] properties = this.accumulated_properties;
-			Property[] mpps = Property.Filter (properties, Properties.WellKnownType.ManagedParagraph);
+			Properties.ManagedParagraphProperty[] mpps = Properties.ManagedParagraphProperty.Filter (this.accumulated_properties);
 			
 			if (mpps.Length > 0)
 			{
-				Properties.ManagedParagraphProperty mpp = mpps[0] as Properties.ManagedParagraphProperty;
+				Properties.ManagedParagraphProperty mpp = mpps[0];
 				
 				for (int i = 0; i < styled_text.Length; i++)
 				{

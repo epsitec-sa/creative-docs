@@ -1,10 +1,11 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe UnitsTools offre quelques méthodes de conversion.
+	/// La classe UnitsTools offre quelques méthodes de conversion pour des
+	/// valeurs numériques associées à des unités de mesure.
 	/// </summary>
 	public sealed class UnitsTools
 	{
@@ -78,9 +79,15 @@ namespace Epsitec.Common.Text.Properties
 			throw new System.NotSupportedException (string.Format ("Unsupported units: {0}.", units));
 		}
 		
-		public static SizeUnits DeserializeSizeUnits(string units)
+		public static string SerializeSizeUnits(double value, SizeUnits units)
 		{
-			switch (units)
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0} {1}", value, UnitsTools.SerializeSizeUnits (units));
+		}
+		
+		
+		public static SizeUnits DeserializeSizeUnits(string text)
+		{
+			switch (text)
 			{
 				case "":	return SizeUnits.None;
 				case "pt":	return SizeUnits.Points;
@@ -93,7 +100,17 @@ namespace Epsitec.Common.Text.Properties
 				case "!%":	return SizeUnits.PercentNotCombining;
 			}
 			
-			throw new System.NotSupportedException (string.Format ("Unsupported units: {0}.", units));
+			throw new System.NotSupportedException (string.Format ("Unsupported units: {0}.", text));
+		}
+		
+		public static void DeserializeSizeUnits(string text, out double value, out SizeUnits units)
+		{
+			string[] args = text.Split (' ');
+			
+			System.Diagnostics.Debug.Assert (args.Length == 2);
+			
+			value = System.Double.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
+			units = UnitsTools.DeserializeSizeUnits (args[1]);
 		}
 		
 		

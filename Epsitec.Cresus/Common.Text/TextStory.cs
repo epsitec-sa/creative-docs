@@ -510,7 +510,7 @@ namespace Epsitec.Common.Text
 			
 			this.ReadText (cursor, length, data);
 			
-			ulong code = data[0] & ~ Unicode.Bits.FullCodeMask;
+			ulong code = data[0] & Internal.CharMarker.CoreAndSettingsMask;
 			
 			TextConverter.ConvertFromString (simple_text, out text);
 			
@@ -525,7 +525,7 @@ namespace Epsitec.Common.Text
 			{
 				for (int i = 0; i < text.Length; i++)
 				{
-					if (data[i] != text[i])
+					if ((data[i] & (Internal.CharMarker.CoreAndSettingsMask | Unicode.Bits.FullCodeMask)) != (text[i] & (Internal.CharMarker.CoreAndSettingsMask | Unicode.Bits.FullCodeMask)))
 					{
 						change = true;
 						break;

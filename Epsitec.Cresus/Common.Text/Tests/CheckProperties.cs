@@ -43,10 +43,10 @@ namespace Epsitec.Common.Text.Tests
 		
 		private static void TestFontSize()
 		{
-			Properties.FontSizeProperty font_size_a = new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points);
-			Properties.FontSizeProperty font_size_b = new Properties.FontSizeProperty (50.0, Properties.SizeUnits.Percent);
-			Properties.FontSizeProperty font_size_c = new Properties.FontSizeProperty (-2.0, Properties.SizeUnits.DeltaPoints);
-			Properties.FontSizeProperty font_size_d = new Properties.FontSizeProperty (200.0, Properties.SizeUnits.Percent);
+			Properties.FontSizeProperty font_size_a = new Properties.FontSizeProperty ( 12.0, Properties.SizeUnits.Points);
+			Properties.FontSizeProperty font_size_b = new Properties.FontSizeProperty ( 50.0/100, Properties.SizeUnits.Percent);
+			Properties.FontSizeProperty font_size_c = new Properties.FontSizeProperty ( -2.0, Properties.SizeUnits.DeltaPoints);
+			Properties.FontSizeProperty font_size_d = new Properties.FontSizeProperty (200.0/100, Properties.SizeUnits.Percent);
 			
 			Properties.FontSizeProperty font_size_ab = font_size_a.GetCombination (font_size_b) as Properties.FontSizeProperty;
 			Properties.FontSizeProperty font_size_ba = font_size_b.GetCombination (font_size_a) as Properties.FontSizeProperty;
@@ -54,11 +54,11 @@ namespace Epsitec.Common.Text.Tests
 			Properties.FontSizeProperty font_size_cb = font_size_c.GetCombination (font_size_b) as Properties.FontSizeProperty;
 			Properties.FontSizeProperty font_size_bd = font_size_b.GetCombination (font_size_d) as Properties.FontSizeProperty;
 			
-			Debug.Assert.IsTrue (font_size_ab.ToString () == "6/pt");
-			Debug.Assert.IsTrue (font_size_ba.ToString () == "12/pt");
-			Debug.Assert.IsTrue (font_size_ac.ToString () == "10/pt");
-			Debug.Assert.IsTrue (font_size_cb.ToString () == "-1/+pt");
-			Debug.Assert.IsTrue (font_size_bd.ToString () == "100/%");
+			Debug.Assert.IsTrue (font_size_ab.ToString () == "6/pt/[NaN]");
+			Debug.Assert.IsTrue (font_size_ba.ToString () == "12/pt/[NaN]");
+			Debug.Assert.IsTrue (font_size_ac.ToString () == "10/pt/[NaN]");
+			Debug.Assert.IsTrue (font_size_cb.ToString () == "-1/+pt/[NaN]");
+			Debug.Assert.IsTrue (font_size_bd.ToString () == "1/%/[NaN]");
 			
 			Debug.Expect.Exception (new Debug.Method (Ex1), typeof (System.InvalidOperationException));
 		}
@@ -92,8 +92,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (margins_f.LeftMarginBody      == 10.0);
 			Debug.Assert.IsTrue (margins_f.RightMarginBody     == 10.0);
 			
-			Debug.Assert.IsTrue (margins_a.ToString () == "[NaN]/10/[NaN]/10/pt/0/0/0/0/0/[?]");
-			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/pt/0/0/0/0/0/[false]");
+			Debug.Assert.IsTrue (margins_a.ToString () == "[NaN]/10/[NaN]/10/pt/0/0/0/0/0/[?]/-1");
+			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/pt/0/0/0/0/0/[false]/-1");
 		}
 		
 		private static void TestXlines()
@@ -241,12 +241,12 @@ namespace Epsitec.Common.Text.Tests
 			story.InsertText (cursor, text);
 			
 			properties.Clear ();
-			properties.Add (new Properties.GeneratorProperty ("G1", 0, 1));
+			properties.Add (new Properties.GeneratorProperty ("G1", 0, 2));
 			story.ConvertToStyledText ("[1]", style, properties, out text);				//	32
 			story.InsertText (cursor, text);
 			
 			properties.Clear ();
-			properties.Add (new Properties.GeneratorProperty ("G1", 0, 1));
+			properties.Add (new Properties.GeneratorProperty ("G1", 0, 3));
 			story.ConvertToStyledText ("[2]", style, properties, out text);				//	35
 			story.InsertText (cursor, text);
 			
@@ -267,12 +267,12 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[2]) == 32);
 			
 			properties.Clear ();
-			properties.Add (new Properties.GeneratorProperty ("G1", 0, 1));
+			properties.Add (new Properties.GeneratorProperty ("G1", 0, 4));
 			story.ConvertToStyledText ("[1]", style, properties, out text);				//	3
 			story.InsertText (cursor, text);
 			
 			properties.Clear ();
-			properties.Add (new Properties.GeneratorProperty ("G1", 0, 1));
+			properties.Add (new Properties.GeneratorProperty ("G1", 0, 5));
 			story.ConvertToStyledText ("[2]", style, properties, out text);				//	6
 			story.InsertText (cursor, text);
 			
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Text.Tests
 			story.InsertText (cursor, text);
 			
 			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0, 1);
-			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0, 1);
+			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0, 2);
 			
 			properties.Clear (); properties.Add (g1_a);
 			
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Text.Tests
 		
 		private static void Ex1()
 		{
-			Properties.FontSizeProperty a = new Properties.FontSizeProperty (80.0, Properties.SizeUnits.Percent);
+			Properties.FontSizeProperty a = new Properties.FontSizeProperty (80.0/100, Properties.SizeUnits.Percent);
 			Properties.FontSizeProperty b = new Properties.FontSizeProperty (-5.0, Properties.SizeUnits.DeltaPoints);
 			
 			a.GetCombination (b);
