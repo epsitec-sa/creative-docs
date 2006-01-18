@@ -132,7 +132,18 @@ namespace Epsitec.Common.Text
 			
 			SerializerSupport.SerializeStringStringHash (this.t_style_hash, buffer);
 			buffer.Append ("/");
-			SerializerSupport.SerializeStringIntHash (this.rank_hash, buffer);
+			
+			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+			
+			foreach (System.Collections.DictionaryEntry entry in this.rank_hash)
+			{
+				TextStyle key  = entry.Key as TextStyle;
+				string    name = StyleList.GetFullName (key);
+				
+				hash[name] = entry.Value;
+			}
+			
+			SerializerSupport.SerializeStringIntHash (hash, buffer);
 		}
 		
 		internal void Deserialize(TextContext context, int version, string[] args, ref int offset)
@@ -142,8 +153,18 @@ namespace Epsitec.Common.Text
 			this.rank_hash    = new	System.Collections.Hashtable ();
 			this.sorted_list  = null;
 			
+			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+			
 			SerializerSupport.DeserializeStringStringHash (args, ref offset, this.t_style_hash);
-			SerializerSupport.DeserializeStringIntHash (args, ref offset, this.rank_hash);
+			SerializerSupport.DeserializeStringIntHash (args, ref offset, hash);
+			
+			foreach (System.Collections.DictionaryEntry entry in hash)
+			{
+				string    name = entry.Key as string;
+				TextStyle key  = this.style_list.GetTextStyle (name);
+				
+				this.rank_hash[key] = entry.Value;
+			}
 			
 			//	Construit encore le dictionnaire inverse utilisé pour retrouver
 			//	rapidement un style d'après son nom (caption) :

@@ -452,6 +452,11 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal static string GetFullName(TextStyle text_style)
+		{
+			return StyleList.GetFullName (text_style.Name, text_style.TextStyleClass);
+		}
+		
 		internal static string GetFullName(string name, TextStyleClass text_style_class)
 		{
 			switch (text_style_class)
