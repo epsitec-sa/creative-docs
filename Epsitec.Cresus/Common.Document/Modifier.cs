@@ -6125,22 +6125,20 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public string GetNextParagraphStyleName
+		public string GetNextTextStyleName(StyleCategory category)
 		{
-			//	Donne le prochain nom unique de style de paragraphe.
-			get
+			//	Donne le prochain nom unique de style de paragraphe ou de caractère.
+			if ( category == StyleCategory.Paragraph )
 			{
 				return string.Format(Res.Strings.Style.Paragraph.Name, this.document.GetNextUniqueParagraphStyleId());
 			}
-		}
 
-		public string GetNextCharacterStyleName
-		{
-			//	Donne le prochain nom unique de style de caractère.
-			get
+			if ( category == StyleCategory.Character )
 			{
 				return string.Format(Res.Strings.Style.Character.Name, this.document.GetNextUniqueCharacterStyleId());
 			}
+			
+			throw new System.ArgumentException("GetNextTextStyleName(" + category.ToString() + ")");
 		}
 		#endregion
 

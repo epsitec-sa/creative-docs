@@ -37,6 +37,14 @@ namespace Epsitec.Common.Document
 		DebugCommands,	// toutes les commandes de debug
 	}
 
+	public enum StyleCategory
+	{
+		Graphic,		// style graphique
+		Paragraph,		// style de paragraphe
+		Character,		// style de caractère
+	}
+
+
 	/// <summary>
 	/// Summary description for Document.
 	/// </summary>
@@ -1449,88 +1457,46 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.UpdateTextStyles();
 		}
 		
-		public Text.TextStyle[] ParagraphStyles
+		public Text.TextStyle[] TextStyles(StyleCategory category)
 		{
-			//	Liste des styles de pagagraphe de ce document.
-			get
+			//	Liste des styles de paragraphe ou de caractère de ce document.
+			System.Diagnostics.Debug.Assert(category == StyleCategory.Paragraph || category == StyleCategory.Character);
+			Text.TextStyle[] list = this.TextContext.StyleList.StyleMap.GetSortedStyles();
+			int total = 0;
+			foreach ( Text.TextStyle style in list )
 			{
-				Text.TextStyle[] list = this.TextContext.StyleList.StyleMap.GetSortedStyles();
-				int total = 0;
-				foreach ( Text.TextStyle style in list )
-				{
-					if ( style.TextStyleClass == Text.TextStyleClass.Paragraph )  total ++;
-				}
-
-				Text.TextStyle[] paragraphs = new Text.TextStyle[total];
-				int i = 0;
-				foreach ( Text.TextStyle style in list )
-				{
-					if ( style.TextStyleClass == Text.TextStyleClass.Paragraph )
-					{
-						paragraphs[i++] = style;
-					}
-				}
-
-				this.selectedParagraphStyle = System.Math.Min(this.selectedParagraphStyle, paragraphs.Length-1);
-
-				return paragraphs;
+				if ( category == StyleCategory.Paragraph && style.TextStyleClass == Text.TextStyleClass.Paragraph )  total ++;
+				if ( category == StyleCategory.Character && style.TextStyleClass == Text.TextStyleClass.Text      )  total ++;
 			}
+
+			Text.TextStyle[] extract = new Text.TextStyle[total];
+			int i = 0;
+			foreach ( Text.TextStyle style in list )
+			{
+				if ( category == StyleCategory.Paragraph && style.TextStyleClass == Text.TextStyleClass.Paragraph )  extract[i++] = style;
+				if ( category == StyleCategory.Character && style.TextStyleClass == Text.TextStyleClass.Text      )  extract[i++] = style;
+			}
+
+			this.SetSelectedTextStyle(category, System.Math.Min(this.GetSelectedTextStyle(category), extract.Length-1));
+
+			return extract;
 		}
 
-		public Text.TextStyle[] CharacterStyles
+		public int GetSelectedTextStyle(StyleCategory category)
 		{
-			//	Liste des styles de caractère de ce document.
-			get
-			{
-				Text.TextStyle[] list = this.TextContext.StyleList.StyleMap.GetSortedStyles();
-				int total = 0;
-				foreach ( Text.TextStyle style in list )
-				{
-					if ( style.TextStyleClass == Text.TextStyleClass.Text )  total ++;
-				}
-
-				Text.TextStyle[] characters = new Text.TextStyle[total];
-				int i = 0;
-				foreach ( Text.TextStyle style in list )
-				{
-					if ( style.TextStyleClass == Text.TextStyleClass.Text )
-					{
-						characters[i++] = style;
-					}
-				}
-
-				this.selectedCharacterStyle = System.Math.Min(this.selectedCharacterStyle, characters.Length-1);
-
-				return characters;
-			}
+			//	Donne le style de paragraphe ou de caractère sélectionné.
+			System.Diagnostics.Debug.Assert(category == StyleCategory.Paragraph || category == StyleCategory.Character);
+			if ( category == StyleCategory.Paragraph )  return this.selectedParagraphStyle;
+			if ( category == StyleCategory.Character )  return this.selectedCharacterStyle;
+			return -1;
 		}
 
-		public int SelectedParagraphStyle
+		public void SetSelectedTextStyle(StyleCategory category, int rank)
 		{
-			//	Style de paragraphe sélectionné.
-			get
-			{
-				return this.selectedParagraphStyle;
-			}
-
-			set
-			{
-				this.selectedParagraphStyle = value;
-			}
-		}
-
-		public int SelectedCharacterStyle
-		{
-			//	Style de caractère sélectionné.
-			get
-			{
-				return this.selectedCharacterStyle;
-			}
-
-			set
-			{
-				this.selectedCharacterStyle = value;
-			}
+			//	Modifie le style de paragraphe ou de caractère sélectionné.
+			System.Diagnostics.Debug.Assert(category == StyleCategory.Paragraph || category == StyleCategory.Character);
+			if ( category == StyleCategory.Paragraph )  this.selectedParagraphStyle = rank;
+			if ( category == StyleCategory.Character )  this.selectedCharacterStyle = rank;
 		}
 		#endregion
 
