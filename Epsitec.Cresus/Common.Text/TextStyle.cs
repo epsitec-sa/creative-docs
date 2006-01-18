@@ -23,6 +23,8 @@ namespace Epsitec.Common.Text
 		{
 			this.name             = name;
 			this.text_style_class = text_style_class;
+			
+			this.SaveStyleProperties (properties);
 		}
 		
 		internal TextStyle(string name, TextStyleClass text_style_class, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
@@ -33,7 +35,8 @@ namespace Epsitec.Common.Text
 			if ((parent_styles == null) ||
 				(parent_styles.Count == 0))
 			{
-				base.Initialise (properties);
+				this.Initialise (properties);
+				this.SaveStyleProperties (properties);
 			}
 			else
 			{
@@ -186,6 +189,7 @@ namespace Epsitec.Common.Text
 				(parent_styles.Count == 0))
 			{
 				this.Initialise (properties);
+				this.SaveStyleProperties (properties);
 			}
 			else
 			{
@@ -203,6 +207,12 @@ namespace Epsitec.Common.Text
 					
 				this.GenerateStyleProperties ();
 			}
+		}
+		
+		internal void SaveStyleProperties(System.Collections.ICollection properties)
+		{
+			this.style_properties = new Property[properties.Count];
+			properties.CopyTo (this.style_properties, 0);
 		}
 		
 		
@@ -574,7 +584,7 @@ namespace Epsitec.Common.Text
 			
 			accumulator.Accumulate (this.style_properties);
 			
-			base.Initialise (accumulator.AccumulatedProperties);
+			this.Initialise (accumulator.AccumulatedProperties);
 			
 			this.ClearContentsSignature ();
 		}
