@@ -1437,7 +1437,7 @@ namespace Epsitec.Common.Document
 			
 			this.textContext.DefaultStyle = style;
 			this.textContext.StyleList.StyleMap.SetRank(style, 0);
-			this.textContext.StyleList.StyleMap.SetCaption(style, "Base");
+			this.textContext.StyleList.StyleMap.SetCaption(style, Res.Strings.Style.Paragraph.Base);
 
 			this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
 		}

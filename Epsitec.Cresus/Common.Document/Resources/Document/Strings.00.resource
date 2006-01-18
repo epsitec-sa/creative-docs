@@ -1278,9 +1278,10 @@
 	<data name="Layer.PositionName.Back">Fond</data>
 	<data name="Aggregates.Header.Name">Nom</data>
 	<data name="Aggregates.NoneLine">&lt;i&gt;Aucun&lt;/i&gt;</data>
-	<data name="Style.Aggregate.Name">Style {0}</data>
-	<data name="Style.Paragraph.Name">Paragraphe {0}</data>
-	<data name="Style.Character.Name">Caractère {0}</data>
+	<data name="Style.Aggregate.Name">Style graphique {0}</data>
+	<data name="Style.Paragraph.Name">Style de paragraphe {0}</data>
+	<data name="Style.Character.Name">Style de caractère {0}</data>
+	<data name="Style.Paragraph.Base">Base</data>
 
 	<data name="Question.ManyObjects">Voulez-vous vraiment transformer {0} objets ?</data>
 	
