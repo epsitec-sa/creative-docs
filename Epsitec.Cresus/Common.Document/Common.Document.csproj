@@ -922,7 +922,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\AbstactStyleList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\AbstractRuler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\AbstractSample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -993,6 +1003,11 @@
                 />
                 <File
                     RelPath = "Widgets\TextFieldUnit.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\TextSample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

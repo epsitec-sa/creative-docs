@@ -4,15 +4,15 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// La classe Sample est un widget affichant un échantillon d'une propriété graphique.
+	/// La classe TextSample est un widget affichant un échantillon d'une propriété de texte.
 	/// </summary>
-	public class Sample : AbstractSample
+	public class TextSample : AbstractSample
 	{
-		public Sample() : base()
+		public TextSample() : base()
 		{
 		}
 
-		public Sample(Widget embedder) : this()
+		public TextSample(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}
