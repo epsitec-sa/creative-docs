@@ -368,12 +368,10 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				st = this[0, row].Children[0] as StaticText;
 				st.Text = (row+1).ToString();
-				this.SelectCell(0, row, selected);
 			}
 
 			st = this[nc, row].Children[0] as StaticText;
 			st.Text = (agg==null) ? Res.Strings.Aggregates.NoneLine : agg.AggregateName;
-			this.SelectCell(nc, row, selected);
 
 			if ( this.isChildrensColumn )
 			{
@@ -388,13 +386,13 @@ namespace Epsitec.Common.Document.Widgets
 				}
 				st = this[fix-1, row].Children[0] as StaticText;
 				st.Text = text;
-				this.SelectCell(fix-1, row, selected);
 			}
 
 			sm = this[fix, row].Children[0] as Sample;
 			sm.Aggregate = agg;
-			this.SelectCell(fix, row, selected);
 			sm.Invalidate();
+
+			this.SelectRow(row, selected);
 		}
 
 		public void HiliteRow(int row, bool hilite)

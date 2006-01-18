@@ -1143,7 +1143,9 @@ namespace Epsitec.Common.Widgets
 			//	Retourne la ligne sélectionnée.
 			get
 			{
-				return this.selectedRow;
+				int sel = this.selectedRow;
+				if ( sel >= this.maxRows )  sel = this.maxRows-1;
+				return sel;
 			}
 		}
 
@@ -1152,7 +1154,9 @@ namespace Epsitec.Common.Widgets
 			//	Retourne la colonne sélectionnée.
 			get
 			{
-				return this.selectedColumn;
+				int sel = this.selectedColumn;
+				if ( sel >= this.maxColumns )  sel = this.maxColumns-1;
+				return sel;
 			}
 		}
 
@@ -1197,7 +1201,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Rend la cellule sélectionnée visible.
 			
-			this.ShowCell(this.selectedRow, this.selectedColumn);
+			this.ShowCell(this.SelectedRow, this.SelectedColumn);
 		}
 		
 		public void ShowCell(int showRow, int showColumn)
