@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateCategoryGroup();
 			this.CreateAggregateToolBar();
 
-			//	Table des agrégats.
+			//	Table des agrégats (styles graphiques).
 			this.graphicList = new Widgets.AggregateList();
 			this.graphicList.Document = this.document;
 			this.graphicList.List = this.document.Aggregates;
@@ -49,10 +49,11 @@ namespace Epsitec.Common.Document.Containers
 			this.graphicList.TabIndex = 2;
 			this.graphicList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			//	Table des styles de texte.
+			//	Table des styles de paragraphe.
 			this.paragraphList = new Widgets.TextStylesList();
 			this.paragraphList.Document = this.document;
-			this.paragraphList.List = this.document.TextStyles;
+			this.paragraphList.Caterory = "Paragraph";
+			this.paragraphList.List = this.document.ParagraphStyles;
 			this.paragraphList.HScroller = true;
 			this.paragraphList.VScroller = true;
 			this.paragraphList.SetParent(this.topPage);
@@ -63,6 +64,22 @@ namespace Epsitec.Common.Document.Containers
 			this.paragraphList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
 			this.paragraphList.TabIndex = 2;
 			this.paragraphList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			//	Table des styles de caractère.
+			this.characterList = new Widgets.TextStylesList();
+			this.characterList.Document = this.document;
+			this.characterList.Caterory = "Character";
+			this.characterList.List = this.document.CharacterStyles;
+			this.characterList.HScroller = true;
+			this.characterList.VScroller = true;
+			this.characterList.SetParent(this.topPage);
+			this.characterList.MinSize = new Size(10, 87);
+			this.characterList.Dock = DockStyle.Fill;
+			this.characterList.DockMargins = new Margins(0, 0, 0, 0);
+			this.characterList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
+			this.characterList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
+			this.characterList.TabIndex = 2;
+			this.characterList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.CreateNameToolBar();
 			this.CreateChildrensToolBar();
@@ -357,8 +374,11 @@ namespace Epsitec.Common.Document.Containers
 			this.graphicList.List = this.document.Aggregates;
 			this.graphicList.UpdateContent();
 
-			this.paragraphList.List = this.document.TextStyles;
+			this.paragraphList.List = this.document.ParagraphStyles;
 			this.paragraphList.UpdateContent();
+			
+			this.characterList.List = this.document.CharacterStyles;
+			this.characterList.UpdateContent();
 			
 			this.UpdateAggregateName();
 			this.UpdateAggregateChildrens();
@@ -390,7 +410,15 @@ namespace Epsitec.Common.Document.Containers
 				int row = this.document.TextContext.StyleList.StyleMap.GetRank(textStyle);
 				if ( row != -1 )
 				{
-					this.paragraphList.UpdateRow(row);
+					if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
+					{
+						this.paragraphList.UpdateRow(row);
+					}
+
+					if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Text )
+					{
+						this.characterList.UpdateRow(row);
+					}
 				}
 			}
 		}
@@ -412,6 +440,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Met à jour la catégorie.
 			this.graphicList.Visibility = (this.category == "Graphic");
 			this.paragraphList.Visibility = (this.category == "Paragraph");
+			this.characterList.Visibility = (this.category == "Character");
 
 			this.buttonAggregateNew3.Visibility = (this.category == "Graphic");
 			this.buttonAggregateNewAll.Visibility = (this.category == "Graphic");
@@ -458,7 +487,18 @@ namespace Epsitec.Common.Document.Containers
 			if ( this.category == "Paragraph" )
 			{
 				int total = this.paragraphList.Rows;
-				int sel = this.document.SelectedTextStyle;
+				int sel = this.document.SelectedParagraphStyle;
+
+				this.buttonAggregateUp.Enable = (sel != -1 && sel > 0);
+				this.buttonAggregateDuplicate.Enable = (sel != -1);
+				this.buttonAggregateDown.Enable = (sel != -1 && sel < total-1);
+				this.buttonAggregateDelete.Enable = (sel != -1);
+			}
+
+			if ( this.category == "Character" )
+			{
+				int total = this.characterList.Rows;
+				int sel = this.document.SelectedCharacterStyle;
 
 				this.buttonAggregateUp.Enable = (sel != -1 && sel > 0);
 				this.buttonAggregateDuplicate.Enable = (sel != -1);
@@ -561,10 +601,20 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == "Paragraph" )
 			{
-				int sel = this.document.SelectedTextStyle;
+				int sel = this.document.SelectedParagraphStyle;
 				if ( sel != -1 )
 				{
 					Common.Text.TextStyle style = this.paragraphList.List[sel];
+					text = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+				}
+			}
+
+			if ( this.category == "Character" )
+			{
+				int sel = this.document.SelectedCharacterStyle;
+				if ( sel != -1 )
+				{
+					Common.Text.TextStyle style = this.characterList.List[sel];
 					text = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
 				}
 			}
@@ -600,6 +650,10 @@ namespace Epsitec.Common.Document.Containers
 			if ( this.category == "Paragraph" )
 			{
 			}
+
+			if ( this.category == "Character" )
+			{
+			}
 		}
 
 		protected void UpdateAggregateChildrens()
@@ -623,6 +677,10 @@ namespace Epsitec.Common.Document.Containers
 			}
 
 			if ( this.category == "Paragraph" )
+			{
+			}
+
+			if ( this.category == "Character" )
 			{
 			}
 		}
@@ -724,6 +782,12 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == "Paragraph" )
 			{
+				this.paragraphList.ShowSelect();
+			}
+
+			if ( this.category == "Character" )
+			{
+				this.characterList.ShowSelect();
 			}
 		}
 
@@ -796,9 +860,21 @@ namespace Epsitec.Common.Document.Containers
 				System.Collections.ArrayList properties = new System.Collections.ArrayList();
 				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(null, Common.Text.TextStyleClass.Paragraph, properties);
 
-				this.document.SelectedTextStyle ++;
+				this.document.SelectedParagraphStyle ++;
 				this.document.TextContext.StyleList.StyleMap.SetCaption(style, this.document.Modifier.GetNextParagraphStyleName);
-				this.document.TextContext.StyleList.StyleMap.SetRank(style, this.document.SelectedTextStyle);
+				this.document.TextContext.StyleList.StyleMap.SetRank(style, this.document.SelectedParagraphStyle);
+
+				this.SetDirtyContent();
+			}
+
+			if ( this.category == "Character" )
+			{
+				System.Collections.ArrayList properties = new System.Collections.ArrayList();
+				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(null, Common.Text.TextStyleClass.Text, properties);
+
+				this.document.SelectedCharacterStyle ++;
+				this.document.TextContext.StyleList.StyleMap.SetCaption(style, this.document.Modifier.GetNextCharacterStyleName);
+				this.document.TextContext.StyleList.StyleMap.SetRank(style, this.document.SelectedCharacterStyle);
 
 				this.SetDirtyContent();
 			}
@@ -848,7 +924,7 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == "Paragraph" )
 			{
-				int sel = this.document.SelectedTextStyle;
+				int sel = this.document.SelectedParagraphStyle;
 
 				Common.Text.TextStyle style1 = this.paragraphList.List[sel];
 				Common.Text.TextStyle style2 = this.paragraphList.List[sel-1];
@@ -859,7 +935,24 @@ namespace Epsitec.Common.Document.Containers
 				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank2);
 				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank1);
 
-				this.document.SelectedTextStyle = sel-1;
+				this.document.SelectedParagraphStyle = sel-1;
+				this.SetDirtyContent();
+			}
+
+			if ( this.category == "Character" )
+			{
+				int sel = this.document.SelectedCharacterStyle;
+
+				Common.Text.TextStyle style1 = this.characterList.List[sel];
+				Common.Text.TextStyle style2 = this.characterList.List[sel-1];
+
+				int rank1 = this.document.TextContext.StyleList.StyleMap.GetRank(style1);
+				int rank2 = this.document.TextContext.StyleList.StyleMap.GetRank(style2);
+
+				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank2);
+				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank1);
+
+				this.document.SelectedCharacterStyle = sel-1;
 				this.SetDirtyContent();
 			}
 		}
@@ -875,7 +968,7 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == "Paragraph" )
 			{
-				int sel = this.document.SelectedTextStyle;
+				int sel = this.document.SelectedParagraphStyle;
 
 				Common.Text.TextStyle style1 = this.paragraphList.List[sel];
 				Common.Text.TextStyle style2 = this.paragraphList.List[sel+1];
@@ -886,7 +979,24 @@ namespace Epsitec.Common.Document.Containers
 				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank2);
 				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank1);
 
-				this.document.SelectedTextStyle = sel+1;
+				this.document.SelectedParagraphStyle = sel+1;
+				this.SetDirtyContent();
+			}
+
+			if ( this.category == "Character" )
+			{
+				int sel = this.document.SelectedCharacterStyle;
+
+				Common.Text.TextStyle style1 = this.characterList.List[sel];
+				Common.Text.TextStyle style2 = this.characterList.List[sel+1];
+
+				int rank1 = this.document.TextContext.StyleList.StyleMap.GetRank(style1);
+				int rank2 = this.document.TextContext.StyleList.StyleMap.GetRank(style2);
+
+				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank2);
+				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank1);
+
+				this.document.SelectedCharacterStyle = sel+1;
 				this.SetDirtyContent();
 			}
 		}
@@ -972,7 +1082,15 @@ namespace Epsitec.Common.Document.Containers
 			//	Sélection changée dans la liste.
 			System.Diagnostics.Debug.Assert(this.category != "Graphic");
 
-			this.document.SelectedTextStyle = this.paragraphList.SelectedRow;
+			if ( sender == this.paragraphList )
+			{
+				this.document.SelectedParagraphStyle = this.paragraphList.SelectedRow;
+			}
+
+			if ( sender == this.characterList )
+			{
+				this.document.SelectedCharacterStyle = this.characterList.SelectedRow;
+			}
 
 			this.UpdateToolBar();
 			this.UpdateSelector();
@@ -1123,10 +1241,21 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == "Paragraph" )
 			{
-				int sel = this.document.SelectedTextStyle;
+				int sel = this.document.SelectedParagraphStyle;
 				if ( sel == -1 )  return;
 
 				Common.Text.TextStyle style = this.paragraphList.List[sel];
+				this.document.TextContext.StyleList.StyleMap.SetCaption(style, this.name.Text);
+
+				this.document.Notifier.NotifyTextStyleChanged(style);
+			}
+
+			if ( this.category == "Character" )
+			{
+				int sel = this.document.SelectedCharacterStyle;
+				if ( sel == -1 )  return;
+
+				Common.Text.TextStyle style = this.characterList.List[sel];
 				this.document.TextContext.StyleList.StyleMap.SetCaption(style, this.name.Text);
 
 				this.document.Notifier.NotifyTextStyleChanged(style);
@@ -1311,6 +1440,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected Widgets.AggregateList		graphicList;
 		protected Widgets.TextStylesList	paragraphList;
+		protected Widgets.TextStylesList	characterList;
 
 		protected HToolBar					nameToolBar;
 		protected TextField					name;

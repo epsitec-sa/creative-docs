@@ -1449,26 +1449,87 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.UpdateTextStyles();
 		}
 		
-		public Text.TextStyle[] TextStyles
+		public Text.TextStyle[] ParagraphStyles
 		{
-			//	Liste des styles de texte de ce document.
+			//	Liste des styles de pagagraphe de ce document.
 			get
 			{
-				return this.TextContext.StyleList.StyleMap.GetSortedStyles();
+				Text.TextStyle[] list = this.TextContext.StyleList.StyleMap.GetSortedStyles();
+				int total = 0;
+				foreach ( Text.TextStyle style in list )
+				{
+					if ( style.TextStyleClass == Text.TextStyleClass.Paragraph )  total ++;
+				}
+
+				Text.TextStyle[] paragraphs = new Text.TextStyle[total];
+				int i = 0;
+				foreach ( Text.TextStyle style in list )
+				{
+					if ( style.TextStyleClass == Text.TextStyleClass.Paragraph )
+					{
+						paragraphs[i++] = style;
+					}
+				}
+
+				this.selectedParagraphStyle = System.Math.Min(this.selectedParagraphStyle, paragraphs.Length-1);
+
+				return paragraphs;
 			}
 		}
 
-		public int SelectedTextStyle
+		public Text.TextStyle[] CharacterStyles
 		{
-			//	Style de texte sélectionné.
+			//	Liste des styles de caractère de ce document.
 			get
 			{
-				return this.selectedTextStyle;
+				Text.TextStyle[] list = this.TextContext.StyleList.StyleMap.GetSortedStyles();
+				int total = 0;
+				foreach ( Text.TextStyle style in list )
+				{
+					if ( style.TextStyleClass == Text.TextStyleClass.Text )  total ++;
+				}
+
+				Text.TextStyle[] characters = new Text.TextStyle[total];
+				int i = 0;
+				foreach ( Text.TextStyle style in list )
+				{
+					if ( style.TextStyleClass == Text.TextStyleClass.Text )
+					{
+						characters[i++] = style;
+					}
+				}
+
+				this.selectedCharacterStyle = System.Math.Min(this.selectedCharacterStyle, characters.Length-1);
+
+				return characters;
+			}
+		}
+
+		public int SelectedParagraphStyle
+		{
+			//	Style de paragraphe sélectionné.
+			get
+			{
+				return this.selectedParagraphStyle;
 			}
 
 			set
 			{
-				this.selectedTextStyle = value;
+				this.selectedParagraphStyle = value;
+			}
+		}
+
+		public int SelectedCharacterStyle
+		{
+			//	Style de caractère sélectionné.
+			get
+			{
+				return this.selectedCharacterStyle;
+			}
+
+			set
+			{
+				this.selectedCharacterStyle = value;
 			}
 		}
 		#endregion
@@ -2026,7 +2087,8 @@ namespace Epsitec.Common.Document
 		protected int									uniqueAggregateId = 0;
 		protected int									uniqueParagraphStyleId = 0;
 		protected int									uniqueCharacterStyleId = 0;
-		protected int									selectedTextStyle = 0;
+		protected int									selectedParagraphStyle = 0;
+		protected int									selectedCharacterStyle = 0;
 		protected Text.TextContext						textContext;
 		protected Widgets.HRuler						hRuler;
 		protected Widgets.VRuler						vRuler;

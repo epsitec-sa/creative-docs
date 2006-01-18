@@ -15,6 +15,20 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		public string Caterory
+		{
+			//	Catérorie "Paragraph" ou "Character".
+			get
+			{
+				return this.caterory;
+			}
+
+			set
+			{
+				this.caterory = value;
+			}
+		}
+
 		public Text.TextStyle[] List
 		{
 			//	Liste des styles de texte représentés dans la liste.
@@ -45,14 +59,12 @@ namespace Epsitec.Common.Document.Widgets
 			//	Ligne sélectionnée dans la liste.
 			get
 			{
-				if ( this.list == null )
+				if ( this.list != null )
 				{
-					return -1;
+					if ( this.caterory == "Paragraph" )  return this.document.SelectedParagraphStyle;
+					if ( this.caterory == "Character" )  return this.document.SelectedCharacterStyle;
 				}
-				else
-				{
-					return this.document.SelectedTextStyle;
-				}
+				return -1;
 			}
 		}
 
@@ -100,6 +112,7 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		protected string						caterory;
 		protected Text.TextStyle[]				list;
 	}
 }
