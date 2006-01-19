@@ -754,8 +754,8 @@ namespace Epsitec.Common.Document.Containers
 
 				int sel = this.document.GetSelectedTextStyle(this.category);
 				Common.Text.TextStyle style = this.TextStyleList.List[sel];
-				this.document.Wrappers.TextWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
-				this.document.Wrappers.ParagraphWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
+				this.document.Wrappers.StyleTextWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
+				this.document.Wrappers.StyleParagraphWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
 			}
 		}
 
@@ -787,8 +787,8 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.textPanel != null )
 			{
-				this.document.Wrappers.TextWrapper.Detach();
-				this.document.Wrappers.ParagraphWrapper.Detach();
+				this.document.Wrappers.StyleTextWrapper.Detach();
+				this.document.Wrappers.StyleParagraphWrapper.Detach();
 
 				this.textPanel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
 				this.textPanel.Dispose();

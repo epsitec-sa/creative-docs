@@ -17,6 +17,9 @@ namespace Epsitec.Common.Document
 			this.textWrapper      = new Text.Wrappers.TextWrapper();
 			this.paragraphWrapper = new Text.Wrappers.ParagraphWrapper();
 
+			this.styleTextWrapper      = new Text.Wrappers.TextWrapper();
+			this.styleParagraphWrapper = new Text.Wrappers.ParagraphWrapper();
+
 			this.textWrapper.Active.Changed  += new EventHandler(this.HandleTextWrapperChanged);
 			this.textWrapper.Defined.Changed += new EventHandler(this.HandleTextWrapperChanged);
 
@@ -35,6 +38,19 @@ namespace Epsitec.Common.Document
 		{
 			//	Wrapper pour le paragraphe.
 			get { return this.paragraphWrapper; }
+		}
+
+
+		public Text.Wrappers.TextWrapper StyleTextWrapper
+		{
+			//	Wrapper pour les styles de caractère.
+			get { return this.styleTextWrapper; }
+		}
+
+		public Text.Wrappers.ParagraphWrapper StyleParagraphWrapper
+		{
+			//	Wrapper pour les styles de paragraphe.
+			get { return this.styleParagraphWrapper; }
 		}
 
 
@@ -842,6 +858,8 @@ namespace Epsitec.Common.Document
 		protected Document								document;
 		protected Text.Wrappers.TextWrapper				textWrapper;
 		protected Text.Wrappers.ParagraphWrapper		paragraphWrapper;
+		protected Text.Wrappers.TextWrapper				styleTextWrapper;
+		protected Text.Wrappers.ParagraphWrapper		styleParagraphWrapper;
 		protected System.Collections.ArrayList			quickFonts;
 	}
 }
