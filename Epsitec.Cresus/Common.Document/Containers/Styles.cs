@@ -100,7 +100,7 @@ namespace Epsitec.Common.Document.Containers
 
 			//	Sélectionneur.
 			this.selectorToolBar = new Widget(this.bottomPage);
-			this.selectorToolBar.Height = 16+8;
+			this.selectorToolBar.Height = Styles.selectorSize+8;
 			this.selectorToolBar.Dock = DockStyle.Top;
 			this.selectorToolBar.DockMargins = new Margins(0, 0, 5, 0);
 			this.selectorToolBar.TabIndex = 97;
@@ -521,7 +521,7 @@ namespace Epsitec.Common.Document.Containers
 					}
 
 					double width = System.Math.Floor(this.selectorToolBar.Width/total);
-					width = System.Math.Min(width, 16);
+					width = System.Math.Min(width, Styles.selectorSize);
 
 					for ( int i=0 ; i<100 ; i++ )
 					{
@@ -541,14 +541,14 @@ namespace Epsitec.Common.Document.Containers
 			{
 				if ( this.document.GetSelectedTextStyle(this.category) != -1 )
 				{
-					this.UpdateSelectorAdd(16, "Justif",   "TextJustif",   Res.Strings.TextPanel.Justif.Title);
-					this.UpdateSelectorAdd(16, "Leading",  "TextLeading",  Res.Strings.TextPanel.Leading.Title);
-					this.UpdateSelectorAdd(16, "Margins",  "TextMargins",  Res.Strings.TextPanel.Margins.Title);
-					this.UpdateSelectorAdd(16, "Spaces",   "TextSpaces",   Res.Strings.TextPanel.Spaces.Title);
-					this.UpdateSelectorAdd(16, "Keep",     "TextKeep",     Res.Strings.TextPanel.Keep.Title);
-					this.UpdateSelectorAdd(16, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
-					this.UpdateSelectorAdd(16, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
-					this.UpdateSelectorAdd(16, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Justif",   "TextJustif",   Res.Strings.TextPanel.Justif.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Leading",  "TextLeading",  Res.Strings.TextPanel.Leading.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Margins",  "TextMargins",  Res.Strings.TextPanel.Margins.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Spaces",   "TextSpaces",   Res.Strings.TextPanel.Spaces.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Keep",     "TextKeep",     Res.Strings.TextPanel.Keep.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);
 				}
 			}
 
@@ -556,10 +556,10 @@ namespace Epsitec.Common.Document.Containers
 			{
 				if ( this.document.GetSelectedTextStyle(this.category) != -1 )
 				{
-					this.UpdateSelectorAdd(16, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
-					this.UpdateSelectorAdd(16, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
-					this.UpdateSelectorAdd(16, "Xscript",  "TextXscript",  Res.Strings.TextPanel.Xscript.Title);
-					this.UpdateSelectorAdd(16, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Xscript",  "TextXscript",  Res.Strings.TextPanel.Xscript.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);
 				}
 			}
 		}
@@ -570,7 +570,7 @@ namespace Epsitec.Common.Document.Containers
 			button.Name = name;
 			button.IconName = Misc.Icon(icon);
 			button.Width = width;
-			button.Height = 16+8;
+			button.Height = Styles.selectorSize+8;
 			button.AutoFocus = false;
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
 			button.Dock = DockStyle.Left;
@@ -1389,22 +1389,24 @@ namespace Epsitec.Common.Document.Containers
 
 		protected string SelectorName
 		{
+			//	Nom du panneau sélectionné selon la catégorie actuelle.
 			get
 			{
-				if ( this.category == StyleCategory.Graphic   )  return this.selectorName[0];
-				if ( this.category == StyleCategory.Paragraph )  return this.selectorName[1];
-				if ( this.category == StyleCategory.Character )  return this.selectorName[2];
-				throw new System.ArgumentException("SelectorName(" + this.category.ToString() + ")");
+				int i = (int) this.category;
+				System.Diagnostics.Debug.Assert(i >= 0 && i < this.selectorName.Length);
+				return this.selectorName[i];
 			}
 
 			set
 			{
-				if ( this.category == StyleCategory.Graphic   )  this.selectorName[0] = value;
-				if ( this.category == StyleCategory.Paragraph )  this.selectorName[1] = value;
-				if ( this.category == StyleCategory.Character )  this.selectorName[2] = value;
+				int i = (int) this.category;
+				System.Diagnostics.Debug.Assert(i >= 0 && i < this.selectorName.Length);
+				this.selectorName[i] = value;
 			}
 		}
 
+
+		protected static readonly double	selectorSize = 20;
 
 		protected PaneBook					mainBook;
 		protected PanePage					topPage;
