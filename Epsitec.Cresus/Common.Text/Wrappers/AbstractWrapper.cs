@@ -22,11 +22,36 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		public bool								IsAttachedToDefaultStyle
+		{
+			get
+			{
+				if ((this.style != null) &&
+					(this.style_list != null) &&
+					(this.style_list.IsDefaultTextStyle (this.style)))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		
 		public Attachment						Attachment
 		{
 			get
 			{
 				return this.attachment;
+			}
+		}
+		
+		public TextStyle						AttachedStyle
+		{
+			get
+			{
+				return this.style;
 			}
 		}
 		

@@ -156,6 +156,14 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				if (defines > 0)
 				{
+					if (this.IsAttachedToDefaultStyle)
+					{
+						System.Diagnostics.Debug.Assert (units != Properties.SizeUnits.Percent);
+						System.Diagnostics.Debug.Assert (units != Properties.SizeUnits.DeltaInches);
+						System.Diagnostics.Debug.Assert (units != Properties.SizeUnits.DeltaMillimeters);
+						System.Diagnostics.Debug.Assert (units != Properties.SizeUnits.DeltaPoints);
+					}
+					
 					Property p_size = new Properties.FontSizeProperty (font_size, units, double.NaN);
 					
 					this.DefineMetaProperty (TextWrapper.FontSize, 0, p_size);

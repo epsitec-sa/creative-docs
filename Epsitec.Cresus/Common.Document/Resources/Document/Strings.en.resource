@@ -548,7 +548,7 @@
 	<data name="TextPanel.Font.Tooltip.Size">Font size</data>
 	<data name="TextPanel.Font.Tooltip.Glue">Tracking (space between characters)</data>
 
-	<data name="TextPanel.Xline.Title">Horizontal lines</data>
+	<data name="TextPanel.Xline.Title">Underlines</data>
 	<data name="TextPanel.Xline.Short.Underlined.Thickness">T</data>
 	<data name="TextPanel.Xline.Short.Underlined.Position">P</data>
 	<data name="TextPanel.Xline.Short.Strikeout.Thickness">T</data>
