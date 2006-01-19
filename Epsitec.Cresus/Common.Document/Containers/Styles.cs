@@ -469,7 +469,7 @@ namespace Epsitec.Common.Document.Containers
 				Properties.Aggregate agg = this.GetAggregate();
 				if ( agg != null )
 				{
-					type = Properties.Abstract.TypeName(this.selectorName);
+					type = Properties.Abstract.TypeName(this.SelectorName);
 					if ( type != Properties.Type.None )
 					{
 						if ( agg.Property(type) != null )
@@ -574,7 +574,7 @@ namespace Epsitec.Common.Document.Containers
 			button.AutoFocus = false;
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
 			button.Dock = DockStyle.Left;
-			button.ActiveState = (name == this.selectorName) ? ActiveState.Yes : ActiveState.No;
+			button.ActiveState = (name == this.SelectorName) ? ActiveState.Yes : ActiveState.No;
 			button.Clicked += new MessageEventHandler(this.HandleSelectorClicked);
 			ToolTip.Default.SetToolTip(button, text);
 		}
@@ -722,7 +722,7 @@ namespace Epsitec.Common.Document.Containers
 				this.ClosePanel();
 
 				TextPanels.Abstract.StaticDocument = this.document;
-				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.selectorName, this.document);
+				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.SelectorName, this.document);
 				if ( panel == null )  return;
 
 				this.textPanel = panel;
@@ -749,7 +749,7 @@ namespace Epsitec.Common.Document.Containers
 			Properties.Aggregate agg = this.GetAggregate();
 			if ( agg == null )  return null;
 
-			Properties.Type type = Properties.Abstract.TypeName(this.selectorName);
+			Properties.Type type = Properties.Abstract.TypeName(this.SelectorName);
 			if ( type == Properties.Type.None )  return null;
 
 			return agg.Property(type);
@@ -831,7 +831,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleSelectorClicked(object sender, MessageEventArgs e)
 		{
-			this.selectorName = null;
+			this.SelectorName = null;
 			foreach ( Widget widget in this.selectorToolBar.Children.Widgets )
 			{
 				if ( widget == sender )
@@ -843,7 +843,7 @@ namespace Epsitec.Common.Document.Containers
 					else
 					{
 						widget.ActiveState = ActiveState.Yes;
-						this.selectorName = widget.Name;
+						this.SelectorName = widget.Name;
 					}
 				}
 				else
@@ -1006,7 +1006,7 @@ namespace Epsitec.Common.Document.Containers
 			Properties.Aggregate agg = this.GetAggregate();
 			if ( agg != null )
 			{
-				Properties.Type type = Properties.Abstract.TypeName(this.selectorName);
+				Properties.Type type = Properties.Abstract.TypeName(this.SelectorName);
 				Properties.Abstract property = agg.Property(type);
 				this.document.Modifier.OpletQueueEnable = false;
 				agg.Styles.Selected = agg.Styles.IndexOf(property);
@@ -1185,7 +1185,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Supprime la propriété sélectionnée.
 			System.Diagnostics.Debug.Assert(this.category == StyleCategory.Graphic);
 			Properties.Aggregate agg = this.GetAggregate();
-			this.document.Modifier.AggregateStyleDelete(agg, Properties.Abstract.TypeName(this.selectorName));
+			this.document.Modifier.AggregateStyleDelete(agg, Properties.Abstract.TypeName(this.SelectorName));
 			this.UpdateSelector();
 			this.UpdatePanel();
 		}
@@ -1314,7 +1314,7 @@ namespace Epsitec.Common.Document.Containers
 			Properties.Aggregate agg = this.GetAggregate();
 			Properties.Type type = Properties.Abstract.TypeName(item.Name);
 			this.document.Modifier.AggregateStyleNew(agg, type);
-			this.selectorName = Properties.Abstract.TypeName(type);
+			this.SelectorName = Properties.Abstract.TypeName(type);
 			this.UpdateSelector();
 			this.UpdatePanel();
 		}
@@ -1387,6 +1387,24 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
+		protected string SelectorName
+		{
+			get
+			{
+				if ( this.category == StyleCategory.Graphic   )  return this.selectorName[0];
+				if ( this.category == StyleCategory.Paragraph )  return this.selectorName[1];
+				if ( this.category == StyleCategory.Character )  return this.selectorName[2];
+				throw new System.ArgumentException("SelectorName(" + this.category.ToString() + ")");
+			}
+
+			set
+			{
+				if ( this.category == StyleCategory.Graphic   )  this.selectorName[0] = value;
+				if ( this.category == StyleCategory.Paragraph )  this.selectorName[1] = value;
+				if ( this.category == StyleCategory.Character )  this.selectorName[2] = value;
+			}
+		}
+
 
 		protected PaneBook					mainBook;
 		protected PanePage					topPage;
@@ -1417,7 +1435,7 @@ namespace Epsitec.Common.Document.Containers
 		protected TextField					name;
 
 		protected Widget					selectorToolBar;
-		protected string					selectorName;
+		protected string[]					selectorName = new string[3];
 
 		protected HToolBar					childrensToolBar;
 		protected IconButton				buttonChildrensNew;
