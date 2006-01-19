@@ -737,12 +737,11 @@ namespace Epsitec.Common.Document.Containers
 				this.ClosePanel();
 
 				TextPanels.Abstract.StaticDocument = this.document;
-				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.SelectorName, this.document);
+				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.SelectorName, this.document, true);
 				if ( panel == null )  return;
 
 				this.textPanel = panel;
 				this.textPanel.IsExtendedSize = true;
-				this.textPanel.IsStyleDefinition = true;
 				this.textPanel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
 				this.textPanel.SetParent(this.panelContainer);
 				this.textPanel.Dock = DockStyle.Fill;

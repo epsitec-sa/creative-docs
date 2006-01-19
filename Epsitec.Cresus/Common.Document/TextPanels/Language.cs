@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Language : Abstract
 	{
-		public Language(Document document) : base(document)
+		public Language(Document document, bool isStyle) : base(document, isStyle)
 		{
 			this.label.Text = Res.Strings.TextPanel.Language.Title;
 
@@ -29,8 +29,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
-			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.UpdateAfterChanging();
 		}
@@ -41,8 +41,8 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.fieldLanguage.TextChanged -= new EventHandler(this.HandleLanguageChanged);
 
-				this.document.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 
 				this.fieldLanguage = null;
 			}
@@ -132,14 +132,14 @@ namespace Epsitec.Common.Document.TextPanels
 
 			bool hyphen = false;
 			bool isHyphen = false;
-			if ( this.document.TextWrapper.Defined.IsLanguageHyphenationDefined )
+			if ( this.TextWrapper.Defined.IsLanguageHyphenationDefined )
 			{
-				hyphen = (this.document.TextWrapper.Active.LanguageHyphenation == 1.0);
+				hyphen = (this.TextWrapper.Active.LanguageHyphenation == 1.0);
 				isHyphen = true;
 			}
 
-			string language = Language.LanguageShortToLong(this.document.TextWrapper.Active.LanguageLocale);
-			bool isLanguage = this.document.TextWrapper.Defined.IsLanguageLocaleDefined;
+			string language = Language.LanguageShortToLong(this.TextWrapper.Active.LanguageLocale);
+			bool isLanguage = this.TextWrapper.Defined.IsLanguageLocaleDefined;
 
 			this.ignoreChanged = true;
 			
@@ -156,24 +156,24 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleHyphenClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 
 			this.buttonHyphen.ActiveState = (this.buttonHyphen.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
 			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.Yes);
 
-			this.document.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
 
 			if ( hyphen )
 			{
-				this.document.TextWrapper.Defined.LanguageHyphenation = 1.0;
+				this.TextWrapper.Defined.LanguageHyphenation = 1.0;
 			}
 			else
 			{
-				this.document.TextWrapper.Defined.LanguageHyphenation = 0.0;
+				this.TextWrapper.Defined.LanguageHyphenation = 0.0;
 			}
 
-			this.document.TextWrapper.DefineOperationName("TextLanguageHyphen", Res.Strings.Action.ParagraphHyphen);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.DefineOperationName("TextLanguageHyphen", Res.Strings.Action.ParagraphHyphen);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleLanguageChanged(object sender)
@@ -181,32 +181,32 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 
-			this.document.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
 
 			string language = Language.LanguageLongToShort(this.fieldLanguage.Text);
 			if ( language != "" )
 			{
-				this.document.TextWrapper.Defined.LanguageLocale = language;
+				this.TextWrapper.Defined.LanguageLocale = language;
 			}
 			else
 			{
-				this.document.TextWrapper.Defined.ClearLanguageLocale();
+				this.TextWrapper.Defined.ClearLanguageLocale();
 			}
 			
-			this.document.TextWrapper.DefineOperationName("TextLanguage", Res.Strings.TextPanel.Language.Title);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.DefineOperationName("TextLanguage", Res.Strings.TextPanel.Language.Title);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronizations();
-			this.document.TextWrapper.Defined.ClearLanguageHyphenation();
-			this.document.TextWrapper.Defined.ClearLanguageLocale();
-			this.document.TextWrapper.DefineOperationName("TextLanguageClear", Res.Strings.TextPanel.Clear);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.Defined.ClearLanguageHyphenation();
+			this.TextWrapper.Defined.ClearLanguageLocale();
+			this.TextWrapper.DefineOperationName("TextLanguageClear", Res.Strings.TextPanel.Clear);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 

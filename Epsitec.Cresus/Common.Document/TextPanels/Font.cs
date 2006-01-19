@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Font : Abstract
 	{
-		public Font(Document document) : base(document)
+		public Font(Document document, bool isStyle) : base(document, isStyle)
 		{
 			this.label.Text = Res.Strings.TextPanel.Font.Title;
 
@@ -67,8 +67,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.checkItalic.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.checkItalic.ActiveStateChanged += new EventHandler(this.HandleCheckItalicActiveStateChanged);
 
-			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -85,8 +85,8 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
 
-				this.document.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 
 				this.fontFace = null;
 				this.fontSize = null;
@@ -184,19 +184,19 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Donne la couleur au wrapper.
 			string color = this.GetColorSample(sample);
 
-			this.document.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
 
 			if ( color == null )
 			{
-				this.document.TextWrapper.Defined.ClearColor();
+				this.TextWrapper.Defined.ClearColor();
 			}
 			else
 			{
-				this.document.TextWrapper.Defined.Color = color;
+				this.TextWrapper.Defined.Color = color;
 			}
 			
-			this.document.TextWrapper.DefineOperationName("FontColor", Res.Strings.Action.FontColor);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.DefineOperationName("FontColor", Res.Strings.Action.FontColor);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		
@@ -205,30 +205,30 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
-			string face = this.document.TextWrapper.Active.FontFace;
-			bool isFace = this.document.TextWrapper.Defined.IsFontFaceDefined;
+			string face = this.TextWrapper.Active.FontFace;
+			bool isFace = this.TextWrapper.Defined.IsFontFaceDefined;
 
-			string style = this.document.TextWrapper.Active.FontStyle;
-			bool isStyle = this.document.TextWrapper.Defined.IsFontStyleDefined;
+			string style = this.TextWrapper.Active.FontStyle;
+			bool isStyle = this.TextWrapper.Defined.IsFontStyleDefined;
 
-			double size = this.document.TextWrapper.Active.FontSize;
-			Text.Properties.SizeUnits units = this.document.TextWrapper.Active.Units;
-			bool isSize = this.document.TextWrapper.Defined.IsFontSizeDefined;
+			double size = this.TextWrapper.Active.FontSize;
+			Text.Properties.SizeUnits units = this.TextWrapper.Active.Units;
+			bool isSize = this.TextWrapper.Defined.IsFontSizeDefined;
 			if ( isSize )
 			{
-				size = this.document.TextWrapper.Defined.FontSize;
-				units = this.document.TextWrapper.Defined.Units;
+				size = this.TextWrapper.Defined.FontSize;
+				units = this.TextWrapper.Defined.Units;
 			}
 
-			double glue = this.document.TextWrapper.Active.FontGlue;
+			double glue = this.TextWrapper.Active.FontGlue;
 			if ( double.IsNaN(glue) )  glue = 0.0;  // TODO: devrait être inutile, non ?
-			bool isGlue = this.document.TextWrapper.Defined.IsFontGlueDefined;
+			bool isGlue = this.TextWrapper.Defined.IsFontGlueDefined;
 
-			string color = this.document.TextWrapper.Defined.Color;
-			bool isColor = this.document.TextWrapper.Defined.IsColorDefined;
+			string color = this.TextWrapper.Defined.Color;
+			bool isColor = this.TextWrapper.Defined.IsColorDefined;
 
-			bool bold   = this.document.TextWrapper.Defined.InvertBold;
-			bool italic = this.document.TextWrapper.Defined.InvertItalic;
+			bool bold   = this.TextWrapper.Defined.InvertBold;
+			bool italic = this.TextWrapper.Defined.InvertItalic;
 
 			this.ignoreChanged = true;
 
@@ -395,9 +395,9 @@ namespace Epsitec.Common.Document.TextPanels
 			IconButton button = sender as IconButton;
 			if ( button == null )  return;
 
-			string face = this.document.TextWrapper.Active.FontFace;
-			string style = this.document.TextWrapper.Active.FontStyle;
-			string[] features = this.document.TextWrapper.Active.FontFeatures;
+			string face = this.TextWrapper.Active.FontFace;
+			string style = this.TextWrapper.Active.FontStyle;
+			string[] features = this.TextWrapper.Active.FontFeatures;
 
 			Point pos = button.MapClientToScreen(new Point(0, 1));
 			VMenu menu = this.BuildFeaturesMenu(face, style, features);
@@ -483,7 +483,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string cmd = item.Name;
 
-			string[] features = this.document.TextWrapper.Active.FontFeatures;
+			string[] features = this.TextWrapper.Active.FontFeatures;
 			if ( features == null )  features = new string[0];
 			
 			string[] newFeatures;
@@ -509,10 +509,10 @@ namespace Epsitec.Common.Document.TextPanels
 				newFeatures[features.Length] = cmd;
 			}
 
-			this.document.TextWrapper.SuspendSynchronizations();
-			this.document.TextWrapper.Defined.FontFeatures = newFeatures;
-			this.document.TextWrapper.DefineOperationName("FontFeatures", Res.Strings.Action.FontFeatures);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.Defined.FontFeatures = newFeatures;
+			this.TextWrapper.DefineOperationName("FontFeatures", Res.Strings.Action.FontFeatures);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 		#endregion
 
@@ -522,32 +522,32 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
 
-			this.document.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
 
 			if ( sender == this.fontStyle )
 			{
 				string style = this.fontStyle.Text;
 				if ( style != "" )
 				{
-					string face = this.document.TextWrapper.Active.FontFace;
-					this.document.TextWrapper.Defined.FontFace = face;
-					this.document.TextWrapper.Defined.FontStyle = style;
+					string face = this.TextWrapper.Active.FontFace;
+					this.TextWrapper.Defined.FontFace = face;
+					this.TextWrapper.Defined.FontStyle = style;
 				}
 				else
 				{
-					this.document.TextWrapper.Defined.ClearFontStyle();
+					this.TextWrapper.Defined.ClearFontStyle();
 				}
-				this.document.TextWrapper.DefineOperationName("FontStyle", Res.Strings.Action.FontStyle);
+				this.TextWrapper.DefineOperationName("FontStyle", Res.Strings.Action.FontStyle);
 			}
 
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
 		{
 			//	Le combo pour les polices va être ouvert.
 			bool quickOnly = this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
-			string selectedFontFace = this.document.TextWrapper.Active.FontFace;
+			string selectedFontFace = this.TextWrapper.Active.FontFace;
 			int quickCount;
 			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.document.Settings.QuickFonts, quickOnly, selectedFontFace, out quickCount);
 
@@ -560,15 +560,15 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleFontFaceTextChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 
 			string face = this.fontFace.Text;
 
-			this.document.TextWrapper.SuspendSynchronizations();
-			this.document.TextWrapper.Defined.FontFace = face;
-			this.document.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
-			this.document.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.Defined.FontFace = face;
+			this.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
+			this.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleButtonSettingsClicked(object sender, MessageEventArgs e)
@@ -601,7 +601,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleButtonUnitClicked(object sender, MessageEventArgs e)
 		{
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 
 			this.fontSize.IsUnitPercent = !this.fontSize.IsUnitPercent;
 
@@ -619,17 +619,17 @@ namespace Epsitec.Common.Document.TextPanels
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
 
-			this.document.TextWrapper.SuspendSynchronizations();
-			this.document.TextWrapper.Defined.FontSize = value;
-			this.document.TextWrapper.Defined.Units = units;
-			this.document.TextWrapper.DefineOperationName("FontSize", Res.Strings.Action.FontSize);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.Defined.FontSize = value;
+			this.TextWrapper.Defined.Units = units;
+			this.TextWrapper.DefineOperationName("FontSize", Res.Strings.Action.FontSize);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleSizeChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
@@ -639,21 +639,21 @@ namespace Epsitec.Common.Document.TextPanels
 			bool isDefined;
 			this.GetTextFieldRealValue(field, out value, out units, out isDefined);
 
-			this.document.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
-				this.document.TextWrapper.Defined.FontSize = value;
-				this.document.TextWrapper.Defined.Units = units;
+				this.TextWrapper.Defined.FontSize = value;
+				this.TextWrapper.Defined.Units = units;
 			}
 			else
 			{
-				this.document.TextWrapper.Defined.ClearFontSize();
-				this.document.TextWrapper.Defined.ClearUnits();
+				this.TextWrapper.Defined.ClearFontSize();
+				this.TextWrapper.Defined.ClearUnits();
 			}
 
-			this.document.TextWrapper.DefineOperationName("FontSize", Res.Strings.Action.FontSize);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.DefineOperationName("FontSize", Res.Strings.Action.FontSize);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleButtonSizeMenuClicked(object sender, MessageEventArgs e)
@@ -670,92 +670,92 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleButtonSizeMinusClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 			this.document.Wrappers.IncrementFontSize(-1);
 		}
 
 		private void HandleButtonSizePlusClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 			this.document.Wrappers.IncrementFontSize(1);
 		}
 
 		private void HandleGlueValueChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 
 			double value;
 			bool isDefined;
 			this.GetTextFieldRealPercent(this.fontGlue.TextFieldReal, out value, out isDefined);
 
-			this.document.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
-				this.document.TextWrapper.Defined.FontGlue = value;
+				this.TextWrapper.Defined.FontGlue = value;
 			}
 			else
 			{
-				this.document.TextWrapper.Defined.ClearFontGlue();
+				this.TextWrapper.Defined.ClearFontGlue();
 			}
 
-			this.document.TextWrapper.DefineOperationName("FontGlue", Res.Strings.TextPanel.Font.Tooltip.Glue);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.DefineOperationName("FontGlue", Res.Strings.TextPanel.Font.Tooltip.Glue);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleCheckBoldActiveStateChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 			
 			bool value = this.checkBold.ActiveState == ActiveState.Yes;
 			
-			if ( this.document.TextWrapper.Defined.InvertBold != value ||
-				 this.document.TextWrapper.Defined.IsInvertBoldDefined == false )
+			if ( this.TextWrapper.Defined.InvertBold != value ||
+				 this.TextWrapper.Defined.IsInvertBoldDefined == false )
 			{
-				this.document.TextWrapper.SuspendSynchronizations();
-				this.document.TextWrapper.Defined.InvertBold = value;
-				this.document.TextWrapper.DefineOperationName("FontBold", Res.Strings.Action.FontBold);
-				this.document.TextWrapper.ResumeSynchronizations();
+				this.TextWrapper.SuspendSynchronizations();
+				this.TextWrapper.Defined.InvertBold = value;
+				this.TextWrapper.DefineOperationName("FontBold", Res.Strings.Action.FontBold);
+				this.TextWrapper.ResumeSynchronizations();
 			}
 		}
 
 		private void HandleCheckItalicActiveStateChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 			
 			bool value = this.checkItalic.ActiveState == ActiveState.Yes;
 			
-			if ( this.document.TextWrapper.Defined.InvertItalic != value ||
-				 this.document.TextWrapper.Defined.IsInvertItalicDefined == false )
+			if ( this.TextWrapper.Defined.InvertItalic != value ||
+				 this.TextWrapper.Defined.IsInvertItalicDefined == false )
 			{
-				this.document.TextWrapper.SuspendSynchronizations();
-				this.document.TextWrapper.Defined.InvertItalic = value;
-				this.document.TextWrapper.DefineOperationName("FontItalic", Res.Strings.Action.FontItalic);
-				this.document.TextWrapper.ResumeSynchronizations();
+				this.TextWrapper.SuspendSynchronizations();
+				this.TextWrapper.Defined.InvertItalic = value;
+				this.TextWrapper.DefineOperationName("FontItalic", Res.Strings.Action.FontItalic);
+				this.TextWrapper.ResumeSynchronizations();
 			}
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronizations();
-			this.document.TextWrapper.Defined.ClearFontFace();
-			this.document.TextWrapper.Defined.ClearFontStyle();
-			this.document.TextWrapper.Defined.ClearFontFeatures();
-			this.document.TextWrapper.Defined.ClearFontSize();
-			this.document.TextWrapper.Defined.ClearFontGlue();
-			this.document.TextWrapper.Defined.ClearUnits();
-			this.document.TextWrapper.Defined.ClearInvertBold();
-			this.document.TextWrapper.Defined.ClearInvertItalic();
-			this.document.TextWrapper.Defined.ClearColor();
-			this.document.TextWrapper.DefineOperationName("FontFaceClear", Res.Strings.TextPanel.Clear);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.Defined.ClearFontFace();
+			this.TextWrapper.Defined.ClearFontStyle();
+			this.TextWrapper.Defined.ClearFontFeatures();
+			this.TextWrapper.Defined.ClearFontSize();
+			this.TextWrapper.Defined.ClearFontGlue();
+			this.TextWrapper.Defined.ClearUnits();
+			this.TextWrapper.Defined.ClearInvertBold();
+			this.TextWrapper.Defined.ClearInvertItalic();
+			this.TextWrapper.Defined.ClearColor();
+			this.TextWrapper.DefineOperationName("FontFaceClear", Res.Strings.TextPanel.Clear);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		
@@ -763,12 +763,12 @@ namespace Epsitec.Common.Document.TextPanels
 		protected VMenu CreateMenu()
 		{
 			//	Construit le menu pour choisir une taille.
-			double size = this.document.TextWrapper.Active.FontSize;
-			Text.Properties.SizeUnits units = this.document.TextWrapper.Active.Units;
-			if ( this.document.TextWrapper.Defined.IsFontSizeDefined )
+			double size = this.TextWrapper.Active.FontSize;
+			Text.Properties.SizeUnits units = this.TextWrapper.Active.Units;
+			if ( this.TextWrapper.Defined.IsFontSizeDefined )
 			{
-				size = this.document.TextWrapper.Defined.FontSize;
-				units = this.document.TextWrapper.Defined.Units;
+				size = this.TextWrapper.Defined.FontSize;
+				units = this.TextWrapper.Defined.Units;
 			}
 			bool percent = (units == Common.Text.Properties.SizeUnits.Percent);
 
@@ -796,11 +796,11 @@ namespace Epsitec.Common.Document.TextPanels
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
 
-			this.document.TextWrapper.SuspendSynchronizations();
-			this.document.TextWrapper.Defined.FontSize = size;
-			this.document.TextWrapper.Defined.Units = units;
-			this.document.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.Defined.FontSize = size;
+			this.TextWrapper.Defined.Units = units;
+			this.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 		#endregion
 

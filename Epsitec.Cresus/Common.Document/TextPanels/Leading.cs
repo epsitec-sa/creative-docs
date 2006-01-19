@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Leading : Abstract
 	{
-		public Leading(Document document) : base(document)
+		public Leading(Document document, bool isStyle) : base(document, isStyle)
 		{
 			this.label.Text = Res.Strings.TextPanel.Leading.Title;
 
@@ -34,8 +34,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
-			this.document.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -46,8 +46,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( disposing )
 			{
 				this.fieldLeading.ButtonUnit.Clicked -= new MessageEventHandler(this.HandleButtonUnitClicked);
-				this.document.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.document.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -194,13 +194,13 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
-			double leading = this.document.ParagraphWrapper.Active.Leading;
-			Common.Text.Properties.SizeUnits units = this.document.ParagraphWrapper.Active.LeadingUnits;
-			bool isLeading = this.document.ParagraphWrapper.Defined.IsLeadingDefined;
+			double leading = this.ParagraphWrapper.Active.Leading;
+			Common.Text.Properties.SizeUnits units = this.ParagraphWrapper.Active.LeadingUnits;
+			bool isLeading = this.ParagraphWrapper.Defined.IsLeadingDefined;
 
-			bool alignFirst = (this.document.ParagraphWrapper.Active.AlignMode == Common.Text.Properties.AlignMode.First);
-			bool alignAll   = (this.document.ParagraphWrapper.Active.AlignMode == Common.Text.Properties.AlignMode.All);
-			bool isAlign = this.document.ParagraphWrapper.Defined.IsAlignModeDefined;
+			bool alignFirst = (this.ParagraphWrapper.Active.AlignMode == Common.Text.Properties.AlignMode.First);
+			bool alignAll   = (this.ParagraphWrapper.Active.AlignMode == Common.Text.Properties.AlignMode.All);
+			bool isAlign = this.ParagraphWrapper.Defined.IsAlignModeDefined;
 
 			this.ignoreChanged = true;
 
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleButtonUnitClicked(object sender, MessageEventArgs e)
 		{
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			this.fieldLeading.IsUnitPercent = !this.fieldLeading.IsUnitPercent;
 
@@ -241,17 +241,17 @@ namespace Epsitec.Common.Document.TextPanels
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
-			this.document.ParagraphWrapper.Defined.Leading = value;
-			this.document.ParagraphWrapper.Defined.LeadingUnits = units;
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.Defined.Leading = value;
+			this.ParagraphWrapper.Defined.LeadingUnits = units;
+			this.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleLeadingChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
@@ -261,21 +261,21 @@ namespace Epsitec.Common.Document.TextPanels
 			bool isDefined;
 			this.GetTextFieldRealValue(field, out value, out units, out isDefined);
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
-				this.document.ParagraphWrapper.Defined.Leading = value;
-				this.document.ParagraphWrapper.Defined.LeadingUnits = units;
+				this.ParagraphWrapper.Defined.Leading = value;
+				this.ParagraphWrapper.Defined.LeadingUnits = units;
 			}
 			else
 			{
-				this.document.ParagraphWrapper.Defined.ClearLeading();
-				this.document.ParagraphWrapper.Defined.ClearLeadingUnits();
+				this.ParagraphWrapper.Defined.ClearLeading();
+				this.ParagraphWrapper.Defined.ClearLeadingUnits();
 			}
 
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleButtonLeadingMenuClicked(object sender, MessageEventArgs e)
@@ -302,21 +302,21 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleButtonAlignFirstClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			bool align = (this.buttonAlignFirst.ActiveState == ActiveState.No);
 			Common.Text.Properties.AlignMode mode = align ? Common.Text.Properties.AlignMode.First : Common.Text.Properties.AlignMode.None;
-			this.document.ParagraphWrapper.Defined.AlignMode = mode;
+			this.ParagraphWrapper.Defined.AlignMode = mode;
 		}
 
 		private void HandleButtonAlignAllClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			bool align = (this.buttonAlignAll.ActiveState == ActiveState.No);
 			Common.Text.Properties.AlignMode mode = align ? Common.Text.Properties.AlignMode.All : Common.Text.Properties.AlignMode.None;
-			this.document.ParagraphWrapper.Defined.AlignMode = mode;
+			this.ParagraphWrapper.Defined.AlignMode = mode;
 		}
 
 		private void HandleButtonSettingsClicked(object sender, MessageEventArgs e)
@@ -327,14 +327,14 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
-			this.document.ParagraphWrapper.Defined.ClearLeading();
-			this.document.ParagraphWrapper.Defined.ClearLeadingUnits();
-			this.document.ParagraphWrapper.Defined.ClearAlignMode();
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphLeadingClear", Res.Strings.TextPanel.Clear);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.Defined.ClearLeading();
+			this.ParagraphWrapper.Defined.ClearLeadingUnits();
+			this.ParagraphWrapper.Defined.ClearAlignMode();
+			this.ParagraphWrapper.DefineOperationName("ParagraphLeadingClear", Res.Strings.TextPanel.Clear);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 
@@ -344,8 +344,8 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Construit le menu pour choisir l'interligne.
 			VMenu menu = new VMenu();
 
-			double leading = this.document.ParagraphWrapper.Active.Leading;
-			Common.Text.Properties.SizeUnits units = this.document.ParagraphWrapper.Active.LeadingUnits;
+			double leading = this.ParagraphWrapper.Active.Leading;
+			Common.Text.Properties.SizeUnits units = this.ParagraphWrapper.Active.LeadingUnits;
 			bool percent = (units == Common.Text.Properties.SizeUnits.Percent);
 
 			return Menus.LeadingMenu.CreateLeadingMenu(this.document, leading, percent?"%":"", new MessageEventHandler(this.HandleMenuPressed));
@@ -371,11 +371,11 @@ namespace Epsitec.Common.Document.TextPanels
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
-			this.document.ParagraphWrapper.Defined.Leading = leading;
-			this.document.ParagraphWrapper.Defined.LeadingUnits = units;
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.Defined.Leading = leading;
+			this.ParagraphWrapper.Defined.LeadingUnits = units;
+			this.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 		#endregion
 

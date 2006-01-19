@@ -684,15 +684,15 @@ namespace Epsitec.Common.Document.Objects
 
 			string[] names =
 			{
-				"Justif", "Leading", "Margins", "Spaces", "Keep",	// paragraphe
-				"Font", "Xline", "Xscript", "Box", "Language"		// caractère
+				"Justif", "Leading", "Margins", "Spaces", "Keep",	// styles de paragraphe
+				"Font", "Xline", "Xscript", "Box", "Language"		// styles de caractère
 			};
 
 			foreach ( string name in names )
 			{
 				if ( TextPanels.Abstract.IsFilterShow(name, filter) )
 				{
-					TextPanels.Abstract panel = TextPanels.Abstract.Create(name, this.document);
+					TextPanels.Abstract panel = TextPanels.Abstract.Create(name, this.document, false);
 
 					if ( panel != null )
 					{

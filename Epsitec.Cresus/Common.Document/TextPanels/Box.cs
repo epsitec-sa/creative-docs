@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Box : Abstract
 	{
-		public Box(Document document) : base(document)
+		public Box(Document document, bool isStyle) : base(document, isStyle)
 		{
 			this.label.Text = Res.Strings.TextPanel.Box.Title;
 
@@ -22,8 +22,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
-			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -33,8 +33,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.document.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -142,10 +142,10 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.document.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronizations();
-			this.document.TextWrapper.Defined.ClearTextBox();
-			this.document.TextWrapper.DefineOperationName("TextBoxClear", Res.Strings.TextPanel.Clear);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.Defined.ClearTextBox();
+			this.TextWrapper.DefineOperationName("TextBoxClear", Res.Strings.TextPanel.Clear);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		

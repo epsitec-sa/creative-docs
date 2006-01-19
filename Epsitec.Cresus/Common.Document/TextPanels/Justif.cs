@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Justif : Abstract
 	{
-		public Justif(Document document) : base(document)
+		public Justif(Document document, bool isStyle) : base(document, isStyle)
 		{
 			this.label.Text = Res.Strings.TextPanel.Justif.Title;
 
@@ -28,8 +28,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
-			this.document.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.UpdateAfterChanging();
 		}
@@ -38,8 +38,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.document.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.document.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -99,11 +99,11 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
-			Common.Text.Wrappers.JustificationMode justif = this.document.ParagraphWrapper.Active.JustificationMode;
-			bool isJustif = this.document.ParagraphWrapper.Defined.IsJustificationModeDefined;
+			Common.Text.Wrappers.JustificationMode justif = this.ParagraphWrapper.Active.JustificationMode;
+			bool isJustif = this.ParagraphWrapper.Defined.IsJustificationModeDefined;
 
-			bool hyphen = this.document.ParagraphWrapper.Active.Hyphenation;
-			bool isHyphen = this.document.ParagraphWrapper.Defined.IsHyphenationDefined;
+			bool hyphen = this.ParagraphWrapper.Active.Hyphenation;
+			bool isHyphen = this.ParagraphWrapper.Defined.IsHyphenationDefined;
 
 			this.ignoreChanged = true;
 
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleJustifClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			IconButton button = sender as IconButton;
 			if ( button == null )  return;
@@ -134,44 +134,44 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.buttonAlignJustif == button )  justif = Common.Text.Wrappers.JustificationMode.JustifyAlignLeft;
 			if ( this.buttonAlignAll    == button )  justif = Common.Text.Wrappers.JustificationMode.JustifyJustfy;
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( justif == Common.Text.Wrappers.JustificationMode.Unknown )
 			{
-				this.document.ParagraphWrapper.Defined.ClearJustificationMode();
+				this.ParagraphWrapper.Defined.ClearJustificationMode();
 			}
 			else
 			{
-				this.document.ParagraphWrapper.Defined.JustificationMode = justif;
+				this.ParagraphWrapper.Defined.JustificationMode = justif;
 			}
 
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphJustif", Res.Strings.Action.ParagraphJustif);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.DefineOperationName("ParagraphJustif", Res.Strings.Action.ParagraphJustif);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleHyphenClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			bool hyphen = (this.buttonHyphen.ActiveState == ActiveState.No);
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
-			this.document.ParagraphWrapper.Defined.Hyphenation = hyphen;
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphHyphen", Res.Strings.Action.ParagraphHyphen);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.Defined.Hyphenation = hyphen;
+			this.ParagraphWrapper.DefineOperationName("ParagraphHyphen", Res.Strings.Action.ParagraphHyphen);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
-			this.document.ParagraphWrapper.Defined.ClearJustificationMode();
-			this.document.ParagraphWrapper.Defined.ClearHyphenation();
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphJustifClear", Res.Strings.TextPanel.Clear);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.Defined.ClearJustificationMode();
+			this.ParagraphWrapper.Defined.ClearHyphenation();
+			this.ParagraphWrapper.DefineOperationName("ParagraphJustifClear", Res.Strings.TextPanel.Clear);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 

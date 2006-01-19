@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Xscript : Abstract
 	{
-		public Xscript(Document document) : base(document)
+		public Xscript(Document document, bool isStyle) : base(document, isStyle)
 		{
 			this.label.Text = Res.Strings.TextPanel.Xscript.Title;
 
@@ -26,8 +26,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
-			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -37,8 +37,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.document.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -161,16 +161,16 @@ namespace Epsitec.Common.Document.TextPanels
 
 			bool subscript   = false;
 			bool superscript = false;
-			bool isXscript   = this.document.TextWrapper.Defined.IsXscriptDefined;
+			bool isXscript   = this.TextWrapper.Defined.IsXscriptDefined;
 			double scale     = 0.0;
 			double offset    = 0.0;
 
 			if ( isXscript )
 			{
-				subscript   = (this.document.TextWrapper.Defined.Xscript.Offset < 0.0);
-				superscript = (this.document.TextWrapper.Defined.Xscript.Offset > 0.0);
-				scale       =  this.document.TextWrapper.Defined.Xscript.Scale;
-				offset      = System.Math.Abs(this.document.TextWrapper.Defined.Xscript.Offset);
+				subscript   = (this.TextWrapper.Defined.Xscript.Offset < 0.0);
+				superscript = (this.TextWrapper.Defined.Xscript.Offset > 0.0);
+				scale       =  this.TextWrapper.Defined.Xscript.Scale;
+				offset      = System.Math.Abs(this.TextWrapper.Defined.Xscript.Offset);
 			}
 
 			this.ignoreChanged = true;
@@ -188,29 +188,29 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleButtonSubscriptClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 			
-			this.document.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
 			
-			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
+			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.TextWrapper.Defined.Xscript;
 			
-			if ( this.document.TextWrapper.Active.IsXscriptDefined )
+			if ( this.TextWrapper.Active.IsXscriptDefined )
 			{
-				if ( this.document.TextWrapper.Active.Xscript.IsDisabled &&
-					 this.document.TextWrapper.Active.Xscript.IsEmpty == false )
+				if ( this.TextWrapper.Active.Xscript.IsDisabled &&
+					 this.TextWrapper.Active.Xscript.IsEmpty == false )
 				{
 					this.FillSubscriptDefinition(xscript, false);
 					
-					if ( xscript.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Xscript) )
+					if ( xscript.EqualsIgnoringIsDisabled(this.TextWrapper.Active.Xscript) )
 					{
-						this.document.TextWrapper.Defined.ClearXscript();
+						this.TextWrapper.Defined.ClearXscript();
 					}
 				}
-				else if ( this.document.TextWrapper.Defined.IsXscriptDefined )
+				else if ( this.TextWrapper.Defined.IsXscriptDefined )
 				{
-					if ( this.document.TextWrapper.Defined.Xscript.Offset < 0 )
+					if ( this.TextWrapper.Defined.Xscript.Offset < 0 )
 					{
-						this.document.TextWrapper.Defined.ClearXscript();
+						this.TextWrapper.Defined.ClearXscript();
 					}
 					else
 					{
@@ -227,36 +227,36 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillSubscriptDefinition(xscript, true);
 			}
 			
-			this.document.TextWrapper.DefineOperationName("FontSubscript", Res.Strings.Action.FontSubscript);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.DefineOperationName("FontSubscript", Res.Strings.Action.FontSubscript);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleButtonSuperscriptClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 			
-			this.document.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
 			
-			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
+			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.TextWrapper.Defined.Xscript;
 			
-			if ( this.document.TextWrapper.Active.IsXscriptDefined )
+			if ( this.TextWrapper.Active.IsXscriptDefined )
 			{
-				if ( this.document.TextWrapper.Active.Xscript.IsDisabled &&
-					 this.document.TextWrapper.Active.Xscript.IsEmpty == false )
+				if ( this.TextWrapper.Active.Xscript.IsDisabled &&
+					 this.TextWrapper.Active.Xscript.IsEmpty == false )
 				{
 					this.FillSuperscriptDefinition(xscript, false);
 					
-					if ( xscript.EqualsIgnoringIsDisabled(this.document.TextWrapper.Active.Xscript) )
+					if ( xscript.EqualsIgnoringIsDisabled(this.TextWrapper.Active.Xscript) )
 					{
-						this.document.TextWrapper.Defined.ClearXscript();
+						this.TextWrapper.Defined.ClearXscript();
 					}
 				}
-				else if ( this.document.TextWrapper.Defined.IsXscriptDefined )
+				else if ( this.TextWrapper.Defined.IsXscriptDefined )
 				{
-					if ( this.document.TextWrapper.Defined.Xscript.Offset > 0 )
+					if ( this.TextWrapper.Defined.Xscript.Offset > 0 )
 					{
-						this.document.TextWrapper.Defined.ClearXscript();
+						this.TextWrapper.Defined.ClearXscript();
 					}
 					else
 					{
@@ -273,32 +273,32 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillSuperscriptDefinition(xscript, true);
 			}
 			
-			this.document.TextWrapper.DefineOperationName("FontSuperscript", Res.Strings.Action.FontSuperscript);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.DefineOperationName("FontSuperscript", Res.Strings.Action.FontSuperscript);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleScaleOffsetChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronizations();
-			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.document.TextWrapper.Defined.Xscript;
+			this.TextWrapper.SuspendSynchronizations();
+			Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript = this.TextWrapper.Defined.Xscript;
 			if ( xscript.Offset < 0 )  this.FillSubscriptDefinition(xscript, false);
 			if ( xscript.Offset > 0 )  this.FillSuperscriptDefinition(xscript, false);
-			this.document.TextWrapper.DefineOperationName("FontXscript", Res.Strings.TextPanel.Xscript.Title);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.DefineOperationName("FontXscript", Res.Strings.TextPanel.Xscript.Title);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 
-			this.document.TextWrapper.SuspendSynchronizations();
-			this.document.TextWrapper.Defined.ClearXscript();
-			this.document.TextWrapper.DefineOperationName("FontXscriptClear", Res.Strings.TextPanel.Clear);
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.TextWrapper.SuspendSynchronizations();
+			this.TextWrapper.Defined.ClearXscript();
+			this.TextWrapper.DefineOperationName("FontXscriptClear", Res.Strings.TextPanel.Clear);
+			this.TextWrapper.ResumeSynchronizations();
 		}
 
 		

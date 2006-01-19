@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Keep : Abstract
 	{
-		public Keep(Document document) : base(document)
+		public Keep(Document document, bool isStyle) : base(document, isStyle)
 		{
 			this.label.Text = Res.Strings.TextPanel.Keep.Title;
 
@@ -40,8 +40,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
-			this.document.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -51,8 +51,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.document.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.document.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -235,17 +235,17 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
-			bool keepNext    = this.document.ParagraphWrapper.Active.KeepWithNextParagraph;
-			bool keepPrev    = this.document.ParagraphWrapper.Active.KeepWithPreviousParagraph;
-			int  keepStart   = this.document.ParagraphWrapper.Active.KeepStartLines;
-			int  keepEnd     = this.document.ParagraphWrapper.Active.KeepEndLines;
-			bool isKeepNext  = this.document.ParagraphWrapper.Defined.IsKeepWithNextParagraphDefined;
-			bool isKeepPrev  = this.document.ParagraphWrapper.Defined.IsKeepWithPreviousParagraphDefined;
-			bool isKeepStart = this.document.ParagraphWrapper.Defined.IsKeepStartLinesDefined;
-			bool isKeepEnd   = this.document.ParagraphWrapper.Defined.IsKeepEndLinesDefined;
+			bool keepNext    = this.ParagraphWrapper.Active.KeepWithNextParagraph;
+			bool keepPrev    = this.ParagraphWrapper.Active.KeepWithPreviousParagraph;
+			int  keepStart   = this.ParagraphWrapper.Active.KeepStartLines;
+			int  keepEnd     = this.ParagraphWrapper.Active.KeepEndLines;
+			bool isKeepNext  = this.ParagraphWrapper.Defined.IsKeepWithNextParagraphDefined;
+			bool isKeepPrev  = this.ParagraphWrapper.Defined.IsKeepWithPreviousParagraphDefined;
+			bool isKeepStart = this.ParagraphWrapper.Defined.IsKeepStartLinesDefined;
+			bool isKeepEnd   = this.ParagraphWrapper.Defined.IsKeepEndLinesDefined;
 
-			Common.Text.Properties.ParagraphStartMode mode = this.document.ParagraphWrapper.Active.ParagraphStartMode;
-			bool isMode = this.document.ParagraphWrapper.Defined.IsParagraphStartModeDefined;
+			Common.Text.Properties.ParagraphStartMode mode = this.ParagraphWrapper.Active.ParagraphStartMode;
+			bool isMode = this.ParagraphWrapper.Defined.IsParagraphStartModeDefined;
 
 			this.ignoreChanged = true;
 
@@ -268,33 +268,33 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleButtonKeepNextClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			bool value = (this.buttonKeepNext.ActiveState == ActiveState.No);
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
-			this.document.ParagraphWrapper.Defined.KeepWithNextParagraph = value;
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.Defined.KeepWithNextParagraph = value;
+			this.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleButtonKeepPrevClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			bool value = (this.buttonKeepPrev.ActiveState == ActiveState.No);
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
-			this.document.ParagraphWrapper.Defined.KeepWithPreviousParagraph = value;
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.Defined.KeepWithPreviousParagraph = value;
+			this.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleKeepStartChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
@@ -302,25 +302,25 @@ namespace Epsitec.Common.Document.TextPanels
 			double value = (double) field.InternalValue;
 			bool isDefined = field.Text != "";
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
-				this.document.ParagraphWrapper.Defined.KeepStartLines = (int) value;
+				this.ParagraphWrapper.Defined.KeepStartLines = (int) value;
 			}
 			else
 			{
-				this.document.ParagraphWrapper.Defined.ClearKeepStartLines();
+				this.ParagraphWrapper.Defined.ClearKeepStartLines();
 			}
 
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 		
 		private void HandleKeepEndChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
@@ -328,19 +328,19 @@ namespace Epsitec.Common.Document.TextPanels
 			double value = (double) field.InternalValue;
 			bool isDefined = field.Text != "";
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
-				this.document.ParagraphWrapper.Defined.KeepEndLines = (int) value;
+				this.ParagraphWrapper.Defined.KeepEndLines = (int) value;
 			}
 			else
 			{
-				this.document.ParagraphWrapper.Defined.ClearKeepEndLines();
+				this.ParagraphWrapper.Defined.ClearKeepEndLines();
 			}
 
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 		
 		private void HandleStartModeChanged(object sender)
@@ -349,34 +349,34 @@ namespace Epsitec.Common.Document.TextPanels
 
 			Common.Text.Properties.ParagraphStartMode mode = Keep.StringToMode(this.fieldStartMode.Text);
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( mode == Common.Text.Properties.ParagraphStartMode.Undefined )
 			{
-				this.document.ParagraphWrapper.Defined.ClearParagraphStartMode();
+				this.ParagraphWrapper.Defined.ClearParagraphStartMode();
 			}
 			else
 			{
-				this.document.ParagraphWrapper.Defined.ParagraphStartMode = mode;
+				this.ParagraphWrapper.Defined.ParagraphStartMode = mode;
 			}
 
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
-			this.document.ParagraphWrapper.Defined.ClearKeepWithNextParagraph();
-			this.document.ParagraphWrapper.Defined.ClearKeepWithPreviousParagraph();
-			this.document.ParagraphWrapper.Defined.ClearKeepStartLines();
-			this.document.ParagraphWrapper.Defined.ClearKeepEndLines();
-			this.document.ParagraphWrapper.Defined.ClearParagraphStartMode();
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphKeepClear", Res.Strings.TextPanel.Clear);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.Defined.ClearKeepWithNextParagraph();
+			this.ParagraphWrapper.Defined.ClearKeepWithPreviousParagraph();
+			this.ParagraphWrapper.Defined.ClearKeepStartLines();
+			this.ParagraphWrapper.Defined.ClearKeepEndLines();
+			this.ParagraphWrapper.Defined.ClearParagraphStartMode();
+			this.ParagraphWrapper.DefineOperationName("ParagraphKeepClear", Res.Strings.TextPanel.Clear);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 		

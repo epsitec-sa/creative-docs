@@ -11,9 +11,10 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public abstract class Abstract : Common.Widgets.Widget
 	{
-		public Abstract(Document document)
+		public Abstract(Document document, bool isStyle)
 		{
 			this.document = document;
+			this.isStyle = isStyle;
 
 			this.label = new StaticText(this);
 			this.fixIcon = new StaticText(this);
@@ -39,19 +40,19 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		public static Abstract Create(string name, Document document)
+		public static Abstract Create(string name, Document document, bool isStyle)
 		{
 			//	Crée un nouveau panneau.
-			if ( name == "Justif"   )  return new Justif(document);
-			if ( name == "Leading"  )  return new Leading(document);
-			if ( name == "Margins"  )  return new Margins(document);
-			if ( name == "Spaces"   )  return new Spaces(document);
-			if ( name == "Keep"     )  return new Keep(document);
-			if ( name == "Font"     )  return new Font(document);
-			if ( name == "Xline"    )  return new Xline(document);
-			if ( name == "Xscript"  )  return new Xscript(document);
-			if ( name == "Box"      )  return new Box(document);
-			if ( name == "Language" )  return new Language(document);
+			if ( name == "Justif"   )  return new Justif(document, isStyle);
+			if ( name == "Leading"  )  return new Leading(document, isStyle);
+			if ( name == "Margins"  )  return new Margins(document, isStyle);
+			if ( name == "Spaces"   )  return new Spaces(document, isStyle);
+			if ( name == "Keep"     )  return new Keep(document, isStyle);
+			if ( name == "Font"     )  return new Font(document, isStyle);
+			if ( name == "Xline"    )  return new Xline(document, isStyle);
+			if ( name == "Xscript"  )  return new Xscript(document, isStyle);
+			if ( name == "Box"      )  return new Box(document, isStyle);
+			if ( name == "Language" )  return new Language(document, isStyle);
 			return null;
 		}
 		
@@ -153,24 +154,6 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		public bool IsStyleDefinition
-		{
-			//	Indique si le panneau sert à féfinir un style.
-			get
-			{
-				return this.isStyleDefinition;
-			}
-
-			set
-			{
-				if ( this.isStyleDefinition != value )
-				{
-					this.isStyleDefinition = value;
-					this.UpdateButtons();
-				}
-			}
-		}
-
 		public void HeightChanged()
 		{
 			//	Indique que la hauteur du panneau a changé.
@@ -253,7 +236,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected void UpdateButtons()
 		{
 			//	Met à jour les boutons.
-			this.extendedButton.Visibility = (this.isNormalAndExtended && !this.isStyleDefinition);
+			this.extendedButton.Visibility = (this.isNormalAndExtended && !this.isStyle);
 			this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 		}
 
@@ -310,7 +293,7 @@ namespace Epsitec.Common.Document.TextPanels
 #endif
 			graphics.RenderSolid(color);
 
-			if ( this.isStyleDefinition )
+			if ( this.isStyle )
 			{
 				Rectangle part = rect;
 				part.Width = this.extendedZoneWidth;
@@ -629,6 +612,37 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
+		protected Text.Wrappers.TextWrapper TextWrapper
+		{
+			//	Donne le wrapper pour un texte.
+			get
+			{
+				if ( this.isStyle )  return this.document.Wrappers.StyleTextWrapper;
+				return this.document.Wrappers.TextWrapper;
+			}
+		}
+
+		protected Text.Wrappers.ParagraphWrapper ParagraphWrapper
+		{
+			//	Donne le wrapper pour un paragraphe.
+			get
+			{
+				if ( this.isStyle )  return this.document.Wrappers.StyleParagraphWrapper;
+				return this.document.Wrappers.ParagraphWrapper;
+			}
+		}
+
+		protected bool IsWrappersAttached
+		{
+			//	Indique si les wrappers sont attachés.
+			get
+			{
+				if ( this.isStyle )  return this.document.Wrappers.StyleParagraphWrapper.IsAttached;
+				return this.document.Wrappers.ParagraphWrapper.IsAttached;
+			}
+		}
+
+
 		protected virtual void OnOriginColorChanged()
 		{
 			//	Génère un événement pour dire que la couleur d'origine a changé.
@@ -650,11 +664,11 @@ namespace Epsitec.Common.Document.TextPanels
 		public static Document				StaticDocument;
 
 		protected Document					document;
+		protected bool						isStyle;
 		protected double					backgroundIntensity = 1.0;
 		protected Text.TextStyle			textStyle;
 		protected bool						isExtendedSize = false;
 		protected bool						isNormalAndExtended = false;
-		protected bool						isStyleDefinition = false;
 		protected double					extendedZoneWidth = 16;
 		protected StaticText				label;
 		protected StaticText				fixIcon;

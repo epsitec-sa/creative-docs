@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Spaces : Abstract
 	{
-		public Spaces(Document document) : base(document)
+		public Spaces(Document document, bool isStyle) : base(document, isStyle)
 		{
 			this.label.Text = Res.Strings.TextPanel.Spaces.Title;
 
@@ -23,8 +23,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
-			this.document.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -34,8 +34,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.document.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.document.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -135,10 +135,10 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
-			double before = this.document.ParagraphWrapper.Active.SpaceBefore;
-			double after  = this.document.ParagraphWrapper.Active.SpaceAfter;
-			bool isBefore = this.document.ParagraphWrapper.Defined.IsSpaceBeforeDefined;
-			bool isAfter  = this.document.ParagraphWrapper.Defined.IsSpaceAfterDefined;
+			double before = this.ParagraphWrapper.Active.SpaceBefore;
+			double after  = this.ParagraphWrapper.Active.SpaceAfter;
+			bool isBefore = this.ParagraphWrapper.Defined.IsSpaceBeforeDefined;
+			bool isAfter  = this.ParagraphWrapper.Defined.IsSpaceAfterDefined;
 
 			this.ignoreChanged = true;
 
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleBeforeChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
@@ -161,27 +161,27 @@ namespace Epsitec.Common.Document.TextPanels
 			double value = (double) field.InternalValue;
 			bool isDefined = field.Text != "";
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
-				this.document.ParagraphWrapper.Defined.SpaceBefore = value;
-				this.document.ParagraphWrapper.Defined.SpaceBeforeUnits = Common.Text.Properties.SizeUnits.Points;
+				this.ParagraphWrapper.Defined.SpaceBefore = value;
+				this.ParagraphWrapper.Defined.SpaceBeforeUnits = Common.Text.Properties.SizeUnits.Points;
 			}
 			else
 			{
-				this.document.ParagraphWrapper.Defined.ClearSpaceBefore();
-				this.document.ParagraphWrapper.Defined.ClearSpaceBeforeUnits();
+				this.ParagraphWrapper.Defined.ClearSpaceBefore();
+				this.ParagraphWrapper.Defined.ClearSpaceBeforeUnits();
 			}
 
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphSpaces", Res.Strings.TextPanel.Spaces.Title);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.DefineOperationName("ParagraphSpaces", Res.Strings.TextPanel.Spaces.Title);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 		
 		private void HandleAfterChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
@@ -189,35 +189,35 @@ namespace Epsitec.Common.Document.TextPanels
 			double value = (double) field.InternalValue;
 			bool isDefined = field.Text != "";
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( isDefined )
 			{
-				this.document.ParagraphWrapper.Defined.SpaceAfter = value;
-				this.document.ParagraphWrapper.Defined.SpaceAfterUnits = Common.Text.Properties.SizeUnits.Points;
+				this.ParagraphWrapper.Defined.SpaceAfter = value;
+				this.ParagraphWrapper.Defined.SpaceAfterUnits = Common.Text.Properties.SizeUnits.Points;
 			}
 			else
 			{
-				this.document.ParagraphWrapper.Defined.ClearSpaceAfter();
-				this.document.ParagraphWrapper.Defined.ClearSpaceAfterUnits();
+				this.ParagraphWrapper.Defined.ClearSpaceAfter();
+				this.ParagraphWrapper.Defined.ClearSpaceAfterUnits();
 			}
 
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphSpaces", Res.Strings.TextPanel.Spaces.Title);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.DefineOperationName("ParagraphSpaces", Res.Strings.TextPanel.Spaces.Title);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 		
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.ParagraphWrapper.IsAttached )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
-			this.document.ParagraphWrapper.SuspendSynchronizations();
-			this.document.ParagraphWrapper.Defined.ClearSpaceBefore();
-			this.document.ParagraphWrapper.Defined.ClearSpaceBeforeUnits();
-			this.document.ParagraphWrapper.Defined.ClearSpaceAfter();
-			this.document.ParagraphWrapper.Defined.ClearSpaceAfterUnits();
-			this.document.ParagraphWrapper.DefineOperationName("ParagraphSpacesClear", Res.Strings.TextPanel.Clear);
-			this.document.ParagraphWrapper.ResumeSynchronizations();
+			this.ParagraphWrapper.SuspendSynchronizations();
+			this.ParagraphWrapper.Defined.ClearSpaceBefore();
+			this.ParagraphWrapper.Defined.ClearSpaceBeforeUnits();
+			this.ParagraphWrapper.Defined.ClearSpaceAfter();
+			this.ParagraphWrapper.Defined.ClearSpaceAfterUnits();
+			this.ParagraphWrapper.DefineOperationName("ParagraphSpacesClear", Res.Strings.TextPanel.Clear);
+			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 
 
