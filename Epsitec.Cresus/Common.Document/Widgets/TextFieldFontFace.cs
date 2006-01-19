@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.button.ButtonStyle = ButtonStyle.Combo;
 			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			
-			this.default_button_width = this.button.Width;
+			this.defaultButtonWidth = this.button.Width;
 			this.margins.Right = this.button.Width;
 			
 			this.ButtonShowCondition = ShowCondition.Always;
@@ -57,13 +57,13 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			get
 			{
-				return this.button_show_condition;
+				return this.buttonShowCondition;
 			}
 			set
 			{
-				if (this.button_show_condition != value)
+				if (this.buttonShowCondition != value)
 				{
-					this.button_show_condition = value;
+					this.buttonShowCondition = value;
 					this.UpdateButtonVisibility ();
 				}
 			}
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Document.Widgets
 			
 			if ( this.button != null )
 			{
-				this.margins.Right = this.button.Visibility ? this.default_button_width : 0;
+				this.margins.Right = this.button.Visibility ? this.defaultButtonWidth : 0;
 				this.button.Bounds = this.GetButtonBounds();
 			}
 		}
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Document.Widgets
 					break;
 				
 				case ShowCondition.WhenModified:
-					show = this.has_edited_text;
+					show = this.hasEditedText;
 					break;
 				
 				default:
@@ -208,34 +208,31 @@ namespace Epsitec.Common.Document.Widgets
 		
 		protected override void OnTextDefined()
 		{
-			base.OnTextDefined ();
-			
-			this.has_edited_text = false;
+			base.OnTextDefined();
+			this.hasEditedText = false;
 		}
 		
 		protected override void OnTextChanged()
 		{
-			base.OnTextChanged ();
-			
-			this.UpdateButtonVisibility ();
+			base.OnTextChanged();
+			this.UpdateButtonVisibility();
 		}
 
 		protected override void OnIsKeyboardFocusedChanged(Types.PropertyChangedEventArgs e)
 		{
-			base.OnIsKeyboardFocusedChanged (e);
+			base.OnIsKeyboardFocusedChanged(e);
 			
-			this.UpdateButtonVisibility ();
+			this.UpdateButtonVisibility();
 		}
 		
 		protected override void OnTextEdited()
 		{
-			base.OnTextEdited ();
+			base.OnTextEdited();
 			
-			if (this.has_edited_text == false)
+			if ( this.hasEditedText == false )
 			{
-				this.has_edited_text = true;
-				
-				this.UpdateButtonVisibility ();
+				this.hasEditedText = true;
+				this.UpdateButtonVisibility();
 			}
 		}
 
@@ -406,26 +403,26 @@ namespace Epsitec.Common.Document.Widgets
 				this.Text = this.openText;
 			}
 			
-			this.OnComboClosed ();
+			this.OnComboClosed();
 		}
 
 		
 		protected virtual void OnOpeningCombo(Support.CancelEventArgs e)
 		{
-			if (this.OpeningCombo != null)
+			if ( this.OpeningCombo != null )
 			{
-				this.OpeningCombo (this, e);
+				this.OpeningCombo(this, e);
 			}
 		}
 		
 		protected virtual void OnComboOpened()
 		{
 			System.Diagnostics.Debug.Assert (this.IsComboOpen == true);
-			this.UpdateButtonVisibility ();
+			this.UpdateButtonVisibility();
 			
-			if (this.OpenedCombo != null)
+			if ( this.OpenedCombo != null )
 			{
-				this.OpenedCombo (this);
+				this.OpenedCombo(this);
 			}
 		}
 		
@@ -434,14 +431,14 @@ namespace Epsitec.Common.Document.Widgets
 			System.Diagnostics.Debug.Assert (this.IsComboOpen == false);
 			this.UpdateButtonVisibility ();
 			
-			if (this.ClosedCombo != null)
+			if ( this.ClosedCombo != null )
 			{
-				this.ClosedCombo (this);
+				this.ClosedCombo(this);
 			}
 			
-			if (this.Window != null)
+			if ( this.Window != null )
 			{
-				this.Window.RestoreLogicalFocus ();
+				this.Window.RestoreLogicalFocus();
 			}
 		}
 		
@@ -566,8 +563,8 @@ namespace Epsitec.Common.Document.Widgets
 		protected Window						comboWindow;
 		protected FontSelector					fontSelector;
 		protected string						openText;
-		protected ShowCondition					button_show_condition;
-		protected bool							has_edited_text;
-		protected double						default_button_width;
+		protected ShowCondition					buttonShowCondition;
+		protected bool							hasEditedText;
+		protected double						defaultButtonWidth;
 	}
 }

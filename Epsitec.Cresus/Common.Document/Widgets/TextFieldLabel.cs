@@ -136,6 +136,25 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		public bool ButtonUnitEnable
+		{
+			//	Etat du bouton pour changer d'unité.
+			get
+			{
+				if ( this.buttonUnit == null )  return false;
+				return this.buttonUnit.Enable;
+			}
+
+			set
+			{
+				if ( this.buttonUnit != null )
+				{
+					this.buttonUnit.Enable = value;
+				}
+			}
+		}
+
+
 		public void SetRangeDimension(Document document, double min, double max, double step)
 		{
 			//	Spécifie les bornes pour une dimension.

@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document.Menus
 			list.Add(fs);
 		}
 
-		public static VMenu CreateFontSizeMenu(double currentValue, string currentUnits, double factor, MessageEventHandler message)
+		public static VMenu CreateFontSizeMenu(double currentValue, string currentUnits, double factor, bool isPercent, MessageEventHandler message)
 		{
 			//	Construit le menu pour choisir une taille.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
@@ -60,12 +60,15 @@ namespace Epsitec.Common.Document.Menus
 
 			FontSizeMenu.Add(list, currentValue, currentUnits);
 
-			FontSizeMenu.Add(list, 0.50, "%");
-			FontSizeMenu.Add(list, 0.75, "%");
-			FontSizeMenu.Add(list, 1.00, "%");
-			FontSizeMenu.Add(list, 1.50, "%");
-			FontSizeMenu.Add(list, 2.00, "%");
-			FontSizeMenu.Add(list, 3.00, "%");
+			if ( isPercent )
+			{
+				FontSizeMenu.Add(list, 0.50, "%");
+				FontSizeMenu.Add(list, 0.75, "%");
+				FontSizeMenu.Add(list, 1.00, "%");
+				FontSizeMenu.Add(list, 1.50, "%");
+				FontSizeMenu.Add(list, 2.00, "%");
+				FontSizeMenu.Add(list, 3.00, "%");
+			}
 
 			FontSizeMenu.Add(list,   8*Modifier.fontSizeScale*factor, "");
 			FontSizeMenu.Add(list,   9*Modifier.fontSizeScale*factor, "");
@@ -88,7 +91,7 @@ namespace Epsitec.Common.Document.Menus
 			list.Sort();
 
 			VMenu menu = new VMenu();
-			string lastUnits = "%";
+			string lastUnits = isPercent ? "%" : "";
 			foreach ( FontSizeMenu fs in list )
 			{
 				if ( lastUnits == "%" && fs.units == "" )
