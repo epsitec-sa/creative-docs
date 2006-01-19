@@ -157,36 +157,39 @@ namespace Epsitec.Common.Document.Containers
 
 			this.index = 0;
 
-			this.categoryGraphic = new RadioButton(this.categoryContainer, "Category", 0);
+			this.categoryGraphic = new Button(this.categoryContainer);
+			this.categoryGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.categoryGraphic.AutoFocus = false;
 			this.categoryGraphic.ActiveState = ActiveState.Yes;
-			this.categoryGraphic.Name = "Graphic";
 			this.categoryGraphic.Text = Res.Strings.Panel.AggregateCategory.Graphic;
 			this.categoryGraphic.Width = 80;
 			this.categoryGraphic.Dock = DockStyle.Left;
 			this.categoryGraphic.DockMargins = new Margins(0, 0, 0, 0);
 			this.categoryGraphic.TabIndex = this.index++;
 			this.categoryGraphic.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.categoryGraphic.ActiveStateChanged += new EventHandler(this.HandleCategoryChanged);
+			this.categoryGraphic.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
-			this.categoryParagraph = new RadioButton(this.categoryContainer, "Category", 1);
-			this.categoryParagraph.Name = "Paragraph";
+			this.categoryParagraph = new Button(this.categoryContainer);
+			this.categoryParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.categoryParagraph.AutoFocus = false;
 			this.categoryParagraph.Text = Res.Strings.Panel.AggregateCategory.Paragraph;
 			this.categoryParagraph.Width = 80;
 			this.categoryParagraph.Dock = DockStyle.Left;
 			this.categoryParagraph.DockMargins = new Margins(0, 0, 0, 0);
 			this.categoryParagraph.TabIndex = this.index++;
 			this.categoryParagraph.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.categoryParagraph.ActiveStateChanged += new EventHandler(this.HandleCategoryChanged);
+			this.categoryParagraph.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
-			this.categoryCharacter = new RadioButton(this.categoryContainer, "Category", 2);
-			this.categoryCharacter.Name = "Character";
+			this.categoryCharacter = new Button(this.categoryContainer);
+			this.categoryCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.categoryCharacter.AutoFocus = false;
 			this.categoryCharacter.Text = Res.Strings.Panel.AggregateCategory.Character;
-			this.categoryCharacter.Width = 80;
+			this.categoryCharacter.Width = 80-1;
 			this.categoryCharacter.Dock = DockStyle.Left;
 			this.categoryCharacter.DockMargins = new Margins(0, 0, 0, 0);
 			this.categoryCharacter.TabIndex = this.index++;
 			this.categoryCharacter.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.categoryCharacter.ActiveStateChanged += new EventHandler(this.HandleCategoryChanged);
+			this.categoryCharacter.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 		}
 
 		protected void CreateAggregateToolBar()
@@ -835,8 +838,14 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		private void HandleCategoryChanged(object sender)
+		private void HandleCategoryChanged(object sender, MessageEventArgs e)
 		{
+			Button button = sender as Button;
+
+			this.categoryGraphic  .ActiveState = (button == this.categoryGraphic  ) ? ActiveState.Yes : ActiveState.No;
+			this.categoryParagraph.ActiveState = (button == this.categoryParagraph) ? ActiveState.Yes : ActiveState.No;
+			this.categoryCharacter.ActiveState = (button == this.categoryCharacter) ? ActiveState.Yes : ActiveState.No;
+
 			if ( this.categoryGraphic  .ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Graphic;
 			if ( this.categoryParagraph.ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Paragraph;
 			if ( this.categoryCharacter.ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Character;
@@ -1427,9 +1436,9 @@ namespace Epsitec.Common.Document.Containers
 		protected Scrollable				bottomScrollable;
 
 		protected Widget					categoryContainer;
-		protected RadioButton				categoryGraphic;
-		protected RadioButton				categoryParagraph;
-		protected RadioButton				categoryCharacter;
+		protected Button					categoryGraphic;
+		protected Button					categoryParagraph;
+		protected Button					categoryCharacter;
 		protected StyleCategory				category;
 
 		protected HToolBar					aggregateToolBar;

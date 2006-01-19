@@ -93,6 +93,27 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			Drawing.Rectangle rect = this.Client.Bounds;
+
+			if ( this.buttonStyle == ButtonStyle.ActivableIcon )
+			{
+				if ( (this.PaintState&WidgetState.ThreeState) == 0 )
+				{
+					rect.Inflate(adorner.GeometryToolShapeBounds);
+				}
+				else
+				{
+					rect.Inflate(adorner.GeometryThreeStateShapeBounds);
+				}
+			}
+
+			return rect;
+		}
+
+		
 		protected override void OnShortcutChanged()
 		{
 			base.OnShortcutChanged ();
