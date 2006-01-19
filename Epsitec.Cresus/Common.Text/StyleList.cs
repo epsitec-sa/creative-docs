@@ -300,6 +300,17 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public bool IsDefaultTextStyle(TextStyle style)
+		{
+			return (this.context.DefaultStyle == style);
+		}
+		
+		public bool IsDeletedTextStyle(TextStyle style)
+		{
+			return false;
+		}
+		
+		
 		public TextStyle GetTextStyle(string name, TextStyleClass text_style_class)
 		{
 			return this.GetTextStyle (StyleList.GetFullName (name, text_style_class));
