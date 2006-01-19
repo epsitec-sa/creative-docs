@@ -285,43 +285,46 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		private void SynchronizeInvert()
 		{
-			if (this.defined_state.IsValueFlagged (State.InvertBoldProperty))
+			if (this.Attachment == Attachment.Text)
 			{
-				if (this.defined_state.IsInvertBoldDefined)
+				if (this.defined_state.IsValueFlagged (State.InvertBoldProperty))
 				{
-					if (this.defined_state.InvertBold)
+					if (this.defined_state.IsInvertBoldDefined)
 					{
-						Property p_font = new Properties.FontProperty (null, "!Bold", new string[0]);
-						this.DefineMetaProperty (TextWrapper.InvertBold, 1, p_font);
+						if (this.defined_state.InvertBold)
+						{
+							Property p_font = new Properties.FontProperty (null, "!Bold", new string[0]);
+							this.DefineMetaProperty (TextWrapper.InvertBold, 1, p_font);
+						}
+						else
+						{
+							this.ClearMetaProperty (TextWrapper.InvertBold);
+						}
 					}
 					else
 					{
 						this.ClearMetaProperty (TextWrapper.InvertBold);
 					}
 				}
-				else
+				
+				if (this.defined_state.IsValueFlagged (State.InvertItalicProperty))
 				{
-					this.ClearMetaProperty (TextWrapper.InvertBold);
-				}
-			}
-			
-			if (this.defined_state.IsValueFlagged (State.InvertItalicProperty))
-			{
-				if (this.defined_state.IsInvertItalicDefined)
-				{
-					if (this.defined_state.InvertItalic)
+					if (this.defined_state.IsInvertItalicDefined)
 					{
-						Property p_font = new Properties.FontProperty (null, "!Italic", new string[0]);
-						this.DefineMetaProperty (TextWrapper.InvertItalic, 1, p_font);
+						if (this.defined_state.InvertItalic)
+						{
+							Property p_font = new Properties.FontProperty (null, "!Italic", new string[0]);
+							this.DefineMetaProperty (TextWrapper.InvertItalic, 1, p_font);
+						}
+						else
+						{
+							this.ClearMetaProperty (TextWrapper.InvertItalic);
+						}
 					}
 					else
 					{
 						this.ClearMetaProperty (TextWrapper.InvertItalic);
 					}
-				}
-				else
-				{
-					this.ClearMetaProperty (TextWrapper.InvertItalic);
 				}
 			}
 		}
