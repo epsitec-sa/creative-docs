@@ -172,6 +172,36 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal void NotifyAttach(Wrappers.AbstractWrapper wrapper)
+		{
+			if (this.wrappers == null)
+			{
+				this.wrappers = new System.Collections.ArrayList ();
+			}
+			
+			this.wrappers.Add (wrapper);
+		}
+		
+		internal void NotifyDetach(Wrappers.AbstractWrapper wrapper)
+		{
+			this.wrappers.Remove (wrapper);
+		}
+		
+		internal Wrappers.AbstractWrapper[] GetWrappers()
+		{
+			int n = (this.wrappers == null) ? 0 : this.wrappers.Count;
+			
+			Wrappers.AbstractWrapper[] wrappers = new Wrappers.AbstractWrapper[n];
+			
+			if (n > 0)
+			{
+				this.wrappers.CopyTo (wrappers, 0);
+			}
+			
+			return wrappers;
+		}
+		
+		
 		internal void Clear()
 		{
 			//	Oublie les dépendances d'un style avec d'éventuels styles parents
@@ -597,6 +627,7 @@ namespace Epsitec.Common.Text
 		private object[]						parent_styles;
 		private TextStyle						next_style;
 		private Property[]						style_properties;
+		private System.Collections.ArrayList	wrappers;
 		
 		private bool							is_flagged;
 		private bool							is_fixup_required;

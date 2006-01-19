@@ -74,6 +74,22 @@ namespace Epsitec.Common.Text.Wrappers
 			return properties;
 		}
 		
+		public StateProperty[] GetDefinedProperties()
+		{
+			StateProperty[] properties = new StateProperty[this.state.Count];
+			this.state.Keys.CopyTo (properties, 0);
+			return properties;
+		}
+		
+		internal void FlagAllDefinedProperties()
+		{
+			this.flags.Clear ();
+			
+			foreach (System.Collections.DictionaryEntry entry in this.state)
+			{
+				this.flags[entry.Key] = true;
+			}
+		}
 		
 		internal bool IsValueDefined(StateProperty property)
 		{
