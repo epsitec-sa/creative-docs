@@ -1266,23 +1266,52 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Le widget qui détermine la couleur d'origine a changé.
 			this.colorSelector.Visibility = true;
-			this.ignoreChanged = true;
-			this.colorSelector.Color = this.panel.OriginColorGet();
-			this.ignoreChanged = false;
-			this.panel.OriginColorSelect(this.panel.OriginColorRank());
+
+			if ( this.panel != null )
+			{
+				this.ignoreChanged = true;
+				this.colorSelector.Color = this.panel.OriginColorGet();
+				this.ignoreChanged = false;
+				this.panel.OriginColorSelect(this.panel.OriginColorRank());
+			}
+
+			if ( this.textPanel != null )
+			{
+				this.ignoreChanged = true;
+				this.colorSelector.Color = this.textPanel.OriginColorGet();
+				this.ignoreChanged = false;
+				this.textPanel.OriginColorSelect(this.textPanel.OriginColorRank());
+			}
 		}
 
 		private void HandleColorSelectorChanged(object sender)
 		{
 			//	Couleur changée dans la roue.
 			if ( this.ignoreChanged )  return;
-			this.panel.OriginColorChange(this.colorSelector.Color);
+
+			if ( this.panel != null )
+			{
+				this.panel.OriginColorChange(this.colorSelector.Color);
+			}
+
+			if ( this.textPanel != null )
+			{
+				this.textPanel.OriginColorChange(this.colorSelector.Color);
+			}
 		}
 
 		private void HandleColorSelectorClosed(object sender)
 		{
 			//	Fermer la roue.
-			this.panel.OriginColorDeselect();
+			if ( this.panel != null )
+			{
+				this.panel.OriginColorDeselect();
+			}
+
+			if ( this.textPanel != null )
+			{
+				this.textPanel.OriginColorDeselect();
+			}
 
 			this.colorSelector.Visibility = false;
 			this.colorSelector.BackColor = Color.Empty;
