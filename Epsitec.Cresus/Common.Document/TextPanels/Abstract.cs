@@ -612,6 +612,11 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
+		public virtual void UpdateAfterAttach()
+		{
+			//	Mise à jour après avoir attaché le wrappers.
+		}
+
 		protected Text.Wrappers.TextWrapper TextWrapper
 		{
 			//	Donne le wrapper pour un texte.

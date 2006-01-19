@@ -755,6 +755,7 @@ namespace Epsitec.Common.Document.Containers
 				Common.Text.TextStyle style = this.TextStyleList.List[sel];
 				this.document.Wrappers.StyleTextWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
 				this.document.Wrappers.StyleParagraphWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
+				this.textPanel.UpdateAfterAttach();
 			}
 		}
 

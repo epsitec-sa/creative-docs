@@ -45,6 +45,13 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
+		public override void UpdateAfterAttach()
+		{
+			//	Mise à jour après avoir attaché le wrappers.
+			this.buttonClear.Visibility = !this.TextWrapper.IsAttachedToDefaultStyle;
+		}
+
+
 		public override double DefaultHeight
 		{
 			//	Retourne la hauteur standard.
