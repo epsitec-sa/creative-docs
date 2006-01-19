@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.bottomPage = new PanePage();
 			this.bottomPage.PaneRelativeSize = 50;
-			this.bottomPage.PaneMinSize = 100;
+			this.bottomPage.PaneMinSize = 150;
 			this.bottomPage.PaneElasticity = 0.5;
 			this.mainBook.Items.Add(this.bottomPage);
 
@@ -106,11 +106,20 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorToolBar.TabIndex = 97;
 			this.selectorToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
+			this.bottomScrollable = new Scrollable();
+			this.bottomScrollable.Dock = DockStyle.Fill;
+			this.bottomScrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
+			this.bottomScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.bottomScrollable.Panel.IsAutoFitting = true;
+			this.bottomScrollable.IsForegroundFrame = true;
+			this.bottomScrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
+			this.bottomScrollable.SetParent(this.bottomPage);
+
 			//	Conteneur du panneau.
-			this.panelContainer = new Widget(this.bottomPage);
+			this.panelContainer = new Widget(this.bottomScrollable.Panel);
 			this.panelContainer.Height = 0.0;
 			this.panelContainer.Dock = DockStyle.Top;
-			this.panelContainer.DockMargins = new Margins(0, 0, 0, 0);
+			this.panelContainer.DockMargins = new Margins(0, 1, 0, 0);
 			this.panelContainer.TabIndex = 99;
 			this.panelContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			
@@ -120,9 +129,9 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.HasCloseButton = true;
 			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
 			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
-			this.colorSelector.SetParent(this.bottomPage);
+			this.colorSelector.SetParent(this.bottomScrollable.Panel);
 			this.colorSelector.Dock = DockStyle.Top;
-			this.colorSelector.DockMargins = new Margins(0, 0, 5, 0);
+			this.colorSelector.DockMargins = new Margins(1, 3, 5, 2);
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.colorSelector.Visibility = false;
@@ -131,6 +140,9 @@ namespace Epsitec.Common.Document.Containers
 
 			this.category = StyleCategory.Graphic;
 			this.UpdateCategory();
+
+			this.panelContainer.Height = 1;  // nécessaire pour mettre à jour la première fois !
+			this.panelContainer.ForceLayout();
 		}
 
 		protected void CreateCategoryGroup()
@@ -1412,6 +1424,7 @@ namespace Epsitec.Common.Document.Containers
 		protected PaneBook					mainBook;
 		protected PanePage					topPage;
 		protected PanePage					bottomPage;
+		protected Scrollable				bottomScrollable;
 
 		protected Widget					categoryContainer;
 		protected RadioButton				categoryGraphic;

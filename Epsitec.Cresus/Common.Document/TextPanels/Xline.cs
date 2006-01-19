@@ -528,6 +528,9 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.document.TextWrapper.DefineOperationName("FontUnderlined", Res.Strings.Action.FontUnderlined);
 			this.document.TextWrapper.ResumeSynchronizations();
+
+			this.HeightChanged();
+			this.UpdateClientGeometry();
 		}
 		
 		private void HandleButtonOverlineClicked(object sender, MessageEventArgs e)
@@ -584,6 +587,9 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.document.TextWrapper.DefineOperationName("FontOverlined", Res.Strings.Action.FontOverlined);
 			this.document.TextWrapper.ResumeSynchronizations();
+
+			this.HeightChanged();
+			this.UpdateClientGeometry();
 		}
 		
 		private void HandleButtonStrikeoutClicked(object sender, MessageEventArgs e)
@@ -640,6 +646,9 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.document.TextWrapper.DefineOperationName("FontStrikeout", Res.Strings.Action.FontStrikeout);
 			this.document.TextWrapper.ResumeSynchronizations();
+
+			this.HeightChanged();
+			this.UpdateClientGeometry();
 		}
 		
 		private void HandleUnderlinedValueChanged(object sender)
