@@ -211,7 +211,7 @@ namespace Epsitec.Common.Document
 					leading = this.paragraphWrapper.Active.Leading;
 				}
 
-				justif = this.document.ParagraphWrapper.Active.JustificationMode;
+				justif = this.paragraphWrapper.Active.JustificationMode;
 			}
 
 			this.CommandActiveState("ParagraphLeading08", enabled, (leading == 0.8));

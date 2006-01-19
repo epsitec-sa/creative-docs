@@ -1236,22 +1236,22 @@ namespace Epsitec.Common.Document
 		public void EditGetFont(out string fontFace, out string fontStyle)
 		{
 			//	Donne la fonte actullement utilisée.
-			if ( this.document.IsWrappersAttached )
+			if ( this.document.Wrappers.IsWrappersAttached )
 			{
-				fontFace = this.document.TextWrapper.Defined.FontFace;
+				fontFace = this.document.Wrappers.TextWrapper.Defined.FontFace;
 				if ( fontFace == null )
 				{
-					fontFace = this.document.TextWrapper.Active.FontFace;
+					fontFace = this.document.Wrappers.TextWrapper.Active.FontFace;
 					if ( fontFace == null )
 					{
 						fontFace = "";
 					}
 				}
 
-				fontStyle = this.document.TextWrapper.Defined.FontStyle;
+				fontStyle = this.document.Wrappers.TextWrapper.Defined.FontStyle;
 				if ( fontStyle == null )
 				{
-					fontStyle = this.document.TextWrapper.Active.FontStyle;
+					fontStyle = this.document.Wrappers.TextWrapper.Active.FontStyle;
 					if ( fontStyle == null )
 					{
 						fontStyle = "";

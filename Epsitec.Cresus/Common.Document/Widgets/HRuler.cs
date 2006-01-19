@@ -45,17 +45,17 @@ namespace Epsitec.Common.Document.Widgets
 		public override void WrappersAttach()
 		{
 			//	Attache la règle aux wrappers.
-			this.document.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.ParagraphWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
-//-			this.document.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.document.Wrappers.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
+			this.document.Wrappers.ParagraphWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
+//-			this.document.Wrappers.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 		}
 
 		public override void WrappersDetach()
 		{
 			//	Détache la règle des wrappers.
-			this.document.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-			this.document.ParagraphWrapper.Active.Changed -= new EventHandler(this.HandleWrapperChanged);
-//-			this.document.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+			this.document.Wrappers.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
+			this.document.Wrappers.ParagraphWrapper.Active.Changed -= new EventHandler(this.HandleWrapperChanged);
+//-			this.document.Wrappers.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 		}
 
 		protected void HandleWrapperChanged(object sender)
@@ -93,9 +93,9 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void GetMargins(out double leftFirst, out double leftBody, out double right)
 		{
-			leftFirst = this.document.ParagraphWrapper.Active.LeftMarginFirst;
-			leftBody  = this.document.ParagraphWrapper.Active.LeftMarginBody;
-			right     = this.document.ParagraphWrapper.Active.RightMarginBody;
+			leftFirst = this.document.Wrappers.ParagraphWrapper.Active.LeftMarginFirst;
+			leftBody  = this.document.Wrappers.ParagraphWrapper.Active.LeftMarginBody;
+			right     = this.document.Wrappers.ParagraphWrapper.Active.RightMarginBody;
 		}
 
 		
@@ -670,18 +670,18 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				if ( handle == "LeftFirst" )
 				{
-					this.document.ParagraphWrapper.SuspendSynchronizations();
-					this.document.ParagraphWrapper.Defined.LeftMarginFirst = x;
-					this.document.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphWrapper.ResumeSynchronizations();
+					this.document.Wrappers.ParagraphWrapper.SuspendSynchronizations();
+					this.document.Wrappers.ParagraphWrapper.Defined.LeftMarginFirst = x;
+					this.document.Wrappers.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
+					this.document.Wrappers.ParagraphWrapper.ResumeSynchronizations();
 				}
 
 				if ( handle == "LeftBody" )
 				{
-					this.document.ParagraphWrapper.SuspendSynchronizations();
-					this.document.ParagraphWrapper.Defined.LeftMarginBody = x;
-					this.document.ParagraphWrapper.Defined.MarginUnits    = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphWrapper.ResumeSynchronizations();
+					this.document.Wrappers.ParagraphWrapper.SuspendSynchronizations();
+					this.document.Wrappers.ParagraphWrapper.Defined.LeftMarginBody = x;
+					this.document.Wrappers.ParagraphWrapper.Defined.MarginUnits    = Common.Text.Properties.SizeUnits.Points;
+					this.document.Wrappers.ParagraphWrapper.ResumeSynchronizations();
 				}
 
 				if ( handle == "FirstBody" )
@@ -690,21 +690,21 @@ namespace Epsitec.Common.Document.Widgets
 					xf = System.Math.Max(xf, 0);
 					xf = System.Math.Min(xf, width);
 
-					this.document.ParagraphWrapper.SuspendSynchronizations();
-					this.document.ParagraphWrapper.Defined.LeftMarginFirst = xf;
-					this.document.ParagraphWrapper.Defined.LeftMarginBody  = x;
-					this.document.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphWrapper.ResumeSynchronizations();
+					this.document.Wrappers.ParagraphWrapper.SuspendSynchronizations();
+					this.document.Wrappers.ParagraphWrapper.Defined.LeftMarginFirst = xf;
+					this.document.Wrappers.ParagraphWrapper.Defined.LeftMarginBody  = x;
+					this.document.Wrappers.ParagraphWrapper.Defined.MarginUnits     = Common.Text.Properties.SizeUnits.Points;
+					this.document.Wrappers.ParagraphWrapper.ResumeSynchronizations();
 				}
 
 				if ( handle == "Right" )
 				{
 					x = width-x;
-					this.document.ParagraphWrapper.SuspendSynchronizations();
-					this.document.ParagraphWrapper.Defined.RightMarginFirst = x;
-					this.document.ParagraphWrapper.Defined.RightMarginBody  = x;
-					this.document.ParagraphWrapper.Defined.MarginUnits      = Common.Text.Properties.SizeUnits.Points;
-					this.document.ParagraphWrapper.ResumeSynchronizations();
+					this.document.Wrappers.ParagraphWrapper.SuspendSynchronizations();
+					this.document.Wrappers.ParagraphWrapper.Defined.RightMarginFirst = x;
+					this.document.Wrappers.ParagraphWrapper.Defined.RightMarginBody  = x;
+					this.document.Wrappers.ParagraphWrapper.Defined.MarginUnits      = Common.Text.Properties.SizeUnits.Points;
+					this.document.Wrappers.ParagraphWrapper.ResumeSynchronizations();
 				}
 			}
 			else	// tabulateur ?

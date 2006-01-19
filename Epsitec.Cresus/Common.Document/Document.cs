@@ -198,27 +198,6 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public Text.Wrappers.TextWrapper TextWrapper
-		{
-			//	Wrapper pour la fonte.
-			get { return this.wrappers.TextWrapper; }
-		}
-
-		public Text.Wrappers.ParagraphWrapper ParagraphWrapper
-		{
-			//	Wrapper pour le paragraphe.
-			get { return this.wrappers.ParagraphWrapper; }
-		}
-
-		public bool IsWrappersAttached
-		{
-			//	Indique si les wrappers sont attachés.
-			get
-			{
-				return this.wrappers.IsWrappersAttached;
-			}
-		}
-
 		public Widgets.HRuler HRuler
 		{
 			//	Règle horizontale.

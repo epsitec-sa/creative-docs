@@ -140,7 +140,7 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
-			if ( !this.document.TextWrapper.IsAttached )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
 
 			this.TextWrapper.SuspendSynchronizations();
 			this.TextWrapper.Defined.ClearTextBox();

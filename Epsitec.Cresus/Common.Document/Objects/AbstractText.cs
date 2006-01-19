@@ -425,12 +425,12 @@ namespace Epsitec.Common.Document.Objects
 
 			this.MetaNavigator.SelectAll();
 
-			this.document.TextWrapper.SuspendSynchronizations();
-			this.document.TextWrapper.Defined.FontFace = fontFace;
-			this.document.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(fontFace);
-			this.document.TextWrapper.Defined.FontSize = fontSize;
-			this.document.TextWrapper.Defined.Units = Text.Properties.SizeUnits.Points;
-			this.document.TextWrapper.ResumeSynchronizations();
+			this.document.Wrappers.TextWrapper.SuspendSynchronizations();
+			this.document.Wrappers.TextWrapper.Defined.FontFace = fontFace;
+			this.document.Wrappers.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(fontFace);
+			this.document.Wrappers.TextWrapper.Defined.FontSize = fontSize;
+			this.document.Wrappers.TextWrapper.Defined.Units = Text.Properties.SizeUnits.Points;
+			this.document.Wrappers.TextWrapper.ResumeSynchronizations();
 
 			this.textFlow.TextNavigator.ClearSelection();
 
@@ -533,20 +533,20 @@ namespace Epsitec.Common.Document.Objects
 			Text.Properties.OpenTypeProperty otp;
 			this.document.TextContext.GetOpenType(sel[0], out otp);
 
-			string face = this.document.TextWrapper.Defined.FontFace;
+			string face = this.document.Wrappers.TextWrapper.Defined.FontFace;
 			if ( face == null )
 			{
-				face = this.document.TextWrapper.Active.FontFace;
+				face = this.document.Wrappers.TextWrapper.Active.FontFace;
 				if ( face == null )
 				{
 					face = "";
 				}
 			}
 
-			string style = this.document.TextWrapper.Defined.FontStyle;
+			string style = this.document.Wrappers.TextWrapper.Defined.FontStyle;
 			if ( style == null )
 			{
-				style = this.document.TextWrapper.Active.FontStyle;
+				style = this.document.Wrappers.TextWrapper.Active.FontStyle;
 				if ( style == null )
 				{
 					style = "";
