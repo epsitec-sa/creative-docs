@@ -153,6 +153,24 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
+		public bool IsStyleDefinition
+		{
+			//	Indique si le panneau sert à féfinir un style.
+			get
+			{
+				return this.isStyleDefinition;
+			}
+
+			set
+			{
+				if ( this.isStyleDefinition != value )
+				{
+					this.isStyleDefinition = value;
+					this.UpdateButtons();
+				}
+			}
+		}
+
 		public void HeightChanged()
 		{
 			//	Indique que la hauteur du panneau a changé.
@@ -206,7 +224,7 @@ namespace Epsitec.Common.Document.TextPanels
 			rect.Top -= 1;
 			rect.Bottom = rect.Top-this.LabelHeight;
 			this.label.Bounds = rect;
-			this.label.Visibility = (this.IsLabelProperties);
+			this.label.Visibility = this.IsLabelProperties;
 
 			rect = this.Client.Bounds;
 			rect.Left += 1;
@@ -223,7 +241,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected void UpdateButtons()
 		{
 			//	Met à jour les boutons.
-			this.extendedButton.Visibility = (this.isNormalAndExtended);
+			this.extendedButton.Visibility = (this.isNormalAndExtended && !this.isStyleDefinition);
 			this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 		}
 
@@ -280,7 +298,7 @@ namespace Epsitec.Common.Document.TextPanels
 #endif
 			graphics.RenderSolid(color);
 
-			if ( false )
+			if ( this.isStyleDefinition )
 			{
 				Rectangle part = rect;
 				part.Width = this.extendedZoneWidth;
@@ -624,6 +642,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected Text.TextStyle			textStyle;
 		protected bool						isExtendedSize = false;
 		protected bool						isNormalAndExtended = false;
+		protected bool						isStyleDefinition = false;
 		protected double					extendedZoneWidth = 16;
 		protected StaticText				label;
 		protected StaticText				fixIcon;

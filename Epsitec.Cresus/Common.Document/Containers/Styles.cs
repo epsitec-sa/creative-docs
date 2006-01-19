@@ -727,6 +727,7 @@ namespace Epsitec.Common.Document.Containers
 
 				this.textPanel = panel;
 				this.textPanel.IsExtendedSize = true;
+				this.textPanel.IsStyleDefinition = true;
 				this.textPanel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
 				this.textPanel.SetParent(this.panelContainer);
 				this.textPanel.Dock = DockStyle.Fill;
