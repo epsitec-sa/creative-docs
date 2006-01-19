@@ -182,6 +182,18 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
+		protected void ForceHeightChanged()
+		{
+			//	Force la mise à jour de la hauteur du panneau.
+			double h = this.DefaultHeight;
+			if ( this.Height != h )
+			{
+				//	Il faut modifier la hauteur du parent (normalement Containers.Styles.panelContainer)
+				//	qui contient ce panneau en mode DockStyle.Fill !
+				this.Parent.Height = h;
+			}
+		}
+
 
 		protected virtual void UpdateAfterChanging()
 		{
