@@ -1367,7 +1367,7 @@ namespace Epsitec.Common.Document
 			
 			#region Experimental Code
 
-#if false
+#if true
 			properties.Clear ();
 			properties.Add(new Text.Properties.FontProperty("Arial Black", Misc.DefaultFontStyle("Arial Black")));
 			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale*1.5, Text.Properties.SizeUnits.Points));
@@ -1379,7 +1379,9 @@ namespace Epsitec.Common.Document
 			Text.TextStyle title = this.textContext.StyleList.NewTextStyle("Title", Text.TextStyleClass.Paragraph, properties);
 			
 			this.textContext.StyleList.SetNextStyle(null, title, style);
-			style = title;
+			
+			this.textContext.StyleList.StyleMap.SetRank(title, 1);
+			this.textContext.StyleList.StyleMap.SetCaption(title, "Titre");
 #endif
 			
 			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("bullet-1");
@@ -1416,10 +1418,18 @@ namespace Epsitec.Common.Document
 			
 			Text.TextStyle[] baseStyles = new Text.TextStyle[] { style };
 			
-			this.textContext.StyleList.NewTextStyle("BulletRound",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
-			this.textContext.StyleList.NewTextStyle("BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2 }, baseStyles);
-			this.textContext.StyleList.NewTextStyle("BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, contInfo }, baseStyles);
+			Text.TextStyle l1 = this.textContext.StyleList.NewTextStyle("BulletRound",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
+			Text.TextStyle l2 = this.textContext.StyleList.NewTextStyle("BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2 }, baseStyles);
+			Text.TextStyle l3 = this.textContext.StyleList.NewTextStyle("BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, contInfo }, baseStyles);
 
+			this.textContext.StyleList.StyleMap.SetRank(l1, 2);
+			this.textContext.StyleList.StyleMap.SetCaption(l1, "Liste à puces");
+
+			this.textContext.StyleList.StyleMap.SetRank(l2, 3);
+			this.textContext.StyleList.StyleMap.SetCaption(l2, "Liste 1./2./...");
+
+			this.textContext.StyleList.StyleMap.SetRank(l3, 4);
+			this.textContext.StyleList.StyleMap.SetCaption(l3, "Liste a)/b)/...");
 			#endregion
 			
 			this.textContext.DefaultStyle = style;
