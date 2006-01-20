@@ -239,14 +239,15 @@ namespace Epsitec.Common.Document
 				 shape.Aspect != Aspect.Support    &&
 				 ((stroke != null && stroke.Dash) || shape.Aspect == Aspect.OverDashed) )
 			{
+				double scaleX = (drawingContext == null) ? 1 : drawingContext.ScaleX;
 				DashedPath dp = new DashedPath();
-				dp.DefaultZoom = drawingContext.ScaleX;
+				dp.DefaultZoom = scaleX;
 				dp.Append(shape.Path);
 
 				if ( shape.Aspect == Aspect.OverDashed )
 				{
 					double pen = 0.00001;
-					double gap = 4.0/drawingContext.ScaleX - pen;
+					double gap = 4.0/scaleX - pen;
 					dp.AddDash(pen, gap);
 				}
 				else

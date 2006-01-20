@@ -184,7 +184,7 @@ namespace Epsitec.Common.Document.Widgets
 			Drawing.Rectangle iClip = graphics.SaveClippingRectangle();
 			graphics.SetClippingRectangle(this.MapClientToRoot(rect));
 
-			rect.Deflate(rect.Height*0.25);
+			rect.Deflate(rect.Height*0.15);
 
 			double scale = 1.0/10.0;
 			Transform initial = graphics.Transform;
