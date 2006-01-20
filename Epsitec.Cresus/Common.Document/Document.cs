@@ -1357,7 +1357,7 @@ namespace Epsitec.Common.Document
 
 			System.Collections.ArrayList properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty("Arial", Misc.DefaultFontStyle("Arial")));
-			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
+			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 0.0));
 			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 			properties.Add(new Text.Properties.FontColorProperty(black));
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
