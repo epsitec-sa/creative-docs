@@ -792,6 +792,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Ribbons\TextStyles.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Ribbons\Undo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

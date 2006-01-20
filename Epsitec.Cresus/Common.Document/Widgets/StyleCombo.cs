@@ -46,6 +46,19 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public StyleCategory StyleCategory
+		{
+			get
+			{
+				return this.styleCategory;
+			}
+
+			set
+			{
+				this.styleCategory = value;
+			}
+		}
+
 		public int ExcludeRank
 		{
 			//	Ligne éventuelle à exclure.
@@ -352,8 +365,23 @@ namespace Epsitec.Common.Document.Widgets
 		protected virtual void OpenCombo()
 		{
 			if ( this.IsComboOpen )  return;
-			if ( this.document.Aggregates.Count == 0 )  return;
-			
+
+			int count = 0;
+			Common.Text.TextStyle[] styles = null;
+
+			if ( this.styleCategory == StyleCategory.Graphic )
+			{
+				count = this.document.Aggregates.Count;
+			}
+		
+			if ( this.styleCategory == StyleCategory.Paragraph || this.styleCategory == StyleCategory.Character )
+			{
+				styles = this.document.TextStyles(this.styleCategory);
+				count = styles.Length;
+			}
+
+			if ( count == 0 )  return;
+
 			Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs();
 			this.OnOpeningCombo(cancelEvent);
 			if ( cancelEvent.Cancel )  return;
@@ -362,21 +390,45 @@ namespace Epsitec.Common.Document.Widgets
 			Margins margins = adorner.GeometryArrayMargins;
 
 			double width = 116+128+margins.Left+margins.Right;
-			double h = this.document.Aggregates.Count*32+17+margins.Bottom+margins.Top;
+			double h = count*32+17+margins.Bottom+margins.Top;
 
-			this.list = new AggregateList();
-			this.list.Document = this.document;
-			this.list.List = this.document.Aggregates;
-			this.list.ExcludeRank = this.excludeRank;
-			this.list.IsNoneLine = this.isNoneLine;
-			this.list.IsDeep = this.isDeep;
-			this.list.HScroller = false;
-			this.list.VScroller = false;
-			this.list.IsHiliteColumn = false;
-			this.list.IsChildrensColumn = false;
-			this.list.IsInitialSelection = false;
-			this.list.FixWidth = width;
-			this.list.UpdateContent();
+			if ( this.styleCategory == StyleCategory.Graphic )
+			{
+				AggregateList list = new AggregateList();
+				list = new AggregateList();
+				list.Document = this.document;
+				list.List = this.document.Aggregates;
+				list.ExcludeRank = this.excludeRank;
+				list.IsNoneLine = this.isNoneLine;
+				list.IsDeep = this.isDeep;
+				list.HScroller = false;
+				list.VScroller = false;
+				list.IsHiliteColumn = false;
+				list.IsChildrensColumn = false;
+				list.IsInitialSelection = false;
+				list.FixWidth = width;
+				list.UpdateContent();
+				this.list = list;
+			}
+
+			if ( this.styleCategory == StyleCategory.Paragraph || this.styleCategory == StyleCategory.Character )
+			{
+				TextStylesList list = new TextStylesList();
+				list.Document = this.document;
+				list.Category = this.styleCategory;
+				list.List = styles;
+				list.ExcludeRank = this.excludeRank;
+				list.IsNoneLine = this.isNoneLine;
+				list.IsDeep = this.isDeep;
+				list.HScroller = false;
+				list.VScroller = false;
+				list.IsHiliteColumn = false;
+				list.IsChildrensColumn = false;
+				list.IsInitialSelection = false;
+				list.FixWidth = width;
+				list.UpdateContent();
+				this.list = list;
+			}
 
 			Point pos = this.MapClientToScreen(new Point(0, 1));
 			ScreenInfo info = ScreenInfo.Find(pos);
@@ -616,12 +668,13 @@ namespace Epsitec.Common.Document.Widgets
 		private Widget							initiallyFocusedWidget;
 
 		protected Document						document;
+		protected StyleCategory					styleCategory = StyleCategory.Graphic;
 		protected int							excludeRank = -1;
 		protected bool							isDeep = false;
 		protected bool							isNoneLine = false;
 		protected GlyphButton					button;
 		protected Window						comboWindow;
-		protected AggregateList					list;
+		protected AbstractStyleList				list;
 		protected int							selectedIndex = -1;
 		protected ShowCondition					buttonShowCondition;
 		protected bool							hasEditedText;

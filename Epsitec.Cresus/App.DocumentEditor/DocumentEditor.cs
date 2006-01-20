@@ -739,6 +739,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonText.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonText.Visibility = false;
+			this.ribbonText.Items.Add(new Ribbons.TextStyles());
 			this.ribbonText.Items.Add(new Ribbons.Paragraph());
 			this.ribbonText.Items.Add(new Ribbons.Font());
 			this.ribbonText.Items.Add(new Ribbons.Clipboard());

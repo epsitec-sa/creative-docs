@@ -170,6 +170,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.aggregateCombo = new Widgets.StyleCombo(this.aggregateToolBar);
 			this.aggregateCombo.Document = this.document;
+			this.aggregateCombo.StyleCategory = StyleCategory.Graphic;
 			this.aggregateCombo.IsDeep = true;
 			this.aggregateCombo.Width = 135;
 			this.aggregateCombo.Dock = DockStyle.Left;

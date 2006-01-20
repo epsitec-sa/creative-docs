@@ -1043,6 +1043,7 @@
 	<data name="Action.Infos">Informations...</data>
 	<data name="Action.LabelProperties">Property names</data>
 
+	<data name="Action.TextStylesMain">@@Styles</data>
 	<data name="Action.FontMain">Font</data>
 	<data name="Action.FontFace">Font name</data>
 	<data name="Action.FontStyle">Font style</data>

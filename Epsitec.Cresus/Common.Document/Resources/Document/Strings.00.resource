@@ -1043,6 +1043,7 @@
 	<data name="Action.Infos">Informations...</data>
 	<data name="Action.LabelProperties">Attributs détaillés</data>
 	
+	<data name="Action.TextStylesMain">Styles</data>
 	<data name="Action.FontMain">Caractère</data>
 	<data name="Action.FontFace">Nom de la police</data>
 	<data name="Action.FontStyle">Style de la police</data>
