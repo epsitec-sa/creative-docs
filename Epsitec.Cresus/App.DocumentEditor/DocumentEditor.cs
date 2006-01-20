@@ -3903,6 +3903,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.SelNamesChanged        += new SimpleEventHandler(this.HandleSelNamesChanged);
 			this.CurrentDocument.Notifier.DrawChanged            += new RedrawEventHandler(this.HandleDrawChanged);
 			this.CurrentDocument.Notifier.RibbonCommand          += new RibbonEventHandler(this.HandleRibbonCommand);
+			this.CurrentDocument.Notifier.BookPanelShowPage      += new BookPanelEventHandler(this.HandleBookPanelShowPage);
 			this.CurrentDocument.Notifier.SettingsShowPage       += new SettingsEventHandler(this.HandleSettingsShowPage);
 		}
 
@@ -4837,6 +4838,29 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			this.ActiveRibbon(ribbon);
+		}
+		
+		private void HandleBookPanelShowPage(string page, string sub)
+		{
+			//	Appelé par le document lorsqu'il faut afficher un onglet spécifique.
+			this.dlgSplash.Hide();
+
+			DocumentInfo di = this.CurrentDocumentInfo;
+			if ( di == null )  return;
+
+			foreach ( TabPage tab in di.bookPanels.Items )
+			{
+				if ( tab == null )  continue;
+				if ( tab.Name == page )
+				{
+					di.bookPanels.ActivePage = tab;
+
+					if ( page == "Styles" )
+					{
+						di.containerStyles.SetCategory(sub);
+					}
+				}
+			}
 		}
 		
 		private void HandleSettingsShowPage(string book, string tab)

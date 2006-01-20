@@ -15,19 +15,37 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.TextStylesMain;
 
+			this.buttonParagraph = new IconButton(this);
+			this.buttonParagraph.IconName = Misc.Icon("TextFilterParagraph");
+			this.buttonParagraph.PreferredIconSize = Misc.IconPreferredSize("Normal");
+			this.buttonParagraph.AutoFocus = false;
+			this.buttonParagraph.TabIndex = this.tabIndex++;
+			this.buttonParagraph.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonParagraph.Clicked += new MessageEventHandler(this.HandleParagraphClicked);
+			ToolTip.Default.SetToolTip(this.buttonParagraph, Res.Strings.Panel.Style.ParagraphDefinition);
+
+			this.buttonCharacter = new IconButton(this);
+			this.buttonCharacter.IconName = Misc.Icon("TextFilterCharacter");
+			this.buttonCharacter.PreferredIconSize = Misc.IconPreferredSize("Normal");
+			this.buttonCharacter.AutoFocus = false;
+			this.buttonCharacter.TabIndex = this.tabIndex++;
+			this.buttonCharacter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonCharacter.Clicked += new MessageEventHandler(this.HandleCharacterClicked);
+			ToolTip.Default.SetToolTip(this.buttonCharacter, Res.Strings.Panel.Style.CharacterDefinition);
+
 			this.styleParagraph = new Widgets.StyleCombo(this);
 			this.styleParagraph.StyleCategory = StyleCategory.Paragraph;
 			this.styleParagraph.IsDeep = true;
 			this.styleParagraph.IsReadOnly = true;
 			this.styleParagraph.ClosedCombo += new EventHandler(this.HandleStyleClosedCombo);
-			//?ToolTip.Default.SetToolTip(this.styleParagraph, Res.Strings.Container.Principal.Button.AggregateCombo);
+			ToolTip.Default.SetToolTip(this.styleParagraph, Res.Strings.Panel.Style.ParagraphChoice);
 
 			this.styleCharacter = new Widgets.StyleCombo(this);
 			this.styleCharacter.StyleCategory = StyleCategory.Character;
 			this.styleCharacter.IsDeep = true;
 			this.styleCharacter.IsReadOnly = true;
 			this.styleCharacter.ClosedCombo += new EventHandler(this.HandleStyleClosedCombo);
-			//?ToolTip.Default.SetToolTip(this.styleCharacter, Res.Strings.Container.Principal.Button.AggregateCombo);
+			ToolTip.Default.SetToolTip(this.styleCharacter, Res.Strings.Panel.Style.CharacterChoice);
 
 			this.UpdateClientGeometry();
 		}
@@ -47,6 +65,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.document == null )
 			{
+				this.buttonParagraph.Enable = false;
+				this.buttonCharacter.Enable = false;
 				this.styleParagraph.Enable = false;
 				this.styleCharacter.Enable = false;
 				this.styleParagraph.Document = null;
@@ -54,6 +74,8 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			else
 			{
+				this.buttonParagraph.Enable = true;
+				this.buttonCharacter.Enable = true;
 				this.styleParagraph.Enable = true;
 				this.styleCharacter.Enable = true;
 				this.styleParagraph.Document = this.document;
@@ -71,7 +93,7 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 135+10;
+				return 10+22+135;
 			}
 		}
 
@@ -83,17 +105,44 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.styleParagraph == null )  return;
 
-			Rectangle rect = this.UsefulZone;
+			Rectangle rect;
+			double dx = this.buttonParagraph.DefaultWidth;
+			double dy = this.buttonParagraph.DefaultHeight;
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
+			rect.Offset(0, dy+5);
+			this.buttonParagraph.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
+			this.buttonCharacter.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Left += dx;
 			rect.Bottom += 28;
 			rect.Height = 20;
 			this.styleParagraph.Bounds = rect;
 
 			rect = this.UsefulZone;
+			rect.Left += dx;
 			rect.Bottom += 1;
 			rect.Height = 20;
 			this.styleCharacter.Bounds = rect;
 		}
 
+
+		private void HandleParagraphClicked(object sender, MessageEventArgs e)
+		{
+			this.document.Notifier.NotifyBookPanelShowPage("Styles", "Paragraph");
+		}
+
+		private void HandleCharacterClicked(object sender, MessageEventArgs e)
+		{
+			this.document.Notifier.NotifyBookPanelShowPage("Styles", "Character");
+		}
 
 		private void HandleStyleClosedCombo(object sender)
 		{
@@ -108,6 +157,8 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 		
+		protected IconButton				buttonParagraph;
+		protected IconButton				buttonCharacter;
 		protected Widgets.StyleCombo		styleParagraph;
 		protected Widgets.StyleCombo		styleCharacter;
 	}

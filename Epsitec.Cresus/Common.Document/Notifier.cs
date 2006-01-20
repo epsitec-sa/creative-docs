@@ -11,6 +11,7 @@ namespace Epsitec.Common.Document
 	public delegate void TextStyleEventHandler(System.Collections.ArrayList textStyleList);
 	public delegate void RedrawEventHandler(Viewer viewer, Rectangle rect);
 	public delegate void RibbonEventHandler(string name);
+	public delegate void BookPanelEventHandler(string page, string sub);
 	public delegate void SettingsEventHandler(string book, string tab);
 
 	/// <summary>
@@ -397,6 +398,12 @@ namespace Epsitec.Common.Document
 		{
 			//	Indique qu'on ruban doit changer.
 			this.OnRibbonCommand(name);
+		}
+
+		public void NotifyBookPanelShowPage(string page, string sub)
+		{
+			//	Indique qu'il faut afficher un onglet donné.
+			this.OnBookPanelShowPage(page, sub);
 		}
 
 		public void NotifySettingsShowPage(string book, string tab)
@@ -857,6 +864,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnBookPanelShowPage(string page, string sub)
+		{
+			if ( this.BookPanelShowPage != null )  // qq'un écoute ?
+			{
+				this.BookPanelShowPage(page, sub);
+			}
+		}
+
 		protected void OnSettingsShowPage(string book, string tab)
 		{
 			if ( this.SettingsShowPage != null )  // qq'un écoute ?
@@ -898,6 +913,7 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			SelNamesChanged;
 		public event RedrawEventHandler			DrawChanged;
 		public event RibbonEventHandler			RibbonCommand;
+		public event BookPanelEventHandler		BookPanelShowPage;
 		public event SettingsEventHandler		SettingsShowPage;
 
 		protected Document						document;

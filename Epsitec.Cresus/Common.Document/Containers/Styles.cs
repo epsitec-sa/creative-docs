@@ -158,6 +158,7 @@ namespace Epsitec.Common.Document.Containers
 			this.index = 0;
 
 			this.categoryGraphic = new Button(this.categoryContainer);
+			this.categoryGraphic.Name = "Graphic";
 			this.categoryGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryGraphic.AutoFocus = false;
 			this.categoryGraphic.ActiveState = ActiveState.Yes;
@@ -170,6 +171,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryGraphic.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
 			this.categoryParagraph = new Button(this.categoryContainer);
+			this.categoryParagraph.Name = "Paragraph";
 			this.categoryParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryParagraph.AutoFocus = false;
 			this.categoryParagraph.Text = Res.Strings.Panel.AggregateCategory.Paragraph;
@@ -181,6 +183,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryParagraph.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
 			this.categoryCharacter = new Button(this.categoryContainer);
+			this.categoryCharacter.Name = "Character";
 			this.categoryCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryCharacter.AutoFocus = false;
 			this.categoryCharacter.Text = Res.Strings.Panel.AggregateCategory.Character;
@@ -820,6 +823,18 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
+		public void SetCategory(string name)
+		{
+			//	Choix d'une catégorie à partir d'une string, depuis le monde extérieur.
+			this.categoryGraphic  .ActiveState = (name == "Graphic"  ) ? ActiveState.Yes : ActiveState.No;
+			this.categoryParagraph.ActiveState = (name == "Paragraph") ? ActiveState.Yes : ActiveState.No;
+			this.categoryCharacter.ActiveState = (name == "Character") ? ActiveState.Yes : ActiveState.No;
+
+			if ( this.categoryGraphic  .ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Graphic;
+			if ( this.categoryParagraph.ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Paragraph;
+			if ( this.categoryCharacter.ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Character;
+		}
+
 		protected StyleCategory Category
 		{
 			//	Catégorie sélectionnée (Graphic, Paragraph ou Character).
@@ -842,14 +857,7 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleCategoryChanged(object sender, MessageEventArgs e)
 		{
 			Button button = sender as Button;
-
-			this.categoryGraphic  .ActiveState = (button == this.categoryGraphic  ) ? ActiveState.Yes : ActiveState.No;
-			this.categoryParagraph.ActiveState = (button == this.categoryParagraph) ? ActiveState.Yes : ActiveState.No;
-			this.categoryCharacter.ActiveState = (button == this.categoryCharacter) ? ActiveState.Yes : ActiveState.No;
-
-			if ( this.categoryGraphic  .ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Graphic;
-			if ( this.categoryParagraph.ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Paragraph;
-			if ( this.categoryCharacter.ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Character;
+			this.SetCategory(button.Name);
 		}
 
 		private void HandleSelectorClicked(object sender, MessageEventArgs e)
