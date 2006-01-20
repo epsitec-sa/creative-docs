@@ -87,6 +87,42 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 		}
 
+		public override void NotifyTextStylesChanged(Text.TextStyle[] styles)
+		{
+			string paragraph = "";
+			string character = "";
+
+			foreach ( Text.TextStyle style in styles )
+			{
+				string text = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+
+				if ( style.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
+				{
+					TextStyles.StyleAppend(ref paragraph, text);
+				}
+
+				if ( style.TextStyleClass == Common.Text.TextStyleClass.Text )
+				{
+					TextStyles.StyleAppend(ref character, text);
+				}
+			}
+
+			this.styleParagraph.Text = paragraph;
+			this.styleCharacter.Text = character;
+		}
+
+		protected static void StyleAppend(ref string initial, string add)
+		{
+			if ( initial == "" )
+			{
+				initial = add;
+			}
+			else
+			{
+				initial = initial + " + " + add;
+			}
+		}
+
 
 		public override double DefaultWidth
 		{
@@ -153,7 +189,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			Common.Text.TextStyle[] styles = this.document.TextStyles(combo.StyleCategory);
 			Common.Text.TextStyle style = styles[sel];
-			//	TODO: modifier le style du texte...
+			this.document.Modifier.SetTextStyle(style);
 		}
 
 		

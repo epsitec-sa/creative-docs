@@ -529,6 +529,10 @@ namespace Epsitec.Common.Document
 			{
 				this.UpdateTextLayout();
 				this.document.Notifier.NotifyTextChanged();
+
+				Text.TextStyle[] styles = this.TextNavigator.TextStyles;
+				this.document.Notifier.NotifyTextStylesChanged(styles);
+
 				this.NotifyAreaFlow();
 			}
 		}

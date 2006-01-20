@@ -13,6 +13,7 @@ namespace Epsitec.Common.Document
 	public delegate void RibbonEventHandler(string name);
 	public delegate void BookPanelEventHandler(string page, string sub);
 	public delegate void SettingsEventHandler(string book, string tab);
+	public delegate void TextStylesEventHandler(Text.TextStyle[] styles);
 
 	/// <summary>
 	/// Summary description for Notifier.
@@ -167,6 +168,14 @@ namespace Epsitec.Common.Document
 			//	Indique que le texte en édition a changé.
 			if ( !this.enable )  return;
 			this.textChanged = true;
+			this.NotifyAsync();
+		}
+
+		public void NotifyTextStylesChanged(Text.TextStyle[] styles)
+		{
+			//	Indique que le texte en édition a changé.
+			if ( !this.enable )  return;
+			this.textStylesChanged = styles;
 			this.NotifyAsync();
 		}
 
@@ -477,6 +486,12 @@ namespace Epsitec.Common.Document
 				this.textChanged = false;
 			}
 
+			if ( this.textStylesChanged != null )
+			{
+				this.OnTextStylesChanged(this.textStylesChanged);
+				this.textStylesChanged = null;
+			}
+
 			if ( this.textCursorChanged )
 			{
 				this.OnTextCursorChanged();
@@ -688,6 +703,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnTextStylesChanged(Text.TextStyle[] styles)
+		{
+			if ( this.TextStylesChanged != null )  // qq'un écoute ?
+			{
+				this.TextStylesChanged(styles);
+			}
+		}
+
 		protected void OnTextCursorChanged()
 		{
 			if ( this.TextCursorChanged != null )  // qq'un écoute ?
@@ -891,6 +914,7 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			SelectionChanged;
 		public event SimpleEventHandler			ShaperChanged;
 		public event SimpleEventHandler			TextChanged;
+		public event TextStylesEventHandler		TextStylesChanged;
 		public event SimpleEventHandler			TextCursorChanged;
 		public event SimpleEventHandler			StyleChanged;
 		public event SimpleEventHandler			PagesChanged;
@@ -929,6 +953,7 @@ namespace Epsitec.Common.Document
 		protected bool							selectionChanged;
 		protected bool							shaperChanged;
 		protected bool							textChanged;
+		protected Text.TextStyle[]				textStylesChanged = null;
 		protected bool							textCursorChanged;
 		protected bool							styleChanged;
 		protected bool							pagesChanged;

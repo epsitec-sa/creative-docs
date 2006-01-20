@@ -1877,6 +1877,25 @@ namespace Epsitec.Common.Document
 
 
 		#region TextFormat
+		public void SetTextStyle(Text.TextStyle style)
+		{
+			//	Modifie le style du texte.
+			Objects.AbstractText edit = this.RetEditObject();
+			if ( edit == null )  return;
+
+			if ( style.TextStyleClass == Text.TextStyleClass.Paragraph )
+			{
+				edit.TextFlow.MetaNavigator.EndSelection();
+				edit.TextFlow.TextNavigator.SetParagraphStyles(style);
+			}
+
+			if ( style.TextStyleClass == Text.TextStyleClass.Text )
+			{
+				edit.TextFlow.MetaNavigator.EndSelection();
+				edit.TextFlow.TextNavigator.SetTextStyles(style);
+			}
+		}
+
 		public void TextFlowChange(Objects.AbstractText obj, Objects.AbstractText parent, bool after)
 		{
 			//	Modifie le flux.
