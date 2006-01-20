@@ -289,6 +289,9 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			if ( rect.IsEmpty )  return;
 
+			Drawing.Rectangle iClip = graphics.SaveClippingRectangle();
+			graphics.SetClippingRectangle(this.MapClientToRoot(rect));
+
 			rect.Deflate(rect.Height*0.15);
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
@@ -306,8 +309,8 @@ namespace Epsitec.Common.Document.Widgets
 			Path pathLine  = new Path();
 			bool outlineStart, surfaceStart, outlineEnd, surfaceEnd;
 
-			Point p1 = new Point(form.Left,  form.Center.Y);
-			Point p2 = new Point(form.Right, form.Center.Y);
+			Point p1 = form.BottomLeft;
+			Point p2 = form.TopRight;
 			double w = 1.0/scale;
 			Point pp1 = arrow.PathExtremity(pathStart, 0, w, CapStyle.Square, p1,p2, false, out outlineStart, out surfaceStart);
 			Point pp2 = arrow.PathExtremity(pathEnd,   1, w, CapStyle.Square, p2,p1, false, out outlineEnd,   out surfaceEnd);
@@ -326,6 +329,8 @@ namespace Epsitec.Common.Document.Widgets
 
 			graphics.LineWidth = initialWidth;
 			graphics.Transform = initialTransform;
+
+			graphics.RestoreClippingRectangle(iClip);
 		}
 
 		protected void PaintFont(Graphics graphics, Rectangle rect, Properties.Font font)

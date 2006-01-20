@@ -736,6 +736,11 @@ namespace Epsitec.Common.Document.Containers
 			{
 				this.ClosePanel();
 
+				int sel = this.document.GetSelectedTextStyle(this.category);
+				Common.Text.TextStyle style = this.TextStyleList.List[sel];
+				this.document.Wrappers.StyleTextWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
+				this.document.Wrappers.StyleParagraphWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
+
 				TextPanels.Abstract.StaticDocument = this.document;
 				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.SelectorName, this.document, true);
 				if ( panel == null )  return;
@@ -747,15 +752,10 @@ namespace Epsitec.Common.Document.Containers
 				this.textPanel.Dock = DockStyle.Fill;
 				this.textPanel.TabIndex = 1;
 				this.textPanel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+				this.textPanel.UpdateAfterAttach();
 
 				this.panelContainer.Height = this.textPanel.DefaultHeight;
 				this.panelContainer.ForceLayout();
-
-				int sel = this.document.GetSelectedTextStyle(this.category);
-				Common.Text.TextStyle style = this.TextStyleList.List[sel];
-				this.document.Wrappers.StyleTextWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
-				this.document.Wrappers.StyleParagraphWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
-				this.textPanel.UpdateAfterAttach();
 			}
 		}
 
