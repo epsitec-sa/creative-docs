@@ -557,7 +557,7 @@ namespace Epsitec.Common.Document.Properties
 			//	Donne le petit texte pour les échantillons.
 			get
 			{
-				return this.document.Modifier.RealToString(this.width);
+				return string.Concat(Res.Strings.Property.Line.Short.Witdh, this.document.Modifier.RealToString(this.width));
 			}
 		}
 

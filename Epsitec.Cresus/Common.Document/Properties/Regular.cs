@@ -83,9 +83,8 @@ namespace Epsitec.Common.Document.Properties
 			//	Donne le petit texte pour les échantillons.
 			get
 			{
-				string text = string.Format("{0}", this.nbFaces);
-				if ( this.star )  text += " *";
-				return text;
+				string star = this.star ? " *" : "";
+				return string.Concat(Res.Strings.Property.Regular.Short.Faces, this.nbFaces.ToString(), star);
 			}
 		}
 

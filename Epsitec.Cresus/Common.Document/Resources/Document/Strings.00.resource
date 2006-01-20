@@ -697,9 +697,11 @@
 	<data name="Property.Line.JoinRound">Jointure ronde</data>
 	<data name="Property.Line.JoinMiter">Jointure pointue</data>
 	<data name="Property.Line.JoinBevel">Jointure tronquée</data>
+	<data name="Property.Line.Short.Witdh">E = </data>
 
 	<data name="Property.Regular.Norm">Polygone régulier</data>
 	<data name="Property.Regular.Star">Etoile</data>
+	<data name="Property.Regular.Short.Faces">N = </data>
 
 	<data name="Property.Surface.ParallelT">Parallélogramme 1</data>
 	<data name="Property.Surface.ParallelB">Parallélogramme 2</data>

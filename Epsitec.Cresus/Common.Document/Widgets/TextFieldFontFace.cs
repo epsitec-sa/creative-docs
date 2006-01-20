@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.ButtonShowCondition = ShowCondition.Always;
 		}
 		
-		public TextFieldFontFace(Widget embedder) : this ()
+		public TextFieldFontFace(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}
@@ -61,10 +61,10 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			set
 			{
-				if (this.buttonShowCondition != value)
+				if ( this.buttonShowCondition != value )
 				{
 					this.buttonShowCondition = value;
-					this.UpdateButtonVisibility ();
+					this.UpdateButtonVisibility();
 				}
 			}
 		}
@@ -155,14 +155,14 @@ namespace Epsitec.Common.Document.Widgets
 		
 		protected virtual  void UpdateButtonVisibility()
 		{
-			this.SetButtonVisibility (this.ComputeButtonVisibility ());
+			this.SetButtonVisibility(this.ComputeButtonVisibility());
 		}
 		
-		protected virtual  bool ComputeButtonVisibility()
+		protected virtual bool ComputeButtonVisibility()
 		{
 			bool show = false;
 			
-			switch (this.ButtonShowCondition)
+			switch ( this.ButtonShowCondition )
 			{
 				case ShowCondition.Always:
 					show = true;
@@ -184,23 +184,23 @@ namespace Epsitec.Common.Document.Widgets
 					break;
 				
 				default:
-					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
+					throw new System.NotImplementedException(string.Format("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
 			}
 			
 			return show;
 		}
 		
-		protected virtual  void SetButtonVisibility(bool show)
+		protected virtual void SetButtonVisibility(bool show)
 		{
-			if (this.button != null)
+			if ( this.button != null )
 			{
-				if (this.button.Visibility != show)
+				if ( this.button.Visibility != show )
 				{
-					this.button.Visibility = (show);
+					this.button.Visibility = show;
 					
-					this.UpdateButtonGeometry ();
-					this.UpdateTextLayout ();
-					this.UpdateMouseCursor (this.MapRootToClient (Message.State.LastPosition));
+					this.UpdateButtonGeometry();
+					this.UpdateTextLayout();
+					this.UpdateMouseCursor(this.MapRootToClient(Message.State.LastPosition));
 				}
 			}
 		}
@@ -305,10 +305,10 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			if ( this.IsComboOpen )  return;
 			
-			Support.CancelEventArgs cancel_event = new Support.CancelEventArgs ();
-			this.OnOpeningCombo (cancel_event);
+			Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs();
+			this.OnOpeningCombo(cancelEvent);
 			
-			if ( cancel_event.Cancel )  return;
+			if ( cancelEvent.Cancel )  return;
 			
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			Drawing.Margins shadow = adorner.GeometryMenuShadow;
@@ -373,7 +373,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.comboWindow.AnimateShow(Animation.RollDown);
 			
 			this.openText = this.Text;
-			this.OnComboOpened ();
+			this.OnComboOpened();
 		}
 		
 		protected virtual void CloseCombo(bool accept)
@@ -417,7 +417,7 @@ namespace Epsitec.Common.Document.Widgets
 		
 		protected virtual void OnComboOpened()
 		{
-			System.Diagnostics.Debug.Assert (this.IsComboOpen == true);
+			System.Diagnostics.Debug.Assert(this.IsComboOpen == true);
 			this.UpdateButtonVisibility();
 			
 			if ( this.OpenedCombo != null )
@@ -428,8 +428,8 @@ namespace Epsitec.Common.Document.Widgets
 		
 		protected virtual void OnComboClosed()
 		{
-			System.Diagnostics.Debug.Assert (this.IsComboOpen == false);
-			this.UpdateButtonVisibility ();
+			System.Diagnostics.Debug.Assert(this.IsComboOpen == false);
+			this.UpdateButtonVisibility();
 			
 			if ( this.ClosedCombo != null )
 			{
@@ -470,7 +470,7 @@ namespace Epsitec.Common.Document.Widgets
 					if ( feel.TestNavigationKey(message) )
 					{
 						this.CloseCombo(true);
-						//?Message.DefineLastWindow (this.Window);
+						//?Message.DefineLastWindow(this.Window);
 					}
 					break;
 				
@@ -500,7 +500,6 @@ namespace Epsitec.Common.Document.Widgets
 		private void HandleSelectorSelectionChanged(object sender)
 		{
 			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
-			
 			string text = this.fontSelector.SelectedFontFace;
 			if ( this.Text != text )
 			{
@@ -524,8 +523,7 @@ namespace Epsitec.Common.Document.Widgets
 			Window.MessageFilter          += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
 			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
 			
-			if ( this.Window != null &&
-				this.AutoFocus == false )
+			if ( this.Window != null && this.AutoFocus == false )
 			{
 				this.initiallyFocusedWidget = this.Window.FocusedWidget;
 			}

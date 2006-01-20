@@ -697,9 +697,11 @@
 	<data name="Property.Line.JoinRound">Round join</data>
 	<data name="Property.Line.JoinMiter">Miter join</data>
 	<data name="Property.Line.JoinBevel">Bevel join</data>
+	<data name="Property.Line.Short.Witdh">W = </data>
 
 	<data name="Property.Regular.Norm">Regular polygon</data>
 	<data name="Property.Regular.Star">Star</data>
+	<data name="Property.Regular.Short.Faces">N = </data>
 
 	<data name="Property.Surface.ParallelT">Parallelogram 1</data>
 	<data name="Property.Surface.ParallelB">Parallelogram 2</data>
