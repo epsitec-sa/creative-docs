@@ -398,24 +398,14 @@ namespace Epsitec.Common.Document.Widgets
 			Drawing.Rectangle iClip = graphics.SaveClippingRectangle();
 			graphics.SetClippingRectangle(this.MapClientToRoot(rect));
 
-			double size = rect.Height*0.25;
-			double x = rect.Left+1.0;
-			double y = rect.Bottom+rect.Height*0.3;
+			OpenType.FontIdentity id = Misc.DefaultFontIdentityStyle(font.FontName);
+			double size = rect.Height*0.6;
+			double ox = rect.Left;
+			double oy = rect.Bottom+rect.Height*0.3;
+			Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(id, ox, oy, size);
 
-			Color textColor = font.FontColor.Basic;
-			Color backColor = Color.FromBrightness(1.0);  // blanc
-			double intensity = textColor.R + textColor.G + textColor.B;
-			if ( intensity > 2.0 )  // couleur claire ?
-			{
-				backColor = Color.FromBrightness(0.0);  // noir
-			}
-
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(backColor);
-
-			string text = font.FontName;
-			graphics.Color = textColor;
-			graphics.PaintText(x, y, text, Font.DefaultFont, size);
+			graphics.Color = font.FontColor.Basic;
+			graphics.PaintSurface(path);
 
 			graphics.RestoreClippingRectangle(iClip);
 		}
