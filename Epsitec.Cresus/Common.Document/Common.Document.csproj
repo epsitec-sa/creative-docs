@@ -937,11 +937,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Widgets\AggregateCombo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Widgets\AggregateList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -988,6 +983,11 @@
                 />
                 <File
                     RelPath = "Widgets\Sample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\StyleCombo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -168,7 +168,7 @@ namespace Epsitec.Common.Document.Containers
 			st.Dock = DockStyle.Left;
 			st.Text = Res.Strings.Container.Principal.Button.AggregateLabel;
 
-			this.aggregateCombo = new Widgets.AggregateCombo(this.aggregateToolBar);
+			this.aggregateCombo = new Widgets.StyleCombo(this.aggregateToolBar);
 			this.aggregateCombo.Document = this.document;
 			this.aggregateCombo.IsDeep = true;
 			this.aggregateCombo.Width = 135;
@@ -878,7 +878,7 @@ namespace Epsitec.Common.Document.Containers
 		protected Button						selectorGo;
 
 		protected HToolBar						aggregateToolBar;
-		protected Widgets.AggregateCombo		aggregateCombo;
+		protected Widgets.StyleCombo			aggregateCombo;
 		protected IconButton					aggregateNew3;
 		protected IconButton					aggregateNewAll;
 		protected IconButton					aggregateFree;

@@ -5,11 +5,11 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
-	/// AggregateCombo est un widget "combo" pour les agrégats.
+	/// StyleCombo est un widget "combo" pour les styles graphique, de paragraphe ou de caractère.
 	/// </summary>
-	public class AggregateCombo : AbstractTextField
+	public class StyleCombo : AbstractTextField
 	{
-		public AggregateCombo()
+		public StyleCombo()
 		{
 			this.textFieldStyle = TextFieldStyle.Combo;
 
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.ButtonShowCondition = ShowCondition.Always;
 		}
 		
-		public AggregateCombo(Widget embedder) : this()
+		public StyleCombo(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}
