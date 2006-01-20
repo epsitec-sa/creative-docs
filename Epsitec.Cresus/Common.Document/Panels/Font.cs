@@ -12,24 +12,23 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Font(Document document) : base(document)
 		{
-			this.fontName = new TextFieldCombo(this);
-			this.fontName.IsReadOnly = true;
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.fontName.Items.Add("Tahoma");
-				this.fontName.Items.Add("Arial");
-				this.fontName.Items.Add("Courier New");
-				this.fontName.Items.Add("Times New Roman");
-			}
-			else
-			{
-				Misc.AddFontList(this.fontName, false);
-			}
-			//?this.fontName.SelectedIndexChanged += new EventHandler(this.HandleFieldChanged);
-			this.fontName.TextChanged += new EventHandler(this.HandleFieldChanged);
-			this.fontName.TabIndex = 1;
-			this.fontName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fontName, Res.Strings.Panel.Font.Tooltip.Name);
+			this.fontFace = new Widgets.TextFieldFontFace(this);
+			this.fontFace.IsReadOnly = true;
+			this.fontFace.OpeningCombo += new CancelEventHandler(this.HandleFontFaceOpeningCombo);
+			this.fontFace.ClosedCombo += new EventHandler(this.HandleFontFaceTextChanged);
+			this.fontFace.TabIndex = 1;
+			this.fontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
+
+			this.buttonFilter = new IconButton(this);
+			this.buttonFilter.Command = "TextFontFilter";
+			this.buttonFilter.IconName = Misc.Icon("TextFontFilter");
+			this.buttonFilter.PreferredIconSize = Misc.IconPreferredSize("Normal");
+			this.buttonFilter.AutoFocus = false;
+			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonFilter.TabIndex = 2;
+			this.buttonFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonFilter, Res.Strings.Action.TextFontFilter);
 
 			this.fontSize = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fontSize.LabelShortText = Res.Strings.Panel.Font.Short.Size;
@@ -58,14 +57,14 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				//?this.fontName.SelectedIndexChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fontName.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fontFace.OpeningCombo -= new CancelEventHandler(this.HandleFontFaceOpeningCombo);
+				this.fontFace.ClosedCombo -= new EventHandler(this.HandleFontFaceTextChanged);
 				this.fontSize.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
 
 				this.labelColor = null;
-				this.fontName = null;
+				this.fontFace = null;
 				this.fontSize = null;
 				this.fontColor = null;
 			}
@@ -111,8 +110,7 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			//?this.fontName.SelectedName = p.FontName;
-			this.ComboSelectedName(this.fontName, p.FontName);
+			this.fontFace.Text = p.FontName;
 			this.fontSize.TextFieldReal.InternalValue = (decimal) p.FontSize;
 			this.fontColor.Color = p.FontColor;
 
@@ -125,36 +123,9 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Font p = this.property as Properties.Font;
 			if ( p == null )  return;
 
-			//?string name = this.fontName.SelectedName;
-			string name = this.ComboSelectedName(this.fontName);
-			if ( name == null )  p.FontName = "";
-			else                 p.FontName = name;
-
+			p.FontName = this.fontFace.Text;
 			p.FontSize = (double) this.fontSize.TextFieldReal.InternalValue;
 			p.FontColor = this.fontColor.Color;
-		}
-
-
-		protected void ComboSelectedName(TextFieldCombo combo, string name)
-		{
-			//	TODO: TextFieldCombo.SelectedName ne marche pas !!!
-			int total = combo.Items.Count;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				string s = combo.Items[i];
-				if ( s == name )
-				{
-					combo.SelectedIndex = i;
-					return;
-				}
-			}
-		}
-
-		protected string ComboSelectedName(TextFieldCombo combo)
-		{
-			//	TODO: TextFieldCombo.SelectedName ne marche pas !!!
-			if ( combo.SelectedIndex == -1 )  return "";
-			return combo.Items[combo.SelectedIndex] as string;
 		}
 
 
@@ -205,7 +176,7 @@ namespace Epsitec.Common.Document.Panels
 			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
-			if ( this.fontName == null )  return;
+			if ( this.fontFace == null )  return;
 
 			this.UpdateShortLongText();
 
@@ -215,8 +186,15 @@ namespace Epsitec.Common.Document.Panels
 			{
 				Rectangle r = rect;
 				r.Bottom = r.Top-20;
-				this.fontName.Bounds = r;
-				this.fontName.Visibility = true;
+				r.Left = rect.Left;
+				r.Right = rect.Right-20;
+				this.fontFace.Bounds = r;
+				this.fontFace.Visibility = true;
+
+				r.Left = rect.Right-20;
+				r.Right = rect.Right;
+				this.buttonFilter.Bounds = r;
+				this.buttonFilter.Visibility = true;
 
 				if ( this.IsLabelProperties )
 				{
@@ -260,8 +238,9 @@ namespace Epsitec.Common.Document.Panels
 				Rectangle r = rect;
 				r.Bottom = r.Top-20;
 				r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-5;
-				this.fontName.Bounds = r;
-				this.fontName.Visibility = true;
+				this.fontFace.Bounds = r;
+				this.fontFace.Visibility = true;
+				this.buttonFilter.Visibility = false;
 
 				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
@@ -274,6 +253,26 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
+
+		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
+		{
+			//	Le combo pour les polices va être ouvert.
+			bool quickOnly = this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
+			string selectedFontFace = this.fontFace.Text;
+			int quickCount;
+			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.document.Settings.QuickFonts, quickOnly, selectedFontFace, out quickCount);
+
+			this.fontFace.FontList     = fontList;
+			this.fontFace.QuickCount   = quickCount;
+			this.fontFace.SampleHeight = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleHeight;
+			this.fontFace.SampleAbc    = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleAbc;
+		}
+
+		private void HandleFontFaceTextChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			this.OnChanged();
+		}
 
 		private void HandleFieldChanged(object sender)
 		{
@@ -300,7 +299,8 @@ namespace Epsitec.Common.Document.Panels
 
 
 		protected StaticText				labelColor;
-		protected TextFieldCombo			fontName;
+		protected Widgets.TextFieldFontFace fontFace;
+		protected IconButton				buttonFilter;
 		protected Widgets.TextFieldLabel	fontSize;
 		protected ColorSample				fontColor;
 	}

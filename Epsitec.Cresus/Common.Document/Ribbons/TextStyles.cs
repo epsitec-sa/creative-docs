@@ -37,6 +37,9 @@ namespace Epsitec.Common.Document.Ribbons
 			this.styleParagraph.StyleCategory = StyleCategory.Paragraph;
 			this.styleParagraph.IsDeep = true;
 			this.styleParagraph.IsReadOnly = true;
+			this.styleParagraph.AutoFocus = false;
+			this.styleParagraph.TabIndex = this.tabIndex++;
+			this.styleParagraph.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.styleParagraph.ClosedCombo += new EventHandler(this.HandleStyleClosedCombo);
 			ToolTip.Default.SetToolTip(this.styleParagraph, Res.Strings.Panel.Style.ParagraphChoice);
 
@@ -44,6 +47,9 @@ namespace Epsitec.Common.Document.Ribbons
 			this.styleCharacter.StyleCategory = StyleCategory.Character;
 			this.styleCharacter.IsDeep = true;
 			this.styleCharacter.IsReadOnly = true;
+			this.styleCharacter.AutoFocus = false;
+			this.styleCharacter.TabIndex = this.tabIndex++;
+			this.styleCharacter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.styleCharacter.ClosedCombo += new EventHandler(this.HandleStyleClosedCombo);
 			ToolTip.Default.SetToolTip(this.styleCharacter, Res.Strings.Panel.Style.CharacterChoice);
 
