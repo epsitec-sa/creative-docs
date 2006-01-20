@@ -56,20 +56,30 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else
 			{
-				Properties.Gradient fillColor = this.aggregate.Property(Properties.Type.FillGradient) as Properties.Gradient;
-				Properties.Gradient lineColor = this.aggregate.Property(Properties.Type.LineColor)    as Properties.Gradient;
-				Properties.Line     lineMode  = this.aggregate.Property(Properties.Type.LineMode)     as Properties.Line;
-				Properties.Corner   corner    = this.aggregate.Property(Properties.Type.Corner)       as Properties.Corner;
-				Properties.Arc      arc       = this.aggregate.Property(Properties.Type.Arc)          as Properties.Arc;
-				Properties.Arrow    arrow     = this.aggregate.Property(Properties.Type.Arrow)        as Properties.Arrow;
-				Properties.Font     font      = this.aggregate.Property(Properties.Type.TextFont)     as Properties.Font;
+				Properties.Gradient fillColor      = this.aggregate.Property(Properties.Type.FillGradient)   as Properties.Gradient;
+				Properties.Gradient fillColorVT    = this.aggregate.Property(Properties.Type.FillGradientVT) as Properties.Gradient;
+				Properties.Gradient fillColorVL    = this.aggregate.Property(Properties.Type.FillGradientVL) as Properties.Gradient;
+				Properties.Gradient fillColorVR    = this.aggregate.Property(Properties.Type.FillGradientVR) as Properties.Gradient;
+				Properties.Gradient lineColor      = this.aggregate.Property(Properties.Type.LineColor)      as Properties.Gradient;
+				Properties.Line     lineMode       = this.aggregate.Property(Properties.Type.LineMode)       as Properties.Line;
+				Properties.Line     lineDimension  = this.aggregate.Property(Properties.Type.LineDimension)  as Properties.Line;
+				Properties.Corner   corner         = this.aggregate.Property(Properties.Type.Corner)         as Properties.Corner;
+				Properties.Arc      arc            = this.aggregate.Property(Properties.Type.Arc)            as Properties.Arc;
+				Properties.Arrow    arrow          = this.aggregate.Property(Properties.Type.Arrow)          as Properties.Arrow;
+				Properties.Arrow    arrowDimension = this.aggregate.Property(Properties.Type.DimensionArrow) as Properties.Arrow;
+				Properties.Font     font           = this.aggregate.Property(Properties.Type.TextFont)       as Properties.Font;
 
 				int total = 0;
-				if ( fillColor != null || lineColor != null || lineMode != null )  total ++;
-				if ( corner != null )  total ++;
-				if ( arc    != null )  total ++;
-				if ( arrow  != null )  total ++;
-				if ( font   != null )  total ++;
+				if ( fillColor      != null || lineColor != null || lineMode != null )  total ++;
+				if ( fillColorVT    != null )  total ++;
+				if ( fillColorVL    != null )  total ++;
+				if ( fillColorVR    != null )  total ++;
+				if ( lineDimension  != null )  total ++;
+				if ( corner         != null )  total ++;
+				if ( arc            != null )  total ++;
+				if ( arrow          != null )  total ++;
+				if ( arrowDimension != null )  total ++;
+				if ( font           != null )  total ++;
 
 				System.Collections.ArrayList texts = new System.Collections.ArrayList();
 				UndoableList styles = this.aggregate.Styles;
@@ -101,6 +111,30 @@ namespace Epsitec.Common.Document.Widgets
 					this.PaintSurface(graphics, box, fillColor, lineColor, lineMode);
 				}
 
+				if ( fillColorVT != null )
+				{
+					box = this.GetPlace(rect, dim, rank++);
+					this.PaintSurface(graphics, box, fillColorVT, null, null);
+				}
+
+				if ( fillColorVL != null )
+				{
+					box = this.GetPlace(rect, dim, rank++);
+					this.PaintSurface(graphics, box, fillColorVL, null, null);
+				}
+
+				if ( fillColorVR != null )
+				{
+					box = this.GetPlace(rect, dim, rank++);
+					this.PaintSurface(graphics, box, fillColorVR, null, null);
+				}
+
+				if ( lineDimension != null )
+				{
+					box = this.GetPlace(rect, dim, rank++);
+					this.PaintSurface(graphics, box, null, lineColor, lineDimension);
+				}
+
 				if ( corner != null )
 				{
 					box = this.GetPlace(rect, dim, rank++);
@@ -117,6 +151,12 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					box = this.GetPlace(rect, dim, rank++);
 					this.PaintArrow(graphics, box, arrow);
+				}
+
+				if ( arrowDimension != null )
+				{
+					box = this.GetPlace(rect, dim, rank++);
+					this.PaintArrow(graphics, box, arrowDimension);
 				}
 
 				if ( font != null )
@@ -186,6 +226,16 @@ namespace Epsitec.Common.Document.Widgets
 
 			rect.Deflate(rect.Height*0.15);
 
+			if ( fillColor != null )  // dessine une croix "x" dans le fond ?
+			{
+				rect.Deflate(1);
+				graphics.LineWidth = 1;
+				graphics.AddLine(rect.BottomLeft, rect.TopRight);
+				graphics.AddLine(rect.BottomRight, rect.TopLeft);
+				graphics.RenderSolid(Color.FromBrightness(0));
+				rect.Inflate(1);
+			}
+
 			double scale = 1.0/10.0;
 			Transform initial = graphics.Transform;
 			graphics.ScaleTransform(scale, scale, 0.0, 0.0);
@@ -195,7 +245,15 @@ namespace Epsitec.Common.Document.Widgets
 			obj.SurfaceAnchor.SetSurface(rect);
 
 			Path path = new Path();
-			path.AppendRectangle(rect);
+			if ( fillColor == null )
+			{
+				path.MoveTo(rect.BottomLeft);
+				path.LineTo(rect.TopRight);
+			}
+			else
+			{
+				path.AppendRectangle(rect);
+			}
 
 			Drawer drawer = new Drawer(null);
 			
