@@ -3882,7 +3882,6 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.SelectionChanged       += new SimpleEventHandler(this.HandleSelectionChanged);
 			this.CurrentDocument.Notifier.ShaperChanged          += new SimpleEventHandler(this.HandleShaperChanged);
 			this.CurrentDocument.Notifier.TextChanged            += new SimpleEventHandler(this.HandleTextChanged);
-			this.CurrentDocument.Notifier.TextStylesChanged      += new TextStylesEventHandler(this.HandleTextStylesChanged);
 			this.CurrentDocument.Notifier.StyleChanged           += new SimpleEventHandler(this.HandleStyleChanged);
 			this.CurrentDocument.Notifier.PagesChanged           += new SimpleEventHandler(this.HandlePagesChanged);
 			this.CurrentDocument.Notifier.LayersChanged          += new SimpleEventHandler(this.HandleLayersChanged);
@@ -4438,16 +4437,12 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleTextChanged()
 		{
 			//	Appelé par le document lorsque le texte en édition a changé.
-			this.dlgGlyphs.SetAlternatesDirty();
-		}
+			this.ribbonMain.NotifyTextStylesChanged();
+			this.ribbonGeom.NotifyTextStylesChanged();
+			this.ribbonOper.NotifyTextStylesChanged();
+			this.ribbonText.NotifyTextStylesChanged();
 
-		private void HandleTextStylesChanged(Common.Text.TextStyle[] styles)
-		{
-			//	Appelé par le document lorsqu'un style de texte a changé.
-			this.ribbonMain.NotifyTextStylesChanged(styles);
-			this.ribbonGeom.NotifyTextStylesChanged(styles);
-			this.ribbonOper.NotifyTextStylesChanged(styles);
-			this.ribbonText.NotifyTextStylesChanged(styles);
+			this.dlgGlyphs.SetAlternatesDirty();
 		}
 
 		private void HandleStyleChanged()

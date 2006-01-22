@@ -93,23 +93,27 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 		}
 
-		public override void NotifyTextStylesChanged(Text.TextStyle[] styles)
+		public override void NotifyTextStylesChanged()
 		{
 			string paragraph = "";
 			string character = "";
 
-			foreach ( Text.TextStyle style in styles )
+			if ( this.document.Wrappers.TextFlow != null )
 			{
-				string text = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
-
-				if ( style.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
+				Text.TextStyle[] styles = this.document.Wrappers.TextFlow.TextNavigator.TextStyles;
+				foreach ( Text.TextStyle style in styles )
 				{
-					TextStyles.StyleAppend(ref paragraph, text);
-				}
+					string text = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
 
-				if ( style.TextStyleClass == Common.Text.TextStyleClass.Text )
-				{
-					TextStyles.StyleAppend(ref character, text);
+					if ( style.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
+					{
+						TextStyles.StyleAppend(ref paragraph, text);
+					}
+
+					if ( style.TextStyleClass == Common.Text.TextStyleClass.Text )
+					{
+						TextStyles.StyleAppend(ref character, text);
+					}
 				}
 			}
 

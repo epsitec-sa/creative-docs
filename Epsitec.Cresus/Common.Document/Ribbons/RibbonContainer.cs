@@ -54,12 +54,12 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-		public void NotifyTextStylesChanged(Text.TextStyle[] styles)
+		public void NotifyTextStylesChanged()
 		{
 			foreach ( Abstract ribbon in this.Children )
 			{
 				if ( ribbon == null )  continue;
-				ribbon.NotifyTextStylesChanged(styles);
+				ribbon.NotifyTextStylesChanged();
 			}
 		}
 

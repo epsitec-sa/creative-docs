@@ -66,6 +66,7 @@ namespace Epsitec.Common.Document
 		public void WrappersAttach(TextFlow textFlow)
 		{
 			//	Attache tous les wrappers à un texte.
+			this.textFlow = textFlow;
 			this.textWrapper.Attach(textFlow.TextNavigator);
 			this.paragraphWrapper.Attach(textFlow.TextNavigator);
 		}
@@ -73,8 +74,18 @@ namespace Epsitec.Common.Document
 		public void WrappersDetach()
 		{
 			//	Détache tous les wrappers.
+			this.textFlow = null;
 			this.textWrapper.Detach();
 			this.paragraphWrapper.Detach();
+		}
+
+		public TextFlow TextFlow
+		{
+			//	Donne le TextFlow en cours d'édition.
+			get
+			{
+				return this.textFlow;
+			}
 		}
 
 
@@ -860,6 +871,7 @@ namespace Epsitec.Common.Document
 		protected Text.Wrappers.ParagraphWrapper		paragraphWrapper;
 		protected Text.Wrappers.TextWrapper				styleTextWrapper;
 		protected Text.Wrappers.ParagraphWrapper		styleParagraphWrapper;
+		protected TextFlow								textFlow;
 		protected System.Collections.ArrayList			quickFonts;
 	}
 }
