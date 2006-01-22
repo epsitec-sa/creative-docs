@@ -34,6 +34,7 @@ namespace Epsitec.Common.Document.Ribbons
 			ToolTip.Default.SetToolTip(this.buttonCharacter, Res.Strings.Panel.Style.CharacterDefinition);
 
 			this.styleParagraph = new Widgets.StyleCombo(this);
+			this.styleParagraph.Command = "TextEditing";
 			this.styleParagraph.StyleCategory = StyleCategory.Paragraph;
 			this.styleParagraph.IsDeep = true;
 			this.styleParagraph.IsReadOnly = true;
@@ -44,6 +45,7 @@ namespace Epsitec.Common.Document.Ribbons
 			ToolTip.Default.SetToolTip(this.styleParagraph, Res.Strings.Panel.Style.ParagraphChoice);
 
 			this.styleCharacter = new Widgets.StyleCombo(this);
+			this.styleCharacter.Command = "TextEditing";
 			this.styleCharacter.StyleCategory = StyleCategory.Character;
 			this.styleCharacter.IsDeep = true;
 			this.styleCharacter.IsReadOnly = true;
@@ -73,8 +75,7 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				this.buttonParagraph.Enable = false;
 				this.buttonCharacter.Enable = false;
-				this.styleParagraph.Enable = false;
-				this.styleCharacter.Enable = false;
+
 				this.styleParagraph.Document = null;
 				this.styleCharacter.Document = null;
 			}
@@ -82,8 +83,7 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				this.buttonParagraph.Enable = true;
 				this.buttonCharacter.Enable = true;
-				this.styleParagraph.Enable = true;
-				this.styleCharacter.Enable = true;
+				
 				this.styleParagraph.Document = this.document;
 				this.styleCharacter.Document = this.document;
 			}

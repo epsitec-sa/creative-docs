@@ -3565,6 +3565,7 @@ namespace Epsitec.App.DocumentEditor
 			this.exportState = this.CreateCommandState("Export");
 			this.glyphsState = this.CreateCommandState("Glyphs");
 			this.glyphsInsertState = this.CreateCommandState("GlyphsInsert");
+			this.textEditingState = this.CreateCommandState("TextEditing");
 			this.replaceState = this.CreateCommandState("Replace", KeyCode.ModifierCtrl|KeyCode.AlphaF);
 			this.findNextState = this.CreateCommandState("FindNext", KeyCode.FuncF3);
 			this.findPrevState = this.CreateCommandState("FindPrev", KeyCode.ModifierShift|KeyCode.FuncF3);
@@ -4272,6 +4273,7 @@ namespace Epsitec.App.DocumentEditor
 				this.pasteState.Enable = false;
 				this.glyphsState.Enable = false;
 				this.glyphsInsertState.Enable = false;
+				this.textEditingState.Enable = false;
 				this.textShowControlCharactersState.Enable = false;
 				this.textFontFilterState.Enable = false;
 				this.textFontSampleAbcState.Enable = false;
@@ -5631,6 +5633,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					exportState;
 		protected CommandState					glyphsState;
 		protected CommandState					glyphsInsertState;
+		protected CommandState					textEditingState;
 		protected CommandState					replaceState;
 		protected CommandState					findNextState;
 		protected CommandState					findPrevState;

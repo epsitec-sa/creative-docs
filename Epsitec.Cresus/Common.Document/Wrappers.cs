@@ -188,6 +188,7 @@ namespace Epsitec.Common.Document
 			this.CommandActiveState("Paste", enabled);
 			this.CommandActiveState("Glyphs", enabled);
 			this.CommandActiveState("GlyphsInsert", enabled);
+			this.CommandActiveState("TextEditing", enabled);
 			this.CommandActiveState("TextShowControlCharacters", enabled);
 			this.CommandActiveState("TextInsertQuad", enabled);
 			this.CommandActiveState("TextInsertNewFrame", enabled);
