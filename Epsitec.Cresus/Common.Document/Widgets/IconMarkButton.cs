@@ -55,7 +55,20 @@ namespace Epsitec.Common.Document.Widgets
 			
 			state &= ~WidgetState.Selected;
 			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
-			adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
+
+			if ( this.innerZoom != 1.0 )
+			{
+				double zoom = (this.innerZoom-1)/2+1;
+				this.TextLayout.LayoutSize = this.Client.Size/this.innerZoom;
+				Drawing.Transform transform = graphics.Transform;
+				graphics.ScaleTransform(zoom, zoom, 0, -this.Client.Height*zoom);
+				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
+				graphics.Transform = transform;
+			}
+			else
+			{
+				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
+			}
 
 			if ( this.ActiveState == ActiveState.Yes )  // dessine la marque 'v' en bas du bouton ?
 			{

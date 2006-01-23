@@ -99,12 +99,7 @@ namespace Epsitec.Common.Document.Containers
 			this.childrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Sélectionneur.
-			this.selectorToolBar = new Widget(this.bottomPage);
-			this.selectorToolBar.Height = Styles.selectorSize+8;
-			this.selectorToolBar.Dock = DockStyle.Top;
-			this.selectorToolBar.DockMargins = new Margins(0, 0, 5, 0);
-			this.selectorToolBar.TabIndex = 97;
-			this.selectorToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.CreateSelectorToolBar();
 
 			this.bottomScrollable = new Scrollable();
 			this.bottomScrollable.Dock = DockStyle.Fill;
@@ -258,22 +253,6 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonAggregateDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateDelete);
 			ToolTip.Default.SetToolTip(this.buttonAggregateDelete, Res.Strings.Action.AggregateDelete);
-
-			this.aggregateToolBar.Items.Add(new IconSeparator());
-
-			this.buttonStyleNew = new IconButton(Misc.Icon("AggregateStyleNew"));
-			this.buttonStyleNew.Clicked += new MessageEventHandler(this.HandleButtonStyleNew);
-			this.buttonStyleNew.TabIndex = this.index++;
-			this.buttonStyleNew.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.aggregateToolBar.Items.Add(this.buttonStyleNew);
-			ToolTip.Default.SetToolTip(this.buttonStyleNew, Res.Strings.Action.AggregateStyleNew);
-
-			this.buttonStyleDelete = new IconButton(Misc.Icon("AggregateStyleDelete"));
-			this.buttonStyleDelete.Clicked += new MessageEventHandler(this.HandleButtonStyleDelete);
-			this.buttonStyleDelete.TabIndex = this.index++;
-			this.buttonStyleDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.aggregateToolBar.Items.Add(this.buttonStyleDelete);
-			ToolTip.Default.SetToolTip(this.buttonStyleDelete, Res.Strings.Action.AggregateStyleDelete);
 		}
 
 		protected void CreateChildrensToolBar()
@@ -358,6 +337,47 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonChildrensExtend.TabIndex = 2;
 			this.buttonChildrensExtend.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonChildrensExtend, Res.Strings.Panel.Abstract.Extend);
+		}
+
+		protected void CreateSelectorToolBar()
+		{
+			//	Crée la toolbar pour le sélectionneur de panneaux.
+			this.selectorContainer = new Widget(this.bottomPage);
+			this.selectorContainer.Height = Styles.selectorSize+8;
+			this.selectorContainer.Dock = DockStyle.Top;
+			this.selectorContainer.DockMargins = new Margins(0, 0, 5, 0);
+			this.selectorContainer.TabIndex = 97;
+			this.selectorContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+			this.selectorToolBar = new Widget(this.selectorContainer);
+			this.selectorToolBar.Height = Styles.selectorSize+8;
+			this.selectorToolBar.Dock = DockStyle.Fill;
+			this.selectorToolBar.DockMargins = new Margins(0, 0, 0, 0);
+			this.selectorToolBar.TabIndex = 1;
+			this.selectorToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+			this.buttonStyleDelete = new IconButton(this.selectorContainer);
+			this.buttonStyleDelete.IconName = Misc.Icon("AggregateStyleDelete");
+			this.buttonStyleDelete.AutoFocus = false;
+			this.buttonStyleDelete.Clicked += new MessageEventHandler(this.HandleButtonStyleDelete);
+			this.buttonStyleDelete.Dock = DockStyle.Right;
+			this.buttonStyleDelete.DockMargins = new Margins(0, 0, 0, 6);
+			this.buttonStyleDelete.TabIndex = 3;
+			this.buttonStyleDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonStyleDelete, Res.Strings.Action.AggregateStyleDelete);
+
+			this.buttonStyleNew = new IconButton(this.selectorContainer);
+			this.buttonStyleNew.IconName = Misc.Icon("AggregateStyleNew");
+			this.buttonStyleNew.AutoFocus = false;
+			this.buttonStyleNew.Clicked += new MessageEventHandler(this.HandleButtonStyleNew);
+			this.buttonStyleNew.Dock = DockStyle.Right;
+			this.buttonStyleNew.DockMargins = new Margins(0, 0, 0, 6);
+			this.buttonStyleNew.TabIndex = 2;
+			this.buttonStyleNew.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonStyleNew, Res.Strings.Action.AggregateStyleNew);
+
+			this.separatorStyle = new IconSeparator(this.selectorContainer);
+			this.separatorStyle.Dock = DockStyle.Right;
 		}
 
 
@@ -460,6 +480,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.buttonAggregateNew3.Visibility = (this.category == StyleCategory.Graphic);
 			this.buttonAggregateNewAll.Visibility = (this.category == StyleCategory.Graphic);
+			this.separatorStyle.Visibility = (this.category == StyleCategory.Graphic);
 			this.buttonStyleNew.Visibility = (this.category == StyleCategory.Graphic);
 			this.buttonStyleDelete.Visibility = (this.category == StyleCategory.Graphic);
 
@@ -540,6 +561,7 @@ namespace Epsitec.Common.Document.Containers
 
 					double width = System.Math.Floor(this.selectorToolBar.Width/total);
 					width = System.Math.Min(width, Styles.selectorSize);
+					double zoom = width/Styles.selectorSize;
 
 					for ( int i=0 ; i<100 ; i++ )
 					{
@@ -549,7 +571,8 @@ namespace Epsitec.Common.Document.Containers
 							string icon = Properties.Abstract.IconText(table[i]);
 							string text = Properties.Abstract.Text(table[i]);
 
-							this.UpdateSelectorAdd(width, name, icon, text);
+							Widgets.IconMarkButton button = this.UpdateSelectorAdd(width, name, icon, text);
+							button.InnerZoom = zoom;
 						}
 					}
 				}
@@ -582,7 +605,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		protected void UpdateSelectorAdd(double width, string name, string icon, string text)
+		protected Widgets.IconMarkButton UpdateSelectorAdd(double width, string name, string icon, string text)
 		{
 			Widgets.IconMarkButton button = new Widgets.IconMarkButton(this.selectorToolBar);
 			button.Name = name;
@@ -595,6 +618,7 @@ namespace Epsitec.Common.Document.Containers
 			button.ActiveState = (name == this.SelectorName) ? ActiveState.Yes : ActiveState.No;
 			button.Clicked += new MessageEventHandler(this.HandleSelectorClicked);
 			ToolTip.Default.SetToolTip(button, text);
+			return button;
 		}
 
 		protected void UpdateAggregateName()
@@ -1486,8 +1510,6 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton				buttonAggregateUp;
 		protected IconButton				buttonAggregateDown;
 		protected IconButton				buttonAggregateDelete;
-		protected IconButton				buttonStyleNew;
-		protected IconButton				buttonStyleDelete;
 
 		protected Widgets.AggregateList		graphicList;
 		protected Widgets.TextStylesList	paragraphList;
@@ -1496,8 +1518,12 @@ namespace Epsitec.Common.Document.Containers
 		protected HToolBar					nameToolBar;
 		protected TextField					name;
 
+		protected Widget					selectorContainer;
 		protected Widget					selectorToolBar;
 		protected string[]					selectorName = new string[3];
+		protected IconSeparator				separatorStyle;
+		protected IconButton				buttonStyleNew;
+		protected IconButton				buttonStyleDelete;
 
 		protected HToolBar					childrensToolBar;
 		protected IconButton				buttonChildrensNew;
