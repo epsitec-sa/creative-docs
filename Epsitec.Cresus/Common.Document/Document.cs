@@ -1380,8 +1380,8 @@ namespace Epsitec.Common.Document
 			
 			this.textContext.StyleList.SetNextStyle(null, title, style);
 			
-			this.textContext.StyleList.StyleMap.SetRank(title, 1);
-			this.textContext.StyleList.StyleMap.SetCaption(title, "Titre");
+			this.textContext.StyleList.StyleMap.SetRank(null, title, 1);
+			this.textContext.StyleList.StyleMap.SetCaption(null, title, "Titre");
 #endif
 			
 			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("bullet-1");
@@ -1422,19 +1422,19 @@ namespace Epsitec.Common.Document
 			Text.TextStyle l2 = this.textContext.StyleList.NewTextStyle("BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2 }, baseStyles);
 			Text.TextStyle l3 = this.textContext.StyleList.NewTextStyle("BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, contInfo }, baseStyles);
 
-			this.textContext.StyleList.StyleMap.SetRank(l1, 2);
-			this.textContext.StyleList.StyleMap.SetCaption(l1, "Liste à puces");
+			this.textContext.StyleList.StyleMap.SetRank(null, l1, 2);
+			this.textContext.StyleList.StyleMap.SetCaption(null, l1, "Liste à puces");
 
-			this.textContext.StyleList.StyleMap.SetRank(l2, 3);
-			this.textContext.StyleList.StyleMap.SetCaption(l2, "Liste 1./2./...");
+			this.textContext.StyleList.StyleMap.SetRank(null, l2, 3);
+			this.textContext.StyleList.StyleMap.SetCaption(null, l2, "Liste 1./2./...");
 
-			this.textContext.StyleList.StyleMap.SetRank(l3, 4);
-			this.textContext.StyleList.StyleMap.SetCaption(l3, "Liste a)/b)/...");
+			this.textContext.StyleList.StyleMap.SetRank(null, l3, 4);
+			this.textContext.StyleList.StyleMap.SetCaption(null, l3, "Liste a)/b)/...");
 			#endregion
 			
 			this.textContext.DefaultStyle = style;
-			this.textContext.StyleList.StyleMap.SetRank(style, 0);
-			this.textContext.StyleList.StyleMap.SetCaption(style, Res.Strings.Style.Paragraph.Base);
+			this.textContext.StyleList.StyleMap.SetRank(null, style, 0);
+			this.textContext.StyleList.StyleMap.SetCaption(null, style, Res.Strings.Style.Paragraph.Base);
 
 			this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
 		}

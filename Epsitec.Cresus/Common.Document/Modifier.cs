@@ -1885,14 +1885,18 @@ namespace Epsitec.Common.Document
 
 			if ( style.TextStyleClass == Text.TextStyleClass.Paragraph )
 			{
+				this.document.Modifier.OpletQueueBeginAction("@@DR");
 				edit.TextFlow.MetaNavigator.EndSelection();
 				edit.TextFlow.TextNavigator.SetParagraphStyles(style);
+				this.document.Modifier.OpletQueueValidateAction();
 			}
 
 			if ( style.TextStyleClass == Text.TextStyleClass.Text )
 			{
+				this.document.Modifier.OpletQueueBeginAction("@@DR");
 				edit.TextFlow.MetaNavigator.EndSelection();
 				edit.TextFlow.TextNavigator.SetTextStyles(style);
+				this.document.Modifier.OpletQueueValidateAction();
 			}
 		}
 

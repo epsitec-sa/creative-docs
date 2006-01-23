@@ -933,9 +933,11 @@ namespace Epsitec.Common.Document.Containers
 				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(null, type, properties, parents);
 
 				int rank = this.document.GetSelectedTextStyle(this.category)+1;
-				this.document.TextContext.StyleList.StyleMap.SetCaption(style, this.document.Modifier.GetNextTextStyleName(this.category));
-				this.document.TextContext.StyleList.StyleMap.SetRank(style, rank);
+				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, this.document.Modifier.GetNextTextStyleName(this.category));
+				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, rank);
 				this.document.SetSelectedTextStyle(this.category, rank);
+				this.document.Modifier.OpletQueueValidateAction();
 
 				this.SetDirtyContent();
 			}
@@ -1001,10 +1003,12 @@ namespace Epsitec.Common.Document.Containers
 				int rank1 = this.document.TextContext.StyleList.StyleMap.GetRank(style1);
 				int rank2 = this.document.TextContext.StyleList.StyleMap.GetRank(style2);
 
-				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank2);
-				this.document.TextContext.StyleList.StyleMap.SetRank(style2, rank1);
+				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style1, rank2);
+				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style2, rank1);
 
 				this.document.SetSelectedTextStyle(this.category, sel-1);
+				this.document.Modifier.OpletQueueValidateAction();
 				this.SetDirtyContent();
 			}
 		}
@@ -1028,10 +1032,12 @@ namespace Epsitec.Common.Document.Containers
 				int rank1 = this.document.TextContext.StyleList.StyleMap.GetRank(style1);
 				int rank2 = this.document.TextContext.StyleList.StyleMap.GetRank(style2);
 
-				this.document.TextContext.StyleList.StyleMap.SetRank(style1, rank2);
-				this.document.TextContext.StyleList.StyleMap.SetRank(style2, rank1);
+				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style1, rank2);
+				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style2, rank1);
 
 				this.document.SetSelectedTextStyle(this.category, sel+1);
+				this.document.Modifier.OpletQueueValidateAction();
 				this.SetDirtyContent();
 			}
 		}
@@ -1271,7 +1277,9 @@ namespace Epsitec.Common.Document.Containers
 				if ( sel == -1 )  return;
 
 				Common.Text.TextStyle style = this.TextStyleList.List[sel];
-				this.document.TextContext.StyleList.StyleMap.SetCaption(style, this.name.Text);
+				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, this.name.Text);
+				this.document.Modifier.OpletQueueValidateAction();
 
 				this.document.Notifier.NotifyTextStyleChanged(style);
 			}

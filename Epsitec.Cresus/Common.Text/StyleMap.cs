@@ -18,13 +18,14 @@ namespace Epsitec.Common.Text
 		}
 
 		
-		public void SetCaption(TextStyle style, string caption)
+		public void SetCaption(Common.Support.OpletQueue queue, TextStyle style, string caption)
 		{
 			string key = this.GetKeyName (style);
 			
+			int    old_rank    = this.GetRank (style);
 			string old_caption = this.GetCaption (style);
 			string new_caption = caption;
-
+			
 			if (old_caption != new_caption)
 			{
 				if (old_caption != null)
@@ -41,31 +42,56 @@ namespace Epsitec.Common.Text
 				{
 					this.t_style_hash.Remove (key);
 				}
+				
+				if (queue != null)
+				{
+					using (queue.BeginAction ())
+					{
+						queue.Insert (new ChangeOplet (this, style, old_caption, old_rank));
+						queue.ValidateAction ();
+					}
+				}
 			}
 			
 			System.Diagnostics.Debug.Assert (this.GetCaption (style) == new_caption);
 			System.Diagnostics.Debug.Assert (new_caption == null || this.GetTextStyle (new_caption) == style);
 		}
 
-		public void SetRank(TextStyle style, int rank)
+		public void SetRank(Common.Support.OpletQueue queue, TextStyle style, int rank)
 		{
-			if (rank < 0)
+			int    old_rank    = this.GetRank (style);
+			int    new_rank    = rank;
+			string old_caption = this.GetCaption (style);
+			
+			if (old_rank != new_rank)
 			{
-				if (rank != -1)
+				if (new_rank < 0)
 				{
-					throw new System.ArgumentOutOfRangeException ("rank", rank, string.Format ("Rank {0} not allowed", rank));
-				}
+					if (new_rank != -1)
+					{
+						throw new System.ArgumentOutOfRangeException ("rank", new_rank, string.Format ("Rank {0} not allowed", new_rank));
+					}
 				
-				if (this.rank_hash.Contains (style))
+					if (this.rank_hash.Contains (style))
+					{
+						this.rank_hash.Remove (style);
+						this.ClearCache ();
+					}
+				}
+				else
 				{
-					this.rank_hash.Remove (style);
+					this.rank_hash[style] = new_rank;
 					this.ClearCache ();
 				}
-			}
-			else if (this.GetRank (style) != rank)
-			{
-				this.rank_hash[style] = rank;
-				this.ClearCache ();
+				
+				if (queue != null)
+				{
+					using (queue.BeginAction ())
+					{
+						queue.Insert (new ChangeOplet (this, style, old_caption, old_rank));
+						queue.ValidateAction ();
+					}
+				}
 			}
 		}
 		
@@ -231,7 +257,47 @@ namespace Epsitec.Common.Text
 			return this.sorted_list.GetEnumerator ();
 		}
 		#endregion
-		
+
+		#region ChangeOplet Class
+		private class ChangeOplet : Common.Support.AbstractOplet
+		{
+			public ChangeOplet(StyleMap map, TextStyle style, string old_caption, int old_rank)
+			{
+				this.map     = map;
+				this.style   = style;
+				this.caption = old_caption;
+				this.rank    = old_rank;
+			}
+			
+			public override Epsitec.Common.Support.IOplet Undo()
+			{
+				string new_caption = this.caption;
+				string old_caption = this.map.GetCaption (this.style);
+				
+				int new_rank = this.rank;
+				int old_rank = this.map.GetRank (this.style);
+				
+				this.map.SetCaption (null, this.style, new_caption);
+				this.map.SetRank (null, this.style, new_rank);
+				
+				this.caption = old_caption;
+				this.rank    = old_rank;
+				
+				return this;
+			}
+			
+			public override Epsitec.Common.Support.IOplet Redo()
+			{
+				return this.Undo ();
+			}
+			
+			
+			private StyleMap					map;
+			private TextStyle					style;
+			private int							rank;
+			private string						caption;
+		}
+		#endregion
 		
 		private StyleList						style_list;
 		private System.Collections.Hashtable	t_style_hash;		//	text style -> caption
