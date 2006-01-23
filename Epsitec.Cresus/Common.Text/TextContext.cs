@@ -170,6 +170,11 @@ namespace Epsitec.Common.Text
 			this.style_list.Serialize (buffer);
 			buffer.Append ("/");
 			
+			string default_style_name = this.default_style == null ? null : this.default_style.Name;
+			
+			buffer.Append (SerializerSupport.SerializeString (default_style_name));
+			buffer.Append ("/");
+			
 			this.tab_list.Serialize (buffer);
 			buffer.Append ("/");
 			
@@ -200,6 +205,17 @@ namespace Epsitec.Common.Text
 			this.unique_id = SerializerSupport.DeserializeLong (args[offset++]);
 			
 			this.style_list.Deserialize (this, version, args, ref offset);
+			
+			if (version >= 2)
+			{
+				string default_style_name = SerializerSupport.DeserializeString (args[offset++]);
+				
+				System.Diagnostics.Debug.Assert (default_style_name != null);
+				System.Diagnostics.Debug.Assert (default_style_name.Length > 0);
+				
+				this.default_style = this.style_list[default_style_name, TextStyleClass.Paragraph];
+			}
+			
 			this.tab_list.Deserialize (this, version, args, ref offset);
 			this.generator_list.Deserialize (this, version, args, ref offset);
 			this.DeserializeConditions (version, args, ref offset);
@@ -1897,6 +1913,6 @@ namespace Epsitec.Common.Text
 		
 		static System.Collections.Hashtable		font_ids = new System.Collections.Hashtable ();
 		
-		internal const int						SerializationVersion = 1;
+		internal const int						SerializationVersion = 2;
 	}
 }

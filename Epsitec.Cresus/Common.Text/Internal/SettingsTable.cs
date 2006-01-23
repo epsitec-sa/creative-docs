@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			int count = SerializerSupport.DeserializeInt (args[offset++]);
 			
-			Debug.Assert.IsTrue (version == 1);
+			Debug.Assert.IsTrue (version == TextContext.SerializationVersion);
 			
 			if (count > 0)
 			{

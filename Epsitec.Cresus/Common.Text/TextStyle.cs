@@ -470,6 +470,7 @@ namespace Epsitec.Common.Text
 					this.style_properties = null;
 					
 					this.Initialise (style_properties);
+					this.SaveStyleProperties (style_properties);
 				}
 			}
 		}
