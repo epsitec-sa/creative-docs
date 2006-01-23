@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document.TextPanels
 		public override void UpdateAfterAttach()
 		{
 			//	Mise à jour après avoir attaché le wrappers.
-			this.buttonClear.Visibility = !this.ParagraphWrapper.IsAttachedToDefaultStyle;
+			this.UpdateButtonClear();
 		}
 
 
@@ -112,7 +112,6 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Left = rect.Right-20;
 					r.Width = 20;
 					this.buttonClear.Bounds = r;
-					this.buttonClear.Visibility = true;
 				}
 				else
 				{
@@ -128,7 +127,6 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Left = rect.Right-20;
 					r.Width = 20;
 					this.buttonClear.Bounds = r;
-					this.buttonClear.Visibility = true;
 				}
 			}
 			else
@@ -143,11 +141,22 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fieldLeftMarginBody.Bounds = r;
 				r.Offset(60, 0);
 				this.fieldRightMargin.Bounds = r;
+			}
 
+			this.UpdateButtonClear();
+		}
+
+		protected void UpdateButtonClear()
+		{
+			if ( this.isExtendedSize )
+			{
+				this.buttonClear.Visibility = !this.ParagraphWrapper.IsAttachedToDefaultStyle;
+			}
+			else
+			{
 				this.buttonClear.Visibility = false;
 			}
 		}
-
 
 		protected override void UpdateAfterChanging()
 		{
