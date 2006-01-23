@@ -67,6 +67,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.checkItalic.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.checkItalic.ActiveStateChanged += new EventHandler(this.HandleCheckItalicActiveStateChanged);
 
+			this.buttonSizeMinus.Visibility = !this.isStyle;
+			this.buttonSizePlus.Visibility  = !this.isStyle;
+
 			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 

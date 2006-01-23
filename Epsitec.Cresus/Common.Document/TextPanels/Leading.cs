@@ -34,6 +34,9 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
+			this.buttonLeadingMinus.Visibility = !this.isStyle;
+			this.buttonLeadingPlus.Visibility  = !this.isStyle;
+
 			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
