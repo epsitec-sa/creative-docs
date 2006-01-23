@@ -89,6 +89,9 @@ namespace Epsitec.Common.Text.Wrappers
 			double justif_last = double.NaN;
 			double disposition = double.NaN;
 			
+			double bfb = double.NaN;
+			double bfa = double.NaN;
+			
 			int level = -1;
 			
 			if (this.defined_state.IsValueFlagged (State.JustificationModeProperty))
@@ -215,11 +218,31 @@ namespace Epsitec.Common.Text.Wrappers
 				defines++;
 			}
 			
+			if (this.defined_state.IsValueFlagged (State.BreakFenceBeforeProperty))
+			{
+				changes++;
+			}
+			if (this.defined_state.IsBreakFenceBeforeDefined)
+			{
+				bfb = this.defined_state.BreakFenceBefore;
+				defines++;
+			}
+			
+			if (this.defined_state.IsValueFlagged (State.BreakFenceAfterProperty))
+			{
+				changes++;
+			}
+			if (this.defined_state.IsBreakFenceAfterDefined)
+			{
+				bfa = this.defined_state.BreakFenceAfter;
+				defines++;
+			}
+			
 			if (changes > 0)
 			{
 				if (defines > 0)
 				{
-					this.DefineMetaProperty (ParagraphWrapper.Margins, 0, new Properties.MarginsProperty (left_m_first, left_m_body, right_m_first, right_m_body, units, justif_body, justif_last, disposition, double.NaN, double.NaN, hyphenate, level));
+					this.DefineMetaProperty (ParagraphWrapper.Margins, 0, new Properties.MarginsProperty (left_m_first, left_m_body, right_m_first, right_m_body, units, justif_body, justif_last, disposition, bfb, bfa, hyphenate, level));
 				}
 				else
 				{
@@ -578,10 +601,30 @@ namespace Epsitec.Common.Text.Wrappers
 						state.DefineValue (State.HyphenationProperty, false);
 						break;
 				}
+				
+				if (double.IsNaN (margins.BreakFenceBefore))
+				{
+					state.DefineValue (State.BreakFenceBeforeProperty);
+				}
+				else
+				{
+					state.DefineValue (State.BreakFenceBeforeProperty, margins.BreakFenceBefore);
+				}
+				
+				if (double.IsNaN (margins.BreakFenceAfter))
+				{
+					state.DefineValue (State.BreakFenceAfterProperty);
+				}
+				else
+				{
+					state.DefineValue (State.BreakFenceAfterProperty, margins.BreakFenceBefore);
+				}
 			}
 			else
 			{
 				state.DefineValue (State.HyphenationProperty);
+				state.DefineValue (State.BreakFenceBeforeProperty);
+				state.DefineValue (State.BreakFenceAfterProperty);
 			}
 			
 			if ((margins != null) &&
@@ -844,6 +887,30 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public double							BreakFenceBefore
+			{
+				get
+				{
+					return (double) this.GetValue (State.BreakFenceBeforeProperty);
+				}
+				set
+				{
+					this.SetValue (State.BreakFenceBeforeProperty, value);
+				}
+			}
+			
+			public double							BreakFenceAfter
+			{
+				get
+				{
+					return (double) this.GetValue (State.BreakFenceAfterProperty);
+				}
+				set
+				{
+					this.SetValue (State.BreakFenceAfterProperty, value);
+				}
+			}
+			
 			
 			public double							Leading
 			{
@@ -1068,6 +1135,22 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public bool								IsBreakFenceBeforeDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.BreakFenceBeforeProperty);
+				}
+			}
+			
+			public bool								IsBreakFenceAfterDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.BreakFenceAfterProperty);
+				}
+			}
+			
 			
 			public bool								IsLeadingDefined
 			{
@@ -1216,6 +1299,16 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.IndentationLevelProperty);
 			}
 			
+			public void ClearBreakFenceBefore()
+			{
+				this.ClearValue (State.BreakFenceBeforeProperty);
+			}
+			
+			public void ClearBreakFenceAfter()
+			{
+				this.ClearValue (State.BreakFenceAfterProperty);
+			}
+			
 			
 			public void ClearLeading()
 			{
@@ -1292,6 +1385,8 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	LeftMarginBodyProperty = new StateProperty (typeof (State), "LeftMarginBody", double.NaN);
 			public static readonly StateProperty	RightMarginFirstProperty = new StateProperty (typeof (State), "RightMarginFirst", double.NaN);
 			public static readonly StateProperty	RightMarginBodyProperty = new StateProperty (typeof (State), "RightMarginBody", double.NaN);
+			public static readonly StateProperty	BreakFenceBeforeProperty = new StateProperty (typeof (State), "BreakFenceBefore", double.NaN);
+			public static readonly StateProperty	BreakFenceAfterProperty = new StateProperty (typeof (State), "BreakFenceAfter", double.NaN);
 			public static readonly StateProperty	MarginUnitsProperty = new StateProperty (typeof (State), "MarginUnits", Properties.SizeUnits.None);
 			public static readonly StateProperty	IndentationLevelProperty = new StateProperty (typeof (State), "IndentationLevel", -1);
 			public static readonly StateProperty	LeadingProperty = new StateProperty (typeof (State), "Leading", double.NaN);
