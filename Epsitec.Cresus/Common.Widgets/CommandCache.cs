@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -309,6 +309,11 @@ namespace Epsitec.Common.Widgets
 					(this.records[index].Command == null))
 				{
 					this.clear_count -= 1;
+				}
+				
+				if (command == null)
+				{
+					System.Diagnostics.Debug.Assert (false, "Command '" + visual.CommandName + "' does not exist (yet).");
 				}
 				
 				if (command != null)

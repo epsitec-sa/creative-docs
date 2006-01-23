@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Helpers
@@ -350,6 +350,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
+
 		public static CommandState GetCommandState(Visual visual)
 		{
 			if (visual == null)
@@ -372,11 +373,20 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			foreach (CommandDispatcher dispatcher in list)
 			{
-				CommandState command = dispatcher.GetCommandState (name);
+				CommandState command = dispatcher.FindCommandState (name);
 				
 				if (command != null)
 				{
 					return command;
+				}
+			}
+			
+			foreach (CommandDispatcher dispatcher in list)
+			{
+				if (dispatcher.ContainsCommandHandler (name))
+				{
+					System.Diagnostics.Debug.WriteLine ("Command '" + name + "' created in dispatcher '" + dispatcher.Name + "'.");
+					return dispatcher.GetCommandState (name);
 				}
 			}
 			
@@ -398,7 +408,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			foreach (CommandDispatcher dispatcher in list)
 			{
-				CommandState command = dispatcher.GetCommandState (shortcut);
+				CommandState command = dispatcher.FindCommandState (shortcut);
 				
 				if (command != null)
 				{

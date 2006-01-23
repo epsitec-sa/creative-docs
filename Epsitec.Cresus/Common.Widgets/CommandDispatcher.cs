@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Text.RegularExpressions;
@@ -359,7 +359,18 @@ namespace Epsitec.Common.Widgets
 			return state;
 		}
 		
-		public CommandState GetCommandState(Shortcut shortcut)
+		public CommandState FindCommandState(string name)
+		{
+			System.Diagnostics.Debug.Assert (name != null);
+			System.Diagnostics.Debug.Assert (name.Length > 0);
+			
+			//	Retourne un object CommandState pour le nom spécifié; si l'objet n'existe pas encore,
+			//	il sera créé dynamiquement.
+			
+			return this[name];
+		}
+		
+		public CommandState FindCommandState(Shortcut shortcut)
 		{
 			foreach (CommandState command in this.command_states)
 			{
@@ -441,6 +452,11 @@ namespace Epsitec.Common.Widgets
 		public void Unregister(ICommandDispatcher extra)
 		{
 			this.extra_dispatchers.Remove (extra);
+		}
+		
+		public bool ContainsCommandHandler(string name)
+		{
+			return this.event_handlers.Contains (name);
 		}
 		
 		
