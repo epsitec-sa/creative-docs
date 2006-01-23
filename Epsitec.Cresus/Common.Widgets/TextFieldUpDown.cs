@@ -174,6 +174,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.defaultValue = value;
 					this.isDefaultValueDefined = true;
+					this.UpdateValidator();
 					
 					if ( this.Validator != null )
 					{
@@ -220,7 +221,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ( this.textSuffix == null )
+				if ( this.textSuffix == null || this.IsTextEmpty )
 				{
 					return base.TextLayout;
 				}
@@ -237,6 +238,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.isDefaultValueDefined )
 			{
 				this.isDefaultValueDefined = false;
+				this.UpdateValidator();
 				
 				if ( this.Validator != null )
 				{
@@ -245,18 +247,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void SelectAll(bool silent)
-		{
-			int skip = (this.textSuffix == null) ? 0 : this.textSuffix.Length;
-
-			this.TextNavigator.Context.CursorFrom  = 0;
-			this.TextNavigator.Context.CursorTo    = this.TextLayout.MaxTextIndex-skip;
-			this.TextNavigator.Context.CursorAfter = false;
-
-			this.OnCursorChanged(silent);
-		}
-
-
+		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -460,14 +451,19 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateValidator()
 		{
-			if (this.validator_1 == null)
+			if (this.validator_1 != null)
 			{
-				this.validator_1 = new Validators.RegexValidator(this, Support.RegexFactory.LocalizedDecimalNum, this.IsDefaultValueDefined);
+				this.validator_1.Dispose ();
 			}
-			if (this.validator_2 == null)
+			
+			this.validator_1 = new Validators.RegexValidator(this, Support.RegexFactory.LocalizedDecimalNum, this.IsDefaultValueDefined);
+			
+			if (this.validator_2 != null)
 			{
-				this.validator_2 = new Validators.NumRangeValidator(this);
+				this.validator_2.Dispose ();
 			}
+			
+			this.validator_2 = new Validators.NumRangeValidator(this);
 		}
 		
 		
@@ -484,7 +480,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		private void HandleDecimalRangeChanged(object sender)
-		{
+		{	
 			this.UpdateValidator();
 			this.OnDecimalRangeChanged();
 		}

@@ -54,7 +54,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.CreateTextLayout();
 			
-			this.navigator = new TextNavigator(this.TextLayout);
+			this.navigator = new TextNavigator(base.TextLayout);
 			this.navigator.AboutToChange += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorAboutToChange);
 			this.navigator.TextDeleted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextDeleted);
 			this.navigator.TextInserted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
@@ -124,6 +124,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsTextEmpty
+		{
+			get
+			{
+				return this.navigator.IsEmpty;
+			}
+		}
+		
 		public bool								AutoSelectOnFocus
 		{
 			get { return this.autoSelectOnFocus; }
@@ -529,9 +537,18 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Ne fait rien, on veut s'assurer que le TextLayout associé avec le
 			//	TextField n'est jamais détruit du vivant du TextField.
-			this.TextLayout.Text = "";
+			this.navigator.TextLayout.Text = "";
 		}
 
+		
+		public void ClearText()
+		{
+			if (this.navigator.TextLayout.Text.Length > 0)
+			{
+				this.navigator.TextLayout.Text = "";
+				this.OnTextDeleted();
+			}
+		}
 		
 		public void SelectAll()
 		{
@@ -599,7 +616,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void SelectAll(bool silent)
 		{
-			this.TextLayout.SelectAll(this.navigator.Context);
+			this.navigator.TextLayout.SelectAll(this.navigator.Context);
 			this.OnCursorChanged(silent);
 		}
 
@@ -1341,8 +1358,10 @@ namespace Epsitec.Common.Widgets
 				this.ResetCursor();
 			}
 			
+			TextLayout textLayout = this.TextLayout;
+			
 			//	Dessine le texte en cours d'édition :
-			System.Diagnostics.Debug.Assert(this.TextLayout != null);
+			System.Diagnostics.Debug.Assert(textLayout != null);
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
@@ -1393,12 +1412,12 @@ namespace Epsitec.Common.Widgets
 					areas[0].Rect = rInside;
 					areas[0].Rect.Deflate(1, 1);
 					adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, this.textDisplayMode);
-					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					adorner.PaintFocusBox(graphics, areas[0].Rect);
 				}
 				else if ( from == to )
 				{
-					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
 				}
 				else
@@ -1408,15 +1427,15 @@ namespace Epsitec.Common.Widgets
 					//	- Peint les rectangles de sélection
 					//	- Peint tout le texte en mode sélectionné, avec clipping
 					
-					TextLayout.SelectedArea[] areas = this.TextLayout.FindTextRange(pos, from, to);
+					TextLayout.SelectedArea[] areas = textLayout.FindTextRange(pos, from, to);
 					if ( areas.Length == 0 )
 					{
-						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 						visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
 					}
 					else
 					{
-						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, state&~(WidgetState.Focused|WidgetState.Selected), PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~(WidgetState.Focused|WidgetState.Selected), PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					
 						for ( int i=0 ; i<areas.Length ; i++ )
 						{
@@ -1434,7 +1453,7 @@ namespace Epsitec.Common.Widgets
 						}
 						graphics.SetClippingRectangles(rects);
 
-						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					}
 				}
 				
@@ -1442,7 +1461,7 @@ namespace Epsitec.Common.Widgets
 				{
 					//	Dessine le curseur :
 					Drawing.Point p1, p2;
-					if ( this.TextLayout.FindTextCursor(this.navigator.Context, out p1, out p2) )
+					if ( textLayout.FindTextCursor(this.navigator.Context, out p1, out p2) )
 					{
 						p1 += pos;
 						p2 += pos;
@@ -1452,7 +1471,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+				adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 			}
 
 			graphics.RestoreClippingRectangle(rSaveClip);

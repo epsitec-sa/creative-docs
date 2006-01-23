@@ -482,15 +482,17 @@ namespace Epsitec.Common.Widgets
 
 			TextFieldUpDown tud = new TextFieldUpDown();
 //			tud.Location = new Point(160, 160);
-			tud.Width = 45;
+			tud.Width = 52;
 			tud.TextSuffix = "%";
 			
 			tud.Value        =   5.00M;
 			tud.DefaultValue =   0.00M;
-			tud.MinValue     =  10.00M;
+			tud.MinValue     =  -2.50M;
 			tud.MaxValue     = 100.00M;
 			tud.Step         =   2.50M;
 			tud.Resolution   =   0.25M;
+			
+			tud.ClearText();
 			
 			tud.Anchor = AnchorStyles.BottomLeft;
 			tud.AnchorMargins = new Margins(160, 0, 0, 160);

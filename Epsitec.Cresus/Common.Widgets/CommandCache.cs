@@ -313,7 +313,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (command == null)
 				{
-					System.Diagnostics.Debug.Assert (false, "Command '" + visual.CommandName + "' does not exist (yet).");
+					System.Diagnostics.Debug.WriteLine (string.Format ("Command '{0}' does not exist (yet).", visual.CommandName));
 				}
 				
 				if (command != null)

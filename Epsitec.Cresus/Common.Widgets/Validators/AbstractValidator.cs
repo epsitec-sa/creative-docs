@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Validators
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		protected virtual void DetachWidget(Widget widget)
 		{
-			widget.RemoveValidator (null);
+			widget.RemoveValidator (this);
 		}
 		
 		

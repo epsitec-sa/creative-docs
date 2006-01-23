@@ -20,6 +20,14 @@ namespace Epsitec.Common.Widgets
 			get { return this.context; }
 		}
 
+		public TextLayout						TextLayout
+		{
+			get
+			{
+				return this.textLayout;
+			}
+		}
+
 		public Support.OpletQueue				OpletQueue
 		{
 			get { return this.undoQueue; }
@@ -32,6 +40,14 @@ namespace Epsitec.Common.Widgets
 			set { this.isReadOnly = value; }
 		}
 
+		public bool								IsEmpty
+		{
+			get
+			{
+				return this.textLayout.Text.Length == 0;
+			}
+		}
+		
 		public bool								IsNumeric
 		{
 			get { return this.isNumeric; }
