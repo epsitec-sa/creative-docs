@@ -496,7 +496,7 @@ namespace Epsitec.Common.Document.Containers
 						}
 					}
 				}
-				this.buttonStyleNew.Enable = true;
+				this.buttonStyleNew.Enable = (sel != -1);
 				this.buttonStyleDelete.Enable = enableDelete;
 			}
 
@@ -1346,11 +1346,10 @@ namespace Epsitec.Common.Document.Containers
 				back = Properties.Abstract.BackgroundIntensity(type);
 
 				bool enable = (!this.MenuTypesExist(agg.Styles, type));
-				string active = Misc.Image(enable ? "ActiveNo" : "ActiveYes");
 				string icon = Misc.Image(Properties.Abstract.IconText(type));
 				string text = Properties.Abstract.Text(type);
-				string line = string.Format("{0} {1}   {2}", active, icon, text);
-				MenuItem item = new MenuItem("StyleNew", "", line, "", Properties.Abstract.TypeName(type));
+				string line = string.Format("{0}   {1}",icon, text);
+				MenuItem item = new MenuItem("", "", line, "", Properties.Abstract.TypeName(type));
 				item.Enable = enable;
 				item.Pressed += new MessageEventHandler(this.HandleMenuTypesPressed);
 				menu.Items.Add(item);
