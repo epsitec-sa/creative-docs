@@ -590,13 +590,12 @@ namespace Epsitec.Common.Document.TextPanels
 		protected string GetColorSample(ColorSample sample)
 		{
 			//	Donne la couleur d'un échantillon.
-			if ( sample.Color.IsEmpty )
+			if ( sample.Color.IsEmpty || sample.Color.A == 0.0 )
 			{
 				return null;
 			}
 			else
 			{
-				if ( sample.Color.A == 0.0 )  return null;
 				return RichColor.ToString(sample.Color);
 			}
 		}
