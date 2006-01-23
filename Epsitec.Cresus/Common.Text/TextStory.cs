@@ -284,6 +284,7 @@ namespace Epsitec.Common.Text
 						if (this.MergeOplets (oplets_2[0], oplets_1[0]))
 						{
 							this.oplet_queue.PurgeSingleUndo ();
+							force = true;
 						}
 					}
 					else if ((oplets_1.Length == 1) &&
@@ -292,6 +293,7 @@ namespace Epsitec.Common.Text
 						if (this.MergeOplets (oplets_2[oplets_2.Length-1], oplets_1[0]))
 						{
 							this.oplet_queue.PurgeSingleUndo ();
+							force = true;
 						}
 					}
 				}
@@ -1915,6 +1917,7 @@ namespace Epsitec.Common.Text
 				if (this.position + this.length == other.position)
 				{
 					this.length += other.length;
+					this.text    = string.Concat (this.text, other.text);
 					return true;
 				}
 				
@@ -2087,6 +2090,7 @@ namespace Epsitec.Common.Text
 					//	à annuler :
 					
 					this.length += other.length;
+					this.text    = string.Concat (this.text, other.text);
 					other.length = 0;
 					return true;
 				}
@@ -2105,6 +2109,7 @@ namespace Epsitec.Common.Text
 					this.story.InternalMoveText (pos_2, pos_1, other.length);
 					
 					this.position = other.position;
+					this.text     = string.Concat (other.text, this.text);
 					this.length  += other.length;
 					other.length  = 0;
 					return true;

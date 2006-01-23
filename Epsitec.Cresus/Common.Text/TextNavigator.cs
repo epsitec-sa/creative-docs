@@ -334,7 +334,7 @@ namespace Epsitec.Common.Text
 					int pos = this.story.GetCursorPosition (this.cursor);
 					int dir = this.story.GetCursorDirection (this.cursor);
 					
-					this.AdjustCursor (this.cursor, Direction.Forward, ref pos, ref dir);
+					this.AdjustCursor (this.temp_cursor, Direction.Forward, ref pos, ref dir);
 					this.story.SetCursorPosition (this.cursor, pos, dir);
 					
 					this.story.ValidateAction ();
@@ -427,7 +427,7 @@ namespace Epsitec.Common.Text
 					int pos = this.story.GetCursorPosition (this.cursor);
 					int dir = this.story.GetCursorDirection (this.cursor);
 					
-					this.AdjustCursor (this.cursor, Direction.Forward, ref pos, ref dir);
+					this.AdjustCursor (this.temp_cursor, Direction.Forward, ref pos, ref dir);
 					this.story.SetCursorPosition (this.cursor, pos, dir);
 					
 					this.story.ValidateAction ();
@@ -3037,6 +3037,8 @@ process_ranges:
 			//	Ajuste la position du curseur pour éviter de placer celui-ci à
 			//	des endroits "impossibles" (par ex. avant une puce).
 			
+			System.Diagnostics.Debug.Assert (temp.Attachment == CursorAttachment.Temporary);
+			
 			if (direction == Direction.None)
 			{
 				direction = Direction.Forward;
@@ -3336,6 +3338,27 @@ process_ranges:
 			return false;
 		}
 		
+		protected bool IsAfterManagedParagraph(ICursor cursor)
+		{
+			ulong code = this.story.ReadChar (cursor, -1);
+			
+			if (code == 0)
+			{
+				return false;
+			}
+			if (Internal.Navigator.IsParagraphSeparator (code))
+			{
+				Properties.ManagedParagraphProperty property;
+				
+				if (this.TextContext.GetManagedParagraph (code, out property))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
 		
 		protected int SkipOverProperty(ICursor cursor, Property property, int direction)
 		{
@@ -3539,7 +3562,8 @@ process_ranges:
 				//	Procède à quelques ajustements pour tenir compte correctement
 				//	des textes automatiques.
 				
-				if (this.SkipOverAutoText (ref p2, Direction.Backward))
+				if ((this.SkipOverAutoText (ref p2, Direction.Backward)) ||
+					(this.IsAfterManagedParagraph (this.temp_cursor)))
 				{
 					this.SkipOverAutoText (ref p1, Direction.Backward);
 				}
