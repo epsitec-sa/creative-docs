@@ -241,6 +241,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
+			
+			if ( this.ParagraphWrapper.IsAttached == false )  return;
 
 			bool keepNext    = this.ParagraphWrapper.Active.KeepWithNextParagraph;
 			bool keepPrev    = this.ParagraphWrapper.Active.KeepWithPreviousParagraph;

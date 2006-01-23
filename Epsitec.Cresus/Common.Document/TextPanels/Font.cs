@@ -217,6 +217,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
+			
+			if ( this.TextWrapper.IsAttached == false )  return;
 
 			string face = this.TextWrapper.Active.FontFace;
 			bool isFace = this.TextWrapper.Defined.IsFontFaceDefined;

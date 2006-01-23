@@ -137,6 +137,8 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
+			if ( this.TextWrapper.IsAttached == false )  return;
+			
 			bool hyphen = false;
 			bool isHyphen = false;
 			if ( this.TextWrapper.Defined.IsLanguageHyphenationDefined )

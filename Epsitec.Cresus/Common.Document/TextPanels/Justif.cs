@@ -106,6 +106,8 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
+			if ( this.ParagraphWrapper.IsAttached == false )  return;
+			
 			Common.Text.Wrappers.JustificationMode justif = this.ParagraphWrapper.Active.JustificationMode;
 			bool isJustif = this.ParagraphWrapper.Defined.IsJustificationModeDefined;
 

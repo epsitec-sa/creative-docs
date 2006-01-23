@@ -402,7 +402,9 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
-
+			
+			if ( this.TextWrapper.IsAttached == false )  return;
+			
 			bool underlined   = this.TextWrapper.Active.IsUnderlineDefined;
 			bool isUnderlined = this.TextWrapper.Defined.IsUnderlineDefined;
 

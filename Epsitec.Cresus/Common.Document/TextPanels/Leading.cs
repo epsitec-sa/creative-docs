@@ -201,6 +201,8 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
+			if ( this.ParagraphWrapper.IsAttached == false )  return;
+			
 			double leading = this.ParagraphWrapper.Active.Leading;
 			Common.Text.Properties.SizeUnits units = this.ParagraphWrapper.Active.LeadingUnits;
 			bool isLeading = this.ParagraphWrapper.Defined.IsLeadingDefined;

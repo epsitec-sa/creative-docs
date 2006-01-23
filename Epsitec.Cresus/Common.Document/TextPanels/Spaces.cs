@@ -142,6 +142,8 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
 
+			if ( this.ParagraphWrapper.IsAttached == false )  return;
+			
 			double before = this.ParagraphWrapper.Active.SpaceBefore;
 			double after  = this.ParagraphWrapper.Active.SpaceAfter;
 			bool isBefore = this.ParagraphWrapper.Defined.IsSpaceBeforeDefined;

@@ -165,7 +165,9 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Met à jour après un changement du wrapper.
 			base.UpdateAfterChanging();
-
+			
+			if ( this.TextWrapper.IsAttached == false )  return;
+			
 			bool subscript   = false;
 			bool superscript = false;
 			bool isXscript   = this.TextWrapper.Defined.IsXscriptDefined;
