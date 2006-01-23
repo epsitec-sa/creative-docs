@@ -1368,15 +1368,17 @@ namespace Epsitec.Common.Document
 			#region Experimental Code
 
 #if true
+			Text.TextStyle[] baseStyles = new Text.TextStyle[] { style };
+			
 			properties.Clear ();
 			properties.Add(new Text.Properties.FontProperty("Arial Black", Misc.DefaultFontStyle("Arial Black")));
 			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale*1.5, Text.Properties.SizeUnits.Points));
 			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-			//properties.Add(new Text.Properties.FontColorProperty(black));
-			//properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
+//			properties.Add(new Text.Properties.FontColorProperty(black));
+//			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
-			Text.TextStyle title = this.textContext.StyleList.NewTextStyle("Title", Text.TextStyleClass.Paragraph, properties);
+			Text.TextStyle title = this.textContext.StyleList.NewTextStyle("Title", Text.TextStyleClass.Paragraph, properties, baseStyles);
 			
 			this.textContext.StyleList.SetNextStyle(null, title, style);
 			
@@ -1415,8 +1417,6 @@ namespace Epsitec.Common.Document
 			Text.Properties.ManagedParagraphProperty itemList3 = new Text.Properties.ManagedParagraphProperty("ItemList", items3.Save());
 			
 			Text.Properties.ManagedInfoProperty contInfo = new Epsitec.Common.Text.Properties.ManagedInfoProperty("ItemList", "cont");
-			
-			Text.TextStyle[] baseStyles = new Text.TextStyle[] { style };
 			
 			Text.TextStyle l1 = this.textContext.StyleList.NewTextStyle("BulletRound",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
 			Text.TextStyle l2 = this.textContext.StyleList.NewTextStyle("BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2 }, baseStyles);
