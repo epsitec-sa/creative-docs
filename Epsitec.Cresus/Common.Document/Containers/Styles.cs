@@ -1071,7 +1071,10 @@ namespace Epsitec.Common.Document.Containers
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, -1);
 				this.document.TextContext.StyleList.DeleteTextStyle(this.document.Modifier.OpletQueue, style);
 				
-				this.document.SetSelectedTextStyle(this.category, sel+1);
+				//	TODO: déterminer quelle case mettre en évidence dans la liste
+				//	après la destruction
+				
+				this.document.SetSelectedTextStyle(this.category, sel);
 				this.document.Modifier.OpletQueueValidateAction();
 				this.SetDirtyContent();
 			}

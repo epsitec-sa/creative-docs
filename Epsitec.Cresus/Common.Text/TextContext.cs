@@ -1039,6 +1039,40 @@ namespace Epsitec.Common.Text
 			return copy;
 		}
 		
+		public TextStyle[] RemoveDeadStyles(TextStyle[] styles)
+		{
+			int count = styles.Length;
+			
+			for (int i = 0; i < styles.Length; i++)
+			{
+				if (styles[i].IsDeleted)
+				{
+					count--;
+				}
+			}
+			
+			if (count != styles.Length)
+			{
+				TextStyle[] copy = new TextStyle[count];
+				
+				for (int i = 0, j = 0; i < styles.Length && j < count; i++)
+				{
+					if (styles[i].IsDeleted)
+					{
+						//	Saute...
+					}
+					else
+					{
+						copy[j++] = styles[i];
+					}
+				}
+				
+				return copy;
+			}
+			
+			return styles;
+		}
+		
 		
 		#region Internal Property & Style Related Methods
 		internal void GetAllProperties(ulong code, out Property[] properties)

@@ -481,6 +481,14 @@ namespace Epsitec.Common.Text
 					this.parent_styles    = null;
 					this.style_properties = null;
 					
+					if (style_properties == null)
+					{
+						style_properties = new Property[0];
+					}
+					
+					System.Diagnostics.Debug.Assert (style_properties != null);
+					System.Diagnostics.Debug.Assert (parent_styles != null);
+					
 					this.Initialise (style_properties, parent_styles);
 				}
 				else
@@ -488,6 +496,13 @@ namespace Epsitec.Common.Text
 					Property[] style_properties = this.style_properties;
 					
 					this.style_properties = null;
+					
+					if (style_properties == null)
+					{
+						style_properties = new Property[0];
+					}
+					
+					System.Diagnostics.Debug.Assert (style_properties != null);
 					
 					this.Initialise (style_properties);
 					this.SaveStyleProperties (style_properties);

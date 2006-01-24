@@ -54,7 +54,14 @@ namespace Epsitec.Common.Text
 			get
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
-				return this.TextContext.AddDefaultTextStyleIfNeeded (this.current_styles.Clone () as TextStyle[]);
+				
+				TextStyle[] styles;
+				
+				styles = this.current_styles.Clone () as TextStyle[];
+				styles = this.TextContext.RemoveDeadStyles (styles);
+				styles = this.TextContext.AddDefaultTextStyleIfNeeded (styles);
+				
+				return styles;
 			}
 		}
 		
