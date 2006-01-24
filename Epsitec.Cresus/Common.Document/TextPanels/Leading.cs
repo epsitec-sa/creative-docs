@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document.TextPanels
 		public override void UpdateAfterAttach()
 		{
 			//	Mise à jour après avoir attaché le wrappers.
-			this.buttonClear.Visibility = !this.ParagraphWrapper.IsAttachedToDefaultStyle;
+			this.buttonClear.Visibility = !this.ParagraphWrapper.IsAttachedToDefaultParagraphStyle;
 		}
 
 
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Document.TextPanels
 			double leading = this.ParagraphWrapper.Active.Leading;
 			Common.Text.Properties.SizeUnits units = this.ParagraphWrapper.Active.LeadingUnits;
 			bool isPercent = (units == Common.Text.Properties.SizeUnits.Percent);
-			bool isDefault = !this.ParagraphWrapper.IsAttachedToDefaultStyle;
+			bool isDefault = !this.ParagraphWrapper.IsAttachedToDefaultParagraphStyle;
 
 			return Menus.LeadingMenu.CreateLeadingMenu(this.document, leading, isPercent?"%":"", isDefault, new MessageEventHandler(this.HandleMenuPressed));
 		}

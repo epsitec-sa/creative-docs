@@ -201,7 +201,7 @@ namespace Epsitec.Common.Drawing
 						Text.StyleList style_list    = this.story.TextContext.StyleList;
 						Text.TextStyle style_default = style_list.NewTextStyle ("Default", Common.Text.TextStyleClass.Paragraph, properties);
 						
-						this.story.TextContext.DefaultStyle = style_default;
+						this.story.TextContext.DefaultParagraphStyle = style_default;
 					}
 					
 					Text.TextNavigator navigator = new Text.TextNavigator (this.fitter);

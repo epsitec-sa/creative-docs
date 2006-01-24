@@ -156,7 +156,7 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				if (defines > 0)
 				{
-					if (this.IsAttachedToDefaultStyle)
+					if (this.IsAttachedToDefaultParagraphStyle)
 					{
 						System.Diagnostics.Debug.Assert (units != Properties.SizeUnits.Percent);
 						System.Diagnostics.Debug.Assert (units != Properties.SizeUnits.DeltaInches);

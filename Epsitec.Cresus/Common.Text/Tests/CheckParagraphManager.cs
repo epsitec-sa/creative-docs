@@ -28,7 +28,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.LeadingProperty (14.0, Properties.SizeUnits.Points, Properties.AlignMode.None));
 			properties.Add (new Properties.MarginsProperty (5.0, 5.0, 5.0, 5.0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Properties.ThreeState.True));
 			
-			story.TextContext.DefaultStyle = story.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
+			story.TextContext.DefaultParagraphStyle = story.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
 			
 			navigator.Insert ("Abcdef");
 			navigator.MoveTo (3, 1);
@@ -46,8 +46,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsFalse (Property.CompareEqualContents (at2, at3));
 			
-			story.ConvertToStyledText ("X", story.TextContext.DefaultStyle, new Property[] { at1 }, out text1);
-			story.ConvertToStyledText ("12", story.TextContext.DefaultStyle, new Property[] { at2 }, out text2);
+			story.ConvertToStyledText ("X", story.TextContext.DefaultParagraphStyle, new Property[] { at1 }, out text1);
+			story.ConvertToStyledText ("12", story.TextContext.DefaultParagraphStyle, new Property[] { at2 }, out text2);
 			
 			story.InsertText (navigator.ActiveCursor, text1);
 			story.InsertText (navigator.ActiveCursor, text2);

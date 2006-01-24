@@ -22,13 +22,13 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
-		public bool								IsAttachedToDefaultStyle
+		public bool								IsAttachedToDefaultParagraphStyle
 		{
 			get
 			{
 				if ((this.style != null) &&
 					(this.style_list != null) &&
-					(this.style_list.IsDefaultTextStyle (this.style)))
+					(this.style_list.IsDefaultParagraphStyle (this.style)))
 				{
 					return true;
 				}

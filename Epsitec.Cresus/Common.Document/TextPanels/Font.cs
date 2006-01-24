@@ -103,8 +103,8 @@ namespace Epsitec.Common.Document.TextPanels
 		public override void UpdateAfterAttach()
 		{
 			//	Mise à jour après avoir attaché le wrappers.
-			this.fontSize.ButtonUnitEnable = !this.TextWrapper.IsAttachedToDefaultStyle;
-			this.buttonClear.Visibility = !this.TextWrapper.IsAttachedToDefaultStyle;
+			this.fontSize.ButtonUnitEnable = !this.TextWrapper.IsAttachedToDefaultParagraphStyle;
+			this.buttonClear.Visibility = !this.TextWrapper.IsAttachedToDefaultParagraphStyle;
 		}
 
 
@@ -806,8 +806,8 @@ namespace Epsitec.Common.Document.TextPanels
 			bool percent = (units == Common.Text.Properties.SizeUnits.Percent);
 
 			double factor = (this.document.Type == DocumentType.Pictogram) ? 0.1 : 1.0;
-			bool isPercent = !this.TextWrapper.IsAttachedToDefaultStyle;
-			bool isDefault = !this.TextWrapper.IsAttachedToDefaultStyle;
+			bool isPercent = !this.TextWrapper.IsAttachedToDefaultParagraphStyle;
+			bool isDefault = !this.TextWrapper.IsAttachedToDefaultParagraphStyle;
 			return Menus.FontSizeMenu.CreateFontSizeMenu(size, percent?"%":"", factor, isPercent, isDefault, new MessageEventHandler(this.HandleMenuPressed));
 		}
 

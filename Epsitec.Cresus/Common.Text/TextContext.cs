@@ -80,7 +80,19 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public TextStyle						DefaultStyle
+		public TextStyle						DefaultParagraphStyle
+		{
+			get
+			{
+				return this.default_style;
+			}
+			set
+			{
+				this.default_style = value;
+			}
+		}
+		
+		public TextStyle						DefaultTextStyle
 		{
 			get
 			{

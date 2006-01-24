@@ -85,7 +85,7 @@ namespace Epsitec.Common.Support
 			
 			Text.TextStyle default_style = story.StyleList.NewTextStyle ("Default", Text.TextStyleClass.Paragraph, properties);
 			
-			story.TextContext.DefaultStyle = default_style;
+			story.TextContext.DefaultParagraphStyle = default_style;
 			
 			Assert.AreEqual (0, navigator.TextLength);
 			Assert.AreEqual (0, navigator.CursorPosition);

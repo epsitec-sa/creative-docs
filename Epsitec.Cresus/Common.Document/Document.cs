@@ -1440,7 +1440,7 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.StyleMap.SetCaption(null, l3, "Liste a)/b)/...");
 			#endregion
 			
-			this.textContext.DefaultStyle = style;
+			this.textContext.DefaultParagraphStyle = style;
 			this.textContext.StyleList.StyleMap.SetRank(null, style, 0);
 			this.textContext.StyleList.StyleMap.SetCaption(null, style, Res.Strings.Style.Paragraph.Base);
 

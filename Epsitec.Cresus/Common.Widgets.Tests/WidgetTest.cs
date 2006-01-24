@@ -290,7 +290,7 @@ namespace Epsitec.Common.Widgets
 			
 			Text.TextStyle style = story.TextContext.StyleList.NewTextStyle ("Default", Text.TextStyleClass.Paragraph, properties);
 			
-			story.TextContext.DefaultStyle = style;
+			story.TextContext.DefaultParagraphStyle = style;
 			story.TextContext.ShowControlCharacters = true;
 			story.TextContext.IsDegradedLayoutEnabled = true;
 			
@@ -384,7 +384,7 @@ namespace Epsitec.Common.Widgets
 				switch (button.Name)
 				{
 					case "default":
-						this.frame.TextNavigator.SetParagraphStyles (this.frame.TextStory.TextContext.DefaultStyle);
+						this.frame.TextNavigator.SetParagraphStyles (this.frame.TextStory.TextContext.DefaultParagraphStyle);
 						this.frame.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Overwrite, new Text.Property[0]);
 						break;
 					

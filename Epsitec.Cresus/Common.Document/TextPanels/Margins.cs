@@ -150,7 +150,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( this.isExtendedSize )
 			{
-				this.buttonClear.Visibility = !this.ParagraphWrapper.IsAttachedToDefaultStyle;
+				this.buttonClear.Visibility = !this.ParagraphWrapper.IsAttachedToDefaultParagraphStyle;
 			}
 			else
 			{

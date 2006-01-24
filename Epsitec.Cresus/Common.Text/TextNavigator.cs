@@ -1991,9 +1991,9 @@ again:
 			
 			if (code == 0)
 			{
-				if (this.TextContext.DefaultStyle != null)
+				if (this.TextContext.DefaultParagraphStyle != null)
 				{
-					styles     = new TextStyle[] { this.TextContext.DefaultStyle };
+					styles     = new TextStyle[] { this.TextContext.DefaultParagraphStyle };
 					properties = new Property[0];
 				}
 				else
@@ -2501,7 +2501,7 @@ again:
 						
 						//	ATTENTION: cet appel modifie la position du curseur temp_cursor !
 						
-						this.SetParagraphStyles (start, new TextStyle[] { this.TextContext.StyleList["Default", TextStyleClass.Paragraph] });
+						this.SetParagraphStyles (start, new TextStyle[] { this.TextContext.DefaultParagraphStyle });
 						
 						fence = this.story.GetCursorPosition (temp);
 						this.story.RecycleCursor (temp);
@@ -3133,7 +3133,7 @@ process_ranges:
 			//	graphe standard. Cela implique qu'il faut remettre le style par
 			//	défaut.
 			
-			this.SetParagraphStyles (this.TextContext.StyleList["Default", TextStyleClass.Paragraph]);
+			this.SetParagraphStyles (this.TextContext.DefaultParagraphStyle);
 		}
 		
 		private Properties.ManagedParagraphProperty GetManagedParagraphProperty(ICursor cursor)

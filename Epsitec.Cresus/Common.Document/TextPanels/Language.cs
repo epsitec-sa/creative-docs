@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document.TextPanels
 		public override void UpdateAfterAttach()
 		{
 			//	Mise à jour après avoir attaché le wrappers.
-			this.buttonClear.Visibility = !this.TextWrapper.IsAttachedToDefaultStyle;
+			this.buttonClear.Visibility = !this.TextWrapper.IsAttachedToDefaultParagraphStyle;
 		}
 
 

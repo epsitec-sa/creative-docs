@@ -628,7 +628,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			Text.TextStyle default_style = story.StyleList.NewTextStyle ("Default", Text.TextStyleClass.Paragraph, properties_3);
 			
-			story.TextContext.DefaultStyle = default_style;
+			story.TextContext.DefaultParagraphStyle = default_style;
 			
 			story.ConvertToStyledText ("fin\n", default_style, out text);
 			story.InsertText (cursor, text);
