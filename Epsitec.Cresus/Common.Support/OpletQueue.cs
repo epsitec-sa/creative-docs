@@ -1,4 +1,4 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -322,6 +322,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public IOplet[]							PendingOplets
+		{
+			get
+			{
+				return (IOplet[]) this.temp_queue.ToArray (typeof (IOplet));
+			}
+		}
+		
 		public MergeMode						PendingMergeMode
 		{
 			get
@@ -557,6 +565,7 @@ namespace Epsitec.Common.Support
 					this.live_index = this.queue.Count;
 				}
 				
+				this.OnActionValidated ();
 				this.disable_merge = false;
 			}
 		}
@@ -596,6 +605,8 @@ namespace Epsitec.Common.Support
 				System.Diagnostics.Debug.Assert (this.action == null);
 				System.Diagnostics.Debug.Assert (this.fence_id == 0);
 				System.Diagnostics.Debug.Assert (this.temp_queue.Count == 0);
+				
+				this.OnActionCancelled ();
 			}
 		}
 		
@@ -1092,6 +1103,26 @@ namespace Epsitec.Common.Support
 			protected MergeMode					mode;
 		}
 		
+		
+		protected virtual void OnActionValidated()
+		{
+			if (this.ActionValidated != null)
+			{
+				this.ActionValidated (this);
+			}
+		}
+		
+		protected virtual void OnActionCancelled()
+		{
+			if (this.ActionCancelled != null)
+			{
+				this.ActionCancelled (this);
+			}
+		}
+		
+		
+		public event EventHandler				ActionValidated;
+		public event EventHandler				ActionCancelled;
 		
 		protected System.Collections.ArrayList	queue;
 		protected System.Collections.ArrayList	temp_queue;

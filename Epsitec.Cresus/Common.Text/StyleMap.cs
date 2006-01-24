@@ -45,12 +45,10 @@ namespace Epsitec.Common.Text
 				
 				if (queue != null)
 				{
-					using (queue.BeginAction ())
-					{
-						queue.Insert (new ChangeOplet (this, style, old_caption, old_rank));
-						queue.ValidateAction ();
-					}
+					TextStory.InsertOplet (queue, new ChangeOplet (this, style, old_caption, old_rank));
 				}
+				
+				this.style_list.NotifyStyleMapChanged ();
 			}
 			
 			System.Diagnostics.Debug.Assert (this.GetCaption (style) == new_caption);
@@ -86,12 +84,10 @@ namespace Epsitec.Common.Text
 				
 				if (queue != null)
 				{
-					using (queue.BeginAction ())
-					{
-						queue.Insert (new ChangeOplet (this, style, old_caption, old_rank));
-						queue.ValidateAction ();
-					}
+					TextStory.InsertOplet (queue, new ChangeOplet (this, style, old_caption, old_rank));
 				}
+				
+				this.style_list.NotifyStyleMapChanged ();
 			}
 		}
 		
@@ -259,7 +255,7 @@ namespace Epsitec.Common.Text
 		#endregion
 
 		#region ChangeOplet Class
-		private class ChangeOplet : Common.Support.AbstractOplet
+		public class ChangeOplet : Common.Support.AbstractOplet
 		{
 			public ChangeOplet(StyleMap map, TextStyle style, string old_caption, int old_rank)
 			{
@@ -268,6 +264,7 @@ namespace Epsitec.Common.Text
 				this.caption = old_caption;
 				this.rank    = old_rank;
 			}
+			
 			
 			public override Epsitec.Common.Support.IOplet Undo()
 			{
@@ -291,6 +288,18 @@ namespace Epsitec.Common.Text
 				return this.Undo ();
 			}
 			
+			
+			public bool MergeWith(ChangeOplet other)
+			{
+				if ((this.style == other.style) &&
+					(this.map   == other.map))
+				{
+					return true;
+				}
+				
+				return false;
+			}
+						
 			
 			private StyleMap					map;
 			private TextStyle					style;

@@ -281,7 +281,7 @@ namespace Epsitec.Common.Text
 					if ((oplets_1.Length == 1) &&
 						(oplets_2.Length == 1))
 					{
-						if (this.MergeOplets (oplets_2[0], oplets_1[0]))
+						if (TextStory.MergeOplets (oplets_2[0], oplets_1[0]))
 						{
 							this.oplet_queue.PurgeSingleUndo ();
 							force = true;
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Text
 					else if ((oplets_1.Length == 1) &&
 						/**/ (oplets_2.Length > 0))
 					{
-						if (this.MergeOplets (oplets_2[oplets_2.Length-1], oplets_1[0]))
+						if (TextStory.MergeOplets (oplets_2[oplets_2.Length-1], oplets_1[0]))
 						{
 							this.oplet_queue.PurgeSingleUndo ();
 							force = true;
@@ -1307,15 +1307,13 @@ namespace Epsitec.Common.Text
 				{
 					Common.Support.IOplet last = last_oplets[0];
 					
-					if (this.MergeOplets (last, oplet))
+					if (TextStory.MergeOplets (last, oplet))
 					{
 						oplet.Dispose ();
 						this.ApplyAutomaticOpletName (true);
 						return;
 					}
 				}
-				
-				//	TODO: gérer la fusion d'oplets identiques
 				
 				using (this.oplet_queue.BeginAction ())
 				{
@@ -1331,27 +1329,53 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		
-		protected Common.Support.IOplet[] FindTextOplets(System.Collections.ICollection oplets)
+		internal static void InsertOplet(Common.Support.OpletQueue queue, Common.Support.IOplet oplet)
 		{
-			//	Trouve tous les oplets qui appartiennent au projet Common.Text
-			//	parmi la liste passée en entrée.
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			System.Reflection.Assembly assembly = this.GetType ().Assembly;
-			
-			foreach (Common.Support.IOplet oplet in oplets)
+			if (queue.IsActionDefinitionInProgress)
 			{
-				if (oplet.GetType ().Assembly == assembly)
+				Common.Support.IOplet[] last_oplets = queue.PendingOplets;
+				
+				if (last_oplets.Length > 0)
 				{
-					list.Add (oplet);
+					Common.Support.IOplet last = last_oplets[last_oplets.Length-1];
+					
+					if (TextStory.MergeOplets (last, oplet))
+					{
+						oplet.Dispose ();
+						return;
+					}
+				}
+				
+				queue.Insert (oplet);
+			}
+			else
+			{
+				Common.Support.IOplet[] last_oplets = queue.LastActionOplets;
+				
+				bool enable_merge = (queue.LastActionMergeMode != Common.Support.OpletQueue.MergeMode.Disabled) &&
+					/**/            (queue.PendingMergeMode != Common.Support.OpletQueue.MergeMode.Disabled);
+					
+				if ((last_oplets.Length == 1) &&
+					(enable_merge))
+				{
+					Common.Support.IOplet last = last_oplets[0];
+						
+					if (TextStory.MergeOplets (last, oplet))
+					{
+						oplet.Dispose ();
+						return;
+					}
+				}
+					
+				using (queue.BeginAction ())
+				{
+					queue.Insert (oplet);
+					queue.ValidateAction ();
 				}
 			}
-			
-			return (Common.Support.IOplet[]) list.ToArray (typeof (Common.Support.IOplet));
 		}
 		
-		protected bool MergeOplets(Common.Support.IOplet last, Common.Support.IOplet oplet)
+		internal static bool MergeOplets(Common.Support.IOplet last, Common.Support.IOplet oplet)
 		{
 			//	Retourne true si l'oplet peut être fusionné avec le précédent.
 			
@@ -1411,9 +1435,39 @@ namespace Epsitec.Common.Text
 					
 					return true;
 				}
+				else if (oplet is StyleMap.ChangeOplet)
+				{
+					StyleMap.ChangeOplet op_1 = oplet as StyleMap.ChangeOplet;
+					StyleMap.ChangeOplet op_2 = last as StyleMap.ChangeOplet;
+					
+					if (op_2.MergeWith (op_1))
+					{
+						return true;
+					}
+				}
 			}
 			
 			return false;
+		}
+		
+		
+		protected Common.Support.IOplet[] FindTextOplets(System.Collections.ICollection oplets)
+		{
+			//	Trouve tous les oplets qui appartiennent au projet Common.Text
+			//	parmi la liste passée en entrée.
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			System.Reflection.Assembly assembly = this.GetType ().Assembly;
+			
+			foreach (Common.Support.IOplet oplet in oplets)
+			{
+				if (oplet.GetType ().Assembly == assembly)
+				{
+					list.Add (oplet);
+				}
+			}
+			
+			return (Common.Support.IOplet[]) list.ToArray (typeof (Common.Support.IOplet));
 		}
 		
 		protected void UpdateTextBreakInformation(int position, int length)

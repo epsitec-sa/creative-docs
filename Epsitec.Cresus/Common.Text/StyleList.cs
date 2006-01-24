@@ -447,6 +447,11 @@ namespace Epsitec.Common.Text
 			return this.internal_settings.GetCoreFromIndex (index);
 		}
 		
+		internal void NotifyStyleMapChanged()
+		{
+			this.OnStyleMapChanged ();
+		}
+		
 		
 		internal Property[] Flatten(ulong code)
 		{
@@ -717,6 +722,8 @@ namespace Epsitec.Common.Text
 			
 			this.text_style_list.Add (style);
 			this.text_style_hash[full_name] = style;
+			
+			this.OnStyleAdded ();
 		}
 		
 		private void Detach(TextStyle style)
@@ -873,10 +880,19 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		private void OnStyleMapChanged()
+		{
+			if (this.StyleMapChanged != null)
+			{
+				this.StyleMapChanged (this);
+			}
+		}
+		
 		
 		public event EventHandler				StyleRedefined;
 		public event EventHandler				StyleAdded;
 		public event EventHandler				StyleRemoved;
+		public event EventHandler				StyleMapChanged;
 		
 		private TextContext						context;
 		private Internal.SettingsTable			internal_settings;
