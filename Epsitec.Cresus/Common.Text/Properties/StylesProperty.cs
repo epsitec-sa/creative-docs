@@ -80,15 +80,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			if (this.style_cache == null)
 			{
-				int       n    = this.style_names == null ? 0 : this.style_names.Length;
-				StyleList list = context.StyleList;
-				
-				this.style_cache = new TextStyle[n];
-				
-				for (int i = 0; i < n; i++)
-				{
-					this.style_cache[i] = list.GetTextStyle (this.style_names[i]);
-				}
+				this.RefreshStyleCache (context.StyleList);
 			}
 			
 			return (TextStyle[]) this.style_cache.Clone ();
@@ -115,6 +107,7 @@ namespace Epsitec.Common.Text.Properties
 			string[] names = SerializerSupport.DeserializeStringArray (args[0]);
 			
 			this.style_names = names;
+			this.style_cache = null;
 		}
 
 		public override Property GetCombination(Property property)
@@ -213,6 +206,59 @@ namespace Epsitec.Common.Text.Properties
 			return filtered;
 		}
 		
+		
+		private void RefreshStyleCache(StyleList list)
+		{
+			int n = (this.style_names == null) ? 0 : this.style_names.Length;
+			bool refresh_names = false;
+			
+			this.style_cache = new TextStyle[n];
+			
+			for (int i = 0; i < n; i++)
+			{
+				this.style_cache[i] = list.GetTextStyle (this.style_names[i]);
+				
+				if (this.style_cache[i] == null)
+				{
+					if (refresh_names == false)
+					{
+						string         name;
+						TextStyleClass text_style_class;
+						
+						StyleList.SplitFullName(this.style_names[i], out name, out text_style_class);
+						
+						switch (text_style_class)
+						{
+							case TextStyleClass.Paragraph:
+								this.style_cache[i] = list.TextContext.DefaultParagraphStyle;
+								break;
+							
+							case TextStyleClass.Text:
+								this.style_cache[i] = list.TextContext.DefaultTextStyle;
+								break;
+							
+							default:
+								break;
+						}
+						
+						refresh_names = true;
+					}
+				}
+			}
+			
+			this.style_cache = TextStyle.FilterNullStyles (this.style_cache);
+			
+			if (refresh_names)
+			{
+				this.style_names = new string[this.style_cache.Length];
+				
+				for (int i = 0; i < this.style_cache.Length; i++)
+				{
+					TextStyle style = this.style_cache[i];
+					this.style_names[i] = StyleList.GetFullName (style.Name, style.TextStyleClass);
+				}
+			}
+		}
 		
 		private static bool CompareEqualContents(StylesProperty a, StylesProperty b)
 		{

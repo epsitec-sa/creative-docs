@@ -400,9 +400,21 @@ namespace Epsitec.Common.Text
 		
 		public void Serialize(System.Text.StringBuilder buffer)
 		{
+			int n = this.text_style_list.Count;
+			
+			for (int i = 0; i < this.text_style_list.Count; i++)
+			{
+				TextStyle style = this.text_style_list[i] as TextStyle;
+				
+				if (style.IsDeleted)
+				{
+					n--;
+				}
+			}
+			
 			buffer.Append (SerializerSupport.SerializeLong (this.unique_id));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeInt (this.text_style_list.Count));
+			buffer.Append (SerializerSupport.SerializeInt (n));
 			buffer.Append ("/");
 			
 			this.internal_settings.Serialize (buffer);
@@ -412,8 +424,11 @@ namespace Epsitec.Common.Text
 			{
 				TextStyle style = this.text_style_list[i] as TextStyle;
 				
-				style.Serialize (buffer);
-				buffer.Append ("/");
+				if (style.IsDeleted == false)
+				{
+					style.Serialize (buffer);
+					buffer.Append ("/");
+				}
 			}
 			
 			this.StyleMap.Serialize (buffer);
