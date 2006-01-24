@@ -56,12 +56,12 @@ namespace Epsitec.Common.Text.Internal
 		 *	- Le "unicode code" forme le caractère Unicode à proprement dit.
 		 */
 		
-		public const ulong						MarkerMask  = 0x00000000F8000000ul;
-		public const int						MarkerShift = 27;
+		public const int						MarkerShift				 = 27;
+		public const ulong						MarkerMask				 = 0x00000000F8000000ul;
 		
-		public const ulong						CoreAndSettingsMask      = 0xffffffff00000000ul;
-		public const ulong						CoreAndExtraSettingsMask = 0xfe3fffff00000000ul;
-		public const ulong						CoreAndLocalSettingsMask = 0x01ffffff00000000ul;
+		public const ulong						CoreAndSettingsMask      = 0xFFFFFFFF00000000ul;
+		public const ulong						CoreAndExtraSettingsMask = 0xFE3FFFFF00000000ul;
+		public const ulong						CoreAndLocalSettingsMask = 0x01FFFFFF00000000ul;
 		
 		public ulong							this[object key]
 		{

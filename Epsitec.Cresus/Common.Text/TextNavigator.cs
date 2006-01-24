@@ -1357,6 +1357,7 @@ again:
 						}
 					}
 					
+					this.UpdateSelectionMarkers ();
 					this.story.ValidateAction ();
 				}
 			}

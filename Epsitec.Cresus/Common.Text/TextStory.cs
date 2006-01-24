@@ -509,17 +509,22 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (length > 0);
 			System.Diagnostics.Debug.Assert (simple_text.Length > 0);
 			
+			ulong   mask = Internal.CharMarker.CoreAndSettingsMask | this.TextContext.Markers.Selected;
+			ulong   code = 0;
 			ulong[] data = new ulong[length];
 			ulong[] text;
 			
 			this.ReadText (cursor, length, data);
 			
-			ulong code = data[0] & Internal.CharMarker.CoreAndSettingsMask;
-			
 			TextConverter.ConvertFromString (simple_text, out text);
 			
 			for (int i = 0; i < text.Length; i++)
 			{
+				if (i < data.Length)
+				{
+					code = data[i] & mask;
+				}
+				
 				text[i] |= code;
 			}
 			
