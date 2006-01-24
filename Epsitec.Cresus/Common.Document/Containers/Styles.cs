@@ -1060,6 +1060,21 @@ namespace Epsitec.Common.Document.Containers
 				int sel = this.document.Aggregates.Selected;
 				this.document.Modifier.AggregateDelete(sel);
 			}
+			
+			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
+			{
+				int sel = this.document.GetSelectedTextStyle(this.category);
+
+				Common.Text.TextStyle style = this.TextStyleList.List[sel];
+
+				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, -1);
+				this.document.TextContext.StyleList.DeleteTextStyle(this.document.Modifier.OpletQueue, style);
+				
+				this.document.SetSelectedTextStyle(this.category, sel+1);
+				this.document.Modifier.OpletQueueValidateAction();
+				this.SetDirtyContent();
+			}
 		}
 
 		private void HandleAggregatesTableSelectionChanged(object sender)

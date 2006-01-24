@@ -227,6 +227,41 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void DeleteTextStyle(Common.Support.OpletQueue queue, TextStyle style)
+		{
+			System.Diagnostics.Debug.Assert (style != null);
+			System.Diagnostics.Debug.Assert (style.IsDeleted == false);
+			
+			TextStyle default_style = null;
+			
+			switch (style.TextStyleClass)
+			{
+				case TextStyleClass.Text:
+					default_style = this.TextContext.DefaultTextStyle;
+					break;
+				
+				case TextStyleClass.Paragraph:
+					default_style = this.TextContext.DefaultParagraphStyle;
+					break;
+					
+				default:
+					throw new System.NotSupportedException (string.Format ("Cannot delete style {0} of class {1}", style.Name, style.TextStyleClass));
+			}
+			
+			System.Diagnostics.Debug.Assert (default_style != null);
+			
+			if (queue != null)
+			{
+				System.Diagnostics.Debug.Assert (queue.IsActionDefinitionInProgress);
+			}
+			
+			queue.Insert (new DeleteOplet (this, style));
+			
+			style.IsDeleted = true;
+			this.RedefineTextStyle (queue, style, new Property[0], new TextStyle[1] { default_style } );
+		}
+		
+		
 		public void SetNextStyle(Common.Support.OpletQueue queue, TextStyle style, TextStyle next_style)
 		{
 			if (style.NextStyle == next_style)
@@ -308,6 +343,11 @@ namespace Epsitec.Common.Text
 		
 		public bool IsDeletedTextStyle(TextStyle style)
 		{
+			if (style != null)
+			{
+				return style.IsDeleted;
+			}
+			
 			return false;
 		}
 		
@@ -866,6 +906,36 @@ namespace Epsitec.Common.Text
 			private StyleList					stylist;
 			private TextStyle					style;
 			private TextStyle					next;
+		}
+		#endregion
+		
+		#region DeleteOplet Class
+		private class DeleteOplet : Common.Support.AbstractOplet
+		{
+			public DeleteOplet(StyleList stylist, TextStyle style)
+			{
+				this.stylist = stylist;
+				this.style   = style;
+			}
+			
+
+			public override Common.Support.IOplet Undo()
+			{
+				this.style.IsDeleted = false;
+				
+				return this;
+			}
+			
+			public override Common.Support.IOplet Redo()
+			{
+				this.style.IsDeleted = true;
+				
+				return this;
+			}
+			
+			
+			private StyleList					stylist;
+			private TextStyle					style;
 		}
 		#endregion
 		

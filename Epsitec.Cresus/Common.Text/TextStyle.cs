@@ -142,6 +142,19 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal bool							IsDeleted
+		{
+			get
+			{
+				return this.is_deleted;
+			}
+			set
+			{
+				this.is_deleted = value;
+			}
+		}
+		
+		
 		public static System.Collections.IComparer	Comparer
 		{
 			get
@@ -639,5 +652,6 @@ namespace Epsitec.Common.Text
 		
 		private bool							is_flagged;
 		private bool							is_fixup_required;
+		private bool							is_deleted;
 	}
 }
