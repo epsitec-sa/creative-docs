@@ -190,7 +190,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			int count = SerializerSupport.DeserializeInt (args[offset++]);
 			
-			Debug.Assert.IsTrue (version == TextContext.SerializationVersion);
+			Debug.Assert.IsTrue (version <= TextContext.SerializationVersion);
 			
 			if (count > 0)
 			{
