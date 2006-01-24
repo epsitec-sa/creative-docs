@@ -128,7 +128,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 					if ( this.isStyle )
 					{
-						h -= 40;
+						//?h -= 40;
 					}
 				}
 				else	// panneau réduit ?
@@ -358,10 +358,12 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Left = rect.Left;
 				r.Right = rect.Right;
 				this.checkBold.Bounds = r;
-				this.checkBold.Visibility = !this.isStyle;
+				//?this.checkBold.Visibility = !this.isStyle;
+				this.checkBold.Visibility = true;
 				r.Offset(0, -18);
 				this.checkItalic.Bounds = r;
-				this.checkItalic.Visibility = !this.isStyle;
+				//?this.checkItalic.Visibility = !this.isStyle;
+				this.checkItalic.Visibility = true;
 			}
 			else
 			{
