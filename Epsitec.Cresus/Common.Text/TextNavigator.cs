@@ -1317,6 +1317,7 @@ again:
 			this.story.ResumeTextChanged ();
 		}
 		
+		
 		private void InternalSetParagraphStyles(TextStyle[] styles)
 		{
 			//	Change les styles du paragraphe attachés à la position courante (ou
@@ -1376,6 +1377,7 @@ again:
 			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
 		}
+		
 		
 		public void SetTextStyles(params TextStyle[] styles)
 		{
@@ -1735,7 +1737,7 @@ again:
 				
 				if (direction < 0)
 				{
-					this.MoveCursor (temp, 0, Direction.Backward, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
+					this.MoveCursor (temp, 0, Direction.Backward, new MoveCallback (this.IsRawLineStart), out new_pos, out new_dir);
 					this.story.SetCursorPosition (temp, new_pos, new_dir);
 					this.MoveCursor (temp, -1, out new_pos, out new_dir);
 					this.story.SetCursorPosition (temp, new_pos, new_dir);
@@ -2821,6 +2823,20 @@ process_ranges:
 		
 		protected bool IsLineStart(int offset, Direction direction)
 		{
+			if (this.IsRawLineStart (offset, direction))
+			{
+				return true;
+			}
+			if (this.IsAfterAutoText (this.temp_cursor, offset))
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
+		protected bool IsRawLineStart(int offset, Direction direction)
+		{
 			if (this.IsParagraphStart (offset, direction))
 			{
 				return true;
@@ -3332,7 +3348,12 @@ process_ranges:
 		
 		protected bool IsAfterAutoText(ICursor cursor)
 		{
-			ulong code = this.story.ReadChar (cursor, -1);
+			return this.IsAfterAutoText (cursor, 0);
+		}
+		
+		protected bool IsAfterAutoText(ICursor cursor, int offset)
+		{
+			ulong code = this.story.ReadChar (cursor, offset-1);
 			
 			if (code == 0)
 			{
