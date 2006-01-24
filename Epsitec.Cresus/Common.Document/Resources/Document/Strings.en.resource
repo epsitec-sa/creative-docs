@@ -505,6 +505,7 @@
 	<data name="TextPanel.Leading.Tooltip.GridOffset">Baseline Grid Vertical offset</data>
 	<data name="TextPanel.Leading.Tooltip.AlignFirst">Align first line of paragraph on Baseline Grid</data>
 	<data name="TextPanel.Leading.Tooltip.AlignAll">Align full paragraph on Baseline Grid</data>
+	<data name="TextPanel.Leading.None">@@Aucun</data>
 
 	<data name="TextPanel.Margins.Title">Padding</data>
 	<data name="TextPanel.Margins.Short.LeftFirst">F</data>
@@ -551,6 +552,7 @@
 	<data name="TextPanel.Font.Tooltip.Features">OpenType features</data>
 	<data name="TextPanel.Font.Tooltip.Size">Font size</data>
 	<data name="TextPanel.Font.Tooltip.Glue">Tracking (space between characters)</data>
+	<data name="Panel.Font.None">@@Aucun</data>
 
 	<data name="TextPanel.Xline.Title">Underlines</data>
 	<data name="TextPanel.Xline.Short.Underlined.Thickness">T</data>

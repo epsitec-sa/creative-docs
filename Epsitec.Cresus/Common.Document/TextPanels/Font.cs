@@ -38,9 +38,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontFeatures = this.CreateIconButton(Misc.Icon("FontFeatures"), Res.Strings.TextPanel.Font.Tooltip.Features, new MessageEventHandler(this.HandleFeaturesClicked));
 			this.buttonSettings = this.CreateIconButton(Misc.Icon("Settings"), Res.Strings.Action.Settings, new MessageEventHandler(this.HandleButtonSettingsClicked), false);
 
-			this.fontSize = this.CreateTextFieldLabel(Res.Strings.TextPanel.Font.Tooltip.Size, Res.Strings.TextPanel.Font.Short.Size, Res.Strings.TextPanel.Font.Long.Size, 0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, new EventHandler(this.HandleSizeChanged));
+			this.fontSize = this.CreateTextFieldLabel(Res.Strings.TextPanel.Font.Tooltip.Size, Res.Strings.TextPanel.Font.Short.Size, Res.Strings.TextPanel.Font.Long.Size, 0,0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, new EventHandler(this.HandleSizeChanged));
 			this.fontSize.SetRangeFontSize(this.document);
-			this.fontSize.SetRangePercents(this.document, 25.0, 400.0, 10.0);
+			this.fontSize.SetRangePercents(this.document, 25.0, 400.0, 100.0, 10.0);
 			this.fontSize.IsUnitPercent = true;
 			this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonSizeMinus = this.CreateIconButton(Misc.Icon("FontSizeMinus"), Res.Strings.Action.FontSizeMinus, new MessageEventHandler(this.HandleButtonSizeMinusClicked), false);
 			this.buttonSizePlus  = this.CreateIconButton(Misc.Icon("FontSizePlus"),  Res.Strings.Action.FontSizePlus,  new MessageEventHandler(this.HandleButtonSizePlusClicked), false);
 
-			this.fontGlue = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Font.Tooltip.Glue, Res.Strings.TextPanel.Font.Short.Glue, Res.Strings.TextPanel.Font.Long.Glue, -50.0, 200.0, 5.0, new EventHandler(this.HandleGlueValueChanged));
+			this.fontGlue = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Font.Tooltip.Glue, Res.Strings.TextPanel.Font.Short.Glue, Res.Strings.TextPanel.Font.Long.Glue, -50.0, 200.0, 0.0, 5.0, new EventHandler(this.HandleGlueValueChanged));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -239,7 +239,6 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			double glue = this.TextWrapper.Active.FontGlue;
-			if ( double.IsNaN(glue) )  glue = 0.0;  // TODO: devrait être inutile, non ?
 			bool isGlue = this.TextWrapper.Defined.IsFontGlueDefined;
 
 			string color = this.TextWrapper.Defined.Color;
@@ -583,9 +582,19 @@ namespace Epsitec.Common.Document.TextPanels
 			string face = this.fontFace.Text;
 
 			this.TextWrapper.SuspendSynchronizations();
-			this.TextWrapper.Defined.FontFace = face;
-			this.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
-			this.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
+
+			if ( face == "" )
+			{
+				this.TextWrapper.Defined.ClearFontFace();
+				this.TextWrapper.Defined.ClearFontStyle();
+			}
+			else
+			{
+				this.TextWrapper.Defined.FontFace = face;
+				this.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
+				this.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
+			}
+
 			this.TextWrapper.ResumeSynchronizations();
 		}
 
@@ -792,7 +801,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			double factor = (this.document.Type == DocumentType.Pictogram) ? 0.1 : 1.0;
 			bool isPercent = !this.TextWrapper.IsAttachedToDefaultStyle;
-			return Menus.FontSizeMenu.CreateFontSizeMenu(size, percent?"%":"", factor, isPercent, new MessageEventHandler(this.HandleMenuPressed));
+			bool isDefault = !this.TextWrapper.IsAttachedToDefaultStyle;
+			return Menus.FontSizeMenu.CreateFontSizeMenu(size, percent?"%":"", factor, isPercent, isDefault, new MessageEventHandler(this.HandleMenuPressed));
 		}
 
 		private void HandleMenuPressed(object sender, MessageEventArgs e)
@@ -803,22 +813,40 @@ namespace Epsitec.Common.Document.TextPanels
 			double size;
 			Common.Text.Properties.SizeUnits units;
 
-			if ( text.EndsWith("%") )
+			if ( text == "" )
 			{
-				text = text.Substring(0, text.Length-1);
-				size = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
-				units = Common.Text.Properties.SizeUnits.Percent;
+				size = double.NaN;
+				units = Common.Text.Properties.SizeUnits.Points;
 			}
 			else
 			{
-				size = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
-				units = Common.Text.Properties.SizeUnits.Points;
+				if ( text.EndsWith("%") )
+				{
+					text = text.Substring(0, text.Length-1);
+					size = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
+					units = Common.Text.Properties.SizeUnits.Percent;
+				}
+				else
+				{
+					size = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
+					units = Common.Text.Properties.SizeUnits.Points;
+				}
 			}
 
 			this.TextWrapper.SuspendSynchronizations();
-			this.TextWrapper.Defined.FontSize = size;
-			this.TextWrapper.Defined.Units = units;
-			this.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
+
+			if ( double.IsNaN(size) )
+			{
+				this.TextWrapper.Defined.ClearFontSize();
+				this.TextWrapper.Defined.ClearUnits();
+			}
+			else
+			{
+				this.TextWrapper.Defined.FontSize = size;
+				this.TextWrapper.Defined.Units = units;
+				this.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
+			}
+
 			this.TextWrapper.ResumeSynchronizations();
 		}
 		#endregion

@@ -337,6 +337,7 @@
 	<data name="Panel.Font.Tooltip.Name">Police du texte par défaut</data>
 	<data name="Panel.Font.Tooltip.Size">Taille du texte par défaut</data>
 	<data name="Panel.Font.Tooltip.Color">Couleur du texte par défaut</data>
+	<data name="Panel.Font.None">Aucun</data>
 
 	<data name="Panel.Gradient.Short.Angle">α</data>
 	<data name="Panel.Gradient.Short.Repeat">n</data>
@@ -505,6 +506,7 @@
 	<data name="TextPanel.Leading.Tooltip.GridOffset">Décalage vertical des lignes magnétiques</data>
 	<data name="TextPanel.Leading.Tooltip.AlignFirst">Forcer la première ligne du paragraphe sur une ligne magnétique</data>
 	<data name="TextPanel.Leading.Tooltip.AlignAll">Forcer toutes les lignes sur les lignes magnétiques</data>
+	<data name="TextPanel.Leading.None">Aucun</data>
 
 	<data name="TextPanel.Margins.Title">Retraits</data>
 	<data name="TextPanel.Margins.Short.LeftFirst">P</data>

@@ -428,7 +428,7 @@ namespace Epsitec.Common.Document.TextPanels
 			return button;
 		}
 
-		protected Widgets.TextFieldLabel CreateTextFieldLabel(string tooltip, string shortText, string longText, double minRange, double maxRange, double step, Widgets.TextFieldLabel.Type type, EventHandler handler)
+		protected Widgets.TextFieldLabel CreateTextFieldLabel(string tooltip, string shortText, string longText, double minRange, double maxRange, double defRange, double step, Widgets.TextFieldLabel.Type type, EventHandler handler)
 		{
 			//	Crée un TextFieldLabel.
 			Widgets.TextFieldLabel field = new Widgets.TextFieldLabel(this, type);
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			if ( type == Widgets.TextFieldLabel.Type.TextFieldReal )
 			{
-				field.SetRangeDimension(this.document, minRange, maxRange, step);
+				field.SetRangeDimension(this.document, minRange, maxRange, defRange, step);
 				field.TextFieldReal.EditionAccepted += handler;
 			}
 
@@ -460,14 +460,14 @@ namespace Epsitec.Common.Document.TextPanels
 			return field;
 		}
 
-		protected Widgets.TextFieldLabel CreateTextFieldLabelPercent(string tooltip, string shortText, string longText, double minRange, double maxRange, double step, EventHandler handler)
+		protected Widgets.TextFieldLabel CreateTextFieldLabelPercent(string tooltip, string shortText, string longText, double minRange, double maxRange, double defRange, double step, EventHandler handler)
 		{
 			//	Crée un TextFieldLabel en %.
 			Widgets.TextFieldLabel field = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 
 			field.LabelShortText = shortText;
 			field.LabelLongText  = longText;
-			field.SetRangePercents(this.document, minRange, maxRange, step);
+			field.SetRangePercents(this.document, minRange, maxRange, defRange, step);
 			
 			field.TextFieldReal.EditionAccepted += handler;
 			
@@ -481,9 +481,9 @@ namespace Epsitec.Common.Document.TextPanels
 		protected void SetTextFieldRealValue(TextFieldReal field, double value, Common.Text.Properties.SizeUnits units, bool isDefined, bool disabledIfUndefined)
 		{
 			//	Modifie la valeur d'un TextFieldReal.
-			if ( units == Common.Text.Properties.SizeUnits.Percent )
+			if ( double.IsNaN(value) )
 			{
-				field.InternalValue = (decimal) value;
+				field.ClearText();
 			}
 			else
 			{
@@ -504,24 +504,38 @@ namespace Epsitec.Common.Document.TextPanels
 		protected void GetTextFieldRealValue(TextFieldReal field, out double value, out Common.Text.Properties.SizeUnits units, out bool isDefined)
 		{
 			//	Donne la valeur d'un TextFieldReal.
-			if ( field.UnitType == RealUnitType.Percent )
+			if ( field.IsTextEmpty )
 			{
-				value = (double) field.InternalValue;
-				units = Common.Text.Properties.SizeUnits.Percent;
+				value = double.NaN;
 			}
 			else
 			{
 				value = (double) field.InternalValue;
+			}
+
+			if ( field.UnitType == RealUnitType.Percent )
+			{
+				units = Common.Text.Properties.SizeUnits.Percent;
+			}
+			else
+			{
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
 
-			isDefined = (field.Text != "");
+			isDefined = (field.Text != "" && !field.IsTextEmpty);
 		}
 
 		protected void SetTextFieldRealPercent(TextFieldReal field, double value, bool isDefined, bool disabledIfUndefined)
 		{
 			//	Modifie la valeur d'un TextFieldReal en %.
-			field.InternalValue = (decimal) value;
+			if ( double.IsNaN(value) )
+			{
+				field.ClearText();
+			}
+			else
+			{
+				field.InternalValue = (decimal) value;
+			}
 
 			if ( disabledIfUndefined )
 			{
@@ -537,8 +551,16 @@ namespace Epsitec.Common.Document.TextPanels
 		protected void GetTextFieldRealPercent(TextFieldReal field, out double value, out bool isDefined)
 		{
 			//	Donne la valeur d'un TextFieldReal en %.
-			value = (double) field.InternalValue;
-			isDefined = (field.Text != "");
+			if ( field.IsTextEmpty )
+			{
+				value = double.NaN;
+			}
+			else
+			{
+				value = (double) field.InternalValue;
+			}
+
+			isDefined = (field.Text != "" && !field.IsTextEmpty);
 		}
 
 		protected void ProposalTextFieldLabel(Widgets.TextFieldLabel field, bool proposal)

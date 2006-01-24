@@ -10,15 +10,23 @@ namespace Epsitec.Common.Document.Menus
 			this.value = value;
 			this.units = units;
 
-			if ( this.units == "%" )
+			if ( double.IsNaN(this.value) )
 			{
-				this.name = string.Format("{0}{1}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture), this.units);
-				this.text = string.Format("{0}{1}", (this.value*100).ToString(System.Globalization.CultureInfo.CurrentUICulture), this.units);
+				this.name = "";
+				this.text = Res.Strings.Panel.Font.None;
 			}
 			else
 			{
-				this.name = string.Format("{0}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				this.text = string.Format("{0}", (this.value/Modifier.fontSizeScale).ToString(System.Globalization.CultureInfo.CurrentUICulture));
+				if ( this.units == "%" )
+				{
+					this.name = string.Format("{0}{1}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture), this.units);
+					this.text = string.Format("{0}{1}", (this.value*100).ToString(System.Globalization.CultureInfo.CurrentUICulture), this.units);
+				}
+				else
+				{
+					this.name = string.Format("{0}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					this.text = string.Format("{0}", (this.value/Modifier.fontSizeScale).ToString(System.Globalization.CultureInfo.CurrentUICulture));
+				}
 			}
 		}
 
@@ -26,6 +34,12 @@ namespace Epsitec.Common.Document.Menus
 		{
 			//	Défini par System.IComparable.
 			FontSizeMenu that = obj as FontSizeMenu;
+
+			if ( double.IsNaN(this.value) &&
+				 double.IsNaN(that.value) )  return 0;
+
+			if ( double.IsNaN(this.value) )  return -1;  // "Aucun" toujours au début
+			if ( double.IsNaN(that.value) )  return  1;
 
 			if ( this.units != that.units )
 			{
@@ -51,7 +65,7 @@ namespace Epsitec.Common.Document.Menus
 			list.Add(fs);
 		}
 
-		public static VMenu CreateFontSizeMenu(double currentValue, string currentUnits, double factor, bool isPercent, MessageEventHandler message)
+		public static VMenu CreateFontSizeMenu(double currentValue, string currentUnits, double factor, bool isPercent, bool isDefault, MessageEventHandler message)
 		{
 			//	Construit le menu pour choisir une taille.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
@@ -59,6 +73,11 @@ namespace Epsitec.Common.Document.Menus
 			FontSizeMenu current = new FontSizeMenu(currentValue, currentUnits);
 
 			FontSizeMenu.Add(list, currentValue, currentUnits);
+
+			if ( isDefault )
+			{
+				FontSizeMenu.Add(list, double.NaN, "");
+			}
 
 			if ( isPercent )
 			{
@@ -91,10 +110,10 @@ namespace Epsitec.Common.Document.Menus
 			list.Sort();
 
 			VMenu menu = new VMenu();
-			string lastUnits = isPercent ? "%" : "";
+			string lastUnits = isDefault ? "" : (isPercent ? "%" : "");
 			foreach ( FontSizeMenu fs in list )
 			{
-				if ( lastUnits == "%" && fs.units == "" )
+				if ( lastUnits != fs.units )
 				{
 					menu.Items.Add(new MenuSeparator());
 				}

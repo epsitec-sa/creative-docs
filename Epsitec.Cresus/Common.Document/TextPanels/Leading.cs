@@ -18,9 +18,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextLeading");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Leading.Title);
 
-			this.fieldLeading = this.CreateTextFieldLabel(Res.Strings.TextPanel.Leading.Tooltip.Leading, Res.Strings.TextPanel.Leading.Short.Leading, Res.Strings.TextPanel.Leading.Long.Leading, 0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, new EventHandler(this.HandleLeadingChanged));
-			this.fieldLeading.SetRangeDimension(this.document, 0.0, 0.1, 1.0);
-			this.fieldLeading.SetRangePercents(this.document, 50.0, 300.0, 10.0);
+			this.fieldLeading = this.CreateTextFieldLabel(Res.Strings.TextPanel.Leading.Tooltip.Leading, Res.Strings.TextPanel.Leading.Short.Leading, Res.Strings.TextPanel.Leading.Long.Leading, 0,0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, new EventHandler(this.HandleLeadingChanged));
+			this.fieldLeading.SetRangeDimension(this.document, 0.0, 0.1, 0.0, 1.0);
+			this.fieldLeading.SetRangePercents(this.document, 50.0, 300.0, 100.0, 10.0);
 			this.fieldLeading.IsUnitPercent = true;
 			this.fieldLeading.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 
@@ -358,9 +358,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 			double leading = this.ParagraphWrapper.Active.Leading;
 			Common.Text.Properties.SizeUnits units = this.ParagraphWrapper.Active.LeadingUnits;
-			bool percent = (units == Common.Text.Properties.SizeUnits.Percent);
+			bool isPercent = (units == Common.Text.Properties.SizeUnits.Percent);
+			bool isDefault = !this.ParagraphWrapper.IsAttachedToDefaultStyle;
 
-			return Menus.LeadingMenu.CreateLeadingMenu(this.document, leading, percent?"%":"", new MessageEventHandler(this.HandleMenuPressed));
+			return Menus.LeadingMenu.CreateLeadingMenu(this.document, leading, isPercent?"%":"", isDefault, new MessageEventHandler(this.HandleMenuPressed));
 		}
 
 		private void HandleMenuPressed(object sender, MessageEventArgs e)
@@ -371,22 +372,40 @@ namespace Epsitec.Common.Document.TextPanels
 			double leading;
 			Common.Text.Properties.SizeUnits units;
 
-			if ( text.EndsWith("%") )
+			if ( text == "" )
 			{
-				text = text.Substring(0, text.Length-1);
-				leading = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
-				units = Common.Text.Properties.SizeUnits.Percent;
+				leading = double.NaN;
+				units = Common.Text.Properties.SizeUnits.Points;
 			}
 			else
 			{
-				leading = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
-				units = Common.Text.Properties.SizeUnits.Points;
+				if ( text.EndsWith("%") )
+				{
+					text = text.Substring(0, text.Length-1);
+					leading = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
+					units = Common.Text.Properties.SizeUnits.Percent;
+				}
+				else
+				{
+					leading = double.Parse(text, System.Globalization.CultureInfo.InvariantCulture);
+					units = Common.Text.Properties.SizeUnits.Points;
+				}
 			}
 
 			this.ParagraphWrapper.SuspendSynchronizations();
-			this.ParagraphWrapper.Defined.Leading = leading;
-			this.ParagraphWrapper.Defined.LeadingUnits = units;
-			this.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
+
+			if ( double.IsNaN(leading) )
+			{
+				this.ParagraphWrapper.Defined.ClearLeading();
+				this.ParagraphWrapper.Defined.ClearLeadingUnits();
+			}
+			else
+			{
+				this.ParagraphWrapper.Defined.Leading = leading;
+				this.ParagraphWrapper.Defined.LeadingUnits = units;
+				this.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
+			}
+
 			this.ParagraphWrapper.ResumeSynchronizations();
 		}
 		#endregion

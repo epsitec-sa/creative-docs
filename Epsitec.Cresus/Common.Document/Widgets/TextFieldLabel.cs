@@ -155,12 +155,13 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		public void SetRangeDimension(Document document, double min, double max, double step)
+		public void SetRangeDimension(Document document, double min, double max, double def, double step)
 		{
 			//	Spécifie les bornes pour une dimension.
-			this.textFieldReal.FactorMinRange = (decimal) min;
-			this.textFieldReal.FactorMaxRange = (decimal) max;
-			this.textFieldReal.FactorStep     = (decimal) step;
+			this.textFieldReal.FactorMinRange     = (decimal) min;
+			this.textFieldReal.FactorMaxRange     = (decimal) max;
+			this.textFieldReal.FactorDefaultRange = (decimal) def;
+			this.textFieldReal.FactorStep         = (decimal) step;
 
 			document.Modifier.AdaptTextFieldRealDimension(this.textFieldReal);
 		}
@@ -172,31 +173,34 @@ namespace Epsitec.Common.Document.Widgets
 			this.textFieldReal.Scale = (decimal) Modifier.fontSizeScale;
 			if ( document.Type == DocumentType.Pictogram )
 			{
-				this.textFieldReal.InternalMinValue = (decimal) ( 0.1*Modifier.fontSizeScale);
-				this.textFieldReal.InternalMaxValue = (decimal) (24.0*Modifier.fontSizeScale);
-				this.textFieldReal.Step = 0.1M;
-				this.textFieldReal.Resolution = 0.01M;
+				this.textFieldReal.InternalMinValue     = (decimal) ( 0.1*Modifier.fontSizeScale);
+				this.textFieldReal.InternalMaxValue     = (decimal) (24.0*Modifier.fontSizeScale);
+				this.textFieldReal.InternalDefaultValue = (decimal) ( 1.2*Modifier.fontSizeScale);
+				this.textFieldReal.Step                 = 0.1M;
+				this.textFieldReal.Resolution           = 0.01M;
 			}
 			else
 			{
-				this.textFieldReal.InternalMinValue = (decimal) (  1*Modifier.fontSizeScale);
-				this.textFieldReal.InternalMaxValue = (decimal) (240*Modifier.fontSizeScale);
-				this.textFieldReal.Step = 1.0M;
-				this.textFieldReal.Resolution = 0.1M;
+				this.textFieldReal.InternalMinValue     = (decimal) (  1*Modifier.fontSizeScale);
+				this.textFieldReal.InternalMaxValue     = (decimal) (240*Modifier.fontSizeScale);
+				this.textFieldReal.InternalDefaultValue = (decimal) ( 12*Modifier.fontSizeScale);
+				this.textFieldReal.Step                 = 1.0M;
+				this.textFieldReal.Resolution           = 0.1M;
 			}
 		}
 
-		public void SetRangePercents(Document document, double min, double max, double step)
+		public void SetRangePercents(Document document, double min, double max, double def, double step)
 		{
 			//	Spécifie les bornes pour une valeur en pourcents.
 			TextFieldReal field = (this.type == Type.TextFieldUnit) ? this.textFieldPercent : this.textFieldReal;
 
 			document.Modifier.AdaptTextFieldRealPercent(field);
 
-			field.MinValue   = (decimal) min;
-			field.MaxValue   = (decimal) max;
-			field.Step       = (decimal) step;
-			field.Resolution = 1.0M;
+			field.MinValue     = (decimal) min;
+			field.MaxValue     = (decimal) max;
+			field.DefaultValue = (decimal) def;
+			field.Step         = (decimal) step;
+			field.Resolution   = 1.0M;
 		}
 
 		public bool IsUnitPercent

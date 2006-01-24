@@ -10,15 +10,23 @@ namespace Epsitec.Common.Document.Menus
 			this.value = value;
 			this.units = units;
 
-			if ( this.units == "%" )
+			if ( double.IsNaN(this.value) )
 			{
-				this.name = string.Format("{0}{1}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture), this.units);
-				this.text = string.Format("{0}{1}", (this.value*100).ToString(System.Globalization.CultureInfo.CurrentUICulture), this.units);
+				this.name = "";
+				this.text = Res.Strings.TextPanel.Leading.None;
 			}
 			else
 			{
-				this.name = string.Format("{0}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				this.text = string.Format("{0} {1}", document.Modifier.RealToString(this.value), document.Modifier.ShortNameUnitDimension);
+				if ( this.units == "%" )
+				{
+					this.name = string.Format("{0}{1}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture), this.units);
+					this.text = string.Format("{0}{1}", (this.value*100).ToString(System.Globalization.CultureInfo.CurrentUICulture), this.units);
+				}
+				else
+				{
+					this.name = string.Format("{0}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					this.text = string.Format("{0} {1}", document.Modifier.RealToString(this.value), document.Modifier.ShortNameUnitDimension);
+				}
 			}
 		}
 
@@ -26,6 +34,12 @@ namespace Epsitec.Common.Document.Menus
 		{
 			//	Défini par System.IComparable.
 			LeadingMenu that = obj as LeadingMenu;
+
+			if ( double.IsNaN(this.value) &&
+				 double.IsNaN(that.value) )  return 0;
+
+			if ( double.IsNaN(this.value) )  return -1;  // "Aucun" toujours au début
+			if ( double.IsNaN(that.value) )  return  1;
 
 			if ( this.units != that.units )
 			{
@@ -51,7 +65,7 @@ namespace Epsitec.Common.Document.Menus
 			list.Add(fs);
 		}
 
-		public static VMenu CreateLeadingMenu(Document document, double currentValue, string currentUnits, MessageEventHandler message)
+		public static VMenu CreateLeadingMenu(Document document, double currentValue, string currentUnits, bool isDefault, MessageEventHandler message)
 		{
 			//	Construit le menu pour choisir un interligne.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
@@ -59,6 +73,11 @@ namespace Epsitec.Common.Document.Menus
 			LeadingMenu current = new LeadingMenu(document, currentValue, currentUnits);
 
 			LeadingMenu.Add(document, list, currentValue, currentUnits);
+
+			if ( isDefault )
+			{
+				LeadingMenu.Add(document, list, double.NaN, "");
+			}
 
 			LeadingMenu.Add(document, list, 0.5, "%");
 			LeadingMenu.Add(document, list, 0.8, "%");
@@ -102,10 +121,10 @@ namespace Epsitec.Common.Document.Menus
 			list.Sort();
 
 			VMenu menu = new VMenu();
-			string lastUnits = "%";
+			string lastUnits = isDefault ? "" : "%";
 			foreach ( LeadingMenu fs in list )
 			{
-				if ( lastUnits == "%" && fs.units == "" )
+				if ( lastUnits != fs.units )
 				{
 					menu.Items.Add(new MenuSeparator());
 				}

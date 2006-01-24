@@ -526,10 +526,17 @@ namespace Epsitec.Common.Document.Containers
 				int total = this.TextStyleList.Rows;
 				int sel = this.document.GetSelectedTextStyle(this.category);
 
+				bool enableDelete = false;
+				if ( sel != -1 )
+				{
+					Common.Text.TextStyle style = this.TextStyleList.List[sel];
+					enableDelete = !this.document.TextContext.StyleList.IsDefaultTextStyle(style);
+				}
+
 				this.buttonAggregateUp.Enable = (sel != -1 && sel > 0);
 				this.buttonAggregateDuplicate.Enable = (sel != -1);
 				this.buttonAggregateDown.Enable = (sel != -1 && sel < total-1);
-				this.buttonAggregateDelete.Enable = (sel != -1);
+				this.buttonAggregateDelete.Enable = enableDelete;
 			}
 		}
 
@@ -928,7 +935,10 @@ namespace Epsitec.Common.Document.Containers
 				System.Collections.ArrayList properties = new System.Collections.ArrayList();
 
 				System.Collections.ArrayList parents = new System.Collections.ArrayList();
-				parents.Add(this.document.TextContext.DefaultStyle);
+				if ( this.category == StyleCategory.Paragraph )
+				{
+					parents.Add(this.document.TextContext.DefaultStyle);
+				}
 
 				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(null, type, properties, parents);
 

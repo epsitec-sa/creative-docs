@@ -37,6 +37,7 @@ namespace Epsitec.Common.Widgets
 			this.realScale = 1.0M;
 			this.factorMinRange = -1.0M;
 			this.factorMaxRange = 1.0M;
+			this.factorDefaultRange = 0.0M;
 			this.factorStep = 1.0M;
 		}
 		
@@ -132,6 +133,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public decimal							InternalDefaultValue
+		{
+			get
+			{
+				return this.RealToInternal(this.DefaultValue);
+			}
+
+			set
+			{
+				this.DefaultValue = this.InternalToReal(value);
+			}
+		}
+
 
 		public decimal							FactorMinRange
 		{
@@ -156,6 +170,19 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.factorMaxRange = value;
+			}
+		}
+
+		public decimal							FactorDefaultRange
+		{
+			get
+			{
+				return this.factorDefaultRange;
+			}
+
+			set
+			{
+				this.factorDefaultRange = value;
 			}
 		}
 
@@ -208,6 +235,7 @@ namespace Epsitec.Common.Widgets
 		protected decimal				realScale;
 		protected decimal				factorMinRange;
 		protected decimal				factorMaxRange;
+		protected decimal				factorDefaultRange;
 		protected decimal				factorStep;
 	}
 }
