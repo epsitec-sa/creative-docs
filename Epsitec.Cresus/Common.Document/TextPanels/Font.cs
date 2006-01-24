@@ -581,7 +581,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.TextWrapper.IsAttached )  return;
 
-			string face = this.fontFace.Text;
+			string face  = this.fontFace.Text;
+			string style = this.fontStyle.Text;
 
 			this.TextWrapper.SuspendSynchronizations();
 
@@ -592,8 +593,13 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			else
 			{
+				if ( !Misc.IsExistingFontStyle(face, style) )
+				{
+					style = Misc.DefaultFontStyle(face);
+				}
+
 				this.TextWrapper.Defined.FontFace = face;
-				this.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
+				this.TextWrapper.Defined.FontStyle = style;
 				this.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
 			}
 

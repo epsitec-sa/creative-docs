@@ -250,12 +250,17 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
-		static public string SimplifyFontStyle(string style)
+		static public bool IsExistingFontStyle(string face, string style)
 		{
-			//	Simplifie un style ("Regular !Bold" devient "Bold" par exemple).
-			string simple = OpenType.FontCollection.GetStyleHash(style);
-			if ( simple != "" )  return simple;
-			return style;
+			//	Cherche si un FontStyle existe pour un FontFace donné.
+			OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
+
+			foreach ( OpenType.FontIdentity id in list )
+			{
+				if ( id.InvariantStyleName == style )  return true;
+			}
+
+			return false;
 		}
 
 		static public Font GetFont(string fontName)
