@@ -1364,13 +1364,13 @@ namespace Epsitec.Common.Document
 			double fontSize = (this.type == DocumentType.Pictogram) ? 1.2 : 12.0;
 
 			System.Collections.ArrayList properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.FontProperty("Arial", Misc.DefaultFontStyle("Arial")));
+			properties.Add(new Text.Properties.FontProperty("Arial", Misc.DefaultFontStyle("Arial"), "kern", "liga"));
 			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 0.0));
 			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 			properties.Add(new Text.Properties.FontColorProperty(black));
-			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
+			properties.Add(new Text.Properties.LanguageProperty(System.Globalization.CultureInfo.CurrentCulture.Name, 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
-			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
+			properties.Add(new Text.Properties.KeepProperty(2, 2, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
 			Text.TextStyle paraStyle = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
 			Text.TextStyle charStyle = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Text);
 			
@@ -1380,13 +1380,13 @@ namespace Epsitec.Common.Document
 			Text.TextStyle[] baseStyles = new Text.TextStyle[] { paraStyle };
 			
 			properties.Clear ();
-			properties.Add(new Text.Properties.FontProperty("Arial Black", Misc.DefaultFontStyle("Arial Black")));
+			properties.Add(new Text.Properties.FontProperty("Times New Roman", "Italic", "kern", "liga"));
 			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale*1.5, Text.Properties.SizeUnits.Points));
-			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
+//			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 //			properties.Add(new Text.Properties.FontColorProperty(black));
 //			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
-			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
-			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
+//			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.True));
 			Text.TextStyle title = this.textContext.StyleList.NewTextStyle("Title", Text.TextStyleClass.Paragraph, properties, baseStyles);
 			
 			this.textContext.StyleList.SetNextStyle(null, title, paraStyle);
@@ -1445,7 +1445,7 @@ namespace Epsitec.Common.Document
 			this.textContext.DefaultTextStyle = charStyle;
 			this.textContext.StyleList.StyleMap.SetRank(null, paraStyle, 0);
 			this.textContext.StyleList.StyleMap.SetCaption(null, paraStyle, Res.Strings.Style.Paragraph.Base);
-			this.textContext.StyleList.StyleMap.SetRank(null, charStyle, 1000000);
+			this.textContext.StyleList.StyleMap.SetRank(null, charStyle, 0);
 			this.textContext.StyleList.StyleMap.SetCaption(null, charStyle, "@@DR");
 
 			this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
