@@ -964,10 +964,12 @@
 	<data name="Action.LayerChangePrint">Changer le mode d'impression du calque</data>
 	<data name="Action.LayerChangeMagnet">Changer l'état du calque</data>
 	
-	<data name="Action.AggregateUse">Utiliser le style</data>
+	<data name="Action.AggregateUse">Utiliser le style &quot;{0}&quot;</data>
 	<data name="Action.AggregateNewEmpty">Nouveau style vide</data>
 	<data name="Action.AggregateNew3">Nouveau style pour trait et couleurs</data>
 	<data name="Action.AggregateNewAll">Nouveau style pour tout</data>
+	<data name="Action.AggregateNewParagraph">Nouveau style de paragraphe</data>
+	<data name="Action.AggregateNewCharacter">Nouveau style de caractère</data>
 	<data name="Action.AggregateDuplicate">Dupliquer un style</data>
 	<data name="Action.AggregateUp">Style plus haut</data>
 	<data name="Action.AggregateDown">Style plus bas</data>

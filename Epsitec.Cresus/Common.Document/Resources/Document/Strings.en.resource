@@ -964,10 +964,12 @@
 	<data name="Action.LayerChangePrint">Change layer printing mode</data>
 	<data name="Action.LayerChangeMagnet">Change layer state</data>
 	
-	<data name="Action.AggregateUse">Use style</data>
+	<data name="Action.AggregateUse">Use style &quot;{0}&quot;</data>
 	<data name="Action.AggregateNewEmpty">New style (empty)</data>
 	<data name="Action.AggregateNew3">New Style (based on line width and colors)</data>
 	<data name="Action.AggregateNewAll">New style (based on all properties)</data>
+	<data name="Action.AggregateNewParagraph">@@Nouveau style de paragraphe</data>
+	<data name="Action.AggregateNewCharacter">@@Nouveau style de caractère</data>
 	<data name="Action.AggregateDuplicate">Make copy of current style</data>
 	<data name="Action.AggregateUp">Move style up in list</data>
 	<data name="Action.AggregateDown">Move style down in list</data>

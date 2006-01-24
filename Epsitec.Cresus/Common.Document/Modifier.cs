@@ -1883,9 +1883,12 @@ namespace Epsitec.Common.Document
 			Objects.AbstractText edit = this.RetEditObject();
 			if ( edit == null )  return;
 
+			string name = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+			string text = string.Format(Res.Strings.Action.AggregateUse, name);
+
 			if ( style.TextStyleClass == Text.TextStyleClass.Paragraph )
 			{
-				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.Modifier.OpletQueueBeginAction(text);
 				edit.TextFlow.MetaNavigator.EndSelection();
 				edit.TextFlow.TextNavigator.SetParagraphStyles(style);
 				this.document.Modifier.OpletQueueValidateAction();
@@ -1893,7 +1896,7 @@ namespace Epsitec.Common.Document
 
 			if ( style.TextStyleClass == Text.TextStyleClass.Text )
 			{
-				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.Modifier.OpletQueueBeginAction(text);
 				edit.TextFlow.MetaNavigator.EndSelection();
 				edit.TextFlow.TextNavigator.SetTextStyles(style);
 				this.document.Modifier.OpletQueueValidateAction();
@@ -5729,7 +5732,8 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.TotalSelected == 0 )  return;
 
-				using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateUse) )
+				string text = string.Format(Res.Strings.Action.AggregateUse, agg.AggregateName);
+				using ( this.OpletQueueBeginAction(text) )
 				{
 					DrawingContext context = this.ActiveViewer.DrawingContext;
 					Objects.Abstract layer = context.RootObject();

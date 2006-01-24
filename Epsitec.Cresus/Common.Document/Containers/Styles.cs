@@ -943,7 +943,7 @@ namespace Epsitec.Common.Document.Containers
 				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(null, type, properties, parents);
 
 				int rank = this.document.GetSelectedTextStyle(this.category)+1;
-				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.Modifier.OpletQueueBeginAction((this.category == StyleCategory.Paragraph) ? Res.Strings.Action.AggregateNewParagraph : Res.Strings.Action.AggregateNewCharacter);
 				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, this.document.Modifier.GetNextTextStyleName(this.category));
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, rank);
 				this.document.SetSelectedTextStyle(this.category, rank);
@@ -1013,7 +1013,7 @@ namespace Epsitec.Common.Document.Containers
 				int rank1 = this.document.TextContext.StyleList.StyleMap.GetRank(style1);
 				int rank2 = this.document.TextContext.StyleList.StyleMap.GetRank(style2);
 
-				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateUp);
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style1, rank2);
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style2, rank1);
 
@@ -1042,7 +1042,7 @@ namespace Epsitec.Common.Document.Containers
 				int rank1 = this.document.TextContext.StyleList.StyleMap.GetRank(style1);
 				int rank2 = this.document.TextContext.StyleList.StyleMap.GetRank(style2);
 
-				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateDown);
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style1, rank2);
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style2, rank1);
 
@@ -1287,7 +1287,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( sel == -1 )  return;
 
 				Common.Text.TextStyle style = this.TextStyleList.List[sel];
-				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
 				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, this.name.Text);
 				this.document.Modifier.OpletQueueValidateAction();
 
