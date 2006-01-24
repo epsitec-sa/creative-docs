@@ -2801,6 +2801,15 @@ process_ranges:
 			{
 				return true;
 			}
+			if ((this.IsAfterAutoText (this.temp_cursor, offset)) &&
+				(this.IsAfterAutoText (this.temp_cursor, offset+1) == false))
+			{
+				return true;
+			}
+			if (this.IsAfterAutoText (this.temp_cursor, offset+1))
+			{
+				return false;
+			}
 			
 			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
 		}
