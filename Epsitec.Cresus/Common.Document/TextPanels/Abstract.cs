@@ -11,11 +11,12 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public abstract class Abstract : Common.Widgets.Widget
 	{
-		public Abstract(Document document, bool isStyle)
+		public Abstract(Document document, bool isStyle, StyleCategory styleCategory)
 		{
 			this.document = document;
 			this.isStyle = isStyle;
-
+			this.styleCategory = styleCategory;
+			
 			this.label = new StaticText(this);
 			this.fixIcon = new StaticText(this);
 
@@ -42,17 +43,22 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public static Abstract Create(string name, Document document, bool isStyle)
 		{
+			return Abstract.Create(name, document, isStyle, StyleCategory.None);
+		}
+		
+		public static Abstract Create(string name, Document document, bool isStyle, StyleCategory styleCategory)
+		{
 			//	Crée un nouveau panneau.
-			if ( name == "Justif"   )  return new Justif(document, isStyle);
-			if ( name == "Leading"  )  return new Leading(document, isStyle);
-			if ( name == "Margins"  )  return new Margins(document, isStyle);
-			if ( name == "Spaces"   )  return new Spaces(document, isStyle);
-			if ( name == "Keep"     )  return new Keep(document, isStyle);
-			if ( name == "Font"     )  return new Font(document, isStyle);
-			if ( name == "Xline"    )  return new Xline(document, isStyle);
-			if ( name == "Xscript"  )  return new Xscript(document, isStyle);
-			if ( name == "Box"      )  return new Box(document, isStyle);
-			if ( name == "Language" )  return new Language(document, isStyle);
+			if ( name == "Justif"   )  return new Justif(document, isStyle, styleCategory);
+			if ( name == "Leading"  )  return new Leading(document, isStyle, styleCategory);
+			if ( name == "Margins"  )  return new Margins(document, isStyle, styleCategory);
+			if ( name == "Spaces"   )  return new Spaces(document, isStyle, styleCategory);
+			if ( name == "Keep"     )  return new Keep(document, isStyle, styleCategory);
+			if ( name == "Font"     )  return new Font(document, isStyle, styleCategory);
+			if ( name == "Xline"    )  return new Xline(document, isStyle, styleCategory);
+			if ( name == "Xscript"  )  return new Xscript(document, isStyle, styleCategory);
+			if ( name == "Box"      )  return new Box(document, isStyle, styleCategory);
+			if ( name == "Language" )  return new Language(document, isStyle, styleCategory);
 			return null;
 		}
 		
@@ -693,13 +699,14 @@ namespace Epsitec.Common.Document.TextPanels
 		protected bool						isStyle;
 		protected double					backgroundIntensity = 1.0;
 		protected Text.TextStyle			textStyle;
-		protected bool						isExtendedSize = false;
-		protected bool						isNormalAndExtended = false;
+		protected bool						isExtendedSize;
+		protected bool						isNormalAndExtended;
 		protected double					extendedZoneWidth = 16;
 		protected StaticText				label;
 		protected StaticText				fixIcon;
 		protected GlyphButton				extendedButton;
-		protected bool						ignoreChanged = false;
-		protected int						tabIndex = 0;
+		protected bool						ignoreChanged;
+		protected int						tabIndex;
+		protected StyleCategory				styleCategory;
 	}
 }

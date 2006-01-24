@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Xline : Abstract
 	{
-		public Xline(Document document, bool isStyle) : base(document, isStyle)
+		public Xline(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
 		{
 			this.label.Text = Res.Strings.TextPanel.Xline.Title;
 

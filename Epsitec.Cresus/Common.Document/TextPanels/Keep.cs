@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Keep : Abstract
 	{
-		public Keep(Document document, bool isStyle) : base(document, isStyle)
+		public Keep(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
 		{
 			this.label.Text = Res.Strings.TextPanel.Keep.Title;
 

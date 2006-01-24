@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Font : Abstract
 	{
-		public Font(Document document, bool isStyle) : base(document, isStyle)
+		public Font(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
 		{
 			this.label.Text = Res.Strings.TextPanel.Font.Title;
 
@@ -358,12 +358,10 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Left = rect.Left;
 				r.Right = rect.Right;
 				this.checkBold.Bounds = r;
-				//?this.checkBold.Visibility = !this.isStyle;
-				this.checkBold.Visibility = true;
+				this.checkBold.Visibility = (this.styleCategory == StyleCategory.Paragraph) ? false : true;
 				r.Offset(0, -18);
 				this.checkItalic.Bounds = r;
-				//?this.checkItalic.Visibility = !this.isStyle;
-				this.checkItalic.Visibility = true;
+				this.checkItalic.Visibility = (this.styleCategory == StyleCategory.Paragraph) ? false : true;
 			}
 			else
 			{

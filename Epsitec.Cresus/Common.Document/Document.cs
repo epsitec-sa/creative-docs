@@ -39,6 +39,8 @@ namespace Epsitec.Common.Document
 
 	public enum StyleCategory
 	{
+		None,
+		
 		Graphic,		// style graphique
 		Paragraph,		// style de paragraphe
 		Character,		// style de caractère

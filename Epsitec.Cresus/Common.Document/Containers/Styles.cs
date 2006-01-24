@@ -777,7 +777,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Wrappers.StyleParagraphWrapper.Attach(style, this.document.TextContext, this.document.Modifier.OpletQueue);
 
 				TextPanels.Abstract.StaticDocument = this.document;
-				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.SelectorName, this.document, true);
+				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.SelectorName, this.document, true, this.category);
 				if ( panel == null )  return;
 
 				this.textPanel = panel;

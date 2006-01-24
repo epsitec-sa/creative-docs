@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Leading : Abstract
 	{
-		public Leading(Document document, bool isStyle) : base(document, isStyle)
+		public Leading(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
 		{
 			this.label.Text = Res.Strings.TextPanel.Leading.Title;
 
