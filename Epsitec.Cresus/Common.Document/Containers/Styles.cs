@@ -1069,6 +1069,7 @@ namespace Epsitec.Common.Document.Containers
 
 				this.document.Modifier.OpletQueueBeginAction("@@DR");
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, -1);
+				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, null);
 				this.document.TextContext.StyleList.DeleteTextStyle(this.document.Modifier.OpletQueue, style);
 				
 				//	TODO: déterminer quelle case mettre en évidence dans la liste

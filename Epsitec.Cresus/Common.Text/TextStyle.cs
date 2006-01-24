@@ -242,10 +242,9 @@ namespace Epsitec.Common.Text
 				//	toutes les propriétés au même niveau, il ne serait pas possible
 				//	d'en regénérer la liste si ces infos n'étaient pas conservées.
 				
-				this.parent_styles    = new TextStyle[parent_styles.Count];
+				this.parent_styles    = TextStyle.FilterNullStyles (parent_styles);
 				this.style_properties = new Property[properties.Count];
-					
-				parent_styles.CopyTo (this.parent_styles, 0);
+				
 				properties.CopyTo (this.style_properties, 0);
 					
 				this.GenerateStyleProperties ();
@@ -265,6 +264,21 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		public static TextStyle[] FilterNullStyles(System.Collections.ICollection styles)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (TextStyle style in styles)
+			{
+				if (style != null)
+				{
+					list.Add (style);
+				}
+			}
+			
+			return (TextStyle[]) list.ToArray (typeof (TextStyle));
+		}
 		
 		public override void UpdateContentsSignature(Epsitec.Common.IO.IChecksum checksum)
 		{
@@ -368,9 +382,33 @@ namespace Epsitec.Common.Text
 				for (int i = 0; i < this.parent_styles.Length; i++)
 				{
 					TextStyle parent = this.parent_styles[i] as TextStyle;
+					string    name   = null;
+					
+					while ((parent != null) && (parent.IsDeleted))
+					{
+						//	Remplace le parent détruit par son propre parent.
+						
+						if (parent.ParentStyles.Length == 0)
+						{
+							parent = null;
+						}
+						else if (parent.ParentStyles.Length == 1)
+						{
+							parent = parent.ParentStyles[0];
+						}
+						else
+						{
+							throw new System.InvalidOperationException (string.Format ("Deleted TextStyle {0} has {1} parents", parent.Name, parent.ParentStyles.Length));
+						}
+					}
+					
+					if (parent != null)
+					{
+						name = StyleList.GetFullName (parent.Name, parent.TextStyleClass);
+					}
 					
 					buffer.Append ("/");
-					buffer.Append (SerializerSupport.SerializeString (StyleList.GetFullName (parent.Name, parent.TextStyleClass)));
+					buffer.Append (SerializerSupport.SerializeString (name));
 				}
 			}
 
@@ -456,7 +494,7 @@ namespace Epsitec.Common.Text
 					int    n         = this.parent_styles.Length;
 					string last_name = this.parent_styles[n-1] as string;
 					
-					if (last_name.StartsWith ("=>"))
+					if ((last_name != null) && (last_name.StartsWith ("=>")))
 					{
 						this.next_style = list.GetTextStyle (last_name.Substring (2));
 						this.next_style.DeserializeFixups (list);
@@ -468,12 +506,17 @@ namespace Epsitec.Common.Text
 					
 					for (int i = 0; i < parent_styles.Length; i++)
 					{
-						parent_styles[i] = list.GetTextStyle (this.parent_styles[i] as string);
+						string full_name = this.parent_styles[i] as string;
 						
-						//	Il faut s'assurer que le style duquel nous dérivons est
-						//	prête à l'emploi :
-						
-						parent_styles[i].DeserializeFixups (list);
+						if (full_name != null)
+						{
+							parent_styles[i] = list.GetTextStyle (full_name);
+							
+							//	Il faut s'assurer que le style duquel nous dérivons est
+							//	prête à l'emploi :
+							
+							parent_styles[i].DeserializeFixups (list);
+						}
 					}
 					
 					Property[] style_properties = this.style_properties;
