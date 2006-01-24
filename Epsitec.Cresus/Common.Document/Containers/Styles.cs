@@ -1538,7 +1538,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected Widget					selectorContainer;
 		protected Widget					selectorToolBar;
-		protected string[]					selectorName = new string[3];
+		protected string[]					selectorName = new string[(int) StyleCategory.Count];
 		protected IconSeparator				separatorStyle;
 		protected IconButton				buttonStyleNew;
 		protected IconButton				buttonStyleDelete;

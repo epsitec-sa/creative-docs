@@ -39,11 +39,17 @@ namespace Epsitec.Common.Document
 
 	public enum StyleCategory
 	{
-		None,
+		//	Attention: les membres de cette énumération sont utilisés comme index
+		//	dans certaines tables; il ne faut donc pas changer leur numérotation.
+		//	cf. Containers.Styles.SelectorName, par exemple.
 		
-		Graphic,		// style graphique
-		Paragraph,		// style de paragraphe
-		Character,		// style de caractère
+		None		= -1,
+		
+		Graphic		= 0,	// style graphique
+		Paragraph	= 1,	// style de paragraphe
+		Character	= 2,	// style de caractère
+		
+		Count				// nombre d'éléments dans l'énumération (3)
 	}
 
 
