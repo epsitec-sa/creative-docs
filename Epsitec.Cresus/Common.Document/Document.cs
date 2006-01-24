@@ -1371,12 +1371,13 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
-			Text.TextStyle style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
+			Text.TextStyle paraStyle = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
+			Text.TextStyle charStyle = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Text);
 			
 			#region Experimental Code
 
 #if true
-			Text.TextStyle[] baseStyles = new Text.TextStyle[] { style };
+			Text.TextStyle[] baseStyles = new Text.TextStyle[] { paraStyle };
 			
 			properties.Clear ();
 			properties.Add(new Text.Properties.FontProperty("Arial Black", Misc.DefaultFontStyle("Arial Black")));
@@ -1388,7 +1389,7 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
 			Text.TextStyle title = this.textContext.StyleList.NewTextStyle("Title", Text.TextStyleClass.Paragraph, properties, baseStyles);
 			
-			this.textContext.StyleList.SetNextStyle(null, title, style);
+			this.textContext.StyleList.SetNextStyle(null, title, paraStyle);
 			
 			this.textContext.StyleList.StyleMap.SetRank(null, title, 1);
 			this.textContext.StyleList.StyleMap.SetCaption(null, title, "Titre");
@@ -1440,9 +1441,12 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.StyleMap.SetCaption(null, l3, "Liste a)/b)/...");
 			#endregion
 			
-			this.textContext.DefaultParagraphStyle = style;
-			this.textContext.StyleList.StyleMap.SetRank(null, style, 0);
-			this.textContext.StyleList.StyleMap.SetCaption(null, style, Res.Strings.Style.Paragraph.Base);
+			this.textContext.DefaultParagraphStyle = paraStyle;
+			this.textContext.DefaultTextStyle = charStyle;
+			this.textContext.StyleList.StyleMap.SetRank(null, paraStyle, 0);
+			this.textContext.StyleList.StyleMap.SetCaption(null, paraStyle, Res.Strings.Style.Paragraph.Base);
+			this.textContext.StyleList.StyleMap.SetRank(null, charStyle, 1000000);
+			this.textContext.StyleList.StyleMap.SetCaption(null, charStyle, "@@DR");
 
 			this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
 		}
