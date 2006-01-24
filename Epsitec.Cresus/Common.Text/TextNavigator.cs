@@ -1678,12 +1678,13 @@ again:
 		
 		public bool HitTest(ITextFrame frame, double cx, double cy, bool skip_invisible, out int position, out int direction)
 		{
-			position  = 0;
+			position  = -1;
 			direction = 0;
 			
 			if (frame != null)
 			{
-				if (this.fitter.HitTestTextFrame (frame, cx, cy, skip_invisible, ref position, ref direction))
+				if ((this.fitter.HitTestTextFrame (frame, cx, cy, skip_invisible, ref position, ref direction)) ||
+					(position >= 0))
 				{
 					//	Vérifie encore si le curseur ne se trouve pas dans un
 					//	fragment de texte automatique (texte auto. d'une liste

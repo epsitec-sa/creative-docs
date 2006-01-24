@@ -283,39 +283,51 @@ namespace Epsitec.Common.Text
 				throw new System.ArgumentException ("Not a valid ITextFrame.", "frame");
 			}
 			
-			Cursors.FitterCursor cursor = this.frame_list.FindFirstCursor (index);
-			Internal.TextTable   text   = this.story.TextTable;
+			bool accept_out_of_line = false;
 			
-			while (cursor != null)
+			for (;;)
 			{
-				if (cursor.ContainsFrameIndex (index) == false)
+				Cursors.FitterCursor cursor = this.frame_list.FindFirstCursor (index);
+				Internal.TextTable   text   = this.story.TextTable;
+				
+				while (cursor != null)
+				{
+					if (cursor.ContainsFrameIndex (index) == false)
+					{
+						break;
+					}
+					
+					if (this.HitTestParagraphInTextFrame (cursor, frame, x, y, skip_invisible, accept_out_of_line, ref position, ref direction))
+					{
+						return true;
+					}
+					
+					//	Trouve le curseur du paragraphe suivant :
+					
+					CursorInfo[] cursors = text.FindNextCursor (cursor.CursorId, Cursors.FitterCursor.Filter);
+					
+					if (cursors.Length == 1)
+					{
+						cursor = text.GetCursorInstance (cursors[0].CursorId) as Cursors.FitterCursor;
+					}
+					else
+					{
+						break;
+					}
+				}
+				
+				if (accept_out_of_line)
 				{
 					break;
 				}
 				
-				if (this.HitTestParagraphInTextFrame (cursor, frame, x, y, skip_invisible, ref position, ref direction))
-				{
-					return true;
-				}
-				
-				//	Trouve le curseur du paragraphe suivant :
-				
-				CursorInfo[] cursors = text.FindNextCursor (cursor.CursorId, Cursors.FitterCursor.Filter);
-				
-				if (cursors.Length == 1)
-				{
-					cursor = text.GetCursorInstance (cursors[0].CursorId) as Cursors.FitterCursor;
-				}
-				else
-				{
-					break;
-				}
+				accept_out_of_line = true;
 			}
 			
 			return false;
 		}
 		
-		public bool HitTestParagraphInTextFrame(ICursor fitter_cursor, ITextFrame frame, double x, double y, bool skip_invisible, ref int position, ref int direction)
+		public bool HitTestParagraphInTextFrame(ICursor fitter_cursor, ITextFrame frame, double x, double y, bool skip_invisible, bool accept_out_of_line, ref int position, ref int direction)
 		{
 			//	Détermine où se trouve le curseur dans le frame spécifié. La recherche
 			//	se base sur les positions des lignes, dans un premier temps, puis sur
@@ -366,6 +378,9 @@ namespace Epsitec.Common.Text
 				double l_y1 = System.Math.Min (elements[i].LineY1 - dy_after, l_yb + elements[i].LineDescender);
 				double l_y2 = System.Math.Max (elements[i].LineY2, l_yb + elements[i].LineAscender);
 				
+				position  = para_start + line_offset + elements[i].Length;
+				direction = 1;
+				
 				if ((y >= l_y1) &&
 					(y <= l_y2))
 				{
@@ -392,6 +407,12 @@ namespace Epsitec.Common.Text
 							
 							position  = para_start + line_offset;
 							direction = -1;
+							
+							if ((accept_out_of_line) &&
+								(elements[i].IsTabulation == false))
+							{
+								return true;
+							}
 							
 							break;
 						}
@@ -442,6 +463,12 @@ namespace Epsitec.Common.Text
 							{
 								position  = para_start + line_offset + last_valid_offset;
 								direction = 1;
+								
+								if ((accept_out_of_line) &&
+									(elements[i].IsTabulation == false))
+								{
+									return true;
+								}
 							}
 						}
 					}
