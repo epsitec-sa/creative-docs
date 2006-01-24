@@ -2346,6 +2346,8 @@ again:
 		
 		private void InsertText(string text)
 		{
+			this.story.SuspendTextChanged ();
+			
 			using (this.story.BeginAction ())
 			{
 				string[] args = text.Split ((char) Unicode.Code.ParagraphSeparator);
@@ -2369,6 +2371,8 @@ again:
 				
 				this.story.ValidateAction ();
 			}
+			
+			this.story.ResumeTextChanged ();
 		}
 		
 		private void DeleteText(ICursor cursor, int length)
