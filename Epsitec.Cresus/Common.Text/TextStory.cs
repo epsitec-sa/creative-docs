@@ -743,6 +743,18 @@ namespace Epsitec.Common.Text
 			
 			this.suspend_text_changed--;
 			
+			if (this.pending_oplet_executed_notifications != null)
+			{
+				OpletEventArgs[] args = (OpletEventArgs[]) this.pending_oplet_executed_notifications.ToArray (typeof (OpletEventArgs));
+				
+				this.pending_oplet_executed_notifications = null;
+				
+				foreach (OpletEventArgs e in args)
+				{
+					this.OnOpletExecuted (e);
+				}
+			}
+			
 			if (this.suspend_text_changed == 0)
 			{
 				if (this.last_text_version != this.text.Version)
@@ -1797,9 +1809,21 @@ namespace Epsitec.Common.Text
 		
 		protected virtual void OnOpletExecuted(OpletEventArgs e)
 		{
-			if (this.OpletExecuted != null)
+			if (this.suspend_text_changed == 0)
 			{
-				this.OpletExecuted (this, e);
+				if (this.OpletExecuted != null)
+				{
+					this.OpletExecuted (this, e);
+				}
+			}
+			else
+			{
+				if (this.pending_oplet_executed_notifications == null)
+				{
+					this.pending_oplet_executed_notifications = new System.Collections.ArrayList ();
+				}
+				
+				this.pending_oplet_executed_notifications.Add (e);
 			}
 		}
 		
@@ -2464,5 +2488,6 @@ namespace Epsitec.Common.Text
 		
 		private int								suspend_text_changed;
 		private long							last_text_version = 0;
+		private System.Collections.ArrayList	pending_oplet_executed_notifications;
 	}
 }

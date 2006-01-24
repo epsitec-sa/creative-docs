@@ -1312,6 +1312,13 @@ again:
 		
 		public void SetParagraphStyles(params TextStyle[] styles)
 		{
+			this.story.SuspendTextChanged ();
+			this.InternalSetParagraphStyles (styles);
+			this.story.ResumeTextChanged ();
+		}
+		
+		private void InternalSetParagraphStyles(TextStyle[] styles)
+		{
 			//	Change les styles du paragraphe attachés à la position courante (ou
 			//	compris dans la sélection).
 			
