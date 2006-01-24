@@ -126,9 +126,9 @@ namespace Epsitec.Common.Document.TextPanels
 						h += 30+25+25+25+40;
 					}
 
-					if ( this.isStyle )
+					if ( this.styleCategory == StyleCategory.Paragraph )
 					{
-						//?h -= 40;
+						h -= 40;
 					}
 				}
 				else	// panneau réduit ?
