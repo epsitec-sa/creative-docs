@@ -218,11 +218,7 @@ namespace Epsitec.Common.Text
 			
 			if (queue != null)
 			{
-				using (queue.BeginAction ())
-				{
-					queue.Insert (new RedefineOplet (this, style));
-					queue.ValidateAction ();
-				}
+				TextStory.InsertOplet (queue, new RedefineOplet (this, style));
 			}
 			
 			this.PreRedefine (style);
@@ -780,7 +776,7 @@ namespace Epsitec.Common.Text
 		#endregion
 		
 		#region RedefineOplet Class
-		private class RedefineOplet : Common.Support.AbstractOplet
+		public class RedefineOplet : Common.Support.AbstractOplet
 		{
 			public RedefineOplet(StyleList stylist, TextStyle style)
 			{
@@ -814,6 +810,18 @@ namespace Epsitec.Common.Text
 				base.Dispose ();
 			}
 			
+			
+			public bool MergeWith(RedefineOplet other)
+			{
+				if ((this.style   == other.style) &&
+					(this.stylist == other.stylist))
+				{
+					return true;
+				}
+				
+				return false;
+			}
+						
 			
 			private StyleList					stylist;
 			private TextStyle					style;

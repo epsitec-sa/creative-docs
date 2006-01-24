@@ -381,10 +381,11 @@ namespace Epsitec.Common.Text
 						
 						this.RenamingOplet (name, ref result);
 						
-						name = result;
+						if (name != result)
+						{
+							this.oplet_queue.ChangeLastActionName (result);
+						}
 					}
-					
-					this.oplet_queue.ChangeLastActionName (name);
 				}
 			}
 		}
@@ -1439,6 +1440,16 @@ namespace Epsitec.Common.Text
 				{
 					StyleMap.ChangeOplet op_1 = oplet as StyleMap.ChangeOplet;
 					StyleMap.ChangeOplet op_2 = last as StyleMap.ChangeOplet;
+					
+					if (op_2.MergeWith (op_1))
+					{
+						return true;
+					}
+				}
+				else if (oplet is StyleList.RedefineOplet)
+				{
+					StyleList.RedefineOplet op_1 = oplet as StyleList.RedefineOplet;
+					StyleList.RedefineOplet op_2 = last as StyleList.RedefineOplet;
 					
 					if (op_2.MergeWith (op_1))
 					{
