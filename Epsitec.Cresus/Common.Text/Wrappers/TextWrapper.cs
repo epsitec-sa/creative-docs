@@ -293,7 +293,8 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		private void SynchronizeInvert()
 		{
-			if (this.Attachment == Attachment.Text)
+			if ((this.Attachment == Attachment.Text) ||
+				(this.AttachedTextStyleClass == TextStyleClass.Text))
 			{
 				if (this.defined_state.IsValueFlagged (State.InvertBoldProperty))
 				{
@@ -629,7 +630,15 @@ namespace Epsitec.Common.Text.Wrappers
 					style_name = buffer.ToString ();
 					style_name = OpenType.FontCollection.GetStyleHash (style_name);
 					
-					state.DefineValue (State.FontStyleProperty, style_name.Length == 0 ? "Regular" : style_name);
+					if ((style_name.Length == 0) &&
+						(this.AttachedTextStyleClass == TextStyleClass.Text))
+					{
+						state.DefineValue (State.FontStyleProperty);
+					}
+					else
+					{
+						state.DefineValue (State.FontStyleProperty, style_name.Length == 0 ? "Regular" : style_name);
+					}
 				}
 			}
 			else
@@ -856,7 +865,8 @@ namespace Epsitec.Common.Text.Wrappers
 				Properties.FontProperty p_bold   = this.ReadMetaProperty (TextWrapper.InvertBold, Properties.WellKnownType.Font) as Properties.FontProperty;
 				Properties.FontProperty p_italic = this.ReadMetaProperty (TextWrapper.InvertItalic, Properties.WellKnownType.Font) as Properties.FontProperty;
 				
-				if (p_bold == null)
+				if ((p_bold == null) ||
+					(p_bold.StyleName.IndexOf ("!Bold") < 0))
 				{
 					state.DefineValue (State.InvertBoldProperty, false);
 				}
@@ -865,7 +875,8 @@ namespace Epsitec.Common.Text.Wrappers
 					state.DefineValue (State.InvertBoldProperty, true);
 				}
 				
-				if (p_italic == null)
+				if ((p_italic == null) ||
+					(p_italic.StyleName.IndexOf ("!Italic") < 0))
 				{
 					state.DefineValue (State.InvertItalicProperty, false);
 				}

@@ -47,6 +47,21 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		public TextStyleClass					AttachedTextStyleClass
+		{
+			get
+			{
+				if (this.style == null)
+				{
+					return TextStyleClass.Invalid;
+				}
+				else
+				{
+					return this.style.TextStyleClass;
+				}
+			}
+		}
+		
 		public TextStyle						AttachedStyle
 		{
 			get

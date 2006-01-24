@@ -241,8 +241,15 @@ namespace Epsitec.Common.Text
 		
 		internal void SaveStyleProperties(System.Collections.ICollection properties)
 		{
-			this.style_properties = new Property[properties.Count];
-			properties.CopyTo (this.style_properties, 0);
+			if (properties != null)
+			{
+				this.style_properties = new Property[properties.Count];
+				properties.CopyTo (this.style_properties, 0);
+			}
+			else
+			{
+				this.style_properties = new Property[0];
+			}
 		}
 		
 		
