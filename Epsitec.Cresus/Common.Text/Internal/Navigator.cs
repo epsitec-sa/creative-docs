@@ -1002,7 +1002,10 @@ namespace Epsitec.Common.Text.Internal
 				return;
 			}
 			
-			if (styles == null) styles = new TextStyle[0];
+			if (styles == null)
+			{
+				styles = new TextStyle[0];
+			}
 			
 			int offset_start = 0;
 			int offset_end   = length;

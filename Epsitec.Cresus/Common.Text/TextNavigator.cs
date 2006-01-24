@@ -54,7 +54,7 @@ namespace Epsitec.Common.Text
 			get
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
-				return this.current_styles.Clone () as TextStyle[];
+				return this.TextContext.AddDefaultTextStyleIfNeeded (this.current_styles.Clone () as TextStyle[]);
 			}
 		}
 		
@@ -1392,6 +1392,11 @@ again:
 			TextStyle[] text_styles = TextStyle.FilterStyles (styles, TextStyleClass.Text);
 			
 			System.Diagnostics.Debug.Assert (text_styles.Length > 0);
+			
+			//	Si besoin, supprime le style de texte par défaut (il n'apporte rien
+			//	dans ce contexte) :
+			
+			text_styles = story.TextContext.FilterDefaultTextStyle (text_styles);
 			
 			if (this.HasSelection)
 			{

@@ -987,6 +987,59 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public TextStyle[] FilterDefaultTextStyle(TextStyle[] styles)
+		{
+			int count = styles.Length;
+			
+			for (int i = 0; i < styles.Length; i++)
+			{
+				if (styles[i] == this.default_text_style)
+				{
+					count--;
+				}
+			}
+			
+			if (count != styles.Length)
+			{
+				TextStyle[] copy = new TextStyle[count];
+				
+				for (int i = 0, j = 0; i < styles.Length && j < count; i++)
+				{
+					if (styles[i] == this.default_text_style)
+					{
+						//	Saute...
+					}
+					else
+					{
+						copy[j++] = styles[i];
+					}
+				}
+				
+				return copy;
+			}
+			
+			return styles;
+		}
+		
+		public TextStyle[] AddDefaultTextStyleIfNeeded(TextStyle[] styles)
+		{
+			for (int i = 0; i < styles.Length; i++)
+			{
+				if ((styles[i] == this.default_text_style) ||
+					(styles[i].TextStyleClass == TextStyleClass.Text))
+				{
+					return styles;
+				}
+			}
+			
+			TextStyle[] copy = new TextStyle[styles.Length+1];
+			styles.CopyTo (copy, 0);
+			copy[styles.Length] = this.default_text_style;
+			
+			return copy;
+		}
+		
+		
 		#region Internal Property & Style Related Methods
 		internal void GetAllProperties(ulong code, out Property[] properties)
 		{
