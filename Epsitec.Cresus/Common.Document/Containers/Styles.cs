@@ -530,7 +530,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( sel != -1 )
 				{
 					Common.Text.TextStyle style = this.TextStyleList.List[sel];
-					enableDelete = !this.document.TextContext.StyleList.IsDefaultParagraphStyle(style);
+					enableDelete = !this.document.TextContext.StyleList.IsDefaultParagraphTextStyle(style) && !this.document.TextContext.StyleList.IsDefaultTextTextStyle(style);
 				}
 
 				this.buttonAggregateUp.Enable = (sel != -1 && sel > 0);

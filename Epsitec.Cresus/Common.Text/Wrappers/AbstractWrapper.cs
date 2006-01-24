@@ -28,7 +28,24 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				if ((this.style != null) &&
 					(this.style_list != null) &&
-					(this.style_list.IsDefaultParagraphStyle (this.style)))
+					(this.style_list.IsDefaultParagraphTextStyle (this.style)))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		
+		public bool								IsAttachedToDefaultTextStyle
+		{
+			get
+			{
+				if ((this.style != null) &&
+					(this.style_list != null) &&
+					(this.style_list.IsDefaultTextTextStyle (this.style)))
 				{
 					return true;
 				}

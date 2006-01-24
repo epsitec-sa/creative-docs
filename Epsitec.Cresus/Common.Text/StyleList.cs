@@ -296,12 +296,12 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public bool IsDefaultParagraphStyle(TextStyle style)
+		public bool IsDefaultParagraphTextStyle(TextStyle style)
 		{
 			return (this.context.DefaultParagraphStyle == style);
 		}
 		
-		public bool IsDefaultTextStyleX(TextStyle style)
+		public bool IsDefaultTextTextStyle(TextStyle style)
 		{
 			return (this.context.DefaultTextStyle == style);
 		}

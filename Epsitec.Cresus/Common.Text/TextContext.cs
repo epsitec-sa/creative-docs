@@ -84,11 +84,11 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.default_style;
+				return this.default_para_style;
 			}
 			set
 			{
-				this.default_style = value;
+				this.default_para_style = value;
 			}
 		}
 		
@@ -96,11 +96,11 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.default_style;
+				return this.default_text_style;
 			}
 			set
 			{
-				this.default_style = value;
+				this.default_text_style = value;
 			}
 		}
 		
@@ -182,9 +182,12 @@ namespace Epsitec.Common.Text
 			this.style_list.Serialize (buffer);
 			buffer.Append ("/");
 			
-			string default_style_name = this.default_style == null ? null : this.default_style.Name;
+			string default_para_style_name = this.default_para_style == null ? null : this.default_para_style.Name;
+			string default_text_style_name = this.default_text_style == null ? null : this.default_text_style.Name;
 			
-			buffer.Append (SerializerSupport.SerializeString (default_style_name));
+			buffer.Append (SerializerSupport.SerializeString (default_para_style_name));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeString (default_text_style_name));
 			buffer.Append ("/");
 			
 			this.tab_list.Serialize (buffer);
@@ -220,12 +223,22 @@ namespace Epsitec.Common.Text
 			
 			if (version >= 2)
 			{
-				string default_style_name = SerializerSupport.DeserializeString (args[offset++]);
+				string default_para_style_name = SerializerSupport.DeserializeString (args[offset++]);
 				
-				System.Diagnostics.Debug.Assert (default_style_name != null);
-				System.Diagnostics.Debug.Assert (default_style_name.Length > 0);
+				System.Diagnostics.Debug.Assert (default_para_style_name != null);
+				System.Diagnostics.Debug.Assert (default_para_style_name.Length > 0);
 				
-				this.default_style = this.style_list[default_style_name, TextStyleClass.Paragraph];
+				this.default_para_style = this.style_list[default_para_style_name, TextStyleClass.Paragraph];
+			}
+			
+			if (version >= 3)
+			{
+				string default_text_style_name = SerializerSupport.DeserializeString (args[offset++]);
+				
+				System.Diagnostics.Debug.Assert (default_text_style_name != null);
+				System.Diagnostics.Debug.Assert (default_text_style_name.Length > 0);
+				
+				this.default_text_style = this.style_list[default_text_style_name, TextStyleClass.Text];
 			}
 			
 			this.tab_list.Deserialize (this, version, args, ref offset);
@@ -1835,7 +1848,8 @@ namespace Epsitec.Common.Text
 		private DefaultMarkers					markers;
 		private System.Collections.Hashtable	conditions;
 		private System.Collections.ArrayList	stories;
-		private TextStyle						default_style;
+		private TextStyle						default_para_style;
+		private TextStyle						default_text_style;
 		
 		private long							unique_id = 1;
 		private object							unique_id_lock = new object ();
@@ -1925,6 +1939,6 @@ namespace Epsitec.Common.Text
 		
 		static System.Collections.Hashtable		font_ids = new System.Collections.Hashtable ();
 		
-		internal const int						SerializationVersion = 2;
+		internal const int						SerializationVersion = 3;
 	}
 }
