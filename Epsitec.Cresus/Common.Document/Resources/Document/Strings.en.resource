@@ -526,10 +526,10 @@
 	<data name="TextPanel.Keep.Title">Keep Options</data>
 	<data name="TextPanel.Keep.Tooltip.KeepNext">Keep with next paragraph</data>
 	<data name="TextPanel.Keep.Tooltip.KeepPrev">Keep with previous paragraph</data>
-	<data name="TextPanel.Keep.Tooltip.NextStyle">@@Style du paragraphe suivant</data>
+	<data name="TextPanel.Keep.Tooltip.NextStyle">Style for Next Paragraph</data>
 	<data name="TextPanel.Keep.Short.KeepStart">S</data>
 	<data name="TextPanel.Keep.Short.KeepEnd">E</data>
-	<data name="TextPanel.Keep.Short.NextStyle">@@Suivant</data>
+	<data name="TextPanel.Keep.Short.NextStyle">Next</data>
 	<data name="TextPanel.Keep.Long.KeepStart">Keep start lines</data>
 	<data name="TextPanel.Keep.Long.KeepEnd">Keep end lines</data>
 	<data name="TextPanel.Keep.Tooltip.KeepStart">Lines to keep together at the start of a paragraph</data>
