@@ -147,6 +147,16 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.NotifyAreaFlow();
 		}
 
+		public void CreateFromRectangle(Drawing.Rectangle rect)
+		{
+			//	Crée un objet temporaire à partir d'un rectangle.
+			this.HandleAdd(rect.BottomLeft,  HandleType.Primary);  // rang = 0
+			this.HandleAdd(rect.TopRight,    HandleType.Primary);  // rang = 1
+			this.HandleAdd(rect.TopLeft,     HandleType.Primary);  // rang = 2
+			this.HandleAdd(rect.BottomRight, HandleType.Primary);  // rang = 3
+			this.UpdateGeometry();
+		}
+
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
 			//	Début de la création d'un objet.
@@ -489,7 +499,7 @@ namespace Epsitec.Common.Document.Objects
 			this.drawingContext = drawingContext;
 
 			this.isActive = true;
-			if ( this.document.Modifier != null )
+			if ( this.document.Modifier != null && this.document.Modifier.ActiveViewer != null )
 			{
 				this.isActive = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext &&
 								 this.document.Modifier.ActiveViewer.IsFocused);
@@ -1093,6 +1103,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Met à jour le pavé en fonction des lignes magnétiques.
 			if ( this.document.Modifier == null )  return;
+			if ( this.document.Modifier.ActiveViewer == null )  return;
 
 			Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
 			frame.GridStep   = this.document.Modifier.ActiveViewer.DrawingContext.TextGridStep;

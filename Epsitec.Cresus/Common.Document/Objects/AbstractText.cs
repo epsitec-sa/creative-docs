@@ -415,6 +415,33 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
+		public void EditInsertText(string text, Text.TextStyle style)
+		{
+			//	Insère un texte pour un échantillon.
+			this.EditInsertText(text, "", "");
+
+			this.EditWrappersAttach();  // attache l'objet aux différents wrappers
+			this.textFlow.ActiveTextBox = this;
+
+			this.MetaNavigator.SelectAll();
+			this.textFlow.MetaNavigator.EndSelection();
+
+			if ( style.TextStyleClass == Text.TextStyleClass.Paragraph )
+			{
+				this.textFlow.TextNavigator.SetParagraphStyles(style);
+			}
+
+			if ( style.TextStyleClass == Text.TextStyleClass.Text )
+			{
+				this.textFlow.TextNavigator.SetTextStyles(style);
+			}
+
+			this.textFlow.TextNavigator.ClearSelection();
+
+			this.document.Wrappers.WrappersDetach();
+			this.textFlow.ActiveTextBox = null;
+		}
+
 		public void EditInsertText(string text, string fontFace, double fontSize)
 		{
 			//	Insère un texte en provenance d'un ancien TextBox ou TextLine.

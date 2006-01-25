@@ -253,6 +253,7 @@ namespace Epsitec.Common.Document.Objects
 		protected void NotifyArea()
 		{
 			//	Notifie un changement de la poignée.
+			if ( this.document == null )  return;
 			if ( this.document.Notifier == null )  return;
 			if ( !this.isVisible )  return;
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);

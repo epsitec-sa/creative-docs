@@ -25,6 +25,9 @@ namespace Epsitec.Common.Document
 
 			this.paragraphWrapper.Active.Changed  += new EventHandler(this.HandleParagraphWrapperChanged);
 			this.paragraphWrapper.Defined.Changed += new EventHandler(this.HandleParagraphWrapperChanged);
+
+			this.styleTextWrapper.Active.Changed      += new EventHandler(this.HandleStyleWrapperChanged);
+			this.styleParagraphWrapper.Active.Changed += new EventHandler(this.HandleStyleWrapperChanged);
 		}
 
 
@@ -135,6 +138,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Met à jour une commande pour les polices rapides.
 			//	Commandes "FontQuick1" à "FontQuick4":
+			if ( this.document.CommandDispatcher == null )  return;
 			string cmd = string.Format("FontQuick{0}", (i+1).ToString(System.Globalization.CultureInfo.InvariantCulture));
 			CommandState cs = this.document.CommandDispatcher.GetCommandState(cmd);
 			if ( cs == null )  return;
@@ -244,6 +248,27 @@ namespace Epsitec.Common.Document
 			this.CommandActiveState("ParagraphIndentPlus",  enabled);
 			this.CommandActiveState("ParagraphIndentMinus", enabled);
 			this.CommandActiveState("ParagraphClear",       enabled);
+		}
+
+		protected void HandleStyleWrapperChanged(object sender)
+		{
+			Text.TextStyle attachedStyle = this.styleParagraphWrapper.AttachedStyle;
+			if ( attachedStyle == null )  return;
+
+			Text.TextStyle[] styles = this.document.TextContext.StyleList.StyleMap.GetSortedStyles();
+			foreach ( Text.TextStyle style in styles )
+			{
+				Text.TextStyle[] parents = style.ParentStyles;
+				foreach ( Text.TextStyle parent in parents )
+				{
+					if ( parent == attachedStyle )
+					{
+						this.document.Notifier.NotifyTextStyleChanged(style);
+					}
+				}
+			}
+
+			this.document.Notifier.NotifyTextStyleChanged(attachedStyle);
 		}
 
 
@@ -823,6 +848,7 @@ namespace Epsitec.Common.Document
 		protected void CommandActiveState(string name, bool enabled)
 		{
 			//	Modifie l'état d'une commande.
+			if ( this.document.CommandDispatcher == null )  return;
 			CommandState cs = this.document.CommandDispatcher.GetCommandState(name);
 			System.Diagnostics.Debug.Assert(cs != null);
 			cs.Enable = enabled;
@@ -831,6 +857,7 @@ namespace Epsitec.Common.Document
 		protected void CommandActiveState(string name, bool enabled, bool state)
 		{
 			//	Modifie l'état d'une commande.
+			if ( this.document.CommandDispatcher == null )  return;
 			CommandState cs = this.document.CommandDispatcher.GetCommandState(name);
 			System.Diagnostics.Debug.Assert(cs != null);
 			cs.Enable = enabled;

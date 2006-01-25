@@ -309,6 +309,8 @@ namespace Epsitec.Common.Document
 		public void UpdateClipboardCommands()
 		{
 			//	Met à jour les commandes du clipboard.
+			if ( this.document.CommandDispatcher == null )  return;
+
 			bool sel = (this.TextNavigator.SelectionCount != 0);
 			CommandDispatcher cd = this.document.CommandDispatcher;
 

@@ -255,7 +255,7 @@ namespace Epsitec.Common.Document.Widgets
 			for ( i=0 ; i<rows ; i++ )
 			{
 				this.FillRow(i);
-				this.UpdateRow(i);
+				this.UpdateRow(i, true);
 			}
 		}
 
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public void UpdateRow(int row)
+		public void UpdateRow(int row, bool updateSelection)
 		{
 			//	Met à jour le contenu d'une ligne de la table.
 			System.Diagnostics.Debug.Assert(this.document != null);
@@ -355,7 +355,10 @@ namespace Epsitec.Common.Document.Widgets
 			sm = this[fix, row].Children[0] as AbstractSample;
 			this.ListSample(sm, rank);
 
-			this.SelectRow(row, selected);
+			if ( updateSelection )
+			{
+				this.SelectRow(row, selected);
+			}
 		}
 
 		public void HiliteRow(int row, bool hilite)

@@ -468,7 +468,7 @@ namespace Epsitec.Common.Document.Containers
 				int row = this.document.Aggregates.IndexOf(agg);
 				if ( row != -1 )
 				{
-					this.graphicList.UpdateRow(row);
+					this.graphicList.UpdateRow(row, false);
 				}
 			}
 		}
@@ -483,12 +483,12 @@ namespace Epsitec.Common.Document.Containers
 				{
 					if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
 					{
-						this.paragraphList.UpdateRow(row);
+						this.paragraphList.UpdateRow(row, false);
 					}
 
 					if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Text )
 					{
-						this.characterList.UpdateRow(row);
+						this.characterList.UpdateRow(row, false);
 					}
 				}
 			}
@@ -701,7 +701,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.name.Text = text;
 
-			if ( this.oneShootSelectName )
+			if ( this.oneShootSelectName )  // vient-on de créer/dupliquer un style ?
 			{
 				this.oneShootSelectName = false;
 				this.name.SelectAll();
@@ -1550,7 +1550,7 @@ namespace Epsitec.Common.Document.Containers
 			int sel = this.graphicList.SelectedRow;
 			if ( sel != -1 )
 			{
-				this.graphicList.UpdateRow(sel);
+				this.graphicList.UpdateRow(sel, true);
 
 				double h = this.panel.DefaultHeight;
 				if ( h != this.panelContainer.Height )
