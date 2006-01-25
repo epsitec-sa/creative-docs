@@ -229,6 +229,9 @@ namespace Epsitec.Common.Text
 		
 		public void DeleteTextStyle(Common.Support.OpletQueue queue, TextStyle style)
 		{
+			//	Supprime un style : le style est vidé, ses parents remplacés par le style
+			//	par défaut correspondant à la classe du style et le style marqué "deleted".
+			
 			System.Diagnostics.Debug.Assert (style != null);
 			System.Diagnostics.Debug.Assert (style.IsDeleted == false);
 			
@@ -236,13 +239,8 @@ namespace Epsitec.Common.Text
 			
 			switch (style.TextStyleClass)
 			{
-				case TextStyleClass.Text:
-					default_style = this.TextContext.DefaultTextStyle;
-					break;
-				
-				case TextStyleClass.Paragraph:
-					default_style = this.TextContext.DefaultParagraphStyle;
-					break;
+				case TextStyleClass.Text:		default_style = this.TextContext.DefaultTextStyle;		break;
+				case TextStyleClass.Paragraph:	default_style = this.TextContext.DefaultParagraphStyle;	break;
 					
 				default:
 					throw new System.NotSupportedException (string.Format ("Cannot delete style {0} of class {1}", style.Name, style.TextStyleClass));

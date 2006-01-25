@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
@@ -209,56 +209,83 @@ namespace Epsitec.Common.Text.Properties
 		
 		private void RefreshStyleCache(StyleList list)
 		{
+			//	La propriété stocke de manière interne une table des TextStyle
+			//	correspondant à la table des noms de styles. Celle-ci ne peut
+			//	pas être construite à la désérialisation (car les styles ne sont
+			//	pas encore disponibles dans le StyleList).
+			
+			//	Profite de l'occasion pour remplacer d'éventuelles références à
+			//	des styles supprimés (qui ne se trouvent plus dans le StyleList)
+			//	par le style par défaut correspondant.
+			
 			int n = (this.style_names == null) ? 0 : this.style_names.Length;
+			
 			bool refresh_names = false;
+			bool replace_done  = false;
+			bool filter_null   = false;
 			
 			this.style_cache = new TextStyle[n];
 			
 			for (int i = 0; i < n; i++)
 			{
-				this.style_cache[i] = list.GetTextStyle (this.style_names[i]);
+				TextStyle style = list.GetTextStyle (this.style_names[i]);
 				
-				if (this.style_cache[i] == null)
+				if (style == null)
 				{
-					if (refresh_names == false)
+					if (!replace_done)
 					{
+						//	Le style a été supprimé et nous n'avons pas encore généré
+						//	de référence au style de paragraphe par défaut :
+						
 						string         name;
 						TextStyleClass text_style_class;
 						
 						StyleList.SplitFullName(this.style_names[i], out name, out text_style_class);
 						
-						switch (text_style_class)
+						if (text_style_class == TextStyleClass.Paragraph)
 						{
-							case TextStyleClass.Paragraph:
-								this.style_cache[i] = list.TextContext.DefaultParagraphStyle;
-								break;
+							//	Ne remplace que le style qui faisait référence à un
+							//	style de paragraphe; les autres styles peuvent simple-
+							//	ment être "oubliés".
 							
-							case TextStyleClass.Text:
-								this.style_cache[i] = list.TextContext.DefaultTextStyle;
-								break;
-							
-							default:
-								break;
+							style        = list.TextContext.DefaultParagraphStyle;
+							replace_done = true;
 						}
 						
 						refresh_names = true;
 					}
 				}
+				
+				if (style == null)
+				{
+					filter_null = true;
+				}
+				
+				this.style_cache[i] = style;
 			}
 			
-			this.style_cache = TextStyle.FilterNullStyles (this.style_cache);
+			if (filter_null)
+			{
+				this.style_cache = TextStyle.FilterNullStyles (this.style_cache);
+			}
 			
 			if (refresh_names)
 			{
+				//	Regénère la table des noms de styles; ceci est nécessaire, car
+				//	nous avons fait le ménage plus haut :
+				
 				this.style_names = new string[this.style_cache.Length];
 				
 				for (int i = 0; i < this.style_cache.Length; i++)
 				{
 					TextStyle style = this.style_cache[i];
-					this.style_names[i] = StyleList.GetFullName (style.Name, style.TextStyleClass);
+					string    name  = StyleList.GetFullName (style.Name, style.TextStyleClass);
+					
+					this.style_names[i] = name;
 				}
 			}
 		}
+		
 		
 		private static bool CompareEqualContents(StylesProperty a, StylesProperty b)
 		{

@@ -265,21 +265,6 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public static TextStyle[] FilterNullStyles(System.Collections.ICollection styles)
-		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			foreach (TextStyle style in styles)
-			{
-				if (style != null)
-				{
-					list.Add (style);
-				}
-			}
-			
-			return (TextStyle[]) list.ToArray (typeof (TextStyle));
-		}
-		
 		public override void UpdateContentsSignature(Epsitec.Common.IO.IChecksum checksum)
 		{
 			//	Ignore le nom dans le calcul de la signature. C'est voulu !
@@ -638,6 +623,23 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		public static TextStyle[] FilterNullStyles(System.Collections.ICollection styles)
+		{
+			//	Supprime les styles nuls (s'il y en a dans la collection).
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (TextStyle style in styles)
+			{
+				if (style != null)
+				{
+					list.Add (style);
+				}
+			}
+			
+			return (TextStyle[]) list.ToArray (typeof (TextStyle));
+		}
 		
 		public static TextStyle[] FilterStyles(System.Collections.ICollection styles, params TextStyleClass[] text_style_classes)
 		{
