@@ -1371,7 +1371,10 @@ again:
 			
 			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 			
-			this.SetParagraphStyles (this.story.GetCursorPosition (this.cursor), paragraph_styles);
+			if (this.HasRealSelection == false)
+			{
+				this.SetParagraphStyles (this.story.GetCursorPosition (this.cursor), paragraph_styles);
+			}
 			
 			System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
 			
