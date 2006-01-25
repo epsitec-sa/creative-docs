@@ -885,6 +885,20 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
+		protected void StylesShiftRanks(int startRank)
+		{
+			//	Décale le rank de tous les styles plus grands ou égaux à startRank.
+			Text.TextStyle[] styles = this.TextStyleList.List;
+			foreach ( Text.TextStyle style in styles )
+			{
+				int rank = this.document.TextContext.StyleList.StyleMap.GetRank(style);
+				if ( rank >= startRank )
+				{
+					this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, rank+1);
+				}
+			}
+		}
+
 		private void HandleCategoryChanged(object sender, MessageEventArgs e)
 		{
 			Button button = sender as Button;
@@ -945,6 +959,7 @@ namespace Epsitec.Common.Document.Containers
 				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(this.document.Modifier.OpletQueue, null, type, properties, parents);
 
 				int rank = this.document.GetSelectedTextStyle(this.category)+1;
+				this.StylesShiftRanks(rank);
 				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, this.document.Modifier.GetNextTextStyleName(this.category));
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, rank);
 				this.document.SetSelectedTextStyle(this.category, rank);
