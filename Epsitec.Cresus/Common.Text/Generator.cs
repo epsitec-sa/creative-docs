@@ -80,16 +80,25 @@ namespace Epsitec.Common.Text
 				throw new System.InvalidOperationException ();
 			}
 			
+			Sequence sequence = this.sequences[0] as Sequence;
+			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			for (int i = 0; i < max_level_count; i++)
+			if (sequence.WellKnownType == SequenceType.Constant)
 			{
-				int      index    = System.Math.Min (i, this.sequences.Count - 1);
-				Sequence sequence = this.sequences[index] as Sequence;
-				
-				sequence.GenerateText (ranks[i], culture, buffer);
+				sequence.GenerateText (max_level_count, culture, buffer);
 			}
-			
+			else
+			{
+				for (int i = 0; i < max_level_count; i++)
+				{
+					int index = System.Math.Min (i, this.sequences.Count - 1);
+					
+					sequence = this.sequences[index] as Sequence;
+					
+					sequence.GenerateText (ranks[i], culture, buffer);
+				}
+			}
 			return buffer.ToString ();
 		}
 		

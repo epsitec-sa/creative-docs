@@ -29,7 +29,9 @@ namespace Epsitec.Common.Text.Internal.Sequences
 		
 		protected override string GetRawText(int rank, System.Globalization.CultureInfo culture)
 		{
-			return this.constant;
+			rank = System.Math.Min (rank, this.constant.Length);
+			
+			return this.constant.Substring (rank-1, 1);
 		}
 		
 		protected override string GetSetupArgument()

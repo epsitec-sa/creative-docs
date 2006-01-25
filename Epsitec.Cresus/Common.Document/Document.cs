@@ -1403,7 +1403,7 @@ namespace Epsitec.Common.Document
 			Text.Generator generator2 = this.textContext.GeneratorList.NewGenerator("num-1");
 			Text.Generator generator3 = this.textContext.GeneratorList.NewGenerator("alpha-1");
 			
-			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant,   "", "", Text.Generator.Casing.Default, "\u25CF"));
+			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant,   "", "", Text.Generator.Casing.Default, "\u25CF\u25CB-"));
 			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric,    "", "."));
 			generator3.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Alphabetic, "", ")", Text.Generator.Casing.Lower));
 			
@@ -1414,16 +1414,16 @@ namespace Epsitec.Common.Document
 			Text.TabList tabs = this.textContext.TabList;
 
 			items1.Generator = generator1;
-			items1.TabItem   = tabs.NewTab("T1-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
-			items1.TabBody   = tabs.NewTab("T1-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.AbsoluteIndent);
+			items1.TabItem   = tabs.NewTab("T1-item", 0.0, Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute ("Em:1"));
+			items1.TabBody   = tabs.NewTab("T1-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute ("Em:2"));
 			
 			items2.Generator = generator2;
-			items2.TabItem   = tabs.NewTab("T2-item", 0.0, Text.Properties.SizeUnits.Points, 1, null, TabPositionMode.Force, TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:2"));
-			items2.TabBody   = tabs.NewTab("T2-body", 0.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:2.5"));
+			items2.TabItem   = tabs.NewTab("T2-item", 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:1.5"));
+			items2.TabBody   = tabs.NewTab("T2-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:2"));
 			
 			items3.Generator = generator3;
-			items3.TabItem   = tabs.NewTab("T3-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.LeftRelative);
-			items3.TabBody   = tabs.NewTab("T3-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.LeftRelativeIndent);
+			items3.TabItem   = tabs.NewTab("T3-item", 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:1.5"));
+			items3.TabBody   = tabs.NewTab("T3-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:2"));
 			
 			Text.Properties.ManagedParagraphProperty itemList1 = new Text.Properties.ManagedParagraphProperty("ItemList", items1.Save());
 			Text.Properties.ManagedParagraphProperty itemList2 = new Text.Properties.ManagedParagraphProperty("ItemList", items2.Save());
