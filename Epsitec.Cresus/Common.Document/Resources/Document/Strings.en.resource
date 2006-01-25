@@ -1292,8 +1292,8 @@
 	<data name="Style.Aggregate.Name">@@Style graphique {0}</data>
 	<data name="Style.Paragraph.Name">@@Style de paragraphe {0}</data>
 	<data name="Style.Character.Name">@@Style de caractère {0}</data>
-	<data name="Style.Paragraph.Base">@@Paragraphe de base</data>
-	<data name="Style.Character.Base">@@Caractère de base</data>
+	<data name="Style.Paragraph.Base">@@Paragraphe normal</data>
+	<data name="Style.Character.Base">@@Caractère normal</data>
 
 	<data name="Question.ManyObjects">Do you really want to transform {0} objects?</data>
 

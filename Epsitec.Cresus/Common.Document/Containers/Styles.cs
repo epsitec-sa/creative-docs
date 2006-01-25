@@ -533,9 +533,9 @@ namespace Epsitec.Common.Document.Containers
 					enableDelete = !this.document.TextContext.StyleList.IsDefaultParagraphTextStyle(style) && !this.document.TextContext.StyleList.IsDefaultTextTextStyle(style);
 				}
 
-				this.buttonAggregateUp.Enable = (sel != -1 && sel > 0);
+				this.buttonAggregateUp.Enable = (sel != -1 && sel > 1);
 				this.buttonAggregateDuplicate.Enable = (sel != -1);
-				this.buttonAggregateDown.Enable = (sel != -1 && sel < total-1);
+				this.buttonAggregateDown.Enable = (sel != -1 && sel != 0 && sel < total-1);
 				this.buttonAggregateDelete.Enable = enableDelete;
 			}
 		}
@@ -578,7 +578,7 @@ namespace Epsitec.Common.Document.Containers
 							string icon = Properties.Abstract.IconText(table[i]);
 							string text = Properties.Abstract.Text(table[i]);
 
-							Widgets.IconMarkButton button = this.UpdateSelectorAdd(width, name, icon, text);
+							Widgets.IconMarkButton button = this.UpdateSelectorAdd(width, true, name, icon, text);
 							button.InnerZoom = zoom;
 						}
 					}
@@ -587,38 +587,42 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == StyleCategory.Paragraph )
 			{
-				if ( this.document.GetSelectedTextStyle(this.category) != -1 )
+				int sel = this.document.GetSelectedTextStyle(this.category);
+				if ( sel != -1 )
 				{
-					this.UpdateSelectorAdd(Styles.selectorSize, "Justif",   "TextJustif",   Res.Strings.TextPanel.Justif.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, "Leading",  "TextLeading",  Res.Strings.TextPanel.Leading.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, "Margins",  "TextMargins",  Res.Strings.TextPanel.Margins.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, "Spaces",   "TextSpaces",   Res.Strings.TextPanel.Spaces.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, "Keep",     "TextKeep",     Res.Strings.TextPanel.Keep.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Justif",   "TextJustif",   Res.Strings.TextPanel.Justif.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Leading",  "TextLeading",  Res.Strings.TextPanel.Leading.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Margins",  "TextMargins",  Res.Strings.TextPanel.Margins.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Spaces",   "TextSpaces",   Res.Strings.TextPanel.Spaces.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Keep",     "TextKeep",     Res.Strings.TextPanel.Keep.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);
 				}
 			}
 
 			if ( this.category == StyleCategory.Character )
 			{
-				if ( this.document.GetSelectedTextStyle(this.category) != -1 )
+				int sel = this.document.GetSelectedTextStyle(this.category);
+				if ( sel != -1 )
 				{
-					this.UpdateSelectorAdd(Styles.selectorSize, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, "Xscript",  "TextXscript",  Res.Strings.TextPanel.Xscript.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+					bool enable = (sel != 0);
+					this.UpdateSelectorAdd(Styles.selectorSize, enable, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, enable, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, enable, "Xscript",  "TextXscript",  Res.Strings.TextPanel.Xscript.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, enable, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);
 				}
 			}
 		}
 
-		protected Widgets.IconMarkButton UpdateSelectorAdd(double width, string name, string icon, string text)
+		protected Widgets.IconMarkButton UpdateSelectorAdd(double width, bool enable, string name, string icon, string text)
 		{
 			Widgets.IconMarkButton button = new Widgets.IconMarkButton(this.selectorToolBar);
 			button.Name = name;
 			button.IconName = Misc.Icon(icon);
 			button.Width = width;
 			button.Height = Styles.selectorSize+8;
+			button.Enable = enable;
 			button.AutoFocus = false;
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
 			button.Dock = DockStyle.Left;

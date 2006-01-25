@@ -1085,7 +1085,7 @@ namespace Epsitec.Common.Document.Objects
 					this.document.VRuler.WrappersAttach();
 				}
 				this.EditWrappersAttach();  // attache l'objet aux différents wrappers
-				this.document.Notifier.NotifyTextChanged();
+				this.document.Notifier.NotifyTextChanged();  // pour mettre à jour le ruban TextStyles
 				
 				this.textFlow.ActiveTextBox = this;
 			}
