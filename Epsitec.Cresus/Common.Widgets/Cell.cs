@@ -91,6 +91,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool						IsFlyOver
+		{
+			get
+			{
+				return this.isFlyOver;
+			}
+			
+			set
+			{
+				if ( this.isFlyOver != value )
+				{
+					this.isFlyOver = value;
+					this.Invalidate();
+				}
+			}
+		}
+		
 		
 		internal void SetArrayRank(AbstractCellArray array, int column, int row)
 		{
@@ -114,6 +131,14 @@ namespace Epsitec.Common.Widgets
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.cellArray.HiliteColor);
 			}
+
+			if ( this.isFlyOver )
+			{
+				Drawing.Color color = adorner.ColorCaption;
+				color.A = 0.2;
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(color);
+			}
 		}
 		
 		
@@ -121,5 +146,6 @@ namespace Epsitec.Common.Widgets
 		protected int					rankColumn;
 		protected int					rankRow;
 		protected bool					isHilite;
+		protected bool					isFlyOver;
 	}
 }

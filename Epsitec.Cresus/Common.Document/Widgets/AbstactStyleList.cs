@@ -22,6 +22,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.DefHeight = 32;
 			this.headerHeight = 16;
+			this.IsFlyOverHilite = true;
 		}
 
 		public Document Document
@@ -179,6 +180,20 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public int FixSelection
+		{
+			//	Sélection initiale fixe (pour un menu).
+			get
+			{
+				return this.fixSelection;
+			}
+
+			set
+			{
+				this.fixSelection = value;
+			}
+		}
+
 		public double FixWidth
 		{
 			//	Largeur fixe pour toutes les colonnes.
@@ -322,7 +337,7 @@ namespace Epsitec.Common.Document.Widgets
 			//	Met à jour le contenu d'une ligne de la table.
 			System.Diagnostics.Debug.Assert(this.document != null);
 			int rank = this.RowToRank(row);
-			bool selected = (rank == this.ListSelected && this.isInitialSelection);
+			bool selected = ((rank == this.ListSelected && this.isInitialSelection) || rank == this.fixSelection);
 			int nc = this.NameColumn;
 			int fix = this.FixColumns;
 			GlyphButton gb;
@@ -463,5 +478,6 @@ namespace Epsitec.Common.Document.Widgets
 		protected bool							isOrderColumn = false;
 		protected bool							isChildrensColumn = true;
 		protected bool							isInitialSelection = true;
+		protected int							fixSelection = -1;
 	}
 }

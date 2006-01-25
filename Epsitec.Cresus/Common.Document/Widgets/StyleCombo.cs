@@ -367,17 +367,20 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.IsComboOpen )  return;
 
 			int count = 0;
+			int sel = -1;
 			Common.Text.TextStyle[] styles = null;
 
 			if ( this.styleCategory == StyleCategory.Graphic )
 			{
 				count = this.document.Aggregates.Count;
+				sel = this.GetSelectedStyle(this.document.Aggregates, this.Text);
 			}
 		
 			if ( this.styleCategory == StyleCategory.Paragraph || this.styleCategory == StyleCategory.Character )
 			{
 				styles = this.document.TextStyles(this.styleCategory);
 				count = styles.Length;
+				sel = this.GetSelectedTextStyle(styles, this.Text);
 			}
 
 			if ( count == 0 )  return;
@@ -406,6 +409,7 @@ namespace Epsitec.Common.Document.Widgets
 				list.IsHiliteColumn = false;
 				list.IsChildrensColumn = false;
 				list.IsInitialSelection = false;
+				list.FixSelection = sel;
 				list.FixWidth = width;
 				list.UpdateContent();
 				this.list = list;
@@ -425,6 +429,7 @@ namespace Epsitec.Common.Document.Widgets
 				list.IsHiliteColumn = false;
 				list.IsChildrensColumn = false;
 				list.IsInitialSelection = false;
+				list.FixSelection = sel;
 				list.FixWidth = width;
 				list.UpdateContent();
 				this.list = list;
@@ -464,7 +469,6 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.list.Bounds = new Rectangle(0, 0, width, h);
 			this.list.Location = new Point(0, 0);
-			this.list.FlyOverChanged += new EventHandler(this.HandleListFlyOverChanged);
 			this.list.FinalSelectionChanged += new EventHandler(this.HandleListSelectionActivated);
 			
 			this.comboWindow = new Window();
@@ -495,7 +499,6 @@ namespace Epsitec.Common.Document.Widgets
 				this.selectedIndex = -1;
 			}
 
-			this.list.FlyOverChanged += new EventHandler(this.HandleListFlyOverChanged);
 			this.list.FinalSelectionChanged -= new EventHandler(this.HandleListSelectionActivated);
 			this.UnregisterFilter();
 			this.list.Dispose();
@@ -604,26 +607,6 @@ namespace Epsitec.Common.Document.Widgets
 			this.OpenCombo();
 		}
 		
-		private void HandleListFlyOverChanged(object sender)
-		{
-			//	L'utilisateur survole la liste.
-			int fly = this.list.FlyOverRow;
-			for ( int r=0 ; r<this.list.Rows ; r++ )
-			{
-				if ( fly == r )  // ligne survolée ?
-				{
-					for ( int c=0 ; c<this.list.Columns ; c++ )
-					{
-						//?this.list.SelectCell(c, r, this.list.UsedCell(r, c));
-					}
-				}
-				else	// autre ligne ?
-				{
-					this.list.SelectRow(r, false);
-				}
-			}
-		}
-
 		private void HandleListSelectionActivated(object sender)
 		{
 			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
@@ -656,6 +639,39 @@ namespace Epsitec.Common.Document.Widgets
 				
 				this.initiallyFocusedWidget = null;
 			}
+		}
+
+
+		protected int GetSelectedStyle(UndoableList aggregates, string currentStyle)
+		{
+			//	Cherche le rang du style graphique actuellement en édition.
+			for ( int i=0 ; i<aggregates.Count ; i++ )
+			{
+				Properties.Aggregate aggregate = aggregates[i] as Properties.Aggregate;
+
+				if ( aggregate.AggregateName == currentStyle )
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		protected int GetSelectedTextStyle(Text.TextStyle[] styles, string currentStyle)
+		{
+			//	Cherche le rang du style de texte actuellement en édition.
+			for ( int i=0 ; i<styles.Length ; i++ )
+			{
+				Text.TextStyle style = styles[i];
+
+				if ( this.document.TextContext.StyleList.StyleMap.GetCaption(style) == currentStyle )
+				{
+					return i;
+				}
+			}
+
+			return -1;
 		}
 		
 		

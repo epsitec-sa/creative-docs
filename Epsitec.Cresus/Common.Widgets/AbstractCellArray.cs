@@ -95,6 +95,12 @@ namespace Epsitec.Common.Widgets
 			get { return this.hiliteColor; }
 			set { this.hiliteColor = value; }
 		}
+
+		public bool							IsFlyOverHilite
+		{
+			get { return this.isFlyOverHilite; }
+			set { this.isFlyOverHilite = value; }
+		}
 		
 
 
@@ -979,6 +985,11 @@ namespace Epsitec.Common.Widgets
 				this.flyOverRow = row;
 				this.flyOverColumn = column;
 			}
+
+			if ( this.isFlyOverHilite )
+			{
+				this.FlyOver(this.flyOverRow, this.flyOverColumn);
+			}
 		}
 
 		public int FlyOverRow
@@ -1193,6 +1204,36 @@ namespace Epsitec.Common.Widgets
 			if ( this.FlyOverChanged != null )  // qq'un écoute ?
 			{
 				this.FlyOverChanged(this);
+			}
+		}
+
+
+		protected void FlyOver(int flyOverRow, int flyOverColumn)
+		{
+			//	Met en évidence la cellule survolée par la souris.
+			for ( int row=0 ; row<this.maxRows ; row++ )
+			{
+				for ( int column=0 ; column<this.maxColumns ; column++ )
+				{
+					bool fly = false;
+
+					if ( row == flyOverRow && column == flyOverColumn )
+					{
+						fly = true;
+					}
+					
+					if ( row == flyOverRow )
+					{
+						if ( (this.styleV & CellArrayStyle.SelectLine) != 0 )  fly = true;
+					}
+					
+					if ( column == flyOverColumn )
+					{
+						if ( (this.styleH & CellArrayStyle.SelectLine) != 0 )  fly = true;
+					}
+					
+					this.array[column, row].IsFlyOver = fly;
+				}
 			}
 		}
 
@@ -1993,6 +2034,7 @@ namespace Epsitec.Common.Widgets
 		protected int							flyOverRow = -1;
 		protected int							flyOverColumn = -1;
 		protected Drawing.Color					hiliteColor = Drawing.Color.Empty;
+		protected bool							isFlyOverHilite = false;
 		
 		protected bool							isDraggingSlider;
 		protected double						savedTotalWidth;
