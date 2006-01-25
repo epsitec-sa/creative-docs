@@ -275,13 +275,13 @@
 
 	<data name="Panel.Abstract.Extend">Expand or Collapse pannel</data>
 
-	<data name="Panel.Style.ParagraphDefinition">@@Définition des styles de paragraphe</data>
-	<data name="Panel.Style.ParagraphChoice">@@Choix d'un style de paragraphe</data>
-	<data name="Panel.Style.CharacterDefinition">@@Définition des styles de caractère</data>
-	<data name="Panel.Style.CharacterChoice">@@Choix d'un style de caractère</data>
-	<data name="Panel.AggregateCategory.Graphic">@@Graphique</data>
-	<data name="Panel.AggregateCategory.Paragraph">@@Paragraphe</data>
-	<data name="Panel.AggregateCategory.Character">@@Caractère</data>
+	<data name="Panel.Style.ParagraphDefinition">Paragraph Style Definition</data>
+	<data name="Panel.Style.ParagraphChoice">Select a Paragraph Style</data>
+	<data name="Panel.Style.CharacterDefinition">Character Style Definition</data>
+	<data name="Panel.Style.CharacterChoice">Select a Character Style</data>
+	<data name="Panel.AggregateCategory.Graphic">Graphic</data>
+	<data name="Panel.AggregateCategory.Paragraph">Paragraph</data>
+	<data name="Panel.AggregateCategory.Character">Character</data>
 	<data name="Panel.AggregateName.Label.Name">Style name</data>
 	<data name="Panel.AggregateName.Tooltip.Name">Style name</data>
 	<data name="Panel.AggregateChildrens.Label.Name">Base styles</data>
@@ -505,7 +505,7 @@
 	<data name="TextPanel.Leading.Tooltip.GridOffset">Baseline Grid Vertical offset</data>
 	<data name="TextPanel.Leading.Tooltip.AlignFirst">Align first line of paragraph on Baseline Grid</data>
 	<data name="TextPanel.Leading.Tooltip.AlignAll">Align full paragraph on Baseline Grid</data>
-	<data name="TextPanel.Leading.None">@@Aucun</data>
+	<data name="TextPanel.Leading.None">None</data>
 
 	<data name="TextPanel.Margins.Title">Padding</data>
 	<data name="TextPanel.Margins.Short.LeftFirst">F</data>
@@ -552,7 +552,7 @@
 	<data name="TextPanel.Font.Tooltip.Features">OpenType features</data>
 	<data name="TextPanel.Font.Tooltip.Size">Font size</data>
 	<data name="TextPanel.Font.Tooltip.Glue">Tracking (space between characters)</data>
-	<data name="Panel.Font.None">@@Aucun</data>
+	<data name="Panel.Font.None">None</data>
 
 	<data name="TextPanel.Xline.Title">Underlines</data>
 	<data name="TextPanel.Xline.Short.Underlined.Thickness">T</data>
@@ -968,8 +968,8 @@
 	<data name="Action.AggregateNewEmpty">New style (empty)</data>
 	<data name="Action.AggregateNew3">New Style (based on line width and colors)</data>
 	<data name="Action.AggregateNewAll">New style (based on all properties)</data>
-	<data name="Action.AggregateNewParagraph">@@Nouveau style de paragraphe</data>
-	<data name="Action.AggregateNewCharacter">@@Nouveau style de caractère</data>
+	<data name="Action.AggregateNewParagraph">New (empty) Paragraph Style</data>
+	<data name="Action.AggregateNewCharacter">New (empty) Character Style</data>
 	<data name="Action.AggregateDuplicate">Make copy of current style</data>
 	<data name="Action.AggregateUp">Move style up in list</data>
 	<data name="Action.AggregateDown">Move style down in list</data>
@@ -1051,7 +1051,7 @@
 	<data name="Action.Infos">Informations...</data>
 	<data name="Action.LabelProperties">Property names</data>
 
-	<data name="Action.TextStylesMain">@@Styles</data>
+	<data name="Action.TextStylesMain">Styles</data>
 	<data name="Action.FontMain">Font</data>
 	<data name="Action.FontFace">Font name</data>
 	<data name="Action.FontStyle">Font style</data>
@@ -1289,11 +1289,11 @@
 	<data name="Layer.PositionName.Back">Bottom</data>
 	<data name="Aggregates.Header.Name">Name</data>
 	<data name="Aggregates.NoneLine">&lt;i&gt;None&lt;/i&gt;</data>
-	<data name="Style.Aggregate.Name">@@Style graphique {0}</data>
-	<data name="Style.Paragraph.Name">@@Style de paragraphe {0}</data>
-	<data name="Style.Character.Name">@@Style de caractère {0}</data>
-	<data name="Style.Paragraph.Base">@@Paragraphe normal</data>
-	<data name="Style.Character.Base">@@Caractère normal</data>
+	<data name="Style.Aggregate.Name">Graphic Style #{0}</data>
+	<data name="Style.Paragraph.Name">Paragraph Style #{0}</data>
+	<data name="Style.Character.Name">Character Style #{0}</data>
+	<data name="Style.Paragraph.Base">Standard Paragraph</data>
+	<data name="Style.Character.Base">Standard Character</data>
 
 	<data name="Question.ManyObjects">Do you really want to transform {0} objects?</data>
 
