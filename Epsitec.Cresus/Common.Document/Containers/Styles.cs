@@ -1067,14 +1067,15 @@ namespace Epsitec.Common.Document.Containers
 
 				Common.Text.TextStyle style = this.TextStyleList.List[sel];
 
-				this.document.Modifier.OpletQueueBeginAction("@@DR");
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateDelete);
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, -1);
 				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, null);
 				this.document.TextContext.StyleList.DeleteTextStyle(this.document.Modifier.OpletQueue, style);
 				
-				//	TODO: déterminer quelle case mettre en évidence dans la liste
-				//	après la destruction
-				
+				if ( sel >= this.TextStyleList.List.Length )
+				{
+					sel = this.TextStyleList.List.Length-1;
+				}
 				this.document.SetSelectedTextStyle(this.category, sel);
 				this.document.Modifier.OpletQueueValidateAction();
 				this.SetDirtyContent();

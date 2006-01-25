@@ -1293,6 +1293,7 @@
 	<data name="Style.Paragraph.Name">Style de paragraphe {0}</data>
 	<data name="Style.Character.Name">Style de caractère {0}</data>
 	<data name="Style.Paragraph.Base">Base</data>
+	<data name="Style.Character.Base">Base</data>
 
 	<data name="Question.ManyObjects">Voulez-vous vraiment transformer {0} objets ?</data>
 	

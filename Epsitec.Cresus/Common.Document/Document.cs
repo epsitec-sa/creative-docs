@@ -1442,11 +1442,12 @@ namespace Epsitec.Common.Document
 			#endregion
 			
 			this.textContext.DefaultParagraphStyle = paraStyle;
-			this.textContext.DefaultTextStyle = charStyle;
 			this.textContext.StyleList.StyleMap.SetRank(null, paraStyle, 0);
 			this.textContext.StyleList.StyleMap.SetCaption(null, paraStyle, Res.Strings.Style.Paragraph.Base);
+
+			this.textContext.DefaultTextStyle = charStyle;
 			this.textContext.StyleList.StyleMap.SetRank(null, charStyle, 0);
-			this.textContext.StyleList.StyleMap.SetCaption(null, charStyle, "@@DR");
+			this.textContext.StyleList.StyleMap.SetCaption(null, charStyle, Res.Strings.Style.Character.Base);
 
 			this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
 		}
