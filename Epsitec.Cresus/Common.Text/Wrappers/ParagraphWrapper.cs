@@ -428,6 +428,26 @@ namespace Epsitec.Common.Text.Wrappers
 				defines++;
 			}
 			
+			if (this.defined_state.IsValueFlagged (State.ManagedParagraphProperty))
+			{
+				changes++;
+			}
+			if ((this.defined_state.IsManagedParagraphDefined) &&
+				(this.defined_state.ManagedParagraph != null))
+			{
+				string   name       = this.defined_state.ManagedParagraph[0] as string;
+				string[] parameters = new string[this.defined_state.ManagedParagraph.Count-1];
+				
+				for (int i = 0; i < parameters.Length; i++)
+				{
+					parameters[i] = this.defined_state.ManagedParagraph[i+1] as string;
+				}
+				
+				list.Add (new Properties.ManagedParagraphProperty (name, parameters));
+				
+				defines++;
+			}
+			
 			if (changes > 0)
 			{
 				if (defines > 0)
@@ -452,6 +472,7 @@ namespace Epsitec.Common.Text.Wrappers
 			this.UpdateMargins (state, active);
 			this.UpdateLeading (state, active);
 			this.UpdateKeep (state, active);
+			this.UpdateManaged (state, active);
 			
 			state.NotifyIfDirty ();
 		}
@@ -782,6 +803,52 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void UpdateManaged(State state, bool active)
+		{
+			Properties.ManagedInfoProperty      managed_info;
+			Properties.ManagedParagraphProperty managed_paragraph;
+			
+			if (active)
+			{
+				managed_info      = this.ReadAccumulatedProperty (Properties.WellKnownType.ManagedInfo) as Properties.ManagedInfoProperty;
+				managed_paragraph = this.ReadAccumulatedProperty (Properties.WellKnownType.ManagedParagraph) as Properties.ManagedParagraphProperty;
+			}
+			else
+			{
+				managed_info      = this.ReadMetaProperty (ParagraphWrapper.Managed, Properties.WellKnownType.ManagedInfo) as Properties.ManagedInfoProperty;
+				managed_paragraph = this.ReadMetaProperty (ParagraphWrapper.Managed, Properties.WellKnownType.ManagedParagraph) as Properties.ManagedParagraphProperty;
+			}
+			
+			this.UpdateManaged (state, managed_info, managed_paragraph);
+		}
+		
+		private void UpdateManaged(State state, Properties.ManagedInfoProperty managed_info, Properties.ManagedParagraphProperty managed_paragraph)
+		{
+			if (managed_info != null)
+			{
+				string info = managed_info.ManagerInfo;
+				state.DefineValue (State.ItemListInfoProperty, info);
+			}
+			else
+			{
+				state.DefineValue (State.ItemListInfoProperty);
+			}
+			
+			if (managed_paragraph != null)
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				list.Add (managed_paragraph.ManagerName);
+				list.AddRange (managed_paragraph.ManagerParameters);
+				
+				state.DefineValue (State.ManagedParagraphProperty, list);
+			}
+			else
+			{
+				state.DefineValue (State.ManagedParagraphProperty);
+			}
+		}
+		
 		
 		
 		public class State : AbstractState
@@ -1070,6 +1137,18 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public System.Collections.ArrayList		ManagedParagraph
+			{
+				get
+				{
+					return (System.Collections.ArrayList) this.GetValue (State.ManagedParagraphProperty);
+				}
+				set
+				{
+					this.SetValue (State.ManagedParagraphProperty, value);
+				}
+			}
+			
 			
 			public bool								IsJustificationModeDefined
 			{
@@ -1258,6 +1337,14 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
+			public bool								IsManagedParagraphDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.ManagedParagraphProperty);
+				}
+			}
+			
 			
 			public void ClearJustificationMode()
 			{
@@ -1377,6 +1464,11 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.ItemListInfoProperty);
 			}
 			
+			public void ClearManagedParagraph()
+			{
+				this.ClearValue (State.ManagedParagraphProperty);
+			}
+			
 			
 			#region State Properties
 			public static readonly StateProperty	JustificationModeProperty = new StateProperty (typeof (State), "JustificationMode", JustificationMode.Unknown);
@@ -1400,6 +1492,7 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	KeepEndLinesProperty = new StateProperty (typeof (State), "KeepEndLines", 0);
 			public static readonly StateProperty	ParagraphStartModeProperty = new StateProperty (typeof (State), "ParagraphStartMode", Properties.ParagraphStartMode.Undefined);
 			public static readonly StateProperty	ItemListInfoProperty = new StateProperty (typeof (State), "ItemListInfo", null);
+			public static readonly StateProperty	ManagedParagraphProperty = new StateProperty (typeof (State), "ManagedParagraph", null);
 			public static readonly StateProperty	KeepWithNextParagraphProperty = new StateProperty (typeof (State), "KeepWithNextParagraph", false);
 			public static readonly StateProperty	KeepWithPreviousParagraphProperty = new StateProperty (typeof (State), "KeepWithPreviousParagraph", false);
 			#endregion

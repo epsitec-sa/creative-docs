@@ -617,15 +617,20 @@ namespace Epsitec.Common.Text
 					story.NewCursor (cursor);
 					story.DisableOpletQueue ();
 					
+					int pos = 0;
+					
+					this.is_patcher_on_break = true;
+					
 					try
 					{
 						while (length > 0)
 						{
 							int count = System.Math.Min (length, buffer.Length);
 							
+							story.SetCursorPosition (cursor, pos);
 							story.ReadText (cursor, count, buffer);
 							
-							if (this.UpdateTextBuffer (story, patcher, buffer, count))
+							if (this.UpdateTextBuffer (story, patcher, buffer, pos, count))
 							{
 								if (count == buffer.Length)
 								{
@@ -640,8 +645,7 @@ namespace Epsitec.Common.Text
 								update = true;
 							}
 							
-							story.MoveCursor (cursor, count);
-							
+							pos    += count;
 							length -= count;
 						}
 					}
@@ -669,7 +673,7 @@ namespace Epsitec.Common.Text
 			return dirty_stories.Count > 0;
 		}
 		
-		private bool UpdateTextBuffer(TextStory story, Patcher patcher, ulong[] buffer, int length)
+		private bool UpdateTextBuffer(TextStory story, Patcher patcher, ulong[] buffer, int abs_pos, int length)
 		{
 			bool update = false;
 			
@@ -687,7 +691,7 @@ namespace Epsitec.Common.Text
 				
 				if (code != last)
 				{
-					update |= this.UpdateTextRun (story, patcher, buffer, last, i-num, num);
+					update |= this.UpdateTextRun (story, patcher, buffer, last, abs_pos, i-num, num);
 					
 					num  = 1;
 					last = code;
@@ -698,18 +702,19 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			update |= this.UpdateTextRun (story, patcher, buffer, last, length-num, num);
+			update |= this.UpdateTextRun (story, patcher, buffer, last, abs_pos, length-num, num);
 			
 			return update;
 		}
 		
-		private bool UpdateTextRun(TextStory story, Patcher patcher, ulong[] buffer, ulong code, int pos, int length)
+		private bool UpdateTextRun(TextStory story, Patcher patcher, ulong[] buffer, ulong code, int abs_pos, int pos, int length)
 		{
 			//	La tranche définie par 'pos' et 'length' est définie avec les
 			//	mêmes propriétés. On peut donc procéder au même remplacement
 			//	partout :
 			
 			ulong replacement;
+			ManagedParagraphPropertyInfo mppi = patcher.FingManagedParagraphPropertyInfo (code);
 			
 			if (patcher.FindReplacement (code, out replacement) == false)
 			{
@@ -745,6 +750,28 @@ namespace Epsitec.Common.Text
 				}
 				
 				patcher.DefineReplacement (code, replacement);
+				
+				if (replacement != code)
+				{
+					//	Si les propriétés sont remplacées, regarde encore s'il y a un
+					//	changement de "manged paragraph" qui s'en suit :
+					
+					Properties.ManagedParagraphProperty mpp1;
+					Properties.ManagedParagraphProperty mpp2;
+					
+					this.context.GetManagedParagraph (code, out mpp1);
+					this.context.GetManagedParagraph (replacement, out mpp2);
+					
+					if (Properties.ManagedParagraphProperty.CompareEqualContents (mpp1, mpp2) == false)
+					{
+						IParagraphManager pm1 = (mpp1 == null) ? null : this.context.GetParagraphManager (code);
+						IParagraphManager pm2 = (mpp2 == null) ? null : this.context.GetParagraphManager (replacement);
+						
+						mppi = new ManagedParagraphPropertyInfo (mpp1, pm1, mpp2, pm2);
+						
+						patcher.DefineManagedParagraphPropertyInfo (code, mppi);
+					}
+				}
 			}
 			
 			int end = pos + length;
@@ -763,13 +790,27 @@ namespace Epsitec.Common.Text
 			{
 				for (int i = pos; i < end; i++)
 				{
+					if (this.is_patcher_on_break)
+					{
+						System.Diagnostics.Debug.WriteLine ("New paragraph at " + (abs_pos+pos));
+						
+						if (mppi != null)
+						{
+							System.Diagnostics.Debug.WriteLine (string.Format ("-- Change from {0} to {1}", mppi.Mpp1, mppi.Mpp2));
+						}
+					}
+					
 					buffer[i] ^= replacement;
+					
+					this.is_patcher_on_break = Internal.Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (buffer[i]));
 				}
 				
 				return true;
 			}
 			else
 			{
+				this.is_patcher_on_break = Internal.Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (buffer[end-1]));
+				
 				return false;
 			}
 		}
@@ -816,6 +857,7 @@ namespace Epsitec.Common.Text
 			public Patcher()
 			{
 				this.hash = new System.Collections.Hashtable ();
+				this.mppi = new System.Collections.Hashtable ();
 			}
 			
 			
@@ -835,13 +877,75 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			public ManagedParagraphPropertyInfo FingManagedParagraphPropertyInfo(ulong code)
+			{
+				return this.mppi[code] as ManagedParagraphPropertyInfo;
+			}
+			
 			public void DefineReplacement(ulong code, ulong replacement)
 			{
 				this.hash[code] = replacement;
 			}
 			
+			public void DefineManagedParagraphPropertyInfo(ulong code, ManagedParagraphPropertyInfo mppi)
+			{
+				this.mppi[code] = mppi;
+			}
+			
 			
 			System.Collections.Hashtable		hash;
+			System.Collections.Hashtable		mppi;
+		}
+		#endregion
+		
+		#region ManagedParagraphPropertyInfo Class
+		private class ManagedParagraphPropertyInfo
+		{
+			public ManagedParagraphPropertyInfo(Properties.ManagedParagraphProperty mpp1, IParagraphManager pm1, Properties.ManagedParagraphProperty mpp2, IParagraphManager pm2)
+			{
+				this.mpp1 = mpp1;
+				this.pm1  = pm1;
+				this.mpp2 = mpp2;
+				this.pm2  = pm2;
+			}
+			
+			public Properties.ManagedParagraphProperty Mpp1
+			{
+				get
+				{
+					return this.mpp1;
+				}
+			}
+			
+			public Properties.ManagedParagraphProperty Mpp2
+			{
+				get
+				{
+					return this.mpp2;
+				}
+			}
+			
+			public IParagraphManager			 Pm1
+			{
+				get
+				{
+					return this.pm1;
+				}
+			}
+			
+			public IParagraphManager			 Pm2
+			{
+				get
+				{
+					return this.pm2;
+				}
+			}
+			
+			
+			Properties.ManagedParagraphProperty	mpp1;
+			IParagraphManager					pm1;
+			Properties.ManagedParagraphProperty mpp2;
+			IParagraphManager					pm2;
 		}
 		#endregion
 		
@@ -1051,5 +1155,7 @@ namespace Epsitec.Common.Text
 		private object							unique_id_lock = new object ();
 		private StyleVersion					version = new StyleVersion ();
 		private long							version_of_last_update;
+		
+		private bool							is_patcher_on_break;
 	}
 }
