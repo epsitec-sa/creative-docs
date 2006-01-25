@@ -83,20 +83,52 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateChildrensToolBar();
 
 			//	Enfants de l'agrégat.
-			this.childrens = new Widgets.AggregateList();
-			this.childrens.Document = this.document;
-			this.childrens.HScroller = true;
-			this.childrens.VScroller = true;
-			this.childrens.IsHiliteColumn = false;
-			this.childrens.IsOrderColumn = true;
-			this.childrens.IsChildrensColumn = false;
-			this.childrens.SetParent(this.bottomPage);
-			this.childrens.Height = 103;
-			this.childrens.Dock = DockStyle.Top;
-			this.childrens.DockMargins = new Margins(0, 0, 0, 0);
-			this.childrens.FinalSelectionChanged += new EventHandler(this.HandleAggregatesChildrensSelectionChanged);
-			this.childrens.TabIndex = 96;
-			this.childrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.childrensGraphicList = new Widgets.AggregateList();
+			this.childrensGraphicList.Document = this.document;
+			this.childrensGraphicList.HScroller = true;
+			this.childrensGraphicList.VScroller = true;
+			this.childrensGraphicList.IsHiliteColumn = false;
+			this.childrensGraphicList.IsOrderColumn = true;
+			this.childrensGraphicList.IsChildrensColumn = false;
+			this.childrensGraphicList.SetParent(this.bottomPage);
+			this.childrensGraphicList.Height = 103;
+			this.childrensGraphicList.Dock = DockStyle.Top;
+			this.childrensGraphicList.DockMargins = new Margins(0, 0, 0, 0);
+			this.childrensGraphicList.FinalSelectionChanged += new EventHandler(this.HandleAggregatesChildrensSelectionChanged);
+			this.childrensGraphicList.TabIndex = 96;
+			this.childrensGraphicList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.childrensParagraphList = new Widgets.TextStylesList();
+			this.childrensParagraphList.Document = this.document;
+			this.childrensParagraphList.Category = StyleCategory.Paragraph;
+			this.childrensParagraphList.HScroller = true;
+			this.childrensParagraphList.VScroller = true;
+			this.childrensParagraphList.IsHiliteColumn = false;
+			this.childrensParagraphList.IsOrderColumn = true;
+			this.childrensParagraphList.IsChildrensColumn = false;
+			this.childrensParagraphList.SetParent(this.bottomPage);
+			this.childrensParagraphList.Height = 103;
+			this.childrensParagraphList.Dock = DockStyle.Top;
+			this.childrensParagraphList.DockMargins = new Margins(0, 0, 0, 0);
+			this.childrensParagraphList.FinalSelectionChanged += new EventHandler(this.HandleAggregatesChildrensSelectionChanged);
+			this.childrensParagraphList.TabIndex = 96;
+			this.childrensParagraphList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.childrensCharacterList = new Widgets.TextStylesList();
+			this.childrensCharacterList.Document = this.document;
+			this.childrensCharacterList.Category = StyleCategory.Paragraph;
+			this.childrensCharacterList.HScroller = true;
+			this.childrensCharacterList.VScroller = true;
+			this.childrensCharacterList.IsHiliteColumn = false;
+			this.childrensCharacterList.IsOrderColumn = true;
+			this.childrensCharacterList.IsChildrensColumn = false;
+			this.childrensCharacterList.SetParent(this.bottomPage);
+			this.childrensCharacterList.Height = 103;
+			this.childrensCharacterList.Dock = DockStyle.Top;
+			this.childrensCharacterList.DockMargins = new Margins(0, 0, 0, 0);
+			this.childrensCharacterList.FinalSelectionChanged += new EventHandler(this.HandleAggregatesChildrensSelectionChanged);
+			this.childrensCharacterList.TabIndex = 96;
+			this.childrensCharacterList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Sélectionneur.
 			this.CreateSelectorToolBar();
@@ -665,8 +697,10 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Met à jour les panneaux des enfants selon le mode réduit/étendu.
 			this.buttonChildrensExtend.GlyphShape = this.isChildrensExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-			this.childrensToolBar.Visibility = (this.isChildrensExtended);
-			this.childrens.Visibility = (this.isChildrensExtended);
+			this.childrensToolBar.Visibility = this.isChildrensExtended;
+			this.childrensGraphicList.Visibility = (this.isChildrensExtended && this.category == StyleCategory.Graphic);
+			this.childrensParagraphList.Visibility = (this.isChildrensExtended && this.category == StyleCategory.Paragraph);
+			this.childrensCharacterList.Visibility = (this.isChildrensExtended && this.category == StyleCategory.Character);
 		}
 
 		protected void UpdateChildrensToolBar()
@@ -675,8 +709,8 @@ namespace Epsitec.Common.Document.Containers
 			if ( this.category == StyleCategory.Graphic )
 			{
 				int aggSel = this.graphicList.SelectedRow;
-				int total = this.childrens.Rows;
-				int sel = this.childrens.SelectedRow;
+				int total = this.childrensGraphicList.Rows;
+				int sel = this.childrensGraphicList.SelectedRow;
 
 				this.buttonChildrensNew.Enable = (aggSel != -1);
 				this.buttonChildrensUp.Enable = (sel != -1 && sel > 0);
@@ -684,12 +718,16 @@ namespace Epsitec.Common.Document.Containers
 				this.buttonChildrensDelete.Enable = (sel != -1);
 			}
 
-			if ( this.category == StyleCategory.Paragraph )
+			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
 			{
-			}
+				int styleSel = this.TextStyleList.SelectedRow;
+				int total = this.TextChildrensList.Rows;
+				int sel = this.TextChildrensList.SelectedRow;
 
-			if ( this.category == StyleCategory.Character )
-			{
+				this.buttonChildrensNew.Enable = (styleSel != -1);
+				this.buttonChildrensUp.Enable = (sel != -1 && sel > 0);
+				this.buttonChildrensDown.Enable = (sel != -1 && sel < total-1);
+				this.buttonChildrensDelete.Enable = (sel != -1);
 			}
 		}
 
@@ -702,23 +740,33 @@ namespace Epsitec.Common.Document.Containers
 
 				if ( agg == null )
 				{
-					this.childrens.List = null;
+					this.childrensGraphicList.List = null;
 				}
 				else
 				{
-					this.childrens.List = agg.Childrens;
-					this.childrens.SelectRow(agg.Childrens.Selected, true);
+					this.childrensGraphicList.List = agg.Childrens;
+					this.childrensGraphicList.SelectRow(agg.Childrens.Selected, true);
 				}
 
-				this.childrens.UpdateContent();
+				this.childrensGraphicList.UpdateContent();
 			}
 
-			if ( this.category == StyleCategory.Paragraph )
+			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
 			{
-			}
+				int sel = this.document.GetSelectedTextStyle(this.category);
 
-			if ( this.category == StyleCategory.Character )
-			{
+				if ( sel == -1 )
+				{
+					this.TextChildrensList.List = null;
+				}
+				else
+				{
+					Common.Text.TextStyle style = this.TextStyleList.List[sel];
+					this.TextChildrensList.List = style.ParentStyles;
+					//?this.TextChildrensList.SelectRow(0, true);
+				}
+
+				this.TextChildrensList.UpdateContent();
 			}
 		}
 
@@ -885,6 +933,7 @@ namespace Epsitec.Common.Document.Containers
 					this.category = value;
 					this.UpdateCategory();
 					this.UpdatePanel();
+					this.UpdateChildrensExtend();
 				}
 			}
 		}
@@ -1244,29 +1293,50 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleButtonChildrensUp(object sender, MessageEventArgs e)
 		{
 			//	Enfant en haut.
-			int sel = this.childrens.SelectedRow;
-			if ( sel == -1 )  return;
-			Properties.Aggregate agg = this.GetAggregate();
-			this.document.Modifier.AggregateChildrensSwap(agg, sel, sel-1);
+			if ( this.category == StyleCategory.Graphic )
+			{
+				int sel = this.childrensGraphicList.SelectedRow;
+				if ( sel == -1 )  return;
+				Properties.Aggregate agg = this.GetAggregate();
+				this.document.Modifier.AggregateChildrensSwap(agg, sel, sel-1);
+			}
+
+			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
+			{
+			}
 		}
 
 		private void HandleButtonChildrensDown(object sender, MessageEventArgs e)
 		{
 			//	Enfant en bas.
-			int sel = this.childrens.SelectedRow;
-			if ( sel == -1 )  return;
-			Properties.Aggregate agg = this.GetAggregate();
-			this.document.Modifier.AggregateChildrensSwap(agg, sel, sel+1);
+			if ( this.category == StyleCategory.Graphic )
+			{
+				int sel = this.childrensGraphicList.SelectedRow;
+				if ( sel == -1 )  return;
+				Properties.Aggregate agg = this.GetAggregate();
+				this.document.Modifier.AggregateChildrensSwap(agg, sel, sel+1);
+			}
+
+			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
+			{
+			}
 		}
 
 		private void HandleButtonChildrensDelete(object sender, MessageEventArgs e)
 		{
 			//	Supprime l'enfant.
-			int sel = this.childrens.SelectedRow;
-			if ( sel == -1 )  return;
-			Properties.Aggregate agg = this.GetAggregate();
-			Properties.Aggregate delAgg = agg.Childrens[sel] as Properties.Aggregate;
-			this.document.Modifier.AggregateChildrensDelete(agg, delAgg);
+			if ( this.category == StyleCategory.Graphic )
+			{
+				int sel = this.childrensGraphicList.SelectedRow;
+				if ( sel == -1 )  return;
+				Properties.Aggregate agg = this.GetAggregate();
+				Properties.Aggregate delAgg = agg.Childrens[sel] as Properties.Aggregate;
+				this.document.Modifier.AggregateChildrensDelete(agg, delAgg);
+			}
+
+			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
+			{
+			}
 		}
 
 		private void HandleButtonChildrensExtend(object sender, MessageEventArgs e)
@@ -1280,12 +1350,20 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleAggregatesChildrensSelectionChanged(object sender)
 		{
 			//	Sélection changée dans la liste des enfants.
-			Properties.Aggregate agg = this.GetAggregate();
-			this.document.Modifier.OpletQueueEnable = false;
-			agg.Childrens.Selected = this.childrens.SelectedRow;
-			this.document.Modifier.OpletQueueEnable = true;
+			if ( this.category == StyleCategory.Graphic )
+			{
+				Properties.Aggregate agg = this.GetAggregate();
+				this.document.Modifier.OpletQueueEnable = false;
+				agg.Childrens.Selected = this.childrensGraphicList.SelectedRow;
+				this.document.Modifier.OpletQueueEnable = true;
 
-			this.UpdateChildrensToolBar();
+				this.UpdateChildrensToolBar();
+			}
+
+			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
+			{
+				this.UpdateChildrensToolBar();
+			}
 		}
 
 
@@ -1492,30 +1570,57 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Construit le menu pour choisir un enfant à ajouter.
 			VMenu menu = new VMenu();
-			Properties.Aggregate currentAgg = this.GetAggregate();
 			int used = 0;
-			for ( int i=0 ; i<this.document.Aggregates.Count ; i++ )
-			{
-				Properties.Aggregate agg = this.document.Aggregates[i] as Properties.Aggregate;
-				if ( agg == currentAgg )  continue;
-				if ( currentAgg.Childrens.Contains(agg) )  continue;
 
-				string line = agg.AggregateName;
-				MenuItem item = new MenuItem("ChildrensNew", "", line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
-				menu.Items.Add(item);
-				used ++;
+			if ( this.category == StyleCategory.Graphic )
+			{
+				Properties.Aggregate currentAgg = this.GetAggregate();
+				for ( int i=0 ; i<this.document.Aggregates.Count ; i++ )
+				{
+					Properties.Aggregate agg = this.document.Aggregates[i] as Properties.Aggregate;
+					if ( agg == currentAgg )  continue;
+					if ( currentAgg.Childrens.Contains(agg) )  continue;
+
+					string line = agg.AggregateName;
+					MenuItem item = new MenuItem("ChildrensNew", "", line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
+					menu.Items.Add(item);
+					used ++;
+				}
 			}
+
+			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
+			{
+				int sel = this.document.GetSelectedTextStyle(this.category);
+				if ( sel == -1 )  return null;
+
+				Text.TextStyle[] styles = this.TextStyleList.List;
+				Text.TextStyle currentStyle = styles[sel];
+
+				for ( int i=0 ; i<styles.Length ; i++ )
+				{
+					Text.TextStyle style = styles[i];
+					if ( style == currentStyle )  continue;
+					if ( Styles.ContainsStyle(currentStyle.ParentStyles, style) )  continue;
+
+					string line = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+					MenuItem item = new MenuItem("ChildrensNew", "", line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
+					menu.Items.Add(item);
+					used ++;
+				}
+			}
+
 			if ( used == 0 )  return null;
 			menu.AdjustSize();
 			return menu;
 		}
 
-		protected bool MenuChildrensExist(UndoableList styles, Properties.Type type)
+		protected static bool ContainsStyle(Text.TextStyle[] styles, Text.TextStyle search)
 		{
-			foreach ( Properties.Abstract property in styles )
+			foreach ( Text.TextStyle style in styles )
 			{
-				if ( property.Type == type )  return true;
+				if ( style == search )  return true;
 			}
 			return false;
 		}
@@ -1524,9 +1629,40 @@ namespace Epsitec.Common.Document.Containers
 		{
 			MenuItem item = sender as MenuItem;
 			int i = System.Int32.Parse(item.Name, System.Globalization.CultureInfo.InvariantCulture);
-			Properties.Aggregate newAgg = this.document.Aggregates[i] as Properties.Aggregate;
-			Properties.Aggregate agg = this.GetAggregate();
-			this.document.Modifier.AggregateChildrensNew(agg, newAgg);
+
+			if ( this.category == StyleCategory.Graphic )
+			{
+				Properties.Aggregate newAgg = this.document.Aggregates[i] as Properties.Aggregate;
+				Properties.Aggregate agg = this.GetAggregate();
+				this.document.Modifier.AggregateChildrensNew(agg, newAgg);
+			}
+
+			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
+			{
+				int sel = this.document.GetSelectedTextStyle(this.category);
+				Text.TextStyle[] styles = this.TextStyleList.List;
+				Text.TextStyle currentStyle = styles[sel];
+				Text.TextStyle newStyle = styles[i];
+
+				System.Collections.ArrayList parents = new System.Collections.ArrayList();
+				Text.TextStyle[] currentParents = currentStyle.ParentStyles;
+				foreach ( Text.TextStyle style in currentParents )
+				{
+					parents.Add(style);
+				}
+
+				int parentSel = this.TextChildrensList.SelectedRow;
+				if ( parentSel == -1 )
+				{
+					parentSel = this.TextChildrensList.List.Length;
+				}
+				parents.Insert(parentSel, newStyle);
+
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange);
+				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
+				this.document.Modifier.OpletQueueValidateAction();
+				this.document.IsDirtySerialize = true;
+			}
 		}
 		#endregion
 
@@ -1550,6 +1686,17 @@ namespace Epsitec.Common.Document.Containers
 				if ( this.category == StyleCategory.Paragraph )  return this.paragraphList;
 				if ( this.category == StyleCategory.Character )  return this.characterList;
 				throw new System.ArgumentException("TextStyleList(" + this.category.ToString() + ")");
+			}
+		}
+
+		protected Widgets.TextStylesList TextChildrensList
+		{
+			//	Donne le widget pour la liste des enfants selon la catégorie actuelle.
+			get
+			{
+				if ( this.category == StyleCategory.Paragraph )  return this.childrensParagraphList;
+				if ( this.category == StyleCategory.Character )  return this.childrensCharacterList;
+				throw new System.ArgumentException("TextChildrensList(" + this.category.ToString() + ")");
 			}
 		}
 
@@ -1615,7 +1762,10 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton				buttonChildrensDelete;
 		protected GlyphButton				buttonChildrensExtend;
 
-		protected Widgets.AggregateList		childrens;
+		protected Widgets.AggregateList		childrensGraphicList;
+		protected Widgets.TextStylesList	childrensParagraphList;
+		protected Widgets.TextStylesList	childrensCharacterList;
+
 		protected Widget					panelContainer;
 		protected Panels.Abstract			panel;
 		protected TextPanels.Abstract		textPanel;
