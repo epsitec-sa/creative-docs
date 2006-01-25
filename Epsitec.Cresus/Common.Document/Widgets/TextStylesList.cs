@@ -100,6 +100,15 @@ namespace Epsitec.Common.Document.Widgets
 		protected override string ListChildrensCount(int rank)
 		{
 			//	Nombre d'enfants d'une ligne de la liste.
+			if ( rank != -1 && this.list != null )
+			{
+				Text.TextStyle style = this.list[rank];
+				int count = style.ParentStyles.Length;
+				if ( count != 0 )
+				{
+					return count.ToString();
+				}
+			}
 			return "";
 		}
 
