@@ -213,6 +213,7 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.TextWrapper.DefineOperationName("FontColor", Res.Strings.Action.FontColor);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		
@@ -530,6 +531,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.TextWrapper.Defined.FontFeatures = newFeatures;
 			this.TextWrapper.DefineOperationName("FontFeatures", Res.Strings.Action.FontFeatures);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 		#endregion
 
@@ -558,6 +560,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
@@ -602,6 +605,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleButtonSettingsClicked(object sender, MessageEventArgs e)
@@ -657,6 +661,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.TextWrapper.Defined.Units = units;
 			this.TextWrapper.DefineOperationName("FontSize", Res.Strings.Action.FontSize);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleSizeChanged(object sender)
@@ -687,6 +692,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.TextWrapper.DefineOperationName("FontSize", Res.Strings.Action.FontSize);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleButtonSizeMenuClicked(object sender, MessageEventArgs e)
@@ -736,6 +742,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.TextWrapper.DefineOperationName("FontGlue", Res.Strings.TextPanel.Font.Tooltip.Glue);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleCheckBoldActiveStateChanged(object sender)
@@ -752,6 +759,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.TextWrapper.Defined.InvertBold = value;
 				this.TextWrapper.DefineOperationName("FontBold", Res.Strings.Action.FontBold);
 				this.TextWrapper.ResumeSynchronizations();
+				this.document.IsDirtySerialize = true;
 			}
 		}
 
@@ -769,6 +777,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.TextWrapper.Defined.InvertItalic = value;
 				this.TextWrapper.DefineOperationName("FontItalic", Res.Strings.Action.FontItalic);
 				this.TextWrapper.ResumeSynchronizations();
+				this.document.IsDirtySerialize = true;
 			}
 		}
 
@@ -789,6 +798,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.TextWrapper.Defined.ClearColor();
 			this.TextWrapper.DefineOperationName("FontFaceClear", Res.Strings.TextPanel.Clear);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		
@@ -854,6 +864,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 		#endregion
 

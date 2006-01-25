@@ -156,6 +156,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ParagraphWrapper.DefineOperationName("ParagraphJustif", Res.Strings.Action.ParagraphJustif);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleHyphenClicked(object sender, MessageEventArgs e)
@@ -169,6 +170,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.Hyphenation = hyphen;
 			this.ParagraphWrapper.DefineOperationName("ParagraphHyphen", Res.Strings.Action.ParagraphHyphen);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -181,6 +183,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.ClearHyphenation();
 			this.ParagraphWrapper.DefineOperationName("ParagraphJustifClear", Res.Strings.TextPanel.Clear);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 

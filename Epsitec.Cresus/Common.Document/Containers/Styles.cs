@@ -948,6 +948,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, rank);
 				this.document.SetSelectedTextStyle(this.category, rank);
 				this.document.Modifier.OpletQueueValidateAction();
+				this.document.IsDirtySerialize = true;
 
 				this.SetDirtyContent();
 			}
@@ -985,12 +986,9 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Modifier.AggregateDuplicate(sel);
 			}
 
-			if ( this.category == StyleCategory.Paragraph )
+			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
 			{
-			}
-
-			if ( this.category == StyleCategory.Character )
-			{
+				this.document.IsDirtySerialize = true;
 			}
 		}
 
@@ -1019,6 +1017,7 @@ namespace Epsitec.Common.Document.Containers
 
 				this.document.SetSelectedTextStyle(this.category, sel-1);
 				this.document.Modifier.OpletQueueValidateAction();
+				this.document.IsDirtySerialize = true;
 				this.SetDirtyContent();
 			}
 		}
@@ -1048,6 +1047,7 @@ namespace Epsitec.Common.Document.Containers
 
 				this.document.SetSelectedTextStyle(this.category, sel+1);
 				this.document.Modifier.OpletQueueValidateAction();
+				this.document.IsDirtySerialize = true;
 				this.SetDirtyContent();
 			}
 		}
@@ -1078,6 +1078,7 @@ namespace Epsitec.Common.Document.Containers
 				}
 				this.document.SetSelectedTextStyle(this.category, sel);
 				this.document.Modifier.OpletQueueValidateAction();
+				this.document.IsDirtySerialize = true;
 				this.SetDirtyContent();
 			}
 		}
@@ -1310,6 +1311,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
 				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, this.name.Text);
 				this.document.Modifier.OpletQueueValidateAction();
+				this.document.IsDirtySerialize = true;
 
 				this.document.Notifier.NotifyTextStyleChanged(style);
 			}

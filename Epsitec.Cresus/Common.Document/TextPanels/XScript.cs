@@ -238,6 +238,7 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.TextWrapper.DefineOperationName("FontSubscript", Res.Strings.Action.FontSubscript);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleButtonSuperscriptClicked(object sender, MessageEventArgs e)
@@ -284,6 +285,7 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.TextWrapper.DefineOperationName("FontSuperscript", Res.Strings.Action.FontSuperscript);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleScaleOffsetChanged(object sender)
@@ -297,6 +299,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( xscript.Offset > 0 )  this.FillSuperscriptDefinition(xscript, false);
 			this.TextWrapper.DefineOperationName("FontXscript", Res.Strings.TextPanel.Xscript.Title);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -308,6 +311,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.TextWrapper.Defined.ClearXscript();
 			this.TextWrapper.DefineOperationName("FontXscriptClear", Res.Strings.TextPanel.Clear);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		

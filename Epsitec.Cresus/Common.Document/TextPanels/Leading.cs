@@ -258,6 +258,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.LeadingUnits = units;
 			this.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleLeadingChanged(object sender)
@@ -288,6 +289,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ParagraphWrapper.DefineOperationName("ParagraphLeading", Res.Strings.Action.ParagraphLeading);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleButtonLeadingMenuClicked(object sender, MessageEventArgs e)
@@ -347,6 +349,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.ClearAlignMode();
 			this.ParagraphWrapper.DefineOperationName("ParagraphLeadingClear", Res.Strings.TextPanel.Clear);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 
@@ -407,6 +410,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 		#endregion
 

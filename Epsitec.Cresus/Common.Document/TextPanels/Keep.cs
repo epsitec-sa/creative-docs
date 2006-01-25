@@ -285,6 +285,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.KeepWithNextParagraph = value;
 			this.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleButtonKeepPrevClicked(object sender, MessageEventArgs e)
@@ -298,6 +299,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.KeepWithPreviousParagraph = value;
 			this.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleKeepStartChanged(object sender)
@@ -324,6 +326,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 		
 		private void HandleKeepEndChanged(object sender)
@@ -350,6 +353,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 		
 		private void HandleStartModeChanged(object sender)
@@ -371,6 +375,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ParagraphWrapper.DefineOperationName("ParagraphKeep", Res.Strings.TextPanel.Keep.Title);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -386,6 +391,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.ClearParagraphStartMode();
 			this.ParagraphWrapper.DefineOperationName("ParagraphKeepClear", Res.Strings.TextPanel.Clear);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		

@@ -186,6 +186,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.TextWrapper.DefineOperationName("TextLanguageHyphen", Res.Strings.Action.ParagraphHyphen);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleLanguageChanged(object sender)
@@ -207,6 +208,7 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.TextWrapper.DefineOperationName("TextLanguage", Res.Strings.TextPanel.Language.Title);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -219,6 +221,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.TextWrapper.Defined.ClearLanguageLocale();
 			this.TextWrapper.DefineOperationName("TextLanguageClear", Res.Strings.TextPanel.Clear);
 			this.TextWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 

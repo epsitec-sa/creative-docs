@@ -185,6 +185,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ParagraphWrapper.DefineOperationName("ParagraphSpaces", Res.Strings.TextPanel.Spaces.Title);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 		
 		private void HandleAfterChanged(object sender)
@@ -213,6 +214,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ParagraphWrapper.DefineOperationName("ParagraphSpaces", Res.Strings.TextPanel.Spaces.Title);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 		
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -227,6 +229,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.ClearSpaceAfterUnits();
 			this.ParagraphWrapper.DefineOperationName("ParagraphSpacesClear", Res.Strings.TextPanel.Clear);
 			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 
