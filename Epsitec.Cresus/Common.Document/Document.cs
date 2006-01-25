@@ -697,6 +697,8 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		
+		#region VersionDeserializationBinder Class
 		sealed class VersionDeserializationBinder : Common.IO.GenericDeserializationBinder
 		{
 			public VersionDeserializationBinder()
@@ -740,15 +742,16 @@ namespace Epsitec.Common.Document
 				return base.BindToType(assemblyName, typeName);
 			}
 		}
+		#endregion
 
 		//	Utilisé par les constructeurs de désérialisation du genre:
 		//	protected Toto(SerializationInfo info, StreamingContext context)
 		public static Document ReadDocument = null;
 		public static long ReadRevision = 0;
 
-		//	Adapte tous les objets après une désérialisation.
 		protected void ReadFinalize()
 		{
+			//	Adapte tous les objets après une désérialisation.
 			if ( this.Modifier != null )
 			{
 				this.Modifier.OpletQueueEnable = false;
@@ -817,6 +820,7 @@ namespace Epsitec.Common.Document
 			get { return this.containOldText; }
 		}
 
+		
 		#region OldStylesToAggregates
 		protected void OldStylesToAggregates()
 		{
@@ -1034,6 +1038,7 @@ namespace Epsitec.Common.Document
 			stream.Write(buffer, 0, 8);
 		}
 
+		
 		#region Serialization
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
@@ -1185,7 +1190,6 @@ namespace Epsitec.Common.Document
 			return ( Document.ReadRevision >= r );
 		}
 		#endregion
-
 		
 		public void Paint(Graphics graphics, DrawingContext drawingContext, Rectangle clipRect)
 		{
@@ -1497,6 +1501,12 @@ namespace Epsitec.Common.Document
 		{
 			//	Modifie le style de paragraphe ou de caractère sélectionné.
 			System.Diagnostics.Debug.Assert(category == StyleCategory.Paragraph || category == StyleCategory.Character);
+			
+			if ( this.modifier.OpletQueue.IsActionDefinitionInProgress )
+			{
+				this.modifier.OpletQueue.Insert(new SetSelectedTextStyleOplet(this, category));
+			}
+			
 			if ( category == StyleCategory.Paragraph )  this.selectedParagraphStyle = rank;
 			if ( category == StyleCategory.Character )  this.selectedCharacterStyle = rank;
 		}
@@ -2013,53 +2023,108 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+		#region SetSelectedTextStyleOplet Class
+		private class SetSelectedTextStyleOplet : Common.Support.AbstractOplet
+		{
+			public SetSelectedTextStyleOplet(Document document, StyleCategory category)
+			{
+				this.document = document;
+				this.category = category;
+				
+				switch ( this.category )
+				{
+					case StyleCategory.Paragraph:
+						this.rank = this.document.selectedParagraphStyle;
+						break;
+					case StyleCategory.Character:
+						this.rank = this.document.selectedCharacterStyle;
+						break;
+				}
+			}
+			
+
+			public override Common.Support.IOplet Undo()
+			{
+				int oldRank = -1;
+				int newRank = this.rank;
+				
+				switch ( this.category )
+				{
+					case StyleCategory.Paragraph:
+						oldRank = this.document.selectedParagraphStyle;
+						this.document.selectedParagraphStyle = newRank;
+						break;
+					
+					case StyleCategory.Character:
+						oldRank = this.document.selectedCharacterStyle;
+						this.document.selectedCharacterStyle = newRank;
+						break;
+				}
+				
+				this.rank = oldRank;
+				
+				return this;
+			}
+			
+			public override Common.Support.IOplet Redo()
+			{
+				return this.Undo ();
+			}
+			
+			
+			private Document					document;
+			private StyleCategory				category;
+			private int							rank;
+		}
+		#endregion
 
 
-		protected DocumentType							type;
-		protected DocumentMode							mode;
-		protected InstallType							installType;
-		protected DebugMode								debugMode;
-		protected Settings.GlobalSettings				globalSettings;
-		protected CommandDispatcher						commandDispatcher;
-		protected string								name;
-		protected Document								clipboard;
-		protected Size									size;
-		protected Point									hotSpot;
-		protected string								filename;
-		protected string								exportDirectory;
-		protected string								exportFilename;
-		protected int									exportFilter;
-		protected bool									isDirtySerialize;
-		protected UndoableList							objects;
-		protected UndoableList							propertiesAuto;
-		protected UndoableList							propertiesSel;
-		protected UndoableList							aggregates;
-		protected UndoableList							textFlows;
-		protected Settings.Settings						settings;
-		protected Modifier								modifier;
-		protected Wrappers								wrappers;
-		protected Notifier								notifier;
-		protected Printer								printer;
-		protected Common.Dialogs.Print					printDialog;
-		protected PDF.Export							exportPDF;
-		protected Dialogs								dialogs;
-		protected string								ioDirectory;
-		protected System.Collections.ArrayList			readWarnings;
-		protected IOType								ioType;
-		protected Objects.Memory						readObjectMemory;
-		protected Objects.Memory						readObjectMemoryText;
-		protected System.Collections.ArrayList			readRootStack;
-		protected bool									isSurfaceRotation;
-		protected double								surfaceRotationAngle;
-		protected int									uniqueObjectId = 0;
-		protected int									uniqueAggregateId = 0;
-		protected int									uniqueParagraphStyleId = 0;
-		protected int									uniqueCharacterStyleId = 0;
-		protected int									selectedParagraphStyle = 0;
-		protected int									selectedCharacterStyle = 0;
-		protected Text.TextContext						textContext;
-		protected Widgets.HRuler						hRuler;
-		protected Widgets.VRuler						vRuler;
-		protected bool									containOldText;
+
+		protected DocumentType					type;
+		protected DocumentMode					mode;
+		protected InstallType					installType;
+		protected DebugMode						debugMode;
+		protected Settings.GlobalSettings		globalSettings;
+		protected CommandDispatcher				commandDispatcher;
+		protected string						name;
+		protected Document						clipboard;
+		protected Size							size;
+		protected Point							hotSpot;
+		protected string						filename;
+		protected string						exportDirectory;
+		protected string						exportFilename;
+		protected int							exportFilter;
+		protected bool							isDirtySerialize;
+		protected UndoableList					objects;
+		protected UndoableList					propertiesAuto;
+		protected UndoableList					propertiesSel;
+		protected UndoableList					aggregates;
+		protected UndoableList					textFlows;
+		protected Settings.Settings				settings;
+		protected Modifier						modifier;
+		protected Wrappers						wrappers;
+		protected Notifier						notifier;
+		protected Printer						printer;
+		protected Common.Dialogs.Print			printDialog;
+		protected PDF.Export					exportPDF;
+		protected Dialogs						dialogs;
+		protected string						ioDirectory;
+		protected System.Collections.ArrayList	readWarnings;
+		protected IOType						ioType;
+		protected Objects.Memory				readObjectMemory;
+		protected Objects.Memory				readObjectMemoryText;
+		protected System.Collections.ArrayList	readRootStack;
+		protected bool							isSurfaceRotation;
+		protected double						surfaceRotationAngle;
+		protected int							uniqueObjectId = 0;
+		protected int							uniqueAggregateId = 0;
+		protected int							uniqueParagraphStyleId = 0;
+		protected int							uniqueCharacterStyleId = 0;
+		protected int							selectedParagraphStyle = 0;
+		protected int							selectedCharacterStyle = 0;
+		protected Text.TextContext				textContext;
+		protected Widgets.HRuler				hRuler;
+		protected Widgets.VRuler				vRuler;
+		protected bool							containOldText;
 	}
 }
