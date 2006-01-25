@@ -642,6 +642,12 @@ namespace Epsitec.Common.Document.Containers
 				if ( sel != -1 )
 				{
 					bool enable = (sel != 0);  // le premier style est forcément le style de base !
+
+					if ( !enable )
+					{
+						this.SelectorName = null;  // ferme un éventuel panneau ouvert
+					}
+
 					this.UpdateSelectorAdd(Styles.selectorSize, enable, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
 					this.UpdateSelectorAdd(Styles.selectorSize, enable, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
 					this.UpdateSelectorAdd(Styles.selectorSize, enable, "Xscript",  "TextXscript",  Res.Strings.TextPanel.Xscript.Title);
