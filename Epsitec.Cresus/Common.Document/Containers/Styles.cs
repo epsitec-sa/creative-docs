@@ -1017,9 +1017,10 @@ namespace Epsitec.Common.Document.Containers
 				Text.Property[] properties = initialStyle.StyleProperties;
 				Text.TextStyle[] parents = initialStyle.ParentStyles;
 
-				this.document.Modifier.OpletQueueBeginAction((this.category == StyleCategory.Paragraph) ? Res.Strings.Action.AggregateNewParagraph : Res.Strings.Action.AggregateNewCharacter);
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateDuplicate);
 				
 				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(this.document.Modifier.OpletQueue, null, type, properties, parents);
+				this.document.TextContext.StyleList.SetNextStyle(this.document.Modifier.OpletQueue, style, initialStyle.NextStyle);
 
 				rank ++;
 				this.StylesShiftRanks(rank);
