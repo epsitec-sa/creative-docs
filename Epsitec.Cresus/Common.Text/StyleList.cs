@@ -89,22 +89,22 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
-		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class)
+		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass text_style_class)
 		{
-			return this.NewTextStyle (name, text_style_class, new Property[0], null);
+			return this.NewTextStyle (queue, name, text_style_class, new Property[0], null);
 		}
 		
-		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class, params Property[] properties)
+		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass text_style_class, params Property[] properties)
 		{
-			return this.NewTextStyle (name, text_style_class, properties, null);
+			return this.NewTextStyle (queue, name, text_style_class, properties, null);
 		}
 		
-		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class, System.Collections.ICollection properties)
+		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass text_style_class, System.Collections.ICollection properties)
 		{
-			return this.NewTextStyle (name, text_style_class, properties, null);
+			return this.NewTextStyle (queue, name, text_style_class, properties, null);
 		}
 		
-		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass text_style_class, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
 		{
 			if (name == null)
 			{
@@ -114,6 +114,11 @@ namespace Epsitec.Common.Text
 			TextStyle style = new TextStyle (name, text_style_class, properties, parent_styles);
 			
 			this.Attach (style);
+			
+			if (queue != null)
+			{
+				TextStory.InsertOplet (queue, new NewOplet (this, style));
+			}
 			
 			return style;
 		}
@@ -235,30 +240,18 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (style != null);
 			System.Diagnostics.Debug.Assert (style.IsDeleted == false);
 			
-			TextStyle default_style = null;
-			
-			switch (style.TextStyleClass)
-			{
-				case TextStyleClass.Text:		default_style = this.TextContext.DefaultTextStyle;		break;
-				case TextStyleClass.Paragraph:	default_style = this.TextContext.DefaultParagraphStyle;	break;
-					
-				default:
-					throw new System.NotSupportedException (string.Format ("Cannot delete style {0} of class {1}", style.Name, style.TextStyleClass));
-			}
-			
-			System.Diagnostics.Debug.Assert (default_style != null);
+			TextStyle default_style = this.GetDefaultTextStyle (style);
 			
 			if (queue != null)
 			{
 				System.Diagnostics.Debug.Assert (queue.IsActionDefinitionInProgress);
 			}
 			
-			queue.Insert (new DeleteOplet (this, style));
+			TextStory.InsertOplet (queue, new DeleteOplet (this, style));
 			
 			style.IsDeleted = true;
 			this.RedefineTextStyle (queue, style, new Property[0], new TextStyle[1] { default_style } );
 		}
-		
 		
 		public void SetNextStyle(Common.Support.OpletQueue queue, TextStyle style, TextStyle next_style)
 		{
@@ -355,6 +348,7 @@ namespace Epsitec.Common.Text
 			return this.GetTextStyle (StyleList.GetFullName (name, text_style_class));
 		}
 		
+		
 		internal TextStyle GetTextStyle(string full_name)
 		{
 			if (this.text_style_hash.Contains (full_name))
@@ -365,6 +359,24 @@ namespace Epsitec.Common.Text
 			{
 				return null;
 			}
+		}
+		
+		internal TextStyle GetDefaultTextStyle(TextStyle style)
+		{
+			TextStyle default_style = null;
+			
+			switch (style.TextStyleClass)
+			{
+				case TextStyleClass.Text:		default_style = this.TextContext.DefaultTextStyle;		break;
+				case TextStyleClass.Paragraph:	default_style = this.TextContext.DefaultParagraphStyle;	break;
+					
+				default:
+					throw new System.NotSupportedException (string.Format ("Cannot delete style {0} of class {1}", style.Name, style.TextStyleClass));
+			}
+			
+			System.Diagnostics.Debug.Assert (default_style != null);
+			
+			return default_style;
 		}
 		
 		
@@ -949,6 +961,46 @@ namespace Epsitec.Common.Text
 			
 			private StyleList					stylist;
 			private TextStyle					style;
+		}
+		#endregion
+		
+		#region NewOplet Class
+		private class NewOplet : Common.Support.AbstractOplet
+		{
+			public NewOplet(StyleList stylist, TextStyle style)
+			{
+				this.stylist = stylist;
+				this.style   = style;
+			}
+			
+
+			public override Common.Support.IOplet Undo()
+			{
+				this.state = this.style.SaveState (this.stylist);
+				
+				TextStyle default_style = this.stylist.GetDefaultTextStyle (this.style);
+				
+				this.style.IsDeleted = true;
+				this.stylist.RedefineTextStyle (null, this.style, new Property[0], new TextStyle[1] { default_style } );
+				
+				return this;
+			}
+			
+			public override Common.Support.IOplet Redo()
+			{
+				this.stylist.PreRedefine (this.style);
+				this.style.RestoreState (this.stylist, this.state);
+				this.stylist.PostRedefine (this.style);
+				
+				this.style.IsDeleted = false;
+				
+				return this;
+			}
+			
+			
+			private StyleList					stylist;
+			private TextStyle					style;
+			private string						state;
 		}
 		#endregion
 		

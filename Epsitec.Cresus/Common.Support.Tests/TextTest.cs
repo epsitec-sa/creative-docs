@@ -83,7 +83,7 @@ namespace Epsitec.Common.Support
 			properties.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
 			properties.Add (new Text.Properties.FontSizeProperty (14.0, Text.Properties.SizeUnits.Points));
 			
-			Text.TextStyle default_style = story.StyleList.NewTextStyle ("Default", Text.TextStyleClass.Paragraph, properties);
+			Text.TextStyle default_style = story.StyleList.NewTextStyle (null, "Default", Text.TextStyleClass.Paragraph, properties);
 			
 			story.TextContext.DefaultParagraphStyle = default_style;
 			

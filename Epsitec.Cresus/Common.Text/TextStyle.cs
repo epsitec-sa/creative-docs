@@ -367,30 +367,7 @@ namespace Epsitec.Common.Text
 				for (int i = 0; i < this.parent_styles.Length; i++)
 				{
 					TextStyle parent = this.parent_styles[i] as TextStyle;
-					string    name   = null;
-					
-					while ((parent != null) && (parent.IsDeleted))
-					{
-						//	Remplace le parent détruit par son propre parent.
-						
-						if (parent.ParentStyles.Length == 0)
-						{
-							parent = null;
-						}
-						else if (parent.ParentStyles.Length == 1)
-						{
-							parent = parent.ParentStyles[0];
-						}
-						else
-						{
-							throw new System.InvalidOperationException (string.Format ("Deleted TextStyle {0} has {1} parents", parent.Name, parent.ParentStyles.Length));
-						}
-					}
-					
-					if (parent != null)
-					{
-						name = StyleList.GetFullName (parent.Name, parent.TextStyleClass);
-					}
+					string    name   = TextStyle.GetStyleNameAndFilterDeletedStyles (parent);
 					
 					buffer.Append ("/");
 					buffer.Append (SerializerSupport.SerializeString (name));
@@ -403,9 +380,12 @@ namespace Epsitec.Common.Text
 			
 			if (this.next_style != null)
 			{
-				string name = string.Concat ("=>", StyleList.GetFullName (this.next_style.Name, this.next_style.TextStyleClass));
+				string name = TextStyle.GetStyleNameAndFilterDeletedStyles (this.next_style);
+				
+				System.Diagnostics.Debug.Assert (name != null);
+				
 				buffer.Append ("/");
-				buffer.Append (SerializerSupport.SerializeString (name));
+				buffer.Append (SerializerSupport.SerializeString (string.Concat ("=>", name)));
 			}
 			
 			if (properties != null)
@@ -554,6 +534,33 @@ namespace Epsitec.Common.Text
 			
 			this.Deserialize (list.TextContext, version, args, ref offset);
 			this.DeserializeFixups (list);
+		}
+		
+		
+		private static string GetStyleNameAndFilterDeletedStyles(TextStyle style)
+		{
+			//	Retourne le nom du style; si le style a été détruit, on retourne
+			//	le nom du style par défaut (que si c'est un style de paragraphe).
+			
+			System.Diagnostics.Debug.Assert (style != null);
+			
+			if (style.IsDeleted)
+			{
+				//	Remplace le style détruit par le style par défaut correspondant.
+				
+				if (style.TextStyleClass == TextStyleClass.Paragraph)
+				{
+					return "P.Default";
+				}
+				else
+				{
+					return null;
+				}
+			}
+			else
+			{
+				return StyleList.GetFullName (style);
+			}
 		}
 		
 		

@@ -1371,8 +1371,8 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.LanguageProperty(System.Globalization.CultureInfo.CurrentCulture.Name, 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			properties.Add(new Text.Properties.KeepProperty(2, 2, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
-			Text.TextStyle paraStyle = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
-			Text.TextStyle charStyle = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Text);
+			Text.TextStyle paraStyle = this.textContext.StyleList.NewTextStyle(null, "Default", Text.TextStyleClass.Paragraph, properties);
+			Text.TextStyle charStyle = this.textContext.StyleList.NewTextStyle(null, "Default", Text.TextStyleClass.Text);
 			
 			#region Experimental Code
 
@@ -1387,7 +1387,7 @@ namespace Epsitec.Common.Document
 //			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
 //			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.True));
-			Text.TextStyle title = this.textContext.StyleList.NewTextStyle("Title", Text.TextStyleClass.Paragraph, properties, baseStyles);
+			Text.TextStyle title = this.textContext.StyleList.NewTextStyle(null, "Title", Text.TextStyleClass.Paragraph, properties, baseStyles);
 			
 			this.textContext.StyleList.SetNextStyle(null, title, paraStyle);
 			
@@ -1427,9 +1427,9 @@ namespace Epsitec.Common.Document
 			
 			Text.Properties.ManagedInfoProperty contInfo = new Epsitec.Common.Text.Properties.ManagedInfoProperty("ItemList", "cont");
 			
-			Text.TextStyle l1 = this.textContext.StyleList.NewTextStyle("BulletRound",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
-			Text.TextStyle l2 = this.textContext.StyleList.NewTextStyle("BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2 }, baseStyles);
-			Text.TextStyle l3 = this.textContext.StyleList.NewTextStyle("BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, contInfo }, baseStyles);
+			Text.TextStyle l1 = this.textContext.StyleList.NewTextStyle(null, "BulletRound",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
+			Text.TextStyle l2 = this.textContext.StyleList.NewTextStyle(null, "BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2 }, baseStyles);
+			Text.TextStyle l3 = this.textContext.StyleList.NewTextStyle(null, "BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, contInfo }, baseStyles);
 
 			this.textContext.StyleList.StyleMap.SetRank(null, l1, 2);
 			this.textContext.StyleList.StyleMap.SetCaption(null, l1, "Liste à puces");

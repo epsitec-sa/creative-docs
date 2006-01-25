@@ -288,7 +288,7 @@ namespace Epsitec.Common.Widgets
 			properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 			properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 15.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			
-			Text.TextStyle style = story.TextContext.StyleList.NewTextStyle ("Default", Text.TextStyleClass.Paragraph, properties);
+			Text.TextStyle style = story.TextContext.StyleList.NewTextStyle (null, "Default", Text.TextStyleClass.Paragraph, properties);
 			
 			story.TextContext.DefaultParagraphStyle = style;
 			story.TextContext.ShowControlCharacters = true;

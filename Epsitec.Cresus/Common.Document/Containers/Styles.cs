@@ -940,13 +940,15 @@ namespace Epsitec.Common.Document.Containers
 					parents.Add(this.document.TextContext.DefaultParagraphStyle);
 				}
 
-				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(null, type, properties, parents);
+				this.document.Modifier.OpletQueueBeginAction((this.category == StyleCategory.Paragraph) ? Res.Strings.Action.AggregateNewParagraph : Res.Strings.Action.AggregateNewCharacter);
+				
+				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(this.document.Modifier.OpletQueue, null, type, properties, parents);
 
 				int rank = this.document.GetSelectedTextStyle(this.category)+1;
-				this.document.Modifier.OpletQueueBeginAction((this.category == StyleCategory.Paragraph) ? Res.Strings.Action.AggregateNewParagraph : Res.Strings.Action.AggregateNewCharacter);
 				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, this.document.Modifier.GetNextTextStyleName(this.category));
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, rank);
 				this.document.SetSelectedTextStyle(this.category, rank);
+				
 				this.document.Modifier.OpletQueueValidateAction();
 				this.document.IsDirtySerialize = true;
 

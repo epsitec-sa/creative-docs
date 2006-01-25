@@ -28,7 +28,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.LeadingProperty (14.0, Properties.SizeUnits.Points, Properties.AlignMode.None));
 			properties.Add (new Properties.MarginsProperty (5.0, 5.0, 5.0, 5.0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Properties.ThreeState.True));
 			
-			story.TextContext.DefaultParagraphStyle = story.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
+			story.TextContext.DefaultParagraphStyle = story.StyleList.NewTextStyle (null, "Normal", TextStyleClass.Paragraph, properties);
 			
 			navigator.Insert ("Abcdef");
 			navigator.MoveTo (3, 1);
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.LeadingProperty (14.0, Properties.SizeUnits.Points, Properties.AlignMode.None));
 			properties.Add (new Properties.MarginsProperty (5.0, 5.0, 5.0, 5.0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Properties.ThreeState.True));
 			
-			TextStyle style1 = story.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
+			TextStyle style1 = story.StyleList.NewTextStyle (null, "Normal", TextStyleClass.Paragraph, properties);
 			
 			Generator generator = story.TextContext.GeneratorList.NewGenerator ("liste");
 			
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.ManagedParagraphProperty ("ItemList", items.Save ()));
 			properties.Add (new Properties.MarginsProperty (0, 40.0, double.NaN, double.NaN, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Properties.ThreeState.Undefined));
 			
-			TextStyle style2 = story.StyleList.NewTextStyle ("Puces", TextStyleClass.Paragraph, properties);
+			TextStyle style2 = story.StyleList.NewTextStyle (null, "Puces", TextStyleClass.Paragraph, properties);
 			
 			story.ConvertToStyledText ("Xyz\n", style1, null, out text);
 			story.InsertText (cursor, text);

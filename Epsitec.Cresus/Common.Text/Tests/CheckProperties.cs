@@ -227,7 +227,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontProperty ("Verdana", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			TextStyle style = story.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
+			TextStyle style = story.StyleList.NewTextStyle (null, "Normal", TextStyleClass.Paragraph, properties);
 			
 			story.ConvertToStyledText ("Texte ", style, null, out text);				//	6
 			story.InsertText (cursor, text);
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontProperty ("Verdana", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			TextStyle style = story.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
+			TextStyle style = story.StyleList.NewTextStyle (null, "Normal", TextStyleClass.Paragraph, properties);
 			
 			story.ConvertToStyledText ("1234567890", style, null, out text);
 			story.InsertText (cursor, text);
@@ -343,7 +343,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontProperty ("Verdana", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			TextStyle style = story.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
+			TextStyle style = story.StyleList.NewTextStyle (null, "Normal", TextStyleClass.Paragraph, properties);
 			
 			story.ConvertToStyledText ("Abc", style, null, out text);
 			story.InsertText (cursor, text);

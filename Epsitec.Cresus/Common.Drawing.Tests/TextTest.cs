@@ -199,7 +199,7 @@ namespace Epsitec.Common.Drawing
 						properties.Add (new Text.Properties.LeadingProperty (double.NaN, Common.Text.Properties.SizeUnits.None, 5.0, Common.Text.Properties.SizeUnits.Points, 5.0, Common.Text.Properties.SizeUnits.Points, Common.Text.Properties.AlignMode.None));
 						
 						Text.StyleList style_list    = this.story.TextContext.StyleList;
-						Text.TextStyle style_default = style_list.NewTextStyle ("Default", Common.Text.TextStyleClass.Paragraph, properties);
+						Text.TextStyle style_default = style_list.NewTextStyle (null, "Default", Common.Text.TextStyleClass.Paragraph, properties);
 						
 						this.story.TextContext.DefaultParagraphStyle = style_default;
 					}
@@ -573,7 +573,7 @@ namespace Epsitec.Common.Drawing
 					
 					Text.TextContext   context      = this.painter.TextStory.TextContext;
 					Text.StyleList style_list   = context.StyleList;
-					Text.TextStyle style_normal = style_list.NewTextStyle ("Normal", Text.TextStyleClass.Paragraph, properties);
+					Text.TextStyle style_normal = style_list.NewTextStyle (null, "Normal", Text.TextStyleClass.Paragraph, properties);
 					
 					this.painter.TextStory.ConvertToStyledText ("Un petit texte juste avant l'image >", style_normal, null, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -866,7 +866,7 @@ namespace Epsitec.Common.Drawing
 					properties_1.Add (new Text.Properties.MarginsProperty (5.0, 5.0, 5.0, 5.0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Text.Properties.ThreeState.True));
 					properties_1.Add (new Text.Properties.FontColorProperty ("Black"));
 					
-					Text.TextStyle style1 = this.painter.TextStory.StyleList.NewTextStyle ("Normal", Text.TextStyleClass.Paragraph, properties_1);
+					Text.TextStyle style1 = this.painter.TextStory.StyleList.NewTextStyle (null, "Normal", Text.TextStyleClass.Paragraph, properties_1);
 					
 					Text.Generator generator = this.painter.TextStory.TextContext.GeneratorList.NewGenerator ("liste");
 					
@@ -885,7 +885,7 @@ namespace Epsitec.Common.Drawing
 					properties_1.Add (new Text.Properties.MarginsProperty (0, tab, double.NaN, double.NaN, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Text.Properties.ThreeState.Undefined));
 					properties_1.Add (new Text.Properties.FontColorProperty ("Navy"));
 					
-					Text.TextStyle style2 = this.painter.TextStory.StyleList.NewTextStyle ("Puces", Text.TextStyleClass.Paragraph, properties_1);
+					Text.TextStyle style2 = this.painter.TextStory.StyleList.NewTextStyle (null, "Puces", Text.TextStyleClass.Paragraph, properties_1);
 					
 					words = "Voici une liste à puces pour faire un test.\n";
 					

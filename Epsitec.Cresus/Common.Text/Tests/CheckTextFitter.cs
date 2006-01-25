@@ -626,7 +626,7 @@ namespace Epsitec.Common.Text.Tests
 			story.ConvertToStyledText ("Tout un paragraphe indenté (comme si le tabulateur se comportait comme un indentateur).\n", properties_2, out text);
 			story.InsertText (cursor, text);
 			
-			Text.TextStyle default_style = story.StyleList.NewTextStyle ("Default", Text.TextStyleClass.Paragraph, properties_3);
+			Text.TextStyle default_style = story.StyleList.NewTextStyle (null, "Default", Text.TextStyleClass.Paragraph, properties_3);
 			
 			story.TextContext.DefaultParagraphStyle = default_style;
 			
