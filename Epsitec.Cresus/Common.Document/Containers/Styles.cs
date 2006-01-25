@@ -329,7 +329,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.buttonChildrensExtend = new GlyphButton(this.nameToolBar);
 			this.buttonChildrensExtend.ButtonStyle = ButtonStyle.Icon;
-			this.buttonChildrensExtend.GlyphShape = GlyphShape.ArrowUp;
+			this.buttonChildrensExtend.GlyphShape = GlyphShape.ArrowDown;
 			this.buttonChildrensExtend.Width = 12;
 			this.buttonChildrensExtend.Dock = DockStyle.Right;
 			this.buttonChildrensExtend.DockMargins = new Margins(0, 0, 5, 5);
@@ -664,7 +664,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void UpdateChildrensExtend()
 		{
 			//	Met à jour les panneaux des enfants selon le mode réduit/étendu.
-			this.buttonChildrensExtend.GlyphShape = this.isChildrensExtended ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
+			this.buttonChildrensExtend.GlyphShape = this.isChildrensExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 			this.childrensToolBar.Visibility = (this.isChildrensExtended);
 			this.childrens.Visibility = (this.isChildrensExtended);
 		}

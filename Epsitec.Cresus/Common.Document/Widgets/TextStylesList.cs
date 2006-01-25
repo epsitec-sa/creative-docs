@@ -49,8 +49,24 @@ namespace Epsitec.Common.Document.Widgets
 			//	Nombre le lignes de la liste.
 			get
 			{
-				if ( this.list == null )  return 0;
-				return this.list.Length;
+				int count = 0;
+
+				if ( this.list != null )
+				{
+					count = this.list.Length;;
+				}
+
+				if ( this.excludeRank != -1 )
+				{
+					count --;
+				}
+
+				if ( this.isNoneLine )
+				{
+					count ++;
+				}
+
+				return count;
 			}
 		}
 

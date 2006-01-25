@@ -202,7 +202,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.document.Modifier.SetTextStyle(style);
 		}
 
-		
+
 		protected IconButton				buttonParagraph;
 		protected IconButton				buttonCharacter;
 		protected Widgets.StyleCombo		styleParagraph;

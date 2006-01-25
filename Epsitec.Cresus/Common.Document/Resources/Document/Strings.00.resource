@@ -527,8 +527,10 @@
 	<data name="TextPanel.Keep.Title">Enchaînements</data>
 	<data name="TextPanel.Keep.Tooltip.KeepNext">Lié au paragraphe suivant</data>
 	<data name="TextPanel.Keep.Tooltip.KeepPrev">Lié au paragraphe précédent</data>
+	<data name="TextPanel.Keep.Tooltip.NextStyle">Style du paragraphe suivant</data>
 	<data name="TextPanel.Keep.Short.KeepStart">D</data>
 	<data name="TextPanel.Keep.Short.KeepEnd">F</data>
+	<data name="TextPanel.Keep.Short.NextStyle">Suivant</data>
 	<data name="TextPanel.Keep.Long.KeepStart">Lignes solidaires au début</data>
 	<data name="TextPanel.Keep.Long.KeepEnd">Lignes solidaires à la fin</data>
 	<data name="TextPanel.Keep.Tooltip.KeepStart">Nombre de lignes solidaires au début du paragraphe</data>

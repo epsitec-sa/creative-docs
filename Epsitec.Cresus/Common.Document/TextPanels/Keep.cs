@@ -38,6 +38,22 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fieldStartMode = CreateComboStartMode(new EventHandler(this.HandleStartModeChanged));
 
+			this.labelNextStyle = new StaticText(this);
+			this.labelNextStyle.Alignment = ContentAlignment.MiddleRight;
+			this.labelNextStyle.Text = Res.Strings.TextPanel.Keep.Short.NextStyle;
+
+			this.fieldNextStyle = new Widgets.StyleCombo(this);
+			this.fieldNextStyle.StyleCategory = StyleCategory.Paragraph;
+			this.fieldNextStyle.Document = this.document;
+			this.fieldNextStyle.IsNoneLine = true;
+			this.fieldNextStyle.IsDeep = true;
+			this.fieldNextStyle.IsReadOnly = true;
+			this.fieldNextStyle.AutoFocus = false;
+			this.fieldNextStyle.TabIndex = this.tabIndex++;
+			this.fieldNextStyle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldNextStyle.ClosedCombo += new EventHandler(this.HandleStyleClosedCombo);
+			ToolTip.Default.SetToolTip(this.fieldNextStyle, Res.Strings.TextPanel.Keep.Tooltip.NextStyle);
+
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
 			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
@@ -51,6 +67,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
+				this.fieldNextStyle.ClosedCombo -= new EventHandler(this.HandleStyleClosedCombo);
+
 				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
 				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
@@ -82,6 +100,11 @@ namespace Epsitec.Common.Document.TextPanels
 					else	// étendu/compact ?
 					{
 						h += 55;
+					}
+
+					if ( this.isStyle )
+					{
+						h += 25;  // place pour NextStyle
 					}
 				}
 				else	// panneau réduit ?
@@ -187,6 +210,16 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Right = rect.Right;
 					this.fieldStartMode.Bounds = r;
 					this.fieldStartMode.Visibility = true;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Right = rect.Left+45-5;
+					this.labelNextStyle.Bounds = r;
+					this.labelNextStyle.Visibility = this.isStyle;
+					r.Left = rect.Left+45;
+					r.Right = rect.Right;
+					this.fieldNextStyle.Bounds = r;
+					this.fieldNextStyle.Visibility = this.isStyle;
 				}
 				else
 				{
@@ -210,6 +243,16 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Right = rect.Right;
 					this.fieldStartMode.Bounds = r;
 					this.fieldStartMode.Visibility = true;
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Right = rect.Left+45-5;
+					this.labelNextStyle.Bounds = r;
+					this.labelNextStyle.Visibility = this.isStyle;
+					r.Left = rect.Left+45;
+					r.Right = rect.Right;
+					this.fieldNextStyle.Bounds = r;
+					this.fieldNextStyle.Visibility = this.isStyle;
 				}
 			}
 			else
@@ -233,6 +276,8 @@ namespace Epsitec.Common.Document.TextPanels
 				this.buttonClear.Bounds = r;
 
 				this.fieldStartMode.Visibility = false;
+				this.labelNextStyle.Visibility = false;
+				this.fieldNextStyle.Visibility = false;
 			}
 		}
 
@@ -268,6 +313,27 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fieldStartMode.Text = Keep.ModeToString(mode);
 			this.fieldStartMode.TextDisplayMode = isMode ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+
+			Text.TextStyle currentStyle = this.ParagraphWrapper.AttachedStyle;
+			string nextStyleName = "";
+			if ( currentStyle != null )
+			{
+				Text.TextStyle nextStyle = currentStyle.NextStyle;
+				if ( nextStyle != null )
+				{
+					nextStyleName = this.document.TextContext.StyleList.StyleMap.GetCaption(nextStyle);
+				}
+			}
+			this.fieldNextStyle.Text = nextStyleName;
+
+			int rank = -1;
+			Text.TextStyle[] styles = this.document.TextStyles(StyleCategory.Paragraph);
+			for ( int i=0 ; i<styles.Length ; i++ )
+			{
+				Text.TextStyle style = styles[i];
+				if ( style == currentStyle )  rank = i;
+			}
+			this.fieldNextStyle.ExcludeRank = rank;
 
 			this.ignoreChanged = false;
 		}
@@ -378,6 +444,32 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.IsDirtySerialize = true;
 		}
 
+		private void HandleStyleClosedCombo(object sender)
+		{
+			//	Combo des styles fermé.
+			int sel = fieldNextStyle.SelectedIndex;
+			if ( sel == -1 )  return;
+
+			Text.TextStyle currentStyle = this.ParagraphWrapper.AttachedStyle;
+			Text.TextStyle nextStyle;
+
+			if ( sel == -2 )  // ligne <aucun> ?
+			{
+				nextStyle = null;
+				this.fieldNextStyle.Text = "";
+			}
+			else
+			{
+				Text.TextStyle[] styles = this.document.TextStyles(StyleCategory.Paragraph);
+				nextStyle = styles[sel];
+				this.fieldNextStyle.Text = this.document.TextContext.StyleList.StyleMap.GetCaption(nextStyle);
+			}
+
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange);
+			this.document.TextContext.StyleList.SetNextStyle(this.document.Modifier.OpletQueue, currentStyle, nextStyle);
+			this.document.Modifier.OpletQueueValidateAction();
+		}
+
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
@@ -400,6 +492,8 @@ namespace Epsitec.Common.Document.TextPanels
 		protected Widgets.TextFieldLabel	fieldKeepStart;
 		protected Widgets.TextFieldLabel	fieldKeepEnd;
 		protected TextFieldCombo			fieldStartMode;
+		protected StaticText				labelNextStyle;
+		protected Widgets.StyleCombo		fieldNextStyle;
 		protected IconButton				buttonClear;
 	}
 }
