@@ -698,7 +698,16 @@ namespace Epsitec.Common.Document.Containers
 			}
 
 			this.ignoreChanged = true;
+
 			this.name.Text = text;
+
+			if ( this.oneShootSelectName )
+			{
+				this.oneShootSelectName = false;
+				this.name.SelectAll();
+				this.name.Focus();
+			}
+
 			this.ignoreChanged = false;
 		}
 
@@ -1005,6 +1014,7 @@ namespace Epsitec.Common.Document.Containers
 			{
 				int sel = this.document.Aggregates.Selected;
 				if ( sel == -1 )  sel = 10000;
+				this.oneShootSelectName = true;
 				this.document.Modifier.AggregateNewEmpty(sel, "", true);
 			}
 
@@ -1033,6 +1043,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Modifier.OpletQueueValidateAction();
 				this.document.IsDirtySerialize = true;
 
+				this.oneShootSelectName = true;
 				this.SetDirtyContent();
 			}
 		}
@@ -1044,6 +1055,7 @@ namespace Epsitec.Common.Document.Containers
 			{
 				int sel = this.document.Aggregates.Selected;
 				if ( sel == -1 )  sel = 10000;
+				this.oneShootSelectName = true;
 				this.document.Modifier.AggregateNew3(sel, "", true);
 			}
 		}
@@ -1055,6 +1067,7 @@ namespace Epsitec.Common.Document.Containers
 			{
 				int sel = this.document.Aggregates.Selected;
 				if ( sel == -1 )  sel = 10000;
+				this.oneShootSelectName = true;
 				this.document.Modifier.AggregateNewAll(sel, "", true);
 			}
 		}
@@ -1066,6 +1079,7 @@ namespace Epsitec.Common.Document.Containers
 			{
 				int sel = this.document.Aggregates.Selected;
 				if ( sel == -1 )  sel = 10000;
+				this.oneShootSelectName = true;
 				this.document.Modifier.AggregateDuplicate(sel);
 			}
 
@@ -1093,6 +1107,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Modifier.OpletQueueValidateAction();
 				this.document.IsDirtySerialize = true;
 
+				this.oneShootSelectName = true;
 				this.SetDirtyContent();
 			}
 		}
@@ -1860,6 +1875,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected int						index;
 		protected bool						isChildrensExtended = false;
+		protected bool						oneShootSelectName = false;
 		protected bool						ignoreChanged = false;
 	}
 }
