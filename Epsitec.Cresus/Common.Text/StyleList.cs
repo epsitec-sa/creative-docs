@@ -167,16 +167,12 @@ namespace Epsitec.Common.Text
 			
 			if (find.Length > 0)
 			{
-				System.Diagnostics.Debug.WriteLine ("Reusing meta property : " + find[0].ToString ());
-				
 				this.RecycleTextStyle (temp);
 				
 				return find[0];
 			}
 			else
 			{
-				System.Diagnostics.Debug.WriteLine ("Created meta property : " + temp.ToString ());
-				
 				return temp;
 			}
 		}
@@ -191,16 +187,12 @@ namespace Epsitec.Common.Text
 			
 			if (find.Length > 0)
 			{
-				System.Diagnostics.Debug.WriteLine ("Reusing meta property : " + find[0].ToString ());
-				
 				this.RecycleTextStyle (temp);
 				
 				return find[0];
 			}
 			else
 			{
-				System.Diagnostics.Debug.WriteLine ("Created meta property : " + temp.ToString ());
-				
 				return temp;
 			}
 		}
@@ -614,15 +606,20 @@ namespace Epsitec.Common.Text
 				{
 					Cursors.TempCursor cursor = new Cursors.TempCursor ();
 					
+					story.SuspendTextChanged ();
 					story.NewCursor (cursor);
 					story.DisableOpletQueue ();
 					
 					int pos = 0;
 					
-					this.is_patcher_on_break = true;
+					this.is_patcher_on_break     = true;
+					this.pending_manager_patches = new System.Collections.Stack ();
 					
 					try
 					{
+						//	Passe en revue tout le texte et substitue les infos de
+						//	formatage là où les styles ont changé :
+						
 						while (length > 0)
 						{
 							int count = System.Math.Min (length, buffer.Length);
@@ -648,12 +645,36 @@ namespace Epsitec.Common.Text
 							pos    += count;
 							length -= count;
 						}
+						
+						//	S'il y a des "managed paragraphs" dans le texte qui a été
+						//	mis à jour, il faut encore les passer en revue pour ajuster
+						//	les textes automatiques.
+						//
+						//	On commence par la fin, ainsi les positions intermédiaires
+						//	ne seront pas altérées par l'insertion ou la suppression de
+						//	textes automatiques.
+						
+						while (this.pending_manager_patches.Count > 0)
+						{
+							ManagedParagraphPropertyInfo mppi = this.pending_manager_patches.Pop () as ManagedParagraphPropertyInfo;
+							
+							story.SetCursorPosition (cursor, mppi.Position);
+							
+							Properties.ManagedParagraphProperty[] mpp_old = (mppi.Mpp1 == null) ? new Properties.ManagedParagraphProperty[0] : new Properties.ManagedParagraphProperty[1] { mppi.Mpp1 };
+							Properties.ManagedParagraphProperty[] mpp_new = (mppi.Mpp2 == null) ? new Properties.ManagedParagraphProperty[0] : new Properties.ManagedParagraphProperty[1] { mppi.Mpp2 };
+							
+							Internal.Navigator.HandleManagedParagraphPropertiesChange (story, cursor, 0, mpp_old, mpp_new);
+						}
 					}
 					finally
 					{
 						story.EnableOpletQueue ();
 						story.RecycleCursor (cursor);
+						story.ResumeTextChanged ();
 					}
+					
+					this.is_patcher_on_break     = false;
+					this.pending_manager_patches = null;
 				}
 				
 				if (update)
@@ -714,7 +735,7 @@ namespace Epsitec.Common.Text
 			//	partout :
 			
 			ulong replacement;
-			ManagedParagraphPropertyInfo mppi = patcher.FingManagedParagraphPropertyInfo (code);
+			ManagedParagraphPropertyInfo mppi = patcher.FindManagedParagraphPropertyInfo (code);
 			
 			if (patcher.FindReplacement (code, out replacement) == false)
 			{
@@ -724,6 +745,10 @@ namespace Epsitec.Common.Text
 				this.context.GetStylesAndProperties (code, out styles, out properties);
 				
 				bool is_flagged = false;
+				
+				//	Regarde si l'un des styles appliqués au "run" actuel a été marqué
+				//	comme modifié. Ce n'est que dans ce cas qu'une substitution sera
+				//	nécessaire :
 				
 				for (int i = 0; i < styles.Length; i++)
 				{
@@ -764,10 +789,7 @@ namespace Epsitec.Common.Text
 					
 					if (Properties.ManagedParagraphProperty.CompareEqualContents (mpp1, mpp2) == false)
 					{
-						IParagraphManager pm1 = (mpp1 == null) ? null : this.context.GetParagraphManager (code);
-						IParagraphManager pm2 = (mpp2 == null) ? null : this.context.GetParagraphManager (replacement);
-						
-						mppi = new ManagedParagraphPropertyInfo (mpp1, pm1, mpp2, pm2);
+						mppi = new ManagedParagraphPropertyInfo (mpp1, mpp2);
 						
 						patcher.DefineManagedParagraphPropertyInfo (code, mppi);
 					}
@@ -792,15 +814,24 @@ namespace Epsitec.Common.Text
 				{
 					if (this.is_patcher_on_break)
 					{
-						System.Diagnostics.Debug.WriteLine ("New paragraph at " + (abs_pos+pos));
+						//	Au début de chaque paragraphe, vérifie si nous avons un
+						//	changement de "managed paragraph". Si c'est le cas, il
+						//	faut prendre note de la position pour pouvoir y revenir
+						//	plus tard pour faire les attach/detach nécessaires sur
+						//	les IParagraphManager :
 						
 						if (mppi != null)
 						{
-							System.Diagnostics.Debug.WriteLine (string.Format ("-- Change from {0} to {1}", mppi.Mpp1, mppi.Mpp2));
+							mppi = new ManagedParagraphPropertyInfo (mppi, abs_pos+i);
+							
+							this.pending_manager_patches.Push (mppi);
 						}
 					}
 					
 					buffer[i] ^= replacement;
+					
+					//	Regarde encore si l'on se trouve à une fin de paragraphe;
+					//	c'est utile pour la suite :
 					
 					this.is_patcher_on_break = Internal.Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (buffer[i]));
 				}
@@ -809,6 +840,9 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
+				//	Aucune modification n'a été nécessaire. Vérifie encore si le
+				//	"run" se termine par une fin de paragraphe :
+				
 				this.is_patcher_on_break = Internal.Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (buffer[end-1]));
 				
 				return false;
@@ -877,7 +911,7 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			public ManagedParagraphPropertyInfo FingManagedParagraphPropertyInfo(ulong code)
+			public ManagedParagraphPropertyInfo FindManagedParagraphPropertyInfo(ulong code)
 			{
 				return this.mppi[code] as ManagedParagraphPropertyInfo;
 			}
@@ -901,12 +935,22 @@ namespace Epsitec.Common.Text
 		#region ManagedParagraphPropertyInfo Class
 		private class ManagedParagraphPropertyInfo
 		{
-			public ManagedParagraphPropertyInfo(Properties.ManagedParagraphProperty mpp1, IParagraphManager pm1, Properties.ManagedParagraphProperty mpp2, IParagraphManager pm2)
+			//	Représente la transition d'une propriété Managed Paragraph à une
+			//	autre; utilisé par la méthode de patch lors de mise à jour des
+			//	propriétés associées à un style dans TextStory.
+			
+			public ManagedParagraphPropertyInfo(Properties.ManagedParagraphProperty mpp1, Properties.ManagedParagraphProperty mpp2)
 			{
 				this.mpp1 = mpp1;
-				this.pm1  = pm1;
 				this.mpp2 = mpp2;
-				this.pm2  = pm2;
+				this.pos  = -1;
+			}
+			
+			public ManagedParagraphPropertyInfo(ManagedParagraphPropertyInfo mppi, int pos)
+			{
+				this.mpp1 = mppi.mpp1;
+				this.mpp2 = mppi.mpp2;
+				this.pos  = pos;
 			}
 			
 			public Properties.ManagedParagraphProperty Mpp1
@@ -925,27 +969,19 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			public IParagraphManager			 Pm1
-			{
-				get
-				{
-					return this.pm1;
-				}
-			}
 			
-			public IParagraphManager			 Pm2
+			public int							Position
 			{
 				get
 				{
-					return this.pm2;
+					return this.pos;
 				}
 			}
 			
 			
 			Properties.ManagedParagraphProperty	mpp1;
-			IParagraphManager					pm1;
 			Properties.ManagedParagraphProperty mpp2;
-			IParagraphManager					pm2;
+			private int							pos;
 		}
 		#endregion
 		
@@ -1157,5 +1193,6 @@ namespace Epsitec.Common.Text
 		private long							version_of_last_update;
 		
 		private bool							is_patcher_on_break;
+		private System.Collections.Stack		pending_manager_patches;
 	}
 }
