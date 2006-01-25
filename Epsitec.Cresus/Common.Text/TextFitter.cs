@@ -705,6 +705,8 @@ restart_paragraph_layout:
 				Properties.MarginsProperty margins_property;
 				TextFitter.TabStatus       tab_status;
 				
+				double font_size_in_points;
+				
 				Layout.Status layout_status = layout.Fit (ref result, line_count, continuation);
 				
 				bool tab_new_line = false;
@@ -815,6 +817,7 @@ restart_paragraph_layout:
 						
 						layout.TextContext.GetTab (text[layout.TextOffset-1], out tab_property);
 						layout.TextContext.GetMargins (text[layout.TextOffset-1], out margins_property);
+						layout.TextContext.GetFontSize (text[layout.TextOffset-1], out font_size_in_points);
 						
 						System.Diagnostics.Debug.Assert (tab_property != null);
 						
@@ -823,7 +826,7 @@ restart_paragraph_layout:
 						bool   tab_at_line_start = (!continuation) && (layout.TextOffset == line_start_offset+1);
 						bool   tab_indents;
 						
-						tab_status = this.MeasureTabTextWidth (layout, tab_property, margins_property, line_count, tab_at_line_start, out tab_x, out tab_dx, out tab_indents);
+						tab_status = this.MeasureTabTextWidth (layout, tab_property, margins_property, font_size_in_points, line_count, tab_at_line_start, out tab_x, out tab_dx, out tab_indents);
 						
 						if (tab_status == TabStatus.ErrorNeedMoreText)
 						{
@@ -838,7 +841,7 @@ restart_paragraph_layout:
 							//	à la ligne.
 							
 							tab_new_line = true;
-							tab_status   = this.MeasureTabTextWidth (layout, tab_property, margins_property, line_count, true, out tab_x, out tab_dx, out tab_indents);
+							tab_status   = this.MeasureTabTextWidth (layout, tab_property, margins_property, font_size_in_points, line_count, true, out tab_x, out tab_dx, out tab_indents);
 							
 							if (tab_status == TabStatus.ErrorNeedMoreRoom)
 							{
@@ -1381,7 +1384,7 @@ restart_paragraph_layout:
 		}
 		
 		
-		private TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, Properties.MarginsProperty margins_property, int line_count, bool start_of_line, out double tab_x, out double width, out bool tab_indents)
+		private TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, Properties.MarginsProperty margins_property, double font_size_in_points, int line_count, bool start_of_line, out double tab_x, out double width, out bool tab_indents)
 		{
 			//	Détermine la position de départ du texte après le tabulateur, sa
 			//	largeur et l'indentation éventuellement à appliquer à la suite du
@@ -1405,12 +1408,37 @@ restart_paragraph_layout:
 			double x2 = tabs.GetTabPositionInPoints (tab_property);
 			double x3 = layout.LineWidth - layout.RightMargin;
 			
+			//	Gestion des attributs spéciaux :
+			
+			string tab_attr = tabs.GetTabAttribute (tab_property);
+			
+			if ((tab_attr != null) &&
+				(tab_attr.Length > 0))
+			{
+				int    level  = margins_property == null ? 0 : margins_property.Level;
+				double offset = 0;
+
+				//	Les attributs spéciaux peuvent définir un offset dépendant de
+				//	l'indentation ou encore un offset relatif additionnel qui est
+				//	alors dépendant de la taille de la fonte.
+				
+				offset += TabList.GetLevelOffset (font_size_in_points, level, tab_attr);
+				offset += TabList.GetRelativeOffset (font_size_in_points, tab_attr);
+				
+				x2 += offset;
+			}
+			
 			//	Gestion des modes absolus/relatifs :
 			
 			switch (tabs.GetTabPositionMode (tab_property))
 			{
 				case TabPositionMode.Absolute:
 				case TabPositionMode.AbsoluteIndent:
+					break;
+				
+				case TabPositionMode.Force:
+				case TabPositionMode.ForceIndent:
+					x1 = 0;
 					break;
 				
 				case TabPositionMode.LeftRelative:
@@ -1426,30 +1454,19 @@ restart_paragraph_layout:
 					throw new System.NotSupportedException (string.Format ("Tab position mode {0} not supported", tabs.GetTabPositionMode (tab_property)));
 			}
 			
-			string tab_attr = tabs.GetTabAttribute (tab_property);
-			
-			if ((tab_attr != null) &&
-				(tab_attr.Length > 0))
-			{
-				int    level  = margins_property == null ? 0 : margins_property.Level;
-				double offset = TabList.GetLevelOffset (level, tab_attr);
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Tab {0}, offset {1} for level {2}", tab_property.TabTag, offset, level));
-				
-				x2 += offset;
-			}
-			
 			//	Gestion de l'indentation du paragraphe après la marque de tabulation :
 			
 			switch (tabs.GetTabPositionMode (tab_property))
 			{
 				case TabPositionMode.Absolute:
 				case TabPositionMode.LeftRelative:
+				case TabPositionMode.Force:
 					tab_indents = false;
 					break;
 				
 				case TabPositionMode.AbsoluteIndent:
 				case TabPositionMode.LeftRelativeIndent:
+				case TabPositionMode.ForceIndent:
 					tab_indents = true;
 					break;
 				

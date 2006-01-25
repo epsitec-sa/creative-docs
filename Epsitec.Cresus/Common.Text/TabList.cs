@@ -412,7 +412,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public static double GetLevelOffset(int level, string attribute)
+		public static double GetLevelOffset(double font_size_in_points, int level, string attribute)
 		{
 			string[] args = TabList.UnpackFromAttribute (attribute);
 			double offset = 0;
@@ -426,13 +426,13 @@ namespace Epsitec.Common.Text
 						if (args[i].StartsWith (TabList.LevelMultiplier))
 						{
 							string value = args[i].Substring (TabList.LevelMultiplier.Length);
-							offset = TabList.GetLevelOffsetFromMultiplier (level, value);
+							offset = TabList.GetLevelOffsetFromMultiplier (font_size_in_points, level, value);
 							break;
 						}
 						else if (args[i].StartsWith (TabList.LevelTable))
 						{
 							string value = args[i].Substring (TabList.LevelTable.Length);
-							offset = TabList.GetLevelOffsetFromTable (level, value);
+							offset = TabList.GetLevelOffsetFromTable (font_size_in_points, level, value);
 							break;
 						}
 					}
@@ -442,8 +442,29 @@ namespace Epsitec.Common.Text
 			return offset;
 		}
 		
+		public static double GetRelativeOffset(double font_size_in_points, string attribute)
+		{
+			string[] args = TabList.UnpackFromAttribute (attribute);
+			double offset = 0;
+			
+			for (int i = 0; i < args.Length; i++)
+			{
+				if (args[i] != null)
+				{
+					if (args[i].StartsWith (TabList.RelativeEmOffset))
+					{
+						string value = args[i].Substring (TabList.RelativeEmOffset.Length);
+						double scale = System.Double.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
+						offset = scale * font_size_in_points;
+						break;
+					}
+				}
+			}
+			
+			return offset;
+		}
 		
-		private static double GetLevelOffsetFromMultiplier(int level, string value)
+		private static double GetLevelOffsetFromMultiplier(double font_size_in_points, int level, string value)
 		{
 			if (level == 0)
 			{
@@ -456,11 +477,18 @@ namespace Epsitec.Common.Text
 				
 				Properties.UnitsTools.DeserializeSizeUnits (value, out multiplier, out units);
 				
-				return Properties.UnitsTools.ConvertToPoints (multiplier, units) * level;
+				if (Properties.UnitsTools.IsScale (units))
+				{
+					return Properties.UnitsTools.ConvertToScale (multiplier, units) * level * font_size_in_points;
+				}
+				else
+				{
+					return Properties.UnitsTools.ConvertToPoints (multiplier, units) * level;
+				}
 			}
 		}
 		
-		private static double GetLevelOffsetFromTable(int level, string value)
+		private static double GetLevelOffsetFromTable(double font_size_in_points, int level, string value)
 		{
 			string[] args = value.Split (';');
 			
@@ -471,7 +499,14 @@ namespace Epsitec.Common.Text
 			
 			Properties.UnitsTools.DeserializeSizeUnits (args[level], out offset, out units);
 			
-			return Properties.UnitsTools.ConvertToPoints (offset, units);
+			if (Properties.UnitsTools.IsScale (units))
+			{
+				return Properties.UnitsTools.ConvertToScale (offset, units) * font_size_in_points;
+			}
+			else
+			{
+				return Properties.UnitsTools.ConvertToPoints (offset, units);
+			}
 		}
 		
 		
@@ -794,5 +829,6 @@ namespace Epsitec.Common.Text
 		
 		private const string					LevelMultiplier = "LevelMultiplier:";
 		private const string					LevelTable = "LevelTable:";
+		private const string					RelativeEmOffset = "Em:";
 	}
 }

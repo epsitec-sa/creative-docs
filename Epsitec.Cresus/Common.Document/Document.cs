@@ -1418,8 +1418,8 @@ namespace Epsitec.Common.Document
 			items1.TabBody   = tabs.NewTab("T1-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.AbsoluteIndent);
 			
 			items2.Generator = generator2;
-			items2.TabItem   = tabs.NewTab("T2-item", 60.0, Text.Properties.SizeUnits.Points, 1, null, TabPositionMode.LeftRelative, TabList.PackToAttribute ("LevelMultiplier:60 pt"));
-			items2.TabBody   = tabs.NewTab("T2-body", 65.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute ("LevelMultiplier:60 pt"));
+			items2.TabItem   = tabs.NewTab("T2-item", 0.0, Text.Properties.SizeUnits.Points, 1, null, TabPositionMode.Force, TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:2"));
+			items2.TabBody   = tabs.NewTab("T2-body", 0.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:2.5"));
 			
 			items3.Generator = generator3;
 			items3.TabItem   = tabs.NewTab("T3-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.LeftRelative);

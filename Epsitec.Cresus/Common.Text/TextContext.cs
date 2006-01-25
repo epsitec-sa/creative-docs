@@ -506,6 +506,19 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void GetFontSize(ulong code, out double font_size_in_points)
+		{
+			OpenType.Font font;
+			
+			double font_size;
+			double scale;
+			double glue;
+			
+			this.InternalGetFontAndSize (code, out font, out font_size, out scale, out glue);
+			
+			font_size_in_points = font_size * scale;
+		}
+		
 		public void GetFontSize(Properties.FontProperty font_property, Properties.FontSizeProperty font_size_property, Properties.FontXscriptProperty font_xscript_property, out double font_size, out double font_scale, out double font_glue)
 		{
 			font_size  = font_size_property.SizeInPoints;

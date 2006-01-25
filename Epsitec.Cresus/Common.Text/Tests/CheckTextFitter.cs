@@ -561,20 +561,20 @@ namespace Epsitec.Common.Text.Tests
 			string a1 = TabList.PackToAttribute ("Dummy", "LevelMultiplier:10 mm");
 			string a2 = TabList.PackToAttribute ("Dummy", "LevelTable:10 mm;50 pt;2.54 in");
 			
-			double v1_0 = TabList.GetLevelOffset (0, a1);
-			double v1_1 = TabList.GetLevelOffset (1, a1);
-			double v1_2 = TabList.GetLevelOffset (2, a1);
-			double v1_3 = TabList.GetLevelOffset (3, a1);
+			double v1_0 = TabList.GetLevelOffset (1.0, 0, a1);
+			double v1_1 = TabList.GetLevelOffset (1.0, 1, a1);
+			double v1_2 = TabList.GetLevelOffset (1.0, 2, a1);
+			double v1_3 = TabList.GetLevelOffset (1.0, 3, a1);
 			
 			Debug.Assert.Equals (0,   (int)(v1_0*10));
 			Debug.Assert.Equals (283, (int)(v1_1*10));
 			Debug.Assert.Equals (566, (int)(v1_2*10));
 			Debug.Assert.Equals (850, (int)(v1_3*10));
 			
-			double v2_0 = TabList.GetLevelOffset (0, a2);
-			double v2_1 = TabList.GetLevelOffset (1, a2);
-			double v2_2 = TabList.GetLevelOffset (2, a2);
-			double v2_3 = TabList.GetLevelOffset (3, a2);
+			double v2_0 = TabList.GetLevelOffset (1.0, 0, a2);
+			double v2_1 = TabList.GetLevelOffset (1.0, 1, a2);
+			double v2_2 = TabList.GetLevelOffset (1.0, 2, a2);
+			double v2_3 = TabList.GetLevelOffset (1.0, 3, a2);
 			
 			Debug.Assert.Equals ( 283, (int)(v2_0*10));
 			Debug.Assert.Equals ( 500, (int)(v2_1*10));

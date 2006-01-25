@@ -14,5 +14,8 @@ namespace Epsitec.Common.Text
 		
 		LeftRelative			= 2,			//	position relative à la marge de gauche
 		LeftRelativeIndent		= 3,			//	position relative, indente toutes les lignes
+		
+		Force					= 4,			//	position absolue (sans changement de ligne)
+		ForceIndent				= 5,			//	position absolue, indente toutes les lignes
 	}
 }
