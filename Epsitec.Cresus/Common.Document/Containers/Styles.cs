@@ -1009,7 +1009,28 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
 			{
+				int rank = this.document.GetSelectedTextStyle(this.category);
+				Common.Text.TextStyle initialStyle = this.TextStyleList.List[rank];
+				string initialName = this.document.TextContext.StyleList.StyleMap.GetCaption(initialStyle);
+
+				Common.Text.TextStyleClass type = initialStyle.TextStyleClass;
+				Text.Property[] properties = initialStyle.StyleProperties;
+				Text.TextStyle[] parents = initialStyle.ParentStyles;
+
+				this.document.Modifier.OpletQueueBeginAction((this.category == StyleCategory.Paragraph) ? Res.Strings.Action.AggregateNewParagraph : Res.Strings.Action.AggregateNewCharacter);
+				
+				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(this.document.Modifier.OpletQueue, null, type, properties, parents);
+
+				rank ++;
+				this.StylesShiftRanks(rank);
+				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, Misc.CopyName(initialName));
+				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, rank);
+				this.document.SetSelectedTextStyle(this.category, rank);
+				
+				this.document.Modifier.OpletQueueValidateAction();
 				this.document.IsDirtySerialize = true;
+
+				this.SetDirtyContent();
 			}
 		}
 
