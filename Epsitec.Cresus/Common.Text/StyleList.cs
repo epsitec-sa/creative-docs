@@ -117,6 +117,7 @@ namespace Epsitec.Common.Text
 			
 			if (queue != null)
 			{
+				System.Diagnostics.Debug.Assert (queue.IsActionDefinitionInProgress);
 				TextStory.InsertOplet (queue, new NewOplet (this, style));
 			}
 			
@@ -215,6 +216,7 @@ namespace Epsitec.Common.Text
 			
 			if (queue != null)
 			{
+				System.Diagnostics.Debug.Assert (queue.IsActionDefinitionInProgress);
 				TextStory.InsertOplet (queue, new RedefineOplet (this, style));
 			}
 			
@@ -254,11 +256,8 @@ namespace Epsitec.Common.Text
 			
 			if (queue != null)
 			{
-				using (queue.BeginAction ())
-				{
-					queue.Insert (new SetNextStyleOplet (this, style, next_style));
-					queue.ValidateAction ();
-				}
+				System.Diagnostics.Debug.Assert (queue.IsActionDefinitionInProgress);
+				TextStory.InsertOplet (queue, new SetNextStyleOplet (this, style));
 			}
 			
 			if (next_style == null)
@@ -576,7 +575,10 @@ namespace Epsitec.Common.Text
 		{
 			this.version.ChangeVersion ();
 			
+			TextStyle next = style.NextStyle;
+			
 			style.Clear ();
+			style.DefineNextStyle (next);
 		}
 		
 		private void PostRedefine(TextStyle style)
@@ -1042,11 +1044,11 @@ namespace Epsitec.Common.Text
 		#region SetNextStyleOplet Class
 		private class SetNextStyleOplet : Common.Support.AbstractOplet
 		{
-			public SetNextStyleOplet(StyleList stylist, TextStyle style, TextStyle next_style)
+			public SetNextStyleOplet(StyleList stylist, TextStyle style)
 			{
 				this.stylist = stylist;
 				this.style   = style;
-				this.next    = next_style;
+				this.next    = this.style.NextStyle;
 			}
 			
 

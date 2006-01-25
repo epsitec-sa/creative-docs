@@ -447,7 +447,7 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleStyleClosedCombo(object sender)
 		{
 			//	Combo des styles fermé.
-			int sel = fieldNextStyle.SelectedIndex;
+			int sel = this.fieldNextStyle.SelectedIndex;
 			if ( sel == -1 )  return;
 
 			Text.TextStyle currentStyle = this.ParagraphWrapper.AttachedStyle;
