@@ -440,12 +440,15 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Effectue la mise à jour du contenu.
 			this.graphicList.List = this.document.Aggregates;
+			this.graphicList.SelectedRank = this.document.Aggregates.Selected;
 			this.graphicList.UpdateContent();
 
 			this.paragraphList.List = this.document.TextStyles(StyleCategory.Paragraph);
+			this.paragraphList.SelectedRank = this.document.GetSelectedTextStyle(StyleCategory.Paragraph);
 			this.paragraphList.UpdateContent();
 			
 			this.characterList.List = this.document.TextStyles(StyleCategory.Character);
+			this.characterList.SelectedRank = this.document.GetSelectedTextStyle(StyleCategory.Character);
 			this.characterList.UpdateContent();
 			
 			this.UpdateAggregateName();
@@ -722,7 +725,7 @@ namespace Epsitec.Common.Document.Containers
 			{
 				int styleSel = this.TextStyleList.SelectedRow;
 				int total = this.TextChildrensList.Rows;
-				int sel = this.TextChildrensList.SelectedRow;
+				int sel = this.TextChildrensList.SelectedRank;
 
 				this.buttonChildrensNew.Enable = (styleSel != -1);
 				this.buttonChildrensUp.Enable = (sel != -1 && sel > 0);
@@ -745,7 +748,7 @@ namespace Epsitec.Common.Document.Containers
 				else
 				{
 					this.childrensGraphicList.List = agg.Childrens;
-					this.childrensGraphicList.SelectRow(agg.Childrens.Selected, true);
+					this.childrensGraphicList.SelectedRank = agg.Childrens.Selected;
 				}
 
 				this.childrensGraphicList.UpdateContent();
@@ -763,6 +766,10 @@ namespace Epsitec.Common.Document.Containers
 				{
 					Common.Text.TextStyle style = this.TextStyleList.List[sel];
 					this.TextChildrensList.List = style.ParentStyles;
+
+					int rank = this.TextChildrensList.SelectedRank;
+					rank = System.Math.Min(rank, this.TextChildrensList.List.Length-1);
+					this.TextChildrensList.SelectedRank = rank;
 				}
 
 				this.TextChildrensList.UpdateContent();
@@ -1303,6 +1310,31 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
 			{
+				int sel = this.document.GetSelectedTextStyle(this.category);
+				if ( sel == -1 )  return;
+				Text.TextStyle[] styles = this.TextStyleList.List;
+				Text.TextStyle currentStyle = styles[sel];
+
+				System.Collections.ArrayList parents = new System.Collections.ArrayList();
+				Text.TextStyle[] currentParents = currentStyle.ParentStyles;
+				foreach ( Text.TextStyle style in currentParents )
+				{
+					parents.Add(style);
+				}
+
+				int parentSel = this.TextChildrensList.SelectedRank;
+				if ( parentSel == -1 )  return;
+				Text.TextStyle removed = parents[parentSel] as Text.TextStyle;
+				parents.RemoveAt(parentSel);
+				parents.Insert(parentSel-1, removed);
+
+				this.TextChildrensList.SelectedRank = parentSel-1;
+
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensUp);
+				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
+				this.document.Modifier.OpletQueueValidateAction();
+				this.document.IsDirtySerialize = true;
+				this.SetDirtyContent();
 			}
 		}
 
@@ -1319,6 +1351,31 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
 			{
+				int sel = this.document.GetSelectedTextStyle(this.category);
+				if ( sel == -1 )  return;
+				Text.TextStyle[] styles = this.TextStyleList.List;
+				Text.TextStyle currentStyle = styles[sel];
+
+				System.Collections.ArrayList parents = new System.Collections.ArrayList();
+				Text.TextStyle[] currentParents = currentStyle.ParentStyles;
+				foreach ( Text.TextStyle style in currentParents )
+				{
+					parents.Add(style);
+				}
+
+				int parentSel = this.TextChildrensList.SelectedRank;
+				if ( parentSel == -1 )  return;
+				Text.TextStyle removed = parents[parentSel] as Text.TextStyle;
+				parents.RemoveAt(parentSel);
+				parents.Insert(parentSel+1, removed);
+
+				this.TextChildrensList.SelectedRank = parentSel+1;
+
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensDown);
+				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
+				this.document.Modifier.OpletQueueValidateAction();
+				this.document.IsDirtySerialize = true;
+				this.SetDirtyContent();
 			}
 		}
 
@@ -1348,9 +1405,15 @@ namespace Epsitec.Common.Document.Containers
 					parents.Add(style);
 				}
 
-				int parentSel = this.TextChildrensList.SelectedRow;
+				int parentSel = this.TextChildrensList.SelectedRank;
 				if ( parentSel == -1 )  return;
 				parents.RemoveAt(parentSel);
+
+				if ( parentSel >= this.TextChildrensList.List.Length )
+				{
+					parentSel = this.TextChildrensList.List.Length-1;
+				}
+				this.TextChildrensList.SelectedRank = parentSel;
 
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensDelete);
 				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
@@ -1383,6 +1446,7 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
 			{
+				this.TextChildrensList.SelectedRank = this.TextChildrensList.SelectedRow;
 				this.UpdateChildrensToolBar();
 			}
 		}
@@ -1672,6 +1736,7 @@ namespace Epsitec.Common.Document.Containers
 					parents.Add(style);
 				}
 				parents.Insert(0, newStyle);
+				this.TextChildrensList.SelectedRank = 0;
 
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensNew);
 				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);

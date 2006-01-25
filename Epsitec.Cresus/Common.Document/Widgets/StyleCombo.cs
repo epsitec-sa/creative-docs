@@ -408,8 +408,7 @@ namespace Epsitec.Common.Document.Widgets
 				list.VScroller = false;
 				list.IsHiliteColumn = false;
 				list.IsChildrensColumn = false;
-				list.IsInitialSelection = false;
-				list.FixSelection = sel;
+				list.SelectedRank = sel;
 				list.FixWidth = width;
 				list.UpdateContent();
 				this.list = list;
@@ -428,8 +427,7 @@ namespace Epsitec.Common.Document.Widgets
 				list.VScroller = false;
 				list.IsHiliteColumn = false;
 				list.IsChildrensColumn = false;
-				list.IsInitialSelection = false;
-				list.FixSelection = sel;
+				list.SelectedRank = sel;
 				list.FixWidth = width;
 				list.UpdateContent();
 				this.list = list;

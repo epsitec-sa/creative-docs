@@ -55,22 +55,6 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		protected override int ListSelected
-		{
-			//	Ligne sélectionnée dans la liste.
-			get
-			{
-				if ( this.list == null )
-				{
-					return -1;
-				}
-				else
-				{
-					return this.list.Selected;
-				}
-			}
-		}
-
 		protected override string ListName(int rank)
 		{
 			//	Nom d'une ligne de la liste.

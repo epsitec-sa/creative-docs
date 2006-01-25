@@ -70,19 +70,6 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		protected override int ListSelected
-		{
-			//	Ligne sélectionnée dans la liste.
-			get
-			{
-				if ( this.list != null )
-				{
-					return this.document.GetSelectedTextStyle(this.category);
-				}
-				return -1;
-			}
-		}
-
 		protected override string ListName(int rank)
 		{
 			//	Nom d'une ligne de la liste.

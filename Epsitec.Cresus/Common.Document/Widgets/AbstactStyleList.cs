@@ -80,6 +80,20 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public int SelectedRank
+		{
+			//	Ligne sélectionnée.
+			get
+			{
+				return this.selectedRank;
+			}
+
+			set
+			{
+				this.selectedRank = value;
+			}
+		}
+
 		public int ExcludeRank
 		{
 			//	Ligne éventuelle à exclure.
@@ -163,34 +177,6 @@ namespace Epsitec.Common.Document.Widgets
 			set
 			{
 				this.isChildrensColumn = value;
-			}
-		}
-
-		public bool IsInitialSelection
-		{
-			//	Sélection initiale.
-			get
-			{
-				return this.isInitialSelection;
-			}
-
-			set
-			{
-				this.isInitialSelection = value;
-			}
-		}
-
-		public int FixSelection
-		{
-			//	Sélection initiale fixe (pour un menu).
-			get
-			{
-				return this.fixSelection;
-			}
-
-			set
-			{
-				this.fixSelection = value;
 			}
 		}
 
@@ -337,7 +323,7 @@ namespace Epsitec.Common.Document.Widgets
 			//	Met à jour le contenu d'une ligne de la table.
 			System.Diagnostics.Debug.Assert(this.document != null);
 			int rank = this.RowToRank(row);
-			bool selected = ((rank == this.ListSelected && this.isInitialSelection) || rank == this.fixSelection);
+			bool selected = (rank == this.selectedRank);
 			int nc = this.NameColumn;
 			int fix = this.FixColumns;
 			GlyphButton gb;
@@ -436,15 +422,6 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		protected virtual int ListSelected
-		{
-			//	Ligne sélectionnée dans la liste.
-			get
-			{
-				return -1;
-			}
-		}
-
 		protected virtual string ListName(int rank)
 		{
 			//	Nom d'une ligne de la liste.
@@ -470,6 +447,7 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		protected Document						document;
+		protected int							selectedRank = -1;
 		protected int							excludeRank = -1;
 		protected double						fixWidth = 0;
 		protected bool							isDeep = false;
@@ -477,7 +455,5 @@ namespace Epsitec.Common.Document.Widgets
 		protected bool							isHiliteColumn = true;
 		protected bool							isOrderColumn = false;
 		protected bool							isChildrensColumn = true;
-		protected bool							isInitialSelection = true;
-		protected int							fixSelection = -1;
 	}
 }
