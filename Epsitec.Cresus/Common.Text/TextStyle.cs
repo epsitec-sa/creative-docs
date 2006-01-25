@@ -333,16 +333,11 @@ namespace Epsitec.Common.Text
 		
 		internal void Serialize(System.Text.StringBuilder buffer)
 		{
-			Property[] properties = null;
+			Property[] properties = this.style_properties;
 			
-			if ((this.style_properties == null) ||
-				(this.style_properties.Length == 0))
+			if (properties == null)
 			{
-				properties = this.GetProperties ();
-			}
-			else
-			{
-				properties = this.style_properties;
+				properties = new Property[0];
 			}
 			
 			int n_styles;
