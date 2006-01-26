@@ -740,6 +740,9 @@
 	<data name="Misc.Extract">Extrait</data>
 	<data name="Misc.ExtractOf">de</data>
 
+	<data name="Sample.Paragraph">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</data>
+	<data name="Sample.Character">Lorem ipsum dolor</data>
+
 	<data name="Action.ActionMain">Action</data>
 
 	<data name="Action.ToolSelect">Sélectionner</data>

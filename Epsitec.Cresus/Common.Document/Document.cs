@@ -219,9 +219,7 @@ namespace Epsitec.Common.Document
 				{
 					this.objectForSamplesParagraph = new Objects.TextBox2(this.DocumentForSamples, null);
 					this.objectForSamplesParagraph.CreateForSample();
-
-					string latin = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
-					this.objectForSamplesParagraph.EditInsertText(latin, "", "");
+					this.objectForSamplesParagraph.EditInsertText(Res.Strings.Sample.Paragraph, "", "");
 				}
 
 				return this.objectForSamplesParagraph;
@@ -237,9 +235,7 @@ namespace Epsitec.Common.Document
 				{
 					this.objectForSamplesCharacter = new Objects.TextBox2(this.DocumentForSamples, null);
 					this.objectForSamplesCharacter.CreateForSample();
-
-					string latin = "Lorem ipsum dolor";
-					this.objectForSamplesCharacter.EditInsertText(latin, "", "");
+					this.objectForSamplesCharacter.EditInsertText(Res.Strings.Sample.Character, "", "");
 				}
 
 				return this.objectForSamplesCharacter;

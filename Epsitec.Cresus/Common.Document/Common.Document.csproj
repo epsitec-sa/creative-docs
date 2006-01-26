@@ -1017,11 +1017,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Widgets\TextStyleSample.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Widgets\TextStylesList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
