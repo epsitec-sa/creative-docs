@@ -1454,6 +1454,7 @@ namespace Epsitec.Common.Document.Containers
 				{
 					parents.Add(this.document.TextContext.DefaultParagraphStyle);
 					this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
+					this.document.Modifier.ActiveViewer.DialogError(Res.Strings.Error.StyleNoBase);
 				}
 
 				this.document.Modifier.OpletQueueValidateAction();
@@ -1722,7 +1723,10 @@ namespace Epsitec.Common.Document.Containers
 				Text.TextStyle[] styles = this.TextStyleList.List;
 				Text.TextStyle currentStyle = styles[sel];
 
-				for ( int i=0 ; i<styles.Length ; i++ )
+				//	Avec les styles de caractère, il faut sauter le premier style qui est
+				//	toujours le style de base.
+				int start = (this.category == StyleCategory.Paragraph) ? 0 : 1;
+				for ( int i=start ; i<styles.Length ; i++ )
 				{
 					Text.TextStyle style = styles[i];
 					if ( style == currentStyle )  continue;
@@ -1780,7 +1784,16 @@ namespace Epsitec.Common.Document.Containers
 
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensNew);
 				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
+
+				if ( this.document.Wrappers.IsStyleAsCircularRef(currentStyle) )
+				{
+					parents.RemoveAt(0);
+					this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
+					this.document.Modifier.ActiveViewer.DialogError(Res.Strings.Error.StyleCircularRef);
+				}
+
 				this.document.Modifier.OpletQueueValidateAction();
+
 				this.document.IsDirtySerialize = true;
 				this.SetDirtyContent();
 			}

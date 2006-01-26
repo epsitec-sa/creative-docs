@@ -311,6 +311,31 @@ namespace Epsitec.Common.Document
 			return false;
 		}
 
+		public bool IsStyleAsCircularRef(Text.TextStyle style)
+		{
+			//	Vérifie s'il existe une référence circulaire dans un style.
+			return this.IsStyleAsCircularRef(style, style);
+		}
+
+		protected bool IsStyleAsCircularRef(Text.TextStyle reference, Text.TextStyle style)
+		{
+			Text.TextStyle[] parents = style.ParentStyles;
+			foreach ( Text.TextStyle parent in parents )
+			{
+				if ( parent == reference )
+				{
+					return true;
+				}
+
+				if ( this.IsStyleAsCircularRef(reference, parent) )
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+
 
 		public void ExecuteCommand(string name)
 		{

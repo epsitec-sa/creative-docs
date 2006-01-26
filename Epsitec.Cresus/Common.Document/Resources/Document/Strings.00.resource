@@ -1314,5 +1314,7 @@
 	<data name="Error.Boolean">Opération impossible.</data>
 	<data name="Error.NoText">Le document ne contient aucun texte.</data>
 	<data name="Error.NotFound">Le texte recherché n'existe pas dans ce document.</data>
+	<data name="Error.StyleNoBase">Le style ne faisait plus référence au style normal.&lt;br/&gt;Une référence au style normal a donc été ajoutée.</data>
+	<data name="Error.StyleCircularRef">Impossible d'ajouter ce style car il génère une référence en boucle.</data>
 
 </bundle>
