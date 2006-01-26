@@ -306,10 +306,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ActiveIconButton(this.buttonKeepNext, keepNext, isKeepNext);
 			this.ActiveIconButton(this.buttonKeepPrev, keepPrev, isKeepPrev);
 
-			this.fieldKeepStart.TextFieldReal.InternalValue = (decimal) keepStart;
-			this.fieldKeepEnd  .TextFieldReal.InternalValue = (decimal) keepEnd;
-			this.ProposalTextFieldLabel(this.fieldKeepStart, !isKeepStart);
-			this.ProposalTextFieldLabel(this.fieldKeepEnd,   !isKeepEnd);
+			this.SetTextFieldRealValue(this.fieldKeepStart.TextFieldReal, keepStart, Common.Text.Properties.SizeUnits.Points, isKeepStart, false);
+			this.SetTextFieldRealValue(this.fieldKeepEnd.TextFieldReal,   keepEnd,   Common.Text.Properties.SizeUnits.Points, isKeepEnd,   false);
 
 			this.fieldStartMode.Text = Keep.ModeToString(mode);
 			this.fieldStartMode.TextDisplayMode = isMode ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
@@ -376,8 +374,10 @@ namespace Epsitec.Common.Document.TextPanels
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
 
-			double value = (double) field.InternalValue;
-			bool isDefined = field.Text != "";
+			double value;
+			Common.Text.Properties.SizeUnits units;
+			bool isDefined;
+			this.GetTextFieldRealValue(field, out value, out units, out isDefined);
 
 			this.ParagraphWrapper.SuspendSynchronizations();
 
@@ -403,8 +403,10 @@ namespace Epsitec.Common.Document.TextPanels
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
 
-			double value = (double) field.InternalValue;
-			bool isDefined = field.Text != "";
+			double value;
+			Common.Text.Properties.SizeUnits units;
+			bool isDefined;
+			this.GetTextFieldRealValue(field, out value, out units, out isDefined);
 
 			this.ParagraphWrapper.SuspendSynchronizations();
 

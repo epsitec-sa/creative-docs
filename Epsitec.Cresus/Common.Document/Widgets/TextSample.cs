@@ -46,13 +46,13 @@ namespace Epsitec.Common.Document.Widgets
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
-			if ( this.textStyle == null )  // dessine une croix ?
+			if ( this.textStyle == null || !this.document.Wrappers.IsStyleCorrect(this.textStyle) )
 			{
 				rect.Deflate(0.5);
 				Color color = adorner.ColorBorder;
 				color.A = 0.3;
 
-				graphics.AddLine(rect.BottomLeft, rect.TopRight);
+				graphics.AddLine(rect.BottomLeft, rect.TopRight);  // dessine une croix
 				graphics.RenderSolid(color);
 
 				graphics.AddLine(rect.TopLeft, rect.BottomRight);
@@ -60,6 +60,8 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else
 			{
+				string n = this.document.TextContext.StyleList.StyleMap.GetCaption(this.textStyle);
+				System.Diagnostics.Debug.WriteLine("TextSamplePaint "+n);
 				this.PaintSample(graphics, rect);
 			}
 		}

@@ -174,13 +174,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ignoreChanged = true;
 
-			this.fieldLeftMarginFirst.TextFieldReal.InternalValue = (decimal) leftFirst;
-			this.fieldLeftMarginBody.TextFieldReal.InternalValue  = (decimal) leftBody;
-			this.fieldRightMargin.TextFieldReal.InternalValue     = (decimal) right;
-			this.ProposalTextFieldLabel(this.fieldLeftMarginFirst, !isLeftFirst);
-			this.ProposalTextFieldLabel(this.fieldLeftMarginBody,  !isLeftBody );
-			this.ProposalTextFieldLabel(this.fieldRightMargin,     !isRight    );
-			
+			this.SetTextFieldRealValue(this.fieldLeftMarginFirst.TextFieldReal, leftFirst, Common.Text.Properties.SizeUnits.Points, isLeftFirst, false);
+			this.SetTextFieldRealValue(this.fieldLeftMarginBody.TextFieldReal,  leftBody,  Common.Text.Properties.SizeUnits.Points, isLeftBody,  false);
+			this.SetTextFieldRealValue(this.fieldRightMargin.TextFieldReal,     right,     Common.Text.Properties.SizeUnits.Points, isRight,     false);
+
 			this.ignoreChanged = false;
 		}
 
@@ -193,8 +190,10 @@ namespace Epsitec.Common.Document.TextPanels
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
 
-			double value = (double) field.InternalValue;
-			bool isDefined = field.Text != "";
+			double value;
+			Common.Text.Properties.SizeUnits units;
+			bool isDefined;
+			this.GetTextFieldRealValue(field, out value, out units, out isDefined);
 
 			this.ParagraphWrapper.SuspendSynchronizations();
 

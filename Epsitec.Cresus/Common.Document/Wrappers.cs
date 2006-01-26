@@ -252,6 +252,8 @@ namespace Epsitec.Common.Document
 
 		protected void HandleStyleWrapperChanged(object sender)
 		{
+			//	Le wrapper des styles de paragraphe ou de caractère a changé.
+			System.Diagnostics.Debug.WriteLine("HandleStyleWrapperChanged "+(Wrappers.cc++).ToString());
 			Text.TextStyle attachedStyle = this.styleParagraphWrapper.AttachedStyle;
 			if ( attachedStyle == null )  return;
 
@@ -269,6 +271,36 @@ namespace Epsitec.Common.Document
 			}
 
 			this.document.Notifier.NotifyTextStyleChanged(attachedStyle);
+		}
+
+		protected static int cc=0;
+
+
+		public bool IsStyleCorrect(Text.TextStyle style)
+		{
+			//	Vérifie si un style de paragraphe contient le style de base dans ses parents.
+			if ( style.TextStyleClass != Text.TextStyleClass.Paragraph )  return true;
+
+			if ( this.document.TextContext.StyleList.IsDefaultParagraphTextStyle(style) )
+			{
+				return true;
+			}
+
+			Text.TextStyle[] parents = style.ParentStyles;
+			foreach ( Text.TextStyle parent in parents )
+			{
+				if ( this.document.TextContext.StyleList.IsDefaultParagraphTextStyle(parent) )
+				{
+					return true;
+				}
+
+				if ( this.IsStyleCorrect(parent) )
+				{
+					return true;
+				}
+			}
+			
+			return false;
 		}
 
 
