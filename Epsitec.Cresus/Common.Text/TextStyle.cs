@@ -137,7 +137,18 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.next_style;
+				if (this.next_style == null)
+				{
+					return this.next_style;
+				}
+				else if (this.next_style.IsDeleted)
+				{
+					return null;
+				}
+				else
+				{
+					return this.next_style;
+				}
 			}
 		}
 		
