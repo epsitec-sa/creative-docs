@@ -195,9 +195,10 @@ namespace Epsitec.Common.Document
 			set { this.clipboard = value; }
 		}
 
+		#region ForSamples
 		public Document DocumentForSamples
 		{
-			//	Donne le document spécial servant à dessiner les miniatures.
+			//	Donne le document spécial servant à dessiner les échantillons.
 			get
 			{
 				if ( this.documentForSamples == null )
@@ -208,6 +209,43 @@ namespace Epsitec.Common.Document
 				return this.documentForSamples;
 			}
 		}
+
+		public Objects.TextBox2 ObjectForSamplesParagraph
+		{
+			//	Donne l'objet TextBox2 servant à dessiner les échantillons des styles de paragraphe.
+			get
+			{
+				if ( this.objectForSamplesParagraph == null )
+				{
+					this.objectForSamplesParagraph = new Objects.TextBox2(this.DocumentForSamples, null);
+					this.objectForSamplesParagraph.CreateForSample();
+
+					string latin = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+					this.objectForSamplesParagraph.EditInsertText(latin, "", "");
+				}
+
+				return this.objectForSamplesParagraph;
+			}
+		}
+
+		public Objects.TextBox2 ObjectForSamplesCharacter
+		{
+			//	Donne l'objet TextBox2 servant à dessiner les échantillons des styles de caractère.
+			get
+			{
+				if ( this.objectForSamplesCharacter == null )
+				{
+					this.objectForSamplesCharacter = new Objects.TextBox2(this.DocumentForSamples, null);
+					this.objectForSamplesCharacter.CreateForSample();
+
+					string latin = "Lorem ipsum dolor";
+					this.objectForSamplesCharacter.EditInsertText(latin, "", "");
+				}
+
+				return this.objectForSamplesCharacter;
+			}
+		}
+		#endregion
 
 		public UndoableList GetObjects
 		{
@@ -2112,6 +2150,8 @@ namespace Epsitec.Common.Document
 		protected string						name;
 		protected Document						clipboard;
 		protected Document						documentForSamples;
+		protected Objects.TextBox2				objectForSamplesParagraph;
+		protected Objects.TextBox2				objectForSamplesCharacter;
 		protected Size							size;
 		protected Point							hotSpot;
 		protected string						filename;

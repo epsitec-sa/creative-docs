@@ -147,15 +147,27 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.NotifyAreaFlow();
 		}
 
-		public void CreateFromRectangle(Drawing.Rectangle rect)
+		#region ForSamples
+		public void CreateForSample()
 		{
-			//	Crée un objet temporaire à partir d'un rectangle.
-			this.HandleAdd(rect.BottomLeft,  HandleType.Primary);  // rang = 0
-			this.HandleAdd(rect.TopRight,    HandleType.Primary);  // rang = 1
-			this.HandleAdd(rect.TopLeft,     HandleType.Primary);  // rang = 2
-			this.HandleAdd(rect.BottomRight, HandleType.Primary);  // rang = 3
+			//	Crée un objet pour un échantillon.
+			Point pos = new Point(0, 0);
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 2
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 3
+		}
+
+		public void RectangleToSample(Drawing.Rectangle rect)
+		{
+			//	Spécifie les dimensions pour un échantillon.
+			this.Handle(0).Position = rect.BottomLeft;
+			this.Handle(1).Position = rect.TopRight;
+			this.Handle(2).Position = rect.TopLeft;
+			this.Handle(3).Position = rect.BottomRight;
 			this.UpdateGeometry();
 		}
+		#endregion
 
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{

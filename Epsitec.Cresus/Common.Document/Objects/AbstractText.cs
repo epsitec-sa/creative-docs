@@ -415,11 +415,9 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		public void EditInsertText(string text, Text.TextStyle style)
+		public void SampleChangeStyle(Text.TextStyle style)
 		{
-			//	Insère un texte pour un échantillon.
-			this.EditInsertText(text, "", "");
-
+			//	Change le style pour un échantillon.
 			this.EditWrappersAttach();  // attache l'objet aux différents wrappers
 			this.textFlow.ActiveTextBox = this;
 

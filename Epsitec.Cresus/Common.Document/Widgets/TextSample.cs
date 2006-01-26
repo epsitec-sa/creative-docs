@@ -82,28 +82,29 @@ namespace Epsitec.Common.Document.Widgets
 			Document document = this.document.DocumentForSamples;
 			document.Modifier.OpletQueueEnable = false;
 
-			string latin = "";
+			Objects.TextBox2 obj = null;
 
 			if ( this.textStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
 			{
-				latin = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+				obj = this.document.ObjectForSamplesParagraph;
 			}
 
 			if ( this.textStyle.TextStyleClass == Common.Text.TextStyleClass.Text )
 			{
-				latin = "Lorem ipsum dolor";
+				obj = this.document.ObjectForSamplesCharacter;
 			}
 
-			Objects.TextBox2 obj = new Objects.TextBox2(document, null);
-			obj.CreateFromRectangle(rect);
-			obj.EditInsertText(latin, this.textStyle);
+			if ( obj != null )
+			{
+				obj.RectangleToSample(rect);
+				obj.SampleChangeStyle(this.textStyle);
 
-			Shape[] shapes = obj.ShapesBuild(graphics, null, false);
+				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
 
-			Drawer drawer = new Drawer(document);
-			drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
+				Drawer drawer = new Drawer(document);
+				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
+			}
 
-			obj.Dispose();
 			graphics.Transform = initial;
 			graphics.RestoreClippingRectangle(iClip);
 		}
