@@ -866,6 +866,7 @@ namespace Epsitec.Common.Text.Wrappers
 				Properties.FontProperty p_italic = this.ReadMetaProperty (TextWrapper.InvertItalic, Properties.WellKnownType.Font) as Properties.FontProperty;
 				
 				if ((p_bold == null) ||
+					(p_bold.StyleName == null) ||
 					(p_bold.StyleName.IndexOf ("!Bold") < 0))
 				{
 					state.DefineValue (State.InvertBoldProperty, false);
@@ -876,6 +877,7 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 				
 				if ((p_italic == null) ||
+					(p_italic.StyleName == null) ||
 					(p_italic.StyleName.IndexOf ("!Italic") < 0))
 				{
 					state.DefineValue (State.InvertItalicProperty, false);
