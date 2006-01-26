@@ -226,14 +226,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public Objects.TextBox2 ObjectForSamplesCharacter
+		public Objects.TextLine2 ObjectForSamplesCharacter
 		{
-			//	Donne l'objet TextBox2 servant à dessiner les échantillons des styles de caractère.
+			//	Donne l'objet TextLine2 servant à dessiner les échantillons des styles de caractère.
 			get
 			{
 				if ( this.objectForSamplesCharacter == null )
 				{
-					this.objectForSamplesCharacter = new Objects.TextBox2(this.DocumentForSamples, null);
+					this.objectForSamplesCharacter = new Objects.TextLine2(this.DocumentForSamples, null);
 					this.objectForSamplesCharacter.CreateForSample();
 					this.objectForSamplesCharacter.EditInsertText(Res.Strings.Sample.Character, "", "");
 				}
@@ -2147,7 +2147,7 @@ namespace Epsitec.Common.Document
 		protected Document						clipboard;
 		protected Document						documentForSamples;
 		protected Objects.TextBox2				objectForSamplesParagraph;
-		protected Objects.TextBox2				objectForSamplesCharacter;
+		protected Objects.TextLine2				objectForSamplesCharacter;
 		protected Size							size;
 		protected Point							hotSpot;
 		protected string						filename;

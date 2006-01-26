@@ -221,8 +221,8 @@ namespace Epsitec.Common.Document.Widgets
 					widthUsed += 20;
 				}
 				
-				this.SetWidthColumn(i++, 115);  // noms
-				widthUsed += 115;
+				this.SetWidthColumn(i++, 121);  // noms
+				widthUsed += 121;
 				
 				if ( this.isChildrensColumn )
 				{
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Document.Widgets
 					widthUsed += 20;
 				}
 
-				double w = 128;
+				double w = 64;
 				if ( this.fixWidth != 0 )  // largeur fixe pour toutes les colonnes ?
 				{
 					w = this.fixWidth-widthUsed-7;  // largeur restante

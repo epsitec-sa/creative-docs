@@ -71,32 +71,40 @@ namespace Epsitec.Common.Document.Widgets
 			Drawing.Rectangle iClip = graphics.SaveClippingRectangle();
 			graphics.SetClippingRectangle(this.MapClientToRoot(rect));
 
+			double h = rect.Height;
 			rect.Deflate(rect.Height*0.05);
 			rect.Bottom -= rect.Height*10;  // hauteur presque infinie
 
-			double scale = 1.0/10.0;
+			double scale = 1.0/7.0;
 			Transform initial = graphics.Transform;
 			graphics.ScaleTransform(scale, scale, 0.0, 0.0);
 			rect.Scale(1.0/scale);
+			h *= 1.0/scale;
 
 			Document document = this.document.DocumentForSamples;
 			document.Modifier.OpletQueueEnable = false;
 
-			Objects.TextBox2 obj = null;
-
 			if ( this.textStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
 			{
-				obj = this.document.ObjectForSamplesParagraph;
+				Objects.TextBox2 obj = this.document.ObjectForSamplesParagraph;
+				obj.RectangleToSample(rect);
+				obj.SampleChangeStyle(this.textStyle);
+
+				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
+
+				Drawer drawer = new Drawer(document);
+				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
 			}
 
 			if ( this.textStyle.TextStyleClass == Common.Text.TextStyleClass.Text )
 			{
-				obj = this.document.ObjectForSamplesCharacter;
-			}
+				Point p1 = rect.TopLeft;
+				Point p2 = rect.TopRight;
+				p1.Y -= h*0.7;
+				p2.Y -= h*0.7;
 
-			if ( obj != null )
-			{
-				obj.RectangleToSample(rect);
+				Objects.TextLine2 obj = this.document.ObjectForSamplesCharacter;
+				obj.RectangleToSample(p1, p2);
 				obj.SampleChangeStyle(this.textStyle);
 
 				Shape[] shapes = obj.ShapesBuild(graphics, null, false);

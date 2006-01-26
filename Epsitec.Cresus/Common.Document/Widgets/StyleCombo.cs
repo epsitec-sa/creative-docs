@@ -392,7 +392,7 @@ namespace Epsitec.Common.Document.Widgets
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Margins margins = adorner.GeometryArrayMargins;
 
-			double width = 116+128+margins.Left+margins.Right;
+			double width = 121+64+margins.Left+margins.Right;
 			double h = count*32+17+margins.Bottom+margins.Top;
 
 			if ( this.styleCategory == StyleCategory.Graphic )

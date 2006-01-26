@@ -1118,6 +1118,36 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
+		#region ForSamples
+		public void CreateForSample()
+		{
+			//	Crée un objet pour un échantillon.
+			Point pos = new Point(0, 0);
+
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 2
+
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 3
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 4
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 5
+		}
+
+		public void RectangleToSample(Point p1, Point p2)
+		{
+			//	Spécifie les dimensions pour un échantillon.
+			this.Handle(0).Position = p1;
+			this.Handle(1).Position = p1;
+			this.Handle(2).Position = p1;
+
+			this.Handle(3).Position = p2;
+			this.Handle(4).Position = p2;
+			this.Handle(5).Position = p2;
+
+			this.UpdateGeometry();
+		}
+		#endregion
+
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
 			//	Début de la création d'un objet.
@@ -1745,7 +1775,7 @@ namespace Epsitec.Common.Document.Objects
 			this.drawingContext = drawingContext;
 
 			this.isActive = true;
-			if ( this.document.Modifier != null )
+			if ( this.document.Modifier != null && this.document.Modifier.ActiveViewer != null )
 			{
 				this.isActive = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext &&
 								 this.document.Modifier.ActiveViewer.IsFocused);
