@@ -81,7 +81,14 @@ namespace Epsitec.Common.Text
 				
 				for (int i = 0; i < value.Length; i++)
 				{
-					array[i] = SerializerSupport.Escape (value[i]);
+					if (value[i] == null)
+					{
+						array[i] = "[null]";
+					}
+					else
+					{
+						array[i] = SerializerSupport.Escape (value[i]);
+					}
 				}
 				
 				return SerializerSupport.Escape (SerializerSupport.Join (array));
@@ -235,7 +242,14 @@ namespace Epsitec.Common.Text
 				
 				for (int i = 0; i < array.Length; i++)
 				{
-					array[i] = SerializerSupport.Unescape (array[i]);
+					if (array[i] == "[null]")
+					{
+						array[i] = null;
+					}
+					else
+					{
+						array[i] = SerializerSupport.Unescape (array[i]);
+					}
 				}
 				
 				return array;

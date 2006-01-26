@@ -1,10 +1,11 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Internal.Sequences
 {
 	/// <summary>
-	/// La classe Constant produit  ...
+	/// La classe Constant produit des séquences de puces prédéfinies. Chaque
+	/// niveau possède sa puce.
 	/// </summary>
 	public class Constant : Generator.Sequence
 	{

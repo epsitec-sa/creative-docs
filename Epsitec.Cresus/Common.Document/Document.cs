@@ -1416,6 +1416,7 @@ namespace Epsitec.Common.Document
 			items1.Generator = generator1;
 			items1.TabItem   = tabs.NewTab("T1-item", 0.0, Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute ("Em:1"));
 			items1.TabBody   = tabs.NewTab("T1-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute ("Em:2"));
+			items1.Font      = new Text.Properties.FontProperty ("Arial", "Regular");
 			
 			items2.Generator = generator2;
 			items2.TabItem   = tabs.NewTab("T2-item", 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:1.5"));

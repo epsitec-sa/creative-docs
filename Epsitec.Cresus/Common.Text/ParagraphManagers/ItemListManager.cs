@@ -28,14 +28,36 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			System.Diagnostics.Debug.Assert (Internal.Navigator.IsParagraphStart (story, cursor, 0));
 			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, property));
 			
-			Properties.AutoTextProperty  auto_text_prop = new Properties.AutoTextProperty (this.Name);
-			Properties.GeneratorProperty generator_prop = new Properties.GeneratorProperty (p.Generator.Name, 0, context.GenerateUniqueId ());
-			Properties.TabProperty       tab_item_prop  = p.TabItem;
-			Properties.TabProperty       tab_body_prop  = p.TabBody;
+			Properties.AutoTextProperty   auto_text_prop   = new Properties.AutoTextProperty (this.Name);
+			Properties.GeneratorProperty  generator_prop   = new Properties.GeneratorProperty (p.Generator.Name, 0, context.GenerateUniqueId ());
+			Properties.TabProperty        tab_item_prop    = p.TabItem;
+			Properties.TabProperty        tab_body_prop    = p.TabBody;
+			Properties.FontProperty       font_prop        = p.Font;
+			Properties.FontSizeProperty   font_size_prop   = p.FontSize;
+			Properties.FontOffsetProperty font_offset_prop = p.FontOffset;
 			
 			Property[] props_1 = new Property[] { auto_text_prop, tab_item_prop };
-			Property[] props_2 = new Property[] { auto_text_prop, generator_prop };
 			Property[] props_3 = new Property[] { auto_text_prop, tab_body_prop };
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			list.Add (auto_text_prop);
+			list.Add (generator_prop);
+			
+			if (font_prop != null)
+			{
+				list.Add (font_prop);
+			}
+			if (font_size_prop != null)
+			{
+				list.Add (font_size_prop);
+			}
+			if (font_offset_prop != null)
+			{
+				list.Add (font_offset_prop);
+			}
+			
+			Property[] props_2 = (Property[]) list.ToArray (typeof (Property));
 			
 			Internal.Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props_1);
 			Internal.Navigator.Insert (story, cursor, "X", null, props_2);
@@ -88,6 +110,7 @@ namespace Epsitec.Common.Text.ParagraphManagers
 		}
 		
 		
+		#region Parameters Class
 		public class Parameters
 		{
 			public Parameters()
@@ -136,10 +159,46 @@ namespace Epsitec.Common.Text.ParagraphManagers
 				}
 			}
 			
+			public Properties.FontProperty		Font
+			{
+				get
+				{
+					return this.font;
+				}
+				set
+				{
+					this.font = value;
+				}
+			}
+			
+			public Properties.FontSizeProperty	FontSize
+			{
+				get
+				{
+					return this.font_size;
+				}
+				set
+				{
+					this.font_size = value;
+				}
+			}
+			
+			public Properties.FontOffsetProperty FontOffset
+			{
+				get
+				{
+					return this.font_offset;
+				}
+				set
+				{
+					this.font_offset = value;
+				}
+			}
+			
 			
 			public void Load(TextContext context, string[] parameters)
 			{
-				System.Diagnostics.Debug.Assert (parameters.Length == 3);
+				System.Diagnostics.Debug.Assert ((parameters.Length == 3) || (parameters.Length == 6));
 				
 				this.generator = context.GeneratorList[parameters[0]];
 				this.tab_item  = new Properties.TabProperty ();
@@ -147,23 +206,63 @@ namespace Epsitec.Common.Text.ParagraphManagers
 				
 				this.tab_item.DeserializeFromText (context, parameters[1]);
 				this.tab_body.DeserializeFromText (context, parameters[2]);
+				
+				if (parameters.Length == 6)
+				{
+					if (parameters[3] == null)
+					{
+						this.font = null;
+					}
+					else
+					{
+						this.font = new Properties.FontProperty ();
+						this.font.DeserializeFromText (context, parameters[3]);
+					}
+					
+					if (parameters[4] == null)
+					{
+						this.font_size = null;
+					}
+					else
+					{
+						this.font_size = new Properties.FontSizeProperty ();
+						this.font_size.DeserializeFromText (context, parameters[4]);
+					}
+					
+					if (parameters[5] == null)
+					{
+						this.font_offset = null;
+					}
+					else
+					{
+						this.font_offset = new Properties.FontOffsetProperty ();
+						this.font_offset.DeserializeFromText (context, parameters[5]);
+					}
+				}
 			}
 			
 			public string[] Save()
 			{
-				string[] parameters = new string[3];
+				string[] parameters = new string[6];
 				
 				parameters[0] = this.generator.Name;
 				parameters[1] = this.tab_item.SerializeToText ();
 				parameters[2] = this.tab_body.SerializeToText ();
+				parameters[3] = this.font == null ? null : this.font.SerializeToText ();
+				parameters[4] = this.font_size == null ? null : this.font_size.SerializeToText ();
+				parameters[5] = this.font_offset == null ? null : this.font_offset.SerializeToText ();
 				
 				return parameters;
 			}
 			
 			
-			private Generator					generator;
-			private Properties.TabProperty		tab_item;
-			private Properties.TabProperty		tab_body;
+			private Generator						generator;
+			private Properties.TabProperty			tab_item;
+			private Properties.TabProperty			tab_body;
+			private Properties.FontProperty			font;
+			private Properties.FontSizeProperty		font_size;
+			private Properties.FontOffsetProperty	font_offset;
 		}
+		#endregion
 	}
 }
