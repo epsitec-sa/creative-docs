@@ -124,7 +124,18 @@ namespace Epsitec.Common.Text
 			{
 				if (this.parent_styles != null)
 				{
-					return (TextStyle[]) this.parent_styles.Clone ();
+					System.Collections.ArrayList list = new System.Collections.ArrayList ();
+					
+					foreach (TextStyle style in this.parent_styles)
+					{
+						if ((style != null) &&
+							(style.IsDeleted == false))
+						{
+							list.Add (style);
+						}
+					}
+					
+					return (TextStyle[]) list.ToArray (typeof (TextStyle));
 				}
 				else
 				{
