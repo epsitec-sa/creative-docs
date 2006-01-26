@@ -103,6 +103,12 @@ namespace Epsitec.Common.Document.Widgets
 				p1.Y -= h*0.7;
 				p2.Y -= h*0.7;
 
+				double r = 12*Modifier.fontSizeScale;
+				graphics.LineWidth = 1.0;
+				graphics.AddLine(p1.X-10, p1.Y, p2.X+10, p2.Y);
+				graphics.AddLine(p1.X-10, p1.Y+r, p2.X+10, p2.Y+r);
+				graphics.RenderSolid(Color.FromRGB(1,0,0));  // rouge
+
 				Objects.TextLine2 obj = this.document.ObjectForSamplesCharacter;
 				obj.RectangleToSample(p1, p2);
 				obj.SampleChangeStyle(this.textStyle);
