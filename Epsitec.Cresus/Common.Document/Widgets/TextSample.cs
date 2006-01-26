@@ -72,13 +72,14 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.SetClippingRectangle(this.MapClientToRoot(rect));
 
 			rect.Deflate(rect.Height*0.05);
+			rect.Bottom -= rect.Height*10;  // hauteur presque infinie
 
 			double scale = 1.0/10.0;
 			Transform initial = graphics.Transform;
 			graphics.ScaleTransform(scale, scale, 0.0, 0.0);
 			rect.Scale(1.0/scale);
 
-			Document document = new Document(DocumentType.Graphic, DocumentMode.Modify, InstallType.Full, DebugMode.Release, this.document.GlobalSettings, null);
+			Document document = this.document.DocumentForSamples;
 			document.Modifier.OpletQueueEnable = false;
 
 			string latin = "";

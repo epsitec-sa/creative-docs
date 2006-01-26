@@ -21,6 +21,7 @@ namespace Epsitec.Common.Document
 		ReadOnly,		// document uniquement affichable
 		Modify,			// document modifiable
 		Clipboard,		// document servant uniquement de bloc-notes
+		Samples,		// document servant uniquement pour dessiner les miniatures
 	}
 
 	public enum InstallType
@@ -123,6 +124,13 @@ namespace Epsitec.Common.Document
 				this.exportPDF = new PDF.Export(this);
 			}
 
+			if ( this.mode == DocumentMode.Samples )
+			{
+				this.modifier  = new Modifier(this);
+				this.wrappers  = new Wrappers(this);
+				this.notifier  = new Notifier(this);
+			}
+
 			if ( this.mode == DocumentMode.Clipboard )
 			{
 				Viewer clipboardViewer = new Viewer(this);
@@ -185,6 +193,20 @@ namespace Epsitec.Common.Document
 			//	Bloc-notes associé.
 			get { return this.clipboard; }
 			set { this.clipboard = value; }
+		}
+
+		public Document DocumentForSamples
+		{
+			//	Donne le document spécial servant à dessiner les miniatures.
+			get
+			{
+				if ( this.documentForSamples == null )
+				{
+					this.documentForSamples = new Document(DocumentType.Graphic, DocumentMode.Samples, InstallType.Full, DebugMode.Release, this.GlobalSettings, null);
+				}
+
+				return this.documentForSamples;
+			}
 		}
 
 		public UndoableList GetObjects
@@ -2089,6 +2111,7 @@ namespace Epsitec.Common.Document
 		protected CommandDispatcher				commandDispatcher;
 		protected string						name;
 		protected Document						clipboard;
+		protected Document						documentForSamples;
 		protected Size							size;
 		protected Point							hotSpot;
 		protected string						filename;
