@@ -481,12 +481,14 @@ namespace Epsitec.Common.Document.Containers
 				int row = this.document.TextContext.StyleList.StyleMap.GetRank(textStyle);
 				if ( row != -1 )
 				{
-					if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
+					if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph &&
+						 row < this.paragraphList.List.Length )
 					{
 						this.paragraphList.UpdateRow(row, false);
 					}
 
-					if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Text )
+					if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Text &&
+						 row < this.characterList.List.Length )
 					{
 						this.characterList.UpdateRow(row, false);
 					}
@@ -1200,6 +1202,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style, -1);
 				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, null);
 				this.document.TextContext.StyleList.DeleteTextStyle(this.document.Modifier.OpletQueue, style);
+				this.document.Wrappers.StyleCheckAllDefaultParent();
 				
 				if ( sel >= this.TextStyleList.List.Length )
 				{

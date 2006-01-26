@@ -276,10 +276,31 @@ namespace Epsitec.Common.Document
 		protected static int cc=0;
 
 
+		public void StyleCheckAllDefaultParent()
+		{
+			//	Passe en revue tous les styles de paragraphe pour vérifier s'ils font
+			//	référence au style de base.
+			Text.TextStyle[] styles = this.document.TextContext.StyleList.StyleMap.GetSortedStyles();
+			foreach ( Text.TextStyle style in styles )
+			{
+				if ( !this.IsStyleAsDefaultParent(style) )
+				{
+					System.Collections.ArrayList parents = new System.Collections.ArrayList();
+					foreach ( Text.TextStyle parent in style.ParentStyles )
+					{
+						parents.Add(parent);
+					}
+					parents.Add(this.document.TextContext.DefaultParagraphStyle);
+
+					this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, style, style.StyleProperties, parents);
+				}
+			}
+		}
+
 		public bool IsStyleAsDefaultParent(Text.TextStyle style)
 		{
-			//	Vérifie si un style de paragraphe fait référence au style de base dans dans
-			//	sa parenté directe ou indirecte. Il faut savoir qu'un style de paragraphe doit
+			//	Vérifie si un style de paragraphe fait référence au style de base dans sa
+			//	parenté directe ou indirecte. Il faut savoir qu'un style de paragraphe doit
 			//	obligatoirement avoir une référence au style de base quelque part dans sa
 			//	parenté complexe !
 			//	Par exemple, ceci est correct:
