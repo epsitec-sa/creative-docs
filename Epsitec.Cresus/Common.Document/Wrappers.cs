@@ -276,9 +276,17 @@ namespace Epsitec.Common.Document
 		protected static int cc=0;
 
 
-		public bool IsStyleCorrect(Text.TextStyle style)
+		public bool IsStyleAsDefaultParent(Text.TextStyle style)
 		{
-			//	Vérifie si un style de paragraphe contient le style de base dans ses parents.
+			//	Vérifie si un style de paragraphe fait référence au style de base dans dans
+			//	sa parenté directe ou indirecte. Il faut savoir qu'un style de paragraphe doit
+			//	obligatoirement avoir une référence au style de base quelque part dans sa
+			//	parenté complexe !
+			//	Par exemple, ceci est correct:
+			//		b -> a -> base
+			//	Le style 'b' n'a pas le style de base comme parent direct. Il a seulement le
+			//	style 'a' comme parent. Mais comme 'a' à le style de base comme parent direct,
+			//	tout est juste.
 			if ( style.TextStyleClass != Text.TextStyleClass.Paragraph )  return true;
 
 			if ( this.document.TextContext.StyleList.IsDefaultParagraphTextStyle(style) )
@@ -294,7 +302,7 @@ namespace Epsitec.Common.Document
 					return true;
 				}
 
-				if ( this.IsStyleCorrect(parent) )
+				if ( this.IsStyleAsDefaultParent(parent) )
 				{
 					return true;
 				}

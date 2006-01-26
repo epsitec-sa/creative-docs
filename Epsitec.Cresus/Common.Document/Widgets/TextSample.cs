@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document.Widgets
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
-			if ( this.textStyle == null || !this.document.Wrappers.IsStyleCorrect(this.textStyle) )
+			if ( this.textStyle == null || !this.document.Wrappers.IsStyleAsDefaultParent(this.textStyle) )
 			{
 				rect.Deflate(0.5);
 				Color color = adorner.ColorBorder;

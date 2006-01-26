@@ -742,10 +742,19 @@ namespace Epsitec.Common.Document.Containers
 				int total = this.TextChildrensList.Rows;
 				int sel = this.TextChildrensList.SelectedRank;
 
+				bool enableDelete = (sel != -1);
+				if ( this.category == StyleCategory.Paragraph && enableDelete && total == 1 && styleSel != -1 )
+				{
+					Text.TextStyle[] styles = this.TextStyleList.List;
+					Text.TextStyle currentStyle = styles[styleSel];
+					Text.TextStyle parent = currentStyle.ParentStyles[0];
+					enableDelete = !this.document.TextContext.StyleList.IsDefaultParagraphTextStyle(parent);
+				}
+
 				this.buttonChildrensNew.Enable = (styleSel != -1);
 				this.buttonChildrensUp.Enable = (sel != -1 && sel > 0);
 				this.buttonChildrensDown.Enable = (sel != -1 && sel < total-1);
-				this.buttonChildrensDelete.Enable = (sel != -1);
+				this.buttonChildrensDelete.Enable = enableDelete;
 			}
 		}
 
@@ -1438,7 +1447,17 @@ namespace Epsitec.Common.Document.Containers
 
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensDelete);
 				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
+
+				//	Si le style ne fait plus du tout référence au style de base (dans sa parenté directe
+				//	ou indirecte), on ajoute le style de base à la fin de la liste !
+				if ( !this.document.Wrappers.IsStyleAsDefaultParent(currentStyle) )
+				{
+					parents.Add(this.document.TextContext.DefaultParagraphStyle);
+					this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
+				}
+
 				this.document.Modifier.OpletQueueValidateAction();
+
 				this.document.IsDirtySerialize = true;
 				this.SetDirtyContent();
 			}
