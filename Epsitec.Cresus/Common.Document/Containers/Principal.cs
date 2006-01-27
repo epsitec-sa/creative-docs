@@ -172,7 +172,7 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateCombo.Document = this.document;
 			this.aggregateCombo.StyleCategory = StyleCategory.Graphic;
 			this.aggregateCombo.IsDeep = true;
-			this.aggregateCombo.Width = 135;
+			this.aggregateCombo.Width = 130;
 			this.aggregateCombo.Dock = DockStyle.Left;
 			this.aggregateCombo.DockMargins = new Margins(0, 0, 1, 1);
 			this.aggregateCombo.TextChanged += new EventHandler(this.HandleAggregateComboChanged);

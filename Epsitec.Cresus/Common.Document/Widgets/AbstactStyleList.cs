@@ -122,6 +122,34 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public bool IsHeader
+		{
+			//	En-tête en haut de la liste.
+			get
+			{
+				return this.isHeader;
+			}
+
+			set
+			{
+				if ( this.isHeader != value )
+				{
+					this.isHeader = value;
+
+					if ( this.isHeader )
+					{
+						this.StyleH |= CellArrayStyle.Header;
+						this.StyleH |= CellArrayStyle.Mobile;
+					}
+					else
+					{
+						this.StyleH &= ~CellArrayStyle.Header;
+						this.StyleH &= ~CellArrayStyle.Mobile;
+					}
+				}
+			}
+		}
+
 		public bool IsNoneLine
 		{
 			//	Première ligne avec <aucun>.
@@ -454,6 +482,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected int							excludeRank = -1;
 		protected double						fixWidth = 0;
 		protected bool							isDeep = false;
+		protected bool							isHeader = true;
 		protected bool							isNoneLine = false;
 		protected bool							isHiliteColumn = true;
 		protected bool							isOrderColumn = false;

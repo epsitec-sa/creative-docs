@@ -393,7 +393,7 @@ namespace Epsitec.Common.Document.Widgets
 			Margins margins = adorner.GeometryArrayMargins;
 
 			double width = 109+96+margins.Left+margins.Right;
-			double h = count*32+17+margins.Bottom+margins.Top;
+			double h = count*32+1+margins.Bottom+margins.Top;
 
 			if ( this.styleCategory == StyleCategory.Graphic )
 			{
@@ -402,6 +402,7 @@ namespace Epsitec.Common.Document.Widgets
 				list.Document = this.document;
 				list.List = this.document.Aggregates;
 				list.ExcludeRank = this.excludeRank;
+				list.IsHeader = false;
 				list.IsNoneLine = this.isNoneLine;
 				list.IsDeep = this.isDeep;
 				list.HScroller = false;
@@ -420,6 +421,7 @@ namespace Epsitec.Common.Document.Widgets
 				list.Category = this.styleCategory;
 				list.List = styles;
 				list.ExcludeRank = this.excludeRank;
+				list.IsHeader = false;
 				list.IsNoneLine = this.isNoneLine;
 				list.IsDeep = this.isDeep;
 				list.HScroller = false;
