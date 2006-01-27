@@ -418,6 +418,9 @@ namespace Epsitec.Common.Document.Objects
 		public void SampleDefineStyle(Text.TextStyle style)
 		{
 			//	Change le style pour un échantillon.
+			
+			if ( this.style == style )  return;
+			
 			this.EditWrappersAttach();  // attache l'objet aux différents wrappers
 			
 			Text.TextNavigator navigator = this.TextFlow.TextNavigator;
@@ -449,6 +452,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.document.Wrappers.WrappersDetach();
 			this.textFlow.ActiveTextBox = null;
+			this.style = style;
 		}
 
 		public void EditInsertText(string text, string fontFace, double fontSize)
@@ -1287,6 +1291,7 @@ namespace Epsitec.Common.Document.Objects
 		protected ulong							markerSelected;
 		protected TextFlow						textFlow;
 		protected Text.ITextFrame				textFrame;
+		protected Text.TextStyle				style;
 		protected IPaintPort					port;
 		protected Graphics						graphics;
 		protected DrawingContext				drawingContext;
