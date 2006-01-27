@@ -56,18 +56,18 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else
 			{
-				Properties.Gradient fillColor      = this.aggregate.Property(Properties.Type.FillGradient)   as Properties.Gradient;
-				Properties.Gradient fillColorVT    = this.aggregate.Property(Properties.Type.FillGradientVT) as Properties.Gradient;
-				Properties.Gradient fillColorVL    = this.aggregate.Property(Properties.Type.FillGradientVL) as Properties.Gradient;
-				Properties.Gradient fillColorVR    = this.aggregate.Property(Properties.Type.FillGradientVR) as Properties.Gradient;
-				Properties.Gradient lineColor      = this.aggregate.Property(Properties.Type.LineColor)      as Properties.Gradient;
-				Properties.Line     lineMode       = this.aggregate.Property(Properties.Type.LineMode)       as Properties.Line;
-				Properties.Line     lineDimension  = this.aggregate.Property(Properties.Type.LineDimension)  as Properties.Line;
-				Properties.Corner   corner         = this.aggregate.Property(Properties.Type.Corner)         as Properties.Corner;
-				Properties.Arc      arc            = this.aggregate.Property(Properties.Type.Arc)            as Properties.Arc;
-				Properties.Arrow    arrow          = this.aggregate.Property(Properties.Type.Arrow)          as Properties.Arrow;
-				Properties.Arrow    arrowDimension = this.aggregate.Property(Properties.Type.DimensionArrow) as Properties.Arrow;
-				Properties.Font     font           = this.aggregate.Property(Properties.Type.TextFont)       as Properties.Font;
+				Properties.Gradient fillColor      = this.aggregate.Property(Properties.Type.FillGradient,   this.isDeep) as Properties.Gradient;
+				Properties.Gradient fillColorVT    = this.aggregate.Property(Properties.Type.FillGradientVT, this.isDeep) as Properties.Gradient;
+				Properties.Gradient fillColorVL    = this.aggregate.Property(Properties.Type.FillGradientVL, this.isDeep) as Properties.Gradient;
+				Properties.Gradient fillColorVR    = this.aggregate.Property(Properties.Type.FillGradientVR, this.isDeep) as Properties.Gradient;
+				Properties.Gradient lineColor      = this.aggregate.Property(Properties.Type.LineColor,      this.isDeep) as Properties.Gradient;
+				Properties.Line     lineMode       = this.aggregate.Property(Properties.Type.LineMode,       this.isDeep) as Properties.Line;
+				Properties.Line     lineDimension  = this.aggregate.Property(Properties.Type.LineDimension,  this.isDeep) as Properties.Line;
+				Properties.Corner   corner         = this.aggregate.Property(Properties.Type.Corner,         this.isDeep) as Properties.Corner;
+				Properties.Arc      arc            = this.aggregate.Property(Properties.Type.Arc,            this.isDeep) as Properties.Arc;
+				Properties.Arrow    arrow          = this.aggregate.Property(Properties.Type.Arrow,          this.isDeep) as Properties.Arrow;
+				Properties.Arrow    arrowDimension = this.aggregate.Property(Properties.Type.DimensionArrow, this.isDeep) as Properties.Arrow;
+				Properties.Font     font           = this.aggregate.Property(Properties.Type.TextFont,       this.isDeep) as Properties.Font;
 
 				int total = 0;
 				if ( fillColor      != null || lineColor != null || lineMode != null )  total ++;

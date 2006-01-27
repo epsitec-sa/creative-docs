@@ -69,21 +69,6 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		protected override string ListChildrensCount(int rank)
-		{
-			//	Nombre d'enfants d'une ligne de la liste.
-			if ( rank != -1 && this.list != null )
-			{
-				Properties.Aggregate agg = this.list[rank] as Properties.Aggregate;
-				int count = agg.Childrens.Count;
-				if ( count != 0 )
-				{
-					return count.ToString();
-				}
-			}
-			return "";
-		}
-
 		protected override AbstractSample CreateSample()
 		{
 			//	Crée un échantillon.

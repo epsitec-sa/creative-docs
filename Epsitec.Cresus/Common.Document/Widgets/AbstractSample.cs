@@ -32,7 +32,21 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public bool IsDeep
+		{
+			get
+			{
+				return this.isDeep;
+			}
+			
+			set
+			{
+				this.isDeep = value;
+			}
+		}
+
 
 		protected Document						document;
+		protected bool							isDeep;
 	}
 }

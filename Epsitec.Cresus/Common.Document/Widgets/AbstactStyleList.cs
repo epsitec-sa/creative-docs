@@ -303,6 +303,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				AbstractSample sm = this.CreateSample();
 				sm.Document = this.document;
+				sm.IsDeep = this.isDeep;
 				sm.Dock = DockStyle.Fill;
 				this[fix, row].Insert(sm);
 			}
@@ -412,12 +413,6 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			//	Nom d'une ligne de la liste.
 			return Res.Strings.Aggregates.NoneLine;
-		}
-
-		protected virtual string ListChildrensCount(int rank)
-		{
-			//	Nombre d'enfants d'une ligne de la liste.
-			return "";
 		}
 
 		protected virtual AbstractSample CreateSample()

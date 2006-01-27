@@ -272,11 +272,8 @@ namespace Epsitec.Common.Document
 				if ( !this.IsStyleAsDefaultParent(style) )
 				{
 					System.Collections.ArrayList parents = new System.Collections.ArrayList();
-					foreach ( Text.TextStyle parent in style.ParentStyles )
-					{
-						parents.Add(parent);
-					}
 					parents.Add(this.document.TextContext.DefaultParagraphStyle);
+					parents.AddRange(style.ParentStyles);
 
 					this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, style, style.StyleProperties, parents);
 				}
