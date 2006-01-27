@@ -60,8 +60,6 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else
 			{
-				string n = this.document.TextContext.StyleList.StyleMap.GetCaption(this.textStyle);
-				System.Diagnostics.Debug.WriteLine("TextSamplePaint "+n);
 				this.PaintSample(graphics, rect);
 			}
 		}

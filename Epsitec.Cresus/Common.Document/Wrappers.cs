@@ -252,8 +252,6 @@ namespace Epsitec.Common.Document
 		protected void HandleStyleWrapperChanged(object sender)
 		{
 			//	Un style de paragraphe ou de caractère a changé.
-			System.Diagnostics.Debug.WriteLine("HandleStyleWrapperChanged "+(Wrappers.cc++).ToString());
-
 			Text.TextStyle[] styles = this.document.TextContext.StyleList.StyleMap.GetSortedStyles();
 			foreach ( Text.TextStyle style in styles )
 			{
@@ -262,8 +260,6 @@ namespace Epsitec.Common.Document
 
 			this.document.Notifier.NotifyArea();
 		}
-
-		protected static int cc=0;
 
 
 		public void StyleCheckAllDefaultParent()
