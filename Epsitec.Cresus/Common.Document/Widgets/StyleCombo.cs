@@ -392,7 +392,7 @@ namespace Epsitec.Common.Document.Widgets
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Margins margins = adorner.GeometryArrayMargins;
 
-			double width = 121+64+margins.Left+margins.Right;
+			double width = 109+96+margins.Left+margins.Right;
 			double h = count*32+17+margins.Bottom+margins.Top;
 
 			if ( this.styleCategory == StyleCategory.Graphic )
@@ -407,7 +407,6 @@ namespace Epsitec.Common.Document.Widgets
 				list.HScroller = false;
 				list.VScroller = false;
 				list.IsHiliteColumn = false;
-				list.IsChildrensColumn = false;
 				list.SelectedRank = sel;
 				list.FixWidth = width;
 				list.UpdateContent();
@@ -426,7 +425,6 @@ namespace Epsitec.Common.Document.Widgets
 				list.HScroller = false;
 				list.VScroller = false;
 				list.IsHiliteColumn = false;
-				list.IsChildrensColumn = false;
 				list.SelectedRank = sel;
 				list.FixWidth = width;
 				list.UpdateContent();

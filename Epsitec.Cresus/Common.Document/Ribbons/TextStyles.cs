@@ -139,7 +139,7 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 10+22+135;
+				return 10+22+125;
 			}
 		}
 

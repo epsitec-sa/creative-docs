@@ -221,8 +221,8 @@ namespace Epsitec.Common.Document.Widgets
 					widthUsed += 20;
 				}
 				
-				this.SetWidthColumn(i++, 121);  // noms
-				widthUsed += 121;
+				this.SetWidthColumn(i++, 109);  // noms
+				widthUsed += 109;
 				
 				if ( this.isChildrensColumn )
 				{
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Document.Widgets
 					widthUsed += 20;
 				}
 
-				double w = 64;
+				double w = 96;
 				if ( this.fixWidth != 0 )  // largeur fixe pour toutes les colonnes ?
 				{
 					w = this.fixWidth-widthUsed-7;  // largeur restante
@@ -457,6 +457,6 @@ namespace Epsitec.Common.Document.Widgets
 		protected bool							isNoneLine = false;
 		protected bool							isHiliteColumn = true;
 		protected bool							isOrderColumn = false;
-		protected bool							isChildrensColumn = true;
+		protected bool							isChildrensColumn = false;
 	}
 }

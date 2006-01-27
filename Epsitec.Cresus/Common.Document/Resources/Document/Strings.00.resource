@@ -1295,8 +1295,8 @@
 	<data name="Aggregates.Header.Name">Nom</data>
 	<data name="Aggregates.NoneLine">&lt;i&gt;Aucun&lt;/i&gt;</data>
 	<data name="Style.Aggregate.Name">Style graphique {0}</data>
-	<data name="Style.Paragraph.Name">Style de paragraphe {0}</data>
-	<data name="Style.Character.Name">Style de caractère {0}</data>
+	<data name="Style.Paragraph.Name">Style paragraphe {0}</data>
+	<data name="Style.Character.Name">Style caractère {0}</data>
 	<data name="Style.Paragraph.Base">Paragraphe normal</data>
 	<data name="Style.Character.Base">Caractère normal</data>
 

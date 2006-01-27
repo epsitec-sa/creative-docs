@@ -89,7 +89,6 @@ namespace Epsitec.Common.Document.Containers
 			this.childrensGraphicList.VScroller = true;
 			this.childrensGraphicList.IsHiliteColumn = false;
 			this.childrensGraphicList.IsOrderColumn = true;
-			this.childrensGraphicList.IsChildrensColumn = false;
 			this.childrensGraphicList.SetParent(this.bottomPage);
 			this.childrensGraphicList.Height = 103;
 			this.childrensGraphicList.Dock = DockStyle.Top;
@@ -105,7 +104,6 @@ namespace Epsitec.Common.Document.Containers
 			this.childrensParagraphList.VScroller = true;
 			this.childrensParagraphList.IsHiliteColumn = false;
 			this.childrensParagraphList.IsOrderColumn = true;
-			this.childrensParagraphList.IsChildrensColumn = false;
 			this.childrensParagraphList.SetParent(this.bottomPage);
 			this.childrensParagraphList.Height = 103;
 			this.childrensParagraphList.Dock = DockStyle.Top;
@@ -121,7 +119,6 @@ namespace Epsitec.Common.Document.Containers
 			this.childrensCharacterList.VScroller = true;
 			this.childrensCharacterList.IsHiliteColumn = false;
 			this.childrensCharacterList.IsOrderColumn = true;
-			this.childrensCharacterList.IsChildrensColumn = false;
 			this.childrensCharacterList.SetParent(this.bottomPage);
 			this.childrensCharacterList.Height = 103;
 			this.childrensCharacterList.Dock = DockStyle.Top;
