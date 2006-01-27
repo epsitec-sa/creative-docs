@@ -204,6 +204,7 @@ namespace Epsitec.Common.Document
 				if ( this.documentForSamples == null )
 				{
 					this.documentForSamples = new Document(DocumentType.Graphic, DocumentMode.Samples, InstallType.Full, DebugMode.Release, this.GlobalSettings, null);
+					this.documentForSamples.TextContext = this.TextContext;
 				}
 
 				return this.documentForSamples;
@@ -259,6 +260,10 @@ namespace Epsitec.Common.Document
 					this.CreateDefaultTextContext();
 				}
 				return this.textContext;
+			}
+			set
+			{
+				this.textContext = value;
 			}
 		}
 

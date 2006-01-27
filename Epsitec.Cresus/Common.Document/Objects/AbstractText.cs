@@ -415,26 +415,37 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		public void SampleChangeStyle(Text.TextStyle style)
+		public void SampleDefineStyle(Text.TextStyle style)
 		{
 			//	Change le style pour un échantillon.
 			this.EditWrappersAttach();  // attache l'objet aux différents wrappers
+			
+			Text.TextNavigator navigator = this.TextFlow.TextNavigator;
+			
 			this.textFlow.ActiveTextBox = this;
-
-			this.MetaNavigator.SelectAll();
-			this.textFlow.MetaNavigator.EndSelection();
-
-			if ( style.TextStyleClass == Text.TextStyleClass.Paragraph )
+			
+			if (navigator.TextStory.IsOpletQueueEnabled)
 			{
-				this.textFlow.TextNavigator.SetParagraphStyles(style);
+				navigator.TextStory.DisableOpletQueue();
 			}
-
-			if ( style.TextStyleClass == Text.TextStyleClass.Text )
+			
+			navigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);
+			navigator.StartSelection();
+			navigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
+			navigator.EndSelection();
+			
+			switch ( style.TextStyleClass )
 			{
-				this.textFlow.TextNavigator.SetTextStyles(style);
+				case Text.TextStyleClass.Paragraph:
+					navigator.SetParagraphStyles(style);
+					break;
+				
+				case Text.TextStyleClass.Text:
+					navigator.SetTextStyles(style);
+					break;
 			}
-
-			this.textFlow.TextNavigator.ClearSelection();
+			
+			navigator.ClearSelection();
 
 			this.document.Wrappers.WrappersDetach();
 			this.textFlow.ActiveTextBox = null;

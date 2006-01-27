@@ -90,7 +90,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				Objects.TextBox2 obj = this.document.ObjectForSamplesParagraph;
 				obj.RectangleToSample(rect);
-				obj.SampleChangeStyle(this.textStyle);
+				obj.SampleDefineStyle(this.textStyle);
 
 				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
 
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Document.Widgets
 
 				Objects.TextLine2 obj = this.document.ObjectForSamplesCharacter;
 				obj.RectangleToSample(p1, p2);
-				obj.SampleChangeStyle(this.textStyle);
+				obj.SampleDefineStyle(this.textStyle);
 
 				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
 
