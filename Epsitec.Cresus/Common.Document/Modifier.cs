@@ -6052,36 +6052,6 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void AggregateChildrensSwap(Properties.Aggregate agg, int rank1, int rank2)
-		{
-			//	Permute deux enfants.
-			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
-
-			string op = (rank1 > rank2) ? Res.Strings.Action.AggregateChildrensUp : Res.Strings.Action.AggregateChildrensDown;
-			using ( this.OpletQueueBeginAction(op) )
-			{
-				Properties.Aggregate temp = agg.Childrens[rank1] as Properties.Aggregate;
-				agg.Childrens.RemoveAt(rank1);
-				agg.Childrens.Insert(rank2, temp);
-				agg.Childrens.Selected = rank2;
-
-				DrawingContext context = this.ActiveViewer.DrawingContext;
-				Objects.Abstract doc = context.RootObject(0);
-				foreach ( Objects.Abstract obj in this.document.Deep(doc) )
-				{
-					obj.AggregateAdapt(agg);
-				}
-
-				this.objectMemory.AggregateAdapt(agg);
-				this.objectMemoryText.AggregateAdapt(agg);
-
-				this.document.Notifier.NotifyStyleChanged();
-				this.document.Notifier.NotifySelectionChanged();
-				this.OpletQueueValidateAction();
-			}
-		}
-
 		public void AggregateChildrensDelete(Properties.Aggregate agg, Properties.Aggregate delAgg)
 		{
 			//	Supprime un enfant à un agrégat.

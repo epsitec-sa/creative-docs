@@ -282,9 +282,11 @@
 	<data name="Panel.AggregateCategory.Graphic">Graphic</data>
 	<data name="Panel.AggregateCategory.Paragraph">Paragraph</data>
 	<data name="Panel.AggregateCategory.Character">Character</data>
-	<data name="Panel.AggregateName.Label.Name">Style name</data>
+	<data name="Panel.AggregateName.Label.Name">Name</data>
 	<data name="Panel.AggregateName.Tooltip.Name">Style name</data>
-	<data name="Panel.AggregateChildrens.Label.Name">Base styles</data>
+	<data name="Panel.AggregateChildrens.Label.Name">@@Basé sur</data>
+	<data name="Panel.AggregateChildrens.Tooltip.Name">Base styles</data>
+	<data name="Panel.AggregateChildrens.Tooltip.Menu">@@Choix des styles de base</data>
 
 	<data name="Panel.Arc.Short.Initial">α1</data>
 	<data name="Panel.Arc.Short.Final">α2</data>
@@ -985,8 +987,6 @@
 	<data name="Action.AggregateStyleNew">Add property to current style</data>
 	<data name="Action.AggregateStyleDelete">Remove property from current style</data>
 	<data name="Action.AggregateChildrensNew">Add base style to current style</data>
-	<data name="Action.AggregateChildrensUp">Move base style up in list</data>
-	<data name="Action.AggregateChildrensDown">Move base style down in list</data>
 	<data name="Action.AggregateChildrensDelete">Remove base style from current style</data>
 	
 	<data name="Action.GuideNewH">New horizontal guide</data>
@@ -1314,7 +1314,5 @@
 	<data name="Error.Boolean">Impossible operation.</data>
 	<data name="Error.NoText">There is no text in the current document.</data>
 	<data name="Error.NotFound">The text cannot be found in the current document.</data>
-	<data name="Error.StyleNoBase">@@Le style ne faisait plus référence au style normal.&lt;br/&gt;Une référence au style normal a donc été ajoutée.</data>
-	<data name="Error.StyleCircularRef">@@Impossible d'ajouter ce style car il génère une référence en boucle.</data>
 
 </bundle>

@@ -194,20 +194,6 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public bool IsChildrensColumn
-		{
-			//	Colonne pour les enfants.
-			get
-			{
-				return this.isChildrensColumn;
-			}
-
-			set
-			{
-				this.isChildrensColumn = value;
-			}
-		}
-
 		public double FixWidth
 		{
 			//	Largeur fixe pour toutes les colonnes.
@@ -252,12 +238,6 @@ namespace Epsitec.Common.Document.Widgets
 				this.SetWidthColumn(i++, 109);  // noms
 				widthUsed += 109;
 				
-				if ( this.isChildrensColumn )
-				{
-					this.SetWidthColumn(i++, 20);
-					widthUsed += 20;
-				}
-
 				double w = 96;
 				if ( this.fixWidth != 0 )  // largeur fixe pour toutes les colonnes ?
 				{
@@ -274,12 +254,6 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.SetHeaderTextH(i++, Res.Strings.Aggregates.Header.Name);
 			
-			if ( this.isChildrensColumn )
-			{
-				this.SetHeaderTextH(i, Misc.Image("AggregateChildrens"));
-				ToolTip.Default.SetToolTip(this.FindButtonH(i), Res.Strings.Panel.AggregateChildrens.Label.Name);
-			}
-
 			for ( i=0 ; i<rows ; i++ )
 			{
 				this.FillRow(i);
@@ -325,18 +299,6 @@ namespace Epsitec.Common.Document.Widgets
 				this[nc, row].Insert(st);
 			}
 
-			if ( this.isChildrensColumn )
-			{
-				if ( this[fix-1, row].IsEmpty )
-				{
-					StaticText st = new StaticText();
-					st.Alignment = ContentAlignment.MiddleCenter;
-					st.Dock = DockStyle.Fill;
-					st.DockMargins = new Margins(2, 2, 0, 0);
-					this[fix-1, row].Insert(st);
-				}
-			}
-
 			if ( this[fix, row].IsEmpty )
 			{
 				AbstractSample sm = this.CreateSample();
@@ -373,12 +335,6 @@ namespace Epsitec.Common.Document.Widgets
 
 			st = this[nc, row].Children[0] as StaticText;
 			st.Text = this.ListName(rank);
-
-			if ( this.isChildrensColumn )
-			{
-				st = this[fix-1, row].Children[0] as StaticText;
-				st.Text = this.ListChildrensCount(rank);
-			}
 
 			sm = this[fix, row].Children[0] as AbstractSample;
 			this.ListSample(sm, rank);
@@ -436,9 +392,8 @@ namespace Epsitec.Common.Document.Widgets
 			get
 			{
 				int fix = 1;
-				if ( this.isHiliteColumn    )  fix ++;
-				if ( this.IsOrderColumn     )  fix ++;
-				if ( this.isChildrensColumn )  fix ++;
+				if ( this.isHiliteColumn )  fix ++;
+				if ( this.IsOrderColumn  )  fix ++;
 				return fix;
 			}
 		}
@@ -486,6 +441,5 @@ namespace Epsitec.Common.Document.Widgets
 		protected bool							isNoneLine = false;
 		protected bool							isHiliteColumn = true;
 		protected bool							isOrderColumn = false;
-		protected bool							isChildrensColumn = false;
 	}
 }

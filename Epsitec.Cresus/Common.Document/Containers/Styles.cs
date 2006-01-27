@@ -82,51 +82,6 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateNameToolBar();
 			this.CreateChildrensToolBar();
 
-			//	Enfants de l'agrégat.
-			this.childrensGraphicList = new Widgets.AggregateList();
-			this.childrensGraphicList.Document = this.document;
-			this.childrensGraphicList.HScroller = true;
-			this.childrensGraphicList.VScroller = true;
-			this.childrensGraphicList.IsHiliteColumn = false;
-			this.childrensGraphicList.IsOrderColumn = true;
-			this.childrensGraphicList.SetParent(this.bottomPage);
-			this.childrensGraphicList.Height = 103;
-			this.childrensGraphicList.Dock = DockStyle.Top;
-			this.childrensGraphicList.DockMargins = new Margins(0, 0, 0, 0);
-			this.childrensGraphicList.FinalSelectionChanged += new EventHandler(this.HandleAggregatesChildrensSelectionChanged);
-			this.childrensGraphicList.TabIndex = 96;
-			this.childrensGraphicList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.childrensParagraphList = new Widgets.TextStylesList();
-			this.childrensParagraphList.Document = this.document;
-			this.childrensParagraphList.Category = StyleCategory.Paragraph;
-			this.childrensParagraphList.HScroller = true;
-			this.childrensParagraphList.VScroller = true;
-			this.childrensParagraphList.IsHiliteColumn = false;
-			this.childrensParagraphList.IsOrderColumn = true;
-			this.childrensParagraphList.SetParent(this.bottomPage);
-			this.childrensParagraphList.Height = 103;
-			this.childrensParagraphList.Dock = DockStyle.Top;
-			this.childrensParagraphList.DockMargins = new Margins(0, 0, 0, 0);
-			this.childrensParagraphList.FinalSelectionChanged += new EventHandler(this.HandleAggregatesChildrensSelectionChanged);
-			this.childrensParagraphList.TabIndex = 96;
-			this.childrensParagraphList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.childrensCharacterList = new Widgets.TextStylesList();
-			this.childrensCharacterList.Document = this.document;
-			this.childrensCharacterList.Category = StyleCategory.Paragraph;
-			this.childrensCharacterList.HScroller = true;
-			this.childrensCharacterList.VScroller = true;
-			this.childrensCharacterList.IsHiliteColumn = false;
-			this.childrensCharacterList.IsOrderColumn = true;
-			this.childrensCharacterList.SetParent(this.bottomPage);
-			this.childrensCharacterList.Height = 103;
-			this.childrensCharacterList.Dock = DockStyle.Top;
-			this.childrensCharacterList.DockMargins = new Margins(0, 0, 0, 0);
-			this.childrensCharacterList.FinalSelectionChanged += new EventHandler(this.HandleAggregatesChildrensSelectionChanged);
-			this.childrensCharacterList.TabIndex = 96;
-			this.childrensCharacterList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
 			//	Sélectionneur.
 			this.CreateSelectorToolBar();
 
@@ -159,8 +114,6 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.colorSelector.Visibility = false;
-
-			this.UpdateChildrensExtend();
 
 			this.category = StyleCategory.Graphic;
 			this.UpdateCategory();
@@ -294,43 +247,30 @@ namespace Epsitec.Common.Document.Containers
 			this.childrensToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
-			st.Width = 80;
+			st.Width = 45;
+			st.DockMargins = new Margins(0, 5, 0, 0);
 			st.Text = Res.Strings.Panel.AggregateChildrens.Label.Name;
+			st.Alignment = ContentAlignment.MiddleRight;
 			this.childrensToolBar.Items.Add(st);
 
-			this.index = 0;
+			this.nameChildrens = new TextField();
+			this.nameChildrens.IsReadOnly = true;
+			this.nameChildrens.Width = 165;
+			this.nameChildrens.DockMargins = new Margins(0, 0, 1, 1);
+			this.nameChildrens.TextChanged += new EventHandler(this.HandleNameTextChanged);
+			this.nameChildrens.TabIndex = 1;
+			this.nameChildrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.childrensToolBar.Items.Add(this.nameChildrens);
+			ToolTip.Default.SetToolTip(this.nameChildrens, Res.Strings.Panel.AggregateChildrens.Tooltip.Name);
 
-			this.buttonChildrensNew = new IconButton(Misc.Icon("AggregateChildrensNew"));
-			this.buttonChildrensNew.Clicked += new MessageEventHandler(this.HandleButtonChildrensNew);
-			this.buttonChildrensNew.TabIndex = this.index++;
-			this.buttonChildrensNew.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.childrensToolBar.Items.Add(this.buttonChildrensNew);
-			ToolTip.Default.SetToolTip(this.buttonChildrensNew, Res.Strings.Action.AggregateChildrensNew);
-
-			this.childrensToolBar.Items.Add(new IconSeparator());
-
-			this.buttonChildrensUp = new IconButton(Misc.Icon("Up"));
-			this.buttonChildrensUp.Clicked += new MessageEventHandler(this.HandleButtonChildrensUp);
-			this.buttonChildrensUp.TabIndex = this.index++;
-			this.buttonChildrensUp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.childrensToolBar.Items.Add(this.buttonChildrensUp);
-			ToolTip.Default.SetToolTip(this.buttonChildrensUp, Res.Strings.Action.AggregateChildrensUp);
-
-			this.buttonChildrensDown = new IconButton(Misc.Icon("Down"));
-			this.buttonChildrensDown.Clicked += new MessageEventHandler(this.HandleButtonChildrensDown);
-			this.buttonChildrensDown.TabIndex = this.index++;
-			this.buttonChildrensDown.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.childrensToolBar.Items.Add(this.buttonChildrensDown);
-			ToolTip.Default.SetToolTip(this.buttonChildrensDown, Res.Strings.Action.AggregateChildrensDown);
-
-			this.childrensToolBar.Items.Add(new IconSeparator());
-
-			this.buttonChildrensDelete = new IconButton(Misc.Icon("DeleteItem"));
-			this.buttonChildrensDelete.Clicked += new MessageEventHandler(this.HandleButtonChildrensDelete);
-			this.buttonChildrensDelete.TabIndex = this.index++;
-			this.buttonChildrensDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.childrensToolBar.Items.Add(this.buttonChildrensDelete);
-			ToolTip.Default.SetToolTip(this.buttonChildrensDelete, Res.Strings.Action.AggregateChildrensDelete);
+			this.menuChildrens = new GlyphButton();
+			this.menuChildrens.GlyphShape = GlyphShape.Menu;
+			this.menuChildrens.DockMargins = new Margins(0, 0, 1, 1);
+			this.menuChildrens.TabIndex = 2;
+			this.menuChildrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.menuChildrens.Clicked += new MessageEventHandler(this.HandleMenuChildrensClicked);
+			this.childrensToolBar.Items.Add(this.menuChildrens);
+			ToolTip.Default.SetToolTip(this.menuChildrens, Res.Strings.Panel.AggregateChildrens.Tooltip.Menu);
 		}
 
 		protected void CreateNameToolBar()
@@ -343,29 +283,20 @@ namespace Epsitec.Common.Document.Containers
 			this.nameToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
-			st.Width = 80;
+			st.Width = 45;
+			st.DockMargins = new Margins(0, 5, 0, 0);
 			st.Text = Res.Strings.Panel.AggregateName.Label.Name;
+			st.Alignment = ContentAlignment.MiddleRight;
 			this.nameToolBar.Items.Add(st);
 
 			this.name = new TextField();
-			this.name.Width = 135;
+			this.name.Width = 110;
 			this.name.DockMargins = new Margins(0, 0, 1, 1);
 			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
 			this.name.TabIndex = 1;
 			this.name.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.nameToolBar.Items.Add(this.name);
 			ToolTip.Default.SetToolTip(this.name, Res.Strings.Panel.AggregateName.Tooltip.Name);
-
-			this.buttonChildrensExtend = new GlyphButton(this.nameToolBar);
-			this.buttonChildrensExtend.ButtonStyle = ButtonStyle.Icon;
-			this.buttonChildrensExtend.GlyphShape = GlyphShape.ArrowDown;
-			this.buttonChildrensExtend.Width = 12;
-			this.buttonChildrensExtend.Dock = DockStyle.Right;
-			this.buttonChildrensExtend.DockMargins = new Margins(0, 0, 5, 5);
-			this.buttonChildrensExtend.Clicked += new MessageEventHandler(this.HandleButtonChildrensExtend);
-			this.buttonChildrensExtend.TabIndex = 2;
-			this.buttonChildrensExtend.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.buttonChildrensExtend, Res.Strings.Panel.Abstract.Extend);
 		}
 
 		protected void CreateSelectorToolBar()
@@ -450,7 +381,6 @@ namespace Epsitec.Common.Document.Containers
 			
 			this.UpdateAggregateName();
 			this.UpdateAggregateChildrens();
-			this.UpdateChildrensToolBar();
 			this.UpdateToolBar();
 			this.UpdateSelector();
 			this.UpdatePanel();
@@ -710,93 +640,54 @@ namespace Epsitec.Common.Document.Containers
 			this.ignoreChanged = false;
 		}
 
-		protected void UpdateChildrensExtend()
-		{
-			//	Met à jour les panneaux des enfants selon le mode réduit/étendu.
-			this.buttonChildrensExtend.GlyphShape = this.isChildrensExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-			this.childrensToolBar.Visibility = this.isChildrensExtended;
-			this.childrensGraphicList.Visibility = (this.isChildrensExtended && this.category == StyleCategory.Graphic);
-			this.childrensParagraphList.Visibility = (this.isChildrensExtended && this.category == StyleCategory.Paragraph);
-			this.childrensCharacterList.Visibility = (this.isChildrensExtended && this.category == StyleCategory.Character);
-		}
-
-		protected void UpdateChildrensToolBar()
-		{
-			//	Met à jour les boutons de la toolbar des enfants.
-			if ( this.category == StyleCategory.Graphic )
-			{
-				int aggSel = this.graphicList.SelectedRow;
-				int total = this.childrensGraphicList.Rows;
-				int sel = this.childrensGraphicList.SelectedRow;
-
-				this.buttonChildrensNew.Enable = (aggSel != -1);
-				this.buttonChildrensUp.Enable = (sel != -1 && sel > 0);
-				this.buttonChildrensDown.Enable = (sel != -1 && sel < total-1);
-				this.buttonChildrensDelete.Enable = (sel != -1);
-			}
-
-			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
-			{
-				int styleSel = this.TextStyleList.SelectedRow;
-				int total = this.TextChildrensList.Rows;
-				int sel = this.TextChildrensList.SelectedRank;
-
-				bool enableDelete = (sel != -1);
-				if ( this.category == StyleCategory.Paragraph && enableDelete && total == 1 && styleSel != -1 )
-				{
-					Text.TextStyle[] styles = this.TextStyleList.List;
-					Text.TextStyle currentStyle = styles[styleSel];
-					Text.TextStyle parent = currentStyle.ParentStyles[0];
-					enableDelete = !this.document.TextContext.StyleList.IsDefaultParagraphTextStyle(parent);
-				}
-
-				this.buttonChildrensNew.Enable = (styleSel != -1);
-				this.buttonChildrensUp.Enable = (sel != -1 && sel > 0);
-				this.buttonChildrensDown.Enable = (sel != -1 && sel < total-1);
-				this.buttonChildrensDelete.Enable = enableDelete;
-			}
-		}
-
 		protected void UpdateAggregateChildrens()
 		{
 			//	Met à jour le panneau pour éditer les enfants de l'agrégat sélectionné.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
 			if ( this.category == StyleCategory.Graphic )
 			{
 				Properties.Aggregate agg = this.GetAggregate();
 
-				if ( agg == null )
+				if ( agg != null )
 				{
-					this.childrensGraphicList.List = null;
-				}
-				else
-				{
-					this.childrensGraphicList.List = agg.Childrens;
-					this.childrensGraphicList.SelectedRank = agg.Childrens.Selected;
+					foreach ( Properties.Aggregate property in agg.Childrens )
+					{
+						if ( builder.Length != 0 )  builder.Append(", ");
+						builder.Append(property.AggregateName);
+					}
 				}
 
-				this.childrensGraphicList.UpdateContent();
+				this.menuChildrens.Enable = true;
 			}
 
 			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
 			{
 				int sel = this.document.GetSelectedTextStyle(this.category);
 
-				if ( sel == -1 )
-				{
-					this.TextChildrensList.List = null;
-				}
-				else
+				if ( sel != -1 )
 				{
 					Common.Text.TextStyle style = this.TextStyleList.List[sel];
-					this.TextChildrensList.List = style.ParentStyles;
-
-					int rank = this.TextChildrensList.SelectedRank;
-					rank = System.Math.Min(rank, this.TextChildrensList.List.Length-1);
-					this.TextChildrensList.SelectedRank = rank;
+					Text.TextStyle[] parents = style.ParentStyles;
+					foreach ( Text.TextStyle parent in parents )
+					{
+						if ( builder.Length != 0 )  builder.Append(", ");
+						builder.Append(this.document.TextContext.StyleList.StyleMap.GetCaption(parent));
+					}
 				}
 
-				this.TextChildrensList.UpdateContent();
+				this.menuChildrens.Enable = (sel != 0);
 			}
+
+			int overflow = builder.Length-30;
+			if ( overflow > 0 )
+			{
+				double size = System.Math.Max((1-((double)overflow/(30*2)))*100, 50);
+				builder.Insert(0, string.Format("<font size=\"{0}%\">", size.ToString()));
+				builder.Append("</font>");
+			}
+
+			this.nameChildrens.Text = builder.ToString();
 		}
 
 		protected void UpdatePanel()
@@ -962,7 +853,6 @@ namespace Epsitec.Common.Document.Containers
 					this.category = value;
 					this.UpdateCategory();
 					this.UpdatePanel();
-					this.UpdateChildrensExtend();
 					this.UpdateAggregateChildrens();
 				}
 			}
@@ -1239,7 +1129,6 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdatePanel();
 			this.UpdateAggregateName();
 			this.UpdateAggregateChildrens();
-			this.UpdateChildrensToolBar();
 			this.ShowSelection();
 		}
 
@@ -1289,7 +1178,6 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdatePanel();
 			this.UpdateAggregateName();
 			this.UpdateAggregateChildrens();
-			this.UpdateChildrensToolBar();
 			this.ShowSelection();
 		}
 
@@ -1301,11 +1189,11 @@ namespace Epsitec.Common.Document.Containers
 			this.name.Focus();
 		}
 
-		private void HandleButtonChildrensNew(object sender, MessageEventArgs e)
+		private void HandleMenuChildrensClicked(object sender, MessageEventArgs e)
 		{
-			//	Crée un nouvel enfant.
-			IconButton button = sender as IconButton;
-			Point pos = button.MapClientToScreen(new Point(0,0));
+			//	Crée un nouveau parent.
+			Button button = sender as Button;
+			Point pos = button.MapClientToScreen(new Point(button.Width, 0));
 			VMenu menu = this.CreateMenuChildrens(pos);
 			if ( menu == null )  return;
 			menu.Host = this;
@@ -1319,177 +1207,9 @@ namespace Epsitec.Common.Document.Containers
 				pos.Y += menu.Height;  // déroule contre le haut ?
 			}
 
-			if ( pos.X+menu.Width > area.Right )  // dépasse à droite ?
-			{
-				pos.X -= pos.X+menu.Width-area.Right;
-			}
+			pos.X -= menu.Width;
 
 			menu.ShowAsContextMenu(this.Window, pos);
-		}
-
-		private void HandleButtonChildrensUp(object sender, MessageEventArgs e)
-		{
-			//	Enfant en haut.
-			if ( this.category == StyleCategory.Graphic )
-			{
-				int sel = this.childrensGraphicList.SelectedRow;
-				if ( sel == -1 )  return;
-				Properties.Aggregate agg = this.GetAggregate();
-				this.document.Modifier.AggregateChildrensSwap(agg, sel, sel-1);
-			}
-
-			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
-			{
-				int sel = this.document.GetSelectedTextStyle(this.category);
-				if ( sel == -1 )  return;
-				Text.TextStyle[] styles = this.TextStyleList.List;
-				Text.TextStyle currentStyle = styles[sel];
-
-				System.Collections.ArrayList parents = new System.Collections.ArrayList();
-				Text.TextStyle[] currentParents = currentStyle.ParentStyles;
-				foreach ( Text.TextStyle style in currentParents )
-				{
-					parents.Add(style);
-				}
-
-				int parentSel = this.TextChildrensList.SelectedRank;
-				if ( parentSel == -1 )  return;
-				Text.TextStyle removed = parents[parentSel] as Text.TextStyle;
-				parents.RemoveAt(parentSel);
-				parents.Insert(parentSel-1, removed);
-
-				this.TextChildrensList.SelectedRank = parentSel-1;
-
-				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensUp);
-				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
-				this.document.Modifier.OpletQueueValidateAction();
-				this.document.IsDirtySerialize = true;
-				this.SetDirtyContent();
-			}
-		}
-
-		private void HandleButtonChildrensDown(object sender, MessageEventArgs e)
-		{
-			//	Enfant en bas.
-			if ( this.category == StyleCategory.Graphic )
-			{
-				int sel = this.childrensGraphicList.SelectedRow;
-				if ( sel == -1 )  return;
-				Properties.Aggregate agg = this.GetAggregate();
-				this.document.Modifier.AggregateChildrensSwap(agg, sel, sel+1);
-			}
-
-			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
-			{
-				int sel = this.document.GetSelectedTextStyle(this.category);
-				if ( sel == -1 )  return;
-				Text.TextStyle[] styles = this.TextStyleList.List;
-				Text.TextStyle currentStyle = styles[sel];
-
-				System.Collections.ArrayList parents = new System.Collections.ArrayList();
-				Text.TextStyle[] currentParents = currentStyle.ParentStyles;
-				foreach ( Text.TextStyle style in currentParents )
-				{
-					parents.Add(style);
-				}
-
-				int parentSel = this.TextChildrensList.SelectedRank;
-				if ( parentSel == -1 )  return;
-				Text.TextStyle removed = parents[parentSel] as Text.TextStyle;
-				parents.RemoveAt(parentSel);
-				parents.Insert(parentSel+1, removed);
-
-				this.TextChildrensList.SelectedRank = parentSel+1;
-
-				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensDown);
-				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
-				this.document.Modifier.OpletQueueValidateAction();
-				this.document.IsDirtySerialize = true;
-				this.SetDirtyContent();
-			}
-		}
-
-		private void HandleButtonChildrensDelete(object sender, MessageEventArgs e)
-		{
-			//	Supprime l'enfant.
-			if ( this.category == StyleCategory.Graphic )
-			{
-				int sel = this.childrensGraphicList.SelectedRow;
-				if ( sel == -1 )  return;
-				Properties.Aggregate agg = this.GetAggregate();
-				Properties.Aggregate delAgg = agg.Childrens[sel] as Properties.Aggregate;
-				this.document.Modifier.AggregateChildrensDelete(agg, delAgg);
-			}
-
-			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
-			{
-				int sel = this.document.GetSelectedTextStyle(this.category);
-				if ( sel == -1 )  return;
-				Text.TextStyle[] styles = this.TextStyleList.List;
-				Text.TextStyle currentStyle = styles[sel];
-
-				System.Collections.ArrayList parents = new System.Collections.ArrayList();
-				Text.TextStyle[] currentParents = currentStyle.ParentStyles;
-				foreach ( Text.TextStyle style in currentParents )
-				{
-					parents.Add(style);
-				}
-
-				int parentSel = this.TextChildrensList.SelectedRank;
-				if ( parentSel == -1 )  return;
-				parents.RemoveAt(parentSel);
-
-				if ( parentSel >= this.TextChildrensList.List.Length )
-				{
-					parentSel = this.TextChildrensList.List.Length-1;
-				}
-				this.TextChildrensList.SelectedRank = parentSel;
-
-				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensDelete);
-				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
-
-				//	Si le style ne fait plus du tout référence au style de base (dans sa parenté directe
-				//	ou indirecte), on ajoute le style de base à la fin de la liste !
-				if ( !this.document.Wrappers.IsStyleAsDefaultParent(currentStyle) )
-				{
-					parents.Add(this.document.TextContext.DefaultParagraphStyle);
-					this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
-					this.document.Modifier.ActiveViewer.DialogError(Res.Strings.Error.StyleNoBase);
-				}
-
-				this.document.Modifier.OpletQueueValidateAction();
-
-				this.document.IsDirtySerialize = true;
-				this.SetDirtyContent();
-			}
-		}
-
-		private void HandleButtonChildrensExtend(object sender, MessageEventArgs e)
-		{
-			//	Etend/réduit le panneau des enfants.
-			this.isChildrensExtended = !this.isChildrensExtended;
-			this.UpdateChildrensExtend();
-			this.ForceLayout();
-		}
-
-		private void HandleAggregatesChildrensSelectionChanged(object sender)
-		{
-			//	Sélection changée dans la liste des enfants.
-			if ( this.category == StyleCategory.Graphic )
-			{
-				Properties.Aggregate agg = this.GetAggregate();
-				this.document.Modifier.OpletQueueEnable = false;
-				agg.Childrens.Selected = this.childrensGraphicList.SelectedRow;
-				this.document.Modifier.OpletQueueEnable = true;
-
-				this.UpdateChildrensToolBar();
-			}
-
-			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
-			{
-				this.TextChildrensList.SelectedRank = this.TextChildrensList.SelectedRow;
-				this.UpdateChildrensToolBar();
-			}
 		}
 
 
@@ -1705,17 +1425,18 @@ namespace Epsitec.Common.Document.Containers
 				{
 					Properties.Aggregate agg = this.document.Aggregates[i] as Properties.Aggregate;
 					if ( agg == currentAgg )  continue;
-					if ( currentAgg.Childrens.Contains(agg) )  continue;
 
+					bool active = currentAgg.Childrens.Contains(agg);
+					string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
 					string line = agg.AggregateName;
-					MenuItem item = new MenuItem("ChildrensNew", "", line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					MenuItem item = new MenuItem("ChildrensNew", icon, line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
 					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
 					menu.Items.Add(item);
 					used ++;
 				}
 			}
 
-			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
+			if ( this.category == StyleCategory.Paragraph )
 			{
 				int sel = this.document.GetSelectedTextStyle(this.category);
 				if ( sel == -1 )  return null;
@@ -1723,17 +1444,62 @@ namespace Epsitec.Common.Document.Containers
 				Text.TextStyle[] styles = this.TextStyleList.List;
 				Text.TextStyle currentStyle = styles[sel];
 
-				//	Avec les styles de caractère, il faut sauter le premier style qui est
-				//	toujours le style de base.
-				int start = (this.category == StyleCategory.Paragraph) ? 0 : 1;
-				for ( int i=start ; i<styles.Length ; i++ )
+				for ( int i=0 ; i<styles.Length ; i++ )
 				{
 					Text.TextStyle style = styles[i];
 					if ( style == currentStyle )  continue;
-					if ( Styles.ContainsStyle(currentStyle.ParentStyles, style) )  continue;
 
+					bool active = Styles.ContainsStyle(currentStyle.ParentStyles, style);
+					string icon = Misc.Icon(active ? "RadioYes" : "RadioNo");
 					string line = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
-					MenuItem item = new MenuItem("ChildrensNew", "", line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					MenuItem item = new MenuItem("ChildrensNew", icon, line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
+					menu.Items.Add(item);
+					used ++;
+				}
+
+				bool firstCharacter = true;
+				styles = this.characterList.List;
+				for ( int i=1 ; i<styles.Length ; i++ )
+				{
+					Text.TextStyle style = styles[i];
+					if ( style == currentStyle )  continue;
+
+					if ( firstCharacter )
+					{
+						firstCharacter = false;
+						menu.Items.Add(new MenuSeparator());
+					}
+
+					bool active = Styles.ContainsStyle(currentStyle.ParentStyles, style);
+					string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
+					string line = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+					MenuItem item = new MenuItem("ChildrensNew", icon, line, "", (i+10000).ToString(System.Globalization.CultureInfo.InvariantCulture));
+					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
+					menu.Items.Add(item);
+					used ++;
+				}
+			}
+
+			if ( this.category == StyleCategory.Character )
+			{
+				int sel = this.document.GetSelectedTextStyle(this.category);
+				if ( sel == -1 )  return null;
+
+				Text.TextStyle[] styles = this.TextStyleList.List;
+				Text.TextStyle currentStyle = styles[sel];
+
+				//	Il faut sauter le premier style de caractère qui est toujours le style de base.
+				for ( int i=1 ; i<styles.Length ; i++ )
+				{
+					Text.TextStyle style = styles[i];
+					if ( currentStyle == style )  continue;
+					if ( this.document.Wrappers.IsStyleAsCircularRef(currentStyle, style) )  continue;
+
+					bool active = Styles.ContainsStyle(currentStyle.ParentStyles, style);
+					string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
+					string line = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+					MenuItem item = new MenuItem("ChildrensNew", icon, line, "", (i+10000).ToString(System.Globalization.CultureInfo.InvariantCulture));
 					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
 					menu.Items.Add(item);
 					used ++;
@@ -1761,9 +1527,16 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.category == StyleCategory.Graphic )
 			{
-				Properties.Aggregate newAgg = this.document.Aggregates[i] as Properties.Aggregate;
-				Properties.Aggregate agg = this.GetAggregate();
-				this.document.Modifier.AggregateChildrensNew(agg, newAgg);
+				Properties.Aggregate menuAgg = this.document.Aggregates[i] as Properties.Aggregate;
+				Properties.Aggregate currentAgg = this.GetAggregate();
+				if ( currentAgg.Childrens.Contains(menuAgg) )
+				{
+					this.document.Modifier.AggregateChildrensDelete(currentAgg, menuAgg);
+				}
+				else
+				{
+					this.document.Modifier.AggregateChildrensNew(currentAgg, menuAgg);
+				}
 			}
 
 			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
@@ -1771,27 +1544,51 @@ namespace Epsitec.Common.Document.Containers
 				int sel = this.document.GetSelectedTextStyle(this.category);
 				Text.TextStyle[] styles = this.TextStyleList.List;
 				Text.TextStyle currentStyle = styles[sel];
-				Text.TextStyle newStyle = styles[i];
+
+				Text.TextStyle newStyle = null;
+				if ( i < 10000 )
+				{
+					newStyle = this.paragraphList.List[i];
+				}
+				else
+				{
+					newStyle = this.characterList.List[i-10000];
+				}
 
 				System.Collections.ArrayList parents = new System.Collections.ArrayList();
-				Text.TextStyle[] currentParents = currentStyle.ParentStyles;
-				foreach ( Text.TextStyle style in currentParents )
-				{
-					parents.Add(style);
-				}
-				parents.Insert(0, newStyle);
-				this.TextChildrensList.SelectedRank = 0;
+				parents.AddRange(currentStyle.ParentStyles);
 
-				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensNew);
+				if ( this.category == StyleCategory.Paragraph && newStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
+				{
+					int j = 0;
+					while ( j < parents.Count )
+					{
+						Text.TextStyle parent = parents[j] as Text.TextStyle;
+						if ( parent.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
+						{
+							parents.RemoveAt(j);
+						}
+						else
+						{
+							j ++;
+						}
+					}
+				}
+
+				string op;
+				if ( parents.Contains(newStyle) )
+				{
+					op = Res.Strings.Action.AggregateChildrensDelete;
+					parents.Remove(newStyle);
+				}
+				else
+				{
+					op = Res.Strings.Action.AggregateChildrensNew;
+					parents.Add(newStyle);
+				}
+
+				this.document.Modifier.OpletQueueBeginAction(op);
 				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
-
-				if ( this.document.Wrappers.IsStyleAsCircularRef(currentStyle) )
-				{
-					parents.RemoveAt(0);
-					this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
-					this.document.Modifier.ActiveViewer.DialogError(Res.Strings.Error.StyleCircularRef);
-				}
-
 				this.document.Modifier.OpletQueueValidateAction();
 
 				this.document.IsDirtySerialize = true;
@@ -1820,17 +1617,6 @@ namespace Epsitec.Common.Document.Containers
 				if ( this.category == StyleCategory.Paragraph )  return this.paragraphList;
 				if ( this.category == StyleCategory.Character )  return this.characterList;
 				throw new System.ArgumentException("TextStyleList(" + this.category.ToString() + ")");
-			}
-		}
-
-		protected Widgets.TextStylesList TextChildrensList
-		{
-			//	Donne le widget pour la liste des enfants selon la catégorie actuelle.
-			get
-			{
-				if ( this.category == StyleCategory.Paragraph )  return this.childrensParagraphList;
-				if ( this.category == StyleCategory.Character )  return this.childrensCharacterList;
-				throw new System.ArgumentException("TextChildrensList(" + this.category.ToString() + ")");
 			}
 		}
 
@@ -1882,23 +1668,16 @@ namespace Epsitec.Common.Document.Containers
 		protected HToolBar					nameToolBar;
 		protected TextField					name;
 
+		protected HToolBar					childrensToolBar;
+		protected TextField					nameChildrens;
+		protected GlyphButton				menuChildrens;
+
 		protected Widget					selectorContainer;
 		protected Widget					selectorToolBar;
 		protected string[]					selectorName = new string[(int) StyleCategory.Count];
 		protected IconSeparator				separatorStyle;
 		protected IconButton				buttonStyleNew;
 		protected IconButton				buttonStyleDelete;
-
-		protected HToolBar					childrensToolBar;
-		protected IconButton				buttonChildrensNew;
-		protected IconButton				buttonChildrensUp;
-		protected IconButton				buttonChildrensDown;
-		protected IconButton				buttonChildrensDelete;
-		protected GlyphButton				buttonChildrensExtend;
-
-		protected Widgets.AggregateList		childrensGraphicList;
-		protected Widgets.TextStylesList	childrensParagraphList;
-		protected Widgets.TextStylesList	childrensCharacterList;
 
 		protected Widget					panelContainer;
 		protected Panels.Abstract			panel;
