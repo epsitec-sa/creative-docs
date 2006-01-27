@@ -26,8 +26,7 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.Active.Changed  += new EventHandler(this.HandleParagraphWrapperChanged);
 			this.paragraphWrapper.Defined.Changed += new EventHandler(this.HandleParagraphWrapperChanged);
 
-			this.styleTextWrapper.Active.Changed      += new EventHandler(this.HandleStyleWrapperChanged);
-			this.styleParagraphWrapper.Active.Changed += new EventHandler(this.HandleStyleWrapperChanged);
+			this.document.TextContext.StyleList.StyleRedefined +=  new EventHandler(this.HandleStyleWrapperChanged);
 		}
 
 
@@ -252,25 +251,16 @@ namespace Epsitec.Common.Document
 
 		protected void HandleStyleWrapperChanged(object sender)
 		{
-			//	Le wrapper des styles de paragraphe ou de caractère a changé.
+			//	Un style de paragraphe ou de caractère a changé.
 			System.Diagnostics.Debug.WriteLine("HandleStyleWrapperChanged "+(Wrappers.cc++).ToString());
-			Text.TextStyle attachedStyle = this.styleParagraphWrapper.AttachedStyle;
-			if ( attachedStyle == null )  return;
 
 			Text.TextStyle[] styles = this.document.TextContext.StyleList.StyleMap.GetSortedStyles();
 			foreach ( Text.TextStyle style in styles )
 			{
-				Text.TextStyle[] parents = style.ParentStyles;
-				foreach ( Text.TextStyle parent in parents )
-				{
-					if ( parent == attachedStyle )
-					{
-						this.document.Notifier.NotifyTextStyleChanged(style);
-					}
-				}
+				this.document.Notifier.NotifyTextStyleChanged(style);
 			}
 
-			this.document.Notifier.NotifyTextStyleChanged(attachedStyle);
+			this.document.Notifier.NotifyArea();
 		}
 
 		protected static int cc=0;
