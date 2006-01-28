@@ -70,7 +70,7 @@ namespace Epsitec.Common.Text.Internal
 				//	les réglages supplémentaires :
 				
 				SettingsCoreMatcher matcher = new SettingsCoreMatcher (local_settings, extra_settings);
-				Styles.CoreSettings  find    = this.FindCore (core_settings, new CoreMatcher (matcher.FindExactSettings));
+				Styles.CoreSettings find    = this.FindCore (core_settings, new CoreMatcher (matcher.FindExactSettings));
 				
 				if ((find == null) &&
 					(matcher.WasCalled))
@@ -397,7 +397,10 @@ namespace Epsitec.Common.Text.Internal
 				{
 					if (core_settings.FindSettings (this.local_settings) == 0)
 					{
-						return core_settings.CountLocalSettings < Styles.BaseSettings.MaxSettingsCount;
+						if (core_settings.CountLocalSettings == Styles.BaseSettings.MaxSettingsCount)
+						{
+							return false;
+						}
 					}
 				}
 				
@@ -405,7 +408,10 @@ namespace Epsitec.Common.Text.Internal
 				{
 					if (core_settings.FindSettings (this.extra_settings) == 0)
 					{
-						return core_settings.CountExtraSettings < Styles.BaseSettings.MaxSettingsCount;
+						if (core_settings.CountExtraSettings == Styles.BaseSettings.MaxSettingsCount)
+						{
+							return false;
+						}
 					}
 				}
 				

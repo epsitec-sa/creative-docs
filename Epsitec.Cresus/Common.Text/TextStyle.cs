@@ -268,7 +268,7 @@ namespace Epsitec.Common.Text
 				this.style_properties = new Property[properties.Count];
 				
 				properties.CopyTo (this.style_properties, 0);
-					
+				
 				this.GenerateStyleProperties ();
 			}
 		}
