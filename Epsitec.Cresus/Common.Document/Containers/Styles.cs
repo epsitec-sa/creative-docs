@@ -253,15 +253,21 @@ namespace Epsitec.Common.Document.Containers
 			st.Alignment = ContentAlignment.MiddleRight;
 			this.childrensToolBar.Items.Add(st);
 
-			this.nameChildrens = new TextField();
-			this.nameChildrens.IsReadOnly = true;
-			this.nameChildrens.Width = 165;
-			this.nameChildrens.DockMargins = new Margins(0, 0, 1, 1);
-			this.nameChildrens.TextChanged += new EventHandler(this.HandleNameTextChanged);
+			TextField edit = new TextField();
+			edit.IsReadOnly = true;
+			edit.Width = 165;
+			edit.DockMargins = new Margins(0, 0, 1, 1);
+			edit.TabIndex = 1;
+			edit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			edit.Clicked += new MessageEventHandler(this.HandleMenuChildrensClicked);
+			this.childrensToolBar.Items.Add(edit);
+			ToolTip.Default.SetToolTip(edit, Res.Strings.Panel.AggregateChildrens.Tooltip.Name);
+
+			this.nameChildrens = new StaticText(edit);
+			this.nameChildrens.Dock = DockStyle.Fill;
+			this.nameChildrens.DockMargins = new Margins(2, 2, 0, 0);
 			this.nameChildrens.TabIndex = 1;
 			this.nameChildrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.childrensToolBar.Items.Add(this.nameChildrens);
-			ToolTip.Default.SetToolTip(this.nameChildrens, Res.Strings.Panel.AggregateChildrens.Tooltip.Name);
 
 			this.menuChildrens = new GlyphButton();
 			this.menuChildrens.GlyphShape = GlyphShape.Menu;
@@ -682,7 +688,7 @@ namespace Epsitec.Common.Document.Containers
 			int overflow = builder.Length-30;
 			if ( overflow > 0 )
 			{
-				double size = System.Math.Max((1-((double)overflow/(30*2)))*100, 50);
+				double size = System.Math.Max((1-((double)overflow/(30*2)))*100, 60);
 				builder.Insert(0, string.Format("<font size=\"{0}%\">", size.ToString()));
 				builder.Append("</font>");
 			}
@@ -1192,7 +1198,7 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleMenuChildrensClicked(object sender, MessageEventArgs e)
 		{
 			//	Crée un nouveau parent.
-			Button button = sender as Button;
+			Button button = this.menuChildrens;
 			Point pos = button.MapClientToScreen(new Point(button.Width, 0));
 			VMenu menu = this.CreateMenuChildrens(pos);
 			if ( menu == null )  return;
@@ -1669,7 +1675,7 @@ namespace Epsitec.Common.Document.Containers
 		protected TextField					name;
 
 		protected HToolBar					childrensToolBar;
-		protected TextField					nameChildrens;
+		protected StaticText				nameChildrens;
 		protected GlyphButton				menuChildrens;
 
 		protected Widget					selectorContainer;
