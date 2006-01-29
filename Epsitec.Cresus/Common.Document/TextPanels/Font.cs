@@ -652,7 +652,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			else
 			{
-				value = 12.0 * Modifier.fontSizeScale;
+				value = 12.0 * Modifier.FontSizeScale;
 				units = Common.Text.Properties.SizeUnits.Points;
 			}
 

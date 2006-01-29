@@ -24,7 +24,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				this.fontSize = 12.0*Modifier.fontSizeScale;  // corps 12
+				this.fontSize = 12.0*Modifier.FontSizeScale;  // corps 12
 			}
 
 			this.fontColor = Drawing.RichColor.FromCMYK(0.0, 0.0, 0.0, 1.0);

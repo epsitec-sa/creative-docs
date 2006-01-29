@@ -170,20 +170,20 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			//	Spécifie les bornes pour une taille de fonte.
 			this.textFieldReal.UnitType = RealUnitType.Scalar;
-			this.textFieldReal.Scale = (decimal) Modifier.fontSizeScale;
+			this.textFieldReal.Scale = (decimal) Modifier.FontSizeScale;
 			if ( document.Type == DocumentType.Pictogram )
 			{
-				this.textFieldReal.InternalMinValue     = (decimal) ( 0.1*Modifier.fontSizeScale);
-				this.textFieldReal.InternalMaxValue     = (decimal) (24.0*Modifier.fontSizeScale);
-				this.textFieldReal.InternalDefaultValue = (decimal) ( 1.2*Modifier.fontSizeScale);
+				this.textFieldReal.InternalMinValue     = (decimal) ( 0.1*Modifier.FontSizeScale);
+				this.textFieldReal.InternalMaxValue     = (decimal) (24.0*Modifier.FontSizeScale);
+				this.textFieldReal.InternalDefaultValue = (decimal) ( 1.2*Modifier.FontSizeScale);
 				this.textFieldReal.Step                 = 0.1M;
 				this.textFieldReal.Resolution           = 0.01M;
 			}
 			else
 			{
-				this.textFieldReal.InternalMinValue     = (decimal) (  1*Modifier.fontSizeScale);
-				this.textFieldReal.InternalMaxValue     = (decimal) (240*Modifier.fontSizeScale);
-				this.textFieldReal.InternalDefaultValue = (decimal) ( 12*Modifier.fontSizeScale);
+				this.textFieldReal.InternalMinValue     = (decimal) (  1*Modifier.FontSizeScale);
+				this.textFieldReal.InternalMaxValue     = (decimal) (240*Modifier.FontSizeScale);
+				this.textFieldReal.InternalDefaultValue = (decimal) ( 12*Modifier.FontSizeScale);
 				this.textFieldReal.Step                 = 1.0M;
 				this.textFieldReal.Resolution           = 0.1M;
 			}

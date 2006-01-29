@@ -553,7 +553,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				size /= Modifier.fontSizeScale;
+				size /= Modifier.FontSizeScale;
 
 				if ( this.document.Type == DocumentType.Pictogram )
 				{
@@ -566,7 +566,7 @@ namespace Epsitec.Common.Document
 					size = Wrappers.SearchNextValue(size, list, delta);
 				}
 
-				size *= Modifier.fontSizeScale;
+				size *= Modifier.FontSizeScale;
 			}
 
 			this.textWrapper.SuspendSynchronizations();
@@ -634,6 +634,8 @@ namespace Epsitec.Common.Document
 			double marginFirst = this.paragraphWrapper.Active.LeftMarginFirst;
 			double marginBody  = this.paragraphWrapper.Active.LeftMarginBody;
 			double marginBase  = this.paragraphWrapper.GetUnderlyingMarginsState().LeftMarginBody;
+			double marginFirstRight = this.paragraphWrapper.Active.RightMarginFirst;
+			double marginBodyRight  = this.paragraphWrapper.Active.RightMarginBody;
 
 			double distance;
 			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
@@ -647,9 +649,23 @@ namespace Epsitec.Common.Document
 
 			level += delta;
 			level = System.Math.Max(level, 0);
+			
+			double offset = level*distance;
+			
+			if ( this.paragraphWrapper.Active.IsIndentationLevelAttributeDefined &&
+				this.paragraphWrapper.Active.IndentationLevelAttribute != null )
+			{
+				string attribute = this.paragraphWrapper.Active.IndentationLevelAttribute;
+				double fontSize = this.textWrapper.Active.FontSize;
+				fontSize /= Modifier.FontSizeScale;
+				offset = 0;
+				offset += Text.TabList.GetLevelOffset(fontSize, level, attribute);
+				offset += Text.TabList.GetRelativeOffset(fontSize, attribute);
+				offset *= Modifier.FontSizeScale;
+			}
 
 			double diff = marginFirst-marginBody;
-			marginBody  = marginBase+level*distance;
+			marginBody  = marginBase+offset;
 			marginFirst = marginBody+diff;
 			marginBody  = System.Math.Max(marginBody,  0);
 			marginFirst = System.Math.Max(marginFirst, 0);
@@ -657,7 +673,9 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.SuspendSynchronizations();
 			this.paragraphWrapper.Defined.IndentationLevel = level;
 			this.paragraphWrapper.Defined.LeftMarginFirst = marginFirst;
+			this.paragraphWrapper.Defined.RightMarginFirst = marginFirstRight;
 			this.paragraphWrapper.Defined.LeftMarginBody  = marginBody;
+			this.paragraphWrapper.Defined.RightMarginBody = marginBodyRight;
 			this.paragraphWrapper.Defined.MarginUnits = Common.Text.Properties.SizeUnits.Points;
 			this.paragraphWrapper.DefineOperationName("ParagraphIndent", Res.Strings.Action.ParagraphIndent);
 			this.paragraphWrapper.ResumeSynchronizations();

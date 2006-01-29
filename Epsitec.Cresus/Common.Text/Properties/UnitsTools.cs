@@ -81,6 +81,12 @@ namespace Epsitec.Common.Text.Properties
 		
 		public static string SerializeSizeUnits(double value, SizeUnits units)
 		{
+			if ((units == SizeUnits.Percent) ||
+				(units == SizeUnits.PercentNotCombining))
+			{
+				value *= 100;
+			}
+			
 			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0} {1}", value, UnitsTools.SerializeSizeUnits (units));
 		}
 		
@@ -111,6 +117,12 @@ namespace Epsitec.Common.Text.Properties
 			
 			value = System.Double.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
 			units = UnitsTools.DeserializeSizeUnits (args[1]);
+			
+			if ((units == SizeUnits.Percent) ||
+				(units == SizeUnits.PercentNotCombining))
+			{
+				value /= 100;
+			}
 		}
 		
 		

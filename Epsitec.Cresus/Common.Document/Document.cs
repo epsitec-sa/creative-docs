@@ -1426,12 +1426,13 @@ namespace Epsitec.Common.Document
 			this.textContext.IsPropertiesPropertyEnabled = false;
 
 			string black = RichColor.ToString(RichColor.FromBrightness(0));
+			string indentAttribute = Text.TabList.PackToAttribute(System.Globalization.RegionInfo.CurrentRegion.IsMetric ? "LevelMultiplier:10 mm" : "LevelMultiplier:0.5 in");
 			double fontSize = (this.type == DocumentType.Pictogram) ? 1.2 : 12.0;
 
 			System.Collections.ArrayList properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty("Arial", Misc.DefaultFontStyle("Arial"), "kern", "liga"));
-			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 0.0));
-			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
+			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.FontSizeScale, Text.Properties.SizeUnits.Points, 0.0));
+			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True, 0, indentAttribute));
 			properties.Add(new Text.Properties.FontColorProperty(black));
 			properties.Add(new Text.Properties.LanguageProperty(System.Globalization.CultureInfo.CurrentCulture.Name, 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
@@ -1473,12 +1474,12 @@ namespace Epsitec.Common.Document
 			items1.Font      = new Text.Properties.FontProperty ("Arial", "Regular");
 			
 			items2.Generator = generator2;
-			items2.TabItem   = tabs.NewTab("T2-item", 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:1.5"));
-			items2.TabBody   = tabs.NewTab("T2-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:2"));
+			items2.TabItem   = tabs.NewTab("T2-item", 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:1.5"));
+			items2.TabBody   = tabs.NewTab("T2-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:2"));
 			
 			items3.Generator = generator3;
-			items3.TabItem   = tabs.NewTab("T3-item", 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:1.5"));
-			items3.TabBody   = tabs.NewTab("T3-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:2"));
+			items3.TabItem   = tabs.NewTab("T3-item", 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:1.5"));
+			items3.TabBody   = tabs.NewTab("T3-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:2"));
 			
 			items4.Generator = generator4;
 			
@@ -1491,14 +1492,17 @@ namespace Epsitec.Common.Document
 			
 			properties.Clear ();
 			properties.Add(new Text.Properties.FontProperty("Times New Roman", "Italic", "kern", "liga"));
-			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale*1.5, Text.Properties.SizeUnits.Points));
+			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.FontSizeScale*1.5, Text.Properties.SizeUnits.Points));
 			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.True));
+			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True, 0, Text.TabList.PackToAttribute("LevelMultiplier:0 mm")));
 			
 			Text.TextStyle title = this.textContext.StyleList.NewTextStyle(null, "Title", Text.TextStyleClass.Paragraph, properties, baseStyles);
 			
+			Text.Properties.MarginsProperty m = new Text.Properties.MarginsProperty(2*fontSize*Modifier.FontSizeScale, 2*fontSize*Modifier.FontSizeScale, 0.0, 0.0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True, 0, Text.TabList.PackToAttribute("LevelMultiplier:150 %"));
+			
 			Text.TextStyle l1 = this.textContext.StyleList.NewTextStyle(null, "BulletRound",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
-			Text.TextStyle l2 = this.textContext.StyleList.NewTextStyle(null, "BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2 }, baseStyles);
-			Text.TextStyle l3 = this.textContext.StyleList.NewTextStyle(null, "BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, contInfo }, baseStyles);
+			Text.TextStyle l2 = this.textContext.StyleList.NewTextStyle(null, "BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2, m }, baseStyles);
+			Text.TextStyle l3 = this.textContext.StyleList.NewTextStyle(null, "BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, m, contInfo }, baseStyles);
 			Text.TextStyle l4 = this.textContext.StyleList.NewTextStyle(null, "TitleNumeric",  Text.TextStyleClass.Paragraph, new Text.Property[] { itemList4, contInfo }, new Text.TextStyle[] { title } );
 
 			this.textContext.StyleList.StyleMap.SetRank(null, l1, 3);

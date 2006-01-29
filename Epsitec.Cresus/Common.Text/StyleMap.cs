@@ -30,13 +30,19 @@ namespace Epsitec.Common.Text
 			{
 				if (old_caption != null)
 				{
-					this.caption_hash.Remove (old_caption);
+					if (this.caption_hash[old_caption] as string == key)
+					{
+						this.caption_hash.Remove (old_caption);
+					}
 				}
 
 				if (new_caption != null)
 				{
-					this.caption_hash[new_caption] = key;
-					this.t_style_hash[key] = new_caption;
+					if (this.caption_hash.Contains (new_caption) == false)
+					{
+						this.caption_hash[new_caption] = key;
+						this.t_style_hash[key] = new_caption;
+					}
 				}
 				else
 				{

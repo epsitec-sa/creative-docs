@@ -655,9 +655,9 @@ namespace Epsitec.Common.Document
 			else
 			{
 				field.UnitType = RealUnitType.Scalar;
-				field.Scale = (decimal) Modifier.fontSizeScale;
+				field.Scale = (decimal) Modifier.FontSizeScale;
 				field.InternalMinValue = 1.0M;
-				field.InternalMaxValue = (decimal) (200.0*Modifier.fontSizeScale);
+				field.InternalMaxValue = (decimal) (200.0*Modifier.FontSizeScale);
 				field.Step = 1.0M;
 				field.Resolution = 0.1M;
 			}
@@ -6464,6 +6464,6 @@ namespace Epsitec.Common.Document
 		protected int							aggregateUsed;
 		protected System.Collections.Hashtable	accumulateObjects;
 
-		public static readonly double			fontSizeScale = 3.5;  // empyrique !
+		public static readonly double			FontSizeScale = 254.0 / 72.0;	//	1pt = 1/72 de pouce (unités internes, 0.1mm)
 	}
 }

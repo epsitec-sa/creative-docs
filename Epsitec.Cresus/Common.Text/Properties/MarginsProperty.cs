@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
@@ -24,13 +24,14 @@ namespace Epsitec.Common.Text.Properties
 			
 			this.units = units;
 			this.level = -1;
+			this.level_attribute = null;
 		}
 		
-		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, SizeUnits units, double justification_body, double justification_last_line, double disposition, double break_fence_before, double break_fence_after, ThreeState enable_hyphenation) : this (left_margin_first_line, left_margin_body, right_margin_first_line, right_margin_body, units, justification_body, justification_last_line, disposition, break_fence_before, break_fence_after, enable_hyphenation, -1)
+		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, SizeUnits units, double justification_body, double justification_last_line, double disposition, double break_fence_before, double break_fence_after, ThreeState enable_hyphenation) : this (left_margin_first_line, left_margin_body, right_margin_first_line, right_margin_body, units, justification_body, justification_last_line, disposition, break_fence_before, break_fence_after, enable_hyphenation, -1, null)
 		{
 		}
 		
-		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, SizeUnits units, double justification_body, double justification_last_line, double disposition, double break_fence_before, double break_fence_after, ThreeState enable_hyphenation, int level)
+		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, SizeUnits units, double justification_body, double justification_last_line, double disposition, double break_fence_before, double break_fence_after, ThreeState enable_hyphenation, int level, string level_attribute)
 		{
 			this.left_margin_first_line  = left_margin_first_line;
 			this.left_margin_body        = left_margin_body;
@@ -48,6 +49,7 @@ namespace Epsitec.Common.Text.Properties
 			this.enable_hyphenation = enable_hyphenation;
 			
 			this.level = level;
+			this.level_attribute = level_attribute;
 		}
 		
 		
@@ -172,6 +174,14 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public string							LevelAttribute
+		{
+			get
+			{
+				return this.level_attribute;
+			}
+		}
+		
 		
 		public override Property EmptyClone()
 		{
@@ -192,14 +202,15 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeDouble (this.break_fence_before),
 				/**/				SerializerSupport.SerializeDouble (this.break_fence_after),
 				/**/				SerializerSupport.SerializeThreeState (this.enable_hyphenation),
-				/**/				SerializerSupport.SerializeInt (this.level));
+				/**/				SerializerSupport.SerializeInt (this.level),
+				/**/				SerializerSupport.SerializeString (this.level_attribute));
 		}
 		
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 12);
+			Debug.Assert.IsTrue ((args.Length == 12) || (args.Length == 13));
 			
 			double     left_margin_first_line  = SerializerSupport.DeserializeDouble (args[0]);
 			double     left_margin_body        = SerializerSupport.DeserializeDouble (args[1]);
@@ -213,6 +224,7 @@ namespace Epsitec.Common.Text.Properties
 			double     break_fence_after       = SerializerSupport.DeserializeDouble (args[9]);
 			ThreeState enable_hyphenation      = SerializerSupport.DeserializeThreeState (args[10]);
 			int        level                   = SerializerSupport.DeserializeInt (args[11]);
+			string     level_attribute         = (args.Length < 13) ? null : SerializerSupport.DeserializeString (args[12]);
 			
 			this.left_margin_first_line  = left_margin_first_line;
 			this.left_margin_body        = left_margin_body;
@@ -226,6 +238,7 @@ namespace Epsitec.Common.Text.Properties
 			this.break_fence_after       = break_fence_after;
 			this.enable_hyphenation      = enable_hyphenation;
 			this.level                   = level;
+			this.level_attribute         = level_attribute;
 		}
 		
 		
@@ -239,11 +252,16 @@ namespace Epsitec.Common.Text.Properties
 			
 			if (b.units != SizeUnits.None)
 			{
-				c.left_margin_first_line  = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_first_line, a.units, b.units),  b.left_margin_first_line);
-				c.left_margin_body        = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_body, a.units, b.units),        b.left_margin_body);
-				c.right_margin_first_line = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_first_line, a.units, b.units), b.right_margin_first_line);
-				c.right_margin_body       = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_body, a.units, b.units),       b.right_margin_body);
-				c.units                   = b.units;
+				UnitsTools.Combine (a.left_margin_first_line,  a.units, b.left_margin_first_line,  b.units, out c.left_margin_first_line,  out c.units);
+				UnitsTools.Combine (a.left_margin_body,        a.units, b.left_margin_body,        b.units, out c.left_margin_body,        out c.units);
+				UnitsTools.Combine (a.right_margin_first_line, a.units, b.right_margin_first_line, b.units, out c.right_margin_first_line, out c.units);
+				UnitsTools.Combine (a.right_margin_body,       a.units, b.right_margin_body,       b.units, out c.right_margin_body,       out c.units);
+
+//				c.left_margin_first_line  = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_first_line, a.units, b.units),  b.left_margin_first_line);
+//				c.left_margin_body        = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_body, a.units, b.units),        b.left_margin_body);
+//				c.right_margin_first_line = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_first_line, a.units, b.units), b.right_margin_first_line);
+//				c.right_margin_body       = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_body, a.units, b.units),       b.right_margin_body);
+//				c.units                   = b.units;
 			}
 			else
 			{
@@ -261,6 +279,7 @@ namespace Epsitec.Common.Text.Properties
 			c.break_fence_after       = NumberSupport.Combine (a.break_fence_after,       b.break_fence_after);
 			c.enable_hyphenation      = b.enable_hyphenation == ThreeState.Undefined ? a.enable_hyphenation : b.enable_hyphenation;
 			c.level                   = b.level < 0 ? a.level : b.level;
+			c.level_attribute         = b.level_attribute == null ? a.level_attribute : b.level_attribute;
 			
 			return c;
 		}
@@ -280,6 +299,7 @@ namespace Epsitec.Common.Text.Properties
 			checksum.UpdateValue (this.break_fence_after);
 			checksum.UpdateValue ((int) this.enable_hyphenation);
 			checksum.UpdateValue (this.level);
+			checksum.UpdateValue (this.level_attribute);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -301,7 +321,8 @@ namespace Epsitec.Common.Text.Properties
 				&& NumberSupport.Equal (a.break_fence_before,      b.break_fence_before)
 				&& NumberSupport.Equal (a.break_fence_after,       b.break_fence_after)
 				&& a.enable_hyphenation == b.enable_hyphenation
-				&& a.level == b.level;
+				&& a.level == b.level
+				&& a.level_attribute == b.level_attribute;
 		}
 		
 		
@@ -322,5 +343,6 @@ namespace Epsitec.Common.Text.Properties
 		private double							disposition;				//	0.0 = aligné à gauche, 0.5 = centré, 1.0 = aligné à droite
 		
 		private int								level;						//	-1 => pas de niveau spécifié
+		private string							level_attribute;			//	null => pas d'indentations particulières
 	}
 }

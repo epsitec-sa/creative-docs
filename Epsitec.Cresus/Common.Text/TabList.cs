@@ -827,8 +827,8 @@ namespace Epsitec.Common.Text
 		private const string					AutoTagPrefix = "#A#";
 		private const string					SharedTagPrefix = "#S#";
 		
-		private const string					LevelMultiplier = "LevelMultiplier:";
-		private const string					LevelTable = "LevelTable:";
-		private const string					RelativeEmOffset = "Em:";
+		public const string						LevelMultiplier = "LevelMultiplier:";
+		public const string						LevelTable = "LevelTable:";
+		public const string						RelativeEmOffset = "Em:";
 	}
 }

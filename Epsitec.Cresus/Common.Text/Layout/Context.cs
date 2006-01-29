@@ -1352,18 +1352,33 @@ restart:
 			ulong code = this.text[this.text_start + this.text_offset];
 			
 			Properties.MarginsProperty margins;
+			double font_size_in_points;
 			
 			this.text_context.GetMargins (code, out margins);
+			this.text_context.GetFontSize (code, out font_size_in_points);
 			
 			if (margins != null)
 			{
-				this.mx_left  = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
-				this.mx_right = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
-				this.x_origin = this.mx_left;
+				if (Properties.UnitsTools.IsScale (margins.Units))
+				{
+					this.mx_left  = font_size_in_points * Properties.UnitsTools.ConvertToScale (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
+					this.mx_right = font_size_in_points * Properties.UnitsTools.ConvertToScale (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+					this.x_origin = this.mx_left;
 				
-				this.break_fence_before = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
-				this.break_fence_after  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
-				this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
+					this.break_fence_before = font_size_in_points * Properties.UnitsTools.ConvertToScale (margins.BreakFenceBefore, margins.Units);
+					this.break_fence_after  = font_size_in_points * Properties.UnitsTools.ConvertToScale (margins.BreakFenceAfter, margins.Units);
+					this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
+				}
+				else
+				{
+					this.mx_left  = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
+					this.mx_right = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+					this.x_origin = this.mx_left;
+				
+					this.break_fence_before = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
+					this.break_fence_after  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
+					this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
+				}
 			}
 		}
 		
@@ -1379,22 +1394,39 @@ restart:
 			ulong code = this.text[this.text_start + offset];
 			
 			Properties.MarginsProperty margins;
+			double font_size_in_points;
 			
 			this.text_context.GetMargins (code, out margins);
+			this.text_context.GetFontSize (code, out font_size_in_points);
 			
 			if (margins != null)
 			{
-				this.mx_left      = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
-				this.mx_right     = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
-				this.mx_left_body = Properties.UnitsTools.ConvertToPoints (margins.LeftMarginBody, margins.Units);
-				this.x_origin     = this.mx_left;
+				if (Properties.UnitsTools.IsScale (margins.Units))
+				{
+					this.mx_left      = font_size_in_points * Properties.UnitsTools.ConvertToScale (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
+					this.mx_right     = font_size_in_points * Properties.UnitsTools.ConvertToScale (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+					this.mx_left_body = font_size_in_points * Properties.UnitsTools.ConvertToScale (margins.LeftMarginBody, margins.Units);
+					this.x_origin     = this.mx_left;
+				
+					this.break_fence_before = font_size_in_points * Properties.UnitsTools.ConvertToScale (margins.BreakFenceBefore, margins.Units);
+					this.break_fence_after  = font_size_in_points * Properties.UnitsTools.ConvertToScale (margins.BreakFenceAfter, margins.Units);
+					this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
+				}
+				else
+				{
+					this.mx_left      = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
+					this.mx_right     = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+					this.mx_left_body = Properties.UnitsTools.ConvertToPoints (margins.LeftMarginBody, margins.Units);
+					this.x_origin     = this.mx_left;
+					
+					this.break_fence_before = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
+					this.break_fence_after  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
+					this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
+				}
+					
 				
 				this.justification = is_last_line ? margins.JustificationLastLine : margins.JustificationBody;
 				this.disposition   = margins.Disposition;
-				
-				this.break_fence_before = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
-				this.break_fence_after  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
-				this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
 			}
 		}
 		
