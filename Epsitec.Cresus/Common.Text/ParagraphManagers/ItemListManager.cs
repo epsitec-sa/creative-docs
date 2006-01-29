@@ -36,9 +36,6 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			Properties.FontSizeProperty   font_size_prop   = p.FontSize;
 			Properties.FontOffsetProperty font_offset_prop = p.FontOffset;
 			
-			Property[] props_1 = new Property[] { auto_text_prop, tab_item_prop };
-			Property[] props_3 = new Property[] { auto_text_prop, tab_body_prop };
-			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			list.Add (auto_text_prop);
@@ -57,11 +54,22 @@ namespace Epsitec.Common.Text.ParagraphManagers
 				list.Add (font_offset_prop);
 			}
 			
-			Property[] props_2 = (Property[]) list.ToArray (typeof (Property));
+			Property[] props;
 			
-			Internal.Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props_1);
-			Internal.Navigator.Insert (story, cursor, "X", null, props_2);
-			Internal.Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props_3);
+			if (tab_item_prop != null)
+			{
+				props = new Property[] { auto_text_prop, tab_item_prop };
+				Internal.Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props);
+			}
+			
+			props = (Property[]) list.ToArray (typeof (Property));
+			Internal.Navigator.Insert (story, cursor, "X", null, props);
+			
+			if (tab_body_prop != null)
+			{
+				props = new Property[] { auto_text_prop, tab_body_prop };
+				Internal.Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props);
+			}
 			
 			p.Generator.UpdateAllFields (story, property, context.Culture);
 		}
@@ -201,11 +209,19 @@ namespace Epsitec.Common.Text.ParagraphManagers
 				System.Diagnostics.Debug.Assert ((parameters.Length == 3) || (parameters.Length == 6));
 				
 				this.generator = context.GeneratorList[parameters[0]];
-				this.tab_item  = new Properties.TabProperty ();
-				this.tab_body  = new Properties.TabProperty ();
+				this.tab_item  = null;
+				this.tab_body  = null;
 				
-				this.tab_item.DeserializeFromText (context, parameters[1]);
-				this.tab_body.DeserializeFromText (context, parameters[2]);
+				if (parameters[1] != null)
+				{
+					this.tab_item = new Properties.TabProperty ();
+					this.tab_item.DeserializeFromText (context, parameters[1]);
+				}
+				if (parameters[2] != null)
+				{
+					this.tab_body = new Properties.TabProperty ();
+					this.tab_body.DeserializeFromText (context, parameters[2]);
+				}
 				
 				if (parameters.Length == 6)
 				{
@@ -246,10 +262,10 @@ namespace Epsitec.Common.Text.ParagraphManagers
 				string[] parameters = new string[6];
 				
 				parameters[0] = this.generator.Name;
-				parameters[1] = this.tab_item.SerializeToText ();
-				parameters[2] = this.tab_body.SerializeToText ();
-				parameters[3] = this.font == null ? null : this.font.SerializeToText ();
-				parameters[4] = this.font_size == null ? null : this.font_size.SerializeToText ();
+				parameters[1] = this.tab_item    == null ? null : this.tab_item.SerializeToText ();
+				parameters[2] = this.tab_body    == null ? null : this.tab_body.SerializeToText ();
+				parameters[3] = this.font        == null ? null : this.font.SerializeToText ();
+				parameters[4] = this.font_size   == null ? null : this.font_size.SerializeToText ();
 				parameters[5] = this.font_offset == null ? null : this.font_offset.SerializeToText ();
 				
 				return parameters;

@@ -2039,6 +2039,6 @@ namespace Epsitec.Common.Text
 		
 		static System.Collections.Hashtable		font_ids = new System.Collections.Hashtable ();
 		
-		internal const int						SerializationVersion = 3;
+		internal const int						SerializationVersion = 4;
 	}
 }

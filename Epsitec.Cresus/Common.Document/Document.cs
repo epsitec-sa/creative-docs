@@ -1440,37 +1440,30 @@ namespace Epsitec.Common.Document
 			Text.TextStyle charStyle = this.textContext.StyleList.NewTextStyle(null, "Default", Text.TextStyleClass.Text);
 			
 			#region Experimental Code
-
-#if true
 			Text.TextStyle[] baseStyles = new Text.TextStyle[] { paraStyle };
-			
-			properties.Clear ();
-			properties.Add(new Text.Properties.FontProperty("Times New Roman", "Italic", "kern", "liga"));
-			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale*1.5, Text.Properties.SizeUnits.Points));
-//			properties.Add(new Text.Properties.MarginsProperty(0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-//			properties.Add(new Text.Properties.FontColorProperty(black));
-//			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
-//			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.PercentNotCombining, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
-			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.True));
-			Text.TextStyle title = this.textContext.StyleList.NewTextStyle(null, "Title", Text.TextStyleClass.Paragraph, properties, baseStyles);
-			
-			this.textContext.StyleList.SetNextStyle(null, title, paraStyle);
-			
-			this.textContext.StyleList.StyleMap.SetRank(null, title, 1);
-			this.textContext.StyleList.StyleMap.SetCaption(null, title, "Titre");
-#endif
 			
 			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("bullet-1");
 			Text.Generator generator2 = this.textContext.GeneratorList.NewGenerator("num-1");
 			Text.Generator generator3 = this.textContext.GeneratorList.NewGenerator("alpha-1");
+			Text.Generator generator4 = this.textContext.GeneratorList.NewGenerator("num-2");
 			
 			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant,   "", "", Text.Generator.Casing.Default, "\u25CF\u25CB-"));
+			
 			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric,    "", "."));
-			generator3.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Alphabetic, "", ")", Text.Generator.Casing.Lower));
+			
+			generator3.GlobalPrefix = "";
+			generator3.GlobalSuffix = ")";
+			generator3.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Alphabetic, "", "", Text.Generator.Casing.Lower));
+			generator3.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric,    "-", ""));
+			
+			generator4.GlobalSuffix = " ";
+			generator4.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric,  "", "", Text.Generator.Casing.Lower));
+			generator4.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric, ".", "", Text.Generator.Casing.Lower));
 			
 			Text.ParagraphManagers.ItemListManager.Parameters items1 = new Text.ParagraphManagers.ItemListManager.Parameters();
 			Text.ParagraphManagers.ItemListManager.Parameters items2 = new Text.ParagraphManagers.ItemListManager.Parameters();
 			Text.ParagraphManagers.ItemListManager.Parameters items3 = new Text.ParagraphManagers.ItemListManager.Parameters();
+			Text.ParagraphManagers.ItemListManager.Parameters items4 = new Text.ParagraphManagers.ItemListManager.Parameters();
 
 			Text.TabList tabs = this.textContext.TabList;
 
@@ -1487,24 +1480,44 @@ namespace Epsitec.Common.Document
 			items3.TabItem   = tabs.NewTab("T3-item", 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:1.5"));
 			items3.TabBody   = tabs.NewTab("T3-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:1.5 %", "Em:2"));
 			
+			items4.Generator = generator4;
+			
 			Text.Properties.ManagedParagraphProperty itemList1 = new Text.Properties.ManagedParagraphProperty("ItemList", items1.Save());
 			Text.Properties.ManagedParagraphProperty itemList2 = new Text.Properties.ManagedParagraphProperty("ItemList", items2.Save());
 			Text.Properties.ManagedParagraphProperty itemList3 = new Text.Properties.ManagedParagraphProperty("ItemList", items3.Save());
+			Text.Properties.ManagedParagraphProperty itemList4 = new Text.Properties.ManagedParagraphProperty("ItemList", items4.Save());
 			
 			Text.Properties.ManagedInfoProperty contInfo = new Epsitec.Common.Text.Properties.ManagedInfoProperty("ItemList", "cont");
+			
+			properties.Clear ();
+			properties.Add(new Text.Properties.FontProperty("Times New Roman", "Italic", "kern", "liga"));
+			properties.Add(new Text.Properties.FontSizeProperty(fontSize*Modifier.fontSizeScale*1.5, Text.Properties.SizeUnits.Points));
+			properties.Add(new Text.Properties.KeepProperty(1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.True));
+			
+			Text.TextStyle title = this.textContext.StyleList.NewTextStyle(null, "Title", Text.TextStyleClass.Paragraph, properties, baseStyles);
 			
 			Text.TextStyle l1 = this.textContext.StyleList.NewTextStyle(null, "BulletRound",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
 			Text.TextStyle l2 = this.textContext.StyleList.NewTextStyle(null, "BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2 }, baseStyles);
 			Text.TextStyle l3 = this.textContext.StyleList.NewTextStyle(null, "BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, contInfo }, baseStyles);
+			Text.TextStyle l4 = this.textContext.StyleList.NewTextStyle(null, "TitleNumeric",  Text.TextStyleClass.Paragraph, new Text.Property[] { itemList4, contInfo }, new Text.TextStyle[] { title } );
 
-			this.textContext.StyleList.StyleMap.SetRank(null, l1, 2);
+			this.textContext.StyleList.StyleMap.SetRank(null, l1, 3);
 			this.textContext.StyleList.StyleMap.SetCaption(null, l1, "Liste à puces");
 
-			this.textContext.StyleList.StyleMap.SetRank(null, l2, 3);
+			this.textContext.StyleList.StyleMap.SetRank(null, l2, 4);
 			this.textContext.StyleList.StyleMap.SetCaption(null, l2, "Liste 1./2./...");
 
-			this.textContext.StyleList.StyleMap.SetRank(null, l3, 4);
+			this.textContext.StyleList.StyleMap.SetRank(null, l3, 5);
 			this.textContext.StyleList.StyleMap.SetCaption(null, l3, "Liste a)/b)/...");
+			
+			this.textContext.StyleList.SetNextStyle(null, l4, paraStyle);
+			this.textContext.StyleList.StyleMap.SetRank(null, l4, 2);
+			this.textContext.StyleList.StyleMap.SetCaption(null, l4, "Titre numéroté");
+			
+			this.textContext.StyleList.SetNextStyle(null, title, paraStyle);
+			this.textContext.StyleList.StyleMap.SetRank(null, title, 1);
+			this.textContext.StyleList.StyleMap.SetCaption(null, title, "Titre");
+			
 			#endregion
 			
 			this.textContext.DefaultParagraphStyle = paraStyle;

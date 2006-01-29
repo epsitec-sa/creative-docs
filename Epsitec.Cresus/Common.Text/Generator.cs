@@ -53,6 +53,30 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public string							GlobalPrefix
+		{
+			get
+			{
+				return this.global_prefix;
+			}
+			set
+			{
+				this.global_prefix = value;
+			}
+		}
+		
+		public string							GlobalSuffix
+		{
+			get
+			{
+				return this.global_suffix;
+			}
+			set
+			{
+				this.global_suffix = value;
+			}
+		}
+		
 		
 		public void Add(Generator.Sequence sequence)
 		{
@@ -84,6 +108,11 @@ namespace Epsitec.Common.Text
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
+			if (this.global_prefix != null)
+			{
+				buffer.Append (this.global_prefix);
+			}
+			
 			if (sequence.WellKnownType == SequenceType.Constant)
 			{
 				sequence.GenerateText (max_level_count, culture, buffer);
@@ -99,6 +128,12 @@ namespace Epsitec.Common.Text
 					sequence.GenerateText (ranks[i], culture, buffer);
 				}
 			}
+			
+			if (this.global_suffix != null)
+			{
+				buffer.Append (this.global_suffix);
+			}
+			
 			return buffer.ToString ();
 		}
 		
@@ -143,6 +178,11 @@ namespace Epsitec.Common.Text
 				buffer.Append ("/");
 				buffer.Append (SerializerSupport.SerializeInt (start));
 			}
+			
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeString (this.global_prefix));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeString (this.global_suffix));
 		}
 		
 		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
@@ -166,6 +206,12 @@ namespace Epsitec.Common.Text
 			for (int i = 0; i < num_starts; i++)
 			{
 				this.start_vector[i] = SerializerSupport.DeserializeInt (args[offset++]);
+			}
+			
+			if (version >= 4)
+			{
+				this.global_prefix = SerializerSupport.DeserializeString (args[offset++]);
+				this.global_suffix = SerializerSupport.DeserializeString (args[offset++]);
 			}
 		}
 		
@@ -634,5 +680,7 @@ namespace Epsitec.Common.Text
 		private System.Collections.ArrayList	sequences = new System.Collections.ArrayList ();
 		private string							name;
 		private int[]							start_vector;
+		private string							global_prefix;
+		private string							global_suffix;
 	}
 }

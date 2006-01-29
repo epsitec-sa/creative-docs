@@ -284,9 +284,9 @@
 	<data name="Panel.AggregateCategory.Character">Character</data>
 	<data name="Panel.AggregateName.Label.Name">Name</data>
 	<data name="Panel.AggregateName.Tooltip.Name">Style name</data>
-	<data name="Panel.AggregateChildrens.Label.Name">@@Basé sur</data>
+	<data name="Panel.AggregateChildrens.Label.Name">Based on</data>
 	<data name="Panel.AggregateChildrens.Tooltip.Name">Base styles</data>
-	<data name="Panel.AggregateChildrens.Tooltip.Menu">@@Choix des styles de base</data>
+	<data name="Panel.AggregateChildrens.Tooltip.Menu">Select the attached base styles</data>
 
 	<data name="Panel.Arc.Short.Initial">α1</data>
 	<data name="Panel.Arc.Short.Final">α2</data>
