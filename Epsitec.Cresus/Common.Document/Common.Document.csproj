@@ -957,6 +957,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\DummyTextFieldCombo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\FontSample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

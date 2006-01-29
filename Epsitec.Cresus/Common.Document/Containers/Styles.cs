@@ -253,30 +253,20 @@ namespace Epsitec.Common.Document.Containers
 			st.Alignment = ContentAlignment.MiddleRight;
 			this.childrensToolBar.Items.Add(st);
 
-			TextField edit = new TextField();
-			edit.IsReadOnly = true;
-			edit.Width = 165;
-			edit.DockMargins = new Margins(0, 0, 1, 1);
-			edit.TabIndex = 1;
-			edit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			edit.Clicked += new MessageEventHandler(this.HandleMenuChildrensClicked);
-			this.childrensToolBar.Items.Add(edit);
-			ToolTip.Default.SetToolTip(edit, Res.Strings.Panel.AggregateChildrens.Tooltip.Name);
+			this.dummyChildrens = new Widgets.DummyTextFieldCombo();
+			this.dummyChildrens.IsReadOnly = true;
+			this.dummyChildrens.Width = 185;
+			this.dummyChildrens.DockMargins = new Margins(0, 0, 1, 1);
+			this.dummyChildrens.Clicked += new MessageEventHandler(this.HandleMenuChildrensClicked);
+			this.dummyChildrens.Button.Clicked += new MessageEventHandler(this.HandleMenuChildrensClicked);
+			this.childrensToolBar.Items.Add(this.dummyChildrens);
+			ToolTip.Default.SetToolTip(this.dummyChildrens, Res.Strings.Panel.AggregateChildrens.Tooltip.Name);
 
-			this.nameChildrens = new StaticText(edit);
+			this.nameChildrens = new StaticText(this.dummyChildrens);
 			this.nameChildrens.Dock = DockStyle.Fill;
 			this.nameChildrens.DockMargins = new Margins(2, 2, 0, 0);
 			this.nameChildrens.TabIndex = 1;
 			this.nameChildrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.menuChildrens = new GlyphButton();
-			this.menuChildrens.GlyphShape = GlyphShape.Menu;
-			this.menuChildrens.DockMargins = new Margins(0, 0, 1, 1);
-			this.menuChildrens.TabIndex = 2;
-			this.menuChildrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.menuChildrens.Clicked += new MessageEventHandler(this.HandleMenuChildrensClicked);
-			this.childrensToolBar.Items.Add(this.menuChildrens);
-			ToolTip.Default.SetToolTip(this.menuChildrens, Res.Strings.Panel.AggregateChildrens.Tooltip.Menu);
 		}
 
 		protected void CreateNameToolBar()
@@ -664,7 +654,8 @@ namespace Epsitec.Common.Document.Containers
 					}
 				}
 
-				this.menuChildrens.Enable = true;
+				this.dummyChildrens.Enable = true;
+				this.nameChildrens.Enable = true;
 			}
 
 			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
@@ -682,7 +673,8 @@ namespace Epsitec.Common.Document.Containers
 					}
 				}
 
-				this.menuChildrens.Enable = (sel != 0);
+				this.dummyChildrens.Enable = (sel != 0);
+				this.nameChildrens.Enable = (sel != 0);
 			}
 
 			int overflow = builder.Length-30;
@@ -1198,8 +1190,8 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleMenuChildrensClicked(object sender, MessageEventArgs e)
 		{
 			//	Crée un nouveau parent.
-			Button button = this.menuChildrens;
-			Point pos = button.MapClientToScreen(new Point(button.Width, 0));
+			Widget widget = this.dummyChildrens;
+			Point pos = widget.MapClientToScreen(new Point(0, 1));
 			VMenu menu = this.CreateMenuChildrens(pos);
 			if ( menu == null )  return;
 			menu.Host = this;
@@ -1209,11 +1201,14 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( pos.Y-menu.Height < area.Bottom )  // dépasse en bas ?
 			{
-				pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));
+				pos = widget.MapClientToScreen(new Drawing.Point(0, widget.Height));
 				pos.Y += menu.Height;  // déroule contre le haut ?
 			}
 
-			pos.X -= menu.Width;
+			if ( pos.X+menu.Width > area.Right )  // dépasse à droite ?
+			{
+				pos.X -= pos.X+menu.Width-area.Right;
+			}
 
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
@@ -1675,8 +1670,8 @@ namespace Epsitec.Common.Document.Containers
 		protected TextField					name;
 
 		protected HToolBar					childrensToolBar;
+		protected Widgets.DummyTextFieldCombo dummyChildrens;
 		protected StaticText				nameChildrens;
-		protected GlyphButton				menuChildrens;
 
 		protected Widget					selectorContainer;
 		protected Widget					selectorToolBar;
