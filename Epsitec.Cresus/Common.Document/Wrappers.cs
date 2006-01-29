@@ -280,6 +280,37 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public System.Collections.ArrayList ArrangeParentStyles(System.Collections.ArrayList parents)
+		{
+			//	Réarrange la liste des parents d'un style pour utiliser le même ordre
+			//	que la liste (selon StyleMap.GetRank donc).
+			System.Collections.ArrayList arrangedParents = new System.Collections.ArrayList();
+
+			Text.TextStyle[] styles = this.document.TextContext.StyleList.StyleMap.GetSortedStyles();
+			foreach ( Text.TextStyle style in styles )
+			{
+				if ( style.TextStyleClass == Text.TextStyleClass.Paragraph )
+				{
+					if ( parents.Contains(style) )
+					{
+						arrangedParents.Add(style);
+					}
+				}
+			}
+			foreach ( Text.TextStyle style in styles )
+			{
+				if ( style.TextStyleClass == Text.TextStyleClass.Text )
+				{
+					if ( parents.Contains(style) )
+					{
+						arrangedParents.Add(style);
+					}
+				}
+			}
+
+			return arrangedParents;
+		}
+
 		public bool IsStyleAsDefaultParent(Text.TextStyle style)
 		{
 			//	Vérifie si un style de paragraphe fait référence au style de base dans sa

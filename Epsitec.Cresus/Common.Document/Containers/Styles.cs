@@ -666,8 +666,10 @@ namespace Epsitec.Common.Document.Containers
 				{
 					Common.Text.TextStyle style = this.TextStyleList.List[sel];
 					Text.TextStyle[] parents = style.ParentStyles;
-					foreach ( Text.TextStyle parent in parents )
+					//?for ( int i=parents.Length-1 ; i>=0 ; i-- )
+					for ( int i=0 ; i<parents.Length ; i++ )
 					{
+						Text.TextStyle parent = parents[i] as Text.TextStyle;
 						if ( builder.Length != 0 )  builder.Append(", ");
 						builder.Append(this.document.TextContext.StyleList.StyleMap.GetCaption(parent));
 					}
@@ -677,10 +679,10 @@ namespace Epsitec.Common.Document.Containers
 				this.nameChildrens.Enable = (sel != 0);
 			}
 
-			int overflow = builder.Length-30;
+			int overflow = builder.Length-30;  // nb de caractères en "trop"
 			if ( overflow > 0 )
 			{
-				double size = System.Math.Max((1-((double)overflow/(30*2)))*100, 60);
+				double size = System.Math.Max((1-((double)overflow/(30*2)))*100, 60);  // zoom 60..100
 				builder.Insert(0, string.Format("<font size=\"{0}%\">", size.ToString()));
 				builder.Append("</font>");
 			}
@@ -1445,6 +1447,7 @@ namespace Epsitec.Common.Document.Containers
 				Text.TextStyle[] styles = this.TextStyleList.List;
 				Text.TextStyle currentStyle = styles[sel];
 
+				//	Met les styles de paragraphe, avec des icônes "radio".
 				for ( int i=0 ; i<styles.Length ; i++ )
 				{
 					Text.TextStyle style = styles[i];
@@ -1459,9 +1462,10 @@ namespace Epsitec.Common.Document.Containers
 					used ++;
 				}
 
+				//	Met les styles de caractère, avec des icônes "check".
 				bool firstCharacter = true;
 				styles = this.characterList.List;
-				for ( int i=1 ; i<styles.Length ; i++ )
+				for ( int i=1 ; i<styles.Length ; i++ )  // saute le style de base (toujours le premier)
 				{
 					Text.TextStyle style = styles[i];
 					if ( style == currentStyle )  continue;
@@ -1490,8 +1494,7 @@ namespace Epsitec.Common.Document.Containers
 				Text.TextStyle[] styles = this.TextStyleList.List;
 				Text.TextStyle currentStyle = styles[sel];
 
-				//	Il faut sauter le premier style de caractère qui est toujours le style de base.
-				for ( int i=1 ; i<styles.Length ; i++ )
+				for ( int i=1 ; i<styles.Length ; i++ )  // saute le style de base (toujours le premier)
 				{
 					Text.TextStyle style = styles[i];
 					if ( currentStyle == style )  continue;
@@ -1587,6 +1590,8 @@ namespace Epsitec.Common.Document.Containers
 					op = Res.Strings.Action.AggregateChildrensNew;
 					parents.Add(newStyle);
 				}
+
+				parents = this.document.Wrappers.ArrangeParentStyles(parents);
 
 				this.document.Modifier.OpletQueueBeginAction(op);
 				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
