@@ -3628,7 +3628,8 @@ process_ranges:
 				//	des textes automatiques.
 				
 				if ((this.SkipOverAutoText (ref p2, Direction.Backward)) ||
-					(this.IsAfterManagedParagraph (this.temp_cursor)))
+					(this.IsAfterManagedParagraph (this.temp_cursor)) ||
+					(p2+1 == this.TextLength))
 				{
 					this.SkipOverAutoText (ref p1, Direction.Backward);
 				}
