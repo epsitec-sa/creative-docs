@@ -721,7 +721,7 @@ namespace Epsitec.Common.Document
 			double offset = newLevel*distance;
 			
 			if ( this.paragraphWrapper.Active.IsIndentationLevelAttributeDefined &&
-				this.paragraphWrapper.Active.IndentationLevelAttribute != null )
+				 this.paragraphWrapper.Active.IndentationLevelAttribute != null )
 			{
 				string attribute = this.paragraphWrapper.Active.IndentationLevelAttribute;
 				double fontSize = this.textWrapper.Active.FontSize;
@@ -1049,6 +1049,8 @@ namespace Epsitec.Common.Document
 		protected static double SearchNextValue(double value, double[] list, double delta)
 		{
 			//	Cherche la valeur suivante ou précédente dans une liste.
+			value += delta*0.0000001;
+
 			if ( delta > 0 )
 			{
 				for ( int i=0 ; i<list.Length ; i++ )
