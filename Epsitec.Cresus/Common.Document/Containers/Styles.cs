@@ -1036,6 +1036,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateUp);
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style1, rank2);
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style2, rank1);
+				this.document.Wrappers.StyleArrangeAll();
 
 				this.document.SetSelectedTextStyle(this.category, sel-1);
 				this.document.Modifier.OpletQueueValidateAction();
@@ -1066,6 +1067,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateDown);
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style1, rank2);
 				this.document.TextContext.StyleList.StyleMap.SetRank(this.document.Modifier.OpletQueue, style2, rank1);
+				this.document.Wrappers.StyleArrangeAll();
 
 				this.document.SetSelectedTextStyle(this.category, sel+1);
 				this.document.Modifier.OpletQueueValidateAction();

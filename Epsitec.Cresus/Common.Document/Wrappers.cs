@@ -280,6 +280,19 @@ namespace Epsitec.Common.Document
 			return true;
 		}
 
+		public void StyleArrangeAll()
+		{
+			//	Passe en revue tous les styles pour réarranger l'ordre des parents.
+			Text.TextStyle[] styles = this.document.TextContext.StyleList.StyleMap.GetSortedStyles();
+			foreach ( Text.TextStyle style in styles )
+			{
+				System.Collections.ArrayList parents = new System.Collections.ArrayList();
+				parents.AddRange(style.ParentStyles);
+				parents = this.ArrangeParentStyles(parents);
+				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, style, style.StyleProperties, parents);
+			}
+		}
+
 		public void StyleCheckAllDefaultParent()
 		{
 			//	Passe en revue tous les styles de paragraphe pour vérifier s'ils font
