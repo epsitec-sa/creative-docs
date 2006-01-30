@@ -659,10 +659,49 @@ namespace Epsitec.Common.Document
 			if ( !this.paragraphWrapper.IsAttached )  return;
 
 			int level = 0;
+			
 			if ( this.paragraphWrapper.Active.IsIndentationLevelDefined )
 			{
 				level = this.paragraphWrapper.Active.IndentationLevel;
 			}
+			
+			int oldLevel = level;
+			int newLevel = System.Math.Max(level+delta, 0);
+			
+#if false
+			if ( this.paragraphWrapper.Attachment == Text.Wrappers.Attachment.Text )
+			{
+				Text.TextNavigator navigator = this.paragraphWrapper.AttachedTextNavigator;
+				Text.TextStyle[] styles = Text.TextStyle.FilterStyles(navigator.TextStyles, Text.TextStyleClass.Paragraph);
+				
+				if ( styles.Length == 1 )
+				{
+					string oldLevelSuffix = string.Format(" {0}", oldLevel+1);
+					string newLevelSuffix = string.Format(" {0}", newLevel+1);
+					string styleCaption = this.document.TextContext.StyleList.StyleMap.GetCaption(styles[0]);
+					
+					if ( styleCaption.EndsWith(oldLevelSuffix) )
+					{
+						//	Le style courant se termine avec un numéro qui correspond à notre
+						//	niveau d'indentation; s'il existe un style avec le nom de la nou-
+						//	velle indentation, on va simplement appliquer ce style-là au texte
+						//	plutôt que de changer des réglages.
+						
+						styleCaption = styleCaption+"¬";
+						styleCaption = styleCaption.Replace(oldLevelSuffix+"¬", newLevelSuffix);
+						
+						Text.TextStyle newStyle = this.document.TextContext.StyleList.StyleMap.GetTextStyle(styleCaption);
+						
+						if ( newStyle != null && newStyle.TextStyleClass == Text.TextStyleClass.Paragraph )
+						{
+							navigator.SetParagraphStyles(newStyle);
+							return;
+						}
+					}
+				}
+			}
+#endif
+			
 			double marginFirst = this.paragraphWrapper.Active.LeftMarginFirst;
 			double marginBody  = this.paragraphWrapper.Active.LeftMarginBody;
 			double marginBase  = this.paragraphWrapper.GetUnderlyingMarginsState().LeftMarginBody;
@@ -679,10 +718,7 @@ namespace Epsitec.Common.Document
 				distance = 127.0;  // 0.5in
 			}
 
-			level += delta;
-			level = System.Math.Max(level, 0);
-			
-			double offset = level*distance;
+			double offset = newLevel*distance;
 			
 			if ( this.paragraphWrapper.Active.IsIndentationLevelAttributeDefined &&
 				this.paragraphWrapper.Active.IndentationLevelAttribute != null )
@@ -691,7 +727,7 @@ namespace Epsitec.Common.Document
 				double fontSize = this.textWrapper.Active.FontSize;
 				fontSize /= Modifier.FontSizeScale;
 				offset = 0;
-				offset += Text.TabList.GetLevelOffset(fontSize, level, attribute);
+				offset += Text.TabList.GetLevelOffset(fontSize, newLevel, attribute);
 				offset += Text.TabList.GetRelativeOffset(fontSize, attribute);
 				offset *= Modifier.FontSizeScale;
 			}
@@ -703,7 +739,7 @@ namespace Epsitec.Common.Document
 			marginFirst = System.Math.Max(marginFirst, 0);
 
 			this.paragraphWrapper.SuspendSynchronizations();
-			this.paragraphWrapper.Defined.IndentationLevel = level;
+			this.paragraphWrapper.Defined.IndentationLevel = newLevel;
 			this.paragraphWrapper.Defined.LeftMarginFirst = marginFirst;
 			this.paragraphWrapper.Defined.RightMarginFirst = marginFirstRight;
 			this.paragraphWrapper.Defined.LeftMarginBody  = marginBody;

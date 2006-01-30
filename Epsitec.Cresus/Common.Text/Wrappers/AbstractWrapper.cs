@@ -87,6 +87,14 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		public TextNavigator					AttachedTextNavigator
+		{
+			get
+			{
+				return this.navigator;
+			}
+		}
+		
 		
 		public void Attach(Text.TextNavigator navigator)
 		{

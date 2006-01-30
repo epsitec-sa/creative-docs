@@ -1498,29 +1498,46 @@ namespace Epsitec.Common.Document
 			
 			Text.TextStyle title = this.textContext.StyleList.NewTextStyle(null, "Title", Text.TextStyleClass.Paragraph, properties, baseStyles);
 			
-			Text.Properties.MarginsProperty m = new Text.Properties.MarginsProperty(2*fontSize*Modifier.FontSizeScale, 2*fontSize*Modifier.FontSizeScale, 0.0, 0.0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True, 0, Text.TabList.PackToAttribute("LevelMultiplier:150 %"));
+			Text.Properties.MarginsProperty ml = new Text.Properties.MarginsProperty(2*fontSize*Modifier.FontSizeScale, 2*fontSize*Modifier.FontSizeScale, 0.0, 0.0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True, 0, Text.TabList.PackToAttribute("LevelMultiplier:150 %"));
+			
+			Text.Properties.MarginsProperty mt1 = new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined, 0, Text.TabList.PackToAttribute("LevelMultiplier:0 mm"));
+			Text.Properties.MarginsProperty mt2 = new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined, 1, Text.TabList.PackToAttribute("LevelMultiplier:0 mm"));
+			Text.Properties.MarginsProperty mt3 = new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined, 2, Text.TabList.PackToAttribute("LevelMultiplier:0 mm"));
 			
 			Text.TextStyle l1 = this.textContext.StyleList.NewTextStyle(null, "BulletRound",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
-			Text.TextStyle l2 = this.textContext.StyleList.NewTextStyle(null, "BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2, m }, baseStyles);
-			Text.TextStyle l3 = this.textContext.StyleList.NewTextStyle(null, "BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, m }, baseStyles);
-			Text.TextStyle l4 = this.textContext.StyleList.NewTextStyle(null, "TitleNumeric",  Text.TextStyleClass.Paragraph, new Text.Property[] { itemList4, contInfo }, new Text.TextStyle[] { title } );
-
-			this.textContext.StyleList.StyleMap.SetRank(null, l1, 3);
-			this.textContext.StyleList.StyleMap.SetCaption(null, l1, "Liste à puces");
-
-			this.textContext.StyleList.StyleMap.SetRank(null, l2, 4);
-			this.textContext.StyleList.StyleMap.SetCaption(null, l2, "Liste 1./2./...");
-
-			this.textContext.StyleList.StyleMap.SetRank(null, l3, 5);
-			this.textContext.StyleList.StyleMap.SetCaption(null, l3, "Liste a)/b)/...");
+			Text.TextStyle l2 = this.textContext.StyleList.NewTextStyle(null, "BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2, ml }, baseStyles);
+			Text.TextStyle l3 = this.textContext.StyleList.NewTextStyle(null, "BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, ml }, baseStyles);
 			
-			this.textContext.StyleList.SetNextStyle(null, l4, paraStyle);
-			this.textContext.StyleList.StyleMap.SetRank(null, l4, 2);
-			this.textContext.StyleList.StyleMap.SetCaption(null, l4, "Titre 1");
+			Text.TextStyle t1 = this.textContext.StyleList.NewTextStyle(null, "TitleNum1",  Text.TextStyleClass.Paragraph, new Text.Property[] { itemList4, mt1, contInfo }, new Text.TextStyle[] { title } );
+			Text.TextStyle t2 = this.textContext.StyleList.NewTextStyle(null, "TitleNum2",  Text.TextStyleClass.Paragraph, new Text.Property[] { itemList4, mt2, contInfo }, new Text.TextStyle[] { title } );
+			Text.TextStyle t3 = this.textContext.StyleList.NewTextStyle(null, "TitleNum3",  Text.TextStyleClass.Paragraph, new Text.Property[] { itemList4, mt3, contInfo }, new Text.TextStyle[] { title } );
+			
+			int rank = 1;
 			
 			this.textContext.StyleList.SetNextStyle(null, title, paraStyle);
-			this.textContext.StyleList.StyleMap.SetRank(null, title, 1);
+			this.textContext.StyleList.StyleMap.SetRank(null, title, rank++);
 			this.textContext.StyleList.StyleMap.SetCaption(null, title, "Titre");
+			
+			this.textContext.StyleList.SetNextStyle(null, t1, paraStyle);
+			this.textContext.StyleList.StyleMap.SetRank(null, t1, rank++);
+			this.textContext.StyleList.StyleMap.SetCaption(null, t1, "Titre 1");
+			
+			this.textContext.StyleList.SetNextStyle(null, t2, paraStyle);
+			this.textContext.StyleList.StyleMap.SetRank(null, t2, rank++);
+			this.textContext.StyleList.StyleMap.SetCaption(null, t2, "Titre 2");
+			
+			this.textContext.StyleList.SetNextStyle(null, t3, paraStyle);
+			this.textContext.StyleList.StyleMap.SetRank(null, t3, rank++);
+			this.textContext.StyleList.StyleMap.SetCaption(null, t3, "Titre 3");
+			
+			this.textContext.StyleList.StyleMap.SetRank(null, l1, rank++);
+			this.textContext.StyleList.StyleMap.SetCaption(null, l1, "Liste à puces");
+
+			this.textContext.StyleList.StyleMap.SetRank(null, l2, rank++);
+			this.textContext.StyleList.StyleMap.SetCaption(null, l2, "Liste 1./2./...");
+
+			this.textContext.StyleList.StyleMap.SetRank(null, l3, rank++);
+			this.textContext.StyleList.StyleMap.SetCaption(null, l3, "Liste a)/b)/...");
 			
 			#endregion
 			
