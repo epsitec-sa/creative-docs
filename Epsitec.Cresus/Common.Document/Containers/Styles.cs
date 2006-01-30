@@ -288,7 +288,11 @@ namespace Epsitec.Common.Document.Containers
 			this.name = new TextField();
 			this.name.Width = 110;
 			this.name.DockMargins = new Margins(0, 0, 1, 1);
-			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
+			this.name.EditionAccepted += new EventHandler(this.HandleNameTextChanged);
+			this.name.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			this.name.AutoSelectOnFocus = true;
+			this.name.SwallowEscape = true;
+			this.name.SwallowReturn = true;
 			this.name.TabIndex = 1;
 			this.name.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.nameToolBar.Items.Add(this.name);
@@ -1263,13 +1267,20 @@ namespace Epsitec.Common.Document.Containers
 				if ( sel == -1 )  return;
 
 				Properties.Aggregate agg = this.document.Aggregates[sel] as Properties.Aggregate;
-
-				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
-				agg.AggregateName = this.name.Text;
-				this.document.Modifier.OpletQueueValidateAction();
-				this.document.IsDirtySerialize = true;
-
-				this.document.Notifier.NotifyAggregateChanged(agg);
+				if ( this.document.Modifier.AggregateIsFreeName(agg, this.name.Text) )
+				{
+					this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
+					agg.AggregateName = this.name.Text;
+					this.document.Modifier.OpletQueueValidateAction();
+					this.document.IsDirtySerialize = true;
+					this.document.Notifier.NotifyAggregateChanged(agg);
+				}
+				else
+				{
+					this.ignoreChanged = true;
+					this.name.Text = agg.AggregateName;
+					this.ignoreChanged = false;
+				}
 			}
 
 			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
@@ -1278,12 +1289,20 @@ namespace Epsitec.Common.Document.Containers
 				if ( sel == -1 )  return;
 
 				Common.Text.TextStyle style = this.TextStyleList.List[sel];
-				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
-				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, this.name.Text);
-				this.document.Modifier.OpletQueueValidateAction();
-				this.document.IsDirtySerialize = true;
-
-				this.document.Notifier.NotifyTextStyleChanged(style);
+				if ( this.document.Wrappers.IsFreeName(style, this.name.Text) )
+				{
+					this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
+					this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, this.name.Text);
+					this.document.Modifier.OpletQueueValidateAction();
+					this.document.IsDirtySerialize = true;
+					this.document.Notifier.NotifyTextStyleChanged(style);
+				}
+				else
+				{
+					this.ignoreChanged = true;
+					this.name.Text = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+					this.ignoreChanged = false;
+				}
 			}
 		}
 

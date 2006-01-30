@@ -5510,35 +5510,17 @@ namespace Epsitec.Common.Document
 			return name;
 		}
 
-#if false
-		public Properties.Aggregate AggregateSearch22(string name)
+		public bool AggregateIsFreeName(Properties.Aggregate agg, string name)
 		{
-			//	Cherche un agrégat d'après son nom. Rien ne garantit que plusieurs
-			//	agrégats n'aient pas des noms identiques, mais c'est le seul moyen
-			//	de retrouver un agrégat à partir du nom choisi par l'utilisateur dans
-			//	le TextFieldCombo du panneau principal !
+			//	Vérifie si un nom est possible pour un agrégat donné.
 			UndoableList aggregates = this.document.Aggregates;
-			foreach ( Properties.Aggregate agg in aggregates )
+			foreach ( Properties.Aggregate existing in aggregates )
 			{
-				if ( agg.AggregateName == name )
-				{
-					return agg;
-				}
+				if ( existing == agg )  continue;
+				if ( existing.AggregateName == name )  return false;
 			}
-
-			if ( this.objectMemory.AggregateName == name )
-			{
-				return this.objectMemory.Aggregate;
-			}
-
-			if ( this.objectMemoryText.AggregateName == name )
-			{
-				return this.objectMemoryText.Aggregate;
-			}
-
-			return null;
+			return true;
 		}
-#endif
 
 		public void AggregateNewEmpty(int rank, string name, bool putToList)
 		{

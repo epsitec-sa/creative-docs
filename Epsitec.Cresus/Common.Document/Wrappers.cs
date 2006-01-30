@@ -262,6 +262,24 @@ namespace Epsitec.Common.Document
 		}
 
 
+		#region Style Check
+		public bool IsFreeName(Text.TextStyle style, string name)
+		{
+			//	Vérifie si un nom est possible pour un style donné.
+			Text.TextStyle[] styles = this.document.TextContext.StyleList.StyleMap.GetSortedStyles();
+			foreach ( Text.TextStyle existing in styles )
+			{
+				if ( existing == style )  continue;
+				if ( existing.TextStyleClass != style.TextStyleClass )  continue;
+
+				if ( name == this.document.TextContext.StyleList.StyleMap.GetCaption(existing) )
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
 		public void StyleCheckAllDefaultParent()
 		{
 			//	Passe en revue tous les styles de paragraphe pour vérifier s'ils font
@@ -365,6 +383,7 @@ namespace Epsitec.Common.Document
 			
 			return false;
 		}
+		#endregion
 
 
 		public void ExecuteCommand(string name)
