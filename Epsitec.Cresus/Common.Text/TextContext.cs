@@ -474,10 +474,17 @@ namespace Epsitec.Common.Text
 		
 		public void GetFont(Properties.FontProperty font_property, out OpenType.Font font)
 		{
-			string font_face  = font_property.FaceName;
-			string font_style = font_property.StyleName;
-			
-			TextContext.CreateOrGetFontFromCache (font_face, font_style, out font);
+			if (font_property != null)
+			{
+				string font_face  = font_property.FaceName;
+				string font_style = font_property.StyleName;
+				
+				TextContext.CreateOrGetFontFromCache (font_face, font_style, out font);
+			}
+			else
+			{
+				font = null;
+			}
 		}
 		
 		public void GetFont(Property[] properties, out OpenType.Font font)

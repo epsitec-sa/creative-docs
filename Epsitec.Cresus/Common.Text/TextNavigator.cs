@@ -299,6 +299,8 @@ namespace Epsitec.Common.Text
 			
 			if (this.selection_cursors != null)
 			{
+				this.story.SuspendTextChanged ();
+				
 				Internal.TextTable text = this.story.TextTable;
 				
 				using (this.story.BeginAction ())
@@ -310,20 +312,10 @@ namespace Epsitec.Common.Text
 						//	Traite les tranches dans l'ordre, en les détruisant les
 						//	unes après les autres.
 						
-						ICursor c1 = this.selection_cursors[i+0] as ICursor;
-						ICursor c2 = this.selection_cursors[i+1] as ICursor;
+						int[] selected_pos = this.GetAdjustedSelectionCursorPositions ();
 						
-						int p1 = text.GetCursorPosition (c1.CursorId);
-						int p2 = text.GetCursorPosition (c2.CursorId);
-						
-						if (p1 > p2)
-						{
-							ICursor cc = c1;
-							int     pp = p1;
-							
-							p1 = p2;	c1 = c2;
-							p2 = pp;	c2 = cc;
-						}
+						int p1 = selected_pos[i+0];
+						int p2 = selected_pos[i+1];
 						
 						if (i+2 == this.selection_cursors.Count)
 						{
@@ -335,7 +327,18 @@ namespace Epsitec.Common.Text
 							this.UpdateCurrentStylesAndProperties ();
 						}
 						
-						this.DeleteText (c1, p2-p1);
+						Cursors.TempCursor temp = new Cursors.TempCursor ();
+						
+						try
+						{
+							this.story.NewCursor (temp);
+							this.story.SetCursorPosition (temp, p1);
+							this.DeleteText (temp, p2-p1);
+						}
+						finally
+						{
+							this.story.RecycleCursor (temp);
+						}
 					}
 					
 					int pos = this.story.GetCursorPosition (this.cursor);
@@ -349,6 +352,8 @@ namespace Epsitec.Common.Text
 				
 				this.InternalClearSelection ();
 				this.UpdateSelectionMarkers ();
+				
+				this.story.ResumeTextChanged ();
 			}
 			
 			this.NotifyTextChanged ();
@@ -425,6 +430,7 @@ namespace Epsitec.Common.Text
 			
 			if (p2 > p1)
 			{
+				this.story.SuspendTextChanged ();
 				this.story.SetCursorPosition (temp, p1);
 				
 				using (this.story.BeginAction ())
@@ -440,6 +446,7 @@ namespace Epsitec.Common.Text
 					this.story.ValidateAction ();
 				}
 				
+				this.story.ResumeTextChanged ();
 				this.NotifyTextChanged ();
 			}
 			

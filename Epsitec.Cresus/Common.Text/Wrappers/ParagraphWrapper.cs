@@ -58,6 +58,58 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
+		public static void UnwrapManagedParagraphSettings(System.Collections.ArrayList list, out string name, out string[] parameters)
+		{
+			name       = list[0] as string;
+			parameters = new string[list.Count-1];
+				
+			for (int i = 0; i < parameters.Length; i++)
+			{
+				parameters[i] = list[i+1] as string;
+			}
+		}
+		
+		public static System.Collections.ArrayList WrapManagedParagraphSettings(string name, string[] parameters)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			list.Add (name);
+			list.AddRange (parameters);
+			
+			return list;
+		}
+		
+		
+		public ParagraphManagers.ItemListManager.Parameters ConvertToItemListManager(System.Collections.ArrayList list)
+		{
+			string   name;
+			string[] parameters;
+			
+			ParagraphWrapper.UnwrapManagedParagraphSettings (list, out name, out parameters);
+			
+			if (name == "ItemList")
+			{
+				return new ParagraphManagers.ItemListManager.Parameters (this.AttachedTextContext, parameters);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		public System.Collections.ArrayList ConvertFromItemListManager(ParagraphManagers.ItemListManager.Parameters parameters)
+		{
+			if (parameters == null)
+			{
+				return null;
+			}
+			else
+			{
+				return ParagraphWrapper.WrapManagedParagraphSettings ("ItemList", parameters.Save ());
+			}
+		}
+		
+		
 		internal override void InternalSynchronize(AbstractState state, StateProperty property)
 		{
 			if (state == this.defined_state)
@@ -446,13 +498,10 @@ namespace Epsitec.Common.Text.Wrappers
 			if ((this.defined_state.IsManagedParagraphDefined) &&
 				(this.defined_state.ManagedParagraph != null))
 			{
-				string   name       = this.defined_state.ManagedParagraph[0] as string;
-				string[] parameters = new string[this.defined_state.ManagedParagraph.Count-1];
+				string   name;
+				string[] parameters;
 				
-				for (int i = 0; i < parameters.Length; i++)
-				{
-					parameters[i] = this.defined_state.ManagedParagraph[i+1] as string;
-				}
+				ParagraphWrapper.UnwrapManagedParagraphSettings (this.defined_state.ManagedParagraph, out name, out parameters);
 				
 				list.Add (new Properties.ManagedParagraphProperty (name, parameters));
 				
@@ -857,12 +906,7 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			if (managed_paragraph != null)
 			{
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
-				
-				list.Add (managed_paragraph.ManagerName);
-				list.AddRange (managed_paragraph.ManagerParameters);
-				
-				state.DefineValue (State.ManagedParagraphProperty, list);
+				state.DefineValue (State.ManagedParagraphProperty, ParagraphWrapper.WrapManagedParagraphSettings (managed_paragraph.ManagerName, managed_paragraph.ManagerParameters));
 			}
 			else
 			{
@@ -1158,7 +1202,20 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			
-			public string							ItemListInfo
+			public System.Collections.ArrayList		ManagedParagraph
+			{
+				get
+				{
+					return (System.Collections.ArrayList) this.GetValue (State.ManagedParagraphProperty);
+				}
+				set
+				{
+					this.SetValue (State.ManagedParagraphProperty, value);
+				}
+			}
+			
+			
+			public string										ItemListInfo
 			{
 				get
 				{
@@ -1170,15 +1227,21 @@ namespace Epsitec.Common.Text.Wrappers
 				}
 			}
 			
-			public System.Collections.ArrayList		ManagedParagraph
+			public ParagraphManagers.ItemListManager.Parameters	ItemListParameters
 			{
+				//	Cette propriété encapsule simplement ManagedParagraph pour que l'accès
+				//	soit plus simple.
+				//	Il faut utiliser IsManagedParagraphDefined et ClearManagedParagraph,
+				//	car il n'y a pas d'équivalent pour ItemListParameters.
 				get
 				{
-					return (System.Collections.ArrayList) this.GetValue (State.ManagedParagraphProperty);
+					ParagraphWrapper wrapper = this.Wrapper as ParagraphWrapper;
+					return wrapper.ConvertToItemListManager (this.ManagedParagraph);
 				}
 				set
 				{
-					this.SetValue (State.ManagedParagraphProperty, value);
+					ParagraphWrapper wrapper = this.Wrapper as ParagraphWrapper;
+					this.ManagedParagraph = wrapper.ConvertFromItemListManager (value);
 				}
 			}
 			
