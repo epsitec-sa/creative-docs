@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Properties
 
 			if ( this.childrens.Count != 0 )
 			{
-				//?for ( int i=0 ; i<this.childrens.Count ; i++ )
+				//	Cherche depuis la fin, pour obtenir le même ordre que les styles de texte.
 				for ( int i=this.childrens.Count-1 ; i>=0 ; i-- )
 				{
 					Properties.Aggregate children = this.childrens[i] as Properties.Aggregate;
