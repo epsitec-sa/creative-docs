@@ -630,6 +630,7 @@ namespace Epsitec.Common.Document.Containers
 			this.ignoreChanged = true;
 
 			this.name.Text = text;
+			this.name.SelectAll();
 
 			if ( this.oneShootSelectName )  // vient-on de créer/dupliquer un style ?
 			{
@@ -1282,6 +1283,7 @@ namespace Epsitec.Common.Document.Containers
 				{
 					this.ignoreChanged = true;
 					this.name.Text = agg.AggregateName;
+					this.name.SelectAll();
 					this.ignoreChanged = false;
 				}
 			}
@@ -1313,6 +1315,7 @@ namespace Epsitec.Common.Document.Containers
 				{
 					this.ignoreChanged = true;
 					this.name.Text = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+					this.name.SelectAll();
 					this.ignoreChanged = false;
 				}
 			}
