@@ -1293,6 +1293,7 @@
 	<data name="Layer.PositionName.Middle">Bottom+{0}</data>
 	<data name="Layer.PositionName.Back">Bottom</data>
 	<data name="Aggregates.Header.Name">Name</data>
+	<data name="Aggregates.Header.Sample">@@Exemple</data>
 	<data name="Aggregates.NoneLine">&lt;i&gt;None&lt;/i&gt;</data>
 	<data name="Style.Aggregate.Name">Graphic Style #{0}</data>
 	<data name="Style.Paragraph.Name">Paragraph Style #{0}</data>

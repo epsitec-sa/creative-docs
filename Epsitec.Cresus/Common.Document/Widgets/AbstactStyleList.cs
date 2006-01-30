@@ -253,6 +253,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 
 			this.SetHeaderTextH(i++, Res.Strings.Aggregates.Header.Name);
+			this.SetHeaderTextH(i++, Res.Strings.Aggregates.Header.Sample);
 			
 			for ( i=0 ; i<rows ; i++ )
 			{

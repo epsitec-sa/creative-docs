@@ -87,8 +87,10 @@ namespace Epsitec.Common.Document.Properties
 
 			if ( this.childrens.Count != 0 )
 			{
-				foreach ( Properties.Aggregate children in this.childrens )
+				//?for ( int i=0 ; i<this.childrens.Count ; i++ )
+				for ( int i=this.childrens.Count-1 ; i>=0 ; i-- )
 				{
+					Properties.Aggregate children = this.childrens[i] as Properties.Aggregate;
 					property = children.PropertyDeep(type, deep+1);
 					if ( property != null )  return property;
 				}

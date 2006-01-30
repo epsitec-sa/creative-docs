@@ -6015,8 +6015,18 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensNew) )
 			{
-				agg.Childrens.Insert(0, newAgg);
-				agg.Childrens.Selected = 0;
+				UndoableList aggregates = this.document.Aggregates;
+				int ins = aggregates.IndexOf(newAgg);
+				int rank = 0;
+				while ( rank < agg.Childrens.Count )
+				{
+					Properties.Aggregate children = agg.Childrens[rank] as Properties.Aggregate;
+					if ( ins < aggregates.IndexOf(children) )  break;
+					rank ++;
+				}
+				
+				agg.Childrens.Insert(rank, newAgg);
+				agg.Childrens.Selected = rank;
 
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract doc = context.RootObject(0);
