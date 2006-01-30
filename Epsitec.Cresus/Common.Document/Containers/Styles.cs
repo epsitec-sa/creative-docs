@@ -1452,6 +1452,7 @@ namespace Epsitec.Common.Document.Containers
 				{
 					Text.TextStyle style = styles[i];
 					if ( style == currentStyle )  continue;
+					if ( this.document.Wrappers.IsStyleAsCircularRef(currentStyle, style) )  continue;
 
 					bool active = Styles.ContainsStyle(currentStyle.ParentStyles, style);
 					string icon = Misc.Icon(active ? "RadioYes" : "RadioNo");
