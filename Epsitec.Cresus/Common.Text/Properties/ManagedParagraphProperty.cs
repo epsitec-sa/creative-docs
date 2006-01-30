@@ -41,7 +41,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return CombinationMode.Accumulate;
+				return CombinationMode.Combine;
 			}
 		}
 		
@@ -108,7 +108,16 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override Property GetCombination(Property property)
 		{
-			throw new System.NotImplementedException ();
+			Debug.Assert.IsTrue (property is Properties.ManagedParagraphProperty);
+			
+			ManagedParagraphProperty a = this;
+			ManagedParagraphProperty b = property as ManagedParagraphProperty;
+			ManagedParagraphProperty c = new ManagedParagraphProperty ();
+			
+			c.manager_name       = b.manager_name;
+			c.manager_parameters = b.manager_parameters;
+			
+			return c;
 		}
 
 		

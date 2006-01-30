@@ -1502,7 +1502,7 @@ namespace Epsitec.Common.Document
 			
 			Text.TextStyle l1 = this.textContext.StyleList.NewTextStyle(null, "BulletRound",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
 			Text.TextStyle l2 = this.textContext.StyleList.NewTextStyle(null, "BulletNumeric", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList2, m }, baseStyles);
-			Text.TextStyle l3 = this.textContext.StyleList.NewTextStyle(null, "BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, m, contInfo }, baseStyles);
+			Text.TextStyle l3 = this.textContext.StyleList.NewTextStyle(null, "BulletAlpha",   Text.TextStyleClass.Paragraph, new Text.Property[] { itemList3, m }, baseStyles);
 			Text.TextStyle l4 = this.textContext.StyleList.NewTextStyle(null, "TitleNumeric",  Text.TextStyleClass.Paragraph, new Text.Property[] { itemList4, contInfo }, new Text.TextStyle[] { title } );
 
 			this.textContext.StyleList.StyleMap.SetRank(null, l1, 3);
@@ -1516,7 +1516,7 @@ namespace Epsitec.Common.Document
 			
 			this.textContext.StyleList.SetNextStyle(null, l4, paraStyle);
 			this.textContext.StyleList.StyleMap.SetRank(null, l4, 2);
-			this.textContext.StyleList.StyleMap.SetCaption(null, l4, "Titre numéroté");
+			this.textContext.StyleList.StyleMap.SetCaption(null, l4, "Titre 1");
 			
 			this.textContext.StyleList.SetNextStyle(null, title, paraStyle);
 			this.textContext.StyleList.StyleMap.SetRank(null, title, 1);
