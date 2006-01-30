@@ -114,6 +114,7 @@ namespace Epsitec.Common.Text
 			TextStyle style = new TextStyle (name, text_style_class, properties, parent_styles);
 			
 			this.Attach (style);
+			this.UpdateTabListUserCount (style, 1);
 			
 			if (queue != null)
 			{
@@ -525,6 +526,37 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal void UpdateTabListUserCount()
+		{
+			foreach (TextStyle style in this.text_style_list)
+			{
+				this.UpdateTabListUserCount (style, 1);
+			}
+		}
+		
+		internal void UpdateTabListUserCount(TextStyle style, int sign)
+		{
+			Properties.TabsProperty tabs = style[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+			
+			if (tabs != null)
+			{
+				TabList list = this.context.TabList;
+				
+				foreach (string tag in tabs.TabTags)
+				{
+					if (sign > 0)
+					{
+						list.IncrementTabUserCount (tag);
+					}
+					else if (sign < 0)
+					{
+						list.DecrementTabUserCount (tag);
+					}
+				}
+			}
+		}
+		
+		
 		internal static string GetFullName(TextStyle text_style)
 		{
 			return StyleList.GetFullName (text_style.Name, text_style.TextStyleClass);
@@ -577,6 +609,8 @@ namespace Epsitec.Common.Text
 			
 			TextStyle next = style.NextStyle;
 			
+			this.UpdateTabListUserCount (style, -1);
+			
 			style.Clear ();
 			style.DefineNextStyle (next);
 		}
@@ -584,6 +618,8 @@ namespace Epsitec.Common.Text
 		private void PostRedefine(TextStyle style)
 		{
 			style.DefineIsFlagged (true);
+			
+			this.UpdateTabListUserCount (style, 1);
 			
 			this.OnStyleRedefined ();
 		}

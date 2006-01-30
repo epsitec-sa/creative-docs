@@ -13,6 +13,7 @@ namespace Epsitec.Common.Text
 			this.context  = context;
 			this.tag_hash = new System.Collections.Hashtable ();
 			this.auto_tab_hash = new System.Collections.Hashtable ();
+			this.shared_tab_hash = new System.Collections.Hashtable ();
 		}
 		
 		
@@ -66,6 +67,20 @@ namespace Epsitec.Common.Text
 			if (this.auto_tab_hash.Contains (find))
 			{
 				find = this.auto_tab_hash[find] as TabRecord;
+				
+				return this.GetTabProperty (find.Tag);
+			}
+			
+			return null;
+		}
+		
+		public Properties.TabProperty FindSharedTab(double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		{
+			TabRecord find = new TabRecord ("?", position, units, disposition, docking_mark, position_mode, attribute);
+			
+			if (this.shared_tab_hash.Contains (find))
+			{
+				find = this.shared_tab_hash[find] as TabRecord;
 				
 				return this.GetTabProperty (find.Tag);
 			}
@@ -135,6 +150,14 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			foreach (TabRecord record in this.shared_tab_hash.Values)
+			{
+				if (record.UserCount == 0)
+				{
+					list.Add (record.Tag);
+				}
+			}
+			
 			return (string[]) list.ToArray (typeof (string));
 		}
 		
@@ -144,6 +167,14 @@ namespace Epsitec.Common.Text
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			foreach (TabRecord record in this.auto_tab_hash.Values)
+			{
+				if (record.UserCount == 0)
+				{
+					list.Add (record.Tag);
+				}
+			}
+			
+			foreach (TabRecord record in this.shared_tab_hash.Values)
 			{
 				if (record.UserCount == 0)
 				{
@@ -377,8 +408,9 @@ namespace Epsitec.Common.Text
 			
 			int count = SerializerSupport.DeserializeInt (args[offset++]);
 			
-			this.tag_hash      = new System.Collections.Hashtable ();
-			this.auto_tab_hash = new System.Collections.Hashtable ();
+			this.tag_hash        = new System.Collections.Hashtable ();
+			this.auto_tab_hash   = new System.Collections.Hashtable ();
+			this.shared_tab_hash = new System.Collections.Hashtable ();
 			
 			for (int i = 0; i < count; i++)
 			{
@@ -790,9 +822,15 @@ namespace Epsitec.Common.Text
 			
 			this.tag_hash[tag] = record;
 			
-			if (record.TabClass == TabClass.Auto)
+			switch (record.TabClass)
 			{
-				this.auto_tab_hash[record] = record;
+				case TabClass.Auto:
+					this.auto_tab_hash[record] = record;
+					break;
+				
+				case TabClass.Shared:
+					this.shared_tab_hash[record] = record;
+					break;
 			}
 		}
 		
@@ -809,11 +847,17 @@ namespace Epsitec.Common.Text
 			
 			this.tag_hash.Remove (tag);
 			
-			if (record.TabClass == TabClass.Auto)
+			switch (record.TabClass)
 			{
-				System.Diagnostics.Debug.Assert (this.auto_tab_hash.Contains (record));
+				case TabClass.Auto:
+					System.Diagnostics.Debug.Assert (this.auto_tab_hash.Contains (record));
+					this.auto_tab_hash.Remove (record);
+					break;
 				
-				this.auto_tab_hash.Remove (record);
+				case TabClass.Shared:
+					System.Diagnostics.Debug.Assert (this.shared_tab_hash.Contains (record));
+					this.shared_tab_hash.Remove (record);
+					break;
 			}
 		}
 		
@@ -821,6 +865,7 @@ namespace Epsitec.Common.Text
 		private TextContext						context;
 		private System.Collections.Hashtable	tag_hash;
 		private System.Collections.Hashtable	auto_tab_hash;
+		private System.Collections.Hashtable	shared_tab_hash;
 		private long							unique_id;
 		private StyleVersion					version = new StyleVersion ();
 		

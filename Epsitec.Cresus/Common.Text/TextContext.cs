@@ -245,6 +245,8 @@ namespace Epsitec.Common.Text
 			this.generator_list.Deserialize (this, version, args, ref offset);
 			this.DeserializeConditions (version, args, ref offset);
 			
+			this.style_list.UpdateTabListUserCount ();
+			
 			System.Diagnostics.Debug.Assert (args[offset] == "~");
 			System.Diagnostics.Debug.Assert (args.Length == offset+1);
 		}
