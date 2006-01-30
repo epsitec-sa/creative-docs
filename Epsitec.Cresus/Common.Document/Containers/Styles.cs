@@ -288,8 +288,9 @@ namespace Epsitec.Common.Document.Containers
 			this.name = new TextField();
 			this.name.Width = 110;
 			this.name.DockMargins = new Margins(0, 0, 1, 1);
-			this.name.EditionAccepted += new EventHandler(this.HandleNameTextChanged);
-			this.name.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
+//			this.name.EditionAccepted += new EventHandler(this.HandleNameTextChanged);
+//			this.name.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.name.AutoSelectOnFocus = true;
 			this.name.SwallowEscape = true;
 			this.name.SwallowReturn = true;
@@ -1291,10 +1292,19 @@ namespace Epsitec.Common.Document.Containers
 				if ( sel == -1 )  return;
 
 				Common.Text.TextStyle style = this.TextStyleList.List[sel];
-				if ( this.document.Wrappers.IsFreeName(style, this.name.Text) )
+				string name = this.name.Text;
+				int attempt = 0;
+
+				while ( !this.document.Wrappers.IsFreeName(style, name) )
+				{
+					attempt += 1;
+					name     = string.Format("{0} ({1})", this.name.Text, attempt);
+				}
+				
+				if ( this.document.Wrappers.IsFreeName(style, name) )
 				{
 					this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
-					this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, this.name.Text);
+					this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, name);
 					this.document.Modifier.OpletQueueValidateAction();
 					this.document.IsDirtySerialize = true;
 					this.document.Notifier.NotifyTextStyleChanged(style);
