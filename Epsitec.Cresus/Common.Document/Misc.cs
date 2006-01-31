@@ -93,6 +93,35 @@ namespace Epsitec.Common.Document
 		}
 
 
+		static public string ColorString(RichColor color)
+		{
+			//	Donne le nom d'une couleur d'après ses composantes 'rgb'.
+			if ( color.R == color.G && color.R == color.B )  // gris ?
+			{
+				double br = color.Basic.GetBrightness();
+
+				if ( br == 0.0 )  return Res.Strings.Color.Black;
+				if ( br == 1.0 )  return Res.Strings.Color.White;
+				if ( br <  0.3 )  return Res.Strings.Color.DarkGray;
+				if ( br >  0.7 )  return Res.Strings.Color.LightGray;
+				                  return Res.Strings.Color.Gray;
+			}
+			else
+			{
+				double h,s,v;
+				color.Basic.GetHSV(out h, out s, out v);
+
+				if ( h < 30+60*0 )  return Res.Strings.Color.Red;
+				if ( h < 30+60*1 )  return Res.Strings.Color.Yellow;
+				if ( h < 30+60*2 )  return Res.Strings.Color.Green;
+				if ( h < 30+60*3 )  return Res.Strings.Color.Cyan;
+				if ( h < 30+60*4 )  return Res.Strings.Color.Blue;
+				if ( h < 30+60*5 )  return Res.Strings.Color.Magenta;
+				                    return Res.Strings.Color.Red;
+			}
+		}
+
+
 		static public System.Collections.ArrayList MergeFontList(System.Collections.ArrayList inList, System.Collections.ArrayList quickFaceNames, bool quickOnly, string selectedFaceName, out int quickCount)
 		{
 			//	Crée une liste qui contient les fontes rapides au début.

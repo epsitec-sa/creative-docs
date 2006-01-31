@@ -147,7 +147,7 @@ namespace Epsitec.Common.Document.TextPanels
 			return Common.Text.Properties.ParagraphStartMode.Undefined;
 		}
 
-		protected static string ModeToString(Common.Text.Properties.ParagraphStartMode mode)
+		public static string ModeToString(Common.Text.Properties.ParagraphStartMode mode)
 		{
 			switch ( mode )
 			{

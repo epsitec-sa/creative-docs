@@ -113,7 +113,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		protected static string LanguageShortToLong(string shortLanguage)
+		public static string LanguageShortToLong(string shortLanguage)
 		{
 			if ( shortLanguage != null )
 			{

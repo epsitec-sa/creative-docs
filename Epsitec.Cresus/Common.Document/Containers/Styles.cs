@@ -752,19 +752,37 @@ namespace Epsitec.Common.Document.Containers
 
 				TextPanels.Abstract.StaticDocument = this.document;
 				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.SelectorName, this.document, true, this.category);
-				if ( panel == null )  return;
+				if ( panel == null )
+				{
+					string info;
+					int lines;
+					this.document.Wrappers.GetStyleTextInfo(style, out info, out lines);
+					double h = lines*14+10;
 
-				this.textPanel = panel;
-				this.textPanel.IsExtendedSize = true;
-				this.textPanel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
-				this.textPanel.SetParent(this.panelContainer);
-				this.textPanel.Dock = DockStyle.Fill;
-				this.textPanel.TabIndex = 1;
-				this.textPanel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-				this.textPanel.UpdateAfterAttach();
+					this.styleInfoPanel = new StaticText(this.panelContainer);
+					this.styleInfoPanel.Alignment = ContentAlignment.TopLeft;
+					this.styleInfoPanel.Height = h;
+					this.styleInfoPanel.Dock = DockStyle.Fill;
+					this.styleInfoPanel.DockMargins = new Margins(5, -1000, 5, 5);
+					this.styleInfoPanel.Text = info;
 
-				this.panelContainer.Height = this.textPanel.DefaultHeight;
-				this.panelContainer.ForceLayout();
+					this.panelContainer.Height = h;
+					this.panelContainer.ForceLayout();
+				}
+				else
+				{
+					this.textPanel = panel;
+					this.textPanel.IsExtendedSize = true;
+					this.textPanel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
+					this.textPanel.SetParent(this.panelContainer);
+					this.textPanel.Dock = DockStyle.Fill;
+					this.textPanel.TabIndex = 1;
+					this.textPanel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+					this.textPanel.UpdateAfterAttach();
+
+					this.panelContainer.Height = this.textPanel.DefaultHeight;
+					this.panelContainer.ForceLayout();
+				}
 			}
 		}
 
@@ -803,7 +821,13 @@ namespace Epsitec.Common.Document.Containers
 				this.textPanel.Dispose();
 				this.textPanel = null;
 			}
-				
+
+			if ( this.styleInfoPanel != null )
+			{
+				this.styleInfoPanel.Dispose();
+				this.styleInfoPanel = null;
+			}
+
 			this.panelContainer.Height = 0.0;
 			this.panelContainer.ForceLayout();
 		}
@@ -1706,6 +1730,7 @@ namespace Epsitec.Common.Document.Containers
 		protected Widget					panelContainer;
 		protected Panels.Abstract			panel;
 		protected TextPanels.Abstract		textPanel;
+		protected StaticText				styleInfoPanel;
 		protected ColorSelector				colorSelector;
 
 		protected int						index;

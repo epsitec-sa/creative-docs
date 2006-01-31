@@ -1300,6 +1300,18 @@
 	<data name="Style.Character.Name">Style caractère {0}</data>
 	<data name="Style.Paragraph.Base">Paragraphe normal</data>
 	<data name="Style.Character.Base">Caractère normal</data>
+	
+	<data name="Color.Black">Noir</data>
+	<data name="Color.White">Blanc</data>
+	<data name="Color.LightGray">Gris clair</data>
+	<data name="Color.Gray">Gris</data>
+	<data name="Color.DarkGray">Gris foncé</data>
+	<data name="Color.Red">Rouge</data>
+	<data name="Color.Yellow">Jaune</data>
+	<data name="Color.Green">Vert</data>
+	<data name="Color.Cyan">Cyan</data>
+	<data name="Color.Blue">Bleu</data>
+	<data name="Color.Magenta">Magenta</data>
 
 	<data name="Question.ManyObjects">Voulez-vous vraiment transformer {0} objets ?</data>
 	

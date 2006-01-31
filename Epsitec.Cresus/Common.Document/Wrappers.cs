@@ -399,6 +399,374 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region GetStyleTextInfo
+		public void GetStyleTextInfo(Text.TextStyle style, out string info, out int lines)
+		{
+			//	Donne un texte d'information sur un style quelconque.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			builder.Append("<font size=\"80%\">");
+			lines = 0;
+
+			if ( this.styleParagraphWrapper.Defined.IsJustificationModeDefined ||
+				 this.styleParagraphWrapper.Defined.IsHyphenationDefined       )
+			{
+				builder.Append(Misc.Image("TextJustif"));
+				builder.Append("  ");
+				bool first = true;
+
+				if ( this.styleParagraphWrapper.Defined.IsJustificationModeDefined )
+				{
+					Text.Wrappers.JustificationMode justif = this.styleParagraphWrapper.Defined.JustificationMode;
+					switch ( justif )
+					{
+						case Text.Wrappers.JustificationMode.AlignLeft:         builder.Append(Res.Strings.Action.ParagraphAlignLeft);    break;
+						case Text.Wrappers.JustificationMode.Center:            builder.Append(Res.Strings.Action.ParagraphAlignCenter);  break;
+						case Text.Wrappers.JustificationMode.AlignRight:        builder.Append(Res.Strings.Action.ParagraphAlignRight);   break;
+						case Text.Wrappers.JustificationMode.JustifyAlignLeft:  builder.Append(Res.Strings.Action.ParagraphAlignJustif);  break;
+						case Text.Wrappers.JustificationMode.JustifyJustfy:     builder.Append(Res.Strings.Action.ParagraphAlignAll);     break;
+					}
+					first = false;
+				}
+
+				if ( this.styleParagraphWrapper.Defined.IsHyphenationDefined )
+				{
+					bool isHyphen = this.styleParagraphWrapper.Defined.IsHyphenationDefined;
+					if ( isHyphen )
+					{
+						if ( !first )  builder.Append(", ");
+						builder.Append(Res.Strings.Action.ParagraphHyphen);
+						first = false;
+					}
+				}
+
+				builder.Append("<br/>");
+				lines ++;
+			}
+
+			if ( this.styleParagraphWrapper.Defined.IsLeadingDefined   ||
+				 this.styleParagraphWrapper.Defined.IsAlignModeDefined )
+			{
+				builder.Append(Misc.Image("TextLeading"));
+				builder.Append("  ");
+				bool first = true;
+
+				if ( this.styleParagraphWrapper.Defined.IsLeadingDefined )
+				{
+					double leading = this.styleParagraphWrapper.Defined.Leading;
+					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.LeadingUnits;
+					builder.Append(this.GetInfoValue(leading, units, this.document.Modifier.RealScale));
+					first = false;
+				}
+
+				if ( this.styleParagraphWrapper.Defined.IsAlignModeDefined )
+				{
+					bool alignFirst = (this.styleParagraphWrapper.Defined.AlignMode == Common.Text.Properties.AlignMode.First);
+					bool alignAll   = (this.styleParagraphWrapper.Defined.AlignMode == Common.Text.Properties.AlignMode.All);
+					if ( alignFirst )
+					{
+						if ( !first )  builder.Append(", ");
+						builder.Append(Res.Strings.TextPanel.Leading.Tooltip.AlignFirst);
+						first = false;
+					}
+					if ( alignAll )
+					{
+						if ( !first )  builder.Append(", ");
+						builder.Append(Res.Strings.TextPanel.Leading.Tooltip.AlignAll);
+						first = false;
+					}
+				}
+
+				builder.Append("<br/>");
+				lines ++;
+			}
+
+			if ( this.styleParagraphWrapper.Defined.IsLeftMarginFirstDefined ||
+				 this.styleParagraphWrapper.Defined.IsLeftMarginBodyDefined  ||
+				 this.styleParagraphWrapper.Defined.IsRightMarginBodyDefined )
+			{
+				builder.Append(Misc.Image("TextMargins"));
+				builder.Append("  ");
+				bool first = true;
+
+				if ( this.styleParagraphWrapper.Defined.IsLeftMarginFirstDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					double margin = this.styleParagraphWrapper.Defined.LeftMarginFirst;
+					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
+					builder.Append(this.GetInfoValue(margin, units, this.document.Modifier.RealScale));
+					first = false;
+				}
+
+				if ( this.styleParagraphWrapper.Defined.IsLeftMarginBodyDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					double margin = this.styleParagraphWrapper.Defined.LeftMarginBody;
+					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
+					builder.Append(this.GetInfoValue(margin, units, this.document.Modifier.RealScale));
+					first = false;
+				}
+
+				if ( this.styleParagraphWrapper.Defined.IsRightMarginBodyDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					double margin = this.styleParagraphWrapper.Defined.RightMarginBody;
+					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
+					builder.Append(this.GetInfoValue(margin, units, this.document.Modifier.RealScale));
+					first = false;
+				}
+
+				builder.Append("<br/>");
+				lines ++;
+			}
+
+			if ( this.styleParagraphWrapper.Defined.IsSpaceBeforeDefined ||
+				 this.styleParagraphWrapper.Defined.IsSpaceAfterDefined  )
+			{
+				builder.Append(Misc.Image("TextSpaces"));
+				builder.Append("  ");
+				bool first = true;
+
+				if ( this.styleParagraphWrapper.Defined.IsSpaceBeforeDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					double margin = this.styleParagraphWrapper.Defined.SpaceBefore;
+					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.SpaceBeforeUnits;
+					builder.Append(this.GetInfoValue(margin, units, this.document.Modifier.RealScale));
+					first = false;
+				}
+
+				if ( this.styleParagraphWrapper.Defined.IsSpaceAfterDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					double margin = this.styleParagraphWrapper.Defined.SpaceAfter;
+					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.SpaceAfterUnits;
+					builder.Append(this.GetInfoValue(margin, units, this.document.Modifier.RealScale));
+					first = false;
+				}
+
+				builder.Append("<br/>");
+				lines ++;
+			}
+
+			if ( this.styleParagraphWrapper.Defined.IsKeepWithNextParagraphDefined     ||
+				 this.styleParagraphWrapper.Defined.IsKeepWithPreviousParagraphDefined ||
+				 this.styleParagraphWrapper.Defined.IsKeepStartLinesDefined            ||
+				 this.styleParagraphWrapper.Defined.IsKeepEndLinesDefined              ||
+				 this.styleParagraphWrapper.Defined.IsParagraphStartModeDefined        )
+			{
+				builder.Append(Misc.Image("TextKeep"));
+				builder.Append("  ");
+				bool first = true;
+
+				if ( this.styleParagraphWrapper.Defined.IsKeepWithNextParagraphDefined )
+				{
+					bool keep = this.styleParagraphWrapper.Defined.KeepWithNextParagraph;
+					if ( keep )
+					{
+						if ( !first )  builder.Append(", ");
+						builder.Append(Res.Strings.TextPanel.Keep.Tooltip.KeepNext);
+						first = false;
+					}
+				}
+
+				if ( this.styleParagraphWrapper.Defined.IsKeepWithPreviousParagraphDefined )
+				{
+					bool keep = this.styleParagraphWrapper.Defined.KeepWithPreviousParagraph;
+					if ( keep )
+					{
+						if ( !first )  builder.Append(", ");
+						builder.Append(Res.Strings.TextPanel.Keep.Tooltip.KeepPrev);
+						first = false;
+					}
+				}
+
+				if ( this.styleParagraphWrapper.Defined.IsKeepStartLinesDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					int keep = this.styleParagraphWrapper.Defined.KeepStartLines;
+					builder.Append(keep.ToString());
+					first = false;
+				}
+
+				if ( this.styleParagraphWrapper.Defined.IsKeepEndLinesDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					int keep = this.styleParagraphWrapper.Defined.KeepEndLines;
+					builder.Append(keep.ToString());
+					first = false;
+				}
+
+				if ( this.styleParagraphWrapper.Defined.IsParagraphStartModeDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					Text.Properties.ParagraphStartMode mode = this.styleParagraphWrapper.Defined.ParagraphStartMode;
+					builder.Append(TextPanels.Keep.ModeToString(mode));
+					first = false;
+				}
+
+				builder.Append("<br/>");
+				lines ++;
+			}
+
+			if ( this.styleTextWrapper.Defined.IsFontFaceDefined  ||
+				 this.styleTextWrapper.Defined.IsFontStyleDefined ||
+				 this.styleTextWrapper.Defined.IsFontSizeDefined  ||
+				 this.styleTextWrapper.Defined.IsColorDefined     ||
+				 this.styleTextWrapper.Defined.IsFontGlueDefined  )
+			{
+				builder.Append(Misc.Image("TextFont"));
+				builder.Append("  ");
+				bool first = true;
+
+				if ( this.styleTextWrapper.Defined.IsFontFaceDefined )
+				{
+					builder.Append(this.styleTextWrapper.Defined.FontFace);
+					first = false;
+				}
+
+				if ( this.styleTextWrapper.Defined.IsFontStyleDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					builder.Append(this.styleTextWrapper.Defined.FontStyle);
+					first = false;
+				}
+
+				if ( this.styleTextWrapper.Defined.IsFontSizeDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					double size = this.styleTextWrapper.Defined.FontSize;
+					Text.Properties.SizeUnits units = this.styleTextWrapper.Defined.Units;
+					builder.Append(this.GetInfoValue(size, units, Modifier.FontSizeScale));
+					first = false;
+				}
+
+				if ( this.styleTextWrapper.Defined.IsColorDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					RichColor color = RichColor.Parse(this.styleTextWrapper.Defined.Color);
+					builder.Append(Misc.ColorString(color));
+					first = false;
+				}
+
+				if ( this.styleTextWrapper.Defined.IsFontGlueDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					double size = this.styleTextWrapper.Defined.FontGlue;
+					builder.Append(this.GetInfoValue(size, Text.Properties.SizeUnits.Percent, this.document.Modifier.RealScale));
+					first = false;
+				}
+
+				builder.Append("<br/>");
+				lines ++;
+			}
+
+			if ( this.styleTextWrapper.Defined.IsUnderlineDefined ||
+				 this.styleTextWrapper.Defined.IsOverlineDefined  ||
+				 this.styleTextWrapper.Defined.IsStrikeoutDefined )
+			{
+				builder.Append(Misc.Image("TextXline"));
+				builder.Append("  ");
+				bool first = true;
+
+				if ( this.styleTextWrapper.Defined.IsUnderlineDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.Action.FontUnderlined);
+					first = false;
+				}
+
+				if ( this.styleTextWrapper.Defined.IsOverlineDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.Action.FontOverlined);
+					first = false;
+				}
+
+				if ( this.styleTextWrapper.Defined.IsStrikeoutDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.Action.FontStrikeout);
+					first = false;
+				}
+
+				builder.Append("<br/>");
+				lines ++;
+			}
+
+			if ( this.styleTextWrapper.Defined.IsXscriptDefined )
+			{
+				builder.Append(Misc.Image("TextXscript"));
+				builder.Append("  ");
+				bool first = true;
+
+				double offset = this.styleTextWrapper.Defined.Xscript.Offset;
+
+				if ( offset > 0 )
+				{
+					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.Action.FontSuperscript);
+					first = false;
+				}
+
+				if ( offset < 0 )
+				{
+					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.Action.FontSubscript);
+					first = false;
+				}
+
+				builder.Append("<br/>");
+				lines ++;
+			}
+
+			if ( this.styleTextWrapper.Defined.IsLanguageHyphenationDefined ||
+				 this.styleTextWrapper.Defined.IsLanguageLocaleDefined      )
+			{
+				builder.Append(Misc.Image("TextLanguage"));
+				builder.Append("  ");
+				bool first = true;
+
+				if ( this.styleTextWrapper.Defined.IsLanguageLocaleDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					string language = this.styleTextWrapper.Defined.LanguageLocale;
+					builder.Append(TextPanels.Language.LanguageShortToLong(language));
+					first = false;
+				}
+
+				if ( this.styleTextWrapper.Defined.IsLanguageHyphenationDefined )
+				{
+					bool hyphen = (this.styleTextWrapper.Defined.LanguageHyphenation == 1.0);
+					if ( hyphen )
+					{
+						if ( !first )  builder.Append(", ");
+						builder.Append(Res.Strings.Action.ParagraphHyphen);
+						first = false;
+					}
+				}
+
+				builder.Append("<br/>");
+				lines ++;
+			}
+
+			builder.Append("</font>");
+			info = builder.ToString();
+		}
+
+		protected string GetInfoValue(double value, Text.Properties.SizeUnits units, double scale)
+		{
+			if ( units == Text.Properties.SizeUnits.Percent )
+			{
+				return string.Format("{0}%", (value*100).ToString());
+			}
+			else
+			{
+				return (value/scale).ToString();
+			}
+		}
+		#endregion
+
+
 		public void ExecuteCommand(string name)
 		{
 			//	Exécute une commande.
