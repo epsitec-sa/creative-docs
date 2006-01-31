@@ -17,6 +17,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		public MarginsProperty(double left_margin, double right_margin, SizeUnits units)
 		{
+			System.Diagnostics.Debug.Assert (UnitsTools.IsScale (units) == false);
+			
 			this.left_margin_first_line  = left_margin;
 			this.left_margin_body        = left_margin;
 			this.right_margin_first_line = right_margin;
@@ -33,6 +35,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, SizeUnits units, double justification_body, double justification_last_line, double disposition, double break_fence_before, double break_fence_after, ThreeState enable_hyphenation, int level, string level_attribute)
 		{
+			System.Diagnostics.Debug.Assert (UnitsTools.IsScale (units) == false);
+			
 			this.left_margin_first_line  = left_margin_first_line;
 			this.left_margin_body        = left_margin_body;
 			this.right_margin_first_line = right_margin_first_line;
@@ -252,16 +256,11 @@ namespace Epsitec.Common.Text.Properties
 			
 			if (b.units != SizeUnits.None)
 			{
-				UnitsTools.Combine (a.left_margin_first_line,  a.units, b.left_margin_first_line,  b.units, out c.left_margin_first_line,  out c.units);
-				UnitsTools.Combine (a.left_margin_body,        a.units, b.left_margin_body,        b.units, out c.left_margin_body,        out c.units);
-				UnitsTools.Combine (a.right_margin_first_line, a.units, b.right_margin_first_line, b.units, out c.right_margin_first_line, out c.units);
-				UnitsTools.Combine (a.right_margin_body,       a.units, b.right_margin_body,       b.units, out c.right_margin_body,       out c.units);
-
-//				c.left_margin_first_line  = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_first_line, a.units, b.units),  b.left_margin_first_line);
-//				c.left_margin_body        = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_body, a.units, b.units),        b.left_margin_body);
-//				c.right_margin_first_line = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_first_line, a.units, b.units), b.right_margin_first_line);
-//				c.right_margin_body       = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_body, a.units, b.units),       b.right_margin_body);
-//				c.units                   = b.units;
+				c.left_margin_first_line  = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_first_line, a.units, b.units),  b.left_margin_first_line);
+				c.left_margin_body        = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_body, a.units, b.units),        b.left_margin_body);
+				c.right_margin_first_line = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_first_line, a.units, b.units), b.right_margin_first_line);
+				c.right_margin_body       = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_body, a.units, b.units),       b.right_margin_body);
+				c.units                   = b.units;
 			}
 			else
 			{

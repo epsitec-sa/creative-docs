@@ -719,7 +719,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 			
 			this.document.Modifier.OpletQueueChangeLastNameAction("@@DR:Modifie tab");
-//-			this.textFlow.UpdateTabs();  // TODO: devrait être inutile
 		}
 
 		public virtual System.Collections.ArrayList CreateTextPanels(string filter)
