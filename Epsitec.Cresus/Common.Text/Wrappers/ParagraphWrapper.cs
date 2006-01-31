@@ -118,6 +118,7 @@ namespace Epsitec.Common.Text.Wrappers
 				this.SynchronizeLeading ();
 				this.SynchronizeKeep ();
 				this.SynchronizeManaged ();
+				this.SynchronizeTabs ();
 				
 				this.defined_state.ClearValueFlags ();
 			}
@@ -522,6 +523,51 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void SynchronizeTabs()
+		{
+			if (this.Attachment == Attachment.Style)
+			{
+				//	Les tabulateurs ne sont éditables par le ParagraphWrapper que
+				//	s'ils sont attachés à un style.
+				
+				//	Pour éditer les tabulateurs associés à du texte normal, il faut
+				//	passer par TextNavigator et TabList directement.
+				
+				int defines = 0;
+				int changes = 0;
+				
+				Properties.TabsProperty tabs = null;
+				
+				if (this.defined_state.IsValueFlagged (State.TabsProperty))
+				{
+					changes++;
+				}
+				if ((this.defined_state.IsTabsDefined) &&
+					(this.defined_state.Tabs != null) &&
+					(this.defined_state.Tabs.Length > 0))
+				{
+					defines++;
+					tabs = new Properties.TabsProperty (this.defined_state.Tabs);
+					
+					foreach (string tag in tabs.TabTags)
+					{
+						System.Diagnostics.Debug.Assert (TabList.GetTabClass (tag) == TabClass.Shared);
+					}
+				}
+				
+				if (changes > 0)
+				{
+					if (defines > 0)
+					{
+						this.DefineMetaProperty (ParagraphWrapper.Tabs, 0, tabs);
+					}
+					else
+					{
+						this.ClearUniformMetaProperty (ParagraphWrapper.Tabs);
+					}
+				}
+			}
+		}
 		
 		internal override void UpdateState(bool active)
 		{
@@ -533,6 +579,7 @@ namespace Epsitec.Common.Text.Wrappers
 			this.UpdateLeading (state, active);
 			this.UpdateKeep (state, active);
 			this.UpdateManaged (state, active);
+			this.UpdateTabs (state, active);
 			
 			state.NotifyIfDirty ();
 		}
@@ -914,6 +961,35 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
+		private void UpdateTabs(State state, bool active)
+		{
+			Properties.TabsProperty tabs;
+			
+			if (active)
+			{
+				tabs = this.ReadAccumulatedProperty (Properties.WellKnownType.Tabs) as Properties.TabsProperty;
+			}
+			else
+			{
+				tabs = this.ReadMetaProperty (ParagraphWrapper.Tabs, Properties.WellKnownType.Tabs) as Properties.TabsProperty;
+			}
+			
+			this.UpdateTabs (state, tabs);
+		}
+		
+		private void UpdateTabs(State state, Properties.TabsProperty tabs)
+		{
+			if (tabs != null)
+			{
+				state.DefineValue (State.TabsProperty, tabs.TabTags);
+			}
+			else
+			{
+				state.DefineValue (State.TabsProperty);
+			}
+		}
+		
+		
 		
 		
 		public class State : AbstractState
@@ -1246,6 +1322,21 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			
+			public string[]							Tabs
+			{
+				get
+				{
+					return (string[]) this.GetValue (State.TabsProperty);
+				}
+				set
+				{
+					string[] copy = (value == null) ? null : (string[]) value.Clone ();
+					this.SetValue (State.TabsProperty, copy);
+				}
+			}
+			
+			
+			
 			public bool								IsJustificationModeDefined
 			{
 				get
@@ -1450,6 +1541,15 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			
+			public bool								IsTabsDefined
+			{
+				get
+				{
+					return this.IsValueDefined (State.TabsProperty);
+				}
+			}
+			
+			
 			public void ClearJustificationMode()
 			{
 				this.ClearValue (State.JustificationModeProperty);
@@ -1578,6 +1678,12 @@ namespace Epsitec.Common.Text.Wrappers
 				this.ClearValue (State.ManagedParagraphProperty);
 			}
 			
+
+			public void ClearTabs()
+			{
+				this.ClearValue (State.TabsProperty);
+			}
+			
 			
 			#region State Properties
 			public static readonly StateProperty	JustificationModeProperty = new StateProperty (typeof (State), "JustificationMode", JustificationMode.Unknown);
@@ -1603,6 +1709,7 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	ParagraphStartModeProperty = new StateProperty (typeof (State), "ParagraphStartMode", Properties.ParagraphStartMode.Undefined);
 			public static readonly StateProperty	ItemListInfoProperty = new StateProperty (typeof (State), "ItemListInfo", null);
 			public static readonly StateProperty	ManagedParagraphProperty = new StateProperty (typeof (State), "ManagedParagraph", null);
+			public static readonly StateProperty	TabsProperty = new StateProperty (typeof (State), "Tabs", null);
 			public static readonly StateProperty	KeepWithNextParagraphProperty = new StateProperty (typeof (State), "KeepWithNextParagraph", false);
 			public static readonly StateProperty	KeepWithPreviousParagraphProperty = new StateProperty (typeof (State), "KeepWithPreviousParagraph", false);
 			#endregion
@@ -1616,5 +1723,6 @@ namespace Epsitec.Common.Text.Wrappers
 		private const string						Leading = "#Pa#Leading";
 		private const string						Keep	= "#Pa#Keep";
 		private const string						Managed = "#Pa#Managed";
+		private const string						Tabs    = "#Pa#Tabs";
 	}
 }
