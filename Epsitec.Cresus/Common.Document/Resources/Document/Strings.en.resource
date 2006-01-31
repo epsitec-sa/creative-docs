@@ -544,7 +544,7 @@
 	<data name="TextPanel.Keep.StartMode.NewOddPage">In an Odd Page</data>
 	<data name="TextPanel.Keep.StartMode.NewEvenPage">In an Even Page</data>
 
-	<data name="TextPanel.Tabs.Title">@@Tabulateurs</data>
+	<data name="TextPanel.Tabs.Title">Tab Marks</data>
 	
 	<data name="TextPanel.Align.Title">Vertical alignment</data>
 
@@ -1303,17 +1303,17 @@
 	<data name="Style.Paragraph.Base">Standard Paragraph</data>
 	<data name="Style.Character.Base">Standard Character</data>
 
-	<data name="Color.Black">@@Noir</data>
-	<data name="Color.White">@@Blanc</data>
-	<data name="Color.LightGray">@@Gris clair</data>
-	<data name="Color.Gray">@@Gris</data>
-	<data name="Color.DarkGray">@@Gris foncé</data>
-	<data name="Color.Red">@@Rouge</data>
-	<data name="Color.Yellow">@@Jaune</data>
-	<data name="Color.Green">@@Vert</data>
-	<data name="Color.Cyan">@@Cyan</data>
-	<data name="Color.Blue">@@Bleu</data>
-	<data name="Color.Magenta">@@Magenta</data>
+	<data name="Color.Black">Black</data>
+	<data name="Color.White">White</data>
+	<data name="Color.LightGray">Light gray</data>
+	<data name="Color.Gray">Gray</data>
+	<data name="Color.DarkGray">Dark gray</data>
+	<data name="Color.Red">Red</data>
+	<data name="Color.Yellow">Yellow</data>
+	<data name="Color.Green">Green</data>
+	<data name="Color.Cyan">Cyan</data>
+	<data name="Color.Blue">Blue</data>
+	<data name="Color.Magenta">Magenta</data>
 
 	<data name="Question.ManyObjects">Do you really want to transform {0} objects?</data>
 
