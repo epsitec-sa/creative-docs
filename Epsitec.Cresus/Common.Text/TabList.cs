@@ -51,6 +51,10 @@ namespace Epsitec.Common.Text
 			{
 				tag = this.GenerateAutoTagName ();
 			}
+			else if (tag == "shared")
+			{
+				tag = this.GenerateSharedTagName ();
+			}
 			
 			Properties.TabProperty tab = new Properties.TabProperty (tag);
 			

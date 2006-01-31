@@ -1469,17 +1469,17 @@ namespace Epsitec.Common.Document
 			Text.TabList tabs = this.textContext.TabList;
 
 			items1.Generator = generator1;
-			items1.TabItem   = tabs.NewTab("T1-item", 0.0, Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute ("Em:1"));
-			items1.TabBody   = tabs.NewTab("T1-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute ("Em:2"));
+			items1.TabItem   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute ("Em:1"));
+			items1.TabBody   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute ("Em:2"));
 			items1.Font      = new Text.Properties.FontProperty ("Arial", "Regular");
 			
 			items2.Generator = generator2;
-			items2.TabItem   = tabs.NewTab("T2-item", 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:1.5"));
-			items2.TabBody   = tabs.NewTab("T2-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:2"));
+			items2.TabItem   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:1.5"));
+			items2.TabBody   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:2"));
 			
 			items3.Generator = generator3;
-			items3.TabItem   = tabs.NewTab("T3-item", 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:1.5"));
-			items3.TabBody   = tabs.NewTab("T3-body", 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:2"));
+			items3.TabItem   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:1.5"));
+			items3.TabBody   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:2"));
 			
 			items4.Generator = generator4;
 			

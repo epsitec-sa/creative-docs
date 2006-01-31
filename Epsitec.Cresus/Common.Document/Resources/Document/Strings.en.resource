@@ -547,8 +547,8 @@
 	<data name="TextPanel.Align.Title">Vertical alignment</data>
 
 	<data name="TextPanel.Font.Title">Font</data>
-	<data name="TextPanel.Font.Short.Size">S</data>
-	<data name="TextPanel.Font.Short.Glue">G</data>
+	<data name="TextPanel.Font.Short.Size">pt</data>
+	<data name="TextPanel.Font.Short.Glue">T</data>
 	<data name="TextPanel.Font.Long.Size">%</data>
 	<data name="TextPanel.Font.Long.Glue">Tracking</data>
 	<data name="TextPanel.Font.Tooltip.Face">Font name</data>

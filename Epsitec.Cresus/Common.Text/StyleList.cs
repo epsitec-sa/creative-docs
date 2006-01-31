@@ -537,11 +537,14 @@ namespace Epsitec.Common.Text
 		internal void UpdateTabListUserCount(TextStyle style, int sign)
 		{
 			Properties.TabsProperty tabs = style[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+			Properties.ManagedParagraphProperty mpp = style[Properties.WellKnownType.ManagedParagraph] as Properties.ManagedParagraphProperty;
+			
+			TabList list = this.context.TabList;
+			
+			//	Tient compte des tabulateurs définis directement dans le style :
 			
 			if (tabs != null)
 			{
-				TabList list = this.context.TabList;
-				
 				foreach (string tag in tabs.TabTags)
 				{
 					if (sign > 0)
@@ -554,8 +557,47 @@ namespace Epsitec.Common.Text
 					}
 				}
 			}
+			
+			//	Tient compte des tabulateurs utilisés par des managed paragraphs :
+			
+			if (mpp != null)
+			{
+				string   manager_name = mpp.ManagerName;
+				string[] parameters   = mpp.ManagerParameters;
+				
+				switch (manager_name)
+				{
+					case "ItemList":
+						ParagraphManagers.ItemListManager.Parameters p = new Epsitec.Common.Text.ParagraphManagers.ItemListManager.Parameters (this.context, parameters);
+						
+						if (p.TabItem != null)
+						{
+							if (sign > 0)
+							{
+								list.IncrementTabUserCount (p.TabItem.TabTag);
+							}
+							else if (sign < 0)
+							{
+								list.DecrementTabUserCount (p.TabItem.TabTag);
+							}
+						}
+						
+						if (p.TabBody != null)
+						{
+							if (sign > 0)
+							{
+								list.IncrementTabUserCount (p.TabBody.TabTag);
+							}
+							else if (sign < 0)
+							{
+								list.DecrementTabUserCount (p.TabBody.TabTag);
+							}
+						}
+						
+						break;
+				}
+			}
 		}
-		
 		
 		internal static string GetFullName(TextStyle text_style)
 		{
