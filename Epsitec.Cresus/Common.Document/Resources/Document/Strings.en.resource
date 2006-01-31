@@ -1145,6 +1145,9 @@
 	<data name="Action.Text.Ruler.TabCreate">Click to create a new Tab Mark</data>
 	<data name="Action.Text.Glyphs.Insert">Insert special character</data>
 	<data name="Action.Text.Glyphs.Alternate">Alternate character</data>
+	<data name="Action.Text.Tab.Create">@@Créer un tabulateur</data>
+	<data name="Action.Text.Tab.Modify">@@Modifier un tabulateur</data>
+	<data name="Action.Text.Tab.Delete">@@Supprimer un tabulateur</data>
 
 	<data name="Text.Features_aalt">Access All Alternates</data>
 	<data name="Text.Features_abvf">Above-Base Forms</data>
