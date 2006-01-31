@@ -1008,7 +1008,7 @@ namespace Epsitec.Common.Document.Widgets
 			return Drawing.TextTabType.None;
 		}
 
-		protected static string ConvType2Image(TextTabType type)
+		public static string ConvType2Image(TextTabType type)
 		{
 			//	Conversion d'un type de tabulateur en tag xml "image" à mettre dans un texte.
 			switch ( type )

@@ -65,11 +65,11 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( this.isExtendedSize )  // panneau étendu ?
 				{
-					h += 120;
+					h += 34 + 17*5;
 				}
 				else
 				{
-					h += 55;
+					h += 34 + 17*2;
 				}
 
 				return h;
@@ -116,20 +116,31 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void UpdateTable()
 		{
-			int columns = 2;
-			int rows = 0;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
+
 			string[] tabsName = null;
-			Text.TextStyle style = this.ParagraphWrapper.AttachedStyle;
-			if ( style != null && this.ParagraphWrapper.IsAttached )
+			if ( this.isStyle )
 			{
-				if ( this.ParagraphWrapper.Defined.IsTabsDefined )
+				Text.TextStyle style = this.ParagraphWrapper.AttachedStyle;
+				if ( style != null )
 				{
-					tabsName = this.ParagraphWrapper.Defined.Tabs;
-					if ( tabsName != null )
+					if ( this.ParagraphWrapper.Defined.IsTabsDefined )
 					{
-						rows = tabsName.Length;
+						tabsName = this.ParagraphWrapper.Defined.Tabs;
 					}
 				}
+			}
+			else
+			{
+				tabsName = this.ParagraphWrapper.AttachedTextNavigator.GetAllTabTags();
+			}
+
+			int columns = 2;
+			int rows = 0;
+
+			if ( tabsName != null )
+			{
+				rows = tabsName.Length;
 			}
 
 			int initialColumns = this.table.Columns;
@@ -139,18 +150,17 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.table.SetWidthColumn(0, 50);
 				this.table.SetWidthColumn(1, 47);
-
-				this.table.SetHeaderTextH(0, Res.Strings.TextPanel.Tabs.Table.Pos);
-				this.table.SetHeaderTextH(1, Res.Strings.TextPanel.Tabs.Table.Type);
 			}
+
+			this.table.SetHeaderTextH(0, Res.Strings.TextPanel.Tabs.Table.Pos);
+			this.table.SetHeaderTextH(1, Res.Strings.TextPanel.Tabs.Table.Type);
 
 			if ( tabsName != null )
 			{
-				//?Text.Properties.TabsProperty tabsProp = style[Text.Properties.WellKnownType.Tabs] as Text.Properties.TabsProperty;
 				for ( int i=0 ; i<tabsName.Length ; i++ )
 				{
 					this.TableFillRow(i);
-					this.TableUpdateRow(i);
+					this.TableUpdateRow(i, tabsName[i]);
 				}
 			}
 		}
@@ -163,27 +173,70 @@ namespace Epsitec.Common.Document.TextPanels
 				StaticText st = new StaticText();
 				st.Alignment = ContentAlignment.MiddleLeft;
 				st.Dock = DockStyle.Fill;
-				st.DockMargins = new Drawing.Margins(2, 2, 0, 0);
+				st.DockMargins = new Drawing.Margins(10, 0, 0, 0);
 				this.table[0, row].Insert(st);
 			}
 
 			if ( this.table[1, row].IsEmpty )
 			{
 				StaticText st = new StaticText();
-				st.Alignment = ContentAlignment.MiddleCenter;
+				st.Alignment = ContentAlignment.MiddleLeft;
 				st.Dock = DockStyle.Fill;
-				st.DockMargins = new Drawing.Margins(2, 2, 0, 0);
+				st.DockMargins = new Drawing.Margins(12, 0, 0, 0);
 				this.table[1, row].Insert(st);
 			}
 		}
 
-		protected void TableUpdateRow(int row)
+		protected void TableUpdateRow(int row, string tag)
 		{
 			//	Met à jour le contenu d'une ligne de la table.
+			double tabPos;
+			TextTabType type;
+			this.GetTextTab(tag, out tabPos, out type);
+
 			StaticText st;
 
 			st = this.table[0, row].Children[0] as StaticText;
-			st.Text = "coucou";
+			st.Text = this.document.Modifier.RealToString(tabPos);
+
+			st = this.table[1, row].Children[0] as StaticText;
+			string image = Widgets.HRuler.ConvType2Image(type);
+			string mark  = Widgets.HRuler.ConvType2Mark(type);
+			if ( mark == null )
+			{
+				st.Text = image;
+			}
+			else
+			{
+				st.Text = string.Format("{0} ({1})", image, mark);
+			}
+		}
+
+		protected void GetTextTab(string tag, out double pos, out TextTabType type)
+		{
+			//	Donne un tabulateur du texte.
+			Text.TabList list = this.document.TextContext.TabList;
+			Text.Properties.TabProperty tab = list.GetTabProperty(tag);
+
+			pos = list.GetTabPosition(tab);
+			string mark = list.GetTabDockingMark(tab);
+
+			type = TextTabType.Left;
+
+			if ( list.GetTabPositionMode(tab) == TabPositionMode.AbsoluteIndent )
+			{
+				type = TextTabType.Indent;
+			}
+			else if ( mark != null )
+			{
+				type = Widgets.HRuler.ConvMark2Type(mark);
+			}
+			else
+			{
+				double dispo = list.GetTabDisposition(tab);
+				if ( dispo == 0.5 )  type = TextTabType.Center;
+				if ( dispo == 1.0 )  type = TextTabType.Right;
+			}
 		}
 
 
