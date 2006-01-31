@@ -67,7 +67,6 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Indique si ce panneau est visible pour un filtre donné.
 			if ( panel == "Box" )  return false;  // provisoire...
-			if ( panel == "Tabs" )  return false;  // seulement pour les styles
 			if ( filter == "All" )  return true;
 
 			bool F = filter == "Frequently";
@@ -78,12 +77,13 @@ namespace Epsitec.Common.Document.TextPanels
 
 			switch ( panel )
 			{
-				//	F    U    P    C
+				//                         F    U    P    C
 				case "Justif":    return ( F || U || P || o );
 				case "Leading":   return ( F || o || P || o );
 				case "Margins":   return ( o || o || P || o );
 				case "Spaces":    return ( o || o || P || o );
 				case "Keep":      return ( o || o || P || o );
+				case "Tabs":      return ( o || o || P || o );
 				case "Font":      return ( F || U || o || C );
 				case "Xline":     return ( F || o || o || C );
 				case "Xscript":   return ( F || o || o || C );

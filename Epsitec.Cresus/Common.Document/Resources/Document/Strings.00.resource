@@ -546,6 +546,11 @@
 	<data name="TextPanel.Keep.StartMode.NewEvenPage">Au début d'une page paire</data>
 
 	<data name="TextPanel.Tabs.Title">Tabulateurs</data>
+	<data name="TextPanel.Tabs.Table.Pos">Position</data>
+	<data name="TextPanel.Tabs.Table.Type">Type</data>
+	<data name="TextPanel.Tabs.Tooltip.New">Créer un nouveau tabulateur</data>
+	<data name="TextPanel.Tabs.Tooltip.Delete">Supprimer un tabulateur</data>
+	<data name="TextPanel.Tabs.Tooltip.Pos">Position du tabulateur</data>
 	
 	<data name="TextPanel.Align.Title">Alignement vertical</data>
 

@@ -758,13 +758,13 @@ namespace Epsitec.Common.Document
 			if ( units == Text.Properties.SizeUnits.Percent )
 			{
 				value *= 100.0;
-				value = System.Math.Floor(value+0.5);
+				value = System.Math.Floor(value+0.5);  // zéro décimales
 				return string.Format("{0}%", value.ToString());
 			}
 			else
 			{
 				value /= scale;
-				value *= 1000.0;
+				value *= 1000.0;  // 3 décimales
 				value = System.Math.Floor(value+0.5);
 				value /= 1000.0;
 				return value.ToString();
