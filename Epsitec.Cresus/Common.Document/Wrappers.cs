@@ -644,7 +644,7 @@ namespace Epsitec.Common.Document
 				{
 					if ( !first )  builder.Append(", ");
 					RichColor color = RichColor.Parse(this.styleTextWrapper.Defined.Color);
-					builder.Append(Misc.ColorString(color));
+					builder.Append(Misc.GetColorNiceName(color));
 					first = false;
 				}
 
@@ -757,11 +757,17 @@ namespace Epsitec.Common.Document
 		{
 			if ( units == Text.Properties.SizeUnits.Percent )
 			{
-				return string.Format("{0}%", (value*100).ToString());
+				value *= 100.0;
+				value = System.Math.Floor(value+0.5);
+				return string.Format("{0}%", value.ToString());
 			}
 			else
 			{
-				return (value/scale).ToString();
+				value /= scale;
+				value *= 1000.0;
+				value = System.Math.Floor(value+0.5);
+				value /= 1000.0;
+				return value.ToString();
 			}
 		}
 		#endregion

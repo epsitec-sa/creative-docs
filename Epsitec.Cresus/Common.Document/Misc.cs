@@ -93,7 +93,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		static public string ColorString(RichColor color)
+		static public string GetColorNiceName(RichColor color)
 		{
 			//	Donne le nom d'une couleur d'après ses composantes 'rgb'.
 			if ( color.R == color.G && color.R == color.B )  // gris ?

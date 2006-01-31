@@ -1833,6 +1833,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\TextTabs.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\TextXline.icon"
                     BuildAction = "EmbeddedResource"
                 />

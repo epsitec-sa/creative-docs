@@ -54,6 +54,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( name == "Margins"  )  return new Margins(document, isStyle, styleCategory);
 			if ( name == "Spaces"   )  return new Spaces(document, isStyle, styleCategory);
 			if ( name == "Keep"     )  return new Keep(document, isStyle, styleCategory);
+			if ( name == "Tabs"     )  return new Tabs(document, isStyle, styleCategory);
 			if ( name == "Font"     )  return new Font(document, isStyle, styleCategory);
 			if ( name == "Xline"    )  return new Xline(document, isStyle, styleCategory);
 			if ( name == "Xscript"  )  return new Xscript(document, isStyle, styleCategory);
@@ -66,6 +67,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Indique si ce panneau est visible pour un filtre donné.
 			if ( panel == "Box" )  return false;  // provisoire...
+			if ( panel == "Tabs" )  return false;  // seulement pour les styles
 			if ( filter == "All" )  return true;
 
 			bool F = filter == "Frequently";

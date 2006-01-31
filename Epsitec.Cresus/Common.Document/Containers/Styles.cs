@@ -556,6 +556,7 @@ namespace Epsitec.Common.Document.Containers
 					this.UpdateSelectorAdd(Styles.selectorSize, true, "Margins",  "TextMargins",  Res.Strings.TextPanel.Margins.Title);
 					this.UpdateSelectorAdd(Styles.selectorSize, true, "Spaces",   "TextSpaces",   Res.Strings.TextPanel.Spaces.Title);
 					this.UpdateSelectorAdd(Styles.selectorSize, true, "Keep",     "TextKeep",     Res.Strings.TextPanel.Keep.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Tabs",     "TextTabs",     Res.Strings.TextPanel.Tabs.Title);
 					this.UpdateSelectorAdd(Styles.selectorSize, true, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
 					this.UpdateSelectorAdd(Styles.selectorSize, true, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
 					this.UpdateSelectorAdd(Styles.selectorSize, true, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);

@@ -545,6 +545,8 @@
 	<data name="TextPanel.Keep.StartMode.NewOddPage">Au début d'une page impaire</data>
 	<data name="TextPanel.Keep.StartMode.NewEvenPage">Au début d'une page paire</data>
 
+	<data name="TextPanel.Tabs.Title">Tabulateurs</data>
+	
 	<data name="TextPanel.Align.Title">Alignement vertical</data>
 
 	<data name="TextPanel.Font.Title">Police</data>

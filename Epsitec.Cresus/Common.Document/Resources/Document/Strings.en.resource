@@ -544,6 +544,8 @@
 	<data name="TextPanel.Keep.StartMode.NewOddPage">In an Odd Page</data>
 	<data name="TextPanel.Keep.StartMode.NewEvenPage">In an Even Page</data>
 
+	<data name="TextPanel.Tabs.Title">@@Tabulateurs</data>
+	
 	<data name="TextPanel.Align.Title">Vertical alignment</data>
 
 	<data name="TextPanel.Font.Title">Font</data>
