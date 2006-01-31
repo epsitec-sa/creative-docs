@@ -1333,6 +1333,27 @@ again:
 			this.story.ResumeTextChanged ();
 		}
 		
+		public void SetTextStyles(params TextStyle[] styles)
+		{
+			this.story.SuspendTextChanged ();
+			this.InternalSetTextStyles (styles);
+			this.story.ResumeTextChanged ();
+		}
+		
+		public void SetSymbolStyles(params TextStyle[] styles)
+		{
+			this.story.SuspendTextChanged ();
+			this.InternalSetSymbolStyles (styles);
+			this.story.ResumeTextChanged ();
+		}
+
+		public void SetMetaProperties(Properties.ApplyMode mode, params TextStyle[] styles)
+		{
+			this.story.SuspendTextChanged ();
+			this.InternalSetMetaProperties (mode, styles);
+			this.story.ResumeTextChanged ();
+		}
+		
 		
 		private void InternalSetParagraphStyles(TextStyle[] styles)
 		{
@@ -1398,8 +1419,7 @@ again:
 			this.NotifyTextChanged ();
 		}
 		
-		
-		public void SetTextStyles(params TextStyle[] styles)
+		private void InternalSetTextStyles(params TextStyle[] styles)
 		{
 			//	Change les styles du texte attachés à la position courante (ou
 			//	compris dans la sélection).
@@ -1454,7 +1474,7 @@ again:
 			this.NotifyTextChanged ();
 		}
 		
-		public void SetSymbolStyles(params TextStyle[] styles)
+		private void InternalSetSymbolStyles(params TextStyle[] styles)
 		{
 			//	Change les styles des symboles attachés à la position courante (ou
 			//	compris dans la sélection).
@@ -1504,7 +1524,7 @@ again:
 			this.NotifyTextChanged ();
 		}
 		
-		public void SetMetaProperties(Properties.ApplyMode mode, params TextStyle[] styles)
+		private void InternalSetMetaProperties(Properties.ApplyMode mode, TextStyle[] styles)
 		{
 			//	Change les méta-propriétés attachées à la position courante (ou
 			//	compris dans la sélection).
@@ -1597,6 +1617,7 @@ again:
 			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
 		}
+		
 		
 		public void SetParagraphProperties(Properties.ApplyMode mode, params Property[] properties)
 		{

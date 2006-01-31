@@ -1456,10 +1456,11 @@ namespace Epsitec.Common.Document
 			generator3.GlobalSuffix = ")";
 			generator3.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Alphabetic, "", "", Text.Generator.Casing.Lower));
 			generator3.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric,    "-", ""));
+			generator3.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Roman,      "(", "", Text.Generator.Casing.Lower, null, true));
 			
 			generator4.GlobalSuffix = " ";
-			generator4.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric,  "", "", Text.Generator.Casing.Lower));
-			generator4.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric, ".", "", Text.Generator.Casing.Lower));
+			generator4.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric,  "", "", Text.Generator.Casing.Default));
+			generator4.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric, ".", "", Text.Generator.Casing.Default));
 			
 			Text.ParagraphManagers.ItemListManager.Parameters items1 = new Text.ParagraphManagers.ItemListManager.Parameters();
 			Text.ParagraphManagers.ItemListManager.Parameters items2 = new Text.ParagraphManagers.ItemListManager.Parameters();
@@ -1478,7 +1479,7 @@ namespace Epsitec.Common.Document
 			items2.TabBody   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:2"));
 			
 			items3.Generator = generator3;
-			items3.TabItem   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:1.5"));
+			items3.TabItem   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Force,       TabList.PackToAttribute ("LevelMultiplier:100 %", "Em:0.5"));
 			items3.TabBody   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute ("LevelMultiplier:150 %", "Em:2"));
 			
 			items4.Generator = generator4;

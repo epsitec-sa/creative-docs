@@ -125,6 +125,16 @@ namespace Epsitec.Common.Text
 					
 					sequence = this.sequences[index] as Sequence;
 					
+					if (sequence.SuppressBefore)
+					{
+						buffer.Length = 0;
+						
+						if (this.global_prefix != null)
+						{
+							buffer.Append (this.global_prefix);
+						}
+					}
+					
 					sequence.GenerateText (ranks[i], culture, buffer);
 				}
 			}
@@ -475,6 +485,18 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			public bool							SuppressBefore
+			{
+				get
+				{
+					return this.suppress_before;
+				}
+				set
+				{
+					this.suppress_before = value;
+				}
+			}
+			
 			public abstract SequenceType		WellKnownType
 			{
 				get;
@@ -515,7 +537,7 @@ namespace Epsitec.Common.Text
 				SerializerSupport.Join (buffer,
 					/**/				SerializerSupport.SerializeString (this.prefix),
 					/**/				SerializerSupport.SerializeString (this.suffix),
-					/**/				SerializerSupport.SerializeInt ((int) this.casing),
+					/**/				SerializerSupport.SerializeInt ((int) this.casing | (this.suppress_before ? 0x0100 : 0x0000)),
 					/**/				SerializerSupport.SerializeString (this.GetSetupArgument ()));
 			}
 			
@@ -532,7 +554,8 @@ namespace Epsitec.Common.Text
 				
 				this.prefix = prefix;
 				this.suffix = suffix;
-				this.casing = (Casing) casing;
+				this.casing = (Casing) (casing & 0x00ff);
+				this.suppress_before = (casing & 0x0100) != 0;
 				
 				this.Setup (setup);
 			}
@@ -552,6 +575,7 @@ namespace Epsitec.Common.Text
 			private string						prefix;
 			private string						suffix;
 			private Casing						casing;
+			private bool						suppress_before;
 		}
 		#endregion
 		
@@ -567,6 +591,9 @@ namespace Epsitec.Common.Text
 				
 				case SequenceType.Constant:
 					return new Internal.Sequences.Constant ();
+				
+				case SequenceType.Roman:
+					return new Internal.Sequences.Roman ();
 				
 				default:
 					throw new System.NotSupportedException (string.Format ("SequenceType {0} not supported", type));
@@ -602,6 +629,19 @@ namespace Epsitec.Common.Text
 			sequence.Prefix = prefix;
 			sequence.Suffix = suffix;
 			sequence.Casing = casing;
+			
+			return sequence;
+		}
+		
+		public static Generator.Sequence CreateSequence(SequenceType type, string prefix, string suffix, Casing casing, string setup_argument, bool suppress_before)
+		{
+			Generator.Sequence sequence = Generator.CreateSequence (type);
+			
+			sequence.DefineSetupArgument (setup_argument);
+			sequence.Prefix = prefix;
+			sequence.Suffix = suffix;
+			sequence.Casing = casing;
+			sequence.SuppressBefore = suppress_before;
 			
 			return sequence;
 		}
@@ -673,7 +713,8 @@ namespace Epsitec.Common.Text
 			
 			Alphabetic,
 			Numeric,
-			Constant
+			Constant,
+			Roman
 		}
 		#endregion
 		

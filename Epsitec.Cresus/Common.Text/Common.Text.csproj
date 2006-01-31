@@ -454,6 +454,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Internal\Sequences\RomanSequence.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Layout\BaseEngine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
