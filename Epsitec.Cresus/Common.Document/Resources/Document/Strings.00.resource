@@ -1173,7 +1173,7 @@
 	<data name="Text.Features_dist">Distances</data>
 	<data name="Text.Features_dlig">Discretionary Ligatures</data>
 	<data name="Text.Features_dnom">Denominators</data>
-	<data name="Text.Features_dpng">Diphthongs</data>
+	<data name="Text.Features_dpng">Diphthongs (æ, œ)</data>
 	<data name="Text.Features_expt">Expert Forms</data>
 	<data name="Text.Features_falt">Final glyph Alternates</data>
 	<data name="Text.Features_fin2">Terminal Forms #2</data>

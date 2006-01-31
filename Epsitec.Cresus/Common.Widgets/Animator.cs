@@ -133,8 +133,6 @@ namespace Epsitec.Common.Widgets
 				this.Changed (this);
 			}
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Tick {0} {1}", this.tick_end - this.tick_begin, now - this.tick_begin));
-			
 			if (this.callback_changed != null)
 			{
 				object[] args = new object[this.Count];

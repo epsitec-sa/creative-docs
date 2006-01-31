@@ -1320,10 +1320,10 @@ namespace Epsitec.Common.Text.Internal
 			context.GetStyles (code, out current_styles);
 			context.GetProperties (code, out current_properties);
 			
-			foreach (Property p in current_properties)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Current: {0} - {1}.", p.WellKnownType, p.ToString ()));
-			}
+//			foreach (Property p in current_properties)
+//			{
+//				System.Diagnostics.Debug.WriteLine (string.Format ("Current: {0} - {1}.", p.WellKnownType, p.ToString ()));
+//			}
 			
 			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
 			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (text_properties) == false);
@@ -1421,10 +1421,10 @@ namespace Epsitec.Common.Text.Internal
 			context.GetStyles (code, out current_styles);
 			context.GetProperties (code, out current_properties);
 			
-			foreach (Property p in current_properties)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Current: {0} - {1}.", p.WellKnownType, p.ToString ()));
-			}
+//			foreach (Property p in current_properties)
+//			{
+//				System.Diagnostics.Debug.WriteLine (string.Format ("Current: {0} - {1}.", p.WellKnownType, p.ToString ()));
+//			}
 			
 			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
 			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (paragraph_properties) == false);

@@ -545,11 +545,11 @@
 	<data name="TextPanel.Keep.StartMode.NewEvenPage">In an Even Page</data>
 
 	<data name="TextPanel.Tabs.Title">Tab Marks</data>
-	<data name="TextPanel.Tabs.Table.Pos">@@Position</data>
-	<data name="TextPanel.Tabs.Table.Type">@@Type</data>
-	<data name="TextPanel.Tabs.Tooltip.New">@@Créer un nouveau tabulateur</data>
-	<data name="TextPanel.Tabs.Tooltip.Delete">@@Supprimer un tabulateur</data>
-	<data name="TextPanel.Tabs.Tooltip.Pos">@@Position du tabulateur</data>
+	<data name="TextPanel.Tabs.Table.Pos">Tab position</data>
+	<data name="TextPanel.Tabs.Table.Type">Tab type</data>
+	<data name="TextPanel.Tabs.Tooltip.New">Create a new tab mark</data>
+	<data name="TextPanel.Tabs.Tooltip.Delete">Delete tab mark</data>
+	<data name="TextPanel.Tabs.Tooltip.Pos">Tab mark position</data>
 	
 	<data name="TextPanel.Align.Title">Vertical alignment</data>
 
@@ -1122,7 +1122,7 @@
 	<data name="Action.Text.Edit.MoveCursor">Move cursor</data>
 	<data name="Action.Text.Edit.DefineSelection">Select characters</data>
 	<data name="Action.Text.Edit.ClearSelection">Deselect characters</data>
-	<data name="Action.Text.FlowChanged">Changed text flow</data>
+	<data name="Action.Text.FlowChanged">Change text flow</data>
 	<data name="Action.Text.Ruler.Drag">Drag to create a guide</data>
 	<data name="Action.Text.Ruler.HandleLeftFirst">Left Padding, first line</data>
 	<data name="Action.Text.Ruler.HandleLeftBody">Left Padding, text body</data>
@@ -1145,9 +1145,9 @@
 	<data name="Action.Text.Ruler.TabCreate">Click to create a new Tab Mark</data>
 	<data name="Action.Text.Glyphs.Insert">Insert special character</data>
 	<data name="Action.Text.Glyphs.Alternate">Alternate character</data>
-	<data name="Action.Text.Tab.Create">@@Créer un tabulateur</data>
-	<data name="Action.Text.Tab.Modify">@@Modifier un tabulateur</data>
-	<data name="Action.Text.Tab.Delete">@@Supprimer un tabulateur</data>
+	<data name="Action.Text.Tab.Create">Create tab mark</data>
+	<data name="Action.Text.Tab.Modify">Change tab mark</data>
+	<data name="Action.Text.Tab.Delete">Delete tab mark</data>
 
 	<data name="Text.Features_aalt">Access All Alternates</data>
 	<data name="Text.Features_abvf">Above-Base Forms</data>
@@ -1173,7 +1173,7 @@
 	<data name="Text.Features_dist">Distances</data>
 	<data name="Text.Features_dlig">Discretionary Ligatures</data>
 	<data name="Text.Features_dnom">Denominators</data>
-	<data name="Text.Features_dpng">Diphthongs</data>
+	<data name="Text.Features_dpng">Diphthongs (æ, œ)</data>
 	<data name="Text.Features_expt">Expert Forms</data>
 	<data name="Text.Features_falt">Final glyph Alternates</data>
 	<data name="Text.Features_fin2">Terminal Forms #2</data>
