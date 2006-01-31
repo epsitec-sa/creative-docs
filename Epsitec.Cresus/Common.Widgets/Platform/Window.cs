@@ -153,6 +153,7 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			double start_alpha = this.alpha;
 			
+			this.is_animating_active_window = true;
 			this.WindowBounds = bounds;
 			this.MarkForRepaint ();
 			this.RefreshGraphics ();
@@ -161,8 +162,10 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			switch (animation)
 			{
+				default:
 				case Animation.None:
 					this.ShowWindow ();
+					this.is_animating_active_window = false;
 					return;
 				
 				case Animation.RollDown:
@@ -214,10 +217,6 @@ namespace Epsitec.Common.Widgets.Platform
 					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
 					animator.SetValue (start_alpha, 0.0);
 					animator.Start ();
-					return;
-				
-				default:
-					this.ShowWindow ();
 					return;
 			}
 			
@@ -309,6 +308,7 @@ namespace Epsitec.Common.Widgets.Platform
 				case Animation.RollRight:
 				case Animation.RollLeft:
 					this.is_frozen = true;
+					this.is_animating_active_window = this.IsActive;
 					this.WindowBounds = b1;
 					this.UpdateLayeredWindow ();
 					
@@ -331,6 +331,7 @@ namespace Epsitec.Common.Widgets.Platform
 			this.WindowBounds = bounds;
 			this.paint_offset = offset;
 			this.Invalidate ();
+			this.Update ();
 		}
 		
 		protected void AnimateAlpha(double alpha)
@@ -354,6 +355,7 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			this.MinimumSize = this.form_min_size;
 			this.is_frozen = false;
+			this.is_animating_active_window = false;
 			this.Invalidate ();
 			this.widget_window.OnWindowAnimationEnded ();
 		}
@@ -529,6 +531,14 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				return (this.is_frozen)
 					|| (this.widget_window.Root == null);
+			}
+		}
+		
+		internal bool							IsAnimatingActiveWindow
+		{
+			get
+			{
+				return this.is_animating_active_window;
 			}
 		}
 		
@@ -1917,6 +1927,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		private bool							is_layered;
 		private bool							is_frozen;
+		private bool							is_animating_active_window;
 		private bool							is_no_activate;
 		private bool							is_tool_window;
 		

@@ -476,9 +476,8 @@ namespace Epsitec.Common.Document.Widgets
 			this.comboWindow.WindowBounds = new Rectangle(pos.X, pos.Y, this.list.Width, this.list.Height);
 			this.RegisterFilter();
 			this.comboWindow.Root.Children.Add(this.list);
-			this.comboWindow.AnimateShow(Animation.RollDown);
-			
 			this.list.Focus();
+			this.comboWindow.AnimateShow(Animation.RollDown);
 			
 			this.OnOpenedCombo();
 		}

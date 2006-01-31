@@ -600,6 +600,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
+				if ((this.window != null) &&
+					(this.window.IsAnimatingActiveWindow))
+				{
+					return true;
+				}
+				
 				return this.window_is_focused;
 			}
 		}
