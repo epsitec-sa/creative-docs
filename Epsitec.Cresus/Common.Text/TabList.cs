@@ -59,6 +59,7 @@ namespace Epsitec.Common.Text
 			Properties.TabProperty tab = new Properties.TabProperty (tag);
 			
 			this.Attach (new TabRecord (tag, position, units, disposition, docking_mark, position_mode, attribute));
+			this.NotifyChanged (null);
 			
 			return tab;
 		}
@@ -108,10 +109,10 @@ namespace Epsitec.Common.Text
 		
 		public void RedefineTab(Common.Support.OpletQueue queue, string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
 		{
-			this.RedefineTab (queue, new Properties.TabProperty (tag), position, units, disposition, docking_mark, position_mode, attribute);
+			this.RedefineTab (queue, null, new Properties.TabProperty (tag), position, units, disposition, docking_mark, position_mode, attribute);
 		}
 		
-		public void RedefineTab(Common.Support.OpletQueue queue, Properties.TabProperty tab, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		public void RedefineTab(Common.Support.OpletQueue queue, TextStory story, Properties.TabProperty tab, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
 		{
 			System.Diagnostics.Debug.Assert (tab != null);
 			System.Diagnostics.Debug.Assert (tab.TabTag != null);
@@ -125,6 +126,33 @@ namespace Epsitec.Common.Text
 			
 			this.version.ChangeVersion ();
 			
+			if (queue != null)
+			{
+				if (queue.IsActionDefinitionInProgress)
+				{
+					TextStory.InsertOplet (queue, new RedefineOplet (this, record));
+				}
+				else
+				{
+					if (story == null)
+					{
+						using (queue.BeginAction ())
+						{
+							TextStory.InsertOplet (queue, new RedefineOplet (this, record));
+							queue.ValidateAction ();
+						}
+					}
+					else
+					{
+						using (story.BeginAction ())
+						{
+							TextStory.InsertOplet (queue, new RedefineOplet (this, record));
+							story.ValidateAction ();
+						}
+					}
+				}
+			}
+			
 			lock (record)
 			{
 				int count = record.UserCount;
@@ -135,6 +163,8 @@ namespace Epsitec.Common.Text
 				
 				System.Diagnostics.Debug.Assert (record.UserCount == count);
 			}
+			
+			this.NotifyChanged (record);
 		}
 		
 		public void RecycleTab(Properties.TabProperty tab)
@@ -391,6 +421,8 @@ namespace Epsitec.Common.Text
 					tags[i] = tag;
 				}
 				
+				this.NotifyChanged (null);
+				
 				return new Properties.TabsProperty (tags);
 			}
 			else
@@ -509,6 +541,7 @@ namespace Epsitec.Common.Text
 			return offset;
 		}
 		
+		
 		private static double GetLevelOffsetFromMultiplier(double font_size_in_points, int level, string value)
 		{
 			if (level == 0)
@@ -555,8 +588,56 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		#region RedefineOplet Class
+		public class RedefineOplet : Common.Support.AbstractOplet
+		{
+			internal RedefineOplet(TabList list, TabRecord record)
+			{
+				this.list   = list;
+				this.record = record;
+				this.state  = this.record.Save ();
+			}
+			
+			public override Common.Support.IOplet Undo()
+			{
+				string old_state = this.record.Save ();
+				string new_state = this.state;
+				
+				this.record.Restore (new_state);
+				this.state = old_state;
+				this.list.NotifyChanged (this.record);
+				
+				return this;
+			}
+			
+			public override Common.Support.IOplet Redo()
+			{
+				return this.Undo ();
+			}
+			
+			
+			public bool MergeWith(RedefineOplet other)
+			{
+				if ((this.list == other.list) &&
+					(this.record == other.record))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			
+			
+			private TabList						list;
+			private TabRecord					record;
+			private string						state;
+		}
+		#endregion
+		
 		#region TabRecord Class
-		private class TabRecord : IContentsSignature, IContentsComparer
+		internal class TabRecord : IContentsSignature, IContentsComparer
 		{
 			public TabRecord()
 			{
@@ -721,6 +802,23 @@ namespace Epsitec.Common.Text
 				this.attribute     = SerializerSupport.DeserializeString (args[offset++]);
 			}
 			
+			internal string Save()
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				this.Serialize (buffer);
+				return buffer.ToString ();
+			}
+			
+			internal void Restore(string archive)
+			{
+				string[] args = archive.Split ('/');
+				
+				int offset  = 0;
+				int version = TextContext.SerializationVersion;
+				
+				this.Deserialize (null, version, args, ref offset);
+			}
+			
 			
 			#region IContentsSignature Members
 			public int GetContentsSignature()
@@ -813,6 +911,34 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		private void NotifyChanged(TabRecord record)
+		{
+			if (record != null)
+			{
+				foreach (TextStory story in this.context.GetTextStories ())
+				{
+					TextStats stats = new TextStats (story);
+					string[]  tags  = stats.GetTabsUse ();
+					
+					foreach (string tag in tags)
+					{
+						if (tag == record.Tag)
+						{
+							System.Diagnostics.Debug.WriteLine (string.Format ("Tab {0} changed in text story", tag));
+							story.NotifyTextChanged ();
+							break;
+						}
+					}
+				}
+			}
+			
+			if (this.Changed != null)
+			{
+				this.Changed (this);
+			}
+		}
+		
+		
 		private TabRecord GetTabRecord(Properties.TabProperty tab)
 		{
 			return this.tag_hash[tab.TabTag] as TabRecord;
@@ -874,6 +1000,8 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		public event Common.Support.EventHandler Changed;
 		
 		private TextContext						context;
 		private System.Collections.Hashtable	tag_hash;

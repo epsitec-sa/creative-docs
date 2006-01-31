@@ -639,14 +639,18 @@ namespace Epsitec.Common.Document.Objects
 			Text.TabList list = this.document.TextContext.TabList;
 			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode);
 			Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
+			this.document.Modifier.OpletQueueBeginAction("@@DR:Crée tab");
 			this.MetaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
+			this.document.Modifier.OpletQueueValidateAction();
 			return tab.TabTag;
 		}
 
 		public void DeleteTextTab(string tag)
 		{
 			//	Supprime un tabulateur du texte.
+			this.document.Modifier.OpletQueueBeginAction("@@DR:Supprime tab");
 			this.MetaNavigator.RemoveTab(tag);
+			this.document.Modifier.OpletQueueValidateAction();
 		}
 
 		public bool RenameTextTabs(string[] oldTags, string newTag)
@@ -714,7 +718,8 @@ namespace Epsitec.Common.Document.Objects
 				this.textFlow.TextNavigator.RedefineTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
 			}
 			
-			this.textFlow.UpdateTabs();  // TODO: devrait être inutile
+			this.document.Modifier.OpletQueueChangeLastNameAction("@@DR:Modifie tab");
+//-			this.textFlow.UpdateTabs();  // TODO: devrait être inutile
 		}
 
 		public virtual System.Collections.ArrayList CreateTextPanels(string filter)

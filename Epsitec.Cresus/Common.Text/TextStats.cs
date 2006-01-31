@@ -72,12 +72,48 @@ namespace Epsitec.Common.Text
 			string[] names = new string[hash.Count];
 			
 			hash.Keys.CopyTo (names, 0);
-			
 			System.Array.Sort (names);
 			
 			return names;
 		}
 		
+		public string[] GetTabsUse()
+		{
+			PropertyWrapper[] wrappers_1 = this.GetPropertyUsage (Properties.WellKnownType.Tabs);
+			PropertyWrapper[] wrappers_2 = this.GetPropertyUsage (Properties.WellKnownType.Tab);
+			
+			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+			
+			foreach (PropertyWrapper wrapper in wrappers_1)
+			{
+				Properties.TabsProperty tabs_property = wrapper.Value as Properties.TabsProperty;
+				
+				foreach (string tag in tabs_property.TabTags)
+				{
+					if (hash.Contains (tag) == false)
+					{
+						hash[tag] = tabs_property;
+					}
+				}
+			}
+			
+			foreach (PropertyWrapper wrapper in wrappers_2)
+			{
+				Properties.TabProperty tab_property = wrapper.Value as Properties.TabProperty;
+				
+				if (hash.Contains (tab_property.TabTag) == false)
+				{
+					hash[tab_property.TabTag] = tab_property;
+				}
+			}
+			
+			string[] names = new string[hash.Count];
+			
+			hash.Keys.CopyTo (names, 0);
+			System.Array.Sort (names);
+			
+			return names;
+		}
 		
 		public PropertyWrapper[] GetPropertyUsage(Properties.WellKnownType type)
 		{

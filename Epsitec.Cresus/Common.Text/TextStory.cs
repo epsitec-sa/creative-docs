@@ -1461,6 +1461,16 @@ namespace Epsitec.Common.Text
 						return true;
 					}
 				}
+				else if (oplet is TabList.RedefineOplet)
+				{
+					TabList.RedefineOplet op_1 = oplet as TabList.RedefineOplet;
+					TabList.RedefineOplet op_2 = last as TabList.RedefineOplet;
+					
+					if (op_2.MergeWith (op_1))
+					{
+						return true;
+					}
+				}
 			}
 			
 			return false;

@@ -30,6 +30,8 @@ namespace Epsitec.Common.Text
 			
 			this.story.OpletExecuted += new OpletEventHandler (this.HandleStoryOpletExecuted);
 			this.story.TextChanged   += new EventHandler (this.HandleStoryTextChanged);
+			
+			this.story.TextContext.TabList.Changed += new EventHandler (this.HandleTabListChanged);
 		}
 		
 		
@@ -987,11 +989,11 @@ again:
 		
 		public void RedefineTab(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
 		{
-			this.TextContext.TabList.RedefineTab (this.OpletQueue, new Properties.TabProperty (tag), position, units, disposition, docking_mark, position_mode, attribute);
+			this.story.SuspendTextChanged ();
+			
+			this.TextContext.TabList.RedefineTab (this.OpletQueue, this.TextStory, new Properties.TabProperty (tag), position, units, disposition, docking_mark, position_mode, attribute);
 			
 			int[] pos = this.FindTextTabPositions (tag);
-			
-			this.story.SuspendTextChanged ();
 			
 			for (int i = 0; i < pos.Length; i++)
 			{
@@ -3715,6 +3717,12 @@ process_ranges:
 			
 			this.UpdateCurrentStylesAndProperties ();
 			this.NotifyTextChanged ();
+		}
+		
+		private void HandleTabListChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.story.TextContext.TabList == sender);
+			this.NotifyTabsChanged ();
 		}
 		
 		

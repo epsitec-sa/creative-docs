@@ -6369,6 +6369,12 @@ namespace Epsitec.Common.Document
 			this.opletQueue.DefineActionName(name);
 		}
 
+		public void OpletQueueChangeLastNameAction(string name)
+		{
+			//	Nomme une action annulable.
+			this.opletQueue.ChangeLastActionName(name);
+		}
+
 		public void OpletQueueValidateAction()
 		{
 			//	Fin d'une zone annulable.
