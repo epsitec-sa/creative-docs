@@ -543,7 +543,7 @@ namespace Epsitec.Common.Document.Widgets
 				if ( rect.Contains(pos) )  // change le type de tabulateur à insérer ?
 				{
 					Point posMenu = this.MapClientToScreen(new Point(0, 1));
-					VMenu menu = this.CreateMenu(new MessageEventHandler(this.HandleMenuPressed));
+					VMenu menu = HRuler.CreateMenu(new MessageEventHandler(this.HandleMenuPressed), this.tabToCreate);
 					if ( menu == null )  return;
 					menu.Host = this;
 					menu.ShowAsContextMenu(this.Window, posMenu);
@@ -915,7 +915,7 @@ namespace Epsitec.Common.Document.Widgets
 			return type.ToString();
 		}
 
-		protected static TextTabType ConvName2Type(string name)
+		public static TextTabType ConvName2Type(string name)
 		{
 			//	Conversion d'un nom interne en type de tabulateur.
 			if ( name == null )  return TextTabType.None;
@@ -1024,79 +1024,79 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		#region Menu
-		protected VMenu CreateMenu(MessageEventHandler message)
+		public static VMenu CreateMenu(MessageEventHandler message, Drawing.TextTabType currentType)
 		{
 			//	Crée le menu pour choisir un tabulateur.
 			VMenu menuMath = new VMenu();
-			this.CreateMenu(menuMath, TextTabType.DecimalAdd,  message);
-			this.CreateMenu(menuMath, TextTabType.DecimalSub,  message);
-			this.CreateMenu(menuMath, TextTabType.DecimalMul,  message);
-			this.CreateMenu(menuMath, TextTabType.DecimalDiv,  message);
-			this.CreateMenu(menuMath, TextTabType.DecimalP100, message);
+			HRuler.CreateMenu(menuMath, TextTabType.DecimalAdd,  message, currentType);
+			HRuler.CreateMenu(menuMath, TextTabType.DecimalSub,  message, currentType);
+			HRuler.CreateMenu(menuMath, TextTabType.DecimalMul,  message, currentType);
+			HRuler.CreateMenu(menuMath, TextTabType.DecimalDiv,  message, currentType);
+			HRuler.CreateMenu(menuMath, TextTabType.DecimalP100, message, currentType);
 			menuMath.Items.Add(new MenuSeparator());
-			this.CreateMenu(menuMath, TextTabType.DecimalEq,   message);
-			this.CreateMenu(menuMath, TextTabType.DecimalLt,   message);
-			this.CreateMenu(menuMath, TextTabType.DecimalGt,   message);
+			HRuler.CreateMenu(menuMath, TextTabType.DecimalEq,   message, currentType);
+			HRuler.CreateMenu(menuMath, TextTabType.DecimalLt,   message, currentType);
+			HRuler.CreateMenu(menuMath, TextTabType.DecimalGt,   message, currentType);
 
 			VMenu menuBus = new VMenu();
-			this.CreateMenu(menuBus, TextTabType.DecimalEuro,   message);
-			this.CreateMenu(menuBus, TextTabType.DecimalDollar, message);
-			this.CreateMenu(menuBus, TextTabType.DecimalLivre,  message);
+			HRuler.CreateMenu(menuBus, TextTabType.DecimalEuro,   message, currentType);
+			HRuler.CreateMenu(menuBus, TextTabType.DecimalDollar, message, currentType);
+			HRuler.CreateMenu(menuBus, TextTabType.DecimalLivre,  message, currentType);
 			menuBus.Items.Add(new MenuSeparator());
-			this.CreateMenu(menuBus, TextTabType.DecimalCopy,   message);
-			this.CreateMenu(menuBus, TextTabType.DecimalReg,    message);
-			this.CreateMenu(menuBus, TextTabType.DecimalTM,     message);
+			HRuler.CreateMenu(menuBus, TextTabType.DecimalCopy,   message, currentType);
+			HRuler.CreateMenu(menuBus, TextTabType.DecimalReg,    message, currentType);
+			HRuler.CreateMenu(menuBus, TextTabType.DecimalTM,     message, currentType);
 
 			VMenu menuSign = new VMenu();
-			this.CreateMenu(menuSign, TextTabType.DecimalColon,    message);
-			this.CreateMenu(menuSign, TextTabType.DecimalSColon,   message);
+			HRuler.CreateMenu(menuSign, TextTabType.DecimalColon,    message, currentType);
+			HRuler.CreateMenu(menuSign, TextTabType.DecimalSColon,   message, currentType);
 			menuSign.Items.Add(new MenuSeparator());
-			this.CreateMenu(menuSign, TextTabType.DecimalAt,       message);
-			this.CreateMenu(menuSign, TextTabType.DecimalAmp,      message);
-			this.CreateMenu(menuSign, TextTabType.DecimalNumber,   message);
-			this.CreateMenu(menuSign, TextTabType.DecimalQuot,     message);
-			this.CreateMenu(menuSign, TextTabType.DecimalApos,     message);
-			this.CreateMenu(menuSign, TextTabType.DecimalVert,     message);
-			this.CreateMenu(menuSign, TextTabType.DecimalTilde,    message);
+			HRuler.CreateMenu(menuSign, TextTabType.DecimalAt,       message, currentType);
+			HRuler.CreateMenu(menuSign, TextTabType.DecimalAmp,      message, currentType);
+			HRuler.CreateMenu(menuSign, TextTabType.DecimalNumber,   message, currentType);
+			HRuler.CreateMenu(menuSign, TextTabType.DecimalQuot,     message, currentType);
+			HRuler.CreateMenu(menuSign, TextTabType.DecimalApos,     message, currentType);
+			HRuler.CreateMenu(menuSign, TextTabType.DecimalVert,     message, currentType);
+			HRuler.CreateMenu(menuSign, TextTabType.DecimalTilde,    message, currentType);
 			menuSign.Items.Add(new MenuSeparator());
-			this.CreateMenu(menuSign, TextTabType.DecimalExclam,   message);
-			this.CreateMenu(menuSign, TextTabType.DecimalQuestion, message);
+			HRuler.CreateMenu(menuSign, TextTabType.DecimalExclam,   message, currentType);
+			HRuler.CreateMenu(menuSign, TextTabType.DecimalQuestion, message, currentType);
 
 			VMenu menuPar = new VMenu();
-			this.CreateMenu(menuPar, TextTabType.DecimalOpPar, message);
-			this.CreateMenu(menuPar, TextTabType.DecimalClPar, message);
+			HRuler.CreateMenu(menuPar, TextTabType.DecimalOpPar, message, currentType);
+			HRuler.CreateMenu(menuPar, TextTabType.DecimalClPar, message, currentType);
 			menuPar.Items.Add(new MenuSeparator());
-			this.CreateMenu(menuPar, TextTabType.DecimalOpSBr, message);
-			this.CreateMenu(menuPar, TextTabType.DecimalClSBr, message);
+			HRuler.CreateMenu(menuPar, TextTabType.DecimalOpSBr, message, currentType);
+			HRuler.CreateMenu(menuPar, TextTabType.DecimalClSBr, message, currentType);
 			menuPar.Items.Add(new MenuSeparator());
-			this.CreateMenu(menuPar, TextTabType.DecimalOpCBr, message);
-			this.CreateMenu(menuPar, TextTabType.DecimalClCBr, message);
+			HRuler.CreateMenu(menuPar, TextTabType.DecimalOpCBr, message, currentType);
+			HRuler.CreateMenu(menuPar, TextTabType.DecimalClCBr, message, currentType);
 
 			VMenu menu = new VMenu();
-			this.CreateMenu(menu, TextTabType.Left,   message);
-			this.CreateMenu(menu, TextTabType.Right,  message);
-			this.CreateMenu(menu, TextTabType.Center, message);
-			this.CreateMenu(menu, TextTabType.Indent, message);
+			HRuler.CreateMenu(menu, TextTabType.Left,   message, currentType);
+			HRuler.CreateMenu(menu, TextTabType.Right,  message, currentType);
+			HRuler.CreateMenu(menu, TextTabType.Center, message, currentType);
+			HRuler.CreateMenu(menu, TextTabType.Indent, message, currentType);
 			menu.Items.Add(new MenuSeparator());
-			this.CreateMenu(menu, TextTabType.DecimalDot,   message);
-			this.CreateMenu(menu, TextTabType.DecimalComma, message);
-			this.CreateMenu(menu, TextTabType.DecimalSpace, message);
-			this.CreateMenu(menu, menuMath, Res.Strings.Action.Text.Ruler.TabDecimalMath);
-			this.CreateMenu(menu, menuBus,  Res.Strings.Action.Text.Ruler.TabDecimalBus);
-			this.CreateMenu(menu, menuSign, Res.Strings.Action.Text.Ruler.TabDecimalSign);
-			this.CreateMenu(menu, menuPar,  Res.Strings.Action.Text.Ruler.TabDecimalPar);
+			HRuler.CreateMenu(menu, TextTabType.DecimalDot,   message, currentType);
+			HRuler.CreateMenu(menu, TextTabType.DecimalComma, message, currentType);
+			HRuler.CreateMenu(menu, TextTabType.DecimalSpace, message, currentType);
+			HRuler.CreateMenu(menu, menuMath, Res.Strings.Action.Text.Ruler.TabDecimalMath, currentType);
+			HRuler.CreateMenu(menu, menuBus,  Res.Strings.Action.Text.Ruler.TabDecimalBus,  currentType);
+			HRuler.CreateMenu(menu, menuSign, Res.Strings.Action.Text.Ruler.TabDecimalSign, currentType);
+			HRuler.CreateMenu(menu, menuPar,  Res.Strings.Action.Text.Ruler.TabDecimalPar,  currentType);
 
 			menu.AdjustSize();
 			return menu;
 		}
 
-		protected void CreateMenu(VMenu menu, TextTabType type, MessageEventHandler message)
+		protected static void CreateMenu(VMenu menu, TextTabType type, MessageEventHandler message, Drawing.TextTabType currentType)
 		{
 			//	Crée une case du menu pour choisir un tabulateur.
 			string text = HRuler.ConvType2String(type);
 			string name = HRuler.ConvType2Name(type);
 			string icon = Misc.Icon("RadioNo");
-			if ( type == this.tabToCreate )
+			if ( type == currentType )
 			{
 				icon = Misc.Icon("RadioYes");
 				text = Misc.Bold(text);
@@ -1113,13 +1113,13 @@ namespace Epsitec.Common.Document.Widgets
 			menu.Items.Add(item);
 		}
 
-		protected void CreateMenu(VMenu menu, VMenu subMenu, string text)
+		protected static void CreateMenu(VMenu menu, VMenu subMenu, string text, Drawing.TextTabType currentType)
 		{
 			//	Crée un case pour un sous-menu.
 			string icon = Misc.Icon("RadioNo");
 			foreach ( MenuItem subItem in subMenu.Items )
 			{
-				if ( HRuler.ConvName2Type(subItem.Name) == this.tabToCreate )
+				if ( HRuler.ConvName2Type(subItem.Name) == currentType )
 				{
 					icon = Misc.Icon("RadioYes");
 					text = Misc.Bold(text);

@@ -31,6 +31,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonDelete = this.CreateIconButton(Misc.Icon("Delete"), Res.Strings.TextPanel.Tabs.Tooltip.Delete, new MessageEventHandler(this.HandleDeleteClicked), false);
 
 			this.fieldPos = this.CreateTextFieldLabel(Res.Strings.TextPanel.Tabs.Tooltip.Pos, "", "", 0.0,  1.0, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandlePosValueChanged));
+			this.buttonType = this.CreateIconButton(Misc.Icon("TabLeft"), Res.Strings.Action.Text.Ruler.TabChoice, new MessageEventHandler(this.HandleTypeClicked), true);
 
 			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
@@ -95,12 +96,12 @@ namespace Epsitec.Common.Document.TextPanels
 			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
-			r.Width = 120;
+			r.Width = 126;
 			this.table.Bounds = r;
 
 			r = rect;
 			r.Bottom = r.Top-20;
-			r.Left = r.Left+120+10;
+			r.Left = r.Left+120+10+2;
 			r.Width = 20;
 			this.buttonNew.Bounds = r;
 			this.buttonNew.Visibility = this.isExtendedSize;
@@ -115,6 +116,14 @@ namespace Epsitec.Common.Document.TextPanels
 			r.Width = 50;
 			this.fieldPos.Bounds = r;
 			this.fieldPos.Visibility = this.isExtendedSize;
+
+			r = rect;
+			r.Top -= 50;
+			r.Bottom = r.Top-20;
+			r.Left = r.Left+120+10+2;
+			r.Width = 50-3;
+			this.buttonType.Bounds = r;
+			this.buttonType.Visibility = this.isExtendedSize;
 		}
 
 
@@ -166,8 +175,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( initialColumns != this.table.Columns )
 			{
-				this.table.SetWidthColumn(0, 50);
-				this.table.SetWidthColumn(1, 47);
+				this.table.SetWidthColumn(0, 53);
+				this.table.SetWidthColumn(1, 50);
 			}
 
 			this.table.SetHeaderTextH(0, Res.Strings.TextPanel.Tabs.Table.Pos);
@@ -218,41 +227,53 @@ namespace Epsitec.Common.Document.TextPanels
 			st.Text = this.document.Modifier.RealToString(tabPos);
 
 			st = this.table[1, row].Children[0] as StaticText;
-			string image = Widgets.HRuler.ConvType2Image(type);
-			string mark  = Widgets.HRuler.ConvType2Mark(type);
-			if ( mark == null )
-			{
-				st.Text = image;
-			}
-			else
-			{
-				st.Text = string.Format("{0} ({1})", image, mark);
-			}
+			st.Text = Tabs.ConvType2Button(type);
 		}
 
 
 		protected void UpdateWidgets()
 		{
-			int sel = this.table.SelectedRow;
+			this.ignoreChanged = true;
 
+			int sel = this.table.SelectedRow;
 			this.buttonDelete.Enable = (sel != -1);
 
 			if ( sel == -1 )
 			{
 				this.fieldPos.Enable = false;
+				this.fieldPos.TextFieldReal.ClearText();
+
+				this.buttonType.Enable = false;
+				this.buttonType.Text = " ";
 			}
 			else
 			{
-				this.fieldPos.Enable = true;
-
 				string tag = this.tabsName[sel];
 				double tabPos;
 				TextTabType type;
 				Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
 				
-				this.ignoreChanged = true;
+				this.fieldPos.Enable = true;
 				this.fieldPos.TextFieldReal.InternalValue = (decimal) tabPos;
-				this.ignoreChanged = false;
+
+				this.buttonType.Enable = true;
+				this.buttonType.Text = Tabs.ConvType2Button(type);
+			}
+
+			this.ignoreChanged = false;
+		}
+
+		protected static string ConvType2Button(TextTabType type)
+		{
+			string image = Widgets.HRuler.ConvType2Image(type);
+			string mark  = Widgets.HRuler.ConvType2Mark(type);
+			if ( mark == null )
+			{
+				return image;
+			}
+			else
+			{
+				return string.Format("{0} ({1})", image, mark);
 			}
 		}
 
@@ -303,11 +324,66 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.IsDirtySerialize = true;
 		}
 
+		private void HandleTypeClicked(object sender, MessageEventArgs e)
+		{
+			//	Appelé lors le bouton pour choisir le type du tabulateur est cliqué.
+			if ( this.ignoreChanged )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
+
+			int sel = this.table.SelectedRow;
+			if ( sel == -1 )  return;
+			string tag = this.tabsName[sel];
+
+			double tabPos;
+			TextTabType type;
+			Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
+
+			Point pos = this.buttonType.MapClientToScreen(new Point(0, 1));
+			VMenu menu = Widgets.HRuler.CreateMenu(new MessageEventHandler(this.HandleMenuPressed), type);
+			if ( menu == null )  return;
+			menu.Host = this;
+
+			ScreenInfo info = ScreenInfo.Find(pos);
+			Drawing.Rectangle area = info.WorkingArea;
+
+			if ( pos.Y-menu.Height < area.Bottom )  // dépasse en bas ?
+			{
+				pos = this.buttonType.MapClientToScreen(new Drawing.Point(0, this.buttonType.Height-1));
+				pos.Y += menu.Height;  // déroule contre le haut ?
+			}
+
+			if ( pos.X+menu.Width > area.Right )  // dépasse à droite ?
+			{
+				pos.X -= pos.X+menu.Width-area.Right;
+			}
+
+			menu.ShowAsContextMenu(this.Window, pos);
+		}
+
+		private void HandleMenuPressed(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsqu'une case du menu est pressée.
+			MenuItem item = sender as MenuItem;
+
+			int sel = this.table.SelectedRow;
+			if ( sel == -1 )  return;
+			string tag = this.tabsName[sel];
+
+			double tabPos;
+			TextTabType type;
+			Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
+			type = Widgets.HRuler.ConvName2Type(item.Name);
+			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow.TextNavigator, ref tag, tabPos, type, false);
+
+			this.document.IsDirtySerialize = true;
+		}
+
 		
 		protected CellTable					table;
 		protected IconButton				buttonNew;
 		protected IconButton				buttonDelete;
 		protected Widgets.TextFieldLabel	fieldPos;
+		protected IconButton				buttonType;
 
 		protected string[]					tabsName;
 	}
