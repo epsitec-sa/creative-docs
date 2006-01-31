@@ -51,7 +51,7 @@ namespace Epsitec.Common.Text
 			{
 				tag = this.GenerateAutoTagName ();
 			}
-			else if (tag == "shared")
+			else if (tag == TabList.GenericSharedName)
 			{
 				tag = this.GenerateSharedTagName ();
 			}
@@ -875,6 +875,8 @@ namespace Epsitec.Common.Text
 		
 		private const string					AutoTagPrefix = "#A#";
 		private const string					SharedTagPrefix = "#S#";
+		
+		public const string						GenericSharedName = "[shared]";
 		
 		public const string						LevelMultiplier = "LevelMultiplier:";
 		public const string						LevelTable = "LevelTable:";
