@@ -205,6 +205,26 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void SortTabs(string[] tags)
+		{
+			//	Trie la table passée en entrée selon des positions de tabulateurs
+			//	croissantes.
+			
+			//	NB: ceci ne tient en compte que la position "simple" du tabulateur
+			//	et ignore les attributs qui permettent de régler de manière plus
+			//	subtile la position.
+			
+			double[] pos = new double[tags.Length];
+			
+			for (int i = 0; i < tags.Length; i++)
+			{
+				pos[i] = this.GetTabRecord (tags[i]).PositionInPoints;
+			}
+			
+			System.Array.Sort (pos, tags);
+		}
+		
+		
 		public void ClearUnusedTabTags()
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
