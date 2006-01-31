@@ -67,7 +67,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.GetMargins(out leftFirst, out leftBody, out right);
 
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
-			double width = this.editObject.WithForHRuler;
+			double width = this.editObject.WidthForHRuler;
 			leftFirst = bbox.Left + leftFirst;
 			leftBody  = bbox.Left + leftBody;
 			right     = bbox.Left+width - right;
@@ -662,7 +662,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected void SetHandleHorizontalPos(ref string handle, Point pos)
 		{
 			//	Modifie la position d'une poignée quelconque (marge ou tabulateur).
-			double width = this.editObject.WithForHRuler;
+			double width = this.editObject.WidthForHRuler;
 			double x = this.MouseToText(pos);
 
 			Tab tab = this.GetTab(handle);
@@ -711,8 +711,8 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				double tabPos;
 				TextTabType type;
-				this.editObject.GetTextTab(handle, out tabPos, out type);
-				this.editObject.SetTextTab(ref handle, x, type, this.draggingFirstMove);
+				Objects.AbstractText.GetTextTab(this.document, handle, out tabPos, out type);
+				Objects.AbstractText.SetTextTab(this.document, this.editObject.TextFlow.TextNavigator, ref handle, x, type, this.draggingFirstMove);
 			}
 		}
 
@@ -740,7 +740,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			//	Conversion de la position de la souris en une position relative au texte.
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
-			double width = this.editObject.WithForHRuler;
+			double width = this.editObject.WidthForHRuler;
 
 			double x = this.ScreenToDocument(mouse.X);
 			x = this.SnapGrid(x)-bbox.Left;
@@ -798,7 +798,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected override string GetTooltipEditedText(Point pos)
 		{
 			//	Donne le texte du tooltip d'édition en fonction de la position.
-			double width = this.editObject.WithForHRuler;
+			double width = this.editObject.WidthForHRuler;
 			double x = this.MouseToText(pos);
 
 			if ( this.isDragging )  // déplacement en cours ?

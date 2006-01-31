@@ -1682,7 +1682,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public override double WithForHRuler
+		public override double WidthForHRuler
 		{
 			//	Donne la largeur à utiliser pour la règle horizontale.
 			get

@@ -24,12 +24,13 @@ namespace Epsitec.Common.Document.TextPanels
 			this.table.StyleV |= CellArrayStyle.ScrollNorm;
 			this.table.StyleV |= CellArrayStyle.Separator;
 			this.table.StyleV |= CellArrayStyle.SelectLine;
+			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 			this.UpdateTable();
 
 			this.buttonNew    = this.CreateIconButton(Misc.Icon("New"),    Res.Strings.TextPanel.Tabs.Tooltip.New,    new MessageEventHandler(this.HandleNewClicked),    false);
 			this.buttonDelete = this.CreateIconButton(Misc.Icon("Delete"), Res.Strings.TextPanel.Tabs.Tooltip.Delete, new MessageEventHandler(this.HandleDeleteClicked), false);
 
-			this.fieldPos = this.CreateTextFieldLabel(Res.Strings.TextPanel.Tabs.Tooltip.Pos, "", "", 0.0,  0.1, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandlePosValueChanged));
+			this.fieldPos = this.CreateTextFieldLabel(Res.Strings.TextPanel.Tabs.Tooltip.Pos, "", "", 0.0,  1.0, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandlePosValueChanged));
 
 			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
@@ -102,8 +103,10 @@ namespace Epsitec.Common.Document.TextPanels
 			r.Left = r.Left+120+10;
 			r.Width = 20;
 			this.buttonNew.Bounds = r;
+			this.buttonNew.Visibility = this.isExtendedSize;
 			r.Offset(20, 0);
 			this.buttonDelete.Bounds = r;
+			this.buttonDelete.Visibility = this.isExtendedSize;
 
 			r = rect;
 			r.Top -= 25;
@@ -111,14 +114,28 @@ namespace Epsitec.Common.Document.TextPanels
 			r.Left = r.Left+120+10;
 			r.Width = 50;
 			this.fieldPos.Bounds = r;
+			this.fieldPos.Visibility = this.isExtendedSize;
+		}
+
+
+		protected override void UpdateAfterChanging()
+		{
+			//	Met à jour après un changement du wrapper.
+			base.UpdateAfterChanging();
+			
+			if ( this.ParagraphWrapper.IsAttached == false )  return;
+
+			this.UpdateTable();
+			this.UpdateWidgets();
 		}
 
 
 		protected void UpdateTable()
 		{
+			//	Met à jour le contenu de la liste des tabulateurs.
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 
-			string[] tabsName = null;
+			this.tabsName = null;
 			if ( this.isStyle )
 			{
 				Text.TextStyle style = this.ParagraphWrapper.AttachedStyle;
@@ -126,21 +143,22 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					if ( this.ParagraphWrapper.Defined.IsTabsDefined )
 					{
-						tabsName = this.ParagraphWrapper.Defined.Tabs;
+						this.tabsName = this.ParagraphWrapper.Defined.Tabs;
 					}
 				}
 			}
 			else
 			{
-				tabsName = this.ParagraphWrapper.AttachedTextNavigator.GetAllTabTags();
+				this.tabsName = this.ParagraphWrapper.AttachedTextNavigator.GetAllTabTags();
 			}
 
 			int columns = 2;
 			int rows = 0;
 
-			if ( tabsName != null )
+			if ( this.tabsName != null )
 			{
-				rows = tabsName.Length;
+				this.document.TextContext.TabList.SortTabs(this.tabsName);
+				rows = this.tabsName.Length;
 			}
 
 			int initialColumns = this.table.Columns;
@@ -155,12 +173,12 @@ namespace Epsitec.Common.Document.TextPanels
 			this.table.SetHeaderTextH(0, Res.Strings.TextPanel.Tabs.Table.Pos);
 			this.table.SetHeaderTextH(1, Res.Strings.TextPanel.Tabs.Table.Type);
 
-			if ( tabsName != null )
+			if ( this.tabsName != null )
 			{
-				for ( int i=0 ; i<tabsName.Length ; i++ )
+				for ( int i=0 ; i<this.tabsName.Length ; i++ )
 				{
 					this.TableFillRow(i);
-					this.TableUpdateRow(i, tabsName[i]);
+					this.TableUpdateRow(i, this.tabsName[i]);
 				}
 			}
 		}
@@ -182,7 +200,7 @@ namespace Epsitec.Common.Document.TextPanels
 				StaticText st = new StaticText();
 				st.Alignment = ContentAlignment.MiddleLeft;
 				st.Dock = DockStyle.Fill;
-				st.DockMargins = new Drawing.Margins(12, 0, 0, 0);
+				st.DockMargins = new Drawing.Margins(10, 0, 0, 0);
 				this.table[1, row].Insert(st);
 			}
 		}
@@ -192,7 +210,7 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour le contenu d'une ligne de la table.
 			double tabPos;
 			TextTabType type;
-			this.GetTextTab(tag, out tabPos, out type);
+			Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
 
 			StaticText st;
 
@@ -212,44 +230,38 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		protected void GetTextTab(string tag, out double pos, out TextTabType type)
+
+		protected void UpdateWidgets()
 		{
-			//	Donne un tabulateur du texte.
-			Text.TabList list = this.document.TextContext.TabList;
-			Text.Properties.TabProperty tab = list.GetTabProperty(tag);
+			int sel = this.table.SelectedRow;
 
-			pos = list.GetTabPosition(tab);
-			string mark = list.GetTabDockingMark(tab);
+			this.buttonDelete.Enable = (sel != -1);
 
-			type = TextTabType.Left;
-
-			if ( list.GetTabPositionMode(tab) == TabPositionMode.AbsoluteIndent )
+			if ( sel == -1 )
 			{
-				type = TextTabType.Indent;
-			}
-			else if ( mark != null )
-			{
-				type = Widgets.HRuler.ConvMark2Type(mark);
+				this.fieldPos.Enable = false;
 			}
 			else
 			{
-				double dispo = list.GetTabDisposition(tab);
-				if ( dispo == 0.5 )  type = TextTabType.Center;
-				if ( dispo == 1.0 )  type = TextTabType.Right;
+				this.fieldPos.Enable = true;
+
+				string tag = this.tabsName[sel];
+				double tabPos;
+				TextTabType type;
+				Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
+				
+				this.ignoreChanged = true;
+				this.fieldPos.TextFieldReal.InternalValue = (decimal) tabPos;
+				this.ignoreChanged = false;
 			}
 		}
 
 
-		protected override void UpdateAfterChanging()
+		private void HandleTableSelectionChanged(object sender)
 		{
-			//	Met à jour après un changement du wrapper.
-			base.UpdateAfterChanging();
-			
-			if ( this.ParagraphWrapper.IsAttached == false )  return;
-
-			this.UpdateTable();
+			//	Liste des tabulateurs cliquée.
+			this.UpdateWidgets();
 		}
-
 
 		private void HandleNewClicked(object sender, MessageEventArgs e)
 		{
@@ -278,9 +290,16 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 
-			this.ParagraphWrapper.SuspendSynchronizations();
-			// TODO: ...
-			this.ParagraphWrapper.ResumeSynchronizations();
+			int sel = this.table.SelectedRow;
+			if ( sel == -1 )  return;
+			string tag = this.tabsName[sel];
+
+			double tabPos;
+			TextTabType type;
+			Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
+			tabPos = (double) this.fieldPos.TextFieldReal.InternalValue;
+			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow.TextNavigator, ref tag, tabPos, type, false);
+
 			this.document.IsDirtySerialize = true;
 		}
 
@@ -289,5 +308,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonNew;
 		protected IconButton				buttonDelete;
 		protected Widgets.TextFieldLabel	fieldPos;
+
+		protected string[]					tabsName;
 	}
 }

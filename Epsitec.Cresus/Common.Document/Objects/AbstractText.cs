@@ -659,10 +659,10 @@ namespace Epsitec.Common.Document.Objects
 			return this.textFlow.TextNavigator.RenameTabs(oldTags, newTag);
 		}
 
-		public void GetTextTab(string tag, out double pos, out TextTabType type)
+		public static void GetTextTab(Document document, string tag, out double pos, out TextTabType type)
 		{
 			//	Donne un tabulateur du texte.
-			Text.TabList list = this.document.TextContext.TabList;
+			Text.TabList list = document.TextContext.TabList;
 			Text.Properties.TabProperty tab = list.GetTabProperty(tag);
 
 			pos = list.GetTabPosition(tab);
@@ -686,7 +686,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public void SetTextTab(ref string tag, double pos, TextTabType type, bool firstChange)
+		public static void SetTextTab(Document document, Text.TextNavigator textNavigator, ref string tag, double pos, TextTabType type, bool firstChange)
 		{
 			//	Modifie un tabulateur du texte.
 			double dispo = 0.0;
@@ -703,22 +703,21 @@ namespace Epsitec.Common.Document.Objects
 				//	modification ne doit toucher que le paragraphe courant (ou la
 				//	sélection en cours), c'est pourquoi on crée une copie avant de
 				//	procéder à des modifications :
-				
-				Text.TabList list = this.document.TextContext.TabList;
+				Text.TabList list = document.TextContext.TabList;
 				
 				Text.Properties.TabProperty oldTab = list.GetTabProperty(tag);
 				Text.Properties.TabProperty newTab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
 				
-				this.textFlow.TextNavigator.RenameTab(oldTab.TabTag, newTab.TabTag);
+				textNavigator.RenameTab(oldTab.TabTag, newTab.TabTag);
 				
 				tag = newTab.TabTag;
 			}
 			else
 			{
-				this.textFlow.TextNavigator.RedefineTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
+				textNavigator.RedefineTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
 			}
 			
-			this.document.Modifier.OpletQueueChangeLastNameAction(Res.Strings.Action.Text.Tab.Modify);
+			document.Modifier.OpletQueueChangeLastNameAction(Res.Strings.Action.Text.Tab.Modify);
 		}
 
 		public virtual System.Collections.ArrayList CreateTextPanels(string filter)
@@ -787,7 +786,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public virtual double WithForHRuler
+		public virtual double WidthForHRuler
 		{
 			//	Donne la largeur à utiliser pour la règle horizontale.
 			get

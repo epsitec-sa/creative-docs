@@ -279,7 +279,7 @@ namespace Epsitec.Common.Document
 			if ( this.HasActiveTextBox )
 			{
 				Drawing.Rectangle bbox = this.activeTextBox.BoundingBoxThin;
-				double width = this.activeTextBox.WithForHRuler;
+				double width = this.activeTextBox.WidthForHRuler;
 				this.document.HRuler.LimitLow  = bbox.Left;
 				this.document.HRuler.LimitHigh = bbox.Left+width;
 				this.document.VRuler.LimitLow  = bbox.Bottom;
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Document
 
 					double pos;
 					Drawing.TextTabType type;
-					this.activeTextBox.GetTextTab(info.Tag, out pos, out type);
+					Objects.AbstractText.GetTextTab(this.document, info.Tag, out pos, out type);
 
 					tabs[i].Tag = info.Tag;
 					tabs[i].Pos = bbox.Left+pos;
