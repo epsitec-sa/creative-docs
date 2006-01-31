@@ -106,7 +106,12 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void RedefineTab(Properties.TabProperty tab, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		public void RedefineTab(Common.Support.OpletQueue queue, string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		{
+			this.RedefineTab (queue, new Properties.TabProperty (tag), position, units, disposition, docking_mark, position_mode, attribute);
+		}
+		
+		public void RedefineTab(Common.Support.OpletQueue queue, Properties.TabProperty tab, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
 		{
 			System.Diagnostics.Debug.Assert (tab != null);
 			System.Diagnostics.Debug.Assert (tab.TabTag != null);
@@ -122,9 +127,13 @@ namespace Epsitec.Common.Text
 			
 			lock (record)
 			{
+				int count = record.UserCount;
+				
 				this.Detach (record.Tag);
 				record.Initialise (tab.TabTag, position, units, disposition, docking_mark, position_mode, attribute);
 				this.Attach (record);
+				
+				System.Diagnostics.Debug.Assert (record.UserCount == count);
 			}
 		}
 		

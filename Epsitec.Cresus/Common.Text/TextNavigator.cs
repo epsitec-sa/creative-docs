@@ -987,7 +987,7 @@ again:
 		
 		public void RedefineTab(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
 		{
-			this.TextContext.TabList.RedefineTab (new Properties.TabProperty (tag), position, units, disposition, docking_mark, position_mode, attribute);
+			this.TextContext.TabList.RedefineTab (this.OpletQueue, new Properties.TabProperty (tag), position, units, disposition, docking_mark, position_mode, attribute);
 			
 			int[] pos = this.FindTextTabPositions (tag);
 			
