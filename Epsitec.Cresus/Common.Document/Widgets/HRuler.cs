@@ -364,8 +364,7 @@ namespace Epsitec.Common.Document.Widgets
 					}
 					if ( tab.Shared )  // tabulateur d'un style ?
 					{
-						//?colorGlyph = Color.FromRGB(1.0, 0.5, 0.0);  // orange pour bien voir
-						colorGlyph = Color.FromBrightness(0.5);
+						colorGlyph = Color.FromBrightness(0.5);  // gris
 					}
 
 					if ( pass == 1 )

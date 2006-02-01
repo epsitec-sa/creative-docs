@@ -25,12 +25,13 @@ namespace Epsitec.Common.Document.TextPanels
 			this.table.StyleV |= CellArrayStyle.Separator;
 			this.table.StyleV |= CellArrayStyle.SelectLine;
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
-			this.UpdateTable();
+			this.UpdateTable();  // pour afficher les noms des colonnes
 
 			this.buttonNew    = this.CreateIconButton(Misc.Icon("TabNew"), Res.Strings.TextPanel.Tabs.Tooltip.New,    new MessageEventHandler(this.HandleNewClicked),    false);
 			this.buttonDelete = this.CreateIconButton(Misc.Icon("Delete"), Res.Strings.TextPanel.Tabs.Tooltip.Delete, new MessageEventHandler(this.HandleDeleteClicked), false);
 
 			this.fieldPos = this.CreateTextFieldLabel(Res.Strings.TextPanel.Tabs.Tooltip.Pos, "", "", 0.0,  1.0, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandlePosValueChanged));
+			this.ProposalTextFieldLabel(this.fieldPos, false);  // toujours défini
 
 			this.buttonType = this.CreateIconButton(Misc.Icon("TabLeft"), Res.Strings.Action.Text.Ruler.TabChoice, new MessageEventHandler(this.HandleTypeClicked), true);
 
@@ -45,6 +46,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
+				this.table.FinalSelectionChanged -= new EventHandler(this.HandleTableSelectionChanged);
 				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
 				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
@@ -196,9 +198,9 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.document.TextContext.TabList.SortTabs(this.tabsName);
 
-				if ( this.GetTabRank(this.tabSelected) == -1 )
+				if ( this.GetTabRank(this.tabSelected) == -1 )  // tabulateur à sélectionner inexistant ?
 				{
-					this.tabSelected = null;
+					this.tabSelected = null;  // supprime la sélection
 				}
 
 				rows = this.tabsName.Length;
@@ -207,7 +209,7 @@ namespace Epsitec.Common.Document.TextPanels
 			int initialColumns = this.table.Columns;
 			this.table.SetArraySize(columns, rows);
 
-			if ( initialColumns != this.table.Columns )
+			if ( initialColumns != this.table.Columns )  // changement du nombre de colonnes ?
 			{
 				this.table.SetWidthColumn(0, 53);
 				this.table.SetWidthColumn(1, 50);
@@ -270,6 +272,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void UpdateWidgets()
 		{
+			//	Met à jour les boutons.
 			this.ignoreChanged = true;
 
 			this.buttonDelete.Enable = (this.tabSelected != null);
@@ -301,6 +304,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected static string ConvType2Button(TextTabType type)
 		{
 			//	Donne le texte à mettre dans un button pour représenter un type de tabulateur.
+			//	Les tabulateurs décimaux sont suivis du caractère de marque entre parenthèses.
 			string image = Widgets.HRuler.ConvType2Image(type);
 			string mark  = Widgets.HRuler.ConvType2Mark(type);
 			if ( mark == null )
@@ -315,6 +319,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected int GetTabRank(string tag)
 		{
+			//	Cherche le rang d'un tabulateur d'après son nom.
 			for ( int i=0 ; i<this.tabsName.Length ; i++ )
 			{
 				if ( this.tabsName[i] == tag )  return i;
@@ -333,7 +338,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			else
 			{
-				this.tabSelected = this.tabsName[sel];
+				this.tabSelected = this.tabsName[sel];  // this.tabSelected <- nom du tabulateur sélectionné
 			}
 
 			this.UpdateWidgets();
@@ -341,6 +346,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleNewClicked(object sender, MessageEventArgs e)
 		{
+			//	Crée un nouveau tabulateur.
 			if ( this.ignoreChanged )  return;
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 
@@ -373,7 +379,7 @@ namespace Epsitec.Common.Document.TextPanels
 				else
 				{
 					int rank = this.GetTabRank(this.tabSelected);
-					if ( rank < this.tabsName.Length-1 )
+					if ( rank != -1 && rank < this.tabsName.Length-1 )
 					{
 						Objects.AbstractText.GetTextTab(this.document, this.tabsName[rank+1], out tabPos, out type);
 						double pos = tabPos;
@@ -393,6 +399,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleDeleteClicked(object sender, MessageEventArgs e)
 		{
+			//	Supprime le tabulateur sélectionné.
 			if ( this.ignoreChanged )  return;
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 			if ( this.tabSelected == null )  return;
@@ -402,6 +409,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandlePosValueChanged(object sender)
 		{
+			//	Changement de la position d'un tabulateur.
 			if ( this.ignoreChanged )  return;
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 			if ( this.tabSelected == null )  return;
@@ -421,7 +429,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleTypeClicked(object sender, MessageEventArgs e)
 		{
-			//	Appelé lors le bouton pour choisir le type du tabulateur est cliqué.
+			//	Appelé lorsque le bouton pour choisir le type du tabulateur est cliqué.
 			if ( this.ignoreChanged )  return;
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 			if ( this.tabSelected == null )  return;
@@ -477,7 +485,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected Widgets.TextFieldLabel	fieldPos;
 		protected IconButton				buttonType;
 
-		protected string[]					tabsName;
-		protected string					tabSelected;
+		protected string[]					tabsName;		// noms des tabulateurs dans la liste
+		protected string					tabSelected;	// nom du tabulateur sélectionné
 	}
 }
