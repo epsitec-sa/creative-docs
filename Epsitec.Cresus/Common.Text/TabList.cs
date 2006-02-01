@@ -224,6 +224,56 @@ namespace Epsitec.Common.Text
 			System.Array.Sort (pos, tags);
 		}
 		
+		public void CloneTabs(Property[] properties)
+		{
+			for (int p = 0; p < properties.Length; p++)
+			{
+				if (properties[p].WellKnownType == Properties.WellKnownType.Tabs)
+				{
+					Properties.TabsProperty tabs = properties[p] as Properties.TabsProperty;
+					string[] tags = tabs.TabTags;
+					
+					for (int i = 0; i < tags.Length; i++)
+					{
+						tags[i] = this.CloneTab (tags[i]);
+						
+						System.Diagnostics.Debug.Assert (tags[i] != null);
+						System.Diagnostics.Debug.Assert (this.GetTabRecord (tags[i]).UserCount == 0);
+					}
+					
+					properties[p] = new Properties.TabsProperty (tags);
+				}
+			}
+		}
+		
+		public string CloneTab(string tag)
+		{
+			TabRecord record = this.GetTabRecord (tag);
+			
+			if (record == null)
+			{
+				return null;
+			}
+			
+			string new_tag = null;
+			
+			switch (record.TabClass)
+			{
+				case TabClass.Auto:		new_tag = this.GenerateAutoTagName ();		break;
+				case TabClass.Shared:	new_tag = this.GenerateSharedTagName ();	break;
+			}
+			
+			if (new_tag != null)
+			{
+				string state = record.Save ();
+				record = new TabRecord ();
+				record.RestoreAndRename (state, new_tag);
+				this.Attach (record);
+				this.NotifyChanged (null);
+			}
+			
+			return new_tag;
+		}
 		
 		public void ClearUnusedTabTags()
 		{
@@ -820,6 +870,7 @@ namespace Epsitec.Common.Text
 				this.attribute     = SerializerSupport.DeserializeString (args[offset++]);
 			}
 			
+			
 			internal string Save()
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -835,6 +886,12 @@ namespace Epsitec.Common.Text
 				int version = TextContext.SerializationVersion;
 				
 				this.Deserialize (null, version, args, ref offset);
+			}
+			
+			internal void RestoreAndRename(string archive, string tag)
+			{
+				this.Restore (archive);
+				this.tag = tag;
 			}
 			
 			
