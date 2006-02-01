@@ -27,10 +27,11 @@ namespace Epsitec.Common.Document.TextPanels
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 			this.UpdateTable();
 
-			this.buttonNew    = this.CreateIconButton(Misc.Icon("New"),    Res.Strings.TextPanel.Tabs.Tooltip.New,    new MessageEventHandler(this.HandleNewClicked),    false);
+			this.buttonNew    = this.CreateIconButton(Misc.Icon("TabNew"), Res.Strings.TextPanel.Tabs.Tooltip.New,    new MessageEventHandler(this.HandleNewClicked),    false);
 			this.buttonDelete = this.CreateIconButton(Misc.Icon("Delete"), Res.Strings.TextPanel.Tabs.Tooltip.Delete, new MessageEventHandler(this.HandleDeleteClicked), false);
 
 			this.fieldPos = this.CreateTextFieldLabel(Res.Strings.TextPanel.Tabs.Tooltip.Pos, "", "", 0.0,  1.0, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandlePosValueChanged));
+
 			this.buttonType = this.CreateIconButton(Misc.Icon("TabLeft"), Res.Strings.Action.Text.Ruler.TabChoice, new MessageEventHandler(this.HandleTypeClicked), true);
 
 			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);

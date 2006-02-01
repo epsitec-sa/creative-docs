@@ -39,6 +39,7 @@ namespace Epsitec.Common.Widgets
 			this.factorMaxRange = 1.0M;
 			this.factorDefaultRange = 0.0M;
 			this.factorStep = 1.0M;
+			this.factorResolution = 1.0M;
 		}
 		
 		public TextFieldReal(Widget embedder) : this()
@@ -199,6 +200,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public decimal							FactorResolution
+		{
+			get
+			{
+				return this.factorResolution;
+			}
+
+			set
+			{
+				this.factorResolution = value;
+			}
+		}
+
 
 		public decimal InternalToReal(decimal value)
 		{
@@ -237,5 +251,6 @@ namespace Epsitec.Common.Widgets
 		protected decimal				factorMaxRange;
 		protected decimal				factorDefaultRange;
 		protected decimal				factorStep;
+		protected decimal				factorResolution;
 	}
 }

@@ -162,6 +162,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.textFieldReal.FactorMaxRange     = (decimal) max;
 			this.textFieldReal.FactorDefaultRange = (decimal) def;
 			this.textFieldReal.FactorStep         = (decimal) step;
+			this.textFieldReal.FactorResolution   = 10.0M;  // une décimale de moins
 
 			document.Modifier.AdaptTextFieldRealDimension(this.textFieldReal);
 		}

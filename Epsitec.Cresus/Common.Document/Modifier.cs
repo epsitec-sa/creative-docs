@@ -486,9 +486,9 @@ namespace Epsitec.Common.Document
 			else
 			{
 				value /= this.realScale;
-				value /= this.realPrecision*10.0;  // *10 -> un digit de moins
+				value /= this.realResolution*10.0;  // *10 -> un digit de moins
 				value = System.Math.Floor(value+0.5);
-				value *= this.realPrecision*10.0;
+				value *= this.realResolution*10.0;
 				return value.ToString();
 			}
 		}
@@ -522,28 +522,28 @@ namespace Epsitec.Common.Document
 			{
 				case RealUnitType.DimensionMillimeter:
 					this.realScale = 10.0;
-					this.realPrecision = 0.01;
+					this.realResolution = 0.01;
 					this.realShortNameUnitDimension = Res.Strings.Units.Short.Millimeter;
 					this.realLongNameUnitDimension  = Res.Strings.Units.Long.Millimeter;
 					break;
 
 				case RealUnitType.DimensionCentimeter:
 					this.realScale = 100.0;
-					this.realPrecision = 0.001;
+					this.realResolution = 0.001;
 					this.realShortNameUnitDimension = Res.Strings.Units.Short.Centimeter;
 					this.realLongNameUnitDimension  = Res.Strings.Units.Long.Centimeter;
 					break;
 
 				case RealUnitType.DimensionInch:
 					this.realScale = 254.0;
-					this.realPrecision = 0.0001;
+					this.realResolution = 0.0001;
 					this.realShortNameUnitDimension = Res.Strings.Units.Short.Inch;
 					this.realLongNameUnitDimension  = Res.Strings.Units.Long.Inch;
 					break;
 
 				default:
 					this.realScale = 1.0;
-					this.realPrecision = 1.0;
+					this.realResolution = 1.0;
 					this.realShortNameUnitDimension = "";
 					this.realLongNameUnitDimension  = "";
 					break;
@@ -557,7 +557,7 @@ namespace Epsitec.Common.Document
 
 		public double RealScale
 		{
-			//	Facteur d'échelle.
+			//	Facteur d'échelle pour les distances.
 			get
 			{
 				return this.realScale;
@@ -636,7 +636,7 @@ namespace Epsitec.Common.Document
 						break;
 				}
 
-				field.Resolution = (decimal) this.realPrecision;
+				field.Resolution = (decimal) this.realResolution * field.FactorResolution;
 			}
 		}
 
@@ -6440,7 +6440,7 @@ namespace Epsitec.Common.Document
 		protected System.Collections.Hashtable	tableTextPanelExtended;
 		protected RealUnitType					realUnitDimension;
 		protected double						realScale;
-		protected double						realPrecision;
+		protected double						realResolution;
 		protected string						realShortNameUnitDimension;
 		protected string						realLongNameUnitDimension;
 		protected Point							duplicateMove;

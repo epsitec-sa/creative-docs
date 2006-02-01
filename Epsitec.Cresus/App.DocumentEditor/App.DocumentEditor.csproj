@@ -1725,6 +1725,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\TabNew.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\TabRight.icon"
                     BuildAction = "EmbeddedResource"
                 />
