@@ -334,7 +334,7 @@ namespace Epsitec.Common.Document.TextPanels
 				add = 127;  // 0.5in
 			}
 
-			if ( this.tabsName.Length == 0 )
+			if ( this.tabsName == null || this.tabsName.Length == 0 )
 			{
 				tabPos = add;
 				type = TextTabType.Left;
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Document.TextPanels
 						Objects.AbstractText.GetTextTab(this.document, this.tabsName[rank+1], out tabPos, out type);
 						double pos = tabPos;
 						Objects.AbstractText.GetTextTab(this.document, this.tabsName[rank+0], out tabPos, out type);
-						tabPos = (tabPos+pos)/2;
+						tabPos = (tabPos+pos)/2;  // entre les 2
 					}
 					else
 					{
@@ -387,7 +387,7 @@ namespace Epsitec.Common.Document.TextPanels
 			TextTabType type;
 			Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
 			tabPos = (double) this.fieldPos.TextFieldReal.InternalValue;
-			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow, ref this.tabSelected, tabPos, type, this.isStyle);
+			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow, ref this.tabSelected, tabPos, type, true);
 		}
 
 		private void HandleTypeClicked(object sender, MessageEventArgs e)
@@ -432,7 +432,7 @@ namespace Epsitec.Common.Document.TextPanels
 			TextTabType type;
 			Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
 			type = Widgets.HRuler.ConvName2Type(item.Name);
-			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow, ref this.tabSelected, tabPos, type, this.isStyle);
+			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow, ref this.tabSelected, tabPos, type, true);
 		}
 
 		

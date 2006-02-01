@@ -637,11 +637,22 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == TextTabType.Indent )  positionMode = TabPositionMode.AbsoluteIndent;
 
 			Text.TabList list = document.TextContext.TabList;
-			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode);
-			Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
-			document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Tab.Create);
-			textFlow.MetaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
-			document.Modifier.OpletQueueValidateAction();
+			Text.Properties.TabProperty tab;
+
+			if ( textFlow == null )  // style ?
+			{
+				tab = list.NewTab(TabList.GenericSharedName, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode);
+				Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
+			}
+			else
+			{
+				tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode);
+				Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
+				document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Tab.Create);
+				textFlow.MetaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
+				document.Modifier.OpletQueueValidateAction();
+			}
+
 			document.IsDirtySerialize = true;
 			return tab.TabTag;
 		}
