@@ -96,29 +96,58 @@ namespace Epsitec.Common.Document
 		static public string GetColorNiceName(RichColor color)
 		{
 			//	Donne le nom d'une couleur d'après ses composantes 'rgb'.
-			if ( color.R == color.G && color.R == color.B )  // gris ?
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			if ( color.ColorSpace == ColorSpace.Cmyk )
+			{
+				builder.Append(Res.Strings.Color.CMYK);
+				builder.Append(":");
+			}
+
+			if ( color.ColorSpace == ColorSpace.Gray )
+			{
+				builder.Append(Res.Strings.Color.Gray);
+				builder.Append(":");
+			}
+
+			if ( color.ColorSpace == ColorSpace.Cmyk && color.C == 1.0 && color.M == 1.0 && color.Y == 1.0 && color.K == 1.0 )
+			{
+				builder.Append(Res.Strings.Color.TargetBlack);
+			}
+			else if ( color.R == color.G && color.R == color.B )  // gris ?
 			{
 				double br = color.Basic.GetBrightness();
 
-				if ( br == 0.0 )  return Res.Strings.Color.Black;
-				if ( br == 1.0 )  return Res.Strings.Color.White;
-				if ( br <  0.3 )  return Res.Strings.Color.DarkGray;
-				if ( br >  0.7 )  return Res.Strings.Color.LightGray;
-				                  return Res.Strings.Color.Gray;
+				     if ( br == 0.0 )  builder.Append(Res.Strings.Color.Black);
+				else if ( br == 1.0 )  builder.Append(Res.Strings.Color.White);
+				else if ( br <  0.3 )  builder.Append(Res.Strings.Color.DarkGray);
+				else if ( br >  0.7 )  builder.Append(Res.Strings.Color.LightGray);
+				else                   builder.Append(Res.Strings.Color.Gray);
 			}
 			else
 			{
 				double h,s,v;
 				color.Basic.GetHSV(out h, out s, out v);
 
-				if ( h < 30+60*0 )  return Res.Strings.Color.Red;
-				if ( h < 30+60*1 )  return Res.Strings.Color.Yellow;
-				if ( h < 30+60*2 )  return Res.Strings.Color.Green;
-				if ( h < 30+60*3 )  return Res.Strings.Color.Cyan;
-				if ( h < 30+60*4 )  return Res.Strings.Color.Blue;
-				if ( h < 30+60*5 )  return Res.Strings.Color.Magenta;
-				                    return Res.Strings.Color.Red;
+				     if ( h < 30+60*0 )  builder.Append(Res.Strings.Color.Red);
+				else if ( h < 30+60*1 )  builder.Append(Res.Strings.Color.Yellow);
+				else if ( h < 30+60*2 )  builder.Append(Res.Strings.Color.Green);
+				else if ( h < 30+60*3 )  builder.Append(Res.Strings.Color.Cyan);
+				else if ( h < 30+60*4 )  builder.Append(Res.Strings.Color.Blue);
+				else if ( h < 30+60*5 )  builder.Append(Res.Strings.Color.Magenta);
+				else                     builder.Append(Res.Strings.Color.Red);
 			}
+
+			if ( color.A < 1.0 )
+			{
+				builder.Append(" (");
+				builder.Append(Res.Strings.Color.Alpha);
+				builder.Append("=");
+				builder.Append((color.A*255).ToString("F0"));
+				builder.Append(")");
+			}
+
+			return builder.ToString();
 		}
 
 

@@ -1311,6 +1311,11 @@
 	<data name="Style.Paragraph.Base">Standard Paragraph</data>
 	<data name="Style.Character.Base">Standard Character</data>
 
+	<data name="Color.RGB">RGB</data>
+	<data name="Color.CMYK">CMYK</data>
+	<data name="Color.Gray">G</data>
+	<data name="Color.Alpha">a</data>
+	<data name="Color.TargetBlack">@@Noir repérage</data>
 	<data name="Color.Black">Black</data>
 	<data name="Color.White">White</data>
 	<data name="Color.LightGray">Light gray</data>
