@@ -88,6 +88,14 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public override void PutStyleResume(System.Text.StringBuilder builder)
+		{
+			//	Construit le texte résumé d'un style pour une propriété.
+			this.PutStyleResumePrefix(builder);
+			builder.Append(this.SampleText);
+			this.PutStyleResumePostfix(builder);
+		}
+
 		public static string GetName(bool type)
 		{
 			//	Retourne le nom d'un type donné.

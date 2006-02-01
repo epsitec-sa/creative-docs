@@ -702,6 +702,25 @@ namespace Epsitec.Common.Document.Containers
 				if ( property == null )
 				{
 					this.ClosePanel();
+
+					int sel = this.document.Aggregates.Selected;
+					if ( sel == -1 )  return;
+					Properties.Aggregate agg = this.document.Aggregates[sel] as Properties.Aggregate;
+
+					string resume;
+					int lines;
+					agg.GetStyleResume(out resume, out lines);
+					double h = 5 + lines*14 + 5;
+
+					this.styleResumePanel = new StaticText(this.panelContainer);
+					this.styleResumePanel.Alignment = ContentAlignment.TopLeft;
+					this.styleResumePanel.Height = h;
+					this.styleResumePanel.Dock = DockStyle.Fill;
+					this.styleResumePanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
+					this.styleResumePanel.Text = resume;
+
+					this.panelContainer.Height = h;
+					this.panelContainer.ForceLayout();
 					return;
 				}
 
@@ -725,20 +744,21 @@ namespace Epsitec.Common.Document.Containers
 				this.ClosePanel();
 
 				this.panel = property.CreatePanel(this.document);
-				if ( this.panel == null )  return;
+				if ( this.panel != null )
+				{
+					this.panel.Property = property;
+					this.panel.IsExtendedSize = true;
+					this.panel.IsLayoutDirect = true;
+					this.panel.Changed += new EventHandler(this.HandlePanelChanged);
+					this.panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
+					this.panel.SetParent(this.panelContainer);
+					this.panel.Dock = DockStyle.Fill;
+					this.panel.TabIndex = 1;
+					this.panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
-				this.panel.Property = property;
-				this.panel.IsExtendedSize = true;
-				this.panel.IsLayoutDirect = true;
-				this.panel.Changed += new EventHandler(this.HandlePanelChanged);
-				this.panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
-				this.panel.SetParent(this.panelContainer);
-				this.panel.Dock = DockStyle.Fill;
-				this.panel.TabIndex = 1;
-				this.panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-
-				this.panelContainer.Height = this.panel.DefaultHeight;
-				this.panelContainer.ForceLayout();
+					this.panelContainer.Height = this.panel.DefaultHeight;
+					this.panelContainer.ForceLayout();
+				}
 			}
 
 			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
@@ -755,17 +775,17 @@ namespace Epsitec.Common.Document.Containers
 				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.SelectorName, this.document, true, this.category);
 				if ( panel == null )
 				{
-					string info;
+					string resume;
 					int lines;
-					this.document.Wrappers.GetStyleTextInfo(style, out info, out lines);
-					double h = lines*14+10;
+					this.document.Wrappers.GetStyleResume(style, out resume, out lines);
+					double h = 5 + lines*14 + 5;
 
-					this.styleInfoPanel = new StaticText(this.panelContainer);
-					this.styleInfoPanel.Alignment = ContentAlignment.TopLeft;
-					this.styleInfoPanel.Height = h;
-					this.styleInfoPanel.Dock = DockStyle.Fill;
-					this.styleInfoPanel.DockMargins = new Margins(5, -1000, 5, 5);
-					this.styleInfoPanel.Text = info;
+					this.styleResumePanel = new StaticText(this.panelContainer);
+					this.styleResumePanel.Alignment = ContentAlignment.TopLeft;
+					this.styleResumePanel.Height = h;
+					this.styleResumePanel.Dock = DockStyle.Fill;
+					this.styleResumePanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
+					this.styleResumePanel.Text = resume;
 
 					this.panelContainer.Height = h;
 					this.panelContainer.ForceLayout();
@@ -823,10 +843,10 @@ namespace Epsitec.Common.Document.Containers
 				this.textPanel = null;
 			}
 
-			if ( this.styleInfoPanel != null )
+			if ( this.styleResumePanel != null )
 			{
-				this.styleInfoPanel.Dispose();
-				this.styleInfoPanel = null;
+				this.styleResumePanel.Dispose();
+				this.styleResumePanel = null;
 			}
 
 			this.panelContainer.Height = 0.0;
@@ -1731,7 +1751,7 @@ namespace Epsitec.Common.Document.Containers
 		protected Widget					panelContainer;
 		protected Panels.Abstract			panel;
 		protected TextPanels.Abstract		textPanel;
-		protected StaticText				styleInfoPanel;
+		protected StaticText				styleResumePanel;
 		protected ColorSelector				colorSelector;
 
 		protected int						index;

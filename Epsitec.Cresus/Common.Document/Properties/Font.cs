@@ -94,6 +94,20 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public override void PutStyleResume(System.Text.StringBuilder builder)
+		{
+			//	Construit le texte résumé d'un style pour une propriété.
+			this.PutStyleResumePrefix(builder);
+
+			builder.Append(this.fontName);
+			builder.Append(", ");
+			builder.Append((this.fontSize/Modifier.FontSizeScale).ToString("F1"));
+			builder.Append(", ");
+			builder.Append(Misc.GetColorNiceName(this.fontColor));
+			
+			this.PutStyleResumePostfix(builder);
+		}
+
 		public override bool AlterBoundingBox
 		{
 			//	Indique si un changement de cette propriété modifie la bbox de l'objet.

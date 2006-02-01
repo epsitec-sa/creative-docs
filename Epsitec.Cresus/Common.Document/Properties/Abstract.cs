@@ -362,6 +362,26 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		#region StyleResume
+		public virtual void PutStyleResume(System.Text.StringBuilder builder)
+		{
+			//	Construit le texte résumé d'un style pour une propriété.
+			this.PutStyleResumePrefix(builder);
+			this.PutStyleResumePostfix(builder);
+		}
+
+		protected void PutStyleResumePrefix(System.Text.StringBuilder builder)
+		{
+			builder.Append(Misc.Image(Abstract.IconText(this.type)));
+			builder.Append("  ");
+		}
+
+		protected void PutStyleResumePostfix(System.Text.StringBuilder builder)
+		{
+			builder.Append("<br/>");
+		}
+		#endregion
+
 		public bool IsSelected
 		{
 			//	Indique si la propriété est utilisée par un objet sélectionnée.

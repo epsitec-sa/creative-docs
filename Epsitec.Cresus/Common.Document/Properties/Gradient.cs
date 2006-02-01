@@ -516,6 +516,25 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		
+		public override void PutStyleResume(System.Text.StringBuilder builder)
+		{
+			//	Construit le texte résumé d'un style pour une propriété.
+			this.PutStyleResumePrefix(builder);
+
+			builder.Append(Gradient.GetName(this.fillType));
+			builder.Append(", ");
+			builder.Append(Misc.GetColorNiceName(this.color1));
+
+			if ( this.fillType != GradientFillType.None )
+			{
+				builder.Append(", ");
+				builder.Append(Misc.GetColorNiceName(this.color2));
+			}
+			
+			this.PutStyleResumePostfix(builder);
+		}
+
+
 		public override bool IsComplexPrinting
 		{
 			//	Indique si une impression complexe est nécessaire.

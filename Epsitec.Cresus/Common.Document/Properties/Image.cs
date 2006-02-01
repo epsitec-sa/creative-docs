@@ -147,6 +147,16 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public override void PutStyleResume(System.Text.StringBuilder builder)
+		{
+			//	Construit le texte résumé d'un style pour une propriété.
+			this.PutStyleResumePrefix(builder);
+
+			builder.Append(this.filename);
+			
+			this.PutStyleResumePostfix(builder);
+		}
+
 
 		public override bool AlterBoundingBox
 		{

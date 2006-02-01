@@ -399,10 +399,10 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		#region GetStyleTextInfo
-		public void GetStyleTextInfo(Text.TextStyle style, out string info, out int lines)
+		#region GetStyleResume
+		public void GetStyleResume(Text.TextStyle style, out string resume, out int lines)
 		{
-			//	Donne un texte d'information sur un style quelconque.
+			//	Donne un texte résumé sur un style quelconque.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			builder.Append("<font size=\"80%\">");
 			lines = 0;
@@ -454,7 +454,7 @@ namespace Epsitec.Common.Document
 				{
 					double leading = this.styleParagraphWrapper.Defined.Leading;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.LeadingUnits;
-					builder.Append(this.GetInfoValue(leading, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetResumeValue(leading, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -493,7 +493,7 @@ namespace Epsitec.Common.Document
 					if ( !first )  builder.Append(", ");
 					double margin = this.styleParagraphWrapper.Defined.LeftMarginFirst;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
-					builder.Append(this.GetInfoValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Document
 					if ( !first )  builder.Append(", ");
 					double margin = this.styleParagraphWrapper.Defined.LeftMarginBody;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
-					builder.Append(this.GetInfoValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -511,7 +511,7 @@ namespace Epsitec.Common.Document
 					if ( !first )  builder.Append(", ");
 					double margin = this.styleParagraphWrapper.Defined.RightMarginBody;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
-					builder.Append(this.GetInfoValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -531,7 +531,7 @@ namespace Epsitec.Common.Document
 					if ( !first )  builder.Append(", ");
 					double margin = this.styleParagraphWrapper.Defined.SpaceBefore;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.SpaceBeforeUnits;
-					builder.Append(this.GetInfoValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -540,7 +540,7 @@ namespace Epsitec.Common.Document
 					if ( !first )  builder.Append(", ");
 					double margin = this.styleParagraphWrapper.Defined.SpaceAfter;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.SpaceAfterUnits;
-					builder.Append(this.GetInfoValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -625,7 +625,7 @@ namespace Epsitec.Common.Document
 					Objects.AbstractText.GetTextTab(this.document, tab, out pos, out type);
 
 					if ( !first )  builder.Append(", ");
-					builder.Append(this.GetInfoValue(pos, Text.Properties.SizeUnits.Points, this.document.Modifier.RealScale));
+					builder.Append(this.GetResumeValue(pos, Text.Properties.SizeUnits.Points, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -661,7 +661,7 @@ namespace Epsitec.Common.Document
 					if ( !first )  builder.Append(", ");
 					double size = this.styleTextWrapper.Defined.FontSize;
 					Text.Properties.SizeUnits units = this.styleTextWrapper.Defined.Units;
-					builder.Append(this.GetInfoValue(size, units, Modifier.FontSizeScale));
+					builder.Append(this.GetResumeValue(size, units, Modifier.FontSizeScale));
 					first = false;
 				}
 
@@ -677,7 +677,7 @@ namespace Epsitec.Common.Document
 				{
 					if ( !first )  builder.Append(", ");
 					double size = this.styleTextWrapper.Defined.FontGlue;
-					builder.Append(this.GetInfoValue(size, Text.Properties.SizeUnits.Percent, this.document.Modifier.RealScale));
+					builder.Append(this.GetResumeValue(size, Text.Properties.SizeUnits.Percent, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -775,11 +775,12 @@ namespace Epsitec.Common.Document
 			}
 
 			builder.Append("</font>");
-			info = builder.ToString();
+			resume = builder.ToString();
 		}
 
-		protected string GetInfoValue(double value, Text.Properties.SizeUnits units, double scale)
+		protected string GetResumeValue(double value, Text.Properties.SizeUnits units, double scale)
 		{
+			//	Donne la chaîne pour représenter une valeur numérique.
 			if ( units == Text.Properties.SizeUnits.Percent )
 			{
 				value *= 100.0;

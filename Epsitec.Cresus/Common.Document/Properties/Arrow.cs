@@ -309,6 +309,30 @@ namespace Epsitec.Common.Document.Properties
 		}
 #endif
 
+		public override void PutStyleResume(System.Text.StringBuilder builder)
+		{
+			//	Construit le texte résumé d'un style pour une propriété.
+			this.PutStyleResumePrefix(builder);
+
+			builder.Append(Arrow.GetName(this.arrowType[0]));
+			if ( this.arrowType[0] != ArrowType.Right )
+			{
+				builder.Append(", ");
+				builder.Append(this.document.Modifier.RealToString(this.length[0]));
+			}
+
+			builder.Append(", ");
+			
+			builder.Append(Arrow.GetName(this.arrowType[1]));
+			if ( this.arrowType[1] != ArrowType.Right )
+			{
+				builder.Append(", ");
+				builder.Append(this.document.Modifier.RealToString(this.length[1]));
+			}
+			
+			this.PutStyleResumePostfix(builder);
+		}
+
 		public static string GetName(ArrowType type)
 		{
 			//	Retourne le nom d'un type donné.

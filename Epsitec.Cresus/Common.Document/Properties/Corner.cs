@@ -132,6 +132,22 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public override void PutStyleResume(System.Text.StringBuilder builder)
+		{
+			//	Construit le texte résumé d'un style pour une propriété.
+			this.PutStyleResumePrefix(builder);
+
+			builder.Append(Corner.GetName(this.cornerType));
+
+			if ( this.cornerType != CornerType.Right )
+			{
+				builder.Append(", ");
+				builder.Append(this.document.Modifier.RealToString(this.radius));
+			}
+
+			this.PutStyleResumePostfix(builder);
+		}
+
 		public static CornerType ConvType(int index)
 		{
 			//	Cherche le type correspondant à un index donné.

@@ -133,6 +133,24 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		public void GetStyleResume(out string resume, out int lines)
+		{
+			//	Donne un texte résumé sur un style graphique.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			builder.Append("<font size=\"80%\">");
+			lines = 0;
+
+			foreach ( Properties.Abstract property in this.styles )
+			{
+				property.PutStyleResume(builder);
+				lines ++;
+			}
+
+			builder.Append("</font>");
+			resume = builder.ToString();
+		}
+
+
 		public void CopyTo(Aggregate dst)
 		{
 			//	Copie tout l'agrégat.
