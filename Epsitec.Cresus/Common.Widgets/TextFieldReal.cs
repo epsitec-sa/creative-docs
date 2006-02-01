@@ -202,6 +202,7 @@ namespace Epsitec.Common.Widgets
 
 		public decimal							FactorResolution
 		{
+			//	Modification de la résolution (10 = une décimale de moins).
 			get
 			{
 				return this.factorResolution;

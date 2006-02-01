@@ -608,6 +608,34 @@ namespace Epsitec.Common.Document
 				lines ++;
 			}
 
+			if ( this.styleParagraphWrapper.Defined.IsTabsDefined )
+			{
+				builder.Append(Misc.Image("TextTabs"));
+				builder.Append("  ");
+				bool first = true;
+
+				string[] tabs = this.styleParagraphWrapper.Defined.Tabs;
+				this.document.TextContext.TabList.SortTabs(tabs);
+
+				if ( !first )  builder.Append(", ");
+				builder.Append(string.Format("{0}x: ", tabs.Length));
+				first = false;
+
+				foreach ( string tab in tabs )
+				{
+					double pos;
+					TextTabType type;
+					Objects.AbstractText.GetTextTab(this.document, tab, out pos, out type);
+
+					if ( !first )  builder.Append(", ");
+					builder.Append(this.GetInfoValue(pos, Text.Properties.SizeUnits.Points, Modifier.FontSizeScale));
+					first = false;
+				}
+
+				builder.Append("<br/>");
+				lines ++;
+			}
+
 			if ( this.styleTextWrapper.Defined.IsFontFaceDefined  ||
 				 this.styleTextWrapper.Defined.IsFontStyleDefined ||
 				 this.styleTextWrapper.Defined.IsFontSizeDefined  ||

@@ -320,7 +320,7 @@ namespace Epsitec.Common.Document.TextPanels
 			TextTabType type;
 			Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
 			tabPos = (double) this.fieldPos.TextFieldReal.InternalValue;
-			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow.TextNavigator, ref tag, tabPos, type, false);
+			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow.TextNavigator, ref tag, tabPos, type, this.isStyle);
 
 			this.document.IsDirtySerialize = true;
 		}
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Document.TextPanels
 			TextTabType type;
 			Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
 			type = Widgets.HRuler.ConvName2Type(item.Name);
-			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow.TextNavigator, ref tag, tabPos, type, false);
+			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow.TextNavigator, ref tag, tabPos, type, this.isStyle);
 
 			this.document.IsDirtySerialize = true;
 		}
