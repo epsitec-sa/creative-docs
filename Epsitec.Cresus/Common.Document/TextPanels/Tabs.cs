@@ -165,9 +165,19 @@ namespace Epsitec.Common.Document.TextPanels
 			int columns = 2;
 			int rows = 0;
 
-			if ( this.tabsName != null )
+			if ( this.tabsName == null )
+			{
+				this.tabSelected = null;
+			}
+			else
 			{
 				this.document.TextContext.TabList.SortTabs(this.tabsName);
+
+				if ( this.GetTabRank(this.tabSelected) == -1 )
+				{
+					this.tabSelected = null;
+				}
+
 				rows = this.tabsName.Length;
 			}
 
@@ -229,6 +239,9 @@ namespace Epsitec.Common.Document.TextPanels
 
 			st = this.table[1, row].Children[0] as StaticText;
 			st.Text = Tabs.ConvType2Button(type);
+
+			bool selected = (tag == this.tabSelected);
+			this.table.SelectRow(row, selected);
 		}
 
 
@@ -236,10 +249,9 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			this.ignoreChanged = true;
 
-			int sel = this.table.SelectedRow;
-			this.buttonDelete.Enable = (sel != -1);
+			this.buttonDelete.Enable = (this.tabSelected != null);
 
-			if ( sel == -1 )
+			if ( this.tabSelected == null )
 			{
 				this.fieldPos.Enable = false;
 				this.fieldPos.TextFieldReal.ClearText();
@@ -249,10 +261,9 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			else
 			{
-				string tag = this.tabsName[sel];
 				double tabPos;
 				TextTabType type;
-				Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
+				Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
 				
 				this.fieldPos.Enable = true;
 				this.fieldPos.TextFieldReal.InternalValue = (decimal) tabPos;
@@ -266,6 +277,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected static string ConvType2Button(TextTabType type)
 		{
+			//	Donne le texte à mettre dans un button pour représenter un type de tabulateur.
 			string image = Widgets.HRuler.ConvType2Image(type);
 			string mark  = Widgets.HRuler.ConvType2Mark(type);
 			if ( mark == null )
@@ -278,10 +290,29 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
+		protected int GetTabRank(string tag)
+		{
+			for ( int i=0 ; i<this.tabsName.Length ; i++ )
+			{
+				if ( this.tabsName[i] == tag )  return i;
+			}
+			return -1;
+		}
+
 
 		private void HandleTableSelectionChanged(object sender)
 		{
 			//	Liste des tabulateurs cliquée.
+			int sel = this.table.SelectedRow;
+			if ( sel == -1 )
+			{
+				this.tabSelected = null;
+			}
+			else
+			{
+				this.tabSelected = this.tabsName[sel];
+			}
+
 			this.UpdateWidgets();
 		}
 
@@ -290,39 +321,73 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 
-			this.ParagraphWrapper.SuspendSynchronizations();
-			// TODO: ...
-			this.ParagraphWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			double tabPos = 0;
+			TextTabType type = TextTabType.Left;
+
+			double add;
+			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+			{
+				add = 100;  // 10mm
+			}
+			else
+			{
+				add = 127;  // 0.5in
+			}
+
+			if ( this.tabsName.Length == 0 )
+			{
+				tabPos = add;
+				type = TextTabType.Left;
+			}
+			else
+			{
+				if ( this.tabSelected == null )
+				{
+					string tag = this.tabsName[this.tabsName.Length-1];
+					Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);  // dernier
+					tabPos += add;
+				}
+				else
+				{
+					int rank = this.GetTabRank(this.tabSelected);
+					if ( rank < this.tabsName.Length-1 )
+					{
+						Objects.AbstractText.GetTextTab(this.document, this.tabsName[rank+1], out tabPos, out type);
+						double pos = tabPos;
+						Objects.AbstractText.GetTextTab(this.document, this.tabsName[rank+0], out tabPos, out type);
+						tabPos = (tabPos+pos)/2;
+					}
+					else
+					{
+						Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
+						tabPos += add;
+					}
+				}
+			}
+			
+			this.tabSelected = Objects.AbstractText.NewTextTab(this.document, this.document.Wrappers.TextFlow, tabPos, type);
 		}
 
 		private void HandleDeleteClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.ParagraphWrapper.IsAttached )  return;
+			if ( this.tabSelected == null )  return;
 
-			this.ParagraphWrapper.SuspendSynchronizations();
-			// TODO: ...
-			this.ParagraphWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			Objects.AbstractText.DeleteTextTab(this.document, this.document.Wrappers.TextFlow, this.tabSelected);
 		}
 
 		private void HandlePosValueChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.ParagraphWrapper.IsAttached )  return;
-
-			int sel = this.table.SelectedRow;
-			if ( sel == -1 )  return;
-			string tag = this.tabsName[sel];
+			if ( this.tabSelected == null )  return;
 
 			double tabPos;
 			TextTabType type;
-			Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
+			Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
 			tabPos = (double) this.fieldPos.TextFieldReal.InternalValue;
-			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow.TextNavigator, ref tag, tabPos, type, this.isStyle);
-
-			this.document.IsDirtySerialize = true;
+			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow, ref this.tabSelected, tabPos, type, this.isStyle);
 		}
 
 		private void HandleTypeClicked(object sender, MessageEventArgs e)
@@ -330,14 +395,11 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Appelé lors le bouton pour choisir le type du tabulateur est cliqué.
 			if ( this.ignoreChanged )  return;
 			if ( !this.ParagraphWrapper.IsAttached )  return;
-
-			int sel = this.table.SelectedRow;
-			if ( sel == -1 )  return;
-			string tag = this.tabsName[sel];
+			if ( this.tabSelected == null )  return;
 
 			double tabPos;
 			TextTabType type;
-			Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
+			Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
 
 			Point pos = this.buttonType.MapClientToScreen(new Point(0, 1));
 			VMenu menu = Widgets.HRuler.CreateMenu(new MessageEventHandler(this.HandleMenuPressed), type);
@@ -366,17 +428,11 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Appelé lorsqu'une case du menu est pressée.
 			MenuItem item = sender as MenuItem;
 
-			int sel = this.table.SelectedRow;
-			if ( sel == -1 )  return;
-			string tag = this.tabsName[sel];
-
 			double tabPos;
 			TextTabType type;
-			Objects.AbstractText.GetTextTab(this.document, tag, out tabPos, out type);
+			Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
 			type = Widgets.HRuler.ConvName2Type(item.Name);
-			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow.TextNavigator, ref tag, tabPos, type, this.isStyle);
-
-			this.document.IsDirtySerialize = true;
+			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow, ref this.tabSelected, tabPos, type, this.isStyle);
 		}
 
 		
@@ -387,5 +443,6 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonType;
 
 		protected string[]					tabsName;
+		protected string					tabSelected;
 	}
 }

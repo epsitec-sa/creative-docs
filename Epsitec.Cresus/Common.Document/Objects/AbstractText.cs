@@ -625,7 +625,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public string NewTextTab(double pos, TextTabType type)
+		public static string NewTextTab(Document document, TextFlow textFlow, double pos, TextTabType type)
 		{
 			//	Crée un nouveau tabulateur dans le texte.
 			double dispo = 0.0;
@@ -636,21 +636,23 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == TextTabType.Right  )  dispo = 1.0;
 			if ( type == TextTabType.Indent )  positionMode = TabPositionMode.AbsoluteIndent;
 
-			Text.TabList list = this.document.TextContext.TabList;
+			Text.TabList list = document.TextContext.TabList;
 			Text.Properties.TabProperty tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode);
 			Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
-			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Tab.Create);
-			this.MetaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
-			this.document.Modifier.OpletQueueValidateAction();
+			document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Tab.Create);
+			textFlow.MetaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
+			document.Modifier.OpletQueueValidateAction();
+			document.IsDirtySerialize = true;
 			return tab.TabTag;
 		}
 
-		public void DeleteTextTab(string tag)
+		public static void DeleteTextTab(Document document, TextFlow textFlow, string tag)
 		{
 			//	Supprime un tabulateur du texte.
-			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Tab.Delete);
-			this.MetaNavigator.RemoveTab(tag);
-			this.document.Modifier.OpletQueueValidateAction();
+			document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Tab.Delete);
+			textFlow.MetaNavigator.RemoveTab(tag);
+			document.Modifier.OpletQueueValidateAction();
+			document.IsDirtySerialize = true;
 		}
 
 		public bool RenameTextTabs(string[] oldTags, string newTag)
@@ -686,7 +688,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public static void SetTextTab(Document document, Text.TextNavigator textNavigator, ref string tag, double pos, TextTabType type, bool firstChange)
+		public static void SetTextTab(Document document, TextFlow textFlow, ref string tag, double pos, TextTabType type, bool firstChange)
 		{
 			//	Modifie un tabulateur du texte.
 			double dispo = 0.0;
@@ -708,16 +710,17 @@ namespace Epsitec.Common.Document.Objects
 				Text.Properties.TabProperty oldTab = list.GetTabProperty(tag);
 				Text.Properties.TabProperty newTab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
 				
-				textNavigator.RenameTab(oldTab.TabTag, newTab.TabTag);
+				textFlow.TextNavigator.RenameTab(oldTab.TabTag, newTab.TabTag);
 				
 				tag = newTab.TabTag;
 			}
 			else
 			{
-				textNavigator.RedefineTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
+				textFlow.TextNavigator.RedefineTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
 			}
 			
 			document.Modifier.OpletQueueChangeLastNameAction(Res.Strings.Action.Text.Tab.Modify);
+			document.IsDirtySerialize = true;
 		}
 
 		public virtual System.Collections.ArrayList CreateTextPanels(string filter)

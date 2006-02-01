@@ -552,7 +552,7 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					double x = this.MouseToText(pos);
 
-					handle = this.editObject.NewTextTab(x, this.tabToCreate);
+					handle = Objects.AbstractText.NewTextTab(this.document, this.editObject.TextFlow, x, this.tabToCreate);
 					this.draggingOffset = 0.0;
 					this.draggingFirstMove = false;
 				}
@@ -625,7 +625,7 @@ namespace Epsitec.Common.Document.Widgets
 				Rectangle rect = this.Client.Bounds;
 				if ( pos.Y < rect.Bottom || pos.Y > rect.Top )  // hors de la règle ?
 				{
-					this.editObject.DeleteTextTab(handle);
+					Objects.AbstractText.DeleteTextTab(this.document, this.editObject.TextFlow, handle);
 				}
 				else
 				{
@@ -712,7 +712,7 @@ namespace Epsitec.Common.Document.Widgets
 				double tabPos;
 				TextTabType type;
 				Objects.AbstractText.GetTextTab(this.document, handle, out tabPos, out type);
-				Objects.AbstractText.SetTextTab(this.document, this.editObject.TextFlow.TextNavigator, ref handle, x, type, this.draggingFirstMove);
+				Objects.AbstractText.SetTextTab(this.document, this.editObject.TextFlow, ref handle, x, type, this.draggingFirstMove);
 			}
 		}
 
