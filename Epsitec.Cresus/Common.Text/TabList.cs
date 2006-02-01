@@ -242,37 +242,9 @@ namespace Epsitec.Common.Text
 					}
 					
 					properties[p] = new Properties.TabsProperty (tags);
+					this.NotifyChanged (null);
 				}
 			}
-		}
-		
-		public string CloneTab(string tag)
-		{
-			TabRecord record = this.GetTabRecord (tag);
-			
-			if (record == null)
-			{
-				return null;
-			}
-			
-			string new_tag = null;
-			
-			switch (record.TabClass)
-			{
-				case TabClass.Auto:		new_tag = this.GenerateAutoTagName ();		break;
-				case TabClass.Shared:	new_tag = this.GenerateSharedTagName ();	break;
-			}
-			
-			if (new_tag != null)
-			{
-				string state = record.Save ();
-				record = new TabRecord ();
-				record.RestoreAndRename (state, new_tag);
-				this.Attach (record);
-				this.NotifyChanged (null);
-			}
-			
-			return new_tag;
 		}
 		
 		public void ClearUnusedTabTags()
@@ -976,6 +948,34 @@ namespace Epsitec.Common.Text
 			private int							user_count;
 		}
 		#endregion
+		
+		private string CloneTab(string tag)
+		{
+			TabRecord record = this.GetTabRecord (tag);
+			
+			if (record == null)
+			{
+				return null;
+			}
+			
+			string new_tag = null;
+			
+			switch (record.TabClass)
+			{
+				case TabClass.Auto:		new_tag = this.GenerateAutoTagName ();		break;
+				case TabClass.Shared:	new_tag = this.GenerateSharedTagName ();	break;
+			}
+			
+			if (new_tag != null)
+			{
+				string state = record.Save ();
+				record = new TabRecord ();
+				record.RestoreAndRename (state, new_tag);
+				this.Attach (record);
+			}
+			
+			return new_tag;
+		}
 		
 		private string GenerateUniqueName(string prefix)
 		{

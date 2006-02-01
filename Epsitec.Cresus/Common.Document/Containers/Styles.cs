@@ -1039,6 +1039,7 @@ namespace Epsitec.Common.Document.Containers
 				Text.TextStyle[] parents = initialStyle.ParentStyles;
 
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateDuplicate);
+				this.document.TextContext.TabList.CloneTabs(properties);
 				
 				Text.TextStyle style = this.document.TextContext.StyleList.NewTextStyle(this.document.Modifier.OpletQueue, null, type, properties, parents);
 				this.document.TextContext.StyleList.SetNextStyle(this.document.Modifier.OpletQueue, style, initialStyle.NextStyle);
