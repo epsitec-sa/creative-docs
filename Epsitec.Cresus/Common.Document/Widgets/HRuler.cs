@@ -10,8 +10,8 @@ namespace Epsitec.Common.Document.Widgets
 		public string			Tag;
 		public double			Pos;
 		public TextTabType		Type;
-		public bool				Shared;
-		public bool				Zombie;
+		public bool				Shared;		// tabulateur d'un style
+		public bool				Zombie;		// tabulateur supprimé
 	}
 
 	/// <summary>
@@ -362,9 +362,10 @@ namespace Epsitec.Common.Document.Widgets
 					{
 						colorGlyph = Color.FromBrightness(1);  // blanc
 					}
-					if ( tab.Shared )
+					if ( tab.Shared )  // tabulateur d'un style ?
 					{
-						colorGlyph = Color.FromRGB(1.0, 0.5, 0.0);  // orange pour bien voir
+						//?colorGlyph = Color.FromRGB(1.0, 0.5, 0.0);  // orange pour bien voir
+						colorGlyph = Color.FromBrightness(0.5);
 					}
 
 					if ( pass == 1 )
@@ -507,6 +508,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				Tab tab = this.tabs[i];
 				if ( tab.Tag == exclude )  continue;
+				if ( tab.Shared )  continue;  // tabulateur d'un style ?
 
 				double posx = this.GetHandleHorizontalPos(tab);
 				if ( pos.X < posx-5 || pos.X > posx+5 )  continue;
@@ -552,7 +554,7 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					double x = this.MouseToText(pos);
 
-					handle = Objects.AbstractText.NewTextTab(this.document, this.editObject.TextFlow, x, this.tabToCreate);
+					Objects.AbstractText.NewTextTab(this.document, this.editObject.TextFlow, out handle, x, this.tabToCreate, false);
 					this.draggingOffset = 0.0;
 					this.draggingFirstMove = false;
 				}
@@ -625,7 +627,7 @@ namespace Epsitec.Common.Document.Widgets
 				Rectangle rect = this.Client.Bounds;
 				if ( pos.Y < rect.Bottom || pos.Y > rect.Top )  // hors de la règle ?
 				{
-					Objects.AbstractText.DeleteTextTab(this.document, this.editObject.TextFlow, handle);
+					Objects.AbstractText.DeleteTextTab(this.document, this.editObject.TextFlow, handle, false);
 				}
 				else
 				{
@@ -712,7 +714,7 @@ namespace Epsitec.Common.Document.Widgets
 				double tabPos;
 				TextTabType type;
 				Objects.AbstractText.GetTextTab(this.document, handle, out tabPos, out type);
-				Objects.AbstractText.SetTextTab(this.document, this.editObject.TextFlow, ref handle, x, type, this.draggingFirstMove);
+				Objects.AbstractText.SetTextTab(this.document, this.editObject.TextFlow, ref handle, x, type, this.draggingFirstMove, false);
 			}
 		}
 

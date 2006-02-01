@@ -616,10 +616,7 @@ namespace Epsitec.Common.Document
 
 				string[] tabs = this.styleParagraphWrapper.Defined.Tabs;
 				this.document.TextContext.TabList.SortTabs(tabs);
-
-				if ( !first )  builder.Append(", ");
 				builder.Append(string.Format("{0}x: ", tabs.Length));
-				first = false;
 
 				foreach ( string tab in tabs )
 				{
@@ -628,7 +625,7 @@ namespace Epsitec.Common.Document
 					Objects.AbstractText.GetTextTab(this.document, tab, out pos, out type);
 
 					if ( !first )  builder.Append(", ");
-					builder.Append(this.GetInfoValue(pos, Text.Properties.SizeUnits.Points, Modifier.FontSizeScale));
+					builder.Append(this.GetInfoValue(pos, Text.Properties.SizeUnits.Points, this.document.Modifier.RealScale));
 					first = false;
 				}
 

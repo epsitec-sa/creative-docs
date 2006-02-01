@@ -159,7 +159,30 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			else
 			{
-				this.tabsName = this.ParagraphWrapper.AttachedTextNavigator.GetAllTabTags();
+				string[] all = this.ParagraphWrapper.AttachedTextNavigator.GetAllTabTags();
+				int count = 0;
+				foreach ( string tag in all )
+				{
+					TabClass tc = TabList.GetTabClass(tag);
+					if ( tc == TabClass.Auto )
+					{
+						count ++;
+					}
+				}
+
+				if ( count > 0 )
+				{
+					this.tabsName = new string[count];
+					int i = 0;
+					foreach ( string tag in all )
+					{
+						TabClass tc = TabList.GetTabClass(tag);
+						if ( tc == TabClass.Auto )
+						{
+							this.tabsName[i++] = tag;
+						}
+					}
+				}
 			}
 
 			int columns = 2;
@@ -240,7 +263,7 @@ namespace Epsitec.Common.Document.TextPanels
 			st = this.table[1, row].Children[0] as StaticText;
 			st.Text = Tabs.ConvType2Button(type);
 
-			bool selected = (tag == this.tabSelected);
+			bool selected = (tag == this.tabSelected);  // voir (**) dans Objects.AbstractText !
 			this.table.SelectRow(row, selected);
 		}
 
@@ -302,7 +325,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleTableSelectionChanged(object sender)
 		{
-			//	Liste des tabulateurs cliquée.
+			//	Sélection d'un tabulateur dans la liste.
 			int sel = this.table.SelectedRow;
 			if ( sel == -1 )
 			{
@@ -365,7 +388,7 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 			
-			this.tabSelected = Objects.AbstractText.NewTextTab(this.document, this.document.Wrappers.TextFlow, tabPos, type);
+			Objects.AbstractText.NewTextTab(this.document, this.document.Wrappers.TextFlow, out this.tabSelected, tabPos, type, this.isStyle);
 		}
 
 		private void HandleDeleteClicked(object sender, MessageEventArgs e)
@@ -374,7 +397,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 			if ( this.tabSelected == null )  return;
 
-			Objects.AbstractText.DeleteTextTab(this.document, this.document.Wrappers.TextFlow, this.tabSelected);
+			Objects.AbstractText.DeleteTextTab(this.document, this.document.Wrappers.TextFlow, this.tabSelected, this.isStyle);
 		}
 
 		private void HandlePosValueChanged(object sender)
@@ -387,7 +410,13 @@ namespace Epsitec.Common.Document.TextPanels
 			TextTabType type;
 			Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
 			tabPos = (double) this.fieldPos.TextFieldReal.InternalValue;
-			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow, ref this.tabSelected, tabPos, type, true);
+			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow, ref this.tabSelected, tabPos, type, true, this.isStyle);
+
+			if ( this.isStyle )
+			{
+				this.UpdateTable();
+				this.UpdateWidgets();
+			}
 		}
 
 		private void HandleTypeClicked(object sender, MessageEventArgs e)
@@ -432,7 +461,13 @@ namespace Epsitec.Common.Document.TextPanels
 			TextTabType type;
 			Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
 			type = Widgets.HRuler.ConvName2Type(item.Name);
-			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow, ref this.tabSelected, tabPos, type, true);
+			Objects.AbstractText.SetTextTab(this.document, this.document.Wrappers.TextFlow, ref this.tabSelected, tabPos, type, true, this.isStyle);
+
+			if ( this.isStyle )
+			{
+				this.UpdateTable();
+				this.UpdateWidgets();
+			}
 		}
 
 		

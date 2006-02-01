@@ -625,7 +625,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public static string NewTextTab(Document document, TextFlow textFlow, double pos, TextTabType type)
+		public static void NewTextTab(Document document, TextFlow textFlow, out string tag, double pos, TextTabType type, bool isStyle)
 		{
 			//	Crée un nouveau tabulateur dans le texte.
 			double dispo = 0.0;
@@ -636,32 +636,66 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == TextTabType.Right  )  dispo = 1.0;
 			if ( type == TextTabType.Indent )  positionMode = TabPositionMode.AbsoluteIndent;
 
+			document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Tab.Create);
 			Text.TabList list = document.TextContext.TabList;
 			Text.Properties.TabProperty tab;
 
-			if ( textFlow == null )  // style ?
+			if ( isStyle )  // style ?
 			{
 				tab = list.NewTab(TabList.GenericSharedName, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode);
-				Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
+				tag = tab.TabTag;  // voir (**)
+				
+				string[] initialTabs = document.Wrappers.StyleParagraphWrapper.Defined.Tabs;
+				int length = (initialTabs == null) ? 0 : initialTabs.Length;
+				string[] newTabs = new string[length+1];
+				for ( int i=0 ; i<length ; i++ )
+				{
+					newTabs[i] = initialTabs[i];
+				}
+				newTabs[length] = tab.TabTag;
+				document.Wrappers.StyleParagraphWrapper.Defined.Tabs = newTabs;
 			}
 			else
 			{
 				tab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode);
+				tag = tab.TabTag;  // voir (**)
 				Text.Properties.TabsProperty tabs = new Text.Properties.TabsProperty(tab);
-				document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Tab.Create);
 				textFlow.MetaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, tabs);
-				document.Modifier.OpletQueueValidateAction();
 			}
 
+			document.Modifier.OpletQueueValidateAction();
 			document.IsDirtySerialize = true;
-			return tab.TabTag;
 		}
 
-		public static void DeleteTextTab(Document document, TextFlow textFlow, string tag)
+		public static void DeleteTextTab(Document document, TextFlow textFlow, string tag, bool isStyle)
 		{
 			//	Supprime un tabulateur du texte.
 			document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.Tab.Delete);
-			textFlow.MetaNavigator.RemoveTab(tag);
+
+			if ( isStyle )  // style ?
+			{
+				string[] initialTabs = document.Wrappers.StyleParagraphWrapper.Defined.Tabs;
+				int length = (initialTabs == null) ? 0 : initialTabs.Length;
+				string[] newTabs = null;
+				if ( length > 1 )
+				{
+					newTabs = new string[length-1];
+					int j = 0;
+					for ( int i=0 ; i<length ; i++ )
+					{
+						if ( initialTabs[i] != tag )
+						{
+							newTabs[j++] = initialTabs[i];
+						}
+					}
+				}
+				document.Wrappers.StyleParagraphWrapper.Defined.Tabs = newTabs;
+			}
+			else
+			{
+				textFlow.MetaNavigator.RemoveTab(tag);
+			}
+
 			document.Modifier.OpletQueueValidateAction();
 			document.IsDirtySerialize = true;
 		}
@@ -699,7 +733,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public static void SetTextTab(Document document, TextFlow textFlow, ref string tag, double pos, TextTabType type, bool firstChange)
+		public static void SetTextTab(Document document, TextFlow textFlow, ref string tag, double pos, TextTabType type, bool firstChange, bool isStyle)
 		{
 			//	Modifie un tabulateur du texte.
 			double dispo = 0.0;
@@ -710,29 +744,41 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == TextTabType.Right  )  dispo = 1.0;
 			if ( type == TextTabType.Indent )  positionMode = TabPositionMode.AbsoluteIndent;
 			
-			if ( firstChange && Text.TabList.GetTabClass(tag) == Text.TabClass.Auto )
+			if ( isStyle )  // style ?
 			{
-				//	Les tabulateurs "automatiques" ne sont pas liés à un style. Leur
-				//	modification ne doit toucher que le paragraphe courant (ou la
-				//	sélection en cours), c'est pourquoi on crée une copie avant de
-				//	procéder à des modifications :
 				Text.TabList list = document.TextContext.TabList;
-				
-				Text.Properties.TabProperty oldTab = list.GetTabProperty(tag);
-				Text.Properties.TabProperty newTab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
-				
-				textFlow.TextNavigator.RenameTab(oldTab.TabTag, newTab.TabTag);
-				
-				tag = newTab.TabTag;
+				list.RedefineTab(document.Modifier.OpletQueue, tag, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
 			}
 			else
 			{
-				textFlow.TextNavigator.RedefineTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
+				if ( firstChange && Text.TabList.GetTabClass(tag) == Text.TabClass.Auto )
+				{
+					//	Les tabulateurs "automatiques" ne sont pas liés à un style. Leur
+					//	modification ne doit toucher que le paragraphe courant (ou la
+					//	sélection en cours), c'est pourquoi on crée une copie avant de
+					//	procéder à des modifications :
+					Text.TabList list = document.TextContext.TabList;
+				
+					Text.Properties.TabProperty oldTab = list.GetTabProperty(tag);
+					Text.Properties.TabProperty newTab = list.NewTab(null, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
+				
+					// (**)
+					//	Le nom du tabulateur doit être mis à jour avant que le wrapper envoie un
+					//	événement pour indiquer le changement. C'est nécessaire pour que TextPanels.Tabs
+					//	puisse mettre à jour la table en sélectionnant le bon tabulateur.
+					tag = newTab.TabTag;  // voir (**)
+					textFlow.TextNavigator.RenameTab(oldTab.TabTag, newTab.TabTag);
+				}
+				else
+				{
+					textFlow.TextNavigator.RedefineTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, dockingMark, positionMode, null);
+				}
 			}
 			
 			document.Modifier.OpletQueueChangeLastNameAction(Res.Strings.Action.Text.Tab.Modify);
 			document.IsDirtySerialize = true;
 		}
+
 
 		public virtual System.Collections.ArrayList CreateTextPanels(string filter)
 		{
