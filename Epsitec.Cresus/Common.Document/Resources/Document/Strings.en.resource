@@ -1315,7 +1315,7 @@
 	<data name="Color.CMYK">CMYK</data>
 	<data name="Color.Gray">G</data>
 	<data name="Color.Alpha">a</data>
-	<data name="Color.RegistrationBlack">Registration black</data>
+	<data name="Color.RegistrationBlack">Registration (black)</data>
 	<data name="Color.Black">Black</data>
 	<data name="Color.White">White</data>
 	<data name="Color.LightGray">Light gray</data>
