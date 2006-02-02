@@ -139,6 +139,18 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public string[]							UserData
+		{
+			get
+			{
+				return this.user_data;
+			}
+			set
+			{
+				this.user_data = value;
+			}
+		}
+		
 		
 		public Generator.Sequence				this[int index]
 		{
@@ -283,6 +295,12 @@ namespace Epsitec.Common.Text
 			buffer.Append (SerializerSupport.SerializeString (this.global_prefix));
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeString (this.global_suffix));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeString (Property.SerializeProperties (this.global_prefix_properties)));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeString (Property.SerializeProperties (this.global_suffix_properties)));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeStringArray (this.user_data));
 		}
 		
 		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
@@ -312,6 +330,14 @@ namespace Epsitec.Common.Text
 			{
 				this.global_prefix = SerializerSupport.DeserializeString (args[offset++]);
 				this.global_suffix = SerializerSupport.DeserializeString (args[offset++]);
+			}
+			
+			if (version >= 5)
+			{
+				this.global_prefix_properties = Property.DeserializeProperties (context, SerializerSupport.DeserializeString (args[offset++]));
+				this.global_suffix_properties = Property.DeserializeProperties (context, SerializerSupport.DeserializeString (args[offset++]));
+				
+				this.user_data = SerializerSupport.DeserializeStringArray (args[offset++]);
 			}
 		}
 		
@@ -446,6 +472,7 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		#region TextRange Class
 		public class TextRange
 		{
 			public TextRange(string text)
@@ -535,6 +562,7 @@ namespace Epsitec.Common.Text
 			private Property[]					properties;
 			private string						text;
 		}
+		#endregion
 		
 		#region Series Class
 		public class Series
@@ -787,6 +815,18 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			public string[]						UserData
+			{
+				get
+				{
+					return this.user_data;
+				}
+				set
+				{
+					this.user_data = value;
+				}
+			}
+			
 			public abstract SequenceType		WellKnownType
 			{
 				get;
@@ -822,7 +862,8 @@ namespace Epsitec.Common.Text
 				
 				if ((value_p == null) &&
 					(prefix_p == null) &&
-					(suffix_p == null))
+					(suffix_p == null) &&
+					(this.user_data == null))
 				{
 					SerializerSupport.Join (buffer,
 						/**/				SerializerSupport.SerializeString (this.prefix),
@@ -839,7 +880,8 @@ namespace Epsitec.Common.Text
 						/**/				SerializerSupport.SerializeString (this.GetSetupArgument ()),
 						/**/				SerializerSupport.SerializeString (value_p),
 						/**/				SerializerSupport.SerializeString (prefix_p),
-						/**/				SerializerSupport.SerializeString (suffix_p));
+						/**/				SerializerSupport.SerializeString (suffix_p),
+						/**/				SerializerSupport.SerializeStringArray (this.user_data));
 				}
 			}
 			
@@ -847,17 +889,19 @@ namespace Epsitec.Common.Text
 			{
 				string[] args = SerializerSupport.Split (text, pos, length);
 				
-				System.Diagnostics.Debug.Assert ((args.Length == 4) || (args.Length == 7));
+				System.Diagnostics.Debug.Assert ((args.Length == 4) || (args.Length == 8));
 				
-				string value_p  = null;
-				string prefix_p = null;
-				string suffix_p = null;
+				string   value_p   = null;
+				string   prefix_p  = null;
+				string   suffix_p  = null;
+				string[] user_data = null;
 				
-				if (args.Length == 7)
+				if (args.Length == 8)
 				{
-					value_p  = SerializerSupport.DeserializeString (args[4]);
-					prefix_p = SerializerSupport.DeserializeString (args[5]);
-					suffix_p = SerializerSupport.DeserializeString (args[6]);
+					value_p   = SerializerSupport.DeserializeString (args[4]);
+					prefix_p  = SerializerSupport.DeserializeString (args[5]);
+					suffix_p  = SerializerSupport.DeserializeString (args[6]);
+					user_data = SerializerSupport.DeserializeStringArray (args[7]);
 				}
 				
 				string prefix = SerializerSupport.DeserializeString (args[0]);
@@ -895,6 +939,7 @@ namespace Epsitec.Common.Text
 			private Property[]					value_properties;
 			private Property[]					prefix_properties;
 			private Property[]					suffix_properties;
+			private string[]					user_data;
 			private bool						suppress_before;
 		}
 		#endregion
@@ -1045,5 +1090,6 @@ namespace Epsitec.Common.Text
 		private string							global_suffix;
 		private Property[]						global_prefix_properties;
 		private Property[]						global_suffix_properties;
+		private string[]						user_data;
 	}
 }
