@@ -334,6 +334,7 @@ namespace Epsitec.Common.Text
 			{
 				if (this.enumerator.MoveNext ())
 				{
+					Properties.AutoTextProperty    auto_text_property;
 					Properties.GeneratorProperty   generator_property;
 					Properties.MarginsProperty     margins_property = null;
 					Properties.ManagedInfoProperty m_info_property  = null;
@@ -353,6 +354,7 @@ namespace Epsitec.Common.Text
 						
 						generator_property = this.enumerator.GetGeneratorProperty (code);
 						
+						context.GetAutoText (code, out auto_text_property);
 						context.GetMargins (code, out margins_property);
 						
 						if (this.mpp != null)
@@ -410,7 +412,7 @@ namespace Epsitec.Common.Text
 						//	Compte combien de textes ont été modifiés pendant cette
 						//	opération :
 						
-						if (this.story.ReplaceText (cursor, length, text[0].Text))
+						if (this.story.ReplaceTextSequence (cursor, length, auto_text_property, generator_property, text))
 						{
 							this.count++;
 						}
@@ -473,6 +475,21 @@ namespace Epsitec.Common.Text
 				get
 				{
 					return this.properties;
+				}
+			}
+			
+			public int							PropertyCount
+			{
+				get
+				{
+					if (this.properties == null)
+					{
+						return 0;
+					}
+					else
+					{
+						return this.properties.Length;
+					}
 				}
 			}
 			

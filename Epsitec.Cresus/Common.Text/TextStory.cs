@@ -555,6 +555,86 @@ namespace Epsitec.Common.Text
 			return change;
 		}
 		
+		public bool ReplaceTextSequence(ICursor cursor, int length, Properties.AutoTextProperty auto_text, Properties.GeneratorProperty generator, Generator.TextRange[] ranges)
+		{
+			//	Voir ReplaceText ci-avant.
+			
+			//	Cette version applique une série de textes qui peuvent avoir des
+			//	propriétés associées. On conserve les styles et la propriété du
+			//	générateur dans l'opération.
+			
+			System.Diagnostics.Debug.Assert (length > 0);
+			System.Diagnostics.Debug.Assert (ranges.Length > 0);
+			System.Diagnostics.Debug.Assert (ranges[0].Text.Length > 0);
+			
+			ulong   mask = this.TextContext.Markers.Selected;
+			ulong   code = 0;
+			ulong[] data = new ulong[length];
+			ulong[] text = new ulong[0];
+			
+			this.ReadText (cursor, length, data);
+			
+			TextStyle[] styles;
+			this.context.GetStyles (data[0], out styles);
+			
+			foreach (Generator.TextRange range in ranges)
+			{
+				Property[] properties = new Property[range.PropertyCount+2];
+				properties[0] = auto_text;
+				properties[1] = generator;
+				
+				if (properties.Length > 2)
+				{
+					range.Properties.CopyTo (properties, 1);
+				}
+				
+				ulong[] substring;
+				this.ConvertToStyledText (range.Text, styles, properties, out substring);
+				
+				ulong[] temp = new ulong[text.Length + substring.Length];
+				text.CopyTo (temp, 0);
+				substring.CopyTo (temp, text.Length);
+				
+				text = temp;
+			}
+			
+			for (int i = 0; i < text.Length; i++)
+			{
+				if (i < data.Length)
+				{
+					code = data[i] & mask;
+				}
+				
+				text[i] |= code;
+			}
+			
+			bool change = false;
+			
+			if (data.Length == text.Length)
+			{
+				for (int i = 0; i < text.Length; i++)
+				{
+					if ((data[i] & (Internal.CharMarker.CoreAndSettingsMask | Unicode.Bits.FullCodeMask)) != (text[i] & (Internal.CharMarker.CoreAndSettingsMask | Unicode.Bits.FullCodeMask)))
+					{
+						change = true;
+						break;
+					}
+				}
+			}
+			else
+			{
+				change = true;
+			}
+			
+			if (change)
+			{
+				this.DeleteText (cursor, length);
+				this.InsertText (cursor, text);
+			}
+			
+			return change;
+		}
+		
 		internal bool InPlaceReplaceText(ICursor cursor, int length, ulong[] text)
 		{
 			//	Remplace le texte sans mettre à jour les informations de undo
