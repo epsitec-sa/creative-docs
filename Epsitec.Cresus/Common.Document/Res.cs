@@ -433,7 +433,7 @@ namespace Epsitec.Common.Document
 				public static string Magenta { get { return GetText ("Strings", "Color", "Magenta"); } }
 				public static string Red { get { return GetText ("Strings", "Color", "Red"); } }
 				public static string RGB { get { return GetText ("Strings", "Color", "RGB"); } }
-				public static string TargetBlack { get { return GetText ("Strings", "Color", "TargetBlack"); } }
+				public static string RegistrationBlack { get { return GetText ("Strings", "Color", "RegistrationBlack"); } }
 				public static string White { get { return GetText ("Strings", "Color", "White"); } }
 				public static string Yellow { get { return GetText ("Strings", "Color", "Yellow"); } }
 			}

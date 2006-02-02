@@ -1315,7 +1315,7 @@
 	<data name="Color.CMYK">CMJN</data>
 	<data name="Color.Gray">G</data>
 	<data name="Color.Alpha">a</data>
-	<data name="Color.TargetBlack">Noir repérage</data>
+	<data name="Color.RegistrationBlack">Noir repérage</data>
 	<data name="Color.Black">Noir</data>
 	<data name="Color.White">Blanc</data>
 	<data name="Color.LightGray">Gris clair</data>

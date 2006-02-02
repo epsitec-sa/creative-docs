@@ -112,7 +112,7 @@ namespace Epsitec.Common.Document
 
 			if ( color.ColorSpace == ColorSpace.Cmyk && color.C == 1.0 && color.M == 1.0 && color.Y == 1.0 && color.K == 1.0 )
 			{
-				builder.Append(Res.Strings.Color.TargetBlack);
+				builder.Append(Res.Strings.Color.RegistrationBlack);
 			}
 			else if ( color.R == color.G && color.R == color.B )  // gris ?
 			{
