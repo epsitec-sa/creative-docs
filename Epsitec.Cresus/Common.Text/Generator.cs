@@ -65,6 +65,37 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public Property[]						GlobalPrefixProperties
+		{
+			get
+			{
+				if ((this.global_prefix_properties == null) ||
+					(this.global_prefix_properties.Length == 0))
+				{
+					return null;
+				}
+				else
+				{
+					return (Property[]) this.global_prefix_properties.Clone ();
+				}
+			}
+			set
+			{
+				if (this.global_prefix_properties != value)
+				{
+					if ((value == null) ||
+						(value.Length == 0))
+					{
+						this.global_prefix_properties = value;
+					}
+					else
+					{
+						this.global_prefix_properties = (Property[]) value.Clone ();
+					}
+				}
+			}
+		}
+		
 		public string							GlobalSuffix
 		{
 			get
@@ -74,6 +105,37 @@ namespace Epsitec.Common.Text
 			set
 			{
 				this.global_suffix = value;
+			}
+		}
+		
+		public Property[]						GlobalSuffixProperties
+		{
+			get
+			{
+				if ((this.global_suffix_properties == null) ||
+					(this.global_suffix_properties.Length == 0))
+				{
+					return null;
+				}
+				else
+				{
+					return (Property[]) this.global_suffix_properties.Clone ();
+				}
+			}
+			set
+			{
+				if (this.global_suffix_properties != value)
+				{
+					if ((value == null) ||
+						(value.Length == 0))
+					{
+						this.global_suffix_properties = value;
+					}
+					else
+					{
+						this.global_suffix_properties = (Property[]) value.Clone ();
+					}
+				}
 			}
 		}
 		
@@ -89,13 +151,29 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public string GenerateText(int[] ranks, System.Globalization.CultureInfo culture)
+		public string GenerateTextString(int[] ranks, System.Globalization.CultureInfo culture)
+		{
+			TextRange[] ranges = this.GenerateText (ranks, culture);
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			foreach (TextRange range in ranges)
+			{
+				buffer.Append (range.Text);
+			}
+			
+			return buffer.ToString ();
+		}
+		
+		public TextRange[] GenerateText(int[] ranks, System.Globalization.CultureInfo culture)
 		{
 			return this.GenerateText (ranks, ranks.Length, culture);
 		}
 		
-		public string GenerateText(int[] ranks, int max_level_count, System.Globalization.CultureInfo culture)
+		public TextRange[] GenerateText(int[] ranks, int max_level_count, System.Globalization.CultureInfo culture)
 		{
+			System.Collections.ArrayList text_range = new System.Collections.ArrayList ();
+			
 			System.Diagnostics.Debug.Assert (max_level_count > 0);
 			System.Diagnostics.Debug.Assert (max_level_count <= ranks.Length);
 			
@@ -106,13 +184,6 @@ namespace Epsitec.Common.Text
 			
 			Sequence sequence = this.sequences[0] as Sequence;
 			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			if (this.global_prefix != null)
-			{
-				buffer.Append (this.global_prefix);
-			}
-			
 			for (int i = 0; i < max_level_count; i++)
 			{
 				int index = System.Math.Min (i, this.sequences.Count - 1);
@@ -121,23 +192,40 @@ namespace Epsitec.Common.Text
 				
 				if (sequence.SuppressBefore)
 				{
-					buffer.Length = 0;
-					
-					if (this.global_prefix != null)
-					{
-						buffer.Append (this.global_prefix);
-					}
+					text_range.Clear ();
 				}
 				
-				sequence.GenerateText (ranks[i], culture, buffer);
+				if ((sequence.Prefix != null) &&
+					(sequence.Prefix.Length > 0))
+				{
+					text_range.Add (new TextRange (sequence.Prefix, sequence.PrefixProperties));
+				}
+				
+				string text = sequence.GenerateText (ranks[i], culture);
+				
+				if (text.Length > 0)
+				{
+					text_range.Add (new TextRange (text, sequence.ValueProperties));
+				}
+				
+				if ((sequence.Suffix != null) &&
+					(sequence.Suffix.Length > 0))
+				{
+					text_range.Add (new TextRange (sequence.Suffix, sequence.SuffixProperties));
+				}
+			}
+			
+			if (this.global_prefix != null)
+			{
+				text_range.Insert (0, new TextRange (this.global_prefix, this.global_prefix_properties));
 			}
 			
 			if (this.global_suffix != null)
 			{
-				buffer.Append (this.global_suffix);
+				text_range.Add (new TextRange (this.global_suffix, this.global_suffix_properties));
 			}
 			
-			return buffer.ToString ();
+			return TextRange.Simplify (text_range);
 		}
 		
 		
@@ -313,15 +401,16 @@ namespace Epsitec.Common.Text
 						int    length = this.context.GetTextEndDistance (this.story, cursor, generator_property);
 						int    level  = System.Math.Max (generator_property.Level, margins_property == null ? 0 : margins_property.Level);
 						
-						string text = this.series.GetNextText (level);
+						TextRange[] text = this.series.GetNextText (level);
 						
 						System.Diagnostics.Debug.Assert (length > 0);
 						System.Diagnostics.Debug.Assert (text.Length > 0);
+						System.Diagnostics.Debug.Assert (text[0].Text.Length > 0);
 						
 						//	Compte combien de textes ont été modifiés pendant cette
 						//	opération :
 						
-						if (this.story.ReplaceText (cursor, length, text))
+						if (this.story.ReplaceText (cursor, length, text[0].Text))
 						{
 							this.count++;
 						}
@@ -346,6 +435,81 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		public class TextRange
+		{
+			public TextRange(string text)
+			{
+				this.text = text;
+			}
+			
+			public TextRange(string text, System.Collections.ICollection properties)
+			{
+				this.text       = text;
+				this.properties = ((properties == null) || (properties.Count == 0)) ? null : new Property[properties.Count];
+				
+				if (this.properties != null)
+				{
+					properties.CopyTo (this.properties, 0);
+				}
+			}
+			
+			public TextRange(string text, params Property[] properties)
+			{
+				this.text       = text;
+				this.properties = properties;
+			}
+			
+			
+			public string						Text
+			{
+				get
+				{
+					return this.text;
+				}
+			}
+			
+			public Property[]					Properties
+			{
+				get
+				{
+					return this.properties;
+				}
+			}
+			
+			
+			public static TextRange[] Simplify(System.Collections.ICollection ranges)
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				TextRange last = null;
+				
+				foreach (TextRange range in ranges)
+				{
+					if ((range.text == null) ||
+						(range.text.Length == 0))
+					{
+						continue;
+					}
+					
+					if ((last == null) ||
+						(Property.CompareEqualContents (last.properties, range.properties) == false))
+					{
+						list.Add (range);
+						last = range;
+					}
+					else
+					{
+						last.text = string.Concat (last.text, range.text);
+					}
+				}
+				
+				return (TextRange[]) list.ToArray (typeof (TextRange));
+			}
+			
+			
+			private Property[]					properties;
+			private string						text;
+		}
+		
 		#region Series Class
 		public class Series
 		{
@@ -364,7 +528,21 @@ namespace Epsitec.Common.Text
 				this.level  = -1;
 			}
 			
-			public string GetNextText(int level)
+			public string GetNextTextString(int level)
+			{
+				TextRange[] ranges = this.GetNextText (level);
+			
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+				foreach (TextRange range in ranges)
+				{
+					buffer.Append (range.Text);
+				}
+			
+				return buffer.ToString ();
+			}
+			
+			public TextRange[] GetNextText(int level)
 			{
 				this.GrowToLevel (level);
 				
@@ -398,11 +576,11 @@ namespace Epsitec.Common.Text
 					this.vector[level]++;
 				}
 				
-				string text = this.generator.GenerateText (this.vector, level + 1, this.culture);
+				TextRange[] text_range = this.generator.GenerateText (this.vector, level + 1, this.culture);
 				
 				this.level = level;
 				
-				return text;
+				return text_range;
 			}
 			
 			
@@ -442,6 +620,37 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			public Property[]					ValueProperties
+			{
+				get
+				{
+					if ((this.value_properties == null) ||
+						(this.value_properties.Length == 0))
+					{
+						return null;
+					}
+					else
+					{
+						return (Property[]) this.value_properties.Clone ();
+					}
+				}
+				set
+				{
+					if (this.value_properties != value)
+					{
+						if ((value == null) ||
+							(value.Length == 0))
+						{
+							this.value_properties = value;
+						}
+						else
+						{
+							this.value_properties = (Property[]) value.Clone ();
+						}
+					}
+				}
+			}
+		
 			public string						Prefix
 			{
 				get
@@ -454,6 +663,37 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			public Property[]					PrefixProperties
+			{
+				get
+				{
+					if ((this.prefix_properties == null) ||
+						(this.prefix_properties.Length == 0))
+					{
+						return null;
+					}
+					else
+					{
+						return (Property[]) this.prefix_properties.Clone ();
+					}
+				}
+				set
+				{
+					if (this.prefix_properties != value)
+					{
+						if ((value == null) ||
+							(value.Length == 0))
+						{
+							this.prefix_properties = value;
+						}
+						else
+						{
+							this.prefix_properties = (Property[]) value.Clone ();
+						}
+					}
+				}
+			}
+		
 			public string						Suffix
 			{
 				get
@@ -466,6 +706,37 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			public Property[]					SuffixProperties
+			{
+				get
+				{
+					if ((this.suffix_properties == null) ||
+						(this.suffix_properties.Length == 0))
+					{
+						return null;
+					}
+					else
+					{
+						return (Property[]) this.suffix_properties.Clone ();
+					}
+				}
+				set
+				{
+					if (this.suffix_properties != value)
+					{
+						if ((value == null) ||
+							(value.Length == 0))
+						{
+							this.suffix_properties = value;
+						}
+						else
+						{
+							this.suffix_properties = (Property[]) value.Clone ();
+						}
+					}
+				}
+			}
+		
 			public Casing						Casing
 			{
 				get
@@ -501,44 +772,67 @@ namespace Epsitec.Common.Text
 				this.Setup (argument);
 			}
 			
-			public void GenerateText(int rank, System.Globalization.CultureInfo culture, System.Text.StringBuilder buffer)
+			public string GenerateText(int rank, System.Globalization.CultureInfo culture)
 			{
-				if (this.prefix != null)
-				{
-					buffer.Append (this.prefix);
-				}
-				
 				string text = this.GetRawText (rank, culture);
 				
 				switch (this.casing)
 				{
-					case Casing.Default: buffer.Append (text);					 break;
-					case Casing.Lower:	 buffer.Append (text.ToLower (culture)); break;
-					case Casing.Upper:	 buffer.Append (text.ToUpper (culture)); break;
+					case Casing.Default:								break;
+					case Casing.Lower:	 text = text.ToLower (culture); break;
+					case Casing.Upper:	 text = text.ToUpper (culture); break;
 				}
 				
-				if (this.suffix != null)
-				{
-					buffer.Append (this.suffix);
-				}
+				return text;
 			}
 			
 			
 			#region ISerializableAsText Members
 			public void SerializeToText(System.Text.StringBuilder buffer)
 			{
-				SerializerSupport.Join (buffer,
-					/**/				SerializerSupport.SerializeString (this.prefix),
-					/**/				SerializerSupport.SerializeString (this.suffix),
-					/**/				SerializerSupport.SerializeInt ((int) this.casing | (this.suppress_before ? 0x0100 : 0x0000)),
-					/**/				SerializerSupport.SerializeString (this.GetSetupArgument ()));
+				string value_p  = Property.SerializeProperties (this.value_properties);
+				string prefix_p = Property.SerializeProperties (this.prefix_properties);
+				string suffix_p = Property.SerializeProperties (this.suffix_properties);
+				
+				if ((value_p == null) &&
+					(prefix_p == null) &&
+					(suffix_p == null))
+				{
+					SerializerSupport.Join (buffer,
+						/**/				SerializerSupport.SerializeString (this.prefix),
+						/**/				SerializerSupport.SerializeString (this.suffix),
+						/**/				SerializerSupport.SerializeInt ((int) this.casing | (this.suppress_before ? 0x0100 : 0x0000)),
+						/**/				SerializerSupport.SerializeString (this.GetSetupArgument ()));
+				}
+				else
+				{
+					SerializerSupport.Join (buffer,
+						/**/				SerializerSupport.SerializeString (this.prefix),
+						/**/				SerializerSupport.SerializeString (this.suffix),
+						/**/				SerializerSupport.SerializeInt ((int) this.casing | (this.suppress_before ? 0x0100 : 0x0000)),
+						/**/				SerializerSupport.SerializeString (this.GetSetupArgument ()),
+						/**/				SerializerSupport.SerializeString (value_p),
+						/**/				SerializerSupport.SerializeString (prefix_p),
+						/**/				SerializerSupport.SerializeString (suffix_p));
+				}
 			}
 			
 			public void DeserializeFromText(TextContext context, string text, int pos, int length)
 			{
 				string[] args = SerializerSupport.Split (text, pos, length);
 				
-				System.Diagnostics.Debug.Assert (args.Length == 4);
+				System.Diagnostics.Debug.Assert ((args.Length == 4) || (args.Length == 7));
+				
+				string value_p  = null;
+				string prefix_p = null;
+				string suffix_p = null;
+				
+				if (args.Length == 7)
+				{
+					value_p  = SerializerSupport.DeserializeString (args[4]);
+					prefix_p = SerializerSupport.DeserializeString (args[5]);
+					suffix_p = SerializerSupport.DeserializeString (args[6]);
+				}
 				
 				string prefix = SerializerSupport.DeserializeString (args[0]);
 				string suffix = SerializerSupport.DeserializeString (args[1]);
@@ -549,6 +843,10 @@ namespace Epsitec.Common.Text
 				this.suffix = suffix;
 				this.casing = (Casing) (casing & 0x00ff);
 				this.suppress_before = (casing & 0x0100) != 0;
+				
+				this.value_properties  = Property.DeserializeProperties (context, value_p);
+				this.prefix_properties = Property.DeserializeProperties (context, prefix_p);
+				this.suffix_properties = Property.DeserializeProperties (context, suffix_p);
 				
 				this.Setup (setup);
 			}
@@ -568,6 +866,9 @@ namespace Epsitec.Common.Text
 			private string						prefix;
 			private string						suffix;
 			private Casing						casing;
+			private Property[]					value_properties;
+			private Property[]					prefix_properties;
+			private Property[]					suffix_properties;
 			private bool						suppress_before;
 		}
 		#endregion
@@ -716,5 +1017,7 @@ namespace Epsitec.Common.Text
 		private int[]							start_vector;
 		private string							global_prefix;
 		private string							global_suffix;
+		private Property[]						global_prefix_properties;
+		private Property[]						global_suffix_properties;
 	}
 }

@@ -936,7 +936,7 @@ namespace Epsitec.Common.Text
 						
 						if (serialized.Length > 0)
 						{
-							this.get_properties_last_properties = Properties.PropertiesProperty.DeserializeProperties (this, serialized);
+							this.get_properties_last_properties = Properties.PropertiesProperty.DeserializePropertiesFromStringArray (this, serialized);
 						}
 						else
 						{

@@ -299,6 +299,52 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public static string SerializeProperties(Property[] properties)
+		{
+			if (properties == null)
+			{
+				return null;
+			}
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append (SerializerSupport.SerializeInt (properties.Length));
+			buffer.Append ("/");
+			buffer.Append (TextContext.SerializationVersion);
+			
+			for (int i = 0; i < properties.Length; i++)
+			{
+				buffer.Append ("/");
+				buffer.Append (SerializerSupport.SerializeString (Property.Serialize (properties[i])));
+			}
+			
+			return buffer.ToString ();
+		}
+		
+		public static Property[] DeserializeProperties(TextContext context, string text)
+		{
+			if (text == null)
+			{
+				return null;
+			}
+			
+			string[] args = text.Split ('/');
+			
+			int offset  = 0;
+			int count   = SerializerSupport.DeserializeInt (args[offset++]);
+			int version = SerializerSupport.DeserializeInt (args[offset++]);
+			
+			Property[] properties = new Property[count];
+			
+			for (int i = 0; i < count; i++)
+			{
+				properties[i] = Property.Deserialize (context, version, SerializerSupport.DeserializeString (args[offset++]));
+			}
+			
+			return properties;
+		}
+		
+		
 		public static void SerializeToText(System.Text.StringBuilder buffer, Property property)
 		{
 			System.Diagnostics.Debug.Assert (property != null);

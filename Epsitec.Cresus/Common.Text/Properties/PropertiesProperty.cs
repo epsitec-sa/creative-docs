@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Text.Properties
 			
 			properties.CopyTo (props, 0);
 			
-			this.serialized_properties = PropertiesProperty.SerializeProperties (props);
+			this.serialized_properties = PropertiesProperty.SerializePropertiesToStringArray (props);
 		}
 		
 		
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Text.Properties
 			return new PropertiesProperty ();
 		}
 		
-		public static string[] SerializeProperties(Property[] properties)
+		public static string[] SerializePropertiesToStringArray(Property[] properties)
 		{
 			if ((properties == null) ||
 				(properties.Length == 0))
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Text.Properties
 			return serialized_properties;
 		}
 		
-		public static Property[] DeserializeProperties(TextContext context, string[] serialized_properties)
+		public static Property[] DeserializePropertiesFromStringArray(TextContext context, string[] serialized_properties)
 		{
 			if ((serialized_properties == null) ||
 				(serialized_properties.Length == 0))

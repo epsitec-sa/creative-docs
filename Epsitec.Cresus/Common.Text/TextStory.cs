@@ -501,7 +501,7 @@ namespace Epsitec.Common.Text
 		
 		public bool ReplaceText(ICursor cursor, int length, string simple_text)
 		{
-			//	Cette méthode permet de remplace un texte par un autre, sur place,
+			//	Cette méthode permet de remplacer un texte par un autre, sur place,
 			//	en conservant les mêmes attributs typographiques.
 			//	Retourne true en cas de modification.
 			//	Contrairement à InPlaceReplaceText, cette méthode est annulable.

@@ -92,8 +92,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (margins_f.LeftMarginBody      == 10.0);
 			Debug.Assert.IsTrue (margins_f.RightMarginBody     == 10.0);
 			
-			Debug.Assert.IsTrue (margins_a.ToString () == "[NaN]/10/[NaN]/10/pt/0/0/0/0/0/[?]/-1");
-			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/pt/0/0/0/0/0/[false]/-1");
+			Debug.Assert.IsTrue (margins_a.ToString () == "[NaN]/10/[NaN]/10/pt/0/0/0/0/0/[?]/-1/[null]");
+			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/pt/0/0/0/0/0/[false]/-1/[null]");
 		}
 		
 		private static void TestXlines()

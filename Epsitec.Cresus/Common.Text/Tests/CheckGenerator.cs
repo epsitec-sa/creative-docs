@@ -31,10 +31,18 @@ namespace Epsitec.Common.Text.Tests
 			s_ALF.Casing = Generator.Casing.Upper;
 			s_ALF.Suffix = ">";
 			
-			s_num.GenerateText (1, System.Globalization.CultureInfo.CurrentCulture, buffer);
-			s_num.GenerateText (10, System.Globalization.CultureInfo.CurrentCulture, buffer);
-			s_alf.GenerateText (3, System.Globalization.CultureInfo.CurrentCulture, buffer);
-			s_ALF.GenerateText (1, System.Globalization.CultureInfo.CurrentCulture, buffer);
+			buffer.Append (s_num.Prefix == null ? "" : s_num.Prefix);
+			buffer.Append (s_num.GenerateText (1, System.Globalization.CultureInfo.CurrentCulture));
+			buffer.Append (s_num.Suffix == null ? "" : s_num.Suffix);
+			buffer.Append (s_num.Prefix == null ? "" : s_num.Prefix);
+			buffer.Append (s_num.GenerateText (10, System.Globalization.CultureInfo.CurrentCulture));
+			buffer.Append (s_num.Suffix == null ? "" : s_num.Suffix);
+			buffer.Append (s_alf.Prefix == null ? "" : s_alf.Prefix);
+			buffer.Append (s_alf.GenerateText (3, System.Globalization.CultureInfo.CurrentCulture));
+			buffer.Append (s_alf.Suffix == null ? "" : s_alf.Suffix);
+			buffer.Append (s_ALF.Prefix == null ? "" : s_ALF.Prefix);
+			buffer.Append (s_ALF.GenerateText (1, System.Globalization.CultureInfo.CurrentCulture));
+			buffer.Append (s_ALF.Suffix == null ? "" : s_ALF.Suffix);
 			
 			Debug.Assert.IsTrue (buffer.ToString () == "1.10.c)<A>");
 			
@@ -45,21 +53,21 @@ namespace Epsitec.Common.Text.Tests
 			
 			int[] ranks = new int[] { 1, 10, 3, 2, 3, 4 };
 			
-			Debug.Assert.IsTrue ("1.10.c)2.3.4." == generator.GenerateText (ranks, System.Globalization.CultureInfo.CurrentCulture));
+			Debug.Assert.IsTrue ("1.10.c)2.3.4." == generator.GenerateTextString (ranks, System.Globalization.CultureInfo.CurrentCulture));
 			
 			Generator.Series series;
 			generator.StartVector = null;
 			
 			series = generator.NewSeries (System.Globalization.CultureInfo.CurrentCulture);
 			
-			Debug.Assert.IsTrue ("1." == series.GetNextText (0));
-			Debug.Assert.IsTrue ("2." == series.GetNextText (0));
-			Debug.Assert.IsTrue ("2.1." == series.GetNextText (1));
-			Debug.Assert.IsTrue ("2.1.a)1." == series.GetNextText (3));
-			Debug.Assert.IsTrue ("2.1.b)" == series.GetNextText (2));
-			Debug.Assert.IsTrue ("2.1.c)" == series.GetNextText (2));
-			Debug.Assert.IsTrue ("3." == series.GetNextText (0));
-			Debug.Assert.IsTrue ("3.1.a)1.1.1." == series.GetNextText (5));
+			Debug.Assert.IsTrue ("1." == series.GetNextTextString (0));
+			Debug.Assert.IsTrue ("2." == series.GetNextTextString (0));
+			Debug.Assert.IsTrue ("2.1." == series.GetNextTextString (1));
+			Debug.Assert.IsTrue ("2.1.a)1." == series.GetNextTextString (3));
+			Debug.Assert.IsTrue ("2.1.b)" == series.GetNextTextString (2));
+			Debug.Assert.IsTrue ("2.1.c)" == series.GetNextTextString (2));
+			Debug.Assert.IsTrue ("3." == series.GetNextTextString (0));
+			Debug.Assert.IsTrue ("3.1.a)1.1.1." == series.GetNextTextString (5));
 		}
 		
 		private static void TestTextStory()
