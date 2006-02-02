@@ -95,7 +95,7 @@ namespace Epsitec.Common.Document
 
 		static public string GetColorNiceName(RichColor color)
 		{
-			//	Donne le nom d'une couleur d'après ses composantes 'rgb'.
+			//	Donne le nom d'une couleur d'après ses composantes.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			if ( color.ColorSpace == ColorSpace.Cmyk )
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Document
 				else                     builder.Append(Res.Strings.Color.Red);
 			}
 
-			if ( color.A < 1.0 )
+			if ( color.A < 1.0 )  // partiellement transparent ?
 			{
 				builder.Append(" (");
 				builder.Append(Res.Strings.Color.Alpha);

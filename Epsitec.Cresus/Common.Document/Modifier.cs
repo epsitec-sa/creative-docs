@@ -5610,6 +5610,13 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			if ( !this.IsTool )  // objectMemory ?
+			{
+				this.OpletQueueEnable = false;
+				model.Dispose();
+				this.OpletQueueEnable = true;
+			}
+
 			this.AggregateUse(agg);
 		}
 
