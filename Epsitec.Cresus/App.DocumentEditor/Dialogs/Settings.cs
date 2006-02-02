@@ -81,6 +81,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				TextFieldCombo combo;
 				TextFieldSlider field;
+				TextField edit;
 				CheckButton check;
 				HToolBar toolBar;
 				this.tabIndex = 0;
@@ -88,7 +89,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Crée l'onglet "general".
 				Common.Document.Dialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.Startup);
 
-				combo = this.CreateCombo(bookGeneral, "FirstAction", "Action");
+				combo = this.CreateCombo(bookGeneral, "FirstAction", Res.Strings.Dialog.Settings.StartupAction);
 				for ( int i=0 ; i<GlobalSettings.FirstActionCount ; i++ )
 				{
 					Common.Document.Settings.FirstAction action = GlobalSettings.FirstActionType(i);
@@ -99,6 +100,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				check = this.CreateCheck(bookGeneral, "SplashScreen", Res.Strings.Dialog.Settings.SplashScreen);
 				check.ActiveState = this.globalSettings.SplashScreen ? ActiveState.Yes : ActiveState.No;
 
+				Common.Document.Dialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.New);
+
+				edit = this.CreateFilename(bookGeneral, "NewDocument", Res.Strings.Dialog.Settings.NewDocument);
+				edit.Text = this.globalSettings.NewDocument;
+				edit.Cursor = edit.Text.Length;
+				
 				Common.Document.Dialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.AutoUpdate);
 
 				check = this.CreateCheck(bookGeneral, "AutoChecker", Res.Strings.Dialog.Settings.AutoChecker);
@@ -364,6 +371,41 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return field;
 		}
 
+		protected TextField CreateFilename(Widget parent, string name, string label)
+		{
+			//	Crée un widget pour choisir un nom de fichier.
+			Panel container = new Panel(parent);
+			container.Height = 22;
+			container.TabIndex = this.tabIndex++;
+			container.Dock = DockStyle.Top;
+			container.DockMargins = new Margins(10, 10, 0, 5);
+
+			StaticText text = new StaticText(container);
+			text.Text = label;
+			text.Width = 100;
+			text.Dock = DockStyle.Left;
+			text.DockMargins = new Margins(0, 0, 0, 0);
+
+			TextField field = new TextField(container);
+			field.Width = 160-22;
+			field.Name = name;
+			field.TextChanged += new EventHandler(this.HandleTextSettingsChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.Dock = DockStyle.Left;
+			field.DockMargins = new Margins(0, 0, 0, 0);
+
+			IconButton button = new IconButton(container);
+			button.IconName = Misc.Icon("OpenModel");
+			button.Name = name;
+			button.Clicked += new MessageEventHandler(this.HandleButtonSettingsClicked);
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button.Dock = DockStyle.Left;
+			button.DockMargins = new Margins(0, 0, 0, 0);
+			return field;
+		}
+
 		protected TextFieldSlider CreateField(Widget parent, string name, string label)
 		{
 			//	Crée un widget textfield.
@@ -447,6 +489,53 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.globalSettings.Adorner = combo.Text;
 				Widgets.Adorners.Factory.SetActive(combo.Text);
+			}
+		}
+
+		private void HandleTextSettingsChanged(object sender)
+		{
+			TextField edit = sender as TextField;
+
+			if ( edit.Name == "NewDocument" )
+			{
+				this.globalSettings.NewDocument = edit.Text;
+			}
+		}
+
+		private void HandleButtonSettingsClicked(object sender, MessageEventArgs e)
+		{
+			IconButton button = sender as IconButton;
+
+			if ( button.Name == "NewDocument" )
+			{
+				Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
+
+				if ( this.globalSettings.NewDocument == "" )
+				{
+					dialog.InitialDirectory = this.globalSettings.InitialDirectory;
+					dialog.FileName = "";
+				}
+				else
+				{
+					dialog.InitialDirectory = System.IO.Path.GetDirectoryName(this.globalSettings.NewDocument);
+					dialog.FileName = System.IO.Path.GetFileName(this.globalSettings.NewDocument);
+				}
+
+				dialog.Title = Res.Strings.Dialog.Open.TitleMod;
+				dialog.Filters.Add("crmod", Res.Strings.Dialog.FileMod, "*.crmod");
+				dialog.Owner = this.editor.Window;
+				dialog.OpenDialog();
+				if ( dialog.Result == Common.Dialogs.DialogResult.Accept )
+				{
+					this.globalSettings.NewDocument = dialog.FileName;
+
+					TextField edit = button.Parent.FindChild(button.Name) as TextField;
+					if ( edit != null )
+					{
+						edit.Text = this.globalSettings.NewDocument;
+						edit.Cursor = edit.Text.Length;
+					}
+				}
 			}
 		}
 

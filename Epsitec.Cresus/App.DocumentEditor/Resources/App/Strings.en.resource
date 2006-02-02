@@ -180,6 +180,9 @@
 	<data name="Dialog.Settings.TabPage.Fonts">Fonts</data>
 	<data name="Dialog.Settings.TabPage.FontsHelp">Preferred fonts, listed before others</data>
 	<data name="Dialog.Settings.Startup">What to do at startup?</data>
+	<data name="Dialog.Settings.StartupAction">Action</data>
+	<data name="Dialog.Settings.New">@@Modèle à ouvrir pour un nouveau document ?</data>
+	<data name="Dialog.Settings.NewDocument">@@Document modèle</data>
 	<data name="Dialog.Settings.Mouse">Mouse settings</data>
 	<data name="Dialog.Settings.Screen">Display settings</data>
 	<data name="Dialog.Settings.SplashScreen">Splash screen</data>

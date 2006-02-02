@@ -39,6 +39,7 @@ namespace Epsitec.Common.Document.Settings
 			this.fineCursor = false;
 			this.splashScreen = true;
 			this.firstAction = FirstAction.OpenNewDocument;
+			this.newDocument = "";
 			this.lastFilename = new System.Collections.ArrayList();
 			this.lastFilenameMax = 10;
 			this.labelProperties = true;
@@ -242,6 +243,19 @@ namespace Epsitec.Common.Document.Settings
 			set
 			{
 				this.firstAction = value;
+			}
+		}
+
+		public string NewDocument
+		{
+			get
+			{
+				return this.newDocument;
+			}
+
+			set
+			{
+				this.newDocument = value;
 			}
 		}
 
@@ -731,7 +745,7 @@ namespace Epsitec.Common.Document.Settings
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise les réglages.
-			info.AddValue("Version", 5);
+			info.AddValue("Version", 6);
 
 			info.AddValue("WindowLocation", this.windowLocation);
 			info.AddValue("WindowSize", this.windowSize);
@@ -745,6 +759,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("FineCursor", this.fineCursor);
 			info.AddValue("SplashScreen", this.splashScreen);
 			info.AddValue("FirstAction", this.firstAction);
+			info.AddValue("NewDocument", this.newDocument);
 			info.AddValue("LastFilename", this.lastFilename);
 			info.AddValue("InitialDirectory", this.initialDirectory);
 			info.AddValue("LabelProperties", this.labelProperties);
@@ -803,6 +818,15 @@ namespace Epsitec.Common.Document.Settings
 			{
 				this.quickCommands = GlobalSettings.DefaultQuickCommands();
 			}
+
+			if ( version >= 6 )
+			{
+				this.newDocument = info.GetString("NewDocument");
+			}
+			else
+			{
+				this.newDocument = "";
+			}
 		}
 		#endregion
 
@@ -818,6 +842,7 @@ namespace Epsitec.Common.Document.Settings
 		protected bool							fineCursor;
 		protected bool							splashScreen;
 		protected FirstAction					firstAction;
+		protected string						newDocument;
 		protected System.Collections.ArrayList	lastFilename;
 		protected int							lastFilenameMax;
 		protected string						initialDirectory;

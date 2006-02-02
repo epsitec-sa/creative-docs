@@ -566,7 +566,7 @@ namespace Epsitec.Common.Document.Properties
 			//	Construit le texte résumé d'un style pour une propriété.
 			this.PutStyleResumePrefix(builder);
 
-			builder.Append(Res.Strings.Property.Line.Short.Witdh);
+			//?builder.Append(Res.Strings.Property.Line.Short.Witdh);
 			builder.Append(this.document.Modifier.RealToString(this.width));
 			builder.Append(", ");
 			builder.Append(Line.GetName(this.StandardDash));

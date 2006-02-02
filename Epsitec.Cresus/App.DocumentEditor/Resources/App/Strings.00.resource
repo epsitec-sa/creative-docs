@@ -180,6 +180,9 @@
 	<data name="Dialog.Settings.TabPage.Fonts">Polices</data>
 	<data name="Dialog.Settings.TabPage.FontsHelp">Polices fréquemment utilisées, en tête de liste</data>
 	<data name="Dialog.Settings.Startup">Que faire au démarrage du logiciel ?</data>
+	<data name="Dialog.Settings.StartupAction">Action</data>
+	<data name="Dialog.Settings.New">Modèle à ouvrir pour un nouveau document ?</data>
+	<data name="Dialog.Settings.NewDocument">Document modèle</data>
 	<data name="Dialog.Settings.Mouse">Réglages de la souris</data>
 	<data name="Dialog.Settings.Screen">Réglages de l'écran</data>
 	<data name="Dialog.Settings.SplashScreen">Ecran initial</data>

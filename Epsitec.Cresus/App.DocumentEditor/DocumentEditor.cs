@@ -86,7 +86,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgSplash = new Dialogs.Splash(this);
 			
 			if ( this.type != DocumentType.Pictogram &&
-				this.globalSettings.SplashScreen )
+				 this.globalSettings.SplashScreen )
 			{
 				this.dlgSplash.Show();
 			}
@@ -149,7 +149,15 @@ namespace Epsitec.App.DocumentEditor
 			{
 				if ( this.globalSettings.FirstAction == Settings.FirstAction.OpenNewDocument )
 				{
-					this.CreateDocument();
+					if ( this.globalSettings.NewDocument == "" )
+					{
+						this.CreateDocument();
+					}
+					else
+					{
+						this.Open(this.globalSettings.NewDocument);
+						this.CurrentDocument.IsDirtySerialize = false;
+					}
 				}
 
 				if ( this.globalSettings.FirstAction == Settings.FirstAction.OpenLastFile &&
@@ -1588,6 +1596,7 @@ namespace Epsitec.App.DocumentEditor
 		public Common.Dialogs.DialogResult DialogError(CommandDispatcher dispatcher, string error)
 		{
 			//	Affiche le dialogue pour signaler une erreur.
+			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
 			if ( error == "" )  return Common.Dialogs.DialogResult.None;
 
 			this.dlgSplash.Hide();
@@ -1889,9 +1898,18 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("New")]
 		void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CreateDocument();
-			this.CurrentDocument.Modifier.New();
-			this.CurrentDocument.Modifier.ActiveViewer.Focus();
+			if ( this.globalSettings.NewDocument == "" )
+			{
+				this.CreateDocument();
+				this.CurrentDocument.Modifier.New();
+				this.CurrentDocument.Modifier.ActiveViewer.Focus();
+			}
+			else
+			{
+				this.Open(this.globalSettings.NewDocument);
+				this.CurrentDocument.IsDirtySerialize = false;
+				this.CurrentDocument.Modifier.ActiveViewer.Focus();
+			}
 		}
 
 		[Command ("Open")]
@@ -5116,6 +5134,8 @@ namespace Epsitec.App.DocumentEditor
 		protected void MouseShowWait()
 		{
 			//	Met le sablier.
+			if ( this.Window == null )  return;
+
 			if ( this.MouseCursor != MouseCursor.AsWait )
 			{
 				this.lastMouseCursor = this.MouseCursor;
@@ -5128,6 +5148,7 @@ namespace Epsitec.App.DocumentEditor
 		protected void MouseHideWait()
 		{
 			//	Enlève le sablier.
+			if ( this.Window == null )  return;
 			this.MouseCursor = this.lastMouseCursor;
 			this.Window.MouseCursor = this.MouseCursor;
 		}
