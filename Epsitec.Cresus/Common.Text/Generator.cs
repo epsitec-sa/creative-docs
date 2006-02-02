@@ -113,30 +113,23 @@ namespace Epsitec.Common.Text
 				buffer.Append (this.global_prefix);
 			}
 			
-			if (sequence.WellKnownType == SequenceType.Constant)
+			for (int i = 0; i < max_level_count; i++)
 			{
-				sequence.GenerateText (max_level_count, culture, buffer);
-			}
-			else
-			{
-				for (int i = 0; i < max_level_count; i++)
+				int index = System.Math.Min (i, this.sequences.Count - 1);
+				
+				sequence = this.sequences[index] as Sequence;
+				
+				if (sequence.SuppressBefore)
 				{
-					int index = System.Math.Min (i, this.sequences.Count - 1);
+					buffer.Length = 0;
 					
-					sequence = this.sequences[index] as Sequence;
-					
-					if (sequence.SuppressBefore)
+					if (this.global_prefix != null)
 					{
-						buffer.Length = 0;
-						
-						if (this.global_prefix != null)
-						{
-							buffer.Append (this.global_prefix);
-						}
+						buffer.Append (this.global_prefix);
 					}
-					
-					sequence.GenerateText (ranks[i], culture, buffer);
 				}
+				
+				sequence.GenerateText (ranks[i], culture, buffer);
 			}
 			
 			if (this.global_suffix != null)

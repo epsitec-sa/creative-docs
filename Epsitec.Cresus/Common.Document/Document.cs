@@ -1448,9 +1448,11 @@ namespace Epsitec.Common.Document
 			Text.Generator generator3 = this.textContext.GeneratorList.NewGenerator("alpha-1");
 			Text.Generator generator4 = this.textContext.GeneratorList.NewGenerator("num-2");
 			
-			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant,   "", "", Text.Generator.Casing.Default, "\u25CF\u25CB-"));
+			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25CF"));
+			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25CB", true));
+			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "-", true));
 			
-			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric,    "", "."));
+			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric, "", "."));
 			
 			generator3.GlobalPrefix = "";
 			generator3.GlobalSuffix = ")";
