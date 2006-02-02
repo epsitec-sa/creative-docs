@@ -140,6 +140,15 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public Generator.Sequence				this[int index]
+		{
+			get
+			{
+				return this.sequences[index] as Sequence;
+			}
+		}
+		
+		
 		public void Add(Generator.Sequence sequence)
 		{
 			this.sequences.Add (sequence);

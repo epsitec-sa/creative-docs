@@ -585,7 +585,7 @@ namespace Epsitec.Common.Text
 				
 				if (properties.Length > 2)
 				{
-					range.Properties.CopyTo (properties, 1);
+					range.Properties.CopyTo (properties, 2);
 				}
 				
 				ulong[] substring;

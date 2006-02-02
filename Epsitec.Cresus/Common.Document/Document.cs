@@ -1426,6 +1426,8 @@ namespace Epsitec.Common.Document
 			this.textContext.IsPropertiesPropertyEnabled = false;
 
 			string black = RichColor.ToString(RichColor.FromBrightness(0));
+			string red = RichColor.ToString(RichColor.FromRGB(1.0, 0.0, 0.0));
+			string green = RichColor.ToString(RichColor.FromRGB(0.0, 1.0, 0.0));
 			string indentAttribute = Text.TabList.PackToAttribute(System.Globalization.RegionInfo.CurrentRegion.IsMetric ? "LevelMultiplier:10 mm" : "LevelMultiplier:0.5 in");
 			double fontSize = (this.type == DocumentType.Pictogram) ? 1.2 : 12.0;
 
@@ -1451,6 +1453,9 @@ namespace Epsitec.Common.Document
 			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25CF"));
 			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25CB", true));
 			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "-", true));
+			
+			generator1[1].ValueProperties = new Text.Property[] { new Text.Properties.FontColorProperty(red) };
+			generator1[2].ValueProperties = new Text.Property[] { new Text.Properties.FontColorProperty(green) };
 			
 			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric, "", "."));
 			
