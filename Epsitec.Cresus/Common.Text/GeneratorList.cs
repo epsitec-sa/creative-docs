@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -32,6 +32,13 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		public Generator NewGenerator()
+		{
+			string name = this.context.StyleList.GenerateUniqueName ();
+			
+			return this.NewGenerator (name);
+		}
 		
 		public Generator NewGenerator(string name)
 		{
@@ -81,6 +88,40 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		public void IncrementUserCount(string name)
+		{
+			System.Diagnostics.Debug.Assert (this.generators.Contains (name));
+			
+			Generator generator = this.generators[name] as Generator;
+			generator.IncrementUserCount ();
+		}
+		
+		public void DecrementUserCount(string name)
+		{
+			System.Diagnostics.Debug.Assert (this.generators.Contains (name));
+			
+			Generator generator = this.generators[name] as Generator;
+			generator.DecrementUserCount ();
+		}
+		
+		public void ClearUnusedGenerators()
+		{
+			string[] names = new string[this.generators.Count];
+			this.generators.Keys.CopyTo (names, 0);
+			
+			foreach (string name in names)
+			{
+				Generator generator = this.generators[name] as Generator;
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Generator '{0}' used {1} times.", name, generator.UserCount));
+				
+				if (generator.UserCount == 0)
+				{
+					this.DisposeGenerator (generator);
+				}
+			}
+		}
 		
 		
 		private Text.TextContext				context;

@@ -859,6 +859,7 @@ namespace Epsitec.Common.Document
 			if ( this.textContext != null )
 			{
 				this.textContext.TabList.ClearUnusedTabTags();
+				this.textContext.GeneratorList.ClearUnusedGenerators();
 			}
 
 			if ( this.settings != null )

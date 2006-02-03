@@ -151,6 +151,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public int								UserCount
+		{
+			get
+			{
+				return this.user_count;
+			}
+		}
+		
 		
 		public Generator.Sequence				this[int index]
 		{
@@ -339,6 +347,19 @@ namespace Epsitec.Common.Text
 				
 				this.user_data = SerializerSupport.DeserializeStringArray (args[offset++]);
 			}
+		}
+		
+		
+		internal void IncrementUserCount()
+		{
+			this.user_count++;
+			System.Diagnostics.Debug.Assert (this.user_count > 0);
+		}
+		
+		internal void DecrementUserCount()
+		{
+			System.Diagnostics.Debug.Assert (this.user_count > 0);
+			this.user_count--;
 		}
 		
 		
@@ -1091,5 +1112,6 @@ namespace Epsitec.Common.Text
 		private Property[]						global_prefix_properties;
 		private Property[]						global_suffix_properties;
 		private string[]						user_data;
+		private int								user_count;
 	}
 }

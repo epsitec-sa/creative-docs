@@ -115,6 +115,7 @@ namespace Epsitec.Common.Text
 			
 			this.Attach (style);
 			this.UpdateTabListUserCount (style, 1);
+			this.UpdateGeneratorUserCount (style, 1);
 			
 			if (queue != null)
 			{
@@ -534,6 +535,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		internal void UpdateGeneratorUserCount()
+		{
+			foreach (TextStyle style in this.text_style_list)
+			{
+				this.UpdateGeneratorUserCount (style, 1);
+			}
+		}
+		
 		internal void UpdateTabListUserCount(TextStyle style, int sign)
 		{
 			Properties.TabsProperty tabs = style[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
@@ -599,6 +608,41 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		internal void UpdateGeneratorUserCount(TextStyle style, int sign)
+		{
+			Properties.ManagedParagraphProperty mpp = style[Properties.WellKnownType.ManagedParagraph] as Properties.ManagedParagraphProperty;
+			
+			GeneratorList list = this.context.GeneratorList;
+			
+			//	Tient compte des générateurs utilisés par des managed paragraphs :
+			
+			if (mpp != null)
+			{
+				string   manager_name = mpp.ManagerName;
+				string[] parameters   = mpp.ManagerParameters;
+				
+				switch (manager_name)
+				{
+					case "ItemList":
+						ParagraphManagers.ItemListManager.Parameters p = new Epsitec.Common.Text.ParagraphManagers.ItemListManager.Parameters (this.context, parameters);
+						
+						if (p.Generator != null)
+						{
+							if (sign > 0)
+							{
+								list.IncrementUserCount (p.Generator.Name);
+							}
+							else if (sign < 0)
+							{
+								list.DecrementUserCount (p.Generator.Name);
+							}
+						}
+						
+						break;
+				}
+			}
+		}
+		
 		internal static string GetFullName(TextStyle text_style)
 		{
 			return StyleList.GetFullName (text_style.Name, text_style.TextStyleClass);
@@ -652,6 +696,7 @@ namespace Epsitec.Common.Text
 			TextStyle next = style.NextStyle;
 			
 			this.UpdateTabListUserCount (style, -1);
+			this.UpdateGeneratorUserCount (style, -1);
 			
 			style.Clear ();
 			style.DefineNextStyle (next);
@@ -662,6 +707,7 @@ namespace Epsitec.Common.Text
 			style.DefineIsFlagged (true);
 			
 			this.UpdateTabListUserCount (style, 1);
+			this.UpdateGeneratorUserCount (style, 1);
 			
 			this.OnStyleRedefined ();
 		}
