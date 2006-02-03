@@ -137,9 +137,8 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryGraphic = new Button(this.categoryContainer);
 			this.categoryGraphic.Name = "Graphic";
 			this.categoryGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.categoryGraphic.Alignment = ContentAlignment.MiddleLeft;
 			this.categoryGraphic.AutoFocus = false;
-			this.categoryGraphic.ActiveState = ActiveState.Yes;
-			this.categoryGraphic.Text = Res.Strings.Panel.AggregateCategory.Graphic;
 			this.categoryGraphic.Width = 80;
 			this.categoryGraphic.Dock = DockStyle.Left;
 			this.categoryGraphic.DockMargins = new Margins(0, 0, 0, 0);
@@ -150,8 +149,8 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryParagraph = new Button(this.categoryContainer);
 			this.categoryParagraph.Name = "Paragraph";
 			this.categoryParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.categoryParagraph.Alignment = ContentAlignment.MiddleLeft;
 			this.categoryParagraph.AutoFocus = false;
-			this.categoryParagraph.Text = Res.Strings.Panel.AggregateCategory.Paragraph;
 			this.categoryParagraph.Width = 80;
 			this.categoryParagraph.Dock = DockStyle.Left;
 			this.categoryParagraph.DockMargins = new Margins(0, 0, 0, 0);
@@ -162,14 +161,16 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryCharacter = new Button(this.categoryContainer);
 			this.categoryCharacter.Name = "Character";
 			this.categoryCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.categoryCharacter.Alignment = ContentAlignment.MiddleLeft;
 			this.categoryCharacter.AutoFocus = false;
-			this.categoryCharacter.Text = Res.Strings.Panel.AggregateCategory.Character;
 			this.categoryCharacter.Width = 80-1;
 			this.categoryCharacter.Dock = DockStyle.Left;
 			this.categoryCharacter.DockMargins = new Margins(0, 0, 0, 0);
 			this.categoryCharacter.TabIndex = this.index++;
 			this.categoryCharacter.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.categoryCharacter.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
+
+			this.SetCategory("Graphic");
 		}
 
 		protected void CreateAggregateToolBar()
@@ -876,13 +877,21 @@ namespace Epsitec.Common.Document.Containers
 		public void SetCategory(string name)
 		{
 			//	Choix d'une catégorie à partir d'une string, depuis le monde extérieur.
-			this.categoryGraphic  .ActiveState = (name == "Graphic"  ) ? ActiveState.Yes : ActiveState.No;
-			this.categoryParagraph.ActiveState = (name == "Paragraph") ? ActiveState.Yes : ActiveState.No;
-			this.categoryCharacter.ActiveState = (name == "Character") ? ActiveState.Yes : ActiveState.No;
+			if ( name == "Graphic"   )  this.Category = StyleCategory.Graphic;
+			if ( name == "Paragraph" )  this.Category = StyleCategory.Paragraph;
+			if ( name == "Character" )  this.Category = StyleCategory.Character;
 
-			if ( this.categoryGraphic  .ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Graphic;
-			if ( this.categoryParagraph.ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Paragraph;
-			if ( this.categoryCharacter.ActiveState == ActiveState.Yes )  this.Category = StyleCategory.Character;
+			this.SetCategory(this.categoryGraphic,   Res.Strings.Panel.AggregateCategory.Graphic,   (this.category == StyleCategory.Graphic)  );
+			this.SetCategory(this.categoryParagraph, Res.Strings.Panel.AggregateCategory.Paragraph, (this.category == StyleCategory.Paragraph));
+			this.SetCategory(this.categoryCharacter, Res.Strings.Panel.AggregateCategory.Character, (this.category == StyleCategory.Character));
+		}
+
+		protected void SetCategory(Button button, string text, bool state)
+		{
+			string radio = state ? "RadioYes" : "RadioNo";
+			button.Text = string.Format(" {0} {1}", Misc.Image(radio), text);
+
+			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected StyleCategory Category
