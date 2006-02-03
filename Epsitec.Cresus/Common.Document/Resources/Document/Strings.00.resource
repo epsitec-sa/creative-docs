@@ -494,6 +494,10 @@
 	<data name="TextPanel.Filter.Tooltip.Character">Attributs pour les caractères</data>
 	
 	<data name="TextPanel.Generator.Title">Puces et numérotations</data>
+	<data name="TextPanel.Generator.Tooltip.Prefix">Préfixe du niveau</data>
+	<data name="TextPanel.Generator.Tooltip.Generator">Numérotation du niveau</data>
+	<data name="TextPanel.Generator.Tooltip.Suffix">Suffixe du niveau</data>
+	<data name="TextPanel.Generator.Radio.Global">b</data>
 	
 	<data name="TextPanel.Justif.Title">Mise en page</data>
 

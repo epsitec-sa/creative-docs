@@ -78,19 +78,19 @@ namespace Epsitec.Common.Document.TextPanels
 
 			switch ( panel )
 			{
-				//                         F    U    P    C
-				case "Justif":    return ( F || U || P || o );
-				case "Leading":   return ( F || o || P || o );
-				case "Margins":   return ( o || o || P || o );
-				case "Spaces":    return ( o || o || P || o );
-				case "Keep":      return ( o || o || P || o );
-				case "Tabs":      return ( o || o || P || o );
-				case "Generator": return ( o || o || P || o );
-				case "Font":      return ( F || U || o || C );
-				case "Xline":     return ( F || o || o || C );
-				case "Xscript":   return ( F || o || o || C );
-				case "Box":       return ( o || o || o || C );
-				case "Language":  return ( o || o || o || C );
+				//                          F    U    P    C
+				case "Justif":     return ( F || U || P || o );
+				case "Leading":    return ( F || o || P || o );
+				case "Margins":    return ( o || o || P || o );
+				case "Spaces":     return ( o || o || P || o );
+				case "Keep":       return ( o || o || P || o );
+				case "Tabs":       return ( o || o || P || o );
+				case "Generator":  return ( o || o || P || o );
+				case "Font":       return ( F || U || o || C );
+				case "Xline":      return ( F || o || o || C );
+				case "Xscript":    return ( F || o || o || C );
+				case "Box":        return ( o || o || o || C );
+				case "Language":   return ( o || o || o || C );
 			}
 			return true;
 		}

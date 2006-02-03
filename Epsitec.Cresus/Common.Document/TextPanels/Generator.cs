@@ -18,14 +18,77 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextGenerator");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Generator.Title);
 
-			this.fieldLeftMarginFirst = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftFirst, Res.Strings.TextPanel.Margins.Short.LeftFirst, Res.Strings.TextPanel.Margins.Long.LeftFirst, 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
-			this.fieldLeftMarginBody  = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftBody,  Res.Strings.TextPanel.Margins.Short.LeftBody,  Res.Strings.TextPanel.Margins.Long.LeftBody,  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
-			this.fieldRightMargin     = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleRight,     Res.Strings.TextPanel.Margins.Short.Right,     Res.Strings.TextPanel.Margins.Long.Right,     0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
+			this.fieldType = new TextFieldCombo(this);
+			this.fieldType.Text = "Aucun";
+			this.fieldType.IsReadOnly = true;
+			this.fieldType.AutoFocus = false;
+			this.fieldType.TextChanged += new EventHandler(this.HandleTypeChanged);
+			this.fieldType.TabIndex = this.tabIndex++;
+			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldType.Items.Add("Aucun");
+			this.fieldType.Items.Add("Petites puces");
+			this.fieldType.Items.Add("Grosse puces");
+			this.fieldType.Items.Add("Numérotation 1.1.1");
+			this.fieldType.Items.Add("Numérotation 1.a.a");
+			this.fieldType.Items.Add("Numérotation a.i.i");
+			this.fieldType.Items.Add("Personnalisé");
+			//?ToolTip.Default.SetToolTip(this.fieldType, Res.Strings.TextPanel.Generator.Tooltip.Generator);
+
+			this.radioLevel = new RadioButton[Generator.maxLevel];
+			for ( int i=0 ; i<Generator.maxLevel ; i++ )
+			{
+				this.radioLevel[i] = new RadioButton(this);
+				this.radioLevel[i].Name = i.ToString(System.Globalization.CultureInfo.InvariantCulture);
+				this.radioLevel[i].Text = i.ToString();
+				this.radioLevel[i].Group = "Level";
+				this.radioLevel[i].Clicked += new MessageEventHandler(this.HandleRadioLevelClicked);
+			}
+			this.radioLevel[0].Text = Res.Strings.TextPanel.Generator.Radio.Global;
+			this.radioLevel[0].ActiveState = ActiveState.Yes;
+
+			this.fieldPrefix = new TextFieldCombo(this);
+			this.fieldPrefix.AutoFocus = false;
+			this.fieldPrefix.TextChanged += new EventHandler(this.HandlePrefixChanged);
+			this.fieldPrefix.TabIndex = this.tabIndex++;
+			this.fieldPrefix.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldPrefix.Items.Add(" ");
+			this.fieldPrefix.Items.Add("o");
+			this.fieldPrefix.Items.Add("-");
+			this.fieldPrefix.Items.Add("(");
+			ToolTip.Default.SetToolTip(this.fieldPrefix, Res.Strings.TextPanel.Generator.Tooltip.Prefix);
+
+			this.fieldGenerator = new TextFieldCombo(this);
+			this.fieldGenerator.IsReadOnly = true;
+			this.fieldGenerator.AutoFocus = false;
+			this.fieldGenerator.TextChanged += new EventHandler(this.HandleGeneratorChanged);
+			this.fieldGenerator.TabIndex = this.tabIndex++;
+			this.fieldGenerator.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldGenerator.Items.Add(" ");
+			this.fieldGenerator.Items.Add("1, 2...");
+			this.fieldGenerator.Items.Add("A, B...");
+			this.fieldGenerator.Items.Add("a, b...");
+			this.fieldGenerator.Items.Add("i, ii...");
+			this.fieldGenerator.Items.Add("I, II...");
+			ToolTip.Default.SetToolTip(this.fieldGenerator, Res.Strings.TextPanel.Generator.Tooltip.Generator);
+
+			this.fieldSuffix = new TextFieldCombo(this);
+			this.fieldSuffix.AutoFocus = false;
+			this.fieldSuffix.TextChanged += new EventHandler(this.HandleSuffixChanged);
+			this.fieldSuffix.TabIndex = this.tabIndex++;
+			this.fieldSuffix.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldSuffix.Items.Add(" ");
+			this.fieldSuffix.Items.Add(".");
+			this.fieldSuffix.Items.Add("-");
+			this.fieldSuffix.Items.Add(")");
+			ToolTip.Default.SetToolTip(this.fieldSuffix, Res.Strings.TextPanel.Generator.Tooltip.Suffix);
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
 			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+
+			this.Type = 0;
+			this.Level = 0;
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -59,14 +122,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( this.isExtendedSize )  // panneau étendu ?
 				{
-					if ( this.IsLabelProperties )  // étendu/détails ?
-					{
-						h += 80;
-					}
-					else	// étendu/compact ?
-					{
-						h += 55;
-					}
+					h += 105;
 				}
 				else	// panneau réduit ?
 				{
@@ -90,57 +146,54 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
-			if ( this.fieldLeftMarginFirst == null )  return;
+			if ( this.buttonClear == null )  return;
 
 			Rectangle rect = this.UsefulZone;
+			Rectangle r;
 
-			if ( this.isExtendedSize )
+			r = rect;
+			r.Bottom = r.Top-20;
+			r.Right = rect.Right-25;
+			this.fieldType.Bounds = r;
+			r.Left = rect.Right-20;
+			r.Right = rect.Right;
+			this.buttonClear.Bounds = r;
+
+			if ( this.isExtendedSize )  // panneau étendu ?
 			{
-				Rectangle r = rect;
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Width = 31;
 				r.Bottom = r.Top-20;
-
-				if ( this.IsLabelProperties )
+				for ( int i=0 ; i<Generator.maxLevel ; i++ )
 				{
-					r.Left = rect.Left;
-					r.Right = rect.Right-25;
-					this.fieldLeftMarginFirst.Bounds = r;
-					r.Offset(0, -25);
-					this.fieldLeftMarginBody.Bounds = r;
-					r.Offset(0, -25);
-					this.fieldRightMargin.Bounds = r;
-
-					r.Left = rect.Right-20;
-					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.radioLevel[i].Bounds = r;
+					this.radioLevel[i].Visibility = true;
+					r.Offset(r.Width, 0);
 				}
-				else
-				{
-					r.Left = rect.Left;
-					r.Width = 60;
-					this.fieldLeftMarginFirst.Bounds = r;
-					r.Offset(60, 0);
-					this.fieldLeftMarginBody.Bounds = r;
-					r.Offset(60, 0);
-					this.fieldRightMargin.Bounds = r;
 
-					r.Offset(0, -25);
-					r.Left = rect.Right-20;
-					r.Width = 20;
-					this.buttonClear.Bounds = r;
-				}
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Width = 56;
+				this.fieldPrefix.Bounds = r;
+				this.fieldPrefix.Visibility = true;
+				r.Offset(r.Width+5, 0);
+				this.fieldGenerator.Bounds = r;
+				this.fieldGenerator.Visibility = true;
+				r.Offset(r.Width+5, 0);
+				this.fieldSuffix.Bounds = r;
+				this.fieldSuffix.Visibility = true;
 			}
 			else
 			{
-				Rectangle r = rect;
-				r.Bottom = r.Top-20;
+				for ( int i=0 ; i<Generator.maxLevel ; i++ )
+				{
+					this.radioLevel[i].Visibility = false;
+				}
 
-				r.Left = rect.Left;
-				r.Width = 60;
-				this.fieldLeftMarginFirst.Bounds = r;
-				r.Offset(60, 0);
-				this.fieldLeftMarginBody.Bounds = r;
-				r.Offset(60, 0);
-				this.fieldRightMargin.Bounds = r;
+				this.fieldPrefix.Visibility = false;
+				this.fieldGenerator.Visibility = false;
+				this.fieldSuffix.Visibility = false;
 			}
 
 			this.UpdateButtonClear();
@@ -148,14 +201,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void UpdateButtonClear()
 		{
-			if ( this.isExtendedSize )
-			{
-				this.buttonClear.Visibility = !this.ParagraphWrapper.IsAttachedToDefaultParagraphStyle;
-			}
-			else
-			{
-				this.buttonClear.Visibility = false;
-			}
+			this.buttonClear.Visibility = !this.ParagraphWrapper.IsAttachedToDefaultParagraphStyle;
 		}
 
 		protected override void UpdateAfterChanging()
@@ -174,81 +220,95 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ignoreChanged = true;
 
-			this.SetTextFieldRealValue(this.fieldLeftMarginFirst.TextFieldReal, leftFirst, Common.Text.Properties.SizeUnits.Points, isLeftFirst, false);
-			this.SetTextFieldRealValue(this.fieldLeftMarginBody.TextFieldReal,  leftBody,  Common.Text.Properties.SizeUnits.Points, isLeftBody,  false);
-			this.SetTextFieldRealValue(this.fieldRightMargin.TextFieldReal,     right,     Common.Text.Properties.SizeUnits.Points, isRight,     false);
 
 			this.ignoreChanged = false;
 		}
 
 
-		private void HandleMarginChanged(object sender)
+		protected void UpdateWidgets()
+		{
+			bool custom = (this.type == 6);
+
+			for ( int i=0 ; i<Generator.maxLevel ; i++ )
+			{
+				this.radioLevel[i].Enable = custom;
+			}
+
+			this.fieldPrefix.Enable = custom;
+			this.fieldGenerator.Enable = (custom && this.level != 0);
+			this.fieldSuffix.Enable = custom;
+		}
+
+		protected int Type
+		{
+			get
+			{
+				return this.type;
+			}
+
+			set
+			{
+				if ( this.type != value )
+				{
+					this.type = value;
+					this.UpdateWidgets();
+				}
+			}
+		}
+
+		protected int Level
+		{
+			get
+			{
+				return this.level;
+			}
+
+			set
+			{
+				if ( this.level != value )
+				{
+					this.level = value;
+					this.UpdateWidgets();
+				}
+			}
+		}
+
+
+		private void HandleTypeChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 
-			TextFieldReal field = sender as TextFieldReal;
-			if ( field == null )  return;
+			TextFieldCombo combo = sender as TextFieldCombo;
+			this.Type = combo.SelectedIndex;
+		}
 
-			double value;
-			Common.Text.Properties.SizeUnits units;
-			bool isDefined;
-			this.GetTextFieldRealValue(field, out value, out units, out isDefined);
+		private void HandleRadioLevelClicked(object sender, MessageEventArgs e)
+		{
+			RadioButton button = sender as RadioButton;
+			int level = int.Parse(button.Name);
+			this.Level = level;
+		}
 
-			this.ParagraphWrapper.SuspendSynchronizations();
+		private void HandlePrefixChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
-			if ( field == this.fieldLeftMarginFirst.TextFieldReal )
-			{
-				if ( isDefined )
-				{
-					this.ParagraphWrapper.Defined.LeftMarginFirst = value;
-					this.ParagraphWrapper.Defined.MarginUnits = Common.Text.Properties.SizeUnits.Points;
-				}
-				else
-				{
-					this.ParagraphWrapper.Defined.ClearLeftMarginFirst();
-				}
-			}
+		}
 
-			if ( field == this.fieldLeftMarginBody.TextFieldReal )
-			{
-				if ( isDefined )
-				{
-					this.ParagraphWrapper.Defined.LeftMarginBody = value;
-					this.ParagraphWrapper.Defined.MarginUnits = Common.Text.Properties.SizeUnits.Points;
-				}
-				else
-				{
-					this.ParagraphWrapper.Defined.ClearLeftMarginBody();
-				}
-			}
+		private void HandleGeneratorChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
-			if ( field == this.fieldRightMargin.TextFieldReal )
-			{
-				if ( isDefined )
-				{
-					this.ParagraphWrapper.Defined.RightMarginFirst = value;
-					this.ParagraphWrapper.Defined.RightMarginBody  = value;
-					this.ParagraphWrapper.Defined.MarginUnits = Common.Text.Properties.SizeUnits.Points;
-				}
-				else
-				{
-					this.ParagraphWrapper.Defined.ClearRightMarginFirst();
-					this.ParagraphWrapper.Defined.ClearRightMarginBody();
-				}
-			}
+		}
 
-			if ( !this.ParagraphWrapper.Defined.IsLeftMarginFirstDefined  &&
-				 !this.ParagraphWrapper.Defined.IsLeftMarginBodyDefined   &&
-				 !this.ParagraphWrapper.Defined.IsRightMarginFirstDefined &&
-				 !this.ParagraphWrapper.Defined.IsRightMarginBodyDefined  )
-			{
-				this.ParagraphWrapper.Defined.ClearMarginUnits();
-			}
+		private void HandleSuffixChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.ParagraphWrapper.IsAttached )  return;
 
-			this.ParagraphWrapper.DefineOperationName("ParagraphMargins", Res.Strings.TextPanel.Margins.Title);
-			this.ParagraphWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -270,9 +330,16 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		protected Widgets.TextFieldLabel	fieldLeftMarginFirst;
-		protected Widgets.TextFieldLabel	fieldLeftMarginBody;
-		protected Widgets.TextFieldLabel	fieldRightMargin;
+		protected static readonly int		maxLevel = 6;
+
+		protected RadioButton[]				radioLevel;
+		protected TextFieldCombo			fieldType;
+		protected TextFieldCombo			fieldPrefix;
+		protected TextFieldCombo			fieldGenerator;
+		protected TextFieldCombo			fieldSuffix;
 		protected IconButton				buttonClear;
+
+		protected int						type = -1;
+		protected int						level = -1;
 	}
 }
