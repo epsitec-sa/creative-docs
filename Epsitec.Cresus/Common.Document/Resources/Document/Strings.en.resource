@@ -492,6 +492,8 @@
 	<data name="TextPanel.Filter.Tooltip.Paragraph">Paragraph properties only</data>
 	<data name="TextPanel.Filter.Tooltip.Character">Character properties only</data>
 	
+	<data name="TextPanel.Generator.Title">@@Puces et numérotations</data>
+	
 	<data name="TextPanel.Justif.Title">Layout</data>
 
 	<data name="TextPanel.Leading.Title">Leading</data>

@@ -887,6 +887,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TextPanels\Generator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TextPanels\Justif.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

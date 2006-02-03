@@ -49,17 +49,18 @@ namespace Epsitec.Common.Document.TextPanels
 		public static Abstract Create(string name, Document document, bool isStyle, StyleCategory styleCategory)
 		{
 			//	Crée un nouveau panneau.
-			if ( name == "Justif"   )  return new Justif(document, isStyle, styleCategory);
-			if ( name == "Leading"  )  return new Leading(document, isStyle, styleCategory);
-			if ( name == "Margins"  )  return new Margins(document, isStyle, styleCategory);
-			if ( name == "Spaces"   )  return new Spaces(document, isStyle, styleCategory);
-			if ( name == "Keep"     )  return new Keep(document, isStyle, styleCategory);
-			if ( name == "Tabs"     )  return new Tabs(document, isStyle, styleCategory);
-			if ( name == "Font"     )  return new Font(document, isStyle, styleCategory);
-			if ( name == "Xline"    )  return new Xline(document, isStyle, styleCategory);
-			if ( name == "Xscript"  )  return new Xscript(document, isStyle, styleCategory);
-			if ( name == "Box"      )  return new Box(document, isStyle, styleCategory);
-			if ( name == "Language" )  return new Language(document, isStyle, styleCategory);
+			if ( name == "Justif"    )  return new Justif(document, isStyle, styleCategory);
+			if ( name == "Leading"   )  return new Leading(document, isStyle, styleCategory);
+			if ( name == "Margins"   )  return new Margins(document, isStyle, styleCategory);
+			if ( name == "Spaces"    )  return new Spaces(document, isStyle, styleCategory);
+			if ( name == "Keep"      )  return new Keep(document, isStyle, styleCategory);
+			if ( name == "Tabs"      )  return new Tabs(document, isStyle, styleCategory);
+			if ( name == "Generator" )  return new Generator(document, isStyle, styleCategory);
+			if ( name == "Font"      )  return new Font(document, isStyle, styleCategory);
+			if ( name == "Xline"     )  return new Xline(document, isStyle, styleCategory);
+			if ( name == "Xscript"   )  return new Xscript(document, isStyle, styleCategory);
+			if ( name == "Box"       )  return new Box(document, isStyle, styleCategory);
+			if ( name == "Language"  )  return new Language(document, isStyle, styleCategory);
 			return null;
 		}
 		
@@ -84,6 +85,7 @@ namespace Epsitec.Common.Document.TextPanels
 				case "Spaces":    return ( o || o || P || o );
 				case "Keep":      return ( o || o || P || o );
 				case "Tabs":      return ( o || o || P || o );
+				case "Generator": return ( o || o || P || o );
 				case "Font":      return ( F || U || o || C );
 				case "Xline":     return ( F || o || o || C );
 				case "Xscript":   return ( F || o || o || C );

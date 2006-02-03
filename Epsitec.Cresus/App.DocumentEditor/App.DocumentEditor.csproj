@@ -1789,6 +1789,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\TextGenerator.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\TextGrid.icon"
                     BuildAction = "EmbeddedResource"
                 />

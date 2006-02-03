@@ -493,6 +493,8 @@
 	<data name="TextPanel.Filter.Tooltip.Paragraph">Attributs pour les paragraphes</data>
 	<data name="TextPanel.Filter.Tooltip.Character">Attributs pour les caractères</data>
 	
+	<data name="TextPanel.Generator.Title">Puces et numérotations</data>
+	
 	<data name="TextPanel.Justif.Title">Mise en page</data>
 
 	<data name="TextPanel.Leading.Title">Interligne</data>

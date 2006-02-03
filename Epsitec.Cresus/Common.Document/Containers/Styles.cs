@@ -137,7 +137,6 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryGraphic = new Button(this.categoryContainer);
 			this.categoryGraphic.Name = "Graphic";
 			this.categoryGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.categoryGraphic.Alignment = ContentAlignment.MiddleLeft;
 			this.categoryGraphic.AutoFocus = false;
 			this.categoryGraphic.Width = 80;
 			this.categoryGraphic.Dock = DockStyle.Left;
@@ -149,7 +148,6 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryParagraph = new Button(this.categoryContainer);
 			this.categoryParagraph.Name = "Paragraph";
 			this.categoryParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.categoryParagraph.Alignment = ContentAlignment.MiddleLeft;
 			this.categoryParagraph.AutoFocus = false;
 			this.categoryParagraph.Width = 80;
 			this.categoryParagraph.Dock = DockStyle.Left;
@@ -161,7 +159,6 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryCharacter = new Button(this.categoryContainer);
 			this.categoryCharacter.Name = "Character";
 			this.categoryCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.categoryCharacter.Alignment = ContentAlignment.MiddleLeft;
 			this.categoryCharacter.AutoFocus = false;
 			this.categoryCharacter.Width = 80-1;
 			this.categoryCharacter.Dock = DockStyle.Left;
@@ -552,15 +549,16 @@ namespace Epsitec.Common.Document.Containers
 				int sel = this.document.GetSelectedTextStyle(this.category);
 				if ( sel != -1 )
 				{
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Justif",   "TextJustif",   Res.Strings.TextPanel.Justif.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Leading",  "TextLeading",  Res.Strings.TextPanel.Leading.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Margins",  "TextMargins",  Res.Strings.TextPanel.Margins.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Spaces",   "TextSpaces",   Res.Strings.TextPanel.Spaces.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Keep",     "TextKeep",     Res.Strings.TextPanel.Keep.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Tabs",     "TextTabs",     Res.Strings.TextPanel.Tabs.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Font",     "TextFont",     Res.Strings.TextPanel.Font.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Xline",    "TextXline",    Res.Strings.TextPanel.Xline.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Language", "TextLanguage", Res.Strings.TextPanel.Language.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Justif",    "TextJustif",    Res.Strings.TextPanel.Justif.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Leading",   "TextLeading",   Res.Strings.TextPanel.Leading.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Margins",   "TextMargins",   Res.Strings.TextPanel.Margins.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Spaces",    "TextSpaces",    Res.Strings.TextPanel.Spaces.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Keep",      "TextKeep",      Res.Strings.TextPanel.Keep.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Tabs",      "TextTabs",      Res.Strings.TextPanel.Tabs.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Generator", "TextGenerator", Res.Strings.TextPanel.Generator.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Font",      "TextFont",      Res.Strings.TextPanel.Font.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Xline",     "TextXline",     Res.Strings.TextPanel.Xline.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true, "Language",  "TextLanguage",  Res.Strings.TextPanel.Language.Title);
 				}
 			}
 
@@ -888,10 +886,16 @@ namespace Epsitec.Common.Document.Containers
 
 		protected void SetCategory(Button button, string text, bool state)
 		{
-			string radio = state ? "RadioYes" : "RadioNo";
-			button.Text = string.Format(" {0} {1}", Misc.Image(radio), text);
-
-			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
+			if ( state )
+			{
+				button.Text = Misc.Bold(text);
+				button.ActiveState = ActiveState.Yes;
+			}
+			else
+			{
+				button.Text = text;
+				button.ActiveState = ActiveState.No;
+			}
 		}
 
 		protected StyleCategory Category

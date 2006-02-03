@@ -787,8 +787,8 @@ namespace Epsitec.Common.Document.Objects
 
 			string[] names =
 			{
-				"Justif", "Leading", "Margins", "Spaces", "Keep", "Tabs",	// styles de paragraphe
-				"Font", "Xline", "Xscript", "Box", "Language"				// styles de caractère
+				"Justif", "Leading", "Margins", "Spaces", "Keep", "Tabs", "Generator",	// styles de paragraphe
+				"Font", "Xline", "Xscript", "Box", "Language"							// styles de caractère
 			};
 
 			foreach ( string name in names )
