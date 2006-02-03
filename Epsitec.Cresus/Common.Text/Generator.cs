@@ -313,6 +313,8 @@ namespace Epsitec.Common.Text
 		
 		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
 		{
+			this.sequences.Clear ();
+			
 			this.name = SerializerSupport.DeserializeString (args[offset++]);
 
 			int num_sequences = SerializerSupport.DeserializeInt (args[offset++]);
@@ -347,6 +349,29 @@ namespace Epsitec.Common.Text
 				
 				this.user_data = SerializerSupport.DeserializeStringArray (args[offset++]);
 			}
+		}
+		
+		
+		internal string Save()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			this.Serialize (buffer);
+			return buffer.ToString ();
+		}
+		
+		internal void Restore(TextContext context, string state)
+		{
+			string[] args = state.Split ('/');
+			
+			int version = TextContext.SerializationVersion;
+			int offset  = 0;
+			
+			this.Deserialize (context, version, args, ref offset);
+		}
+		
+		internal void DefineName(string name)
+		{
+			this.name = name;
 		}
 		
 		
@@ -424,6 +449,7 @@ namespace Epsitec.Common.Text
 							//	Mode spécifique :
 							//
 							//	- "cont" -----> continue indépendamment du contexte
+							//	- "reset" ----> reprend au début
 							//	- "set ..." --> reprend avec le numéro spécifié
 							
 							string mode = m_info_property.ManagerInfo;
@@ -432,6 +458,10 @@ namespace Epsitec.Common.Text
 							{
 								//	Continue normalement la séquence, indépendamment
 								//	des recommendations de l'énumérateur.
+							}
+							else if (mode == "reset")
+							{
+								this.series.Restart ();
 							}
 							else if (mode.StartsWith ("set "))
 							{

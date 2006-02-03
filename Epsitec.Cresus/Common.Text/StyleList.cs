@@ -624,7 +624,7 @@ namespace Epsitec.Common.Text
 				switch (manager_name)
 				{
 					case "ItemList":
-						ParagraphManagers.ItemListManager.Parameters p = new Epsitec.Common.Text.ParagraphManagers.ItemListManager.Parameters (this.context, parameters);
+						ParagraphManagers.ItemListManager.Parameters p = new ParagraphManagers.ItemListManager.Parameters (this.context, parameters);
 						
 						if (p.Generator != null)
 						{

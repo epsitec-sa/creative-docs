@@ -3,6 +3,8 @@
 
 namespace Epsitec.Common.Text
 {
+	using EventHandler = Epsitec.Common.Support.EventHandler;
+	
 	/// <summary>
 	/// La classe GeneratorList gère la liste des générateurs, accessibles par
 	/// leur nom.
@@ -33,6 +35,17 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public Generator NewTemporaryGenerator(Generator model)
+		{
+			Generator generator = new Generator (null);
+			
+			generator.Restore (this.context, model.Save ());
+			generator.DefineName ("*");
+			
+			return generator;
+		}
+		
+		
 		public Generator NewGenerator()
 		{
 			string name = this.context.StyleList.GenerateUniqueName ();
@@ -43,12 +56,32 @@ namespace Epsitec.Common.Text
 		public Generator NewGenerator(string name)
 		{
 			System.Diagnostics.Debug.Assert (this.generators.Contains (name) == false);
+			System.Diagnostics.Debug.Assert (name != null);
+			System.Diagnostics.Debug.Assert (name.Length > 0);
+			System.Diagnostics.Debug.Assert (name != "*");
 			
 			Generator generator = new Generator (name);
 			
 			this.generators[name] = generator;
+			this.NotifyChanged (generator);
 			
 			return generator;
+		}
+		
+		public void RedefineGenerator(Common.Support.OpletQueue queue, Generator generator, Generator model)
+		{
+			System.Diagnostics.Debug.Assert (this.generators.Contains (generator.Name));
+			
+			if (queue != null)
+			{
+				System.Diagnostics.Debug.Assert (queue.IsActionDefinitionInProgress);
+				TextStory.InsertOplet (queue, new RedefineOplet (this, generator));
+			}
+			
+			string name = generator.Name;
+			generator.Restore (this.context, model.Save ());
+			generator.DefineName (name);
+			this.NotifyChanged (generator);
 		}
 		
 		public void DisposeGenerator(Generator generator)
@@ -56,6 +89,40 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (this.generators.Contains (generator.Name));
 			
 			this.generators.Remove (generator.Name);
+		}
+		
+		
+		public void CloneGenerators(Property[] properties)
+		{
+			for (int i = 0; i < properties.Length; i++)
+			{
+				if (properties[i].WellKnownType == Properties.WellKnownType.ManagedParagraph)
+				{
+					Properties.ManagedParagraphProperty mpp = properties[i] as Properties.ManagedParagraphProperty;
+					string   manager_name = mpp.ManagerName;
+					string[] parameters   = mpp.ManagerParameters;
+					
+					switch (manager_name)
+					{
+						case "ItemList":
+							ParagraphManagers.ItemListManager.Parameters p = new ParagraphManagers.ItemListManager.Parameters (this.context, parameters);
+							p.Generator = this.CloneGenerator (p.Generator);
+							parameters = p.Save ();
+							break;
+					}
+					
+					properties[i] = new Properties.ManagedParagraphProperty (manager_name, parameters);
+					this.NotifyChanged (null);
+				}
+			}
+		}
+		
+		public Generator CloneGenerator(Generator model)
+		{
+			Generator generator = this.NewGenerator ();
+			this.RedefineGenerator (null, generator, model);
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cloned Generator '{0}' to '{1}'", model.Name, generator.Name));
+			return generator;
 		}
 		
 		
@@ -123,6 +190,70 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		#region RedefineOplet Class
+		public class RedefineOplet : Common.Support.AbstractOplet
+		{
+			public RedefineOplet(GeneratorList list, Generator generator)
+			{
+				this.list      = list;
+				this.generator = generator;
+				this.state     = this.generator.Save ();
+			}
+			
+			
+			public override Common.Support.IOplet Undo()
+			{
+				string new_state = this.generator.Save ();
+				string old_state = this.state;
+				
+				this.state = new_state;
+				
+				this.generator.Restore (this.list.context, old_state);
+				this.list.NotifyChanged (this.generator);
+				
+				return this;
+			}
+			
+			public override Common.Support.IOplet Redo()
+			{
+				return this.Undo ();
+			}
+			
+			public override void Dispose()
+			{
+				base.Dispose ();
+			}
+			
+			
+			public bool MergeWith(RedefineOplet other)
+			{
+				if ((this.generator == other.generator) &&
+					(this.list == other.list))
+				{
+					return true;
+				}
+				
+				return false;
+			}
+						
+			
+			private GeneratorList				list;
+			private Generator					generator;
+			private string						state;
+		}
+		#endregion
+		
+		private void NotifyChanged(Generator generator)
+		{
+			if (this.Changed != null)
+			{
+				this.Changed (this);
+			}
+		}
+		
+		
+		public event EventHandler				Changed;
 		
 		private Text.TextContext				context;
 		private System.Collections.Hashtable	generators;
