@@ -7,6 +7,9 @@ namespace Epsitec.Common.Document.Menus
 		public LeadingMenu(Document document, double value, string units)
 		{
 			//	Constructeur unique.
+			value *= 1000000.0;
+			value = System.Math.Floor(value+0.5);  // arrondi à la 6ème décimale
+			value /= 1000000.0;
 			this.value = value;
 			this.units = units;
 
@@ -20,11 +23,17 @@ namespace Epsitec.Common.Document.Menus
 				if ( this.units == "%" )
 				{
 					this.name = string.Format("{0}{1}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture), this.units);
-					this.text = string.Format("{0}{1}", (this.value*100).ToString(System.Globalization.CultureInfo.CurrentUICulture), this.units);
+					
+					value = this.value*100;
+					value *= 1000000.0;
+					value = System.Math.Floor(value+0.5);  // arrondi à la 6ème décimale
+					value /= 1000000.0;
+					this.text = string.Format("{0}{1}", value.ToString(), this.units);
 				}
 				else
 				{
 					this.name = string.Format("{0}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					
 					this.text = string.Format("{0} {1}", document.Modifier.RealToString(this.value), document.Modifier.ShortNameUnitDimension);
 				}
 			}

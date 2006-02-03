@@ -20,12 +20,22 @@ namespace Epsitec.Common.Document.Menus
 				if ( this.units == "%" )
 				{
 					this.name = string.Format("{0}{1}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture), this.units);
-					this.text = string.Format("{0}{1}", (this.value*100).ToString(System.Globalization.CultureInfo.CurrentUICulture), this.units);
+					
+					value = this.value*100;
+					value *= 1000000.0;
+					value = System.Math.Floor(value+0.5);  // arrondi à la 6ème décimale
+					value /= 1000000.0;
+					this.text = string.Format("{0}{1}", value.ToString(), this.units);
 				}
 				else
 				{
 					this.name = string.Format("{0}", this.value.ToString(System.Globalization.CultureInfo.InvariantCulture));
-					this.text = string.Format("{0}", (this.value/Modifier.FontSizeScale).ToString(System.Globalization.CultureInfo.CurrentUICulture));
+					
+					value = this.value/Modifier.FontSizeScale;
+					value *= 1000000.0;
+					value = System.Math.Floor(value+0.5);  // arrondi à la 6ème décimale
+					value /= 1000000.0;
+					this.text = string.Format("{0}", value.ToString());
 				}
 			}
 		}
