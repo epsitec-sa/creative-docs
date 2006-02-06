@@ -393,7 +393,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( isGenerator )
 			{
 				Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
-				string[] user = p.Generator.UserData;
+				string[] user = p == null ? null : p.Generator.UserData;
 				if ( user != null )
 				{
 					foreach ( string data in user )

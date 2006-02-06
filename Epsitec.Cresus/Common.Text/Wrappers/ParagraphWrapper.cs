@@ -82,6 +82,11 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public ParagraphManagers.ItemListManager.Parameters ConvertToItemListManager(System.Collections.ArrayList list)
 		{
+			if (list == null)
+			{
+				return null;
+			}
+			
 			string   name;
 			string[] parameters;
 			
