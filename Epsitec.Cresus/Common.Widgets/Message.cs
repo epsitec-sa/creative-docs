@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -1066,6 +1066,12 @@ namespace Epsitec.Common.Widgets
 		Add				= 107,
 		Substract		= 109,
 		Tab				= 9,
+		
+		ContextualMenu	= 93,
+		
+		CapsLock		= 20,
+		NumLock			= 144,
+		ScrollLock		= 145,
 		
 		KeyCodeMask		= 0x0000ffff,
 		ModifierMask	= 0x00ff0000,

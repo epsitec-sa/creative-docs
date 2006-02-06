@@ -610,7 +610,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.keyboard_menu_window = this.keyboard_menu_item == null ? null : this.keyboard_menu_item.Window;
 				this.keyboard_menu_active = true;
 				
-				window.Hide ();
+				if (this.keyboard_menu_window != null)
+				{
+					window.Hide ();
+				}
+				else
+				{
+					this.Reject ();
+				}
 			}
 			else
 			{

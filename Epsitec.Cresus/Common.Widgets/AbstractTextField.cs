@@ -774,7 +774,7 @@ namespace Epsitec.Common.Widgets
 						message.Consumer = this;
 						if ( message.IsRightButton )
 						{
-							this.ContextMenu();
+							this.ShowContextMenu(true);
 						}
 					}
 					break;
@@ -809,6 +809,10 @@ namespace Epsitec.Common.Widgets
 									message.Consumer = this;
 									message.Swallowed = true;
 								}
+								break;
+								
+							case KeyCode.ContextualMenu:
+								this.ShowContextMenu(false);
 								break;
 						}
 					}
@@ -876,12 +880,12 @@ namespace Epsitec.Common.Widgets
 
 
 		#region ContextMenu
-		protected void ContextMenu()
+		protected void ShowContextMenu(bool mouseBased)
 		{
 			this.contextMenu = new VMenu();
 			this.contextMenu.Host = this;
-//@			this.contextMenu.Accepted += new MenuEventHandler(this.HandleContextMenuAccepted);
-//@			this.contextMenu.Rejected += new Epsitec.Common.Support.EventHandler(this.HandleContextMenuRejected);
+			this.contextMenu.Behavior.Accepted += new Support.EventHandler(this.HandleContextMenuAccepted);
+			this.contextMenu.Behavior.Rejected += new Support.EventHandler(this.HandleContextMenuRejected);
 
 			MenuItem mi;
 			bool sel = (this.TextNavigator.CursorFrom != this.TextNavigator.CursorTo);
@@ -922,9 +926,29 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu.Items.Add(mi);
 
 			this.contextMenu.AdjustSize();
-			Drawing.Point mouse = this.lastMousePos;
+			
+			Drawing.Point mouse;
+			
+			if (mouseBased)
+			{
+				mouse = this.lastMousePos;
+			}
+			else
+			{
+				Drawing.Point p1, p2;
+				
+				if (this.TextLayout.FindTextCursor(this.navigator.Context, out p1, out p2))
+				{
+					mouse = p1 + this.InnerTextBounds.Location - this.scrollOffset;
+				}
+				else
+				{
+					mouse = this.Client.Bounds.Center;
+				}
+			}
+			
 			mouse = this.MapClientToScreen(mouse);
-
+			
 			ScreenInfo si = ScreenInfo.Find(mouse);
 			Drawing.Rectangle wa = si.WorkingArea;
 			if ( mouse.Y-this.contextMenu.Height < wa.Bottom )
@@ -936,40 +960,16 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu.ShowAsContextMenu(this, mouse);
 		}
 
+		private void HandleContextMenuAccepted(object sender)
+		{
+			this.contextMenu = null;
+			this.Invalidate ();
+		}
+		
 		private void HandleContextMenuRejected(object sender)
 		{
-	//		private void HandleContextMenuAccepted(object sender, MenuEventArgs e)
-	//		{
-	//			if ( e.MenuItem.Name == "Cut" )
-	//			{
-	//				this.copyPasteBehavior.ProcessCopy();
-	//				this.copyPasteBehavior.ProcessDelete();
-	//			}
-	//
-	//			if ( e.MenuItem.Name == "Copy" )
-	//			{
-	//				this.copyPasteBehavior.ProcessCopy();
-	//			}
-	//
-	//			if ( e.MenuItem.Name == "Paste" )
-	//			{
-	//				this.copyPasteBehavior.ProcessPaste();
-	//			}
-	//
-	//			if ( e.MenuItem.Name == "Delete" )
-	//			{
-	//				this.copyPasteBehavior.ProcessDelete();
-	//			}
-	//
-	//			if ( e.MenuItem.Name == "SelectAll" )
-	//			{
-	//				this.copyPasteBehavior.ProcessSelectAll();
-	//			}
-	//
-	//			this.contextMenu = null;
-	//		}
-	
 			this.contextMenu = null;
+			this.Invalidate ();
 		}
 		#endregion
 
@@ -1040,7 +1040,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void HandleDefocused()
 		{
-			System.Diagnostics.Debug.WriteLine ("AbstractTextField de-focused");
+			System.Diagnostics.Debug.WriteLine ("AbstractTextField de-focused (IsKeyboardFocused="+this.IsKeyboardFocused+")");
 			
 			TextField.blinking = null;
 			
@@ -1457,7 +1457,7 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				if ( !this.navigator.IsReadOnly && visibleCursor )
+				if ( !this.navigator.IsReadOnly && visibleCursor && this.IsKeyboardFocused )
 				{
 					//	Dessine le curseur :
 					Drawing.Point p1, p2;
