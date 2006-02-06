@@ -498,6 +498,13 @@
 	<data name="TextPanel.Generator.Tooltip.Generator">Numérotation du niveau</data>
 	<data name="TextPanel.Generator.Tooltip.Suffix">Suffixe du niveau</data>
 	<data name="TextPanel.Generator.Radio.Global">b</data>
+	<data name="TextPanel.Generator.Type.None">Aucun</data>
+	<data name="TextPanel.Generator.Type.Bullet1">Petites puces</data>
+	<data name="TextPanel.Generator.Type.Bullet2">Grandes puces</data>
+	<data name="TextPanel.Generator.Type.Num1">Numérotation 1.1.1</data>
+	<data name="TextPanel.Generator.Type.Num2">Numérotation 1.a.a</data>
+	<data name="TextPanel.Generator.Type.Num3">Numérotation a.i.i</data>
+	<data name="TextPanel.Generator.Type.Custom">Personnalisé</data>
 	
 	<data name="TextPanel.Justif.Title">Mise en page</data>
 

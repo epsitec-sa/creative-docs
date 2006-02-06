@@ -22,17 +22,16 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.Text = "Aucun";
 			this.fieldType.IsReadOnly = true;
 			this.fieldType.AutoFocus = false;
-			this.fieldType.TextChanged += new EventHandler(this.HandleTypeChanged);
+			this.fieldType.ClosedCombo += new EventHandler(this.HandleTypeChanged);
 			this.fieldType.TabIndex = this.tabIndex++;
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.fieldType.Items.Add("Aucun");
-			this.fieldType.Items.Add("Petites puces");
-			this.fieldType.Items.Add("Grosse puces");
-			this.fieldType.Items.Add("Numérotation 1.1.1");
-			this.fieldType.Items.Add("Numérotation 1.a.a");
-			this.fieldType.Items.Add("Numérotation a.i.i");
-			this.fieldType.Items.Add("Personnalisé");
-			//?ToolTip.Default.SetToolTip(this.fieldType, Res.Strings.TextPanel.Generator.Tooltip.Generator);
+			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.None);
+			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet1);
+			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet2);
+			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Num1);
+			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Num2);
+			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Num3);
+			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Custom);
 
 			this.radioLevel = new RadioButton[Generator.maxLevel];
 			for ( int i=0 ; i<Generator.maxLevel ; i++ )
@@ -87,7 +86,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
-			this.Type = 0;
+			this.Type = "None";
 			this.Level = 0;
 
 			this.isNormalAndExtended = true;
@@ -98,6 +97,17 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
+				this.fieldType.ClosedCombo -= new EventHandler(this.HandleTypeChanged);
+
+				for ( int i=0 ; i<Generator.maxLevel ; i++ )
+				{
+					this.radioLevel[i].Clicked -= new MessageEventHandler(this.HandleRadioLevelClicked);
+				}
+
+				this.fieldPrefix.TextChanged -= new EventHandler(this.HandlePrefixChanged);
+				this.fieldGenerator.TextChanged -= new EventHandler(this.HandleGeneratorChanged);
+				this.fieldSuffix.TextChanged -= new EventHandler(this.HandleSuffixChanged);
+
 				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
 				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
 			}
@@ -138,6 +148,108 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Le wrapper associé a changé.
 			this.UpdateAfterChanging();
+		}
+
+
+		protected void CreateGenerator(string type)
+		{
+			Text.TabList tabs = this.document.TextContext.TabList;
+			Text.ParagraphManagers.ItemListManager.Parameters p;
+
+			string[] user = new string[1];
+			user[0] = string.Concat("Type=", type);
+
+			if ( type == "None" )
+			{
+				this.ParagraphWrapper.Defined.ItemListParameters = null;
+			}
+
+			if ( type == "Bullet1" || (type == "Custom" && this.ParagraphWrapper.Defined.ItemListParameters == null) )
+			{
+				p = new Text.ParagraphManagers.ItemListManager.Parameters();
+				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
+
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CF"));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CB", true));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
+				
+				Text.ParagraphManagers.ItemListManager.Parameters items = new Text.ParagraphManagers.ItemListManager.Parameters();
+				items.Generator = p.Generator;
+				items.TabItem   = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("Em:1"));
+				items.TabBody   = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("Em:2"));
+				items.Font      = new Text.Properties.FontProperty("Arial", "Regular");
+
+				p.Generator.UserData = user;
+				this.ParagraphWrapper.Defined.ItemListParameters = p;
+			}
+
+			if ( type == "Custom" )
+			{
+				p = this.ParagraphWrapper.Defined.ItemListParameters;
+				p.Generator.UserData = user;
+				this.ParagraphWrapper.Defined.ItemListParameters = p;
+			}
+
+
+				
+				
+#if false				
+			Text.TabList tabs = this.document.TextContext.TabList;
+
+			Text.TextStyle[] baseStyles = new Text.TextStyle[] { paraStyle };
+		
+			Text.Generator generator1 = this.document.TextContext.GeneratorList.NewGenerator("bullet-1");
+		
+			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25CF"));
+			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25CB", true));
+			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "-", true));
+		
+			generator1[1].ValueProperties = new Text.Property[] { new Text.Properties.FontColorProperty(red) };
+			generator1[2].ValueProperties = new Text.Property[] { new Text.Properties.FontColorProperty(green) };
+		
+			Text.ParagraphManagers.ItemListManager.Parameters items1 = new Text.ParagraphManagers.ItemListManager.Parameters();
+
+			items1.Generator = generator1;
+			items1.TabItem   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute ("Em:1"));
+			items1.TabBody   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute ("Em:2"));
+			items1.Font      = new Text.Properties.FontProperty ("Arial", "Regular");
+		
+			Text.Properties.ManagedParagraphProperty itemList1 = new Text.Properties.ManagedParagraphProperty("ItemList", items1.Save());
+		
+			Text.TextStyle l1 = this.document.TextContext.StyleList.NewTextStyle(null, "BulletRound", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
+		
+			int rank = 1;
+			this.document.TextContext.StyleList.StyleMap.SetRank(null, l1, rank++);
+			this.document.TextContext.StyleList.StyleMap.SetCaption(null, l1, "Liste à puces");
+#endif
+		}
+
+
+		protected static string ConvTypeToText(string type)
+		{
+			switch ( type )
+			{
+				case "None":     return Res.Strings.TextPanel.Generator.Type.None;
+				case "Bullet1":  return Res.Strings.TextPanel.Generator.Type.Bullet1;
+				case "Bullet2":  return Res.Strings.TextPanel.Generator.Type.Bullet2;
+				case "Num1":     return Res.Strings.TextPanel.Generator.Type.Num1;
+				case "Num2":     return Res.Strings.TextPanel.Generator.Type.Num2;
+				case "Num3":     return Res.Strings.TextPanel.Generator.Type.Num3;
+				case "Custom":   return Res.Strings.TextPanel.Generator.Type.Custom;
+			}
+			return "?";
+		}
+
+		protected static string ConvTextToType(string text)
+		{
+			if ( text == Res.Strings.TextPanel.Generator.Type.None    )  return "None";
+			if ( text == Res.Strings.TextPanel.Generator.Type.Bullet1 )  return "Bullet1";
+			if ( text == Res.Strings.TextPanel.Generator.Type.Bullet2 )  return "Bullet2";
+			if ( text == Res.Strings.TextPanel.Generator.Type.Num1    )  return "Num1";
+			if ( text == Res.Strings.TextPanel.Generator.Type.Num2    )  return "Num2";
+			if ( text == Res.Strings.TextPanel.Generator.Type.Num3    )  return "Num3";
+			if ( text == Res.Strings.TextPanel.Generator.Type.Custom  )  return "Custom";
+			return null;
 		}
 
 		
@@ -211,10 +323,27 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			if ( this.ParagraphWrapper.IsAttached == false )  return;
 
-			//?Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Active.ItemListParameters;
+			string type = "None";
 			bool isGenerator = this.ParagraphWrapper.Defined.IsManagedParagraphDefined;
+			if ( isGenerator )
+			{
+				Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
+				string[] user = p.Generator.UserData;
+				if ( user != null )
+				{
+					foreach ( string data in user )
+					{
+						if ( data.StartsWith("Type=") )
+						{
+							type = data.Substring(5);
+						}
+					}
+				}
+			}
 
 			this.ignoreChanged = true;
+
+			this.fieldType.Text = Generator.ConvTypeToText(type);
 
 			this.ProposalTextFieldCombo(this.fieldType, !isGenerator);
 			this.ProposalTextFieldCombo(this.fieldPrefix, !isGenerator);
@@ -227,7 +356,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void UpdateWidgets()
 		{
-			bool custom = (this.type == 6);
+			bool custom = (this.type == "Custom");
 
 			for ( int i=0 ; i<Generator.maxLevel ; i++ )
 			{
@@ -239,7 +368,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldSuffix.Enable = custom;
 		}
 
-		protected int Type
+		protected string Type
 		{
 			get
 			{
@@ -280,7 +409,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			TextFieldCombo combo = sender as TextFieldCombo;
-			this.Type = combo.SelectedIndex;
+			this.Type = Generator.ConvTextToType(combo.Text);
+			this.CreateGenerator(this.type);
 		}
 
 		private void HandleRadioLevelClicked(object sender, MessageEventArgs e)
@@ -317,14 +447,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 
 			this.ParagraphWrapper.SuspendSynchronizations();
-			this.ParagraphWrapper.Defined.ClearLeftMarginFirst();
-			this.ParagraphWrapper.Defined.ClearLeftMarginBody();
-			this.ParagraphWrapper.Defined.ClearRightMarginFirst();
-			this.ParagraphWrapper.Defined.ClearRightMarginBody();
-			this.ParagraphWrapper.Defined.ClearMarginUnits();
-			this.ParagraphWrapper.Defined.ClearIndentationLevel();
-			this.ParagraphWrapper.Defined.ClearIndentationLevelAttribute();
-			this.ParagraphWrapper.DefineOperationName("ParagraphMarginsClear", Res.Strings.TextPanel.Clear);
+			this.ParagraphWrapper.Defined.ItemListParameters = null;
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorClear", Res.Strings.TextPanel.Clear);
 			this.ParagraphWrapper.ResumeSynchronizations();
 			this.document.IsDirtySerialize = true;
 		}
@@ -339,7 +463,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected TextFieldCombo			fieldSuffix;
 		protected IconButton				buttonClear;
 
-		protected int						type = -1;
+		protected string					type = null;
 		protected int						level = -1;
 	}
 }
