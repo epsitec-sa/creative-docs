@@ -5051,6 +5051,7 @@ namespace Epsitec.App.DocumentEditor
 					Point mouse;
 					if ( doc.Modifier.ActiveViewer.MousePos(out mouse) )
 					{
+						doc.Modifier.ActiveViewer.DrawingContext.SnapGrid(ref mouse);
 						return string.Format("x:{0} y:{1}", doc.Modifier.RealToString(mouse.X), doc.Modifier.RealToString(mouse.Y));
 					}
 					else
