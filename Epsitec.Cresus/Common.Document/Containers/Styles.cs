@@ -126,15 +126,15 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Crée les boutons radio pour le choix de la catégorie.
 			this.categoryContainer = new Widget(this.topPage);
-			this.categoryContainer.Height = 20;
+			this.categoryContainer.Height = 20+8;
 			this.categoryContainer.Dock = DockStyle.Top;
-			this.categoryContainer.DockMargins = new Margins(0, 0, 0, 5);
+			this.categoryContainer.DockMargins = new Margins(0, 0, 0, 0);
 			this.categoryContainer.TabIndex = 1;
 			this.categoryContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.index = 0;
 
-			this.categoryGraphic = new Button(this.categoryContainer);
+			this.categoryGraphic = new Widgets.IconMarkButton(this.categoryContainer);
 			this.categoryGraphic.Name = "Graphic";
 			this.categoryGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryGraphic.AutoFocus = false;
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryGraphic.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.categoryGraphic.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
-			this.categoryParagraph = new Button(this.categoryContainer);
+			this.categoryParagraph = new Widgets.IconMarkButton(this.categoryContainer);
 			this.categoryParagraph.Name = "Paragraph";
 			this.categoryParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryParagraph.AutoFocus = false;
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryParagraph.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.categoryParagraph.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
-			this.categoryCharacter = new Button(this.categoryContainer);
+			this.categoryCharacter = new Widgets.IconMarkButton(this.categoryContainer);
 			this.categoryCharacter.Name = "Character";
 			this.categoryCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryCharacter.AutoFocus = false;
@@ -884,18 +884,10 @@ namespace Epsitec.Common.Document.Containers
 			this.SetCategory(this.categoryCharacter, Res.Strings.Panel.AggregateCategory.Character, (this.category == StyleCategory.Character));
 		}
 
-		protected void SetCategory(Button button, string text, bool state)
+		protected void SetCategory(Widgets.IconMarkButton button, string text, bool state)
 		{
-			if ( state )
-			{
-				button.Text = Misc.Bold(text);
-				button.ActiveState = ActiveState.Yes;
-			}
-			else
-			{
-				button.Text = text;
-				button.ActiveState = ActiveState.No;
-			}
+			button.Text = text;
+			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected StyleCategory Category
@@ -934,7 +926,7 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleCategoryChanged(object sender, MessageEventArgs e)
 		{
-			Button button = sender as Button;
+			Widget button = sender as Widget;
 			this.SetCategory(button.Name);
 		}
 
@@ -1731,9 +1723,9 @@ namespace Epsitec.Common.Document.Containers
 		protected Scrollable				bottomScrollable;
 
 		protected Widget					categoryContainer;
-		protected Button					categoryGraphic;
-		protected Button					categoryParagraph;
-		protected Button					categoryCharacter;
+		protected Widgets.IconMarkButton	categoryGraphic;
+		protected Widgets.IconMarkButton	categoryParagraph;
+		protected Widgets.IconMarkButton	categoryCharacter;
 		protected StyleCategory				category;
 
 		protected HToolBar					aggregateToolBar;

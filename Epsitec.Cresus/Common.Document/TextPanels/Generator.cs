@@ -165,7 +165,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.ParagraphWrapper.Defined.ItemListParameters = null;
 			}
 
-			if ( type == "Bullet1" || (type == "Custom" && this.ParagraphWrapper.Defined.ItemListParameters == null) )
+			if ( type == "Bullet1" || (type == "Custom" && !this.ParagraphWrapper.Defined.IsManagedParagraphDefined) )
 			{
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();

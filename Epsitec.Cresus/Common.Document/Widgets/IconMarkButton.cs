@@ -52,6 +52,24 @@ namespace Epsitec.Common.Document.Widgets
 				state &= ~WidgetState.Entered;
 				state &= ~WidgetState.Engaged;
 			}
+
+			if ( this.ActiveState == ActiveState.Yes )  // dessine la marque 'v' en bas du bouton ?
+			{
+				Drawing.Rectangle rmark = this.Client.Bounds;
+				rmark.Top = rmark.Bottom+this.markHeight;
+				rmark.Inflate(5);
+				rmark.Offset(0, 1);
+				rmark.Top += 1;
+				if ( (state & WidgetState.Enabled) == 0 )
+				{
+					Color color = adorner.ColorTextFieldBorder(false);
+					adorner.PaintGlyph(graphics, rmark, WidgetState.Enabled, color, GlyphShape.Menu, PaintTextStyle.Button);
+				}
+				else
+				{
+					adorner.PaintGlyph(graphics, rmark, WidgetState.Enabled, GlyphShape.Menu, PaintTextStyle.Button);
+				}
+			}
 			
 			state &= ~WidgetState.Selected;
 			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
@@ -68,15 +86,6 @@ namespace Epsitec.Common.Document.Widgets
 			else
 			{
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
-			}
-
-			if ( this.ActiveState == ActiveState.Yes )  // dessine la marque 'v' en bas du bouton ?
-			{
-				rect = this.Client.Bounds;
-				rect.Top = rect.Bottom+this.markHeight;
-				rect.Inflate(5);
-				rect.Offset(0, 1);
-				adorner.PaintGlyph(graphics, rect, WidgetState.Enabled, GlyphShape.Menu, PaintTextStyle.Button);
 			}
 		}
 
