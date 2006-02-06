@@ -496,7 +496,7 @@
 	<data name="TextPanel.Generator.Tooltip.Prefix">@@Préfixe du niveau</data>
 	<data name="TextPanel.Generator.Tooltip.Generator">@@Numérotation du niveau</data>
 	<data name="TextPanel.Generator.Tooltip.Suffix">@@Suffixe du niveau</data>
-	<data name="TextPanel.Generator.Radio.Global">b</data>
+	<data name="TextPanel.Generator.Radio.Global">Base</data>
 	<data name="TextPanel.Generator.Type.None">@@Aucun</data>
 	<data name="TextPanel.Generator.Type.Bullet1">@@Petites puces</data>
 	<data name="TextPanel.Generator.Type.Bullet2">@@Grandes puces</data>

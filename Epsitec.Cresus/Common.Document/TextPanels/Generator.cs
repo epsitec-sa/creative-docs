@@ -33,17 +33,18 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Num3);
 			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Custom);
 
-			this.radioLevel = new RadioButton[Generator.maxLevel];
+			this.buttonLevel = new Widgets.IconMarkButton[Generator.maxLevel];
 			for ( int i=0 ; i<Generator.maxLevel ; i++ )
 			{
-				this.radioLevel[i] = new RadioButton(this);
-				this.radioLevel[i].Name = i.ToString(System.Globalization.CultureInfo.InvariantCulture);
-				this.radioLevel[i].Text = i.ToString();
-				this.radioLevel[i].Group = "Level";
-				this.radioLevel[i].Clicked += new MessageEventHandler(this.HandleRadioLevelClicked);
+				this.buttonLevel[i] = new Widgets.IconMarkButton(this);
+				this.buttonLevel[i].ButtonStyle = ButtonStyle.ActivableIcon;
+				this.buttonLevel[i].AutoFocus = false;
+				this.buttonLevel[i].Name = i.ToString(System.Globalization.CultureInfo.InvariantCulture);
+				this.buttonLevel[i].Text = i.ToString();
+				this.buttonLevel[i].Clicked += new MessageEventHandler(this.HandleLevelClicked);
 			}
-			this.radioLevel[0].Text = Res.Strings.TextPanel.Generator.Radio.Global;
-			this.radioLevel[0].ActiveState = ActiveState.Yes;
+			this.buttonLevel[0].Text = Res.Strings.TextPanel.Generator.Radio.Global;
+			this.buttonLevel[0].ActiveState = ActiveState.Yes;
 
 			this.fieldPrefix = new TextFieldCombo(this);
 			this.fieldPrefix.AutoFocus = false;
@@ -101,7 +102,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				for ( int i=0 ; i<Generator.maxLevel ; i++ )
 				{
-					this.radioLevel[i].Clicked -= new MessageEventHandler(this.HandleRadioLevelClicked);
+					this.buttonLevel[i].Clicked -= new MessageEventHandler(this.HandleLevelClicked);
 				}
 
 				this.fieldPrefix.TextChanged -= new EventHandler(this.HandlePrefixChanged);
@@ -132,11 +133,11 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( this.isExtendedSize )  // panneau étendu ?
 				{
-					h += 105;
+					h += 110;
 				}
 				else	// panneau réduit ?
 				{
-					h += 30;
+					h += 35;
 				}
 
 				return h;
@@ -173,11 +174,26 @@ namespace Epsitec.Common.Document.TextPanels
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CB", true));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
 				
-				Text.ParagraphManagers.ItemListManager.Parameters items = new Text.ParagraphManagers.ItemListManager.Parameters();
-				items.Generator = p.Generator;
-				items.TabItem   = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("Em:1"));
-				items.TabBody   = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("Em:2"));
-				items.Font      = new Text.Properties.FontProperty("Arial", "Regular");
+				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("Em:1"));
+				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("Em:2"));
+				p.Font    = new Text.Properties.FontProperty("Arial", "Regular");
+
+				p.Generator.UserData = user;
+				this.ParagraphWrapper.Defined.ItemListParameters = p;
+			}
+
+			if ( type == "Bullet2" )
+			{
+				p = new Text.ParagraphManagers.ItemListManager.Parameters();
+				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
+
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CF"));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CB", true));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
+				
+				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("Em:1"));
+				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("Em:2"));
+				p.Font    = new Text.Properties.FontProperty("Arial", "Regular");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -189,39 +205,6 @@ namespace Epsitec.Common.Document.TextPanels
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
 			}
-
-
-				
-				
-#if false				
-			Text.TabList tabs = this.document.TextContext.TabList;
-
-			Text.TextStyle[] baseStyles = new Text.TextStyle[] { paraStyle };
-		
-			Text.Generator generator1 = this.document.TextContext.GeneratorList.NewGenerator("bullet-1");
-		
-			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25CF"));
-			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25CB", true));
-			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "-", true));
-		
-			generator1[1].ValueProperties = new Text.Property[] { new Text.Properties.FontColorProperty(red) };
-			generator1[2].ValueProperties = new Text.Property[] { new Text.Properties.FontColorProperty(green) };
-		
-			Text.ParagraphManagers.ItemListManager.Parameters items1 = new Text.ParagraphManagers.ItemListManager.Parameters();
-
-			items1.Generator = generator1;
-			items1.TabItem   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute ("Em:1"));
-			items1.TabBody   = tabs.NewTab(Text.TabList.GenericSharedName, 0.0, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute ("Em:2"));
-			items1.Font      = new Text.Properties.FontProperty ("Arial", "Regular");
-		
-			Text.Properties.ManagedParagraphProperty itemList1 = new Text.Properties.ManagedParagraphProperty("ItemList", items1.Save());
-		
-			Text.TextStyle l1 = this.document.TextContext.StyleList.NewTextStyle(null, "BulletRound", Text.TextStyleClass.Paragraph, new Text.Property[] { itemList1 }, baseStyles);
-		
-			int rank = 1;
-			this.document.TextContext.StyleList.StyleMap.SetRank(null, l1, rank++);
-			this.document.TextContext.StyleList.StyleMap.SetCaption(null, l1, "Liste à puces");
-#endif
 		}
 
 
@@ -275,16 +258,21 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				r.Offset(0, -25);
 				r.Left = rect.Left;
-				r.Width = 31;
-				r.Bottom = r.Top-20;
-				for ( int i=0 ; i<Generator.maxLevel ; i++ )
+				r.Width = 37;
+				r.Bottom = r.Top-(20+8);
+				this.buttonLevel[0].Bounds = r;
+				this.buttonLevel[0].Visibility = true;
+				r.Offset(r.Width, 0);
+				r.Width = 20;
+				for ( int i=1 ; i<Generator.maxLevel ; i++ )
 				{
-					this.radioLevel[i].Bounds = r;
-					this.radioLevel[i].Visibility = true;
+					this.buttonLevel[i].Bounds = r;
+					this.buttonLevel[i].Visibility = true;
 					r.Offset(r.Width, 0);
 				}
 
-				r.Offset(0, -25);
+				r.Offset(0, -30);
+				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Width = 56;
 				this.fieldPrefix.Bounds = r;
@@ -300,7 +288,7 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				for ( int i=0 ; i<Generator.maxLevel ; i++ )
 				{
-					this.radioLevel[i].Visibility = false;
+					this.buttonLevel[i].Visibility = false;
 				}
 
 				this.fieldPrefix.Visibility = false;
@@ -360,7 +348,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			for ( int i=0 ; i<Generator.maxLevel ; i++ )
 			{
-				this.radioLevel[i].Enable = custom;
+				this.buttonLevel[i].Enable = custom;
 			}
 
 			this.fieldPrefix.Enable = custom;
@@ -413,9 +401,15 @@ namespace Epsitec.Common.Document.TextPanels
 			this.CreateGenerator(this.type);
 		}
 
-		private void HandleRadioLevelClicked(object sender, MessageEventArgs e)
+		private void HandleLevelClicked(object sender, MessageEventArgs e)
 		{
-			RadioButton button = sender as RadioButton;
+			Button button = sender as Button;
+
+			for ( int i=0 ; i<Generator.maxLevel ; i++ )
+			{
+				this.buttonLevel[i].ActiveState = (this.buttonLevel[i] == button) ? ActiveState.Yes : ActiveState.No;
+			}
+			
 			int level = int.Parse(button.Name);
 			this.Level = level;
 		}
@@ -454,9 +448,9 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		protected static readonly int		maxLevel = 6;
+		protected static readonly int		maxLevel = 8;
 
-		protected RadioButton[]				radioLevel;
+		protected Widgets.IconMarkButton[]	buttonLevel;
 		protected TextFieldCombo			fieldType;
 		protected TextFieldCombo			fieldPrefix;
 		protected TextFieldCombo			fieldGenerator;
