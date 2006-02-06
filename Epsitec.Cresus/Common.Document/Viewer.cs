@@ -4420,6 +4420,13 @@ namespace Epsitec.Common.Document
 						{
 							rect.Bottom = pos.Y;
 							rect.Top    = pos.Y;  // juste une ligne horizontale
+
+							Point p1 = rect.BottomLeft;
+							Point p2 = rect.TopRight;
+							this.drawingContext.SnapGrid(ref p1);
+							this.drawingContext.SnapGrid(ref p2);
+							rect.BottomLeft = p1;
+							rect.TopRight = p2;
 						}
 					}
 				}
