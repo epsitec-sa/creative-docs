@@ -164,6 +164,11 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( type == "None" )
 			{
 				this.ParagraphWrapper.Defined.ItemListParameters = null;
+				this.ParagraphWrapper.Defined.ClearIndentationLevelAttribute();
+			}
+			else
+			{
+				this.ParagraphWrapper.Defined.IndentationLevelAttribute = string.Concat(TabList.LevelMultiplier, "0 pt");
 			}
 
 			if ( type == "Bullet1" || (type == "Custom" && !this.ParagraphWrapper.Defined.IsManagedParagraphDefined) )
@@ -177,8 +182,9 @@ namespace Epsitec.Common.Document.TextPanels
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CB", true));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
 				
-				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("Em:1"));
-				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("Em:2"));
+				//?Common.Text.Properties.UnitsTools.SerializeSizeUnits();
+				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("LevelTable:50 pt;150 pt;250 pt;350 pt"));
+				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("LevelTable:100 pt;200 pt;300 pt;400 pt"));
 				p.Font    = new Text.Properties.FontProperty("Arial", "Regular");
 
 				p.Generator.UserData = user;
@@ -231,8 +237,8 @@ namespace Epsitec.Common.Document.TextPanels
 				p.Generator.GlobalSuffix = "";
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Numeric, "", "."));
 				
-				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute("LevelMultiplier:150 %", "Em:1.5"));
-				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
+				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("LevelMultiplier:150 %", "Em:1.5"));
+				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -249,8 +255,8 @@ namespace Epsitec.Common.Document.TextPanels
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Numeric,    "-", ""));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Roman,      "(", "", Common.Text.Generator.Casing.Lower, null, true));
 				
-				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Force,       TabList.PackToAttribute("LevelMultiplier:100 %", "Em:0.5"));
-				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
+				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("LevelMultiplier:100 %", "Em:0.5"));
+				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -267,8 +273,8 @@ namespace Epsitec.Common.Document.TextPanels
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Alphabetic, "", ")", Common.Text.Generator.Casing.Lower, null, true));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Roman,      "", ")", Common.Text.Generator.Casing.Lower, null, true));
 				
-				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Force,       TabList.PackToAttribute("LevelMultiplier:100 %", "Em:0.5"));
-				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
+				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("LevelMultiplier:100 %", "Em:0.5"));
+				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -519,6 +525,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ParagraphWrapper.SuspendSynchronizations();
 			this.ParagraphWrapper.Defined.ItemListParameters = null;
+			this.ParagraphWrapper.Defined.ClearIndentationLevelAttribute();
 			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorClear", Res.Strings.TextPanel.Clear);
 			this.ParagraphWrapper.ResumeSynchronizations();
 			this.document.IsDirtySerialize = true;

@@ -528,9 +528,12 @@
 	<data name="TextPanel.Margins.Short.LeftFirst">P</data>
 	<data name="TextPanel.Margins.Short.LeftBody">G</data>
 	<data name="TextPanel.Margins.Short.Right">D</data>
+	<data name="TextPanel.Margins.Short.Level">N</data>
 	<data name="TextPanel.Margins.Long.LeftFirst">Marge première ligne</data>
 	<data name="TextPanel.Margins.Long.LeftBody">Marge gauche</data>
 	<data name="TextPanel.Margins.Long.Right">Marge droite</data>
+	<data name="TextPanel.Margins.Long.Level">Niveau d'indentation</data>
+	<data name="TextPanel.Margins.Tooltip.Level">Niveau d'indentation (1..9)</data>
 
 	<data name="TextPanel.Spaces.Title">Espacements</data>
 	<data name="TextPanel.Spaces.Short.Before">H</data>

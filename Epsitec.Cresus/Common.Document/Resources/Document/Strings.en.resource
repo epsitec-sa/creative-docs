@@ -527,9 +527,12 @@
 	<data name="TextPanel.Margins.Short.LeftFirst">F</data>
 	<data name="TextPanel.Margins.Short.LeftBody">L</data>
 	<data name="TextPanel.Margins.Short.Right">R</data>
+	<data name="TextPanel.Margins.Short.Level">:</data>
 	<data name="TextPanel.Margins.Long.LeftFirst">First line</data>
 	<data name="TextPanel.Margins.Long.LeftBody">Left Indent</data>
 	<data name="TextPanel.Margins.Long.Right">Right Indent</data>
+	<data name="TextPanel.Margins.Long.Level">@@Niveau d'indentation</data>
+	<data name="TextPanel.Margins.Tooltip.Level">@@Niveau d'indentation (1..9)</data>
 
 	<data name="TextPanel.Spaces.Title">Spacing</data>
 	<data name="TextPanel.Spaces.Short.Before">B</data>

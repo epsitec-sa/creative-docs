@@ -18,9 +18,15 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextMargins");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Margins.Title);
 
-			this.fieldLeftMarginFirst = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftFirst, Res.Strings.TextPanel.Margins.Short.LeftFirst, Res.Strings.TextPanel.Margins.Long.LeftFirst, 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
-			this.fieldLeftMarginBody  = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftBody,  Res.Strings.TextPanel.Margins.Short.LeftBody,  Res.Strings.TextPanel.Margins.Long.LeftBody,  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
-			this.fieldRightMargin     = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleRight,     Res.Strings.TextPanel.Margins.Short.Right,     Res.Strings.TextPanel.Margins.Long.Right,     0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
+			this.fieldLeftMarginFirst = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftFirst, Res.Strings.TextPanel.Margins.Short.LeftFirst, Res.Strings.TextPanel.Margins.Long.LeftFirst, 0.0,   0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
+			this.fieldLeftMarginBody  = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleLeftBody,  Res.Strings.TextPanel.Margins.Short.LeftBody,  Res.Strings.TextPanel.Margins.Long.LeftBody,  0.0,   0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
+			this.fieldRightMargin     = this.CreateTextFieldLabel(Res.Strings.Action.Text.Ruler.HandleRight,     Res.Strings.TextPanel.Margins.Short.Right,     Res.Strings.TextPanel.Margins.Long.Right,     0.0,   0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
+			this.fieldLevel           = this.CreateTextFieldLabel(Res.Strings.TextPanel.Margins.Tooltip.Level,   Res.Strings.TextPanel.Margins.Short.Level,     Res.Strings.TextPanel.Margins.Long.Level,     0.0, 100.0, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleMarginChanged));
+			this.fieldLevel.TextFieldReal.Resolution = 1.0M;
+			this.fieldLevel.TextFieldReal.Scale      = 1.0M;
+			this.fieldLevel.TextFieldReal.UnitType   = RealUnitType.Scalar;
+			this.fieldLevel.TextFieldReal.MinValue   = 1M;
+			this.fieldLevel.TextFieldReal.MaxValue   = 9M;
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -61,7 +67,7 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					if ( this.IsLabelProperties )  // étendu/détails ?
 					{
-						h += 80;
+						h += 105;
 					}
 					else	// étendu/compact ?
 					{
@@ -108,6 +114,9 @@ namespace Epsitec.Common.Document.TextPanels
 					this.fieldLeftMarginBody.Bounds = r;
 					r.Offset(0, -25);
 					this.fieldRightMargin.Bounds = r;
+					r.Offset(0, -25);
+					this.fieldLevel.Bounds = r;
+					this.fieldLevel.Visibility = true;
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
@@ -124,6 +133,10 @@ namespace Epsitec.Common.Document.TextPanels
 					this.fieldRightMargin.Bounds = r;
 
 					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Width = 60;
+					this.fieldLevel.Bounds = r;
+					this.fieldLevel.Visibility = true;
 					r.Left = rect.Right-20;
 					r.Width = 20;
 					this.buttonClear.Bounds = r;
@@ -141,6 +154,8 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fieldLeftMarginBody.Bounds = r;
 				r.Offset(60, 0);
 				this.fieldRightMargin.Bounds = r;
+
+				this.fieldLevel.Visibility = false;
 			}
 
 			this.UpdateButtonClear();
@@ -168,15 +183,18 @@ namespace Epsitec.Common.Document.TextPanels
 			double leftFirst = this.ParagraphWrapper.Active.LeftMarginFirst;
 			double leftBody  = this.ParagraphWrapper.Active.LeftMarginBody;
 			double right     = this.ParagraphWrapper.Active.RightMarginBody;
+			double level     = (double) this.ParagraphWrapper.Active.IndentationLevel + 1;
 			bool isLeftFirst = this.ParagraphWrapper.Defined.IsLeftMarginFirstDefined;
 			bool isLeftBody  = this.ParagraphWrapper.Defined.IsLeftMarginBodyDefined;
 			bool isRight     = this.ParagraphWrapper.Defined.IsRightMarginBodyDefined;
+			bool isLevel     = this.ParagraphWrapper.Defined.IsIndentationLevelDefined;
 
 			this.ignoreChanged = true;
 
 			this.SetTextFieldRealValue(this.fieldLeftMarginFirst.TextFieldReal, leftFirst, Common.Text.Properties.SizeUnits.Points, isLeftFirst, false);
 			this.SetTextFieldRealValue(this.fieldLeftMarginBody.TextFieldReal,  leftBody,  Common.Text.Properties.SizeUnits.Points, isLeftBody,  false);
 			this.SetTextFieldRealValue(this.fieldRightMargin.TextFieldReal,     right,     Common.Text.Properties.SizeUnits.Points, isRight,     false);
+			this.SetTextFieldRealValue(this.fieldLevel.TextFieldReal,           level,     Common.Text.Properties.SizeUnits.Points, isLevel,     false);
 
 			this.ignoreChanged = false;
 		}
@@ -238,6 +256,18 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 
+			if ( field == this.fieldLevel.TextFieldReal )
+			{
+				if ( isDefined )
+				{
+					this.ParagraphWrapper.Defined.IndentationLevel = (int) value-1;
+				}
+				else
+				{
+					this.ParagraphWrapper.Defined.ClearIndentationLevel();
+				}
+			}
+
 			if ( !this.ParagraphWrapper.Defined.IsLeftMarginFirstDefined  &&
 				 !this.ParagraphWrapper.Defined.IsLeftMarginBodyDefined   &&
 				 !this.ParagraphWrapper.Defined.IsRightMarginFirstDefined &&
@@ -273,6 +303,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected Widgets.TextFieldLabel	fieldLeftMarginFirst;
 		protected Widgets.TextFieldLabel	fieldLeftMarginBody;
 		protected Widgets.TextFieldLabel	fieldRightMargin;
+		protected Widgets.TextFieldLabel	fieldLevel;
 		protected IconButton				buttonClear;
 	}
 }

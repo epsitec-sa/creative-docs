@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.TextPanels
 				case "Spaces":     return ( o || o || P || o );
 				case "Keep":       return ( o || o || P || o );
 				case "Tabs":       return ( o || o || P || o );
-				case "Generator":  return ( o || o || P || o );
+				case "Generator":  return ( o || o || o || o );
 				case "Font":       return ( F || U || o || C );
 				case "Xline":      return ( F || o || o || C );
 				case "Xscript":    return ( F || o || o || C );
