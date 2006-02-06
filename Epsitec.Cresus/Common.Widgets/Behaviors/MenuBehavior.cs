@@ -1282,7 +1282,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				//	Rien à filtrer si aucun menu n'est actuellement visible. Il
 				//	est primordial de faire le test immédiatement, pour éviter
-				//	de griller de cycles de CPU inutilement.
+				//	de griller inutilement des cycles CPU.
 				
 				return;
 			}
@@ -1639,6 +1639,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private static void HandleApplicationDeactivated(object sender)
 		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("Application deactivated, {0} behaviors on stack.", MenuBehavior.stack.Count));
+			
+			while (MenuBehavior.stack.Count > 1)
+			{
+				MenuBehavior.RejectAll ();
+			}
+			
 			MenuBehavior.RejectAll ();
 		}
 		
@@ -1734,6 +1741,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.filter_keyboard_off = MenuBehavior.filter_keyboard_off;
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("Saved; menu list: {0} items, root list: {1} items", this.menu_list.Count, this.menu_root_list.Count));
+				
+				MenuBehavior.menu_last_item = null;
+				MenuBehavior.menu_last_behavior = null;
+				MenuBehavior.menu_list.Clear ();
+				MenuBehavior.menu_root_list.Clear ();
+				MenuBehavior.filter_keyboard_off = 0;
 			}
 			
 			public void Restore()

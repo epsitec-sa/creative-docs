@@ -1875,6 +1875,7 @@ namespace Epsitec.Common.Widgets.Platform
 			string title   = is_french ? "Erreur interne" : "Internal error";
 			string message = is_french ? msg_fr : msg_en;
 			
+			System.Diagnostics.Debug.WriteLine (buffer.ToString ());
 			System.Windows.Forms.MessageBox.Show (null, message, title);
 		}
 		
