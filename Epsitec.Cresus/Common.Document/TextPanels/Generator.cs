@@ -28,6 +28,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.None);
 			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet1);
 			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet2);
+			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet3);
 			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Num1);
 			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Num2);
 			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Num3);
@@ -187,8 +188,8 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CF"));
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CB", true));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25A0"));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25A1", true));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
 				
 				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("Em:1"));
@@ -197,6 +198,58 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
+			}
+
+			if ( type == "Bullet3" )
+			{
+				p = new Text.ParagraphManagers.ItemListManager.Parameters();
+				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
+
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25BA"));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
+				
+				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("Em:1"));
+				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("Em:2"));
+				p.Font    = new Text.Properties.FontProperty("Arial", "Regular");
+
+				p.Generator.UserData = user;
+				this.ParagraphWrapper.Defined.ItemListParameters = p;
+			}
+
+			if ( type == "Num1" )
+			{
+				p = new Text.ParagraphManagers.ItemListManager.Parameters();
+				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
+
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Numeric, "", "."));
+				
+				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute("LevelMultiplier:150 %", "Em:1.5"));
+				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
+
+				p.Generator.UserData = user;
+				this.ParagraphWrapper.Defined.ItemListParameters = p;
+			}
+
+			if ( type == "Num2" )
+			{
+				p = new Text.ParagraphManagers.ItemListManager.Parameters();
+				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
+
+				p.Generator.GlobalPrefix = "";
+				p.Generator.GlobalSuffix = ")";
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Alphabetic, "", "", Common.Text.Generator.Casing.Lower));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Numeric,    "-", ""));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Roman,      "(", "", Common.Text.Generator.Casing.Lower, null, true));
+				
+				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Force,       TabList.PackToAttribute("LevelMultiplier:100 %", "Em:0.5"));
+				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
+
+				p.Generator.UserData = user;
+				this.ParagraphWrapper.Defined.ItemListParameters = p;
+			}
+
+			if ( type == "Num3" )
+			{
 			}
 
 			if ( type == "Custom" )
@@ -215,6 +268,7 @@ namespace Epsitec.Common.Document.TextPanels
 				case "None":     return Res.Strings.TextPanel.Generator.Type.None;
 				case "Bullet1":  return Res.Strings.TextPanel.Generator.Type.Bullet1;
 				case "Bullet2":  return Res.Strings.TextPanel.Generator.Type.Bullet2;
+				case "Bullet3":  return Res.Strings.TextPanel.Generator.Type.Bullet3;
 				case "Num1":     return Res.Strings.TextPanel.Generator.Type.Num1;
 				case "Num2":     return Res.Strings.TextPanel.Generator.Type.Num2;
 				case "Num3":     return Res.Strings.TextPanel.Generator.Type.Num3;
@@ -228,6 +282,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( text == Res.Strings.TextPanel.Generator.Type.None    )  return "None";
 			if ( text == Res.Strings.TextPanel.Generator.Type.Bullet1 )  return "Bullet1";
 			if ( text == Res.Strings.TextPanel.Generator.Type.Bullet2 )  return "Bullet2";
+			if ( text == Res.Strings.TextPanel.Generator.Type.Bullet3 )  return "Bullet3";
 			if ( text == Res.Strings.TextPanel.Generator.Type.Num1    )  return "Num1";
 			if ( text == Res.Strings.TextPanel.Generator.Type.Num2    )  return "Num2";
 			if ( text == Res.Strings.TextPanel.Generator.Type.Num3    )  return "Num3";
