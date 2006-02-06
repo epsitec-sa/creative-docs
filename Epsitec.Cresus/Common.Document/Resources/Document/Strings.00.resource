@@ -502,9 +502,9 @@
 	<data name="TextPanel.Generator.Type.Bullet1">Puces rondes</data>
 	<data name="TextPanel.Generator.Type.Bullet2">Puces carrées</data>
 	<data name="TextPanel.Generator.Type.Bullet3">Puces triangulaires</data>
-	<data name="TextPanel.Generator.Type.Num1">Numérotation 1.1.1</data>
-	<data name="TextPanel.Generator.Type.Num2">Numérotation 1.a.a</data>
-	<data name="TextPanel.Generator.Type.Num3">Numérotation a.i.i</data>
+	<data name="TextPanel.Generator.Type.Num1">Numérotation 1.1.1.</data>
+	<data name="TextPanel.Generator.Type.Num2">Numérotation A-1), (i)</data>
+	<data name="TextPanel.Generator.Type.Num3">Numérotation 1, a), i)</data>
 	<data name="TextPanel.Generator.Type.Custom">Personnalisé</data>
 	
 	<data name="TextPanel.Justif.Title">Mise en page</data>

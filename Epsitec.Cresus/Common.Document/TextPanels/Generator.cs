@@ -171,6 +171,8 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
+				p.Generator.GlobalPrefix = "";
+				p.Generator.GlobalSuffix = "";
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CF"));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CB", true));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
@@ -188,6 +190,8 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
+				p.Generator.GlobalPrefix = "";
+				p.Generator.GlobalSuffix = "";
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25A0"));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25A1", true));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
@@ -205,6 +209,8 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
+				p.Generator.GlobalPrefix = "";
+				p.Generator.GlobalSuffix = "";
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25BA"));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
 				
@@ -221,6 +227,8 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
+				p.Generator.GlobalPrefix = "";
+				p.Generator.GlobalSuffix = "";
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Numeric, "", "."));
 				
 				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.Force,       TabList.PackToAttribute("LevelMultiplier:150 %", "Em:1.5"));
@@ -237,7 +245,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.GlobalPrefix = "";
 				p.Generator.GlobalSuffix = ")";
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Alphabetic, "", "", Common.Text.Generator.Casing.Lower));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Alphabetic, "", "", Common.Text.Generator.Casing.Upper));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Numeric,    "-", ""));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Roman,      "(", "", Common.Text.Generator.Casing.Lower, null, true));
 				
@@ -250,6 +258,20 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( type == "Num3" )
 			{
+				p = new Text.ParagraphManagers.ItemListManager.Parameters();
+				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
+
+				p.Generator.GlobalPrefix = "";
+				p.Generator.GlobalSuffix = "";
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Numeric,    "", "", Common.Text.Generator.Casing.Default, null, true));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Alphabetic, "", ")", Common.Text.Generator.Casing.Lower, null, true));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Roman,      "", ")", Common.Text.Generator.Casing.Lower, null, true));
+				
+				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Force,       TabList.PackToAttribute("LevelMultiplier:100 %", "Em:0.5"));
+				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.ForceIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
+
+				p.Generator.UserData = user;
+				this.ParagraphWrapper.Defined.ItemListParameters = p;
 			}
 
 			if ( type == "Custom" )
