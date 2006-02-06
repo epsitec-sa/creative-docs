@@ -1328,6 +1328,7 @@ namespace Epsitec.Common.Document
 		public void DeselectAllCmd()
 		{
 			//	Désélectionne tous les objets.
+			if ( this.ActiveViewer.CloseMiniBar() )  return;
 			if ( this.ActiveViewer.EditFlowTerminate() )  return;
 
 			this.DeselectAll();

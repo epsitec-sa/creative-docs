@@ -211,15 +211,15 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			if ( this.ParagraphWrapper.IsAttached == false )  return;
 
-			double leftFirst = this.ParagraphWrapper.Active.LeftMarginFirst;
-			double leftBody  = this.ParagraphWrapper.Active.LeftMarginBody;
-			double right     = this.ParagraphWrapper.Active.RightMarginBody;
-			bool isLeftFirst = this.ParagraphWrapper.Defined.IsLeftMarginFirstDefined;
-			bool isLeftBody  = this.ParagraphWrapper.Defined.IsLeftMarginBodyDefined;
-			bool isRight     = this.ParagraphWrapper.Defined.IsRightMarginBodyDefined;
+			//?Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Active.ItemListParameters;
+			bool isGenerator = this.ParagraphWrapper.Defined.IsManagedParagraphDefined;
 
 			this.ignoreChanged = true;
 
+			this.ProposalTextFieldCombo(this.fieldType, !isGenerator);
+			this.ProposalTextFieldCombo(this.fieldPrefix, !isGenerator);
+			this.ProposalTextFieldCombo(this.fieldGenerator, !isGenerator);
+			this.ProposalTextFieldCombo(this.fieldSuffix, !isGenerator);
 
 			this.ignoreChanged = false;
 		}

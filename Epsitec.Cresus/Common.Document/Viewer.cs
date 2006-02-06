@@ -2789,6 +2789,14 @@ namespace Epsitec.Common.Document
 			this.CloseMiniBar(false);
 		}
 
+		public bool CloseMiniBar()
+		{
+			//	Ferme la mini-palette si nécessaire. Retourne true si elle a été fermée.
+			if ( this.miniBar == null )  return false;
+			this.CloseMiniBar(false);
+			return true;
+		}
+
 		public void CloseMiniBar(bool fadeout)
 		{
 			//	Ferme la mini-palette.
