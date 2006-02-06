@@ -2545,6 +2545,7 @@ namespace Epsitec.Common.Document
 			this.miniBarDistance = (distance == 0) ? frame.Distance : distance;
 			if ( !hot && distance == 0 )  this.miniBarDistance = 0;
 
+			this.miniBarClickPos = mouse;
 			mouse = this.InternalToScreen(mouse);
 			mouse.Y ++;  // pour ne pas être sur le pixel visé par la souris
 
@@ -2624,6 +2625,13 @@ namespace Epsitec.Common.Document
 			//	Crée la mini-palette.
 			Point mouse;
 			if ( !this.MousePos(out mouse) )
+			{
+				this.miniBarCmds = null;
+				return;
+			}
+
+			double d = Point.Distance(mouse, this.miniBarClickPos)*this.drawingContext.ScaleX;
+			if ( d > 4 )
 			{
 				this.miniBarCmds = null;
 				return;
@@ -4683,6 +4691,7 @@ namespace Epsitec.Common.Document
 		protected Point							editPosPress = Point.Empty;
 		protected Drawing.Rectangle				editCreateRect = Drawing.Rectangle.Empty;
 
+		protected Point							miniBarClickPos;
 		protected Timer							miniBarTimer;
 		protected System.Collections.ArrayList	miniBarCmds = null;
 		protected int							miniBarLines;
