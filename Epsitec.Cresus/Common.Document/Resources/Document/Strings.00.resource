@@ -506,12 +506,33 @@
 	<data name="TextPanel.Generator.Type.Num2">Numérotation A-1), (i)</data>
 	<data name="TextPanel.Generator.Type.Num3">Numérotation 1, a), i)</data>
 	<data name="TextPanel.Generator.Type.Custom">Personnalisé</data>
-	<data name="TextPanel.Generator.Numerator.None"> </data>
+	<data name="TextPanel.Generator.Numerator.None">Aucun</data>
 	<data name="TextPanel.Generator.Numerator.Numeric">1, 2...</data>
 	<data name="TextPanel.Generator.Numerator.AlphaLower">a, b...</data>
 	<data name="TextPanel.Generator.Numerator.AlphaUpper">A, B...</data>
 	<data name="TextPanel.Generator.Numerator.RomanLower">i, ii...</data>
 	<data name="TextPanel.Generator.Numerator.RomanUpper">I, II...</data>
+	<data name="TextPanel.Generator.Text.None">Aucun</data>
+	<data name="TextPanel.Generator.Text.Fix1">.</data>
+	<data name="TextPanel.Generator.Text.Fix2">,</data>
+	<data name="TextPanel.Generator.Text.Fix3">:</data>
+	<data name="TextPanel.Generator.Text.Fix4">;</data>
+	<data name="TextPanel.Generator.Text.Fix5">-</data>
+	<data name="TextPanel.Generator.Text.Fix6">/</data>
+	<data name="TextPanel.Generator.Text.Fix7">(</data>
+	<data name="TextPanel.Generator.Text.Fix8">)</data>
+	<data name="TextPanel.Generator.Text.Fix9">[</data>
+	<data name="TextPanel.Generator.Text.Fix10">]</data>
+	<data name="TextPanel.Generator.Text.Fix11">#</data>
+	<data name="TextPanel.Generator.Text.Arial1">&lt;font face=&quot;Arial&quot;&gt;●&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial2">&lt;font face=&quot;Arial&quot;&gt;○&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial3">&lt;font face=&quot;Arial&quot;&gt;■&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial4">&lt;font face=&quot;Arial&quot;&gt;□&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial5">&lt;font face=&quot;Arial&quot;&gt;♦&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial6">&lt;font face=&quot;Arial&quot;&gt;◊&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial7">&lt;font face=&quot;Arial&quot;&gt;►&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial8">&lt;font face=&quot;Arial&quot;&gt;→&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial9">&lt;font face=&quot;Arial&quot;&gt;―&lt;/font&gt;</data>
 	
 	<data name="TextPanel.Justif.Title">Mise en page</data>
 

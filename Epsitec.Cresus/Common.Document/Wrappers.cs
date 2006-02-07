@@ -633,6 +633,32 @@ namespace Epsitec.Common.Document
 				lines ++;
 			}
 
+			if ( this.styleParagraphWrapper.Defined.IsManagedParagraphDefined )
+			{
+				builder.Append(Misc.Image("TextGenerator"));
+				builder.Append("  ");
+				bool first = true;
+
+				Text.ParagraphManagers.ItemListManager.Parameters p = this.styleParagraphWrapper.Defined.ItemListParameters;
+				builder.Append(p.Generator.GlobalPrefix);
+				for ( int i=0 ; i<p.Generator.Count ; i++ )
+				{
+					Text.Generator.Sequence sequence = p.Generator[i];
+					if ( sequence.SuppressBefore && !first )
+					{
+						builder.Append(", ");
+					}
+					builder.Append(sequence.Prefix);
+					builder.Append(TextPanels.Generator.ConvSequenceToShort(sequence));
+					builder.Append(sequence.Suffix);
+					first = false;
+				}
+				builder.Append(p.Generator.GlobalSuffix);
+
+				builder.Append("<br/>");
+				lines ++;
+			}
+
 			if ( this.styleTextWrapper.Defined.IsFontFaceDefined  ||
 				 this.styleTextWrapper.Defined.IsFontStyleDefined ||
 				 this.styleTextWrapper.Defined.IsFontSizeDefined  ||

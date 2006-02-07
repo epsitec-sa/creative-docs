@@ -25,14 +25,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.ClosedCombo += new EventHandler(this.HandleTypeChanged);
 			this.fieldType.TabIndex = this.tabIndex++;
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.None);
-			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet1);
-			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet2);
-			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet3);
-			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Num1);
-			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Num2);
-			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Num3);
-			this.fieldType.Items.Add(Res.Strings.TextPanel.Generator.Type.Custom);
+			this.InitComboType(this.fieldType);
 
 			this.buttonLevel = new Widgets.IconMarkButton[Generator.maxLevel];
 			for ( int i=0 ; i<Generator.maxLevel ; i++ )
@@ -48,14 +41,12 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonLevel[0].ActiveState = ActiveState.Yes;
 
 			this.fieldPrefix = new TextFieldCombo(this);
+			this.fieldPrefix.IsReadOnly = true;
 			this.fieldPrefix.AutoFocus = false;
 			this.fieldPrefix.TextChanged += new EventHandler(this.HandlePrefixChanged);
 			this.fieldPrefix.TabIndex = this.tabIndex++;
 			this.fieldPrefix.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.fieldPrefix.Items.Add(" ");
-			this.fieldPrefix.Items.Add("o");
-			this.fieldPrefix.Items.Add("-");
-			this.fieldPrefix.Items.Add("(");
+			this.InitComboFix(this.fieldPrefix);
 			ToolTip.Default.SetToolTip(this.fieldPrefix, Res.Strings.TextPanel.Generator.Tooltip.Prefix);
 
 			this.fieldNumerator = new TextFieldCombo(this);
@@ -64,23 +55,16 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldNumerator.TextChanged += new EventHandler(this.HandleNumeratorChanged);
 			this.fieldNumerator.TabIndex = this.tabIndex++;
 			this.fieldNumerator.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.None);
-			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.Numeric);
-			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
-			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.AlphaUpper);
-			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.RomanLower);
-			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.RomanUpper);
+			this.InitComboNumerator(this.fieldNumerator);
 			ToolTip.Default.SetToolTip(this.fieldNumerator, Res.Strings.TextPanel.Generator.Tooltip.Numerator);
 
 			this.fieldSuffix = new TextFieldCombo(this);
+			this.fieldSuffix.IsReadOnly = true;
 			this.fieldSuffix.AutoFocus = false;
 			this.fieldSuffix.TextChanged += new EventHandler(this.HandleSuffixChanged);
 			this.fieldSuffix.TabIndex = this.tabIndex++;
 			this.fieldSuffix.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.fieldSuffix.Items.Add(" ");
-			this.fieldSuffix.Items.Add(".");
-			this.fieldSuffix.Items.Add("-");
-			this.fieldSuffix.Items.Add(")");
+			this.InitComboFix(this.fieldSuffix);
 			ToolTip.Default.SetToolTip(this.fieldSuffix, Res.Strings.TextPanel.Generator.Tooltip.Suffix);
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
@@ -178,14 +162,17 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.GlobalPrefix = "";
 				p.Generator.GlobalSuffix = "";
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CF"));
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "a", "b", Common.Text.Generator.Casing.Default, "\u25CF"));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CB", true));
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
 				
+				p.Generator[0].ValueProperties = new Text.Property[] { new Text.Properties.FontProperty("Arial", "Regular") };
+				p.Generator[1].ValueProperties = new Text.Property[] { new Text.Properties.FontProperty("Arial", "Regular") };
+				p.Generator[2].ValueProperties = new Text.Property[] { new Text.Properties.FontProperty("Arial", "Regular") };
+
 				//?Common.Text.Properties.UnitsTools.SerializeSizeUnits();
 				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("LevelTable:50 pt;150 pt;250 pt;350 pt"));
 				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("LevelTable:100 pt;200 pt;300 pt;400 pt"));
-				p.Font    = new Text.Properties.FontProperty("Arial", "Regular");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -289,6 +276,58 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
+		protected void InitComboType(TextFieldCombo combo)
+		{
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.None);
+			
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet1);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet2);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet3);
+			
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num1);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num2);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num3);
+			
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Custom);
+		}
+
+		protected void InitComboFix(TextFieldCombo combo)
+		{
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.None);
+
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix1);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix2);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix3);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix4);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix5);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix6);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix7);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix8);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix9);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix10);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix11);
+			
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Arial1);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Arial2);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Arial3);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Arial4);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Arial5);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Arial6);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Arial7);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Arial8);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Arial9);
+		}
+
+		protected void InitComboNumerator(TextFieldCombo combo)
+		{
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Numerator.None);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Numerator.Numeric);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Numerator.AlphaUpper);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Numerator.RomanLower);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Numerator.RomanUpper);
+		}
+
 		protected static string ConvTypeToText(string type)
 		{
 			switch ( type )
@@ -350,6 +389,40 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			return Res.Strings.TextPanel.Generator.Numerator.None;
+		}
+
+		public static string ConvSequenceToShort(Common.Text.Generator.Sequence sequence)
+		{
+			if ( sequence is Common.Text.Internal.Sequences.Numeric )
+			{
+				return "1";
+			}
+
+			if ( sequence is Common.Text.Internal.Sequences.Alphabetic )
+			{
+				if ( sequence.Casing == Common.Text.Generator.Casing.Lower )
+				{
+					return "a";
+				}
+				else
+				{
+					return "A";
+				}
+			}
+
+			if ( sequence is Common.Text.Internal.Sequences.Roman )
+			{
+				if ( sequence.Casing == Common.Text.Generator.Casing.Lower )
+				{
+					return "i";
+				}
+				else
+				{
+					return "I";
+				}
+			}
+
+			return "";
 		}
 
 		

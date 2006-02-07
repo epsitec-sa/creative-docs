@@ -505,7 +505,7 @@
 	<data name="TextPanel.Generator.Type.Num2">@@Numérotation 1.a.a</data>
 	<data name="TextPanel.Generator.Type.Num3">@@Numérotation a.i.i</data>
 	<data name="TextPanel.Generator.Type.Custom">@@Personnalisé</data>
-	<data name="TextPanel.Generator.Numerator.None"> </data>
+	<data name="TextPanel.Generator.Numerator.None">@@Aucun</data>
 	<data name="TextPanel.Generator.Numerator.Numeric">1, 2...</data>
 	<data name="TextPanel.Generator.Numerator.AlphaLower">a, b...</data>
 	<data name="TextPanel.Generator.Numerator.AlphaUpper">A, B...</data>
