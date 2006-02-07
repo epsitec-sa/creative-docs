@@ -48,9 +48,6 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fontColor = this.CreateColorSample(Res.Strings.Action.FontColor, new MessageEventHandler(this.HandleFieldColorClicked), new EventHandler(this.HandleFieldColorChanged));
 
-			this.buttonSizeMinus = this.CreateIconButton(Misc.Icon("FontSizeMinus"), Res.Strings.Action.FontSizeMinus, new MessageEventHandler(this.HandleButtonSizeMinusClicked), false);
-			this.buttonSizePlus  = this.CreateIconButton(Misc.Icon("FontSizePlus"),  Res.Strings.Action.FontSizePlus,  new MessageEventHandler(this.HandleButtonSizePlusClicked), false);
-
 			this.fontGlue = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Font.Tooltip.Glue, Res.Strings.TextPanel.Font.Short.Glue, Res.Strings.TextPanel.Font.Long.Glue, -50.0, 200.0, 0.0, 5.0, new EventHandler(this.HandleGlueValueChanged));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
@@ -66,9 +63,6 @@ namespace Epsitec.Common.Document.TextPanels
 			this.checkItalic.TabIndex = this.tabIndex++;
 			this.checkItalic.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.checkItalic.ActiveStateChanged += new EventHandler(this.HandleCheckItalicActiveStateChanged);
-
-			this.buttonSizeMinus.Visibility = !this.isStyle;
-			this.buttonSizePlus.Visibility  = !this.isStyle;
 
 			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
@@ -338,10 +332,6 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Offset(69, 0);
 				r.Width = 20;
 				this.buttonSizeMenu.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonSizeMinus.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonSizePlus.Bounds = r;
 				r.Left = rect.Right-40;
 				r.Width = 40;
 				this.fontColor.Bounds = r;
@@ -388,10 +378,6 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Offset(69, 0);
 				r.Width = 20;
 				this.buttonSizeMenu.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonSizeMinus.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonSizePlus.Bounds = r;
 				r.Left = rect.Right-40;
 				r.Width = 40;
 				this.fontColor.Bounds = r;
@@ -706,20 +692,6 @@ namespace Epsitec.Common.Document.TextPanels
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
-		private void HandleButtonSizeMinusClicked(object sender, MessageEventArgs e)
-		{
-			if ( this.ignoreChanged )  return;
-			if ( !this.TextWrapper.IsAttached )  return;
-			this.document.Wrappers.IncrementFontSize(-1);
-		}
-
-		private void HandleButtonSizePlusClicked(object sender, MessageEventArgs e)
-		{
-			if ( this.ignoreChanged )  return;
-			if ( !this.TextWrapper.IsAttached )  return;
-			this.document.Wrappers.IncrementFontSize(1);
-		}
-
 		private void HandleGlueValueChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
@@ -878,8 +850,6 @@ namespace Epsitec.Common.Document.TextPanels
 		protected ColorSample				fontColor;
 		protected Widgets.TextFieldLabel	fontGlue;
 		protected GlyphButton				buttonSizeMenu;
-		protected IconButton				buttonSizeMinus;
-		protected IconButton				buttonSizePlus;
 		protected IconButton				buttonClear;
 		protected CheckButton				checkBold;
 		protected CheckButton				checkItalic;

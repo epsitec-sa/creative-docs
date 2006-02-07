@@ -26,16 +26,11 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonLeadingMenu = this.CreateComboButton(null, Res.Strings.TextPanel.Leading.Tooltip.Leading, new MessageEventHandler(this.HandleButtonLeadingMenuClicked));
 
-			this.buttonLeadingMinus = this.CreateIconButton(Misc.Icon("ParagraphLeadingMinus"),      Res.Strings.Action.ParagraphLeadingMinus,         new MessageEventHandler(this.HandleButtonLeadingMinusClicked), false);
-			this.buttonLeadingPlus  = this.CreateIconButton(Misc.Icon("ParagraphLeadingPlus"),       Res.Strings.Action.ParagraphLeadingPlus,          new MessageEventHandler(this.HandleButtonLeadingPlusClicked), false);
-			this.buttonAlignFirst   = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignFirst"), Res.Strings.TextPanel.Leading.Tooltip.AlignFirst, new MessageEventHandler(this.HandleButtonAlignFirstClicked));
-			this.buttonAlignAll     = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignAll"),   Res.Strings.TextPanel.Leading.Tooltip.AlignAll,   new MessageEventHandler(this.HandleButtonAlignAllClicked));
-			this.buttonSettings     = this.CreateIconButton(Misc.Icon("Settings"),                   Res.Strings.Action.Settings,                      new MessageEventHandler(this.HandleButtonSettingsClicked), false);
+			this.buttonAlignFirst = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignFirst"), Res.Strings.TextPanel.Leading.Tooltip.AlignFirst, new MessageEventHandler(this.HandleButtonAlignFirstClicked));
+			this.buttonAlignAll   = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignAll"),   Res.Strings.TextPanel.Leading.Tooltip.AlignAll,   new MessageEventHandler(this.HandleButtonAlignAllClicked));
+			this.buttonSettings   = this.CreateIconButton(Misc.Icon("Settings"),                   Res.Strings.Action.Settings,                      new MessageEventHandler(this.HandleButtonSettingsClicked), false);
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
-
-			this.buttonLeadingMinus.Visibility = !this.isStyle;
-			this.buttonLeadingPlus.Visibility  = !this.isStyle;
 
 			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
 			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
@@ -121,10 +116,6 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Offset(69, 0);
 					r.Width = 20;
 					this.buttonLeadingMenu.Bounds = r;
-					r.Offset(20, 0);
-					this.buttonLeadingMinus.Bounds = r;
-					r.Offset(20, 0);
-					this.buttonLeadingPlus.Bounds = r;
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
@@ -150,10 +141,6 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Offset(69, 0);
 					r.Width = 20;
 					this.buttonLeadingMenu.Bounds = r;
-					r.Offset(20, 0);
-					this.buttonLeadingMinus.Bounds = r;
-					r.Offset(20, 0);
-					this.buttonLeadingPlus.Bounds = r;
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
@@ -183,10 +170,6 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Offset(69, 0);
 				r.Width = 20;
 				this.buttonLeadingMenu.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonLeadingMinus.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonLeadingPlus.Bounds = r;
 
 				r.Left = rect.Right-20;
 				r.Width = 20;
@@ -303,16 +286,6 @@ namespace Epsitec.Common.Document.TextPanels
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
-		private void HandleButtonLeadingMinusClicked(object sender, MessageEventArgs e)
-		{
-			this.document.Wrappers.IncrementParagraphLeading(-1);
-		}
-
-		private void HandleButtonLeadingPlusClicked(object sender, MessageEventArgs e)
-		{
-			this.document.Wrappers.IncrementParagraphLeading(1);
-		}
-
 		private void HandleButtonAlignFirstClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
@@ -418,8 +391,6 @@ namespace Epsitec.Common.Document.TextPanels
 		protected Button					buttonUnits;
 		protected Widgets.TextFieldLabel	fieldLeading;
 		protected GlyphButton				buttonLeadingMenu;
-		protected IconButton				buttonLeadingMinus;
-		protected IconButton				buttonLeadingPlus;
 		protected IconButton				buttonAlignFirst;
 		protected IconButton				buttonAlignAll;
 		protected IconButton				buttonSettings;
