@@ -494,7 +494,7 @@
 	
 	<data name="TextPanel.Generator.Title">@@Puces et numérotations</data>
 	<data name="TextPanel.Generator.Tooltip.Prefix">@@Préfixe du niveau</data>
-	<data name="TextPanel.Generator.Tooltip.Generator">@@Numérotation du niveau</data>
+	<data name="TextPanel.Generator.Tooltip.Numerator">@@Numérotation du niveau</data>
 	<data name="TextPanel.Generator.Tooltip.Suffix">@@Suffixe du niveau</data>
 	<data name="TextPanel.Generator.Radio.Global">Base</data>
 	<data name="TextPanel.Generator.Type.None">@@Aucun</data>
@@ -505,6 +505,12 @@
 	<data name="TextPanel.Generator.Type.Num2">@@Numérotation 1.a.a</data>
 	<data name="TextPanel.Generator.Type.Num3">@@Numérotation a.i.i</data>
 	<data name="TextPanel.Generator.Type.Custom">@@Personnalisé</data>
+	<data name="TextPanel.Generator.Numerator.None"> </data>
+	<data name="TextPanel.Generator.Numerator.Numeric">1, 2...</data>
+	<data name="TextPanel.Generator.Numerator.AlphaLower">a, b...</data>
+	<data name="TextPanel.Generator.Numerator.AlphaUpper">A, B...</data>
+	<data name="TextPanel.Generator.Numerator.RomanLower">i, ii...</data>
+	<data name="TextPanel.Generator.Numerator.RomanUpper">I, II...</data>
 	
 	<data name="TextPanel.Justif.Title">Layout</data>
 

@@ -58,19 +58,19 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldPrefix.Items.Add("(");
 			ToolTip.Default.SetToolTip(this.fieldPrefix, Res.Strings.TextPanel.Generator.Tooltip.Prefix);
 
-			this.fieldGenerator = new TextFieldCombo(this);
-			this.fieldGenerator.IsReadOnly = true;
-			this.fieldGenerator.AutoFocus = false;
-			this.fieldGenerator.TextChanged += new EventHandler(this.HandleGeneratorChanged);
-			this.fieldGenerator.TabIndex = this.tabIndex++;
-			this.fieldGenerator.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.fieldGenerator.Items.Add(" ");
-			this.fieldGenerator.Items.Add("1, 2...");
-			this.fieldGenerator.Items.Add("A, B...");
-			this.fieldGenerator.Items.Add("a, b...");
-			this.fieldGenerator.Items.Add("i, ii...");
-			this.fieldGenerator.Items.Add("I, II...");
-			ToolTip.Default.SetToolTip(this.fieldGenerator, Res.Strings.TextPanel.Generator.Tooltip.Generator);
+			this.fieldNumerator = new TextFieldCombo(this);
+			this.fieldNumerator.IsReadOnly = true;
+			this.fieldNumerator.AutoFocus = false;
+			this.fieldNumerator.TextChanged += new EventHandler(this.HandleNumeratorChanged);
+			this.fieldNumerator.TabIndex = this.tabIndex++;
+			this.fieldNumerator.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.None);
+			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.Numeric);
+			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
+			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.AlphaUpper);
+			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.RomanLower);
+			this.fieldNumerator.Items.Add(Res.Strings.TextPanel.Generator.Numerator.RomanUpper);
+			ToolTip.Default.SetToolTip(this.fieldNumerator, Res.Strings.TextPanel.Generator.Tooltip.Numerator);
 
 			this.fieldSuffix = new TextFieldCombo(this);
 			this.fieldSuffix.AutoFocus = false;
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 
 				this.fieldPrefix.TextChanged -= new EventHandler(this.HandlePrefixChanged);
-				this.fieldGenerator.TextChanged -= new EventHandler(this.HandleGeneratorChanged);
+				this.fieldNumerator.TextChanged -= new EventHandler(this.HandleNumeratorChanged);
 				this.fieldSuffix.TextChanged -= new EventHandler(this.HandleSuffixChanged);
 
 				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
@@ -318,6 +318,40 @@ namespace Epsitec.Common.Document.TextPanels
 			return null;
 		}
 
+		protected static string ConvSequenceToText(Common.Text.Generator.Sequence sequence)
+		{
+			if ( sequence is Common.Text.Internal.Sequences.Numeric )
+			{
+				return Res.Strings.TextPanel.Generator.Numerator.Numeric;
+			}
+
+			if ( sequence is Common.Text.Internal.Sequences.Alphabetic )
+			{
+				if ( sequence.Casing == Common.Text.Generator.Casing.Lower )
+				{
+					return Res.Strings.TextPanel.Generator.Numerator.AlphaLower;
+				}
+				else
+				{
+					return Res.Strings.TextPanel.Generator.Numerator.AlphaUpper;
+				}
+			}
+
+			if ( sequence is Common.Text.Internal.Sequences.Roman )
+			{
+				if ( sequence.Casing == Common.Text.Generator.Casing.Lower )
+				{
+					return Res.Strings.TextPanel.Generator.Numerator.RomanLower;
+				}
+				else
+				{
+					return Res.Strings.TextPanel.Generator.Numerator.RomanUpper;
+				}
+			}
+
+			return Res.Strings.TextPanel.Generator.Numerator.None;
+		}
+
 		
 		protected override void UpdateClientGeometry()
 		{
@@ -361,8 +395,8 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fieldPrefix.Bounds = r;
 				this.fieldPrefix.Visibility = true;
 				r.Offset(r.Width+5, 0);
-				this.fieldGenerator.Bounds = r;
-				this.fieldGenerator.Visibility = true;
+				this.fieldNumerator.Bounds = r;
+				this.fieldNumerator.Visibility = true;
 				r.Offset(r.Width+5, 0);
 				this.fieldSuffix.Bounds = r;
 				this.fieldSuffix.Visibility = true;
@@ -375,7 +409,7 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 
 				this.fieldPrefix.Visibility = false;
-				this.fieldGenerator.Visibility = false;
+				this.fieldNumerator.Visibility = false;
 				this.fieldSuffix.Visibility = false;
 			}
 
@@ -394,12 +428,16 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			if ( this.ParagraphWrapper.IsAttached == false )  return;
 
-			string type = "None";
 			bool isGenerator = this.ParagraphWrapper.Defined.IsManagedParagraphDefined;
+			string type = "None";
+			string prefix = "";
+			string generator = "";
+			string suffix = "";
+
 			if ( isGenerator )
 			{
 				Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
-				string[] user = p == null ? null : p.Generator.UserData;
+				string[] user = (p == null) ? null : p.Generator.UserData;
 				if ( user != null )
 				{
 					foreach ( string data in user )
@@ -410,15 +448,36 @@ namespace Epsitec.Common.Document.TextPanels
 						}
 					}
 				}
+
+				if ( p != null )
+				{
+					if ( this.level == 0 )
+					{
+						prefix = p.Generator.GlobalPrefix;
+						suffix = p.Generator.GlobalSuffix;
+					}
+					else if ( this.level-1 < p.Generator.Count )
+					{
+						Common.Text.Generator.Sequence sequence = p.Generator[this.level-1];
+						prefix = sequence.Prefix;
+						generator = Generator.ConvSequenceToText(sequence);
+						suffix = sequence.Suffix;
+					}
+				}
 			}
+
+			this.Type = type;
 
 			this.ignoreChanged = true;
 
 			this.fieldType.Text = Generator.ConvTypeToText(type);
+			this.fieldPrefix.Text = prefix;
+			this.fieldNumerator.Text = generator;
+			this.fieldSuffix.Text = suffix;
 
 			this.ProposalTextFieldCombo(this.fieldType, !isGenerator);
 			this.ProposalTextFieldCombo(this.fieldPrefix, !isGenerator);
-			this.ProposalTextFieldCombo(this.fieldGenerator, !isGenerator);
+			this.ProposalTextFieldCombo(this.fieldNumerator, !isGenerator);
 			this.ProposalTextFieldCombo(this.fieldSuffix, !isGenerator);
 
 			this.ignoreChanged = false;
@@ -435,7 +494,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.fieldPrefix.Enable = custom;
-			this.fieldGenerator.Enable = (custom && this.level != 0);
+			this.fieldNumerator.Enable = (custom && this.level != 0);
 			this.fieldSuffix.Enable = custom;
 		}
 
@@ -468,6 +527,7 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( this.level != value )
 				{
 					this.level = value;
+					this.UpdateAfterChanging();
 					this.UpdateWidgets();
 				}
 			}
@@ -504,7 +564,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		}
 
-		private void HandleGeneratorChanged(object sender)
+		private void HandleNumeratorChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.ParagraphWrapper.IsAttached )  return;
@@ -537,7 +597,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected Widgets.IconMarkButton[]	buttonLevel;
 		protected TextFieldCombo			fieldType;
 		protected TextFieldCombo			fieldPrefix;
-		protected TextFieldCombo			fieldGenerator;
+		protected TextFieldCombo			fieldNumerator;
 		protected TextFieldCombo			fieldSuffix;
 		protected IconButton				buttonClear;
 

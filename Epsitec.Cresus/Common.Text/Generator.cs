@@ -167,6 +167,14 @@ namespace Epsitec.Common.Text
 				return this.sequences[index] as Sequence;
 			}
 		}
+
+		public int								Count
+		{
+			get
+			{
+				return this.sequences.Count;
+			}
+		}
 		
 		
 		public void Add(Generator.Sequence sequence)
