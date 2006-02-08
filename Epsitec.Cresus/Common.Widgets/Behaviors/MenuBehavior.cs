@@ -357,8 +357,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			this.is_open = false;
 			this.keyboard_menu_active = false;
-			
-			System.Diagnostics.Debug.WriteLine ("Timer stopped, cleaned up");
 		}
 		
 		
@@ -803,7 +801,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 							MenuBehavior.OpenItemSubmenu (item, Animate.No);
 							MenuBehavior.EnableKeyboardNavigation ();
 							
-							if (this.live_menu_windows.Count == n+1)
+							n = this.live_menu_windows.Count - 1;
+							
+							if (n > 0)
 							{
 								window = this.live_menu_windows[n] as MenuWindow;
 								item   = this.FindFirstItem (window.Root);
@@ -1153,13 +1153,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private static void RegisterFilter()
 		{
-			Window.ApplicationDeactivated += new Support.EventHandler (MenuBehavior.HandleApplicationDeactivated);
+//-			Window.ApplicationDeactivated += new Support.EventHandler (MenuBehavior.HandleApplicationDeactivated);
 			Window.MessageFilter          += new MessageHandler (MenuBehavior.MessageFilter);
 		}
 		
 		private static void UnregisterFilter()
 		{
-			Window.ApplicationDeactivated -= new Support.EventHandler (MenuBehavior.HandleApplicationDeactivated);
+//-			Window.ApplicationDeactivated -= new Support.EventHandler (MenuBehavior.HandleApplicationDeactivated);
 			Window.MessageFilter          -= new MessageHandler (MenuBehavior.MessageFilter);
 		}
 		
@@ -1570,8 +1570,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				that = MenuBehavior.menu_list[MenuBehavior.menu_list.Count-1] as MenuBehavior;
 			}
 			
-			if ((that == null) ||
-				(that.keyboard_menu_window == null))
+			if (that == null)
 			{
 				return;
 			}
@@ -1641,8 +1640,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			MenuBehavior.keyboard_navigation_active    = true;
 			MenuBehavior.keyboard_navigation_mouse_pos = MenuBehavior.last_mouse_pos;
-			
-			System.Diagnostics.Debug.WriteLine ("Keyboard navigation enabled, mouse at " + MenuBehavior.keyboard_navigation_mouse_pos.ToString ());
 		}
 		
 		private static void DisableKeyboardNavigation()
@@ -1650,15 +1647,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if (MenuBehavior.keyboard_navigation_active)
 			{
 				MenuBehavior.keyboard_navigation_active = false;
-				
-				System.Diagnostics.Debug.WriteLine ("Keyboard navigation disabled");
 			}
 		}
 		
 		private static void HandleApplicationDeactivated(object sender)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("Application deactivated, {0} behaviors on stack.", MenuBehavior.stack.Count));
-			
 			while (MenuBehavior.stack.Count > 1)
 			{
 				MenuBehavior.RejectAll ();
