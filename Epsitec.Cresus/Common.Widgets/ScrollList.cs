@@ -187,6 +187,26 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public override Drawing.Size GetBestFitSize()
+		{
+			double margin = ScrollList.TextOffsetY * 2;
+			double height = this.lineHeight * this.items.Count;
+			double width  = this.Width;
+			
+			double dy = height;
+			
+			dy += margin;
+			dy  = System.Math.Max (dy, this.MinSize.Height);
+			dy  = System.Math.Min (dy, this.MaxSize.Height);
+			dy -= margin;
+			
+			int n = (int) (dy / this.lineHeight);
+			
+			height = this.lineHeight * n + margin;
+			
+			return new Drawing.Size (width, height);
+		}
+
 
 		public bool AdjustHeight(ScrollAdjustMode mode)
 		{

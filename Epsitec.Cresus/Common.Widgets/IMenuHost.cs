@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -9,6 +9,6 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public interface IMenuHost
 	{
-		void GetMenuDisposition(Widget parent_widget, Drawing.Size size, out Drawing.Point location, out Animation animation);
+		void GetMenuDisposition(Widget parent_widget, ref Drawing.Size size, out Drawing.Point location, out Animation animation);
 	}
 }

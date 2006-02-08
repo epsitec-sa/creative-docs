@@ -570,8 +570,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.auto_min_size != value)
 				{
+					object old_value = this.MinSize;
 					this.auto_min_size = value;
-					this.OnMinSizeChanged ();
+					object new_value = this.MinSize;
+					
+					this.InvalidateProperty (Visual.MinSizeProperty, old_value, new_value);
 				}
 			}
 		}
@@ -586,8 +589,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.auto_max_size != value)
 				{
+					object old_value = this.MaxSize;
 					this.auto_max_size = value;
-					this.OnMaxSizeChanged ();
+					object new_value = this.MaxSize;
+					
+					this.InvalidateProperty (Visual.MaxSizeProperty, old_value, new_value);
 				}
 			}
 		}
@@ -4906,22 +4912,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnMinSizeChanged()
-		{
-			if (this.MinSizeChanged != null)
-			{
-				this.MinSizeChanged (this);
-			}
-		}
-		
-		protected virtual void OnMaxSizeChanged()
-		{
-			if (this.MaxSizeChanged != null)
-			{
-				this.MaxSizeChanged (this);
-			}
-		}
-		
 		protected virtual void OnValidatorChanged()
 		{
 			if (this.ValidatorChanged != null)
@@ -5008,8 +4998,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			StillEngaged;
 		public event Support.EventHandler			Disengaged;
 		public event Support.EventHandler			ActiveStateChanged;
-		public event Support.EventHandler			MinSizeChanged;
-		public event Support.EventHandler			MaxSizeChanged;
 		public event Support.EventHandler			Disposed;
 		public event Support.EventHandler			TextDefined;
 		public event Support.EventHandler			TextChanged;

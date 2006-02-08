@@ -13,8 +13,6 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			this.textFieldStyle = TextFieldStyle.Combo;
 
-			this.isCombo = true;
-			
 			this.button = new GlyphButton(this);
 			this.button.Name = "Open";
 			this.button.GlyphShape = GlyphShape.ArrowDown;
@@ -111,6 +109,14 @@ namespace Epsitec.Common.Document.Widgets
 			set
 			{
 				this.selectedIndex = value;
+			}
+		}
+
+		public override bool					IsCombo
+		{
+			get
+			{
+				return true;
 			}
 		}
 

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -60,6 +60,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public double							IconWidth
+		{
+			get
+			{
+				return this.icon_width;
+			}
+		}
+		
 		public Behaviors.MenuBehavior			Behavior
 		{
 			get
@@ -80,6 +88,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
+		public Drawing.Margins					MenuShadow
+		{
+			get
+			{
+				return this.shadow;
+			}
+		}
+		
+		public Drawing.Margins					MenuMargins
+		{
+			get
+			{
+				return this.margins;
+			}
+		}
+		
 #if false //#fix
 		public override CommandDispatcher[]		CommandDispatchers
 		{
@@ -93,7 +118,7 @@ namespace Epsitec.Common.Widgets
 #endif
 		
 		
-		public void AdjustSize()
+		public virtual void AdjustSize()
 		{
 			//	Ajuste les dimensions du menu selon son contenu.
 			//	Il faut appeler AdjustSize après avoir fini de remplir le
@@ -146,7 +171,28 @@ namespace Epsitec.Common.Widgets
 			
 			this.Focus ();
 		}
-
+		
+		public void ShowAsComboList(Widget parent, Drawing.Point pos)
+		{
+			Window.ResetMouseCursor ();
+			
+			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
+			Window     owner  = parent.Window;
+			
+			pos.Y -= this.Height;
+			pos.X -= this.shadow.Left;
+			pos.Y += this.shadow.Top;
+			
+			window.Owner          = owner;
+			window.WindowLocation = pos;
+			window.ParentWidget   = parent;
+			
+			this.Behavior.OpenCombo (window, Behaviors.MenuBehavior.Animate.Yes);
+			
+			this.Focus ();
+			this.Window.MakeFocused ();
+		}
+		
 		
 		public override Drawing.Size GetBestFitSize()
 		{
@@ -248,17 +294,6 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.FindHost() != null, "No Host defined for menu.",
 				/**/						 "The menu you are trying to display has no associated command dispatcher host.\n"+
 				/**/						 "Use AbstractMenu.Host to define it when you setup the menu.");
-			
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			
-			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
-			
-			if (this.IsVertical)
-			{
-				double iw = (this.icon_width > 10) ? this.icon_width+3 : 0;
-				adorner.PaintMenuBackground (graphics, rect, state, Direction.Down, Drawing.Rectangle.Empty, iw);
-			}
 		}
 		
 		
@@ -324,7 +359,7 @@ namespace Epsitec.Common.Widgets
 			
 			
 			#region IMenuHost Members
-			public void GetMenuDisposition(Widget item, Drawing.Size size, out Drawing.Point location, out Animation animation)
+			public void GetMenuDisposition(Widget item, ref Drawing.Size size, out Drawing.Point location, out Animation animation)
 			{
 				ScreenInfo        screen_info;
 				Drawing.Rectangle working_area;
@@ -456,8 +491,8 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		private Drawing.Margins					margins = new Drawing.Margins (2,2,2,2);
-		private Drawing.Margins					shadow  = Drawing.Margins.Zero;
+		protected Drawing.Margins				margins = new Drawing.Margins (2,2,2,2);
+		protected Drawing.Margins				shadow  = Drawing.Margins.Zero;
 		private MenuItemCollection				items;
 		private ICommandDispatcherHost			host;
 		private double							icon_width;

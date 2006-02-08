@@ -49,6 +49,11 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.InitialiseFromFlags (flags);
 		}
 		
+		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyFlags flags) : base (default_value, property_invalidated_callback)
+		{
+			this.InitialiseFromFlags (flags);
+		}
+		
 		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyFlags flags) : base (default_value, get_value_override_callback, property_invalidated_callback)
 		{
 			this.InitialiseFromFlags (flags);

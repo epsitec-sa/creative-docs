@@ -1,12 +1,12 @@
-//	Désolé -- j'ai fait ces modifications dans l'urgence, avec mon propre
-//	style. C'est possible que je prenne une fois le contrôle de ce source... / PA
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Support.BundleAttribute;
-	
 	/// <summary>
-	/// La classe TextFieldCombo implémente la ligne éditable avec bouton "v".
+	/// La classe TextFieldCombo implémente la ligne éditable avec bouton "v"
+	/// qui fait apparaître un menu dit "combo" pour permettre de choisir une
+	/// option prédéfinie.
 	/// </summary>
 	public class TextFieldCombo : AbstractTextField, Collections.IStringCollectionHost, Support.Data.INamedStringSelection
 	{
@@ -15,7 +15,6 @@ namespace Epsitec.Common.Widgets
 			this.textFieldStyle = TextFieldStyle.Combo;
 
 			this.items = new Collections.StringCollection(this);
-			this.isCombo = true;
 			
 			this.button = new GlyphButton(this);
 			this.button.Name = "Open";
@@ -55,7 +54,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle] public ShowCondition			ButtonShowCondition
+		public ShowCondition					ButtonShowCondition
 		{
 			get
 			{
@@ -71,28 +70,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool								IsComboOpen
+		public override bool					IsCombo
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		private bool							IsComboOpen
 		{
 			get
 			{
 				return this.scrollList != null;
 			}
 		}
-		
-		
-		#region Interface IBundleSupport
-		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
-		{
-			base.RestoreFromBundle (bundler, bundle);
-			this.items.RestoreFromBundle ("items", bundler, bundle);
-		}
-		
-		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			base.SerializeToBundle (bundler, bundle);
-			this.items.SerializeToBundle ("items", bundler, bundle);
-		}
-		#endregion
 		
 		public bool FindMatch(string find, out int index, out bool exactMatch)
 		{
@@ -203,11 +195,11 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual  void OnSelectedIndexChanged()
 		{
-			if ( this.scrollList == null )
+			if (this.IsComboOpen == false)
 			{
-				if ( this.SelectedIndexChanged != null )
+				if (this.SelectedIndexChanged != null)
 				{
-					this.SelectedIndexChanged(this);
+					this.SelectedIndexChanged (this);
 				}
 			}
 		}
@@ -317,7 +309,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.SelectedIndex = sel;
 //			this.SetFocused(true);
-			this.CloseCombo(true);
+			this.menu.Behavior.Accept ();
 		}
 		
 		protected virtual  void ProcessComboSelectedIndex(int sel)
@@ -382,59 +374,40 @@ namespace Epsitec.Common.Widgets
 			if ( cancel_event.Cancel )  return;
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Margins shadow = adorner.GeometryMenuShadow;
-
-			this.scrollList = new ScrollList(null);
-			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
-			this.scrollList.Bounds = new Drawing.Rectangle(0, 0, this.Width, 200);
+			
+			this.menu = new TextFieldComboMenu ();
+			
+			this.menu.Size = new Drawing.Size (this.Width, 200);
+			
+			this.scrollList = this.menu.ScrollList;
+//			this.scrollList = new ScrollList(null);
+//			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
+//			this.scrollList.Bounds = new Drawing.Rectangle(0, 0, this.Width, 200);
 			
 			this.FillComboList(this.scrollList.Items);
 			
-			Drawing.Point     pos  = this.MapClientToScreen(new Drawing.Point(0, 0));
-			ScreenInfo        info = ScreenInfo.Find(pos);
-			Drawing.Rectangle area = info.WorkingArea;
-			double            hMax = pos.Y-area.Bottom;
-
-			if ( hMax > this.scrollList.Height || hMax > 100 )  // assez de place pour dérouler contre le bas ?
-			{
-				this.scrollList.AdjustHeightToContent(ScrollAdjustMode.MoveTop, 40, hMax);
-				pos.X -= shadow.Left;
-				pos.Y -= this.scrollList.Height+shadow.Bottom;
-			}
-			else	// déroule contre le haut ?
-			{
-				pos = this.MapClientToScreen(new Drawing.Point(0, this.Height));
-				hMax = area.Top-pos.Y;
-				this.scrollList.AdjustHeightToContent(ScrollAdjustMode.MoveTop, 40, hMax);
-			}
+			this.menu.AdjustSize ();
+			
+			MenuItem.SetMenuHost (this, new MenuHost (this.menu));
 			
 			this.scrollList.SelectedIndex = this.MapIndexToComboList(this.SelectedIndex);
 			this.scrollList.ShowSelected(ScrollShowMode.Center);
 			
-			this.comboWindow = new Window();
-			this.comboWindow.MakeFramelessWindow();
-			this.comboWindow.MakeFloatingWindow();
-			this.comboWindow.Owner = this.Window;
-			if ( adorner.AlphaMenu < 1.0 )
-			{
-				this.comboWindow.MakeLayeredWindow();
-				this.comboWindow.Alpha = adorner.AlphaMenu;
-				this.comboWindow.Root.BackColor = Drawing.Color.Transparent;
-			}
-			//?pos = this.MapClientToScreen(new Drawing.Point(0, 0));
-			//?pos.X -= shadow.Left;
-			//?pos.Y -= this.scrollList.Height+shadow.Bottom;
-			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width+shadow.Width, this.scrollList.Height+shadow.Height);
-			this.scrollList.Location = new Drawing.Point(shadow.Left, shadow.Bottom);
+			this.comboWindow = this.menu.Window;
+			
+			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Drawing.Point (0, 0)));
+			
+			this.menu.Behavior.Accepted += new Epsitec.Common.Support.EventHandler(this.HandleMenuAccepted);
+			this.menu.Behavior.Rejected += new Epsitec.Common.Support.EventHandler(this.HandleMenuRejected);
 			this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
 			this.scrollList.SelectionActivated += new Support.EventHandler(this.HandleScrollListSelectionActivated);
-			this.RegisterFilter();
-			this.comboWindow.Root.Children.Add(this.scrollList);
-			this.comboWindow.AnimateShow(Animation.RollDown);
+//			this.RegisterFilter();
+//			this.comboWindow.Root.Children.Add(this.scrollList);
+//			this.comboWindow.AnimateShow(Animation.RollDown);
 			
 //			this.SetFocused(true);
 //			this.SetFocused(false);
-			this.scrollList.SetFocused(true);
+//			this.scrollList.SetFocused(true);
 			
 			this.openText = this.Text;
 			this.OnOpenedCombo ();
@@ -442,9 +415,12 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void CloseCombo(bool accept)
 		{
+			System.Diagnostics.Debug.WriteLine(string.Format ("CloseCombo(accept={0})", accept));
+			this.menu.Behavior.Accepted -= new Epsitec.Common.Support.EventHandler(this.HandleMenuAccepted);
+			this.menu.Behavior.Rejected -= new Epsitec.Common.Support.EventHandler(this.HandleMenuRejected);
 			this.scrollList.SelectionActivated -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
 			this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
-			this.UnregisterFilter();
+//			this.UnregisterFilter();
 			this.scrollList.Dispose();
 			this.scrollList = null;
 			
@@ -453,7 +429,7 @@ namespace Epsitec.Common.Widgets
 				this.Window.MakeActive();
 			}
 			
-			this.comboWindow.Dispose();
+//			this.comboWindow.Dispose();
 			this.comboWindow = null;
 			
 			this.SelectAll();
@@ -476,6 +452,66 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		#region MenuHost Class
+		private class MenuHost : IMenuHost
+		{
+			public MenuHost(TextFieldComboMenu menu)
+			{
+				this.menu = menu;
+			}
+			
+			
+			#region IMenuHost Members
+			public void GetMenuDisposition(Widget item, ref Drawing.Size size, out Drawing.Point location, out Animation animation)
+			{
+				//	Détermine la hauteur maximale disponible par rapport à la position
+				//	actuelle :
+				
+				Drawing.Point     pos  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, 0));
+				ScreenInfo        screen_info  = ScreenInfo.Find (pos);
+				Drawing.Rectangle working_area = screen_info.WorkingArea;
+				
+				double max_height = pos.Y - working_area.Bottom;
+				
+				if ((max_height > size.Height) ||
+					(max_height > 100))
+				{
+					//	Il y a assez de place pour dérouler le menu vers le bas,
+					//	mais il faudra peut-être le raccourcir un bout :
+					
+					this.menu.MaxSize = new Drawing.Size (this.menu.MaxSize.Width, max_height);
+					this.menu.AdjustSize ();
+					
+					size      = this.menu.Size;
+					location  = pos;
+					animation = Animation.RollDown;
+				}
+				else
+				{
+					//	Il faut dérouler le menu vers le haut.
+					
+					pos.Y += item.Height;
+					
+					max_height = working_area.Top - pos.Y;
+				
+					this.menu.MaxSize = new Drawing.Size (this.menu.MaxSize.Width, max_height);
+					this.menu.AdjustSize ();
+					
+					pos.Y += this.menu.Height;
+					
+					size      = this.menu.Size;
+					location  = pos;
+					animation = Animation.RollUp;
+				}
+				
+				location.X -= this.menu.MenuShadow.Left;
+				location.Y -= size.Height;
+			}
+			#endregion
+			
+			private TextFieldComboMenu			menu;
+		}
+		#endregion
 		
 		protected virtual void OnOpeningCombo(Support.CancelEventArgs e)
 		{
@@ -524,38 +560,38 @@ namespace Epsitec.Common.Widgets
 				case MessageType.KeyPress:
 					if ( feel.TestCancelKey(message) )
 					{
-						this.CloseCombo(false);
+						this.menu.Behavior.Reject ();
 						message.Swallowed = true;
 					}
 					if ( feel.TestAcceptKey(message) )
 					{
-						this.CloseCombo(true);
+						this.menu.Behavior.Accept ();
 						message.Swallowed = true;
 					}
 					if ( feel.TestNavigationKey(message) )
 					{
-						this.CloseCombo(true);
+						this.menu.Behavior.Accept ();
 						Message.DefineLastWindow (this.Window);
 					}
 					break;
 				
-				case MessageType.MouseDown:
-					Drawing.Point mouse = window.Root.MapClientToScreen(message.Cursor);
-					Drawing.Point pos = this.scrollList.MapScreenToClient(mouse);
-					if ( !this.scrollList.HitTest(pos) )
-					{
-						this.CloseCombo(false);
-						message.Swallowed = ! message.NonClient;
-					}
-					break;
+//				case MessageType.MouseDown:
+//					Drawing.Point mouse = window.Root.MapClientToScreen(message.Cursor);
+//					Drawing.Point pos = this.scrollList.MapScreenToClient(mouse);
+//					if ( !this.scrollList.HitTest(pos) )
+//					{
+//						this.CloseCombo(false);
+//						message.Swallowed = ! message.NonClient;
+//					}
+//					break;
 			}
 		}
 		
 		
-		private void HandleApplicationDeactivated(object sender)
-		{
-			this.CloseCombo(false);
-		}
+//		private void HandleApplicationDeactivated(object sender)
+//		{
+//			this.CloseCombo(false);
+//		}
 
 		private void HandleButtonPressed(object sender, MessageEventArgs e)
 		{
@@ -577,33 +613,33 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private void RegisterFilter()
-		{
-			Window.MessageFilter          += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
-			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
-			
-			if ( this.Window != null &&
-				 this.AutoFocus == false )
-			{
-				this.initiallyFocusedWidget = this.Window.FocusedWidget;
-			}
-		}
-		
-		private void UnregisterFilter()
-		{
-			Window.MessageFilter          -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
-			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
-			
-			if ( this.initiallyFocusedWidget != null )
-			{
-				if ( this.initiallyFocusedWidget.Window != null )
-				{
-					this.initiallyFocusedWidget.SetFocused(true);
-				}
-				
-				this.initiallyFocusedWidget = null;
-			}
-		}
+//		private void RegisterFilter()
+//		{
+//			Window.MessageFilter          += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+//			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
+//			
+//			if ( this.Window != null &&
+//				 this.AutoFocus == false )
+//			{
+//				this.initiallyFocusedWidget = this.Window.FocusedWidget;
+//			}
+//		}
+//		
+//		private void UnregisterFilter()
+//		{
+//			Window.MessageFilter          -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+//			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
+//			
+//			if ( this.initiallyFocusedWidget != null )
+//			{
+//				if ( this.initiallyFocusedWidget.Window != null )
+//				{
+//					this.initiallyFocusedWidget.SetFocused(true);
+//				}
+//				
+//				this.initiallyFocusedWidget = null;
+//			}
+//		}
 		
 		
 		
@@ -723,6 +759,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		ClosedCombo;
 		
 		private Widget							initiallyFocusedWidget;
+		private TextFieldComboMenu				menu;
 		
 		protected GlyphButton					button;
 		protected Collections.StringCollection		items;
@@ -732,5 +769,15 @@ namespace Epsitec.Common.Widgets
 		protected ShowCondition					button_show_condition;
 		protected bool							has_edited_text;
 		protected double						default_button_width;
+
+		private void HandleMenuAccepted(object sender)
+		{
+			this.CloseCombo(true);
+		}
+
+		private void HandleMenuRejected(object sender)
+		{
+			this.CloseCombo(false);
+		}
 	}
 }

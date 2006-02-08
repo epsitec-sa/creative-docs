@@ -35,7 +35,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.root.Size = new Drawing.Size (this.window.ClientSize);
 			this.root.Name = "Root";
-			this.root.MinSizeChanged += new EventHandler (this.HandleRootMinSizeChanged);
+			this.root.MinSizeChanged += new Types.PropertyChangedEventHandler (this.HandleRootMinSizeChanged);
 			
 			this.timer.TimeElapsed += new EventHandler (this.HandleTimeElapsed);
 			this.timer.AutoRepeat = 0.050;
@@ -1171,7 +1171,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.root != null)
 				{
-					this.root.MinSizeChanged -= new EventHandler (this.HandleRootMinSizeChanged);
+					this.root.MinSizeChanged -= new Types.PropertyChangedEventHandler (this.HandleRootMinSizeChanged);
 					this.root.Dispose ();
 				}
 				
@@ -2122,7 +2122,7 @@ namespace Epsitec.Common.Widgets
 			this.timer.Stop ();
 		}
 
-		protected void HandleRootMinSizeChanged(object sender)
+		protected void HandleRootMinSizeChanged(object sender, Types.PropertyChangedEventArgs e)
 		{
 			int width  = (int) (this.root.RealMinSize.Width + 0.5);
 			int height = (int) (this.root.RealMinSize.Height + 0.5);

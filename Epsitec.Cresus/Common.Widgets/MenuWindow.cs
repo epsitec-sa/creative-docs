@@ -11,6 +11,7 @@ namespace Epsitec.Common.Widgets
 		
 		Popup			= 1,
 		Submenu			= 2,
+		ComboList		= 3,
 	}
 	
 	/// <summary>

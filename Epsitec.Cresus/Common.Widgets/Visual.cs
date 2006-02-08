@@ -979,6 +979,18 @@ namespace Epsitec.Common.Widgets
 			that.OnSizeChanged (new PropertyChangedEventArgs (Visual.SizeProperty, old_value, new_value));
 		}
 		
+		private static void NotifyMinSizeChanged(Object o, object old_value, object new_value)
+		{
+			Visual that = o as Visual;
+			that.OnMinSizeChanged (new PropertyChangedEventArgs (Visual.MinSizeProperty, old_value, new_value));
+		}
+		
+		private static void NotifyMaxSizeChanged(Object o, object old_value, object new_value)
+		{
+			Visual that = o as Visual;
+			that.OnMaxSizeChanged (new PropertyChangedEventArgs (Visual.MaxSizeProperty, old_value, new_value));
+		}
+		
 		private static void NotifyParentChanged(Object o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
@@ -1018,6 +1030,14 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected virtual void OnSizeChanged(Types.PropertyChangedEventArgs e)
+		{
+		}
+		
+		protected virtual void OnMinSizeChanged(Types.PropertyChangedEventArgs e)
+		{
+		}
+		
+		protected virtual void OnMaxSizeChanged(Types.PropertyChangedEventArgs e)
 		{
 		}
 		
@@ -1074,6 +1094,30 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		
+		public event PropertyChangedEventHandler	MaxSizeChanged
+		{
+			add
+			{
+				this.AddEvent (Visual.MaxSizeProperty, value);
+			}
+			remove
+			{
+				this.RemoveEvent (Visual.MaxSizeProperty, value);
+			}
+		}
+		
+		public event PropertyChangedEventHandler	MinSizeChanged
+		{
+			add
+			{
+				this.AddEvent (Visual.MinSizeProperty, value);
+			}
+			remove
+			{
+				this.RemoveEvent (Visual.MinSizeProperty, value);
+			}
+		}
 		
 		public event PropertyChangedEventHandler	SizeChanged
 		{
@@ -1176,8 +1220,8 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property BoundsProperty				= Property.Register ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new PropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue), new SetValueOverrideCallback (Visual.SetBoundsValue)));
 		public static readonly Property SizeProperty				= Property.Register ("Size", typeof (Drawing.Size), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetSizeValue), new SetValueOverrideCallback (Visual.SetSizeValue), new PropertyInvalidatedCallback (Visual.NotifySizeChanged)));
 		public static readonly Property PreferredSizeProperty		= Property.Register ("PreferredSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyFlags.AffectsParentLayout));
-		public static readonly Property MinSizeProperty				= Property.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyFlags.AffectsParentLayout));
-		public static readonly Property MaxSizeProperty				= Property.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property MinSizeProperty				= Property.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property MaxSizeProperty				= Property.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyFlags.AffectsParentLayout));
 		
 		public static readonly Property VisibilityProperty			= Property.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyFlags.AffectsParentLayout | VisualPropertyFlags.AffectsDisplay));
 		public static readonly Property EnableProperty				= Property.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyFlags.AffectsDisplay));

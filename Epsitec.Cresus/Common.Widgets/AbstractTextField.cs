@@ -96,6 +96,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		public virtual bool						IsCombo
+		{
+			get
+			{
+				return false;
+			}
+		}
+		
 		public bool								IsReadOnly
 		{
 			get
@@ -1389,7 +1397,7 @@ namespace Epsitec.Common.Widgets
 				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond
 				//	de la ligne éditable.
 				state &= ~WidgetState.Selected;
-				adorner.PaintTextFieldBackground(graphics, rFill, state, this.textFieldStyle, this.textDisplayMode, this.navigator.IsReadOnly&&!this.isCombo);
+				adorner.PaintTextFieldBackground(graphics, rFill, state, this.textFieldStyle, this.textDisplayMode, this.navigator.IsReadOnly&&!this.IsCombo);
 			}
 			
 //			graphics.AddFilledRectangle(rText);
@@ -1405,7 +1413,7 @@ namespace Epsitec.Common.Widgets
 				int from = System.Math.Min(this.navigator.Context.CursorFrom, this.navigator.Context.CursorTo);
 				int to   = System.Math.Max(this.navigator.Context.CursorFrom, this.navigator.Context.CursorTo);
 				
-				if ( this.isCombo && this.navigator.IsReadOnly )
+				if ( this.IsCombo && this.navigator.IsReadOnly )
 				{
 					TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
 					areas[0] = new TextLayout.SelectedArea();
@@ -1660,7 +1668,6 @@ namespace Epsitec.Common.Widgets
 		internal static readonly double			FrameMargin = 2;
 		internal static readonly double			Infinity = 1000000;
 		
-		protected bool							isCombo = false;
 		private bool							autoSelectOnFocus;
 		private bool							autoEraseOnFocus;
 		protected Drawing.Margins				margins = new Drawing.Margins();

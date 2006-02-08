@@ -172,6 +172,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.OpenGenericMenu (window, animate, MenuType.Submenu);
 		}
 
+		public void OpenCombo(MenuWindow window, Animate animate)
+		{
+			//	Montre le menu en animant l'ouverture à la façon d'une combo.
+			this.OpenGenericMenu (window, animate, MenuType.ComboList);
+		}
+
 		
 		private void OpenGenericMenu(MenuWindow window, Animate animate, MenuType type)
 		{
@@ -245,6 +251,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 			
 			this.CleanupAfterClose ();
+		}
+		
+		public void Accept()
+		{
+			this.HideAll ();
+			
+			this.OnAccepted ();
 		}
 		
 		public void Reject()
@@ -331,7 +344,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			if (host != null)
 			{
-				host.GetMenuDisposition (parent, size, out location, out animation);
+				host.GetMenuDisposition (parent, ref size, out location, out animation);
 			}
 			
 			switch (animate)
@@ -1432,6 +1445,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 					return;
 				}
 				
+				MenuWindow menu_window = window as MenuWindow;
+				
+				if ((menu_window != null) &&
+					(menu_window.MenuType == MenuType.ComboList))
+				{
+					return;
+				}
+				
 				MenuBehavior.ProcessKeyboardEvent (window, message);
 			}
 		}
@@ -1770,6 +1791,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 		}
 		
+		
 		private static void Push(MenuBehavior behavior)
 		{
 			State state = new State (behavior);
@@ -1786,6 +1808,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			state.Restore ();
 		}
+		
 		
 		#region State Class
 		private class State
