@@ -363,27 +363,27 @@ namespace Epsitec.Common.Widgets
 			VMenu debugMenu1 = new VMenu();
 			debugMenu1.Host = this.window;
 			debugMenu1.Name = "debugMenu1";
-			debugMenu1.Items.Add(new MenuItem ("red", "", "Rouge", ""));
-			debugMenu1.Items.Add(new MenuItem ("green", "", "Vert", ""));
-			debugMenu1.Items.Add(new MenuItem ("blue", "", "Bleu", ""));
+			debugMenu1.Items.Add(new MenuItem ("red-1", "", "Rouge", ""));
+			debugMenu1.Items.Add(new MenuItem ("green-1", "", "Vert", ""));
+			debugMenu1.Items.Add(new MenuItem ("blue-1", "", "Bleu", ""));
 			debugMenu1.AdjustSize();
 			debugMenu.Items[0].Submenu = debugMenu1;
 
 			VMenu debugMenu2 = new VMenu();
 			debugMenu2.Host = this.window;
 			debugMenu2.Name = "debugMenu2";
-			debugMenu2.Items.Add(new MenuItem ("red", "", "Rouge", ""));
-			debugMenu2.Items.Add(new MenuItem ("green", "", "Vert", ""));
-			debugMenu2.Items.Add(new MenuItem ("blue", "", "Bleu", ""));
+			debugMenu2.Items.Add(new MenuItem ("red-2", "", "Rouge", ""));
+			debugMenu2.Items.Add(new MenuItem ("green-2", "", "Vert", ""));
+			debugMenu2.Items.Add(new MenuItem ("blue-2", "", "Bleu", ""));
 			debugMenu2.AdjustSize();
 			debugMenu.Items[1].Submenu = debugMenu2;
 
 			VMenu debugMenu3 = new VMenu();
 			debugMenu3.Host = this.window;
 			debugMenu3.Name = "debugMenu3";
-			debugMenu3.Items.Add(new MenuItem ("red", "", "Rouge", ""));
-			debugMenu3.Items.Add(new MenuItem ("green", "", "Vert", ""));
-			debugMenu3.Items.Add(new MenuItem ("blue", "", "Bleu", ""));
+			debugMenu3.Items.Add(new MenuItem ("red-3", "", "Rouge", ""));
+			debugMenu3.Items.Add(new MenuItem ("green-3", "", "Vert", ""));
+			debugMenu3.Items.Add(new MenuItem ("blue-3", "", "Bleu", ""));
 			debugMenu3.AdjustSize();
 			debugMenu.Items[2].Submenu = debugMenu3;
 

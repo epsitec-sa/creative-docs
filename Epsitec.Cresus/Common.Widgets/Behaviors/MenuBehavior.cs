@@ -577,7 +577,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void NotifyExitedItem(MenuItem item)
 		{
-			this.keyboard_menu_item = null;
+			this.keyboard_menu_item   = null;
+			this.keyboard_menu_window = null;
 			
 			if (this.live_menu_windows.Count > 0)
 			{
@@ -692,6 +693,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				//	ouvrir celui correspondant à la case sélectionnée :
 				
 				MenuBehavior.OpenItemSubmenu (this.keyboard_menu_item, Animate.No);
+				MenuBehavior.EnableKeyboardNavigation ();
 				
 				n = this.live_menu_windows.Count;
 				
@@ -773,7 +775,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 				//	En fonction du niveau, il faudra soit ouvrir un sous-menu, soit
 				//	passer au menu suivant/précédent :
 				
-				item = this.keyboard_menu_item;
+				item = null;
+				
+				if ((this.keyboard_menu_item != null) &&
+					(this.keyboard_menu_item.RootParent is WindowRoot))
+				{
+					item = this.keyboard_menu_item;
+				}
 				
 				if (item == null)
 				{
@@ -793,6 +801,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 						if (submenu != null)
 						{
 							MenuBehavior.OpenItemSubmenu (item, Animate.No);
+							MenuBehavior.EnableKeyboardNavigation ();
 							
 							if (this.live_menu_windows.Count == n+1)
 							{
@@ -820,6 +829,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 								if (item != null)
 								{
 									MenuBehavior.OpenItemSubmenu (item, Animate.No);
+									MenuBehavior.EnableKeyboardNavigation ();
 									
 									if (this.live_menu_windows.Count == 1)
 									{
@@ -857,6 +867,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 								if (item != null)
 								{
 									MenuBehavior.OpenItemSubmenu (item, Animate.No);
+									MenuBehavior.EnableKeyboardNavigation ();
 									
 									if (this.live_menu_windows.Count == 1)
 									{

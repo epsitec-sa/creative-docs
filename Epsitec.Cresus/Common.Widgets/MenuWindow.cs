@@ -99,6 +99,10 @@ namespace Epsitec.Common.Widgets
 		
 		public override void Hide()
 		{
+			//	Quand on cache un menu, on libère en fait de manière "transparente"
+			//	la fenêtre associée; grâce à la méthode OnWindowDisposing, nous
+			//	empêchons que ceci n'entraîne notre propre destruction.
+			
 			base.Hide ();
 			base.Close ();
 		}

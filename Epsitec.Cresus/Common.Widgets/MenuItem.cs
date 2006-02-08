@@ -361,6 +361,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		protected override void OnParentChanged(PropertyChangedEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("Parent changed: " + e.NewValue);
+			base.OnParentChanged (e);
+		}
+
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged ();
