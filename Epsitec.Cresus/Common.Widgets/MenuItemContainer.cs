@@ -21,8 +21,37 @@ namespace Epsitec.Common.Widgets
 		
 		
 
-		public void FocusFromMenu(Message message)
+		public bool DefocusFromMenu()
 		{
+			bool changed = false;
+			
+			if (this.Children.Count > 0)
+			{
+				Widget[] widgets = this.Children.Widgets;
+				
+				foreach (Widget widget in widgets)
+				{
+					if (widget.IsFocused)
+					{
+						System.Diagnostics.Debug.WriteLine ("Removing focus from " + widget.ToString ());
+						
+						this.EnableFilter ();
+						this.Focus ();
+						
+						changed = true;
+					}
+				}
+			}
+			
+			this.Invalidate ();
+			
+			return changed;
+		}
+		
+		public bool FocusFromMenu()
+		{
+			bool swallow = false;
+			
 			System.Diagnostics.Debug.WriteLine ("FocusFromMenu called");
 			this.Window.MakeFocused ();
 			
@@ -41,10 +70,7 @@ namespace Epsitec.Common.Widgets
 							this.EnableFilter ();
 							this.Focus ();
 							
-							if (message != null)
-							{
-								message.Swallowed = true;
-							}
+							swallow = true;
 						}
 						else
 						{
@@ -58,6 +84,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.Invalidate ();
+			return swallow;
 		}
 		
 		
@@ -130,10 +157,16 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.WriteLine ("MenuItemContainer de-focused");
 		}
 		
-		protected override void OnPressed(MessageEventArgs e)
-		{
-			this.FocusFromMenu (e == null ? null : e.Message);
-		}
+//		protected override void OnPressed(MessageEventArgs e)
+//		{
+//			if (this.FocusFromMenu ())
+//			{
+//				if (e != null)
+//				{
+//					e.Message.Swallowed = true;
+//				}
+//			}
+//		}
 
 		protected override void OnIconSizeChanged()
 		{
@@ -152,6 +185,12 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			base.OnIconSizeChanged ();
+		}
+
+		protected override void OnUserAction(MessageEventArgs e)
+		{
+			//	Mange l'événement. Un item "riche" ne peut pas générer d'actions
+			//	lui-même !
 		}
 
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
@@ -179,6 +218,14 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 				
+				switch (message.KeyCode)
+				{
+					case KeyCode.ArrowUp:
+					case KeyCode.ArrowDown:
+						forward = true;
+						break;
+				}
+				
 				if (forward)
 				{
 					Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
@@ -204,7 +251,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
 				
-				behavior.IsFrozen = true;
+				behavior.AttachMenuItemContainer (this);
 				
 				System.Diagnostics.Debug.WriteLine ("Keyboard Filter disabled temporarily");
 				
@@ -219,7 +266,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
 				
-				behavior.IsFrozen = false;
+				behavior.DetachMenuItemContainer (this);
 				
 				System.Diagnostics.Debug.WriteLine ("Keyboard Filter re-enabled");
 				

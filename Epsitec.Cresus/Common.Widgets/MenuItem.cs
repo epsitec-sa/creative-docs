@@ -121,11 +121,6 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if (this.Text == "Aide")
-				{
-					System.Diagnostics.Debug.WriteLine ("Setting ItemType to " + value + " on 'Aide' item");
-				}
-				
 				this.SetValue (MenuItem.ItemTypeProperty, value);
 			}
 		}
@@ -361,12 +356,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected override void OnParentChanged(PropertyChangedEventArgs e)
-		{
-			System.Diagnostics.Debug.WriteLine ("Parent changed: " + e.NewValue);
-			base.OnParentChanged (e);
-		}
-
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged ();
@@ -605,7 +594,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (parent == null)
 			{
-				return root.GetValue (MenuItem.MenuBehaviorProperty) as Behaviors.MenuBehavior;
+				return (root == null) ? null : root.GetValue (MenuItem.MenuBehaviorProperty) as Behaviors.MenuBehavior;
 			}
 			else
 			{
@@ -657,7 +646,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static MenuItem GetParentMenuItem(Widget widget)
 		{
-			return widget.GetValue (MenuItem.ParentMenuItemProperty) as MenuItem;
+			return (widget == null) ? null : widget.GetValue (MenuItem.ParentMenuItemProperty) as MenuItem;
 		}
 		
 		

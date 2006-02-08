@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 	{
 		[Test] public void CheckFicheApplication()
 		{
-			Widgets.Adorners.Factory.SetActive("LookDany");
+			Widgets.Adorners.Factory.SetActive("LookRoyale");
 			
 			this.window = new Window();
 			this.window.Root.LayoutChanged += new EventHandler(this.Root_LayoutChanged);
@@ -389,6 +389,7 @@ namespace Epsitec.Common.Widgets
 
 			MenuItemContainer helpMenuItemContainer1 = new MenuItemContainer ();
 			MenuItemContainer helpMenuItemContainer2 = new MenuItemContainer ();
+			MenuItemContainer helpMenuItemContainer3 = new MenuItemContainer ();
 			Widget            helpMenuItemTextField  = new TextField ();
 			TextFieldCombo    helpMenuItemCombo      = new TextFieldCombo ();
 			
@@ -410,6 +411,42 @@ namespace Epsitec.Common.Widgets
 			
 			helpMenuItemContainer2.Children.Add (helpMenuItemCombo);
 			
+			{
+				Button b1 = new Button ("A");
+				Button b2 = new Button ("B");
+				Button b3 = new Button ("C");
+				
+				b1.Size = new Size (20, 20);
+				b2.Size = new Size (20, 20);
+				b3.Size = new Size (20, 20);
+
+				b1.MinSize = new Size (20, 20);
+				b2.MinSize = new Size (20, 20);
+				b3.MinSize = new Size (20, 20);
+				
+				b1.Dock = DockStyle.Left;
+				b2.Dock = DockStyle.Left;
+				b3.Dock = DockStyle.Left;
+				
+				b1.AutoToggle = true;
+				b2.AutoToggle = true;
+				b3.AutoToggle = true;
+				
+				b1.TabIndex = 1;
+				b2.TabIndex = 2;
+				b3.TabIndex = 3;
+				
+				b1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				b2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				b3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				
+				helpMenuItemContainer3.DockPadding = new Margins (0, 0, 4, 4);
+				
+				helpMenuItemContainer3.Children.Add (b1);
+				helpMenuItemContainer3.Children.Add (b2);
+				helpMenuItemContainer3.Children.Add (b3);
+			}
+			
 			VMenu helpMenu = new VMenu();
 			helpMenu.Host = this.window;
 			helpMenu.Name = "helpMenu";
@@ -420,6 +457,7 @@ namespace Epsitec.Common.Widgets
 			helpMenu.Items.Add(helpMenuItemContainer1);
 			helpMenu.Items.Add(new MenuSeparator ());
 			helpMenu.Items.Add(helpMenuItemContainer2);
+			helpMenu.Items.Add(helpMenuItemContainer3);
 			helpMenu.AdjustSize();
 			this.menu.Items[4].Submenu = helpMenu;
 

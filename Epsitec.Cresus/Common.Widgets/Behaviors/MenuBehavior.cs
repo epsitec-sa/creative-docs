@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 		
 		
-		public bool								IsFrozen
+		private bool							IsFrozen
 		{
 			get
 			{
@@ -290,6 +290,23 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 		
 		
+		internal void AttachMenuItemContainer(MenuItemContainer item)
+		{
+			this.IsFrozen = true;
+			this.UpdateItems ();
+			
+			System.Diagnostics.Debug.Assert (this.frozen_menu_last_item == item);
+		}
+		
+		internal void DetachMenuItemContainer(MenuItemContainer item)
+		{
+			System.Diagnostics.Debug.Assert (this.frozen_menu_last_item == item);
+			
+			this.IsFrozen = false;
+			this.UpdateItems ();
+		}
+		
+		
 		private void ShowSubmenu(MenuWindow window, Animate animate)
 		{
 			//	Montre un sous-menu en le positionnant au préalable par rapport
@@ -354,6 +371,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 			MenuBehavior.timer_item      = null;
 			MenuBehavior.timer_keep_menu = null;
 			MenuBehavior.timer_behaviour = null;
+			
+			if (this.IsFrozen)
+			{
+				this.ChangeFocusedItem (null);
+			}
+			
+			System.Diagnostics.Debug.Assert (this.is_frozen == false);
+			System.Diagnostics.Debug.Assert (this.frozen_menu_last_item == null);
 			
 			this.is_open = false;
 			this.keyboard_menu_active = false;
@@ -605,8 +630,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				MenuWindow window = this.live_menu_windows[n-1] as MenuWindow;
 				
-				this.keyboard_menu_item   = window.ParentWidget as MenuItem;
-				this.keyboard_menu_window = this.keyboard_menu_item == null ? null : this.keyboard_menu_item.Window;
+				this.keyboard_menu_item   = ((window.ParentWidget != null) && (window.ParentWidget.RootParent is WindowRoot)) ? window.ParentWidget as MenuItem : null;
+				this.keyboard_menu_window = (this.keyboard_menu_item == null) ? null : this.keyboard_menu_item.Window;
 				this.keyboard_menu_active = true;
 				
 				if (this.keyboard_menu_window != null)
@@ -637,6 +662,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void KeyboardSelectItem(int direction)
 		{
+			//	Sélectionne un élément du même menu à la suite d'un déplacement
+			//	avec les touches haut/bas.
+			
 			int    n    = this.live_menu_windows.Count;
 			Widget root = this.keyboard_menu_window == null ? null : this.keyboard_menu_window.Root;
 			
@@ -702,12 +730,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				}
 			}
 			
-			MenuBehavior.menu_last_item     = this.keyboard_menu_item;
-			MenuBehavior.menu_last_behavior = this.keyboard_menu_item == null ? null : this;
-			
-			this.keyboard_menu_active = true;
-			
-			this.UpdateItems ();
+			this.UpdateItemsAfterKeyboardAction (this.keyboard_menu_item);
 		}
 		
 		private void KeyboardSelectMenu(int direction)
@@ -898,12 +921,66 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.keyboard_menu_item   = item;
 				this.keyboard_menu_window = window;
 				
-				MenuBehavior.menu_last_item     = item;
-				MenuBehavior.menu_last_behavior = item == null ? null : this;
+				this.UpdateItemsAfterKeyboardAction (item);
+			}
+		}
+		
+		private void UpdateItemsAfterKeyboardAction(MenuItem item)
+		{
+			this.SuspendUpdates ();
+			
+			MenuItem old_item = MenuBehavior.menu_last_item;
+			MenuItem new_item = item;
+			
+			MenuBehavior.menu_last_item     = item;
+			MenuBehavior.menu_last_behavior = (item == null) ? null : this;
+			
+			if (old_item != new_item)
+			{
+				this.ChangeFocusedItem (new_item);
+			}
+			
+			this.keyboard_menu_active = true;
+			
+			this.UpdateItems ();
+			this.ResumeUpdates ();
+		}
+		
+		private bool ChangeFocusedItem(MenuItem new_item)
+		{
+			//	Change le focus d'un item à un autre, tout en tenant compte des
+			//	éventuels items "riches" qui nécessitent un traitement spécial.
+			
+			MenuItemContainer old_container = this.frozen_menu_last_item as MenuItemContainer;
+			MenuItemContainer new_container = new_item as MenuItemContainer;
+			
+			if (old_container != null)
+			{
+				//	Un item "riche" a le focus et il faut donc lui signaler qu'il va le
+				//	perdre (ce qui va mettre IsFrozen à 'false' et procéder à diverses
+				//	modifications) :
 				
-				this.keyboard_menu_active = true;
+				old_container.DefocusFromMenu ();
 				
-				this.UpdateItems ();
+				//	Les réglages de menu_last_... peuvent avoir été modifiés depuis
+				//	notre appel. On les applique à nouveau ici pour être sûr :
+				
+				MenuBehavior.menu_last_item     = new_item;
+				MenuBehavior.menu_last_behavior = (new_item == null) ? null : this;
+			}
+			
+			System.Diagnostics.Debug.Assert (this.is_frozen == false);
+			System.Diagnostics.Debug.Assert (this.frozen_menu_last_item == null);
+			
+			if (new_container != null)
+			{
+				//	Un item "riche" va recevoir le focus :
+				
+				return new_container.FocusFromMenu ();
+			}
+			else
+			{
+				return false;
 			}
 		}
 		
@@ -1416,11 +1493,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 						//	un menu (autre que celui de la racine); on va changer
 						//	le focus si un item "riche" a été cliqué :
 						
-						MenuItemContainer container = item as MenuItemContainer;
+						MenuBehavior that = MenuItem.GetMenuBehavior (item);
 						
-						if (container != null)
+						if (that != null)
 						{
-							container.FocusFromMenu (message);
+							if (that.ChangeFocusedItem (item))
+							{
+								message.Swallowed = true;
+							}
 						}
 					}
 					else
@@ -1597,21 +1677,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				switch (message.KeyCode)
 				{
-					case KeyCode.ArrowUp:
-						that.KeyboardSelectItem (-1);
-						break;
-					
-					case KeyCode.ArrowDown:
-						that.KeyboardSelectItem (1);
-						break;
-						
-					case KeyCode.ArrowRight:
-						that.KeyboardSelectMenu (1);
-						break;
-						
-					case KeyCode.ArrowLeft:
-						that.KeyboardSelectMenu (-1);
-						break;
+					case KeyCode.ArrowUp:		that.KeyboardSelectItem (-1);	break;
+					case KeyCode.ArrowDown:		that.KeyboardSelectItem (1);	break;
+					case KeyCode.ArrowRight:	that.KeyboardSelectMenu (1);	break;
+					case KeyCode.ArrowLeft:		that.KeyboardSelectMenu (-1);	break;
 					
 					default:
 						if ((feel.TestSelectItemKey (message)) &&
