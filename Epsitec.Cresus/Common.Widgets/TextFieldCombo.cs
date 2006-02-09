@@ -82,7 +82,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.scrollList != null;
+				return this.scroll_list != null;
 			}
 		}
 		
@@ -107,6 +107,15 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.combo_arrow_mode = value;
+			}
+		}
+		
+		
+		protected ScrollList					ScrollList
+		{
+			get
+			{
+				return this.scroll_list;
 			}
 		}
 		
@@ -143,14 +152,6 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		
-		#region CloseMode Enumeration
-		protected enum CloseMode
-		{
-			Accept,
-			Reject
-		}
-		#endregion
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -189,6 +190,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetButtonVisibility (this.ComputeButtonVisibility ());
 		}
+		
 		
 		protected bool ComputeButtonVisibility()
 		{
@@ -250,7 +252,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
+		protected virtual bool CheckIfOpenComboRequested(Message message)
+		{
+			return Feel.Factory.Active.TestComboOpenKey (message);
+		}
 
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
@@ -283,11 +288,6 @@ namespace Epsitec.Common.Widgets
 			base.ProcessMessage(message, pos);
 		}
 		
-		protected virtual bool CheckIfOpenComboRequested(Message message)
-		{
-			return Feel.Factory.Active.TestComboOpenKey (message);
-		}
-
 		protected override bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
 			//	Gère les pressions de touches (en particulier les flèches haut
@@ -336,6 +336,7 @@ namespace Epsitec.Common.Widgets
 			return base.ProcessKeyPress (message, pos);
 		}
 
+		
 		protected virtual bool ProcessKeyPressInSelectItemBehavior(Message message)
 		{
 			return this.select_item_behavior.ProcessKeyPress (message);
@@ -371,11 +372,12 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void CopyItemsToComboList(Collections.StringCollection list)
 		{
-			for ( int i=0 ; i<this.items.Count ; i++ )
+			for (int i = 0 ; i < this.items.Count; i++)
 			{
-				string name = this.items.GetName(i);
+				string name = this.items.GetName (i);
 				string text = this.items[i];
-				list.Add(name, text);
+				
+				list.Add (name, text);
 			}
 		}
 		
@@ -392,68 +394,74 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void Navigate(int dir)
 		{
-			if ( this.items.Count == 0 )
-			{
-				return;
-			}
-
 			//	Cherche le nom suivant ou précédent dans la comboList, même si elle
 			//	n'est pas "déroulée".
 			
-			int		sel;
-			bool	exact;
-
-			if ( this.FindMatch(this.Text, out sel, out exact) )
+			if (this.items.Count == 0)
 			{
-				if ( exact )  sel += dir;
+				return;
+			}
+			
+			int	 sel;
+			bool exact;
+
+			if (this.FindMatch (this.Text, out sel, out exact))
+			{
+				if (exact)
+				{
+					sel += dir;
+				}
 			}
 			
 			sel = System.Math.Max(sel, 0);
 			sel = System.Math.Min(sel, this.items.Count-1);
 			
 			this.SelectedIndex = sel;
-			this.SetFocused(true);
+			this.Focus ();
 		}
 		
 		protected virtual void OpenCombo()
 		{
-			if ( this.IsComboOpen )  return;
+			//	Rend la liste visible et démarre l'interaction.
+			
+			if (this.IsComboOpen)
+			{
+				return;
+			}
 			
 			Support.CancelEventArgs cancel_event = new Support.CancelEventArgs ();
 			this.OnComboOpening (cancel_event);
 			
-			if ( cancel_event.Cancel )  return;
+			if (cancel_event.Cancel)
+			{
+				return;
+			}
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			this.menu = new TextFieldComboMenu ();
-			
 			this.menu.Size = new Drawing.Size (this.Width, 200);
 			
-			this.scrollList = this.menu.ScrollList;
-//			this.scrollList = new ScrollList(null);
-//			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
-//			this.scrollList.Bounds = new Drawing.Rectangle(0, 0, this.Width, 200);
+			this.scroll_list = this.menu.ScrollList;
 			
-			this.CopyItemsToComboList(this.scrollList.Items);
+			//	Remplit la liste :
+			
+			this.CopyItemsToComboList (this.scroll_list.Items);
 			
 			this.menu.AdjustSize ();
 			
 			MenuItem.SetMenuHost (this, new MenuHost (this.menu));
 			
-			this.scrollList.SelectedIndex = this.MapIndexToComboList(this.SelectedIndex);
-			this.scrollList.ShowSelected(ScrollShowMode.Center);
+			this.scroll_list.SelectedIndex = this.MapIndexToComboList (this.SelectedIndex);
+			this.scroll_list.ShowSelected (ScrollShowMode.Center);
 			
 			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Drawing.Point (0, 0)));
 			
-			this.menu.Behavior.Accepted += new Epsitec.Common.Support.EventHandler(this.HandleMenuAccepted);
-			this.menu.Behavior.Rejected += new Epsitec.Common.Support.EventHandler(this.HandleMenuRejected);
-			this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
-			this.scrollList.SelectionActivated += new Support.EventHandler(this.HandleScrollListSelectionActivated);
+			this.menu.Behavior.Accepted += new Support.EventHandler (this.HandleMenuAccepted);
+			this.menu.Behavior.Rejected += new Support.EventHandler (this.HandleMenuRejected);
 			
-//			this.SetFocused(true);
-//			this.SetFocused(false);
-//			this.scrollList.SetFocused(true);
+			this.scroll_list.SelectedIndexChanged += new Support.EventHandler (this.HandleScrollerSelectedIndexChanged);
+			this.scroll_list.SelectionActivated   += new Support.EventHandler (this.HandleScrollListSelectionActivated);
 			
 			this.StartEdition ();
 			this.OnComboOpened ();
@@ -461,8 +469,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void CloseCombo(CloseMode mode)
 		{
-			System.Diagnostics.Debug.WriteLine(string.Format ("CloseCombo(mode={0})", mode));
-
+			//	Ferme la liste (si nécessaire) et valide/rejette la modification
+			//	en fonction du mode spécifié.
+			
 			if (this.menu.IsMenuOpen)
 			{
 				switch (mode)
@@ -476,36 +485,29 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-
-			this.menu.Behavior.Accepted -= new Epsitec.Common.Support.EventHandler(this.HandleMenuAccepted);
-			this.menu.Behavior.Rejected -= new Epsitec.Common.Support.EventHandler(this.HandleMenuRejected);
-			this.scrollList.SelectionActivated -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
-			this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
-//			this.UnregisterFilter();
-			this.scrollList.Dispose();
-			this.scrollList = null;
+			this.menu.Behavior.Accepted -= new Support.EventHandler (this.HandleMenuAccepted);
+			this.menu.Behavior.Rejected -= new Support.EventHandler (this.HandleMenuRejected);
 			
-			if ( Window.IsApplicationActive )
+			this.scroll_list.SelectionActivated   -= new Support.EventHandler (this.HandleScrollListSelectionActivated);
+			this.scroll_list.SelectedIndexChanged -= new Support.EventHandler (this.HandleScrollerSelectedIndexChanged);
+			
+			this.scroll_list.Dispose();
+			this.menu.Dispose ();
+			
+			this.scroll_list = null;
+			this.menu        = null;
+			
+			this.SelectAll ();
+			
+			if (this.AutoFocus)
 			{
-				this.Window.MakeActive();
-			}
-			
-			this.SelectAll();
-			
-			if ( this.AutoFocus )
-			{
-				this.SetFocused(true);
+				this.Focus ();
 			}
 			
 			switch (mode)
 			{
-				case CloseMode.Reject:
-					this.RejectEdition ();
-					break;
-				
-				case CloseMode.Accept:
-					this.AcceptEdition ();
-					break;
+				case CloseMode.Reject:	this.RejectEdition ();	break;
+				case CloseMode.Accept:	this.AcceptEdition ();	break;
 			}
 			
 			this.OnComboClosed ();
@@ -516,6 +518,213 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
+		protected virtual void OnComboOpening(Support.CancelEventArgs e)
+		{
+			if (this.ComboOpening != null)
+			{
+				this.ComboOpening (this, e);
+			}
+		}
+		
+		protected virtual void OnComboOpened()
+		{
+			System.Diagnostics.Debug.Assert (this.IsComboOpen == true);
+			
+			this.UpdateButtonVisibility ();
+			
+			if (this.ComboOpened != null)
+			{
+				this.ComboOpened (this);
+			}
+		}
+		
+		protected virtual void OnComboClosed()
+		{
+			System.Diagnostics.Debug.Assert (this.IsComboOpen == false);
+			
+			this.UpdateButtonVisibility ();
+			
+			if (this.ComboClosed != null)
+			{
+				this.ComboClosed (this);
+			}
+		}
+		
+		
+		private void HandleButtonPressed(object sender, MessageEventArgs e)
+		{
+			//	L'utilisateur a cliqué dans le bouton d'ouverture de la liste.
+			
+			this.OpenCombo ();
+		}
+		
+		private void HandleScrollListSelectionActivated(object sender)
+		{
+			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
+			
+			this.ProcessComboActivatedIndex (this.scroll_list.SelectedIndex);
+		}
+		
+		private void HandleScrollerSelectedIndexChanged(object sender)
+		{
+			//	L'utilisateur a simplement déplacé la souris dans la liste.
+			
+			this.ProcessComboSelectedIndex (this.scroll_list.SelectedIndex);
+		}
+		
+		private void HandleMenuAccepted(object sender)
+		{
+			this.CloseCombo(CloseMode.Accept);
+		}
+
+		private void HandleMenuRejected(object sender)
+		{
+			this.CloseCombo(CloseMode.Reject);
+		}
+		
+		
+		#region IStringCollectionHost Members
+		public void StringCollectionChanged()
+		{
+		}
+		
+		
+		public Collections.StringCollection		Items
+		{
+			get
+			{
+				return this.items;
+			}
+		}
+		#endregion
+		
+		#region INamedStringSelection Members
+		public int								SelectedIndex
+		{
+			get
+			{
+				int	 sel;
+				bool exact;
+				
+				if (this.FindMatch (this.Text, out sel, out exact))
+				{
+					return sel;
+				}
+				
+				return -1;
+			}
+
+			set
+			{
+				string text = "";
+				
+				if ((value >= 0) &&
+					(value < this.items.Count))
+				{
+					text = this.items[value];
+				}
+
+				if (this.Text != text)
+				{
+					this.Text = text;
+					this.OnSelectedIndexChanged ();
+					this.SelectAll ();
+				}
+			}
+		}
+		
+		public string							SelectedItem
+		{
+			get
+			{
+				int index = this.SelectedIndex;
+				
+				if (index < 0)
+				{
+					return "";
+				}
+				else
+				{
+					return this.items[index];
+				}
+			}
+			set
+			{
+				if (value == null)
+				{
+					value = "";
+				}
+				
+				int index = this.Items.IndexOf (value);
+				
+				if (index < 0)
+				{
+					this.Text = value;
+					this.SelectAll ();
+				}
+				else
+				{
+					this.SelectedIndex = index;
+				}
+			}
+		}
+
+		public string							SelectedName
+		{
+			//	Nom de la ligne sélectionnée, "" si aucune.
+			get
+			{
+				int index = this.SelectedIndex;
+				
+				if (index < 0)
+				{
+					return "";
+				}
+				else
+				{
+					return this.items.GetName(index);
+				}
+			}
+			
+			set
+			{
+				if (value == null)
+				{
+					value = "";
+				}
+				
+				if (this.SelectedName != value)
+				{
+					int index = -1;
+					
+					if (value.Length > 0)
+					{
+						index = this.items.FindNameIndex (value);
+						
+						if (index < 0)
+						{
+							throw new System.ArgumentException (string.Format ("No element named '{0}' in list", value));
+						}
+					}
+					
+					this.SelectedIndex = index;
+				}
+			}
+		}
+		
+		
+		public event Support.EventHandler		SelectedIndexChanged;
+		#endregion
+		
+		#region CloseMode Enumeration
+		protected enum CloseMode
+		{
+			Accept,
+			Reject
+		}
+		#endregion
+		
 		#region MenuHost Class
 		private class MenuHost : IMenuHost
 		{
@@ -577,244 +786,20 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		protected virtual void OnComboOpening(Support.CancelEventArgs e)
-		{
-			if (this.ComboOpening != null)
-			{
-				this.ComboOpening (this, e);
-			}
-		}
-		
-		protected virtual void OnComboOpened()
-		{
-			System.Diagnostics.Debug.Assert (this.IsComboOpen == true);
-			this.UpdateButtonVisibility ();
-			
-			if (this.ComboOpened != null)
-			{
-				this.ComboOpened (this);
-			}
-		}
-		
-		protected virtual void OnComboClosed()
-		{
-			System.Diagnostics.Debug.Assert (this.IsComboOpen == false);
-			this.UpdateButtonVisibility ();
-			
-			if (this.ComboClosed != null)
-			{
-				this.ComboClosed (this);
-			}
-		}
-		
-		
-		private void MessageFilter(object sender, Message message)
-		{
-			Window window = sender as Window;
-			
-			System.Diagnostics.Debug.Assert(this.IsComboOpen);
-			System.Diagnostics.Debug.Assert(window != null);
-			
-			if ( this.scrollList == null )  return;
-			
-			IFeel feel = Feel.Factory.Active;
-			
-			switch ( message.Type )
-			{
-				case MessageType.KeyPress:
-					if ( feel.TestCancelKey(message) )
-					{
-						this.menu.Behavior.Reject ();
-						message.Swallowed = true;
-					}
-					if ( feel.TestAcceptKey(message) )
-					{
-						this.menu.Behavior.Accept ();
-						message.Swallowed = true;
-					}
-					if ( feel.TestNavigationKey(message) )
-					{
-						this.menu.Behavior.Accept ();
-						Message.DefineLastWindow (this.Window);
-					}
-					break;
-				
-//				case MessageType.MouseDown:
-//					Drawing.Point mouse = window.Root.MapClientToScreen(message.Cursor);
-//					Drawing.Point pos = this.scrollList.MapScreenToClient(mouse);
-//					if ( !this.scrollList.HitTest(pos) )
-//					{
-//						this.CloseCombo(false);
-//						message.Swallowed = ! message.NonClient;
-//					}
-//					break;
-			}
-		}
-		
-		
-//		private void HandleApplicationDeactivated(object sender)
-//		{
-//			this.CloseCombo(false);
-//		}
-
-		private void HandleButtonPressed(object sender, MessageEventArgs e)
-		{
-			this.OpenCombo();
-		}
-		
-		private void HandleScrollListSelectionActivated(object sender)
-		{
-			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
-			
-			this.ProcessComboActivatedIndex(this.scrollList.SelectedIndex);
-		}
-		
-		private void HandleScrollerSelectedIndexChanged(object sender)
-		{
-			//	L'utilisateur a simplement déplacé la souris dans la liste.
-			
-			this.ProcessComboSelectedIndex(this.scrollList.SelectedIndex);
-		}
-		
-		
-		
-		
-		#region IStringCollectionHost Members
-		public void StringCollectionChanged()
-		{
-		}
-		
-		
-		public Collections.StringCollection				Items
-		{
-			get { return this.items; }
-		}
-		#endregion
-		
-		#region INamedStringSelection Members
-		public int									SelectedIndex
-		{
-			get
-			{
-				int		sel;
-				bool	exact;
-				if ( this.FindMatch(this.Text, out sel, out exact) )  return sel;
-				return -1;
-			}
-
-			set
-			{
-				string text = "";
-				if ( value >= 0 && value < this.items.Count )
-				{
-					text = this.items[value];
-				}
-
-				if ( this.Text != text )
-				{
-					this.Text = text;
-					this.OnSelectedIndexChanged();
-//-					this.Cursor = 0;
-					this.SelectAll();
-				}
-			}
-		}
-		
-		public string								SelectedItem
-		{
-			get
-			{
-				int index = this.SelectedIndex;
-				if ( index < 0 )  return "";
-				return this.Items[index];
-			}
-			
-			set
-			{
-				if ( value == null )
-				{
-					value = "";
-				}
-				
-				int index = this.Items.IndexOf(value);
-				if ( index < 0 )
-				{
-					this.Text = value;
-					this.Cursor = 0;
-					this.SelectAll();
-				}
-				else
-				{
-					this.SelectedIndex = index;
-				}
-			}
-		}
-
-		public string								SelectedName
-		{
-			//	Nom de la ligne sélectionnée, null si aucune.
-			get
-			{
-				int index = this.SelectedIndex;
-				if ( index < 0 )  return "";
-				return this.items.GetName(index);
-			}
-			
-			set
-			{
-				if ( value == null )
-				{
-					value = "";
-				}
-				
-				if ( this.SelectedName != value )
-				{
-					int index = -1;
-					
-					if ( value.Length > 0 )
-					{
-						index = this.items.FindNameIndex(value);
-						
-						if ( index < 0 )
-						{
-							throw new System.ArgumentException(string.Format("No element named '{0}' in list", value));
-						}
-					}
-					
-					this.SelectedIndex = index;
-				}
-			}
-		}
-		
-		
-		public event Support.EventHandler		SelectedIndexChanged;
-		#endregion
-		
-		
 		public event Support.CancelEventHandler	ComboOpening;
 		public event Support.EventHandler		ComboOpened;
 		public event Support.EventHandler		ComboClosed;
 		
+		private Behaviors.SelectItemBehavior	select_item_behavior;
+		private ComboArrowMode					combo_arrow_mode		= ComboArrowMode.Open;
+		private bool							is_live_update_enabled	= true;
 		
 		private TextFieldComboMenu				menu;
-		private ComboArrowMode					combo_arrow_mode	= ComboArrowMode.Open;
-		private Behaviors.SelectItemBehavior	select_item_behavior;
-		private bool							is_live_update_enabled = true;
+		private ScrollList						scroll_list;
 		
 		protected Button						button;
 		protected Collections.StringCollection	items;
-		protected ScrollList					scrollList;
 		protected ShowCondition					button_show_condition = ShowCondition.Always;
 		protected double						default_button_width;
-
-		private void HandleMenuAccepted(object sender)
-		{
-			this.CloseCombo(CloseMode.Accept);
-		}
-
-		private void HandleMenuRejected(object sender)
-		{
-			this.CloseCombo(CloseMode.Reject);
-		}
 	}
 }

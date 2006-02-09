@@ -427,7 +427,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ((this.HasPlaceHolder) &&
 				(mode == CloseMode.Accept) &&
-				(this.scrollList.SelectedIndex == 0))
+				(this.ScrollList.SelectedIndex == 0))
 			{
 				this.StartPassiveEdition (this.PlaceHolder);
 				this.Focus ();
