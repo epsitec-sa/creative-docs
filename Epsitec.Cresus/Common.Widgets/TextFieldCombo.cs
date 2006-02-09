@@ -86,6 +86,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								IsLiveUpdateEnabled
+		{
+			get
+			{
+				return this.is_live_update_enabled;
+			}
+			set
+			{
+				this.is_live_update_enabled = value;
+			}
+		}
+		
 		public ComboArrowMode					ComboArrowMode
 		{
 			get
@@ -243,21 +255,29 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			if ( message.Type == MessageType.MouseWheel )
+			switch (message.Type)
 			{
-				if ( message.Wheel > 0 )  this.Navigate(-1);
-				if ( message.Wheel < 0 )  this.Navigate(1);
-				message.Consumer = this;
-				return;
-			}
-
-			if ( this.IsReadOnly )
-			{
-				if ( message.Type == MessageType.MouseDown )
-				{
-					this.OpenCombo();
+				case MessageType.MouseWheel:
+					if (message.Wheel > 0)
+					{
+						this.Navigate(-1);
+					}
+					else if (message.Wheel < 0)
+					{
+						this.Navigate(1);
+					}
+					
+					message.Consumer = this;
 					return;
-				}
+				
+				case MessageType.MouseDown:
+					if (this.IsReadOnly)
+					{
+						this.OpenCombo ();
+						message.Consumer = this;
+						return;
+					}
+					break;
 			}
 			
 			base.ProcessMessage(message, pos);
@@ -302,14 +322,13 @@ namespace Epsitec.Common.Widgets
 				this.menu.Behavior.Reject ();
 				return true;
 			}
-
 			
 			return base.ProcessKeyDown(message, pos);
 		}
 		
 		protected override bool ProcessKeyPress(Message message, Epsitec.Common.Drawing.Point pos)
 		{
-			if (this.select_item_behavior.ProcessKeyPress (message))
+			if (this.ProcessKeyPressInSelectItemBehavior (message))
 			{
 				return true;
 			}
@@ -317,29 +336,40 @@ namespace Epsitec.Common.Widgets
 			return base.ProcessKeyPress (message, pos);
 		}
 
-		
-		protected virtual  void ProcessComboActivatedIndex(int sel)
+		protected virtual bool ProcessKeyPressInSelectItemBehavior(Message message)
 		{
-			sel = this.MapComboListToIndex(sel);
-			
+			return this.select_item_behavior.ProcessKeyPress (message);
+		}
+		
+		protected virtual void ProcessComboActivatedIndex(int sel)
+		{
 			//	Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
 			//	est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
 			//	qui est appelée à chaque changement "visuel".
 			
-			if ( sel == -1 )  return;
+			int index = this.MapComboListToIndex (sel);
 			
-			this.SelectedIndex = sel;
-//			this.SetFocused(true);
-			this.menu.Behavior.Accept ();
+			if (index >= 0)
+			{
+				this.SelectedIndex = index;
+				this.menu.Behavior.Accept ();
+			}
 		}
 		
-		protected virtual  void ProcessComboSelectedIndex(int sel)
+		protected virtual void ProcessComboSelectedIndex(int sel)
 		{
-			this.SelectedIndex = this.MapComboListToIndex(sel);
+			//	Met à jour le contenu de la combo en cas de changement de sélection
+			//	dans la liste, pour autant qu'une telle mise à jour "live" ait été
+			//	activée.
+			
+			if (this.is_live_update_enabled)
+			{
+				this.SelectedIndex = this.MapComboListToIndex (sel);
+			}
 		}
 		
 		
-		protected virtual void FillComboList(Collections.StringCollection list)
+		protected virtual void CopyItemsToComboList(Collections.StringCollection list)
 		{
 			for ( int i=0 ; i<this.items.Count ; i++ )
 			{
@@ -405,7 +435,7 @@ namespace Epsitec.Common.Widgets
 //			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
 //			this.scrollList.Bounds = new Drawing.Rectangle(0, 0, this.Width, 200);
 			
-			this.FillComboList(this.scrollList.Items);
+			this.CopyItemsToComboList(this.scrollList.Items);
 			
 			this.menu.AdjustSize ();
 			
@@ -769,6 +799,7 @@ namespace Epsitec.Common.Widgets
 		private TextFieldComboMenu				menu;
 		private ComboArrowMode					combo_arrow_mode	= ComboArrowMode.Open;
 		private Behaviors.SelectItemBehavior	select_item_behavior;
+		private bool							is_live_update_enabled = true;
 		
 		protected Button						button;
 		protected Collections.StringCollection	items;

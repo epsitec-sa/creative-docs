@@ -832,6 +832,7 @@ namespace Epsitec.Common.Widgets
 								
 							case KeyCode.ContextualMenu:
 								this.ShowContextMenu(false);
+								message.Consumer = this;
 								break;
 						}
 					}

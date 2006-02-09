@@ -202,6 +202,7 @@ namespace Epsitec.Common.Widgets
 			t1.Items.Add("blue",  "Bleu");
 			t1.ButtonShowCondition = ShowCondition.Always;
 			t1.ComboArrowMode = ComboArrowMode.Cycle;
+			t1.IsLiveUpdateEnabled = false;
 			t1.TabIndex = 1;
 			t1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 

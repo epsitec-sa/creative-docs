@@ -298,14 +298,14 @@ namespace Epsitec.Common.Widgets
 			base.HandleDefocused ();
 		}
 		
-		protected override void FillComboList(Epsitec.Common.Widgets.Collections.StringCollection list)
+		protected override void CopyItemsToComboList(Epsitec.Common.Widgets.Collections.StringCollection list)
 		{
 			if (this.HasPlaceHolder)
 			{
-				list.Add ("$PlaceHolder$", this.PlaceHolder);
+				list.Add (TextFieldExList.PlaceHolderTag, this.PlaceHolder);
 			}
 			
-			base.FillComboList (list);
+			base.CopyItemsToComboList (list);
 		}
 		
 		protected override int MapComboListToIndex(int value)
@@ -463,6 +463,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override bool ProcessKeyPressInSelectItemBehavior(Message message)
+		{
+			//	N'utilise pas le mécanisme de sélection automatique dans la liste
+			//	si on a commencé l'édition en mode interactif.
+			
+			if ((this.mode == TextFieldExListMode.EditActive) ||
+				(this.mode == TextFieldExListMode.EditPassive))
+			{
+				return false;
+			}
+			else
+			{
+				return base.ProcessKeyPressInSelectItemBehavior (message);
+			}
+		}
+
 		
 		private void HandleAcceptClicked(object sender)
 		{
@@ -477,9 +493,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected string						place_holder;
+		public const string						PlaceHolderTag = "$PlaceHolder$";
 		
-		protected TextFieldExListMode			mode = TextFieldExListMode.Undefined;
-		protected Behaviors.AcceptRejectBehavior	accept_reject_behavior;
+		private string							place_holder;
+		
+		private TextFieldExListMode				mode = TextFieldExListMode.Undefined;
+		private Behaviors.AcceptRejectBehavior	accept_reject_behavior;
 	}
 }
