@@ -1,32 +1,8 @@
-using System;
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Support.BundleAttribute;
-	
-	public enum DefocusAction
-	{
-		None,
-		
-		AcceptEdition,
-		RejectEdition,
-		
-		Modal,
-		AutoAcceptOrRejectEdition
-	}
-	
-	public enum ShowCondition
-	{
-		Always,
-		
-		WhenFocused,
-		WhenKeyboardFocused,
-		
-		WhenModified,
-		
-		Never
-	}
-	
 	/// <summary>
 	/// La classe TextFieldEx implémente une variante de TextField, avec une fonction
 	/// pour accepter/annuler une édition.
@@ -52,7 +28,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		[Bundle] public ShowCondition			ButtonShowCondition
+		public ShowCondition					ButtonShowCondition
 		{
 			get
 			{
@@ -74,7 +50,7 @@ namespace Epsitec.Common.Widgets
 			if (this.IsValid)
 			{
 				this.accept_reject_behavior.InitialText = this.Text;
-				this.has_edited_text = false;
+				this.OnTextDefined ();
 				this.SelectAll ();
 				this.UpdateButtonVisibility ();
 				this.OnEditionAccepted ();
@@ -87,7 +63,6 @@ namespace Epsitec.Common.Widgets
 		public override bool RejectEdition()
 		{
 			this.Text = this.accept_reject_behavior.InitialText;
-			this.has_edited_text = false;
 			this.SelectAll ();
 			this.UpdateButtonVisibility ();
 			this.OnEditionRejected ();
@@ -150,26 +125,7 @@ namespace Epsitec.Common.Widgets
 			base.UpdateButtonGeometry ();
 		}
 
-		
-		protected virtual void SetButtonVisibility(bool show)
-		{
-			if (this.accept_reject_behavior == null)
-			{
-				return;
-			}
-			
-			if (this.accept_reject_behavior.IsVisible != show)
-			{
-				this.accept_reject_behavior.SetVisible (show);
-				
-				this.UpdateButtonGeometry ();
-				this.UpdateButtonEnable ();
-				this.UpdateTextLayout ();
-				this.UpdateMouseCursor (this.MapRootToClient (Message.State.LastPosition));
-			}
-		}
-		
-		protected virtual void UpdateButtonVisibility()
+		protected override void UpdateButtonVisibility()
 		{
 			bool show = false;
 			
@@ -191,7 +147,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case ShowCondition.WhenModified:
-					show = this.has_edited_text;
+					show = this.HasEditedText;
 					break;
 				
 				default:
@@ -201,7 +157,26 @@ namespace Epsitec.Common.Widgets
 			this.SetButtonVisibility (show);
 		}
 		
-		protected virtual void UpdateButtonEnable()
+		
+		protected void SetButtonVisibility(bool show)
+		{
+			if (this.accept_reject_behavior == null)
+			{
+				return;
+			}
+			
+			if (this.accept_reject_behavior.IsVisible != show)
+			{
+				this.accept_reject_behavior.SetVisible (show);
+				
+				this.UpdateButtonGeometry ();
+				this.UpdateButtonEnable ();
+				this.UpdateTextLayout ();
+				this.UpdateMouseCursor (this.MapRootToClient (Message.State.LastPosition));
+			}
+		}
+		
+		protected void UpdateButtonEnable()
 		{
 			if (this.accept_reject_behavior != null)
 			{
@@ -215,17 +190,13 @@ namespace Epsitec.Common.Widgets
 			base.OnTextDefined ();
 			
 			this.accept_reject_behavior.InitialText = this.Text;
-			this.has_edited_text = false;
 		}
 
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged ();
 			
-			if (this.Text != this.accept_reject_behavior.InitialText)
-			{
-				this.has_edited_text = true;
-			}
+			System.Diagnostics.Debug.Assert (this.HasEditedText || this.Text == this.accept_reject_behavior.InitialText);
 			
 			this.UpdateButtonEnable ();
 			this.UpdateButtonVisibility ();
@@ -252,9 +223,7 @@ namespace Epsitec.Common.Widgets
 		}		
 		
 		
-		protected bool							show_buttons;
-		protected bool							has_edited_text;
-		protected ShowCondition					button_show_condition;
-		protected Behaviors.AcceptRejectBehavior	accept_reject_behavior;
+		private ShowCondition					button_show_condition;
+		private Behaviors.AcceptRejectBehavior	accept_reject_behavior;
 	}
 }

@@ -254,6 +254,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ComboArrowMode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "CommandCache.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -275,6 +280,11 @@
                 />
                 <File
                     RelPath = "CommandState.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DefocusAction.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -495,6 +505,11 @@
                 />
                 <File
                     RelPath = "Shortcut.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ShowCondition.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -858,6 +873,11 @@
                 />
                 <File
                     RelPath = "Behaviors\MenuBehavior.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Behaviors\SelectItemBehavior.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -140,6 +140,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								HasEditedText
+		{
+			get
+			{
+				return this.has_edited_text;
+			}
+		}
+		
 		public bool								AutoSelectOnFocus
 		{
 			get { return this.autoSelectOnFocus; }
@@ -656,10 +664,12 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = new Drawing.Rectangle();
+			
 			rect.Left   = this.Bounds.Width-this.margins.Right-adorner.GeometryComboRightMargin;
 			rect.Right  = this.Bounds.Width-adorner.GeometryComboRightMargin;
 			rect.Bottom = adorner.GeometryComboBottomMargin;
 			rect.Top    = this.Bounds.Height-adorner.GeometryComboTopMargin;
+			
 			return rect;
 		}
 
@@ -828,7 +838,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case MessageType.KeyPress:
-					if ( this.navigator.ProcessMessage(message, pos) )
+					if ( this.ProcessKeyPress(message, pos) )
 					{
 						message.Consumer = this;
 					}
@@ -867,6 +877,12 @@ namespace Epsitec.Common.Widgets
 		protected virtual bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
 			//	Gestion d'une touche pressée avec KeyDown dans le texte.
+			return this.navigator.ProcessMessage(message, pos);
+		}
+		
+		protected virtual bool ProcessKeyPress(Message message, Drawing.Point pos)
+		{
+			//	Gestion d'une touche pressée avec KeyPress dans le texte.
 			return this.navigator.ProcessMessage(message, pos);
 		}
 
@@ -1118,6 +1134,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnTextChanged()
 		{
+			this.UpdateButtonVisibility ();
+			
 			int from = this.CursorFrom;
 			int to   = this.CursorTo;
 			
@@ -1145,6 +1163,20 @@ namespace Epsitec.Common.Widgets
 			this.SelectAll ();
 		}
 
+		protected override void OnTextDefined()
+		{
+			base.OnTextDefined ();
+			this.has_edited_text = false;
+			System.Diagnostics.Debug.WriteLine ("Text defined. has_edited_text = false");
+		}
+
+		protected override void OnIsKeyboardFocusedChanged(Types.PropertyChangedEventArgs e)
+		{
+			base.OnIsKeyboardFocusedChanged (e);
+			
+			this.UpdateButtonVisibility ();
+		}
+
 		
 		protected virtual void OnTextDeleted()
 		{
@@ -1168,6 +1200,14 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnTextEdited()
 		{
+			if (this.has_edited_text == false)
+			{
+				System.Diagnostics.Debug.WriteLine ("Text edited. has_edited_text = true");
+				this.has_edited_text = true;
+				
+				this.UpdateButtonVisibility ();
+			}
+			
 			if ( this.TextEdited != null )
 			{
 				this.TextEdited(this);
@@ -1497,6 +1537,10 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		protected virtual void UpdateButtonVisibility()
+		{
+		}
+		
 		protected virtual bool UpdateMouseCursor(Drawing.Point pos)
 		{
 			if (this.Client.Bounds.Contains(pos))
@@ -1687,6 +1731,7 @@ namespace Epsitec.Common.Widgets
 		protected string						initial_text;
 		protected TextDisplayMode				initial_text_display_mode;
 		protected bool							is_editing;
+		protected bool							has_edited_text;
 		protected bool							swallow_return;
 		protected bool							swallow_escape;
 		

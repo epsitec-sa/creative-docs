@@ -442,21 +442,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override bool OpenComboAfterKeyDown(Message message)
+		protected override bool CheckIfOpenComboRequested(Message message)
 		{
-			if (this.mode == TextFieldExListMode.Combo)
+			switch (this.mode)
 			{
-				return base.OpenComboAfterKeyDown (message);
+				case TextFieldExListMode.Combo:
+				case TextFieldExListMode.EditPassive:
+					return base.CheckIfOpenComboRequested (message);
+				
+				default:
+					return false;
 			}
-			
-			if ((this.mode == TextFieldExListMode.EditPassive) &&
-                (Feel.Factory.Active.TestComboOpenKey (message)))
-			{
-				this.OpenCombo();
-				return true;
-			}
-			
-			return false;
 		}
 
 		protected override void Navigate(int dir)

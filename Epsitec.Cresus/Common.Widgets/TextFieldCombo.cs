@@ -13,9 +13,10 @@ namespace Epsitec.Common.Widgets
 		public TextFieldCombo()
 		{
 			this.textFieldStyle = TextFieldStyle.Combo;
-
-			this.items = new Collections.StringCollection(this);
 			
+			this.select_item_behavior = new Behaviors.SelectItemBehavior (new Behaviors.SelectItemCallback (this.AutomaticItemSelection));
+
+			this.items  = new Collections.StringCollection (this);
 			this.button = this.CreateButton ();
 			
 			this.button.Name     = "Open";
@@ -23,9 +24,13 @@ namespace Epsitec.Common.Widgets
 			
 			this.default_button_width = this.button.Width;
 			this.margins.Right        = this.button.Width;
-			
-			this.ButtonShowCondition = ShowCondition.Always;
 		}
+		
+		public TextFieldCombo(Widget embedder) : this ()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
 		
 		protected virtual Button CreateButton()
 		{
@@ -35,11 +40,6 @@ namespace Epsitec.Common.Widgets
 			button.ButtonStyle = ButtonStyle.Combo;
 			
 			return button;
-		}
-		
-		public TextFieldCombo(Widget embedder) : this ()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private bool							IsComboOpen
+		public bool								IsComboOpen
 		{
 			get
 			{
@@ -84,41 +84,59 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool FindMatch(string find, out int index, out bool exactMatch)
+		public ComboArrowMode					ComboArrowMode
 		{
-			index = this.items.FindExactMatch(find);
-			
-			if ( index < 0 )
+			get
 			{
-				exactMatch = false;
+				return this.combo_arrow_mode;
+			}
+			set
+			{
+				this.combo_arrow_mode = value;
+			}
+		}
+		
+		
+		public bool FindMatch(string find, out int index, out bool exact_match)
+		{
+			//	Trouve l'index de l'élément recherché. Indique s'il s'agit d'un
+			//	match exact ('find' est égal au contenu de la cellule) ou non
+			//	('find' correspond au début de la cellule).
+			
+			index = this.items.FindExactMatch (find);
+			
+			if (index < 0)
+			{
+				exact_match = false;
 				
-				if ( find == "" )
+				if (find == "")
 				{
 					return false;
 				}
 				
+				index = this.items.FindStartMatch (find);
 				
-				index = this.items.FindStartMatch(find);
-				
-				if ( index < 0 )
+				if (index < 0)
 				{
 					return false;
 				}
 			}
 			else
 			{
-				exactMatch = true;
+				exact_match = true;
 			}
 			
 			return true;
 		}
 
 		
+		#region CloseMode Enumeration
 		protected enum CloseMode
 		{
 			Accept,
 			Reject
 		}
+		#endregion
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -130,7 +148,7 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				this.button.Pressed -= new MessageEventHandler (this.HandleButtonPressed);
-				this.button.Dispose();
+				this.button.Dispose ();
 				this.button = null;
 			}
 			
@@ -140,59 +158,50 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void UpdateButtonGeometry()
 		{
+			//	Met à jour la position du bouton; la marge droite de la ligne
+			//	éditable est ajustée pour tenir compte de la présence (ou non)
+			//	du bouton.
+			
 			base.UpdateButtonGeometry();
 			
-			if ( this.button != null )
+			if (this.button != null)
 			{
 				this.margins.Right = this.button.Visibility ? this.default_button_width : 0;
-				this.button.Bounds = this.GetButtonBounds();
+				this.button.Bounds = this.GetButtonBounds ();
 			}
 		}
 		
-		protected virtual  void UpdateButtonVisibility()
+		protected override void UpdateButtonVisibility()
 		{
 			this.SetButtonVisibility (this.ComputeButtonVisibility ());
 		}
 		
-		protected virtual  bool ComputeButtonVisibility()
+		protected bool ComputeButtonVisibility()
 		{
 			bool show = false;
 			
-			switch (this.ButtonShowCondition)
+			switch (this.button_show_condition)
 			{
-				case ShowCondition.Always:
-					show = true;
-					break;
-				
-				case ShowCondition.Never:
-					break;
-				
-				case ShowCondition.WhenFocused:
-					show = this.IsFocused || this.IsComboOpen;
-					break;
-				
-				case ShowCondition.WhenKeyboardFocused:
-					show = this.IsKeyboardFocused || this.IsComboOpen;
-					break;
-				
-				case ShowCondition.WhenModified:
-					show = this.has_edited_text;
-					break;
+				case ShowCondition.Always:				show = true;										break;
+				case ShowCondition.Never:				show = false;										break;
+				case ShowCondition.WhenFocused:			show = this.IsFocused         || this.IsComboOpen;	break;
+				case ShowCondition.WhenKeyboardFocused:	show = this.IsKeyboardFocused || this.IsComboOpen;	break;
+				case ShowCondition.WhenModified:		show = this.HasEditedText;							break;
 				
 				default:
-					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
+					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.button_show_condition));
 			}
 			
 			return show;
 		}
 		
-		protected virtual  void SetButtonVisibility(bool show)
+		protected void SetButtonVisibility(bool visibility)
 		{
 			if (this.button != null)
 			{
-				if (this.button.Visibility != show)
+				if (this.button.Visibility != visibility)
 				{
-					this.button.Visibility = (show);
+					this.button.Visibility = visibility;
 					
 					this.UpdateButtonGeometry ();
 					this.UpdateTextLayout ();
@@ -202,8 +211,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual  void OnSelectedIndexChanged()
+		protected virtual void OnSelectedIndexChanged()
 		{
+			//	Ne notifie les changements d'index que lorsque le menu déroulant
+			//	est fermé.
+			
 			if (this.IsComboOpen == false)
 			{
 				if (this.SelectedIndexChanged != null)
@@ -213,57 +225,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void OnTextDefined()
+		protected virtual void AutomaticItemSelection(string search)
 		{
-			base.OnTextDefined ();
+			int  index;
+			bool exact;
 			
-			this.has_edited_text = false;
-		}
-		
-		protected override void OnTextChanged()
-		{
-			base.OnTextChanged ();
-			
-			this.UpdateButtonVisibility ();
-		}
-
-		protected override void OnIsKeyboardFocusedChanged(Types.PropertyChangedEventArgs e)
-		{
-			base.OnIsKeyboardFocusedChanged (e);
-			
-			this.UpdateButtonVisibility ();
-		}
-		
-		protected override void OnTextEdited()
-		{
-			base.OnTextEdited ();
-			
-			if (this.has_edited_text == false)
+			if (this.FindMatch (search, out index, out exact))
 			{
-				this.has_edited_text = true;
-				
-				this.UpdateButtonVisibility ();
+				this.SelectedIndex = index;
 			}
 		}
 
-
-
-		
-		protected virtual bool OpenComboAfterKeyDown(Message message)
-		{
-			if ( this.IsReadOnly )
-			{
-				IFeel feel = Feel.Factory.Active;
-				
-				if ( feel.TestComboOpenKey(message) )
-				{
-					this.OpenCombo();
-					return true;
-				}
-			}
-			
-			return false;
-		}
 		
 
 		
@@ -288,23 +260,53 @@ namespace Epsitec.Common.Widgets
 			
 			base.ProcessMessage(message, pos);
 		}
+		
+		protected virtual bool CheckIfOpenComboRequested(Message message)
+		{
+			return Feel.Factory.Active.TestComboOpenKey (message);
+		}
 
 		protected override bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
-			if ( this.OpenComboAfterKeyDown(message) == false )
+			//	Gère les pressions de touches (en particulier les flèches haut
+			//	et bas qui permettent soit d'ouvrir un combo, soit de cycler le
+			//	contenu).
+			
+			switch (this.ComboArrowMode)
 			{
-				switch ( message.KeyCode )
-				{
-					case KeyCode.ArrowUp:	this.Navigate(-1);	break;
-					case KeyCode.ArrowDown:	this.Navigate(1);	break;
-					
-					default:
-						return base.ProcessKeyDown(message, pos);
-				}
+				case ComboArrowMode.None:
+					break;
+				
+				case ComboArrowMode.Cycle:
+					switch (message.KeyCode)
+					{
+						case KeyCode.ArrowUp:	this.Navigate (-1);	return true;
+						case KeyCode.ArrowDown:	this.Navigate (1);	return true;
+					}
+					break;
+				
+				case ComboArrowMode.Open:
+					if (this.CheckIfOpenComboRequested (message))
+					{
+						this.OpenCombo ();
+						return true;
+					}
+					break;
 			}
 			
-			return true;
+			return base.ProcessKeyDown(message, pos);
 		}
+		
+		protected override bool ProcessKeyPress(Message message, Epsitec.Common.Drawing.Point pos)
+		{
+			if (this.select_item_behavior.ProcessKeyPress (message))
+			{
+				return true;
+			}
+			
+			return base.ProcessKeyPress (message, pos);
+		}
+
 		
 		protected virtual  void ProcessComboActivatedIndex(int sel)
 		{
@@ -755,12 +757,13 @@ namespace Epsitec.Common.Widgets
 		
 		
 		private TextFieldComboMenu				menu;
+		private ComboArrowMode					combo_arrow_mode	= ComboArrowMode.Open;
+		private Behaviors.SelectItemBehavior	select_item_behavior;
 		
 		protected Button						button;
 		protected Collections.StringCollection	items;
 		protected ScrollList					scrollList;
-		protected ShowCondition					button_show_condition;
-		protected bool							has_edited_text;
+		protected ShowCondition					button_show_condition = ShowCondition.Always;
 		protected double						default_button_width;
 
 		private void HandleMenuAccepted(object sender)

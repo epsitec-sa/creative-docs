@@ -201,8 +201,24 @@ namespace Epsitec.Common.Widgets
 			t1.Items.Add("green", "Vert");
 			t1.Items.Add("blue",  "Bleu");
 			t1.ButtonShowCondition = ShowCondition.Always;
+			t1.ComboArrowMode = ComboArrowMode.Cycle;
+			t1.TabIndex = 1;
+			t1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			TextFieldCombo t2 = new TextFieldCombo();
+			t2.Width = 70;
+			t2.Text = "Lecture";
+			t2.Items.Add("readonly",  "Lecture");
+			t2.Items.Add("writeonly", "Ecriture");
+			t2.Items.Add("readwrite", "Lecture &amp; Ecriture");
+			t2.ButtonShowCondition = ShowCondition.Always;
+			t2.ComboArrowMode = ComboArrowMode.Cycle;
+			t2.IsReadOnly = true;
+			t2.TabIndex = 2;
+			t2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
 			tb.Items.Add(t1);
+			tb.Items.Add(t2);
 			tb.Items.Add(new IconSeparator());
 			tb.Items.Add(new IconButton("cut",   @"file:images/cut.icon"));
 			tb.Items.Add(new IconButton("copy",  @"file:images/copy.icon"));
@@ -467,6 +483,7 @@ namespace Epsitec.Common.Widgets
 			combo.TabIndex = 10;
 			combo.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			combo.ButtonShowCondition = ShowCondition.Always;
+			combo.ComboArrowMode = ComboArrowMode.Open;
 			window.Root.Children.Add(combo);
 
 			TextField text = new TextField();
