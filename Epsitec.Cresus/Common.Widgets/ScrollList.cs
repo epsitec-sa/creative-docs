@@ -1,11 +1,8 @@
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
-	public enum ScrollListStyle
-	{
-		Normal,			// liste fixe normale
-		Menu,			// menu d'un TextFieldCombo
-	}
-
 	/// <summary>
 	/// La classe ScrollList réalise une liste déroulante simple.
 	/// </summary>
@@ -23,11 +20,16 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.items = new Collections.StringCollection(this);
+			this.items.AcceptsRichText = true;
+			
 			this.DockPadding = new Drawing.Margins(2, 2, 2, 2);
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;
 
+			
+			this.select_item_behavior = new Behaviors.SelectItemBehavior (new Behaviors.SelectItemCallback (this.AutomaticItemSelection));
+			
 			this.scrollListStyle = ScrollListStyle.Normal;
 			this.lineHeight = this.DefaultFontHeight+1;
 			this.scroller = new VScroller(null);
@@ -337,8 +339,17 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.KeyDown:
-					if (!this.ProcessKeyEvent (message))
+					if (!this.ProcessKeyDown (message))
 					{
+						base.ProcessMessage (message, pos);
+						return;
+					}
+					break;
+					
+				case MessageType.KeyPress:
+					if (!this.ProcessKeyPress (message))
+					{
+						base.ProcessMessage (message, pos);
 						return;
 					}
 					break;
@@ -350,7 +361,7 @@ namespace Epsitec.Common.Widgets
 			message.Consumer = this;
 		}
 
-		protected virtual  bool MouseSelect(Drawing.Point pos)
+		protected virtual bool MouseSelect(Drawing.Point pos)
 		{
 			//	Sélectionne la ligne selon la souris.
 			
@@ -371,7 +382,13 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		protected virtual bool ProcessKeyEvent(Message message)
+		
+		protected virtual bool ProcessKeyPress(Message message)
+		{
+			return this.select_item_behavior.ProcessKeyPress (message);
+		}
+		
+		protected virtual bool ProcessKeyDown(Message message)
 		{
 			if ((message.IsAltPressed) ||
 				(message.IsShiftPressed) ||
@@ -386,6 +403,9 @@ namespace Epsitec.Common.Widgets
 			
 			switch (message.KeyCode)
 			{
+				case KeyCode.Back:		sel = 0;							break;
+				case KeyCode.Home:		sel = 0;							break;
+				case KeyCode.End:		sel = this.RowCount-1;				break;
 				case KeyCode.ArrowUp:	sel--;								break;
 				case KeyCode.ArrowDown:	sel++;								break;
 				case KeyCode.PageUp:	sel -= this.FullyVisibleRowCount-1;	break;
@@ -402,8 +422,11 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.SelectedIndex != sel)
 			{
+				this.select_item_behavior.ClearSearch ();
+				
 				sel = System.Math.Max(sel, 0);
 				sel = System.Math.Min(sel, this.RowCount-1);
+				
 				this.SelectedIndex = sel;
 				this.ShowSelected(ScrollShowMode.Extremity);
 			}
@@ -554,6 +577,21 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		protected virtual void AutomaticItemSelection(string search, bool continued)
+		{
+			int index = this.items.FindStartMatch (search, this.SelectedIndex + (continued ? 0 : 1));
+			
+			if (index < 0)
+			{
+				index = this.items.FindStartMatch (search);
+			}
+			
+			if (index >= 0)
+			{
+				this.SelectedIndex = index;
+			}
+		}
+		
 		protected virtual void OnSelectedIndexChanged()
 		{
 			//	Génère un événement pour dire que la sélection dans la liste a changé.
@@ -741,6 +779,7 @@ namespace Epsitec.Common.Widgets
 		protected const double					TextOffsetX = 3;
 		protected const double					TextOffsetY = 3;
 
+		private Behaviors.SelectItemBehavior	select_item_behavior;
 		protected ScrollListStyle				scrollListStyle;
 		protected bool							isDirty;
 		protected bool							mouseDown = false;

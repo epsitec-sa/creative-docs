@@ -1,4 +1,4 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Collections
@@ -12,6 +12,18 @@ namespace Epsitec.Common.Widgets.Collections
 			this.names = new System.Collections.ArrayList ();
 		}
 		
+		
+		public bool								AcceptsRichText
+		{
+			get
+			{
+				return this.accepts_rich_text;
+			}
+			set
+			{
+				this.accepts_rich_text = value;
+			}
+		}
 		
 		public string							this[int index]
 		{
@@ -93,7 +105,14 @@ namespace Epsitec.Common.Widgets.Collections
 				
 				for (int i = 0; i < this.list.Count; i++)
 				{
-					string text = this[i].ToUpper ();
+					string text = this[i];
+					
+					if (this.accepts_rich_text)
+					{
+						text = TextLayout.ConvertToSimpleText (text);
+					}
+					
+					text = text.ToUpper ();
 					
 					if (text == find)
 					{
@@ -107,11 +126,23 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		public int FindStartMatch(string find)
 		{
+			return this.FindStartMatch (find, 0);
+		}
+		
+		public int FindStartMatch(string find, int start_at)
+		{
 			find = find.ToUpper ();
 			
-			for (int i = 0; i < this.list.Count; i++)
+			for (int i = start_at; i < this.list.Count; i++)
 			{
-				string text = this[i].ToUpper ();
+				string text = this[i];
+					
+				if (this.accepts_rich_text)
+				{
+					text = TextLayout.ConvertToSimpleText (text);
+				}
+					
+				text = text.ToUpper ();
 				
 				if (text.StartsWith (find))
 				{
@@ -352,5 +383,6 @@ namespace Epsitec.Common.Widgets.Collections
 		private IStringCollectionHost			host;
 		private System.Collections.ArrayList	list;
 		private System.Collections.ArrayList	names;
+		private bool							accepts_rich_text;
 	}
 }

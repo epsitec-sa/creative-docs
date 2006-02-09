@@ -499,6 +499,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ScrollListStyle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Separator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

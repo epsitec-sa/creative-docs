@@ -1805,6 +1805,7 @@ namespace Epsitec.Common.Widgets
 				
 				Drawing.Point pos = message.Cursor;
 				
+				
 				if (root == null)
 				{
 					root = this.root;
@@ -1817,7 +1818,32 @@ namespace Epsitec.Common.Widgets
 				
 				root.MessageHandler (message, pos);
 				
-				if (this.IsDisposed) return;
+				if (this.IsDisposed)
+				{
+					return;
+				}
+				
+				Window window = this;
+				
+				while (message.Handled == false)
+				{
+					//	Le message n'a pas été consommé. Regarde si nous avons à faire
+					//	à une fenêtre chaînée avec un parent.
+					
+					pos  = Helpers.VisualTree.MapParentToScreen (root, pos);
+					root = MenuWindow.GetParentWidget (window);
+					
+					if ((root == null) ||
+						(root.IsVisible == false))
+					{
+						break;
+					}
+					
+					pos    = Helpers.VisualTree.MapScreenToParent (root, pos);
+					window = root.Window;
+					
+					root.MessageHandler (message, pos);
+				}
 				
 				this.window.Capture = false;
 			}

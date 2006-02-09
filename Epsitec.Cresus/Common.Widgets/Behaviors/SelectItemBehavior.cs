@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
-	public delegate void SelectItemCallback(string search);
+	public delegate void SelectItemCallback(string search, bool continued);
 	
 	/// <summary>
 	/// La classe SelectItemBehavior gère la sélection automatique d'éléments
@@ -60,21 +60,21 @@ namespace Epsitec.Common.Widgets.Behaviors
 		public void ResetSearch(string value)
 		{
 			this.text = value;
-			this.Search ();
+			this.Search (false);
 		}
 		
 		public void ExpandSearch(string value)
 		{
 			this.text = string.Concat (this.text, value);
-			this.Search ();
+			this.Search (true);
 		}
 		
 		
-		public void Search()
+		public void Search(bool continued)
 		{
 			if (this.callback != null)
 			{
-				this.callback (this.text);
+				this.callback (this.text, continued);
 			}
 		}
 		

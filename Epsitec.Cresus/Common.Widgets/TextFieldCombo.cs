@@ -16,7 +16,9 @@ namespace Epsitec.Common.Widgets
 			
 			this.select_item_behavior = new Behaviors.SelectItemBehavior (new Behaviors.SelectItemCallback (this.AutomaticItemSelection));
 
-			this.items  = new Collections.StringCollection (this);
+			this.items = new Collections.StringCollection (this);
+			this.items.AcceptsRichText = true;
+			
 			this.button = this.CreateButton ();
 			
 			this.button.Name     = "Open";
@@ -225,7 +227,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected virtual void AutomaticItemSelection(string search)
+		protected virtual void AutomaticItemSelection(string search, bool continued)
 		{
 			int  index;
 			bool exact;
@@ -293,6 +295,14 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 			}
+			
+			if ((this.IsComboOpen) &&
+				(Feel.Factory.Active.TestCancelKey (message)))
+			{
+				this.menu.Behavior.Reject ();
+				return true;
+			}
+
 			
 			return base.ProcessKeyDown(message, pos);
 		}
