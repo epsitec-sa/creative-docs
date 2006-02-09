@@ -41,7 +41,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.styleParagraph.AutoFocus = false;
 			this.styleParagraph.TabIndex = this.tabIndex++;
 			this.styleParagraph.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.styleParagraph.ClosedCombo += new EventHandler(this.HandleStyleClosedCombo);
+			this.styleParagraph.ComboClosed += new EventHandler(this.HandleStyleComboClosed);
 			ToolTip.Default.SetToolTip(this.styleParagraph, Res.Strings.Panel.Style.ParagraphChoice);
 
 			this.styleCharacter = new Widgets.StyleCombo(this);
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.styleCharacter.AutoFocus = false;
 			this.styleCharacter.TabIndex = this.tabIndex++;
 			this.styleCharacter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.styleCharacter.ClosedCombo += new EventHandler(this.HandleStyleClosedCombo);
+			this.styleCharacter.ComboClosed += new EventHandler(this.HandleStyleComboClosed);
 			ToolTip.Default.SetToolTip(this.styleCharacter, Res.Strings.Panel.Style.CharacterChoice);
 
 			this.UpdateClientGeometry();
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.document.Notifier.NotifyBookPanelShowPage("Styles", "Character");
 		}
 
-		private void HandleStyleClosedCombo(object sender)
+		private void HandleStyleComboClosed(object sender)
 		{
 			//	Combo des styles fermé.
 			Widgets.StyleCombo combo = sender as Widgets.StyleCombo;

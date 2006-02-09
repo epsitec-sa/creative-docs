@@ -216,7 +216,7 @@ namespace Epsitec.Common.Widgets
 			if ((this.HasPlaceHolder) &&
 				(sel == 0))
 			{
-				this.CloseCombo (true);
+				this.CloseCombo (CloseMode.Accept);
 			}
 			else
 			{
@@ -415,17 +415,17 @@ namespace Epsitec.Common.Widgets
 			base.OpenCombo ();
 		}
 		
-		protected override void CloseCombo(bool accept)
+		protected override void CloseCombo(CloseMode mode)
 		{
 			if ((this.HasPlaceHolder) &&
-				(accept) &&
+				(mode == CloseMode.Accept) &&
 				(this.scrollList.SelectedIndex == 0))
 			{
 				this.StartPassiveEdition (this.PlaceHolder);
 				this.Focus ();
 			}
 			
-			base.CloseCombo (accept);
+			base.CloseCombo (mode);
 			
 			if ((this.HasPlaceHolder) &&
 				(this.Text == this.PlaceHolder))

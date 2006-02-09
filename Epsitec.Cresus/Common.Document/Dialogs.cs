@@ -1386,8 +1386,8 @@ namespace Epsitec.Common.Document
 			field.Width = 177;
 			field.Dock = DockStyle.Left;
 			field.DockMargins = new Margins(0, 0, 0, 0);
-			field.OpeningCombo += new CancelEventHandler(this.HandlePrinterOpeningCombo);
-			field.ClosedCombo += new EventHandler(this.HandlePrinterClosedCombo);
+			field.ComboOpening += new CancelEventHandler(this.HandlePrinterComboOpening);
+			field.ComboClosed += new EventHandler(this.HandlePrinterComboClosed);
 			this.WidgetsTableAdd(field, "");
 
 			Button button = new Button(container);
@@ -1400,7 +1400,7 @@ namespace Epsitec.Common.Document
 			this.WidgetsTableAdd(button, ".Button");
 		}
 
-		private void HandlePrinterOpeningCombo(object sender, CancelEventArgs e)
+		private void HandlePrinterComboOpening(object sender, CancelEventArgs e)
 		{
 			TextFieldCombo field = sender as TextFieldCombo;
 			field.Items.Clear();
@@ -1419,7 +1419,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		private void HandlePrinterClosedCombo(object sender)
+		private void HandlePrinterComboClosed(object sender)
 		{
 			TextFieldCombo field = sender as TextFieldCombo;
 			this.document.Settings.PrintInfo.PrintName = field.Text;

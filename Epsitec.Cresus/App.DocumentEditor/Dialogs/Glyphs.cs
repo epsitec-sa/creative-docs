@@ -123,7 +123,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldFontFace.TabIndex = tabIndex++;
 				this.fieldFontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fieldFontFace.Text = this.fontFace;
-				this.fieldFontFace.OpeningCombo += new CancelEventHandler(this.HandleFontFaceOpeningCombo);
+				this.fieldFontFace.ComboOpening += new CancelEventHandler(this.HandleFontFaceComboOpening);
 				this.fieldFontFace.TextChanged += new EventHandler(this.HandleFontFaceChanged);
 
 				this.buttonFilter = new IconButton(bookArray);
@@ -627,7 +627,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateAlternates();
 		}
 
-		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
+		private void HandleFontFaceComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le combo pour les polices va être ouvert.
 			bool quickOnly = false;

@@ -286,8 +286,8 @@ namespace Epsitec.Common.Document.Containers
 			this.specificMasterPage.IsReadOnly = true;
 			this.specificMasterPage.Dock = DockStyle.Left;
 			this.specificMasterPage.DockMargins = new Margins(0, 0, 0, 0);
-			this.specificMasterPage.OpeningCombo += new CancelEventHandler(this.HandleOpeningCombo);
-			this.specificMasterPage.ClosedCombo += new EventHandler(this.HandleClosedCombo);
+			this.specificMasterPage.ComboOpening += new CancelEventHandler(this.HandleComboOpening);
+			this.specificMasterPage.ComboClosed += new EventHandler(this.HandleComboClosed);
 			this.specificMasterPage.TabIndex = 2;
 			this.specificMasterPage.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -353,8 +353,8 @@ namespace Epsitec.Common.Document.Containers
 			this.specificSlavePage.IsReadOnly = true;
 			this.specificSlavePage.Dock = DockStyle.Bottom;
 			this.specificSlavePage.DockMargins = new Margins(0, 0, 0, 61);
-			this.specificSlavePage.OpeningCombo += new CancelEventHandler(this.HandleOpeningCombo);
-			this.specificSlavePage.ClosedCombo += new EventHandler(this.HandleClosedCombo);
+			this.specificSlavePage.ComboOpening += new CancelEventHandler(this.HandleComboOpening);
+			this.specificSlavePage.ComboClosed += new EventHandler(this.HandleComboClosed);
 			this.specificSlavePage.TabIndex = 1;
 			this.specificSlavePage.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -845,7 +845,7 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.OpletQueueValidateAction();
 		}
 
-		private void HandleOpeningCombo(object sender, CancelEventArgs e)
+		private void HandleComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Combo ouvert.
 			TextFieldCombo field = sender as TextFieldCombo;
@@ -866,7 +866,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		private void HandleClosedCombo(object sender)
+		private void HandleComboClosed(object sender)
 		{
 			//	Combo fermé.
 			if ( this.ignoreChanged )  return;

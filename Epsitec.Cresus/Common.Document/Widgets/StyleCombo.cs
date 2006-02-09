@@ -392,7 +392,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( count == 0 )  return;
 
 			Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs();
-			this.OnOpeningCombo(cancelEvent);
+			this.OnComboOpening(cancelEvent);
 			if ( cancelEvent.Cancel )  return;
 			
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -485,7 +485,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.list.Focus();
 			this.comboWindow.AnimateShow(Animation.RollDown);
 			
-			this.OnOpenedCombo();
+			this.OnComboOpened();
 		}
 		
 		protected virtual void CloseCombo(bool accept)
@@ -522,37 +522,37 @@ namespace Epsitec.Common.Document.Widgets
 				this.Focus();
 			}
 			
-			this.OnClosedCombo();
+			this.OnComboClosed();
 		}
 
 		
-		protected virtual void OnOpeningCombo(Support.CancelEventArgs e)
+		protected virtual void OnComboOpening(Support.CancelEventArgs e)
 		{
-			if ( this.OpeningCombo != null )
+			if ( this.ComboOpening != null )
 			{
-				this.OpeningCombo(this, e);
+				this.ComboOpening(this, e);
 			}
 		}
 		
-		protected virtual void OnOpenedCombo()
+		protected virtual void OnComboOpened()
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == true);
 			this.UpdateButtonVisibility();
 			
-			if ( this.OpenedCombo != null )
+			if ( this.ComboOpened != null )
 			{
-				this.OpenedCombo(this);
+				this.ComboOpened(this);
 			}
 		}
 		
-		protected virtual void OnClosedCombo()
+		protected virtual void OnComboClosed()
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == false);
 			this.UpdateButtonVisibility();
 			
-			if ( this.ClosedCombo != null )
+			if ( this.ComboClosed != null )
 			{
-				this.ClosedCombo(this);
+				this.ComboClosed(this);
 			}
 		}
 		
@@ -680,9 +680,9 @@ namespace Epsitec.Common.Document.Widgets
 		
 		
 		
-		public event Support.CancelEventHandler	OpeningCombo;
-		public event Support.EventHandler		OpenedCombo;
-		public event Support.EventHandler		ClosedCombo;
+		public event Support.CancelEventHandler	ComboOpening;
+		public event Support.EventHandler		ComboOpened;
+		public event Support.EventHandler		ComboClosed;
 		
 		private Widget							initiallyFocusedWidget;
 

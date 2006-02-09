@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.Text = "Aucun";
 			this.fieldType.IsReadOnly = true;
 			this.fieldType.AutoFocus = false;
-			this.fieldType.ClosedCombo += new EventHandler(this.HandleTypeChanged);
+			this.fieldType.ComboClosed += new EventHandler(this.HandleTypeChanged);
 			this.fieldType.TabIndex = this.tabIndex++;
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.InitComboType(this.fieldType);
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.fieldType.ClosedCombo -= new EventHandler(this.HandleTypeChanged);
+				this.fieldType.ComboClosed -= new EventHandler(this.HandleTypeChanged);
 
 				for ( int i=0 ; i<Generator.maxLevel ; i++ )
 				{

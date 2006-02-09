@@ -16,16 +16,25 @@ namespace Epsitec.Common.Widgets
 
 			this.items = new Collections.StringCollection(this);
 			
-			this.button = new GlyphButton(this);
-			this.button.Name = "Open";
-			this.button.GlyphShape = GlyphShape.ArrowDown;
-			this.button.ButtonStyle = ButtonStyle.Combo;
-			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.button = this.CreateButton ();
+			
+			this.button.Name     = "Open";
+			this.button.Pressed += new MessageEventHandler (this.HandleButtonPressed);
 			
 			this.default_button_width = this.button.Width;
-			this.margins.Right = this.button.Width;
+			this.margins.Right        = this.button.Width;
 			
 			this.ButtonShowCondition = ShowCondition.Always;
+		}
+		
+		protected virtual Button CreateButton()
+		{
+			GlyphButton button = new GlyphButton(this);
+			
+			button.GlyphShape  = GlyphShape.ArrowDown;
+			button.ButtonStyle = ButtonStyle.Combo;
+			
+			return button;
 		}
 		
 		public TextFieldCombo(Widget embedder) : this ()
@@ -33,18 +42,6 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		
-		public GlyphShape						ButtonGlyphShape
-		{
-			get
-			{
-				return this.button.GlyphShape;
-			}
-			set
-			{
-				this.button.GlyphShape = value;
-			}
-		}
 		
 		public Button							Button
 		{
@@ -69,6 +66,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
 		
 		public override bool					IsCombo
 		{
@@ -116,11 +114,22 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		protected enum CloseMode
+		{
+			Accept,
+			Reject
+		}
+		
 		protected override void Dispose(bool disposing)
 		{
-			if ( disposing )
+			if (disposing)
 			{
-				this.button.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				if (this.IsComboOpen)
+				{
+					this.CloseCombo (CloseMode.Reject);
+				}
+				
+				this.button.Pressed -= new MessageEventHandler (this.HandleButtonPressed);
 				this.button.Dispose();
 				this.button = null;
 			}
@@ -369,7 +378,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.IsComboOpen )  return;
 			
 			Support.CancelEventArgs cancel_event = new Support.CancelEventArgs ();
-			this.OnOpeningCombo (cancel_event);
+			this.OnComboOpening (cancel_event);
 			
 			if ( cancel_event.Cancel )  return;
 			
@@ -393,29 +402,24 @@ namespace Epsitec.Common.Widgets
 			this.scrollList.SelectedIndex = this.MapIndexToComboList(this.SelectedIndex);
 			this.scrollList.ShowSelected(ScrollShowMode.Center);
 			
-			this.comboWindow = this.menu.Window;
-			
 			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Drawing.Point (0, 0)));
 			
 			this.menu.Behavior.Accepted += new Epsitec.Common.Support.EventHandler(this.HandleMenuAccepted);
 			this.menu.Behavior.Rejected += new Epsitec.Common.Support.EventHandler(this.HandleMenuRejected);
 			this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
 			this.scrollList.SelectionActivated += new Support.EventHandler(this.HandleScrollListSelectionActivated);
-//			this.RegisterFilter();
-//			this.comboWindow.Root.Children.Add(this.scrollList);
-//			this.comboWindow.AnimateShow(Animation.RollDown);
 			
 //			this.SetFocused(true);
 //			this.SetFocused(false);
 //			this.scrollList.SetFocused(true);
 			
 			this.openText = this.Text;
-			this.OnOpenedCombo ();
+			this.OnComboOpened ();
 		}
 		
-		protected virtual void CloseCombo(bool accept)
+		protected virtual void CloseCombo(CloseMode mode)
 		{
-			System.Diagnostics.Debug.WriteLine(string.Format ("CloseCombo(accept={0})", accept));
+			System.Diagnostics.Debug.WriteLine(string.Format ("CloseCombo(mode={0})", mode));
 			this.menu.Behavior.Accepted -= new Epsitec.Common.Support.EventHandler(this.HandleMenuAccepted);
 			this.menu.Behavior.Rejected -= new Epsitec.Common.Support.EventHandler(this.HandleMenuRejected);
 			this.scrollList.SelectionActivated -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
@@ -429,9 +433,6 @@ namespace Epsitec.Common.Widgets
 				this.Window.MakeActive();
 			}
 			
-//			this.comboWindow.Dispose();
-			this.comboWindow = null;
-			
 			this.SelectAll();
 			
 			if ( this.AutoFocus )
@@ -439,12 +440,12 @@ namespace Epsitec.Common.Widgets
 				this.SetFocused(true);
 			}
 			
-			if ( !accept )
+			if (mode == CloseMode.Reject)
 			{
 				this.Text = this.openText;
 			}
 			
-			this.OnClosedCombo ();
+			this.OnComboClosed ();
 			
 			if ( this.openText != this.Text )
 			{
@@ -513,33 +514,33 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		protected virtual void OnOpeningCombo(Support.CancelEventArgs e)
+		protected virtual void OnComboOpening(Support.CancelEventArgs e)
 		{
-			if (this.OpeningCombo != null)
+			if (this.ComboOpening != null)
 			{
-				this.OpeningCombo (this, e);
+				this.ComboOpening (this, e);
 			}
 		}
 		
-		protected virtual void OnOpenedCombo()
+		protected virtual void OnComboOpened()
 		{
 			System.Diagnostics.Debug.Assert (this.IsComboOpen == true);
 			this.UpdateButtonVisibility ();
 			
-			if (this.OpenedCombo != null)
+			if (this.ComboOpened != null)
 			{
-				this.OpenedCombo (this);
+				this.ComboOpened (this);
 			}
 		}
 		
-		protected virtual void OnClosedCombo()
+		protected virtual void OnComboClosed()
 		{
 			System.Diagnostics.Debug.Assert (this.IsComboOpen == false);
 			this.UpdateButtonVisibility ();
 			
-			if (this.ClosedCombo != null)
+			if (this.ComboClosed != null)
 			{
-				this.ClosedCombo (this);
+				this.ComboClosed (this);
 			}
 		}
 		
@@ -612,34 +613,6 @@ namespace Epsitec.Common.Widgets
 			this.ProcessComboSelectedIndex(this.scrollList.SelectedIndex);
 		}
 		
-		
-//		private void RegisterFilter()
-//		{
-//			Window.MessageFilter          += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
-//			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
-//			
-//			if ( this.Window != null &&
-//				 this.AutoFocus == false )
-//			{
-//				this.initiallyFocusedWidget = this.Window.FocusedWidget;
-//			}
-//		}
-//		
-//		private void UnregisterFilter()
-//		{
-//			Window.MessageFilter          -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
-//			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
-//			
-//			if ( this.initiallyFocusedWidget != null )
-//			{
-//				if ( this.initiallyFocusedWidget.Window != null )
-//				{
-//					this.initiallyFocusedWidget.SetFocused(true);
-//				}
-//				
-//				this.initiallyFocusedWidget = null;
-//			}
-//		}
 		
 		
 		
@@ -754,16 +727,16 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		SelectedIndexChanged;
 		#endregion
 		
-		public event Support.CancelEventHandler	OpeningCombo;
-		public event Support.EventHandler		OpenedCombo;
-		public event Support.EventHandler		ClosedCombo;
 		
-		private Widget							initiallyFocusedWidget;
+		public event Support.CancelEventHandler	ComboOpening;
+		public event Support.EventHandler		ComboOpened;
+		public event Support.EventHandler		ComboClosed;
+		
+		
 		private TextFieldComboMenu				menu;
 		
-		protected GlyphButton					button;
-		protected Collections.StringCollection		items;
-		protected Window						comboWindow;
+		protected Button						button;
+		protected Collections.StringCollection	items;
 		protected ScrollList					scrollList;
 		protected string						openText;
 		protected ShowCondition					button_show_condition;
@@ -772,12 +745,12 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleMenuAccepted(object sender)
 		{
-			this.CloseCombo(true);
+			this.CloseCombo(CloseMode.Accept);
 		}
 
 		private void HandleMenuRejected(object sender)
 		{
-			this.CloseCombo(false);
+			this.CloseCombo(CloseMode.Reject);
 		}
 	}
 }

@@ -52,10 +52,10 @@ namespace Epsitec.Common.Document.Containers
 			if ( disposing )
 			{
 				this.aggregateCombo.TextChanged -= new EventHandler(this.HandleAggregateComboChanged);
-				this.aggregateCombo.ClosedCombo -= new EventHandler(this.HandleAggregateClosedCombo);
+				this.aggregateCombo.ComboClosed -= new EventHandler(this.HandleAggregateComboClosed);
 				this.selectorName.TextChanged -= new EventHandler(this.HandleSelectorNameChanged);
-				this.selectorName.OpeningCombo -= new CancelEventHandler(this.HandleSelectorNameOpeningCombo);
-				this.selectorName.ClosedCombo -= new EventHandler(this.HandleSelectorNameClosedCombo);
+				this.selectorName.ComboOpening -= new CancelEventHandler(this.HandleSelectorNameComboOpening);
+				this.selectorName.ComboClosed -= new EventHandler(this.HandleSelectorNameComboClosed);
 				this.selectorGo.Pressed -= new MessageEventHandler(this.HandleSelectorGo);
 			}
 
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateCombo.Dock = DockStyle.Left;
 			this.aggregateCombo.DockMargins = new Margins(0, 0, 1, 1);
 			this.aggregateCombo.TextChanged += new EventHandler(this.HandleAggregateComboChanged);
-			this.aggregateCombo.ClosedCombo += new EventHandler(this.HandleAggregateClosedCombo);
+			this.aggregateCombo.ComboClosed += new EventHandler(this.HandleAggregateComboClosed);
 			ToolTip.Default.SetToolTip(this.aggregateCombo, Res.Strings.Container.Principal.Button.AggregateCombo);
 			
 			this.aggregateNew3 = new IconButton(Misc.Icon("AggregateNew3"));
@@ -297,8 +297,8 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorName.Width = 150;
 			this.selectorName.Dock = DockStyle.Left;
 			this.selectorName.TextChanged += new EventHandler(this.HandleSelectorNameChanged);
-			this.selectorName.OpeningCombo += new CancelEventHandler(this.HandleSelectorNameOpeningCombo);
-			this.selectorName.ClosedCombo += new EventHandler(this.HandleSelectorNameClosedCombo);
+			this.selectorName.ComboOpening += new CancelEventHandler(this.HandleSelectorNameComboOpening);
+			this.selectorName.ComboClosed += new EventHandler(this.HandleSelectorNameComboClosed);
 			ToolTip.Default.SetToolTip(this.selectorName, Res.Strings.Container.Principal.Button.SelName);
 
 			this.selectorGo = new Button(this.selectorPanel);
@@ -734,7 +734,7 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateSelectorGo();
 		}
 
-		private void HandleSelectorNameOpeningCombo(object sender, CancelEventArgs e)
+		private void HandleSelectorNameComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Combo du texte du nom à sélectionner ouvert.
 			this.selectorName.Items.Clear();
@@ -745,7 +745,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		private void HandleSelectorNameClosedCombo(object sender)
+		private void HandleSelectorNameComboClosed(object sender)
 		{
 			//	Combo du texte du nom à sélectionner fermé.
 			if ( this.ignoreChanged )  return;
@@ -766,7 +766,7 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.AggregateChangeName(this.aggregateCombo.Text);
 		}
 
-		private void HandleAggregateClosedCombo(object sender)
+		private void HandleAggregateComboClosed(object sender)
 		{
 			//	Combo des agrégats fermé.
 			if ( this.ignoreChanged )  return;

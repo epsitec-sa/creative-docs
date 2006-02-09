@@ -313,7 +313,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.IsComboOpen )  return;
 			
 			Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs();
-			this.OnOpeningCombo(cancelEvent);
+			this.OnComboOpening(cancelEvent);
 			
 			if ( cancelEvent.Cancel )  return;
 			
@@ -414,11 +414,11 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		
-		protected virtual void OnOpeningCombo(Support.CancelEventArgs e)
+		protected virtual void OnComboOpening(Support.CancelEventArgs e)
 		{
-			if ( this.OpeningCombo != null )
+			if ( this.ComboOpening != null )
 			{
-				this.OpeningCombo(this, e);
+				this.ComboOpening(this, e);
 			}
 		}
 		
@@ -427,9 +427,9 @@ namespace Epsitec.Common.Document.Widgets
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == true);
 			this.UpdateButtonVisibility();
 			
-			if ( this.OpenedCombo != null )
+			if ( this.ComboOpened != null )
 			{
-				this.OpenedCombo(this);
+				this.ComboOpened(this);
 			}
 		}
 		
@@ -438,9 +438,9 @@ namespace Epsitec.Common.Document.Widgets
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == false);
 			this.UpdateButtonVisibility();
 			
-			if ( this.ClosedCombo != null )
+			if ( this.ComboClosed != null )
 			{
-				this.ClosedCombo(this);
+				this.ComboClosed(this);
 			}
 			
 			if ( this.Window != null )
@@ -554,9 +554,9 @@ namespace Epsitec.Common.Document.Widgets
 		
 		
 		
-		public event Support.CancelEventHandler	OpeningCombo;
-		public event Support.EventHandler		OpenedCombo;
-		public event Support.EventHandler		ClosedCombo;
+		public event Support.CancelEventHandler	ComboOpening;
+		public event Support.EventHandler		ComboOpened;
+		public event Support.EventHandler		ComboClosed;
 		
 		private Widget							initiallyFocusedWidget;
 		

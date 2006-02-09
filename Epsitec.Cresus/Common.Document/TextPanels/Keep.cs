@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldNextStyle.AutoFocus = false;
 			this.fieldNextStyle.TabIndex = this.tabIndex++;
 			this.fieldNextStyle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.fieldNextStyle.ClosedCombo += new EventHandler(this.HandleStyleClosedCombo);
+			this.fieldNextStyle.ComboClosed += new EventHandler(this.HandleStyleComboClosed);
 			ToolTip.Default.SetToolTip(this.fieldNextStyle, Res.Strings.TextPanel.Keep.Tooltip.NextStyle);
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.fieldNextStyle.ClosedCombo -= new EventHandler(this.HandleStyleClosedCombo);
+				this.fieldNextStyle.ComboClosed -= new EventHandler(this.HandleStyleComboClosed);
 
 				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
 				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
@@ -446,7 +446,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.IsDirtySerialize = true;
 		}
 
-		private void HandleStyleClosedCombo(object sender)
+		private void HandleStyleComboClosed(object sender)
 		{
 			//	Combo des styles fermé.
 			int sel = this.fieldNextStyle.SelectedIndex;

@@ -20,8 +20,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fontFace = new Widgets.TextFieldFontFace(this);
 			this.fontFace.IsReadOnly = true;
-			this.fontFace.OpeningCombo += new CancelEventHandler(this.HandleFontFaceOpeningCombo);
-			this.fontFace.ClosedCombo += new EventHandler(this.HandleFontFaceTextChanged);
+			this.fontFace.ComboOpening += new CancelEventHandler(this.HandleFontFaceComboOpening);
+			this.fontFace.ComboClosed += new EventHandler(this.HandleFontFaceTextChanged);
 			this.fontFace.TabIndex = this.tabIndex++;
 			this.fontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
@@ -75,8 +75,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.fontFace.OpeningCombo -= new CancelEventHandler(this.HandleFontFaceOpeningCombo);
-				this.fontFace.ClosedCombo -= new EventHandler(this.HandleFontFaceTextChanged);
+				this.fontFace.ComboOpening -= new CancelEventHandler(this.HandleFontFaceComboOpening);
+				this.fontFace.ComboClosed -= new EventHandler(this.HandleFontFaceTextChanged);
 				this.fontStyle.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document.IsDirtySerialize = true;
 		}
 
-		private void HandleFontFaceOpeningCombo(object sender, CancelEventArgs e)
+		private void HandleFontFaceComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le combo pour les polices va être ouvert.
 			bool quickOnly = this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
