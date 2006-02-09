@@ -78,11 +78,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool								IsComboOpen
+		public virtual bool						IsComboOpen
 		{
 			get
 			{
-				return this.scroll_list != null;
+				return this.menu != null;
 			}
 		}
 		
@@ -420,6 +420,7 @@ namespace Epsitec.Common.Widgets
 			this.Focus ();
 		}
 		
+		
 		protected virtual void OpenCombo()
 		{
 			//	Rend la liste visible et démarre l'interaction.
@@ -439,29 +440,26 @@ namespace Epsitec.Common.Widgets
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
-			this.menu = new TextFieldComboMenu ();
-			this.menu.Size = new Drawing.Size (this.Width, 200);
-			
-			this.scroll_list = this.menu.ScrollList;
-			
-			//	Remplit la liste :
-			
-			this.CopyItemsToComboList (this.scroll_list.Items);
-			
-			this.menu.AdjustSize ();
+			this.menu = this.CreateMenu ();
 			
 			MenuItem.SetMenuHost (this, new MenuHost (this.menu));
 			
-			this.scroll_list.SelectedIndex = this.MapIndexToComboList (this.SelectedIndex);
-			this.scroll_list.ShowSelected (ScrollShowMode.Center);
+			if (this.scroll_list != null)
+			{
+				this.scroll_list.SelectedIndex = this.MapIndexToComboList (this.SelectedIndex);
+				this.scroll_list.ShowSelected (ScrollShowMode.Center);
+			}
 			
 			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Drawing.Point (0, 0)));
 			
 			this.menu.Behavior.Accepted += new Support.EventHandler (this.HandleMenuAccepted);
 			this.menu.Behavior.Rejected += new Support.EventHandler (this.HandleMenuRejected);
 			
-			this.scroll_list.SelectedIndexChanged += new Support.EventHandler (this.HandleScrollerSelectedIndexChanged);
-			this.scroll_list.SelectionActivated   += new Support.EventHandler (this.HandleScrollListSelectionActivated);
+			if (this.scroll_list != null)
+			{
+				this.scroll_list.SelectedIndexChanged += new Support.EventHandler (this.HandleScrollerSelectedIndexChanged);
+				this.scroll_list.SelectionActivated   += new Support.EventHandler (this.HandleScrollListSelectionActivated);
+			}
 			
 			this.StartEdition ();
 			this.OnComboOpened ();
@@ -488,14 +486,17 @@ namespace Epsitec.Common.Widgets
 			this.menu.Behavior.Accepted -= new Support.EventHandler (this.HandleMenuAccepted);
 			this.menu.Behavior.Rejected -= new Support.EventHandler (this.HandleMenuRejected);
 			
-			this.scroll_list.SelectionActivated   -= new Support.EventHandler (this.HandleScrollListSelectionActivated);
-			this.scroll_list.SelectedIndexChanged -= new Support.EventHandler (this.HandleScrollerSelectedIndexChanged);
+			if (this.scroll_list != null)
+			{
+				this.scroll_list.SelectionActivated   -= new Support.EventHandler (this.HandleScrollListSelectionActivated);
+				this.scroll_list.SelectedIndexChanged -= new Support.EventHandler (this.HandleScrollerSelectedIndexChanged);
+				
+				this.scroll_list.Dispose();
+				this.scroll_list = null;
+			}
 			
-			this.scroll_list.Dispose();
 			this.menu.Dispose ();
-			
-			this.scroll_list = null;
-			this.menu        = null;
+			this.menu = null;
 			
 			this.SelectAll ();
 			
@@ -518,6 +519,26 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
+		protected virtual AbstractMenu CreateMenu()
+		{
+			TextFieldComboMenu menu = new TextFieldComboMenu ();
+			
+			menu.Size = new Drawing.Size (this.Width, 200);
+			
+			this.scroll_list = new ScrollList ();
+			this.scroll_list.ScrollListStyle = ScrollListStyle.Menu;
+			
+			menu.Contents = this.scroll_list;
+			
+			//	Remplit la liste :
+			
+			this.CopyItemsToComboList (this.scroll_list.Items);
+			
+			menu.AdjustSize ();
+			
+			return menu;
+		}
 		
 		protected virtual void OnComboOpening(Support.CancelEventArgs e)
 		{
@@ -726,9 +747,9 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region MenuHost Class
-		private class MenuHost : IMenuHost
+		protected class MenuHost : IMenuHost
 		{
-			public MenuHost(TextFieldComboMenu menu)
+			public MenuHost(AbstractMenu menu)
 			{
 				this.menu = menu;
 			}
@@ -779,10 +800,15 @@ namespace Epsitec.Common.Widgets
 				
 				location.X -= this.menu.MenuShadow.Left;
 				location.Y -= size.Height;
+				
+				if (location.X + size.Width > working_area.Right)
+				{
+					location.X = working_area.Right - size.Width;
+				}
 			}
 			#endregion
 			
-			private TextFieldComboMenu			menu;
+			private AbstractMenu				menu;
 		}
 		#endregion
 		
@@ -794,7 +820,8 @@ namespace Epsitec.Common.Widgets
 		private ComboArrowMode					combo_arrow_mode		= ComboArrowMode.Open;
 		private bool							is_live_update_enabled	= true;
 		
-		private TextFieldComboMenu				menu;
+		protected AbstractMenu					menu;
+		
 		private ScrollList						scroll_list;
 		
 		protected Button						button;

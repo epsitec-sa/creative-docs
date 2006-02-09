@@ -20,6 +20,8 @@ namespace Epsitec.Common.Document.Widgets
 			this.scroller = new VScroller(this);
 			this.scroller.IsInverted = true;  // zéro en haut
 			this.scroller.ValueChanged += new Epsitec.Common.Support.EventHandler(this.ScrollerValueChanged);
+			
+			this.samples = new Common.Document.Widgets.FontSample[0];
 		}
 
 		public FontSelector(Widget embedder) : this()
@@ -42,8 +44,7 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					this.sampleHeight = value;
 					this.UpdateClientGeometry();
-					this.UpdateScroller();
-					this.UpdateList();
+					this.UpdateContents();
 				}
 			}
 		}
@@ -131,8 +132,7 @@ namespace Epsitec.Common.Document.Widgets
 			set
 			{
 				this.selectedList = value;
-				this.UpdateScroller();
-				this.UpdateList();
+				this.UpdateContents();
 			}
 		}
 
@@ -155,11 +155,25 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		public override Size GetBestFitSize()
+		{
+			double maxHeight = System.Math.Min(500, this.MaxSize.Height);
+			
+			double w = FontSelector.BestWidth(this.sampleHeight, this.sampleAbc);
+			double h = FontSelector.BestHeight(maxHeight, this.fontList.Count, this.sampleHeight);
+			
+			return new Drawing.Size(w, h);
+		}
+
 		protected override void UpdateClientGeometry()
 		{
 			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
-
+			this.RebuildContents();
+		}
+		
+		public void RebuildContents()
+		{
 			if ( this.scroller == null )  return;
 
 			Rectangle rect = this.Client.Bounds;
@@ -273,6 +287,7 @@ namespace Epsitec.Common.Document.Widgets
 				switch ( message.KeyCode )
 				{
 					case KeyCode.Escape:
+						ok = false;
 						break;
 
 					case KeyCode.Return:
@@ -454,8 +469,7 @@ namespace Epsitec.Common.Document.Widgets
 						this.firstLine = first;  // montre la sélection
 					}
 
-					this.UpdateScroller();
-					this.UpdateList();
+					this.UpdateContents();
 				}
 			}
 		}
@@ -477,8 +491,7 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					this.firstLine = value;
 
-					this.UpdateScroller();
-					this.UpdateList();
+					this.UpdateContents();
 				}
 			}
 		}
@@ -510,6 +523,12 @@ namespace Epsitec.Common.Document.Widgets
 			}
 
 			this.ignoreChange = false;
+		}
+		
+		public void UpdateContents()
+		{
+			this.UpdateScroller();
+			this.UpdateList();
 		}
 
 		public void UpdateList()

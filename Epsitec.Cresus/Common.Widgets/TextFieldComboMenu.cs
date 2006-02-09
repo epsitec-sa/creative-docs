@@ -19,16 +19,25 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public ScrollList						ScrollList
+		public Widget							Contents
 		{
 			get
 			{
-				if (this.list == null)
+				return this.contents;
+			}
+			set
+			{
+				if (this.contents != value)
 				{
-					this.CreateScrollList ();
+					this.contents = value;
+					
+					if (this.contents != null)
+					{
+						this.DockPadding = Widgets.Adorners.Factory.Active.GeometryMenuShadow;
+						this.contents.Dock = DockStyle.Fill;
+						this.Children.Add (this.contents);
+					}
 				}
-				
-				return this.list;
 			}
 		}
 		
@@ -43,43 +52,54 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Size GetBestFitSize()
 		{
-			Drawing.Size size = this.ScrollList.GetBestFitSize ();
-			
-			double dx = size.Width;
-			double dy = size.Height;
-			
-			dx += this.DockPadding.Width;
-			dy += this.DockPadding.Height;
-			
-			return new Drawing.Size (dx, dy);
+			if (this.contents != null)
+			{
+				Drawing.Size size = this.contents.GetBestFitSize ();
+				
+				double dx = size.Width;
+				double dy = size.Height;
+				
+				dx += this.DockPadding.Width;
+				dy += this.DockPadding.Height;
+				
+				return new Drawing.Size (dx, dy);
+			}
+			else
+			{
+				return base.GetBestFitSize ();
+			}
 		}
 
 		public override void AdjustSize()
 		{
-			Drawing.Size size = this.ScrollList.GetBestFitSize ();
-			
-			double width  = size.Width + this.DockPadding.Width;
-			double height = size.Height + this.DockPadding.Height;
-			
-			System.Diagnostics.Debug.WriteLine (string.Format ("AdjustSize from {0}:{1} to {2}:{3}", this.Width, this.Height, width, height));
-			
-			if ((this.Parent != null) &&
-				(this.RootParent is WindowRoot))
+			if (this.contents != null)
 			{
-				this.RootParent.Size = new Drawing.Size (width, height);
-			}
-			else
-			{
-				this.Size = new Drawing.Size (width, height);
+				Drawing.Size size = this.contents.GetBestFitSize ();
+				
+				double width  = size.Width + this.DockPadding.Width;
+				double height = size.Height + this.DockPadding.Height;
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("AdjustSize from {0}:{1} to {2}:{3}", this.Width, this.Height, width, height));
+				
+				if ((this.Parent != null) &&
+					(this.RootParent is WindowRoot))
+				{
+					this.RootParent.Size = new Drawing.Size (width, height);
+				}
+				else
+				{
+					this.Size = new Drawing.Size (width, height);
+				}
 			}
 		}
 		
 		
+		
 		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
 		{
-			if (this.list != null)
+			if (this.contents != null)
 			{
-				return this.list.InternalAboutToGetFocus (dir, mode, out focus);
+				return this.contents.InternalAboutToGetFocus (dir, mode, out focus);
 			}
 			else
 			{
@@ -91,29 +111,19 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnMaxSizeChanged (e);
 			
-			if (this.list != null)
+			if (this.contents != null)
 			{
 				Drawing.Size size = (Drawing.Size) e.NewValue;
 				
 				double width  = size.Width - this.DockPadding.Width;
 				double height = size.Height - this.DockPadding.Height;
 				
-				this.list.MaxSize = size;
+				this.contents.MaxSize = size;
 			}
 		}
 		
-		protected virtual void CreateScrollList()
-		{
-			this.list = new ScrollList (this);
-			this.list.ScrollListStyle = ScrollListStyle.Menu;
-			this.list.Dock = DockStyle.Fill;
-			
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			
-			this.DockPadding = adorner.GeometryMenuShadow;
-		}
 		
 		
-		private ScrollList						list;
+		private Widget							contents;
 	}
 }
