@@ -413,13 +413,28 @@ namespace Epsitec.Common.Widgets
 //			this.SetFocused(false);
 //			this.scrollList.SetFocused(true);
 			
-			this.openText = this.Text;
+			this.StartEdition ();
 			this.OnComboOpened ();
 		}
 		
 		protected virtual void CloseCombo(CloseMode mode)
 		{
 			System.Diagnostics.Debug.WriteLine(string.Format ("CloseCombo(mode={0})", mode));
+
+			if (this.menu.IsMenuOpen)
+			{
+				switch (mode)
+				{
+					case CloseMode.Reject:
+						this.menu.Behavior.Reject ();
+							return;
+					case CloseMode.Accept:
+						this.menu.Behavior.Accept ();
+						return;
+				}
+			}
+
+
 			this.menu.Behavior.Accepted -= new Epsitec.Common.Support.EventHandler(this.HandleMenuAccepted);
 			this.menu.Behavior.Rejected -= new Epsitec.Common.Support.EventHandler(this.HandleMenuRejected);
 			this.scrollList.SelectionActivated -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
@@ -440,16 +455,22 @@ namespace Epsitec.Common.Widgets
 				this.SetFocused(true);
 			}
 			
-			if (mode == CloseMode.Reject)
+			switch (mode)
 			{
-				this.Text = this.openText;
+				case CloseMode.Reject:
+					this.RejectEdition ();
+					break;
+				
+				case CloseMode.Accept:
+					this.AcceptEdition ();
+					break;
 			}
 			
 			this.OnComboClosed ();
 			
-			if ( this.openText != this.Text )
+			if (this.InitialText != this.Text )
 			{
-				this.OnSelectedIndexChanged();
+				this.OnSelectedIndexChanged ();
 			}
 		}
 
@@ -738,7 +759,6 @@ namespace Epsitec.Common.Widgets
 		protected Button						button;
 		protected Collections.StringCollection	items;
 		protected ScrollList					scrollList;
-		protected string						openText;
 		protected ShowCondition					button_show_condition;
 		protected bool							has_edited_text;
 		protected double						default_button_width;

@@ -60,6 +60,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsMenuOpen
+		{
+			get
+			{
+				WindowRoot root = this.RootParent as WindowRoot;
+				
+				if (root != null)
+				{
+					return root.Window.IsVisible;
+				}
+				
+				return false;
+			}
+		}
+		
 		public double							IconWidth
 		{
 			get

@@ -119,8 +119,10 @@ namespace Epsitec.Common.Widgets
 				this.OnEditionRejected ();
 				return true;
 			}
-			
-			return false;
+			else
+			{
+				return base.RejectEdition ();
+			}
 		}
 		
 		public override bool AcceptEdition()
@@ -135,9 +137,15 @@ namespace Epsitec.Common.Widgets
 					this.OnEditionAccepted ();
 					return true;
 				}
+				else
+				{
+					return false;
+				}
 			}
-			
-			return false;
+			else
+			{
+				return base.AcceptEdition ();
+			}
 		}
 		
 		public bool AutoRejectEdition(bool change_focus)

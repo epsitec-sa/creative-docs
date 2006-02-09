@@ -569,7 +569,7 @@ namespace Epsitec.Common.Widgets
 		public virtual bool StartEdition()
 		{
 			if ((this.is_editing == false) &&
-				(this.defocus_action != DefocusAction.None))
+				((this.defocus_action != DefocusAction.None) || (this.IsCombo)))
 			{
 				this.initial_text              = this.Text;
 				this.initial_text_display_mode = this.TextDisplayMode;
@@ -585,6 +585,7 @@ namespace Epsitec.Common.Widgets
 				
 				return true;
 			}
+			
 			return false;
 		}
 		
