@@ -1943,6 +1943,48 @@ again:
 		}
 		
 		
+		public int GetRunLength(int max)
+		{
+			ulong last = 0;
+			
+			for (int offset = 0; offset < max; offset++)
+			{
+				ulong code = Internal.CharMarker.ExtractCoreAndSettings (this.story.ReadChar (this.cursor, offset));
+				
+				if (code == 0)
+				{
+					return offset;
+				}
+				
+				if (offset == 0)
+				{
+					last = code;
+				}
+				else
+				{
+					if (last != code)
+					{
+						return offset;
+					}
+				}
+			}
+			
+			return max;
+		}
+		
+		public string ReadText(int length)
+		{
+			ulong[] buffer = new ulong[length];
+			string  result;
+			
+			int read = this.story.ReadText (this.cursor, length, buffer);
+			
+			TextConverter.ConvertToString (buffer, read, out result);
+			
+			return result;
+		}
+		
+		
 		public void ClearCurrentStylesAndProperties()
 		{
 			this.current_styles     = null;

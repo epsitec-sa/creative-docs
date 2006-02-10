@@ -150,9 +150,23 @@ namespace Epsitec.Common.Text
 			result = buffer.ToString ();
 		}
 		
+		public static void ConvertToString(ulong[] text, int length, out string result)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			TextConverter.ConvertToString (text, length, buffer);
+			
+			result = buffer.ToString ();
+		}
+		
 		public static void ConvertToString(ulong[] text, System.Text.StringBuilder buffer)
 		{
-			for (int i = 0; i < text.Length; i++)
+			TextConverter.ConvertToString(text, text.Length, buffer);
+		}
+		
+		public static void ConvertToString(ulong[] text, int length, System.Text.StringBuilder buffer)
+		{
+			for (int i = 0; i < length; i++)
 			{
 				uint code = (uint) Unicode.Bits.GetCode (text[i]);
 				

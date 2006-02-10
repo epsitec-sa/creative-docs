@@ -199,6 +199,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing.Agg", "Commo
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Text.Exchange", "Common.Text.Exchange\Common.Text.Exchange.csproj", "{CAE8D21F-CADA-4401-949F-186BB1D4F5D6}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Text.Exchange.Tests", "Common.Text.Exchange.Tests\Common.Text.Exchange.Tests.csproj", "{2D23E2CA-6BFB-41B5-951D-E06E47E6F620}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -399,6 +407,14 @@ Global
 		{7D73AD35-D078-4B4C-AF30-434C6A377058}.Debug.Build.0 = Debug|.NET
 		{7D73AD35-D078-4B4C-AF30-434C6A377058}.Release.ActiveCfg = Release|.NET
 		{7D73AD35-D078-4B4C-AF30-434C6A377058}.Release.Build.0 = Release|.NET
+		{CAE8D21F-CADA-4401-949F-186BB1D4F5D6}.Debug.ActiveCfg = Debug|.NET
+		{CAE8D21F-CADA-4401-949F-186BB1D4F5D6}.Debug.Build.0 = Debug|.NET
+		{CAE8D21F-CADA-4401-949F-186BB1D4F5D6}.Release.ActiveCfg = Release|.NET
+		{CAE8D21F-CADA-4401-949F-186BB1D4F5D6}.Release.Build.0 = Release|.NET
+		{2D23E2CA-6BFB-41B5-951D-E06E47E6F620}.Debug.ActiveCfg = Debug|.NET
+		{2D23E2CA-6BFB-41B5-951D-E06E47E6F620}.Debug.Build.0 = Debug|.NET
+		{2D23E2CA-6BFB-41B5-951D-E06E47E6F620}.Release.ActiveCfg = Release|.NET
+		{2D23E2CA-6BFB-41B5-951D-E06E47E6F620}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\AntiGrain.NET.dll = External\AntiGrain.NET.dll
