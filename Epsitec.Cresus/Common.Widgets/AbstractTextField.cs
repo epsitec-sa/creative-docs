@@ -910,8 +910,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.contextMenu = new VMenu();
 			this.contextMenu.Host = this;
-			this.contextMenu.Behavior.Accepted += new Support.EventHandler(this.HandleContextMenuAccepted);
-			this.contextMenu.Behavior.Rejected += new Support.EventHandler(this.HandleContextMenuRejected);
+			this.contextMenu.Accepted += new Support.EventHandler(this.HandleContextMenuAccepted);
+			this.contextMenu.Rejected += new Support.EventHandler(this.HandleContextMenuRejected);
 
 			MenuItem mi;
 			bool sel = (this.TextNavigator.CursorFrom != this.TextNavigator.CursorTo);
@@ -985,16 +985,27 @@ namespace Epsitec.Common.Widgets
 //			this.contextMenu.AttachCommandDispatcher(this.CommandDispatchers[0]);
 			this.contextMenu.ShowAsContextMenu(this, mouse);
 		}
+		
+		protected void DisposeContextMenu()
+		{
+			if (this.contextMenu != null)
+			{
+				this.contextMenu.Accepted -= new Support.EventHandler(this.HandleContextMenuAccepted);
+				this.contextMenu.Rejected -= new Support.EventHandler(this.HandleContextMenuRejected);
+				this.contextMenu.Dispose ();
+				this.contextMenu = null;
+			}
+		}
 
 		private void HandleContextMenuAccepted(object sender)
 		{
-			this.contextMenu = null;
+			this.DisposeContextMenu ();
 			this.Invalidate ();
 		}
 		
 		private void HandleContextMenuRejected(object sender)
 		{
-			this.contextMenu = null;
+			this.DisposeContextMenu ();
 			this.Invalidate ();
 		}
 		#endregion

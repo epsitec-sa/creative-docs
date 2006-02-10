@@ -450,10 +450,10 @@ namespace Epsitec.Common.Widgets
 				this.scroll_list.ShowSelected (ScrollShowMode.Center);
 			}
 			
-			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Drawing.Point (0, 0)));
+			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Drawing.Point (0, 0)), this.Button);
 			
-			this.menu.Behavior.Accepted += new Support.EventHandler (this.HandleMenuAccepted);
-			this.menu.Behavior.Rejected += new Support.EventHandler (this.HandleMenuRejected);
+			this.menu.Accepted += new Support.EventHandler (this.HandleMenuAccepted);
+			this.menu.Rejected += new Support.EventHandler (this.HandleMenuRejected);
 			
 			if (this.scroll_list != null)
 			{
@@ -483,8 +483,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			this.menu.Behavior.Accepted -= new Support.EventHandler (this.HandleMenuAccepted);
-			this.menu.Behavior.Rejected -= new Support.EventHandler (this.HandleMenuRejected);
+			this.menu.Accepted -= new Support.EventHandler (this.HandleMenuAccepted);
+			this.menu.Rejected -= new Support.EventHandler (this.HandleMenuRejected);
 			
 			if (this.scroll_list != null)
 			{

@@ -160,6 +160,7 @@ namespace Epsitec.Common.Widgets
 			window.Owner          = owner;
 			window.WindowLocation = pos;
 			
+			this.ConnectEventHandlers ();
 			this.Behavior.OpenPopup (window, Behaviors.MenuBehavior.Animate.Yes);
 			
 			this.Focus ();
@@ -182,12 +183,13 @@ namespace Epsitec.Common.Widgets
 			window.WindowLocation = pos;
 			window.ParentWidget   = parent;
 			
+			this.ConnectEventHandlers ();
 			this.Behavior.OpenPopup (window, Behaviors.MenuBehavior.Animate.Yes);
 			
 			this.Focus ();
 		}
 		
-		public void ShowAsComboList(Widget parent, Drawing.Point pos)
+		public void ShowAsComboList(Widget parent, Drawing.Point pos, Widget button)
 		{
 			Window.ResetMouseCursor ();
 			
@@ -202,6 +204,14 @@ namespace Epsitec.Common.Widgets
 			window.WindowLocation = pos;
 			window.ParentWidget   = parent;
 			
+			if (button != null)
+			{
+				this.open_button = button;
+				this.open_button.SetEngaged (true);
+				this.open_button.SetFrozen (true);
+			}
+			
+			this.ConnectEventHandlers ();
 			this.Behavior.OpenCombo (window, Behaviors.MenuBehavior.Animate.Yes);
 			
 			this.Focus ();
@@ -297,6 +307,8 @@ namespace Epsitec.Common.Widgets
 					this.items.Dispose();
 				}
 				
+				this.DisconnectEventHandlers ();
+				
 				this.items = null;
 				this.host  = null;
 			}
@@ -309,6 +321,49 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.FindHost() != null, "No Host defined for menu.",
 				/**/						 "The menu you are trying to display has no associated command dispatcher host.\n"+
 				/**/						 "Use AbstractMenu.Host to define it when you setup the menu.");
+		}
+		
+		
+		protected virtual void ConnectEventHandlers()
+		{
+			if (this.is_connected == false)
+			{
+				this.Behavior.Accepted += new Support.EventHandler (this.HandleBehaviorAccepted);
+				this.Behavior.Rejected += new Support.EventHandler (this.HandleBehaviorRejected);
+				
+				this.is_connected = true;
+			}
+		}
+		
+		protected virtual void DisconnectEventHandlers()
+		{
+			if (this.is_connected)
+			{
+				if (this.open_button != null)
+				{
+					this.open_button.SetFrozen (false);
+					this.open_button.SetEngaged (false);
+					this.open_button = null;
+				}
+				
+				this.Behavior.Accepted -= new Support.EventHandler (this.HandleBehaviorAccepted);
+				this.Behavior.Rejected -= new Support.EventHandler (this.HandleBehaviorRejected);
+				
+				this.is_connected = false;
+			}
+		}
+		
+		
+		private void HandleBehaviorAccepted(object sender)
+		{
+			this.OnAccepted ();
+			this.DisconnectEventHandlers ();
+		}
+		
+		private void HandleBehaviorRejected(object sender)
+		{
+			this.OnRejected ();
+			this.DisconnectEventHandlers ();
 		}
 		
 		
@@ -506,10 +561,32 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		protected virtual void OnAccepted()
+		{
+			if (this.Accepted != null)
+			{
+				this.Accepted (this);
+			}
+		}
+		
+		protected virtual void OnRejected()
+		{
+			if (this.Rejected != null)
+			{
+				this.Rejected (this);
+			}
+		}
+		
+		
+		public event Support.EventHandler		Accepted;
+		public event Support.EventHandler		Rejected;
+		
 		protected Drawing.Margins				margins = new Drawing.Margins (2,2,2,2);
 		protected Drawing.Margins				shadow  = Drawing.Margins.Zero;
 		private MenuItemCollection				items;
 		private ICommandDispatcherHost			host;
 		private double							icon_width;
+		private Widget							open_button;
+		private bool							is_connected;
 	}
 }
