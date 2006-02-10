@@ -419,6 +419,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MenuType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MenuWindow.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -5,15 +5,6 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	public enum MenuType
-	{
-		Undefined		= 0,
-		
-		Popup			= 1,
-		Submenu			= 2,
-		ComboList		= 3,
-	}
-	
 	/// <summary>
 	/// La classe MenuWindow représente une fenêtre utilisée spécifiquement
 	/// pour contenir des menus (ou des palettes de type pop-up).
