@@ -972,6 +972,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\FontFaceCombo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\FontSample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1008,11 +1013,6 @@
                 />
                 <File
                     RelPath = "Widgets\StyleCombo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Widgets\TextFieldFontFace.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

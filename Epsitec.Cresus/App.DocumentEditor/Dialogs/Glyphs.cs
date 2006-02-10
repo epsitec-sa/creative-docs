@@ -8,6 +8,7 @@ using Epsitec.Common.OpenType;
 namespace Epsitec.App.DocumentEditor.Dialogs
 {
 	using GlobalSettings = Common.Document.Settings.GlobalSettings;
+	using FontFaceCombo  = Common.Document.Widgets.FontFaceCombo;
 
 	/// <summary>
 	/// Dialogue permettant de choisir un caractère quelconque à insérer dans
@@ -116,7 +117,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				fontFaceLabel.Anchor = AnchorStyles.TopLeft;
 				fontFaceLabel.AnchorMargins = new Margins(6, 0, 6+3, 0);
 
-				this.fieldFontFace = new Common.Document.Widgets.TextFieldFontFace(bookArray);
+				this.fieldFontFace = new FontFaceCombo(bookArray);
 				this.fieldFontFace.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
 				this.fieldFontFace.AnchorMargins = new Margins(6+50, 6+20+21+3, 6, 0);
 				this.fieldFontFace.IsReadOnly = true;
@@ -783,7 +784,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected TextFieldCombo			family;
 		protected ScrollList				list;
 
-		protected Common.Document.Widgets.TextFieldFontFace fieldFontFace;
+		protected FontFaceCombo				fieldFontFace;
 		protected IconButton				buttonFilter;
 		protected TextFieldCombo			fieldFontStyle;
 		protected GlyphButton				currentFont;

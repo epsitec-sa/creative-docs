@@ -169,14 +169,18 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
-			this.RebuildContents();
+			if ( this.RebuildContents() )
+			{
+				this.UpdateContents();
+			}
 		}
 		
-		public void RebuildContents()
+		public bool RebuildContents()
 		{
-			if ( this.scroller == null )  return;
+			if ( this.scroller == null )  return false;
 
 			Rectangle rect = this.Client.Bounds;
+			bool changed = false;
 
 			//	Crée les échantillons, si nécessaire.
 			int lines = (int) (rect.Height/this.sampleHeight);
@@ -201,6 +205,8 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					this.samples[i] = new Epsitec.Common.Document.Widgets.FontSample(this);
 				}
+				
+				changed = true;
 			}
 
 			//	Positionne l'ascenseur.
@@ -220,6 +226,8 @@ namespace Epsitec.Common.Document.Widgets
 
 				top -= h;
 			}
+			
+			return changed;
 		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)

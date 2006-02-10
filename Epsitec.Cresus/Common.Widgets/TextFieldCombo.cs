@@ -747,7 +747,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region MenuHost Class
-		protected class MenuHost : IMenuHost
+		public class MenuHost : IMenuHost
 		{
 			public MenuHost(AbstractMenu menu)
 			{
@@ -761,8 +761,9 @@ namespace Epsitec.Common.Widgets
 				//	Détermine la hauteur maximale disponible par rapport à la position
 				//	actuelle :
 				
-				Drawing.Point     pos  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, 0));
-				ScreenInfo        screen_info  = ScreenInfo.Find (pos);
+				Drawing.Point     pos = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, 0));
+				Drawing.Point     hot = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, 0));
+				ScreenInfo        screen_info  = ScreenInfo.Find (hot);
 				Drawing.Rectangle working_area = screen_info.WorkingArea;
 				
 				double max_height = pos.Y - working_area.Bottom;

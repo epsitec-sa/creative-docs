@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Font(Document document) : base(document)
 		{
-			this.fontFace = new Widgets.TextFieldFontFace(this);
+			this.fontFace = new Widgets.FontFaceCombo(this);
 			this.fontFace.IsReadOnly = true;
 			this.fontFace.ComboOpening += new CancelEventHandler(this.HandleFontFaceComboOpening);
 			this.fontFace.ComboClosed += new EventHandler(this.HandleFontFaceTextChanged);
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Document.Panels
 
 
 		protected StaticText				labelColor;
-		protected Widgets.TextFieldFontFace fontFace;
+		protected Widgets.FontFaceCombo		fontFace;
 		protected IconButton				buttonFilter;
 		protected Widgets.TextFieldLabel	fontSize;
 		protected ColorSample				fontColor;

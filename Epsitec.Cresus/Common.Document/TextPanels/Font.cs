@@ -18,7 +18,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextFont");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Font.Title);
 
-			this.fontFace = new Widgets.TextFieldFontFace(this);
+			this.fontFace = new Widgets.FontFaceCombo(this);
 			this.fontFace.IsReadOnly = true;
 			this.fontFace.ComboOpening += new CancelEventHandler(this.HandleFontFaceComboOpening);
 			this.fontFace.ComboClosed += new EventHandler(this.HandleFontFaceTextChanged);
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fontFace.Text  = face;
 			this.fontStyle.Text = style;
-			this.ProposalTextFieldFontFace(this.fontFace, !isFace);
+			this.ProposalFontFaceCombo(this.fontFace, !isFace);
 			this.ProposalTextFieldCombo(this.fontStyle, !isStyle);
 
 			this.fontSize.IsUnitPercent = (units == Common.Text.Properties.SizeUnits.Percent);
@@ -841,7 +841,7 @@ namespace Epsitec.Common.Document.TextPanels
 		#endregion
 
 		
-		protected Widgets.TextFieldFontFace fontFace;
+		protected Widgets.FontFaceCombo		fontFace;
 		protected IconButton				buttonFilter;
 		protected TextFieldCombo			fontStyle;
 		protected IconButton				fontFeatures;
