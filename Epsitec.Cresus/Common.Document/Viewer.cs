@@ -2645,7 +2645,7 @@ namespace Epsitec.Common.Document
 			this.miniBar.Root.SetSyncPaint(true);
 			this.miniBar.WindowSize = this.miniBarRect.Size;
 			this.miniBar.WindowLocation = this.MapClientToScreen(this.miniBarRect.BottomLeft);
-			this.miniBar.Root.BackColor = Color.FromARGB(0, 1,1,1);
+			this.miniBar.Root.BackColor = Color.FromAlphaRgb(0, 1,1,1);
 			this.miniBar.Owner = this.Window;
 			this.miniBar.AttachCommandDispatcher(this.GetCommandDispatcher());
 
@@ -3891,14 +3891,14 @@ namespace Epsitec.Common.Document
 					rect.Offset(ix, iy);
 
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Color.FromARGB(0.4, 0.5,0.5,0.5));
+					graphics.RenderSolid(Color.FromAlphaRgb(0.4, 0.5,0.5,0.5));
 				}
 
 				Rectangle area = this.document.Modifier.RectangleArea;
 				graphics.Align(ref area);
 				area.Offset(ix, iy);
 				graphics.AddRectangle(area);
-				graphics.RenderSolid(Color.FromARGB(0.4, 0.5,0.5,0.5));
+				graphics.RenderSolid(Color.FromAlphaRgb(0.4, 0.5,0.5,0.5));
 			}
 
 			if ( this.drawingContext.PreviewActive )
@@ -3948,11 +3948,11 @@ namespace Epsitec.Common.Document
 							graphics.AddLine(x, y, x, clipRect.Top);
 							if ( rank%subdiv == 0 )
 							{
-								graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.6,0.6));  // gris
+								graphics.RenderSolid(Color.FromAlphaRgb(0.3, 0.6,0.6,0.6));  // gris
 							}
 							else
 							{
-								graphics.RenderSolid(Color.FromARGB(0.1, 0.6,0.6,0.6));  // gris
+								graphics.RenderSolid(Color.FromAlphaRgb(0.1, 0.6,0.6,0.6));  // gris
 							}
 						}
 						rank ++;
@@ -3974,11 +3974,11 @@ namespace Epsitec.Common.Document
 							graphics.AddLine(x, y, clipRect.Right, y);
 							if ( rank%subdiv == 0 )
 							{
-								graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.6,0.6));  // gris
+								graphics.RenderSolid(Color.FromAlphaRgb(0.3, 0.6,0.6,0.6));  // gris
 							}
 							else
 							{
-								graphics.RenderSolid(Color.FromARGB(0.1, 0.6,0.6,0.6));  // gris
+								graphics.RenderSolid(Color.FromAlphaRgb(0.1, 0.6,0.6,0.6));  // gris
 							}
 						}
 						rank ++;
@@ -4010,11 +4010,11 @@ namespace Epsitec.Common.Document
 							graphics.AddLine(x, y, clipRect.Right, y);
 							if ( rank%subdiv == 0 )
 							{
-								graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.8,0.9));  // gris-bleu
+								graphics.RenderSolid(Color.FromAlphaRgb(0.3, 0.6,0.8,0.9));  // gris-bleu
 							}
 							else
 							{
-								graphics.RenderSolid(Color.FromARGB(0.1, 0.6,0.8,0.9));  // gris-bleu
+								graphics.RenderSolid(Color.FromAlphaRgb(0.1, 0.6,0.8,0.9));  // gris-bleu
 							}
 						}
 						rank ++;
@@ -4064,7 +4064,7 @@ namespace Epsitec.Common.Document
 						cy += iy;
 						graphics.AddLine(cx, 0, cx, this.document.PageSize.Height);
 						graphics.AddLine(0, cy, this.document.PageSize.Width, cy);
-						graphics.RenderSolid(Color.FromARGB(0.4, 0.5,0.5,0.5));
+						graphics.RenderSolid(Color.FromAlphaRgb(0.4, 0.5,0.5,0.5));
 					}
 				}
 			}
@@ -4107,16 +4107,16 @@ namespace Epsitec.Common.Document
 				{
 					if ( guide.Hilite )
 					{
-						graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.8,0.0));  // vert
+						graphics.RenderSolid(Color.FromAlphaRgb(0.5, 0.0,0.8,0.0));  // vert
 					}
 					else
 					{
-						graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.0,0.8));  // bleuté
+						graphics.RenderSolid(Color.FromAlphaRgb(0.5, 0.0,0.0,0.8));  // bleuté
 					}
 				}
 				else
 				{
-					graphics.RenderSolid(Color.FromARGB(0.5, 0.8,0.0,0.0));  // rouge
+					graphics.RenderSolid(Color.FromAlphaRgb(0.5, 0.8,0.0,0.0));  // rouge
 				}
 			}
 		}
@@ -4136,7 +4136,7 @@ namespace Epsitec.Common.Document
 				x += ix;
 				y += iy;
 				graphics.AddLine(x, y, x, rd.Top);
-				graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.0,0.8));  // bleuté
+				graphics.RenderSolid(Color.FromAlphaRgb(0.5, 0.0,0.0,0.8));  // bleuté
 			}
 
 			if ( !double.IsNaN(this.markerHorizontal) )
@@ -4147,7 +4147,7 @@ namespace Epsitec.Common.Document
 				x += ix;
 				y += iy;
 				graphics.AddLine(x, y, rd.Right, y);
-				graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.0,0.8));  // bleuté
+				graphics.RenderSolid(Color.FromAlphaRgb(0.5, 0.0,0.0,0.8));  // bleuté
 			}
 		}
 
@@ -4174,7 +4174,7 @@ namespace Epsitec.Common.Document
 			y += iy;
 			graphics.AddLine(x, y, this.document.Modifier.SizeArea.Width, y);
 
-			graphics.RenderSolid(Color.FromRGB(1.0, 0.0, 0.0));  // rouge
+			graphics.RenderSolid(Color.FromRgb(1.0, 0.0, 0.0));  // rouge
 
 			Objects.Handle handle = new Objects.Handle(this.document);
 			handle.Type = Objects.HandleType.Center;
@@ -4315,7 +4315,7 @@ namespace Epsitec.Common.Document
 			if ( this.debugDirty )
 			{
 				graphics.AddFilledRectangle(clipRect);
-				graphics.RenderSolid(Color.FromARGB(0.5, 0.2, 0.2, 0.0));  // beurk !
+				graphics.RenderSolid(Color.FromAlphaRgb(0.5, 0.2, 0.2, 0.0));  // beurk !
 				this.debugDirty = false;
 			}
 		}

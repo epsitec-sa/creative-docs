@@ -14,8 +14,8 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ColorMain;
 
-			this.buttonColorToRGB  = this.CreateIconButton("ColorToRGB");
-			this.buttonColorToCMYK = this.CreateIconButton("ColorToCMYK");
+			this.buttonColorToRgb  = this.CreateIconButton("ColorToRgb");
+			this.buttonColorToCmyk = this.CreateIconButton("ColorToCmyk");
 			this.buttonColorToGray = this.CreateIconButton("ColorToGray");
 			this.separator = new IconSeparator(this);
 			this.buttonColorStrokeDark  = this.CreateIconButton("ColorStrokeDark");
@@ -58,10 +58,10 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
-			if ( this.buttonColorToRGB == null )  return;
+			if ( this.buttonColorToRgb == null )  return;
 
-			double dx = this.buttonColorToRGB.DefaultWidth;
-			double dy = this.buttonColorToRGB.DefaultHeight;
+			double dx = this.buttonColorToRgb.DefaultWidth;
+			double dy = this.buttonColorToRgb.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*2;
@@ -72,9 +72,9 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonColorToRGB.Bounds = rect;
+			this.buttonColorToRgb.Bounds = rect;
 			rect.Offset(dx, 0);
-			this.buttonColorToCMYK.Bounds = rect;
+			this.buttonColorToCmyk.Bounds = rect;
 			rect.Offset(dx+this.separatorWidth, 0);
 			this.buttonColorStrokeDark.Bounds = rect;
 			rect.Offset(dx, 0);
@@ -137,8 +137,8 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		protected IconButton				buttonColorToRGB;
-		protected IconButton				buttonColorToCMYK;
+		protected IconButton				buttonColorToRgb;
+		protected IconButton				buttonColorToCmyk;
 		protected IconButton				buttonColorToGray;
 		protected IconSeparator				separator;
 		protected IconButton				buttonColorStrokeDark;

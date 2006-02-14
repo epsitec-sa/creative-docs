@@ -1454,7 +1454,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 //			graphics.AddFilledRectangle(rText);
-//			graphics.RenderSolid(Drawing.Color.FromARGB(0.6, 1, 0, 0));
+//			graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.6, 1, 0, 0));
 			
 			rClip = this.MapClientToRoot(rClip);
 			graphics.SetClippingRectangle(rClip);

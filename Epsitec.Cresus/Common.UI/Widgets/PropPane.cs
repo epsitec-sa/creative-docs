@@ -237,7 +237,7 @@ namespace Epsitec.Common.UI.Widgets
 			graphics.AddFilledRectangle (rect);
 			
 			Drawing.Color color_caption = adorner.ColorCaption;
-			Drawing.Color color_back    = Drawing.Color.FromARGB (0.2,
+			Drawing.Color color_back    = Drawing.Color.FromAlphaRgb (0.2,
 				/**/											  0.5 + color_caption.R * 0.5,
 				/**/											  0.5 + color_caption.G * 0.5,
 				/**/											  0.5 + color_caption.B * 0.5);

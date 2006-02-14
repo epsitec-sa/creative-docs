@@ -87,12 +87,12 @@ namespace Epsitec.Common.Widgets
 		
 		public static Drawing.Color				FrameColor
 		{
-			get { return Drawing.Color.FromRGB (0.57, 0.66, 0.80); }
+			get { return Drawing.Color.FromRgb (0.57, 0.66, 0.80); }
 		}
 		
 		public static Drawing.Color				HintColor
 		{
-			get { return Drawing.Color.FromRGB (0.00, 0.00, 1.00); }
+			get { return Drawing.Color.FromRgb (0.00, 0.00, 1.00); }
 		}
 		
 		

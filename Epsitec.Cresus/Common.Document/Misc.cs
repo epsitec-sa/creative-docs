@@ -127,7 +127,7 @@ namespace Epsitec.Common.Document
 			else
 			{
 				double h,s,v;
-				color.Basic.GetHSV(out h, out s, out v);
+				color.Basic.GetHsv(out h, out s, out v);
 
 				     if ( h < 30+60*0 )  builder.Append(Res.Strings.Color.Red);
 				else if ( h < 30+60*1 )  builder.Append(Res.Strings.Color.Yellow);

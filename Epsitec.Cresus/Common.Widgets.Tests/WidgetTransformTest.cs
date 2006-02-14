@@ -48,13 +48,13 @@ namespace Epsitec.Common.Widgets
 			double dx = this.Client.Width;
 			double dy = this.Client.Height;
 			
-			Color color_text = this.IsFocused ? Color.FromRGB (0.0, 0.0, 0.5) : Color.FromRGB (0.0, 0.0, 0.0);
-			Color color_back = this.IsFocused ? Color.FromRGB (0.8, 0.8, 1.0) : Color.FromRGB (1.0, 1.0, 1.0);
+			Color color_text = this.IsFocused ? Color.FromRgb (0.0, 0.0, 0.5) : Color.FromRgb (0.0, 0.0, 0.0);
+			Color color_back = this.IsFocused ? Color.FromRgb (0.8, 0.8, 1.0) : Color.FromRgb (1.0, 1.0, 1.0);
 			
 			graphics.AddFilledRectangle (1, 1, dx - 2, dy - 2);
 			graphics.RenderSolid (color_back);
 			graphics.AddRectangle (1, 1, dx-2, dy-2);
-			graphics.RenderSolid (Color.FromRGB (0, 0, 0.6));
+			graphics.RenderSolid (Color.FromRgb (0, 0, 0.6));
 			
 			Font   font = Font.GetFont ("Tahoma", "Regular");
 			double size = 12;

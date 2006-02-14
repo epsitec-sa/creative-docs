@@ -146,12 +146,12 @@ namespace Epsitec.Common.Drawing
 			return Color.GetBrightness (this.r, this.g, this.b);
 		}
 		
-		public void GetHSV(out double h, out double s, out double v)
+		public void GetHsv(out double h, out double s, out double v)
 		{
-			Color.ConvertRGBtoHSV (this.r, this.g, this.b, out h, out s, out v);
+			Color.ConvertRgbToHsv (this.r, this.g, this.b, out h, out s, out v);
 		}
 
-		public void GetARGB(out double a, out double r, out double g, out double b)
+		public void GetAlphaRgb(out double a, out double r, out double g, out double b)
 		{
 			a = this.A;
 			r = this.R;
@@ -173,12 +173,12 @@ namespace Epsitec.Common.Drawing
 			return new Color (color.a * alpha, color.r, color.g, color.b);
 		}
 		
-		public static Color FromARGB(double a, double r, double g, double b)
+		public static Color FromAlphaRgb(double a, double r, double g, double b)
 		{
 			return new Color (a, r, g, b);
 		}
 		
-		public static Color FromRGB(double r, double g, double b)
+		public static Color FromRgb(double r, double g, double b)
 		{
 			return new Color (r, g, b);
 		}
@@ -188,16 +188,16 @@ namespace Epsitec.Common.Drawing
 			return new Color (brightness);
 		}
 		
-		public static Color FromHSV(double h, double s, double v)
+		public static Color FromHsv(double h, double s, double v)
 		{
 			double r,g,b;
-			Color.ConvertHSVtoRGB(h,s,v, out r, out g, out b);
+			Color.ConvertHsvToRgb(h,s,v, out r, out g, out b);
 			return new Color(r, g, b);
 		}
 
-		public static Color FromAHSV(double a, double h, double s, double v)
+		public static Color FromAlphaHsv(double a, double h, double s, double v)
 		{
-			Color color = Color.FromHSV (h, s, v);
+			Color color = Color.FromHsv (h, s, v);
 			color.A = a;
 			return color;
 		}
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static void ConvertRGBtoHSV(double r, double g, double b, out double h, out double s, out double v)
+		public static void ConvertRgbToHsv(double r, double g, double b, out double h, out double s, out double v)
 		{
 			//	H = [0..360]
 			//	S = [0..1]
@@ -453,7 +453,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public static void ConvertHSVtoRGB(double h, double s, double v, out double r, out double g, out double b)
+		public static void ConvertHsvToRgb(double h, double s, double v, out double r, out double g, out double b)
 		{
 			r = g = b = v;
 			if ( s == 0 )  return;  // noir ?

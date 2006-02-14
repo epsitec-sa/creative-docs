@@ -843,7 +843,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Le bouton "aucune couleur" a été cliqué.
 			this.grid.SelectedValue = (int) Properties.GradientFillType.None;
-			this.fieldColor1.Color = Drawing.RichColor.FromARGB(0, 1,1,1);
+			this.fieldColor1.Color = Drawing.RichColor.FromAlphaRgb(0, 1,1,1);
 			this.OnChanged();
 		}
 

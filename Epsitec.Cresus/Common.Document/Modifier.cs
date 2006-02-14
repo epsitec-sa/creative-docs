@@ -827,7 +827,7 @@ namespace Epsitec.Common.Document
 
 			this.objectMemoryText = new Objects.Memory(this.document, null);
 			this.objectMemoryText.PropertyLineMode.Width = 0.0;
-			this.objectMemoryText.PropertyFillGradient.Color1 = RichColor.FromARGB(0, 1,1,1);
+			this.objectMemoryText.PropertyFillGradient.Color1 = RichColor.FromAlphaRgb(0, 1,1,1);
 		}
 
 
@@ -3657,7 +3657,7 @@ namespace Epsitec.Common.Document
 			this.Simplify(bezier);
 			this.TotalSelected ++;
 			bezier.PropertyFillGradient.FillType = Properties.GradientFillType.None;
-			bezier.PropertyFillGradient.Color1 = RichColor.FromARGB(0, 1,1,1);
+			bezier.PropertyFillGradient.Color1 = RichColor.FromAlphaRgb(0, 1,1,1);
 			bezier.PropertyPolyClose.BoolValue = false;
 			this.VisibilityForce(bezier);
 

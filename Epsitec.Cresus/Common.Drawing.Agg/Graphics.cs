@@ -247,7 +247,7 @@ namespace Epsitec.Common.Drawing
 			Graphics mask = new Graphics ();
 			
 			mask.SetPixmapSize (this.pixmap.Size.Width, this.pixmap.Size.Height);
-			mask.SolidRenderer.ClearARGB (0, 0, 0, 0);
+			mask.SolidRenderer.ClearAlphaRgb (0, 0, 0, 0);
 			mask.Transform = this.Transform;
 			
 			return mask;

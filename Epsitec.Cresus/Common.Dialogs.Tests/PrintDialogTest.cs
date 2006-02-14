@@ -303,7 +303,7 @@ namespace Epsitec.Common.Dialogs
 				Drawing.Font font = Drawing.Font.GetFont ("Tahoma", "Italic");
 				
 				port.LineWidth = 0.1;
-				port.Color     = Drawing.Color.FromRGB (0, 0, 0);
+				port.Color     = Drawing.Color.FromRgb (0, 0, 0);
 				
 				for (int x = 0; x < 210; x++)
 				{
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Dialogs
 				
 				for (int i = 0; i < 2; i++)
 				{
-					port.Color     = Drawing.Color.FromRGB (0, 0, 0);
+					port.Color     = Drawing.Color.FromRgb (0, 0, 0);
 					port.LineCap   = Drawing.CapStyle.Square;
 					port.LineJoin  = Drawing.JoinStyle.MiterRevert;
 					port.LineWidth = 1.5;
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Dialogs
 					
 					port.TranslateTransform (60, 0);
 					
-					port.Color     = Drawing.Color.FromRGB (0, 0, 0);
+					port.Color     = Drawing.Color.FromRgb (0, 0, 0);
 					port.LineCap   = Drawing.CapStyle.Square;
 					port.LineJoin  = Drawing.JoinStyle.MiterRevert;
 					port.LineWidth = 0.5;
@@ -385,7 +385,7 @@ namespace Epsitec.Common.Dialogs
 					
 					port.TranslateTransform (60, 0);
 					
-					port.Color = Drawing.Color.FromRGB (0, 1, 0);
+					port.Color = Drawing.Color.FromRgb (0, 1, 0);
 					
 					port.PaintSurface (path);
 					port.PaintSurface (Drawing.Path.FromLine (40, 10, 60, 20));
@@ -393,13 +393,13 @@ namespace Epsitec.Common.Dialogs
 					
 					port.TranslateTransform (60, 0);
 					
-					port.Color = Drawing.Color.FromRGB (1, 1, 0);
+					port.Color = Drawing.Color.FromRgb (1, 1, 0);
 					
 					port.PaintSurface (path);
 					port.PaintSurface (Drawing.Path.FromLine (40, 10, 60, 20));
 					port.PaintSurface (Drawing.Path.FromCircle (40, 30, 5));
 					
-					port.Color     = Drawing.Color.FromRGB (1, 0, 0);
+					port.Color     = Drawing.Color.FromRgb (1, 0, 0);
 					port.LineCap   = Drawing.CapStyle.Square;
 					port.LineJoin  = Drawing.JoinStyle.MiterRevert;
 					port.LineWidth = 1.0;
@@ -410,7 +410,7 @@ namespace Epsitec.Common.Dialogs
 					
 					port.TranslateTransform (-180, 0);
 					
-					port.Color = Drawing.Color.FromRGB (0, 0, 0);
+					port.Color = Drawing.Color.FromRgb (0, 0, 0);
 					
 					double ox = 10;
 					
@@ -439,22 +439,22 @@ namespace Epsitec.Common.Dialogs
 				port.PaintOutline (Drawing.Path.FromLine (35, 40, 45, 40));
 				port.PaintOutline (Drawing.Path.FromLine (40, 35, 40, 45));
 				
-				port.Color = Drawing.Color.FromRGB (0, 0, 0);
+				port.Color = Drawing.Color.FromRgb (0, 0, 0);
 				pport.PaintText (40, 40, "A", font_1, 100.0, true);
-				port.Color = Drawing.Color.FromRGB (0, 1, 0);
+				port.Color = Drawing.Color.FromRgb (0, 1, 0);
 				pport.PaintText (40, 40, "X", font_2, 100.0, true);
-				port.Color = Drawing.Color.FromRGB (1, 1, 0);
+				port.Color = Drawing.Color.FromRgb (1, 1, 0);
 				pport.PaintText (40, 40, "Y", font_3, 100.0, true);
 				
-				port.Color = Drawing.Color.FromRGB (0, 0, 0);
+				port.Color = Drawing.Color.FromRgb (0, 0, 0);
 				port.PaintOutline (Drawing.Path.FromLine (35, 160, 45, 160));
 				port.PaintOutline (Drawing.Path.FromLine (40, 155, 40, 165));
 				
-				port.Color = Drawing.Color.FromRGB (0, 0, 0);
+				port.Color = Drawing.Color.FromRgb (0, 0, 0);
 				pport.PaintText (40, 160, "A", font_1, 100.0, false);
-				port.Color = Drawing.Color.FromRGB (0, 1, 0);
+				port.Color = Drawing.Color.FromRgb (0, 1, 0);
 				pport.PaintText (40, 160, "X", font_2, 100.0, false);
-				port.Color = Drawing.Color.FromRGB (1, 1, 0);
+				port.Color = Drawing.Color.FromRgb (1, 1, 0);
 				pport.PaintText (40, 160, "Y", font_3, 100.0, false);
 #endif
 			}

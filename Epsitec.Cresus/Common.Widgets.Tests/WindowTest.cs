@@ -78,7 +78,7 @@ namespace Epsitec.Common.Widgets
 			window.WindowActivated += new EventHandler(window_Activated);
 			window.WindowDeactivated += new EventHandler(window_Deactivated);
 			window.WindowBounds = new Rectangle (ox+10, oy+30, 50, 10);
-			window.Root.BackColor = Color.FromRGB (1, 0, 0);
+			window.Root.BackColor = Color.FromRgb (1, 0, 0);
 			window.Show ();
 		}
 
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Widgets
 			window.Name = "ToolWindow";
 			window.Owner = owner;
 			window.ClientSize = new Size (300, 50);
-			window.Root.BackColor = Color.FromRGB (1, 1, 1);
+			window.Root.BackColor = Color.FromRgb (1, 1, 1);
 			
 			Button button = new Button (window.Root);
 			button.Bounds = new Drawing.Rectangle (250, 10, 40, 20);

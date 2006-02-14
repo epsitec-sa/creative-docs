@@ -1427,8 +1427,8 @@ namespace Epsitec.Common.Document
 			this.textContext.IsPropertiesPropertyEnabled = false;
 
 			string black = RichColor.ToString(RichColor.FromBrightness(0));
-			string red = RichColor.ToString(RichColor.FromRGB(1.0, 0.0, 0.0));
-			string green = RichColor.ToString(RichColor.FromRGB(0.0, 1.0, 0.0));
+			string red = RichColor.ToString(RichColor.FromRgb(1.0, 0.0, 0.0));
+			string green = RichColor.ToString(RichColor.FromRgb(0.0, 1.0, 0.0));
 			string indentAttribute = Text.TabList.PackToAttribute(System.Globalization.RegionInfo.CurrentRegion.IsMetric ? "LevelMultiplier:10 mm" : "LevelMultiplier:0.5 in");
 			double fontSize = (this.type == DocumentType.Pictogram) ? 1.2 : 12.0;
 

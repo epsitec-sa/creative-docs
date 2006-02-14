@@ -11,8 +11,8 @@ namespace Epsitec.Common.Drawing
 			double br = 0.8;
 			
 			Color c1 = Color.FromBrightness (br);
-			Color c2 = Color.FromARGB (1.0, br, br, br);
-			Color c3 = Color.FromRGB (br, br, br);
+			Color c2 = Color.FromAlphaRgb (1.0, br, br, br);
+			Color c3 = Color.FromRgb (br, br, br);
 			Color c4 = Color.FromName ("White");
 			Color c5 = new Color (System.Drawing.Color.Empty);
 			
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Drawing
 			float b = 0.6f;
 			float a = 0.8f;
 			
-			Color color = Color.FromARGB (a, r, g, b);
+			Color color = Color.FromAlphaRgb (a, r, g, b);
 			
 			Assert.IsTrue (color.A == a);
 			Assert.IsTrue (color.R == r);
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Drawing
 		
 		[Test] public void CheckRanges()
 		{
-			Color color = Color.FromARGB (1.8, 0.5, -0.1, 10);
+			Color color = Color.FromAlphaRgb (1.8, 0.5, -0.1, 10);
 			
 			Assert.IsTrue (color.IsValid);
 			Assert.IsTrue (color.IsInRange == false);
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Drawing
 		
 		[Test] public void CheckFromNameAndHexa()
 		{
-			Color color_1 = Color.FromARGB (1, 1, 0, 0);
+			Color color_1 = Color.FromAlphaRgb (1, 1, 0, 0);
 			Color color_2 = Color.FromName ("red");
 			Color color_3 = Color.FromName ("#ff0000");
 			Color color_4 = Color.FromName ("#blabla");
@@ -119,126 +119,126 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 
-		[Test] public void CheckHSVConvert()
+		[Test] public void CheckHsvConvert()
 		{
 			Color c1, c2;
 			double h,s,v;
 
 			//	rouge
-			c1 = Color.FromRGB(1.0, 0.0, 0.0);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(1.0, 0.0, 0.0);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
 			Assert.IsTrue(s == 1.0);
 			Assert.IsTrue(v == 1.0);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	jaune
-			c1 = Color.FromRGB(1.0, 1.0, 0.0);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(1.0, 1.0, 0.0);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 60.0);
 			Assert.IsTrue(s == 1.0);
 			Assert.IsTrue(v == 1.0);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	vert
-			c1 = Color.FromRGB(0.0, 1.0, 0.0);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(0.0, 1.0, 0.0);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 120.0);
 			Assert.IsTrue(s == 1.0);
 			Assert.IsTrue(v == 1.0);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	cyan
-			c1 = Color.FromRGB(0.0, 1.0, 1.0);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(0.0, 1.0, 1.0);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 180.0);
 			Assert.IsTrue(s == 1.0);
 			Assert.IsTrue(v == 1.0);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	bleu
-			c1 = Color.FromRGB(0.0, 0.0, 1.0);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(0.0, 0.0, 1.0);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 240.0);
 			Assert.IsTrue(s == 1.0);
 			Assert.IsTrue(v == 1.0);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	magenta
-			c1 = Color.FromRGB(1.0, 0.0, 1.0);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(1.0, 0.0, 1.0);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 300.0);
 			Assert.IsTrue(s == 1.0);
 			Assert.IsTrue(v == 1.0);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	rose
-			c1 = Color.FromRGB(1.0, 0.5, 0.5);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(1.0, 0.5, 0.5);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
 			Assert.IsTrue(s == 0.5);
 			Assert.IsTrue(v == 1.0);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	brun-rouge
-			c1 = Color.FromRGB(0.5, 0.0, 0.0);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(0.5, 0.0, 0.0);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
 			Assert.IsTrue(s == 1.0);
 			Assert.IsTrue(v == 0.5);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	brun
-			c1 = Color.FromRGB(0.5, 0.25, 0.25);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(0.5, 0.25, 0.25);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
 			Assert.IsTrue(s == 0.5);
 			Assert.IsTrue(v == 0.5);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	gris
-			c1 = Color.FromRGB(0.5, 0.5, 0.5);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(0.5, 0.5, 0.5);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
 			Assert.IsTrue(s == 0.0);
 			Assert.IsTrue(v == 0.5);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	blanc
-			c1 = Color.FromRGB(1.0, 1.0, 1.0);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(1.0, 1.0, 1.0);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
 			Assert.IsTrue(s == 0.0);
 			Assert.IsTrue(v == 1.0);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	noir
-			c1 = Color.FromRGB(0.0, 0.0, 0.0);
-			c1.GetHSV(out h, out s, out v);
+			c1 = Color.FromRgb(0.0, 0.0, 0.0);
+			c1.GetHsv(out h, out s, out v);
 			Assert.IsTrue(h == 0.0);
 			Assert.IsTrue(s == 0.0);
 			Assert.IsTrue(v == 0.0);
-			c2 = Color.FromHSV(h,s,v);
+			c2 = Color.FromHsv(h,s,v);
 			Assert.IsTrue(c1 == c2);
 
 			//	jaune
-			c1 = Color.FromHSV(60+360,1,1);
+			c1 = Color.FromHsv(60+360,1,1);
 			Assert.IsTrue(c1.R == 1.0);
 			Assert.IsTrue(c1.G == 1.0);
 			Assert.IsTrue(c1.B == 0.0);
 
-			c1 = Color.FromHSV(60-360,1,1);
+			c1 = Color.FromHsv(60-360,1,1);
 			Assert.IsTrue(c1.R == 1.0);
 			Assert.IsTrue(c1.G == 1.0);
 			Assert.IsTrue(c1.B == 0.0);

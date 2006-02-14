@@ -127,8 +127,8 @@ namespace Epsitec.Common.Widgets
 			path.CurveTo (0, 0, 5, 0);
 			path.Close ();
 			
-			Color color_text = this.IsFocused ? Color.FromRGB (0.0, 0.0, 0.5) : Color.FromRGB (0.0, 0.0, 0.0);
-			Color color_back = this.IsFocused ? Color.FromRGB (0.8, 0.8, 1.0) : Color.FromRGB (1.0, 1.0, 1.0);
+			Color color_text = this.IsFocused ? Color.FromRgb (0.0, 0.0, 0.5) : Color.FromRgb (0.0, 0.0, 0.0);
+			Color color_back = this.IsFocused ? Color.FromRgb (0.8, 0.8, 1.0) : Color.FromRgb (1.0, 1.0, 1.0);
 			
 			graphics.SolidRenderer.Color = color_back;
 			graphics.Rasterizer.AddSurface (path);
@@ -147,21 +147,21 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.ActiveState == ActiveState.Yes)
 			{
-				graphics.SolidRenderer.Color = Color.FromRGB (1.0, 0, 0);
+				graphics.SolidRenderer.Color = Color.FromRgb (1.0, 0, 0);
 				graphics.AddText (2, 2, dx-4, dy-4, "A", font, size, ContentAlignment.MiddleRight);
 				graphics.RenderSolid ();
 			}
 			
 			if (this.IsEngaged)
 			{
-				graphics.SolidRenderer.Color = Color.FromRGB (0, 0, 1.0);
+				graphics.SolidRenderer.Color = Color.FromRgb (0, 0, 1.0);
 				graphics.AddText (2, 2, dx-4, dy-4, "E  ", font, size, ContentAlignment.MiddleRight);
 				graphics.RenderSolid ();
 			}
 			
 			if (this.IsSelected)
 			{
-				graphics.SolidRenderer.Color = Color.FromRGB (0, 0.5, 0);
+				graphics.SolidRenderer.Color = Color.FromRgb (0, 0.5, 0);
 				graphics.AddText (2, 2, dx-4, dy-4, "S    ", font, size, ContentAlignment.MiddleRight);
 				graphics.RenderSolid ();
 			}

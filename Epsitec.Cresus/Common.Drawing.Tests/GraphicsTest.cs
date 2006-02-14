@@ -302,7 +302,7 @@ namespace Epsitec.Common.Drawing
 			
 			font = Font.GetFont ("Times New Roman", "Italic");
 			
-			e.Graphics.SolidRenderer.Color = Color.FromRGB (0, 0, 0);
+			e.Graphics.SolidRenderer.Color = Color.FromRgb (0, 0, 0);
 			e.Graphics.PaintText (10, 60, "Hello, world. 14pt", font, 14.0);
 			e.Graphics.PaintText (10, 50, "Hello, world. 13pt", font, 13.0);
 			e.Graphics.PaintText (10, 40, "Hello, world. 12pt", font, 12.0);
@@ -339,13 +339,13 @@ namespace Epsitec.Common.Drawing
 					}
 				}
 				
-				e.Graphics.SolidRenderer.Color = Color.FromRGB (0, 0, 0);
+				e.Graphics.SolidRenderer.Color = Color.FromRgb (0, 0, 0);
 				e.Graphics.PaintText (10, y, text, font, font_size, text_infos);
 				e.Graphics.LineWidth = 0.8;
 				e.Graphics.AddLine (10, y, 10, y+10);
 				e.Graphics.AddLine (10 + text_width, y, 10 + text_width, y+10);
 				e.Graphics.AddLine (10 + line_width, y, 10 + line_width, y+10);
-				e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+				e.Graphics.RenderSolid (Color.FromRgb (1, 0, 0));
 				
 				y += font_size;
 				line_width += 5;
@@ -540,7 +540,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddSurface (path2);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
-			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+			e.Graphics.RenderSolid (Color.FromRgb (1, 0, 0));
 		}
 		
 		private void CheckPixmapRawData_PaintForeground(object sender, PaintEventArgs e)
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Drawing
 			
 			Graphics gfx = new Graphics ();
 			gfx.SetPixmapSize (40, 40)	;
-			gfx.SolidRenderer.Color = Color.FromRGB (1, 0.2, 0);
+			gfx.SolidRenderer.Color = Color.FromRgb (1, 0.2, 0);
 			gfx.PaintText (2, 8, "@", Font.DefaultFont, 40);
 			
 			using (Pixmap.RawData src = new Pixmap.RawData (gfx.Pixmap))
@@ -608,7 +608,7 @@ namespace Epsitec.Common.Drawing
 			path4.Append (path2);
 			path4.AddDash (0.5, 0.5);
 			
-			e.Graphics.SmoothRenderer.Color = Color.FromRGB (0, 0, 1);
+			e.Graphics.SmoothRenderer.Color = Color.FromRgb (0, 0, 1);
 			e.Graphics.SmoothRenderer.SetParameters (1, 1);
 			e.Graphics.SmoothRenderer.AddPath (path1);
 			e.Graphics.SmoothRenderer.AddPath (path2);
@@ -623,13 +623,13 @@ namespace Epsitec.Common.Drawing
 				e.Graphics.Rasterizer.AddOutline (dashed, 0.2);
 			}
 			
-			e.Graphics.RenderSolid (Color.FromRGB (0, 1, 0));
+			e.Graphics.RenderSolid (Color.FromRgb (0, 1, 0));
 			
 			
 			e.Graphics.RotateTransformDeg (15, cx/10, cy/10);
 			e.Graphics.TranslateTransform (5, 2);
 			
-			e.Graphics.SmoothRenderer.Color = Color.FromARGB (0.5, 1, 0, 0);
+			e.Graphics.SmoothRenderer.Color = Color.FromAlphaRgb (0.5, 1, 0, 0);
 			e.Graphics.SmoothRenderer.SetParameters (1, 1);
 			e.Graphics.SmoothRenderer.AddPath (path1);
 			e.Graphics.SmoothRenderer.AddPath (path2);
@@ -662,7 +662,7 @@ namespace Epsitec.Common.Drawing
 				path.Close ();
 				
 				mask.Rasterizer.AddSurface (path);
-				mask.RenderSolid (Color.FromRGB (i/200.0, 0, 0));
+				mask.RenderSolid (Color.FromRgb (i/200.0, 0, 0));
 			}
 			
 			e.Graphics.AddText (10, 10, "AAAAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
@@ -671,13 +671,13 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.AddText (10,130, "AAAAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
 			e.Graphics.AddText (10,170, "AAAAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
 			e.Graphics.AddText (10,210, "AAAAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
-			e.Graphics.RenderSolid (Color.FromRGB (1, 0.5, 0));
+			e.Graphics.RenderSolid (Color.FromRgb (1, 0.5, 0));
 			e.Graphics.SolidRenderer.SetAlphaMask (mask.Pixmap, MaskComponent.R);
 			e.Graphics.AddText (30, 30, "A!!", Font.GetFont ("Tahoma", "Regular"), 250);
-			e.Graphics.RenderSolid (Color.FromARGB (1.0, 0, 0, 1));
+			e.Graphics.RenderSolid (Color.FromAlphaRgb (1.0, 0, 0, 1));
 			e.Graphics.SolidRenderer.SetAlphaMask (null, MaskComponent.None);
 			e.Graphics.AddText (-30, 50, "|", Font.GetFont ("Tahoma", "Regular"), 250);
-			e.Graphics.RenderSolid (Color.FromARGB (1.0, 0, 1, 0));
+			e.Graphics.RenderSolid (Color.FromAlphaRgb (1.0, 0, 1, 0));
 			
 			mask.Dispose ();
 		}
@@ -705,15 +705,15 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.RotateTransformDeg (15, cx/10, cy/10);
 			
 			e.Graphics.Rasterizer.AddOutline (path2, 1.8, CapStyle.Round, JoinStyle.Miter, 5.0);
-			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+			e.Graphics.RenderSolid (Color.FromRgb (1, 0, 0));
 			
 			e.Graphics.TranslateTransform (20, 2);
 			e.Graphics.Rasterizer.AddSurface (path2);
-			e.Graphics.RenderSolid (Color.FromRGB (1, 1, 0));
+			e.Graphics.RenderSolid (Color.FromRgb (1, 1, 0));
 			
 			path3.Append (path2, 10, -2);
 			e.Graphics.Rasterizer.AddSurface (path3);
-			e.Graphics.RenderSolid (Color.FromARGB (0.5, 0, 1, 0));
+			e.Graphics.RenderSolid (Color.FromAlphaRgb (0.5, 0, 1, 0));
 		}
 		
 		private void MultiPath_PaintForeground(object sender, PaintEventArgs e)
@@ -742,7 +742,7 @@ namespace Epsitec.Common.Drawing
 			path1.Append (path2);
 			
 			e.Graphics.Rasterizer.AddOutline (path1, 2, CapStyle.Round, JoinStyle.Miter, 5.0);
-			e.Graphics.RenderSolid (Color.FromRGB (0, 0, 0));
+			e.Graphics.RenderSolid (Color.FromRgb (0, 0, 0));
 		}
 		
 		private void NonZeroFill_PaintForeground(object sender, PaintEventArgs e)
@@ -788,7 +788,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddSurface (path2);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
-			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+			e.Graphics.RenderSolid (Color.FromRgb (1, 0, 0));
 			
 			e.Graphics.Transform = t;
 		}
@@ -838,7 +838,7 @@ namespace Epsitec.Common.Drawing
 			g.Rasterizer.AddSurface (path2);
 			g.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 			g.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
-			g.RenderSolid (Color.FromRGB (1, 0, 0));
+			g.RenderSolid (Color.FromRgb (1, 0, 0));
 			
 			foreach (Path path in r.GetPaths ())
 			{
@@ -846,7 +846,7 @@ namespace Epsitec.Common.Drawing
 				System.Console.WriteLine (path.ToString ());
 			}
 			
-			e.Graphics.RenderSolid (Color.FromRGB (0, 0, 1));
+			e.Graphics.RenderSolid (Color.FromRgb (0, 0, 1));
 		}
 		
 		private void PathAppend_PaintForeground(object sender, PaintEventArgs e)
@@ -956,7 +956,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddSurface (path2);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
-			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+			e.Graphics.RenderSolid (Color.FromRgb (1, 0, 0));
 			e.Graphics.ResetClippingRectangle ();
 			e.Graphics.Transform = t;
 			
@@ -967,11 +967,11 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.AddFilledRectangle (r1);
 			e.Graphics.AddFilledRectangle (r2);
 			e.Graphics.AddFilledRectangle (r3);
-			e.Graphics.RenderSolid (Color.FromRGB (0, 1, 0));
+			e.Graphics.RenderSolid (Color.FromRgb (0, 1, 0));
 			
 			e.Graphics.SetClippingRectangles (new Rectangle[] { r2, r1, r3 });
 			e.Graphics.AddText (0, root.Client.Height - 50, "AAAAAAAAAAAAAAAAAAA", font, 70);
-			e.Graphics.RenderSolid (Color.FromRGB (0, 0, 1));
+			e.Graphics.RenderSolid (Color.FromRgb (0, 0, 1));
 		}
 		
 		private void Transform_PaintForeground(object sender, PaintEventArgs e)
@@ -1015,10 +1015,10 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddSurface (path2);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
-			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+			e.Graphics.RenderSolid (Color.FromRgb (1, 0, 0));
 			
 			e.Graphics.AddText (0, cy + 10, root.Client.Width, 20, "The quick brown fox jumps over the lazy dog !", font, 12, ContentAlignment.BottomCenter);
-			e.Graphics.RenderSolid (Color.FromRGB (0, 0, 0.4));
+			e.Graphics.RenderSolid (Color.FromRgb (0, 0, 0.4));
 		}
 		
 		private void LineCaps_PaintForeground(object sender, PaintEventArgs e)
@@ -1118,7 +1118,7 @@ namespace Epsitec.Common.Drawing
 				r[i] = 0.5 + sin1*sin1 * 0.3;
 				g[i] = 0.5 + sin2*sin2 * 0.3;
 				b[i] = 1.0;
-				Color.ConvertHSVtoRGB (i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
+				Color.ConvertHsvToRgb (i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
 				a[i] = 1.0;
 			}
 			
@@ -1175,7 +1175,7 @@ namespace Epsitec.Common.Drawing
 			
 			for (int i = 0 ; i < 256 ; i++)
 			{
-				Color.ConvertHSVtoRGB (i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
+				Color.ConvertHsvToRgb (i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
 				a[i] = 1.0;
 			}
 			
@@ -1184,7 +1184,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.GradientRenderer.Fill = Epsitec.Common.Drawing.GradientFill.Conic;
 			e.Graphics.GradientRenderer.SetParameters (0, 200);
 			e.Graphics.GradientRenderer.SetColors (r, g, b, a);
-			//e.Graphics.GradientRenderer.SetColors (Color.FromRGB(1,0,0), Color.FromRGB(0,0,1));
+			//e.Graphics.GradientRenderer.SetColors (Color.FromRgb(1,0,0), Color.FromRgb(0,0,1));
 			
 			Transform t = new Transform ();
 			t.Translate (cx, cy);
@@ -1214,7 +1214,7 @@ namespace Epsitec.Common.Drawing
 			//e.Graphics.RenderSolid(Color.FromBrightness(0));
 
 			e.Graphics.FillMode = FillMode.NonZero;
-			e.Graphics.GradientRenderer.SetColors(Color.FromRGB(1,0,0), Color.FromRGB(0,0,1));
+			e.Graphics.GradientRenderer.SetColors(Color.FromRgb(1,0,0), Color.FromRgb(0,0,1));
 
 			Transform ot = e.Graphics.GradientRenderer.Transform;
 			Transform t = new Transform();
@@ -1279,9 +1279,9 @@ namespace Epsitec.Common.Drawing
 				x += width;
 			}
 			
-			e.Graphics.Color = Color.FromRGB (1.0, 1.0, 1.0);
+			e.Graphics.Color = Color.FromRgb (1.0, 1.0, 1.0);
 			e.Graphics.PaintSurface (Path.FromRectangle (cx-120, cy+20, 120, 40));
-			e.Graphics.Color = Color.FromRGB (0.5, 0.5, 0.5);
+			e.Graphics.Color = Color.FromRgb (0.5, 0.5, 0.5);
 			e.Graphics.PaintSurface (Path.FromRectangle (cx+0, cy+20, 120, 40));
 			
 			Graphics draft_graphics = new Graphics ();
@@ -1291,21 +1291,21 @@ namespace Epsitec.Common.Drawing
 			Pixmap draft_pixmap = draft_graphics.Pixmap;
 			Image  draft_bitmap = Bitmap.FromPixmap (draft_pixmap);
 			
-			draft_graphics.SolidRenderer.ClearARGB (0.0, 1.0, 1.0, 1.0);
-			draft_graphics.Color     = Color.FromRGB (0, 0, 0.6);
+			draft_graphics.SolidRenderer.ClearAlphaRgb (0.0, 1.0, 1.0, 1.0);
+			draft_graphics.Color     = Color.FromRgb (0, 0, 0.6);
 			draft_graphics.LineWidth = 3.0;
 			draft_graphics.PaintOutline (Path.FromCircle (20, 20, 15, 10));
 			
 			e.Graphics.PaintImage (draft_bitmap, cx-120, cy+20, 40, 40, 0, 0, 40, 40);
 			e.Graphics.PaintImage (draft_bitmap, cx+0,  cy+20, 40, 40, 0, 0, 40, 40);
 			
-			draft_graphics.Color     = Color.FromRGB (1.0, 1.0, 1.0);
+			draft_graphics.Color     = Color.FromRgb (1.0, 1.0, 1.0);
 			draft_graphics.PaintSurface (Path.FromCircle (20, 20, 5, 5));
 			
 			e.Graphics.PaintImage (draft_bitmap, cx-80, cy+20, 40, 40, 0, 0, 40, 40);
 			e.Graphics.PaintImage (draft_bitmap, cx+40, cy+20, 40, 40, 0, 0, 40, 40);
 			
-			draft_graphics.Color     = Color.FromARGB (0.5, 1.0, 0, 0);
+			draft_graphics.Color     = Color.FromAlphaRgb (0.5, 1.0, 0, 0);
 			draft_graphics.PaintSurface (Path.FromCircle (20, 20, 10, 15));
 			
 			e.Graphics.PaintImage (draft_bitmap, cx-40, cy+20, 40, 40, 0, 0, 40, 40);
@@ -1397,10 +1397,10 @@ namespace Epsitec.Common.Drawing
 			int dy = (int) root.Height;
 			
 			e.Graphics.SolidRenderer.Clear4Colors (10, 10, dx - 20, dy - 20,
-				Color.FromRGB (0.75, 0, 0),
-				Color.FromRGB (0.75, 0, 1),
-				Color.FromRGB (0.75, 1, 1),
-				Color.FromRGB (0.75, 1, 0));
+				Color.FromRgb (0.75, 0, 0),
+				Color.FromRgb (0.75, 0, 1),
+				Color.FromRgb (0.75, 1, 1),
+				Color.FromRgb (0.75, 1, 0));
 		}
 		
 	}

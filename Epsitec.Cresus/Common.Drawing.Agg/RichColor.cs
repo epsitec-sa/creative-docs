@@ -183,15 +183,15 @@ namespace Epsitec.Common.Drawing
 				switch (this.colorSpace)
 				{
 					case ColorSpace.Rgb:
-						return Color.FromARGB(this.alpha, this.value1, this.value2, this.value3);
+						return Color.FromAlphaRgb(this.alpha, this.value1, this.value2, this.value3);
 
 					case ColorSpace.Cmyk:
 						RichColor.CmykToRgb(this.value1, this.value2, this.value3, this.value4, out r, out g, out b);
-						return Color.FromARGB(this.alpha, r, g, b);
+						return Color.FromAlphaRgb(this.alpha, r, g, b);
 
 					case ColorSpace.Gray:
 						RichColor.GrayToRgb(this.value1, out r, out g, out b);
-						return Color.FromARGB(this.alpha, r, g, b);
+						return Color.FromAlphaRgb(this.alpha, r, g, b);
 				}
 
 				return Color.Empty;
@@ -783,12 +783,12 @@ namespace Epsitec.Common.Drawing
 			return new RichColor(color.A*alpha, color.R, color.G, color.B);
 		}
 		
-		public static RichColor FromARGB(double a, double r, double g, double b)
+		public static RichColor FromAlphaRgb(double a, double r, double g, double b)
 		{
 			return new RichColor(a, r, g, b);
 		}
 		
-		public static RichColor FromRGB(double r, double g, double b)
+		public static RichColor FromRgb(double r, double g, double b)
 		{
 			return new RichColor(r, g, b);
 		}
@@ -798,26 +798,26 @@ namespace Epsitec.Common.Drawing
 			return new RichColor(brightness);
 		}
 		
-		public static RichColor FromHSV(double h, double s, double v)
+		public static RichColor FromHsv(double h, double s, double v)
 		{
 			double r,g,b;
-			Color.ConvertHSVtoRGB(h,s,v, out r, out g, out b);
+			Color.ConvertHsvToRgb(h,s,v, out r, out g, out b);
 			return new RichColor(r, g, b);
 		}
 
-		public static RichColor FromAHSV(double a, double h, double s, double v)
+		public static RichColor FromAlphaHsv(double a, double h, double s, double v)
 		{
-			RichColor color = RichColor.FromHSV(h, s, v);
+			RichColor color = RichColor.FromHsv(h, s, v);
 			color.A = a;
 			return color;
 		}
 		
-		public static RichColor FromACMYK(double a, double c, double m, double y, double k)
+		public static RichColor FromAlphaCmyk(double a, double c, double m, double y, double k)
 		{
 			return new RichColor(a, c, m, y, k);
 		}
 		
-		public static RichColor FromCMYK(double c, double m, double y, double k)
+		public static RichColor FromCmyk(double c, double m, double y, double k)
 		{
 			RichColor color = new RichColor();
 
@@ -890,7 +890,7 @@ namespace Epsitec.Common.Drawing
 					byte r = System.Convert.ToByte(hexa.Substring(0, 2), 16);
 					byte g = System.Convert.ToByte(hexa.Substring(2, 2), 16);
 					byte b = System.Convert.ToByte(hexa.Substring(4, 2), 16);
-					return RichColor.FromRGB(r/255.0, g/255.0, b/255.0);
+					return RichColor.FromRgb(r/255.0, g/255.0, b/255.0);
 				}
 
 				if (hexa.Length == 8)  // cmyk ?
@@ -899,7 +899,7 @@ namespace Epsitec.Common.Drawing
 					byte m = System.Convert.ToByte(hexa.Substring(2, 2), 16);
 					byte y = System.Convert.ToByte(hexa.Substring(4, 2), 16);
 					byte k = System.Convert.ToByte(hexa.Substring(6, 2), 16);
-					return RichColor.FromCMYK(c/255.0, m/255.0, y/255.0, k/255.0);
+					return RichColor.FromCmyk(c/255.0, m/255.0, y/255.0, k/255.0);
 				}
 
 				if (hexa.Length == 2)  // gray ?
@@ -1002,28 +1002,28 @@ namespace Epsitec.Common.Drawing
 				case "RGB":
 					if (args.Length == 4)
 					{
-						return RichColor.FromARGB (1.0, Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]));
+						return RichColor.FromAlphaRgb (1.0, Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]));
 					}
 					break;
 				
 				case "αRGB":
 					if (args.Length == 5)
 					{
-						return RichColor.FromARGB (Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]), Color.ColorComponentToDouble (args[4]));
+						return RichColor.FromAlphaRgb (Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]), Color.ColorComponentToDouble (args[4]));
 					}
 					break;
 				
 				case "CMYK":
 					if (args.Length == 5)
 					{
-						return RichColor.FromACMYK (1.0, Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]), Color.ColorComponentToDouble (args[4]));
+						return RichColor.FromAlphaCmyk (1.0, Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]), Color.ColorComponentToDouble (args[4]));
 					}
 					break;
 				
 				case "αCMYK":
 					if (args.Length == 6)
 					{
-						return RichColor.FromACMYK (Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]), Color.ColorComponentToDouble (args[4]), Color.ColorComponentToDouble (args[5]));
+						return RichColor.FromAlphaCmyk (Color.ColorComponentToDouble (args[1]), Color.ColorComponentToDouble (args[2]), Color.ColorComponentToDouble (args[3]), Color.ColorComponentToDouble (args[4]), Color.ColorComponentToDouble (args[5]));
 					}
 					break;
 			}

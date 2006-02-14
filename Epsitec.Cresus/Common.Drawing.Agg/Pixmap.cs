@@ -309,7 +309,7 @@ namespace Epsitec.Common.Drawing
 						b = ptr[0];
 					}
 					
-					return Color.FromARGB (a / 255.0, r / 255.0, g / 255.0, b / 255.0);
+					return Color.FromAlphaRgb (a / 255.0, r / 255.0, g / 255.0, b / 255.0);
 				}
 				set
 				{

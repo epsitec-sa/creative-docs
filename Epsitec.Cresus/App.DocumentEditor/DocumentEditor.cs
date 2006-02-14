@@ -2587,14 +2587,14 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.AdjustSelection(false);
 		}
 
-		[Command ("ColorToRGB")]
-		void CommandColorToRGB(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("ColorToRgb")]
+		void CommandColorToRgb(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.ColorSelection(ColorSpace.Rgb);
 		}
 
-		[Command ("ColorToCMYK")]
-		void CommandColorToCMYK(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("ColorToCmyk")]
+		void CommandColorToCmyk(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.ColorSelection(ColorSpace.Cmyk);
 		}
@@ -3670,8 +3670,8 @@ namespace Epsitec.App.DocumentEditor
 			this.adjustWidthState = this.CreateCommandState("AdjustWidth");
 			this.adjustHeightState = this.CreateCommandState("AdjustHeight");
 			
-			this.colorToRGBState = this.CreateCommandState("ColorToRGB");
-			this.colorToCMYKState = this.CreateCommandState("ColorToCMYK");
+			this.colorToRgbState = this.CreateCommandState("ColorToRgb");
+			this.colorToCmykState = this.CreateCommandState("ColorToCmyk");
 			this.colorToGrayState = this.CreateCommandState("ColorToGray");
 			this.colorStrokeDarkState = this.CreateCommandState("ColorStrokeDark");
 			this.colorStrokeLightState = this.CreateCommandState("ColorStrokeLight");
@@ -4212,8 +4212,8 @@ namespace Epsitec.App.DocumentEditor
 				this.shareBottomState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
 				this.adjustWidthState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.adjustHeightState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.colorToRGBState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.colorToCMYKState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorToRgbState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorToCmykState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.colorToGrayState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.colorStrokeDarkState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.colorStrokeLightState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
@@ -4363,8 +4363,8 @@ namespace Epsitec.App.DocumentEditor
 				this.shareBottomState.Enable = false;
 				this.adjustWidthState.Enable = false;
 				this.adjustHeightState.Enable = false;
-				this.colorToRGBState.Enable = false;
-				this.colorToCMYKState.Enable = false;
+				this.colorToRgbState.Enable = false;
+				this.colorToCmykState.Enable = false;
 				this.colorToGrayState.Enable = false;
 				this.colorStrokeDarkState.Enable = false;
 				this.colorStrokeLightState.Enable = false;
@@ -5731,8 +5731,8 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					shareBottomState;
 		protected CommandState					adjustWidthState;
 		protected CommandState					adjustHeightState;
-		protected CommandState					colorToRGBState;
-		protected CommandState					colorToCMYKState;
+		protected CommandState					colorToRgbState;
+		protected CommandState					colorToCmykState;
 		protected CommandState					colorToGrayState;
 		protected CommandState					colorStrokeDarkState;
 		protected CommandState					colorStrokeLightState;

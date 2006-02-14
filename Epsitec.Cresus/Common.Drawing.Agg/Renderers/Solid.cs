@@ -63,16 +63,16 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 			if (color.IsValid)
 			{
-				this.ClearARGB (color.A, color.R, color.G, color.B);
+				this.ClearAlphaRgb (color.A, color.R, color.G, color.B);
 			}
 		}
 		
 		public void Clear(double r, double g, double b)
 		{
-			this.ClearARGB (1, r, g, b);
+			this.ClearAlphaRgb (1, r, g, b);
 		}
 		
-		public void ClearARGB(double a, double r, double g, double b)
+		public void ClearAlphaRgb(double a, double r, double g, double b)
 		{
 			if (this.agg_ren == System.IntPtr.Zero)
 			{
@@ -97,20 +97,20 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 			if (color.IsEmpty)
 			{
-				this.SetColorARGB (0, 0, 0, 0);
+				this.SetColorAlphaRgb (0, 0, 0, 0);
 			}
 			else
 			{
-				this.SetColorARGB (color.A, color.R, color.G, color.B);
+				this.SetColorAlphaRgb (color.A, color.R, color.G, color.B);
 			}
 		}
 		
 		public void SetColor(double r, double g, double b)
 		{
-			this.SetColorARGB (1, r, g, b);
+			this.SetColorAlphaRgb (1, r, g, b);
 		}
 		
-		public void SetColorARGB(double a, double r, double g, double b)
+		public void SetColorAlphaRgb(double a, double r, double g, double b)
 		{
 			if (this.agg_ren == System.IntPtr.Zero)
 			{

@@ -38,7 +38,7 @@ namespace Epsitec.Common.Widgets
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 255;
 					this.fields[i].Step = 10;
-					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextRGBChanged);
+					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextRgbChanged);
 				}
 				else if ( i == 3 )  // a ?
 				{
@@ -52,21 +52,21 @@ namespace Epsitec.Common.Widgets
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 360;
 					this.fields[i].Step = 10;
-					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextHSVChanged);
+					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextHsvChanged);
 				}
 				else if ( i < 7 )  // s,i ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextHSVChanged);
+					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextHsvChanged);
 				}
 				else if ( i< 11 )  // c,m,y,k ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextCMYKChanged);
+					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextCmykChanged);
 				}
 				else	// g ?
 				{
@@ -91,42 +91,42 @@ namespace Epsitec.Common.Widgets
 			this.fields[11].TabIndex = index++;
 			this.fields[ 3].TabIndex = index++;
 
-			this.fields[0].Color = Drawing.Color.FromRGB(1,0,0);  // r
-			this.fields[1].Color = Drawing.Color.FromRGB(0,1,0);  // v
-			this.fields[2].Color = Drawing.Color.FromRGB(0,0,1);  // b
-			this.fields[3].Color = Drawing.Color.FromRGB(0.5,0.5,0.5);
+			this.fields[0].Color = Drawing.Color.FromRgb(1,0,0);  // r
+			this.fields[1].Color = Drawing.Color.FromRgb(0,1,0);  // v
+			this.fields[2].Color = Drawing.Color.FromRgb(0,0,1);  // b
+			this.fields[3].Color = Drawing.Color.FromRgb(0.5,0.5,0.5);
 			ToolTip.Default.SetToolTip(this.fields[0], Res.Strings.ColorSelector.LongRed);
 			ToolTip.Default.SetToolTip(this.fields[1], Res.Strings.ColorSelector.LongGreen);
 			ToolTip.Default.SetToolTip(this.fields[2], Res.Strings.ColorSelector.LongBlue);
 			ToolTip.Default.SetToolTip(this.fields[3], Res.Strings.ColorSelector.LongAlpha);
 
 			this.fields[4].TextSuffix = "\u00B0";  // symbole unicode "degré" (#176)
-			this.fields[4].Color = Drawing.Color.FromRGB(0,0,0);
-			this.fields[4].BackColor = Drawing.Color.FromRGB(0.5,0.5,0.5);
+			this.fields[4].Color = Drawing.Color.FromRgb(0,0,0);
+			this.fields[4].BackColor = Drawing.Color.FromRgb(0.5,0.5,0.5);
 			ToolTip.Default.SetToolTip(this.fields[4], Res.Strings.ColorSelector.LongHue);
 
 			this.fields[5].TextSuffix = "%";
-			this.fields[5].Color = Drawing.Color.FromRGB(0,0,0);
-			this.fields[5].BackColor = Drawing.Color.FromRGB(1,1,1);
+			this.fields[5].Color = Drawing.Color.FromRgb(0,0,0);
+			this.fields[5].BackColor = Drawing.Color.FromRgb(1,1,1);
 			ToolTip.Default.SetToolTip(this.fields[5], Res.Strings.ColorSelector.LongSaturation);
 			
 			this.fields[6].TextSuffix = "%";
-			this.fields[6].Color = Drawing.Color.FromRGB(1,1,1);
-			this.fields[6].BackColor = Drawing.Color.FromRGB(0,0,0);
+			this.fields[6].Color = Drawing.Color.FromRgb(1,1,1);
+			this.fields[6].BackColor = Drawing.Color.FromRgb(0,0,0);
 			ToolTip.Default.SetToolTip(this.fields[6], Res.Strings.ColorSelector.LongValue);
 
-			this.fields[ 7].Color = Drawing.Color.FromRGB(0,1,1);  // c
-			this.fields[ 8].Color = Drawing.Color.FromRGB(1,0,1);  // m
-			this.fields[ 9].Color = Drawing.Color.FromRGB(1,1,0);  // y
-			this.fields[10].Color = Drawing.Color.FromRGB(0,0,0);  // k
-			this.fields[10].BackColor = Drawing.Color.FromRGB(1,1,1);
+			this.fields[ 7].Color = Drawing.Color.FromRgb(0,1,1);  // c
+			this.fields[ 8].Color = Drawing.Color.FromRgb(1,0,1);  // m
+			this.fields[ 9].Color = Drawing.Color.FromRgb(1,1,0);  // y
+			this.fields[10].Color = Drawing.Color.FromRgb(0,0,0);  // k
+			this.fields[10].BackColor = Drawing.Color.FromRgb(1,1,1);
 			ToolTip.Default.SetToolTip(this.fields[ 7], Res.Strings.ColorSelector.LongCyan);
 			ToolTip.Default.SetToolTip(this.fields[ 8], Res.Strings.ColorSelector.LongMagenta);
 			ToolTip.Default.SetToolTip(this.fields[ 9], Res.Strings.ColorSelector.LongYellow);
 			ToolTip.Default.SetToolTip(this.fields[10], Res.Strings.ColorSelector.LongBlack);
 
-			this.fields[11].Color = Drawing.Color.FromRGB(1,1,1);  // g
-			this.fields[11].BackColor = Drawing.Color.FromRGB(0,0,0);
+			this.fields[11].Color = Drawing.Color.FromRgb(1,1,1);  // g
+			this.fields[11].BackColor = Drawing.Color.FromRgb(0,0,0);
 			ToolTip.Default.SetToolTip(this.fields[11], Res.Strings.ColorSelector.LongGray);
 
 			this.labels[ 0].Text = Res.Strings.ColorSelector.ShortRed;
@@ -179,25 +179,25 @@ namespace Epsitec.Common.Widgets
 			this.colorSpaceController = Helpers.GroupController.GetGroupController(this, "ColorSpace");
 			this.colorSpaceController.Changed += new Support.EventHandler(this.HandleColorSpaceChanged);
 			
-			this.buttonRGB = new IconButton(this);
-			this.buttonRGB.AutoRadio = true;
-			this.buttonRGB.AutoToggle = true;
-			this.buttonRGB.Group = this.colorSpaceController.Group;
-			this.buttonRGB.Index = 1;
-			this.buttonRGB.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceRGB.icon";
-			this.buttonRGB.TabIndex = 21;
-			this.buttonRGB.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.buttonRGB, Res.Strings.ColorSelector.ColorSpace.Rgb);
+			this.buttonRgb = new IconButton(this);
+			this.buttonRgb.AutoRadio = true;
+			this.buttonRgb.AutoToggle = true;
+			this.buttonRgb.Group = this.colorSpaceController.Group;
+			this.buttonRgb.Index = 1;
+			this.buttonRgb.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceRGB.icon";
+			this.buttonRgb.TabIndex = 21;
+			this.buttonRgb.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonRgb, Res.Strings.ColorSelector.ColorSpace.Rgb);
 
-			this.buttonCMYK = new IconButton(this);
-			this.buttonCMYK.AutoRadio = true;
-			this.buttonCMYK.AutoToggle = true;
-			this.buttonCMYK.Group = this.colorSpaceController.Group;
-			this.buttonCMYK.Index = 2;
-			this.buttonCMYK.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceCMYK.icon";
-			this.buttonCMYK.TabIndex = 21;
-			this.buttonCMYK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.buttonCMYK, Res.Strings.ColorSelector.ColorSpace.Cmyk);
+			this.buttonCmyk = new IconButton(this);
+			this.buttonCmyk.AutoRadio = true;
+			this.buttonCmyk.AutoToggle = true;
+			this.buttonCmyk.Group = this.colorSpaceController.Group;
+			this.buttonCmyk.Index = 2;
+			this.buttonCmyk.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceCMYK.icon";
+			this.buttonCmyk.TabIndex = 21;
+			this.buttonCmyk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonCmyk, Res.Strings.ColorSelector.ColorSpace.Cmyk);
 
 			this.buttonGray = new IconButton(this);
 			this.buttonGray.AutoRadio = true;
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( value.IsEmpty )
 				{
-					value = Drawing.RichColor.FromARGB(0, 1,1,1);
+					value = Drawing.RichColor.FromAlphaRgb(0, 1,1,1);
 				}
 
 				if ( this.color != value )
@@ -293,9 +293,9 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Met tout à jour après un changement de couleur.
 			System.Diagnostics.Debug.Assert(this.suspendColorEvents == true);
-			this.ColorToFieldsRGB();
-			this.ColorToFieldsHSV();
-			this.ColorToFieldsCMYK();
+			this.ColorToFieldsRgb();
+			this.ColorToFieldsHsv();
+			this.ColorToFieldsCmyk();
 			this.ColorToFieldsGray();
 			this.ColorToFieldsHexa();
 			this.UpdateColorSpace();
@@ -309,16 +309,16 @@ namespace Epsitec.Common.Widgets
 			//	Met à jour les boutons pour l'espace de couleur.
 			Drawing.ColorSpace cs = this.color.ColorSpace;
 
-			this.buttonRGB .ActiveState = (cs == Drawing.ColorSpace.Rgb ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonCMYK.ActiveState = (cs == Drawing.ColorSpace.Cmyk) ? ActiveState.Yes : ActiveState.No;
+			this.buttonRgb .ActiveState = (cs == Drawing.ColorSpace.Rgb ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonCmyk.ActiveState = (cs == Drawing.ColorSpace.Cmyk) ? ActiveState.Yes : ActiveState.No;
 			this.buttonGray.ActiveState = (cs == Drawing.ColorSpace.Gray) ? ActiveState.Yes : ActiveState.No;
 		}
 
-		protected void ColorToFieldsRGB()
+		protected void ColorToFieldsRgb()
 		{
 			//	Couleur -> textes éditables.
 			double a,r,g,b;
-			this.color.Basic.GetARGB(out a, out r, out g, out b);
+			this.color.Basic.GetAlphaRgb(out a, out r, out g, out b);
 		
 			this.fields[0].Value = (decimal) System.Math.Floor(r*255+0.5);
 			this.fields[1].Value = (decimal) System.Math.Floor(g*255+0.5);
@@ -326,11 +326,11 @@ namespace Epsitec.Common.Widgets
 			this.fields[3].Value = (decimal) System.Math.Floor(a*255+0.5);
 		}
 
-		protected void ColorToFieldsHSV()
+		protected void ColorToFieldsHsv()
 		{
 			//	Couleur -> textes éditables.
 			double h,s,v;
-			this.circle.GetHSV(out h, out s, out v);
+			this.circle.GetHsv(out h, out s, out v);
 		
 			this.fields[4].Value = (decimal) System.Math.Floor(System.Math.Floor(h+0.5));
 			this.fields[5].Value = (decimal) System.Math.Floor(s*100+0.5);
@@ -339,7 +339,7 @@ namespace Epsitec.Common.Widgets
 			this.ColoriseSliders();
 		}
 
-		protected void ColorToFieldsCMYK()
+		protected void ColorToFieldsCmyk()
 		{
 			//	Couleur -> textes éditables.
 			double a = this.color.A;
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Couleur -> textes éditables.
 			double a,r,g,b;
-			this.color.Basic.GetARGB(out a, out r, out g, out b);
+			this.color.Basic.GetAlphaRgb(out a, out r, out g, out b);
 
 			r = Epsitec.Common.Math.Clip(r);
 			g = Epsitec.Common.Math.Clip(g);
@@ -384,7 +384,7 @@ namespace Epsitec.Common.Widgets
 			this.fieldHexa.SelectAll();
 		}
 
-		protected void FieldsRGBToColor()
+		protected void FieldsRgbToColor()
 		{
 			//	Textes éditables RGB -> couleur.
 			double r = (double) this.fields[0].Value/255;
@@ -394,10 +394,10 @@ namespace Epsitec.Common.Widgets
 
 			bool isc = this.suspendColorEvents;
 			this.suspendColorEvents = true;
-			this.color = Drawing.RichColor.FromARGB(a,r,g,b);
+			this.color = Drawing.RichColor.FromAlphaRgb(a,r,g,b);
 			this.circle.Color = this.color;
-			this.ColorToFieldsHSV();
-			this.ColorToFieldsCMYK();
+			this.ColorToFieldsHsv();
+			this.ColorToFieldsCmyk();
 			this.ColorToFieldsGray();
 			this.ColorToFieldsHexa();
 			this.ColoriseSliders();
@@ -406,7 +406,7 @@ namespace Epsitec.Common.Widgets
 			this.suspendColorEvents = isc;
 		}
 
-		protected void FieldsHSVToColor()
+		protected void FieldsHsvToColor()
 		{
 			//	Textes éditables HSV -> couleur.
 			double h = (double) this.fields[4].Value;
@@ -415,10 +415,10 @@ namespace Epsitec.Common.Widgets
 
 			bool isc = this.suspendColorEvents;
 			this.suspendColorEvents = true;
-			this.circle.SetHSV(h,s,v);
-			this.color = Drawing.RichColor.FromAHSV(this.color.A, h,s,v);
-			this.ColorToFieldsRGB();
-			this.ColorToFieldsCMYK();
+			this.circle.SetHsv(h,s,v);
+			this.color = Drawing.RichColor.FromAlphaHsv(this.color.A, h,s,v);
+			this.ColorToFieldsRgb();
+			this.ColorToFieldsCmyk();
 			this.ColorToFieldsGray();
 			this.ColorToFieldsHexa();
 			this.ColoriseSliders();
@@ -427,7 +427,7 @@ namespace Epsitec.Common.Widgets
 			this.suspendColorEvents = isc;
 		}
 
-		protected void FieldsCMYKToColor()
+		protected void FieldsCmykToColor()
 		{
 			//	Textes éditables CMYK -> couleur.
 			double a = (double) this.fields[ 3].Value/255;
@@ -438,10 +438,10 @@ namespace Epsitec.Common.Widgets
 
 			bool isc = this.suspendColorEvents;
 			this.suspendColorEvents = true;
-			this.color = Drawing.RichColor.FromACMYK(a,c,m,y,k);
+			this.color = Drawing.RichColor.FromAlphaCmyk(a,c,m,y,k);
 			this.circle.Color = this.color;
-			this.ColorToFieldsRGB();
-			this.ColorToFieldsHSV();
+			this.ColorToFieldsRgb();
+			this.ColorToFieldsHsv();
 			this.ColorToFieldsGray();
 			this.ColorToFieldsHexa();
 			this.ColoriseSliders();
@@ -460,9 +460,9 @@ namespace Epsitec.Common.Widgets
 			this.suspendColorEvents = true;
 			this.color = Drawing.RichColor.FromAGray(a,g);
 			this.circle.SetAGray(a,g);
-			this.ColorToFieldsRGB();
-			this.ColorToFieldsHSV();
-			this.ColorToFieldsCMYK();
+			this.ColorToFieldsRgb();
+			this.ColorToFieldsHsv();
+			this.ColorToFieldsCmyk();
 			this.ColorToFieldsHexa();
 			this.ColoriseSliders();
 			this.Invalidate();
@@ -514,11 +514,11 @@ namespace Epsitec.Common.Widgets
 			
 			bool isc = this.suspendColorEvents;
 			this.suspendColorEvents = true;
-			this.color = Drawing.RichColor.FromARGB(a,r,g,b);
+			this.color = Drawing.RichColor.FromAlphaRgb(a,r,g,b);
 			this.circle.Color = this.color;
-			this.ColorToFieldsRGB();
-			this.ColorToFieldsHSV();
-			this.ColorToFieldsCMYK();
+			this.ColorToFieldsRgb();
+			this.ColorToFieldsHsv();
+			this.ColorToFieldsCmyk();
 			this.ColorToFieldsGray();
 			this.ColoriseSliders();
 			this.Invalidate();
@@ -530,8 +530,8 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Colorise certains sliders en fonction de la couleur définie.
 			double h,s,v;
-			this.circle.GetHSV(out h, out s, out v);
-			Drawing.Color saturated = Drawing.Color.FromHSV(h,1,1);
+			this.circle.GetHsv(out h, out s, out v);
+			Drawing.Color saturated = Drawing.Color.FromHsv(h,1,1);
 
 			this.fields[4].Color = saturated;
 
@@ -561,30 +561,30 @@ namespace Epsitec.Common.Widgets
 			bool visibleCircle = ( rect.Height > 160 );
 			bool visibleFields = ( rect.Height > 3*20 );
 
-			bool visibleFieldsRGB  = visibleFields;
-			bool visibleFieldsCMYK = visibleFields;
+			bool visibleFieldsRgb  = visibleFields;
+			bool visibleFieldsCmyk = visibleFields;
 			bool visibleFieldsGray = visibleFields;
 
 			switch ( this.Color.ColorSpace )
 			{
 				case Drawing.ColorSpace.Rgb:
-					visibleFieldsCMYK = false;
+					visibleFieldsCmyk = false;
 					visibleFieldsGray = false;
 					break;
 
 				case Drawing.ColorSpace.Cmyk:
-					visibleFieldsRGB  = false;
+					visibleFieldsRgb  = false;
 					visibleFieldsGray = false;
 					break;
 				
 				case Drawing.ColorSpace.Gray:
-					visibleFieldsRGB  = false;
-					visibleFieldsCMYK = false;
+					visibleFieldsRgb  = false;
+					visibleFieldsCmyk = false;
 					break;
 				
 				default:
-					visibleFieldsRGB  = false;
-					visibleFieldsCMYK = false;
+					visibleFieldsRgb  = false;
+					visibleFieldsCmyk = false;
 					visibleFieldsGray = false;
 					break;
 			}
@@ -621,12 +621,12 @@ namespace Epsitec.Common.Widgets
 				r.Left  = 10;
 				r.Width = 12;
 				this.labels[i].Bounds = r;
-				this.labels[i].Visibility = (visibleFieldsRGB);
+				this.labels[i].Visibility = (visibleFieldsRgb);
 
 				r.Left  = r.Right;
 				r.Width = 50;
 				this.fields[i].Bounds = r;
-				this.fields[i].Visibility = (visibleFieldsRGB);
+				this.fields[i].Visibility = (visibleFieldsRgb);
 
 				r.Offset(0, -19);
 			}
@@ -638,12 +638,12 @@ namespace Epsitec.Common.Widgets
 				r.Left  = 10+70;
 				r.Width = 12;
 				this.labels[i].Bounds = r;
-				this.labels[i].Visibility = (visibleFieldsRGB);
+				this.labels[i].Visibility = (visibleFieldsRgb);
 
 				r.Left  = r.Right;
 				r.Width = 50;
 				this.fields[i].Bounds = r;
-				this.fields[i].Visibility = (visibleFieldsRGB);
+				this.fields[i].Visibility = (visibleFieldsRgb);
 
 				r.Offset(0, -19);
 			}
@@ -655,12 +655,12 @@ namespace Epsitec.Common.Widgets
 				r.Left  = 10;
 				r.Width = 12;
 				this.labels[i].Bounds = r;
-				this.labels[i].Visibility = (visibleFieldsCMYK);
+				this.labels[i].Visibility = (visibleFieldsCmyk);
 
 				r.Left  = r.Right;
 				r.Width = 50;
 				this.fields[i].Bounds = r;
-				this.fields[i].Visibility = (visibleFieldsCMYK);
+				this.fields[i].Visibility = (visibleFieldsCmyk);
 
 				r.Offset(0, -19);
 			}
@@ -670,12 +670,12 @@ namespace Epsitec.Common.Widgets
 			r.Left  = 10+70;
 			r.Width = 12;
 			this.labels[10].Bounds = r;
-			this.labels[10].Visibility = (visibleFieldsCMYK);
+			this.labels[10].Visibility = (visibleFieldsCmyk);
 
 			r.Left  = r.Right;
 			r.Width = 50;
 			this.fields[10].Bounds = r;
-			this.fields[10].Visibility = (visibleFieldsCMYK);
+			this.fields[10].Visibility = (visibleFieldsCmyk);
 
 			r.Top    = rect.Bottom+3*19;
 			r.Bottom = r.Top-20;
@@ -742,9 +742,9 @@ namespace Epsitec.Common.Widgets
 			r.Width = 14;
 			r.Bottom = rect.Top-hCircle;
 			r.Height = 14;
-			this.buttonRGB.Bounds = r;
+			this.buttonRgb.Bounds = r;
 			r.Offset(14, 0);
-			this.buttonCMYK.Bounds = r;
+			this.buttonCmyk.Bounds = r;
 			r.Offset(14, 0);
 			this.buttonGray.Bounds = r;
 		}
@@ -766,7 +766,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( i < 3 )
 					{
-						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextRGBChanged);
+						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextRgbChanged);
 					}
 					else if ( i == 3 )
 					{
@@ -774,15 +774,15 @@ namespace Epsitec.Common.Widgets
 					}
 					else if ( i == 4 )
 					{
-						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextHSVChanged);
+						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextHsvChanged);
 					}
 					else if ( i < 7 )
 					{
-						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextHSVChanged);
+						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextHsvChanged);
 					}
 					else if ( i < 11 )
 					{
-						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextCMYKChanged);
+						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextCmykChanged);
 					}
 					else
 					{
@@ -828,12 +828,12 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.Color.ColorSpace == Drawing.ColorSpace.Rgb  )
 				{
-					this.FieldsRGBToColor();
+					this.FieldsRgbToColor();
 				}
 			
 				if ( this.Color.ColorSpace == Drawing.ColorSpace.Cmyk )
 				{
-					this.FieldsCMYKToColor();
+					this.FieldsCmykToColor();
 				}
 			
 				if ( this.Color.ColorSpace == Drawing.ColorSpace.Gray )
@@ -843,30 +843,30 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void HandleTextRGBChanged(object sender)
+		private void HandleTextRgbChanged(object sender)
 		{
 			//	Une valeur RGB a été changée.
 			if ( !this.suspendColorEvents )
 			{
-				this.FieldsRGBToColor();
+				this.FieldsRgbToColor();
 			}
 		}
 
-		private void HandleTextHSVChanged(object sender)
+		private void HandleTextHsvChanged(object sender)
 		{
 			//	Une valeur HSV a été changée.
 			if ( !this.suspendColorEvents )
 			{
-				this.FieldsHSVToColor();
+				this.FieldsHsvToColor();
 			}
 		}
 
-		private void HandleTextCMYKChanged(object sender)
+		private void HandleTextCmykChanged(object sender)
 		{
 			//	Une valeur CMYK a été changée.
 			if ( !this.suspendColorEvents )
 			{
-				this.FieldsCMYKToColor();
+				this.FieldsCmykToColor();
 			}
 		}
 
@@ -896,9 +896,9 @@ namespace Epsitec.Common.Widgets
 				bool isc = this.suspendColorEvents;
 				this.suspendColorEvents = true;
 				this.color = this.circle.Color;
-				this.ColorToFieldsRGB();
-				this.ColorToFieldsHSV();
-				this.ColorToFieldsCMYK();
+				this.ColorToFieldsRgb();
+				this.ColorToFieldsHsv();
+				this.ColorToFieldsCmyk();
 				this.ColorToFieldsGray();
 				this.ColorToFieldsHexa();
 				this.ColoriseSliders();
@@ -996,8 +996,8 @@ namespace Epsitec.Common.Widgets
 		protected GlyphButton					buttonClose;
 		
 		protected Helpers.GroupController		colorSpaceController;
-		protected IconButton					buttonRGB;
-		protected IconButton					buttonCMYK;
+		protected IconButton					buttonRgb;
+		protected IconButton					buttonCmyk;
 		protected IconButton					buttonGray;
 		private Tools.Magnifier.DragSource		picker;
 	}

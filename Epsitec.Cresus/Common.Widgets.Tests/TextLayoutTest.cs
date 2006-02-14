@@ -95,7 +95,7 @@ namespace Epsitec.Common.Widgets
 			text.Dock = DockStyle.Fill;
 			text.Text = @"abracadabra abracadabra<br/><a href=""x"">abc <img src=""file:images/icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra <a href=""y"">bla bla bla&#160;!</a>";
 			text.SetParent (window.Root);
-			text.BackColor = Color.FromRGB (1.0, 1.0, 1.0);
+			text.BackColor = Color.FromRgb (1.0, 1.0, 1.0);
 			
 			window.Show ();
 		}
@@ -440,7 +440,7 @@ namespace Epsitec.Common.Widgets
 			{
 				e.Graphics.Align(ref areas[i].Rect);
 				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
-				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
+				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
 			}
 
 			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
@@ -466,7 +466,7 @@ namespace Epsitec.Common.Widgets
 			{
 				e.Graphics.Align(ref areas[i].Rect);
 				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
-				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
+				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
 			}
 
 			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
@@ -492,7 +492,7 @@ namespace Epsitec.Common.Widgets
 			{
 				e.Graphics.Align(ref areas[i].Rect);
 				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
-				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
+				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
 			}
 
 			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
@@ -518,7 +518,7 @@ namespace Epsitec.Common.Widgets
 			{
 				e.Graphics.Align(ref areas[i].Rect);
 				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
-				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
+				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
 			}
 
 			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
@@ -545,7 +545,7 @@ namespace Epsitec.Common.Widgets
 			{
 				e.Graphics.Align(ref areas[i].Rect);
 				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
-				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
+				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
 			}
 #endif
 
@@ -572,7 +572,7 @@ namespace Epsitec.Common.Widgets
 			Rectangle bounds = layout.TotalRectangle;
 			bounds.Offset(pos);
 			e.Graphics.AddRectangle(bounds);
-			e.Graphics.RenderSolid(Color.FromRGB(1,0,0));
+			e.Graphics.RenderSolid(Color.FromRgb(1,0,0));
 		}
 
 		private void CheckImage_Paint1(object sender, PaintEventArgs e)

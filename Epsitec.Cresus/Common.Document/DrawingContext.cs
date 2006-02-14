@@ -2042,73 +2042,73 @@ namespace Epsitec.Common.Document
 		static public Color ColorMulti
 		{
 			//	Retourne la couleur pour indiquer une sélection multiple.
-			get { return Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
+			get { return Color.FromAlphaRgb(1.0, 1.0, 0.0, 0.0); }  // rouge
 		}
 
 		static public Color ColorMultiBack
 		{
 			//	Retourne la couleur pour indiquer une sélection multiple.
-			get { return Color.FromARGB(0.15, 1.0, 0.0, 0.0); }  // rouge
+			get { return Color.FromAlphaRgb(0.15, 1.0, 0.0, 0.0); }  // rouge
 		}
 
 		static public Color ColorStyle
 		{
 			//	Retourne la couleur pour indiquer un style.
-			get { return Color.FromARGB(0.3, 1.0, 0.75, 0.0); }  // orange
+			get { return Color.FromAlphaRgb(0.3, 1.0, 0.75, 0.0); }  // orange
 		}
 
 		static public Color ColorStyleBack
 		{
 			//	Retourne la couleur pour indiquer un style.
-			get { return Color.FromARGB(0.15, 1.0, 0.75, 0.0); }  // orange
+			get { return Color.FromAlphaRgb(0.15, 1.0, 0.75, 0.0); }  // orange
 		}
 
 		static public Color ColorHandleOutline
 		{
 			//	Retourne la couleur du pourtour d'une poignée.
-			get { return Color.FromARGB(1.0, 0.0, 0.0, 0.0); }  // noir
+			get { return Color.FromAlphaRgb(1.0, 0.0, 0.0, 0.0); }  // noir
 		}
 
 		static public Color ColorHandleMain
 		{
 			//	Retourne la couleur d'une poignée principale.
-			get { return Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
+			get { return Color.FromAlphaRgb(1.0, 1.0, 0.0, 0.0); }  // rouge
 		}
 
 		static public Color ColorSelectedSegment
 		{
 			//	Retourne la couleur d'un segment sélectionné.
-			get { return Color.FromARGB(0.5, 1.0, 0.0, 0.0); }  // rouge
+			get { return Color.FromAlphaRgb(0.5, 1.0, 0.0, 0.0); }  // rouge
 		}
 
 		static public Color ColorHandleStart
 		{
 			//	Retourne la couleur d'une poignée de début/fin.
-			get { return Color.FromARGB(1.0, 0.0, 1.0, 0.0); }  // vert
+			get { return Color.FromAlphaRgb(1.0, 0.0, 1.0, 0.0); }  // vert
 		}
 
 		static public Color ColorHandleProperty
 		{
 			//	Retourne la couleur d'une poignée de propriété.
-			get { return Color.FromARGB(1.0, 0.0, 1.0, 1.0); }  // cyan
+			get { return Color.FromAlphaRgb(1.0, 0.0, 1.0, 1.0); }  // cyan
 		}
 
 		static public Color ColorHandleGlobal
 		{
 			//	Retourne la couleur d'une poignée de sélection globale.
-			get { return Color.FromARGB(1.0, 1.0, 1.0, 1.0); }  // blanc
+			get { return Color.FromAlphaRgb(1.0, 1.0, 1.0, 1.0); }  // blanc
 		}
 
 		static public Color ColorConstrain
 		{
 			//	Retourne la couleur pour dessiner une contrainte.
-			get { return Color.FromARGB(0.5, 1.0, 0.0, 0.0); }  // rouge
+			get { return Color.FromAlphaRgb(0.5, 1.0, 0.0, 0.0); }  // rouge
 		}
 
 		static public Color ColorFrameEdit
 		{
 			//	Retourne la couleur du cadre pendant l'édition.
-			get { return Color.FromARGB(1.0, 0.0, 0.7, 1.0); }  // bleu
+			get { return Color.FromAlphaRgb(1.0, 0.0, 0.7, 1.0); }  // bleu
 		}
 
 		static public Color ColorCursorEdit(bool active)
@@ -2116,7 +2116,7 @@ namespace Epsitec.Common.Document
 			//	Retourne la couleur du curseur pendant l'édition.
 			if ( active )
 			{
-				return Color.FromARGB(1.0, 0.0, 0.0, 1.0);  // bleu
+				return Color.FromAlphaRgb(1.0, 0.0, 0.0, 1.0);  // bleu
 			}
 			else
 			{
@@ -2129,7 +2129,7 @@ namespace Epsitec.Common.Document
 			//	Retourne la couleur des sélections pendant l'édition.
 			if ( active )
 			{
-				return Color.FromARGB(1.0, 0.73, 0.81, 0.98);  // bleu
+				return Color.FromAlphaRgb(1.0, 0.73, 0.81, 0.98);  // bleu
 			}
 			else
 			{
@@ -2140,7 +2140,7 @@ namespace Epsitec.Common.Document
 		static public Color ColorTabZombie
 		{
 			//	Retourne la couleur du fond d'un tabulateur supprimé.
-			get { return Color.FromARGB(1.0, 1.0, 0.4, 0.0); }  // rouge-orange
+			get { return Color.FromAlphaRgb(1.0, 1.0, 0.4, 0.0); }  // rouge-orange
 		}
 		#endregion
 

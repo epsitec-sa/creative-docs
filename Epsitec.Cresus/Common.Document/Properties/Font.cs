@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Properties
 				this.fontSize = 12.0*Modifier.FontSizeScale;  // corps 12
 			}
 
-			this.fontColor = Drawing.RichColor.FromCMYK(0.0, 0.0, 0.0, 1.0);
+			this.fontColor = Drawing.RichColor.FromCmyk(0.0, 0.0, 0.0, 1.0);
 		}
 
 		public string FontName

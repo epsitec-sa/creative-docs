@@ -358,7 +358,7 @@ namespace Epsitec.Common.Widgets
 			if (hilite.IsValid)
 			{
 				e.Graphics.AddFilledRectangle (hilite);
-				e.Graphics.RenderSolid (Drawing.Color.FromARGB (0.25, 0, 0, 1));
+				e.Graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.25, 0, 0, 1));
 			}
 		}
 		

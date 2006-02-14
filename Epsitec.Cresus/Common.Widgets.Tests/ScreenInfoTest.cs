@@ -254,7 +254,7 @@ namespace Epsitec.Common.Widgets
 					
 					path = Drawing.Path.FromCircle (dx/2, dy/2, dx/2, dy/2);
 					
-					this.mask.Color = Drawing.Color.FromRGB (1, 0, 0);
+					this.mask.Color = Drawing.Color.FromRgb (1, 0, 0);
 					this.mask.PaintSurface (path);
 					
 					path.Dispose ();
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Widgets
 				path.AppendCircle (dx/2, dy/2, dx/2-0.5, dy/2-0.5);
 				path.AppendCircle (dx/2, dy/2, dx/2, dy/2);
 				
-				graphics.Color = Drawing.Color.FromARGB (0.5, 0, 0, 0.8);
+				graphics.Color = Drawing.Color.FromAlphaRgb (0.5, 0, 0, 0.8);
 				graphics.LineWidth = 1.0;
 				graphics.PaintOutline (path);
 				
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Widgets
 				
 				graphics.AddFilledRectangle (ox - 1, oy - 2, dx + 2, font.LineHeight * size - 0);
 				graphics.AddFilledRectangle (ox - 2, oy - 1, dx + 4, font.LineHeight * size - 2);
-				graphics.RenderSolid (Drawing.Color.FromARGB (0.8, 1, 1, 1));
+				graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.8, 1, 1, 1));
 				
 				graphics.AddText (ox, oy, text, font, size);
 				graphics.RenderSolid (Drawing.Color.FromBrightness (0));

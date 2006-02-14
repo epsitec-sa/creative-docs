@@ -472,7 +472,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Calcule la couleur opposée pour la mise en évidence.
 			double h,s,v;
-			color.GetHSV(out h, out s, out v);
+			color.GetHsv(out h, out s, out v);
 			if ( s < 0.2 )  // gris ou presque ?
 			{
 				IAdorner adorner = Widgets.Adorners.Factory.Active;

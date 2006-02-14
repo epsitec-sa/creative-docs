@@ -39,18 +39,18 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else if ( this.type == Type.FillGradientVT )
 			{
-				this.color1 = RichColor.FromARGB(0.95, 0.8, 0.7, 0.7);
-				this.color2 = RichColor.FromARGB(0.95, 0.6, 0.5, 0.5);
+				this.color1 = RichColor.FromAlphaRgb(0.95, 0.8, 0.7, 0.7);
+				this.color2 = RichColor.FromAlphaRgb(0.95, 0.6, 0.5, 0.5);
 			}
 			else if ( this.type == Type.FillGradientVL )
 			{
-				this.color1 = RichColor.FromARGB(0.95, 0.7, 0.8, 0.7);
-				this.color2 = RichColor.FromARGB(0.95, 0.5, 0.6, 0.5);
+				this.color1 = RichColor.FromAlphaRgb(0.95, 0.7, 0.8, 0.7);
+				this.color2 = RichColor.FromAlphaRgb(0.95, 0.5, 0.6, 0.5);
 			}
 			else if ( this.type == Type.FillGradientVR )
 			{
-				this.color1 = RichColor.FromARGB(0.95, 0.7, 0.7, 0.8);
-				this.color2 = RichColor.FromARGB(0.95, 0.5, 0.5, 0.6);
+				this.color1 = RichColor.FromAlphaRgb(0.95, 0.7, 0.7, 0.8);
+				this.color2 = RichColor.FromAlphaRgb(0.95, 0.5, 0.5, 0.6);
 			}
 			else
 			{

@@ -746,7 +746,7 @@ namespace Epsitec.Common.Document
 			int dx = (int) ((clipRect.Width/10.0)*(dpi/25.4)*autoZoom);
 			int dy = (int) ((clipRect.Height/10.0)*(dpi/25.4)*autoZoom);
 			gfx.SetPixmapSize(dx, dy);
-			gfx.SolidRenderer.ClearARGB(1,1,1,1);
+			gfx.SolidRenderer.ClearAlphaRgb(1,1,1,1);
 			gfx.Rasterizer.Gamma = this.PrintInfo.Gamma;
 
 			double zoomX = dx/clipRect.Width;
@@ -798,7 +798,7 @@ namespace Epsitec.Common.Document
 			this.InitSimplyPort(port, printEngine, offset, pageNumber);
 
 			port.LineWidth = 0.1;
-			port.Color = Color.FromRGB(1,0,0);  // rouge
+			port.Color = Color.FromRgb(1,0,0);  // rouge
 
 			foreach ( PrintingArea area in areas )
 			{
@@ -888,11 +888,11 @@ namespace Epsitec.Common.Document
 			rect.Offset(rect.Width, 0.0);
 			this.PaintColorSample(port, rect, Color.FromBrightness(0.0));  // noir
 			rect.Offset(rect.Width+len/2.0, 0.0);
-			this.PaintColorSample(port, rect, Color.FromRGB(0,1,1));  // cyan
+			this.PaintColorSample(port, rect, Color.FromRgb(0,1,1));  // cyan
 			rect.Offset(rect.Width, 0.0);
-			this.PaintColorSample(port, rect, Color.FromRGB(1,0,1));  // magenta
+			this.PaintColorSample(port, rect, Color.FromRgb(1,0,1));  // magenta
 			rect.Offset(rect.Width, 0.0);
-			this.PaintColorSample(port, rect, Color.FromRGB(1,1,0));  // jaune
+			this.PaintColorSample(port, rect, Color.FromRgb(1,1,0));  // jaune
 		}
 
 		protected void PaintColorSample(Drawing.IPaintPort port, Rectangle rect, Color color)
@@ -1069,7 +1069,7 @@ namespace Epsitec.Common.Document
 			int dx = (int) ((pageSize.Width/10.0)*(dpi/25.4));
 			int dy = (int) ((pageSize.Height/10.0)*(dpi/25.4));
 			gfx.SetPixmapSize(dx, dy);
-			gfx.SolidRenderer.ClearARGB((depth==32)?0:1, 1,1,1);
+			gfx.SolidRenderer.ClearAlphaRgb((depth==32)?0:1, 1,1,1);
 			gfx.Rasterizer.Gamma = this.imageAA;
 
 			double zoomH = dx / pageSize.Width;

@@ -160,7 +160,7 @@ namespace Epsitec.Common.Widgets
 					
 					graphics.LineWidth = 2.0;
 					graphics.AddLine (x1, y1, x2, y2);
-					graphics.RenderSolid (Drawing.Color.FromRGB (1.0, 0.0, 0.0));
+					graphics.RenderSolid (Drawing.Color.FromRgb (1.0, 0.0, 0.0));
 				}
 			}
 		}

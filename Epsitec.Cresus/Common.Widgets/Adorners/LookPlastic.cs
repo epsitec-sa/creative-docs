@@ -28,19 +28,19 @@ namespace Epsitec.Common.Widgets.Adorners
 			r = 1-(1-this.colorControlLight.R)*0.5;
 			g = 1-(1-this.colorControlLight.G)*0.5;
 			b = 1-(1-this.colorControlLight.B)*0.5;
-			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
+			this.colorScrollerBack = Drawing.Color.FromRgb(r,g,b);
 
 			r = 1-(1-this.colorControlLight.R)*0.7;
 			g = 1-(1-this.colorControlLight.G)*0.7;
 			b = 1-(1-this.colorControlLight.B)*0.7;
-			this.colorButton = Drawing.Color.FromRGB(r,g,b);
+			this.colorButton = Drawing.Color.FromRgb(r,g,b);
 
-			this.colorCaption        = Drawing.Color.FromRGB( 58.0/255.0, 167.0/255.0, 233.0/255.0);
-			this.colorHilite         = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorBorder         = Drawing.Color.FromRGB( 23.0/255.0, 132.0/255.0, 198.0/255.0);
-			this.colorError          = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorTextBackground = Drawing.Color.FromRGB(250.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorWindow         = Drawing.Color.FromRGB(198.0/255.0, 226.0/255.0, 234.0/255.0);
+			this.colorCaption        = Drawing.Color.FromRgb( 58.0/255.0, 167.0/255.0, 233.0/255.0);
+			this.colorHilite         = Drawing.Color.FromRgb(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorBorder         = Drawing.Color.FromRgb( 23.0/255.0, 132.0/255.0, 198.0/255.0);
+			this.colorError          = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorTextBackground = Drawing.Color.FromRgb(250.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorWindow         = Drawing.Color.FromRgb(198.0/255.0, 226.0/255.0, 234.0/255.0);
 		}
 		
 
@@ -62,8 +62,8 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			//	Dessine une icône simple (dans un bouton d'ascenseur par exemple).
 			Drawing.Color color = this.colorBlack;
-			if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRGB(0.5, 0.0, 0.0);  // rouge foncé
-			if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRGB(0.0, 0.5, 0.0);  // vert foncé
+			if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRgb(0.5, 0.0, 0.0);  // rouge foncé
+			if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRgb(0.0, 0.5, 0.0);  // vert foncé
 
 			this.PaintGlyph(graphics, rect, state, color, type, style);
 		}
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.AddFilledRectangle(p.X-1, p.Y+5, -2, 2);
 				graphics.AddFilledRectangle(p.X-5, p.Y+5, -2, 2);
 				graphics.AddFilledRectangle(p.X-1, p.Y+9, -2, 2);
-				graphics.RenderSolid(Drawing.Color.FromRGB(this.colorWindow.R-0.1, this.colorWindow.G-0.1, this.colorWindow.B-0.1));
+				graphics.RenderSolid(Drawing.Color.FromRgb(this.colorWindow.R-0.1, this.colorWindow.G-0.1, this.colorWindow.B-0.1));
 				return;
 			}
 
@@ -2066,8 +2066,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			switch ( mode )
 			{
 				case TextDisplayMode.Default:   return Drawing.Color.Empty;
-				case TextDisplayMode.Defined:   return Drawing.Color.FromRGB(255.0/255.0, 236.0/255.0, 171.0/255.0);
-				case TextDisplayMode.Proposal:  return Drawing.Color.FromRGB(186.0/255.0, 220.0/255.0, 255.0/255.0);
+				case TextDisplayMode.Defined:   return Drawing.Color.FromRgb(255.0/255.0, 236.0/255.0, 171.0/255.0);
+				case TextDisplayMode.Proposal:  return Drawing.Color.FromRgb(186.0/255.0, 220.0/255.0, 255.0/255.0);
 			}
 			return Drawing.Color.Empty;
 		}

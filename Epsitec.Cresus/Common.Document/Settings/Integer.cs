@@ -229,8 +229,8 @@ namespace Epsitec.Common.Document.Settings
 				case "ExportPDFColorConversion":
 					PDF.ColorConversion cc = (PDF.ColorConversion) type;
 					if ( cc == PDF.ColorConversion.None   )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.None;
-					if ( cc == PDF.ColorConversion.ToRGB  )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.ToRGB;
-					if ( cc == PDF.ColorConversion.ToCMYK )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.ToCMYK;
+					if ( cc == PDF.ColorConversion.ToRgb  )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.ToRgb;
+					if ( cc == PDF.ColorConversion.ToCmyk )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.ToCmyk;
 					if ( cc == PDF.ColorConversion.ToGray )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.ToGray;
 					break;
 
@@ -289,8 +289,8 @@ namespace Epsitec.Common.Document.Settings
 
 				case "ExportPDFColorConversion":
 					if ( rank == 0 )  return (int) PDF.ColorConversion.None;
-					if ( rank == 1 )  return (int) PDF.ColorConversion.ToRGB;
-					if ( rank == 2 )  return (int) PDF.ColorConversion.ToCMYK;
+					if ( rank == 1 )  return (int) PDF.ColorConversion.ToRgb;
+					if ( rank == 2 )  return (int) PDF.ColorConversion.ToCmyk;
 					if ( rank == 3 )  return (int) PDF.ColorConversion.ToGray;
 					return -1;
 

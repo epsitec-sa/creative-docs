@@ -57,9 +57,9 @@ namespace Epsitec.Common.Document
 				public static string ColorMain { get { return GetText ("Strings", "Action", "ColorMain"); } }
 				public static string ColorStrokeDark { get { return GetText ("Strings", "Action", "ColorStrokeDark"); } }
 				public static string ColorStrokeLight { get { return GetText ("Strings", "Action", "ColorStrokeLight"); } }
-				public static string ColorToCMYK { get { return GetText ("Strings", "Action", "ColorToCMYK"); } }
+				public static string ColorToCmyk { get { return GetText ("Strings", "Action", "ColorToCmyk"); } }
 				public static string ColorToGray { get { return GetText ("Strings", "Action", "ColorToGray"); } }
-				public static string ColorToRGB { get { return GetText ("Strings", "Action", "ColorToRGB"); } }
+				public static string ColorToRgb { get { return GetText ("Strings", "Action", "ColorToRgb"); } }
 				public static string ColorValue { get { return GetText ("Strings", "Action", "ColorValue"); } }
 				public static string Combine { get { return GetText ("Strings", "Action", "Combine"); } }
 				public static string Copy { get { return GetText ("Strings", "Action", "Copy"); } }
@@ -667,9 +667,9 @@ namespace Epsitec.Common.Document
 					{
 						public static string None { get { return GetText ("Strings", "Dialog", "Integer", "ExportPDFColorConversion", "None"); } }
 						public static string Text { get { return GetText ("Strings", "Dialog", "Integer", "ExportPDFColorConversion", "Text"); } }
-						public static string ToCMYK { get { return GetText ("Strings", "Dialog", "Integer", "ExportPDFColorConversion", "ToCMYK"); } }
+						public static string ToCmyk { get { return GetText ("Strings", "Dialog", "Integer", "ExportPDFColorConversion", "ToCmyk"); } }
 						public static string ToGray { get { return GetText ("Strings", "Dialog", "Integer", "ExportPDFColorConversion", "ToGray"); } }
-						public static string ToRGB { get { return GetText ("Strings", "Dialog", "Integer", "ExportPDFColorConversion", "ToRGB"); } }
+						public static string ToRgb { get { return GetText ("Strings", "Dialog", "Integer", "ExportPDFColorConversion", "ToRgb"); } }
 					}
 					
 					public sealed class ExportPDFImageCompression

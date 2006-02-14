@@ -720,7 +720,7 @@ namespace Epsitec.Common.UI.Widgets
 				graphics.AddRectangle (bounds);
 				graphics.AddLine (bounds.BottomLeft, bounds.TopRight);
 				graphics.AddLine (bounds.TopLeft, bounds.BottomRight);
-				graphics.RenderSolid (Drawing.Color.FromRGB (1, 0, 0));
+				graphics.RenderSolid (Drawing.Color.FromRgb (1, 0, 0));
 			}
 		}
 		

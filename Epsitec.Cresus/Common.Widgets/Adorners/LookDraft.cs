@@ -14,16 +14,16 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected override void RefreshColors()
 		{
 			//	Initialise les couleurs en fonction des réglages de Windows.
-			this.colorBlack          = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorControl        = Drawing.Color.FromRGB( 53.0/255.0, 146.0/255.0, 255.0/255.0);
-			this.colorCaption        = Drawing.Color.FromRGB(255.0/255.0, 210.0/255.0,   0.0/255.0);
-			this.colorCaptionNF      = Drawing.Color.FromRGB(255.0/255.0, 242.0/255.0, 183.0/255.0);
-			this.colorInfo           = Drawing.Color.FromRGB(255.0/255.0, 210.0/255.0,   0.0/255.0);
-			this.colorBorder         = Drawing.Color.FromRGB(128.0/255.0, 128.0/255.0, 128.0/255.0);
-			this.colorDisabled       = Drawing.Color.FromRGB(200.0/255.0, 200.0/255.0, 200.0/255.0);
-			this.colorError          = Drawing.Color.FromRGB(255.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorTextBackground = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorWindow         = Drawing.Color.FromRGB(247.0/255.0, 247.0/255.0, 247.0/255.0);
+			this.colorBlack          = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorControl        = Drawing.Color.FromRgb( 53.0/255.0, 146.0/255.0, 255.0/255.0);
+			this.colorCaption        = Drawing.Color.FromRgb(255.0/255.0, 210.0/255.0,   0.0/255.0);
+			this.colorCaptionNF      = Drawing.Color.FromRgb(255.0/255.0, 242.0/255.0, 183.0/255.0);
+			this.colorInfo           = Drawing.Color.FromRgb(255.0/255.0, 210.0/255.0,   0.0/255.0);
+			this.colorBorder         = Drawing.Color.FromRgb(128.0/255.0, 128.0/255.0, 128.0/255.0);
+			this.colorDisabled       = Drawing.Color.FromRgb(200.0/255.0, 200.0/255.0, 200.0/255.0);
+			this.colorError          = Drawing.Color.FromRgb(255.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorTextBackground = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorWindow         = Drawing.Color.FromRgb(247.0/255.0, 247.0/255.0, 247.0/255.0);
 
 			this.colorBorder.A = 0.6;
 		}
@@ -49,8 +49,8 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRGB(0.5, 0.0, 0.0);  // rouge foncé
-				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRGB(0.0, 0.3, 0.0);  // vert foncé
+				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRgb(0.5, 0.0, 0.0);  // rouge foncé
+				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRgb(0.0, 0.3, 0.0);  // vert foncé
 			}
 			else
 			{
@@ -2027,8 +2027,8 @@ namespace Epsitec.Common.Widgets.Adorners
 				path.CurveTo(ox+dx-0.5, oy+0.5, ox+dx-0.5, oy+radius+0.5);
 				path.LineTo (ox+dx-0.5, oy+dy-radius-0.5);
 				graphics.Rasterizer.AddOutline(path, 1);
-				if ( hole )  graphics.RenderSolid(Drawing.Color.FromARGB(alphaBottom, 1,1,1));
-				else         graphics.RenderSolid(Drawing.Color.FromARGB(alphaBottom, 0,0,0));
+				if ( hole )  graphics.RenderSolid(Drawing.Color.FromAlphaRgb(alphaBottom, 1,1,1));
+				else         graphics.RenderSolid(Drawing.Color.FromAlphaRgb(alphaBottom, 0,0,0));
 
 				path = new Drawing.Path();
 				path.MoveTo (ox+dx-0.5, oy+dy-radius-0.5);
@@ -2039,10 +2039,10 @@ namespace Epsitec.Common.Widgets.Adorners
 				Drawing.Rectangle up = rect;
 				up.Bottom = up.Top-radius;
 				Drawing.Color bottomColor, topColor;
-				if ( hole )  bottomColor = Drawing.Color.FromARGB(alphaBottom, 1,1,1);
-				else         bottomColor = Drawing.Color.FromARGB(alphaBottom, 0,0,0);
-				if ( hole )  topColor    = Drawing.Color.FromARGB(alphaTop, 0,0,0);
-				else         topColor    = Drawing.Color.FromARGB(alphaTop, 1,1,1);
+				if ( hole )  bottomColor = Drawing.Color.FromAlphaRgb(alphaBottom, 1,1,1);
+				else         bottomColor = Drawing.Color.FromAlphaRgb(alphaBottom, 0,0,0);
+				if ( hole )  topColor    = Drawing.Color.FromAlphaRgb(alphaTop, 0,0,0);
+				else         topColor    = Drawing.Color.FromAlphaRgb(alphaTop, 1,1,1);
 				this.Gradient(graphics, up, bottomColor, topColor);
 
 				if ( !hole )  rect.Deflate(1);
@@ -2070,7 +2070,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			graphics.Rasterizer.AddSurface(path);
 			Drawing.Rectangle up = rect;
 			up.Bottom = up.Top-radius;
-			this.Gradient(graphics, up, Drawing.Color.FromARGB(0.0, 0,0,0), Drawing.Color.FromARGB(0.2, 0,0,0));
+			this.Gradient(graphics, up, Drawing.Color.FromAlphaRgb(0.0, 0,0,0), Drawing.Color.FromAlphaRgb(0.2, 0,0,0));
 		}
 
 		protected void PaintRectTopShadow(Drawing.Graphics graphics,
@@ -2092,7 +2092,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			graphics.Rasterizer.AddSurface(path);
 			Drawing.Rectangle up = rect;
 			up.Bottom = up.Top-radius;
-			this.Gradient(graphics, up, Drawing.Color.FromARGB(0.0, 0,0,0), Drawing.Color.FromARGB(0.2, 0,0,0));
+			this.Gradient(graphics, up, Drawing.Color.FromAlphaRgb(0.0, 0,0,0), Drawing.Color.FromAlphaRgb(0.2, 0,0,0));
 		}
 
 		protected void Gradient(Drawing.Graphics graphics,
@@ -2197,8 +2197,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			switch ( mode )
 			{
 				case TextDisplayMode.Default:   return Drawing.Color.Empty;
-				case TextDisplayMode.Defined:   return Drawing.Color.FromRGB(255.0/255.0, 210.0/255.0,   0.0/255.0);
-				case TextDisplayMode.Proposal:  return Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 223.0/255.0);
+				case TextDisplayMode.Defined:   return Drawing.Color.FromRgb(255.0/255.0, 210.0/255.0,   0.0/255.0);
+				case TextDisplayMode.Proposal:  return Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 223.0/255.0);
 			}
 			return Drawing.Color.Empty;
 		}

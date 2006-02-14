@@ -107,7 +107,7 @@ namespace Epsitec.Common.Document.Widgets
 				graphics.LineWidth = 1.0;
 				graphics.AddLine(p1.X-10, p1.Y, p2.X+10, p2.Y);
 				graphics.AddLine(p1.X-10, p1.Y+r, p2.X+10, p2.Y+r);
-				graphics.RenderSolid(Color.FromRGB(1,0,0));  // rouge
+				graphics.RenderSolid(Color.FromRgb(1,0,0));  // rouge
 
 				Objects.TextLine2 obj = this.document.ObjectForSamplesCharacter;
 				obj.RectangleToSample(p1, p2);

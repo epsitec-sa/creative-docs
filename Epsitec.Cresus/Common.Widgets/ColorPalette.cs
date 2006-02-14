@@ -38,23 +38,23 @@ namespace Epsitec.Common.Widgets
 				this.palette[i].Rank   = x+y*this.nbColumns;
 			}
 
-			this.palette[ 0].Color = Drawing.RichColor.FromARGB(0.0, 1.0, 1.0, 1.0);
-			this.palette[ 1].Color = Drawing.RichColor.FromARGB(1.0, 1.0, 0.0, 0.0);
-			this.palette[ 2].Color = Drawing.RichColor.FromARGB(1.0, 1.0, 1.0, 0.0);
-			this.palette[ 3].Color = Drawing.RichColor.FromARGB(1.0, 0.0, 1.0, 0.0);
-			this.palette[ 4].Color = Drawing.RichColor.FromARGB(1.0, 0.0, 1.0, 1.0);
-			this.palette[ 5].Color = Drawing.RichColor.FromARGB(1.0, 0.0, 0.0, 1.0);
-			this.palette[ 6].Color = Drawing.RichColor.FromARGB(1.0, 1.0, 0.0, 1.0);
-			this.palette[ 7].Color = Drawing.RichColor.FromARGB(0.5, 0.5, 0.5, 0.5);
+			this.palette[ 0].Color = Drawing.RichColor.FromAlphaRgb(0.0, 1.0, 1.0, 1.0);
+			this.palette[ 1].Color = Drawing.RichColor.FromAlphaRgb(1.0, 1.0, 0.0, 0.0);
+			this.palette[ 2].Color = Drawing.RichColor.FromAlphaRgb(1.0, 1.0, 1.0, 0.0);
+			this.palette[ 3].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.0, 1.0, 0.0);
+			this.palette[ 4].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.0, 1.0, 1.0);
+			this.palette[ 5].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.0, 0.0, 1.0);
+			this.palette[ 6].Color = Drawing.RichColor.FromAlphaRgb(1.0, 1.0, 0.0, 1.0);
+			this.palette[ 7].Color = Drawing.RichColor.FromAlphaRgb(0.5, 0.5, 0.5, 0.5);
 
-			this.palette[ 8].Color = Drawing.RichColor.FromARGB(1.0, 1.0, 1.0, 1.0);
-			this.palette[ 9].Color = Drawing.RichColor.FromARGB(1.0, 0.9, 0.9, 0.9);
-			this.palette[10].Color = Drawing.RichColor.FromARGB(1.0, 0.8, 0.8, 0.8);
-			this.palette[11].Color = Drawing.RichColor.FromARGB(1.0, 0.7, 0.7, 0.7);
-			this.palette[12].Color = Drawing.RichColor.FromARGB(1.0, 0.6, 0.6, 0.6);
-			this.palette[13].Color = Drawing.RichColor.FromARGB(1.0, 0.5, 0.5, 0.5);
-			this.palette[14].Color = Drawing.RichColor.FromARGB(1.0, 0.4, 0.4, 0.4);
-			this.palette[15].Color = Drawing.RichColor.FromARGB(1.0, 0.0, 0.0, 0.0);
+			this.palette[ 8].Color = Drawing.RichColor.FromAlphaRgb(1.0, 1.0, 1.0, 1.0);
+			this.palette[ 9].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.9, 0.9, 0.9);
+			this.palette[10].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.8, 0.8, 0.8);
+			this.palette[11].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.7, 0.7, 0.7);
+			this.palette[12].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.6, 0.6, 0.6);
+			this.palette[13].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.5, 0.5, 0.5);
+			this.palette[14].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.4, 0.4, 0.4);
+			this.palette[15].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.0, 0.0, 0.0);
 
 			this.selected = -1;
 

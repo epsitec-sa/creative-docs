@@ -79,8 +79,8 @@ namespace Epsitec.Common.Document.Containers
 
 			//	Couleurs.
 			this.CreateHeader(ref this.boxColor, ref this.toolBarColor, Res.Strings.Action.Color);
-			this.CreateButton(this.toolBarColor, ref this.buttonColorToRGB,  "ColorToRGB",  Res.Strings.Action.ColorToRGB,  new MessageEventHandler(this.HandleButtonColorToRGB));
-			this.CreateButton(this.toolBarColor, ref this.buttonColorToCMYK, "ColorToCMYK", Res.Strings.Action.ColorToCMYK, new MessageEventHandler(this.HandleButtonColorToCMYK));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorToRgb,  "ColorToRgb",  Res.Strings.Action.ColorToRgb,  new MessageEventHandler(this.HandleButtonColorToRgb));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorToCmyk, "ColorToCmyk", Res.Strings.Action.ColorToCmyk, new MessageEventHandler(this.HandleButtonColorToCmyk));
 			this.CreateButton(this.toolBarColor, ref this.buttonColorToGray, "ColorToGray", Res.Strings.Action.ColorToGray, new MessageEventHandler(this.HandleButtonColorToGray));
 			this.CreateSeparator(this.toolBarColor);
 			this.CreateFieldColor(this.toolBarColor, ref this.fieldColor, Res.Strings.Action.ColorValue);
@@ -245,8 +245,8 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonAdjustWidth.Enable = (enabled2);
 			this.buttonAdjustHeight.Enable = (enabled2);
 
-			this.buttonColorToRGB.Enable = (enabled);
-			this.buttonColorToCMYK.Enable = (enabled);
+			this.buttonColorToRgb.Enable = (enabled);
+			this.buttonColorToCmyk.Enable = (enabled);
 			this.buttonColorToGray.Enable = (enabled);
 			this.buttonColorStrokeDark.Enable = (enabled);
 			this.buttonColorStrokeLight.Enable = (enabled);
@@ -423,12 +423,12 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.AdjustSelection(false);
 		}
 
-		private void HandleButtonColorToRGB(object sender, MessageEventArgs e)
+		private void HandleButtonColorToRgb(object sender, MessageEventArgs e)
 		{
 			this.document.Modifier.ColorSelection(ColorSpace.Rgb);
 		}
 
-		private void HandleButtonColorToCMYK(object sender, MessageEventArgs e)
+		private void HandleButtonColorToCmyk(object sender, MessageEventArgs e)
 		{
 			this.document.Modifier.ColorSelection(ColorSpace.Cmyk);
 		}
@@ -522,8 +522,8 @@ namespace Epsitec.Common.Document.Containers
 		
 		protected GroupBox				boxColor;
 		protected HToolBar				toolBarColor;
-		protected IconButton			buttonColorToRGB;
-		protected IconButton			buttonColorToCMYK;
+		protected IconButton			buttonColorToRgb;
+		protected IconButton			buttonColorToCmyk;
 		protected IconButton			buttonColorToGray;
 		protected TextFieldReal			fieldColor;
 		protected IconButton			buttonColorStrokeDark;

@@ -2578,7 +2578,7 @@ namespace Epsitec.Common.Document.Objects
 					graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
 					graphics.AddRectangle(this.BoundingBoxThin);
-					graphics.RenderSolid(Color.FromARGB(0.5, 0,0.5,1));  // bleu
+					graphics.RenderSolid(Color.FromAlphaRgb(0.5, 0,0.5,1));  // bleu
 
 					graphics.LineWidth = initialWidth;
 				}
@@ -2589,7 +2589,7 @@ namespace Epsitec.Common.Document.Objects
 					graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
 					graphics.AddRectangle(this.BoundingBoxGeom);
-					graphics.RenderSolid(Color.FromARGB(0.5, 0,1,0));  // vert
+					graphics.RenderSolid(Color.FromAlphaRgb(0.5, 0,1,0));  // vert
 
 					graphics.LineWidth = initialWidth;
 				}
@@ -2600,7 +2600,7 @@ namespace Epsitec.Common.Document.Objects
 					graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
 					graphics.AddRectangle(this.BoundingBoxFull);
-					graphics.RenderSolid(Color.FromARGB(0.5, 1,0.5,0));  // orange
+					graphics.RenderSolid(Color.FromAlphaRgb(0.5, 1,0.5,0));  // orange
 
 					graphics.LineWidth = initialWidth;
 				}
@@ -2657,7 +2657,7 @@ namespace Epsitec.Common.Document.Objects
 			Color lineColor = drawingContext.HiliteOutlineColor;
 			if ( this.isHilite )  // survolé par la souris ?
 			{
-				lineColor = Color.FromRGB(1,0,0);  // rouge
+				lineColor = Color.FromRgb(1,0,0);  // rouge
 			}
 
 			Color textColor = Color.FromBrightness(0);  // noir
@@ -2719,7 +2719,7 @@ namespace Epsitec.Common.Document.Objects
 			Color lineColor = drawingContext.HiliteOutlineColor;
 			if ( this.isHilite )  // survolé par la souris ?
 			{
-				lineColor = Color.FromRGB(1.0, 0.8, 0.0);  // jaune-orange
+				lineColor = Color.FromRgb(1.0, 0.8, 0.0);  // jaune-orange
 			}
 
 			Color textColor = Color.FromBrightness(0);  // noir

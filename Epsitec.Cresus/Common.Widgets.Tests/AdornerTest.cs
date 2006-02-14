@@ -283,7 +283,7 @@ namespace Epsitec.Common.Widgets
 			tip_check2.Dock        = DockStyle.Top;
 			tip_check2.DockMargins = new Drawing.Margins (4, 4, 1, 0);
 			
-			tip_widget.BackColor   = Drawing.Color.FromRGB (1.0, 0.5, 0.5);
+			tip_widget.BackColor   = Drawing.Color.FromRgb (1.0, 0.5, 0.5);
 			tip_widget.Size        = new Drawing.Size (120, 4+tip_check1.Height+1+tip_check2.Height+4);
 			
 			tip.SetToolTip(c, tip_widget);
@@ -306,13 +306,13 @@ namespace Epsitec.Common.Widgets
 			Tag tag2 = new Tag("ExecuteTag", "TestTag");
 			tag2.Bounds = new Drawing.Rectangle(115, 226, 18, 18);
 			tag2.SetParent (window.Root);
-			tag2.Color = Drawing.Color.FromRGB(1,0,0);
+			tag2.Color = Drawing.Color.FromRgb(1,0,0);
 			tip.SetToolTip(tag2, "Je suis un <i>smart tag</i> maison rouge.");
 
 			Tag tag3 = new Tag("ExecuteTag", "TestTag");
 			tag3.Bounds = new Drawing.Rectangle(115, 206, 18, 18);
 			tag3.SetParent (window.Root);
-			tag3.Color = Drawing.Color.FromRGB(0,1,0);
+			tag3.Color = Drawing.Color.FromRgb(0,1,0);
 			tip.SetToolTip(tag3, "Je suis un <i>smart tag</i> maison vert.");
 
 			Tag tag4 = new Tag("ExecuteTag", "TestTag");
@@ -323,7 +323,7 @@ namespace Epsitec.Common.Widgets
 			Tag tag5 = new Tag("ExecuteTag", "TestTag");
 			tag5.Bounds = new Drawing.Rectangle(140, 226, 12, 12);
 			tag5.SetParent (window.Root);
-			tag5.Color = Drawing.Color.FromRGB(0,0,1);
+			tag5.Color = Drawing.Color.FromRgb(0,0,1);
 			tip.SetToolTip(tag5, "Je suis un petit <i>smart tag</i> maison bleu.");
 
 			StaticText link = new StaticText();
@@ -1027,7 +1027,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleMultiColor2(object sender, MessageEventArgs e)
 		{
-			this.bigText.TextNavigator.SelectionFontColor = Drawing.Color.FromRGB(1,0,0);
+			this.bigText.TextNavigator.SelectionFontColor = Drawing.Color.FromRgb(1,0,0);
 		}
 
 		private void HandleMultiUndo(object sender, MessageEventArgs e)

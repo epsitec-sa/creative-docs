@@ -1274,7 +1274,7 @@ namespace Epsitec.Common.Widgets
 			path.LineTo (pos.X + width, pos.Y + descender);
 			
 			e.Graphics.Rasterizer.AddOutline (path, 0.2);
-			e.Graphics.RenderSolid (Drawing.Color.FromRGB (1, 0, 0));
+			e.Graphics.RenderSolid (Drawing.Color.FromRgb (1, 0, 0));
 		}
 		
 		private void HandleSelectorChangedForeground(object sender)

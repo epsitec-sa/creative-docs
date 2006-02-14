@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					Drawing.RichColor color = Drawing.RichColor.FromAHSV(this.a, this.h, this.s, this.v);
+					Drawing.RichColor color = Drawing.RichColor.FromAlphaHsv(this.a, this.h, this.s, this.v);
 					color.ColorSpace = this.colorSpace;
 					return color;
 				}
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					double h,s,v,a;
-					value.Basic.GetHSV(out h, out s, out v);
+					value.Basic.GetHsv(out h, out s, out v);
 					a = value.A;
 
 					if ( value.ColorSpace != this.colorSpace ||
@@ -92,14 +92,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public void GetHSV(out double h, out double s, out double v)
+		public void GetHsv(out double h, out double s, out double v)
 		{
 			h = this.h;
 			s = this.s;
 			v = this.v;
 		}
 		
-		public void SetHSV(double h, double s, double v)
+		public void SetHsv(double h, double s, double v)
 		{
 			if ( h != this.h || s != this.s || v != this.v )
 			{
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Widgets
 			
 					for ( int i=0 ; i<256 ; i++ )
 					{
-						Drawing.Color.ConvertHSVtoRGB(i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
+						Drawing.Color.ConvertHsvToRgb(i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
 						a[i] = 1.0;
 					}
 			
@@ -470,7 +470,7 @@ namespace Epsitec.Common.Widgets
 				Drawing.Color c1 = Drawing.Color.FromBrightness(0);
 				Drawing.Color c4 = Drawing.Color.FromBrightness(1);
 				Drawing.Color c2 = c1;
-				Drawing.Color c3 = Drawing.Color.FromHSV(this.h,1,1);
+				Drawing.Color c3 = Drawing.Color.FromHsv(this.h,1,1);
 				
 				double x1 = rect.Left;
 				double y1 = rect.Bottom;
@@ -505,7 +505,7 @@ namespace Epsitec.Common.Widgets
 
 					double factor = (posy-rect.Bottom)/rect.Height;
 					Drawing.Color c1 = Drawing.Color.FromBrightness(factor);
-					Drawing.Color c2 = Drawing.Color.FromHSV(this.h,1,factor);
+					Drawing.Color c2 = Drawing.Color.FromHsv(this.h,1,factor);
 					graphics.GradientRenderer.SetColors(c1, c2);
 
 					Drawing.Transform t = new Drawing.Transform();

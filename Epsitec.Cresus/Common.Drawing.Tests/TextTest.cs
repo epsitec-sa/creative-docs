@@ -1049,7 +1049,7 @@ namespace Epsitec.Common.Drawing
 				Graphics graphics = this.painter.Graphics;
 				
 				graphics.AddFilledRectangle (x, y - 20, 100, 60);
-				graphics.RenderSolid (Drawing.Color.FromRGB (0, 1.0, 0.5));
+				graphics.RenderSolid (Drawing.Color.FromRgb (0, 1.0, 0.5));
 			}
 			#endregion
 			

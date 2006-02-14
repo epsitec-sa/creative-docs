@@ -366,7 +366,7 @@ namespace Epsitec.Common.UI.Controllers
 				surface.AppendRectangle (rect_1);
 				
 				graphics.Rasterizer.AddSurface (surface);
-				graphics.RenderSolid (Drawing.Color.FromARGB (0.8, 1, 1, 1));
+				graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.8, 1, 1, 1));
 				
 				surface.Clear ();
 				
@@ -425,7 +425,7 @@ namespace Epsitec.Common.UI.Controllers
 				if (surface.IsValid)
 				{
 					graphics.Rasterizer.AddSurface (surface);
-					graphics.RenderSolid (Drawing.Color.FromRGB (0, 0, 0.8));
+					graphics.RenderSolid (Drawing.Color.FromRgb (0, 0, 0.8));
 				}
 				
 				if ((this.hilite.IsValid) &&
@@ -434,7 +434,7 @@ namespace Epsitec.Common.UI.Controllers
 					Drawing.Rectangle clip = graphics.SaveClippingRectangle ();
 					graphics.SetClippingRectangle (this.MapClientToRoot (this.hilite));
 					graphics.Rasterizer.AddSurface (picture);
-					graphics.RenderSolid (Drawing.Color.FromARGB (0.5, 0, 0, 1));
+					graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.5, 0, 0, 1));
 					graphics.RestoreClippingRectangle (clip);
 				}
 				

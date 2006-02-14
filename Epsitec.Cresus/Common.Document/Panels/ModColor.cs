@@ -41,16 +41,16 @@ namespace Epsitec.Common.Document.Panels
 				}
 				this.fieldArray[i].TextFieldReal.Step = 5;
 			}
-			this.fieldArray[0].TextFieldReal.Color = Drawing.Color.FromRGB(0,0,0);
-			this.fieldArray[0].TextFieldReal.BackColor = Drawing.Color.FromRGB(0.5,0.5,0.5);
-			this.fieldArray[1].TextFieldReal.Color = Drawing.Color.FromRGB(0,0,0);
-			this.fieldArray[1].TextFieldReal.BackColor = Drawing.Color.FromRGB(1,1,1);
-			this.fieldArray[2].TextFieldReal.Color = Drawing.Color.FromRGB(1,1,1);
-			this.fieldArray[2].TextFieldReal.BackColor = Drawing.Color.FromRGB(0,0,0);
-			this.fieldArray[3].TextFieldReal.Color = Drawing.Color.FromRGB(1,0,0);
-			this.fieldArray[4].TextFieldReal.Color = Drawing.Color.FromRGB(0,1,0);
-			this.fieldArray[5].TextFieldReal.Color = Drawing.Color.FromRGB(0,0,1);
-			this.fieldArray[6].TextFieldReal.Color = Drawing.Color.FromRGB(0.5,0.5,0.5);
+			this.fieldArray[0].TextFieldReal.Color = Drawing.Color.FromRgb(0,0,0);
+			this.fieldArray[0].TextFieldReal.BackColor = Drawing.Color.FromRgb(0.5,0.5,0.5);
+			this.fieldArray[1].TextFieldReal.Color = Drawing.Color.FromRgb(0,0,0);
+			this.fieldArray[1].TextFieldReal.BackColor = Drawing.Color.FromRgb(1,1,1);
+			this.fieldArray[2].TextFieldReal.Color = Drawing.Color.FromRgb(1,1,1);
+			this.fieldArray[2].TextFieldReal.BackColor = Drawing.Color.FromRgb(0,0,0);
+			this.fieldArray[3].TextFieldReal.Color = Drawing.Color.FromRgb(1,0,0);
+			this.fieldArray[4].TextFieldReal.Color = Drawing.Color.FromRgb(0,1,0);
+			this.fieldArray[5].TextFieldReal.Color = Drawing.Color.FromRgb(0,0,1);
+			this.fieldArray[6].TextFieldReal.Color = Drawing.Color.FromRgb(0.5,0.5,0.5);
 			ToolTip.Default.SetToolTip(this.fieldArray[0], Res.Strings.Panel.ModColor.Tooltip.H);
 			ToolTip.Default.SetToolTip(this.fieldArray[1], Res.Strings.Panel.ModColor.Tooltip.S);
 			ToolTip.Default.SetToolTip(this.fieldArray[2], Res.Strings.Panel.ModColor.Tooltip.V);
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Couleur -> sliders.
 			double h = (double) this.fieldArray[0].TextFieldReal.InternalValue;
-			Drawing.Color saturated = Drawing.Color.FromHSV(h,1,1);
+			Drawing.Color saturated = Drawing.Color.FromHsv(h,1,1);
 			
 			this.fieldArray[0].TextFieldReal.Color = saturated;
 			this.fieldArray[1].TextFieldReal.Color = saturated;

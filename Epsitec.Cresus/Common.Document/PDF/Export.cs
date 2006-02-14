@@ -28,8 +28,8 @@ namespace Epsitec.Common.Document.PDF
 	public enum ColorConversion
 	{
 		None   = 0,
-		ToRGB  = 1,
-		ToCMYK = 2,
+		ToRgb  = 1,
+		ToCmyk = 2,
 		ToGray = 3,
 	}
 
@@ -429,11 +429,11 @@ namespace Epsitec.Common.Document.PDF
 		protected void FinalOutputColorModifier(ref RichColor color)
 		{
 			//	Modification finale d'une couleur en fonction du mode de sortie.
-			if ( this.colorConversion == PDF.ColorConversion.ToRGB )
+			if ( this.colorConversion == PDF.ColorConversion.ToRgb )
 			{
 				color.ColorSpace = ColorSpace.Rgb;
 			}
-			else if ( this.colorConversion == PDF.ColorConversion.ToCMYK )
+			else if ( this.colorConversion == PDF.ColorConversion.ToCmyk )
 			{
 				color.ColorSpace = ColorSpace.Cmyk;
 			}
@@ -484,7 +484,7 @@ namespace Epsitec.Common.Document.PDF
 			path.LineTo(width, height+debord+length);
 
 			port.LineWidth = info.TargetWidth;
-			port.RichColor = RichColor.FromCMYK(1.0, 1.0, 1.0, 1.0);  // noir de repérage
+			port.RichColor = RichColor.FromCmyk(1.0, 1.0, 1.0, 1.0);  // noir de repérage
 			port.PaintOutline(path);
 		}
 
@@ -1549,7 +1549,7 @@ namespace Epsitec.Common.Document.PDF
 			ImageCompression compression = this.imageCompression;
 
 			if ( baseType == TypeComplexSurface.XObject &&
-				 this.colorConversion == PDF.ColorConversion.ToCMYK &&
+				 this.colorConversion == PDF.ColorConversion.ToCmyk &&
 				 compression == ImageCompression.JPEG )  // cmyk impossible en jpg !
 			{
 				compression = ImageCompression.ZIP;  // utilise la compression sans pertes
@@ -1565,7 +1565,7 @@ namespace Epsitec.Common.Document.PDF
 				{
 					writer.WriteString("/ColorSpace /DeviceGray ");
 				}
-				else if ( this.colorConversion == PDF.ColorConversion.ToCMYK )
+				else if ( this.colorConversion == PDF.ColorConversion.ToCmyk )
 				{
 					writer.WriteString("/ColorSpace /DeviceCMYK ");
 				}
@@ -1698,11 +1698,11 @@ namespace Epsitec.Common.Document.PDF
 					{
 						bpp = 1;
 					}
-					else if ( this.colorConversion == PDF.ColorConversion.ToRGB )
+					else if ( this.colorConversion == PDF.ColorConversion.ToRgb )
 					{
 						bpp = 3;
 					}
-					else if ( this.colorConversion == PDF.ColorConversion.ToCMYK )
+					else if ( this.colorConversion == PDF.ColorConversion.ToCmyk )
 					{
 						bpp = 4;
 					}

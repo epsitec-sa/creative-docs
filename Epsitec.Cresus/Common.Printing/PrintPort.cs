@@ -819,8 +819,8 @@ namespace Epsitec.Common.Printing
 		protected float							offset_x, offset_y;
 		protected float							scale;
 		
-		protected Drawing.Color					originalColor = Drawing.Color.FromRGB (0, 0, 0);
-		protected Drawing.Color					color = Drawing.Color.FromRGB (0, 0, 0);
+		protected Drawing.Color					originalColor = Drawing.Color.FromRgb (0, 0, 0);
+		protected Drawing.Color					color = Drawing.Color.FromRgb (0, 0, 0);
 		protected System.Collections.Stack		stackColorModifier;
 		protected Drawing.Rectangle				clip = Drawing.Rectangle.Infinite;
 		protected Drawing.Transform				transform = new Drawing.Transform ();

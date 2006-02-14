@@ -255,9 +255,9 @@ namespace Epsitec.Common.Document.Properties
 			{
 				double a = basic.A;
 				double h,s,v;
-				basic.GetHSV(out h, out s, out v);
+				basic.GetHsv(out h, out s, out v);
 				h += this.h;
-				basic = Drawing.Color.FromHSV(h,s,v);
+				basic = Drawing.Color.FromHsv(h,s,v);
 				basic.A = a;
 			}
 

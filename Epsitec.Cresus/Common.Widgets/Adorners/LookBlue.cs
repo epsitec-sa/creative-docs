@@ -15,36 +15,36 @@ namespace Epsitec.Common.Widgets.Adorners
 			double r,g,b;
 
 			this.colorBlack             = Drawing.Color.FromName("WindowFrame");
-			this.colorWindow            = Drawing.Color.FromRGB(107.0/255.0, 144.0/255.0, 189.0/255.0);
-			this.colorControl           = Drawing.Color.FromRGB(107.0/255.0, 144.0/255.0, 189.0/255.0);
-			this.colorButton            = Drawing.Color.FromRGB(107.0/255.0, 144.0/255.0, 189.0/255.0);
-			this.colorControlLight      = Drawing.Color.FromRGB(178.0/255.0, 198.0/255.0, 221.0/255.0);
-			this.colorControlLightLight = Drawing.Color.FromRGB(218.0/255.0, 238.0/255.0, 255.0/255.0);
-			this.colorControlDark       = Drawing.Color.FromRGB( 34.0/255.0,  78.0/255.0, 123.0/255.0);
-			this.colorControlDarkDark   = Drawing.Color.FromRGB(  0.0/255.0,  51.0/255.0, 102.0/255.0);
-			this.colorCaption           = Drawing.Color.FromRGB(255.0/255.0, 186.0/255.0,   1.0/255.0);
-			this.colorCaptionNF         = Drawing.Color.FromRGB(178.0/255.0, 198.0/255.0, 221.0/255.0);
-			this.colorCaptionText       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorCaptionProposal   = Drawing.Color.FromRGB(133.0/255.0, 174.0/255.0, 221.0/255.0);
-			this.colorThreeState        = Drawing.Color.FromRGB(228.0/255.0, 236.0/255.0, 244.0/255.0);
-			this.colorHilite            = Drawing.Color.FromRGB(255.0/255.0, 186.0/255.0,   1.0/255.0);
-			this.colorError             = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorWindow            = Drawing.Color.FromRgb(107.0/255.0, 144.0/255.0, 189.0/255.0);
+			this.colorControl           = Drawing.Color.FromRgb(107.0/255.0, 144.0/255.0, 189.0/255.0);
+			this.colorButton            = Drawing.Color.FromRgb(107.0/255.0, 144.0/255.0, 189.0/255.0);
+			this.colorControlLight      = Drawing.Color.FromRgb(178.0/255.0, 198.0/255.0, 221.0/255.0);
+			this.colorControlLightLight = Drawing.Color.FromRgb(218.0/255.0, 238.0/255.0, 255.0/255.0);
+			this.colorControlDark       = Drawing.Color.FromRgb( 34.0/255.0,  78.0/255.0, 123.0/255.0);
+			this.colorControlDarkDark   = Drawing.Color.FromRgb(  0.0/255.0,  51.0/255.0, 102.0/255.0);
+			this.colorCaption           = Drawing.Color.FromRgb(255.0/255.0, 186.0/255.0,   1.0/255.0);
+			this.colorCaptionNF         = Drawing.Color.FromRgb(178.0/255.0, 198.0/255.0, 221.0/255.0);
+			this.colorCaptionText       = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorCaptionProposal   = Drawing.Color.FromRgb(133.0/255.0, 174.0/255.0, 221.0/255.0);
+			this.colorThreeState        = Drawing.Color.FromRgb(228.0/255.0, 236.0/255.0, 244.0/255.0);
+			this.colorHilite            = Drawing.Color.FromRgb(255.0/255.0, 186.0/255.0,   1.0/255.0);
+			this.colorError             = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
 			this.colorInfo              = Drawing.Color.FromName("Info");
 
 			r = 1-(1-this.colorControlLight.R)*0.5;
 			g = 1-(1-this.colorControlLight.G)*0.5;
 			b = 1-(1-this.colorControlLight.B)*0.5;
-			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
+			this.colorScrollerBack = Drawing.Color.FromRgb(r,g,b);
 
 			r = 1-(1-this.colorControlLight.R)*0.7;
 			g = 1-(1-this.colorControlLight.G)*0.7;
 			b = 1-(1-this.colorControlLight.B)*0.7;
-			this.colorControlReadOnly = Drawing.Color.FromRGB(r,g,b);
+			this.colorControlReadOnly = Drawing.Color.FromRgb(r,g,b);
 
 			r = 1-(1-this.colorCaption.R)*0.25;
 			g = 1-(1-this.colorCaption.G)*0.25;
 			b = 1-(1-this.colorCaption.B)*0.25;
-			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
+			this.colorCaptionLight = Drawing.Color.FromRgb(r,g,b);
 		}
 		
 
@@ -69,8 +69,8 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRGB(0.5, 0.0, 0.0);  // rouge foncé
-				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRGB(0.0, 0.3, 0.0);  // vert foncé
+				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRgb(0.5, 0.0, 0.0);  // rouge foncé
+				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRgb(0.0, 0.3, 0.0);  // vert foncé
 			}
 			else
 			{

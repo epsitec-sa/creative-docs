@@ -26,17 +26,17 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorCaptionNF         = Drawing.Color.FromName("ControlDark");
 			this.colorCaptionText       = Drawing.Color.FromName("ActiveCaptionText");
 			this.colorInfo              = Drawing.Color.FromName("Info");
-			this.colorError             = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorError             = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
 
 			r = 1-(1-this.colorControlLight.R)/2;
 			g = 1-(1-this.colorControlLight.G)/2;
 			b = 1-(1-this.colorControlLight.B)/2;
-			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
+			this.colorScrollerBack = Drawing.Color.FromRgb(r,g,b);
 
 			r = 1-(1-this.colorControlLight.R)*0.7;
 			g = 1-(1-this.colorControlLight.G)*0.7;
 			b = 1-(1-this.colorControlLight.B)*0.7;
-			this.colorControlReadOnly = Drawing.Color.FromRGB(r,g,b);
+			this.colorControlReadOnly = Drawing.Color.FromRgb(r,g,b);
 		}
 		
 
@@ -61,8 +61,8 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRGB(0.5, 0.0, 0.0);  // rouge foncé
-				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRGB(0.0, 0.5, 0.0);  // vert foncé
+				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRgb(0.5, 0.0, 0.0);  // rouge foncé
+				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRgb(0.0, 0.5, 0.0);  // vert foncé
 			}
 			else
 			{
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.AddLine(p.X- 6.5, p.Y+1.5, p.X-1.5, p.Y+ 6.5);
 				graphics.AddLine(p.X- 3.5, p.Y+1.5, p.X-1.5, p.Y+ 3.5);
 				graphics.AddLine(p.X- 2.5, p.Y+1.5, p.X-1.5, p.Y+ 2.5);
-				graphics.RenderSolid(Drawing.Color.FromRGB(this.colorWindow.R-0.2, this.colorWindow.G-0.2, this.colorWindow.B-0.2));
+				graphics.RenderSolid(Drawing.Color.FromRgb(this.colorWindow.R-0.2, this.colorWindow.G-0.2, this.colorWindow.B-0.2));
 
 				graphics.AddLine(p.X-12.5, p.Y+1.5, p.X-1.5, p.Y+12.5);
 				graphics.AddLine(p.X- 8.5, p.Y+1.5, p.X-1.5, p.Y+ 8.5);

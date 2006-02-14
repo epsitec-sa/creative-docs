@@ -205,7 +205,7 @@ namespace Epsitec.Common.Document.Widgets
 				double r = c1.R + (c2.R-c1.R)*0.2;
 				double g = c1.G + (c2.G-c1.G)*0.2;
 				double b = c1.B + (c2.B-c1.B)*0.2;
-				backColor = Color.FromRGB(r,g,b);
+				backColor = Color.FromRgb(r,g,b);
 			}
 
 			Color textColor  = adorner.ColorText(this.PaintState);

@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public AlphaBar()
 		{
-			this.color = Drawing.Color.FromARGB(0.15, 0,0,0);
+			this.color = Drawing.Color.FromAlphaRgb(0.15, 0,0,0);
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

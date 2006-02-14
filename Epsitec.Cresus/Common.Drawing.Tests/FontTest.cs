@@ -350,7 +350,7 @@ namespace Epsitec.Common.Drawing
 			Rectangle text_r = font.GetTextBounds (text);
 			text_r.Scale (size);
 			text_r.Offset (x, y);
-			renderer.Color = Color.FromARGB (0.2, 0, 0, 1);
+			renderer.Color = Color.FromAlphaRgb (0.2, 0, 0, 1);
 			
 			path.MoveTo (text_r.BottomLeft);
 			path.LineTo (text_r.BottomRight);
@@ -393,11 +393,11 @@ namespace Epsitec.Common.Drawing
 			renderer.Color = Color.FromBrightness (0);
 			rasterizer.Render (renderer);
 			
-			renderer.Color = Color.FromRGB (0, 1, 0);
+			renderer.Color = Color.FromRgb (0, 1, 0);
 			rasterizer.AddOutline (path, 1);
 			rasterizer.Render (renderer);
 			
-			renderer.Color = Color.FromRGB (1, 0, 0);
+			renderer.Color = Color.FromRgb (1, 0, 0);
 			rasterizer.AddOutline (rect, 1);
 			rasterizer.Render (renderer);
 			
@@ -474,15 +474,15 @@ namespace Epsitec.Common.Drawing
 			renderer.Color = Color.FromBrightness (0);
 			rasterizer.Render (renderer);
 			
-			renderer.Color = Color.FromARGB (0.2, 0, 0, 0);
+			renderer.Color = Color.FromAlphaRgb (0.2, 0, 0, 0);
 			rasterizer.AddSurface (path2);
 			rasterizer.Render (renderer);
 			
-			renderer.Color = Color.FromRGB (0, 1, 0);
+			renderer.Color = Color.FromRgb (0, 1, 0);
 			rasterizer.AddOutline (path, 1);
 			rasterizer.Render (renderer);
 			
-			renderer.Color = Color.FromRGB (1, 0, 0);
+			renderer.Color = Color.FromRgb (1, 0, 0);
 			rasterizer.AddOutline (rect, 1);
 			rasterizer.Render (renderer);
 			
@@ -545,7 +545,7 @@ namespace Epsitec.Common.Drawing
 					x += font.GetGlyphAdvance (glyph) * size + bold_width;
 				}
 				
-				renderer.Color = Color.FromARGB (1, 0, 0, 0);
+				renderer.Color = Color.FromAlphaRgb (1, 0, 0, 0);
 				rasterizer.AddSurface (path);
 				rasterizer.Render (renderer);
 				

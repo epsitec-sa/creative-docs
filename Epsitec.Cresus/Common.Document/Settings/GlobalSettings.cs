@@ -615,8 +615,8 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:BooleanFrontMinus");
 			list.Add("00:BooleanBackMinus");
 
-			list.Add("00:ColorToRGB");
-			list.Add("00:ColorToCMYK");
+			list.Add("00:ColorToRgb");
+			list.Add("00:ColorToCmyk");
 			list.Add("00:ColorToGray");
 			list.Add("00:ColorToGray");
 

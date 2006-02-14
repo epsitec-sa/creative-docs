@@ -29,32 +29,32 @@ namespace Epsitec.Common.Widgets.Adorners
 			r = 1-(1-this.colorControlLight.R)*0.5;
 			g = 1-(1-this.colorControlLight.G)*0.5;
 			b = 1-(1-this.colorControlLight.B)*0.5;
-			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
+			this.colorScrollerBack = Drawing.Color.FromRgb(r,g,b);
 
 			r = 1-(1-this.colorControlLight.R)*0.7;
 			g = 1-(1-this.colorControlLight.G)*0.7;
 			b = 1-(1-this.colorControlLight.B)*0.7;
-			this.colorControlReadOnly = Drawing.Color.FromRGB(r,g,b);
+			this.colorControlReadOnly = Drawing.Color.FromRgb(r,g,b);
 
 			r = 1-(1-this.colorCaption.R)*0.25;
 			g = 1-(1-this.colorCaption.G)*0.25;
 			b = 1-(1-this.colorCaption.B)*0.25;
-			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
+			this.colorCaptionLight = Drawing.Color.FromRgb(r,g,b);
 
 			r = 1-(1-this.colorCaption.R)*0.5;
 			g = 1-(1-this.colorCaption.G)*0.5;
 			b = 1-(1-this.colorCaption.B)*0.5;
-			this.colorCaptionMiddle = Drawing.Color.FromRGB(r,g,b);
+			this.colorCaptionMiddle = Drawing.Color.FromRgb(r,g,b);
 
 			r = 1-(1-this.colorControlLight.R)*0.7;
 			g = 1-(1-this.colorControlLight.G)*0.7;
 			b = 1-(1-this.colorControlLight.B)*0.7;
-			this.colorButton = Drawing.Color.FromRGB(r,g,b);
+			this.colorButton = Drawing.Color.FromRgb(r,g,b);
 
-			this.colorHilite          = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorError           = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorThreeState      = Drawing.Color.FromRGB(211.0/255.0, 187.0/255.0, 153.0/255.0);
-			this.colorCaptionProposal = Drawing.Color.FromRGB(154.0/255.0, 119.0/255.0,  74.0/255.0);
+			this.colorHilite          = Drawing.Color.FromRgb(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorError           = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorThreeState      = Drawing.Color.FromRgb(211.0/255.0, 187.0/255.0, 153.0/255.0);
+			this.colorCaptionProposal = Drawing.Color.FromRgb(154.0/255.0, 119.0/255.0,  74.0/255.0);
 		}
 		
 
@@ -79,8 +79,8 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRGB(0.5, 0.0, 0.0);  // rouge foncé
-				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRGB(0.0, 0.5, 0.0);  // vert foncé
+				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRgb(0.5, 0.0, 0.0);  // rouge foncé
+				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRgb(0.0, 0.5, 0.0);  // vert foncé
 			}
 			else
 			{
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.AddFilledRectangle(p.X-1, p.Y+5, -2, 2);
 				graphics.AddFilledRectangle(p.X-5, p.Y+5, -2, 2);
 				graphics.AddFilledRectangle(p.X-1, p.Y+9, -2, 2);
-				graphics.RenderSolid(Drawing.Color.FromRGB(this.colorWindow.R-0.1, this.colorWindow.G-0.1, this.colorWindow.B-0.1));
+				graphics.RenderSolid(Drawing.Color.FromRgb(this.colorWindow.R-0.1, this.colorWindow.G-0.1, this.colorWindow.B-0.1));
 				return;
 			}
 

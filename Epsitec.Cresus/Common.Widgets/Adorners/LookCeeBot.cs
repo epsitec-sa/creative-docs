@@ -27,19 +27,19 @@ namespace Epsitec.Common.Widgets.Adorners
 			r = 1-(1-this.colorControlLight.R)*0.5;
 			g = 1-(1-this.colorControlLight.G)*0.5;
 			b = 1-(1-this.colorControlLight.B)*0.5;
-			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
+			this.colorScrollerBack = Drawing.Color.FromRgb(r,g,b);
 
 			r = 1-(1-this.colorControlLight.R)*0.7;
 			g = 1-(1-this.colorControlLight.G)*0.7;
 			b = 1-(1-this.colorControlLight.B)*0.7;
-			this.colorButton = Drawing.Color.FromRGB(r,g,b);
+			this.colorButton = Drawing.Color.FromRgb(r,g,b);
 
-			this.colorCaption        = Drawing.Color.FromRGB(255.0/255.0, 146.0/255.0,   1.0/255.0);
-			this.colorHilite         = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorBorder         = Drawing.Color.FromRGB(124.0/255.0, 105.0/255.0,   0.0/255.0);
-			this.colorError          = Drawing.Color.FromRGB(248.0/255.0, 231.0/255.0,  88.0/255.0);
-			this.colorTextBackground = Drawing.Color.FromRGB(254.0/255.0, 251.0/255.0, 242.0/255.0);
-			this.colorWindow         = Drawing.Color.FromRGB(217.0/255.0, 212.0/255.0, 197.0/255.0);
+			this.colorCaption        = Drawing.Color.FromRgb(255.0/255.0, 146.0/255.0,   1.0/255.0);
+			this.colorHilite         = Drawing.Color.FromRgb(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorBorder         = Drawing.Color.FromRgb(124.0/255.0, 105.0/255.0,   0.0/255.0);
+			this.colorError          = Drawing.Color.FromRgb(248.0/255.0, 231.0/255.0,  88.0/255.0);
+			this.colorTextBackground = Drawing.Color.FromRgb(254.0/255.0, 251.0/255.0, 242.0/255.0);
+			this.colorWindow         = Drawing.Color.FromRgb(217.0/255.0, 212.0/255.0, 197.0/255.0);
 		}
 		
 
@@ -64,8 +64,8 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRGB(0.5, 0.0, 0.0);  // rouge foncé
-				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRGB(0.0, 0.5, 0.0);  // vert foncé
+				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRgb(0.5, 0.0, 0.0);  // rouge foncé
+				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRgb(0.0, 0.5, 0.0);  // vert foncé
 			}
 			else
 			{
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.AddLine(p.X- 6.5, p.Y+1.5, p.X-1.5, p.Y+ 6.5);
 				graphics.AddLine(p.X- 3.5, p.Y+1.5, p.X-1.5, p.Y+ 3.5);
 				graphics.AddLine(p.X- 2.5, p.Y+1.5, p.X-1.5, p.Y+ 2.5);
-				graphics.RenderSolid(Drawing.Color.FromRGB(this.colorWindow.R-0.2, this.colorWindow.G-0.2, this.colorWindow.B-0.2));
+				graphics.RenderSolid(Drawing.Color.FromRgb(this.colorWindow.R-0.2, this.colorWindow.G-0.2, this.colorWindow.B-0.2));
 
 				graphics.AddLine(p.X-12.5, p.Y+1.5, p.X-1.5, p.Y+12.5);
 				graphics.AddLine(p.X- 8.5, p.Y+1.5, p.X-1.5, p.Y+ 8.5);
@@ -1491,14 +1491,14 @@ namespace Epsitec.Common.Widgets.Adorners
 			graphics.Rasterizer.AddSurface(path);
 			if ( (state&WidgetState.Enabled) == 0 )
 			{
-				Drawing.Color topColor = Drawing.Color.FromRGB(179.0/255.0, 175.0/255.0, 165.0/255.0);
-				Drawing.Color bottomColor = Drawing.Color.FromRGB(145.0/255.0, 138.0/255.0, 115.0/255.0);
+				Drawing.Color topColor = Drawing.Color.FromRgb(179.0/255.0, 175.0/255.0, 165.0/255.0);
+				Drawing.Color bottomColor = Drawing.Color.FromRgb(145.0/255.0, 138.0/255.0, 115.0/255.0);
 				this.Gradient(graphics, rect, bottomColor, topColor);
 			}
 			else if ( color.IsEmpty )
 			{
-				Drawing.Color topColor = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 132.0/255.0);
-				Drawing.Color bottomColor = Drawing.Color.FromRGB(233.0/255.0, 213.0/255.0, 29.0/255.0);
+				Drawing.Color topColor = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 132.0/255.0);
+				Drawing.Color bottomColor = Drawing.Color.FromRgb(233.0/255.0, 213.0/255.0, 29.0/255.0);
 				this.Gradient(graphics, rect, bottomColor, topColor);
 			}
 			else
@@ -2028,8 +2028,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			switch ( mode )
 			{
 				case TextDisplayMode.Default:   return Drawing.Color.Empty;
-				case TextDisplayMode.Defined:   return Drawing.Color.FromRGB(249.0/255.0, 205.0/255.0, 173.0/255.0);
-				case TextDisplayMode.Proposal:  return Drawing.Color.FromRGB(226.0/255.0, 209.0/255.0, 255.0/255.0);
+				case TextDisplayMode.Defined:   return Drawing.Color.FromRgb(249.0/255.0, 205.0/255.0, 173.0/255.0);
+				case TextDisplayMode.Proposal:  return Drawing.Color.FromRgb(226.0/255.0, 209.0/255.0, 255.0/255.0);
 			}
 			return Drawing.Color.Empty;
 		}

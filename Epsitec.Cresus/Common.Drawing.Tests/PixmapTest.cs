@@ -138,21 +138,21 @@ namespace Epsitec.Common.Drawing
 			
 			cache.SetPixmapSize (400, 400);
 			
-			cache.SolidRenderer.ClearARGB (1, 1, 1, 1);
+			cache.SolidRenderer.ClearAlphaRgb (1, 1, 1, 1);
 			
-			cache.Color = Color.FromARGB (0.5, 1, 0, 0);
+			cache.Color = Color.FromAlphaRgb (0.5, 1, 0, 0);
 			cache.PaintSurface (Path.FromCircle (40, 40, 20));
-			cache.Color = Color.FromARGB (0.5, 0, 1, 0);
+			cache.Color = Color.FromAlphaRgb (0.5, 0, 1, 0);
 			cache.PaintSurface (Path.FromCircle (52, 32, 16));
-			cache.Color = Color.FromARGB (0.5, 0, 0, 1);
+			cache.Color = Color.FromAlphaRgb (0.5, 0, 0, 1);
 			cache.PaintSurface (Path.FromCircle (52, 48, 12));
 			
 			stack[0] = new Pixmap ();
 			stack[0].Size = new System.Drawing.Size (400, 400);
 			stack[0].Copy (0, 0, cache.Pixmap, 0, 0, 400, 400);
 			
-			cache.SolidRenderer.ClearARGB (0, 0, 0, 0);
-			cache.Color = Color.FromARGB (0.5, 1, 0, 0);
+			cache.SolidRenderer.ClearAlphaRgb (0, 0, 0, 0);
+			cache.Color = Color.FromAlphaRgb (0.5, 1, 0, 0);
 			cache.PaintSurface (Path.FromCircle (200, 200, 100));
 			
 			Color c1 = cache.Pixmap.GetPixel (50, 50);
@@ -165,10 +165,10 @@ namespace Epsitec.Common.Drawing
 			stack[1].Size = new System.Drawing.Size (400, 400);
 			stack[1].Copy (0, 0, cache.Pixmap, 0, 0, 400, 400);
 			
-			cache.SolidRenderer.ClearARGB (0, 0, 0, 0);
-			cache.Color = Color.FromARGB (0.5, 0, 1, 0);
+			cache.SolidRenderer.ClearAlphaRgb (0, 0, 0, 0);
+			cache.Color = Color.FromAlphaRgb (0.5, 0, 1, 0);
 			cache.PaintSurface (Path.FromCircle (260, 160, 80));
-			cache.Color = Color.FromARGB (0.5, 0, 0, 1);
+			cache.Color = Color.FromAlphaRgb (0.5, 0, 0, 1);
 			cache.PaintSurface (Path.FromCircle (260, 240, 60));
 			
 			c1 = cache.Pixmap.GetPixel (50, 50);
