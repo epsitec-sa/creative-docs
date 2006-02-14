@@ -172,7 +172,7 @@ namespace Epsitec.Common.Widgets
 				this.UpdateButtonGeometry ();
 				this.UpdateButtonEnable ();
 				this.UpdateTextLayout ();
-				this.UpdateMouseCursor (this.MapRootToClient (Message.State.LastPosition));
+				this.UpdateMouseCursor (this.MapRootToClient (Message.CurrentState.LastPosition));
 			}
 		}
 		

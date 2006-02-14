@@ -175,7 +175,7 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.KeyDown:
-					if ( message.KeyCode == KeyCode.ArrowUp && message.IsCtrlPressed )
+					if ( message.KeyCode == KeyCode.ArrowUp && message.IsControlPressed )
 					{
 						v = this.scroller.Value;
 						v = System.Math.Min(v+this.scroller.SmallChange*0.5m, this.scroller.Range);
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Widgets
 						message.Consumer = this;
 						return;
 					}
-					if ( message.KeyCode == KeyCode.ArrowDown && message.IsCtrlPressed )
+					if ( message.KeyCode == KeyCode.ArrowDown && message.IsControlPressed )
 					{
 						v = this.scroller.Value;
 						v = System.Math.Max(v-this.scroller.SmallChange*0.5m, 0);

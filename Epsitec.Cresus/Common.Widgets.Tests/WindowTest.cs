@@ -212,9 +212,9 @@ namespace Epsitec.Common.Widgets
 			
 			Assert.AreSame (dispatcher, window.Root.CommandDispatchers[0]);
 			
-			CommandState command_open = new CommandState ("Open", dispatcher, KeyCode.ModifierCtrl | KeyCode.AlphaO);
+			CommandState command_open = new CommandState ("Open", dispatcher, KeyCode.ModifierControl | KeyCode.AlphaO);
 			CommandState command_save = new CommandState ("Save", dispatcher, KeyCode.ModifierAlt | KeyCode.AlphaS);
-			CommandState command_cut  = new CommandState ("ClipCut", dispatcher, KeyCode.ModifierCtrl | KeyCode.AlphaX);
+			CommandState command_cut  = new CommandState ("ClipCut", dispatcher, KeyCode.ModifierControl | KeyCode.AlphaX);
 			
 			Button      button;
 			GroupBox    group;

@@ -223,7 +223,7 @@ namespace Epsitec.Common.Widgets
 				if ((focused != null) &&
 					(focused.AutoRadio) &&
 					(shortcut.IsAltPressed == false) &&
-					(shortcut.IsCtrlPressed == false) &&
+					(shortcut.IsControlPressed == false) &&
 					(shortcut.IsShiftPressed == false))
 				{
 					switch (shortcut.KeyCodeOnly)
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Widgets
 					
 					if ((shortcut.KeyCodeOnly == KeyCode.FuncF4) &&
 						(shortcut.IsAltPressed) &&
-						(shortcut.IsCtrlPressed == false) &&
+						(shortcut.IsControlPressed == false) &&
 						(shortcut.IsShiftPressed == false))
 					{
 						window.QueueCommand (this, "Quit" + this.Window.Name);
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Widgets
 				{
 					case KeyCode.Tab:
 						mode = TabNavigationMode.ActivateOnTab;
-						dir  = Message.State.IsShiftPressed ? TabNavigationDir.Backwards : TabNavigationDir.Forwards;
+						dir  = Message.CurrentState.IsShiftPressed ? TabNavigationDir.Backwards : TabNavigationDir.Forwards;
 						break;
 					
 					case KeyCode.ArrowLeft:

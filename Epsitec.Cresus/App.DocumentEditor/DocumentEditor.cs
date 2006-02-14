@@ -3568,41 +3568,41 @@ namespace Epsitec.App.DocumentEditor
 			this.toolImageState = this.CreateCommandState("ObjectImage", "ObjectImage", "ToolImage");
 			this.toolDimensionState = this.CreateCommandState("ObjectDimension", "ObjectDimension", "ToolDimension");
 
-			this.newState = this.CreateCommandState("New", KeyCode.ModifierCtrl|KeyCode.AlphaN);
-			this.openState = this.CreateCommandState("Open", KeyCode.ModifierCtrl|KeyCode.AlphaO);
+			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
+			this.openState = this.CreateCommandState("Open", KeyCode.ModifierControl|KeyCode.AlphaO);
 			this.openModelState = this.CreateCommandState("OpenModel");
-			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierCtrl|KeyCode.AlphaS);
+			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierControl|KeyCode.AlphaS);
 			this.saveAsState = this.CreateCommandState("SaveAs");
 			this.saveModelState = this.CreateCommandState("SaveModel");
-			this.closeState = this.CreateCommandState("Close", null, "Close", KeyCode.ModifierCtrl|KeyCode.FuncF4);
+			this.closeState = this.CreateCommandState("Close", null, "Close", KeyCode.ModifierControl|KeyCode.FuncF4);
 			this.closeAllState = this.CreateCommandState("CloseAll");
 			this.forceSaveAllState = this.CreateCommandState("ForceSaveAll");
-			this.nextDocState = this.CreateCommandState("NextDocument", KeyCode.ModifierCtrl|KeyCode.FuncF6);
-			this.prevDocState = this.CreateCommandState("PrevDocument", KeyCode.ModifierCtrl|KeyCode.ModifierShift|KeyCode.FuncF6);
-			this.printState = this.CreateCommandState("Print", KeyCode.ModifierCtrl|KeyCode.AlphaP);
+			this.nextDocState = this.CreateCommandState("NextDocument", KeyCode.ModifierControl|KeyCode.FuncF6);
+			this.prevDocState = this.CreateCommandState("PrevDocument", KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.FuncF6);
+			this.printState = this.CreateCommandState("Print", KeyCode.ModifierControl|KeyCode.AlphaP);
 			this.exportState = this.CreateCommandState("Export");
 			this.glyphsState = this.CreateCommandState("Glyphs");
 			this.glyphsInsertState = this.CreateCommandState("GlyphsInsert");
 			this.textEditingState = this.CreateCommandState("TextEditing");
-			this.replaceState = this.CreateCommandState("Replace", KeyCode.ModifierCtrl|KeyCode.AlphaF);
+			this.replaceState = this.CreateCommandState("Replace", KeyCode.ModifierControl|KeyCode.AlphaF);
 			this.findNextState = this.CreateCommandState("FindNext", KeyCode.FuncF3);
 			this.findPrevState = this.CreateCommandState("FindPrev", KeyCode.ModifierShift|KeyCode.FuncF3);
-			this.findDefNextState = this.CreateCommandState("FindDefNext", KeyCode.ModifierCtrl|KeyCode.FuncF3);
-			this.findDefPrevState = this.CreateCommandState("FindDefPrev", KeyCode.ModifierCtrl|KeyCode.ModifierShift|KeyCode.FuncF3);
+			this.findDefNextState = this.CreateCommandState("FindDefNext", KeyCode.ModifierControl|KeyCode.FuncF3);
+			this.findDefPrevState = this.CreateCommandState("FindDefPrev", KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.FuncF3);
 			this.deleteState = this.CreateCommandState("Delete", KeyCode.Delete);
-			this.duplicateState = this.CreateCommandState("Duplicate", KeyCode.ModifierCtrl|KeyCode.AlphaD);
+			this.duplicateState = this.CreateCommandState("Duplicate", KeyCode.ModifierControl|KeyCode.AlphaD);
 
-			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierCtrl|KeyCode.AlphaX);
-			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierCtrl|KeyCode.AlphaC);
-			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierCtrl|KeyCode.AlphaV);
+			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
+			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
+			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
 			
 			this.fontQuick1State = this.CreateCommandState("FontQuick1", null, null, true);
 			this.fontQuick2State = this.CreateCommandState("FontQuick2", null, null, true);
 			this.fontQuick3State = this.CreateCommandState("FontQuick3", null, null, true);
 			this.fontQuick4State = this.CreateCommandState("FontQuick4", null, null, true);
-			this.fontBoldState = this.CreateCommandState("FontBold", true, KeyCode.ModifierCtrl|KeyCode.AlphaB);
-			this.fontItalicState = this.CreateCommandState("FontItalic", true, KeyCode.ModifierCtrl|KeyCode.AlphaI);
-			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", true, KeyCode.ModifierCtrl|KeyCode.AlphaU);
+			this.fontBoldState = this.CreateCommandState("FontBold", true, KeyCode.ModifierControl|KeyCode.AlphaB);
+			this.fontItalicState = this.CreateCommandState("FontItalic", true, KeyCode.ModifierControl|KeyCode.AlphaI);
+			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", true, KeyCode.ModifierControl|KeyCode.AlphaU);
 			this.fontOverlinedState = this.CreateCommandState("FontOverlined", true);
 			this.fontStrikeoutState = this.CreateCommandState("FontStrikeout", true);
 			this.fontSubscriptState = this.CreateCommandState("FontSubscript", true);
@@ -3626,8 +3626,8 @@ namespace Epsitec.App.DocumentEditor
 			this.justifHJustifState = this.CreateCommandState("JustifHJustif", "JustifHJustif", "ParagraphJustifHJustif", true);
 			this.justifHAllState = this.CreateCommandState("JustifHAll", "JustifHAll", "ParagraphJustifHAll", true);
 			
-			this.orderUpOneState = this.CreateCommandState("OrderUpOne", KeyCode.ModifierCtrl|KeyCode.PageUp);
-			this.orderDownOneState = this.CreateCommandState("OrderDownOne", KeyCode.ModifierCtrl|KeyCode.PageDown);
+			this.orderUpOneState = this.CreateCommandState("OrderUpOne", KeyCode.ModifierControl|KeyCode.PageUp);
+			this.orderDownOneState = this.CreateCommandState("OrderDownOne", KeyCode.ModifierControl|KeyCode.PageDown);
 			this.orderUpAllState = this.CreateCommandState("OrderUpAll", KeyCode.ModifierShift|KeyCode.PageUp);
 			this.orderDownAllState = this.CreateCommandState("OrderDownAll", KeyCode.ModifierShift|KeyCode.PageDown);
 			
@@ -3710,12 +3710,12 @@ namespace Epsitec.App.DocumentEditor
 			this.booleanFrontMinusState = this.CreateCommandState("BooleanFrontMinus");
 			this.booleanBackMinusState = this.CreateCommandState("BooleanBackMinus");
 			
-			this.undoState = this.CreateCommandState("Undo", KeyCode.ModifierCtrl|KeyCode.AlphaZ);
-			this.redoState = this.CreateCommandState("Redo", KeyCode.ModifierCtrl|KeyCode.AlphaY);
+			this.undoState = this.CreateCommandState("Undo", KeyCode.ModifierControl|KeyCode.AlphaZ);
+			this.redoState = this.CreateCommandState("Redo", KeyCode.ModifierControl|KeyCode.AlphaY);
 			this.undoRedoListState = this.CreateCommandState("UndoRedoList");
 			
 			this.deselectAllState = this.CreateCommandState("DeselectAll", KeyCode.Escape);
-			this.selectAllState = this.CreateCommandState("SelectAll", KeyCode.ModifierCtrl|KeyCode.AlphaA);
+			this.selectAllState = this.CreateCommandState("SelectAll", KeyCode.ModifierControl|KeyCode.AlphaA);
 			this.selectInvertState = this.CreateCommandState("SelectInvert");
 			this.selectorAutoState = this.CreateCommandState("SelectorAuto");
 			this.selectorIndividualState = this.CreateCommandState("SelectorIndividual");
@@ -3733,7 +3733,7 @@ namespace Epsitec.App.DocumentEditor
 			this.hideCancelState = this.CreateCommandState("HideCancel");
 			
 			this.zoomMinState = this.CreateCommandState("ZoomMin", true);
-			this.zoomPageState = this.CreateCommandState("ZoomPage", true, KeyCode.ModifierCtrl|KeyCode.Digit0);
+			this.zoomPageState = this.CreateCommandState("ZoomPage", true, KeyCode.ModifierControl|KeyCode.Digit0);
 			this.zoomPageWidthState = this.CreateCommandState("ZoomPageWidth", true);
 			this.zoomDefaultState = this.CreateCommandState("ZoomDefault", true);
 			this.zoomSelState = this.CreateCommandState("ZoomSel");
@@ -3809,10 +3809,10 @@ namespace Epsitec.App.DocumentEditor
 			this.moveRightNormState  = this.CreateCommandState("MoveRightNorm",  KeyCode.ArrowRight);
 			this.moveUpNormState     = this.CreateCommandState("MoveUpNorm",     KeyCode.ArrowUp);
 			this.moveDownNormState   = this.CreateCommandState("MoveDownNorm",   KeyCode.ArrowDown);
-			this.moveLeftCtrlState   = this.CreateCommandState("MoveLeftCtrl",   KeyCode.ModifierCtrl|KeyCode.ArrowLeft);
-			this.moveRightCtrlState  = this.CreateCommandState("MoveRightCtrl",  KeyCode.ModifierCtrl|KeyCode.ArrowRight);
-			this.moveUpCtrlState     = this.CreateCommandState("MoveUpCtrl",     KeyCode.ModifierCtrl|KeyCode.ArrowUp);
-			this.moveDownCtrlState   = this.CreateCommandState("MoveDownCtrl",   KeyCode.ModifierCtrl|KeyCode.ArrowDown);
+			this.moveLeftCtrlState   = this.CreateCommandState("MoveLeftCtrl",   KeyCode.ModifierControl|KeyCode.ArrowLeft);
+			this.moveRightCtrlState  = this.CreateCommandState("MoveRightCtrl",  KeyCode.ModifierControl|KeyCode.ArrowRight);
+			this.moveUpCtrlState     = this.CreateCommandState("MoveUpCtrl",     KeyCode.ModifierControl|KeyCode.ArrowUp);
+			this.moveDownCtrlState   = this.CreateCommandState("MoveDownCtrl",   KeyCode.ModifierControl|KeyCode.ArrowDown);
 			this.moveLeftShiftState  = this.CreateCommandState("MoveLeftShift",  KeyCode.ModifierShift|KeyCode.ArrowLeft);
 			this.moveRightShiftState = this.CreateCommandState("MoveRightShift", KeyCode.ModifierShift|KeyCode.ArrowRight);
 			this.moveUpShiftState    = this.CreateCommandState("MoveUpShift",    KeyCode.ModifierShift|KeyCode.ArrowUp);

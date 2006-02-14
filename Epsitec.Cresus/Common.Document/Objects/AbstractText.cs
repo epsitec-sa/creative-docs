@@ -247,7 +247,7 @@ namespace Epsitec.Common.Document.Objects
 		protected bool EditProcessKeyPress(Message message)
 		{
 			//	Gestion des événements clavier.
-			if ( message.IsCtrlPressed )
+			if ( message.IsControlPressed )
 			{
 				switch ( message.KeyCode )
 				{

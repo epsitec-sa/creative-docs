@@ -108,7 +108,8 @@ namespace Epsitec.Common.Widgets
 			get { return this.tick_count; }
 		}
 		
-		public static MessageState			State
+		
+		public static Message.State			CurrentState
 		{
 			get { return Message.state; }
 		}
@@ -196,9 +197,9 @@ namespace Epsitec.Common.Widgets
 			get { return (this.modifiers & ModifierKeys.Shift) != 0; }
 		}
 		
-		public bool							IsCtrlPressed
+		public bool							IsControlPressed
 		{
-			get { return (this.modifiers & ModifierKeys.Ctrl) != 0; }
+			get { return (this.modifiers & ModifierKeys.Control) != 0; }
 		}
 		
 		public bool							IsAltPressed
@@ -258,7 +259,7 @@ namespace Epsitec.Common.Widgets
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			if ((code & KeyCode.ModifierCtrl) != 0)
+			if ((code & KeyCode.ModifierControl) != 0)
 			{
 				buffer.Append (Message.GetSimpleKeyName (KeyCode.ControlKey));
 				buffer.Append ("+");
@@ -336,51 +337,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		private static string GetSimpleKeyName(KeyCode code)
-		{
-			string name;
-			
-			if (Platform.Win32Api.GetKeyName (code, out name))
-			{
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-				
-				string[] elems = name.Split ('.');
-				
-				for (int i = 0; i < elems.Length; i++)
-				{
-					string upper = elems[i];
-					string lower = upper.ToLower ();
-					
-					if (i > 0)
-					{
-						buffer.Append (".");
-					}
-					
-					if (upper.Length > 0)
-					{
-						buffer.Append (upper.Substring (0, 1));
-						buffer.Append (lower.Substring (1));
-					}
-				}
-				
-				return buffer.ToString ();
-			}
-			
-			name = code.ToString ();
-			
-			if (name.StartsWith ("Func"))
-			{
-				return name.Substring (4);
-			}
-			if (name.StartsWith ("Alpha"))
-			{
-				return name.Substring (5);
-			}
-			
-			return name;
-		}
-		
-		
+		#region Internal Static Methods
 		internal static void ClearLastWindow()
 		{
 			Message.state.window = null;
@@ -620,7 +577,7 @@ namespace Epsitec.Common.Widgets
 				
 				Message.state.window = form.HostingWidgetWindow;
 				Message.state.window_cursor = message.cursor;
-				Message.state.screen_cursor = Message.State.window == null ? Drawing.Point.Empty : Message.State.window.MapWindowToScreen (message.cursor);
+				Message.state.screen_cursor = Message.CurrentState.window == null ? Drawing.Point.Empty : Message.CurrentState.window.MapWindowToScreen (message.cursor);
 			}
 			
 			//	Gère les clics multiples, en tenant compte des réglages de l'utilisateur.
@@ -690,7 +647,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (e.Control)
 			{
-				message.modifiers |= ModifierKeys.Ctrl;
+				message.modifiers |= ModifierKeys.Control;
 			}
 			
 			if (type == MessageType.KeyDown)
@@ -731,7 +688,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Control) != 0)
 			{
-				message.modifiers |= ModifierKeys.Ctrl;
+				message.modifiers |= ModifierKeys.Control;
 			}
 			
 			if (message.type == MessageType.KeyPress)
@@ -807,6 +764,152 @@ namespace Epsitec.Common.Widgets
 		{
 			Message.state.window = window;
 		}
+		#endregion
+		
+		#region Message State Structure
+		/// <summary>
+		/// La structure State décrit l'état des boutons et des touches super-
+		/// shift, la dernière position de la souris, la dernière fenêtre visitée,
+		/// etc.
+		/// </summary>
+		public struct State
+		{
+			public MouseButtons					Buttons
+			{
+				get { return this.buttons; }
+			}
+			
+			public ModifierKeys					ModifierKeys
+			{
+				get { return this.modifiers; }
+			}
+			
+			public bool							IsLeftButton
+			{
+				get { return (this.buttons & MouseButtons.Left) != 0; }
+			}
+			
+			public bool							IsRightButton
+			{
+				get { return (this.buttons & MouseButtons.Right) != 0; }
+			}
+			
+			public bool							IsMiddleButton
+			{
+				get { return (this.buttons & MouseButtons.Middle) != 0; }
+			}
+			
+			public bool							IsXButton1
+			{
+				get { return (this.buttons & MouseButtons.XButton1) != 0; }
+			}
+			
+			public bool							IsXButton2
+			{
+				get { return (this.buttons & MouseButtons.XButton2) != 0; }
+			}
+			
+			public bool							IsShiftPressed
+			{
+				get { return (this.modifiers & ModifierKeys.Shift) != 0; }
+			}
+			
+			public bool							IsControlPressed
+			{
+				get { return (this.modifiers & ModifierKeys.Control) != 0; }
+			}
+			
+			public bool							IsAltPressed
+			{
+				get { return (this.modifiers & ModifierKeys.Alt) != 0; }
+			}
+			
+			public Drawing.Point				LastPosition
+			{
+				get { return this.window_cursor; }
+			}
+			
+			public Drawing.Point				LastScreenPosition
+			{
+				get { return this.screen_cursor; }
+			}
+			
+			public Window						LastWindow
+			{
+				get { return this.window; }
+			}
+			
+			public Window						MouseDownWindow
+			{
+				get { return this.window_mouse_down; }
+			}
+			
+			public bool							IsSameWindowAsButtonDown
+			{
+				get { return (this.window_mouse_down == null) || (this.window_mouse_down == this.window); }
+			}
+			
+			
+			#region Internal Fields
+			internal ModifierKeys				modifiers;
+			internal KeyCode					key_down_code;
+			internal MouseButtons				buttons;
+			internal MouseButtons				button_down_id;
+			internal int						button_down_count;
+			internal int						button_down_time;
+			internal int						button_down_x;
+			internal int						button_down_y;
+			internal Drawing.Point				window_cursor;
+			internal Drawing.Point				screen_cursor;
+			internal Window						window;
+			internal Window						window_mouse_down;
+			#endregion
+		}
+		#endregion
+		
+		private static string GetSimpleKeyName(KeyCode code)
+		{
+			string name;
+			
+			if (Platform.Win32Api.GetKeyName (code, out name))
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				string[] elems = name.Split ('.');
+				
+				for (int i = 0; i < elems.Length; i++)
+				{
+					string upper = elems[i];
+					string lower = upper.ToLower ();
+					
+					if (i > 0)
+					{
+						buffer.Append (".");
+					}
+					
+					if (upper.Length > 0)
+					{
+						buffer.Append (upper.Substring (0, 1));
+						buffer.Append (lower.Substring (1));
+					}
+				}
+				
+				return buffer.ToString ();
+			}
+			
+			name = code.ToString ();
+			
+			if (name.StartsWith ("Func"))
+			{
+				return name.Substring (4);
+			}
+			if (name.StartsWith ("Alpha"))
+			{
+				return name.Substring (5);
+			}
+			
+			return name;
+		}
 		
 		
 		private bool						filter_no_children;
@@ -833,281 +936,6 @@ namespace Epsitec.Common.Widgets
 		private int							key_char;
 		
 		private static KeyCode				last_code = 0;
-		private static MessageState			state;
-	}
-	
-	
-	/// <summary>
-	/// La classe MessageState décrit l'état des boutons et des touches super-
-	/// shift, la dernière position de la souris, la dernière fenêtre visitée,
-	/// etc.
-	/// </summary>
-	public struct MessageState
-	{
-		public MouseButtons					Buttons
-		{
-			get { return this.buttons; }
-		}
-		
-		public ModifierKeys					ModifierKeys
-		{
-			get { return this.modifiers; }
-		}
-		
-		public bool							IsLeftButton
-		{
-			get { return (this.buttons & MouseButtons.Left) != 0; }
-		}
-		
-		public bool							IsRightButton
-		{
-			get { return (this.buttons & MouseButtons.Right) != 0; }
-		}
-		
-		public bool							IsMiddleButton
-		{
-			get { return (this.buttons & MouseButtons.Middle) != 0; }
-		}
-		
-		public bool							IsXButton1
-		{
-			get { return (this.buttons & MouseButtons.XButton1) != 0; }
-		}
-		
-		public bool							IsXButton2
-		{
-			get { return (this.buttons & MouseButtons.XButton2) != 0; }
-		}
-		
-		public bool							IsShiftPressed
-		{
-			get { return (this.modifiers & ModifierKeys.Shift) != 0; }
-		}
-		
-		public bool							IsCtrlPressed
-		{
-			get { return (this.modifiers & ModifierKeys.Ctrl) != 0; }
-		}
-		
-		public bool							IsAltPressed
-		{
-			get { return (this.modifiers & ModifierKeys.Alt) != 0; }
-		}
-		
-		public Drawing.Point				LastPosition
-		{
-			get { return this.window_cursor; }
-		}
-		
-		public Drawing.Point				LastScreenPosition
-		{
-			get { return this.screen_cursor; }
-		}
-		
-		public Window						LastWindow
-		{
-			get { return this.window; }
-		}
-		
-		public Window						MouseDownWindow
-		{
-			get { return this.window_mouse_down; }
-		}
-		
-		public bool							IsSameWindowAsButtonDown
-		{
-			get { return (this.window_mouse_down == null) || (this.window_mouse_down == this.window); }
-		}
-		
-		
-		#region Internal Fields
-		internal ModifierKeys				modifiers;
-		internal KeyCode					key_down_code;
-		internal MouseButtons				buttons;
-		internal MouseButtons				button_down_id;
-		internal int						button_down_count;
-		internal int						button_down_time;
-		internal int						button_down_x;
-		internal int						button_down_y;
-		internal Drawing.Point				window_cursor;
-		internal Drawing.Point				screen_cursor;
-		internal Window						window;
-		internal Window						window_mouse_down;
-		#endregion
-	}
-	
-	
-	/// <summary>
-	/// L'énumération MessageType définit les divers types de messages qui
-	/// peuvent survenir dans une application.
-	/// </summary>
-	public enum MessageType
-	{
-		None,
-		
-		MouseEnter,
-		MouseLeave,
-		MouseMove,
-		MouseHover,
-		MouseDown,
-		MouseUp,
-		MouseWheel,
-		
-		KeyDown,
-		KeyUp,
-		KeyPress,
-	}
-	
-	/// <summary>
-	/// L'énumération KeyCode liste tous les codes de touches connus et supportés
-	/// par le système de gestion des événements.
-	/// </summary>
-	[System.Flags] public enum KeyCode
-	{
-		None			= 0,
-		
-		AlphaA			= 65,
-		AlphaB			= 66,
-		AlphaC			= 67,
-		AlphaD			= 68,
-		AlphaE			= 69,
-		AlphaF			= 70,
-		AlphaG			= 71,
-		AlphaH			= 72,
-		AlphaI			= 73,
-		AlphaJ			= 74,
-		AlphaK			= 75,
-		AlphaL			= 76,
-		AlphaM			= 77,
-		AlphaN			= 78,
-		AlphaO			= 79,
-		AlphaP			= 80,
-		AlphaQ			= 81,
-		AlphaR			= 82,
-		AlphaS			= 83,
-		AlphaT			= 84,
-		AlphaU			= 85,
-		AlphaV			= 86,
-		AlphaW			= 87,
-		AlphaX			= 88,
-		AlphaY			= 89,
-		AlphaZ			= 90,
-		
-		Digit0			= 48,
-		Digit1			= 49,
-		Digit2			= 50,
-		Digit3			= 51,
-		Digit4			= 52,
-		Digit5			= 53,
-		Digit6			= 54,
-		Digit7			= 55,
-		Digit8			= 56,
-		Digit9			= 57,
-		
-		FuncF1			= 112,
-		FuncF2			= 113,
-		FuncF3			= 114,
-		FuncF4			= 115,
-		FuncF5			= 116,
-		FuncF6			= 117,
-		FuncF7			= 118,
-		FuncF8			= 119,
-		FuncF9			= 120,
-		FuncF10			= 121,
-		FuncF11			= 122,
-		FuncF12			= 123,
-		FuncF13			= 124,
-		FuncF14			= 125,
-		FuncF15			= 126,
-		FuncF16			= 127,
-		FuncF17			= 128,
-		FuncF18			= 129,
-		FuncF19			= 130,
-		FuncF20			= 131,
-		FuncF21			= 132,
-		FuncF22			= 133,
-		FuncF23			= 134,
-		FuncF24			= 135,
-		
-		AltKey			= 18,
-		AltKeyLeft		= 164,
-		AltKeyRight		= 165,
-		
-		ArrowDown		= 40,
-		ArrowLeft		= 37,
-		ArrowRight		= 39,
-		ArrowUp			= 38,
-		
-		Back			= 8,
-		Clear			= 12,
-		
-		ControlKey		= 17,
-		ControlKeyLeft	= 162,
-		ControlKeyRight	= 163,
-		
-		Decimal			= 110,
-		Delete			= 46,
-		Divide			= 111,
-		End				= 35,
-		Escape			= 27,
-		Home			= 36,
-		Insert			= 45,
-		Multiply		= 106,
-		PageDown		= 34,
-		PageUp			= 33,
-		Pause			= 19,
-		Return			= 13,
-		
-		ShiftKey		= 16,
-		ShiftKeyLeft	= 160,
-		ShiftKeyRight	= 161,
-		
-		Space			= 32,
-		Add				= 107,
-		Substract		= 109,
-		Tab				= 9,
-		
-		ContextualMenu	= 93,
-		
-		CapsLock		= 20,
-		NumLock			= 144,
-		ScrollLock		= 145,
-		
-		KeyCodeMask		= 0x0000ffff,
-		ModifierMask	= 0x00ff0000,
-		
-		ModifierShift	= (int) ModifierKeys.Shift,
-		ModifierCtrl	= (int) ModifierKeys.Ctrl,
-		ModifierAlt		= (int) ModifierKeys.Alt
-	}
-	
-	
-	/// <summary>
-	/// L'énumération MouseButtons définit les boutons de la souris connus.
-	/// Plusieurs boutons peuvent être combinés.
-	/// </summary>
-	[System.Flags] public enum MouseButtons
-	{
-		None			= 0,
-		
-		Left			= 0x00100000,
-		Right			= 0x00200000,
-		Middle			= 0x00400000,
-		XButton1		= 0x00800000,
-		XButton2		= 0x01000000
-	}
-	
-	
-	/// <summary>
-	/// L'énumération ModifierKeys définit les touches super-shift connues.
-	/// Plusieurs touches super-shift peuvent être combinées.
-	/// </summary>
-	[System.Flags] public enum ModifierKeys
-	{
-		None			= 0,
-		
-		Shift			= 0x00010000,
-		Ctrl			= 0x00020000,
-		Alt				= 0x00040000,
+		private static Message.State		state;
 	}
 }

@@ -838,14 +838,14 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case MessageType.MouseDown:
-					this.ProcessMouse(pos, message.IsShiftPressed, message.IsCtrlPressed, false);
+					this.ProcessMouse(pos, message.IsShiftPressed, message.IsControlPressed, false);
 					this.mouseDown = true;
 					break;
 				
 				case MessageType.MouseMove:
 					if ( this.mouseDown )
 					{
-						this.ProcessMouse(pos, message.IsShiftPressed, message.IsCtrlPressed, false);
+						this.ProcessMouse(pos, message.IsShiftPressed, message.IsControlPressed, false);
 					}
 					else
 					{
@@ -856,7 +856,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
-						this.ProcessMouse(pos, message.IsShiftPressed, message.IsCtrlPressed, true);
+						this.ProcessMouse(pos, message.IsShiftPressed, message.IsControlPressed, true);
 						this.mouseDown = false;
 					}
 					break;
@@ -904,14 +904,14 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		protected void ProcessMouse(Drawing.Point pos, bool isShiftPressed, bool isCtrlPressed, bool isFinal)
+		protected void ProcessMouse(Drawing.Point pos, bool isShiftPressed, bool isControlPressed, bool isFinal)
 		{
 			//	Sélectionne une cellule.
 			CellArrayStyle style = this.styleV | this.styleH;
 			if ( (style & CellArrayStyle.SelectCell) == 0 &&
 				 (style & CellArrayStyle.SelectLine) == 0 )  return;
 
-			if ( (style & CellArrayStyle.SelectMulti) == 0 || !isCtrlPressed )
+			if ( (style & CellArrayStyle.SelectMulti) == 0 || !isControlPressed )
 			{
 				this.DeselectAll();
 				this.selectedRow = -1;

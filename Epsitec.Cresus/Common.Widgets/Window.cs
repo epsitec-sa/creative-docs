@@ -1241,7 +1241,7 @@ namespace Epsitec.Common.Widgets
 				this.components.Dispose ();
 				this.components = null;
 				
-				if (Message.State.LastWindow == this)
+				if (Message.CurrentState.LastWindow == this)
 				{
 					Message.ClearLastWindow ();
 				}
@@ -1696,7 +1696,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static void ResetMouseCursor()
 		{
-			Window window = Message.State.LastWindow;
+			Window window = Message.CurrentState.LastWindow;
 			
 			if (window != null)
 			{
@@ -1981,8 +1981,8 @@ namespace Epsitec.Common.Widgets
 						break;
 					
 					case MessageType.MouseEnter:
-						if ((Message.State.IsLeftButton) &&
-							(Message.State.IsSameWindowAsButtonDown) &&
+						if ((Message.CurrentState.IsLeftButton) &&
+							(Message.CurrentState.IsSameWindowAsButtonDown) &&
 							(this.initially_engaged_widget == consumer) &&
 							(consumer.AutoEngage) &&
 							(consumer.IsEngaged == false) &&

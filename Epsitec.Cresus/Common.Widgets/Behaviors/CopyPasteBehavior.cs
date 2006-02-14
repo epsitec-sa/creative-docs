@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				if (message.Type == MessageType.KeyPress)
 				{
-					if (message.IsCtrlPressed)
+					if (message.IsControlPressed)
 					{
 						switch (message.KeyCode)
 						{

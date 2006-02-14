@@ -130,7 +130,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.disable_return_key)
 			{
-				if ((message.IsCtrlPressed == true) &&
+				if ((message.IsControlPressed == true) &&
 					(message.IsAltPressed == false) &&
 					(this.allow_lines))
 				{
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Widgets
 				if ((message.IsAltPressed == false) &&
 					(this.allow_lines))
 				{
-					if ((message.IsCtrlPressed) &&
+					if ((message.IsControlPressed) &&
 						(this.allow_frames))
 					{
 						if (message.IsShiftPressed)										//	saut de colonne
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.disable_tab_key)
 			{
-				if ((message.IsCtrlPressed == true) &&
+				if ((message.IsControlPressed == true) &&
 					(message.IsAltPressed == false) &&
 					(this.allow_tabs))
 				{
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessSpaceKey(Message message)
 		{
-			if (message.IsCtrlPressed && message.IsShiftPressed)
+			if (message.IsControlPressed && message.IsShiftPressed)
 			{
 				this.Insert (Text.Unicode.Code.NoBreakSpace);
 				return true;
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Widgets
 			this.ClearVerticalMoveCache ();
 			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Backward);
 			
-			if (message.IsCtrlPressed)
+			if (message.IsControlPressed)
 			{
 				this.text_navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			}
@@ -279,7 +279,7 @@ namespace Epsitec.Common.Widgets
 			this.ClearVerticalMoveCache ();
 			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Forward);
 			
-			if (message.IsCtrlPressed)
+			if (message.IsControlPressed)
 			{
 				this.text_navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 0);
 			}
@@ -298,13 +298,13 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Backward))
 			{
-				if (message.IsCtrlPressed == false)
+				if (message.IsControlPressed == false)
 				{
 					return true;
 				}
 			}
 			
-			if (message.IsCtrlPressed)
+			if (message.IsControlPressed)
 			{
 				this.text_navigator.MoveTo (Text.TextNavigator.Target.WordStart, 1);
 			}
@@ -323,13 +323,13 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Forward))
 			{
-				if (message.IsCtrlPressed == false)
+				if (message.IsControlPressed == false)
 				{
 					return true;
 				}
 			}
 			
-			if (message.IsCtrlPressed)
+			if (message.IsControlPressed)
 			{
 				this.text_navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
 			}
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Widgets
 			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Backward);
 			
-			if (message.IsCtrlPressed)
+			if (message.IsControlPressed)
 			{
 				this.ClearVerticalMoveCache ();
 				this.text_navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);
@@ -364,7 +364,7 @@ namespace Epsitec.Common.Widgets
 			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, Text.TextNavigator.Direction.Forward);
 			
-			if (message.IsCtrlPressed)
+			if (message.IsControlPressed)
 			{
 				this.ClearVerticalMoveCache ();
 				this.text_navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);

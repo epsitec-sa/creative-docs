@@ -269,7 +269,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.dragTarget != this )
 				{
-					if ( Message.State.IsShiftPressed || Message.State.IsCtrlPressed )
+					if ( Message.CurrentState.IsShiftPressed || Message.CurrentState.IsControlPressed )
 					{
 						Drawing.RichColor temp = this.Color;
 						this.Color = this.dragTarget.Color;
@@ -377,7 +377,7 @@ namespace Epsitec.Common.Widgets
 			//	Mise à jour après un changement de mode swap d'un drag & drop.
 			if ( this.dragTarget != null )
 			{
-				bool swap = Message.State.IsShiftPressed || Message.State.IsCtrlPressed;
+				bool swap = Message.CurrentState.IsShiftPressed || Message.CurrentState.IsControlPressed;
 				this.DragHilite(this, this.dragTarget, swap);
 			}
 			else

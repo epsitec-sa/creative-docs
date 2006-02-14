@@ -99,9 +99,9 @@ namespace Epsitec.Common.Widgets
 				
 				if ((key_code & KeyCode.KeyCodeMask) != KeyCode.None)
 				{
-					if (message.IsCtrlPressed)
+					if (message.IsControlPressed)
 					{
-						key_code |= KeyCode.ModifierCtrl;
+						key_code |= KeyCode.ModifierControl;
 					}
 					
 					if (message.IsShiftPressed)
@@ -114,9 +114,9 @@ namespace Epsitec.Common.Widgets
 			}
 			else if (message.Type == MessageType.KeyPress)
 			{
-				if (message.IsCtrlPressed)
+				if (message.IsControlPressed)
 				{
-					key_code |= KeyCode.ModifierCtrl;
+					key_code |= KeyCode.ModifierControl;
 				}
 				
 				if (message.IsShiftPressed)
@@ -184,11 +184,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool						IsCtrlPressed
+		public bool						IsControlPressed
 		{
 			get
 			{
-				return (this.KeyCode & KeyCode.ModifierCtrl) != 0;
+				return (this.KeyCode & KeyCode.ModifierControl) != 0;
 			}
 		}
 		

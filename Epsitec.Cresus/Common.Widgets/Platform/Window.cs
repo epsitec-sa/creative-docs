@@ -1663,7 +1663,7 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				if (Message.IsMouseMsg (msg))
 				{
-					if (Message.State.Buttons == Widgets.MouseButtons.None)
+					if (Message.CurrentState.Buttons == Widgets.MouseButtons.None)
 					{
 						this.filter_mouse_messages = false;
 					}
@@ -1701,7 +1701,7 @@ namespace Epsitec.Common.Widgets.Platform
 					return false;
 				}
 				
-				Widgets.Window  w_window = Message.State.LastWindow;
+				Widgets.Window  w_window = Message.CurrentState.LastWindow;
 				Platform.Window p_window = (w_window != null) ? w_window.PlatformWindow : null;
 				
 				if (p_window == null)

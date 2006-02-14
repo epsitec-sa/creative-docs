@@ -428,7 +428,7 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.KeyDown:
-					if ( this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed) )
+					if ( this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsControlPressed) )
 					{
 						//?System.Diagnostics.Debug.WriteLine(this.textLayout.Text);
 						message.Swallowed = true;
@@ -489,7 +489,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
+		protected bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isControlPressed)
 		{
 			//	Gestion d'une touche pressée avec KeyDown dans le texte.
 			this.InitialMemorize();
@@ -513,7 +513,7 @@ namespace Epsitec.Common.Widgets
 						return true;
 
 					case KeyCode.Home:
-						if ( isCtrlPressed )
+						if ( isControlPressed )
 						{
 							this.textLayout.MoveCursor(this.context, -1000000, isShiftPressed, false);
 						}
@@ -526,7 +526,7 @@ namespace Epsitec.Common.Widgets
 						return true;
 
 					case KeyCode.End:
-						if ( isCtrlPressed )
+						if ( isControlPressed )
 						{
 							this.textLayout.MoveCursor(this.context, 1000000, isShiftPressed, false);
 						}
@@ -567,7 +567,7 @@ namespace Epsitec.Common.Widgets
 			{
 				case KeyCode.Back:
 					if ( this.isReadOnly )  return false;
-					if ( isShiftPressed || isCtrlPressed )  return false;
+					if ( isShiftPressed || isControlPressed )  return false;
 					this.UndoMemorise(UndoType.Delete);
 					this.textLayout.DeleteCharacter(this.context, -1);
 					this.OnTextDeleted(false);
@@ -577,7 +577,7 @@ namespace Epsitec.Common.Widgets
 				
 				case KeyCode.Delete:
 					if ( this.isReadOnly )  return false;
-					if ( isShiftPressed || isCtrlPressed )  return false;
+					if ( isShiftPressed || isControlPressed )  return false;
 					this.UndoMemorise(UndoType.Delete);
 					this.textLayout.DeleteCharacter(this.context, 1);
 					this.OnTextDeleted(false);
@@ -604,7 +604,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case KeyCode.ArrowLeft:
-					if ( this.textLayout.MoveCursor(this.context, -1, isShiftPressed, isCtrlPressed) )
+					if ( this.textLayout.MoveCursor(this.context, -1, isShiftPressed, isControlPressed) )
 					{
 						this.OnCursorScrolled();
 						this.OnCursorChanged(false);
@@ -613,7 +613,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case KeyCode.ArrowRight:
-					if ( this.textLayout.MoveCursor(this.context, 1, isShiftPressed, isCtrlPressed) )
+					if ( this.textLayout.MoveCursor(this.context, 1, isShiftPressed, isControlPressed) )
 					{
 						this.OnCursorScrolled();
 						this.OnCursorChanged(false);

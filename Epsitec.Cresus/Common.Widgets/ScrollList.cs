@@ -392,7 +392,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ((message.IsAltPressed) ||
 				(message.IsShiftPressed) ||
-				(message.IsCtrlPressed))
+				(message.IsControlPressed))
 			{
 				return false;
 			}

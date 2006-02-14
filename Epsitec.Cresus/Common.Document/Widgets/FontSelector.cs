@@ -308,7 +308,7 @@ namespace Epsitec.Common.Document.Widgets
 						break;
 
 					case KeyCode.ArrowUp:
-						if ( message.IsCtrlPressed )
+						if ( message.IsControlPressed )
 						{
 							this.FirstLine = this.FirstLine-1;
 						}
@@ -319,7 +319,7 @@ namespace Epsitec.Common.Document.Widgets
 						break;
 
 					case KeyCode.ArrowDown:
-						if ( message.IsCtrlPressed )
+						if ( message.IsControlPressed )
 						{
 							this.FirstLine = this.FirstLine+1;
 						}
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Document.Widgets
 						break;
 
 					case KeyCode.PageUp:
-						if ( message.IsCtrlPressed )
+						if ( message.IsControlPressed )
 						{
 							this.FirstLine = this.FirstLine-this.samples.Length;
 						}
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Document.Widgets
 						break;
 
 					case KeyCode.PageDown:
-						if ( message.IsCtrlPressed )
+						if ( message.IsControlPressed )
 						{
 							this.FirstLine = this.FirstLine+this.samples.Length;
 						}
@@ -352,7 +352,7 @@ namespace Epsitec.Common.Document.Widgets
 						break;
 
 					case KeyCode.Home:
-						if ( message.IsCtrlPressed )
+						if ( message.IsControlPressed )
 						{
 							this.FirstLine = 0;
 						}
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Document.Widgets
 						break;
 
 					case KeyCode.End:
-						if ( message.IsCtrlPressed )
+						if ( message.IsControlPressed )
 						{
 							this.FirstLine = 100000;
 						}

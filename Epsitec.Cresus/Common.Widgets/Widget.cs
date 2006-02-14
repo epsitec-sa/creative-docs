@@ -1825,7 +1825,7 @@ namespace Epsitec.Common.Widgets
 					
 					message = Message.FromMouseEvent (MessageType.MouseEnter, null, null);
 					
-					this.OnEntered (new MessageEventArgs (message, Message.State.LastPosition));
+					this.OnEntered (new MessageEventArgs (message, Message.CurrentState.LastPosition));
 				}
 				else
 				{
@@ -1860,7 +1860,7 @@ namespace Epsitec.Common.Widgets
 					
 					message = Message.FromMouseEvent (MessageType.MouseLeave, null, null);
 					
-					this.OnExited (new MessageEventArgs (message, Message.State.LastPosition));
+					this.OnExited (new MessageEventArgs (message, Message.CurrentState.LastPosition));
 				}
 				
 				this.MessageHandler (message);
@@ -4166,7 +4166,7 @@ namespace Epsitec.Common.Widgets
 				{
 					case MessageType.MouseUp:
 						
-						if (Message.State.IsSameWindowAsButtonDown == false)
+						if (Message.CurrentState.IsSameWindowAsButtonDown == false)
 						{
 							return;
 						}

@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case MessageType.KeyPress:
-					if ( message.IsAltPressed || message.IsCtrlPressed )
+					if ( message.IsAltPressed || message.IsControlPressed )
 					{
 						base.ProcessMessage (message, pos);
 						return;

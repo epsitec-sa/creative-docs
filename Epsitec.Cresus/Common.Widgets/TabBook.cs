@@ -751,7 +751,7 @@ namespace Epsitec.Common.Widgets
 						break;
 						
 					case KeyCode.Tab:
-						if ( message.IsCtrlPressed )
+						if ( message.IsControlPressed )
 						{
 							dir   = message.IsShiftPressed ? -1 : 1;
 							cycle = true;

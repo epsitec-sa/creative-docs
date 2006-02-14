@@ -203,7 +203,7 @@ namespace Epsitec.Common.Widgets
 					{
 						return;
 					}
-					if (message.IsCtrlPressed == false)
+					if (message.IsControlPressed == false)
 					{
 						switch (message.KeyCode)
 						{

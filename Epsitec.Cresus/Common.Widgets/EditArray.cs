@@ -791,7 +791,7 @@ namespace Epsitec.Common.Widgets
 			protected override void ProcessMessage(Message message, Drawing.Point pos)
 			{
 				if ((message.Type == MessageType.KeyPress) &&
-					(message.IsCtrlPressed == false) &&
+					(message.IsControlPressed == false) &&
 					(message.IsAltPressed == false))
 				{
 					IFeel feel = Feel.Factory.Active;
@@ -1271,7 +1271,7 @@ namespace Epsitec.Common.Widgets
 					toolbar.SuspendLayout ();
 					toolbar.Items.Add (this.CreateIconButton ("StartReadOnly", "manifest:Epsitec.Common.Widgets.Images.TableReadOnly.icon", Res.Strings.EditArray.StartReadOnly));
 					toolbar.Items.Add (this.CreateIconButton ("StartEdition",  "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",  Res.Strings.EditArray.StartEdition, KeyCode.FuncF2));
-					toolbar.Items.Add (this.CreateIconButton ("StartSearch",   "manifest:Epsitec.Common.Widgets.Images.TableSearch.icon",   Res.Strings.EditArray.StartSearch, KeyCode.ModifierCtrl | KeyCode.AlphaF));
+					toolbar.Items.Add (this.CreateIconButton ("StartSearch",   "manifest:Epsitec.Common.Widgets.Images.TableSearch.icon",   Res.Strings.EditArray.StartSearch, KeyCode.ModifierControl | KeyCode.AlphaF));
 					toolbar.Items.Add (new IconSeparator ());
 					toolbar.Items.Add (this.CreateIconButton ("InsertBefore",  "manifest:Epsitec.Common.Widgets.Images.InsertBeforeCell.icon", Res.Strings.EditArray.InsertBefore));
 					toolbar.Items.Add (this.CreateIconButton ("InsertAfter",   "manifest:Epsitec.Common.Widgets.Images.InsertAfterCell.icon",  Res.Strings.EditArray.InsertAfter));

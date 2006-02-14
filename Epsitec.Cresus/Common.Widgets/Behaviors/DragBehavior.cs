@@ -70,7 +70,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 						break;
 					
 					case MessageType.MouseMove:
-						if (Message.State.Buttons == MouseButtons.Left)
+						if (Message.CurrentState.Buttons == MouseButtons.Left)
 						{
 							this.HandleDragging (message, pos);
 						}

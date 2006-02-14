@@ -308,7 +308,7 @@ namespace Epsitec.Common.Document
 			}
 
 			this.drawingContext.IsShift = message.IsShiftPressed;
-			this.drawingContext.IsCtrl  = message.IsCtrlPressed;
+			this.drawingContext.IsCtrl  = message.IsControlPressed;
 			this.drawingContext.IsAlt   = message.IsAltPressed;
 
 			switch ( message.Type )
@@ -3392,7 +3392,7 @@ namespace Epsitec.Common.Document
 				 this.mouseCursorType == MouseCursorType.ArrowPlus   ||
 				 this.mouseCursorType == MouseCursorType.ArrowGlobal )
 			{
-				if ( message.IsCtrlPressed && !this.mouseDragging )
+				if ( message.IsControlPressed && !this.mouseDragging )
 				{
 					this.ChangeMouseCursor(MouseCursorType.ArrowDup);
 				}
@@ -3432,7 +3432,7 @@ namespace Epsitec.Common.Document
 				 this.mouseCursorType == MouseCursorType.FingerDup  ||
 				 this.mouseCursorType == MouseCursorType.FingerPlus )
 			{
-				if ( message.IsCtrlPressed && !this.mouseDragging )
+				if ( message.IsControlPressed && !this.mouseDragging )
 				{
 					this.ChangeMouseCursor(MouseCursorType.FingerDup);
 				}
@@ -3453,7 +3453,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( message.IsShiftPressed || (this.mouseDragging && this.zoomShift) )
 				{
-					if ( message.IsCtrlPressed || (this.mouseDragging && this.zoomCtrl) )
+					if ( message.IsControlPressed || (this.mouseDragging && this.zoomCtrl) )
 					{
 						this.ChangeMouseCursor(MouseCursorType.ZoomShiftCtrl);
 					}
@@ -3462,7 +3462,7 @@ namespace Epsitec.Common.Document
 						this.ChangeMouseCursor(MouseCursorType.ZoomShift);
 					}
 				}
-				else if ( message.IsCtrlPressed )
+				else if ( message.IsControlPressed )
 				{
 					this.ChangeMouseCursor(MouseCursorType.ZoomMinus);
 				}

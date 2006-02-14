@@ -432,7 +432,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Couleur dans la palette cliquée.
 			ColorSample cs = sender as ColorSample;
-			bool import = ( e != null && (e.Message.IsShiftPressed || e.Message.IsCtrlPressed) );
+			bool import = ( e != null && (e.Message.IsShiftPressed || e.Message.IsControlPressed) );
 			this.SelectSample(cs, import);
 		}
 

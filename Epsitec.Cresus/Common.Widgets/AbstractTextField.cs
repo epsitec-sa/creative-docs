@@ -118,13 +118,13 @@ namespace Epsitec.Common.Widgets
 					this.navigator.IsReadOnly = value;
 					
 					
-					if ( Message.State.LastWindow == this.Window &&
+					if ( Message.CurrentState.LastWindow == this.Window &&
 					     this.IsEntered )
 					{
 						//	Ne changeons l'aspect de la souris que si actuellement le curseur se trouve
 						//	dans la zone éditable; si la souris se trouve sur un bouton, on ne fait rien.
 						
-						this.UpdateMouseCursor(this.MapRootToClient(Message.State.LastPosition));
+						this.UpdateMouseCursor(this.MapRootToClient(Message.CurrentState.LastPosition));
 					}
 					
 					this.OnReadOnlyChanged();

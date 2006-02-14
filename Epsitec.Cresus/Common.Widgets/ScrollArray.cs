@@ -1475,7 +1475,7 @@ invalid:	row    = -1;
 		{
 			if ((message.IsAltPressed) ||
 				(message.IsShiftPressed) ||
-				(message.IsCtrlPressed))
+				(message.IsControlPressed))
 			{
 				return false;
 			}

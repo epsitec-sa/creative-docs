@@ -15,7 +15,7 @@ namespace Epsitec.Common.Widgets.Feel
 		{
 			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
 				(message.IsShiftPressed == false) &&
-				(message.IsCtrlPressed == false) &&
+				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
 			{
 				return (message.KeyCode == KeyCode.Return);
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets.Feel
 		{
 			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
 				(message.IsShiftPressed == false) &&
-				(message.IsCtrlPressed == false) &&
+				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
 			{
 				switch (message.KeyCode)
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Widgets.Feel
 		{
 			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
 				(message.IsShiftPressed == false) &&
-				(message.IsCtrlPressed == false) &&
+				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
 			{
 				return (message.KeyCode == KeyCode.Space);
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets.Feel
 		{
 			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
 				(message.IsShiftPressed == false) &&
-				(message.IsCtrlPressed == false) &&
+				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
 			{
 				return (message.KeyCode == KeyCode.Escape);
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets.Feel
 		public bool TestNavigationKey(Epsitec.Common.Widgets.Message message)
 		{
 			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
-				(message.IsCtrlPressed == false) &&
+				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
 			{
 				return (message.KeyCode == KeyCode.Tab);
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Widgets.Feel
 		{
 			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
 				(message.IsShiftPressed == false) &&
-				(message.IsCtrlPressed == false) &&
+				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
 			{
 				switch (message.KeyCode)

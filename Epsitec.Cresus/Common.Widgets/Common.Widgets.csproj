@@ -404,6 +404,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "KeyCode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MenuItem.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -430,6 +435,21 @@
                 />
                 <File
                     RelPath = "Message.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MessageType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ModifierKeys.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MouseButtons.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
