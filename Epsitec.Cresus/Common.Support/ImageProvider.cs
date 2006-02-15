@@ -268,12 +268,14 @@ namespace Epsitec.Common.Support
 					}
 					
 					string[] names = assemblies[i].GetManifestResourceNames ();
+					string lower_res_name = res_name.ToLower (System.Globalization.CultureInfo.InvariantCulture);
 					
 					for (int j = 0; j < names.Length; j++)
 					{
-						if (names[j] == res_name)
+						if (names[j].ToLower (System.Globalization.CultureInfo.InvariantCulture) == lower_res_name)
 						{
 							assembly = assemblies[i];
+							res_name = names[j];
 							break;
 						}
 					}

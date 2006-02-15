@@ -98,7 +98,7 @@ namespace Epsitec.App.DocumentEditor
 			this.mainWindow.Show();
 			this.mainWindow.MakeActive();
 
-			this.editor.Finalize();
+			this.editor.MakeReadyToRun();
 		}
 		
 		private void HandleWindowAsyncNotification(object sender)
