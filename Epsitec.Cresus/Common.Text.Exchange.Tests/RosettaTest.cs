@@ -139,6 +139,25 @@ namespace Epsitec.Common.Text.Exchange
 //-						System.Console.Out.WriteLine ("- {0}", p.WellKnownType);
 					}
 				}
+				
+				//	La façon "haut niveau" de faire :
+				
+				if (textWrapper.Defined.IsFontFaceDefined)
+				{
+					System.Console.Out.WriteLine ("- Font Face: {0}", textWrapper.Defined.FontFace, textWrapper.Defined.FontStyle, textWrapper.Defined.InvertItalic ? "(italic)" : "");
+				}
+				if (textWrapper.Defined.IsFontStyleDefined)
+				{
+					System.Console.Out.WriteLine ("- Font Style: {0}", textWrapper.Defined.FontStyle);
+				}
+				if (textWrapper.Defined.IsInvertItalicDefined)
+				{
+					System.Console.Out.WriteLine ("- Invert Italic: {0}", textWrapper.Defined.InvertItalic);
+				}
+				if (textWrapper.Defined.IsInvertBoldDefined)
+				{
+					System.Console.Out.WriteLine ("- Invert Bold: {0}", textWrapper.Defined.InvertBold);
+				}
 			}
 		
 			
