@@ -64,9 +64,9 @@ namespace Epsitec.Common.UI.Controllers
 					throw new System.ArgumentException ("Specified widget (RadioButton) is not properly set up.", "widget");
 				}
 				
-				if (this.data_type is Types.IEnum)
+				if (this.data_type is Types.IEnumType)
 				{
-					Types.IEnum        enum_type   = this.data_type as Types.IEnum;
+					Types.IEnumType    enum_type   = this.data_type as Types.IEnumType;
 					Types.IEnumValue[] enum_values = enum_type.Values;
 					
 					//	C'est une énumération pour laquelle nous connaissons peut-être les légendes des

@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe StringType décrit des valeurs de type System.String.
 	/// </summary>
-	public class StringType : IString
+	public class StringType : IStringType
 	{
 		public StringType()
 		{
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		#region IString Members
+		#region IStringType Members
 		public int								Length
 		{
 			get

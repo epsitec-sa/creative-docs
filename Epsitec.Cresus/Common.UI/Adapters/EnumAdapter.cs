@@ -14,11 +14,11 @@ namespace Epsitec.Common.UI.Adapters
 	
 	public class EnumAdapter : AbstractEnumAdapter
 	{
-		public EnumAdapter(Types.IEnum enum_type) : base (enum_type)
+		public EnumAdapter(Types.IEnumType enum_type) : base (enum_type)
 		{
 		}
 		
-		public EnumAdapter(Types.IEnum enum_type, Binders.IBinder binder) : base (enum_type, binder)
+		public EnumAdapter(Types.IEnumType enum_type, Binders.IBinder binder) : base (enum_type, binder)
 		{
 		}
 	}

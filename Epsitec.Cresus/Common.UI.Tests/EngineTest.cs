@@ -42,8 +42,8 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual ("Enumeration", v5.DataType.Name);
 			Assert.AreEqual ("Enumeration", v6.DataType.Name);
 			
-			Types.IEnum e1 = v5.DataType as Types.IEnum;
-			Types.IEnum e2 = v6.DataType as Types.IEnum;
+			Types.IEnumType e1 = v5.DataType as Types.IEnumType;
+			Types.IEnumType e2 = v6.DataType as Types.IEnumType;
 			
 			Assert.IsFalse (e1.IsCustomizable);
 			Assert.IsTrue  (e2.IsCustomizable);

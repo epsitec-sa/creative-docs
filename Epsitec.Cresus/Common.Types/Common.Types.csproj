@@ -204,7 +204,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IEnum.cs"
+                    RelPath = "IEnumType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -239,7 +239,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "INum.cs"
+                    RelPath = "INumType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -259,12 +259,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IString.cs"
+                    RelPath = "IStringDict.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IStringDict.cs"
+                    RelPath = "IStringType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

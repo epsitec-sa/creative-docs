@@ -11,12 +11,12 @@ namespace Epsitec.Common.UI.Adapters
 	/// </summary>
 	public abstract class AbstractEnumAdapter : AbstractAdapter
 	{
-		public AbstractEnumAdapter(Types.IEnum enum_type)
+		public AbstractEnumAdapter(Types.IEnumType enum_type)
 		{
 			this.enum_type = enum_type;
 		}
 		
-		public AbstractEnumAdapter(Types.IEnum enum_type, Binders.IBinder binder) : this (enum_type)
+		public AbstractEnumAdapter(Types.IEnumType enum_type, Binders.IBinder binder) : this (enum_type)
 		{
 			this.Binder = binder;
 			this.Binder.Adapter = this;
@@ -41,7 +41,7 @@ namespace Epsitec.Common.UI.Adapters
 			}
 		}
 		
-		public Types.IEnum						EnumType
+		public Types.IEnumType					EnumType
 		{
 			get
 			{
@@ -70,6 +70,6 @@ namespace Epsitec.Common.UI.Adapters
 		
 		
 		private System.Enum						value;
-		private Types.IEnum						enum_type;
+		private Types.IEnumType					enum_type;
 	}
 }

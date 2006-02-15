@@ -1,15 +1,15 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
-	using IEnum      = Common.Types.IEnum;
+	using IEnumType  = Common.Types.IEnumType;
 	using IEnumValue = Common.Types.IEnumValue;
 	
 	/// <summary>
 	/// La classe DbTypeEnum définit une énumération.
 	/// </summary>
-	public class DbTypeEnum : DbType, System.Collections.ICollection, IEnum
+	public class DbTypeEnum : DbType, System.Collections.ICollection, IEnumType
 	{
 		public DbTypeEnum() : base (DbSimpleType.String)
 		{
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Database
 		
 		
 		#region IEnum Members
-		bool									IEnum.IsCustomizable
+		bool									IEnumType.IsCustomizable
 		{
 			get
 			{
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		bool									IEnum.IsFlags
+		bool									IEnumType.IsDefinedAsFlags
 		{
 			get
 			{
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		IEnumValue[]							IEnum.Values
+		IEnumValue[]							IEnumType.Values
 		{
 			get
 			{
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		IEnumValue								IEnum.this[int rank]
+		IEnumValue								IEnumType.this[int rank]
 		{
 			get
 			{
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		IEnumValue								IEnum.this[string name]
+		IEnumValue								IEnumType.this[string name]
 		{
 			get
 			{

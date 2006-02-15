@@ -57,7 +57,7 @@ namespace Epsitec.Common.UI.Controllers
 				{
 					this.combo_value.Items.Clear ();
 					
-					Types.IEnum        enum_type   = adapter.EnumType;
+					Types.IEnumType    enum_type   = adapter.EnumType;
 					Types.IEnumValue[] enum_values = enum_type.Values;
 					
 					foreach (Types.IEnumValue value in enum_values)

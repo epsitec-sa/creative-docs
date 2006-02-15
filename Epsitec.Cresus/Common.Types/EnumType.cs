@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe EnumType décrit des valeurs de type System.Enum.
 	/// </summary>
-	public class EnumType : IEnum, IDataConstraint
+	public class EnumType : IEnumType, IDataConstraint
 	{
 		public EnumType(System.Type enum_type)
 		{
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		#region IEnum Members
+		#region IEnumType Members
 		public virtual bool						IsCustomizable
 		{
 			get
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public virtual bool						IsFlags
+		public virtual bool						IsDefinedAsFlags
 		{
 			get
 			{
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		IEnumValue[]							IEnum.Values
+		IEnumValue[]							IEnumType.Values
 		{
 			get
 			{
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		IEnumValue								IEnum.this[string name]
+		IEnumValue								IEnumType.this[string name]
 		{
 			get
 			{
@@ -207,7 +207,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		IEnumValue								IEnum.this[int rank]
+		IEnumValue								IEnumType.this[int rank]
 		{
 			get
 			{

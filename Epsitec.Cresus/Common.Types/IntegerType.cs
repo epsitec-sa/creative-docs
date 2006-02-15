@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe IntegerType décrit une valeur de type System.Int32.
 	/// </summary>
-	public class IntegerType : INum, IDataConstraint
+	public class IntegerType : INumType, IDataConstraint
 	{
 		public IntegerType()
 		{
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		#region INum Members
+		#region INumType Members
 		public DecimalRange						Range
 		{
 			get

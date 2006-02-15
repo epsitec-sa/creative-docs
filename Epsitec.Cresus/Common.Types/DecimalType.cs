@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe DecimalType décrit des valeurs de type System.Decimal.
 	/// </summary>
-	public class DecimalType : INum, IDataConstraint
+	public class DecimalType : INumType, IDataConstraint
 	{
 		public DecimalType()
 		{
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		#region INum Members
+		#region INumType Members
 		public DecimalRange						Range
 		{
 			get

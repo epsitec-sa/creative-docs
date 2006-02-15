@@ -4,9 +4,9 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// L'interface INum décrit un type numérique.
+	/// L'interface INumType décrit un type numérique.
 	/// </summary>
-	public interface INum : INamedType
+	public interface INumType : INamedType
 	{
 		DecimalRange	Range	{ get; }
 	}

@@ -4,11 +4,10 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// L'interface INamedType sert de base pour INumType, IEnumType et
-	/// IStringType.
+	/// L'interface IStringType décrit un type texte.
 	/// </summary>
-	public interface INamedType : INameCaption
+	public interface IStringType : INamedType
 	{
-		System.Type		SystemType		{ get; }
+		int		Length	{ get; }
 	}
 }

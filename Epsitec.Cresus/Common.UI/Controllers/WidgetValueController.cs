@@ -27,7 +27,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.CreateUI (widget);
 		}
 		
-		public WidgetValueController(Adapters.IAdapter adapter, Widget widget, Types.IDataConstraint constraint, Types.INum num_type) : this ()
+		public WidgetValueController(Adapters.IAdapter adapter, Widget widget, Types.IDataConstraint constraint, Types.INumType num_type) : this ()
 		{
 			this.Adapter    = adapter;
 			this.Constraint = constraint;
@@ -36,7 +36,7 @@ namespace Epsitec.Common.UI.Controllers
 		}
 		
 		
-		public Types.INum						NumType
+		public Types.INumType					NumType
 		{
 			get
 			{
@@ -116,6 +116,6 @@ namespace Epsitec.Common.UI.Controllers
 		
 		private Widget							widget;
 		private Support.Data.INumValue			num_value;
-		private Types.INum						num_type;
+		private Types.INumType					num_type;
 	}
 }

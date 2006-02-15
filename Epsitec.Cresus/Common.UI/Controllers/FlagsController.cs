@@ -20,7 +20,7 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			Adapters.FlagsAdapter adapter = this.Adapter as Adapters.FlagsAdapter;
 			
-			Types.IEnum enum_type = adapter.EnumType;
+			Types.IEnumType enum_type = adapter.EnumType;
 			
 			this.data_widget = new Widgets.DataWidget (panel);
 			this.data_source = new Data.Field (enum_type.Name, null, enum_type);

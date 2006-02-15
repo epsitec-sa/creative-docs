@@ -14,11 +14,11 @@ namespace Epsitec.Common.UI.Adapters
 	
 	public class FlagsAdapter : AbstractEnumAdapter
 	{
-		public FlagsAdapter(Types.IEnum enum_type) : base (enum_type)
+		public FlagsAdapter(Types.IEnumType enum_type) : base (enum_type)
 		{
 		}
 		
-		public FlagsAdapter(Types.IEnum enum_type, Binders.IBinder binder) : base (enum_type, binder)
+		public FlagsAdapter(Types.IEnumType enum_type, Binders.IBinder binder) : base (enum_type, binder)
 		{
 		}
 	}

@@ -140,9 +140,9 @@ namespace Epsitec.Common.UI
 				return true;
 			}
 			
-			Types.IString str_type  = source.DataType as Types.IString;
-			Types.INum    num_type  = source.DataType as Types.INum;
-			Types.IEnum   enum_type = source.DataType as Types.IEnum;
+			Types.IStringType str_type  = source.DataType as Types.IStringType;
+			Types.INumType    num_type  = source.DataType as Types.INumType;
+			Types.IEnumType   enum_type = source.DataType as Types.IEnumType;
 			
 			if (str_type != null)
 			{
@@ -256,16 +256,16 @@ namespace Epsitec.Common.UI
 				return Data.Representation.StatusLed;
 			}
 			
-			if (source_type is Types.IString)
+			if (source_type is Types.IStringType)
 			{
 				return Data.Representation.TextField;
 			}
-			if (source_type is Types.INum)
+			if (source_type is Types.INumType)
 			{
 				return Data.Representation.NumericUpDown;
 			}
 				
-			Types.IEnum enum_type = source_type as Types.IEnum;
+			Types.IEnumType enum_type = source_type as Types.IEnumType;
 				
 			if (enum_type != null)
 			{

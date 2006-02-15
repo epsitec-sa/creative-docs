@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// L'interface IEnum décrit une énumération.
 	/// </summary>
-	public interface IEnum : INamedType
+	public interface IEnumType : INamedType
 	{
 		IEnumValue[]	Values				{ get; }			//	triés selon Rank
 		
@@ -14,6 +14,6 @@ namespace Epsitec.Common.Types
 		IEnumValue		this[int rank]		{ get; }
 		
 		bool			IsCustomizable		{ get; }
-		bool			IsFlags				{ get; }
+		bool			IsDefinedAsFlags	{ get; }
 	}
 }

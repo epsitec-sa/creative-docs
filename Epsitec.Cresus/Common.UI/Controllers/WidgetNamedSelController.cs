@@ -65,7 +65,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.widget    = widget;
 			this.named_sel = named_sel;
 			
-			Types.IEnum enum_type = this.data_type as Types.IEnum;
+			Types.IEnumType enum_type = this.data_type as Types.IEnumType;
 			
 			if ((enum_type != null) &&
 				(string_host != null))

@@ -103,7 +103,7 @@ namespace Epsitec.Common.UI.Widgets
 			}
 			
 			Types.INamedType type      = data.DataType;
-			Types.IEnum      enum_type = type as Types.IEnum;
+			Types.IEnumType  enum_type = type as Types.IEnumType;
 			
 			if (type == null)
 			{
@@ -117,7 +117,7 @@ namespace Epsitec.Common.UI.Widgets
 				case Data.Representation.TextField:
 					return true;
 				case Data.Representation.NumericUpDown:
-					return (type is Types.INum) || (enum_type != null);
+					return (type is Types.INumType) || (enum_type != null);
 				case Data.Representation.RadioList:
 				case Data.Representation.RadioColumns:
 				case Data.Representation.RadioRows:
@@ -131,7 +131,7 @@ namespace Epsitec.Common.UI.Widgets
 					return (enum_type != null) && (enum_type.IsCustomizable == true);
 				
 				case Data.Representation.StatusLed:
-					return (type is Types.INum) || (enum_type != null);
+					return (type is Types.INumType) || (enum_type != null);
 			}
 			
 			return false;
@@ -313,7 +313,7 @@ namespace Epsitec.Common.UI.Widgets
 		{
 			this.widget_layout_mode = layout_mode;
 			
-			Types.IEnum enum_type = this.source.DataType as Types.IEnum;
+			Types.IEnumType enum_type = this.source.DataType as Types.IEnumType;
 			
 			if (enum_type == null)
 			{
@@ -391,7 +391,7 @@ namespace Epsitec.Common.UI.Widgets
 		{
 			this.widget_layout_mode = layout_mode;
 			
-			Types.IEnum enum_type = this.source.DataType as Types.IEnum;
+			Types.IEnumType enum_type = this.source.DataType as Types.IEnumType;
 			
 			if (enum_type == null)
 			{

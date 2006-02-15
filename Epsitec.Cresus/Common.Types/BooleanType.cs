@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe BooleanType décrit des valeurs de type System.Boolean.
 	/// </summary>
-	public class BooleanType : INum, IDataConstraint
+	public class BooleanType : INumType, IDataConstraint
 	{
 		public BooleanType()
 		{
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		#region INum Members
+		#region INumType Members
 		public DecimalRange						Range
 		{
 			get

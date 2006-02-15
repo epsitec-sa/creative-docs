@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types
 			
 			Assert.AreEqual (5, et.Values.Length);
 			Assert.IsFalse (et.IsCustomizable);
-			Assert.IsFalse (et.IsFlags);
+			Assert.IsFalse (et.IsDefinedAsFlags);
 			
 			Assert.AreEqual ("None",   et.Values[0].Name);
 			Assert.AreEqual ("First",  et.Values[1].Name);
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Types
 			
 			Assert.AreEqual (5, et.Values.Length);
 			Assert.IsFalse (et.IsCustomizable);
-			Assert.IsTrue (et.IsFlags);
+			Assert.IsTrue (et.IsDefinedAsFlags);
 			
 			Assert.AreEqual ("None",   et.Values[0].Name);
 			Assert.AreEqual ("Flag1",  et.Values[1].Name);

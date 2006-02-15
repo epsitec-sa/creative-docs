@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe LongIntegerType décrit une valeur de type System.Int64.
 	/// </summary>
-	public class LongIntegerType : INum, IDataConstraint
+	public class LongIntegerType : INumType, IDataConstraint
 	{
 		public LongIntegerType()
 		{
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		#region INum Members
+		#region INumType Members
 		public DecimalRange						Range
 		{
 			get

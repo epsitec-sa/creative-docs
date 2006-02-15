@@ -233,7 +233,7 @@ namespace Epsitec.Common.Script
 				
 				if (parameter.IsIn)
 				{
-					if (parameter.Type is Types.IEnum)
+					if (parameter.Type is Types.IEnumType)
 					{
 						buffer.Append ("if (! Epsitec.Common.Types.Converter.SafeConvert (");
 						buffer.Append ("in_args[");
