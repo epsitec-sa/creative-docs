@@ -85,7 +85,8 @@ namespace Epsitec.Common.UI.Adapters
 		{
 			if (this.validity == false)
 			{
-				this.binder.NotifyInvalidData ();
+				//	TODO: fix
+//				this.binder.NotifyInvalidData ();
 			}
 			else
 			{

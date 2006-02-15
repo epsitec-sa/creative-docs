@@ -34,7 +34,9 @@ namespace Epsitec.Common.UI.Widgets
 			Types.IDataValue      data_source = data_widget.DataSource;
 			Types.IDataConstraint constraint  = data_source.DataConstraint;
 			
-			bool ok = data_source.IsValueValid;
+			object value = data_source.ReadValue ();
+			
+			bool ok = Types.InvalidValue.IsValueInvalid (value) ? false : true;
 			
 			if ((ok) &&
 				(constraint != null))

@@ -86,16 +86,16 @@ namespace Epsitec.Common.UI.Binders
 			return false;
 		}
 		
-		public override bool NotifyInvalidData()
-		{
-			if (this.IsValid)
-			{
-				this.source.NotifyInvalidData ();
-				return true;
-			}
-			
-			return false;
-		}
+//		public override bool NotifyInvalidData()
+//		{
+//			if (this.IsValid)
+//			{
+//				this.source.NotifyInvalidData ();
+//				return true;
+//			}
+//			
+//			return false;
+//		}
 
 		
 		
@@ -127,7 +127,9 @@ namespace Epsitec.Common.UI.Binders
 		
 		protected virtual void OnSourceValueChanged()
 		{
-			if (this.source.IsValueValid)
+			object value = this.source.ReadValue ();
+			
+			if (Types.InvalidValue.IsValueInvalid (value) == false)
 			{
 				this.SyncToAdapter (SyncReason.ValueChanged);
 			}

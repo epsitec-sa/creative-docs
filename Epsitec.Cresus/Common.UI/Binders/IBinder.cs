@@ -21,7 +21,7 @@ namespace Epsitec.Common.UI.Binders
 		bool WriteData(object data);
 		bool EqualsData(object data);
 		
-		bool NotifyInvalidData();
+//		bool NotifyInvalidData();
 		
 		System.Type GetDataType();
 	}

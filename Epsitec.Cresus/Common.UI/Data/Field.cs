@@ -56,16 +56,14 @@ namespace Epsitec.Common.UI.Data
 			}
 			set
 			{
-				if ((this.is_value_valid == false) ||
-					(Common.Types.Comparer.Equal (this.value, value) == false))
+				if (Common.Types.Comparer.Equal (this.value, value) == false)
 				{
 					if (this.type == null)
 					{
 						throw new System.InvalidOperationException ("Value cannot be changed; no type is defined.");
 					}
 					
-					this.value          = value;
-					this.is_value_valid = true;
+					this.value = value;
 					this.OnChanged ();
 				}
 			}
@@ -84,9 +82,8 @@ namespace Epsitec.Common.UI.Data
 		{
 			if (value is string)
 			{
-				this.value          = value;
-				this.is_value_valid = true;
-				this.type           = new Types.StringType ();
+				this.value = value;
+				this.type  = new Types.StringType ();
 				
 				return;
 			}
@@ -96,45 +93,40 @@ namespace Epsitec.Common.UI.Data
 				decimal small = 1M / large;
 				decimal max   = large - small;
 				
-				this.value          = value;
-				this.is_value_valid = true;
-				this.type           = new Types.DecimalType (-max, max, small);
+				this.value = value;
+				this.type  = new Types.DecimalType (-max, max, small);
 				
 				return;
 			}
 			if (value is bool)
 			{
-				this.value          = value;
-				this.is_value_valid = true;
-				this.type           = new Types.BooleanType ();
+				this.value = value;
+				this.type  = new Types.BooleanType ();
 				
 				return;
 			}
 			if (value is int)
 			{
-				this.value          = value;
-				this.is_value_valid = true;
-				this.type           = new Types.IntegerType ();
+				this.value = value;
+				this.type  = new Types.IntegerType ();
 				
 				return;
 			}
 			if (value is System.Enum)
 			{
-				this.value          = value;
-				this.is_value_valid = true;
-				this.type           = new Types.EnumType (value.GetType ());
+				this.value = value;
+				this.type  = new Types.EnumType (value.GetType ());
 				
 				return;
 			}
 			
-			throw new System.ArgumentException (string.Format ("The specified value's type is not supported ({0}).", value.GetType ()));
+			throw new System.ArgumentException (string.Format ("The specified value's type is not supported ({0})", value.GetType ()));
 		}
 		
 		public void DefineValue(object value, Types.INamedType type)
 		{
-			this.value          = value;
-			this.is_value_valid = true;
-			this.type           = type;
+			this.value = value;
+			this.type  = type;
 		}
 		
 		public void DefineConstraint(Types.IDataConstraint constraint)
@@ -174,7 +166,8 @@ namespace Epsitec.Common.UI.Data
 		{
 			get
 			{
-				return this.is_value_valid;
+				object value = this.Value;
+				return Types.InvalidValue.IsValueInvalid (value) ? false : true;
 			}
 		}
 		
@@ -219,13 +212,13 @@ namespace Epsitec.Common.UI.Data
 			}
 		}
 		
-		public void NotifyInvalidData()
-		{
-			//	Donnée pas valide...
-			
-			this.is_value_valid = false;
-			this.OnChanged ();
-		}
+//		public void NotifyInvalidData()
+//		{
+//			//	Donnée pas valide...
+//			
+//			this.is_value_valid = false;
+//			this.OnChanged ();
+//		}
 		#endregion
 
 		#region IDataItem Members
@@ -316,7 +309,7 @@ namespace Epsitec.Common.UI.Data
 			that.type           = this.type;
 			that.constraint     = this.constraint;
 			that.value          = this.value;
-			that.is_value_valid = this.is_value_valid;
+//-			that.is_value_valid = this.is_value_valid;
 			
 			System.Diagnostics.Debug.Assert (Types.Converter.IsSimple (that.value));
 			
@@ -358,6 +351,6 @@ namespace Epsitec.Common.UI.Data
 		
 		private Record							record;
 		private object							value;
-		private bool							is_value_valid;
+//-		private bool							is_value_valid;
 	}
 }
