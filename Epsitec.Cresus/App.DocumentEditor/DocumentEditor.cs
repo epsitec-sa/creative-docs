@@ -292,7 +292,7 @@ namespace Epsitec.App.DocumentEditor
 #endif
 
 
-		public void Finalize()
+		public void MakeReadyToRun()
 		{
 			//	Appelé lorsque l'application a fini de démarrer.
 			if ( this.askKey )
