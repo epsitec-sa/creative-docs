@@ -1,375 +1,281 @@
-<VisualStudioProject>
-    <CSHARP
-        ProjectType = "Local"
-        ProductVersion = "7.10.3077"
-        SchemaVersion = "2.0"
-        ProjectGuid = "{BDF75452-AAB1-4E62-82D5-AE23F35C6319}"
-    >
-        <Build>
-            <Settings
-                ApplicationIcon = ""
-                AssemblyKeyContainerName = ""
-                AssemblyName = "Common.UI"
-                AssemblyOriginatorKeyFile = ""
-                DefaultClientScript = "JScript"
-                DefaultHTMLPageLayout = "Grid"
-                DefaultTargetSchema = "IE50"
-                DelaySign = "false"
-                OutputType = "Library"
-                PreBuildEvent = ""
-                PostBuildEvent = ""
-                RootNamespace = "Epsitec.Common.UI"
-                RunPostBuildEvent = "OnBuildSuccess"
-                StartupObject = ""
-            >
-                <Config
-                    Name = "Debug"
-                    AllowUnsafeBlocks = "false"
-                    BaseAddress = "285212672"
-                    CheckForOverflowUnderflow = "false"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = ""
-                    DebugSymbols = "true"
-                    FileAlignment = "4096"
-                    IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = ""
-                    Optimize = "false"
-                    OutputPath = "bin\Debug\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
-                />
-                <Config
-                    Name = "Release"
-                    AllowUnsafeBlocks = "false"
-                    BaseAddress = "285212672"
-                    CheckForOverflowUnderflow = "false"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = "TRACE"
-                    DocumentationFile = ""
-                    DebugSymbols = "false"
-                    FileAlignment = "4096"
-                    IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = ""
-                    Optimize = "true"
-                    OutputPath = "bin\Release\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
-                />
-            </Settings>
-            <References>
-                <Reference
-                    Name = "System"
-                    AssemblyName = "System"
-                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
-                />
-                <Reference
-                    Name = "Common.Drawing"
-                    Project = "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "Common.Support"
-                    Project = "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "Common.Widgets"
-                    Project = "{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "System.Extension"
-                    Project = "{10453A3B-CA2A-4D36-B634-78BA87AAAB26}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "System.Data"
-                    AssemblyName = "System.Data"
-                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
-                />
-                <Reference
-                    Name = "System.XML"
-                    AssemblyName = "System.Xml"
-                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
-                />
-                <Reference
-                    Name = "Common.Types"
-                    Project = "{8960D1EA-3B82-49A1-9D44-F92F467209FF}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "Common.Support.Events"
-                    Project = "{EAF258A4-E107-4466-A3E1-9FC072557940}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "Common.Drawing.Agg"
-                    Project = "{7D73AD35-D078-4B4C-AF30-434C6A377058}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-            </References>
-        </Build>
-        <Files>
-            <Include>
-                <File
-                    RelPath = "AbstractPanel.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "AssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Engine.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "InterfaceType.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SyncReason.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\AbstractAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\AbstractEnumAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\AbstractStringAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\BooleanAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\ControllerAttribute.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\DataFolderAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\DecimalAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\EnumAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\FlagsAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\IAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\LayoutAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\Num1Adapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\Num2Adapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Adapters\StringAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Binders\AbstractBinder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Binders\DataFolderBinder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Binders\DataValueBinder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Binders\IBinder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Binders\PropertyBinder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\AbstractConstrainedController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\AbstractController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\BooleanController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\CaptionOnlyController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\ControllerFactory.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\DataFolderController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\EnumController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\FlagsController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\IController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\LayoutController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\Num1Controller.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\Num2Controller.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\StringController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\WidgetDataFolderController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\WidgetFlagController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\WidgetNamedSelController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\WidgetStateController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\WidgetTextController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\WidgetValueController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Data\Field.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Data\Record.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Data\Representation.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Widgets\DataWidget.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Widgets\DataWidgetValidator.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Widgets\ISelfBindingWidget.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Widgets\PropPane.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-            </Include>
-        </Files>
-    </CSHARP>
-</VisualStudioProject>
-
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BDF75452-AAB1-4E62-82D5-AE23F35C6319}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Common.UI</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Epsitec.Common.UI</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
+      <Name>Common.Drawing.Agg</Name>
+      <Project>{7D73AD35-D078-4B4C-AF30-434C6A377058}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Drawing\Common.Drawing.csproj">
+      <Name>Common.Drawing</Name>
+      <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
+      <Name>Common.Support.Events</Name>
+      <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Support\Common.Support.csproj">
+      <Name>Common.Support</Name>
+      <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
+      <Name>Common.Types</Name>
+      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
+      <Name>Common.Widgets</Name>
+      <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\System.Extension\System.Extension.csproj">
+      <Name>System.Extension</Name>
+      <Project>{10453A3B-CA2A-4D36-B634-78BA87AAAB26}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractPanel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\AbstractAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\AbstractEnumAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\AbstractStringAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\BooleanAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\ControllerAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\DataFolderAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\DecimalAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\EnumAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\FlagsAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\IAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\LayoutAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\Num1Adapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\Num2Adapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapters\StringAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Binders\AbstractBinder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Binders\DataFolderBinder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Binders\DataValueBinder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Binders\IBinder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Binders\PropertyBinder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\AbstractConstrainedController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\AbstractController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\BooleanController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\CaptionOnlyController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\ControllerFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\DataFolderController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\EnumController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\FlagsController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\IController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\LayoutController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\Num1Controller.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\Num2Controller.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\StringController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\WidgetDataFolderController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\WidgetFlagController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\WidgetNamedSelController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\WidgetStateController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\WidgetTextController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\WidgetValueController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Field.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Record.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Representation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Engine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InterfaceType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SyncReason.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Widgets\DataWidget.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Widgets\DataWidgetValidator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Widgets\ISelfBindingWidget.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Widgets\PropPane.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
