@@ -301,6 +301,7 @@ namespace Epsitec.Common.OpenType
 			this.font_style_count = value;
 		}
 		
+		
 		public static System.Collections.IComparer	Comparer
 		{
 			get

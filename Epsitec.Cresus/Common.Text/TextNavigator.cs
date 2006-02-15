@@ -1949,11 +1949,16 @@ again:
 			
 			for (int offset = 0; offset < max; offset++)
 			{
-				ulong code = Internal.CharMarker.ExtractCoreAndSettings (this.story.ReadChar (this.cursor, offset));
+				ulong raw  = this.story.ReadChar (this.cursor, offset);
+				ulong code = Internal.CharMarker.ExtractCoreAndSettings (raw);
 				
-				if (code == 0)
+				switch (Unicode.Bits.GetUnicodeCode (raw))
 				{
-					return offset;
+					case Unicode.Code.Null:
+					case Unicode.Code.EndOfText:
+						return offset;
+					case Unicode.Code.ParagraphSeparator:
+						return (offset > 0) ? offset : 1;
 				}
 				
 				if (offset == 0)

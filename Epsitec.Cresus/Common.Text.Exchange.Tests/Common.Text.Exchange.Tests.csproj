@@ -16,7 +16,7 @@
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
                 OutputType = "Library"
-                PreBuildEvent = ""
+                PreBuildEvent = 'xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini&#xd;&#xa;xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini'
                 PostBuildEvent = ""
                 RootNamespace = "Epsitec.Common.Text.Exchange"
                 RunPostBuildEvent = "OnBuildSuccess"
@@ -117,6 +117,26 @@
                 <Reference
                     Name = "Common.Debug"
                     Project = "{AF58270B-4B5C-49F7-81D8-723CFF122F2C}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.Drawing"
+                    Project = "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.Drawing.Agg"
+                    Project = "{7D73AD35-D078-4B4C-AF30-434C6A377058}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.Widgets"
+                    Project = "{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.Support.Implementation"
+                    Project = "{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
