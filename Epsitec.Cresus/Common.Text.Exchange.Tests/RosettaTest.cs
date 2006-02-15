@@ -136,7 +136,7 @@ namespace Epsitec.Common.Text.Exchange
 					}
 					else
 					{
-						System.Console.Out.WriteLine ("- {0}", p.WellKnownType);
+//-						System.Console.Out.WriteLine ("- {0}", p.WellKnownType);
 					}
 				}
 			}
