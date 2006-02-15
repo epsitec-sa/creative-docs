@@ -1,16 +1,15 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe StringType décrit le type 'string' natif.
+	/// La classe StringType décrit des valeurs de type System.String.
 	/// </summary>
 	public class StringType : IString
 	{
 		public StringType()
 		{
-			this.length = 100000;
 		}
 		
 		
@@ -19,7 +18,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return typeof (string);
+				return typeof (System.String);
 			}
 		}
 		#endregion
@@ -60,7 +59,8 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
+		public static readonly StringType		Default = new StringType ();
 		
-		private int								length;
+		private int								length = 100000;
 	}
 }

@@ -1,19 +1,19 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe DecimalType décrit divers types numériques natifs.
+	/// La classe LongIntegerType décrit une valeur de type System.Int64.
 	/// </summary>
-	public class IntegerType : INum, IDataConstraint
+	public class LongIntegerType : INum, IDataConstraint
 	{
-		public IntegerType()
+		public LongIntegerType()
 		{
-			this.range = new DecimalRange (int.MinValue, int.MaxValue);
+			this.range = new DecimalRange (System.Int64.MinValue, System.Int64.MaxValue);
 		}
 		
-		public IntegerType(int min, int max)
+		public LongIntegerType(long min, long max)
 		{
 			this.range = new DecimalRange (min, max);
 		}
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return typeof (int);
+				return typeof (System.Int64);
 			}
 		}
 		#endregion
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return "Integer";
+				return "LongInteger";
 			}
 		}
 

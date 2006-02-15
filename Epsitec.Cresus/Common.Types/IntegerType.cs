@@ -4,13 +4,18 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe BooleanType décrit des valeurs de type System.Boolean.
+	/// La classe IntegerType décrit une valeur de type System.Int32.
 	/// </summary>
-	public class BooleanType : INum, IDataConstraint
+	public class IntegerType : INum, IDataConstraint
 	{
-		public BooleanType()
+		public IntegerType()
 		{
-			this.range = new DecimalRange (0, 1, 1);
+			this.range = new DecimalRange (System.Int32.MinValue, System.Int32.MaxValue);
+		}
+		
+		public IntegerType(int min, int max)
+		{
+			this.range = new DecimalRange (min, max);
 		}
 		
 		
@@ -19,7 +24,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return typeof (System.Boolean);
+				return typeof (System.Int32);
 			}
 		}
 		#endregion
@@ -39,7 +44,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return "Boolean";
+				return "Integer";
 			}
 		}
 
@@ -63,9 +68,11 @@ namespace Epsitec.Common.Types
 		#region IDataConstraint Members
 		public bool CheckConstraint(object value)
 		{
-			if (value is bool)
+			if ((value is int) &&
+				(this.range != null))
 			{
-				return true;
+				int num = (int) value;
+				return this.range.Constrain (num) == num;
 			}
 			
 			return false;

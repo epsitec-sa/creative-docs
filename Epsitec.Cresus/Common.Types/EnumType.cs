@@ -1,14 +1,14 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
-	using IComparer = System.Collections.IComparer;
-	using FieldInfo = System.Reflection.FieldInfo;
+	using IComparer    = System.Collections.IComparer;
+	using FieldInfo    = System.Reflection.FieldInfo;
 	using BindingFlags = System.Reflection.BindingFlags;
 	
 	/// <summary>
-	/// La classe EnumType décrit divers une énumération native.
+	/// La classe EnumType décrit des valeurs de type System.Enum.
 	/// </summary>
 	public class EnumType : IEnum, IDataConstraint
 	{
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return new RankComparerClass ();
+				return new RankComparerImplementation ();
 			}
 		}
 		
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		
+		#region EnumValue Class
 		public class EnumValue : IEnumValue
 		{
 			public EnumValue(int rank, string name) : this (rank, name, null, null)
@@ -328,9 +328,10 @@ namespace Epsitec.Common.Types
 			private string						caption;
 			private string						description;
 		}
+		#endregion
 		
-		
-		private class RankComparerClass : System.Collections.IComparer
+		#region RankComparerImplementation Class
+		private class RankComparerImplementation : System.Collections.IComparer
 		{
 			#region IComparer Members
 			public int Compare(object x, object y)
@@ -359,7 +360,7 @@ namespace Epsitec.Common.Types
 			}
 			#endregion
 		}
-
+		#endregion
 		
 		private System.Type						enum_type;
 		private EnumValue[]						enum_values;

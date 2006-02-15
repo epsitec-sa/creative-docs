@@ -1,10 +1,10 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe DecimalType décrit divers types numériques natifs.
+	/// La classe DecimalType décrit des valeurs de type System.Decimal.
 	/// </summary>
 	public class DecimalType : INum, IDataConstraint
 	{
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return typeof (decimal);
+				return typeof (System.Decimal);
 			}
 		}
 		#endregion

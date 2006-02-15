@@ -1,10 +1,10 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe VoidType décrit le type "void".
+	/// La classe VoidType décrit les valeurs de type System.Void.
 	/// </summary>
 	public class VoidType : INamedType
 	{
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return typeof (void);
+				return typeof (void);			//	System.Void
 			}
 		}
 		#endregion

@@ -229,7 +229,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IntegerlType.cs"
+                    RelPath = "IntegerType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -265,6 +265,11 @@
                 />
                 <File
                     RelPath = "LocalValueEntry.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "LongIntegerType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

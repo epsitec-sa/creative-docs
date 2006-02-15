@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -29,7 +29,10 @@ namespace Epsitec.Common.Types
 		
 		public decimal						Minimum
 		{
-			get { return this.minimum; }
+			get
+			{
+				return this.minimum;
+			}
 			set
 			{
 				if (this.minimum != value)
@@ -42,7 +45,10 @@ namespace Epsitec.Common.Types
 		
 		public decimal						Maximum
 		{
-			get { return this.maximum; }
+			get
+			{
+				return this.maximum;
+			}
 			set
 			{
 				if (this.maximum != value)
@@ -71,14 +77,17 @@ namespace Epsitec.Common.Types
 		
 		public decimal						Resolution
 		{
-			get { return this.resolution; }
+			get
+			{
+				return this.resolution;
+			}
 			set
 			{
 				if (this.resolution != value)
 				{
 					if (value < 0)
 					{
-						throw new System.ArgumentOutOfRangeException ("value", value, "Resolution must be positive.");
+						throw new System.ArgumentOutOfRangeException ("value", value, "Resolution must be positive");
 					}
 					
 					this.resolution = value;
@@ -130,6 +139,10 @@ namespace Epsitec.Common.Types
 		
 		public decimal Constrain(decimal value)
 		{
+			//	Tronque la précision de la valeur à la résolution courante,
+			//	en utilisant un arrondi à la valeur la plus proche, puis
+			//	contraint la valeur aux bornes minimum/maximum.
+			
 			if (this.IsValid)
 			{
 				if (this.resolution != 0)
@@ -168,7 +181,7 @@ namespace Epsitec.Common.Types
 				return value;
 			}
 			
-			throw new System.InvalidOperationException (string.Format ("DecimalRange is invalid."));
+			throw new System.InvalidOperationException (string.Format ("DecimalRange is invalid"));
 		}
 		
 		public decimal Constrain(double value)
@@ -184,6 +197,9 @@ namespace Epsitec.Common.Types
 		
 		public decimal ConstrainToZero(decimal value)
 		{
+			//	Comme Constain, mais force l'arrondi vers le nombre le plus proche
+			//	de zéro.
+			
 			if (this.IsValid)
 			{
 				if (this.resolution != 0)
@@ -222,7 +238,7 @@ namespace Epsitec.Common.Types
 				return value;
 			}
 			
-			throw new System.InvalidOperationException (string.Format ("DecimalRange is invalid."));
+			throw new System.InvalidOperationException (string.Format ("DecimalRange is invalid"));
 		}
 		
 		public decimal ConstrainToZero(double value)
