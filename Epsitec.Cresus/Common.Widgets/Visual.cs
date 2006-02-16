@@ -1099,11 +1099,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.AddEvent (Visual.MaxSizeProperty, value);
+				this.AddEventHandler (Visual.MaxSizeProperty, value);
 			}
 			remove
 			{
-				this.RemoveEvent (Visual.MaxSizeProperty, value);
+				this.RemoveEventHandler (Visual.MaxSizeProperty, value);
 			}
 		}
 		
@@ -1111,11 +1111,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.AddEvent (Visual.MinSizeProperty, value);
+				this.AddEventHandler (Visual.MinSizeProperty, value);
 			}
 			remove
 			{
-				this.RemoveEvent (Visual.MinSizeProperty, value);
+				this.RemoveEventHandler (Visual.MinSizeProperty, value);
 			}
 		}
 		
@@ -1123,11 +1123,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.AddEvent (Visual.SizeProperty, value);
+				this.AddEventHandler (Visual.SizeProperty, value);
 			}
 			remove
 			{
-				this.RemoveEvent (Visual.SizeProperty, value);
+				this.RemoveEventHandler (Visual.SizeProperty, value);
 			}
 		}
 		
@@ -1135,11 +1135,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.AddEvent (Visual.ParentProperty, value);
+				this.AddEventHandler (Visual.ParentProperty, value);
 			}
 			remove
 			{
-				this.RemoveEvent (Visual.ParentProperty, value);
+				this.RemoveEventHandler (Visual.ParentProperty, value);
 			}
 		}
 		
@@ -1147,11 +1147,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.AddEvent (Visual.IsVisibleProperty, value);
+				this.AddEventHandler (Visual.IsVisibleProperty, value);
 			}
 			remove
 			{
-				this.RemoveEvent (Visual.IsVisibleProperty, value);
+				this.RemoveEventHandler (Visual.IsVisibleProperty, value);
 			}
 		}
 		
@@ -1159,11 +1159,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.AddEvent (Visual.IsEnabledProperty, value);
+				this.AddEventHandler (Visual.IsEnabledProperty, value);
 			}
 			remove
 			{
-				this.RemoveEvent (Visual.IsEnabledProperty, value);
+				this.RemoveEventHandler (Visual.IsEnabledProperty, value);
 			}
 		}
 		
@@ -1171,11 +1171,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.AddEvent (Visual.IsFocusedProperty, value);
+				this.AddEventHandler (Visual.IsFocusedProperty, value);
 			}
 			remove
 			{
-				this.RemoveEvent (Visual.IsFocusedProperty, value);
+				this.RemoveEventHandler (Visual.IsFocusedProperty, value);
 			}
 		}
 		
@@ -1183,11 +1183,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.AddEvent (Visual.IsKeyboardFocusedProperty, value);
+				this.AddEventHandler (Visual.IsKeyboardFocusedProperty, value);
 			}
 			remove
 			{
-				this.RemoveEvent (Visual.IsKeyboardFocusedProperty, value);
+				this.RemoveEventHandler (Visual.IsKeyboardFocusedProperty, value);
 			}
 		}
 		
@@ -1195,11 +1195,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.AddEvent (Visual.ContainsKeyboardFocusProperty, value);
+				this.AddEventHandler (Visual.ContainsKeyboardFocusProperty, value);
 			}
 			remove
 			{
-				this.RemoveEvent (Visual.ContainsKeyboardFocusProperty, value);
+				this.RemoveEventHandler (Visual.ContainsKeyboardFocusProperty, value);
 			}
 		}
 		

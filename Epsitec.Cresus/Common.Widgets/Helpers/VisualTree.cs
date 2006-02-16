@@ -554,7 +554,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				
 				while (visual != null)
 				{
-					if (visual.IsEventUsed (property))
+					if (visual.HasEventHandlerForProperty (property))
 					{
 						return visual;
 					}
