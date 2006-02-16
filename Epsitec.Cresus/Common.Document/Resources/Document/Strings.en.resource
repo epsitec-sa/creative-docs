@@ -140,8 +140,8 @@
 	<data name="Dialog.Integer.ImageCompression.FaxGroup4">Fax Group 4</data>
 	<data name="Dialog.Integer.ExportPDFColorConversion.Text">Color conversion</data>
 	<data name="Dialog.Integer.ExportPDFColorConversion.None">None</data>
-	<data name="Dialog.Integer.ExportPDFColorConversion.ToRGB">RGB Colors</data>
-	<data name="Dialog.Integer.ExportPDFColorConversion.ToCMYK">CMYK Colors</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.ToRgb">RGB Colors</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.ToCmyk">CMYK Colors</data>
 	<data name="Dialog.Integer.ExportPDFColorConversion.ToGray">Grayscale</data>
 	<data name="Dialog.Integer.ExportPDFImageCompression.Text">Compression</data>
 	<data name="Dialog.Integer.ExportPDFImageCompression.None">None</data>
@@ -911,8 +911,8 @@
 	<data name="Action.AdjustHeight">Same heights</data>
 	<data name="Action.ColorMain">Color</data>
 	<data name="Action.Color">Adjust colors</data>
-	<data name="Action.ColorToRGB">Convert all colors to RGB</data>
-	<data name="Action.ColorToCMYK">Convert all colors to CMYK</data>
+	<data name="Action.ColorToRgb">Convert all colors to RGB</data>
+	<data name="Action.ColorToCmyk">Convert all colors to CMYK</data>
 	<data name="Action.ColorToGray">Discard all colors and convert to grayscale</data>
 	<data name="Action.ColorValue">Modification of color value</data>
 	<data name="Action.ColorStrokeDark">Darker lines</data>
@@ -1334,8 +1334,8 @@
 	<data name="Style.Paragraph.Base">Standard Paragraph</data>
 	<data name="Style.Character.Base">Standard Character</data>
 
-	<data name="Color.RGB">RGB</data>
-	<data name="Color.CMYK">CMYK</data>
+	<data name="Color.Rgb">RGB</data>
+	<data name="Color.Cmyk">CMYK</data>
 	<data name="Color.Gray">G</data>
 	<data name="Color.Alpha">a</data>
 	<data name="Color.RegistrationBlack">Registration (black)</data>
