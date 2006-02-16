@@ -79,7 +79,7 @@ namespace Epsitec.Common.Types
 			}
 			set
 			{
-				this.days = value / Time.TicksPerDay;
+				this.days = (int) (value / Time.TicksPerDay);
 			}
 		}
 		
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Types
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
-				long days = System.Int64.Parse (value, culture);
+				int days = System.Int32.Parse (value, culture);
 				Date date = new Date ();
 				date.days = days;
 				return date;
@@ -263,6 +263,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		private long							days;
+		private int								days;
 	}
 }

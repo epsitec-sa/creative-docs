@@ -14,7 +14,16 @@ namespace Epsitec.Common.Types
 		protected AbstractDataCollection()
 		{
 		}
-		
+
+		public virtual void AddRange(System.Collections.ICollection items)
+		{
+			foreach (IDataItem item in items)
+			{
+				this.list.Add (item);
+			}
+			
+			this.ClearCachedItemArray ();
+		}
 		
 		#region IDataCollection Members
 		public IDataItem						this[string name]
@@ -78,7 +87,7 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		#region ICollection<IDataItem> Members
-		public void Clear()
+		public virtual void Clear()
 		{
 			if (this.list.Count > 0)
 			{
@@ -113,13 +122,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public void Add(IDataItem item)
+		public virtual void Add(IDataItem item)
 		{
 			this.list.Add (item);
 			this.ClearCachedItemArray ();
 		}
 
-		public bool Remove(IDataItem item)
+		public virtual bool Remove(IDataItem item)
 		{
 			if (this.list.Remove (item))
 			{

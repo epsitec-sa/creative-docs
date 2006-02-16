@@ -20,8 +20,8 @@ namespace Epsitec.Common.Types
 			{
 				throw new System.ArgumentException ("Ticks out of range");
 			}
-			
-			this.time = (int)(ticks / 10000L);
+
+			this.milliseconds = (int) (ticks / Time.TicksPerMillisecond);
 		}
 		
 		public Time(int hour, int minute, int second) : this (hour, minute, second, 0)
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Types
 				throw new System.ArgumentException ("Time argument out of range");
 			}
 			
-			this.time = (millisecond + 1000*(second + 60*(minute + 60*hour)));
+			this.milliseconds = (millisecond + 1000*(second + 60*(minute + 60*hour)));
 			
 			System.Diagnostics.Debug.Assert (this.Ticks >= 0);
 			System.Diagnostics.Debug.Assert (this.Ticks < Time.TicksPerDay);
@@ -51,15 +51,15 @@ namespace Epsitec.Common.Types
 				System.DateTime date_time  = (System.DateTime)time;
 				Time       date_time_time = new Time (date_time.Hour, date_time.Minute, date_time.Second, date_time.Millisecond);
 				
-				this.time = date_time_time.time;
+				this.milliseconds = date_time_time.milliseconds;
 			}
 			else if (time is Time)
 			{
-				this.time = ((Time)time).time;
+				this.milliseconds = ((Time)time).milliseconds;
 			}
 			else if (time == null)
 			{
-				this.time = -1;
+				this.milliseconds = -1;
 			}
 			else
 			{
@@ -70,40 +70,62 @@ namespace Epsitec.Common.Types
 		
 		public int								Hour
 		{
-			get { return this.InternalTime / 60 / 60 / 1000; }
+			get
+			{
+				return this.InternalTime / 60 / 60 / 1000;
+			}
 		}
 		
 		public int								Minute
 		{
-			get { return (this.InternalTime / 60 / 1000) % 60; }
+			get
+			{
+				return (this.InternalTime / 60 / 1000) % 60;
+			}
 		}
 		
 		public int								Second
 		{
-			get { return (this.InternalTime / 1000) % 60; }
+			get
+			{
+				return (this.InternalTime / 1000) % 60;
+			}
 		}
 		
 		public int								Millisecond
 		{
-			get { return (this.InternalTime) % 1000; }
+			get
+			{
+				return (this.InternalTime) % 1000;
+			}
 		}
 		
 		
 		public long								Ticks
 		{
-			get { return this.time * 10000L; }
-			set { this.time = (int)(value / 10000L); }
+			get
+			{
+				return this.milliseconds * Time.TicksPerMillisecond;
+			}
+			set
+			{
+				this.milliseconds = (int) (value / Time.TicksPerMillisecond);
+			}
 		}
 		
 		
 		public static Time						Now
 		{
-			get { return new Time (System.DateTime.Now); }
+			get
+			{
+				return new Time (System.DateTime.Now);
+			}
 		}
 		
 		
 		public const long						TicksPerDay = 1000*60*60*24*10000L;
 		public const long						TicksPerSecond = 1000*10000L;
+		public const long						TicksPerMillisecond = 10000L;
 		
 		
 		public Time AddHour(int value)
@@ -126,7 +148,7 @@ namespace Epsitec.Common.Types
 		
 		public Time AddMillisecond(int value)
 		{
-			long ticks = this.Ticks + (long) value * Time.TicksPerSecond / 1000L;
+			long ticks = this.Ticks + (long) value * Time.TicksPerMillisecond;
 			return new Time (ticks % Time.TicksPerDay);
 		}
 		
@@ -144,18 +166,18 @@ namespace Epsitec.Common.Types
 		
 		public override int GetHashCode()
 		{
-			return this.time;
+			return this.milliseconds;
 		}
 
 		
 		public static int Compare(Time t1, Time t2)
 		{
-			if (t1.time > t2.time)
+			if (t1.milliseconds > t2.milliseconds)
 			{
 				return 1;
 			}
 			
-			if (t1.time < t2.time)
+			if (t1.milliseconds < t2.milliseconds)
 			{
 				return -1;
 			}
@@ -165,7 +187,7 @@ namespace Epsitec.Common.Types
 		
 		public static bool Equals(Time t1, Time t2)
 		{
-			return t1.time == t2.time;
+			return t1.milliseconds == t2.milliseconds;
 		}
 		
 		
@@ -186,7 +208,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.time == -1);
+				return (this.milliseconds == -1);
 			}
 		}
 		#endregion
@@ -231,18 +253,21 @@ namespace Epsitec.Common.Types
 		#endregion
 		
 		#region Converter Class
-		public class Converter : Epsitec.Common.Types.AbstractStringConverter
+		private class Converter : Epsitec.Common.Types.AbstractStringConverter
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
-				long ticks = System.Int64.Parse (value, culture);
-				return new Time (ticks);
+				int milliseconds = System.Int32.Parse (value, culture);
+				Time time = new Time ();
+				time.milliseconds = milliseconds;
+				return time;
 			}
 			
 			public override string ToString(object value, System.Globalization.CultureInfo culture)
 			{
 				Time time = (Time) value;
-				return string.Format (culture, "{0}", time.Ticks);
+				int milliseconds = time.milliseconds;
+				return string.Format (culture, "{0}", milliseconds);
 			}
 		}
 		#endregion
@@ -253,13 +278,13 @@ namespace Epsitec.Common.Types
 			{
 				if (this.IsNull)
 				{
-					throw new System.NullReferenceException ("Time is Null.");
+					throw new System.NullReferenceException ("Time is Null");
 				}
 				
-				return this.time;
+				return this.milliseconds;
 			}
 		}
 		
-		private int								time;
+		private int								milliseconds;
 	}
 }

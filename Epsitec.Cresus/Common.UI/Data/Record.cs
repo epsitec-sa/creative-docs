@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.UI.Data
 {
@@ -94,8 +95,23 @@ namespace Epsitec.Common.UI.Data
 			
 			this.OnChanged ();
 		}
-		
-		public void AddRange(System.Collections.ICollection fields)
+
+		public override bool Remove(Types.IDataItem item)
+		{
+			if (base.Remove (item))
+			{
+				Field field = item as Field;
+				field.DetachFromRecord (this);
+				this.OnChanged ();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override void AddRange(System.Collections.ICollection fields)
 		{
 			if (fields.Count > 0)
 			{
@@ -107,8 +123,7 @@ namespace Epsitec.Common.UI.Data
 					}
 				}
 				
-				this.list.AddRange (fields);
-				this.ClearCachedItemArray ();
+				base.AddRange (fields);
 				
 				foreach (Field field in fields)
 				{
@@ -134,8 +149,8 @@ namespace Epsitec.Common.UI.Data
 				return;
 			}
 			
-			Types.IDataItem[]            items = new Types.IDataItem[count];
-			System.Collections.ArrayList list  = new System.Collections.ArrayList ();
+			Types.IDataItem[] items  = new Types.IDataItem[count];
+			List<Field>       fields = new List<Field> ();
 			
 			graph.Root.CopyTo (items, 0);
 			
@@ -143,23 +158,25 @@ namespace Epsitec.Common.UI.Data
 			{
 				if (items[i].Classes == Types.DataItemClasses.Value)
 				{
-					list.Add (Field.CreateFromValue (items[i] as Types.IDataValue));
+					fields.Add (Field.CreateFromValue (items[i] as Types.IDataValue));
 				}
 			}
 			
-			this.AddRange (list);
+			this.AddRange (fields);
 		}
 		
-		public void Clear()
+		public override void Clear()
 		{
-			foreach (Field field in this.list)
+			if (this.Count > 0)
 			{
-				field.DetachFromRecord (this);
+				foreach (Field field in this)
+				{
+					field.DetachFromRecord (this);
+				}
+				
+				base.Clear ();
+				this.OnChanged ();
 			}
-			
-			this.list.Clear ();
-			this.ClearCachedItemArray ();
-			this.OnChanged ();
 		}
 		
 		
@@ -363,8 +380,8 @@ namespace Epsitec.Common.UI.Data
 		{
 			base.UpdateCachedItemArray ();
 			
-			this.fields = new Field[this.list.Count];
-			this.list.CopyTo (this.fields);
+			this.fields = new Field[this.Count];
+			this.CopyTo (this.fields, 0);
 		}
 
 		
