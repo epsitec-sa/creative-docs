@@ -829,12 +829,12 @@ namespace Epsitec.Common.Text
 				return update;
 			}
 			
-			ulong last = Internal.CharMarker.ExtractCoreAndSettings (buffer[0]);
+			ulong last = buffer[0] & (Internal.CharMarker.CoreAndSettingsMask | Unicode.Bits.SpecialCodeFlag);
 			int   num  = 1;
 			
 			for (int i = 1; i < length; i++)
 			{
-				ulong code = Internal.CharMarker.ExtractCoreAndSettings (buffer[i]);
+				ulong code = buffer[i] & (Internal.CharMarker.CoreAndSettingsMask | Unicode.Bits.SpecialCodeFlag);
 				
 				if (code != last)
 				{
