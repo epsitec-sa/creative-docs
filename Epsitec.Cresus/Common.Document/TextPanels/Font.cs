@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fontFace = new Widgets.FontFaceCombo(this);
 			this.fontFace.IsReadOnly = true;
-			this.fontFace.ComboOpening += new CancelEventHandler(this.HandleFontFaceComboOpening);
+			this.fontFace.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleFontFaceComboOpening);
 			this.fontFace.ComboClosed += new EventHandler(this.HandleFontFaceTextChanged);
 			this.fontFace.TabIndex = this.tabIndex++;
 			this.fontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.fontFace.ComboOpening -= new CancelEventHandler(this.HandleFontFaceComboOpening);
+				this.fontFace.ComboOpening -= new EventHandler<CancelEventArgs> (this.HandleFontFaceComboOpening);
 				this.fontFace.ComboClosed -= new EventHandler(this.HandleFontFaceTextChanged);
 				this.fontStyle.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);

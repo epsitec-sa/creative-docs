@@ -124,7 +124,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldFontFace.TabIndex = tabIndex++;
 				this.fieldFontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fieldFontFace.Text = this.fontFace;
-				this.fieldFontFace.ComboOpening += new CancelEventHandler(this.HandleFontFaceComboOpening);
+				this.fieldFontFace.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleFontFaceComboOpening);
 				this.fieldFontFace.TextChanged += new EventHandler(this.HandleFontFaceChanged);
 
 				this.buttonFilter = new IconButton(bookArray);

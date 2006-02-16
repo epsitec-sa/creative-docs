@@ -11,12 +11,11 @@ namespace Epsitec.Common.Types
 	/// qui permet une plus grande souplesse (valeurs par défaut, introspection,
 	/// sérialisation, styles, génération automatique d'événements, etc.)
 	/// </summary>
-	public abstract class Object
+	public abstract class Object : System.IDisposable
 	{
 		protected Object()
 		{
 		}
-		
 		
 		public ObjectType						ObjectType
 		{
@@ -36,15 +35,13 @@ namespace Epsitec.Common.Types
 				return this.cached_type;
 			}
 		}
-		
-		public System.Collections.IEnumerable	LocalValueEntries
+		public IEnumerable<LocalValueEntry>		LocalValueEntries
 		{
 			get
 			{
 				return new LocalValueEnumerator (this);
 			}
 		}
-		
 		
 		public object GetValue(Property property)
 		{
@@ -59,7 +56,6 @@ namespace Epsitec.Common.Types
 				return this.GetValueBase (property);
 			}
 		}
-		
 		public object GetValueBase(Property property)
 		{
 			object value = this.GetLocalValue (property);
@@ -79,7 +75,6 @@ namespace Epsitec.Common.Types
 			return value;
 		}
 		
-		
 		public void SetValue(Property property, object value)
 		{
 			PropertyMetadata metadata = property.GetMetadata (this);
@@ -93,7 +88,6 @@ namespace Epsitec.Common.Types
 				this.SetValueBase (property, value);
 			}
 		}
-		
 		public void SetValueBase(Property property, object value)
 		{
 			object old_value = this.GetValue (property);
@@ -111,7 +105,6 @@ namespace Epsitec.Common.Types
 				this.InvalidateProperty (property, old_value, new_value);
 			}
 		}
-		
 		public void ClearValueBase(Property property)
 		{
 			object old_value = this.GetValue (property);
@@ -130,10 +123,9 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		
 		public object GetLocalValue(Property property)
 		{
-			if (this.properties.Contains (property))
+			if (this.properties.ContainsKey (property))
 			{
 				return this.properties[property];
 			}
@@ -142,25 +134,36 @@ namespace Epsitec.Common.Types
 				return UndefinedValue.Instance;
 			}
 		}
-		
 		public void SetLocalValue(Property property, object value)
 		{
 			this.properties[property] = value;
 		}
-		
 		public void ClearLocalValue(Property property)
 		{
-			if (this.properties.Contains (property))
+			if (this.properties.ContainsKey (property))
 			{
 				this.properties.Remove (property);
 			}
 		}
-		
 		public bool ContainsLocalValue(Property property)
 		{
-			return this.properties.Contains (property);
+			return this.properties.ContainsKey (property);
 		}
-		
+
+		public void InvalidateProperty(Property property, object old_value, object new_value)
+		{
+			PropertyMetadata metadata = property.GetMetadata (this);
+
+			metadata.NotifyPropertyInvalidated (this, old_value, new_value);
+
+			if (this.HasEventHandlerForProperty (property))
+			{
+				PropertyChangedEventHandler handler = this.propertyEvents[property];
+				PropertyChangedEventArgs args = new PropertyChangedEventArgs (property, old_value, new_value);
+
+				handler (this, args);
+			}
+		}
 		
 		public void AddEventHandler(Property property, PropertyChangedEventHandler handler)
 		{
@@ -204,7 +207,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-
 		protected void AddUserEventHandler(string name, System.Delegate handler)
 		{
 			if (this.userEvents == null)
@@ -246,23 +248,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		
-		public void InvalidateProperty(Property property, object old_value, object new_value)
+		protected virtual void Dispose(bool disposing)
 		{
-			PropertyMetadata metadata = property.GetMetadata (this);
-			
-			metadata.NotifyPropertyInvalidated (this, old_value, new_value);
-			
-			if (this.HasEventHandlerForProperty (property))
-			{
-				PropertyChangedEventHandler handler = this.propertyEvents[property];
-				PropertyChangedEventArgs args = new PropertyChangedEventArgs (property, old_value, new_value);
-				
-				handler (this, args);
-			}
 		}
-		
-		
+
 		internal static void Register(Property property)
 		{
 			lock (Object.declarations)
@@ -281,7 +270,7 @@ namespace Epsitec.Common.Types
 					
 					if (type_declaration.ContainsKey (property.Name))
 					{
-						throw new System.ArgumentException (string.Concat ("Property with name ", property.Name, " already exists for type ", property.OwnerType));
+						throw new System.ArgumentException (string.Format ("Property named {0} already exists for type {1}", property.Name, property.OwnerType));
 					}
 					else
 					{
@@ -292,56 +281,74 @@ namespace Epsitec.Common.Types
 				ObjectType.FromSystemType (property.OwnerType).Register (property);
 			}
 		}
+
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
 		
-		
-		private class LocalValueEnumerator : System.Collections.IEnumerator, System.Collections.IEnumerable
+		#region LocalValueEnumerator Class
+		private struct LocalValueEnumerator : IEnumerator<LocalValueEntry>, IEnumerable<LocalValueEntry>
 		{
 			public LocalValueEnumerator(Object o)
 			{
 				this.property_enumerator = o.properties.GetEnumerator ();
 			}
 			
-			
-			public object						Current
+			public LocalValueEntry Current
 			{
 				get
 				{
-					System.Collections.DictionaryEntry entry = this.property_enumerator.Entry;
-					return new LocalValueEntry (entry.Key as Property, entry.Value);
+					return new LocalValueEntry (this.property_enumerator.Current);
 				}
 			}
-			
+			object System.Collections.IEnumerator.Current
+			{
+				get
+				{
+					return this.Current;
+				}
+			}
 			
 			public void Reset()
 			{
 				this.property_enumerator.Reset ();
 			}
-			
 			public bool MoveNext()
 			{
 				return this.property_enumerator.MoveNext ();
 			}
+			public void Dispose()
+			{
+			}
 			
-			
-			public System.Collections.IEnumerator GetEnumerator()
+			public IEnumerator<LocalValueEntry> GetEnumerator()
 			{
 				return this;
 			}
-			
-			
-			System.Collections.IDictionaryEnumerator property_enumerator;
-		}
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+			{
+				return this;
+			}
 
-		
+			IEnumerator<KeyValuePair<Property, object>> property_enumerator;
+		}
+		#endregion
+
+		#region TypeDeclaration Class
 		private class TypeDeclaration : Dictionary<string, Property>
 		{
 		}
-		
-		private System.Collections.Hashtable	properties = new System.Collections.Hashtable ();
-		private Dictionary<Property, PropertyChangedEventHandler> propertyEvents;
-		protected Dictionary<string, System.Delegate> userEvents;
-		private ObjectType						cached_type;
+		#endregion
 
-		static Dictionary<System.Type, TypeDeclaration> declarations = new Dictionary<System.Type, TypeDeclaration> ();
+		Dictionary<Property, object>						properties = new Dictionary<Property, object> ();
+		Dictionary<Property, PropertyChangedEventHandler>	propertyEvents;
+		Dictionary<string, System.Delegate>					userEvents;
+		ObjectType											cached_type;
+
+		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
 	}
 }

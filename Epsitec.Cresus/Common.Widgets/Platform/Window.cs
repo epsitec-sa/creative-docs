@@ -1,10 +1,10 @@
 //	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets.Platform
 {
-	using CancelEventHandler	= System.ComponentModel.CancelEventHandler;
-	
 	/// <summary>
 	/// La classe Platform.Window fait le lien avec les WinForms.
 	/// </summary>
@@ -588,7 +588,7 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			set
 			{
-				this.window_mode = window_mode;
+				this.window_mode = value;
 			}
 		}
 		

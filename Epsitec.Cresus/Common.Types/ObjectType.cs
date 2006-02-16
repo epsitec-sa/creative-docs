@@ -25,7 +25,6 @@ namespace Epsitec.Common.Types
 				return this.base_type;
 			}
 		}
-		
 		public System.Type						SystemType
 		{
 			get
@@ -33,7 +32,6 @@ namespace Epsitec.Common.Types
 				return this.system_type;
 			}
 		}
-		
 		public string							Name
 		{
 			get
@@ -43,7 +41,7 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		public bool IsInstanceOfType(Object o)
+		public bool IsObjectInstanceOfType(Object o)
 		{
 			if (o == null)
 			{
@@ -61,7 +59,6 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
-		
 		public bool IsSubclassOf(ObjectType type)
 		{
 			ObjectType base_type = this.BaseType;
@@ -79,7 +76,6 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
-		
 		
 		public void Register(Property property)
 		{
@@ -120,8 +116,8 @@ namespace Epsitec.Common.Types
 				return ObjectType.FromSystemTypeLocked (type);
 			}
 		}
-		
-		
+
+		#region Private Methods
 		private static ObjectType FromSystemTypeLocked(System.Type system_type)
 		{
 			if (system_type == null)
@@ -156,8 +152,9 @@ namespace Epsitec.Common.Types
 				return this_type;
 			}
 		}
-		
-		
+		#endregion
+
+
 		private ObjectType						base_type;
 		private System.Type						system_type;
 		private List<Property>					local_properties = new List<Property> ();

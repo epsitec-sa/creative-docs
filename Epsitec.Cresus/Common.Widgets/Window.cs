@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : Types.Object, System.IDisposable, Support.Data.IContainer, ICommandDispatcherHost, Support.Data.IPropertyProvider
+	public class Window : Types.Object, Support.Data.IContainer, ICommandDispatcherHost, Support.Data.IPropertyProvider
 	{
 		public Window()
 		{
@@ -1021,23 +1021,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		#region IDisposable Members
-		public void Dispose()
-		{
-			if (!this.is_disposed)
-			{
-				this.is_disposed = true;
-				
-				if (Widget.DebugDispose)
-				{
-					System.Diagnostics.Debug.WriteLine("Disposing window, still " + Window.DebugAliveWindowsCount + " windows alive");
-				}
-				
-				this.Dispose (true);
-				System.GC.SuppressFinalize (this);
-			}
-		}
-		#endregion
 		
 		public void AttachCommandDispatcher(CommandDispatcher value)
 		{
@@ -1121,11 +1104,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void Dispose(bool disposing)
+		protected override void Dispose(bool disposing)
 		{
+			if (this.is_disposed)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Disposing window {0} which has already been disposed", this.Name));
+				return;
+			}
+			
+			this.is_disposed = true;
+				
 			if (Widget.DebugDispose)
 			{
-				System.Diagnostics.Debug.WriteLine ("Window.Dispose: " + this.Name);
+				System.Diagnostics.Debug.WriteLine (string.Format ("Disposing window {0}, still {1} windows alive", this.Name, Window.DebugAliveWindowsCount));
 			}
 			
 			if (disposing)

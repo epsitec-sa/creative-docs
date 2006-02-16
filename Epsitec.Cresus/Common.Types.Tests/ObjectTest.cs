@@ -66,10 +66,10 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (oa.ObjectType.IsSubclassOf (ObjectType.FromSystemType (typeof (ObjectX))));
 			Assert.IsFalse (ob.ObjectType.IsSubclassOf (ObjectType.FromSystemType (typeof (ObjectX))));
 			
-			Assert.IsTrue (oa.ObjectType.IsInstanceOfType (oa));
-			Assert.IsTrue (oa.ObjectType.IsInstanceOfType (ob));
-			Assert.IsFalse (ob.ObjectType.IsInstanceOfType (oa));
-			Assert.IsFalse (oa.ObjectType.IsInstanceOfType (ox));
+			Assert.IsTrue (oa.ObjectType.IsObjectInstanceOfType (oa));
+			Assert.IsTrue (oa.ObjectType.IsObjectInstanceOfType (ob));
+			Assert.IsFalse (ob.ObjectType.IsObjectInstanceOfType (oa));
+			Assert.IsFalse (oa.ObjectType.IsObjectInstanceOfType (ox));
 		}
 		
 		

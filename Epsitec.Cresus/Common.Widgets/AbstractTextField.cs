@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	using BundleAttribute  = Epsitec.Common.Support.BundleAttribute;
@@ -1707,18 +1709,19 @@ namespace Epsitec.Common.Widgets
 			private AbstractTextField			host;
 		}
 		
-		public event Support.EventHandler		TextEdited;
-		public event Support.EventHandler		TextInserted;
-		public event Support.EventHandler		TextDeleted;
-		public event Support.EventHandler		SelectionChanged;
-		public event Support.EventHandler		CursorChanged;
-		public event Support.EventHandler		ReadOnlyChanged;
-		public event Support.CancelEventHandler	AutoSelecting;
-		public event Support.CancelEventHandler	AutoErasing;
+		public event EventHandler				TextEdited;
+		public event EventHandler				TextInserted;
+		public event EventHandler				TextDeleted;
+		public event EventHandler				SelectionChanged;
+		public event EventHandler				CursorChanged;
+		public event EventHandler				ReadOnlyChanged;
 		
-		public event Support.EventHandler		EditionStarted;
-		public event Support.EventHandler		EditionAccepted;
-		public event Support.EventHandler		EditionRejected;
+		public event EventHandler<CancelEventArgs> AutoSelecting;
+		public event EventHandler<CancelEventArgs> AutoErasing;
+		
+		public event EventHandler				EditionStarted;
+		public event EventHandler				EditionAccepted;
+		public event EventHandler				EditionRejected;
 		
 		
 		internal static readonly double			TextMargin = 2;

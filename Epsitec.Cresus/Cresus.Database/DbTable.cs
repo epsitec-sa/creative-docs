@@ -1,5 +1,7 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Database
 {
@@ -462,8 +464,8 @@ namespace Epsitec.Cresus.Database
 		{
 			this.columns = columns;
 			
-			this.columns.Inserted += new Epsitec.Common.Support.ArgEventHandler(this.HandleColumnInserted);
-			this.columns.Removing += new Epsitec.Common.Support.ArgEventHandler(this.HandleColumnRemoving);
+			this.columns.Inserted += new EventHandler<ValueEventArgs> (this.HandleColumnInserted);
+			this.columns.Removing += new EventHandler<ValueEventArgs> (this.HandleColumnRemoving);
 			
 			foreach (DbColumn column in this.columns)
 			{
@@ -472,15 +474,15 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		private void HandleColumnInserted(object sender, object arg)
+		private void HandleColumnInserted(object sender, Epsitec.Common.Support.ValueEventArgs e)
 		{
-			DbColumn column = arg as DbColumn;
+			DbColumn column = e.Value as DbColumn;
 			column.DefineTable (this);
 		}
 		
-		private void HandleColumnRemoving(object sender, object arg)
+		private void HandleColumnRemoving(object sender, Epsitec.Common.Support.ValueEventArgs e)
 		{
-			DbColumn column = arg as DbColumn;
+			DbColumn column = e.Value as DbColumn;
 			column.DefineTable (null);
 		}
 		

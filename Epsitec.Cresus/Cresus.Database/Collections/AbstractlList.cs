@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections;
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Database.Collections
 		{
 			if (this.Inserted != null)
 			{
-				this.Inserted (this, element);
+				this.Inserted (this, new Epsitec.Common.Support.ValueEventArgs (element));
 			}
 		}
 		
@@ -112,14 +112,14 @@ namespace Epsitec.Cresus.Database.Collections
 		{
 			if (this.Removing != null)
 			{
-				this.Removing (this, element);
+				this.Removing (this, new Epsitec.Common.Support.ValueEventArgs (element));
 			}
 		}
 		
 		
-		public event ArgEventHandler			Removing;
-		public event ArgEventHandler			Inserted;
-		public event EventHandler				Changed;
+		public event EventHandler<ValueEventArgs>	Removing;
+		public event EventHandler<ValueEventArgs>	Inserted;
+		public event EventHandler					Changed;
 		
 		protected ArrayList						list = new System.Collections.ArrayList ();
 	}
