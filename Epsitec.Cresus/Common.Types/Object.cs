@@ -254,6 +254,8 @@ namespace Epsitec.Common.Types
 
 		internal static void Register(Property property)
 		{
+			System.Diagnostics.Debug.Assert (property != null);
+			
 			lock (Object.declarations)
 			{
 				TypeDeclaration type_declaration;
