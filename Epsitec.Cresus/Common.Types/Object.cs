@@ -1,5 +1,7 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
@@ -160,78 +162,90 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		public void AddEvent(Property property, PropertyChangedEventHandler handler)
+		public void AddEventHandler(Property property, PropertyChangedEventHandler handler)
 		{
-			this.InitialiseEventsHashtable ();
-			this.events[property] = (PropertyChangedEventHandler) this.events[property] + handler;
-		}
-		
-		public void AddEvent(string name, Support.EventHandler handler)
-		{
-			this.InitialiseEventsHashtable ();
-			this.events[name] = (Support.EventHandler) this.events[name] + handler;
-		}
-		
-		public void AddEvent(string name, Support.CancelEventHandler handler)
-		{
-			this.InitialiseEventsHashtable ();
-			this.events[name] = (Support.CancelEventHandler) this.events[name] + handler;
-		}
-		
-		public void RemoveEvent(Property property, PropertyChangedEventHandler handler)
-		{
-			if ((this.events != null) &&
-				(this.events.Contains (property)))
+			if (this.propertyEvents == null)
 			{
-				this.events[property] = (PropertyChangedEventHandler) this.events[property] - handler;
-			}
-		}
-		
-		public void RemoveEvent(string name, Support.EventHandler handler)
-		{
-			if ((this.events != null) &&
-				(this.events.Contains (name)))
-			{
-				this.events[name] = (Support.EventHandler) this.events[name] - handler;
-			}
-		}
-		
-		public void RemoveEvent(string name, Support.CancelEventHandler handler)
-		{
-			if ((this.events != null) &&
-				(this.events.Contains (name)))
-			{
-				this.events[name] = (Support.CancelEventHandler) this.events[name] - handler;
-			}
-		}
-		
-		
-		public bool IsEventUsed(Property property)
-		{
-			if (this.events != null)
-			{
-				if (this.events[property] != null)
+				if (this.propertyEvents == null)
 				{
-					return true;
+					this.propertyEvents = new Dictionary<Property, PropertyChangedEventHandler> ();
 				}
 			}
-			
-			return false;
+
+			if (this.propertyEvents.ContainsKey (property))
+			{
+				this.propertyEvents[property] = this.propertyEvents[property] + handler;
+			}
+			else
+			{
+				this.propertyEvents[property] = handler;
+			}
+		}
+		public void RemoveEventHandler(Property property, PropertyChangedEventHandler handler)
+		{
+			if ((this.propertyEvents != null) &&
+				(this.propertyEvents.ContainsKey (property)))
+			{
+				this.propertyEvents[property] = this.propertyEvents[property] - handler;
+			}
 		}
 		
-		public bool IsEventUsed(string name)
+		public bool HasEventHandlerForProperty(Property property)
 		{
-			if (this.events != null)
+			if ((this.propertyEvents != null) &&
+				(this.propertyEvents.ContainsKey (property)) &&
+				(this.propertyEvents[property] != null))
 			{
-				if (this.events[name] != null)
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+
+		protected void AddUserEventHandler(string name, System.Delegate handler)
+		{
+			if (this.userEvents == null)
+			{
+				if (this.userEvents == null)
 				{
-					return true;
+					this.userEvents = new Dictionary<string, System.Delegate> ();
 				}
 			}
-			
-			return false;
+
+			if (this.userEvents.ContainsKey (name))
+			{
+				this.userEvents[name] = System.Delegate.Combine (this.userEvents[name], handler);
+			}
+			else
+			{
+				this.userEvents[name] = handler;
+			}
 		}
-		
+		protected void RemoveUserEventHandler(string name, System.Delegate handler)
+		{
+			if ((this.userEvents != null) &&
+				(this.userEvents.ContainsKey (name)))
+			{
+				this.userEvents[name] = System.Delegate.Remove (this.userEvents[name], handler);
+			}
+		}
+
+		protected System.Delegate GetUserEventHandler(string name)
+		{
+			if ((this.userEvents != null) &&
+				(this.userEvents.ContainsKey (name)))
+			{
+				return this.userEvents[name];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		
 		public void InvalidateProperty(Property property, object old_value, object new_value)
 		{
@@ -239,55 +253,12 @@ namespace Epsitec.Common.Types
 			
 			metadata.NotifyPropertyInvalidated (this, old_value, new_value);
 			
-			if (this.events != null)
+			if (this.HasEventHandlerForProperty (property))
 			{
-				PropertyChangedEventHandler handler = (PropertyChangedEventHandler) this.events[property];
+				PropertyChangedEventHandler handler = this.propertyEvents[property];
+				PropertyChangedEventArgs args = new PropertyChangedEventArgs (property, old_value, new_value);
 				
-				if (handler != null)
-				{
-					handler (this, new PropertyChangedEventArgs (property, old_value, new_value));
-				}
-			}
-		}
-		
-		
-		protected void InitialiseEventsHashtable()
-		{
-			if (this.events == null)
-			{
-				lock (this)
-				{
-					if (this.events == null)
-					{
-						this.events = new System.Collections.Hashtable ();
-					}
-				}
-			}
-		}
-		
-		protected void RaiseEvent(string name)
-		{
-			if (this.events != null)
-			{
-				Support.EventHandler handler = (Support.EventHandler) this.events[name];
-				
-				if (handler != null)
-				{
-					handler (this);
-				}
-			}
-		}
-		
-		protected void RaiseEvent(string name, Support.CancelEventArgs e)
-		{
-			if (this.events != null)
-			{
-				Support.CancelEventHandler handler = (Support.CancelEventHandler) this.events[name];
-				
-				if (handler != null)
-				{
-					handler (this, e);
-				}
+				handler (this, args);
 			}
 		}
 		
@@ -296,21 +267,26 @@ namespace Epsitec.Common.Types
 		{
 			lock (Object.declarations)
 			{
-				System.Collections.Hashtable type_declaration = Object.declarations[property.OwnerType] as System.Collections.Hashtable;
-				
-				if (type_declaration == null)
+				TypeDeclaration type_declaration;
+
+				if (Object.declarations.ContainsKey (property.OwnerType) == false)
 				{
-					type_declaration = new System.Collections.Hashtable ();
+					type_declaration = new TypeDeclaration ();
 					type_declaration[property.Name] = property;
 					Object.declarations[property.OwnerType] = type_declaration;
 				}
-				else if (type_declaration.Contains (property.Name))
-				{
-					throw new System.ArgumentException (string.Concat ("Property with name ", property.Name, " already exists for type ", property.OwnerType));
-				}
 				else
 				{
-					type_declaration[property.Name] = property;
+					type_declaration = Object.declarations[property.OwnerType];
+					
+					if (type_declaration.ContainsKey (property.Name))
+					{
+						throw new System.ArgumentException (string.Concat ("Property with name ", property.Name, " already exists for type ", property.OwnerType));
+					}
+					else
+					{
+						type_declaration[property.Name] = property;
+					}
 				}
 				
 				ObjectType.FromSystemType (property.OwnerType).Register (property);
@@ -355,12 +331,17 @@ namespace Epsitec.Common.Types
 			
 			System.Collections.IDictionaryEnumerator property_enumerator;
 		}
+
 		
+		private class TypeDeclaration : Dictionary<string, Property>
+		{
+		}
 		
 		private System.Collections.Hashtable	properties = new System.Collections.Hashtable ();
-		protected System.Collections.Hashtable	events;
+		private Dictionary<Property, PropertyChangedEventHandler> propertyEvents;
+		protected Dictionary<string, System.Delegate> userEvents;
 		private ObjectType						cached_type;
-		
-		static System.Collections.Hashtable		declarations = new System.Collections.Hashtable ();
+
+		static Dictionary<System.Type, TypeDeclaration> declarations = new Dictionary<System.Type, TypeDeclaration> ();
 	}
 }

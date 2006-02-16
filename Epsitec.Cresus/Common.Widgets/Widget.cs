@@ -4577,20 +4577,17 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnPaintBackground(PaintEventArgs e)
 		{
-			if (this.events != null)
+			PaintEventHandler handler = this.GetUserEventHandler ("PaintBackground") as PaintEventHandler;
+			
+			if (handler != null)
 			{
-				PaintEventHandler handler = (PaintEventHandler) this.events["PaintBackground"];
+				e.Suppress = false;
 				
-				if (handler != null)
+				handler (this, e);
+				
+				if (e.Suppress)
 				{
-					e.Suppress = false;
-					
-					handler (this, e);
-					
-					if (e.Suppress)
-					{
-						return;
-					}
+					return;
 				}
 			}
 			
@@ -4599,20 +4596,17 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnPaintForeground(PaintEventArgs e)
 		{
-			if (this.events != null)
+			PaintEventHandler handler = this.GetUserEventHandler ("PaintForeground") as PaintEventHandler;
+			
+			if (handler != null)
 			{
-				PaintEventHandler handler = (PaintEventHandler) this.events["PaintForeground"];
+				e.Suppress = false;
 				
-				if (handler != null)
+				handler (this, e);
+				
+				if (e.Suppress)
 				{
-					e.Suppress = false;
-					
-					handler (this, e);
-					
-					if (e.Suppress)
-					{
-						return;
-					}
+					return;
 				}
 			}
 			
@@ -4945,15 +4939,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.InitialiseEventsHashtable ();
-				this.events["PaintBackground"] = (PaintEventHandler) this.events["PaintBackground"] + value;
+				this.AddUserEventHandler ("PaintBackground", value);
 			}
 			remove
 			{
-				if (this.events != null)
-				{
-					this.events["PaintBackground"] = (PaintEventHandler) this.events["PaintBackground"] - value;
-				}
+				this.RemoveUserEventHandler ("PaintBackground", value);
 			}
 		}
 		
@@ -4961,15 +4951,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.InitialiseEventsHashtable ();
-				this.events["PaintForeground"] = (PaintEventHandler) this.events["PaintForeground"] + value;
+				this.AddUserEventHandler ("PaintForeground", value);
 			}
 			remove
 			{
-				if (this.events != null)
-				{
-					this.events["PaintForeground"] = (PaintEventHandler) this.events["PaintForeground"] - value;
-				}
+				this.RemoveUserEventHandler ("PaintForeground", value);
 			}
 		}
 		

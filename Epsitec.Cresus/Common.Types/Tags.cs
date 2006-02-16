@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -7,13 +7,8 @@ namespace Epsitec.Common.Types
 	/// La classe Tags exporte des fonctions qui ne sont pas accessibles
 	/// dans Support (problème de références circulaires).
 	/// </summary>
-	internal sealed class Tags
+	internal static class Tags
 	{
-		private Tags()
-		{
-		}
-		
-		
 		public const string	Caption		= "capt";
 		public const string	Description	= "desc";
 	}

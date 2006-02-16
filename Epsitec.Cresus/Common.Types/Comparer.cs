@@ -1,4 +1,4 @@
-﻿//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+﻿//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -11,7 +11,6 @@ namespace Epsitec.Common.Types
 		private Comparer()
 		{
 		}
-		
 		
 		public static bool Equal(double a, double b, double δ)
 		{
@@ -49,7 +48,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		
 		public static bool Equal(object a, object b)
 		{
 			//	Compare deux objets. Pour les tableaux, compare leur contenu; c'est
@@ -77,7 +75,6 @@ namespace Epsitec.Common.Types
 			
 			return a.Equals (b);
 		}
-		
 		public static bool Equal(System.Array a, System.Array b)
 		{
 			//	Compare deux tableaux d'objets : l'égalité est définie par le
@@ -183,7 +180,6 @@ namespace Epsitec.Common.Types
 			
 			return true;
 		}
-		
 		public static bool Equal(string[] a, string[] b)
 		{
 			//	Version optimisée pour comparer des tableaux à une dimension de

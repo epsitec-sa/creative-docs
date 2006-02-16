@@ -1,6 +1,8 @@
 //	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
@@ -97,10 +99,10 @@ namespace Epsitec.Common.Types
 					{
 						Property[] base_properties = this.BaseType == null ? new Property[0] : this.BaseType.GetProperties ();
 						Property[] all_properties  = new Property[base_properties.Length + this.local_properties.Count];
-						
+
 						base_properties.CopyTo (all_properties, 0);
 						this.local_properties.CopyTo (all_properties, base_properties.Length);
-						
+
 						this.all_properties   = all_properties;
 						this.local_properties = null;
 					}
@@ -126,9 +128,9 @@ namespace Epsitec.Common.Types
 			{
 				return null;
 			}
-			else if (ObjectType.types.Contains (system_type))
+			else if (ObjectType.types.ContainsKey (system_type))
 			{
-				return ObjectType.types[system_type] as ObjectType;
+				return ObjectType.types[system_type];
 			}
 			else if (system_type == typeof (Object))
 			{
@@ -158,9 +160,9 @@ namespace Epsitec.Common.Types
 		
 		private ObjectType						base_type;
 		private System.Type						system_type;
-		private System.Collections.ArrayList	local_properties = new System.Collections.ArrayList ();
+		private List<Property>					local_properties = new List<Property> ();
 		private Property[]						all_properties;
-		
-		static System.Collections.Hashtable		types = new System.Collections.Hashtable ();
+
+		static Dictionary<System.Type, ObjectType> types = new Dictionary<System.Type, ObjectType> ();
 	}
 }
