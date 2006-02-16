@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe VoidType décrit les valeurs de type System.Void.
 	/// </summary>
-	public class VoidType : INamedType
+	public sealed class VoidType : INamedType
 	{
 		public VoidType()
 		{

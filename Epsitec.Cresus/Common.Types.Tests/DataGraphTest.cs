@@ -275,8 +275,8 @@ namespace Epsitec.Common.Types
 			{
 				base.UpdateCachedItemArray ();
 				
-				this.items = new IDataItem[this.list.Count];
-				this.list.CopyTo (this.items);
+				this.items = new IDataItem[this.Count];
+				this.CopyTo (this.items, 0);
 			}
 			
 			protected override IDataItem[] GetCachedItemArray()
