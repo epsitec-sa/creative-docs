@@ -1242,13 +1242,13 @@ namespace Epsitec.Common.Document.PDF
 		public static string StringBBox(string cmd, Rectangle bbox)
 		{
 			//	Met une commande "cmd [x0 y0 x1 y1]".
-			return string.Format("{0} [{1} {2} {3} {4}] ", cmd, Port.StringValue(bbox.Left), Port.StringValue(bbox.Bottom), Port.StringValue(bbox.Right), Port.StringValue(bbox.Top));
+			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} [{1} {2} {3} {4}] ", cmd, Port.StringValue(bbox.Left), Port.StringValue(bbox.Bottom), Port.StringValue(bbox.Right), Port.StringValue(bbox.Top));
 		}
 
 		public static string StringLength(int length)
 		{
 			//	Met une commande "/Length x".
-			return string.Format("/Length {0}", length);
+			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "/Length {0}", length);
 		}
 
 		public static string StringValue(double num)
@@ -1273,16 +1273,16 @@ namespace Epsitec.Common.Document.PDF
 
 			switch ( decimals )
 			{
-				case 1:   return string.Format("{0:0.#}", num);
-				case 2:   return string.Format("{0:0.##}", num);
-				case 3:   return string.Format("{0:0.###}", num);
-				case 4:   return string.Format("{0:0.####}", num);
-				case 5:   return string.Format("{0:0.#####}", num);
-				case 6:   return string.Format("{0:0.######}", num);
-				case 7:   return string.Format("{0:0.#######}", num);
-				case 8:   return string.Format("{0:0.########}", num);
-				case 9:   return string.Format("{0:0.#########}", num);
-				default:  return string.Format("{0:0.##}", num);
+				case 1:   return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.#}", num);
+				case 2:   return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.##}", num);
+				case 3:   return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.###}", num);
+				case 4:   return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", num);
+				case 5:   return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.#####}", num);
+				case 6:   return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.######}", num);
+				case 7:   return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.#######}", num);
+				case 8:   return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.########}", num);
+				case 9:   return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.#########}", num);
+				default:  return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.##}", num);
 			}
 		}
 

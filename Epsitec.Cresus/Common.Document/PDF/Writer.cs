@@ -71,7 +71,7 @@ namespace Epsitec.Common.Document.PDF
 				obj.Defined = true;
 			}
 
-			this.parts.Add(string.Format("{0}{1}", type, objectName));
+			this.parts.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}{1}", type, objectName));
 			this.WriteString(ending);
 		}
 
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Document.PDF
 		{
 			//	Ecrit juste une string telle quelle.
 			System.Diagnostics.Debug.Assert(!this.flushed);
-			this.parts.Add(string.Format("F{0}", text));  // texte fixe
+			this.parts.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "F{0}", text));  // texte fixe
 		}
 
 		public void Flush()
@@ -123,18 +123,18 @@ namespace Epsitec.Common.Document.PDF
 
 			//	Ecrit l'objet xref final.
 			int startXref = this.streamOffset;
-			this.FileWriteLine(string.Format("xref 0 {0}", Writer.ToString(this.dictionary.Count+1)));
+			this.FileWriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "xref 0 {0}", Writer.ToString(this.dictionary.Count+1)));
 			this.FileWriteLine("0000000000 65535 f");
 			for ( int i=0 ; i<this.dictionary.Count ; i++ )
 			{
 				Object obj = this.DictionarySearch(i+1);
 				System.Diagnostics.Debug.Assert(obj != null);
 				System.Diagnostics.Debug.Assert(obj.Defined, "PDF.Writer: Object never defined");
-				this.FileWriteLine(string.Format("{0} 00000 n", PDF.Writer.ToStringD10(obj.Offset)));
+				this.FileWriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} 00000 n", PDF.Writer.ToStringD10(obj.Offset)));
 			}
-			this.FileWriteLine(string.Format("trailer << /Size {0} /Root 1 0 R >>", Writer.ToString(this.dictionary.Count+1)));
+			this.FileWriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "trailer << /Size {0} /Root 1 0 R >>", Writer.ToString(this.dictionary.Count+1)));
 			this.FileWriteLine("startxref");
-			this.FileWriteLine(string.Format("{0}", startXref));
+			this.FileWriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}", startXref));
 			this.FileWriteLine("%%EOF");
 
 			this.FileClose();
