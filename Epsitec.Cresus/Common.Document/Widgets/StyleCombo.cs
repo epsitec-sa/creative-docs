@@ -676,13 +676,13 @@ namespace Epsitec.Common.Document.Widgets
 
 			return -1;
 		}
-		
-		
-		
-		
-		public event Support.CancelEventHandler	ComboOpening;
-		public event Support.EventHandler		ComboOpened;
-		public event Support.EventHandler		ComboClosed;
+
+
+
+
+		public event EventHandler<CancelEventArgs> ComboOpening;
+		public event EventHandler				ComboOpened;
+		public event EventHandler				ComboClosed;
 		
 		private Widget							initiallyFocusedWidget;
 

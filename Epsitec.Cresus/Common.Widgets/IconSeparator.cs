@@ -88,7 +88,6 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
-			Drawing.Point     pos   = new Drawing.Point();
 			
 			if ( this.isHorizontal )
 			{

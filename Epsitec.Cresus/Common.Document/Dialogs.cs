@@ -1386,7 +1386,7 @@ namespace Epsitec.Common.Document
 			field.Width = 177;
 			field.Dock = DockStyle.Left;
 			field.DockMargins = new Margins(0, 0, 0, 0);
-			field.ComboOpening += new CancelEventHandler(this.HandlePrinterComboOpening);
+			field.ComboOpening += new EventHandler<CancelEventArgs> (this.HandlePrinterComboOpening);
 			field.ComboClosed += new EventHandler(this.HandlePrinterComboClosed);
 			this.WidgetsTableAdd(field, "");
 

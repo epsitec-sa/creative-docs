@@ -286,7 +286,7 @@ namespace Epsitec.Common.Document.Containers
 			this.specificMasterPage.IsReadOnly = true;
 			this.specificMasterPage.Dock = DockStyle.Left;
 			this.specificMasterPage.DockMargins = new Margins(0, 0, 0, 0);
-			this.specificMasterPage.ComboOpening += new CancelEventHandler(this.HandleComboOpening);
+			this.specificMasterPage.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleComboOpening);
 			this.specificMasterPage.ComboClosed += new EventHandler(this.HandleComboClosed);
 			this.specificMasterPage.TabIndex = 2;
 			this.specificMasterPage.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -353,7 +353,7 @@ namespace Epsitec.Common.Document.Containers
 			this.specificSlavePage.IsReadOnly = true;
 			this.specificSlavePage.Dock = DockStyle.Bottom;
 			this.specificSlavePage.DockMargins = new Margins(0, 0, 0, 61);
-			this.specificSlavePage.ComboOpening += new CancelEventHandler(this.HandleComboOpening);
+			this.specificSlavePage.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleComboOpening);
 			this.specificSlavePage.ComboClosed += new EventHandler(this.HandleComboClosed);
 			this.specificSlavePage.TabIndex = 1;
 			this.specificSlavePage.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;

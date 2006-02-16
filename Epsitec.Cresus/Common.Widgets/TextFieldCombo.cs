@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -813,9 +815,10 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public event Support.CancelEventHandler	ComboOpening;
-		public event Support.EventHandler		ComboOpened;
-		public event Support.EventHandler		ComboClosed;
+		public event EventHandler<CancelEventArgs>	ComboOpening;
+		
+		public event EventHandler				ComboOpened;
+		public event EventHandler				ComboClosed;
 		
 		private Behaviors.SelectItemBehavior	select_item_behavior;
 		private ComboArrowMode					combo_arrow_mode		= ComboArrowMode.Open;

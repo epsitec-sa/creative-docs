@@ -1,8 +1,9 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Epsitec Common Support Events")]
 [assembly: AssemblyDescription("")]
@@ -13,8 +14,11 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.5.0.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: ComVisibleAttribute (false)]
 
-[assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile(@"..\..\..\Epsitec.Cresus.snk")]
-[assembly: AssemblyKeyName("")]
+[assembly: System.CLSCompliant (true)]
+namespace Epsitec.Common.Support
+{
+}
+

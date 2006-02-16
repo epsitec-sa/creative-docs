@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document.Containers
 				this.aggregateCombo.TextChanged -= new EventHandler(this.HandleAggregateComboChanged);
 				this.aggregateCombo.ComboClosed -= new EventHandler(this.HandleAggregateComboClosed);
 				this.selectorName.TextChanged -= new EventHandler(this.HandleSelectorNameChanged);
-				this.selectorName.ComboOpening -= new CancelEventHandler(this.HandleSelectorNameComboOpening);
+				this.selectorName.ComboOpening -= new EventHandler<CancelEventArgs> (this.HandleSelectorNameComboOpening);
 				this.selectorName.ComboClosed -= new EventHandler(this.HandleSelectorNameComboClosed);
 				this.selectorGo.Pressed -= new MessageEventHandler(this.HandleSelectorGo);
 			}
@@ -297,7 +297,7 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorName.Width = 150;
 			this.selectorName.Dock = DockStyle.Left;
 			this.selectorName.TextChanged += new EventHandler(this.HandleSelectorNameChanged);
-			this.selectorName.ComboOpening += new CancelEventHandler(this.HandleSelectorNameComboOpening);
+			this.selectorName.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleSelectorNameComboOpening);
 			this.selectorName.ComboClosed += new EventHandler(this.HandleSelectorNameComboClosed);
 			ToolTip.Default.SetToolTip(this.selectorName, Res.Strings.Container.Principal.Button.SelName);
 

@@ -108,7 +108,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : Visual, System.IDisposable, Support.IBundleSupport, Support.Data.IPropertyProvider, Collections.IShortcutCollectionHost
+	public class Widget : Visual, Support.IBundleSupport, Support.Data.IPropertyProvider, Collections.IShortcutCollectionHost
 	{
 		public Widget()
 		{
@@ -177,14 +177,6 @@ namespace Epsitec.Common.Widgets
 			//	statique de Widget a bien été exécuté.
 		}
 		
-		
-		#region Interface IDisposable
-		public void Dispose()
-		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
-		#endregion
 		
 		#region IShortcutCollectionHost Members
 		public void NotifyShortcutsChanged(Epsitec.Common.Widgets.Collections.ShortcutCollection collection)
@@ -402,7 +394,7 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		protected virtual void Dispose(bool disposing)
+		protected override void Dispose(bool disposing)
 		{
 			if (Widget.DebugDispose)
 			{
