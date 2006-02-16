@@ -166,7 +166,7 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (Converter.Convert (g, out result));
 			Assert.AreEqual ("True", result);
 			Assert.IsTrue (Converter.Convert (h, out result));
-			Assert.AreEqual ("0.1;0.2;0.3;0.4", result);
+			Assert.AreEqual ("#199A;#3;#4CCD;#6", result);
 			Assert.IsTrue (Converter.Convert (i, out result));
 			Assert.AreEqual ("10;20;30;40", result);
 			Assert.IsTrue (Converter.Convert (i, out result));
