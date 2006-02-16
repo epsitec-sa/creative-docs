@@ -1,12 +1,14 @@
 //	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// L'interface IDataCollection donne accès à une collection de IDataItem.
 	/// </summary>
-	public interface IDataCollection : System.Collections.IEnumerable, System.Collections.ICollection
+	public interface IDataCollection : IEnumerable<IDataItem>, ICollection<IDataItem>
 	{
 		IDataItem		this[int index]		{ get; }
 		IDataItem		this[string name]	{ get; }

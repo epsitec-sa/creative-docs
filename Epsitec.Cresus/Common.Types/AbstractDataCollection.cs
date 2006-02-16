@@ -1,6 +1,8 @@
 //	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
@@ -13,13 +15,6 @@ namespace Epsitec.Common.Types
 		{
 		}
 		
-		
-		public virtual void Add(IDataItem item)
-		{
-			this.list.Add (item);
-			this.ClearCachedItemArray ();
-		}
-			
 		
 		#region IDataCollection Members
 		public IDataItem						this[string name]
@@ -67,42 +62,74 @@ namespace Epsitec.Common.Types
 			return -1;
 		}
 		#endregion
-		
-		#region ICollection Members
-		public bool								IsSynchronized
+
+		#region IEnumerable<IDataItem> Members
+		public IEnumerator<IDataItem> GetEnumerator()
 		{
-			get
+			return this.list.GetEnumerator ();
+		}
+		#endregion
+
+		#region IEnumerable Members
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.GetEnumerator ();
+		}
+		#endregion
+
+		#region ICollection<IDataItem> Members
+		public void Clear()
+		{
+			if (this.list.Count > 0)
 			{
-				return false;
+				this.list.Clear ();
+				this.ClearCachedItemArray ();
 			}
 		}
-		
-		public int								Count
+
+		public bool Contains(IDataItem item)
+		{
+			return this.list.Contains (item);
+		}
+
+		public void CopyTo(IDataItem[] array, int arrayIndex)
+		{
+			this.list.CopyTo (array, arrayIndex);
+		}
+
+		public int Count
 		{
 			get
 			{
 				return this.list.Count;
 			}
 		}
-		
-		public object							SyncRoot
+
+		public bool IsReadOnly
 		{
 			get
 			{
-				return this;
+				return false;
 			}
 		}
-		
-		public void CopyTo(System.Array array, int index)
+
+		public void Add(IDataItem item)
 		{
-			this.list.CopyTo (array, index);
+			this.list.Add (item);
+			this.ClearCachedItemArray ();
 		}
-		#endregion
-		
-		#region IEnumerable Members
-		public System.Collections.IEnumerator GetEnumerator()
+
+		public bool Remove(IDataItem item)
 		{
-			return this.list.GetEnumerator ();
+			if (this.list.Remove (item))
+			{
+				this.ClearCachedItemArray ();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		#endregion
 		
@@ -160,7 +187,7 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		protected System.Collections.ArrayList	list = new System.Collections.ArrayList ();
+		private List<IDataItem>					list = new List<IDataItem> ();
 		private bool							is_dirty;
 	}
 }

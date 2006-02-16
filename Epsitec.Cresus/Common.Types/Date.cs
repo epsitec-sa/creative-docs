@@ -14,34 +14,34 @@ namespace Epsitec.Common.Types
 	
 	public struct Date : System.IComparable, INullable
 	{
-		public Date(int year, int month, int day)
+		public Date(int year, int month, int day) : this()
 		{
-			this.ticks = (new System.DateTime (year, month, day)).Ticks;
+			this.Ticks = (new System.DateTime (year, month, day)).Ticks;
 		}
 		
-		public Date(object date)
+		public Date(object date) : this()
 		{
 			if (date is System.DateTime)
 			{
-				this.ticks = ((System.DateTime)date).Date.Ticks;
+				this.Ticks = ((System.DateTime) date).Date.Ticks;
 			}
 			else if (date is Date)
 			{
-				this.ticks = ((Date)date).ticks;
+				this.days = ((Date) date).days;
 			}
 			else if (date == null)
 			{
-				this.ticks = -1;
+				this.days = 0;
 			}
 			else
 			{
-				throw new System.ArgumentException ("Not a Date nor a DateTime");
+				throw new System.ArgumentException ("Neither a Date nor a DateTime");
 			}
 		}
 		
-		public Date(long ticks)
+		public Date(long ticks) : this()
 		{
-			this.ticks = ticks;
+			this.Ticks = ticks;
 		}
 		
 		
@@ -73,14 +73,23 @@ namespace Epsitec.Common.Types
 		
 		public long								Ticks
 		{
-			get { return this.ticks; }
-			set { this.ticks = value; }
+			get
+			{
+				return this.days * Time.TicksPerDay;
+			}
+			set
+			{
+				this.days = value / Time.TicksPerDay;
+			}
 		}
 		
 		
 		public static Date						Today
 		{
-			get { return new Date (System.DateTime.Today); }
+			get
+			{
+				return new Date (System.DateTime.Today);
+			}
 		}
 		
 		
@@ -113,7 +122,7 @@ namespace Epsitec.Common.Types
 		
 		public override int GetHashCode()
 		{
-			return this.ticks.GetHashCode ();
+			return this.days.GetHashCode ();
 		}
 
 		
@@ -137,10 +146,35 @@ namespace Epsitec.Common.Types
 			return t1.Ticks == t2.Ticks;
 		}
 
+
+		public static bool operator==(Date t1, Date t2)
+		{
+			return t1.Ticks == t2.Ticks;
+		}
+		public static bool operator!=(Date t1, Date t2)
+		{
+			return t1.Ticks != t2.Ticks;
+		}
+		public static bool operator<(Date t1, Date t2)
+		{
+			return t1.Ticks < t2.Ticks;
+		}
+		public static bool operator>(Date t1, Date t2)
+		{
+			return t1.Ticks > t2.Ticks;
+		}
+		public static bool operator<=(Date t1, Date t2)
+		{
+			return t1.Ticks <= t2.Ticks;
+		}
+		public static bool operator>=(Date t1, Date t2)
+		{
+			return t1.Ticks >= t2.Ticks;
+		}
 		
 		public override string ToString()
 		{
-			return this.InternalDate.ToString ("d");
+			return this.InternalDate.ToString ("d", System.Globalization.CultureInfo.CurrentCulture);
 		}
 
 		public string ToString(System.IFormatProvider provider)
@@ -154,7 +188,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.ticks == -1L);
+				return (this.days == 0);
 			}
 		}
 		#endregion
@@ -172,11 +206,11 @@ namespace Epsitec.Common.Types
 			
 			if (obj is System.DateTime)
 			{
-				that_ticks = ((System.DateTime)obj).Ticks;
+				that_ticks = ((System.DateTime) obj).Ticks;
 			}
 			else if (obj is Date)
 			{
-				that_ticks = ((Date)obj).Ticks;
+				that_ticks = ((Date) obj).Ticks;
 			}
 			else
 			{
@@ -197,18 +231,21 @@ namespace Epsitec.Common.Types
 		#endregion
 		
 		#region Converter Class
-		public class Converter : Epsitec.Common.Types.AbstractStringConverter
+		private class Converter : Epsitec.Common.Types.AbstractStringConverter
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
-				long ticks = System.Int64.Parse (value, culture);
-				return new Date (ticks);
+				long days = System.Int64.Parse (value, culture);
+				Date date = new Date ();
+				date.days = days;
+				return date;
 			}
 			
 			public override string ToString(object value, System.Globalization.CultureInfo culture)
 			{
 				Date date = (Date) value;
-				return string.Format (culture, "{0}", date.Ticks);
+				long days = date.days;
+				return string.Format (culture, "{0}", days);
 			}
 		}
 		#endregion
@@ -222,10 +259,10 @@ namespace Epsitec.Common.Types
 					throw new System.NullReferenceException ("Date is Null.");
 				}
 				
-				return new System.DateTime (this.ticks);
+				return new System.DateTime (this.days);
 			}
 		}
 		
-		private long							ticks;
+		private long							days;
 	}
 }

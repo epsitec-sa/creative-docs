@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Epsitec Common Type Information")]
 [assembly: AssemblyDescription("")]
@@ -13,4 +14,10 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.1.1.0")]
+[assembly: AssemblyVersion ("2.0.0.0")]
+[assembly: ComVisibleAttribute (false)]
+
+[assembly: System.CLSCompliant (true)]
+namespace Epsitec.Common.Types
+{
+}

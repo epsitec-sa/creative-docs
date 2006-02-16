@@ -135,6 +135,21 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (et.CheckConstraint ("{Other}"));
 		}
 		
+		[Test] public void CheckDate()
+		{
+			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (typeof (Date));
+
+			Date datePast = new Date (2006, 2, 15);
+			Date dateNow = new Date (System.DateTime.Now);
+
+			Assert.AreEqual (732356 * Time.TicksPerDay, datePast.Ticks);
+			Assert.IsTrue (datePast < dateNow);
+			Assert.IsTrue (datePast <= dateNow);
+			Assert.IsFalse (datePast > dateNow);
+			Assert.IsFalse (datePast >= dateNow);
+
+			Assert.AreEqual ("732356", converter.ConvertToInvariantString (datePast));
+		}
 		
 		[Test] public void CheckDateSerialization()
 		{
@@ -227,6 +242,7 @@ namespace Epsitec.Common.Types
 				this.time = new Types.Time (info.GetInt64 ("time"));
 				this.date = new Types.Date (info.GetInt64 ("date"));
 			}
+			
 			#region ISerializable Members
 
 			public void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)

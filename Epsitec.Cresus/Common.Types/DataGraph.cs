@@ -100,7 +100,7 @@ namespace Epsitec.Common.Types
 		
 		public static IDataCollection Select(string query, IDataFolder start)
 		{
-			QueryResult result = new QueryResult ();
+			QueryResultCollection result = new QueryResultCollection ();
 			string[]    names  = System.Utilities.Split (query, '.');
 			
 			result.Select (names, start);
@@ -128,13 +128,13 @@ namespace Epsitec.Common.Types
 			}
 			
 			bool ok = false;
+
+			IDataFolder f1 = i1 as IDataFolder;
+			IDataFolder f2 = i2 as IDataFolder;
 			
-			if ((i1 is IDataFolder) &&
-				(i2 is IDataFolder))
+			if ((f1 != null) &&
+				(f2 != null))
 			{
-				IDataFolder f1 = i1 as IDataFolder;
-				IDataFolder f2 = i2 as IDataFolder;
-				
 				if (f1.Count != f2.Count)
 				{
 					return false;
@@ -156,13 +156,13 @@ namespace Epsitec.Common.Types
 				//	ne s'arrête pas immédiatement en cas de succès, mais on vérifie que
 				//	les valeurs correspondent aussi, s'il y en a.
 			}
+
+			IDataValue v1 = i1 as IDataValue;
+			IDataValue v2 = i2 as IDataValue;
 			
-			if ((i1 is IDataValue) &&
-				(i2 is IDataValue))
+			if ((v1 != null) &&
+				(v2 != null))
 			{
-				IDataValue v1 = i1 as IDataValue;
-				IDataValue v2 = i2 as IDataValue;
-				
 				object o1 = v1.ReadValue ();
 				object o2 = v2.ReadValue ();
 				
@@ -202,13 +202,13 @@ namespace Epsitec.Common.Types
 			{
 				return;
 			}
+
+			IDataFolder f1 = src as IDataFolder;
+			IDataFolder f2 = dst as IDataFolder;
 			
-			if ((src is IDataFolder) &&
-				(dst is IDataFolder))
+			if ((f1 != null) &&
+				(f2 != null))
 			{
-				IDataFolder f1 = src as IDataFolder;
-				IDataFolder f2 = dst as IDataFolder;
-				
 				int n = f1.Count;
 				
 				for (int i = 0; i < n; i++)
@@ -216,13 +216,13 @@ namespace Epsitec.Common.Types
 					DataGraph.CopyValues (f1[i], f2[f1[i].Name], ref count);
 				}
 			}
+
+			IDataValue v1 = src as IDataValue;
+			IDataValue v2 = dst as IDataValue;
 			
-			if ((src is IDataValue) &&
-				(dst is IDataValue))
+			if ((v1 != null) &&
+				(v2 != null))
 			{
-				IDataValue v1 = src as IDataValue;
-				IDataValue v2 = dst as IDataValue;
-				
 				object o1 = v1.ReadValue ();
 				object o2 = v2.ReadValue ();
 				
@@ -236,9 +236,9 @@ namespace Epsitec.Common.Types
 		
 		
 		#region QueryResult Class
-		protected class QueryResult : AbstractDataCollection
+		protected class QueryResultCollection : AbstractDataCollection
 		{
-			public QueryResult()
+			public QueryResultCollection()
 			{
 			}
 			
@@ -287,9 +287,9 @@ namespace Epsitec.Common.Types
 					{
 						if (is_leaf)
 						{
-							if (this.list.Contains (item) == false)
+							if (this.Contains (item) == false)
 							{
-								this.list.Add (item);
+								this.Add (item);
 							}
 						}
 						
@@ -309,9 +309,9 @@ namespace Epsitec.Common.Types
 					{
 						if (is_leaf)
 						{
-							if (this.list.Contains (item) == false)
+							if (this.Contains (item) == false)
 							{
-								this.list.Add (item);
+								this.Add (item);
 							}
 						}
 						
@@ -338,9 +338,9 @@ namespace Epsitec.Common.Types
 						
 						if (is_leaf)
 						{
-							if (this.list.Contains (item) == false)
+							if (this.Contains (item) == false)
 							{
-								this.list.Add (item);
+								this.Add (item);
 							}
 						}
 						
@@ -358,9 +358,9 @@ namespace Epsitec.Common.Types
 					{
 						if (is_leaf)
 						{
-							if (this.list.Contains (item) == false)
+							if (this.Contains (item) == false)
 							{
-								this.list.Add (item);
+								this.Add (item);
 							}
 						}
 						
@@ -382,8 +382,8 @@ namespace Epsitec.Common.Types
 			protected override void UpdateCachedItemArray()
 			{
 				base.UpdateCachedItemArray ();
-				this.items = new IDataItem[this.list.Count];
-				this.list.CopyTo (this.items);
+				this.items = new IDataItem[this.Count];
+				this.CopyTo (this.items, 0);
 			}
 			
 			protected override IDataItem[] GetCachedItemArray()
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Types
 			
 			protected override object CloneNewObject()
 			{
-				return new QueryResult ();
+				return new QueryResultCollection ();
 			}
 			
 			

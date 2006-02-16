@@ -39,9 +39,11 @@ namespace Epsitec.Common.Types
 		
 		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
 		{
-			if (value is string)
+			string text = value as string;
+			
+			if (text != null)
 			{
-				return this.ParseString (value as string, culture);
+				return this.ParseString (text, culture);
 			}
 			
 			return base.ConvertFrom (context, culture, value);
