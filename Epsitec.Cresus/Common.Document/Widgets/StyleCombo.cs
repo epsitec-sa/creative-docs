@@ -87,14 +87,16 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public int SelectedRank
+		public override int SelectedIndex
 		{
-			//	Retourne le rank de l'élément sélectionné.
-			//	Il n'est pas possible d'utiliser TextFieldCombo.SelectedIndex, car la classe
-			//	de base TextFieldCombo ne contient aucun item.
 			get
 			{
-				return this.selectedRank;
+				return this.selectedIndex;
+			}
+
+			set
+			{
+				this.selectedIndex = value;
 			}
 		}
 
@@ -188,7 +190,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.list.UpdateContents();
 			this.list.FinalSelectionChanged += new EventHandler(this.HandleListSelectionActivated);
 			
-			MenuItem.SetMenuHost(this, new MenuHost(menu));
+			MenuItem.SetMenuHost(this, new StyleMenuHost(menu, this.list));
 
 			return menu;
 		}
@@ -219,7 +221,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			int rank = this.list.RowToRank(this.list.SelectedRow);
 			if ( rank == -1 )  rank = -2;  // ligne <aucun> ?
-			this.selectedRank = rank;
+			this.selectedIndex = rank;
 
 			this.CloseCombo(CloseMode.Accept);
 		}
@@ -258,6 +260,68 @@ namespace Epsitec.Common.Document.Widgets
 		}
 		
 		
+		#region StyleMenuHost Class
+		public class StyleMenuHost : IMenuHost
+		{
+			public StyleMenuHost(AbstractMenu menu, AbstractStyleList list)
+			{
+				this.menu = menu;
+				this.list = list;
+			}
+			
+			
+			public void GetMenuDisposition(Widget item, ref Drawing.Size size, out Drawing.Point location, out Animation animation)
+			{
+				//	Détermine la hauteur maximale disponible par rapport à la position
+				//	actuelle :
+				
+				Drawing.Point pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen(item, new Drawing.Point(0, 1));
+				Drawing.Point hot = Common.Widgets.Helpers.VisualTree.MapVisualToScreen(item, new Drawing.Point(0, 1));
+				ScreenInfo screenInfo = ScreenInfo.Find(hot);
+				Drawing.Rectangle workingArea = screenInfo.WorkingArea;
+				
+				double maxHeight = pos.Y - workingArea.Bottom;
+				double w = size.Width;
+				double h = size.Height;
+
+				animation = Animation.RollDown;
+				if ( h > maxHeight )  // dépasse en bas ?
+				{
+					if ( maxHeight > 100 )  // place minimale ?
+					{
+						h = maxHeight;
+						this.list.VScroller = true;
+						w += 16;
+					}
+					else	// déroule contre le haut ?
+					{
+						pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen(item, new Drawing.Point(0, item.Height-1));
+						maxHeight = workingArea.Top-pos.Y;
+						if ( h > maxHeight )  // dépasse en haut ?
+						{
+							h = maxHeight;
+							this.list.VScroller = true;
+							w += 16;
+						}
+						pos.Y += h;
+						animation = Animation.RollUp;
+					}
+				}
+				pos.Y -= h;
+
+				if ( pos.X+w > workingArea.Right )  // dépasse à droite ?
+				{
+					pos.X = workingArea.Right-w;
+				}
+
+				location  = pos;
+				size = new Size(w, h);
+			}
+			
+			private AbstractMenu				menu;
+			private AbstractStyleList			list;
+		}
+		#endregion
 		
 		
 		protected Document						document;
@@ -266,6 +330,6 @@ namespace Epsitec.Common.Document.Widgets
 		protected bool							isDeep = false;
 		protected bool							isNoneLine = false;
 		protected AbstractStyleList				list;
-		protected int							selectedRank = -1;
+		protected int							selectedIndex = -1;
 	}
 }

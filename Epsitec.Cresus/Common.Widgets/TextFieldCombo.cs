@@ -621,7 +621,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region INamedStringSelection Members
-		public int								SelectedIndex
+		public virtual int						SelectedIndex
 		{
 			get
 			{
@@ -761,8 +761,8 @@ namespace Epsitec.Common.Widgets
 				//	Détermine la hauteur maximale disponible par rapport à la position
 				//	actuelle :
 				
-				Drawing.Point     pos = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, 0));
-				Drawing.Point     hot = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, 0));
+				Drawing.Point     pos = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, 1));
+				Drawing.Point     hot = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, 1));
 				ScreenInfo        screen_info  = ScreenInfo.Find (hot);
 				Drawing.Rectangle working_area = screen_info.WorkingArea;
 				
