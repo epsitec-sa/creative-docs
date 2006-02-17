@@ -418,6 +418,7 @@ namespace Epsitec.Common.Document
 				int step = (int)(surface.Smooth*sx);
 				if ( step > 20 )  step = 20;
 				if ( drawingContext != null && !drawingContext.PreviewActive )  step /= 4;  // brouillon
+				if ( drawingContext != null && drawingContext.IsBitmap )  step *= 2;  // qualité supérieure
 				if ( step <  2 )  step =  2;
 				for ( int i=0 ; i<step ; i++ )
 				{

@@ -34,10 +34,10 @@ namespace Epsitec.Common.Document
 		{
 			//	Exporte le document dans un fichier.
 			//	Crée le DrawingContext utilisé pour l'exportation.
-			DrawingContext drawingContext;
-			drawingContext = new DrawingContext(this.document, null);
+			DrawingContext drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = true;
+			drawingContext.IsBitmap = true;
 
 			return this.ExportGeometry(drawingContext, filename, this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage);
 		}
