@@ -11,14 +11,14 @@ namespace Epsitec.Common.Document.Widgets
 	{
 		public AbstractStyleList()
 		{
-			this.StyleH |= CellArrayStyle.ScrollNorm;
-			this.StyleH |= CellArrayStyle.Header;
-			this.StyleH |= CellArrayStyle.Separator;
-			this.StyleH |= CellArrayStyle.Mobile;
+			this.StyleH |= CellArrayStyles.ScrollNorm;
+			this.StyleH |= CellArrayStyles.Header;
+			this.StyleH |= CellArrayStyles.Separator;
+			this.StyleH |= CellArrayStyles.Mobile;
 
-			this.StyleV |= CellArrayStyle.ScrollNorm;
-			this.StyleV |= CellArrayStyle.Separator;
-			this.StyleV |= CellArrayStyle.SelectLine;
+			this.StyleV |= CellArrayStyles.ScrollNorm;
+			this.StyleV |= CellArrayStyles.Separator;
+			this.StyleV |= CellArrayStyles.SelectLine;
 
 			this.DefHeight = 32;
 			this.headerHeight = 16;
@@ -42,20 +42,20 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			get
 			{
-				return (this.StyleH & CellArrayStyle.ScrollNorm) != 0;
+				return (this.StyleH & CellArrayStyles.ScrollNorm) != 0;
 			}
 
 			set
 			{
 				if ( value )
 				{
-					this.StyleH |= CellArrayStyle.ScrollNorm;
-					this.StyleH |= CellArrayStyle.Mobile;
+					this.StyleH |= CellArrayStyles.ScrollNorm;
+					this.StyleH |= CellArrayStyles.Mobile;
 				}
 				else
 				{
-					this.StyleH &= ~CellArrayStyle.ScrollNorm;
-					this.StyleH &= ~CellArrayStyle.Mobile;
+					this.StyleH &= ~CellArrayStyles.ScrollNorm;
+					this.StyleH &= ~CellArrayStyles.Mobile;
 				}
 			}
 		}
@@ -64,18 +64,18 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			get
 			{
-				return (this.StyleV & CellArrayStyle.ScrollNorm) != 0;
+				return (this.StyleV & CellArrayStyles.ScrollNorm) != 0;
 			}
 
 			set
 			{
 				if ( value )
 				{
-					this.StyleV |= CellArrayStyle.ScrollNorm;
+					this.StyleV |= CellArrayStyles.ScrollNorm;
 				}
 				else
 				{
-					this.StyleV &= ~CellArrayStyle.ScrollNorm;
+					this.StyleV &= ~CellArrayStyles.ScrollNorm;
 				}
 			}
 		}
@@ -138,13 +138,13 @@ namespace Epsitec.Common.Document.Widgets
 
 					if ( this.isHeader )
 					{
-						this.StyleH |= CellArrayStyle.Header;
-						this.StyleH |= CellArrayStyle.Mobile;
+						this.StyleH |= CellArrayStyles.Header;
+						this.StyleH |= CellArrayStyles.Mobile;
 					}
 					else
 					{
-						this.StyleH &= ~CellArrayStyle.Header;
-						this.StyleH &= ~CellArrayStyle.Mobile;
+						this.StyleH &= ~CellArrayStyles.Header;
+						this.StyleH &= ~CellArrayStyles.Mobile;
 					}
 				}
 			}

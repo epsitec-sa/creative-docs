@@ -1,6 +1,8 @@
 namespace Epsitec.Common.Widgets
 {
-	[System.Flags] public enum CellArrayStyle
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.PropertyChangedEventArgs>;
+	
+	[System.Flags] public enum CellArrayStyles
 	{
 		None			= 0x00000000,		// neutre
 		ScrollNorm		= 0x00000001,		// défilement avec un ascenseur
@@ -104,7 +106,7 @@ namespace Epsitec.Common.Widgets
 		
 
 
-		public CellArrayStyle StyleH
+		public CellArrayStyles StyleH
 		{
 			//	Sytle pour l'en-tête supérieur et l'ascenseur horizontal.
 			get
@@ -123,7 +125,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public CellArrayStyle StyleV
+		public CellArrayStyles StyleV
 		{
 			//	Sytle pour l'en-tête gauche et l'ascenseur vertical.
 			get
@@ -403,7 +405,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			width = System.Math.Max(width, this.minWidth);
-			if ( (this.styleH & CellArrayStyle.Stretch) == 0 )
+			if ( (this.styleH & CellArrayStyles.Stretch) == 0 )
 			{
 				this.widthColumns[rank] = width;
 			}
@@ -475,7 +477,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			height = System.Math.Max(height, this.minHeight);
-			if ( (this.styleV & CellArrayStyle.Stretch) == 0 )
+			if ( (this.styleV & CellArrayStyles.Stretch) == 0 )
 			{
 				this.heightRows[rank] = height;
 			}
@@ -675,7 +677,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( button.Style == HeaderButtonStyle.Left )
 			{
-				if ( (this.styleV & CellArrayStyle.Sort) == 0 )  return;
+				if ( (this.styleV & CellArrayStyles.Sort) == 0 )  return;
 
 				int      row  = button.Index;
 				SortMode mode = button.SortMode;
@@ -698,7 +700,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( button.Style == HeaderButtonStyle.Top )
 			{
-				if ( (this.styleH & CellArrayStyle.Sort) == 0 )  return;
+				if ( (this.styleH & CellArrayStyles.Sort) == 0 )  return;
 
 				int      column = button.Index;
 				SortMode mode   = button.SortMode;
@@ -907,11 +909,11 @@ namespace Epsitec.Common.Widgets
 		protected void ProcessMouse(Drawing.Point pos, bool isShiftPressed, bool isControlPressed, bool isFinal)
 		{
 			//	Sélectionne une cellule.
-			CellArrayStyle style = this.styleV | this.styleH;
-			if ( (style & CellArrayStyle.SelectCell) == 0 &&
-				 (style & CellArrayStyle.SelectLine) == 0 )  return;
+			CellArrayStyles style = this.styleV | this.styleH;
+			if ( (style & CellArrayStyles.SelectCell) == 0 &&
+				 (style & CellArrayStyles.SelectLine) == 0 )  return;
 
-			if ( (style & CellArrayStyle.SelectMulti) == 0 || !isControlPressed )
+			if ( (style & CellArrayStyles.SelectMulti) == 0 || !isControlPressed )
 			{
 				this.DeselectAll();
 				this.selectedRow = -1;
@@ -927,7 +929,7 @@ namespace Epsitec.Common.Widgets
 				}
 				bool state = this.mouseState;
 
-				if ( (style & CellArrayStyle.SelectMulti) != 0 && isShiftPressed )
+				if ( (style & CellArrayStyles.SelectMulti) != 0 && isShiftPressed )
 				{
 					this.SelectZone(column, row, this.selectedColumn, this.selectedRow, state);
 				}
@@ -938,12 +940,12 @@ namespace Epsitec.Common.Widgets
 					this.selectedRow = row;
 				}
 
-				if ( (this.styleV & CellArrayStyle.SelectLine) != 0 )
+				if ( (this.styleV & CellArrayStyles.SelectLine) != 0 )
 				{
 					this.SelectRow(row, state);
 				}
 
-				if ( (this.styleH & CellArrayStyle.SelectLine) != 0 )
+				if ( (this.styleH & CellArrayStyles.SelectLine) != 0 )
 				{
 					this.SelectColumn(column, state);
 				}
@@ -1057,12 +1059,12 @@ namespace Epsitec.Common.Widgets
 			this.selectedColumn = column;
 			this.selectedRow = row;
 
-			if ( (this.styleV & CellArrayStyle.SelectLine) != 0 )
+			if ( (this.styleV & CellArrayStyles.SelectLine) != 0 )
 			{
 				this.SelectRow(row, true);
 			}
 
-			if ( (this.styleH & CellArrayStyle.SelectLine) != 0 )
+			if ( (this.styleH & CellArrayStyles.SelectLine) != 0 )
 			{
 				this.SelectColumn(column, true);
 			}
@@ -1224,12 +1226,12 @@ namespace Epsitec.Common.Widgets
 					
 					if ( row == flyOverRow )
 					{
-						if ( (this.styleV & CellArrayStyle.SelectLine) != 0 )  fly = true;
+						if ( (this.styleV & CellArrayStyles.SelectLine) != 0 )  fly = true;
 					}
 					
 					if ( column == flyOverColumn )
 					{
-						if ( (this.styleH & CellArrayStyle.SelectLine) != 0 )  fly = true;
+						if ( (this.styleH & CellArrayStyles.SelectLine) != 0 )  fly = true;
 					}
 					
 					this.array[column, row].IsFlyOver = fly;
@@ -1250,8 +1252,8 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate(this.InternalPadding);
 
-			if ( (this.styleV & CellArrayStyle.Stretch) == 0 &&
-				 (this.styleH & CellArrayStyle.SelectLine) == 0 &&
+			if ( (this.styleV & CellArrayStyles.Stretch) == 0 &&
+				 (this.styleH & CellArrayStyles.SelectLine) == 0 &&
 				 showRow != -1 )
 			{
 				double start, end;
@@ -1272,8 +1274,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			if ( (this.styleH & CellArrayStyle.Stretch) == 0 &&
-				 (this.styleV & CellArrayStyle.SelectLine) == 0 &&
+			if ( (this.styleH & CellArrayStyles.Stretch) == 0 &&
+				 (this.styleV & CellArrayStyles.SelectLine) == 0 &&
 				 showColumn != -1 )
 			{
 				double start, end;
@@ -1317,13 +1319,13 @@ namespace Epsitec.Common.Widgets
 
 			this.showScrollerV = false;
 			this.showScrollerH = false;
-			if ( (this.styleV & CellArrayStyle.ScrollNorm) != 0 )  this.showScrollerV = true;
-			if ( (this.styleH & CellArrayStyle.ScrollNorm) != 0 )  this.showScrollerH = true;
+			if ( (this.styleV & CellArrayStyles.ScrollNorm) != 0 )  this.showScrollerV = true;
+			if ( (this.styleH & CellArrayStyles.ScrollNorm) != 0 )  this.showScrollerH = true;
 
 			this.leftMargin = 0;
 			this.topMargin  = 0;
-			if ( (this.styleV & CellArrayStyle.Header) != 0 )  this.leftMargin = this.headerWidth;
-			if ( (this.styleH & CellArrayStyle.Header) != 0 )  this.topMargin  = this.headerHeight;
+			if ( (this.styleV & CellArrayStyles.Header) != 0 )  this.leftMargin = this.headerWidth;
+			if ( (this.styleH & CellArrayStyles.Header) != 0 )  this.topMargin  = this.headerHeight;
 
 			Drawing.Rectangle rect = this.Bounds;
 			Drawing.Rectangle iRect = new Drawing.Rectangle(this.margins.Left, this.margins.Bottom, rect.Width-this.margins.Width, rect.Height-this.margins.Height);
@@ -1336,11 +1338,11 @@ namespace Epsitec.Common.Widgets
 			iRect.Bottom += this.bottomMargin;
 			iRect.Top    -= this.topMargin;
 
-			if ( (this.styleH & CellArrayStyle.Stretch) != 0 )
+			if ( (this.styleH & CellArrayStyles.Stretch) != 0 )
 			{
 				this.StretchColumns();
 			}
-			if ( (this.styleV & CellArrayStyle.Stretch) != 0 )
+			if ( (this.styleV & CellArrayStyles.Stretch) != 0 )
 			{
 				this.StretchRows();
 			}
@@ -1381,7 +1383,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			//	Positionne les boutons de l'en-tête vertical.
-			if ( (this.styleV & CellArrayStyle.Header) == 0 )
+			if ( (this.styleV & CellArrayStyles.Header) == 0 )
 			{
 				this.containerV.Hide();
 			}
@@ -1405,7 +1407,7 @@ namespace Epsitec.Common.Widgets
 					HeaderButton button = this.FindButtonV(i);
 					button.Show();
 					button.Bounds = hRect;
-					button.IsDynamic = ( (this.styleV & CellArrayStyle.Sort) != 0 );
+					button.IsDynamic = ( (this.styleV & CellArrayStyles.Sort) != 0 );
 					if ( this.isGrimy )  this.containerV.Children.Add(button);
 					hRect.Top = hRect.Bottom;
 				}
@@ -1417,8 +1419,8 @@ namespace Epsitec.Common.Widgets
 				{
 					hRect.Bottom = hRect.Top-this.RetHeightRow(i);
 					HeaderSlider slider = this.FindSliderV(i);
-					if ( (this.styleV & CellArrayStyle.Mobile) == 0 ||
-						 ((this.styleV & CellArrayStyle.Stretch) != 0 && i == this.maxRows-1) )
+					if ( (this.styleV & CellArrayStyles.Mobile) == 0 ||
+						 ((this.styleV & CellArrayStyles.Stretch) != 0 && i == this.maxRows-1) )
 					{
 						slider.Hide();
 					}
@@ -1438,7 +1440,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			//	Positionne les boutons de l'en-tête horizontal.
-			if ( (this.styleH & CellArrayStyle.Header) == 0 )
+			if ( (this.styleH & CellArrayStyles.Header) == 0 )
 			{
 				this.containerH.Hide();
 			}
@@ -1462,7 +1464,7 @@ namespace Epsitec.Common.Widgets
 					HeaderButton button = this.FindButtonH(i);
 					button.Show();
 					button.Bounds = hRect;
-					button.IsDynamic = ( (this.styleH & CellArrayStyle.Sort) != 0 );
+					button.IsDynamic = ( (this.styleH & CellArrayStyles.Sort) != 0 );
 					if ( this.isGrimy )  this.containerH.Children.Add(button);
 					hRect.Left = hRect.Right;
 				}
@@ -1474,8 +1476,8 @@ namespace Epsitec.Common.Widgets
 				{
 					hRect.Right = hRect.Left+this.RetWidthColumn(i);
 					HeaderSlider slider = this.FindSliderH(i);
-					if ( (this.styleH & CellArrayStyle.Mobile) == 0 ||
-						 ((this.styleH & CellArrayStyle.Stretch) != 0 && i == this.maxColumns-1) )
+					if ( (this.styleH & CellArrayStyles.Mobile) == 0 ||
+						 ((this.styleH & CellArrayStyles.Stretch) != 0 && i == this.maxColumns-1) )
 					{
 						slider.Hide();
 					}
@@ -1658,7 +1660,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.focusedWidget != null )
 				{
-					this.focusedWidget.IsKeyboardFocusedChanged -= new Types.PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
+					this.focusedWidget.IsKeyboardFocusedChanged -= new PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
 					this.focusedWidget.PreProcessing -= new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
 					this.focusedWidget = null;
 				}
@@ -1671,7 +1673,7 @@ namespace Epsitec.Common.Widgets
 					
 					System.Diagnostics.Debug.Assert( this.focusedWidget != null );
 					
-					this.focusedWidget.IsKeyboardFocusedChanged += new Types.PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
+					this.focusedWidget.IsKeyboardFocusedChanged += new PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
 					this.focusedWidget.PreProcessing += new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
 				}
 			}
@@ -1936,7 +1938,7 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid(color);
 
 			//	Dessine les lignes de séparation horizontales.
-			if ( (this.styleV & CellArrayStyle.Separator) != 0 )
+			if ( (this.styleV & CellArrayStyles.Separator) != 0 )
 			{
 				double limit = 0;
 				for ( int i=0 ; i<this.maxColumns ; i++ )
@@ -1957,7 +1959,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			//	Dessine les lignes de séparation verticales.
-			if ( (this.styleH & CellArrayStyle.Separator) != 0 )
+			if ( (this.styleH & CellArrayStyles.Separator) != 0 )
 			{
 				double limit = 0;
 				for ( int i=0 ; i<this.maxRows ; i++ )
@@ -1992,8 +1994,8 @@ namespace Epsitec.Common.Widgets
 		protected bool							isGrimy;
 		protected bool							mouseDown = false;
 		protected bool							mouseState;
-		protected CellArrayStyle				styleH;
-		protected CellArrayStyle				styleV;
+		protected CellArrayStyles				styleH;
+		protected CellArrayStyles				styleV;
 		protected int							maxColumns;		// nb total de colonnes
 		protected int							maxRows;		// nb total de lignes
 		protected int							visibleColumns;	// nb de colonnes visibles

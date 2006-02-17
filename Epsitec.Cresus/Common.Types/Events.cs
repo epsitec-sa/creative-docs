@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Types
 {
-	public delegate void PropertyChangedEventHandler(object sender, PropertyChangedEventArgs e);
-	
 	public class PropertyChangedEventArgs : System.EventArgs
 	{
 		public PropertyChangedEventArgs(Property property, object old_value, object new_value)

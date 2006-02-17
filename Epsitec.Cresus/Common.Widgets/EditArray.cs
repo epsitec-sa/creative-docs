@@ -1,8 +1,10 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
+	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.PropertyChangedEventArgs>;
+	
 	using BundleAttribute = Support.BundleAttribute;
 	
 	/// <summary>
@@ -1028,7 +1030,7 @@ namespace Epsitec.Common.Widgets
 				widget.TabIndex      = i;
 				widget.TabNavigation = TabNavigationMode.ActivateOnTab;
 				
-				widget.IsKeyboardFocusedChanged += new Types.PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
+				widget.IsKeyboardFocusedChanged += new PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
 				widget.TextChanged              += new Support.EventHandler (this.HandleTextChanged);
 				
 				widget.AutoSelectOnFocus = true;
@@ -1041,7 +1043,7 @@ namespace Epsitec.Common.Widgets
 				{
 					widget.SetParent (null);
 					
-					widget.IsKeyboardFocusedChanged -= new Types.PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
+					widget.IsKeyboardFocusedChanged -= new PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
 					widget.TextChanged              -= new Support.EventHandler (this.HandleTextChanged);
 					
 					widget.Dispose ();

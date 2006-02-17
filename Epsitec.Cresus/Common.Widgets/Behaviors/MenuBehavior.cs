@@ -5,6 +5,8 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<PropertyChangedEventArgs>;
+	
 	/// <summary>
 	/// La classe MenuBehavior implémente la logique permettant de gérer un menu
 	/// (affichage d'une ou plusieurs fenêtres flottantes, fermeture, etc.)

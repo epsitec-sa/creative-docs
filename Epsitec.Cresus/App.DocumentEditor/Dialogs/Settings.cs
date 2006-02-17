@@ -229,8 +229,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.quickList.Height = 259;
 				this.quickList.DefHeight = 21;
 				this.quickList.Dock = DockStyle.Top;
-				this.quickList.StyleH = CellArrayStyle.Stretch | CellArrayStyle.Separator;
-				this.quickList.StyleV = CellArrayStyle.ScrollNorm | CellArrayStyle.Separator | CellArrayStyle.SelectLine;
+				this.quickList.StyleH = CellArrayStyles.Stretch | CellArrayStyles.Separator;
+				this.quickList.StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
 				this.quickList.DockMargins = new Margins(10, 10, 0, 0);
 				this.quickList.SelectionChanged += new EventHandler(this.HandleQuickListSelectionChanged);
 
