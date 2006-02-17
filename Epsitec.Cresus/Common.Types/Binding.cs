@@ -65,6 +65,15 @@ namespace Epsitec.Common.Types
 			return new DeferManager (this);
 		}
 
+		internal void Add(BindingExpression expression)
+		{
+			this.expressions.Add (expression);
+		}
+		internal void Remove(BindingExpression expression)
+		{
+			this.expressions.Remove (expression);
+		}
+
 		private void InternalAttach()
 		{
 			if (this.deferCounter == 0)
@@ -74,19 +83,28 @@ namespace Epsitec.Common.Types
 		}
 		private void InternalDetach()
 		{
-			if (this.state == State.Attached)
+			if (this.state == State.SourceAttached)
 			{
-				//	TODO: détacher de la source
-				this.state = State.Detached;
+				this.state = State.SourceDetached;
+				
+				foreach (BindingExpression expression in this.expressions)
+				{
+					expression.DetachFromSource ();
+				}
 			}
 		}
 
 		private void InternalAttachAfterChanges()
 		{
-			if (this.state == State.Detached)
+			if (this.state == State.SourceDetached)
 			{
-				//	TODO: attacher à la source
-				this.state = State.Attached;
+				this.state = State.SourceAttached;
+				
+				foreach (BindingExpression expression in this.expressions)
+				{
+					expression.AttachToSource ();
+					expression.UpdateTarget (BindingUpdateMode.Reset);
+				}
 			}
 		}
 
@@ -118,8 +136,8 @@ namespace Epsitec.Common.Types
 		{
 			Invalid,
 			
-			Attached,
-			Detached
+			SourceAttached,
+			SourceDetached
 		}
 		#endregion
 
@@ -129,6 +147,7 @@ namespace Epsitec.Common.Types
 		private object							source;
 		private PropertyPath					path;
 		private int								deferCounter;
-		private State							state = State.Detached;
+		private State							state = State.SourceDetached;
+		private List<BindingExpression>			expressions = new List<BindingExpression> ();
 	}
 }

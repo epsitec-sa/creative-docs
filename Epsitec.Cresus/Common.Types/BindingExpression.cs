@@ -75,10 +75,32 @@ namespace Epsitec.Common.Types
 					break;
 			}
 		}
+
+		internal void AttachToSource()
+		{
+			Object            sourceObject;
+			Property          sourceProperty;
+			BindingSourceType sourceType;
+
+			if (this.AnalyseSource (out sourceObject, out sourceProperty, out sourceType))
+			{
+				this.sourceObject   = sourceObject;
+				this.sourceProperty = sourceProperty;
+				this.sourceType     = sourceType;
+				
+				this.InternalAttachToSource ();
+			}
+		}
+		internal void DetachFromSource()
+		{
+			this.InternalDetachFromSource ();
+		}
 		
 		internal static BindingExpression BindToTarget(Object target, Property property, Binding binding)
 		{
 			BindingExpression expression = new BindingExpression ();
+
+			binding.Add (expression);
 			
 			expression.binding = binding;
 			expression.targetObject = target;
@@ -93,7 +115,8 @@ namespace Epsitec.Common.Types
 			//	Detach from the target, and from the source.
 			
 			this.AssertBinding ();
-			
+
+			this.binding.Remove (this);
 			this.InternalDetachFromSource ();
 			
 			this.binding = null;
@@ -112,15 +135,87 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		private bool AnalyseSource(out Object source, out Property property, out BindingSourceType type)
+		{
+			type     = BindingSourceType.None;
+			source   = this.binding.Source as Object;
+			property = null;
+
+			PropertyPath path = this.binding.Path;
+			
+			if ((source != null) &&
+				(path != null))
+			{
+				//	Resolve the path to get at the real source element, starting
+				//	at the root.
+
+				string[] elements = path.GetFullPath ().Split ('.');
+				
+				for (int i = 0; i < elements.Length; i++)
+				{
+					if (i > 0)
+					{
+						source = source.GetValue (property) as Object;
+						
+						if (source == null)
+						{
+							return false;
+						}
+					}
+					
+					property = source.ObjectType.GetProperty (elements[i]);
+					
+					if (property == null)
+					{
+						return false;
+					}
+				}
+
+				type = BindingSourceType.PropertyObject;
+
+				return true;
+			}
+			
+			return false;
+		}
+
 		private void InternalUpdateSource()
+		{
+			//	TODO: update source
+		}
+		private void InternalUpdateSource(object value)
 		{
 			//	TODO: update source
 		}
 		private void InternalUpdateTarget()
 		{
-			//	TODO: update target
+			Object source;
+			
+			switch (this.sourceType)
+			{
+				case BindingSourceType.PropertyObject:
+					source = this.sourceObject as Object;
+					this.InternalUpdateTarget (source.GetValue (this.sourceProperty));
+					break;
+			}
+		}
+		private void InternalUpdateTarget(object value)
+		{
+			this.targetObject.SetValue (this.targetPropery, value);
 		}
 
+		private void InternalAttachToSource()
+		{
+			if (this.sourceObject != null)
+			{
+				switch (this.sourceType)
+				{
+					case BindingSourceType.PropertyObject:
+						BindingExpression.Attach (this, this.sourceObject as Object, this.sourceProperty);
+						break;
+				}
+			}
+		}
 		private void InternalDetachFromSource()
 		{
 			if (this.sourceObject != null)
@@ -136,9 +231,7 @@ namespace Epsitec.Common.Types
 
 		private void HandleSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			object value = e.NewValue;
-			
-			//	TODO: update target with value
+			this.InternalUpdateTarget (e.NewValue);
 		}
 
 		private static void Attach(BindingExpression expression, Object source, Property property)
