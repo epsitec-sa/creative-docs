@@ -857,7 +857,7 @@ namespace Epsitec.Common.Document.PDF
 
 			Shape[] shapes = obj.ShapesBuild(port, drawingContext, false);
 
-			int step = (int)(surface.Smooth*drawingContext.ScaleX);
+			int step = (int)(surface.Smooth*drawingContext.ScaleX*2);
 			if ( step > 20 )  step = 20;
 			if ( step <  2 )  step =  2;
 			foreach ( Shape shape in shapes )

@@ -1260,6 +1260,20 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public bool IsBitmap
+		{
+			//	Indique si on dessine dans un bitmap.
+			get
+			{
+				return this.isBitmap;
+			}
+
+			set
+			{
+				this.isBitmap = value;
+			}
+		}
+
 		#region DrawBox
 		public bool IsDrawBoxThin
 		{
@@ -2479,6 +2493,7 @@ namespace Epsitec.Common.Document
 		protected bool							aggregatesShow = false;
 		protected bool							hideHalfActive = true;
 		protected bool							isDimmed = false;
+		protected bool							isBitmap = false;
 		protected bool							isDrawBoxThin = false;
 		protected bool							isDrawBoxGeom = false;
 		protected bool							isDrawBoxFull = false;
