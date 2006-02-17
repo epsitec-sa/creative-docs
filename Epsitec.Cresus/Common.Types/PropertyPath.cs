@@ -43,6 +43,26 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public string GetFullPath()
+		{
+			if ((this.elements == null) ||
+				(this.elements.Length == 0))
+			{
+				return this.path;
+			}
+			else
+			{
+				string[] args = new string[this.elements.Length];
+
+				for (int i = 0; i < args.Length; i++)
+				{
+					args[i] = this.elements[i].Name;
+				}
+
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, this.path, args);
+			}
+		}
+
 		#region IEquatable<PropertyPath> Members
 		public bool Equals(PropertyPath other)
 		{
@@ -65,12 +85,11 @@ namespace Epsitec.Common.Types
 			{
 				return true;
 			}
-			
-			if (p1 == null)
+			if (System.Object.ReferenceEquals (p1, null))
 			{
 				return false;
 			}
-			if (p2 == null)
+			if (System.Object.ReferenceEquals (p2, null))
 			{
 				return false;
 			}

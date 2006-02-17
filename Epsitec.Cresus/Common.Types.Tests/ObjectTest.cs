@@ -12,9 +12,62 @@ namespace Epsitec.Common.Types
 		{
 			ObjectTest.LoadLibrary (@"s:\Epsitec.Cresus\External\AntiGrain.Win32.dll");
 		}
+
+
+		[Test]
+		public void CheckPropertyPath()
+		{
+			PropertyPath pp1 = new PropertyPath ();
+			PropertyPath pp2 = new PropertyPath ("abc");
+			PropertyPath pp3 = new PropertyPath ("{0}.{1}", MyObject.FooProperty, MyObject.NameProperty);
+
+			Assert.AreEqual (null, pp1.GetFullPath ());
+			Assert.AreEqual ("abc", pp2.GetFullPath ());
+			Assert.AreEqual ("Foo.Name", pp3.GetFullPath ());
+		}
 		
-		
-		[Test] public void CheckObjectCreation()
+		[Test]
+		public void CheckBinding()
+		{
+			Binding bindingName = new Binding ();
+			Binding bindingXyz = new Binding ();
+			
+			MyObject mySource = new MyObject ();
+			MyObject myData = new MyObject ();
+			MyObject myTarget = new MyObject ();
+
+			mySource.SetValue (MyObject.NameProperty, "Jean Dupont");
+			mySource.SetValue (MyObject.XyzProperty, 123);
+			mySource.SetValue (MyObject.SiblingProperty, myData);
+
+			myData.SetValue (MyObject.NameProperty, "John Doe");
+			myData.SetValue (MyObject.XyzProperty, 999);
+
+			using (bindingName.DeferChanges ())
+			{
+				bindingName.Mode = BindingMode.TwoWay;
+				bindingName.Source = mySource;
+				bindingName.Path = new PropertyPath ("Name");
+
+				myTarget.SetBinding (MyObject.FooProperty, bindingName);
+			}
+			
+			using (bindingXyz.DeferChanges ())
+			{
+				bindingXyz.Mode = BindingMode.TwoWay;
+				bindingXyz.Source = mySource;
+				bindingXyz.Path = new PropertyPath ("Sibling.Xyz");
+
+				myTarget.SetBinding (MyObject.XyzProperty, bindingXyz);
+			}
+
+			Assert.AreEqual ("Jean Dupont", myTarget.GetValue (MyObject.FooProperty));
+			Assert.AreEqual (999, myTarget.GetValue (MyObject.XyzProperty));
+		}
+
+		[Test]
+		[Ignore ("Too slow")]
+		public void CheckObjectCreation()
 		{
 			AntiGrain.Interface.Initialise ();
 			
@@ -28,8 +81,10 @@ namespace Epsitec.Common.Types
 			System.Console.WriteLine ("-----------------------------------------done");
 			System.Console.Out.Flush ();
 		}
-		
-		[Test] public void CheckObjectType()
+
+		[Test]
+		[Ignore ("Too slow")]
+		public void CheckObjectType()
 		{
 			Assert.AreEqual ("Object", ObjectType.FromSystemType (typeof (Types.Object)).Name);
 			Assert.AreEqual ("MyObject", ObjectType.FromSystemType (typeof (MyObject)).Name);
@@ -236,6 +291,7 @@ namespace Epsitec.Common.Types
 			public static Property XyzProperty	= Property.Register ("Xyz", typeof (int), typeof (MyObject));
 			public static Property NameProperty	= Property.Register ("Name", typeof (string), typeof (MyObject), new PropertyMetadata ("[default]"));
 			public static Property FooProperty	= Property.Register ("Foo", typeof (string), typeof (MyObject), new PropertyMetadata ("[default]", new PropertyInvalidatedCallback (MyObject.NotifyOnFooChanged)));
+			public static Property SiblingProperty = Property.Register ("Sibling", typeof (MyObject), typeof (MyObject));
 			
 			protected virtual void OnFooChanged()
 			{

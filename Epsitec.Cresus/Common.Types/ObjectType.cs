@@ -85,29 +85,32 @@ namespace Epsitec.Common.Types
 			this.local_properties.Add (property);
 		}
 		
-		public Property[] GetProperties()
+		public ReadOnlyArray<Property> GetProperties()
 		{
 			if (this.all_properties == null)
 			{
-				lock (this)
-				{
-					if (this.all_properties == null)
-					{
-						Property[] base_properties = this.BaseType == null ? new Property[0] : this.BaseType.GetProperties ();
-						Property[] all_properties  = new Property[base_properties.Length + this.local_properties.Count];
-
-						base_properties.CopyTo (all_properties, 0);
-						this.local_properties.CopyTo (all_properties, base_properties.Length);
-
-						this.all_properties   = all_properties;
-						this.local_properties = null;
-					}
-				}
+				this.BuildPropertyList ();
 			}
 			
-			return this.all_properties;
+			return new ReadOnlyArray<Property> (this.all_properties);
 		}
 		
+		public Property GetProperty(string name)
+		{
+			if (this.lookup == null)
+			{
+				this.BuildPropertyList ();
+			}
+
+			if (this.lookup.ContainsKey (name))
+			{
+				return this.lookup[name];
+			}
+			
+			//	TODO: trouver une propriété attachée qui conviendrait
+			
+			return null;
+		}
 		
 		public static ObjectType FromSystemType(System.Type type)
 		{
@@ -118,6 +121,41 @@ namespace Epsitec.Common.Types
 		}
 
 		#region Private Methods
+		private void BuildPropertyList()
+		{
+			lock (this)
+			{
+				if (this.all_properties == null)
+				{
+					ICollection<Property> base_properties;
+
+					if (this.BaseType == null)
+					{
+						base_properties = new Property[0];
+					}
+					else
+					{
+						base_properties = this.BaseType.GetProperties ();
+					}
+
+					Property[] all_properties  = new Property[base_properties.Count + this.local_properties.Count];
+
+					base_properties.CopyTo (all_properties, 0);
+					this.local_properties.CopyTo (all_properties, base_properties.Count);
+
+					this.all_properties   = all_properties;
+					this.local_properties = null;
+
+					this.lookup = new Dictionary<string, Property> (this.all_properties.Length);
+
+					foreach (Property property in this.all_properties)
+					{
+						this.lookup[property.Name] = property;
+					}
+				}
+			}
+		}
+
 		private static ObjectType FromSystemTypeLocked(System.Type system_type)
 		{
 			if (system_type == null)
@@ -159,6 +197,7 @@ namespace Epsitec.Common.Types
 		private System.Type						system_type;
 		private List<Property>					local_properties = new List<Property> ();
 		private Property[]						all_properties;
+		private Dictionary<string, Property>	lookup;
 
 		static Dictionary<System.Type, ObjectType> types = new Dictionary<System.Type, ObjectType> ();
 	}
