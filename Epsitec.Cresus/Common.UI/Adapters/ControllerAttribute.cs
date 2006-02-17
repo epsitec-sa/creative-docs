@@ -48,7 +48,7 @@ namespace Epsitec.Common.UI.Adapters
 			}
 			set
 			{
-				this.type = type;
+				this.type = value;
 			}
 		}
 		
