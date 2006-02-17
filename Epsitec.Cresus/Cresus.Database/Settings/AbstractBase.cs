@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -6,6 +6,8 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Database.Settings
 {
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<PropertyChangedEventArgs>;
+	
 	/// <summary>
 	/// La classe AbstractBase sert de base pour les diverses variables
 	/// globales (réglages) qui utilisent DbDict.
@@ -80,7 +82,7 @@ namespace Epsitec.Cresus.Database.Settings
 		
 		
 		#region IPropertyChange Members
-		public event Epsitec.Common.Types.PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler PropertyChanged;
 		#endregion
 		
 		private DbDict							dict;

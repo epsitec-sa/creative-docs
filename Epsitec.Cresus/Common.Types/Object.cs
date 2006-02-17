@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<PropertyChangedEventArgs>;
+
 	/// <summary>
 	/// La classe Object représente un objet dont les propriétés sont
 	/// stockées dans un dictionnaire interne plutôt que dans des variables, ce
@@ -212,7 +214,7 @@ namespace Epsitec.Common.Types
 			if ((this.bindings != null) &&
 				(this.bindings.ContainsKey (property)))
 			{
-				return this.bindings[property];
+				return this.bindings[property].Binding;
 			}
 			else
 			{
@@ -232,12 +234,10 @@ namespace Epsitec.Common.Types
 			
 			if (this.bindings == null)
 			{
-				this.bindings = new Dictionary<Property, Binding> ();
+				this.bindings = new Dictionary<Property, BindingExpression> ();
 			}
 			
-			this.bindings[property] = binding;
-			
-			//	TODO: gérer l'attachement du binding
+			this.bindings[property] = BindingExpression.BindToTarget (this, property, binding);
 		}
 		public void ClearAllBindings()
 		{
@@ -253,9 +253,8 @@ namespace Epsitec.Common.Types
 			if ((this.bindings != null) &&
 				(this.bindings.ContainsKey (property)))
 			{
+				this.bindings[property].Dispose ();
 				this.bindings.Remove (property);
-				
-				//	TODO: gérer le détachement du binding
 			}
 		}
 		public bool IsDataBound(Property property)
@@ -412,7 +411,7 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		Dictionary<Property, object>						properties = new Dictionary<Property, object> ();
-		Dictionary<Property, Binding>						bindings;
+		Dictionary<Property, BindingExpression>				bindings;
 		Dictionary<Property, PropertyChangedEventHandler>	propertyEvents;
 		Dictionary<string, System.Delegate>					userEvents;
 		ObjectType											cached_type;

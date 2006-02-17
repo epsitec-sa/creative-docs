@@ -20,12 +20,12 @@ namespace Epsitec.Common.Document.Containers
 			this.table = new CellTable(this);
 			this.table.Dock = DockStyle.Fill;
 			this.table.FlyOverChanged += new EventHandler(this.HandleTableFlyOverChanged);
-			this.table.StyleH  = CellArrayStyle.ScrollNorm;
-			this.table.StyleH |= CellArrayStyle.Header;
-			this.table.StyleH |= CellArrayStyle.Separator;
-			this.table.StyleH |= CellArrayStyle.Mobile;
-			this.table.StyleV  = CellArrayStyle.ScrollNorm;
-			this.table.StyleV |= CellArrayStyle.Separator;
+			this.table.StyleH  = CellArrayStyles.ScrollNorm;
+			this.table.StyleH |= CellArrayStyles.Header;
+			this.table.StyleH |= CellArrayStyles.Separator;
+			this.table.StyleH |= CellArrayStyles.Mobile;
+			this.table.StyleV  = CellArrayStyles.ScrollNorm;
+			this.table.StyleV |= CellArrayStyles.Separator;
 			this.table.DefHeight = 16;
 		}
 		

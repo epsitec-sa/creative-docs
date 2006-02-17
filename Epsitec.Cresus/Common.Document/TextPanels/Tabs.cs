@@ -19,11 +19,11 @@ namespace Epsitec.Common.Document.TextPanels
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Tabs.Title);
 
 			this.table = new CellTable(this);
-			this.table.StyleH |= CellArrayStyle.Header;
-			this.table.StyleH |= CellArrayStyle.Separator;
-			this.table.StyleV |= CellArrayStyle.ScrollNorm;
-			this.table.StyleV |= CellArrayStyle.Separator;
-			this.table.StyleV |= CellArrayStyle.SelectLine;
+			this.table.StyleH |= CellArrayStyles.Header;
+			this.table.StyleH |= CellArrayStyles.Separator;
+			this.table.StyleV |= CellArrayStyles.ScrollNorm;
+			this.table.StyleV |= CellArrayStyles.Separator;
+			this.table.StyleV |= CellArrayStyles.SelectLine;
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 			this.UpdateTable();  // pour afficher les noms des colonnes
 

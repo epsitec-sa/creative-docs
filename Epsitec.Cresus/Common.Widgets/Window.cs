@@ -5,6 +5,8 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.PropertyChangedEventArgs>;
+	
 	using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
 	
 	/// <summary>
@@ -35,7 +37,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.root.Size = new Drawing.Size (this.window.ClientSize);
 			this.root.Name = "Root";
-			this.root.MinSizeChanged += new Types.PropertyChangedEventHandler (this.HandleRootMinSizeChanged);
+			this.root.MinSizeChanged += new PropertyChangedEventHandler (this.HandleRootMinSizeChanged);
 			
 			this.timer.TimeElapsed += new EventHandler (this.HandleTimeElapsed);
 			this.timer.AutoRepeat = 0.050;
@@ -1162,7 +1164,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.root != null)
 				{
-					this.root.MinSizeChanged -= new Types.PropertyChangedEventHandler (this.HandleRootMinSizeChanged);
+					this.root.MinSizeChanged -= new PropertyChangedEventHandler (this.HandleRootMinSizeChanged);
 					this.root.Dispose ();
 				}
 				

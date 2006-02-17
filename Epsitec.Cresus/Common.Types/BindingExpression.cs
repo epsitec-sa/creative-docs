@@ -1,13 +1,20 @@
-//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	public class BindingExpression
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<PropertyChangedEventArgs>;
+	
+	/// <summary>
+	/// The BindingExpression class is used to maintain the real binding
+	/// between a source and a target, whereas the Binding class can be
+	/// specified more than once (Binding is more general).
+	/// </summary>
+	public sealed class BindingExpression : System.IDisposable
 	{
-		public BindingExpression()
+		private BindingExpression()
 		{
 		}
 		
@@ -79,14 +86,32 @@ namespace Epsitec.Common.Types
 			
 			return expression;
 		}
+
+		#region IDisposable Members
+		public void Dispose()
+		{
+			//	Detach from the target, and from the source.
+			
+			this.AssertBinding ();
+			
+			this.InternalDetachFromSource ();
+			
+			this.binding = null;
+			this.targetObject = null;
+			this.targetPropery = null;
+		}
+		#endregion
 		
 		private void AssertBinding()
 		{
-			if (this.binding == null)
+			if ((this.binding == null) ||
+				(this.targetObject == null) ||
+				(this.targetPropery == null))
 			{
 				throw new System.InvalidOperationException ("Broken binding");
 			}
 		}
+		
 		private void InternalUpdateSource()
 		{
 			//	TODO: update source
@@ -96,8 +121,40 @@ namespace Epsitec.Common.Types
 			//	TODO: update target
 		}
 
+		private void InternalDetachFromSource()
+		{
+			if (this.sourceObject != null)
+			{
+				switch (this.sourceType)
+				{
+					case BindingSourceType.PropertyObject:
+						BindingExpression.Detach (this, this.sourceObject as Object, this.sourceProperty);
+						break;
+				}
+			}
+		}
+
+		private void HandleSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			object value = e.NewValue;
+			
+			//	TODO: update target with value
+		}
+
+		private static void Attach(BindingExpression expression, Object source, Property property)
+		{
+			source.AddEventHandler (property, new PropertyChangedEventHandler (expression.HandleSourcePropertyChanged));
+		}
+		private static void Detach(BindingExpression expression, Object source, Property property)
+		{
+			source.RemoveEventHandler (property, new PropertyChangedEventHandler (expression.HandleSourcePropertyChanged));
+		}
+
 		private Binding							binding;
 		private Object							targetObject;
 		private Property						targetPropery;
+		private object							sourceObject;
+		private Property						sourceProperty;
+		private BindingSourceType				sourceType;
 	}
 }

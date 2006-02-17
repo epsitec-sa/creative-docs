@@ -3,6 +3,8 @@
 
 namespace Epsitec.Common.Widgets
 {
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.PropertyChangedEventArgs>;
+	
 	/// <summary>
 	/// La classe MenuItemContainer permet d'incorporer dans une case de menu
 	/// des widgets divers et variés.
@@ -256,7 +258,7 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.WriteLine ("Keyboard Filter disabled temporarily");
 				
 				this.filter_disabled   = true;
-				this.IsVisibleChanged += new Types.PropertyChangedEventHandler (this.HandleIsVisibleChanged);
+				this.IsVisibleChanged += new PropertyChangedEventHandler (this.HandleIsVisibleChanged);
 			}
 		}
 		
@@ -271,7 +273,7 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.WriteLine ("Keyboard Filter re-enabled");
 				
 				this.filter_disabled   = false;
-				this.IsVisibleChanged -= new Types.PropertyChangedEventHandler (this.HandleIsVisibleChanged);
+				this.IsVisibleChanged -= new PropertyChangedEventHandler (this.HandleIsVisibleChanged);
 			}
 		}
 		

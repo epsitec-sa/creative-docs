@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -6,6 +6,8 @@ using Epsitec.Common.Widgets.Helpers;
 
 namespace Epsitec.Common.Widgets
 {
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<PropertyChangedEventArgs>;
+	
 	/// <summary>
 	/// Visual.
 	/// </summary>

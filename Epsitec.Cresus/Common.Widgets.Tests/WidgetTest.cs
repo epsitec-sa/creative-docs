@@ -4,6 +4,8 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Support.PropertyChangedEventArgs>;
+	
 	[TestFixture] public class WidgetTest
 	{
 		[SetUp] public void Initialise()
