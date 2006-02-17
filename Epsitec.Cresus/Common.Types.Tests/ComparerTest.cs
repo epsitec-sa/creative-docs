@@ -4,7 +4,8 @@ namespace Epsitec.Common.Types
 {
 	[TestFixture] public class ComparerTest
 	{
-		[Test] public void CheckCompareBoxed()
+		[Test]
+		public void CheckCompareBoxed()
 		{
 			object a = 1;
 			object b = 1;
@@ -30,7 +31,53 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (a.Equals (b));
 		}
 		
-		[Test] public void CheckEqual()
+		[Test]
+		public void CheckArrayComparers()
+		{
+			int size = 1000*1000;
+			int loops = 10;
+			
+			int[] x1 = new int[size];
+			int[] x2 = new int[size];
+
+			for (int i = 0; i < size; i++)
+			{
+				x1[i] = i;
+				x2[i] = i;
+			}
+
+			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch ();
+			
+			stopwatch.Start ();
+			Comparer.Equal (x1, x2);
+			Comparer.EqualValues (x1, x2);
+			stopwatch.Stop ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			for (int i = 0; i < loops; i++)
+			{
+				Comparer.Equal (x1, x2);
+			}
+
+			stopwatch.Stop ();
+			System.Console.Out.WriteLine ("Native int == comparison: {0}ms, {1} loops x {2} elements", stopwatch.ElapsedMilliseconds, loops, size);
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			for (int i = 0; i < loops; i++)
+			{
+				Comparer.EqualValues (x1, x2);
+			}
+
+			stopwatch.Stop ();
+			System.Console.Out.WriteLine ("IEquatable<T> comparison: {0}ms, {1} loops x {2} elements", stopwatch.ElapsedMilliseconds, loops, size);
+		}
+
+		[Test]
+		public void CheckEqual()
 		{
 			object a = 1;
 			object b = 1;
