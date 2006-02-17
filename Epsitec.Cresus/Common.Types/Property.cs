@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// Property.
 	/// </summary>
-	public sealed class Property
+	public sealed class Property : System.IEquatable<Property>
 	{
 		private Property(string name, System.Type property_type, System.Type owner_type, PropertyMetadata metadata)
 		{
@@ -54,19 +54,23 @@ namespace Epsitec.Common.Types
 		{
 			return this.name.GetHashCode () ^ this.owner_type.GetHashCode ();
 		}
-		
 		public override bool Equals(object obj)
 		{
-			Property property = obj as Property;
-			
-			if (property != null)
+			return this.Equals (obj as Property);
+		}
+
+		#region IEquatable<Property> Members
+		public bool Equals(Property other)
+		{
+			if (other != null)
 			{
-				return (this.owner_type == property.owner_type)
-					&& (this.name == property.name);
+				return (this.owner_type == other.owner_type)
+					&& (this.name == other.name);
 			}
-			
+
 			return false;
 		}
+		#endregion
 
 		
 		public void OverrideMetadata(System.Type type, PropertyMetadata metadata)

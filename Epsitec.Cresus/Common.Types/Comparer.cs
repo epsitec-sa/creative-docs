@@ -155,20 +155,13 @@ namespace Epsitec.Common.Types
 		{
 			//	Version optimisée pour comparer des tableaux à une dimension de
 			//	nombres entiers.
-			
-			if (a == b)
+
+			bool result;
+
+			if (Comparer.PreCompare (a, b, out result))
 			{
-				return true;
+				return result;
 			}
-			if ((a == null) ||
-				(b == null) ||
-				(a.Length != b.Length))
-			{
-				return false;
-			}
-			
-			System.Diagnostics.Debug.Assert (a.Rank == 1);
-			System.Diagnostics.Debug.Assert (b.Rank == 1);
 			
 			for (int i = 0; i < a.Length; i++)
 			{
@@ -183,21 +176,14 @@ namespace Epsitec.Common.Types
 		public static bool Equal(string[] a, string[] b)
 		{
 			//	Version optimisée pour comparer des tableaux à une dimension de
-			//	nombres entiers.
-			
-			if (a == b)
+			//	textes.
+
+			bool result;
+
+			if (Comparer.PreCompare (a, b, out result))
 			{
-				return true;
+				return result;
 			}
-			if ((a == null) ||
-				(b == null) ||
-				(a.Length != b.Length))
-			{
-				return false;
-			}
-			
-			System.Diagnostics.Debug.Assert (a.Rank == 1);
-			System.Diagnostics.Debug.Assert (b.Rank == 1);
 			
 			for (int i = 0; i < a.Length; i++)
 			{
@@ -208,6 +194,75 @@ namespace Epsitec.Common.Types
 			}
 			
 			return true;
+		}
+
+		public static bool EqualValues<T>(T[] a, T[] b) where T : struct, System.IEquatable<T>
+		{
+			bool result;
+
+			if (Comparer.PreCompare (a, b, out result))
+			{
+				return result;
+			}
+
+			for (int i = 0; i < a.Length; i++)
+			{
+				if (a[i].Equals (b[i]) == false)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		public static bool EqualObjects<T>(T[] a, T[] b) where T : class
+		{
+			bool result;
+			
+			if (Comparer.PreCompare (a, b, out result))
+			{
+				return result;
+			}
+			
+			for (int i = 0; i < a.Length; i++)
+			{
+				if (a[i] != b[i])
+				{
+					if ((a[i] == null) ||
+						(a[i].Equals (b[i]) == false))
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		private static bool PreCompare<T>(T[] a, T[] b, out bool result)
+		{
+			if (a == b)
+			{
+				result = true;
+				return true;
+			}
+			if (a == null)
+			{
+				result = false;
+				return true;
+			}
+			if (b == null)
+			{
+				result = false;
+				return true;
+			}
+			if (a.Length != b.Length)
+			{
+				result = false;
+				return true;
+			}
+			result = false;
+			return false;
 		}
 	}
 }
