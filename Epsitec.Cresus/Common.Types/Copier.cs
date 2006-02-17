@@ -31,5 +31,18 @@ namespace Epsitec.Common.Types
 
 			throw new System.NotSupportedException (string.Format ("Cannot copy type {0}, not supported", obj.GetType ().Name));
 		}
+		public static T[] CopyArray<T>(T[] array)
+		{
+			if (array == null)
+			{
+				return null;
+			}
+			else
+			{
+				T[] copy = new T[array.Length];
+				array.CopyTo (copy, 0);
+				return copy;
+			}
+		}
 	}
 }
