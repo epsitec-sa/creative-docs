@@ -63,6 +63,12 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("Jean Dupont", myTarget.GetValue (MyObject.FooProperty));
 			Assert.AreEqual (999, myTarget.GetValue (MyObject.XyzProperty));
+
+			mySource.SetValue (MyObject.NameProperty, "Jeanne Dupont");
+			myData.SetValue (MyObject.XyzProperty, 888);
+			
+			Assert.AreEqual ("Jeanne Dupont", myTarget.GetValue (MyObject.FooProperty));
+			Assert.AreEqual (888, myTarget.GetValue (MyObject.XyzProperty));
 		}
 
 		[Test]
