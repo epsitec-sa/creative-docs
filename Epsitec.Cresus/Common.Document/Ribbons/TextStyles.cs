@@ -194,7 +194,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Combo des styles fermé.
 			Widgets.StyleCombo combo = sender as Widgets.StyleCombo;
-			int sel = combo.SelectedIndex;
+			int sel = combo.SelectedRank;
 			if ( sel == -1 )  return;
 
 			Common.Text.TextStyle[] styles = this.document.TextStyles(combo.StyleCategory);

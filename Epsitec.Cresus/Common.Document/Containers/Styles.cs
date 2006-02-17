@@ -364,15 +364,15 @@ namespace Epsitec.Common.Document.Containers
 			//	Effectue la mise à jour du contenu.
 			this.graphicList.List = this.document.Aggregates;
 			this.graphicList.SelectedRank = this.document.Aggregates.Selected;
-			this.graphicList.UpdateContent();
+			this.graphicList.UpdateContents();
 
 			this.paragraphList.List = this.document.TextStyles(StyleCategory.Paragraph);
 			this.paragraphList.SelectedRank = this.document.GetSelectedTextStyle(StyleCategory.Paragraph);
-			this.paragraphList.UpdateContent();
+			this.paragraphList.UpdateContents();
 			
 			this.characterList.List = this.document.TextStyles(StyleCategory.Character);
 			this.characterList.SelectedRank = this.document.GetSelectedTextStyle(StyleCategory.Character);
-			this.characterList.UpdateContent();
+			this.characterList.UpdateContents();
 			
 			this.UpdateAggregateName();
 			this.UpdateAggregateChildrens();
