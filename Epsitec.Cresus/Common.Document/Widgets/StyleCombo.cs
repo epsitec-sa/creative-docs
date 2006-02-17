@@ -191,7 +191,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 		
-		protected virtual void UpdateButtonVisibility()
+		protected override void UpdateButtonVisibility()
 		{
 			this.SetButtonVisibility(this.ComputeButtonVisibility());
 		}
