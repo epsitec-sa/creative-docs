@@ -105,6 +105,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Binding.cs" />
+    <Compile Include="BindingExpression.cs" />
     <Compile Include="BooleanType.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -121,6 +122,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BindingMode.cs" />
+    <Compile Include="BindingUpdateMode.cs" />
     <Compile Include="DataGraph.cs">
       <SubType>Code</SubType>
     </Compile>

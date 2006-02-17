@@ -107,6 +107,8 @@ namespace Epsitec.Common.Document.Widgets
 			
 			this.fontSelector.SelectionChanged += new Support.EventHandler(this.HandleSelectorSelectionChanged);
 			
+			MenuItem.SetMenuHost(this, new MenuHost(menu));
+			
 			return menu;
 		}
 

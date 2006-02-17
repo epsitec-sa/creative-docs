@@ -221,6 +221,10 @@ namespace Epsitec.Common.Types
 		}
 		public void SetBinding(Property property, Binding binding)
 		{
+			if (property == null)
+			{
+				throw new System.ArgumentNullException ("property");
+			}
 			if (binding == null)
 			{
 				throw new System.ArgumentNullException ("binding");
@@ -232,6 +236,17 @@ namespace Epsitec.Common.Types
 			}
 			
 			this.bindings[property] = binding;
+			
+			//	TODO: gérer l'attachement du binding
+		}
+		public void ClearAllBindings()
+		{
+			Property[] properties = Copier.CopyArray (this.bindings.Keys);
+
+			for (int i = 0; i < properties.Length; i++)
+			{
+				this.ClearBinding (properties[i]);
+			}
 		}
 		public void ClearBinding(Property property)
 		{
@@ -239,9 +254,11 @@ namespace Epsitec.Common.Types
 				(this.bindings.ContainsKey (property)))
 			{
 				this.bindings.Remove (property);
+				
+				//	TODO: gérer le détachement du binding
 			}
 		}
-		public bool ContainsBinding(Property property)
+		public bool IsDataBound(Property property)
 		{
 			if ((this.bindings != null) &&
 				(this.bindings.ContainsKey (property)))

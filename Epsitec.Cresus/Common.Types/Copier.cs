@@ -44,5 +44,11 @@ namespace Epsitec.Common.Types
 				return copy;
 			}
 		}
+		public static T[] CopyArray<T>(System.Collections.Generic.ICollection<T> collection)
+		{
+			T[] copy = new T[collection.Count];
+			collection.CopyTo (copy, 0);
+			return copy;
+		}
 	}
 }
