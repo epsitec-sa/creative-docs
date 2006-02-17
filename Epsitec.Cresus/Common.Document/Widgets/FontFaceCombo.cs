@@ -113,6 +113,13 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			base.OnComboClosed();
 			
+			if ( this.fontSelector != null )
+			{
+				this.fontSelector.SelectionChanged -= new Support.EventHandler(this.HandleSelectorSelectionChanged);
+				this.fontSelector.Dispose();
+				this.fontSelector = null;
+			}
+
 			if ( this.Window != null )
 			{
 				this.Window.RestoreLogicalFocus();
