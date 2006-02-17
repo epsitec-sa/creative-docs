@@ -5,16 +5,9 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	public enum BindingMode
+	public enum BindingUpdateMode
 	{
-		None,
-
-		OneTime,
-		OneWay,
-		OneWayToSource,
-		
-		TwoWay,
-		
-		UseDefaultValue,
+		Default,								//	update based on BindingMode
+		Reset									//	update, even BindingMode.OneTime
 	}
 }

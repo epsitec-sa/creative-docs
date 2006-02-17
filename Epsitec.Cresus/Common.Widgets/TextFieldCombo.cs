@@ -444,8 +444,6 @@ namespace Epsitec.Common.Widgets
 			
 			this.menu = this.CreateMenu ();
 			
-			MenuItem.SetMenuHost (this, new MenuHost (this.menu));
-			
 			if (this.scroll_list != null)
 			{
 				this.scroll_list.SelectedIndex = this.MapIndexToComboList (this.SelectedIndex);
@@ -538,6 +536,8 @@ namespace Epsitec.Common.Widgets
 			this.CopyItemsToComboList (this.scroll_list.Items);
 			
 			menu.AdjustSize ();
+			
+			MenuItem.SetMenuHost (this, new MenuHost (menu));
 			
 			return menu;
 		}
