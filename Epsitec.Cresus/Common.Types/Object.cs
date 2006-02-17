@@ -207,6 +207,53 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public Binding GetBinding(Property property)
+		{
+			if ((this.bindings != null) &&
+				(this.bindings.ContainsKey (property)))
+			{
+				return this.bindings[property];
+			}
+			else
+			{
+				return null;
+			}
+		}
+		public void SetBinding(Property property, Binding binding)
+		{
+			if (binding == null)
+			{
+				throw new System.ArgumentNullException ("binding");
+			}
+			
+			if (this.bindings == null)
+			{
+				this.bindings = new Dictionary<Property, Binding> ();
+			}
+			
+			this.bindings[property] = binding;
+		}
+		public void ClearBinding(Property property)
+		{
+			if ((this.bindings != null) &&
+				(this.bindings.ContainsKey (property)))
+			{
+				this.bindings.Remove (property);
+			}
+		}
+		public bool ContainsBinding(Property property)
+		{
+			if ((this.bindings != null) &&
+				(this.bindings.ContainsKey (property)))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		protected void AddUserEventHandler(string name, System.Delegate handler)
 		{
 			if (this.userEvents == null)
@@ -284,6 +331,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+
 		#region IDisposable Members
 		public void Dispose()
 		{
@@ -347,6 +395,7 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		Dictionary<Property, object>						properties = new Dictionary<Property, object> ();
+		Dictionary<Property, Binding>						bindings;
 		Dictionary<Property, PropertyChangedEventHandler>	propertyEvents;
 		Dictionary<string, System.Delegate>					userEvents;
 		ObjectType											cached_type;
