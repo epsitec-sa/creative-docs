@@ -31,7 +31,7 @@ namespace Epsitec.Common.Types
 			}
 			else if (date == null)
 			{
-				this.days = 0;
+				this.days = -1;
 			}
 			else
 			{
@@ -149,27 +149,27 @@ namespace Epsitec.Common.Types
 
 		public static bool operator==(Date t1, Date t2)
 		{
-			return t1.Ticks == t2.Ticks;
+			return t1.days == t2.days;
 		}
 		public static bool operator!=(Date t1, Date t2)
 		{
-			return t1.Ticks != t2.Ticks;
+			return t1.days != t2.days;
 		}
 		public static bool operator<(Date t1, Date t2)
 		{
-			return t1.Ticks < t2.Ticks;
+			return t1.days < t2.days;
 		}
 		public static bool operator>(Date t1, Date t2)
 		{
-			return t1.Ticks > t2.Ticks;
+			return t1.days > t2.days;
 		}
 		public static bool operator<=(Date t1, Date t2)
 		{
-			return t1.Ticks <= t2.Ticks;
+			return t1.days <= t2.days;
 		}
 		public static bool operator>=(Date t1, Date t2)
 		{
-			return t1.Ticks >= t2.Ticks;
+			return t1.days >= t2.days;
 		}
 		
 		public override string ToString()
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.days == 0);
+				return (this.days == -1);
 			}
 		}
 		#endregion

@@ -57,6 +57,13 @@ namespace Epsitec.Common.Types
 			{
 				this.milliseconds = ((Time)time).milliseconds;
 			}
+			else if (time is System.TimeSpan)
+			{
+				System.TimeSpan timeSpan = (System.TimeSpan) time;
+				Time timeSpanTime = new Time (timeSpan.Ticks);
+				
+				this.milliseconds = timeSpanTime.milliseconds;
+			}
 			else if (time == null)
 			{
 				this.milliseconds = -1;
@@ -188,6 +195,31 @@ namespace Epsitec.Common.Types
 		public static bool Equals(Time t1, Time t2)
 		{
 			return t1.milliseconds == t2.milliseconds;
+		}
+
+		public static bool operator==(Time t1, Time t2)
+		{
+			return t1.milliseconds == t2.milliseconds;
+		}
+		public static bool operator!=(Time t1, Time t2)
+		{
+			return t1.milliseconds != t2.milliseconds;
+		}
+		public static bool operator<(Time t1, Time t2)
+		{
+			return t1.milliseconds < t2.milliseconds;
+		}
+		public static bool operator>(Time t1, Time t2)
+		{
+			return t1.milliseconds > t2.milliseconds;
+		}
+		public static bool operator<=(Time t1, Time t2)
+		{
+			return t1.milliseconds <= t2.milliseconds;
+		}
+		public static bool operator>=(Time t1, Time t2)
+		{
+			return t1.milliseconds >= t2.milliseconds;
 		}
 		
 		

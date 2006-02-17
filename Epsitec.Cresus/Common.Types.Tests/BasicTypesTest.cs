@@ -134,13 +134,15 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (et.CheckConstraint (18));
 			Assert.IsTrue (et.CheckConstraint ("{Other}"));
 		}
-		
-		[Test] public void CheckDate()
+
+		[Test]
+		public void CheckDate()
 		{
 			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (typeof (Date));
 
 			Date datePast = new Date (2006, 2, 15);
 			Date dateNow = new Date (System.DateTime.Now);
+			Date dateNull = new Date (null);
 
 			Assert.AreEqual (732356 * Time.TicksPerDay, datePast.Ticks);
 			Assert.IsTrue (datePast < dateNow);
@@ -149,9 +151,35 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (datePast >= dateNow);
 
 			Assert.AreEqual ("732356", converter.ConvertToInvariantString (datePast));
+			
+			Assert.IsTrue (dateNull.IsNull);
 		}
-		
-		[Test] public void CheckDateSerialization()
+
+		[Test]
+		public void CheckTime()
+		{
+			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (typeof (Time));
+
+			Time time1 = new Time (1, 10, 30);
+			Time time2 = new Time (new System.DateTime (2006, 2, 15, 1, 10, 30));
+			Time time3 = new Time (1, 10, 31);
+			Time timeNull = new Time (null);
+
+			Assert.AreEqual (time1.Ticks, time2.Ticks);
+			Assert.IsTrue (time1 == time2);
+			Assert.IsTrue (time1 < time3);
+			Assert.IsTrue (time3 > time1);
+			Assert.IsTrue (time1 <= time3);
+			Assert.IsTrue (time3 >= time1);
+
+			Assert.AreEqual ("4230000", converter.ConvertToInvariantString (time1));
+			Assert.AreEqual ("4231000", converter.ConvertToInvariantString (time3));
+
+			Assert.IsTrue (timeNull.IsNull);
+		}
+
+		[Test]
+		public void CheckDateSerialization()
 		{
 			Date date_1 = Date.Today;
 			Date date_2;
