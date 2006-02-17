@@ -94,11 +94,7 @@ namespace Epsitec.Common.Document.Widgets
 			//	de base TextFieldCombo ne contient aucun item.
 			get
 			{
-				if ( this.list == null )  return -1;
-
-				int rank = this.list.RowToRank(this.list.SelectedRow);
-				if ( rank == -1 )  rank = -2;  // ligne <aucun> ?
-				return rank;
+				return this.selectedRank;
 			}
 		}
 
@@ -201,6 +197,13 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			base.OnComboClosed();
 			
+			if ( this.list != null )
+			{
+				this.list.FinalSelectionChanged -= new EventHandler(this.HandleListSelectionActivated);
+				this.list.Dispose();
+				this.list = null;
+			}
+
 			if ( this.Window != null )
 			{
 				this.Window.RestoreLogicalFocus();
@@ -213,6 +216,10 @@ namespace Epsitec.Common.Document.Widgets
 			int sel = this.MapComboListToIndex(this.list.SelectedRow);
 			if ( sel == -1 )  return;
 			this.list.SelectRow(sel, true);
+
+			int rank = this.list.RowToRank(this.list.SelectedRow);
+			if ( rank == -1 )  rank = -2;  // ligne <aucun> ?
+			this.selectedRank = rank;
 
 			this.CloseCombo(CloseMode.Accept);
 		}
@@ -259,5 +266,6 @@ namespace Epsitec.Common.Document.Widgets
 		protected bool							isDeep = false;
 		protected bool							isNoneLine = false;
 		protected AbstractStyleList				list;
+		protected int							selectedRank = -1;
 	}
 }
