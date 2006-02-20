@@ -314,7 +314,7 @@ namespace Epsitec.Common.Document.Widgets
 					pos.X = workingArea.Right-w;
 				}
 
-				location  = pos;
+				location = pos;
 				size = new Size(w, h);
 			}
 			
