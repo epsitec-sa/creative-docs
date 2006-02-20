@@ -28,11 +28,18 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public virtual void SetDocument(DocumentType type, InstallType install, DebugMode debugMode, Settings.GlobalSettings gs, Document document)
 		{
+			double initialWidth = this.DefaultWidth;
+
 			this.documentType = type;
 			this.installType = install;
 			this.debugMode = debugMode;
 			this.globalSettings = gs;
 			this.document = document;
+
+			if ( initialWidth != this.DefaultWidth )
+			{
+				this.Width = this.DefaultWidth;
+			}
 		}
 
 		public virtual void NotifyChanged(string changed)

@@ -276,7 +276,7 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		protected string GetValue(int level, string name)
+		protected string GetValue(int level, string part, string name)
 		{
 			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )
 			{
@@ -284,113 +284,33 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
+			Common.Text.Property[] properties = null;
 
 			if ( level == 0 )
 			{
-				if ( name == "Prefix" )
+				if ( name == "Text" )
 				{
-					return p.Generator.GlobalPrefix;
+					if ( name == "Prefix" )  return p.Generator.GlobalPrefix;
+					if ( name == "Suffix" )  return p.Generator.GlobalSuffix;
 				}
 
-				if ( name == "Suffix" )
-				{
-					return p.Generator.GlobalSuffix;
-				}
-
-				if ( name == "FontFace" )
-				{
-					if ( p.Font == null )  return null;
-					return p.Font.FaceName;
-				}
-
-				if ( name == "FontStyle" )
-				{
-					if ( p.Font == null )  return null;
-					return p.Font.StyleName;
-				}
-
-				if ( name == "FontSize" )
-				{
-					if ( p.FontSize == null )  return null;
-					//?return p.FontSize.Size;
-				}
-
-				if ( name == "FontOffset" )
-				{
-					if ( p.FontOffset == null )  return null;
-					//?return p.FontOffset.Offset;
-				}
+				if ( part == "Prefix" )  properties = p.Generator.GlobalPrefixProperties;
+				if ( part == "Suffix" )  properties = p.Generator.GlobalSuffixProperties;
 			}
 			else if ( level-1 < p.Generator.Count )
 			{
 				Common.Text.Generator.Sequence sequence = p.Generator[this.level-1];
 
-				if ( name == "Prefix" )
+				if ( name == "Text" )
 				{
-					return sequence.Prefix;
+					if ( part == "Prefix" )  return sequence.Prefix;
+					if ( part == "Value"  )  return Generator.ConvSequenceToText(sequence);
+					if ( part == "Suffix" )  return sequence.Suffix;
 				}
 
-				if ( name == "Suffix" )
-				{
-					return sequence.Suffix;
-				}
-
-				if ( name == "Numerator" )
-				{
-					return Generator.ConvSequenceToText(sequence);
-				}
-
-				if ( name == "FontFace" )
-				{
-					Common.Text.Property[] properties = sequence.ValueProperties;
-					foreach ( Common.Text.Property property in properties )
-					{
-						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.Font )
-						{
-							Common.Text.Properties.FontProperty font = property as Common.Text.Properties.FontProperty;
-							return font.FaceName;
-						}
-					}
-				}
-
-				if ( name == "FontStyle" )
-				{
-					Common.Text.Property[] properties = sequence.ValueProperties;
-					foreach ( Common.Text.Property property in properties )
-					{
-						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.Font )
-						{
-							Common.Text.Properties.FontProperty font = property as Common.Text.Properties.FontProperty;
-							return font.StyleName;
-						}
-					}
-				}
-
-				if ( name == "FontSize" )
-				{
-					Common.Text.Property[] properties = sequence.ValueProperties;
-					foreach ( Common.Text.Property property in properties )
-					{
-						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontSize )
-						{
-							Common.Text.Properties.FontSizeProperty size = property as Common.Text.Properties.FontSizeProperty;
-							//?return size.Size;
-						}
-					}
-				}
-
-				if ( name == "FontOffset" )
-				{
-					Common.Text.Property[] properties = sequence.ValueProperties;
-					foreach ( Common.Text.Property property in properties )
-					{
-						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontOffset )
-						{
-							Common.Text.Properties.FontOffsetProperty offset = property as Common.Text.Properties.FontOffsetProperty;
-							//?return offset.Offset;
-						}
-					}
-				}
+				if ( part == "Prefix" )  properties = sequence.PrefixProperties;
+				if ( part == "Value"  )  properties = sequence.ValueProperties;
+				if ( part == "Suffix" )  properties = sequence.SuffixProperties;
 
 				if ( name == "SupressBefore" )
 				{
@@ -406,10 +326,61 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 
+			if ( properties != null )
+			{
+				if ( name == "FontFace" )
+				{
+					foreach ( Common.Text.Property property in properties )
+					{
+						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.Font )
+						{
+							Common.Text.Properties.FontProperty font = property as Common.Text.Properties.FontProperty;
+							return font.FaceName;
+						}
+					}
+				}
+
+				if ( name == "FontStyle" )
+				{
+					foreach ( Common.Text.Property property in properties )
+					{
+						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.Font )
+						{
+							Common.Text.Properties.FontProperty font = property as Common.Text.Properties.FontProperty;
+							return font.StyleName;
+						}
+					}
+				}
+
+				if ( name == "FontSize" )
+				{
+					foreach ( Common.Text.Property property in properties )
+					{
+						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontSize )
+						{
+							Common.Text.Properties.FontSizeProperty size = property as Common.Text.Properties.FontSizeProperty;
+							//?return size.Size;
+						}
+					}
+				}
+
+				if ( name == "FontOffset" )
+				{
+					foreach ( Common.Text.Property property in properties )
+					{
+						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontOffset )
+						{
+							Common.Text.Properties.FontOffsetProperty offset = property as Common.Text.Properties.FontOffsetProperty;
+							//?return offset.Offset;
+						}
+					}
+				}
+			}
+
 			return null;
 		}
 
-		protected void SetValue(int level, string name, string value)
+		protected void SetValue(int level, string part, string name, string value)
 		{
 		}
 

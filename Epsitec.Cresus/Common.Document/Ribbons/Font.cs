@@ -34,12 +34,13 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonSuperscript   = this.CreateIconButton("FontSuperscript");
 			this.buttonClear         = this.CreateIconButton("FontClear");
 
-			if ( this.debugMode == DebugMode.DebugCommands )
-			{
-				this.buttonStyle = new Button(this);
-				this.buttonStyle.Text = "S";
-				this.buttonStyle.Clicked += new MessageEventHandler(this.HandleButtonStyleClicked);
-			}
+			this.buttonStyle = new Button(this);
+			this.buttonStyle.Text = "S";
+			this.buttonStyle.Clicked += new MessageEventHandler(this.HandleButtonStyleClicked);
+
+			this.buttonMW = new Button(this);
+			this.buttonMW.Text = "MW";
+			this.buttonMW.Clicked += new MessageEventHandler(this.HandleButtonMWClicked);
 
 			this.UpdateClientGeometry();
 		}
@@ -135,11 +136,10 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(dx+10, 0);
 			this.buttonClear.Bounds = rect;
 
-			if ( this.buttonStyle != null )
-			{
-				rect.Offset(dx+10, 0);
-				this.buttonStyle.Bounds = rect;
-			}
+			rect.Offset(dx+10, 0);
+			this.buttonStyle.Bounds = rect;
+			rect.Offset(0, dy+5);
+			this.buttonMW.Bounds = rect;
 		}
 
 
@@ -212,6 +212,16 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
+		private void HandleButtonMWClicked(object sender, MessageEventArgs e)
+		{
+			Objects.TextBox2 text = this.document.Modifier.RetEditObject() as Objects.TextBox2;
+			if ( text != null )
+			{
+				TextFlow flow = text.TextFlow;
+				// TODO: ...
+			}
+		}
+
 
 		protected Widgets.ButtonFontFace CreateButtonFontFace(string command)
 		{
@@ -250,5 +260,6 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonSuperscript;
 		protected IconButton				buttonClear;
 		protected Button					buttonStyle;
+		protected Button					buttonMW;
 	}
 }
