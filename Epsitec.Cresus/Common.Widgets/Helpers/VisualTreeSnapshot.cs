@@ -19,12 +19,11 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				//	Enregistre l'état de toutes les propriétés héritées.
 				
-				Types.Property[] properties = visual.ObjectType.GetProperties ();
-				System.Type      type       = visual.GetType ();
+				System.Type type = visual.GetType ();
 				
-				for (int i = 0; i < properties.Length; i++)
+				foreach (Types.Property prop in visual.ObjectType.GetProperties ())
 				{
-					VisualPropertyMetadata metadata = properties[i].GetMetadata (type) as VisualPropertyMetadata;
+					VisualPropertyMetadata metadata = prop.GetMetadata (type) as VisualPropertyMetadata;
 					
 					if ((metadata != null) &&
 						(metadata.InheritsValue))

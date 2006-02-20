@@ -198,7 +198,7 @@ namespace Epsitec.Common.Types
 		{
 			source = this.binding.Source;
 			path   = this.binding.Path;
-			
+
 			if (source == null)
 			{
 				//	Our binding is not explicitely attached to a source; we will
@@ -211,6 +211,10 @@ namespace Epsitec.Common.Types
 					source = this.dataContext.Source;
 					path   = PropertyPath.Combine (this.dataContext.Path, path);
 				}
+			}
+			else
+			{
+				this.SetDataContext (null);
 			}
 		}
 
