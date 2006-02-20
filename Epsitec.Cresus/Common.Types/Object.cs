@@ -410,6 +410,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
+
 		Dictionary<Property, object>						properties = new Dictionary<Property, object> ();
 		Dictionary<Property, BindingExpression>				bindings;
 		Dictionary<Property, PropertyChangedEventHandler>	propertyEvents;
