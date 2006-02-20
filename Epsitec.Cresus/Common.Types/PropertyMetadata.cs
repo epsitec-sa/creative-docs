@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -16,7 +16,6 @@ namespace Epsitec.Common.Types
 		{
 			this.default_value = default_value;
 		}
-		
 		public PropertyMetadata(object default_value, PropertyInvalidatedCallback property_invalidated_callback)
 		{
 			this.default_value = default_value;
@@ -27,20 +26,17 @@ namespace Epsitec.Common.Types
 		{
 			this.get_value_override = get_value_override_callback;
 		}
-		
 		public PropertyMetadata(GetValueOverrideCallback get_value_override_callback, SetValueOverrideCallback set_value_override_callback)
 		{
 			this.get_value_override = get_value_override_callback;
 			this.set_value_override = set_value_override_callback;
 		}
-		
 		public PropertyMetadata(GetValueOverrideCallback get_value_override_callback, SetValueOverrideCallback set_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback)
 		{
 			this.get_value_override = get_value_override_callback;
 			this.set_value_override = set_value_override_callback;
 			this.property_invalidated = property_invalidated_callback;
 		}
-		
 		public PropertyMetadata(GetValueOverrideCallback get_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback)
 		{
 			this.get_value_override = get_value_override_callback;
@@ -53,20 +49,17 @@ namespace Epsitec.Common.Types
 			this.get_value_override = get_value_override_callback;
 			this.set_value_override = set_value_override_callback;
 		}
-		
 		public PropertyMetadata(object default_value, GetValueOverrideCallback get_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback)
 		{
 			this.default_value        = default_value;
 			this.get_value_override   = get_value_override_callback;
 			this.property_invalidated = property_invalidated_callback;
 		}
-		
 		public PropertyMetadata(object default_value, GetValueOverrideCallback get_value_override_callback)
 		{
 			this.default_value      = default_value;
 			this.get_value_override = get_value_override_callback;
 		}
-		
 		public PropertyMetadata(object default_value, SetValueOverrideCallback set_value_override_callback)
 		{
 			this.default_value      = default_value;
@@ -93,7 +86,6 @@ namespace Epsitec.Common.Types
 				this.get_value_override = value;
 			}
 		}
-		
 		public SetValueOverrideCallback			SetValueOverride
 		{
 			get
@@ -117,22 +109,27 @@ namespace Epsitec.Common.Types
 				this.property_invalidated = value;
 			}
 		}
-		
-		
+		public virtual bool						InheritsValue
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+
+		public virtual object CreateDefaultValue()
+		{
+			object value     = this.DefaultValue;
+			System.ICloneable cloneable = value as System.ICloneable;
+
+			return (cloneable == null) ? value : cloneable.Clone ();
+		}
+
 		internal void NotifyPropertyInvalidated(Object sender, object old_value, object new_value)
 		{
 			this.OnPropertyInvalidated (sender, old_value, new_value);
 		}
-		
-		
-		public virtual object CreateDefaultValue()
-		{
-			object            value     = this.DefaultValue;
-			System.ICloneable cloneable = value as System.ICloneable;
-			
-			return (cloneable == null) ? value : cloneable.Clone ();
-		}
-		
 		
 		protected virtual void OnPropertyInvalidated(Object sender, object old_value, object new_value)
 		{

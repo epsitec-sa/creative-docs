@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Helpers
@@ -15,7 +15,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		public VisualPropertyMetadata(object default_value) : base (default_value)
 		{
 		}
-		
 		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback) : base (default_value, property_invalidated_callback)
 		{
 		}
@@ -23,42 +22,36 @@ namespace Epsitec.Common.Widgets.Helpers
 		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback) : base (get_value_override_callback)
 		{
 		}
-		
-		public VisualPropertyMetadata(VisualPropertyFlags flags)
-		{
-			this.InitialiseFromFlags (flags);
-		}
-		
 		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback, VisualPropertyFlags flags) : base (get_value_override_callback)
 		{
 			this.InitialiseFromFlags (flags);
 		}
-		
 		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyFlags flags) : base (get_value_override_callback, property_invalidated_callback)
 		{
 			this.InitialiseFromFlags (flags);
 		}
-		
+
+		public VisualPropertyMetadata(VisualPropertyFlags flags)
+		{
+			this.InitialiseFromFlags (flags);
+		}
+
 		public VisualPropertyMetadata(object default_value, VisualPropertyFlags flags) : base (default_value)
 		{
 			this.InitialiseFromFlags (flags);
 		}
-		
 		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, VisualPropertyFlags flags) : base (default_value, get_value_override_callback)
 		{
 			this.InitialiseFromFlags (flags);
 		}
-		
 		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyFlags flags) : base (default_value, property_invalidated_callback)
 		{
 			this.InitialiseFromFlags (flags);
 		}
-		
 		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyFlags flags) : base (default_value, get_value_override_callback, property_invalidated_callback)
 		{
 			this.InitialiseFromFlags (flags);
 		}
-		
 		public VisualPropertyMetadata(object default_value, Types.SetValueOverrideCallback set_value_override_callback, VisualPropertyFlags flags) : base (default_value, set_value_override_callback)
 		{
 			this.InitialiseFromFlags (flags);
@@ -76,7 +69,6 @@ namespace Epsitec.Common.Widgets.Helpers
 				this.affects_layout = value;
 			}
 		}
-		
 		public bool								AffectsParentLayout
 		{
 			get
@@ -88,7 +80,6 @@ namespace Epsitec.Common.Widgets.Helpers
 				this.affects_parent_layout = value;
 			}
 		}
-		
 		public bool								AffectsDisplay
 		{
 			get
@@ -101,14 +92,13 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
-		public bool								InheritsValue
+		public override bool					InheritsValue
 		{
 			get
 			{
 				return this.inherits_value;
 			}
 		}
-		
 		
 		protected virtual void InitialiseFromFlags(VisualPropertyFlags flags)
 		{
