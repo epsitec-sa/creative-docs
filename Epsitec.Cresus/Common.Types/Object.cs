@@ -68,8 +68,15 @@ namespace Epsitec.Common.Types
 			if (value == UndefinedValue.Instance)
 			{
 				PropertyMetadata metadata = property.GetMetadata (this);
-				
-				//	TODO: faire mieux...
+
+				if (metadata.InheritsValue)
+				{
+					//	TODO: trouver la valeur héritée
+				}
+				else
+				{
+					//	TODO: faire mieux...
+				}
 				
 				value = metadata.CreateDefaultValue ();
 			}
