@@ -247,6 +247,7 @@
     <Compile Include="UndefinedValue.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ObjectTreeSnapshot.cs" />
     <Compile Include="VoidType.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -219,7 +219,6 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
-
 		private void FindDataSourceRoot(out object source, out PropertyPath path)
 		{
 			source = this.binding.Source;
@@ -322,18 +321,6 @@ namespace Epsitec.Common.Types
 					break;
 			}
 		}
-
-		private static void Attach(BindingExpression expression, List<SourcePropertyPair> list)
-		{
-			if (list != null)
-			{
-				foreach (SourcePropertyPair pair in list)
-				{
-					pair.Source.AddEventHandler (pair.Property, expression.HandleBreadcrumbChanged);
-				}
-			}
-		}
-		
 		private void InternalDetachFromSource()
 		{
 			System.Diagnostics.Debug.Assert (this.sourceObject != null);
@@ -352,17 +339,6 @@ namespace Epsitec.Common.Types
 			this.sourceBreadcrumbs = null;
 		}
 
-		private static void Detach(BindingExpression expression, List<SourcePropertyPair> list)
-		{
-			if (list != null)
-			{
-				foreach (SourcePropertyPair pair in list)
-				{
-					pair.Source.RemoveEventHandler (pair.Property, expression.HandleBreadcrumbChanged);
-				}
-			}
-		}
-
 		private void HandleSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			this.InternalUpdateTarget (e.NewValue);
@@ -376,11 +352,32 @@ namespace Epsitec.Common.Types
 		{
 			source.AddEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
+		private static void Attach(BindingExpression expression, List<SourcePropertyPair> list)
+		{
+			if (list != null)
+			{
+				foreach (SourcePropertyPair pair in list)
+				{
+					pair.Source.AddEventHandler (pair.Property, expression.HandleBreadcrumbChanged);
+				}
+			}
+		}
 		private static void Detach(BindingExpression expression, Object source, Property property)
 		{
 			source.RemoveEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
+		private static void Detach(BindingExpression expression, List<SourcePropertyPair> list)
+		{
+			if (list != null)
+			{
+				foreach (SourcePropertyPair pair in list)
+				{
+					pair.Source.RemoveEventHandler (pair.Property, expression.HandleBreadcrumbChanged);
+				}
+			}
+		}
 
+		#region Private SourcePropertyPair Structure
 		private struct SourcePropertyPair
 		{
 			public SourcePropertyPair(Object source, Property property)
@@ -407,6 +404,7 @@ namespace Epsitec.Common.Types
 			private Object source;
 			private Property property;
 		}
+		#endregion
 
 		private Binding							binding;
 		private Object							targetObject;

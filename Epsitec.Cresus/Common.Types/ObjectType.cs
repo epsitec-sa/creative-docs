@@ -13,8 +13,8 @@ namespace Epsitec.Common.Types
 	{
 		private ObjectType(System.Type system_type, ObjectType base_type)
 		{
-			this.system_type = system_type;
-			this.base_type   = base_type;
+			this.systemType = system_type;
+			this.baseType   = base_type;
 		}
 		
 		
@@ -22,21 +22,21 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.base_type;
+				return this.baseType;
 			}
 		}
 		public System.Type						SystemType
 		{
 			get
 			{
-				return this.system_type;
+				return this.systemType;
 			}
 		}
 		public string							Name
 		{
 			get
 			{
-				return this.system_type.Name;
+				return this.systemType.Name;
 			}
 		}
 		
@@ -80,21 +80,38 @@ namespace Epsitec.Common.Types
 		public void Register(Property property)
 		{
 			System.Diagnostics.Debug.Assert (property.OwnerType == this.SystemType);
-			System.Diagnostics.Debug.Assert (this.local_properties != null);
-			
-			this.local_properties.Add (property);
+			System.Diagnostics.Debug.Assert (this.localStandardProperties != null);
+			System.Diagnostics.Debug.Assert (this.localAttachedProperties != null);
+
+			if (property.IsAttached)
+			{
+				this.localAttachedProperties.Add (property);
+			}
+			else
+			{
+				this.localStandardProperties.Add (property);
+			}
 		}
-		
+
 		public ReadOnlyArray<Property> GetProperties()
 		{
-			if (this.all_properties == null)
+			if (this.standardPropertiesArray == null)
 			{
 				this.BuildPropertyList ();
 			}
-			
-			return new ReadOnlyArray<Property> (this.all_properties);
+
+			return new ReadOnlyArray<Property> (this.standardPropertiesArray);
 		}
-		
+		public ReadOnlyArray<Property> GetAttachedProperties()
+		{
+			if (this.attachedPropertiesArray == null)
+			{
+				this.BuildPropertyList ();
+			}
+
+			return new ReadOnlyArray<Property> (this.attachedPropertiesArray);
+		}
+
 		public Property GetProperty(string name)
 		{
 			if (this.lookup == null)
@@ -125,30 +142,37 @@ namespace Epsitec.Common.Types
 		{
 			lock (this)
 			{
-				if (this.all_properties == null)
+				if (this.standardPropertiesArray == null)
 				{
-					ICollection<Property> base_properties;
+					ICollection<Property> baseProperties;
 
 					if (this.BaseType == null)
 					{
-						base_properties = new Property[0];
+						baseProperties = new Property[0];
 					}
 					else
 					{
-						base_properties = this.BaseType.GetProperties ();
+						baseProperties = this.BaseType.GetProperties ();
 					}
 
-					Property[] all_properties  = new Property[base_properties.Count + this.local_properties.Count];
+					Property[] allProperties  = new Property[baseProperties.Count + this.localStandardProperties.Count];
 
-					base_properties.CopyTo (all_properties, 0);
-					this.local_properties.CopyTo (all_properties, base_properties.Count);
+					baseProperties.CopyTo (allProperties, 0);
+					this.localStandardProperties.CopyTo (allProperties, baseProperties.Count);
 
-					this.all_properties   = all_properties;
-					this.local_properties = null;
+					this.standardPropertiesArray = allProperties;
+					this.attachedPropertiesArray = this.localAttachedProperties.ToArray ();
+					
+					this.localStandardProperties = null;
+					this.localAttachedProperties = null;
 
-					this.lookup = new Dictionary<string, Property> (this.all_properties.Length);
+					this.lookup = new Dictionary<string, Property> (this.standardPropertiesArray.Length);
 
-					foreach (Property property in this.all_properties)
+					foreach (Property property in this.standardPropertiesArray)
+					{
+						this.lookup[property.Name] = property;
+					}
+					foreach (Property property in this.attachedPropertiesArray)
 					{
 						this.lookup[property.Name] = property;
 					}
@@ -193,10 +217,12 @@ namespace Epsitec.Common.Types
 		#endregion
 
 
-		private ObjectType						base_type;
-		private System.Type						system_type;
-		private List<Property>					local_properties = new List<Property> ();
-		private Property[]						all_properties;
+		private ObjectType						baseType;
+		private System.Type						systemType;
+		private List<Property>					localStandardProperties = new List<Property> ();
+		private List<Property>					localAttachedProperties = new List<Property> ();
+		private Property[]						standardPropertiesArray;
+		private Property[]						attachedPropertiesArray;
 		private Dictionary<string, Property>	lookup;
 
 		static Dictionary<System.Type, ObjectType> types = new Dictionary<System.Type, ObjectType> ();

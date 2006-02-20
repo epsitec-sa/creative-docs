@@ -23,18 +23,18 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.cached_type == null)
+				if (this.cachedType == null)
 				{
 					lock (this.properties)
 					{
-						if (this.cached_type == null)
+						if (this.cachedType == null)
 						{
-							this.cached_type = ObjectType.FromSystemType (this.GetType ());
+							this.cachedType = ObjectType.FromSystemType (this.GetType ());
 						}
 					}
 				}
 				
-				return this.cached_type;
+				return this.cachedType;
 			}
 		}
 		public IEnumerable<LocalValueEntry>		LocalValueEntries
@@ -328,29 +328,30 @@ namespace Epsitec.Common.Types
 			
 			lock (Object.declarations)
 			{
-				TypeDeclaration type_declaration;
+				TypeDeclaration typeDeclaration;
 
 				if (Object.declarations.ContainsKey (property.OwnerType) == false)
 				{
-					type_declaration = new TypeDeclaration ();
-					type_declaration[property.Name] = property;
-					Object.declarations[property.OwnerType] = type_declaration;
+					typeDeclaration = new TypeDeclaration ();
+					typeDeclaration[property.Name] = property;
+					Object.declarations[property.OwnerType] = typeDeclaration;
 				}
 				else
 				{
-					type_declaration = Object.declarations[property.OwnerType];
+					typeDeclaration = Object.declarations[property.OwnerType];
 					
-					if (type_declaration.ContainsKey (property.Name))
+					if (typeDeclaration.ContainsKey (property.Name))
 					{
 						throw new System.ArgumentException (string.Format ("Property named {0} already exists for type {1}", property.Name, property.OwnerType));
 					}
 					else
 					{
-						type_declaration[property.Name] = property;
+						typeDeclaration[property.Name] = property;
 					}
 				}
 				
-				ObjectType.FromSystemType (property.OwnerType).Register (property);
+				ObjectType type = ObjectType.FromSystemType (property.OwnerType);
+				type.Register (property);
 			}
 		}
 
@@ -363,7 +364,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		#region LocalValueEnumerator Class
+		#region Private LocalValueEnumerator Structure
 		private struct LocalValueEnumerator : IEnumerator<LocalValueEntry>, IEnumerable<LocalValueEntry>
 		{
 			public LocalValueEnumerator(Object o)
@@ -411,18 +412,19 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
-		#region TypeDeclaration Class
+		#region Private TypeDeclaration Class
 		private class TypeDeclaration : Dictionary<string, Property>
 		{
 		}
 		#endregion
-
+		
+		
 
 		Dictionary<Property, object>						properties = new Dictionary<Property, object> ();
 		Dictionary<Property, BindingExpression>				bindings;
 		Dictionary<Property, PropertyChangedEventHandler>	propertyEvents;
 		Dictionary<string, System.Delegate>					userEvents;
-		ObjectType											cached_type;
+		ObjectType											cachedType;
 
 		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
 	}
