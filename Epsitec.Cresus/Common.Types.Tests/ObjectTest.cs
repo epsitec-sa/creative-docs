@@ -33,13 +33,13 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("abc", PropertyPath.Combine (pp2, pp1).GetFullPath ());
 			Assert.AreEqual (null, PropertyPath.Combine (pp1, pp1).GetFullPath ());
 		}
-		
+
 		[Test]
-		public void CheckBinding()
+		public void CheckBinding1()
 		{
 			Binding bindingName = new Binding ();
 			Binding bindingXyz = new Binding ();
-			
+
 			MyObject mySource = new MyObject ();
 			MyObject myData = new MyObject ();
 			MyObject myTarget = new MyObject ();
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Types
 
 				myTarget.SetBinding (MyObject.FooProperty, bindingName);
 			}
-			
+
 			using (bindingXyz.DeferChanges ())
 			{
 				bindingXyz.Mode = BindingMode.TwoWay;
@@ -69,14 +69,59 @@ namespace Epsitec.Common.Types
 				myTarget.SetBinding (MyObject.XyzProperty, bindingXyz);
 			}
 
-			Assert.AreEqual ("Jean Dupont", myTarget.GetValue (MyObject.FooProperty));
-			Assert.AreEqual (999, myTarget.GetValue (MyObject.XyzProperty));
+			Assert.AreEqual ("Jean Dupont", myTarget.Foo);
+			Assert.AreEqual (999, myTarget.Xyz);
 
-			mySource.SetValue (MyObject.NameProperty, "Jeanne Dupont");
-			myData.SetValue (MyObject.XyzProperty, 888);
+			mySource.Name = "Jeanne Dupont";
+			myData.Xyz = 888;
+
+			Assert.AreEqual ("Jeanne Dupont", myTarget.Foo);
+			Assert.AreEqual (888, myTarget.Xyz);
+		}
+
+		[Test]
+		public void CheckBinding2()
+		{
+			Binding bindingXyz = new Binding ();
+			Binding bindingContext = new Binding ();
+
+			MyObject mySource1 = new MyObject ();
+			MyObject mySource2 = new MyObject ();
+			MyObject myData1 = new MyObject ();
+			MyObject myData2 = new MyObject ();
+			MyObject myTarget = new MyObject ();
+
+			mySource1.Xyz  = 1;
+			mySource1.Sibling = myData1;
 			
-			Assert.AreEqual ("Jeanne Dupont", myTarget.GetValue (MyObject.FooProperty));
-			Assert.AreEqual (888, myTarget.GetValue (MyObject.XyzProperty));
+			mySource2.Xyz  = 2;
+			mySource2.Sibling = myData2;
+
+			myData1.Xyz = 999;
+			myData2.Xyz = 888;
+
+			bindingContext.Source = mySource1;
+			bindingContext.Path = new PropertyPath ("Sibling");
+
+			DataObject.SetDataContext (myTarget, bindingContext);
+
+			bindingXyz.Mode = BindingMode.TwoWay;
+			bindingXyz.Path = new PropertyPath ("Xyz");
+
+			myTarget.SetBinding (MyObject.XyzProperty, bindingXyz);
+			Assert.AreEqual (999, myTarget.Xyz);
+
+			myData1.Xyz = 777;
+			Assert.AreEqual (777, myTarget.Xyz);
+
+			bindingContext.Source = mySource2;
+			Assert.AreEqual (888, myTarget.Xyz);
+
+			bindingContext.Source = mySource1;
+			Assert.AreEqual (777, myTarget.Xyz);
+
+			mySource1.Sibling = myData2;
+			Assert.AreEqual (888, myTarget.Xyz);
 		}
 
 		[Test]
@@ -275,7 +320,6 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyObject.XyzProperty, value);
 				}
 			}
-			
 			public string			Name
 			{
 				get
@@ -287,7 +331,6 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyObject.NameProperty, value);
 				}
 			}
-			
 			public string			Foo
 			{
 				get
@@ -297,6 +340,17 @@ namespace Epsitec.Common.Types
 				set
 				{
 					this.SetValue (MyObject.FooProperty, value);
+				}
+			}
+			public MyObject			Sibling
+			{
+				get
+				{
+					return this.GetValue (MyObject.SiblingProperty) as MyObject;
+				}
+				set
+				{
+					this.SetValue (MyObject.SiblingProperty, value);
 				}
 			}
 			

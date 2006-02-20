@@ -76,25 +76,34 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		internal void RefreshSourceBinding()
+		{
+			this.DetachFromSource ();
+			this.AttachToSource ();
+			this.UpdateTarget (BindingUpdateMode.Reset);
+		}
 		internal void AttachToSource()
 		{
-			Object            sourceObject;
-			Property          sourceProperty;
-			BindingSourceType sourceType;
+			Object						sourceObject;
+			Property					sourceProperty;
+			BindingSourceType			sourceType;
+			List<SourcePropertyPair>	sourceBreadcrumbs;
 
-			if (this.FindDataSource (out sourceObject, out sourceProperty, out sourceType))
+			if (this.FindDataSource (out sourceObject, out sourceProperty, out sourceType, out sourceBreadcrumbs))
 			{
-				this.sourceObject   = sourceObject;
-				this.sourceProperty = sourceProperty;
-				this.sourceType     = sourceType;
+				this.sourceObject      = sourceObject;
+				this.sourceProperty    = sourceProperty;
+				this.sourceType        = sourceType;
+				this.sourceBreadcrumbs = sourceBreadcrumbs;
 
 				this.InternalAttachToSource ();
 			}
 			else
 			{
-				this.sourceObject   = null;
-				this.sourceProperty = null;
-				this.sourceType     = BindingSourceType.None;
+				this.sourceObject      = null;
+				this.sourceProperty    = null;
+				this.sourceType        = BindingSourceType.None;
+				this.sourceBreadcrumbs = null;
 			}
 		}
 		internal void DetachFromSource()
@@ -114,6 +123,9 @@ namespace Epsitec.Common.Types
 			expression.binding = binding;
 			expression.targetObject = target;
 			expression.targetPropery = property;
+
+			expression.AttachToSource ();
+			expression.UpdateTarget (BindingUpdateMode.Reset);
 			
 			return expression;
 		}
@@ -144,12 +156,13 @@ namespace Epsitec.Common.Types
 				throw new System.InvalidOperationException ("Broken binding");
 			}
 		}
-		
-		private bool FindDataSource(out Object source, out Property property, out BindingSourceType type)
+
+		private bool FindDataSource(out Object source, out Property property, out BindingSourceType type, out List<SourcePropertyPair> breadcrumbs)
 		{
-			type     = BindingSourceType.None;
-			source   = null;
-			property = null;
+			type        = BindingSourceType.None;
+			source      = null;
+			property    = null;
+			breadcrumbs = null;
 
 			object root;
 			PropertyPath path;
@@ -170,6 +183,13 @@ namespace Epsitec.Common.Types
 				{
 					if (i > 0)
 					{
+						if (breadcrumbs == null)
+						{
+							breadcrumbs = new List<SourcePropertyPair> ();
+						}
+						
+						breadcrumbs.Add (new SourcePropertyPair (source, property));
+						
 						source = source.GetValue (property) as Object;
 						
 						if (source == null)
@@ -187,6 +207,12 @@ namespace Epsitec.Common.Types
 				}
 
 				type = BindingSourceType.PropertyObject;
+				
+				//	If we have traversed several data source objects to arrive
+				//	at the leaf 'source', we must register with them in order
+				//	to detect changes :
+				
+
 
 				return true;
 			}
@@ -222,9 +248,12 @@ namespace Epsitec.Common.Types
 		{
 			if (this.dataContext != value)
 			{
+				bool wasRegistered = false;
+				
 				if (this.dataContext != null)
 				{
 					this.dataContext.Remove (this);
+					wasRegistered = true;
 				}
 				
 				this.dataContext = value;
@@ -235,10 +264,26 @@ namespace Epsitec.Common.Types
 				if (this.dataContext != null)
 				{
 					this.dataContext.Add (this);
+
+					if (!wasRegistered)
+					{
+						this.targetObject.AddEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
+					}
+				}
+				else
+				{
+					if (wasRegistered)
+					{
+						this.targetObject.RemoveEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
+					}
 				}
 			}
 		}
 
+		private void HandleDataContextChanged(object sender, PropertyChangedEventArgs e)
+		{
+			this.RefreshSourceBinding ();
+		}
 
 		private void InternalUpdateSource()
 		{
@@ -273,9 +318,22 @@ namespace Epsitec.Common.Types
 			{
 				case BindingSourceType.PropertyObject:
 					BindingExpression.Attach (this, this.sourceObject as Object, this.sourceProperty);
+					BindingExpression.Attach (this, this.sourceBreadcrumbs);
 					break;
 			}
 		}
+
+		private static void Attach(BindingExpression expression, List<SourcePropertyPair> list)
+		{
+			if (list != null)
+			{
+				foreach (SourcePropertyPair pair in list)
+				{
+					pair.Source.AddEventHandler (pair.Property, expression.HandleBreadcrumbChanged);
+				}
+			}
+		}
+		
 		private void InternalDetachFromSource()
 		{
 			System.Diagnostics.Debug.Assert (this.sourceObject != null);
@@ -284,7 +342,24 @@ namespace Epsitec.Common.Types
 			{
 				case BindingSourceType.PropertyObject:
 					BindingExpression.Detach (this, this.sourceObject as Object, this.sourceProperty);
+					BindingExpression.Detach (this, this.sourceBreadcrumbs);
 					break;
+			}
+
+			this.sourceObject      = null;
+			this.sourceProperty    = null;
+			this.sourceType        = BindingSourceType.None;
+			this.sourceBreadcrumbs = null;
+		}
+
+		private static void Detach(BindingExpression expression, List<SourcePropertyPair> list)
+		{
+			if (list != null)
+			{
+				foreach (SourcePropertyPair pair in list)
+				{
+					pair.Source.RemoveEventHandler (pair.Property, expression.HandleBreadcrumbChanged);
+				}
 			}
 		}
 
@@ -292,14 +367,45 @@ namespace Epsitec.Common.Types
 		{
 			this.InternalUpdateTarget (e.NewValue);
 		}
+		private void HandleBreadcrumbChanged(object sender, PropertyChangedEventArgs e)
+		{
+			this.RefreshSourceBinding ();
+		}
 
 		private static void Attach(BindingExpression expression, Object source, Property property)
 		{
-			source.AddEventHandler (property, new PropertyChangedEventHandler (expression.HandleSourcePropertyChanged));
+			source.AddEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
 		private static void Detach(BindingExpression expression, Object source, Property property)
 		{
-			source.RemoveEventHandler (property, new PropertyChangedEventHandler (expression.HandleSourcePropertyChanged));
+			source.RemoveEventHandler (property, expression.HandleSourcePropertyChanged);
+		}
+
+		private struct SourcePropertyPair
+		{
+			public SourcePropertyPair(Object source, Property property)
+			{
+				this.source = source;
+				this.property = property;
+			}
+			
+			public Object						Source
+			{
+				get
+				{
+					return this.source;
+				}
+			}
+			public Property						Property
+			{
+				get
+				{
+					return this.property;
+				}
+			}
+			
+			private Object source;
+			private Property property;
 		}
 
 		private Binding							binding;
@@ -308,6 +414,7 @@ namespace Epsitec.Common.Types
 		private object							sourceObject;
 		private Property						sourceProperty;
 		private BindingSourceType				sourceType;
+		private List<SourcePropertyPair>		sourceBreadcrumbs;
 		private Binding							dataContext;
 	}
 }
