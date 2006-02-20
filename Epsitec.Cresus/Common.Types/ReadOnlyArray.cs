@@ -23,14 +23,14 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.array.Length;
+				return this.array == null ? 0 : this.array.Length;
 			}
 		}
 		public int								Rank
 		{
 			get
 			{
-				return this.array.Rank;
+				return 1;
 			}
 		}
 		public bool								IsFixedSize
@@ -45,6 +45,13 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.array.IsSynchronized;
+			}
+		}
+		public bool								IsNull
+		{
+			get
+			{
+				return this.array == null;
 			}
 		}
 		

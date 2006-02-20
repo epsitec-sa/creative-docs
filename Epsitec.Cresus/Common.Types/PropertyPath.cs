@@ -106,8 +106,38 @@ namespace Epsitec.Common.Types
 			return (p1 == p2) ? false : true;
 		}
 		
+		public static PropertyPath Combine(PropertyPath p1, PropertyPath p2)
+		{
+			if (p1 == null)
+			{
+				return p2;
+			}
+			if (p2 == null)
+			{
+				return p1;
+			}
+
+			string path;
+
+			if ((p1.path == null) ||
+				(p1.path.Length == 0))
+			{
+				path = p2.GetFullPath ();
+			}
+			else if ((p2.path == null) ||
+				/**/ (p2.path.Length == 0))
+			{
+				path = p1.GetFullPath ();
+			}
+			else
+			{
+				path = string.Concat (p1.GetFullPath (), ".", p2.GetFullPath ());
+			}
+
+			return new PropertyPath (path);
+		}
+		
 		private string							path;
 		private Property[]						elements;
-
 	}
 }

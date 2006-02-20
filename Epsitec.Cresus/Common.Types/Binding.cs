@@ -21,9 +21,9 @@ namespace Epsitec.Common.Types
 			{
 				if (this.mode != value)
 				{
-					this.InternalDetach ();
+					this.NotifyBeforeChange ();
 					this.mode = value;
-					this.InternalAttach ();
+					this.NotifyAfterChange ();
 				}
 			}
 		}
@@ -37,9 +37,9 @@ namespace Epsitec.Common.Types
 			{
 				if (this.source != value)
 				{
-					this.InternalDetach ();
+					this.NotifyBeforeChange ();
 					this.source = value;
-					this.InternalAttach ();
+					this.NotifyAfterChange ();
 				}
 			}
 		}
@@ -53,9 +53,9 @@ namespace Epsitec.Common.Types
 			{
 				if (this.path != value)
 				{
-					this.InternalDetach ();
+					this.NotifyBeforeChange ();
 					this.path = value;
-					this.InternalAttach ();
+					this.NotifyAfterChange ();
 				}
 			}
 		}
@@ -74,14 +74,19 @@ namespace Epsitec.Common.Types
 			this.expressions.Remove (expression);
 		}
 
-		private void InternalAttach()
+		private void NotifyBeforeChange()
+		{
+			this.DetachBeforeChanges ();
+		}
+		private void NotifyAfterChange()
 		{
 			if (this.deferCounter == 0)
 			{
-				this.InternalAttachAfterChanges ();
+				this.AttachAfterChanges ();
 			}
 		}
-		private void InternalDetach()
+
+		private void DetachBeforeChanges()
 		{
 			if (this.state == State.SourceAttached)
 			{
@@ -93,13 +98,12 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-
-		private void InternalAttachAfterChanges()
+		private void AttachAfterChanges()
 		{
 			if (this.state == State.SourceDetached)
 			{
 				this.state = State.SourceAttached;
-				
+
 				foreach (BindingExpression expression in this.expressions)
 				{
 					expression.AttachToSource ();
@@ -122,7 +126,7 @@ namespace Epsitec.Common.Types
 			{
 				if (System.Threading.Interlocked.Decrement (ref this.binding.deferCounter) == 0)
 				{
-					this.binding.InternalAttachAfterChanges ();
+					this.binding.AttachAfterChanges ();
 				}
 			}
 			#endregion

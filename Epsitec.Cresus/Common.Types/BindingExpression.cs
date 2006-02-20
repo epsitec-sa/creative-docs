@@ -82,18 +82,27 @@ namespace Epsitec.Common.Types
 			Property          sourceProperty;
 			BindingSourceType sourceType;
 
-			if (this.AnalyseSource (out sourceObject, out sourceProperty, out sourceType))
+			if (this.FindDataSource (out sourceObject, out sourceProperty, out sourceType))
 			{
 				this.sourceObject   = sourceObject;
 				this.sourceProperty = sourceProperty;
 				this.sourceType     = sourceType;
-				
+
 				this.InternalAttachToSource ();
+			}
+			else
+			{
+				this.sourceObject   = null;
+				this.sourceProperty = null;
+				this.sourceType     = BindingSourceType.None;
 			}
 		}
 		internal void DetachFromSource()
 		{
-			this.InternalDetachFromSource ();
+			if (this.sourceObject != null)
+			{
+				this.InternalDetachFromSource ();
+			}
 		}
 		
 		internal static BindingExpression BindToTarget(Object target, Property property, Binding binding)
@@ -118,6 +127,7 @@ namespace Epsitec.Common.Types
 
 			this.binding.Remove (this);
 			this.InternalDetachFromSource ();
+			this.SetDataContext (null);
 			
 			this.binding = null;
 			this.targetObject = null;
@@ -135,13 +145,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		private bool AnalyseSource(out Object source, out Property property, out BindingSourceType type)
+		private bool FindDataSource(out Object source, out Property property, out BindingSourceType type)
 		{
 			type     = BindingSourceType.None;
-			source   = this.binding.Source as Object;
+			source   = null;
 			property = null;
 
-			PropertyPath path = this.binding.Path;
+			object root;
+			PropertyPath path;
+
+			this.FindDataSourceRoot (out root, out path);
+
+			source = root as Object;
 			
 			if ((source != null) &&
 				(path != null))
@@ -179,6 +194,48 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 
+		private void FindDataSourceRoot(out object source, out PropertyPath path)
+		{
+			source = this.binding.Source;
+			path   = this.binding.Path;
+			
+			if (source == null)
+			{
+				//	Our binding is not explicitely attached to a source; we will
+				//	have to use the target's DataContext instead.
+
+				this.SetDataContext (DataObject.GetDataContext (this.targetObject));
+
+				if (this.dataContext != null)
+				{
+					source = this.dataContext.Source;
+					path   = PropertyPath.Combine (this.dataContext.Path, path);
+				}
+			}
+		}
+
+		private void SetDataContext(Binding value)
+		{
+			if (this.dataContext != value)
+			{
+				if (this.dataContext != null)
+				{
+					this.dataContext.Remove (this);
+				}
+				
+				this.dataContext = value;
+				
+				//	Attach to data context in order to be informed if the
+				//	source changes:
+
+				if (this.dataContext != null)
+				{
+					this.dataContext.Add (this);
+				}
+			}
+		}
+
+
 		private void InternalUpdateSource()
 		{
 			//	TODO: update source
@@ -206,26 +263,24 @@ namespace Epsitec.Common.Types
 
 		private void InternalAttachToSource()
 		{
-			if (this.sourceObject != null)
+			System.Diagnostics.Debug.Assert (this.sourceObject != null);
+			
+			switch (this.sourceType)
 			{
-				switch (this.sourceType)
-				{
-					case BindingSourceType.PropertyObject:
-						BindingExpression.Attach (this, this.sourceObject as Object, this.sourceProperty);
-						break;
-				}
+				case BindingSourceType.PropertyObject:
+					BindingExpression.Attach (this, this.sourceObject as Object, this.sourceProperty);
+					break;
 			}
 		}
 		private void InternalDetachFromSource()
 		{
-			if (this.sourceObject != null)
+			System.Diagnostics.Debug.Assert (this.sourceObject != null);
+			
+			switch (this.sourceType)
 			{
-				switch (this.sourceType)
-				{
-					case BindingSourceType.PropertyObject:
-						BindingExpression.Detach (this, this.sourceObject as Object, this.sourceProperty);
-						break;
-				}
+				case BindingSourceType.PropertyObject:
+					BindingExpression.Detach (this, this.sourceObject as Object, this.sourceProperty);
+					break;
 			}
 		}
 
@@ -249,5 +304,6 @@ namespace Epsitec.Common.Types
 		private object							sourceObject;
 		private Property						sourceProperty;
 		private BindingSourceType				sourceType;
+		private Binding							dataContext;
 	}
 }

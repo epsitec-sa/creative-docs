@@ -20,10 +20,18 @@ namespace Epsitec.Common.Types
 			PropertyPath pp1 = new PropertyPath ();
 			PropertyPath pp2 = new PropertyPath ("abc");
 			PropertyPath pp3 = new PropertyPath ("{0}.{1}", MyObject.FooProperty, MyObject.NameProperty);
+			PropertyPath pp4 = new PropertyPath ("Bar.{0}", MyObject.XyzProperty);
 
 			Assert.AreEqual (null, pp1.GetFullPath ());
 			Assert.AreEqual ("abc", pp2.GetFullPath ());
 			Assert.AreEqual ("Foo.Name", pp3.GetFullPath ());
+			Assert.AreEqual ("Bar.Xyz", pp4.GetFullPath ());
+			Assert.IsTrue (pp2.Elements.IsNull);
+			Assert.AreEqual (0, pp2.Elements.Length);
+			Assert.AreEqual ("Foo.Name.Bar.Xyz", PropertyPath.Combine (pp3, pp4).GetFullPath ());
+			Assert.AreEqual ("Bar.Xyz", PropertyPath.Combine (pp1, pp4).GetFullPath ());
+			Assert.AreEqual ("abc", PropertyPath.Combine (pp2, pp1).GetFullPath ());
+			Assert.AreEqual (null, PropertyPath.Combine (pp1, pp1).GetFullPath ());
 		}
 		
 		[Test]

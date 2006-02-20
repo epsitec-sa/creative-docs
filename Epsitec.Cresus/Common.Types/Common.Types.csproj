@@ -127,6 +127,7 @@
     <Compile Include="DataGraph.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataObject.cs" />
     <Compile Include="Date.cs">
       <SubType>Code</SubType>
     </Compile>
