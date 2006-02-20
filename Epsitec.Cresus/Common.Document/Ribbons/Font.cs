@@ -218,7 +218,10 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( text != null )
 			{
 				TextFlow flow = text.TextFlow;
-				// TODO: ...
+				Text.TextStory story = flow.TextStory;
+				Text.TextNavigator navigator = flow.TextNavigator;
+				
+				Epsitec.Common.Text.Exchange.Rosetta.TestCode(story, navigator);
 			}
 		}
 

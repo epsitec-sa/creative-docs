@@ -19,5 +19,12 @@ namespace Epsitec.Common.Text.Exchange
 			
 			return "TODO";
 		}
+
+		public static void TestCode(TextStory story, TextNavigator navigator)
+		{
+			//	TODO: ajouter le code de test; appelé par Crésus Documents
+			
+			System.Diagnostics.Debug.WriteLine ("Code de test appelé.");
+		}
 	}
 }
