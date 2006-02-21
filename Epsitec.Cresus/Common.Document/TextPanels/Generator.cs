@@ -299,10 +299,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected string GetValue(int level, Part1 part1, Part2 part2)
 		{
-			//	Possibilités (level.part.name) :
+			//	Possibilités (level.part1.part2) :
 			//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
 			//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-			//	n.[].[SupressBefore,Tab,Indent]
+			//	n.[Generic].[SupressBefore,Tab,Indent]
 			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )
 			{
 				return null;
@@ -344,12 +344,18 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( part2 == Part2.Tab )
 				{
-					return p.TabItem.ToString();
+					string ta = this.document.TextContext.TabList.GetTabAttribute(p.TabItem);
+					string[] tas = TabList.UnpackFromAttribute(ta);
+					double offset = TabList.GetLevelOffset(0, level-1, tas[0]);
+					return this.document.Modifier.RealToString(offset);
 				}
 
 				if ( part2 == Part2.Indent )
 				{
-					return p.TabBody.ToString();
+					string ta = this.document.TextContext.TabList.GetTabAttribute(p.TabBody);
+					string[] tas = TabList.UnpackFromAttribute(ta);
+					double offset = TabList.GetLevelOffset(0, level-1, tas[0]);
+					return this.document.Modifier.RealToString(offset);
 				}
 			}
 
@@ -386,7 +392,7 @@ namespace Epsitec.Common.Document.TextPanels
 						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontSize )
 						{
 							Common.Text.Properties.FontSizeProperty size = property as Common.Text.Properties.FontSizeProperty;
-							//?return size.Size;
+							return this.document.Modifier.RealToString(size.Size);
 						}
 					}
 				}
@@ -398,7 +404,7 @@ namespace Epsitec.Common.Document.TextPanels
 						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontOffset )
 						{
 							Common.Text.Properties.FontOffsetProperty offset = property as Common.Text.Properties.FontOffsetProperty;
-							//?return offset.Offset;
+							return this.document.Modifier.RealToString(offset.Offset);
 						}
 					}
 				}
@@ -409,10 +415,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void SetValue(int level, Part1 part1, Part2 part2, string value)
 		{
-			//	Possibilités (level.part.name) :
+			//	Possibilités (level.part1.part2) :
 			//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
 			//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-			//	n.[].[SupressBefore,Tab,Indent]
+			//	n.[Generic].[SupressBefore,Tab,Indent]
 			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )
 			{
 				return;
