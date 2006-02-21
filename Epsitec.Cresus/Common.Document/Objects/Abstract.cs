@@ -299,6 +299,7 @@ namespace Epsitec.Common.Document.Objects
 				if ( handle.PropertyType != Properties.Type.None )
 				{
 					Properties.Abstract property = this.Property(handle.PropertyType);
+					if ( property == null )  continue;
 
 					bool isVisible = property.IsHandleVisible(this, handle.PropertyRank) && sel;
 					bool isGlobalSelected = this.globalSelected && handle.IsVisible;

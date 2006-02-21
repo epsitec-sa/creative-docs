@@ -140,8 +140,8 @@
 	<data name="Dialog.Integer.ImageCompression.FaxGroup4">Fax Group 4</data>
 	<data name="Dialog.Integer.ExportPDFColorConversion.Text">Conversion</data>
 	<data name="Dialog.Integer.ExportPDFColorConversion.None">Aucune</data>
-	<data name="Dialog.Integer.ExportPDFColorConversion.ToRGB">Couleurs en RVB</data>
-	<data name="Dialog.Integer.ExportPDFColorConversion.ToCMYK">Couleurs en CMJN</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.ToRgb">Couleurs en RVB</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.ToCmyk">Couleurs en CMJN</data>
 	<data name="Dialog.Integer.ExportPDFColorConversion.ToGray">Couleurs en niveaux de gris</data>
 	<data name="Dialog.Integer.ExportPDFImageCompression.Text">Compression</data>
 	<data name="Dialog.Integer.ExportPDFImageCompression.None">Aucune</data>
@@ -932,8 +932,8 @@
 	<data name="Action.AdjustHeight">Hauteurs identiques</data>
 	<data name="Action.ColorMain">Couleur</data>
 	<data name="Action.Color">Couleurs</data>
-	<data name="Action.ColorToRGB">Toutes les couleurs en RVB</data>
-	<data name="Action.ColorToCMYK">Toutes les couleurs en CMJN</data>
+	<data name="Action.ColorToRgb">Toutes les couleurs en RVB</data>
+	<data name="Action.ColorToCmyk">Toutes les couleurs en CMJN</data>
 	<data name="Action.ColorToGray">Toutes les couleurs en niveaux de gris</data>
 	<data name="Action.ColorValue">Intensité des modifications</data>
 	<data name="Action.ColorStrokeDark">Traits plus foncés</data>
@@ -1355,8 +1355,8 @@
 	<data name="Style.Paragraph.Base">Paragraphe normal</data>
 	<data name="Style.Character.Base">Caractère normal</data>
 	
-	<data name="Color.RGB">RVB</data>
-	<data name="Color.CMYK">CMJN</data>
+	<data name="Color.Rgb">RVB</data>
+	<data name="Color.Cmyk">CMJN</data>
 	<data name="Color.Gray">G</data>
 	<data name="Color.Alpha">a</data>
 	<data name="Color.RegistrationBlack">Noir repérage</data>
