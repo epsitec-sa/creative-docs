@@ -278,6 +278,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected string GetValue(int level, string part, string name)
 		{
+			//	Possibilités (level.part.name) :
+			//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
+			//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
+			//	n.[].[SupressBefore,Tab,Indent]
 			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )
 			{
 				return null;
@@ -290,8 +294,8 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				if ( name == "Text" )
 				{
-					if ( name == "Prefix" )  return p.Generator.GlobalPrefix;
-					if ( name == "Suffix" )  return p.Generator.GlobalSuffix;
+					if ( part == "Prefix" )  return p.Generator.GlobalPrefix;
+					if ( part == "Suffix" )  return p.Generator.GlobalSuffix;
 				}
 
 				if ( part == "Prefix" )  properties = p.Generator.GlobalPrefixProperties;
@@ -319,10 +323,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( name == "Tab" )
 				{
+					return p.TabItem.ToString();
 				}
 
 				if ( name == "Indent" )
 				{
+					return p.TabBody.ToString();
 				}
 			}
 
@@ -382,6 +388,116 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void SetValue(int level, string part, string name, string value)
 		{
+			//	Possibilités (level.part.name) :
+			//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
+			//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
+			//	n.[].[SupressBefore,Tab,Indent]
+			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )
+			{
+				return;
+			}
+
+			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
+			Common.Text.Property[] properties = null;
+
+			if ( level == 0 )
+			{
+				if ( name == "Text" )
+				{
+					if ( part == "Prefix" )  p.Generator.GlobalPrefix = value;
+					if ( part == "Suffix" )  p.Generator.GlobalSuffix = value;
+				}
+
+				if ( part == "Prefix" )  properties = p.Generator.GlobalPrefixProperties;
+				if ( part == "Suffix" )  properties = p.Generator.GlobalSuffixProperties;
+			}
+			else
+			{
+				if ( level-1 >= p.Generator.Count )
+				{
+					//p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
+					// TODO:
+				}
+
+				Common.Text.Generator.Sequence sequence = p.Generator[this.level-1];
+
+				if ( name == "Text" )
+				{
+					if ( part == "Prefix" )  sequence.Prefix = value;
+//					if ( part == "Value"  )  // TODO:
+					if ( part == "Suffix" )  sequence.Suffix = value;
+				}
+
+				if ( part == "Prefix" )  properties = sequence.PrefixProperties;
+				if ( part == "Value"  )  properties = sequence.ValueProperties;
+				if ( part == "Suffix" )  properties = sequence.SuffixProperties;
+
+				if ( name == "SupressBefore" )
+				{
+					sequence.SuppressBefore = (value == "true");
+				}
+
+				if ( name == "Tab" )
+				{
+					// TODO:
+				}
+
+				if ( name == "Indent" )
+				{
+					// TODO:
+				}
+			}
+
+			if ( properties != null )
+			{
+				if ( name == "FontFace" )
+				{
+					foreach ( Common.Text.Property property in properties )
+					{
+						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.Font )
+						{
+							Common.Text.Properties.FontProperty font = property as Common.Text.Properties.FontProperty;
+						}
+					}
+					// TODO:
+				}
+
+				if ( name == "FontStyle" )
+				{
+					foreach ( Common.Text.Property property in properties )
+					{
+						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.Font )
+						{
+							Common.Text.Properties.FontProperty font = property as Common.Text.Properties.FontProperty;
+						}
+					}
+					// TODO:
+				}
+
+				if ( name == "FontSize" )
+				{
+					foreach ( Common.Text.Property property in properties )
+					{
+						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontSize )
+						{
+							Common.Text.Properties.FontSizeProperty size = property as Common.Text.Properties.FontSizeProperty;
+						}
+					}
+					// TODO:
+				}
+
+				if ( name == "FontOffset" )
+				{
+					foreach ( Common.Text.Property property in properties )
+					{
+						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontOffset )
+						{
+							Common.Text.Properties.FontOffsetProperty offset = property as Common.Text.Properties.FontOffsetProperty;
+						}
+					}
+					// TODO:
+				}
+			}
 		}
 
 
