@@ -583,6 +583,61 @@ namespace Epsitec.Common.Text
 			return offset;
 		}
 		
+		public static string CreateLevelTable(double[] offsets)
+		{
+			//	Convertit une table de positions exprimées en points en un
+			//	attribut utilisable pour créer un tabulateur.
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append (TabList.LevelTable);
+			
+			for (int i = 0; i < offsets.Length; i++)
+			{
+				if (i > 0)
+				{
+					buffer.Append (";");
+				}
+				
+				buffer.Append (Properties.UnitsTools.SerializeSizeUnits (offsets[i], Properties.SizeUnits.Points));
+			}
+			
+			return TabList.PackToAttribute (buffer.ToString ());
+		}
+		
+		public static double[] ParseLevelTable(string attribute)
+		{
+			//	Analyse et décortique un argument créé avec CreateLevelTable
+			//	et retourne un tableau des offsets en points.
+			
+			string[] args = TabList.UnpackFromAttribute (attribute);
+			
+			for (int i = 0; i < args.Length; i++)
+			{
+				if (args[i] != null)
+				{
+					if (args[i].StartsWith (TabList.LevelTable))
+					{
+						string   value   = args[i].Substring (TabList.LevelTable.Length);
+						string[] nums    = value.Split (';');
+						double[] offsets = new double[nums.Length];
+						
+						for (int j = 0; j < nums.Length; j++)
+						{
+							double offset;
+							Properties.SizeUnits units;
+							Properties.UnitsTools.DeserializeSizeUnits (nums[j], out offset, out units);
+							offsets[j] = Properties.UnitsTools.ConvertToPoints (offset, units);
+						}
+						
+						return offsets;
+					}
+				}
+			}
+			
+			return new double[0];
+		}
+		
 		
 		private static double GetLevelOffsetFromMultiplier(double font_size_in_points, int level, string value)
 		{

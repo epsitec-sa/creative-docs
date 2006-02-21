@@ -187,6 +187,47 @@ namespace Epsitec.Common.Text
 			this.sequences.AddRange (sequences);
 		}
 		
+		public void Truncate(int count)
+		{
+			object[] copy = this.sequences.ToArray ();
+			
+			this.sequences.Clear ();
+			
+			if (count > copy.Length)
+			{
+				count = copy.Length;
+			}
+			
+			for (int i = 0; i < count; i++)
+			{
+				this.sequences.Add (copy[i]);
+			}
+		}
+		
+		public Generator.Sequence Modify(int index, Generator.SequenceType type)
+		{
+			//	Modifie le type d'une séquence; si la séquence nécessite un argument
+			//	spécial pour son initialisation (par exemple un caractère de puce à
+			//	utiliser), il faudra encore appeler sequence.DefineSetupArgument sur
+			//	l'instance de séquence retournée.
+			
+			Sequence old_sequence = this.sequences[index] as Sequence;
+			Sequence new_sequence = Generator.CreateSequence (type);
+			
+			new_sequence.ValueProperties  = old_sequence.ValueProperties;
+			new_sequence.Prefix           = old_sequence.Prefix;
+			new_sequence.PrefixProperties = old_sequence.PrefixProperties;
+			new_sequence.Suffix           = old_sequence.Suffix;
+			new_sequence.SuffixProperties = old_sequence.SuffixProperties;
+			new_sequence.Casing           = old_sequence.Casing;
+			new_sequence.SuppressBefore   = old_sequence.SuppressBefore;
+			new_sequence.UserData         = old_sequence.UserData;
+			
+			this.sequences[index] = new_sequence;
+			
+			return new_sequence;
+		}
+		
 		
 		public string GenerateTextString(int[] ranks, System.Globalization.CultureInfo culture)
 		{
