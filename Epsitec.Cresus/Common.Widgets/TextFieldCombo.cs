@@ -623,7 +623,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region INamedStringSelection Members
-		public int								SelectedIndex
+		public virtual int						SelectedIndex
 		{
 			get
 			{

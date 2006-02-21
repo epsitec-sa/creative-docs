@@ -71,7 +71,7 @@ namespace Epsitec.Common.Document.Widgets
 		
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing)
+			if ( disposing )
 			{
 				//	TODO: ...
 			}
@@ -92,19 +92,15 @@ namespace Epsitec.Common.Document.Widgets
 			this.fontSelector.SampleHeight = this.sampleHeight;
 			this.fontSelector.SampleAbc = this.sampleAbc;
 			
-			TextFieldComboMenu menu = new TextFieldComboMenu ();
-			
+			TextFieldComboMenu menu = new TextFieldComboMenu();
 			menu.Contents = this.fontSelector;
 			menu.AdjustSize();
 			
-			//	On n'a pas le droit de définir le "SelectedFontFace"
-			//	avant d'avoir fait cette mise à jour du contenu avec
-			//	la nouvelle taille ajustée, sinon on risque d'avoir
-			//	un offset incorrect pour le début...
-			
+			//	On n'a pas le droit de définir le "SelectedFontFace" avant d'avoir fait
+			//	cette mise à jour du contenu avec la nouvelle taille ajustée, sinon on
+			//	risque d'avoir un offset incorrect pour le début...
 			this.fontSelector.UpdateContents();
 			this.fontSelector.SelectedFontFace = this.Text;
-			
 			this.fontSelector.SelectionChanged += new Support.EventHandler(this.HandleSelectorSelectionChanged);
 			
 			MenuItem.SetMenuHost(this, new MenuHost(menu));
@@ -115,8 +111,15 @@ namespace Epsitec.Common.Document.Widgets
 		
 		protected override void OnComboClosed()
 		{
-			base.OnComboClosed ();
+			base.OnComboClosed();
 			
+			if ( this.fontSelector != null )
+			{
+				this.fontSelector.SelectionChanged -= new Support.EventHandler(this.HandleSelectorSelectionChanged);
+				this.fontSelector.Dispose();
+				this.fontSelector = null;
+			}
+
 			if ( this.Window != null )
 			{
 				this.Window.RestoreLogicalFocus();

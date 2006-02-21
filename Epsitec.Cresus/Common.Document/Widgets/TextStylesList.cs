@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override int ListCount
 		{
-			//	Nombre le lignes de la liste.
+			//	Nombre de lignes de la liste.
 			get
 			{
 				int count = 0;

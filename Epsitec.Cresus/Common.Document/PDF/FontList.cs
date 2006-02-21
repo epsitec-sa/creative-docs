@@ -154,7 +154,7 @@ namespace Epsitec.Common.Document.PDF
 					string b = cl.Bold ? "+Bold" : "";
 					string j = cl.Italic ? "+Italic" : "";
 					string c = cl.Unicode.ToString();
-					System.Console.WriteLine(string.Format("  >  font={0}{1}{2} char={3}", f, b,j, c));
+					System.Console.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "  >  font={0}{1}{2} char={3}", f, b,j, c));
 				}
 			}
 #endif

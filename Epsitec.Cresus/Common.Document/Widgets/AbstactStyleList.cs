@@ -208,7 +208,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public void UpdateContent()
+		public void UpdateContents()
 		{
 			//	Met à jour le contenu de la table.
 			System.Diagnostics.Debug.Assert(this.document != null);
@@ -401,9 +401,21 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		public override Size GetBestFitSize()
+		{
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			Margins margins = adorner.GeometryArrayMargins;
+
+			double w = 109+96+margins.Left+margins.Right;
+			double h = this.ListCount*32+1+margins.Bottom+margins.Top;
+			
+			return new Drawing.Size(w, h);
+		}
+
+		
 		protected virtual int ListCount
 		{
-			//	Nombre le lignes de la liste.
+			//	Nombre de lignes de la liste.
 			get
 			{
 				return 0;
