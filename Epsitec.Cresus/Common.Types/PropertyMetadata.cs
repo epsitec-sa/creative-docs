@@ -97,6 +97,28 @@ namespace Epsitec.Common.Types
 				this.set_value_override = value;
 			}
 		}
+		public ValidateValueCallback			ValidateValue
+		{
+			get
+			{
+				return this.validate_value_callback;
+			}
+			set
+			{
+				this.validate_value_callback = value;
+			}
+		}
+		public CoerceValueCallback				CoerceValue
+		{
+			get
+			{
+				return this.coerceValueCallback;
+			}
+			set
+			{
+				this.coerceValueCallback = value;
+			}
+		}
 		
 		public PropertyInvalidatedCallback		PropertyInvalidated
 		{
@@ -144,5 +166,7 @@ namespace Epsitec.Common.Types
 		private GetValueOverrideCallback		get_value_override;
 		private SetValueOverrideCallback		set_value_override;
 		private PropertyInvalidatedCallback		property_invalidated;
+		private ValidateValueCallback			validate_value_callback;
+		private CoerceValueCallback				coerceValueCallback;
 	}
 }
