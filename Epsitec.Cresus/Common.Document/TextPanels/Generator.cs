@@ -11,6 +11,12 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Generator : Abstract
 	{
+		//	Possibilités (level.part1.part2) :
+		//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
+		//	0.[Generic].[Disposition]
+		//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
+		//	n.[Generic].[SupressBefore,Tab,Indent]
+
 		protected enum Part1
 		{
 			Generic,
@@ -30,6 +36,7 @@ namespace Epsitec.Common.Document.TextPanels
 			SupressBefore,
 			Tab,
 			Indent,
+			Disposition,
 			Truncate,
 		}
 
@@ -205,9 +212,11 @@ namespace Epsitec.Common.Document.TextPanels
 				this.SetValue(p, 0, Part1.Prefix,  Part2.FontFace,      "Arial");
 				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
 				this.SetValue(p, 0, Part1.Suffix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Center");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
-				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25CF");  // puce ronde pleine
+				//?this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25CF");  // puce ronde pleine
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "*");
 				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,      "Arial");
 				this.SetValue(p, 1, Part1.Value,   Part2.Text,          "");
 				this.SetValue(p, 1, Part1.Value,   Part2.FontFace,      "Arial");
@@ -335,10 +344,6 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected string GetValue(int level, Part1 part1, Part2 part2)
 		{
-			//	Possibilités (level.part1.part2) :
-			//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-			//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-			//	n.[Generic].[SupressBefore,Tab,Indent]
 			System.Diagnostics.Debug.Assert(level >= 0 && level <= 10);
 			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )
 			{
@@ -346,6 +351,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
+			Text.TabList tabs = this.document.TextContext.TabList;
 			Common.Text.Property[] properties = null;
 
 			if ( level == 0 )
@@ -358,6 +364,15 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( part1 == Part1.Prefix )  properties = p.Generator.GlobalPrefixProperties;
 				if ( part1 == Part1.Suffix )  properties = p.Generator.GlobalSuffixProperties;
+
+				if ( part2 == Part2.Disposition )
+				{
+					if ( p.TabItem == null )  return null;
+					double dispo = tabs.GetTabDisposition(p.TabItem);
+					if ( dispo == 0.5 )  return "Center";
+					if ( dispo == 1.0 )  return "Right";
+					return "Left";
+				}
 			}
 			else if ( level-1 < p.Generator.Count )
 			{
@@ -452,10 +467,6 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void SetValue(Text.ParagraphManagers.ItemListManager.Parameters p, int level, Part1 part1, Part2 part2, string value)
 		{
-			//	Possibilités (level.part1.part2) :
-			//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-			//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-			//	n.[Generic].[SupressBefore,Tab,Indent]
 			System.Diagnostics.Debug.Assert(level >= 0 && level <= 10);
 
 			Text.TabList tabs = this.document.TextContext.TabList;
@@ -494,6 +505,22 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( part1 == Part1.Prefix )  properties = p.Generator.GlobalPrefixProperties;
 				if ( part1 == Part1.Suffix )  properties = p.Generator.GlobalSuffixProperties;
+
+				if ( part2 == Part2.Disposition )
+				{
+					if ( p.TabItem == null )  return;
+					string ta = this.document.TextContext.TabList.GetTabAttribute(p.TabItem);
+
+					string[] tas = TabList.UnpackFromAttribute(ta);
+					double[] offsets = TabList.ParseLevelTable(tas[0]);
+					string attribute = TabList.CreateLevelTable(offsets);
+
+					double dispo = 0.0;
+					if ( value == "Center" )  dispo = 0.5;
+					if ( value == "Right"  )  dispo = 1.0;
+
+					p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.LeftRelative,       attribute);
+				}
 			}
 			else
 			{
@@ -543,8 +570,10 @@ namespace Epsitec.Common.Document.TextPanels
 					offsets[level-1] = this.ConvTextToDistance(value);
 					string attribute = TabList.CreateLevelTable(offsets);
 
-					if ( part2 == Part2.Tab    )  p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelative,       attribute);
-					if ( part2 == Part2.Indent )  p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, attribute);
+					double dispo = tabs.GetTabDisposition(p.TabItem);
+
+					if ( part2 == Part2.Tab    )  p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.LeftRelative,       attribute);
+					if ( part2 == Part2.Indent )  p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0,   null, TabPositionMode.LeftRelativeIndent, attribute);
 				}
 			}
 
