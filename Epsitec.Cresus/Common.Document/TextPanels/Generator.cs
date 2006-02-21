@@ -11,6 +11,36 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Generator : Abstract
 	{
+		//	Possibilités (level.part1.part2) :
+		//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
+		//	0.[Generic].[Disposition]
+		//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
+		//	n.[Generic].[SupressBefore,Tab,Indent]
+
+		protected enum Part1
+		{
+			Generic,
+			Prefix,
+			Value,
+			Suffix,
+			Truncate,
+		}
+
+		protected enum Part2
+		{
+			Text,
+			FontFace,
+			FontStyle,
+			FontSize,
+			FontOffset,
+			SupressBefore,
+			Tab,
+			Indent,
+			Disposition,
+			Truncate,
+		}
+
+
 		public Generator(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
 		{
 			this.label.Text = Res.Strings.TextPanel.Generator.Title;
@@ -160,6 +190,7 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
+#if false
 				p.Generator.GlobalPrefix = "";
 				p.Generator.GlobalSuffix = "";
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CF"));
@@ -176,6 +207,41 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
+#else
+				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(p, 0, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Center");
+
+				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
+				//?this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25CF");  // puce ronde pleine
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "*");
+				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,          "");
+				this.SetValue(p, 1, Part1.Value,   Part2.FontFace,      "Arial");
+				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 1, Part1.Suffix,  Part2.FontFace,      "Arial");
+
+				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "true");
+				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "\u25CB");  // puce ronde vide
+				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 2, Part1.Value,   Part2.Text,          "");
+				this.SetValue(p, 2, Part1.Value,   Part2.FontFace,      "Arial");
+				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 2, Part1.Suffix,  Part2.FontFace,      "Arial");
+
+				this.SetValue(p, 3, Part1.Generic, Part2.SupressBefore, "true");
+				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,          "-");
+				this.SetValue(p, 3, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 3, Part1.Value,   Part2.Text,          "");
+				this.SetValue(p, 3, Part1.Value,   Part2.FontFace,      "Arial");
+				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 3, Part1.Suffix,  Part2.FontFace,      "Arial");
+
+				p.Generator.UserData = user;
+				this.ParagraphWrapper.Defined.ItemListParameters = p;
+#endif
 			}
 
 			if ( type == "Bullet2" )
@@ -276,65 +342,71 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		protected string GetValue(int level, string part, string name)
+		protected string GetValue(int level, Part1 part1, Part2 part2)
 		{
-			//	Possibilités (level.part.name) :
-			//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-			//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-			//	n.[].[SupressBefore,Tab,Indent]
+			System.Diagnostics.Debug.Assert(level >= 0 && level <= 10);
 			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )
 			{
 				return null;
 			}
 
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
+			Text.TabList tabs = this.document.TextContext.TabList;
 			Common.Text.Property[] properties = null;
 
 			if ( level == 0 )
 			{
-				if ( name == "Text" )
+				if ( part2 == Part2.Text )
 				{
-					if ( part == "Prefix" )  return p.Generator.GlobalPrefix;
-					if ( part == "Suffix" )  return p.Generator.GlobalSuffix;
+					if ( part1 == Part1.Prefix )  return p.Generator.GlobalPrefix;
+					if ( part1 == Part1.Suffix )  return p.Generator.GlobalSuffix;
 				}
 
-				if ( part == "Prefix" )  properties = p.Generator.GlobalPrefixProperties;
-				if ( part == "Suffix" )  properties = p.Generator.GlobalSuffixProperties;
+				if ( part1 == Part1.Prefix )  properties = p.Generator.GlobalPrefixProperties;
+				if ( part1 == Part1.Suffix )  properties = p.Generator.GlobalSuffixProperties;
+
+				if ( part2 == Part2.Disposition )
+				{
+					if ( p.TabItem == null )  return null;
+					double dispo = tabs.GetTabDisposition(p.TabItem);
+					if ( dispo == 0.5 )  return "Center";
+					if ( dispo == 1.0 )  return "Right";
+					return "Left";
+				}
 			}
 			else if ( level-1 < p.Generator.Count )
 			{
-				Common.Text.Generator.Sequence sequence = p.Generator[this.level-1];
+				Common.Text.Generator.Sequence sequence = p.Generator[level-1];
 
-				if ( name == "Text" )
+				if ( part2 == Part2.Text )
 				{
-					if ( part == "Prefix" )  return sequence.Prefix;
-					if ( part == "Value"  )  return Generator.ConvSequenceToText(sequence);
-					if ( part == "Suffix" )  return sequence.Suffix;
+					if ( part1 == Part1.Prefix )  return sequence.Prefix;
+					if ( part1 == Part1.Suffix )  return sequence.Suffix;
+					if ( part1 == Part1.Value  )  return Generator.ConvSequenceToText(sequence);
 				}
 
-				if ( part == "Prefix" )  properties = sequence.PrefixProperties;
-				if ( part == "Value"  )  properties = sequence.ValueProperties;
-				if ( part == "Suffix" )  properties = sequence.SuffixProperties;
+				if ( part1 == Part1.Prefix )  properties = sequence.PrefixProperties;
+				if ( part1 == Part1.Suffix )  properties = sequence.SuffixProperties;
+				if ( part1 == Part1.Value  )  properties = sequence.ValueProperties;
 
-				if ( name == "SupressBefore" )
+				if ( part2 == Part2.SupressBefore )
 				{
 					return sequence.SuppressBefore ? "true" : "false";
 				}
 
-				if ( name == "Tab" )
+				if ( part2 == Part2.Tab || part2 == Part2.Indent )
 				{
-					return p.TabItem.ToString();
-				}
-
-				if ( name == "Indent" )
-				{
-					return p.TabBody.ToString();
+					string ta = this.document.TextContext.TabList.GetTabAttribute((part2 == Part2.Tab) ? p.TabItem : p.TabBody);
+					if ( ta == null )  return null;
+					string[] tas = TabList.UnpackFromAttribute(ta);
+					double offset = TabList.GetLevelOffset(0, level-1, tas[0]);
+					return this.document.Modifier.RealToString(offset);
 				}
 			}
 
 			if ( properties != null )
 			{
-				if ( name == "FontFace" )
+				if ( part2 == Part2.FontFace )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
@@ -346,7 +418,7 @@ namespace Epsitec.Common.Document.TextPanels
 					}
 				}
 
-				if ( name == "FontStyle" )
+				if ( part2 == Part2.FontStyle )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
@@ -358,26 +430,26 @@ namespace Epsitec.Common.Document.TextPanels
 					}
 				}
 
-				if ( name == "FontSize" )
+				if ( part2 == Part2.FontSize )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
 						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontSize )
 						{
 							Common.Text.Properties.FontSizeProperty size = property as Common.Text.Properties.FontSizeProperty;
-							//?return size.Size;
+							return this.document.Modifier.RealToString(size.Size);
 						}
 					}
 				}
 
-				if ( name == "FontOffset" )
+				if ( part2 == Part2.FontOffset )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
 						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontOffset )
 						{
 							Common.Text.Properties.FontOffsetProperty offset = property as Common.Text.Properties.FontOffsetProperty;
-							//?return offset.Offset;
+							return this.document.Modifier.RealToString(offset.Offset);
 						}
 					}
 				}
@@ -386,119 +458,233 @@ namespace Epsitec.Common.Document.TextPanels
 			return null;
 		}
 
-		protected void SetValue(int level, string part, string name, string value)
+		protected void SetValue(int level, Part1 part1, Part2 part2, string value)
 		{
-			//	Possibilités (level.part.name) :
-			//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-			//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-			//	n.[].[SupressBefore,Tab,Indent]
-			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )
-			{
-				return;
-			}
-
+			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return;
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
+			this.SetValue(p, level, part1, part2, value);
+		}
+
+		protected void SetValue(Text.ParagraphManagers.ItemListManager.Parameters p, int level, Part1 part1, Part2 part2, string value)
+		{
+			System.Diagnostics.Debug.Assert(level >= 0 && level <= 10);
+
+			Text.TabList tabs = this.document.TextContext.TabList;
 			Common.Text.Property[] properties = null;
+
+			if ( p.TabItem == null )
+			{
+				//	Si aucun tabulateur n'est défini, pose 10x2 taquets par défaut.
+				double[] offsetsItem = new double[10];
+				double[] offsetsBody = new double[10];
+				double inc = System.Globalization.RegionInfo.CurrentRegion.IsMetric ? 100 : 127;  // 10mm ou 0.5in
+				double posItem = inc/2;
+				double posBody = inc;
+				for ( int i=0 ; i<10 ; i++ )
+				{
+					offsetsItem[i] = posItem;
+					offsetsBody[i] = posBody;
+					posItem += inc;
+					posBody += inc;
+				}
+
+				string attributeItem = TabList.CreateLevelTable(offsetsItem);
+				string attributeBody = TabList.CreateLevelTable(offsetsBody);
+
+				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelative,       attributeItem);
+				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, attributeBody);
+			}
 
 			if ( level == 0 )
 			{
-				if ( name == "Text" )
+				if ( part2 == Part2.Text )
 				{
-					if ( part == "Prefix" )  p.Generator.GlobalPrefix = value;
-					if ( part == "Suffix" )  p.Generator.GlobalSuffix = value;
+					if ( part1 == Part1.Prefix )  p.Generator.GlobalPrefix = value;
+					if ( part1 == Part1.Suffix )  p.Generator.GlobalSuffix = value;
 				}
 
-				if ( part == "Prefix" )  properties = p.Generator.GlobalPrefixProperties;
-				if ( part == "Suffix" )  properties = p.Generator.GlobalSuffixProperties;
+				if ( part1 == Part1.Prefix )  properties = p.Generator.GlobalPrefixProperties;
+				if ( part1 == Part1.Suffix )  properties = p.Generator.GlobalSuffixProperties;
+
+				if ( part2 == Part2.Disposition )
+				{
+					if ( p.TabItem == null )  return;
+					string ta = this.document.TextContext.TabList.GetTabAttribute(p.TabItem);
+
+					string[] tas = TabList.UnpackFromAttribute(ta);
+					double[] offsets = TabList.ParseLevelTable(tas[0]);
+					string attribute = TabList.CreateLevelTable(offsets);
+
+					double dispo = 0.0;
+					if ( value == "Center" )  dispo = 0.5;
+					if ( value == "Right"  )  dispo = 1.0;
+
+					p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.LeftRelative,       attribute);
+				}
 			}
 			else
 			{
-				if ( level-1 >= p.Generator.Count )
+				while ( level-1 >= p.Generator.Count )
 				{
-					//p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
-					// TODO:
+					p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant));
 				}
 
-				Common.Text.Generator.Sequence sequence = p.Generator[this.level-1];
-
-				if ( name == "Text" )
+				if ( part1 == Part1.Truncate )
 				{
-					if ( part == "Prefix" )  sequence.Prefix = value;
-//					if ( part == "Value"  )  // TODO:
-					if ( part == "Suffix" )  sequence.Suffix = value;
+					p.Generator.Truncate(level-1);
 				}
 
-				if ( part == "Prefix" )  properties = sequence.PrefixProperties;
-				if ( part == "Value"  )  properties = sequence.ValueProperties;
-				if ( part == "Suffix" )  properties = sequence.SuffixProperties;
+				Common.Text.Generator.Sequence sequence = p.Generator[level-1];
 
-				if ( name == "SupressBefore" )
+				if ( part2 == Part2.Text )
+				{
+					if ( part1 == Part1.Prefix )  sequence.Prefix = value;
+					if ( part1 == Part1.Suffix )  sequence.Suffix = value;
+
+					if ( part1 == Part1.Value  )
+					{
+						Common.Text.Generator.SequenceType type;
+						Common.Text.Generator.Casing casing;
+						Generator.ConvTextToSequence(value, out type, out casing);
+						sequence.Casing = casing;
+						p.Generator.Modify(level-1, type);
+					}
+				}
+
+				if ( part1 == Part1.Prefix )  properties = sequence.PrefixProperties;
+				if ( part1 == Part1.Suffix )  properties = sequence.SuffixProperties;
+				if ( part1 == Part1.Value  )  properties = sequence.ValueProperties;
+
+				if ( part2 == Part2.SupressBefore )
 				{
 					sequence.SuppressBefore = (value == "true");
 				}
 
-				if ( name == "Tab" )
+				if ( part2 == Part2.Tab || part2 == Part2.Indent )
 				{
-					// TODO:
-				}
+					string ta = this.document.TextContext.TabList.GetTabAttribute((part2 == Part2.Tab) ? p.TabItem : p.TabBody);
 
-				if ( name == "Indent" )
-				{
-					// TODO:
+					string[] tas = TabList.UnpackFromAttribute(ta);
+					double[] offsets = TabList.ParseLevelTable(tas[0]);
+
+					offsets[level-1] = this.ConvTextToDistance(value);
+					string attribute = TabList.CreateLevelTable(offsets);
+
+					double dispo = tabs.GetTabDisposition(p.TabItem);
+
+					if ( part2 == Part2.Tab    )  p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.LeftRelative,       attribute);
+					if ( part2 == Part2.Indent )  p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0,   null, TabPositionMode.LeftRelativeIndent, attribute);
 				}
 			}
 
 			if ( properties != null )
 			{
-				if ( name == "FontFace" )
+				if ( part2 == Part2.FontFace )
 				{
-					foreach ( Common.Text.Property property in properties )
+					Common.Text.Properties.FontProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontProperty;
+					Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty(value, Misc.DefaultFontStyle(value));
+					if ( current == null )
 					{
-						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.Font )
-						{
-							Common.Text.Properties.FontProperty font = property as Common.Text.Properties.FontProperty;
-						}
+						properties = Generator.PropertyAdd(properties, n);
 					}
-					// TODO:
+					else
+					{
+						Generator.PropertySet(properties, n);
+					}
 				}
 
-				if ( name == "FontStyle" )
+				if ( part2 == Part2.FontStyle )
 				{
-					foreach ( Common.Text.Property property in properties )
+					Common.Text.Properties.FontProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontProperty;
+					if ( current == null )
 					{
-						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.Font )
-						{
-							Common.Text.Properties.FontProperty font = property as Common.Text.Properties.FontProperty;
-						}
+						Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty("Arial", value);
+						properties = Generator.PropertyAdd(properties, n);
 					}
-					// TODO:
+					else
+					{
+						Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty(current.FaceName, value);
+						Generator.PropertySet(properties, n);
+					}
 				}
 
-				if ( name == "FontSize" )
+				if ( part2 == Part2.FontSize )
 				{
-					foreach ( Common.Text.Property property in properties )
+					Common.Text.Properties.FontSizeProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontSizeProperty;
+					Common.Text.Properties.FontSizeProperty n = new Text.Properties.FontSizeProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
+					if ( current == null )
 					{
-						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontSize )
-						{
-							Common.Text.Properties.FontSizeProperty size = property as Common.Text.Properties.FontSizeProperty;
-						}
+						properties = Generator.PropertyAdd(properties, n);
 					}
-					// TODO:
+					else
+					{
+						Generator.PropertySet(properties, n);
+					}
 				}
 
-				if ( name == "FontOffset" )
+				if ( part2 == Part2.FontOffset )
 				{
-					foreach ( Common.Text.Property property in properties )
+					Common.Text.Properties.FontOffsetProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontOffsetProperty;
+					Common.Text.Properties.FontOffsetProperty n = new Text.Properties.FontOffsetProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
+					if ( current == null )
 					{
-						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontOffset )
-						{
-							Common.Text.Properties.FontOffsetProperty offset = property as Common.Text.Properties.FontOffsetProperty;
-						}
+						properties = Generator.PropertyAdd(properties, n);
 					}
-					// TODO:
+					else
+					{
+						Generator.PropertySet(properties, n);
+					}
+				}
+
+				if ( level == 0 )
+				{
+					if ( part1 == Part1.Prefix )  p.Generator.GlobalPrefixProperties = properties;
+					if ( part1 == Part1.Suffix )  p.Generator.GlobalSuffixProperties = properties;
+				}
+				else
+				{
+					Common.Text.Generator.Sequence sequence = p.Generator[level-1];
+
+					if ( part1 == Part1.Prefix )  sequence.PrefixProperties = properties;
+					if ( part1 == Part1.Suffix )  sequence.SuffixProperties = properties;
+					if ( part1 == Part1.Value  )  sequence.ValueProperties  = properties;
 				}
 			}
 		}
+
+		#region Properties array manager
+		protected static Common.Text.Property PropertyGet(Common.Text.Property[] properties, Common.Text.Properties.WellKnownType type)
+		{
+			foreach ( Common.Text.Property property in properties )
+			{
+				if ( property.WellKnownType == type )  return property;
+			}
+			return null;
+		}
+
+		protected static void PropertySet(Common.Text.Property[] properties, Common.Text.Property n)
+		{
+			for ( int i=0 ; i<properties.Length ; i++ )
+			{
+				Common.Text.Property property = properties[i] as Common.Text.Property;
+				if ( property.WellKnownType == n.WellKnownType )
+				{
+					properties[i] = n;
+				}
+			}
+		}
+
+		protected static Common.Text.Property[] PropertyAdd(Common.Text.Property[] properties, Common.Text.Property n)
+		{
+			Common.Text.Property[] list = new Common.Text.Property[properties.Length+1];
+			for ( int i=0 ; i<properties.Length ; i++ )
+			{
+				list[i] = properties[i];
+			}
+			list[properties.Length] = n;
+			return list;
+		}
+		#endregion
 
 
 		protected void InitComboType(TextFieldCombo combo)
@@ -553,6 +739,18 @@ namespace Epsitec.Common.Document.TextPanels
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Numerator.RomanUpper);
 		}
 
+		protected double ConvTextToDistance(string text)
+		{
+			try
+			{
+				return double.Parse(text) * this.document.Modifier.RealScale;
+			}
+			catch
+			{
+				return 0;
+			}
+		}
+
 		protected static string ConvTypeToText(string type)
 		{
 			switch ( type )
@@ -582,14 +780,59 @@ namespace Epsitec.Common.Document.TextPanels
 			return null;
 		}
 
+		protected static void ConvTextToSequence(string text, out Common.Text.Generator.SequenceType type, out Common.Text.Generator.Casing casing)
+		{
+			type = Common.Text.Generator.SequenceType.None;
+			casing = Common.Text.Generator.Casing.Default;
+
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.None || text == "" )
+			{
+				type = Common.Text.Generator.SequenceType.Constant;
+			}
+
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.Numeric )
+			{
+				type = Common.Text.Generator.SequenceType.Numeric;
+			}
+
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.AlphaLower )
+			{
+				type = Common.Text.Generator.SequenceType.Alphabetic;
+				casing = Common.Text.Generator.Casing.Lower;
+			}
+
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.AlphaUpper )
+			{
+				type = Common.Text.Generator.SequenceType.Alphabetic;
+				casing = Common.Text.Generator.Casing.Upper;
+			}
+
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.RomanLower )
+			{
+				type = Common.Text.Generator.SequenceType.Roman;
+				casing = Common.Text.Generator.Casing.Lower;
+			}
+
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.RomanUpper )
+			{
+				type = Common.Text.Generator.SequenceType.Roman;
+				casing = Common.Text.Generator.Casing.Upper;
+			}
+		}
+
 		protected static string ConvSequenceToText(Common.Text.Generator.Sequence sequence)
 		{
-			if ( sequence is Common.Text.Internal.Sequences.Numeric )
+			if ( sequence.WellKnownType == Common.Text.Generator.SequenceType.Constant )
+			{
+				return Res.Strings.TextPanel.Generator.Numerator.None;
+			}
+
+			if ( sequence.WellKnownType == Common.Text.Generator.SequenceType.Numeric )
 			{
 				return Res.Strings.TextPanel.Generator.Numerator.Numeric;
 			}
 
-			if ( sequence is Common.Text.Internal.Sequences.Alphabetic )
+			if ( sequence.WellKnownType == Common.Text.Generator.SequenceType.Alphabetic )
 			{
 				if ( sequence.Casing == Common.Text.Generator.Casing.Lower )
 				{
@@ -601,7 +844,7 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 
-			if ( sequence is Common.Text.Internal.Sequences.Roman )
+			if ( sequence.WellKnownType == Common.Text.Generator.SequenceType.Roman )
 			{
 				if ( sequence.Casing == Common.Text.Generator.Casing.Lower )
 				{
@@ -618,12 +861,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 		public static string ConvSequenceToShort(Common.Text.Generator.Sequence sequence)
 		{
-			if ( sequence is Common.Text.Internal.Sequences.Numeric )
+			if ( sequence.WellKnownType == Common.Text.Generator.SequenceType.Numeric )
 			{
 				return "1";
 			}
 
-			if ( sequence is Common.Text.Internal.Sequences.Alphabetic )
+			if ( sequence.WellKnownType == Common.Text.Generator.SequenceType.Alphabetic )
 			{
 				if ( sequence.Casing == Common.Text.Generator.Casing.Lower )
 				{
@@ -635,7 +878,7 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 
-			if ( sequence is Common.Text.Internal.Sequences.Roman )
+			if ( sequence.WellKnownType == Common.Text.Generator.SequenceType.Roman )
 			{
 				if ( sequence.Casing == Common.Text.Generator.Casing.Lower )
 				{
