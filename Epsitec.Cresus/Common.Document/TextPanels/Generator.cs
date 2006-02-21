@@ -183,6 +183,7 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
+#if false
 				p.Generator.GlobalPrefix = "";
 				p.Generator.GlobalSuffix = "";
 				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CF"));
@@ -199,6 +200,39 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
+#else
+				p.Generator.UserData = user;
+				this.ParagraphWrapper.Defined.ItemListParameters = p;
+
+				this.SetValue(0, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(0, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(0, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(0, Part1.Suffix,  Part2.FontFace,      "Arial");
+
+				this.SetValue(1, Part1.Generic, Part2.SupressBefore, "false");
+				this.SetValue(1, Part1.Prefix,  Part2.Text,          "\u25CF");  // puce ronde pleine
+				this.SetValue(1, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(1, Part1.Value,   Part2.Text,          "");
+				this.SetValue(1, Part1.Value,   Part2.FontFace,      "Arial");
+				this.SetValue(1, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(1, Part1.Suffix,  Part2.FontFace,      "Arial");
+
+				this.SetValue(2, Part1.Generic, Part2.SupressBefore, "true");
+				this.SetValue(2, Part1.Prefix,  Part2.Text,          "\u25CB");  // puce ronde vide
+				this.SetValue(2, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(2, Part1.Value,   Part2.Text,          "");
+				this.SetValue(2, Part1.Value,   Part2.FontFace,      "Arial");
+				this.SetValue(2, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(2, Part1.Suffix,  Part2.FontFace,      "Arial");
+
+				this.SetValue(3, Part1.Generic, Part2.SupressBefore, "true");
+				this.SetValue(3, Part1.Prefix,  Part2.Text,          "-");
+				this.SetValue(3, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(3, Part1.Value,   Part2.Text,          "");
+				this.SetValue(3, Part1.Value,   Part2.FontFace,      "Arial");
+				this.SetValue(3, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(3, Part1.Suffix,  Part2.FontFace,      "Arial");
+#endif
 			}
 
 			if ( type == "Bullet2" )
@@ -712,6 +746,11 @@ namespace Epsitec.Common.Document.TextPanels
 			type = Common.Text.Generator.SequenceType.None;
 			casing = Common.Text.Generator.Casing.Default;
 
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.None || text == "" )
+			{
+				type = Common.Text.Generator.SequenceType.Constant;
+			}
+
 			if ( text == Res.Strings.TextPanel.Generator.Numerator.Numeric )
 			{
 				type = Common.Text.Generator.SequenceType.Numeric;
@@ -744,6 +783,11 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected static string ConvSequenceToText(Common.Text.Generator.Sequence sequence)
 		{
+			if ( sequence.WellKnownType == Common.Text.Generator.SequenceType.Constant )
+			{
+				return Res.Strings.TextPanel.Generator.Numerator.None;
+			}
+
 			if ( sequence.WellKnownType == Common.Text.Generator.SequenceType.Numeric )
 			{
 				return Res.Strings.TextPanel.Generator.Numerator.Numeric;
