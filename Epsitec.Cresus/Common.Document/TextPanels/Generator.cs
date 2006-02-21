@@ -11,6 +11,27 @@ namespace Epsitec.Common.Document.TextPanels
 	[SuppressBundleSupport]
 	public class Generator : Abstract
 	{
+		protected enum Part1
+		{
+			Generic,
+			Prefix,
+			Value,
+			Suffix,
+		}
+
+		protected enum Part2
+		{
+			Text,
+			FontFace,
+			FontStyle,
+			FontSize,
+			FontOffset,
+			SupressBefore,
+			Tab,
+			Indent,
+		}
+
+
 		public Generator(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
 		{
 			this.label.Text = Res.Strings.TextPanel.Generator.Title;
@@ -276,7 +297,7 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		protected string GetValue(int level, string part, string name)
+		protected string GetValue(int level, Part1 part1, Part2 part2)
 		{
 			//	Possibilités (level.part.name) :
 			//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
@@ -292,41 +313,41 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( level == 0 )
 			{
-				if ( name == "Text" )
+				if ( part2 == Part2.Text )
 				{
-					if ( part == "Prefix" )  return p.Generator.GlobalPrefix;
-					if ( part == "Suffix" )  return p.Generator.GlobalSuffix;
+					if ( part1 == Part1.Prefix )  return p.Generator.GlobalPrefix;
+					if ( part1 == Part1.Suffix )  return p.Generator.GlobalSuffix;
 				}
 
-				if ( part == "Prefix" )  properties = p.Generator.GlobalPrefixProperties;
-				if ( part == "Suffix" )  properties = p.Generator.GlobalSuffixProperties;
+				if ( part1 == Part1.Prefix )  properties = p.Generator.GlobalPrefixProperties;
+				if ( part1 == Part1.Suffix )  properties = p.Generator.GlobalSuffixProperties;
 			}
 			else if ( level-1 < p.Generator.Count )
 			{
 				Common.Text.Generator.Sequence sequence = p.Generator[this.level-1];
 
-				if ( name == "Text" )
+				if ( part2 == Part2.Text )
 				{
-					if ( part == "Prefix" )  return sequence.Prefix;
-					if ( part == "Value"  )  return Generator.ConvSequenceToText(sequence);
-					if ( part == "Suffix" )  return sequence.Suffix;
+					if ( part1 == Part1.Prefix )  return sequence.Prefix;
+					if ( part1 == Part1.Value  )  return Generator.ConvSequenceToText(sequence);
+					if ( part1 == Part1.Suffix )  return sequence.Suffix;
 				}
 
-				if ( part == "Prefix" )  properties = sequence.PrefixProperties;
-				if ( part == "Value"  )  properties = sequence.ValueProperties;
-				if ( part == "Suffix" )  properties = sequence.SuffixProperties;
+				if ( part1 == Part1.Prefix )  properties = sequence.PrefixProperties;
+				if ( part1 == Part1.Value  )  properties = sequence.ValueProperties;
+				if ( part1 == Part1.Suffix )  properties = sequence.SuffixProperties;
 
-				if ( name == "SupressBefore" )
+				if ( part2 == Part2.SupressBefore )
 				{
 					return sequence.SuppressBefore ? "true" : "false";
 				}
 
-				if ( name == "Tab" )
+				if ( part2 == Part2.Tab )
 				{
 					return p.TabItem.ToString();
 				}
 
-				if ( name == "Indent" )
+				if ( part2 == Part2.Indent )
 				{
 					return p.TabBody.ToString();
 				}
@@ -334,7 +355,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( properties != null )
 			{
-				if ( name == "FontFace" )
+				if ( part2 == Part2.FontFace )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
@@ -346,7 +367,7 @@ namespace Epsitec.Common.Document.TextPanels
 					}
 				}
 
-				if ( name == "FontStyle" )
+				if ( part2 == Part2.FontStyle )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
@@ -358,7 +379,7 @@ namespace Epsitec.Common.Document.TextPanels
 					}
 				}
 
-				if ( name == "FontSize" )
+				if ( part2 == Part2.FontSize )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
@@ -370,7 +391,7 @@ namespace Epsitec.Common.Document.TextPanels
 					}
 				}
 
-				if ( name == "FontOffset" )
+				if ( part2 == Part2.FontOffset )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
@@ -386,7 +407,7 @@ namespace Epsitec.Common.Document.TextPanels
 			return null;
 		}
 
-		protected void SetValue(int level, string part, string name, string value)
+		protected void SetValue(int level, Part1 part1, Part2 part2, string value)
 		{
 			//	Possibilités (level.part.name) :
 			//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
@@ -402,14 +423,14 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( level == 0 )
 			{
-				if ( name == "Text" )
+				if ( part2 == Part2.Text )
 				{
-					if ( part == "Prefix" )  p.Generator.GlobalPrefix = value;
-					if ( part == "Suffix" )  p.Generator.GlobalSuffix = value;
+					if ( part1 == Part1.Prefix )  p.Generator.GlobalPrefix = value;
+					if ( part1 == Part1.Suffix )  p.Generator.GlobalSuffix = value;
 				}
 
-				if ( part == "Prefix" )  properties = p.Generator.GlobalPrefixProperties;
-				if ( part == "Suffix" )  properties = p.Generator.GlobalSuffixProperties;
+				if ( part1 == Part1.Prefix )  properties = p.Generator.GlobalPrefixProperties;
+				if ( part1 == Part1.Suffix )  properties = p.Generator.GlobalSuffixProperties;
 			}
 			else
 			{
@@ -421,28 +442,28 @@ namespace Epsitec.Common.Document.TextPanels
 
 				Common.Text.Generator.Sequence sequence = p.Generator[this.level-1];
 
-				if ( name == "Text" )
+				if ( part2 == Part2.Text )
 				{
-					if ( part == "Prefix" )  sequence.Prefix = value;
-//					if ( part == "Value"  )  // TODO:
-					if ( part == "Suffix" )  sequence.Suffix = value;
+					if ( part1 == Part1.Prefix )  sequence.Prefix = value;
+//					if ( part1 == Part1.Value  )  // TODO:
+					if ( part1 == Part1.Suffix )  sequence.Suffix = value;
 				}
 
-				if ( part == "Prefix" )  properties = sequence.PrefixProperties;
-				if ( part == "Value"  )  properties = sequence.ValueProperties;
-				if ( part == "Suffix" )  properties = sequence.SuffixProperties;
+				if ( part1 == Part1.Prefix )  properties = sequence.PrefixProperties;
+				if ( part1 == Part1.Value  )  properties = sequence.ValueProperties;
+				if ( part1 == Part1.Suffix )  properties = sequence.SuffixProperties;
 
-				if ( name == "SupressBefore" )
+				if ( part2 == Part2.SupressBefore )
 				{
 					sequence.SuppressBefore = (value == "true");
 				}
 
-				if ( name == "Tab" )
+				if ( part2 == Part2.Tab )
 				{
 					// TODO:
 				}
 
-				if ( name == "Indent" )
+				if ( part2 == Part2.Indent )
 				{
 					// TODO:
 				}
@@ -450,7 +471,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( properties != null )
 			{
-				if ( name == "FontFace" )
+				if ( part2 == Part2.FontFace )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
@@ -462,7 +483,7 @@ namespace Epsitec.Common.Document.TextPanels
 					// TODO:
 				}
 
-				if ( name == "FontStyle" )
+				if ( part2 == Part2.FontStyle )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
@@ -474,7 +495,7 @@ namespace Epsitec.Common.Document.TextPanels
 					// TODO:
 				}
 
-				if ( name == "FontSize" )
+				if ( part2 == Part2.FontSize )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
@@ -486,7 +507,7 @@ namespace Epsitec.Common.Document.TextPanels
 					// TODO:
 				}
 
-				if ( name == "FontOffset" )
+				if ( part2 == Part2.FontOffset )
 				{
 					foreach ( Common.Text.Property property in properties )
 					{
@@ -496,6 +517,20 @@ namespace Epsitec.Common.Document.TextPanels
 						}
 					}
 					// TODO:
+				}
+
+				if ( level == 0 )
+				{
+					if ( part1 == Part1.Prefix )  p.Generator.GlobalPrefixProperties = properties;
+					if ( part1 == Part1.Suffix )  p.Generator.GlobalSuffixProperties = properties;
+				}
+				else
+				{
+					Common.Text.Generator.Sequence sequence = p.Generator[this.level-1];
+
+					if ( part1 == Part1.Prefix )  sequence.PrefixProperties = properties;
+					if ( part1 == Part1.Value  )  sequence.ValueProperties  = properties;
+					if ( part1 == Part1.Suffix )  sequence.SuffixProperties = properties;
 				}
 			}
 		}
