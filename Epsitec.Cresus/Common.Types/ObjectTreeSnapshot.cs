@@ -32,7 +32,6 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-
 		public void Record(Object obj, Types.Property property)
 		{
 			System.Diagnostics.Debug.Assert (property == null);
@@ -40,7 +39,7 @@ namespace Epsitec.Common.Types
 			this.list.Add (new SnapshotValue (obj, property));
 		}
 
-		public void InvalidateDifferent()
+		public void InvalidateDifferentProperties()
 		{
 			foreach (SnapshotValue snapshot in this.list)
 			{
@@ -58,7 +57,6 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
 		
 		#region Private SnapshotValue Structure
 		private struct SnapshotValue

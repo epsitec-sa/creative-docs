@@ -78,7 +78,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
-		public ReadOnlyArray<Property> GetAllAttachedProperties()
+		public static ReadOnlyArray<Property> GetAllAttachedProperties()
 		{
 			if (Property.attachedPropertiesArray == null)
 			{
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Types
 		
 		public static Property RegisterAttached(string name, System.Type property_type, System.Type owner_type)
 		{
-			return Property.Register (name, property_type, owner_type, new PropertyMetadata ());
+			return Property.RegisterAttached (name, property_type, owner_type, new PropertyMetadata ());
 		}
 		public static Property RegisterAttached(string name, System.Type property_type, System.Type owner_type, PropertyMetadata metadata)
 		{

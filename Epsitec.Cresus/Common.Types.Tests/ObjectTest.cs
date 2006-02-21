@@ -15,23 +15,15 @@ namespace Epsitec.Common.Types
 
 
 		[Test]
-		public void CheckPropertyPath()
+		public void CheckAttachedProperties()
 		{
-			PropertyPath pp1 = new PropertyPath ();
-			PropertyPath pp2 = new PropertyPath ("abc");
-			PropertyPath pp3 = new PropertyPath ("{0}.{1}", MyObject.FooProperty, MyObject.NameProperty);
-			PropertyPath pp4 = new PropertyPath ("Bar.{0}", MyObject.XyzProperty);
+			//	Test coupé en morceaux, car NUnit et son analyse du code provoque
+			//	l'exécution du .cctor de la classe Test1 avant que le ObjectType
+			//	relatif à Test1 ne soit instancié.
 
-			Assert.AreEqual (null, pp1.GetFullPath ());
-			Assert.AreEqual ("abc", pp2.GetFullPath ());
-			Assert.AreEqual ("Foo.Name", pp3.GetFullPath ());
-			Assert.AreEqual ("Bar.Xyz", pp4.GetFullPath ());
-			Assert.IsTrue (pp2.Elements.IsNull);
-			Assert.AreEqual (0, pp2.Elements.Length);
-			Assert.AreEqual ("Foo.Name.Bar.Xyz", PropertyPath.Combine (pp3, pp4).GetFullPath ());
-			Assert.AreEqual ("Bar.Xyz", PropertyPath.Combine (pp1, pp4).GetFullPath ());
-			Assert.AreEqual ("abc", PropertyPath.Combine (pp2, pp1).GetFullPath ());
-			Assert.AreEqual (null, PropertyPath.Combine (pp1, pp1).GetFullPath ());
+			TestAttachedProperties.TestA ();
+			TestAttachedProperties.TestB ();
+			TestAttachedProperties.TestC ();
 		}
 
 		[Test]
@@ -93,7 +85,7 @@ namespace Epsitec.Common.Types
 
 			mySource1.Xyz  = 1;
 			mySource1.Sibling = myData1;
-			
+
 			mySource2.Xyz  = 2;
 			mySource2.Sibling = myData2;
 
@@ -142,7 +134,6 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		[Ignore ("Too slow")]
 		public void CheckObjectType()
 		{
 			Assert.AreEqual ("Object", ObjectType.FromSystemType (typeof (Types.Object)).Name);
@@ -185,8 +176,91 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (ob.ObjectType.IsObjectInstanceOfType (oa));
 			Assert.IsFalse (oa.ObjectType.IsObjectInstanceOfType (ox));
 		}
-		
-		
+
+		[Test]
+		public void CheckPassiveClass()
+		{
+			Assert.AreEqual ("", ObjectTest.registered);
+			DerivedPassiveClass.Hello ();
+			Assert.AreEqual ("DerivedPassiveClass, PassiveClass", ObjectTest.registered);
+		}
+
+		[Test]
+		public void CheckPropertyPath()
+		{
+			PropertyPath pp1 = new PropertyPath ();
+			PropertyPath pp2 = new PropertyPath ("abc");
+			PropertyPath pp3 = new PropertyPath ("{0}.{1}", MyObject.FooProperty, MyObject.NameProperty);
+			PropertyPath pp4 = new PropertyPath ("Bar.{0}", MyObject.XyzProperty);
+
+			Assert.AreEqual (null, pp1.GetFullPath ());
+			Assert.AreEqual ("abc", pp2.GetFullPath ());
+			Assert.AreEqual ("Foo.Name", pp3.GetFullPath ());
+			Assert.AreEqual ("Bar.Xyz", pp4.GetFullPath ());
+			Assert.IsTrue (pp2.Elements.IsNull);
+			Assert.AreEqual (0, pp2.Elements.Length);
+			Assert.AreEqual ("Foo.Name.Bar.Xyz", PropertyPath.Combine (pp3, pp4).GetFullPath ());
+			Assert.AreEqual ("Bar.Xyz", PropertyPath.Combine (pp1, pp4).GetFullPath ());
+			Assert.AreEqual ("abc", PropertyPath.Combine (pp2, pp1).GetFullPath ());
+			Assert.AreEqual (null, PropertyPath.Combine (pp1, pp1).GetFullPath ());
+		}
+
+		private static class TestAttachedProperties
+		{
+			public static void TestA()
+			{
+				//	Aucune analyse de la classe Test1 n'a encore eu lieu; il y
+				//	a donc 0 propriétés attachées connues.
+				
+				Assert.AreEqual (0, Property.GetAllAttachedProperties ().Count);
+				Test2 t2 = new Test2 ();
+				Assert.AreEqual (0, Property.GetAllAttachedProperties ().Count);
+			}
+			public static void TestB()
+			{
+				Test2 t2 = new Test2 ();
+				Assert.AreEqual (0, Property.GetAllAttachedProperties ().Count);
+
+				//	Les types sont créés à la demande s'ils ne sont pas encore
+				//	connus; c'est le cas de ot1 :
+
+				Types.ObjectType ot1 = Types.ObjectType.FromSystemType (typeof (Test1));
+				Types.ObjectType ot2 = Types.ObjectType.FromSystemType (typeof (Test2));
+
+				Assert.IsNotNull (ot1);
+				Assert.IsNotNull (ot2);
+
+				//	L'analyse de la classe Test1 a eu lieu; il y a donc 1
+				//	propriété attachée; celle de Test1 !
+
+				Assert.AreEqual (1, Property.GetAllAttachedProperties ().Count);
+				Assert.AreEqual ("Attached", Property.GetAllAttachedProperties ()[0].Name);
+			}
+			public static void TestC()
+			{
+				//	Vérifie que l'utilisation d'une propriété attachée produit
+				//	aussi des événements, comme si c'était une propriété normale
+				//	de l'objet Test2 :
+				
+				Test2 t2 = new Test2 ();
+				
+				ObjectTest.log = "";
+				Test1.SetAttached (t2, "Hello");
+				Assert.AreEqual ("", ObjectTest.log);
+
+				t2.AddEventHandler (Test1.AttachedProperty, ObjectTest.HandleTest1AttachedChanged);
+
+				Test1.SetAttached (t2, "Good bye");
+				Assert.AreEqual ("Property 'Attached' changed from 'Hello' to 'Good bye'", ObjectTest.log);
+			}
+		}
+
+		private static string log = null;
+
+		private static void HandleTest1AttachedChanged(object sender, Types.PropertyChangedEventArgs e)
+		{
+			ObjectTest.log = string.Format ("Property '{2}' changed from '{0}' to '{1}'", e.OldValue, e.NewValue, e.PropertyName);
+		}
 		
 		private void PrivateCreateObjects(int runs)
 		{
@@ -373,19 +447,83 @@ namespace Epsitec.Common.Types
 				m.OnFooChanged ();
 			}
 		}
-		
+
+		#region ObjectA, ObjectB and ObjectX Classes
 		private class ObjectA : Types.Object
 		{
 		}
-		
 		private class ObjectB : ObjectA
 		{
 		}
-		
 		private class ObjectX : Types.Object
 		{
 		}
+		#endregion
+
+		#region PassiveClass and DerivedPassiveClass Classes
+		private class PassiveClass
+		{
+			static PassiveClass()
+			{
+				ObjectTest.Register ("PassiveClass");
+			}
+		}
+		private class DerivedPassiveClass : PassiveClass
+		{
+			static DerivedPassiveClass()
+			{
+				ObjectTest.Register ("DerivedPassiveClass");
+			}
+			
+			public static void Hello()
+			{
+				new DerivedPassiveClass ();
+			}
+		}
+		#endregion
+
+		#region Test1 and Test2 Classes
+		public class Test1 : Types.Object
+		{
+			public Test1()
+			{
+			}
+
+			public static void SetAttached(Object o, string value)
+			{
+				o.SetValue (Test1.AttachedProperty, value);
+			}
+			public static string GetAttached(Object o)
+			{
+				return o.GetValue (Test1.AttachedProperty) as string;
+			}
+
+			public static Property AttachedProperty = Property.RegisterAttached ("Attached", typeof (string), typeof (Test1));
+			public static Property StandardProperty = Property.Register ("Standard", typeof (string), typeof (Test1));
+		}
+		public class Test2 : Types.Object
+		{
+			public Test2()
+			{
+			}
+
+			public static Property StandardProperty = Property.Register ("Standard", typeof (string), typeof (Test2));
+		}
+		#endregion
+		
+		private static void Register(string name)
+		{
+			if (ObjectTest.registered.Length > 0)
+			{
+				ObjectTest.registered = string.Concat (ObjectTest.registered, ", ", name);
+			}
+			else
+			{
+				ObjectTest.registered = name;
+			}
+		}
 		
 		private const double cycles_per_ns = 1.7;
+		private static string registered = "";
 	}
 }

@@ -179,6 +179,23 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+		private void ExecuteTypeStaticConstructor()
+		{
+			System.Reflection.FieldInfo[] infos = this.systemType.GetFields (System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+
+			if (infos.Length > 0)
+			{
+				for (int i = 0; i < infos.Length; i++)
+				{
+					if (infos[i].FieldType == typeof (Property))
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Initialized type {0}", this.Name));
+						infos[i].GetValue (null);
+						break;
+					}
+				}
+			}
+		}
 
 		private static ObjectType FromSystemTypeLocked(System.Type system_type)
 		{
@@ -195,6 +212,8 @@ namespace Epsitec.Common.Types
 				ObjectType this_type = new ObjectType (system_type, null);
 				
 				ObjectType.types[system_type] = this_type;
+
+				this_type.ExecuteTypeStaticConstructor ();
 				
 				return this_type;
 			}
@@ -210,6 +229,8 @@ namespace Epsitec.Common.Types
 				ObjectType this_type = new ObjectType (system_type, base_type);
 				
 				ObjectType.types[system_type] = this_type;
+
+				this_type.ExecuteTypeStaticConstructor ();
 				
 				return this_type;
 			}
