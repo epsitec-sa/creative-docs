@@ -87,6 +87,11 @@ namespace Epsitec.Common.Types
 		public void SetValue(Property property, object value)
 		{
 			PropertyMetadata metadata = property.GetMetadata (this);
+
+			if (metadata.CoerceValue != null)
+			{
+				value = metadata.CoerceValue (this, property, value);
+			}
 			
 			if (metadata.SetValueOverride != null)
 			{
@@ -129,6 +134,20 @@ namespace Epsitec.Common.Types
 			else if ((old_value == null) || (! old_value.Equals (new_value)))
 			{
 				this.InvalidateProperty (property, old_value, new_value);
+			}
+		}
+		
+		public object CoerceValue(Property property, object value)
+		{
+			PropertyMetadata metadata = property.GetMetadata (this);
+
+			if (metadata.CoerceValue != null)
+			{
+				return metadata.CoerceValue (this, property, value);
+			}
+			else
+			{
+				return value;
 			}
 		}
 		

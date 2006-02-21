@@ -16,8 +16,8 @@ namespace Epsitec.Common.Types
 			this.propertyType = property_type;
 			this.ownerType = owner_type;
 			this.defaultMetadata = metadata;
+			this.globalIndex = System.Threading.Interlocked.Increment (ref Property.globalPropertyCount);
 		}
-		
 		
 		public string							Name
 		{
@@ -54,6 +54,13 @@ namespace Epsitec.Common.Types
 				return this.isAttached;
 			}
 		}
+		public int								GlobalIndex
+		{
+			get
+			{
+				return this.globalIndex;
+			}
+		}
 		
 		public override int GetHashCode()
 		{
@@ -62,6 +69,38 @@ namespace Epsitec.Common.Types
 		public override bool Equals(object obj)
 		{
 			return this.Equals (obj as Property);
+		}
+
+		public bool IsValidType(object value)
+		{
+			if (value == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this.PropertyType.IsAssignableFrom (value.GetType ());
+			}
+		}
+		public bool IsValidValue(object value)
+		{
+			if (this.IsValidType (value))
+			{
+				PropertyMetadata metadata = this.DefaultMetadata;
+
+				if (metadata.ValidateValue != null)
+				{
+					return metadata.ValidateValue (value);
+				}
+				else
+				{
+					return true;
+				}
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		#region IEquatable<Property> Members
@@ -184,11 +223,13 @@ namespace Epsitec.Common.Types
 		private System.Type						ownerType;
 		private PropertyMetadata				defaultMetadata;
 		private bool							isAttached;
+		private int								globalIndex;
 		
 		Dictionary<System.Type, PropertyMetadata>	overriddenMetadata;
 		
 		static object							exclusion = new object ();
 		static List<Property>					attachedPropertiesList = new List<Property> ();
 		static Property[]						attachedPropertiesArray;
+		static int								globalPropertyCount;
 	}
 }

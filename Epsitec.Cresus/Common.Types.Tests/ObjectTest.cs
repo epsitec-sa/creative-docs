@@ -171,6 +171,14 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (oa.ObjectType.IsObjectInstanceOfType (ob));
 			Assert.IsFalse (ob.ObjectType.IsObjectInstanceOfType (oa));
 			Assert.IsFalse (oa.ObjectType.IsObjectInstanceOfType (ox));
+
+			Assert.IsTrue (ObjectX.AProperty.IsValidType (oa));		//	ObjectA --> Object
+			Assert.IsTrue (ObjectX.AProperty.IsValidType (ob));		//	ObjectB --> ObjectA --> Object
+			Assert.IsFalse (ObjectX.AProperty.IsValidType (ox));	//	ObjectX --> Object, pas ObjectA
+
+			Assert.IsFalse (ObjectX.BProperty.IsValidType (oa));	//	ObjectA --> Object, pas ObjectB
+			Assert.IsTrue (ObjectX.BProperty.IsValidType (ob));		//	ObjectB --> ObjectA --> Object
+			Assert.IsFalse (ObjectX.BProperty.IsValidType (ox));	//	ObjectX --> Object, pas ObjectB
 		}
 
 		[Test]
@@ -461,6 +469,8 @@ namespace Epsitec.Common.Types
 		}
 		private class ObjectX : Types.Object
 		{
+			public static Property AProperty = Property.Register ("A", typeof (ObjectA), typeof (ObjectX));
+			public static Property BProperty = Property.Register ("B", typeof (ObjectB), typeof (ObjectX));
 		}
 		#endregion
 
