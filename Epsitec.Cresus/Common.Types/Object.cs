@@ -240,7 +240,7 @@ namespace Epsitec.Common.Types
 			if ((this.bindings != null) &&
 				(this.bindings.ContainsKey (property)))
 			{
-				return this.bindings[property].Binding;
+				return this.bindings[property].ParentBinding;
 			}
 			else
 			{

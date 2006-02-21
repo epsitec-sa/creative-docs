@@ -18,7 +18,7 @@ namespace Epsitec.Common.Types
 		{
 		}
 		
-		public Binding							Binding
+		public Binding							ParentBinding
 		{
 			get
 			{
