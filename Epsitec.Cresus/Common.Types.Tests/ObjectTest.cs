@@ -6,11 +6,9 @@ namespace Epsitec.Common.Types
 {
 	[TestFixture] public class ObjectTest
 	{
-		[System.Runtime.InteropServices.DllImport("Kernel32.dll")] private static extern System.IntPtr LoadLibrary(string fullpath);
-		
-		[SetUp] public void Initialise()
+		[SetUp]
+		public void Initialise()
 		{
-			ObjectTest.LoadLibrary (@"s:\Epsitec.Cresus\External\AntiGrain.Win32.dll");
 		}
 
 
@@ -117,11 +115,9 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		[Ignore ("Too slow")]
-		public void CheckObjectCreation()
+//		[Ignore ("Too slow")]
+		public void CheckObjectCreationPerformance()
 		{
-			AntiGrain.Interface.Initialise ();
-			
 			System.Console.WriteLine ("Performance test of AbstractWidget Properties");
 			System.Console.WriteLine ("--------------------------------------100'000");
 			System.Console.Out.Flush ();
@@ -266,122 +262,129 @@ namespace Epsitec.Common.Types
 		{
 			MyObject[] array = new MyObject[runs];
 			long before = System.GC.GetTotalMemory (true);
-			
-			for (int i = 0; i < 1000; i++)
-			{
-				long cc = Epsitec.Common.Drawing.Agg.Library.Cycles;
-			}
-			
-			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-			long c0 = Epsitec.Common.Drawing.Agg.Library.Cycles - c2;
-			
-			System.Console.Out.WriteLine ("Zero work: {0:0.0} ns", c0 / cycles_per_ns);
-			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+
+			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
 			
 			for (int i = 0; i < runs; i++)
 			{
 				array[i] = new MyObject ();
 			}
+
+			stopwatch.Stop ();
 			
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
-			
-			System.Console.WriteLine ("Creating objects: {0:0.0} ns.", c2 / runs / cycles_per_ns);
+			System.Console.WriteLine ("Creating objects: {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
 			System.Console.WriteLine ("Allocated {0} bytes/object.", (System.GC.GetTotalMemory (true) - before) / runs);
 			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
 			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
 			for (int i = 0; i < runs; i++)
 			{
 				array[i].Xyz = 10;
 			}
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
-			System.Console.WriteLine ("Setting int Xyz : {0:0.0} ns.", c2 / runs / cycles_per_ns);
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Setting int Xyz : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
 			System.Console.Out.Flush ();
 			
 			string text = null;
 			int    xyz  = 0;
-			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
 			for (int i = 0; i < runs; i++)
 			{
 				text = array[i].Name;
 			}
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
-			System.Console.WriteLine ("Reading default string Name ({1}) : {0:0.0} ns.", c2 / runs / cycles_per_ns, text);
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Reading default string Name ({1}) : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, text);
 			System.Console.Out.Flush ();
-			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
 			for (int i = 0; i < runs; i++)
 			{
 				array[i].Name = "Test";
 			}
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
-			System.Console.WriteLine ("Setting string Name : {0:0.0} ns.", c2 / runs / cycles_per_ns);
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Setting string Name : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
 			System.Console.Out.Flush ();
-			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
 			for (int i = 0; i < runs; i++)
 			{
 				xyz = array[i].Xyz;
 			}
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
-			System.Console.WriteLine ("Reading local int Xyz ({1}) : {0:0.0} ns.", c2 / runs / cycles_per_ns, xyz);
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Reading local int Xyz ({1}) : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
 			System.Console.Out.Flush ();
-			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
 			for (int i = 0; i < runs; i++)
 			{
 				text = array[i].Name;
 			}
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
-			System.Console.WriteLine ("Reading local string Name ({1}) : {0:0.0} ns.", c2 / runs / cycles_per_ns, text);
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Reading local string Name ({1}) : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, text);
 			System.Console.Out.Flush ();
 			
 			MyObject.OnFooChangedCallCount = 0;
-			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
 			for (int i = 0; i < runs; i++)
 			{
 				array[i].Foo = "0";
 			}
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
-			System.Console.WriteLine ("Setting string Foo, initial : {0:0.0} ns.", c2 / runs / cycles_per_ns);
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Setting string Foo, initial : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
 			System.Console.Out.Flush ();
 			
 			Assert.AreEqual (MyObject.OnFooChangedCallCount, 1*runs);
-			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
 			for (int i = 0; i < runs; i++)
 			{
 				array[i].Foo = "1";
 			}
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
-			System.Console.WriteLine ("Setting string Foo, changed : {0:0.0} ns.", c2 / runs / cycles_per_ns);
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Setting string Foo, changed : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
 			System.Console.Out.Flush ();
 			
 			Assert.AreEqual (MyObject.OnFooChangedCallCount, 2*runs);
-			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
 			for (int i = 0; i < runs; i++)
 			{
 				array[i].Foo = "1";
 			}
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
-			System.Console.WriteLine ("Setting string Foo, unchanged : {0:0.0} ns.", c2 / runs / cycles_per_ns);
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Setting string Foo, unchanged : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
 			System.Console.Out.Flush ();
 			
 			Assert.AreEqual (MyObject.OnFooChangedCallCount, 2*runs);
 		}
-		
-		
+
+		#region MyObject Class
 		private class MyObject : Types.Object
 		{
 			public MyObject()
 			{
 			}
-			
 			
 			public int				Xyz
 			{
@@ -447,6 +450,7 @@ namespace Epsitec.Common.Types
 				m.OnFooChanged ();
 			}
 		}
+		#endregion
 
 		#region ObjectA, ObjectB and ObjectX Classes
 		private class ObjectA : Types.Object
@@ -523,7 +527,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		private const double cycles_per_ns = 1.7;
 		private static string registered = "";
 	}
 }
