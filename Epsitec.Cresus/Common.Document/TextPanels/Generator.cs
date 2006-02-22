@@ -269,6 +269,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "false");
 				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "-");
 				this.SetValue(p, 2, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.Numeric);
+				this.SetValue(p, 2, Part1.Value,   Part2.FontColor,     RichColor.ToString(RichColor.FromRgb(0,0,1)));
 				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          "");
 				this.SetValue(p, 2, Part1.Generic, Part2.Tab,           "15");
 				this.SetValue(p, 2, Part1.Generic, Part2.Indent,        "20");
@@ -323,6 +324,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected string GetResume(int level)
 		{
+			//	Donne le texte résumé pour un niveau complet. Le résumé contient aussi tous
+			//	les niveaux précédents.
 			if ( level == 0 )
 			{
 				return "Base";
@@ -354,6 +357,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected string GetResume(int level, Part1 part1)
 		{
+			//	Donne le texte résumé d'une partie d'un niveau (Prefix, Value ou Suffix).
+			//	Le résumé contient les commandes pour la police et la couleur.
 			string s = this.GetValue(level, part1, Part2.Text);
 			if ( s == null )  return "";
 
@@ -373,18 +378,18 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-				builder.Append("<font ");
+				builder.Append("<font");
 
 				if ( f != null )
 				{
-					builder.Append("face=\"");
+					builder.Append(" face=\"");
 					builder.Append(f);
 					builder.Append("\"");
 				}
 
 				if ( c != null )
 				{
-					builder.Append("color=\"#");
+					builder.Append(" color=\"#");
 					builder.Append(RichColor.ToHexa(RichColor.Parse(c)));
 					builder.Append("\"");
 				}
@@ -399,6 +404,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected string GetValue(int level, Part1 part1, Part2 part2)
 		{
+			//	Donne la valeur d'une partie d'un niveau. Il s'agit du passage obligé
+			//	pour lire les définitions de puces/numérotations.
 			System.Diagnostics.Debug.Assert(level >= 0 && level <= 10);
 			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return null;
 
@@ -531,6 +538,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void SetValue(Text.ParagraphManagers.ItemListManager.Parameters p, int level, Part1 part1, Part2 part2, string value)
 		{
+			//	Modifie une valeur d'une partie d'un niveau. Il s'agit du passage obligé
+			//	pour modifier les définitions de puces/numérotations.
 			System.Diagnostics.Debug.Assert(level >= 0 && level <= 10);
 
 			Text.TabList tabs = this.document.TextContext.TabList;
