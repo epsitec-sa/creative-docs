@@ -328,13 +328,8 @@ namespace Epsitec.Common.Document.TextPanels
 			else
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-				string s;
 
-				s = this.GetValue(0, Part1.Prefix, Part2.Text);
-				if ( s != null )
-				{
-					builder.Append(s);
-				}
+				builder.Append(this.GetResume(0, Part1.Prefix));
 				int lp = builder.Length;
 
 				for ( int i=1 ; i<=level ; i++ )
@@ -344,32 +339,35 @@ namespace Epsitec.Common.Document.TextPanels
 						builder.Remove(lp, builder.Length-lp);
 					}
 
-					s = this.GetValue(i, Part1.Prefix, Part2.Text);
-					if ( s != null )
-					{
-						builder.Append(s);
-					}
-
-					s = this.GetValue(i, Part1.Value, Part2.Text);
-					if ( s != null )
-					{
-						builder.Append(Generator.ConvTextToShort(s));
-					}
-
-					s = this.GetValue(i, Part1.Suffix, Part2.Text);
-					if ( s != null )
-					{
-						builder.Append(s);
-					}
+					builder.Append(this.GetResume(i, Part1.Prefix));
+					builder.Append(this.GetResume(i, Part1.Value));
+					builder.Append(this.GetResume(i, Part1.Suffix));
 				}
 
-				s = this.GetValue(0, Part1.Suffix, Part2.Text);
-				if ( s != null )
-				{
-					builder.Append(s);
-				}
+				builder.Append(this.GetResume(0, Part1.Suffix));
 
 				return builder.ToString();
+			}
+		}
+
+		protected string GetResume(int level, Part1 part1)
+		{
+			string s = this.GetValue(level, part1, Part2.Text);
+			if ( s == null )  return "";
+
+			if ( part1 == Part1.Value )
+			{
+				s = Generator.ConvTextToShort(s);
+			}
+
+			string f = this.GetValue(level, part1, Part2.FontFace);
+			if ( f == null )
+			{
+				return s;
+			}
+			else
+			{
+				return string.Concat("<font face=\"", f, "\">", s, "</font>");
 			}
 		}
 
@@ -600,65 +598,65 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 
+			if ( part2 == Part2.FontFace )
+			{
+				Common.Text.Properties.FontProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontProperty;
+				Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty(value, Misc.DefaultFontStyle(value));
+				if ( current == null )
+				{
+					properties = Generator.PropertyAdd(properties, n);
+				}
+				else
+				{
+					Generator.PropertySet(properties, n);
+				}
+			}
+
+			if ( part2 == Part2.FontStyle )
+			{
+				Common.Text.Properties.FontProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontProperty;
+				if ( current == null )
+				{
+					Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty("Arial", value);
+					properties = Generator.PropertyAdd(properties, n);
+				}
+				else
+				{
+					Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty(current.FaceName, value);
+					Generator.PropertySet(properties, n);
+				}
+			}
+
+			if ( part2 == Part2.FontSize )
+			{
+				Common.Text.Properties.FontSizeProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontSizeProperty;
+				Common.Text.Properties.FontSizeProperty n = new Text.Properties.FontSizeProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
+				if ( current == null )
+				{
+					properties = Generator.PropertyAdd(properties, n);
+				}
+				else
+				{
+					Generator.PropertySet(properties, n);
+				}
+			}
+
+			if ( part2 == Part2.FontOffset )
+			{
+				Common.Text.Properties.FontOffsetProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontOffsetProperty;
+				Common.Text.Properties.FontOffsetProperty n = new Text.Properties.FontOffsetProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
+				if ( current == null )
+				{
+					properties = Generator.PropertyAdd(properties, n);
+				}
+				else
+				{
+					Generator.PropertySet(properties, n);
+				}
+			}
+
 			if ( properties != null )
 			{
-				if ( part2 == Part2.FontFace )
-				{
-					Common.Text.Properties.FontProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontProperty;
-					Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty(value, Misc.DefaultFontStyle(value));
-					if ( current == null )
-					{
-						properties = Generator.PropertyAdd(properties, n);
-					}
-					else
-					{
-						Generator.PropertySet(properties, n);
-					}
-				}
-
-				if ( part2 == Part2.FontStyle )
-				{
-					Common.Text.Properties.FontProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontProperty;
-					if ( current == null )
-					{
-						Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty("Arial", value);
-						properties = Generator.PropertyAdd(properties, n);
-					}
-					else
-					{
-						Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty(current.FaceName, value);
-						Generator.PropertySet(properties, n);
-					}
-				}
-
-				if ( part2 == Part2.FontSize )
-				{
-					Common.Text.Properties.FontSizeProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontSizeProperty;
-					Common.Text.Properties.FontSizeProperty n = new Text.Properties.FontSizeProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
-					if ( current == null )
-					{
-						properties = Generator.PropertyAdd(properties, n);
-					}
-					else
-					{
-						Generator.PropertySet(properties, n);
-					}
-				}
-
-				if ( part2 == Part2.FontOffset )
-				{
-					Common.Text.Properties.FontOffsetProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontOffsetProperty;
-					Common.Text.Properties.FontOffsetProperty n = new Text.Properties.FontOffsetProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
-					if ( current == null )
-					{
-						properties = Generator.PropertyAdd(properties, n);
-					}
-					else
-					{
-						Generator.PropertySet(properties, n);
-					}
-				}
-
 				if ( level == 0 )
 				{
 					if ( part1 == Part1.Prefix )  p.Generator.GlobalPrefixProperties = properties;
@@ -678,6 +676,8 @@ namespace Epsitec.Common.Document.TextPanels
 		#region Properties array manager
 		protected static Common.Text.Property PropertyGet(Common.Text.Property[] properties, Common.Text.Properties.WellKnownType type)
 		{
+			if ( properties == null )  return null;
+
 			foreach ( Common.Text.Property property in properties )
 			{
 				if ( property.WellKnownType == type )  return property;
@@ -699,12 +699,13 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected static Common.Text.Property[] PropertyAdd(Common.Text.Property[] properties, Common.Text.Property n)
 		{
-			Common.Text.Property[] list = new Common.Text.Property[properties.Length+1];
-			for ( int i=0 ; i<properties.Length ; i++ )
+			int length = (properties == null) ? 0 : properties.Length;
+			Common.Text.Property[] list = new Common.Text.Property[length+1];
+			for ( int i=0 ; i<length ; i++ )
 			{
 				list[i] = properties[i];
 			}
-			list[properties.Length] = n;
+			list[length] = n;
 			return list;
 		}
 		#endregion
@@ -976,9 +977,9 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.table.SetHeaderTextH(0, "Texte");
-			this.table.SetHeaderTextH(1, "Pré.");
+			this.table.SetHeaderTextH(1, "Préfix");
 			this.table.SetHeaderTextH(2, "Num.");
-			this.table.SetHeaderTextH(3, "Suf.");
+			this.table.SetHeaderTextH(3, "Suffix");
 
 			for ( int i=0 ; i<rows ; i++ )
 			{
@@ -1040,13 +1041,13 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( justif == "Right"  )  st.Alignment = ContentAlignment.MiddleRight;
 
 			st = this.table[1, row].Children[0] as StaticText;
-			st.Text = this.GetValue(row, Part1.Prefix, Part2.Text);
+			st.Text = this.GetResume(row, Part1.Prefix);
 
 			st = this.table[2, row].Children[0] as StaticText;
-			st.Text = this.GetValue(row, Part1.Value, Part2.Text);
+			st.Text = this.GetResume(row, Part1.Value);
 
 			st = this.table[3, row].Children[0] as StaticText;
-			st.Text = this.GetValue(row, Part1.Suffix, Part2.Text);
+			st.Text = this.GetResume(row, Part1.Suffix);
 
 			//?bool selected = (tag == this.tabSelected);  // voir (**) dans Objects.AbstractText !
 			//?this.table.SelectRow(row, selected);
