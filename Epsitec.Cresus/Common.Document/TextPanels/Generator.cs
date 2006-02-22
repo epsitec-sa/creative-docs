@@ -23,7 +23,6 @@ namespace Epsitec.Common.Document.TextPanels
 			Prefix,
 			Value,
 			Suffix,
-			Truncate,
 		}
 
 		protected enum Part2
@@ -37,7 +36,6 @@ namespace Epsitec.Common.Document.TextPanels
 			Tab,
 			Indent,
 			Disposition,
-			Truncate,
 		}
 
 
@@ -190,58 +188,30 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-#if false
-				p.Generator.GlobalPrefix = "";
-				p.Generator.GlobalSuffix = "";
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CF"));
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25CB", true));
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
-				
-				p.Generator[0].ValueProperties = new Text.Property[] { new Text.Properties.FontProperty("Arial", "Regular") };
-				p.Generator[1].ValueProperties = new Text.Property[] { new Text.Properties.FontProperty("Arial", "Regular") };
-				p.Generator[2].ValueProperties = new Text.Property[] { new Text.Properties.FontProperty("Arial", "Regular") };
-
-				//?Common.Text.Properties.UnitsTools.SerializeSizeUnits();
-				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("LevelTable:50 pt;150 pt;250 pt;350 pt"));
-				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("LevelTable:100 pt;200 pt;300 pt;400 pt"));
-
-				p.Generator.UserData = user;
-				this.ParagraphWrapper.Defined.ItemListParameters = p;
-#else
 				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
-				this.SetValue(p, 0, Part1.Prefix,  Part2.FontFace,      "Arial");
 				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
-				this.SetValue(p, 0, Part1.Suffix,  Part2.FontFace,      "Arial");
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Center");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
-				//?this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25CF");  // puce ronde pleine
-				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "*");
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25CF");  // puce ronde pleine
 				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,      "Arial");
 				this.SetValue(p, 1, Part1.Value,   Part2.Text,          "");
-				this.SetValue(p, 1, Part1.Value,   Part2.FontFace,      "Arial");
 				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
-				this.SetValue(p, 1, Part1.Suffix,  Part2.FontFace,      "Arial");
 
 				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "true");
 				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "\u25CB");  // puce ronde vide
 				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,      "Arial");
 				this.SetValue(p, 2, Part1.Value,   Part2.Text,          "");
-				this.SetValue(p, 2, Part1.Value,   Part2.FontFace,      "Arial");
 				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          "");
-				this.SetValue(p, 2, Part1.Suffix,  Part2.FontFace,      "Arial");
 
 				this.SetValue(p, 3, Part1.Generic, Part2.SupressBefore, "true");
 				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,          "-");
 				this.SetValue(p, 3, Part1.Prefix,  Part2.FontFace,      "Arial");
 				this.SetValue(p, 3, Part1.Value,   Part2.Text,          "");
-				this.SetValue(p, 3, Part1.Value,   Part2.FontFace,      "Arial");
 				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,          "");
-				this.SetValue(p, 3, Part1.Suffix,  Part2.FontFace,      "Arial");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
-#endif
 			}
 
 			if ( type == "Bullet2" )
@@ -249,15 +219,27 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				p.Generator.GlobalPrefix = "";
-				p.Generator.GlobalSuffix = "";
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25A0"));
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25A1", true));
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
-				
-				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("Em:1"));
-				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("Em:2"));
-				p.Font    = new Text.Properties.FontProperty("Arial", "Regular");
+				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Center");
+
+				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25A0");  // puce carrée pleine
+				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,          "");
+				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
+
+				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "true");
+				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "\u25A1");  // puce carrée vide
+				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 2, Part1.Value,   Part2.Text,          "");
+				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          "");
+
+				this.SetValue(p, 3, Part1.Generic, Part2.SupressBefore, "true");
+				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,          "-");
+				this.SetValue(p, 3, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 3, Part1.Value,   Part2.Text,          "");
+				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,          "");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -268,14 +250,21 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				p.Generator.GlobalPrefix = "";
-				p.Generator.GlobalSuffix = "";
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "\u25BA"));
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant, "", "", Common.Text.Generator.Casing.Default, "-", true));
-				
-				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("Em:1"));
-				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("Em:2"));
-				p.Font    = new Text.Properties.FontProperty("Arial", "Regular");
+				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Center");
+
+				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25BA");  // triangle >
+				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,          "");
+				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
+
+				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "true");
+				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "-");
+				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 2, Part1.Value,   Part2.Text,          "");
+				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          "");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -286,12 +275,14 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				p.Generator.GlobalPrefix = "";
-				p.Generator.GlobalSuffix = "";
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Numeric, "", "."));
-				
-				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 1.0, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("LevelMultiplier:150 %", "Em:1.5"));
-				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
+				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Right");
+
+				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.Numeric);
+				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          ".");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -302,14 +293,30 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				p.Generator.GlobalPrefix = "";
-				p.Generator.GlobalSuffix = ")";
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Alphabetic, "", "", Common.Text.Generator.Casing.Upper));
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Numeric,    "-", ""));
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Roman,      "(", "", Common.Text.Generator.Casing.Lower, null, true));
-				
-				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("LevelMultiplier:100 %", "Em:0.5"));
-				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
+				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          ")");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Right");
+
+				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.AlphaUpper);
+				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 1, Part1.Generic, Part2.Tab,           "15");
+				this.SetValue(p, 1, Part1.Generic, Part2.Indent,        "20");
+
+				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "false");
+				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "-");
+				this.SetValue(p, 2, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.Numeric);
+				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 2, Part1.Generic, Part2.Tab,           "15");
+				this.SetValue(p, 2, Part1.Generic, Part2.Indent,        "20");
+
+				this.SetValue(p, 3, Part1.Generic, Part2.SupressBefore, "true");
+				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,          "(");
+				this.SetValue(p, 3, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.RomanLower);
+				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 3, Part1.Generic, Part2.Tab,           "20");
+				this.SetValue(p, 3, Part1.Generic, Part2.Indent,        "25");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -320,14 +327,24 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				p.Generator.GlobalPrefix = "";
-				p.Generator.GlobalSuffix = "";
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Numeric,    "", "", Common.Text.Generator.Casing.Default, null, true));
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Alphabetic, "", ")", Common.Text.Generator.Casing.Lower, null, true));
-				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Roman,      "", ")", Common.Text.Generator.Casing.Lower, null, true));
-				
-				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelative,       TabList.PackToAttribute("LevelMultiplier:100 %", "Em:0.5"));
-				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, TabList.PackToAttribute("LevelMultiplier:150 %", "Em:2"));
+				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Left");
+
+				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.Numeric);
+				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
+
+				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "true");
+				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(p, 2, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
+				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          ")");
+
+				this.SetValue(p, 3, Part1.Generic, Part2.SupressBefore, "true");
+				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,          "");
+				this.SetValue(p, 3, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.RomanLower);
+				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,          ")");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -526,12 +543,7 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				while ( level-1 >= p.Generator.Count )
 				{
-					p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Constant));
-				}
-
-				if ( part1 == Part1.Truncate )
-				{
-					p.Generator.Truncate(level-1);
+					p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Empty));
 				}
 
 				Common.Text.Generator.Sequence sequence = p.Generator[level-1];
@@ -787,7 +799,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( text == Res.Strings.TextPanel.Generator.Numerator.None || text == "" )
 			{
-				type = Common.Text.Generator.SequenceType.Constant;
+				type = Common.Text.Generator.SequenceType.Empty;
 			}
 
 			if ( text == Res.Strings.TextPanel.Generator.Numerator.Numeric )
@@ -822,7 +834,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected static string ConvSequenceToText(Common.Text.Generator.Sequence sequence)
 		{
-			if ( sequence.WellKnownType == Common.Text.Generator.SequenceType.Constant )
+			if ( sequence.WellKnownType == Common.Text.Generator.SequenceType.Empty )
 			{
 				return Res.Strings.TextPanel.Generator.Numerator.None;
 			}
