@@ -31,6 +31,7 @@ namespace Epsitec.Common.Document.TextPanels
 			FontFace,
 			FontStyle,
 			FontSize,
+			FontColor,
 			FontOffset,
 			SupressBefore,
 			Tab,
@@ -186,6 +187,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
 				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25A0");  // puce carrée pleine
 				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 1, Part1.Prefix,  Part2.FontColor,     RichColor.ToString(RichColor.FromRgb(1,0,0)));
 				this.SetValue(p, 1, Part1.Value,   Part2.Text,          "");
 				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
 
@@ -361,13 +363,37 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			string f = this.GetValue(level, part1, Part2.FontFace);
-			if ( f == null )
+			string c = this.GetValue(level, part1, Part2.FontColor);
+
+			if ( f == null && c == null )
 			{
 				return s;
 			}
 			else
 			{
-				return string.Concat("<font face=\"", f, "\">", s, "</font>");
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				builder.Append("<font ");
+
+				if ( f != null )
+				{
+					builder.Append("face=\"");
+					builder.Append(f);
+					builder.Append("\"");
+				}
+
+				if ( c != null )
+				{
+					builder.Append("color=\"#");
+					builder.Append(RichColor.ToHexa(RichColor.Parse(c)));
+					builder.Append("\"");
+				}
+
+				builder.Append(">");
+				builder.Append(s);
+				builder.Append("</font>");
+
+				return builder.ToString();
 			}
 		}
 
@@ -464,6 +490,18 @@ namespace Epsitec.Common.Document.TextPanels
 						{
 							Common.Text.Properties.FontSizeProperty size = property as Common.Text.Properties.FontSizeProperty;
 							return this.document.Modifier.RealToString(size.Size);
+						}
+					}
+				}
+
+				if ( part2 == Part2.FontColor )
+				{
+					foreach ( Common.Text.Property property in properties )
+					{
+						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontColor )
+						{
+							Common.Text.Properties.FontColorProperty color = property as Common.Text.Properties.FontColorProperty;
+							return color.TextColor;
 						}
 					}
 				}
@@ -631,6 +669,20 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				Common.Text.Properties.FontSizeProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontSizeProperty;
 				Common.Text.Properties.FontSizeProperty n = new Text.Properties.FontSizeProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
+				if ( current == null )
+				{
+					properties = Generator.PropertyAdd(properties, n);
+				}
+				else
+				{
+					Generator.PropertySet(properties, n);
+				}
+			}
+
+			if ( part2 == Part2.FontColor )
+			{
+				Common.Text.Properties.FontColorProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontColorProperty;
+				Common.Text.Properties.FontColorProperty n = new Text.Properties.FontColorProperty(value);
 				if ( current == null )
 				{
 					properties = Generator.PropertyAdd(properties, n);
