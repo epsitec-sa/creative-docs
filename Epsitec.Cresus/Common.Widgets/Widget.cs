@@ -112,6 +112,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public Widget()
 		{
+//-			this.AddEventHandler (Types.ObjectTree.ChildrenProperty, this.HandleWidgetChildrenChanged);
+			
 			if (Support.ObjectBundler.IsBooting)
 			{
 				//	N'initialise rien, car cela prend passablement de temps... et de toute
@@ -141,6 +143,11 @@ namespace Epsitec.Common.Widgets
 				Widget.alive_widgets.Add (new System.WeakReference (this));
 			}
 		}
+
+//-		void HandleWidgetChildrenChanged(object sender, Epsitec.Common.Types.PropertyChangedEventArgs e)
+//-		{
+//-			System.Diagnostics.Debug.WriteLine (string.Format ("{0} has {1} children", this.ToString (), this.HasChildren ? this.Children.Count.ToString () : "no"));
+//-		}
 		
 		public Widget(Widget embedder) : this()
 		{

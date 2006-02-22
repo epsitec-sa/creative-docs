@@ -44,7 +44,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static Property ParentProperty = Property.Register ("Parent", typeof (Object), typeof (ObjectTree));
-		public static Property ChildrenProperty = Property.Register ("Children", typeof (ICollection<Object>), typeof (ObjectTree));
+		public static Property ParentProperty = Property.RegisterReadOnly ("Parent", typeof (Object), typeof (ObjectTree));
+		public static Property ChildrenProperty = Property.RegisterReadOnly ("Children", typeof (ICollection<Object>), typeof (ObjectTree));
 	}
 }
