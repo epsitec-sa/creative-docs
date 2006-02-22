@@ -1266,9 +1266,11 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property IndexProperty				= Property.Register ("Index", typeof (int), typeof (Visual), new PropertyMetadata (-1));
 		public static readonly Property GroupProperty				= Property.Register ("Group", typeof (string), typeof (Visual));
 		public static readonly Property NameProperty				= Property.Register ("Name", typeof (string), typeof (Visual));
-		public static readonly Property ParentProperty				= Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged)));
+		public static readonly Property ParentProperty				= ObjectTree.ParentProperty.AddOwner (typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged)));
+//		public static readonly Property ParentProperty				= Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged)));
 		public static readonly Property ParentLayerProperty			= Property.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentLayerValue)));
-		public static readonly Property ChildrenProperty			= Property.RegisterReadOnly ("Children", typeof (ICollection<Types.Object>), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
+		public static readonly Property ChildrenProperty			= ObjectTree.ChildrenProperty.AddOwner (typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
+//		public static readonly Property ChildrenProperty			= Property.RegisterReadOnly ("Children", typeof (ICollection<Types.Object>), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
 		public static readonly Property LayersProperty				= Property.RegisterReadOnly ("Layers", typeof (Collections.LayerCollection), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetLayersValue)));
 		
 		public static readonly Property AnchorProperty				= Property.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyFlags.AffectsParentLayout));

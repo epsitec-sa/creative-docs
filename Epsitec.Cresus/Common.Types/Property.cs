@@ -103,6 +103,60 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public Property AddOwner(System.Type ownerType)
+		{
+			if (this.IsAttached)
+			{
+				throw new System.InvalidOperationException (string.Format ("Attached property {0} does not accept owner {1}", this.Name, ownerType));
+			}
+
+			if (this.additionalOwnerTypes == null)
+			{
+				lock (this)
+				{
+					if (this.additionalOwnerTypes == null)
+					{
+						this.additionalOwnerTypes = new List<System.Type> ();
+					}
+				}
+			}
+
+			if (this.additionalOwnerTypes.Contains (ownerType))
+			{
+				throw new System.ArgumentException (string.Format ("Property named {0} already has owner {1}", this.Name, ownerType));
+			}
+			
+			this.additionalOwnerTypes.Add (ownerType);
+			
+			Object.Register (this, ownerType);
+			
+			return this;
+		}
+		public Property AddOwner(System.Type ownerType, PropertyMetadata metadata)
+		{
+			Property property = this.AddOwner (ownerType);
+			
+			property.OverrideMetadata (ownerType, metadata);
+			
+			return property;
+		}
+		
+		public bool IsOwnedBy(System.Type ownerType)
+		{
+			if (this.ownerType == ownerType)
+			{
+				return true;
+			}
+			else if (this.additionalOwnerTypes != null)
+			{
+				return this.additionalOwnerTypes.Contains (ownerType);
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		#region IEquatable<Property> Members
 		public bool Equals(Property other)
 		{
@@ -179,7 +233,7 @@ namespace Epsitec.Common.Types
 		{
 			Property dp = new Property (name, property_type, owner_type, metadata);
 			
-			Object.Register (dp);
+			Object.Register (dp, dp.OwnerType);
 			
 			return dp;
 		}
@@ -193,7 +247,7 @@ namespace Epsitec.Common.Types
 			Property dp = new Property (name, property_type, owner_type, metadata);
 			dp.isAttached = true;
 			
-			Object.Register (dp);
+			Object.Register (dp, dp.OwnerType);
 
 			lock (Property.exclusion)
 			{
@@ -212,7 +266,7 @@ namespace Epsitec.Common.Types
 		{
 			Property dp = new Property (name, property_type, owner_type, metadata);
 			
-			Object.Register (dp);
+			Object.Register (dp, dp.OwnerType);
 			
 			return dp;
 		}
@@ -221,6 +275,7 @@ namespace Epsitec.Common.Types
 		private string							name;
 		private System.Type						propertyType;
 		private System.Type						ownerType;
+		private List<System.Type>				additionalOwnerTypes;
 		private PropertyMetadata				defaultMetadata;
 		private bool							isAttached;
 		private int								globalIndex;

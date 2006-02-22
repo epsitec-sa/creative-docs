@@ -79,7 +79,7 @@ namespace Epsitec.Common.Types
 		
 		public void Register(Property property)
 		{
-			System.Diagnostics.Debug.Assert (property.OwnerType == this.SystemType);
+			System.Diagnostics.Debug.Assert (property.IsOwnedBy (this.SystemType));
 			System.Diagnostics.Debug.Assert (this.localStandardProperties != null);
 			System.Diagnostics.Debug.Assert (this.localAttachedProperties != null);
 

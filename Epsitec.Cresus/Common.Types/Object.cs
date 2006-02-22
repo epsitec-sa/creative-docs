@@ -341,35 +341,36 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		internal static void Register(Property property)
+		internal static void Register(Property property, System.Type ownerType)
 		{
 			System.Diagnostics.Debug.Assert (property != null);
-			
+			System.Diagnostics.Debug.Assert (ownerType != null);
+
 			lock (Object.declarations)
 			{
 				TypeDeclaration typeDeclaration;
 
-				if (Object.declarations.ContainsKey (property.OwnerType) == false)
+				if (Object.declarations.ContainsKey (ownerType) == false)
 				{
 					typeDeclaration = new TypeDeclaration ();
 					typeDeclaration[property.Name] = property;
-					Object.declarations[property.OwnerType] = typeDeclaration;
+					Object.declarations[ownerType] = typeDeclaration;
 				}
 				else
 				{
-					typeDeclaration = Object.declarations[property.OwnerType];
+					typeDeclaration = Object.declarations[ownerType];
 					
 					if (typeDeclaration.ContainsKey (property.Name))
 					{
-						throw new System.ArgumentException (string.Format ("Property named {0} already exists for type {1}", property.Name, property.OwnerType));
+						throw new System.ArgumentException (string.Format ("Property named {0} already exists for type {1}", property.Name, ownerType));
 					}
 					else
 					{
 						typeDeclaration[property.Name] = property;
 					}
 				}
-				
-				ObjectType type = ObjectType.FromSystemType (property.OwnerType);
+
+				ObjectType type = ObjectType.FromSystemType (ownerType);
 				type.Register (property);
 			}
 		}
