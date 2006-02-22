@@ -64,7 +64,7 @@ namespace Epsitec.Common.Types
 		
 		public override int GetHashCode()
 		{
-			return this.name.GetHashCode () ^ this.ownerType.GetHashCode ();
+			return this.globalIndex;
 		}
 		public override bool Equals(object obj)
 		{
@@ -162,9 +162,7 @@ namespace Epsitec.Common.Types
 		{
 			if (other != null)
 			{
-				return (this.ownerType == other.ownerType)
-					&& (this.name == other.name)
-					&& (this.isAttached == other.isAttached);
+				return this.globalIndex == other.globalIndex;
 			}
 
 			return false;
