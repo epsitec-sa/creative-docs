@@ -1060,6 +1060,9 @@ namespace Epsitec.Common.Text
 				case SequenceType.Roman:
 					return new Internal.Sequences.Roman ();
 				
+				case SequenceType.Empty:
+					return new Internal.Sequences.Empty ();
+					
 				default:
 					throw new System.NotSupportedException (string.Format ("SequenceType {0} not supported", type));
 			}
@@ -1179,7 +1182,8 @@ namespace Epsitec.Common.Text
 			Alphabetic,
 			Numeric,
 			Constant,
-			Roman
+			Roman,
+			Empty
 		}
 		#endregion
 		
