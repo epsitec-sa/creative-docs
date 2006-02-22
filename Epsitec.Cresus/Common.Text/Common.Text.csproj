@@ -211,6 +211,7 @@
     <Compile Include="Internal\Sequences\ConstantSequence.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Internal\Sequences\EmptySequence.cs" />
     <Compile Include="Internal\Sequences\NumericSequence.cs">
       <SubType>Code</SubType>
     </Compile>
