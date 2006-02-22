@@ -55,45 +55,14 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.InitComboType(this.fieldType);
 
-			this.buttonLevel = new Widgets.IconMarkButton[Generator.maxLevel];
-			for ( int i=0 ; i<Generator.maxLevel ; i++ )
-			{
-				this.buttonLevel[i] = new Widgets.IconMarkButton(this);
-				this.buttonLevel[i].ButtonStyle = ButtonStyle.ActivableIcon;
-				this.buttonLevel[i].AutoFocus = false;
-				this.buttonLevel[i].Name = i.ToString(System.Globalization.CultureInfo.InvariantCulture);
-				this.buttonLevel[i].Text = i.ToString();
-				this.buttonLevel[i].Clicked += new MessageEventHandler(this.HandleLevelClicked);
-			}
-			this.buttonLevel[0].Text = Res.Strings.TextPanel.Generator.Radio.Global;
-			this.buttonLevel[0].ActiveState = ActiveState.Yes;
-
-			this.fieldPrefix = new TextFieldCombo(this);
-			this.fieldPrefix.IsReadOnly = true;
-			this.fieldPrefix.AutoFocus = false;
-			this.fieldPrefix.TextChanged += new EventHandler(this.HandlePrefixChanged);
-			this.fieldPrefix.TabIndex = this.tabIndex++;
-			this.fieldPrefix.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.InitComboFix(this.fieldPrefix);
-			ToolTip.Default.SetToolTip(this.fieldPrefix, Res.Strings.TextPanel.Generator.Tooltip.Prefix);
-
-			this.fieldNumerator = new TextFieldCombo(this);
-			this.fieldNumerator.IsReadOnly = true;
-			this.fieldNumerator.AutoFocus = false;
-			this.fieldNumerator.TextChanged += new EventHandler(this.HandleNumeratorChanged);
-			this.fieldNumerator.TabIndex = this.tabIndex++;
-			this.fieldNumerator.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.InitComboNumerator(this.fieldNumerator);
-			ToolTip.Default.SetToolTip(this.fieldNumerator, Res.Strings.TextPanel.Generator.Tooltip.Numerator);
-
-			this.fieldSuffix = new TextFieldCombo(this);
-			this.fieldSuffix.IsReadOnly = true;
-			this.fieldSuffix.AutoFocus = false;
-			this.fieldSuffix.TextChanged += new EventHandler(this.HandleSuffixChanged);
-			this.fieldSuffix.TabIndex = this.tabIndex++;
-			this.fieldSuffix.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.InitComboFix(this.fieldSuffix);
-			ToolTip.Default.SetToolTip(this.fieldSuffix, Res.Strings.TextPanel.Generator.Tooltip.Suffix);
+			this.table = new CellTable(this);
+			this.table.StyleH |= CellArrayStyle.Header;
+			this.table.StyleH |= CellArrayStyle.Separator;
+			this.table.StyleV |= CellArrayStyle.ScrollNorm;
+			this.table.StyleV |= CellArrayStyle.Separator;
+			this.table.StyleV |= CellArrayStyle.SelectCell;
+			//?this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
+			this.UpdateTable();
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -112,15 +81,6 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( disposing )
 			{
 				this.fieldType.ComboClosed -= new EventHandler(this.HandleTypeChanged);
-
-				for ( int i=0 ; i<Generator.maxLevel ; i++ )
-				{
-					this.buttonLevel[i].Clicked -= new MessageEventHandler(this.HandleLevelClicked);
-				}
-
-				this.fieldPrefix.TextChanged -= new EventHandler(this.HandlePrefixChanged);
-				this.fieldNumerator.TextChanged -= new EventHandler(this.HandleNumeratorChanged);
-				this.fieldSuffix.TextChanged -= new EventHandler(this.HandleSuffixChanged);
 
 				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
 				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
@@ -359,13 +319,64 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
+		protected string GetResume(int level)
+		{
+			if ( level == 0 )
+			{
+				return "Base";
+			}
+			else
+			{
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+				string s;
+
+				s = this.GetValue(0, Part1.Prefix, Part2.Text);
+				if ( s != null )
+				{
+					builder.Append(s);
+				}
+				int lp = builder.Length;
+
+				for ( int i=1 ; i<=level ; i++ )
+				{
+					if ( this.GetValue(i, Part1.Generic, Part2.SupressBefore) == "true" )
+					{
+						builder.Remove(lp, builder.Length-lp);
+					}
+
+					s = this.GetValue(i, Part1.Prefix, Part2.Text);
+					if ( s != null )
+					{
+						builder.Append(s);
+					}
+
+					s = this.GetValue(i, Part1.Value, Part2.Text);
+					if ( s != null )
+					{
+						builder.Append(Generator.ConvTextToShort(s));
+					}
+
+					s = this.GetValue(i, Part1.Suffix, Part2.Text);
+					if ( s != null )
+					{
+						builder.Append(s);
+					}
+				}
+
+				s = this.GetValue(0, Part1.Suffix, Part2.Text);
+				if ( s != null )
+				{
+					builder.Append(s);
+				}
+
+				return builder.ToString();
+			}
+		}
+
 		protected string GetValue(int level, Part1 part1, Part2 part2)
 		{
 			System.Diagnostics.Debug.Assert(level >= 0 && level <= 10);
-			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )
-			{
-				return null;
-			}
+			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return null;
 
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
 			Text.TabList tabs = this.document.TextContext.TabList;
@@ -477,7 +488,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void SetValue(int level, Part1 part1, Part2 part2, string value)
 		{
-			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return;
+			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return;
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
 			this.SetValue(p, level, part1, part2, value);
 		}
@@ -792,6 +803,41 @@ namespace Epsitec.Common.Document.TextPanels
 			return null;
 		}
 
+		protected static string ConvTextToShort(string text)
+		{
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.None || text == "" )
+			{
+				return "";
+			}
+
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.Numeric )
+			{
+				return "1";
+			}
+
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.AlphaLower )
+			{
+				return "a";
+			}
+
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.AlphaUpper )
+			{
+				return "A";
+			}
+
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.RomanLower )
+			{
+				return "i";
+			}
+
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.RomanUpper )
+			{
+				return "I";
+			}
+
+			return "";
+		}
+
 		protected static void ConvTextToSequence(string text, out Common.Text.Generator.SequenceType type, out Common.Text.Generator.Casing casing)
 		{
 			type = Common.Text.Generator.SequenceType.None;
@@ -906,6 +952,107 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
+		protected void UpdateTable()
+		{
+			//	Met à jour le contenu de la liste.
+			int columns = 4;
+			int rows = 0;
+
+			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )
+			{
+				Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
+				rows = 1 + p.Generator.Count;
+			}
+
+			int initialColumns = this.table.Columns;
+			this.table.SetArraySize(columns, rows);
+
+			if ( initialColumns != this.table.Columns )  // changement du nombre de colonnes ?
+			{
+				this.table.SetWidthColumn(0, 49);
+				this.table.SetWidthColumn(1, 36);
+				this.table.SetWidthColumn(2, 36);
+				this.table.SetWidthColumn(3, 36);
+			}
+
+			this.table.SetHeaderTextH(0, "Texte");
+			this.table.SetHeaderTextH(1, "Pré.");
+			this.table.SetHeaderTextH(2, "Num.");
+			this.table.SetHeaderTextH(3, "Suf.");
+
+			for ( int i=0 ; i<rows ; i++ )
+			{
+				this.TableFillRow(i);
+				this.TableUpdateRow(i);
+			}
+		}
+
+		protected void TableFillRow(int row)
+		{
+			//	Peuple une ligne de la table, si nécessaire.
+			if ( this.table[0, row].IsEmpty )
+			{
+				StaticText st = new StaticText();
+				st.Alignment = ContentAlignment.MiddleLeft;
+				st.Dock = DockStyle.Fill;
+				st.DockMargins = new Drawing.Margins(2, 2, 0, 0);
+				this.table[0, row].Insert(st);
+			}
+
+			if ( this.table[1, row].IsEmpty )
+			{
+				StaticText st = new StaticText();
+				st.Alignment = ContentAlignment.MiddleCenter;
+				st.Dock = DockStyle.Fill;
+				st.DockMargins = new Drawing.Margins(2, 0, 0, 0);
+				this.table[1, row].Insert(st);
+			}
+
+			if ( this.table[2, row].IsEmpty )
+			{
+				StaticText st = new StaticText();
+				st.Alignment = ContentAlignment.MiddleCenter;
+				st.Dock = DockStyle.Fill;
+				st.DockMargins = new Drawing.Margins(2, 0, 0, 0);
+				this.table[2, row].Insert(st);
+			}
+
+			if ( this.table[3, row].IsEmpty )
+			{
+				StaticText st = new StaticText();
+				st.Alignment = ContentAlignment.MiddleCenter;
+				st.Dock = DockStyle.Fill;
+				st.DockMargins = new Drawing.Margins(2, 0, 0, 0);
+				this.table[3, row].Insert(st);
+			}
+		}
+
+		protected void TableUpdateRow(int row)
+		{
+			//	Met à jour le contenu d'une ligne de la table.
+			StaticText st;
+
+			st = this.table[0, row].Children[0] as StaticText;
+			st.Text = this.GetResume(row);
+			string justif = this.GetValue(0, Part1.Generic, Part2.Disposition);
+			if ( justif == "Left"   )  st.Alignment = ContentAlignment.MiddleLeft;
+			if ( justif == "Center" )  st.Alignment = ContentAlignment.MiddleCenter;
+			if ( justif == "Right"  )  st.Alignment = ContentAlignment.MiddleRight;
+
+			st = this.table[1, row].Children[0] as StaticText;
+			st.Text = this.GetValue(row, Part1.Prefix, Part2.Text);
+
+			st = this.table[2, row].Children[0] as StaticText;
+			st.Text = this.GetValue(row, Part1.Value, Part2.Text);
+
+			st = this.table[3, row].Children[0] as StaticText;
+			st.Text = this.GetValue(row, Part1.Suffix, Part2.Text);
+
+			//?bool selected = (tag == this.tabSelected);  // voir (**) dans Objects.AbstractText !
+			//?this.table.SelectRow(row, selected);
+		}
+
+		
 		protected override void UpdateClientGeometry()
 		{
 			//	Met à jour la géométrie.
@@ -928,42 +1075,14 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				r.Offset(0, -25);
 				r.Left = rect.Left;
-				r.Width = 37;
-				r.Bottom = r.Top-(20+8);
-				this.buttonLevel[0].Bounds = r;
-				this.buttonLevel[0].Visibility = true;
-				r.Offset(r.Width, 0);
-				r.Width = 20;
-				for ( int i=1 ; i<Generator.maxLevel ; i++ )
-				{
-					this.buttonLevel[i].Bounds = r;
-					this.buttonLevel[i].Visibility = true;
-					r.Offset(r.Width, 0);
-				}
-
-				r.Offset(0, -30);
-				r.Bottom = r.Top-20;
-				r.Left = rect.Left;
-				r.Width = 56;
-				this.fieldPrefix.Bounds = r;
-				this.fieldPrefix.Visibility = true;
-				r.Offset(r.Width+5, 0);
-				this.fieldNumerator.Bounds = r;
-				this.fieldNumerator.Visibility = true;
-				r.Offset(r.Width+5, 0);
-				this.fieldSuffix.Bounds = r;
-				this.fieldSuffix.Visibility = true;
+				r.Right = rect.Right;
+				r.Bottom = r.Top-74;
+				this.table.Bounds = r;
+				this.table.Visibility = true;
 			}
 			else
 			{
-				for ( int i=0 ; i<Generator.maxLevel ; i++ )
-				{
-					this.buttonLevel[i].Visibility = false;
-				}
-
-				this.fieldPrefix.Visibility = false;
-				this.fieldNumerator.Visibility = false;
-				this.fieldSuffix.Visibility = false;
+				this.table.Visibility = false;
 			}
 
 			this.UpdateButtonClear();
@@ -1024,14 +1143,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ignoreChanged = true;
 
 			this.fieldType.Text = Generator.ConvTypeToText(type);
-			this.fieldPrefix.Text = prefix;
-			this.fieldNumerator.Text = generator;
-			this.fieldSuffix.Text = suffix;
-
 			this.ProposalTextFieldCombo(this.fieldType, !isGenerator);
-			this.ProposalTextFieldCombo(this.fieldPrefix, !isGenerator);
-			this.ProposalTextFieldCombo(this.fieldNumerator, !isGenerator);
-			this.ProposalTextFieldCombo(this.fieldSuffix, !isGenerator);
+
+			this.UpdateTable();
 
 			this.ignoreChanged = false;
 		}
@@ -1040,15 +1154,6 @@ namespace Epsitec.Common.Document.TextPanels
 		protected void UpdateWidgets()
 		{
 			bool custom = (this.type == "Custom");
-
-			for ( int i=0 ; i<Generator.maxLevel ; i++ )
-			{
-				this.buttonLevel[i].Enable = custom;
-			}
-
-			this.fieldPrefix.Enable = custom;
-			this.fieldNumerator.Enable = (custom && this.level != 0);
-			this.fieldSuffix.Enable = custom;
 		}
 
 		protected string Type
@@ -1097,40 +1202,6 @@ namespace Epsitec.Common.Document.TextPanels
 			this.CreateGenerator(this.type);
 		}
 
-		private void HandleLevelClicked(object sender, MessageEventArgs e)
-		{
-			Button button = sender as Button;
-
-			for ( int i=0 ; i<Generator.maxLevel ; i++ )
-			{
-				this.buttonLevel[i].ActiveState = (this.buttonLevel[i] == button) ? ActiveState.Yes : ActiveState.No;
-			}
-			
-			int level = int.Parse(button.Name);
-			this.Level = level;
-		}
-
-		private void HandlePrefixChanged(object sender)
-		{
-			if ( this.ignoreChanged )  return;
-			if ( !this.ParagraphWrapper.IsAttached )  return;
-
-		}
-
-		private void HandleNumeratorChanged(object sender)
-		{
-			if ( this.ignoreChanged )  return;
-			if ( !this.ParagraphWrapper.IsAttached )  return;
-
-		}
-
-		private void HandleSuffixChanged(object sender)
-		{
-			if ( this.ignoreChanged )  return;
-			if ( !this.ParagraphWrapper.IsAttached )  return;
-
-		}
-
 		private void HandleClearClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
@@ -1147,11 +1218,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected static readonly int		maxLevel = 8;
 
-		protected Widgets.IconMarkButton[]	buttonLevel;
 		protected TextFieldCombo			fieldType;
-		protected TextFieldCombo			fieldPrefix;
-		protected TextFieldCombo			fieldNumerator;
-		protected TextFieldCombo			fieldSuffix;
+		protected CellTable					table;
 		protected IconButton				buttonClear;
 
 		protected string					type = null;
