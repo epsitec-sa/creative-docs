@@ -1,4 +1,4 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Collections
@@ -19,7 +19,6 @@ namespace Epsitec.Common.Widgets.Collections
 				return this.list[index] as Visual;
 			}
 		}
-		
 		public Visual							this[string name]
 		{
 			get
@@ -50,7 +49,6 @@ namespace Epsitec.Common.Widgets.Collections
 			this.NotifyContentsChanged ();
 			return index;
 		}
-		
 		public void AddRange(System.Collections.ICollection visuals)
 		{
 			foreach (Visual visual in visuals)
@@ -67,8 +65,7 @@ namespace Epsitec.Common.Widgets.Collections
 			
 			this.NotifyContentsChanged ();
 		}
-		
-		public void Remove(Visual value)
+		public bool Remove(Visual value)
 		{
 			if (this.list.Contains (value))
 			{
@@ -76,6 +73,11 @@ namespace Epsitec.Common.Widgets.Collections
 				this.list.Remove (value);
 				this.NotifyAfterVisualRemoval (value);
 				this.NotifyContentsChanged ();
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 		
@@ -83,7 +85,6 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			return this.list.Contains (value);
 		}
-		
 		
 		public Visual[] ToArray()
 		{
@@ -224,7 +225,6 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			this.host.NotifyVisualCollectionBeforeInsertion (this, item);
 		}
-		
 		private void NotifyAfterVisualInsertion(Visual item)
 		{
 			this.host.NotifyVisualCollectionAfterInsertion (this, item);
@@ -234,7 +234,6 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			this.host.NotifyVisualCollectionBeforeRemoval (this, item);
 		}
-		
 		private void NotifyAfterVisualRemoval(Visual item)
 		{
 			this.host.NotifyVisualCollectionAfterRemoval (this, item);
@@ -244,7 +243,6 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			this.host.NotifyVisualCollectionChanged (this);
 		}
-		
 		
 		private IVisualCollectionHost			host;
 		private System.Collections.ArrayList	list;

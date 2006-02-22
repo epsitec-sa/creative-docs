@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -11,11 +11,10 @@ namespace Epsitec.Common.Widgets.Layouts
 	/// </summary>
 	public class Layer : Types.Object, Collections.IVisualCollectionHost
 	{
-		public Layer(Visual visual)
+		public Layer(Visual parent)
 		{
-			this.visual = visual;
+			this.parent = parent;
 		}
-		
 		
 		public string							Name
 		{
@@ -28,7 +27,6 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.SetValue (Layer.NameProperty, value);
 			}
 		}
-		
 		public Collections.VisualCollection		Children
 		{
 			get
@@ -47,28 +45,24 @@ namespace Epsitec.Common.Widgets.Layouts
 				return this.children;
 			}
 		}
-		
-		public Visual							Visual
+		public Visual							ParentVisual
 		{
 			get
 			{
-				return this.visual;
+				return this.parent;
 			}
 		}
-		
 		
 		private static object GetChildrenValue(Object o)
 		{
 			Layer layer = o as Layer;
 			return layer.Children;
 		}
-		
-		private static object GetVisualValue(Object o)
+		private static object GetParentVisualValue(Object o)
 		{
 			Layer layer = o as Layer;
-			return layer.Visual;
+			return layer.ParentVisual;
 		}
-		
 		
 		#region IVisualCollectionHost Members
 		void Collections.IVisualCollectionHost.NotifyVisualCollectionBeforeInsertion(Collections.VisualCollection collection, Visual visual)
@@ -84,10 +78,9 @@ namespace Epsitec.Common.Widgets.Layouts
 				System.Diagnostics.Debug.Assert (visual.ParentLayer == null);
 			}
 		}
-		
 		void Collections.IVisualCollectionHost.NotifyVisualCollectionAfterInsertion(Collections.VisualCollection collection, Visual visual)
 		{
-			System.Diagnostics.Debug.Assert (this.visual != null);
+			System.Diagnostics.Debug.Assert (this.parent != null);
 			
 			if (visual.ParentLayer == null)
 			{
@@ -95,15 +88,14 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			System.Diagnostics.Debug.Assert (visual.ParentLayer == this);
-			
-			this.visual.NotifyChildrenChanged (this);
+
+			this.parent.NotifyChildrenChanged (this);
 		}
 		
 		void Collections.IVisualCollectionHost.NotifyVisualCollectionBeforeRemoval(Collections.VisualCollection collection, Visual visual)
 		{
 			System.Diagnostics.Debug.Assert (visual.ParentLayer == this);
 		}
-		
 		void Collections.IVisualCollectionHost.NotifyVisualCollectionAfterRemoval(Collections.VisualCollection collection, Visual visual)
 		{
 			System.Diagnostics.Debug.Assert (visual.ParentLayer == this);
@@ -111,8 +103,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			visual.SetParentLayer (null);
 			
 			System.Diagnostics.Debug.Assert (visual.ParentLayer == null);
-			
-			this.visual.NotifyChildrenChanged (this);
+
+			this.parent.NotifyChildrenChanged (this);
 		}
 		
 		void Collections.IVisualCollectionHost.NotifyVisualCollectionChanged(Collections.VisualCollection collection)
@@ -122,9 +114,9 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		public static readonly Property NameProperty = Property.Register ("Name", typeof (string), typeof (Layer));
 		public static readonly Property ChildrenProperty = Property.RegisterReadOnly ("Children", typeof (Collections.VisualCollection), typeof (Layer), new PropertyMetadata (new GetValueOverrideCallback (Layer.GetChildrenValue)));
-		public static readonly Property VisualProperty = Property.RegisterReadOnly ("Visual", typeof (Visual), typeof (Layer), new PropertyMetadata (new GetValueOverrideCallback (Layer.GetVisualValue)));
-		
-		private Visual							visual;
+		public static readonly Property VisualParentProperty = Property.RegisterReadOnly ("VisualParent", typeof (Visual), typeof (Layer), new PropertyMetadata (new GetValueOverrideCallback (Layer.GetParentVisualValue)));
+
+		private Visual							parent;
 		private Collections.VisualCollection	children;
 	}
 }
