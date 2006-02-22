@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets.Helpers;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -72,7 +73,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					return this.parent_layer.Visual;
+					return this.parent_layer.ParentVisual;
 				}
 			}
 		}
@@ -82,6 +83,25 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.parent_layer;
+			}
+		}
+
+		public Collections.LayerCollection		Layers
+		{
+			get
+			{
+				if (this.ContainsLocalValue (Visual.LayersProperty) == false)
+				{
+					lock (this)
+					{
+						if (this.ContainsLocalValue (Visual.LayersProperty) == false)
+						{
+							this.SetLocalValue (Visual.LayersProperty, new Collections.LayerCollection (this));
+						}
+					}
+				}
+
+				return this.GetLocalValue (Visual.LayersProperty) as Collections.LayerCollection;
 			}
 		}
 		
@@ -633,11 +653,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		internal bool							HasLayerCollection
+		public bool								HasLayers
 		{
 			get
 			{
-				return this.layer_collection == null ? false : true;
+				if (this.ContainsLocalValue (Visual.LayersProperty))
+				{
+					return this.Layers.HasLayers;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 		
@@ -645,7 +672,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.HasLayerCollection)
+				if (this.HasLayers)
 				{
 					Collections.ChildrenCollection children = new Collections.ChildrenCollection (this);
 					return children.Count == 0 ? false : true;
@@ -654,9 +681,8 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 		}
-		
-		
-		
+
+
 		public Collections.ChildrenCollection	Children
 		{
 			get
@@ -734,23 +760,29 @@ namespace Epsitec.Common.Widgets
 				this.InvalidateProperty (Visual.SizeProperty, old_value.Size, new_value.Size);
 			}
 		}
-		
-		internal Collections.LayerCollection GetLayerCollection()
+
+		internal Layouts.Layer GetDefaultLayer()
 		{
-			if (this.layer_collection == null)
+			Collections.LayerCollection layers = this.Layers;
+			
+			if (layers.Count == 0)
 			{
-				lock (this)
+				lock (layers.SyncRoot)
 				{
-					if (this.layer_collection == null)
+					if (layers.Count == 0)
 					{
-						this.layer_collection = new Collections.LayerCollection (this);
+						layers.AddLayer ();
 					}
 				}
 			}
 			
-			return this.layer_collection;
+			return layers[0];
 		}
-		
+
+		internal void NotifyLayersChanged()
+		{
+			this.InvalidateProperty (Visual.LayersProperty, UndefinedValue.Instance, UndefinedValue.Instance);
+		}
 		
 		internal void NotifyGeometryChanged()
 		{
@@ -760,6 +792,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal void NotifyChildrenChanged(Layouts.Layer layer)
 		{
+			this.InvalidateProperty (Visual.ChildrenProperty, UndefinedValue.Instance, UndefinedValue.Instance);
 			this.NotifyLayoutChanged ();
 		}
 		
@@ -887,8 +920,14 @@ namespace Epsitec.Common.Widgets
 		static Visual()
 		{
 		}
-		
-		
+
+
+		private static object GetLayersValue(Object o)
+		{
+			Visual that = o as Visual;
+			return that.Layers;
+		}
+
 		private static object GetParentValue(Object o)
 		{
 			Visual that = o as Visual;
@@ -900,7 +939,13 @@ namespace Epsitec.Common.Widgets
 			Visual that = o as Visual;
 			return that.ParentLayer;
 		}
-		
+
+		private static object GetChildrenValue(Object o)
+		{
+			Visual that = o as Visual;
+			return that.Children;
+		}
+
 		private static object GetBoundsValue(Object o)
 		{
 			Visual that = o as Visual;
@@ -1132,7 +1177,7 @@ namespace Epsitec.Common.Widgets
 				this.RemoveEventHandler (Visual.SizeProperty, value);
 			}
 		}
-		
+
 		public event PropertyChangedEventHandler	ParentChanged
 		{
 			add
@@ -1144,7 +1189,19 @@ namespace Epsitec.Common.Widgets
 				this.RemoveEventHandler (Visual.ParentProperty, value);
 			}
 		}
-		
+
+		public event PropertyChangedEventHandler	ChildrenChanged
+		{
+			add
+			{
+				this.AddEventHandler (Visual.ChildrenProperty, value);
+			}
+			remove
+			{
+				this.RemoveEventHandler (Visual.ChildrenProperty, value);
+			}
+		}
+
 		public event PropertyChangedEventHandler	IsVisibleChanged
 		{
 			add
@@ -1211,6 +1268,8 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property NameProperty				= Property.Register ("Name", typeof (string), typeof (Visual));
 		public static readonly Property ParentProperty				= Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged)));
 		public static readonly Property ParentLayerProperty			= Property.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentLayerValue)));
+		public static readonly Property ChildrenProperty			= Property.RegisterReadOnly ("Children", typeof (ICollection<Types.Object>), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
+		public static readonly Property LayersProperty				= Property.RegisterReadOnly ("Layers", typeof (Collections.LayerCollection), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetLayersValue)));
 		
 		public static readonly Property AnchorProperty				= Property.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyFlags.AffectsParentLayout));
 		public static readonly Property AnchorMarginsProperty		= Property.Register ("AnchorMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyFlags.AffectsParentLayout));
@@ -1258,14 +1317,8 @@ namespace Epsitec.Common.Widgets
 		protected bool							has_layout_changed;
 		protected bool							have_children_changed;
 		protected byte							currently_updating_layout;
-		private Collections.LayerCollection		layer_collection;
 		private Layouts.Layer					parent_layer;
 		private static short					next_serial_id = 0;
 //-		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
-		
-		
-		
-		
-		
 	}
 }

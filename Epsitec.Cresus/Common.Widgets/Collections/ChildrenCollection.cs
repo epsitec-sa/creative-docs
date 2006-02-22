@@ -1,5 +1,7 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Collections
 {
@@ -7,22 +9,21 @@ namespace Epsitec.Common.Widgets.Collections
 	/// La classe ChildrenCollection regroupe dans une collection unique tous les
 	/// widgets qui constituent les enfants d'un widget donné.
 	/// </summary>
-	public class ChildrenCollection : System.Collections.IList
+	public struct ChildrenCollection : System.Collections.IList, ICollection<Types.Object>
 	{
 		public ChildrenCollection(Visual visual)
 		{
 			this.visual = visual;
 		}
 		
-		
 		public Visual							this[int index]
 		{
 			get
 			{
 				if ((index > -1) &&
-					(this.visual.HasLayerCollection))
+					(this.visual.HasLayers))
 				{
-					Collections.LayerCollection layers = this.visual.GetLayerCollection ();
+					Collections.LayerCollection layers = this.visual.Layers;
 				
 					for (int i = 0; i < layers.Count; i++)
 					{
@@ -40,7 +41,6 @@ namespace Epsitec.Common.Widgets.Collections
 				throw new System.ArgumentOutOfRangeException ("index");
 			}
 		}
-		
 		public Widget[]							Widgets
 		{
 			get
@@ -59,9 +59,9 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		public Visual[] ToArray()
 		{
-			if (this.visual.HasLayerCollection)
+			if (this.visual.HasLayers)
 			{
-				Collections.LayerCollection layers = this.visual.GetLayerCollection ();
+				Collections.LayerCollection layers = this.visual.Layers;
 				
 				switch (layers.Count)
 				{
@@ -84,7 +84,6 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 		
-		
 		public Visual FindNext(Visual visual)
 		{
 			Visual[] visuals = this.ToArray ();
@@ -99,7 +98,6 @@ namespace Epsitec.Common.Widgets.Collections
 			
 			return null;
 		}
-		
 		public Visual FindPrevious(Visual visual)
 		{
 			Visual[] visuals = this.ToArray ();
@@ -114,7 +112,6 @@ namespace Epsitec.Common.Widgets.Collections
 			
 			return null;
 		}
-		
 		
 		public int IndexOf(Visual visual)
 		{
@@ -136,22 +133,8 @@ namespace Epsitec.Common.Widgets.Collections
 			return this.IndexOf (visual) < 0 ? false : true;
 		}
 		
-		
 		public void Add(Visual visual)
 		{
-			Collections.LayerCollection layers = this.visual.GetLayerCollection ();
-			
-			if (layers.Count == 0)
-			{
-				lock (this.visual)
-				{
-					if (layers.Count == 0)
-					{
-						layers.AddLayer ();
-					}
-				}
-			}
-			
 			if (this.Contains (visual))
 			{
 				//	Ne fait rien: le widget est déjà contenu dans la liste des
@@ -159,24 +142,26 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 			else
 			{
-				layers[0].Children.Add (visual);
+				this.visual.GetDefaultLayer ().Children.Add (visual);
 			}
 		}
-		
-		public void Remove(Visual visual)
+		public bool Remove(Visual visual)
 		{
 			if ((visual != null) &&
 				(visual.ParentLayer != null))
 			{
-				visual.ParentLayer.Children.Remove (visual);
+				return visual.ParentLayer.Children.Remove (visual);
+			}
+			else
+			{
+				return false;
 			}
 		}
-		
 		public void Clear()
 		{
-			if (this.visual.HasLayerCollection)
+			if (this.visual.HasLayers)
 			{
-				Collections.LayerCollection layers = this.visual.GetLayerCollection ();
+				Collections.LayerCollection layers = this.visual.Layers;
 				
 				foreach (Layouts.Layer layer in layers)
 				{
@@ -276,9 +261,9 @@ namespace Epsitec.Common.Widgets.Collections
 			{
 				int count = 0;
 				
-				if (this.visual.HasLayerCollection)
+				if (this.visual.HasLayers)
 				{
-					Collections.LayerCollection layers = this.visual.GetLayerCollection ();
+					Collections.LayerCollection layers = this.visual.Layers;
 					
 					for (int i = 0; i < layers.Count; i++)
 					{
@@ -298,42 +283,90 @@ namespace Epsitec.Common.Widgets.Collections
 		#endregion
 		
 		#region IEnumerable Members
-		public System.Collections.IEnumerator GetEnumerator()
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.GetEnumerator ();
+		}
+		#endregion
+
+		#region ICollection<Object> Members
+		void ICollection<Types.Object>.Add(Types.Object item)
+		{
+			this.Add (item as Visual);
+		}
+
+		void ICollection<Types.Object>.Clear()
+		{
+			this.Clear ();
+		}
+
+		bool ICollection<Types.Object>.Contains(Types.Object item)
+		{
+			return this.Contains (item as Visual);
+		}
+
+		void ICollection<Types.Object>.CopyTo(Types.Object[] array, int index)
+		{
+			this.CopyTo (array, index);
+		}
+
+		int ICollection<Types.Object>.Count
+		{
+			get
+			{
+				return this.Count;
+			}
+		}
+
+		bool ICollection<Types.Object>.IsReadOnly
+		{
+			get
+			{
+				return this.IsReadOnly;
+			}
+		}
+
+		bool ICollection<Types.Object>.Remove(Types.Object item)
+		{
+			return this.Remove (item as Visual);
+		}
+		#endregion
+
+		#region IEnumerable<Object> Members
+		public IEnumerator<Types.Object> GetEnumerator()
 		{
 			return new ChildrenCollectionEnumerator (this.visual);
 		}
 		#endregion
-		
+
 		#region ChildrenCollectionEnumerator Class
-		private class ChildrenCollectionEnumerator : System.Collections.IEnumerator
+		private class ChildrenCollectionEnumerator : System.Collections.IEnumerator, IEnumerator<Types.Object>
 		{
 			public ChildrenCollectionEnumerator(Visual visual)
 			{
 				this.visual = visual;
 				this.Reset ();
 			}
-			
-			
-			public object						Current
+
+			#region IEnumerator Members
+			object								System.Collections.IEnumerator.Current
 			{
 				get
 				{
-					return this.visual.GetLayerCollection ()[this.layer_index].Children[this.child_index];
+					return this.Current;
 				}
 			}
-			
 			
 			public void Reset()
 			{
 				this.layer_index = 0;
 				this.child_index = -1;
 			}
-			
 			public bool MoveNext()
 			{
-				if (this.visual.HasLayerCollection)
+				if (this.visual.HasLayers)
 				{
-					Collections.LayerCollection layers = this.visual.GetLayerCollection ();
+					Collections.LayerCollection layers = this.visual.Layers;
 					
 					while (this.layer_index < layers.Count)
 					{
@@ -351,14 +384,30 @@ namespace Epsitec.Common.Widgets.Collections
 				
 				return false;
 			}
-			
+			#endregion
+
+			#region IEnumerator<Object> Members
+			public Types.Object Current
+			{
+				get
+				{
+					return this.visual.Layers[this.layer_index].Children[this.child_index];
+				}
+			}
+			#endregion
+
+			#region IDisposable Members
+			public void Dispose()
+			{
+			}
+			#endregion
 			
 			private Visual						visual;
 			private int							layer_index;
 			private int							child_index;
 		}
 		#endregion
-		
-		Visual							visual;
+
+		private Visual							visual;
 	}
 }

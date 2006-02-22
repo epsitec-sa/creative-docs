@@ -1,18 +1,39 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets.Layouts;
 
 namespace Epsitec.Common.Widgets.Collections
 {
-	public sealed class LayerCollection : System.Collections.IList
+	public class LayerCollection : System.Collections.IList
 	{
-		public LayerCollection(Visual visual)
+		internal LayerCollection(Visual parent)
 		{
-			this.visual = visual;
-			this.list   = new System.Collections.ArrayList ();
+			this.parent = parent;
 		}
 		
+		public bool								HasLayers
+		{
+			get
+			{
+				if ((this.list == null) ||
+					(this.list.Count == 0))
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+		public Visual							ParentVisual
+		{
+			get
+			{
+				return this.parent;
+			}
+		}
 		
 		public Layer							this[int index]
 		{
@@ -21,16 +42,18 @@ namespace Epsitec.Common.Widgets.Collections
 				return this.list[index] as Layer;
 			}
 		}
-		
 		public Layer							this[string name]
 		{
 			get
 			{
-				foreach (Layer layer in this.list)
+				if (this.list != null)
 				{
-					if (layer.Name == name)
+					foreach (Layer layer in this.list)
 					{
-						return layer;
+						if (layer.Name == name)
+						{
+							return layer;
+						}
 					}
 				}
 				
@@ -43,34 +66,45 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			return this.AddLayer ("");
 		}
-		
 		public Layer AddLayer(string name)
 		{
-			Layer layer = new Layer (this.visual);
+			Layer layer = new Layer (this.parent);
 			
 			layer.Name = name;
-			
+
+			this.EnsureListExists ();
 			this.list.Add (layer);
 			this.NotifyLayerInsertion (layer);
 			
 			return layer;
 		}
 		
-		public void RemoveLayer(Layer layer)
+		public bool RemoveLayer(Layer layer)
 		{
-			if (this.list.Contains (layer))
+			if ((this.list != null) &&
+				(this.list.Contains (layer)))
 			{
 				this.list.Remove (layer);
 				this.NotifyLayerRemoval (layer);
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 		
-		
 		public bool Contains(Layer layer)
 		{
-			return this.list.Contains (layer);
+			if (this.list == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this.list.Contains (layer);
+			}
 		}
-		
 		
 		#region IList Members
 		public bool								IsReadOnly
@@ -85,7 +119,7 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				return this.list.IsFixedSize;
+				return false;
 			}
 		}
 		
@@ -125,7 +159,8 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public void Clear()
 		{
-			if (this.list.Count > 0)
+			if ((this.list != null) &&
+				(this.list.Count > 0))
 			{
 				Layer[] layers = (Layer[]) this.list.ToArray (typeof (Layer));
 				
@@ -154,7 +189,7 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				return this.list.IsSynchronized;
+				return false;
 			}
 		}
 
@@ -162,7 +197,14 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				return this.list.Count;
+				if (this.list == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.list.Count;
+				}
 			}
 		}
 
@@ -170,33 +212,53 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
+				this.EnsureListExists ();
+				
 				return this.list.SyncRoot;
 			}
 		}
 
 		public void CopyTo(System.Array array, int index)
 		{
-			this.list.CopyTo (array, index);
+			if (this.list != null)
+			{
+				this.list.CopyTo (array, index);
+			}
 		}
 		#endregion
 		
 		#region IEnumerable Members
 		public System.Collections.IEnumerator GetEnumerator()
 		{
+			this.EnsureListExists ();
 			return this.list.GetEnumerator ();
 		}
 		#endregion
-		
+
+		private void EnsureListExists()
+		{
+			if (this.list == null)
+			{
+				lock (this)
+				{
+					if (this.list == null)
+					{
+						this.list = new System.Collections.ArrayList ();
+					}
+				}
+			}
+		}
+
 		private void NotifyLayerInsertion(Layer item)
 		{
+			this.parent.NotifyLayersChanged ();
 		}
-		
 		private void NotifyLayerRemoval(Layer item)
 		{
+			this.parent.NotifyLayersChanged ();
 		}
 		
-		
-		private Visual							visual;
 		private System.Collections.ArrayList	list;
+		private Visual							parent;
 	}
 }
