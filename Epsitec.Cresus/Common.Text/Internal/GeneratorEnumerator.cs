@@ -67,8 +67,10 @@ namespace Epsitec.Common.Text.Internal
 			{
 				ulong code;
 				ulong next;
-				
-				length = System.Math.Min (step, this.story.TextLength - this.story.GetCursorPosition (cursor));
+
+				int pos = this.story.GetCursorPosition (this.cursor);
+
+				length = System.Math.Min (step, this.story.TextLength - pos);
 				length = this.story.TextTable.GetRunLength (this.cursor.CursorId, length, out code, out next);
 				
 				if (length == 0)
@@ -111,6 +113,14 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (generator != null)
 				{
+					if ((pos > 0) &&
+						(generator.UniqueId == this.generator_unique_id))
+					{
+						continue;
+					}
+
+					this.generator_unique_id = generator.UniqueId;
+					
 					switch (this.state)
 					{
 						case State.RestartPending:	this.state = State.Restarted;	break;
@@ -286,6 +296,7 @@ namespace Epsitec.Common.Text.Internal
 		private string							generator;
 		private System.Collections.Hashtable	failure_cache;
 		private Cursors.TempCursor				cursor;
+		private long							generator_unique_id;
 		private bool							at_start_of_text;
 		private bool							at_end_of_text;
 		private State							state;
