@@ -481,8 +481,6 @@ namespace Epsitec.Common.Types
 		}
 		private class ObjectY : ObjectX
 		{
-			public static Property AProperty = Property.Register ("A", typeof (ObjectA), typeof (ObjectX));
-			public static Property BProperty = Property.Register ("B", typeof (ObjectB), typeof (ObjectX));
 		}
 		#endregion
 
