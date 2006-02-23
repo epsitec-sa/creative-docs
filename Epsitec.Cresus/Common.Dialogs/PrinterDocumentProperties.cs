@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Dialogs
@@ -50,6 +50,12 @@ namespace Epsitec.Common.Dialogs
 			//	ensuite d'obtenir la mémoire en faisant un "GlobalLock".
 			
 			System.IntPtr dev_mode_handle  = this.document.PrinterSettings.GetDevMode ();
+
+			if (dev_mode_handle == System.IntPtr.Zero)
+			{
+				return System.Windows.Forms.DialogResult.Abort;
+			}
+			
 			System.IntPtr dev_mode_ptr     = PrinterDocumentProperties.GlobalLock (dev_mode_handle);
 			System.IntPtr printer_handle   = System.IntPtr.Zero;
 			System.IntPtr printer_defaults = System.IntPtr.Zero;

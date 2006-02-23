@@ -1,4 +1,4 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Printing
@@ -347,12 +347,27 @@ namespace Epsitec.Common.Printing
 		
 		public System.IntPtr GetDevMode()
 		{
-			return this.ps.GetHdevmode ();
+			try
+			{
+				return this.ps.GetHdevmode ();
+			}
+			catch
+			{
+				return System.IntPtr.Zero;
+			}
 		}
 		
-		public void SetDevMode(System.IntPtr dev_mode)
+		public bool SetDevMode(System.IntPtr dev_mode)
 		{
-			this.ps.SetHdevmode (dev_mode);
+			try
+			{
+				this.ps.SetHdevmode (dev_mode);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 		
 		
