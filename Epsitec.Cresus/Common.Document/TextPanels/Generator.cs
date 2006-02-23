@@ -1059,7 +1059,10 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ParagraphWrapper.Defined.IsManagedParagraphDefined )
 			{
 				Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
-				rows = 1 + p.Generator.Count;
+				if ( p != null )
+				{
+					rows = 1 + p.Generator.Count;
+				}
 			}
 
 			int initialColumns = this.table.Columns;
