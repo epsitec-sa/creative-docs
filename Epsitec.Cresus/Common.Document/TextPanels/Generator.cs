@@ -187,21 +187,15 @@ namespace Epsitec.Common.Document.TextPanels
 				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
 				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25A0");  // puce carrée pleine
 				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,      "Arial");
-				this.SetValue(p, 1, Part1.Prefix,  Part2.FontColor,     RichColor.ToString(RichColor.FromRgb(1,0,0)));
-				this.SetValue(p, 1, Part1.Value,   Part2.Text,          "");
-				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
+//				this.SetValue(p, 1, Part1.Prefix,  Part2.FontColor,     RichColor.ToString(RichColor.FromRgb(1,0,0)));
 
 				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "true");
 				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "\u25A1");  // puce carrée vide
 				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,      "Arial");
-				this.SetValue(p, 2, Part1.Value,   Part2.Text,          "");
-				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          "");
 
 				this.SetValue(p, 3, Part1.Generic, Part2.SupressBefore, "true");
 				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,          "-");
 				this.SetValue(p, 3, Part1.Prefix,  Part2.FontFace,      "Arial");
-				this.SetValue(p, 3, Part1.Value,   Part2.Text,          "");
-				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,          "");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -212,21 +206,11 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
-				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Center");
 
-				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
+				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "true");
 				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25BA");  // triangle >
 				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,      "Arial");
-				this.SetValue(p, 1, Part1.Value,   Part2.Text,          "");
-				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
-
-				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "true");
-				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "-");
-				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,      "Arial");
-				this.SetValue(p, 2, Part1.Value,   Part2.Text,          "");
-				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          "");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -237,12 +221,9 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
-				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Right");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
-				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "");
 				this.SetValue(p, 1, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.Numeric);
 				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          ".");
 
@@ -255,22 +236,18 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
 				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          ")");
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Right");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
-				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "");
 				this.SetValue(p, 1, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.AlphaUpper);
-				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
 				this.SetValue(p, 1, Part1.Generic, Part2.Tab,           "15");
 				this.SetValue(p, 1, Part1.Generic, Part2.Indent,        "20");
 
 				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "false");
 				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "-");
 				this.SetValue(p, 2, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.Numeric);
-				this.SetValue(p, 2, Part1.Value,   Part2.FontColor,     RichColor.ToString(RichColor.FromRgb(0,0,1)));
-				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          "");
+//				this.SetValue(p, 2, Part1.Value,   Part2.FontColor,     RichColor.ToString(RichColor.FromRgb(0,0,1)));
 				this.SetValue(p, 2, Part1.Generic, Part2.Tab,           "15");
 				this.SetValue(p, 2, Part1.Generic, Part2.Indent,        "20");
 
@@ -290,22 +267,16 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
-				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Left");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
-				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "");
 				this.SetValue(p, 1, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.Numeric);
-				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
 
 				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "true");
-				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "");
 				this.SetValue(p, 2, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
 				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          ")");
 
 				this.SetValue(p, 3, Part1.Generic, Part2.SupressBefore, "true");
-				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,          "");
 				this.SetValue(p, 3, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.RomanLower);
 				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,          ")");
 
@@ -648,71 +619,106 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( part2 == Part2.FontFace )
 			{
 				Common.Text.Properties.FontProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontProperty;
-				Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty(value, Misc.DefaultFontStyle(value));
-				if ( current == null )
+				if ( value == null )
 				{
-					properties = Generator.PropertyAdd(properties, n);
+					properties = Generator.PropertyRemove(properties, Common.Text.Properties.WellKnownType.Font);
 				}
 				else
 				{
-					Generator.PropertySet(properties, n);
+					Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty(value, Misc.DefaultFontStyle(value));
+					if ( current == null )
+					{
+						properties = Generator.PropertyAdd(properties, n);
+					}
+					else
+					{
+						Generator.PropertyModify(properties, n);
+					}
 				}
 			}
 
 			if ( part2 == Part2.FontStyle )
 			{
 				Common.Text.Properties.FontProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontProperty;
-				if ( current == null )
+				if ( value == null )
 				{
-					Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty("Arial", value);
-					properties = Generator.PropertyAdd(properties, n);
+					properties = Generator.PropertyRemove(properties, Common.Text.Properties.WellKnownType.Font);
 				}
 				else
 				{
-					Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty(current.FaceName, value);
-					Generator.PropertySet(properties, n);
+					if ( current == null )
+					{
+						Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty("Arial", value);
+						properties = Generator.PropertyAdd(properties, n);
+					}
+					else
+					{
+						Common.Text.Properties.FontProperty n = new Text.Properties.FontProperty(current.FaceName, value);
+						Generator.PropertyModify(properties, n);
+					}
 				}
 			}
 
 			if ( part2 == Part2.FontSize )
 			{
-				Common.Text.Properties.FontSizeProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontSizeProperty;
-				Common.Text.Properties.FontSizeProperty n = new Text.Properties.FontSizeProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
-				if ( current == null )
+				Common.Text.Properties.FontSizeProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.FontSize) as Common.Text.Properties.FontSizeProperty;
+				if ( value == null )
 				{
-					properties = Generator.PropertyAdd(properties, n);
+					properties = Generator.PropertyRemove(properties, Common.Text.Properties.WellKnownType.FontSize);
 				}
 				else
 				{
-					Generator.PropertySet(properties, n);
+					Common.Text.Properties.FontSizeProperty n = new Text.Properties.FontSizeProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
+					if ( current == null )
+					{
+						properties = Generator.PropertyAdd(properties, n);
+					}
+					else
+					{
+						Generator.PropertyModify(properties, n);
+					}
 				}
 			}
 
 			if ( part2 == Part2.FontColor )
 			{
-				Common.Text.Properties.FontColorProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontColorProperty;
-				Common.Text.Properties.FontColorProperty n = new Text.Properties.FontColorProperty(value);
-				if ( current == null )
+				Common.Text.Properties.FontColorProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.FontColor) as Common.Text.Properties.FontColorProperty;
+				if ( value == null )
 				{
-					properties = Generator.PropertyAdd(properties, n);
+					properties = Generator.PropertyRemove(properties, Common.Text.Properties.WellKnownType.FontColor);
 				}
 				else
 				{
-					Generator.PropertySet(properties, n);
+					Common.Text.Properties.FontColorProperty n = new Text.Properties.FontColorProperty(value);
+					if ( current == null )
+					{
+						properties = Generator.PropertyAdd(properties, n);
+					}
+					else
+					{
+						Generator.PropertyModify(properties, n);
+					}
 				}
 			}
 
 			if ( part2 == Part2.FontOffset )
 			{
-				Common.Text.Properties.FontOffsetProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.Font) as Common.Text.Properties.FontOffsetProperty;
-				Common.Text.Properties.FontOffsetProperty n = new Text.Properties.FontOffsetProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
-				if ( current == null )
+				Common.Text.Properties.FontOffsetProperty current = Generator.PropertyGet(properties, Common.Text.Properties.WellKnownType.FontOffset) as Common.Text.Properties.FontOffsetProperty;
+				if ( value == null )
 				{
-					properties = Generator.PropertyAdd(properties, n);
+					properties = Generator.PropertyRemove(properties, Common.Text.Properties.WellKnownType.FontOffset);
 				}
 				else
 				{
-					Generator.PropertySet(properties, n);
+					Common.Text.Properties.FontOffsetProperty n = new Text.Properties.FontOffsetProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
+					if ( current == null )
+					{
+						properties = Generator.PropertyAdd(properties, n);
+					}
+					else
+					{
+						Generator.PropertyModify(properties, n);
+					}
 				}
 			}
 
@@ -737,6 +743,7 @@ namespace Epsitec.Common.Document.TextPanels
 		#region Properties array manager
 		protected static Common.Text.Property PropertyGet(Common.Text.Property[] properties, Common.Text.Properties.WellKnownType type)
 		{
+			//	Cherche une propriété dans un tableau.
 			if ( properties == null )  return null;
 
 			foreach ( Common.Text.Property property in properties )
@@ -746,8 +753,9 @@ namespace Epsitec.Common.Document.TextPanels
 			return null;
 		}
 
-		protected static void PropertySet(Common.Text.Property[] properties, Common.Text.Property n)
+		protected static void PropertyModify(Common.Text.Property[] properties, Common.Text.Property n)
 		{
+			//	Modifie une propriété d'un tableau.
 			for ( int i=0 ; i<properties.Length ; i++ )
 			{
 				Common.Text.Property property = properties[i] as Common.Text.Property;
@@ -760,6 +768,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected static Common.Text.Property[] PropertyAdd(Common.Text.Property[] properties, Common.Text.Property n)
 		{
+			//	Ajoute une propriété à la fin d'un tableau.
 			int length = (properties == null) ? 0 : properties.Length;
 			Common.Text.Property[] list = new Common.Text.Property[length+1];
 			for ( int i=0 ; i<length ; i++ )
@@ -767,6 +776,33 @@ namespace Epsitec.Common.Document.TextPanels
 				list[i] = properties[i];
 			}
 			list[length] = n;
+			return list;
+		}
+
+		protected static Common.Text.Property[] PropertyRemove(Common.Text.Property[] properties, Common.Text.Properties.WellKnownType type)
+		{
+			//	Supprime une propriété d'un tableau.
+			if ( properties == null )  return null;
+
+			int length = 0;
+			foreach ( Common.Text.Property property in properties )
+			{
+				if ( property.WellKnownType != type )
+				{
+					length ++;
+				}
+			}
+			if ( length == 0 )  return null;
+
+			Common.Text.Property[] list = new Common.Text.Property[length];
+			int i = 0;
+			foreach ( Common.Text.Property property in properties )
+			{
+				if ( property.WellKnownType != type )
+				{
+					list[i++] = property;
+				}
+			}
 			return list;
 		}
 		#endregion
