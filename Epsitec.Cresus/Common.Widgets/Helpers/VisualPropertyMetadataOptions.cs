@@ -1,15 +1,15 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Helpers
 {
 	/// <summary>
-	/// VisualPropertyFlags.
+	/// VisualPropertyMetadataOptions.
 	/// </summary>
 	
 	[System.Flags]
 	
-	public enum VisualPropertyFlags
+	public enum VisualPropertyMetadataOptions
 	{
 		None					= 0,
 		

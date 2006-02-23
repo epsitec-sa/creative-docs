@@ -179,6 +179,13 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (ObjectX.BProperty.IsValidType (oa));	//	ObjectA --> Object, pas ObjectB
 			Assert.IsTrue (ObjectX.BProperty.IsValidType (ob));		//	ObjectB --> ObjectA --> Object
 			Assert.IsFalse (ObjectX.BProperty.IsValidType (ox));	//	ObjectX --> Object, pas ObjectB
+
+			Assert.IsTrue (ObjectX.AProperty.IsOwnedBy (typeof (ObjectX)));
+			Assert.IsFalse (ObjectX.AProperty.IsReferencedBy (typeof (ObjectY)));
+
+			ObjectType.FromSystemType (typeof (ObjectY));
+			
+			Assert.IsTrue (ObjectX.AProperty.IsReferencedBy (typeof (ObjectY)));
 		}
 
 		[Test]
@@ -468,6 +475,11 @@ namespace Epsitec.Common.Types
 		{
 		}
 		private class ObjectX : Types.Object
+		{
+			public static Property AProperty = Property.Register ("A", typeof (ObjectA), typeof (ObjectX));
+			public static Property BProperty = Property.Register ("B", typeof (ObjectB), typeof (ObjectX));
+		}
+		private class ObjectY : ObjectX
 		{
 			public static Property AProperty = Property.Register ("A", typeof (ObjectA), typeof (ObjectX));
 			public static Property BProperty = Property.Register ("B", typeof (ObjectB), typeof (ObjectX));

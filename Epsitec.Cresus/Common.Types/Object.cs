@@ -17,23 +17,13 @@ namespace Epsitec.Common.Types
 	{
 		protected Object()
 		{
+			this.cachedType = ObjectType.SetupFromSystemType (this.GetType ());
 		}
 		
 		public ObjectType						ObjectType
 		{
 			get
 			{
-				if (this.cachedType == null)
-				{
-					lock (this.properties)
-					{
-						if (this.cachedType == null)
-						{
-							this.cachedType = ObjectType.FromSystemType (this.GetType ());
-						}
-					}
-				}
-				
 				return this.cachedType;
 			}
 		}
@@ -42,6 +32,14 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return new LocalValueEnumerator (this);
+			}
+		}
+		
+		public static int						RegisteredPropertyCount
+		{
+			get
+			{
+				return Object.registeredPropertyCount;
 			}
 		}
 		
@@ -372,10 +370,11 @@ namespace Epsitec.Common.Types
 
 				ObjectType type = ObjectType.FromSystemType (ownerType);
 				type.Register (property);
+
+				System.Threading.Interlocked.Increment (ref Object.registeredPropertyCount);
 			}
 		}
-
-
+		
 		#region IDisposable Members
 		public void Dispose()
 		{
@@ -447,5 +446,6 @@ namespace Epsitec.Common.Types
 		ObjectType											cachedType;
 
 		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
+		static int											registeredPropertyCount;
 	}
 }

@@ -15,8 +15,34 @@ namespace Epsitec.Common.Types
 		{
 			this.systemType = system_type;
 			this.baseType   = base_type;
+
+			ObjectType type = this.baseType;
+			
+			//	Register this type as a derived type on all standard properties
+			//	defined by the base classes :
+			
+			while (type != null)
+			{
+				if (type.localStandardProperties != null)
+				{
+					foreach (Property property in type.localStandardProperties)
+					{
+						property.AddDerivedType (this.systemType);
+					}
+				}
+				else if (type.standardPropertiesArray != null)
+				{
+					foreach (Property property in type.standardPropertiesArray)
+					{
+						property.AddDerivedType (this.systemType);
+					}
+					
+					break;
+				}
+				
+				type = type.baseType;
+			}
 		}
-		
 		
 		public ObjectType						BaseType
 		{
@@ -39,7 +65,6 @@ namespace Epsitec.Common.Types
 				return this.systemType.Name;
 			}
 		}
-		
 		
 		public bool IsObjectInstanceOfType(Object o)
 		{
@@ -128,13 +153,49 @@ namespace Epsitec.Common.Types
 			
 			return null;
 		}
-		
+		public Property GetProperty(Property property)
+		{
+			if (this.lookup == null)
+			{
+				this.BuildPropertyList ();
+			}
+
+			for (int i = 0; i < this.standardPropertiesArray.Length; i++)
+			{
+				if (this.standardPropertiesArray[i] == property)
+				{
+					return property;
+				}
+			}
+			
+			return null;
+		}
+
 		public static ObjectType FromSystemType(System.Type type)
 		{
 			lock (ObjectType.types)
 			{
 				return ObjectType.FromSystemTypeLocked (type);
 			}
+		}
+
+		internal static ObjectType SetupFromSystemType(System.Type type)
+		{
+			ObjectType objectType = ObjectType.FromSystemType (type);
+
+			if (objectType.initialized == false)
+			{
+				lock (objectType)
+				{
+					if (objectType.initialized == false)
+					{
+						objectType.InitializeLocked ();
+						objectType.initialized = true;
+					}
+				}
+			}
+			
+			return objectType;
 		}
 
 		#region Private Methods
@@ -235,6 +296,11 @@ namespace Epsitec.Common.Types
 				return this_type;
 			}
 		}
+
+		private void InitializeLocked()
+		{
+			
+		}
 		#endregion
 
 
@@ -245,6 +311,7 @@ namespace Epsitec.Common.Types
 		private Property[]						standardPropertiesArray;
 		private Property[]						attachedPropertiesArray;
 		private Dictionary<string, Property>	lookup;
+		private bool							initialized;
 
 		static Dictionary<System.Type, ObjectType> types = new Dictionary<System.Type, ObjectType> ();
 	}

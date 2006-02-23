@@ -739,8 +739,8 @@ namespace Epsitec.Common.Widgets
 		
 		
 		public static readonly Property			SubmenuProperty			= Property.Register ("Submenu", typeof (Widget), typeof (MenuItem), new PropertyMetadata (null, new PropertyInvalidatedCallback (MenuItem.NotifySubmenuChanged)));
-		public static readonly Property			ItemTypeProperty		= Property.Register ("ItemType", typeof (MenuItemType), typeof (MenuItem), new VisualPropertyMetadata (MenuItemType.Default, VisualPropertyFlags.AffectsDisplay));
-		public static readonly Property			MenuOrientationProperty	= Property.Register ("MenuOrientation", typeof (MenuOrientation), typeof (MenuItem), new VisualPropertyMetadata (MenuOrientation.Undefined, VisualPropertyFlags.AffectsDisplay));
+		public static readonly Property			ItemTypeProperty		= Property.Register ("ItemType", typeof (MenuItemType), typeof (MenuItem), new VisualPropertyMetadata (MenuItemType.Default, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly Property			MenuOrientationProperty	= Property.Register ("MenuOrientation", typeof (MenuOrientation), typeof (MenuItem), new VisualPropertyMetadata (MenuOrientation.Undefined, VisualPropertyMetadataOptions.AffectsDisplay));
 		
 		public static readonly Property			MenuBehaviorProperty	= Property.RegisterAttached ("MenuBehavior", typeof (Behaviors.MenuBehavior), typeof (MenuItem));
 		public static readonly Property			ParentMenuItemProperty	= Property.RegisterAttached ("ParentMenuItem", typeof (MenuItem), typeof (MenuItem));

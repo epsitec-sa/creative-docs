@@ -368,7 +368,7 @@
     <Compile Include="Helpers\IToolTipHost.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Helpers\VisualPropertyFlags.cs">
+    <Compile Include="Helpers\VisualPropertyMetadataOptions.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Helpers\VisualPropertyMetadata.cs">
