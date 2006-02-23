@@ -22,37 +22,37 @@ namespace Epsitec.Common.Widgets.Helpers
 		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback) : base (get_value_override_callback)
 		{
 		}
-		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback, VisualPropertyFlags flags) : base (get_value_override_callback)
+		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback, VisualPropertyMetadataOptions flags) : base (get_value_override_callback)
 		{
 			this.InitialiseFromFlags (flags);
 		}
-		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyFlags flags) : base (get_value_override_callback, property_invalidated_callback)
-		{
-			this.InitialiseFromFlags (flags);
-		}
-
-		public VisualPropertyMetadata(VisualPropertyFlags flags)
+		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyMetadataOptions flags) : base (get_value_override_callback, property_invalidated_callback)
 		{
 			this.InitialiseFromFlags (flags);
 		}
 
-		public VisualPropertyMetadata(object default_value, VisualPropertyFlags flags) : base (default_value)
+		public VisualPropertyMetadata(VisualPropertyMetadataOptions flags)
 		{
 			this.InitialiseFromFlags (flags);
 		}
-		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, VisualPropertyFlags flags) : base (default_value, get_value_override_callback)
+
+		public VisualPropertyMetadata(object default_value, VisualPropertyMetadataOptions flags) : base (default_value)
 		{
 			this.InitialiseFromFlags (flags);
 		}
-		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyFlags flags) : base (default_value, property_invalidated_callback)
+		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, VisualPropertyMetadataOptions flags) : base (default_value, get_value_override_callback)
 		{
 			this.InitialiseFromFlags (flags);
 		}
-		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyFlags flags) : base (default_value, get_value_override_callback, property_invalidated_callback)
+		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyMetadataOptions flags) : base (default_value, property_invalidated_callback)
 		{
 			this.InitialiseFromFlags (flags);
 		}
-		public VisualPropertyMetadata(object default_value, Types.SetValueOverrideCallback set_value_override_callback, VisualPropertyFlags flags) : base (default_value, set_value_override_callback)
+		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyMetadataOptions flags) : base (default_value, get_value_override_callback, property_invalidated_callback)
+		{
+			this.InitialiseFromFlags (flags);
+		}
+		public VisualPropertyMetadata(object default_value, Types.SetValueOverrideCallback set_value_override_callback, VisualPropertyMetadataOptions flags) : base (default_value, set_value_override_callback)
 		{
 			this.InitialiseFromFlags (flags);
 		}
@@ -100,12 +100,12 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
-		protected virtual void InitialiseFromFlags(VisualPropertyFlags flags)
+		protected virtual void InitialiseFromFlags(VisualPropertyMetadataOptions flags)
 		{
-			this.affects_layout        = (flags & VisualPropertyFlags.AffectsLayout) != 0;
-			this.affects_parent_layout = (flags & VisualPropertyFlags.AffectsParentLayout) != 0;
-			this.affects_display       = (flags & VisualPropertyFlags.AffectsDisplay) != 0;
-			this.inherits_value        = (flags & VisualPropertyFlags.InheritsValue) != 0;
+			this.affects_layout        = (flags & VisualPropertyMetadataOptions.AffectsLayout) != 0;
+			this.affects_parent_layout = (flags & VisualPropertyMetadataOptions.AffectsParentLayout) != 0;
+			this.affects_display       = (flags & VisualPropertyMetadataOptions.AffectsDisplay) != 0;
+			this.inherits_value        = (flags & VisualPropertyMetadataOptions.InheritsValue) != 0;
 		}
 		
 		protected override void OnPropertyInvalidated(Types.Object sender, object old_value, object new_value)

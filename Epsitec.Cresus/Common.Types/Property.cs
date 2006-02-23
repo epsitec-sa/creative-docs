@@ -140,6 +140,36 @@ namespace Epsitec.Common.Types
 			
 			return property;
 		}
+
+		internal void AddDerivedType(System.Type derivedType)
+		{
+			if (this.derivedTypes == null)
+			{
+				lock (this)
+				{
+					if (this.derivedTypes == null)
+					{
+						this.derivedTypes = new List<System.Type> ();
+					}
+				}
+			}
+			
+			this.derivedTypes.Add (derivedType);
+
+			//	If the base type overrides the metadata for this property, then
+			//	we have to inherit the same metadata :
+			
+			System.Type baseType = derivedType.BaseType;
+
+			if (this.overriddenMetadata != null)
+			{
+				if ((this.overriddenMetadata.ContainsKey (baseType)) &&
+					(this.overriddenMetadata.ContainsKey (derivedType) == false))
+				{
+					this.overriddenMetadata[derivedType] = this.overriddenMetadata[baseType];
+				}
+			}
+		}
 		
 		public bool IsOwnedBy(System.Type ownerType)
 		{
@@ -155,6 +185,25 @@ namespace Epsitec.Common.Types
 			{
 				return false;
 			}
+		}
+		public bool IsReferencedBy(System.Type referrerType)
+		{
+			if (this.IsOwnedBy (referrerType))
+			{
+				return true;
+			}
+			else if (this.derivedTypes != null)
+			{
+				foreach (System.Type type in this.derivedTypes)
+				{
+					if (type == referrerType)
+					{
+						return true;
+					}
+				}
+			}
+			
+			return false;
 		}
 		
 		#region IEquatable<Property> Members
@@ -187,6 +236,8 @@ namespace Epsitec.Common.Types
 		
 		public void OverrideMetadata(System.Type type, PropertyMetadata metadata)
 		{
+			ObjectType.FromSystemType (type);
+			
 			if (this.overriddenMetadata == null)
 			{
 				lock (this)
@@ -209,14 +260,9 @@ namespace Epsitec.Common.Types
 		{
 			if (this.overriddenMetadata != null)
 			{
-				while (type != null)
+				if (this.overriddenMetadata.ContainsKey (type))
 				{
-					if (this.overriddenMetadata.ContainsKey (type))
-					{
-						return this.overriddenMetadata[type];
-					}
-					
-					type = type.BaseType;
+					return this.overriddenMetadata[type];
 				}
 			}
 			
@@ -274,9 +320,11 @@ namespace Epsitec.Common.Types
 		private System.Type						propertyType;
 		private System.Type						ownerType;
 		private List<System.Type>				additionalOwnerTypes;
+		private List<System.Type>				derivedTypes;
 		private PropertyMetadata				defaultMetadata;
 		private bool							isAttached;
 		private int								globalIndex;
+		private int								lastPropertyCount;
 		
 		Dictionary<System.Type, PropertyMetadata>	overriddenMetadata;
 		
