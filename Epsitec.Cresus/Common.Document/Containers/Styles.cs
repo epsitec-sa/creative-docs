@@ -549,16 +549,23 @@ namespace Epsitec.Common.Document.Containers
 				int sel = this.document.GetSelectedTextStyle(this.category);
 				if ( sel != -1 )
 				{
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Justif",    "TextJustif",    Res.Strings.TextPanel.Justif.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Leading",   "TextLeading",   Res.Strings.TextPanel.Leading.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Margins",   "TextMargins",   Res.Strings.TextPanel.Margins.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Spaces",    "TextSpaces",    Res.Strings.TextPanel.Spaces.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Keep",      "TextKeep",      Res.Strings.TextPanel.Keep.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Tabs",      "TextTabs",      Res.Strings.TextPanel.Tabs.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Generator", "TextGenerator", Res.Strings.TextPanel.Generator.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Font",      "TextFont",      Res.Strings.TextPanel.Font.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Xline",     "TextXline",     Res.Strings.TextPanel.Xline.Title);
-					this.UpdateSelectorAdd(Styles.selectorSize, true, "Language",  "TextLanguage",  Res.Strings.TextPanel.Language.Title);
+					bool enable = (sel != 0);  // le premier style est forcément le style de base !
+
+					if ( !enable && this.SelectorName == "Generator" )
+					{
+						this.SelectorName = null;  // ferme un éventuel panneau ouvert
+					}
+
+					this.UpdateSelectorAdd(Styles.selectorSize, true,   "Justif",    "TextJustif",    Res.Strings.TextPanel.Justif.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true,   "Leading",   "TextLeading",   Res.Strings.TextPanel.Leading.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true,   "Margins",   "TextMargins",   Res.Strings.TextPanel.Margins.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true,   "Spaces",    "TextSpaces",    Res.Strings.TextPanel.Spaces.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true,   "Keep",      "TextKeep",      Res.Strings.TextPanel.Keep.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true,   "Tabs",      "TextTabs",      Res.Strings.TextPanel.Tabs.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, enable, "Generator", "TextGenerator", Res.Strings.TextPanel.Generator.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true,   "Font",      "TextFont",      Res.Strings.TextPanel.Font.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true,   "Xline",     "TextXline",     Res.Strings.TextPanel.Xline.Title);
+					this.UpdateSelectorAdd(Styles.selectorSize, true,   "Language",  "TextLanguage",  Res.Strings.TextPanel.Language.Title);
 				}
 			}
 
