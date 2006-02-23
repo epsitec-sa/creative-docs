@@ -1127,11 +1127,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Platform\Window.resx"
-                    DependentUpon = "Window.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "Platform\WindowList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
