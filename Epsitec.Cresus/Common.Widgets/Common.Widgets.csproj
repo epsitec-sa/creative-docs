@@ -377,9 +377,6 @@
     <Compile Include="Helpers\VisualTree.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Helpers\VisualTreeSnapshot.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="HiliteWidgetAdorner.cs">
       <SubType>Code</SubType>
     </Compile>

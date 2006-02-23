@@ -1624,9 +1624,8 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			Window window = this.Window;
-			
-			Helpers.VisualTreeSnapshot snapshot_1 = Helpers.VisualTree.SnapshotProperties (this, Visual.IsKeyboardFocusedProperty);
-			Helpers.VisualTreeSnapshot snapshot_2 = Helpers.VisualTree.SnapshotProperties (this, Visual.IsFocusedProperty);
+
+			Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsKeyboardFocusedProperty, Visual.IsFocusedProperty);
 			
 			if (new_focus)
 			{
@@ -1636,8 +1635,7 @@ namespace Epsitec.Common.Widgets
 					window.FocusedWidget = this;
 				}
 				
-				snapshot_1.InvalidateDifferent ();
-				snapshot_2.InvalidateDifferent ();
+				snapshot.InvalidateDifferentProperties ();
 				
 				this.Invalidate (InvalidateReason.FocusedChanged);
 			}
@@ -1650,8 +1648,7 @@ namespace Epsitec.Common.Widgets
 					window.FocusedWidget = null;
 				}
 				
-				snapshot_1.InvalidateDifferent ();
-				snapshot_2.InvalidateDifferent ();
+				snapshot.InvalidateDifferentProperties ();
 				
 				this.Invalidate (InvalidateReason.FocusedChanged);
 			}

@@ -1319,8 +1319,8 @@ namespace Epsitec.Common.Widgets
 		internal void OnWindowShown()
 		{
 			System.Diagnostics.Debug.Assert (! this.window_is_visible);
-			
-			Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.Root, Visual.IsVisibleProperty);
+
+			Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this.Root, Visual.IsVisibleProperty);
 			
 			this.window_is_visible = true;
 			
@@ -1330,7 +1330,7 @@ namespace Epsitec.Common.Widgets
 				this.window.Owner = this.owner.window;
 			}
 			
-			snapshot.InvalidateDifferent ();
+			snapshot.InvalidateDifferentProperties ();
 			
 			if (this.WindowShown != null)
 			{
@@ -1341,8 +1341,8 @@ namespace Epsitec.Common.Widgets
 		internal void OnWindowHidden()
 		{
 			System.Diagnostics.Debug.Assert (this.window_is_visible);
-			
-			Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.Root, Visual.IsVisibleProperty);
+
+			Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this.Root, Visual.IsVisibleProperty);
 			
 			this.window_is_visible = false;
 			
@@ -1352,7 +1352,7 @@ namespace Epsitec.Common.Widgets
 				this.window.Owner = null;
 			}
 			
-			snapshot.InvalidateDifferent ();
+			snapshot.InvalidateDifferentProperties ();
 			
 			if (this.WindowHidden != null)
 			{
@@ -1419,12 +1419,12 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.focused_widget != null)
 				{
-					Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.focused_widget, Visual.IsFocusedProperty);
-				
+					Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this.focused_widget, Visual.IsFocusedProperty);
+					
 					this.window_is_focused = true;
 					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
 				
-					snapshot.InvalidateDifferent ();
+					snapshot.InvalidateDifferentProperties ();
 				}
 				else
 				{
@@ -1446,12 +1446,12 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.focused_widget != null)
 				{
-					Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this.focused_widget, Visual.IsFocusedProperty);
+					Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this.focused_widget, Visual.IsFocusedProperty);
 					
 					this.window_is_focused = false;
 					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
 					
-					snapshot.InvalidateDifferent ();
+					snapshot.InvalidateDifferentProperties ();
 				}
 				else
 				{
