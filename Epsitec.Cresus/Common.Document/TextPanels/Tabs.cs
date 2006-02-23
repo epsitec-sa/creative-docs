@@ -30,7 +30,12 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonNew    = this.CreateIconButton(Misc.Icon("TabNew"), Res.Strings.TextPanel.Tabs.Tooltip.New,    new MessageEventHandler(this.HandleNewClicked),    false);
 			this.buttonDelete = this.CreateIconButton(Misc.Icon("Delete"), Res.Strings.TextPanel.Tabs.Tooltip.Delete, new MessageEventHandler(this.HandleDeleteClicked), false);
 
-			this.fieldPos = this.CreateTextFieldLabel(Res.Strings.TextPanel.Tabs.Tooltip.Pos, "", "", 0.0,  1.0, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandlePosValueChanged));
+			this.fieldPos = new Epsitec.Common.Document.Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
+			this.fieldPos.SetRangeDimension(this.document, 0.0, 1.0, 0.0, 1.0);
+			this.fieldPos.TextFieldReal.TextChanged += new EventHandler(this.HandlePosValueChanged);
+			this.fieldPos.TabIndex = this.tabIndex++;
+			this.fieldPos.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldPos, Res.Strings.TextPanel.Tabs.Tooltip.Pos);
 			this.ProposalTextFieldLabel(this.fieldPos, false);  // toujours défini
 
 			this.buttonType = this.CreateIconButton(Misc.Icon("TabLeft"), Res.Strings.Action.Text.Ruler.TabChoice, new MessageEventHandler(this.HandleTypeClicked), true);

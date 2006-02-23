@@ -492,20 +492,20 @@
 	<data name="TextPanel.Filter.Tooltip.Paragraph">Paragraph properties only</data>
 	<data name="TextPanel.Filter.Tooltip.Character">Character properties only</data>
 	
-	<data name="TextPanel.Generator.Title">@@Puces et numérotations</data>
-	<data name="TextPanel.Generator.Tooltip.Prefix">@@Préfixe du niveau</data>
-	<data name="TextPanel.Generator.Tooltip.Numerator">@@Numérotation du niveau</data>
-	<data name="TextPanel.Generator.Tooltip.Suffix">@@Suffixe du niveau</data>
-	<data name="TextPanel.Generator.Radio.Global">Base</data>
-	<data name="TextPanel.Generator.Type.None">@@Aucun</data>
-	<data name="TextPanel.Generator.Type.Bullet1">@@Puces rondes</data>
-	<data name="TextPanel.Generator.Type.Bullet2">@@Puces carrées</data>
-	<data name="TextPanel.Generator.Type.Bullet3">@@Puces triangulaires</data>
-	<data name="TextPanel.Generator.Type.Num1">@@Numérotation 1.1.1</data>
-	<data name="TextPanel.Generator.Type.Num2">@@Numérotation 1.a.a</data>
-	<data name="TextPanel.Generator.Type.Num3">@@Numérotation a.i.i</data>
-	<data name="TextPanel.Generator.Type.Custom">@@Personnalisé</data>
-	<data name="TextPanel.Generator.Numerator.None">@@Aucun</data>
+	<data name="TextPanel.Generator.Title">Bullets and numbering</data>
+	<data name="TextPanel.Generator.Tooltip.Prefix">Prefix at this level</data>
+	<data name="TextPanel.Generator.Tooltip.Numerator">Numbering at this level</data>
+	<data name="TextPanel.Generator.Tooltip.Suffix">Suffix at this level</data>
+	<data name="TextPanel.Generator.Radio.Global">Global</data>
+	<data name="TextPanel.Generator.Type.None">None</data>
+	<data name="TextPanel.Generator.Type.Bullet1">Round bullet</data>
+	<data name="TextPanel.Generator.Type.Bullet2">Square bullet</data>
+	<data name="TextPanel.Generator.Type.Bullet3">Triangular bullet</data>
+	<data name="TextPanel.Generator.Type.Num1">Numbering 1.1.1</data>
+	<data name="TextPanel.Generator.Type.Num2">Numbering 1.a.a</data>
+	<data name="TextPanel.Generator.Type.Num3">Numbering a.i.i</data>
+	<data name="TextPanel.Generator.Type.Custom">Custom</data>
+	<data name="TextPanel.Generator.Numerator.None">None</data>
 	<data name="TextPanel.Generator.Numerator.Numeric">1, 2...</data>
 	<data name="TextPanel.Generator.Numerator.AlphaLower">a, b...</data>
 	<data name="TextPanel.Generator.Numerator.AlphaUpper">A, B...</data>
@@ -537,8 +537,8 @@
 	<data name="TextPanel.Margins.Long.LeftFirst">First line</data>
 	<data name="TextPanel.Margins.Long.LeftBody">Left Indent</data>
 	<data name="TextPanel.Margins.Long.Right">Right Indent</data>
-	<data name="TextPanel.Margins.Long.Level">@@Niveau d'indentation</data>
-	<data name="TextPanel.Margins.Tooltip.Level">@@Niveau d'indentation (1..9)</data>
+	<data name="TextPanel.Margins.Long.Level">Indentation level</data>
+	<data name="TextPanel.Margins.Tooltip.Level">Indentation level (1..9)</data>
 
 	<data name="TextPanel.Spaces.Title">Spacing</data>
 	<data name="TextPanel.Spaces.Short.Before">B</data>
