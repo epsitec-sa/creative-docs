@@ -488,9 +488,9 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this, Visual.IsVisibleProperty);
+				Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsVisibleProperty);
 				this.SetValueBase (Visual.VisibilityProperty, value);
-				snapshot.InvalidateDifferent ();
+				snapshot.InvalidateDifferentProperties ();
 			}
 		}
 		
@@ -502,9 +502,9 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this, Visual.IsEnabledProperty);
+				Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsEnabledProperty);
 				this.SetValueBase (Visual.EnableProperty, value);
-				snapshot.InvalidateDifferent ();
+				snapshot.InvalidateDifferentProperties ();
 			}
 		}
 		
@@ -711,7 +711,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal void SetParentLayer(Layouts.Layer parent_layer)
 		{
-			Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this, Visual.IsVisibleProperty);
+			Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsVisibleProperty);
 			
 			Visual old_parent = this.Parent;
 			
@@ -734,7 +734,7 @@ namespace Epsitec.Common.Widgets
 				this.InvalidateProperty (Visual.ParentProperty, old_parent, new_parent);
 			}
 			
-			snapshot.InvalidateDifferent ();
+			snapshot.InvalidateDifferentProperties ();
 		}
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
@@ -944,6 +944,12 @@ namespace Epsitec.Common.Widgets
 		{
 			Visual that = o as Visual;
 			return that.Children;
+		}
+
+		private static object GetHasChildrenValue(Object o)
+		{
+			Visual that = o as Visual;
+			return that.HasChildren;
 		}
 
 		private static object GetBoundsValue(Object o)
@@ -1267,10 +1273,9 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property GroupProperty				= Property.Register ("Group", typeof (string), typeof (Visual));
 		public static readonly Property NameProperty				= Property.Register ("Name", typeof (string), typeof (Visual));
 		public static readonly Property ParentProperty				= ObjectTree.ParentProperty.AddOwner (typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged)));
-//		public static readonly Property ParentProperty				= Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged)));
 		public static readonly Property ParentLayerProperty			= Property.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentLayerValue)));
 		public static readonly Property ChildrenProperty			= ObjectTree.ChildrenProperty.AddOwner (typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
-//		public static readonly Property ChildrenProperty			= Property.RegisterReadOnly ("Children", typeof (ICollection<Types.Object>), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
+		public static readonly Property HasChildrenProperty			= ObjectTree.HasChildrenProperty.AddOwner (typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetHasChildrenValue)));
 		public static readonly Property LayersProperty				= Property.RegisterReadOnly ("Layers", typeof (Collections.LayerCollection), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetLayersValue)));
 		
 		public static readonly Property AnchorProperty				= Property.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyFlags.AffectsParentLayout));
@@ -1321,6 +1326,5 @@ namespace Epsitec.Common.Widgets
 		protected byte							currently_updating_layout;
 		private Layouts.Layer					parent_layer;
 		private static short					next_serial_id = 0;
-//-		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
 	}
 }

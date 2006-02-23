@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// The ObjectTreeSnapshot is used to compute differences between sets of
 	/// object properties.
 	/// </summary>
-	public sealed class ObjectTreeSnapshot
+	public class ObjectTreeSnapshot
 	{
 		public ObjectTreeSnapshot()
 		{
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Types
 
 			System.Type type = obj.GetType ();
 
-			foreach (Types.Property property in obj.ObjectType.GetProperties ())
+			foreach (Property property in obj.ObjectType.GetProperties ())
 			{
 				PropertyMetadata metadata = property.GetMetadata (type);
 
@@ -32,11 +32,42 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		public void Record(Object obj, Types.Property property)
+		public void Record(Object obj, Property property)
 		{
-			System.Diagnostics.Debug.Assert (property == null);
-			
+			System.Diagnostics.Debug.Assert (property != null);
+
 			this.list.Add (new SnapshotValue (obj, property));
+		}
+		public void Record(Object obj, Property property1, Property property2)
+		{
+			System.Diagnostics.Debug.Assert (property1 != null);
+			System.Diagnostics.Debug.Assert (property2 != null);
+
+			this.list.Add (new SnapshotValue (obj, property1));
+			this.list.Add (new SnapshotValue (obj, property2));
+		}
+
+		public void RecordSubtree(Object root, Property property)
+		{
+			if (ObjectTree.GetHasChildren (root))
+			{
+				foreach (Object child in ObjectTree.GetChildren (root))
+				{
+					this.Record (child, property);
+					this.RecordSubtree (child, property);
+				}
+			}
+		}
+		public void RecordSubtree(Object root, Property property1, Property property2)
+		{
+			if (ObjectTree.GetHasChildren (root))
+			{
+				foreach (Object child in ObjectTree.GetChildren (root))
+				{
+					this.Record (child, property1, property2);
+					this.RecordSubtree (child, property1, property2);
+				}
+			}
 		}
 
 		public void InvalidateDifferentProperties()
@@ -61,7 +92,7 @@ namespace Epsitec.Common.Types
 		#region Private SnapshotValue Structure
 		private struct SnapshotValue
 		{
-			public SnapshotValue(Object obj, Types.Property property)
+			public SnapshotValue(Object obj, Property property)
 			{
 				this.obj      = obj;
 				this.property = property;
@@ -75,7 +106,7 @@ namespace Epsitec.Common.Types
 					return this.obj;
 				}
 			}
-			public Types.Property				Property
+			public Property						Property
 			{
 				get
 				{
@@ -91,7 +122,7 @@ namespace Epsitec.Common.Types
 			}
 
 			private Object						obj;
-			private Types.Property				property;
+			private Property					property;
 			private object						value;
 		}
 		#endregion

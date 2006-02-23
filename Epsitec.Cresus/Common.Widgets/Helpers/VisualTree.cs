@@ -566,41 +566,6 @@ namespace Epsitec.Common.Widgets.Helpers
 			return null;
 		}
 		
-		
-		public static VisualTreeSnapshot SnapshotProperties(Visual visual, Types.Property property)
-		{
-			VisualTreeSnapshot snapshot = new VisualTreeSnapshot ();
-			
-			snapshot.Record (visual, property);
-			VisualTree.SnapshotChildrenProperties (snapshot, visual, property);
-			
-			return snapshot;
-		}
-		
-		public static VisualTreeSnapshot SnapshotChildrenProperties(Visual visual, Types.Property property)
-		{
-			VisualTreeSnapshot snapshot = new VisualTreeSnapshot ();
-			
-			VisualTree.SnapshotChildrenProperties (snapshot, visual, property);
-			
-			return snapshot;
-		}
-		
-		
-		private static void SnapshotChildrenProperties(VisualTreeSnapshot snapshot, Visual visual, Types.Property property)
-		{
-			if (visual.HasChildren)
-			{
-				foreach (Visual child in visual.GetChildrenCollection ())
-				{
-					snapshot.Record (child, property);
-					
-					VisualTree.SnapshotChildrenProperties (snapshot, child, property);
-				}
-			}
-		}
-		
-		
 		#region GetDispatchers (Private Methods)
 		private static void GetDispatchers(System.Collections.ArrayList list, Visual visual)
 		{
