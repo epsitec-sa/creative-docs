@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldTab        = this.CreateTextFieldLabel("Position de la puce/numéro", "Puces", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleTabChanged));
 			this.fieldIndent     = this.CreateTextFieldLabel("Position du texte", "Texte", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleIndentChanged));
 			this.fieldFontSize   = this.CreateTextFieldLabel("Taille de la police", "Taille", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontSizeChanged));
-			this.fieldFontOffset = this.CreateTextFieldLabel("Offset vertical", "Offset", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontOffsetChanged));
+			this.fieldFontOffset = this.CreateTextFieldLabel("Offset vertical", "Offset", "", -0.1, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontOffsetChanged));
 
 			this.colorText = this.CreateColorSample("Couleur du texte", new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
 
@@ -155,6 +155,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void CreateGenerator(string type)
 		{
+			//	Crée un nouveau générateur prédéfini.
 			Text.TabList tabs = this.document.TextContext.TabList;
 			Text.ParagraphManagers.ItemListManager.Parameters p;
 
@@ -322,6 +323,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected int GetCount()
 		{
+			//	Nombre de lignes du générateur.
 			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return 0;
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
 			if ( p == null )  return 0;
@@ -330,6 +332,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void IncCount()
 		{
+			//	Ajoute une nouvelle ligne au générateur.
 			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return;
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
 
@@ -339,6 +342,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected void DecCount()
 		{
+			//	Supprime la dernière ligne du générateur.
 			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return;
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
 
@@ -792,6 +796,8 @@ namespace Epsitec.Common.Document.TextPanels
 					if ( part1 == Part1.Value  )  sequence.ValueProperties  = properties;
 				}
 			}
+
+			this.ParagraphWrapper.Defined.ItemListParameters = p;
 		}
 
 		#region Properties array manager
