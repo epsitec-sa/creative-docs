@@ -56,12 +56,16 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			Generator.InitComboType(this.fieldType);
 
+			this.buttonPerso = new IconButton(this);
+			this.buttonPerso.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonPerso.Text = "Perso";
+			this.buttonPerso.Clicked += new MessageEventHandler(this.HandlePersoClicked);
+
 			this.table = new CellTable(this);
 			this.table.StyleH |= CellArrayStyle.Header;
 			this.table.StyleH |= CellArrayStyle.Separator;
 			this.table.StyleV |= CellArrayStyle.ScrollNorm;
 			this.table.StyleV |= CellArrayStyle.Separator;
-			//?this.table.StyleV |= CellArrayStyle.SelectCell;
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 
 			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), "Ajouter une ligne à la fin", new MessageEventHandler(this.HandleAddClicked));
@@ -81,6 +85,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldText.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldText.TabIndex = this.tabIndex++;
 			this.fieldText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.labelTabs = new StaticText(this);
+			this.labelTabs.Text = "Positions des tabulateurs :";
 
 			this.fieldTab        = this.CreateTextFieldLabel("Position de la puce/numéro", "Puces", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleTabChanged));
 			this.fieldIndent     = this.CreateTextFieldLabel("Position du texte", "Texte", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleIndentChanged));
@@ -134,7 +141,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( this.isExtendedSize )  // panneau étendu ?
 				{
-					h += 86 + (23+17*4);
+					h += 111 + (23+17*4);
 				}
 				else	// panneau réduit ?
 				{
@@ -348,6 +355,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			int count = p.Generator.Count;
 			p.Generator.Truncate(count-1);
+			this.ParagraphWrapper.Defined.ItemListParameters = p;
 		}
 
 		protected string GetResume(int level)
@@ -1186,11 +1194,22 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( this.table[2, row].IsEmpty )
 			{
-				StaticText st = new StaticText();
-				st.Alignment = ContentAlignment.MiddleCenter;
-				st.Dock = DockStyle.Fill;
-				st.DockMargins = new Drawing.Margins(2, 0, 0, 0);
-				this.table[2, row].Insert(st);
+				if ( row == 0 )
+				{
+					ColorSample cs = new ColorSample();
+					cs.Color = RichColor.FromAlphaRgb(0,0,0,0);
+					cs.Dock = DockStyle.Fill;
+					cs.DockMargins = new Drawing.Margins(-1, -1, -1, -1);
+					this.table[2, row].Insert(cs);
+				}
+				else
+				{
+					StaticText st = new StaticText();
+					st.Alignment = ContentAlignment.MiddleCenter;
+					st.Dock = DockStyle.Fill;
+					st.DockMargins = new Drawing.Margins(2, 0, 0, 0);
+					this.table[2, row].Insert(st);
+				}
 			}
 
 			if ( this.table[3, row].IsEmpty )
@@ -1218,8 +1237,11 @@ namespace Epsitec.Common.Document.TextPanels
 			st = this.table[1, row].Children[0] as StaticText;
 			st.Text = this.GetResume(row, Part1.Prefix, false);
 
-			st = this.table[2, row].Children[0] as StaticText;
-			st.Text = this.GetResume(row, Part1.Value, false);
+			if ( row != 0 )
+			{
+				st = this.table[2, row].Children[0] as StaticText;
+				st.Text = this.GetResume(row, Part1.Value, false);
+			}
 
 			st = this.table[3, row].Children[0] as StaticText;
 			st.Text = this.GetResume(row, Part1.Suffix, false);
@@ -1247,15 +1269,11 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.isExtendedSize )  // panneau étendu ?
 			{
 				r.Offset(0, -25);
-				r.Left = rect.Left;
-				r.Right = rect.Right;
-				r.Bottom = r.Top-(23+17*4);
-				this.table.Bounds = r;
-				this.table.Visibility = true;
-
-				r.Top = r.Bottom-5;
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
+				r.Right = rect.Right-20*6;
+				this.buttonPerso.Bounds = r;
+				r.Left = r.Right+10;
 				r.Width = 20;
 				this.buttonAdd.Bounds = r;
 				r.Offset(20, 0);
@@ -1267,6 +1285,15 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Offset(20, 0);
 				this.buttonRight.Bounds = r;
 
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				r.Bottom = r.Top-(23+17*4);
+				this.table.Bounds = r;
+				this.table.Visibility = true;
+
+				r.Top = r.Bottom-5;
+				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Width = 20;
 				this.buttonSuppressBefore.Bounds = r;
@@ -1279,6 +1306,10 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Left = rect.Right-48;
 				r.Right = rect.Right;
 				this.colorText.Bounds = r;
+
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.labelTabs.Bounds = r;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -1352,6 +1383,8 @@ namespace Epsitec.Common.Document.TextPanels
 			int column = this.tableSelectedColumn;
 			Part1 part1 = Generator.ConvColumnToPart1(column);
 			string text;
+
+			this.buttonPerso.ActiveState = (this.Type == "Custom") ? ActiveState.Yes : ActiveState.No;
 
 			text = this.GetValue(0, Part1.Generic, Part2.Disposition);
 			this.buttonLeft.ActiveState   = (text == "Left"  ) ? ActiveState.Yes : ActiveState.No;
@@ -1432,13 +1465,6 @@ namespace Epsitec.Common.Document.TextPanels
 			int count  = this.GetCount();
 			bool enable;
 
-			enable = (this.isExtendedSize && column == 0);
-			this.buttonAdd.Visibility    = enable;
-			this.buttonSub.Visibility    = enable;
-			this.buttonLeft.Visibility   = enable;
-			this.buttonCenter.Visibility = enable;
-			this.buttonRight.Visibility  = enable;
-
 			enable = (this.isExtendedSize && column != 0 && column != -1);
 			if ( row == 0 && column == 2 )  enable = false;
 			this.buttonSuppressBefore.Visibility = (enable && row != 0);
@@ -1449,18 +1475,12 @@ namespace Epsitec.Common.Document.TextPanels
 			this.colorText.Visibility       = enable;
 
 			enable = (this.isExtendedSize && column == 0 && row != 0);
+			this.labelTabs.Visibility       = enable;
 			this.fieldTab.Visibility        = enable;
 			this.fieldIndent.Visibility     = enable;
 
-			//?this.table.Enable = custom;
-			if ( custom )
-			{
-				this.table.StyleV |= CellArrayStyle.SelectCell;
-			}
-			else
-			{
-				this.table.StyleV &= ~CellArrayStyle.SelectCell;
-			}
+			if ( custom )  this.table.StyleV |=  CellArrayStyle.SelectCell;
+			else           this.table.StyleV &= ~CellArrayStyle.SelectCell;
 
 			this.buttonAdd.Enable = (custom && count < 9);
 			this.buttonSub.Enable = (custom && count > 1);
@@ -1510,12 +1530,25 @@ namespace Epsitec.Common.Document.TextPanels
 			this.CreateGenerator(this.type);
 		}
 
+		private void HandlePersoClicked(object sender, MessageEventArgs e)
+		{
+			this.Type = "Custom";
+			this.CreateGenerator(this.type);
+		}
+
 		private void HandleTableSelectionChanged(object sender)
 		{
 			if ( this.type != "Custom" )  return;
 
 			this.tableSelectedRow    = this.table.SelectedRow;
 			this.tableSelectedColumn = this.table.SelectedColumn;
+
+			if ( this.tableSelectedRow == 0 && this.tableSelectedColumn == 2 )
+			{
+				this.table.DeselectAll();
+				this.tableSelectedRow    = -1;
+				this.tableSelectedColumn = -1;
+			}
 
 			this.UpdateWidgets();
 			this.UpdateFields();
@@ -1648,6 +1681,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected static readonly int		maxLevel = 8;
 
 		protected TextFieldCombo			fieldType;
+		protected IconButton				buttonPerso;
 		protected CellTable					table;
 		protected IconButton				buttonAdd;
 		protected IconButton				buttonSub;
@@ -1657,6 +1691,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonSuppressBefore;
 		protected StaticText				labelText;
 		protected TextFieldCombo			fieldText;
+		protected StaticText				labelTabs;
 		protected Widgets.TextFieldLabel	fieldTab;
 		protected Widgets.TextFieldLabel	fieldIndent;
 		protected Widgets.TextFieldLabel	fieldFontSize;
