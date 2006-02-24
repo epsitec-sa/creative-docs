@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\SuppressBefore.icon" />
     <Compile Include="Application.cs">
       <SubType>Code</SubType>
     </Compile>
