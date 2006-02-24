@@ -61,7 +61,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.table.StyleH |= CellArrayStyle.Separator;
 			this.table.StyleV |= CellArrayStyle.ScrollNorm;
 			this.table.StyleV |= CellArrayStyle.Separator;
-			this.table.StyleV |= CellArrayStyle.SelectCell;
+			//?this.table.StyleV |= CellArrayStyle.SelectCell;
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 
 			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), "Ajouter une ligne à la fin", new MessageEventHandler(this.HandleAddClicked));
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Document.TextPanels
 			//	les niveaux précédents.
 			if ( level == 0 )
 			{
-				return "Base";
+				return "Global";
 			}
 			else
 			{
@@ -1429,6 +1429,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			int row    = this.tableSelectedRow;
 			int column = this.tableSelectedColumn;
+			int count  = this.GetCount();
 			bool enable;
 
 			enable = (this.isExtendedSize && column == 0);
@@ -1451,8 +1452,16 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldTab.Visibility        = enable;
 			this.fieldIndent.Visibility     = enable;
 
-			int count = this.GetCount();
-			this.table.Enable = custom;
+			//?this.table.Enable = custom;
+			if ( custom )
+			{
+				this.table.StyleV |= CellArrayStyle.SelectCell;
+			}
+			else
+			{
+				this.table.StyleV &= ~CellArrayStyle.SelectCell;
+			}
+
 			this.buttonAdd.Enable = (custom && count < 9);
 			this.buttonSub.Enable = (custom && count > 1);
 			this.buttonLeft.Enable = custom;
@@ -1503,6 +1512,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleTableSelectionChanged(object sender)
 		{
+			if ( this.type != "Custom" )  return;
+
 			this.tableSelectedRow    = this.table.SelectedRow;
 			this.tableSelectedColumn = this.table.SelectedColumn;
 
