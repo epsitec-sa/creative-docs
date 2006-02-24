@@ -71,9 +71,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), "Ajouter une ligne à la fin", new MessageEventHandler(this.HandleAddClicked));
 			this.buttonSub = this.CreateIconButton(Misc.Icon("ShaperHandleSub"), "Supprimer la dernière ligne", new MessageEventHandler(this.HandleSubClicked));
 
-			this.buttonLeft   = this.CreateIconButton(Misc.Icon("JustifHLeft"),   Res.Strings.Action.ParagraphAlignLeft,   new MessageEventHandler(this.HandleJustifClicked));
-			this.buttonCenter = this.CreateIconButton(Misc.Icon("JustifHCenter"), Res.Strings.Action.ParagraphAlignCenter, new MessageEventHandler(this.HandleJustifClicked));
-			this.buttonRight  = this.CreateIconButton(Misc.Icon("JustifHRight"),  Res.Strings.Action.ParagraphAlignRight,  new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonLeft   = this.CreateIconButton(Misc.Icon("BulletJustifLeft"),   Res.Strings.Action.ParagraphAlignLeft,   new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonCenter = this.CreateIconButton(Misc.Icon("BulletJustifCenter"), Res.Strings.Action.ParagraphAlignCenter, new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonRight  = this.CreateIconButton(Misc.Icon("BulletJustifRight"),  Res.Strings.Action.ParagraphAlignRight,  new MessageEventHandler(this.HandleJustifClicked));
 
 			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), "Cette ligne remplace les précédentes", new MessageEventHandler(this.HandleSuppressBeforeClicked));
 
