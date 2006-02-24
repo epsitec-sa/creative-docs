@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.TextPanels
 		//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
 		//	0.[Generic].[Disposition]
 		//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-		//	n.[Generic].[SupressBefore,Tab,Indent]
+		//	n.[Generic].[SuppressBefore,Tab,Indent]
 
 		protected enum Part1
 		{
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.TextPanels
 			FontSize,
 			FontColor,
 			FontOffset,
-			SupressBefore,
+			SuppressBefore,
 			Tab,
 			Indent,
 			Disposition,
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.ComboClosed += new EventHandler(this.HandleTypeChanged);
 			this.fieldType.TabIndex = this.tabIndex++;
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.InitComboType(this.fieldType);
+			Generator.InitComboType(this.fieldType);
 
 			this.table = new CellTable(this);
 			this.table.StyleH |= CellArrayStyle.Header;
@@ -62,8 +62,32 @@ namespace Epsitec.Common.Document.TextPanels
 			this.table.StyleV |= CellArrayStyle.ScrollNorm;
 			this.table.StyleV |= CellArrayStyle.Separator;
 			this.table.StyleV |= CellArrayStyle.SelectCell;
-			//?this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
-			this.UpdateTable();
+			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
+
+			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), "Ajouter une ligne à la fin", new MessageEventHandler(this.HandleAddClicked));
+			this.buttonSub = this.CreateIconButton(Misc.Icon("ShaperHandleSub"), "Supprimer la dernière ligne", new MessageEventHandler(this.HandleSubClicked));
+
+			this.buttonLeft   = this.CreateIconButton(Misc.Icon("JustifHLeft"),   Res.Strings.Action.ParagraphAlignLeft,   new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonCenter = this.CreateIconButton(Misc.Icon("JustifHCenter"), Res.Strings.Action.ParagraphAlignCenter, new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonRight  = this.CreateIconButton(Misc.Icon("JustifHRight"),  Res.Strings.Action.ParagraphAlignRight,  new MessageEventHandler(this.HandleJustifClicked));
+
+			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), "Cette ligne remplace les précédentes", new MessageEventHandler(this.HandleSuppressBeforeClicked));
+
+			this.labelText = new StaticText(this);
+			this.labelText.Alignment = ContentAlignment.MiddleRight;
+
+			this.fieldText = new TextFieldCombo(this);
+			this.fieldText.AutoFocus = false;
+			this.fieldText.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldText.TabIndex = this.tabIndex++;
+			this.fieldText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.fieldTab        = this.CreateTextFieldLabel("Position de la puce/numéro", "Puces", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleTabChanged));
+			this.fieldIndent     = this.CreateTextFieldLabel("Position du texte", "Texte", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleIndentChanged));
+			this.fieldFontSize   = this.CreateTextFieldLabel("Taille de la police", "Taille", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontSizeChanged));
+			this.fieldFontOffset = this.CreateTextFieldLabel("Offset vertical", "Offset", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontOffsetChanged));
+
+			this.colorText = this.CreateColorSample("Couleur du texte", new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -71,7 +95,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
 
 			this.Type = "None";
-			this.Level = 0;
+			this.UpdateTable();
+			this.UpdateFields();
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -82,6 +107,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( disposing )
 			{
 				this.fieldType.ComboClosed -= new EventHandler(this.HandleTypeChanged);
+				this.table.FinalSelectionChanged -= new EventHandler(this.HandleTableSelectionChanged);
+				this.fieldText.TextChanged -= new EventHandler(this.HandleTextChanged);
 
 				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
 				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
@@ -107,7 +134,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( this.isExtendedSize )  // panneau étendu ?
 				{
-					h += 110;
+					h += 86 + (23+17*4);
 				}
 				else	// panneau réduit ?
 				{
@@ -149,27 +176,27 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
-				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
-				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Center");
+				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,           "");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           "");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Center");
 
-				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
-				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25CF");  // puce ronde pleine
-				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,      "Arial");
-				this.SetValue(p, 1, Part1.Value,   Part2.Text,          "");
-				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,           "\u25CF");  // puce ronde pleine
+				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,       "Arial");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,           "");
+				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,           "");
 
-				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "true");
-				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "\u25CB");  // puce ronde vide
-				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,      "Arial");
-				this.SetValue(p, 2, Part1.Value,   Part2.Text,          "");
-				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,           "\u25CB");  // puce ronde vide
+				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,       "Arial");
+				this.SetValue(p, 2, Part1.Value,   Part2.Text,           "");
+				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,           "");
 
-				this.SetValue(p, 3, Part1.Generic, Part2.SupressBefore, "true");
-				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,          "-");
-				this.SetValue(p, 3, Part1.Prefix,  Part2.FontFace,      "Arial");
-				this.SetValue(p, 3, Part1.Value,   Part2.Text,          "");
-				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,          "");
+				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,           "-");
+				this.SetValue(p, 3, Part1.Prefix,  Part2.FontFace,       "Arial");
+				this.SetValue(p, 3, Part1.Value,   Part2.Text,           "");
+				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,           "");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -180,22 +207,22 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,          "");
-				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          "");
-				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Center");
+				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,           "");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           "");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Center");
 
-				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
-				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25A0");  // puce carrée pleine
-				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,      "Arial");
-//				this.SetValue(p, 1, Part1.Prefix,  Part2.FontColor,     RichColor.ToString(RichColor.FromRgb(1,0,0)));
+				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,           "\u25A0");  // puce carrée pleine
+				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,       "Arial");
+//				this.SetValue(p, 1, Part1.Prefix,  Part2.FontColor,      RichColor.ToString(RichColor.FromRgb(1,0,0)));
 
-				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "true");
-				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "\u25A1");  // puce carrée vide
-				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,           "\u25A1");  // puce carrée vide
+				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,       "Arial");
 
-				this.SetValue(p, 3, Part1.Generic, Part2.SupressBefore, "true");
-				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,          "-");
-				this.SetValue(p, 3, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,           "-");
+				this.SetValue(p, 3, Part1.Prefix,  Part2.FontFace,       "Arial");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -206,11 +233,11 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Center");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Center");
 
-				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "true");
-				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,          "\u25BA");  // triangle >
-				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,      "Arial");
+				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,           "\u25BA");  // triangle >
+				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,       "Arial");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -221,11 +248,11 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Right");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Right");
 
-				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
-				this.SetValue(p, 1, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.Numeric);
-				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,          ".");
+				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.Numeric);
+				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,           ".");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -236,27 +263,27 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,          ")");
-				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Right");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           ")");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Right");
 
-				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
-				this.SetValue(p, 1, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.AlphaUpper);
-				this.SetValue(p, 1, Part1.Generic, Part2.Tab,           "15");
-				this.SetValue(p, 1, Part1.Generic, Part2.Indent,        "20");
+				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.AlphaUpper);
+				this.SetValue(p, 1, Part1.Generic, Part2.Tab,            "15");
+				this.SetValue(p, 1, Part1.Generic, Part2.Indent,         "20");
 
-				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "false");
-				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,          "-");
-				this.SetValue(p, 2, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.Numeric);
-//				this.SetValue(p, 2, Part1.Value,   Part2.FontColor,     RichColor.ToString(RichColor.FromRgb(0,0,1)));
-				this.SetValue(p, 2, Part1.Generic, Part2.Tab,           "15");
-				this.SetValue(p, 2, Part1.Generic, Part2.Indent,        "20");
+				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "false");
+				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,           "-");
+				this.SetValue(p, 2, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.Numeric);
+//				this.SetValue(p, 2, Part1.Value,   Part2.FontColor,      RichColor.ToString(RichColor.FromRgb(0,0,1)));
+				this.SetValue(p, 2, Part1.Generic, Part2.Tab,            "15");
+				this.SetValue(p, 2, Part1.Generic, Part2.Indent,         "20");
 
-				this.SetValue(p, 3, Part1.Generic, Part2.SupressBefore, "true");
-				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,          "(");
-				this.SetValue(p, 3, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.RomanLower);
-				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,          "");
-				this.SetValue(p, 3, Part1.Generic, Part2.Tab,           "20");
-				this.SetValue(p, 3, Part1.Generic, Part2.Indent,        "25");
+				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,           "(");
+				this.SetValue(p, 3, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.RomanLower);
+				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,           "");
+				this.SetValue(p, 3, Part1.Generic, Part2.Tab,            "20");
+				this.SetValue(p, 3, Part1.Generic, Part2.Indent,         "25");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -267,18 +294,18 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,   "Left");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Left");
 
-				this.SetValue(p, 1, Part1.Generic, Part2.SupressBefore, "false");
-				this.SetValue(p, 1, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.Numeric);
+				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.Numeric);
 
-				this.SetValue(p, 2, Part1.Generic, Part2.SupressBefore, "true");
-				this.SetValue(p, 2, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
-				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,          ")");
+				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 2, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
+				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,           ")");
 
-				this.SetValue(p, 3, Part1.Generic, Part2.SupressBefore, "true");
-				this.SetValue(p, 3, Part1.Value,   Part2.Text,          Res.Strings.TextPanel.Generator.Numerator.RomanLower);
-				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,          ")");
+				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 3, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.RomanLower);
+				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,           ")");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -293,6 +320,32 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
+		protected int GetCount()
+		{
+			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return 0;
+			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
+			if ( p == null )  return 0;
+			return p.Generator.Count;
+		}
+
+		protected void IncCount()
+		{
+			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return;
+			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
+
+			int count = p.Generator.Count;
+			this.SetValue(count+1, Part1.Generic, Part2.SuppressBefore, "false");
+		}
+
+		protected void DecCount()
+		{
+			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return;
+			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
+
+			int count = p.Generator.Count;
+			p.Generator.Truncate(count-1);
+		}
+
 		protected string GetResume(int level)
 		{
 			//	Donne le texte résumé pour un niveau complet. Le résumé contient aussi tous
@@ -305,35 +358,35 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-				builder.Append(this.GetResume(0, Part1.Prefix));
+				builder.Append(this.GetResume(0, Part1.Prefix, true));
 				int lp = builder.Length;
 
 				for ( int i=1 ; i<=level ; i++ )
 				{
-					if ( this.GetValue(i, Part1.Generic, Part2.SupressBefore) == "true" )
+					if ( this.GetValue(i, Part1.Generic, Part2.SuppressBefore) == "true" )
 					{
 						builder.Remove(lp, builder.Length-lp);
 					}
 
-					builder.Append(this.GetResume(i, Part1.Prefix));
-					builder.Append(this.GetResume(i, Part1.Value));
-					builder.Append(this.GetResume(i, Part1.Suffix));
+					builder.Append(this.GetResume(i, Part1.Prefix, true));
+					builder.Append(this.GetResume(i, Part1.Value,  true));
+					builder.Append(this.GetResume(i, Part1.Suffix, true));
 				}
 
-				builder.Append(this.GetResume(0, Part1.Suffix));
+				builder.Append(this.GetResume(0, Part1.Suffix, true));
 
 				return builder.ToString();
 			}
 		}
 
-		protected string GetResume(int level, Part1 part1)
+		protected string GetResume(int level, Part1 part1, bool isShort)
 		{
 			//	Donne le texte résumé d'une partie d'un niveau (Prefix, Value ou Suffix).
 			//	Le résumé contient les commandes pour la police et la couleur.
 			string s = this.GetValue(level, part1, Part2.Text);
 			if ( s == null )  return "";
 
-			if ( part1 == Part1.Value )
+			if ( part1 == Part1.Value && isShort )
 			{
 				s = Generator.ConvTextToShort(s);
 			}
@@ -377,10 +430,11 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Donne la valeur d'une partie d'un niveau. Il s'agit du passage obligé
 			//	pour lire les définitions de puces/numérotations.
-			System.Diagnostics.Debug.Assert(level >= 0 && level <= 10);
+			if ( level < 0 || level > 10 )  return null;
 			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return null;
 
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
+			if ( p == null )  return null;
 			Text.TabList tabs = this.document.TextContext.TabList;
 			Common.Text.Property[] properties = null;
 
@@ -419,7 +473,7 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( part1 == Part1.Suffix )  properties = sequence.SuffixProperties;
 				if ( part1 == Part1.Value  )  properties = sequence.ValueProperties;
 
-				if ( part2 == Part2.SupressBefore )
+				if ( part2 == Part2.SuppressBefore )
 				{
 					return sequence.SuppressBefore ? "true" : "false";
 				}
@@ -511,7 +565,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Modifie une valeur d'une partie d'un niveau. Il s'agit du passage obligé
 			//	pour modifier les définitions de puces/numérotations.
-			System.Diagnostics.Debug.Assert(level >= 0 && level <= 10);
+			if ( level < 0 || level > 10 )  return;
 
 			Text.TabList tabs = this.document.TextContext.TabList;
 			Common.Text.Property[] properties = null;
@@ -594,7 +648,7 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( part1 == Part1.Suffix )  properties = sequence.SuffixProperties;
 				if ( part1 == Part1.Value  )  properties = sequence.ValueProperties;
 
-				if ( part2 == Part2.SupressBefore )
+				if ( part2 == Part2.SuppressBefore )
 				{
 					sequence.SuppressBefore = (value == "true");
 				}
@@ -808,8 +862,10 @@ namespace Epsitec.Common.Document.TextPanels
 		#endregion
 
 
-		protected void InitComboType(TextFieldCombo combo)
+		protected static void InitComboType(TextFieldCombo combo)
 		{
+			combo.Items.Clear();
+
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.None);
 			
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Bullet1);
@@ -823,8 +879,10 @@ namespace Epsitec.Common.Document.TextPanels
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Custom);
 		}
 
-		protected void InitComboFix(TextFieldCombo combo)
+		protected static void InitComboFix(TextFieldCombo combo)
 		{
+			combo.Items.Clear();
+
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.None);
 
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Fix1);
@@ -850,8 +908,10 @@ namespace Epsitec.Common.Document.TextPanels
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Text.Arial9);
 		}
 
-		protected void InitComboNumerator(TextFieldCombo combo)
+		protected static void InitComboNumerator(TextFieldCombo combo)
 		{
+			combo.Items.Clear();
+
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Numerator.None);
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Numerator.Numeric);
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
@@ -1049,6 +1109,15 @@ namespace Epsitec.Common.Document.TextPanels
 			return "";
 		}
 
+		protected static Part1 ConvColumnToPart1(int column)
+		{
+			Part1 part1 = Part1.Generic;
+			if ( column == 1 )  part1 = Part1.Prefix;
+			if ( column == 2 )  part1 = Part1.Value;
+			if ( column == 3 )  part1 = Part1.Suffix;
+			return part1;
+		}
+
 		
 		protected void UpdateTable()
 		{
@@ -1141,16 +1210,13 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( justif == "Right"  )  st.Alignment = ContentAlignment.MiddleRight;
 
 			st = this.table[1, row].Children[0] as StaticText;
-			st.Text = this.GetResume(row, Part1.Prefix);
+			st.Text = this.GetResume(row, Part1.Prefix, false);
 
 			st = this.table[2, row].Children[0] as StaticText;
-			st.Text = this.GetResume(row, Part1.Value);
+			st.Text = this.GetResume(row, Part1.Value, false);
 
 			st = this.table[3, row].Children[0] as StaticText;
-			st.Text = this.GetResume(row, Part1.Suffix);
-
-			//?bool selected = (tag == this.tabSelected);  // voir (**) dans Objects.AbstractText !
-			//?this.table.SelectRow(row, selected);
+			st.Text = this.GetResume(row, Part1.Suffix, false);
 		}
 
 		
@@ -1177,9 +1243,49 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				r.Bottom = r.Top-74;
+				r.Bottom = r.Top-(23+17*4);
 				this.table.Bounds = r;
 				this.table.Visibility = true;
+
+				r.Top = r.Bottom-5;
+				r.Bottom = r.Top-20;
+				r.Left = rect.Left;
+				r.Width = 20;
+				this.buttonAdd.Bounds = r;
+				r.Offset(20, 0);
+				this.buttonSub.Bounds = r;
+				r.Offset(20+10, 0);
+				this.buttonLeft.Bounds = r;
+				r.Offset(20, 0);
+				this.buttonCenter.Bounds = r;
+				r.Offset(20, 0);
+				this.buttonRight.Bounds = r;
+
+				r.Left = rect.Left;
+				r.Width = 20;
+				this.buttonSuppressBefore.Bounds = r;
+				r.Offset(20+10, 0);
+				r.Width = 30;
+				this.labelText.Bounds = r;
+				r.Offset(30+3, 0);
+				r.Width = 60;
+				this.fieldText.Bounds = r;
+				r.Left = rect.Right-48;
+				r.Right = rect.Right;
+				this.colorText.Bounds = r;
+
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Width = 90;
+				this.fieldTab.Bounds = r;
+				r.Offset(90, 0);
+				this.fieldIndent.Bounds = r;
+
+				r.Left = rect.Left;
+				r.Width = 90;
+				this.fieldFontSize.Bounds = r;
+				r.Offset(90, 0);
+				this.fieldFontOffset.Bounds = r;
 			}
 			else
 			{
@@ -1203,9 +1309,6 @@ namespace Epsitec.Common.Document.TextPanels
 
 			bool isGenerator = this.ParagraphWrapper.Defined.IsManagedParagraphDefined;
 			string type = "None";
-			string prefix = "";
-			string generator = "";
-			string suffix = "";
 
 			if ( isGenerator )
 			{
@@ -1221,40 +1324,142 @@ namespace Epsitec.Common.Document.TextPanels
 						}
 					}
 				}
-
-				if ( p != null )
-				{
-					if ( this.level == 0 )
-					{
-						prefix = p.Generator.GlobalPrefix;
-						suffix = p.Generator.GlobalSuffix;
-					}
-					else if ( this.level-1 < p.Generator.Count )
-					{
-						Common.Text.Generator.Sequence sequence = p.Generator[this.level-1];
-						prefix = sequence.Prefix;
-						generator = Generator.ConvSequenceToText(sequence);
-						suffix = sequence.Suffix;
-					}
-				}
 			}
 
 			this.Type = type;
 
 			this.ignoreChanged = true;
-
 			this.fieldType.Text = Generator.ConvTypeToText(type);
 			this.ProposalTextFieldCombo(this.fieldType, !isGenerator);
+			this.ignoreChanged = false;
 
 			this.UpdateTable();
+			this.UpdateWidgets();
+			this.UpdateFields();
+		}
+
+		protected void UpdateFields()
+		{
+			this.ignoreChanged = true;
+
+			int row    = this.tableSelectedRow;
+			int column = this.tableSelectedColumn;
+			Part1 part1 = Generator.ConvColumnToPart1(column);
+			string text;
+
+			text = this.GetValue(0, Part1.Generic, Part2.Disposition);
+			this.buttonLeft.ActiveState   = (text == "Left"  ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonCenter.ActiveState = (text == "Center") ? ActiveState.Yes : ActiveState.No;
+			this.buttonRight.ActiveState  = (text == "Right" ) ? ActiveState.Yes : ActiveState.No;
+
+			text = this.GetValue(row, Part1.Generic, Part2.SuppressBefore);
+			this.buttonSuppressBefore.ActiveState = (text == "true"  ) ? ActiveState.Yes : ActiveState.No;
+
+			text = this.GetResume(row, part1, false);
+			this.fieldText.Text = text;
+
+			if ( part1 == Part1.Prefix || part1 == Part1.Suffix )
+			{
+				this.labelText.Text = "Texte";
+				this.fieldText.IsReadOnly = false;
+				Generator.InitComboFix(this.fieldText);
+				ToolTip.Default.SetToolTip(this.fieldText, "Texte fixe");
+			}
+			
+			if ( part1 == Part1.Value )
+			{
+				this.labelText.Text = "Num.";
+				this.fieldText.IsReadOnly = true;
+				Generator.InitComboNumerator(this.fieldText);
+				ToolTip.Default.SetToolTip(this.fieldText, "Type de numérotation");
+			}
+			
+			text = this.GetValue(row, part1, Part2.FontSize);
+			if ( text == null )
+			{
+				this.fieldFontSize.TextFieldReal.ClearText();
+			}
+			else
+			{
+				this.fieldFontSize.TextFieldReal.Text = text;
+			}
+
+			text = this.GetValue(row, part1, Part2.FontOffset);
+			if ( text == null )
+			{
+				this.fieldFontOffset.TextFieldReal.ClearText();
+			}
+			else
+			{
+				this.fieldFontOffset.TextFieldReal.Text = text;
+			}
+
+			text = this.GetValue(row, Part1.Generic, Part2.Tab);
+			if ( text == null )
+			{
+				this.fieldTab.TextFieldReal.ClearText();
+			}
+			else
+			{
+				this.fieldTab.TextFieldReal.Text = text;
+			}
+
+			text = this.GetValue(row, Part1.Generic, Part2.Indent);
+			if ( text == null )
+			{
+				this.fieldIndent.TextFieldReal.ClearText();
+			}
+			else
+			{
+				this.fieldIndent.TextFieldReal.Text = text;
+			}
 
 			this.ignoreChanged = false;
 		}
 
-
 		protected void UpdateWidgets()
 		{
 			bool custom = (this.type == "Custom");
+
+			int row    = this.tableSelectedRow;
+			int column = this.tableSelectedColumn;
+			bool enable;
+
+			enable = (this.isExtendedSize && column == 0);
+			this.buttonAdd.Visibility    = enable;
+			this.buttonSub.Visibility    = enable;
+			this.buttonLeft.Visibility   = enable;
+			this.buttonCenter.Visibility = enable;
+			this.buttonRight.Visibility  = enable;
+
+			enable = (this.isExtendedSize && column != 0 && column != -1);
+			if ( row == 0 && column == 2 )  enable = false;
+			this.buttonSuppressBefore.Visibility = (enable && row != 0);
+			this.labelText.Visibility       = enable;
+			this.fieldText.Visibility       = enable;
+			this.fieldFontSize.Visibility   = enable;
+			this.fieldFontOffset.Visibility = enable;
+			this.colorText.Visibility       = enable;
+
+			enable = (this.isExtendedSize && column == 0 && row != 0);
+			this.fieldTab.Visibility        = enable;
+			this.fieldIndent.Visibility     = enable;
+
+			int count = this.GetCount();
+			this.table.Enable = custom;
+			this.buttonAdd.Enable = (custom && count < 9);
+			this.buttonSub.Enable = (custom && count > 1);
+			this.buttonLeft.Enable = custom;
+			this.buttonCenter.Enable = custom;
+			this.buttonRight.Enable = custom;
+			this.buttonSuppressBefore.Enable = custom;
+			this.labelText.Enable = custom;
+			this.fieldText.Enable = custom;
+			this.fieldFontSize.Enable = custom;
+			this.fieldFontOffset.Enable = custom;
+			this.colorText.Enable = custom;
+			this.fieldTab.Enable = custom;
+			this.fieldIndent.Enable = custom;
 		}
 
 		protected string Type
@@ -1269,24 +1474,11 @@ namespace Epsitec.Common.Document.TextPanels
 				if ( this.type != value )
 				{
 					this.type = value;
-					this.UpdateWidgets();
-				}
-			}
-		}
 
-		protected int Level
-		{
-			get
-			{
-				return this.level;
-			}
+					this.table.DeselectAll();
+					this.tableSelectedRow    = -1;
+					this.tableSelectedColumn = -1;
 
-			set
-			{
-				if ( this.level != value )
-				{
-					this.level = value;
-					this.UpdateAfterChanging();
 					this.UpdateWidgets();
 				}
 			}
@@ -1301,6 +1493,125 @@ namespace Epsitec.Common.Document.TextPanels
 			TextFieldCombo combo = sender as TextFieldCombo;
 			this.Type = Generator.ConvTextToType(combo.Text);
 			this.CreateGenerator(this.type);
+		}
+
+		private void HandleTableSelectionChanged(object sender)
+		{
+			this.tableSelectedRow    = this.table.SelectedRow;
+			this.tableSelectedColumn = this.table.SelectedColumn;
+
+			this.UpdateWidgets();
+			this.UpdateFields();
+		}
+
+		private void HandleAddClicked(object sender, MessageEventArgs e)
+		{
+			this.IncCount();
+		}
+
+		private void HandleSubClicked(object sender, MessageEventArgs e)
+		{
+			this.DecCount();
+		}
+
+		private void HandleJustifClicked(object sender, MessageEventArgs e)
+		{
+			string text = null;
+			if ( sender == this.buttonLeft   )  text = "Left";
+			if ( sender == this.buttonCenter )  text = "Center";
+			if ( sender == this.buttonRight  )  text = "Right";
+			this.SetValue(0, Part1.Generic, Part2.Disposition, text);
+		}
+
+		private void HandleSuppressBeforeClicked(object sender, MessageEventArgs e)
+		{
+			IconButton button = sender as IconButton;
+
+			int row = this.tableSelectedRow;
+			if ( row == -1 )  return;
+
+			string text = "false";
+			if ( button.ActiveState == ActiveState.No)  text = "true";
+			this.SetValue(row, Part1.Generic, Part2.SuppressBefore, text);
+		}
+
+		private void HandleTextChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			int row    = this.tableSelectedRow;
+			int column = this.tableSelectedColumn;
+			if ( row == -1 || column == -1 )  return;
+
+			string text = this.fieldText.Text;
+			string font = null;
+			if ( text.StartsWith("<font face=\"") )
+			{
+				font = text.Substring(12);
+				int i = font.IndexOf("\"");
+				if ( i != -1 )
+				{
+					font = font.Substring(0, i);
+				}
+				text = TextLayout.ConvertToSimpleText(text);
+			}
+
+			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.Text, text);
+			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontFace, font);
+		}
+
+		private void HandleFontSizeChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			int row    = this.tableSelectedRow;
+			int column = this.tableSelectedColumn;
+			if ( row == -1 || column == -1 )  return;
+
+			string text = this.fieldFontSize.TextFieldReal.Text;
+			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontSize, text);
+		}
+
+		private void HandleFontOffsetChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			int row    = this.tableSelectedRow;
+			int column = this.tableSelectedColumn;
+			if ( row == -1 || column == -1 )  return;
+
+			string text = this.fieldFontOffset.TextFieldReal.Text;
+			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontOffset, text);
+		}
+
+		private void HandleTabChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			int row = this.tableSelectedRow;
+			if ( row == -1 )  return;
+
+			string text = this.fieldTab.TextFieldReal.Text;
+			this.SetValue(row, Part1.Generic, Part2.Tab, text);
+		}
+
+		private void HandleIndentChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			int row = this.tableSelectedRow;
+			if ( row == -1 )  return;
+
+			string text = this.fieldIndent.TextFieldReal.Text;
+			this.SetValue(row, Part1.Generic, Part2.Indent, text);
+		}
+
+		private void HandleSampleColorClicked(object sender, MessageEventArgs e)
+		{
+		}
+
+		private void HandleSampleColorChanged(object sender)
+		{
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -1321,9 +1632,23 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected TextFieldCombo			fieldType;
 		protected CellTable					table;
+		protected IconButton				buttonAdd;
+		protected IconButton				buttonSub;
+		protected IconButton				buttonLeft;
+		protected IconButton				buttonCenter;
+		protected IconButton				buttonRight;
+		protected IconButton				buttonSuppressBefore;
+		protected StaticText				labelText;
+		protected TextFieldCombo			fieldText;
+		protected Widgets.TextFieldLabel	fieldTab;
+		protected Widgets.TextFieldLabel	fieldIndent;
+		protected Widgets.TextFieldLabel	fieldFontSize;
+		protected Widgets.TextFieldLabel	fieldFontOffset;
+		protected ColorSample				colorText;
 		protected IconButton				buttonClear;
 
 		protected string					type = null;
-		protected int						level = -1;
+		protected int						tableSelectedRow = -1;
+		protected int						tableSelectedColumn = -1;
 	}
 }

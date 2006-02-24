@@ -1633,6 +1633,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\SuppressBefore.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\SurfaceGrid.icon"
                     BuildAction = "EmbeddedResource"
                 />
