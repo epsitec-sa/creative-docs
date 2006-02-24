@@ -1002,6 +1002,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\Nothing.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\RadioIcon.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
