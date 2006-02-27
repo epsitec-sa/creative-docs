@@ -1237,6 +1237,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Met à jour le contenu d'une ligne de la table.
 			StaticText st;
+			string s;
 
 			st = this.table[0, row].Children[0] as StaticText;
 			st.Text = this.GetResume(row);
@@ -1246,7 +1247,12 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( justif == "Right"  )  st.Alignment = ContentAlignment.MiddleRight;
 
 			st = this.table[1, row].Children[0] as StaticText;
-			st.Text = this.GetResume(row, Part1.Prefix, false);
+			s = this.GetResume(row, Part1.Prefix, false);
+			if ( s != null && s != "" )
+			{
+				s = string.Concat("\"", s, "\"");
+			}
+			st.Text = s;
 
 			if ( row != 0 )
 			{
@@ -1255,7 +1261,12 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			st = this.table[3, row].Children[0] as StaticText;
-			st.Text = this.GetResume(row, Part1.Suffix, false);
+			s = this.GetResume(row, Part1.Suffix, false);
+			if ( s != null && s != "" )
+			{
+				s = string.Concat("\"", s, "\"");
+			}
+			st.Text = s;
 		}
 
 		
