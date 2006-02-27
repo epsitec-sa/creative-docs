@@ -501,6 +501,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\BulletJustifNone.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\BulletJustifRight.icon"
                     BuildAction = "EmbeddedResource"
                 />
