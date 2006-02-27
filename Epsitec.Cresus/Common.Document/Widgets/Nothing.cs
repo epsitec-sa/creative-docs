@@ -23,11 +23,13 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			//	Dessine la croix.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			WidgetState state = this.PaintState;
 			Drawing.Rectangle rect = this.Client.Bounds;
+			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetState.Enabled) != 0);
 
 			graphics.AddLine(rect.BottomLeft, rect.TopRight);
 			graphics.AddLine(rect.BottomRight, rect.TopLeft);
-			graphics.RenderSolid(adorner.ColorBorder);
+			graphics.RenderSolid(color);
 		}
 	}
 }

@@ -60,13 +60,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonPerso.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonPerso.Text = "Perso";
 			this.buttonPerso.Clicked += new MessageEventHandler(this.HandlePersoClicked);
-
-			this.table = new CellTable(this);
-			this.table.StyleH |= CellArrayStyle.Header;
-			this.table.StyleH |= CellArrayStyle.Separator;
-			this.table.StyleV |= CellArrayStyle.ScrollNorm;
-			this.table.StyleV |= CellArrayStyle.Separator;
-			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
+			ToolTip.Default.SetToolTip(this.buttonPerso, "Accès aux modifications personnalisées");
 
 			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), "Ajouter une ligne à la fin", new MessageEventHandler(this.HandleAddClicked));
 			this.buttonSub = this.CreateIconButton(Misc.Icon("ShaperHandleSub"), "Supprimer la dernière ligne", new MessageEventHandler(this.HandleSubClicked));
@@ -74,6 +68,14 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonLeft   = this.CreateIconButton(Misc.Icon("BulletJustifLeft"),   Res.Strings.Action.ParagraphAlignLeft,   new MessageEventHandler(this.HandleJustifClicked));
 			this.buttonCenter = this.CreateIconButton(Misc.Icon("BulletJustifCenter"), Res.Strings.Action.ParagraphAlignCenter, new MessageEventHandler(this.HandleJustifClicked));
 			this.buttonRight  = this.CreateIconButton(Misc.Icon("BulletJustifRight"),  Res.Strings.Action.ParagraphAlignRight,  new MessageEventHandler(this.HandleJustifClicked));
+
+			this.table = new CellTable(this);
+			this.table.StyleH |= CellArrayStyle.Header;
+			this.table.StyleH |= CellArrayStyle.Separator;
+			this.table.StyleV |= CellArrayStyle.ScrollNorm;
+			this.table.StyleV |= CellArrayStyle.Separator;
+			this.table.StyleV |= CellArrayStyle.SelectCell;
+			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 
 			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), "Cette ligne remplace les précédentes", new MessageEventHandler(this.HandleSuppressBeforeClicked));
 
@@ -86,6 +88,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldText.TabIndex = this.tabIndex++;
 			this.fieldText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			this.colorText = this.CreateColorSample("Couleur du texte", new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
+
 			this.labelTabs = new StaticText(this);
 			this.labelTabs.Text = "Positions des tabulateurs :";
 
@@ -93,8 +97,6 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldIndent     = this.CreateTextFieldLabel("Position du texte", "Texte", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleIndentChanged));
 			this.fieldFontSize   = this.CreateTextFieldLabel("Taille de la police", "Taille", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontSizeChanged));
 			this.fieldFontOffset = this.CreateTextFieldLabel("Offset vertical", "Offset", "", -0.1, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontOffsetChanged));
-
-			this.colorText = this.CreateColorSample("Couleur du texte", new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -579,6 +581,8 @@ namespace Epsitec.Common.Document.TextPanels
 			//	pour modifier les définitions de puces/numérotations.
 			if ( level < 0 || level > 10 )  return;
 
+			if ( value == "" )  value = null;
+
 			Text.TabList tabs = this.document.TextContext.TabList;
 			Common.Text.Property[] properties = null;
 
@@ -1015,7 +1019,7 @@ namespace Epsitec.Common.Document.TextPanels
 			type = Common.Text.Generator.SequenceType.None;
 			casing = Common.Text.Generator.Casing.Default;
 
-			if ( text == Res.Strings.TextPanel.Generator.Numerator.None || text == "" )
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.None || text == "" || text == null )
 			{
 				type = Common.Text.Generator.SequenceType.Empty;
 			}
@@ -1477,14 +1481,12 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldTab.Visibility        = enable;
 			this.fieldIndent.Visibility     = enable;
 
-			if ( custom )  this.table.StyleV |=  CellArrayStyle.SelectCell;
-			else           this.table.StyleV &= ~CellArrayStyle.SelectCell;
-
 			this.buttonAdd.Enable = (custom && count < 9);
 			this.buttonSub.Enable = (custom && count > 1);
 			this.buttonLeft.Enable = custom;
 			this.buttonCenter.Enable = custom;
 			this.buttonRight.Enable = custom;
+			this.table.Enable = custom;
 			this.buttonSuppressBefore.Enable = custom;
 			this.labelText.Enable = custom;
 			this.fieldText.Enable = custom;
@@ -1559,6 +1561,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleSubClicked(object sender, MessageEventArgs e)
 		{
+			this.table.DeselectAll();
+			this.tableSelectedRow    = -1;
+			this.tableSelectedColumn = -1;
+
 			this.DecCount();
 		}
 

@@ -506,13 +506,13 @@
 	<data name="TextPanel.Generator.Type.Num2">Numérotation A-1), (i)</data>
 	<data name="TextPanel.Generator.Type.Num3">Numérotation 1, a), i)</data>
 	<data name="TextPanel.Generator.Type.Custom">Personnalisé</data>
-	<data name="TextPanel.Generator.Numerator.None">Aucun</data>
+	<data name="TextPanel.Generator.Numerator.None"></data>
 	<data name="TextPanel.Generator.Numerator.Numeric">1, 2...</data>
 	<data name="TextPanel.Generator.Numerator.AlphaLower">a, b...</data>
 	<data name="TextPanel.Generator.Numerator.AlphaUpper">A, B...</data>
 	<data name="TextPanel.Generator.Numerator.RomanLower">i, ii...</data>
 	<data name="TextPanel.Generator.Numerator.RomanUpper">I, II...</data>
-	<data name="TextPanel.Generator.Text.None">Aucun</data>
+	<data name="TextPanel.Generator.Text.None"></data>
 	<data name="TextPanel.Generator.Text.Fix1">.</data>
 	<data name="TextPanel.Generator.Text.Fix2">,</data>
 	<data name="TextPanel.Generator.Text.Fix3">:</data>
