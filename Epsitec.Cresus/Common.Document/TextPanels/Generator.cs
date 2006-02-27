@@ -564,6 +564,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return;
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
 			this.SetValue(p, level, part1, part2, value);
+			this.ParagraphWrapper.Defined.ItemListParameters = p;
 		}
 
 		protected void SetValue(Text.ParagraphManagers.ItemListManager.Parameters p, int level, Part1 part1, Part2 part2, string value)
@@ -576,6 +577,11 @@ namespace Epsitec.Common.Document.TextPanels
 
 			Text.TabList tabs = this.document.TextContext.TabList;
 			Common.Text.Property[] properties = null;
+
+			if ( p.Generator.Count == 0 )
+			{
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Empty));
+			}
 
 			if ( level == 0 )
 			{
@@ -806,8 +812,6 @@ namespace Epsitec.Common.Document.TextPanels
 					if ( part1 == Part1.Value  )  sequence.ValueProperties  = properties;
 				}
 			}
-
-			this.ParagraphWrapper.Defined.ItemListParameters = p;
 		}
 
 		#region Properties array manager
