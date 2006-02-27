@@ -339,6 +339,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual bool ProcessKeyPressInSelectItemBehavior(Message message)
 		{
+			if (!this.IsReadOnly)  return false;
 			return this.select_item_behavior.ProcessKeyPress (message);
 		}
 		
