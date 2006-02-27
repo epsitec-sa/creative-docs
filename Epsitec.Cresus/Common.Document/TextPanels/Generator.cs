@@ -526,7 +526,7 @@ namespace Epsitec.Common.Document.TextPanels
 						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontSize )
 						{
 							Common.Text.Properties.FontSizeProperty size = property as Common.Text.Properties.FontSizeProperty;
-							return this.document.Modifier.RealToString(size.Size);
+							return Generator.ConvFontSizeToText(size.Size);
 						}
 					}
 				}
@@ -742,7 +742,7 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 				else
 				{
-					Common.Text.Properties.FontSizeProperty n = new Text.Properties.FontSizeProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
+					Common.Text.Properties.FontSizeProperty n = new Text.Properties.FontSizeProperty(Generator.ConvTextToFontSize(value), Common.Text.Properties.SizeUnits.Points);
 					if ( current == null )
 					{
 						properties = Generator.PropertyAdd(properties, n);
@@ -950,6 +950,27 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				return 0;
 			}
+		}
+
+		protected static double ConvTextToFontSize(string text)
+		{
+			try
+			{
+				return double.Parse(text) * Modifier.FontSizeScale;
+			}
+			catch
+			{
+				return 0;
+			}
+		}
+
+		protected static string ConvFontSizeToText(double value)
+		{
+			value /= Modifier.FontSizeScale;
+			value *= 1000000.0;
+			value = System.Math.Floor(value+0.5);  // arrondi à la 6ème décimale
+			value /= 1000000.0;
+			return value.ToString();
 		}
 
 		protected static string ConvTypeToText(string type)
