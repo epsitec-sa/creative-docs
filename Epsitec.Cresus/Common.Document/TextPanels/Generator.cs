@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document.TextPanels
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Generator.Title);
 
 			this.fieldType = new TextFieldCombo(this);
-			this.fieldType.Text = "Aucun";
+			this.fieldType.Text = Res.Strings.TextPanel.Generator.Type.None;
 			this.fieldType.IsReadOnly = true;
 			this.fieldType.AutoFocus = false;
 			this.fieldType.ComboClosed += new EventHandler(this.HandleTypeChanged);
@@ -58,17 +58,17 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonPerso = new IconButton(this);
 			this.buttonPerso.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonPerso.Text = "Perso";
+			this.buttonPerso.Text = Res.Strings.TextPanel.Generator.Button.Perso;
 			this.buttonPerso.Clicked += new MessageEventHandler(this.HandlePersoClicked);
-			ToolTip.Default.SetToolTip(this.buttonPerso, "Accès aux modifications personnalisées");
+			ToolTip.Default.SetToolTip(this.buttonPerso, Res.Strings.TextPanel.Generator.Tooltip.Perso);
 
-			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), "Ajouter une ligne à la fin", new MessageEventHandler(this.HandleAddClicked));
-			this.buttonSub = this.CreateIconButton(Misc.Icon("ShaperHandleSub"), "Supprimer la dernière ligne", new MessageEventHandler(this.HandleSubClicked));
+			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Add, new MessageEventHandler(this.HandleAddClicked));
+			this.buttonSub = this.CreateIconButton(Misc.Icon("ShaperHandleSub"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Sub, new MessageEventHandler(this.HandleSubClicked));
 
-			this.buttonNone   = this.CreateIconButton(Misc.Icon("BulletJustifNone"),   "Pas de tabulateurs", new MessageEventHandler(this.HandleJustifClicked));
-			this.buttonLeft   = this.CreateIconButton(Misc.Icon("BulletJustifLeft"),   "Tabulateur gauche",  new MessageEventHandler(this.HandleJustifClicked));
-			this.buttonCenter = this.CreateIconButton(Misc.Icon("BulletJustifCenter"), "Tabulateur centré",  new MessageEventHandler(this.HandleJustifClicked));
-			this.buttonRight  = this.CreateIconButton(Misc.Icon("BulletJustifRight"),  "Tabulateur droite",  new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonNone   = this.CreateIconButton(Misc.Icon("BulletJustifNone"),   Res.Strings.TextPanel.Generator.Tooltip.Justif.None,   new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonLeft   = this.CreateIconButton(Misc.Icon("BulletJustifLeft"),   Res.Strings.TextPanel.Generator.Tooltip.Justif.Left,   new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonCenter = this.CreateIconButton(Misc.Icon("BulletJustifCenter"), Res.Strings.TextPanel.Generator.Tooltip.Justif.Center, new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonRight  = this.CreateIconButton(Misc.Icon("BulletJustifRight"),  Res.Strings.TextPanel.Generator.Tooltip.Justif.Right,  new MessageEventHandler(this.HandleJustifClicked));
 
 			this.table = new CellTable(this);
 			this.table.StyleH |= CellArrayStyle.Header;
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.table.StyleV |= CellArrayStyle.SelectCell;
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 
-			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), "Cette ligne remplace les précédentes", new MessageEventHandler(this.HandleSuppressBeforeClicked));
+			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), Res.Strings.TextPanel.Generator.Tooltip.SuppressBefore, new MessageEventHandler(this.HandleSuppressBeforeClicked));
 
 			this.labelText = new StaticText(this);
 			this.labelText.Alignment = ContentAlignment.MiddleRight;
@@ -89,15 +89,15 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldText.TabIndex = this.tabIndex++;
 			this.fieldText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.colorText = this.CreateColorSample("Couleur du texte", new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
+			this.colorText = this.CreateColorSample(Res.Strings.TextPanel.Generator.Tooltip.Color, new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
 
 			this.labelTabs = new StaticText(this);
-			this.labelTabs.Text = "Positions des tabulateurs :";
+			this.labelTabs.Text = Res.Strings.TextPanel.Generator.Label.Tabs;
 
-			this.fieldTab        = this.CreateTextFieldLabel("Position de la puce/numéro", "Puces", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleTabChanged));
-			this.fieldIndent     = this.CreateTextFieldLabel("Position du texte", "Texte", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleIndentChanged));
-			this.fieldFontSize   = this.CreateTextFieldLabel("Taille de la police", "Taille", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontSizeChanged));
-			this.fieldFontOffset = this.CreateTextFieldLabel("Offset vertical", "Offset", "", -0.1, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontOffsetChanged));
+			this.fieldTab        = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Tab,    Res.Strings.TextPanel.Generator.Short.Tab,    "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleTabChanged));
+			this.fieldIndent     = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Indent, Res.Strings.TextPanel.Generator.Short.Indent, "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleIndentChanged));
+			this.fieldFontSize   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Size,   Res.Strings.TextPanel.Generator.Short.Size,   "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontSizeChanged));
+			this.fieldFontOffset = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Offset, Res.Strings.TextPanel.Generator.Short.Offset, "", -0.1, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontOffsetChanged));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -187,27 +187,19 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,           "");
-				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           "");
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Center");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
 				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,           "\u25CF");  // puce ronde pleine
 				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,       "Arial");
-				this.SetValue(p, 1, Part1.Value,   Part2.Text,           "");
-				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,           "");
 
 				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "true");
 				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,           "\u25CB");  // puce ronde vide
 				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,       "Arial");
-				this.SetValue(p, 2, Part1.Value,   Part2.Text,           "");
-				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,           "");
 
 				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
 				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,           "-");
 				this.SetValue(p, 3, Part1.Prefix,  Part2.FontFace,       "Arial");
-				this.SetValue(p, 3, Part1.Value,   Part2.Text,           "");
-				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,           "");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -218,8 +210,6 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,           "");
-				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           "");
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Center");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
@@ -292,7 +282,6 @@ namespace Epsitec.Common.Document.TextPanels
 				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
 				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,           "(");
 				this.SetValue(p, 3, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.RomanLower);
-				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,           "");
 				this.SetValue(p, 3, Part1.Generic, Part2.Tab,            "20");
 				this.SetValue(p, 3, Part1.Generic, Part2.Indent,         "25");
 
@@ -367,7 +356,7 @@ namespace Epsitec.Common.Document.TextPanels
 			//	les niveaux précédents.
 			if ( level == 0 )
 			{
-				return "Global";
+				return Res.Strings.TextPanel.Generator.Short.Global;
 			}
 			else
 			{
@@ -1172,10 +1161,10 @@ namespace Epsitec.Common.Document.TextPanels
 				this.table.SetWidthColumn(3, 36);
 			}
 
-			this.table.SetHeaderTextH(0, "Texte");
-			this.table.SetHeaderTextH(1, "Préfix");
-			this.table.SetHeaderTextH(2, "Num.");
-			this.table.SetHeaderTextH(3, "Suffix");
+			this.table.SetHeaderTextH(0, Res.Strings.TextPanel.Generator.Header.Resume);
+			this.table.SetHeaderTextH(1, Res.Strings.TextPanel.Generator.Header.Prefix);
+			this.table.SetHeaderTextH(2, Res.Strings.TextPanel.Generator.Header.Value);
+			this.table.SetHeaderTextH(3, Res.Strings.TextPanel.Generator.Header.Suffix);
 
 			for ( int i=0 ; i<rows ; i++ )
 			{
@@ -1424,18 +1413,18 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( part1 == Part1.Prefix || part1 == Part1.Suffix )
 			{
-				this.labelText.Text = "Texte";
+				this.labelText.Text = Res.Strings.TextPanel.Generator.Label.Fix;
 				this.fieldText.IsReadOnly = false;
 				Generator.InitComboFix(this.fieldText);
-				ToolTip.Default.SetToolTip(this.fieldText, "Texte fixe");
+				ToolTip.Default.SetToolTip(this.fieldText, Res.Strings.TextPanel.Generator.Tooltip.Fix);
 			}
 			
 			if ( part1 == Part1.Value )
 			{
-				this.labelText.Text = "Num.";
+				this.labelText.Text = Res.Strings.TextPanel.Generator.Label.Value;
 				this.fieldText.IsReadOnly = true;
 				Generator.InitComboNumerator(this.fieldText);
-				ToolTip.Default.SetToolTip(this.fieldText, "Type de numérotation");
+				ToolTip.Default.SetToolTip(this.fieldText, Res.Strings.TextPanel.Generator.Tooltip.Value);
 			}
 			
 			text = this.GetValue(row, part1, Part2.FontSize);
