@@ -812,6 +812,8 @@ namespace Epsitec.Common.Document.TextPanels
 					if ( part1 == Part1.Value  )  sequence.ValueProperties  = properties;
 				}
 			}
+
+			this.document.IsDirtySerialize = true;
 		}
 
 		#region Properties array manager
@@ -1160,6 +1162,63 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
+		public override void OriginColorDeselect()
+		{
+			//	Désélectionne toutes les origines de couleurs possibles.
+			this.colorText.ActiveState = ActiveState.No;
+		}
+
+		public override void OriginColorSelect(int rank)
+		{
+			//	Sélectionne l'origine de couleur.
+			if ( rank != -1 )
+			{
+				this.originFieldRank = rank;
+				if ( rank == 0 )  this.originFieldColor = this.colorText;
+			}
+			if ( this.originFieldColor == null )  return;
+
+			this.OriginColorDeselect();
+			this.originFieldColor.ActiveState = ActiveState.Yes;
+		}
+
+		public override int OriginColorRank()
+		{
+			//	Retourne le rang de la couleur d'origine.
+			return this.originFieldRank;
+		}
+
+		public override void OriginColorChange(Drawing.RichColor color)
+		{
+			//	Modifie la couleur d'origine.
+			if ( this.originFieldColor == null )  return;
+			
+			if ( this.originFieldColor.Color != color )
+			{
+				this.originFieldColor.Color = color;
+				this.ColorToWrapper(this.originFieldColor);
+			}
+		}
+
+		public override Drawing.RichColor OriginColorGet()
+		{
+			//	Donne la couleur d'origine.
+			if ( this.originFieldColor == null )  return Drawing.RichColor.FromBrightness(0.0);
+			return this.originFieldColor.Color;
+		}
+
+		protected void ColorToWrapper(ColorSample sample)
+		{
+			//	Donne la couleur au wrapper.
+			int row    = this.tableSelectedRow;
+			int column = this.tableSelectedColumn;
+			if ( row == -1 || column == -1 )  return;
+
+			string color = this.GetColorSample(sample);
+			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontColor, color);
+		}
+
+		
 		protected void UpdateTable()
 		{
 			//	Met à jour le contenu de la liste.
@@ -1492,6 +1551,18 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fieldIndent.TextFieldReal.Text = text;
 			}
 
+			text = this.GetValue(row, part1, Part2.FontColor);
+			this.SetColorSample(this.colorText, text, (text != null), false);
+
+			if ( this.colorText.Visibility && this.originFieldRank != -1 )
+			{
+				this.OnOriginColorChanged();  // change la couleur dans le ColorSelector
+			}
+			else
+			{
+				this.OnOriginColorClosed();
+			}
+
 			this.ignoreChanged = false;
 		}
 
@@ -1702,10 +1773,25 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleSampleColorClicked(object sender, MessageEventArgs e)
 		{
+			this.originFieldColor = sender as ColorSample;
+
+			this.originFieldRank = -1;
+			if ( this.originFieldColor == this.colorText )  this.originFieldRank = 0;
+
+			this.OnOriginColorChanged();
 		}
 
 		private void HandleSampleColorChanged(object sender)
 		{
+			if ( this.ignoreChanged )  return;
+
+			ColorSample cs = sender as ColorSample;
+			if ( cs.ActiveState == ActiveState.Yes )
+			{
+				this.OnOriginColorChanged();
+			}
+
+			this.ColorToWrapper(cs);
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -1747,5 +1833,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected string					type = null;
 		protected int						tableSelectedRow = -1;
 		protected int						tableSelectedColumn = -1;
+		protected ColorSample				originFieldColor;
+		protected int						originFieldRank = -1;
 	}
 }

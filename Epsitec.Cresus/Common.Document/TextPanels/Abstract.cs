@@ -688,7 +688,17 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
+		protected virtual void OnOriginColorClosed()
+		{
+			//	Génère un événement pour dire que la couleur d'origine doit être fermée.
+			if ( this.OriginColorClosed != null )  // qq'un écoute ?
+			{
+				this.OriginColorClosed(this);
+			}
+		}
+
 		public event EventHandler OriginColorChanged;
+		public event EventHandler OriginColorClosed;
 
 		
 		//	ATTENTION: Ceci n'est pas propre, mais je ne sais pas comment faire mieux.
