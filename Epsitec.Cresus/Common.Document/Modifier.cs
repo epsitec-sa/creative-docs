@@ -607,15 +607,17 @@ namespace Epsitec.Common.Document
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
-				field.InternalMinValue = 200.0M * field.FactorMinRange;
-				field.InternalMaxValue = 200.0M * field.FactorMaxRange;
-				field.Step = 1.0M * field.FactorStep;
-				field.Resolution = 0.1M;
+				field.InternalMinValue     = 200.0M * field.FactorMinRange;
+				field.InternalMaxValue     = 200.0M * field.FactorMaxRange;
+				field.InternalDefaultValue = 200.0M * field.FactorDefaultRange;
+				field.Step                 =   1.0M * field.FactorStep;
+				field.Resolution           =   0.1M;
 			}
 			else
 			{
-				field.InternalMinValue = 10000.0M * field.FactorMinRange;
-				field.InternalMaxValue = 10000.0M * field.FactorMaxRange;
+				field.InternalMinValue     = 10000.0M * field.FactorMinRange;
+				field.InternalMaxValue     = 10000.0M * field.FactorMaxRange;
+				field.InternalDefaultValue = 10000.0M * field.FactorDefaultRange;
 
 				switch ( this.realUnitDimension )
 				{
