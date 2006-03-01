@@ -330,7 +330,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected override bool ProcessKeyPress(Message message, Epsitec.Common.Drawing.Point pos)
 		{
-			if (this.ProcessKeyPressInSelectItemBehavior (message))
+			if ((this.IsReadOnly) &&
+				(this.ProcessKeyPressInSelectItemBehavior (message)))
 			{
 				return true;
 			}

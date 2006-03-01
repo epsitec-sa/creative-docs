@@ -171,6 +171,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\BulletJustifCenter.icon" />
+    <EmbeddedResource Include="Images\BulletJustifLeft.icon" />
+    <EmbeddedResource Include="Images\BulletJustifNone.icon" />
+    <EmbeddedResource Include="Images\BulletJustifRight.icon" />
     <EmbeddedResource Include="Images\SuppressBefore.icon" />
     <Compile Include="Application.cs">
       <SubType>Code</SubType>

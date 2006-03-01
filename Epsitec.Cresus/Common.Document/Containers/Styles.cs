@@ -801,6 +801,7 @@ namespace Epsitec.Common.Document.Containers
 					this.textPanel = panel;
 					this.textPanel.IsExtendedSize = true;
 					this.textPanel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
+					this.textPanel.OriginColorClosed += new EventHandler(this.HandleOriginColorClosed);
 					this.textPanel.SetParent(this.panelContainer);
 					this.textPanel.Dock = DockStyle.Fill;
 					this.textPanel.TabIndex = 1;
@@ -845,6 +846,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Wrappers.StyleParagraphWrapper.Detach();
 
 				this.textPanel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
+				this.textPanel.OriginColorClosed -= new EventHandler(this.HandleOriginColorClosed);
 				this.textPanel.Dispose();
 				this.textPanel = null;
 			}
@@ -1401,6 +1403,12 @@ namespace Epsitec.Common.Document.Containers
 				this.ignoreChanged = false;
 				this.textPanel.OriginColorSelect(this.textPanel.OriginColorRank());
 			}
+		}
+
+		private void HandleOriginColorClosed(object sender)
+		{
+			//	Le widget qui détermine la couleur d'origine doit être fermé.
+			this.HandleColorSelectorClosed(sender);
 		}
 
 		private void HandleColorSelectorChanged(object sender)

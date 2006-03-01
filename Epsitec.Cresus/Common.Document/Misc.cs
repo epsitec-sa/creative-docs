@@ -100,7 +100,7 @@ namespace Epsitec.Common.Document
 
 			if ( color.ColorSpace == ColorSpace.Cmyk )
 			{
-				builder.Append(Res.Strings.Color.CMYK);
+				builder.Append(Res.Strings.Color.Cmyk);
 				builder.Append(":");
 			}
 

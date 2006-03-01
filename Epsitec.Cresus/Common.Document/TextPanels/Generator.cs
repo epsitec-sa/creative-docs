@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document.TextPanels
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Generator.Title);
 
 			this.fieldType = new TextFieldCombo(this);
-			this.fieldType.Text = "Aucun";
+			this.fieldType.Text = Res.Strings.TextPanel.Generator.Type.None;
 			this.fieldType.IsReadOnly = true;
 			this.fieldType.AutoFocus = false;
 			this.fieldType.ComboClosed += new EventHandler(this.HandleTypeChanged);
@@ -56,21 +56,29 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			Generator.InitComboType(this.fieldType);
 
+			this.buttonPerso = new IconButton(this);
+			this.buttonPerso.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonPerso.Text = Res.Strings.TextPanel.Generator.Button.Perso;
+			this.buttonPerso.Clicked += new MessageEventHandler(this.HandlePersoClicked);
+			ToolTip.Default.SetToolTip(this.buttonPerso, Res.Strings.TextPanel.Generator.Tooltip.Perso);
+
+			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Add, new MessageEventHandler(this.HandleAddClicked));
+			this.buttonSub = this.CreateIconButton(Misc.Icon("ShaperHandleSub"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Sub, new MessageEventHandler(this.HandleSubClicked));
+
+			this.buttonNone   = this.CreateIconButton(Misc.Icon("BulletJustifNone"),   Res.Strings.TextPanel.Generator.Tooltip.Justif.None,   new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonLeft   = this.CreateIconButton(Misc.Icon("BulletJustifLeft"),   Res.Strings.TextPanel.Generator.Tooltip.Justif.Left,   new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonCenter = this.CreateIconButton(Misc.Icon("BulletJustifCenter"), Res.Strings.TextPanel.Generator.Tooltip.Justif.Center, new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonRight  = this.CreateIconButton(Misc.Icon("BulletJustifRight"),  Res.Strings.TextPanel.Generator.Tooltip.Justif.Right,  new MessageEventHandler(this.HandleJustifClicked));
+
 			this.table = new CellTable(this);
 			this.table.StyleH |= CellArrayStyles.Header;
 			this.table.StyleH |= CellArrayStyles.Separator;
 			this.table.StyleV |= CellArrayStyles.ScrollNorm;
 			this.table.StyleV |= CellArrayStyles.Separator;
+			this.table.StyleV |= CellArrayStyles.SelectCell;
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 
-			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), "Ajouter une ligne à la fin", new MessageEventHandler(this.HandleAddClicked));
-			this.buttonSub = this.CreateIconButton(Misc.Icon("ShaperHandleSub"), "Supprimer la dernière ligne", new MessageEventHandler(this.HandleSubClicked));
-
-			this.buttonLeft   = this.CreateIconButton(Misc.Icon("JustifHLeft"),   Res.Strings.Action.ParagraphAlignLeft,   new MessageEventHandler(this.HandleJustifClicked));
-			this.buttonCenter = this.CreateIconButton(Misc.Icon("JustifHCenter"), Res.Strings.Action.ParagraphAlignCenter, new MessageEventHandler(this.HandleJustifClicked));
-			this.buttonRight  = this.CreateIconButton(Misc.Icon("JustifHRight"),  Res.Strings.Action.ParagraphAlignRight,  new MessageEventHandler(this.HandleJustifClicked));
-
-			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), "Cette ligne remplace les précédentes", new MessageEventHandler(this.HandleSuppressBeforeClicked));
+			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), Res.Strings.TextPanel.Generator.Tooltip.SuppressBefore, new MessageEventHandler(this.HandleSuppressBeforeClicked));
 
 			this.labelText = new StaticText(this);
 			this.labelText.Alignment = ContentAlignment.MiddleRight;
@@ -81,12 +89,15 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldText.TabIndex = this.tabIndex++;
 			this.fieldText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.fieldTab        = this.CreateTextFieldLabel("Position de la puce/numéro", "Puces", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleTabChanged));
-			this.fieldIndent     = this.CreateTextFieldLabel("Position du texte", "Texte", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleIndentChanged));
-			this.fieldFontSize   = this.CreateTextFieldLabel("Taille de la police", "Taille", "", 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontSizeChanged));
-			this.fieldFontOffset = this.CreateTextFieldLabel("Offset vertical", "Offset", "", -0.1, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontOffsetChanged));
+			this.colorText = this.CreateColorSample(Res.Strings.TextPanel.Generator.Tooltip.Color, new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
 
-			this.colorText = this.CreateColorSample("Couleur du texte", new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
+			this.labelTabs = new StaticText(this);
+			this.labelTabs.Text = Res.Strings.TextPanel.Generator.Label.Tabs;
+
+			this.fieldTab        = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Tab,    Res.Strings.TextPanel.Generator.Short.Tab,    "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleTabChanged));
+			this.fieldIndent     = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Indent, Res.Strings.TextPanel.Generator.Short.Indent, "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleIndentChanged));
+			this.fieldFontSize   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Size,   Res.Strings.TextPanel.Generator.Short.Size,   "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontSizeChanged));
+			this.fieldFontOffset = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Offset, Res.Strings.TextPanel.Generator.Short.Offset, "", -0.1, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontOffsetChanged));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -133,7 +144,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( this.isExtendedSize )  // panneau étendu ?
 				{
-					h += 86 + (23+17*4);
+					h += 111 + (23+17*4);
 				}
 				else	// panneau réduit ?
 				{
@@ -176,27 +187,19 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,           "");
-				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           "");
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Center");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
 				this.SetValue(p, 1, Part1.Prefix,  Part2.Text,           "\u25CF");  // puce ronde pleine
 				this.SetValue(p, 1, Part1.Prefix,  Part2.FontFace,       "Arial");
-				this.SetValue(p, 1, Part1.Value,   Part2.Text,           "");
-				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,           "");
 
 				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "true");
 				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,           "\u25CB");  // puce ronde vide
 				this.SetValue(p, 2, Part1.Prefix,  Part2.FontFace,       "Arial");
-				this.SetValue(p, 2, Part1.Value,   Part2.Text,           "");
-				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,           "");
 
 				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
 				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,           "-");
 				this.SetValue(p, 3, Part1.Prefix,  Part2.FontFace,       "Arial");
-				this.SetValue(p, 3, Part1.Value,   Part2.Text,           "");
-				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,           "");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -207,8 +210,6 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Prefix,  Part2.Text,           "");
-				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           "");
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Center");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
@@ -281,7 +282,6 @@ namespace Epsitec.Common.Document.TextPanels
 				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
 				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,           "(");
 				this.SetValue(p, 3, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.RomanLower);
-				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,           "");
 				this.SetValue(p, 3, Part1.Generic, Part2.Tab,            "20");
 				this.SetValue(p, 3, Part1.Generic, Part2.Indent,         "25");
 
@@ -347,6 +347,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			int count = p.Generator.Count;
 			p.Generator.Truncate(count-1);
+			this.ParagraphWrapper.Defined.ItemListParameters = p;
 		}
 
 		protected string GetResume(int level)
@@ -355,7 +356,7 @@ namespace Epsitec.Common.Document.TextPanels
 			//	les niveaux précédents.
 			if ( level == 0 )
 			{
-				return "Global";
+				return Res.Strings.TextPanel.Generator.Short.Global;
 			}
 			else
 			{
@@ -454,7 +455,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( part2 == Part2.Disposition )
 				{
-					if ( p.TabItem == null )  return null;
+					if ( p.TabItem == null )  return "None";
 					double dispo = tabs.GetTabDisposition(p.TabItem);
 					if ( dispo == 0.5 )  return "Center";
 					if ( dispo == 1.0 )  return "Right";
@@ -483,6 +484,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( part2 == Part2.Tab || part2 == Part2.Indent )
 				{
+					if ( p.TabItem == null )  return "None";
 					string ta = this.document.TextContext.TabList.GetTabAttribute((part2 == Part2.Tab) ? p.TabItem : p.TabBody);
 					if ( ta == null )  return null;
 					string[] tas = TabList.UnpackFromAttribute(ta);
@@ -524,7 +526,7 @@ namespace Epsitec.Common.Document.TextPanels
 						if ( property.WellKnownType == Common.Text.Properties.WellKnownType.FontSize )
 						{
 							Common.Text.Properties.FontSizeProperty size = property as Common.Text.Properties.FontSizeProperty;
-							return this.document.Modifier.RealToString(size.Size);
+							return Generator.ConvFontSizeToText(size.Size);
 						}
 					}
 				}
@@ -562,6 +564,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.ParagraphWrapper.Defined.IsManagedParagraphDefined )  return;
 			Text.ParagraphManagers.ItemListManager.Parameters p = this.ParagraphWrapper.Defined.ItemListParameters;
 			this.SetValue(p, level, part1, part2, value);
+			this.ParagraphWrapper.Defined.ItemListParameters = p;
 		}
 
 		protected void SetValue(Text.ParagraphManagers.ItemListManager.Parameters p, int level, Part1 part1, Part2 part2, string value)
@@ -570,30 +573,14 @@ namespace Epsitec.Common.Document.TextPanels
 			//	pour modifier les définitions de puces/numérotations.
 			if ( level < 0 || level > 10 )  return;
 
+			if ( value == "" )  value = null;
+
 			Text.TabList tabs = this.document.TextContext.TabList;
 			Common.Text.Property[] properties = null;
 
-			if ( p.TabItem == null )
+			if ( p.Generator.Count == 0 )
 			{
-				//	Si aucun tabulateur n'est défini, pose 10x2 taquets par défaut.
-				double[] offsetsItem = new double[10];
-				double[] offsetsBody = new double[10];
-				double inc = System.Globalization.RegionInfo.CurrentRegion.IsMetric ? 100 : 127;  // 10mm ou 0.5in
-				double posItem = inc/2;
-				double posBody = inc;
-				for ( int i=0 ; i<10 ; i++ )
-				{
-					offsetsItem[i] = posItem;
-					offsetsBody[i] = posBody;
-					posItem += inc;
-					posBody += inc;
-				}
-
-				string attributeItem = TabList.CreateLevelTable(offsetsItem);
-				string attributeBody = TabList.CreateLevelTable(offsetsBody);
-
-				p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelative,       attributeItem);
-				p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, attributeBody);
+				p.Generator.Add(Common.Text.Generator.CreateSequence(Common.Text.Generator.SequenceType.Empty));
 			}
 
 			if ( level == 0 )
@@ -609,18 +596,48 @@ namespace Epsitec.Common.Document.TextPanels
 
 				if ( part2 == Part2.Disposition )
 				{
-					if ( p.TabItem == null )  return;
-					string ta = this.document.TextContext.TabList.GetTabAttribute(p.TabItem);
+					if ( value == "None" )
+					{
+						p.TabItem = null;
+						p.TabBody = null;
+					}
+					else
+					{
+						if ( p.TabItem == null )
+						{
+							//	Si aucun tabulateur n'est défini, pose 10x2 taquets par défaut.
+							double[] offsetsItem = new double[10];
+							double[] offsetsBody = new double[10];
+							double inc = System.Globalization.RegionInfo.CurrentRegion.IsMetric ? 100 : 127;  // 10mm ou 0.5in
+							double posItem = inc/2;
+							double posBody = inc;
+							for ( int i=0 ; i<10 ; i++ )
+							{
+								offsetsItem[i] = posItem;
+								offsetsBody[i] = posBody;
+								posItem += inc;
+								posBody += inc;
+							}
 
-					string[] tas = TabList.UnpackFromAttribute(ta);
-					double[] offsets = TabList.ParseLevelTable(tas[0]);
-					string attribute = TabList.CreateLevelTable(offsets);
+							string attributeItem = TabList.CreateLevelTable(offsetsItem);
+							string attributeBody = TabList.CreateLevelTable(offsetsBody);
 
-					double dispo = 0.0;
-					if ( value == "Center" )  dispo = 0.5;
-					if ( value == "Right"  )  dispo = 1.0;
+							p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelative,       attributeItem);
+							p.TabBody = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.LeftRelativeIndent, attributeBody);
+						}
 
-					p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.LeftRelative,       attribute);
+						string ta = this.document.TextContext.TabList.GetTabAttribute(p.TabItem);
+
+						string[] tas = TabList.UnpackFromAttribute(ta);
+						double[] offsets = TabList.ParseLevelTable(tas[0]);
+						string attribute = TabList.CreateLevelTable(offsets);
+
+						double dispo = 0.0;
+						if ( value == "Center" )  dispo = 0.5;
+						if ( value == "Right"  )  dispo = 1.0;
+
+						p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.LeftRelative,       attribute);
+					}
 				}
 			}
 			else
@@ -725,7 +742,7 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 				else
 				{
-					Common.Text.Properties.FontSizeProperty n = new Text.Properties.FontSizeProperty(this.ConvTextToDistance(value), Common.Text.Properties.SizeUnits.Points);
+					Common.Text.Properties.FontSizeProperty n = new Text.Properties.FontSizeProperty(Generator.ConvTextToFontSize(value), Common.Text.Properties.SizeUnits.Points);
 					if ( current == null )
 					{
 						properties = Generator.PropertyAdd(properties, n);
@@ -796,7 +813,7 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 
-			this.ParagraphWrapper.Defined.ItemListParameters = p;
+			this.document.IsDirtySerialize = true;
 		}
 
 		#region Properties array manager
@@ -937,6 +954,27 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
+		protected static double ConvTextToFontSize(string text)
+		{
+			try
+			{
+				return double.Parse(text) * Modifier.FontSizeScale;
+			}
+			catch
+			{
+				return 0;
+			}
+		}
+
+		protected static string ConvFontSizeToText(double value)
+		{
+			value /= Modifier.FontSizeScale;
+			value *= 1000000.0;
+			value = System.Math.Floor(value+0.5);  // arrondi à la 6ème décimale
+			value /= 1000000.0;
+			return value.ToString();
+		}
+
 		protected static string ConvTypeToText(string type)
 		{
 			switch ( type )
@@ -1006,7 +1044,7 @@ namespace Epsitec.Common.Document.TextPanels
 			type = Common.Text.Generator.SequenceType.None;
 			casing = Common.Text.Generator.Casing.Default;
 
-			if ( text == Res.Strings.TextPanel.Generator.Numerator.None || text == "" )
+			if ( text == Res.Strings.TextPanel.Generator.Numerator.None || text == "" || text == null )
 			{
 				type = Common.Text.Generator.SequenceType.Empty;
 			}
@@ -1124,6 +1162,63 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
+		public override void OriginColorDeselect()
+		{
+			//	Désélectionne toutes les origines de couleurs possibles.
+			this.colorText.ActiveState = ActiveState.No;
+		}
+
+		public override void OriginColorSelect(int rank)
+		{
+			//	Sélectionne l'origine de couleur.
+			if ( rank != -1 )
+			{
+				this.originFieldRank = rank;
+				if ( rank == 0 )  this.originFieldColor = this.colorText;
+			}
+			if ( this.originFieldColor == null )  return;
+
+			this.OriginColorDeselect();
+			this.originFieldColor.ActiveState = ActiveState.Yes;
+		}
+
+		public override int OriginColorRank()
+		{
+			//	Retourne le rang de la couleur d'origine.
+			return this.originFieldRank;
+		}
+
+		public override void OriginColorChange(Drawing.RichColor color)
+		{
+			//	Modifie la couleur d'origine.
+			if ( this.originFieldColor == null )  return;
+			
+			if ( this.originFieldColor.Color != color )
+			{
+				this.originFieldColor.Color = color;
+				this.ColorToWrapper(this.originFieldColor);
+			}
+		}
+
+		public override Drawing.RichColor OriginColorGet()
+		{
+			//	Donne la couleur d'origine.
+			if ( this.originFieldColor == null )  return Drawing.RichColor.FromBrightness(0.0);
+			return this.originFieldColor.Color;
+		}
+
+		protected void ColorToWrapper(ColorSample sample)
+		{
+			//	Donne la couleur au wrapper.
+			int row    = this.tableSelectedRow;
+			int column = this.tableSelectedColumn;
+			if ( row == -1 || column == -1 )  return;
+
+			string color = this.GetColorSample(sample);
+			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontColor, color);
+		}
+
+		
 		protected void UpdateTable()
 		{
 			//	Met à jour le contenu de la liste.
@@ -1150,10 +1245,10 @@ namespace Epsitec.Common.Document.TextPanels
 				this.table.SetWidthColumn(3, 36);
 			}
 
-			this.table.SetHeaderTextH(0, "Texte");
-			this.table.SetHeaderTextH(1, "Préfix");
-			this.table.SetHeaderTextH(2, "Num.");
-			this.table.SetHeaderTextH(3, "Suffix");
+			this.table.SetHeaderTextH(0, Res.Strings.TextPanel.Generator.Header.Resume);
+			this.table.SetHeaderTextH(1, Res.Strings.TextPanel.Generator.Header.Prefix);
+			this.table.SetHeaderTextH(2, Res.Strings.TextPanel.Generator.Header.Value);
+			this.table.SetHeaderTextH(3, Res.Strings.TextPanel.Generator.Header.Suffix);
 
 			for ( int i=0 ; i<rows ; i++ )
 			{
@@ -1185,11 +1280,20 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( this.table[2, row].IsEmpty )
 			{
-				StaticText st = new StaticText();
-				st.Alignment = ContentAlignment.MiddleCenter;
-				st.Dock = DockStyle.Fill;
-				st.DockMargins = new Drawing.Margins(2, 0, 0, 0);
-				this.table[2, row].Insert(st);
+				if ( row == 0 )
+				{
+					Widgets.Nothing cs = new Widgets.Nothing();
+					cs.Dock = DockStyle.Fill;
+					this.table[2, row].Insert(cs);
+				}
+				else
+				{
+					StaticText st = new StaticText();
+					st.Alignment = ContentAlignment.MiddleCenter;
+					st.Dock = DockStyle.Fill;
+					st.DockMargins = new Drawing.Margins(2, 0, 0, 0);
+					this.table[2, row].Insert(st);
+				}
 			}
 
 			if ( this.table[3, row].IsEmpty )
@@ -1206,6 +1310,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Met à jour le contenu d'une ligne de la table.
 			StaticText st;
+			string s;
 
 			st = this.table[0, row].Children[0] as StaticText;
 			st.Text = this.GetResume(row);
@@ -1215,13 +1320,26 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( justif == "Right"  )  st.Alignment = ContentAlignment.MiddleRight;
 
 			st = this.table[1, row].Children[0] as StaticText;
-			st.Text = this.GetResume(row, Part1.Prefix, false);
+			s = this.GetResume(row, Part1.Prefix, false);
+			if ( s != null && s != "" )
+			{
+				s = string.Concat("\"", s, "\"");
+			}
+			st.Text = s;
 
-			st = this.table[2, row].Children[0] as StaticText;
-			st.Text = this.GetResume(row, Part1.Value, false);
+			if ( row != 0 )
+			{
+				st = this.table[2, row].Children[0] as StaticText;
+				st.Text = this.GetResume(row, Part1.Value, false);
+			}
 
 			st = this.table[3, row].Children[0] as StaticText;
-			st.Text = this.GetResume(row, Part1.Suffix, false);
+			s = this.GetResume(row, Part1.Suffix, false);
+			if ( s != null && s != "" )
+			{
+				s = string.Concat("\"", s, "\"");
+			}
+			st.Text = s;
 		}
 
 		
@@ -1246,6 +1364,25 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.isExtendedSize )  // panneau étendu ?
 			{
 				r.Offset(0, -25);
+				r.Bottom = r.Top-20;
+				r.Left = rect.Left;
+				r.Right = rect.Right-20*7;
+				this.buttonPerso.Bounds = r;
+				r.Left = r.Right+10;
+				r.Width = 20;
+				this.buttonAdd.Bounds = r;
+				r.Offset(20, 0);
+				this.buttonSub.Bounds = r;
+				r.Offset(20+10, 0);
+				this.buttonNone.Bounds = r;
+				r.Offset(20, 0);
+				this.buttonLeft.Bounds = r;
+				r.Offset(20, 0);
+				this.buttonCenter.Bounds = r;
+				r.Offset(20, 0);
+				this.buttonRight.Bounds = r;
+
+				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Right = rect.Right;
 				r.Bottom = r.Top-(23+17*4);
@@ -1254,18 +1391,6 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Top = r.Bottom-5;
 				r.Bottom = r.Top-20;
-				r.Left = rect.Left;
-				r.Width = 20;
-				this.buttonAdd.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonSub.Bounds = r;
-				r.Offset(20+10, 0);
-				this.buttonLeft.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonCenter.Bounds = r;
-				r.Offset(20, 0);
-				this.buttonRight.Bounds = r;
-
 				r.Left = rect.Left;
 				r.Width = 20;
 				this.buttonSuppressBefore.Bounds = r;
@@ -1278,6 +1403,10 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Left = rect.Right-48;
 				r.Right = rect.Right;
 				this.colorText.Bounds = r;
+
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.labelTabs.Bounds = r;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -1352,7 +1481,10 @@ namespace Epsitec.Common.Document.TextPanels
 			Part1 part1 = Generator.ConvColumnToPart1(column);
 			string text;
 
+			this.buttonPerso.ActiveState = (this.Type == "Custom") ? ActiveState.Yes : ActiveState.No;
+
 			text = this.GetValue(0, Part1.Generic, Part2.Disposition);
+			this.buttonNone.ActiveState   = (text == "None"  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonLeft.ActiveState   = (text == "Left"  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonCenter.ActiveState = (text == "Center") ? ActiveState.Yes : ActiveState.No;
 			this.buttonRight.ActiveState  = (text == "Right" ) ? ActiveState.Yes : ActiveState.No;
@@ -1365,18 +1497,18 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( part1 == Part1.Prefix || part1 == Part1.Suffix )
 			{
-				this.labelText.Text = "Texte";
+				this.labelText.Text = Res.Strings.TextPanel.Generator.Label.Fix;
 				this.fieldText.IsReadOnly = false;
 				Generator.InitComboFix(this.fieldText);
-				ToolTip.Default.SetToolTip(this.fieldText, "Texte fixe");
+				ToolTip.Default.SetToolTip(this.fieldText, Res.Strings.TextPanel.Generator.Tooltip.Fix);
 			}
 			
 			if ( part1 == Part1.Value )
 			{
-				this.labelText.Text = "Num.";
+				this.labelText.Text = Res.Strings.TextPanel.Generator.Label.Value;
 				this.fieldText.IsReadOnly = true;
 				Generator.InitComboNumerator(this.fieldText);
-				ToolTip.Default.SetToolTip(this.fieldText, "Type de numérotation");
+				ToolTip.Default.SetToolTip(this.fieldText, Res.Strings.TextPanel.Generator.Tooltip.Value);
 			}
 			
 			text = this.GetValue(row, part1, Part2.FontSize);
@@ -1400,7 +1532,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			text = this.GetValue(row, Part1.Generic, Part2.Tab);
-			if ( text == null )
+			if ( text == null || text == "None" )
 			{
 				this.fieldTab.TextFieldReal.ClearText();
 			}
@@ -1410,13 +1542,25 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			text = this.GetValue(row, Part1.Generic, Part2.Indent);
-			if ( text == null )
+			if ( text == null || text == "None" )
 			{
 				this.fieldIndent.TextFieldReal.ClearText();
 			}
 			else
 			{
 				this.fieldIndent.TextFieldReal.Text = text;
+			}
+
+			text = this.GetValue(row, part1, Part2.FontColor);
+			this.SetColorSample(this.colorText, text, (text != null), false);
+
+			if ( this.colorText.Visibility && this.originFieldRank != -1 )
+			{
+				this.OnOriginColorChanged();  // change la couleur dans le ColorSelector
+			}
+			else
+			{
+				this.OnOriginColorClosed();
 			}
 
 			this.ignoreChanged = false;
@@ -1431,13 +1575,6 @@ namespace Epsitec.Common.Document.TextPanels
 			int count  = this.GetCount();
 			bool enable;
 
-			enable = (this.isExtendedSize && column == 0);
-			this.buttonAdd.Visibility    = enable;
-			this.buttonSub.Visibility    = enable;
-			this.buttonLeft.Visibility   = enable;
-			this.buttonCenter.Visibility = enable;
-			this.buttonRight.Visibility  = enable;
-
 			enable = (this.isExtendedSize && column != 0 && column != -1);
 			if ( row == 0 && column == 2 )  enable = false;
 			this.buttonSuppressBefore.Visibility = (enable && row != 0);
@@ -1448,32 +1585,26 @@ namespace Epsitec.Common.Document.TextPanels
 			this.colorText.Visibility       = enable;
 
 			enable = (this.isExtendedSize && column == 0 && row != 0);
+			if ( this.GetValue(0, Part1.Generic, Part2.Disposition) == "None" )  enable = false;
+			this.labelTabs.Visibility       = enable;
 			this.fieldTab.Visibility        = enable;
 			this.fieldIndent.Visibility     = enable;
 
-			//?this.table.Enable = custom;
-			if ( custom )
-			{
-				this.table.StyleV |= CellArrayStyle.SelectCell;
-			}
-			else
-			{
-				this.table.StyleV &= ~CellArrayStyle.SelectCell;
-			}
-
 			this.buttonAdd.Enable = (custom && count < 9);
 			this.buttonSub.Enable = (custom && count > 1);
-			this.buttonLeft.Enable = custom;
-			this.buttonCenter.Enable = custom;
-			this.buttonRight.Enable = custom;
+			this.buttonNone.Enable           = custom;
+			this.buttonLeft.Enable           = custom;
+			this.buttonCenter.Enable         = custom;
+			this.buttonRight.Enable          = custom;
+			this.table.Enable                = custom;
 			this.buttonSuppressBefore.Enable = custom;
-			this.labelText.Enable = custom;
-			this.fieldText.Enable = custom;
-			this.fieldFontSize.Enable = custom;
-			this.fieldFontOffset.Enable = custom;
-			this.colorText.Enable = custom;
-			this.fieldTab.Enable = custom;
-			this.fieldIndent.Enable = custom;
+			this.labelText.Enable            = custom;
+			this.fieldText.Enable            = custom;
+			this.fieldFontSize.Enable        = custom;
+			this.fieldFontOffset.Enable      = custom;
+			this.colorText.Enable            = custom;
+			this.fieldTab.Enable             = custom;
+			this.fieldIndent.Enable          = custom;
 		}
 
 		protected string Type
@@ -1509,12 +1640,25 @@ namespace Epsitec.Common.Document.TextPanels
 			this.CreateGenerator(this.type);
 		}
 
+		private void HandlePersoClicked(object sender, MessageEventArgs e)
+		{
+			this.Type = "Custom";
+			this.CreateGenerator(this.type);
+		}
+
 		private void HandleTableSelectionChanged(object sender)
 		{
 			if ( this.type != "Custom" )  return;
 
 			this.tableSelectedRow    = this.table.SelectedRow;
 			this.tableSelectedColumn = this.table.SelectedColumn;
+
+			if ( this.tableSelectedRow == 0 && this.tableSelectedColumn == 2 )
+			{
+				this.table.DeselectAll();
+				this.tableSelectedRow    = -1;
+				this.tableSelectedColumn = -1;
+			}
 
 			this.UpdateWidgets();
 			this.UpdateFields();
@@ -1527,12 +1671,17 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleSubClicked(object sender, MessageEventArgs e)
 		{
+			this.table.DeselectAll();
+			this.tableSelectedRow    = -1;
+			this.tableSelectedColumn = -1;
+
 			this.DecCount();
 		}
 
 		private void HandleJustifClicked(object sender, MessageEventArgs e)
 		{
 			string text = null;
+			if ( sender == this.buttonNone   )  text = "None";
 			if ( sender == this.buttonLeft   )  text = "Left";
 			if ( sender == this.buttonCenter )  text = "Center";
 			if ( sender == this.buttonRight  )  text = "Right";
@@ -1624,10 +1773,25 @@ namespace Epsitec.Common.Document.TextPanels
 
 		private void HandleSampleColorClicked(object sender, MessageEventArgs e)
 		{
+			this.originFieldColor = sender as ColorSample;
+
+			this.originFieldRank = -1;
+			if ( this.originFieldColor == this.colorText )  this.originFieldRank = 0;
+
+			this.OnOriginColorChanged();
 		}
 
 		private void HandleSampleColorChanged(object sender)
 		{
+			if ( this.ignoreChanged )  return;
+
+			ColorSample cs = sender as ColorSample;
+			if ( cs.ActiveState == ActiveState.Yes )
+			{
+				this.OnOriginColorChanged();
+			}
+
+			this.ColorToWrapper(cs);
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -1647,15 +1811,18 @@ namespace Epsitec.Common.Document.TextPanels
 		protected static readonly int		maxLevel = 8;
 
 		protected TextFieldCombo			fieldType;
+		protected IconButton				buttonPerso;
 		protected CellTable					table;
 		protected IconButton				buttonAdd;
 		protected IconButton				buttonSub;
+		protected IconButton				buttonNone;
 		protected IconButton				buttonLeft;
 		protected IconButton				buttonCenter;
 		protected IconButton				buttonRight;
 		protected IconButton				buttonSuppressBefore;
 		protected StaticText				labelText;
 		protected TextFieldCombo			fieldText;
+		protected StaticText				labelTabs;
 		protected Widgets.TextFieldLabel	fieldTab;
 		protected Widgets.TextFieldLabel	fieldIndent;
 		protected Widgets.TextFieldLabel	fieldFontSize;
@@ -1666,5 +1833,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected string					type = null;
 		protected int						tableSelectedRow = -1;
 		protected int						tableSelectedColumn = -1;
+		protected ColorSample				originFieldColor;
+		protected int						originFieldRank = -1;
 	}
 }

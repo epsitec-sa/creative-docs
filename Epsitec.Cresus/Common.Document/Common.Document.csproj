@@ -649,6 +649,7 @@
     <Compile Include="Widgets\IconMarkButton.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Widgets\Nothing.cs" />
     <Compile Include="Widgets\RadioIcon.cs">
       <SubType>Code</SubType>
     </Compile>
