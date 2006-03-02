@@ -494,7 +494,7 @@
 	<data name="TextPanel.Filter.Tooltip.Character">Attributs pour les caractères</data>
 	
 	<data name="TextPanel.Generator.Title">Puces et numérotations</data>
-	<data name="TextPanel.Generator.Button.Perso">Perso</data>
+	<data name="TextPanel.Generator.Button.Perso">Personnaliser</data>
 	<data name="TextPanel.Generator.Tooltip.Perso">Accès aux modifications personnalisées</data>
 	<data name="TextPanel.Generator.Tooltip.Generator.Add">Ajouter une ligne à la fin</data>
 	<data name="TextPanel.Generator.Tooltip.Generator.Sub">Supprimer la dernière ligne</data>

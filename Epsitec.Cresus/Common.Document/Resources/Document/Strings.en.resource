@@ -493,7 +493,7 @@
 	<data name="TextPanel.Filter.Tooltip.Character">Character properties only</data>
 	
 	<data name="TextPanel.Generator.Title">Bullets and numbering</data>
-	<data name="TextPanel.Generator.Button.Perso">Custom</data>
+	<data name="TextPanel.Generator.Button.Perso">Customize</data>
 	<data name="TextPanel.Generator.Tooltip.Perso">Customize the settings</data>
 	<data name="TextPanel.Generator.Tooltip.Generator.Add">Add a level</data>
 	<data name="TextPanel.Generator.Tooltip.Generator.Sub">Remove last level</data>

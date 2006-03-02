@@ -56,12 +56,6 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			Generator.InitComboType(this.fieldType);
 
-			this.buttonPerso = new IconButton(this);
-			this.buttonPerso.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonPerso.Text = Res.Strings.TextPanel.Generator.Button.Perso;
-			this.buttonPerso.Clicked += new MessageEventHandler(this.HandlePersoClicked);
-			ToolTip.Default.SetToolTip(this.buttonPerso, Res.Strings.TextPanel.Generator.Tooltip.Perso);
-
 			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Add, new MessageEventHandler(this.HandleAddClicked));
 			this.buttonSub = this.CreateIconButton(Misc.Icon("ShaperHandleSub"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Sub, new MessageEventHandler(this.HandleSubClicked));
 
@@ -77,6 +71,11 @@ namespace Epsitec.Common.Document.TextPanels
 			this.table.StyleV |= CellArrayStyle.Separator;
 			this.table.StyleV |= CellArrayStyle.SelectCell;
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
+
+			this.buttonPerso = new Button(this);
+			this.buttonPerso.Text = Res.Strings.TextPanel.Generator.Button.Perso;
+			this.buttonPerso.Clicked += new MessageEventHandler(this.HandlePersoClicked);
+			ToolTip.Default.SetToolTip(this.buttonPerso, Res.Strings.TextPanel.Generator.Tooltip.Perso);
 
 			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), Res.Strings.TextPanel.Generator.Tooltip.SuppressBefore, new MessageEventHandler(this.HandleSuppressBeforeClicked));
 
@@ -897,8 +896,6 @@ namespace Epsitec.Common.Document.TextPanels
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num1);
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num2);
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num3);
-			
-			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Custom);
 		}
 
 		protected static void InitComboFix(TextFieldCombo combo)
@@ -1366,9 +1363,6 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Offset(0, -25);
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
-				r.Right = rect.Right-20*7;
-				this.buttonPerso.Bounds = r;
-				r.Left = r.Right+10;
 				r.Width = 20;
 				this.buttonAdd.Bounds = r;
 				r.Offset(20, 0);
@@ -1390,6 +1384,11 @@ namespace Epsitec.Common.Document.TextPanels
 				this.table.Visibility = true;
 
 				r.Top = r.Bottom-5;
+				r.Bottom = r.Top-30;
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.buttonPerso.Bounds = r;
+
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Width = 20;
@@ -1480,8 +1479,6 @@ namespace Epsitec.Common.Document.TextPanels
 			int column = this.tableSelectedColumn;
 			Part1 part1 = Generator.ConvColumnToPart1(column);
 			string text;
-
-			this.buttonPerso.ActiveState = (this.Type == "Custom") ? ActiveState.Yes : ActiveState.No;
 
 			text = this.GetValue(0, Part1.Generic, Part2.Disposition);
 			this.buttonNone.ActiveState   = (text == "None"  ) ? ActiveState.Yes : ActiveState.No;
@@ -1574,6 +1571,8 @@ namespace Epsitec.Common.Document.TextPanels
 			int column = this.tableSelectedColumn;
 			int count  = this.GetCount();
 			bool enable;
+
+			this.buttonPerso.Visibility = !custom;
 
 			enable = (this.isExtendedSize && column != 0 && column != -1);
 			if ( row == 0 && column == 2 )  enable = false;
@@ -1811,7 +1810,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected static readonly int		maxLevel = 8;
 
 		protected TextFieldCombo			fieldType;
-		protected IconButton				buttonPerso;
+		protected Button					buttonPerso;
 		protected CellTable					table;
 		protected IconButton				buttonAdd;
 		protected IconButton				buttonSub;
