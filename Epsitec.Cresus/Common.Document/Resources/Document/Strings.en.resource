@@ -1161,6 +1161,7 @@
 	<data name="Action.ParagraphLeading15">Leading x 1.5</data>
 	<data name="Action.ParagraphLeading20">Leading x 2</data>
 	<data name="Action.ParagraphLeading30">Leading x 3</data>
+	<data name="Action.ParagraphGenerator">@@Modifier les puces/numérotations</data>
 	<data name="Action.ParagraphClear">Clear all Paragraph Properties</data>
 	<data name="Action.Text.Insert">Insert</data>
 	<data name="Action.Text.Edit.InsertText">Insert "{0}"</data>
