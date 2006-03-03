@@ -171,6 +171,8 @@ namespace Epsitec.Common.Document.TextPanels
 			string[] user = new string[1];
 			user[0] = string.Concat("Type=", type);
 
+			this.ParagraphWrapper.SuspendSynchronizations();
+
 			if ( type == "None" )
 			{
 				this.ParagraphWrapper.Defined.ItemListParameters = null;
@@ -316,6 +318,10 @@ namespace Epsitec.Common.Document.TextPanels
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
 			}
+
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorCreate", Res.Strings.TextPanel.Generator.Title);
+			this.ParagraphWrapper.ResumeSynchronizations();
+			this.document.IsDirtySerialize = true;
 		}
 
 
@@ -336,6 +342,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			int count = p.Generator.Count;
 			this.SetValue(count+1, Part1.Generic, Part2.SuppressBefore, "false");
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorIncCount", Res.Strings.TextPanel.Generator.Tooltip.Generator.Add);
 		}
 
 		protected void DecCount()
@@ -347,6 +354,7 @@ namespace Epsitec.Common.Document.TextPanels
 			int count = p.Generator.Count;
 			p.Generator.Truncate(count-1);
 			this.ParagraphWrapper.Defined.ItemListParameters = p;
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorDecCount", Res.Strings.TextPanel.Generator.Tooltip.Generator.Sub);
 		}
 
 		protected string GetResume(int level)
@@ -1213,6 +1221,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string color = this.GetColorSample(sample);
 			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontColor, color);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorColor", Res.Strings.TextPanel.Generator.Tooltip.Color);
 		}
 
 		
@@ -1685,6 +1694,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( sender == this.buttonCenter )  text = "Center";
 			if ( sender == this.buttonRight  )  text = "Right";
 			this.SetValue(0, Part1.Generic, Part2.Disposition, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorJustif", Res.Strings.TextPanel.Generator.Title);
 		}
 
 		private void HandleSuppressBeforeClicked(object sender, MessageEventArgs e)
@@ -1697,6 +1707,7 @@ namespace Epsitec.Common.Document.TextPanels
 			string text = "false";
 			if ( button.ActiveState == ActiveState.No)  text = "true";
 			this.SetValue(row, Part1.Generic, Part2.SuppressBefore, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorSuppressBefore", Res.Strings.TextPanel.Generator.Tooltip.SuppressBefore);
 		}
 
 		private void HandleTextChanged(object sender)
@@ -1722,6 +1733,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.Text, text);
 			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontFace, font);
+			string s = (Generator.ConvColumnToPart1(column) == Part1.Value) ? Res.Strings.TextPanel.Generator.Tooltip.Value : Res.Strings.TextPanel.Generator.Tooltip.Fix;
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorText", s);
 		}
 
 		private void HandleFontSizeChanged(object sender)
@@ -1734,6 +1747,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string text = this.fieldFontSize.TextFieldReal.Text;
 			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontSize, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorFontSize", Res.Strings.TextPanel.Generator.Tooltip.Size);
 		}
 
 		private void HandleFontOffsetChanged(object sender)
@@ -1746,6 +1760,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string text = this.fieldFontOffset.TextFieldReal.Text;
 			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontOffset, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorFontOffset", Res.Strings.TextPanel.Generator.Tooltip.Offset);
 		}
 
 		private void HandleTabChanged(object sender)
@@ -1757,6 +1772,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string text = this.fieldTab.TextFieldReal.Text;
 			this.SetValue(row, Part1.Generic, Part2.Tab, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorTab", Res.Strings.TextPanel.Generator.Tooltip.Tab);
 		}
 
 		private void HandleIndentChanged(object sender)
@@ -1768,6 +1784,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string text = this.fieldIndent.TextFieldReal.Text;
 			this.SetValue(row, Part1.Generic, Part2.Indent, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorIndent", Res.Strings.TextPanel.Generator.Tooltip.Indent);
 		}
 
 		private void HandleSampleColorClicked(object sender, MessageEventArgs e)
