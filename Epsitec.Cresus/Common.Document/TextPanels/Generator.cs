@@ -321,7 +321,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorCreate", Res.Strings.TextPanel.Generator.Title);
 			this.ParagraphWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 		}
 
 
@@ -820,7 +820,7 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 		}
 
 		#region Properties array manager
@@ -1820,7 +1820,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.ClearIndentationLevelAttribute();
 			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorClear", Res.Strings.TextPanel.Clear);
 			this.ParagraphWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 		}
 
 

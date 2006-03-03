@@ -278,6 +278,13 @@ namespace Epsitec.Common.Document.TextPanels
 			return Drawing.RichColor.FromBrightness(0);
 		}
 
+		public void ActionMade()
+		{
+			//	Indique qu'une action a été effectuée.
+			this.document.Notifier.NotifyUndoRedoChanged();
+			this.document.IsDirtySerialize = true;
+		}
+
 
 		
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)

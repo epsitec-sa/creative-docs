@@ -278,7 +278,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ParagraphWrapper.DefineOperationName("ParagraphMargins", Res.Strings.TextPanel.Margins.Title);
 			this.ParagraphWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 		}
 
 		private void HandleClearClicked(object sender, MessageEventArgs e)
@@ -296,7 +296,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.ClearIndentationLevelAttribute();
 			this.ParagraphWrapper.DefineOperationName("ParagraphMarginsClear", Res.Strings.TextPanel.Clear);
 			this.ParagraphWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 		}
 
 
