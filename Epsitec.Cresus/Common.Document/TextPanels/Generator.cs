@@ -56,12 +56,6 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			Generator.InitComboType(this.fieldType);
 
-			this.buttonPerso = new IconButton(this);
-			this.buttonPerso.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonPerso.Text = Res.Strings.TextPanel.Generator.Button.Perso;
-			this.buttonPerso.Clicked += new MessageEventHandler(this.HandlePersoClicked);
-			ToolTip.Default.SetToolTip(this.buttonPerso, Res.Strings.TextPanel.Generator.Tooltip.Perso);
-
 			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Add, new MessageEventHandler(this.HandleAddClicked));
 			this.buttonSub = this.CreateIconButton(Misc.Icon("ShaperHandleSub"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Sub, new MessageEventHandler(this.HandleSubClicked));
 
@@ -77,6 +71,11 @@ namespace Epsitec.Common.Document.TextPanels
 			this.table.StyleV |= CellArrayStyles.Separator;
 			this.table.StyleV |= CellArrayStyles.SelectCell;
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
+
+			this.buttonPerso = new Button(this);
+			this.buttonPerso.Text = Res.Strings.TextPanel.Generator.Button.Perso;
+			this.buttonPerso.Clicked += new MessageEventHandler(this.HandlePersoClicked);
+			ToolTip.Default.SetToolTip(this.buttonPerso, Res.Strings.TextPanel.Generator.Tooltip.Perso);
 
 			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), Res.Strings.TextPanel.Generator.Tooltip.SuppressBefore, new MessageEventHandler(this.HandleSuppressBeforeClicked));
 
@@ -171,6 +170,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string[] user = new string[1];
 			user[0] = string.Concat("Type=", type);
+
+			this.ParagraphWrapper.SuspendSynchronizations();
 
 			if ( type == "None" )
 			{
@@ -317,6 +318,10 @@ namespace Epsitec.Common.Document.TextPanels
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
 			}
+
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorCreate", Res.Strings.Action.ParagraphGenerator);
+			this.ParagraphWrapper.ResumeSynchronizations();
+			this.ActionMade();
 		}
 
 
@@ -337,6 +342,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			int count = p.Generator.Count;
 			this.SetValue(count+1, Part1.Generic, Part2.SuppressBefore, "false");
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorIncCount", Res.Strings.Action.ParagraphGenerator);
 		}
 
 		protected void DecCount()
@@ -348,6 +354,7 @@ namespace Epsitec.Common.Document.TextPanels
 			int count = p.Generator.Count;
 			p.Generator.Truncate(count-1);
 			this.ParagraphWrapper.Defined.ItemListParameters = p;
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorDecCount", Res.Strings.Action.ParagraphGenerator);
 		}
 
 		protected string GetResume(int level)
@@ -813,7 +820,7 @@ namespace Epsitec.Common.Document.TextPanels
 				}
 			}
 
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 		}
 
 		#region Properties array manager
@@ -897,8 +904,6 @@ namespace Epsitec.Common.Document.TextPanels
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num1);
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num2);
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num3);
-			
-			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Custom);
 		}
 
 		protected static void InitComboFix(TextFieldCombo combo)
@@ -1216,6 +1221,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string color = this.GetColorSample(sample);
 			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontColor, color);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorColor", Res.Strings.Action.ParagraphGenerator);
 		}
 
 		
@@ -1366,9 +1372,6 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Offset(0, -25);
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
-				r.Right = rect.Right-20*7;
-				this.buttonPerso.Bounds = r;
-				r.Left = r.Right+10;
 				r.Width = 20;
 				this.buttonAdd.Bounds = r;
 				r.Offset(20, 0);
@@ -1390,6 +1393,11 @@ namespace Epsitec.Common.Document.TextPanels
 				this.table.Visibility = true;
 
 				r.Top = r.Bottom-5;
+				r.Bottom = r.Top-30;
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.buttonPerso.Bounds = r;
+
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Width = 20;
@@ -1480,8 +1488,6 @@ namespace Epsitec.Common.Document.TextPanels
 			int column = this.tableSelectedColumn;
 			Part1 part1 = Generator.ConvColumnToPart1(column);
 			string text;
-
-			this.buttonPerso.ActiveState = (this.Type == "Custom") ? ActiveState.Yes : ActiveState.No;
 
 			text = this.GetValue(0, Part1.Generic, Part2.Disposition);
 			this.buttonNone.ActiveState   = (text == "None"  ) ? ActiveState.Yes : ActiveState.No;
@@ -1574,6 +1580,8 @@ namespace Epsitec.Common.Document.TextPanels
 			int column = this.tableSelectedColumn;
 			int count  = this.GetCount();
 			bool enable;
+
+			this.buttonPerso.Visibility = !custom;
 
 			enable = (this.isExtendedSize && column != 0 && column != -1);
 			if ( row == 0 && column == 2 )  enable = false;
@@ -1686,6 +1694,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( sender == this.buttonCenter )  text = "Center";
 			if ( sender == this.buttonRight  )  text = "Right";
 			this.SetValue(0, Part1.Generic, Part2.Disposition, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorJustif", Res.Strings.Action.ParagraphGenerator);
 		}
 
 		private void HandleSuppressBeforeClicked(object sender, MessageEventArgs e)
@@ -1698,6 +1707,7 @@ namespace Epsitec.Common.Document.TextPanels
 			string text = "false";
 			if ( button.ActiveState == ActiveState.No)  text = "true";
 			this.SetValue(row, Part1.Generic, Part2.SuppressBefore, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorSuppressBefore", Res.Strings.Action.ParagraphGenerator);
 		}
 
 		private void HandleTextChanged(object sender)
@@ -1723,6 +1733,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.Text, text);
 			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontFace, font);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorText", Res.Strings.Action.ParagraphGenerator);
 		}
 
 		private void HandleFontSizeChanged(object sender)
@@ -1735,6 +1746,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string text = this.fieldFontSize.TextFieldReal.Text;
 			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontSize, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorFontSize", Res.Strings.Action.ParagraphGenerator);
 		}
 
 		private void HandleFontOffsetChanged(object sender)
@@ -1747,6 +1759,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string text = this.fieldFontOffset.TextFieldReal.Text;
 			this.SetValue(row, Generator.ConvColumnToPart1(column), Part2.FontOffset, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorFontOffset", Res.Strings.Action.ParagraphGenerator);
 		}
 
 		private void HandleTabChanged(object sender)
@@ -1758,6 +1771,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string text = this.fieldTab.TextFieldReal.Text;
 			this.SetValue(row, Part1.Generic, Part2.Tab, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorTab", Res.Strings.Action.ParagraphGenerator);
 		}
 
 		private void HandleIndentChanged(object sender)
@@ -1769,6 +1783,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string text = this.fieldIndent.TextFieldReal.Text;
 			this.SetValue(row, Part1.Generic, Part2.Indent, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorIndent", Res.Strings.Action.ParagraphGenerator);
 		}
 
 		private void HandleSampleColorClicked(object sender, MessageEventArgs e)
@@ -1804,14 +1819,14 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ParagraphWrapper.Defined.ClearIndentationLevelAttribute();
 			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorClear", Res.Strings.TextPanel.Clear);
 			this.ParagraphWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 		}
 
 
 		protected static readonly int		maxLevel = 8;
 
 		protected TextFieldCombo			fieldType;
-		protected IconButton				buttonPerso;
+		protected Button					buttonPerso;
 		protected CellTable					table;
 		protected IconButton				buttonAdd;
 		protected IconButton				buttonSub;

@@ -494,7 +494,7 @@
 	<data name="TextPanel.Filter.Tooltip.Character">Attributs pour les caractères</data>
 	
 	<data name="TextPanel.Generator.Title">Puces et numérotations</data>
-	<data name="TextPanel.Generator.Button.Perso">Perso</data>
+	<data name="TextPanel.Generator.Button.Perso">Personnaliser</data>
 	<data name="TextPanel.Generator.Tooltip.Perso">Accès aux modifications personnalisées</data>
 	<data name="TextPanel.Generator.Tooltip.Generator.Add">Ajouter une ligne à la fin</data>
 	<data name="TextPanel.Generator.Tooltip.Generator.Sub">Supprimer la dernière ligne</data>
@@ -1182,6 +1182,7 @@
 	<data name="Action.ParagraphLeading15">Interligne étendu</data>
 	<data name="Action.ParagraphLeading20">Interligne double</data>
 	<data name="Action.ParagraphLeading30">Interligne triple</data>
+	<data name="Action.ParagraphGenerator">Modifier les puces/numérotations</data>
 	<data name="Action.ParagraphClear">Effacer tous les attributs de paragraphe</data>
 	<data name="Action.Text.Insert">Insertion</data>
 	<data name="Action.Text.Edit.InsertText">Insertion de "{0}"</data>

@@ -493,7 +493,7 @@
 	<data name="TextPanel.Filter.Tooltip.Character">Character properties only</data>
 	
 	<data name="TextPanel.Generator.Title">Bullets and numbering</data>
-	<data name="TextPanel.Generator.Button.Perso">Custom</data>
+	<data name="TextPanel.Generator.Button.Perso">Customize</data>
 	<data name="TextPanel.Generator.Tooltip.Perso">Customize the settings</data>
 	<data name="TextPanel.Generator.Tooltip.Generator.Add">Add a level</data>
 	<data name="TextPanel.Generator.Tooltip.Generator.Sub">Remove last level</data>
@@ -1158,9 +1158,10 @@
 	<data name="Action.ParagraphLeadingPlus">Increase leading</data>
 	<data name="Action.ParagraphLeading08">Compact leading</data>
 	<data name="Action.ParagraphLeading10">Normal leading</data>
-	<data name="Action.ParagraphLeading15">Leading x 1.5</data>
-	<data name="Action.ParagraphLeading20">Leading x 2</data>
-	<data name="Action.ParagraphLeading30">Leading x 3</data>
+	<data name="Action.ParagraphLeading15">Leading ×1.5</data>
+	<data name="Action.ParagraphLeading20">Leading ×2</data>
+	<data name="Action.ParagraphLeading30">Leading ×3</data>
+	<data name="Action.ParagraphGenerator">Change bullet/numbering</data>
 	<data name="Action.ParagraphClear">Clear all Paragraph Properties</data>
 	<data name="Action.Text.Insert">Insert</data>
 	<data name="Action.Text.Edit.InsertText">Insert "{0}"</data>
