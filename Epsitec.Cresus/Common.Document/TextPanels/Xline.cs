@@ -159,7 +159,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillUnderlineDefinition(xline, false);
 				this.TextWrapper.DefineOperationName("FontXline", Res.Strings.TextPanel.Xline.Title);
 				this.TextWrapper.ResumeSynchronizations();
-				this.document.IsDirtySerialize = true;
+				this.ActionMade();
 			}
 
 			if ( sample == this.overlinedColor )
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillOverlineDefinition(xline, false);
 				this.TextWrapper.DefineOperationName("FontXline", Res.Strings.TextPanel.Xline.Title);
 				this.TextWrapper.ResumeSynchronizations();
-				this.document.IsDirtySerialize = true;
+				this.ActionMade();
 			}
 
 			if ( sample == this.strikeoutColor )
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillStrikeoutDefinition(xline, false);
 				this.TextWrapper.DefineOperationName("FontXline", Res.Strings.TextPanel.Xline.Title);
 				this.TextWrapper.ResumeSynchronizations();
-				this.document.IsDirtySerialize = true;
+				this.ActionMade();
 			}
 		}
 
@@ -540,7 +540,7 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.TextWrapper.DefineOperationName("FontUnderlined", Res.Strings.Action.FontUnderlined);
 			this.TextWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 			this.ForceHeightChanged();
 		}
 		
@@ -598,7 +598,7 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.TextWrapper.DefineOperationName("FontOverlined", Res.Strings.Action.FontOverlined);
 			this.TextWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 			this.ForceHeightChanged();
 		}
 		
@@ -656,7 +656,7 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			this.TextWrapper.DefineOperationName("FontStrikeout", Res.Strings.Action.FontStrikeout);
 			this.TextWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 			this.ForceHeightChanged();
 		}
 		
@@ -670,7 +670,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.FillUnderlineDefinition(xline, false);
 			this.TextWrapper.DefineOperationName("FontUnderlined", Res.Strings.Action.FontUnderlined);
 			this.TextWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 		}
 
 		private void HandleOverlinedValueChanged(object sender)
@@ -683,7 +683,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.FillOverlineDefinition(xline, false);
 			this.TextWrapper.DefineOperationName("FontOverlined", Res.Strings.Action.FontOverlined);
 			this.TextWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 		}
 
 		private void HandleStrikeoutValueChanged(object sender)
@@ -696,7 +696,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.FillStrikeoutDefinition(xline, false);
 			this.TextWrapper.DefineOperationName("FontStrikeout", Res.Strings.Action.FontStrikeout);
 			this.TextWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 		}
 
 		private void HandleSampleColorClicked(object sender, MessageEventArgs e)
@@ -735,7 +735,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.TextWrapper.Defined.ClearStrikeout();
 			this.TextWrapper.DefineOperationName("FontXlineClear", Res.Strings.TextPanel.Clear);
 			this.TextWrapper.ResumeSynchronizations();
-			this.document.IsDirtySerialize = true;
+			this.ActionMade();
 		}
 
 		
