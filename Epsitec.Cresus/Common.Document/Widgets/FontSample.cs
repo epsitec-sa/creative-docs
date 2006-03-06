@@ -42,26 +42,31 @@ namespace Epsitec.Common.Document.Widgets
 			//	Nom de la police.
 			get
 			{
-				if ( this.textLayout == null )  return null;
-				return this.textLayout.Text;
+				return this.fontName;
 			}
 
 			set
 			{
-				if ( value == null )
+				if (this.fontName != value)
 				{
-					this.textLayout = null;
-				}
-				else
-				{
-					if ( this.textLayout == null )
+					this.fontName = value;
+					
+					if (this.fontName == null)
 					{
-						this.textLayout = new TextLayout();
-						this.textLayout.DefaultFont     = this.DefaultFont;
-						this.textLayout.DefaultFontSize = this.DefaultFontSize;
-						this.textLayout.Alignment       = ContentAlignment.MiddleLeft;
+						this.textLayout = null;
 					}
-					this.textLayout.Text = value;
+					else
+					{
+						if (this.textLayout == null)
+						{
+							this.textLayout = new TextLayout ();
+							this.textLayout.DefaultFont     = this.DefaultFont;
+							this.textLayout.DefaultFontSize = this.DefaultFontSize;
+							this.textLayout.Alignment       = ContentAlignment.MiddleLeft;
+						}
+						
+						this.textLayout.Text = TextLayout.ConvertToTaggedText (this.fontName);
+					}
 				}
 			}
 		}
@@ -315,13 +320,14 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		protected OpenType.FontIdentity			fontIdentity = null;
-		protected double						fontHeight = 0;
-		protected bool							isSampleAbc = false;
-		protected bool							isCenter = false;
-		protected bool							isSeparator = false;
-		protected bool							isLast = false;
-		protected double						frontier = 0;
-		protected TextLayout					textLayout = null;
+		protected OpenType.FontIdentity			fontIdentity;
+		protected double						fontHeight;
+		protected bool							isSampleAbc;
+		protected bool							isCenter;
+		protected bool							isSeparator;
+		protected bool							isLast;
+		protected double						frontier;
+		protected TextLayout					textLayout;
+		protected string						fontName;
 	}
 }
