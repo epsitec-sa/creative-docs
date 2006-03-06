@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -13,8 +13,8 @@ namespace Epsitec.Common.Support
 		Merged,							//	fusion (accès standard)
 		
 		Default,						//	ressources par défaut
-		Localised,						//	ressources localisées
-		Customised,						//	ressources personnalisées
+		Localized,						//	ressources localisées
+		Customized,						//	ressources personnalisées
 		
 		All								//	toutes les variantes (pour GetBundleIds)
 	}

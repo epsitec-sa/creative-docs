@@ -31,8 +31,8 @@ namespace Epsitec.Common.Support.Implementation
 				switch (level)
 				{
 					case ResourceLevel.Default:
-					case ResourceLevel.Localised:
-					case ResourceLevel.Customised:
+					case ResourceLevel.Localized:
+					case ResourceLevel.Customized:
 						break;
 					
 					default:
@@ -50,8 +50,8 @@ namespace Epsitec.Common.Support.Implementation
 			switch (level)
 			{
 				case ResourceLevel.Default:		return this.file_default;
-				case ResourceLevel.Localised:	return this.file_local;
-				case ResourceLevel.Customised:	return this.file_custom;
+				case ResourceLevel.Localized:	return this.file_local;
+				case ResourceLevel.Customized:	return this.file_custom;
 				case ResourceLevel.All:			return this.file_all;
 			}
 			

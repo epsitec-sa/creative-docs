@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Globalization;
@@ -40,27 +40,27 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public static string					DefaultPrefix
+		public static string					ActivePrefix
 		{
 			get
 			{
-				return Resources.manager.DefaultPrefix;
+				return Resources.manager.ActivePrefix;
 			}
 			set
 			{
-				Resources.manager.DefaultPrefix = value;
+				Resources.manager.ActivePrefix = value;
 			}
 		}
 		
-		public static CultureInfo				DefaultCulture
+		public static CultureInfo				ActiveCulture
 		{
 			get
 			{
-				return Resources.manager.DefaultCulture;
+				return Resources.manager.ActiveCulture;
 			}
 			set
 			{
-				Resources.manager.DefaultCulture = value;
+				Resources.manager.ActiveCulture = value;
 			}
 		}
 		

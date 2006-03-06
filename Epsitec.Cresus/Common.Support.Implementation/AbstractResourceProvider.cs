@@ -30,8 +30,8 @@ namespace Epsitec.Common.Support.Implementation
 			this.culture = culture;
 			
 			this.default_suffix = this.manager.MapToSuffix (ResourceLevel.Default, culture);
-			this.local_suffix   = this.manager.MapToSuffix (ResourceLevel.Localised, culture);
-			this.custom_suffix  = this.manager.MapToSuffix (ResourceLevel.Customised, culture);
+			this.local_suffix   = this.manager.MapToSuffix (ResourceLevel.Localized, culture);
+			this.custom_suffix  = this.manager.MapToSuffix (ResourceLevel.Customized, culture);
 			
 			System.Diagnostics.Debug.Assert (culture.TwoLetterISOLanguageName == this.local_suffix);
 		}

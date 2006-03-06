@@ -85,7 +85,7 @@ namespace Epsitec.Common.Support
 				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag].AsString);
 			}
 			
-			bundle = Resources.GetBundle ("file:button.cancel", ResourceLevel.Localised);
+			bundle = Resources.GetBundle ("file:button.cancel", ResourceLevel.Localized);
 			Assert.IsNotNull (bundle);
 			System.Console.Out.WriteLine ("Bundle with localised level only:");
 			
@@ -313,8 +313,8 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckGetBundleIds()
 		{
 			string[] names_1 = Resources.GetBundleIds ("file:*");
-			string[] names_2 = Resources.GetBundleIds ("file:*", ResourceLevel.Localised);
-			string[] names_3 = Resources.GetBundleIds ("file:*", "String", ResourceLevel.Localised);
+			string[] names_2 = Resources.GetBundleIds ("file:*", ResourceLevel.Localized);
+			string[] names_3 = Resources.GetBundleIds ("file:*", "String", ResourceLevel.Localized);
 			string[] names_4 = Resources.GetBundleIds ("file:strings", ResourceLevel.All);
 			
 			System.Console.Out.WriteLine ("file:*");
@@ -354,10 +354,10 @@ namespace Epsitec.Common.Support
 				
 				switch (level)
 				{
-					case ResourceLevel.Localised:
+					case ResourceLevel.Localized:
 						about = "localised to " + culture.EnglishName;
 						break;
-					case ResourceLevel.Customised:
+					case ResourceLevel.Customized:
 						about = "customised for " + culture.EnglishName;
 						break;
 				}
