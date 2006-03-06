@@ -1,5 +1,7 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
@@ -7,28 +9,29 @@ namespace Epsitec.Common.Support
 	
 	/// <summary>
 	/// La classe ResourceBundleCollection permet de stocker ensemble toutes les variantes
-	/// d'un bundle (Default, Localised, Customised).
+	/// d'un bundle (Default, Localized, Customized).
 	/// </summary>
-	public class ResourceBundleCollection : System.Collections.ICollection, System.IDisposable, System.Collections.IList
+	public class ResourceBundleCollection : System.Collections.Generic.ICollection<ResourceBundle>, System.Collections.Generic.IList<ResourceBundle>
 	{
 		public ResourceBundleCollection(ResourceManager resource_manager)
 		{
-			this.list    = new System.Collections.ArrayList ();
+			this.list    = new List<ResourceBundle> ();
 			this.manager = resource_manager;
 		}
-		
-		
-		public ResourceBundle					this[int index]
+
+
+		public ResourceBundle this[int index]
 		{
 			get
 			{
-				if ((index < 0) ||
-					(index >= this.list.Count))
+				return this.list[index];
+			}
+			set
+			{
+				if (this[index] != value)
 				{
-					return null;
+					throw new System.InvalidOperationException ("ResourceBundle may not be replaced.");
 				}
-				
-				return this.list[index] as ResourceBundle;
 			}
 		}
 		
@@ -36,7 +39,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this[level, this.manager.DefaultCulture];
+				return this[level, this.manager.ActiveCulture];
 			}
 		}
 		
@@ -102,7 +105,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				List<string> list = new List<string> ();
 				
 				foreach (ResourceBundle bundle in this.list)
 				{
@@ -112,37 +115,11 @@ namespace Epsitec.Common.Support
 					list.Add (this.manager.MapToSuffix (level, culture));
 				}
 				
-				string[] suffixes = new string[list.Count];
-				list.CopyTo (suffixes);
-				
-				return suffixes;
+				return list.ToArray ();
 			}
 		}
 		
 		
-		public int Add(ResourceBundle bundle)
-		{
-			if (bundle != null)
-			{
-				this.Attach (bundle);
-				return this.list.Add (bundle);
-			}
-			
-			return -1;
-		}
-		
-		public void Remove(ResourceBundle bundle)
-		{
-			int index = this.list.IndexOf (bundle);
-			
-			if (index < 0)
-			{
-				throw new System.ArgumentException ("Resource bundle not found in collection.");
-			}
-			
-			this.Detach (bundle);
-			this.list.RemoveAt (index);
-		}
 		
 		
 		public void LoadBundles(string prefix, string[] ids)
@@ -179,7 +156,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.list.IsSynchronized;
+				return false;
 			}
 		}
 		
@@ -193,14 +170,14 @@ namespace Epsitec.Common.Support
 		
 		public void CopyTo(System.Array array, int index)
 		{
-			this.list.CopyTo (array, index);
+			this.list.ToArray ().CopyTo (array, index);
 		}
 		
 		public object							SyncRoot
 		{
 			get
 			{
-				return this.list.SyncRoot;
+				return this.list;
 			}
 		}
 		#endregion
@@ -221,22 +198,6 @@ namespace Epsitec.Common.Support
 				return false;
 			}
 		}
-		
-		
-		object			System.Collections.IList.this[int index]
-		{
-			get
-			{
-				return this[index];
-			}
-			set
-			{
-				if (this[index] != value)
-				{
-					throw new System.InvalidOperationException ("ResourceBundle may not be replaced.");
-				}
-			}
-		}
 
 		
 		public void RemoveAt(int index)
@@ -255,25 +216,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		int System.Collections.IList.Add(object value)
-		{
-			return this.Add (value as ResourceBundle);
-		}
-		
-		void System.Collections.IList.Remove(object value)
-		{
-			this.Remove (value as ResourceBundle);
-		}
-		
 		public bool Contains(object value)
 		{
-			return this.list.Contains (value);
+			return this.list.Contains (value as ResourceBundle);
 		}
 		
 		public void Clear()
 		{
-			ResourceBundle[] bundles = new ResourceBundle[this.list.Count];
-			this.list.CopyTo (bundles);
+			ResourceBundle[] bundles = this.list.ToArray ();
 			
 			foreach (ResourceBundle bundle in bundles)
 			{
@@ -281,11 +231,6 @@ namespace Epsitec.Common.Support
 			}
 			
 			System.Diagnostics.Debug.Assert (this.list.Count == 0);
-		}
-
-		public int IndexOf(object value)
-		{
-			return this.list.IndexOf (value);
 		}
 		#endregion
 		
@@ -376,8 +321,8 @@ namespace Epsitec.Common.Support
 			System.Diagnostics.Debug.WriteLine (string.Format ("Merging ressource {0} for culture '{1}'.", this.FullName, culture.TwoLetterISOLanguageName));
 			
 			ResourceBundle model_default    = this[ResourceLevel.Default, culture];
-			ResourceBundle model_localised  = this[ResourceLevel.Localised, culture];
-			ResourceBundle model_customised = this[ResourceLevel.Customised, culture];
+			ResourceBundle model_localised  = this[ResourceLevel.Localized, culture];
+			ResourceBundle model_customised = this[ResourceLevel.Customized, culture];
 			
 			if (model_default == null)
 			{
@@ -414,7 +359,77 @@ namespace Epsitec.Common.Support
 		
 		private ResourceManager					manager;
 		private System.Collections.ArrayList	merged;
-		private System.Collections.ArrayList	list;
+		private List<ResourceBundle>			list;
 		private string							name;
+
+		#region ICollection<ResourceBundle> Members
+
+		public void Add(ResourceBundle item)
+		{
+			if (item == null)
+			{
+				throw new System.ArgumentNullException ();
+			}
+
+			this.Attach (item);
+			this.list.Add (item);
+		}
+
+		public bool Contains(ResourceBundle item)
+		{
+			return this.list.Contains (item);
+		}
+
+		public void CopyTo(ResourceBundle[] array, int arrayIndex)
+		{
+			this.list.CopyTo (array, arrayIndex);
+		}
+
+		public bool Remove(ResourceBundle item)
+		{
+			int index = this.list.IndexOf (item);
+
+			if (index < 0)
+			{
+				return false;
+			}
+
+			this.Detach (item);
+			this.list.RemoveAt (index);
+			
+			return true;
+		}
+
+		#endregion
+
+		#region IEnumerable<ResourceBundle> Members
+
+		IEnumerator<ResourceBundle> IEnumerable<ResourceBundle>.GetEnumerator()
+		{
+			return this.list.GetEnumerator ();
+		}
+
+		#endregion
+
+		#region IList<ResourceBundle> Members
+
+		public int IndexOf(ResourceBundle item)
+		{
+			return this.list.IndexOf (item);
+		}
+
+		public void Insert(int index, ResourceBundle item)
+		{
+			if (item == null)
+			{
+				throw new System.ArgumentNullException ();
+			}
+			
+			this.Attach (item);
+			this.list.Insert (index, item);
+		}
+
+
+		#endregion
 	}
 }

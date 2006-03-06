@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Database
 					//	ce contexte; commence par chercher la variante personnalisée, puis la
 					//	variante localisée, pour enfin chercher la variante de base.
 					
-					find = DbTools.BuildLocalisedName (name, ResourceLevel.Customised);
+					find = DbTools.BuildLocalisedName (name, ResourceLevel.Customized);
 					
 					if (this.attributes.Contains (find))
 					{
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Database
 					}
 					
 					
-					find = DbTools.BuildLocalisedName (name, ResourceLevel.Localised);
+					find = DbTools.BuildLocalisedName (name, ResourceLevel.Localized);
 					
 					if (this.attributes.Contains (find))
 					{

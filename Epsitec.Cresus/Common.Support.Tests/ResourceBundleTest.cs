@@ -22,7 +22,7 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assert.AreEqual (2, bundle.CountFields);
+			Assert.AreEqual (2, bundle.FieldCount);
 			Assert.AreEqual ("a", names[0]);
 			Assert.AreEqual ("b", names[1]);
 			Assert.AreEqual ("test", bundle.Name);
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assert.AreEqual (2, bundle.CountFields);
+			Assert.AreEqual (2, bundle.FieldCount);
 			Assert.AreEqual ("a", names[0]);
 			Assert.AreEqual ("b", names[1]);
 			Assert.AreEqual ("A", bundle["a"].AsString);
@@ -60,14 +60,14 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assert.AreEqual (2, bundle.CountFields);
+			Assert.AreEqual (2, bundle.FieldCount);
 			Assert.AreEqual ("a", names[0]);
 			Assert.AreEqual ("b", names[1]);
 			Assert.AreEqual ("A0", bundle["a"].AsString);
 			
 			Assert.IsTrue (bundle["b"].Data is ResourceBundle);
 			
-			Assert.AreEqual (2, bundle["b"].AsBundle.CountFields);
+			Assert.AreEqual (2, bundle["b"].AsBundle.FieldCount);
 			Assert.AreEqual ("A1", bundle["b"].AsBundle["a"].AsString);
 			Assert.AreEqual ("B1", bundle["b"].AsBundle["b"].AsString);
 			Assert.AreEqual ("test", bundle.Name);
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Support
 			
 			string[] names = bundle.FieldNames;
 			
-			Assert.AreEqual (1, bundle.CountFields);
+			Assert.AreEqual (1, bundle.FieldCount);
 			Assert.AreEqual ("text", names[0]);
 			Assert.AreEqual ("Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.", bundle["text"].AsString);
 		}
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Support
 			
 			string[] names = bundle.FieldNames;
 			
-			Assert.AreEqual (1, bundle.CountFields);
+			Assert.AreEqual (1, bundle.FieldCount);
 			Assert.AreEqual ("text", names[0]);
 			Assert.AreEqual ("Small <b>text</b> to <i>check</i> if embedded &lt;xml&gt; works.", bundle["text"].AsString);
 		}
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Support
 			
 			string[] names = bundle.FieldNames;
 			
-			Assert.AreEqual (1, bundle.CountFields);
+			Assert.AreEqual (1, bundle.FieldCount);
 			Assert.AreEqual ("text", names[0]);
 			Assert.AreEqual ("<&>", bundle["text"].AsString);
 		}
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assert.AreEqual (3, bundle.CountFields);
+			Assert.AreEqual (3, bundle.FieldCount);
 			Assert.AreEqual ("a", names[0]);
 			Assert.AreEqual ("b", names[1]);
 			Assert.AreEqual ("c", names[2]);
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assert.AreEqual (4, bundle.CountFields);
+			Assert.AreEqual (4, bundle.FieldCount);
 			Assert.AreEqual ("a", names[0]);
 			Assert.AreEqual ("a", names[1]);
 			Assert.AreEqual ("b", names[2]);
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assert.AreEqual (6, bundle.CountFields);
+			Assert.AreEqual (6, bundle.FieldCount);
 			Assert.AreEqual ("aaa",    names[0]);
 			Assert.AreEqual ("Anchor", names[1]);
 			Assert.AreEqual ("class",  names[2]);
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assert.AreEqual (3, bundle.CountFields);
+			Assert.AreEqual (3, bundle.FieldCount);
 			Assert.AreEqual ("a", names[0]);
 			Assert.AreEqual ("b", names[1]);
 			Assert.AreEqual ("c", names[2]);
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assert.AreEqual (2, bundle.CountFields);
+			Assert.AreEqual (2, bundle.FieldCount);
 			Assert.AreEqual ("a", names[0]);
 			Assert.AreEqual ("b", names[1]);
 			Assert.AreEqual ("Cancel", bundle["b"].AsString);

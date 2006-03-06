@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -143,11 +143,11 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.CountFields == 0;
+				return this.FieldCount == 0;
 			}
 		}
 		
-		public int							CountFields
+		public int							FieldCount
 		{
 			get
 			{

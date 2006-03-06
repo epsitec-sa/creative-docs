@@ -1,4 +1,4 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Globalization;
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public string							DefaultPrefix
+		public string							ActivePrefix
 		{
 			get
 			{
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public CultureInfo						DefaultCulture
+		public CultureInfo						ActiveCulture
 		{
 			get
 			{
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.MapToSuffix (ResourceLevel.Localised, this.culture);
+				return this.MapToSuffix (ResourceLevel.Localized, this.culture);
 			}
 		}
 		
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.MapToSuffix (ResourceLevel.Localised, this.culture);
+				return this.MapToSuffix (ResourceLevel.Localized, this.culture);
 			}
 		}
 		
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Support
 			}
 			if (prefix == null)
 			{
-				prefix = this.DefaultPrefix;
+				prefix = this.ActivePrefix;
 				
 				if (prefix == null)
 				{
@@ -269,8 +269,8 @@ namespace Epsitec.Common.Support
 			switch (level)
 			{
 				case ResourceLevel.Default:		return "00";
-				case ResourceLevel.Localised:	return culture.TwoLetterISOLanguageName;
-				case ResourceLevel.Customised:	return string.Concat ("X", culture.TwoLetterISOLanguageName);
+				case ResourceLevel.Localized:	return culture.TwoLetterISOLanguageName;
+				case ResourceLevel.Customized:	return string.Concat ("X", culture.TwoLetterISOLanguageName);
 			}
 			
 			throw new ResourceException (string.Format ("Invalid level {0} specified in MapToSuffix.", level));
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Support
 				
 				if (culture != null)
 				{
-					level = ResourceLevel.Localised;
+					level = ResourceLevel.Localized;
 					return;
 				}
 			}
@@ -305,7 +305,7 @@ namespace Epsitec.Common.Support
 				
 				if (culture != null)
 				{
-					level = ResourceLevel.Customised;
+					level = ResourceLevel.Customized;
 					return;
 				}
 			}
@@ -324,8 +324,8 @@ namespace Epsitec.Common.Support
 			switch (level)
 			{
 				case ResourceLevel.Default:		return "*";
-				case ResourceLevel.Localised:	return culture.DisplayName;
-				case ResourceLevel.Customised:	return string.Concat ("Pers. ", culture.DisplayName);
+				case ResourceLevel.Localized:	return culture.DisplayName;
+				case ResourceLevel.Customized:	return string.Concat ("Pers. ", culture.DisplayName);
 			}
 			
 			throw new ResourceException (string.Format ("Invalid level {0} specified in GetLevelCaption.", level));
@@ -367,8 +367,8 @@ namespace Epsitec.Common.Support
 			switch (level)
 			{
 				case ResourceLevel.Default:
-				case ResourceLevel.Customised:
-				case ResourceLevel.Localised:
+				case ResourceLevel.Customized:
+				case ResourceLevel.Localized:
 				case ResourceLevel.All:
 					break;
 				default:
@@ -446,13 +446,13 @@ namespace Epsitec.Common.Support
 					case ResourceLevel.Merged:
 						bundle = ResourceBundle.Create (this, prefix, resource_id, level, culture, recursion);
 						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Default, culture));
-						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localised, culture));
-						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customised, culture));
+						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localized, culture));
+						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customized, culture));
 						break;
 					
 					case ResourceLevel.Default:
-					case ResourceLevel.Localised:
-					case ResourceLevel.Customised:
+					case ResourceLevel.Localized:
+					case ResourceLevel.Customized:
 						bundle = ResourceBundle.Create (this, prefix, resource_id, level, culture, recursion);
 						bundle.Compile (provider.GetData (resource_id, level, culture));
 						break;
@@ -508,14 +508,14 @@ namespace Epsitec.Common.Support
 				switch (level)
 				{
 					case ResourceLevel.Merged:
-						data = provider.GetData (resource_id, ResourceLevel.Customised, culture);	if (data != null) break;
-						data = provider.GetData (resource_id, ResourceLevel.Localised, culture);	if (data != null) break;
+						data = provider.GetData (resource_id, ResourceLevel.Customized, culture);	if (data != null) break;
+						data = provider.GetData (resource_id, ResourceLevel.Localized, culture);	if (data != null) break;
 						data = provider.GetData (resource_id, ResourceLevel.Default, culture);
 						break;
 					
 					case ResourceLevel.Default:
-					case ResourceLevel.Localised:
-					case ResourceLevel.Customised:
+					case ResourceLevel.Localized:
+					case ResourceLevel.Customized:
 						data = provider.GetData (resource_id, level, culture);
 						break;
 					
@@ -598,8 +598,8 @@ namespace Epsitec.Common.Support
 			switch (level)
 			{
 				case ResourceLevel.Default:
-				case ResourceLevel.Localised:
-				case ResourceLevel.Customised:
+				case ResourceLevel.Localized:
+				case ResourceLevel.Customized:
 					break;
 				
 				default:
@@ -632,8 +632,8 @@ namespace Epsitec.Common.Support
 			switch (level)
 			{
 				case ResourceLevel.Default:
-				case ResourceLevel.Localised:
-				case ResourceLevel.Customised:
+				case ResourceLevel.Localized:
+				case ResourceLevel.Customized:
 				case ResourceLevel.All:
 					break;
 				
@@ -736,7 +736,7 @@ namespace Epsitec.Common.Support
 				{
 					string prefix;
 					
-					prefix   = this.DefaultPrefix;
+					prefix   = this.ActivePrefix;
 					local_id = full_id;
 					
 					IResourceProvider provider = this.resource_provider_hash[prefix] as IResourceProvider;
