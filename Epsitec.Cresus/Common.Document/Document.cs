@@ -1444,6 +1444,7 @@ namespace Epsitec.Common.Document
 			Text.TextStyle charStyle = this.textContext.StyleList.NewTextStyle(null, "Default", Text.TextStyleClass.Text);
 			
 			#region Experimental Code
+#if false
 			Text.TextStyle[] baseStyles = new Text.TextStyle[] { paraStyle };
 			
 			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("bullet-1");
@@ -1547,7 +1548,7 @@ namespace Epsitec.Common.Document
 
 			this.textContext.StyleList.StyleMap.SetRank(null, l3, rank++);
 			this.textContext.StyleList.StyleMap.SetCaption(null, l3, "Liste a)/b)/...");
-			
+#endif	
 			#endregion
 			
 			this.textContext.DefaultParagraphStyle = paraStyle;

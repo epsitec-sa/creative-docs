@@ -47,25 +47,25 @@ namespace Epsitec.Common.Document.Widgets
 
 			set
 			{
-				if (this.fontName != value)
+				if ( this.fontName != value )
 				{
 					this.fontName = value;
 					
-					if (this.fontName == null)
+					if ( this.fontName == null )
 					{
 						this.textLayout = null;
 					}
 					else
 					{
-						if (this.textLayout == null)
+						if ( this.textLayout == null )
 						{
-							this.textLayout = new TextLayout ();
+							this.textLayout = new TextLayout();
 							this.textLayout.DefaultFont     = this.DefaultFont;
 							this.textLayout.DefaultFontSize = this.DefaultFontSize;
 							this.textLayout.Alignment       = ContentAlignment.MiddleLeft;
 						}
 						
-						this.textLayout.Text = TextLayout.ConvertToTaggedText (this.fontName);
+						this.textLayout.Text = TextLayout.ConvertToTaggedText(this.fontName);
 					}
 				}
 			}

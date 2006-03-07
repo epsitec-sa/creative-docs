@@ -179,6 +179,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Samples\normal.crmod"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Samples\objets.crdoc"
                     BuildAction = "Content"
                 />
