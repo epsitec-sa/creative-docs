@@ -19,8 +19,7 @@ namespace Epsitec.Common.Support
 			this.manager = resource_manager;
 		}
 
-
-		public ResourceBundle this[int index]
+		public ResourceBundle					this[int index]
 		{
 			get
 			{
@@ -34,7 +33,6 @@ namespace Epsitec.Common.Support
 				}
 			}
 		}
-		
 		public ResourceBundle					this[ResourceLevel level]
 		{
 			get
@@ -42,7 +40,6 @@ namespace Epsitec.Common.Support
 				return this[level, this.manager.ActiveCulture];
 			}
 		}
-		
 		public ResourceBundle					this[ResourceLevel level, CultureInfo culture]
 		{
 			get
@@ -66,7 +63,6 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 		}
-		
 		public ResourceBundle					this[string suffix]
 		{
 			get
@@ -80,27 +76,27 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		
 		public string							FullName
+		{
+			get
+			{
+				return this.manager.MakeFullName (this.prefix, this.name);
+			}
+		}
+		public string							Name
 		{
 			get
 			{
 				return this.name;
 			}
-			set
-			{
-				this.name = value;
-			}
 		}
-		
 		public string							Prefix
 		{
 			get
 			{
-				return Resources.ExtractPrefix (this.name);
+				return this.prefix;
 			}
 		}
-		
 		public string[]							Suffixes
 		{
 			get
@@ -118,22 +114,39 @@ namespace Epsitec.Common.Support
 				return list.ToArray ();
 			}
 		}
-		
-		
-		
-		
+
 		public void LoadBundles(string prefix, string[] ids)
 		{
-			System.Diagnostics.Debug.Assert (this.FullName != null, "FullName should be defined first.");
-			System.Diagnostics.Debug.Assert (this.Prefix == prefix, string.Format ("Prefix mismatch, expecting '{0}', got '{1}'.", this.Prefix, prefix));
-			
-			this.Clear ();
-			
-			foreach (string id in ids)
+			if (ids.Length > 0)
 			{
-				string suffix = Resources.ExtractSuffix (id);
-				string name   = Resources.StripSuffix (id);
+				string name = Resources.ExtractName (ids[0]);
+				string[] suffixes = new string[ids.Length];
+				suffixes[0] = Resources.ExtractSuffix (ids[0]);
 				
+				for (int i = 1; i < ids.Length; i++)
+				{
+					if (Resources.ExtractName (ids[i]) != name)
+					{
+						throw new System.ArgumentException (string.Format ("Invalid name '{0}' in argument ids[{1}]", Resources.ExtractName (ids[i]), i));
+					}
+					
+					suffixes[i] = Resources.ExtractSuffix (ids[i]);
+				}
+
+				this.LoadBundles (prefix, name, suffixes);
+			}
+		}
+		public void LoadBundles(string prefix, string name, string[] suffixes)
+		{
+			this.Clear ();
+
+			this.name   = name;
+			this.prefix = prefix;
+
+			string fullName = this.FullName;
+			
+			foreach (string suffix in suffixes)
+			{
 				ResourceLevel level;
 				CultureInfo   culture;
 				
@@ -142,14 +155,81 @@ namespace Epsitec.Common.Support
 				System.Diagnostics.Debug.Assert (level != ResourceLevel.None);
 				System.Diagnostics.Debug.Assert (culture != null || level == ResourceLevel.Default);
 				
-				ResourceBundle bundle = this.manager.GetBundle (this.manager.MakeFullName (prefix, name), level, culture);
+				ResourceBundle bundle = this.manager.GetBundle (fullName, level, culture);
 				
 				System.Diagnostics.Debug.Assert (bundle != null);
 				
 				this.Add (bundle);
 			}
 		}
+
+
+		#region ICollection<ResourceBundle> Members
 		
+		public void Add(ResourceBundle item)
+		{
+			if (item == null)
+			{
+				throw new System.ArgumentNullException ();
+			}
+
+			this.Attach (item);
+			this.list.Add (item);
+		}
+		public bool Remove(ResourceBundle item)
+		{
+			int index = this.list.IndexOf (item);
+
+			if (index < 0)
+			{
+				return false;
+			}
+
+			this.Detach (item);
+			this.list.RemoveAt (index);
+
+			return true;
+		}
+
+		public bool Contains(ResourceBundle item)
+		{
+			return this.list.Contains (item);
+		}
+
+		public void CopyTo(ResourceBundle[] array, int arrayIndex)
+		{
+			this.list.CopyTo (array, arrayIndex);
+		}
+
+		#endregion
+
+		#region IEnumerable<ResourceBundle> Members
+
+		IEnumerator<ResourceBundle> IEnumerable<ResourceBundle>.GetEnumerator()
+		{
+			return this.list.GetEnumerator ();
+		}
+
+		#endregion
+
+		#region IList<ResourceBundle> Members
+
+		public int IndexOf(ResourceBundle item)
+		{
+			return this.list.IndexOf (item);
+		}
+
+		public void Insert(int index, ResourceBundle item)
+		{
+			if (item == null)
+			{
+				throw new System.ArgumentNullException ();
+			}
+
+			this.Attach (item);
+			this.list.Insert (index, item);
+		}
+		#endregion
 		
 		#region ICollection Members
 		public bool								IsSynchronized
@@ -267,13 +347,13 @@ namespace Epsitec.Common.Support
 		protected virtual void Attach(ResourceBundle bundle)
 		{
 			bundle.FieldsChanged += new EventHandler (this.HandleBundleFieldsChanged);
+			this.ClearMergedCache ();
 		}
-		
 		protected virtual void Detach(ResourceBundle bundle)
 		{
 			bundle.FieldsChanged -= new EventHandler (this.HandleBundleFieldsChanged);
+			this.ClearMergedCache ();
 		}
-		
 		
 		protected virtual void OnFieldsChanged()
 		{
@@ -283,7 +363,6 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		
 		protected virtual ResourceBundle GetMerged(CultureInfo culture)
 		{
 			//	Retrouve la version "fusionnée" des divers bundles pour la culture
@@ -292,7 +371,7 @@ namespace Epsitec.Common.Support
 			
 			if (this.merged == null)
 			{
-				this.merged = new System.Collections.ArrayList ();
+				this.merged = new List<ResourceBundle> ();
 			}
 			
 			foreach (ResourceBundle bundle in this.merged)
@@ -315,7 +394,6 @@ namespace Epsitec.Common.Support
 			
 			return merged;
 		}
-		
 		protected virtual ResourceBundle CreateMerged(CultureInfo culture)
 		{
 			System.Diagnostics.Debug.WriteLine (string.Format ("Merging ressource {0} for culture '{1}'.", this.FullName, culture.TwoLetterISOLanguageName));
@@ -345,91 +423,25 @@ namespace Epsitec.Common.Support
 			
 			return bundle;
 		}
-		
+
+		protected virtual void ClearMergedCache()
+		{
+			this.merged = null;
+		}
 		
 		private void HandleBundleFieldsChanged(object sender)
 		{
-			this.merged = null;
+			this.ClearMergedCache ();
 			this.OnFieldsChanged ();
 		}
-		
-		
+
 		
 		public event EventHandler				FieldsChanged;
 		
 		private ResourceManager					manager;
-		private System.Collections.ArrayList	merged;
+		private List<ResourceBundle>			merged;
 		private List<ResourceBundle>			list;
 		private string							name;
-
-		#region ICollection<ResourceBundle> Members
-
-		public void Add(ResourceBundle item)
-		{
-			if (item == null)
-			{
-				throw new System.ArgumentNullException ();
-			}
-
-			this.Attach (item);
-			this.list.Add (item);
-		}
-
-		public bool Contains(ResourceBundle item)
-		{
-			return this.list.Contains (item);
-		}
-
-		public void CopyTo(ResourceBundle[] array, int arrayIndex)
-		{
-			this.list.CopyTo (array, arrayIndex);
-		}
-
-		public bool Remove(ResourceBundle item)
-		{
-			int index = this.list.IndexOf (item);
-
-			if (index < 0)
-			{
-				return false;
-			}
-
-			this.Detach (item);
-			this.list.RemoveAt (index);
-			
-			return true;
-		}
-
-		#endregion
-
-		#region IEnumerable<ResourceBundle> Members
-
-		IEnumerator<ResourceBundle> IEnumerable<ResourceBundle>.GetEnumerator()
-		{
-			return this.list.GetEnumerator ();
-		}
-
-		#endregion
-
-		#region IList<ResourceBundle> Members
-
-		public int IndexOf(ResourceBundle item)
-		{
-			return this.list.IndexOf (item);
-		}
-
-		public void Insert(int index, ResourceBundle item)
-		{
-			if (item == null)
-			{
-				throw new System.ArgumentNullException ();
-			}
-			
-			this.Attach (item);
-			this.list.Insert (index, item);
-		}
-
-
-		#endregion
+		private string							prefix;
 	}
 }
