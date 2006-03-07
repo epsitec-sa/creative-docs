@@ -197,9 +197,11 @@ namespace Epsitec.Common.Types
 			{
 				if (this.propertyEvents == null)
 				{
-					this.propertyEvents = new Dictionary<DependencyProperty, PropertyChangedEventHandler> ();
+					this.propertyEvents = new PropertyChangedEventDictionary ();
 				}
 			}
+			
+			//	TODO: ajouter le support pour des "weak delegates" qui ne maintiennent qu'une WeakReference sur le handler
 
 			if (this.propertyEvents.ContainsKey (property))
 			{
@@ -258,7 +260,7 @@ namespace Epsitec.Common.Types
 			
 			if (this.bindings == null)
 			{
-				this.bindings = new Dictionary<DependencyProperty, BindingExpression> ();
+				this.bindings = new BindingExpressionDictionary ();
 			}
 			
 			this.bindings[property] = BindingExpression.BindToTarget (this, property, binding);
@@ -300,7 +302,7 @@ namespace Epsitec.Common.Types
 			{
 				if (this.userEvents == null)
 				{
-					this.userEvents = new Dictionary<string, System.Delegate> ();
+					this.userEvents = new UserEventDictionary ();
 				}
 			}
 
@@ -436,13 +438,30 @@ namespace Epsitec.Common.Types
 		{
 		}
 		#endregion
-		
-		
+
+		#region Private PropertyChangedEventDictionary Class
+		private class PropertyChangedEventDictionary : Dictionary<DependencyProperty, PropertyChangedEventHandler>
+		{
+		}
+		#endregion
+
+		#region Private UserEventDictionary Class
+		private class UserEventDictionary : Dictionary<string, System.Delegate>
+		{
+		}
+		#endregion
+
+		#region Private BindingExpressionDictionary Class
+		private class BindingExpressionDictionary : Dictionary<DependencyProperty, BindingExpression>
+		{
+		}
+		#endregion
 
 		Dictionary<DependencyProperty, object>				properties = new Dictionary<DependencyProperty, object> ();
-		Dictionary<DependencyProperty, BindingExpression>	bindings;
-		Dictionary<DependencyProperty, PropertyChangedEventHandler>	propertyEvents;
-		Dictionary<string, System.Delegate>					userEvents;
+		BindingExpressionDictionary							bindings;
+		PropertyChangedEventDictionary						propertyEvents;
+		UserEventDictionary									userEvents;
+		
 		DependencyObjectType								cachedType;
 
 		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
