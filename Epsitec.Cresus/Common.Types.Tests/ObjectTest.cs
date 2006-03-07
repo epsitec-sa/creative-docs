@@ -23,6 +23,62 @@ namespace Epsitec.Common.Types
 			TestAttachedProperties.TestB ();
 			TestAttachedProperties.TestC ();
 		}
+		
+		[Test]
+		public void CheckAttachedPropertiesEventNotification()
+		{
+			//	Vérifie que les événements sont générés aussi pour des propriétés attachées,
+			//	pas seulement pour des propriétés normales.
+			
+			Test2 t2 = new Test2 ();
+
+			EventHandlerSupport handler = new EventHandlerSupport ();
+
+			t2.SetValue (Test2.StandardProperty, "x");
+			Test1.SetAttached (t2, "a");
+			
+			t2.AddEventHandler (Test2.StandardProperty, handler.RecordEvent);
+			t2.AddEventHandler (Test1.AttachedProperty, handler.RecordEvent);
+
+			//	Modifie la propriété normale de "x" en "y"
+			
+			t2.SetValue (Test2.StandardProperty, "y");
+			Assert.AreEqual ("Standard:x,y.", handler.Log);
+			
+			handler.Clear ();
+			
+			//	Modifie la propriété attachée de "a" en "b"
+			
+			Test1.SetAttached (t2, "b");
+			Assert.AreEqual ("Attached:a,b.", handler.Log);
+		}
+
+		private class EventHandlerSupport
+		{
+			public string Log
+			{
+				get
+				{
+					return this.buffer.ToString ();
+				}
+			}
+			
+			public void RecordEvent(object sender, DependencyPropertyChangedEventArgs e)
+			{
+				this.buffer.Append (e.PropertyName);
+				this.buffer.Append (":");
+				this.buffer.Append (e.OldValue);
+				this.buffer.Append (",");
+				this.buffer.Append (e.NewValue);
+				this.buffer.Append (".");
+			}
+			public void Clear()
+			{
+				this.buffer.Length = 0;
+			}
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+		}
 
 		[Test]
 		public void CheckBinding1()
