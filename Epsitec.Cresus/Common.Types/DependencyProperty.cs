@@ -40,7 +40,7 @@ namespace Epsitec.Common.Types
 				return this.propertyType;
 			}
 		}
-		public DependencyPropertyMetadata					DefaultMetadata
+		public DependencyPropertyMetadata		DefaultMetadata
 		{
 			get
 			{
@@ -321,16 +321,15 @@ namespace Epsitec.Common.Types
 		private System.Type						ownerType;
 		private List<System.Type>				additionalOwnerTypes;
 		private List<System.Type>				derivedTypes;
-		private DependencyPropertyMetadata				defaultMetadata;
+		private DependencyPropertyMetadata		defaultMetadata;
 		private bool							isAttached;
 		private int								globalIndex;
-		private int								lastPropertyCount;
 		
 		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
 		
 		static object							exclusion = new object ();
-		static List<DependencyProperty>					attachedPropertiesList = new List<DependencyProperty> ();
-		static DependencyProperty[]						attachedPropertiesArray;
+		static List<DependencyProperty>			attachedPropertiesList = new List<DependencyProperty> ();
+		static DependencyProperty[]				attachedPropertiesArray;
 		static int								globalPropertyCount;
 	}
 }
