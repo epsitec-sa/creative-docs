@@ -49,6 +49,178 @@ namespace Epsitec.Common.Types
 
 			return snapshot;
 		}
+
+		public static DependencyObject FindFirst(DependencyObject root, string name)
+		{
+			if (root == null)
+			{
+				return null;
+			}
+
+			//	Breadth first search for the named item.
+
+			List<DependencyObject> roots = new List<DependencyObject> ();
+
+			roots.Add (root);
+
+			while (roots.Count > 0)
+			{
+				for (int i = 0; i < roots.Count; i++)
+				{
+					DependencyObject item = roots[i];
+
+					if (DependencyObjectTree.GetName (item) == name)
+					{
+						return item;
+					}
+				}
+
+				int n = roots.Count;
+
+				for (int i = 0; i < n; i++)
+				{
+					DependencyObject item = roots[i];
+
+					if (DependencyObjectTree.GetHasChildren (item))
+					{
+						roots.AddRange (DependencyObjectTree.GetChildren (item));
+					}
+				}
+
+				roots.RemoveRange (0, n);
+			}
+
+			return null;
+		}
+		public static DependencyObject FindFirst(DependencyObject root, System.Text.RegularExpressions.Regex regex)
+		{
+			if (root == null)
+			{
+				return null;
+			}
+
+			//	Breadth first search for the named item.
+
+			List<DependencyObject> roots = new List<DependencyObject> ();
+
+			roots.Add (root);
+
+			while (roots.Count > 0)
+			{
+				for (int i = 0; i < roots.Count; i++)
+				{
+					DependencyObject item = roots[i];
+
+					if (regex.IsMatch (DependencyObjectTree.GetName (item)))
+					{
+						return item;
+					}
+				}
+
+				int n = roots.Count;
+
+				for (int i = 0; i < n; i++)
+				{
+					DependencyObject item = roots[i];
+
+					if (DependencyObjectTree.GetHasChildren (item))
+					{
+						roots.AddRange (DependencyObjectTree.GetChildren (item));
+					}
+				}
+
+				roots.RemoveRange (0, n);
+			}
+
+			return null;
+		}
+		public static DependencyObject[] FindAll(DependencyObject root, string name)
+		{
+			if (root == null)
+			{
+				return new DependencyObject[0];
+			}
+
+			//	Breadth first search for the named item.
+
+			List<DependencyObject> roots = new List<DependencyObject> ();
+			List<DependencyObject> result = new List<DependencyObject> ();
+
+			roots.Add (root);
+
+			while (roots.Count > 0)
+			{
+				for (int i = 0; i < roots.Count; i++)
+				{
+					DependencyObject item = roots[i];
+
+					if ((name == "*") ||
+						(DependencyObjectTree.GetName (item) == name))
+					{
+						result.Add (item);
+					}
+				}
+
+				int n = roots.Count;
+
+				for (int i = 0; i < n; i++)
+				{
+					DependencyObject item = roots[i];
+
+					if (DependencyObjectTree.GetHasChildren (item))
+					{
+						roots.AddRange (DependencyObjectTree.GetChildren (item));
+					}
+				}
+
+				roots.RemoveRange (0, n);
+			}
+
+			return result.ToArray ();
+		}
+		public static DependencyObject[] FindAll(DependencyObject root, System.Text.RegularExpressions.Regex regex)
+		{
+			if (root == null)
+			{
+				return new DependencyObject[0];
+			}
+
+			//	Breadth first search for the named item.
+
+			List<DependencyObject> roots = new List<DependencyObject> ();
+			List<DependencyObject> result = new List<DependencyObject> ();
+
+			roots.Add (root);
+
+			while (roots.Count > 0)
+			{
+				for (int i = 0; i < roots.Count; i++)
+				{
+					DependencyObject item = roots[i];
+
+					if (regex.IsMatch (DependencyObjectTree.GetName (item)))
+					{
+						result.Add (item);
+					}
+				}
+
+				int n = roots.Count;
+
+				for (int i = 0; i < n; i++)
+				{
+					DependencyObject item = roots[i];
+
+					if (DependencyObjectTree.GetHasChildren (item))
+					{
+						roots.AddRange (DependencyObjectTree.GetChildren (item));
+					}
+				}
+
+				roots.RemoveRange (0, n);
+			}
+
+			return result.ToArray ();
+		}
 		
 		public static DependencyObject GetParent(DependencyObject o)
 		{

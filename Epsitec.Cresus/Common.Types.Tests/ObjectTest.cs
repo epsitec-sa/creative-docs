@@ -250,20 +250,24 @@ namespace Epsitec.Common.Types
 		{
 			TreeTest a = new TreeTest ();
 			TreeTest b = new TreeTest ();
+			TreeTest q = new TreeTest ();
 			TreeTest c1 = new TreeTest ();
 			TreeTest c2 = new TreeTest ();
 
 			a.AddChild (b);
+			a.AddChild (q);
 			b.AddChild (c1);
 			b.AddChild (c2);
 
 			a.Name = "a";
 			b.Name = "b";
+			q.Name = "q";
 			c1.Name = "c1";
 			c2.Name = "c2";
 
 			a.Value = "A";
 			b.Value = "B";
+			q.Value = "Q";
 			c1.Value = "C1";
 			c2.Value = "C2";
 
@@ -279,6 +283,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (b, DependencyObjectTree.GetParent (c1));
 			Assert.AreEqual (b, DependencyObjectTree.GetParent (c2));
 			Assert.AreEqual (a, DependencyObjectTree.GetParent (b));
+			Assert.AreEqual (a, DependencyObjectTree.GetParent (q));
 
 			DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (a, TreeTest.ValueProperty);
 
@@ -296,6 +301,27 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (TreeTest.ValueProperty, changes[1].Property);
 			Assert.AreEqual ("C2", changes[1].OldValue);
 			Assert.AreEqual ("C2-X", changes[1].NewValue);
+
+			Assert.AreEqual (a, DependencyObjectTree.FindFirst (a, "a"));
+			Assert.AreEqual (b, DependencyObjectTree.FindFirst (a, "b"));
+			Assert.AreEqual (c1, DependencyObjectTree.FindFirst (a, "c1"));
+			Assert.AreEqual (c2, DependencyObjectTree.FindFirst (a, "c2"));
+			Assert.IsNull (DependencyObjectTree.FindFirst (a, "x"));
+			
+			DependencyObject[] search = DependencyObjectTree.FindAll (a, "*");
+
+			Assert.AreEqual (5, search.Length);
+			Assert.AreEqual ("a", (search[0] as TreeTest).Name);
+			Assert.AreEqual ("b", (search[1] as TreeTest).Name);
+			Assert.AreEqual ("q", (search[2] as TreeTest).Name);
+			Assert.AreEqual ("c1", (search[3] as TreeTest).Name);
+			Assert.AreEqual ("c2", (search[4] as TreeTest).Name);
+			
+			search = DependencyObjectTree.FindAll (a, new System.Text.RegularExpressions.Regex (@"c.?.*", System.Text.RegularExpressions.RegexOptions.Singleline));
+			
+			Assert.AreEqual (2, search.Length);
+			Assert.AreEqual ("c1", (search[0] as TreeTest).Name);
+			Assert.AreEqual ("c2", (search[1] as TreeTest).Name);
 		}
 
 		
