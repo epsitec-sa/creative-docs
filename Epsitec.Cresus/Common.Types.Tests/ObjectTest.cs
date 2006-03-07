@@ -253,6 +253,8 @@ namespace Epsitec.Common.Types
 			TreeTest q = new TreeTest ();
 			TreeTest c1 = new TreeTest ();
 			TreeTest c2 = new TreeTest ();
+			TreeTest anon1 = new TreeTest ();
+			TreeTest y = new TreeTest ();
 
 			a.AddChild (b);
 			a.AddChild (q);
@@ -264,6 +266,8 @@ namespace Epsitec.Common.Types
 			q.Name = "q";
 			c1.Name = "c1";
 			c2.Name = "c2";
+
+			y.Name = "y";
 
 			a.Value = "A";
 			b.Value = "B";
@@ -307,6 +311,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (c1, DependencyObjectTree.FindFirst (a, "c1"));
 			Assert.AreEqual (c2, DependencyObjectTree.FindFirst (a, "c2"));
 			Assert.IsNull (DependencyObjectTree.FindFirst (a, "x"));
+			Assert.IsNull (DependencyObjectTree.FindFirst (a, "y"));
 			
 			DependencyObject[] search = DependencyObjectTree.FindAll (a, "*");
 
@@ -322,6 +327,37 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (2, search.Length);
 			Assert.AreEqual ("c1", (search[0] as TreeTest).Name);
 			Assert.AreEqual ("c2", (search[1] as TreeTest).Name);
+
+			Assert.AreEqual (b, DependencyObjectTree.FindChild (a, "b"));
+			Assert.AreEqual (q, DependencyObjectTree.FindChild (a, "q"));
+			Assert.AreEqual (c1, DependencyObjectTree.FindChild (a, "b", "c1"));
+			Assert.AreEqual (c2, DependencyObjectTree.FindChild (a, "b", "c2"));
+			Assert.IsNull (DependencyObjectTree.FindChild (a, "c2"));
+			Assert.IsNull (DependencyObjectTree.FindChild (a, "x"));
+			Assert.IsNull (DependencyObjectTree.FindChild (a, "a", "b", "c1", "x"));
+
+			q.AddChild (anon1);
+			anon1.AddChild (y);
+			
+			Assert.AreEqual (y, DependencyObjectTree.FindFirst (a, "y"));
+			Assert.AreEqual (y, DependencyObjectTree.FindChild (a, "q", "y"));
+			
+			search = DependencyObjectTree.FindAll (a, new System.Text.RegularExpressions.Regex (@"c1|y", System.Text.RegularExpressions.RegexOptions.Singleline));
+			
+			Assert.AreEqual (2, search.Length);
+			Assert.AreEqual ("c1", (search[0] as TreeTest).Name);
+			Assert.AreEqual ("y", (search[1] as TreeTest).Name);
+			
+			search = DependencyObjectTree.FindAll (a, "*");
+
+			Assert.AreEqual (7, search.Length);
+			Assert.AreEqual ("a", (search[0] as TreeTest).Name);
+			Assert.AreEqual ("b", (search[1] as TreeTest).Name);
+			Assert.AreEqual ("q", (search[2] as TreeTest).Name);
+			Assert.AreEqual ("c1", (search[3] as TreeTest).Name);
+			Assert.AreEqual ("c2", (search[4] as TreeTest).Name);
+			Assert.AreEqual (null, (search[5] as TreeTest).Name);
+			Assert.AreEqual ("y", (search[6] as TreeTest).Name);
 		}
 
 		

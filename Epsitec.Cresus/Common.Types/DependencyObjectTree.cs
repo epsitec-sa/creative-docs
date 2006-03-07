@@ -52,6 +52,10 @@ namespace Epsitec.Common.Types
 
 		public static DependencyObject FindFirst(DependencyObject root, string name)
 		{
+			return DependencyObjectTree.FindFirst (root, name, true, false);
+		}
+		private static DependencyObject FindFirst(DependencyObject root, string name, bool all, bool skipRoot)
+		{
 			if (root == null)
 			{
 				return null;
@@ -65,13 +69,16 @@ namespace Epsitec.Common.Types
 
 			while (roots.Count > 0)
 			{
-				for (int i = 0; i < roots.Count; i++)
+				if (!skipRoot)
 				{
-					DependencyObject item = roots[i];
-
-					if (DependencyObjectTree.GetName (item) == name)
+					for (int i = 0; i < roots.Count; i++)
 					{
-						return item;
+						DependencyObject item = roots[i];
+
+						if (DependencyObjectTree.GetName (item) == name)
+						{
+							return item;
+						}
 					}
 				}
 
@@ -81,11 +88,17 @@ namespace Epsitec.Common.Types
 				{
 					DependencyObject item = roots[i];
 
-					if (DependencyObjectTree.GetHasChildren (item))
+					if ((all) || (skipRoot) ||
+						(DependencyObjectTree.GetName (item) == null))
 					{
-						roots.AddRange (DependencyObjectTree.GetChildren (item));
+						if (DependencyObjectTree.GetHasChildren (item))
+						{
+							roots.AddRange (DependencyObjectTree.GetChildren (item));
+						}
 					}
 				}
+
+				skipRoot = false;
 
 				roots.RemoveRange (0, n);
 			}
@@ -110,8 +123,10 @@ namespace Epsitec.Common.Types
 				for (int i = 0; i < roots.Count; i++)
 				{
 					DependencyObject item = roots[i];
+					string itemName = DependencyObjectTree.GetName (item);
 
-					if (regex.IsMatch (DependencyObjectTree.GetName (item)))
+					if ((itemName != null) &&
+						(regex.IsMatch (itemName)))
 					{
 						return item;
 					}
@@ -134,6 +149,7 @@ namespace Epsitec.Common.Types
 
 			return null;
 		}
+		
 		public static DependencyObject[] FindAll(DependencyObject root, string name)
 		{
 			if (root == null)
@@ -197,8 +213,10 @@ namespace Epsitec.Common.Types
 				for (int i = 0; i < roots.Count; i++)
 				{
 					DependencyObject item = roots[i];
+					string itemName = DependencyObjectTree.GetName (item);
 
-					if (regex.IsMatch (DependencyObjectTree.GetName (item)))
+					if ((itemName != null) &&
+						(regex.IsMatch (itemName)))
 					{
 						result.Add (item);
 					}
@@ -220,6 +238,31 @@ namespace Epsitec.Common.Types
 			}
 
 			return result.ToArray ();
+		}
+		
+		public static DependencyObject FindChild(DependencyObject root, params string[] path)
+		{
+			return DependencyObjectTree.FindChild (root, path, 0);
+		}
+		public static DependencyObject FindChild(DependencyObject root, string[] path, int start)
+		{
+			if (root == null)
+			{
+				return null;
+			}
+			if (start == path.Length)
+			{
+				return root;
+			}
+
+			DependencyObject item = DependencyObjectTree.FindFirst (root, path[start], false, true);
+
+			if (item != null)
+			{
+				return DependencyObjectTree.FindChild (item, path, start+1);
+			}
+			
+			return null;
 		}
 		
 		public static DependencyObject GetParent(DependencyObject o)
