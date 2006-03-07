@@ -692,7 +692,7 @@ namespace Epsitec.Common.Document.Properties
 						// de recalculer les bbox des objets l'utilisant, soit A et B. De même pour
 						// l'objet B !
 						// A la place, le Modifier.AccumulateObject garde la trace de tous les objets
-						// modifiés, pour les traiter globalement et une seule fois, lors du
+						// modifiés, pour les traiter globalement en une seule fois, lors du
 						// Modifier.AccumulateEnding.
 						this.document.Modifier.AccumulateObject(obj);
 					}

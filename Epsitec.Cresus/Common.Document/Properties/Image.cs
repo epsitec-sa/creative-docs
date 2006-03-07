@@ -126,9 +126,11 @@ namespace Epsitec.Common.Document.Properties
 				{
 					if ( value )
 					{
-						this.NotifyBefore(false);
+						this.document.Modifier.OpletQueueEnable = false;
+						this.NotifyBefore();
 						this.reload = value;
-						this.NotifyAfter(false);
+						this.NotifyAfter();
+						this.document.Modifier.OpletQueueEnable = true;
 					}
 					else
 					{
