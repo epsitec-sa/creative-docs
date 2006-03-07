@@ -6,17 +6,17 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// Property.
+	/// DependencyProperty.
 	/// </summary>
-	public sealed class Property : System.IEquatable<Property>
+	public sealed class DependencyProperty : System.IEquatable<DependencyProperty>
 	{
-		private Property(string name, System.Type property_type, System.Type owner_type, PropertyMetadata metadata)
+		private DependencyProperty(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
 		{
 			this.name = name;
 			this.propertyType = property_type;
 			this.ownerType = owner_type;
 			this.defaultMetadata = metadata;
-			this.globalIndex = System.Threading.Interlocked.Increment (ref Property.globalPropertyCount);
+			this.globalIndex = System.Threading.Interlocked.Increment (ref DependencyProperty.globalPropertyCount);
 		}
 		
 		public string							Name
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Types
 				return this.propertyType;
 			}
 		}
-		public PropertyMetadata					DefaultMetadata
+		public DependencyPropertyMetadata					DefaultMetadata
 		{
 			get
 			{
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Types
 		}
 		public override bool Equals(object obj)
 		{
-			return this.Equals (obj as Property);
+			return this.Equals (obj as DependencyProperty);
 		}
 
 		public bool IsValidType(object value)
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Types
 		{
 			if (this.IsValidType (value))
 			{
-				PropertyMetadata metadata = this.DefaultMetadata;
+				DependencyPropertyMetadata metadata = this.DefaultMetadata;
 
 				if (metadata.ValidateValue != null)
 				{
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public Property AddOwner(System.Type ownerType)
+		public DependencyProperty AddOwner(System.Type ownerType)
 		{
 			if (this.IsAttached)
 			{
@@ -123,18 +123,18 @@ namespace Epsitec.Common.Types
 
 			if (this.additionalOwnerTypes.Contains (ownerType))
 			{
-				throw new System.ArgumentException (string.Format ("Property named {0} already has owner {1}", this.Name, ownerType));
+				throw new System.ArgumentException (string.Format ("DependencyProperty named {0} already has owner {1}", this.Name, ownerType));
 			}
 			
 			this.additionalOwnerTypes.Add (ownerType);
 			
-			Object.Register (this, ownerType);
+			DependencyObject.Register (this, ownerType);
 			
 			return this;
 		}
-		public Property AddOwner(System.Type ownerType, PropertyMetadata metadata)
+		public DependencyProperty AddOwner(System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
-			Property property = this.AddOwner (ownerType);
+			DependencyProperty property = this.AddOwner (ownerType);
 			
 			property.OverrideMetadata (ownerType, metadata);
 			
@@ -206,8 +206,8 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 		
-		#region IEquatable<Property> Members
-		public bool Equals(Property other)
+		#region IEquatable<DependencyProperty> Members
+		public bool Equals(DependencyProperty other)
 		{
 			if (other != null)
 			{
@@ -218,25 +218,25 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
-		public static ReadOnlyArray<Property> GetAllAttachedProperties()
+		public static ReadOnlyArray<DependencyProperty> GetAllAttachedProperties()
 		{
-			if (Property.attachedPropertiesArray == null)
+			if (DependencyProperty.attachedPropertiesArray == null)
 			{
-				lock (Property.exclusion)
+				lock (DependencyProperty.exclusion)
 				{
-					if (Property.attachedPropertiesArray == null)
+					if (DependencyProperty.attachedPropertiesArray == null)
 					{
-						Property.attachedPropertiesArray = Property.attachedPropertiesList.ToArray ();
+						DependencyProperty.attachedPropertiesArray = DependencyProperty.attachedPropertiesList.ToArray ();
 					}
 				}
 			}
 			
-			return new ReadOnlyArray<Property> (Property.attachedPropertiesArray);
+			return new ReadOnlyArray<DependencyProperty> (DependencyProperty.attachedPropertiesArray);
 		}
 		
-		public void OverrideMetadata(System.Type type, PropertyMetadata metadata)
+		public void OverrideMetadata(System.Type type, DependencyPropertyMetadata metadata)
 		{
-			ObjectType.FromSystemType (type);
+			DependencyObjectType.FromSystemType (type);
 			
 			if (this.overriddenMetadata == null)
 			{
@@ -244,7 +244,7 @@ namespace Epsitec.Common.Types
 				{
 					if (this.overriddenMetadata == null)
 					{
-						this.overriddenMetadata = new Dictionary<System.Type, PropertyMetadata> ();
+						this.overriddenMetadata = new Dictionary<System.Type, DependencyPropertyMetadata> ();
 					}
 				}
 			}
@@ -252,11 +252,11 @@ namespace Epsitec.Common.Types
 			this.overriddenMetadata[type] = metadata;
 		}
 		
-		public PropertyMetadata GetMetadata(Object o)
+		public DependencyPropertyMetadata GetMetadata(DependencyObject o)
 		{
 			return this.GetMetadata (o.GetType ());
 		}
-		public PropertyMetadata GetMetadata(System.Type type)
+		public DependencyPropertyMetadata GetMetadata(System.Type type)
 		{
 			if (this.overriddenMetadata != null)
 			{
@@ -269,48 +269,48 @@ namespace Epsitec.Common.Types
 			return this.DefaultMetadata;
 		}
 		
-		public static Property Register(string name, System.Type property_type, System.Type owner_type)
+		public static DependencyProperty Register(string name, System.Type property_type, System.Type owner_type)
 		{
-			return Property.Register (name, property_type, owner_type, new PropertyMetadata ());
+			return DependencyProperty.Register (name, property_type, owner_type, new DependencyPropertyMetadata ());
 		}
-		public static Property Register(string name, System.Type property_type, System.Type owner_type, PropertyMetadata metadata)
+		public static DependencyProperty Register(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
 		{
-			Property dp = new Property (name, property_type, owner_type, metadata);
+			DependencyProperty dp = new DependencyProperty (name, property_type, owner_type, metadata);
 			
-			Object.Register (dp, dp.OwnerType);
+			DependencyObject.Register (dp, dp.OwnerType);
 			
 			return dp;
 		}
 		
-		public static Property RegisterAttached(string name, System.Type property_type, System.Type owner_type)
+		public static DependencyProperty RegisterAttached(string name, System.Type property_type, System.Type owner_type)
 		{
-			return Property.RegisterAttached (name, property_type, owner_type, new PropertyMetadata ());
+			return DependencyProperty.RegisterAttached (name, property_type, owner_type, new DependencyPropertyMetadata ());
 		}
-		public static Property RegisterAttached(string name, System.Type property_type, System.Type owner_type, PropertyMetadata metadata)
+		public static DependencyProperty RegisterAttached(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
 		{
-			Property dp = new Property (name, property_type, owner_type, metadata);
+			DependencyProperty dp = new DependencyProperty (name, property_type, owner_type, metadata);
 			dp.isAttached = true;
 			
-			Object.Register (dp, dp.OwnerType);
+			DependencyObject.Register (dp, dp.OwnerType);
 
-			lock (Property.exclusion)
+			lock (DependencyProperty.exclusion)
 			{
-				Property.attachedPropertiesList.Add (dp);
-				Property.attachedPropertiesArray = null;
+				DependencyProperty.attachedPropertiesList.Add (dp);
+				DependencyProperty.attachedPropertiesArray = null;
 			}
 			
 			return dp;
 		}
 		
-		public static Property RegisterReadOnly(string name, System.Type property_type, System.Type owner_type)
+		public static DependencyProperty RegisterReadOnly(string name, System.Type property_type, System.Type owner_type)
 		{
-			return Property.Register (name, property_type, owner_type, new PropertyMetadata ());
+			return DependencyProperty.Register (name, property_type, owner_type, new DependencyPropertyMetadata ());
 		}
-		public static Property RegisterReadOnly(string name, System.Type property_type, System.Type owner_type, PropertyMetadata metadata)
+		public static DependencyProperty RegisterReadOnly(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
 		{
-			Property dp = new Property (name, property_type, owner_type, metadata);
+			DependencyProperty dp = new DependencyProperty (name, property_type, owner_type, metadata);
 			
-			Object.Register (dp, dp.OwnerType);
+			DependencyObject.Register (dp, dp.OwnerType);
 			
 			return dp;
 		}
@@ -321,16 +321,16 @@ namespace Epsitec.Common.Types
 		private System.Type						ownerType;
 		private List<System.Type>				additionalOwnerTypes;
 		private List<System.Type>				derivedTypes;
-		private PropertyMetadata				defaultMetadata;
+		private DependencyPropertyMetadata				defaultMetadata;
 		private bool							isAttached;
 		private int								globalIndex;
 		private int								lastPropertyCount;
 		
-		Dictionary<System.Type, PropertyMetadata>	overriddenMetadata;
+		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
 		
 		static object							exclusion = new object ();
-		static List<Property>					attachedPropertiesList = new List<Property> ();
-		static Property[]						attachedPropertiesArray;
+		static List<DependencyProperty>					attachedPropertiesList = new List<DependencyProperty> ();
+		static DependencyProperty[]						attachedPropertiesArray;
 		static int								globalPropertyCount;
 	}
 }

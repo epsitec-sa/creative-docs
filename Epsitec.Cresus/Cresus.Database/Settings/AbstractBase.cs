@@ -6,7 +6,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Database.Settings
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
 	/// La classe AbstractBase sert de base pour les diverses variables
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Database.Settings
 		{
 			if (this.PropertyChanged != null)
 			{
-				this.PropertyChanged (this, new Epsitec.Common.Types.PropertyChangedEventArgs (name, old_value, new_value));
+				this.PropertyChanged (this, new Epsitec.Common.Types.DependencyPropertyChangedEventArgs (name, old_value, new_value));
 			}
 		}
 		

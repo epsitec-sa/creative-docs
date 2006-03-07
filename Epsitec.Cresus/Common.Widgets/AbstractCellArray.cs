@@ -1,6 +1,6 @@
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 	
 	[System.Flags] public enum CellArrayStyles
 	{
@@ -1680,7 +1680,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		private void HandleFocusedWidgetIsKeyboardFocusedChanged(object sender, Types.PropertyChangedEventArgs e)
+		private void HandleFocusedWidgetIsKeyboardFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool focused = (bool) e.NewValue;
 			

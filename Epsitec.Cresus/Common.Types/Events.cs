@@ -3,37 +3,34 @@
 
 namespace Epsitec.Common.Types
 {
-	public class PropertyChangedEventArgs : System.EventArgs
+	public class DependencyPropertyChangedEventArgs : System.EventArgs
 	{
-		public PropertyChangedEventArgs(Property property, object old_value, object new_value)
+		public DependencyPropertyChangedEventArgs(DependencyProperty property, object oldValue, object newValue)
 		{
 			this.property = property;
-			this.property_name = property.Name;
-			this.old_value = old_value;
-			this.new_value = new_value;
+			this.propertyName = property.Name;
+			this.oldValue = oldValue;
+			this.newValue = newValue;
 		}
-		
-		public PropertyChangedEventArgs(string property_name, object old_value, object new_value)
+		public DependencyPropertyChangedEventArgs(string propertyName, object oldValue, object newValue)
 		{
-			this.property_name = property_name;
-			this.old_value = old_value;
-			this.new_value = new_value;
+			this.propertyName = propertyName;
+			this.oldValue = oldValue;
+			this.newValue = newValue;
 		}
 		
-		
-		public Property							Property
+		public DependencyProperty				Property
 		{
 			get
 			{
 				return this.property;
 			}
 		}
-		
 		public string							PropertyName
 		{
 			get
 			{
-				return this.property_name;
+				return this.propertyName;
 			}
 		}
 		
@@ -41,21 +38,21 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.old_value;
+				return this.oldValue;
 			}
 		}
 		public object							NewValue
 		{
 			get
 			{
-				return this.new_value;
+				return this.newValue;
 			}
 		}
 		
 		
-		private Property						property;
-		private string							property_name;
-		private object							old_value;
-		private object							new_value;
+		private DependencyProperty				property;
+		private string							propertyName;
+		private object							oldValue;
+		private object							newValue;
 	}
 }

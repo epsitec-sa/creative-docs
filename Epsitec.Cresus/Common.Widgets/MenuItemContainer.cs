@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
 	/// La classe MenuItemContainer permet d'incorporer dans une case de menu
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		private void HandleIsVisibleChanged(object sender, Epsitec.Common.Types.PropertyChangedEventArgs e)
+		private void HandleIsVisibleChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool is_visible = (bool) e.NewValue;
 			
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
+		protected override void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool focused = (bool) e.NewValue;
 			

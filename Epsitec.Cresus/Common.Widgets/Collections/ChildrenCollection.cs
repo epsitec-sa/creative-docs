@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets.Collections
 	/// La classe ChildrenCollection regroupe dans une collection unique tous les
 	/// widgets qui constituent les enfants d'un widget donné.
 	/// </summary>
-	public struct ChildrenCollection : System.Collections.IList, ICollection<Types.Object>
+	public struct ChildrenCollection : System.Collections.IList, ICollection<Types.DependencyObject>
 	{
 		public ChildrenCollection(Visual visual)
 		{
@@ -289,28 +289,28 @@ namespace Epsitec.Common.Widgets.Collections
 		}
 		#endregion
 
-		#region ICollection<Object> Members
-		void ICollection<Types.Object>.Add(Types.Object item)
+		#region ICollection<DependencyObject> Members
+		void ICollection<Types.DependencyObject>.Add(Types.DependencyObject item)
 		{
 			this.Add (item as Visual);
 		}
 
-		void ICollection<Types.Object>.Clear()
+		void ICollection<Types.DependencyObject>.Clear()
 		{
 			this.Clear ();
 		}
 
-		bool ICollection<Types.Object>.Contains(Types.Object item)
+		bool ICollection<Types.DependencyObject>.Contains(Types.DependencyObject item)
 		{
 			return this.Contains (item as Visual);
 		}
 
-		void ICollection<Types.Object>.CopyTo(Types.Object[] array, int index)
+		void ICollection<Types.DependencyObject>.CopyTo(Types.DependencyObject[] array, int index)
 		{
 			this.CopyTo (array, index);
 		}
 
-		int ICollection<Types.Object>.Count
+		int ICollection<Types.DependencyObject>.Count
 		{
 			get
 			{
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
-		bool ICollection<Types.Object>.IsReadOnly
+		bool ICollection<Types.DependencyObject>.IsReadOnly
 		{
 			get
 			{
@@ -326,21 +326,21 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
-		bool ICollection<Types.Object>.Remove(Types.Object item)
+		bool ICollection<Types.DependencyObject>.Remove(Types.DependencyObject item)
 		{
 			return this.Remove (item as Visual);
 		}
 		#endregion
 
-		#region IEnumerable<Object> Members
-		public IEnumerator<Types.Object> GetEnumerator()
+		#region IEnumerable<DependencyObject> Members
+		public IEnumerator<Types.DependencyObject> GetEnumerator()
 		{
 			return new ChildrenCollectionEnumerator (this.visual);
 		}
 		#endregion
 
 		#region ChildrenCollectionEnumerator Class
-		private class ChildrenCollectionEnumerator : System.Collections.IEnumerator, IEnumerator<Types.Object>
+		private class ChildrenCollectionEnumerator : System.Collections.IEnumerator, IEnumerator<Types.DependencyObject>
 		{
 			public ChildrenCollectionEnumerator(Visual visual)
 			{
@@ -386,8 +386,8 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 			#endregion
 
-			#region IEnumerator<Object> Members
-			public Types.Object Current
+			#region IEnumerator<DependencyObject> Members
+			public Types.DependencyObject Current
 			{
 				get
 				{

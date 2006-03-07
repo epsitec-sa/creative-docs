@@ -202,7 +202,7 @@ namespace Epsitec.Common.Widgets
 			this.UpdateButtonVisibility ();
 		}
 
-		protected override void OnIsKeyboardFocusedChanged(Types.PropertyChangedEventArgs e)
+		protected override void OnIsKeyboardFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			base.OnIsKeyboardFocusedChanged (e);
 			

@@ -78,12 +78,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static Widget GetParentWidget(Object o)
+		public static Widget GetParentWidget(DependencyObject o)
 		{
 			return (Widget) o.GetValue (MenuWindow.ParentWidgetProperty);
 		}
 		
-		public static void SetParentWidget(Object o, Widget value)
+		public static void SetParentWidget(DependencyObject o, Widget value)
 		{
 			o.SetValue (MenuWindow.ParentWidgetProperty, value);
 		}
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private static void SetParentWidgetValue(Object o, object value)
+		private static void SetParentWidgetValue(DependencyObject o, object value)
 		{
 			MenuWindow that = o as MenuWindow;
 			Widget   parent = value as Widget;
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static readonly Property ParentWidgetProperty	= Property.Register ("ParentWidget", typeof (Widget), typeof (MenuWindow), new PropertyMetadata (null, new SetValueOverrideCallback (MenuWindow.SetParentWidgetValue)));
+		public static readonly DependencyProperty ParentWidgetProperty	= DependencyProperty.Register ("ParentWidget", typeof (Widget), typeof (MenuWindow), new DependencyPropertyMetadata (null, new SetValueOverrideCallback (MenuWindow.SetParentWidgetValue)));
 		
 		private Behaviors.MenuBehavior			behavior;
 		private MenuType						menu_type;

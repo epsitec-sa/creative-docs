@@ -1130,7 +1130,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.scrollTop    )  this.ScrollVertical(amplitude);
 		}
 
-		protected override void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
+		protected override void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool focused = (bool) e.NewValue;
 			
@@ -1184,7 +1184,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.WriteLine ("Text defined. has_edited_text = false");
 		}
 
-		protected override void OnIsKeyboardFocusedChanged(Types.PropertyChangedEventArgs e)
+		protected override void OnIsKeyboardFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			base.OnIsKeyboardFocusedChanged (e);
 			

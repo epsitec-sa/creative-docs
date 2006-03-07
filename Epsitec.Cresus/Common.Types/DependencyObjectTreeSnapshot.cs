@@ -6,24 +6,24 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// The ObjectTreeSnapshot is used to compute differences between sets of
+	/// The DependencyObjectTreeSnapshot is used to compute differences between sets of
 	/// object properties.
 	/// </summary>
-	public class ObjectTreeSnapshot
+	public class DependencyObjectTreeSnapshot
 	{
-		public ObjectTreeSnapshot()
+		public DependencyObjectTreeSnapshot()
 		{
 		}
 
-		public void Record(Object obj)
+		public void Record(DependencyObject obj)
 		{
 			//	Record the state of all inherited properties.
 
 			System.Type type = obj.GetType ();
 
-			foreach (Property property in obj.ObjectType.GetProperties ())
+			foreach (DependencyProperty property in obj.ObjectType.GetProperties ())
 			{
-				PropertyMetadata metadata = property.GetMetadata (type);
+				DependencyPropertyMetadata metadata = property.GetMetadata (type);
 
 				if ((metadata != null) &&
 					(metadata.InheritsValue))
@@ -32,13 +32,13 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		public void Record(Object obj, Property property)
+		public void Record(DependencyObject obj, DependencyProperty property)
 		{
 			System.Diagnostics.Debug.Assert (property != null);
 
 			this.list.Add (new SnapshotValue (obj, property));
 		}
-		public void Record(Object obj, Property property1, Property property2)
+		public void Record(DependencyObject obj, DependencyProperty property1, DependencyProperty property2)
 		{
 			System.Diagnostics.Debug.Assert (property1 != null);
 			System.Diagnostics.Debug.Assert (property2 != null);
@@ -47,22 +47,22 @@ namespace Epsitec.Common.Types
 			this.list.Add (new SnapshotValue (obj, property2));
 		}
 
-		public void RecordSubtree(Object root, Property property)
+		public void RecordSubtree(DependencyObject root, DependencyProperty property)
 		{
-			if (ObjectTree.GetHasChildren (root))
+			if (DependencyObjectTree.GetHasChildren (root))
 			{
-				foreach (Object child in ObjectTree.GetChildren (root))
+				foreach (DependencyObject child in DependencyObjectTree.GetChildren (root))
 				{
 					this.Record (child, property);
 					this.RecordSubtree (child, property);
 				}
 			}
 		}
-		public void RecordSubtree(Object root, Property property1, Property property2)
+		public void RecordSubtree(DependencyObject root, DependencyProperty property1, DependencyProperty property2)
 		{
-			if (ObjectTree.GetHasChildren (root))
+			if (DependencyObjectTree.GetHasChildren (root))
 			{
-				foreach (Object child in ObjectTree.GetChildren (root))
+				foreach (DependencyObject child in DependencyObjectTree.GetChildren (root))
 				{
 					this.Record (child, property1, property2);
 					this.RecordSubtree (child, property1, property2);
@@ -92,21 +92,21 @@ namespace Epsitec.Common.Types
 		#region Private SnapshotValue Structure
 		private struct SnapshotValue
 		{
-			public SnapshotValue(Object obj, Property property)
+			public SnapshotValue(DependencyObject obj, DependencyProperty property)
 			{
 				this.obj      = obj;
 				this.property = property;
 				this.value    = obj.GetValue (property);
 			}
 			
-			public Object						Object
+			public DependencyObject						Object
 			{
 				get
 				{
 					return this.obj;
 				}
 			}
-			public Property						Property
+			public DependencyProperty						Property
 			{
 				get
 				{
@@ -121,8 +121,8 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			private Object						obj;
-			private Property					property;
+			private DependencyObject						obj;
+			private DependencyProperty					property;
 			private object						value;
 		}
 		#endregion

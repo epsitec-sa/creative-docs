@@ -678,7 +678,7 @@ namespace Epsitec.Common.UI.Widgets
 			System.Diagnostics.Debug.WriteLine ("Binding info set to " + this.BindingInfo);
 		}
 		
-		protected override void OnSizeChanged(Types.PropertyChangedEventArgs e)
+		protected override void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			base.OnSizeChanged (e);
 			

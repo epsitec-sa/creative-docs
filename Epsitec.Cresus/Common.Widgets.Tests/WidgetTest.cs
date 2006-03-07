@@ -4,7 +4,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 	
 	[TestFixture] public class WidgetTest
 	{
@@ -541,7 +541,7 @@ namespace Epsitec.Common.Widgets
 		private object		check_parent_changed_new_value;
 		private int			check_parent_changed_count;
 		
-		private void HandleCheckParentChangedParentChanged(object sender, Types.PropertyChangedEventArgs e)
+		private void HandleCheckParentChangedParentChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			this.check_parent_changed_sender = sender;
 			this.check_parent_changed_old_value = e.OldValue;
@@ -1327,7 +1327,7 @@ namespace Epsitec.Common.Widgets
 			//	nothing
 		}
 
-		private void HandleManagedAnchorChanged(object sender, Types.PropertyChangedEventArgs e)
+		private void HandleManagedAnchorChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	nothing
 		}

@@ -106,7 +106,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected override void OnIsVisibleChanged(Types.PropertyChangedEventArgs e)
+		protected override void OnIsVisibleChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			this.CloseMiniBar(false);  // ferme la mini-palette si le viewer devient invisible
 		}
@@ -4329,7 +4329,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected override void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
+		protected override void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool focused = (bool) e.NewValue;
 			

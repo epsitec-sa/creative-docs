@@ -6,7 +6,7 @@ namespace Epsitec.Common.Widgets.Helpers
 	/// <summary>
 	/// VisualPropertyMetadata.
 	/// </summary>
-	public class VisualPropertyMetadata : Types.PropertyMetadata
+	public class VisualPropertyMetadata : Types.DependencyPropertyMetadata
 	{
 		public VisualPropertyMetadata()
 		{
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.inherits_value        = (flags & VisualPropertyMetadataOptions.InheritsValue) != 0;
 		}
 		
-		protected override void OnPropertyInvalidated(Types.Object sender, object old_value, object new_value)
+		protected override void OnPropertyInvalidated(Types.DependencyObject sender, object old_value, object new_value)
 		{
 			Visual visual = sender as Visual;
 			
