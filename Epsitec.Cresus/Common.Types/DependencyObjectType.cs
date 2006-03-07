@@ -44,7 +44,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public DependencyObjectType						BaseType
+		public DependencyObjectType				BaseType
 		{
 			get
 			{
@@ -304,12 +304,12 @@ namespace Epsitec.Common.Types
 		#endregion
 
 
-		private DependencyObjectType						baseType;
+		private DependencyObjectType			baseType;
 		private System.Type						systemType;
-		private List<DependencyProperty>					localStandardProperties = new List<DependencyProperty> ();
-		private List<DependencyProperty>					localAttachedProperties = new List<DependencyProperty> ();
-		private DependencyProperty[]						standardPropertiesArray;
-		private DependencyProperty[]						attachedPropertiesArray;
+		private List<DependencyProperty>		localStandardProperties = new List<DependencyProperty> ();
+		private List<DependencyProperty>		localAttachedProperties = new List<DependencyProperty> ();
+		private DependencyProperty[]			standardPropertiesArray;
+		private DependencyProperty[]			attachedPropertiesArray;
 		private Dictionary<string, DependencyProperty>	lookup;
 		private bool							initialized;
 

@@ -31,7 +31,7 @@ namespace Epsitec.Common.Types
 				this.path = value;
 			}
 		}
-		public ReadOnlyArray<DependencyProperty>			Elements
+		public ReadOnlyArray<DependencyProperty> Elements
 		{
 			get
 			{
@@ -138,6 +138,6 @@ namespace Epsitec.Common.Types
 		}
 		
 		private string							path;
-		private DependencyProperty[]						elements;
+		private DependencyProperty[]			elements;
 	}
 }
