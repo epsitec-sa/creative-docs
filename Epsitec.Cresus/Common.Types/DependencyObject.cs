@@ -20,7 +20,7 @@ namespace Epsitec.Common.Types
 			this.cachedType = DependencyObjectType.SetupFromSystemType (this.GetType ());
 		}
 		
-		public DependencyObjectType						ObjectType
+		public DependencyObjectType				ObjectType
 		{
 			get
 			{
@@ -439,11 +439,11 @@ namespace Epsitec.Common.Types
 		
 		
 
-		Dictionary<DependencyProperty, object>						properties = new Dictionary<DependencyProperty, object> ();
-		Dictionary<DependencyProperty, BindingExpression>				bindings;
+		Dictionary<DependencyProperty, object>				properties = new Dictionary<DependencyProperty, object> ();
+		Dictionary<DependencyProperty, BindingExpression>	bindings;
 		Dictionary<DependencyProperty, PropertyChangedEventHandler>	propertyEvents;
 		Dictionary<string, System.Delegate>					userEvents;
-		DependencyObjectType											cachedType;
+		DependencyObjectType								cachedType;
 
 		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
 		static int											registeredPropertyCount;

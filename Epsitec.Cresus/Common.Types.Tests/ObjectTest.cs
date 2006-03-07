@@ -115,7 +115,6 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-//		[Ignore ("Too slow")]
 		public void CheckObjectCreationPerformance()
 		{
 			System.Console.WriteLine ("Performance test of AbstractWidget Properties");

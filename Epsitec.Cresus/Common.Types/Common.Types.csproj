@@ -141,7 +141,7 @@
     <Compile Include="EnumType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Events.cs">
+    <Compile Include="DependencyPropertyChangedEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HideAttribute.cs">
