@@ -362,9 +362,9 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public static bool RemoveResource(string id, ResourceLevel level, CultureInfo culture)
+		public static bool RemoveBundle(string id, ResourceLevel level, CultureInfo culture)
 		{
-			return Resources.manager.RemoveResource (id, level, culture);
+			return Resources.manager.RemoveBundle (id, level, culture);
 		}
 		
 		

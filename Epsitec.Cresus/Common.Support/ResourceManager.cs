@@ -622,7 +622,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public bool RemoveResource(string id, ResourceLevel level, CultureInfo culture)
+		public bool RemoveBundle(string id, ResourceLevel level, CultureInfo culture)
 		{
 			if (culture == null)
 			{
