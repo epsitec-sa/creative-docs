@@ -5,16 +5,16 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	public class PropertyPath : System.IEquatable<PropertyPath>
+	public class DependencyPropertyPath : System.IEquatable<DependencyPropertyPath>
 	{
-		public PropertyPath()
+		public DependencyPropertyPath()
 		{
 		}
-		public PropertyPath(string path)
+		public DependencyPropertyPath(string path)
 		{
 			this.path = path;
 		}
-		public PropertyPath(string path, params Property[] elements)
+		public DependencyPropertyPath(string path, params DependencyProperty[] elements)
 		{
 			this.path = path;
 			this.elements = Copier.CopyArray (elements);
@@ -31,11 +31,11 @@ namespace Epsitec.Common.Types
 				this.path = value;
 			}
 		}
-		public ReadOnlyArray<Property>			Elements
+		public ReadOnlyArray<DependencyProperty>			Elements
 		{
 			get
 			{
-				return new ReadOnlyArray<Property> (this.elements);
+				return new ReadOnlyArray<DependencyProperty> (this.elements);
 			}
 			set
 			{
@@ -63,8 +63,8 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		#region IEquatable<PropertyPath> Members
-		public bool Equals(PropertyPath other)
+		#region IEquatable<DependencyPropertyPath> Members
+		public bool Equals(DependencyPropertyPath other)
 		{
 			return this == other;
 		}
@@ -72,14 +72,14 @@ namespace Epsitec.Common.Types
 		
 		public override bool Equals(object obj)
 		{
-			return this.Equals (obj as PropertyPath);
+			return this.Equals (obj as DependencyPropertyPath);
 		}
 		public override int GetHashCode()
 		{
 			return base.GetHashCode ();
 		}
 		
-		public static bool operator==(PropertyPath p1, PropertyPath p2)
+		public static bool operator==(DependencyPropertyPath p1, DependencyPropertyPath p2)
 		{
 			if (System.Object.ReferenceEquals (p1, p2))
 			{
@@ -101,12 +101,12 @@ namespace Epsitec.Common.Types
 
 			return Comparer.EqualObjects (p1.elements, p2.elements);
 		}
-		public static bool operator!=(PropertyPath p1, PropertyPath p2)
+		public static bool operator!=(DependencyPropertyPath p1, DependencyPropertyPath p2)
 		{
 			return (p1 == p2) ? false : true;
 		}
 		
-		public static PropertyPath Combine(PropertyPath p1, PropertyPath p2)
+		public static DependencyPropertyPath Combine(DependencyPropertyPath p1, DependencyPropertyPath p2)
 		{
 			if (p1 == null)
 			{
@@ -134,10 +134,10 @@ namespace Epsitec.Common.Types
 				path = string.Concat (p1.GetFullPath (), ".", p2.GetFullPath ());
 			}
 
-			return new PropertyPath (path);
+			return new DependencyPropertyPath (path);
 		}
 		
 		private string							path;
-		private Property[]						elements;
+		private DependencyProperty[]						elements;
 	}
 }

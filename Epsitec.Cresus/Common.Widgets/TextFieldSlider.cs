@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private static void SetBackColorValue(Types.Object o, object value)
+		private static void SetBackColorValue(Types.DependencyObject o, object value)
 		{
 			TextFieldSlider that = o as TextFieldSlider;
 			that.slider.BackColor = (Drawing.Color) value;

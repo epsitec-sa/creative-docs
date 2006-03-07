@@ -702,7 +702,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private static void NotifySubmenuChanged(Object o, object old_value, object new_value)
+		private static void NotifySubmenuChanged(DependencyObject o, object old_value, object new_value)
 		{
 			//	Quand la propriété "Submenu" est appliquée à un item d'un menu,
 			//	on réalise un lien entre le menu et l'item en question. Ce lien
@@ -738,14 +738,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static readonly Property			SubmenuProperty			= Property.Register ("Submenu", typeof (Widget), typeof (MenuItem), new PropertyMetadata (null, new PropertyInvalidatedCallback (MenuItem.NotifySubmenuChanged)));
-		public static readonly Property			ItemTypeProperty		= Property.Register ("ItemType", typeof (MenuItemType), typeof (MenuItem), new VisualPropertyMetadata (MenuItemType.Default, VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly Property			MenuOrientationProperty	= Property.Register ("MenuOrientation", typeof (MenuOrientation), typeof (MenuItem), new VisualPropertyMetadata (MenuOrientation.Undefined, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty			SubmenuProperty			= DependencyProperty.Register ("Submenu", typeof (Widget), typeof (MenuItem), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (MenuItem.NotifySubmenuChanged)));
+		public static readonly DependencyProperty			ItemTypeProperty		= DependencyProperty.Register ("ItemType", typeof (MenuItemType), typeof (MenuItem), new VisualPropertyMetadata (MenuItemType.Default, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty			MenuOrientationProperty	= DependencyProperty.Register ("MenuOrientation", typeof (MenuOrientation), typeof (MenuItem), new VisualPropertyMetadata (MenuOrientation.Undefined, VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		public static readonly Property			MenuBehaviorProperty	= Property.RegisterAttached ("MenuBehavior", typeof (Behaviors.MenuBehavior), typeof (MenuItem));
-		public static readonly Property			ParentMenuItemProperty	= Property.RegisterAttached ("ParentMenuItem", typeof (MenuItem), typeof (MenuItem));
-		public static readonly Property			MenuHostProperty		= Property.RegisterAttached ("MenuHost", typeof (IMenuHost), typeof (MenuItem));
-		public static readonly Property			ZeroDelayProperty		= Property.RegisterAttached ("ZeroDelay", typeof (bool), typeof (MenuItem), new PropertyMetadata (false));
+		public static readonly DependencyProperty			MenuBehaviorProperty	= DependencyProperty.RegisterAttached ("MenuBehavior", typeof (Behaviors.MenuBehavior), typeof (MenuItem));
+		public static readonly DependencyProperty			ParentMenuItemProperty	= DependencyProperty.RegisterAttached ("ParentMenuItem", typeof (MenuItem), typeof (MenuItem));
+		public static readonly DependencyProperty			MenuHostProperty		= DependencyProperty.RegisterAttached ("MenuHost", typeof (IMenuHost), typeof (MenuItem));
+		public static readonly DependencyProperty			ZeroDelayProperty		= DependencyProperty.RegisterAttached ("ZeroDelay", typeof (bool), typeof (MenuItem), new DependencyPropertyMetadata (false));
 		
 		
 		private const double					MarginHeader	= 6;

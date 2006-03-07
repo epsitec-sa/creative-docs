@@ -112,7 +112,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public Widget()
 		{
-//-			this.AddEventHandler (Types.ObjectTree.ChildrenProperty, this.HandleWidgetChildrenChanged);
+//-			this.AddEventHandler (Types.DependencyObjectTree.ChildrenProperty, this.HandleWidgetChildrenChanged);
 			
 			if (Support.ObjectBundler.IsBooting)
 			{
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-//-		void HandleWidgetChildrenChanged(object sender, Epsitec.Common.Types.PropertyChangedEventArgs e)
+//-		void HandleWidgetChildrenChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 //-		{
 //-			System.Diagnostics.Debug.WriteLine (string.Format ("{0} has {1} children", this.ToString (), this.HasChildren ? this.Children.Count.ToString () : "no"));
 //-		}
@@ -1625,7 +1625,7 @@ namespace Epsitec.Common.Widgets
 			
 			Window window = this.Window;
 
-			Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsKeyboardFocusedProperty, Visual.IsFocusedProperty);
+			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsKeyboardFocusedProperty, Visual.IsFocusedProperty);
 			
 			if (new_focus)
 			{
@@ -4437,7 +4437,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		protected override void OnParentChanged(Epsitec.Common.Types.PropertyChangedEventArgs e)
+		protected override void OnParentChanged(Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			base.OnParentChanged (e);
 			
@@ -4830,7 +4830,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void OnSizeChanged(Types.PropertyChangedEventArgs e)
+		protected override void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		

@@ -10,18 +10,18 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public struct LocalValueEntry
 	{
-		public LocalValueEntry(Property property, object value)
+		public LocalValueEntry(DependencyProperty property, object value)
 		{
 			this.property = property;
 			this.value    = value;
 		}
-		public LocalValueEntry(KeyValuePair<Property, object> pair)
+		public LocalValueEntry(KeyValuePair<DependencyProperty, object> pair)
 		{
 			this.property = pair.Key;
 			this.value = pair.Value;
 		}
 		
-		public Property							Property
+		public DependencyProperty							Property
 		{
 			get
 			{
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		private Property						property;
+		private DependencyProperty						property;
 		private object							value;
 	}
 }

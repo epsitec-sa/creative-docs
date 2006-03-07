@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe CommandState permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec les widgets associés.
 	/// </summary>
-	public class CommandState : Types.Object
+	public class CommandState : Types.DependencyObject
 	{
 		public CommandState(string name, CommandDispatcher dispatcher)
 		{
@@ -232,41 +232,41 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected virtual void OnIconNameChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnIconNameChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
-		protected virtual void OnShortCaptionChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnShortCaptionChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
-		protected virtual void OnLongCaptionChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnLongCaptionChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
 		
-		private static void NotifyIconNameChanged(Object o, object old_value, object new_value)
-		{
-			CommandState that = o as CommandState;
-			that.OnIconNameChanged (new PropertyChangedEventArgs (CommandState.IconNameProperty, old_value, new_value));
-		}
-		
-		private static void NotifyShortCaptionChanged(Object o, object old_value, object new_value)
+		private static void NotifyIconNameChanged(DependencyObject o, object old_value, object new_value)
 		{
 			CommandState that = o as CommandState;
-			that.OnShortCaptionChanged (new PropertyChangedEventArgs (CommandState.ShortCaptionProperty, old_value, new_value));
+			that.OnIconNameChanged (new DependencyPropertyChangedEventArgs (CommandState.IconNameProperty, old_value, new_value));
 		}
 		
-		private static void NotifyLongCaptionChanged(Object o, object old_value, object new_value)
+		private static void NotifyShortCaptionChanged(DependencyObject o, object old_value, object new_value)
 		{
 			CommandState that = o as CommandState;
-			that.OnLongCaptionChanged (new PropertyChangedEventArgs (CommandState.LongCaptionProperty, old_value, new_value));
+			that.OnShortCaptionChanged (new DependencyPropertyChangedEventArgs (CommandState.ShortCaptionProperty, old_value, new_value));
+		}
+		
+		private static void NotifyLongCaptionChanged(DependencyObject o, object old_value, object new_value)
+		{
+			CommandState that = o as CommandState;
+			that.OnLongCaptionChanged (new DependencyPropertyChangedEventArgs (CommandState.LongCaptionProperty, old_value, new_value));
 		}
 		
 		
-		public static readonly Property			IconNameProperty = Property.Register ("IconName", typeof (string), typeof (CommandState), new PropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyIconNameChanged)));
-		public static readonly Property			ShortCaptionProperty = Property.Register ("ShortCaption", typeof (string), typeof (CommandState), new PropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyShortCaptionChanged)));
-		public static readonly Property			LongCaptionProperty	= Property.Register ("LongCaption", typeof (string), typeof (CommandState), new PropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
+		public static readonly DependencyProperty			IconNameProperty = DependencyProperty.Register ("IconName", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyIconNameChanged)));
+		public static readonly DependencyProperty			ShortCaptionProperty = DependencyProperty.Register ("ShortCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyShortCaptionChanged)));
+		public static readonly DependencyProperty			LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
 		
 		private ActiveState						active_state = ActiveState.No;
 		private bool							enable       = true;

@@ -4,7 +4,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 	
 	[TestFixture] public class VisualTest
 	{
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Widgets
 		
 		private static System.Text.StringBuilder buffer;
 		
-		private static void A_IsEnabledChanged(object sender, Types.PropertyChangedEventArgs e)
+		private static void A_IsEnabledChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			buffer.Append (" A:");
 			buffer.Append ((bool) e.OldValue == true ? "1" : "0");
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Widgets
 			buffer.Append ((bool) e.NewValue == true ? "1" : "0");
 		}
 		
-		private static void B_IsEnabledChanged(object sender, Types.PropertyChangedEventArgs e)
+		private static void B_IsEnabledChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			buffer.Append (" B:");
 			buffer.Append ((bool) e.OldValue == true ? "1" : "0");
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Widgets
 			buffer.Append ((bool) e.NewValue == true ? "1" : "0");
 		}
 		
-		private static void C1_IsEnabledChanged(object sender, Types.PropertyChangedEventArgs e)
+		private static void C1_IsEnabledChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			buffer.Append (" C1:");
 			buffer.Append ((bool) e.OldValue == true ? "1" : "0");
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Widgets
 			buffer.Append ((bool) e.NewValue == true ? "1" : "0");
 		}
 		
-		private static void C2_IsEnabledChanged(object sender, Types.PropertyChangedEventArgs e)
+		private static void C2_IsEnabledChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			buffer.Append (" C2:");
 			buffer.Append ((bool) e.OldValue == true ? "1" : "0");

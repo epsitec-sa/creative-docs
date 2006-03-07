@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
 	/// The BindingExpression class is used to maintain the real binding
@@ -25,14 +25,14 @@ namespace Epsitec.Common.Types
 				return this.binding;
 			}
 		}
-		public Object							TargetObject
+		public DependencyObject							TargetObject
 		{
 			get
 			{
 				return this.targetObject;
 			}
 		}
-		public Property							TargetProperty
+		public DependencyProperty							TargetProperty
 		{
 			get
 			{
@@ -84,8 +84,8 @@ namespace Epsitec.Common.Types
 		}
 		internal void AttachToSource()
 		{
-			Object						sourceObject;
-			Property					sourceProperty;
+			DependencyObject						sourceObject;
+			DependencyProperty					sourceProperty;
 			BindingSourceType			sourceType;
 			List<SourcePropertyPair>	sourceBreadcrumbs;
 
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		internal static BindingExpression BindToTarget(Object target, Property property, Binding binding)
+		internal static BindingExpression BindToTarget(DependencyObject target, DependencyProperty property, Binding binding)
 		{
 			BindingExpression expression = new BindingExpression ();
 
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private bool FindDataSource(out Object source, out Property property, out BindingSourceType type, out List<SourcePropertyPair> breadcrumbs)
+		private bool FindDataSource(out DependencyObject source, out DependencyProperty property, out BindingSourceType type, out List<SourcePropertyPair> breadcrumbs)
 		{
 			type        = BindingSourceType.None;
 			source      = null;
@@ -165,11 +165,11 @@ namespace Epsitec.Common.Types
 			breadcrumbs = null;
 
 			object root;
-			PropertyPath path;
+			DependencyPropertyPath path;
 
 			this.FindDataSourceRoot (out root, out path);
 
-			source = root as Object;
+			source = root as DependencyObject;
 			
 			if ((source != null) &&
 				(path != null))
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Types
 						
 						breadcrumbs.Add (new SourcePropertyPair (source, property));
 						
-						source = source.GetValue (property) as Object;
+						source = source.GetValue (property) as DependencyObject;
 						
 						if (source == null)
 						{
@@ -219,7 +219,7 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
-		private void FindDataSourceRoot(out object source, out PropertyPath path)
+		private void FindDataSourceRoot(out object source, out DependencyPropertyPath path)
 		{
 			source = this.binding.Source;
 			path   = this.binding.Path;
@@ -234,7 +234,7 @@ namespace Epsitec.Common.Types
 				if (this.dataContext != null)
 				{
 					source = this.dataContext.Source;
-					path   = PropertyPath.Combine (this.dataContext.Path, path);
+					path   = DependencyPropertyPath.Combine (this.dataContext.Path, path);
 				}
 			}
 			else
@@ -279,7 +279,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private void HandleDataContextChanged(object sender, PropertyChangedEventArgs e)
+		private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.RefreshSourceBinding ();
 		}
@@ -294,12 +294,12 @@ namespace Epsitec.Common.Types
 		}
 		private void InternalUpdateTarget()
 		{
-			Object source;
+			DependencyObject source;
 			
 			switch (this.sourceType)
 			{
 				case BindingSourceType.PropertyObject:
-					source = this.sourceObject as Object;
+					source = this.sourceObject as DependencyObject;
 					this.InternalUpdateTarget (source.GetValue (this.sourceProperty));
 					break;
 			}
@@ -316,7 +316,7 @@ namespace Epsitec.Common.Types
 			switch (this.sourceType)
 			{
 				case BindingSourceType.PropertyObject:
-					BindingExpression.Attach (this, this.sourceObject as Object, this.sourceProperty);
+					BindingExpression.Attach (this, this.sourceObject as DependencyObject, this.sourceProperty);
 					BindingExpression.Attach (this, this.sourceBreadcrumbs);
 					break;
 			}
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Types
 			switch (this.sourceType)
 			{
 				case BindingSourceType.PropertyObject:
-					BindingExpression.Detach (this, this.sourceObject as Object, this.sourceProperty);
+					BindingExpression.Detach (this, this.sourceObject as DependencyObject, this.sourceProperty);
 					BindingExpression.Detach (this, this.sourceBreadcrumbs);
 					break;
 			}
@@ -339,16 +339,16 @@ namespace Epsitec.Common.Types
 			this.sourceBreadcrumbs = null;
 		}
 
-		private void HandleSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
+		private void HandleSourcePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.InternalUpdateTarget (e.NewValue);
 		}
-		private void HandleBreadcrumbChanged(object sender, PropertyChangedEventArgs e)
+		private void HandleBreadcrumbChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.RefreshSourceBinding ();
 		}
 
-		private static void Attach(BindingExpression expression, Object source, Property property)
+		private static void Attach(BindingExpression expression, DependencyObject source, DependencyProperty property)
 		{
 			source.AddEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		private static void Detach(BindingExpression expression, Object source, Property property)
+		private static void Detach(BindingExpression expression, DependencyObject source, DependencyProperty property)
 		{
 			source.RemoveEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
@@ -380,20 +380,20 @@ namespace Epsitec.Common.Types
 		#region Private SourcePropertyPair Structure
 		private struct SourcePropertyPair
 		{
-			public SourcePropertyPair(Object source, Property property)
+			public SourcePropertyPair(DependencyObject source, DependencyProperty property)
 			{
 				this.source = source;
 				this.property = property;
 			}
 			
-			public Object						Source
+			public DependencyObject						Source
 			{
 				get
 				{
 					return this.source;
 				}
 			}
-			public Property						Property
+			public DependencyProperty						Property
 			{
 				get
 				{
@@ -401,16 +401,16 @@ namespace Epsitec.Common.Types
 				}
 			}
 			
-			private Object source;
-			private Property property;
+			private DependencyObject source;
+			private DependencyProperty property;
 		}
 		#endregion
 
 		private Binding							binding;
-		private Object							targetObject;
-		private Property						targetPropery;
+		private DependencyObject							targetObject;
+		private DependencyProperty						targetPropery;
 		private object							sourceObject;
-		private Property						sourceProperty;
+		private DependencyProperty						sourceProperty;
 		private BindingSourceType				sourceType;
 		private List<SourcePropertyPair>		sourceBreadcrumbs;
 		private Binding							dataContext;

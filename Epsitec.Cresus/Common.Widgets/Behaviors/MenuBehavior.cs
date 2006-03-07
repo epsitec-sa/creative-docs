@@ -5,13 +5,13 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
 	/// La classe MenuBehavior implémente la logique permettant de gérer un menu
 	/// (affichage d'une ou plusieurs fenêtres flottantes, fermeture, etc.)
 	/// </summary>
-	public sealed class MenuBehavior : Types.Object
+	public sealed class MenuBehavior : Types.DependencyObject
 	{
 		public MenuBehavior()
 		{
@@ -553,7 +553,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 		
 		
-		private void HandleRootMenuIsVisibleChanged(object sender, PropertyChangedEventArgs e)
+		private void HandleRootMenuIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			//	Quand le menu racine devient visible, on s'attache à sa fenêtre
 			//	via AttachRootWindow, et vice versa.

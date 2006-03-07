@@ -5,7 +5,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Types
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
 	/// L'interface IPropertyChange définit un événement PropertyChanged.

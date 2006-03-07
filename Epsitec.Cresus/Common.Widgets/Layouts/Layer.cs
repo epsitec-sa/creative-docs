@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets.Layouts
 	/// La classe Layer permet de représenter un calque logique pour un widget
 	/// où les enfants doivent être organisés de manière avancée.
 	/// </summary>
-	public class Layer : Types.Object, Collections.IVisualCollectionHost
+	public class Layer : Types.DependencyObject, Collections.IVisualCollectionHost
 	{
 		public Layer(Visual parent)
 		{
@@ -53,12 +53,12 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
-		private static object GetChildrenValue(Object o)
+		private static object GetChildrenValue(DependencyObject o)
 		{
 			Layer layer = o as Layer;
 			return layer.Children;
 		}
-		private static object GetParentVisualValue(Object o)
+		private static object GetParentVisualValue(DependencyObject o)
 		{
 			Layer layer = o as Layer;
 			return layer.ParentVisual;
@@ -112,9 +112,9 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		#endregion
 		
-		public static readonly Property NameProperty = Property.Register ("Name", typeof (string), typeof (Layer));
-		public static readonly Property ChildrenProperty = Property.RegisterReadOnly ("Children", typeof (Collections.VisualCollection), typeof (Layer), new PropertyMetadata (new GetValueOverrideCallback (Layer.GetChildrenValue)));
-		public static readonly Property VisualParentProperty = Property.RegisterReadOnly ("VisualParent", typeof (Visual), typeof (Layer), new PropertyMetadata (new GetValueOverrideCallback (Layer.GetParentVisualValue)));
+		public static readonly DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (Layer));
+		public static readonly DependencyProperty ChildrenProperty = DependencyProperty.RegisterReadOnly ("Children", typeof (Collections.VisualCollection), typeof (Layer), new DependencyPropertyMetadata (new GetValueOverrideCallback (Layer.GetChildrenValue)));
+		public static readonly DependencyProperty VisualParentProperty = DependencyProperty.RegisterReadOnly ("VisualParent", typeof (Visual), typeof (Layer), new DependencyPropertyMetadata (new GetValueOverrideCallback (Layer.GetParentVisualValue)));
 
 		private Visual							parent;
 		private Collections.VisualCollection	children;

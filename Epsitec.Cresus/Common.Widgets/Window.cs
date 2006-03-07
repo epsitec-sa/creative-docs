@@ -5,7 +5,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 	
 	using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
 	
@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : Types.Object, Support.Data.IContainer, ICommandDispatcherHost, Support.Data.IPropertyProvider
+	public class Window : Types.DependencyObject, Support.Data.IContainer, ICommandDispatcherHost, Support.Data.IPropertyProvider
 	{
 		public Window()
 		{
@@ -1320,7 +1320,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (! this.window_is_visible);
 
-			Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this.Root, Visual.IsVisibleProperty);
+			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.Root, Visual.IsVisibleProperty);
 			
 			this.window_is_visible = true;
 			
@@ -1342,7 +1342,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (this.window_is_visible);
 
-			Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this.Root, Visual.IsVisibleProperty);
+			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.Root, Visual.IsVisibleProperty);
 			
 			this.window_is_visible = false;
 			
@@ -1419,7 +1419,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.focused_widget != null)
 				{
-					Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this.focused_widget, Visual.IsFocusedProperty);
+					Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.focused_widget, Visual.IsFocusedProperty);
 					
 					this.window_is_focused = true;
 					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
@@ -1446,7 +1446,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.focused_widget != null)
 				{
-					Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this.focused_widget, Visual.IsFocusedProperty);
+					Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.focused_widget, Visual.IsFocusedProperty);
 					
 					this.window_is_focused = false;
 					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
@@ -2141,7 +2141,7 @@ namespace Epsitec.Common.Widgets
 			this.timer.Stop ();
 		}
 
-		protected void HandleRootMinSizeChanged(object sender, Types.PropertyChangedEventArgs e)
+		protected void HandleRootMinSizeChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			int width  = (int) (this.root.RealMinSize.Width + 0.5);
 			int height = (int) (this.root.RealMinSize.Height + 0.5);

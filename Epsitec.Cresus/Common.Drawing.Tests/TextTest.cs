@@ -139,7 +139,7 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			
-			protected override void OnSizeChanged(Types.PropertyChangedEventArgs e)
+			protected override void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
 			{
 				base.OnSizeChanged (e);
 				

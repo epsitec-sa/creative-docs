@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		protected override void OnIsVisibleChanged(Types.PropertyChangedEventArgs e)
+		protected override void OnIsVisibleChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé par Widget lorsque la visibilité change.
 			base.OnIsVisibleChanged(e);

@@ -107,7 +107,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void OnMaxSizeChanged(Types.PropertyChangedEventArgs e)
+		protected override void OnMaxSizeChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			base.OnMaxSizeChanged (e);
 			

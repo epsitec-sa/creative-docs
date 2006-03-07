@@ -193,7 +193,7 @@ namespace Epsitec.App.DocumentEditor
 			this.resize.Enable = !this.Window.IsFullScreen;
 		}
 		
-		protected override void OnSizeChanged(Epsitec.Common.Types.PropertyChangedEventArgs e)
+		protected override void OnSizeChanged(Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			base.OnSizeChanged(e);
 			this.HandleSizeChanged();

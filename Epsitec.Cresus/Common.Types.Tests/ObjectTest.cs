@@ -16,7 +16,7 @@ namespace Epsitec.Common.Types
 		public void CheckAttachedProperties()
 		{
 			//	Test coupé en morceaux, car NUnit et son analyse du code provoque
-			//	l'exécution du .cctor de la classe Test1 avant que le ObjectType
+			//	l'exécution du .cctor de la classe Test1 avant que le DependencyObjectType
 			//	relatif à Test1 ne soit instancié.
 
 			TestAttachedProperties.TestA ();
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Types
 			{
 				bindingName.Mode = BindingMode.TwoWay;
 				bindingName.Source = mySource;
-				bindingName.Path = new PropertyPath ("Name");
+				bindingName.Path = new DependencyPropertyPath ("Name");
 
 				myTarget.SetBinding (MyObject.FooProperty, bindingName);
 			}
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Types
 			{
 				bindingXyz.Mode = BindingMode.TwoWay;
 				bindingXyz.Source = mySource;
-				bindingXyz.Path = new PropertyPath ("Sibling.Xyz");
+				bindingXyz.Path = new DependencyPropertyPath ("Sibling.Xyz");
 
 				myTarget.SetBinding (MyObject.XyzProperty, bindingXyz);
 			}
@@ -91,12 +91,12 @@ namespace Epsitec.Common.Types
 			myData2.Xyz = 888;
 
 			bindingContext.Source = mySource1;
-			bindingContext.Path = new PropertyPath ("Sibling");
+			bindingContext.Path = new DependencyPropertyPath ("Sibling");
 
 			DataObject.SetDataContext (myTarget, bindingContext);
 
 			bindingXyz.Mode = BindingMode.TwoWay;
-			bindingXyz.Path = new PropertyPath ("Xyz");
+			bindingXyz.Path = new DependencyPropertyPath ("Xyz");
 
 			myTarget.SetBinding (MyObject.XyzProperty, bindingXyz);
 			Assert.AreEqual (999, myTarget.Xyz);
@@ -132,16 +132,16 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckObjectType()
 		{
-			Assert.AreEqual ("Object", ObjectType.FromSystemType (typeof (Types.Object)).Name);
-			Assert.AreEqual ("MyObject", ObjectType.FromSystemType (typeof (MyObject)).Name);
-			Assert.AreEqual ("Object", ObjectType.FromSystemType (typeof (MyObject)).BaseType.Name);
+			Assert.AreEqual ("DependencyObject", DependencyObjectType.FromSystemType (typeof (Types.DependencyObject)).Name);
+			Assert.AreEqual ("MyObject", DependencyObjectType.FromSystemType (typeof (MyObject)).Name);
+			Assert.AreEqual ("DependencyObject", DependencyObjectType.FromSystemType (typeof (MyObject)).BaseType.Name);
 			
-			Assert.IsNull (ObjectType.FromSystemType (typeof (ObjectTest)));
+			Assert.IsNull (DependencyObjectType.FromSystemType (typeof (ObjectTest)));
 			
 			MyObject mo = new MyObject ();
 			
 			Assert.AreEqual ("MyObject", mo.ObjectType.Name);
-			Assert.AreSame (ObjectType.FromSystemType (typeof (MyObject)), mo.ObjectType);
+			Assert.AreSame (DependencyObjectType.FromSystemType (typeof (MyObject)), mo.ObjectType);
 			Assert.AreSame (typeof (MyObject), mo.ObjectType.SystemType);
 			
 			ObjectA oa = new ObjectA ();
@@ -151,39 +151,39 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("ObjectA", oa.ObjectType.Name);
 			Assert.AreEqual ("ObjectB", ob.ObjectType.Name);
 			Assert.AreEqual ("ObjectX", ox.ObjectType.Name);
-			Assert.AreEqual ("Object", oa.ObjectType.BaseType.Name);
+			Assert.AreEqual ("DependencyObject", oa.ObjectType.BaseType.Name);
 			Assert.AreEqual ("ObjectA", ob.ObjectType.BaseType.Name);
-			Assert.AreEqual ("Object", ox.ObjectType.BaseType.Name);
+			Assert.AreEqual ("DependencyObject", ox.ObjectType.BaseType.Name);
 			
-			Assert.AreEqual (oa.ObjectType.BaseType.Name, ObjectType.FromSystemType (typeof (Object)).Name);
-			Assert.AreSame (oa.ObjectType.BaseType, ObjectType.FromSystemType (typeof (Object)));
+			Assert.AreEqual (oa.ObjectType.BaseType.Name, DependencyObjectType.FromSystemType (typeof (DependencyObject)).Name);
+			Assert.AreSame (oa.ObjectType.BaseType, DependencyObjectType.FromSystemType (typeof (DependencyObject)));
 			
-			Assert.IsTrue (oa.ObjectType.IsSubclassOf (ObjectType.FromSystemType (typeof (Object))));
-			Assert.IsTrue (ob.ObjectType.IsSubclassOf (ObjectType.FromSystemType (typeof (Object))));
-			Assert.IsTrue (ox.ObjectType.IsSubclassOf (ObjectType.FromSystemType (typeof (Object))));
-			Assert.IsTrue (ob.ObjectType.IsSubclassOf (ObjectType.FromSystemType (typeof (ObjectA))));
-			Assert.IsFalse (oa.ObjectType.IsSubclassOf (ObjectType.FromSystemType (typeof (ObjectA))));
-			Assert.IsFalse (oa.ObjectType.IsSubclassOf (ObjectType.FromSystemType (typeof (ObjectB))));
-			Assert.IsFalse (oa.ObjectType.IsSubclassOf (ObjectType.FromSystemType (typeof (ObjectX))));
-			Assert.IsFalse (ob.ObjectType.IsSubclassOf (ObjectType.FromSystemType (typeof (ObjectX))));
+			Assert.IsTrue (oa.ObjectType.IsSubclassOf (DependencyObjectType.FromSystemType (typeof (DependencyObject))));
+			Assert.IsTrue (ob.ObjectType.IsSubclassOf (DependencyObjectType.FromSystemType (typeof (DependencyObject))));
+			Assert.IsTrue (ox.ObjectType.IsSubclassOf (DependencyObjectType.FromSystemType (typeof (DependencyObject))));
+			Assert.IsTrue (ob.ObjectType.IsSubclassOf (DependencyObjectType.FromSystemType (typeof (ObjectA))));
+			Assert.IsFalse (oa.ObjectType.IsSubclassOf (DependencyObjectType.FromSystemType (typeof (ObjectA))));
+			Assert.IsFalse (oa.ObjectType.IsSubclassOf (DependencyObjectType.FromSystemType (typeof (ObjectB))));
+			Assert.IsFalse (oa.ObjectType.IsSubclassOf (DependencyObjectType.FromSystemType (typeof (ObjectX))));
+			Assert.IsFalse (ob.ObjectType.IsSubclassOf (DependencyObjectType.FromSystemType (typeof (ObjectX))));
 			
 			Assert.IsTrue (oa.ObjectType.IsObjectInstanceOfType (oa));
 			Assert.IsTrue (oa.ObjectType.IsObjectInstanceOfType (ob));
 			Assert.IsFalse (ob.ObjectType.IsObjectInstanceOfType (oa));
 			Assert.IsFalse (oa.ObjectType.IsObjectInstanceOfType (ox));
 
-			Assert.IsTrue (ObjectX.AProperty.IsValidType (oa));		//	ObjectA --> Object
-			Assert.IsTrue (ObjectX.AProperty.IsValidType (ob));		//	ObjectB --> ObjectA --> Object
-			Assert.IsFalse (ObjectX.AProperty.IsValidType (ox));	//	ObjectX --> Object, pas ObjectA
+			Assert.IsTrue (ObjectX.AProperty.IsValidType (oa));		//	ObjectA --> DependencyObject
+			Assert.IsTrue (ObjectX.AProperty.IsValidType (ob));		//	ObjectB --> ObjectA --> DependencyObject
+			Assert.IsFalse (ObjectX.AProperty.IsValidType (ox));	//	ObjectX --> DependencyObject, pas ObjectA
 
-			Assert.IsFalse (ObjectX.BProperty.IsValidType (oa));	//	ObjectA --> Object, pas ObjectB
-			Assert.IsTrue (ObjectX.BProperty.IsValidType (ob));		//	ObjectB --> ObjectA --> Object
-			Assert.IsFalse (ObjectX.BProperty.IsValidType (ox));	//	ObjectX --> Object, pas ObjectB
+			Assert.IsFalse (ObjectX.BProperty.IsValidType (oa));	//	ObjectA --> DependencyObject, pas ObjectB
+			Assert.IsTrue (ObjectX.BProperty.IsValidType (ob));		//	ObjectB --> ObjectA --> DependencyObject
+			Assert.IsFalse (ObjectX.BProperty.IsValidType (ox));	//	ObjectX --> DependencyObject, pas ObjectB
 
 			Assert.IsTrue (ObjectX.AProperty.IsOwnedBy (typeof (ObjectX)));
 			Assert.IsFalse (ObjectX.AProperty.IsReferencedBy (typeof (ObjectY)));
 
-			ObjectType.FromSystemType (typeof (ObjectY));
+			DependencyObjectType.FromSystemType (typeof (ObjectY));
 			
 			Assert.IsTrue (ObjectX.AProperty.IsReferencedBy (typeof (ObjectY)));
 		}
@@ -199,10 +199,10 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckPropertyPath()
 		{
-			PropertyPath pp1 = new PropertyPath ();
-			PropertyPath pp2 = new PropertyPath ("abc");
-			PropertyPath pp3 = new PropertyPath ("{0}.{1}", MyObject.FooProperty, MyObject.NameProperty);
-			PropertyPath pp4 = new PropertyPath ("Bar.{0}", MyObject.XyzProperty);
+			DependencyPropertyPath pp1 = new DependencyPropertyPath ();
+			DependencyPropertyPath pp2 = new DependencyPropertyPath ("abc");
+			DependencyPropertyPath pp3 = new DependencyPropertyPath ("{0}.{1}", MyObject.FooProperty, MyObject.NameProperty);
+			DependencyPropertyPath pp4 = new DependencyPropertyPath ("Bar.{0}", MyObject.XyzProperty);
 
 			Assert.AreEqual (null, pp1.GetFullPath ());
 			Assert.AreEqual ("abc", pp2.GetFullPath ());
@@ -210,10 +210,10 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Bar.Xyz", pp4.GetFullPath ());
 			Assert.IsTrue (pp2.Elements.IsNull);
 			Assert.AreEqual (0, pp2.Elements.Length);
-			Assert.AreEqual ("Foo.Name.Bar.Xyz", PropertyPath.Combine (pp3, pp4).GetFullPath ());
-			Assert.AreEqual ("Bar.Xyz", PropertyPath.Combine (pp1, pp4).GetFullPath ());
-			Assert.AreEqual ("abc", PropertyPath.Combine (pp2, pp1).GetFullPath ());
-			Assert.AreEqual (null, PropertyPath.Combine (pp1, pp1).GetFullPath ());
+			Assert.AreEqual ("Foo.Name.Bar.Xyz", DependencyPropertyPath.Combine (pp3, pp4).GetFullPath ());
+			Assert.AreEqual ("Bar.Xyz", DependencyPropertyPath.Combine (pp1, pp4).GetFullPath ());
+			Assert.AreEqual ("abc", DependencyPropertyPath.Combine (pp2, pp1).GetFullPath ());
+			Assert.AreEqual (null, DependencyPropertyPath.Combine (pp1, pp1).GetFullPath ());
 		}
 
 		private static class TestAttachedProperties
@@ -223,20 +223,20 @@ namespace Epsitec.Common.Types
 				//	Aucune analyse de la classe Test1 n'a encore eu lieu; il y
 				//	a donc 0 propriétés attachées connues.
 				
-				Assert.AreEqual (0, Property.GetAllAttachedProperties ().Count);
+				Assert.AreEqual (0, DependencyProperty.GetAllAttachedProperties ().Count);
 				Test2 t2 = new Test2 ();
-				Assert.AreEqual (0, Property.GetAllAttachedProperties ().Count);
+				Assert.AreEqual (0, DependencyProperty.GetAllAttachedProperties ().Count);
 			}
 			public static void TestB()
 			{
 				Test2 t2 = new Test2 ();
-				Assert.AreEqual (0, Property.GetAllAttachedProperties ().Count);
+				Assert.AreEqual (0, DependencyProperty.GetAllAttachedProperties ().Count);
 
 				//	Les types sont créés à la demande s'ils ne sont pas encore
 				//	connus; c'est le cas de ot1 :
 
-				Types.ObjectType ot1 = Types.ObjectType.FromSystemType (typeof (Test1));
-				Types.ObjectType ot2 = Types.ObjectType.FromSystemType (typeof (Test2));
+				Types.DependencyObjectType ot1 = Types.DependencyObjectType.FromSystemType (typeof (Test1));
+				Types.DependencyObjectType ot2 = Types.DependencyObjectType.FromSystemType (typeof (Test2));
 
 				Assert.IsNotNull (ot1);
 				Assert.IsNotNull (ot2);
@@ -244,8 +244,8 @@ namespace Epsitec.Common.Types
 				//	L'analyse de la classe Test1 a eu lieu; il y a donc 1
 				//	propriété attachée; celle de Test1 !
 
-				Assert.AreEqual (1, Property.GetAllAttachedProperties ().Count);
-				Assert.AreEqual ("Attached", Property.GetAllAttachedProperties ()[0].Name);
+				Assert.AreEqual (1, DependencyProperty.GetAllAttachedProperties ().Count);
+				Assert.AreEqual ("Attached", DependencyProperty.GetAllAttachedProperties ()[0].Name);
 			}
 			public static void TestC()
 			{
@@ -262,15 +262,15 @@ namespace Epsitec.Common.Types
 				t2.AddEventHandler (Test1.AttachedProperty, ObjectTest.HandleTest1AttachedChanged);
 
 				Test1.SetAttached (t2, "Good bye");
-				Assert.AreEqual ("Property 'Attached' changed from 'Hello' to 'Good bye'", ObjectTest.log);
+				Assert.AreEqual ("DependencyProperty 'Attached' changed from 'Hello' to 'Good bye'", ObjectTest.log);
 			}
 		}
 
 		private static string log = null;
 
-		private static void HandleTest1AttachedChanged(object sender, Types.PropertyChangedEventArgs e)
+		private static void HandleTest1AttachedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
-			ObjectTest.log = string.Format ("Property '{2}' changed from '{0}' to '{1}'", e.OldValue, e.NewValue, e.PropertyName);
+			ObjectTest.log = string.Format ("DependencyProperty '{2}' changed from '{0}' to '{1}'", e.OldValue, e.NewValue, e.PropertyName);
 		}
 		
 		private void PrivateCreateObjects(int runs)
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Types
 		}
 
 		#region MyObject Class
-		private class MyObject : Types.Object
+		private class MyObject : Types.DependencyObject
 		{
 			public MyObject()
 			{
@@ -448,10 +448,10 @@ namespace Epsitec.Common.Types
 			
 			public static int		OnFooChangedCallCount = 0;
 			
-			public static Property XyzProperty	= Property.Register ("Xyz", typeof (int), typeof (MyObject));
-			public static Property NameProperty	= Property.Register ("Name", typeof (string), typeof (MyObject), new PropertyMetadata ("[default]"));
-			public static Property FooProperty	= Property.Register ("Foo", typeof (string), typeof (MyObject), new PropertyMetadata ("[default]", new PropertyInvalidatedCallback (MyObject.NotifyOnFooChanged)));
-			public static Property SiblingProperty = Property.Register ("Sibling", typeof (MyObject), typeof (MyObject));
+			public static DependencyProperty XyzProperty	= DependencyProperty.Register ("Xyz", typeof (int), typeof (MyObject));
+			public static DependencyProperty NameProperty	= DependencyProperty.Register ("Name", typeof (string), typeof (MyObject), new DependencyPropertyMetadata ("[default]"));
+			public static DependencyProperty FooProperty	= DependencyProperty.Register ("Foo", typeof (string), typeof (MyObject), new DependencyPropertyMetadata ("[default]", new PropertyInvalidatedCallback (MyObject.NotifyOnFooChanged)));
+			public static DependencyProperty SiblingProperty = DependencyProperty.Register ("Sibling", typeof (MyObject), typeof (MyObject));
 			
 			protected virtual void OnFooChanged()
 			{
@@ -459,7 +459,7 @@ namespace Epsitec.Common.Types
 			}
 			
 			
-			private static void NotifyOnFooChanged(Object o, object old_value, object new_value)
+			private static void NotifyOnFooChanged(DependencyObject o, object old_value, object new_value)
 			{
 				MyObject m = o as MyObject;
 				m.OnFooChanged ();
@@ -468,16 +468,16 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		#region ObjectA, ObjectB and ObjectX Classes
-		private class ObjectA : Types.Object
+		private class ObjectA : Types.DependencyObject
 		{
 		}
 		private class ObjectB : ObjectA
 		{
 		}
-		private class ObjectX : Types.Object
+		private class ObjectX : Types.DependencyObject
 		{
-			public static Property AProperty = Property.Register ("A", typeof (ObjectA), typeof (ObjectX));
-			public static Property BProperty = Property.Register ("B", typeof (ObjectB), typeof (ObjectX));
+			public static DependencyProperty AProperty = DependencyProperty.Register ("A", typeof (ObjectA), typeof (ObjectX));
+			public static DependencyProperty BProperty = DependencyProperty.Register ("B", typeof (ObjectB), typeof (ObjectX));
 		}
 		private class ObjectY : ObjectX
 		{
@@ -507,31 +507,31 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		#region Test1 and Test2 Classes
-		public class Test1 : Types.Object
+		public class Test1 : Types.DependencyObject
 		{
 			public Test1()
 			{
 			}
 
-			public static void SetAttached(Object o, string value)
+			public static void SetAttached(DependencyObject o, string value)
 			{
 				o.SetValue (Test1.AttachedProperty, value);
 			}
-			public static string GetAttached(Object o)
+			public static string GetAttached(DependencyObject o)
 			{
 				return o.GetValue (Test1.AttachedProperty) as string;
 			}
 
-			public static Property AttachedProperty = Property.RegisterAttached ("Attached", typeof (string), typeof (Test1));
-			public static Property StandardProperty = Property.Register ("Standard", typeof (string), typeof (Test1));
+			public static DependencyProperty AttachedProperty = DependencyProperty.RegisterAttached ("Attached", typeof (string), typeof (Test1));
+			public static DependencyProperty StandardProperty = DependencyProperty.Register ("Standard", typeof (string), typeof (Test1));
 		}
-		public class Test2 : Types.Object
+		public class Test2 : Types.DependencyObject
 		{
 			public Test2()
 			{
 			}
 
-			public static Property StandardProperty = Property.Register ("Standard", typeof (string), typeof (Test2));
+			public static DependencyProperty StandardProperty = DependencyProperty.Register ("Standard", typeof (string), typeof (Test2));
 		}
 		#endregion
 		

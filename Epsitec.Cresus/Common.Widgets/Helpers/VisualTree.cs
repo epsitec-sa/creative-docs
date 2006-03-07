@@ -543,7 +543,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
-		public static Visual FindParentUsingEvent(Visual visual, Types.Property property)
+		public static Visual FindParentUsingEvent(Visual visual, Types.DependencyProperty property)
 		{
 			//	Cherche le premier parent dans la hiérarchie pour lequel un
 			//	événement a été attaché pour la propriété spécifiée.

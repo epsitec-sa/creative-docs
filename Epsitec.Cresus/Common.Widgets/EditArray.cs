@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 	
 	using BundleAttribute = Support.BundleAttribute;
 	
@@ -512,7 +512,7 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
-		protected override void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
+		protected override void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool focused = (bool) e.NewValue;
 			
@@ -1051,7 +1051,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			private void HandleEditArrayIsKeyboardFocusedChanged(object sender, Types.PropertyChangedEventArgs e)
+			private void HandleEditArrayIsKeyboardFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 			{
 				bool focused = (bool) e.NewValue;
 				

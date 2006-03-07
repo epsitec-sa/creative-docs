@@ -5,22 +5,22 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 
 	/// <summary>
-	/// La classe Object représente un objet dont les propriétés sont
+	/// La classe DependencyObject représente un objet dont les propriétés sont
 	/// stockées dans un dictionnaire interne plutôt que dans des variables, ce
 	/// qui permet une plus grande souplesse (valeurs par défaut, introspection,
 	/// sérialisation, styles, génération automatique d'événements, etc.)
 	/// </summary>
-	public abstract class Object : System.IDisposable
+	public abstract class DependencyObject : System.IDisposable
 	{
-		protected Object()
+		protected DependencyObject()
 		{
-			this.cachedType = ObjectType.SetupFromSystemType (this.GetType ());
+			this.cachedType = DependencyObjectType.SetupFromSystemType (this.GetType ());
 		}
 		
-		public ObjectType						ObjectType
+		public DependencyObjectType						ObjectType
 		{
 			get
 			{
@@ -39,13 +39,13 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return Object.registeredPropertyCount;
+				return DependencyObject.registeredPropertyCount;
 			}
 		}
 		
-		public object GetValue(Property property)
+		public object GetValue(DependencyProperty property)
 		{
-			PropertyMetadata metadata = property.GetMetadata (this);
+			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 			
 			if (metadata.GetValueOverride != null)
 			{
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Types
 				return this.GetValueBase (property);
 			}
 		}
-		public object GetValueBase(Property property)
+		public object GetValueBase(DependencyProperty property)
 		{
 			object value = this.GetLocalValue (property);
 			
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Types
 			
 			if (value == UndefinedValue.Instance)
 			{
-				PropertyMetadata metadata = property.GetMetadata (this);
+				DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
 				if (metadata.InheritsValue)
 				{
@@ -82,9 +82,9 @@ namespace Epsitec.Common.Types
 			return value;
 		}
 		
-		public void SetValue(Property property, object value)
+		public void SetValue(DependencyProperty property, object value)
 		{
-			PropertyMetadata metadata = property.GetMetadata (this);
+			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
 			if (metadata.CoerceValue != null)
 			{
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Types
 				this.SetValueBase (property, value);
 			}
 		}
-		public void SetValueBase(Property property, object value)
+		public void SetValueBase(DependencyProperty property, object value)
 		{
 			object old_value = this.GetValue (property);
 			
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Types
 				this.InvalidateProperty (property, old_value, new_value);
 			}
 		}
-		public void ClearValueBase(Property property)
+		public void ClearValueBase(DependencyProperty property)
 		{
 			object old_value = this.GetValue (property);
 			
@@ -135,9 +135,9 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public object CoerceValue(Property property, object value)
+		public object CoerceValue(DependencyProperty property, object value)
 		{
-			PropertyMetadata metadata = property.GetMetadata (this);
+			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
 			if (metadata.CoerceValue != null)
 			{
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public object GetLocalValue(Property property)
+		public object GetLocalValue(DependencyProperty property)
 		{
 			if (this.properties.ContainsKey (property))
 			{
@@ -160,44 +160,44 @@ namespace Epsitec.Common.Types
 				return UndefinedValue.Instance;
 			}
 		}
-		public void SetLocalValue(Property property, object value)
+		public void SetLocalValue(DependencyProperty property, object value)
 		{
 			this.properties[property] = value;
 		}
-		public void ClearLocalValue(Property property)
+		public void ClearLocalValue(DependencyProperty property)
 		{
 			if (this.properties.ContainsKey (property))
 			{
 				this.properties.Remove (property);
 			}
 		}
-		public bool ContainsLocalValue(Property property)
+		public bool ContainsLocalValue(DependencyProperty property)
 		{
 			return this.properties.ContainsKey (property);
 		}
 
-		public void InvalidateProperty(Property property, object old_value, object new_value)
+		public void InvalidateProperty(DependencyProperty property, object old_value, object new_value)
 		{
-			PropertyMetadata metadata = property.GetMetadata (this);
+			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
 			metadata.NotifyPropertyInvalidated (this, old_value, new_value);
 
 			if (this.HasEventHandlerForProperty (property))
 			{
 				PropertyChangedEventHandler handler = this.propertyEvents[property];
-				PropertyChangedEventArgs args = new PropertyChangedEventArgs (property, old_value, new_value);
+				DependencyPropertyChangedEventArgs args = new DependencyPropertyChangedEventArgs (property, old_value, new_value);
 
 				handler (this, args);
 			}
 		}
 		
-		public void AddEventHandler(Property property, PropertyChangedEventHandler handler)
+		public void AddEventHandler(DependencyProperty property, PropertyChangedEventHandler handler)
 		{
 			if (this.propertyEvents == null)
 			{
 				if (this.propertyEvents == null)
 				{
-					this.propertyEvents = new Dictionary<Property, PropertyChangedEventHandler> ();
+					this.propertyEvents = new Dictionary<DependencyProperty, PropertyChangedEventHandler> ();
 				}
 			}
 
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Types
 				this.propertyEvents[property] = handler;
 			}
 		}
-		public void RemoveEventHandler(Property property, PropertyChangedEventHandler handler)
+		public void RemoveEventHandler(DependencyProperty property, PropertyChangedEventHandler handler)
 		{
 			if ((this.propertyEvents != null) &&
 				(this.propertyEvents.ContainsKey (property)))
@@ -219,7 +219,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public bool HasEventHandlerForProperty(Property property)
+		public bool HasEventHandlerForProperty(DependencyProperty property)
 		{
 			if ((this.propertyEvents != null) &&
 				(this.propertyEvents.ContainsKey (property)) &&
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public Binding GetBinding(Property property)
+		public Binding GetBinding(DependencyProperty property)
 		{
 			if ((this.bindings != null) &&
 				(this.bindings.ContainsKey (property)))
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Types
 				return null;
 			}
 		}
-		public void SetBinding(Property property, Binding binding)
+		public void SetBinding(DependencyProperty property, Binding binding)
 		{
 			if (property == null)
 			{
@@ -258,21 +258,21 @@ namespace Epsitec.Common.Types
 			
 			if (this.bindings == null)
 			{
-				this.bindings = new Dictionary<Property, BindingExpression> ();
+				this.bindings = new Dictionary<DependencyProperty, BindingExpression> ();
 			}
 			
 			this.bindings[property] = BindingExpression.BindToTarget (this, property, binding);
 		}
 		public void ClearAllBindings()
 		{
-			Property[] properties = Copier.CopyArray (this.bindings.Keys);
+			DependencyProperty[] properties = Copier.CopyArray (this.bindings.Keys);
 
 			for (int i = 0; i < properties.Length; i++)
 			{
 				this.ClearBinding (properties[i]);
 			}
 		}
-		public void ClearBinding(Property property)
+		public void ClearBinding(DependencyProperty property)
 		{
 			if ((this.bindings != null) &&
 				(this.bindings.ContainsKey (property)))
@@ -281,7 +281,7 @@ namespace Epsitec.Common.Types
 				this.bindings.Remove (property);
 			}
 		}
-		public bool IsDataBound(Property property)
+		public bool IsDataBound(DependencyProperty property)
 		{
 			if ((this.bindings != null) &&
 				(this.bindings.ContainsKey (property)))
@@ -339,28 +339,28 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		internal static void Register(Property property, System.Type ownerType)
+		internal static void Register(DependencyProperty property, System.Type ownerType)
 		{
 			System.Diagnostics.Debug.Assert (property != null);
 			System.Diagnostics.Debug.Assert (ownerType != null);
 
-			lock (Object.declarations)
+			lock (DependencyObject.declarations)
 			{
 				TypeDeclaration typeDeclaration;
 
-				if (Object.declarations.ContainsKey (ownerType) == false)
+				if (DependencyObject.declarations.ContainsKey (ownerType) == false)
 				{
 					typeDeclaration = new TypeDeclaration ();
 					typeDeclaration[property.Name] = property;
-					Object.declarations[ownerType] = typeDeclaration;
+					DependencyObject.declarations[ownerType] = typeDeclaration;
 				}
 				else
 				{
-					typeDeclaration = Object.declarations[ownerType];
+					typeDeclaration = DependencyObject.declarations[ownerType];
 					
 					if (typeDeclaration.ContainsKey (property.Name))
 					{
-						throw new System.ArgumentException (string.Format ("Property named {0} already exists for type {1}", property.Name, ownerType));
+						throw new System.ArgumentException (string.Format ("DependencyProperty named {0} already exists for type {1}", property.Name, ownerType));
 					}
 					else
 					{
@@ -368,10 +368,10 @@ namespace Epsitec.Common.Types
 					}
 				}
 
-				ObjectType type = ObjectType.FromSystemType (ownerType);
+				DependencyObjectType type = DependencyObjectType.FromSystemType (ownerType);
 				type.Register (property);
 
-				System.Threading.Interlocked.Increment (ref Object.registeredPropertyCount);
+				System.Threading.Interlocked.Increment (ref DependencyObject.registeredPropertyCount);
 			}
 		}
 		
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Types
 		#region Private LocalValueEnumerator Structure
 		private struct LocalValueEnumerator : IEnumerator<LocalValueEntry>, IEnumerable<LocalValueEntry>
 		{
-			public LocalValueEnumerator(Object o)
+			public LocalValueEnumerator(DependencyObject o)
 			{
 				this.property_enumerator = o.properties.GetEnumerator ();
 			}
@@ -427,23 +427,23 @@ namespace Epsitec.Common.Types
 				return this;
 			}
 
-			IEnumerator<KeyValuePair<Property, object>> property_enumerator;
+			IEnumerator<KeyValuePair<DependencyProperty, object>> property_enumerator;
 		}
 		#endregion
 
 		#region Private TypeDeclaration Class
-		private class TypeDeclaration : Dictionary<string, Property>
+		private class TypeDeclaration : Dictionary<string, DependencyProperty>
 		{
 		}
 		#endregion
 		
 		
 
-		Dictionary<Property, object>						properties = new Dictionary<Property, object> ();
-		Dictionary<Property, BindingExpression>				bindings;
-		Dictionary<Property, PropertyChangedEventHandler>	propertyEvents;
+		Dictionary<DependencyProperty, object>						properties = new Dictionary<DependencyProperty, object> ();
+		Dictionary<DependencyProperty, BindingExpression>				bindings;
+		Dictionary<DependencyProperty, PropertyChangedEventHandler>	propertyEvents;
 		Dictionary<string, System.Delegate>					userEvents;
-		ObjectType											cachedType;
+		DependencyObjectType											cachedType;
 
 		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
 		static int											registeredPropertyCount;

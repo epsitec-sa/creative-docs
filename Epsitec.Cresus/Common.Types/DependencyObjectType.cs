@@ -6,17 +6,17 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe ObjectType représente une version de plus haut niveau de
+	/// La classe DependencyObjectType représente une version de plus haut niveau de
 	/// System.Type.
 	/// </summary>
-	public sealed class ObjectType
+	public sealed class DependencyObjectType
 	{
-		private ObjectType(System.Type system_type, ObjectType base_type)
+		private DependencyObjectType(System.Type system_type, DependencyObjectType base_type)
 		{
 			this.systemType = system_type;
 			this.baseType   = base_type;
 
-			ObjectType type = this.baseType;
+			DependencyObjectType type = this.baseType;
 			
 			//	Register this type as a derived type on all standard properties
 			//	defined by the base classes :
@@ -25,14 +25,14 @@ namespace Epsitec.Common.Types
 			{
 				if (type.localStandardProperties != null)
 				{
-					foreach (Property property in type.localStandardProperties)
+					foreach (DependencyProperty property in type.localStandardProperties)
 					{
 						property.AddDerivedType (this.systemType);
 					}
 				}
 				else if (type.standardPropertiesArray != null)
 				{
-					foreach (Property property in type.standardPropertiesArray)
+					foreach (DependencyProperty property in type.standardPropertiesArray)
 					{
 						property.AddDerivedType (this.systemType);
 					}
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public ObjectType						BaseType
+		public DependencyObjectType						BaseType
 		{
 			get
 			{
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public bool IsObjectInstanceOfType(Object o)
+		public bool IsObjectInstanceOfType(DependencyObject o)
 		{
 			if (o == null)
 			{
@@ -84,9 +84,9 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
-		public bool IsSubclassOf(ObjectType type)
+		public bool IsSubclassOf(DependencyObjectType type)
 		{
-			ObjectType base_type = this.BaseType;
+			DependencyObjectType base_type = this.BaseType;
 			
 			if (base_type == type)
 			{
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 		
-		public void Register(Property property)
+		public void Register(DependencyProperty property)
 		{
 			System.Diagnostics.Debug.Assert (property.IsOwnedBy (this.SystemType));
 			System.Diagnostics.Debug.Assert (this.localStandardProperties != null);
@@ -118,26 +118,26 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public ReadOnlyArray<Property> GetProperties()
+		public ReadOnlyArray<DependencyProperty> GetProperties()
 		{
 			if (this.standardPropertiesArray == null)
 			{
 				this.BuildPropertyList ();
 			}
 
-			return new ReadOnlyArray<Property> (this.standardPropertiesArray);
+			return new ReadOnlyArray<DependencyProperty> (this.standardPropertiesArray);
 		}
-		public ReadOnlyArray<Property> GetAttachedProperties()
+		public ReadOnlyArray<DependencyProperty> GetAttachedProperties()
 		{
 			if (this.attachedPropertiesArray == null)
 			{
 				this.BuildPropertyList ();
 			}
 
-			return new ReadOnlyArray<Property> (this.attachedPropertiesArray);
+			return new ReadOnlyArray<DependencyProperty> (this.attachedPropertiesArray);
 		}
 
-		public Property GetProperty(string name)
+		public DependencyProperty GetProperty(string name)
 		{
 			if (this.lookup == null)
 			{
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Types
 			
 			return null;
 		}
-		public Property GetProperty(Property property)
+		public DependencyProperty GetProperty(DependencyProperty property)
 		{
 			if (this.lookup == null)
 			{
@@ -171,17 +171,17 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 
-		public static ObjectType FromSystemType(System.Type type)
+		public static DependencyObjectType FromSystemType(System.Type type)
 		{
-			lock (ObjectType.types)
+			lock (DependencyObjectType.types)
 			{
-				return ObjectType.FromSystemTypeLocked (type);
+				return DependencyObjectType.FromSystemTypeLocked (type);
 			}
 		}
 
-		internal static ObjectType SetupFromSystemType(System.Type type)
+		internal static DependencyObjectType SetupFromSystemType(System.Type type)
 		{
-			ObjectType objectType = ObjectType.FromSystemType (type);
+			DependencyObjectType objectType = DependencyObjectType.FromSystemType (type);
 
 			if (objectType.initialized == false)
 			{
@@ -205,18 +205,18 @@ namespace Epsitec.Common.Types
 			{
 				if (this.standardPropertiesArray == null)
 				{
-					ICollection<Property> baseProperties;
+					ICollection<DependencyProperty> baseProperties;
 
 					if (this.BaseType == null)
 					{
-						baseProperties = new Property[0];
+						baseProperties = new DependencyProperty[0];
 					}
 					else
 					{
 						baseProperties = this.BaseType.GetProperties ();
 					}
 
-					Property[] allProperties  = new Property[baseProperties.Count + this.localStandardProperties.Count];
+					DependencyProperty[] allProperties  = new DependencyProperty[baseProperties.Count + this.localStandardProperties.Count];
 
 					baseProperties.CopyTo (allProperties, 0);
 					this.localStandardProperties.CopyTo (allProperties, baseProperties.Count);
@@ -227,13 +227,13 @@ namespace Epsitec.Common.Types
 					this.localStandardProperties = null;
 					this.localAttachedProperties = null;
 
-					this.lookup = new Dictionary<string, Property> (this.standardPropertiesArray.Length);
+					this.lookup = new Dictionary<string, DependencyProperty> (this.standardPropertiesArray.Length);
 
-					foreach (Property property in this.standardPropertiesArray)
+					foreach (DependencyProperty property in this.standardPropertiesArray)
 					{
 						this.lookup[property.Name] = property;
 					}
-					foreach (Property property in this.attachedPropertiesArray)
+					foreach (DependencyProperty property in this.attachedPropertiesArray)
 					{
 						this.lookup[property.Name] = property;
 					}
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Types
 			{
 				for (int i = 0; i < infos.Length; i++)
 				{
-					if (infos[i].FieldType == typeof (Property))
+					if (infos[i].FieldType == typeof (DependencyProperty))
 					{
 						System.Diagnostics.Debug.WriteLine (string.Format ("Initialized type {0}", this.Name));
 						infos[i].GetValue (null);
@@ -258,21 +258,21 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private static ObjectType FromSystemTypeLocked(System.Type system_type)
+		private static DependencyObjectType FromSystemTypeLocked(System.Type system_type)
 		{
 			if (system_type == null)
 			{
 				return null;
 			}
-			else if (ObjectType.types.ContainsKey (system_type))
+			else if (DependencyObjectType.types.ContainsKey (system_type))
 			{
-				return ObjectType.types[system_type];
+				return DependencyObjectType.types[system_type];
 			}
-			else if (system_type == typeof (Object))
+			else if (system_type == typeof (DependencyObject))
 			{
-				ObjectType this_type = new ObjectType (system_type, null);
+				DependencyObjectType this_type = new DependencyObjectType (system_type, null);
 				
-				ObjectType.types[system_type] = this_type;
+				DependencyObjectType.types[system_type] = this_type;
 
 				this_type.ExecuteTypeStaticConstructor ();
 				
@@ -280,16 +280,16 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				ObjectType base_type = ObjectType.FromSystemTypeLocked (system_type.BaseType);
+				DependencyObjectType base_type = DependencyObjectType.FromSystemTypeLocked (system_type.BaseType);
 				
 				if (base_type == null)
 				{
 					return null;
 				}
 				
-				ObjectType this_type = new ObjectType (system_type, base_type);
+				DependencyObjectType this_type = new DependencyObjectType (system_type, base_type);
 				
-				ObjectType.types[system_type] = this_type;
+				DependencyObjectType.types[system_type] = this_type;
 
 				this_type.ExecuteTypeStaticConstructor ();
 				
@@ -304,15 +304,15 @@ namespace Epsitec.Common.Types
 		#endregion
 
 
-		private ObjectType						baseType;
+		private DependencyObjectType						baseType;
 		private System.Type						systemType;
-		private List<Property>					localStandardProperties = new List<Property> ();
-		private List<Property>					localAttachedProperties = new List<Property> ();
-		private Property[]						standardPropertiesArray;
-		private Property[]						attachedPropertiesArray;
-		private Dictionary<string, Property>	lookup;
+		private List<DependencyProperty>					localStandardProperties = new List<DependencyProperty> ();
+		private List<DependencyProperty>					localAttachedProperties = new List<DependencyProperty> ();
+		private DependencyProperty[]						standardPropertiesArray;
+		private DependencyProperty[]						attachedPropertiesArray;
+		private Dictionary<string, DependencyProperty>	lookup;
 		private bool							initialized;
 
-		static Dictionary<System.Type, ObjectType> types = new Dictionary<System.Type, ObjectType> ();
+		static Dictionary<System.Type, DependencyObjectType> types = new Dictionary<System.Type, DependencyObjectType> ();
 	}
 }

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<PropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
 	/// Visual.
 	/// </summary>
-	public class Visual : Types.Object, ICommandDispatcherHost
+	public class Visual : Types.DependencyObject, ICommandDispatcherHost
 	{
 		public Visual()
 		{
@@ -488,7 +488,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsVisibleProperty);
+				Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsVisibleProperty);
 				this.SetValueBase (Visual.VisibilityProperty, value);
 				snapshot.InvalidateDifferentProperties ();
 			}
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsEnabledProperty);
+				Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsEnabledProperty);
 				this.SetValueBase (Visual.EnableProperty, value);
 				snapshot.InvalidateDifferentProperties ();
 			}
@@ -711,7 +711,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal void SetParentLayer(Layouts.Layer parent_layer)
 		{
-			Types.ObjectTreeSnapshot snapshot = Types.ObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsVisibleProperty);
+			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsVisibleProperty);
 			
 			Visual old_parent = this.Parent;
 			
@@ -922,91 +922,91 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		private static object GetLayersValue(Object o)
+		private static object GetLayersValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.Layers;
 		}
 
-		private static object GetParentValue(Object o)
+		private static object GetParentValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.Parent;
 		}
 		
-		private static object GetParentLayerValue(Object o)
+		private static object GetParentLayerValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.ParentLayer;
 		}
 
-		private static object GetChildrenValue(Object o)
+		private static object GetChildrenValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.Children;
 		}
 
-		private static object GetHasChildrenValue(Object o)
+		private static object GetHasChildrenValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.HasChildren;
 		}
 
-		private static object GetBoundsValue(Object o)
+		private static object GetBoundsValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.Bounds;
 		}
 		
-		private static void SetBoundsValue(Object o, object value)
+		private static void SetBoundsValue(DependencyObject o, object value)
 		{
 			Visual that = o as Visual;
 			that.Bounds = (Drawing.Rectangle) value;
 		}
 		
-		private static object GetSizeValue(Object o)
+		private static object GetSizeValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.Size;
 		}
 		
-		private static void SetSizeValue(Object o, object value)
+		private static void SetSizeValue(DependencyObject o, object value)
 		{
 			Visual that = o as Visual;
 			that.Size = (Drawing.Size) value;
 		}
 		
-		private static object GetIsEnabledValue(Object o)
+		private static object GetIsEnabledValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.IsEnabled;
 		}
 		
-		private static object GetIsVisibleValue(Object o)
+		private static object GetIsVisibleValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.IsVisible;
 		}
 		
-		private static object GetIsFocusedValue(Object o)
+		private static object GetIsFocusedValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.IsFocused;
 		}
 		
-		private static object GetIsKeyboardFocusedValue(Object o)
+		private static object GetIsKeyboardFocusedValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.IsKeyboardFocused;
 		}
 		
-		private static object GetContainsKeyboardFocusValue(Object o)
+		private static object GetContainsKeyboardFocusValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.ContainsKeyboardFocus;
 		}
 		
-		private static object GetCommandDispatchersValue(Object o)
+		private static object GetCommandDispatchersValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			CommandDispatcher[] value = (CommandDispatcher[]) that.GetValueBase (Visual.CommandDispatchersProperty);
@@ -1014,104 +1014,104 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private static void SetEnableValue(Object o, object value)
+		private static void SetEnableValue(DependencyObject o, object value)
 		{
 			Visual that = o as Visual;
 			that.Enable = (bool) value;
 		}
 		
-		private static void SetVisibilityValue(Object o, object value)
+		private static void SetVisibilityValue(DependencyObject o, object value)
 		{
 			Visual that = o as Visual;
 			that.Visibility = (bool) value;
 		}
 		
-		private static void NotifySizeChanged(Object o, object old_value, object new_value)
+		private static void NotifySizeChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
-			that.OnSizeChanged (new PropertyChangedEventArgs (Visual.SizeProperty, old_value, new_value));
+			that.OnSizeChanged (new DependencyPropertyChangedEventArgs (Visual.SizeProperty, old_value, new_value));
 		}
 		
-		private static void NotifyMinSizeChanged(Object o, object old_value, object new_value)
+		private static void NotifyMinSizeChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
-			that.OnMinSizeChanged (new PropertyChangedEventArgs (Visual.MinSizeProperty, old_value, new_value));
+			that.OnMinSizeChanged (new DependencyPropertyChangedEventArgs (Visual.MinSizeProperty, old_value, new_value));
 		}
 		
-		private static void NotifyMaxSizeChanged(Object o, object old_value, object new_value)
+		private static void NotifyMaxSizeChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
-			that.OnMaxSizeChanged (new PropertyChangedEventArgs (Visual.MaxSizeProperty, old_value, new_value));
+			that.OnMaxSizeChanged (new DependencyPropertyChangedEventArgs (Visual.MaxSizeProperty, old_value, new_value));
 		}
 		
-		private static void NotifyParentChanged(Object o, object old_value, object new_value)
+		private static void NotifyParentChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
-			that.OnParentChanged (new PropertyChangedEventArgs (Visual.ParentProperty, old_value, new_value));
+			that.OnParentChanged (new DependencyPropertyChangedEventArgs (Visual.ParentProperty, old_value, new_value));
 		}
 		
-		private static void NotifyIsVisibleChanged(Object o, object old_value, object new_value)
+		private static void NotifyIsVisibleChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
-			that.OnIsVisibleChanged (new PropertyChangedEventArgs (Visual.IsVisibleProperty, old_value, new_value));
+			that.OnIsVisibleChanged (new DependencyPropertyChangedEventArgs (Visual.IsVisibleProperty, old_value, new_value));
 		}
 		
 		
-		private static void NotifyIsFocusedChanged(Object o, object old_value, object new_value)
+		private static void NotifyIsFocusedChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
-			that.OnIsFocusedChanged (new PropertyChangedEventArgs (Visual.IsFocusedProperty, old_value, new_value));
+			that.OnIsFocusedChanged (new DependencyPropertyChangedEventArgs (Visual.IsFocusedProperty, old_value, new_value));
 		}
 		
-		private static void NotifyIsKeyboardFocusedChanged(Object o, object old_value, object new_value)
+		private static void NotifyIsKeyboardFocusedChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
-			that.OnIsKeyboardFocusedChanged (new PropertyChangedEventArgs (Visual.IsKeyboardFocusedProperty, old_value, new_value));
+			that.OnIsKeyboardFocusedChanged (new DependencyPropertyChangedEventArgs (Visual.IsKeyboardFocusedProperty, old_value, new_value));
 		}
 		
-		private static void NotifyCommandChanged(Object o, object old_value, object new_value)
+		private static void NotifyCommandChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
-			that.OnCommandChanged (new PropertyChangedEventArgs (Visual.CommandProperty, old_value, new_value));
+			that.OnCommandChanged (new DependencyPropertyChangedEventArgs (Visual.CommandProperty, old_value, new_value));
 		}
 		
-		private static void NotifyCommandDispatchersChanged(Object o, object old_value, object new_value)
+		private static void NotifyCommandDispatchersChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
-			that.OnCommandDispatchersChanged (new PropertyChangedEventArgs (Visual.CommandDispatchersProperty, old_value, new_value));
+			that.OnCommandDispatchersChanged (new DependencyPropertyChangedEventArgs (Visual.CommandDispatchersProperty, old_value, new_value));
 		}
 		
 		
-		protected virtual void OnSizeChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
-		protected virtual void OnMinSizeChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnMinSizeChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
-		protected virtual void OnMaxSizeChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnMaxSizeChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
-		protected virtual void OnParentChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnParentChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			Helpers.VisualTree.InvalidateCommandDispatcher (this);
 		}
 		
-		protected virtual void OnIsVisibleChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnIsVisibleChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
-		protected virtual void OnIsFocusedChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
-		protected virtual void OnIsKeyboardFocusedChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnIsKeyboardFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
-		protected virtual void OnCommandChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnCommandChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			string old_command = e.OldValue as string;
 			string new_command = e.NewValue as string;
@@ -1137,7 +1137,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnCommandDispatchersChanged(Types.PropertyChangedEventArgs e)
+		protected virtual void OnCommandDispatchersChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			Helpers.VisualTree.InvalidateCommandDispatcher (this);
 		}
@@ -1269,54 +1269,54 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static readonly Property IndexProperty				= Property.Register ("Index", typeof (int), typeof (Visual), new PropertyMetadata (-1));
-		public static readonly Property GroupProperty				= Property.Register ("Group", typeof (string), typeof (Visual));
-		public static readonly Property NameProperty				= Property.Register ("Name", typeof (string), typeof (Visual));
-		public static readonly Property ParentProperty				= ObjectTree.ParentProperty.AddOwner (typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged)));
-		public static readonly Property ParentLayerProperty			= Property.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentLayerValue)));
-		public static readonly Property ChildrenProperty			= ObjectTree.ChildrenProperty.AddOwner (typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
-		public static readonly Property HasChildrenProperty			= ObjectTree.HasChildrenProperty.AddOwner (typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetHasChildrenValue)));
-		public static readonly Property LayersProperty				= Property.RegisterReadOnly ("Layers", typeof (Collections.LayerCollection), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetLayersValue)));
+		public static readonly DependencyProperty IndexProperty				= DependencyProperty.Register ("Index", typeof (int), typeof (Visual), new DependencyPropertyMetadata (-1));
+		public static readonly DependencyProperty GroupProperty				= DependencyProperty.Register ("Group", typeof (string), typeof (Visual));
+		public static readonly DependencyProperty NameProperty				= DependencyProperty.Register ("Name", typeof (string), typeof (Visual));
+		public static readonly DependencyProperty ParentProperty				= DependencyObjectTree.ParentProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged)));
+		public static readonly DependencyProperty ParentLayerProperty			= DependencyProperty.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetParentLayerValue)));
+		public static readonly DependencyProperty ChildrenProperty			= DependencyObjectTree.ChildrenProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
+		public static readonly DependencyProperty HasChildrenProperty			= DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetHasChildrenValue)));
+		public static readonly DependencyProperty LayersProperty				= DependencyProperty.RegisterReadOnly ("Layers", typeof (Collections.LayerCollection), typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetLayersValue)));
 		
-		public static readonly Property AnchorProperty				= Property.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyMetadataOptions.AffectsParentLayout));
-		public static readonly Property AnchorMarginsProperty		= Property.Register ("AnchorMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsParentLayout));
-		public static readonly Property DockProperty				= Property.Register ("Dock", typeof (DockStyle), typeof (Visual), new VisualPropertyMetadata (DockStyle.None, VisualPropertyMetadataOptions.AffectsParentLayout));
-		public static readonly Property DockPaddingProperty			= Property.Register ("DockPadding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsParentLayout));
-		public static readonly Property DockMarginsProperty			= Property.Register ("DockMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsParentLayout));
-		public static readonly Property ContainerLayoutModeProperty	= Property.Register ("ContainerLayoutMode", typeof (ContainerLayoutMode), typeof (Visual), new VisualPropertyMetadata (ContainerLayoutMode.VerticalFlow, VisualPropertyMetadataOptions.AffectsLayout));
+		public static readonly DependencyProperty AnchorProperty				= DependencyProperty.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyMetadataOptions.AffectsParentLayout));
+		public static readonly DependencyProperty AnchorMarginsProperty		= DependencyProperty.Register ("AnchorMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsParentLayout));
+		public static readonly DependencyProperty DockProperty				= DependencyProperty.Register ("Dock", typeof (DockStyle), typeof (Visual), new VisualPropertyMetadata (DockStyle.None, VisualPropertyMetadataOptions.AffectsParentLayout));
+		public static readonly DependencyProperty DockPaddingProperty			= DependencyProperty.Register ("DockPadding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsParentLayout));
+		public static readonly DependencyProperty DockMarginsProperty			= DependencyProperty.Register ("DockMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsParentLayout));
+		public static readonly DependencyProperty ContainerLayoutModeProperty	= DependencyProperty.Register ("ContainerLayoutMode", typeof (ContainerLayoutMode), typeof (Visual), new VisualPropertyMetadata (ContainerLayoutMode.VerticalFlow, VisualPropertyMetadataOptions.AffectsLayout));
 		
-		public static readonly Property BoundsProperty				= Property.Register ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new PropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue), new SetValueOverrideCallback (Visual.SetBoundsValue)));
-		public static readonly Property SizeProperty				= Property.Register ("Size", typeof (Drawing.Size), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetSizeValue), new SetValueOverrideCallback (Visual.SetSizeValue), new PropertyInvalidatedCallback (Visual.NotifySizeChanged)));
-		public static readonly Property PreferredSizeProperty		= Property.Register ("PreferredSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyMetadataOptions.AffectsParentLayout));
-		public static readonly Property MinSizeProperty				= Property.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsParentLayout));
-		public static readonly Property MaxSizeProperty				= Property.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyMetadataOptions.AffectsParentLayout));
+		public static readonly DependencyProperty BoundsProperty				= DependencyProperty.Register ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new DependencyPropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue), new SetValueOverrideCallback (Visual.SetBoundsValue)));
+		public static readonly DependencyProperty SizeProperty				= DependencyProperty.Register ("Size", typeof (Drawing.Size), typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetSizeValue), new SetValueOverrideCallback (Visual.SetSizeValue), new PropertyInvalidatedCallback (Visual.NotifySizeChanged)));
+		public static readonly DependencyProperty PreferredSizeProperty		= DependencyProperty.Register ("PreferredSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyMetadataOptions.AffectsParentLayout));
+		public static readonly DependencyProperty MinSizeProperty				= DependencyProperty.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsParentLayout));
+		public static readonly DependencyProperty MaxSizeProperty				= DependencyProperty.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyMetadataOptions.AffectsParentLayout));
 		
-		public static readonly Property VisibilityProperty			= Property.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyMetadataOptions.AffectsParentLayout | VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly Property EnableProperty				= Property.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty VisibilityProperty			= DependencyProperty.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyMetadataOptions.AffectsParentLayout | VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty EnableProperty				= DependencyProperty.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		public static readonly Property InheritParentFocusProperty	= Property.Register ("InheritParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false));
+		public static readonly DependencyProperty InheritParentFocusProperty	= DependencyProperty.Register ("InheritParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false));
 		
-		public static readonly Property IsVisibleProperty			= Property.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsVisibleValue), new PropertyInvalidatedCallback (Visual.NotifyIsVisibleChanged), VisualPropertyMetadataOptions.InheritsValue));
-		public static readonly Property IsEnabledProperty			= Property.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsEnabledValue), VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly Property IsFocusedProperty			= Property.RegisterReadOnly ("IsFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsFocusedChanged), VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty IsVisibleProperty			= DependencyProperty.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsVisibleValue), new PropertyInvalidatedCallback (Visual.NotifyIsVisibleChanged), VisualPropertyMetadataOptions.InheritsValue));
+		public static readonly DependencyProperty IsEnabledProperty			= DependencyProperty.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsEnabledValue), VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty IsFocusedProperty			= DependencyProperty.RegisterReadOnly ("IsFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsFocusedChanged), VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		public static readonly Property IsKeyboardFocusedProperty	= Property.RegisterReadOnly ("IsKeyboardFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetIsKeyboardFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsKeyboardFocusedChanged), VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly Property ContainsKeyboardFocusProperty = Property.RegisterReadOnly ("ContainsKeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetContainsKeyboardFocusValue), VisualPropertyMetadataOptions.None));
+		public static readonly DependencyProperty IsKeyboardFocusedProperty	= DependencyProperty.RegisterReadOnly ("IsKeyboardFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetIsKeyboardFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsKeyboardFocusedChanged), VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty ContainsKeyboardFocusProperty = DependencyProperty.RegisterReadOnly ("ContainsKeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetContainsKeyboardFocusValue), VisualPropertyMetadataOptions.None));
 		
-		public static readonly Property AutoCaptureProperty			= Property.Register ("AutoCapture", typeof (bool), typeof (Visual), new PropertyMetadata (true));
-		public static readonly Property AutoFocusProperty			= Property.Register ("AutoFocus", typeof (bool), typeof (Visual), new PropertyMetadata (false));
-		public static readonly Property AutoEngageProperty			= Property.Register ("AutoEngage", typeof (bool), typeof (Visual), new PropertyMetadata (false));
-		public static readonly Property AutoRepeatProperty			= Property.Register ("AutoRepeat", typeof (bool), typeof (Visual), new PropertyMetadata (false));
-		public static readonly Property AutoToggleProperty			= Property.Register ("AutoToggle", typeof (bool), typeof (Visual), new PropertyMetadata (false));
-		public static readonly Property AutoRadioProperty			= Property.Register ("AutoRadio", typeof (bool), typeof (Visual), new PropertyMetadata (false));
-		public static readonly Property AutoDoubleClickProperty		= Property.Register ("AutoDoubleClick", typeof (bool), typeof (Visual), new PropertyMetadata (false));
+		public static readonly DependencyProperty AutoCaptureProperty			= DependencyProperty.Register ("AutoCapture", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (true));
+		public static readonly DependencyProperty AutoFocusProperty			= DependencyProperty.Register ("AutoFocus", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty AutoEngageProperty			= DependencyProperty.Register ("AutoEngage", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty AutoRepeatProperty			= DependencyProperty.Register ("AutoRepeat", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty AutoToggleProperty			= DependencyProperty.Register ("AutoToggle", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty AutoRadioProperty			= DependencyProperty.Register ("AutoRadio", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty AutoDoubleClickProperty		= DependencyProperty.Register ("AutoDoubleClick", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
 		
-		public static readonly Property AcceptThreeStatePropery		= Property.Register ("AcceptThreeState", typeof (bool), typeof (Visual), new PropertyMetadata (false));
+		public static readonly DependencyProperty AcceptThreeStatePropery		= DependencyProperty.Register ("AcceptThreeState", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
 		
-		public static readonly Property BackColorProperty			= Property.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty BackColorProperty			= DependencyProperty.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		public static readonly Property CommandDispatchersProperty	= Property.RegisterReadOnly ("CommandDispatchers", typeof (CommandDispatcher[]), typeof (Visual), new PropertyMetadata (null, new GetValueOverrideCallback (Visual.GetCommandDispatchersValue), new PropertyInvalidatedCallback (Visual.NotifyCommandDispatchersChanged)));
-		public static readonly Property CommandProperty				= Property.Register ("Command", typeof (string), typeof (Visual), new PropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged)));
+		public static readonly DependencyProperty CommandDispatchersProperty	= DependencyProperty.RegisterReadOnly ("CommandDispatchers", typeof (CommandDispatcher[]), typeof (Visual), new DependencyPropertyMetadata (null, new GetValueOverrideCallback (Visual.GetCommandDispatchersValue), new PropertyInvalidatedCallback (Visual.NotifyCommandDispatchersChanged)));
+		public static readonly DependencyProperty CommandProperty				= DependencyProperty.Register ("Command", typeof (string), typeof (Visual), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged)));
 		
 		private int								command_cache_id = -1;
 		private short							visual_serial_id = Visual.next_serial_id++;

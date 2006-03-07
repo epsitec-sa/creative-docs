@@ -124,7 +124,7 @@
     <Compile Include="BindingMode.cs" />
     <Compile Include="BindingUpdateMode.cs" />
     <Compile Include="BindingSourceType.cs" />
-    <Compile Include="ObjectTree.cs" />
+    <Compile Include="DependencyObjectTree.cs" />
     <Compile Include="DataGraph.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -213,22 +213,22 @@
     <Compile Include="LongIntegerType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Object.cs">
+    <Compile Include="DependencyObject.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ObjectType.cs">
+    <Compile Include="DependencyObjectType.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="OpenEnumType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Property.cs">
+    <Compile Include="DependencyProperty.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PropertyMetadata.cs">
+    <Compile Include="DependencyPropertyMetadata.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PropertyPath.cs" />
+    <Compile Include="DependencyPropertyPath.cs" />
     <Compile Include="ReadOnlyArray.cs" />
     <Compile Include="Resources.cs">
       <SubType>Code</SubType>
@@ -248,7 +248,7 @@
     <Compile Include="UndefinedValue.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ObjectTreeSnapshot.cs" />
+    <Compile Include="DependencyObjectTreeSnapshot.cs" />
     <Compile Include="VoidType.cs">
       <SubType>Code</SubType>
     </Compile>
