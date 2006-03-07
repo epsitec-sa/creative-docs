@@ -52,58 +52,10 @@ namespace Epsitec.Common.Types
 
 		public static DependencyObject FindFirst(DependencyObject root, string name)
 		{
-			return DependencyObjectTree.FindFirst (root, name, true, false);
-		}
-		private static DependencyObject FindFirst(DependencyObject root, string name, bool all, bool skipRoot)
-		{
-			if (root == null)
-			{
-				return null;
-			}
-
-			//	Breadth first search for the named item.
-
-			List<DependencyObject> roots = new List<DependencyObject> ();
-
-			roots.Add (root);
-
-			while (roots.Count > 0)
-			{
-				if (!skipRoot)
-				{
-					for (int i = 0; i < roots.Count; i++)
-					{
-						DependencyObject item = roots[i];
-
-						if (DependencyObjectTree.GetName (item) == name)
-						{
-							return item;
-						}
-					}
-				}
-
-				int n = roots.Count;
-
-				for (int i = 0; i < n; i++)
-				{
-					DependencyObject item = roots[i];
-
-					if ((all) || (skipRoot) ||
-						(DependencyObjectTree.GetName (item) == null))
-					{
-						if (DependencyObjectTree.GetHasChildren (item))
-						{
-							roots.AddRange (DependencyObjectTree.GetChildren (item));
-						}
-					}
-				}
-
-				skipRoot = false;
-
-				roots.RemoveRange (0, n);
-			}
-
-			return null;
+			//	Do a breadth-first search for an item named 'name' in the tree
+			//	starting at 'root' (the search includes the root).
+			
+			return DependencyObjectTree.FindFirst (root, name, FindMode.SearchAll);
 		}
 		public static DependencyObject FindFirst(DependencyObject root, System.Text.RegularExpressions.Regex regex)
 		{
@@ -152,12 +104,15 @@ namespace Epsitec.Common.Types
 		
 		public static DependencyObject[] FindAll(DependencyObject root, string name)
 		{
+			//	Do a breadth-first search for all items named 'name' in the tree
+			//	starting at 'root' (the search includes the root). If there are
+			//	several matches, they will be returned in order (starting from
+			//	the root, then level 1, then level 2, etc.)
+			
 			if (root == null)
 			{
 				return new DependencyObject[0];
 			}
-
-			//	Breadth first search for the named item.
 
 			List<DependencyObject> roots = new List<DependencyObject> ();
 			List<DependencyObject> result = new List<DependencyObject> ();
@@ -242,6 +197,16 @@ namespace Epsitec.Common.Types
 		
 		public static DependencyObject FindChild(DependencyObject root, params string[] path)
 		{
+			//	Find the item by looking first for an item which matches the first
+			//	element of the path, then a child which matches the second element,
+			//	etc.
+			//
+			//	Named items which don't match the path are not further analysed.
+			//	A tree [R] --> [A] --> [B] --> [C] in which a path of "A"/"C" is
+			//	being searched won't return [C], as the search will abort when it
+			//	encounters [B]. However, [R] --> [A] --> [] --> [C] will be OK,
+			//	as items with no names (null) will be skipped.
+			
 			return DependencyObjectTree.FindChild (root, path, 0);
 		}
 		public static DependencyObject FindChild(DependencyObject root, string[] path, int start)
@@ -255,7 +220,7 @@ namespace Epsitec.Common.Types
 				return root;
 			}
 
-			DependencyObject item = DependencyObjectTree.FindFirst (root, path[start], false, true);
+			DependencyObject item = DependencyObjectTree.FindFirst (root, path[start], FindMode.SearchMatchingChildrenOnly);
 
 			if (item != null)
 			{
@@ -323,6 +288,77 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+
+		#region FindMode Enumeration
+		private enum FindMode
+		{
+			SearchAll,
+			SearchMatchingChildrenOnly
+		}
+		#endregion
+
+		#region Private Methods
+		private static DependencyObject FindFirst(DependencyObject root, string name, FindMode mode)
+		{
+			if (root == null)
+			{
+				return null;
+			}
+
+			//	Breadth first search for the named item. Depending on the search mode,
+			//	either consider the root as a candidate or only process its children.
+
+			List<DependencyObject> roots = new List<DependencyObject> ();
+
+			roots.Add (root);
+
+			bool findAll = (mode == FindMode.SearchAll);
+			bool skipRoot = (mode == FindMode.SearchMatchingChildrenOnly);
+
+			while (roots.Count > 0)
+			{
+				if (skipRoot == false)
+				{
+					for (int i = 0; i < roots.Count; i++)
+					{
+						DependencyObject item = roots[i];
+
+						if (DependencyObjectTree.GetName (item) == name)
+						{
+							return item;
+						}
+					}
+				}
+
+				int n = roots.Count;
+
+				for (int i = 0; i < n; i++)
+				{
+					DependencyObject item = roots[i];
+
+					//	If we are skipping the root, always analyse its children,
+					//	regardless of the root's name.
+					//	If SearchMatchingChildrenOnly has been specified, then we
+					//	will not process the children if items which have a name.
+
+					if ((findAll) || (skipRoot) ||
+						(DependencyObjectTree.GetName (item) == null))
+					{
+						if (DependencyObjectTree.GetHasChildren (item))
+						{
+							roots.AddRange (DependencyObjectTree.GetChildren (item));
+						}
+					}
+				}
+
+				skipRoot = false;
+
+				roots.RemoveRange (0, n);
+			}
+
+			return null;
+		}
+		#endregion
 
 		public static DependencyProperty ParentProperty = DependencyProperty.RegisterReadOnly ("Parent", typeof (DependencyObject), typeof (DependencyObjectTree));
 		public static DependencyProperty ChildrenProperty = DependencyProperty.RegisterReadOnly ("Children", typeof (ICollection<DependencyObject>), typeof (DependencyObjectTree));
