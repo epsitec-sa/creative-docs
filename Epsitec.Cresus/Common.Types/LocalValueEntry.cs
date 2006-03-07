@@ -6,7 +6,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// LocalValueEntry.
+	/// The LocalValueEntry structure is used by DependencyObject to store its
+	/// values.
 	/// </summary>
 	public struct LocalValueEntry
 	{
@@ -21,7 +22,7 @@ namespace Epsitec.Common.Types
 			this.value = pair.Value;
 		}
 		
-		public DependencyProperty							Property
+		public DependencyProperty				Property
 		{
 			get
 			{
@@ -36,7 +37,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		private DependencyProperty						property;
+		private DependencyProperty				property;
 		private object							value;
 	}
 }
