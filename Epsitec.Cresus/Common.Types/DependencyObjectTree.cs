@@ -54,11 +54,22 @@ namespace Epsitec.Common.Types
 		{
 			if (o == null)
 			{
-				return null;
+				throw new System.ArgumentNullException ();
 			}
 			else
 			{
 				return o.GetValue (DependencyObjectTree.ParentProperty) as DependencyObject;
+			}
+		}
+		public static string GetName(DependencyObject o)
+		{
+			if (o == null)
+			{
+				throw new System.ArgumentNullException ();
+			}
+			else
+			{
+				return o.GetValue (DependencyObjectTree.NameProperty) as string;
 			}
 		}
 		
@@ -66,7 +77,7 @@ namespace Epsitec.Common.Types
 		{
 			if (o == null)
 			{
-				return null;
+				throw new System.ArgumentNullException ();
 			}
 			else
 			{
@@ -81,7 +92,7 @@ namespace Epsitec.Common.Types
 			
 			if (o == null)
 			{
-				return false;
+				throw new System.ArgumentNullException ();
 			}
 			else
 			{
@@ -101,5 +112,6 @@ namespace Epsitec.Common.Types
 		public static DependencyProperty ParentProperty = DependencyProperty.RegisterReadOnly ("Parent", typeof (DependencyObject), typeof (DependencyObjectTree));
 		public static DependencyProperty ChildrenProperty = DependencyProperty.RegisterReadOnly ("Children", typeof (ICollection<DependencyObject>), typeof (DependencyObjectTree));
 		public static DependencyProperty HasChildrenProperty = DependencyProperty.RegisterReadOnly ("HasChildren", typeof (bool), typeof (DependencyObjectTree));
+		public static DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (DependencyObjectTree));
 	}
 }

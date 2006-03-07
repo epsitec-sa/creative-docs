@@ -89,6 +89,76 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		public ChangeRecord[] GetChanges()
+		{
+			List<ChangeRecord> records = new List<ChangeRecord> ();
+			
+			foreach (SnapshotValue snapshot in this.list)
+			{
+				object oldValue = snapshot.Value;
+				object newValue = snapshot.Object.GetValue (snapshot.Property);
+
+				if (oldValue == newValue)
+				{
+					//	Nothing changed, skip.
+				}
+				else if ((oldValue == null) ||
+					/**/ (!oldValue.Equals (newValue)))
+				{
+					records.Add (new ChangeRecord (snapshot.Object, snapshot.Property, oldValue, newValue));
+				}
+			}
+			
+			return records.ToArray ();
+		}
+
+		#region ChangeRecord Structure
+		public struct ChangeRecord
+		{
+			public ChangeRecord(DependencyObject obj, DependencyProperty property, object oldValue, object newValue)
+			{
+				this.obj = obj;
+				this.property = property;
+				this.oldValue = oldValue;
+				this.newValue = newValue;
+			}
+			
+			public DependencyObject				Object
+			{
+				get
+				{
+					return this.obj;
+				}
+			}
+			public DependencyProperty			Property
+			{
+				get
+				{
+					return this.property;
+				}
+			}
+			public object						OldValue
+			{
+				get
+				{
+					return this.oldValue;
+				}
+			}
+			public object						NewValue
+			{
+				get
+				{
+					return this.newValue;
+				}
+			}
+			
+			private DependencyObject			obj;
+			private DependencyProperty			property;
+			private object						oldValue;
+			private object						newValue;
+		}
+		#endregion
+
 		#region Private SnapshotValue Structure
 		private struct SnapshotValue
 		{
@@ -99,14 +169,14 @@ namespace Epsitec.Common.Types
 				this.value    = obj.GetValue (property);
 			}
 			
-			public DependencyObject						Object
+			public DependencyObject				Object
 			{
 				get
 				{
 					return this.obj;
 				}
 			}
-			public DependencyProperty						Property
+			public DependencyProperty			Property
 			{
 				get
 				{
@@ -121,8 +191,8 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			private DependencyObject						obj;
-			private DependencyProperty					property;
+			private DependencyObject			obj;
+			private DependencyProperty			property;
 			private object						value;
 		}
 		#endregion
