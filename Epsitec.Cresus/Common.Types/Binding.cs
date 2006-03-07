@@ -43,7 +43,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		public DependencyPropertyPath						Path
+		public DependencyPropertyPath			Path
 		{
 			get
 			{
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Types
 
 		private BindingMode						mode;
 		private object							source;
-		private DependencyPropertyPath					path;
+		private DependencyPropertyPath			path;
 		private int								deferCounter;
 		private State							state = State.SourceDetached;
 		private List<BindingExpression>			expressions = new List<BindingExpression> ();

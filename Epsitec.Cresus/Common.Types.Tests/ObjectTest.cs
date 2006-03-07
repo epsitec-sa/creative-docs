@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
@@ -51,33 +52,6 @@ namespace Epsitec.Common.Types
 			
 			Test1.SetAttached (t2, "b");
 			Assert.AreEqual ("Attached:a,b.", handler.Log);
-		}
-
-		private class EventHandlerSupport
-		{
-			public string Log
-			{
-				get
-				{
-					return this.buffer.ToString ();
-				}
-			}
-			
-			public void RecordEvent(object sender, DependencyPropertyChangedEventArgs e)
-			{
-				this.buffer.Append (e.PropertyName);
-				this.buffer.Append (":");
-				this.buffer.Append (e.OldValue);
-				this.buffer.Append (",");
-				this.buffer.Append (e.NewValue);
-				this.buffer.Append (".");
-			}
-			public void Clear()
-			{
-				this.buffer.Length = 0;
-			}
-			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 		}
 
 		[Test]
@@ -271,6 +245,61 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (null, DependencyPropertyPath.Combine (pp1, pp1).GetFullPath ());
 		}
 
+		[Test]
+		public void CheckTree()
+		{
+			TreeTest a = new TreeTest ();
+			TreeTest b = new TreeTest ();
+			TreeTest c1 = new TreeTest ();
+			TreeTest c2 = new TreeTest ();
+
+			a.AddChild (b);
+			b.AddChild (c1);
+			b.AddChild (c2);
+
+			a.Name = "a";
+			b.Name = "b";
+			c1.Name = "c1";
+			c2.Name = "c2";
+
+			a.Value = "A";
+			b.Value = "B";
+			c1.Value = "C1";
+			c2.Value = "C2";
+
+			Assert.IsTrue (a.HasChildren);
+			Assert.IsTrue (b.HasChildren);
+			Assert.IsFalse (c1.HasChildren);
+			Assert.IsFalse (c2.HasChildren);
+			Assert.AreEqual ("a", a.Name);
+			Assert.AreEqual ("b", b.Name);
+			Assert.AreEqual (b.Children[0].Name, "c1");
+			Assert.AreEqual (b.Children[1].Name, "c2");
+
+			Assert.AreEqual (b, DependencyObjectTree.GetParent (c1));
+			Assert.AreEqual (b, DependencyObjectTree.GetParent (c2));
+			Assert.AreEqual (a, DependencyObjectTree.GetParent (b));
+
+			DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (a, TreeTest.ValueProperty);
+
+			c1.Value = "C1-X";
+			c2.Value = "C2-X";
+
+			DependencyObjectTreeSnapshot.ChangeRecord[] changes = snapshot.GetChanges ();
+
+			Assert.AreEqual (2, changes.Length);
+			Assert.AreEqual (c1, changes[0].Object);
+			Assert.AreEqual (TreeTest.ValueProperty, changes[0].Property);
+			Assert.AreEqual ("C1", changes[0].OldValue);
+			Assert.AreEqual ("C1-X", changes[0].NewValue);
+			Assert.AreEqual (c2, changes[1].Object);
+			Assert.AreEqual (TreeTest.ValueProperty, changes[1].Property);
+			Assert.AreEqual ("C2", changes[1].OldValue);
+			Assert.AreEqual ("C2-X", changes[1].NewValue);
+		}
+
+		
+		
 		private static class TestAttachedProperties
 		{
 			public static void TestA()
@@ -589,7 +618,119 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty StandardProperty = DependencyProperty.Register ("Standard", typeof (string), typeof (Test2));
 		}
 		#endregion
-		
+
+		#region Class EventHandlerSupport
+		private class EventHandlerSupport
+		{
+			public string Log
+			{
+				get
+				{
+					return this.buffer.ToString ();
+				}
+			}
+
+			public void RecordEvent(object sender, DependencyPropertyChangedEventArgs e)
+			{
+				this.buffer.Append (e.PropertyName);
+				this.buffer.Append (":");
+				this.buffer.Append (e.OldValue);
+				this.buffer.Append (",");
+				this.buffer.Append (e.NewValue);
+				this.buffer.Append (".");
+			}
+			public void Clear()
+			{
+				this.buffer.Length = 0;
+			}
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+		}
+		#endregion
+
+		class TreeTest : DependencyObject
+		{
+			public string Name
+			{
+				get
+				{
+					return this.GetValue (TreeTest.NameProperty) as string;
+				}
+				set
+				{
+					this.SetValue (TreeTest.NameProperty, value);
+				}
+			}
+			public TreeTest Parent
+			{
+				get
+				{
+					return this.parent;
+				}
+			}
+			public IList<TreeTest> Children
+			{
+				get
+				{
+					return this.children;
+				}
+			}
+			public bool HasChildren
+			{
+				get
+				{
+					return this.children == null ? false : (this.children.Count > 0);
+				}
+			}
+			public string Value
+			{
+				get
+				{
+					return this.GetValue (TreeTest.ValueProperty) as string;
+				}
+				set
+				{
+					this.SetValue (TreeTest.ValueProperty, value);
+				}
+			}
+			
+			public void AddChild(TreeTest item)
+			{
+				if (this.children == null)
+				{
+					this.children = new List<TreeTest> ();
+				}
+				this.children.Add (item);
+				item.parent = this;
+			}
+			
+			public static object GetValueParent(DependencyObject o)
+			{
+				TreeTest tt = o as TreeTest;
+				return tt.Parent;
+			}
+			public static object GetValueChildren(DependencyObject o)
+			{
+				TreeTest tt = o as TreeTest;
+				DependencyObject[] copy = tt.children.ToArray ();
+				return copy;
+			}
+			public static object GetValueHasChildren(DependencyObject o)
+			{
+				TreeTest tt = o as TreeTest;
+				return tt.HasChildren;
+			}
+
+			public static DependencyProperty NameProperty = DependencyObjectTree.NameProperty.AddOwner (typeof (TreeTest));
+			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueParent));
+			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueChildren));
+			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueHasChildren));
+			public static DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (string), typeof (TreeTest));
+
+			TreeTest parent;
+			List<TreeTest> children;
+		}
+
 		private static void Register(string name)
 		{
 			if (ObjectTest.registered.Length > 0)

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// The BindingExpression class is used to maintain the real binding
 	/// between a source and a target, whereas the Binding class can be
-	/// specified more than once (Binding is more general).
+	/// specified more than once (i.e. Binding is more general).
 	/// </summary>
 	public sealed class BindingExpression : System.IDisposable
 	{
@@ -25,14 +25,14 @@ namespace Epsitec.Common.Types
 				return this.binding;
 			}
 		}
-		public DependencyObject							TargetObject
+		public DependencyObject					TargetObject
 		{
 			get
 			{
 				return this.targetObject;
 			}
 		}
-		public DependencyProperty							TargetProperty
+		public DependencyProperty				TargetProperty
 		{
 			get
 			{
@@ -407,10 +407,10 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		private Binding							binding;
-		private DependencyObject							targetObject;
-		private DependencyProperty						targetPropery;
+		private DependencyObject				targetObject;
+		private DependencyProperty				targetPropery;
 		private object							sourceObject;
-		private DependencyProperty						sourceProperty;
+		private DependencyProperty				sourceProperty;
 		private BindingSourceType				sourceType;
 		private List<SourcePropertyPair>		sourceBreadcrumbs;
 		private Binding							dataContext;
