@@ -1420,6 +1420,11 @@ restart_paragraph_layout:
 			{
 				int    level  = margins_property == null ? 0 : margins_property.Level;
 				double offset = 0;
+				
+				if (level < 0)
+				{
+					level = 0;
+				}
 
 				//	Les attributs spéciaux peuvent définir un offset dépendant de
 				//	l'indentation ou encore un offset relatif additionnel qui est
