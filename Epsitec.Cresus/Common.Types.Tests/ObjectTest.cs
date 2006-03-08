@@ -165,6 +165,27 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckPropertyInheritance()
+		{
+			MyObject o1 = new MyObject ();
+			MyObject o2 = new MyObject ();
+			MyObject o3 = new MyObject ();
+
+			o3.Parent = o2;
+			o2.Parent = o1;
+
+			o1.Cascade = "O1";
+
+			Assert.AreEqual ("O1", o1.Cascade);
+			Assert.AreEqual ("O1", o2.Cascade);
+			Assert.AreEqual ("O1", o3.Cascade);
+
+			o2.Parent = null;
+
+			Assert.AreEqual (null, o3.Cascade);
+		}
+
+		[Test]
 		public void CheckObjectCreationPerformance()
 		{
 			System.Console.WriteLine ("Performance test of AbstractWidget Properties");
@@ -378,6 +399,43 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("c2", (search[4] as TreeTest).Name);
 			Assert.AreEqual (null, (search[5] as TreeTest).Name);
 			Assert.AreEqual ("y", (search[6] as TreeTest).Name);
+		}
+		
+		[Test]
+		public void CheckTreeWithPropertyInheritance()
+		{
+			TreeTest a = new TreeTest ();
+			TreeTest b = new TreeTest ();
+			TreeTest c1 = new TreeTest ();
+			TreeTest c2 = new TreeTest ();
+			TreeTest c3 = new TreeTest ();
+
+			a.AddChild (b);
+			b.AddChild (c1);
+			b.AddChild (c2);
+			b.AddChild (c3);
+			
+			a.Cascade = "A";
+			c2.Cascade = "C2";
+
+			Assert.AreEqual ("A", c1.Cascade);
+			Assert.AreEqual ("C2", c2.Cascade);
+			Assert.AreEqual ("A", c3.Cascade);
+			
+			EventHandlerSupport handler = new EventHandlerSupport ();
+
+			c1.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEvent);
+			c2.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEvent);
+			c3.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEvent);
+
+			c2.Cascade = "C";
+
+			Assert.AreEqual ("Cascade:C2,C.", handler.Log);
+			handler.Clear ();
+
+			a.Cascade = "a";
+
+			Assert.AreEqual ("Cascade:A,a.Cascade:A,a.", handler.Log);
 		}
 
 		
@@ -611,6 +669,28 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyObject.SiblingProperty, value);
 				}
 			}
+			public string			Cascade
+			{
+				get
+				{
+					return this.GetValue (MyObject.CascadeProperty) as string;
+				}
+				set
+				{
+					this.SetValue (MyObject.CascadeProperty, value);
+				}
+			}
+			public MyObject			Parent
+			{
+				get
+				{
+					return this.GetValue (MyObject.ParentProperty) as MyObject;
+				}
+				set
+				{
+					this.SetValue (MyObject.ParentProperty, value);
+				}
+			}
 			
 			public static int		OnFooChangedCallCount = 0;
 			
@@ -618,6 +698,8 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty NameProperty	= DependencyProperty.Register ("Name", typeof (string), typeof (MyObject), new DependencyPropertyMetadata ("[default]"));
 			public static DependencyProperty FooProperty	= DependencyProperty.Register ("Foo", typeof (string), typeof (MyObject), new DependencyPropertyMetadata ("[default]", new PropertyInvalidatedCallback (MyObject.NotifyOnFooChanged)));
 			public static DependencyProperty SiblingProperty = DependencyProperty.Register ("Sibling", typeof (MyObject), typeof (MyObject));
+			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (MyObject), new DependencyPropertyMetadataWithInheritance ());
+			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (MyObject));
 			
 			protected virtual void OnFooChanged()
 			{
@@ -732,7 +814,7 @@ namespace Epsitec.Common.Types
 
 		class TreeTest : DependencyObject
 		{
-			public string Name
+			public string						Name
 			{
 				get
 				{
@@ -743,28 +825,28 @@ namespace Epsitec.Common.Types
 					this.SetValue (TreeTest.NameProperty, value);
 				}
 			}
-			public TreeTest Parent
+			public TreeTest						Parent
 			{
 				get
 				{
 					return this.parent;
 				}
 			}
-			public IList<TreeTest> Children
+			public IList<TreeTest>				Children
 			{
 				get
 				{
 					return this.children;
 				}
 			}
-			public bool HasChildren
+			public bool							HasChildren
 			{
 				get
 				{
 					return this.children == null ? false : (this.children.Count > 0);
 				}
 			}
-			public string Value
+			public string						Value
 			{
 				get
 				{
@@ -773,6 +855,17 @@ namespace Epsitec.Common.Types
 				set
 				{
 					this.SetValue (TreeTest.ValueProperty, value);
+				}
+			}
+			public string						Cascade
+			{
+				get
+				{
+					return this.GetValue (TreeTest.CascadeProperty) as string;
+				}
+				set
+				{
+					this.SetValue (TreeTest.CascadeProperty, value);
 				}
 			}
 			
@@ -808,6 +901,7 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueChildren));
 			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueHasChildren));
 			public static DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (string), typeof (TreeTest));
+			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (TreeTest), new DependencyPropertyMetadataWithInheritance ());
 
 			TreeTest parent;
 			List<TreeTest> children;
