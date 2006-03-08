@@ -356,7 +356,7 @@ namespace Epsitec.Common.Document.Objects
 							this.imageOriginal = null;
 						}
 						this.imageDimmed = null;
-						image.Reload = false;
+						image.ReloadReset();
 					}
 				}
 			}

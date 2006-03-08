@@ -205,7 +205,7 @@ namespace Epsitec.Common.Document.Panels
 		private void HandleUpdateClicked(object sender, MessageEventArgs e)
 		{
 			Properties.Image p = this.property as Properties.Image;
-			p.Reload = true;
+			p.ReloadDo();
 		}
 
 
