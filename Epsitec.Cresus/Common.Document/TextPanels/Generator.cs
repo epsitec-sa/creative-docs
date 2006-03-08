@@ -37,6 +37,7 @@ namespace Epsitec.Common.Document.TextPanels
 			Tab,
 			Indent,
 			Disposition,
+			Continue,
 		}
 
 
@@ -63,6 +64,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonLeft   = this.CreateIconButton(Misc.Icon("BulletJustifLeft"),   Res.Strings.TextPanel.Generator.Tooltip.Justif.Left,   new MessageEventHandler(this.HandleJustifClicked));
 			this.buttonCenter = this.CreateIconButton(Misc.Icon("BulletJustifCenter"), Res.Strings.TextPanel.Generator.Tooltip.Justif.Center, new MessageEventHandler(this.HandleJustifClicked));
 			this.buttonRight  = this.CreateIconButton(Misc.Icon("BulletJustifRight"),  Res.Strings.TextPanel.Generator.Tooltip.Justif.Right,  new MessageEventHandler(this.HandleJustifClicked));
+
+			this.buttonContinue = this.CreateIconButton(Misc.Icon("BulletContinue"), Res.Strings.TextPanel.Generator.Tooltip.Continue, new MessageEventHandler(this.HandleContinueClicked));
 
 			this.table = new CellTable(this);
 			this.table.StyleH |= CellArrayStyle.Header;
@@ -177,6 +180,7 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.ParagraphWrapper.Defined.ItemListParameters = null;
 				this.ParagraphWrapper.Defined.ClearIndentationLevelAttribute();
+				this.ParagraphWrapper.Defined.ClearItemListInfo();
 			}
 			else
 			{
@@ -204,6 +208,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
+				this.ParagraphWrapper.Defined.ClearItemListInfo();
 			}
 
 			if ( type == "Bullet2" )
@@ -228,6 +233,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
+				this.ParagraphWrapper.Defined.ClearItemListInfo();
 			}
 
 			if ( type == "Bullet3" )
@@ -243,6 +249,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
+				this.ParagraphWrapper.Defined.ClearItemListInfo();
 			}
 
 			if ( type == "Num1" )
@@ -270,6 +277,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
+				this.ParagraphWrapper.Defined.ClearItemListInfo();
 			}
 
 			if ( type == "Num2" )
@@ -297,6 +305,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
+				this.ParagraphWrapper.Defined.ClearItemListInfo();
 			}
 
 			if ( type == "Num3" )
@@ -324,6 +333,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
+				this.ParagraphWrapper.Defined.ClearItemListInfo();
 			}
 
 			if ( type == "Num4" )
@@ -351,6 +361,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
+				this.ParagraphWrapper.Defined.ClearItemListInfo();
 			}
 
 			if ( type == "Num5" )
@@ -359,6 +370,7 @@ namespace Epsitec.Common.Document.TextPanels
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "None");
+				this.SetValue(p, 0, Part1.Generic, Part2.Continue,       "cont");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
 				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.Numeric);
@@ -523,6 +535,15 @@ namespace Epsitec.Common.Document.TextPanels
 					if ( dispo == 0.5 )  return "Center";
 					if ( dispo == 1.0 )  return "Right";
 					return "Left";
+				}
+
+				if ( part2 == Part2.Continue )
+				{
+					if ( this.ParagraphWrapper.Defined.IsItemListInfoDefined )
+					{
+						return this.ParagraphWrapper.Defined.ItemListInfo;
+					}
+					return null;
 				}
 			}
 			else if ( level-1 < p.Generator.Count )
@@ -700,6 +721,18 @@ namespace Epsitec.Common.Document.TextPanels
 						if ( value == "Right"  )  dispo = 1.0;
 
 						p.TabItem = tabs.NewTab(Common.Text.TabList.GenericSharedName, 0.0, Common.Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.LeftRelative,       attribute);
+					}
+				}
+
+				if ( part2 == Part2.Continue )
+				{
+					if ( value == null )
+					{
+						this.ParagraphWrapper.Defined.ClearItemListInfo();
+					}
+					else
+					{
+						this.ParagraphWrapper.Defined.ItemListInfo = value;
 					}
 				}
 			}
@@ -1446,6 +1479,8 @@ namespace Epsitec.Common.Document.TextPanels
 				this.buttonCenter.Bounds = r;
 				r.Offset(20, 0);
 				this.buttonRight.Bounds = r;
+				r.Offset(20+10, 0);
+				this.buttonContinue.Bounds = r;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -1557,6 +1592,9 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonCenter.ActiveState = (text == "Center") ? ActiveState.Yes : ActiveState.No;
 			this.buttonRight.ActiveState  = (text == "Right" ) ? ActiveState.Yes : ActiveState.No;
 
+			text = this.GetValue(0, Part1.Generic, Part2.Continue);
+			this.buttonContinue.ActiveState = (text == "cont" ) ? ActiveState.Yes : ActiveState.No;
+
 			text = this.GetValue(row, Part1.Generic, Part2.SuppressBefore);
 			this.buttonSuppressBefore.ActiveState = (text == "true"  ) ? ActiveState.Yes : ActiveState.No;
 
@@ -1666,6 +1704,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonLeft.Enable           = custom;
 			this.buttonCenter.Enable         = custom;
 			this.buttonRight.Enable          = custom;
+			this.buttonContinue.Enable       = custom;
 			this.table.Enable                = custom;
 			this.buttonSuppressBefore.Enable = custom;
 			this.labelText.Enable            = custom;
@@ -1757,6 +1796,15 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( sender == this.buttonRight  )  text = "Right";
 			this.SetValue(0, Part1.Generic, Part2.Disposition, text);
 			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorJustif", Res.Strings.Action.ParagraphGenerator);
+		}
+
+		private void HandleContinueClicked(object sender, MessageEventArgs e)
+		{
+			string text = this.GetValue(0, Part1.Generic, Part2.Continue);
+			if ( text == "cont" )  text = null;
+			else                   text = "cont";
+			this.SetValue(0, Part1.Generic, Part2.Continue, text);
+			this.ParagraphWrapper.DefineOperationName("ParagraphGeneratorContinue", Res.Strings.Action.ParagraphGenerator);
 		}
 
 		private void HandleSuppressBeforeClicked(object sender, MessageEventArgs e)
@@ -1896,6 +1944,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton				buttonLeft;
 		protected IconButton				buttonCenter;
 		protected IconButton				buttonRight;
+		protected IconButton				buttonContinue;
 		protected IconButton				buttonSuppressBefore;
 		protected StaticText				labelText;
 		protected TextFieldCombo			fieldText;

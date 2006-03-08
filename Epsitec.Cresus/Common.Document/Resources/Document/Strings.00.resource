@@ -502,6 +502,7 @@
 	<data name="TextPanel.Generator.Tooltip.Justif.Left">Tabulateur gauche</data>
 	<data name="TextPanel.Generator.Tooltip.Justif.Center">Tabulateur centré</data>
 	<data name="TextPanel.Generator.Tooltip.Justif.Right">Tabulateur droite</data>
+	<data name="TextPanel.Generator.Tooltip.Continue">La numérotation continue à travers tout le document</data>
 	<data name="TextPanel.Generator.Tooltip.SuppressBefore">Cette ligne remplace les précédentes</data>
 	<data name="TextPanel.Generator.Tooltip.Color">Couleur du texte</data>
 	<data name="TextPanel.Generator.Tooltip.Tab">Position de la puce/numéro</data>

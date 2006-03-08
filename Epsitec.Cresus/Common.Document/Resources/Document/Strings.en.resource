@@ -501,6 +501,7 @@
 	<data name="TextPanel.Generator.Tooltip.Justif.Left">Right-align bullet/numbering</data>
 	<data name="TextPanel.Generator.Tooltip.Justif.Center">Center bullet/numbering</data>
 	<data name="TextPanel.Generator.Tooltip.Justif.Right">Left-align bullet/numbering</data>
+	<data name="TextPanel.Generator.Tooltip.Continue">@@La numérotation continue à travers tout le document</data>
 	<data name="TextPanel.Generator.Tooltip.SuppressBefore">Override former levels</data>
 	<data name="TextPanel.Generator.Tooltip.Color">Text color</data>
 	<data name="TextPanel.Generator.Tooltip.Tab">Bullet/numbering position</data>
