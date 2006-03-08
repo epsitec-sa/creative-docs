@@ -551,19 +551,23 @@ namespace Epsitec.Common.Document.Widgets
 					Common.OpenType.FontIdentity id = this.fontList[ii] as Common.OpenType.FontIdentity;
 					this.samples[i].FontIdentity = id;
 
-					string face = id.InvariantFaceName;
+					string prefix = "";
+					string face   = id.InvariantFaceName;
+					string suffix = "";
 					if ( ii < this.quickCount )  // police rapide ?
 					{
 						if ( ii < 9 )  // police rapide avec un raccourci [1]..[9] ?
 						{
-							face = string.Format("{0}: {1}", (ii+1).ToString(System.Globalization.CultureInfo.InvariantCulture), Misc.Bold(face));
+							prefix = string.Format("{0}: <b>", (ii+1).ToString(System.Globalization.CultureInfo.InvariantCulture));
+							suffix = "</b>";
 						}
 						else	// police rapide sans raccourci
 						{
-							face = Misc.Bold(face);
+							prefix = "<b>";
+							suffix = "</b>";
 						}
 					}
-					this.samples[i].FontFace = face;
+					this.samples[i].SetFontFace(prefix, face, suffix);
 					this.samples[i].IsSampleAbc = this.sampleAbc;
 
 					if ( this.selectedList == null )  // sélection unique ?
@@ -579,7 +583,7 @@ namespace Epsitec.Common.Document.Widgets
 				else
 				{
 					this.samples[i].FontIdentity = null;
-					this.samples[i].FontFace     = null;
+					this.samples[i].SetFontFace(null, null, null);
 					this.samples[i].IsSampleAbc  = false;
 					this.samples[i].ActiveState  = ActiveState.No;
 				}
