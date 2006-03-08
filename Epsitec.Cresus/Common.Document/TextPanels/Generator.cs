@@ -251,10 +251,22 @@ namespace Epsitec.Common.Document.TextPanels
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Right");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           ".");
 
-				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
+				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "true");
 				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.Numeric);
-				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,           ".");
+				this.SetValue(p, 1, Part1.Generic, Part2.Tab,            "8");
+				this.SetValue(p, 1, Part1.Generic, Part2.Indent,         "10");
+
+				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 2, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
+				this.SetValue(p, 2, Part1.Generic, Part2.Tab,            "13");
+				this.SetValue(p, 2, Part1.Generic, Part2.Indent,         "15");
+
+				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 3, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.RomanLower);
+				this.SetValue(p, 3, Part1.Generic, Part2.Tab,            "17");
+				this.SetValue(p, 3, Part1.Generic, Part2.Indent,         "20");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -265,26 +277,23 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           ")");
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Right");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           ")");
 
-				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
-				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.AlphaUpper);
-				this.SetValue(p, 1, Part1.Generic, Part2.Tab,            "15");
-				this.SetValue(p, 1, Part1.Generic, Part2.Indent,         "20");
+				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.Numeric);
+				this.SetValue(p, 1, Part1.Generic, Part2.Tab,            "8");
+				this.SetValue(p, 1, Part1.Generic, Part2.Indent,         "10");
 
-				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "false");
-				this.SetValue(p, 2, Part1.Prefix,  Part2.Text,           "-");
-				this.SetValue(p, 2, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.Numeric);
-//				this.SetValue(p, 2, Part1.Value,   Part2.FontColor,      RichColor.ToString(RichColor.FromRgb(0,0,1)));
-				this.SetValue(p, 2, Part1.Generic, Part2.Tab,            "15");
-				this.SetValue(p, 2, Part1.Generic, Part2.Indent,         "20");
+				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 2, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
+				this.SetValue(p, 2, Part1.Generic, Part2.Tab,            "13");
+				this.SetValue(p, 2, Part1.Generic, Part2.Indent,         "15");
 
 				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
-				this.SetValue(p, 3, Part1.Prefix,  Part2.Text,           "(");
 				this.SetValue(p, 3, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.RomanLower);
-				this.SetValue(p, 3, Part1.Generic, Part2.Tab,            "20");
-				this.SetValue(p, 3, Part1.Generic, Part2.Indent,         "25");
+				this.SetValue(p, 3, Part1.Generic, Part2.Tab,            "17");
+				this.SetValue(p, 3, Part1.Generic, Part2.Indent,         "20");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -295,18 +304,65 @@ namespace Epsitec.Common.Document.TextPanels
 				p = new Text.ParagraphManagers.ItemListManager.Parameters();
 				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
 
-				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Left");
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Right");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           ".");
 
-				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
-				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.Numeric);
+				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.AlphaUpper);
+				this.SetValue(p, 1, Part1.Generic, Part2.Tab,            "8");
+				this.SetValue(p, 1, Part1.Generic, Part2.Indent,         "10");
 
 				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "true");
 				this.SetValue(p, 2, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
-				this.SetValue(p, 2, Part1.Suffix,  Part2.Text,           ")");
+				this.SetValue(p, 2, Part1.Generic, Part2.Tab,            "13");
+				this.SetValue(p, 2, Part1.Generic, Part2.Indent,         "15");
 
 				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
 				this.SetValue(p, 3, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.RomanLower);
-				this.SetValue(p, 3, Part1.Suffix,  Part2.Text,           ")");
+				this.SetValue(p, 3, Part1.Generic, Part2.Tab,            "17");
+				this.SetValue(p, 3, Part1.Generic, Part2.Indent,         "20");
+
+				p.Generator.UserData = user;
+				this.ParagraphWrapper.Defined.ItemListParameters = p;
+			}
+
+			if ( type == "Num4" )
+			{
+				p = new Text.ParagraphManagers.ItemListManager.Parameters();
+				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
+
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "Right");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           ")");
+
+				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.AlphaLower);
+				this.SetValue(p, 1, Part1.Generic, Part2.Tab,            "8");
+				this.SetValue(p, 1, Part1.Generic, Part2.Indent,         "10");
+
+				this.SetValue(p, 2, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 2, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.Numeric);
+				this.SetValue(p, 2, Part1.Generic, Part2.Tab,            "13");
+				this.SetValue(p, 2, Part1.Generic, Part2.Indent,         "15");
+
+				this.SetValue(p, 3, Part1.Generic, Part2.SuppressBefore, "true");
+				this.SetValue(p, 3, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.RomanLower);
+				this.SetValue(p, 3, Part1.Generic, Part2.Tab,            "17");
+				this.SetValue(p, 3, Part1.Generic, Part2.Indent,         "20");
+
+				p.Generator.UserData = user;
+				this.ParagraphWrapper.Defined.ItemListParameters = p;
+			}
+
+			if ( type == "Num5" )
+			{
+				p = new Text.ParagraphManagers.ItemListManager.Parameters();
+				p.Generator = this.document.TextContext.GeneratorList.NewGenerator();
+
+				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "None");
+
+				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
+				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.Numeric);
+				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,           ". ");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
@@ -904,6 +960,8 @@ namespace Epsitec.Common.Document.TextPanels
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num1);
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num2);
 			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num3);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num4);
+			combo.Items.Add(Res.Strings.TextPanel.Generator.Type.Num5);
 		}
 
 		protected static void InitComboFix(TextFieldCombo combo)
@@ -991,6 +1049,8 @@ namespace Epsitec.Common.Document.TextPanels
 				case "Num1":     return Res.Strings.TextPanel.Generator.Type.Num1;
 				case "Num2":     return Res.Strings.TextPanel.Generator.Type.Num2;
 				case "Num3":     return Res.Strings.TextPanel.Generator.Type.Num3;
+				case "Num4":     return Res.Strings.TextPanel.Generator.Type.Num4;
+				case "Num5":     return Res.Strings.TextPanel.Generator.Type.Num5;
 				case "Custom":   return Res.Strings.TextPanel.Generator.Type.Custom;
 			}
 			return "?";
@@ -1005,6 +1065,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( text == Res.Strings.TextPanel.Generator.Type.Num1    )  return "Num1";
 			if ( text == Res.Strings.TextPanel.Generator.Type.Num2    )  return "Num2";
 			if ( text == Res.Strings.TextPanel.Generator.Type.Num3    )  return "Num3";
+			if ( text == Res.Strings.TextPanel.Generator.Type.Num4    )  return "Num4";
+			if ( text == Res.Strings.TextPanel.Generator.Type.Num5    )  return "Num5";
 			if ( text == Res.Strings.TextPanel.Generator.Type.Custom  )  return "Custom";
 			return null;
 		}
