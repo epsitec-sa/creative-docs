@@ -26,7 +26,17 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.Active.Changed  += new EventHandler(this.HandleParagraphWrapperChanged);
 			this.paragraphWrapper.Defined.Changed += new EventHandler(this.HandleParagraphWrapperChanged);
 
-			this.document.TextContext.StyleList.StyleRedefined +=  new EventHandler(this.HandleStyleWrapperChanged);
+			this.document.TextContext.StyleList.StyleRedefined += new EventHandler(this.HandleStyleWrapperChanged);
+		}
+
+		public void TextContextChangedDisconnect()
+		{
+			this.document.TextContext.StyleList.StyleRedefined -= new EventHandler(this.HandleStyleWrapperChanged);
+		}
+
+		public void TextContextChangedConnect()
+		{
+			this.document.TextContext.StyleList.StyleRedefined += new EventHandler(this.HandleStyleWrapperChanged);
 		}
 
 

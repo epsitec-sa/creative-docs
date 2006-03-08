@@ -703,6 +703,16 @@ namespace Epsitec.Common.Document
 				this.Modifier.OpletQueueEnable = true;
 			}
 
+			if ( doc.textContext != null )
+			{
+				doc.textContext.StyleList.StyleRedefined -= new Support.EventHandler(doc.HandleStyleListStyleRedefined);
+
+				if ( doc.wrappers != null )
+				{
+					doc.wrappers.TextContextChangedDisconnect();
+				}
+			}
+			
 			this.objects = doc.objects;
 			this.propertiesAuto = doc.propertiesAuto;
 			this.aggregates = doc.aggregates;
@@ -716,7 +726,11 @@ namespace Epsitec.Common.Document
 			if ( this.textContext != null )
 			{
 				this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
-				this.textContext.StyleList.StyleRedefined -= new Support.EventHandler(doc.HandleStyleListStyleRedefined);
+
+				if ( this.wrappers != null )
+				{
+					this.wrappers.TextContextChangedConnect();
+				}
 			}
 			
 			if ( this.type == DocumentType.Pictogram )
@@ -735,7 +749,7 @@ namespace Epsitec.Common.Document
 				{
 					doc.readObjectMemory.PropertiesXferMemory(this.Modifier.ObjectMemory);
 					doc.readObjectMemoryText.PropertiesXferMemory(this.Modifier.ObjectMemoryText);
-					this.Modifier.ObjectMemory = doc.readObjectMemory;
+					this.Modifier.ObjectMemory     = doc.readObjectMemory;
 					this.Modifier.ObjectMemoryText = doc.readObjectMemoryText;
 				}
 
@@ -1573,7 +1587,6 @@ namespace Epsitec.Common.Document
 		{
 			//	Appelé quand un TextStyle est modifié dans StyleList.
 			this.textContext.StyleList.UpdateTextStyles();
-			this.notifier.NotifyStyleChanged();
 		}
 		
 		public Text.TextStyle[] TextStyles(StyleCategory category)
