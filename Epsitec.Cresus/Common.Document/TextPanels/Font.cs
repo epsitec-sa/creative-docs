@@ -310,7 +310,6 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
 				this.buttonFilter.Bounds = r;
-				this.buttonFilter.Visibility = true;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -360,8 +359,11 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Bottom = r.Top-20;
 
 				r.Left = rect.Left;
-				r.Right = rect.Right;
+				r.Right = rect.Right-20;
 				this.fontFace.Bounds = r;
+				r.Left = rect.Right-20;
+				r.Right = rect.Right;
+				this.buttonFilter.Bounds = r;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -382,7 +384,6 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Width = 40;
 				this.fontColor.Bounds = r;
 
-				this.buttonFilter.Visibility = false;
 				this.fontFeatures.Visibility = false;
 				this.buttonSettings.Visibility = false;
 				this.fontGlue.Visibility = false;

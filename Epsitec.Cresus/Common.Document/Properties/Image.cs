@@ -113,28 +113,25 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public void ReloadDo()
+		{
+			this.document.Modifier.OpletQueueEnable = false;
+			this.NotifyBefore();
+			this.reload = true;
+			this.NotifyAfter();
+			this.document.Modifier.OpletQueueEnable = true;
+		}
+
+		public void ReloadReset()
+		{
+			this.reload = false;
+		}
+
 		public bool Reload
 		{
 			get
 			{
 				return this.reload;
-			}
-			
-			set
-			{
-				if ( this.reload != value )
-				{
-					if ( value )
-					{
-						this.NotifyBefore(false);
-						this.reload = value;
-						this.NotifyAfter(false);
-					}
-					else
-					{
-						this.reload = value;
-					}
-				}
 			}
 		}
 

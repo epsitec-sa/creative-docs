@@ -86,6 +86,11 @@ namespace Epsitec.Common.Document.Settings
 			catch
 			{
 			}
+
+			if ( type != DocumentType.Pictogram )
+			{
+				this.newDocument = this.initialDirectory + @"\" + "normal.crmod";
+			}
 		}
 
 
