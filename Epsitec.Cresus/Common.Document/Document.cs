@@ -713,6 +713,12 @@ namespace Epsitec.Common.Document
 			this.uniqueParagraphStyleId = doc.uniqueParagraphStyleId;
 			this.uniqueCharacterStyleId = doc.uniqueCharacterStyleId;
 			
+			if ( this.textContext != null )
+			{
+				this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
+				this.textContext.StyleList.StyleRedefined -= new Support.EventHandler(doc.HandleStyleListStyleRedefined);
+			}
+			
 			if ( this.type == DocumentType.Pictogram )
 			{
 				this.size = doc.size;
