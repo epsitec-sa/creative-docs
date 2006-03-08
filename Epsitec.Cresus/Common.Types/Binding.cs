@@ -59,6 +59,22 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+		public string							ElementName
+		{
+			get
+			{
+				return this.elementName;
+			}
+			set
+			{
+				if (this.elementName != value)
+				{
+					this.NotifyBeforeChange ();
+					this.elementName = value;
+					this.NotifyAfterChange ();
+				}
+			}
+		}
 
 		public System.IDisposable DeferChanges()
 		{
@@ -150,6 +166,7 @@ namespace Epsitec.Common.Types
 		private BindingMode						mode;
 		private object							source;
 		private DependencyPropertyPath			path;
+		private string							elementName;
 		private int								deferCounter;
 		private State							state = State.SourceDetached;
 		private List<BindingExpression>			expressions = new List<BindingExpression> ();
