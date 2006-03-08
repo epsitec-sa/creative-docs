@@ -1573,6 +1573,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Appelé quand un TextStyle est modifié dans StyleList.
 			this.textContext.StyleList.UpdateTextStyles();
+			this.notifier.NotifyStyleChanged();
 		}
 		
 		public Text.TextStyle[] TextStyles(StyleCategory category)
