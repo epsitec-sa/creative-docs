@@ -229,6 +229,28 @@ namespace Epsitec.Common.Types
 			
 			return null;
 		}
+
+		public static DependencyObject FindParentDefiningProperty(DependencyObject item, DependencyProperty property)
+		{
+			if (item == null)
+			{
+				throw new System.ArgumentNullException ();
+			}
+			
+			item = DependencyObjectTree.GetParent (item);
+			
+			while (item != null)
+			{
+				if (item.GetLocalValue (property) != UndefinedValue.Instance)
+				{
+					break;
+				}
+				
+				item = DependencyObjectTree.GetParent (item);
+			}
+			
+			return item;
+		}
 		
 		public static DependencyObject GetParent(DependencyObject o)
 		{

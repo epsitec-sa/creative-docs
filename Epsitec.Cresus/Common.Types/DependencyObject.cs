@@ -69,14 +69,12 @@ namespace Epsitec.Common.Types
 
 				if (metadata.InheritsValue)
 				{
-					//	TODO: trouver la valeur héritée
+					value = metadata.FindInheritedValue (this, property);
 				}
 				else
 				{
-					//	TODO: faire mieux...
+					value = metadata.CreateDefaultValue ();
 				}
-				
-				value = metadata.CreateDefaultValue ();
 			}
 			
 			return value;
@@ -102,19 +100,32 @@ namespace Epsitec.Common.Types
 		}
 		public void SetValueBase(DependencyProperty property, object value)
 		{
-			object old_value = this.GetValue (property);
-			
-			this.SetLocalValue (property, value);
-			
-			object new_value = this.GetValue (property);
-			
-			if (old_value == new_value)
+			DependencyPropertyMetadata metadata = property.GetMetadata (this);
+
+			if (metadata.InheritsValue)
 			{
-				//	C'est exactement la même valeur -- on ne signale donc rien ici.
+				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (this, property);
+				
+				this.SetLocalValue (property, value);
+				
+				snapshot.InvalidateDifferentProperties ();
 			}
-			else if ((old_value == null) || (! old_value.Equals (new_value)))
+			else
 			{
-				this.InvalidateProperty (property, old_value, new_value);
+				object old_value = this.GetValue (property);
+
+				this.SetLocalValue (property, value);
+
+				object new_value = this.GetValue (property);
+
+				if (old_value == new_value)
+				{
+					//	C'est exactement la même valeur -- on ne signale donc rien ici.
+				}
+				else if ((old_value == null) || (!old_value.Equals (new_value)))
+				{
+					this.InvalidateProperty (property, old_value, new_value);
+				}
 			}
 		}
 		public void ClearValueBase(DependencyProperty property)
