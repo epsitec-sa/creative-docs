@@ -3,6 +3,94 @@
 
 namespace Epsitec.Common.Text.Exchange
 {
+
+    /// <summary>
+    /// Cette classe représente un texte formaté en HTML compatible "Microsoft".
+    /// </summary>
+    /// 
+
+    public class HtmlRun
+    {
+        private string runText ;
+        private bool italic ;
+        private bool bold ;
+
+        public HtmlRun()
+        {
+        }
+
+
+    }
+
+    public class HtmlText
+    {
+        enum htmlattribute { bold, italic };
+
+        private bool isItalic = false ;
+        private bool isBold = false;
+
+        private bool precedIsItalic = false;
+        private bool precedIsBold = false;
+        
+        enum Days {Sat, Sun, Mon, Tue, Wed, Thu, Fri};
+
+        htmlattribute lastAttributeSet;
+
+        private System.Collections.ArrayList runList;
+
+        System.Text.StringBuilder output = new System.Text.StringBuilder ();
+
+        public HtmlText()
+        {
+        }
+
+        public override string ToString()
+        {
+            return output.ToString();
+        }
+
+        public void AppendText(string thestring)
+        {
+            if (precedIsItalic && !isItalic)
+                output.Append("</i>");
+
+            if (!precedIsItalic && isItalic)
+            {
+                output.Append("<i>");
+                precedIsItalic = true;
+            }
+
+            if (precedIsBold && !isBold)
+                output.Append("</b>");
+
+            if (!precedIsBold && isBold)
+            {
+                output.Append("<b>");
+                precedIsBold = true;
+            }
+
+            precedIsItalic = isItalic;
+            precedIsBold = isBold;
+
+            output.Append(thestring);
+        }
+
+        public void SetItalic(bool italic)
+        {
+            this.isItalic = italic;
+        }
+
+        public void SetBold(bool bold)
+        {
+            this.isBold = bold;
+        }
+
+        public void SetFont(string fontName, int fontSize)
+        {
+        }
+
+    }
+
 	/// <summary>
 	/// La classe Rosetta joue le rôle de plate-forme centrale pour la conversion
 	/// de formats de texte (la "pierre de Rosette").
@@ -108,18 +196,21 @@ namespace Epsitec.Common.Text.Exchange
 			System.Text.StringBuilder output = new System.Text.StringBuilder ();
 			string[] opentag = new string[10];
 			string[] closetag = new string[10];
-			int tagindex = 0;
+			int tagindex ;
 
 			textWrapper.Attach (navigator);
 			paraWrapper.Attach (navigator);
 
 			System.Windows.Forms.Clipboard clipboard;
 
+            HtmlText htmlText = new HtmlText() ;
+
 			navigator.MoveTo (0,0);
 
 			while (true)
 			{
 				int runLength = navigator.GetRunLength (1000000);
+				tagindex = 0;
 
 				if (runLength == 0)
 				{
@@ -134,47 +225,42 @@ namespace Epsitec.Common.Text.Exchange
 				{
 					System.Console.Out.WriteLine ("- Font Style: {0}", textWrapper.Defined.FontStyle);
 				}
-				if (textWrapper.Defined.IsInvertItalicDefined)
-				{
-					if (textWrapper.Defined.InvertItalic)
-					{
-						opentag[tagindex] = "<i>";
-						closetag[tagindex] += "</i>";
-						tagindex++;
-					}
-				}
-				if (textWrapper.Defined.IsInvertBoldDefined)
-				{
-					if (textWrapper.Defined.InvertBold)
-					{
-						opentag[tagindex] = "<b>";
-						closetag[tagindex] += "</b>";
-						tagindex++;
-					}
-				}
+
+                htmlText.SetItalic(textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic) ;
+                htmlText.SetBold(textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold) ;
 
 				int i;
 
 				for (i = 0; i < tagindex; i++)
 				{
-					output.Append(opentag[i]) ;
+// 					output.Append(opentag[i]) ;
 				}
 
-				output.Append(navigator.ReadText (runLength) );
+				//output.Append(navigator.ReadText (runLength) );
+                htmlText.AppendText(navigator.ReadText(runLength));
 				
-				for (i = tagindex-1; i >= tagindex; i--)
+				for (i = tagindex-1; i >= 0; i--)
 				{
-					output.Append(opentag[i]) ;
+					// output.Append(closetag[i]) ;
 				}
 
 
+                // avance au run suivant
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext , runLength);
+
+                // avance encore d'un seul caractère afin de se trouver véritablement dans
+                // le contexte su run
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);
+
+				if (navigator.GetRunLength (1000000) == 0)
+					break; // arrête si on est à la fin
+
+                // recule au début du run
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);
 
 			}
 
-			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Text, output);
+			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Text, htmlText);
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
 		}
 	}
