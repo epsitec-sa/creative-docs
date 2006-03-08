@@ -37,36 +37,33 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public string FontFace
+		public void SetFontFace(string prefix, string face, string suffix)
 		{
-			//	Nom de la police.
-			get
+			//	Nom de la police, séparé en trois parties, car il faut enlever les tags de la
+			//	partie 'fontFace' uniquement, à cause des polices qui peuvent avoir des '&'
+			//	dans le nom.
+			if ( this.fontPrefix != prefix || this.fontName != face || this.fontSuffix != suffix )
 			{
-				return this.fontName;
-			}
+				this.fontPrefix = prefix;
+				this.fontName   = face;
+				this.fontSuffix = suffix;
 
-			set
-			{
-				if (this.fontName != value)
+				if ( this.fontName == null )
 				{
-					this.fontName = value;
+					this.textLayout = null;
+				}
+				else
+				{
+					if ( this.textLayout == null )
+					{
+						this.textLayout = new TextLayout();
+						this.textLayout.DefaultFont     = this.DefaultFont;
+						this.textLayout.DefaultFontSize = this.DefaultFontSize;
+						this.textLayout.Alignment       = ContentAlignment.MiddleLeft;
+					}
 					
-					if (this.fontName == null)
-					{
-						this.textLayout = null;
-					}
-					else
-					{
-						if (this.textLayout == null)
-						{
-							this.textLayout = new TextLayout ();
-							this.textLayout.DefaultFont     = this.DefaultFont;
-							this.textLayout.DefaultFontSize = this.DefaultFontSize;
-							this.textLayout.Alignment       = ContentAlignment.MiddleLeft;
-						}
-						
-						this.textLayout.Text = TextLayout.ConvertToTaggedText (this.fontName);
-					}
+					string f = TextLayout.ConvertToTaggedText(this.fontName);
+					this.textLayout.Text = string.Concat(this.fontPrefix, f, this.fontSuffix);
 				}
 			}
 		}
@@ -328,6 +325,8 @@ namespace Epsitec.Common.Document.Widgets
 		protected bool							isLast;
 		protected double						frontier;
 		protected TextLayout					textLayout;
+		protected string						fontPrefix;
 		protected string						fontName;
+		protected string						fontSuffix;
 	}
 }
