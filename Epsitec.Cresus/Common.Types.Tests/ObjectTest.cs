@@ -421,21 +421,60 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("A", c1.Cascade);
 			Assert.AreEqual ("C2", c2.Cascade);
 			Assert.AreEqual ("A", c3.Cascade);
+
+			a.Name = "a";
+			b.Name = "b";
+			c1.Name = "c1";
+			c2.Name = "c2";
+			c3.Name = "c3";
 			
 			EventHandlerSupport handler = new EventHandlerSupport ();
 
-			c1.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEvent);
-			c2.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEvent);
-			c3.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEvent);
+			a.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEventAndName);
+			b.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEventAndName);
+			c1.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEventAndName);
+			c2.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEventAndName);
+			c3.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEventAndName);
 
+			//	La modification d'une propriété héritée qui est définie localement
+			//	ne provoque qu'une notification locale (et évtl. des enfants, mais
+			//	il n'y en a pas dans ce cas) :
+			
 			c2.Cascade = "C";
 
-			Assert.AreEqual ("Cascade:C2,C.", handler.Log);
+			Assert.AreEqual ("c2-Cascade:C2,C.", handler.Log);
 			handler.Clear ();
 
+			//	La modification d'une propriété à la racine va être répercutée à
+			//	travers tout l'arbre; on poursuit par une redéfinition (en fait,
+			//	on définit une valeur locale) :
+			
 			a.Cascade = "a";
+			c3.Cascade = "c";
 
-			Assert.AreEqual ("Cascade:A,a.Cascade:A,a.", handler.Log);
+			Assert.AreEqual ("a-Cascade:A,a.b-Cascade:A,a.c1-Cascade:A,a.c3-Cascade:A,a.c3-Cascade:a,c.", handler.Log);
+			handler.Clear ();
+
+			//	Supprime une valeur locale pour vérifier que l'on reprend bien 
+			//	la valeur héritée :
+			
+			c3.ClearValueBase (TreeTest.CascadeProperty);
+
+			Assert.AreEqual ("c3-Cascade:c,a.", handler.Log);
+			handler.Clear ();
+
+			//	Modifie l'héritage à un niveau intermédiaire de l'arbre, puis
+			//	restaure l'arbre dans l'état initial.
+			
+			b.Cascade = "b";
+			
+			Assert.AreEqual ("b-Cascade:a,b.c1-Cascade:a,b.c3-Cascade:a,b.", handler.Log);
+			handler.Clear ();
+
+			b.ClearValueBase (TreeTest.CascadeProperty);
+
+			Assert.AreEqual ("b-Cascade:b,a.c1-Cascade:b,a.c3-Cascade:b,a.", handler.Log);
+			handler.Clear ();
 		}
 
 		
@@ -796,6 +835,17 @@ namespace Epsitec.Common.Types
 
 			public void RecordEvent(object sender, DependencyPropertyChangedEventArgs e)
 			{
+				this.buffer.Append (e.PropertyName);
+				this.buffer.Append (":");
+				this.buffer.Append (e.OldValue);
+				this.buffer.Append (",");
+				this.buffer.Append (e.NewValue);
+				this.buffer.Append (".");
+			}
+			public void RecordEventAndName(object sender, DependencyPropertyChangedEventArgs e)
+			{
+				this.buffer.Append (DependencyObjectTree.GetName (sender as DependencyObject));
+				this.buffer.Append ("-");
 				this.buffer.Append (e.PropertyName);
 				this.buffer.Append (":");
 				this.buffer.Append (e.OldValue);

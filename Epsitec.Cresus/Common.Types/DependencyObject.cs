@@ -130,19 +130,32 @@ namespace Epsitec.Common.Types
 		}
 		public void ClearValueBase(DependencyProperty property)
 		{
-			object old_value = this.GetValue (property);
-			
-			this.ClearLocalValue (property);
-			
-			object new_value = this.GetValue (property);
-			
-			if (old_value == new_value)
+			DependencyPropertyMetadata metadata = property.GetMetadata (this);
+
+			if (metadata.InheritsValue)
 			{
-				//	C'est exactement la même valeur -- on ne signale donc rien ici.
+				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (this, property);
+
+				this.ClearLocalValue (property);
+
+				snapshot.InvalidateDifferentProperties ();
 			}
-			else if ((old_value == null) || (! old_value.Equals (new_value)))
+			else
 			{
-				this.InvalidateProperty (property, old_value, new_value);
+				object old_value = this.GetValue (property);
+
+				this.ClearLocalValue (property);
+
+				object new_value = this.GetValue (property);
+
+				if (old_value == new_value)
+				{
+					//	C'est exactement la même valeur -- on ne signale donc rien ici.
+				}
+				else if ((old_value == null) || (!old_value.Equals (new_value)))
+				{
+					this.InvalidateProperty (property, old_value, new_value);
+				}
 			}
 		}
 		
