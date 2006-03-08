@@ -873,13 +873,19 @@ namespace Epsitec.Common.Document
 			
 #if false
 			System.Diagnostics.Debug.WriteLine("Unused tab tags:");
-			System.Diagnostics.Debug.WriteLine("  " + string.Join ("\n  ", this.textContext.TabList.GetUnusedTabTags()));
+			System.Diagnostics.Debug.WriteLine("  " + string.Join("\n  ", this.textContext.TabList.GetUnusedTabTags()));
 #endif
 			
 			if ( this.textContext != null )
 			{
 				this.textContext.TabList.ClearUnusedTabTags();
 				this.textContext.GeneratorList.ClearUnusedGenerators();
+
+				Text.TextStyle[] list = this.TextContext.StyleList.StyleMap.GetSortedStyles();
+				if ( list.Length == 0 )
+				{
+					// TODO: le document n'a aucun style. Que faire ?
+				}
 			}
 
 			if ( this.settings != null )
