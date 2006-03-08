@@ -84,8 +84,8 @@ namespace Epsitec.Common.Types
 		}
 		internal void AttachToSource()
 		{
-			DependencyObject						sourceObject;
-			DependencyProperty					sourceProperty;
+			DependencyObject			sourceObject;
+			DependencyProperty			sourceProperty;
 			BindingSourceType			sourceType;
 			List<SourcePropertyPair>	sourceBreadcrumbs;
 
@@ -209,10 +209,9 @@ namespace Epsitec.Common.Types
 				type = BindingSourceType.PropertyObject;
 				
 				//	If we have traversed several data source objects to arrive
-				//	at the leaf 'source', we must register with them in order
-				//	to detect changes :
-				
-
+				//	at the leaf 'source', we will register with them in order
+				//	to detect changes; this is done in InternalAttachToSource,
+				//	by the caller, based on the breadcrumbs.
 
 				return true;
 			}

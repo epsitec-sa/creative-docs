@@ -123,23 +123,43 @@ namespace Epsitec.Common.Types
 			bindingContext.Source = mySource1;
 			bindingContext.Path = new DependencyPropertyPath ("Sibling");
 
+			//	myTarget --> bindingContext { source=mySource1, path=Sibling }
+			
 			DataObject.SetDataContext (myTarget, bindingContext);
 
 			bindingXyz.Mode = BindingMode.TwoWay;
 			bindingXyz.Path = new DependencyPropertyPath ("Xyz");
 
 			myTarget.SetBinding (MyObject.XyzProperty, bindingXyz);
+			
+			//	myTarget -+-> binding { source=*, path=Xyz } sur propriété Xyz
+			//	          +-> bindingContext { source=mySource1, path=Sibling }
+			//
+			//	Donc myTarget.Xyz sera défini selon le contenu obtenu par
+			//	la source mySource1, via un path concaténé de Sibling.Xyz,
+			//	soit :
+			//
+			//		mySource1 --Sibling--> myData1 --Xyz--> 999
+
 			Assert.AreEqual (999, myTarget.Xyz);
 
+			//		mySource1 --Sibling--> myData1 --Xyz--> 777
+			
 			myData1.Xyz = 777;
 			Assert.AreEqual (777, myTarget.Xyz);
 
+			//		mySource2 --Sibling--> myData2 --Xyz--> 888
+			
 			bindingContext.Source = mySource2;
 			Assert.AreEqual (888, myTarget.Xyz);
 
+			//		mySource1 --Sibling--> myData1 --Xyz--> 777
+			
 			bindingContext.Source = mySource1;
 			Assert.AreEqual (777, myTarget.Xyz);
 
+			//		mySource1 --Sibling--> myData2 --Xyz--> 888
+			
 			mySource1.Sibling = myData2;
 			Assert.AreEqual (888, myTarget.Xyz);
 		}
