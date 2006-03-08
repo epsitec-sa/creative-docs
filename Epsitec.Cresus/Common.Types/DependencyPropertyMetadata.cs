@@ -14,56 +14,56 @@ namespace Epsitec.Common.Types
 		
 		public DependencyPropertyMetadata(object default_value)
 		{
-			this.default_value = default_value;
+			this.defaultValue = default_value;
 		}
 		public DependencyPropertyMetadata(object default_value, PropertyInvalidatedCallback property_invalidated_callback)
 		{
-			this.default_value = default_value;
-			this.property_invalidated = property_invalidated_callback;
+			this.defaultValue = default_value;
+			this.propertyInvalidated = property_invalidated_callback;
 		}
 		
 		public DependencyPropertyMetadata(GetValueOverrideCallback get_value_override_callback)
 		{
-			this.get_value_override = get_value_override_callback;
+			this.getValueOverride = get_value_override_callback;
 		}
 		public DependencyPropertyMetadata(GetValueOverrideCallback get_value_override_callback, SetValueOverrideCallback set_value_override_callback)
 		{
-			this.get_value_override = get_value_override_callback;
-			this.set_value_override = set_value_override_callback;
+			this.getValueOverride = get_value_override_callback;
+			this.setValueOverride = set_value_override_callback;
 		}
 		public DependencyPropertyMetadata(GetValueOverrideCallback get_value_override_callback, SetValueOverrideCallback set_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback)
 		{
-			this.get_value_override = get_value_override_callback;
-			this.set_value_override = set_value_override_callback;
-			this.property_invalidated = property_invalidated_callback;
+			this.getValueOverride = get_value_override_callback;
+			this.setValueOverride = set_value_override_callback;
+			this.propertyInvalidated = property_invalidated_callback;
 		}
 		public DependencyPropertyMetadata(GetValueOverrideCallback get_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback)
 		{
-			this.get_value_override = get_value_override_callback;
-			this.property_invalidated = property_invalidated_callback;
+			this.getValueOverride = get_value_override_callback;
+			this.propertyInvalidated = property_invalidated_callback;
 		}
 		
 		public DependencyPropertyMetadata(object default_value, GetValueOverrideCallback get_value_override_callback, SetValueOverrideCallback set_value_override_callback)
 		{
-			this.default_value      = default_value;
-			this.get_value_override = get_value_override_callback;
-			this.set_value_override = set_value_override_callback;
+			this.defaultValue     = default_value;
+			this.getValueOverride = get_value_override_callback;
+			this.setValueOverride = set_value_override_callback;
 		}
 		public DependencyPropertyMetadata(object default_value, GetValueOverrideCallback get_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback)
 		{
-			this.default_value        = default_value;
-			this.get_value_override   = get_value_override_callback;
-			this.property_invalidated = property_invalidated_callback;
+			this.defaultValue        = default_value;
+			this.getValueOverride    = get_value_override_callback;
+			this.propertyInvalidated = property_invalidated_callback;
 		}
 		public DependencyPropertyMetadata(object default_value, GetValueOverrideCallback get_value_override_callback)
 		{
-			this.default_value      = default_value;
-			this.get_value_override = get_value_override_callback;
+			this.defaultValue     = default_value;
+			this.getValueOverride = get_value_override_callback;
 		}
 		public DependencyPropertyMetadata(object default_value, SetValueOverrideCallback set_value_override_callback)
 		{
-			this.default_value      = default_value;
-			this.set_value_override = set_value_override_callback;
+			this.defaultValue     = default_value;
+			this.setValueOverride = set_value_override_callback;
 		}
 		
 		
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.default_value;
+				return this.defaultValue;
 			}
 		}
 		
@@ -79,33 +79,33 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.get_value_override;
+				return this.getValueOverride;
 			}
 			set
 			{
-				this.get_value_override = value;
+				this.getValueOverride = value;
 			}
 		}
 		public SetValueOverrideCallback			SetValueOverride
 		{
 			get
 			{
-				return this.set_value_override;
+				return this.setValueOverride;
 			}
 			set
 			{
-				this.set_value_override = value;
+				this.setValueOverride = value;
 			}
 		}
 		public ValidateValueCallback			ValidateValue
 		{
 			get
 			{
-				return this.validate_value_callback;
+				return this.validateValueCallback;
 			}
 			set
 			{
-				this.validate_value_callback = value;
+				this.validateValueCallback = value;
 			}
 		}
 		public CoerceValueCallback				CoerceValue
@@ -124,11 +124,11 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.property_invalidated;
+				return this.propertyInvalidated;
 			}
 			set
 			{
-				this.property_invalidated = value;
+				this.propertyInvalidated = value;
 			}
 		}
 		public virtual bool						InheritsValue
@@ -175,11 +175,11 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		private object							default_value;
-		private GetValueOverrideCallback		get_value_override;
-		private SetValueOverrideCallback		set_value_override;
-		private PropertyInvalidatedCallback		property_invalidated;
-		private ValidateValueCallback			validate_value_callback;
+		private object							defaultValue = UndefinedValue.Instance;
+		private GetValueOverrideCallback		getValueOverride;
+		private SetValueOverrideCallback		setValueOverride;
+		private PropertyInvalidatedCallback		propertyInvalidated;
+		private ValidateValueCallback			validateValueCallback;
 		private CoerceValueCallback				coerceValueCallback;
 	}
 }

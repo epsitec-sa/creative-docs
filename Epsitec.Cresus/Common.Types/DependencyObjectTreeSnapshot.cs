@@ -15,7 +15,7 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		public void Record(DependencyObject obj)
+		public void RecordInherited(DependencyObject obj)
 		{
 			//	Record the state of all inherited properties.
 
@@ -46,6 +46,15 @@ namespace Epsitec.Common.Types
 			this.list.Add (new SnapshotValue (obj, property1));
 			this.list.Add (new SnapshotValue (obj, property2));
 		}
+		public void Record(DependencyObject obj, IEnumerable<DependencyProperty> properties)
+		{
+			System.Diagnostics.Debug.Assert (properties != null);
+
+			foreach (DependencyProperty property in properties)
+			{
+				this.list.Add (new SnapshotValue (obj, property));
+			}
+		}
 
 		public void RecordSubtree(DependencyObject root, DependencyProperty property)
 		{
@@ -69,7 +78,49 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+		public void RecordSubtree(DependencyObject root, IEnumerable<DependencyProperty> properties)
+		{
+			if (DependencyObjectTree.GetHasChildren (root))
+			{
+				foreach (DependencyObject child in DependencyObjectTree.GetChildren (root))
+				{
+					this.Record (child, properties);
+					this.RecordSubtree (child, properties);
+				}
+			}
+		}
 
+		public void AddNewInheritedProperties(DependencyObject obj)
+		{
+			//	Analyse the object tree starting at 'obj' and add any new properties
+			//	which were not yet known by this snapshot.
+			
+			this.AddNewProperties (DependencyObjectTree.CreateInheritedPropertyTreeSnapshot (obj));
+		}
+		public void AddNewProperties(DependencyObjectTreeSnapshot other)
+		{
+			foreach (SnapshotValue snapshot in other.list)
+			{
+				DependencyObject obj = snapshot.Object;
+				DependencyProperty property = snapshot.Property;
+				
+				for (int i = 0; i < this.list.Count; i++)
+				{
+					if ((this.list[i].Object == obj) &&
+						(this.list[i].Property == property))
+					{
+						property = null;
+						break;
+					}
+				}
+				
+				if (property != null)
+				{
+					this.list.Add (new SnapshotValue (obj, property, UndefinedValue.Instance));
+				}
+			}
+		}
+		
 		public void InvalidateDifferentProperties()
 		{
 			foreach (SnapshotValue snapshot in this.list)
@@ -167,6 +218,12 @@ namespace Epsitec.Common.Types
 				this.obj      = obj;
 				this.property = property;
 				this.value    = obj.GetValue (property);
+			}
+			public SnapshotValue(DependencyObject obj, DependencyProperty property, object value)
+			{
+				this.obj      = obj;
+				this.property = property;
+				this.value    = value;
 			}
 			
 			public DependencyObject				Object
