@@ -525,9 +525,11 @@
 	<data name="TextPanel.Generator.Type.Bullet1">Round bullet</data>
 	<data name="TextPanel.Generator.Type.Bullet2">Square bullet</data>
 	<data name="TextPanel.Generator.Type.Bullet3">Triangular bullet</data>
-	<data name="TextPanel.Generator.Type.Num1">Numbering 1.1.1</data>
-	<data name="TextPanel.Generator.Type.Num2">Numbering A-1), (i)</data>
-	<data name="TextPanel.Generator.Type.Num3">Numbering 1, a), i)</data>
+	<data name="TextPanel.Generator.Type.Num1">Numbering 1.</data>
+	<data name="TextPanel.Generator.Type.Num2">Numbering 1)</data>
+	<data name="TextPanel.Generator.Type.Num3">Numbering A.</data>
+	<data name="TextPanel.Generator.Type.Num4">Numbering a)</data>
+	<data name="TextPanel.Generator.Type.Num5">Numbering 1.1.1.</data>
 	<data name="TextPanel.Generator.Type.Custom">Customized</data>
 	<data name="TextPanel.Generator.Numerator.None">None</data>
 	<data name="TextPanel.Generator.Numerator.Numeric">1, 2...</data>
