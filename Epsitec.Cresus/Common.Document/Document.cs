@@ -881,10 +881,49 @@ namespace Epsitec.Common.Document
 				this.textContext.TabList.ClearUnusedTabTags();
 				this.textContext.GeneratorList.ClearUnusedGenerators();
 
-				Text.TextStyle[] list = this.TextContext.StyleList.StyleMap.GetSortedStyles();
+				Text.TextStyle[] list = this.textContext.StyleList.StyleMap.GetSortedStyles();
 				if ( list.Length == 0 )
 				{
-					// TODO: le document n'a aucun style. Que faire ?
+					//	Le document n'a aucun style. Il faut rechercher si par hasard, il
+					//	y en a quand-même certains qui seraient utilisables.
+					
+					Text.TextStyle paraStyle = this.textContext.StyleList["Default", Text.TextStyleClass.Paragraph];
+					Text.TextStyle charStyle = this.textContext.StyleList["Default", Text.TextStyleClass.Text];
+					
+					if ( paraStyle == null )
+					{
+						paraStyle = this.textContext.DefaultParagraphStyle;
+					}
+					
+					//	Tous les documents qui contenaient du texte ont toujours au moins
+					//	défini un style nommé 'Default'. Si ça ne devait pas être le cas,
+					//	crash garanti.
+					
+					if ( paraStyle == null )  throw new System.ArgumentNullException("No default paragraph style found");
+					
+					this.textContext.DefaultParagraphStyle = paraStyle;
+					this.textContext.StyleList.StyleMap.SetRank(null, paraStyle, 0);
+					this.textContext.StyleList.StyleMap.SetCaption(null, paraStyle, Res.Strings.Style.Paragraph.Base);
+
+					//	Cherche un style de caractère; si aucun n'est trouvé, on en crée
+					//	un nouveau de toutes pièces (c'est facile). Toute une série de
+					//	documents créés avec des versions de décembre 2005 n'avaient pas
+					//	de style de caractère par défaut.
+					
+					if ( charStyle == null )
+					{
+						charStyle = this.textContext.DefaultTextStyle;
+					}
+					if ( charStyle == null )
+					{
+						charStyle = this.textContext.StyleList.NewTextStyle(null, "Default", Text.TextStyleClass.Text);
+					}
+					
+					System.Diagnostics.Debug.Assert(charStyle != null);
+					
+					this.textContext.DefaultTextStyle = charStyle;
+					this.textContext.StyleList.StyleMap.SetRank(null, charStyle, 0);
+					this.textContext.StyleList.StyleMap.SetCaption(null, charStyle, Res.Strings.Style.Character.Base);
 				}
 			}
 

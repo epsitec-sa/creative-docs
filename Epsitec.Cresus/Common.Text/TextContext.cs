@@ -221,6 +221,9 @@ namespace Epsitec.Common.Text
 			
 			this.style_list.Deserialize (this, version, args, ref offset);
 			
+			this.default_para_style = null;
+			this.default_text_style = null;
+			
 			if (version >= 2)
 			{
 				string default_para_style_name = SerializerSupport.DeserializeString (args[offset++]);
