@@ -18,7 +18,11 @@ namespace Epsitec.Common.Types
 		{
 			return (value == UndefinedValue.Instance);
 		}
-		
+
+		public override string ToString()
+		{
+			return "<UndefinedValue>";
+		}
 		
 		public static readonly UndefinedValue	Instance = new UndefinedValue();
 	}

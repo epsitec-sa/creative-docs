@@ -15,6 +15,12 @@ namespace Epsitec.Common.Types
 		{
 		}
 
+		public static DependencyObjectTreeSnapshot CreateInheritedPropertyTreeSnapshot(DependencyObject root)
+		{
+			IList<DependencyProperty> properties = DependencyObjectTree.FindInheritedProperties (root);
+			return DependencyObjectTree.CreatePropertyTreeSnapshot (root, properties);
+		}
+		
 		public static DependencyObjectTreeSnapshot CreatePropertyTreeSnapshot(DependencyObject root, DependencyProperty property)
 		{
 			DependencyObjectTreeSnapshot snapshot = new DependencyObjectTreeSnapshot ();
@@ -33,6 +39,16 @@ namespace Epsitec.Common.Types
 
 			return snapshot;
 		}
+		public static DependencyObjectTreeSnapshot CreatePropertyTreeSnapshot(DependencyObject root, IList<DependencyProperty> properties)
+		{
+			DependencyObjectTreeSnapshot snapshot = new DependencyObjectTreeSnapshot ();
+
+			snapshot.Record (root, properties);
+			snapshot.RecordSubtree (root, properties);
+
+			return snapshot;
+		}
+		
 		public static DependencyObjectTreeSnapshot CreatePropertySubtreeSnapshot(DependencyObject root, DependencyProperty property)
 		{
 			DependencyObjectTreeSnapshot snapshot = new DependencyObjectTreeSnapshot ();
@@ -251,6 +267,12 @@ namespace Epsitec.Common.Types
 			
 			return item;
 		}
+		public static IList<DependencyProperty> FindInheritedProperties(DependencyObject item)
+		{
+			List<DependencyProperty> list = new List<DependencyProperty> ();
+			DependencyObjectTree.FindInheritedProperties (item, list);
+			return list;
+		}
 		
 		public static DependencyObject GetParent(DependencyObject o)
 		{
@@ -320,6 +342,7 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		#region Private Methods
+		
 		private static DependencyObject FindFirst(DependencyObject root, string name, FindMode mode)
 		{
 			if (root == null)
@@ -380,6 +403,26 @@ namespace Epsitec.Common.Types
 
 			return null;
 		}
+		
+		private static void FindInheritedProperties(DependencyObject item, List<DependencyProperty> list)
+		{
+			while (item != null)
+			{
+				foreach (LocalValueEntry entry in item.LocalValueEntries)
+				{
+					if (entry.Property.GetMetadata (item).InheritsValue)
+					{
+						if (list.Contains (entry.Property) == false)
+						{
+							list.Add (entry.Property);
+						}
+					}
+				}
+
+				item = DependencyObjectTree.GetParent (item);
+			}
+		}
+		
 		#endregion
 
 		public static DependencyProperty ParentProperty = DependencyProperty.RegisterReadOnly ("Parent", typeof (DependencyObject), typeof (DependencyObjectTree));

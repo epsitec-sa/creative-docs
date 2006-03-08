@@ -475,6 +475,47 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("b-Cascade:b,a.c1-Cascade:b,a.c3-Cascade:b,a.", handler.Log);
 			handler.Clear ();
+
+			TreeTest x = new TreeTest ();
+			TreeTest y = new TreeTest ();
+			TreeTest z = new TreeTest ();
+
+			x.Name = "x";
+			y.Name = "y";
+			z.Name = "z";
+
+			x.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEventAndName);
+			y.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEventAndName);
+			z.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEventAndName);
+			
+			a.AddChild (x);
+			a.AddChild (y);
+
+			//	Change le parent de 'b' : a-->x-->b-->c1/c2/c3
+
+			x.AddChild (b);
+			handler.Clear ();
+			
+			y.Cascade = "y";
+
+			Assert.AreEqual ("y-Cascade:a,y.", handler.Log);
+			handler.Clear ();
+			
+			//	Change le parent de 'b' : a-->y-->b-->c1/c2/c3. Comme 'y' définit
+			//	sa propre valeur héritée, cela affecte b, c1 et c3.
+
+			y.AddChild (b);
+
+			Assert.AreEqual ("b-Cascade:a,y.c1-Cascade:a,y.c3-Cascade:a,y.", handler.Log);
+			handler.Clear ();
+
+			z.AddChild (b);
+			Assert.AreEqual ("b-Cascade:y,<UndefinedValue>.c1-Cascade:y,<UndefinedValue>.c3-Cascade:y,<UndefinedValue>.", handler.Log);
+			handler.Clear ();
+			
+			x.AddChild (b);
+			Assert.AreEqual ("b-Cascade:<UndefinedValue>,a.c1-Cascade:<UndefinedValue>,a.c2-Cascade:<UndefinedValue>,C.c3-Cascade:<UndefinedValue>,a.", handler.Log);
+			handler.Clear ();
 		}
 
 		
@@ -921,12 +962,22 @@ namespace Epsitec.Common.Types
 			
 			public void AddChild(TreeTest item)
 			{
+				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreateInheritedPropertyTreeSnapshot (item);
+				
 				if (this.children == null)
 				{
 					this.children = new List<TreeTest> ();
 				}
+				if (item.parent != null)
+				{
+					item.parent.children.Remove (item);
+				}
 				this.children.Add (item);
+
 				item.parent = this;
+				
+				snapshot.AddNewInheritedProperties (item);
+				snapshot.InvalidateDifferentProperties ();
 			}
 			
 			public static object GetValueParent(DependencyObject o)
