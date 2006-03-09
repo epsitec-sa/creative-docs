@@ -22,6 +22,36 @@ namespace Epsitec.Common.Text.Internal.Sequences
 		}
 		
 		
+		public override bool ParseText(string text, out int value)
+		{
+			if ((text == null) ||
+				(text.Length == 0))
+			{
+				value = 0;
+				return false;
+			}
+			
+			text = text.ToUpper ();
+			
+			if (Roman.inverse_lookup.Count == 0)
+			{
+				for (int i = 1; i < 1000; i++)
+				{
+					Roman.inverse_lookup[this.GetRawText (i, System.Globalization.CultureInfo.InvariantCulture)] = i;
+				}
+			}
+			
+			if (Roman.inverse_lookup.Contains (text))
+			{
+				value = (int) Roman.inverse_lookup[text];
+				return true;
+			}
+			
+			value = 0;
+			return false;
+		}
+		
+		
 		protected override string GetRawText(int rank, System.Globalization.CultureInfo culture)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -56,5 +86,8 @@ namespace Epsitec.Common.Text.Internal.Sequences
 				buffer.Append (letter);
 			}
 		}
+		
+		
+		static System.Collections.Hashtable		inverse_lookup = new System.Collections.Hashtable ();
 	}
 }

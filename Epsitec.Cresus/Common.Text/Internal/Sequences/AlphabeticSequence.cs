@@ -27,6 +27,21 @@ namespace Epsitec.Common.Text.Internal.Sequences
 		}
 		
 		
+		public override bool ParseText(string text, out int value)
+		{
+			if ((text == null) ||
+				(text.Length == 0))
+			{
+				value = 0;
+				return false;
+			}
+			
+			value = this.alphabet.ToLower ().IndexOf (text.ToLower ()[0]) + 1;
+			
+			return (value > 0);
+		}
+		
+		
 		protected override string GetRawText(int rank, System.Globalization.CultureInfo culture)
 		{
 			if ((rank < 1) ||
