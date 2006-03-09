@@ -35,52 +35,36 @@ namespace Epsitec.Common.Text.Exchange
 			return output.ToString ();
 		}
 
-		// ferme les tags ouverts avant de fermer
-		// un tag
-		private void CloseTag(HtmlAttribute closeattribute)
-		{
-			while (this.openTags.Count > 0)
-			{
-				HtmlAttribute attribute = (HtmlAttribute)this.openTags.Pop ();
-
-				if (attribute != closeattribute)
-				{
-					this.output.Append (this.AttributeToString(attribute, HtmlTagMode.Close , null));
-				}
-			}
-		}
-
 		public void AppendText(string thestring)
 		{
 			if (precedIsItalic && !isItalic)
 			{
 				this.CloseTag (HtmlAttribute.Italic);
-				output.Append ("</i>");
-			}
-
-			if (!precedIsItalic && isItalic)
-			{
-				this.output.Append ("<i>");
-				this.openTags.Push (HtmlAttribute.Italic);
-				precedIsItalic = true;
 			}
 
 			if (precedIsBold && !isBold)
 			{
 				this.CloseTag (HtmlAttribute.Bold);
-				this.output.Append ("</b>");
 			}
+
+			if (!precedIsItalic && isItalic)
+			{
+				this.OpenTag (HtmlAttribute.Italic);
+			}
+
 
 			if (!precedIsBold && isBold)
 			{
-				this.openTags.Push (HtmlAttribute.Bold);
-				output.Append ("<b>");
-				precedIsBold = true;
+				this.OpenTag (HtmlAttribute.Italic);
+//				output.Append ("<b>");
+//				this.openTags.Push (HtmlAttribute.Bold);
 			}
 
 			precedIsItalic = isItalic;
 			precedIsBold = isBold;
 
+			this.AppendTagsToClose ();
+			this.AppendTagsToOpen ();
 			this.output.Append (thestring);
 		}
 
@@ -132,6 +116,25 @@ namespace Epsitec.Common.Text.Exchange
 			return retval;
 		}
 
+		private void CloseTag(HtmlAttribute closetag)
+		{
+			this.tagsToClose.Add (closetag);
+		}
+
+		private void OpenTag(HtmlAttribute opentag)
+		{
+			this.tagsToOpen.Add (opentag);
+		}
+
+		private void AppendTagsToClose()
+		{
+		}
+
+		private void AppendTagsToOpen()
+		{
+		}
+		
+
 		enum HtmlAttribute
 		{
 			Bold,
@@ -156,7 +159,9 @@ namespace Epsitec.Common.Text.Exchange
 
         private System.Text.StringBuilder output = new System.Text.StringBuilder ();
 
-		System.Collections.Stack openTags = new System.Collections.Stack();
+		private System.Collections.Stack openTags = new System.Collections.Stack ();
+		private System.Collections.ArrayList tagsToClose = new System.Collections.ArrayList ();
+		private System.Collections.ArrayList tagsToOpen = new System.Collections.ArrayList ();
 
     }
 
@@ -183,9 +188,6 @@ namespace Epsitec.Common.Text.Exchange
 			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
 
 			System.Text.StringBuilder output = new System.Text.StringBuilder ();
-			string[] opentag = new string[10];
-			string[] closetag = new string[10];
-			int tagindex ;
 
 			textWrapper.Attach (navigator);
 			paraWrapper.Attach (navigator);
@@ -199,8 +201,7 @@ namespace Epsitec.Common.Text.Exchange
 			while (true)
 			{
 				int runLength = navigator.GetRunLength (1000000);
-				tagindex = 0;
-
+				
 				if (runLength == 0)
 				{
 					break;
