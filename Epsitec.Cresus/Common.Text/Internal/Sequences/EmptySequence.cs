@@ -22,6 +22,13 @@ namespace Epsitec.Common.Text.Internal.Sequences
 		}
 		
 		
+		public override bool ParseText(string text, out int value)
+		{
+			value = 1;
+			return true;
+		}
+		
+		
 		protected override string GetRawText(int rank, System.Globalization.CultureInfo culture)
 		{
 			return "";

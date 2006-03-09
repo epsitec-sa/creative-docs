@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -16,12 +16,12 @@ namespace Epsitec.Common.Types
 		
 		public static bool IsNull(object obj)
 		{
-			return (obj == null) || (obj is System.DBNull);
+			return (obj == null) || (obj == System.DBNull.Value);
 		}
 		
 		public static bool IsNotNull(object obj)
 		{
-			return (obj != null) && !(obj is System.DBNull);
+			return (obj != null) && !(obj == System.DBNull.Value);
 		}
 		
 		public static bool IsSimple(object obj)
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Types
 			//	- obj est une chaîne de caractères
 			
 			if ((obj == null) ||
-				(obj is System.DBNull) ||
+				(obj == System.DBNull.Value) ||
 				(obj is string) ||
 				(obj is System.ValueType))
 			{
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Types
 		
 		public static bool Convert(object obj, out string value)
 		{
-			if ((obj == null) || (obj is System.DBNull))
+			if ((obj == null) || (obj == System.DBNull.Value))
 			{
 				value = null;
 				return false;
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Types
 			//	de ses variantes, false sinon. Si le type n'est pas reconnu ou
 			//	que la syntaxe n'est pas correcte, une exception est levée.
 			
-			if ((obj == null) || (obj is System.DBNull))
+			if ((obj == null) || (obj == System.DBNull.Value))
 			{
 				value = 0;
 				return false;
@@ -321,7 +321,7 @@ namespace Epsitec.Common.Types
 		
 		public static bool Convert(object obj, System.Type type, out System.Enum value)
 		{
-			if ((obj == null) || (obj is System.DBNull))
+			if ((obj == null) || (obj == System.DBNull.Value))
 			{
 				value = null;
 				return false;
@@ -371,7 +371,7 @@ namespace Epsitec.Common.Types
 		
 		public static bool Convert(object obj, out System.DateTime value)
 		{
-			if ((obj == null) || (obj is System.DBNull))
+			if ((obj == null) || (obj == System.DBNull.Value))
 			{
 				value = new System.DateTime ();
 				return false;
