@@ -171,6 +171,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\BulletContinue.icon" />
+    <EmbeddedResource Include="Images\TextNumerator.icon" />
     <EmbeddedResource Include="Images\BulletJustifCenter.icon" />
     <EmbeddedResource Include="Images\BulletJustifLeft.icon" />
     <EmbeddedResource Include="Images\BulletJustifNone.icon" />

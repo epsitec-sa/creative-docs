@@ -175,7 +175,7 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		private object							defaultValue = UndefinedValue.Instance;
+		private object							defaultValue;
 		private GetValueOverrideCallback		getValueOverride;
 		private SetValueOverrideCallback		setValueOverride;
 		private PropertyInvalidatedCallback		propertyInvalidated;

@@ -595,6 +595,7 @@
     <Compile Include="TextPanels\Margins.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TextPanels\Numerator.cs" />
     <Compile Include="TextPanels\Spaces.cs">
       <SubType>Code</SubType>
     </Compile>
