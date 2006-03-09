@@ -23,6 +23,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.labelStart.Text = Res.Strings.TextPanel.Numerator.Label.Start;
 
 			this.fieldStart = new TextField(this);
+			this.fieldStart.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.fieldStart.AutoSelectOnFocus = true;
 			this.fieldStart.SwallowEscape = true;
 			this.fieldStart.SwallowReturn = true;
