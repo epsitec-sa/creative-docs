@@ -488,9 +488,12 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsVisibleProperty);
-				this.SetValueBase (Visual.VisibilityProperty, value);
-				snapshot.InvalidateDifferentProperties ();
+				if (this.Visibility != value)
+				{
+					Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsVisibleProperty);
+					this.SetValueBase (Visual.VisibilityProperty, value);
+					snapshot.InvalidateDifferentProperties ();
+				}
 			}
 		}
 		
