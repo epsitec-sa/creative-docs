@@ -492,6 +492,17 @@
 	<data name="TextPanel.Filter.Tooltip.Paragraph">Paragraph properties only</data>
 	<data name="TextPanel.Filter.Tooltip.Character">Character properties only</data>
 	
+	<data name="TextPanel.Font.Title">Font</data>
+	<data name="TextPanel.Font.Short.Size">pt</data>
+	<data name="TextPanel.Font.Short.Glue">T</data>
+	<data name="TextPanel.Font.Long.Size">%</data>
+	<data name="TextPanel.Font.Long.Glue">Tracking</data>
+	<data name="TextPanel.Font.Tooltip.Face">Font name</data>
+	<data name="TextPanel.Font.Tooltip.Style">Font style</data>
+	<data name="TextPanel.Font.Tooltip.Features">OpenType features</data>
+	<data name="TextPanel.Font.Tooltip.Size">Font size</data>
+	<data name="TextPanel.Font.Tooltip.Glue">Tracking (space between characters)</data>
+
 	<data name="TextPanel.Generator.Title">Bullets and numbering</data>
 	<data name="TextPanel.Generator.Button.Perso">Customize</data>
 	<data name="TextPanel.Generator.Tooltip.Perso">Customize the settings</data>
@@ -541,6 +552,25 @@
 	
 	<data name="TextPanel.Justif.Title">Layout</data>
 
+	<data name="TextPanel.Keep.Title">Keep Options</data>
+	<data name="TextPanel.Keep.Tooltip.KeepNext">Keep with next paragraph</data>
+	<data name="TextPanel.Keep.Tooltip.KeepPrev">Keep with previous paragraph</data>
+	<data name="TextPanel.Keep.Tooltip.NextStyle">Style for Next Paragraph</data>
+	<data name="TextPanel.Keep.Short.KeepStart">S</data>
+	<data name="TextPanel.Keep.Short.KeepEnd">E</data>
+	<data name="TextPanel.Keep.Short.NextStyle">Next</data>
+	<data name="TextPanel.Keep.Long.KeepStart">Keep start lines</data>
+	<data name="TextPanel.Keep.Long.KeepEnd">Keep end lines</data>
+	<data name="TextPanel.Keep.Tooltip.KeepStart">Lines to keep together at the start of a paragraph</data>
+	<data name="TextPanel.Keep.Tooltip.KeepEnd">Lines to keep together at the end of a paragraph</data>
+	<data name="TextPanel.Keep.Tooltip.StartMode">Start Paragraph at ...</data>
+	<data name="TextPanel.Keep.StartMode.Undefined">&lt;i&gt;Defined by Style&lt;/i&gt;</data>
+	<data name="TextPanel.Keep.StartMode.Anywhere">Anywhere</data>
+	<data name="TextPanel.Keep.StartMode.NewFrame">In a New Frame</data>
+	<data name="TextPanel.Keep.StartMode.NewPage">In a New Page</data>
+	<data name="TextPanel.Keep.StartMode.NewOddPage">In an Odd Page</data>
+	<data name="TextPanel.Keep.StartMode.NewEvenPage">In an Even Page</data>
+
 	<data name="TextPanel.Leading.Title">Leading</data>
 	<data name="TextPanel.Leading.Short.Leading">d</data>
 	<data name="TextPanel.Leading.Short.GridStep">S</data>
@@ -567,6 +597,10 @@
 	<data name="TextPanel.Margins.Long.Level">Indentation level</data>
 	<data name="TextPanel.Margins.Tooltip.Level">Indentation level (1..9)</data>
 
+	<data name="TextPanel.Numerator.Title">@@Numérotation</data>
+	<data name="TextPanel.Numerator.Label.Start">@@Numéro initial</data>
+	<data name="TextPanel.Numerator.Tooltip.Start">@@Exemples: 12 ou 15.A.i (laisser vide pour continuer la numérotation)</data>
+	
 	<data name="TextPanel.Spaces.Title">Spacing</data>
 	<data name="TextPanel.Spaces.Short.Before">B</data>
 	<data name="TextPanel.Spaces.Short.After">A</data>
@@ -575,25 +609,6 @@
 	<data name="TextPanel.Spaces.Tooltip.Before">Additional space before paragraph</data>
 	<data name="TextPanel.Spaces.Tooltip.After">Additional space before paragraph</data>
 
-	<data name="TextPanel.Keep.Title">Keep Options</data>
-	<data name="TextPanel.Keep.Tooltip.KeepNext">Keep with next paragraph</data>
-	<data name="TextPanel.Keep.Tooltip.KeepPrev">Keep with previous paragraph</data>
-	<data name="TextPanel.Keep.Tooltip.NextStyle">Style for Next Paragraph</data>
-	<data name="TextPanel.Keep.Short.KeepStart">S</data>
-	<data name="TextPanel.Keep.Short.KeepEnd">E</data>
-	<data name="TextPanel.Keep.Short.NextStyle">Next</data>
-	<data name="TextPanel.Keep.Long.KeepStart">Keep start lines</data>
-	<data name="TextPanel.Keep.Long.KeepEnd">Keep end lines</data>
-	<data name="TextPanel.Keep.Tooltip.KeepStart">Lines to keep together at the start of a paragraph</data>
-	<data name="TextPanel.Keep.Tooltip.KeepEnd">Lines to keep together at the end of a paragraph</data>
-	<data name="TextPanel.Keep.Tooltip.StartMode">Start Paragraph at ...</data>
-	<data name="TextPanel.Keep.StartMode.Undefined">&lt;i&gt;Defined by Style&lt;/i&gt;</data>
-	<data name="TextPanel.Keep.StartMode.Anywhere">Anywhere</data>
-	<data name="TextPanel.Keep.StartMode.NewFrame">In a New Frame</data>
-	<data name="TextPanel.Keep.StartMode.NewPage">In a New Page</data>
-	<data name="TextPanel.Keep.StartMode.NewOddPage">In an Odd Page</data>
-	<data name="TextPanel.Keep.StartMode.NewEvenPage">In an Even Page</data>
-
 	<data name="TextPanel.Tabs.Title">Tab Marks</data>
 	<data name="TextPanel.Tabs.Table.Pos">Tab position</data>
 	<data name="TextPanel.Tabs.Table.Type">Tab type</data>
@@ -601,20 +616,6 @@
 	<data name="TextPanel.Tabs.Tooltip.Delete">Delete tab mark</data>
 	<data name="TextPanel.Tabs.Tooltip.Pos">Tab mark position</data>
 	
-	<data name="TextPanel.Align.Title">Vertical alignment</data>
-
-	<data name="TextPanel.Font.Title">Font</data>
-	<data name="TextPanel.Font.Short.Size">pt</data>
-	<data name="TextPanel.Font.Short.Glue">T</data>
-	<data name="TextPanel.Font.Long.Size">%</data>
-	<data name="TextPanel.Font.Long.Glue">Tracking</data>
-	<data name="TextPanel.Font.Tooltip.Face">Font name</data>
-	<data name="TextPanel.Font.Tooltip.Style">Font style</data>
-	<data name="TextPanel.Font.Tooltip.Features">OpenType features</data>
-	<data name="TextPanel.Font.Tooltip.Size">Font size</data>
-	<data name="TextPanel.Font.Tooltip.Glue">Tracking (space between characters)</data>
-	<data name="Panel.Font.None">None</data>
-
 	<data name="TextPanel.Xline.Title">Underlines</data>
 	<data name="TextPanel.Xline.Short.Underlined.Thickness">T</data>
 	<data name="TextPanel.Xline.Short.Underlined.Position">P</data>

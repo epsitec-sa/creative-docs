@@ -1857,6 +1857,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\TextNumerator.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\TextShowControlCharacters.icon"
                     BuildAction = "EmbeddedResource"
                 />

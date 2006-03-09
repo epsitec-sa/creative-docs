@@ -922,6 +922,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TextPanels\Numerator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TextPanels\Spaces.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

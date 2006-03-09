@@ -493,6 +493,17 @@
 	<data name="TextPanel.Filter.Tooltip.Paragraph">Attributs pour les paragraphes</data>
 	<data name="TextPanel.Filter.Tooltip.Character">Attributs pour les caractères</data>
 	
+	<data name="TextPanel.Font.Title">Police</data>
+	<data name="TextPanel.Font.Short.Size">T</data>
+	<data name="TextPanel.Font.Short.Glue">E</data>
+	<data name="TextPanel.Font.Long.Size">%</data>
+	<data name="TextPanel.Font.Long.Glue">Espacement</data>
+	<data name="TextPanel.Font.Tooltip.Face">Police de caractères</data>
+	<data name="TextPanel.Font.Tooltip.Style">Style de la police</data>
+	<data name="TextPanel.Font.Tooltip.Features">Variantes OpenType</data>
+	<data name="TextPanel.Font.Tooltip.Size">Taille de la police</data>
+	<data name="TextPanel.Font.Tooltip.Glue">Espacement des caractères</data>
+
 	<data name="TextPanel.Generator.Title">Puces et numérotations</data>
 	<data name="TextPanel.Generator.Button.Perso">Personnaliser</data>
 	<data name="TextPanel.Generator.Tooltip.Perso">Accès aux modifications personnalisées</data>
@@ -563,6 +574,25 @@
 	
 	<data name="TextPanel.Justif.Title">Mise en page</data>
 
+	<data name="TextPanel.Keep.Title">Enchaînements</data>
+	<data name="TextPanel.Keep.Tooltip.KeepNext">Lié au paragraphe suivant</data>
+	<data name="TextPanel.Keep.Tooltip.KeepPrev">Lié au paragraphe précédent</data>
+	<data name="TextPanel.Keep.Tooltip.NextStyle">Style du paragraphe suivant</data>
+	<data name="TextPanel.Keep.Short.KeepStart">D</data>
+	<data name="TextPanel.Keep.Short.KeepEnd">F</data>
+	<data name="TextPanel.Keep.Short.NextStyle">Suivant</data>
+	<data name="TextPanel.Keep.Long.KeepStart">Lignes solidaires au début</data>
+	<data name="TextPanel.Keep.Long.KeepEnd">Lignes solidaires à la fin</data>
+	<data name="TextPanel.Keep.Tooltip.KeepStart">Nombre de lignes solidaires au début du paragraphe</data>
+	<data name="TextPanel.Keep.Tooltip.KeepEnd">Nombre de lignes solidaires à la fin du paragraphe</data>
+	<data name="TextPanel.Keep.Tooltip.StartMode">Emplacement du début du paragraphe</data>
+	<data name="TextPanel.Keep.StartMode.Undefined">&lt;i&gt;Selon le style sous-jacent&lt;/i&gt;</data>
+	<data name="TextPanel.Keep.StartMode.Anywhere">N'importe où</data>
+	<data name="TextPanel.Keep.StartMode.NewFrame">Au début d'un pavé</data>
+	<data name="TextPanel.Keep.StartMode.NewPage">Au début d'une page</data>
+	<data name="TextPanel.Keep.StartMode.NewOddPage">Au début d'une page impaire</data>
+	<data name="TextPanel.Keep.StartMode.NewEvenPage">Au début d'une page paire</data>
+
 	<data name="TextPanel.Leading.Title">Interligne</data>
 	<data name="TextPanel.Leading.Short.Leading">d</data>
 	<data name="TextPanel.Leading.Short.GridStep">G</data>
@@ -589,6 +619,10 @@
 	<data name="TextPanel.Margins.Long.Level">Niveau d'indentation</data>
 	<data name="TextPanel.Margins.Tooltip.Level">Niveau d'indentation (1..9)</data>
 
+	<data name="TextPanel.Numerator.Title">Numérotation</data>
+	<data name="TextPanel.Numerator.Label.Start">Numéro initial</data>
+	<data name="TextPanel.Numerator.Tooltip.Start">Exemples: 12 ou 15.A.i (laisser vide pour continuer la numérotation)</data>
+	
 	<data name="TextPanel.Spaces.Title">Espacements</data>
 	<data name="TextPanel.Spaces.Short.Before">H</data>
 	<data name="TextPanel.Spaces.Short.After">B</data>
@@ -597,25 +631,6 @@
 	<data name="TextPanel.Spaces.Tooltip.Before">Espacement avant le paragraphe</data>
 	<data name="TextPanel.Spaces.Tooltip.After">Espacement après le paragraphe</data>
 
-	<data name="TextPanel.Keep.Title">Enchaînements</data>
-	<data name="TextPanel.Keep.Tooltip.KeepNext">Lié au paragraphe suivant</data>
-	<data name="TextPanel.Keep.Tooltip.KeepPrev">Lié au paragraphe précédent</data>
-	<data name="TextPanel.Keep.Tooltip.NextStyle">Style du paragraphe suivant</data>
-	<data name="TextPanel.Keep.Short.KeepStart">D</data>
-	<data name="TextPanel.Keep.Short.KeepEnd">F</data>
-	<data name="TextPanel.Keep.Short.NextStyle">Suivant</data>
-	<data name="TextPanel.Keep.Long.KeepStart">Lignes solidaires au début</data>
-	<data name="TextPanel.Keep.Long.KeepEnd">Lignes solidaires à la fin</data>
-	<data name="TextPanel.Keep.Tooltip.KeepStart">Nombre de lignes solidaires au début du paragraphe</data>
-	<data name="TextPanel.Keep.Tooltip.KeepEnd">Nombre de lignes solidaires à la fin du paragraphe</data>
-	<data name="TextPanel.Keep.Tooltip.StartMode">Emplacement du début du paragraphe</data>
-	<data name="TextPanel.Keep.StartMode.Undefined">&lt;i&gt;Selon le style sous-jacent&lt;/i&gt;</data>
-	<data name="TextPanel.Keep.StartMode.Anywhere">N'importe où</data>
-	<data name="TextPanel.Keep.StartMode.NewFrame">Au début d'un pavé</data>
-	<data name="TextPanel.Keep.StartMode.NewPage">Au début d'une page</data>
-	<data name="TextPanel.Keep.StartMode.NewOddPage">Au début d'une page impaire</data>
-	<data name="TextPanel.Keep.StartMode.NewEvenPage">Au début d'une page paire</data>
-
 	<data name="TextPanel.Tabs.Title">Tabulateurs</data>
 	<data name="TextPanel.Tabs.Table.Pos">Position</data>
 	<data name="TextPanel.Tabs.Table.Type">Type</data>
@@ -623,19 +638,6 @@
 	<data name="TextPanel.Tabs.Tooltip.Delete">Supprimer un tabulateur</data>
 	<data name="TextPanel.Tabs.Tooltip.Pos">Position du tabulateur</data>
 	
-	<data name="TextPanel.Align.Title">Alignement vertical</data>
-
-	<data name="TextPanel.Font.Title">Police</data>
-	<data name="TextPanel.Font.Short.Size">T</data>
-	<data name="TextPanel.Font.Short.Glue">E</data>
-	<data name="TextPanel.Font.Long.Size">%</data>
-	<data name="TextPanel.Font.Long.Glue">Espacement</data>
-	<data name="TextPanel.Font.Tooltip.Face">Police de caractères</data>
-	<data name="TextPanel.Font.Tooltip.Style">Style de la police</data>
-	<data name="TextPanel.Font.Tooltip.Features">Variantes OpenType</data>
-	<data name="TextPanel.Font.Tooltip.Size">Taille de la police</data>
-	<data name="TextPanel.Font.Tooltip.Glue">Espacement des caractères</data>
-
 	<data name="TextPanel.Xline.Title">Traits horizontaux</data>
 	<data name="TextPanel.Xline.Short.Underlined.Thickness">E</data>
 	<data name="TextPanel.Xline.Short.Underlined.Position">P</data>
