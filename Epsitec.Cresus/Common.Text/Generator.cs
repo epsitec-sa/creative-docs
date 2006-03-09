@@ -514,7 +514,25 @@ namespace Epsitec.Common.Text
 							}
 							else if (mode.StartsWith ("set "))
 							{
-								//	TODO: réinitialiser le vecteur de départ
+								string[] args = mode.Substring (4).Split ('.');
+								
+								int[] vector = new int[args.Length];
+								
+								for (int i = 0; i < args.Length; i++)
+								{
+									int value;
+									
+									if (this.generator.Sequences[i].ParseText (args[i], out value))
+									{
+										vector[i] = value;
+									}
+									else
+									{
+										vector[i] = 1;
+									}
+								}
+								
+								this.series.Restart (vector);
 							}
 							else
 							{
@@ -679,6 +697,12 @@ namespace Epsitec.Common.Text
 			public void Restart()
 			{
 				this.vector = this.generator.StartVector;
+				this.level  = -1;
+			}
+			
+			public void Restart(int[] vector)
+			{
+				this.vector = vector == null ? new int[0] : vector.Clone () as int[];
 				this.level  = -1;
 			}
 			
@@ -952,6 +976,7 @@ namespace Epsitec.Common.Text
 				return text;
 			}
 			
+			public abstract bool ParseText(string text, out int value);
 			
 			#region ISerializableAsText Members
 			public void SerializeToText(System.Text.StringBuilder buffer)

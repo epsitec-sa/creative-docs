@@ -56,6 +56,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( name == "Keep"      )  return new Keep(document, isStyle, styleCategory);
 			if ( name == "Tabs"      )  return new Tabs(document, isStyle, styleCategory);
 			if ( name == "Generator" )  return new Generator(document, isStyle, styleCategory);
+			if ( name == "Numerator" )  return new Numerator(document, isStyle, styleCategory);
 			if ( name == "Font"      )  return new Font(document, isStyle, styleCategory);
 			if ( name == "Xline"     )  return new Xline(document, isStyle, styleCategory);
 			if ( name == "Xscript"   )  return new Xscript(document, isStyle, styleCategory);
@@ -86,6 +87,7 @@ namespace Epsitec.Common.Document.TextPanels
 				case "Keep":       return ( o || o || P || o );
 				case "Tabs":       return ( o || o || P || o );
 				case "Generator":  return ( o || o || o || o );
+				case "Numerator":  return ( o || o || P || o );
 				case "Font":       return ( F || U || o || C );
 				case "Xline":      return ( F || o || o || C );
 				case "Xscript":    return ( F || o || o || C );
