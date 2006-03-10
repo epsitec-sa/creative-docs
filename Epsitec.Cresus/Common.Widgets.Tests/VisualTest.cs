@@ -13,7 +13,8 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		[Test] public void CheckVisualEnable()
+		[Test]
+		public void CheckVisualEnable()
 		{
 			Visual a = new Visual ();
 			Visual b = new Visual ();
@@ -78,6 +79,105 @@ namespace Epsitec.Common.Widgets
 			Assert.IsFalse (c1.Enable);	Assert.IsFalse (c1.IsEnabled);
 			Assert.IsTrue (c2.Enable);	Assert.IsTrue (c2.IsEnabled);
 			Assert.AreEqual (" B:0->1 C2:0->1", VisualTest.buffer.ToString ());
+		}
+		
+		[Test]
+		public void CheckVisualChildren()
+		{
+			Visual root = new Visual ();
+
+			root.Name = "root";
+			
+			Visual a = new Visual ();
+			Visual b = new Visual ();
+			Visual c = new Visual ();
+
+			a.Name = "a";
+			b.Name = "b";
+			c.Name = "c";
+			
+			Assert.IsFalse (root.HasChildren);
+			Assert.IsFalse (a.HasChildren);
+
+			Assert.AreEqual (0, a.Children.Count);
+			Assert.IsFalse (a.HasChildren);
+
+			Collections.FlatChildrenCollection colA = a.Children;
+
+			Assert.AreEqual (colA, a.Children);
+
+			root.Children.Insert (0, a);
+
+			Assert.IsTrue (root.HasChildren);
+			Assert.AreEqual (1, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (a, root.Children[0]);
+			
+			root.Children.Insert (0, b);
+			
+			Assert.IsTrue (root.HasChildren);
+			Assert.AreEqual (2, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (b, root.Children[0]);
+			Assert.AreEqual (a, root.Children[1]);
+
+			Assert.AreEqual (1, root.Children.IndexOf (a));
+			Assert.AreEqual (0, root.Children.IndexOf (b));
+
+			root.Children[1] = c;
+
+			Assert.AreEqual (0, root.Children.IndexOf (b));
+			Assert.AreEqual (1, root.Children.IndexOf (c));
+			
+			Assert.AreEqual (2, root.Children.Count);
+			Assert.AreEqual (null, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (root, c.Parent);
+			Assert.AreEqual (b, root.Children[0]);
+			Assert.AreEqual (c, root.Children[1]);
+
+			root.Children.Add (a);
+
+			Assert.AreEqual (3, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (2, root.Children.IndexOf (a));
+
+			Visual[] array = new Visual[3];
+			root.Children.CopyTo (array, 0);
+
+			Assert.AreEqual (b, array[0]);
+			Assert.AreEqual (c, array[1]);
+			Assert.AreEqual (a, array[2]);
+
+			root.Children.Remove (c);
+			
+			Assert.AreEqual (2, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (null, c.Parent);
+			Assert.AreEqual (b, root.Children[0]);
+			Assert.AreEqual (a, root.Children[1]);
+
+			a.Parent = root;
+			c.Parent = root;
+
+			Assert.AreEqual (3, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (root, c.Parent);
+			Assert.AreEqual (b, root.Children[0]);
+			Assert.AreEqual (a, root.Children[1]);
+			Assert.AreEqual (c, root.Children[2]);
+			
+			a.Parent = null;
+
+			Assert.AreEqual (2, root.Children.Count);
+			Assert.AreEqual (null, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (root, c.Parent);
+			Assert.AreEqual (b, root.Children[0]);
+			Assert.AreEqual (c, root.Children[1]);
 		}
 		
 		

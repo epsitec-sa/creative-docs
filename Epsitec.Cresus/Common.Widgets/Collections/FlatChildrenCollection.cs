@@ -15,6 +15,18 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			this.host = host;
 		}
+
+		public Widget[] Widgets
+		{
+			get
+			{
+				Visual[] visuals = this.visuals.ToArray ();
+				Widget[] widgets = new Widget[visuals.Length];
+				visuals.CopyTo (widgets, 0);
+				return widgets;
+			}
+		}
+		
 		class Snapshot
 		{
 			private Snapshot()
@@ -32,7 +44,75 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 		
-		#region IList<Visual> Members
+		private void NotifyChanges(Snapshot snapshot)
+		{
+			snapshot.NotifyChanges ();
+		}
+
+		private void AttachVisual(Visual visual)
+		{
+			//	Attache le visual à son nouveau parent; il est au préalable détaché
+			//	de son ancien parent. Cette méthode ne s'occupe pas de la question
+			//	des propriétés héritées.
+
+			System.Diagnostics.Debug.Assert (visual != null);
+			System.Diagnostics.Debug.Assert (this.visuals.Contains (visual));
+			
+			Visual parent = visual.Parent;
+
+			if (parent == null)
+			{
+				//	Le visual n'a pas de parent, ce qui simplifie la gestion. Il
+				//	suffit de lui en attribuer un :
+
+				visual.SetParentVisual (this.host);
+			}
+			else if (this.host == parent)
+			{
+				//	Le visual a déjà le même parent; il n'y a donc rien à faire
+				//	au niveau des liens.
+			}
+			else
+			{
+				//	Le visual est encore attaché à un parent. Il faut commencer par
+				//	le détacher de son ancien parent, puis notifier l'ancien parent
+				//	du changement :
+
+				FlatChildrenCollection others = parent.Children;
+
+				others.visuals.Remove (visual);
+				others.DetachVisual (visual);
+
+				System.Diagnostics.Debug.Assert (visual.Parent == null);
+				
+				visual.SetParentVisual (this.host);
+			}
+			
+			System.Diagnostics.Debug.Assert (visual.Parent == this.host);
+			
+			this.NotifyChanged ();
+		}
+		private void DetachVisual(Visual visual)
+		{
+			//	Détache le visual de son parent.
+			
+			System.Diagnostics.Debug.Assert (visual != null);
+			System.Diagnostics.Debug.Assert (this.visuals.Contains (visual) == false);
+			System.Diagnostics.Debug.Assert (this.host == visual.Parent);
+			
+			visual.SetParentVisual (null);
+
+			System.Diagnostics.Debug.Assert (visual.Parent == null);
+			
+			this.NotifyChanged ();
+		}
+
+		private void NotifyChanged()
+		{
+			this.host.NotifyChildrenChanged ();
+		}
+		
+#region IList<Visual> Members
 
 		public Visual							this[int index]
 		{
@@ -42,15 +122,29 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 			set
 			{
-				if (this.visuals[index] != value)
+				if (value == null)
 				{
-					Snapshot snapshot = Snapshot.RecordTree (this.visuals[index], value);
+					throw new System.ArgumentNullException (FlatChildrenCollection.NullVisualMessage);
+				}
 
-					this.DetachVisual (this.visuals[index]);
+				Visual oldValue = this.visuals[index];
+				Visual newValue = value;
+				
+				if (oldValue != newValue)
+				{
+					if (value.Parent == this.host)
+					{
+						throw new System.InvalidOperationException (FlatChildrenCollection.NotTwiceMessage);
+					}
+					
+					Snapshot snapshot = Snapshot.RecordTree (oldValue, newValue);
+
+					this.visuals[index] = null;
+					this.DetachVisual (oldValue);
 					this.visuals[index] = value;
-					this.AttachVisual (this.visuals[index]);
+					this.AttachVisual (newValue);
 
-					snapshot.NotifyChanges ();
+					this.NotifyChanges (snapshot);
 				}
 			}
 		}
@@ -60,14 +154,37 @@ namespace Epsitec.Common.Widgets.Collections
 			return this.visuals.IndexOf (item);
 		}
 
+		
+
 		public void Insert(int index, Visual item)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			if (item == null)
+			{
+				throw new System.ArgumentNullException (FlatChildrenCollection.NullVisualMessage);
+			}
+			if (item.Parent == this.host)
+			{
+				throw new System.InvalidOperationException (FlatChildrenCollection.NotTwiceMessage);
+			}
+			
+			Snapshot snapshot = Snapshot.RecordTree (item);
+
+			this.visuals.Insert (index, item);
+			this.AttachVisual (item);
+
+			this.NotifyChanges (snapshot);
 		}
 
 		public void RemoveAt(int index)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			Visual item = this.visuals[index];
+
+			Snapshot snapshot = Snapshot.RecordTree (item);
+
+			this.visuals.RemoveAt (index);
+			this.DetachVisual (item);
+
+			this.NotifyChanges (snapshot);
 		}
 
 		#endregion
@@ -91,12 +208,43 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public void Add(Visual item)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			if (item == null)
+			{
+				throw new System.ArgumentNullException (FlatChildrenCollection.NullVisualMessage);
+			}
+			if (item.Parent == this.host)
+			{
+				throw new System.InvalidOperationException (FlatChildrenCollection.NotTwiceMessage);
+			}
+
+			Snapshot snapshot = Snapshot.RecordTree (item);
+
+			this.visuals.Add (item);
+			this.AttachVisual (item);
+			
+			this.NotifyChanges (snapshot);
 		}
 
 		public bool Remove(Visual item)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			if (item == null)
+			{
+				throw new System.ArgumentNullException (FlatChildrenCollection.NullVisualMessage);
+			}
+
+			Snapshot snapshot = Snapshot.RecordTree (item);
+
+			if (this.visuals.Remove (item))
+			{
+				this.DetachVisual (item);
+				this.NotifyChanges (snapshot);
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public void Clear()
@@ -134,7 +282,40 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		#endregion
 
+		private const string					NullVisualMessage = "Visual children may not be null";
+		private const string					NotTwiceMessage = "Visual may not be inserted twice";
+		
 		private Visual							host;
 		private List<Visual>					visuals = new List<Visual> ();
+
+		internal Visual FindNext(Visual find)
+		{
+			int index = this.visuals.IndexOf (find);
+			
+			if ((index < 0) ||
+				(index >= this.visuals.Count))
+			{
+				return null;
+			}
+			else
+			{
+				return this.visuals[index+1];
+			}
+		}
+
+		internal Visual FindPrevious(Visual find)
+		{
+			int index = this.visuals.IndexOf (find);
+
+			if ((index < 1) ||
+				(index > this.visuals.Count))
+			{
+				return null;
+			}
+			else
+			{
+				return this.visuals[index-1];
+			}
+		}
 	}
 }

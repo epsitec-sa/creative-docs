@@ -67,13 +67,20 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.parent_layer == null)
+				return this.parent;
+			}
+			set
+			{
+				if (this.parent != value)
 				{
-					return null;
-				}
-				else
-				{
-					return this.parent_layer.ParentVisual;
+					if (value == null)
+					{
+						this.parent.Children.Remove (this);
+					}
+					else
+					{
+						value.Children.Add (this);
+					}
 				}
 			}
 		}
@@ -675,30 +682,24 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.HasLayers)
-				{
-					Collections.LayeredChildrenCollection children = new Collections.LayeredChildrenCollection (this);
-					return children.Count == 0 ? false : true;
-				}
-				
-				return false;
+				return (this.children != null) && (this.children.Count > 0);
 			}
 		}
 
 
-		public Collections.LayeredChildrenCollection	Children
+		public Collections.FlatChildrenCollection	Children
 		{
 			get
 			{
-				return this.GetChildrenCollection ();
+				if (this.children == null)
+				{
+					this.children = new Collections.FlatChildrenCollection (this);
+				}
+				
+				return this.children;
 			}
 		}
 		
-		
-		internal Collections.LayeredChildrenCollection GetChildrenCollection()
-		{
-			return new Collections.LayeredChildrenCollection (this);
-		}
 		
 		
 		internal int GetCommandCacheId()
@@ -1330,5 +1331,17 @@ namespace Epsitec.Common.Widgets
 		private Layouts.Layer					parent_layer;
 		private Drawing.Rectangle				bounds;
 		private static short					next_serial_id;
+		Collections.FlatChildrenCollection		children;
+		private Visual							parent;
+
+		internal void SetParentVisual(Visual visual)
+		{
+			this.parent = visual;
+		}
+
+		internal void NotifyChildrenChanged()
+		{
+			//	TODO: ...
+		}
 	}
 }
