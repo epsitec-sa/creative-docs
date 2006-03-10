@@ -91,10 +91,12 @@ namespace Epsitec.Common.Widgets
 			Visual a = new Visual ();
 			Visual b = new Visual ();
 			Visual c = new Visual ();
+			Visual x = new Visual ();
 
 			a.Name = "a";
 			b.Name = "b";
 			c.Name = "c";
+			x.Name = "x";
 			
 			Assert.IsFalse (root.HasChildren);
 			Assert.IsFalse (a.HasChildren);
@@ -169,6 +171,16 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (b, root.Children[0]);
 			Assert.AreEqual (a, root.Children[1]);
 			Assert.AreEqual (c, root.Children[2]);
+
+			Assert.AreEqual (null, root.Children.FindPrevious (b));
+			Assert.AreEqual (b, root.Children.FindPrevious (a));
+			Assert.AreEqual (a, root.Children.FindPrevious (c));
+			Assert.AreEqual (null, root.Children.FindPrevious (x));
+
+			Assert.AreEqual (a, root.Children.FindNext (b));
+			Assert.AreEqual (c, root.Children.FindNext (a));
+			Assert.AreEqual (null, root.Children.FindNext (c));
+			Assert.AreEqual (null, root.Children.FindNext (x));
 			
 			a.Parent = null;
 
@@ -178,6 +190,24 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (root, c.Parent);
 			Assert.AreEqual (b, root.Children[0]);
 			Assert.AreEqual (c, root.Children[1]);
+
+			root.Children.Clear ();
+
+			Assert.IsFalse (root.HasChildren);
+			
+			Assert.AreEqual (null, a.Parent);
+			Assert.AreEqual (null, b.Parent);
+			Assert.AreEqual (null, c.Parent);
+
+			root.Children.AddRange (new Visual[] { a, b, c });
+			
+			Assert.AreEqual (3, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (root, c.Parent);
+			Assert.AreEqual (a, root.Children[0]);
+			Assert.AreEqual (b, root.Children[1]);
+			Assert.AreEqual (c, root.Children[2]);
 		}
 		
 		

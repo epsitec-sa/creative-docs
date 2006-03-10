@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets.Collections
 	/// La classe FlatChildrenCollection stocke un ensemble de widgets de manière
 	/// ordonnée.
 	/// </summary>
-	public class FlatChildrenCollection : IList<Visual>
+	public class FlatChildrenCollection : IList<Visual>, ICollection<Types.DependencyObject>
 	{
 		internal FlatChildrenCollection(Visual host)
 		{
@@ -26,6 +26,51 @@ namespace Epsitec.Common.Widgets.Collections
 				return widgets;
 			}
 		}
+
+		public Visual FindNext(Visual find)
+		{
+			int index = this.visuals.IndexOf (find);
+
+			if ((index < 0) ||
+				(index > this.visuals.Count-2))
+			{
+				return null;
+			}
+			else
+			{
+				return this.visuals[index+1];
+			}
+		}
+		public Visual FindPrevious(Visual find)
+		{
+			int index = this.visuals.IndexOf (find);
+
+			if (index < 1)
+			{
+				return null;
+			}
+			else
+			{
+				return this.visuals[index-1];
+			}
+		}
+		
+		public void AddRange(IEnumerable<Visual> collection)
+		{
+			if (collection != null)
+			{
+				Snapshot snapshot = Snapshot.RecordTree (collection);
+				
+				this.visuals.AddRange (collection);
+
+				foreach (Visual item in collection)
+				{
+					this.AttachVisual (item);
+				}
+
+				this.NotifyChanges (snapshot);
+			}
+		}
 		
 		class Snapshot
 		{
@@ -36,8 +81,18 @@ namespace Epsitec.Common.Widgets.Collections
 			public void NotifyChanges()
 			{
 			}
-			
+
+			public static Snapshot RecordTree(Visual visual)
+			{
+				Snapshot snapshot = new Snapshot ();
+				return snapshot;
+			}
 			public static Snapshot RecordTree(params Visual[] visuals)
+			{
+				IEnumerable<Visual> collection = visuals;
+				return Snapshot.RecordTree (collection);
+			}
+			public static Snapshot RecordTree(IEnumerable<Visual> collection)
 			{
 				Snapshot snapshot = new Snapshot ();
 				return snapshot;
@@ -112,7 +167,7 @@ namespace Epsitec.Common.Widgets.Collections
 			this.host.NotifyChildrenChanged ();
 		}
 		
-#region IList<Visual> Members
+		#region IList<Visual> Members
 
 		public Visual							this[int index]
 		{
@@ -224,7 +279,6 @@ namespace Epsitec.Common.Widgets.Collections
 			
 			this.NotifyChanges (snapshot);
 		}
-
 		public bool Remove(Visual item)
 		{
 			if (item == null)
@@ -249,7 +303,20 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public void Clear()
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			if (this.visuals.Count > 0)
+			{
+				Visual[] copy = this.visuals.ToArray ();
+				Snapshot snapshot = Snapshot.RecordTree (copy);
+				
+				this.visuals.Clear ();
+				
+				foreach (Visual visual in copy)
+				{
+					this.DetachVisual (visual);
+				}
+				
+				this.NotifyChanges (snapshot);
+			}
 		}
 
 		public bool Contains(Visual item)
@@ -260,6 +327,31 @@ namespace Epsitec.Common.Widgets.Collections
 		public void CopyTo(Visual[] array, int index)
 		{
 			this.visuals.CopyTo (array, index);
+		}
+
+		#endregion
+
+		#region ICollection<Types.DependencyObject> Members
+
+		public void Add(Types.DependencyObject item)
+		{
+			this.Add (item as Visual);
+		}
+
+		public bool Contains(Types.DependencyObject item)
+		{
+			return this.Contains (item as Visual);
+		}
+
+		public void CopyTo(Types.DependencyObject[] array, int index)
+		{
+			Visual[] temp = this.visuals.ToArray ();
+			temp.CopyTo (array, index);
+		}
+
+		public bool Remove(Types.DependencyObject item)
+		{
+			return this.Remove (item as Visual);
 		}
 
 		#endregion
@@ -282,40 +374,22 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		#endregion
 
+		#region IEnumerable<Types.DependencyObject> Members
+
+		IEnumerator<Types.DependencyObject> IEnumerable<Types.DependencyObject>.GetEnumerator()
+		{
+			foreach (Visual item in this.visuals)
+			{
+				yield return item;
+			}
+		}
+
+		#endregion
+
 		private const string					NullVisualMessage = "Visual children may not be null";
 		private const string					NotTwiceMessage = "Visual may not be inserted twice";
 		
 		private Visual							host;
 		private List<Visual>					visuals = new List<Visual> ();
-
-		internal Visual FindNext(Visual find)
-		{
-			int index = this.visuals.IndexOf (find);
-			
-			if ((index < 0) ||
-				(index >= this.visuals.Count))
-			{
-				return null;
-			}
-			else
-			{
-				return this.visuals[index+1];
-			}
-		}
-
-		internal Visual FindPrevious(Visual find)
-		{
-			int index = this.visuals.IndexOf (find);
-
-			if ((index < 1) ||
-				(index > this.visuals.Count))
-			{
-				return null;
-			}
-			else
-			{
-				return this.visuals[index-1];
-			}
-		}
 	}
 }
