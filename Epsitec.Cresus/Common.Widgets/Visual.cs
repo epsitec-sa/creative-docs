@@ -677,7 +677,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.HasLayers)
 				{
-					Collections.ChildrenCollection children = new Collections.ChildrenCollection (this);
+					Collections.LayeredChildrenCollection children = new Collections.LayeredChildrenCollection (this);
 					return children.Count == 0 ? false : true;
 				}
 				
@@ -686,7 +686,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public Collections.ChildrenCollection	Children
+		public Collections.LayeredChildrenCollection	Children
 		{
 			get
 			{
@@ -695,9 +695,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal Collections.ChildrenCollection GetChildrenCollection()
+		internal Collections.LayeredChildrenCollection GetChildrenCollection()
 		{
-			return new Collections.ChildrenCollection (this);
+			return new Collections.LayeredChildrenCollection (this);
 		}
 		
 		
