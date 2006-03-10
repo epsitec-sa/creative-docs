@@ -244,11 +244,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (Drawing.Rectangle) this.GetValueBase (Visual.BoundsProperty);
+				return this.bounds;
 			}
 			set
 			{
-				if (this.Bounds != value)
+				if (this.bounds != value)
 				{
 					Visual parent = this.Parent;
 					
@@ -742,9 +742,9 @@ namespace Epsitec.Common.Widgets
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
 		{
-			Drawing.Rectangle old_value = this.Bounds;
-			this.SetValueBase (Visual.BoundsProperty, value);
-			Drawing.Rectangle new_value = this.Bounds;
+			Drawing.Rectangle old_value = this.bounds;
+			this.bounds = value;
+			Drawing.Rectangle new_value = this.bounds;
 			
 			if (old_value != new_value)
 			{
@@ -1328,6 +1328,7 @@ namespace Epsitec.Common.Widgets
 		protected bool							have_children_changed;
 		protected byte							currently_updating_layout;
 		private Layouts.Layer					parent_layer;
+		private Drawing.Rectangle				bounds;
 		private static short					next_serial_id;
 	}
 }
