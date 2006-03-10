@@ -79,6 +79,10 @@ namespace Epsitec.Common.Widgets
 			Assert.IsFalse (c1.Enable);	Assert.IsFalse (c1.IsEnabled);
 			Assert.IsTrue (c2.Enable);	Assert.IsTrue (c2.IsEnabled);
 			Assert.AreEqual (" B:0->1 C2:0->1", VisualTest.buffer.ToString ());
+
+			Assert.AreEqual (a, b.Parent);
+			
+			a.Children.Clear ();
 		}
 		
 		[Test]

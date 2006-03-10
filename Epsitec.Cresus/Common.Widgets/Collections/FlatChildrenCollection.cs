@@ -72,33 +72,6 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 		
-		class Snapshot
-		{
-			private Snapshot()
-			{
-			}
-
-			public void NotifyChanges()
-			{
-			}
-
-			public static Snapshot RecordTree(Visual visual)
-			{
-				Snapshot snapshot = new Snapshot ();
-				return snapshot;
-			}
-			public static Snapshot RecordTree(params Visual[] visuals)
-			{
-				IEnumerable<Visual> collection = visuals;
-				return Snapshot.RecordTree (collection);
-			}
-			public static Snapshot RecordTree(IEnumerable<Visual> collection)
-			{
-				Snapshot snapshot = new Snapshot ();
-				return snapshot;
-			}
-		}
-		
 		private void NotifyChanges(Snapshot snapshot)
 		{
 			snapshot.NotifyChanges ();
@@ -384,6 +357,58 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
+		#endregion
+
+		#region Shapshot Class
+		class Snapshot
+		{
+			private Snapshot()
+			{
+				snapshot = new Types.DependencyObjectTreeSnapshot ();
+			}
+
+			public void NotifyChanges()
+			{
+				Types.DependencyObjectTreeSnapshot.ChangeRecord[] records = this.snapshot.GetChanges ();
+				for (int i = 0; i < records.Length; i++)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1}.{2} changed from {3} to {4}", i, (records[i].Object as Visual).Name, records[i].Property.Name, records[i].OldValue, records[i].NewValue));
+				}
+			}
+
+			public static Snapshot RecordTree(Visual visual)
+			{
+				Snapshot snapshot = new Snapshot ();
+				snapshot.Add (visual);
+				return snapshot;
+			}
+			public static Snapshot RecordTree(params Visual[] visuals)
+			{
+				IEnumerable<Visual> collection = visuals;
+				return Snapshot.RecordTree (collection);
+			}
+			public static Snapshot RecordTree(IEnumerable<Visual> collection)
+			{
+				Snapshot snapshot = new Snapshot ();
+				foreach (Visual item in collection)
+				{
+					snapshot.Add (item);
+				}
+				return snapshot;
+			}
+			
+			private void Add(Visual visual)
+			{
+				IList<Types.DependencyProperty> properties = Types.DependencyObjectTree.FindInheritedProperties (visual);
+
+				//	TODO: vérifier que ceci fonctionne avec des propriétés héritées !
+
+				this.snapshot.Record (visual, properties);
+				this.snapshot.RecordSubtree (visual, properties);
+			}
+
+			Types.DependencyObjectTreeSnapshot snapshot;
+		}
 		#endregion
 
 		private const string					NullVisualMessage = "Visual children may not be null";
