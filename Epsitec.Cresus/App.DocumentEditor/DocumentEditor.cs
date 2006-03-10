@@ -681,22 +681,22 @@ namespace Epsitec.App.DocumentEditor
 
 			this.ribbonMainButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Main);
 			this.ribbonMainButton.Size = this.ribbonMainButton.RequiredSize;
-			this.ribbonMainButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
+			this.ribbonMainButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonMainButton);
 
 			this.ribbonGeomButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Geom);
 			this.ribbonGeomButton.Size = this.ribbonGeomButton.RequiredSize;
-			this.ribbonGeomButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
+			this.ribbonGeomButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonGeomButton);
 
 			this.ribbonOperButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Oper);
 			this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
-			this.ribbonOperButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
+			this.ribbonOperButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonOperButton);
 
 			this.ribbonTextButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Text);
 			this.ribbonTextButton.Size = this.ribbonTextButton.RequiredSize;
-			this.ribbonTextButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
+			this.ribbonTextButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonTextButton);
 
 			this.UpdateQuickCommands();
@@ -1325,7 +1325,7 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		private void HandleRibbonClicked(object sender, MessageEventArgs e)
+		private void HandleRibbonPressed(object sender, MessageEventArgs e)
 		{
 			//	Le bouton pour activer/désactiver un ruban a été cliqué.
 			Ribbons.RibbonButton button = sender as Ribbons.RibbonButton;
