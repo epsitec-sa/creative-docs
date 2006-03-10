@@ -512,7 +512,7 @@
 	<data name="TextPanel.Generator.Tooltip.Justif.Left">Right-align bullet/numbering</data>
 	<data name="TextPanel.Generator.Tooltip.Justif.Center">Center bullet/numbering</data>
 	<data name="TextPanel.Generator.Tooltip.Justif.Right">Left-align bullet/numbering</data>
-	<data name="TextPanel.Generator.Tooltip.Continue">@@La numérotation continue à travers tout le document</data>
+	<data name="TextPanel.Generator.Tooltip.Continue">Continuous numbering (does not restart numbering&lt;br/&gt;when other paragraph styles are used)</data>
 	<data name="TextPanel.Generator.Tooltip.SuppressBefore">Override former levels</data>
 	<data name="TextPanel.Generator.Tooltip.Color">Text color</data>
 	<data name="TextPanel.Generator.Tooltip.Tab">Bullet/numbering position</data>
@@ -597,9 +597,9 @@
 	<data name="TextPanel.Margins.Long.Level">Indentation level</data>
 	<data name="TextPanel.Margins.Tooltip.Level">Indentation level (1..9)</data>
 
-	<data name="TextPanel.Numerator.Title">@@Numérotation</data>
-	<data name="TextPanel.Numerator.Label.Start">@@Numéro initial</data>
-	<data name="TextPanel.Numerator.Tooltip.Start">@@Exemples: 12 ou 15.A.i (laisser vide pour continuer la numérotation)</data>
+	<data name="TextPanel.Numerator.Title">Numbering</data>
+	<data name="TextPanel.Numerator.Label.Start">Start with</data>
+	<data name="TextPanel.Numerator.Tooltip.Start">Examples: 12 or 15.A.i (leave blank if you&lt;br/&gt;want to use &lt;i&gt;automatic numbering&lt;/i&gt;)</data>
 	
 	<data name="TextPanel.Spaces.Title">Spacing</data>
 	<data name="TextPanel.Spaces.Short.Before">B</data>
