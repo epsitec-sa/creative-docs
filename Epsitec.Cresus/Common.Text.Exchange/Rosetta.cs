@@ -1,8 +1,6 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Michael WALZ
 
-using NUnit.Framework;
-
 namespace Epsitec.Common.Text.Exchange
 {
 
