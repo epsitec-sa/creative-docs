@@ -4,33 +4,33 @@
 namespace Epsitec.Common.Text.Exchange
 {
 
-    /// <summary>
-    /// Cette classe représente un texte formaté en HTML compatible "Microsoft".
-    /// </summary>
-    /// 
+	/// <summary>
+	/// Cette classe représente un texte formaté en HTML compatible "Microsoft".
+	/// </summary>
+	/// 
 
-    public class HtmlRun
-    {
-        private string runText ;
-        private bool italic ;
-        private bool bold ;
+	public class HtmlRun
+	{
+		private string runText;
+		private bool italic;
+		private bool bold;
 
-        public HtmlRun()
-        {
-        }
+		public HtmlRun()
+		{
+		}
 
 
-    }
+	}
 
-    public class HtmlText
-    {
+	public class HtmlText
+	{
 		public HtmlText()
 		{
 		}
 
 		public override string ToString()
 		{
-			return output.ToString ();
+			return this.output.ToString ();
 		}
 
 		public void AppendText(string thestring)
@@ -54,8 +54,8 @@ namespace Epsitec.Common.Text.Exchange
 			if (!precedIsBold && isBold)
 			{
 				this.OpenTag (HtmlAttribute.Italic);
-//				output.Append ("<b>");
-//				this.openTags.Push (HtmlAttribute.Bold);
+				//				output.Append ("<b>");
+				//				this.openTags.Push (HtmlAttribute.Bold);
 			}
 
 			precedIsItalic = isItalic;
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private string GetHtmlTag(string attribute, HtmlTagMode tagMode)
 		{
-			string retval = "" ;
+			string retval = "";
 			switch (tagMode)
 			{
 				case HtmlTagMode.Open:
@@ -94,12 +94,12 @@ namespace Epsitec.Common.Text.Exchange
 				case HtmlTagMode.StartOnly:
 					break;
 			}
-			return retval ;
+			return retval;
 		}
 
 		private string AttributeToString(HtmlAttribute attribute, HtmlTagMode tagmode, string parameter)
 		{
-			string retval = "" ;
+			string retval = "";
 
 			switch (attribute)
 			{
@@ -131,37 +131,39 @@ namespace Epsitec.Common.Text.Exchange
 		private void AppendTagsToOpen()
 		{
 		}
-		
+
 
 		enum HtmlAttribute
 		{
 			Bold,
 			Italic,
 			Font
-		};
+		}
 
 		enum HtmlTagMode
 		{
-			Open, Close, StartOnly
-		} ;
+			Open,
+			Close,
+			StartOnly
+		}
 
-        private bool isItalic = false ;
-        private bool isBold = false;
+		private bool isItalic = false;
+		private bool isBold = false;
 
-        private bool precedIsItalic = false;
-        private bool precedIsBold = false;
-        
-        private HtmlAttribute lastAttributeSet;
+		private bool precedIsItalic = false;
+		private bool precedIsBold = false;
 
-        private System.Collections.ArrayList runList;
+		private HtmlAttribute lastAttributeSet;
 
-        private System.Text.StringBuilder output = new System.Text.StringBuilder ();
+		private System.Collections.ArrayList runList;
+
+		private System.Text.StringBuilder output = new System.Text.StringBuilder ();
 
 		private System.Collections.Stack openTags = new System.Collections.Stack ();
 		private System.Collections.ArrayList tagsToClose = new System.Collections.ArrayList ();
 		private System.Collections.ArrayList tagsToOpen = new System.Collections.ArrayList ();
 
-    }
+	}
 
 	/// <summary>
 	/// La classe Rosetta joue le rôle de plate-forme centrale pour la conversion
@@ -172,11 +174,11 @@ namespace Epsitec.Common.Text.Exchange
 		public Rosetta()
 		{
 		}
-		
+
 		public string ConvertCtmlToHtml(string ctml)
 		{
 			//	Méthode bidon juste pour vérifier si les tests compilent.
-			
+
 			return "TODO";
 		}
 
@@ -192,19 +194,19 @@ namespace Epsitec.Common.Text.Exchange
 
 			System.Windows.Forms.Clipboard clipboard;
 
-            HtmlText htmlText = new HtmlText() ;
+			HtmlText htmlText = new HtmlText ();
 
-			navigator.MoveTo (0,0);
+			navigator.MoveTo (0, 0);
 
 			while (true)
 			{
 				int runLength = navigator.GetRunLength (1000000);
-				
+
 				if (runLength == 0)
 				{
 					break;
 				}
-				
+
 				if (textWrapper.Defined.IsFontFaceDefined)
 				{
 					System.Console.Out.WriteLine ("- Font Face: {0}", textWrapper.Defined.FontFace, textWrapper.Defined.FontStyle, textWrapper.Defined.InvertItalic ? "(italic)" : "");
@@ -214,25 +216,25 @@ namespace Epsitec.Common.Text.Exchange
 					System.Console.Out.WriteLine ("- Font Style: {0}", textWrapper.Defined.FontStyle);
 				}
 
-                htmlText.SetItalic(textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic) ;
-                htmlText.SetBold(textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold) ;
+				htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
+				htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
 
 				int i;
 
 				//output.Append(navigator.ReadText (runLength) );
-                htmlText.AppendText(navigator.ReadText(runLength));
+				htmlText.AppendText (navigator.ReadText (runLength));
 
 				// avance au run suivant
-				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext , runLength);
+				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
 
-                // avance encore d'un seul caractère afin de se trouver véritablement dans
-                // le contexte su run
+				// avance encore d'un seul caractère afin de se trouver véritablement dans
+				// le contexte su run
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);
 
 				if (navigator.GetRunLength (1000000) == 0)
 					break; // arrête si on est à la fin
 
-                // recule au début du run
+				// recule au début du run
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);
 
 			}
