@@ -202,6 +202,18 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckObjectType()
 		{
+			Assert.IsTrue (typeof (MyObject).IsSubclassOf (typeof (DependencyObject)));
+			Assert.IsTrue (typeof (MyObject).IsAssignableFrom (typeof (MyObject)));
+			Assert.IsTrue (typeof (DependencyObject).IsAssignableFrom (typeof (MyObject)));
+
+			Assert.IsFalse (MyObject.FooProperty.IsPropertyTypeDerivedFromDependencyObject);
+			Assert.IsTrue (MyObject.SiblingProperty.IsPropertyTypeDerivedFromDependencyObject);
+			
+			Assert.IsTrue (MyObject.ReadOnlyProperty.IsReadOnly);
+			Assert.IsTrue (MyObject.XyzProperty.IsReadWrite);
+			Assert.IsFalse (MyObject.XyzProperty.IsReadOnly);
+			Assert.IsFalse (MyObject.ReadOnlyProperty.IsReadWrite);
+			
 			Assert.AreEqual ("DependencyObject", DependencyObjectType.FromSystemType (typeof (Types.DependencyObject)).Name);
 			Assert.AreEqual ("MyObject", DependencyObjectType.FromSystemType (typeof (MyObject)).Name);
 			Assert.AreEqual ("DependencyObject", DependencyObjectType.FromSystemType (typeof (MyObject)).BaseType.Name);
@@ -267,6 +279,22 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckProperties()
+		{
+			TreeTest t = new TreeTest ();
+
+			t.Name = "Name";
+			t.Value = "Value";
+
+			foreach (LocalValueEntry entry in t.LocalValueEntries)
+			{
+				DependencyProperty dp = entry.Property;
+				System.Console.Out.WriteLine ("Property '{0}' has type {1}; it belongs to {2}", dp.Name, dp.PropertyType, dp.OwnerType);
+			}
+			//	TODO: terminer le test ici
+		}
+		
+		[Test]
 		public void CheckPropertyPath()
 		{
 			DependencyPropertyPath pp1 = new DependencyPropertyPath ();
@@ -289,6 +317,11 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckTree()
 		{
+			Assert.IsTrue (DependencyObjectTree.ChildrenProperty.IsReadOnly);
+			Assert.IsTrue (TreeTest.ChildrenProperty.IsReadOnly);
+			Assert.IsTrue (TreeTest.ChildrenProperty.GetMetadata (typeof (TreeTest)).CanSerializeReadOnly);
+			Assert.IsFalse (TreeTest.ChildrenProperty.DefaultMetadata.CanSerializeReadOnly);
+			
 			TreeTest a = new TreeTest ();
 			TreeTest b = new TreeTest ();
 			TreeTest q = new TreeTest ();
@@ -330,6 +363,16 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (a, DependencyObjectTree.GetParent (b));
 			Assert.AreEqual (a, DependencyObjectTree.GetParent (q));
 
+			Serialization.GraphVisitor visitor = new Serialization.GraphVisitor ();
+			
+			visitor.VisitSerializableNodes (a);
+			
+			foreach (DependencyObject obj in visitor.Map.RecordedObjects)
+			{
+				System.Console.Out.WriteLine ("{0} has id {1}", obj == null ? "<null>" : DependencyObjectTree.GetName (obj), visitor.Map.GetId (obj));
+			}
+			
+			
 			DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (a, TreeTest.ValueProperty);
 
 			c1.Value = "C1-X";
@@ -780,6 +823,7 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty SiblingProperty = DependencyProperty.Register ("Sibling", typeof (MyObject), typeof (MyObject));
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (MyObject), new DependencyPropertyMetadataWithInheritance ());
 			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (MyObject));
+			public static DependencyProperty ReadOnlyProperty = DependencyProperty.RegisterReadOnly ("ReadOnly", typeof (string), typeof (MyObject));
 			
 			protected virtual void OnFooChanged()
 			{
@@ -999,7 +1043,7 @@ namespace Epsitec.Common.Types
 
 			public static DependencyProperty NameProperty = DependencyObjectTree.NameProperty.AddOwner (typeof (TreeTest));
 			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueParent));
-			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueChildren));
+			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueChildren).MakeReadOnlySerializable ());
 			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueHasChildren));
 			public static DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (string), typeof (TreeTest));
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (TreeTest), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Instance));

@@ -139,7 +139,25 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public bool								CanSerializeReadOnly
+		{
+			get
+			{
+				return this.canSerialize;
+			}
+			set
+			{
+				this.canSerialize = value;
+			}
+		}
 
+
+		public DependencyPropertyMetadata MakeReadOnlySerializable()
+		{
+			this.canSerialize = true;
+			return this;
+		}
+		
 		public virtual object CreateDefaultValue()
 		{
 			object value     = this.DefaultValue;
@@ -181,5 +199,6 @@ namespace Epsitec.Common.Types
 		private PropertyInvalidatedCallback		propertyInvalidated;
 		private ValidateValueCallback			validateValueCallback;
 		private CoerceValueCallback				coerceValueCallback;
+		private bool							canSerialize;
 	}
 }

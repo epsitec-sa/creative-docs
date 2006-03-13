@@ -17,6 +17,7 @@ namespace Epsitec.Common.Types
 			this.ownerType = owner_type;
 			this.defaultMetadata = metadata;
 			this.globalIndex = System.Threading.Interlocked.Increment (ref DependencyProperty.globalPropertyCount);
+			this.isPropertyDerivedFromDependencyObject = typeof (DependencyObject).IsAssignableFrom (this.propertyType);
 		}
 		
 		public string							Name
@@ -52,6 +53,27 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.isAttached;
+			}
+		}
+		public bool								IsPropertyTypeDerivedFromDependencyObject
+		{
+			get
+			{
+				return this.isPropertyDerivedFromDependencyObject;
+			}
+		}
+		public bool								IsReadOnly
+		{
+			get
+			{
+				return this.isReadOnly;
+			}
+		}
+		public bool								IsReadWrite
+		{
+			get
+			{
+				return this.isReadOnly == false;
 			}
 		}
 		public int								GlobalIndex
@@ -304,11 +326,13 @@ namespace Epsitec.Common.Types
 		
 		public static DependencyProperty RegisterReadOnly(string name, System.Type property_type, System.Type owner_type)
 		{
-			return DependencyProperty.Register (name, property_type, owner_type, new DependencyPropertyMetadata ());
+			return DependencyProperty.RegisterReadOnly (name, property_type, owner_type, new DependencyPropertyMetadata ());
 		}
 		public static DependencyProperty RegisterReadOnly(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
 		{
 			DependencyProperty dp = new DependencyProperty (name, property_type, owner_type, metadata);
+
+			dp.isReadOnly = true;
 			
 			DependencyObject.Register (dp, dp.OwnerType);
 			
@@ -323,6 +347,8 @@ namespace Epsitec.Common.Types
 		private List<System.Type>				derivedTypes;
 		private DependencyPropertyMetadata		defaultMetadata;
 		private bool							isAttached;
+		private bool							isPropertyDerivedFromDependencyObject;
+		private bool							isReadOnly;
 		private int								globalIndex;
 		
 		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;

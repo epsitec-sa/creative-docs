@@ -31,7 +31,16 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return new LocalValueEnumerator (this);
+				foreach (DependencyProperty property in this.properties.Keys)
+				{
+					yield return new LocalValueEntry (property, this.properties[property]);
+				}
+				
+				//	Passe encore en revue les propriétés qui ne sont pas définies
+				//	dans la variable 'properties' mais directement au moyen de
+				//	callbacks GetValueOverrideCallback :
+
+				//	TODO: gestion des GetValueOverrideCallback
 			}
 		}
 		
@@ -406,54 +415,6 @@ namespace Epsitec.Common.Types
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
-		}
-		#endregion
-		
-		#region Private LocalValueEnumerator Structure
-		private struct LocalValueEnumerator : IEnumerator<LocalValueEntry>, IEnumerable<LocalValueEntry>
-		{
-			public LocalValueEnumerator(DependencyObject o)
-			{
-				this.property_enumerator = o.properties.GetEnumerator ();
-			}
-			
-			public LocalValueEntry Current
-			{
-				get
-				{
-					return new LocalValueEntry (this.property_enumerator.Current);
-				}
-			}
-			object System.Collections.IEnumerator.Current
-			{
-				get
-				{
-					return this.Current;
-				}
-			}
-			
-			public void Reset()
-			{
-				this.property_enumerator.Reset ();
-			}
-			public bool MoveNext()
-			{
-				return this.property_enumerator.MoveNext ();
-			}
-			public void Dispose()
-			{
-			}
-			
-			public IEnumerator<LocalValueEntry> GetEnumerator()
-			{
-				return this;
-			}
-			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-			{
-				return this;
-			}
-
-			IEnumerator<KeyValuePair<DependencyProperty, object>> property_enumerator;
 		}
 		#endregion
 

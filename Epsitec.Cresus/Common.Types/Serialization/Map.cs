@@ -35,23 +35,27 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 		
-		public void Register(DependencyObject obj)
+		public bool Record(DependencyObject obj)
 		{
 			if (obj == null)
 			{
 				//	Nothing to do: null objects are remembered as null. No need to
 				//	record them.
+				
+				return false;
 			}
 			else if (this.IsDefined (obj))
 			{
 				//	Nothing to do: the object has already been registered before.
+
+				return false;
 			}
 			else
 			{
-				int id = this.nextId++;
+				int id = this.idToObjectLookup.Count;
 				System.Type type = obj.GetType ();
 				
-				this.idToObjectLookup[id]  = obj;
+				this.idToObjectLookup.Add (obj);
 				this.objectToIdLookup[obj] = id;
 
 				if (this.typeInformation.ContainsKey (type) == false)
@@ -60,6 +64,8 @@ namespace Epsitec.Common.Types.Serialization
 				}
 
 				this.typeInformation[type].Add (id);
+				
+				return true;
 			}
 		}
 
@@ -96,7 +102,11 @@ namespace Epsitec.Common.Types.Serialization
 		}
 		public int GetId(DependencyObject obj)
 		{
-			if (this.IsDefined (obj))
+			if (obj == null)
+			{
+				return 0;
+			}
+			else if (this.IsDefined (obj))
 			{
 				return this.objectToIdLookup[obj];
 			}
@@ -131,6 +141,5 @@ namespace Epsitec.Common.Types.Serialization
 		List<DependencyObject>					idToObjectLookup = new List<DependencyObject> ();
 		Dictionary<DependencyObject, int>		objectToIdLookup = new Dictionary<DependencyObject, int> ();
 		Dictionary<System.Type, List<int>>		typeInformation = new Dictionary<System.Type, List<int>> ();
-		int										nextId = 1;
 	}
 }
