@@ -234,6 +234,8 @@
     <Compile Include="Resources.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Serialization\Map.cs" />
+    <Compile Include="Storage.cs" />
     <Compile Include="StringDict.cs">
       <SubType>Code</SubType>
     </Compile>
