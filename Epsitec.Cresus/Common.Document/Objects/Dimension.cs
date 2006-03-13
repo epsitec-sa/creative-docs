@@ -561,6 +561,11 @@ namespace Epsitec.Common.Document.Objects
 			double fontSize = propFont.FontSize;
 			string text = this.GetText;
 
+			if ( font == null )
+			{
+				font = Drawing.Font.GetFont("Arial", "Regular");
+			}
+
 			double textWidth = 0.0;
 			if ( font != null )
 			{
@@ -847,9 +852,14 @@ namespace Epsitec.Common.Document.Objects
 			Properties.Dimension dimension = this.PropertyDimension;
 			Properties.Font propFont = this.PropertyTextFont;
 			Drawing.Font font = propFont.GetFont();
-			if ( font == null )  return;
 			double fontSize = propFont.FontSize;
 			string text = this.GetText;
+
+			if ( font == null )
+			{
+				font = Drawing.Font.GetFont("Arial", "Regular");
+				if ( font == null )  return;
+			}
 
 			double textWidth = 0.0;
 			for ( int i=0 ; i<text.Length ; i++ )
