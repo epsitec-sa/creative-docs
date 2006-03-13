@@ -364,15 +364,53 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			private Snapshot()
 			{
-				snapshot = new Types.DependencyObjectTreeSnapshot ();
+				this.snapshot   = new Types.DependencyObjectTreeSnapshot ();
+				this.visuals    = new List<Visual> ();
+				this.properties = new List<Types.DependencyProperty> ();
 			}
 
 			public void NotifyChanges()
 			{
+				//	Maintenant que tous les visuals ont leur parent définitif, il
+				//	faut tous les passer en revue pour déterminer les changements
+				//	de propriétés héritées.
+				
+				foreach (Visual visual in this.visuals)
+				{
+					IList<Types.DependencyProperty> properties = Types.DependencyObjectTree.FindInheritedProperties (visual);
+
+					foreach (Types.DependencyProperty property in properties)
+					{
+						//	S'il y a tout à coup de nouvelles propriétés héritées, il
+						//	faut les inclure dans le snapshot de départ, sous leur forme
+						//	"undefined" :
+						
+						if (this.properties.Contains (property) == false)
+						{
+							this.snapshot.RecordUndefinedTree (visual, property);
+						}
+					}
+				}
+
+				//	Passe en revue tous les changements.
+
 				Types.DependencyObjectTreeSnapshot.ChangeRecord[] records = this.snapshot.GetChanges ();
 				for (int i = 0; i < records.Length; i++)
 				{
 					System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1}.{2} changed from {3} to {4}", i, (records[i].Object as Visual).Name, records[i].Property.Name, records[i].OldValue, records[i].NewValue));
+					
+					object oldValue = records[i].OldValue;
+					object newValue = records[i].NewValue;
+
+					if (oldValue == newValue)
+					{
+						//	Nothing changed, skip.
+					}
+					else if ((oldValue == null) ||
+						/**/ (!oldValue.Equals (newValue)))
+					{
+						records[i].Object.InvalidateProperty (records[i].Property, oldValue, newValue);
+					}
 				}
 			}
 
@@ -399,15 +437,32 @@ namespace Epsitec.Common.Widgets.Collections
 			
 			private void Add(Visual visual)
 			{
-				IList<Types.DependencyProperty> properties = Types.DependencyObjectTree.FindInheritedProperties (visual);
+				if (this.visuals.Contains (visual))
+				{
+					//	Rien à faire, car ce visual est déjà connu et a déjà été analysé.
+				}
+				else
+				{
+					this.visuals.Add (visual);
+					
+					IList<Types.DependencyProperty> properties = Types.DependencyObjectTree.FindInheritedProperties (visual);
 
-				//	TODO: vérifier que ceci fonctionne avec des propriétés héritées !
+					foreach (Types.DependencyProperty property in properties)
+					{
+						if (this.properties.Contains (property) == false)
+						{
+							this.properties.Add (property);
+						}
+					}
 
-				this.snapshot.Record (visual, properties);
-				this.snapshot.RecordSubtree (visual, properties);
+					this.snapshot.Record (visual, properties);
+					this.snapshot.RecordSubtree (visual, properties);
+				}
 			}
 
-			Types.DependencyObjectTreeSnapshot snapshot;
+			Types.DependencyObjectTreeSnapshot	snapshot;
+			List<Visual>						visuals;
+			List<Types.DependencyProperty>		properties;
 		}
 		#endregion
 

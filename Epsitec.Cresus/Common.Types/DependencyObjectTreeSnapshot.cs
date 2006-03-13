@@ -32,6 +32,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+		
 		public void Record(DependencyObject obj, DependencyProperty property)
 		{
 			System.Diagnostics.Debug.Assert (property != null);
@@ -56,6 +57,22 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public void RecordUndefinedTree(DependencyObject obj, DependencyProperty property)
+		{
+			if (obj.ContainsLocalValue (property) == false)
+			{
+				this.list.Add (new SnapshotValue (obj, property, UndefinedValue.Instance));
+				
+				if (DependencyObjectTree.GetHasChildren (obj))
+				{
+					foreach (DependencyObject child in DependencyObjectTree.GetChildren (obj))
+					{
+						this.RecordUndefinedTree (child, property);
+					}
+				}
+			}
+		}
+		
 		public void RecordSubtree(DependencyObject root, DependencyProperty property)
 		{
 			if (DependencyObjectTree.GetHasChildren (root))

@@ -86,7 +86,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		[Test]
-		public void CheckVisualChildren()
+		public void CheckVisualChildren1()
 		{
 			Visual root = new Visual ();
 
@@ -214,6 +214,140 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (c, root.Children[2]);
 		}
 		
+		[Test]
+		public void CheckVisualChildren2()
+		{
+			Visual r1 = new Visual ();
+			Visual r2 = new Visual ();
+			Visual a = new Visual ();
+			Visual b = new Visual ();
+			Visual c1 = new Visual ();
+			Visual c2 = new Visual ();
+
+			r1.Name = "r1";
+			r2.Name = "r2";
+			
+			a.Name = "a";
+			b.Name = "b";
+			c1.Name = "c1";
+			c2.Name = "c2";
+			
+			EventHandlerSupport handler = new EventHandlerSupport ();
+
+			r1.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			r2.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			a.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			b.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			c1.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			c2.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+
+			a.Children.Add (b);
+			b.Children.Add (c1);
+			b.Children.Add (c2);
+
+			r1.Children.Add (a);
+
+			r1.SetValue (Visual.WindowProperty, "W1");
+
+			Assert.AreEqual ("r1-Window:<UndefinedValue>,W1.a-Window:<UndefinedValue>,W1.b-Window:<UndefinedValue>,W1.c1-Window:<UndefinedValue>,W1.c2-Window:<UndefinedValue>,W1.", handler.Log);
+			handler.Clear ();
+
+			Assert.AreEqual ("W1", a.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W1", b.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W1", c1.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W1", c2.GetValue (Visual.WindowProperty));
+
+			r2.SetValue (Visual.WindowProperty, "W2");
+
+			Assert.AreEqual ("r2-Window:<UndefinedValue>,W2.", handler.Log);
+			handler.Clear ();
+			
+			r1.Children.Remove (a);
+
+			Assert.AreEqual ("a-Window:W1,<UndefinedValue>.b-Window:W1,<UndefinedValue>.c1-Window:W1,<UndefinedValue>.c2-Window:W1,<UndefinedValue>.", handler.Log);
+			handler.Clear ();
+			
+			Assert.AreEqual (Types.UndefinedValue.Instance, a.GetValue (Visual.WindowProperty));
+			Assert.AreEqual (Types.UndefinedValue.Instance, b.GetValue (Visual.WindowProperty));
+			Assert.AreEqual (Types.UndefinedValue.Instance, c1.GetValue (Visual.WindowProperty));
+			Assert.AreEqual (Types.UndefinedValue.Instance, c2.GetValue (Visual.WindowProperty));
+
+			r2.Children.Add (a);
+
+			Assert.AreEqual ("a-Window:<UndefinedValue>,W2.b-Window:<UndefinedValue>,W2.c1-Window:<UndefinedValue>,W2.c2-Window:<UndefinedValue>,W2.", handler.Log);
+			handler.Clear ();
+			
+			Assert.AreEqual ("W2", a.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W2", b.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W2", c1.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W2", c2.GetValue (Visual.WindowProperty));
+
+			Visual c10 = new Visual ();
+			Visual c11 = new Visual ();
+
+			c10.Name = "c10";
+			c11.Name = "c11";
+			
+			c10.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			c11.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+
+			c1.Children.Add (c10);
+			c1.Children.Add (c11);
+			
+			Assert.AreEqual ("c10-Window:<UndefinedValue>,W2.c11-Window:<UndefinedValue>,W2.", handler.Log);
+			handler.Clear ();
+
+			c1.SetValue (Visual.WindowProperty, "WX");
+			
+			Assert.AreEqual ("c1-Window:W2,WX.c10-Window:W2,WX.c11-Window:W2,WX.", handler.Log);
+			handler.Clear ();
+
+			r1.Children.Add (a);
+
+			Assert.AreEqual ("a-Window:W2,W1.b-Window:W2,W1.c2-Window:W2,W1.", handler.Log);
+			handler.Clear ();
+		}
+
+
+		#region Class EventHandlerSupport
+		private class EventHandlerSupport
+		{
+			public string Log
+			{
+				get
+				{
+					return this.buffer.ToString ();
+				}
+			}
+
+			public void RecordEvent(object sender, Types.DependencyPropertyChangedEventArgs e)
+			{
+				this.buffer.Append (e.PropertyName);
+				this.buffer.Append (":");
+				this.buffer.Append (e.OldValue);
+				this.buffer.Append (",");
+				this.buffer.Append (e.NewValue);
+				this.buffer.Append (".");
+			}
+			public void RecordEventAndName(object sender, Types.DependencyPropertyChangedEventArgs e)
+			{
+				this.buffer.Append (Types.DependencyObjectTree.GetName (sender as Types.DependencyObject));
+				this.buffer.Append ("-");
+				this.buffer.Append (e.PropertyName);
+				this.buffer.Append (":");
+				this.buffer.Append (e.OldValue);
+				this.buffer.Append (",");
+				this.buffer.Append (e.NewValue);
+				this.buffer.Append (".");
+			}
+			public void Clear()
+			{
+				this.buffer.Length = 0;
+			}
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+		}
+		#endregion
 		
 		private static System.Text.StringBuilder buffer;
 		
