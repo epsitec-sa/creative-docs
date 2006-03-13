@@ -409,6 +409,12 @@ namespace Epsitec.Common.Document.Objects
 			double fontSize = propFont.FontSize;
 			string text = this.GetText;
 
+			if ( font == null )
+			{
+				font = Drawing.Font.GetFont("Arial", "Regular");
+				if ( font == null )  return;
+			}
+
 			for ( int i=0 ; i<text.Length ; i++ )
 			{
 				TextLayout.OneCharStructure oneChar = new TextLayout.OneCharStructure();
