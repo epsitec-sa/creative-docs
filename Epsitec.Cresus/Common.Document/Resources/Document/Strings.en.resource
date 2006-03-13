@@ -612,7 +612,7 @@
 	<data name="TextPanel.Margins.Short.LeftFirst">F</data>
 	<data name="TextPanel.Margins.Short.LeftBody">L</data>
 	<data name="TextPanel.Margins.Short.Right">R</data>
-	<data name="TextPanel.Margins.Short.Level">:</data>
+	<data name="TextPanel.Margins.Short.Level">l</data>
 	<data name="TextPanel.Margins.Long.LeftFirst">First line</data>
 	<data name="TextPanel.Margins.Long.LeftBody">Left Indent</data>
 	<data name="TextPanel.Margins.Long.Right">Right Indent</data>
