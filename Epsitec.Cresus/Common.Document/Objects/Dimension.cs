@@ -966,6 +966,20 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Constructeur qui désérialise l'objet.
 		}
+
+		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
+		{
+			//	Vérifie si tous les fichiers existent.
+			string fontName = this.PropertyTextFont.FontName;
+			if ( !Abstract.ReadSearchFont(fonts, fontName) )
+			{
+				string message = string.Format(Res.Strings.Object.Text.Error, fontName);
+				if ( !warnings.Contains(message) )
+				{
+					warnings.Add(message);
+				}
+			}
+		}
 		#endregion
 
 
