@@ -562,9 +562,12 @@ namespace Epsitec.Common.Document.Objects
 			string text = this.GetText;
 
 			double textWidth = 0.0;
-			for ( int i=0 ; i<text.Length ; i++ )
+			if ( font != null )
 			{
-				textWidth += font.GetCharAdvance(text[i])*fontSize;
+				for ( int i=0 ; i<text.Length ; i++ )
+				{
+					textWidth += font.GetCharAdvance(text[i])*fontSize;
+				}
 			}
 
 			double zoom = Properties.Abstract.DefaultZoom(drawingContext);
@@ -744,25 +747,28 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			double angle = Point.ComputeAngleDeg(this.Handle(0).Position, this.Handle(1).Position);
-			if ( dimension.RotateText )  angle += 180.0;
-			Point center = Point.Move(this.Handle(0).Position, this.Handle(1).Position, textPos);
-			double advance = -textWidth/2.0;
-			if ( justif ==  1 )  advance = 0;
-			if ( justif == -1 )  advance = -textWidth;
-			double offset = font.Ascender*fontSize*dimension.FontOffset;
-
-			for ( int i=0 ; i<text.Length ; i++ )
+			if ( font != null )
 			{
-				Transform transform = new Transform();
-				transform.Scale(fontSize);
-				transform.RotateDeg(angle);
-				transform.Translate(center+Transform.RotatePointDeg(angle, new Point(advance, offset)));
+				double angle = Point.ComputeAngleDeg(this.Handle(0).Position, this.Handle(1).Position);
+				if ( dimension.RotateText )  angle += 180.0;
+				Point center = Point.Move(this.Handle(0).Position, this.Handle(1).Position, textPos);
+				double advance = -textWidth/2.0;
+				if ( justif ==  1 )  advance = 0;
+				if ( justif == -1 )  advance = -textWidth;
+				double offset = font.Ascender*fontSize*dimension.FontOffset;
 
-				int glyph = font.GetGlyphIndex(text[i]);
-				pathText.Append(font, glyph, transform);
+				for ( int i=0 ; i<text.Length ; i++ )
+				{
+					Transform transform = new Transform();
+					transform.Scale(fontSize);
+					transform.RotateDeg(angle);
+					transform.Translate(center+Transform.RotatePointDeg(angle, new Point(advance, offset)));
 
-				advance += font.GetCharAdvance(text[i])*fontSize;
+					int glyph = font.GetGlyphIndex(text[i]);
+					pathText.Append(font, glyph, transform);
+
+					advance += font.GetCharAdvance(text[i])*fontSize;
+				}
 			}
 		}
 
@@ -841,6 +847,7 @@ namespace Epsitec.Common.Document.Objects
 			Properties.Dimension dimension = this.PropertyDimension;
 			Properties.Font propFont = this.PropertyTextFont;
 			Drawing.Font font = propFont.GetFont();
+			if ( font == null )  return;
 			double fontSize = propFont.FontSize;
 			string text = this.GetText;
 
