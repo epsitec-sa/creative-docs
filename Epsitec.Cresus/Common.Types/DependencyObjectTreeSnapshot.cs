@@ -142,18 +142,8 @@ namespace Epsitec.Common.Types
 		{
 			foreach (SnapshotValue snapshot in this.list)
 			{
-				object oldValue = snapshot.Value;
-				object newValue = snapshot.Object.GetValue (snapshot.Property);
-				
-				if (oldValue == newValue)
-				{
-					//	Nothing changed, skip.
-				}
-				else if ((oldValue == null) ||
-					/**/ (! oldValue.Equals (newValue)))
-				{
-					snapshot.Object.InvalidateProperty (snapshot.Property, oldValue, newValue);
-				}
+				ChangeRecord record = new ChangeRecord (snapshot.Object, snapshot.Property, snapshot.Value);
+				record.InvalidateIfChanged ();
 			}
 		}
 		
@@ -166,14 +156,14 @@ namespace Epsitec.Common.Types
 				object oldValue = snapshot.Value;
 				object newValue = snapshot.Object.GetValue (snapshot.Property);
 
-				if (oldValue == newValue)
+				if (oldValue != newValue)
 				{
-					//	Nothing changed, skip.
-				}
-				else if ((oldValue == null) ||
-					/**/ (!oldValue.Equals (newValue)))
-				{
-					records.Add (new ChangeRecord (snapshot.Object, snapshot.Property, oldValue, newValue));
+					if ((oldValue == null) ||
+						(UndefinedValue.IsValueUndefined (oldValue)) ||
+						(oldValue.Equals (newValue) == false))
+					{
+						records.Add (new ChangeRecord (snapshot.Object, snapshot.Property, oldValue, newValue));
+					}
 				}
 			}
 			
@@ -183,6 +173,13 @@ namespace Epsitec.Common.Types
 		#region ChangeRecord Structure
 		public struct ChangeRecord
 		{
+			public ChangeRecord(DependencyObject obj, DependencyProperty property, object oldValue)
+			{
+				this.obj = obj;
+				this.property = property;
+				this.oldValue = oldValue;
+				this.newValue = obj.GetValue (property);
+			}
 			public ChangeRecord(DependencyObject obj, DependencyProperty property, object oldValue, object newValue)
 			{
 				this.obj = obj;
@@ -217,6 +214,19 @@ namespace Epsitec.Common.Types
 				get
 				{
 					return this.newValue;
+				}
+			}
+
+			public void InvalidateIfChanged()
+			{
+				if (this.oldValue != this.newValue)
+				{
+					if ((this.oldValue == null) ||
+						(UndefinedValue.IsValueUndefined (this.oldValue)) ||
+						(this.oldValue.Equals (this.newValue) == false))
+					{
+						this.obj.InvalidateProperty (this.property, this.oldValue, this.newValue);
+					}
 				}
 			}
 			

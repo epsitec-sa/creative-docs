@@ -394,24 +394,7 @@ namespace Epsitec.Common.Widgets.Collections
 
 				//	Passe en revue tous les changements.
 
-				Types.DependencyObjectTreeSnapshot.ChangeRecord[] records = this.snapshot.GetChanges ();
-				for (int i = 0; i < records.Length; i++)
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1}.{2} changed from {3} to {4}", i, (records[i].Object as Visual).Name, records[i].Property.Name, records[i].OldValue, records[i].NewValue));
-					
-					object oldValue = records[i].OldValue;
-					object newValue = records[i].NewValue;
-
-					if (oldValue == newValue)
-					{
-						//	Nothing changed, skip.
-					}
-					else if ((oldValue == null) ||
-						/**/ (!oldValue.Equals (newValue)))
-					{
-						records[i].Object.InvalidateProperty (records[i].Property, oldValue, newValue);
-					}
-				}
+				this.snapshot.InvalidateDifferentProperties ();
 			}
 
 			public static Snapshot RecordTree(Visual visual)
