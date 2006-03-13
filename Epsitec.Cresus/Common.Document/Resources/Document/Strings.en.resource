@@ -339,6 +339,7 @@
 	<data name="Panel.Font.Tooltip.Name">Default text font</data>
 	<data name="Panel.Font.Tooltip.Size">Default text size</data>
 	<data name="Panel.Font.Tooltip.Color">Default text color</data>
+	<data name="Panel.Font.None">None</data>
 
 	<data name="Panel.Gradient.Short.Angle">α</data>
 	<data name="Panel.Gradient.Short.Repeat">#</data>
@@ -549,6 +550,27 @@
 	<data name="TextPanel.Generator.Numerator.AlphaUpper">A, B...</data>
 	<data name="TextPanel.Generator.Numerator.RomanLower">i, ii...</data>
 	<data name="TextPanel.Generator.Numerator.RomanUpper">I, II...</data>
+	<data name="TextPanel.Generator.Text.None"></data>
+	<data name="TextPanel.Generator.Text.Fix1">.</data>
+	<data name="TextPanel.Generator.Text.Fix2">,</data>
+	<data name="TextPanel.Generator.Text.Fix3">:</data>
+	<data name="TextPanel.Generator.Text.Fix4">;</data>
+	<data name="TextPanel.Generator.Text.Fix5">-</data>
+	<data name="TextPanel.Generator.Text.Fix6">/</data>
+	<data name="TextPanel.Generator.Text.Fix7">(</data>
+	<data name="TextPanel.Generator.Text.Fix8">)</data>
+	<data name="TextPanel.Generator.Text.Fix9">[</data>
+	<data name="TextPanel.Generator.Text.Fix10">]</data>
+	<data name="TextPanel.Generator.Text.Fix11">#</data>
+	<data name="TextPanel.Generator.Text.Arial1">&lt;font face=&quot;Arial&quot;&gt;●&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial2">&lt;font face=&quot;Arial&quot;&gt;○&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial3">&lt;font face=&quot;Arial&quot;&gt;■&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial4">&lt;font face=&quot;Arial&quot;&gt;□&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial5">&lt;font face=&quot;Arial&quot;&gt;♦&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial6">&lt;font face=&quot;Arial&quot;&gt;◊&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial7">&lt;font face=&quot;Arial&quot;&gt;►&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial8">&lt;font face=&quot;Arial&quot;&gt;→&lt;/font&gt;</data>
+	<data name="TextPanel.Generator.Text.Arial9">&lt;font face=&quot;Arial&quot;&gt;―&lt;/font&gt;</data>
 	
 	<data name="TextPanel.Justif.Title">Layout</data>
 
@@ -590,7 +612,7 @@
 	<data name="TextPanel.Margins.Short.LeftFirst">F</data>
 	<data name="TextPanel.Margins.Short.LeftBody">L</data>
 	<data name="TextPanel.Margins.Short.Right">R</data>
-	<data name="TextPanel.Margins.Short.Level">:</data>
+	<data name="TextPanel.Margins.Short.Level">l</data>
 	<data name="TextPanel.Margins.Long.LeftFirst">First line</data>
 	<data name="TextPanel.Margins.Long.LeftBody">Left Indent</data>
 	<data name="TextPanel.Margins.Long.Right">Right Indent</data>

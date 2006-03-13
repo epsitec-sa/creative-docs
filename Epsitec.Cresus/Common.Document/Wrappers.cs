@@ -462,6 +462,8 @@ namespace Epsitec.Common.Document
 
 				if ( this.styleParagraphWrapper.Defined.IsLeadingDefined )
 				{
+					builder.Append(Res.Strings.TextPanel.Leading.Short.Leading);
+					builder.Append("=");
 					double leading = this.styleParagraphWrapper.Defined.Leading;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.LeadingUnits;
 					builder.Append(this.GetResumeValue(leading, units, this.document.Modifier.RealScale));
@@ -490,9 +492,10 @@ namespace Epsitec.Common.Document
 				lines ++;
 			}
 
-			if ( this.styleParagraphWrapper.Defined.IsLeftMarginFirstDefined ||
-				 this.styleParagraphWrapper.Defined.IsLeftMarginBodyDefined  ||
-				 this.styleParagraphWrapper.Defined.IsRightMarginBodyDefined )
+			if ( this.styleParagraphWrapper.Defined.IsLeftMarginFirstDefined  ||
+				 this.styleParagraphWrapper.Defined.IsLeftMarginBodyDefined   ||
+				 this.styleParagraphWrapper.Defined.IsRightMarginBodyDefined  ||
+				 this.styleParagraphWrapper.Defined.IsIndentationLevelDefined )
 			{
 				builder.Append(Misc.Image("TextMargins"));
 				builder.Append("  ");
@@ -501,6 +504,8 @@ namespace Epsitec.Common.Document
 				if ( this.styleParagraphWrapper.Defined.IsLeftMarginFirstDefined )
 				{
 					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.TextPanel.Margins.Short.LeftFirst);
+					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.LeftMarginFirst;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
 					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
@@ -510,6 +515,8 @@ namespace Epsitec.Common.Document
 				if ( this.styleParagraphWrapper.Defined.IsLeftMarginBodyDefined )
 				{
 					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.TextPanel.Margins.Short.LeftBody);
+					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.LeftMarginBody;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
 					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
@@ -519,9 +526,21 @@ namespace Epsitec.Common.Document
 				if ( this.styleParagraphWrapper.Defined.IsRightMarginBodyDefined )
 				{
 					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.TextPanel.Margins.Short.Right);
+					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.RightMarginBody;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
 					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					first = false;
+				}
+
+				if ( this.styleParagraphWrapper.Defined.IsIndentationLevelDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.TextPanel.Margins.Short.Level);
+					builder.Append("=");
+					int level = this.styleParagraphWrapper.Defined.IndentationLevel;
+					builder.Append(level.ToString());
 					first = false;
 				}
 
@@ -539,6 +558,8 @@ namespace Epsitec.Common.Document
 				if ( this.styleParagraphWrapper.Defined.IsSpaceBeforeDefined )
 				{
 					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.TextPanel.Spaces.Short.Before);
+					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.SpaceBefore;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.SpaceBeforeUnits;
 					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
@@ -548,6 +569,8 @@ namespace Epsitec.Common.Document
 				if ( this.styleParagraphWrapper.Defined.IsSpaceAfterDefined )
 				{
 					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.TextPanel.Spaces.Short.After);
+					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.SpaceAfter;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.SpaceAfterUnits;
 					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
@@ -593,6 +616,8 @@ namespace Epsitec.Common.Document
 				if ( this.styleParagraphWrapper.Defined.IsKeepStartLinesDefined )
 				{
 					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.TextPanel.Keep.Short.KeepStart);
+					builder.Append("=");
 					int keep = this.styleParagraphWrapper.Defined.KeepStartLines;
 					builder.Append(keep.ToString());
 					first = false;
@@ -601,6 +626,8 @@ namespace Epsitec.Common.Document
 				if ( this.styleParagraphWrapper.Defined.IsKeepEndLinesDefined )
 				{
 					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.TextPanel.Keep.Short.KeepEnd);
+					builder.Append("=");
 					int keep = this.styleParagraphWrapper.Defined.KeepEndLines;
 					builder.Append(keep.ToString());
 					first = false;
@@ -695,6 +722,8 @@ namespace Epsitec.Common.Document
 				if ( this.styleTextWrapper.Defined.IsFontSizeDefined )
 				{
 					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.TextPanel.Font.Short.Size);
+					builder.Append("=");
 					double size = this.styleTextWrapper.Defined.FontSize;
 					Text.Properties.SizeUnits units = this.styleTextWrapper.Defined.Units;
 					builder.Append(this.GetResumeValue(size, units, Modifier.FontSizeScale));
@@ -712,6 +741,8 @@ namespace Epsitec.Common.Document
 				if ( this.styleTextWrapper.Defined.IsFontGlueDefined )
 				{
 					if ( !first )  builder.Append(", ");
+					builder.Append(Res.Strings.TextPanel.Font.Short.Glue);
+					builder.Append("=");
 					double size = this.styleTextWrapper.Defined.FontGlue;
 					builder.Append(this.GetResumeValue(size, Text.Properties.SizeUnits.Percent, this.document.Modifier.RealScale));
 					first = false;

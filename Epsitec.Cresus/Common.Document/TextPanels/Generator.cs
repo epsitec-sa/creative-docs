@@ -371,10 +371,11 @@ namespace Epsitec.Common.Document.TextPanels
 
 				this.SetValue(p, 0, Part1.Generic, Part2.Disposition,    "None");
 				this.SetValue(p, 0, Part1.Generic, Part2.Continue,       "cont");
+				this.SetValue(p, 0, Part1.Suffix,  Part2.Text,           " ");
 
 				this.SetValue(p, 1, Part1.Generic, Part2.SuppressBefore, "false");
 				this.SetValue(p, 1, Part1.Value,   Part2.Text,           Res.Strings.TextPanel.Generator.Numerator.Numeric);
-				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,           ". ");
+				this.SetValue(p, 1, Part1.Suffix,  Part2.Text,           ".");
 
 				p.Generator.UserData = user;
 				this.ParagraphWrapper.Defined.ItemListParameters = p;
