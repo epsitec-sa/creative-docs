@@ -393,7 +393,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void FillFontFaceList(System.Collections.ArrayList list)
 		{
 			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
-			string fontName = this.PropertyTextFont.GetFont().FaceName;
+			string fontName = this.PropertyTextFont.FontName;
 
 			if ( !list.Contains(fontName) )
 			{
