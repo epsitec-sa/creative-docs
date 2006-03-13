@@ -490,9 +490,10 @@ namespace Epsitec.Common.Document
 				lines ++;
 			}
 
-			if ( this.styleParagraphWrapper.Defined.IsLeftMarginFirstDefined ||
-				 this.styleParagraphWrapper.Defined.IsLeftMarginBodyDefined  ||
-				 this.styleParagraphWrapper.Defined.IsRightMarginBodyDefined )
+			if ( this.styleParagraphWrapper.Defined.IsLeftMarginFirstDefined  ||
+				 this.styleParagraphWrapper.Defined.IsLeftMarginBodyDefined   ||
+				 this.styleParagraphWrapper.Defined.IsRightMarginBodyDefined  ||
+				 this.styleParagraphWrapper.Defined.IsIndentationLevelDefined )
 			{
 				builder.Append(Misc.Image("TextMargins"));
 				builder.Append("  ");
@@ -522,6 +523,14 @@ namespace Epsitec.Common.Document
 					double margin = this.styleParagraphWrapper.Defined.RightMarginBody;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
 					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					first = false;
+				}
+
+				if ( this.styleParagraphWrapper.Defined.IsIndentationLevelDefined )
+				{
+					if ( !first )  builder.Append(", ");
+					int level = this.styleParagraphWrapper.Defined.IndentationLevel;
+					builder.Append(level.ToString());
 					first = false;
 				}
 
