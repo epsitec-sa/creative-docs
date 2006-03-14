@@ -41,6 +41,27 @@ namespace Epsitec.Common.Types
 				//	callbacks GetValueOverrideCallback :
 
 				//	TODO: gestion des GetValueOverrideCallback
+
+				DependencyObjectType type = this.ObjectType;
+				System.Type sysType = this.GetType ();
+
+				foreach (DependencyProperty property in type.GetProperties ())
+				{
+					if (this.properties.ContainsKey (property) == false)
+					{
+						DependencyPropertyMetadata metadata = property.GetMetadata (sysType);
+						
+						if (metadata.GetValueOverride != null)
+						{
+							object value = metadata.GetValueOverride (this);
+							
+							if (UndefinedValue.IsValueUndefined (value) == false)
+							{
+								yield return new LocalValueEntry (property, value);
+							}
+						}
+					}
+				}
 			}
 		}
 		

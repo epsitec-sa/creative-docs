@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// DependencyProperty.
 	/// </summary>
-	public sealed class DependencyProperty : System.IEquatable<DependencyProperty>
+	public sealed class DependencyProperty : System.IEquatable<DependencyProperty>, System.IComparable<DependencyProperty>
 	{
 		private DependencyProperty(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
 		{
@@ -240,6 +240,37 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
+		#region IComparable<DependencyProperty> Members
+
+		public int CompareTo(DependencyProperty other)
+		{
+			if (other == null)
+			{
+				return 1;
+			}
+			
+			if (other.globalIndex == this.globalIndex)
+			{
+				return 0;
+			}
+
+			int compare = this.name.CompareTo (other.name);
+
+			if (compare == 0)
+			{
+				compare = this.propertyType.Name.CompareTo (other.propertyType.Name);
+
+				if (compare == 0)
+				{
+					compare = this.ownerType.Name.CompareTo (other.ownerType.Name);
+				}
+			}
+
+			return compare;
+		}
+
+		#endregion
+		
 		public static ReadOnlyArray<DependencyProperty> GetAllAttachedProperties()
 		{
 			if (DependencyProperty.attachedPropertiesArray == null)

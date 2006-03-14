@@ -227,6 +227,9 @@ namespace Epsitec.Common.Types
 					this.localStandardProperties = null;
 					this.localAttachedProperties = null;
 
+					System.Array.Sort (this.standardPropertiesArray);
+					System.Array.Sort (this.attachedPropertiesArray);
+
 					this.lookup = new Dictionary<string, DependencyProperty> (this.standardPropertiesArray.Length);
 
 					foreach (DependencyProperty property in this.standardPropertiesArray)

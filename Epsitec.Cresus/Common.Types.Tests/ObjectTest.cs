@@ -286,12 +286,19 @@ namespace Epsitec.Common.Types
 			t.Name = "Name";
 			t.Value = "Value";
 
+			List<DependencyProperty> properties = new List<DependencyProperty> ();
+
 			foreach (LocalValueEntry entry in t.LocalValueEntries)
 			{
-				DependencyProperty dp = entry.Property;
-				System.Console.Out.WriteLine ("Property '{0}' has type {1}; it belongs to {2}", dp.Name, dp.PropertyType, dp.OwnerType);
+				properties.Add (entry.Property);
+				System.Console.Out.WriteLine ("{0}: {1}", entry.Property.Name, entry.Value == null ? "<null>" : entry.Value.ToString ());
 			}
-			//	TODO: terminer le test ici
+
+			Assert.AreEqual ("Name", properties[0].Name);
+			Assert.AreEqual ("Value", properties[1].Name);
+			Assert.AreEqual ("Children", properties[2].Name);
+			Assert.AreEqual ("HasChildren", properties[3].Name);
+			Assert.AreEqual ("Parent", properties[4].Name);
 		}
 		
 		[Test]
@@ -1032,8 +1039,15 @@ namespace Epsitec.Common.Types
 			public static object GetValueChildren(DependencyObject o)
 			{
 				TreeTest tt = o as TreeTest;
-				DependencyObject[] copy = tt.children.ToArray ();
-				return copy;
+				if (tt.children == null)
+				{
+					return new DependencyObject[0];
+				}
+				else
+				{
+					DependencyObject[] copy = tt.children.ToArray ();
+					return copy;
+				}
 			}
 			public static object GetValueHasChildren(DependencyObject o)
 			{
