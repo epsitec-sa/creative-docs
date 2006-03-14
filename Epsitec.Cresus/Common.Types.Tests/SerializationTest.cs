@@ -11,7 +11,81 @@ namespace Epsitec.Common.Types
 		public void Initialise()
 		{
 		}
-		
+
+		[Test]
+		public void CheckMap()
+		{
+			Serialization.Map map = new Epsitec.Common.Types.Serialization.Map ();
+
+			Assert.AreEqual (0, map.GetNullId ());
+			Assert.AreEqual (0, map.GetId (null));
+			Assert.IsNull (map.GetObject (0));
+			Assert.AreEqual (1, Collection.Count (map.RecordedObjects));
+			Assert.IsTrue (map.IsDefined (null));
+
+			map.Record (null);
+			
+			Assert.AreEqual (1, Collection.Count (map.RecordedObjects));
+
+			MyItem a = new MyItem ();
+			MyItem b = new MyItem ();
+			MyItem c = new MyItem ();
+
+			MySimpleObject s1 = new MySimpleObject ();
+			MySimpleObject s2 = new MySimpleObject ();
+			
+			map.Record (a);
+
+			Assert.AreEqual (1, map.GetId (a));
+			Assert.AreEqual (a, map.GetObject (1));
+			Assert.AreEqual (2, Collection.Count (map.RecordedObjects));
+			Assert.IsTrue (map.IsDefined (a));
+			Assert.IsTrue (map.IsDefined (1));
+			Assert.IsFalse (map.IsDefined (b));
+			Assert.IsFalse (map.IsDefined (2));
+			Assert.AreEqual (1, Collection.Count (map.RecordedTypes));
+			Assert.AreEqual (typeof (MyItem), Collection.ToList (map.RecordedTypes)[0]);
+			Assert.AreEqual (-1, map.GetId (b));
+
+			map.Record (b);
+			map.Record (b);
+
+			Assert.AreEqual (2, map.GetId (b));
+			Assert.AreEqual (b, map.GetObject (2));
+			Assert.AreEqual (3, Collection.Count (map.RecordedObjects));
+
+			map.Record (s1);
+			map.Record (c);
+			map.Record (s2);
+
+			Assert.AreEqual (3, map.GetId (s1));
+			Assert.AreEqual (4, map.GetId (c));
+			Assert.AreEqual (5, map.GetId (s2));
+
+			Assert.AreEqual (2, Collection.Count (map.RecordedTypes));
+			Assert.AreEqual (typeof (MyItem), Collection.ToList (map.RecordedTypes)[0]);
+			Assert.AreEqual (typeof (MySimpleObject), Collection.ToList (map.RecordedTypes)[1]);
+
+			Assert.AreEqual (3, Collection.Count (map.GetObjects (typeof (MyItem))));
+			Assert.AreEqual (2, Collection.Count (map.GetObjects (typeof (MySimpleObject))));
+
+			Assert.AreEqual (a, Collection.ToList (map.GetObjects (typeof (MyItem)))[0]);
+			Assert.AreEqual (b, Collection.ToList (map.GetObjects (typeof (MyItem)))[1]);
+			Assert.AreEqual (c, Collection.ToList (map.GetObjects (typeof (MyItem)))[2]);
+			
+			Assert.AreEqual (s1, Collection.ToList (map.GetObjects (typeof (MySimpleObject)))[0]);
+			Assert.AreEqual (s2, Collection.ToList (map.GetObjects (typeof (MySimpleObject)))[1]);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.Collections.Generic.KeyNotFoundException))]
+		public void CheckMapEx1()
+		{
+			Serialization.Map map = new Epsitec.Common.Types.Serialization.Map ();
+			
+			map.GetObject (1);
+		}
+
 		[Test]
 		public void CheckVisitSerializableNodes()
 		{
@@ -215,6 +289,17 @@ namespace Epsitec.Common.Types
 			List<MyItem> children;
 		}
 		
+		#endregion
+
+		#region MySimpleObject Class
+
+		class MySimpleObject : DependencyObject
+		{
+			public MySimpleObject()
+			{
+			}
+		}
+
 		#endregion
 	}
 }

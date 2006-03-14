@@ -109,6 +109,7 @@
     <Compile Include="BooleanType.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Collection.cs" />
     <Compile Include="DependencyPropertyMetadataWithInheritance.cs" />
     <Compile Include="DependencyObjectCallbacks.cs">
       <SubType>Code</SubType>
