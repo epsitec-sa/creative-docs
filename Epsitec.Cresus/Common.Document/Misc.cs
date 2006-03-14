@@ -672,7 +672,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				name += filename;
+				name += TextLayout.ConvertToTaggedText(filename);
 			}
 
 			if ( dirtySerialize )  name += "</b>";
@@ -704,7 +704,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
 			//	"c:\rep\abc.txt" devient "abc".
-			return System.IO.Path.GetFileNameWithoutExtension(filename);
+			return TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(filename));
 		}
 
 		static public bool IsExtension(string filename, string ext)
