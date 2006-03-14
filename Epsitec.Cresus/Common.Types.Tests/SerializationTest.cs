@@ -1,4 +1,4 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Collections.Generic;
@@ -8,6 +8,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	public delegate object MyAllocator();
+	
 	[TestFixture] public class SerializationTest
 	{
 		[SetUp]
@@ -39,6 +41,62 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual (typeof (MyItem), t1.SystemType);
 			Assert.AreEqual (typeof (MySimpleObject), t2.SystemType);
+		}
+
+		[Test]
+		public void CheckAllocationSpeed()
+		{
+			System.Type type = typeof (MySimpleObject);
+			int steps = 1000*100;
+
+			System.Reflection.Emit.DynamicMethod dm = new System.Reflection.Emit.DynamicMethod ("MyCtor", type, System.Type.EmptyTypes, typeof (SerializationTest).Module, true);
+			System.Reflection.Emit.ILGenerator ilgen = dm.GetILGenerator ();
+			
+			ilgen.Emit (System.Reflection.Emit.OpCodes.Nop);
+			ilgen.Emit (System.Reflection.Emit.OpCodes.Newobj, type.GetConstructor (System.Type.EmptyTypes));
+			ilgen.Emit (System.Reflection.Emit.OpCodes.Ret);
+
+			MyAllocator allocator = (MyAllocator) dm.CreateDelegate (typeof (MyAllocator));
+
+			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch ();
+
+			stopwatch.Start ();
+
+			for (int i = 0; i < steps; i++)
+			{
+				//	allocator: 0.45 μs
+				allocator ();
+			}
+
+			stopwatch.Stop ();
+			System.Console.Out.WriteLine ("DynamicMethod + ILGen: {0} μs, {1} executions.", 1.0M * stopwatch.ElapsedMilliseconds / (steps / 1000), steps);
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			for (int i = 0; i < steps; i++)
+			{
+				//	Activator: 17.2 μs (38 x plus lent que activator)
+				System.Activator.CreateInstance (type);
+			}
+
+			stopwatch.Stop ();
+			System.Console.Out.WriteLine ("Activator.CreateInstance: {0} μs, {1} executions.", 1.0M * stopwatch.ElapsedMilliseconds / (steps / 1000), steps);
+
+			DependencyObjectType depType = DependencyObjectType.FromSystemType (type);
+			depType.CreateEmptyObject ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			for (int i = 0; i < steps; i++)
+			{
+				//	Même méthode que l'allocator ci-dessus...
+				depType.CreateEmptyObject ();
+			}
+
+			stopwatch.Stop ();
+			System.Console.Out.WriteLine ("CreateEmptyObject: {0} μs, {1} executions.", 1.0M * stopwatch.ElapsedMilliseconds / (steps / 1000), steps);
 		}
 
 		[Test]
@@ -206,8 +264,12 @@ namespace Epsitec.Common.Types
 
 		#region MyItem Class
 
-		internal class MyItem : DependencyObject
+		public class MyItem : DependencyObject
 		{
+			public MyItem()
+			{
+			}
+			
 			public string						Name
 			{
 				get

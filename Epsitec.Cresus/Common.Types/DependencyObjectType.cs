@@ -1,4 +1,4 @@
-//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+ï»¿//	Copyright Â© 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe DependencyObjectType représente une version de plus haut niveau de
+	/// La classe DependencyObjectType reprÃ©sente une version de plus haut niveau de
 	/// System.Type.
 	/// </summary>
 	public sealed class DependencyObjectType
@@ -117,6 +117,27 @@ namespace Epsitec.Common.Types
 				this.localStandardProperties.Add (property);
 			}
 		}
+		
+		public DependencyObject CreateEmptyObject()
+		{
+			if (this.allocator == null)
+			{
+				lock (this)
+				{
+					if (this.allocator == null)
+					{
+						this.BuildDynamicAllocator ();
+					}
+				}
+			}
+			
+			//	The allocator invokes a dynamically generated piece of IL code
+			//	which does simply 'new' the associated type. With .NET 2.0, this
+			//	is 40 times faster than the equivalent System.Activator call; it
+			//	takes less than 0.5 Î¼s on a 3GHz Pentium-D system.
+			
+			return this.allocator ();
+		}
 
 		public ReadOnlyArray<DependencyProperty> GetProperties()
 		{
@@ -149,7 +170,7 @@ namespace Epsitec.Common.Types
 				return this.lookup[name];
 			}
 			
-			//	TODO: trouver une propriété attachée qui conviendrait
+			//	TODO: trouver une propriÃ©tÃ© attachÃ©e qui conviendrait
 			
 			return null;
 		}
@@ -197,7 +218,7 @@ namespace Epsitec.Common.Types
 			
 			return objectType;
 		}
-
+		
 		#region Private Methods
 		private void BuildPropertyList()
 		{
@@ -242,6 +263,17 @@ namespace Epsitec.Common.Types
 					}
 				}
 			}
+		}
+		private void BuildDynamicAllocator()
+		{
+			System.Reflection.Emit.DynamicMethod dm = new System.Reflection.Emit.DynamicMethod ("DynamicAllocator", this.systemType, System.Type.EmptyTypes, typeof (DependencyObjectType).Module, true);
+			System.Reflection.Emit.ILGenerator ilgen = dm.GetILGenerator ();
+
+			ilgen.Emit (System.Reflection.Emit.OpCodes.Nop);
+			ilgen.Emit (System.Reflection.Emit.OpCodes.Newobj, this.systemType.GetConstructor (System.Type.EmptyTypes));
+			ilgen.Emit (System.Reflection.Emit.OpCodes.Ret);
+
+			this.allocator = (Allocator) dm.CreateDelegate (typeof (Allocator));
 		}
 		private void ExecuteTypeStaticConstructor()
 		{
@@ -306,6 +338,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
+		private delegate DependencyObject Allocator();
 
 		private DependencyObjectType			baseType;
 		private System.Type						systemType;
@@ -315,6 +348,7 @@ namespace Epsitec.Common.Types
 		private DependencyProperty[]			attachedPropertiesArray;
 		private Dictionary<string, DependencyProperty>	lookup;
 		private bool							initialized;
+		private Allocator						allocator;
 
 		static Dictionary<System.Type, DependencyObjectType> types = new Dictionary<System.Type, DependencyObjectType> ();
 	}
