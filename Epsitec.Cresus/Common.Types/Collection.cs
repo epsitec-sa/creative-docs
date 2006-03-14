@@ -31,5 +31,24 @@ namespace Epsitec.Common.Types
 			list.AddRange (collection);
 			return list.ToArray ();
 		}
+
+		public static bool ContainsAll<T>(IEnumerable<T> collection, ICollection<T> values)
+		{
+			List<T> ignore = new List<T> ();
+			
+			foreach (T item in collection)
+			{
+				if (ignore.Contains (item))
+				{
+					continue;
+				}
+				if (values.Contains (item))
+				{
+					ignore.Add (item);
+				}
+			}
+
+			return ignore.Count == values.Count;
+		}
 	}
 }

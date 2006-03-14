@@ -23,6 +23,9 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			if (this.map.Record (obj))
 			{
+				//	Visit every locally defined property which either refers to
+				//	a DependencyObject or to a collection of such.
+				
 				foreach (LocalValueEntry entry in obj.LocalValueEntries)
 				{
 					DependencyPropertyMetadata metadata = entry.Property.GetMetadata (obj);

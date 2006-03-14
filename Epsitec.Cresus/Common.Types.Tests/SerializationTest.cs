@@ -3,6 +3,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.SerializationTest.MyItem))]
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.SerializationTest.MySimpleObject))]
+
 namespace Epsitec.Common.Types
 {
 	[TestFixture] public class SerializationTest
@@ -10,6 +13,32 @@ namespace Epsitec.Common.Types
 		[SetUp]
 		public void Initialise()
 		{
+			Serialization.DependencyClassManager.Setup ();
+		}
+
+		[Test]
+		public void CheckAttributes()
+		{
+			List<string> names = new List<string> ();
+
+			foreach (System.Type type in DependencyClassAttribute.GetRegisteredTypes (this.GetType ().Assembly))
+			{
+				names.Add (type.FullName);
+			}
+			
+			string[] array = new string[] { "Epsitec.Common.Types.SerializationTest+MyItem", "Epsitec.Common.Types.SerializationTest+MySimpleObject" };
+
+			Assert.IsTrue (Collection.ContainsAll (names, array));
+		}
+
+		[Test]
+		public void CheckDependencyClassManager()
+		{
+			DependencyObjectType t1 = Serialization.DependencyClassManager.Current.FindObjectType ("Epsitec.Common.Types.SerializationTest+MyItem");
+			DependencyObjectType t2 = Serialization.DependencyClassManager.Current.FindObjectType ("Epsitec.Common.Types.SerializationTest+MySimpleObject");
+
+			Assert.AreEqual (typeof (MyItem), t1.SystemType);
+			Assert.AreEqual (typeof (MySimpleObject), t2.SystemType);
 		}
 
 		[Test]
@@ -177,7 +206,7 @@ namespace Epsitec.Common.Types
 
 		#region MyItem Class
 
-		class MyItem : DependencyObject
+		internal class MyItem : DependencyObject
 		{
 			public string						Name
 			{
@@ -293,7 +322,7 @@ namespace Epsitec.Common.Types
 
 		#region MySimpleObject Class
 
-		class MySimpleObject : DependencyObject
+		internal class MySimpleObject : DependencyObject
 		{
 			public MySimpleObject()
 			{

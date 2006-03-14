@@ -110,6 +110,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Collection.cs" />
+    <Compile Include="DependencyClassAttribute.cs" />
     <Compile Include="DependencyPropertyMetadataWithInheritance.cs" />
     <Compile Include="DependencyObjectCallbacks.cs">
       <SubType>Code</SubType>
@@ -235,6 +236,7 @@
     <Compile Include="Resources.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Serialization\DependencyClassManager.cs" />
     <Compile Include="Serialization\GraphVisitor.cs" />
     <Compile Include="Serialization\Map.cs" />
     <Compile Include="Storage.cs" />
