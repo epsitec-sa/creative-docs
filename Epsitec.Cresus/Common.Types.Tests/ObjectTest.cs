@@ -291,9 +291,9 @@ namespace Epsitec.Common.Types
 			foreach (LocalValueEntry entry in t.LocalValueEntries)
 			{
 				properties.Add (entry.Property);
-				System.Console.Out.WriteLine ("{0}: {1}", entry.Property.Name, entry.Value == null ? "<null>" : entry.Value.ToString ());
 			}
 
+			Assert.AreEqual (5, properties.Count);
 			Assert.AreEqual ("Name", properties[0].Name);
 			Assert.AreEqual ("Value", properties[1].Name);
 			Assert.AreEqual ("Children", properties[2].Name);
@@ -355,6 +355,10 @@ namespace Epsitec.Common.Types
 			q.Value = "Q";
 			c1.Value = "C1";
 			c2.Value = "C2";
+			
+			//	a --+--> b --+--> c1
+			//	    |        +--> c2
+			//	    +--> q
 
 			Assert.IsTrue (a.HasChildren);
 			Assert.IsTrue (b.HasChildren);
@@ -370,16 +374,6 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (a, DependencyObjectTree.GetParent (b));
 			Assert.AreEqual (a, DependencyObjectTree.GetParent (q));
 
-			Serialization.GraphVisitor visitor = new Serialization.GraphVisitor ();
-			
-			visitor.VisitSerializableNodes (a);
-			
-			foreach (DependencyObject obj in visitor.Map.RecordedObjects)
-			{
-				System.Console.Out.WriteLine ("{0} has id {1}", obj == null ? "<null>" : DependencyObjectTree.GetName (obj), visitor.Map.GetId (obj));
-			}
-			
-			
 			DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (a, TreeTest.ValueProperty);
 
 			c1.Value = "C1-X";
@@ -954,6 +948,8 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
+		#region TreeTest Class
+
 		class TreeTest : DependencyObject
 		{
 			public string						Name
@@ -1065,6 +1061,8 @@ namespace Epsitec.Common.Types
 			TreeTest parent;
 			List<TreeTest> children;
 		}
+		
+		#endregion
 
 		private static void Register(string name)
 		{
