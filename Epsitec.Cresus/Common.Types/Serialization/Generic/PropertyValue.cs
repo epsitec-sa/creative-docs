@@ -27,13 +27,6 @@ namespace Epsitec.Common.Types.Serialization.Generic
 				return this.property;
 			}
 		}
-		public string							Name
-		{
-			get
-			{
-				return this.property.Name;
-			}
-		}
 		public T								Value
 		{
 			get

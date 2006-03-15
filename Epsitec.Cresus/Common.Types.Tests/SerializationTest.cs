@@ -256,29 +256,34 @@ namespace Epsitec.Common.Types
 			MyItem a = new MyItem ();
 			MyItem b = new MyItem ();
 			MyItem q = new MyItem ();
+			MyItem r = new MyItem ();
 			MyItem c1 = new MyItem ();
 			MyItem c2 = new MyItem ();
 
 			a.AddChild (b);
 			a.AddChild (q);
+			a.AddChild (r);
 			b.AddChild (c1);
 			b.AddChild (c2);
 
 			a.Name = "a";
 			b.Name = "b";
 			q.Name = "q";
+			r.Name = "r";
 			c1.Name = "c1";
 			c2.Name = "c2";
 
 			a.Value = "A";
 			b.Value = "B";
 			q.Value = "Q{<\"&>}";
+			r.Value = "R";
 			c1.Value = "C1";
 			c2.Value = "C2";
 
 			//	a --+--> b --+--> c1
 			//	    |        +--> c2
 			//	    +--> q
+			//		+--> r
 
 			a.Friend = c2;
 			q.Friend = b;
@@ -287,15 +292,29 @@ namespace Epsitec.Common.Types
 			c1.Price = 125.95M;
 			c2.Price = 3899.20M;
 
-			Binding binding = new Binding ();
+			Binding bindingQ = new Binding ();
+			Binding bindingR = new Binding ();
+			Binding dataContext = new Binding ();
 			
-			binding.Source = a;
-			binding.Path = new DependencyPropertyPath ("Friend.Price"); //("Children[0].Children[1]");
-			binding.Mode = BindingMode.OneWay;
+			bindingQ.Source = a;
+			bindingQ.Path = new DependencyPropertyPath ("Friend.Price"); //("Children[0].Children[1]");
+			bindingQ.Mode = BindingMode.OneWay;
 
-			q.SetBinding (MyItem.PriceProperty, binding);
+			bindingR.Mode = BindingMode.OneWay;
+
+			dataContext.Source = c1;
+			
+			DataObject.SetDataContext (a, dataContext);
+
+			Assert.AreEqual (dataContext, DataObject.GetDataContext (a));
+			Assert.AreEqual (dataContext, DataObject.GetDataContext (b));
+			Assert.AreEqual (dataContext, DataObject.GetDataContext (r));
+
+			q.SetBinding (MyItem.PriceProperty, bindingQ);
+			r.SetBinding (MyItem.FriendProperty, bindingR);
 
 			Assert.AreEqual (c2.Price, q.Price);
+			Assert.AreEqual (c1, r.Friend);
 			
 			return a;
 		}

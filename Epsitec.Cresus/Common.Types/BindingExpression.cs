@@ -215,6 +215,12 @@ namespace Epsitec.Common.Types
 
 				return true;
 			}
+
+			if (source != null)
+			{
+				type = BindingSourceType.SourceItself;
+				return true;
+			}
 			
 			return false;
 		}
@@ -301,6 +307,10 @@ namespace Epsitec.Common.Types
 					source = this.sourceObject as DependencyObject;
 					this.InternalUpdateTarget (source.GetValue (this.sourceProperty));
 					break;
+				case BindingSourceType.SourceItself:
+					source = this.sourceObject as DependencyObject;
+					this.InternalUpdateTarget (source);
+					break;
 			}
 		}
 		private void InternalUpdateTarget(object value)
@@ -318,6 +328,8 @@ namespace Epsitec.Common.Types
 					BindingExpression.Attach (this, this.sourceObject as DependencyObject, this.sourceProperty);
 					BindingExpression.Attach (this, this.sourceBreadcrumbs);
 					break;
+				case BindingSourceType.SourceItself:
+					break;
 			}
 		}
 		private void InternalDetachFromSource()
@@ -329,6 +341,8 @@ namespace Epsitec.Common.Types
 				case BindingSourceType.PropertyObject:
 					BindingExpression.Detach (this, this.sourceObject as DependencyObject, this.sourceProperty);
 					BindingExpression.Detach (this, this.sourceBreadcrumbs);
+					break;
+				case BindingSourceType.SourceItself:
 					break;
 			}
 

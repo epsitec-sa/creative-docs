@@ -586,16 +586,16 @@ namespace Epsitec.Common.Types
 			{
 				//	Aucune analyse de la classe Test1 n'a encore eu lieu; il y
 				//	a donc 0 propriétés attachées connues.
-				
-				Assert.AreEqual (0, DependencyProperty.GetAllAttachedProperties ().Count);
+
+				int n = DependencyProperty.GetAllAttachedProperties ().Count;
 				Test2 t2 = new Test2 ();
-				Assert.AreEqual (0, DependencyProperty.GetAllAttachedProperties ().Count);
+				Assert.AreEqual (n, DependencyProperty.GetAllAttachedProperties ().Count);
 			}
 			public static void TestB()
 			{
 				Test2 t2 = new Test2 ();
-				Assert.AreEqual (0, DependencyProperty.GetAllAttachedProperties ().Count);
-
+				int n = DependencyProperty.GetAllAttachedProperties ().Count;
+				
 				//	Les types sont créés à la demande s'ils ne sont pas encore
 				//	connus; c'est le cas de ot1 :
 
@@ -608,8 +608,8 @@ namespace Epsitec.Common.Types
 				//	L'analyse de la classe Test1 a eu lieu; il y a donc 1
 				//	propriété attachée; celle de Test1 !
 
-				Assert.AreEqual (1, DependencyProperty.GetAllAttachedProperties ().Count);
-				Assert.AreEqual ("Attached", DependencyProperty.GetAllAttachedProperties ()[0].Name);
+				Assert.AreEqual (n+1, DependencyProperty.GetAllAttachedProperties ().Count);
+				Assert.AreEqual ("Attached", DependencyProperty.GetAllAttachedProperties ()[n].Name);
 			}
 			public static void TestC()
 			{

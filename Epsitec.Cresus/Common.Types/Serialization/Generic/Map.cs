@@ -82,6 +82,14 @@ namespace Epsitec.Common.Types.Serialization.Generic
 				return true;
 			}
 		}
+		public void RecordType(System.Type type)
+		{
+			if (this.typeInformation.ContainsKey (type) == false)
+			{
+				this.types.Add (type);
+				this.typeInformation[type] = new List<int> ();
+			}
+		}
 
 		public bool IsDefined(T value)
 		{
@@ -144,6 +152,11 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		{
 			return this.types[index];
 		}
+		public int GetTypeIndex(System.Type type)
+		{
+			int id = this.types.IndexOf (type);
+			return (id < 0) ? -1 : id+1;
+		}
 
 		public IEnumerable<T> GetValues(System.Type type)
 		{
@@ -160,5 +173,6 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		Dictionary<T, int>						valueToIdLookup = new Dictionary<T, int> ();
 		List<System.Type>						types = new List<System.Type> ();
 		Dictionary<System.Type, List<int>>		typeInformation = new Dictionary<System.Type, List<int>> ();
+
 	}
 }
