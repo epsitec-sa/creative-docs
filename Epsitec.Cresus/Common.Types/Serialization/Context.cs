@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using Epsitec.Common.Types.Serialization.Generic;
 
 namespace Epsitec.Common.Types.Serialization
 {
@@ -30,7 +31,7 @@ namespace Epsitec.Common.Types.Serialization
 				return this.visitor;
 			}
 		}
-		public Generic.Map<DependencyObject>	ObjectMap
+		public Map<DependencyObject>			ObjectMap
 		{
 			get
 			{
@@ -79,9 +80,22 @@ namespace Epsitec.Common.Types.Serialization
 
 			this.writer.BeginObject (id, obj);
 
-			foreach (KeyValuePair<DependencyProperty, int> entry in this.visitor.GetDependencyObjectFieldReferences (obj))
+			GraphVisitor.Fields fields = this.visitor.GetFields (obj);
+
+			foreach (PropertyValue<int> field in fields.Ids)
 			{
-				this.writer.WriteObjectFieldReference (obj, entry.Key.Name, entry.Value);
+				this.writer.WriteObjectFieldReference (obj, field.Name, field.Value);
+			}
+			foreach (PropertyValue<string> field in fields.Values)
+			{
+				this.writer.WriteObjectFieldValue (obj, field.Name, field.Value);
+			}
+			foreach (PropertyValue<IList<int>> field in fields.IdCollections)
+			{
+				if (field.Value.Count > 0)
+				{
+					this.writer.WriteObjectFieldReferenceList (obj, field.Name, field.Value);
+				}
 			}
 			
 			this.writer.EndObject (id, obj);

@@ -48,9 +48,22 @@ namespace Epsitec.Common.Types.Serialization.IO
 		{
 			this.xml.WriteAttributeString ("f", name, this.nsFields, XmlSupport.IdToString (id));
 		}
-		public override void WriteObjectFieldData(DependencyObject obj, string name, string value)
+		public override void WriteObjectFieldReferenceList(DependencyObject obj, string name, IList<int> ids)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			this.xml.WriteStartElement ("f", name, this.nsFields);
+			
+			foreach (int id in ids)
+			{
+				this.xml.WriteStartElement ("item", this.nsStructure);
+				this.xml.WriteAttributeString ("oid", this.nsStructure, XmlSupport.IdToString (id));
+				this.xml.WriteEndElement ();
+			}
+			
+			this.xml.WriteEndElement ();
+		}
+		public override void WriteObjectFieldValue(DependencyObject obj, string name, string value)
+		{
+			this.xml.WriteAttributeString ("f", name, this.nsFields, value);
 		}
 		public override void EndObject(int id, DependencyObject obj)
 		{

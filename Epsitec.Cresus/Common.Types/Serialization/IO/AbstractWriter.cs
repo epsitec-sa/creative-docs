@@ -29,6 +29,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 		}
 
 		public abstract void WriteObjectFieldReference(DependencyObject obj, string name, int id);
-		public abstract void WriteObjectFieldData(DependencyObject obj, string name, string value);
+		public abstract void WriteObjectFieldReferenceList(DependencyObject obj, string name, IList<int> ids);
+		public abstract void WriteObjectFieldValue(DependencyObject obj, string name, string value);
 	}
 }

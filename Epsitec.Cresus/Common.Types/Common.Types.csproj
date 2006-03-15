@@ -236,6 +236,7 @@
     <Compile Include="Resources.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Serialization\Generic\PropertyValue.cs" />
     <Compile Include="Serialization\IO\AbstractWriter.cs" />
     <Compile Include="Serialization\Context.cs" />
     <Compile Include="Serialization\IO\AbstractReader.cs" />
