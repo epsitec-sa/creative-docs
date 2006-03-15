@@ -53,9 +53,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (!precedIsBold && isBold)
 			{
-				this.OpenTag (HtmlAttribute.Italic);
-				//				output.Append ("<b>");
-				//				this.openTags.Push (HtmlAttribute.Bold);
+				this.OpenTag (HtmlAttribute.Bold);
 			}
 
 			precedIsItalic = isItalic;
@@ -126,10 +124,43 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void AppendTagsToClose()
 		{
+			bool found = false;
+			
+			for (int i = 0; i < this.tagsToClose.Count; i++)
+			{
+				HtmlAttribute attr = (HtmlAttribute)this.tagsToClose[i] ;
+				if ((HtmlAttribute)this.openTagsStack.Peek () == attr)
+				{
+					this.output.Append(this.AttributeToString(attr, HtmlTagMode.Close, null)) ;
+					this.tagsToClose.RemoveAt(i) ;
+					i-- ;
+					this.openTagsStack.Pop() ;
+					this.tagsToOpen.Add(attr) ;
+					found = true;
+				}
+			}
+
+			for (int i = 0; i <this.tagsToClose.Count; i++)
+			{
+				HtmlAttribute attr = (HtmlAttribute)this.openTagsStack.Pop ();
+
+				this.output.Append (this.AttributeToString (attr, HtmlTagMode.Close, null));
+				this.tagsToOpen.Add (attr);
+			}
+
+			this.tagsToClose.Clear ();
 		}
 
 		private void AppendTagsToOpen()
 		{
+			foreach (HtmlAttribute attr in this.tagsToOpen)
+			{
+				string tag = AttributeToString (attr, HtmlTagMode.Open, null);
+				this.output.Append (tag);
+				this.openTagsStack.Push (attr);
+			}
+
+			this.tagsToOpen.Clear ();
 		}
 
 
@@ -159,7 +190,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private System.Text.StringBuilder output = new System.Text.StringBuilder ();
 
-		private System.Collections.Stack openTags = new System.Collections.Stack ();
+		private System.Collections.Stack openTagsStack = new System.Collections.Stack ();
 		private System.Collections.ArrayList tagsToClose = new System.Collections.ArrayList ();
 		private System.Collections.ArrayList tagsToOpen = new System.Collections.ArrayList ();
 
@@ -215,6 +246,7 @@ namespace Epsitec.Common.Text.Exchange
 				{
 					System.Console.Out.WriteLine ("- Font Style: {0}", textWrapper.Defined.FontStyle);
 				}
+
 
 				htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
 				htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
