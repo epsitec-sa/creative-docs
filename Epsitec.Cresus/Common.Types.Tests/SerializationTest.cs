@@ -149,10 +149,14 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (4, map.GetId (c));
 			Assert.AreEqual (5, map.GetId (s2));
 
+			Assert.AreEqual (2, map.TypeCount);
 			Assert.AreEqual (2, Collection.Count (map.RecordedTypes));
 			Assert.AreEqual (typeof (MyItem), Collection.ToList (map.RecordedTypes)[0]);
 			Assert.AreEqual (typeof (MySimpleObject), Collection.ToList (map.RecordedTypes)[1]);
+			Assert.AreEqual (typeof (MyItem), map.GetType (0));
+			Assert.AreEqual (typeof (MySimpleObject), map.GetType (1));
 
+			Assert.AreEqual (6, map.ValueCount);
 			Assert.AreEqual (3, Collection.Count (map.GetValues (typeof (MyItem))));
 			Assert.AreEqual (2, Collection.Count (map.GetValues (typeof (MySimpleObject))));
 
@@ -208,8 +212,11 @@ namespace Epsitec.Common.Types
 			visitor.VisitSerializableNodes (a);
 
 			List<DependencyObject> objects = Collection.ToList (visitor.ObjectMap.RecordedValues);
-			List<System.Type> types = Collection.ToList (visitor.TypeMap.RecordedValues);
+			List<System.Type> types = Collection.ToList (visitor.ObjectMap.RecordedTypes);
 
+			Assert.AreEqual (6, visitor.ObjectMap.ValueCount);
+			Assert.AreEqual (1, visitor.ObjectMap.TypeCount);
+			
 			Assert.AreEqual (6, objects.Count);
 			Assert.IsNull (objects[0]);
 			Assert.AreEqual (a, objects[1]);
@@ -218,9 +225,59 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (c2, objects[4]);
 			Assert.AreEqual (q, objects[5]);
 
-			Assert.AreEqual (2, types.Count);
-			Assert.IsNull (types[0]);
-			Assert.AreEqual (typeof (MyItem), types[1]);
+			Assert.AreEqual (1, types.Count);
+			Assert.AreEqual (typeof (MyItem), types[0]);
+		}
+
+		[Test]
+		public void CheckSerializeToXml()
+		{
+			MyItem root = this.CreateSampleTree ();
+
+			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (System.Console.Out);
+			
+			xmlWriter.Indentation = 2;
+			xmlWriter.Formatting = System.Xml.Formatting.Indented;
+			xmlWriter.WriteStartElement ("root");
+
+			Serialization.Context context = new Serialization.Context (new Serialization.IO.XmlWriter (xmlWriter));
+			Storage.Serialize (root, context);
+
+			xmlWriter.WriteEndElement ();
+			xmlWriter.Flush ();
+			xmlWriter.Close ();
+		}
+
+		private MyItem CreateSampleTree()
+		{
+			MyItem a = new MyItem ();
+			MyItem b = new MyItem ();
+			MyItem q = new MyItem ();
+			MyItem c1 = new MyItem ();
+			MyItem c2 = new MyItem ();
+
+			a.AddChild (b);
+			a.AddChild (q);
+			b.AddChild (c1);
+			b.AddChild (c2);
+
+			a.Name = "a";
+			b.Name = "b";
+			q.Name = "q";
+			c1.Name = "c1";
+			c2.Name = "c2";
+
+			a.Value = "A";
+			b.Value = "B";
+			q.Value = "Q";
+			c1.Value = "C1";
+			c2.Value = "C2";
+
+			//	a --+--> b --+--> c1
+			//	    |        +--> c2
+			//	    +--> q
+			
+			return a;
 		}
 		
 		#region Class EventHandlerSupport

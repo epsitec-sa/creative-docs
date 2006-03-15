@@ -21,10 +21,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		{
 			get
 			{
-				foreach (KeyValuePair<System.Type, List<int>> pair in this.typeInformation)
-				{
-					yield return pair.Key;
-				}
+				return this.types;
 			}
 		}
 		public IEnumerable<T>					RecordedValues
@@ -34,6 +31,22 @@ namespace Epsitec.Common.Types.Serialization.Generic
 				return this.idToValueLookup;
 			}
 		}
+
+		public int								TypeCount
+		{
+			get
+			{
+				return this.types.Count;
+			}
+		}
+		public int								ValueCount
+		{
+			get
+			{
+				return this.idToValueLookup.Count;
+			}
+		}
+		
 		
 		public bool Record(T value)
 		{
@@ -60,6 +73,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 
 				if (this.typeInformation.ContainsKey (type) == false)
 				{
+					this.types.Add (type);
 					this.typeInformation[type] = new List<int> ();
 				}
 
@@ -126,6 +140,10 @@ namespace Epsitec.Common.Types.Serialization.Generic
 				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("Id {0} not found.", id));
 			}
 		}
+		public System.Type GetType(int index)
+		{
+			return this.types[index];
+		}
 
 		public IEnumerable<T> GetValues(System.Type type)
 		{
@@ -140,6 +158,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		
 		List<T>									idToValueLookup = new List<T> ();
 		Dictionary<T, int>						valueToIdLookup = new Dictionary<T, int> ();
+		List<System.Type>						types = new List<System.Type> ();
 		Dictionary<System.Type, List<int>>		typeInformation = new Dictionary<System.Type, List<int>> ();
 	}
 }
