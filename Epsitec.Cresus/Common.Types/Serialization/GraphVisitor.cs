@@ -18,6 +18,13 @@ namespace Epsitec.Common.Types.Serialization
 				return this.objMap;
 			}
 		}
+		public Generic.Map<System.Type>			TypeMap
+		{
+			get
+			{
+				return this.typeMap;
+			}
+		}
 
 		public void VisitSerializableNodes(DependencyObject obj)
 		{
@@ -25,6 +32,8 @@ namespace Epsitec.Common.Types.Serialization
 			{
 				//	Visit every locally defined property which either refers to
 				//	a DependencyObject or to a collection of such.
+
+				this.typeMap.Record (obj.GetType ());
 				
 				foreach (LocalValueEntry entry in obj.LocalValueEntries)
 				{

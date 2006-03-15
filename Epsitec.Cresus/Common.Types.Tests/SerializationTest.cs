@@ -106,13 +106,13 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual (0, map.GetNullId ());
 			Assert.AreEqual (0, map.GetId (null));
-			Assert.IsNull (map.GetObject (0));
-			Assert.AreEqual (1, Collection.Count (map.RecordedObjects));
+			Assert.IsNull (map.GetValue (0));
+			Assert.AreEqual (1, Collection.Count (map.RecordedValues));
 			Assert.IsTrue (map.IsDefined (null));
 
 			map.Record (null);
 			
-			Assert.AreEqual (1, Collection.Count (map.RecordedObjects));
+			Assert.AreEqual (1, Collection.Count (map.RecordedValues));
 
 			MyItem a = new MyItem ();
 			MyItem b = new MyItem ();
@@ -124,8 +124,8 @@ namespace Epsitec.Common.Types
 			map.Record (a);
 
 			Assert.AreEqual (1, map.GetId (a));
-			Assert.AreEqual (a, map.GetObject (1));
-			Assert.AreEqual (2, Collection.Count (map.RecordedObjects));
+			Assert.AreEqual (a, map.GetValue (1));
+			Assert.AreEqual (2, Collection.Count (map.RecordedValues));
 			Assert.IsTrue (map.IsDefined (a));
 			Assert.IsTrue (map.IsDefined (1));
 			Assert.IsFalse (map.IsDefined (b));
@@ -138,8 +138,8 @@ namespace Epsitec.Common.Types
 			map.Record (b);
 
 			Assert.AreEqual (2, map.GetId (b));
-			Assert.AreEqual (b, map.GetObject (2));
-			Assert.AreEqual (3, Collection.Count (map.RecordedObjects));
+			Assert.AreEqual (b, map.GetValue (2));
+			Assert.AreEqual (3, Collection.Count (map.RecordedValues));
 
 			map.Record (s1);
 			map.Record (c);
@@ -153,15 +153,15 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (typeof (MyItem), Collection.ToList (map.RecordedTypes)[0]);
 			Assert.AreEqual (typeof (MySimpleObject), Collection.ToList (map.RecordedTypes)[1]);
 
-			Assert.AreEqual (3, Collection.Count (map.GetObjects (typeof (MyItem))));
-			Assert.AreEqual (2, Collection.Count (map.GetObjects (typeof (MySimpleObject))));
+			Assert.AreEqual (3, Collection.Count (map.GetValues (typeof (MyItem))));
+			Assert.AreEqual (2, Collection.Count (map.GetValues (typeof (MySimpleObject))));
 
-			Assert.AreEqual (a, Collection.ToList (map.GetObjects (typeof (MyItem)))[0]);
-			Assert.AreEqual (b, Collection.ToList (map.GetObjects (typeof (MyItem)))[1]);
-			Assert.AreEqual (c, Collection.ToList (map.GetObjects (typeof (MyItem)))[2]);
+			Assert.AreEqual (a, Collection.ToList (map.GetValues (typeof (MyItem)))[0]);
+			Assert.AreEqual (b, Collection.ToList (map.GetValues (typeof (MyItem)))[1]);
+			Assert.AreEqual (c, Collection.ToList (map.GetValues (typeof (MyItem)))[2]);
 			
-			Assert.AreEqual (s1, Collection.ToList (map.GetObjects (typeof (MySimpleObject)))[0]);
-			Assert.AreEqual (s2, Collection.ToList (map.GetObjects (typeof (MySimpleObject)))[1]);
+			Assert.AreEqual (s1, Collection.ToList (map.GetValues (typeof (MySimpleObject)))[0]);
+			Assert.AreEqual (s2, Collection.ToList (map.GetValues (typeof (MySimpleObject)))[1]);
 		}
 
 		[Test]
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Types
 		{
 			Serialization.Generic.Map<DependencyObject> map = new Serialization.Generic.Map<DependencyObject> ();
 			
-			map.GetObject (1);
+			map.GetValue (1);
 		}
 
 		[Test]
@@ -207,14 +207,20 @@ namespace Epsitec.Common.Types
 			
 			visitor.VisitSerializableNodes (a);
 
-			List<DependencyObject> objects = Collection.ToList (visitor.ObjectMap.RecordedObjects);
+			List<DependencyObject> objects = Collection.ToList (visitor.ObjectMap.RecordedValues);
+			List<System.Type> types = Collection.ToList (visitor.TypeMap.RecordedValues);
 
-			Assert.AreEqual (null, objects[0]);
+			Assert.AreEqual (6, objects.Count);
+			Assert.IsNull (objects[0]);
 			Assert.AreEqual (a, objects[1]);
 			Assert.AreEqual (b, objects[2]);
 			Assert.AreEqual (c1, objects[3]);
 			Assert.AreEqual (c2, objects[4]);
 			Assert.AreEqual (q, objects[5]);
+
+			Assert.AreEqual (2, types.Count);
+			Assert.IsNull (types[0]);
+			Assert.AreEqual (typeof (MyItem), types[1]);
 		}
 		
 		#region Class EventHandlerSupport

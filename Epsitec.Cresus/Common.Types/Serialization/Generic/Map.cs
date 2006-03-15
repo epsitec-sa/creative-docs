@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 	{
 		public Map()
 		{
-			this.idToObjectLookup.Add (null);
+			this.idToValueLookup.Add (null);
 		}
 
 		public IEnumerable<System.Type>			RecordedTypes
@@ -27,36 +27,36 @@ namespace Epsitec.Common.Types.Serialization.Generic
 				}
 			}
 		}
-		public IEnumerable<T>					RecordedObjects
+		public IEnumerable<T>					RecordedValues
 		{
 			get
 			{
-				return this.idToObjectLookup;
+				return this.idToValueLookup;
 			}
 		}
 		
-		public bool Record(T obj)
+		public bool Record(T value)
 		{
-			if (obj == null)
+			if (value == null)
 			{
-				//	Nothing to do: null objects are remembered as null. No need to
+				//	Nothing to do: null values are remembered as null. No need to
 				//	record them.
 				
 				return false;
 			}
-			else if (this.IsDefined (obj))
+			else if (this.IsDefined (value))
 			{
-				//	Nothing to do: the object has already been registered before.
+				//	Nothing to do: the value has already been registered before.
 
 				return false;
 			}
 			else
 			{
-				int id = this.idToObjectLookup.Count;
-				System.Type type = obj.GetType ();
+				int id = this.idToValueLookup.Count;
+				System.Type type = value.GetType ();
 				
-				this.idToObjectLookup.Add (obj);
-				this.objectToIdLookup[obj] = id;
+				this.idToValueLookup.Add (value);
+				this.valueToIdLookup[value] = id;
 
 				if (this.typeInformation.ContainsKey (type) == false)
 				{
@@ -69,13 +69,13 @@ namespace Epsitec.Common.Types.Serialization.Generic
 			}
 		}
 
-		public bool IsDefined(T obj)
+		public bool IsDefined(T value)
 		{
-			if (obj == null)
+			if (value == null)
 			{
 				return true;
 			}
-			else if (this.objectToIdLookup.ContainsKey (obj))
+			else if (this.valueToIdLookup.ContainsKey (value))
 			{
 				return true;
 			}
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		}
 		public bool IsDefined(int id)
 		{
-			if ((id >= 0) && (id < this.idToObjectLookup.Count))
+			if ((id >= 0) && (id < this.idToValueLookup.Count))
 			{
 				return true;
 			}
@@ -100,26 +100,26 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		{
 			return 0;
 		}
-		public int GetId(T obj)
+		public int GetId(T value)
 		{
-			if (obj == null)
+			if (value == null)
 			{
 				return 0;
 			}
-			else if (this.IsDefined (obj))
+			else if (this.IsDefined (value))
 			{
-				return this.objectToIdLookup[obj];
+				return this.valueToIdLookup[value];
 			}
 			else
 			{
 				return -1;
 			}
 		}
-		public T GetObject(int id)
+		public T GetValue(int id)
 		{
 			if (this.IsDefined (id))
 			{
-				return this.idToObjectLookup[id];
+				return this.idToValueLookup[id];
 			}
 			else
 			{
@@ -127,19 +127,19 @@ namespace Epsitec.Common.Types.Serialization.Generic
 			}
 		}
 
-		public IEnumerable<T> GetObjects(System.Type type)
+		public IEnumerable<T> GetValues(System.Type type)
 		{
 			if (this.typeInformation.ContainsKey (type))
 			{
 				foreach (int id in this.typeInformation[type])
 				{
-					yield return this.idToObjectLookup[id];
+					yield return this.idToValueLookup[id];
 				}
 			}
 		}
 		
-		List<T>									idToObjectLookup = new List<T> ();
-		Dictionary<T, int>						objectToIdLookup = new Dictionary<T, int> ();
+		List<T>									idToValueLookup = new List<T> ();
+		Dictionary<T, int>						valueToIdLookup = new Dictionary<T, int> ();
 		Dictionary<System.Type, List<int>>		typeInformation = new Dictionary<System.Type, List<int>> ();
 	}
 }
