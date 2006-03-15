@@ -15,11 +15,12 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ParagraphMain;
 
-			this.buttonJustifHLeft   = this.CreateIconButton("JustifHLeft");
-			this.buttonJustifHCenter = this.CreateIconButton("JustifHCenter");
-			this.buttonJustifHRight  = this.CreateIconButton("JustifHRight");
-			this.buttonJustifHJustif = this.CreateIconButton("JustifHJustif");
-			this.buttonJustifHAll    = this.CreateIconButton("JustifHAll");
+			this.buttonJustif = new IconButtonCombo(this);
+			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHLeft", Misc.Icon("JustifHLeft"), "Aligné à gauche"));
+			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHCenter", Misc.Icon("JustifHCenter"), "Centré"));
+			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHRight", Misc.Icon("JustifHRight"), "Aligné à droite"));
+			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHJustif", Misc.Icon("JustifHJustif"), "Justifié"));
+			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHAll", Misc.Icon("JustifHAll"), "Tout"));
 
 			this.buttonIndentMinus   = this.CreateIconButton("ParagraphIndentMinus");
 			this.buttonIndentPlus    = this.CreateIconButton("ParagraphIndentPlus");
@@ -68,18 +69,11 @@ namespace Epsitec.Common.Document.Ribbons
 
 			Rectangle rect = this.UsefulZone;
 			rect.Height = dy;
-			rect.Width = dx;
+			rect.Width = dx*1.5;
 			rect.Offset(0, dy+5);
-			this.buttonJustifHLeft.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonJustifHCenter.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonJustifHRight.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonJustifHJustif.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonJustifHAll.Bounds = rect;
-			rect.Offset(dx+5, 0);
+			this.buttonJustif.Bounds = rect;
+			rect.Offset(dx*1.5+5, 0);
+			rect.Width = dx;
 			this.buttonIndentMinus.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonIndentPlus.Bounds = rect;
@@ -105,11 +99,7 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		protected IconButton				buttonJustifHLeft;
-		protected IconButton				buttonJustifHCenter;
-		protected IconButton				buttonJustifHRight;
-		protected IconButton				buttonJustifHJustif;
-		protected IconButton				buttonJustifHAll;
+		protected IconButtonCombo			buttonJustif;
 		protected IconButton				buttonLeading08;
 		protected IconButton				buttonLeading10;
 		protected IconButton				buttonLeading15;
