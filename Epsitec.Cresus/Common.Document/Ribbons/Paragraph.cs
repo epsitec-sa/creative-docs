@@ -16,11 +16,11 @@ namespace Epsitec.Common.Document.Ribbons
 			this.title.Text = Res.Strings.Action.ParagraphMain;
 
 			this.buttonJustif = new IconButtonCombo(this);
-			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHLeft", Misc.Icon("JustifHLeft"), "Aligné à gauche"));
-			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHCenter", Misc.Icon("JustifHCenter"), "Centré"));
-			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHRight", Misc.Icon("JustifHRight"), "Aligné à droite"));
-			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHJustif", Misc.Icon("JustifHJustif"), "Justifié"));
-			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHAll", Misc.Icon("JustifHAll"), "Tout"));
+			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHLeft",   Misc.Icon("JustifHLeft"),   Res.Strings.Property.Justif.JustifHLeft));
+			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHCenter", Misc.Icon("JustifHCenter"), Res.Strings.Property.Justif.JustifHCenter));
+			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHRight",  Misc.Icon("JustifHRight"),  Res.Strings.Property.Justif.JustifHRight));
+			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHJustif", Misc.Icon("JustifHJustif"), Res.Strings.Property.Justif.JustifHJustif));
+			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHAll",    Misc.Icon("JustifHAll"),    Res.Strings.Property.Justif.JustifHAll));
 
 			this.buttonIndentMinus   = this.CreateIconButton("ParagraphIndentMinus");
 			this.buttonIndentPlus    = this.CreateIconButton("ParagraphIndentPlus");
