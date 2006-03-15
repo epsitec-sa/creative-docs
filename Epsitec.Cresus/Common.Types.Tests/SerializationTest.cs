@@ -19,31 +19,6 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckAttributes()
-		{
-			List<string> names = new List<string> ();
-
-			foreach (System.Type type in DependencyClassAttribute.GetRegisteredTypes (this.GetType ().Assembly))
-			{
-				names.Add (type.FullName);
-			}
-			
-			string[] array = new string[] { "Epsitec.Common.Types.SerializationTest+MyItem", "Epsitec.Common.Types.SerializationTest+MySimpleObject" };
-
-			Assert.IsTrue (Collection.ContainsAll (names, array));
-		}
-
-		[Test]
-		public void CheckDependencyClassManager()
-		{
-			DependencyObjectType t1 = Serialization.DependencyClassManager.Current.FindObjectType ("Epsitec.Common.Types.SerializationTest+MyItem");
-			DependencyObjectType t2 = Serialization.DependencyClassManager.Current.FindObjectType ("Epsitec.Common.Types.SerializationTest+MySimpleObject");
-
-			Assert.AreEqual (typeof (MyItem), t1.SystemType);
-			Assert.AreEqual (typeof (MySimpleObject), t2.SystemType);
-		}
-
-		[Test]
 		public void CheckAllocationSpeed()
 		{
 			System.Type type = typeof (MySimpleObject);
@@ -97,6 +72,31 @@ namespace Epsitec.Common.Types
 
 			stopwatch.Stop ();
 			System.Console.Out.WriteLine ("CreateEmptyObject: {0} μs, {1} executions.", 1.0M * stopwatch.ElapsedMilliseconds / (steps / 1000), steps);
+		}
+
+		[Test]
+		public void CheckAttributes()
+		{
+			List<string> names = new List<string> ();
+
+			foreach (System.Type type in DependencyClassAttribute.GetRegisteredTypes (this.GetType ().Assembly))
+			{
+				names.Add (type.FullName);
+			}
+			
+			string[] array = new string[] { "Epsitec.Common.Types.SerializationTest+MyItem", "Epsitec.Common.Types.SerializationTest+MySimpleObject" };
+
+			Assert.IsTrue (Collection.ContainsAll (names, array));
+		}
+
+		[Test]
+		public void CheckDependencyClassManager()
+		{
+			DependencyObjectType t1 = Serialization.DependencyClassManager.Current.FindObjectType ("Epsitec.Common.Types.SerializationTest+MyItem");
+			DependencyObjectType t2 = Serialization.DependencyClassManager.Current.FindObjectType ("Epsitec.Common.Types.SerializationTest+MySimpleObject");
+
+			Assert.AreEqual (typeof (MyItem), t1.SystemType);
+			Assert.AreEqual (typeof (MySimpleObject), t2.SystemType);
 		}
 
 		[Test]

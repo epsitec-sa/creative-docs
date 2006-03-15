@@ -266,14 +266,19 @@ namespace Epsitec.Common.Types
 		}
 		private void BuildDynamicAllocator()
 		{
-			System.Reflection.Emit.DynamicMethod dm = new System.Reflection.Emit.DynamicMethod ("DynamicAllocator", this.systemType, System.Type.EmptyTypes, typeof (DependencyObjectType).Module, true);
-			System.Reflection.Emit.ILGenerator ilgen = dm.GetILGenerator ();
+			//	Create a small piece of dynamic code which does simply "new T()"
+			//	for the underlying system type. This code relies on lightweight
+			//	code generation and results in a very fast dynamic allocator.
+			
+			System.Reflection.Module module = typeof (DependencyObjectType).Module;
+			System.Reflection.Emit.DynamicMethod dynamicMethod = new System.Reflection.Emit.DynamicMethod ("DynamicAllocator", this.systemType, System.Type.EmptyTypes, module, true);
+			System.Reflection.Emit.ILGenerator ilGen = dynamicMethod.GetILGenerator ();
 
-			ilgen.Emit (System.Reflection.Emit.OpCodes.Nop);
-			ilgen.Emit (System.Reflection.Emit.OpCodes.Newobj, this.systemType.GetConstructor (System.Type.EmptyTypes));
-			ilgen.Emit (System.Reflection.Emit.OpCodes.Ret);
+			ilGen.Emit (System.Reflection.Emit.OpCodes.Nop);
+			ilGen.Emit (System.Reflection.Emit.OpCodes.Newobj, this.systemType.GetConstructor (System.Type.EmptyTypes));
+			ilGen.Emit (System.Reflection.Emit.OpCodes.Ret);
 
-			this.allocator = (Allocator) dm.CreateDelegate (typeof (Allocator));
+			this.allocator = (Allocator) dynamicMethod.CreateDelegate (typeof (Allocator));
 		}
 		private void ExecuteTypeStaticConstructor()
 		{
