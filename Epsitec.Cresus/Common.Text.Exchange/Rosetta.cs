@@ -45,6 +45,12 @@ namespace Epsitec.Common.Text.Exchange
 				this.CloseTag (HtmlAttribute.Bold);
 			}
 
+			if (precedIsUnderlined && !isUnderlined)
+			{
+				this.CloseTag (HtmlAttribute.Underlined);
+			}
+
+
 			if (!precedIsItalic && isItalic)
 			{
 				this.OpenTag (HtmlAttribute.Italic);
@@ -56,8 +62,15 @@ namespace Epsitec.Common.Text.Exchange
 				this.OpenTag (HtmlAttribute.Bold);
 			}
 
+
+			if (!precedIsUnderlined && isUnderlined)
+			{
+				this.OpenTag (HtmlAttribute.Underlined);
+			}
+
 			precedIsItalic = isItalic;
 			precedIsBold = isBold;
+			precedIsUnderlined = isUnderlined;
 
 			this.AppendTagsToClose ();
 			this.AppendTagsToOpen ();
@@ -72,6 +85,11 @@ namespace Epsitec.Common.Text.Exchange
 		public void SetBold(bool bold)
 		{
 			this.isBold = bold;
+		}
+
+		public void SetUnderlined(bool underlined)
+		{
+			this.isUnderlined = underlined;
 		}
 
 		public void SetFont(string fontName, int fontSize)
@@ -107,6 +125,10 @@ namespace Epsitec.Common.Text.Exchange
 				case HtmlAttribute.Bold:
 					retval = this.GetHtmlTag ("b", tagmode);
 					break;
+				case HtmlAttribute.Underlined:
+					retval = this.GetHtmlTag ("u", tagmode);
+					break;
+
 			}
 
 			return retval;
@@ -122,30 +144,53 @@ namespace Epsitec.Common.Text.Exchange
 			this.tagsToOpen.Add (opentag);
 		}
 
+
+		private void CloseTagsIfPossible()
+		{
+			// ferme tous les tags dans this.tagsToClose si possible
+
+			bool found = true;
+
+			while (found)
+			{
+				found = false;
+				for (int i = 0; i < this.tagsToClose.Count; i++)
+				{
+					HtmlAttribute attr = (HtmlAttribute) this.tagsToClose[i];
+					if ((HtmlAttribute) this.openTagsStack.Peek () == attr)
+					{
+						this.output.Append (this.AttributeToString (attr, HtmlTagMode.Close, null));
+						this.tagsToClose.RemoveAt (i);
+						i--;
+						this.openTagsStack.Pop ();
+						// this.tagsToOpen.Add(attr) ;
+						found = true;
+					}
+				}
+			}
+		}
+
 		private void AppendTagsToClose()
 		{
-			bool found = false;
-			
-			for (int i = 0; i < this.tagsToClose.Count; i++)
+			System.Collections.ArrayList tmpattributes = new System.Collections.ArrayList() ;
+
+			while (this.tagsToClose.Count > 0)
 			{
-				HtmlAttribute attr = (HtmlAttribute)this.tagsToClose[i] ;
-				if ((HtmlAttribute)this.openTagsStack.Peek () == attr)
+				CloseTagsIfPossible ();
+
+				if (this.tagsToClose.Count > 0)
 				{
-					this.output.Append(this.AttributeToString(attr, HtmlTagMode.Close, null)) ;
-					this.tagsToClose.RemoveAt(i) ;
-					i-- ;
-					this.openTagsStack.Pop() ;
-					this.tagsToOpen.Add(attr) ;
-					found = true;
+					HtmlAttribute topattribute = (HtmlAttribute) this.openTagsStack.Pop ();
+					tmpattributes.Add (topattribute);
+					this.output.Append (this.AttributeToString (topattribute, HtmlTagMode.Close, null));
 				}
 			}
 
-			for (int i = 0; i <this.tagsToClose.Count; i++)
+			for (int i = 0; i < tmpattributes.Count; i++)
 			{
-				HtmlAttribute attr = (HtmlAttribute)this.openTagsStack.Pop ();
-
-				this.output.Append (this.AttributeToString (attr, HtmlTagMode.Close, null));
-				this.tagsToOpen.Add (attr);
+				HtmlAttribute attr;
+				attr = (HtmlAttribute) tmpattributes[i];
+				this.output.Append (this.AttributeToString (attr, HtmlTagMode.Open, null));
 			}
 
 			this.tagsToClose.Clear ();
@@ -168,6 +213,7 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			Bold,
 			Italic,
+			Underlined,
 			Font
 		}
 
@@ -180,9 +226,11 @@ namespace Epsitec.Common.Text.Exchange
 
 		private bool isItalic = false;
 		private bool isBold = false;
+		private bool isUnderlined = false;
 
 		private bool precedIsItalic = false;
 		private bool precedIsBold = false;
+		private bool precedIsUnderlined = false;
 
 		private HtmlAttribute lastAttributeSet;
 
@@ -250,6 +298,8 @@ namespace Epsitec.Common.Text.Exchange
 
 				htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
 				htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
+				htmlText.SetUnderlined (textWrapper.Defined.IsUnderlineDefined);//  && textWrapper.Defined.InvertBold);
+				
 
 				int i;
 
