@@ -302,6 +302,13 @@ namespace Epsitec.Common.Types
 		}
 		
 		[Test]
+		[ExpectedException (typeof (System.TypeInitializationException))]
+		public void CheckPropertiesEx1()
+		{
+			DependencyProperty p = Test2b.StandardProperty;
+		}
+		
+		[Test]
 		public void CheckPropertyPath()
 		{
 			DependencyPropertyPath pp1 = new DependencyPropertyPath ();
@@ -905,6 +912,17 @@ namespace Epsitec.Common.Types
 			}
 
 			public static DependencyProperty StandardProperty = DependencyProperty.Register ("Standard", typeof (string), typeof (Test2));
+		}
+		public class Test2b : Test2
+		{
+			public Test2b()
+			{
+			}
+			
+			//	Provoque une exception à l'initialisation, car "Standard" est hérité
+			//	de Test2.
+			
+			public static new DependencyProperty StandardProperty = DependencyProperty.Register ("Standard", typeof (string), typeof (Test2b));
 		}
 		#endregion
 

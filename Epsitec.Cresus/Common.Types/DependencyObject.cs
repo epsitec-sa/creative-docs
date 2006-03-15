@@ -402,29 +402,43 @@ namespace Epsitec.Common.Types
 
 			lock (DependencyObject.declarations)
 			{
-				TypeDeclaration typeDeclaration;
+				DependencyObjectType type = DependencyObjectType.FromSystemType (ownerType);
+				
+				System.Type t = ownerType;
+
+				//	Verify that neither the owner type, nor any of its ancestors,
+				//	already defines the specified property :
+
+				while (t != typeof (object))
+				{
+					if (DependencyObject.declarations.ContainsKey (t))
+					{
+						TypeDeclaration typeDeclaration;
+						typeDeclaration = DependencyObject.declarations[t];
+
+						if (typeDeclaration.ContainsKey (property.Name))
+						{
+							throw new System.ArgumentException (string.Format ("DependencyProperty named '{0}' already exists for type {1} (defined by {2})", property.Name, ownerType, t));
+						}
+					}
+
+					t = t.BaseType;
+				}
 
 				if (DependencyObject.declarations.ContainsKey (ownerType) == false)
 				{
+					TypeDeclaration typeDeclaration;
 					typeDeclaration = new TypeDeclaration ();
 					typeDeclaration[property.Name] = property;
 					DependencyObject.declarations[ownerType] = typeDeclaration;
 				}
 				else
 				{
+					TypeDeclaration typeDeclaration;
 					typeDeclaration = DependencyObject.declarations[ownerType];
-					
-					if (typeDeclaration.ContainsKey (property.Name))
-					{
-						throw new System.ArgumentException (string.Format ("DependencyProperty named {0} already exists for type {1}", property.Name, ownerType));
-					}
-					else
-					{
-						typeDeclaration[property.Name] = property;
-					}
+					typeDeclaration[property.Name] = property;
 				}
 
-				DependencyObjectType type = DependencyObjectType.FromSystemType (ownerType);
 				type.Register (property);
 
 				System.Threading.Interlocked.Increment (ref DependencyObject.registeredPropertyCount);
