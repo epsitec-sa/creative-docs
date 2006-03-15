@@ -237,13 +237,16 @@ namespace Epsitec.Common.Types
 			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (System.Console.Out);
 			
 			xmlWriter.Indentation = 2;
+			xmlWriter.IndentChar = ' ';
 			xmlWriter.Formatting = System.Xml.Formatting.Indented;
+			xmlWriter.WriteStartDocument (true);
 			xmlWriter.WriteStartElement ("root");
 
 			Serialization.Context context = new Serialization.Context (new Serialization.IO.XmlWriter (xmlWriter));
 			Storage.Serialize (root, context);
 
 			xmlWriter.WriteEndElement ();
+			xmlWriter.WriteEndDocument ();
 			xmlWriter.Flush ();
 			xmlWriter.Close ();
 		}
@@ -276,6 +279,9 @@ namespace Epsitec.Common.Types
 			//	a --+--> b --+--> c1
 			//	    |        +--> c2
 			//	    +--> q
+
+			q.Friend = b;
+			b.Friend = q;
 			
 			return a;
 		}
@@ -382,6 +388,17 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyItem.CascadeProperty, value);
 				}
 			}
+			public MyItem						Friend
+			{
+				get
+				{
+					return this.GetValue (MyItem.FriendProperty) as MyItem;
+				}
+				set
+				{
+					this.SetValue (MyItem.FriendProperty, value);
+				}
+			}
 			
 			public void AddChild(MyItem item)
 			{
@@ -433,6 +450,7 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (MyItem), new DependencyPropertyMetadata (MyItem.GetValueHasChildren));
 			public static DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (string), typeof (MyItem));
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (MyItem), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Instance));
+			public static DependencyProperty FriendProperty = DependencyProperty.Register ("Friend", typeof (MyItem), typeof (MyItem));
 
 			MyItem parent;
 			List<MyItem> children;

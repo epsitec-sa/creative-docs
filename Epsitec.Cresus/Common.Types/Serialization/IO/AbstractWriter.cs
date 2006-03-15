@@ -11,8 +11,24 @@ namespace Epsitec.Common.Types.Serialization.IO
 		{
 		}
 
+		public virtual void BeginStorageBundle()
+		{
+		}
+		public virtual void EndStorageBundle()
+		{
+		}
+		
 		public abstract void WriteTypeDefinition(int id, string p);
 		public abstract void WriteObjectDefinition(int id, int typeId);
-		public abstract void WriteObjectData(int id, DependencyObject obj);
+
+		public virtual void BeginObject(int id, DependencyObject obj)
+		{
+		}
+		public virtual void EndObject(int id, DependencyObject obj)
+		{
+		}
+
+		public abstract void WriteObjectFieldReference(DependencyObject obj, string name, int id);
+		public abstract void WriteObjectFieldData(DependencyObject obj, string name, string value);
 	}
 }

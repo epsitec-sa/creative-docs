@@ -242,6 +242,7 @@
     <Compile Include="Serialization\DependencyClassManager.cs" />
     <Compile Include="Serialization\Generic\Map.cs" />
     <Compile Include="Serialization\GraphVisitor.cs" />
+    <Compile Include="Serialization\IO\XmlSupport.cs" />
     <Compile Include="Serialization\IO\XmlWriter.cs" />
     <Compile Include="Storage.cs" />
     <Compile Include="StringDict.cs">

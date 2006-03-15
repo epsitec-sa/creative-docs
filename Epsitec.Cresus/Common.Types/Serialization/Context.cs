@@ -77,7 +77,14 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			this.AssertWritable ();
 
-			this.writer.WriteObjectData (id, obj);
+			this.writer.BeginObject (id, obj);
+
+			foreach (KeyValuePair<DependencyProperty, int> entry in this.visitor.GetDependencyObjectFieldReferences (obj))
+			{
+				this.writer.WriteObjectFieldReference (obj, entry.Key.Name, entry.Value);
+			}
+			
+			this.writer.EndObject (id, obj);
 		}
 
 		private void AssertWritable()

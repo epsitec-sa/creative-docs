@@ -55,6 +55,25 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
+		public IEnumerable<KeyValuePair<DependencyProperty, int>> GetDependencyObjectFieldReferences(DependencyObject obj)
+		{
+			foreach (LocalValueEntry entry in obj.LocalValueEntries)
+			{
+				DependencyPropertyMetadata metadata = entry.Property.GetMetadata (obj);
+
+				if ((entry.Property.IsReadWrite) ||
+					(metadata.CanSerializeReadOnly))
+				{
+					DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
+
+					if (dependencyObjectValue != null)
+					{
+						yield return new KeyValuePair<DependencyProperty, int> (entry.Property, this.objMap.GetId (dependencyObjectValue));
+					}
+				}
+			}
+		}
+
 		private Generic.Map<DependencyObject>	objMap = new Generic.Map<DependencyObject> ();
 	}
 }

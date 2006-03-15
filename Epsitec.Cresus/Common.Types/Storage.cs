@@ -18,18 +18,25 @@ namespace Epsitec.Common.Types
 
 			int newTypeCount = map.TypeCount;
 			int newObjCount = map.ValueCount;
-			
-			for (int id = typeCount; id < newTypeCount; id++)
+
+			if (newObjCount > objCount)
 			{
-				context.DefineType (id, map.GetType (id));
-			}
-			for (int id = objCount; id < newObjCount; id++)
-			{
-				context.DefineObject (id, map.GetValue (id));
-			}
-			for (int id = objCount; id < newObjCount; id++)
-			{
-				context.StoreObject (id, map.GetValue (id));
+				context.Writer.BeginStorageBundle ();
+				
+				for (int id = typeCount; id < newTypeCount; id++)
+				{
+					context.DefineType (id+1, map.GetType (id));
+				}
+				for (int id = objCount; id < newObjCount; id++)
+				{
+					context.DefineObject (id, map.GetValue (id));
+				}
+				for (int id = objCount; id < newObjCount; id++)
+				{
+					context.StoreObject (id, map.GetValue (id));
+				}
+				
+				context.Writer.EndStorageBundle ();
 			}
 		}
 	}
