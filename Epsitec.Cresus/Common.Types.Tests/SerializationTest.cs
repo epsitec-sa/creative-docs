@@ -102,7 +102,7 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckMap()
 		{
-			Serialization.Map map = new Epsitec.Common.Types.Serialization.Map ();
+			Serialization.Generic.Map<DependencyObject> map = new Serialization.Generic.Map<DependencyObject> ();
 
 			Assert.AreEqual (0, map.GetNullId ());
 			Assert.AreEqual (0, map.GetId (null));
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Types
 		[ExpectedException (typeof (System.Collections.Generic.KeyNotFoundException))]
 		public void CheckMapEx1()
 		{
-			Serialization.Map map = new Epsitec.Common.Types.Serialization.Map ();
+			Serialization.Generic.Map<DependencyObject> map = new Serialization.Generic.Map<DependencyObject> ();
 			
 			map.GetObject (1);
 		}
@@ -207,12 +207,7 @@ namespace Epsitec.Common.Types
 			
 			visitor.VisitSerializableNodes (a);
 
-			List<DependencyObject> objects = new List<DependencyObject> ();
-			
-			foreach (DependencyObject obj in visitor.Map.RecordedObjects)
-			{
-				objects.Add (obj);
-			}
+			List<DependencyObject> objects = Collection.ToList (visitor.ObjectMap.RecordedObjects);
 
 			Assert.AreEqual (null, objects[0]);
 			Assert.AreEqual (a, objects[1]);

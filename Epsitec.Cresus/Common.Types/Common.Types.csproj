@@ -237,8 +237,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Serialization\DependencyClassManager.cs" />
+    <Compile Include="Serialization\Generic\Map.cs" />
     <Compile Include="Serialization\GraphVisitor.cs" />
-    <Compile Include="Serialization\Map.cs" />
     <Compile Include="Storage.cs" />
     <Compile Include="StringDict.cs">
       <SubType>Code</SubType>

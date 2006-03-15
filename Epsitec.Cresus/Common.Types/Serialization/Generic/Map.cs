@@ -3,14 +3,14 @@
 
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Types.Serialization
+namespace Epsitec.Common.Types.Serialization.Generic
 {
 	/// <summary>
-	/// The Map class is used to record Dependency Objects and associate them with
+	/// The generic Map class is used to record objects and associate them with
 	/// unique identifiers. These identifiers are needed when serializing object
 	/// graphs.
 	/// </summary>
-	public class Map
+	public class Map<T> where T : class
 	{
 		public Map()
 		{
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Types.Serialization
 				}
 			}
 		}
-		public IEnumerable<DependencyObject>	RecordedObjects
+		public IEnumerable<T>					RecordedObjects
 		{
 			get
 			{
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 		
-		public bool Record(DependencyObject obj)
+		public bool Record(T obj)
 		{
 			if (obj == null)
 			{
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
-		public bool IsDefined(DependencyObject obj)
+		public bool IsDefined(T obj)
 		{
 			if (obj == null)
 			{
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			return 0;
 		}
-		public int GetId(DependencyObject obj)
+		public int GetId(T obj)
 		{
 			if (obj == null)
 			{
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Types.Serialization
 				return -1;
 			}
 		}
-		public DependencyObject GetObject(int id)
+		public T GetObject(int id)
 		{
 			if (this.IsDefined (id))
 			{
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
-		public IEnumerable<DependencyObject> GetObjects(System.Type type)
+		public IEnumerable<T> GetObjects(System.Type type)
 		{
 			if (this.typeInformation.ContainsKey (type))
 			{
@@ -138,8 +138,8 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 		
-		List<DependencyObject>					idToObjectLookup = new List<DependencyObject> ();
-		Dictionary<DependencyObject, int>		objectToIdLookup = new Dictionary<DependencyObject, int> ();
+		List<T>									idToObjectLookup = new List<T> ();
+		Dictionary<T, int>						objectToIdLookup = new Dictionary<T, int> ();
 		Dictionary<System.Type, List<int>>		typeInformation = new Dictionary<System.Type, List<int>> ();
 	}
 }

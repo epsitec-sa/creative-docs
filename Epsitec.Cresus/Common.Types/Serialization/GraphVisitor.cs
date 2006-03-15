@@ -11,17 +11,17 @@ namespace Epsitec.Common.Types.Serialization
 		{
 		}
 
-		public Map								Map
+		public Generic.Map<DependencyObject>	ObjectMap
 		{
 			get
 			{
-				return this.map;
+				return this.objMap;
 			}
 		}
 
 		public void VisitSerializableNodes(DependencyObject obj)
 		{
-			if (this.map.Record (obj))
+			if (this.objMap.Record (obj))
 			{
 				//	Visit every locally defined property which either refers to
 				//	a DependencyObject or to a collection of such.
@@ -55,6 +55,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
-		private Map								map = new Map ();
+		private Generic.Map<DependencyObject>	objMap = new Generic.Map<DependencyObject> ();
+		private Generic.Map<System.Type>		typeMap = new Generic.Map<System.Type> ();
 	}
 }
