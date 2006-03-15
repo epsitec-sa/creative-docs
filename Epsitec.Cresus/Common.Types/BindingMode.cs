@@ -15,6 +15,6 @@ namespace Epsitec.Common.Types
 		
 		TwoWay,
 		
-		UseDefaultValue,
+//		UseDefaultValue,
 	}
 }

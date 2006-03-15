@@ -81,6 +81,41 @@ namespace Epsitec.Common.Types
 			return new DeferManager (this);
 		}
 
+		public static bool IsBindingTarget(BindingMode mode)
+		{
+			switch (mode)
+			{
+				case BindingMode.OneTime:
+				case BindingMode.OneWay:
+				case BindingMode.TwoWay:
+					return true;
+
+				case BindingMode.OneWayToSource:
+				case BindingMode.None:
+					return false;
+
+				default:
+					throw new System.ArgumentOutOfRangeException (string.Format ("BindingMode.{0} not supported", mode));
+			}
+		}
+		public static bool IsBindingSource(BindingMode mode)
+		{
+			switch (mode)
+			{
+				case BindingMode.None:
+				case BindingMode.OneTime:
+				case BindingMode.OneWay:
+					return false;
+
+				case BindingMode.OneWayToSource:
+				case BindingMode.TwoWay:
+					return true;
+
+				default:
+					throw new System.ArgumentOutOfRangeException (string.Format ("BindingMode.{0} not supported", mode));
+			}
+		}
+
 		internal void Add(BindingExpression expression)
 		{
 			this.expressions.Add (expression);

@@ -272,7 +272,7 @@ namespace Epsitec.Common.Types
 
 			a.Value = "A";
 			b.Value = "B";
-			q.Value = "Q";
+			q.Value = "Q{<\"&>}";
 			c1.Value = "C1";
 			c2.Value = "C2";
 
@@ -280,8 +280,22 @@ namespace Epsitec.Common.Types
 			//	    |        +--> c2
 			//	    +--> q
 
+			a.Friend = c2;
 			q.Friend = b;
 			b.Friend = q;
+
+			c1.Price = 125.95M;
+			c2.Price = 3899.20M;
+
+			Binding binding = new Binding ();
+			
+			binding.Source = a;
+			binding.Path = new DependencyPropertyPath ("Friend.Price"); //("Children[0].Children[1]");
+			binding.Mode = BindingMode.OneWay;
+
+			q.SetBinding (MyItem.PriceProperty, binding);
+
+			Assert.AreEqual (c2.Price, q.Price);
 			
 			return a;
 		}
@@ -399,6 +413,17 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyItem.FriendProperty, value);
 				}
 			}
+			public decimal						Price
+			{
+				get
+				{
+					return (decimal) this.GetValue (MyItem.PriceProperty);
+				}
+				set
+				{
+					this.SetValue (MyItem.PriceProperty, value);
+				}
+			}
 			
 			public void AddChild(MyItem item)
 			{
@@ -451,6 +476,7 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (string), typeof (MyItem));
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (MyItem), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Instance));
 			public static DependencyProperty FriendProperty = DependencyProperty.Register ("Friend", typeof (MyItem), typeof (MyItem));
+			public static DependencyProperty PriceProperty = DependencyProperty.Register ("Price", typeof (decimal), typeof (MyItem));
 
 			MyItem parent;
 			List<MyItem> children;

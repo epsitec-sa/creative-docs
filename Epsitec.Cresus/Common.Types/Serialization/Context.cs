@@ -84,21 +84,151 @@ namespace Epsitec.Common.Types.Serialization
 
 			foreach (PropertyValue<int> field in fields.Ids)
 			{
-				this.writer.WriteObjectFieldReference (obj, field.Name, field.Value);
+				if (field.IsDataBound == false)
+				{
+					this.writer.WriteObjectFieldReference (obj, field.Name, field.Value);
+				}
 			}
 			foreach (PropertyValue<string> field in fields.Values)
 			{
-				this.writer.WriteObjectFieldValue (obj, field.Name, field.Value);
+				if (field.IsDataBound == false)
+				{
+					this.writer.WriteObjectFieldValue (obj, field.Name, Context.EscapeString (field.Value));
+				}
 			}
+			foreach (KeyValuePair<DependencyProperty, Binding> field in fields.Bindings)
+			{
+				this.writer.WriteObjectFieldValue (obj, field.Key.Name, this.ConvertBindingToString (field.Value));
+			}
+			
 			foreach (PropertyValue<IList<int>> field in fields.IdCollections)
 			{
-				if (field.Value.Count > 0)
+				if ((field.IsDataBound == false) &&
+					(field.Value.Count > 0))
 				{
 					this.writer.WriteObjectFieldReferenceList (obj, field.Name, field.Value);
 				}
 			}
 			
 			this.writer.EndObject (id, obj);
+		}
+
+		private static string EscapeString(string value)
+		{
+			if ((value == null) ||
+				(value.IndexOfAny (new char[] { '{', '}' }) < 0))
+			{
+				return value;
+			}
+			else
+			{
+				return string.Concat ("{}", value);
+			}
+		}
+		private static string UnescapeString(string value)
+		{
+			if ((value != null) &&
+				(value.StartsWith ("{}")))
+			{
+				return value.Substring (2);
+			}
+			else
+			{
+				return value;
+			}
+		}
+		
+		private static bool IsMarkupExtension(string value)
+		{
+			if ((value != null) &&
+				(value.StartsWith ("{")) &&
+				(value.StartsWith ("{}") == false) &&
+				(value.EndsWith ("}")))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		private static string ConvertToMarkupExtension(string value)
+		{
+			return string.Concat ("{", value, "}");
+		}
+		private static string ConvertFromMarkupExtension(string value)
+		{
+			System.Diagnostics.Debug.Assert (Context.IsMarkupExtension (value));
+			return value.Substring (1, value.Length-2);
+		}
+
+		private string ConvertBindingToString(Binding binding)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append ("{");
+			buffer.Append ("Binding ");
+
+			int args = 0;
+
+			DependencyObject source = binding.Source as DependencyObject;
+			BindingMode mode = binding.Mode;
+			DependencyPropertyPath path = binding.Path;
+
+			if (source != null)
+			{
+				int id = this.ObjectMap.GetId (source);
+
+				if (id < 0)
+				{
+					//	TODO: handle unknown sources
+				}
+				else
+				{
+					if (args++ > 0)
+					{
+						buffer.Append (", ");
+					}
+					
+					buffer.Append ("Source={ref ");
+					buffer.Append (id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+					buffer.Append ("}");
+				}
+			}
+
+			if (path != null)
+			{
+				string value = path.GetFullPath ();
+
+				if (value.Length > 0)
+				{
+					if (args++ > 0)
+					{
+						buffer.Append (", ");
+					}
+
+					buffer.Append ("Path=");
+					buffer.Append (value);
+				}
+			}
+
+			if (mode != BindingMode.None)
+			{
+				string value = mode.ToString ();
+
+				if (args++ > 0)
+				{
+					buffer.Append (", ");
+				}
+				
+				buffer.Append ("Mode=");
+				buffer.Append (value);
+			}
+			
+			buffer.Append ("}");
+			
+			return buffer.ToString ();
 		}
 
 		private void AssertWritable()
