@@ -300,14 +300,23 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("HasChildren", properties[3].Name);
 			Assert.AreEqual ("Parent", properties[4].Name);
 		}
-		
+
 		[Test]
 		[ExpectedException (typeof (System.TypeInitializationException))]
 		public void CheckPropertiesEx1()
 		{
 			DependencyProperty p = Test2b.StandardProperty;
 		}
-		
+
+		[Test]
+		public void CheckPropertiesEx2()
+		{
+			DependencyProperty p;
+			
+			p = Test1b.AttachedProperty;
+			p = Test1c.AttachedProperty;
+		}
+
 		[Test]
 		public void CheckPropertyPath()
 		{
@@ -904,6 +913,30 @@ namespace Epsitec.Common.Types
 
 			public static DependencyProperty AttachedProperty = DependencyProperty.RegisterAttached ("Attached", typeof (string), typeof (Test1));
 			public static DependencyProperty StandardProperty = DependencyProperty.Register ("Standard", typeof (string), typeof (Test1));
+		}
+		public class Test1b : Test1
+		{
+			public Test1b()
+			{
+			}
+
+			//	Ne provoque pas d'exception à l'initialisation, car "Attached", bien que
+			//	hérité de Test1, n'est pas incompatible (c'est une propriété attachée).
+
+			public static new DependencyProperty AttachedProperty = DependencyProperty.RegisterAttached ("Attached", typeof (string), typeof (Test1b));
+		}
+		public class Test1c : Test1
+		{
+			public Test1c()
+			{
+			}
+
+			//	Ne provoque pas d'exception à l'initialisation, car "Attached", bien que
+			//	hérité de Test1, n'est pas incompatible (dans Test1, c'est une propriété
+			//	attachée).
+
+			public static new DependencyProperty AttachedProperty = DependencyProperty.Register ("Attached", typeof (string), typeof (Test1c));
+			public static new DependencyProperty StandardProperty = DependencyProperty.RegisterAttached ("Standard", typeof (string), typeof (Test1c));
 		}
 		public class Test2 : Types.DependencyObject
 		{

@@ -404,39 +404,45 @@ namespace Epsitec.Common.Types
 			{
 				DependencyObjectType type = DependencyObjectType.FromSystemType (ownerType);
 				
-				System.Type t = ownerType;
+				string name = property.Name;
 
 				//	Verify that neither the owner type, nor any of its ancestors,
 				//	already defines the specified property :
 
-				while (t != typeof (object))
+				if (property.IsAttached == false)
 				{
-					if (DependencyObject.declarations.ContainsKey (t))
+					System.Type t = ownerType;
+					
+					while (t != typeof (object))
 					{
-						TypeDeclaration typeDeclaration;
-						typeDeclaration = DependencyObject.declarations[t];
-
-						if (typeDeclaration.ContainsKey (property.Name))
+						if (DependencyObject.declarations.ContainsKey (t))
 						{
-							throw new System.ArgumentException (string.Format ("DependencyProperty named '{0}' already exists for type {1} (defined by {2})", property.Name, ownerType, t));
-						}
-					}
+							TypeDeclaration typeDeclaration;
+							typeDeclaration = DependencyObject.declarations[t];
 
-					t = t.BaseType;
+							if ((typeDeclaration.ContainsKey (name)) &&
+							(typeDeclaration[name].IsAttached == false))
+							{
+								throw new System.ArgumentException (string.Format ("DependencyProperty named '{0}' already exists for type {1} (defined by {2})", name, ownerType, t));
+							}
+						}
+
+						t = t.BaseType;
+					}
 				}
 
 				if (DependencyObject.declarations.ContainsKey (ownerType) == false)
 				{
 					TypeDeclaration typeDeclaration;
 					typeDeclaration = new TypeDeclaration ();
-					typeDeclaration[property.Name] = property;
+					typeDeclaration[name] = property;
 					DependencyObject.declarations[ownerType] = typeDeclaration;
 				}
 				else
 				{
 					TypeDeclaration typeDeclaration;
 					typeDeclaration = DependencyObject.declarations[ownerType];
-					typeDeclaration[property.Name] = property;
+					typeDeclaration[name] = property;
 				}
 
 				type.Register (property);
