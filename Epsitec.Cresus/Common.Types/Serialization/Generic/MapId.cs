@@ -58,7 +58,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 				
 				return false;
 			}
-			else if (this.IsDefined (value))
+			else if (this.IsValueDefined (value))
 			{
 				//	Nothing to do: the value has already been registered before.
 
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 			}
 		}
 
-		public bool IsDefined(T value)
+		public bool IsValueDefined(T value)
 		{
 			if (value == null)
 			{
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 				return false;
 			}
 		}
-		public bool IsDefined(int id)
+		public bool IsIdDefined(int id)
 		{
 			if ((id >= 0) && (id < this.idToValueLookup.Count))
 			{
@@ -117,6 +117,10 @@ namespace Epsitec.Common.Types.Serialization.Generic
 			{
 				return false;
 			}
+		}
+		public bool IsTypeDefined(System.Type type)
+		{
+			return this.typeInformation.ContainsKey (type);
 		}
 
 		public int GetNullId()
@@ -129,7 +133,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 			{
 				return 0;
 			}
-			else if (this.IsDefined (value))
+			else if (this.IsValueDefined (value))
 			{
 				return this.valueToIdLookup[value];
 			}
@@ -140,7 +144,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		}
 		public T GetValue(int id)
 		{
-			if (this.IsDefined (id))
+			if (this.IsIdDefined (id))
 			{
 				return this.idToValueLookup[id];
 			}

@@ -100,7 +100,7 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckMap()
+		public void CheckMapId()
 		{
 			Serialization.Generic.MapId<DependencyObject> map = new Serialization.Generic.MapId<DependencyObject> ();
 
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (0, map.GetId (null));
 			Assert.IsNull (map.GetValue (0));
 			Assert.AreEqual (1, Collection.Count (map.RecordedValues));
-			Assert.IsTrue (map.IsDefined (null));
+			Assert.IsTrue (map.IsValueDefined (null));
 
 			map.Record (null);
 			
@@ -126,10 +126,10 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (1, map.GetId (a));
 			Assert.AreEqual (a, map.GetValue (1));
 			Assert.AreEqual (2, Collection.Count (map.RecordedValues));
-			Assert.IsTrue (map.IsDefined (a));
-			Assert.IsTrue (map.IsDefined (1));
-			Assert.IsFalse (map.IsDefined (b));
-			Assert.IsFalse (map.IsDefined (2));
+			Assert.IsTrue (map.IsValueDefined (a));
+			Assert.IsTrue (map.IsIdDefined (1));
+			Assert.IsFalse (map.IsValueDefined (b));
+			Assert.IsFalse (map.IsIdDefined (2));
 			Assert.AreEqual (2, Collection.Count (map.RecordedTypes));
 			Assert.AreEqual (typeof (MyItem), Collection.ToList (map.RecordedTypes)[1]);
 			Assert.AreEqual (typeof (MyItem), map.GetType (1));
@@ -172,13 +172,47 @@ namespace Epsitec.Common.Types
 
 		[Test]
 		[ExpectedException (typeof (System.Collections.Generic.KeyNotFoundException))]
-		public void CheckMapEx1()
+		public void CheckMapIdEx1()
 		{
 			Serialization.Generic.MapId<DependencyObject> map = new Serialization.Generic.MapId<DependencyObject> ();
 			
 			map.GetValue (1);
 		}
 
+		[Test]
+		public void CheckMapTag()
+		{
+			Serialization.Generic.MapTag<DependencyObject> map = new Serialization.Generic.MapTag<DependencyObject> ();
+
+			Assert.AreEqual (0, map.TagCount);
+			Assert.AreEqual (0, map.ValueCount);
+
+			MyItem a = new MyItem ();
+			MyItem b = new MyItem ();
+
+			a.Name = "a";
+			b.Name = "b";
+
+			map.Record ("a", a);
+			map.Record ("b", b);
+
+			Assert.AreEqual (2, map.TagCount);
+			Assert.AreEqual (2, map.ValueCount);
+
+			Assert.AreEqual (a, map.GetValue ("a"));
+			Assert.AreEqual (b, map.GetValue ("b"));
+			Assert.IsNull (map.GetValue ("c"));
+			Assert.IsTrue (map.IsTagDefined ("a"));
+			Assert.IsTrue (map.IsTagDefined ("b"));
+			Assert.IsFalse (map.IsTagDefined ("c"));
+			Assert.AreEqual ("a", map.GetTag (a));
+			Assert.AreEqual ("b", map.GetTag (b));
+			Assert.AreEqual (a, Collection.ToList (map.RecordedValues)[0]);
+			Assert.AreEqual (b, Collection.ToList (map.RecordedValues)[1]);
+			Assert.AreEqual ("a", Collection.ToList (map.RecordedTags)[0]);
+			Assert.AreEqual ("b", Collection.ToList (map.RecordedTags)[1]);
+		}
+		
 		[Test]
 		public void CheckVisitSerializableNodes()
 		{

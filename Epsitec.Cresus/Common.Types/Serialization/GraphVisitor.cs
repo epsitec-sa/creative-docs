@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types.Serialization
 	{
 		public static void VisitSerializableNodes(DependencyObject obj, Context context)
 		{
-			if (context.ExternalMap.IsDefined (obj))
+			if (context.ExternalMap.IsValueDefined (obj))
 			{
 				return;
 			}
