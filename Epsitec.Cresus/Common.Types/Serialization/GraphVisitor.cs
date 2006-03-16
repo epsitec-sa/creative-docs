@@ -6,23 +6,11 @@ using Epsitec.Common.Types.Serialization.Generic;
 
 namespace Epsitec.Common.Types.Serialization
 {
-	public class GraphVisitor
+	public static class GraphVisitor
 	{
-		public GraphVisitor()
+		public static void VisitSerializableNodes(DependencyObject obj, Generic.Map<DependencyObject> map)
 		{
-		}
-
-		public Generic.Map<DependencyObject>	ObjectMap
-		{
-			get
-			{
-				return this.objMap;
-			}
-		}
-
-		public void VisitSerializableNodes(DependencyObject obj)
-		{
-			if (this.objMap.Record (obj))
+			if (map.Record (obj))
 			{
 				//	Visit every locally defined property which either refers to
 				//	a DependencyObject or to a collection of such.
@@ -36,14 +24,14 @@ namespace Epsitec.Common.Types.Serialization
 					{
 						if (entry.Property.IsAttached)
 						{
-							this.objMap.RecordType (entry.Property.OwnerType);
+							map.RecordType (entry.Property.OwnerType);
 						}
 						
 						DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
 
 						if (dependencyObjectValue != null)
 						{
-							this.VisitSerializableNodes (dependencyObjectValue);
+							GraphVisitor.VisitSerializableNodes (dependencyObjectValue, map);
 							continue;
 						}
 
@@ -53,14 +41,12 @@ namespace Epsitec.Common.Types.Serialization
 						{
 							foreach (DependencyObject node in dependencyObjectCollection)
 							{
-								this.VisitSerializableNodes (node);
+								GraphVisitor.VisitSerializableNodes (node, map);
 							}
 						}
 					}
 				}
 			}
 		}
-
-		private Generic.Map<DependencyObject>	objMap = new Generic.Map<DependencyObject> ();
 	}
 }

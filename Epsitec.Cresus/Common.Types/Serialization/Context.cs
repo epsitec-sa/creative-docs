@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types.Serialization
 	{
 		public Context()
 		{
-			this.visitor = new GraphVisitor ();
+			this.objMap = new Map<DependencyObject> ();
 			this.typeIds = new Dictionary<System.Type, int> ();
 		}
 		public Context(IO.AbstractReader reader)
@@ -24,18 +24,11 @@ namespace Epsitec.Common.Types.Serialization
 			this.writer = writer;
 		}
 		
-		public GraphVisitor						Visitor
-		{
-			get
-			{
-				return this.visitor;
-			}
-		}
 		public Map<DependencyObject>			ObjectMap
 		{
 			get
 			{
-				return this.visitor.ObjectMap;
+				return this.objMap;
 			}
 		}
 		
@@ -288,6 +281,7 @@ namespace Epsitec.Common.Types.Serialization
 					if (binding != null)
 					{
 						fields.Add (entry.Property, this.ConvertBindingToString (binding), false);
+						continue;
 					}
 
 					string value = entry.Property.ConvertToString (entry.Value);
@@ -391,9 +385,9 @@ namespace Epsitec.Common.Types.Serialization
 				throw new System.InvalidOperationException (string.Format ("No reader associated with serialization context"));
 			}
 		}
-		
-		
-		private GraphVisitor visitor;
+
+
+		private Generic.Map<DependencyObject> objMap = new Generic.Map<DependencyObject> ();
 		private Dictionary<System.Type, int> typeIds;
 		private IO.AbstractWriter writer;
 		private IO.AbstractReader reader;

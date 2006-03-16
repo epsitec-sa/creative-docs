@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types
 			int typeCount = map.TypeCount;
 			int objCount = map.ValueCount;
 
-			context.Visitor.VisitSerializableNodes (obj);
+			Serialization.GraphVisitor.VisitSerializableNodes (obj, map);
 
 			int newTypeCount = map.TypeCount;
 			int newObjCount = map.ValueCount;

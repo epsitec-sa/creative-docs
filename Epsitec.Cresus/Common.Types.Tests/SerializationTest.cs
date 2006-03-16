@@ -207,15 +207,15 @@ namespace Epsitec.Common.Types
 			//	    |        +--> c2
 			//	    +--> q
 
-			Serialization.GraphVisitor visitor = new Serialization.GraphVisitor ();
+			Serialization.Generic.Map<DependencyObject> objectMap = new Epsitec.Common.Types.Serialization.Generic.Map<DependencyObject> ();
 			
-			visitor.VisitSerializableNodes (a);
+			Serialization.GraphVisitor.VisitSerializableNodes (a, objectMap);
 
-			List<DependencyObject> objects = Collection.ToList (visitor.ObjectMap.RecordedValues);
-			List<System.Type> types = Collection.ToList (visitor.ObjectMap.RecordedTypes);
+			List<DependencyObject> objects = Collection.ToList (objectMap.RecordedValues);
+			List<System.Type> types = Collection.ToList (objectMap.RecordedTypes);
 
-			Assert.AreEqual (6, visitor.ObjectMap.ValueCount);
-			Assert.AreEqual (1, visitor.ObjectMap.TypeCount);
+			Assert.AreEqual (6, objectMap.ValueCount);
+			Assert.AreEqual (1, objectMap.TypeCount);
 			
 			Assert.AreEqual (6, objects.Count);
 			Assert.IsNull (objects[0]);
