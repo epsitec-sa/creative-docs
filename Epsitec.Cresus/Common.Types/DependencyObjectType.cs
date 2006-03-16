@@ -165,9 +165,11 @@ namespace Epsitec.Common.Types
 				this.BuildPropertyList ();
 			}
 
-			if (this.lookup.ContainsKey (name))
+			DependencyProperty property;
+
+			if (this.lookup.TryGetValue (name, out property))
 			{
-				return this.lookup[name];
+				return property;
 			}
 			
 			//	TODO: trouver une propriété attachée qui conviendrait
@@ -304,9 +306,12 @@ namespace Epsitec.Common.Types
 			{
 				return null;
 			}
-			else if (DependencyObjectType.types.ContainsKey (system_type))
+
+			DependencyObjectType objectType;
+			
+			if (DependencyObjectType.types.TryGetValue (system_type, out objectType))
 			{
-				return DependencyObjectType.types[system_type];
+				return objectType;
 			}
 			else if (system_type == typeof (DependencyObject))
 			{

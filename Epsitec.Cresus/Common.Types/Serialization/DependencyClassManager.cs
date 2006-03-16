@@ -39,9 +39,11 @@ namespace Epsitec.Common.Types.Serialization
 		
 		public DependencyObjectType FindObjectType(string name)
 		{
-			if (this.types.ContainsKey (name))
+			DependencyObjectType objectType;
+			
+			if (this.types.TryGetValue (name, out objectType))
 			{
-				return this.types[name];
+				return objectType;
 			}
 			else
 			{

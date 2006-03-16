@@ -323,9 +323,11 @@ namespace Epsitec.Common.Types
 		{
 			if (this.overriddenMetadata != null)
 			{
-				if (this.overriddenMetadata.ContainsKey (type))
+				DependencyPropertyMetadata metadata;
+				
+				if (this.overriddenMetadata.TryGetValue (type, out metadata))
 				{
-					return this.overriddenMetadata[type];
+					return metadata;
 				}
 			}
 			

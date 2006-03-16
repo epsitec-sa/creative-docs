@@ -6,13 +6,13 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types.Serialization.Generic
 {
 	/// <summary>
-	/// The generic Map class is used to record objects and associate them with
+	/// The generic MapId class is used to record objects and associate them with
 	/// unique identifiers. These identifiers are needed when serializing object
 	/// graphs.
 	/// </summary>
-	public class Map<T> where T : class
+	public class MapId<T> where T : class
 	{
-		public Map()
+		public MapId()
 		{
 			this.idToValueLookup.Add (null);
 			this.types.Add (null);
@@ -160,9 +160,10 @@ namespace Epsitec.Common.Types.Serialization.Generic
 
 		public IEnumerable<T> GetValues(System.Type type)
 		{
-			if (this.typeInformation.ContainsKey (type))
+			List<int> list;
+			if (this.typeInformation.TryGetValue (type, out list))
 			{
-				foreach (int id in this.typeInformation[type])
+				foreach (int id in list)
 				{
 					yield return this.idToValueLookup[id];
 				}
@@ -173,6 +174,5 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		Dictionary<T, int>						valueToIdLookup = new Dictionary<T, int> ();
 		List<System.Type>						types = new List<System.Type> ();
 		Dictionary<System.Type, List<int>>		typeInformation = new Dictionary<System.Type, List<int>> ();
-
 	}
 }

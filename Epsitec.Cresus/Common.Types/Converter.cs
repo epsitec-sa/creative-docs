@@ -13,19 +13,20 @@ namespace Epsitec.Common.Types
 	{
 		public static ITypeConverter GetTypeConverter(System.Type type)
 		{
-			if (Converter.typeConverters.ContainsKey (type))
+			ITypeConverter converter;
+			
+			if (Converter.typeConverters.TryGetValue (type, out converter))
 			{
-				return Converter.typeConverters[type];
+				return converter;
 			}
 
 			lock (Converter.typeConverters)
 			{
-				if (Converter.typeConverters.ContainsKey (type))
+				if (Converter.typeConverters.TryGetValue (type, out converter))
 				{
-					return Converter.typeConverters[type];
+					return converter;
 				}
 
-				ITypeConverter converter;
 				object[] attributes = type.GetCustomAttributes (typeof (TypeConverterAttribute), false);
 
 				if (attributes.Length > 0)

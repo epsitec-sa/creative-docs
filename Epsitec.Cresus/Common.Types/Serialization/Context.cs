@@ -6,19 +6,27 @@ using Epsitec.Common.Types.Serialization.Generic;
 
 namespace Epsitec.Common.Types.Serialization
 {
-	public abstract class Context : IContextResolver
+	public class Context : IContextResolver
 	{
-		protected Context()
+		public Context()
 		{
-			this.objMap = new Map<DependencyObject> ();
+			this.objMap = new MapId<DependencyObject> ();
+			this.externalMap = new MapId<object> ();
 			this.typeIds = new Dictionary<System.Type, int> ();
 		}
 		
-		public Map<DependencyObject>			ObjectMap
+		public MapId<DependencyObject>			ObjectMap
 		{
 			get
 			{
 				return this.objMap;
+			}
+		}
+		public MapId<object> ExternalMap
+		{
+			get
+			{
+				return this.externalMap;
 			}
 		}
 		
@@ -322,9 +330,11 @@ namespace Epsitec.Common.Types.Serialization
 		}
 
 
-		protected Generic.Map<DependencyObject> objMap = new Generic.Map<DependencyObject> ();
-		protected Dictionary<System.Type, int> typeIds;
-		protected IO.AbstractWriter writer;
-		protected IO.AbstractReader reader;
+		protected MapId<DependencyObject>			objMap;
+		protected MapId<object>					externalMap;
+		protected Dictionary<System.Type, int>	typeIds;
+		
+		protected IO.AbstractWriter				writer;
+		protected IO.AbstractReader				reader;
 	}
 }

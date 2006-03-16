@@ -205,9 +205,11 @@ namespace Epsitec.Common.Types
 		
 		public object GetLocalValue(DependencyProperty property)
 		{
-			if (this.properties.ContainsKey (property))
+			object value;
+			
+			if (this.properties.TryGetValue (property, out value))
 			{
-				return this.properties[property];
+				return value;
 			}
 			else
 			{
@@ -220,10 +222,7 @@ namespace Epsitec.Common.Types
 		}
 		public void ClearLocalValue(DependencyProperty property)
 		{
-			if (this.properties.ContainsKey (property))
-			{
-				this.properties.Remove (property);
-			}
+			this.properties.Remove (property);
 		}
 		public bool ContainsLocalValue(DependencyProperty property)
 		{
@@ -291,10 +290,12 @@ namespace Epsitec.Common.Types
 
 		public Binding GetBinding(DependencyProperty property)
 		{
+			BindingExpression bindingExpression;
+			
 			if ((this.bindings != null) &&
-				(this.bindings.ContainsKey (property)))
+				(this.bindings.TryGetValue (property, out bindingExpression)))
 			{
-				return this.bindings[property].ParentBinding;
+				return bindingExpression.ParentBinding;
 			}
 			else
 			{
@@ -330,10 +331,11 @@ namespace Epsitec.Common.Types
 		}
 		public void ClearBinding(DependencyProperty property)
 		{
+			BindingExpression bindingExpression;
 			if ((this.bindings != null) &&
-				(this.bindings.ContainsKey (property)))
+				(this.bindings.TryGetValue (property, out bindingExpression)))
 			{
-				this.bindings[property].Dispose ();
+				bindingExpression.Dispose ();
 				this.bindings.Remove (property);
 			}
 		}
@@ -380,10 +382,12 @@ namespace Epsitec.Common.Types
 
 		protected System.Delegate GetUserEventHandler(string name)
 		{
+			System.Delegate value;
+			
 			if ((this.userEvents != null) &&
-				(this.userEvents.ContainsKey (name)))
+				(this.userEvents.TryGetValue (name, out value)))
 			{
-				return this.userEvents[name];
+				return value;
 			}
 			else
 			{
@@ -403,6 +407,7 @@ namespace Epsitec.Common.Types
 			lock (DependencyObject.declarations)
 			{
 				DependencyObjectType type = DependencyObjectType.FromSystemType (ownerType);
+				TypeDeclaration typeDeclaration;
 				
 				string name = property.Name;
 
@@ -415,13 +420,10 @@ namespace Epsitec.Common.Types
 					
 					while (t != typeof (object))
 					{
-						if (DependencyObject.declarations.ContainsKey (t))
+						if (DependencyObject.declarations.TryGetValue (t, out typeDeclaration))
 						{
-							TypeDeclaration typeDeclaration;
-							typeDeclaration = DependencyObject.declarations[t];
-
 							if ((typeDeclaration.ContainsKey (name)) &&
-							(typeDeclaration[name].IsAttached == false))
+								(typeDeclaration[name].IsAttached == false))
 							{
 								throw new System.ArgumentException (string.Format ("DependencyProperty named '{0}' already exists for type {1} (defined by {2})", name, ownerType, t));
 							}
@@ -431,18 +433,15 @@ namespace Epsitec.Common.Types
 					}
 				}
 
-				if (DependencyObject.declarations.ContainsKey (ownerType) == false)
+				if (DependencyObject.declarations.TryGetValue (ownerType, out typeDeclaration))
 				{
-					TypeDeclaration typeDeclaration;
-					typeDeclaration = new TypeDeclaration ();
 					typeDeclaration[name] = property;
-					DependencyObject.declarations[ownerType] = typeDeclaration;
 				}
 				else
 				{
-					TypeDeclaration typeDeclaration;
-					typeDeclaration = DependencyObject.declarations[ownerType];
+					typeDeclaration = new TypeDeclaration ();
 					typeDeclaration[name] = property;
+					DependencyObject.declarations[ownerType] = typeDeclaration;
 				}
 
 				type.Register (property);

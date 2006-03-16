@@ -9,12 +9,12 @@ namespace Epsitec.Common.Types
 	{
 		public static void Serialize(DependencyObject obj, Serialization.Context context)
 		{
-			Serialization.Generic.Map<DependencyObject> map = context.ObjectMap;
+			Serialization.Generic.MapId<DependencyObject> map = context.ObjectMap;
 			
 			int typeCount = map.TypeCount;
 			int objCount = map.ValueCount;
 
-			Serialization.GraphVisitor.VisitSerializableNodes (obj, map);
+			Serialization.GraphVisitor.VisitSerializableNodes (obj, context);
 
 			int newTypeCount = map.TypeCount;
 			int newObjCount = map.ValueCount;
