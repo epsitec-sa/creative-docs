@@ -26,6 +26,13 @@ namespace Epsitec.Common.Text.Exchange
 	{
 		public HtmlText()
 		{
+			this.output.Append ("<p>");
+			this.openTagsStack.Push (HtmlAttribute.Paragraph);
+		}
+
+		public void Terminate()
+		{
+			CloseOpenTagsOnStack() ;
 		}
 
 		public override string ToString()
@@ -75,7 +82,8 @@ namespace Epsitec.Common.Text.Exchange
 			this.AppendTagsToClose ();
 			this.AppendTagsToOpen ();
 
-			this.TransformLineBreaks (ref thestring);
+			this.TransformLineSeparators (ref thestring);
+			this.TransformParagraphSeparators (ref thestring);
 			this.output.Append (thestring);
 		}
 
@@ -98,10 +106,9 @@ namespace Epsitec.Common.Text.Exchange
 		{
 		}
 
-		private void TransformLineBreaks(ref string line)
-		{
-			// transforme tous les caractères LineSeparator en <br>
 
+		private void ReplaceSpecialCodes(ref string line, Epsitec.Common.Text.Unicode.Code specialCode, string htmlTag)
+		{
 #if false			
 
 			// line.Remove() n'a aucun effet ??? très bizarre, bon pour l'instant on s'en fiche
@@ -111,27 +118,41 @@ namespace Epsitec.Common.Text.Exchange
 			while ((index = line.IndexOf((char)Epsitec.Common.Text.Unicode.Code.LineSeparator)) != -1)
 			{
 				line.Remove (index, 1);
-				line.Insert (index, "<br>");
+				line.Insert (index, "<br />");
 			}
 #else
 			System.Text.StringBuilder output = new System.Text.StringBuilder ();
 
-			string[] split = line.Split (new char[] { (char) Epsitec.Common.Text.Unicode.Code.LineSeparator});
+			string[] split = line.Split (new char[] { (char) specialCode });
 
 			int index;
 			int start = 0;
-			int max = split.GetLength(0) ;
+			int max = split.GetLength (0);
 
-			for (index = 0; index < max ; index++)
+			for (index = 0; index < max; index++)
 			{
 				output.Append (split[index]);
 				if (index + 1 < max)
-					output.Append ("<br>");
+					output.Append (htmlTag);
 			}
 
-			line = output.ToString();
+			line = output.ToString ();
 #endif
 		}
+
+		private void TransformLineSeparators(ref string line)
+		{
+			// transforme tous les caractères LineSeparator en <br>
+			ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.LineSeparator, "<br />");
+		}
+
+
+		private void TransformParagraphSeparators(ref string line)
+		{
+			// transforme tous les caractères LineSeparator en <br>
+			ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.ParagraphSeparator, "</p>\r\n<p>");
+		}
+
 
 		private string GetHtmlTag(string attribute, HtmlTagMode tagMode)
 		{
@@ -234,6 +255,17 @@ namespace Epsitec.Common.Text.Exchange
 			this.tagsToClose.Clear ();
 		}
 
+		private void CloseOpenTagsOnStack()
+		{
+			// ferme les tags restés ouverts
+			while (this.openTagsStack.Count > 0)
+			{
+				HtmlAttribute attr;
+				attr = (HtmlAttribute) openTagsStack.Pop ();
+				this.output.Append (this.AttributeToString (attr, HtmlTagMode.Close, null));
+			}
+		}
+
 		private void AppendTagsToOpen()
 		{
 			foreach (HtmlAttribute attr in this.tagsToOpen)
@@ -252,7 +284,8 @@ namespace Epsitec.Common.Text.Exchange
 			Bold,
 			Italic,
 			Underlined,
-			Font
+			Font,
+			Paragraph
 		}
 
 		enum HtmlTagMode
