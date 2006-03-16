@@ -74,6 +74,8 @@ namespace Epsitec.Common.Text.Exchange
 
 			this.AppendTagsToClose ();
 			this.AppendTagsToOpen ();
+
+			this.TransformLineBreaks (ref thestring);
 			this.output.Append (thestring);
 		}
 
@@ -94,6 +96,41 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void SetFont(string fontName, int fontSize)
 		{
+		}
+
+		private void TransformLineBreaks(ref string line)
+		{
+			// transforme tous les caractères LineSeparator en <br>
+
+#if false			
+
+			// line.Remove() n'a aucun effet ??? très bizarre, bon pour l'instant on s'en fiche
+			// car on fait autrement
+
+			int index ; 
+			while ((index = line.IndexOf((char)Epsitec.Common.Text.Unicode.Code.LineSeparator)) != -1)
+			{
+				line.Remove (index, 1);
+				line.Insert (index, "<br>");
+			}
+#else
+			System.Text.StringBuilder output = new System.Text.StringBuilder ();
+
+			string[] split = line.Split (new char[] { (char) Epsitec.Common.Text.Unicode.Code.LineSeparator});
+
+			int index;
+			int start = 0;
+			int max = split.GetLength(0) ;
+
+			for (index = 0; index < max ; index++)
+			{
+				output.Append (split[index]);
+				if (index + 1 < max)
+					output.Append ("<br>");
+			}
+
+			line = output.ToString();
+#endif
 		}
 
 		private string GetHtmlTag(string attribute, HtmlTagMode tagMode)
@@ -157,13 +194,13 @@ namespace Epsitec.Common.Text.Exchange
 				for (int i = 0; i < this.tagsToClose.Count; i++)
 				{
 					HtmlAttribute attr = (HtmlAttribute) this.tagsToClose[i];
+				//	System.Diagnostics.Debug.Assert (this.openTagsStack.Count > 0);
 					if ((HtmlAttribute) this.openTagsStack.Peek () == attr)
 					{
 						this.output.Append (this.AttributeToString (attr, HtmlTagMode.Close, null));
 						this.tagsToClose.RemoveAt (i);
 						i--;
 						this.openTagsStack.Pop ();
-						// this.tagsToOpen.Add(attr) ;
 						found = true;
 					}
 				}
@@ -172,7 +209,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void AppendTagsToClose()
 		{
-			System.Collections.ArrayList tmpattributes = new System.Collections.ArrayList() ;
+			System.Collections.Stack tmpattributes = new System.Collections.Stack() ;
 
 			while (this.tagsToClose.Count > 0)
 			{
@@ -181,16 +218,17 @@ namespace Epsitec.Common.Text.Exchange
 				if (this.tagsToClose.Count > 0)
 				{
 					HtmlAttribute topattribute = (HtmlAttribute) this.openTagsStack.Pop ();
-					tmpattributes.Add (topattribute);
+					tmpattributes.Push (topattribute);
 					this.output.Append (this.AttributeToString (topattribute, HtmlTagMode.Close, null));
 				}
 			}
 
-			for (int i = 0; i < tmpattributes.Count; i++)
+			while (tmpattributes.Count > 0)
 			{
 				HtmlAttribute attr;
-				attr = (HtmlAttribute) tmpattributes[i];
+				attr = (HtmlAttribute) tmpattributes.Pop();
 				this.output.Append (this.AttributeToString (attr, HtmlTagMode.Open, null));
+				this.openTagsStack.Push (attr);
 			}
 
 			this.tagsToClose.Clear ();
@@ -202,7 +240,7 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				string tag = AttributeToString (attr, HtmlTagMode.Open, null);
 				this.output.Append (tag);
-				this.openTagsStack.Push (attr);
+				//this.openTagsStack.Push (attr);
 			}
 
 			this.tagsToOpen.Clear ();
