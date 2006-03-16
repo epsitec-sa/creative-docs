@@ -15,6 +15,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		public Map()
 		{
 			this.idToValueLookup.Add (null);
+			this.types.Add (null);
 		}
 
 		public IEnumerable<System.Type>			RecordedTypes
@@ -154,8 +155,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		}
 		public int GetTypeIndex(System.Type type)
 		{
-			int id = this.types.IndexOf (type);
-			return (id < 0) ? -1 : id+1;
+			return this.types.IndexOf (type);
 		}
 
 		public IEnumerable<T> GetValues(System.Type type)

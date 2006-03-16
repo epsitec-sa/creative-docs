@@ -26,7 +26,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 		public override void WriteTypeDefinition(int id, string name)
 		{
 			this.xml.WriteStartElement ("type", this.nsStructure);
-			this.xml.WriteAttributeString ("id", XmlSupport.IdToString (id));
+			this.xml.WriteAttributeString ("id", Context.IdToString (id));
 			this.xml.WriteAttributeString ("name", this.nsStructure, name);
 			this.xml.WriteEndElement ();
 		}
@@ -34,19 +34,19 @@ namespace Epsitec.Common.Types.Serialization.IO
 		public override void WriteObjectDefinition(int id, int typeId)
 		{
 			this.xml.WriteStartElement ("object", this.nsStructure);
-			this.xml.WriteAttributeString ("id", XmlSupport.IdToString (id));
-			this.xml.WriteAttributeString ("type", this.nsStructure, XmlSupport.IdToString (typeId));
+			this.xml.WriteAttributeString ("id", Context.IdToString (id));
+			this.xml.WriteAttributeString ("type", this.nsStructure, Context.IdToString (typeId));
 			this.xml.WriteEndElement ();
 		}
 
 		public override void BeginObject(int id, DependencyObject obj)
 		{
 			this.xml.WriteStartElement ("data", this.nsStructure);
-			this.xml.WriteAttributeString ("obj", this.nsStructure, XmlSupport.IdToString (id));
+			this.xml.WriteAttributeString ("obj", this.nsStructure, Context.IdToString (id));
 		}
 		public override void WriteObjectFieldReference(DependencyObject obj, string name, int id)
 		{
-			this.xml.WriteAttributeString ("f", name, this.nsFields, XmlSupport.IdToString (id));
+			this.xml.WriteAttributeString ("f", name, this.nsFields, Context.IdToString (id));
 		}
 		public override void WriteObjectFieldReferenceList(DependencyObject obj, string name, IList<int> ids)
 		{
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 			foreach (int id in ids)
 			{
 				this.xml.WriteStartElement ("ref", this.nsStructure);
-				this.xml.WriteAttributeString ("oid", this.nsStructure, XmlSupport.IdToString (id));
+				this.xml.WriteAttributeString ("oid", this.nsStructure, Context.IdToString (id));
 				this.xml.WriteEndElement ();
 			}
 			

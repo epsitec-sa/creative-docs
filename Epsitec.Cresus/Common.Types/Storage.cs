@@ -25,7 +25,7 @@ namespace Epsitec.Common.Types
 				
 				for (int id = typeCount; id < newTypeCount; id++)
 				{
-					context.DefineType (id+1, map.GetType (id));
+					context.DefineType (id, map.GetType (id));
 				}
 				for (int id = objCount; id < newObjCount; id++)
 				{

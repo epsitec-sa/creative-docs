@@ -15,6 +15,9 @@ namespace Epsitec.Common.Types.Serialization
 		
 		public override void StoreObject(int id, DependencyObject obj)
 		{
+			//	Dump the contents of the object to the writer. This will record
+			//	all defined read/write fields and binding settings.
+			
 			this.AssertWritable ();
 
 			this.writer.BeginObject (id, obj);
@@ -23,17 +26,11 @@ namespace Epsitec.Common.Types.Serialization
 
 			foreach (PropertyValue<int> field in fields.Ids)
 			{
-				if (field.IsDataBound == false)
-				{
-					this.writer.WriteObjectFieldReference (obj, this.GetPropertyName (field.Property), field.Value);
-				}
+				this.writer.WriteObjectFieldReference (obj, this.GetPropertyName (field.Property), field.Value);
 			}
 			foreach (PropertyValue<string> field in fields.Values)
 			{
-				if (field.IsDataBound == false)
-				{
-					this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (field.Property), Context.EscapeString (field.Value));
-				}
+				this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (field.Property), Context.EscapeString (field.Value));
 			}
 			foreach (KeyValuePair<DependencyProperty, Binding> field in fields.Bindings)
 			{
@@ -42,8 +39,7 @@ namespace Epsitec.Common.Types.Serialization
 
 			foreach (PropertyValue<IList<int>> field in fields.IdCollections)
 			{
-				if ((field.IsDataBound == false) &&
-					(field.Value.Count > 0))
+				if (field.Value.Count > 0)
 				{
 					this.writer.WriteObjectFieldReferenceList (obj, this.GetPropertyName (field.Property), field.Value);
 				}
@@ -52,8 +48,19 @@ namespace Epsitec.Common.Types.Serialization
 			this.writer.EndObject (id, obj);
 		}
 
-		public Fields GetFields(DependencyObject obj)
+		
+		private Fields GetFields(DependencyObject obj)
 		{
+			//	Generate sorted lists describing the different fields, based on
+			//	their type :
+			//
+			//	- DependencyObject references
+			//	- Serializable values
+			//	
+			//	This skips all fields which are data bound, as they do not need
+			//	to be serialized; the bindings themselves will be serialized
+			//	instead.
+			
 			Fields fields = new Fields ();
 
 			foreach (LocalValueEntry entry in obj.LocalValueEntries)
@@ -63,55 +70,45 @@ namespace Epsitec.Common.Types.Serialization
 				if ((entry.Property.IsReadWrite) ||
 					(metadata.CanSerializeReadOnly))
 				{
-					DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
-					Binding binding = obj.GetBinding (entry.Property);
-
-					bool isDataBound;
-
-					if (binding == null)
+					if (obj.GetBinding (entry.Property) == null)
 					{
-						isDataBound = false;
-					}
-					else
-					{
-						isDataBound = true;
+						DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
 
-						fields.Add (entry.Property, binding);
-					}
-
-					if (dependencyObjectValue != null)
-					{
-						fields.Add (entry.Property, this.ObjectMap.GetId (dependencyObjectValue), isDataBound);
-						continue;
-					}
-
-					ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
-
-					if (dependencyObjectCollection != null)
-					{
-						List<int> ids = new List<int> ();
-						foreach (DependencyObject node in dependencyObjectCollection)
+						if (dependencyObjectValue != null)
 						{
-							ids.Add (this.ObjectMap.GetId (node));
+							int id = this.objMap.GetId (dependencyObjectValue);
+							fields.Add (entry.Property, id);
+							continue;
 						}
-						fields.Add (entry.Property, ids, isDataBound);
-						continue;
-					}
 
-					binding = entry.Value as Binding;
+						ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
 
-					if (binding != null)
-					{
-						fields.Add (entry.Property, this.ConvertBindingToString (binding), false);
-						continue;
-					}
+						if (dependencyObjectCollection != null)
+						{
+							List<int> ids = new List<int> ();
+							foreach (DependencyObject node in dependencyObjectCollection)
+							{
+								ids.Add (this.ObjectMap.GetId (node));
+							}
+							fields.Add (entry.Property, ids);
+							continue;
+						}
 
-					string value = entry.Property.ConvertToString (entry.Value);
+						Binding binding = entry.Value as Binding;
 
-					if (value != null)
-					{
-						fields.Add (entry.Property, value, isDataBound);
-						continue;
+						if (binding != null)
+						{
+							fields.Add (entry.Property, this.ConvertBindingToString (binding));
+							continue;
+						}
+
+						string value = entry.Property.ConvertToString (entry.Value);
+
+						if (value != null)
+						{
+							fields.Add (entry.Property, value);
+							continue;
+						}
 					}
 				}
 			}
@@ -161,25 +158,25 @@ namespace Epsitec.Common.Types.Serialization
 				}
 			}
 
-			public void Add(DependencyProperty property, int id, bool isDataBound)
+			public void Add(DependencyProperty property, int id)
 			{
-				this.ids.Add (new PropertyValue<int> (property, id, isDataBound));
+				this.ids.Add (new PropertyValue<int> (property, id));
 			}
-			public void Add(DependencyProperty property, string value, bool isDataBound)
+			public void Add(DependencyProperty property, string value)
 			{
-				this.values.Add (new PropertyValue<string> (property, value, isDataBound));
+				this.values.Add (new PropertyValue<string> (property, value));
 			}
-			public void Add(DependencyProperty property, IEnumerable<int> collection, bool isDataBound)
+			public void Add(DependencyProperty property, IEnumerable<int> collection)
 			{
 				List<int> list = new List<int> ();
 				list.AddRange (collection);
-				this.idCollections.Add (new PropertyValue<IList<int>> (property, list, isDataBound));
+				this.idCollections.Add (new PropertyValue<IList<int>> (property, list));
 			}
-			public void Add(DependencyProperty property, IEnumerable<string> collection, bool isDataBound)
+			public void Add(DependencyProperty property, IEnumerable<string> collection)
 			{
 				List<string> list = new List<string> ();
 				list.AddRange (collection);
-				this.valueCollections.Add (new PropertyValue<IList<string>> (property, list, isDataBound));
+				this.valueCollections.Add (new PropertyValue<IList<string>> (property, list));
 			}
 			public void Add(DependencyProperty property, Binding binding)
 			{

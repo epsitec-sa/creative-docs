@@ -238,13 +238,13 @@
     </Compile>
     <Compile Include="Serialization\DeserializerContext.cs" />
     <Compile Include="Serialization\Generic\PropertyValue.cs" />
+    <Compile Include="Serialization\IContextResolver.cs" />
     <Compile Include="Serialization\IO\AbstractWriter.cs" />
     <Compile Include="Serialization\Context.cs" />
     <Compile Include="Serialization\IO\AbstractReader.cs" />
     <Compile Include="Serialization\DependencyClassManager.cs" />
     <Compile Include="Serialization\Generic\Map.cs" />
     <Compile Include="Serialization\GraphVisitor.cs" />
-    <Compile Include="Serialization\IO\XmlSupport.cs" />
     <Compile Include="Serialization\IO\XmlWriter.cs" />
     <Compile Include="Serialization\SerializerContext.cs" />
     <Compile Include="Storage.cs" />

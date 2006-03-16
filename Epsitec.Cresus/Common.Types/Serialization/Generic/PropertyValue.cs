@@ -11,13 +11,6 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		{
 			this.property = property;
 			this.value = value;
-			this.isDataBound = false;
-		}
-		public PropertyValue(DependencyProperty property, T value, bool isDataBound)
-		{
-			this.property = property;
-			this.value = value;
-			this.isDataBound = isDataBound;
 		}
 
 		public DependencyProperty				Property
@@ -34,20 +27,8 @@ namespace Epsitec.Common.Types.Serialization.Generic
 				return this.value;
 			}
 		}
-		public bool								IsDataBound
-		{
-			get
-			{
-				return this.isDataBound;
-			}
-			set
-			{
-				this.isDataBound = value;
-			}
-		}
 
 		private DependencyProperty property;
 		private T value;
-		private bool isDataBound;
 	}
 }

@@ -6,7 +6,7 @@ using Epsitec.Common.Types.Serialization.Generic;
 
 namespace Epsitec.Common.Types.Serialization
 {
-	public abstract class Context
+	public abstract class Context : IContextResolver
 	{
 		protected Context()
 		{
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Types.Serialization
 			if (property.IsAttached)
 			{
 				int typeId = this.objMap.GetTypeIndex (property.OwnerType);
-				string typeTag = IO.XmlSupport.IdToString (typeId);
+				string typeTag = Context.IdToString (typeId);
 				return string.Concat (typeTag, ".", property.Name);
 			}
 			else
@@ -74,12 +74,76 @@ namespace Epsitec.Common.Types.Serialization
 				return property.Name;
 			}
 		}
-		public DependencyProperty GetProperty(string name)
+		public DependencyProperty GetProperty(DependencyObject obj, string name)
 		{
-			return null;
+			if (name.Contains ("."))
+			{
+				string[] args = name.Split ('.');
+
+				System.Diagnostics.Debug.Assert (args.Length == 2);
+
+				string typeTag = args[0];
+				string shortName = args[1];
+
+				System.Type sysType = this.objMap.GetType (Context.ParseId (typeTag));
+				DependencyObjectType objType = DependencyObjectType.FromSystemType (sysType);
+
+				return objType.GetProperty (shortName);
+			}
+			else
+			{
+				return obj.ObjectType.GetProperty (name);
+			}
 		}
 
-		protected static string EscapeString(string value)
+		#region IContextResolver Members
+
+		public string ResolveToId(object value)
+		{
+			if (value == null)
+			{
+				return "null";
+			}
+			
+			DependencyObject obj = value as DependencyObject;
+			
+			if (obj != null)
+			{
+				return Context.IdToString (this.objMap.GetId (obj));
+			}
+
+			return null;
+		}
+		public object ResolveFromId(string id)
+		{
+			if (id == null)
+			{
+				throw new System.ArgumentNullException ();
+			}
+			
+			if (id == "null")
+			{
+				return null;
+			}
+
+			return this.objMap.GetValue (Context.ParseId (id));
+		}
+
+		#endregion
+
+		public static string IdToString(int id)
+		{
+			return string.Concat ("_", id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+		}
+		public static int ParseId(string value)
+		{
+			System.Diagnostics.Debug.Assert (value.Length > 1);
+			System.Diagnostics.Debug.Assert (value[0] == '_');
+
+			return int.Parse (value.Substring (1), System.Globalization.CultureInfo.InvariantCulture);
+		}
+
+		public static string EscapeString(string value)
 		{
 			if ((value == null) ||
 				(value.IndexOfAny (new char[] { '{', '}' }) < 0))
@@ -91,7 +155,7 @@ namespace Epsitec.Common.Types.Serialization
 				return string.Concat ("{}", value);
 			}
 		}
-		protected static string UnescapeString(string value)
+		public static string UnescapeString(string value)
 		{
 			if ((value != null) &&
 				(value.StartsWith ("{}")))
@@ -104,7 +168,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
-		protected static bool IsMarkupExtension(string value)
+		public static bool IsMarkupExtension(string value)
 		{
 			if ((value != null) &&
 				(value.StartsWith ("{")) &&
@@ -119,11 +183,11 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
-		protected static string ConvertToMarkupExtension(string value)
+		public static string ConvertToMarkupExtension(string value)
 		{
 			return string.Concat ("{", value, "}");
 		}
-		protected static string ConvertFromMarkupExtension(string value)
+		public static string ConvertFromMarkupExtension(string value)
 		{
 			System.Diagnostics.Debug.Assert (Context.IsMarkupExtension (value));
 			return value.Substring (1, value.Length-2);
@@ -144,9 +208,9 @@ namespace Epsitec.Common.Types.Serialization
 
 			if (source != null)
 			{
-				int id = this.ObjectMap.GetId (source);
+				string id = this.ResolveToId (source);
 
-				if (id < 0)
+				if (id == null)
 				{
 					//	TODO: handle unknown sources
 				}
@@ -155,8 +219,8 @@ namespace Epsitec.Common.Types.Serialization
 					buffer.Append (space);
 					space = ", ";
 					
-					buffer.Append ("Source={ref _");
-					buffer.Append (id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+					buffer.Append ("Source={ref ");
+					buffer.Append (id);
 					buffer.Append ("}");
 				}
 			}

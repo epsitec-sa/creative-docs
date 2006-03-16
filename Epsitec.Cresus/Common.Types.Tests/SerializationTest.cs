@@ -130,8 +130,9 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (map.IsDefined (1));
 			Assert.IsFalse (map.IsDefined (b));
 			Assert.IsFalse (map.IsDefined (2));
-			Assert.AreEqual (1, Collection.Count (map.RecordedTypes));
-			Assert.AreEqual (typeof (MyItem), Collection.ToList (map.RecordedTypes)[0]);
+			Assert.AreEqual (2, Collection.Count (map.RecordedTypes));
+			Assert.AreEqual (typeof (MyItem), Collection.ToList (map.RecordedTypes)[1]);
+			Assert.AreEqual (typeof (MyItem), map.GetType (1));
 			Assert.AreEqual (-1, map.GetId (b));
 
 			map.Record (b);
@@ -149,12 +150,13 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (4, map.GetId (c));
 			Assert.AreEqual (5, map.GetId (s2));
 
-			Assert.AreEqual (2, map.TypeCount);
-			Assert.AreEqual (2, Collection.Count (map.RecordedTypes));
-			Assert.AreEqual (typeof (MyItem), Collection.ToList (map.RecordedTypes)[0]);
-			Assert.AreEqual (typeof (MySimpleObject), Collection.ToList (map.RecordedTypes)[1]);
-			Assert.AreEqual (typeof (MyItem), map.GetType (0));
-			Assert.AreEqual (typeof (MySimpleObject), map.GetType (1));
+			Assert.AreEqual (3, map.TypeCount);
+			Assert.AreEqual (3, Collection.Count (map.RecordedTypes));
+			Assert.AreEqual (typeof (MyItem), Collection.ToList (map.RecordedTypes)[1]);
+			Assert.AreEqual (typeof (MySimpleObject), Collection.ToList (map.RecordedTypes)[2]);
+			Assert.IsNull (map.GetType (0));
+			Assert.AreEqual (typeof (MyItem), map.GetType (1));
+			Assert.AreEqual (typeof (MySimpleObject), map.GetType (2));
 
 			Assert.AreEqual (6, map.ValueCount);
 			Assert.AreEqual (3, Collection.Count (map.GetValues (typeof (MyItem))));
@@ -215,7 +217,7 @@ namespace Epsitec.Common.Types
 			List<System.Type> types = Collection.ToList (objectMap.RecordedTypes);
 
 			Assert.AreEqual (6, objectMap.ValueCount);
-			Assert.AreEqual (1, objectMap.TypeCount);
+			Assert.AreEqual (2, objectMap.TypeCount);
 			
 			Assert.AreEqual (6, objects.Count);
 			Assert.IsNull (objects[0]);
@@ -224,9 +226,12 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (c1, objects[3]);
 			Assert.AreEqual (c2, objects[4]);
 			Assert.AreEqual (q, objects[5]);
+			Assert.AreEqual (q, objectMap.GetValue (5));
 
-			Assert.AreEqual (1, types.Count);
-			Assert.AreEqual (typeof (MyItem), types[0]);
+			Assert.AreEqual (2, types.Count);
+			Assert.IsNull (types[0]);
+			Assert.AreEqual (typeof (MyItem), types[1]);
+			Assert.AreEqual (typeof (MyItem), objectMap.GetType (1));
 		}
 
 		[Test]
@@ -249,6 +254,9 @@ namespace Epsitec.Common.Types
 			xmlWriter.WriteEndDocument ();
 			xmlWriter.Flush ();
 			xmlWriter.Close ();
+
+			Assert.AreEqual ("_2.DataContext", context.GetPropertyName (DataObject.DataContextProperty));
+			Assert.AreEqual (DataObject.DataContextProperty, context.GetProperty (root, "_2.DataContext"));
 		}
 
 		private MyItem CreateSampleTree()
