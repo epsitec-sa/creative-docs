@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	[TypeConverter (typeof (Binding.Converter))]
 	public class Binding
 	{
 		public Binding()
@@ -196,6 +197,24 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
+		public class Converter : ITypeConverter
+		{
+			#region ITypeConverter Members
+
+			public string ConvertToString(object value, IContextResolver context)
+			{
+				Binding binding = value as Binding;
+				return Serialization.Context.ConvertBindingToString (binding, context);
+			}
+
+			public object ConvertFromString(string value, IContextResolver context)
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+
+			#endregion
+		}
+		
 		public static readonly object			DoNothing = new object ();
 
 		private BindingMode						mode;

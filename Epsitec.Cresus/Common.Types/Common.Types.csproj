@@ -101,6 +101,7 @@
     <Compile Include="AbstractStringConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ITypeConverter.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -238,7 +239,7 @@
     </Compile>
     <Compile Include="Serialization\DeserializerContext.cs" />
     <Compile Include="Serialization\Generic\PropertyValue.cs" />
-    <Compile Include="Serialization\IContextResolver.cs" />
+    <Compile Include="IContextResolver.cs" />
     <Compile Include="Serialization\IO\AbstractWriter.cs" />
     <Compile Include="Serialization\Context.cs" />
     <Compile Include="Serialization\IO\AbstractReader.cs" />
@@ -260,6 +261,7 @@
     <Compile Include="Time.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TypeConverterAttribute.cs" />
     <Compile Include="UndefinedValue.cs">
       <SubType>Code</SubType>
     </Compile>

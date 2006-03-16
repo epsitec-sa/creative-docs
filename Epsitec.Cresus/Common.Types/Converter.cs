@@ -1,29 +1,99 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// La classe Converter permet de convertir des données simples entre
 	/// elles.
 	/// </summary>
-	public sealed class Converter
+	public static class Converter
 	{
-		private Converter()
+		public static ITypeConverter GetTypeConverter(System.Type type)
 		{
+			if (Converter.typeConverters.ContainsKey (type))
+			{
+				return Converter.typeConverters[type];
+			}
+
+			lock (Converter.typeConverters)
+			{
+				if (Converter.typeConverters.ContainsKey (type))
+				{
+					return Converter.typeConverters[type];
+				}
+
+				ITypeConverter converter;
+				object[] attributes = type.GetCustomAttributes (typeof (TypeConverterAttribute), false);
+
+				if (attributes.Length > 0)
+				{
+					//	The type specifies a dedicated ITypeConverter which must
+					//	be used to convert to/from strings.
+					
+					TypeConverterAttribute attribute = attributes[0] as TypeConverterAttribute;
+					converter = attribute.Converter;
+				}
+				else
+				{
+					//	There is no dedicated ITypeConverter. Instead, use the type
+					//	converter provided by the ComponentModel infrastructure.
+					
+					converter = new GenericTypeConverterAdaptor (System.ComponentModel.TypeDescriptor.GetConverter (type));
+				}
+				
+				Converter.typeConverters[type] = converter;
+				return converter;
+			}
+		}
+		public static void OverrideTypeConverter(System.Type type, ITypeConverter converter)
+		{
+			Converter.typeConverters[type] = converter;
+		}
+
+		#region GenericTypeConverter Class
+
+		/// <summary>
+		/// The GenericTypeConverterAdaptor wraps the type converter provided by
+		/// the ComponentModel services to our own ITypeConverter infrastructure.
+		/// </summary>
+		
+		private class GenericTypeConverterAdaptor : ITypeConverter
+		{
+			public GenericTypeConverterAdaptor(System.ComponentModel.TypeConverter converter)
+			{
+				this.converter = converter;
+			}
+			
+			#region ITypeConverter Members
+
+			public string ConvertToString(object value, IContextResolver context)
+			{
+				return this.converter.ConvertToInvariantString (value);
+			}
+
+			public object ConvertFromString(string value, IContextResolver context)
+			{
+				return this.converter.ConvertFromInvariantString (value);
+			}
+
+			#endregion
+
+			private System.ComponentModel.TypeConverter converter;
 		}
 		
-		
+		#endregion
+
 		public static bool IsNull(object obj)
 		{
 			return (obj == null) || (obj == System.DBNull.Value);
 		}
-		
 		public static bool IsNotNull(object obj)
 		{
 			return (obj != null) && !(obj == System.DBNull.Value);
 		}
-		
 		public static bool IsSimple(object obj)
 		{
 			//	Considère comme simple les cas suivants:
@@ -43,14 +113,12 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 		
-		
 		public static string ToString(object obj)
 		{
 			string value;
 			Converter.Convert (obj, out value);
 			return value;
 		}
-		
 		public static double ToDouble(object obj)
 		{
 			decimal value;
@@ -58,7 +126,6 @@ namespace Epsitec.Common.Types
 			return (double) value;
 		}
 		
-
 		public static bool SafeConvert(object obj, out string value)
 		{
 			try
@@ -71,7 +138,6 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 		}
-		
 		public static bool SafeConvert(object obj, out bool value)
 		{
 			try
@@ -89,7 +155,6 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 		}
-		
 		public static bool SafeConvert(object obj, out int value)
 		{
 			try
@@ -107,7 +172,6 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 		}
-		
 		public static bool SafeConvert(object obj, out long value)
 		{
 			try
@@ -125,7 +189,6 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 		}
-		
 		public static bool SafeConvert(object obj, out decimal value)
 		{
 			try
@@ -143,7 +206,6 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 		}
-		
 		public static bool SafeConvert(object obj, System.Type type, out System.Enum value)
 		{
 			try
@@ -161,7 +223,6 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 		}
-		
 		
 		public static bool Convert(object obj, out string value)
 		{
@@ -215,7 +276,6 @@ namespace Epsitec.Common.Types
 			
 			return true;
 		}
-		
 		public static bool Convert(object obj, out bool value)
 		{
 			decimal value_decimal;
@@ -223,7 +283,6 @@ namespace Epsitec.Common.Types
 			value = (value_decimal == 0) ? false : true;
 			return ok;
 		}
-		
 		public static bool Convert(object obj, out int value)
 		{
 			decimal value_decimal;
@@ -231,7 +290,6 @@ namespace Epsitec.Common.Types
 			value = (int) value_decimal;
 			return ok;
 		}
-		
 		public static bool Convert(object obj, out long value)
 		{
 			decimal value_decimal;
@@ -239,7 +297,6 @@ namespace Epsitec.Common.Types
 			value = (long) value_decimal;
 			return ok;
 		}
-		
 		public static bool Convert(object obj, out short value)
 		{
 			decimal value_decimal;
@@ -247,7 +304,6 @@ namespace Epsitec.Common.Types
 			value = (short) value_decimal;
 			return ok;
 		}
-		
 		public static bool Convert(object obj, out decimal value)
 		{
 			//	Retourne true si la valeur de 'obj' n'est pas 'null' ou une
@@ -318,7 +374,6 @@ namespace Epsitec.Common.Types
 			
 			throw new System.NotSupportedException (string.Format ("Type {0}: conversion not supported.", obj.GetType ().Name));
 		}
-		
 		public static bool Convert(object obj, System.Type type, out System.Enum value)
 		{
 			if ((obj == null) || (obj == System.DBNull.Value))
@@ -368,7 +423,6 @@ namespace Epsitec.Common.Types
 			value = null;
 			return false;
 		}
-		
 		public static bool Convert(object obj, out System.DateTime value)
 		{
 			if ((obj == null) || (obj == System.DBNull.Value))
@@ -428,7 +482,6 @@ namespace Epsitec.Common.Types
 			
 			throw new System.NotSupportedException (string.Format ("Type {0}: conversion not supported.", obj.GetType ().Name));
 		}
-		
 		
 		public static bool Convert(object obj, System.Type type, out object value)
 		{
@@ -544,7 +597,6 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 		
-		
 		public static string[] GetSplitEnumValues(System.Type type, System.Enum value)
 		{
 			string   name   = value.ToString ();
@@ -565,7 +617,6 @@ namespace Epsitec.Common.Types
 			
 			return values;
 		}
-		
 		
 		public static string ExtractDecimal(ref string value)
 		{
@@ -633,7 +684,6 @@ namespace Epsitec.Common.Types
 			value = null;
 			return false;
 		}
-		
 		internal static bool CheckEnumValue(System.Type type, System.Enum value)
 		{
 			string[] values = Converter.GetSplitEnumValues (type, value);
@@ -659,6 +709,7 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 		}
-		
+
+		private static Dictionary<System.Type, ITypeConverter> typeConverters = new Dictionary<System.Type, ITypeConverter> ();
 	}
 }

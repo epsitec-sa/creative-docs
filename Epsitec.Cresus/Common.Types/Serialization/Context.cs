@@ -63,6 +63,12 @@ namespace Epsitec.Common.Types.Serialization
 
 		public string GetPropertyName(DependencyProperty property)
 		{
+			//	Convert a property to a full name :
+			//
+			//	- For standard properties, returns "Name".
+			//	- For attached properties, returns "_nnn.Name" where _nnn is the
+			//	  id tag for the type which owns the property.
+			
 			if (property.IsAttached)
 			{
 				int typeId = this.objMap.GetTypeIndex (property.OwnerType);
@@ -74,11 +80,14 @@ namespace Epsitec.Common.Types.Serialization
 				return property.Name;
 			}
 		}
-		public DependencyProperty GetProperty(DependencyObject obj, string name)
+		public DependencyProperty GetProperty(DependencyObject obj, string fullName)
 		{
-			if (name.Contains ("."))
+			//	Return the property which matches the specified full name. See
+			//	method GetProperyName.
+
+			if (fullName.Contains ("."))
 			{
-				string[] args = name.Split ('.');
+				string[] args = fullName.Split ('.');
 
 				System.Diagnostics.Debug.Assert (args.Length == 2);
 
@@ -92,7 +101,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 			else
 			{
-				return obj.ObjectType.GetProperty (name);
+				return obj.ObjectType.GetProperty (fullName);
 			}
 		}
 
@@ -100,6 +109,9 @@ namespace Epsitec.Common.Types.Serialization
 
 		public string ResolveToId(object value)
 		{
+			//	Map an object reference to a tag id. If the object is not known
+			//	in this context, returns null.
+			
 			if (value == null)
 			{
 				return "null";
@@ -114,29 +126,37 @@ namespace Epsitec.Common.Types.Serialization
 
 			return null;
 		}
-		public object ResolveFromId(string id)
+		public object ResolveFromId(string tagId)
 		{
-			if (id == null)
+			//	Map a tag id to an object.
+
+			if (tagId == null)
 			{
 				throw new System.ArgumentNullException ();
 			}
-			
-			if (id == "null")
+
+			if (tagId == "null")
 			{
 				return null;
 			}
 
-			return this.objMap.GetValue (Context.ParseId (id));
+			return this.objMap.GetValue (Context.ParseId (tagId));
 		}
 
 		#endregion
 
 		public static string IdToString(int id)
 		{
+			//	Convert an id to a string representation, which is compatible
+			//	with the XML naming conventions.
+			
 			return string.Concat ("_", id.ToString (System.Globalization.CultureInfo.InvariantCulture));
 		}
 		public static int ParseId(string value)
 		{
+			//	Convert a string representation of an id to its integer value.
+			//	See method IdToString.
+			
 			System.Diagnostics.Debug.Assert (value.Length > 1);
 			System.Diagnostics.Debug.Assert (value[0] == '_');
 
@@ -145,6 +165,13 @@ namespace Epsitec.Common.Types.Serialization
 
 		public static string EscapeString(string value)
 		{
+			//	If needed, inserts a special escape sequence to make the value
+			//	valid and easily recognizable as escaped by the markup extension
+			//	parser.
+			//
+			//	NB: A value string may not contain { and } curly braces, since
+			//		these are used to define the markup extensions.
+			
 			if ((value == null) ||
 				(value.IndexOfAny (new char[] { '{', '}' }) < 0))
 			{
@@ -157,6 +184,9 @@ namespace Epsitec.Common.Types.Serialization
 		}
 		public static string UnescapeString(string value)
 		{
+			//	If the string was escaped, remove the escape sequence and
+			//	return the original string (see EscapeString).
+			
 			if ((value != null) &&
 				(value.StartsWith ("{}")))
 			{
@@ -170,6 +200,13 @@ namespace Epsitec.Common.Types.Serialization
 
 		public static bool IsMarkupExtension(string value)
 		{
+			//	Return true is the value is a markup extension. This does not
+			//	check for a valid syntax; it only analyses the value to see if
+			//	the "{" and "}" markers are found.
+			//
+			//	Escaped values are recognized as such and won't be considered
+			//	to be markup extensions.
+			
 			if ((value != null) &&
 				(value.StartsWith ("{")) &&
 				(value.StartsWith ("{}") == false) &&
@@ -185,15 +222,29 @@ namespace Epsitec.Common.Types.Serialization
 
 		public static string ConvertToMarkupExtension(string value)
 		{
+			//	Convert a value to a markup extension by embedding it within a
+			//	pair of { and }.
+			
+			if (value == null)
+			{
+				throw new System.ArgumentNullException ("Invalid null markup extension");
+			}
+			if (value.Length == 0)
+			{
+				throw new System.ArgumentException ("Invalid empty markup extension");
+			}
+			
 			return string.Concat ("{", value, "}");
 		}
 		public static string ConvertFromMarkupExtension(string value)
 		{
+			//	Remove the { and } which embed the markup extension.
+			
 			System.Diagnostics.Debug.Assert (Context.IsMarkupExtension (value));
 			return value.Substring (1, value.Length-2);
 		}
 
-		public string ConvertBindingToString(Binding binding)
+		public static string ConvertBindingToString(Binding binding, IContextResolver resolver)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
@@ -208,7 +259,7 @@ namespace Epsitec.Common.Types.Serialization
 
 			if (source != null)
 			{
-				string id = this.ResolveToId (source);
+				string id = resolver.ResolveToId (source);
 
 				if (id == null)
 				{

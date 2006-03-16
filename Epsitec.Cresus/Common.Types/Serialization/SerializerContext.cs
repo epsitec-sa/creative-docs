@@ -34,7 +34,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 			foreach (KeyValuePair<DependencyProperty, Binding> field in fields.Bindings)
 			{
-				this.writer.WriteObjectFieldValue (obj, field.Key.Name, this.ConvertBindingToString (field.Value));
+				this.writer.WriteObjectFieldValue (obj, field.Key.Name, Context.ConvertBindingToString (field.Value, this));
 			}
 
 			foreach (PropertyValue<IList<int>> field in fields.IdCollections)
@@ -94,15 +94,17 @@ namespace Epsitec.Common.Types.Serialization
 							continue;
 						}
 
+#if false
 						Binding binding = entry.Value as Binding;
 
 						if (binding != null)
 						{
-							fields.Add (entry.Property, this.ConvertBindingToString (binding));
+							fields.Add (entry.Property, Context.ConvertBindingToString (binding, this));
 							continue;
 						}
+#endif
 
-						string value = entry.Property.ConvertToString (entry.Value);
+						string value = entry.Property.ConvertToString (entry.Value, this);
 
 						if (value != null)
 						{

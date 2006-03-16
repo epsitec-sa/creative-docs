@@ -332,7 +332,7 @@ namespace Epsitec.Common.Types
 			return this.DefaultMetadata;
 		}
 
-		public string ConvertToString(object value)
+		public string ConvertToString(object value, IContextResolver context)
 		{
 			if (value == null)
 			{
@@ -345,16 +345,16 @@ namespace Epsitec.Common.Types
 				{
 					if (this.typeConverter == null)
 					{
-						this.typeConverter = System.ComponentModel.TypeDescriptor.GetConverter (this.propertyType);
+						this.typeConverter = Converter.GetTypeConverter (this.propertyType);
 					}
 				}
 			}
 
 			System.Diagnostics.Debug.Assert (value.GetType () == this.propertyType);
 			
-			return this.typeConverter.ConvertToInvariantString (value);
+			return this.typeConverter.ConvertToString (value, context);
 		}
-		public object ConvertFromString(string value)
+		public object ConvertFromString(string value, IContextResolver context)
 		{
 			if (value == null)
 			{
@@ -367,12 +367,12 @@ namespace Epsitec.Common.Types
 				{
 					if (this.typeConverter == null)
 					{
-						this.typeConverter = System.ComponentModel.TypeDescriptor.GetConverter (this.propertyType);
+						this.typeConverter = Converter.GetTypeConverter (this.propertyType);
 					}
 				}
 			}
 
-			return this.typeConverter.ConvertFromInvariantString (value);
+			return this.typeConverter.ConvertFromString (value, context);
 		}
 		
 		public static DependencyProperty Register(string name, System.Type propertyType, System.Type ownerType)
@@ -438,7 +438,7 @@ namespace Epsitec.Common.Types
 		private bool							isPropertyDerivedFromDependencyObject;
 		private bool							isReadOnly;
 		private int								globalIndex;
-		private System.ComponentModel.TypeConverter typeConverter;
+		private ITypeConverter					typeConverter;
 		
 		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
 		
