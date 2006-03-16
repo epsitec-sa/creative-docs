@@ -12,6 +12,7 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			if (context.ExternalMap.IsValueDefined (obj))
 			{
+				context.ExternalMap.IncrementUseValue (obj);
 				return;
 			}
 			

@@ -256,7 +256,6 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			buffer.Append ("{");
 			buffer.Append ("Binding");
 
 			string space = " ";
@@ -278,7 +277,7 @@ namespace Epsitec.Common.Types.Serialization
 					buffer.Append (space);
 					space = ", ";
 					
-					buffer.Append ("Source={ref ");
+					buffer.Append ("Source={Object ");
 					buffer.Append (id);
 					buffer.Append ("}");
 				}
@@ -308,8 +307,6 @@ namespace Epsitec.Common.Types.Serialization
 				buffer.Append ("Mode=");
 				buffer.Append (value);
 			}
-			
-			buffer.Append ("}");
 			
 			return buffer.ToString ();
 		}

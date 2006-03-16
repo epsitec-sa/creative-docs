@@ -63,7 +63,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 			this.valueToTagLookup[value] = tag;
 		}
 
-		public void UseValue(T value)
+		public void IncrementUseValue(T value)
 		{
 			int count;
 

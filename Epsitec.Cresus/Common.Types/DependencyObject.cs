@@ -351,6 +351,16 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 		}
+		public IEnumerable<KeyValuePair<DependencyProperty, Binding>> GetAllBindings()
+		{
+			if (this.bindings != null)
+			{
+				foreach (KeyValuePair<DependencyProperty, BindingExpression> entry in this.bindings)
+				{
+					yield return new KeyValuePair<DependencyProperty, Binding> (entry.Key, entry.Value.ParentBinding);
+				}
+			}
+		}
 		
 		protected void AddUserEventHandler(string name, System.Delegate handler)
 		{

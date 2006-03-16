@@ -30,11 +30,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 			foreach (PropertyValue<string> field in fields.Values)
 			{
-				this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (field.Property), Context.EscapeString (field.Value));
-			}
-			foreach (KeyValuePair<DependencyProperty, Binding> field in fields.Bindings)
-			{
-				this.writer.WriteObjectFieldValue (obj, field.Key.Name, Context.ConvertBindingToString (field.Value, this));
+				this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (field.Property), field.Value);
 			}
 
 			foreach (PropertyValue<IList<int>> field in fields.IdCollections)
@@ -63,6 +59,16 @@ namespace Epsitec.Common.Types.Serialization
 			
 			Fields fields = new Fields ();
 
+			foreach (KeyValuePair<DependencyProperty, Binding> entry in obj.GetAllBindings ())
+			{
+				DependencyProperty property = entry.Key;
+				Binding binding = entry.Value;
+				
+				string markup = Context.ConvertBindingToString (binding, this);
+				
+				fields.Add (property, Context.ConvertToMarkupExtension (markup));
+			}
+			
 			foreach (LocalValueEntry entry in obj.LocalValueEntries)
 			{
 				DependencyPropertyMetadata metadata = entry.Property.GetMetadata (obj);
@@ -72,6 +78,15 @@ namespace Epsitec.Common.Types.Serialization
 				{
 					if (obj.GetBinding (entry.Property) == null)
 					{
+						if (this.extMap.IsValueDefined (entry.Value))
+						{
+							//	This is an external reference. Record it as such.
+
+							string markup = string.Concat ("External ", this.extMap.GetTag (entry.Value));
+							
+							fields.Add (entry.Property, Context.ConvertToMarkupExtension (markup));
+						}
+						
 						DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
 
 						if (dependencyObjectValue != null)
@@ -108,7 +123,7 @@ namespace Epsitec.Common.Types.Serialization
 
 						if (value != null)
 						{
-							fields.Add (entry.Property, value);
+							fields.Add (entry.Property, Context.EscapeString (value));
 							continue;
 						}
 					}
@@ -152,13 +167,6 @@ namespace Epsitec.Common.Types.Serialization
 					return this.valueCollections;
 				}
 			}
-			public IList<KeyValuePair<DependencyProperty, Binding>> Bindings
-			{
-				get
-				{
-					return this.bindings;
-				}
-			}
 
 			public void Add(DependencyProperty property, int id)
 			{
@@ -180,16 +188,11 @@ namespace Epsitec.Common.Types.Serialization
 				list.AddRange (collection);
 				this.valueCollections.Add (new PropertyValue<IList<string>> (property, list));
 			}
-			public void Add(DependencyProperty property, Binding binding)
-			{
-				this.bindings.Add (new KeyValuePair<DependencyProperty, Binding> (property, binding));
-			}
 
 			private List<PropertyValue<int>> ids = new List<PropertyValue<int>> ();
 			private List<PropertyValue<string>> values = new List<PropertyValue<string>> ();
 			private List<PropertyValue<IList<int>>> idCollections = new List<PropertyValue<IList<int>>> ();
 			private List<PropertyValue<IList<string>>> valueCollections = new List<PropertyValue<IList<string>>> ();
-			private List<KeyValuePair<DependencyProperty, Binding>> bindings = new List<KeyValuePair<DependencyProperty, Binding>> ();
 		}
 
 	}

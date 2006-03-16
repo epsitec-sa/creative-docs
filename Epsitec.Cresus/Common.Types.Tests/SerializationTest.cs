@@ -219,7 +219,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (a, Collection.ToList (map.GetUnusedValues ())[0]);
 			Assert.AreEqual (b, Collection.ToList (map.GetUnusedValues ())[1]);
 
-			map.UseValue (a);
+			map.IncrementUseValue (a);
 
 			Assert.AreEqual (1, Collection.Count (map.GetUsedValues ()));
 			Assert.AreEqual (1, Collection.Count (map.GetUnusedValues ()));
@@ -228,9 +228,9 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (a, Collection.ToList (map.GetUsedValues ())[0]);
 			Assert.AreEqual (b, Collection.ToList (map.GetUnusedValues ())[0]);
 			
-			map.UseValue (a);
-			map.UseValue (a);
-			map.UseValue (a);
+			map.IncrementUseValue (a);
+			map.IncrementUseValue (a);
+			map.IncrementUseValue (a);
 
 			Assert.AreEqual (1, Collection.Count (map.GetUsedValues ()));
 			Assert.AreEqual (1, Collection.Count (map.GetUnusedValues ()));
@@ -333,7 +333,8 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckSerializeToXml()
 		{
-			MyItem root = this.CreateSampleTree ();
+			MyItem ext;
+			MyItem root = this.CreateSampleTree (out ext);
 
 			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (System.Console.Out);
 			
@@ -344,6 +345,9 @@ namespace Epsitec.Common.Types
 			xmlWriter.WriteStartElement ("root");
 
 			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
+
+			context.ExternalMap.Record ("ext", ext);
+			
 			Storage.Serialize (root, context);
 
 			xmlWriter.WriteEndElement ();
@@ -355,8 +359,12 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (DataObject.DataContextProperty, context.GetProperty (root, "_2.DataContext"));
 		}
 
-		private MyItem CreateSampleTree()
+		private MyItem CreateSampleTree(out MyItem ext)
 		{
+			ext = new MyItem ();
+			ext.Name = "ext";
+			ext.Value = "EXT";
+
 			MyItem a = new MyItem ();
 			MyItem b = new MyItem ();
 			MyItem q = new MyItem ();
@@ -376,7 +384,7 @@ namespace Epsitec.Common.Types
 			r.Name = "r";
 			c1.Name = "c1";
 			c2.Name = "c2";
-
+			
 			a.Value = "A";
 			b.Value = "B";
 			q.Value = "Q{<\"&>}";
@@ -385,7 +393,7 @@ namespace Epsitec.Common.Types
 			c2.Value = "C2";
 
 			//	a --+--> b --+--> c1
-			//	    |        +--> c2
+			//	    |        +--> c2 ...friend... ext
 			//	    +--> q
 			//		+--> r
 
@@ -395,6 +403,8 @@ namespace Epsitec.Common.Types
 
 			c1.Price = 125.95M;
 			c2.Price = 3899.20M;
+
+			c2.Friend = ext;
 
 			Binding bindingQ = new Binding ();
 			Binding bindingR = new Binding ();
