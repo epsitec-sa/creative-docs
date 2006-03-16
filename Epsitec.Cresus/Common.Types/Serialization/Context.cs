@@ -123,26 +123,27 @@ namespace Epsitec.Common.Types.Serialization
 
 		#region IContextResolver Members
 
-		public string ResolveToId(object value)
+		public string ResolveToMarkup(object value)
 		{
-			//	Map an object reference to a tag id. If the object is not known
-			//	in this context, returns null.
+			//	Map an object reference to a markup extension. If the object is
+			//	not known in this context, returns null.
 			
 			if (value == null)
 			{
-				return "null";
+				return MarkupExtension.NullToString ();
 			}
 			
 			DependencyObject obj = value as DependencyObject;
 			
-			if (obj != null)
+			if ((obj != null) &&
+				(this.objMap.IsValueDefined (obj)))
 			{
-				return Context.IdToString (this.objMap.GetId (obj));
+				return MarkupExtension.ObjRefToString (obj, this);
 			}
 
 			return null;
 		}
-		public object ResolveFromId(string tagId)
+		public object ResolveFromMarkup(string tagId)
 		{
 			//	Map a tag id to an object.
 
@@ -151,6 +152,8 @@ namespace Epsitec.Common.Types.Serialization
 				throw new System.ArgumentNullException ();
 			}
 
+			//	TODO: use MarkupExtension to parse the tag
+			
 			if (tagId == "null")
 			{
 				return null;

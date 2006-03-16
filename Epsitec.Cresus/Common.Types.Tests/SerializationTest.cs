@@ -363,8 +363,20 @@ namespace Epsitec.Common.Types
 			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
 
 			context.ExternalMap.Record ("ext", ext);
+
+			MyItem b = DependencyObjectTree.FindChild (root, "b") as MyItem;
+			MyItem m = new MyItem ();
+
+			m.Name = "m";
+			m.Value = "M";
+			m.Price = 12.60M;
+			m.Friend = ext;
+
+			Assert.IsNotNull (b);
 			
 			Storage.Serialize (root, context);
+			Storage.Serialize (b, context);
+			Storage.Serialize (m, context);
 
 			xmlWriter.WriteEndElement ();
 			xmlWriter.WriteEndDocument ();

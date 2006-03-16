@@ -63,6 +63,10 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
+		public static string NullToString()
+		{
+			return "{Null}";
+		}
 		public static string BindingToString(Binding binding, IContextResolver resolver)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -78,9 +82,9 @@ namespace Epsitec.Common.Types.Serialization
 
 			if (source != null)
 			{
-				string id = resolver.ResolveToId (source);
+				string markup = resolver.ResolveToMarkup (source);
 
-				if (id == null)
+				if (markup == null)
 				{
 					//	TODO: handle unknown sources
 				}
@@ -89,9 +93,8 @@ namespace Epsitec.Common.Types.Serialization
 					buffer.Append (space);
 					space = ", ";
 
-					buffer.Append ("Source={Object ");
-					buffer.Append (id);
-					buffer.Append ("}");
+					buffer.Append ("Source=");
+					buffer.Append (markup);
 				}
 			}
 
@@ -123,12 +126,11 @@ namespace Epsitec.Common.Types.Serialization
 			buffer.Append ("}");
 			return buffer.ToString ();
 		}
-		
-		public static string ExtRefToString(object value, SerializerContext context)
+		public static string ExtRefToString(object value, Context context)
 		{
 			return string.Concat ("{ExtRef ", context.ExternalMap.GetTag (value), "}");
 		}
-		public static string ObjRefToString(DependencyObject value, SerializerContext context)
+		public static string ObjRefToString(DependencyObject value, Context context)
 		{
 			return string.Concat ("{ObjRef ", Context.IdToString (context.ObjectMap.GetId (value)), "}");
 		}

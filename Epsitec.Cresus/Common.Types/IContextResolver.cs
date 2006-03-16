@@ -5,7 +5,7 @@ namespace Epsitec.Common.Types
 {
 	public interface IContextResolver
 	{
-		string ResolveToId(object value);
-		object ResolveFromId(string id);
+		string ResolveToMarkup(object value);
+		object ResolveFromMarkup(string id);
 	}
 }

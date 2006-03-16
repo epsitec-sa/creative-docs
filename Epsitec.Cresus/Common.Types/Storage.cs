@@ -7,21 +7,28 @@ namespace Epsitec.Common.Types
 {
 	public static class Storage
 	{
-		public static void Serialize(DependencyObject obj, Serialization.Context context)
+		public static void Serialize(DependencyObject root, Serialization.Context context)
 		{
+			context.ExternalMap.ClearUseCount ();
+			
 			Serialization.Generic.MapId<DependencyObject> map = context.ObjectMap;
 			
 			int typeCount = map.TypeCount;
 			int objCount = map.ValueCount;
 
-			Serialization.GraphVisitor.VisitSerializableNodes (obj, context);
+			Serialization.GraphVisitor.VisitSerializableNodes (root, context);
 
 			int newTypeCount = map.TypeCount;
 			int newObjCount = map.ValueCount;
 
+			context.ActiveWriter.BeginStorageBundle (map.GetId (root));
+			
 			if (newObjCount > objCount)
 			{
-				context.ActiveWriter.BeginStorageBundle ();
+				foreach (string name in context.ExternalMap.RecordedTags)
+				{
+					context.ActiveWriter.WriteExternalReference (name);
+				}
 				
 				for (int id = typeCount; id < newTypeCount; id++)
 				{
@@ -35,9 +42,9 @@ namespace Epsitec.Common.Types
 				{
 					context.StoreObject (id, map.GetValue (id));
 				}
-				
-				context.ActiveWriter.EndStorageBundle ();
 			}
+			
+			context.ActiveWriter.EndStorageBundle ();
 		}
 	}
 }

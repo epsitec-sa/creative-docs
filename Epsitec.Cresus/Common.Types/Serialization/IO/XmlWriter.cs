@@ -12,17 +12,24 @@ namespace Epsitec.Common.Types.Serialization.IO
 			this.xml = xml;
 		}
 
-		public override void BeginStorageBundle()
+		public override void BeginStorageBundle(int id)
 		{
 			this.xml.WriteStartElement ("s", "storage", this.nsStructure);
 //			this.xml.WriteAttributeString ("xmlns", "s", null, this.nsStructure);
 			this.xml.WriteAttributeString ("xmlns", "f", null, this.nsFields);
+			this.xml.WriteAttributeString ("root", this.nsStructure, Context.IdToString (id));
 		}
 		public override void EndStorageBundle()
 		{
 			this.xml.WriteEndElement ();
 		}
-		
+
+		public override void WriteExternalReference(string name)
+		{
+			this.xml.WriteStartElement ("external", this.nsStructure);
+			this.xml.WriteAttributeString ("name", this.nsStructure, name);
+			this.xml.WriteEndElement ();
+		}
 		public override void WriteTypeDefinition(int id, string name)
 		{
 			this.xml.WriteStartElement ("type", this.nsStructure);
@@ -30,7 +37,6 @@ namespace Epsitec.Common.Types.Serialization.IO
 			this.xml.WriteAttributeString ("name", this.nsStructure, name);
 			this.xml.WriteEndElement ();
 		}
-
 		public override void WriteObjectDefinition(int id, int typeId)
 		{
 			this.xml.WriteStartElement ("object", this.nsStructure);
@@ -42,7 +48,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 		public override void BeginObject(int id, DependencyObject obj)
 		{
 			this.xml.WriteStartElement ("data", this.nsStructure);
-			this.xml.WriteAttributeString ("obj", this.nsStructure, Context.IdToString (id));
+			this.xml.WriteAttributeString ("id", Context.IdToString (id));
 		}
 		public override void WriteObjectFieldReference(DependencyObject obj, string name, int id)
 		{
