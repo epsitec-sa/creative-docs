@@ -3,6 +3,10 @@
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The TypeConverterAttribute is used to specify which class to use in
+	/// order to convert between a type and string (see ITypeConverter).
+	/// </summary>
 	[System.AttributeUsage (System.AttributeTargets.Class, Inherited=false)]
 	public class TypeConverterAttribute : System.Attribute
 	{

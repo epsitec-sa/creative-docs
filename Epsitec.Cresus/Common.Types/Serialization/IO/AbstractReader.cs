@@ -10,5 +10,8 @@ namespace Epsitec.Common.Types.Serialization.IO
 		protected AbstractReader()
 		{
 		}
+
+		public abstract void BeginStorageBundle(out int rootId);
+		public abstract void EndStorageBundle();
 	}
 }

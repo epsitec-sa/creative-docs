@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The Collection class provides a few useful methods to operate on
+	/// enumerable collections.
+	/// </summary>
 	public class Collection
 	{
 		public static int Count<T>(IEnumerable<T> collection)

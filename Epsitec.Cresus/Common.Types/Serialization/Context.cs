@@ -6,6 +6,11 @@ using Epsitec.Common.Types.Serialization.Generic;
 
 namespace Epsitec.Common.Types.Serialization
 {
+	/// <summary>
+	/// The Context class is either used by itself to analyse a DependencyObject
+	/// graph, or as a base class to SerializerContext and DeserializerContext;
+	/// see also the Epsitec.Common.Types.Storage class.
+	/// </summary>
 	public class Context : IContextResolver
 	{
 		public Context()
@@ -76,7 +81,7 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			throw new System.InvalidOperationException ("StoreObject not supported");
 		}
-
+		
 		public string GetPropertyName(DependencyProperty property)
 		{
 			//	Convert a property to a full name :

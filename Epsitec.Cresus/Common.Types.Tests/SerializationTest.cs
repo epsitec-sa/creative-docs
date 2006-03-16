@@ -387,6 +387,64 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (DataObject.DataContextProperty, context.GetProperty (root, "_2.DataContext"));
 		}
 
+		[Test]
+		public void CheckDeserializeFromXml()
+		{
+			MyItem ext;
+			MyItem root = this.CreateSampleTree (out ext);
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
+			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
+
+			xmlWriter.Indentation = 2;
+			xmlWriter.IndentChar = ' ';
+			xmlWriter.Formatting = System.Xml.Formatting.Indented;
+			xmlWriter.WriteStartDocument (true);
+			xmlWriter.WriteStartElement ("root");
+
+			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
+
+			context.ExternalMap.Record ("ext", ext);
+
+			MyItem b = DependencyObjectTree.FindChild (root, "b") as MyItem;
+			MyItem m = new MyItem ();
+
+			m.Name = "m";
+			m.Value = "M";
+			m.Price = 12.60M;
+			m.Friend = ext;
+
+			Storage.Serialize (root, context);
+			Storage.Serialize (b, context);
+			Storage.Serialize (m, context);
+
+			xmlWriter.WriteEndElement ();
+			xmlWriter.WriteEndDocument ();
+			xmlWriter.Flush ();
+			xmlWriter.Close ();
+
+			System.IO.StringReader stringReader = new System.IO.StringReader (buffer.ToString ());
+			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
+
+			while (xmlReader.Read ())
+			{
+				if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+					(xmlReader.LocalName == "root"))
+				{
+					break;
+				}
+			}
+
+			context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader));
+
+			context.ExternalMap.Record ("ext", ext);
+
+			MyItem readRoot = Storage.Deserialize (context) as MyItem;
+			MyItem readB = Storage.Deserialize (context) as MyItem;
+			MyItem readM = Storage.Deserialize (context) as MyItem;
+		}
+		
 		private MyItem CreateSampleTree(out MyItem ext)
 		{
 			ext = new MyItem ();

@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The Storage class is used to serialize and deserialize DependencyObject
+	/// graphs.
+	/// </summary>
 	public static class Storage
 	{
 		public static void Serialize(DependencyObject root, Serialization.Context context)
@@ -45,6 +49,28 @@ namespace Epsitec.Common.Types
 			}
 			
 			context.ActiveWriter.EndStorageBundle ();
+		}
+		public static DependencyObject Deserialize(Serialization.Context context)
+		{
+			int rootId;
+			DependencyObject root;
+			
+			context.ActiveReader.BeginStorageBundle (out rootId);
+
+			if (context.ObjectMap.IsIdDefined (rootId))
+			{
+				root = context.ObjectMap.GetValue (rootId);
+			}
+			else
+			{
+				//	TODO: deserialize, really
+				
+				root = null;
+			}
+			
+			context.ActiveReader.EndStorageBundle ();
+			
+			return root;
 		}
 	}
 }
