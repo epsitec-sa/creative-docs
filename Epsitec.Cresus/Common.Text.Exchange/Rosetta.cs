@@ -57,6 +57,11 @@ namespace Epsitec.Common.Text.Exchange
 				this.CloseTag (HtmlAttribute.Underlined);
 			}
 
+			if (precedIsStrikeout && !isStrikeout)
+			{
+				this.CloseTag (HtmlAttribute.Strikeout);
+			}
+
 
 			if (!precedIsItalic && isItalic)
 			{
@@ -75,9 +80,15 @@ namespace Epsitec.Common.Text.Exchange
 				this.OpenTag (HtmlAttribute.Underlined);
 			}
 
+			if (!precedIsStrikeout && isStrikeout)
+			{
+				this.OpenTag (HtmlAttribute.Strikeout);
+			}
+
 			precedIsItalic = isItalic;
 			precedIsBold = isBold;
 			precedIsUnderlined = isUnderlined;
+			precedIsStrikeout = isStrikeout;
 
 			this.AppendTagsToClose ();
 			this.AppendTagsToOpen ();
@@ -102,6 +113,11 @@ namespace Epsitec.Common.Text.Exchange
 			this.isUnderlined = underlined;
 		}
 
+		public void SetStrikeout(bool underlined)
+		{
+			this.isStrikeout = underlined;
+		}
+		
 		public void SetFont(string fontName, int fontSize)
 		{
 		}
@@ -143,14 +159,14 @@ namespace Epsitec.Common.Text.Exchange
 		private void TransformLineSeparators(ref string line)
 		{
 			// transforme tous les caractères LineSeparator en <br>
-			ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.LineSeparator, "<br />");
+			ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.LineSeparator, "<br />\r\n");
 		}
 
 
 		private void TransformParagraphSeparators(ref string line)
 		{
 			// transforme tous les caractères LineSeparator en <br>
-			ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.ParagraphSeparator, "</p>\r\n<p>");
+			ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.ParagraphSeparator, "</p>\r\n\r\n<p>");
 		}
 
 
@@ -186,7 +202,12 @@ namespace Epsitec.Common.Text.Exchange
 				case HtmlAttribute.Underlined:
 					retval = this.GetHtmlTag ("u", tagmode);
 					break;
-
+				case HtmlAttribute.Strikeout:
+					retval = this.GetHtmlTag ("s", tagmode);
+					break;
+				case HtmlAttribute.Paragraph:
+					retval = this.GetHtmlTag ("p", tagmode);
+					break;
 			}
 
 			return retval;
@@ -272,7 +293,7 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				string tag = AttributeToString (attr, HtmlTagMode.Open, null);
 				this.output.Append (tag);
-				//this.openTagsStack.Push (attr);
+				this.openTagsStack.Push (attr);
 			}
 
 			this.tagsToOpen.Clear ();
@@ -284,6 +305,7 @@ namespace Epsitec.Common.Text.Exchange
 			Bold,
 			Italic,
 			Underlined,
+			Strikeout,
 			Font,
 			Paragraph
 		}
@@ -296,12 +318,16 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 		private bool isItalic = false;
-		private bool isBold = false;
-		private bool isUnderlined = false;
-
 		private bool precedIsItalic = false;
+
+		private bool isBold = false;
 		private bool precedIsBold = false;
+
+		private bool isUnderlined = false;
 		private bool precedIsUnderlined = false;
+
+		private bool isStrikeout = false;
+		private bool precedIsStrikeout = false;
 
 		private HtmlAttribute lastAttributeSet;
 
@@ -370,6 +396,8 @@ namespace Epsitec.Common.Text.Exchange
 				htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
 				htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
 				htmlText.SetUnderlined (textWrapper.Defined.IsUnderlineDefined);//  && textWrapper.Defined.InvertBold);
+				htmlText.SetStrikeout (textWrapper.Defined.IsStrikeoutDefined);//  && textWrapper.Defined.InvertBold);
+
 				
 
 				int i;
@@ -391,6 +419,8 @@ namespace Epsitec.Common.Text.Exchange
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);
 
 			}
+
+			htmlText.Terminate ();
 
 			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Text, htmlText);
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
