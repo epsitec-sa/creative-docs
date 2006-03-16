@@ -211,8 +211,69 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (b, Collection.ToList (map.RecordedValues)[1]);
 			Assert.AreEqual ("a", Collection.ToList (map.RecordedTags)[0]);
 			Assert.AreEqual ("b", Collection.ToList (map.RecordedTags)[1]);
+
+			Assert.AreEqual (0, Collection.Count (map.GetUsedValues ()));
+			Assert.AreEqual (2, Collection.Count (map.GetUnusedValues ()));
+			Assert.AreEqual (0, map.GetValueUseCount (a));
+			Assert.AreEqual (0, map.GetValueUseCount (b));
+			Assert.AreEqual (a, Collection.ToList (map.GetUnusedValues ())[0]);
+			Assert.AreEqual (b, Collection.ToList (map.GetUnusedValues ())[1]);
+
+			map.UseValue (a);
+
+			Assert.AreEqual (1, Collection.Count (map.GetUsedValues ()));
+			Assert.AreEqual (1, Collection.Count (map.GetUnusedValues ()));
+			Assert.AreEqual (1, map.GetValueUseCount (a));
+			Assert.AreEqual (0, map.GetValueUseCount (b));
+			Assert.AreEqual (a, Collection.ToList (map.GetUsedValues ())[0]);
+			Assert.AreEqual (b, Collection.ToList (map.GetUnusedValues ())[0]);
+			
+			map.UseValue (a);
+			map.UseValue (a);
+			map.UseValue (a);
+
+			Assert.AreEqual (1, Collection.Count (map.GetUsedValues ()));
+			Assert.AreEqual (1, Collection.Count (map.GetUnusedValues ()));
+			Assert.AreEqual (4, map.GetValueUseCount (a));
+			Assert.AreEqual (0, map.GetValueUseCount (b));
+			Assert.AreEqual (a, Collection.ToList (map.GetUsedValues ())[0]);
+			Assert.AreEqual (b, Collection.ToList (map.GetUnusedValues ())[0]);
+
+			map.ClearUseCount ();
+			
+			Assert.AreEqual (0, Collection.Count (map.GetUsedValues ()));
+			Assert.AreEqual (2, Collection.Count (map.GetUnusedValues ()));
+			Assert.AreEqual (0, map.GetValueUseCount (a));
+			Assert.AreEqual (0, map.GetValueUseCount (b));
+			Assert.AreEqual (a, Collection.ToList (map.GetUnusedValues ())[0]);
+			Assert.AreEqual (b, Collection.ToList (map.GetUnusedValues ())[1]);
 		}
-		
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckMapTagEx1()
+		{
+			Serialization.Generic.MapTag<DependencyObject> map = new Serialization.Generic.MapTag<DependencyObject> ();
+
+			MyItem a = new MyItem ();
+			MyItem b = new MyItem ();
+
+			map.Record ("x", a);
+			map.Record ("x", b);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckMapTagEx2()
+		{
+			Serialization.Generic.MapTag<DependencyObject> map = new Serialization.Generic.MapTag<DependencyObject> ();
+
+			MyItem x = new MyItem ();
+			
+			map.Record ("a", x);
+			map.Record ("b", x);
+		}
+
 		[Test]
 		public void CheckVisitSerializableNodes()
 		{

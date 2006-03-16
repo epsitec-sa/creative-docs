@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types.Serialization
 		public Context()
 		{
 			this.objMap = new MapId<DependencyObject> ();
-			this.externalMap = new MapId<object> ();
+			this.extMap = new MapTag<object> ();
 			this.typeIds = new Dictionary<System.Type, int> ();
 		}
 		
@@ -22,11 +22,11 @@ namespace Epsitec.Common.Types.Serialization
 				return this.objMap;
 			}
 		}
-		public MapId<object> ExternalMap
+		public MapTag<object>					ExternalMap
 		{
 			get
 			{
-				return this.externalMap;
+				return this.extMap;
 			}
 		}
 		
@@ -330,8 +330,8 @@ namespace Epsitec.Common.Types.Serialization
 		}
 
 
-		protected MapId<DependencyObject>			objMap;
-		protected MapId<object>					externalMap;
+		protected MapId<DependencyObject>		objMap;
+		protected MapTag<object>				extMap;
 		protected Dictionary<System.Type, int>	typeIds;
 		
 		protected IO.AbstractWriter				writer;

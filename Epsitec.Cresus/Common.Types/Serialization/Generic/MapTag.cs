@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types.Serialization.Generic
 {
+	/// <summary>
+	/// The MapTag class is used to record relations between values of type T
+	/// and tags, which are just unique names.
+	/// </summary>
 	public class MapTag<T> where T : class
 	{
 		public MapTag()
@@ -59,6 +63,57 @@ namespace Epsitec.Common.Types.Serialization.Generic
 			this.valueToTagLookup[value] = tag;
 		}
 
+		public void UseValue(T value)
+		{
+			int count;
+
+			if (this.valueCounters.TryGetValue (value, out count))
+			{
+				this.valueCounters[value] = count+1;
+			}
+			else
+			{
+				this.valueCounters[value] = 1;
+			}
+		}
+		public void ClearUseCount()
+		{
+			this.valueCounters.Clear ();
+		}
+
+		public int GetValueUseCount(T value)
+		{
+			int count;
+			
+			if (this.valueCounters.TryGetValue (value, out count))
+			{
+				return count;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		
+		public IEnumerable<T> GetUsedValues()
+		{
+			foreach (T value in this.valueCounters.Keys)
+			{
+				yield return value;
+			}
+		}
+		public IEnumerable<T> GetUnusedValues()
+		{
+			foreach (T value in this.valueToTagLookup.Keys)
+			{
+				if (this.valueCounters.ContainsKey (value))
+				{
+					continue;
+				}
+				yield return value;
+			}
+		}
+
 		public bool IsValueDefined(T value)
 		{
 			return this.valueToTagLookup.ContainsKey (value);
@@ -93,5 +148,6 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		
 		private Dictionary<string, T> tagToValueLookup = new Dictionary<string, T> ();
 		private Dictionary<T, string> valueToTagLookup = new Dictionary<T, string> ();
+		private Dictionary<T, int> valueCounters = new Dictionary<T, int> ();
 	}
 }
