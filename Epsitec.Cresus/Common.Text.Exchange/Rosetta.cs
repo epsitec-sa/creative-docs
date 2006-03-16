@@ -9,18 +9,12 @@ namespace Epsitec.Common.Text.Exchange
 	/// </summary>
 	/// 
 
-	public class HtmlRun
+
+	class HtmlFontDefinition
 	{
-		private string runText;
-		private bool italic;
-		private bool bold;
-
-		public HtmlRun()
-		{
-		}
-
-
-	}
+		int fontSize;
+		int fontFace;
+	} ;
 
 	public class HtmlText
 	{
@@ -118,10 +112,32 @@ namespace Epsitec.Common.Text.Exchange
 			this.isStrikeout = underlined;
 		}
 		
-		public void SetFont(string fontName, int fontSize)
+		public void SetFontSize(double fontSize)
 		{
+			this.fontSize = (int)(fontSize / 3.5277777775);
 		}
 
+		public void SetFontFace(string fontFace)
+		{
+			this.fontFace = fontFace;
+		}
+
+		public void SetFontColor(string fontcolor)
+		{
+		//	Epsitec.Common.Drawing. = new Epsitec.Common.Drawing.RichColor ();
+		//	richcolor.Parse (fontcolor);
+
+			Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.Parse (fontcolor);
+
+			//richcolor.ToString
+
+			int r = (int)(richcolor.R * 255);
+			int g = (int)(richcolor.G * 255);
+			int b = (int)(richcolor.B * 255);
+
+			this.fontColor = string.Format ("#{0,02:x}{1,02:x}{2,02:x}", r, g, b);
+
+		}
 
 		private void ReplaceSpecialCodes(ref string line, Epsitec.Common.Text.Unicode.Code specialCode, string htmlTag)
 		{
@@ -329,6 +345,10 @@ namespace Epsitec.Common.Text.Exchange
 		private bool isStrikeout = false;
 		private bool precedIsStrikeout = false;
 
+		private string fontColor = "";
+		private string fontFace = "";
+		private int fontSize = 0;
+
 		private HtmlAttribute lastAttributeSet;
 
 		private System.Collections.ArrayList runList;
@@ -398,9 +418,9 @@ namespace Epsitec.Common.Text.Exchange
 				htmlText.SetUnderlined (textWrapper.Defined.IsUnderlineDefined);//  && textWrapper.Defined.InvertBold);
 				htmlText.SetStrikeout (textWrapper.Defined.IsStrikeoutDefined);//  && textWrapper.Defined.InvertBold);
 
-				
-
-				int i;
+				htmlText.SetFontSize (textWrapper.Defined.IsFontSizeDefined ? textWrapper.Defined.FontSize : 0);
+				htmlText.SetFontFace (textWrapper.Defined.FontFace);
+				htmlText.SetFontColor (textWrapper.Defined.Color);
 
 				//output.Append(navigator.ReadText (runLength) );
 				htmlText.AppendText (navigator.ReadText (runLength));
