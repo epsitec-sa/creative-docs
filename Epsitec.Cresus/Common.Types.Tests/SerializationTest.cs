@@ -242,7 +242,7 @@ namespace Epsitec.Common.Types
 			xmlWriter.WriteStartDocument (true);
 			xmlWriter.WriteStartElement ("root");
 
-			Serialization.Context context = new Serialization.Context (new Serialization.IO.XmlWriter (xmlWriter));
+			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
 			Storage.Serialize (root, context);
 
 			xmlWriter.WriteEndElement ();

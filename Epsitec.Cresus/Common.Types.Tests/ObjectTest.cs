@@ -318,6 +318,27 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		[ExpectedException (typeof (System.TypeInitializationException))]
+		public void CheckPropertiesEx3()
+		{
+			DependencyProperty p = Test3a.InvalidProperty;
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.TypeInitializationException))]
+		public void CheckPropertiesEx4()
+		{
+			DependencyProperty p = Test3b.InvalidProperty;
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.TypeInitializationException))]
+		public void CheckPropertiesEx5()
+		{
+			DependencyProperty p = Test3c.InvalidProperty;
+		}
+
+		[Test]
 		public void CheckPropertyPath()
 		{
 			DependencyPropertyPath pp1 = new DependencyPropertyPath ();
@@ -895,7 +916,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
-		#region Test1 and Test2 Classes
+		#region Test1, Test2... and Test3... Classes
 		public class Test1 : Types.DependencyObject
 		{
 			public Test1()
@@ -956,6 +977,18 @@ namespace Epsitec.Common.Types
 			//	de Test2.
 			
 			public static new DependencyProperty StandardProperty = DependencyProperty.Register ("Standard", typeof (string), typeof (Test2b));
+		}
+		public class Test3a : DependencyObject
+		{
+			public static DependencyProperty InvalidProperty = DependencyProperty.Register (null, typeof (string), typeof (Test3a));
+		}
+		public class Test3b : DependencyObject
+		{
+			public static DependencyProperty InvalidProperty = DependencyProperty.Register ("X$z", typeof (string), typeof (Test3b));
+		}
+		public class Test3c : DependencyObject
+		{
+			public static DependencyProperty InvalidProperty = DependencyProperty.Register ("_Invalid", typeof (string), typeof (Test3c));
 		}
 		#endregion
 

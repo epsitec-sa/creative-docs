@@ -10,11 +10,21 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public sealed class DependencyProperty : System.IEquatable<DependencyProperty>, System.IComparable<DependencyProperty>
 	{
-		private DependencyProperty(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
+		private DependencyProperty(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
+			if (name == null)
+			{
+				throw new System.ArgumentNullException ("Property needs a name");
+			}
+
+			if (DependencyProperty.validNameRegex.IsMatch (name) == false)
+			{
+				throw new System.ArgumentException (string.Format ("'{0}' is not a valid property name", name));
+			}
+			
 			this.name = name;
-			this.propertyType = property_type;
-			this.ownerType = owner_type;
+			this.propertyType = propertyType;
+			this.ownerType = ownerType;
 			this.defaultMetadata = metadata;
 			this.globalIndex = System.Threading.Interlocked.Increment (ref DependencyProperty.globalPropertyCount);
 			this.isPropertyDerivedFromDependencyObject = typeof (DependencyObject).IsAssignableFrom (this.propertyType);
@@ -365,26 +375,26 @@ namespace Epsitec.Common.Types
 			return this.typeConverter.ConvertFromInvariantString (value);
 		}
 		
-		public static DependencyProperty Register(string name, System.Type property_type, System.Type owner_type)
+		public static DependencyProperty Register(string name, System.Type propertyType, System.Type ownerType)
 		{
-			return DependencyProperty.Register (name, property_type, owner_type, new DependencyPropertyMetadata ());
+			return DependencyProperty.Register (name, propertyType, ownerType, new DependencyPropertyMetadata ());
 		}
-		public static DependencyProperty Register(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
+		public static DependencyProperty Register(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
-			DependencyProperty dp = new DependencyProperty (name, property_type, owner_type, metadata);
+			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata);
 			
 			DependencyObject.Register (dp, dp.OwnerType);
 			
 			return dp;
 		}
 		
-		public static DependencyProperty RegisterAttached(string name, System.Type property_type, System.Type owner_type)
+		public static DependencyProperty RegisterAttached(string name, System.Type propertyType, System.Type ownerType)
 		{
-			return DependencyProperty.RegisterAttached (name, property_type, owner_type, new DependencyPropertyMetadata ());
+			return DependencyProperty.RegisterAttached (name, propertyType, ownerType, new DependencyPropertyMetadata ());
 		}
-		public static DependencyProperty RegisterAttached(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
+		public static DependencyProperty RegisterAttached(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
-			DependencyProperty dp = new DependencyProperty (name, property_type, owner_type, metadata);
+			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata);
 			dp.isAttached = true;
 			
 			DependencyObject.Register (dp, dp.OwnerType);
@@ -398,13 +408,13 @@ namespace Epsitec.Common.Types
 			return dp;
 		}
 		
-		public static DependencyProperty RegisterReadOnly(string name, System.Type property_type, System.Type owner_type)
+		public static DependencyProperty RegisterReadOnly(string name, System.Type propertyType, System.Type ownerType)
 		{
-			return DependencyProperty.RegisterReadOnly (name, property_type, owner_type, new DependencyPropertyMetadata ());
+			return DependencyProperty.RegisterReadOnly (name, propertyType, ownerType, new DependencyPropertyMetadata ());
 		}
-		public static DependencyProperty RegisterReadOnly(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
+		public static DependencyProperty RegisterReadOnly(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
-			DependencyProperty dp = new DependencyProperty (name, property_type, owner_type, metadata);
+			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata);
 
 			dp.isReadOnly = true;
 			
@@ -412,9 +422,13 @@ namespace Epsitec.Common.Types
 			
 			return dp;
 		}
-		
-		
-		private string							name;
+
+		static DependencyProperty()
+		{
+			DependencyProperty.validNameRegex = new System.Text.RegularExpressions.Regex ("^[a-zA-Z][_a-zA-Z0-9]*$");
+		}
+
+		private string name;
 		private System.Type						propertyType;
 		private System.Type						ownerType;
 		private List<System.Type>				additionalOwnerTypes;
@@ -432,5 +446,6 @@ namespace Epsitec.Common.Types
 		static List<DependencyProperty>			attachedPropertiesList = new List<DependencyProperty> ();
 		static DependencyProperty[]				attachedPropertiesArray;
 		static int								globalPropertyCount;
+		static System.Text.RegularExpressions.Regex validNameRegex;
 	}
 }

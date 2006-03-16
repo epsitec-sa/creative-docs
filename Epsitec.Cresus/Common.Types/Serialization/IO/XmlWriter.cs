@@ -35,14 +35,14 @@ namespace Epsitec.Common.Types.Serialization.IO
 		{
 			this.xml.WriteStartElement ("object", this.nsStructure);
 			this.xml.WriteAttributeString ("id", XmlSupport.IdToString (id));
-			this.xml.WriteAttributeString ("tid", this.nsStructure, XmlSupport.IdToString (typeId));
+			this.xml.WriteAttributeString ("type", this.nsStructure, XmlSupport.IdToString (typeId));
 			this.xml.WriteEndElement ();
 		}
 
 		public override void BeginObject(int id, DependencyObject obj)
 		{
 			this.xml.WriteStartElement ("data", this.nsStructure);
-			this.xml.WriteAttributeString ("oid", this.nsStructure, XmlSupport.IdToString (id));
+			this.xml.WriteAttributeString ("obj", this.nsStructure, XmlSupport.IdToString (id));
 		}
 		public override void WriteObjectFieldReference(DependencyObject obj, string name, int id)
 		{
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 			
 			foreach (int id in ids)
 			{
-				this.xml.WriteStartElement ("item", this.nsStructure);
+				this.xml.WriteStartElement ("ref", this.nsStructure);
 				this.xml.WriteAttributeString ("oid", this.nsStructure, XmlSupport.IdToString (id));
 				this.xml.WriteEndElement ();
 			}

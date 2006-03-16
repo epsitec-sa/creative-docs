@@ -21,7 +21,7 @@ namespace Epsitec.Common.Types
 
 			if (newObjCount > objCount)
 			{
-				context.Writer.BeginStorageBundle ();
+				context.ActiveWriter.BeginStorageBundle ();
 				
 				for (int id = typeCount; id < newTypeCount; id++)
 				{
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Types
 					context.StoreObject (id, map.GetValue (id));
 				}
 				
-				context.Writer.EndStorageBundle ();
+				context.ActiveWriter.EndStorageBundle ();
 			}
 		}
 	}
