@@ -314,6 +314,7 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual (6, objectMap.ValueCount);
 			Assert.AreEqual (2, objectMap.TypeCount);
+			Assert.AreEqual (1, context.UnknownMap.ValueCount);
 			
 			Assert.AreEqual (6, objects.Count);
 			Assert.IsNull (objects[0]);
@@ -328,6 +329,21 @@ namespace Epsitec.Common.Types
 			Assert.IsNull (types[0]);
 			Assert.AreEqual (typeof (MyItem), types[1]);
 			Assert.AreEqual (typeof (MyItem), objectMap.GetType (1));
+
+			object xxx = new object ();
+			
+			Binding binding = new Binding ();
+			binding.Source = xxx;
+			binding.Path = new DependencyPropertyPath ("Abc");
+
+			c1.SetBinding (MyItem.FriendProperty, binding);
+
+			context = new Serialization.Context ();
+
+			Serialization.GraphVisitor.VisitSerializableNodes (a, context);
+
+			Assert.AreEqual (2, context.UnknownMap.ValueCount);
+			Assert.AreEqual (xxx, context.UnknownMap.GetValue (1));
 		}
 
 		[Test]

@@ -11,8 +11,9 @@ namespace Epsitec.Common.Types.Serialization
 		public Context()
 		{
 			this.objMap = new MapId<DependencyObject> ();
-			this.extMap = new MapTag<object> ();
+			this.externalMap = new MapTag<object> ();
 			this.typeIds = new Dictionary<System.Type, int> ();
+			this.unknownMap = new MapId<object> ();
 		}
 		
 		public MapId<DependencyObject>			ObjectMap
@@ -26,7 +27,14 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			get
 			{
-				return this.extMap;
+				return this.externalMap;
+			}
+		}
+		public MapId<object>					UnknownMap
+		{
+			get
+			{
+				return this.unknownMap;
 			}
 		}
 		
@@ -171,146 +179,6 @@ namespace Epsitec.Common.Types.Serialization
 			return int.Parse (value.Substring (1), System.Globalization.CultureInfo.InvariantCulture);
 		}
 
-		public static string EscapeString(string value)
-		{
-			//	If needed, inserts a special escape sequence to make the value
-			//	valid and easily recognizable as escaped by the markup extension
-			//	parser.
-			//
-			//	NB: A value string may not contain { and } curly braces, since
-			//		these are used to define the markup extensions.
-			
-			if ((value == null) ||
-				(value.IndexOfAny (new char[] { '{', '}' }) < 0))
-			{
-				return value;
-			}
-			else
-			{
-				return string.Concat ("{}", value);
-			}
-		}
-		public static string UnescapeString(string value)
-		{
-			//	If the string was escaped, remove the escape sequence and
-			//	return the original string (see EscapeString).
-			
-			if ((value != null) &&
-				(value.StartsWith ("{}")))
-			{
-				return value.Substring (2);
-			}
-			else
-			{
-				return value;
-			}
-		}
-
-		public static bool IsMarkupExtension(string value)
-		{
-			//	Return true is the value is a markup extension. This does not
-			//	check for a valid syntax; it only analyses the value to see if
-			//	the "{" and "}" markers are found.
-			//
-			//	Escaped values are recognized as such and won't be considered
-			//	to be markup extensions.
-			
-			if ((value != null) &&
-				(value.StartsWith ("{")) &&
-				(value.StartsWith ("{}") == false) &&
-				(value.EndsWith ("}")))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public static string ConvertToMarkupExtension(string value)
-		{
-			//	Convert a value to a markup extension by embedding it within a
-			//	pair of { and }.
-			
-			if (value == null)
-			{
-				throw new System.ArgumentNullException ("Invalid null markup extension");
-			}
-			if (value.Length == 0)
-			{
-				throw new System.ArgumentException ("Invalid empty markup extension");
-			}
-			
-			return string.Concat ("{", value, "}");
-		}
-		public static string ConvertFromMarkupExtension(string value)
-		{
-			//	Remove the { and } which embed the markup extension.
-			
-			System.Diagnostics.Debug.Assert (Context.IsMarkupExtension (value));
-			return value.Substring (1, value.Length-2);
-		}
-
-		public static string ConvertBindingToString(Binding binding, IContextResolver resolver)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			buffer.Append ("Binding");
-
-			string space = " ";
-
-			DependencyObject source = binding.Source as DependencyObject;
-			BindingMode mode = binding.Mode;
-			DependencyPropertyPath path = binding.Path;
-
-			if (source != null)
-			{
-				string id = resolver.ResolveToId (source);
-
-				if (id == null)
-				{
-					//	TODO: handle unknown sources
-				}
-				else
-				{
-					buffer.Append (space);
-					space = ", ";
-					
-					buffer.Append ("Source={Object ");
-					buffer.Append (id);
-					buffer.Append ("}");
-				}
-			}
-
-			if (path != null)
-			{
-				string value = path.GetFullPath ();
-
-				if (value.Length > 0)
-				{
-					buffer.Append (space);
-					space = ", ";
-
-					buffer.Append ("Path=");
-					buffer.Append (value);
-				}
-			}
-
-			if (mode != BindingMode.None)
-			{
-				string value = mode.ToString ();
-
-				buffer.Append (space);
-				space = ", ";
-				
-				buffer.Append ("Mode=");
-				buffer.Append (value);
-			}
-			
-			return buffer.ToString ();
-		}
-
 		protected void AssertWritable()
 		{
 			if (this.writer == null)
@@ -327,9 +195,10 @@ namespace Epsitec.Common.Types.Serialization
 		}
 
 
-		protected MapId<DependencyObject>		objMap;
-		protected MapTag<object>				extMap;
-		protected Dictionary<System.Type, int>	typeIds;
+		private MapId<DependencyObject>			objMap;
+		private MapTag<object>					externalMap;
+		private Dictionary<System.Type, int>	typeIds;
+		private MapId<object>					unknownMap;
 		
 		protected IO.AbstractWriter				writer;
 		protected IO.AbstractReader				reader;

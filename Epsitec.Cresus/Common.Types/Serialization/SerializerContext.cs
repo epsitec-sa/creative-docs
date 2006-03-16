@@ -24,10 +24,6 @@ namespace Epsitec.Common.Types.Serialization
 
 			Fields fields = this.GetFields (obj);
 
-			foreach (PropertyValue<int> field in fields.Ids)
-			{
-				this.writer.WriteObjectFieldReference (obj, this.GetPropertyName (field.Property), field.Value);
-			}
 			foreach (PropertyValue<string> field in fields.Values)
 			{
 				this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (field.Property), field.Value);
@@ -61,12 +57,9 @@ namespace Epsitec.Common.Types.Serialization
 
 			foreach (KeyValuePair<DependencyProperty, Binding> entry in obj.GetAllBindings ())
 			{
-				DependencyProperty property = entry.Key;
-				Binding binding = entry.Value;
+				string markup = MarkupExtension.BindingToString (entry.Value, this);
 				
-				string markup = Context.ConvertBindingToString (binding, this);
-				
-				fields.Add (property, Context.ConvertToMarkupExtension (markup));
+				fields.Add (entry.Key, markup);
 			}
 			
 			foreach (LocalValueEntry entry in obj.LocalValueEntries)
@@ -78,21 +71,27 @@ namespace Epsitec.Common.Types.Serialization
 				{
 					if (obj.GetBinding (entry.Property) == null)
 					{
-						if (this.extMap.IsValueDefined (entry.Value))
+						if (this.ExternalMap.IsValueDefined (entry.Value))
 						{
-							//	This is an external reference. Record it as such.
+							//	This is an external reference. Record it as {External xxx}.
 
-							string markup = string.Concat ("External ", this.extMap.GetTag (entry.Value));
+							string markup = MarkupExtension.ExtRefToString (entry.Value, this);
 							
-							fields.Add (entry.Property, Context.ConvertToMarkupExtension (markup));
+							fields.Add (entry.Property, markup);
+							continue;
 						}
 						
 						DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
 
 						if (dependencyObjectValue != null)
 						{
-							int id = this.objMap.GetId (dependencyObjectValue);
-							fields.Add (entry.Property, id);
+							//	This is an internal reference. Record it as {Object _nnn}.
+
+							int id = this.ObjectMap.GetId (dependencyObjectValue);
+
+							string markup = MarkupExtension.ObjRefToString (dependencyObjectValue, this);
+							
+							fields.Add (entry.Property, markup);
 							continue;
 						}
 
@@ -109,21 +108,11 @@ namespace Epsitec.Common.Types.Serialization
 							continue;
 						}
 
-#if false
-						Binding binding = entry.Value as Binding;
-
-						if (binding != null)
-						{
-							fields.Add (entry.Property, Context.ConvertBindingToString (binding, this));
-							continue;
-						}
-#endif
-
 						string value = entry.Property.ConvertToString (entry.Value, this);
 
 						if (value != null)
 						{
-							fields.Add (entry.Property, Context.EscapeString (value));
+							fields.Add (entry.Property, MarkupExtension.Escape (value));
 							continue;
 						}
 					}
@@ -139,13 +128,6 @@ namespace Epsitec.Common.Types.Serialization
 			{
 			}
 
-			public IList<PropertyValue<int>> Ids
-			{
-				get
-				{
-					return this.ids;
-				}
-			}
 			public IList<PropertyValue<string>> Values
 			{
 				get
@@ -168,10 +150,6 @@ namespace Epsitec.Common.Types.Serialization
 				}
 			}
 
-			public void Add(DependencyProperty property, int id)
-			{
-				this.ids.Add (new PropertyValue<int> (property, id));
-			}
 			public void Add(DependencyProperty property, string value)
 			{
 				this.values.Add (new PropertyValue<string> (property, value));
@@ -189,7 +167,6 @@ namespace Epsitec.Common.Types.Serialization
 				this.valueCollections.Add (new PropertyValue<IList<string>> (property, list));
 			}
 
-			private List<PropertyValue<int>> ids = new List<PropertyValue<int>> ();
 			private List<PropertyValue<string>> values = new List<PropertyValue<string>> ();
 			private List<PropertyValue<IList<int>>> idCollections = new List<PropertyValue<IList<int>>> ();
 			private List<PropertyValue<IList<string>>> valueCollections = new List<PropertyValue<IList<string>>> ();

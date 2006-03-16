@@ -28,28 +28,56 @@ namespace Epsitec.Common.Types.Serialization
 					if ((entry.Property.IsReadWrite) ||
 						(metadata.CanSerializeReadOnly))
 					{
-						if (entry.Property.IsAttached)
+						if (obj.GetBinding (entry.Property) == null)
 						{
-							context.ObjectMap.RecordType (entry.Property.OwnerType);
-						}
-						
-						DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
+							if (entry.Property.IsAttached)
+							{
+								context.ObjectMap.RecordType (entry.Property.OwnerType);
+							}
 
-						if (dependencyObjectValue != null)
+							DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
+
+							if (dependencyObjectValue != null)
+							{
+								GraphVisitor.VisitSerializableNodes (dependencyObjectValue, context);
+								continue;
+							}
+
+							ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
+
+							if (dependencyObjectCollection != null)
+							{
+								foreach (DependencyObject node in dependencyObjectCollection)
+								{
+									GraphVisitor.VisitSerializableNodes (node, context);
+								}
+							}
+						}
+					}
+				}
+				
+				//	Visit also the properties which are data bound.
+				
+				foreach (KeyValuePair<DependencyProperty, Binding> entry in obj.GetAllBindings ())
+				{
+					Binding binding = entry.Value;
+
+					if (binding.Source != null)
+					{
+						DependencyObject value = binding.Source as DependencyObject;
+
+						if ((value != null) &&
+							(context.ObjectMap.IsValueDefined (value)))
 						{
-							GraphVisitor.VisitSerializableNodes (dependencyObjectValue, context);
+							continue;
+						}
+						if (context.ExternalMap.IsValueDefined (binding.Source))
+						{
+							context.ExternalMap.IncrementUseValue (binding.Source);
 							continue;
 						}
 
-						ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
-
-						if (dependencyObjectCollection != null)
-						{
-							foreach (DependencyObject node in dependencyObjectCollection)
-							{
-								GraphVisitor.VisitSerializableNodes (node, context);
-							}
-						}
+						context.UnknownMap.Record (binding.Source);
 					}
 				}
 			}

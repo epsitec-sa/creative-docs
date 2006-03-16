@@ -204,7 +204,7 @@ namespace Epsitec.Common.Types
 			public string ConvertToString(object value, IContextResolver context)
 			{
 				Binding binding = value as Binding;
-				return Serialization.Context.ConvertBindingToString (binding, context);
+				return Serialization.MarkupExtension.BindingToString (binding, context);
 			}
 
 			public object ConvertFromString(string value, IContextResolver context)

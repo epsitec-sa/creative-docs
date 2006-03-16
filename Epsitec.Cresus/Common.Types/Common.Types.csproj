@@ -248,6 +248,7 @@
     <Compile Include="Serialization\Generic\MapId.cs" />
     <Compile Include="Serialization\GraphVisitor.cs" />
     <Compile Include="Serialization\IO\XmlWriter.cs" />
+    <Compile Include="Serialization\MarkupExtension.cs" />
     <Compile Include="Serialization\SerializerContext.cs" />
     <Compile Include="Storage.cs" />
     <Compile Include="StringDict.cs">
