@@ -135,6 +135,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public string							AdvancedState
+		{
+			get
+			{
+				return CommandState.GetAdvancedState (this);
+			}
+			set
+			{
+				if (this.AdvancedState != value)
+				{
+					CommandState.SetAdvancedState (this, value);
+					this.Synchronize ();
+				}
+			}
+		}
+		
 		public ShortcutCollection				Shortcuts
 		{
 			get
@@ -263,10 +279,29 @@ namespace Epsitec.Common.Widgets
 			that.OnLongCaptionChanged (new PropertyChangedEventArgs (CommandState.LongCaptionProperty, old_value, new_value));
 		}
 		
+		 
+		public static void SetAdvancedState(Types.Object obj, string value)
+		{
+			if (value == null)
+			{
+				obj.ClearValueBase (CommandState.AdvancedStateProperty);
+			}
+			else
+			{
+				obj.SetValue (CommandState.AdvancedStateProperty, value);
+			}
+		}
+		
+		public static string GetAdvancedState(Types.Object obj)
+		{
+			return obj.GetValue (CommandState.AdvancedStateProperty) as string;
+		}
 		
 		public static readonly Property			IconNameProperty = Property.Register ("IconName", typeof (string), typeof (CommandState), new PropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyIconNameChanged)));
 		public static readonly Property			ShortCaptionProperty = Property.Register ("ShortCaption", typeof (string), typeof (CommandState), new PropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyShortCaptionChanged)));
 		public static readonly Property			LongCaptionProperty	= Property.Register ("LongCaption", typeof (string), typeof (CommandState), new PropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
+		
+		public static readonly Property			AdvancedStateProperty = Property.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new Types.PropertyMetadata (null));
 		
 		private ActiveState						active_state = ActiveState.No;
 		private bool							enable       = true;

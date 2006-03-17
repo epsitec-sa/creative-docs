@@ -23,6 +23,8 @@ namespace Epsitec.Common.Widgets
 			this.buttonMenu.ButtonStyle = ButtonStyle.Combo;
 			this.buttonMenu.Name = "Open";
 			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			
+			this.AddEvent (CommandState.AdvancedStateProperty, new Types.PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
 		}
 		
 		public IconButtonCombo(Widget embedder) : this()
@@ -125,6 +127,8 @@ namespace Epsitec.Common.Widgets
 				this.buttonMenu.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
 				this.buttonMenu.Dispose();
 				this.buttonMenu = null;
+				
+				this.RemoveEvent (CommandState.AdvancedStateProperty, new Types.PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
 			}
 			
 			base.Dispose(disposing);
@@ -176,8 +180,6 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-
-		public event Support.EventHandler		SelectedIndexChanged;
 
 
 		protected virtual bool CheckIfOpenComboRequested(Message message)
@@ -432,6 +434,10 @@ namespace Epsitec.Common.Widgets
 			this.CloseCombo(CloseMode.Reject);
 		}
 		
+		private void HandleAdvancedStatePropertyChanged(object sender, Types.PropertyChangedEventArgs e)
+		{
+			this.SelectedName = e.NewValue as string;
+		}
 		
 		#region Items
 		public class Item
@@ -544,6 +550,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.CancelEventHandler	ComboOpening;
 		public event Support.EventHandler		ComboOpened;
 		public event Support.EventHandler		ComboClosed;
+		public event Support.EventHandler		SelectedIndexChanged;
 		
 		protected bool							isLiveUpdateEnabled	= true;
 		protected int							selectedIndex = -1;
