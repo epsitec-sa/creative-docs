@@ -188,7 +188,43 @@ namespace Epsitec.Common.Types.Serialization
 				throw new System.FormatException (string.Format ("String '{0}' is not a valid Binding expression", value));
 			}
 
-			return null;
+			Binding binding = new Binding ();
+
+			for (int i = 1; i < args.Length; i++)
+			{
+				string element = args[i];
+
+				if (element.Length > 0)
+				{
+					string[] elems = element.Split ('=');
+
+					if (elems.Length != 2)
+					{
+						throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
+					}
+					
+					System.Enum mode;
+					
+					switch (elems[0])
+					{
+						case "Path":
+							binding.Path = new DependencyPropertyPath (elems[1]);
+							break;
+						case "Source":
+							binding.Source = context.ResolveFromMarkup (elems[1]);
+							break;
+						case "Mode":
+							Converter.Convert (elems[1], typeof (BindingMode), out mode);
+							binding.Mode = (BindingMode) mode;
+							break;
+						
+						default:
+							throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
+					}
+				}
+			}
+			
+			return binding;
 		}
 
 		public static string[] Explode(string source)

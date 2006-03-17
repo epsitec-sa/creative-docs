@@ -219,12 +219,16 @@ namespace Epsitec.Common.Types.Serialization
 
 			//	TODO: use MarkupExtension to parse the tag
 			
-			if (tagId == "null")
+			if (tagId == "{Null}")
 			{
 				return null;
 			}
-
-			return this.objMap.GetValue (Context.ParseId (tagId));
+			if (tagId.StartsWith ("{ObjRef "))
+			{
+				return this.objMap.GetValue (Context.ParseId (tagId.Substring (8, tagId.Length-9)));
+			}
+			
+			throw new System.NotImplementedException (string.Format ("Cannot resolve '{0}'", tagId));
 		}
 
 		#endregion
