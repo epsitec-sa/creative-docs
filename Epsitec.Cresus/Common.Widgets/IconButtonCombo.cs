@@ -24,7 +24,7 @@ namespace Epsitec.Common.Widgets
 			this.buttonMenu.Name = "Open";
 			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			
-			this.AddEvent (CommandState.AdvancedStateProperty, new Types.PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
+			this.AddEvent(CommandState.AdvancedStateProperty, new Types.PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
 		}
 		
 		public IconButtonCombo(Widget embedder) : this()
@@ -90,22 +90,36 @@ namespace Epsitec.Common.Widgets
 				int sel = this.SelectedIndex;
 				if ( sel == -1 )  return null;
 
-				Item item = this.items[sel] as Item;
-				return item.Name;
+				int rank = 0;
+				foreach ( MenuItem item in this.menu.Items )
+				{
+					if ( item == null )  continue;
+
+					if ( rank == sel )
+					{
+						return item.Name;
+					}
+
+					rank ++;
+				}
+
+				return null;
 			}
 
 			set
 			{
-				for ( int i=0 ; i<this.items.Count ; i++ )
+				int rank = 0;
+				foreach ( MenuItem item in this.menu.Items )
 				{
-					Item item = this.items[i] as Item;
-					System.Diagnostics.Debug.Assert(item != null);
+					if ( item == null )  continue;
 
 					if ( item.Name == value )
 					{
-						this.SelectedIndex = i;
+						this.SelectedIndex = rank;
 						break;
 					}
+
+					rank ++;
 				}
 			}
 		}
@@ -128,7 +142,7 @@ namespace Epsitec.Common.Widgets
 				this.buttonMenu.Dispose();
 				this.buttonMenu = null;
 				
-				this.RemoveEvent (CommandState.AdvancedStateProperty, new Types.PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
+				this.RemoveEvent(CommandState.AdvancedStateProperty, new Types.PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
 			}
 			
 			base.Dispose(disposing);
@@ -171,7 +185,6 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Ne notifie les changements d'index que lorsque le menu déroulant
 			//	est fermé.
-			
 			if ( this.IsComboOpen == false )
 			{
 				if ( this.SelectedIndexChanged != null )
@@ -215,34 +228,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void ProcessComboActivatedIndex(int sel)
-		{
-			//	Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
-			//	est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
-			//	qui est appelée à chaque changement "visuel".
-			
-			int index = this.MapComboListToIndex(sel);
-			
-			if ( index >= 0 )
-			{
-				this.SelectedIndex = index;
-				this.menu.Behavior.Accept();
-			}
-		}
-		
-		protected virtual void ProcessComboSelectedIndex(int sel)
-		{
-			//	Met à jour le contenu de la combo en cas de changement de sélection
-			//	dans la liste, pour autant qu'une telle mise à jour "live" ait été
-			//	activée.
-			
-			if ( this.isLiveUpdateEnabled )
-			{
-				this.SelectedIndex = this.MapComboListToIndex(sel);
-			}
-		}
-		
-		
 		protected virtual int MapComboListToIndex(int value)
 		{
 			return (value < 0) ? -1 : value;
@@ -258,7 +243,6 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Cherche le nom suivant ou précédent dans la comboList, même si elle
 			//	n'est pas "déroulée".
-			
 			if ( this.items.Count == 0 )
 			{
 				return;
@@ -278,7 +262,6 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OpenCombo()
 		{
 			//	Rend la liste visible et démarre l'interaction.
-			
 			if ( this.IsComboOpen )
 			{
 				return;
@@ -348,16 +331,22 @@ namespace Epsitec.Common.Widgets
 			for ( int i=0 ; i<this.items.Count ; i++ )
 			{
 				Item item = this.items[i] as Item;
-				System.Diagnostics.Debug.Assert(item != null);
 
-				MenuItem cell = new MenuItem("", item.Icon, item.Text, "", item.Name);
-
-				if ( i == this.SelectedIndex )
+				if ( item == null )
 				{
-					cell.ActiveState = ActiveState.Yes;
+					menu.Items.Add(new MenuSeparator());
 				}
+				else
+				{
+					MenuItem cell = new MenuItem("", item.Icon, item.Text, "", item.Name);
 
-				menu.Items.Add(cell);
+					if ( i == this.SelectedIndex )
+					{
+						cell.ActiveState = ActiveState.Yes;
+					}
+
+					menu.Items.Add(cell);
+				}
 			}
 			
 			menu.AdjustSize();
@@ -401,29 +390,19 @@ namespace Epsitec.Common.Widgets
 			this.OpenCombo();
 		}
 		
-		private void HandleScrollListSelectionActivated(object sender)
-		{
-			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
-			//?this.ProcessComboActivatedIndex(this.scrollList.SelectedIndex);
-		}
-		
-		private void HandleScrollerSelectedIndexChanged(object sender)
-		{
-			//	L'utilisateur a simplement déplacé la souris dans la liste.
-			//?this.ProcessComboSelectedIndex(this.scrollList.SelectedIndex);
-		}
-		
 		private void HandleMenuAccepted(object sender)
 		{
-			for ( int i=0 ; i<this.menu.Items.Count ; i++ )
+			int rank = 0;
+			foreach ( MenuItem item in this.menu.Items )
 			{
-				MenuItem item = this.menu.Items[i] as MenuItem;
 				if ( item == null )  continue;
 
 				if ( item.ItemType == MenuItemType.Selected )
 				{
-					this.SelectedIndex = i;
+					this.SelectedIndex = rank;
 				}
+
+				rank ++;
 			}
 
 			this.CloseCombo(CloseMode.Accept);

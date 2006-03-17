@@ -19,6 +19,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHLeft",   Misc.Icon("JustifHLeft"),   Res.Strings.Property.Justif.JustifHLeft));
 			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHCenter", Misc.Icon("JustifHCenter"), Res.Strings.Property.Justif.JustifHCenter));
 			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHRight",  Misc.Icon("JustifHRight"),  Res.Strings.Property.Justif.JustifHRight));
+			this.buttonJustif.Items.Add(null);
 			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHJustif", Misc.Icon("JustifHJustif"), Res.Strings.Property.Justif.JustifHJustif));
 			this.buttonJustif.Items.Add(new IconButtonCombo.Item("JustifHAll",    Misc.Icon("JustifHAll"),    Res.Strings.Property.Justif.JustifHAll));
 
@@ -29,6 +30,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLeading.Items.Add(new IconButtonCombo.Item("ParagraphLeading08", Misc.Icon("ParagraphLeading08"), Res.Strings.Property.Leading.Leading08));
 			this.buttonLeading.Items.Add(new IconButtonCombo.Item("ParagraphLeading10", Misc.Icon("ParagraphLeading10"), Res.Strings.Property.Leading.Leading10));
 			this.buttonLeading.Items.Add(new IconButtonCombo.Item("ParagraphLeading15", Misc.Icon("ParagraphLeading15"), Res.Strings.Property.Leading.Leading15));
+			this.buttonLeading.Items.Add(null);
 			this.buttonLeading.Items.Add(new IconButtonCombo.Item("ParagraphLeading20", Misc.Icon("ParagraphLeading20"), Res.Strings.Property.Leading.Leading20));
 			this.buttonLeading.Items.Add(new IconButtonCombo.Item("ParagraphLeading30", Misc.Icon("ParagraphLeading30"), Res.Strings.Property.Leading.Leading30));
 
