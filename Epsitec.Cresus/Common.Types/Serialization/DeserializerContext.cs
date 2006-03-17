@@ -16,6 +16,23 @@ namespace Epsitec.Common.Types.Serialization
 		public override void RestoreObjectData(int id, DependencyObject obj)
 		{
 			this.AssertReadable ();
+
+			this.reader.BeginObject (id, obj);
+
+			string field;
+			string value;
+
+			while (this.reader.ReadObjectFieldValue (obj, out field, out value))
+			{
+				this.RestoreObjectField (obj, field, value);
+			}
+			
+			this.reader.EndObject (id, obj);
+		}
+
+		private void RestoreObjectField(DependencyObject obj, string field, string value)
+		{
+			System.Console.Out.WriteLine ("{0}: {1}='{2}'", this.ObjectMap.GetId (obj), field, value);
 		}
 	}
 }

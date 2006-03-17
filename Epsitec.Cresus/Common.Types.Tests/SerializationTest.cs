@@ -451,6 +451,10 @@ namespace Epsitec.Common.Types
 			root = context.ObjectMap.GetValue (1) as MyItem;
 			b    = DependencyObjectTree.FindChild (root, "b") as MyItem;
 
+			Assert.AreEqual ("a", root.Name);
+			Assert.AreEqual ("A", root.Value);
+			Assert.AreEqual (2, root.Children.Count);
+			
 			Assert.AreEqual (3, context.ObjectMap.GetId (b));
 			Assert.AreEqual (3899.20M, root.Friend.Price);
 			

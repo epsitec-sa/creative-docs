@@ -15,12 +15,14 @@ namespace Epsitec.Common.Types.Serialization.IO
 		public override void BeginStorageBundle(int id, int externalCount, int typeCount, int objectCount)
 		{
 			this.xml.WriteStartElement ("s", "storage", this.nsStructure);
-//			this.xml.WriteAttributeString ("xmlns", "s", null, this.nsStructure);
-			this.xml.WriteAttributeString ("xmlns", "f", null, this.nsFields);
+			
 			this.xml.WriteAttributeString ("root", this.nsStructure, Context.IdToString (id));
 			this.xml.WriteAttributeString ("n_ext", this.nsStructure, Context.NumToString (externalCount));
 			this.xml.WriteAttributeString ("n_typ", this.nsStructure, Context.NumToString (typeCount));
 			this.xml.WriteAttributeString ("n_obj", this.nsStructure, Context.NumToString (objectCount));
+			
+//			this.xml.WriteAttributeString ("xmlns", "s", null, this.nsStructure);
+			this.xml.WriteAttributeString ("xmlns", "f", null, this.nsFields);
 		}
 		public override void EndStorageBundle()
 		{

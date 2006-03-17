@@ -144,6 +144,64 @@ namespace Epsitec.Common.Types.Serialization.IO
 
 			throw new System.FormatException ("Unexpected end of XML; expected <object>");
 		}
+
+		public override void BeginObject(int id, DependencyObject obj)
+		{
+			while (this.xml.Read ())
+			{
+				if (this.xml.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if ((this.xml.LocalName == "data") &&
+						(this.xml.NamespaceURI == this.nsStructure))
+					{
+						string elementId = this.xml.GetAttribute ("id");
+						string expectedId = Context.IdToString (id);
+
+						if (elementId != expectedId)
+						{
+							throw new System.FormatException (string.Format ("Element <data> id={0}; expected id={1}", elementId, expectedId));
+						}
+
+						if (this.xml.MoveToFirstAttribute ())
+						{
+							return;
+						}
+						else
+						{
+							throw new System.FormatException ("Element <data> has no attributes");
+						}
+					}
+					else
+					{
+						throw new System.FormatException (string.Format ("Element <{0}> not expected here; expected <data>", this.xml.Name));
+					}
+				}
+			}
+
+			throw new System.FormatException ("Unexpected end of XML; expected <object>");
+		}
+		public override bool ReadObjectFieldValue(DependencyObject obj, out string field, out string value)
+		{
+			while (this.xml.MoveToNextAttribute ())
+			{
+				if (this.xml.NamespaceURI == this.nsFields)
+				{
+					field = this.xml.LocalName;
+					value = this.xml.Value;
+					
+					return true;
+				}
+			}
+
+			field = null;
+			value = null;
+
+			return false;
+		}
+		public override void EndObject(int id, DependencyObject obj)
+		{
+			this.xml.MoveToElement ();
+		}
 		
 		private System.Xml.XmlReader			xml;
 		private string							nsStructure = "http://www.epsitec.ch/XNS/storage-structure-1";
