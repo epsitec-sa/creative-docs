@@ -80,6 +80,34 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public string							SelectedName
+		{
+			//	Donne le nom de l'élément sélectionné (null si aucune sélection).
+			get
+			{
+				int sel = this.SelectedIndex;
+				if ( sel == -1 )  return null;
+
+				Item item = this.items[sel] as Item;
+				return item.Name;
+			}
+
+			set
+			{
+				for ( int i=0 ; i<this.items.Count ; i++ )
+				{
+					Item item = this.items[i] as Item;
+					System.Diagnostics.Debug.Assert(item != null);
+
+					if ( item.Name == value )
+					{
+						this.SelectedIndex = i;
+						break;
+					}
+				}
+			}
+		}
+
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -263,23 +291,9 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.menu = this.CreateMenu();
-			
-			if ( this.menu != null )
-			{
-				//?this.scrollList.SelectedIndex = this.MapIndexToComboList(this.SelectedIndex);
-				//?this.scrollList.ShowSelected(ScrollShowMode.Center);
-			}
-			
 			this.menu.ShowAsComboList(this, this.MapClientToScreen(new Drawing.Point(0, 0)), this.buttonMenu);
-			
 			this.menu.Accepted += new Support.EventHandler(this.HandleMenuAccepted);
 			this.menu.Rejected += new Support.EventHandler(this.HandleMenuRejected);
-			
-			if ( this.menu != null )
-			{
-				//?this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
-				//?this.scrollList.SelectionActivated   += new Support.EventHandler(this.HandleScrollListSelectionActivated);
-			}
 			
 			this.OnComboOpened();
 		}
@@ -307,9 +321,6 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.menu != null )
 			{
-				//?this.scrollList.SelectionActivated   -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
-				//?this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
-				
 				this.menu.Dispose();
 				this.menu = null;
 			}
@@ -396,6 +407,17 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleMenuAccepted(object sender)
 		{
+			for ( int i=0 ; i<this.menu.Items.Count ; i++ )
+			{
+				MenuItem item = this.menu.Items[i] as MenuItem;
+				if ( item == null )  continue;
+
+				if ( item.ItemType == MenuItemType.Selected )
+				{
+					this.SelectedIndex = i;
+				}
+			}
+
 			this.CloseCombo(CloseMode.Accept);
 		}
 
