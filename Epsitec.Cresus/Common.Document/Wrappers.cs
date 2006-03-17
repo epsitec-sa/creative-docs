@@ -239,26 +239,32 @@ namespace Epsitec.Common.Document
 				justif = this.paragraphWrapper.Active.JustificationMode;
 			}
 
-			this.CommandActiveState("ParagraphLeading", enabled);
-			this.CommandActiveState("ParagraphLeading08", enabled, (leading == 0.8));
-			this.CommandActiveState("ParagraphLeading10", enabled, (leading == 1.0));
-			this.CommandActiveState("ParagraphLeading12", enabled, (leading == 1.2));
-			this.CommandActiveState("ParagraphLeading15", enabled, (leading == 1.5));
-			this.CommandActiveState("ParagraphLeading20", enabled, (leading == 2.0));
-			this.CommandActiveState("ParagraphLeading30", enabled, (leading == 3.0));
+			string leadingState = "Leading?";
+			if ( leading == 0.8 )  leadingState = "ParagraphLeading08";
+			if ( leading == 1.0 )  leadingState = "ParagraphLeading10";
+			if ( leading == 1.2 )  leadingState = "ParagraphLeading12";
+			if ( leading == 1.5 )  leadingState = "ParagraphLeading15";
+			if ( leading == 2.0 )  leadingState = "ParagraphLeading20";
+			if ( leading == 3.0 )  leadingState = "ParagraphLeading30";
+
+			string justifState = "Justif?";
+			switch ( justif )
+			{
+				case Text.Wrappers.JustificationMode.AlignLeft:         justifState = "ParagraphJustifLeft";    break;
+				case Text.Wrappers.JustificationMode.Center:            justifState = "ParagraphJustifCenter";  break;
+				case Text.Wrappers.JustificationMode.AlignRight:        justifState = "ParagraphJustifRight";   break;
+				case Text.Wrappers.JustificationMode.JustifyAlignLeft:  justifState = "ParagraphJustifJustif";  break;
+				case Text.Wrappers.JustificationMode.JustifyJustfy:     justifState = "ParagraphJustifAll";     break;
+			}
+
+			this.CommandActiveState("ParagraphLeading", enabled, leadingState);
+			this.CommandActiveState("ParagraphJustif",  enabled, justifState);
+
 			this.CommandActiveState("ParagraphLeadingPlus",  enabled);
 			this.CommandActiveState("ParagraphLeadingMinus", enabled);
-
-			this.CommandActiveState("ParagraphJustif", enabled);
-			this.CommandActiveState("JustifHLeft",   enabled, (justif == Text.Wrappers.JustificationMode.AlignLeft));
-			this.CommandActiveState("JustifHCenter", enabled, (justif == Text.Wrappers.JustificationMode.Center));
-			this.CommandActiveState("JustifHRight",  enabled, (justif == Text.Wrappers.JustificationMode.AlignRight));
-			this.CommandActiveState("JustifHJustif", enabled, (justif == Text.Wrappers.JustificationMode.JustifyAlignLeft));
-			this.CommandActiveState("JustifHAll",    enabled, (justif == Text.Wrappers.JustificationMode.JustifyJustfy));
-
-			this.CommandActiveState("ParagraphIndentPlus",  enabled);
-			this.CommandActiveState("ParagraphIndentMinus", enabled);
-			this.CommandActiveState("ParagraphClear",       enabled);
+			this.CommandActiveState("ParagraphIndentPlus",   enabled);
+			this.CommandActiveState("ParagraphIndentMinus",  enabled);
+			this.CommandActiveState("ParagraphClear",        enabled);
 		}
 
 		protected void HandleStyleWrapperChanged(object sender)
@@ -868,7 +874,7 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		public void ExecuteCommand(string name)
+		public void ExecuteCommand(string name, string advanceState)
 		{
 			//	Exécute une commande.
 			switch ( name )
@@ -887,22 +893,13 @@ namespace Epsitec.Common.Document
 				case "FontSizePlus":    this.IncrementFontSize(1);   break;
 				case "FontSizeMinus":   this.IncrementFontSize(-1);  break;
 
-				case "ParagraphLeading08":     this.ChangeParagraphLeading(0.8);    break;
-				case "ParagraphLeading10":     this.ChangeParagraphLeading(1.0);    break;
-				case "ParagraphLeading12":     this.ChangeParagraphLeading(1.2);    break;
-				case "ParagraphLeading15":     this.ChangeParagraphLeading(1.5);    break;
-				case "ParagraphLeading20":     this.ChangeParagraphLeading(2.0);    break;
-				case "ParagraphLeading30":     this.ChangeParagraphLeading(3.0);    break;
+				case "ParagraphLeading":  this.ChangeParagraphLeading(advanceState);  break;
+				case "ParagraphJustif":   this.ChangeParagraphJustif(advanceState);   break;
+
 				case "ParagraphLeadingPlus":   this.IncrementParagraphLeading(1);   break;
 				case "ParagraphLeadingMinus":  this.IncrementParagraphLeading(-1);  break;
 				case "ParagraphIndentPlus":    this.IncrementParagraphIndent(1);    break;
 				case "ParagraphIndentMinus":   this.IncrementParagraphIndent(-1);   break;
-
-				case "JustifHLeft":    this.Justif(Text.Wrappers.JustificationMode.AlignLeft);         break;
-				case "JustifHCenter":  this.Justif(Text.Wrappers.JustificationMode.Center);            break;
-				case "JustifHRight":   this.Justif(Text.Wrappers.JustificationMode.AlignRight);        break;
-				case "JustifHJustif":  this.Justif(Text.Wrappers.JustificationMode.JustifyAlignLeft);  break;
-				case "JustifHAll":     this.Justif(Text.Wrappers.JustificationMode.JustifyJustfy);     break;
 
 				case "FontClear":       this.FontClear();       break;
 				case "ParagraphClear":  this.ParagraphClear();  break;
@@ -1078,9 +1075,20 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected void ChangeParagraphLeading(double value)
+		protected void ChangeParagraphLeading(string advanceState)
 		{
 			//	La commande pour changer d'interligne a été actionnée.
+			double value = 1.0;
+			switch ( advanceState )
+			{
+				case "ParagraphLeading08":  value = 0.8;  break;
+				case "ParagraphLeading10":  value = 1.0;  break;
+				case "ParagraphLeading12":  value = 1.2;  break;
+				case "ParagraphLeading15":  value = 1.5;  break;
+				case "ParagraphLeading20":  value = 2.0;  break;
+				case "ParagraphLeading30":  value = 3.0;  break;
+			}
+
 			this.paragraphWrapper.SuspendSynchronizations();
 			this.paragraphWrapper.Defined.Leading = value;
 			this.paragraphWrapper.Defined.LeadingUnits = Text.Properties.SizeUnits.Percent;
@@ -1218,11 +1226,21 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.ResumeSynchronizations();
 		}
 
-		protected void Justif(Common.Text.Wrappers.JustificationMode justif)
+		protected void ChangeParagraphJustif(string advanceState)
 		{
 			//	La commande pour changer de mode de justification a été actionnée.
+			Text.Wrappers.JustificationMode mode = Text.Wrappers.JustificationMode.AlignLeft;
+			switch ( advanceState )
+			{
+				case "ParagraphJustifLeft":    mode = Text.Wrappers.JustificationMode.AlignLeft;         break;
+				case "ParagraphJustifCenter":  mode = Text.Wrappers.JustificationMode.Center;            break;
+				case "ParagraphJustifRight":   mode = Text.Wrappers.JustificationMode.AlignRight;        break;
+				case "ParagraphJustifJustif":  mode = Text.Wrappers.JustificationMode.JustifyAlignLeft;  break;
+				case "ParagraphJustifAll":     mode = Text.Wrappers.JustificationMode.JustifyJustfy;     break;
+			}
+
 			this.paragraphWrapper.SuspendSynchronizations();
-			this.paragraphWrapper.Defined.JustificationMode = justif;
+			this.paragraphWrapper.Defined.JustificationMode = mode;
 			this.paragraphWrapper.DefineOperationName("ParagraphJustif", Res.Strings.Action.ParagraphJustif);
 			this.paragraphWrapper.ResumeSynchronizations();
 		}
@@ -1512,6 +1530,16 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(cs != null);
 			cs.Enable = enabled;
 			cs.ActiveState = state ? ActiveState.Yes : ActiveState.No;
+		}
+
+		protected void CommandActiveState(string name, bool enabled, string advanceState)
+		{
+			//	Modifie l'état d'une commande avancée.
+			if ( this.document.CommandDispatcher == null )  return;
+			CommandState cs = this.document.CommandDispatcher.GetCommandState(name);
+			System.Diagnostics.Debug.Assert(cs != null);
+			cs.Enable = enabled;
+			cs.AdvancedState = advanceState;
 		}
 
 

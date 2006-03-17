@@ -91,9 +91,9 @@ namespace Epsitec.Common.Widgets
 				if ( sel == -1 )  return null;
 
 				int rank = 0;
-				foreach ( MenuItem item in this.menu.Items )
+				foreach ( Item item in this.items )
 				{
-					if ( item == null )  continue;
+					if ( item == null )  continue;  // séparateur ?
 
 					if ( rank == sel )
 					{
@@ -109,9 +109,9 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				int rank = 0;
-				foreach ( MenuItem item in this.menu.Items )
+				foreach ( Item item in this.items )
 				{
-					if ( item == null )  continue;
+					if ( item == null )  continue;  // séparateur ?
 
 					if ( item.Name == value )
 					{
@@ -174,10 +174,19 @@ namespace Epsitec.Common.Widgets
 			if ( sel == -1 )  return;
 			if ( sel >= this.items.Count )  return;
 
-			Item item = this.items[sel] as Item;
-			System.Diagnostics.Debug.Assert(item != null);
+			int rank = 0;
+			foreach ( Item item in this.items )
+			{
+				if ( item == null )  continue;  // séparateur ?
 
-			this.buttonMain.IconName = item.Icon;
+				if ( rank == sel )
+				{
+					this.buttonMain.IconName = item.Icon;
+					break;
+				}
+
+				rank ++;
+			}
 		}
 		
 		
@@ -328,11 +337,10 @@ namespace Epsitec.Common.Widgets
 		{
 			VMenu menu = new VMenu();
 			
-			for ( int i=0 ; i<this.items.Count ; i++ )
+			int rank = 0;
+			foreach ( Item item in this.items )
 			{
-				Item item = this.items[i] as Item;
-
-				if ( item == null )
+				if ( item == null )  // séparateur ?
 				{
 					menu.Items.Add(new MenuSeparator());
 				}
@@ -340,12 +348,13 @@ namespace Epsitec.Common.Widgets
 				{
 					MenuItem cell = new MenuItem("", item.Icon, item.Text, "", item.Name);
 
-					if ( i == this.SelectedIndex )
+					if ( rank == this.SelectedIndex )
 					{
 						cell.ActiveState = ActiveState.Yes;
 					}
 
 					menu.Items.Add(cell);
+					rank ++;
 				}
 			}
 			

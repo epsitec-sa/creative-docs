@@ -2310,7 +2310,13 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ParagraphClear")]
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName);
+			CommandState cs = dispatcher.FindCommandState(e.CommandName);
+			string state = null;
+			if ( cs != null )
+			{
+				state = cs.AdvancedState;
+			}
+			this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName, state);
 		}
 
 
