@@ -44,6 +44,13 @@ namespace Epsitec.Common.Types.Serialization.Generic
 				return this.tagToValueLookup.Count;
 			}
 		}
+		public int								UsedTagCount
+		{
+			get
+			{
+				return this.valueCounters.Count;
+			}
+		}
 
 		public void Record(string tag, T value)
 		{

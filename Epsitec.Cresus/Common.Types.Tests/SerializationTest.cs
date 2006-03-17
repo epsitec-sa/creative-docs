@@ -441,8 +441,27 @@ namespace Epsitec.Common.Types
 			context.ExternalMap.Record ("ext", ext);
 
 			MyItem readRoot = Storage.Deserialize (context) as MyItem;
+
+			Assert.AreEqual (3, context.ObjectMap.TypeCount);
+			Assert.AreEqual (typeof (MyItem), context.ObjectMap.GetType (1));
+			Assert.AreEqual (typeof (DataObject), context.ObjectMap.GetType (2));
+
+			Assert.AreEqual (7, context.ObjectMap.ValueCount);
+
+			root = context.ObjectMap.GetValue (1) as MyItem;
+			b    = DependencyObjectTree.FindChild (root, "b") as MyItem;
+
+			Assert.AreEqual (3, context.ObjectMap.GetId (b));
+			Assert.AreEqual (3899.20M, root.Friend.Price);
+			
 			MyItem readB = Storage.Deserialize (context) as MyItem;
+
+			Assert.AreEqual (b, readB);
+			
 			MyItem readM = Storage.Deserialize (context) as MyItem;
+
+			Assert.AreEqual ("m", readM.Name);
+			Assert.AreEqual (ext, root.Friend.Friend);
 		}
 		
 		private MyItem CreateSampleTree(out MyItem ext)
@@ -478,9 +497,13 @@ namespace Epsitec.Common.Types
 			c1.Value = "C1";
 			c2.Value = "C2";
 
+			//	c2       q
+			//	:        :
+			//	friend   friend
+			//	:        :
 			//	a --+--> b --+--> c1
 			//	    |        +--> c2 ...friend... ext
-			//	    +--> q
+			//	    +--> q ...friend... b
 			//		+--> r
 
 			a.Friend = c2;

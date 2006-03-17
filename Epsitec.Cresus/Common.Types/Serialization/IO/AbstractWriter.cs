@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 		{
 		}
 
-		public virtual void BeginStorageBundle(int id)
+		public virtual void BeginStorageBundle(int id, int externalCount, int typeCount, int objectCount)
 		{
 		}
 		public virtual void EndStorageBundle()

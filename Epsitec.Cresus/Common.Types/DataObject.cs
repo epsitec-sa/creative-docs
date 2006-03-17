@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.DataObject))]
+
 namespace Epsitec.Common.Types
 {
 	public abstract class DataObject : DependencyObject

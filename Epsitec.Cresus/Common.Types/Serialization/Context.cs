@@ -58,7 +58,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 		
-		public void DefineType(int id, System.Type type)
+		public void StoreTypeDefinition(int id, System.Type type)
 		{
 			this.AssertWritable ();
 			
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Types.Serialization
 			this.typeIds[type] = id;
 			this.writer.WriteTypeDefinition (id, type.FullName);
 		}
-		public void DefineObject(int id, DependencyObject obj)
+		public void StoreObjectDefinition(int id, DependencyObject obj)
 		{
 			this.AssertWritable ();
 			
@@ -75,6 +75,56 @@ namespace Epsitec.Common.Types.Serialization
 			int typeId = this.typeIds[type];
 
 			this.writer.WriteObjectDefinition (id, typeId);
+		}
+		public void StoreExternalDefinition(string tag)
+		{
+			this.AssertWritable ();
+			this.writer.WriteExternalReference (tag);
+		}
+
+		public void RestoreTypeDefinition()
+		{
+			this.AssertReadable ();
+			
+			int id = this.ObjectMap.TypeCount;
+			string name = this.reader.ReadTypeDefinition (id);
+
+			DependencyObjectType type = DependencyClassManager.Current.FindObjectType (name);
+
+			if (type == null)
+			{
+				throw new System.ArgumentException (string.Format ("Type {0} cannot be resolved", name));
+			}
+
+			this.typeIds[type.SystemType] = id;
+			this.ObjectMap.RecordType (type.SystemType);
+		}
+		public void RestoreObjectDefinition()
+		{
+			this.AssertReadable ();
+
+			int id = this.ObjectMap.ValueCount;
+			int typeId = this.reader.ReadObjectDefinition (id);
+
+			DependencyObjectType type = DependencyObjectType.FromSystemType (this.objMap.GetType (typeId));
+			DependencyObject value = type.CreateEmptyObject ();
+			
+			this.ObjectMap.Record (value);
+		}
+		public void RestoreExternalDefinition()
+		{
+			this.AssertReadable ();
+			
+			string tag = this.reader.ReadExternalReference ();
+
+			if (this.ExternalMap.IsTagDefined (tag))
+			{
+				//	OK. Tag defined.
+			}
+			else
+			{
+				throw new System.ArgumentException (string.Format ("Required external value '{0}' not defined in context", tag));
+			}
 		}
 
 		public virtual void StoreObject(int id, DependencyObject obj)
@@ -185,6 +235,15 @@ namespace Epsitec.Common.Types.Serialization
 			System.Diagnostics.Debug.Assert (value[0] == '_');
 
 			return int.Parse (value.Substring (1), System.Globalization.CultureInfo.InvariantCulture);
+		}
+		
+		public static string NumToString(int num)
+		{
+			return num.ToString (System.Globalization.CultureInfo.InvariantCulture);
+		}
+		public static int ParseNum(string value)
+		{
+			return int.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
 		}
 
 		protected void AssertWritable()

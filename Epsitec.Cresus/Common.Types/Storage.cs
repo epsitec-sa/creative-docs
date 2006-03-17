@@ -17,32 +17,36 @@ namespace Epsitec.Common.Types
 			
 			Serialization.Generic.MapId<DependencyObject> map = context.ObjectMap;
 			
-			int typeCount = map.TypeCount;
-			int objCount = map.ValueCount;
+			int oldTypeCount = map.TypeCount;
+			int oldObjCount = map.ValueCount;
 
 			Serialization.GraphVisitor.VisitSerializableNodes (root, context);
 
 			int newTypeCount = map.TypeCount;
 			int newObjCount = map.ValueCount;
 
-			context.ActiveWriter.BeginStorageBundle (map.GetId (root));
-			
-			if (newObjCount > objCount)
+			int objectCount   = newObjCount - oldObjCount;
+			int typeCount     = newTypeCount - oldTypeCount;
+			int externalCount = context.ExternalMap.UsedTagCount;
+
+			context.ActiveWriter.BeginStorageBundle (map.GetId (root), externalCount, typeCount, objectCount);
+
+			if (newObjCount > oldObjCount)
 			{
-				foreach (string name in context.ExternalMap.RecordedTags)
+				foreach (string tag in context.ExternalMap.RecordedTags)
 				{
-					context.ActiveWriter.WriteExternalReference (name);
+					context.StoreExternalDefinition (tag);
 				}
-				
-				for (int id = typeCount; id < newTypeCount; id++)
+
+				for (int id = oldTypeCount; id < newTypeCount; id++)
 				{
-					context.DefineType (id, map.GetType (id));
+					context.StoreTypeDefinition (id, map.GetType (id));
 				}
-				for (int id = objCount; id < newObjCount; id++)
+				for (int id = oldObjCount; id < newObjCount; id++)
 				{
-					context.DefineObject (id, map.GetValue (id));
+					context.StoreObjectDefinition (id, map.GetValue (id));
 				}
-				for (int id = objCount; id < newObjCount; id++)
+				for (int id = oldObjCount; id < newObjCount; id++)
 				{
 					context.StoreObject (id, map.GetValue (id));
 				}
@@ -53,9 +57,14 @@ namespace Epsitec.Common.Types
 		public static DependencyObject Deserialize(Serialization.Context context)
 		{
 			int rootId;
+			
+			int externalCount;
+			int typeCount;
+			int objectCount;
+			
 			DependencyObject root;
 			
-			context.ActiveReader.BeginStorageBundle (out rootId);
+			context.ActiveReader.BeginStorageBundle (out rootId, out externalCount, out typeCount, out objectCount);
 
 			if (context.ObjectMap.IsIdDefined (rootId))
 			{
@@ -63,7 +72,21 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				//	TODO: deserialize, really
+				for (int i = 0; i < externalCount; i++)
+				{
+					context.RestoreExternalDefinition ();
+				}
+				for (int i = 0; i < typeCount; i++)
+				{
+					context.RestoreTypeDefinition ();
+				}
+				for (int i = 0; i < objectCount; i++)
+				{
+					context.RestoreObjectDefinition ();
+				}
+				for (int i = 0; i < objectCount; i++)
+				{
+				}
 				
 				root = null;
 			}
