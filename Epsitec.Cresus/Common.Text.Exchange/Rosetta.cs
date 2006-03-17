@@ -86,6 +86,33 @@ namespace Epsitec.Common.Text.Exchange
 				}
 			}
 
+			if (this.precedfontSize != this.fontSize)
+			{
+				if (this.precedfontSize != 0)
+				{
+					this.CloseTag (HtmlAttribute.Font);
+				}
+
+				if (this.fontSize != 0)
+				{
+					this.OpenTag (HtmlAttribute.Font, "size", this.fontSize.ToString());
+				}
+			}
+
+			if (this.precedfontColor != this.fontColor)
+			{
+				if (this.precedfontColor.Length != 0)
+				{
+					this.CloseTag (HtmlAttribute.Font);
+				}
+
+				if (this.fontColor.Length != 0)
+				{
+					this.OpenTag (HtmlAttribute.Font, "color", this.fontColor);
+				}
+			}
+
+
 
 			this.precedIsItalic = this.isItalic;
 			this.precedIsBold = this.isBold;
@@ -93,6 +120,8 @@ namespace Epsitec.Common.Text.Exchange
 			this.precedIsStrikeout = this.isStrikeout;
 
 			this.precedFontFace = this.fontFace;
+			this.precedfontSize = this.fontSize;
+			this.precedfontColor = this.fontColor;
 
 			this.AppendTagsToClose ();
 			this.AppendTagsToOpen ();
@@ -131,17 +160,26 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			if (fontFace != null)
 				this.fontFace = fontFace;
+			else
+				this.fontFace = "";
 		}
 
 		public void SetFontColor(string fontcolor)
 		{
-			Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.Parse (fontcolor);
+			if (fontcolor != null)
+			{
+				Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.Parse (fontcolor);
 
-			int r = (int)(richcolor.R * 255);
-			int g = (int)(richcolor.G * 255);
-			int b = (int)(richcolor.B * 255);
+				int r = (int) (richcolor.R * 255);
+				int g = (int) (richcolor.G * 255);
+				int b = (int) (richcolor.B * 255);
 
-			this.fontColor = string.Format ("#{0,2:x2}{1,2:x2}{2,2:x2}", r, g, b);
+				this.fontColor = string.Format ("#{0,2:x2}{1,2:x2}{2,2:x2}", r, g, b);
+			}
+			else
+			{
+				this.fontColor = "";
+			}
 		}
 
 		private void ReplaceSpecialCodes(ref string line, Epsitec.Common.Text.Unicode.Code specialCode, string htmlTag)
@@ -468,10 +506,9 @@ namespace Epsitec.Common.Text.Exchange
 				htmlText.SetStrikeout (textWrapper.Defined.IsStrikeoutDefined);//  && textWrapper.Defined.InvertBold);
 
 				htmlText.SetFontFace (textWrapper.Defined.FontFace);
-#if false
 				htmlText.SetFontSize (textWrapper.Defined.IsFontSizeDefined ? textWrapper.Defined.FontSize : 0);
 				htmlText.SetFontColor (textWrapper.Defined.Color);
-#endif
+
 				//output.Append(navigator.ReadText (runLength) );
 				htmlText.AppendText (navigator.ReadText (runLength));
 
