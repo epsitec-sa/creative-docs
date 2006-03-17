@@ -1162,11 +1162,6 @@
 	<data name="Action.FontClear">Clear all Character Properties</data>
 	<data name="Action.ParagraphMain">Paragraph</data>
 	<data name="Action.ParagraphJustif">Change alignment</data>
-	<data name="Action.ParagraphJustifHLeft">Left aligned</data>
-	<data name="Action.ParagraphJustifHCenter">Centered</data>
-	<data name="Action.ParagraphJustifHRight">Right aligned</data>
-	<data name="Action.ParagraphJustifHJustif">Justified, but last line</data>
-	<data name="Action.ParagraphJustifHAll">Justified, including last line</data>
 	<data name="Action.ParagraphBulletRound">Bullet list</data>
 	<data name="Action.ParagraphBulletNumeric">Numbered list 1..</data>
 	<data name="Action.ParagraphBulletAlpha">Alphabetical list A..</data>

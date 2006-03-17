@@ -2310,12 +2310,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ParagraphLeadingMinus")]
 		[Command ("ParagraphIndentPlus")]
 		[Command ("ParagraphIndentMinus")]
+		[Command ("ParagraphJustif")]
 		[Command ("ParagraphClear")]
-		[Command ("JustifHLeft")]
-		[Command ("JustifHCenter")]
-		[Command ("JustifHRight")]
-		[Command ("JustifHJustif")]
-		[Command ("JustifHAll")]
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName);
@@ -3619,12 +3615,8 @@ namespace Epsitec.App.DocumentEditor
 			this.paragraphLeadingMinusState = this.CreateCommandState("ParagraphLeadingMinus");
 			this.paragraphIndentPlusState = this.CreateCommandState("ParagraphIndentPlus");
 			this.paragraphIndentMinusState = this.CreateCommandState("ParagraphIndentMinus");
+			this.paragraphJustifState = this.CreateCommandState("ParagraphJustif", null, "ParagraphJustif", true);
 			this.paragraphClearState = this.CreateCommandState("ParagraphClear");
-			this.justifHLeftState = this.CreateCommandState("JustifHLeft", "JustifHLeft", "ParagraphJustifHLeft", true);
-			this.justifHCenterState = this.CreateCommandState("JustifHCenter", "JustifHCenter", "ParagraphJustifHCenter", true);
-			this.justifHRightState = this.CreateCommandState("JustifHRight", "JustifHRight", "ParagraphJustifHRight", true);
-			this.justifHJustifState = this.CreateCommandState("JustifHJustif", "JustifHJustif", "ParagraphJustifHJustif", true);
-			this.justifHAllState = this.CreateCommandState("JustifHAll", "JustifHAll", "ParagraphJustifHAll", true);
 			
 			this.orderUpOneState = this.CreateCommandState("OrderUpOne", KeyCode.ModifierControl|KeyCode.PageUp);
 			this.orderDownOneState = this.CreateCommandState("OrderDownOne", KeyCode.ModifierControl|KeyCode.PageDown);
@@ -4321,12 +4313,8 @@ namespace Epsitec.App.DocumentEditor
 				this.paragraphLeadingMinusState.Enable = false;
 				this.paragraphIndentPlusState.Enable = false;
 				this.paragraphIndentMinusState.Enable = false;
+				this.paragraphJustifState.Enable = false;
 				this.paragraphClearState.Enable = false;
-				this.justifHLeftState.Enable = false;
-				this.justifHCenterState.Enable = false;
-				this.justifHRightState.Enable = false;
-				this.justifHJustifState.Enable = false;
-				this.justifHAllState.Enable = false;
 				this.orderUpOneState.Enable = false;
 				this.orderDownOneState.Enable = false;
 				this.orderUpAllState.Enable = false;
@@ -5689,12 +5677,8 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					paragraphLeadingMinusState;
 		protected CommandState					paragraphIndentPlusState;
 		protected CommandState					paragraphIndentMinusState;
+		protected CommandState					paragraphJustifState;
 		protected CommandState					paragraphClearState;
-		protected CommandState					justifHLeftState;
-		protected CommandState					justifHCenterState;
-		protected CommandState					justifHRightState;
-		protected CommandState					justifHJustifState;
-		protected CommandState					justifHAllState;
 		protected CommandState					orderUpOneState;
 		protected CommandState					orderDownOneState;
 		protected CommandState					orderUpAllState;

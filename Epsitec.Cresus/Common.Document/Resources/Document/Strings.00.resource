@@ -1162,11 +1162,6 @@
 	<data name="Action.FontClear">Effacer tous les attributs de caractère</data>
 	<data name="Action.ParagraphMain">Paragraphe</data>
 	<data name="Action.ParagraphJustif">Modifier la justification</data>
-	<data name="Action.ParagraphJustifHLeft">Justification à gauche</data>
-	<data name="Action.ParagraphJustifHCenter">Justification centrée</data>
-	<data name="Action.ParagraphJustifHRight">Justification à droite</data>
-	<data name="Action.ParagraphJustifHJustif">Justification alignée, sauf dernière ligne</data>
-	<data name="Action.ParagraphJustifHAll">Justification alignée, y compris dernière ligne</data>
 	<data name="Action.ParagraphBulletRound">Puces</data>
 	<data name="Action.ParagraphBulletNumeric">Numérotation 1..</data>
 	<data name="Action.ParagraphBulletAlpha">Numérotation A..</data>

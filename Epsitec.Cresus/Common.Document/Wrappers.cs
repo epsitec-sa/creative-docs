@@ -248,6 +248,7 @@ namespace Epsitec.Common.Document
 			this.CommandActiveState("ParagraphLeadingPlus",  enabled);
 			this.CommandActiveState("ParagraphLeadingMinus", enabled);
 
+			this.CommandActiveState("ParagraphJustif", enabled);
 			this.CommandActiveState("JustifHLeft",   enabled, (justif == Text.Wrappers.JustificationMode.AlignLeft));
 			this.CommandActiveState("JustifHCenter", enabled, (justif == Text.Wrappers.JustificationMode.Center));
 			this.CommandActiveState("JustifHRight",  enabled, (justif == Text.Wrappers.JustificationMode.AlignRight));

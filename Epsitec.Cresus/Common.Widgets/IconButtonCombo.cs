@@ -349,6 +349,12 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert(item != null);
 
 				MenuItem cell = new MenuItem("", item.Icon, item.Text, "", item.Name);
+
+				if ( i == this.SelectedIndex )
+				{
+					cell.ActiveState = ActiveState.Yes;
+				}
+
 				menu.Items.Add(cell);
 			}
 			
