@@ -12,5 +12,10 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			this.reader = reader;
 		}
+
+		public override void RestoreObjectData(int id, DependencyObject obj)
+		{
+			this.AssertReadable ();
+		}
 	}
 }

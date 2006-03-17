@@ -48,7 +48,7 @@ namespace Epsitec.Common.Types
 				}
 				for (int id = oldObjCount; id < newObjCount; id++)
 				{
-					context.StoreObject (id, map.GetValue (id));
+					context.StoreObjectData (id, map.GetValue (id));
 				}
 			}
 			
@@ -72,6 +72,8 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
+				List<DependencyObject> list = new List<DependencyObject> ();
+				
 				for (int i = 0; i < externalCount; i++)
 				{
 					context.RestoreExternalDefinition ();
@@ -82,10 +84,11 @@ namespace Epsitec.Common.Types
 				}
 				for (int i = 0; i < objectCount; i++)
 				{
-					context.RestoreObjectDefinition ();
+					list.Add (context.RestoreObjectDefinition ());
 				}
-				for (int i = 0; i < objectCount; i++)
+				foreach (DependencyObject obj in list)
 				{
+					context.RestoreObjectData (context.ObjectMap.GetId (obj), obj);
 				}
 				
 				root = null;

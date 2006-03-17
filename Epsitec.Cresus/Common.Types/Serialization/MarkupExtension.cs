@@ -134,5 +134,48 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			return string.Concat ("{ObjRef ", Context.IdToString (context.ObjectMap.GetId (value)), "}");
 		}
+		public static string CollectionToString(ICollection<DependencyObject> collection, SerializerContext context)
+		{
+			System.Text.StringBuilder buffer = new StringBuilder ();
+
+			buffer.Append ("{Collection");
+			
+			int i = -1;
+			
+			foreach (DependencyObject node in collection)
+			{
+				if (++i == 0)
+				{
+					buffer.Append (" ");
+				}
+				else
+				{
+					buffer.Append (", ");
+				}
+				
+				if (node == null)
+				{
+					buffer.Append (MarkupExtension.NullToString ());
+					continue;
+				}
+				
+				if (context.ObjectMap.IsValueDefined (node))
+				{
+					buffer.Append (MarkupExtension.ObjRefToString (node, context));
+					continue;
+				}
+
+				if (context.ExternalMap.IsValueDefined (node))
+				{
+					buffer.Append (MarkupExtension.ExtRefToString (node, context));
+					continue;
+				}
+				
+				throw new System.ArgumentException (string.Format ("Element {0} in collection cannot be resolved", i));
+			}
+
+			buffer.Append ("}");
+			return buffer.ToString ();
+		}
 	}
 }

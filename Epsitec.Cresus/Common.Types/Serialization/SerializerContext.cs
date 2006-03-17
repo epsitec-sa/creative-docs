@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types.Serialization
 			this.writer = writer;
 		}
 		
-		public override void StoreObject(int id, DependencyObject obj)
+		public override void StoreObjectData(int id, DependencyObject obj)
 		{
 			//	Dump the contents of the object to the writer. This will record
 			//	all defined read/write fields and binding settings.
@@ -87,8 +87,6 @@ namespace Epsitec.Common.Types.Serialization
 						{
 							//	This is an internal reference. Record it as {Object _nnn}.
 
-							int id = this.ObjectMap.GetId (dependencyObjectValue);
-
 							string markup = MarkupExtension.ObjRefToString (dependencyObjectValue, this);
 							
 							fields.Add (entry.Property, markup);
@@ -99,12 +97,11 @@ namespace Epsitec.Common.Types.Serialization
 
 						if (dependencyObjectCollection != null)
 						{
-							List<int> ids = new List<int> ();
-							foreach (DependencyObject node in dependencyObjectCollection)
-							{
-								ids.Add (this.ObjectMap.GetId (node));
-							}
-							fields.Add (entry.Property, ids);
+							//	This is a collection. Record it as {Collection xxx, xxx, xxx}
+
+							string markup = MarkupExtension.CollectionToString (dependencyObjectCollection, this);
+							
+							fields.Add (entry.Property, markup);
 							continue;
 						}
 

@@ -82,7 +82,7 @@ namespace Epsitec.Common.Types.Serialization
 			this.writer.WriteExternalReference (tag);
 		}
 
-		public void RestoreTypeDefinition()
+		public System.Type RestoreTypeDefinition()
 		{
 			this.AssertReadable ();
 			
@@ -98,8 +98,10 @@ namespace Epsitec.Common.Types.Serialization
 
 			this.typeIds[type.SystemType] = id;
 			this.ObjectMap.RecordType (type.SystemType);
+
+			return type.SystemType;
 		}
-		public void RestoreObjectDefinition()
+		public DependencyObject RestoreObjectDefinition()
 		{
 			this.AssertReadable ();
 
@@ -110,8 +112,10 @@ namespace Epsitec.Common.Types.Serialization
 			DependencyObject value = type.CreateEmptyObject ();
 			
 			this.ObjectMap.Record (value);
+			
+			return value;
 		}
-		public void RestoreExternalDefinition()
+		public string RestoreExternalDefinition()
 		{
 			this.AssertReadable ();
 			
@@ -120,6 +124,8 @@ namespace Epsitec.Common.Types.Serialization
 			if (this.ExternalMap.IsTagDefined (tag))
 			{
 				//	OK. Tag defined.
+				
+				return tag;
 			}
 			else
 			{
@@ -127,9 +133,13 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
-		public virtual void StoreObject(int id, DependencyObject obj)
+		public virtual void StoreObjectData(int id, DependencyObject obj)
 		{
-			throw new System.InvalidOperationException ("StoreObject not supported");
+			throw new System.InvalidOperationException ("StoreObjectData not supported");
+		}
+		public virtual void RestoreObjectData(int id, DependencyObject obj)
+		{
+			throw new System.InvalidOperationException ("RestoreObjectData not supported");
 		}
 		
 		public string GetPropertyName(DependencyProperty property)
