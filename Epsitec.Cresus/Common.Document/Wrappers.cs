@@ -239,6 +239,7 @@ namespace Epsitec.Common.Document
 				justif = this.paragraphWrapper.Active.JustificationMode;
 			}
 
+			this.CommandActiveState("ParagraphLeading", enabled);
 			this.CommandActiveState("ParagraphLeading08", enabled, (leading == 0.8));
 			this.CommandActiveState("ParagraphLeading10", enabled, (leading == 1.0));
 			this.CommandActiveState("ParagraphLeading12", enabled, (leading == 1.2));

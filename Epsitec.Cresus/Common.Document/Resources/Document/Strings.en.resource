@@ -773,6 +773,12 @@
 	<data name="Property.Justif.JustifORL">Right-to-left orientation</data>
 	<data name="Property.Justif.JustifOTB">Top-to-bottom orientation</data>
 
+	<data name="Property.Leading.Leading08">Compact leading</data>
+	<data name="Property.Leading.Leading10">Normal leading</data>
+	<data name="Property.Leading.Leading15">Leading ×1.5</data>
+	<data name="Property.Leading.Leading20">Leading ×2</data>
+	<data name="Property.Leading.Leading30">Leading ×3</data>
+
 	<data name="Property.Line.Full">Solid</data>
 	<data name="Property.Line.Lines">Dashed</data>
 	<data name="Property.Line.LineDense">Compact dash</data>
@@ -1177,11 +1183,6 @@
 	<data name="Action.ParagraphLeading">Change leading</data>
 	<data name="Action.ParagraphLeadingMinus">Decrease leading</data>
 	<data name="Action.ParagraphLeadingPlus">Increase leading</data>
-	<data name="Action.ParagraphLeading08">Compact leading</data>
-	<data name="Action.ParagraphLeading10">Normal leading</data>
-	<data name="Action.ParagraphLeading15">Leading ×1.5</data>
-	<data name="Action.ParagraphLeading20">Leading ×2</data>
-	<data name="Action.ParagraphLeading30">Leading ×3</data>
 	<data name="Action.ParagraphGenerator">Change bullet/numbering</data>
 	<data name="Action.ParagraphClear">Clear all Paragraph Properties</data>
 	<data name="Action.Text.Insert">Insert</data>

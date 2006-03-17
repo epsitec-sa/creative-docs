@@ -2301,11 +2301,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("FontSizePlus")]
 		[Command ("FontSizeMinus")]
 		[Command ("FontClear")]
-		[Command ("ParagraphLeading08")]
-		[Command ("ParagraphLeading10")]
-		[Command ("ParagraphLeading15")]
-		[Command ("ParagraphLeading20")]
-		[Command ("ParagraphLeading30")]
+		[Command ("ParagraphLeading")]
 		[Command ("ParagraphLeadingPlus")]
 		[Command ("ParagraphLeadingMinus")]
 		[Command ("ParagraphIndentPlus")]
@@ -3606,11 +3602,7 @@ namespace Epsitec.App.DocumentEditor
 			this.fontSizePlusState = this.CreateCommandState("FontSizePlus");
 			this.fontSizeMinusState = this.CreateCommandState("FontSizeMinus");
 			this.fontClearState = this.CreateCommandState("FontClear");
-			this.paragraphLeading08State = this.CreateCommandState("ParagraphLeading08", true);
-			this.paragraphLeading10State = this.CreateCommandState("ParagraphLeading10", true);
-			this.paragraphLeading15State = this.CreateCommandState("ParagraphLeading15", true);
-			this.paragraphLeading20State = this.CreateCommandState("ParagraphLeading20", true);
-			this.paragraphLeading30State = this.CreateCommandState("ParagraphLeading30", true);
+			this.paragraphLeadingState = this.CreateCommandState("ParagraphLeading", true);
 			this.paragraphLeadingPlusState = this.CreateCommandState("ParagraphLeadingPlus");
 			this.paragraphLeadingMinusState = this.CreateCommandState("ParagraphLeadingMinus");
 			this.paragraphIndentPlusState = this.CreateCommandState("ParagraphIndentPlus");
@@ -4304,11 +4296,7 @@ namespace Epsitec.App.DocumentEditor
 				this.fontSizePlusState.Enable = false;
 				this.fontSizeMinusState.Enable = false;
 				this.fontClearState.Enable = false;
-				this.paragraphLeading08State.Enable = false;
-				this.paragraphLeading10State.Enable = false;
-				this.paragraphLeading15State.Enable = false;
-				this.paragraphLeading20State.Enable = false;
-				this.paragraphLeading30State.Enable = false;
+				this.paragraphLeadingState.Enable = false;
 				this.paragraphLeadingPlusState.Enable = false;
 				this.paragraphLeadingMinusState.Enable = false;
 				this.paragraphIndentPlusState.Enable = false;
@@ -5668,11 +5656,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					fontSizePlusState;
 		protected CommandState					fontSizeMinusState;
 		protected CommandState					fontClearState;
-		protected CommandState					paragraphLeading08State;
-		protected CommandState					paragraphLeading10State;
-		protected CommandState					paragraphLeading15State;
-		protected CommandState					paragraphLeading20State;
-		protected CommandState					paragraphLeading30State;
+		protected CommandState					paragraphLeadingState;
 		protected CommandState					paragraphLeadingPlusState;
 		protected CommandState					paragraphLeadingMinusState;
 		protected CommandState					paragraphIndentPlusState;

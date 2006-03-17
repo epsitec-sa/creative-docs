@@ -773,6 +773,12 @@
 	<data name="Property.Justif.JustifORL">Orientation de droite à gauche</data>
 	<data name="Property.Justif.JustifOTB">Orientation de haut en bas</data>
 
+	<data name="Property.Leading.Leading08">Interligne serré</data>
+	<data name="Property.Leading.Leading10">Interligne normal</data>
+	<data name="Property.Leading.Leading15">Interligne étendu</data>
+	<data name="Property.Leading.Leading20">Interligne double</data>
+	<data name="Property.Leading.Leading30">Interligne triple</data>
+
 	<data name="Property.Line.Full">Plein</data>
 	<data name="Property.Line.Lines">Traitillé</data>
 	<data name="Property.Line.LineDense">Traitillé serré</data>
@@ -1177,11 +1183,6 @@
 	<data name="Action.ParagraphLeading">Modifier l'interligne</data>
 	<data name="Action.ParagraphLeadingMinus">Diminuer l'interligne</data>
 	<data name="Action.ParagraphLeadingPlus">Augmenter l'interligne</data>
-	<data name="Action.ParagraphLeading08">Interligne serré</data>
-	<data name="Action.ParagraphLeading10">Interligne normal</data>
-	<data name="Action.ParagraphLeading15">Interligne étendu</data>
-	<data name="Action.ParagraphLeading20">Interligne double</data>
-	<data name="Action.ParagraphLeading30">Interligne triple</data>
 	<data name="Action.ParagraphGenerator">Modifier les puces/numérotations</data>
 	<data name="Action.ParagraphClear">Effacer tous les attributs de paragraphe</data>
 	<data name="Action.Text.Insert">Insertion</data>

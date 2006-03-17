@@ -180,6 +180,21 @@ namespace Epsitec.Common.Document.Ribbons
 			return button;
 		}
 
+		protected IconButtonCombo CreateIconButtonCombo(string command)
+		{
+			//	Crée un bouton combo pour une commande.
+			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
+			IconButtonCombo button = new IconButtonCombo(this);
+
+			button.Command = command;
+			button.AutoFocus = false;
+
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+			return button;
+		}
+
 		protected GlyphButton CreateMenuButton(string command, string tooltip, MessageEventHandler handler)
 		{
 			//	Crée un bouton "v" pour un menu.
