@@ -12,6 +12,33 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.UI.Engine.Initialise ();
 			Epsitec.Common.Document.Engine.Initialise ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+			
+			Drawing.DynamicImage image = new Drawing.DynamicImage (new Drawing.Size (30, 18), new Drawing.DynamicImagePaintCallback (this.DynamicImageXyz));
+			
+			image.IsCacheEnabled = false;
+			
+			Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage ("Xyz", image);
+		}
+
+		private void DynamicImageXyz(Drawing.Graphics graphics, Drawing.Size size, string argument, Drawing.GlyphPaintStyle style, Drawing.Color color, object adorner)
+		{
+			int hue; 
+			
+			if (argument == "random")
+			{
+				System.Random random = new System.Random ();
+				hue = random.Next (360);
+			}
+			else
+			{
+				hue = int.Parse (argument);
+			}
+			
+			graphics.AddFilledRectangle (0, 0, size.Width, size.Height);
+			graphics.RenderSolid (Drawing.Color.FromHsv (hue, 1, 1));
+			graphics.LineWidth = 2.0;
+			graphics.AddRectangle (1, 1, size.Width-2, size.Height-2);
+			graphics.RenderSolid (Drawing.Color.FromBrightness (0));
 		}
 		
 		[Test] public void CheckAdornerWidgets()
@@ -344,6 +371,8 @@ namespace Epsitec.Common.Widgets
 			StaticImage image1 = new StaticImage ();
 			StaticImage image2 = new StaticImage ();
 			StaticImage image3 = new StaticImage ();
+			StaticImage image4 = new StaticImage ();
+			StaticImage image5 = new StaticImage ();
 			
 			image1.Location = new Point(590, 15);
 			image1.Size = new Size(20, 20);
@@ -359,9 +388,19 @@ namespace Epsitec.Common.Widgets
 			image3.ImageName = @"file:images/cut.png";
 			image3.VerticalOffset = 2;
 			
+			image4.Location = new Point(630, 15);
+			image4.Size = new Size(40, 20);
+			image4.ImageName = @"dyn:Xyz/random";
+			
+			image5.Location = new Point(630, 35);
+			image5.Size = new Size(40, 20);
+			image5.ImageName = @"dyn:Xyz/80";
+			
 			window.Root.Children.Add(image1);
 			window.Root.Children.Add(image2);
 			window.Root.Children.Add(image3);
+			window.Root.Children.Add(image4);
+			window.Root.Children.Add(image5);
 
 			GroupBox box = new GroupBox();
 //			box.Location = new Point(10, 100);

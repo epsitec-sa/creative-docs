@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -11,6 +11,7 @@ namespace Epsitec.Common.Support
 	/// nom. Cette implémentation supporte les protocoles suivants :
 	/// - "file:name", accès direct à une image dans un fichier (name)
 	/// - "res:id#field", accès direct à une image dans un bundle de ressources
+	/// - "dyn:tag", accès à une image dynamique
 	/// </summary>
 	public class ImageProvider : IImageProvider
 	{
@@ -100,6 +101,30 @@ namespace Epsitec.Common.Support
 				(name.Length < 1))
 			{
 				return null;
+			}
+			
+			if (name.StartsWith ("dyn:"))
+			{
+				string full_name = name.Substring (4);
+				
+				int pos = full_name.IndexOf ('/');
+				
+				if (pos < 0)
+				{
+					return null;
+				}
+				
+				string base_name = full_name.Substring (0, pos);
+				string argument = full_name.Substring (pos+1);
+				
+				Drawing.DynamicImage image = this.dynamic_images[base_name] as Drawing.DynamicImage;
+				
+				if (image != null)
+				{
+					image = image.GetImageForArgument (argument);
+				}
+				
+				return image;
 			}
 			
 			if (this.images.ContainsKey (name))
@@ -331,6 +356,17 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public void AddDynamicImage(string tag, Drawing.DynamicImage image)
+		{
+			this.dynamic_images[tag] = image;
+		}
+		
+		public void RemoveDynamicImage(string tag)
+		{
+			this.dynamic_images.Remove (tag);
+		}
+		
+		
 		public void PrefillManifestIconCache()
 		{
 			System.AppDomain             domain     = System.AppDomain.CurrentDomain;
@@ -508,6 +544,7 @@ namespace Epsitec.Common.Support
 
 		
 		protected Hashtable				images = new Hashtable ();
+		protected Hashtable				dynamic_images = new Hashtable ();
 		protected ArrayList				keep_alive_images = null;
 		protected Hashtable				bundle_hash = new Hashtable ();
 		protected string				default_resource_provider = "file:";
