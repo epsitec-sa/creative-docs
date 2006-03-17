@@ -2310,13 +2310,24 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ParagraphClear")]
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName, null);
+		}
+
+		[Command ("ParagraphLeading")]
+		[Command ("ParagraphJustif")]
+		void CommandCombo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			IconButtonCombo combo = e.Source as IconButtonCombo;
 			CommandState cs = dispatcher.FindCommandState(e.CommandName);
-			string state = null;
-			if ( cs != null )
+			if ( combo != null && cs != null )
 			{
-				state = cs.AdvancedState;
+				cs.AdvancedState = combo.SelectedName;
+				this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName, cs.AdvancedState);
 			}
-			this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName, state);
+			else
+			{
+				this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName, null);
+			}
 		}
 
 

@@ -423,6 +423,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.CloseCombo(CloseMode.Accept);
+			this.ExecuteCommand();
 		}
 
 		private void HandleMenuRejected(object sender)
