@@ -177,5 +177,154 @@ namespace Epsitec.Common.Types.Serialization
 			buffer.Append ("}");
 			return buffer.ToString ();
 		}
+
+		public static Binding BindingFromString(string value, IContextResolver context)
+		{
+			string[] args = MarkupExtension.Explode (value);
+			
+			if ((args.Length == 0) ||
+				(args[0] != "Binding"))
+			{
+				throw new System.FormatException (string.Format ("String '{0}' is not a valid Binding expression", value));
+			}
+
+			return null;
+		}
+
+		public static string[] Explode(string source)
+		{
+			if ((source.StartsWith ("{")) &&
+				(source.EndsWith ("}")))
+			{
+				int start = 1;
+				int end = source.Length-1;
+				int num = 0;
+				
+				bool onSpace = true;
+				bool hasComma = false;
+				bool isEmpty = true;
+
+				for (int i = start; i < end; i++)
+				{
+					bool wasEmpty = isEmpty;
+					
+					char c = source[i];
+					
+					if (char.IsWhiteSpace (c))
+					{
+						if (onSpace)
+						{
+							continue;
+						}
+						
+						onSpace = true;
+						continue;
+					}
+
+					isEmpty = false;
+					
+					if (c == ',')
+					{
+						if (hasComma || wasEmpty)
+						{
+							hasComma = true;
+							num++;
+							continue;
+						}
+
+						hasComma = true;
+						onSpace = true;
+						continue;
+					}
+					if (onSpace)
+					{
+						hasComma = false;
+						onSpace = false;
+						num++;
+					}
+				}
+				
+				if (hasComma)
+				{
+					num++;
+				}
+
+				string[] args = new string[num];
+
+				onSpace = true;
+				hasComma = false;
+				isEmpty = true;
+
+				int index = 0;
+
+				for (int i = start; i < end; i++)
+				{
+					bool wasEmpty = isEmpty;
+					
+					char c = source[i];
+
+					if (char.IsWhiteSpace (c))
+					{
+						if (onSpace)
+						{
+							continue;
+						}
+
+						args[index++] = source.Substring (start, i-start);
+						
+						onSpace = true;
+						continue;
+					}
+					
+					isEmpty = false;
+					
+					if (c == ',')
+					{
+						if (hasComma || wasEmpty)
+						{
+							hasComma = true;
+							args[index++] = "";
+							start = i+1;
+							continue;
+						}
+
+						hasComma = true;
+
+						if (onSpace)
+						{
+							continue;
+						}
+						
+						args[index++] = source.Substring (start, i-start);
+						
+						onSpace = true;
+						continue;
+					}
+					if (onSpace)
+					{
+						hasComma = false;
+						onSpace = false;
+						start = i;
+					}
+				}
+
+				if (hasComma)
+				{
+					args[index++] = "";
+				}
+				else if (onSpace == false)
+				{
+					args[index++] = source.Substring (start, end-start);
+				}
+
+				System.Diagnostics.Debug.Assert (index == num);
+				
+				return args;
+			}
+			else
+			{
+				throw new System.FormatException (string.Format ("String '{0}' is not a valid markup extension", source));
+			}
+		}
 	}
 }

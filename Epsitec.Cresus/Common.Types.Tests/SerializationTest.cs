@@ -275,6 +275,119 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckMarkupExtension()
+		{
+			string[] args;
+
+			args = Serialization.MarkupExtension.Explode ("{abc}");
+
+			Assert.AreEqual (1, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+
+			args = Serialization.MarkupExtension.Explode ("{abc   }");
+
+			Assert.AreEqual (1, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+
+			args = Serialization.MarkupExtension.Explode ("{   abc}");
+
+			Assert.AreEqual (1, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+
+			args = Serialization.MarkupExtension.Explode ("{abc,def}");
+
+			Assert.AreEqual (2, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+			Assert.AreEqual ("def", args[1]);
+
+			args = Serialization.MarkupExtension.Explode ("{abc, def}");
+
+			Assert.AreEqual (2, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+			Assert.AreEqual ("def", args[1]);
+
+			args = Serialization.MarkupExtension.Explode ("{abc ,def}");
+
+			Assert.AreEqual (2, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+			Assert.AreEqual ("def", args[1]);
+
+			args = Serialization.MarkupExtension.Explode ("{  abc  ,  def  }");
+
+			Assert.AreEqual (2, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+			Assert.AreEqual ("def", args[1]);
+
+			args = Serialization.MarkupExtension.Explode ("{abc,}");
+
+			Assert.AreEqual (2, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+			Assert.AreEqual ("", args[1]);
+
+			args = Serialization.MarkupExtension.Explode ("{abc  ,  }");
+
+			Assert.AreEqual (2, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+			Assert.AreEqual ("", args[1]);
+
+			args = Serialization.MarkupExtension.Explode ("{,abc}");
+
+			Assert.AreEqual (2, args.Length);
+			Assert.AreEqual ("", args[0]);
+			Assert.AreEqual ("abc", args[1]);
+
+			args = Serialization.MarkupExtension.Explode ("{abc,,def}");
+
+			Assert.AreEqual (3, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+			Assert.AreEqual ("", args[1]);
+			Assert.AreEqual ("def", args[2]);
+
+			args = Serialization.MarkupExtension.Explode ("{abc , , def}");
+
+			Assert.AreEqual (3, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+			Assert.AreEqual ("", args[1]);
+			Assert.AreEqual ("def", args[2]);
+
+			args = Serialization.MarkupExtension.Explode ("{abc,,}");
+
+			Assert.AreEqual (3, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+			Assert.AreEqual ("", args[1]);
+			Assert.AreEqual ("", args[2]);
+
+			args = Serialization.MarkupExtension.Explode ("{abc , ,  }");
+
+			Assert.AreEqual (3, args.Length);
+			Assert.AreEqual ("abc", args[0]);
+			Assert.AreEqual ("", args[1]);
+			Assert.AreEqual ("", args[2]);
+
+			args = Serialization.MarkupExtension.Explode ("{,,}");
+
+			Assert.AreEqual (3, args.Length);
+			Assert.AreEqual ("", args[0]);
+			Assert.AreEqual ("", args[1]);
+			Assert.AreEqual ("", args[2]);
+
+			args = Serialization.MarkupExtension.Explode ("{ , , }");
+
+			Assert.AreEqual (3, args.Length);
+			Assert.AreEqual ("", args[0]);
+			Assert.AreEqual ("", args[1]);
+			Assert.AreEqual ("", args[2]);
+
+			args = Serialization.MarkupExtension.Explode ("{   }");
+
+			Assert.AreEqual (0, args.Length);
+
+			args = Serialization.MarkupExtension.Explode ("{}");
+
+			Assert.AreEqual (0, args.Length);
+		}
+
+		[Test]
 		public void CheckVisitSerializableNodes()
 		{
 			MyItem a = new MyItem ();

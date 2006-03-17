@@ -209,7 +209,7 @@ namespace Epsitec.Common.Types
 
 			public object ConvertFromString(string value, IContextResolver context)
 			{
-				throw new System.Exception ("The method or operation is not implemented.");
+				return Serialization.MarkupExtension.BindingFromString (value, context);
 			}
 
 			#endregion

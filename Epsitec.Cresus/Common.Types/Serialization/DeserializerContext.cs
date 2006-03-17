@@ -33,6 +33,41 @@ namespace Epsitec.Common.Types.Serialization
 		private void RestoreObjectField(DependencyObject obj, string field, string value)
 		{
 			System.Console.Out.WriteLine ("{0}: {1}='{2}'", this.ObjectMap.GetId (obj), field, value);
+
+			DependencyProperty property = null;
+
+			if (field.IndexOf ('.') < 0)
+			{
+				//	This is a standard, simple field.
+
+				property = obj.ObjectType.GetProperty (field);
+			}
+			else
+			{
+				string[] args = field.Split ('.');
+				
+				string typeTag = args[0];
+				string name    = args[1];
+
+				DependencyObjectType type = DependencyObjectType.FromSystemType (this.ObjectMap.GetType (Context.ParseId (typeTag)));
+
+				property = type.GetProperty (name);
+			}
+
+			if (property == null)
+			{
+				throw new System.ArgumentException (string.Format ("Property {0} could not be resolved", field));
+			}
+
+			if (MarkupExtension.IsMarkupExtension (value))
+			{
+				//	This is a markup extension
+			}
+			else
+			{
+				object data = property.ConvertFromString (MarkupExtension.Unescape (value), this);
+				obj.SetValue (property, data);
+			}
 		}
 	}
 }
