@@ -10,18 +10,12 @@ namespace Epsitec.Common.Text.Exchange
 	/// 
 
 
-	class HtmlFontDefinition
-	{
-		int fontSize;
-		int fontFace;
-	} ;
-
 	public class HtmlText
 	{
 		public HtmlText()
 		{
 			this.output.Append ("<p>");
-			this.openTagsStack.Push (HtmlAttribute.Paragraph);
+			this.openTagsStack.Push (new HtmlAttributeWithParam(HtmlAttribute.Paragraph, null, null));
 		}
 
 		public void Terminate()
@@ -79,10 +73,26 @@ namespace Epsitec.Common.Text.Exchange
 				this.OpenTag (HtmlAttribute.Strikeout);
 			}
 
-			precedIsItalic = isItalic;
-			precedIsBold = isBold;
-			precedIsUnderlined = isUnderlined;
-			precedIsStrikeout = isStrikeout;
+			if (this.precedFontFace != this.fontFace)
+			{
+				if (this.precedFontFace.Length != 0)
+				{
+					this.CloseTag (HtmlAttribute.Font);
+				}
+
+				if (this.fontFace.Length != 0)
+				{
+					this.OpenTag (HtmlAttribute.Font, "face", this.fontFace);
+				}
+			}
+
+
+			this.precedIsItalic = this.isItalic;
+			this.precedIsBold = this.isBold;
+			this.precedIsUnderlined = this.isUnderlined;
+			this.precedIsStrikeout = this.isStrikeout;
+
+			this.precedFontFace = this.fontFace;
 
 			this.AppendTagsToClose ();
 			this.AppendTagsToOpen ();
@@ -119,24 +129,19 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void SetFontFace(string fontFace)
 		{
-			this.fontFace = fontFace;
+			if (fontFace != null)
+				this.fontFace = fontFace;
 		}
 
 		public void SetFontColor(string fontcolor)
 		{
-		//	Epsitec.Common.Drawing. = new Epsitec.Common.Drawing.RichColor ();
-		//	richcolor.Parse (fontcolor);
-
 			Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.Parse (fontcolor);
-
-			//richcolor.ToString
 
 			int r = (int)(richcolor.R * 255);
 			int g = (int)(richcolor.G * 255);
 			int b = (int)(richcolor.B * 255);
 
-			this.fontColor = string.Format ("#{0,02:x}{1,02:x}{2,02:x}", r, g, b);
-
+			this.fontColor = string.Format ("#{0,2:x2}{1,2:x2}{2,2:x2}", r, g, b);
 		}
 
 		private void ReplaceSpecialCodes(ref string line, Epsitec.Common.Text.Unicode.Code specialCode, string htmlTag)
@@ -158,7 +163,6 @@ namespace Epsitec.Common.Text.Exchange
 			string[] split = line.Split (new char[] { (char) specialCode });
 
 			int index;
-			int start = 0;
 			int max = split.GetLength (0);
 
 			for (index = 0; index < max; index++)
@@ -188,11 +192,27 @@ namespace Epsitec.Common.Text.Exchange
 
 		private string GetHtmlTag(string attribute, HtmlTagMode tagMode)
 		{
+			return GetHtmlTag (attribute, tagMode, null, null);
+		}
+
+		private string GetHtmlTag(string attribute, HtmlTagMode tagMode, string parametername, string parametervalue)
+		{
 			string retval = "";
+			string tagcontent;
+
+			if (parametername != null)
+			{
+				tagcontent = string.Format ("{0} {1}=\"{2}\"", attribute, parametername, parametervalue);
+			}
+			else
+			{
+				tagcontent = attribute;
+			}
+
 			switch (tagMode)
 			{
 				case HtmlTagMode.Open:
-					retval = "<" + attribute + ">";
+					retval = "<" + tagcontent + ">";
 					break;
 				case HtmlTagMode.Close:
 					retval = "</" + attribute + ">";
@@ -203,11 +223,11 @@ namespace Epsitec.Common.Text.Exchange
 			return retval;
 		}
 
-		private string AttributeToString(HtmlAttribute attribute, HtmlTagMode tagmode, string parameter)
+		private string AttributeToString(HtmlAttributeWithParam attribute, HtmlTagMode tagmode, string parameter)
 		{
 			string retval = "";
 
-			switch (attribute)
+			switch (attribute.htmlattribute)
 			{
 				case HtmlAttribute.Italic:
 					retval = this.GetHtmlTag ("i", tagmode);
@@ -224,6 +244,9 @@ namespace Epsitec.Common.Text.Exchange
 				case HtmlAttribute.Paragraph:
 					retval = this.GetHtmlTag ("p", tagmode);
 					break;
+				case HtmlAttribute.Font:
+					retval = this.GetHtmlTag ("font", tagmode, attribute.parametername, attribute.parametervalue);
+					break;
 			}
 
 			return retval;
@@ -231,14 +254,21 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void CloseTag(HtmlAttribute closetag)
 		{
-			this.tagsToClose.Add (closetag);
+			HtmlAttributeWithParam attr = new HtmlAttributeWithParam (closetag, null, null);
+			this.tagsToClose.Add (attr);
 		}
+
+		private void OpenTag(HtmlAttribute opentag, string parametername, string parametervalue)
+		{
+			HtmlAttributeWithParam attr = new HtmlAttributeWithParam (opentag, parametername, parametervalue);
+			this.tagsToOpen.Add (attr);
+		}
+
 
 		private void OpenTag(HtmlAttribute opentag)
 		{
-			this.tagsToOpen.Add (opentag);
+			this.OpenTag (opentag, null, null);
 		}
-
 
 		private void CloseTagsIfPossible()
 		{
@@ -251,9 +281,12 @@ namespace Epsitec.Common.Text.Exchange
 				found = false;
 				for (int i = 0; i < this.tagsToClose.Count; i++)
 				{
-					HtmlAttribute attr = (HtmlAttribute) this.tagsToClose[i];
-				//	System.Diagnostics.Debug.Assert (this.openTagsStack.Count > 0);
-					if ((HtmlAttribute) this.openTagsStack.Peek () == attr)
+					System.Diagnostics.Debug.Assert (this.openTagsStack.Count > 0);
+
+					HtmlAttributeWithParam attr = (HtmlAttributeWithParam)this.tagsToClose[i];
+					HtmlAttributeWithParam attronstack = (HtmlAttributeWithParam)this.openTagsStack.Peek ();
+
+					if (attronstack.htmlattribute == attr.htmlattribute)
 					{
 						this.output.Append (this.AttributeToString (attr, HtmlTagMode.Close, null));
 						this.tagsToClose.RemoveAt (i);
@@ -275,7 +308,7 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (this.tagsToClose.Count > 0)
 				{
-					HtmlAttribute topattribute = (HtmlAttribute) this.openTagsStack.Pop ();
+					HtmlAttributeWithParam topattribute = (HtmlAttributeWithParam) this.openTagsStack.Pop ();
 					tmpattributes.Push (topattribute);
 					this.output.Append (this.AttributeToString (topattribute, HtmlTagMode.Close, null));
 				}
@@ -283,8 +316,8 @@ namespace Epsitec.Common.Text.Exchange
 
 			while (tmpattributes.Count > 0)
 			{
-				HtmlAttribute attr;
-				attr = (HtmlAttribute) tmpattributes.Pop();
+				HtmlAttributeWithParam attr;
+				attr = (HtmlAttributeWithParam) tmpattributes.Pop();
 				this.output.Append (this.AttributeToString (attr, HtmlTagMode.Open, null));
 				this.openTagsStack.Push (attr);
 			}
@@ -297,15 +330,15 @@ namespace Epsitec.Common.Text.Exchange
 			// ferme les tags restés ouverts
 			while (this.openTagsStack.Count > 0)
 			{
-				HtmlAttribute attr;
-				attr = (HtmlAttribute) openTagsStack.Pop ();
+				HtmlAttributeWithParam attr;
+				attr = (HtmlAttributeWithParam) openTagsStack.Pop ();
 				this.output.Append (this.AttributeToString (attr, HtmlTagMode.Close, null));
 			}
 		}
 
 		private void AppendTagsToOpen()
 		{
-			foreach (HtmlAttribute attr in this.tagsToOpen)
+			foreach (HtmlAttributeWithParam attr in this.tagsToOpen)
 			{
 				string tag = AttributeToString (attr, HtmlTagMode.Open, null);
 				this.output.Append (tag);
@@ -333,6 +366,20 @@ namespace Epsitec.Common.Text.Exchange
 			StartOnly
 		}
 
+		class HtmlAttributeWithParam
+		{
+			public HtmlAttributeWithParam(HtmlAttribute attr, string parametername, string parametervalue)
+			{
+				this.htmlattribute = attr;
+				this.parametername = parametername;
+				this.parametervalue = parametervalue;
+			}
+
+			public HtmlAttribute htmlattribute;
+			public string parametername;
+			public string parametervalue;
+		} 
+
 		private bool isItalic = false;
 		private bool precedIsItalic = false;
 
@@ -346,13 +393,15 @@ namespace Epsitec.Common.Text.Exchange
 		private bool precedIsStrikeout = false;
 
 		private string fontColor = "";
-		private string fontFace = "";
+		private string precedfontColor = "";
+
 		private int fontSize = 0;
+		private int precedfontSize = 0;
 
-		private HtmlAttribute lastAttributeSet;
+		private string fontFace = "";
+		private string precedFontFace = "";
 
-		private System.Collections.ArrayList runList;
-
+		
 		private System.Text.StringBuilder output = new System.Text.StringBuilder ();
 
 		private System.Collections.Stack openTagsStack = new System.Collections.Stack ();
@@ -418,10 +467,11 @@ namespace Epsitec.Common.Text.Exchange
 				htmlText.SetUnderlined (textWrapper.Defined.IsUnderlineDefined);//  && textWrapper.Defined.InvertBold);
 				htmlText.SetStrikeout (textWrapper.Defined.IsStrikeoutDefined);//  && textWrapper.Defined.InvertBold);
 
-				htmlText.SetFontSize (textWrapper.Defined.IsFontSizeDefined ? textWrapper.Defined.FontSize : 0);
 				htmlText.SetFontFace (textWrapper.Defined.FontFace);
+#if false
+				htmlText.SetFontSize (textWrapper.Defined.IsFontSizeDefined ? textWrapper.Defined.FontSize : 0);
 				htmlText.SetFontColor (textWrapper.Defined.Color);
-
+#endif
 				//output.Append(navigator.ReadText (runLength) );
 				htmlText.AppendText (navigator.ReadText (runLength));
 
