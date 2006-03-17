@@ -116,11 +116,13 @@ namespace Epsitec.Common.Widgets
 					if ( item.Name == value )
 					{
 						this.SelectedIndex = rank;
-						break;
+						return;
 					}
 
 					rank ++;
 				}
+
+				this.SelectedIndex = -1;
 			}
 		}
 
@@ -171,7 +173,13 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Met à jour l'icône dans le bouton, en fonction de la sélection.
 			int sel = this.SelectedIndex;
-			if ( sel == -1 )  return;
+
+			if ( sel == -1 )
+			{
+				this.buttonMain.IconName = null;
+				return;
+			}
+
 			if ( sel >= this.items.Count )  return;
 
 			int rank = 0;
