@@ -340,6 +340,28 @@ namespace Epsitec.Common.Widgets
 			spec.Width    = 40;
 			window.Root.Children.Add(spec);
 			tip.SetToolTip(spec, "*");
+			
+			StaticImage image1 = new StaticImage ();
+			StaticImage image2 = new StaticImage ();
+			StaticImage image3 = new StaticImage ();
+			
+			image1.Location = new Point(590, 15);
+			image1.Size = new Size(20, 20);
+			image1.ImageName = @"file:images/cut.png";
+			
+			image2.Location = new Point(600, 15);
+			image2.Size = new Size(20, 20);
+			image2.ImageName = @"file:images/cut.png";
+			image2.VerticalOffset = 1;
+			
+			image3.Location = new Point(610, 15);
+			image3.Size = new Size(20, 20);
+			image3.ImageName = @"file:images/cut.png";
+			image3.VerticalOffset = 2;
+			
+			window.Root.Children.Add(image1);
+			window.Root.Children.Add(image2);
+			window.Root.Children.Add(image3);
 
 			GroupBox box = new GroupBox();
 //			box.Location = new Point(10, 100);

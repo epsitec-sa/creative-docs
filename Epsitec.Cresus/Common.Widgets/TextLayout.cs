@@ -1546,7 +1546,7 @@ namespace Epsitec.Common.Widgets
 					double dx = image.Width;
 					double dy = image.Height;
 					double ix = pos.X+block.Pos.X;
-					double iy = pos.Y+block.Pos.Y+block.ImageDescender;
+					double iy = pos.Y+block.Pos.Y+block.ImageDescender+block.VerticalOffset;
 					
 					if ( block.Anchor )
 					{
@@ -3512,7 +3512,7 @@ namespace Epsitec.Common.Widgets
 							  System.Collections.Stack fontStack,
 							  SupplItem supplItem,
 							  int partIndex, ref int startIndex, int currentIndex,
-							  Drawing.Image image)
+							  Drawing.Image image, double verticalOffset)
 		{
 			if ( currentIndex-startIndex == 0 )  return;
 
@@ -3529,6 +3529,7 @@ namespace Epsitec.Common.Widgets
 			run.Start  = startIndex-partIndex;
 			run.Length = currentIndex-startIndex;
 			run.Image  = image;
+			run.VerticalOffset = verticalOffset;
 			this.FontToRun(run, fontIndex, fontItem, supplItem);
 			runList.Add(run);
 
@@ -3624,7 +3625,7 @@ namespace Epsitec.Common.Widgets
 			
 					if ( tag != Tag.None && tag != Tag.LineBreak )
 					{
-						this.PutRun(runList, fontList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, null);
+						this.PutRun(runList, fontList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, null, 0);
 					}
 
 					if ( tag == Tag.EndOfText )  // fin du texte ?
@@ -3650,8 +3651,10 @@ namespace Epsitec.Common.Widgets
 							case Tag.Image:
 								System.Diagnostics.Debug.Assert( parameters != null && parameters.ContainsKey("src") );
 								string imageName = parameters["src"] as string;
+								double verticalOffset = 0;
 							
 								Drawing.Image image = this.ResourceManager.GetImage(imageName);
+								
 								if ( image == null )
 								{
 									image = this.ResourceManager.GetImage("file:images/missing.icon");
@@ -3659,6 +3662,12 @@ namespace Epsitec.Common.Widgets
 //-									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 								}
 
+								if (parameters.ContainsKey("voff"))
+								{
+									string s = (string)parameters["voff"];
+									verticalOffset = double.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+								}
+								
 								if ( image is Drawing.Canvas )
 								{
 									Drawing.Canvas canvas = image as Drawing.Canvas;
@@ -3691,7 +3700,7 @@ namespace Epsitec.Common.Widgets
 							
 								buffer.Append(TextLayout.CodeObject);
 								currentIndex ++;
-								this.PutRun(runList, fontList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, image);
+								this.PutRun(runList, fontList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, image, verticalOffset);
 								break;
 
 							case Tag.LineBreak:
@@ -3965,6 +3974,8 @@ noText:
 									block.ImageAscender  = dy*fontAscender/fontHeight;
 									block.ImageDescender = dy*fontDescender/fontHeight;
 								}
+								
+								block.VerticalOffset = run.VerticalOffset;
 							
 								if ( this.JustifMode != Drawing.TextJustifMode.NoLine )
 								{
@@ -4767,6 +4778,7 @@ noText:
 			public Drawing.Image			Image;		// image bitmap
 			public double					ImageAscender;
 			public double					ImageDescender;
+			public double					VerticalOffset;
 			public bool						Tab;		// contient un tabulateur
 			public bool						List;		// contient une puce
 			public System.Collections.Hashtable Parameters;

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -41,18 +41,60 @@ namespace Epsitec.Common.Widgets
 				if (this.image_name != value)
 				{
 					this.image_name = value;
-					
-					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-					buffer.Append ("<img src=\"");
-					buffer.Append (TextLayout.ConvertToTaggedText (value));
-					buffer.Append ("\"/>");
-					
-					this.Text = buffer.ToString ();
+					this.RebuildTextLayout ();
 				}
+			}
+		}
+		
+		public double					VerticalOffset
+		{
+			get
+			{
+				return this.vertical_offset;
+			}
+			set
+			{
+				if (this.vertical_offset != value)
+				{
+					this.vertical_offset = value;
+					this.RebuildTextLayout ();
+				}
+			}
+		}
+
+		
+		private void RebuildTextLayout()
+		{
+			if ((this.ImageName == null) ||
+				(this.ImageName.Length == 0))
+			{
+				this.Text = "";
+			}
+			else
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				buffer.Append ("<img src=\"");
+				buffer.Append (TextLayout.ConvertToTaggedText (this.ImageName));
+				buffer.Append ("\"");
+					
+				int vOffset = (int) (this.VerticalOffset * 100);
+					
+				if (vOffset != 0)
+				{
+					buffer.Append (" voff=\"");
+					buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0}", vOffset / 100.0);
+					buffer.Append ("\"");
+				}
+					
+				buffer.Append ("/>");
+					
+				this.Text = buffer.ToString ();
 			}
 		}
 		
 		
 		protected string				image_name;
+		protected double				vertical_offset;
 	}
 }
