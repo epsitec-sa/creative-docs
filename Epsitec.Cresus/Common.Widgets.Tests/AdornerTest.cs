@@ -22,7 +22,13 @@ namespace Epsitec.Common.Widgets
 
 		private void DynamicImageXyz(Drawing.Graphics graphics, Drawing.Size size, string argument, Drawing.GlyphPaintStyle style, Drawing.Color color, object adorner)
 		{
-			int hue; 
+			//	Méthode de test pour peindre une image dynamique selon un
+			//	modèle nommé "Xyz"; l'argument reçu en entrée permet de
+			//	déterminer exactement ce qui doit être peint.
+			
+			int    hue; 
+			double saturation = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.2 : 1.0;
+			double value      = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.7 : 1.0;
 			
 			if (argument == "random")
 			{
@@ -35,7 +41,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			graphics.AddFilledRectangle (0, 0, size.Width, size.Height);
-			graphics.RenderSolid (Drawing.Color.FromHsv (hue, 1, 1));
+			graphics.RenderSolid (Drawing.Color.FromHsv (hue, saturation, value));
 			graphics.LineWidth = 2.0;
 			graphics.AddRectangle (1, 1, size.Width-2, size.Height-2);
 			graphics.RenderSolid (Drawing.Color.FromBrightness (0));
