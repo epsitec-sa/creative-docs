@@ -1162,8 +1162,6 @@ namespace Epsitec.App.DocumentEditor
 			di.containerOperations.DockMargins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerOperations);
 #endif
-
-			this.bookDocuments.ActivePage = di.tabPage;
 		}
 
 		#region LastFilenames
@@ -5219,11 +5217,15 @@ namespace Epsitec.App.DocumentEditor
 			this.documents.Insert(++this.currentDocument, di);
 
 			this.CreateDocumentLayout(this.CurrentDocument);
-
 			this.ConnectEvents();
 			this.CurrentDocument.Modifier.New();
+			this.bookDocuments.ActivePage = di.tabPage;  // (*)
 			this.UpdateCloseCommand();
 			this.PrepareOpenDocument();
+
+			// (*)	Le Modifier.New doit avoir été fait, car certains panneaux accèdent aux dimensions
+			//		de la page. Pour cela, DrawingContext doit avoir un rootStack initialisé, ce qui
+			//		est fait par Modifier.New.
 		}
 
 		protected void UseDocument(int rank)
