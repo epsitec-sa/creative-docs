@@ -850,77 +850,11 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
-		public class ChildrenCollection : List<MyItem>, ICollection<DependencyObject>
+		#region ChildrenCollection Class
+		public class ChildrenCollection : DependencyObjectList<MyItem>
 		{
-			#region ICollection<DependencyObject> Members
-
-			void ICollection<DependencyObject>.Add(DependencyObject item)
-			{
-				this.Add (item as MyItem);
-			}
-
-			void ICollection<DependencyObject>.Clear()
-			{
-				this.Clear ();
-			}
-
-			bool ICollection<DependencyObject>.Contains(DependencyObject item)
-			{
-				return this.Contains (item as MyItem);
-			}
-
-			void ICollection<DependencyObject>.CopyTo(DependencyObject[] array, int arrayIndex)
-			{
-				this.ToArray ().CopyTo (array, arrayIndex);
-			}
-
-			int ICollection<DependencyObject>.Count
-			{
-				get
-				{
-					return this.Count;
-				}
-			}
-
-			bool ICollection<DependencyObject>.IsReadOnly
-			{
-				get
-				{
-					return false;
-				}
-			}
-
-			bool ICollection<DependencyObject>.Remove(DependencyObject item)
-			{
-				return this.Remove (item as MyItem);
-			}
-
-			#endregion
-
-			#region IEnumerable<DependencyObject> Members
-
-			IEnumerator<DependencyObject> IEnumerable<DependencyObject>.GetEnumerator()
-			{
-				foreach (MyItem item in this)
-				{
-					yield return item;
-				}
-			}
-
-			#endregion
-
-			#region IEnumerable Members
-
-			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-			{
-				foreach (MyItem item in this)
-				{
-					yield return item;
-				}
-			}
-
-			#endregion
 		}
+		#endregion
 
 		#region MySimpleObject Class
 

@@ -1032,6 +1032,12 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
+		#region TreeTestChildren Class
+		class TreeTestChildren : DependencyObjectList<TreeTest>
+		{
+		}
+		#endregion
+		
 		#region TreeTest Class
 
 		class TreeTest : DependencyObject
@@ -1054,7 +1060,7 @@ namespace Epsitec.Common.Types
 					return this.parent;
 				}
 			}
-			public IList<TreeTest>				Children
+			public TreeTestChildren				Children
 			{
 				get
 				{
@@ -1097,7 +1103,7 @@ namespace Epsitec.Common.Types
 				
 				if (this.children == null)
 				{
-					this.children = new List<TreeTest> ();
+					this.children = new TreeTestChildren ();
 				}
 				if (item.parent != null)
 				{
@@ -1121,13 +1127,9 @@ namespace Epsitec.Common.Types
 				TreeTest tt = o as TreeTest;
 				if (tt.children == null)
 				{
-					return new DependencyObject[0];
+					tt.children = new TreeTestChildren ();
 				}
-				else
-				{
-					DependencyObject[] copy = tt.children.ToArray ();
-					return copy;
-				}
+				return tt.children;
 			}
 			public static object GetValueHasChildren(DependencyObject o)
 			{
@@ -1143,7 +1145,7 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (TreeTest), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Instance));
 
 			TreeTest parent;
-			List<TreeTest> children;
+			TreeTestChildren children;
 		}
 		
 		#endregion

@@ -1,6 +1,7 @@
-using System;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace Epsitec.Common.Types.Serialization
 {
@@ -136,7 +137,7 @@ namespace Epsitec.Common.Types.Serialization
 		}
 		public static string CollectionToString(ICollection<DependencyObject> collection, SerializerContext context)
 		{
-			System.Text.StringBuilder buffer = new StringBuilder ();
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
 			buffer.Append ("{Collection");
 			
