@@ -33,6 +33,15 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public override double					DefaultWidth
+		{
+			//	Retourne la largeur standard.
+			get
+			{
+				return base.DefaultWidth + IconButtonCombo.menuWidth;
+			}
+		}
+
 		public virtual bool						IsComboOpen
 		{
 			get
@@ -161,11 +170,11 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect;
 
 			rect = box;
-			rect.Right -= 12-1;
+			rect.Right -= IconButtonCombo.menuWidth-1;
 			this.buttonMain.Bounds = rect;
 
 			rect = box;
-			rect.Left = rect.Right-12;
+			rect.Left = rect.Right-IconButtonCombo.menuWidth;
 			this.buttonMenu.Bounds = rect;
 		}
 
@@ -604,6 +613,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		ComboClosed;
 		public event Support.EventHandler		SelectedIndexChanged;
 		
+		protected static readonly double		menuWidth = 12;
 		protected bool							isLiveUpdateEnabled	= true;
 		protected int							selectedIndex = -1;
 		protected IconButton					buttonMain;
