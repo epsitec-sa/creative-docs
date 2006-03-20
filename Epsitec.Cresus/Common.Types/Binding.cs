@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	[TypeConverter (typeof (Binding.Converter))]
 	public class Binding
 	{
 		public Binding()
@@ -79,6 +80,41 @@ namespace Epsitec.Common.Types
 		public System.IDisposable DeferChanges()
 		{
 			return new DeferManager (this);
+		}
+
+		public static bool IsBindingTarget(BindingMode mode)
+		{
+			switch (mode)
+			{
+				case BindingMode.OneTime:
+				case BindingMode.OneWay:
+				case BindingMode.TwoWay:
+					return true;
+
+				case BindingMode.OneWayToSource:
+				case BindingMode.None:
+					return false;
+
+				default:
+					throw new System.ArgumentOutOfRangeException (string.Format ("BindingMode.{0} not supported", mode));
+			}
+		}
+		public static bool IsBindingSource(BindingMode mode)
+		{
+			switch (mode)
+			{
+				case BindingMode.None:
+				case BindingMode.OneTime:
+				case BindingMode.OneWay:
+					return false;
+
+				case BindingMode.OneWayToSource:
+				case BindingMode.TwoWay:
+					return true;
+
+				default:
+					throw new System.ArgumentOutOfRangeException (string.Format ("BindingMode.{0} not supported", mode));
+			}
 		}
 
 		internal void Add(BindingExpression expression)
@@ -161,6 +197,24 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
+		public class Converter : ITypeConverter
+		{
+			#region ITypeConverter Members
+
+			public string ConvertToString(object value, IContextResolver context)
+			{
+				Binding binding = value as Binding;
+				return Serialization.MarkupExtension.BindingToString (context, binding);
+			}
+
+			public object ConvertFromString(string value, IContextResolver context)
+			{
+				return Serialization.MarkupExtension.BindingFromString (context, value);
+			}
+
+			#endregion
+		}
+		
 		public static readonly object			DoNothing = new object ();
 
 		private BindingMode						mode;

@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.DataObject))]
+
 namespace Epsitec.Common.Types
 {
 	public abstract class DataObject : DependencyObject
@@ -16,6 +18,6 @@ namespace Epsitec.Common.Types
 			o.SetValue (DataObject.DataContextProperty, value);
 		}
 		
-		public static DependencyProperty DataContextProperty = DependencyProperty.RegisterAttached ("DataContext", typeof (Binding), typeof (DataObject));
+		public static DependencyProperty DataContextProperty = DependencyProperty.RegisterAttached ("DataContext", typeof (Binding), typeof (DataObject), new DependencyPropertyMetadataWithInheritance ());
 	}
 }

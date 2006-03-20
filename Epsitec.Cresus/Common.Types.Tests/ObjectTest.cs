@@ -202,6 +202,18 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckObjectType()
 		{
+			Assert.IsTrue (typeof (MyObject).IsSubclassOf (typeof (DependencyObject)));
+			Assert.IsTrue (typeof (MyObject).IsAssignableFrom (typeof (MyObject)));
+			Assert.IsTrue (typeof (DependencyObject).IsAssignableFrom (typeof (MyObject)));
+
+			Assert.IsFalse (MyObject.FooProperty.IsPropertyTypeDerivedFromDependencyObject);
+			Assert.IsTrue (MyObject.SiblingProperty.IsPropertyTypeDerivedFromDependencyObject);
+			
+			Assert.IsTrue (MyObject.ReadOnlyProperty.IsReadOnly);
+			Assert.IsTrue (MyObject.XyzProperty.IsReadWrite);
+			Assert.IsFalse (MyObject.XyzProperty.IsReadOnly);
+			Assert.IsFalse (MyObject.ReadOnlyProperty.IsReadWrite);
+			
 			Assert.AreEqual ("DependencyObject", DependencyObjectType.FromSystemType (typeof (Types.DependencyObject)).Name);
 			Assert.AreEqual ("MyObject", DependencyObjectType.FromSystemType (typeof (MyObject)).Name);
 			Assert.AreEqual ("DependencyObject", DependencyObjectType.FromSystemType (typeof (MyObject)).BaseType.Name);
@@ -267,6 +279,66 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckProperties()
+		{
+			TreeTest t = new TreeTest ();
+
+			t.Name = "Name";
+			t.Value = "Value";
+
+			List<DependencyProperty> properties = new List<DependencyProperty> ();
+
+			foreach (LocalValueEntry entry in t.LocalValueEntries)
+			{
+				properties.Add (entry.Property);
+			}
+
+			Assert.AreEqual (5, properties.Count);
+			Assert.AreEqual ("Name", properties[0].Name);
+			Assert.AreEqual ("Value", properties[1].Name);
+			Assert.AreEqual ("Children", properties[2].Name);
+			Assert.AreEqual ("HasChildren", properties[3].Name);
+			Assert.AreEqual ("Parent", properties[4].Name);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.TypeInitializationException))]
+		public void CheckPropertiesEx1()
+		{
+			DependencyProperty p = Test2b.StandardProperty;
+		}
+
+		[Test]
+		public void CheckPropertiesEx2()
+		{
+			DependencyProperty p;
+			
+			p = Test1b.AttachedProperty;
+			p = Test1c.AttachedProperty;
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.TypeInitializationException))]
+		public void CheckPropertiesEx3()
+		{
+			DependencyProperty p = Test3a.InvalidProperty;
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.TypeInitializationException))]
+		public void CheckPropertiesEx4()
+		{
+			DependencyProperty p = Test3b.InvalidProperty;
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.TypeInitializationException))]
+		public void CheckPropertiesEx5()
+		{
+			DependencyProperty p = Test3c.InvalidProperty;
+		}
+
+		[Test]
 		public void CheckPropertyPath()
 		{
 			DependencyPropertyPath pp1 = new DependencyPropertyPath ();
@@ -289,6 +361,11 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckTree()
 		{
+			Assert.IsTrue (DependencyObjectTree.ChildrenProperty.IsReadOnly);
+			Assert.IsTrue (TreeTest.ChildrenProperty.IsReadOnly);
+			Assert.IsTrue (TreeTest.ChildrenProperty.GetMetadata (typeof (TreeTest)).CanSerializeReadOnly);
+			Assert.IsFalse (TreeTest.ChildrenProperty.DefaultMetadata.CanSerializeReadOnly);
+			
 			TreeTest a = new TreeTest ();
 			TreeTest b = new TreeTest ();
 			TreeTest q = new TreeTest ();
@@ -315,6 +392,10 @@ namespace Epsitec.Common.Types
 			q.Value = "Q";
 			c1.Value = "C1";
 			c2.Value = "C2";
+			
+			//	a --+--> b --+--> c1
+			//	    |        +--> c2
+			//	    +--> q
 
 			Assert.IsTrue (a.HasChildren);
 			Assert.IsTrue (b.HasChildren);
@@ -526,16 +607,16 @@ namespace Epsitec.Common.Types
 			{
 				//	Aucune analyse de la classe Test1 n'a encore eu lieu; il y
 				//	a donc 0 propriétés attachées connues.
-				
-				Assert.AreEqual (0, DependencyProperty.GetAllAttachedProperties ().Count);
+
+				int n = DependencyProperty.GetAllAttachedProperties ().Count;
 				Test2 t2 = new Test2 ();
-				Assert.AreEqual (0, DependencyProperty.GetAllAttachedProperties ().Count);
+				Assert.AreEqual (n, DependencyProperty.GetAllAttachedProperties ().Count);
 			}
 			public static void TestB()
 			{
 				Test2 t2 = new Test2 ();
-				Assert.AreEqual (0, DependencyProperty.GetAllAttachedProperties ().Count);
-
+				int n = DependencyProperty.GetAllAttachedProperties ().Count;
+				
 				//	Les types sont créés à la demande s'ils ne sont pas encore
 				//	connus; c'est le cas de ot1 :
 
@@ -548,8 +629,8 @@ namespace Epsitec.Common.Types
 				//	L'analyse de la classe Test1 a eu lieu; il y a donc 1
 				//	propriété attachée; celle de Test1 !
 
-				Assert.AreEqual (1, DependencyProperty.GetAllAttachedProperties ().Count);
-				Assert.AreEqual ("Attached", DependencyProperty.GetAllAttachedProperties ()[0].Name);
+				Assert.AreEqual (n+1, DependencyProperty.GetAllAttachedProperties ().Count);
+				Assert.AreEqual ("Attached", DependencyProperty.GetAllAttachedProperties ()[n].Name);
 			}
 			public static void TestC()
 			{
@@ -780,6 +861,7 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty SiblingProperty = DependencyProperty.Register ("Sibling", typeof (MyObject), typeof (MyObject));
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (MyObject), new DependencyPropertyMetadataWithInheritance ());
 			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (MyObject));
+			public static DependencyProperty ReadOnlyProperty = DependencyProperty.RegisterReadOnly ("ReadOnly", typeof (string), typeof (MyObject));
 			
 			protected virtual void OnFooChanged()
 			{
@@ -834,7 +916,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
-		#region Test1 and Test2 Classes
+		#region Test1, Test2... and Test3... Classes
 		public class Test1 : Types.DependencyObject
 		{
 			public Test1()
@@ -853,6 +935,30 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty AttachedProperty = DependencyProperty.RegisterAttached ("Attached", typeof (string), typeof (Test1));
 			public static DependencyProperty StandardProperty = DependencyProperty.Register ("Standard", typeof (string), typeof (Test1));
 		}
+		public class Test1b : Test1
+		{
+			public Test1b()
+			{
+			}
+
+			//	Ne provoque pas d'exception à l'initialisation, car "Attached", bien que
+			//	hérité de Test1, n'est pas incompatible (c'est une propriété attachée).
+
+			public static new DependencyProperty AttachedProperty = DependencyProperty.RegisterAttached ("Attached", typeof (string), typeof (Test1b));
+		}
+		public class Test1c : Test1
+		{
+			public Test1c()
+			{
+			}
+
+			//	Ne provoque pas d'exception à l'initialisation, car "Attached", bien que
+			//	hérité de Test1, n'est pas incompatible (dans Test1, c'est une propriété
+			//	attachée).
+
+			public static new DependencyProperty AttachedProperty = DependencyProperty.Register ("Attached", typeof (string), typeof (Test1c));
+			public static new DependencyProperty StandardProperty = DependencyProperty.RegisterAttached ("Standard", typeof (string), typeof (Test1c));
+		}
 		public class Test2 : Types.DependencyObject
 		{
 			public Test2()
@@ -860,6 +966,29 @@ namespace Epsitec.Common.Types
 			}
 
 			public static DependencyProperty StandardProperty = DependencyProperty.Register ("Standard", typeof (string), typeof (Test2));
+		}
+		public class Test2b : Test2
+		{
+			public Test2b()
+			{
+			}
+			
+			//	Provoque une exception à l'initialisation, car "Standard" est hérité
+			//	de Test2.
+			
+			public static new DependencyProperty StandardProperty = DependencyProperty.Register ("Standard", typeof (string), typeof (Test2b));
+		}
+		public class Test3a : DependencyObject
+		{
+			public static DependencyProperty InvalidProperty = DependencyProperty.Register (null, typeof (string), typeof (Test3a));
+		}
+		public class Test3b : DependencyObject
+		{
+			public static DependencyProperty InvalidProperty = DependencyProperty.Register ("X$z", typeof (string), typeof (Test3b));
+		}
+		public class Test3c : DependencyObject
+		{
+			public static DependencyProperty InvalidProperty = DependencyProperty.Register ("_Invalid", typeof (string), typeof (Test3c));
 		}
 		#endregion
 
@@ -903,6 +1032,14 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
+		#region TreeTestChildren Class
+		class TreeTestChildren : DependencyObjectList<TreeTest>
+		{
+		}
+		#endregion
+		
+		#region TreeTest Class
+
 		class TreeTest : DependencyObject
 		{
 			public string						Name
@@ -923,7 +1060,7 @@ namespace Epsitec.Common.Types
 					return this.parent;
 				}
 			}
-			public IList<TreeTest>				Children
+			public TreeTestChildren				Children
 			{
 				get
 				{
@@ -966,7 +1103,7 @@ namespace Epsitec.Common.Types
 				
 				if (this.children == null)
 				{
-					this.children = new List<TreeTest> ();
+					this.children = new TreeTestChildren ();
 				}
 				if (item.parent != null)
 				{
@@ -988,8 +1125,11 @@ namespace Epsitec.Common.Types
 			public static object GetValueChildren(DependencyObject o)
 			{
 				TreeTest tt = o as TreeTest;
-				DependencyObject[] copy = tt.children.ToArray ();
-				return copy;
+				if (tt.children == null)
+				{
+					tt.children = new TreeTestChildren ();
+				}
+				return tt.children;
 			}
 			public static object GetValueHasChildren(DependencyObject o)
 			{
@@ -999,14 +1139,16 @@ namespace Epsitec.Common.Types
 
 			public static DependencyProperty NameProperty = DependencyObjectTree.NameProperty.AddOwner (typeof (TreeTest));
 			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueParent));
-			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueChildren));
+			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueChildren).MakeReadOnlySerializable ());
 			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueHasChildren));
 			public static DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (string), typeof (TreeTest));
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (TreeTest), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Instance));
 
 			TreeTest parent;
-			List<TreeTest> children;
+			TreeTestChildren children;
 		}
+		
+		#endregion
 
 		private static void Register(string name)
 		{

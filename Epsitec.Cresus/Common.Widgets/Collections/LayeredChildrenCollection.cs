@@ -1,4 +1,4 @@
-//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,12 +6,12 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets.Collections
 {
 	/// <summary>
-	/// La classe ChildrenCollection regroupe dans une collection unique tous les
+	/// La classe LayeredChildrenCollection regroupe dans une collection unique tous les
 	/// widgets qui constituent les enfants d'un widget donné.
 	/// </summary>
-	public struct ChildrenCollection : System.Collections.IList, ICollection<Types.DependencyObject>
+	public struct LayeredChildrenCollection : System.Collections.IList, ICollection<Types.DependencyObject>
 	{
-		public ChildrenCollection(Visual visual)
+		public LayeredChildrenCollection(Visual visual)
 		{
 			this.visual = visual;
 		}
