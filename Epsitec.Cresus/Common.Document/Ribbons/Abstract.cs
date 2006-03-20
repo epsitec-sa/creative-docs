@@ -198,9 +198,10 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void AddIconButtonCombo(IconButtonCombo combo, string name, string icon, string text)
 		{
-			text = string.Format("{0} {1}", Misc.Image(icon, -5), text);
+			string regularText  = string.Format("{0} {1}", Misc.Image(icon, -5), text);
+			string selectedText = string.Format("{0} {1}", Misc.Image(icon, -5), Misc.Bold(text));
 			icon = Misc.Icon(icon);
-			IconButtonCombo.Item item = new IconButtonCombo.Item(name, icon, text);
+			IconButtonCombo.Item item = new IconButtonCombo.Item(name, icon, regularText, selectedText);
 			combo.Items.Add(item);
 		}
 

@@ -408,7 +408,8 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( item == null )  continue;  // séparateur ?
 
-				this.scrollList.Items.Add(item.Name, item.Text);
+				bool sel = (rank == this.SelectedIndex);
+				this.scrollList.Items.Add(item.Name, sel ? item.SelectedText : item.RegularText);
 				rank ++;
 			}
 
@@ -487,11 +488,12 @@ namespace Epsitec.Common.Widgets
 		#region Items
 		public class Item
 		{
-			public Item(string name, string icon, string text)
+			public Item(string name, string icon, string regularText, string selectedText)
 			{
 				this.name = name;
 				this.icon = icon;
-				this.text = text;
+				this.regularText = regularText;
+				this.selectedText = selectedText;
 			}
 
 			public string Name
@@ -504,14 +506,20 @@ namespace Epsitec.Common.Widgets
 				get { return this.icon; }
 			}
 
-			public string Text
+			public string RegularText
 			{
-				get { return this.text; }
+				get { return this.regularText; }
+			}
+
+			public string SelectedText
+			{
+				get { return this.selectedText; }
 			}
 
 			protected string			name;
 			protected string			icon;
-			protected string			text;
+			protected string			regularText;
+			protected string			selectedText;
 		}
 		#endregion
 
