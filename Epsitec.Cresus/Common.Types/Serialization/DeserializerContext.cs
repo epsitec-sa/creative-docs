@@ -62,6 +62,35 @@ namespace Epsitec.Common.Types.Serialization
 			if (MarkupExtension.IsMarkupExtension (value))
 			{
 				//	This is a markup extension
+				
+				object data = this.ResolveFromMarkup (value);
+
+
+				if ((data != null) &&
+					(data.GetType () == typeof (DependencyObject[])) &&
+					(property.IsPropertyTypeAnICollectionOfDependencyObject))
+				{
+					//	Assign a collection of DependencyObject to a property which implements
+					//	such a collection.
+
+					ICollection<DependencyObject> collection = obj.GetValue (property) as ICollection<DependencyObject>;
+
+					if (collection == null)
+					{
+						throw new System.ArgumentException (string.Format ("Property {0} does not follow Collection semantics", field));
+					}
+
+					collection.Clear ();
+					
+					foreach (DependencyObject item in (DependencyObject[]) data)
+					{
+						collection.Add (item);
+					}
+				}
+				else
+				{
+					obj.SetValue (property, data);
+				}
 			}
 			else
 			{

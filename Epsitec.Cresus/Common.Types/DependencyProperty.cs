@@ -28,6 +28,22 @@ namespace Epsitec.Common.Types
 			this.defaultMetadata = metadata;
 			this.globalIndex = System.Threading.Interlocked.Increment (ref DependencyProperty.globalPropertyCount);
 			this.isPropertyDerivedFromDependencyObject = typeof (DependencyObject).IsAssignableFrom (this.propertyType);
+
+			if (this.propertyType == typeof (ICollection<DependencyObject>))
+			{
+				this.isPropertyAnICollection = true;
+			}
+			else
+			{
+				foreach (System.Type type in this.propertyType.GetInterfaces ())
+				{
+					if (type == typeof (ICollection<DependencyObject>))
+					{
+						this.isPropertyAnICollection = true;
+						break;
+					}
+				}
+			}
 		}
 		
 		public string							Name
@@ -70,6 +86,13 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.isPropertyDerivedFromDependencyObject;
+			}
+		}
+		public bool								IsPropertyTypeAnICollectionOfDependencyObject
+		{
+			get
+			{
+				return this.isPropertyAnICollection;
 			}
 		}
 		public bool								IsReadOnly
@@ -438,6 +461,7 @@ namespace Epsitec.Common.Types
 		private DependencyPropertyMetadata		defaultMetadata;
 		private bool							isAttached;
 		private bool							isPropertyDerivedFromDependencyObject;
+		private bool							isPropertyAnICollection;
 		private bool							isReadOnly;
 		private int								globalIndex;
 		private ITypeConverter					typeConverter;

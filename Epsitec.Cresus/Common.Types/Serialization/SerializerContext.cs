@@ -32,7 +32,7 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			foreach (KeyValuePair<DependencyProperty, Binding> entry in obj.GetAllBindings ())
 			{
-				string markup = MarkupExtension.BindingToString (entry.Value, this);
+				string markup = MarkupExtension.BindingToString (this, entry.Value);
 
 				this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Key), markup);
 			}

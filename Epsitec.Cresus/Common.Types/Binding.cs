@@ -204,12 +204,12 @@ namespace Epsitec.Common.Types
 			public string ConvertToString(object value, IContextResolver context)
 			{
 				Binding binding = value as Binding;
-				return Serialization.MarkupExtension.BindingToString (binding, context);
+				return Serialization.MarkupExtension.BindingToString (context, binding);
 			}
 
 			public object ConvertFromString(string value, IContextResolver context)
 			{
-				return Serialization.MarkupExtension.BindingFromString (value, context);
+				return Serialization.MarkupExtension.BindingFromString (context, value);
 			}
 
 			#endregion

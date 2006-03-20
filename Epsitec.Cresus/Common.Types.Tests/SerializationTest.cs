@@ -385,6 +385,14 @@ namespace Epsitec.Common.Types
 			args = Serialization.MarkupExtension.Explode ("{}");
 
 			Assert.AreEqual (0, args.Length);
+			
+			args = Serialization.MarkupExtension.Explode ("{ {x}, {}, x={a{b}c} }");
+
+			Assert.AreEqual (3, args.Length);
+			Assert.AreEqual ("{x}", args[0]);
+			Assert.AreEqual ("{}", args[1]);
+			Assert.AreEqual ("x={a{b}c}", args[2]);
+
 		}
 
 		[Test]
@@ -566,7 +574,10 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("a", root.Name);
 			Assert.AreEqual ("A", root.Value);
-			Assert.AreEqual (2, root.Children.Count);
+			Assert.AreEqual (3, root.Children.Count);
+			Assert.AreEqual ("b", root.Children[0].Name);
+			Assert.AreEqual ("q", root.Children[1].Name);
+			Assert.AreEqual ("r", root.Children[2].Name);
 			
 			Assert.AreEqual (3, context.ObjectMap.GetId (b));
 			Assert.AreEqual (3899.20M, root.Friend.Price);
@@ -725,7 +736,7 @@ namespace Epsitec.Common.Types
 					return this.parent;
 				}
 			}
-			public IList<MyItem>				Children
+			public ChildrenCollection			Children
 			{
 				get
 				{
@@ -790,7 +801,7 @@ namespace Epsitec.Common.Types
 				
 				if (this.children == null)
 				{
-					this.children = new List<MyItem> ();
+					this.children = new ChildrenCollection ();
 				}
 				if (item.parent != null)
 				{
@@ -814,13 +825,9 @@ namespace Epsitec.Common.Types
 				MyItem tt = o as MyItem;
 				if (tt.children == null)
 				{
-					return new DependencyObject[0];
+					tt.children = new ChildrenCollection ();
 				}
-				else
-				{
-					DependencyObject[] copy = tt.children.ToArray ();
-					return copy;
-				}
+				return tt.children;
 			}
 			public static object GetValueHasChildren(DependencyObject o)
 			{
@@ -838,10 +845,82 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty PriceProperty = DependencyProperty.Register ("Price", typeof (decimal), typeof (MyItem));
 
 			MyItem parent;
-			List<MyItem> children;
+			ChildrenCollection children;
 		}
 		
 		#endregion
+
+		public class ChildrenCollection : List<MyItem>, ICollection<DependencyObject>
+		{
+			#region ICollection<DependencyObject> Members
+
+			void ICollection<DependencyObject>.Add(DependencyObject item)
+			{
+				this.Add (item as MyItem);
+			}
+
+			void ICollection<DependencyObject>.Clear()
+			{
+				this.Clear ();
+			}
+
+			bool ICollection<DependencyObject>.Contains(DependencyObject item)
+			{
+				return this.Contains (item as MyItem);
+			}
+
+			void ICollection<DependencyObject>.CopyTo(DependencyObject[] array, int arrayIndex)
+			{
+				this.ToArray ().CopyTo (array, arrayIndex);
+			}
+
+			int ICollection<DependencyObject>.Count
+			{
+				get
+				{
+					return this.Count;
+				}
+			}
+
+			bool ICollection<DependencyObject>.IsReadOnly
+			{
+				get
+				{
+					return false;
+				}
+			}
+
+			bool ICollection<DependencyObject>.Remove(DependencyObject item)
+			{
+				return this.Remove (item as MyItem);
+			}
+
+			#endregion
+
+			#region IEnumerable<DependencyObject> Members
+
+			IEnumerator<DependencyObject> IEnumerable<DependencyObject>.GetEnumerator()
+			{
+				foreach (MyItem item in this)
+				{
+					yield return item;
+				}
+			}
+
+			#endregion
+
+			#region IEnumerable Members
+
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+			{
+				foreach (MyItem item in this)
+				{
+					yield return item;
+				}
+			}
+
+			#endregion
+		}
 
 		#region MySimpleObject Class
 

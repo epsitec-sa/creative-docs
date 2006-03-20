@@ -67,7 +67,7 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			return "{Null}";
 		}
-		public static string BindingToString(Binding binding, IContextResolver resolver)
+		public static string BindingToString(IContextResolver resolver, Binding binding)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Types.Serialization
 			return buffer.ToString ();
 		}
 
-		public static Binding BindingFromString(string value, IContextResolver context)
+		public static Binding BindingFromString(IContextResolver context, string value)
 		{
 			string[] args = MarkupExtension.Explode (value);
 			
@@ -188,6 +188,11 @@ namespace Epsitec.Common.Types.Serialization
 				throw new System.FormatException (string.Format ("String '{0}' is not a valid Binding expression", value));
 			}
 
+			return MarkupExtension.BindingFromString (context, args);
+		}
+
+		private static Binding BindingFromString(IContextResolver context, string[] args)
+		{
 			Binding binding = new Binding ();
 
 			for (int i = 1; i < args.Length; i++)
@@ -202,9 +207,9 @@ namespace Epsitec.Common.Types.Serialization
 					{
 						throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
 					}
-					
+
 					System.Enum mode;
-					
+
 					switch (elems[0])
 					{
 						case "Path":
@@ -217,13 +222,13 @@ namespace Epsitec.Common.Types.Serialization
 							Converter.Convert (elems[1], typeof (BindingMode), out mode);
 							binding.Mode = (BindingMode) mode;
 							break;
-						
+
 						default:
 							throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
 					}
 				}
 			}
-			
+
 			return binding;
 		}
 
@@ -239,12 +244,27 @@ namespace Epsitec.Common.Types.Serialization
 				bool onSpace = true;
 				bool hasComma = false;
 				bool isEmpty = true;
+				int skipBraces = 0;
 
 				for (int i = start; i < end; i++)
 				{
 					bool wasEmpty = isEmpty;
 					
 					char c = source[i];
+
+					if (skipBraces > 0)
+					{
+						switch (c)
+						{
+							case '{':
+								skipBraces++;
+								break;
+							case '}':
+								skipBraces--;
+								break;
+						}
+						continue;
+					}
 					
 					if (char.IsWhiteSpace (c))
 					{
@@ -278,6 +298,11 @@ namespace Epsitec.Common.Types.Serialization
 						onSpace = false;
 						num++;
 					}
+
+					if (c == '{')
+					{
+						skipBraces++;
+					}
 				}
 				
 				if (hasComma)
@@ -290,6 +315,7 @@ namespace Epsitec.Common.Types.Serialization
 				onSpace = true;
 				hasComma = false;
 				isEmpty = true;
+				skipBraces = 0;
 
 				int index = 0;
 
@@ -299,6 +325,20 @@ namespace Epsitec.Common.Types.Serialization
 					
 					char c = source[i];
 
+					if (skipBraces > 0)
+					{
+						switch (c)
+						{
+							case '{':
+								skipBraces++;
+								break;
+							case '}':
+								skipBraces--;
+								break;
+						}
+						continue;
+					}
+					
 					if (char.IsWhiteSpace (c))
 					{
 						if (onSpace)
@@ -342,6 +382,11 @@ namespace Epsitec.Common.Types.Serialization
 						onSpace = false;
 						start = i;
 					}
+					
+					if (c == '{')
+					{
+						skipBraces++;
+					}
 				}
 
 				if (hasComma)
@@ -361,6 +406,68 @@ namespace Epsitec.Common.Types.Serialization
 			{
 				throw new System.FormatException (string.Format ("String '{0}' is not a valid markup extension", source));
 			}
+		}
+
+		public static object Resolve(Context context, string markup)
+		{
+			string[] args = MarkupExtension.Explode (markup);
+
+			if (args.Length > 0)
+			{
+				string tag = args[0];
+			
+				switch (tag)
+				{
+					case "Null":
+						return null;
+					
+					case "Binding":
+						return MarkupExtension.BindingFromString (context, args);
+					
+					case "ObjRef":
+						return MarkupExtension.ObjRefFromString (context, args);
+					
+					case "ExtRef":
+						return MarkupExtension.ExtRefFromString (context, args);
+					
+					case "Collection":
+						return MarkupExtension.CollectionFromString (context, args);
+				}
+			}
+			
+			throw new System.NotImplementedException (string.Format ("Cannot resolve '{0}'", markup));
+		}
+
+		private static object CollectionFromString(Context context, string[] args)
+		{
+			DependencyObject[] items = new DependencyObject[args.Length-1];
+			
+			for (int i = 1; i < args.Length; i++)
+			{
+				items[i-1] = context.ResolveFromMarkup (args[i]) as DependencyObject;
+			}
+			
+			return items;
+		}
+
+		private static object ExtRefFromString(Context context, string[] args)
+		{
+			if (args.Length != 2)
+			{
+				throw new System.FormatException ("ObjRef format error");
+			}
+
+			return context.ExternalMap.GetTag (args[1]);
+		}
+
+		private static object ObjRefFromString(Context context, string[] args)
+		{
+			if (args.Length != 2)
+			{
+				throw new System.FormatException ("ObjRef format error");
+			}
+
+			return context.ObjectMap.GetValue (Context.ParseId (args[1]));
 		}
 	}
 }
