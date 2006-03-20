@@ -101,6 +101,8 @@
     <Compile Include="AbstractStringConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DependencyObjectList.cs" />
+    <Compile Include="ITypeConverter.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -109,6 +111,8 @@
     <Compile Include="BooleanType.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Collection.cs" />
+    <Compile Include="DependencyClassAttribute.cs" />
     <Compile Include="DependencyPropertyMetadataWithInheritance.cs" />
     <Compile Include="DependencyObjectCallbacks.cs">
       <SubType>Code</SubType>
@@ -234,6 +238,21 @@
     <Compile Include="Resources.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Serialization\DeserializerContext.cs" />
+    <Compile Include="Serialization\Generic\MapTag.cs" />
+    <Compile Include="Serialization\Generic\PropertyValue.cs" />
+    <Compile Include="IContextResolver.cs" />
+    <Compile Include="Serialization\IO\AbstractWriter.cs" />
+    <Compile Include="Serialization\Context.cs" />
+    <Compile Include="Serialization\IO\AbstractReader.cs" />
+    <Compile Include="Serialization\DependencyClassManager.cs" />
+    <Compile Include="Serialization\Generic\MapId.cs" />
+    <Compile Include="Serialization\GraphVisitor.cs" />
+    <Compile Include="Serialization\IO\XmlReader.cs" />
+    <Compile Include="Serialization\IO\XmlWriter.cs" />
+    <Compile Include="Serialization\MarkupExtension.cs" />
+    <Compile Include="Serialization\SerializerContext.cs" />
+    <Compile Include="Storage.cs" />
     <Compile Include="StringDict.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -246,6 +265,7 @@
     <Compile Include="Time.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TypeConverterAttribute.cs" />
     <Compile Include="UndefinedValue.cs">
       <SubType>Code</SubType>
     </Compile>

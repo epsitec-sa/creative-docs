@@ -1,4 +1,4 @@
-//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+ï»¿//	Copyright Â© 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe DependencyObjectType représente une version de plus haut niveau de
+	/// La classe DependencyObjectType reprÃ©sente une version de plus haut niveau de
 	/// System.Type.
 	/// </summary>
 	public sealed class DependencyObjectType
@@ -117,6 +117,27 @@ namespace Epsitec.Common.Types
 				this.localStandardProperties.Add (property);
 			}
 		}
+		
+		public DependencyObject CreateEmptyObject()
+		{
+			if (this.allocator == null)
+			{
+				lock (this)
+				{
+					if (this.allocator == null)
+					{
+						this.BuildDynamicAllocator ();
+					}
+				}
+			}
+			
+			//	The allocator invokes a dynamically generated piece of IL code
+			//	which does simply 'new' the associated type. With .NET 2.0, this
+			//	is 40 times faster than the equivalent System.Activator call; it
+			//	takes less than 0.5 Î¼s on a 3GHz Pentium-D system.
+			
+			return this.allocator ();
+		}
 
 		public ReadOnlyArray<DependencyProperty> GetProperties()
 		{
@@ -144,12 +165,14 @@ namespace Epsitec.Common.Types
 				this.BuildPropertyList ();
 			}
 
-			if (this.lookup.ContainsKey (name))
+			DependencyProperty property;
+
+			if (this.lookup.TryGetValue (name, out property))
 			{
-				return this.lookup[name];
+				return property;
 			}
 			
-			//	TODO: trouver une propriété attachée qui conviendrait
+			//	TODO: trouver une propriÃ©tÃ© attachÃ©e qui conviendrait
 			
 			return null;
 		}
@@ -197,7 +220,7 @@ namespace Epsitec.Common.Types
 			
 			return objectType;
 		}
-
+		
 		#region Private Methods
 		private void BuildPropertyList()
 		{
@@ -227,6 +250,9 @@ namespace Epsitec.Common.Types
 					this.localStandardProperties = null;
 					this.localAttachedProperties = null;
 
+					System.Array.Sort (this.standardPropertiesArray);
+					System.Array.Sort (this.attachedPropertiesArray);
+
 					this.lookup = new Dictionary<string, DependencyProperty> (this.standardPropertiesArray.Length);
 
 					foreach (DependencyProperty property in this.standardPropertiesArray)
@@ -239,6 +265,22 @@ namespace Epsitec.Common.Types
 					}
 				}
 			}
+		}
+		private void BuildDynamicAllocator()
+		{
+			//	Create a small piece of dynamic code which does simply "new T()"
+			//	for the underlying system type. This code relies on lightweight
+			//	code generation and results in a very fast dynamic allocator.
+			
+			System.Reflection.Module module = typeof (DependencyObjectType).Module;
+			System.Reflection.Emit.DynamicMethod dynamicMethod = new System.Reflection.Emit.DynamicMethod ("DynamicAllocator", this.systemType, System.Type.EmptyTypes, module, true);
+			System.Reflection.Emit.ILGenerator ilGen = dynamicMethod.GetILGenerator ();
+
+			ilGen.Emit (System.Reflection.Emit.OpCodes.Nop);
+			ilGen.Emit (System.Reflection.Emit.OpCodes.Newobj, this.systemType.GetConstructor (System.Type.EmptyTypes));
+			ilGen.Emit (System.Reflection.Emit.OpCodes.Ret);
+
+			this.allocator = (Allocator) dynamicMethod.CreateDelegate (typeof (Allocator));
 		}
 		private void ExecuteTypeStaticConstructor()
 		{
@@ -264,9 +306,12 @@ namespace Epsitec.Common.Types
 			{
 				return null;
 			}
-			else if (DependencyObjectType.types.ContainsKey (system_type))
+
+			DependencyObjectType objectType;
+			
+			if (DependencyObjectType.types.TryGetValue (system_type, out objectType))
 			{
-				return DependencyObjectType.types[system_type];
+				return objectType;
 			}
 			else if (system_type == typeof (DependencyObject))
 			{
@@ -303,6 +348,7 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
+		private delegate DependencyObject Allocator();
 
 		private DependencyObjectType			baseType;
 		private System.Type						systemType;
@@ -312,6 +358,7 @@ namespace Epsitec.Common.Types
 		private DependencyProperty[]			attachedPropertiesArray;
 		private Dictionary<string, DependencyProperty>	lookup;
 		private bool							initialized;
+		private Allocator						allocator;
 
 		static Dictionary<System.Type, DependencyObjectType> types = new Dictionary<System.Type, DependencyObjectType> ();
 	}

@@ -9,12 +9,12 @@ namespace Epsitec.Common.Types
 	{
 		None,
 
-		OneTime,
-		OneWay,
-		OneWayToSource,
+		OneTime,								//	copy data from source to target, once
+		OneWay,									//	copy data from source to target
+		OneWayToSource,							//	copy data from target to source
+
+		TwoWay,									//	copy data in both directions
 		
-		TwoWay,
-		
-		UseDefaultValue,
+//		UseDefaultValue,
 	}
 }

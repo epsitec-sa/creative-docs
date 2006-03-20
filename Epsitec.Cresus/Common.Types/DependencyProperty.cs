@@ -8,15 +8,42 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// DependencyProperty.
 	/// </summary>
-	public sealed class DependencyProperty : System.IEquatable<DependencyProperty>
+	public sealed class DependencyProperty : System.IEquatable<DependencyProperty>, System.IComparable<DependencyProperty>
 	{
-		private DependencyProperty(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
+		private DependencyProperty(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
+			if (name == null)
+			{
+				throw new System.ArgumentNullException ("Property needs a name");
+			}
+
+			if (DependencyProperty.validNameRegex.IsMatch (name) == false)
+			{
+				throw new System.ArgumentException (string.Format ("'{0}' is not a valid property name", name));
+			}
+			
 			this.name = name;
-			this.propertyType = property_type;
-			this.ownerType = owner_type;
+			this.propertyType = propertyType;
+			this.ownerType = ownerType;
 			this.defaultMetadata = metadata;
 			this.globalIndex = System.Threading.Interlocked.Increment (ref DependencyProperty.globalPropertyCount);
+			this.isPropertyDerivedFromDependencyObject = typeof (DependencyObject).IsAssignableFrom (this.propertyType);
+
+			if (this.propertyType == typeof (ICollection<DependencyObject>))
+			{
+				this.isPropertyAnICollection = true;
+			}
+			else
+			{
+				foreach (System.Type type in this.propertyType.GetInterfaces ())
+				{
+					if (type == typeof (ICollection<DependencyObject>))
+					{
+						this.isPropertyAnICollection = true;
+						break;
+					}
+				}
+			}
 		}
 		
 		public string							Name
@@ -52,6 +79,34 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.isAttached;
+			}
+		}
+		public bool								IsPropertyTypeDerivedFromDependencyObject
+		{
+			get
+			{
+				return this.isPropertyDerivedFromDependencyObject;
+			}
+		}
+		public bool								IsPropertyTypeAnICollectionOfDependencyObject
+		{
+			get
+			{
+				return this.isPropertyAnICollection;
+			}
+		}
+		public bool								IsReadOnly
+		{
+			get
+			{
+				return this.isReadOnly;
+			}
+		}
+		public bool								IsReadWrite
+		{
+			get
+			{
+				return this.isReadOnly == false;
 			}
 		}
 		public int								GlobalIndex
@@ -218,6 +273,37 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
+		#region IComparable<DependencyProperty> Members
+
+		public int CompareTo(DependencyProperty other)
+		{
+			if (other == null)
+			{
+				return 1;
+			}
+			
+			if (other.globalIndex == this.globalIndex)
+			{
+				return 0;
+			}
+
+			int compare = this.name.CompareTo (other.name);
+
+			if (compare == 0)
+			{
+				compare = this.propertyType.Name.CompareTo (other.propertyType.Name);
+
+				if (compare == 0)
+				{
+					compare = this.ownerType.Name.CompareTo (other.ownerType.Name);
+				}
+			}
+
+			return compare;
+		}
+
+		#endregion
+		
 		public static ReadOnlyArray<DependencyProperty> GetAllAttachedProperties()
 		{
 			if (DependencyProperty.attachedPropertiesArray == null)
@@ -260,35 +346,80 @@ namespace Epsitec.Common.Types
 		{
 			if (this.overriddenMetadata != null)
 			{
-				if (this.overriddenMetadata.ContainsKey (type))
+				DependencyPropertyMetadata metadata;
+				
+				if (this.overriddenMetadata.TryGetValue (type, out metadata))
 				{
-					return this.overriddenMetadata[type];
+					return metadata;
 				}
 			}
 			
 			return this.DefaultMetadata;
 		}
-		
-		public static DependencyProperty Register(string name, System.Type property_type, System.Type owner_type)
+
+		public string ConvertToString(object value, IContextResolver context)
 		{
-			return DependencyProperty.Register (name, property_type, owner_type, new DependencyPropertyMetadata ());
+			if (value == null)
+			{
+				return null;
+			}
+			
+			if (this.typeConverter == null)
+			{
+				lock (this)
+				{
+					if (this.typeConverter == null)
+					{
+						this.typeConverter = Converter.GetTypeConverter (this.propertyType);
+					}
+				}
+			}
+
+			System.Diagnostics.Debug.Assert (value.GetType () == this.propertyType);
+			
+			return this.typeConverter.ConvertToString (value, context);
 		}
-		public static DependencyProperty Register(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
+		public object ConvertFromString(string value, IContextResolver context)
 		{
-			DependencyProperty dp = new DependencyProperty (name, property_type, owner_type, metadata);
+			if (value == null)
+			{
+				return null;
+			}
+			
+			if (this.typeConverter == null)
+			{
+				lock (this)
+				{
+					if (this.typeConverter == null)
+					{
+						this.typeConverter = Converter.GetTypeConverter (this.propertyType);
+					}
+				}
+			}
+
+			return this.typeConverter.ConvertFromString (value, context);
+		}
+		
+		public static DependencyProperty Register(string name, System.Type propertyType, System.Type ownerType)
+		{
+			return DependencyProperty.Register (name, propertyType, ownerType, new DependencyPropertyMetadata ());
+		}
+		public static DependencyProperty Register(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
+		{
+			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata);
 			
 			DependencyObject.Register (dp, dp.OwnerType);
 			
 			return dp;
 		}
 		
-		public static DependencyProperty RegisterAttached(string name, System.Type property_type, System.Type owner_type)
+		public static DependencyProperty RegisterAttached(string name, System.Type propertyType, System.Type ownerType)
 		{
-			return DependencyProperty.RegisterAttached (name, property_type, owner_type, new DependencyPropertyMetadata ());
+			return DependencyProperty.RegisterAttached (name, propertyType, ownerType, new DependencyPropertyMetadata ());
 		}
-		public static DependencyProperty RegisterAttached(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
+		public static DependencyProperty RegisterAttached(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
-			DependencyProperty dp = new DependencyProperty (name, property_type, owner_type, metadata);
+			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata);
 			dp.isAttached = true;
 			
 			DependencyObject.Register (dp, dp.OwnerType);
@@ -302,28 +433,38 @@ namespace Epsitec.Common.Types
 			return dp;
 		}
 		
-		public static DependencyProperty RegisterReadOnly(string name, System.Type property_type, System.Type owner_type)
+		public static DependencyProperty RegisterReadOnly(string name, System.Type propertyType, System.Type ownerType)
 		{
-			return DependencyProperty.Register (name, property_type, owner_type, new DependencyPropertyMetadata ());
+			return DependencyProperty.RegisterReadOnly (name, propertyType, ownerType, new DependencyPropertyMetadata ());
 		}
-		public static DependencyProperty RegisterReadOnly(string name, System.Type property_type, System.Type owner_type, DependencyPropertyMetadata metadata)
+		public static DependencyProperty RegisterReadOnly(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
-			DependencyProperty dp = new DependencyProperty (name, property_type, owner_type, metadata);
+			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata);
+
+			dp.isReadOnly = true;
 			
 			DependencyObject.Register (dp, dp.OwnerType);
 			
 			return dp;
 		}
-		
-		
-		private string							name;
+
+		static DependencyProperty()
+		{
+			DependencyProperty.validNameRegex = new System.Text.RegularExpressions.Regex ("^[a-zA-Z][_a-zA-Z0-9]*$");
+		}
+
+		private string name;
 		private System.Type						propertyType;
 		private System.Type						ownerType;
 		private List<System.Type>				additionalOwnerTypes;
 		private List<System.Type>				derivedTypes;
 		private DependencyPropertyMetadata		defaultMetadata;
 		private bool							isAttached;
+		private bool							isPropertyDerivedFromDependencyObject;
+		private bool							isPropertyAnICollection;
+		private bool							isReadOnly;
 		private int								globalIndex;
+		private ITypeConverter					typeConverter;
 		
 		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
 		
@@ -331,5 +472,6 @@ namespace Epsitec.Common.Types
 		static List<DependencyProperty>			attachedPropertiesList = new List<DependencyProperty> ();
 		static DependencyProperty[]				attachedPropertiesArray;
 		static int								globalPropertyCount;
+		static System.Text.RegularExpressions.Regex validNameRegex;
 	}
 }

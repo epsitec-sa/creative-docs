@@ -174,7 +174,38 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (Converter.Convert (j, out result));
 			Assert.AreEqual ("2004-11-03T10:30:05.1230000Z", result);
 		}
-		
+
+		[Test]
+		public void CheckTypeConverter()
+		{
+			ITypeConverter convC = Converter.GetTypeConverter (typeof (string));
+			ITypeConverter convD = Converter.GetTypeConverter (typeof (int));
+			ITypeConverter convE = Converter.GetTypeConverter (typeof (double));
+			ITypeConverter convF = Converter.GetTypeConverter (typeof (decimal));
+			ITypeConverter convG = Converter.GetTypeConverter (typeof (bool));
+			ITypeConverter convH = Converter.GetTypeConverter (typeof (Drawing.Color));
+			ITypeConverter convI = Converter.GetTypeConverter (typeof (Drawing.Rectangle));
+			ITypeConverter convJ = Converter.GetTypeConverter (typeof (System.DateTime));
+
+			object c = "test";
+			object d = 10;
+			object e = 10.0;
+			object f = 10.00M;
+			object g = true;
+			object h = new Drawing.Color (0.1, 0.2, 0.3, 0.4);
+			object i = new Drawing.Rectangle (10, 20, 30, 40);
+			object j = new System.DateTime (2004, 11, 3, 10, 30, 5, 123);
+			
+			Assert.AreEqual ("test",	convC.ConvertToString (c, null));
+			Assert.AreEqual ("10",		convD.ConvertToString (d, null));
+			Assert.AreEqual ("10",		convE.ConvertToString (e, null));
+			Assert.AreEqual ("10.00",	convF.ConvertToString (f, null));
+			Assert.AreEqual ("True",	convG.ConvertToString (g, null));
+			
+			Assert.AreEqual ("#199A;#3;#4CCD;#6",	convH.ConvertToString (h, null));
+			Assert.AreEqual ("10;20;30;40",			convI.ConvertToString (i, null));
+			Assert.AreEqual ("11/03/2004 10:30:05", convJ.ConvertToString (j, null));
+		}
 		
 		[Test] public void MicrosoftBug()
 		{

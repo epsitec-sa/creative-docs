@@ -13,7 +13,8 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		[Test] public void CheckVisualEnable()
+		[Test]
+		public void CheckVisualEnable()
 		{
 			Visual a = new Visual ();
 			Visual b = new Visual ();
@@ -78,8 +79,275 @@ namespace Epsitec.Common.Widgets
 			Assert.IsFalse (c1.Enable);	Assert.IsFalse (c1.IsEnabled);
 			Assert.IsTrue (c2.Enable);	Assert.IsTrue (c2.IsEnabled);
 			Assert.AreEqual (" B:0->1 C2:0->1", VisualTest.buffer.ToString ());
+
+			Assert.AreEqual (a, b.Parent);
+			
+			a.Children.Clear ();
 		}
 		
+		[Test]
+		public void CheckVisualChildren1()
+		{
+			Visual root = new Visual ();
+
+			root.Name = "root";
+			
+			Visual a = new Visual ();
+			Visual b = new Visual ();
+			Visual c = new Visual ();
+			Visual x = new Visual ();
+
+			a.Name = "a";
+			b.Name = "b";
+			c.Name = "c";
+			x.Name = "x";
+			
+			Assert.IsFalse (root.HasChildren);
+			Assert.IsFalse (a.HasChildren);
+
+			Assert.AreEqual (0, a.Children.Count);
+			Assert.IsFalse (a.HasChildren);
+
+			Collections.FlatChildrenCollection colA = a.Children;
+
+			Assert.AreEqual (colA, a.Children);
+
+			root.Children.Insert (0, a);
+
+			Assert.IsTrue (root.HasChildren);
+			Assert.AreEqual (1, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (a, root.Children[0]);
+			
+			root.Children.Insert (0, b);
+			
+			Assert.IsTrue (root.HasChildren);
+			Assert.AreEqual (2, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (b, root.Children[0]);
+			Assert.AreEqual (a, root.Children[1]);
+
+			Assert.AreEqual (1, root.Children.IndexOf (a));
+			Assert.AreEqual (0, root.Children.IndexOf (b));
+
+			root.Children[1] = c;
+
+			Assert.AreEqual (0, root.Children.IndexOf (b));
+			Assert.AreEqual (1, root.Children.IndexOf (c));
+			
+			Assert.AreEqual (2, root.Children.Count);
+			Assert.AreEqual (null, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (root, c.Parent);
+			Assert.AreEqual (b, root.Children[0]);
+			Assert.AreEqual (c, root.Children[1]);
+
+			root.Children.Add (a);
+
+			Assert.AreEqual (3, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (2, root.Children.IndexOf (a));
+
+			Visual[] array = new Visual[3];
+			root.Children.CopyTo (array, 0);
+
+			Assert.AreEqual (b, array[0]);
+			Assert.AreEqual (c, array[1]);
+			Assert.AreEqual (a, array[2]);
+
+			root.Children.Remove (c);
+			
+			Assert.AreEqual (2, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (null, c.Parent);
+			Assert.AreEqual (b, root.Children[0]);
+			Assert.AreEqual (a, root.Children[1]);
+
+			a.Parent = root;
+			c.Parent = root;
+
+			Assert.AreEqual (3, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (root, c.Parent);
+			Assert.AreEqual (b, root.Children[0]);
+			Assert.AreEqual (a, root.Children[1]);
+			Assert.AreEqual (c, root.Children[2]);
+
+			Assert.AreEqual (null, root.Children.FindPrevious (b));
+			Assert.AreEqual (b, root.Children.FindPrevious (a));
+			Assert.AreEqual (a, root.Children.FindPrevious (c));
+			Assert.AreEqual (null, root.Children.FindPrevious (x));
+
+			Assert.AreEqual (a, root.Children.FindNext (b));
+			Assert.AreEqual (c, root.Children.FindNext (a));
+			Assert.AreEqual (null, root.Children.FindNext (c));
+			Assert.AreEqual (null, root.Children.FindNext (x));
+			
+			a.Parent = null;
+
+			Assert.AreEqual (2, root.Children.Count);
+			Assert.AreEqual (null, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (root, c.Parent);
+			Assert.AreEqual (b, root.Children[0]);
+			Assert.AreEqual (c, root.Children[1]);
+
+			root.Children.Clear ();
+
+			Assert.IsFalse (root.HasChildren);
+			
+			Assert.AreEqual (null, a.Parent);
+			Assert.AreEqual (null, b.Parent);
+			Assert.AreEqual (null, c.Parent);
+
+			root.Children.AddRange (new Visual[] { a, b, c });
+			
+			Assert.AreEqual (3, root.Children.Count);
+			Assert.AreEqual (root, a.Parent);
+			Assert.AreEqual (root, b.Parent);
+			Assert.AreEqual (root, c.Parent);
+			Assert.AreEqual (a, root.Children[0]);
+			Assert.AreEqual (b, root.Children[1]);
+			Assert.AreEqual (c, root.Children[2]);
+		}
+		
+		[Test]
+		public void CheckVisualChildren2()
+		{
+			Visual r1 = new Visual ();
+			Visual r2 = new Visual ();
+			Visual a = new Visual ();
+			Visual b = new Visual ();
+			Visual c1 = new Visual ();
+			Visual c2 = new Visual ();
+
+			r1.Name = "r1";
+			r2.Name = "r2";
+			
+			a.Name = "a";
+			b.Name = "b";
+			c1.Name = "c1";
+			c2.Name = "c2";
+			
+			EventHandlerSupport handler = new EventHandlerSupport ();
+
+			r1.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			r2.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			a.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			b.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			c1.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			c2.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+
+			a.Children.Add (b);
+			b.Children.Add (c1);
+			b.Children.Add (c2);
+
+			r1.Children.Add (a);
+
+			r1.SetValue (Visual.WindowProperty, "W1");
+
+			Assert.AreEqual ("r1-Window:<UndefinedValue>,W1.a-Window:<UndefinedValue>,W1.b-Window:<UndefinedValue>,W1.c1-Window:<UndefinedValue>,W1.c2-Window:<UndefinedValue>,W1.", handler.Log);
+			handler.Clear ();
+
+			Assert.AreEqual ("W1", a.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W1", b.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W1", c1.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W1", c2.GetValue (Visual.WindowProperty));
+
+			r2.SetValue (Visual.WindowProperty, "W2");
+
+			Assert.AreEqual ("r2-Window:<UndefinedValue>,W2.", handler.Log);
+			handler.Clear ();
+			
+			r1.Children.Remove (a);
+
+			Assert.AreEqual ("a-Window:W1,<UndefinedValue>.b-Window:W1,<UndefinedValue>.c1-Window:W1,<UndefinedValue>.c2-Window:W1,<UndefinedValue>.", handler.Log);
+			handler.Clear ();
+			
+			Assert.AreEqual (Types.UndefinedValue.Instance, a.GetValue (Visual.WindowProperty));
+			Assert.AreEqual (Types.UndefinedValue.Instance, b.GetValue (Visual.WindowProperty));
+			Assert.AreEqual (Types.UndefinedValue.Instance, c1.GetValue (Visual.WindowProperty));
+			Assert.AreEqual (Types.UndefinedValue.Instance, c2.GetValue (Visual.WindowProperty));
+
+			r2.Children.Add (a);
+
+			Assert.AreEqual ("a-Window:<UndefinedValue>,W2.b-Window:<UndefinedValue>,W2.c1-Window:<UndefinedValue>,W2.c2-Window:<UndefinedValue>,W2.", handler.Log);
+			handler.Clear ();
+			
+			Assert.AreEqual ("W2", a.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W2", b.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W2", c1.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W2", c2.GetValue (Visual.WindowProperty));
+
+			Visual c10 = new Visual ();
+			Visual c11 = new Visual ();
+
+			c10.Name = "c10";
+			c11.Name = "c11";
+			
+			c10.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			c11.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+
+			c1.Children.Add (c10);
+			c1.Children.Add (c11);
+			
+			Assert.AreEqual ("c10-Window:<UndefinedValue>,W2.c11-Window:<UndefinedValue>,W2.", handler.Log);
+			handler.Clear ();
+
+			c1.SetValue (Visual.WindowProperty, "WX");
+			
+			Assert.AreEqual ("c1-Window:W2,WX.c10-Window:W2,WX.c11-Window:W2,WX.", handler.Log);
+			handler.Clear ();
+
+			r1.Children.Add (a);
+
+			Assert.AreEqual ("a-Window:W2,W1.b-Window:W2,W1.c2-Window:W2,W1.", handler.Log);
+			handler.Clear ();
+		}
+
+
+		#region Class EventHandlerSupport
+		private class EventHandlerSupport
+		{
+			public string Log
+			{
+				get
+				{
+					return this.buffer.ToString ();
+				}
+			}
+
+			public void RecordEvent(object sender, Types.DependencyPropertyChangedEventArgs e)
+			{
+				this.buffer.Append (e.PropertyName);
+				this.buffer.Append (":");
+				this.buffer.Append (e.OldValue);
+				this.buffer.Append (",");
+				this.buffer.Append (e.NewValue);
+				this.buffer.Append (".");
+			}
+			public void RecordEventAndName(object sender, Types.DependencyPropertyChangedEventArgs e)
+			{
+				this.buffer.Append (Types.DependencyObjectTree.GetName (sender as Types.DependencyObject));
+				this.buffer.Append ("-");
+				this.buffer.Append (e.PropertyName);
+				this.buffer.Append (":");
+				this.buffer.Append (e.OldValue);
+				this.buffer.Append (",");
+				this.buffer.Append (e.NewValue);
+				this.buffer.Append (".");
+			}
+			public void Clear()
+			{
+				this.buffer.Length = 0;
+			}
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+		}
+		#endregion
 		
 		private static System.Text.StringBuilder buffer;
 		

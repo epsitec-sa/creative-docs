@@ -526,12 +526,9 @@ namespace Epsitec.Common.Widgets.Helpers
 				
 				if (visual.HasChildren)
 				{
-					Visual[] children = visual.Children.ToArray ();
-					int  children_num = children.Length;
-					
-					for (int i = 0; i < children_num; i++)
+					foreach (Visual child in visual.Children)
 					{
-						if (VisualTree.ContainsKeyboardFocus (children[i]))
+						if (VisualTree.ContainsKeyboardFocus (child))
 						{
 							return true;
 						}

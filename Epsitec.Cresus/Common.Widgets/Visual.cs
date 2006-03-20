@@ -67,13 +67,20 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.parent_layer == null)
+				return this.parent;
+			}
+			set
+			{
+				if (this.parent != value)
 				{
-					return null;
-				}
-				else
-				{
-					return this.parent_layer.ParentVisual;
+					if (value == null)
+					{
+						this.parent.Children.Remove (this);
+					}
+					else
+					{
+						value.Children.Add (this);
+					}
 				}
 			}
 		}
@@ -675,30 +682,24 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.HasLayers)
-				{
-					Collections.ChildrenCollection children = new Collections.ChildrenCollection (this);
-					return children.Count == 0 ? false : true;
-				}
-				
-				return false;
+				return (this.children != null) && (this.children.Count > 0);
 			}
 		}
 
 
-		public Collections.ChildrenCollection	Children
+		public Collections.FlatChildrenCollection	Children
 		{
 			get
 			{
-				return this.GetChildrenCollection ();
+				if (this.children == null)
+				{
+					this.children = new Collections.FlatChildrenCollection (this);
+				}
+				
+				return this.children;
 			}
 		}
 		
-		
-		internal Collections.ChildrenCollection GetChildrenCollection()
-		{
-			return new Collections.ChildrenCollection (this);
-		}
 		
 		
 		internal int GetCommandCacheId()
@@ -1280,6 +1281,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ChildrenProperty				= DependencyObjectTree.ChildrenProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
 		public static readonly DependencyProperty HasChildrenProperty			= DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetHasChildrenValue)));
 		public static readonly DependencyProperty LayersProperty				= DependencyProperty.RegisterReadOnly ("Layers", typeof (Collections.LayerCollection), typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetLayersValue)));
+		public static readonly DependencyProperty WindowProperty				= DependencyProperty.RegisterReadOnly ("Window", typeof (Window), typeof (Visual), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Instance));
 		
 		public static readonly DependencyProperty AnchorProperty				= DependencyProperty.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyMetadataOptions.AffectsParentLayout));
 		public static readonly DependencyProperty AnchorMarginsProperty			= DependencyProperty.Register ("AnchorMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsParentLayout));
@@ -1330,5 +1332,17 @@ namespace Epsitec.Common.Widgets
 		private Layouts.Layer					parent_layer;
 		private Drawing.Rectangle				bounds;
 		private static short					next_serial_id;
+		Collections.FlatChildrenCollection		children;
+		private Visual							parent;
+
+		internal void SetParentVisual(Visual visual)
+		{
+			this.parent = visual;
+		}
+
+		internal void NotifyChildrenChanged()
+		{
+			//	TODO: ...
+		}
 	}
 }

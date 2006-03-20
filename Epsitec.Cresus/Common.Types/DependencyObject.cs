@@ -31,7 +31,37 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return new LocalValueEnumerator (this);
+				foreach (DependencyProperty property in this.properties.Keys)
+				{
+					yield return new LocalValueEntry (property, this.properties[property]);
+				}
+				
+				//	Passe encore en revue les propriétés qui ne sont pas définies
+				//	dans la variable 'properties' mais directement au moyen de
+				//	callbacks GetValueOverrideCallback :
+
+				//	TODO: gestion des GetValueOverrideCallback
+
+				DependencyObjectType type = this.ObjectType;
+				System.Type sysType = this.GetType ();
+
+				foreach (DependencyProperty property in type.GetProperties ())
+				{
+					if (this.properties.ContainsKey (property) == false)
+					{
+						DependencyPropertyMetadata metadata = property.GetMetadata (sysType);
+						
+						if (metadata.GetValueOverride != null)
+						{
+							object value = metadata.GetValueOverride (this);
+							
+							if (UndefinedValue.IsValueUndefined (value) == false)
+							{
+								yield return new LocalValueEntry (property, value);
+							}
+						}
+					}
+				}
 			}
 		}
 		
@@ -175,9 +205,11 @@ namespace Epsitec.Common.Types
 		
 		public object GetLocalValue(DependencyProperty property)
 		{
-			if (this.properties.ContainsKey (property))
+			object value;
+			
+			if (this.properties.TryGetValue (property, out value))
 			{
-				return this.properties[property];
+				return value;
 			}
 			else
 			{
@@ -190,10 +222,7 @@ namespace Epsitec.Common.Types
 		}
 		public void ClearLocalValue(DependencyProperty property)
 		{
-			if (this.properties.ContainsKey (property))
-			{
-				this.properties.Remove (property);
-			}
+			this.properties.Remove (property);
 		}
 		public bool ContainsLocalValue(DependencyProperty property)
 		{
@@ -261,10 +290,12 @@ namespace Epsitec.Common.Types
 
 		public Binding GetBinding(DependencyProperty property)
 		{
+			BindingExpression bindingExpression;
+			
 			if ((this.bindings != null) &&
-				(this.bindings.ContainsKey (property)))
+				(this.bindings.TryGetValue (property, out bindingExpression)))
 			{
-				return this.bindings[property].ParentBinding;
+				return bindingExpression.ParentBinding;
 			}
 			else
 			{
@@ -300,10 +331,11 @@ namespace Epsitec.Common.Types
 		}
 		public void ClearBinding(DependencyProperty property)
 		{
+			BindingExpression bindingExpression;
 			if ((this.bindings != null) &&
-				(this.bindings.ContainsKey (property)))
+				(this.bindings.TryGetValue (property, out bindingExpression)))
 			{
-				this.bindings[property].Dispose ();
+				bindingExpression.Dispose ();
 				this.bindings.Remove (property);
 			}
 		}
@@ -317,6 +349,16 @@ namespace Epsitec.Common.Types
 			else
 			{
 				return false;
+			}
+		}
+		public IEnumerable<KeyValuePair<DependencyProperty, Binding>> GetAllBindings()
+		{
+			if (this.bindings != null)
+			{
+				foreach (KeyValuePair<DependencyProperty, BindingExpression> entry in this.bindings)
+				{
+					yield return new KeyValuePair<DependencyProperty, Binding> (entry.Key, entry.Value.ParentBinding);
+				}
 			}
 		}
 		
@@ -350,10 +392,12 @@ namespace Epsitec.Common.Types
 
 		protected System.Delegate GetUserEventHandler(string name)
 		{
+			System.Delegate value;
+			
 			if ((this.userEvents != null) &&
-				(this.userEvents.ContainsKey (name)))
+				(this.userEvents.TryGetValue (name, out value)))
 			{
-				return this.userEvents[name];
+				return value;
 			}
 			else
 			{
@@ -372,29 +416,44 @@ namespace Epsitec.Common.Types
 
 			lock (DependencyObject.declarations)
 			{
+				DependencyObjectType type = DependencyObjectType.FromSystemType (ownerType);
 				TypeDeclaration typeDeclaration;
+				
+				string name = property.Name;
 
-				if (DependencyObject.declarations.ContainsKey (ownerType) == false)
+				//	Verify that neither the owner type, nor any of its ancestors,
+				//	already defines the specified property :
+
+				if (property.IsAttached == false)
 				{
-					typeDeclaration = new TypeDeclaration ();
-					typeDeclaration[property.Name] = property;
-					DependencyObject.declarations[ownerType] = typeDeclaration;
+					System.Type t = ownerType;
+					
+					while (t != typeof (object))
+					{
+						if (DependencyObject.declarations.TryGetValue (t, out typeDeclaration))
+						{
+							if ((typeDeclaration.ContainsKey (name)) &&
+								(typeDeclaration[name].IsAttached == false))
+							{
+								throw new System.ArgumentException (string.Format ("DependencyProperty named '{0}' already exists for type {1} (defined by {2})", name, ownerType, t));
+							}
+						}
+
+						t = t.BaseType;
+					}
+				}
+
+				if (DependencyObject.declarations.TryGetValue (ownerType, out typeDeclaration))
+				{
+					typeDeclaration[name] = property;
 				}
 				else
 				{
-					typeDeclaration = DependencyObject.declarations[ownerType];
-					
-					if (typeDeclaration.ContainsKey (property.Name))
-					{
-						throw new System.ArgumentException (string.Format ("DependencyProperty named {0} already exists for type {1}", property.Name, ownerType));
-					}
-					else
-					{
-						typeDeclaration[property.Name] = property;
-					}
+					typeDeclaration = new TypeDeclaration ();
+					typeDeclaration[name] = property;
+					DependencyObject.declarations[ownerType] = typeDeclaration;
 				}
 
-				DependencyObjectType type = DependencyObjectType.FromSystemType (ownerType);
 				type.Register (property);
 
 				System.Threading.Interlocked.Increment (ref DependencyObject.registeredPropertyCount);
@@ -406,54 +465,6 @@ namespace Epsitec.Common.Types
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
-		}
-		#endregion
-		
-		#region Private LocalValueEnumerator Structure
-		private struct LocalValueEnumerator : IEnumerator<LocalValueEntry>, IEnumerable<LocalValueEntry>
-		{
-			public LocalValueEnumerator(DependencyObject o)
-			{
-				this.property_enumerator = o.properties.GetEnumerator ();
-			}
-			
-			public LocalValueEntry Current
-			{
-				get
-				{
-					return new LocalValueEntry (this.property_enumerator.Current);
-				}
-			}
-			object System.Collections.IEnumerator.Current
-			{
-				get
-				{
-					return this.Current;
-				}
-			}
-			
-			public void Reset()
-			{
-				this.property_enumerator.Reset ();
-			}
-			public bool MoveNext()
-			{
-				return this.property_enumerator.MoveNext ();
-			}
-			public void Dispose()
-			{
-			}
-			
-			public IEnumerator<LocalValueEntry> GetEnumerator()
-			{
-				return this;
-			}
-			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-			{
-				return this;
-			}
-
-			IEnumerator<KeyValuePair<DependencyProperty, object>> property_enumerator;
 		}
 		#endregion
 

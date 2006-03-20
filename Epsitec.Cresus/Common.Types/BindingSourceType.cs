@@ -10,5 +10,6 @@ namespace Epsitec.Common.Types
 		None,
 		
 		PropertyObject,
+		SourceItself,
 	}
 }
