@@ -2299,12 +2299,10 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("FontSizePlus")]
 		[Command ("FontSizeMinus")]
 		[Command ("FontClear")]
-		[Command ("ParagraphLeading")]
 		[Command ("ParagraphLeadingPlus")]
 		[Command ("ParagraphLeadingMinus")]
 		[Command ("ParagraphIndentPlus")]
 		[Command ("ParagraphIndentMinus")]
-		[Command ("ParagraphJustif")]
 		[Command ("ParagraphClear")]
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{

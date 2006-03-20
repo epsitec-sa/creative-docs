@@ -17,14 +17,13 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonJustif = this.CreateIconButtonCombo("ParagraphJustif");
 			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifLeft",   "JustifHLeft",   Res.Strings.Property.Justif.JustifHLeft);
-			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifLeft",   "JustifHLeft",   Res.Strings.Property.Justif.JustifHLeft);
 			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifCenter", "JustifHCenter", Res.Strings.Property.Justif.JustifHCenter);
 			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifRight",  "JustifHRight",  Res.Strings.Property.Justif.JustifHRight);
 			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifJustif", "JustifHJustif", Res.Strings.Property.Justif.JustifHJustif);
 			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifAll",    "JustifHAll",    Res.Strings.Property.Justif.JustifHAll);
 
-			this.buttonIndentMinus   = this.CreateIconButton("ParagraphIndentMinus");
-			this.buttonIndentPlus    = this.CreateIconButton("ParagraphIndentPlus");
+			this.buttonIndentMinus = this.CreateIconButton("ParagraphIndentMinus");
+			this.buttonIndentPlus  = this.CreateIconButton("ParagraphIndentPlus");
 
 			this.buttonLeading = this.CreateIconButtonCombo("ParagraphLeading");
 			this.AddIconButtonCombo(this.buttonLeading, "ParagraphLeading08", "ParagraphLeading08", Res.Strings.Property.Leading.Leading08);
@@ -36,7 +35,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLeadingMinus = this.CreateIconButton("ParagraphLeadingMinus");
 			this.buttonLeadingPlus  = this.CreateIconButton("ParagraphLeadingPlus");
 
-			this.buttonClear        = this.CreateIconButton("ParagraphClear");
+			this.buttonClear = this.CreateIconButton("ParagraphClear");
 
 			this.UpdateClientGeometry();
 		}

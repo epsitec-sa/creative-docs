@@ -188,6 +188,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			button.Command = command;
 			button.AutoFocus = false;
+			button.IsLiveUpdateEnabled = false;
 
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

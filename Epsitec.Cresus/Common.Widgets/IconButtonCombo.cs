@@ -258,7 +258,6 @@ namespace Epsitec.Common.Widgets
 			//	Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
 			//	est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
 			//	qui est appelée à chaque changement "visuel".
-			
 			int index = this.MapComboListToIndex(sel);
 			
 			if ( index >= 0 )
@@ -273,7 +272,6 @@ namespace Epsitec.Common.Widgets
 			//	Met à jour le contenu de la combo en cas de changement de sélection
 			//	dans la liste, pour autant qu'une telle mise à jour "live" ait été
 			//	activée.
-			
 			if ( this.isLiveUpdateEnabled )
 			{
 				this.SelectedIndex = this.MapComboListToIndex(sel);
@@ -467,25 +465,11 @@ namespace Epsitec.Common.Widgets
 		private void HandleScrollerSelectedIndexChanged(object sender)
 		{
 			//	L'utilisateur a simplement déplacé la souris dans la liste.
-			
 			this.ProcessComboSelectedIndex(this.scrollList.SelectedIndex);
 		}
 
 		private void HandleMenuAccepted(object sender)
 		{
-			int rank = 0;
-			foreach ( MenuItem item in this.menu.Items )
-			{
-				if ( item == null )  continue;
-
-				if ( item.ItemType == MenuItemType.Selected )
-				{
-					this.SelectedIndex = rank;
-				}
-
-				rank ++;
-			}
-
 			this.CloseCombo(CloseMode.Accept);
 			this.ExecuteCommand();
 		}
