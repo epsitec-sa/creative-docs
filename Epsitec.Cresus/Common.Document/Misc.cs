@@ -619,6 +619,12 @@ namespace Epsitec.Common.Document
 			return string.Format(@"<img src=""{0}""/>", Misc.Icon(icon));
 		}
 
+		static public string Image(string icon, double verticalOffset)
+		{
+			//	Retourne le texte pour mettre une image dans un texte.
+			return string.Format(@"<img src=""{0}"" voff=""{1}""/>", Misc.Icon(icon), verticalOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+		}
+
 		static public Size IconPreferredSize(string iconSize)
 		{
 			//	Retourne la taille préférée pour une icône. Si la taille réelle de l'icône n'est

@@ -195,6 +195,14 @@ namespace Epsitec.Common.Document.Ribbons
 			return button;
 		}
 
+		protected void AddIconButtonCombo(IconButtonCombo combo, string name, string icon, string text)
+		{
+			text = string.Format("{0} {1}", Misc.Image(icon, -5), text);
+			icon = Misc.Icon(icon);
+			IconButtonCombo.Item item = new IconButtonCombo.Item(name, icon, text);
+			combo.Items.Add(item);
+		}
+
 		protected GlyphButton CreateMenuButton(string command, string tooltip, MessageEventHandler handler)
 		{
 			//	Crée un bouton "v" pour un menu.

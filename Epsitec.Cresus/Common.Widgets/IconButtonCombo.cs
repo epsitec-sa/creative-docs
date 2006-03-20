@@ -244,6 +244,32 @@ namespace Epsitec.Common.Widgets
 			base.ProcessMessage(message, pos);
 		}
 		
+		protected virtual void ProcessComboActivatedIndex(int sel)
+		{
+			//	Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
+			//	est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
+			//	qui est appelée à chaque changement "visuel".
+			
+			int index = this.MapComboListToIndex(sel);
+			
+			if ( index >= 0 )
+			{
+				this.SelectedIndex = index;
+				this.menu.Behavior.Accept();
+			}
+		}
+		
+		protected virtual void ProcessComboSelectedIndex(int sel)
+		{
+			//	Met à jour le contenu de la combo en cas de changement de sélection
+			//	dans la liste, pour autant qu'une telle mise à jour "live" ait été
+			//	activée.
+			
+			if ( this.isLiveUpdateEnabled )
+			{
+				this.SelectedIndex = this.MapComboListToIndex(sel);
+			}
+		}
 		
 		protected virtual int MapComboListToIndex(int value)
 		{
@@ -293,9 +319,22 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.menu = this.CreateMenu();
+			
+			if ( this.scrollList != null )
+			{
+				this.scrollList.SelectedIndex = this.MapIndexToComboList(this.SelectedIndex);
+				this.scrollList.ShowSelected(ScrollShowMode.Center);
+			}
+			
 			this.menu.ShowAsComboList(this, this.MapClientToScreen(new Drawing.Point(0, 0)), this.buttonMenu);
 			this.menu.Accepted += new Support.EventHandler(this.HandleMenuAccepted);
 			this.menu.Rejected += new Support.EventHandler(this.HandleMenuRejected);
+			
+			if ( this.scrollList != null )
+			{
+				this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
+				this.scrollList.SelectionActivated   += new Support.EventHandler(this.HandleScrollListSelectionActivated);
+			}
 			
 			this.OnComboOpened();
 		}
@@ -321,11 +360,17 @@ namespace Epsitec.Common.Widgets
 			this.menu.Accepted -= new Support.EventHandler(this.HandleMenuAccepted);
 			this.menu.Rejected -= new Support.EventHandler(this.HandleMenuRejected);
 			
-			if ( this.menu != null )
+			if ( this.scrollList != null )
 			{
-				this.menu.Dispose();
-				this.menu = null;
+				this.scrollList.SelectionActivated   -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
+				this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
+				
+				this.scrollList.Dispose();
+				this.scrollList = null;
 			}
+			
+			this.menu.Dispose();
+			this.menu = null;
 			
 			if ( this.AutoFocus )
 			{
@@ -343,29 +388,26 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual AbstractMenu CreateMenu()
 		{
-			VMenu menu = new VMenu();
+			TextFieldComboMenu menu = new TextFieldComboMenu();
 			
+			this.scrollList = new ScrollList();
+			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
+			
+			menu.Contents = this.scrollList;
+			
+			//	Remplit la liste :
 			int rank = 0;
 			foreach ( Item item in this.items )
 			{
-				if ( item == null )  // séparateur ?
-				{
-					menu.Items.Add(new MenuSeparator());
-				}
-				else
-				{
-					MenuItem cell = new MenuItem("", item.Icon, item.Text, "", item.Name);
+				if ( item == null )  continue;  // séparateur ?
 
-					if ( rank == this.SelectedIndex )
-					{
-						cell.ActiveState = ActiveState.Yes;
-					}
-
-					menu.Items.Add(cell);
-					rank ++;
-				}
+				this.scrollList.Items.Add(item.Name, item.Text);
+				rank ++;
 			}
-			
+
+			Drawing.Size size = this.scrollList.GetBestSize();
+			this.scrollList.LineHeight = size.Height;
+			menu.Size = new Drawing.Size(size.Width, 200);
 			menu.AdjustSize();
 			MenuItem.SetMenuHost(this, new MenuHost(menu));
 			
@@ -407,6 +449,19 @@ namespace Epsitec.Common.Widgets
 			this.OpenCombo();
 		}
 		
+		private void HandleScrollListSelectionActivated(object sender)
+		{
+			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
+			this.ProcessComboActivatedIndex(this.scrollList.SelectedIndex);
+		}
+		
+		private void HandleScrollerSelectedIndexChanged(object sender)
+		{
+			//	L'utilisateur a simplement déplacé la souris dans la liste.
+			
+			this.ProcessComboSelectedIndex(this.scrollList.SelectedIndex);
+		}
+
 		private void HandleMenuAccepted(object sender)
 		{
 			int rank = 0;
@@ -555,5 +610,6 @@ namespace Epsitec.Common.Widgets
 		protected GlyphButton					buttonMenu;
 		protected System.Collections.ArrayList	items;
 		protected AbstractMenu					menu;
+		protected ScrollList					scrollList;
 	}
 }

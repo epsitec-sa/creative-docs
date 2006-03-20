@@ -209,6 +209,40 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Size (width, height);
 		}
 
+		public Drawing.Size GetBestSize()
+		{
+			//	Donne lles dimensions optimales pour la liste.
+			//	La largeur est la largeur la plus grande de tous les textes contenus dans Items.
+			//	La hauteur est la hauteur la plus grande de tous les textes contenus dans Items.
+
+			double dx = 0;
+			double dy = 0;
+
+			TextLayout layout = new TextLayout();
+			layout.ResourceManager = this.ResourceManager;
+			layout.DefaultFont     = this.DefaultFont;
+			layout.DefaultFontSize = this.DefaultFontSize;
+
+			for ( int i=0 ; i<this.items.Count ; i++ )
+			{
+				layout.Text = this.items[i];
+				Drawing.Size size = layout.SingleLineSize;
+				dx = System.Math.Max(dx, size.Width);
+				dy = System.Math.Max(dy, size.Height);
+			}
+
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			dx += adorner.GeometryScrollerRightMargin;
+			dx += this.margins.Left;
+			dx += this.margins.Right;
+			dx += 2;  // ch'tite marge pour respirer
+			dx = System.Math.Ceiling(dx);
+
+			dy = System.Math.Ceiling(dy);
+
+			return new Drawing.Size(dx, dy);
+		}
+
 
 		public bool AdjustHeight(ScrollAdjustMode mode)
 		{

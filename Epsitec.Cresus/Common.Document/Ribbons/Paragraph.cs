@@ -16,23 +16,22 @@ namespace Epsitec.Common.Document.Ribbons
 			this.title.Text = Res.Strings.Action.ParagraphMain;
 
 			this.buttonJustif = this.CreateIconButtonCombo("ParagraphJustif");
-			this.buttonJustif.Items.Add(new IconButtonCombo.Item("ParagraphJustifLeft",   Misc.Icon("JustifHLeft"),   Res.Strings.Property.Justif.JustifHLeft));
-			this.buttonJustif.Items.Add(new IconButtonCombo.Item("ParagraphJustifCenter", Misc.Icon("JustifHCenter"), Res.Strings.Property.Justif.JustifHCenter));
-			this.buttonJustif.Items.Add(new IconButtonCombo.Item("ParagraphJustifRight",  Misc.Icon("JustifHRight"),  Res.Strings.Property.Justif.JustifHRight));
-			this.buttonJustif.Items.Add(null);
-			this.buttonJustif.Items.Add(new IconButtonCombo.Item("ParagraphJustifJustif", Misc.Icon("JustifHJustif"), Res.Strings.Property.Justif.JustifHJustif));
-			this.buttonJustif.Items.Add(new IconButtonCombo.Item("ParagraphJustifAll",    Misc.Icon("JustifHAll"),    Res.Strings.Property.Justif.JustifHAll));
+			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifLeft",   "JustifHLeft",   Res.Strings.Property.Justif.JustifHLeft);
+			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifLeft",   "JustifHLeft",   Res.Strings.Property.Justif.JustifHLeft);
+			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifCenter", "JustifHCenter", Res.Strings.Property.Justif.JustifHCenter);
+			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifRight",  "JustifHRight",  Res.Strings.Property.Justif.JustifHRight);
+			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifJustif", "JustifHJustif", Res.Strings.Property.Justif.JustifHJustif);
+			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifAll",    "JustifHAll",    Res.Strings.Property.Justif.JustifHAll);
 
 			this.buttonIndentMinus   = this.CreateIconButton("ParagraphIndentMinus");
 			this.buttonIndentPlus    = this.CreateIconButton("ParagraphIndentPlus");
 
 			this.buttonLeading = this.CreateIconButtonCombo("ParagraphLeading");
-			this.buttonLeading.Items.Add(new IconButtonCombo.Item("ParagraphLeading08", Misc.Icon("ParagraphLeading08"), Res.Strings.Property.Leading.Leading08));
-			this.buttonLeading.Items.Add(new IconButtonCombo.Item("ParagraphLeading10", Misc.Icon("ParagraphLeading10"), Res.Strings.Property.Leading.Leading10));
-			this.buttonLeading.Items.Add(new IconButtonCombo.Item("ParagraphLeading15", Misc.Icon("ParagraphLeading15"), Res.Strings.Property.Leading.Leading15));
-			this.buttonLeading.Items.Add(null);
-			this.buttonLeading.Items.Add(new IconButtonCombo.Item("ParagraphLeading20", Misc.Icon("ParagraphLeading20"), Res.Strings.Property.Leading.Leading20));
-			this.buttonLeading.Items.Add(new IconButtonCombo.Item("ParagraphLeading30", Misc.Icon("ParagraphLeading30"), Res.Strings.Property.Leading.Leading30));
+			this.AddIconButtonCombo(this.buttonLeading, "ParagraphLeading08", "ParagraphLeading08", Res.Strings.Property.Leading.Leading08);
+			this.AddIconButtonCombo(this.buttonLeading, "ParagraphLeading10", "ParagraphLeading10", Res.Strings.Property.Leading.Leading10);
+			this.AddIconButtonCombo(this.buttonLeading, "ParagraphLeading15", "ParagraphLeading15", Res.Strings.Property.Leading.Leading15);
+			this.AddIconButtonCombo(this.buttonLeading, "ParagraphLeading20", "ParagraphLeading20", Res.Strings.Property.Leading.Leading20);
+			this.AddIconButtonCombo(this.buttonLeading, "ParagraphLeading30", "ParagraphLeading30", Res.Strings.Property.Leading.Leading30);
 
 			this.buttonLeadingMinus = this.CreateIconButton("ParagraphLeadingMinus");
 			this.buttonLeadingPlus  = this.CreateIconButton("ParagraphLeadingPlus");
