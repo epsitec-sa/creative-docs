@@ -457,7 +457,7 @@ namespace Epsitec.Common.Types.Serialization
 				throw new System.FormatException ("ObjRef format error");
 			}
 
-			return context.ExternalMap.GetTag (args[1]);
+			return context.ExternalMap.GetValue (args[1]);
 		}
 
 		private static object ObjRefFromString(Context context, string[] args)

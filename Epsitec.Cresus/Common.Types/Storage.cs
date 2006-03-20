@@ -90,8 +90,8 @@ namespace Epsitec.Common.Types
 				{
 					context.RestoreObjectData (context.ObjectMap.GetId (obj), obj);
 				}
-				
-				root = null;
+
+				root = context.ObjectMap.GetValue (rootId);
 			}
 			
 			context.ActiveReader.EndStorageBundle ();
