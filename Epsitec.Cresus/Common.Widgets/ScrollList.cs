@@ -811,7 +811,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		SelectionActivated;
 		
 		protected const double					TextOffsetX = 3;
-		protected const double					TextOffsetY = 3;
+		protected const double					TextOffsetY = 2;
 
 		private Behaviors.SelectItemBehavior	select_item_behavior;
 		protected ScrollListStyle				scrollListStyle;
