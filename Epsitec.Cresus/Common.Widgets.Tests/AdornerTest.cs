@@ -383,24 +383,36 @@ namespace Epsitec.Common.Widgets
 			image1.Location = new Point(590, 15);
 			image1.Size = new Size(20, 20);
 			image1.ImageName = @"file:images/cut.png";
+			image1.Alignment = Drawing.ContentAlignment.BottomCenter;
+			image1.VerticalOffset = 0;
 			
 			image2.Location = new Point(600, 15);
 			image2.Size = new Size(20, 20);
 			image2.ImageName = @"file:images/cut.png";
-			image2.VerticalOffset = 1;
+			image2.VerticalOffset = 4;
+			image2.Alignment = Drawing.ContentAlignment.BottomCenter;
 			
 			image3.Location = new Point(610, 15);
 			image3.Size = new Size(20, 20);
 			image3.ImageName = @"file:images/cut.png";
-			image3.VerticalOffset = 2;
+			image3.VerticalOffset = 8;
+			image3.Alignment = Drawing.ContentAlignment.BottomCenter;
+			
+			Widget.BaseLineAlign (image1, image2);
+			Widget.BaseLineAlign (image1, image3);
+			
+			Assert.AreEqual ((int)((image1.Bottom+image2.VerticalOffset)*100+0.5), (int)(image2.Bottom*100+0.5));
+			Assert.AreEqual ((int)((image1.Bottom+image3.VerticalOffset)*100+0.5), (int)(image3.Bottom*100+0.5));
 			
 			image4.Location = new Point(630, 15);
 			image4.Size = new Size(40, 20);
 			image4.ImageName = @"dyn:Xyz/random";
+			image4.Alignment = Drawing.ContentAlignment.BottomCenter;
 			
 			image5.Location = new Point(630, 35);
 			image5.Size = new Size(40, 20);
 			image5.ImageName = @"dyn:Xyz/80";
+			image5.Alignment = Drawing.ContentAlignment.BottomCenter;
 			
 			window.Root.Children.Add(image1);
 			window.Root.Children.Add(image2);

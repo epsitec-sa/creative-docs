@@ -1524,10 +1524,21 @@ namespace Epsitec.Common.Widgets
 				if ( !block.Visible )  continue;
 
 				Drawing.Rectangle blockRect = new Drawing.Rectangle();
-				blockRect.Top    = pos.Y+block.Pos.Y+block.Font.Ascender*block.FontSize;
-				blockRect.Bottom = pos.Y+block.Pos.Y+block.Font.Descender*block.FontSize;
+				
+				if ( block.IsImage )
+				{
+					blockRect.Top    = pos.Y+block.Pos.Y+block.ImageAscender;
+					blockRect.Bottom = pos.Y+block.Pos.Y+block.ImageDescender;
+				}
+				else
+				{
+					blockRect.Top    = pos.Y+block.Pos.Y+block.Font.Ascender*block.FontSize;
+					blockRect.Bottom = pos.Y+block.Pos.Y+block.Font.Descender*block.FontSize;
+				}
+				
 				blockRect.Left   = pos.X+block.Pos.X;
 				blockRect.Width  = block.Width;
+				
 				if ( !blockRect.IntersectsWith(clipRect) )  continue;
 
 				if ( block.IsImage )
@@ -1546,7 +1557,7 @@ namespace Epsitec.Common.Widgets
 					double dx = image.Width;
 					double dy = image.Height;
 					double ix = pos.X+block.Pos.X;
-					double iy = pos.Y+block.Pos.Y+block.ImageDescender+block.VerticalOffset;
+					double iy = pos.Y+block.Pos.Y+block.ImageDescender; //+block.VerticalOffset;
 					
 					if ( block.Anchor )
 					{
@@ -3975,7 +3986,10 @@ noText:
 									block.ImageDescender = dy*fontDescender/fontHeight;
 								}
 								
-								block.VerticalOffset = run.VerticalOffset;
+								block.ImageAscender  += run.VerticalOffset;
+								block.ImageDescender += run.VerticalOffset;
+								
+//-								block.VerticalOffset = run.VerticalOffset;
 							
 								if ( this.JustifMode != Drawing.TextJustifMode.NoLine )
 								{
@@ -4108,15 +4122,33 @@ noText:
 					width += block.Width;
 					if ( block.IsImage )
 					{
-						height    = System.Math.Max(height,    block.ImageAscender-block.ImageDescender);
-						ascender  = System.Math.Max(ascender,  block.ImageAscender);
-						descender = System.Math.Min(descender, block.ImageDescender);
+						if (height == 0)
+						{
+							height    = block.ImageAscender-block.ImageDescender;
+							ascender  = block.ImageAscender;
+							descender = block.ImageDescender;
+						}
+						else
+						{
+							height    = System.Math.Max(height,    block.ImageAscender-block.ImageDescender);
+							ascender  = System.Math.Max(ascender,  block.ImageAscender);
+							descender = System.Math.Min(descender, block.ImageDescender);
+						}
 					}
 					else
 					{
-						height    = System.Math.Max(height,    block.Font.LineHeight*block.FontSize);
-						ascender  = System.Math.Max(ascender,  block.Font.Ascender  *block.FontSize);
-						descender = System.Math.Min(descender, block.Font.Descender *block.FontSize);
+						if (height == 0)
+						{
+							height    = block.Font.LineHeight*block.FontSize;
+							ascender  = block.Font.Ascender  *block.FontSize;
+							descender = block.Font.Descender *block.FontSize;
+						}
+						else
+						{
+							height    = System.Math.Max(height,    block.Font.LineHeight*block.FontSize);
+							ascender  = System.Math.Max(ascender,  block.Font.Ascender  *block.FontSize);
+							descender = System.Math.Min(descender, block.Font.Descender *block.FontSize);
+						}
 					}
 					if ( block.Tab || block.List )
 					{
@@ -4778,7 +4810,7 @@ noText:
 			public Drawing.Image			Image;		// image bitmap
 			public double					ImageAscender;
 			public double					ImageDescender;
-			public double					VerticalOffset;
+//-			public double					VerticalOffset;
 			public bool						Tab;		// contient un tabulateur
 			public bool						List;		// contient une puce
 			public System.Collections.Hashtable Parameters;
