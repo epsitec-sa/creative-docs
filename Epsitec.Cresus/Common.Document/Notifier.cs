@@ -24,6 +24,10 @@ namespace Epsitec.Common.Document
 			this.document = document;
 		}
 
+		public void Dispose()
+		{
+		}
+
 
 		public bool Enable
 		{

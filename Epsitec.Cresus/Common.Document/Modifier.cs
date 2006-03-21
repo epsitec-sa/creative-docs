@@ -85,6 +85,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public void Dispose()
+		{
+		}
+
 		public string Tool
 		{
 			//	Outil sélectionné dans la palette.

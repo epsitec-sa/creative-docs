@@ -5310,6 +5310,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ignoreChange = true;
 			this.bookDocuments.Items.RemoveAt(rank);
 			this.ignoreChange = false;
+			di.document.Dispose();
 			di.Dispose();
 
 			if ( rank >= this.bookDocuments.PageCount )

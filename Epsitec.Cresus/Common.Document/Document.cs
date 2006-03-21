@@ -142,14 +142,65 @@ namespace Epsitec.Common.Document
 
 			if ( this.mode == DocumentMode.Modify )
 			{
+				string tag = string.Concat(this.UniqueName, ".ParagraphStyle");
 				Drawing.DynamicImage image = new Drawing.DynamicImage(new Drawing.Size(50, 40), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyle));
 				image.IsCacheEnabled = false;
-				string tag = string.Concat(this.UniqueName, ".ParagraphStyle");
 				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
 			}
 
 			this.ioType = IOType.BinaryCompress;
 			//this.ioType = IOType.SoapUncompress;
+		}
+
+		public void Dispose()
+		{
+			if ( this.mode == DocumentMode.Modify )
+			{
+				string tag = string.Concat(this.UniqueName, ".ParagraphStyle");
+				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
+			}
+
+			if ( this.modifier != null )
+			{
+				this.modifier.Dispose();
+				this.modifier = null;
+			}
+
+			if ( this.wrappers != null )
+			{
+				this.wrappers.Dispose();
+				this.wrappers = null;
+			}
+
+			if ( this.notifier != null )
+			{
+				this.notifier.Dispose();
+				this.notifier = null;
+			}
+
+			if ( this.dialogs != null )
+			{
+				this.dialogs.Dispose();
+				this.dialogs = null;
+			}
+
+			if ( this.settings != null )
+			{
+				this.settings.Dispose();
+				this.settings = null;
+			}
+
+			if ( this.printer != null )
+			{
+				this.printer.Dispose();
+				this.printer = null;
+			}
+
+			if ( this.exportPDF != null )
+			{
+				this.exportPDF.Dispose();
+				this.exportPDF = null;
+			}
 		}
 
 		public DocumentType Type
