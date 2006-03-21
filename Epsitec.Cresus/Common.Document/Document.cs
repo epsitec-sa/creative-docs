@@ -70,6 +70,7 @@ namespace Epsitec.Common.Document
 		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher)
 		{
 			//	Crée un nouveau document vide.
+			this.UniqueIDCreate();
 			this.type = type;
 			this.mode = mode;
 			this.installType = installType;
@@ -137,6 +138,14 @@ namespace Epsitec.Common.Document
 				this.Modifier.ActiveViewer = clipboardViewer;
 				this.Modifier.AttachViewer(clipboardViewer);
 				this.Modifier.New();
+			}
+
+			if ( this.mode == DocumentMode.Modify )
+			{
+				Drawing.DynamicImage image = new Drawing.DynamicImage(new Drawing.Size(50, 40), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyle));
+				image.IsCacheEnabled = false;
+				string tag = string.Concat(this.UniqueName, ".ParagraphStyle");
+				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
 			}
 
 			this.ioType = IOType.BinaryCompress;
@@ -1681,6 +1690,73 @@ namespace Epsitec.Common.Document
 			if ( category == StyleCategory.Paragraph )  this.selectedParagraphStyle = rank;
 			if ( category == StyleCategory.Character )  this.selectedCharacterStyle = rank;
 		}
+
+		protected void DrawDynamicImageStyle(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
+		{
+			//	Dessine un style, pour une image dynamique.
+			string[] arguments = argument.Split('.');
+			System.Diagnostics.Debug.Assert(arguments.Length == 2);
+			string styleName = arguments[0];
+			Text.TextStyleClass styleClass = Text.TextStyleClass.Paragraph;
+			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
+			Text.TextStyle textStyle = this.textContext.StyleList.GetTextStyle(styleName, styleClass);
+
+			Drawing.Rectangle rect = new Rectangle(0, 0, size.Width, size.Height);
+
+			Drawing.Rectangle iClip = graphics.SaveClippingRectangle();
+			graphics.SetClippingRectangle(rect);
+
+			double h = rect.Height;
+			rect.Deflate(rect.Height*0.05);
+			rect.Bottom -= rect.Height*10;  // hauteur presque infinie
+
+			double scale = 1.0/7.0;
+			Transform initial = graphics.Transform;
+			graphics.ScaleTransform(scale, scale, 0.0, 0.0);
+			rect.Scale(1.0/scale);
+			h *= 1.0/scale;
+
+			Document document = this.DocumentForSamples;
+			document.Modifier.OpletQueueEnable = false;
+
+			if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
+			{
+				Objects.TextBox2 obj = this.ObjectForSamplesParagraph;
+				obj.RectangleToSample(rect);
+				obj.SampleDefineStyle(textStyle);
+
+				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
+
+				Drawer drawer = new Drawer(document);
+				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
+			}
+
+			if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Text )
+			{
+				Point p1 = rect.TopLeft;
+				Point p2 = rect.TopRight;
+				p1.Y -= h*0.7;
+				p2.Y -= h*0.7;
+
+				double r = 12*Modifier.FontSizeScale;
+				graphics.LineWidth = 1.0;
+				graphics.AddLine(p1.X-10, p1.Y, p2.X+10, p2.Y);
+				graphics.AddLine(p1.X-10, p1.Y+r, p2.X+10, p2.Y+r);
+				graphics.RenderSolid(Color.FromRgb(1,0,0));  // rouge
+
+				Objects.TextLine2 obj = this.ObjectForSamplesCharacter;
+				obj.RectangleToSample(p1, p2);
+				obj.SampleDefineStyle(textStyle);
+
+				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
+
+				Drawer drawer = new Drawer(document);
+				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
+			}
+
+			graphics.Transform = initial;
+			graphics.RestoreClippingRectangle(iClip);
+		}
 		#endregion
 
 		#region UniqueId
@@ -2249,6 +2325,25 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+		#region UniqueID
+		protected void UniqueIDCreate()
+		{
+			//	Assigne un numéro unique à ce document.
+			this.uniqueID = Document.uniqueIDGenerator++;
+		}
+
+		public string UniqueName
+		{
+			//	Retourne un nom unique pour ce document.
+			get
+			{
+				return string.Concat("Document.", this.uniqueID.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			}
+		}
+
+		protected static int					uniqueIDGenerator = 0;
+		protected int							uniqueID;
+		#endregion
 
 
 		protected DocumentType					type;

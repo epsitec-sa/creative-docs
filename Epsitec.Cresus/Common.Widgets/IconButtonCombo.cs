@@ -49,6 +49,14 @@ namespace Epsitec.Common.Widgets
 				return this.menu != null;
 			}
 		}
+
+		public IconButton						IconButton
+		{
+			get
+			{
+				return this.buttonMain;
+			}
+		}
 		
 		public bool								IsLiveUpdateEnabled
 		{

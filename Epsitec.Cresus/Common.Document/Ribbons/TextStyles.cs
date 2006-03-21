@@ -55,9 +55,39 @@ namespace Epsitec.Common.Document.Ribbons
 			this.styleCharacter.ComboClosed += new EventHandler(this.HandleStyleComboClosed);
 			ToolTip.Default.SetToolTip(this.styleCharacter, Res.Strings.Panel.Style.CharacterChoice);
 
+			this.paragraphCombo = this.CreateIconButtonCombo("ParagraphCombo");
+			this.paragraphCombo.ComboOpening += new CancelEventHandler(this.HandleParagraphComboOpening);
+
 			this.UpdateClientGeometry();
 		}
 		
+		private void DynamicImageXyz(Drawing.Graphics graphics, Drawing.Size size, string argument, Drawing.GlyphPaintStyle style, Drawing.Color color, object adorner)
+		{
+			//	Méthode de test pour peindre une image dynamique selon un
+			//	modèle nommé "Xyz"; l'argument reçu en entrée permet de
+			//	déterminer exactement ce qui doit être peint.
+			
+			int    hue; 
+			double saturation = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.2 : 1.0;
+			double value      = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.7 : 1.0;
+			
+			if (argument == "random")
+			{
+				System.Random random = new System.Random ();
+				hue = random.Next (360);
+			}
+			else
+			{
+				hue = int.Parse (argument);
+			}
+			
+			graphics.AddFilledRectangle (0, 0, size.Width, size.Height);
+			graphics.RenderSolid (Drawing.Color.FromHsv (hue, saturation, value));
+			graphics.LineWidth = 2.0;
+			graphics.AddRectangle (1, 1, size.Width-2, size.Height-2);
+			graphics.RenderSolid (Drawing.Color.FromBrightness (0));
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -139,7 +169,8 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 10+22+130;
+				//?return 10+22+130;
+				return 10+22+130 + 75;
 			}
 		}
 
@@ -168,15 +199,21 @@ namespace Epsitec.Common.Document.Ribbons
 
 			rect = this.UsefulZone;
 			rect.Left += dx;
+			rect.Right -= 75;
 			rect.Bottom += 28;
 			rect.Height = 20;
 			this.styleParagraph.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Left += dx;
+			rect.Right -= 75;
 			rect.Bottom += 1;
 			rect.Height = 20;
 			this.styleCharacter.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Left += 160;
+			this.paragraphCombo.Bounds = rect;
 		}
 
 
@@ -202,10 +239,25 @@ namespace Epsitec.Common.Document.Ribbons
 			this.document.Modifier.SetTextStyle(style);
 		}
 
+		private void HandleParagraphComboOpening(object sender, CancelEventArgs e)
+		{
+			this.paragraphCombo.Items.Clear();
+
+			Text.TextStyle[] styles = this.document.TextStyles(StyleCategory.Paragraph);
+			foreach ( Text.TextStyle style in styles )
+			{
+				string name = string.Concat(this.document.UniqueName, ".ParagraphStyle");
+				string para = string.Concat(style.Name, ".Paragraph");
+				string text = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+				this.AddIconButtonComboDyn(this.paragraphCombo, name, para, text);
+			}
+		}
+
 
 		protected IconButton				buttonParagraph;
 		protected IconButton				buttonCharacter;
 		protected Widgets.StyleCombo		styleParagraph;
 		protected Widgets.StyleCombo		styleCharacter;
+		protected IconButtonCombo			paragraphCombo;
 	}
 }

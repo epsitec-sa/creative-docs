@@ -625,6 +625,18 @@ namespace Epsitec.Common.Document
 			return string.Format(@"<img src=""{0}"" voff=""{1}""/>", Misc.Icon(icon), verticalOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
 		}
 
+		static public string ImageDyn(string name, string parameter)
+		{
+			//	Retourne le texte pour mettre une image dynamique dans un texte.
+			return string.Format(@"<img src=""{0}""/>", Misc.IconDyn(name, parameter));
+		}
+
+		static public string ImageDyn(string name, string parameter, double verticalOffset)
+		{
+			//	Retourne le texte pour mettre une image dynamique dans un texte.
+			return string.Format(@"<img src=""{0}"" voff=""{1}""/>", Misc.IconDyn(name, parameter), verticalOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+		}
+
 		static public Size IconPreferredSize(string iconSize)
 		{
 			//	Retourne la taille préférée pour une icône. Si la taille réelle de l'icône n'est
@@ -638,6 +650,12 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne le nom complet d'une icône.
 			return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon);
+		}
+
+		static public string IconDyn(string name, string parameter)
+		{
+			//	Retourne le nom complet d'une icône dynamique.
+			return string.Format("dyn:{0}/{1}", name, parameter);
 		}
 
 		static public string GetShortCut(CommandState cs)

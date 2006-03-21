@@ -198,9 +198,20 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void AddIconButtonCombo(IconButtonCombo combo, string name, string icon, string text)
 		{
+			//	Ajoute une ligne au menu d'un IconButtonCombo.
 			string regularText  = string.Format("{0} {1}", Misc.Image(icon, -5), text);
 			string selectedText = string.Format("{0} {1}", Misc.Image(icon, -5), Misc.Bold(text));
 			icon = Misc.Icon(icon);
+			IconButtonCombo.Item item = new IconButtonCombo.Item(name, icon, regularText, selectedText);
+			combo.Items.Add(item);
+		}
+
+		protected void AddIconButtonComboDyn(IconButtonCombo combo, string name, string parameter, string text)
+		{
+			//	Ajoute une ligne au menu d'un IconButtonCombo.
+			string regularText  = string.Format("{0} {1}", Misc.ImageDyn(name, parameter, -5), text);
+			string selectedText = string.Format("{0} {1}", Misc.ImageDyn(name, parameter, -5), Misc.Bold(text));
+			string icon = Misc.IconDyn(name, parameter);
 			IconButtonCombo.Item item = new IconButtonCombo.Item(name, icon, regularText, selectedText);
 			combo.Items.Add(item);
 		}
