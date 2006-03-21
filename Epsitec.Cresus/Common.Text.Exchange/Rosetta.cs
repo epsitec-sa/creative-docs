@@ -14,8 +14,6 @@ namespace Epsitec.Common.Text.Exchange
 	{
 		public HtmlText()
 		{
-			this.output.Append ("<p>");
-			this.openTagsStack.Push (new HtmlAttributeWithParam(HtmlAttribute.Paragraph, null, null));
 		}
 
 		public void Terminate()
@@ -30,6 +28,23 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void AppendText(string thestring)
 		{
+
+			if ((precedParagraphMode != paragraphMode) || paragraphNotModeSet)
+			{
+				if (!paragraphNotModeSet)
+					this.CloseTag (HtmlAttribute.Paragraph);
+
+				this.paragraphNotModeSet = false ;
+
+				string mode = JustificationModeToHtml (paragraphMode);
+				string parametername = null;
+
+				if (mode != null)
+					parametername = "align";
+
+				this.OpenTag (HtmlAttribute.Paragraph, parametername, mode);
+			}
+
 			if (precedIsItalic && !isItalic)
 			{
 				this.CloseTag (HtmlAttribute.Italic);
@@ -123,11 +138,13 @@ namespace Epsitec.Common.Text.Exchange
 			this.precedfontSize = this.fontSize;
 			this.precedfontColor = this.fontColor;
 
+			this.precedParagraphMode = this.paragraphMode;
+
 			this.AppendTagsToClose ();
 			this.AppendTagsToOpen ();
 
 			this.TransformLineSeparators (ref thestring);
-			this.TransformParagraphSeparators (ref thestring);
+			// this.TransformParagraphSeparators (ref thestring);
 			this.output.Append (thestring);
 		}
 
@@ -182,6 +199,73 @@ namespace Epsitec.Common.Text.Exchange
 			}
 		}
 
+		public void SetParagraph(Wrappers.JustificationMode JustificationMode)
+		{
+			this.paragraphMode = JustificationMode;
+		}
+
+		public string JustificationModeToHtml(Wrappers.JustificationMode JustificationMode)
+		{
+			string retval = null ;
+
+			switch (JustificationMode)
+			{
+				case Wrappers.JustificationMode.AlignLeft:
+					retval = null;
+					break;
+				case Wrappers.JustificationMode.JustifyAlignLeft:
+				case Wrappers.JustificationMode.JustifyCenter:
+				case Wrappers.JustificationMode.JustifyAlignRight:
+					retval = "justify";
+					break;
+				case Wrappers.JustificationMode.Center:
+					retval = "center";
+					break;
+				case Wrappers.JustificationMode.AlignRight:
+					retval = "right";
+					break;
+			}
+
+			return retval;
+		}
+
+		public void NewParagraph(Wrappers.JustificationMode JustificationMode)
+		{
+			string parametername = null, parametervalue = null ;
+
+			if (JustificationMode != Wrappers.JustificationMode.Unknown)
+			{
+				parametername = "align" ;
+
+				switch (JustificationMode)
+				{
+					case Wrappers.JustificationMode.AlignLeft:
+						parametername = null ;
+						parametervalue = null ;
+						break;
+					case Wrappers.JustificationMode.JustifyAlignLeft:
+					case Wrappers.JustificationMode.JustifyCenter:
+					case Wrappers.JustificationMode.JustifyAlignRight:
+						parametervalue = "justify" ;
+						break;
+					case Wrappers.JustificationMode.Center:
+						parametervalue = "center" ;
+						break ;
+					case Wrappers.JustificationMode.AlignRight:
+						parametervalue = "right" ;
+						break ;
+				}
+			}
+			else
+			{
+
+			}
+
+			HtmlAttributeWithParam attr = new HtmlAttributeWithParam (HtmlAttribute.Paragraph, parametername, parametervalue);
+
+			this.output.Append (attr.AttributeToString(HtmlTagMode.Open)) ;
+			this.openTagsStack.Push (attr);
+		}
 
 		static private string GetHtmlTag(string attribute, HtmlTagMode tagMode)
 		{
@@ -240,9 +324,9 @@ namespace Epsitec.Common.Text.Exchange
 
 			for (index = 0; index < max; index++)
 			{
-				output.Append (split[index]);
+				outputstringbuilder.Append (split[index]);
 				if (index + 1 < max)
-					output.Append (htmlTag);
+					outputstringbuilder.Append (htmlTag);
 			}
 
 			line = outputstringbuilder.ToString ();
@@ -298,7 +382,7 @@ namespace Epsitec.Common.Text.Exchange
 
 					if (attronstack.IsSameTag(attr))  //attronstack.htmlattribute == attr.htmlattribute)
 					{
-						this.output.Append (attr.AttributeToString (HtmlTagMode.Close, null));
+						this.output.Append (attr.AttributeToString (HtmlTagMode.Close));
 						this.tagsToClose.RemoveAt (i);
 						i--;
 						this.openTagsStack.Pop ();
@@ -320,7 +404,7 @@ namespace Epsitec.Common.Text.Exchange
 				{
 					HtmlAttributeWithParam topattribute = this.openTagsStack.Pop ();
 					tmpattributes.Push (topattribute);
-					this.output.Append (topattribute.AttributeToString (HtmlTagMode.Close, null));
+					this.output.Append (topattribute.AttributeToString (HtmlTagMode.Close));
 				}
 			}
 
@@ -328,7 +412,7 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				HtmlAttributeWithParam attr;
 				attr = tmpattributes.Pop();
-				this.output.Append (attr.AttributeToString (HtmlTagMode.Open, null));
+				this.output.Append (attr.AttributeToString (HtmlTagMode.Open));
 				this.openTagsStack.Push (attr);
 			}
 
@@ -342,7 +426,7 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				HtmlAttributeWithParam attr;
 				attr = openTagsStack.Pop ();
-				this.output.Append (attr.AttributeToString (HtmlTagMode.Close, null));
+				this.output.Append (attr.AttributeToString (HtmlTagMode.Close));
 			}
 		}
 
@@ -350,7 +434,7 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			foreach (HtmlAttributeWithParam attr in this.tagsToOpen)
 			{
-				string tag = attr.AttributeToString (HtmlTagMode.Open, null);
+				string tag = attr.AttributeToString (HtmlTagMode.Open);
 				this.output.Append (tag);
 				this.openTagsStack.Push (attr);
 			}
@@ -386,7 +470,7 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 
-			public string AttributeToString(HtmlTagMode tagmode, string parameter)
+			public string AttributeToString(HtmlTagMode tagmode)
 			{
 				string retval = "";
 
@@ -405,7 +489,7 @@ namespace Epsitec.Common.Text.Exchange
 						retval = HtmlText.GetHtmlTag ("s", tagmode);
 						break;
 					case HtmlAttribute.Paragraph:
-						retval = HtmlText.GetHtmlTag ("p", tagmode);
+						retval = HtmlText.GetHtmlTag ("p", tagmode, parametername, parametervalue);
 						break;
 					case HtmlAttribute.Font:
 						retval = HtmlText.GetHtmlTag ("font", tagmode, parametername, parametervalue);
@@ -425,7 +509,11 @@ namespace Epsitec.Common.Text.Exchange
 			private HtmlAttribute htmlattribute;
 			private string parametername;
 			private string parametervalue;
-		} 
+		}
+
+		private Wrappers.JustificationMode paragraphMode = Wrappers.JustificationMode.Unknown ;
+		private Wrappers.JustificationMode precedParagraphMode = Wrappers.JustificationMode.Unknown;
+		private bool paragraphNotModeSet = true ;
 
 		private bool isItalic = false;
 		private bool precedIsItalic = false;
@@ -487,11 +575,16 @@ namespace Epsitec.Common.Text.Exchange
 			System.Windows.Forms.Clipboard clipboard;
 
 			HtmlText htmlText = new HtmlText ();
+			bool newParagraph = true;
 
 			navigator.MoveTo (0, 0);
+			
+			htmlText.SetParagraph (paraWrapper.Defined.JustificationMode);
+			htmlText.AppendText ("");
 
 			while (true)
 			{
+				string runText ;
 				int runLength = navigator.GetRunLength (1000000);
 
 				if (runLength == 0)
@@ -499,27 +592,47 @@ namespace Epsitec.Common.Text.Exchange
 					break;
 				}
 
-				if (textWrapper.Defined.IsFontFaceDefined)
-				{
-					System.Console.Out.WriteLine ("- Font Face: {0}", textWrapper.Defined.FontFace, textWrapper.Defined.FontStyle, textWrapper.Defined.InvertItalic ? "(italic)" : "");
-				}
-				if (textWrapper.Defined.IsFontStyleDefined)
-				{
-					System.Console.Out.WriteLine ("- Font Style: {0}", textWrapper.Defined.FontStyle);
-				}
-
-
 				htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
 				htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
-				htmlText.SetUnderlined (textWrapper.Defined.IsUnderlineDefined);//  && textWrapper.Defined.InvertBold);
-				htmlText.SetStrikeout (textWrapper.Defined.IsStrikeoutDefined);//  && textWrapper.Defined.InvertBold);
+				htmlText.SetUnderlined (textWrapper.Defined.IsUnderlineDefined);
+				htmlText.SetStrikeout (textWrapper.Defined.IsStrikeoutDefined);
 
 				htmlText.SetFontFace (textWrapper.Defined.FontFace);
 				htmlText.SetFontSize (textWrapper.Defined.IsFontSizeDefined ? textWrapper.Defined.FontSize : 0);
 				htmlText.SetFontColor (textWrapper.Defined.Color);
 
-				//output.Append(navigator.ReadText (runLength) );
-				htmlText.AppendText (navigator.ReadText (runLength));
+				runText = navigator.ReadText (runLength) ;
+
+				if (runLength == 1 && runText[0] == (char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator)
+				{
+					htmlText.SetParagraph (paraWrapper.Defined.JustificationMode);
+				}
+				else
+				{
+					htmlText.AppendText (runText);
+				}
+
+#if false
+
+				{
+					// on vient de lire un caractère "fin de paragraphe"
+					runLength = navigator.GetRunLength (1000000);
+					runText = navigator.ReadText (runLength);
+					if (newParagraph)
+					{
+						Wrappers.JustificationMode JustificationMode = paraWrapper.Defined.JustificationMode;
+						// = paraWrapper.Defined.IsJustificationModeDefined && 
+
+						htmlText.NewParagraph (paraWrapper.Defined.JustificationMode);
+					}
+				}
+				else
+				{
+					htmlText.AppendText (runText);
+				}
+#endif
+
+			
 
 				// avance au run suivant
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
