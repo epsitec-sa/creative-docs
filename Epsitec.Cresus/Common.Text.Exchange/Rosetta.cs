@@ -20,7 +20,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void Terminate()
 		{
-			CloseOpenTagsOnStack() ;
+			this.CloseOpenTagsOnStack ();
 		}
 
 		public override string ToString()
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Text.Exchange
 		
 		public void SetFontSize(double fontSize)
 		{
-			this.fontSize = (int)(fontSize / 3.5277777775);
+			this.fontSize = (int)(fontSize / (254.0 / 72.0));
 		}
 
 		public void SetFontFace(string fontFace)
@@ -182,58 +182,13 @@ namespace Epsitec.Common.Text.Exchange
 			}
 		}
 
-		private void ReplaceSpecialCodes(ref string line, Epsitec.Common.Text.Unicode.Code specialCode, string htmlTag)
-		{
-#if false			
 
-			// line.Remove() n'a aucun effet ??? très bizarre, bon pour l'instant on s'en fiche
-			// car on fait autrement
-
-			int index ; 
-			while ((index = line.IndexOf((char)Epsitec.Common.Text.Unicode.Code.LineSeparator)) != -1)
-			{
-				line.Remove (index, 1);
-				line.Insert (index, "<br />");
-			}
-#else
-			System.Text.StringBuilder output = new System.Text.StringBuilder ();
-
-			string[] split = line.Split (new char[] { (char) specialCode });
-
-			int index;
-			int max = split.GetLength (0);
-
-			for (index = 0; index < max; index++)
-			{
-				output.Append (split[index]);
-				if (index + 1 < max)
-					output.Append (htmlTag);
-			}
-
-			line = output.ToString ();
-#endif
-		}
-
-		private void TransformLineSeparators(ref string line)
-		{
-			// transforme tous les caractères LineSeparator en <br>
-			ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.LineSeparator, "<br />\r\n");
-		}
-
-
-		private void TransformParagraphSeparators(ref string line)
-		{
-			// transforme tous les caractères LineSeparator en <br>
-			ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.ParagraphSeparator, "</p>\r\n\r\n<p>");
-		}
-
-
-		private string GetHtmlTag(string attribute, HtmlTagMode tagMode)
+		static private string GetHtmlTag(string attribute, HtmlTagMode tagMode)
 		{
 			return GetHtmlTag (attribute, tagMode, null, null);
 		}
 
-		private string GetHtmlTag(string attribute, HtmlTagMode tagMode, string parametername, string parametervalue)
+		static private string GetHtmlTag(string attribute, HtmlTagMode tagMode, string parametername, string parametervalue)
 		{
 			string retval = "";
 			string tagcontent;
@@ -250,10 +205,10 @@ namespace Epsitec.Common.Text.Exchange
 			switch (tagMode)
 			{
 				case HtmlTagMode.Open:
-					retval = "<" + tagcontent + ">";
+					retval = string.Concat ("<", tagcontent, ">");
 					break;
 				case HtmlTagMode.Close:
-					retval = "</" + attribute + ">";
+					retval = string.Concat ("</", attribute, ">");
 					break;
 				case HtmlTagMode.StartOnly:
 					break;
@@ -261,33 +216,50 @@ namespace Epsitec.Common.Text.Exchange
 			return retval;
 		}
 
-		private string AttributeToString(HtmlAttributeWithParam attribute, HtmlTagMode tagmode, string parameter)
-		{
-			string retval = "";
 
-			switch (attribute.htmlattribute)
+		private void ReplaceSpecialCodes(ref string line, Epsitec.Common.Text.Unicode.Code specialCode, string htmlTag)
+		{
+#if false			
+
+			// line.Remove() n'a aucun effet ??? très bizarre, bon pour l'instant on s'en fiche
+			// car on fait autrement
+
+			int index ; 
+			while ((index = line.IndexOf((char)Epsitec.Common.Text.Unicode.Code.LineSeparator)) != -1)
 			{
-				case HtmlAttribute.Italic:
-					retval = this.GetHtmlTag ("i", tagmode);
-					break;
-				case HtmlAttribute.Bold:
-					retval = this.GetHtmlTag ("b", tagmode);
-					break;
-				case HtmlAttribute.Underlined:
-					retval = this.GetHtmlTag ("u", tagmode);
-					break;
-				case HtmlAttribute.Strikeout:
-					retval = this.GetHtmlTag ("s", tagmode);
-					break;
-				case HtmlAttribute.Paragraph:
-					retval = this.GetHtmlTag ("p", tagmode);
-					break;
-				case HtmlAttribute.Font:
-					retval = this.GetHtmlTag ("font", tagmode, attribute.parametername, attribute.parametervalue);
-					break;
+				line.Remove (index, 1);
+				line.Insert (index, "<br />");
+			}
+#else
+			System.Text.StringBuilder outputstringbuilder = new System.Text.StringBuilder ();
+
+			string[] split = line.Split (new char[] { (char) specialCode });
+
+			int index;
+			int max = split.GetLength (0);
+
+			for (index = 0; index < max; index++)
+			{
+				output.Append (split[index]);
+				if (index + 1 < max)
+					output.Append (htmlTag);
 			}
 
-			return retval;
+			line = outputstringbuilder.ToString ();
+#endif
+		}
+
+		private void TransformLineSeparators(ref string line)
+		{
+			// transforme tous les caractères LineSeparator en <br>
+			this.ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.LineSeparator, "<br />\r\n");
+		}
+
+
+		private void TransformParagraphSeparators(ref string line)
+		{
+			// transforme tous les caractères LineSeparator en <br>
+			this.ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.ParagraphSeparator, "</p>\r\n\r\n<p>");
 		}
 
 		private void CloseTag(HtmlAttribute closetag)
@@ -324,9 +296,9 @@ namespace Epsitec.Common.Text.Exchange
 					HtmlAttributeWithParam attr = this.tagsToClose[i];
 					HtmlAttributeWithParam attronstack = this.openTagsStack.Peek ();
 
-					if (attronstack.htmlattribute == attr.htmlattribute)
+					if (attronstack.IsSameTag(attr))  //attronstack.htmlattribute == attr.htmlattribute)
 					{
-						this.output.Append (this.AttributeToString (attr, HtmlTagMode.Close, null));
+						this.output.Append (attr.AttributeToString (HtmlTagMode.Close, null));
 						this.tagsToClose.RemoveAt (i);
 						i--;
 						this.openTagsStack.Pop ();
@@ -348,7 +320,7 @@ namespace Epsitec.Common.Text.Exchange
 				{
 					HtmlAttributeWithParam topattribute = this.openTagsStack.Pop ();
 					tmpattributes.Push (topattribute);
-					this.output.Append (this.AttributeToString (topattribute, HtmlTagMode.Close, null));
+					this.output.Append (topattribute.AttributeToString (HtmlTagMode.Close, null));
 				}
 			}
 
@@ -356,7 +328,7 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				HtmlAttributeWithParam attr;
 				attr = tmpattributes.Pop();
-				this.output.Append (this.AttributeToString (attr, HtmlTagMode.Open, null));
+				this.output.Append (attr.AttributeToString (HtmlTagMode.Open, null));
 				this.openTagsStack.Push (attr);
 			}
 
@@ -370,7 +342,7 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				HtmlAttributeWithParam attr;
 				attr = openTagsStack.Pop ();
-				this.output.Append (this.AttributeToString (attr, HtmlTagMode.Close, null));
+				this.output.Append (attr.AttributeToString (HtmlTagMode.Close, null));
 			}
 		}
 
@@ -378,7 +350,7 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			foreach (HtmlAttributeWithParam attr in this.tagsToOpen)
 			{
-				string tag = AttributeToString (attr, HtmlTagMode.Open, null);
+				string tag = attr.AttributeToString (HtmlTagMode.Open, null);
 				this.output.Append (tag);
 				this.openTagsStack.Push (attr);
 			}
@@ -413,9 +385,46 @@ namespace Epsitec.Common.Text.Exchange
 				this.parametervalue = parametervalue;
 			}
 
-			public HtmlAttribute htmlattribute;
-			public string parametername;
-			public string parametervalue;
+
+			public string AttributeToString(HtmlTagMode tagmode, string parameter)
+			{
+				string retval = "";
+
+				switch (this.htmlattribute)
+				{
+					case HtmlAttribute.Italic:
+						retval = HtmlText.GetHtmlTag ("i", tagmode);
+						break;
+					case HtmlAttribute.Bold:
+						retval = HtmlText.GetHtmlTag ("b", tagmode);
+						break;
+					case HtmlAttribute.Underlined:
+						retval = HtmlText.GetHtmlTag ("u", tagmode);
+						break;
+					case HtmlAttribute.Strikeout:
+						retval = HtmlText.GetHtmlTag ("s", tagmode);
+						break;
+					case HtmlAttribute.Paragraph:
+						retval = HtmlText.GetHtmlTag ("p", tagmode);
+						break;
+					case HtmlAttribute.Font:
+						retval = HtmlText.GetHtmlTag ("font", tagmode, parametername, parametervalue);
+						break;
+				}
+
+				return retval;
+			}
+
+			public bool IsSameTag(HtmlAttributeWithParam tag)
+			{
+				// si les deux tags sont de même type
+				return this.htmlattribute == tag.htmlattribute;
+			}
+
+
+			private HtmlAttribute htmlattribute;
+			private string parametername;
+			private string parametervalue;
 		} 
 
 		private bool isItalic = false;
