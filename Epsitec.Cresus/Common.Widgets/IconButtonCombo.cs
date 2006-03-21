@@ -326,6 +326,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.menu = this.CreateMenu();
+			this.menu.ShowAsComboList(this, this.MapClientToScreen(new Drawing.Point(0, 0)), this.buttonMenu);
 			
 			if ( this.scrollList != null )
 			{
@@ -333,7 +334,6 @@ namespace Epsitec.Common.Widgets
 				this.scrollList.ShowSelected(ScrollShowMode.Center);
 			}
 			
-			this.menu.ShowAsComboList(this, this.MapClientToScreen(new Drawing.Point(0, 0)), this.buttonMenu);
 			this.menu.Accepted += new Support.EventHandler(this.HandleMenuAccepted);
 			this.menu.Rejected += new Support.EventHandler(this.HandleMenuRejected);
 			

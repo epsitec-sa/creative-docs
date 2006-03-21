@@ -442,14 +442,13 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			this.menu = this.CreateMenu ();
+			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Drawing.Point (0, 0)), this.Button);
 			
 			if (this.scroll_list != null)
 			{
 				this.scroll_list.SelectedIndex = this.MapIndexToComboList (this.SelectedIndex);
 				this.scroll_list.ShowSelected (ScrollShowMode.Center);
 			}
-			
-			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Drawing.Point (0, 0)), this.Button);
 			
 			this.menu.Accepted += new Support.EventHandler (this.HandleMenuAccepted);
 			this.menu.Rejected += new Support.EventHandler (this.HandleMenuRejected);
