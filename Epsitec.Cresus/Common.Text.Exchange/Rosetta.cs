@@ -321,8 +321,8 @@ namespace Epsitec.Common.Text.Exchange
 				{
 					System.Diagnostics.Debug.Assert (this.openTagsStack.Count > 0);
 
-					HtmlAttributeWithParam attr = (HtmlAttributeWithParam)this.tagsToClose[i];
-					HtmlAttributeWithParam attronstack = (HtmlAttributeWithParam)this.openTagsStack.Peek ();
+					HtmlAttributeWithParam attr = this.tagsToClose[i];
+					HtmlAttributeWithParam attronstack = this.openTagsStack.Peek ();
 
 					if (attronstack.htmlattribute == attr.htmlattribute)
 					{
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void AppendTagsToClose()
 		{
-			System.Collections.Stack tmpattributes = new System.Collections.Stack() ;
+			System.Collections.Generic.Stack<HtmlAttributeWithParam> tmpattributes = new System.Collections.Generic.Stack<HtmlAttributeWithParam> ();
 
 			while (this.tagsToClose.Count > 0)
 			{
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (this.tagsToClose.Count > 0)
 				{
-					HtmlAttributeWithParam topattribute = (HtmlAttributeWithParam) this.openTagsStack.Pop ();
+					HtmlAttributeWithParam topattribute = this.openTagsStack.Pop ();
 					tmpattributes.Push (topattribute);
 					this.output.Append (this.AttributeToString (topattribute, HtmlTagMode.Close, null));
 				}
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Text.Exchange
 			while (tmpattributes.Count > 0)
 			{
 				HtmlAttributeWithParam attr;
-				attr = (HtmlAttributeWithParam) tmpattributes.Pop();
+				attr = tmpattributes.Pop();
 				this.output.Append (this.AttributeToString (attr, HtmlTagMode.Open, null));
 				this.openTagsStack.Push (attr);
 			}
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Text.Exchange
 			while (this.openTagsStack.Count > 0)
 			{
 				HtmlAttributeWithParam attr;
-				attr = (HtmlAttributeWithParam) openTagsStack.Pop ();
+				attr = openTagsStack.Pop ();
 				this.output.Append (this.AttributeToString (attr, HtmlTagMode.Close, null));
 			}
 		}
@@ -442,9 +442,9 @@ namespace Epsitec.Common.Text.Exchange
 		
 		private System.Text.StringBuilder output = new System.Text.StringBuilder ();
 
-		private System.Collections.Stack openTagsStack = new System.Collections.Stack ();
-		private System.Collections.ArrayList tagsToClose = new System.Collections.ArrayList ();
-		private System.Collections.ArrayList tagsToOpen = new System.Collections.ArrayList ();
+		private System.Collections.Generic.Stack<HtmlAttributeWithParam> openTagsStack = new System.Collections.Generic.Stack<HtmlAttributeWithParam> ();
+		private System.Collections.Generic.List<HtmlAttributeWithParam> tagsToClose = new System.Collections.Generic.List<HtmlAttributeWithParam> ();
+		private System.Collections.Generic.List<HtmlAttributeWithParam> tagsToOpen = new System.Collections.Generic.List<HtmlAttributeWithParam> ();
 
 	}
 
