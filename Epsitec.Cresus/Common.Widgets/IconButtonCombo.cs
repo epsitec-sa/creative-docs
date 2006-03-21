@@ -571,7 +571,7 @@ namespace Epsitec.Common.Widgets
 				{
 					//	Il faut dérouler le menu vers le haut.
 					
-					pos.Y += item.Height;
+					pos.Y += item.Height-2;
 					
 					maxHeight = workingArea.Top - pos.Y;
 				
