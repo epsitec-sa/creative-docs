@@ -1611,7 +1611,12 @@ namespace Epsitec.Common.Document
 			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
 
 			Rectangle rect = new Rectangle(0, 0, size.Width, size.Height);
+			this.DrawStyle(graphics, rect, textStyle);
+		}
 
+		protected void DrawStyle(Graphics graphics, Rectangle rect, Text.TextStyle textStyle)
+		{
+			//	Dessine un échantillon de style dans un rectangle.
 			Rectangle iClip = graphics.SaveClippingRectangle();
 			graphics.SetClippingRectangle(rect);
 
