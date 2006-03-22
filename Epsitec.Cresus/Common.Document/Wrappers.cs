@@ -27,10 +27,24 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.Defined.Changed += new EventHandler(this.HandleParagraphWrapperChanged);
 
 			this.document.TextContext.StyleList.StyleRedefined += new EventHandler(this.HandleStyleWrapperChanged);
+
+			if ( this.document.Mode == DocumentMode.Modify )
+			{
+				string tag = string.Concat(this.document.UniqueName, ".ParagraphStyle");
+				Drawing.DynamicImage image = new Drawing.DynamicImage(new Drawing.Size(50, 40), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyle));
+				image.IsCacheEnabled = false;
+				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
+			}
 		}
 
 		public void Dispose()
 		{
+			if ( this.document.Mode == DocumentMode.Modify )
+			{
+				string tag = string.Concat(this.document.UniqueName, ".ParagraphStyle");
+				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
+			}
+
 			this.textWrapper.Active.Changed  -= new EventHandler(this.HandleTextWrapperChanged);
 			this.textWrapper.Defined.Changed -= new EventHandler(this.HandleTextWrapperChanged);
 
@@ -1583,6 +1597,76 @@ namespace Epsitec.Common.Document
 
 			return value;
 		}
+
+
+		#region DynamicDrawing
+		protected void DrawDynamicImageStyle(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
+		{
+			//	Dessine un style, pour une image dynamique.
+			string[] arguments = argument.Split('.');
+			System.Diagnostics.Debug.Assert(arguments.Length == 2);
+			string styleName = arguments[0];
+			Text.TextStyleClass styleClass = Text.TextStyleClass.Paragraph;
+			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
+			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
+
+			Rectangle rect = new Rectangle(0, 0, size.Width, size.Height);
+
+			Rectangle iClip = graphics.SaveClippingRectangle();
+			graphics.SetClippingRectangle(rect);
+
+			double h = rect.Height;
+			rect.Deflate(rect.Height*0.05);
+			rect.Bottom -= rect.Height*10;  // hauteur presque infinie
+
+			double scale = 1.0/7.0;
+			Transform initial = graphics.Transform;
+			graphics.ScaleTransform(scale, scale, 0.0, 0.0);
+			rect.Scale(1.0/scale);
+			h *= 1.0/scale;
+
+			Document document = this.document.DocumentForSamples;
+			document.Modifier.OpletQueueEnable = false;
+
+			if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
+			{
+				Objects.TextBox2 obj = this.document.ObjectForSamplesParagraph;
+				obj.RectangleToSample(rect);
+				obj.SampleDefineStyle(textStyle);
+
+				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
+
+				Drawer drawer = new Drawer(document);
+				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
+			}
+
+			if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Text )
+			{
+				Point p1 = rect.TopLeft;
+				Point p2 = rect.TopRight;
+				p1.Y -= h*0.7;
+				p2.Y -= h*0.7;
+
+				double r = 12*Modifier.FontSizeScale;
+				graphics.LineWidth = 1.0;
+				graphics.AddLine(p1.X-10, p1.Y, p2.X+10, p2.Y);
+				graphics.AddLine(p1.X-10, p1.Y+r, p2.X+10, p2.Y+r);
+				graphics.RenderSolid(Color.FromRgb(1,0,0));  // rouge
+
+				Objects.TextLine2 obj = this.document.ObjectForSamplesCharacter;
+				obj.RectangleToSample(p1, p2);
+				obj.SampleDefineStyle(textStyle);
+
+				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
+
+				Drawer drawer = new Drawer(document);
+				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
+			}
+
+			graphics.Transform = initial;
+			graphics.RestoreClippingRectangle(iClip);
+		}
+		#endregion
 
 		
 		protected Document								document;
