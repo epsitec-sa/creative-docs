@@ -18,7 +18,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void Terminate()
 		{
-			this.CloseOpenTagsOnStack ();
+			this.CloseOpenTagsOnStack (true);
 		}
 
 		public override string ToString()
@@ -50,22 +50,6 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void AppendText(string thestring)
 		{
-			if ((precedParagraphMode != paragraphMode) || paragraphNotModeSet)
-			{
-				if (!paragraphNotModeSet)
-					this.CloseTag (HtmlAttribute.Paragraph);
-
-				this.paragraphNotModeSet = false ;
-
-				string mode = JustificationModeToHtml (paragraphMode);
-				string parametername = null;
-
-				if (mode != null)
-					parametername = "align";
-
-				this.OpenTag (HtmlAttribute.Paragraph, parametername, mode);
-			}
-
 			if (precedIsItalic && !isItalic)
 			{
 				this.CloseTag (HtmlAttribute.Italic);
@@ -289,11 +273,14 @@ namespace Epsitec.Common.Text.Exchange
 			this.openTagsStack.Push (attr);
 		}
 
-		public void CloseParagraph()
+		public void CloseParagraph(Wrappers.JustificationMode JustificationMode)
 		{
-			this.CloseTag (HtmlAttribute.Paragraph);
-			this.AppendTagsToClose (true);
-			this.AppendTagsToOpen ();
+			this.CloseOpenTagsOnStack (true);
+			this.ClearTags ();
+			this.output.Append ("\r\n");
+
+
+			this.NewParagraph (JustificationMode);
 		}
 
 		static private string GetHtmlTag(string attribute, HtmlTagMode tagMode)
@@ -329,6 +316,33 @@ namespace Epsitec.Common.Text.Exchange
 			return retval;
 		}
 
+		private void ClearTags()
+		{
+			this.paragraphMode = Wrappers.JustificationMode.Unknown;
+			this.precedParagraphMode = Wrappers.JustificationMode.Unknown;
+			this.paragraphNotModeSet = true;
+
+			this.isItalic = false;
+			this.precedIsItalic = false;
+
+			this.isBold = false;
+			this.precedIsBold = false;
+
+			this.isUnderlined = false;
+			this.precedIsUnderlined = false;
+
+			this.isStrikeout = false;
+			this.precedIsStrikeout = false;
+
+			this.fontColor = "";
+			this.precedfontColor = "";
+
+			this.fontSize = 0;
+			this.precedfontSize = 0;
+
+			this.fontFace = "";
+			this.precedFontFace = "";
+		}
 
 		private void ReplaceSpecialCodes(ref string line, Epsitec.Common.Text.Unicode.Code specialCode, string htmlTag)
 		{
@@ -366,13 +380,6 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			// transforme tous les caractères LineSeparator en <br>
 			this.ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.LineSeparator, "<br />\r\n");
-		}
-
-
-		private void TransformParagraphSeparators(ref string line)
-		{
-			// transforme tous les caractères LineSeparator en <br>
-			this.ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.ParagraphSeparator, "</p>\r\n\r\n<p>");
 		}
 
 		private void CloseTag(HtmlAttribute closetag)
@@ -451,7 +458,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.pendingAttributes.Clear ();
 		}
 
-		private void CloseOpenTagsOnStack()
+		private void CloseOpenTagsOnStack(bool closeAlsoParagraphs)
 		{
 			// ferme les tags restés ouverts
 			while (this.openTagsStack.Count > 0)
@@ -461,6 +468,8 @@ namespace Epsitec.Common.Text.Exchange
 				this.output.Append (attr.AttributeToString (HtmlTagMode.Close));
 			}
 		}
+
+
 
 		private void AppendTagsToOpen()
 		{
@@ -623,7 +632,7 @@ namespace Epsitec.Common.Text.Exchange
 			while (true)
 			{
 				string runText ;
-				int runLength = navigator.GetRunLength (1000000);
+				int runLength = navigator.GetRunLength (100000);
 
 				if (runLength == 0)
 				{
@@ -635,10 +644,8 @@ namespace Epsitec.Common.Text.Exchange
 				bool finishParagraph = false;
 				if (runLength == 1 && runText[0] == (char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator)
 				{
-					//		htmlText.SetParagraph (paraWrapper.Defined.JustificationMode);
-					// on est tombé sur un séparateur de paragraphe
-					htmlText.CloseParagraph ();
 					finishParagraph = true;
+					// on est tombé sur un séparateur de paragraphe
 				}
 				else
 				{
@@ -651,30 +658,8 @@ namespace Epsitec.Common.Text.Exchange
 					htmlText.SetFontSize (textWrapper.Defined.IsFontSizeDefined ? textWrapper.Defined.FontSize : 0);
 					htmlText.SetFontColor (textWrapper.Defined.Color);
 
-					htmlText.AppendText (runText);
+					//htmlText.AppendText (runText);
 				}
-
-#if false
-
-				{
-					// on vient de lire un caractère "fin de paragraphe"
-					runLength = navigator.GetRunLength (1000000);
-					runText = navigator.ReadText (runLength);
-					if (newParagraph)
-					{
-						Wrappers.JustificationMode JustificationMode = paraWrapper.Defined.JustificationMode;
-						// = paraWrapper.Defined.IsJustificationModeDefined && 
-
-						htmlText.NewParagraph (paraWrapper.Defined.JustificationMode);
-					}
-				}
-				else
-				{
-					htmlText.AppendText (runText);
-				}
-#endif
-
-			
 
 				// avance au run suivant
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
@@ -691,8 +676,8 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (finishParagraph)
 				{
-					htmlText.SetParagraph (paraWrapper.Defined.JustificationMode);
-					htmlText.NewPara ();
+					htmlText.CloseParagraph (paraWrapper.Defined.JustificationMode);
+					finishParagraph = false;
 				}
 			}
 
