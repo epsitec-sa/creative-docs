@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document
 				Drawing.DynamicImage image;
 
 				tag = string.Concat(this.document.UniqueName, ".TextStyleBrief");
-				image = new Drawing.DynamicImage(new Drawing.Size(50, 40), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleBrief));
+				image = new Drawing.DynamicImage(new Drawing.Size(54, 45), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleBrief));
 				image.IsCacheEnabled = false;
 				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
 
@@ -1623,8 +1623,18 @@ namespace Epsitec.Common.Document
 			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
 			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
 
-			Rectangle rect = new Rectangle(0, 0, size.Width, size.Height);
+			double limit = System.Math.Floor(size.Height*0.25);
+
+			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
+			Font font = Misc.GetFont("Tahoma");
+			graphics.AddText(0, 0, size.Width, limit, text, font, limit-3, ContentAlignment.MiddleLeft);
+			graphics.RenderSolid(Color.FromBrightness(0));
+
+			Rectangle rect = new Rectangle(0, limit, size.Width, size.Height-limit);
 			this.DrawStyle(graphics, rect, textStyle);
+
+			graphics.AddLine(0, limit-0.5, size.Width, limit-0.5);
+			graphics.RenderSolid(Color.FromBrightness(0));
 		}
 
 		protected void DrawDynamicImageStyleMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
@@ -1641,14 +1651,14 @@ namespace Epsitec.Common.Document
 
 			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
 			Font font = Misc.GetFont("Tahoma");
-			graphics.AddText(0, 0, limit-1, size.Height, text, font, 10, ContentAlignment.MiddleLeft);
+			graphics.AddText(0, 0, limit-1, size.Height, text, font, Font.DefaultFontSize, ContentAlignment.MiddleLeft);
 			graphics.RenderSolid(Color.FromBrightness(0));
 
 			Rectangle rect = new Rectangle(limit, 0, size.Width-limit, size.Height);
 			this.DrawStyle(graphics, rect, textStyle);
 
 			graphics.AddLine(limit-0.5, 0, limit-0.5, size.Height);
-			graphics.AddLine(0, 0, size.Width, 0);
+			graphics.AddLine(0, 0.5, size.Width, 0.5);
 			graphics.RenderSolid(Color.FromBrightness(0));
 		}
 
