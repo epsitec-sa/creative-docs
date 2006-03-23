@@ -1613,10 +1613,12 @@ namespace Epsitec.Common.Document
 
 
 		#region DynamicDrawing
-		protected void DrawDynamicImageStyleBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
+		protected void DrawDynamicImageStyleBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
 		{
 			//	Dessine un style pour l'icône résumée, pour une image dynamique.
 			if ( style == GlyphPaintStyle.Disabled )  return;
+
+			IAdorner adorner = xAdorner as IAdorner;
 
 			string[] arguments = argument.Split('.');
 			System.Diagnostics.Debug.Assert(arguments.Length == 2);
@@ -1636,12 +1638,14 @@ namespace Epsitec.Common.Document
 			this.DrawStyle(graphics, rect, textStyle);
 
 			graphics.AddLine(0, limit-0.5, size.Width, limit-0.5);  // séparateur horizontal
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(adorner.ColorBorder);
 		}
 
-		protected void DrawDynamicImageStyleMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
+		protected void DrawDynamicImageStyleMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
 		{
 			//	Dessine un style pour un menu, pour une image dynamique.
+			IAdorner adorner = xAdorner as IAdorner;
+
 			string[] arguments = argument.Split('.');
 			System.Diagnostics.Debug.Assert(arguments.Length == 2);
 			string styleName = arguments[0];
@@ -1661,7 +1665,7 @@ namespace Epsitec.Common.Document
 
 			graphics.AddLine(limit-0.5, 0, limit-0.5, size.Height);  // séparateur vertical
 			graphics.AddLine(0, 0.5, size.Width, 0.5);  // séparateur horizontal en bas
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(adorner.ColorBorder);
 		}
 
 		protected void DrawStyle(Graphics graphics, Rectangle rect, Text.TextStyle textStyle)
