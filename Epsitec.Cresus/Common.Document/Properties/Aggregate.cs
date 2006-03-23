@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		public void GetStyleResume(out string resume, out int lines)
+		public void GetStyleBrief(out string brief, out int lines)
 		{
 			//	Donne un texte résumé sur un style graphique.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
@@ -142,12 +142,12 @@ namespace Epsitec.Common.Document.Properties
 
 			foreach ( Properties.Abstract property in this.styles )
 			{
-				property.PutStyleResume(builder);
+				property.PutStyleBrief(builder);
 				lines ++;
 			}
 
 			builder.Append("</font>");
-			resume = builder.ToString();
+			brief = builder.ToString();
 		}
 
 

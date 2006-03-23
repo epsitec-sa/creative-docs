@@ -455,8 +455,8 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		#region GetStyleResume
-		public void GetStyleResume(Text.TextStyle style, out string resume, out int lines)
+		#region GetStyleBrief
+		public void GetStyleBrief(Text.TextStyle style, out string brief, out int lines)
 		{
 			//	Donne un texte résumé sur un style quelconque.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
@@ -512,7 +512,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double leading = this.styleParagraphWrapper.Defined.Leading;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.LeadingUnits;
-					builder.Append(this.GetResumeValue(leading, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(leading, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -554,7 +554,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.LeftMarginFirst;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
-					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -565,7 +565,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.LeftMarginBody;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
-					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -576,7 +576,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.RightMarginBody;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
-					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -608,7 +608,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.SpaceBefore;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.SpaceBeforeUnits;
-					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -619,7 +619,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.SpaceAfter;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.SpaceAfterUnits;
-					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -708,7 +708,7 @@ namespace Epsitec.Common.Document
 					Objects.AbstractText.GetTextTab(this.document, tab, out pos, out type);
 
 					if ( !first )  builder.Append(", ");
-					builder.Append(this.GetResumeValue(pos, Text.Properties.SizeUnits.Points, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(pos, Text.Properties.SizeUnits.Points, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -772,7 +772,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double size = this.styleTextWrapper.Defined.FontSize;
 					Text.Properties.SizeUnits units = this.styleTextWrapper.Defined.Units;
-					builder.Append(this.GetResumeValue(size, units, Modifier.FontSizeScale));
+					builder.Append(this.GetBriefValue(size, units, Modifier.FontSizeScale));
 					first = false;
 				}
 
@@ -790,7 +790,7 @@ namespace Epsitec.Common.Document
 					builder.Append(Res.Strings.TextPanel.Font.Short.Glue);
 					builder.Append("=");
 					double size = this.styleTextWrapper.Defined.FontGlue;
-					builder.Append(this.GetResumeValue(size, Text.Properties.SizeUnits.Percent, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(size, Text.Properties.SizeUnits.Percent, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -888,10 +888,10 @@ namespace Epsitec.Common.Document
 			}
 
 			builder.Append("</font>");
-			resume = builder.ToString();
+			brief = builder.ToString();
 		}
 
-		protected string GetResumeValue(double value, Text.Properties.SizeUnits units, double scale)
+		protected string GetBriefValue(double value, Text.Properties.SizeUnits units, double scale)
 		{
 			//	Donne la chaîne pour représenter une valeur numérique.
 			if ( units == Text.Properties.SizeUnits.Percent )
@@ -1633,7 +1633,7 @@ namespace Epsitec.Common.Document
 			Rectangle rect = new Rectangle(0, limit, size.Width, size.Height-limit);
 			this.DrawStyle(graphics, rect, textStyle);
 
-			graphics.AddLine(0, limit-0.5, size.Width, limit-0.5);
+			graphics.AddLine(0, limit-0.5, size.Width, limit-0.5);  // séparateur horizontal
 			graphics.RenderSolid(Color.FromBrightness(0));
 		}
 
@@ -1657,8 +1657,8 @@ namespace Epsitec.Common.Document
 			Rectangle rect = new Rectangle(limit, 0, size.Width-limit, size.Height);
 			this.DrawStyle(graphics, rect, textStyle);
 
-			graphics.AddLine(limit-0.5, 0, limit-0.5, size.Height);
-			graphics.AddLine(0, 0.5, size.Width, 0.5);
+			graphics.AddLine(limit-0.5, 0, limit-0.5, size.Height);  // séparateur vertical
+			graphics.AddLine(0, 0.5, size.Width, 0.5);  // séparateur horizontal en bas
 			graphics.RenderSolid(Color.FromBrightness(0));
 		}
 

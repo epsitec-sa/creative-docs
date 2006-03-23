@@ -713,17 +713,17 @@ namespace Epsitec.Common.Document.Containers
 					if ( sel == -1 )  return;
 					Properties.Aggregate agg = this.document.Aggregates[sel] as Properties.Aggregate;
 
-					string resume;
+					string brief;
 					int lines;
-					agg.GetStyleResume(out resume, out lines);
+					agg.GetStyleBrief(out brief, out lines);
 					double h = 5 + lines*14 + 5;
 
-					this.styleResumePanel = new StaticText(this.panelContainer);
-					this.styleResumePanel.Alignment = ContentAlignment.TopLeft;
-					this.styleResumePanel.Height = h;
-					this.styleResumePanel.Dock = DockStyle.Fill;
-					this.styleResumePanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
-					this.styleResumePanel.Text = resume;
+					this.styleBriefPanel = new StaticText(this.panelContainer);
+					this.styleBriefPanel.Alignment = ContentAlignment.TopLeft;
+					this.styleBriefPanel.Height = h;
+					this.styleBriefPanel.Dock = DockStyle.Fill;
+					this.styleBriefPanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
+					this.styleBriefPanel.Text = brief;
 
 					this.panelContainer.Height = h;
 					this.panelContainer.ForceLayout();
@@ -781,17 +781,17 @@ namespace Epsitec.Common.Document.Containers
 				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.SelectorName, this.document, true, this.category);
 				if ( panel == null )
 				{
-					string resume;
+					string brief;
 					int lines;
-					this.document.Wrappers.GetStyleResume(style, out resume, out lines);
+					this.document.Wrappers.GetStyleBrief(style, out brief, out lines);
 					double h = 5 + lines*14 + 5;
 
-					this.styleResumePanel = new StaticText(this.panelContainer);
-					this.styleResumePanel.Alignment = ContentAlignment.TopLeft;
-					this.styleResumePanel.Height = h;
-					this.styleResumePanel.Dock = DockStyle.Fill;
-					this.styleResumePanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
-					this.styleResumePanel.Text = resume;
+					this.styleBriefPanel = new StaticText(this.panelContainer);
+					this.styleBriefPanel.Alignment = ContentAlignment.TopLeft;
+					this.styleBriefPanel.Height = h;
+					this.styleBriefPanel.Dock = DockStyle.Fill;
+					this.styleBriefPanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
+					this.styleBriefPanel.Text = brief;
 
 					this.panelContainer.Height = h;
 					this.panelContainer.ForceLayout();
@@ -851,10 +851,10 @@ namespace Epsitec.Common.Document.Containers
 				this.textPanel = null;
 			}
 
-			if ( this.styleResumePanel != null )
+			if ( this.styleBriefPanel != null )
 			{
-				this.styleResumePanel.Dispose();
-				this.styleResumePanel = null;
+				this.styleBriefPanel.Dispose();
+				this.styleBriefPanel = null;
 			}
 
 			this.panelContainer.Height = 0.0;
@@ -1773,7 +1773,7 @@ namespace Epsitec.Common.Document.Containers
 		protected Widget					panelContainer;
 		protected Panels.Abstract			panel;
 		protected TextPanels.Abstract		textPanel;
-		protected StaticText				styleResumePanel;
+		protected StaticText				styleBriefPanel;
 		protected ColorSelector				colorSelector;
 
 		protected int						index;
