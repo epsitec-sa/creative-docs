@@ -33,8 +33,8 @@ namespace Epsitec.Common.Document
 				string tag;
 				Drawing.DynamicImage image;
 
-				tag = string.Concat(this.document.UniqueName, ".TextStyleResume");
-				image = new Drawing.DynamicImage(new Drawing.Size(50, 40), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleResume));
+				tag = string.Concat(this.document.UniqueName, ".TextStyleBrief");
+				image = new Drawing.DynamicImage(new Drawing.Size(50, 40), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleBrief));
 				image.IsCacheEnabled = false;
 				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
 
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document
 			{
 				string tag;
 				
-				tag = string.Concat(this.document.UniqueName, ".TextStyleResume");
+				tag = string.Concat(this.document.UniqueName, ".TextStyleBrief");
 				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
 				
 				tag = string.Concat(this.document.UniqueName, ".TextStyleMenu");
@@ -1613,7 +1613,7 @@ namespace Epsitec.Common.Document
 
 
 		#region DynamicDrawing
-		protected void DrawDynamicImageStyleResume(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
+		protected void DrawDynamicImageStyleBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
 		{
 			//	Dessine un style pour l'icône résumée, pour une image dynamique.
 			string[] arguments = argument.Split('.');

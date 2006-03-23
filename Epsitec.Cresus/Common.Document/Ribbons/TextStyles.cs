@@ -246,11 +246,11 @@ namespace Epsitec.Common.Document.Ribbons
 			Text.TextStyle[] styles = this.document.TextStyles(StyleCategory.Paragraph);
 			foreach ( Text.TextStyle style in styles )
 			{
-				string name       = style.Name;
-				string resumeIcon = string.Concat(this.document.UniqueName, ".TextStyleResume");
-				string menuIcon   = string.Concat(this.document.UniqueName, ".TextStyleMenu");
-				string parameter  = string.Concat(style.Name, ".Paragraph");
-				this.AddIconButtonComboDyn(this.paragraphCombo, name, resumeIcon, menuIcon, parameter);
+				string name      = style.Name;
+				string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
+				string menuIcon  = string.Concat(this.document.UniqueName, ".TextStyleMenu");
+				string parameter = string.Concat(style.Name, ".Paragraph");
+				this.AddIconButtonComboDyn(this.paragraphCombo, name, briefIcon, menuIcon, parameter);
 			}
 		}
 
