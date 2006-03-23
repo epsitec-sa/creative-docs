@@ -30,8 +30,16 @@ namespace Epsitec.Common.Document
 
 			if ( this.document.Mode == DocumentMode.Modify )
 			{
-				string tag = string.Concat(this.document.UniqueName, ".ParagraphStyle");
-				Drawing.DynamicImage image = new Drawing.DynamicImage(new Drawing.Size(50, 40), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyle));
+				string tag;
+				Drawing.DynamicImage image;
+
+				tag = string.Concat(this.document.UniqueName, ".TextStyleResume");
+				image = new Drawing.DynamicImage(new Drawing.Size(50, 40), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleResume));
+				image.IsCacheEnabled = false;
+				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
+
+				tag = string.Concat(this.document.UniqueName, ".TextStyleMenu");
+				image = new Drawing.DynamicImage(new Drawing.Size(200, 32), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleMenu));
 				image.IsCacheEnabled = false;
 				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
 			}
@@ -41,7 +49,12 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.document.Mode == DocumentMode.Modify )
 			{
-				string tag = string.Concat(this.document.UniqueName, ".ParagraphStyle");
+				string tag;
+				
+				tag = string.Concat(this.document.UniqueName, ".TextStyleResume");
+				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
+				
+				tag = string.Concat(this.document.UniqueName, ".TextStyleMenu");
 				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
 			}
 
@@ -1600,9 +1613,23 @@ namespace Epsitec.Common.Document
 
 
 		#region DynamicDrawing
-		protected void DrawDynamicImageStyle(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
+		protected void DrawDynamicImageStyleResume(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
 		{
-			//	Dessine un style, pour une image dynamique.
+			//	Dessine un style pour l'icône résumée, pour une image dynamique.
+			string[] arguments = argument.Split('.');
+			System.Diagnostics.Debug.Assert(arguments.Length == 2);
+			string styleName = arguments[0];
+			Text.TextStyleClass styleClass = Text.TextStyleClass.Paragraph;
+			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
+			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
+
+			Rectangle rect = new Rectangle(0, 0, size.Width, size.Height);
+			this.DrawStyle(graphics, rect, textStyle);
+		}
+
+		protected void DrawDynamicImageStyleMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
+		{
+			//	Dessine un style pour un menu, pour une image dynamique.
 			string[] arguments = argument.Split('.');
 			System.Diagnostics.Debug.Assert(arguments.Length == 2);
 			string styleName = arguments[0];

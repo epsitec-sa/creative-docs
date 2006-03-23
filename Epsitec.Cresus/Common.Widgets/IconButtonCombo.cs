@@ -496,11 +496,10 @@ namespace Epsitec.Common.Widgets
 		#region Items
 		public class Item
 		{
-			public Item(string name, string resumeIcon, string menuIcon, string regularText, string selectedText)
+			public Item(string name, string resumeIcon, string regularText, string selectedText)
 			{
 				this.name         = name;
 				this.resumeIcon   = resumeIcon;
-				this.menuIcon     = menuIcon;
 				this.regularText  = regularText;
 				this.selectedText = selectedText;
 			}
@@ -515,11 +514,6 @@ namespace Epsitec.Common.Widgets
 				get { return this.resumeIcon; }
 			}
 
-			public string MenuIcon
-			{
-				get { return this.menuIcon; }
-			}
-
 			public string RegularText
 			{
 				get { return this.regularText; }
@@ -532,7 +526,6 @@ namespace Epsitec.Common.Widgets
 
 			protected string			name;
 			protected string			resumeIcon;
-			protected string			menuIcon;
 			protected string			regularText;
 			protected string			selectedText;
 		}
