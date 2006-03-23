@@ -1616,6 +1616,8 @@ namespace Epsitec.Common.Document
 		protected void DrawDynamicImageStyleBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
 		{
 			//	Dessine un style pour l'icône résumée, pour une image dynamique.
+			if ( style == GlyphPaintStyle.Disabled )  return;
+
 			string[] arguments = argument.Split('.');
 			System.Diagnostics.Debug.Assert(arguments.Length == 2);
 			string styleName = arguments[0];

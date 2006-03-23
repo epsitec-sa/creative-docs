@@ -201,19 +201,26 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Ajoute une ligne au menu d'un IconButtonCombo.
 			string regularText  = string.Format("{0} {1}", Misc.Image(icon, -5), text);
 			string selectedText = string.Format("{0} {1}", Misc.Image(icon, -5), Misc.Bold(text));
-			string resumeIcon   = Misc.Icon(icon);
-			IconButtonCombo.Item item = new IconButtonCombo.Item(name, resumeIcon, regularText, selectedText);
+			string briefIcon    = Misc.Icon(icon);
+			IconButtonCombo.Item item = new IconButtonCombo.Item(name, briefIcon, regularText, selectedText);
 			combo.Items.Add(item);
 		}
 
-		protected void AddIconButtonComboDyn(IconButtonCombo combo, string name, string resumeIcon, string menuIcon, string parameter)
+		protected void AddIconButtonComboDyn(IconButtonCombo combo, string name, string briefIcon, string menuIcon, string parameter)
 		{
 			//	Ajoute une ligne au menu d'un IconButtonCombo.
 			string regularText  = Misc.ImageDyn(menuIcon, parameter);
 			string selectedText = Misc.ImageDyn(menuIcon, parameter);
-			resumeIcon = Misc.IconDyn(resumeIcon, parameter);
-			IconButtonCombo.Item item = new IconButtonCombo.Item(name, resumeIcon, regularText, selectedText);
+			briefIcon           = Misc.IconDyn(briefIcon, parameter);
+			IconButtonCombo.Item item = new IconButtonCombo.Item(name, briefIcon, regularText, selectedText);
 			combo.Items.Add(item);
+		}
+
+		protected void BriefIconButtonComboDyn(IconButtonCombo combo, string briefIcon, string parameter)
+		{
+			//	Ajoute une ligne au menu d'un IconButtonCombo.
+			briefIcon = Misc.IconDyn(briefIcon, parameter);
+			combo.IconButton.IconName = briefIcon;
 		}
 
 		protected GlyphButton CreateMenuButton(string command, string tooltip, MessageEventHandler handler)
