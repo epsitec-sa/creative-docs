@@ -366,6 +366,31 @@ namespace Epsitec.Common.Support
 			this.dynamic_images.Remove (tag);
 		}
 		
+		public void ClearDynamicImageCache(string full_name)
+		{
+			int pos = full_name.IndexOf ('/');
+			
+			string base_name;
+			string argument;
+			
+			if (pos < 0)
+			{
+				base_name = full_name;
+				argument  = null;
+			}
+			else
+			{
+				base_name = full_name.Substring (0, pos);
+				argument = full_name.Substring (pos+1);
+			}
+			
+			Drawing.DynamicImage image = this.dynamic_images[base_name] as Drawing.DynamicImage;
+			
+			if (image != null)
+			{
+				image.ClearCache (argument);
+			}
+		}
 		
 		public void PrefillManifestIconCache()
 		{

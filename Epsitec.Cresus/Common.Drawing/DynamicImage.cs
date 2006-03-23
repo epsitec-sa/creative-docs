@@ -54,6 +54,32 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void ClearCache(string argument)
+		{
+			if (this.model != null)
+			{
+				this.model.ClearCache (argument);
+			}
+			else
+			{
+				if (this.variants != null)
+				{
+					foreach (System.Collections.DictionaryEntry entry in this.variants)
+					{
+						Key          key   = entry.Key as Key;
+						DynamicImage image = entry.Value as DynamicImage;
+						
+						if ((argument == null) ||
+							(key.Argument == argument))
+						{
+							image.ClearCache ();
+						}
+					}
+				}
+			}
+		}
+		
+		
 		#region Public Override Properties
 		public override Bitmap					BitmapImage
 		{
@@ -478,7 +504,6 @@ namespace Epsitec.Common.Drawing
 				this.cache = null;
 			}
 		}
-		
 		
 		#region Private Key Class
 		private class Key
