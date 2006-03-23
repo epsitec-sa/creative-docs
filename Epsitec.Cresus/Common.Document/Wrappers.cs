@@ -1637,8 +1637,19 @@ namespace Epsitec.Common.Document
 			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
 			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
 
-			Rectangle rect = new Rectangle(0, 0, size.Width, size.Height);
+			double limit = System.Math.Floor(size.Width*0.5);
+
+			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
+			Font font = Misc.GetFont("Tahoma");
+			graphics.AddText(0, 0, limit-1, size.Height, text, font, 10, ContentAlignment.MiddleLeft);
+			graphics.RenderSolid(Color.FromBrightness(0));
+
+			Rectangle rect = new Rectangle(limit, 0, size.Width-limit, size.Height);
 			this.DrawStyle(graphics, rect, textStyle);
+
+			graphics.AddLine(limit-0.5, 0, limit-0.5, size.Height);
+			graphics.AddLine(0, 0, size.Width, 0);
+			graphics.RenderSolid(Color.FromBrightness(0));
 		}
 
 		protected void DrawStyle(Graphics graphics, Rectangle rect, Text.TextStyle textStyle)
