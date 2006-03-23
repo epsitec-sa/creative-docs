@@ -1632,7 +1632,7 @@ namespace Epsitec.Common.Document
 			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
 			Font font = Misc.GetFont("Tahoma");
 			graphics.AddText(0, 0, size.Width, limit, text, font, limit-3, ContentAlignment.MiddleLeft);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(adorner.ColorText(WidgetState.Enabled));
 
 			Rectangle rect = new Rectangle(0, limit, size.Width, size.Height-limit);
 			this.DrawStyle(graphics, rect, textStyle);
@@ -1655,10 +1655,13 @@ namespace Epsitec.Common.Document
 
 			double limit = System.Math.Floor(size.Width*0.5);
 
+			Rectangle iClip = graphics.SaveClippingRectangle();
+			graphics.SetClippingRectangle(0, 0, limit-1, size.Height);
 			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
 			Font font = Misc.GetFont("Tahoma");
-			graphics.AddText(0, 0, limit-1, size.Height, text, font, Font.DefaultFontSize, ContentAlignment.MiddleLeft);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.AddText(3, 0, limit-3-1, size.Height, text, font, Font.DefaultFontSize, ContentAlignment.MiddleLeft);
+			graphics.RenderSolid(adorner.ColorText(WidgetState.Enabled));
+			graphics.RestoreClippingRectangle(iClip);
 
 			Rectangle rect = new Rectangle(limit, 0, size.Width-limit, size.Height);
 			this.DrawStyle(graphics, rect, textStyle);
