@@ -275,10 +275,9 @@
 
 	<data name="Panel.Abstract.Extend">Etend ou réduit le panneau</data>
 
-	<data name="Panel.Style.ParagraphDefinition">Définition des styles de paragraphe</data>
-	<data name="Panel.Style.ParagraphChoice">Choix d'un style de paragraphe</data>
-	<data name="Panel.Style.CharacterDefinition">Définition des styles de caractère</data>
-	<data name="Panel.Style.CharacterChoice">Choix d'un style de caractère</data>
+	<data name="Panel.Style.ParagraphDefinition">Choix des styles de paragraphe</data>
+	<data name="Panel.Style.CharacterDefinition">Choix des styles de caractère</data>
+	<data name="Panel.Style.Choice">Choix d'un style pour le texte</data>
 	<data name="Panel.AggregateCategory.Graphic">Graphique</data>
 	<data name="Panel.AggregateCategory.Paragraph">Paragraphe</data>
 	<data name="Panel.AggregateCategory.Character">Caractère</data>
