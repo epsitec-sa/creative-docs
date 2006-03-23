@@ -206,7 +206,7 @@ namespace Epsitec.Common.Widgets
 
 				if ( rank == sel )
 				{
-					this.buttonMain.IconName = item.Icon;
+					this.buttonMain.IconName = item.ResumeIcon;
 					break;
 				}
 
@@ -496,11 +496,12 @@ namespace Epsitec.Common.Widgets
 		#region Items
 		public class Item
 		{
-			public Item(string name, string icon, string regularText, string selectedText)
+			public Item(string name, string resumeIcon, string menuIcon, string regularText, string selectedText)
 			{
-				this.name = name;
-				this.icon = icon;
-				this.regularText = regularText;
+				this.name         = name;
+				this.resumeIcon   = resumeIcon;
+				this.menuIcon     = menuIcon;
+				this.regularText  = regularText;
 				this.selectedText = selectedText;
 			}
 
@@ -509,9 +510,14 @@ namespace Epsitec.Common.Widgets
 				get { return this.name; }
 			}
 
-			public string Icon
+			public string ResumeIcon
 			{
-				get { return this.icon; }
+				get { return this.resumeIcon; }
+			}
+
+			public string MenuIcon
+			{
+				get { return this.menuIcon; }
 			}
 
 			public string RegularText
@@ -525,7 +531,8 @@ namespace Epsitec.Common.Widgets
 			}
 
 			protected string			name;
-			protected string			icon;
+			protected string			resumeIcon;
+			protected string			menuIcon;
 			protected string			regularText;
 			protected string			selectedText;
 		}

@@ -201,8 +201,9 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Ajoute une ligne au menu d'un IconButtonCombo.
 			string regularText  = string.Format("{0} {1}", Misc.Image(icon, -5), text);
 			string selectedText = string.Format("{0} {1}", Misc.Image(icon, -5), Misc.Bold(text));
-			icon = Misc.Icon(icon);
-			IconButtonCombo.Item item = new IconButtonCombo.Item(name, icon, regularText, selectedText);
+			string resumeIcon   = Misc.Icon(icon);
+			string menuIcon     = Misc.Icon(icon);
+			IconButtonCombo.Item item = new IconButtonCombo.Item(name, resumeIcon, menuIcon, regularText, selectedText);
 			combo.Items.Add(item);
 		}
 
@@ -211,8 +212,9 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Ajoute une ligne au menu d'un IconButtonCombo.
 			string regularText  = string.Format("{0} {1}", Misc.ImageDyn(name, parameter, -5), text);
 			string selectedText = string.Format("{0} {1}", Misc.ImageDyn(name, parameter, -5), Misc.Bold(text));
-			string icon = Misc.IconDyn(name, parameter);
-			IconButtonCombo.Item item = new IconButtonCombo.Item(name, icon, regularText, selectedText);
+			string resumeIcon   = Misc.IconDyn(name, parameter);
+			string menuIcon     = Misc.IconDyn(name, parameter);
+			IconButtonCombo.Item item = new IconButtonCombo.Item(name, resumeIcon, menuIcon, regularText, selectedText);
 			combo.Items.Add(item);
 		}
 
