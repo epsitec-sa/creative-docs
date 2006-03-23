@@ -1664,7 +1664,6 @@ namespace Epsitec.Common.Document
 			this.DrawStyle(graphics, rect, textStyle);
 
 			graphics.AddLine(limit-0.5, 0, limit-0.5, size.Height);  // séparateur vertical
-			graphics.AddLine(0, 0.5, size.Width, 0.5);  // séparateur horizontal en bas
 			graphics.RenderSolid(adorner.ColorBorder);
 		}
 

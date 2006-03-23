@@ -71,6 +71,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								MenuDrawFrame
+		{
+			get
+			{
+				return this.menuDrawFrame;
+			}
+
+			set
+			{
+				this.menuDrawFrame = value;
+			}
+		}
+		
 		public System.Collections.ArrayList		Items
 		{
 			//	Donne la collection d'éléments de type IconButtonCombo.Item.
@@ -407,6 +420,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.scrollList = new ScrollList();
 			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
+			this.scrollList.DrawFrame = this.menuDrawFrame;
 			
 			menu.Contents = this.scrollList;
 			
@@ -615,6 +629,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected static readonly double		menuWidth = 12;
 		protected bool							isLiveUpdateEnabled	= true;
+		protected bool							menuDrawFrame = false;
 		protected int							selectedIndex = -1;
 		protected IconButton					buttonMain;
 		protected GlyphButton					buttonMenu;
