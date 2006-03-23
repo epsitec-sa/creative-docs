@@ -3708,6 +3708,40 @@ namespace Epsitec.Common.Widgets
 
 									image = canvas.GetImageForIconKey(key);  // cherche la meilleure image
 								}
+								else if ( image is Drawing.DynamicImage )
+								{
+									Drawing.DynamicImage dynamic = image as Drawing.DynamicImage;
+									
+									double width = 0;
+									double height = 0;
+									
+									if ( parameters.ContainsKey("dx") )
+									{
+										string s = (string)parameters["dx"];
+										width = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+									}
+
+									if ( parameters.ContainsKey("dy") )
+									{
+										string s = (string)parameters["dy"];
+										height = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+									}
+									
+									if ((width != 0) ||
+										(height != 0))
+									{
+										if (width == 0)
+										{
+											width = dynamic.Width * height / dynamic.Height;
+										}
+										if (height == 0)
+										{
+											height = dynamic.Height * width / dynamic.Width;
+										}
+										
+										image = dynamic.GetImageForSize (width, height);
+									}
+								}
 							
 								buffer.Append(TextLayout.CodeObject);
 								currentIndex ++;

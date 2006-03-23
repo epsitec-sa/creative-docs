@@ -77,15 +77,8 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (this.model == null)
-				{
-					this.ValidateGeometry();
-					return base.Size;
-				}
-				else
-				{
-					return this.model.Size;
-				}
+				this.ValidateGeometry();
+				return base.Size;
 			}
 		}
 
@@ -303,21 +296,8 @@ namespace Epsitec.Common.Drawing
 			//	Retourne l'image qui correspond au style de peinture de glyphe
 			//	désiré. On réalise un clonage rapide. Afin d'éviter de devoir
 			//	copier trop d'information, on chaîne le clone avec son modèle.
-			//
-			//	NB: Cette méthode ne peut être appelée que sur une instance
-			//		retournée par GetImageForArgument, laquelle est elle-même
-			//		un clone du modèle initial.
 			
-			System.Diagnostics.Debug.Assert (this.model != null);
-			
-			if (this.effects != null)
-			{
-				return this.effects[style] as DynamicImage;
-			}
-			else
-			{
-				return this.model.GetImageForPaintStyle (style);
-			}
+			return this.GetImageForKey (new Key (style, this.Width, this.Height, this.Argument));
 		}
 		
 		public DynamicImage GetImageForArgument(string argument)
@@ -327,55 +307,32 @@ namespace Epsitec.Common.Drawing
 			//	les instances déjà créées, ce qui évite que l'on n'instancie des
 			//	nouvelles copies à tour de bras.
 			
-			if (this.model == null)
-			{
-				//	Nous travaillons avec le modèle initial, seul à contenir
-				//	une table des variantes :
-				
-				DynamicImage image = this.variants[argument] as DynamicImage;
-				
-				if (image == null)
-				{
-					//	Crée un clone qui reprend tous les réglages du modèle
-					//	initial, sauf l'argument qui lui est spécifique. Il va
-					//	a son tour avoir des clones (un par GlyphPaintStyle).
-					
-					//	Chacun a son propre cache.
-					
-					image = new DynamicImage ();
-					
-					image.model    = this;
-					image.argument = argument;
-					image.variants = null;
-					
-					this.variants[argument] = image;
-				}
-				
-				return image;
-			}
-			else
-			{
-				return this.model.GetImageForArgument (argument);
-			}
+			return this.GetImageForKey (new Key (this.PaintStyle, this.Width, this.Height, argument));
+		}
+		
+		public DynamicImage GetImageForSize(double width, double height)
+		{
+			//	Retourne une instance de DynamicImage réglée pour correspondre
+			//	à la taille sépcifiée.
+			
+			return this.GetImageForKey (new Key (this.PaintStyle, width, height, this.Argument));
 		}
 		
 		
 		#region Private Constructors
 		private DynamicImage()
 		{
-			this.effects = new System.Collections.Hashtable ();
 			this.variants = new System.Collections.Hashtable ();
-			
-			this.effects[GlyphPaintStyle.Normal]   = new DynamicImage(this, GlyphPaintStyle.Normal);
-			this.effects[GlyphPaintStyle.Disabled] = new DynamicImage(this, GlyphPaintStyle.Disabled);
-			this.effects[GlyphPaintStyle.Selected] = new DynamicImage(this, GlyphPaintStyle.Selected);
-			this.effects[GlyphPaintStyle.Entered]  = new DynamicImage(this, GlyphPaintStyle.Entered);
-			this.effects[GlyphPaintStyle.Shadow]   = new DynamicImage(this, GlyphPaintStyle.Shadow);
 		}
-		private DynamicImage(DynamicImage model, GlyphPaintStyle style)
+		private DynamicImage(DynamicImage model, Key key) : this (model, key.PaintStyle, new Drawing.Size (key.Width, key.Height), key.Argument)
 		{
-			this.model = model;
+		}
+		private DynamicImage(DynamicImage model, GlyphPaintStyle style, Drawing.Size size, string argument)
+		{
+			this.model      = model;
 			this.paintStyle = style;
+			this.size       = size;
+			this.argument   = argument;
 		}
 		#endregion
 		
@@ -396,6 +353,35 @@ namespace Epsitec.Common.Drawing
 			base.Dispose(disposing);
 		}
 
+		
+		private DynamicImage GetImageForKey(Key key)
+		{
+			if (this.model == null)
+			{
+				//	Nous travaillons avec le modèle initial, seul à contenir
+				//	une table des variantes :
+				
+				DynamicImage image = this.variants[key] as DynamicImage;
+				
+				if (image == null)
+				{
+					//	Crée un clone qui reprend tous les réglages du modèle
+					//	initial, sauf les arguments qui lui sont spécifiques.
+					
+					//	Chacun a son propre cache.
+					
+					image = new DynamicImage (this, key);
+					this.variants[key] = image;
+				}
+				
+				return image;
+			}
+			else
+			{
+				return this.model.GetImageForKey (key);
+			}
+		}
+		
 		
 		private void ValidateCache()
 		{
@@ -478,13 +464,6 @@ namespace Epsitec.Common.Drawing
 		
 		private void ClearCache()
 		{
-			if (this.effects != null)
-			{
-				foreach (DynamicImage image in this.effects.Values)
-				{
-					image.ClearCache ();
-				}
-			}
 			if (this.variants != null)
 			{
 				foreach (DynamicImage image in this.variants.Values)
@@ -501,22 +480,82 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		#region Private Key Class
+		private class Key
+		{
+			public Key(GlyphPaintStyle paintStyle, double width, double height, string argument)
+			{
+				this.paintStyle = paintStyle;
+				this.width      = width;
+				this.height     = height;
+				this.argument   = argument;
+			}
+			
+			
+			public GlyphPaintStyle				PaintStyle
+			{
+				get
+				{
+					return this.paintStyle;
+				}
+			}
+			public double						Width
+			{
+				get
+				{
+					return this.width;
+				}
+			}
+			public double						Height
+			{
+				get
+				{
+					return this.height;
+				}
+			}
+			public string						Argument
+			{
+				get
+				{
+					return this.argument;
+				}
+			}
+			
+			public override bool Equals(object obj)
+			{
+				Key key = obj as Key;
+				
+				if (key == null)
+				{
+					return false;
+				}
+				
+				return (this.paintStyle == key.paintStyle)
+					&& (this.width == key.width) 
+					&& (this.height == key.height)
+					&& (this.argument == key.argument);
+			}
+			
+			public override int GetHashCode()
+			{
+				return this.paintStyle.GetHashCode ()
+					 ^ this.width.GetHashCode ()
+					 ^ this.height.GetHashCode ()
+					 ^ this.argument.GetHashCode ();
+			}
+
+			
+			GlyphPaintStyle						paintStyle;
+			double								width;
+			double								height;
+			string								argument;
+		}
+		#endregion
+		
 		private bool							isDisposed;
 		private bool							isCacheEnabled = true;
 		
 		private DynamicImagePaintCallback		callback;
-		private System.Collections.Hashtable	effects;
-		
-		//	       modèle
-		//	          |
-		//	   +------+------+
-		//	   |      |      |
-		//	 arg=X  arg=Y  arg=Z
-		//	          |
-		//	   +------+------+
-		//	   |      |      |
-		//	divers GlyphPaintStyle
-		
 		private DynamicImage					model;
 		
 		private System.Collections.Hashtable	variants;

@@ -379,6 +379,7 @@ namespace Epsitec.Common.Widgets
 			StaticImage image3 = new StaticImage ();
 			StaticImage image4 = new StaticImage ();
 			StaticImage image5 = new StaticImage ();
+			StaticImage image6 = new StaticImage ();
 			
 			image1.Location = new Point(590, 15);
 			image1.Size = new Size(20, 20);
@@ -414,11 +415,18 @@ namespace Epsitec.Common.Widgets
 			image5.ImageName = @"dyn:Xyz/80";
 			image5.Alignment = Drawing.ContentAlignment.BottomCenter;
 			
+			image6.Location = new Point(630, 55);
+			image6.Size = new Size(40, 20);
+			image6.ImageName = @"dyn:Xyz/60";
+			image6.ImageSize = new Drawing.Size (20, 12);
+			image6.Alignment = Drawing.ContentAlignment.BottomCenter;
+			
 			window.Root.Children.Add(image1);
 			window.Root.Children.Add(image2);
 			window.Root.Children.Add(image3);
 			window.Root.Children.Add(image4);
 			window.Root.Children.Add(image5);
+			window.Root.Children.Add(image6);
 
 			GroupBox box = new GroupBox();
 //			box.Location = new Point(10, 100);

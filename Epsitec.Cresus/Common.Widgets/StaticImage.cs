@@ -46,6 +46,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Drawing.Size				ImageSize
+		{
+			get
+			{
+				return this.image_size;
+			}
+			set
+			{
+				if (this.image_size != value)
+				{
+					this.image_size = value;
+					this.RebuildTextLayout ();
+				}
+			}
+		}
+		
 		public double					VerticalOffset
 		{
 			get
@@ -77,16 +93,32 @@ namespace Epsitec.Common.Widgets
 				buffer.Append ("<img src=\"");
 				buffer.Append (TextLayout.ConvertToTaggedText (this.ImageName));
 				buffer.Append ("\"");
-					
-				int vOffset = (int) (this.VerticalOffset * 100);
-					
+				
+				int vOffset = (int) (this.VerticalOffset * 100 + 0.5);
+				
+				int imageDx = (int) (this.image_size.Width + 0.5);
+				int imageDy = (int) (this.image_size.Height + 0.5);
+				
 				if (vOffset != 0)
 				{
 					buffer.Append (" voff=\"");
 					buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0}", vOffset / 100.0);
 					buffer.Append ("\"");
 				}
-					
+				
+				if (imageDx > 0)
+				{
+					buffer.Append (" dx=\"");
+					buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0}", imageDx);
+					buffer.Append ("\"");
+				}
+				if (imageDy > 0)
+				{
+					buffer.Append (" dy=\"");
+					buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0}", imageDy);
+					buffer.Append ("\"");
+				}
+				
 				buffer.Append ("/>");
 					
 				this.Text = buffer.ToString ();
@@ -95,6 +127,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected string				image_name;
+		protected Drawing.Size			image_size;
 		protected double				vertical_offset;
 	}
 }
