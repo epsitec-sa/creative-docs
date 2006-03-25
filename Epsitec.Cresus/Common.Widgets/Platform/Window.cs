@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -1593,6 +1593,54 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			
 			return windows;
+		}
+
+		internal bool StartWindowManagerOperation(WindowManagerOperation op)
+		{
+			switch (op)
+			{
+				case Platform.WindowManagerOperation.ResizeLeft:
+					this.ReleaseCaptureAndSendMessage (Win32Const.HT_LEFT);
+					return true;
+				case Platform.WindowManagerOperation.ResizeRight:
+					this.ReleaseCaptureAndSendMessage (Win32Const.HT_RIGHT);
+					return true;
+				case Platform.WindowManagerOperation.ResizeBottom:
+					this.ReleaseCaptureAndSendMessage (Win32Const.HT_BOTTOM);
+					return true;
+				case Platform.WindowManagerOperation.ResizeBottomRight:
+					this.ReleaseCaptureAndSendMessage (Win32Const.HT_BOTTOMRIGHT);
+					return true;
+				case Platform.WindowManagerOperation.ResizeBottomLeft:
+					this.ReleaseCaptureAndSendMessage (Win32Const.HT_BOTTOMLEFT);
+					return true;
+				case Platform.WindowManagerOperation.ResizeTop:
+					this.ReleaseCaptureAndSendMessage (Win32Const.HT_TOP);
+					return true;
+				case Platform.WindowManagerOperation.ResizeTopRight:
+					this.ReleaseCaptureAndSendMessage (Win32Const.HT_TOPRIGHT);
+					return true;
+				case Platform.WindowManagerOperation.ResizeTopLeft:
+					this.ReleaseCaptureAndSendMessage (Win32Const.HT_TOPLEFT);
+					return true;
+				case Platform.WindowManagerOperation.MoveWindow:
+					this.ReleaseCaptureAndSendMessage (Win32Const.HT_CAPTION);
+					return true;
+				case Platform.WindowManagerOperation.PressMinimizeButton:
+					this.ReleaseCaptureAndSendMessage (Win32Const.HT_MINBUTTON);
+					return true;
+				case Platform.WindowManagerOperation.PressMaximizeButton:
+					this.ReleaseCaptureAndSendMessage (Win32Const.HT_MAXBUTTON);
+					return true;
+			}
+
+			return false;
+		}
+
+		private void ReleaseCaptureAndSendMessage(uint ht)
+		{
+			Win32Api.ReleaseCapture ();
+			Win32Api.SendMessage (this.Handle, Platform.Win32Const.WM_NCLBUTTONDOWN, (System.IntPtr) ht, (System.IntPtr) 0);
 		}
 		
 		protected void FakeActivate(bool active)

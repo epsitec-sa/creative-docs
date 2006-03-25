@@ -301,7 +301,15 @@ namespace Epsitec.Common.Widgets
 		{
 			this.window.IsMouseActivationEnabled = false;
 		}
-		
+
+		public bool StartWindowManagerOperation(Platform.WindowManagerOperation op)
+		{
+			if (this.window != null)
+			{
+				return this.window.StartWindowManagerOperation (op);
+			}
+			return false;
+		}
 		
 		public virtual void Show()
 		{
