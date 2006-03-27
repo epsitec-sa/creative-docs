@@ -1,6 +1,8 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Michael WALZ
 
+using System.Text;
+
 namespace Epsitec.Common.Text.Exchange
 {
 
@@ -73,7 +75,7 @@ namespace Epsitec.Common.Text.Exchange
 	{
 		public ExchangeStringBuilder()
 		{
-			theBuilder = new System.Text.StringBuilder ();
+			theBuilder = new StringBuilder ();
 		}
 
 		public void Append(string str)
@@ -106,7 +108,7 @@ namespace Epsitec.Common.Text.Exchange
 			return theBuilder.ToString() ;
 		}
 
-		private System.Text.StringBuilder theBuilder;
+		private StringBuilder theBuilder;
 		private int length ;
 	}
 
@@ -122,7 +124,6 @@ namespace Epsitec.Common.Text.Exchange
 			this.output.AppendLine ("</HEAD>");
 			this.output.AppendLine ("");
 			this.output.AppendLine ("<BODY>");
-
 			this.mshtml.UpdateStartFragment (this.output.Length);
 		}
 
@@ -242,9 +243,8 @@ namespace Epsitec.Common.Text.Exchange
 			this.AppendPendingTags ();
 			this.AppendTagsToOpen ();
 
-			this.TransformLineSeparators (ref thestring);
+			this.TransformSpecialHtmlChars (ref thestring);
 			this.TransformToUTF8 (ref thestring);
-			// this.TransformParagraphSeparators (ref thestring);
 			this.output.Append (thestring);
 		}
 
@@ -460,28 +460,10 @@ namespace Epsitec.Common.Text.Exchange
 			this.precedFontFace = "";
 		}
 
-		private void ReplaceSpecialCodes(ref string line, Epsitec.Common.Text.Unicode.Code specialCode, string htmlTag)
-		{
-			System.Text.StringBuilder outputstringbuilder = new System.Text.StringBuilder ();
-
-			string[] split = line.Split (new char[] { (char) specialCode });
-
-			int index;
-			int max = split.GetLength (0);
-
-			for (index = 0; index < max; index++)
-			{
-				outputstringbuilder.Append (split[index]);
-				if (index + 1 < max)
-					outputstringbuilder.Append (htmlTag);
-			}
-
-			line = outputstringbuilder.ToString ();
-		}
 
 		private void TransformToUTF8(ref string line)
 		{
-			System.Text.UTF8Encoding utf8 = new System.Text.UTF8Encoding ();
+			UTF8Encoding utf8 = new UTF8Encoding ();
 			byte[] encodedBytes = utf8.GetBytes (line);
 			char[] chararray = new char[encodedBytes.Length] ;
 
@@ -493,10 +475,25 @@ namespace Epsitec.Common.Text.Exchange
 			line = new string (chararray);
 		}
 
-		private void TransformLineSeparators(ref string line)
+		private void TransformSpecialHtmlChars(ref string line)
 		{
-			// transforme tous les caractères LineSeparator en <br>
-			this.ReplaceSpecialCodes (ref line, Epsitec.Common.Text.Unicode.Code.LineSeparator, "<br />\r\n");
+			StringBuilder output = new StringBuilder (line);
+			string oldchar;
+
+			output.Replace ("<", "&lt;");
+			output.Replace (">", "&gt;");
+			oldchar = new string ((char) Epsitec.Common.Text.Unicode.Code.LineSeparator, 1);
+			output.Replace (oldchar, "<br />\r\n");
+
+			for (int i = 0; i < output.Length - 1; i++)
+			{
+				if (output[i] == ' ' && output[i + 1] == ' ')
+				{
+					output[i] = (char)0xA0 ;	// non breaking space
+				}
+			}
+
+			line = output.ToString ();
 		}
 
 		private void CloseTag(HtmlAttribute closetag)
@@ -743,7 +740,7 @@ namespace Epsitec.Common.Text.Exchange
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
 			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
 
-			System.Text.StringBuilder output = new System.Text.StringBuilder ();
+			StringBuilder output = new StringBuilder ();
 
 			textWrapper.Attach (navigator);
 			paraWrapper.Attach (navigator);
