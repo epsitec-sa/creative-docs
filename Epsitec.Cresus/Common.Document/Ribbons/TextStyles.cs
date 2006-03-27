@@ -98,14 +98,14 @@ namespace Epsitec.Common.Document.Ribbons
 					if ( style.TextStyleClass == Common.Text.TextStyleClass.Paragraph && !this.characterMode )
 					{
 						string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
-						string parameter = string.Concat(style.Name, ".Paragraph");
+						string parameter = string.Concat(style.Name, '\t', "Paragraph");
 						this.BriefIconButtonComboDyn(this.comboStyle, briefIcon, parameter);
 					}
 
 					if ( style.TextStyleClass == Common.Text.TextStyleClass.Text && this.characterMode )
 					{
 						string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
-						string parameter = string.Concat(style.Name, ".Character");
+						string parameter = string.Concat(style.Name, '\t', "Character");
 						this.BriefIconButtonComboDyn(this.comboStyle, briefIcon, parameter);
 					}
 				}
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Document.Ribbons
 				string name      = style.Name;
 				string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
 				string menuIcon  = string.Concat(this.document.UniqueName, ".TextStyleMenu");
-				string parameter = string.Concat(style.Name, this.characterMode ? ".Character" : ".Paragraph");
+				string parameter = string.Concat(style.Name, '\t', this.characterMode ? "Character" : "Paragraph");
 				this.AddIconButtonComboDyn(this.comboStyle, name, briefIcon, menuIcon, parameter);
 			}
 		}
