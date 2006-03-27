@@ -243,6 +243,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.AppendTagsToOpen ();
 
 			this.TransformLineSeparators (ref thestring);
+			this.TransformToUTF8 (ref thestring);
 			// this.TransformParagraphSeparators (ref thestring);
 			this.output.Append (thestring);
 		}
@@ -285,7 +286,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			for (i = 0; i <= HtmlText.htmlfontsizes.Length; i++)
 			{
-				if (pointsize > htmlfontsizes[i])
+				if (pointsize <= htmlfontsizes[i])
 					break;
 				htmlsize++;
 			}
@@ -476,6 +477,20 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 			line = outputstringbuilder.ToString ();
+		}
+
+		private void TransformToUTF8(ref string line)
+		{
+			System.Text.UTF8Encoding utf8 = new System.Text.UTF8Encoding ();
+			byte[] encodedBytes = utf8.GetBytes (line);
+			char[] chararray = new char[encodedBytes.Length] ;
+
+			for (int i = 0; i < encodedBytes.Length; i++)
+			{
+				chararray[i] = (char) encodedBytes[i];
+			}
+
+			line = new string (chararray);
 		}
 
 		private void TransformLineSeparators(ref string line)
