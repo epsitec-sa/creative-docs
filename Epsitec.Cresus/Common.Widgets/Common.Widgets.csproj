@@ -260,9 +260,7 @@
     <Compile Include="CheckButton.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\ChildrenCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Collections\FlatChildrenCollection.cs" />
     <Compile Include="Collections\HostedShortcutCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -281,6 +279,7 @@
     <Compile Include="Collections\LayerCollection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Collections\LayeredChildrenCollection.cs" />
     <Compile Include="Collections\ShortcutCollection.cs">
       <SubType>Code</SubType>
     </Compile>
