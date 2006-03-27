@@ -361,6 +361,11 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+
+		internal IInheritedPropertyCache GetInheritedPropertyCache()
+		{
+			return this.inheritedPropertyCache;
+		}
 		
 		protected void AddUserEventHandler(string name, System.Delegate handler)
 		{
@@ -496,6 +501,7 @@ namespace Epsitec.Common.Types
 		BindingExpressionDictionary							bindings;
 		PropertyChangedEventDictionary						propertyEvents;
 		UserEventDictionary									userEvents;
+		InheritedPropertyCache								inheritedPropertyCache;
 		
 		DependencyObjectType								cachedType;
 
