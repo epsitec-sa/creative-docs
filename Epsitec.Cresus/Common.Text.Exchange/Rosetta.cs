@@ -17,10 +17,9 @@ namespace Epsitec.Common.Text.Exchange
 			this.text.AppendLine ("StartSelection:<STARTSE>");
 			this.text.AppendLine ("EndSelection:<ENDSELE>");
 			this.text.AppendLine ("SourceURL:mhtml:mid://00000002/");
-			offsetHtml = this.text.Length ;
-			this.UpdateOffset ("<STARTHT>", offsetHtml);
-			this.text.AppendLine ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
 			this.text.AppendLine ("");
+			offsetHtml = this.text.Length;
+			this.UpdateOffset ("<STARTHT>", offsetHtml);
 		}
 
 		public void AddHtmlText(ref string htmltext)
@@ -45,9 +44,14 @@ namespace Epsitec.Common.Text.Exchange
 			UpdateOffset ("<ENDSELE>", offset + offsetHtml);
 		}
 
+		public void UpdateStartHtml(int offset)
+		{
+			UpdateOffset ("<STARTHTM>", offset + offsetHtml);
+		}
+
 		public void UpdateEndHtml(int offset)
 		{
-			UpdateOffset ("<ENDHTML>", offset);
+			UpdateOffset ("<ENDHTML>", offset + offsetHtml);
 		}
 
 		public string ToString()
@@ -112,8 +116,9 @@ namespace Epsitec.Common.Text.Exchange
 		public HtmlText()
 		{
 			this.mshtml = new MSHtmlText ();
-			this.output.AppendLine("<HTML><HEAD>") ;
-			this.output.AppendLine("<STYLE></STYLE>") ;
+			this.output.AppendLine ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
+			this.output.AppendLine ("<HTML><HEAD>") ;
+			this.output.AppendLine ("<STYLE></STYLE>") ;
 			this.output.AppendLine ("</HEAD>");
 			this.output.AppendLine ("");
 			this.output.AppendLine ("<BODY>");
@@ -266,6 +271,28 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			this.fontSize = (int) (fontSize / (254.0 / 72.0));
 		}
+
+		static private int[] htmlfontsizes =
+			{
+				8,10,12,14,18,24,36
+			};
+
+		static public int PointFontSizeToHtmlFontSize(int pointsize)
+		{
+			int htmlsize = 1;
+
+			int i;
+
+			for (i = 0; i <= HtmlText.htmlfontsizes.Length; i++)
+			{
+				if (pointsize > htmlfontsizes[i])
+					break;
+				htmlsize++;
+			}
+
+			return htmlsize;
+		}
+
 
 		public void SetFontFace(string fontFace)
 		{
@@ -605,10 +632,12 @@ namespace Epsitec.Common.Text.Exchange
 						retval = HtmlText.GetHtmlTag ("s", tagmode);
 						break;
 					case HtmlAttribute.Paragraph:
-						retval = HtmlText.GetHtmlTag ("p", tagmode, parametername, parametervalue);
+						retval = HtmlText.GetHtmlTag ("p", tagmode, this.parametername, this.parametervalue);
 						break;
 					case HtmlAttribute.Font:
-						retval = HtmlText.GetHtmlTag ("font", tagmode, parametername, parametervalue);
+						if (parametername == "size")
+							parametervalue = HtmlText.PointFontSizeToHtmlFontSize (System.Int32.Parse(this.parametervalue)).ToString();
+						retval = HtmlText.GetHtmlTag ("font", tagmode, this.parametername, this.parametervalue);
 						break;
 				}
 
@@ -771,7 +800,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			htmlText.Terminate ();
 
-			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Text, htmlText.msHtml);
+			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, htmlText.msHtml);
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
 		}
 
@@ -851,7 +880,7 @@ namespace Epsitec.Common.Text.Exchange
 				}
 			}
 
-			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Text, output);
+			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, output);
 
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
 		}
