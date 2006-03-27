@@ -4,48 +4,136 @@
 namespace Epsitec.Common.Text.Exchange
 {
 
-	/// <summary>
-	/// Cette classe représente un texte formaté en HTML compatible "Microsoft".
-	/// </summary>
-	/// 
+
+	public class MSHtmlText
+	{
+		public MSHtmlText()
+		{
+			this.text.AppendLine ("Version:1.0");
+			this.text.AppendLine ("StartHTML:<STARTHT>");
+			this.text.AppendLine ("EndHTML:<ENDHTML>");
+			this.text.AppendLine ("StartFragment:<STARTFR>");
+			this.text.AppendLine ("EndFragment:<ENDFRAG>");
+			this.text.AppendLine ("StartSelection:<STARTSE>");
+			this.text.AppendLine ("EndSelection:<ENDSELE>");
+			this.text.AppendLine ("SourceURL:mhtml:mid://00000002/");
+			offsetHtml = this.text.Length ;
+			this.UpdateOffset ("<STARTHT>", offsetHtml);
+			this.text.AppendLine ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
+			this.text.AppendLine ("");
+		}
+
+		public void AddHtmlText(ref string htmltext)
+		{
+			this.text.Append (htmltext);
+		}
+
+		public void AddHtmlText(ref ExchangeStringBuilder htmltext)
+		{
+			this.text.Append (htmltext.ToString());
+		}
+
+		public void UpdateStartFragment(int offset)
+		{
+			UpdateOffset ("<STARTFR>", offset + offsetHtml);
+			UpdateOffset ("<STARTSE>", offset + offsetHtml);
+		}
+
+		public void UpdateEndFragment(int offset)
+		{
+			UpdateOffset ("<ENDFRAG>", offset + offsetHtml);
+			UpdateOffset ("<ENDSELE>", offset + offsetHtml);
+		}
+
+		public void UpdateEndHtml(int offset)
+		{
+			UpdateOffset ("<ENDHTML>", offset);
+		}
+
+		public string ToString()
+		{
+			return this.text.ToString() ;
+		}
+
+		private void UpdateOffset(string offsetname, int offset)
+		{
+			this.text.Replace (offsetname, string.Format ("{0,9:d9}", offset));
+		}
+
+		private ExchangeStringBuilder text = new ExchangeStringBuilder() ;
+		private int offsetHtml;
+	}
+
+
+	public class ExchangeStringBuilder
+	{
+		public ExchangeStringBuilder()
+		{
+			theBuilder = new System.Text.StringBuilder ();
+		}
+
+		public void Append(string str)
+		{
+			this.length += str.Length ;
+			theBuilder.Append (str);
+		}
+
+		public void AppendLine(string str)
+		{
+			this.length += str.Length + 2 ;
+			theBuilder.AppendLine(str) ;
+		}
+
+		public void Replace(string oldstring, string newstring)
+		{
+			theBuilder.Replace (oldstring, newstring);
+		}
+
+		public int Length
+		{
+			get
+			{
+				return this.length;
+			}
+		}
+
+		public new string ToString()
+		{
+			return theBuilder.ToString() ;
+		}
+
+		private System.Text.StringBuilder theBuilder;
+		private int length ;
+	}
 
 
 	public class HtmlText
 	{
 		public HtmlText()
 		{
+			this.mshtml = new MSHtmlText ();
+			this.output.AppendLine("<HTML><HEAD>") ;
+			this.output.AppendLine("<STYLE></STYLE>") ;
+			this.output.AppendLine ("</HEAD>");
+			this.output.AppendLine ("");
+			this.output.AppendLine ("<BODY>");
+
+			this.mshtml.UpdateStartFragment (this.output.Length);
 		}
 
 		public void Terminate()
 		{
 			this.CloseOpenTagsOnStack (true);
+			mshtml.UpdateEndFragment (this.output.Length);
+			this.output.AppendLine ("<BODY>");
+			this.output.AppendLine ("<HTML>");
+			mshtml.UpdateEndHtml (this.output.Length);
+			mshtml.AddHtmlText (ref this.output);
 		}
 
 		public override string ToString()
 		{
 			return this.output.ToString ();
-		}
-
-		public void NewPara()
-		{
-			if ((precedParagraphMode != paragraphMode) || paragraphNotModeSet)
-			{
-				if (!paragraphNotModeSet)
-					this.CloseTag (HtmlAttribute.Paragraph);
-
-				this.paragraphNotModeSet = false;
-
-				string mode = JustificationModeToHtml (paragraphMode);
-				string parametername = null;
-
-				if (mode != null)
-					parametername = "align";
-
-				this.OpenTag (HtmlAttribute.Paragraph, parametername, mode);
-			}
-
-			this.AppendTagsToOpen ();
-			this.AppendPendingTags ();
 		}
 
 		public void AppendText(string thestring)
@@ -115,7 +203,7 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (this.fontSize != 0)
 				{
-					this.OpenTag (HtmlAttribute.Font, "size", this.fontSize.ToString());
+					this.OpenTag (HtmlAttribute.Font, "size", this.fontSize.ToString ());
 				}
 			}
 
@@ -173,10 +261,10 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			this.isStrikeout = underlined;
 		}
-		
+
 		public void SetFontSize(double fontSize)
 		{
-			this.fontSize = (int)(fontSize / (254.0 / 72.0));
+			this.fontSize = (int) (fontSize / (254.0 / 72.0));
 		}
 
 		public void SetFontFace(string fontFace)
@@ -212,7 +300,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		public string JustificationModeToHtml(Wrappers.JustificationMode JustificationMode)
 		{
-			string retval = null ;
+			string retval = null;
 
 			switch (JustificationMode)
 			{
@@ -237,29 +325,29 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void NewParagraph(Wrappers.JustificationMode JustificationMode)
 		{
-			string parametername = null, parametervalue = null ;
+			string parametername = null, parametervalue = null;
 
 			if (JustificationMode != Wrappers.JustificationMode.Unknown)
 			{
-				parametername = "align" ;
+				parametername = "align";
 
 				switch (JustificationMode)
 				{
 					case Wrappers.JustificationMode.AlignLeft:
-						parametername = null ;
-						parametervalue = null ;
+						parametername = null;
+						parametervalue = null;
 						break;
 					case Wrappers.JustificationMode.JustifyAlignLeft:
 					case Wrappers.JustificationMode.JustifyCenter:
 					case Wrappers.JustificationMode.JustifyAlignRight:
-						parametervalue = "justify" ;
+						parametervalue = "justify";
 						break;
 					case Wrappers.JustificationMode.Center:
-						parametervalue = "center" ;
-						break ;
+						parametervalue = "center";
+						break;
 					case Wrappers.JustificationMode.AlignRight:
-						parametervalue = "right" ;
-						break ;
+						parametervalue = "right";
+						break;
 				}
 			}
 			else
@@ -269,7 +357,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			HtmlAttributeWithParam attr = new HtmlAttributeWithParam (HtmlAttribute.Paragraph, parametername, parametervalue);
 
-			this.output.Append (attr.AttributeToString(HtmlTagMode.Open)) ;
+			this.output.Append (attr.AttributeToString (HtmlTagMode.Open));
 			this.openTagsStack.Push (attr);
 		}
 
@@ -346,18 +434,6 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void ReplaceSpecialCodes(ref string line, Epsitec.Common.Text.Unicode.Code specialCode, string htmlTag)
 		{
-#if false			
-
-			// line.Remove() n'a aucun effet ??? très bizarre, bon pour l'instant on s'en fiche
-			// car on fait autrement
-
-			int index ; 
-			while ((index = line.IndexOf((char)Epsitec.Common.Text.Unicode.Code.LineSeparator)) != -1)
-			{
-				line.Remove (index, 1);
-				line.Insert (index, "<br />");
-			}
-#else
 			System.Text.StringBuilder outputstringbuilder = new System.Text.StringBuilder ();
 
 			string[] split = line.Split (new char[] { (char) specialCode });
@@ -373,7 +449,6 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 			line = outputstringbuilder.ToString ();
-#endif
 		}
 
 		private void TransformLineSeparators(ref string line)
@@ -583,13 +658,23 @@ namespace Epsitec.Common.Text.Exchange
 		private string precedFontFace = "";
 
 
-		private System.Text.StringBuilder output = new System.Text.StringBuilder ();
+		private ExchangeStringBuilder output = new ExchangeStringBuilder ();
 
 		private System.Collections.Generic.Stack<HtmlAttributeWithParam> openTagsStack = new System.Collections.Generic.Stack<HtmlAttributeWithParam> ();
 		private System.Collections.Generic.List<HtmlAttributeWithParam> tagsToClose = new System.Collections.Generic.List<HtmlAttributeWithParam> ();
 		private System.Collections.Generic.List<HtmlAttributeWithParam> tagsToOpen = new System.Collections.Generic.List<HtmlAttributeWithParam> ();
 		private System.Collections.Generic.Stack<HtmlAttributeWithParam> pendingAttributes = new System.Collections.Generic.Stack<HtmlAttributeWithParam> ();
 
+
+		MSHtmlText mshtml;
+
+		public string msHtml
+		{
+			get
+			{
+				return mshtml.ToString() ;
+			}
+		}
 	}
 
 	/// <summary>
@@ -625,13 +710,12 @@ namespace Epsitec.Common.Text.Exchange
 			bool newParagraph = true;
 
 			navigator.MoveTo (0, 0);
-			
-			htmlText.SetParagraph (paraWrapper.Defined.JustificationMode);
-			htmlText.AppendText ("");
+
+			htmlText.NewParagraph (paraWrapper.Active.JustificationMode);
 
 			while (true)
 			{
-				string runText ;
+				string runText;
 				int runLength = navigator.GetRunLength (100000);
 
 				if (runLength == 0)
@@ -640,6 +724,10 @@ namespace Epsitec.Common.Text.Exchange
 				}
 
 				runText = navigator.ReadText (runLength);
+
+				// navigator.TextStyles[1].StyleProperties[1]. ;
+				// navigator.TextContext.StyleList.StyleMap.GetCaption ();
+				// navigator.TextContext.StyleList.
 
 				bool finishParagraph = false;
 				if (runLength == 1 && runText[0] == (char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator)
@@ -651,21 +739,21 @@ namespace Epsitec.Common.Text.Exchange
 				{
 					htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
 					htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
-					htmlText.SetUnderlined (textWrapper.Defined.IsUnderlineDefined);
-					htmlText.SetStrikeout (textWrapper.Defined.IsStrikeoutDefined);
+					htmlText.SetUnderlined (textWrapper.Active.IsUnderlineDefined);
+					htmlText.SetStrikeout (textWrapper.Active.IsStrikeoutDefined);
 
-					htmlText.SetFontFace (textWrapper.Defined.FontFace);
-					htmlText.SetFontSize (textWrapper.Defined.IsFontSizeDefined ? textWrapper.Defined.FontSize : 0);
-					htmlText.SetFontColor (textWrapper.Defined.Color);
+					htmlText.SetFontFace (textWrapper.Active.FontFace);
+					htmlText.SetFontSize (textWrapper.Active.IsFontSizeDefined ? textWrapper.Active.FontSize : 0);
+					htmlText.SetFontColor (textWrapper.Active.Color);
 
-					//htmlText.AppendText (runText);
+					htmlText.AppendText (runText);
 				}
 
 				// avance au run suivant
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
 
 				// avance encore d'un seul caractère afin de se trouver véritablement dans
-				// le contexte su run
+				// le contexte du run
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);
 
 				if (navigator.GetRunLength (1000000) == 0)
@@ -676,14 +764,14 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (finishParagraph)
 				{
-					htmlText.CloseParagraph (paraWrapper.Defined.JustificationMode);
+					htmlText.CloseParagraph (paraWrapper.Active.JustificationMode);
 					finishParagraph = false;
 				}
 			}
 
 			htmlText.Terminate ();
 
-			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Text, htmlText);
+			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Text, htmlText.msHtml);
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
 		}
 
@@ -745,21 +833,21 @@ namespace Epsitec.Common.Text.Exchange
 
 				//	La façon "haut niveau" de faire :
 
-				if (textWrapper.Defined.IsFontFaceDefined)
+				if (textWrapper.Active.IsFontFaceDefined)
 				{
-					System.Console.Out.WriteLine ("- Font Face: {0}", textWrapper.Defined.FontFace, textWrapper.Defined.FontStyle, textWrapper.Defined.InvertItalic ? "(italic)" : "");
+					System.Console.Out.WriteLine ("- Font Face: {0}", textWrapper.Active.FontFace, textWrapper.Active.FontStyle, textWrapper.Active.InvertItalic ? "(italic)" : "");
 				}
-				if (textWrapper.Defined.IsFontStyleDefined)
+				if (textWrapper.Active.IsFontStyleDefined)
 				{
-					System.Console.Out.WriteLine ("- Font Style: {0}", textWrapper.Defined.FontStyle);
+					System.Console.Out.WriteLine ("- Font Style: {0}", textWrapper.Active.FontStyle);
 				}
-				if (textWrapper.Defined.IsInvertItalicDefined)
+				if (textWrapper.Active.IsInvertItalicDefined)
 				{
-					System.Console.Out.WriteLine ("- Invert Italic: {0}", textWrapper.Defined.InvertItalic);
+					System.Console.Out.WriteLine ("- Invert Italic: {0}", textWrapper.Active.InvertItalic);
 				}
-				if (textWrapper.Defined.IsInvertBoldDefined)
+				if (textWrapper.Active.IsInvertBoldDefined)
 				{
-					System.Console.Out.WriteLine ("- Invert Bold: {0}", textWrapper.Defined.InvertBold);
+					System.Console.Out.WriteLine ("- Invert Bold: {0}", textWrapper.Active.InvertBold);
 				}
 			}
 
