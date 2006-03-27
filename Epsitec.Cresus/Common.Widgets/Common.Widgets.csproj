@@ -261,9 +261,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Collections\FlatChildrenCollection.cs" />
-    <Compile Include="Collections\LayeredChildrenCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Collections\HostedShortcutCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -277,9 +274,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Collections\IWidgetCollectionHost.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Collections\LayerCollection.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Collections\ShortcutCollection.cs">
@@ -436,9 +430,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Layouts\ILayout.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Layouts\Layer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Layouts\LayoutEngine.cs">

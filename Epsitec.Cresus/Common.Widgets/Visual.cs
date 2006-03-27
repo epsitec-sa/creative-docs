@@ -85,34 +85,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Layouts.Layer					ParentLayer
-		{
-			get
-			{
-				return this.parent_layer;
-			}
-		}
-
-		public Collections.LayerCollection		Layers
-		{
-			get
-			{
-				if (this.ContainsLocalValue (Visual.LayersProperty) == false)
-				{
-					lock (this)
-					{
-						if (this.ContainsLocalValue (Visual.LayersProperty) == false)
-						{
-							this.SetLocalValue (Visual.LayersProperty, new Collections.LayerCollection (this));
-						}
-					}
-				}
-
-				return this.GetLocalValue (Visual.LayersProperty) as Collections.LayerCollection;
-			}
-		}
-		
-		
 		public CommandDispatcher[]				CommandDispatchers
 		{
 			get
@@ -663,21 +635,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool								HasLayers
-		{
-			get
-			{
-				if (this.ContainsLocalValue (Visual.LayersProperty))
-				{
-					return this.Layers.HasLayers;
-				}
-				else
-				{
-					return false;
-				}
-			}
-		}
-		
 		public bool								HasChildren
 		{
 			get
@@ -713,33 +670,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal void SetParentLayer(Layouts.Layer parent_layer)
-		{
-			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsVisibleProperty);
-			
-			Visual old_parent = this.Parent;
-			
-			if (old_parent != null)
-			{
-				old_parent.Invalidate (this.Bounds);
-			}
-			
-			this.parent_layer = parent_layer;
-			
-			Visual new_parent = this.Parent;
-			
-			if (new_parent != null)
-			{
-				new_parent.Invalidate (this.Bounds);
-			}
-			
-			if (old_parent != new_parent)
-			{
-				this.InvalidateProperty (Visual.ParentProperty, old_parent, new_parent);
-			}
-			
-			snapshot.InvalidateDifferentProperties ();
-		}
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
 		{
@@ -765,39 +695,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		internal Layouts.Layer GetDefaultLayer()
-		{
-			Collections.LayerCollection layers = this.Layers;
-			
-			if (layers.Count == 0)
-			{
-				lock (layers.SyncRoot)
-				{
-					if (layers.Count == 0)
-					{
-						layers.AddLayer ();
-					}
-				}
-			}
-			
-			return layers[0];
-		}
-
-		internal void NotifyLayersChanged()
-		{
-			this.InvalidateProperty (Visual.LayersProperty, UndefinedValue.Instance, UndefinedValue.Instance);
-		}
-		
 		internal void NotifyGeometryChanged()
 		{
 			this.NotifyLayoutChanged ();
 			this.NotifyParentLayoutChanged ();
-		}
-		
-		internal void NotifyChildrenChanged(Layouts.Layer layer)
-		{
-			this.InvalidateProperty (Visual.ChildrenProperty, UndefinedValue.Instance, UndefinedValue.Instance);
-			this.NotifyLayoutChanged ();
 		}
 		
 		internal void NotifyLayoutChanged()
@@ -926,24 +827,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		private static object GetLayersValue(DependencyObject o)
-		{
-			Visual that = o as Visual;
-			return that.Layers;
-		}
-
 		private static object GetParentValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.Parent;
 		}
 		
-		private static object GetParentLayerValue(DependencyObject o)
-		{
-			Visual that = o as Visual;
-			return that.ParentLayer;
-		}
-
 		private static object GetChildrenValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
@@ -1277,10 +1166,8 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty GroupProperty					= DependencyProperty.Register ("Group", typeof (string), typeof (Visual));
 		public static readonly DependencyProperty NameProperty					= DependencyObjectTree.NameProperty.AddOwner (typeof (Visual));
 		public static readonly DependencyProperty ParentProperty				= DependencyObjectTree.ParentProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged)));
-		public static readonly DependencyProperty ParentLayerProperty			= DependencyProperty.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetParentLayerValue)));
 		public static readonly DependencyProperty ChildrenProperty				= DependencyObjectTree.ChildrenProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
 		public static readonly DependencyProperty HasChildrenProperty			= DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetHasChildrenValue)));
-		public static readonly DependencyProperty LayersProperty				= DependencyProperty.RegisterReadOnly ("Layers", typeof (Collections.LayerCollection), typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetLayersValue)));
 		public static readonly DependencyProperty WindowProperty				= DependencyProperty.RegisterReadOnly ("Window", typeof (Window), typeof (Visual), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Instance));
 		
 		public static readonly DependencyProperty AnchorProperty				= DependencyProperty.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyMetadataOptions.AffectsParentLayout));
@@ -1329,7 +1216,6 @@ namespace Epsitec.Common.Widgets
 		protected bool							has_layout_changed;
 		protected bool							have_children_changed;
 		protected byte							currently_updating_layout;
-		private Layouts.Layer					parent_layer;
 		private Drawing.Rectangle				bounds;
 		private static short					next_serial_id;
 		Collections.FlatChildrenCollection		children;
@@ -1343,6 +1229,7 @@ namespace Epsitec.Common.Widgets
 		internal void NotifyChildrenChanged()
 		{
 			//	TODO: ...
+			this.NotifyLayoutChanged ();
 		}
 	}
 }
