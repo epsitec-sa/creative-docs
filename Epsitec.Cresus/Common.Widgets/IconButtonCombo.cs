@@ -510,6 +510,9 @@ namespace Epsitec.Common.Widgets
 		#region Items
 		public class Item
 		{
+			//	Les instances de cette classe servent à peupler la liste Items de IconButtonCombo.
+			//	Chaque instance correspond à une ligne du menu-combo.
+
 			public Item(string name, string briefIcon, string regularText, string selectedText)
 			{
 				this.name         = name;
@@ -545,7 +548,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 
-
 		#region CloseMode Enumeration
 		protected enum CloseMode
 		{
@@ -562,7 +564,6 @@ namespace Epsitec.Common.Widgets
 				this.menu = menu;
 			}
 			
-			
 			#region IMenuHost Members
 			public void GetMenuDisposition(Widget item, ref Drawing.Size size, out Drawing.Point location, out Animation animation)
 			{
@@ -575,6 +576,7 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle workingArea = screenInfo.WorkingArea;
 				
 				double maxHeight = pos.Y - workingArea.Bottom;
+				double scrollWidth = 0;
 				
 				if ( maxHeight > size.Height ||
 					 maxHeight > 100         )
@@ -582,6 +584,11 @@ namespace Epsitec.Common.Widgets
 					//	Il y a assez de place pour dérouler le menu vers le bas,
 					//	mais il faudra peut-être le raccourcir un bout :
 					
+					if ( this.menu.Height > maxHeight )  // pas assez de place en hauteur ?
+					{
+						scrollWidth = 17;  // place pour l'ascenseur à droite
+					}
+
 					this.menu.MaxSize = new Drawing.Size(this.menu.MaxSize.Width, maxHeight);
 					this.menu.AdjustSize();
 					
@@ -597,6 +604,11 @@ namespace Epsitec.Common.Widgets
 					
 					maxHeight = workingArea.Top - pos.Y;
 				
+					if ( this.menu.Height > maxHeight )  // pas assez de place en hauteur ?
+					{
+						scrollWidth = 17;  // place pour l'ascenseur à droite
+					}
+
 					this.menu.MaxSize = new Drawing.Size(this.menu.MaxSize.Width, maxHeight);
 					this.menu.AdjustSize();
 					
@@ -607,6 +619,8 @@ namespace Epsitec.Common.Widgets
 					animation = Animation.RollUp;
 				}
 				
+				size.Width += scrollWidth;
+
 				location.X -= this.menu.MenuShadow.Left;
 				location.Y -= size.Height;
 				
