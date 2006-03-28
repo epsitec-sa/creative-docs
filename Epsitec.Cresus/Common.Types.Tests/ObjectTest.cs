@@ -1201,8 +1201,6 @@ namespace Epsitec.Common.Types
 			
 			public void AddChild(TreeTest item)
 			{
-//				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreateInheritedPropertyTreeSnapshot (item);
-				
 				if (this.children == null)
 				{
 					this.children = new TreeTestChildren ();
@@ -1217,9 +1215,6 @@ namespace Epsitec.Common.Types
 				item.parent = this;
 				item.InheritedPropertyCache.InheritValuesFromParent (item, item.parent);
 				item.InheritedPropertyCache.NotifyChanges (item);
-				
-//				snapshot.AddNewInheritedProperties (item);
-//				snapshot.InvalidateDifferentProperties ();
 			}
 			
 			public static object GetValueParent(DependencyObject o)

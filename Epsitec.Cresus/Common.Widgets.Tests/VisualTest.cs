@@ -20,10 +20,14 @@ namespace Epsitec.Common.Widgets
 			xs.Foo ();
 			Assert.AreEqual (1, xs.Count);
 
+			//	Travailler avec une interface pointant sur une structure crée
+			//	en fait une version "boxed" de la structure, ce qui signifie
+			//	que l'on travaille sur une copie, plus sur un original...
+			
 			IX ix = xs;
 
 			ix.Foo ();
-			Assert.AreEqual (2, xs.Count);
+			Assert.AreEqual (1, xs.Count);
 		}
 
 		interface IX

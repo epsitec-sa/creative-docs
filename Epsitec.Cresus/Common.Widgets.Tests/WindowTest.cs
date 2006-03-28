@@ -202,13 +202,17 @@ namespace Epsitec.Common.Widgets
 			window.Text = "CheckTabNavigation";
 			window.ClientSize = new Drawing.Size (450, 230);
 			window.MakeFixedSizeWindow ();
+
+//-			Assert.IsNotNull (window.CommandDispatchers[0]);
+//-			Assert.IsNotNull (window.Root.CommandDispatchers[0]);
 			
-			Assert.IsNotNull (window.CommandDispatchers[0]);
-			Assert.IsNotNull (window.Root.CommandDispatchers[0]);
+//-			CommandDispatcher dispatcher = window.CommandDispatchers[0];
 			
-			CommandDispatcher dispatcher = window.CommandDispatchers[0];
-			
+			CommandDispatcher dispatcher = CommandDispatcher.Default;
 			dispatcher.RegisterController (new MyController ());
+
+			window.AttachCommandDispatcher (dispatcher);
+			window.Root.AttachCommandDispatcher (dispatcher);
 			
 			Assert.AreSame (dispatcher, window.Root.CommandDispatchers[0]);
 			

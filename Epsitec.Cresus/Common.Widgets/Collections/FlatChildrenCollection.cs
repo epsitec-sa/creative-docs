@@ -245,7 +245,10 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 			if (item.Parent == this.host)
 			{
-				throw new System.InvalidOperationException (FlatChildrenCollection.NotTwiceMessage);
+				//	If the caller tries to add a visual to the same parent, we
+				//	simply accept it; don't do anything here...
+				
+				return;
 			}
 
 			Snapshot snapshot = Snapshot.RecordTree (item);
@@ -399,10 +402,14 @@ namespace Epsitec.Common.Widgets.Collections
 
 				this.snapshot.InvalidateDifferentProperties ();
 #else
+				//	Passe en revue tous les changements.
+				
 				foreach (Visual visual in this.visuals)
 				{
 					visual.InheritedPropertyCache.NotifyChanges (visual);
 				}
+
+				this.snapshot.InvalidateDifferentProperties ();
 #endif
 			}
 
@@ -447,8 +454,7 @@ namespace Epsitec.Common.Widgets.Collections
 						}
 					}
 
-					this.snapshot.Record (visual, properties);
-					this.snapshot.RecordSubtree (visual, properties);
+					this.snapshot.Record (visual, Visual.ParentProperty);
 				}
 			}
 

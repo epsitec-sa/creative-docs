@@ -792,7 +792,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private bool								AutoMnemonic
+		public bool									AutoMnemonic
 		{
 			get
 			{
@@ -1543,22 +1543,21 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetParent(Widget widget)
 		{
-			if (widget != this.Parent)
+			Widget oldParent = this.Parent;
+			Widget newParent = widget;
+			
+			if (newParent != oldParent)
 			{
-				Widget parent;
-				
-				if (widget == null)
+				if (newParent == null)
 				{
-					parent = this.Parent;
-					parent.Children.Remove (this);
+					oldParent.Children.Remove (this);
 				}
 				else
 				{
-					parent = widget;
-					parent.Children.Add (this);
+					newParent.Children.Add (this);
 				}
 				
-				System.Diagnostics.Debug.Assert (this.Parent == widget);
+				System.Diagnostics.Debug.Assert (this.Parent == newParent);
 			}
 		}
 		
