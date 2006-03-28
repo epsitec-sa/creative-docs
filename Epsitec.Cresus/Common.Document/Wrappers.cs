@@ -34,11 +34,11 @@ namespace Epsitec.Common.Document
 				Drawing.DynamicImage image;
 
 				tag = string.Concat(this.document.UniqueName, ".TextFontBrief");
-				image = new Drawing.DynamicImage(new Drawing.Size(100, 18), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageFontBrief));
+				image = new Drawing.DynamicImage(new Drawing.Size(140, 16), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageFontBrief));
 				image.IsCacheEnabled = false;
 				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
 
-				tag = string.Concat(this.document.UniqueName, ".TextFontShort");
+				tag = string.Concat(this.document.UniqueName, ".TextFontMenu");
 				image = new Drawing.DynamicImage(new Drawing.Size(220, 30), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageFontMenu));
 				image.IsCacheEnabled = false;
 				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
@@ -1623,6 +1623,61 @@ namespace Epsitec.Common.Document
 
 
 		#region DynamicDrawing
+		public void FontFaceComboSelect(IconButtonCombo combo, string fontFace)
+		{
+			//	Sélectionne une police, sans ouvrir le menu-combo.
+			string text = TextLayout.ConvertToTaggedText(fontFace);
+			string parameter = string.Concat(fontFace, '\t', "", '\t', "", '\t', text, '\t', "", '\t', "");
+			string briefIcon = Misc.IconDyn(string.Concat(this.document.UniqueName, ".TextFontBrief"), parameter);
+			combo.IconButton.IconName = briefIcon;
+		}
+
+		public void FontFaceComboOpening(IconButtonCombo combo)
+		{
+			//	Le combo pour les polices va être ouvert.
+			bool quickOnly = this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
+			string selectedFontFace = this.textWrapper.Active.FontFace;
+			int quickCount;
+			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.document.Settings.QuickFonts, quickOnly, selectedFontFace, out quickCount);
+
+			combo.Items.Clear();
+			int i = 0;
+			foreach ( OpenType.FontIdentity id in fontList )
+			{
+				string fontFace  = id.InvariantFaceName;
+				string fontStyle = id.InvariantStyleName;
+				string prefix    = "";
+				string text      = TextLayout.ConvertToTaggedText(id.InvariantFaceName);
+				string suffix    = "";
+				string abc       = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleAbc ? "Abc" : "AaBbYyZz";
+
+				if ( i < quickCount )  // police rapide ?
+				{
+					if ( i < 9 )  // police rapide avec un raccourci [1]..[9] ?
+					{
+						prefix = string.Format("{0}: <b>", (i+1).ToString(System.Globalization.CultureInfo.InvariantCulture));
+						suffix = "</b>";
+					}
+					else	// police rapide sans raccourci ?
+					{
+						prefix = "<b>";
+						suffix = "</b>";
+					}
+
+					prefix = TextLayout.ConvertToTaggedText(prefix);
+					suffix = TextLayout.ConvertToTaggedText(suffix);
+				}
+
+				string parameter = string.Concat(fontFace, '\t', fontStyle, '\t', prefix, '\t', text, '\t', suffix, '\t', abc);
+
+				string briefIcon = Misc.IconDyn(string.Concat(this.document.UniqueName, ".TextFontBrief"), parameter);
+				string regularText = Misc.ImageDyn(string.Concat(this.document.UniqueName, ".TextFontMenu"), parameter);
+
+				combo.Items.Add(new IconButtonCombo.Item(fontFace, briefIcon, regularText, regularText));
+				i ++;
+			}
+		}
+
 		protected void DrawDynamicImageFontBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
 		{
 			//	Dessine une police pour l'icône résumée, pour une image dynamique.
@@ -1630,7 +1685,18 @@ namespace Epsitec.Common.Document
 
 			IAdorner adorner = xAdorner as IAdorner;
 
+			string[] arguments = argument.Split('\t');
+			System.Diagnostics.Debug.Assert(arguments.Length == 6);
+			string fontFace  = arguments[0];
+			string fontStyle = arguments[1];
+			string prefix    = arguments[2];
+			string text      = arguments[3];
+			string suffix    = arguments[4];
+			string abc       = arguments[5];
 
+			Rectangle r = new Rectangle(0, 0, size.Width, size.Height);
+			Color c = adorner.ColorText(WidgetState.Enabled);
+			this.DrawDynamicText(graphics, r, text, 0, c, ContentAlignment.MiddleLeft);
 		}
 
 		protected void DrawDynamicImageFontMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
@@ -1641,15 +1707,55 @@ namespace Epsitec.Common.Document
 			IAdorner adorner = xAdorner as IAdorner;
 
 			string[] arguments = argument.Split('\t');
-			System.Diagnostics.Debug.Assert(arguments.Length == 4);
+			System.Diagnostics.Debug.Assert(arguments.Length == 6);
 			string fontFace  = arguments[0];
 			string fontStyle = arguments[1];
-			string text      = arguments[2];
-			string abc       = arguments[3];
+			string prefix    = arguments[2];
+			string text      = arguments[3];
+			string suffix    = arguments[4];
+			string abc       = arguments[5];
 
 			OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
 			OpenType.FontIdentity id = font.FontIdentity;
+			double oy = size.Height*0.25;
 
+			//	Dessine le nom de la police.
+			Rectangle r = new Rectangle(3, 0, 141, size.Height);
+			Color c = adorner.ColorText(WidgetState.Enabled);
+			TextLayout layout = new TextLayout();
+			layout.Text = string.Concat(TextLayout.ConvertToSimpleText(prefix), text, TextLayout.ConvertToSimpleText(suffix));
+			layout.Alignment = ContentAlignment.MiddleLeft;
+			layout.LayoutSize = r.Size;
+			layout.Paint(r.BottomLeft, graphics, r, c, GlyphPaintStyle.Normal);
+
+			//	Dessine le nombre de variantes.
+			string v = id.FontStyleCount.ToString();
+			r = new Rectangle(144, 0, 16, size.Height);
+			this.DrawDynamicText(graphics, r, v, 0, c, ContentAlignment.MiddleCenter);
+
+			//	Dessine l'échantillon "Abc" ou "AaBbYyZz".
+			double fontSize = size.Height*0.85;
+			Path path;
+			if ( abc == "Abc" )
+			{
+				path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(id, 165, oy, fontSize);
+			}
+			else
+			{
+				path = Common.Widgets.Helpers.FontPreviewer.GetPath(id, 165, oy, fontSize);
+			}
+				
+			if ( path != null )
+			{
+				graphics.Color = c;
+				graphics.PaintSurface(path);
+				path.Dispose();
+			}
+
+			//	Dessine les traits verticaux de séparation.
+			graphics.AddLine(144-0.5, 0, 144-0.5, size.Height);
+			graphics.AddLine(160-0.5, 0, 160-0.5, size.Height);
+			graphics.RenderSolid(adorner.ColorTextFieldBorder(true));  // dessine le cadre
 		}
 
 		protected void DrawDynamicImageStyleBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
@@ -1671,7 +1777,7 @@ namespace Epsitec.Common.Document
 			Rectangle r = new Rectangle(0, 0, size.Width, limit);
 			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
 			Color c = adorner.ColorText(WidgetState.Enabled);
-			this.DrawDynamicText(graphics, r, text, limit-3, c);
+			this.DrawDynamicText(graphics, r, text, limit-3, c, ContentAlignment.MiddleLeft);
 
 			Rectangle rect = new Rectangle(0, limit, size.Width, size.Height-limit);
 			this.DrawStyle(graphics, rect, textStyle);
@@ -1697,7 +1803,7 @@ namespace Epsitec.Common.Document
 			Rectangle r = new Rectangle(3, 0, limit-3-1, size.Height);
 			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
 			Color c = adorner.ColorText(WidgetState.Enabled);
-			this.DrawDynamicText(graphics, r, text, 0, c);
+			this.DrawDynamicText(graphics, r, text, 0, c, ContentAlignment.MiddleLeft);
 
 			Rectangle rect = new Rectangle(limit, 0, size.Width-limit, size.Height);
 			this.DrawStyle(graphics, rect, textStyle);
@@ -1764,7 +1870,7 @@ namespace Epsitec.Common.Document
 			graphics.RestoreClippingRectangle(iClip);
 		}
 
-		protected void DrawDynamicText(Graphics graphics, Rectangle rect, string text, double fontSize, Color color)
+		protected void DrawDynamicText(Graphics graphics, Rectangle rect, string text, double fontSize, Color color, ContentAlignment alignment)
 		{
 			//	Dessine un texte simple (sans tags html) inclu dans un rectangle.
 			Rectangle iClip = graphics.SaveClippingRectangle();
@@ -1776,7 +1882,7 @@ namespace Epsitec.Common.Document
 			}
 
 			Font font = Misc.GetFont("Tahoma");
-			graphics.AddText(rect.Left, rect.Bottom, rect.Width, rect.Height, text, font, fontSize, ContentAlignment.MiddleLeft);
+			graphics.AddText(rect.Left, rect.Bottom, rect.Width, rect.Height, text, font, fontSize, alignment);
 			graphics.RenderSolid(color);
 			
 			graphics.RestoreClippingRectangle(iClip);

@@ -109,6 +109,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								AllLinesWidthSameWidth
+		{
+			//	Détermine si toutes les lignes ont la même largeur (par exemple parce qu'elles
+			//	contiennent de simples icônes), pour accélérer l'ouverture.
+			get
+			{
+				return this.allLinesWidthSameWidth;
+			}
+
+			set
+			{
+				this.allLinesWidthSameWidth = value;
+			}
+		}
+
 		public AbstractScroller					Scroller
 		{
 			get { return this.scroller; }
@@ -229,7 +244,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Size GetBestSize()
 		{
-			//	Donne lles dimensions optimales pour la liste.
+			//	Donne les dimensions optimales pour la liste.
 			//	La largeur est la largeur la plus grande de tous les textes contenus dans Items.
 			//	La hauteur est la hauteur la plus grande de tous les textes contenus dans Items.
 
@@ -241,7 +256,8 @@ namespace Epsitec.Common.Widgets
 			layout.DefaultFont     = this.DefaultFont;
 			layout.DefaultFontSize = this.DefaultFontSize;
 
-			for ( int i=0 ; i<this.items.Count ; i++ )
+			int max = this.allLinesWidthSameWidth ? 1 : this.items.Count;
+			for ( int i=0 ; i<max ; i++ )
 			{
 				layout.Text = this.items[i];
 				Drawing.Size size = layout.SingleLineSize;
@@ -855,6 +871,7 @@ namespace Epsitec.Common.Widgets
 		protected bool							mouseDown = false;
 		protected Collections.StringCollection	items;
 		protected TextLayout[]					textLayouts;
+		protected bool							allLinesWidthSameWidth;
 		
 		protected Drawing.Margins				margins;
 		

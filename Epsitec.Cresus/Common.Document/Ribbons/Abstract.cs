@@ -218,7 +218,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected void BriefIconButtonComboDyn(IconButtonCombo combo, string briefIcon, string parameter)
 		{
-			//	Ajoute une ligne au menu d'un IconButtonCombo.
+			//	Spécifie le contenu (au repos, càd menu fermé) d'un IconButtonCombo.
 			briefIcon = Misc.IconDyn(briefIcon, parameter);
 			combo.IconButton.IconName = briefIcon;
 		}

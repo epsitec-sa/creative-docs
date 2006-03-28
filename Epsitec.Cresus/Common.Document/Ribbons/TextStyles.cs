@@ -39,6 +39,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.comboStyle = this.CreateIconButtonCombo("TextEditing");  // (*)
 			this.comboStyle.MenuDrawFrame = true;
+			this.comboStyle.AllLinesWidthSameWidth = true;
 			this.comboStyle.ComboOpening += new CancelEventHandler(this.HandleParagraphOpening);
 			this.comboStyle.ComboClosed += new EventHandler(this.HandleParagraphClosed);
 			ToolTip.Default.SetToolTip(this.comboStyle, Res.Strings.Panel.Style.Choice);
