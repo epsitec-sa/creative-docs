@@ -209,7 +209,9 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (this.fontSize != 0)
 				{
-					this.OpenTag (HtmlAttribute.Font, "size", this.fontSize.ToString ());
+					int htmlfontsize = HtmlText.PointFontSizeToHtmlFontSize (this.fontSize);
+
+					this.OpenTag (HtmlAttribute.Font, "size", htmlfontsize.ToString ());
 				}
 			}
 
@@ -647,8 +649,6 @@ namespace Epsitec.Common.Text.Exchange
 						retval = HtmlText.GetHtmlTag ("p", tagmode, this.parametername, this.parametervalue);
 						break;
 					case HtmlAttribute.Font:
-						if (parametername == "size")
-							parametervalue = HtmlText.PointFontSizeToHtmlFontSize (System.Int32.Parse(this.parametervalue)).ToString();
 						retval = HtmlText.GetHtmlTag ("font", tagmode, this.parametername, this.parametervalue);
 						break;
 				}
