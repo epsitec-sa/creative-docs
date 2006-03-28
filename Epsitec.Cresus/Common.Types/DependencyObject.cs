@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types
 	/// qui permet une plus grande souplesse (valeurs par défaut, introspection,
 	/// sérialisation, styles, génération automatique d'événements, etc.)
 	/// </summary>
-	public abstract class DependencyObject : System.IDisposable
+	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache
 	{
 		protected DependencyObject()
 		{
@@ -64,6 +64,27 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+		public IEnumerable<LocalValueEntry>		InheritableLocalValueEntries
+		{
+			get
+			{
+				foreach (DependencyProperty property in this.properties.Keys)
+				{
+					if (property.DefaultMetadata.InheritsValue)
+					{
+						yield return new LocalValueEntry (property, this.properties[property]);
+					}
+				}
+			}
+		}
+		
+		public IInheritedPropertyCache			InheritedPropertyCache
+		{
+			get
+			{
+				return this;
+			}
+		}
 		
 		public static int						RegisteredPropertyCount
 		{
@@ -97,14 +118,29 @@ namespace Epsitec.Common.Types
 			{
 				DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
-				if (metadata.InheritsValue)
+#if true
+				if ((metadata.InheritsValue) &&
+					(this.inheritedPropertyCache.TryGetValue (this, property, out value)))
 				{
-					value = metadata.FindInheritedValue (this, property);
+					//	Re-use cached value.
+					System.Diagnostics.Debug.WriteLine ("Reuse cached value " + (value == null ? "<null>" : value.ToString ()));
 				}
 				else
 				{
 					value = metadata.CreateDefaultValue ();
 				}
+#else		
+				if (metadata.InheritsValue)
+				{
+
+					value = metadata.FindInheritedValue (this, property);
+
+				}
+				else
+				{
+					value = metadata.CreateDefaultValue ();
+				}
+#endif
 			}
 			
 			return value;
@@ -134,11 +170,17 @@ namespace Epsitec.Common.Types
 
 			if (metadata.InheritsValue)
 			{
+#if true
+				this.SetLocalValue (property, value);
+				this.inheritedPropertyCache.SetValue (this, property, value);
+				this.inheritedPropertyCache.NotifyChanges (this);
+#else
 				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (this, property);
 				
 				this.SetLocalValue (property, value);
 				
 				snapshot.InvalidateDifferentProperties ();
+#endif
 			}
 			else
 			{
@@ -164,11 +206,17 @@ namespace Epsitec.Common.Types
 
 			if (metadata.InheritsValue)
 			{
+#if true
+				this.ClearLocalValue (property);
+				this.inheritedPropertyCache.ClearValue (this, property);
+				this.inheritedPropertyCache.NotifyChanges (this);
+#else
 				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (this, property);
 
 				this.ClearLocalValue (property);
 
 				snapshot.InvalidateDifferentProperties ();
+#endif
 			}
 			else
 			{
@@ -362,11 +410,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		internal IInheritedPropertyCache GetInheritedPropertyCache()
-		{
-			return this.inheritedPropertyCache;
-		}
-		
 		protected void AddUserEventHandler(string name, System.Delegate handler)
 		{
 			if (this.userEvents == null)
@@ -507,5 +550,42 @@ namespace Epsitec.Common.Types
 
 		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
 		static int											registeredPropertyCount;
+
+		#region IInheritedPropertyCache Members
+
+		void IInheritedPropertyCache.ClearAllValues(DependencyObject node)
+		{
+			this.inheritedPropertyCache.ClearAllValues (node);
+		}
+		void IInheritedPropertyCache.ClearValues(DependencyObject node, IEnumerable<DependencyProperty> properties)
+		{
+			this.inheritedPropertyCache.ClearValues (node, properties);
+		}
+		void IInheritedPropertyCache.SetValues(DependencyObject node, IEnumerable<LocalValueEntry> propertyValues)
+		{
+			this.inheritedPropertyCache.SetValues (node, propertyValues);
+		}
+		bool IInheritedPropertyCache.IsDefined(DependencyObject node, DependencyProperty property)
+		{
+			return this.inheritedPropertyCache.IsDefined (node, property);
+		}
+		bool IInheritedPropertyCache.TryGetValue(DependencyObject node, DependencyProperty property, out object value)
+		{
+			return this.inheritedPropertyCache.TryGetValue (node, property, out value);
+		}
+		void IInheritedPropertyCache.NotifyChanges(DependencyObject node)
+		{
+			this.inheritedPropertyCache.NotifyChanges (node);
+		}
+		IEnumerable<LocalValueEntry> IInheritedPropertyCache.GetValues(DependencyObject node)
+		{
+			return this.inheritedPropertyCache.GetValues (node);
+		}
+		void IInheritedPropertyCache.InheritValuesFromParent(DependencyObject node, DependencyObject parent)
+		{
+			this.inheritedPropertyCache.InheritValuesFromParent (node, parent);
+		}
+
+		#endregion
 	}
 }

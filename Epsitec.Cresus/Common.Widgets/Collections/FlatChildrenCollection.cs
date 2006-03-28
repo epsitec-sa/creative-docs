@@ -94,6 +94,7 @@ namespace Epsitec.Common.Widgets.Collections
 				//	suffit de lui en attribuer un :
 
 				visual.SetParentVisual (this.host);
+				visual.InheritedPropertyCache.InheritValuesFromParent (visual, this.host);
 			}
 			else if (this.host == parent)
 			{
@@ -114,6 +115,7 @@ namespace Epsitec.Common.Widgets.Collections
 				System.Diagnostics.Debug.Assert (visual.Parent == null);
 				
 				visual.SetParentVisual (this.host);
+				visual.InheritedPropertyCache.InheritValuesFromParent (visual, this.host);
 			}
 			
 			System.Diagnostics.Debug.Assert (visual.Parent == this.host);
@@ -129,6 +131,7 @@ namespace Epsitec.Common.Widgets.Collections
 			System.Diagnostics.Debug.Assert (this.host == visual.Parent);
 			
 			visual.SetParentVisual (null);
+			visual.InheritedPropertyCache.ClearAllValues (visual);
 
 			System.Diagnostics.Debug.Assert (visual.Parent == null);
 			
@@ -374,7 +377,7 @@ namespace Epsitec.Common.Widgets.Collections
 				//	Maintenant que tous les visuals ont leur parent définitif, il
 				//	faut tous les passer en revue pour déterminer les changements
 				//	de propriétés héritées.
-				
+#if false
 				foreach (Visual visual in this.visuals)
 				{
 					IList<Types.DependencyProperty> properties = Types.DependencyObjectTree.FindInheritedProperties (visual);
@@ -395,6 +398,12 @@ namespace Epsitec.Common.Widgets.Collections
 				//	Passe en revue tous les changements.
 
 				this.snapshot.InvalidateDifferentProperties ();
+#else
+				foreach (Visual visual in this.visuals)
+				{
+					visual.InheritedPropertyCache.NotifyChanges (visual);
+				}
+#endif
 			}
 
 			public static Snapshot RecordTree(Visual visual)

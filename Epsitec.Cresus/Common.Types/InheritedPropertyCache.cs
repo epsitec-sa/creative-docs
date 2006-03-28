@@ -7,6 +7,18 @@ namespace Epsitec.Common.Types
 {
 	public struct InheritedPropertyCache : IInheritedPropertyCache
 	{
+		internal void SetValue(DependencyObject node, DependencyProperty property, object value)
+		{
+			LocalValueEntry[] propertyValues = new LocalValueEntry[1];
+			propertyValues[0] = new LocalValueEntry (property, value);
+			this.SetValues (node, propertyValues);
+		}
+		internal void ClearValue(DependencyObject node, DependencyProperty property)
+		{
+			DependencyProperty[] properties = new DependencyProperty[] { property };
+			this.ClearValues (node, properties);
+		}
+		
 		#region IInheritedPropertyCache Members
 
 		public void ClearAllValues(DependencyObject node)
@@ -21,21 +33,28 @@ namespace Epsitec.Common.Types
 				{
 					if ((mask & this.cachedValueFlags) != 0)
 					{
-						list.Add (DependencyProperty.GetInheritedPropertyFromCacheMask (mask));
+						DependencyProperty property = DependencyProperty.GetInheritedPropertyFromCacheMask (mask);
+						
+						if (node.ContainsLocalValue (property) == false)
+						{
+							list.Add (property);
+							
+							this.cachedValueFlags &= (byte) ~mask;
+							this.currentValues &= (byte) ~mask;
+							this.currentValues |= (byte) (mask & this.defaultValues);
+						}
 					}
 					
 					mask = mask << 1;
 				}
-
-				this.cachedValueFlags = 0;
-				this.currentValues = this.defaultValues;
 			}
 			
 			if (this.more != null)
 			{
-				this.more.ClearAllValues (ref list);
+				this.more.ClearAllValues (node, ref list);
 
-				if (this.more.ContainsChanges () == false)
+				if ((this.more.ContainsChanges () == false) &&
+					(this.more.ContainsData () == false))
 				{
 					//	There is no longer any useful information in the additional
 					//	cache, so simply release it:
@@ -61,22 +80,37 @@ namespace Epsitec.Common.Types
 				{
 					if (this.more != null)
 					{
-						this.more.ClearValues (ref list, properties);
+						if (node.ContainsLocalValue (property) == false)
+						{
+							this.more.ClearValue (ref list, property);
+
+							if ((this.more.ContainsChanges () == false) &&
+								(this.more.ContainsData () == false))
+							{
+								//	There is no longer any useful information in the additional
+								//	cache, so simply release it:
+
+								this.more = null;
+							}
+						}
 					}
 				}
 				else
 				{
 					if ((mask & this.cachedValueFlags) != 0)
 					{
-						byte bits;
-						bits  = this.currentValues;
-						bits ^= this.defaultValues;
-						bits &= mask;
-						
-						this.cachedValueFlags ^= mask;
-						this.currentValues    ^= bits;
-						
-						list.Add (property);
+						if (node.ContainsLocalValue (property) == false)
+						{
+							byte bits;
+							bits  = this.currentValues;
+							bits ^= this.defaultValues;
+							bits &= mask;
+
+							this.cachedValueFlags ^= mask;
+							this.currentValues    ^= bits;
+
+							list.Add (property);
+						}
 					}
 				}
 			}
@@ -87,22 +121,69 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public void SetValues(DependencyObject node, IEnumerable<Serialization.Generic.PropertyValue<object>> propertyValues)
+		public IEnumerable<LocalValueEntry> GetValues(DependencyObject node)
 		{
-			ListWrapper<Serialization.Generic.PropertyValue<object>> list = new ListWrapper<Serialization.Generic.PropertyValue<object>> ();
+			if (this.cachedValueFlags != 0)
+			{
+				int mask = 1;
 
-			foreach (Serialization.Generic.PropertyValue<object> propertyValue in propertyValues)
+				for (int i = 0; i < InheritedPropertyCache.MaskBits; i++)
+				{
+					if ((mask & this.cachedValueFlags) != 0)
+					{
+						DependencyProperty property = DependencyProperty.GetInheritedPropertyFromCacheMask (mask);
+						bool value = ((this.currentValues & mask) != 0) ? true : false;
+						yield return new LocalValueEntry (property, value);
+					}
+
+					mask = mask << 1;
+				}
+			}
+
+			if (this.more != null)
+			{
+				foreach (LocalValueEntry propertyValue in this.more.GetValues (node))
+				{
+					yield return propertyValue;
+				}
+			}
+		}
+		
+		public void InheritValuesFromParent(DependencyObject node, DependencyObject parent)
+		{
+			System.Diagnostics.Debug.Assert (parent != null);
+
+			this.SetValues (node, InheritedPropertyCache.OnlyUndefinedEntries (node, parent.InheritedPropertyCache.GetValues (parent)));
+		}
+
+		private static IEnumerable<LocalValueEntry> OnlyUndefinedEntries(DependencyObject node, IEnumerable<LocalValueEntry> entries)
+		{
+			foreach (LocalValueEntry entry in entries)
+			{
+				if (node.ContainsLocalValue (entry.Property) == false)
+				{
+					yield return entry;
+				}
+			}
+		}
+
+		public void SetValues(DependencyObject node, IEnumerable<LocalValueEntry> propertyValues)
+		{
+			ListWrapper<LocalValueEntry> list = new ListWrapper<LocalValueEntry> ();
+
+			foreach (LocalValueEntry propertyValue in propertyValues)
 			{
 				byte mask = (byte) propertyValue.Property.InheritedPropertyCacheMask;
 
 				if (mask == 0)
 				{
-					if (this.more != null)
+					if (this.more == null)
 					{
-						//	TODO: ...
+						this.more = new MoreSmall ();
 					}
-					
-					//	TODO: ...
+
+					this.more = this.more.SetValue (node, propertyValue.Property, propertyValue.Value);
+					list.Add (propertyValue);
 				}
 				else
 				{
@@ -141,6 +222,29 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public bool IsDefined(DependencyObject node, DependencyProperty property)
+		{
+			byte mask = (byte) property.InheritedPropertyCacheMask;
+
+			if (mask == 0)
+			{
+				if (this.more != null)
+				{
+					return this.more.IsDefined (property);
+				}
+
+				return false;
+			}
+			else
+			{
+				if ((mask & this.cachedValueFlags) != 0)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
 		public bool TryGetValue(DependencyObject node, DependencyProperty property, out object value)
 		{
 			byte mask = (byte) property.InheritedPropertyCacheMask;
@@ -149,7 +253,7 @@ namespace Epsitec.Common.Types
 			{
 				if (this.more != null)
 				{
-					//	TODO: ...
+					return this.more.TryGetValue (property, out value);
 				}
 
 				value = UndefinedValue.Instance;
@@ -206,7 +310,7 @@ namespace Epsitec.Common.Types
 			}
 			if (this.more != null)
 			{
-				//	TODO: ...
+				this.more.NotifyChanges (node);
 			}
 			
 			//	And now also walk through all the children nodes :
@@ -217,7 +321,7 @@ namespace Epsitec.Common.Types
 
 				foreach (DependencyObject child in children)
 				{
-					child.GetInheritedPropertyCache ().NotifyChanges (child);
+					child.InheritedPropertyCache.NotifyChanges (child);
 				}
 			}
 		}
@@ -261,11 +365,11 @@ namespace Epsitec.Common.Types
 				
 				foreach (DependencyObject child in children)
 				{
-					child.GetInheritedPropertyCache ().ClearValues (child, properties);
+					child.InheritedPropertyCache.ClearValues (child, properties);
 				}
 			}
 		}
-		private static void SetChildrenProperties(DependencyObject node, List<Serialization.Generic.PropertyValue<object>> properties)
+		private static void SetChildrenProperties(DependencyObject node, List<LocalValueEntry> properties)
 		{
 			//	Walk through the node's children and set the specified properties.
 
@@ -278,7 +382,7 @@ namespace Epsitec.Common.Types
 
 				foreach (DependencyObject child in children)
 				{
-					child.GetInheritedPropertyCache ().SetValues (child, properties);
+					child.InheritedPropertyCache.SetValues (child, InheritedPropertyCache.OnlyUndefinedEntries (child, properties));
 				}
 			}
 		}
@@ -286,12 +390,160 @@ namespace Epsitec.Common.Types
 
 		private abstract class More
 		{
-			public abstract void ClearAllValues(ref ListWrapper<DependencyProperty> list);
-			public abstract void ClearValues(ref ListWrapper<DependencyProperty> list, IEnumerable<DependencyProperty> properties);
+			public abstract void ClearAllValues(DependencyObject node, ref ListWrapper<DependencyProperty> list);
+			public abstract void ClearValue(ref ListWrapper<DependencyProperty> list, DependencyProperty property);
 			public abstract bool ContainsChanges();
+			public abstract bool ContainsData();
+			public abstract More SetValue(DependencyObject node, DependencyProperty property, object value);
+			public abstract bool IsDefined(DependencyProperty property);
+			public abstract bool TryGetValue(DependencyProperty property, out object value);
+			public abstract void NotifyChanges(DependencyObject node);
+			public abstract IEnumerable<Epsitec.Common.Types.LocalValueEntry> GetValues(DependencyObject node);
 		}
-		private abstract class MoreSmall : More
+		private class MoreSmall : More
 		{
+			public override void ClearAllValues(DependencyObject node, ref ListWrapper<DependencyProperty> list)
+			{
+				if (this.isValueDefined)
+				{
+					if (node.ContainsLocalValue (this.property) == false)
+					{
+						list.Add (this.property);
+
+						this.currentValue    = this.defaultValue;
+						this.hasValueChanged = true;
+						this.isValueDefined  = false;
+					}
+				}
+			}
+			public override void ClearValue(ref ListWrapper<DependencyProperty> list, DependencyProperty property)
+			{
+				if (this.isValueDefined)
+				{
+					if (this.property == property)
+					{
+						list.Add (this.property);
+
+						this.currentValue    = this.defaultValue;
+						this.hasValueChanged = true;
+						this.isValueDefined  = false;
+					}
+				}
+			}
+
+			public override bool ContainsChanges()
+			{
+				if (this.hasValueChanged)
+				{
+					if (this.oldValue != this.currentValue)
+					{
+						if ((this.oldValue == null) ||
+							(UndefinedValue.IsValueUndefined (this.oldValue)) ||
+							(this.oldValue.Equals (this.currentValue) == false))
+						{
+							return true;
+						}
+					}
+				}
+				
+				return false;
+			}
+			public override bool ContainsData()
+			{
+				return this.isValueDefined;
+			}
+			public override More SetValue(DependencyObject node, DependencyProperty property, object value)
+			{
+				if (this.isValueDefined)
+				{
+					if (this.property == property)
+					{
+						this.currentValue = value;
+						this.hasValueChanged = true;
+
+						return this;
+					}
+					else
+					{
+						//	TODO: ...
+						
+						throw new System.NotImplementedException ();
+					}
+				}
+				else
+				{
+					if (this.property != property)
+					{
+						this.property     = property;
+						this.defaultValue = property.DefaultMetadata.CreateDefaultValue ();
+						this.oldValue     = this.defaultValue;
+					}
+					
+					this.currentValue    = value;
+					
+					this.hasValueChanged = true;
+					this.isValueDefined  = true;
+					
+					return this;
+				}
+			}
+
+			public override void NotifyChanges(DependencyObject node)
+			{
+				if (this.hasValueChanged)
+				{
+					if (this.oldValue != this.currentValue)
+					{
+						if ((this.oldValue == null) ||
+							(UndefinedValue.IsValueUndefined (this.oldValue)) ||
+							(this.oldValue.Equals (this.currentValue) == false))
+						{
+							node.InvalidateProperty (this.property, this.oldValue, this.currentValue);
+							
+							this.oldValue = this.currentValue;
+						}
+					}
+					
+					this.hasValueChanged = false;
+				}
+			}
+			public override bool IsDefined(DependencyProperty property)
+			{
+				if (this.isValueDefined)
+				{
+					if (this.property == property)
+					{
+						return true;
+					}
+				}
+				
+				return false;
+			}
+			public override bool TryGetValue(DependencyProperty property, out object value)
+			{
+				if (this.property == property)
+				{
+					value = this.currentValue;
+					return true;
+				}
+				
+				value = UndefinedValue.Instance;
+				return false;
+			}
+			public override IEnumerable<Epsitec.Common.Types.LocalValueEntry> GetValues(DependencyObject node)
+			{
+				if (this.isValueDefined)
+				{
+					yield return new LocalValueEntry (this.property, this.currentValue);
+				}
+			}
+
+			private DependencyProperty property;
+			private object oldValue;
+			private object defaultValue;
+			private object currentValue;
+			private bool isValueDefined;
+			private bool hasValueChanged;
 		}
 		private abstract class MoreExtended : More
 		{
@@ -310,7 +562,10 @@ namespace Epsitec.Common.Types
 	{
 		void ClearAllValues(DependencyObject node);
 		void ClearValues(DependencyObject node, IEnumerable<DependencyProperty> properties);
-		void SetValues(DependencyObject node, IEnumerable<Serialization.Generic.PropertyValue<object>> propertyValues);
+		void SetValues(DependencyObject node, IEnumerable<LocalValueEntry> propertyValues);
+		IEnumerable<LocalValueEntry> GetValues(DependencyObject node);
+		void InheritValuesFromParent(DependencyObject node, DependencyObject parent);
+		bool IsDefined(DependencyObject node, DependencyProperty property);
 		bool TryGetValue(DependencyObject node, DependencyProperty property, out object value);
 		void NotifyChanges(DependencyObject node);
 	}

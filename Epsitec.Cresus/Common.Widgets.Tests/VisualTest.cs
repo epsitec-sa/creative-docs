@@ -12,6 +12,43 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+		[Test]
+		public void CheckStruct()
+		{
+			XS xs = new XS ();
+			Assert.AreEqual (0, xs.Count);
+			xs.Foo ();
+			Assert.AreEqual (1, xs.Count);
+
+			IX ix = xs;
+
+			ix.Foo ();
+			Assert.AreEqual (2, xs.Count);
+		}
+
+		interface IX
+		{
+			void Foo();
+		}
+		struct XS : IX
+		{
+			public int Count
+			{
+				get
+				{
+					return this.count;
+				}
+			}
+			#region IX Members
+
+			public void Foo()
+			{
+				this.count++;
+			}
+
+			#endregion
+			int count;
+		}
 		
 		[Test]
 		public void CheckVisualEnable()
@@ -298,6 +335,8 @@ namespace Epsitec.Common.Widgets
 			handler.Clear ();
 
 			c1.SetValue (Visual.WindowProperty, "WX");
+
+			Assert.AreEqual ("WX", c1.GetValue (Visual.WindowProperty));
 			
 			Assert.AreEqual ("c1-Window:W2,WX.c10-Window:W2,WX.c11-Window:W2,WX.", handler.Log);
 			handler.Clear ();
@@ -306,6 +345,94 @@ namespace Epsitec.Common.Widgets
 
 			Assert.AreEqual ("a-Window:W2,W1.b-Window:W2,W1.c2-Window:W2,W1.", handler.Log);
 			handler.Clear ();
+		}
+
+		[Test]
+		public void CheckMemoryUse()
+		{
+			int size = 1000*1000;
+			X[] array = new X[size];
+
+			long before = System.GC.GetTotalMemory (true);
+
+			for (int i = 0; i < size; i++)
+			{
+				array[i] = new X ();
+			}
+			
+			long after = System.GC.GetTotalMemory (true);
+
+			System.Console.Out.WriteLine ("Allocated {0} bytes for {1} objects, {2:0.0} byte/int", after-before, array.Length, (after-before)*1.0/array.Length);
+		}
+
+		class X : IZ
+		{
+			public Y y;
+
+			#region IZ Members
+
+			public void Foo()
+			{
+				y.Foo ();
+			}
+
+			#endregion
+		}
+		struct Y : IZ
+		{
+			public int v;
+			public void Foo()
+			{
+			}
+		}
+		interface IZ
+		{
+			void Foo();
+		}
+
+		[Test]
+		public void CheckVisualSpeed()
+		{
+			Visual root = new Visual ();
+			Visual parent = root;
+
+			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch ();
+
+			for (int i = 0; i < 1; i++)
+			{
+				StaticText text = new StaticText ();
+				text.Text = "Default";
+				parent.Children.Add (text);
+				Visual child = new Visual ();
+				parent.Children.Add (child);
+				parent = child;
+			}
+
+			for (int j = 0; j < 100; j++)
+			{
+				root = new Visual ();
+				parent = root;
+
+				stopwatch.Reset ();
+				stopwatch.Start ();
+
+				for (int i = 0; i < 150; i++)
+				{
+					StaticText text = new StaticText ();
+					text.Text = "Default";
+					parent.Children.Add (text);
+					Visual child = new Visual ();
+					parent.Children.Add (child);
+					parent = child;
+				}
+
+				stopwatch.Stop ();
+
+				System.Console.WriteLine ("Created tree, top-down: {0:0} ms. {1} x IsVisible, {2} x Visibility", stopwatch.ElapsedMilliseconds, Helpers.VisualTree.IsVisibleCounter, Helpers.VisualTree.VisibilityCounter);
+				Helpers.VisualTree.IsVisibleCounter = 0;
+				Helpers.VisualTree.VisibilityCounter = 0;
+				System.Console.Out.Flush ();
+			}
 		}
 
 

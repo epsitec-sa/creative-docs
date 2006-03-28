@@ -450,12 +450,18 @@ namespace Epsitec.Common.Widgets.Helpers
 				return VisualTree.IsAncestor (descendant, visual);
 			}
 		}
-		
+
+		public static int IsVisibleCounter = 0;
+		public static int VisibilityCounter = 0;
 		
 		public static bool IsVisible(Visual visual)
 		{
+			VisualTree.IsVisibleCounter++;
+			
 			while ((visual != null) && (visual.Visibility))
 			{
+				VisualTree.VisibilityCounter++;
+				
 				if (visual is WindowRoot)
 				{
 					WindowRoot root   = visual as WindowRoot;
