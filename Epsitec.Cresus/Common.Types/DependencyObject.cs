@@ -208,7 +208,27 @@ namespace Epsitec.Common.Types
 			{
 #if true
 				this.ClearLocalValue (property);
-				this.inheritedPropertyCache.ClearValue (this, property);
+				
+				DependencyObject parent = DependencyObjectTree.GetParent (this);
+				
+				if (parent == null)
+				{
+					this.inheritedPropertyCache.ClearValue (this, property);
+				}
+				else
+				{
+					object value;
+					
+					if (parent.inheritedPropertyCache.TryGetValue (parent, property, out value))
+					{
+						this.inheritedPropertyCache.SetValue (this, property, value);
+					}
+					else
+					{
+						this.inheritedPropertyCache.ClearValue (this, property);
+					}
+				}
+				
 				this.inheritedPropertyCache.NotifyChanges (this);
 #else
 				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (this, property);
