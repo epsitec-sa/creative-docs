@@ -967,11 +967,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Widgets\Balloon.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Widgets\ButtonFontFace.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

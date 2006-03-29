@@ -2541,7 +2541,7 @@ namespace Epsitec.Common.Document
 			System.Collections.ArrayList cmds = this.MiniBarCommands(noSelected);
 			if ( cmds == null || cmds.Count == 0 )  return;
 
-			Widgets.Balloon frame = new Widgets.Balloon();
+			Balloon frame = new Balloon();
 			this.miniBarDistance = (distance == 0) ? frame.Distance : distance;
 			if ( !hot && distance == 0 )  this.miniBarDistance = 0;
 
@@ -2649,7 +2649,7 @@ namespace Epsitec.Common.Document
 			this.miniBar.Owner = this.Window;
 			this.miniBar.AttachCommandDispatcher(this.GetCommandDispatcher());
 
-			this.miniBarBalloon = new Widgets.Balloon();
+			this.miniBarBalloon = new Balloon();
 			this.miniBarBalloon.Hot = this.miniBarHot;
 			this.miniBarBalloon.Distance = this.miniBarDistance;
 			this.miniBarBalloon.SetParent(this.miniBar.Root);
@@ -4706,7 +4706,7 @@ namespace Epsitec.Common.Document
 		protected double						miniBarHot;
 		protected double						miniBarDistance;
 		protected Window						miniBar = null;
-		protected Widgets.Balloon				miniBarBalloon = null;
+		protected Balloon						miniBarBalloon = null;
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOrder;
 		protected VMenu							contextMenuOper;
