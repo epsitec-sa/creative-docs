@@ -4816,6 +4816,11 @@ namespace Epsitec.App.DocumentEditor
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerStyles.SetDirtyTextStyles(textStyleList);
 			}
+
+			this.ribbonMain.NotifyTextStylesChanged(textStyleList);
+			this.ribbonGeom.NotifyTextStylesChanged(textStyleList);
+			this.ribbonOper.NotifyTextStylesChanged(textStyleList);
+			this.ribbonText.NotifyTextStylesChanged(textStyleList);
 		}
 
 		private void HandleTextStyleListChanged()

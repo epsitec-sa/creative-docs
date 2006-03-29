@@ -41,7 +41,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboStyle.TotalButtons = 3;
 			this.comboStyle.MenuDrawFrame = true;
 			this.comboStyle.AllLinesWidthSameWidth = true;
-			this.comboStyle.ComboOpening += new CancelEventHandler(this.HandleParagraphOpening);
 			this.comboStyle.SelectedIndexChanged += new EventHandler(this.HandleParagraphSelected);
 			ToolTip.Default.SetToolTip(this.comboStyle, Res.Strings.Panel.Style.Choice);
 
@@ -108,6 +107,25 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
+		public override void NotifyTextStylesChanged(System.Collections.ArrayList textStyleList)
+		{
+			foreach ( Text.TextStyle textStyle in textStyleList )
+			{
+				for ( int i=0 ; i<this.comboStyle.TotalButtons ; i++ )
+				{
+					int rank = this.comboStyle.FirstIconVisible+i;
+					if ( rank >= this.comboStyle.Items.Count )  break;
+
+					IconButtonsCombo.Item item = this.comboStyle.Items[rank] as IconButtonsCombo.Item;
+					if ( textStyle.Name == item.Name )
+					{
+						IconButton button = this.comboStyle.IconButton(i);
+						button.Invalidate();
+					}
+				}
+			}
+		}
+
 		public override void NotifyTextStylesChanged()
 		{
 			if ( this.document == null )  return;
@@ -145,7 +163,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.buttonParagraph.ActiveState = this.characterMode ? ActiveState.No  : ActiveState.Yes;
 			this.buttonCharacter.ActiveState = this.characterMode ? ActiveState.Yes : ActiveState.No;
-			this.NotifyTextStylesChanged();
+			//?this.NotifyTextStylesChanged();
 		}
 
 
@@ -182,16 +200,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.characterMode = false;
 			this.UpdateMode();
+			this.UpdateAfterTextStyleListChanged();
 		}
 
 		private void HandleCharacterClicked(object sender, MessageEventArgs e)
 		{
 			this.characterMode = true;
 			this.UpdateMode();
-		}
-
-		private void HandleParagraphOpening(object sender, CancelEventArgs e)
-		{
+			this.UpdateAfterTextStyleListChanged();
 		}
 
 		private void HandleParagraphSelected(object sender)

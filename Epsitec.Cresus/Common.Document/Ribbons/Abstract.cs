@@ -46,6 +46,10 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 		}
 
+		public virtual void NotifyTextStylesChanged(System.Collections.ArrayList textStyleList)
+		{
+		}
+
 		public virtual void NotifyTextStylesChanged()
 		{
 		}
