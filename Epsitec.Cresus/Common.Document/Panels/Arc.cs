@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Arc(Document document) : base(document)
 		{
-			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 1;
 			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected void AddRadioIcon(Properties.ArcType type)
 		{
-			this.grid.AddRadioIcon(Properties.Arc.GetIconText(type), Properties.Arc.GetName(type), (int)type, false);
+			this.grid.AddRadioIcon(Misc.Icon(Properties.Arc.GetIconText(type)), Properties.Arc.GetName(type), (int)type, false);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -203,7 +203,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected Widgets.RadioIconGrid		grid;
+		protected RadioIconGrid				grid;
 		protected Widgets.TextFieldLabel	fieldStarting;
 		protected Widgets.TextFieldLabel	fieldEnding;
 	}

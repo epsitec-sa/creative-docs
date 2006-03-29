@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Justif(Document document) : base(document)
 		{
-			this.gridHorizontal = new Widgets.RadioIconGrid(this);
+			this.gridHorizontal = new RadioIconGrid(this);
 			this.gridHorizontal.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridHorizontal.TabIndex = 0;
 			this.gridHorizontal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.JustifHorizontal.Justif);
 			this.AddRadioIcon(Properties.JustifHorizontal.All);
 
-			this.gridVertical = new Widgets.RadioIconGrid(this);
+			this.gridVertical = new RadioIconGrid(this);
 			this.gridVertical.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridVertical.TabIndex = 0;
 			this.gridVertical.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.JustifVertical.Center);
 			this.AddRadioIcon(Properties.JustifVertical.Bottom);
 
-			this.gridOrientation = new Widgets.RadioIconGrid(this);
+			this.gridOrientation = new RadioIconGrid(this);
 			this.gridOrientation.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridOrientation.TabIndex = 0;
 			this.gridOrientation.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -83,17 +83,17 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected void AddRadioIcon(Properties.JustifHorizontal type)
 		{
-			this.gridHorizontal.AddRadioIcon(Properties.Justif.GetIconText(type), Properties.Justif.GetName(type), (int)type, false);
+			this.gridHorizontal.AddRadioIcon(Misc.Icon(Properties.Justif.GetIconText(type)), Properties.Justif.GetName(type), (int)type, false);
 		}
 
 		protected void AddRadioIcon(Properties.JustifVertical type)
 		{
-			this.gridVertical.AddRadioIcon(Properties.Justif.GetIconText(type), Properties.Justif.GetName(type), (int)type, false);
+			this.gridVertical.AddRadioIcon(Misc.Icon(Properties.Justif.GetIconText(type)), Properties.Justif.GetName(type), (int)type, false);
 		}
 
 		protected void AddRadioIcon(Properties.JustifOrientation type)
 		{
-			this.gridOrientation.AddRadioIcon(Properties.Justif.GetIconText(type), Properties.Justif.GetName(type), (int)type, false);
+			this.gridOrientation.AddRadioIcon(Misc.Icon(Properties.Justif.GetIconText(type)), Properties.Justif.GetName(type), (int)type, false);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -296,9 +296,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected Widgets.RadioIconGrid		gridHorizontal;
-		protected Widgets.RadioIconGrid		gridVertical;
-		protected Widgets.RadioIconGrid		gridOrientation;
+		protected RadioIconGrid				gridHorizontal;
+		protected RadioIconGrid				gridVertical;
+		protected RadioIconGrid				gridOrientation;
 		protected Widgets.TextFieldLabel	fieldMarginH;
 		protected Widgets.TextFieldLabel	fieldMarginV;
 		protected Widgets.TextFieldLabel	fieldOffsetV;

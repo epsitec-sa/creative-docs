@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Bool(Document document) : base(document)
 		{
-			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 0;
 			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected void AddRadioIcon(bool type)
 		{
-			this.grid.AddRadioIcon(Properties.Bool.GetIconText(type), Properties.Bool.GetName(type), type?1:0, false);
+			this.grid.AddRadioIcon(Misc.Icon(Properties.Bool.GetIconText(type)), Properties.Bool.GetName(type), type?1:0, false);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -81,6 +81,6 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected Widgets.RadioIconGrid		grid;
+		protected RadioIconGrid				grid;
 	}
 }

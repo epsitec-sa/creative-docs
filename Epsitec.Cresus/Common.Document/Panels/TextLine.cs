@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public TextLine(Document document) : base(document)
 		{
-			this.gridHorizontal = new Widgets.RadioIconGrid(this);
+			this.gridHorizontal = new RadioIconGrid(this);
 			this.gridHorizontal.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridHorizontal.TabIndex = 0;
 			this.gridHorizontal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected void AddRadioIcon(Properties.JustifHorizontal type)
 		{
-			this.gridHorizontal.AddRadioIcon(Properties.Justif.GetIconText(type), Properties.Justif.GetName(type), (int)type, false);
+			this.gridHorizontal.AddRadioIcon(Misc.Icon(Properties.Justif.GetIconText(type)), Properties.Justif.GetName(type), (int)type, false);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected Widgets.RadioIconGrid		gridHorizontal;
+		protected RadioIconGrid				gridHorizontal;
 		protected Widgets.TextFieldLabel	fieldOffset;
 		protected Widgets.TextFieldLabel	fieldAdd;
 	}

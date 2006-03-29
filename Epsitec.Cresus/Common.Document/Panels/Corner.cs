@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Corner(Document document) : base(document)
 		{
-			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 1;
 			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected void AddRadioIcon(Properties.CornerType type, bool endOfLine)
 		{
-			this.grid.AddRadioIcon(Properties.Corner.GetIconText(type), Properties.Corner.GetName(type), (int)type, endOfLine);
+			this.grid.AddRadioIcon(Misc.Icon(Properties.Corner.GetIconText(type)), Properties.Corner.GetName(type), (int)type, endOfLine);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected Widgets.RadioIconGrid		grid;
+		protected RadioIconGrid				grid;
 		protected Widgets.TextFieldLabel	fieldRadius;
 		protected Widgets.TextFieldLabel	fieldEffect1;
 		protected Widgets.TextFieldLabel	fieldEffect2;

@@ -509,6 +509,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "RadioIcon.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "RadioIconGrid.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Res.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

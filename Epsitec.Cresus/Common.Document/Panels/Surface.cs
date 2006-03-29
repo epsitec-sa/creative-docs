@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Surface(Document document) : base(document)
 		{
-			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 0;
 			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected void AddRadioIcon(Properties.SurfaceType type, bool endOfLine)
 		{
-			this.grid.AddRadioIcon(Properties.Surface.GetIconText(type), Properties.Surface.GetName(type), (int)type, endOfLine);
+			this.grid.AddRadioIcon(Misc.Icon(Properties.Surface.GetIconText(type)), Properties.Surface.GetName(type), (int)type, endOfLine);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected Widgets.RadioIconGrid		grid;
+		protected RadioIconGrid				grid;
 		protected Widgets.TextFieldLabel[]	fieldFactor;
 		protected Widgets.TextFieldLabel[]	fieldScalar;
 		protected Button					resetButton;

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Dimension(Document document) : base(document)
 		{
-			this.gridForm = new Widgets.RadioIconGrid(this);
+			this.gridForm = new RadioIconGrid(this);
 			this.gridForm.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridForm.TabIndex = 0;
 			this.gridForm.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.DimensionForm.Inside);
 			this.AddRadioIcon(Properties.DimensionForm.Outside);
 
-			this.gridJustif = new Widgets.RadioIconGrid(this);
+			this.gridJustif = new RadioIconGrid(this);
 			this.gridJustif.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridJustif.TabIndex = 1;
 			this.gridJustif.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -88,12 +88,12 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected void AddRadioIcon(Properties.DimensionForm type)
 		{
-			this.gridForm.AddRadioIcon(Properties.Dimension.GetIconText(type), Properties.Dimension.GetName(type), (int)type, false);
+			this.gridForm.AddRadioIcon(Misc.Icon(Properties.Dimension.GetIconText(type)), Properties.Dimension.GetName(type), (int)type, false);
 		}
 
 		protected void AddRadioIcon(Properties.DimensionJustif type)
 		{
-			this.gridJustif.AddRadioIcon(Properties.Dimension.GetIconText(type), Properties.Dimension.GetName(type), (int)type, false);
+			this.gridJustif.AddRadioIcon(Misc.Icon(Properties.Dimension.GetIconText(type)), Properties.Dimension.GetName(type), (int)type, false);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -304,8 +304,8 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected Widgets.RadioIconGrid		gridForm;
-		protected Widgets.RadioIconGrid		gridJustif;
+		protected RadioIconGrid				gridForm;
+		protected RadioIconGrid				gridJustif;
 		protected Widgets.TextFieldLabel	addLength;
 		protected Widgets.TextFieldLabel	outLength;
 		protected Widgets.TextFieldLabel	fontOffset;

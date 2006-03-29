@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Gradient(Document document) : base(document)
 		{
-			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 1;
 			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected void AddRadioIcon(Properties.GradientFillType type, bool endOfLine)
 		{
-			this.grid.AddRadioIcon(Properties.Gradient.GetIconText(type), Properties.Gradient.GetName(type), (int)type, endOfLine);
+			this.grid.AddRadioIcon(Misc.Icon(Properties.Gradient.GetIconText(type)), Properties.Gradient.GetName(type), (int)type, endOfLine);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -880,7 +880,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected Widgets.RadioIconGrid		grid;
+		protected RadioIconGrid				grid;
 		protected IconButton				nothingButton;
 		protected Button					reset;
 		protected ColorSample				fieldColor1;
