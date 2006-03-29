@@ -9,6 +9,11 @@ namespace Epsitec.Common.Drawing
 	[TestFixture]
 	public class TextTest
 	{
+		[Test] public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+		
 		[Test] public void CheckPainting()
 		{
 			Window  window  = new Window ();
@@ -27,6 +32,7 @@ namespace Epsitec.Common.Drawing
 			controller.GenerateText ();
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		
@@ -469,7 +475,16 @@ namespace Epsitec.Common.Drawing
 				ulong[] text;
 				string words;
 				
-				TextStyle[] no_styles = new TextStyle[0];
+				Text.TextStyle[] no_styles = new Text.TextStyle[1];
+
+				if (no_styles.Length > 0)
+				{
+					System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+					properties.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
+					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
+					properties.Add (new Text.Properties.FontColorProperty ("Black"));
+					no_styles[0] = this.painter.TextStory.StyleList.NewTextStyle (null, "Default", Text.TextStyleClass.Paragraph, properties);
+				}
 				
 				if (this.active_test == 0)
 				{

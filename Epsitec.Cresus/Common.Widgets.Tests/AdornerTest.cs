@@ -13,22 +13,27 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.Document.Engine.Initialise ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}
+
+		[Test] public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
 		
 		[Test] public void CheckAdornerWidgets()
 		{
-			Window window = this.CreateAdornerWidgets();
-			System.Windows.Forms.Application.Run (window.PlatformWindowObject as System.Windows.Forms.Form);
+			Window.RunInTestEnvironment (this.CreateAdornerWidgets ());
 		}
 		
 		[Test] public void CheckAdornerWidgetsDisabled()
 		{
 			Window window = this.CreateAdornerWidgets();
 			this.RecursiveDisable(window.Root, true);
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckAdornerBigText()
 		{
-			this.CreateBigText();
+			Window.RunInTestEnvironment (this.CreateBigText());
 		}
 		
 		
@@ -1198,6 +1203,7 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget = tb;
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		private void HandleWindowClosed(object sender)
@@ -1304,6 +1310,7 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget = table;
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckAdornerCell2()
@@ -1378,6 +1385,7 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget = table;
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckAdornerCell3()
@@ -1466,6 +1474,7 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget = table;
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckAdornerScrollArray()
@@ -1512,6 +1521,7 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget = table;
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 
@@ -1666,6 +1676,7 @@ namespace Epsitec.Common.Widgets
 			v2.Children.Add(buttonv2);
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckAdornerPaneBook2()
@@ -1711,6 +1722,7 @@ namespace Epsitec.Common.Widgets
 			p2.Children.Add(button2);
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 
@@ -1758,6 +1770,7 @@ namespace Epsitec.Common.Widgets
 			p2.Children.Add(button2);
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		private void HandleTextExEditionAccepted(object sender)

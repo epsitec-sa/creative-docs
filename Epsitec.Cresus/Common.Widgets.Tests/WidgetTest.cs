@@ -16,6 +16,13 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.Widgets.Widget.Initialise ();
 		}
 
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+		
+
 #if true
 		[Test] public void CheckAllocation()
 		{
@@ -328,6 +335,7 @@ namespace Epsitec.Common.Widgets
 			frame2.Name        = "B";
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		
@@ -622,6 +630,7 @@ namespace Epsitec.Common.Widgets
 			text.PaintForeground += new PaintEventHandler(this.CheckTextLayoutInfoPaintForeground);
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		
@@ -1058,6 +1067,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(button);
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckAliveWidgets()
@@ -1208,6 +1218,7 @@ namespace Epsitec.Common.Widgets
 			
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		
@@ -1252,6 +1263,7 @@ namespace Epsitec.Common.Widgets
 			selector2.Color = new RichColor(tag.BackColor);
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 

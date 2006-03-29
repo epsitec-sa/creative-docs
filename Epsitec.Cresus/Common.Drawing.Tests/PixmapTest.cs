@@ -5,7 +5,14 @@ namespace Epsitec.Common.Drawing
 {
 	[TestFixture] public class PixmapTest
 	{
-		[Test] public void CheckPixmapNew()
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
+		[Test]
+		public void CheckPixmapNew()
 		{
 			Pixmap pixmap = new Pixmap ();
 			
@@ -189,6 +196,7 @@ namespace Epsitec.Common.Drawing
 			widget.SetParent (window.Root);
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Support.SuppressBundleSupport]

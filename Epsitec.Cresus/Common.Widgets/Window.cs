@@ -956,6 +956,34 @@ namespace Epsitec.Common.Widgets
 			get { return this.name; }
 			set { this.window.Name = this.name = value; }
 		}
+
+		public static bool						RunningInAutomatedTestEnvironment
+		{
+			get
+			{
+				return Window.is_running_in_automated_test_environment;
+			}
+			set
+			{
+				if (Window.is_running_in_automated_test_environment != value)
+				{
+					Window.is_running_in_automated_test_environment = value;
+				}
+			}
+		}
+
+
+		public static void RunInTestEnvironment(Window window)
+		{
+			if (Window.RunningInAutomatedTestEnvironment)
+			{
+				System.Windows.Forms.Application.DoEvents ();
+			}
+			else
+			{
+				System.Windows.Forms.Application.Run (window.PlatformWindow);
+			}
+		}
 		
 		
 		#region IPropertyProvider Members
@@ -2263,5 +2291,6 @@ namespace Epsitec.Common.Widgets
 		private Support.Data.ComponentCollection components;
 		
 		static System.Collections.ArrayList		windows = new System.Collections.ArrayList ();
+		static bool								is_running_in_automated_test_environment;
 	}
 }

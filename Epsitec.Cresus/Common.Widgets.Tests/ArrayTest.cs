@@ -12,6 +12,11 @@ namespace Epsitec.Common.Widgets
 			Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}
 		
+		[Test] public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+		
 		[Test] public void CheckInteractive()
 		{
 			Window window = new Window();
@@ -49,6 +54,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckEditArray()
@@ -85,6 +91,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckEditArrayWithTextStore()
@@ -108,6 +115,7 @@ namespace Epsitec.Common.Widgets
 			table.TitleWidget       = new StaticText (@"<font size=""160%"">EditArray test.</font> Double-click to start edition (h x 4).");
 			
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		
@@ -146,6 +154,7 @@ namespace Epsitec.Common.Widgets
 			table.StartSearch ();
 			
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckEditArraySearchWithCaption()
@@ -186,6 +195,7 @@ namespace Epsitec.Common.Widgets
 			table.StartSearch ();
 			
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckEditArraySearchWithToolBar()
@@ -242,6 +252,7 @@ namespace Epsitec.Common.Widgets
 			table.StartSearch ();
 			
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		
