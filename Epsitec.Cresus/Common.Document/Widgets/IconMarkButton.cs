@@ -103,49 +103,6 @@ namespace Epsitec.Common.Document.Widgets
 			Rectangle     rect  = this.Client.Bounds;
 			WidgetState   state = this.PaintState;
 			Drawing.Point pos   = new Drawing.Point(0, 0);
-			Drawing.Path  path  = new Path();
-			double        middle;
-
-			switch ( this.siteMark )
-			{
-				case SiteMark.OnBottom:
-					middle = (rect.Left+rect.Right)/2;
-					path.MoveTo(middle, rect.Bottom);
-					path.LineTo(middle-this.markDimension*0.75, rect.Bottom+this.markDimension);
-					path.LineTo(middle+this.markDimension*0.75, rect.Bottom+this.markDimension);
-					path.Close();
-
-					pos.Y += this.markDimension;
-					break;
-
-				case SiteMark.OnTop:
-					middle = (rect.Left+rect.Right)/2;
-					path.MoveTo(middle, rect.Top);
-					path.LineTo(middle-this.markDimension*0.75, rect.Top-this.markDimension);
-					path.LineTo(middle+this.markDimension*0.75, rect.Top-this.markDimension);
-					path.Close();
-					break;
-
-				case SiteMark.OnLeft:
-					middle = (rect.Bottom+rect.Top)/2;
-					path.MoveTo(rect.Left, middle);
-					path.LineTo(rect.Left+this.markDimension, middle-this.markDimension*0.75);
-					path.LineTo(rect.Left+this.markDimension, middle+this.markDimension*0.75);
-					path.Close();
-
-					pos.X += this.markDimension;
-					break;
-
-				case SiteMark.OnRight:
-					middle = (rect.Bottom+rect.Top)/2;
-					path.MoveTo(rect.Right, middle);
-					path.LineTo(rect.Right-this.markDimension, middle-this.markDimension*0.75);
-					path.LineTo(rect.Right-this.markDimension, middle+this.markDimension*0.75);
-					path.Close();
-					break;
-			}
-
-			rect = this.IconButtonBounds;
 
 			bool enable = ((state & WidgetState.Enabled) != 0);
 			if ( !enable )
@@ -157,17 +114,64 @@ namespace Epsitec.Common.Document.Widgets
 
 			if ( this.ActiveState == ActiveState.Yes )  // dessine la marque triangulaire ?
 			{
+				Drawing.Path path = new Path();
+				double middle;
+
+				switch ( this.siteMark )
+				{
+					case SiteMark.OnBottom:
+						middle = (rect.Left+rect.Right)/2;
+						path.MoveTo(middle, rect.Bottom);
+						path.LineTo(middle-this.markDimension*0.75, rect.Bottom+this.markDimension);
+						path.LineTo(middle+this.markDimension*0.75, rect.Bottom+this.markDimension);
+						break;
+
+					case SiteMark.OnTop:
+						middle = (rect.Left+rect.Right)/2;
+						path.MoveTo(middle, rect.Top);
+						path.LineTo(middle-this.markDimension*0.75, rect.Top-this.markDimension);
+						path.LineTo(middle+this.markDimension*0.75, rect.Top-this.markDimension);
+						break;
+
+					case SiteMark.OnLeft:
+						middle = (rect.Bottom+rect.Top)/2;
+						path.MoveTo(rect.Left, middle);
+						path.LineTo(rect.Left+this.markDimension, middle-this.markDimension*0.75);
+						path.LineTo(rect.Left+this.markDimension, middle+this.markDimension*0.75);
+						break;
+
+					case SiteMark.OnRight:
+						middle = (rect.Bottom+rect.Top)/2;
+						path.MoveTo(rect.Right, middle);
+						path.LineTo(rect.Right-this.markDimension, middle-this.markDimension*0.75);
+						path.LineTo(rect.Right-this.markDimension, middle+this.markDimension*0.75);
+						break;
+				}
+				path.Close();
+
 				graphics.Color = adorner.ColorTextFieldBorder(enable);
 				graphics.PaintSurface(path);
 			}
 			
+			rect = this.IconButtonBounds;
 			state &= ~WidgetState.Selected;
 			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
+
+			switch ( this.siteMark )
+			{
+				case SiteMark.OnBottom:
+					pos.Y += this.markDimension;
+					break;
+
+				case SiteMark.OnLeft:
+					pos.X += this.markDimension;
+					break;
+			}
 
 			if ( this.innerZoom != 1.0 )
 			{
 				double zoom = (this.innerZoom-1)/2+1;
-				this.TextLayout.LayoutSize = this.IconButtonBounds.Size/this.innerZoom;
+				this.TextLayout.LayoutSize = rect.Size/this.innerZoom;
 				Drawing.Transform transform = graphics.Transform;
 				graphics.ScaleTransform(zoom, zoom, 0, -this.Client.Height*zoom);
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
@@ -175,7 +179,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else
 			{
-				this.TextLayout.LayoutSize = this.IconButtonBounds.Size;
+				this.TextLayout.LayoutSize = rect.Size;
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
 			}
 		}
