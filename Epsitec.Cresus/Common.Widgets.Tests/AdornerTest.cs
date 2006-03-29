@@ -16,7 +16,8 @@ namespace Epsitec.Common.Widgets
 		
 		[Test] public void CheckAdornerWidgets()
 		{
-			this.CreateAdornerWidgets();
+			Window window = this.CreateAdornerWidgets();
+			System.Windows.Forms.Application.Run (window.PlatformWindowObject as System.Windows.Forms.Form);
 		}
 		
 		[Test] public void CheckAdornerWidgetsDisabled()
