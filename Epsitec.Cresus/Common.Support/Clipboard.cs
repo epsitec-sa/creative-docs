@@ -1,4 +1,4 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -629,9 +629,19 @@ namespace Epsitec.Common.Support
 				this.PatchString (html, idx_start_frag, string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idx_frag_begin));
 				this.PatchString (html, idx_end_frag,   string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idx_frag_end));
 				
-				this.data.SetData ("HTML Format", false, html.ToString ());
+				
+				byte[] blob = new byte[html.Length];
+
+				for (int i = 0; i < html.Length; i++)
+				{
+					blob[i] = (byte) html[i];
+				}
+
+				System.IO.MemoryStream stream = new System.IO.MemoryStream (blob);
+				
+				this.data.SetData ("HTML Format", true, stream);
 			}
-			
+
 			public void WriteTextLayout(string value)
 			{
 				this.data.SetData ("Epsitec:TextLayout ver:1", false, value);
