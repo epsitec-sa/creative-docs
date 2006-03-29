@@ -17,7 +17,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonParagraph = new Widgets.IconMarkButton(this);
 			//?this.buttonParagraph.Command = "TextEditing";  // (*)
-			this.buttonParagraph.MarkSpace = 5;
+			this.buttonParagraph.MarkDimension = 5;
 			this.buttonParagraph.SiteMark = Widgets.SiteMark.OnRight;
 			this.buttonParagraph.IconName = Misc.Icon("TextFilterParagraph");
 			this.buttonParagraph.PreferredIconSize = Misc.IconPreferredSize("Normal");
@@ -30,7 +30,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonCharacter = new Widgets.IconMarkButton(this);
 			//?this.buttonCharacter.Command = "TextEditing";  // (*)
-			this.buttonCharacter.MarkSpace = 5;
+			this.buttonCharacter.MarkDimension = 5;
 			this.buttonCharacter.SiteMark = Widgets.SiteMark.OnRight;
 			this.buttonCharacter.IconName = Misc.Icon("TextFilterCharacter");
 			this.buttonCharacter.PreferredIconSize = Misc.IconPreferredSize("Normal");

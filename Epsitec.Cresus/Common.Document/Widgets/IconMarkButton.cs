@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Widgets
 
 
 	/// <summary>
-	/// La classe IconMarkButton est un IconButton avec une marque 'v' en bas.
+	/// La classe IconMarkButton est un IconButton avec une marque triangulaire sur un côté.
 	/// </summary>
 	public class IconMarkButton : IconButton
 	{
@@ -38,21 +38,59 @@ namespace Epsitec.Common.Document.Widgets
 
 			set
 			{
-				this.siteMark = value;
+				if ( this.siteMark != value )
+				{
+					this.siteMark = value;
+					this.Invalidate();
+				}
 			}
 		}
 
-		public double							MarkSpace
+		public double							MarkDimension
 		{
-			//	Espacement de la marque.
+			//	Dimension de la marque.
 			get
 			{
-				return this.markSpace;
+				return this.markDimension;
 			}
 
 			set
 			{
-				this.markSpace = value;
+				if ( this.markDimension != value )
+				{
+					this.markDimension = value;
+					this.Invalidate();
+				}
+			}
+		}
+
+		protected Rectangle						IconButtonBounds
+		{
+			//	Donne le rectangle à utiliser pour le bouton.
+			get
+			{
+				Rectangle rect = this.Client.Bounds;
+
+				switch ( this.siteMark )
+				{
+					case SiteMark.OnBottom:
+						rect.Bottom += this.markDimension;
+						break;
+
+					case SiteMark.OnTop:
+						rect.Top -= this.markDimension;
+						break;
+
+					case SiteMark.OnLeft:
+						rect.Left += this.markDimension;
+						break;
+
+					case SiteMark.OnRight:
+						rect.Right -= this.markDimension;
+						break;
+				}
+
+				return rect;
 			}
 		}
 
@@ -62,58 +100,52 @@ namespace Epsitec.Common.Document.Widgets
 			//	Dessine le bouton.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
-			Drawing.Point     pos   = new Drawing.Point(0, 0);
-			Drawing.Path      path  = new Path();
-			double            middle;
+			Rectangle     rect  = this.Client.Bounds;
+			WidgetState   state = this.PaintState;
+			Drawing.Point pos   = new Drawing.Point(0, 0);
+			Drawing.Path  path  = new Path();
+			double        middle;
 
 			switch ( this.siteMark )
 			{
 				case SiteMark.OnBottom:
 					middle = (rect.Left+rect.Right)/2;
 					path.MoveTo(middle, rect.Bottom);
-					path.LineTo(middle-this.markSpace*0.75, rect.Bottom+this.markSpace);
-					path.LineTo(middle+this.markSpace*0.75, rect.Bottom+this.markSpace);
+					path.LineTo(middle-this.markDimension*0.75, rect.Bottom+this.markDimension);
+					path.LineTo(middle+this.markDimension*0.75, rect.Bottom+this.markDimension);
 					path.Close();
 
-					rect.Bottom += this.markSpace;
-					pos.Y += this.markSpace/2;
+					pos.Y += this.markDimension;
 					break;
 
 				case SiteMark.OnTop:
 					middle = (rect.Left+rect.Right)/2;
 					path.MoveTo(middle, rect.Top);
-					path.LineTo(middle-this.markSpace*0.75, rect.Top-this.markSpace);
-					path.LineTo(middle+this.markSpace*0.75, rect.Top-this.markSpace);
+					path.LineTo(middle-this.markDimension*0.75, rect.Top-this.markDimension);
+					path.LineTo(middle+this.markDimension*0.75, rect.Top-this.markDimension);
 					path.Close();
-
-					rect.Top -= this.markSpace;
-					pos.Y -= this.markSpace/2;
 					break;
 
 				case SiteMark.OnLeft:
 					middle = (rect.Bottom+rect.Top)/2;
 					path.MoveTo(rect.Left, middle);
-					path.LineTo(rect.Left+this.markSpace, middle-this.markSpace*0.75);
-					path.LineTo(rect.Left+this.markSpace, middle+this.markSpace*0.75);
+					path.LineTo(rect.Left+this.markDimension, middle-this.markDimension*0.75);
+					path.LineTo(rect.Left+this.markDimension, middle+this.markDimension*0.75);
 					path.Close();
 
-					rect.Left += this.markSpace;
-					pos.X += this.markSpace/2;
+					pos.X += this.markDimension;
 					break;
 
 				case SiteMark.OnRight:
 					middle = (rect.Bottom+rect.Top)/2;
 					path.MoveTo(rect.Right, middle);
-					path.LineTo(rect.Right-this.markSpace, middle-this.markSpace*0.75);
-					path.LineTo(rect.Right-this.markSpace, middle+this.markSpace*0.75);
+					path.LineTo(rect.Right-this.markDimension, middle-this.markDimension*0.75);
+					path.LineTo(rect.Right-this.markDimension, middle+this.markDimension*0.75);
 					path.Close();
-
-					rect.Right -= this.markSpace;
-					pos.X -= this.markSpace/2;
 					break;
 			}
+
+			rect = this.IconButtonBounds;
 
 			bool enable = ((state & WidgetState.Enabled) != 0);
 			if ( !enable )
@@ -123,7 +155,7 @@ namespace Epsitec.Common.Document.Widgets
 				state &= ~WidgetState.Engaged;
 			}
 
-			if ( this.ActiveState == ActiveState.Yes )  // dessine la marque 'v' ?
+			if ( this.ActiveState == ActiveState.Yes )  // dessine la marque triangulaire ?
 			{
 				graphics.Color = adorner.ColorTextFieldBorder(enable);
 				graphics.PaintSurface(path);
@@ -135,7 +167,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.innerZoom != 1.0 )
 			{
 				double zoom = (this.innerZoom-1)/2+1;
-				this.TextLayout.LayoutSize = this.Client.Size/this.innerZoom;
+				this.TextLayout.LayoutSize = this.IconButtonBounds.Size/this.innerZoom;
 				Drawing.Transform transform = graphics.Transform;
 				graphics.ScaleTransform(zoom, zoom, 0, -this.Client.Height*zoom);
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
@@ -143,12 +175,13 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else
 			{
+				this.TextLayout.LayoutSize = this.IconButtonBounds.Size;
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
 			}
 		}
 
 
 		protected SiteMark				siteMark = SiteMark.OnBottom;
-		protected double				markSpace = 8;
+		protected double				markDimension = 8;
 	}
 }
