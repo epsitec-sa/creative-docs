@@ -1772,18 +1772,17 @@ namespace Epsitec.Common.Document
 			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
 			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
 
-			double limit = System.Math.Floor(size.Height*0.25);
+			double limit = System.Math.Floor(size.Height*0.32);
 
-			Rectangle r = new Rectangle(0, 0, size.Width, limit);
-			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
-			Color c = adorner.ColorText(WidgetState.Enabled);
-			this.DrawDynamicText(graphics, r, text, limit-3, c, ContentAlignment.MiddleLeft);
-
-			Rectangle rect = new Rectangle(0, limit, size.Width, size.Height-limit);
+			Rectangle rect = new Rectangle(1, limit, size.Width-2, size.Height-limit-1);
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(Color.FromBrightness(1));  // fond blanc
 			this.DrawStyle(graphics, rect, textStyle);
 
-			graphics.AddLine(0, limit-0.5, size.Width, limit-0.5);  // séparateur horizontal
-			graphics.RenderSolid(adorner.ColorBorder);
+			rect = new Rectangle(0, 0, size.Width, limit);
+			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
+			Color c = adorner.ColorText(WidgetState.Enabled);
+			this.DrawDynamicText(graphics, rect, text, limit-4, c, ContentAlignment.MiddleLeft);
 		}
 
 		protected void DrawDynamicImageStyleMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
