@@ -465,8 +465,10 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void TransformToUTF8(ref string line)
 		{
+#if  false
 			UTF8Encoding utf8 = new UTF8Encoding ();
 			byte[] encodedBytes = utf8.GetBytes (line);
+			
 			char[] chararray = new char[encodedBytes.Length] ;
 
 			for (int i = 0; i < encodedBytes.Length; i++)
@@ -475,6 +477,7 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 			line = new string (chararray);
+#endif
 		}
 
 		private void TransformSpecialHtmlChars(ref string line)
@@ -812,7 +815,10 @@ namespace Epsitec.Common.Text.Exchange
 
 			htmlText.Terminate ();
 
-			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, htmlText.msHtml);
+			byte[] blob = System.Text.Encoding.UTF8.GetBytes (htmlText.msHtml);
+			System.IO.MemoryStream s = new System.IO.MemoryStream (blob);
+			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, s);
+			//System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, htmlText.msHtml);
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
 		}
 
