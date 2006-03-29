@@ -19,18 +19,21 @@ namespace Epsitec.Common.Widgets
 			this.buttonPrev = new GlyphButton(this);
 			this.buttonPrev.GlyphShape = GlyphShape.ArrowUp;
 			this.buttonPrev.ButtonStyle = ButtonStyle.Combo;
+			this.buttonPrev.AutoFocus = false;
 			this.buttonPrev.Name = "Prev";
 			this.buttonPrev.Pressed += new MessageEventHandler(this.HandleButtonPrevPressed);
 			
 			this.buttonNext = new GlyphButton(this);
 			this.buttonNext.GlyphShape = GlyphShape.ArrowDown;
 			this.buttonNext.ButtonStyle = ButtonStyle.Combo;
+			this.buttonNext.AutoFocus = false;
 			this.buttonNext.Name = "Next";
 			this.buttonNext.Pressed += new MessageEventHandler(this.HandleButtonNextPressed);
 			
 			this.buttonMenu = new GlyphButton(this);
 			this.buttonMenu.GlyphShape = GlyphShape.Menu;
 			this.buttonMenu.ButtonStyle = ButtonStyle.Combo;
+			this.buttonMenu.AutoFocus = false;
 			this.buttonMenu.Name = "Menu";
 			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
 			
@@ -89,6 +92,7 @@ namespace Epsitec.Common.Widgets
 					{
 						this.buttonMain[i] = new IconButton(this);
 						this.buttonMain[i].ButtonStyle = ButtonStyle.ActivableIcon;
+						this.buttonMain[i].AutoFocus = false;
 						this.buttonMain[i].Pressed += new MessageEventHandler(this.HandleButtonMainPressed);
 					}
 				}
@@ -256,6 +260,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.firstIconVisible = value;
 					this.UpdateButtons();
+					this.OnFirstIconChanged();
 				}
 			}
 		}
@@ -342,6 +347,14 @@ namespace Epsitec.Common.Widgets
 				{
 					this.SelectedIndexChanged(this);
 				}
+			}
+		}
+
+		protected virtual void OnFirstIconChanged()
+		{
+			if ( this.FirstIconChanged != null )
+			{
+				this.FirstIconChanged(this);
 			}
 		}
 
@@ -775,6 +788,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		ComboOpened;
 		public event Support.EventHandler		ComboClosed;
 		public event Support.EventHandler		SelectedIndexChanged;
+		public event Support.EventHandler		FirstIconChanged;
 		
 		protected static readonly double		menuWidth = 12;
 		protected bool							isLiveUpdateEnabled	= true;

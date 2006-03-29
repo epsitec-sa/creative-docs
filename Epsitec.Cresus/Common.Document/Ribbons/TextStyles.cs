@@ -45,7 +45,11 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboStyle.TotalButtons = 3;
 			this.comboStyle.MenuDrawFrame = true;
 			this.comboStyle.AllLinesWidthSameWidth = true;
-			this.comboStyle.SelectedIndexChanged += new EventHandler(this.HandleParagraphSelected);
+			this.comboStyle.AutoFocus = false;
+			this.comboStyle.TabIndex = this.tabIndex++;
+			this.comboStyle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.comboStyle.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
+			this.comboStyle.FirstIconChanged += new EventHandler(this.HandleFirstIconChanged);
 			ToolTip.Default.SetToolTip(this.comboStyle, Res.Strings.Panel.Style.Choice);
 
 			// (*)	Ce nom permet de griser automatiquement les widgets lorsqu'il n'y a
@@ -66,12 +70,6 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
 		{
-			if ( this.document != null )
-			{
-				this.document.Modifier.RibbonTextStyleSelected = this.comboStyle.SelectedIndex;
-				this.document.Modifier.RibbonTextStyleFirst    = this.comboStyle.FirstIconVisible;
-			}
-
 			base.SetDocument(type, install, debug, gs, document);
 
 			if ( this.document == null )
@@ -89,8 +87,11 @@ namespace Epsitec.Common.Document.Ribbons
 				
 				this.comboStyle.Enable = true;
 				this.UpdateAfterTextStyleListChanged();
-				this.comboStyle.SelectedIndex    = this.document.Modifier.RibbonTextStyleSelected;
-				this.comboStyle.FirstIconVisible = this.document.Modifier.RibbonTextStyleFirst;
+				this.NotifyTextStylesChanged();
+				
+				this.ignoreChange = true;
+				this.comboStyle.FirstIconVisible = this.RibbonStyleFirst;
+				this.ignoreChange = false;
 			}
 		}
 
@@ -116,6 +117,7 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( changed == "TextStyleListChanged" )
 			{
 				this.UpdateAfterTextStyleListChanged();
+				this.NotifyTextStylesChanged();
 			}
 		}
 
@@ -149,12 +151,16 @@ namespace Epsitec.Common.Document.Ribbons
 				{
 					if ( style.TextStyleClass == Common.Text.TextStyleClass.Paragraph && !this.characterMode )
 					{
+						this.ignoreChange = true;
 						this.comboStyle.SelectedName = style.Name;
+						this.ignoreChange = false;
 					}
 
 					if ( style.TextStyleClass == Common.Text.TextStyleClass.Text && this.characterMode )
 					{
+						this.ignoreChange = true;
 						this.comboStyle.SelectedName = style.Name;
+						this.ignoreChange = false;
 					}
 				}
 			}
@@ -176,6 +182,22 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonParagraph.ActiveState = this.characterMode ? ActiveState.No  : ActiveState.Yes;
 			this.buttonCharacter.ActiveState = this.characterMode ? ActiveState.Yes : ActiveState.No;
 			//?this.NotifyTextStylesChanged();
+		}
+
+
+		protected int RibbonStyleFirst
+		{
+			get
+			{
+				if ( this.characterMode )  return this.document.Wrappers.RibbonCharacterStyleFirst;
+				else                       return this.document.Wrappers.RibbonParagraphStyleFirst;
+			}
+
+			set
+			{
+				if ( this.characterMode )  this.document.Wrappers.RibbonCharacterStyleFirst = value;
+				else                       this.document.Wrappers.RibbonParagraphStyleFirst = value;
+			}
 		}
 
 
@@ -207,26 +229,44 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleParagraphClicked(object sender, MessageEventArgs e)
 		{
+			this.RibbonStyleFirst = this.comboStyle.FirstIconVisible;
+
 			this.characterMode = false;
 			this.UpdateMode();
 			this.UpdateAfterTextStyleListChanged();
+			this.NotifyTextStylesChanged();
+
+			this.comboStyle.FirstIconVisible = this.RibbonStyleFirst;
 		}
 
 		private void HandleCharacterClicked(object sender, MessageEventArgs e)
 		{
+			this.RibbonStyleFirst = this.comboStyle.FirstIconVisible;
+
 			this.characterMode = true;
 			this.UpdateMode();
 			this.UpdateAfterTextStyleListChanged();
+			this.NotifyTextStylesChanged();
+
+			this.comboStyle.FirstIconVisible = this.RibbonStyleFirst;
 		}
 
-		private void HandleParagraphSelected(object sender)
+		private void HandleSelectedIndexChanged(object sender)
 		{
-			IconButtonsCombo combo = sender as IconButtonsCombo;
-			string name = combo.SelectedName;
+			if ( this.ignoreChange )  return;
+
+			string name = this.comboStyle.SelectedName;
 			if ( name == null )  return;
 
 			Text.TextStyle style = this.document.TextContext.StyleList.GetTextStyle(name, this.characterMode ? Common.Text.TextStyleClass.Text : Common.Text.TextStyleClass.Paragraph);
 			this.document.Modifier.SetTextStyle(style);
+		}
+
+		private void HandleFirstIconChanged(object sender)
+		{
+			if ( this.ignoreChange )  return;
+
+			this.RibbonStyleFirst = this.comboStyle.FirstIconVisible;
 		}
 
 

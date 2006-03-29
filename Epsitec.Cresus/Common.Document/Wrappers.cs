@@ -1889,6 +1889,23 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		
+		#region RibbonTextStyle
+		//	C'est ici qu'est mémorisé l'état du IconButtonsCombo dans le ruban 'Styles'.
+
+		public int RibbonParagraphStyleFirst
+		{
+			get { return this.ribbonParagraphStyleFirst; }
+			set { this.ribbonParagraphStyleFirst = value; }
+		}
+
+		public int RibbonCharacterStyleFirst
+		{
+			get { return this.ribbonCharacterStyleFirst; }
+			set { this.ribbonCharacterStyleFirst = value; }
+		}
+		#endregion
+
+
 		protected Document								document;
 		protected Text.Wrappers.TextWrapper				textWrapper;
 		protected Text.Wrappers.ParagraphWrapper		paragraphWrapper;
@@ -1896,5 +1913,7 @@ namespace Epsitec.Common.Document
 		protected Text.Wrappers.ParagraphWrapper		styleParagraphWrapper;
 		protected TextFlow								textFlow;
 		protected System.Collections.ArrayList			quickFonts;
+		protected int									ribbonParagraphStyleFirst;
+		protected int									ribbonCharacterStyleFirst;
 	}
 }

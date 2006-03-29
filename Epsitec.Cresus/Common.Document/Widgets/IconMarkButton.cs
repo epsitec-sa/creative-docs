@@ -115,35 +115,36 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				Drawing.Path path = new Path();
 				double middle;
+				double factor = 1.0;
 
 				switch ( this.siteMark )
 				{
 					case SiteMark.OnBottom:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Bottom);
-						path.LineTo(middle-this.markDimension*0.75, rect.Bottom+this.markDimension);
-						path.LineTo(middle+this.markDimension*0.75, rect.Bottom+this.markDimension);
+						path.LineTo(middle-this.markDimension*factor, rect.Bottom+this.markDimension);
+						path.LineTo(middle+this.markDimension*factor, rect.Bottom+this.markDimension);
 						break;
 
 					case SiteMark.OnTop:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Top);
-						path.LineTo(middle-this.markDimension*0.75, rect.Top-this.markDimension);
-						path.LineTo(middle+this.markDimension*0.75, rect.Top-this.markDimension);
+						path.LineTo(middle-this.markDimension*factor, rect.Top-this.markDimension);
+						path.LineTo(middle+this.markDimension*factor, rect.Top-this.markDimension);
 						break;
 
 					case SiteMark.OnLeft:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Left, middle);
-						path.LineTo(rect.Left+this.markDimension, middle-this.markDimension*0.75);
-						path.LineTo(rect.Left+this.markDimension, middle+this.markDimension*0.75);
+						path.LineTo(rect.Left+this.markDimension, middle-this.markDimension*factor);
+						path.LineTo(rect.Left+this.markDimension, middle+this.markDimension*factor);
 						break;
 
 					case SiteMark.OnRight:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Right, middle);
-						path.LineTo(rect.Right-this.markDimension, middle-this.markDimension*0.75);
-						path.LineTo(rect.Right-this.markDimension, middle+this.markDimension*0.75);
+						path.LineTo(rect.Right-this.markDimension, middle-this.markDimension*factor);
+						path.LineTo(rect.Right-this.markDimension, middle+this.markDimension*factor);
 						break;
 				}
 				path.Close();

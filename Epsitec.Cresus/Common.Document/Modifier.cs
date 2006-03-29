@@ -778,21 +778,6 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		#region RibbonTextStyle
-		public int RibbonTextStyleSelected
-		{
-			get { return this.ribbonTextStyleSelected; }
-			set { this.ribbonTextStyleSelected = value; }
-		}
-
-		public int RibbonTextStyleFirst
-		{
-			get { return this.ribbonTextStyleFirst; }
-			set { this.ribbonTextStyleFirst = value; }
-		}
-		#endregion
-
-
 		public void New()
 		{
 			//	Vide le document de tous ses objets.
@@ -6511,8 +6496,6 @@ namespace Epsitec.Common.Document
 		protected double						dimensionDecimal;
 		protected int							aggregateUsed;
 		protected System.Collections.Hashtable	accumulateObjects;
-		protected int							ribbonTextStyleSelected;
-		protected int							ribbonTextStyleFirst;
 
 		public static readonly double			FontSizeScale = 254.0 / 72.0;	//	1pt = 1/72 de pouce (unités internes, 0.1mm)
 	}
