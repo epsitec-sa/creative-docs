@@ -484,6 +484,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Nothing.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "PaneBook.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

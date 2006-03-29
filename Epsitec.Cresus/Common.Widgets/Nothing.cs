@@ -1,8 +1,6 @@
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Text;
 
-namespace Epsitec.Common.Document.Widgets
+namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe Nothing permet de représenter une croix.

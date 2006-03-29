@@ -1384,7 +1384,7 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				if ( row == 0 )
 				{
-					Widgets.Nothing cs = new Widgets.Nothing();
+					Nothing cs = new Nothing();
 					cs.Dock = DockStyle.Fill;
 					this.table[2, row].Insert(cs);
 				}
