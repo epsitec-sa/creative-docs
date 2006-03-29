@@ -134,7 +134,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.index = 0;
 
-			this.categoryGraphic = new Widgets.IconMarkButton(this.categoryContainer);
+			this.categoryGraphic = new IconButtonMark(this.categoryContainer);
 			this.categoryGraphic.Name = "Graphic";
 			this.categoryGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryGraphic.AutoFocus = false;
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryGraphic.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.categoryGraphic.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
-			this.categoryParagraph = new Widgets.IconMarkButton(this.categoryContainer);
+			this.categoryParagraph = new IconButtonMark(this.categoryContainer);
 			this.categoryParagraph.Name = "Paragraph";
 			this.categoryParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryParagraph.AutoFocus = false;
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryParagraph.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.categoryParagraph.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
-			this.categoryCharacter = new Widgets.IconMarkButton(this.categoryContainer);
+			this.categoryCharacter = new IconButtonMark(this.categoryContainer);
 			this.categoryCharacter.Name = "Character";
 			this.categoryCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryCharacter.AutoFocus = false;
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Document.Containers
 							string icon = Properties.Abstract.IconText(table[i]);
 							string text = Properties.Abstract.Text(table[i]);
 
-							Widgets.IconMarkButton button = this.UpdateSelectorAdd(width, true, name, icon, text);
+							IconButtonMark button = this.UpdateSelectorAdd(width, true, name, icon, text);
 							button.InnerZoom = zoom;
 						}
 					}
@@ -589,9 +589,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		protected Widgets.IconMarkButton UpdateSelectorAdd(double width, bool enable, string name, string icon, string text)
+		protected IconButtonMark UpdateSelectorAdd(double width, bool enable, string name, string icon, string text)
 		{
-			Widgets.IconMarkButton button = new Widgets.IconMarkButton(this.selectorToolBar);
+			IconButtonMark button = new IconButtonMark(this.selectorToolBar);
 			button.Name = name;
 			button.IconName = Misc.Icon(icon);
 			button.Width = width;
@@ -893,7 +893,7 @@ namespace Epsitec.Common.Document.Containers
 			this.SetCategory(this.categoryCharacter, Res.Strings.Panel.AggregateCategory.Character, (this.category == StyleCategory.Character));
 		}
 
-		protected void SetCategory(Widgets.IconMarkButton button, string text, bool state)
+		protected void SetCategory(IconButtonMark button, string text, bool state)
 		{
 			button.Text = text;
 			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
@@ -1743,9 +1743,9 @@ namespace Epsitec.Common.Document.Containers
 		protected Scrollable				bottomScrollable;
 
 		protected Widget					categoryContainer;
-		protected Widgets.IconMarkButton	categoryGraphic;
-		protected Widgets.IconMarkButton	categoryParagraph;
-		protected Widgets.IconMarkButton	categoryCharacter;
+		protected IconButtonMark			categoryGraphic;
+		protected IconButtonMark			categoryParagraph;
+		protected IconButtonMark			categoryCharacter;
 		protected StyleCategory				category;
 
 		protected HToolBar					aggregateToolBar;

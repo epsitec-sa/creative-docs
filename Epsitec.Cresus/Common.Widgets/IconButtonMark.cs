@@ -1,8 +1,6 @@
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Text;
 
-namespace Epsitec.Common.Document.Widgets
+namespace Epsitec.Common.Widgets
 {
 	public enum SiteMark
 	{
@@ -14,15 +12,15 @@ namespace Epsitec.Common.Document.Widgets
 
 
 	/// <summary>
-	/// La classe IconMarkButton est un IconButton avec une marque triangulaire sur un côté.
+	/// La classe IconButtonMark est un IconButton avec une marque triangulaire sur un côté.
 	/// </summary>
-	public class IconMarkButton : IconButton
+	public class IconButtonMark : IconButton
 	{
-		public IconMarkButton()
+		public IconButtonMark()
 		{
 		}
 
-		public IconMarkButton(Widget embedder) : this()
+		public IconButtonMark(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}

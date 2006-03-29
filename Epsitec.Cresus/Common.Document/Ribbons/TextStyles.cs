@@ -15,10 +15,10 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.TextStylesMain;
 
-			this.buttonParagraph = new Widgets.IconMarkButton(this);
+			this.buttonParagraph = new IconButtonMark(this);
 			//?this.buttonParagraph.Command = "TextEditing";  // (*)
 			this.buttonParagraph.MarkDimension = 5;
-			this.buttonParagraph.SiteMark = Widgets.SiteMark.OnRight;
+			this.buttonParagraph.SiteMark = SiteMark.OnRight;
 			this.buttonParagraph.IconName = Misc.Icon("TextFilterParagraph");
 			this.buttonParagraph.PreferredIconSize = Misc.IconPreferredSize("Normal");
 			this.buttonParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -28,10 +28,10 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonParagraph.Clicked += new MessageEventHandler(this.HandleParagraphClicked);
 			ToolTip.Default.SetToolTip(this.buttonParagraph, Res.Strings.Panel.Style.ParagraphDefinition);
 
-			this.buttonCharacter = new Widgets.IconMarkButton(this);
+			this.buttonCharacter = new IconButtonMark(this);
 			//?this.buttonCharacter.Command = "TextEditing";  // (*)
 			this.buttonCharacter.MarkDimension = 5;
-			this.buttonCharacter.SiteMark = Widgets.SiteMark.OnRight;
+			this.buttonCharacter.SiteMark = SiteMark.OnRight;
 			this.buttonCharacter.IconName = Misc.Icon("TextFilterCharacter");
 			this.buttonCharacter.PreferredIconSize = Misc.IconPreferredSize("Normal");
 			this.buttonCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -283,8 +283,8 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		protected Widgets.IconMarkButton	buttonParagraph;
-		protected Widgets.IconMarkButton	buttonCharacter;
+		protected IconButtonMark			buttonParagraph;
+		protected IconButtonMark			buttonCharacter;
 		protected IconButtonsCombo			comboStyle;
 		protected bool						characterMode = false;
 	}

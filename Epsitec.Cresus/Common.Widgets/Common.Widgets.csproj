@@ -379,6 +379,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IconButtonMark.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IconButtonsCombo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
