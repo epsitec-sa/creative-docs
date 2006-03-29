@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -965,6 +965,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				//	En mettant cette propriété à true, l'appel RunInTestEnvironment
+				//	ne démarrera pas de "message loop", ce qui évite qu'une batterie
+				//	de tests automatique (NUnit) ne se bloque après l'affichage d'une
+				//	fenêtre.
+				
 				if (Window.is_running_in_automated_test_environment != value)
 				{
 					Window.is_running_in_automated_test_environment = value;
@@ -975,6 +980,14 @@ namespace Epsitec.Common.Widgets
 
 		public static void RunInTestEnvironment(Window window)
 		{
+			//	Cette méthode doit être appelée dans des tests basés sur NUnit, lorsque
+			//	l'on désire que la fenêtre reste visible jusqu'à sa fermeture manuelle.
+			
+			//	Il est conseillé de rajouter un test nommé AutomatedTestEnvironment qui
+			//	met la propriété RunningInAutomatedTestEnvironment à true; ainsi, si on
+			//	exécute un test global (Run sans avoir sélectionné de test spécifique),
+			//	RunInTestEnvironment ne bloquera pas.
+			
 			if (Window.RunningInAutomatedTestEnvironment)
 			{
 				System.Windows.Forms.Application.DoEvents ();
