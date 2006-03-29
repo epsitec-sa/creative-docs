@@ -100,9 +100,8 @@ namespace Epsitec.Common.Document.Widgets
 			//	Dessine le bouton.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			Rectangle     rect  = this.Client.Bounds;
-			WidgetState   state = this.PaintState;
-			Drawing.Point pos   = new Drawing.Point(0, 0);
+			Rectangle   rect  = this.Client.Bounds;
+			WidgetState state = this.PaintState;
 
 			bool enable = ((state & WidgetState.Enabled) != 0);
 			if ( !enable )
@@ -157,30 +156,19 @@ namespace Epsitec.Common.Document.Widgets
 			state &= ~WidgetState.Selected;
 			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
 
-			switch ( this.siteMark )
-			{
-				case SiteMark.OnBottom:
-					pos.Y += this.markDimension;
-					break;
-
-				case SiteMark.OnLeft:
-					pos.X += this.markDimension;
-					break;
-			}
-
 			if ( this.innerZoom != 1.0 )
 			{
 				double zoom = (this.innerZoom-1)/2+1;
 				this.TextLayout.LayoutSize = rect.Size/this.innerZoom;
 				Drawing.Transform transform = graphics.Transform;
 				graphics.ScaleTransform(zoom, zoom, 0, -this.Client.Height*zoom);
-				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
+				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.buttonStyle);
 				graphics.Transform = transform;
 			}
 			else
 			{
 				this.TextLayout.LayoutSize = rect.Size;
-				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
+				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.buttonStyle);
 			}
 		}
 
