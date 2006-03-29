@@ -38,7 +38,7 @@ namespace Epsitec.Common.Widgets
 		{
 			GlyphButton button = new GlyphButton(this);
 			
-			button.GlyphShape  = GlyphShape.ArrowDown;
+			button.GlyphShape  = GlyphShape.Menu;
 			button.ButtonStyle = ButtonStyle.Combo;
 			
 			return button;

@@ -37,11 +37,12 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonCharacter.Clicked += new MessageEventHandler(this.HandleCharacterClicked);
 			ToolTip.Default.SetToolTip(this.buttonCharacter, Res.Strings.Panel.Style.CharacterDefinition);
 
-			this.comboStyle = this.CreateIconButtonCombo("TextEditing");  // (*)
+			this.comboStyle = this.CreateIconButtonsCombo("TextEditing");  // (*)
+			this.comboStyle.TotalButtons = 3;
 			this.comboStyle.MenuDrawFrame = true;
 			this.comboStyle.AllLinesWidthSameWidth = true;
 			this.comboStyle.ComboOpening += new CancelEventHandler(this.HandleParagraphOpening);
-			this.comboStyle.ComboClosed += new EventHandler(this.HandleParagraphClosed);
+			this.comboStyle.SelectedIndexChanged += new EventHandler(this.HandleParagraphSelected);
 			ToolTip.Default.SetToolTip(this.comboStyle, Res.Strings.Panel.Style.Choice);
 
 			// (*)	Ce nom permet de griser automatiquement les widgets lorsqu'il n'y a
@@ -78,11 +79,33 @@ namespace Epsitec.Common.Document.Ribbons
 				this.buttonCharacter.Enable = true;
 				
 				this.comboStyle.Enable = true;
+				this.UpdateAfterTextStyleListChanged();
 			}
+		}
+
+		protected void UpdateAfterTextStyleListChanged()
+		{
+			this.comboStyle.Items.Clear();
+
+			Text.TextStyle[] styles = this.document.TextStyles(this.characterMode ? StyleCategory.Character : StyleCategory.Paragraph);
+			foreach ( Text.TextStyle style in styles )
+			{
+				string name      = style.Name;
+				string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
+				string menuIcon  = string.Concat(this.document.UniqueName, ".TextStyleMenu");
+				string parameter = string.Concat(style.Name, '\t', this.characterMode ? "Character" : "Paragraph");
+				this.AddIconButtonsComboDyn(this.comboStyle, name, briefIcon, menuIcon, parameter);
+			}
+
+			this.comboStyle.UpdateButtons();
 		}
 
 		public override void NotifyChanged(string changed)
 		{
+			if ( changed == "TextStyleListChanged" )
+			{
+				this.UpdateAfterTextStyleListChanged();
+			}
 		}
 
 		public override void NotifyTextStylesChanged()
@@ -94,20 +117,14 @@ namespace Epsitec.Common.Document.Ribbons
 				Text.TextStyle[] styles = this.document.Wrappers.TextFlow.TextNavigator.TextStyles;
 				foreach ( Text.TextStyle style in styles )
 				{
-					string text = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
-
 					if ( style.TextStyleClass == Common.Text.TextStyleClass.Paragraph && !this.characterMode )
 					{
-						string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
-						string parameter = string.Concat(style.Name, '\t', "Paragraph");
-						this.BriefIconButtonComboDyn(this.comboStyle, briefIcon, parameter);
+						this.comboStyle.SelectedName = style.Name;
 					}
 
 					if ( style.TextStyleClass == Common.Text.TextStyleClass.Text && this.characterMode )
 					{
-						string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
-						string parameter = string.Concat(style.Name, '\t', "Character");
-						this.BriefIconButtonComboDyn(this.comboStyle, briefIcon, parameter);
+						this.comboStyle.SelectedName = style.Name;
 					}
 				}
 			}
@@ -119,7 +136,7 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 5+20+5+70+5;
+				return 5+20+5+60*3+5;
 			}
 		}
 
@@ -156,7 +173,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			rect = this.UsefulZone;
 			rect.Left += dx+5;
-			rect.Width = 70;
+			rect.Width = 60*3;
 			this.comboStyle.Bounds = rect;
 		}
 
@@ -175,22 +192,11 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleParagraphOpening(object sender, CancelEventArgs e)
 		{
-			this.comboStyle.Items.Clear();
-
-			Text.TextStyle[] styles = this.document.TextStyles(this.characterMode ? StyleCategory.Character : StyleCategory.Paragraph);
-			foreach ( Text.TextStyle style in styles )
-			{
-				string name      = style.Name;
-				string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
-				string menuIcon  = string.Concat(this.document.UniqueName, ".TextStyleMenu");
-				string parameter = string.Concat(style.Name, '\t', this.characterMode ? "Character" : "Paragraph");
-				this.AddIconButtonComboDyn(this.comboStyle, name, briefIcon, menuIcon, parameter);
-			}
 		}
 
-		private void HandleParagraphClosed(object sender)
+		private void HandleParagraphSelected(object sender)
 		{
-			IconButtonCombo combo = sender as IconButtonCombo;
+			IconButtonsCombo combo = sender as IconButtonsCombo;
 			string name = combo.SelectedName;
 			if ( name == null )  return;
 
@@ -201,7 +207,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected IconButton				buttonParagraph;
 		protected IconButton				buttonCharacter;
-		protected IconButtonCombo			comboStyle;
+		protected IconButtonsCombo			comboStyle;
 		protected bool						characterMode = false;
 	}
 }

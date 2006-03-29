@@ -3916,6 +3916,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.PropertyChanged        += new PropertyEventHandler(this.HandlePropertyChanged);
 			this.CurrentDocument.Notifier.AggregateChanged       += new AggregateEventHandler(this.HandleAggregateChanged);
 			this.CurrentDocument.Notifier.TextStyleChanged       += new TextStyleEventHandler(this.HandleTextStyleChanged);
+			this.CurrentDocument.Notifier.TextStyleListChanged   += new SimpleEventHandler(this.HandleTextStyleListChanged);
 			this.CurrentDocument.Notifier.SelNamesChanged        += new SimpleEventHandler(this.HandleSelNamesChanged);
 			this.CurrentDocument.Notifier.DrawChanged            += new RedrawEventHandler(this.HandleDrawChanged);
 			this.CurrentDocument.Notifier.RibbonCommand          += new RibbonEventHandler(this.HandleRibbonCommand);
@@ -4815,6 +4816,15 @@ namespace Epsitec.App.DocumentEditor
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerStyles.SetDirtyTextStyles(textStyleList);
 			}
+		}
+
+		private void HandleTextStyleListChanged()
+		{
+			//	Appelé lorsqu'un style de texte a été ajouté ou supprimé.
+			this.ribbonMain.NotifyChanged("TextStyleListChanged");
+			this.ribbonGeom.NotifyChanged("TextStyleListChanged");
+			this.ribbonOper.NotifyChanged("TextStyleListChanged");
+			this.ribbonText.NotifyChanged("TextStyleListChanged");
 		}
 
 		private void HandleSelNamesChanged()

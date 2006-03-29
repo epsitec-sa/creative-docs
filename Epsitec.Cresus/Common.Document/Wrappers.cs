@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document
 				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
 
 				tag = string.Concat(this.document.UniqueName, ".TextStyleBrief");
-				image = new Drawing.DynamicImage(new Drawing.Size(54, 45), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleBrief));
+				image = new Drawing.DynamicImage(new Drawing.Size(53, 45), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleBrief));
 				image.IsCacheEnabled = false;
 				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
 

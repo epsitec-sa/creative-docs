@@ -223,6 +223,42 @@ namespace Epsitec.Common.Document.Ribbons
 			combo.IconButton.IconName = briefIcon;
 		}
 
+		protected IconButtonsCombo CreateIconButtonsCombo(string command)
+		{
+			//	Crée un bouton combo pour une commande.
+			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
+			IconButtonsCombo button = new IconButtonsCombo(this);
+
+			button.Command = command;
+			button.AutoFocus = false;
+			button.IsLiveUpdateEnabled = false;
+
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+			return button;
+		}
+
+		protected void AddIconButtonsCombo(IconButtonsCombo combo, string name, string icon, string text)
+		{
+			//	Ajoute une ligne au menu d'un IconButtonsCombo.
+			string regularText  = string.Format("{0} {1}", Misc.Image(icon, -5), text);
+			string selectedText = string.Format("{0} {1}", Misc.Image(icon, -5), Misc.Bold(text));
+			string briefIcon    = Misc.Icon(icon);
+			IconButtonsCombo.Item item = new IconButtonsCombo.Item(name, briefIcon, regularText, selectedText);
+			combo.Items.Add(item);
+		}
+
+		protected void AddIconButtonsComboDyn(IconButtonsCombo combo, string name, string briefIcon, string menuIcon, string parameter)
+		{
+			//	Ajoute une ligne au menu d'un IconButtonsCombo.
+			string regularText  = Misc.ImageDyn(menuIcon, parameter);
+			string selectedText = Misc.ImageDyn(menuIcon, parameter);
+			briefIcon           = Misc.IconDyn(briefIcon, parameter);
+			IconButtonsCombo.Item item = new IconButtonsCombo.Item(name, briefIcon, regularText, selectedText);
+			combo.Items.Add(item);
+		}
+
 		protected GlyphButton CreateMenuButton(string command, string tooltip, MessageEventHandler handler)
 		{
 			//	Crée un bouton "v" pour un menu.

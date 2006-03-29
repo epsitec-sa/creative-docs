@@ -4,30 +4,40 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe IconButtonCombo implémente un IconButton avec bouton "v"
+	/// La classe IconButtonsCombo implémente une liste de IconButton avec bouton "v"
 	/// qui fait apparaître un menu dit "combo" pour permettre de choisir une
 	/// icône prédéfinie.
 	/// </summary>
-	public class IconButtonCombo : Widget
+	public class IconButtonsCombo : Widget
 	{
-		public IconButtonCombo()
+		public IconButtonsCombo()
 		{
 			this.items = new System.Collections.ArrayList();
-			
-			this.buttonMain = new IconButton(this);
-			this.buttonMain.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonMain.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 
+			this.TotalButtons = 2;
+			
+			this.buttonPrev = new GlyphButton(this);
+			this.buttonPrev.GlyphShape = GlyphShape.ArrowUp;
+			this.buttonPrev.ButtonStyle = ButtonStyle.Combo;
+			this.buttonPrev.Name = "Prev";
+			this.buttonPrev.Pressed += new MessageEventHandler(this.HandleButtonPrevPressed);
+			
+			this.buttonNext = new GlyphButton(this);
+			this.buttonNext.GlyphShape = GlyphShape.ArrowDown;
+			this.buttonNext.ButtonStyle = ButtonStyle.Combo;
+			this.buttonNext.Name = "Next";
+			this.buttonNext.Pressed += new MessageEventHandler(this.HandleButtonNextPressed);
+			
 			this.buttonMenu = new GlyphButton(this);
 			this.buttonMenu.GlyphShape = GlyphShape.Menu;
 			this.buttonMenu.ButtonStyle = ButtonStyle.Combo;
-			this.buttonMenu.Name = "Open";
-			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.buttonMenu.Name = "Menu";
+			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
 			
 			this.AddEvent(CommandState.AdvancedStateProperty, new Types.PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
 		}
 		
-		public IconButtonCombo(Widget embedder) : this()
+		public IconButtonsCombo(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}
@@ -38,7 +48,7 @@ namespace Epsitec.Common.Widgets
 			//	Retourne la largeur standard.
 			get
 			{
-				return base.DefaultWidth + IconButtonCombo.menuWidth;
+				return base.DefaultWidth + IconButtonsCombo.menuWidth;
 			}
 		}
 
@@ -50,12 +60,44 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public IconButton						IconButton
+		public int								TotalButtons
 		{
+			//	Nombre de IconButton dans le widget.
 			get
 			{
-				return this.buttonMain;
+				if ( this.buttonMain == null )  return 0;
+				return this.buttonMain.Length;
 			}
+
+			set
+			{
+				if ( this.buttonMain == null || this.buttonMain.Length != value )
+				{
+					if ( this.buttonMain != null )
+					{
+						for ( int i=0 ; i<this.buttonMain.Length ; i++ )
+						{
+							this.buttonMain[i].Pressed -= new MessageEventHandler(this.HandleButtonMainPressed);
+							this.buttonMain[i].Dispose();
+							this.buttonMain[i] = null;
+						}
+					}
+
+					this.buttonMain = new IconButton[value];
+
+					for ( int i=0 ; i<this.buttonMain.Length ; i++ )
+					{
+						this.buttonMain[i] = new IconButton(this);
+						this.buttonMain[i].ButtonStyle = ButtonStyle.ActivableIcon;
+						this.buttonMain[i].Pressed += new MessageEventHandler(this.HandleButtonMainPressed);
+					}
+				}
+			}
+		}
+
+		public IconButton IconButton(int rank)
+		{
+			return this.buttonMain[rank];
 		}
 		
 		public bool								IsLiveUpdateEnabled
@@ -99,7 +141,7 @@ namespace Epsitec.Common.Widgets
 		
 		public System.Collections.ArrayList		Items
 		{
-			//	Donne la collection d'éléments de type IconButtonCombo.Item.
+			//	Donne la collection d'éléments de type IconButtonsCombo.Item.
 			get
 			{
 				return this.items;
@@ -108,7 +150,7 @@ namespace Epsitec.Common.Widgets
 
 		public int								SelectedIndex
 		{
-			//	Donne le rang de l'élément sélectionné (-1 si aucune sélection).
+			//	Rang de l'élément sélectionné (-1 si aucune sélection).
 			get
 			{
 				return this.selectedIndex;
@@ -119,7 +161,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.selectedIndex != value )
 				{
 					this.selectedIndex = value;
-					this.UpdateIcon();
+					this.UpdateButtons();
 					this.OnSelectedIndexChanged();
 				}
 			}
@@ -133,17 +175,17 @@ namespace Epsitec.Common.Widgets
 				int sel = this.SelectedIndex;
 				if ( sel == -1 )  return null;
 
-				int rank = 0;
+				int i = 0;
 				foreach ( Item item in this.items )
 				{
 					if ( item == null )  continue;  // séparateur ?
 
-					if ( rank == sel )
+					if ( i == sel )
 					{
 						return item.Name;
 					}
 
-					rank ++;
+					i ++;
 				}
 
 				return null;
@@ -151,21 +193,70 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				int rank = 0;
+				int i = 0;
 				foreach ( Item item in this.items )
 				{
 					if ( item == null )  continue;  // séparateur ?
 
 					if ( item.Name == value )
 					{
-						this.SelectedIndex = rank;
+						this.SelectedIndex = i;
 						return;
 					}
 
-					rank ++;
+					i ++;
 				}
 
 				this.SelectedIndex = -1;
+			}
+		}
+
+
+		public void UpdateButtons()
+		{
+			//	Met à jour tous les boutons en fonctions de la liste Items.
+			for ( int i=0 ; i<this.buttonMain.Length ; i++ )
+			{
+				this.UpdateIcon(i, this.FirstIconVisible+i);
+			}
+
+			int first = this.FirstIconVisible;
+			this.buttonPrev.Enable = (first > 0);
+			this.buttonNext.Enable = (first < ((this.items.Count-1)/this.buttonMain.Length)*this.buttonMain.Length);
+		}
+
+		protected void UpdateIcon(int rank, int index)
+		{
+			//	Met à jour l'icône dans le bouton.
+			if ( index < this.items.Count )
+			{
+				Item item = this.items[index] as Item;
+				this.buttonMain[rank].IconName = item.BriefIcon;
+				this.buttonMain[rank].ActiveState = (this.SelectedIndex == index) ? ActiveState.Yes : ActiveState.No;
+			}
+			else
+			{
+				this.buttonMain[rank].IconName = null;
+				this.buttonMain[rank].ActiveState = ActiveState.No;
+			}
+		}
+		
+
+		public int								FirstIconVisible
+		{
+			//	Rang de la première icône visible, selon les boutons précédent/suivant.
+			get
+			{
+				return this.firstIconVisible;
+			}
+
+			set
+			{
+				if ( this.firstIconVisible != value )
+				{
+					this.firstIconVisible = value;
+					this.UpdateButtons();
+				}
 			}
 		}
 
@@ -179,11 +270,22 @@ namespace Epsitec.Common.Widgets
 					this.CloseCombo(CloseMode.Reject);
 				}
 				
-				this.buttonMain.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
-				this.buttonMain.Dispose();
-				this.buttonMain = null;
+				for ( int i=0 ; i<this.buttonMain.Length ; i++ )
+				{
+					this.buttonMain[i].Pressed -= new MessageEventHandler(this.HandleButtonMainPressed);
+					this.buttonMain[i].Dispose();
+					this.buttonMain[i] = null;
+				}
 
-				this.buttonMenu.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.buttonPrev.Pressed -= new MessageEventHandler(this.HandleButtonPrevPressed);
+				this.buttonPrev.Dispose();
+				this.buttonPrev = null;
+				
+				this.buttonNext.Pressed -= new MessageEventHandler(this.HandleButtonNextPressed);
+				this.buttonNext.Dispose();
+				this.buttonNext = null;
+				
+				this.buttonMenu.Pressed -= new MessageEventHandler(this.HandleButtonMenuPressed);
 				this.buttonMenu.Dispose();
 				this.buttonMenu = null;
 				
@@ -204,42 +306,31 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect;
 
 			rect = box;
-			rect.Right -= IconButtonCombo.menuWidth-1;
-			this.buttonMain.Bounds = rect;
+			rect.Right -= IconButtonsCombo.menuWidth;
+			double last = rect.Right;
+			rect.Width = System.Math.Floor(rect.Width/this.buttonMain.Length);
+			for ( int i=0 ; i<this.buttonMain.Length ; i++ )
+			{
+				if ( i == this.buttonMain.Length-1 )
+				{
+					rect.Right = last;
+				}
+
+				this.buttonMain[i].Bounds = rect;
+				rect.Offset(rect.Width, 0);
+			}
 
 			rect = box;
-			rect.Left = rect.Right-IconButtonCombo.menuWidth;
+			rect.Left = rect.Right-IconButtonsCombo.menuWidth;
+			rect.Bottom = rect.Top-System.Math.Floor(rect.Height*0.33);
+			this.buttonPrev.Bounds = rect;
+			rect.Offset(0, -(rect.Height-1));
+			this.buttonNext.Bounds = rect;
+			rect.Offset(0, -(rect.Height+1));
+			rect.Bottom = box.Bottom;
 			this.buttonMenu.Bounds = rect;
 		}
 
-		protected void UpdateIcon()
-		{
-			//	Met à jour l'icône dans le bouton, en fonction de la sélection.
-			int sel = this.SelectedIndex;
-
-			if ( sel == -1 )
-			{
-				this.buttonMain.IconName = null;
-				return;
-			}
-
-			if ( sel >= this.items.Count )  return;
-
-			int rank = 0;
-			foreach ( Item item in this.items )
-			{
-				if ( item == null )  continue;  // séparateur ?
-
-				if ( rank == sel )
-				{
-					this.buttonMain.IconName = item.BriefIcon;
-					break;
-				}
-
-				rank ++;
-			}
-		}
-		
 		
 		protected virtual void OnSelectedIndexChanged()
 		{
@@ -483,9 +574,43 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private void HandleButtonPressed(object sender, MessageEventArgs e)
+		private void HandleButtonMainPressed(object sender, MessageEventArgs e)
 		{
-			//	L'utilisateur a cliqué dans le bouton d'ouverture de la liste.
+			//	L'utilisateur a cliqué dans l'un des bouton.
+			for ( int i=0 ; i<this.buttonMain.Length ; i++ )
+			{
+				if ( sender == this.buttonMain[i] )
+				{
+					i += this.firstIconVisible;
+					if ( i < this.items.Count )
+					{
+						this.SelectedIndex = i;
+					}
+				}
+			}
+		}
+		
+		private void HandleButtonPrevPressed(object sender, MessageEventArgs e)
+		{
+			//	L'utilisateur a cliqué dans le bouton 'précédent'.
+			int first = this.FirstIconVisible;
+			first -= this.buttonMain.Length;
+			first = System.Math.Max(first, 0);
+			this.FirstIconVisible = first;
+		}
+		
+		private void HandleButtonNextPressed(object sender, MessageEventArgs e)
+		{
+			//	L'utilisateur a cliqué dans le bouton 'suivant'.
+			int first = this.FirstIconVisible;
+			first += this.buttonMain.Length;
+			first = System.Math.Min(first, ((this.items.Count-1)/this.buttonMain.Length)*this.buttonMain.Length);
+			this.FirstIconVisible = first;
+		}
+		
+		private void HandleButtonMenuPressed(object sender, MessageEventArgs e)
+		{
+			//	L'utilisateur a cliqué dans le bouton d'ouverture du menu-combo.
 			this.OpenCombo();
 		}
 		
@@ -520,7 +645,7 @@ namespace Epsitec.Common.Widgets
 		#region Items
 		public class Item
 		{
-			//	Les instances de cette classe servent à peupler la liste Items de IconButtonCombo.
+			//	Les instances de cette classe servent à peupler la liste Items de IconButtonsCombo.
 			//	Chaque instance correspond à une ligne du menu-combo.
 
 			public Item(string name, string briefIcon, string regularText, string selectedText)
@@ -656,7 +781,10 @@ namespace Epsitec.Common.Widgets
 		protected bool							menuDrawFrame = false;
 		protected bool							allLinesWidthSameWidth = false;
 		protected int							selectedIndex = -1;
-		protected IconButton					buttonMain;
+		protected int							firstIconVisible = 0;
+		protected IconButton[]					buttonMain;
+		protected GlyphButton					buttonPrev;
+		protected GlyphButton					buttonNext;
 		protected GlyphButton					buttonMenu;
 		protected System.Collections.ArrayList	items;
 		protected AbstractMenu					menu;
