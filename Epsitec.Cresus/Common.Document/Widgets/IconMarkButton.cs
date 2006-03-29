@@ -89,6 +89,7 @@ namespace Epsitec.Common.Document.Widgets
 					path.Close();
 
 					rect.Top -= this.markSpace;
+					pos.Y -= this.markSpace/2;
 					break;
 
 				case SiteMark.OnLeft:
@@ -110,6 +111,7 @@ namespace Epsitec.Common.Document.Widgets
 					path.Close();
 
 					rect.Right -= this.markSpace;
+					pos.X -= this.markSpace/2;
 					break;
 			}
 

@@ -2307,7 +2307,7 @@ namespace Epsitec.Common.Document
 			//	Retourne un nom unique pour ce document.
 			get
 			{
-				return string.Concat("Document.", this.uniqueID.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				return string.Concat("Document-", this.uniqueID.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			}
 		}
 

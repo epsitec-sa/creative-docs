@@ -15,8 +15,10 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.TextStylesMain;
 
-			this.buttonParagraph = new IconButton(this);
+			this.buttonParagraph = new Widgets.IconMarkButton(this);
 			//?this.buttonParagraph.Command = "TextEditing";  // (*)
+			this.buttonParagraph.MarkSpace = 5;
+			this.buttonParagraph.SiteMark = Widgets.SiteMark.OnRight;
 			this.buttonParagraph.IconName = Misc.Icon("TextFilterParagraph");
 			this.buttonParagraph.PreferredIconSize = Misc.IconPreferredSize("Normal");
 			this.buttonParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -26,8 +28,10 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonParagraph.Clicked += new MessageEventHandler(this.HandleParagraphClicked);
 			ToolTip.Default.SetToolTip(this.buttonParagraph, Res.Strings.Panel.Style.ParagraphDefinition);
 
-			this.buttonCharacter = new IconButton(this);
+			this.buttonCharacter = new Widgets.IconMarkButton(this);
 			//?this.buttonCharacter.Command = "TextEditing";  // (*)
+			this.buttonCharacter.MarkSpace = 5;
+			this.buttonCharacter.SiteMark = Widgets.SiteMark.OnRight;
 			this.buttonCharacter.IconName = Misc.Icon("TextFilterCharacter");
 			this.buttonCharacter.PreferredIconSize = Misc.IconPreferredSize("Normal");
 			this.buttonCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -62,6 +66,12 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
 		{
+			if ( this.document != null )
+			{
+				this.document.Modifier.RibbonTextStyleSelected = this.comboStyle.SelectedIndex;
+				this.document.Modifier.RibbonTextStyleFirst    = this.comboStyle.FirstIconVisible;
+			}
+
 			base.SetDocument(type, install, debug, gs, document);
 
 			if ( this.document == null )
@@ -79,6 +89,8 @@ namespace Epsitec.Common.Document.Ribbons
 				
 				this.comboStyle.Enable = true;
 				this.UpdateAfterTextStyleListChanged();
+				this.comboStyle.SelectedIndex    = this.document.Modifier.RibbonTextStyleSelected;
+				this.comboStyle.FirstIconVisible = this.document.Modifier.RibbonTextStyleFirst;
 			}
 		}
 
@@ -179,15 +191,12 @@ namespace Epsitec.Common.Document.Ribbons
 			double dy = this.buttonParagraph.DefaultHeight;
 
 			rect = this.UsefulZone;
-			rect.Width  = dx;
+			rect.Width  = dx+5;
 			rect.Height = dy;
-			rect.Offset(0, dy+5);
-			this.buttonParagraph.Bounds = rect;
-
-			rect = this.UsefulZone;
-			rect.Width  = dx;
-			rect.Height = dy;
+			rect.Offset(0, 3);
 			this.buttonCharacter.Bounds = rect;
+			rect.Offset(0, rect.Height-1);
+			this.buttonParagraph.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Left += dx+5;
@@ -221,8 +230,8 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		protected IconButton				buttonParagraph;
-		protected IconButton				buttonCharacter;
+		protected Widgets.IconMarkButton	buttonParagraph;
+		protected Widgets.IconMarkButton	buttonCharacter;
 		protected IconButtonsCombo			comboStyle;
 		protected bool						characterMode = false;
 	}
