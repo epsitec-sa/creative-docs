@@ -4,6 +4,15 @@ using Epsitec.Common.Text;
 
 namespace Epsitec.Common.Document.Widgets
 {
+	public enum SiteMark
+	{
+		OnBottom,		// marque en bas
+		OnTop,			// marque en haut
+		OnLeft,			// marque à gauche
+		OnRight,		// marque à droite
+	}
+
+
 	/// <summary>
 	/// La classe IconMarkButton est un IconButton avec une marque 'v' en bas.
 	/// </summary>
@@ -19,17 +28,31 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		
-		public double MarkHeight
+		public SiteMark							SiteMark
 		{
-			//	Hauteur de la marque en bas du bouton.
+			//	Emplacement de la marque.
 			get
 			{
-				return this.markHeight;
+				return this.siteMark;
 			}
 
 			set
 			{
-				this.markHeight = value;
+				this.siteMark = value;
+			}
+		}
+
+		public double							MarkSpace
+		{
+			//	Espacement de la marque.
+			get
+			{
+				return this.markSpace;
+			}
+
+			set
+			{
+				this.markSpace = value;
 			}
 		}
 
@@ -42,33 +65,66 @@ namespace Epsitec.Common.Document.Widgets
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
-			
-			rect.Bottom += this.markHeight;
-			pos.Y += this.markHeight/2;
+			Drawing.Path      path  = new Path();
+			double            middle;
 
-			if ( (state & WidgetState.Enabled) == 0 )
+			switch ( this.siteMark )
+			{
+				case SiteMark.OnBottom:
+					middle = (rect.Left+rect.Right)/2;
+					path.MoveTo(middle, rect.Bottom);
+					path.LineTo(middle-this.markSpace*0.75, rect.Bottom+this.markSpace);
+					path.LineTo(middle+this.markSpace*0.75, rect.Bottom+this.markSpace);
+					path.Close();
+
+					rect.Bottom += this.markSpace;
+					pos.Y += this.markSpace/2;
+					break;
+
+				case SiteMark.OnTop:
+					middle = (rect.Left+rect.Right)/2;
+					path.MoveTo(middle, rect.Top);
+					path.LineTo(middle-this.markSpace*0.75, rect.Top-this.markSpace);
+					path.LineTo(middle+this.markSpace*0.75, rect.Top-this.markSpace);
+					path.Close();
+
+					rect.Top -= this.markSpace;
+					break;
+
+				case SiteMark.OnLeft:
+					middle = (rect.Bottom+rect.Top)/2;
+					path.MoveTo(rect.Left, middle);
+					path.LineTo(rect.Left+this.markSpace, middle-this.markSpace*0.75);
+					path.LineTo(rect.Left+this.markSpace, middle+this.markSpace*0.75);
+					path.Close();
+
+					rect.Left += this.markSpace;
+					pos.X += this.markSpace/2;
+					break;
+
+				case SiteMark.OnRight:
+					middle = (rect.Bottom+rect.Top)/2;
+					path.MoveTo(rect.Right, middle);
+					path.LineTo(rect.Right-this.markSpace, middle-this.markSpace*0.75);
+					path.LineTo(rect.Right-this.markSpace, middle+this.markSpace*0.75);
+					path.Close();
+
+					rect.Right -= this.markSpace;
+					break;
+			}
+
+			bool enable = ((state & WidgetState.Enabled) != 0);
+			if ( !enable )
 			{
 				state &= ~WidgetState.Focused;
 				state &= ~WidgetState.Entered;
 				state &= ~WidgetState.Engaged;
 			}
 
-			if ( this.ActiveState == ActiveState.Yes )  // dessine la marque 'v' en bas du bouton ?
+			if ( this.ActiveState == ActiveState.Yes )  // dessine la marque 'v' ?
 			{
-				Drawing.Rectangle rmark = this.Client.Bounds;
-				rmark.Top = rmark.Bottom+this.markHeight;
-				rmark.Inflate(5);
-				rmark.Offset(0, 1);
-				rmark.Top += 1;
-				if ( (state & WidgetState.Enabled) == 0 )
-				{
-					Color color = adorner.ColorTextFieldBorder(false);
-					adorner.PaintGlyph(graphics, rmark, WidgetState.Enabled, color, GlyphShape.Menu, PaintTextStyle.Button);
-				}
-				else
-				{
-					adorner.PaintGlyph(graphics, rmark, WidgetState.Enabled, GlyphShape.Menu, PaintTextStyle.Button);
-				}
+				graphics.Color = adorner.ColorTextFieldBorder(enable);
+				graphics.PaintSurface(path);
 			}
 			
 			state &= ~WidgetState.Selected;
@@ -90,6 +146,7 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		protected double				markHeight = 8;
+		protected SiteMark				siteMark = SiteMark.OnBottom;
+		protected double				markSpace = 8;
 	}
 }
