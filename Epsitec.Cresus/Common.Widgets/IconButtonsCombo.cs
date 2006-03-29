@@ -19,25 +19,23 @@ namespace Epsitec.Common.Widgets
 			this.buttonPrev = new GlyphButton(this);
 			this.buttonPrev.GlyphShape = GlyphShape.ArrowUp;
 			this.buttonPrev.ButtonStyle = ButtonStyle.Combo;
-			this.buttonPrev.AutoFocus = false;
 			this.buttonPrev.Name = "Prev";
 			this.buttonPrev.Pressed += new MessageEventHandler(this.HandleButtonPrevPressed);
 			
 			this.buttonNext = new GlyphButton(this);
 			this.buttonNext.GlyphShape = GlyphShape.ArrowDown;
 			this.buttonNext.ButtonStyle = ButtonStyle.Combo;
-			this.buttonNext.AutoFocus = false;
 			this.buttonNext.Name = "Next";
 			this.buttonNext.Pressed += new MessageEventHandler(this.HandleButtonNextPressed);
 			
 			this.buttonMenu = new GlyphButton(this);
 			this.buttonMenu.GlyphShape = GlyphShape.Menu;
 			this.buttonMenu.ButtonStyle = ButtonStyle.Combo;
-			this.buttonMenu.AutoFocus = false;
 			this.buttonMenu.Name = "Menu";
 			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
 			
 			this.AddEvent(CommandState.AdvancedStateProperty, new Types.PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
+			this.AddEvent(Visual.AutoFocusProperty, new Types.PropertyChangedEventHandler(this.HandleAutoFocusChanged));
 		}
 		
 		public IconButtonsCombo(Widget embedder) : this()
@@ -92,7 +90,7 @@ namespace Epsitec.Common.Widgets
 					{
 						this.buttonMain[i] = new IconButton(this);
 						this.buttonMain[i].ButtonStyle = ButtonStyle.ActivableIcon;
-						this.buttonMain[i].AutoFocus = false;
+						this.buttonMain[i].AutoFocus = this.AutoFocus;
 						this.buttonMain[i].Pressed += new MessageEventHandler(this.HandleButtonMainPressed);
 					}
 				}
@@ -295,6 +293,7 @@ namespace Epsitec.Common.Widgets
 				this.buttonMenu = null;
 				
 				this.RemoveEvent(CommandState.AdvancedStateProperty, new Types.PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
+				this.RemoveEvent(Visual.AutoFocusProperty, new Types.PropertyChangedEventHandler(this.HandleAutoFocusChanged));
 			}
 			
 			base.Dispose(disposing);
@@ -653,6 +652,20 @@ namespace Epsitec.Common.Widgets
 		private void HandleAdvancedStatePropertyChanged(object sender, Types.PropertyChangedEventArgs e)
 		{
 			this.SelectedName = e.NewValue as string;
+		}
+
+		private void HandleAutoFocusChanged(object sender, Types.PropertyChangedEventArgs e)
+		{
+			bool autoFocus = (bool) e.NewValue;
+
+			for ( int i=0 ; i<this.buttonMain.Length ; i++ )
+			{
+				this.buttonMain[i].AutoFocus = autoFocus;
+			}
+
+			this.buttonPrev.AutoFocus = autoFocus;
+			this.buttonNext.AutoFocus = autoFocus;
+			this.buttonMenu.AutoFocus = autoFocus;
 		}
 		
 		#region Items
