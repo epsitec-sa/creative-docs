@@ -70,6 +70,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
 		{
+			//	Indique quel est le document actif, puisque les rubans sont globaux à l'application.
 			base.SetDocument(type, install, debug, gs, document);
 
 			if ( this.document == null )
@@ -87,7 +88,7 @@ namespace Epsitec.Common.Document.Ribbons
 				
 				this.comboStyle.Enable = true;
 				this.UpdateAfterTextStyleListChanged();
-				this.NotifyTextStylesChanged();
+				this.UpdateSelectedStyle();
 				
 				this.ignoreChange = true;
 				this.comboStyle.FirstIconVisible = this.RibbonStyleFirst;
@@ -95,34 +96,20 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-		protected void UpdateAfterTextStyleListChanged()
-		{
-			this.comboStyle.Items.Clear();
-
-			Text.TextStyle[] styles = this.document.TextStyles(this.characterMode ? StyleCategory.Character : StyleCategory.Paragraph);
-			foreach ( Text.TextStyle style in styles )
-			{
-				string name      = style.Name;
-				string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
-				string menuIcon  = string.Concat(this.document.UniqueName, ".TextStyleMenu");
-				string parameter = string.Concat(style.Name, '\t', this.characterMode ? "Character" : "Paragraph");
-				this.AddIconButtonsComboDyn(this.comboStyle, name, briefIcon, menuIcon, parameter);
-			}
-
-			this.comboStyle.UpdateButtons();
-		}
-
 		public override void NotifyChanged(string changed)
 		{
+			//	Appelé lorsqu'un style à été créé, supprimé ou déplacé.
 			if ( changed == "TextStyleListChanged" )
 			{
 				this.UpdateAfterTextStyleListChanged();
-				this.NotifyTextStylesChanged();
+				this.UpdateSelectedStyle();
 			}
 		}
 
 		public override void NotifyTextStylesChanged(System.Collections.ArrayList textStyleList)
 		{
+			//	Appelé lorsque les définitions d'un style ont changés, et que l'échantillon
+			//	correspondant doit être redessiné.
 			foreach ( Text.TextStyle textStyle in textStyleList )
 			{
 				for ( int i=0 ; i<this.comboStyle.TotalButtons ; i++ )
@@ -142,8 +129,44 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public override void NotifyTextStylesChanged()
 		{
+			//	Appelé lorsque le style courant a été changé, par exemple suite au
+			//	déplacement du curseur.
 			if ( this.document == null )  return;
+			this.UpdateSelectedStyle();
+		}
 
+
+		public override double DefaultWidth
+		{
+			//	Retourne la largeur standard.
+			get
+			{
+				return 5+20+5+60*3+5;
+			}
+		}
+
+
+		protected void UpdateAfterTextStyleListChanged()
+		{
+			//	Met à jour la liste des styles.
+			this.comboStyle.Items.Clear();
+
+			Text.TextStyle[] styles = this.document.TextStyles(this.characterMode ? StyleCategory.Character : StyleCategory.Paragraph);
+			foreach ( Text.TextStyle style in styles )
+			{
+				string name      = style.Name;
+				string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
+				string menuIcon  = string.Concat(this.document.UniqueName, ".TextStyleMenu");
+				string parameter = string.Concat(style.Name, '\t', this.characterMode ? "Character" : "Paragraph");
+				this.AddIconButtonsComboDyn(this.comboStyle, name, briefIcon, menuIcon, parameter);
+			}
+
+			this.comboStyle.UpdateButtons();
+		}
+
+		protected void UpdateSelectedStyle()
+		{
+			//	Met à jour le style sélectionné en fonction du texte en édition.
 			if ( this.document.Wrappers.TextFlow != null )
 			{
 				Text.TextStyle[] styles = this.document.Wrappers.TextFlow.TextNavigator.TextStyles;
@@ -166,27 +189,17 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 5+20+5+60*3+5;
-			}
-		}
-
-
 		protected void UpdateMode()
 		{
+			//	Met à jour les 2 boutons pour choisir style de paragraphe ou de caractère.
 			this.buttonParagraph.ActiveState = this.characterMode ? ActiveState.No  : ActiveState.Yes;
 			this.buttonCharacter.ActiveState = this.characterMode ? ActiveState.Yes : ActiveState.No;
-			//?this.NotifyTextStylesChanged();
 		}
 
 
 		protected int RibbonStyleFirst
 		{
+			//	Première icône visible, en fonction des boutons prev/next de IconButtonsCombo.
 			get
 			{
 				if ( this.characterMode )  return this.document.Wrappers.RibbonCharacterStyleFirst;
@@ -234,7 +247,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.characterMode = false;
 			this.UpdateMode();
 			this.UpdateAfterTextStyleListChanged();
-			this.NotifyTextStylesChanged();
+			this.UpdateSelectedStyle();
 
 			this.comboStyle.FirstIconVisible = this.RibbonStyleFirst;
 		}
@@ -246,7 +259,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.characterMode = true;
 			this.UpdateMode();
 			this.UpdateAfterTextStyleListChanged();
-			this.NotifyTextStylesChanged();
+			this.UpdateSelectedStyle();
 
 			this.comboStyle.FirstIconVisible = this.RibbonStyleFirst;
 		}
