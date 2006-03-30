@@ -277,7 +277,6 @@
 
 	<data name="Panel.Style.ParagraphDefinition">Show paragraph style palette</data>
 	<data name="Panel.Style.CharacterDefinition">Show character style palette</data>
-	<data name="Panel.Style.Choice">Select and apply a style to the text</data>
 	<data name="Panel.AggregateCategory.Graphic">Graphic</data>
 	<data name="Panel.AggregateCategory.Paragraph">Paragraph</data>
 	<data name="Panel.AggregateCategory.Character">Character</data>

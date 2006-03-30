@@ -243,23 +243,23 @@ namespace Epsitec.Common.Document.Ribbons
 			return button;
 		}
 
-		protected void AddIconButtonsCombo(IconButtonsCombo combo, string name, string icon, string text)
+		protected void AddIconButtonsCombo(IconButtonsCombo combo, string name, string icon, string text, string tooltip)
 		{
 			//	Ajoute une ligne au menu d'un IconButtonsCombo.
 			string regularText  = string.Format("{0} {1}", Misc.Image(icon, -5), text);
 			string selectedText = string.Format("{0} {1}", Misc.Image(icon, -5), Misc.Bold(text));
 			string briefIcon    = Misc.Icon(icon);
-			IconButtonsCombo.Item item = new IconButtonsCombo.Item(name, briefIcon, regularText, selectedText);
+			IconButtonsCombo.Item item = new IconButtonsCombo.Item(name, briefIcon, regularText, selectedText, tooltip);
 			combo.Items.Add(item);
 		}
 
-		protected void AddIconButtonsComboDyn(IconButtonsCombo combo, string name, string briefIcon, string menuIcon, string parameter)
+		protected void AddIconButtonsComboDyn(IconButtonsCombo combo, string name, string briefIcon, string menuIcon, string parameter, string tooltip)
 		{
 			//	Ajoute une ligne au menu d'un IconButtonsCombo.
 			string regularText  = Misc.ImageDyn(menuIcon, parameter);
 			string selectedText = Misc.ImageDyn(menuIcon, parameter);
 			briefIcon           = Misc.IconDyn(briefIcon, parameter);
-			IconButtonsCombo.Item item = new IconButtonsCombo.Item(name, briefIcon, regularText, selectedText);
+			IconButtonsCombo.Item item = new IconButtonsCombo.Item(name, briefIcon, regularText, selectedText, tooltip);
 			combo.Items.Add(item);
 		}
 

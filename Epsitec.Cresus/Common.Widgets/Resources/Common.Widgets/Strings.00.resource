@@ -62,6 +62,10 @@
 	<data name="EditArray.Delete">Supprime une ligne</data>
 	<data name="EditArray.MoveUp">Déplace la ligne vers le haut</data>
 	<data name="EditArray.MoveDown">Déplace la ligne vers le bas</data>
+	
+	<data name="IconButtonsCombo.Prev">Précédents</data>
+	<data name="IconButtonsCombo.Next">Suivants</data>
+	<data name="IconButtonsCombo.Menu">Choix détaillé dans un menu</data>
 
 	<data name="TextNavigator.Action.Modify">Modification du texte</data>
 	<data name="TextNavigator.Action.Insert">Insertion de caractères</data>

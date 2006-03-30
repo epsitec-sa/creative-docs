@@ -24,18 +24,21 @@ namespace Epsitec.Common.Widgets
 			this.buttonPrev.ButtonStyle = ButtonStyle.Combo;
 			this.buttonPrev.Name = "Prev";
 			this.buttonPrev.Pressed += new MessageEventHandler(this.HandleButtonPrevPressed);
+			ToolTip.Default.SetToolTip(this.buttonPrev, Res.Strings.IconButtonsCombo.Prev);
 			
 			this.buttonNext = new GlyphButton(this);
 			this.buttonNext.GlyphShape = GlyphShape.ArrowDown;
 			this.buttonNext.ButtonStyle = ButtonStyle.Combo;
 			this.buttonNext.Name = "Next";
 			this.buttonNext.Pressed += new MessageEventHandler(this.HandleButtonNextPressed);
+			ToolTip.Default.SetToolTip(this.buttonNext, Res.Strings.IconButtonsCombo.Next);
 			
 			this.buttonMenu = new GlyphButton(this);
 			this.buttonMenu.GlyphShape = GlyphShape.Menu;
 			this.buttonMenu.ButtonStyle = ButtonStyle.Combo;
 			this.buttonMenu.Name = "Menu";
 			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
+			ToolTip.Default.SetToolTip(this.buttonMenu, Res.Strings.IconButtonsCombo.Menu);
 			
 			this.AddEventHandler (CommandState.AdvancedStateProperty, new PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
 			this.AddEventHandler (Visual.AutoFocusProperty, new PropertyChangedEventHandler (this.HandleAutoFocusChanged));
@@ -303,11 +306,14 @@ namespace Epsitec.Common.Widgets
 				this.buttonMain[rank].IconName = item.BriefIcon;
 				this.buttonMain[rank].PreferredIconSize = new Drawing.Size(this.ButtonWidth, this.ButtonHeight);
 				this.buttonMain[rank].ActiveState = (this.SelectedIndex == index) ? ActiveState.Yes : ActiveState.No;
+				ToolTip.Default.SetToolTip(this.buttonMain[rank], item.Tooltip);
 			}
 			else
 			{
 				this.buttonMain[rank].IconName = null;
 				this.buttonMain[rank].ActiveState = ActiveState.No;
+				string tooltip = null;
+				ToolTip.Default.SetToolTip(this.buttonMain[rank], tooltip);
 			}
 		}
 		
@@ -733,12 +739,13 @@ namespace Epsitec.Common.Widgets
 			//	Les instances de cette classe servent à peupler la liste Items de IconButtonsCombo.
 			//	Chaque instance correspond à une ligne du menu-combo.
 
-			public Item(string name, string briefIcon, string regularText, string selectedText)
+			public Item(string name, string briefIcon, string regularText, string selectedText, string tooltip)
 			{
 				this.name         = name;
 				this.briefIcon    = briefIcon;
 				this.regularText  = regularText;
 				this.selectedText = selectedText;
+				this.tooltip      = tooltip;
 			}
 
 			public string Name
@@ -761,10 +768,16 @@ namespace Epsitec.Common.Widgets
 				get { return this.selectedText; }
 			}
 
+			public string Tooltip
+			{
+				get { return this.tooltip; }
+			}
+
 			protected string			name;
 			protected string			briefIcon;
 			protected string			regularText;
 			protected string			selectedText;
+			protected string			tooltip;
 		}
 		#endregion
 

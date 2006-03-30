@@ -157,72 +157,6 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public void UpdateQuickFonts()
-		{
-			//	Met à jour toutes les polices rapides, lorsqu'un changement dans les réglages a été fait.
-			//	Appelé par DocumentEditor lorsque la notification FontsSettingsChanged est reçue.
-			System.Collections.ArrayList quickFonts = this.document.Settings.QuickFonts;
-			if ( quickFonts.Count == 0 )
-			{
-				this.quickFonts = null;
-			}
-			else
-			{
-				int quickCount;
-				this.quickFonts = Misc.MergeFontList(Misc.GetFontList(false), quickFonts, true, null, out quickCount);
-			}
-		}
-
-		public OpenType.FontIdentity GetQuickFonts(int rank)
-		{
-			//	Donne une police rapide.
-			if ( this.quickFonts == null )  return null;
-			if ( rank >= this.quickFonts.Count )  return null;
-			return this.quickFonts[rank] as OpenType.FontIdentity;
-		}
-
-
-		public void UpdateQuickButtons()
-		{
-			//	Met à jour toutes les commandes pour les polices rapides.
-			this.UpdateQuickButton(0);
-			this.UpdateQuickButton(1);
-			this.UpdateQuickButton(2);
-			this.UpdateQuickButton(3);
-		}
-
-		public void UpdateQuickButton(int i)
-		{
-			//	Met à jour une commande pour les polices rapides.
-			//	Commandes "FontQuick1" à "FontQuick4":
-			if ( this.document.CommandDispatcher == null )  return;
-			string cmd = string.Format("FontQuick{0}", (i+1).ToString(System.Globalization.CultureInfo.InvariantCulture));
-			CommandState cs = this.document.CommandDispatcher.GetCommandState(cmd);
-			if ( cs == null )  return;
-
-			if ( this.IsWrappersAttached )
-			{
-				OpenType.FontIdentity id = this.GetQuickFonts(i);
-				if ( id == null )
-				{
-					cs.Enable = false;  // pas de police rapide définie pour ce bouton
-					cs.ActiveState = ActiveState.No;
-				}
-				else
-				{
-					cs.Enable = true;
-
-					string face = this.textWrapper.Active.FontFace;
-					cs.ActiveState = (face == id.InvariantFaceName) ? ActiveState.Yes : ActiveState.No;
-				}
-			}
-			else
-			{
-				cs.Enable = false;  // pas de texte en édition
-				cs.ActiveState = ActiveState.No;
-			}
-		}
-
 		protected void HandleTextWrapperChanged(object sender)
 		{
 			//	Le wrapper du texte a changé.
@@ -266,8 +200,6 @@ namespace Epsitec.Common.Document
 			this.CommandActiveState("FontSizePlus",  enabled);
 			this.CommandActiveState("FontSizeMinus", enabled);
 			this.CommandActiveState("FontClear",     enabled);
-
-			this.UpdateQuickButtons();
 		}
 
 		protected void HandleParagraphWrapperChanged(object sender)
@@ -927,10 +859,6 @@ namespace Epsitec.Common.Document
 			//	Exécute une commande.
 			switch ( name )
 			{
-				case "FontQuick1":      this.ChangeQuick(0, name);   break;
-				case "FontQuick2":      this.ChangeQuick(1, name);   break;
-				case "FontQuick3":      this.ChangeQuick(2, name);   break;
-				case "FontQuick4":      this.ChangeQuick(3, name);   break;
 				case "FontBold":        this.ChangeBold();           break;
 				case "FontItalic":      this.ChangeItalic();         break;
 				case "FontUnderlined":  this.ChangeUnderlined();     break;
@@ -952,20 +880,6 @@ namespace Epsitec.Common.Document
 				case "FontClear":       this.FontClear();       break;
 				case "ParagraphClear":  this.ParagraphClear();  break;
 			}
-		}
-
-		protected void ChangeQuick(int i, string name)
-		{
-			//	La commande pour une police rapide a été actionnée.
-			OpenType.FontIdentity id = this.GetQuickFonts(i);
-			if ( id == null )  return;
-			string face = id.InvariantFaceName;
-
-			this.textWrapper.SuspendSynchronizations();
-			this.textWrapper.Defined.FontFace  = face;
-			this.textWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
-			this.textWrapper.DefineOperationName(name, face);
-			this.textWrapper.ResumeSynchronizations();
 		}
 
 		protected void ChangeBold()
@@ -1638,8 +1552,9 @@ namespace Epsitec.Common.Document
 				string parameter = string.Concat(id.InvariantFaceName, '\t', id.InvariantStyleName);
 				string briefIcon   = Misc.IconDyn (string.Concat(this.document.UniqueName, ".TextFontBrief"), parameter);
 				string regularText = Misc.ImageDyn(string.Concat(this.document.UniqueName, ".TextFontMenu"),  parameter);
+				string tooltip     = TextLayout.ConvertToTaggedText(id.InvariantFaceName);
 
-				combo.Items.Add(new IconButtonsCombo.Item(id.InvariantFaceName, briefIcon, regularText, regularText));
+				combo.Items.Add(new IconButtonsCombo.Item(id.InvariantFaceName, briefIcon, regularText, regularText, tooltip));
 				i ++;
 			}
 		}
@@ -1887,7 +1802,6 @@ namespace Epsitec.Common.Document
 		protected Text.Wrappers.TextWrapper				styleTextWrapper;
 		protected Text.Wrappers.ParagraphWrapper		styleParagraphWrapper;
 		protected TextFlow								textFlow;
-		protected System.Collections.ArrayList			quickFonts;
 		protected int									ribbonParagraphStyleFirst;
 		protected int									ribbonCharacterStyleFirst;
 		protected int									ribbonFontFirst;
