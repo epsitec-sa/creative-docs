@@ -1772,18 +1772,18 @@ namespace Epsitec.Common.Document
 			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
 			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
 
-			//	Plus la hauteur est petite, plus il faut de place pour le nom.
+			//	Plus la hauteur est petite, plus il faut de place pour le nom, pour qu'il reste lisible.
 			//	Avec h=45, la hauteur pour le nom est de 14, soit environ un tier.
 			//	Avec h=22, la hauteur pour le nom est de 11, soit la moitié.
-			double factor = 0.68 - size.Height*0.36/45;
+			double factor = System.Math.Min(0.68 - size.Height*0.36/45, 0.5);
 			double limit = System.Math.Floor(size.Height*factor);
 
-			Rectangle rect = new Rectangle(1, limit, size.Width-2, size.Height-limit-1);
+			Rectangle rect = new Rectangle(3, limit, size.Width-6, size.Height-limit-3);
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(Color.FromBrightness(1));  // fond blanc
 			this.DrawStyle(graphics, rect, textStyle);
 
-			rect = new Rectangle(0, 0, size.Width, limit);
+			rect = new Rectangle(1, 0, size.Width-2, limit);
 			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
 			Color c = adorner.ColorText(WidgetState.Enabled);
 			this.DrawDynamicText(graphics, rect, text, limit*10/14, c, ContentAlignment.MiddleLeft);

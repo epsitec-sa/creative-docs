@@ -297,7 +297,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Item item = this.items[index] as Item;
 				this.buttonMain[rank].IconName = item.BriefIcon;
-				this.buttonMain[rank].PreferredIconSize = new Drawing.Size(this.ButtonWidth-3, this.ButtonHeight-3);
+				this.buttonMain[rank].PreferredIconSize = new Drawing.Size(this.ButtonWidth, this.ButtonHeight);
 				this.buttonMain[rank].ActiveState = (this.SelectedIndex == index) ? ActiveState.Yes : ActiveState.No;
 			}
 			else
