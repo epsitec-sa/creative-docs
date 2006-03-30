@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document
 				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
 
 				tag = string.Concat(this.document.UniqueName, ".TextFontMenu");
-				image = new Drawing.DynamicImage(new Drawing.Size(220, 30), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageFontMenu));
+				image = new Drawing.DynamicImage(new Drawing.Size(200, 30), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageFontMenu));
 				image.IsCacheEnabled = false;
 				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
 
@@ -1623,20 +1623,11 @@ namespace Epsitec.Common.Document
 
 
 		#region DynamicDrawing
-		public void FontFaceComboSelect(IconButtonCombo combo, string fontFace)
-		{
-			//	Sélectionne une police, sans ouvrir le menu-combo.
-			string text = TextLayout.ConvertToTaggedText(fontFace);
-			string parameter = string.Concat(fontFace, '\t', "", '\t', "", '\t', text, '\t', "", '\t', "");
-			string briefIcon = Misc.IconDyn(string.Concat(this.document.UniqueName, ".TextFontBrief"), parameter);
-			combo.IconButton.IconName = briefIcon;
-		}
-
-		public void FontFaceComboOpening(IconButtonCombo combo)
+		public void FontFaceComboUpdate(IconButtonsCombo combo)
 		{
 			//	Le combo pour les polices va être ouvert.
-			bool quickOnly = this.document.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
-			string selectedFontFace = this.textWrapper.Active.FontFace;
+			bool quickOnly = true;
+			string selectedFontFace = null;
 			int quickCount;
 			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.document.Settings.QuickFonts, quickOnly, selectedFontFace, out quickCount);
 
@@ -1644,36 +1635,11 @@ namespace Epsitec.Common.Document
 			int i = 0;
 			foreach ( OpenType.FontIdentity id in fontList )
 			{
-				string fontFace  = id.InvariantFaceName;
-				string fontStyle = id.InvariantStyleName;
-				string prefix    = "";
-				string text      = TextLayout.ConvertToTaggedText(id.InvariantFaceName);
-				string suffix    = "";
-				string abc       = this.document.Modifier.ActiveViewer.DrawingContext.TextFontSampleAbc ? "Abc" : "AaBbYyZz";
+				string parameter = string.Concat(id.InvariantFaceName, '\t', id.InvariantStyleName);
+				string briefIcon   = Misc.IconDyn (string.Concat(this.document.UniqueName, ".TextFontBrief"), parameter);
+				string regularText = Misc.ImageDyn(string.Concat(this.document.UniqueName, ".TextFontMenu"),  parameter);
 
-				if ( i < quickCount )  // police rapide ?
-				{
-					if ( i < 9 )  // police rapide avec un raccourci [1]..[9] ?
-					{
-						prefix = string.Format("{0}: <b>", (i+1).ToString(System.Globalization.CultureInfo.InvariantCulture));
-						suffix = "</b>";
-					}
-					else	// police rapide sans raccourci ?
-					{
-						prefix = "<b>";
-						suffix = "</b>";
-					}
-
-					prefix = TextLayout.ConvertToTaggedText(prefix);
-					suffix = TextLayout.ConvertToTaggedText(suffix);
-				}
-
-				string parameter = string.Concat(fontFace, '\t', fontStyle, '\t', prefix, '\t', text, '\t', suffix, '\t', abc);
-
-				string briefIcon = Misc.IconDyn(string.Concat(this.document.UniqueName, ".TextFontBrief"), parameter);
-				string regularText = Misc.ImageDyn(string.Concat(this.document.UniqueName, ".TextFontMenu"), parameter);
-
-				combo.Items.Add(new IconButtonCombo.Item(fontFace, briefIcon, regularText, regularText));
+				combo.Items.Add(new IconButtonsCombo.Item(id.InvariantFaceName, briefIcon, regularText, regularText));
 				i ++;
 			}
 		}
@@ -1686,17 +1652,34 @@ namespace Epsitec.Common.Document
 			IAdorner adorner = xAdorner as IAdorner;
 
 			string[] arguments = argument.Split('\t');
-			System.Diagnostics.Debug.Assert(arguments.Length == 6);
+			System.Diagnostics.Debug.Assert(arguments.Length == 2);
 			string fontFace  = arguments[0];
 			string fontStyle = arguments[1];
-			string prefix    = arguments[2];
-			string text      = arguments[3];
-			string suffix    = arguments[4];
-			string abc       = arguments[5];
 
-			Rectangle r = new Rectangle(0, 0, size.Width, size.Height);
+			Rectangle rect = new Rectangle(0, 1.5, size.Width, size.Height-5);
+
+			OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
+			OpenType.FontIdentity id = font.FontIdentity;
+			double ox = rect.Left;
+			double oy = rect.Bottom + rect.Height*0.25;
+
+			//	Dessine l'échantillon "Abc".
+			double fontSize = rect.Height*0.85;
 			Color c = adorner.ColorText(WidgetState.Enabled);
-			this.DrawDynamicText(graphics, r, text, 0, c, ContentAlignment.MiddleLeft);
+			Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(id, ox, oy, fontSize);
+				
+			if ( path != null )
+			{
+				Rectangle bounds = path.ComputeBounds();
+				double sx = (rect.Width-bounds.Width)/2-ox;
+				graphics.TranslateTransform(sx, 0);
+
+				graphics.Color = c;
+				graphics.PaintSurface(path);
+				path.Dispose();
+
+				graphics.TranslateTransform(-sx, 0);
+			}
 		}
 
 		protected void DrawDynamicImageFontMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
@@ -1707,43 +1690,26 @@ namespace Epsitec.Common.Document
 			IAdorner adorner = xAdorner as IAdorner;
 
 			string[] arguments = argument.Split('\t');
-			System.Diagnostics.Debug.Assert(arguments.Length == 6);
+			System.Diagnostics.Debug.Assert(arguments.Length == 2);
 			string fontFace  = arguments[0];
 			string fontStyle = arguments[1];
-			string prefix    = arguments[2];
-			string text      = arguments[3];
-			string suffix    = arguments[4];
-			string abc       = arguments[5];
 
 			OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
 			OpenType.FontIdentity id = font.FontIdentity;
 			double oy = size.Height*0.25;
 
 			//	Dessine le nom de la police.
-			Rectangle r = new Rectangle(3, 0, 141, size.Height);
+			Rectangle r = new Rectangle(3, 0, 140-3, size.Height);
 			Color c = adorner.ColorText(WidgetState.Enabled);
 			TextLayout layout = new TextLayout();
-			layout.Text = string.Concat(TextLayout.ConvertToSimpleText(prefix), text, TextLayout.ConvertToSimpleText(suffix));
+			layout.Text = TextLayout.ConvertToTaggedText(fontFace);
 			layout.Alignment = ContentAlignment.MiddleLeft;
 			layout.LayoutSize = r.Size;
 			layout.Paint(r.BottomLeft, graphics, r, c, GlyphPaintStyle.Normal);
 
-			//	Dessine le nombre de variantes.
-			string v = id.FontStyleCount.ToString();
-			r = new Rectangle(144, 0, 16, size.Height);
-			this.DrawDynamicText(graphics, r, v, 0, c, ContentAlignment.MiddleCenter);
-
-			//	Dessine l'échantillon "Abc" ou "AaBbYyZz".
+			//	Dessine l'échantillon "Abc".
 			double fontSize = size.Height*0.85;
-			Path path;
-			if ( abc == "Abc" )
-			{
-				path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(id, 165, oy, fontSize);
-			}
-			else
-			{
-				path = Common.Widgets.Helpers.FontPreviewer.GetPath(id, 165, oy, fontSize);
-			}
+			Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(id, 140+5, oy, fontSize);
 				
 			if ( path != null )
 			{
@@ -1753,9 +1719,8 @@ namespace Epsitec.Common.Document
 			}
 
 			//	Dessine les traits verticaux de séparation.
-			graphics.AddLine(144-0.5, 0, 144-0.5, size.Height);
-			graphics.AddLine(160-0.5, 0, 160-0.5, size.Height);
-			graphics.RenderSolid(adorner.ColorTextFieldBorder(true));  // dessine le cadre
+			graphics.AddLine(140+0.5, 0, 140+0.5, size.Height);
+			graphics.RenderSolid(adorner.ColorTextFieldBorder(true));
 		}
 
 		protected void DrawDynamicImageStyleBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
@@ -1893,8 +1858,8 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		
-		#region RibbonTextStyle
-		//	C'est ici qu'est mémorisé l'état du IconButtonsCombo dans le ruban 'Styles'.
+		#region RibbonMemorise
+		//	C'est ici que sont mémorisés les états des IconButtonsCombo dans les rubans.
 
 		public int RibbonParagraphStyleFirst
 		{
@@ -1906,6 +1871,12 @@ namespace Epsitec.Common.Document
 		{
 			get { return this.ribbonCharacterStyleFirst; }
 			set { this.ribbonCharacterStyleFirst = value; }
+		}
+
+		public int RibbonFontFirst
+		{
+			get { return this.ribbonFontFirst; }
+			set { this.ribbonFontFirst = value; }
 		}
 		#endregion
 
@@ -1919,5 +1890,6 @@ namespace Epsitec.Common.Document
 		protected System.Collections.ArrayList			quickFonts;
 		protected int									ribbonParagraphStyleFirst;
 		protected int									ribbonCharacterStyleFirst;
+		protected int									ribbonFontFirst;
 	}
 }

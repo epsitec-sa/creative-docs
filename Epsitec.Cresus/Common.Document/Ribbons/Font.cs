@@ -15,12 +15,16 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.FontMain;
 
-			//	Création dans l'ordre inverse, pour que les cadres soient plus jolis
-			//	lorsqu'un bouton est disable.
-			this.buttonQuick4        = this.CreateButtonFontFace("FontQuick4");
-			this.buttonQuick3        = this.CreateButtonFontFace("FontQuick3");
-			this.buttonQuick2        = this.CreateButtonFontFace("FontQuick2");
-			this.buttonQuick1        = this.CreateButtonFontFace("FontQuick1");
+			this.comboFont = this.CreateIconButtonsCombo("TextEditing");
+			this.comboFont.SetColumnsAndRows(2, 2);
+			this.comboFont.MenuDrawFrame = true;
+			this.comboFont.AllLinesWidthSameWidth = true;
+			this.comboFont.AutoFocus = false;
+			this.comboFont.TabIndex = this.tabIndex++;
+			this.comboFont.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.comboFont.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
+			this.comboFont.FirstIconChanged += new EventHandler(this.HandleFirstIconChanged);
+			//?ToolTip.Default.SetToolTip(this.comboFont, Res.Strings.Panel.Style.Choice);
 
 			this.buttonBold          = this.CreateIconButton("FontBold");
 			this.buttonItalic        = this.CreateIconButton("FontItalic");
@@ -54,13 +58,43 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
+		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
+		{
+			//	Indique quel est le document actif, puisque les rubans sont globaux à l'application.
+			base.SetDocument(type, install, debug, gs, document);
+
+			if ( this.document == null )
+			{
+				this.comboFont.SelectedName = null;
+				this.comboFont.Enable = false;
+			}
+			else
+			{
+				this.comboFont.Enable = true;
+				this.UpdateAfterFontListChanged();
+				this.UpdateSelectedFont();
+				
+				this.ignoreChange = true;
+				this.comboFont.FirstIconVisible = this.document.Wrappers.RibbonFontFirst;
+				this.ignoreChange = false;
+			}
+		}
+
 
 		public override void NotifyChanged(string changed)
 		{
 			if ( changed == "FontsSettingsChanged" )
 			{
-				this.UpdateQuickFonts();
+				this.UpdateAfterFontListChanged();
 			}
+		}
+
+		public override void NotifyTextStylesChanged()
+		{
+			//	Appelé lorsque le style courant a été changé, par exemple suite au
+			//	déplacement du curseur.
+			if ( this.document == null )  return;
+			this.UpdateSelectedFont();
 		}
 
 
@@ -71,16 +105,35 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				if ( this.debugMode == DebugMode.DebugCommands )
 				{
-					return 200+76;
+					return 204+76;
 				}
 				else
 				{
-					return 160+76;
+					return 164+76;
 				}
 			}
 		}
 
 
+		protected void UpdateAfterFontListChanged()
+		{
+			//	Met à jour la liste des styles.
+			this.document.Wrappers.FontFaceComboUpdate(this.comboFont);
+			this.comboFont.UpdateButtons();
+		}
+
+		protected void UpdateSelectedFont()
+		{
+			//	Met à jour la police sélectionnée en fonction du texte en édition.
+			if ( this.document.Wrappers.TextFlow == null )  return;
+
+			string face = this.document.Wrappers.TextWrapper.Active.FontFace;
+			this.ignoreChange = true;
+			this.comboFont.SelectedName = face;
+			this.ignoreChange = false;
+		}
+
+		
 		protected override void UpdateClientGeometry()
 		{
 			//	Met à jour la géométrie.
@@ -88,28 +141,18 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonBold == null )  return;
 
+			Rectangle rect;
 			double dx = this.buttonBold.DefaultWidth;
 			double dy = this.buttonBold.DefaultHeight;
 
-			Rectangle rect = this.UsefulZone;
-			rect.Width  = 33;
-			rect.Height = 25;
-			rect.Offset(0, 25-1);
-			this.buttonQuick1.Bounds = rect;
-			rect.Offset(33, 0);
-			this.buttonQuick2.Bounds = rect;
 			rect = this.UsefulZone;
-			rect.Width  = 33;
-			rect.Height = 25;
-			rect.Offset(0, 0);
-			this.buttonQuick3.Bounds = rect;
-			rect.Offset(33, 0);
-			this.buttonQuick4.Bounds = rect;
+			rect.Width = 75;
+			this.comboFont.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Height = dy;
 			rect.Width = dx;
-			rect.Offset(dx*1.5*2+10, dy+5);
+			rect.Offset(80, dy+5);
 			this.buttonBold.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonItalic.Bounds = rect;
@@ -123,7 +166,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect = this.UsefulZone;
 			rect.Height = dy;
 			rect.Width = dx;
-			rect.Offset(dx*1.5*2+10, 0);
+			rect.Offset(80, 0);
 			this.buttonUnderlined.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonOverlined.Bounds = rect;
@@ -143,38 +186,26 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		protected void UpdateQuickFonts()
+		private void HandleSelectedIndexChanged(object sender)
 		{
-			//	Met à jour les noms des polices rapides.
-			this.UpdateQuickButton(this.buttonQuick1, 0);
-			this.UpdateQuickButton(this.buttonQuick2, 1);
-			this.UpdateQuickButton(this.buttonQuick3, 2);
-			this.UpdateQuickButton(this.buttonQuick4, 3);
+			if ( this.ignoreChange )  return;
 
-			if ( this.document != null )
-			{
-				this.document.Wrappers.UpdateQuickButtons();
-			}
+			string face = this.comboFont.SelectedName;
+			if ( face == null )  return;
+
+			this.document.Wrappers.TextWrapper.SuspendSynchronizations();
+			this.document.Wrappers.TextWrapper.Defined.FontFace  = face;
+			this.document.Wrappers.TextWrapper.Defined.FontStyle = Misc.DefaultFontStyle(face);
+			this.document.Wrappers.TextWrapper.DefineOperationName("QuickFont", face);
+			this.document.Wrappers.TextWrapper.ResumeSynchronizations();
 		}
 
-		protected void UpdateQuickButton(Widgets.ButtonFontFace button, int i)
+		private void HandleFirstIconChanged(object sender)
 		{
-			//	Met à jour un bouton pour une police rapide.
-			if ( this.document == null )
-			{
-				button.FontIdentity = null;
-			}
-			else
-			{
-				OpenType.FontIdentity id = this.document.Wrappers.GetQuickFonts(i);
-				button.FontIdentity = id;
-				if ( id != null )
-				{
-					ToolTip.Default.SetToolTip(button, id.InvariantFaceName);
-				}
-			}
-		}
+			if ( this.ignoreChange )  return;
 
+			this.document.Wrappers.RibbonFontFirst = this.comboFont.FirstIconVisible;
+		}
 
 		private void HandleButtonStyleClicked(object sender, MessageEventArgs e)
 		{
@@ -247,13 +278,10 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		protected IconButtonsCombo			comboFont;
 		protected IconButton				buttonFontSizeMinus;
 		protected IconButton				buttonFontSizePlus;
 		protected IconButton				buttonShowControl;
-		protected Widgets.ButtonFontFace	buttonQuick1;
-		protected Widgets.ButtonFontFace	buttonQuick2;
-		protected Widgets.ButtonFontFace	buttonQuick3;
-		protected Widgets.ButtonFontFace	buttonQuick4;
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
