@@ -86,6 +86,7 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( changed == "FontsSettingsChanged" )
 			{
 				this.UpdateAfterFontListChanged();
+				this.UpdateSelectedFont();
 			}
 		}
 
