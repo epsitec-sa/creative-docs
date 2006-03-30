@@ -2285,10 +2285,6 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.Paste();
 		}
 
-		[Command ("FontQuick1")]
-		[Command ("FontQuick2")]
-		[Command ("FontQuick3")]
-		[Command ("FontQuick4")]
 		[Command ("FontBold")]
 		[Command ("FontItalic")]
 		[Command ("FontUnderlined")]
@@ -3601,10 +3597,6 @@ namespace Epsitec.App.DocumentEditor
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
 			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
 			
-			this.fontQuick1State = this.CreateCommandState("FontQuick1", null, null, true);
-			this.fontQuick2State = this.CreateCommandState("FontQuick2", null, null, true);
-			this.fontQuick3State = this.CreateCommandState("FontQuick3", null, null, true);
-			this.fontQuick4State = this.CreateCommandState("FontQuick4", null, null, true);
 			this.fontBoldState = this.CreateCommandState("FontBold", true, KeyCode.ModifierControl|KeyCode.AlphaB);
 			this.fontItalicState = this.CreateCommandState("FontItalic", true, KeyCode.ModifierControl|KeyCode.AlphaI);
 			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", true, KeyCode.ModifierControl|KeyCode.AlphaU);
@@ -4296,10 +4288,6 @@ namespace Epsitec.App.DocumentEditor
 				this.textInsertQuadState.Enable = false;
 				this.textInsertNewFrameState.Enable = false;
 				this.textInsertNewPageState.Enable = false;
-				this.fontQuick1State.Enable = false;
-				this.fontQuick2State.Enable = false;
-				this.fontQuick3State.Enable = false;
-				this.fontQuick4State.Enable = false;
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
 				this.fontUnderlinedState.Enable = false;
@@ -4717,7 +4705,6 @@ namespace Epsitec.App.DocumentEditor
 				this.textFontSampleAbcState.Enable = true;
 				this.textFontSampleAbcState.ActiveState = context.TextFontSampleAbc ? ActiveState.Yes : ActiveState.No;
 
-				this.CurrentDocument.Wrappers.UpdateQuickFonts();
 				this.CurrentDocument.Dialogs.UpdateFonts();
 			}
 			else
@@ -5675,10 +5662,6 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					cutState;
 		protected CommandState					copyState;
 		protected CommandState					pasteState;
-		protected CommandState					fontQuick1State;
-		protected CommandState					fontQuick2State;
-		protected CommandState					fontQuick3State;
-		protected CommandState					fontQuick4State;
 		protected CommandState					fontBoldState;
 		protected CommandState					fontItalicState;
 		protected CommandState					fontUnderlinedState;
