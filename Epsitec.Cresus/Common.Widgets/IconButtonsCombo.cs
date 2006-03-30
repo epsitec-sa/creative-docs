@@ -400,8 +400,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnSelectedIndexChanged()
 		{
-			//	Ne notifie les changements d'index que lorsque le menu déroulant
-			//	est fermé.
+			//	Ne notifie les changements d'index que lorsque le menu déroulant est fermé.
 			if ( this.IsComboOpen == false )
 			{
 				if ( this.SelectedIndexChanged != null )
@@ -440,11 +439,6 @@ namespace Epsitec.Common.Widgets
 						this.Navigate(1);
 					}
 					
-					message.Consumer = this;
-					return;
-				
-				case MessageType.MouseDown:
-					this.OpenCombo();
 					message.Consumer = this;
 					return;
 			}
