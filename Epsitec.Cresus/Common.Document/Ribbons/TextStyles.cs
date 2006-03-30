@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Ribbons
 			ToolTip.Default.SetToolTip(this.buttonCharacter, Res.Strings.Panel.Style.CharacterDefinition);
 
 			this.comboStyle = this.CreateIconButtonsCombo("TextEditing");  // (*)
-			this.comboStyle.TotalButtons = 3;
+			this.comboStyle.SetColumnsAndRows(3, 1);
 			this.comboStyle.MenuDrawFrame = true;
 			this.comboStyle.AllLinesWidthSameWidth = true;
 			this.comboStyle.AutoFocus = false;
@@ -112,7 +112,8 @@ namespace Epsitec.Common.Document.Ribbons
 			//	correspondant doit être redessiné.
 			foreach ( Text.TextStyle textStyle in textStyleList )
 			{
-				for ( int i=0 ; i<this.comboStyle.TotalButtons ; i++ )
+				int max = this.comboStyle.Columns*this.comboStyle.Rows;
+				for ( int i=0 ; i<max ; i++ )
 				{
 					int rank = this.comboStyle.FirstIconVisible+i;
 					if ( rank >= this.comboStyle.Items.Count )  break;

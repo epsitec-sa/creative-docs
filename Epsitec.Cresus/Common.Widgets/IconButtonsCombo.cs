@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.items = new System.Collections.ArrayList();
 
-			this.TotalButtons = 2;
+			this.SetColumnsAndRows(2, 1);
 			
 			this.buttonPrev = new GlyphButton(this);
 			this.buttonPrev.GlyphShape = GlyphShape.ArrowUp;
@@ -61,7 +61,33 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public int								TotalButtons
+		public int								Columns
+		{
+			get
+			{
+				return this.columns;
+			}
+		}
+
+		public int								Rows
+		{
+			get
+			{
+				return this.rows;
+			}
+		}
+
+		public void SetColumnsAndRows(int columns, int rows)
+		{
+			System.Diagnostics.Debug.Assert(columns > 0 && columns <= 10);
+			System.Diagnostics.Debug.Assert(rows    > 0 && rows    <= 10);
+			this.columns = columns;
+			this.rows    = rows;
+
+			this.TotalButtons = this.columns*this.rows;
+		}
+
+		protected int							TotalButtons
 		{
 			//	Nombre de IconButton dans le widget.
 			get
@@ -214,6 +240,26 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public int								FirstIconVisible
+		{
+			//	Rang de la première icône visible, selon les boutons précédent/suivant.
+			get
+			{
+				return this.firstIconVisible;
+			}
+
+			set
+			{
+				if ( this.firstIconVisible != value )
+				{
+					this.firstIconVisible = value;
+					this.UpdateButtons();
+					this.OnFirstIconChanged();
+				}
+			}
+		}
+
+		
 		public void UpdateButtons()
 		{
 			//	Met à jour tous les boutons en fonctions de la liste Items.
@@ -244,26 +290,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		public int								FirstIconVisible
-		{
-			//	Rang de la première icône visible, selon les boutons précédent/suivant.
-			get
-			{
-				return this.firstIconVisible;
-			}
-
-			set
-			{
-				if ( this.firstIconVisible != value )
-				{
-					this.firstIconVisible = value;
-					this.UpdateButtons();
-					this.OnFirstIconChanged();
-				}
-			}
-		}
-
-		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -309,19 +335,30 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle box = this.Client.Bounds;
 			Drawing.Rectangle rect;
 
-			rect = box;
-			rect.Right -= IconButtonsCombo.menuWidth;
-			double last = rect.Right;
-			rect.Width = System.Math.Floor(rect.Width/this.buttonMain.Length);
-			for ( int i=0 ; i<this.buttonMain.Length ; i++ )
+			double width  = System.Math.Floor((box.Width-IconButtonsCombo.menuWidth)/this.columns);
+			double height = System.Math.Floor(box.Height/this.rows);
+
+			double lastRight  = box.Right-IconButtonsCombo.menuWidth;
+			double lastBottom = box.Bottom;
+
+			double py = box.Top;
+
+			int i = 0;
+			for ( int row=0 ; row<this.rows ; row++ )
 			{
-				if ( i == this.buttonMain.Length-1 )
+				double px = box.Left;
+
+				for ( int column=0 ; column<this.columns ; column++ )
 				{
-					rect.Right = last;
+					rect = new Drawing.Rectangle(px, py-height, width, height);
+					if ( column == this.columns-1 )  rect.Right  = lastRight;
+					if ( row    == this.rows-1    )  rect.Bottom = lastBottom;
+					this.buttonMain[i++].Bounds = rect;
+
+					px += width;
 				}
 
-				this.buttonMain[i].Bounds = rect;
-				rect.Offset(rect.Width, 0);
+				py -= height;
 			}
 
 			rect = box;
@@ -809,6 +846,8 @@ namespace Epsitec.Common.Widgets
 		protected bool							allLinesWidthSameWidth = false;
 		protected int							selectedIndex = -1;
 		protected int							firstIconVisible = 0;
+		protected int							columns;
+		protected int							rows;
 		protected IconButton[]					buttonMain;
 		protected GlyphButton					buttonPrev;
 		protected GlyphButton					buttonNext;
