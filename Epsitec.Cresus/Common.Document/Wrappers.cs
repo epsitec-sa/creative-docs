@@ -1772,7 +1772,11 @@ namespace Epsitec.Common.Document
 			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
 			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
 
-			double limit = System.Math.Floor(size.Height*0.32);
+			//	Plus la hauteur est petite, plus il faut de place pour le nom.
+			//	Avec h=45, la hauteur pour le nom est de 14, soit environ un tier.
+			//	Avec h=22, la hauteur pour le nom est de 11, soit la moitié.
+			double factor = 0.68 - size.Height*0.36/45;
+			double limit = System.Math.Floor(size.Height*factor);
 
 			Rectangle rect = new Rectangle(1, limit, size.Width-2, size.Height-limit-1);
 			graphics.AddFilledRectangle(rect);
@@ -1782,7 +1786,7 @@ namespace Epsitec.Common.Document
 			rect = new Rectangle(0, 0, size.Width, limit);
 			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
 			Color c = adorner.ColorText(WidgetState.Enabled);
-			this.DrawDynamicText(graphics, rect, text, limit-4, c, ContentAlignment.MiddleLeft);
+			this.DrawDynamicText(graphics, rect, text, limit*10/14, c, ContentAlignment.MiddleLeft);
 		}
 
 		protected void DrawDynamicImageStyleMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)

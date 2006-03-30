@@ -217,6 +217,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public double							ButtonWidth
+		{
+			//	Donne la largeur d'un bouton.
+			get
+			{
+				return System.Math.Floor((this.Client.Bounds.Width-IconButtonsCombo.menuWidth)/this.columns);
+			}
+		}
+
+		public double							ButtonHeight
+		{
+			//	Donne la hauteur d'un bouton.
+			get
+			{
+				return System.Math.Floor(this.Client.Bounds.Height/this.rows);
+			}
+		}
+
 		
 		public void UpdateButtons()
 		{
@@ -279,6 +297,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Item item = this.items[index] as Item;
 				this.buttonMain[rank].IconName = item.BriefIcon;
+				this.buttonMain[rank].PreferredIconSize = new Drawing.Size(this.ButtonWidth-3, this.ButtonHeight-3);
 				this.buttonMain[rank].ActiveState = (this.SelectedIndex == index) ? ActiveState.Yes : ActiveState.No;
 			}
 			else
@@ -334,8 +353,8 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle box = this.Client.Bounds;
 			Drawing.Rectangle rect;
 
-			double width  = System.Math.Floor((box.Width-IconButtonsCombo.menuWidth)/this.columns);
-			double height = System.Math.Floor(box.Height/this.rows);
+			double width  = this.ButtonWidth;
+			double height = this.ButtonHeight;
 
 			double lastRight  = box.Right-IconButtonsCombo.menuWidth;
 			double lastBottom = box.Bottom;

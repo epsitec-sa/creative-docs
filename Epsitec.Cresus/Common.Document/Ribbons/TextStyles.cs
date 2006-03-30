@@ -43,6 +43,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.comboStyle = this.CreateIconButtonsCombo("TextEditing");  // (*)
 			this.comboStyle.SetColumnsAndRows(3, 1);
+			//?this.comboStyle.SetColumnsAndRows(5, 2);
 			this.comboStyle.MenuDrawFrame = true;
 			this.comboStyle.AllLinesWidthSameWidth = true;
 			this.comboStyle.AutoFocus = false;
