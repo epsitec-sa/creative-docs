@@ -51,7 +51,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboStyle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.comboStyle.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
 			this.comboStyle.FirstIconChanged += new EventHandler(this.HandleFirstIconChanged);
-			ToolTip.Default.SetToolTip(this.comboStyle, Res.Strings.Panel.Style.Choice);
 
 			// (*)	Ce nom permet de griser automatiquement les widgets lorsqu'il n'y a
 			//		pas de texte en édition.
@@ -160,7 +159,8 @@ namespace Epsitec.Common.Document.Ribbons
 				string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
 				string menuIcon  = string.Concat(this.document.UniqueName, ".TextStyleMenu");
 				string parameter = string.Concat(style.Name, '\t', this.characterMode ? "Character" : "Paragraph");
-				this.AddIconButtonsComboDyn(this.comboStyle, name, briefIcon, menuIcon, parameter);
+				string tooltip   = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+				this.AddIconButtonsComboDyn(this.comboStyle, name, briefIcon, menuIcon, parameter, tooltip);
 			}
 
 			this.comboStyle.UpdateButtons();

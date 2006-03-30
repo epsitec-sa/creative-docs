@@ -2698,46 +2698,19 @@ namespace Epsitec.Common.Document
 				{
 					CommandState cs = cd[cmd];
 
-					if ( cs.Name.StartsWith("FontQuick") )
+					IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
+				
+					if ( cs.Statefull )
 					{
-						string num = cs.Name.Substring(9);
-						int i = int.Parse(num);
-						System.Diagnostics.Debug.Assert(i >= 1 && i <= 4);  // "FontQuick1" à "FontQuick4" ?
-						OpenType.FontIdentity id = this.document.Wrappers.GetQuickFonts(i-1);
-
-						Widgets.ButtonFontFace button = new Widgets.ButtonFontFace();
-					
-						if ( cs.Statefull )
-						{
-							button.ButtonStyle = ButtonStyle.ActivableIcon;
-						}
-
-						button.Width = this.MiniBarCommandWidth(cmd);
-						button.Command = cs.Name;
-						button.Name = cs.Name;
-						button.FontIdentity = id;
-						button.Dock = DockStyle.Left;
-						button.SetParent(line);
-						button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
-
-						ToolTip.Default.SetToolTip(button, id.InvariantFaceName);
+						button.ButtonStyle = ButtonStyle.ActivableIcon;
 					}
-					else
-					{
-						IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
-					
-						if ( cs.Statefull )
-						{
-							button.ButtonStyle = ButtonStyle.ActivableIcon;
-						}
 
-						button.Width = this.MiniBarCommandWidth(cmd);
-						button.Dock = DockStyle.Left;
-						button.SetParent(line);
-						button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
+					button.Width = this.MiniBarCommandWidth(cmd);
+					button.Dock = DockStyle.Left;
+					button.SetParent(line);
+					button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
 
-						ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
-					}
+					ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
 				}
 			}
 			this.miniBarCmds = null;
@@ -2762,10 +2735,6 @@ namespace Epsitec.Common.Document
 					button.Name == "OrderDownOne" ||
 					button.Name == "OrderDownAll" ||
 
-					button.Name == "FontQuick1" ||
-					button.Name == "FontQuick2" ||
-					button.Name == "FontQuick3" ||
-					button.Name == "FontQuick4" ||
 					button.Name == "FontBold" ||
 					button.Name == "FontItalic" ||
 					button.Name == "FontUnderlined" ||
@@ -3062,7 +3031,6 @@ namespace Epsitec.Common.Document
 			}
 			else	// commande ?
 			{
-				if ( cmd.StartsWith("FontQuick") )  return 30;
 				return 22;
 			}
 		}

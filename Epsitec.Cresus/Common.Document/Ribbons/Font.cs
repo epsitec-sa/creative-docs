@@ -24,7 +24,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboFont.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.comboFont.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
 			this.comboFont.FirstIconChanged += new EventHandler(this.HandleFirstIconChanged);
-			//?ToolTip.Default.SetToolTip(this.comboFont, Res.Strings.Panel.Style.Choice);
 
 			this.buttonBold          = this.CreateIconButton("FontBold");
 			this.buttonItalic        = this.CreateIconButton("FontItalic");
@@ -86,6 +85,7 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( changed == "FontsSettingsChanged" )
 			{
 				this.UpdateAfterFontListChanged();
+				this.UpdateSelectedFont();
 			}
 		}
 
