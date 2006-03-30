@@ -1552,8 +1552,9 @@ namespace Epsitec.Common.Document
 				string parameter = string.Concat(id.InvariantFaceName, '\t', id.InvariantStyleName);
 				string briefIcon   = Misc.IconDyn (string.Concat(this.document.UniqueName, ".TextFontBrief"), parameter);
 				string regularText = Misc.ImageDyn(string.Concat(this.document.UniqueName, ".TextFontMenu"),  parameter);
+				string tooltip     = TextLayout.ConvertToTaggedText(id.InvariantFaceName);
 
-				combo.Items.Add(new IconButtonsCombo.Item(id.InvariantFaceName, briefIcon, regularText, regularText));
+				combo.Items.Add(new IconButtonsCombo.Item(id.InvariantFaceName, briefIcon, regularText, regularText, tooltip));
 				i ++;
 			}
 		}
