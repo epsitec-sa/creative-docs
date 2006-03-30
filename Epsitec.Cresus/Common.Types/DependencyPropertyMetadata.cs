@@ -165,19 +165,6 @@ namespace Epsitec.Common.Types
 
 			return (cloneable == null) ? value : cloneable.Clone ();
 		}
-		public virtual object FindInheritedValue(DependencyObject o, DependencyProperty property)
-		{
-			DependencyObject parent = DependencyObjectTree.FindParentDefiningProperty (o, property);
-			
-			if (parent == null)
-			{
-				return this.CreateDefaultValue ();
-			}
-			else
-			{
-				return parent.GetValue (property);
-			}
-		}
 
 		internal void NotifyPropertyInvalidated(DependencyObject sender, object old_value, object new_value)
 		{

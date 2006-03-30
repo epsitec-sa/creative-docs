@@ -282,6 +282,7 @@ namespace Epsitec.Common.Types
 
 		public void NotifyChanges(DependencyObject node)
 		{
+			int changeCount = 0;
 			byte changes;
 			
 			changes  = this.oldValues;
@@ -301,6 +302,7 @@ namespace Epsitec.Common.Types
 						object newValue = ((this.currentValues & mask) != 0) ? true : false;
 						
 						node.InvalidateProperty (property, oldValue, newValue);
+						changeCount++;
 					}
 					
 					mask = mask << 1;
@@ -310,18 +312,22 @@ namespace Epsitec.Common.Types
 			}
 			if (this.more != null)
 			{
-				this.more.NotifyChanges (node);
+				changeCount += this.more.NotifyChanges (node);
 			}
 			
-			//	And now also walk through all the children nodes :
-			
-			if (DependencyObjectTree.GetHasChildren (node))
-			{
-				ICollection<DependencyObject> children = DependencyObjectTree.GetChildren (node);
+			//	And now, if we had local changes, we also walk through all the
+			//	children nodes :
 
-				foreach (DependencyObject child in children)
+			if (changeCount > 0)
+			{
+				if (DependencyObjectTree.GetHasChildren (node))
 				{
-					child.InheritedPropertyCache.NotifyChanges (child);
+					ICollection<DependencyObject> children = DependencyObjectTree.GetChildren (node);
+
+					foreach (DependencyObject child in children)
+					{
+						child.InheritedPropertyCache.NotifyChanges (child);
+					}
 				}
 			}
 		}
@@ -397,7 +403,7 @@ namespace Epsitec.Common.Types
 			public abstract More SetValue(DependencyObject node, DependencyProperty property, object value);
 			public abstract bool IsDefined(DependencyProperty property);
 			public abstract bool TryGetValue(DependencyProperty property, out object value);
-			public abstract void NotifyChanges(DependencyObject node);
+			public abstract int NotifyChanges(DependencyObject node);
 			public abstract IEnumerable<Epsitec.Common.Types.LocalValueEntry> GetValues(DependencyObject node);
 		}
 		private class MoreSmall : More
@@ -488,8 +494,10 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			public override void NotifyChanges(DependencyObject node)
+			public override int NotifyChanges(DependencyObject node)
 			{
+				int changeCount = 0;
+				
 				if (this.hasValueChanged)
 				{
 					if (this.oldValue != this.currentValue)
@@ -501,11 +509,14 @@ namespace Epsitec.Common.Types
 							node.InvalidateProperty (this.property, this.oldValue, this.currentValue);
 							
 							this.oldValue = this.currentValue;
+							changeCount++;
 						}
 					}
 					
 					this.hasValueChanged = false;
 				}
+				
+				return changeCount;
 			}
 			public override bool IsDefined(DependencyProperty property)
 			{

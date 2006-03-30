@@ -64,19 +64,6 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		public IEnumerable<LocalValueEntry>		InheritableLocalValueEntries
-		{
-			get
-			{
-				foreach (DependencyProperty property in this.properties.Keys)
-				{
-					if (property.DefaultMetadata.InheritsValue)
-					{
-						yield return new LocalValueEntry (property, this.properties[property]);
-					}
-				}
-			}
-		}
 		
 		public IInheritedPropertyCache			InheritedPropertyCache
 		{
@@ -118,7 +105,6 @@ namespace Epsitec.Common.Types
 			{
 				DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
-#if true
 				if ((metadata.InheritsValue) &&
 					(this.inheritedPropertyCache.TryGetValue (this, property, out value)))
 				{
@@ -129,18 +115,6 @@ namespace Epsitec.Common.Types
 				{
 					value = metadata.CreateDefaultValue ();
 				}
-#else		
-				if (metadata.InheritsValue)
-				{
-
-					value = metadata.FindInheritedValue (this, property);
-
-				}
-				else
-				{
-					value = metadata.CreateDefaultValue ();
-				}
-#endif
 			}
 			
 			return value;
@@ -170,17 +144,9 @@ namespace Epsitec.Common.Types
 
 			if (metadata.InheritsValue)
 			{
-#if true
 				this.SetLocalValue (property, value);
 				this.inheritedPropertyCache.SetValue (this, property, value);
 				this.inheritedPropertyCache.NotifyChanges (this);
-#else
-				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (this, property);
-				
-				this.SetLocalValue (property, value);
-				
-				snapshot.InvalidateDifferentProperties ();
-#endif
 			}
 			else
 			{
@@ -206,37 +172,9 @@ namespace Epsitec.Common.Types
 
 			if (metadata.InheritsValue)
 			{
-#if true
 				this.ClearLocalValue (property);
-				
-				DependencyObject parent = DependencyObjectTree.GetParent (this);
-				
-				if (parent == null)
-				{
-					this.inheritedPropertyCache.ClearValue (this, property);
-				}
-				else
-				{
-					object value;
-					
-					if (parent.inheritedPropertyCache.TryGetValue (parent, property, out value))
-					{
-						this.inheritedPropertyCache.SetValue (this, property, value);
-					}
-					else
-					{
-						this.inheritedPropertyCache.ClearValue (this, property);
-					}
-				}
-				
+				this.InheritPropertyFromParent (property);
 				this.inheritedPropertyCache.NotifyChanges (this);
-#else
-				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (this, property);
-
-				this.ClearLocalValue (property);
-
-				snapshot.InvalidateDifferentProperties ();
-#endif
 			}
 			else
 			{
@@ -256,7 +194,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
+
 		public object CoerceValue(DependencyProperty property, object value)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
@@ -477,6 +415,39 @@ namespace Epsitec.Common.Types
 		{
 		}
 
+		private void InheritPropertyFromParent(DependencyProperty property)
+		{
+			//	Update the cached value for this inherited property, based
+			//	on what is currently defined by the parent (if any).
+
+			DependencyObject parent = DependencyObjectTree.GetParent (this);
+
+			if (parent == null)
+			{
+				//	No parent means that we can clear the cache and forget
+				//	about it; clearing the cache will return the default
+				//	value from now on.
+
+				this.inheritedPropertyCache.ClearValue (this, property);
+			}
+			else
+			{
+				//	There is a parent; ask it to provide its value and use
+				//	that as the locally cached value.
+
+				object value;
+
+				if (parent.inheritedPropertyCache.TryGetValue (parent, property, out value))
+				{
+					this.inheritedPropertyCache.SetValue (this, property, value);
+				}
+				else
+				{
+					throw new System.InvalidOperationException (string.Format ("Property {0} can be retrieved from parent", property.Name));
+				}
+			}
+		}
+		
 		internal static void Register(DependencyProperty property, System.Type ownerType)
 		{
 			System.Diagnostics.Debug.Assert (property != null);
