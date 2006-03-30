@@ -531,8 +531,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("About to get focus on '{0}'.", this.Text));
-			
 			if ( mode != TabNavigationMode.Passive )
 			{
 				this.SelectAll();
@@ -1048,7 +1046,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void HandleFocused()
 		{
-			System.Diagnostics.Debug.WriteLine ("AbstractTextField focused");
 			TextField.blinking = this;
 			this.ResetCursor();
 			
@@ -1079,8 +1076,6 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void HandleDefocused()
 		{
-			System.Diagnostics.Debug.WriteLine ("AbstractTextField de-focused (IsKeyboardFocused="+this.IsKeyboardFocused+")");
-			
 			TextField.blinking = null;
 			
 			if (this.IsKeyboardFocused == false)
@@ -1181,7 +1176,6 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnTextDefined ();
 			this.has_edited_text = false;
-			System.Diagnostics.Debug.WriteLine ("Text defined. has_edited_text = false");
 		}
 
 		protected override void OnIsKeyboardFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
@@ -1216,7 +1210,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.has_edited_text == false)
 			{
-				System.Diagnostics.Debug.WriteLine ("Text edited. has_edited_text = true");
 				this.has_edited_text = true;
 				
 				this.UpdateButtonVisibility ();
@@ -1284,8 +1277,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEditionStarted()
 		{
-			System.Diagnostics.Debug.WriteLine ("Started Edition");
-			
 			if (this.EditionStarted != null)
 			{
 				this.EditionStarted (this);
@@ -1294,8 +1285,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEditionAccepted()
 		{
-			System.Diagnostics.Debug.WriteLine ("Accepted Edition");
-			
 			if (this.EditionAccepted != null)
 			{
 				this.EditionAccepted (this);
@@ -1304,8 +1293,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEditionRejected()
 		{
-			System.Diagnostics.Debug.WriteLine ("Rejected Edition");
-			
 			if (this.EditionRejected != null)
 			{
 				this.EditionRejected (this);

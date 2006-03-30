@@ -27,6 +27,54 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.Defined.Changed += new EventHandler(this.HandleParagraphWrapperChanged);
 
 			this.document.TextContext.StyleList.StyleRedefined += new EventHandler(this.HandleStyleWrapperChanged);
+
+			if ( this.document.Mode == DocumentMode.Modify )
+			{
+				string tag;
+				Drawing.DynamicImage image;
+
+				tag = string.Concat(this.document.UniqueName, ".TextFontBrief");
+				image = new Drawing.DynamicImage(new Drawing.Size(140, 16), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageFontBrief));
+				image.IsCacheEnabled = false;
+				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
+
+				tag = string.Concat(this.document.UniqueName, ".TextFontMenu");
+				image = new Drawing.DynamicImage(new Drawing.Size(200, 30), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageFontMenu));
+				image.IsCacheEnabled = false;
+				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
+
+				tag = string.Concat(this.document.UniqueName, ".TextStyleBrief");
+				image = new Drawing.DynamicImage(new Drawing.Size(53, 45), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleBrief));
+				image.IsCacheEnabled = false;
+				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
+
+				tag = string.Concat(this.document.UniqueName, ".TextStyleMenu");
+				image = new Drawing.DynamicImage(new Drawing.Size(200, 32), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleMenu));
+				image.IsCacheEnabled = false;
+				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
+			}
+		}
+
+		public void Dispose()
+		{
+			if ( this.document.Mode == DocumentMode.Modify )
+			{
+				string tag;
+				
+				tag = string.Concat(this.document.UniqueName, ".TextStyleBrief");
+				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
+				
+				tag = string.Concat(this.document.UniqueName, ".TextStyleMenu");
+				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
+			}
+
+			this.textWrapper.Active.Changed  -= new EventHandler(this.HandleTextWrapperChanged);
+			this.textWrapper.Defined.Changed -= new EventHandler(this.HandleTextWrapperChanged);
+
+			this.paragraphWrapper.Active.Changed  -= new EventHandler(this.HandleParagraphWrapperChanged);
+			this.paragraphWrapper.Defined.Changed -= new EventHandler(this.HandleParagraphWrapperChanged);
+
+			this.document.TextContext.StyleList.StyleRedefined -= new EventHandler(this.HandleStyleWrapperChanged);
 		}
 
 		public void TextContextChangedDisconnect()
@@ -239,24 +287,32 @@ namespace Epsitec.Common.Document
 				justif = this.paragraphWrapper.Active.JustificationMode;
 			}
 
-			this.CommandActiveState("ParagraphLeading08", enabled, (leading == 0.8));
-			this.CommandActiveState("ParagraphLeading10", enabled, (leading == 1.0));
-			this.CommandActiveState("ParagraphLeading12", enabled, (leading == 1.2));
-			this.CommandActiveState("ParagraphLeading15", enabled, (leading == 1.5));
-			this.CommandActiveState("ParagraphLeading20", enabled, (leading == 2.0));
-			this.CommandActiveState("ParagraphLeading30", enabled, (leading == 3.0));
+			string leadingState = "Leading?";
+			if ( leading == 0.8 )  leadingState = "ParagraphLeading08";
+			if ( leading == 1.0 )  leadingState = "ParagraphLeading10";
+			if ( leading == 1.2 )  leadingState = "ParagraphLeading12";
+			if ( leading == 1.5 )  leadingState = "ParagraphLeading15";
+			if ( leading == 2.0 )  leadingState = "ParagraphLeading20";
+			if ( leading == 3.0 )  leadingState = "ParagraphLeading30";
+
+			string justifState = "Justif?";
+			switch ( justif )
+			{
+				case Text.Wrappers.JustificationMode.AlignLeft:         justifState = "ParagraphJustifLeft";    break;
+				case Text.Wrappers.JustificationMode.Center:            justifState = "ParagraphJustifCenter";  break;
+				case Text.Wrappers.JustificationMode.AlignRight:        justifState = "ParagraphJustifRight";   break;
+				case Text.Wrappers.JustificationMode.JustifyAlignLeft:  justifState = "ParagraphJustifJustif";  break;
+				case Text.Wrappers.JustificationMode.JustifyJustfy:     justifState = "ParagraphJustifAll";     break;
+			}
+
+			this.CommandActiveState("ParagraphLeading", enabled, leadingState);
+			this.CommandActiveState("ParagraphJustif",  enabled, justifState);
+
 			this.CommandActiveState("ParagraphLeadingPlus",  enabled);
 			this.CommandActiveState("ParagraphLeadingMinus", enabled);
-
-			this.CommandActiveState("JustifHLeft",   enabled, (justif == Text.Wrappers.JustificationMode.AlignLeft));
-			this.CommandActiveState("JustifHCenter", enabled, (justif == Text.Wrappers.JustificationMode.Center));
-			this.CommandActiveState("JustifHRight",  enabled, (justif == Text.Wrappers.JustificationMode.AlignRight));
-			this.CommandActiveState("JustifHJustif", enabled, (justif == Text.Wrappers.JustificationMode.JustifyAlignLeft));
-			this.CommandActiveState("JustifHAll",    enabled, (justif == Text.Wrappers.JustificationMode.JustifyJustfy));
-
-			this.CommandActiveState("ParagraphIndentPlus",  enabled);
-			this.CommandActiveState("ParagraphIndentMinus", enabled);
-			this.CommandActiveState("ParagraphClear",       enabled);
+			this.CommandActiveState("ParagraphIndentPlus",   enabled);
+			this.CommandActiveState("ParagraphIndentMinus",  enabled);
+			this.CommandActiveState("ParagraphClear",        enabled);
 		}
 
 		protected void HandleStyleWrapperChanged(object sender)
@@ -409,8 +465,8 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		#region GetStyleResume
-		public void GetStyleResume(Text.TextStyle style, out string resume, out int lines)
+		#region GetStyleBrief
+		public void GetStyleBrief(Text.TextStyle style, out string brief, out int lines)
 		{
 			//	Donne un texte résumé sur un style quelconque.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
@@ -466,7 +522,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double leading = this.styleParagraphWrapper.Defined.Leading;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.LeadingUnits;
-					builder.Append(this.GetResumeValue(leading, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(leading, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -508,7 +564,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.LeftMarginFirst;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
-					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -519,7 +575,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.LeftMarginBody;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
-					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -530,7 +586,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.RightMarginBody;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.MarginUnits;
-					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -562,7 +618,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.SpaceBefore;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.SpaceBeforeUnits;
-					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -573,7 +629,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double margin = this.styleParagraphWrapper.Defined.SpaceAfter;
 					Text.Properties.SizeUnits units = this.styleParagraphWrapper.Defined.SpaceAfterUnits;
-					builder.Append(this.GetResumeValue(margin, units, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(margin, units, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -662,7 +718,7 @@ namespace Epsitec.Common.Document
 					Objects.AbstractText.GetTextTab(this.document, tab, out pos, out type);
 
 					if ( !first )  builder.Append(", ");
-					builder.Append(this.GetResumeValue(pos, Text.Properties.SizeUnits.Points, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(pos, Text.Properties.SizeUnits.Points, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -726,7 +782,7 @@ namespace Epsitec.Common.Document
 					builder.Append("=");
 					double size = this.styleTextWrapper.Defined.FontSize;
 					Text.Properties.SizeUnits units = this.styleTextWrapper.Defined.Units;
-					builder.Append(this.GetResumeValue(size, units, Modifier.FontSizeScale));
+					builder.Append(this.GetBriefValue(size, units, Modifier.FontSizeScale));
 					first = false;
 				}
 
@@ -744,7 +800,7 @@ namespace Epsitec.Common.Document
 					builder.Append(Res.Strings.TextPanel.Font.Short.Glue);
 					builder.Append("=");
 					double size = this.styleTextWrapper.Defined.FontGlue;
-					builder.Append(this.GetResumeValue(size, Text.Properties.SizeUnits.Percent, this.document.Modifier.RealScale));
+					builder.Append(this.GetBriefValue(size, Text.Properties.SizeUnits.Percent, this.document.Modifier.RealScale));
 					first = false;
 				}
 
@@ -842,10 +898,10 @@ namespace Epsitec.Common.Document
 			}
 
 			builder.Append("</font>");
-			resume = builder.ToString();
+			brief = builder.ToString();
 		}
 
-		protected string GetResumeValue(double value, Text.Properties.SizeUnits units, double scale)
+		protected string GetBriefValue(double value, Text.Properties.SizeUnits units, double scale)
 		{
 			//	Donne la chaîne pour représenter une valeur numérique.
 			if ( units == Text.Properties.SizeUnits.Percent )
@@ -866,7 +922,7 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		public void ExecuteCommand(string name)
+		public void ExecuteCommand(string name, string advanceState)
 		{
 			//	Exécute une commande.
 			switch ( name )
@@ -885,22 +941,13 @@ namespace Epsitec.Common.Document
 				case "FontSizePlus":    this.IncrementFontSize(1);   break;
 				case "FontSizeMinus":   this.IncrementFontSize(-1);  break;
 
-				case "ParagraphLeading08":     this.ChangeParagraphLeading(0.8);    break;
-				case "ParagraphLeading10":     this.ChangeParagraphLeading(1.0);    break;
-				case "ParagraphLeading12":     this.ChangeParagraphLeading(1.2);    break;
-				case "ParagraphLeading15":     this.ChangeParagraphLeading(1.5);    break;
-				case "ParagraphLeading20":     this.ChangeParagraphLeading(2.0);    break;
-				case "ParagraphLeading30":     this.ChangeParagraphLeading(3.0);    break;
+				case "ParagraphLeading":  this.ChangeParagraphLeading(advanceState);  break;
+				case "ParagraphJustif":   this.ChangeParagraphJustif(advanceState);   break;
+
 				case "ParagraphLeadingPlus":   this.IncrementParagraphLeading(1);   break;
 				case "ParagraphLeadingMinus":  this.IncrementParagraphLeading(-1);  break;
 				case "ParagraphIndentPlus":    this.IncrementParagraphIndent(1);    break;
 				case "ParagraphIndentMinus":   this.IncrementParagraphIndent(-1);   break;
-
-				case "JustifHLeft":    this.Justif(Text.Wrappers.JustificationMode.AlignLeft);         break;
-				case "JustifHCenter":  this.Justif(Text.Wrappers.JustificationMode.Center);            break;
-				case "JustifHRight":   this.Justif(Text.Wrappers.JustificationMode.AlignRight);        break;
-				case "JustifHJustif":  this.Justif(Text.Wrappers.JustificationMode.JustifyAlignLeft);  break;
-				case "JustifHAll":     this.Justif(Text.Wrappers.JustificationMode.JustifyJustfy);     break;
 
 				case "FontClear":       this.FontClear();       break;
 				case "ParagraphClear":  this.ParagraphClear();  break;
@@ -1076,9 +1123,20 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected void ChangeParagraphLeading(double value)
+		protected void ChangeParagraphLeading(string advanceState)
 		{
 			//	La commande pour changer d'interligne a été actionnée.
+			double value = 1.0;
+			switch ( advanceState )
+			{
+				case "ParagraphLeading08":  value = 0.8;  break;
+				case "ParagraphLeading10":  value = 1.0;  break;
+				case "ParagraphLeading12":  value = 1.2;  break;
+				case "ParagraphLeading15":  value = 1.5;  break;
+				case "ParagraphLeading20":  value = 2.0;  break;
+				case "ParagraphLeading30":  value = 3.0;  break;
+			}
+
 			this.paragraphWrapper.SuspendSynchronizations();
 			this.paragraphWrapper.Defined.Leading = value;
 			this.paragraphWrapper.Defined.LeadingUnits = Text.Properties.SizeUnits.Percent;
@@ -1216,11 +1274,21 @@ namespace Epsitec.Common.Document
 			this.paragraphWrapper.ResumeSynchronizations();
 		}
 
-		protected void Justif(Common.Text.Wrappers.JustificationMode justif)
+		protected void ChangeParagraphJustif(string advanceState)
 		{
 			//	La commande pour changer de mode de justification a été actionnée.
+			Text.Wrappers.JustificationMode mode = Text.Wrappers.JustificationMode.AlignLeft;
+			switch ( advanceState )
+			{
+				case "ParagraphJustifLeft":    mode = Text.Wrappers.JustificationMode.AlignLeft;         break;
+				case "ParagraphJustifCenter":  mode = Text.Wrappers.JustificationMode.Center;            break;
+				case "ParagraphJustifRight":   mode = Text.Wrappers.JustificationMode.AlignRight;        break;
+				case "ParagraphJustifJustif":  mode = Text.Wrappers.JustificationMode.JustifyAlignLeft;  break;
+				case "ParagraphJustifAll":     mode = Text.Wrappers.JustificationMode.JustifyJustfy;     break;
+			}
+
 			this.paragraphWrapper.SuspendSynchronizations();
-			this.paragraphWrapper.Defined.JustificationMode = justif;
+			this.paragraphWrapper.Defined.JustificationMode = mode;
 			this.paragraphWrapper.DefineOperationName("ParagraphJustif", Res.Strings.Action.ParagraphJustif);
 			this.paragraphWrapper.ResumeSynchronizations();
 		}
@@ -1512,6 +1580,16 @@ namespace Epsitec.Common.Document
 			cs.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
+		protected void CommandActiveState(string name, bool enabled, string advanceState)
+		{
+			//	Modifie l'état d'une commande avancée.
+			if ( this.document.CommandDispatcher == null )  return;
+			CommandState cs = this.document.CommandDispatcher.GetCommandState(name);
+			System.Diagnostics.Debug.Assert(cs != null);
+			cs.Enable = enabled;
+			cs.AdvancedState = advanceState;
+		}
+
 
 		protected static double SearchNextValue(double value, double[] list, double delta)
 		{
@@ -1543,7 +1621,266 @@ namespace Epsitec.Common.Document
 			return value;
 		}
 
+
+		#region DynamicDrawing
+		public void FontFaceComboUpdate(IconButtonsCombo combo)
+		{
+			//	Le combo pour les polices va être ouvert.
+			bool quickOnly = true;
+			string selectedFontFace = null;
+			int quickCount;
+			System.Collections.ArrayList fontList = Misc.MergeFontList(Misc.GetFontList(false), this.document.Settings.QuickFonts, quickOnly, selectedFontFace, out quickCount);
+
+			combo.Items.Clear();
+			int i = 0;
+			foreach ( OpenType.FontIdentity id in fontList )
+			{
+				string parameter = string.Concat(id.InvariantFaceName, '\t', id.InvariantStyleName);
+				string briefIcon   = Misc.IconDyn (string.Concat(this.document.UniqueName, ".TextFontBrief"), parameter);
+				string regularText = Misc.ImageDyn(string.Concat(this.document.UniqueName, ".TextFontMenu"),  parameter);
+
+				combo.Items.Add(new IconButtonsCombo.Item(id.InvariantFaceName, briefIcon, regularText, regularText));
+				i ++;
+			}
+		}
+
+		protected void DrawDynamicImageFontBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
+		{
+			//	Dessine une police pour l'icône résumée, pour une image dynamique.
+			if ( style == GlyphPaintStyle.Disabled )  return;
+
+			IAdorner adorner = xAdorner as IAdorner;
+
+			string[] arguments = argument.Split('\t');
+			System.Diagnostics.Debug.Assert(arguments.Length == 2);
+			string fontFace  = arguments[0];
+			string fontStyle = arguments[1];
+
+			Rectangle rect = new Rectangle(0, 1.5, size.Width, size.Height-5);
+
+			OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
+			OpenType.FontIdentity id = font.FontIdentity;
+			double ox = rect.Left;
+			double oy = rect.Bottom + rect.Height*0.25;
+
+			//	Dessine l'échantillon "Abc".
+			double fontSize = rect.Height*0.85;
+			Color c = adorner.ColorText(WidgetState.Enabled);
+			Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(id, ox, oy, fontSize);
+				
+			if ( path != null )
+			{
+				Rectangle bounds = path.ComputeBounds();
+				double sx = (rect.Width-bounds.Width)/2-ox;
+				graphics.TranslateTransform(sx, 0);
+
+				graphics.Color = c;
+				graphics.PaintSurface(path);
+				path.Dispose();
+
+				graphics.TranslateTransform(-sx, 0);
+			}
+		}
+
+		protected void DrawDynamicImageFontMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
+		{
+			//	Dessine une police pour un menu, pour une image dynamique.
+			if ( style == GlyphPaintStyle.Disabled )  return;
+
+			IAdorner adorner = xAdorner as IAdorner;
+
+			string[] arguments = argument.Split('\t');
+			System.Diagnostics.Debug.Assert(arguments.Length == 2);
+			string fontFace  = arguments[0];
+			string fontStyle = arguments[1];
+
+			OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
+			OpenType.FontIdentity id = font.FontIdentity;
+			double oy = size.Height*0.25;
+
+			//	Dessine le nom de la police.
+			Rectangle r = new Rectangle(3, 0, 140-3, size.Height);
+			Color c = adorner.ColorText(WidgetState.Enabled);
+			TextLayout layout = new TextLayout();
+			layout.Text = TextLayout.ConvertToTaggedText(fontFace);
+			layout.Alignment = ContentAlignment.MiddleLeft;
+			layout.LayoutSize = r.Size;
+			layout.Paint(r.BottomLeft, graphics, r, c, GlyphPaintStyle.Normal);
+
+			//	Dessine l'échantillon "Abc".
+			double fontSize = size.Height*0.85;
+			Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(id, 140+5, oy, fontSize);
+				
+			if ( path != null )
+			{
+				graphics.Color = c;
+				graphics.PaintSurface(path);
+				path.Dispose();
+			}
+
+			//	Dessine les traits verticaux de séparation.
+			graphics.AddLine(140+0.5, 0, 140+0.5, size.Height);
+			graphics.RenderSolid(adorner.ColorTextFieldBorder(true));
+		}
+
+		protected void DrawDynamicImageStyleBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
+		{
+			//	Dessine un style pour l'icône résumée, pour une image dynamique.
+			if ( style == GlyphPaintStyle.Disabled )  return;
+
+			IAdorner adorner = xAdorner as IAdorner;
+
+			string[] arguments = argument.Split('\t');
+			System.Diagnostics.Debug.Assert(arguments.Length == 2);
+			string styleName = arguments[0];
+			Text.TextStyleClass styleClass = Text.TextStyleClass.Paragraph;
+			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
+			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
+
+			//	Plus la hauteur est petite, plus il faut de place pour le nom, pour qu'il reste lisible.
+			//	Avec h=45, la hauteur pour le nom est de 14, soit environ un tier.
+			//	Avec h=22, la hauteur pour le nom est de 11, soit la moitié.
+			double factor = System.Math.Min(0.68 - size.Height*0.36/45, 0.5);
+			double limit = System.Math.Floor(size.Height*factor);
+
+			Rectangle rect = new Rectangle(3, limit, size.Width-6, size.Height-limit-3);
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(Color.FromBrightness(1));  // fond blanc
+			this.DrawStyle(graphics, rect, textStyle);
+
+			rect = new Rectangle(1, 0, size.Width-2, limit);
+			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
+			Color c = adorner.ColorText(WidgetState.Enabled);
+			this.DrawDynamicText(graphics, rect, text, limit*10/14, c, ContentAlignment.MiddleLeft);
+		}
+
+		protected void DrawDynamicImageStyleMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
+		{
+			//	Dessine un style pour un menu, pour une image dynamique.
+			IAdorner adorner = xAdorner as IAdorner;
+
+			string[] arguments = argument.Split('\t');
+			System.Diagnostics.Debug.Assert(arguments.Length == 2);
+			string styleName = arguments[0];
+			Text.TextStyleClass styleClass = Text.TextStyleClass.Paragraph;
+			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
+			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
+
+			double limit = System.Math.Floor(size.Width*0.5);
+
+			Rectangle r = new Rectangle(3, 0, limit-3-1, size.Height);
+			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
+			Color c = adorner.ColorText(WidgetState.Enabled);
+			this.DrawDynamicText(graphics, r, text, 0, c, ContentAlignment.MiddleLeft);
+
+			Rectangle rect = new Rectangle(limit, 0, size.Width-limit, size.Height);
+			this.DrawStyle(graphics, rect, textStyle);
+
+			graphics.AddLine(limit-0.5, 0, limit-0.5, size.Height);  // séparateur vertical
+			graphics.RenderSolid(adorner.ColorBorder);
+		}
+
+		protected void DrawStyle(Graphics graphics, Rectangle rect, Text.TextStyle textStyle)
+		{
+			//	Dessine un échantillon de style dans un rectangle.
+			Rectangle iClip = graphics.SaveClippingRectangle();
+			graphics.SetClippingRectangle(rect);
+
+			double h = rect.Height;
+			rect.Deflate(rect.Height*0.05);
+			rect.Bottom -= rect.Height*10;  // hauteur presque infinie
+
+			double scale = 1.0/7.0;
+			Transform initial = graphics.Transform;
+			graphics.ScaleTransform(scale, scale, 0.0, 0.0);
+			rect.Scale(1.0/scale);
+			h *= 1.0/scale;
+
+			Document document = this.document.DocumentForSamples;
+			document.Modifier.OpletQueueEnable = false;
+
+			if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Paragraph )
+			{
+				Objects.TextBox2 obj = this.document.ObjectForSamplesParagraph;
+				obj.RectangleToSample(rect);
+				obj.SampleDefineStyle(textStyle);
+
+				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
+
+				Drawer drawer = new Drawer(document);
+				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
+			}
+
+			if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Text )
+			{
+				Point p1 = rect.TopLeft;
+				Point p2 = rect.TopRight;
+				p1.Y -= h*0.7;
+				p2.Y -= h*0.7;
+
+				double r = 12*Modifier.FontSizeScale;
+				graphics.LineWidth = 1.0;
+				graphics.AddLine(p1.X-10, p1.Y, p2.X+10, p2.Y);
+				graphics.AddLine(p1.X-10, p1.Y+r, p2.X+10, p2.Y+r);
+				graphics.RenderSolid(Color.FromRgb(1,0,0));  // rouge
+
+				Objects.TextLine2 obj = this.document.ObjectForSamplesCharacter;
+				obj.RectangleToSample(p1, p2);
+				obj.SampleDefineStyle(textStyle);
+
+				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
+
+				Drawer drawer = new Drawer(document);
+				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
+			}
+
+			graphics.Transform = initial;
+			graphics.RestoreClippingRectangle(iClip);
+		}
+
+		protected void DrawDynamicText(Graphics graphics, Rectangle rect, string text, double fontSize, Color color, ContentAlignment alignment)
+		{
+			//	Dessine un texte simple (sans tags html) inclu dans un rectangle.
+			Rectangle iClip = graphics.SaveClippingRectangle();
+			graphics.SetClippingRectangle(rect);
+
+			if ( fontSize == 0 )
+			{
+				fontSize = Font.DefaultFontSize;
+			}
+
+			Font font = Misc.GetFont("Tahoma");
+			graphics.AddText(rect.Left, rect.Bottom, rect.Width, rect.Height, text, font, fontSize, alignment);
+			graphics.RenderSolid(color);
+			
+			graphics.RestoreClippingRectangle(iClip);
+		}
+		#endregion
+
 		
+		#region RibbonMemorise
+		//	C'est ici que sont mémorisés les états des IconButtonsCombo dans les rubans.
+
+		public int RibbonParagraphStyleFirst
+		{
+			get { return this.ribbonParagraphStyleFirst; }
+			set { this.ribbonParagraphStyleFirst = value; }
+		}
+
+		public int RibbonCharacterStyleFirst
+		{
+			get { return this.ribbonCharacterStyleFirst; }
+			set { this.ribbonCharacterStyleFirst = value; }
+		}
+
+		public int RibbonFontFirst
+		{
+			get { return this.ribbonFontFirst; }
+			set { this.ribbonFontFirst = value; }
+		}
+		#endregion
+
+
 		protected Document								document;
 		protected Text.Wrappers.TextWrapper				textWrapper;
 		protected Text.Wrappers.ParagraphWrapper		paragraphWrapper;
@@ -1551,5 +1888,8 @@ namespace Epsitec.Common.Document
 		protected Text.Wrappers.ParagraphWrapper		styleParagraphWrapper;
 		protected TextFlow								textFlow;
 		protected System.Collections.ArrayList			quickFonts;
+		protected int									ribbonParagraphStyleFirst;
+		protected int									ribbonCharacterStyleFirst;
+		protected int									ribbonFontFirst;
 	}
 }

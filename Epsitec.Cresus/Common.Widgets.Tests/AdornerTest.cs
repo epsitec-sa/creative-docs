@@ -12,6 +12,39 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.UI.Engine.Initialise ();
 			Epsitec.Common.Document.Engine.Initialise ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+			
+			Drawing.DynamicImage image = new Drawing.DynamicImage (new Drawing.Size (30, 18), new Drawing.DynamicImagePaintCallback (this.DynamicImageXyz));
+			
+			image.IsCacheEnabled = false;
+			
+			Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage ("Xyz", image);
+		}
+
+		private void DynamicImageXyz(Drawing.Graphics graphics, Drawing.Size size, string argument, Drawing.GlyphPaintStyle style, Drawing.Color color, object adorner)
+		{
+			//	Méthode de test pour peindre une image dynamique selon un
+			//	modèle nommé "Xyz"; l'argument reçu en entrée permet de
+			//	déterminer exactement ce qui doit être peint.
+			
+			int    hue; 
+			double saturation = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.2 : 1.0;
+			double value      = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.7 : 1.0;
+			
+			if (argument == "random")
+			{
+				System.Random random = new System.Random ();
+				hue = random.Next (360);
+			}
+			else
+			{
+				hue = int.Parse (argument);
+			}
+			
+			graphics.AddFilledRectangle (0, 0, size.Width, size.Height);
+			graphics.RenderSolid (Drawing.Color.FromHsv (hue, saturation, value));
+			graphics.LineWidth = 2.0;
+			graphics.AddRectangle (1, 1, size.Width-2, size.Height-2);
+			graphics.RenderSolid (Drawing.Color.FromBrightness (0));
 		}
 		
 		[Test] public void CheckAdornerWidgets()
@@ -340,6 +373,60 @@ namespace Epsitec.Common.Widgets
 			spec.Width    = 40;
 			window.Root.Children.Add(spec);
 			tip.SetToolTip(spec, "*");
+			
+			StaticImage image1 = new StaticImage ();
+			StaticImage image2 = new StaticImage ();
+			StaticImage image3 = new StaticImage ();
+			StaticImage image4 = new StaticImage ();
+			StaticImage image5 = new StaticImage ();
+			StaticImage image6 = new StaticImage ();
+			
+			image1.Location = new Point(590, 15);
+			image1.Size = new Size(20, 20);
+			image1.ImageName = @"file:images/cut.png";
+			image1.Alignment = Drawing.ContentAlignment.BottomCenter;
+			image1.VerticalOffset = 0;
+			
+			image2.Location = new Point(600, 15);
+			image2.Size = new Size(20, 20);
+			image2.ImageName = @"file:images/cut.png";
+			image2.VerticalOffset = 4;
+			image2.Alignment = Drawing.ContentAlignment.BottomCenter;
+			
+			image3.Location = new Point(610, 15);
+			image3.Size = new Size(20, 20);
+			image3.ImageName = @"file:images/cut.png";
+			image3.VerticalOffset = 8;
+			image3.Alignment = Drawing.ContentAlignment.BottomCenter;
+			
+			Widget.BaseLineAlign (image1, image2);
+			Widget.BaseLineAlign (image1, image3);
+			
+			Assert.AreEqual ((int)((image1.Bottom+image2.VerticalOffset)*100+0.5), (int)(image2.Bottom*100+0.5));
+			Assert.AreEqual ((int)((image1.Bottom+image3.VerticalOffset)*100+0.5), (int)(image3.Bottom*100+0.5));
+			
+			image4.Location = new Point(630, 15);
+			image4.Size = new Size(40, 20);
+			image4.ImageName = @"dyn:Xyz/random";
+			image4.Alignment = Drawing.ContentAlignment.BottomCenter;
+			
+			image5.Location = new Point(630, 35);
+			image5.Size = new Size(40, 20);
+			image5.ImageName = @"dyn:Xyz/80";
+			image5.Alignment = Drawing.ContentAlignment.BottomCenter;
+			
+			image6.Location = new Point(630, 55);
+			image6.Size = new Size(40, 20);
+			image6.ImageName = @"dyn:Xyz/60";
+			image6.ImageSize = new Drawing.Size (20, 12);
+			image6.Alignment = Drawing.ContentAlignment.BottomCenter;
+			
+			window.Root.Children.Add(image1);
+			window.Root.Children.Add(image2);
+			window.Root.Children.Add(image3);
+			window.Root.Children.Add(image4);
+			window.Root.Children.Add(image5);
+			window.Root.Children.Add(image6);
 
 			GroupBox box = new GroupBox();
 //			box.Location = new Point(10, 100);

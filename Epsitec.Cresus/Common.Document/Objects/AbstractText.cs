@@ -277,12 +277,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public override void FillFontFaceList(System.Collections.ArrayList list)
-		{
-			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
-			//?this.textLayout.FillFontFaceList(list);
-		}
-
 		public override void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
 			//	Ajoute tous les caractères utilisés par l'objet dans une table.

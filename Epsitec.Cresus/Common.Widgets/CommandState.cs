@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe CommandState permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec les widgets associés.
 	/// </summary>
-	public class CommandState : Types.DependencyObject
+	public class CommandState : DependencyObject
 	{
 		public CommandState(string name, CommandDispatcher dispatcher)
 		{
@@ -135,6 +135,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public string							AdvancedState
+		{
+			get
+			{
+				return CommandState.GetAdvancedState (this);
+			}
+			set
+			{
+				if (this.AdvancedState != value)
+				{
+					CommandState.SetAdvancedState (this, value);
+					this.Synchronize ();
+				}
+			}
+		}
+		
 		public ShortcutCollection				Shortcuts
 		{
 			get
@@ -232,15 +248,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected virtual void OnIconNameChanged(Types.DependencyPropertyChangedEventArgs e)
+		protected virtual void OnIconNameChanged(DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
-		protected virtual void OnShortCaptionChanged(Types.DependencyPropertyChangedEventArgs e)
+		protected virtual void OnShortCaptionChanged(DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
-		protected virtual void OnLongCaptionChanged(Types.DependencyPropertyChangedEventArgs e)
+		protected virtual void OnLongCaptionChanged(DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
@@ -263,10 +279,29 @@ namespace Epsitec.Common.Widgets
 			that.OnLongCaptionChanged (new DependencyPropertyChangedEventArgs (CommandState.LongCaptionProperty, old_value, new_value));
 		}
 		
+		 
+		public static void SetAdvancedState(DependencyObject obj, string value)
+		{
+			if (value == null)
+			{
+				obj.ClearValueBase (CommandState.AdvancedStateProperty);
+			}
+			else
+			{
+				obj.SetValue (CommandState.AdvancedStateProperty, value);
+			}
+		}
 		
-		public static readonly DependencyProperty			IconNameProperty = DependencyProperty.Register ("IconName", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyIconNameChanged)));
-		public static readonly DependencyProperty			ShortCaptionProperty = DependencyProperty.Register ("ShortCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyShortCaptionChanged)));
-		public static readonly DependencyProperty			LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
+		public static string GetAdvancedState(DependencyObject obj)
+		{
+			return obj.GetValue (CommandState.AdvancedStateProperty) as string;
+		}
+		
+		public static readonly DependencyProperty	IconNameProperty = DependencyProperty.Register ("IconName", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyIconNameChanged)));
+		public static readonly DependencyProperty	ShortCaptionProperty = DependencyProperty.Register ("ShortCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyShortCaptionChanged)));
+		public static readonly DependencyProperty	LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
+		
+		public static readonly DependencyProperty	AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null));
 		
 		private ActiveState						active_state = ActiveState.No;
 		private bool							enable       = true;

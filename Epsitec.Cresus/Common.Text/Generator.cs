@@ -281,10 +281,16 @@ namespace Epsitec.Common.Text
 				
 				string text = sequence.GenerateText (ranks[i], culture);
 				
-				if (text.Length > 0)
+				//	N'accepte pas de séquences qui ne génèrent aucun texte, car cela
+				//	peut provoquer la disparition complète de la séquence. On force
+				//	donc un espace de largeur nulle dans un tel cas.
+				
+				if (text.Length == 0)
 				{
-					text_range.Add (new TextRange (text, sequence.ValueProperties));
+					text = "\u200b";
 				}
+				
+				text_range.Add (new TextRange (text, sequence.ValueProperties));
 				
 				if ((sequence.Suffix != null) &&
 					(sequence.Suffix.Length > 0))

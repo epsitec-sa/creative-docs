@@ -1524,10 +1524,21 @@ namespace Epsitec.Common.Widgets
 				if ( !block.Visible )  continue;
 
 				Drawing.Rectangle blockRect = new Drawing.Rectangle();
-				blockRect.Top    = pos.Y+block.Pos.Y+block.Font.Ascender*block.FontSize;
-				blockRect.Bottom = pos.Y+block.Pos.Y+block.Font.Descender*block.FontSize;
+				
+				if ( block.IsImage )
+				{
+					blockRect.Top    = pos.Y+block.Pos.Y+block.ImageAscender;
+					blockRect.Bottom = pos.Y+block.Pos.Y+block.ImageDescender;
+				}
+				else
+				{
+					blockRect.Top    = pos.Y+block.Pos.Y+block.Font.Ascender*block.FontSize;
+					blockRect.Bottom = pos.Y+block.Pos.Y+block.Font.Descender*block.FontSize;
+				}
+				
 				blockRect.Left   = pos.X+block.Pos.X;
 				blockRect.Width  = block.Width;
+				
 				if ( !blockRect.IntersectsWith(clipRect) )  continue;
 
 				if ( block.IsImage )
@@ -1546,7 +1557,7 @@ namespace Epsitec.Common.Widgets
 					double dx = image.Width;
 					double dy = image.Height;
 					double ix = pos.X+block.Pos.X;
-					double iy = pos.Y+block.Pos.Y+block.ImageDescender;
+					double iy = pos.Y+block.Pos.Y+block.ImageDescender; //+block.VerticalOffset;
 					
 					if ( block.Anchor )
 					{
@@ -3512,7 +3523,7 @@ namespace Epsitec.Common.Widgets
 							  System.Collections.Stack fontStack,
 							  SupplItem supplItem,
 							  int partIndex, ref int startIndex, int currentIndex,
-							  Drawing.Image image)
+							  Drawing.Image image, double verticalOffset)
 		{
 			if ( currentIndex-startIndex == 0 )  return;
 
@@ -3529,6 +3540,7 @@ namespace Epsitec.Common.Widgets
 			run.Start  = startIndex-partIndex;
 			run.Length = currentIndex-startIndex;
 			run.Image  = image;
+			run.VerticalOffset = verticalOffset;
 			this.FontToRun(run, fontIndex, fontItem, supplItem);
 			runList.Add(run);
 
@@ -3624,7 +3636,7 @@ namespace Epsitec.Common.Widgets
 			
 					if ( tag != Tag.None && tag != Tag.LineBreak )
 					{
-						this.PutRun(runList, fontList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, null);
+						this.PutRun(runList, fontList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, null, 0);
 					}
 
 					if ( tag == Tag.EndOfText )  // fin du texte ?
@@ -3650,8 +3662,10 @@ namespace Epsitec.Common.Widgets
 							case Tag.Image:
 								System.Diagnostics.Debug.Assert( parameters != null && parameters.ContainsKey("src") );
 								string imageName = parameters["src"] as string;
+								double verticalOffset = 0;
 							
 								Drawing.Image image = this.ResourceManager.GetImage(imageName);
+								
 								if ( image == null )
 								{
 									image = this.ResourceManager.GetImage("file:images/missing.icon");
@@ -3659,6 +3673,12 @@ namespace Epsitec.Common.Widgets
 //-									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 								}
 
+								if (parameters.ContainsKey("voff"))
+								{
+									string s = (string)parameters["voff"];
+									verticalOffset = double.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+								}
+								
 								if ( image is Drawing.Canvas )
 								{
 									Drawing.Canvas canvas = image as Drawing.Canvas;
@@ -3688,10 +3708,44 @@ namespace Epsitec.Common.Widgets
 
 									image = canvas.GetImageForIconKey(key);  // cherche la meilleure image
 								}
+								else if ( image is Drawing.DynamicImage )
+								{
+									Drawing.DynamicImage dynamic = image as Drawing.DynamicImage;
+									
+									double width = 0;
+									double height = 0;
+									
+									if ( parameters.ContainsKey("dx") )
+									{
+										string s = (string)parameters["dx"];
+										width = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+									}
+
+									if ( parameters.ContainsKey("dy") )
+									{
+										string s = (string)parameters["dy"];
+										height = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+									}
+									
+									if ((width != 0) ||
+										(height != 0))
+									{
+										if (width == 0)
+										{
+											width = dynamic.Width * height / dynamic.Height;
+										}
+										if (height == 0)
+										{
+											height = dynamic.Height * width / dynamic.Width;
+										}
+										
+										image = dynamic.GetImageForSize (width, height);
+									}
+								}
 							
 								buffer.Append(TextLayout.CodeObject);
 								currentIndex ++;
-								this.PutRun(runList, fontList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, image);
+								this.PutRun(runList, fontList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, image, verticalOffset);
 								break;
 
 							case Tag.LineBreak:
@@ -3965,6 +4019,11 @@ noText:
 									block.ImageAscender  = dy*fontAscender/fontHeight;
 									block.ImageDescender = dy*fontDescender/fontHeight;
 								}
+								
+								block.ImageAscender  += run.VerticalOffset;
+								block.ImageDescender += run.VerticalOffset;
+								
+//-								block.VerticalOffset = run.VerticalOffset;
 							
 								if ( this.JustifMode != Drawing.TextJustifMode.NoLine )
 								{
@@ -4097,15 +4156,33 @@ noText:
 					width += block.Width;
 					if ( block.IsImage )
 					{
-						height    = System.Math.Max(height,    block.ImageAscender-block.ImageDescender);
-						ascender  = System.Math.Max(ascender,  block.ImageAscender);
-						descender = System.Math.Min(descender, block.ImageDescender);
+						if (height == 0)
+						{
+							height    = block.ImageAscender-block.ImageDescender;
+							ascender  = block.ImageAscender;
+							descender = block.ImageDescender;
+						}
+						else
+						{
+							height    = System.Math.Max(height,    block.ImageAscender-block.ImageDescender);
+							ascender  = System.Math.Max(ascender,  block.ImageAscender);
+							descender = System.Math.Min(descender, block.ImageDescender);
+						}
 					}
 					else
 					{
-						height    = System.Math.Max(height,    block.Font.LineHeight*block.FontSize);
-						ascender  = System.Math.Max(ascender,  block.Font.Ascender  *block.FontSize);
-						descender = System.Math.Min(descender, block.Font.Descender *block.FontSize);
+						if (height == 0)
+						{
+							height    = block.Font.LineHeight*block.FontSize;
+							ascender  = block.Font.Ascender  *block.FontSize;
+							descender = block.Font.Descender *block.FontSize;
+						}
+						else
+						{
+							height    = System.Math.Max(height,    block.Font.LineHeight*block.FontSize);
+							ascender  = System.Math.Max(ascender,  block.Font.Ascender  *block.FontSize);
+							descender = System.Math.Min(descender, block.Font.Descender *block.FontSize);
+						}
 					}
 					if ( block.Tab || block.List )
 					{
@@ -4767,6 +4844,7 @@ noText:
 			public Drawing.Image			Image;		// image bitmap
 			public double					ImageAscender;
 			public double					ImageDescender;
+//-			public double					VerticalOffset;
 			public bool						Tab;		// contient un tabulateur
 			public bool						List;		// contient une puce
 			public System.Collections.Hashtable Parameters;

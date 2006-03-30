@@ -393,7 +393,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void FillFontFaceList(System.Collections.ArrayList list)
 		{
 			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
-			string fontName = this.PropertyTextFont.GetFont().FaceName;
+			string fontName = this.PropertyTextFont.FontName;
 
 			if ( !list.Contains(fontName) )
 			{
@@ -408,6 +408,12 @@ namespace Epsitec.Common.Document.Objects
 			Drawing.Font font = propFont.GetFont();
 			double fontSize = propFont.FontSize;
 			string text = this.GetText;
+
+			if ( font == null )
+			{
+				font = Drawing.Font.GetFont("Arial", "Regular");
+				if ( font == null )  return;
+			}
 
 			for ( int i=0 ; i<text.Length ; i++ )
 			{
@@ -561,10 +567,18 @@ namespace Epsitec.Common.Document.Objects
 			double fontSize = propFont.FontSize;
 			string text = this.GetText;
 
-			double textWidth = 0.0;
-			for ( int i=0 ; i<text.Length ; i++ )
+			if ( font == null )
 			{
-				textWidth += font.GetCharAdvance(text[i])*fontSize;
+				font = Drawing.Font.GetFont("Arial", "Regular");
+			}
+
+			double textWidth = 0.0;
+			if ( font != null )
+			{
+				for ( int i=0 ; i<text.Length ; i++ )
+				{
+					textWidth += font.GetCharAdvance(text[i])*fontSize;
+				}
 			}
 
 			double zoom = Properties.Abstract.DefaultZoom(drawingContext);
@@ -744,25 +758,28 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			double angle = Point.ComputeAngleDeg(this.Handle(0).Position, this.Handle(1).Position);
-			if ( dimension.RotateText )  angle += 180.0;
-			Point center = Point.Move(this.Handle(0).Position, this.Handle(1).Position, textPos);
-			double advance = -textWidth/2.0;
-			if ( justif ==  1 )  advance = 0;
-			if ( justif == -1 )  advance = -textWidth;
-			double offset = font.Ascender*fontSize*dimension.FontOffset;
-
-			for ( int i=0 ; i<text.Length ; i++ )
+			if ( font != null )
 			{
-				Transform transform = new Transform();
-				transform.Scale(fontSize);
-				transform.RotateDeg(angle);
-				transform.Translate(center+Transform.RotatePointDeg(angle, new Point(advance, offset)));
+				double angle = Point.ComputeAngleDeg(this.Handle(0).Position, this.Handle(1).Position);
+				if ( dimension.RotateText )  angle += 180.0;
+				Point center = Point.Move(this.Handle(0).Position, this.Handle(1).Position, textPos);
+				double advance = -textWidth/2.0;
+				if ( justif ==  1 )  advance = 0;
+				if ( justif == -1 )  advance = -textWidth;
+				double offset = font.Ascender*fontSize*dimension.FontOffset;
 
-				int glyph = font.GetGlyphIndex(text[i]);
-				pathText.Append(font, glyph, transform);
+				for ( int i=0 ; i<text.Length ; i++ )
+				{
+					Transform transform = new Transform();
+					transform.Scale(fontSize);
+					transform.RotateDeg(angle);
+					transform.Translate(center+Transform.RotatePointDeg(angle, new Point(advance, offset)));
 
-				advance += font.GetCharAdvance(text[i])*fontSize;
+					int glyph = font.GetGlyphIndex(text[i]);
+					pathText.Append(font, glyph, transform);
+
+					advance += font.GetCharAdvance(text[i])*fontSize;
+				}
 			}
 		}
 
@@ -843,6 +860,12 @@ namespace Epsitec.Common.Document.Objects
 			Drawing.Font font = propFont.GetFont();
 			double fontSize = propFont.FontSize;
 			string text = this.GetText;
+
+			if ( font == null )
+			{
+				font = Drawing.Font.GetFont("Arial", "Regular");
+				if ( font == null )  return;
+			}
 
 			double textWidth = 0.0;
 			for ( int i=0 ; i<text.Length ; i++ )
@@ -958,6 +981,20 @@ namespace Epsitec.Common.Document.Objects
 		protected Dimension(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 			//	Constructeur qui désérialise l'objet.
+		}
+
+		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
+		{
+			//	Vérifie si tous les fichiers existent.
+			string fontName = this.PropertyTextFont.FontName;
+			if ( !Abstract.ReadSearchFont(fonts, fontName) )
+			{
+				string message = string.Format(Res.Strings.Object.Text.Error, fontName);
+				if ( !warnings.Contains(message) )
+				{
+					warnings.Add(message);
+				}
+			}
 		}
 		#endregion
 

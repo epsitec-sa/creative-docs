@@ -246,8 +246,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.UpdateComboStyleList(face);
 
-			this.fontFace.Text  = face;
-			this.fontStyle.Text = style;
+			this.fontFace.Text  = TextLayout.ConvertToTaggedText(face);
+			this.fontStyle.Text = TextLayout.ConvertToTaggedText(style);
 			this.ProposalFontFaceCombo(this.fontFace, !isFace);
 			this.ProposalTextFieldCombo(this.fontStyle, !isStyle);
 
@@ -569,8 +569,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.ignoreChanged )  return;
 			if ( !this.TextWrapper.IsAttached )  return;
 
-			string face  = this.fontFace.Text;
-			string style = this.fontStyle.Text;
+			string face  = TextLayout.ConvertToSimpleText(this.fontFace.Text);
+			string style = TextLayout.ConvertToSimpleText(this.fontStyle.Text);
 
 			this.TextWrapper.SuspendSynchronizations();
 

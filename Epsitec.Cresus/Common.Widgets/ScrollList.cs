@@ -28,13 +28,13 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.Focusable;
 
 			
-			this.select_item_behavior = new Behaviors.SelectItemBehavior (new Behaviors.SelectItemCallback (this.AutomaticItemSelection));
+			this.selectItemBehavior = new Behaviors.SelectItemBehavior(new Behaviors.SelectItemCallback(this.AutomaticItemSelection));
 			
 			this.scrollListStyle = ScrollListStyle.Normal;
 			this.lineHeight = this.DefaultFontHeight+1;
 			this.scroller = new VScroller(null);
 			this.scroller.IsInverted = true;
-			this.scroller.SetParent (this);
+			this.scroller.SetParent(this);
 			this.scroller.ValueChanged += new Support.EventHandler(this.HandleScrollerValueChanged);
 			this.scroller.Hide();
 			this.UpdateMargins();
@@ -49,20 +49,20 @@ namespace Epsitec.Common.Widgets
 		#region Interface IBundleSupport
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
-			base.RestoreFromBundle (bundler, bundle);
-			this.items.RestoreFromBundle ("items", bundler, bundle);
+			base.RestoreFromBundle(bundler, bundle);
+			this.items.RestoreFromBundle("items", bundler, bundle);
 		}
 		
 		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
-			base.SerializeToBundle (bundler, bundle);
-			this.items.SerializeToBundle ("items", bundler, bundle);
+			base.SerializeToBundle(bundler, bundle);
+			this.items.SerializeToBundle("items", bundler, bundle);
 		}
 		#endregion
 		
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing)
+			if ( disposing )
 			{
 				if ( this.scroller != null )
 				{
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			base.Dispose (disposing);
+			base.Dispose(disposing);
 		}
 
 
@@ -88,6 +88,39 @@ namespace Epsitec.Common.Widgets
 					this.scrollListStyle = value;
 					this.Invalidate();
 				}
+			}
+		}
+
+		public bool								DrawFrame
+		{
+			//	Détermine s'il faut dessiner un cadre autour de chaque ligne de la liste.
+			get
+			{
+				return this.drawFrame;
+			}
+
+			set
+			{
+				if ( this.drawFrame != value )
+				{
+					this.drawFrame = value;
+					this.Invalidate();
+				}
+			}
+		}
+
+		public bool								AllLinesWidthSameWidth
+		{
+			//	Détermine si toutes les lignes ont la même largeur (par exemple parce qu'elles
+			//	contiennent de simples icônes), pour accélérer l'ouverture.
+			get
+			{
+				return this.allLinesWidthSameWidth;
+			}
+
+			set
+			{
+				this.allLinesWidthSameWidth = value;
 			}
 		}
 
@@ -198,15 +231,50 @@ namespace Epsitec.Common.Widgets
 			double dy = height;
 			
 			dy += margin;
-			dy  = System.Math.Max (dy, this.MinSize.Height);
-			dy  = System.Math.Min (dy, this.MaxSize.Height);
+			dy  = System.Math.Max(dy, this.MinSize.Height);
+			dy  = System.Math.Min(dy, this.MaxSize.Height);
 			dy -= margin;
 			
 			int n = (int) (dy / this.lineHeight);
 			
 			height = this.lineHeight * n + margin;
 			
-			return new Drawing.Size (width, height);
+			return new Drawing.Size(width, height);
+		}
+
+		public Drawing.Size GetBestSize()
+		{
+			//	Donne les dimensions optimales pour la liste.
+			//	La largeur est la largeur la plus grande de tous les textes contenus dans Items.
+			//	La hauteur est la hauteur la plus grande de tous les textes contenus dans Items.
+
+			double dx = 0;
+			double dy = 0;
+
+			TextLayout layout = new TextLayout();
+			layout.ResourceManager = this.ResourceManager;
+			layout.DefaultFont     = this.DefaultFont;
+			layout.DefaultFontSize = this.DefaultFontSize;
+
+			int max = this.allLinesWidthSameWidth ? 1 : this.items.Count;
+			for ( int i=0 ; i<max ; i++ )
+			{
+				layout.Text = this.items[i];
+				Drawing.Size size = layout.SingleLineSize;
+				dx = System.Math.Max(dx, size.Width);
+				dy = System.Math.Max(dy, size.Height);
+			}
+
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			dx += adorner.GeometryScrollerRightMargin;
+			dx += this.margins.Left;
+			dx += this.margins.Right;
+			dx += 2;  // ch'tite marge pour respirer
+			dx = System.Math.Ceiling(dx);
+
+			dy = System.Math.Ceiling(dy);
+
+			return new Drawing.Size(dx, dy);
 		}
 
 
@@ -217,24 +285,24 @@ namespace Epsitec.Common.Widgets
 			double h = this.Client.Height-ScrollList.TextOffsetY*2;
 			int count = (int)(h/this.lineHeight);
 			
-			return this.AdjustHeightToRows (mode, count);
+			return this.AdjustHeightToRows(mode, count);
 		}
 
-		public bool AdjustHeightToContent(ScrollAdjustMode mode, double min_height, double max_height)
+		public bool AdjustHeightToContent(ScrollAdjustMode mode, double minHeight, double maxHeight)
 		{
 			//	Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
 			
 			double h = this.lineHeight*this.items.Count+ScrollList.TextOffsetY*2;
 			double hope = h;
-			h = System.Math.Max(h, min_height);
-			h = System.Math.Min(h, max_height);
+			h = System.Math.Max(h, minHeight);
+			h = System.Math.Min(h, maxHeight);
 			
-			if (h == this.Height)
+			if ( h == this.Height )
 			{
 				return false;
 			}
 
-			switch (mode)
+			switch ( mode )
 			{
 				case ScrollAdjustMode.MoveTop:
 					this.Top = this.Bottom + h;
@@ -245,16 +313,16 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				default:
-					throw new System.NotSupportedException (string.Format ("Adjust mode {0} not supported.", mode));
+					throw new System.NotSupportedException(string.Format("Adjust mode {0} not supported.", mode));
 			}
 			
-			if (h == hope)
+			if ( h == hope )
 			{
-				this.Invalidate ();
+				this.Invalidate();
 			}
 			else
 			{
-				this.AdjustHeight (mode);
+				this.AdjustHeight(mode);
 			}
 			return true;
 		}
@@ -266,23 +334,23 @@ namespace Epsitec.Common.Widgets
 			double h = this.Client.Height-ScrollList.TextOffsetY*2;
 			double adjust = h - count*this.lineHeight;
 			
-			if (adjust == 0)
+			if ( adjust == 0 )
 			{
 				return false;
 			}
 			
-			switch (mode)
+			switch ( mode )
 			{
 				case ScrollAdjustMode.MoveTop:
-					this.Top = System.Math.Floor (this.Top - adjust);
+					this.Top = System.Math.Floor(this.Top - adjust);
 					break;
 				
 				case ScrollAdjustMode.MoveBottom:
-					this.Bottom = System.Math.Floor (this.Bottom + adjust);
+					this.Bottom = System.Math.Floor(this.Bottom + adjust);
 					break;
 				
 				default:
-					throw new System.NotSupportedException (string.Format ("Adjust mode {0} not supported.", mode));
+					throw new System.NotSupportedException(string.Format("Adjust mode {0} not supported.", mode));
 			}
 			
 			this.Invalidate();
@@ -339,17 +407,17 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.KeyDown:
-					if (!this.ProcessKeyDown (message))
+					if ( !this.ProcessKeyDown(message) )
 					{
-						base.ProcessMessage (message, pos);
+						base.ProcessMessage(message, pos);
 						return;
 					}
 					break;
 					
 				case MessageType.KeyPress:
-					if (!this.ProcessKeyPress (message))
+					if ( !this.ProcessKeyPress(message) )
 					{
-						base.ProcessMessage (message, pos);
+						base.ProcessMessage(message, pos);
 						return;
 					}
 					break;
@@ -368,10 +436,10 @@ namespace Epsitec.Common.Widgets
 			double y = this.Client.Height-pos.Y-1-ScrollList.TextOffsetY;
 			double x = pos.X-this.margins.Left;
 			
-			if (y < 0) return false;
-			if (y >= this.visibleLines*this.lineHeight) return false;
-			if (x < 0) return false;
-			if (x >= this.Client.Width-this.margins.Width) return false;
+			if ( y < 0 ) return false;
+			if ( y >= this.visibleLines*this.lineHeight ) return false;
+			if ( x < 0 ) return false;
+			if ( x >= this.Client.Width-this.margins.Width ) return false;
 			
 			int line = (int)(y/this.lineHeight);
 			
@@ -385,14 +453,14 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual bool ProcessKeyPress(Message message)
 		{
-			return this.select_item_behavior.ProcessKeyPress (message);
+			return this.selectItemBehavior.ProcessKeyPress(message);
 		}
 		
 		protected virtual bool ProcessKeyDown(Message message)
 		{
-			if ((message.IsAltPressed) ||
-				(message.IsShiftPressed) ||
-				(message.IsControlPressed))
+			if ( message.IsAltPressed     ||
+				 message.IsShiftPressed   ||
+				 message.IsControlPressed )
 			{
 				return false;
 			}
@@ -401,7 +469,7 @@ namespace Epsitec.Common.Widgets
 			
 			int sel = this.SelectedIndex;
 			
-			switch (message.KeyCode)
+			switch ( message.KeyCode )
 			{
 				case KeyCode.Back:		sel = 0;							break;
 				case KeyCode.Home:		sel = 0;							break;
@@ -412,7 +480,7 @@ namespace Epsitec.Common.Widgets
 				case KeyCode.PageDown:	sel += this.FullyVisibleRowCount-1;	break;
 				
 				default:
-					if (Feel.Factory.Active.TestSelectItemKey (message))
+					if ( Feel.Factory.Active.TestSelectItemKey(message) )
 					{
 						this.OnSelectionActivated();
 						return true;
@@ -420,9 +488,9 @@ namespace Epsitec.Common.Widgets
 					return false;
 			}
 			
-			if (this.SelectedIndex != sel)
+			if ( this.SelectedIndex != sel )
 			{
-				this.select_item_behavior.ClearSearch ();
+				this.selectItemBehavior.ClearSearch();
 				
 				sel = System.Math.Max(sel, 0);
 				sel = System.Math.Min(sel, this.RowCount-1);
@@ -492,7 +560,7 @@ namespace Epsitec.Common.Widgets
 					string text = this.items[i+this.firstLine];
 					
 					this.textLayouts[i].ResourceManager = this.ResourceManager;
-					this.textLayouts[i].Text            = text;	//@	this.AutoResolveResRef ? this.ResourceManager.ResolveTextRef (text) : text;
+					this.textLayouts[i].Text            = text;	//@	this.AutoResolveResRef ? this.ResourceManager.ResolveTextRef(text) : text;
 					this.textLayouts[i].DefaultFont     = this.DefaultFont;
 					this.textLayouts[i].DefaultFontSize = this.DefaultFontSize;
 					this.textLayouts[i].LayoutSize      = new Drawing.Size(this.GetTextWidth(), this.lineHeight);
@@ -518,7 +586,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.scroller != null )
 			{
-				this.UpdateMargins ();
+				this.UpdateMargins();
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
 				rect.Right  = this.Client.Width-adorner.GeometryScrollerRightMargin;
@@ -531,39 +599,39 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnAdornerChanged()
 		{
-			this.UpdateClientGeometry ();
-			this.UpdateMargins ();
-			base.OnAdornerChanged ();
+			this.UpdateClientGeometry();
+			this.UpdateMargins();
+			base.OnAdornerChanged();
 		}
 		
 		protected override void OnResourceManagerChanged()
 		{
-			base.OnResourceManagerChanged ();
+			base.OnResourceManagerChanged();
 			
-			Support.ResourceManager resource_manager = this.ResourceManager;
+			Support.ResourceManager resourceManager = this.ResourceManager;
 			
-			for (int i = 0; i < this.textLayouts.GetLength (0); i++)
+			for ( int i=0 ; i<this.textLayouts.GetLength(0) ; i++ )
 			{
 				TextLayout layout = this.textLayouts[i];
 				
-				if (layout != null)
+				if ( layout != null )
 				{
-					layout.ResourceManager = resource_manager;
+					layout.ResourceManager = resourceManager;
 				}
 			}
 			
-			this.Invalidate ();
+			this.Invalidate();
 		}
 
 		protected void UpdateMargins()
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
-			this.margins = new Drawing.Margins (adorner.GeometryScrollListXMargin, adorner.GeometryScrollListXMargin,
-				/**/                            adorner.GeometryScrollListYMargin, adorner.GeometryScrollListYMargin);
+			this.margins = new Drawing.Margins(adorner.GeometryScrollListXMargin, adorner.GeometryScrollListXMargin,
+				/**/                           adorner.GeometryScrollListYMargin, adorner.GeometryScrollListYMargin);
 			
-			if ((this.scroller != null) &&
-				(this.scroller.IsVisible))
+			if ( this.scroller != null   &&
+				 this.scroller.IsVisible )
 			{
 				this.margins.Right = this.Client.Width - this.scroller.Left;
 			}
@@ -579,14 +647,14 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void AutomaticItemSelection(string search, bool continued)
 		{
-			int index = this.items.FindStartMatch (search, this.SelectedIndex + (continued ? 0 : 1));
+			int index = this.items.FindStartMatch(search, this.SelectedIndex + (continued ? 0 : 1));
 			
-			if (index < 0)
+			if ( index < 0 )
 			{
-				index = this.items.FindStartMatch (search);
+				index = this.items.FindStartMatch(search);
 			}
 			
-			if (index >= 0)
+			if ( index >= 0 )
 			{
 				this.SelectedIndex = index;
 			}
@@ -660,6 +728,23 @@ namespace Epsitec.Common.Widgets
 				}
 
 				adorner.PaintButtonTextLayout(graphics, pos, this.textLayouts[i], state, ButtonStyle.ListItem);
+
+				if ( this.drawFrame )  // dessine les cadres ?
+				{
+					Drawing.Rectangle frame = new Drawing.Rectangle();
+					frame.Left   = this.margins.Left;
+					frame.Width  = this.GetTextWidth();
+					frame.Bottom = pos.Y;
+					frame.Height = this.lineHeight;
+					if ( i < max-1 )
+					{
+						frame.Bottom -= 1;
+					}
+					frame.Deflate(0.5);
+					graphics.AddRectangle(frame);
+					graphics.RenderSolid(adorner.ColorBorder);
+				}
+
 				pos.Y -= this.lineHeight;
 			}
 		}
@@ -668,13 +753,13 @@ namespace Epsitec.Common.Widgets
 		#region IStringCollectionHost Members
 		public void StringCollectionChanged()
 		{
-			if (this.items.Count == 0)
+			if ( this.items.Count == 0 )
 			{
 				this.FirstVisibleRow = 0;
 				this.SelectedIndex   = -1;
 			}
 			
-			this.SetDirty ();
+			this.SetDirty();
 		}
 		
 		
@@ -724,7 +809,7 @@ namespace Epsitec.Common.Widgets
 			
 			set
 			{
-				this.SelectedIndex = this.Items.IndexOf (value);
+				this.SelectedIndex = this.Items.IndexOf(value);
 			}
 		}
 		
@@ -777,14 +862,16 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		SelectionActivated;
 		
 		protected const double					TextOffsetX = 3;
-		protected const double					TextOffsetY = 3;
+		protected const double					TextOffsetY = 2;
 
-		private Behaviors.SelectItemBehavior	select_item_behavior;
+		private Behaviors.SelectItemBehavior	selectItemBehavior;
 		protected ScrollListStyle				scrollListStyle;
 		protected bool							isDirty;
+		protected bool							drawFrame = false;
 		protected bool							mouseDown = false;
-		protected Collections.StringCollection		items;
+		protected Collections.StringCollection	items;
 		protected TextLayout[]					textLayouts;
+		protected bool							allLinesWidthSameWidth;
 		
 		protected Drawing.Margins				margins;
 		

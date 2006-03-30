@@ -70,6 +70,7 @@ namespace Epsitec.Common.Document
 		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher)
 		{
 			//	Crée un nouveau document vide.
+			this.UniqueIDCreate();
 			this.type = type;
 			this.mode = mode;
 			this.installType = installType;
@@ -141,6 +142,51 @@ namespace Epsitec.Common.Document
 
 			this.ioType = IOType.BinaryCompress;
 			//this.ioType = IOType.SoapUncompress;
+		}
+
+		public void Dispose()
+		{
+			if ( this.modifier != null )
+			{
+				this.modifier.Dispose();
+				this.modifier = null;
+			}
+
+			if ( this.wrappers != null )
+			{
+				this.wrappers.Dispose();
+				this.wrappers = null;
+			}
+
+			if ( this.notifier != null )
+			{
+				this.notifier.Dispose();
+				this.notifier = null;
+			}
+
+			if ( this.dialogs != null )
+			{
+				this.dialogs.Dispose();
+				this.dialogs = null;
+			}
+
+			if ( this.settings != null )
+			{
+				this.settings.Dispose();
+				this.settings = null;
+			}
+
+			if ( this.printer != null )
+			{
+				this.printer.Dispose();
+				this.printer = null;
+			}
+
+			if ( this.exportPDF != null )
+			{
+				this.exportPDF.Dispose();
+				this.exportPDF = null;
+			}
 		}
 
 		public DocumentType Type
@@ -2249,6 +2295,25 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+		#region UniqueID
+		protected void UniqueIDCreate()
+		{
+			//	Assigne un numéro unique à ce document.
+			this.uniqueID = Document.uniqueIDGenerator++;
+		}
+
+		public string UniqueName
+		{
+			//	Retourne un nom unique pour ce document.
+			get
+			{
+				return string.Concat("Document-", this.uniqueID.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			}
+		}
+
+		protected static int					uniqueIDGenerator = 0;
+		protected int							uniqueID;
+		#endregion
 
 
 		protected DocumentType					type;

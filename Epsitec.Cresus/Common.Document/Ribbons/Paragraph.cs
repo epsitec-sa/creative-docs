@@ -15,24 +15,27 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ParagraphMain;
 
-			this.buttonJustifHLeft   = this.CreateIconButton("JustifHLeft");
-			this.buttonJustifHCenter = this.CreateIconButton("JustifHCenter");
-			this.buttonJustifHRight  = this.CreateIconButton("JustifHRight");
-			this.buttonJustifHJustif = this.CreateIconButton("JustifHJustif");
-			this.buttonJustifHAll    = this.CreateIconButton("JustifHAll");
+			this.buttonJustif = this.CreateIconButtonCombo("ParagraphJustif");
+			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifLeft",   "JustifHLeft",   Res.Strings.Property.Justif.JustifHLeft);
+			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifCenter", "JustifHCenter", Res.Strings.Property.Justif.JustifHCenter);
+			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifRight",  "JustifHRight",  Res.Strings.Property.Justif.JustifHRight);
+			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifJustif", "JustifHJustif", Res.Strings.Property.Justif.JustifHJustif);
+			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifAll",    "JustifHAll",    Res.Strings.Property.Justif.JustifHAll);
 
-			this.buttonIndentMinus   = this.CreateIconButton("ParagraphIndentMinus");
-			this.buttonIndentPlus    = this.CreateIconButton("ParagraphIndentPlus");
+			this.buttonIndentMinus = this.CreateIconButton("ParagraphIndentMinus");
+			this.buttonIndentPlus  = this.CreateIconButton("ParagraphIndentPlus");
 
-			this.buttonLeading08     = this.CreateIconButton("ParagraphLeading08");
-			this.buttonLeading10     = this.CreateIconButton("ParagraphLeading10");
-			this.buttonLeading15     = this.CreateIconButton("ParagraphLeading15");
-			this.buttonLeading20     = this.CreateIconButton("ParagraphLeading20");
-			this.buttonLeading30     = this.CreateIconButton("ParagraphLeading30");
-			this.buttonLeadingMinus  = this.CreateIconButton("ParagraphLeadingMinus");
-			this.buttonLeadingPlus   = this.CreateIconButton("ParagraphLeadingPlus");
+			this.buttonLeading = this.CreateIconButtonCombo("ParagraphLeading");
+			this.AddIconButtonCombo(this.buttonLeading, "ParagraphLeading08", "ParagraphLeading08", Res.Strings.Property.Leading.Leading08);
+			this.AddIconButtonCombo(this.buttonLeading, "ParagraphLeading10", "ParagraphLeading10", Res.Strings.Property.Leading.Leading10);
+			this.AddIconButtonCombo(this.buttonLeading, "ParagraphLeading15", "ParagraphLeading15", Res.Strings.Property.Leading.Leading15);
+			this.AddIconButtonCombo(this.buttonLeading, "ParagraphLeading20", "ParagraphLeading20", Res.Strings.Property.Leading.Leading20);
+			this.AddIconButtonCombo(this.buttonLeading, "ParagraphLeading30", "ParagraphLeading30", Res.Strings.Property.Leading.Leading30);
 
-			this.buttonClear         = this.CreateIconButton("ParagraphClear");
+			this.buttonLeadingMinus = this.CreateIconButton("ParagraphLeadingMinus");
+			this.buttonLeadingPlus  = this.CreateIconButton("ParagraphLeadingPlus");
+
+			this.buttonClear = this.CreateIconButton("ParagraphClear");
 
 			this.UpdateClientGeometry();
 		}
@@ -51,7 +54,7 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 200;
+				return 123;
 			}
 		}
 
@@ -61,42 +64,28 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
-			if ( this.buttonLeading08 == null )  return;
+			if ( this.buttonClear == null )  return;
 
-			double dx = this.buttonLeading08.DefaultWidth;
-			double dy = this.buttonLeading08.DefaultHeight;
+			double dx = this.buttonClear.DefaultWidth;
+			double dy = this.buttonClear.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
-			rect.Height = dy;
-			rect.Width = dx;
 			rect.Offset(0, dy+5);
-			this.buttonJustifHLeft.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonJustifHCenter.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonJustifHRight.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonJustifHJustif.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonJustifHAll.Bounds = rect;
-			rect.Offset(dx+5, 0);
+			rect.Height = dy;
+			rect.Width = dx*1.5;
+			this.buttonJustif.Bounds = rect;
+			rect.Offset(dx*1.5+5, 0);
+			rect.Width = dx;
 			this.buttonIndentMinus.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonIndentPlus.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Height = dy;
+			rect.Width = dx*1.5;
+			this.buttonLeading.Bounds = rect;
+			rect.Offset(dx*1.5+5, 0);
 			rect.Width = dx;
-			this.buttonLeading08.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonLeading10.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonLeading15.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonLeading20.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonLeading30.Bounds = rect;
-			rect.Offset(dx+5, 0);
 			this.buttonLeadingMinus.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonLeadingPlus.Bounds = rect;
@@ -105,20 +94,12 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		protected IconButton				buttonJustifHLeft;
-		protected IconButton				buttonJustifHCenter;
-		protected IconButton				buttonJustifHRight;
-		protected IconButton				buttonJustifHJustif;
-		protected IconButton				buttonJustifHAll;
-		protected IconButton				buttonLeading08;
-		protected IconButton				buttonLeading10;
-		protected IconButton				buttonLeading15;
-		protected IconButton				buttonLeading20;
-		protected IconButton				buttonLeading30;
-		protected IconButton				buttonLeadingMinus;
-		protected IconButton				buttonLeadingPlus;
+		protected IconButtonCombo			buttonJustif;
 		protected IconButton				buttonIndentMinus;
 		protected IconButton				buttonIndentPlus;
+		protected IconButtonCombo			buttonLeading;
+		protected IconButton				buttonLeadingMinus;
+		protected IconButton				buttonLeadingPlus;
 		protected IconButton				buttonClear;
 	}
 }

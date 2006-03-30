@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -258,6 +258,7 @@ namespace Epsitec.Common.Drawing
 			public bool					Wave        = false;
 			public Color				WaveColor   = Color.Empty;
 			public Image				Image       = null;
+			public double				VerticalOffset = 0.0;
 		}
 		
 		public class Run

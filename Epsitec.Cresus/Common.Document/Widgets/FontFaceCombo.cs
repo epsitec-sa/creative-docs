@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document.Widgets
 			string text = this.fontSelector.SelectedFontFace;
 			if ( this.Text != text )
 			{
-				this.Text = text;
+				this.Text = TextLayout.ConvertToTaggedText(text);
 				this.SelectAll();
 			}
 

@@ -224,6 +224,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Balloon.cs" />
     <Compile Include="Behaviors\AcceptRejectBehavior.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -403,6 +404,9 @@
     <Compile Include="IconButton.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IconButtonCombo.cs" />
+    <Compile Include="IconButtonMark.cs" />
+    <Compile Include="IconButtonsCombo.cs" />
     <Compile Include="IconSeparator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -478,6 +482,7 @@
     <Compile Include="MulticastValidator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Nothing.cs" />
     <Compile Include="PaneBook.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -508,6 +513,8 @@
     <Compile Include="RadioButton.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RadioIcon.cs" />
+    <Compile Include="RadioIconGrid.cs" />
     <Compile Include="Res.cs">
       <SubType>Code</SubType>
     </Compile>

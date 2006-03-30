@@ -63,6 +63,10 @@ namespace Epsitec.Common.Document.PDF
 			this.document = document;
 		}
 
+		public void Dispose()
+		{
+		}
+
 		public string FileExport(string filename)
 		{
 			//	Exporte le document dans un fichier.

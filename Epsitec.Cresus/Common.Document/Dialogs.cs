@@ -15,6 +15,10 @@ namespace Epsitec.Common.Document
 			this.widgetsTable = new System.Collections.Hashtable();
 		}
 
+		public void Dispose()
+		{
+		}
+
 
 		public void UpdateAllSettings()
 		{

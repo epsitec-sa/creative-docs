@@ -21,6 +21,11 @@ namespace Epsitec.Common.Document
 			this.imageAA = 1.0;
 		}
 
+		public void Dispose()
+		{
+		}
+
+
 		public void Print(Epsitec.Common.Dialogs.Print dp)
 		{
 			//	Imprime le document selon les choix faits dans le dialogue Window (dp)

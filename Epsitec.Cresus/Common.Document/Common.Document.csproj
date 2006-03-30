@@ -626,9 +626,6 @@
     <Compile Include="Widgets\AggregateList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Widgets\Balloon.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Widgets\ButtonFontFace.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -645,16 +642,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Widgets\HRuler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Widgets\IconMarkButton.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Widgets\Nothing.cs" />
-    <Compile Include="Widgets\RadioIcon.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Widgets\RadioIconGrid.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Widgets\Sample.cs">

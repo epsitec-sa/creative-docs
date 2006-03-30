@@ -134,7 +134,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.index = 0;
 
-			this.categoryGraphic = new Widgets.IconMarkButton(this.categoryContainer);
+			this.categoryGraphic = new IconButtonMark(this.categoryContainer);
 			this.categoryGraphic.Name = "Graphic";
 			this.categoryGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryGraphic.AutoFocus = false;
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryGraphic.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.categoryGraphic.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
-			this.categoryParagraph = new Widgets.IconMarkButton(this.categoryContainer);
+			this.categoryParagraph = new IconButtonMark(this.categoryContainer);
 			this.categoryParagraph.Name = "Paragraph";
 			this.categoryParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryParagraph.AutoFocus = false;
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryParagraph.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.categoryParagraph.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
-			this.categoryCharacter = new Widgets.IconMarkButton(this.categoryContainer);
+			this.categoryCharacter = new IconButtonMark(this.categoryContainer);
 			this.categoryCharacter.Name = "Character";
 			this.categoryCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryCharacter.AutoFocus = false;
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Document.Containers
 							string icon = Properties.Abstract.IconText(table[i]);
 							string text = Properties.Abstract.Text(table[i]);
 
-							Widgets.IconMarkButton button = this.UpdateSelectorAdd(width, true, name, icon, text);
+							IconButtonMark button = this.UpdateSelectorAdd(width, true, name, icon, text);
 							button.InnerZoom = zoom;
 						}
 					}
@@ -589,9 +589,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		protected Widgets.IconMarkButton UpdateSelectorAdd(double width, bool enable, string name, string icon, string text)
+		protected IconButtonMark UpdateSelectorAdd(double width, bool enable, string name, string icon, string text)
 		{
-			Widgets.IconMarkButton button = new Widgets.IconMarkButton(this.selectorToolBar);
+			IconButtonMark button = new IconButtonMark(this.selectorToolBar);
 			button.Name = name;
 			button.IconName = Misc.Icon(icon);
 			button.Width = width;
@@ -713,17 +713,17 @@ namespace Epsitec.Common.Document.Containers
 					if ( sel == -1 )  return;
 					Properties.Aggregate agg = this.document.Aggregates[sel] as Properties.Aggregate;
 
-					string resume;
+					string brief;
 					int lines;
-					agg.GetStyleResume(out resume, out lines);
+					agg.GetStyleBrief(out brief, out lines);
 					double h = 5 + lines*14 + 5;
 
-					this.styleResumePanel = new StaticText(this.panelContainer);
-					this.styleResumePanel.Alignment = ContentAlignment.TopLeft;
-					this.styleResumePanel.Height = h;
-					this.styleResumePanel.Dock = DockStyle.Fill;
-					this.styleResumePanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
-					this.styleResumePanel.Text = resume;
+					this.styleBriefPanel = new StaticText(this.panelContainer);
+					this.styleBriefPanel.Alignment = ContentAlignment.TopLeft;
+					this.styleBriefPanel.Height = h;
+					this.styleBriefPanel.Dock = DockStyle.Fill;
+					this.styleBriefPanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
+					this.styleBriefPanel.Text = brief;
 
 					this.panelContainer.Height = h;
 					this.panelContainer.ForceLayout();
@@ -781,17 +781,17 @@ namespace Epsitec.Common.Document.Containers
 				TextPanels.Abstract panel = TextPanels.Abstract.Create(this.SelectorName, this.document, true, this.category);
 				if ( panel == null )
 				{
-					string resume;
+					string brief;
 					int lines;
-					this.document.Wrappers.GetStyleResume(style, out resume, out lines);
+					this.document.Wrappers.GetStyleBrief(style, out brief, out lines);
 					double h = 5 + lines*14 + 5;
 
-					this.styleResumePanel = new StaticText(this.panelContainer);
-					this.styleResumePanel.Alignment = ContentAlignment.TopLeft;
-					this.styleResumePanel.Height = h;
-					this.styleResumePanel.Dock = DockStyle.Fill;
-					this.styleResumePanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
-					this.styleResumePanel.Text = resume;
+					this.styleBriefPanel = new StaticText(this.panelContainer);
+					this.styleBriefPanel.Alignment = ContentAlignment.TopLeft;
+					this.styleBriefPanel.Height = h;
+					this.styleBriefPanel.Dock = DockStyle.Fill;
+					this.styleBriefPanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
+					this.styleBriefPanel.Text = brief;
 
 					this.panelContainer.Height = h;
 					this.panelContainer.ForceLayout();
@@ -851,10 +851,10 @@ namespace Epsitec.Common.Document.Containers
 				this.textPanel = null;
 			}
 
-			if ( this.styleResumePanel != null )
+			if ( this.styleBriefPanel != null )
 			{
-				this.styleResumePanel.Dispose();
-				this.styleResumePanel = null;
+				this.styleBriefPanel.Dispose();
+				this.styleBriefPanel = null;
 			}
 
 			this.panelContainer.Height = 0.0;
@@ -893,7 +893,7 @@ namespace Epsitec.Common.Document.Containers
 			this.SetCategory(this.categoryCharacter, Res.Strings.Panel.AggregateCategory.Character, (this.category == StyleCategory.Character));
 		}
 
-		protected void SetCategory(Widgets.IconMarkButton button, string text, bool state)
+		protected void SetCategory(IconButtonMark button, string text, bool state)
 		{
 			button.Text = text;
 			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
@@ -1000,6 +1000,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.SetSelectedTextStyle(this.category, rank);
 				
 				this.document.Modifier.OpletQueueValidateAction();
+				this.document.Notifier.NotifyTextStyleListChanged();
 				this.document.IsDirtySerialize = true;
 
 				this.oneShootSelectName = true;
@@ -1066,6 +1067,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.SetSelectedTextStyle(this.category, rank);
 				
 				this.document.Modifier.OpletQueueValidateAction();
+				this.document.Notifier.NotifyTextStyleListChanged();
 				this.document.IsDirtySerialize = true;
 
 				this.oneShootSelectName = true;
@@ -1099,6 +1101,7 @@ namespace Epsitec.Common.Document.Containers
 
 				this.document.SetSelectedTextStyle(this.category, sel-1);
 				this.document.Modifier.OpletQueueValidateAction();
+				this.document.Notifier.NotifyTextStyleListChanged();
 				this.document.IsDirtySerialize = true;
 				this.SetDirtyContent();
 			}
@@ -1130,6 +1133,7 @@ namespace Epsitec.Common.Document.Containers
 
 				this.document.SetSelectedTextStyle(this.category, sel+1);
 				this.document.Modifier.OpletQueueValidateAction();
+				this.document.Notifier.NotifyTextStyleListChanged();
 				this.document.IsDirtySerialize = true;
 				this.SetDirtyContent();
 			}
@@ -1162,6 +1166,7 @@ namespace Epsitec.Common.Document.Containers
 				}
 				this.document.SetSelectedTextStyle(this.category, sel);
 				this.document.Modifier.OpletQueueValidateAction();
+				this.document.Notifier.NotifyTextStyleListChanged();
 				this.document.IsDirtySerialize = true;
 				this.SetDirtyContent();
 			}
@@ -1738,9 +1743,9 @@ namespace Epsitec.Common.Document.Containers
 		protected Scrollable				bottomScrollable;
 
 		protected Widget					categoryContainer;
-		protected Widgets.IconMarkButton	categoryGraphic;
-		protected Widgets.IconMarkButton	categoryParagraph;
-		protected Widgets.IconMarkButton	categoryCharacter;
+		protected IconButtonMark			categoryGraphic;
+		protected IconButtonMark			categoryParagraph;
+		protected IconButtonMark			categoryCharacter;
 		protected StyleCategory				category;
 
 		protected HToolBar					aggregateToolBar;
@@ -1773,7 +1778,7 @@ namespace Epsitec.Common.Document.Containers
 		protected Widget					panelContainer;
 		protected Panels.Abstract			panel;
 		protected TextPanels.Abstract		textPanel;
-		protected StaticText				styleResumePanel;
+		protected StaticText				styleBriefPanel;
 		protected ColorSelector				colorSelector;
 
 		protected int						index;

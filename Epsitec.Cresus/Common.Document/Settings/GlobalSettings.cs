@@ -623,22 +623,11 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:ColorToRgb");
 			list.Add("00:ColorToCmyk");
 			list.Add("00:ColorToGray");
-			list.Add("00:ColorToGray");
 
-			list.Add("00:ParagraphLeading08");
-			list.Add("00:ParagraphLeading10");
-			list.Add("00:ParagraphLeading15");
-			list.Add("00:ParagraphLeading20");
-			list.Add("00:ParagraphLeading30");
 			list.Add("00:ParagraphLeadingPlus");
 			list.Add("00:ParagraphLeadingMinus");
 			list.Add("00:ParagraphIndentPlus");
 			list.Add("00:ParagraphIndentMinus");
-			list.Add("00:JustifHLeft");
-			list.Add("00:JustifHCenter");
-			list.Add("00:JustifHRight");
-			list.Add("00:JustifHJustif");
-			list.Add("00:JustifHAll");
 			list.Add("00:ParagraphClear");
 			
 			list.Add("00:FontBold");
@@ -694,6 +683,18 @@ namespace Epsitec.Common.Document.Settings
 				int index = this.IndexQuickExisting(all, i);
 				this.quickCommands.Insert(index, GlobalSettings.QuickXcmd(false, false, cmd));
 			}
+
+			//	Supprime les commandes qui n'existent plus dans cette version du logiciel.
+			System.Collections.ArrayList purged = new System.Collections.ArrayList();
+			foreach ( string xcmd in this.quickCommands )
+			{
+				string cmd = GlobalSettings.QuickCmd(xcmd as string);
+				if ( this.SearchQuickList(all, cmd) != -1 )
+				{
+					purged.Add(xcmd);
+				}
+			}
+			this.quickCommands = purged;
 		}
 
 		protected int IndexQuickExisting(System.Collections.ArrayList all, int i)
@@ -713,6 +714,16 @@ namespace Epsitec.Common.Document.Settings
 			for ( int i=0 ; i<this.quickCommands.Count ; i++ )
 			{
 				string xcmd = this.quickCommands[i] as string;
+				if ( cmd == GlobalSettings.QuickCmd(xcmd) )  return i;
+			}
+			return -1;
+		}
+
+		protected int SearchQuickList(System.Collections.ArrayList all, string cmd)
+		{
+			for ( int i=0 ; i<all.Count ; i++ )
+			{
+				string xcmd = all[i] as string;
 				if ( cmd == GlobalSettings.QuickCmd(xcmd) )  return i;
 			}
 			return -1;

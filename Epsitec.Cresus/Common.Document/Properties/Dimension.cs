@@ -187,17 +187,17 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public override void PutStyleResume(System.Text.StringBuilder builder)
+		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
 			//	Construit le texte résumé d'un style pour une propriété.
-			this.PutStyleResumePrefix(builder);
+			this.PutStyleBriefPrefix(builder);
 
 			builder.Append(TextLayout.ConvertToTaggedText(this.SampleText));
 			builder.Append(", &quot;");
 			builder.Append(TextLayout.ConvertToTaggedText(this.dimensionText));
 			builder.Append("&quot;");
 			
-			this.PutStyleResumePostfix(builder);
+			this.PutStyleBriefPostfix(builder);
 		}
 
 		public static string GetName(DimensionForm type)
