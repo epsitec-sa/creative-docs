@@ -54,6 +54,15 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
+		public void NotifyTextStylesChanged(System.Collections.ArrayList textStyleList)
+		{
+			foreach ( Abstract ribbon in this.Children )
+			{
+				if ( ribbon == null )  continue;
+				ribbon.NotifyTextStylesChanged(textStyleList);
+			}
+		}
+
 		public void NotifyTextStylesChanged()
 		{
 			foreach ( Abstract ribbon in this.Children )

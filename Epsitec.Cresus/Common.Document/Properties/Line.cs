@@ -561,10 +561,10 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public override void PutStyleResume(System.Text.StringBuilder builder)
+		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
 			//	Construit le texte résumé d'un style pour une propriété.
-			this.PutStyleResumePrefix(builder);
+			this.PutStyleBriefPrefix(builder);
 
 			builder.Append(Line.GetName(this.StandardDash));
 			builder.Append(", ");
@@ -574,7 +574,7 @@ namespace Epsitec.Common.Document.Properties
 			builder.Append(", ");
 			builder.Append(Line.GetName(this.join));
 			
-			this.PutStyleResumePostfix(builder);
+			this.PutStyleBriefPostfix(builder);
 		}
 
 

@@ -1,7 +1,6 @@
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Document.Widgets
+namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe RadioIcon est un IconButton pour une collection dont un seul

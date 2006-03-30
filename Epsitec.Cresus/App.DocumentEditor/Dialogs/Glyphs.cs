@@ -123,7 +123,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldFontFace.IsReadOnly = true;
 				this.fieldFontFace.TabIndex = tabIndex++;
 				this.fieldFontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.fieldFontFace.Text = this.fontFace;
+				this.fieldFontFace.Text = TextLayout.ConvertToTaggedText(this.fontFace);
 				this.fieldFontFace.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleFontFaceComboOpening);
 				this.fieldFontFace.TextChanged += new EventHandler(this.HandleFontFaceChanged);
 
@@ -587,7 +587,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.ignoreChanged = true;
 
 			this.fontFace = fontFace;
-			this.fieldFontFace.Text = this.fontFace;
+			this.fieldFontFace.Text = TextLayout.ConvertToTaggedText(this.fontFace);
 
 			this.UpdateFontStyle();
 			this.fontStyle = Misc.DefaultFontStyle(this.fontFace);
@@ -655,7 +655,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Police changée.
 			if ( this.ignoreChanged )  return;
-			this.SetFontFace(this.fieldFontFace.Text);
+			this.SetFontFace(TextLayout.ConvertToSimpleText(this.fieldFontFace.Text));
 		}
 
 		private void HandleCurrentFontClicked(object sender, MessageEventArgs e)

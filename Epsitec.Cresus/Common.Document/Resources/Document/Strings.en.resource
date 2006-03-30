@@ -275,10 +275,9 @@
 
 	<data name="Panel.Abstract.Extend">Expand or Collapse pannel</data>
 
-	<data name="Panel.Style.ParagraphDefinition">Paragraph Style Definition</data>
-	<data name="Panel.Style.ParagraphChoice">Select a Paragraph Style</data>
-	<data name="Panel.Style.CharacterDefinition">Character Style Definition</data>
-	<data name="Panel.Style.CharacterChoice">Select a Character Style</data>
+	<data name="Panel.Style.ParagraphDefinition">Show paragraph style palette</data>
+	<data name="Panel.Style.CharacterDefinition">Show character style palette</data>
+	<data name="Panel.Style.Choice">Select and apply a style to the text</data>
 	<data name="Panel.AggregateCategory.Graphic">Graphic</data>
 	<data name="Panel.AggregateCategory.Paragraph">Paragraph</data>
 	<data name="Panel.AggregateCategory.Character">Character</data>
@@ -773,6 +772,12 @@
 	<data name="Property.Justif.JustifORL">Right-to-left orientation</data>
 	<data name="Property.Justif.JustifOTB">Top-to-bottom orientation</data>
 
+	<data name="Property.Leading.Leading08">Compact leading</data>
+	<data name="Property.Leading.Leading10">Normal leading</data>
+	<data name="Property.Leading.Leading15">Leading ×1.5</data>
+	<data name="Property.Leading.Leading20">Leading ×2</data>
+	<data name="Property.Leading.Leading30">Leading ×3</data>
+
 	<data name="Property.Line.Full">Solid</data>
 	<data name="Property.Line.Lines">Dashed</data>
 	<data name="Property.Line.LineDense">Compact dash</data>
@@ -1162,11 +1167,6 @@
 	<data name="Action.FontClear">Clear all Character Properties</data>
 	<data name="Action.ParagraphMain">Paragraph</data>
 	<data name="Action.ParagraphJustif">Change alignment</data>
-	<data name="Action.ParagraphJustifHLeft">Left aligned</data>
-	<data name="Action.ParagraphJustifHCenter">Centered</data>
-	<data name="Action.ParagraphJustifHRight">Right aligned</data>
-	<data name="Action.ParagraphJustifHJustif">Justified, but last line</data>
-	<data name="Action.ParagraphJustifHAll">Justified, including last line</data>
 	<data name="Action.ParagraphBulletRound">Bullet list</data>
 	<data name="Action.ParagraphBulletNumeric">Numbered list 1..</data>
 	<data name="Action.ParagraphBulletAlpha">Alphabetical list A..</data>
@@ -1182,11 +1182,6 @@
 	<data name="Action.ParagraphLeading">Change leading</data>
 	<data name="Action.ParagraphLeadingMinus">Decrease leading</data>
 	<data name="Action.ParagraphLeadingPlus">Increase leading</data>
-	<data name="Action.ParagraphLeading08">Compact leading</data>
-	<data name="Action.ParagraphLeading10">Normal leading</data>
-	<data name="Action.ParagraphLeading15">Leading ×1.5</data>
-	<data name="Action.ParagraphLeading20">Leading ×2</data>
-	<data name="Action.ParagraphLeading30">Leading ×3</data>
 	<data name="Action.ParagraphGenerator">Change bullet/numbering</data>
 	<data name="Action.ParagraphClear">Clear all Paragraph Properties</data>
 	<data name="Action.Text.Insert">Insert</data>

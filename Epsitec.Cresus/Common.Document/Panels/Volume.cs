@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Volume(Document document) : base(document)
 		{
-			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 0;
 			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected void AddRadioIcon(Properties.VolumeType type)
 		{
-			this.grid.AddRadioIcon(Properties.Volume.GetIconText(type), Properties.Volume.GetName(type), (int)type, false);
+			this.grid.AddRadioIcon(Misc.Icon(Properties.Volume.GetIconText(type)), Properties.Volume.GetName(type), (int)type, false);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected Widgets.RadioIconGrid		grid;
+		protected RadioIconGrid				grid;
 		protected Widgets.TextFieldLabel	fieldRapport;
 		protected Widgets.TextFieldLabel	fieldLeft;
 		protected Widgets.TextFieldLabel	fieldRight;

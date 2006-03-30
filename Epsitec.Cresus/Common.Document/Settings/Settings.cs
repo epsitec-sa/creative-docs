@@ -27,6 +27,10 @@ namespace Epsitec.Common.Document.Settings
 			this.exportPDFInfo = new ExportPDFInfo(document);
 		}
 
+		public void Dispose()
+		{
+		}
+
 		protected void CreateDefault()
 		{
 			//	Crée tous les réglages par défaut, si nécessaire.

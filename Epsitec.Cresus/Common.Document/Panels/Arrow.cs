@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Arrow(Document document) : base(document)
 		{
-			this.grid         = new Widgets.RadioIconGrid[2];
+			this.grid         = new RadioIconGrid[2];
 			this.fieldLength  = new Widgets.TextFieldLabel[2];
 			this.fieldEffect1 = new Widgets.TextFieldLabel[2];
 			this.fieldEffect2 = new Widgets.TextFieldLabel[2];
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Panels
 			int index = 1;
 			for ( int j=0 ; j<2 ; j++ )
 			{
-				this.grid[j] = new Widgets.RadioIconGrid(this);
+				this.grid[j] = new RadioIconGrid(this);
 				this.grid[j].SelectionChanged += new EventHandler(HandleTypeChanged);
 				this.grid[j].TabIndex = index++;
 				this.grid[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected void AddRadioIcon(int j, Properties.ArrowType type, bool endOfLine)
 		{
-			this.grid[j].AddRadioIcon(Properties.Arrow.GetIconText(type), Properties.Arrow.GetName(type), (int)type, endOfLine);
+			this.grid[j].AddRadioIcon(Misc.Icon(Properties.Arrow.GetIconText(type)), Properties.Arrow.GetName(type), (int)type, endOfLine);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -453,7 +453,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected Widgets.RadioIconGrid[]	grid;
+		protected RadioIconGrid[]			grid;
 		protected Widgets.TextFieldLabel[]	fieldLength;
 		protected Widgets.TextFieldLabel[]	fieldEffect1;
 		protected Widgets.TextFieldLabel[]	fieldEffect2;

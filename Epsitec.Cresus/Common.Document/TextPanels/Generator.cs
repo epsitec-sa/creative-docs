@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.TextPanels
 		//	0.[Prefix,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
 		//	0.[Generic].[Disposition]
 		//	n.[Prefix,Value,Suffix].[Text,FontFace,FontSyle,FontSize,FontOffset]
-		//	n.[Generic].[SuppressBefore,Tab,Indent]
+		//	n.[Generic].[SuppressBefore,Tab,Indent,Continue]
 
 		protected enum Part1
 		{
@@ -1384,7 +1384,7 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				if ( row == 0 )
 				{
-					Widgets.Nothing cs = new Widgets.Nothing();
+					Nothing cs = new Nothing();
 					cs.Dock = DockStyle.Fill;
 					this.table[2, row].Insert(cs);
 				}
@@ -1682,6 +1682,7 @@ namespace Epsitec.Common.Document.TextPanels
 			int count  = this.GetCount();
 			bool enable;
 
+			this.buttonPerso.Enable = (this.type != "None");
 			this.buttonPerso.Visibility = !custom;
 
 			enable = (this.isExtendedSize && column != 0 && column != -1);

@@ -275,10 +275,9 @@
 
 	<data name="Panel.Abstract.Extend">Etend ou réduit le panneau</data>
 
-	<data name="Panel.Style.ParagraphDefinition">Définition des styles de paragraphe</data>
-	<data name="Panel.Style.ParagraphChoice">Choix d'un style de paragraphe</data>
-	<data name="Panel.Style.CharacterDefinition">Définition des styles de caractère</data>
-	<data name="Panel.Style.CharacterChoice">Choix d'un style de caractère</data>
+	<data name="Panel.Style.ParagraphDefinition">Choix des styles de paragraphe</data>
+	<data name="Panel.Style.CharacterDefinition">Choix des styles de caractère</data>
+	<data name="Panel.Style.Choice">Choix d'un style pour le texte</data>
 	<data name="Panel.AggregateCategory.Graphic">Graphique</data>
 	<data name="Panel.AggregateCategory.Paragraph">Paragraphe</data>
 	<data name="Panel.AggregateCategory.Character">Caractère</data>
@@ -773,6 +772,12 @@
 	<data name="Property.Justif.JustifORL">Orientation de droite à gauche</data>
 	<data name="Property.Justif.JustifOTB">Orientation de haut en bas</data>
 
+	<data name="Property.Leading.Leading08">Interligne serré</data>
+	<data name="Property.Leading.Leading10">Interligne normal</data>
+	<data name="Property.Leading.Leading15">Interligne étendu</data>
+	<data name="Property.Leading.Leading20">Interligne double</data>
+	<data name="Property.Leading.Leading30">Interligne triple</data>
+
 	<data name="Property.Line.Full">Plein</data>
 	<data name="Property.Line.Lines">Traitillé</data>
 	<data name="Property.Line.LineDense">Traitillé serré</data>
@@ -1162,11 +1167,6 @@
 	<data name="Action.FontClear">Effacer tous les attributs de caractère</data>
 	<data name="Action.ParagraphMain">Paragraphe</data>
 	<data name="Action.ParagraphJustif">Modifier la justification</data>
-	<data name="Action.ParagraphJustifHLeft">Justification à gauche</data>
-	<data name="Action.ParagraphJustifHCenter">Justification centrée</data>
-	<data name="Action.ParagraphJustifHRight">Justification à droite</data>
-	<data name="Action.ParagraphJustifHJustif">Justification alignée, sauf dernière ligne</data>
-	<data name="Action.ParagraphJustifHAll">Justification alignée, y compris dernière ligne</data>
 	<data name="Action.ParagraphBulletRound">Puces</data>
 	<data name="Action.ParagraphBulletNumeric">Numérotation 1..</data>
 	<data name="Action.ParagraphBulletAlpha">Numérotation A..</data>
@@ -1182,11 +1182,6 @@
 	<data name="Action.ParagraphLeading">Modifier l'interligne</data>
 	<data name="Action.ParagraphLeadingMinus">Diminuer l'interligne</data>
 	<data name="Action.ParagraphLeadingPlus">Augmenter l'interligne</data>
-	<data name="Action.ParagraphLeading08">Interligne serré</data>
-	<data name="Action.ParagraphLeading10">Interligne normal</data>
-	<data name="Action.ParagraphLeading15">Interligne étendu</data>
-	<data name="Action.ParagraphLeading20">Interligne double</data>
-	<data name="Action.ParagraphLeading30">Interligne triple</data>
 	<data name="Action.ParagraphGenerator">Modifier les puces/numérotations</data>
 	<data name="Action.ParagraphClear">Effacer tous les attributs de paragraphe</data>
 	<data name="Action.Text.Insert">Insertion</data>

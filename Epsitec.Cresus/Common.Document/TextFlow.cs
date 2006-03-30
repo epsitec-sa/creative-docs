@@ -451,12 +451,10 @@ namespace Epsitec.Common.Document
 		}
 		
 		
-		public static System.Collections.ArrayList StatisticFonts(UndoableList textFlows)
+		public static void StatisticFonts(System.Collections.ArrayList list, UndoableList textFlows)
 		{
 			//	Retourne une liste contenant tous les noms des polices utilisées dans
 			//	tous les TextFlows du document.
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
-
 			foreach ( TextFlow flow in textFlows )
 			{
 				Text.TextStats stats = new TextStats(flow.textStory);
@@ -470,8 +468,6 @@ namespace Epsitec.Common.Document
 					}
 				}
 			}
-
-			return list;
 		}
 
 		public static void ReadCheckWarnings(UndoableList textFlows, System.Collections.ArrayList warnings)
@@ -486,7 +482,10 @@ namespace Epsitec.Common.Document
 				existingList.Add(id.InvariantFaceName);
 			}
 
-			System.Collections.ArrayList documentList = TextFlow.StatisticFonts(textFlows);
+			System.Collections.ArrayList documentList = new System.Collections.ArrayList();
+			TextFlow.StatisticFonts(documentList, textFlows);
+			documentList.Sort();
+
 			foreach ( string face in documentList )
 			{
 				if ( !existingList.Contains(face) )

@@ -1,7 +1,6 @@
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Document.Widgets
+namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe Balloon est un widget affichant une "bulle" style bd, avec la queue au milieu en bas.

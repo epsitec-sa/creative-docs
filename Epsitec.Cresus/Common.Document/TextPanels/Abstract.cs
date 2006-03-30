@@ -437,7 +437,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			button.Command = command;
 			button.ButtonStyle = ButtonStyle.Combo;
-			button.GlyphShape = GlyphShape.ArrowDown;
+			button.GlyphShape = GlyphShape.Menu;
 			button.AutoFocus = false;
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;

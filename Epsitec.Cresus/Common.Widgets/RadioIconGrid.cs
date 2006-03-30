@@ -1,7 +1,6 @@
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Document.Widgets
+namespace Epsitec.Common.Widgets
 {
 	using GroupController = Epsitec.Common.Widgets.Helpers.GroupController;
 	
@@ -58,10 +57,10 @@ namespace Epsitec.Common.Document.Widgets
 			base.Dispose(disposing);
 		}
 
-		public void AddRadioIcon(string iconText, string tooltip, int enumValue, bool endOfLine)
+		public void AddRadioIcon(string iconName, string tooltip, int enumValue, bool endOfLine)
 		{
 			Widgets.RadioIcon icon = new Widgets.RadioIcon();
-			icon.IconName = Misc.Icon(iconText);
+			icon.IconName = iconName;
 			icon.EnumValue = enumValue;
 			icon.EndOfLine = endOfLine;
 			icon.SetParent(this);

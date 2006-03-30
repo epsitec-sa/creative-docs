@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Line(Document document) : base(document)
 		{
-			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 1;
 			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.StandardDashType.LineDotDot);
 			this.AddRadioIcon(Properties.StandardDashType.Custom);
 
-			this.gridCap = new Widgets.RadioIconGrid(this);
+			this.gridCap = new RadioIconGrid(this);
 			this.gridCap.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridCap.TabIndex = 100;
 			this.gridCap.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(CapStyle.Square);
 			this.AddRadioIcon(CapStyle.Butt);
 
-			this.gridJoin = new Widgets.RadioIconGrid(this);
+			this.gridJoin = new RadioIconGrid(this);
 			this.gridJoin.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridJoin.TabIndex = 101;
 			this.gridJoin.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -120,17 +120,17 @@ namespace Epsitec.Common.Document.Panels
 		
 		protected void AddRadioIcon(Properties.StandardDashType type)
 		{
-			this.grid.AddRadioIcon(Properties.Line.GetIconText(type), Properties.Line.GetName(type), (int)type, false);
+			this.grid.AddRadioIcon(Misc.Icon(Properties.Line.GetIconText(type)), Properties.Line.GetName(type), (int)type, false);
 		}
 
 		protected void AddRadioIcon(CapStyle type)
 		{
-			this.gridCap.AddRadioIcon(Properties.Line.GetIconText(type), Properties.Line.GetName(type), (int)type, false);
+			this.gridCap.AddRadioIcon(Misc.Icon(Properties.Line.GetIconText(type)), Properties.Line.GetName(type), (int)type, false);
 		}
 
 		protected void AddRadioIcon(JoinStyle type)
 		{
-			this.gridJoin.AddRadioIcon(Properties.Line.GetIconText(type), Properties.Line.GetName(type), (int)type, false);
+			this.gridJoin.AddRadioIcon(Misc.Icon(Properties.Line.GetIconText(type)), Properties.Line.GetName(type), (int)type, false);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -581,9 +581,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected Widgets.RadioIconGrid		grid;
-		protected Widgets.RadioIconGrid		gridCap;
-		protected Widgets.RadioIconGrid		gridJoin;
+		protected RadioIconGrid				grid;
+		protected RadioIconGrid				gridCap;
+		protected RadioIconGrid				gridJoin;
 		protected IconButton				nothingButton;
 		protected Widgets.TextFieldLabel	field;
 		protected RadioButton[]				radioDashRank;

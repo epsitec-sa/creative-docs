@@ -1162,8 +1162,6 @@ namespace Epsitec.App.DocumentEditor
 			di.containerOperations.DockMargins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerOperations);
 #endif
-
-			this.bookDocuments.ActivePage = di.tabPage;
 		}
 
 		#region LastFilenames
@@ -2301,24 +2299,31 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("FontSizePlus")]
 		[Command ("FontSizeMinus")]
 		[Command ("FontClear")]
-		[Command ("ParagraphLeading08")]
-		[Command ("ParagraphLeading10")]
-		[Command ("ParagraphLeading15")]
-		[Command ("ParagraphLeading20")]
-		[Command ("ParagraphLeading30")]
 		[Command ("ParagraphLeadingPlus")]
 		[Command ("ParagraphLeadingMinus")]
 		[Command ("ParagraphIndentPlus")]
 		[Command ("ParagraphIndentMinus")]
 		[Command ("ParagraphClear")]
-		[Command ("JustifHLeft")]
-		[Command ("JustifHCenter")]
-		[Command ("JustifHRight")]
-		[Command ("JustifHJustif")]
-		[Command ("JustifHAll")]
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName);
+			this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName, null);
+		}
+
+		[Command ("ParagraphLeading")]
+		[Command ("ParagraphJustif")]
+		void CommandCombo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			IconButtonCombo combo = e.Source as IconButtonCombo;
+			CommandState cs = dispatcher.FindCommandState(e.CommandName);
+			if ( combo != null && cs != null )
+			{
+				cs.AdvancedState = combo.SelectedName;
+				this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName, cs.AdvancedState);
+			}
+			else
+			{
+				this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName, null);
+			}
 		}
 
 
@@ -3610,21 +3615,13 @@ namespace Epsitec.App.DocumentEditor
 			this.fontSizePlusState = this.CreateCommandState("FontSizePlus");
 			this.fontSizeMinusState = this.CreateCommandState("FontSizeMinus");
 			this.fontClearState = this.CreateCommandState("FontClear");
-			this.paragraphLeading08State = this.CreateCommandState("ParagraphLeading08", true);
-			this.paragraphLeading10State = this.CreateCommandState("ParagraphLeading10", true);
-			this.paragraphLeading15State = this.CreateCommandState("ParagraphLeading15", true);
-			this.paragraphLeading20State = this.CreateCommandState("ParagraphLeading20", true);
-			this.paragraphLeading30State = this.CreateCommandState("ParagraphLeading30", true);
+			this.paragraphLeadingState = this.CreateCommandState("ParagraphLeading", true);
 			this.paragraphLeadingPlusState = this.CreateCommandState("ParagraphLeadingPlus");
 			this.paragraphLeadingMinusState = this.CreateCommandState("ParagraphLeadingMinus");
 			this.paragraphIndentPlusState = this.CreateCommandState("ParagraphIndentPlus");
 			this.paragraphIndentMinusState = this.CreateCommandState("ParagraphIndentMinus");
+			this.paragraphJustifState = this.CreateCommandState("ParagraphJustif", null, "ParagraphJustif", true);
 			this.paragraphClearState = this.CreateCommandState("ParagraphClear");
-			this.justifHLeftState = this.CreateCommandState("JustifHLeft", "JustifHLeft", "ParagraphJustifHLeft", true);
-			this.justifHCenterState = this.CreateCommandState("JustifHCenter", "JustifHCenter", "ParagraphJustifHCenter", true);
-			this.justifHRightState = this.CreateCommandState("JustifHRight", "JustifHRight", "ParagraphJustifHRight", true);
-			this.justifHJustifState = this.CreateCommandState("JustifHJustif", "JustifHJustif", "ParagraphJustifHJustif", true);
-			this.justifHAllState = this.CreateCommandState("JustifHAll", "JustifHAll", "ParagraphJustifHAll", true);
 			
 			this.orderUpOneState = this.CreateCommandState("OrderUpOne", KeyCode.ModifierControl|KeyCode.PageUp);
 			this.orderDownOneState = this.CreateCommandState("OrderDownOne", KeyCode.ModifierControl|KeyCode.PageDown);
@@ -3919,6 +3916,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.PropertyChanged        += new PropertyEventHandler(this.HandlePropertyChanged);
 			this.CurrentDocument.Notifier.AggregateChanged       += new AggregateEventHandler(this.HandleAggregateChanged);
 			this.CurrentDocument.Notifier.TextStyleChanged       += new TextStyleEventHandler(this.HandleTextStyleChanged);
+			this.CurrentDocument.Notifier.TextStyleListChanged   += new SimpleEventHandler(this.HandleTextStyleListChanged);
 			this.CurrentDocument.Notifier.SelNamesChanged        += new SimpleEventHandler(this.HandleSelNamesChanged);
 			this.CurrentDocument.Notifier.DrawChanged            += new RedrawEventHandler(this.HandleDrawChanged);
 			this.CurrentDocument.Notifier.RibbonCommand          += new RibbonEventHandler(this.HandleRibbonCommand);
@@ -4312,21 +4310,13 @@ namespace Epsitec.App.DocumentEditor
 				this.fontSizePlusState.Enable = false;
 				this.fontSizeMinusState.Enable = false;
 				this.fontClearState.Enable = false;
-				this.paragraphLeading08State.Enable = false;
-				this.paragraphLeading10State.Enable = false;
-				this.paragraphLeading15State.Enable = false;
-				this.paragraphLeading20State.Enable = false;
-				this.paragraphLeading30State.Enable = false;
+				this.paragraphLeadingState.Enable = false;
 				this.paragraphLeadingPlusState.Enable = false;
 				this.paragraphLeadingMinusState.Enable = false;
 				this.paragraphIndentPlusState.Enable = false;
 				this.paragraphIndentMinusState.Enable = false;
+				this.paragraphJustifState.Enable = false;
 				this.paragraphClearState.Enable = false;
-				this.justifHLeftState.Enable = false;
-				this.justifHCenterState.Enable = false;
-				this.justifHRightState.Enable = false;
-				this.justifHJustifState.Enable = false;
-				this.justifHAllState.Enable = false;
 				this.orderUpOneState.Enable = false;
 				this.orderDownOneState.Enable = false;
 				this.orderUpAllState.Enable = false;
@@ -4826,6 +4816,20 @@ namespace Epsitec.App.DocumentEditor
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerStyles.SetDirtyTextStyles(textStyleList);
 			}
+
+			this.ribbonMain.NotifyTextStylesChanged(textStyleList);
+			this.ribbonGeom.NotifyTextStylesChanged(textStyleList);
+			this.ribbonOper.NotifyTextStylesChanged(textStyleList);
+			this.ribbonText.NotifyTextStylesChanged(textStyleList);
+		}
+
+		private void HandleTextStyleListChanged()
+		{
+			//	Appelé lorsqu'un style de texte a été ajouté ou supprimé.
+			this.ribbonMain.NotifyChanged("TextStyleListChanged");
+			this.ribbonGeom.NotifyChanged("TextStyleListChanged");
+			this.ribbonOper.NotifyChanged("TextStyleListChanged");
+			this.ribbonText.NotifyChanged("TextStyleListChanged");
 		}
 
 		private void HandleSelNamesChanged()
@@ -5226,11 +5230,15 @@ namespace Epsitec.App.DocumentEditor
 			this.documents.Insert(++this.currentDocument, di);
 
 			this.CreateDocumentLayout(this.CurrentDocument);
-
 			this.ConnectEvents();
 			this.CurrentDocument.Modifier.New();
+			this.bookDocuments.ActivePage = di.tabPage;  // (*)
 			this.UpdateCloseCommand();
 			this.PrepareOpenDocument();
+
+			// (*)	Le Modifier.New doit avoir été fait, car certains panneaux accèdent aux dimensions
+			//		de la page. Pour cela, DrawingContext doit avoir un rootStack initialisé, ce qui
+			//		est fait par Modifier.New.
 		}
 
 		protected void UseDocument(int rank)
@@ -5317,6 +5325,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ignoreChange = true;
 			this.bookDocuments.Items.RemoveAt(rank);
 			this.ignoreChange = false;
+			di.document.Dispose();
 			di.Dispose();
 
 			if ( rank >= this.bookDocuments.PageCount )
@@ -5680,21 +5689,13 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					fontSizePlusState;
 		protected CommandState					fontSizeMinusState;
 		protected CommandState					fontClearState;
-		protected CommandState					paragraphLeading08State;
-		protected CommandState					paragraphLeading10State;
-		protected CommandState					paragraphLeading15State;
-		protected CommandState					paragraphLeading20State;
-		protected CommandState					paragraphLeading30State;
+		protected CommandState					paragraphLeadingState;
 		protected CommandState					paragraphLeadingPlusState;
 		protected CommandState					paragraphLeadingMinusState;
 		protected CommandState					paragraphIndentPlusState;
 		protected CommandState					paragraphIndentMinusState;
+		protected CommandState					paragraphJustifState;
 		protected CommandState					paragraphClearState;
-		protected CommandState					justifHLeftState;
-		protected CommandState					justifHCenterState;
-		protected CommandState					justifHRightState;
-		protected CommandState					justifHJustifState;
-		protected CommandState					justifHAllState;
 		protected CommandState					orderUpOneState;
 		protected CommandState					orderDownOneState;
 		protected CommandState					orderUpAllState;

@@ -24,6 +24,10 @@ namespace Epsitec.Common.Document
 			this.document = document;
 		}
 
+		public void Dispose()
+		{
+		}
+
 
 		public bool Enable
 		{
@@ -69,6 +73,7 @@ namespace Epsitec.Common.Document
 			this.guidesChanged = true;
 			this.hideHalfChanged = true;
 			this.debugChanged = true;
+			this.textStyleListChanged = true;
 			this.selNamesChanged = true;
 
 			this.NotifyArea();
@@ -338,6 +343,14 @@ namespace Epsitec.Common.Document
 			this.NotifyAsync();
 		}
 
+		public void NotifyTextStyleListChanged()
+		{
+			//	Indique qu'un style de texte a été ajouté ou supprimé.
+			if ( !this.enable )  return;
+			this.textStyleListChanged = true;
+			this.NotifyAsync();
+		}
+
 		public void NotifySelNamesChanged()
 		{
 			//	Indique que la sélection par noms a changé.
@@ -591,6 +604,12 @@ namespace Epsitec.Common.Document
 				this.textStyleList.Clear();
 			}
 
+			if ( this.textStyleListChanged )
+			{
+				this.OnTextStyleListChanged();
+				this.textStyleListChanged = false;
+			}
+
 			if ( this.selNamesChanged )
 			{
 				this.OnSelNamesChanged();
@@ -840,6 +859,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnTextStyleListChanged()
+		{
+			if ( this.TextStyleListChanged != null )  // qq'un écoute ?
+			{
+				this.TextStyleListChanged();
+			}
+		}
+
 		protected void OnSelNamesChanged()
 		{
 			if ( this.SelNamesChanged != null )  // qq'un écoute ?
@@ -910,6 +937,7 @@ namespace Epsitec.Common.Document
 		public event PropertyEventHandler		PropertyChanged;
 		public event AggregateEventHandler		AggregateChanged;
 		public event TextStyleEventHandler		TextStyleChanged;
+		public event SimpleEventHandler			TextStyleListChanged;
 		public event SimpleEventHandler			SelNamesChanged;
 		public event RedrawEventHandler			DrawChanged;
 		public event RibbonEventHandler			RibbonCommand;
@@ -948,6 +976,7 @@ namespace Epsitec.Common.Document
 		protected System.Collections.ArrayList	propertyList = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	aggregateList = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	textStyleList = new System.Collections.ArrayList();
+		protected bool							textStyleListChanged;
 		protected bool							selNamesChanged;
 	}
 }

@@ -98,10 +98,10 @@ namespace Epsitec.Common.Document.Properties
 		}
 #endif
 
-		public override void PutStyleResume(System.Text.StringBuilder builder)
+		public override void PutStyleBrief(System.Text.StringBuilder builder)
 		{
 			//	Construit le texte résumé d'un style pour une propriété.
-			this.PutStyleResumePrefix(builder);
+			this.PutStyleBriefPrefix(builder);
 
 			builder.Append(Arc.GetName(this.arcType));
 
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Document.Properties
 				builder.Append(this.document.Modifier.AngleToString(this.endingAngle));
 			}
 
-			this.PutStyleResumePostfix(builder);
+			this.PutStyleBriefPostfix(builder);
 		}
 
 		public static string GetName(ArcType type)

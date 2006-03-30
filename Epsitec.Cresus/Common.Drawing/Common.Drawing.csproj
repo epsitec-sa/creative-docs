@@ -139,6 +139,7 @@
     <Compile Include="DirtyRegion.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DynamicImage.cs" />
     <Compile Include="ICanvasEngine.cs">
       <SubType>Code</SubType>
     </Compile>

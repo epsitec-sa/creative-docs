@@ -619,6 +619,24 @@ namespace Epsitec.Common.Document
 			return string.Format(@"<img src=""{0}""/>", Misc.Icon(icon));
 		}
 
+		static public string Image(string icon, double verticalOffset)
+		{
+			//	Retourne le texte pour mettre une image dans un texte.
+			return string.Format(@"<img src=""{0}"" voff=""{1}""/>", Misc.Icon(icon), verticalOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+		}
+
+		static public string ImageDyn(string name, string parameter)
+		{
+			//	Retourne le texte pour mettre une image dynamique dans un texte.
+			return string.Format(@"<img src=""{0}""/>", Misc.IconDyn(name, parameter));
+		}
+
+		static public string ImageDyn(string name, string parameter, double verticalOffset)
+		{
+			//	Retourne le texte pour mettre une image dynamique dans un texte.
+			return string.Format(@"<img src=""{0}"" voff=""{1}""/>", Misc.IconDyn(name, parameter), verticalOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+		}
+
 		static public Size IconPreferredSize(string iconSize)
 		{
 			//	Retourne la taille préférée pour une icône. Si la taille réelle de l'icône n'est
@@ -632,6 +650,12 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne le nom complet d'une icône.
 			return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon);
+		}
+
+		static public string IconDyn(string name, string parameter)
+		{
+			//	Retourne le nom complet d'une icône dynamique.
+			return string.Format("dyn:{0}/{1}", name, parameter);
 		}
 
 		static public string GetShortCut(CommandState cs)
@@ -672,7 +696,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				name += filename;
+				name += TextLayout.ConvertToTaggedText(filename);
 			}
 
 			if ( dirtySerialize )  name += "</b>";
@@ -704,7 +728,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
 			//	"c:\rep\abc.txt" devient "abc".
-			return System.IO.Path.GetFileNameWithoutExtension(filename);
+			return TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(filename));
 		}
 
 		static public bool IsExtension(string filename, string ext)

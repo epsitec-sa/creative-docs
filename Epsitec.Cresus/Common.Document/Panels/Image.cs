@@ -104,7 +104,7 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.fieldFilename.Text = p.Filename;
+			this.fieldFilename.Text = TextLayout.ConvertToTaggedText(p.Filename);
 			this.fieldFilename.Cursor = p.Filename.Length;
 			this.buttonMirrorH.ActiveState = p.MirrorH ? ActiveState.Yes : ActiveState.No;
 			this.buttonMirrorV.ActiveState = p.MirrorV ? ActiveState.Yes : ActiveState.No;
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Image p = this.property as Properties.Image;
 			if ( p == null )  return;
 
-			p.Filename = this.fieldFilename.Text;
+			p.Filename = TextLayout.ConvertToSimpleText(this.fieldFilename.Text);
 			p.MirrorH = ( this.buttonMirrorH.ActiveState == ActiveState.Yes );
 			p.MirrorV = ( this.buttonMirrorV.ActiveState == ActiveState.Yes );
 			p.Homo    = ( this.buttonHomo   .ActiveState == ActiveState.Yes );
@@ -198,8 +198,8 @@ namespace Epsitec.Common.Document.Panels
 			dialog.Filters.Add("png", Res.Strings.File.Bitmap.PNG, "*.png");
 			dialog.OpenDialog();
 
-			this.fieldFilename.Text = dialog.FileName;
-			this.fieldFilename.Cursor = dialog.FileName.Length;
+			this.fieldFilename.Text = TextLayout.ConvertToTaggedText(dialog.FileName);
+			this.fieldFilename.Cursor = this.fieldFilename.Text.Length;
 		}
 
 		private void HandleUpdateClicked(object sender, MessageEventArgs e)
