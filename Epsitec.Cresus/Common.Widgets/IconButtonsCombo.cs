@@ -13,7 +13,6 @@ namespace Epsitec.Common.Widgets
 		public IconButtonsCombo()
 		{
 			this.items = new System.Collections.ArrayList();
-
 			this.SetColumnsAndRows(2, 1);
 			
 			this.buttonPrev = new GlyphButton(this);
@@ -44,17 +43,22 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double					DefaultWidth
+		public void SetColumnsAndRows(int columns, int rows)
 		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return base.DefaultWidth + IconButtonsCombo.menuWidth;
-			}
+			//	Détermine le nombre de colonnes et de lignes.
+			//	Le nombre nécessaire de IconButton est créé.
+			System.Diagnostics.Debug.Assert(columns > 0 && columns <= 10);
+			System.Diagnostics.Debug.Assert(rows    > 0 && rows    <= 10);
+			this.columns = columns;
+			this.rows    = rows;
+
+			this.CreateButtons(this.columns*this.rows);
 		}
+
 
 		public virtual bool						IsComboOpen
 		{
+			//	Indique si le menu est ouvert.
 			get
 			{
 				return this.menu != null;
@@ -63,6 +67,7 @@ namespace Epsitec.Common.Widgets
 
 		public int								Columns
 		{
+			//	Donne le nombre de colonnes (1..10).
 			get
 			{
 				return this.columns;
@@ -71,65 +76,16 @@ namespace Epsitec.Common.Widgets
 
 		public int								Rows
 		{
+			//	Donne le nombre de lignes (1..10).
 			get
 			{
 				return this.rows;
 			}
 		}
 
-		public void SetColumnsAndRows(int columns, int rows)
-		{
-			System.Diagnostics.Debug.Assert(columns > 0 && columns <= 10);
-			System.Diagnostics.Debug.Assert(rows    > 0 && rows    <= 10);
-			this.columns = columns;
-			this.rows    = rows;
-
-			this.TotalButtons = this.columns*this.rows;
-		}
-
-		protected int							TotalButtons
-		{
-			//	Nombre de IconButton dans le widget.
-			get
-			{
-				if ( this.buttonMain == null )  return 0;
-				return this.buttonMain.Length;
-			}
-
-			set
-			{
-				if ( this.buttonMain == null || this.buttonMain.Length != value )
-				{
-					if ( this.buttonMain != null )
-					{
-						for ( int i=0 ; i<this.buttonMain.Length ; i++ )
-						{
-							this.buttonMain[i].Pressed -= new MessageEventHandler(this.HandleButtonMainPressed);
-							this.buttonMain[i].Dispose();
-							this.buttonMain[i] = null;
-						}
-					}
-
-					this.buttonMain = new IconButton[value];
-
-					for ( int i=0 ; i<this.buttonMain.Length ; i++ )
-					{
-						this.buttonMain[i] = new IconButton(this);
-						this.buttonMain[i].ButtonStyle = ButtonStyle.ActivableIcon;
-						this.buttonMain[i].AutoFocus = this.AutoFocus;
-						this.buttonMain[i].Pressed += new MessageEventHandler(this.HandleButtonMainPressed);
-					}
-				}
-			}
-		}
-
-		public IconButton IconButton(int rank)
-		{
-			return this.buttonMain[rank];
-		}
-		
 		public bool								IsLiveUpdateEnabled
 		{
+			//	Détermine comment se comporte le widget lorsque le menu est déroulé.
 			get
 			{
 				return this.isLiveUpdateEnabled;
@@ -143,6 +99,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool								MenuDrawFrame
 		{
+			//	Détermine si chaque ligne du menu doit avoir un cadre.
 			get
 			{
 				return this.menuDrawFrame;
@@ -156,6 +113,8 @@ namespace Epsitec.Common.Widgets
 		
 		public bool								AllLinesWidthSameWidth
 		{
+			//	Détermine si toutes les lignes du menu ont la même largeur.
+			//	Ceci permet d'accélérer l'ouverture du menu.
 			get
 			{
 				return this.allLinesWidthSameWidth;
@@ -239,7 +198,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
 		public int								FirstIconVisible
 		{
 			//	Rang de la première icône visible, selon les boutons précédent/suivant.
@@ -271,6 +229,47 @@ namespace Epsitec.Common.Widgets
 			int first = this.FirstIconVisible;
 			this.buttonPrev.Enable = (first > 0);
 			this.buttonNext.Enable = (first < ((this.items.Count-1)/this.buttonMain.Length)*this.buttonMain.Length);
+		}
+
+		public IconButton IconButton(int rank)
+		{
+			//	Donne un IconButton.
+			if ( rank < 0 || rank >= this.buttonMain.Length )
+			{
+				return null;
+			}
+			else
+			{
+				return this.buttonMain[rank];
+			}
+		}
+		
+
+		protected void CreateButtons(int total)
+		{
+			//	Modifie le nombre de IconButton dans le widget.
+			if ( this.buttonMain == null || this.buttonMain.Length != total )
+			{
+				if ( this.buttonMain != null )
+				{
+					for ( int i=0 ; i<this.buttonMain.Length ; i++ )
+					{
+						this.buttonMain[i].Pressed -= new MessageEventHandler(this.HandleButtonMainPressed);
+						this.buttonMain[i].Dispose();
+						this.buttonMain[i] = null;
+					}
+				}
+
+				this.buttonMain = new IconButton[total];
+
+				for ( int i=0 ; i<this.buttonMain.Length ; i++ )
+				{
+					this.buttonMain[i] = new IconButton(this);
+					this.buttonMain[i].ButtonStyle = ButtonStyle.ActivableIcon;
+					this.buttonMain[i].AutoFocus = this.AutoFocus;
+					this.buttonMain[i].Pressed += new MessageEventHandler(this.HandleButtonMainPressed);
+				}
+			}
 		}
 
 		protected void UpdateIcon(int rank, int index)
@@ -350,7 +349,7 @@ namespace Epsitec.Common.Widgets
 
 				for ( int column=0 ; column<this.columns ; column++ )
 				{
-					rect = new Drawing.Rectangle(px, py-height, width, height);
+					rect = new Drawing.Rectangle(px, py-height-1, width, height+1);
 					if ( column == this.columns-1 )  rect.Right  = lastRight;
 					if ( row    == this.rows-1    )  rect.Bottom = lastBottom;
 					this.buttonMain[i++].Bounds = rect;
