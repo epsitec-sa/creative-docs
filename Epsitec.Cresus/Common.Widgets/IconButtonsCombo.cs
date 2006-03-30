@@ -20,18 +20,21 @@ namespace Epsitec.Common.Widgets
 			this.buttonPrev.ButtonStyle = ButtonStyle.Combo;
 			this.buttonPrev.Name = "Prev";
 			this.buttonPrev.Pressed += new MessageEventHandler(this.HandleButtonPrevPressed);
+			ToolTip.Default.SetToolTip(this.buttonPrev, Res.Strings.IconButtonsCombo.Prev);
 			
 			this.buttonNext = new GlyphButton(this);
 			this.buttonNext.GlyphShape = GlyphShape.ArrowDown;
 			this.buttonNext.ButtonStyle = ButtonStyle.Combo;
 			this.buttonNext.Name = "Next";
 			this.buttonNext.Pressed += new MessageEventHandler(this.HandleButtonNextPressed);
+			ToolTip.Default.SetToolTip(this.buttonNext, Res.Strings.IconButtonsCombo.Next);
 			
 			this.buttonMenu = new GlyphButton(this);
 			this.buttonMenu.GlyphShape = GlyphShape.Menu;
 			this.buttonMenu.ButtonStyle = ButtonStyle.Combo;
 			this.buttonMenu.Name = "Menu";
 			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
+			ToolTip.Default.SetToolTip(this.buttonMenu, Res.Strings.IconButtonsCombo.Menu);
 			
 			this.AddEvent(CommandState.AdvancedStateProperty, new Types.PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
 			this.AddEvent(Visual.AutoFocusProperty, new Types.PropertyChangedEventHandler(this.HandleAutoFocusChanged));
