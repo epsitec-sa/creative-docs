@@ -250,6 +250,7 @@ namespace Epsitec.Common.Widgets
 			int first = this.FirstIconVisible;
 			this.buttonPrev.Enable = (first > 0);
 			this.buttonNext.Enable = (first < ((this.items.Count-1)/this.buttonMain.Length)*this.buttonMain.Length);
+			this.buttonMenu.Enable = (this.items.Count > this.buttonMain.Length);
 		}
 
 		public IconButton IconButton(int rank)
