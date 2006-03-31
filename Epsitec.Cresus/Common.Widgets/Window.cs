@@ -1326,6 +1326,14 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnAboutToShowWindow()
 		{
+			if ((this.owner != null) &&
+				(this.window != null))
+			{
+				this.window.Owner = this.owner.window;
+			}
+			
+			this.SyncMinSizeWithWindowRoot ();
+			
 			if (this.AboutToShowWindow != null)
 			{
 				this.AboutToShowWindow (this);
@@ -2195,6 +2203,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		protected void HandleRootMinSizeChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		{
+			if (this.IsVisible)
+			{
+				this.SyncMinSizeWithWindowRoot ();
+			}
+		}
+		
+		private void SyncMinSizeWithWindowRoot()
 		{
 			int width  = (int) (this.root.RealMinSize.Width + 0.5);
 			int height = (int) (this.root.RealMinSize.Height + 0.5);
