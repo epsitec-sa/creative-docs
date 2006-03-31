@@ -110,6 +110,8 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Appelé lorsque les définitions d'un style ont changés, et que l'échantillon
 			//	correspondant doit être redessiné.
+			this.document.Wrappers.ClearDynamicImageStyle();
+
 			foreach ( Text.TextStyle textStyle in textStyleList )
 			{
 				int max = this.comboStyle.Columns*this.comboStyle.Rows;
