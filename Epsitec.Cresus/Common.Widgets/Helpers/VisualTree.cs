@@ -451,14 +451,19 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 
-		public static int IsVisibleCounter = 0;
-		public static int VisibilityCounter = 0;
-		
+		public static int ContainsKeyboardFocusCounter = 0;
 		
 		public static bool ContainsKeyboardFocus(Visual visual)
 		{
 			//	Retourne true si un widget, ou l'un de ses enfants, contient le
 			//	focus du clavier.
+
+			VisualTree.ContainsKeyboardFocusCounter++;
+			
+			if ((VisualTree.ContainsKeyboardFocusCounter % 100) == 0)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("ContainsKeyboardFocusCounter = {0}", VisualTree.ContainsKeyboardFocusCounter));
+			}
 			
 			if (visual != null)
 			{

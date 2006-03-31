@@ -585,9 +585,8 @@ namespace Epsitec.Common.Widgets
 
 				stopwatch.Stop ();
 
-				System.Console.WriteLine ("Created tree, top-down: {0:0} ms. {1} x IsVisible, {2} x Visibility", stopwatch.ElapsedMilliseconds, Helpers.VisualTree.IsVisibleCounter, Helpers.VisualTree.VisibilityCounter);
-				Helpers.VisualTree.IsVisibleCounter = 0;
-				Helpers.VisualTree.VisibilityCounter = 0;
+				System.Console.WriteLine ("Created tree, top-down: {0:0} ms. {1} x ContainsKeyboardFocus", stopwatch.ElapsedMilliseconds, Helpers.VisualTree.ContainsKeyboardFocusCounter);
+				Helpers.VisualTree.ContainsKeyboardFocusCounter = 0;
 				System.Console.Out.Flush ();
 			}
 		}
