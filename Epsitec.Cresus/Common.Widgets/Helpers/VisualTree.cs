@@ -454,69 +454,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		public static int IsVisibleCounter = 0;
 		public static int VisibilityCounter = 0;
 		
-		public static bool IsVisible(Visual visual)
-		{
-			VisualTree.IsVisibleCounter++;
-			
-			while ((visual != null) && (visual.Visibility))
-			{
-				VisualTree.VisibilityCounter++;
-				
-				if (visual is WindowRoot)
-				{
-					WindowRoot root   = visual as WindowRoot;
-					Window     window = root.Window;
-					
-					return window == null ? false : window.IsVisible;
-				}
-				
-				visual = visual.Parent;
-			}
-			
-			return false;
-		}
-		
-		public static bool IsEnabled(Visual visual)
-		{
-			while (visual.Enable)
-			{
-				visual = visual.Parent;
-				
-				if (visual == null)
-				{
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
-		public static bool IsFocused(Visual visual)
-		{
-			//	Retourne true si un widget, ou l'un de ses parents (pour autant
-			//	que l'héritage soit activé) contient le focus.
-			
-			while (visual != null)
-			{
-				if (visual.KeyboardFocus)
-				{
-					Window window = VisualTree.GetWindow (visual);
-					return window == null ? false : window.IsFocused;
-				}
-				
-				if (visual.InheritParentFocus)
-				{
-					visual = visual.Parent;
-				}
-				else
-				{
-					break;
-				}
-			}
-			
-			return false;
-		}
-		
 		
 		public static bool ContainsKeyboardFocus(Visual visual)
 		{

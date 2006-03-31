@@ -37,9 +37,9 @@ namespace Epsitec.Common.Widgets
 			
 			this.root.Size = new Drawing.Size (this.window.ClientSize);
 			this.root.Name = "Root";
-			this.root.MinSizeChanged += new PropertyChangedEventHandler (this.HandleRootMinSizeChanged);
+			this.root.MinSizeChanged += this.HandleRootMinSizeChanged;
 			
-			this.timer.TimeElapsed += new EventHandler (this.HandleTimeElapsed);
+			this.timer.TimeElapsed += this.HandleTimeElapsed;
 			this.timer.AutoRepeat = 0.050;
 			
 			Window.windows.Add (new System.WeakReference (this));
@@ -1083,7 +1083,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.dispatcher != null)
 				{
-					this.dispatcher.ValidationRuleBecameDirty += new Support.EventHandler (this.HandleValidationRuleBecameDirty);
+					this.dispatcher.ValidationRuleBecameDirty += this.HandleValidationRuleBecameDirty;
 				}
 				
 				Helpers.VisualTree.InvalidateCommandDispatcher (this);
@@ -1096,7 +1096,7 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.Assert (this.dispatcher == value);
 				
-				this.dispatcher.ValidationRuleBecameDirty -= new Support.EventHandler (this.HandleValidationRuleBecameDirty);
+				this.dispatcher.ValidationRuleBecameDirty -= this.HandleValidationRuleBecameDirty;
 				
 				Helpers.VisualTree.InvalidateCommandDispatcher (this);
 			}
@@ -1213,7 +1213,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.root != null)
 				{
-					this.root.MinSizeChanged -= new PropertyChangedEventHandler (this.HandleRootMinSizeChanged);
+					this.root.MinSizeChanged -= this.HandleRootMinSizeChanged;
 					this.root.Dispose ();
 				}
 				
@@ -1249,7 +1249,7 @@ namespace Epsitec.Common.Widgets
 					this.window.Dispose ();
 				}
 				
-				this.timer.TimeElapsed -= new EventHandler (this.HandleTimeElapsed);
+				this.timer.TimeElapsed -= this.HandleTimeElapsed;
 				this.timer.Dispose ();
 				
 				this.timer  = null;
@@ -1468,25 +1468,17 @@ namespace Epsitec.Common.Widgets
 				
 		internal void NotifyWindowFocused()
 		{
-//-			System.Diagnostics.Debug.WriteLine ("Platform Window focused");
-			
 			if (this.window_is_focused == false)
 			{
 				if (this.focused_widget != null)
 				{
-					Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.focused_widget, Visual.IsFocusedProperty);
-					
 					this.window_is_focused = true;
 					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
-				
-					snapshot.InvalidateDifferentProperties ();
 				}
 				else
 				{
 					this.window_is_focused = true;
 				}
-				
-//-				System.Diagnostics.Debug.WriteLine ("Window focused");
 				
 				this.OnWindowFocused ();
 			}
@@ -1494,26 +1486,18 @@ namespace Epsitec.Common.Widgets
 		
 		internal void NotifyWindowDefocused()
 		{
-//-			System.Diagnostics.Debug.WriteLine ("Platform Window de-focused");
-			
 			if ((this.window_is_focused == true) &&
 				(this.IsSubmenuOpen == false))
 			{
 				if (this.focused_widget != null)
 				{
-					Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.focused_widget, Visual.IsFocusedProperty);
-					
 					this.window_is_focused = false;
 					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
-					
-					snapshot.InvalidateDifferentProperties ();
 				}
 				else
 				{
 					this.window_is_focused = false;
 				}
-				
-//-				System.Diagnostics.Debug.WriteLine ("Window de-focused");
 				
 				this.OnWindowDefocused ();
 				

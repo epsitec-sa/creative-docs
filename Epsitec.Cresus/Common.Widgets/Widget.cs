@@ -1627,6 +1627,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				this.SetValue (Visual.KeyboardFocusProperty, false);
 				this.ClearValueBase (Visual.KeyboardFocusProperty);
 				
 				if (window != null)

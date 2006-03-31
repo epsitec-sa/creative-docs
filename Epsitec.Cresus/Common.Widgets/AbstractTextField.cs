@@ -1483,6 +1483,14 @@ namespace Epsitec.Common.Widgets
 					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
 				}
+				else if (this.Window.IsFocused == false)
+				{
+					//	Il y a une sélection, mais la fenêtre n'a pas le focus; on ne peint
+					//	donc pas la sélection...
+					
+					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+					visibleCursor = false;
+				}
 				else
 				{
 					//	Un morceau de texte a été sélectionné. Peint en plusieurs étapes :
