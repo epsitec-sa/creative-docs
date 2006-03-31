@@ -12,10 +12,10 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Principal(Document document) : base(document)
 		{
-			StaticText help = new StaticText(this);
-			help.Text = Res.Strings.Container.Help.Principal;
-			help.Dock = DockStyle.Top;
-			help.DockMargins = new Margins(0, 0, -2, 7);
+			this.helpText = new StaticText(this);
+			this.helpText.Text = Res.Strings.Container.Help.Principal;
+			this.helpText.Dock = DockStyle.Top;
+			this.helpText.DockMargins = new Margins(0, 0, -2, 7);
 
 			this.CreateSelectorToolBar();
 			this.CreateAggregateToolBar();
@@ -355,6 +355,8 @@ namespace Epsitec.Common.Document.Containers
 			//?System.Diagnostics.Debug.WriteLine(string.Format("A: DebugAliveWidgetsCount = {0}", Widget.DebugAliveWidgetsCount));
 			Viewer viewer = this.document.Modifier.ActiveViewer;
 			DrawingContext context = viewer.DrawingContext;
+
+			this.helpText.Visibility = this.document.GlobalSettings.LabelProperties;
 
 			if ( this.document.Modifier.Tool == "ToolSelect" ||
 				 this.document.Modifier.Tool == "ToolGlobal" )
@@ -869,6 +871,8 @@ namespace Epsitec.Common.Document.Containers
 		}
 		#endregion
 
+
+		protected StaticText					helpText;
 
 		protected HToolBar						selectorToolBar;
 		protected IconButton					selectorAuto;

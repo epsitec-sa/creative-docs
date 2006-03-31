@@ -4639,6 +4639,8 @@ namespace Epsitec.App.DocumentEditor
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerPrincipal.SetDirtyContent();
 				di.containerStyles.SetDirtyContent();
+				di.containerPages.SetDirtyContent();
+				di.containerLayers.SetDirtyContent();
 			}
 		}
 

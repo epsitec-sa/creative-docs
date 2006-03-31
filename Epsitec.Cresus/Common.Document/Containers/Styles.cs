@@ -13,10 +13,10 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Styles(Document document) : base(document)
 		{
-			StaticText help = new StaticText(this);
-			help.Text = Res.Strings.Container.Help.Styles;
-			help.Dock = DockStyle.Top;
-			help.DockMargins = new Margins(0, 0, -2, 7);
+			this.helpText = new StaticText(this);
+			this.helpText.Text = Res.Strings.Container.Help.Styles;
+			this.helpText.Dock = DockStyle.Top;
+			this.helpText.DockMargins = new Margins(0, 0, -2, 7);
 
 			this.mainBook = new PaneBook(this);
 			this.mainBook.PaneBookStyle = PaneBookStyle.BottomTop;
@@ -367,6 +367,8 @@ namespace Epsitec.Common.Document.Containers
 		protected override void DoUpdateContent()
 		{
 			//	Effectue la mise à jour du contenu.
+			this.helpText.Visibility = this.document.GlobalSettings.LabelProperties;
+
 			this.graphicList.List = this.document.Aggregates;
 			this.graphicList.SelectedRank = this.document.Aggregates.Selected;
 			this.graphicList.UpdateContents();
@@ -1745,6 +1747,8 @@ namespace Epsitec.Common.Document.Containers
 
 
 		protected static readonly double	selectorSize = 20;
+
+		protected StaticText					helpText;
 
 		protected PaneBook					mainBook;
 		protected PanePage					topPage;

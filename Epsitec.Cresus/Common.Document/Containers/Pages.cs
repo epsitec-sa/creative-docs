@@ -12,10 +12,10 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Pages(Document document) : base(document)
 		{
-			StaticText help = new StaticText(this);
-			help.Text = Res.Strings.Container.Help.Pages;
-			help.Dock = DockStyle.Top;
-			help.DockMargins = new Margins(0, 0, -2, 7);
+			this.helpText = new StaticText(this);
+			this.helpText.Text = Res.Strings.Container.Help.Pages;
+			this.helpText.Dock = DockStyle.Top;
+			this.helpText.DockMargins = new Margins(0, 0, -2, 7);
 
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
@@ -440,6 +440,7 @@ namespace Epsitec.Common.Document.Containers
 		protected override void DoUpdateContent()
 		{
 			//	Effectue la mise à jour du contenu.
+			this.helpText.Visibility = this.document.GlobalSettings.LabelProperties;
 			this.UpdateTable();
 			this.UpdatePanel();
 		}
@@ -894,6 +895,8 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
+
+		protected StaticText				helpText;
 
 		protected HToolBar					toolBar;
 		protected IconButton				buttonNew;
