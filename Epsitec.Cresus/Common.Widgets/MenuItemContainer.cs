@@ -14,6 +14,7 @@ namespace Epsitec.Common.Widgets
 		public MenuItemContainer()
 		{
 			this.InternalState |= InternalState.Focusable;
+			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 		
 		public MenuItemContainer(Widget embedder) : this()
@@ -100,6 +101,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
+				this.IsFocusedChanged -= this.HandleIsFocusedChanged;
 				this.EnableFilter ();
 			}
 			
@@ -131,9 +133,9 @@ namespace Epsitec.Common.Widgets
 				this.EnableFilter ();
 			}
 		}
-		
-		
-		protected override void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
+
+
+		private void HandleIsFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool focused = (bool) e.NewValue;
 			
@@ -145,8 +147,6 @@ namespace Epsitec.Common.Widgets
 			{
 				this.HandleDefocused ();
 			}
-			
-			base.OnIsFocusedChanged (e);
 		}
 
 		protected void HandleFocused()

@@ -695,15 +695,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override bool						KeyboardFocus
-		{
-			get
-			{
-				return (this.widget_state & WidgetState.Focused) != 0;
-			}
-		}
-		
-		
 		public bool									IsEntered
 		{
 			get
@@ -1624,30 +1615,24 @@ namespace Epsitec.Common.Widgets
 			
 			Window window = this.Window;
 
-			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.KeyboardFocusProperty, Visual.IsFocusedProperty);
-			
 			if (new_focus)
 			{
 				if (window != null)
 				{
-					this.widget_state |= WidgetState.Focused;
+					this.SetValue (Visual.KeyboardFocusProperty, true);
 					window.FocusedWidget = this;
 				}
-				
-				snapshot.InvalidateDifferentProperties ();
 				
 				this.Invalidate (InvalidateReason.FocusedChanged);
 			}
 			else
 			{
-				this.widget_state &= ~ WidgetState.Focused;
+				this.ClearValueBase (Visual.KeyboardFocusProperty);
 				
 				if (window != null)
 				{
 					window.FocusedWidget = null;
 				}
-				
-				snapshot.InvalidateDifferentProperties ();
 				
 				this.Invalidate (InvalidateReason.FocusedChanged);
 			}

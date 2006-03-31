@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonNew       = this.CreateIconButton("New");
 			this.buttonOpen      = this.CreateIconButton("Open", "Large");
-			this.buttonLastFiles = this.CreateMenuButton("", Res.Strings.Action.LastFiles, new MessageEventHandler(this.HandleLastFilesClicked));
+			this.buttonLastFiles = this.CreateMenuButton ("", Res.Strings.Action.LastFiles, new MessageEventHandler (this.HandleLastFilesPressed));
 			this.buttonSave      = this.CreateIconButton("Save", "Large");
 			this.buttonSaveAs    = this.CreateIconButton("SaveAs");
 			this.buttonPrint     = this.CreateIconButton("Print", "Large");
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		private void HandleLastFilesClicked(object sender, MessageEventArgs e)
+		private void HandleLastFilesPressed(object sender, MessageEventArgs e)
 		{
 			//	Bouton pour ouvrir le menu des derniers fichiers cliqué.
 			GlyphButton button = sender as GlyphButton;
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.Ribbons
 			VMenu menu = this.BuildLastFilenamesMenu();
 			if ( menu == null )  return;
 			menu.Host = this;
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.ShowAsComboList(button, pos, button);
 		}
 
 		protected VMenu BuildLastFilenamesMenu()

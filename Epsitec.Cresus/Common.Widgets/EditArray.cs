@@ -16,6 +16,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.edit_line = new EditWidget (this);
 			this.edit_line.Hide ();
+			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 		
 		public EditArray(Widget embedder) : this ()
@@ -201,6 +202,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
+				this.IsFocusedChanged -= this.HandleIsFocusedChanged;
+				
 				if (this.controller != null)
 				{
 					this.controller.Dispose ();
@@ -511,8 +514,8 @@ namespace Epsitec.Common.Widgets
 		protected virtual  void OnSearchCaptionChanged()
 		{
 		}
-		
-		protected override void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
+
+		private void HandleIsFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool focused = (bool) e.NewValue;
 			
@@ -524,8 +527,6 @@ namespace Epsitec.Common.Widgets
 			{
 				this.HandleDefocused ();
 			}
-			
-			base.OnIsFocusedChanged (e);
 		}
 
 		protected void HandleDefocused()

@@ -89,6 +89,7 @@ namespace Epsitec.Common.Document
 			this.miniBarTimer.TimeElapsed += new Support.EventHandler (this.HandleMiniBarTimeElapsed);
 			
 			this.IsVisibleChanged += this.HandleIsVisibleChanged;
+			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 
 		protected override void Dispose(bool disposing)
@@ -102,7 +103,8 @@ namespace Epsitec.Common.Document
 				this.miniBarTimer.TimeElapsed -= new EventHandler(this.HandleMiniBarTimeElapsed);
 				this.miniBarTimer.Dispose();
 				this.miniBarTimer = null;
-				
+
+				this.IsFocusedChanged -= this.HandleIsFocusedChanged;
 				this.IsVisibleChanged -= this.HandleIsVisibleChanged;
 			}
 			
@@ -4333,7 +4335,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected override void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
+		private void HandleIsFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool focused = (bool) e.NewValue;
 			
@@ -4345,8 +4347,6 @@ namespace Epsitec.Common.Document
 			{
 				this.HandleDefocused();
 			}
-			
-			base.OnIsFocusedChanged(e);
 		}
 
 		protected override void NotifyWindowChanged(Window oldWindow, Window newWindow)

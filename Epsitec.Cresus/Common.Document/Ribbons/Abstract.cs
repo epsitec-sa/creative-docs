@@ -188,7 +188,7 @@ namespace Epsitec.Common.Document.Ribbons
 			button.ButtonStyle = ButtonStyle.ToolItem;
 			button.GlyphShape = GlyphShape.Menu;
 			button.AutoFocus = false;
-			button.Clicked += handler;
+			button.Pressed += handler;
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(button, tooltip);

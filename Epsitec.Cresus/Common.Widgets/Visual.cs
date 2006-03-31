@@ -288,11 +288,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual bool						KeyboardFocus
+		public bool								KeyboardFocus
 		{
 			get
 			{
-				return false;
+				return (bool) this.GetValueBase (Visual.KeyboardFocusProperty);
 			}
 		}
 		
@@ -528,7 +528,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return VisualTree.IsFocused (this);
+				return (bool) this.GetValue (Visual.IsFocusedProperty);
 			}
 		}
 		
@@ -886,16 +886,30 @@ namespace Epsitec.Common.Widgets
 			that.Size = (Drawing.Size) value;
 		}
 		
-		private static object GetIsFocusedValue(DependencyObject o)
-		{
-			Visual that = o as Visual;
-			return that.IsFocused;
-		}
-		
 		private static object GetKeyboardFocusValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.KeyboardFocus;
+		}
+
+		private static void SetKeyboardFocusValue(DependencyObject o, object value)
+		{
+			Visual that = o as Visual;
+			bool focus = (bool) value;
+			
+			if (that.KeyboardFocus != focus)
+			{
+				that.SetValueBase (Visual.KeyboardFocusProperty, focus);
+
+				if (focus)
+				{
+					that.SetValueBase (Visual.IsFocusedProperty, true);
+				}
+				else
+				{
+					that.ClearValueBase (Visual.IsFocusedProperty);
+				}
+			}
 		}
 		
 		private static object GetContainsKeyboardFocusValue(DependencyObject o)
@@ -948,12 +962,6 @@ namespace Epsitec.Common.Widgets
 			that.OnParentChanged (new DependencyPropertyChangedEventArgs (Visual.ParentProperty, old_value, new_value));
 		}
 		
-		private static void NotifyIsFocusedChanged(DependencyObject o, object old_value, object new_value)
-		{
-			Visual that = o as Visual;
-			that.OnIsFocusedChanged (new DependencyPropertyChangedEventArgs (Visual.IsFocusedProperty, old_value, new_value));
-		}
-		
 		private static void NotifyKeyboardFocusChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
@@ -988,10 +996,6 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnParentChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			Helpers.VisualTree.InvalidateCommandDispatcher (this);
-		}
-		
-		protected virtual void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
-		{
 		}
 		
 		protected virtual void OnKeyboardFocusChanged(Types.DependencyPropertyChangedEventArgs e)
@@ -1184,9 +1188,9 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty IsVisibleProperty				= DependencyProperty.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsParentLayout | VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty IsEnabledProperty				= DependencyProperty.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty IsFocusedProperty				= DependencyProperty.RegisterReadOnly ("IsFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsFocusedChanged), VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty IsFocusedProperty				= DependencyProperty.RegisterReadOnly ("IsFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		public static readonly DependencyProperty KeyboardFocusProperty			= DependencyProperty.RegisterReadOnly ("KeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetKeyboardFocusValue), new PropertyInvalidatedCallback (Visual.NotifyKeyboardFocusChanged), VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty KeyboardFocusProperty			= DependencyProperty.RegisterReadOnly ("KeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetKeyboardFocusValue), new SetValueOverrideCallback (Visual.SetKeyboardFocusValue), VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty ContainsKeyboardFocusProperty	= DependencyProperty.RegisterReadOnly ("ContainsKeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetContainsKeyboardFocusValue), VisualPropertyMetadataOptions.None));
 		
 		public static readonly DependencyProperty AutoCaptureProperty			= DependencyProperty.Register ("AutoCapture", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (true));

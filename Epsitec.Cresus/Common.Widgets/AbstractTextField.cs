@@ -71,6 +71,7 @@ namespace Epsitec.Common.Widgets
 			CommandDispatcher dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
 			dispatcher.RegisterController (new Dispatcher (this));
 			this.AttachCommandDispatcher (dispatcher);
+			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 		
 		public AbstractTextField(Widget embedder) : this()
@@ -509,6 +510,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
+				this.IsFocusedChanged -= this.HandleIsFocusedChanged;
 				if ( TextField.blinking == this )
 				{
 					if ( this.navigator != null )
@@ -1130,7 +1132,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.scrollTop    )  this.ScrollVertical(amplitude);
 		}
 
-		protected override void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
+		private void HandleIsFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool focused = (bool) e.NewValue;
 			
@@ -1142,8 +1144,6 @@ namespace Epsitec.Common.Widgets
 			{
 				this.HandleDefocused ();
 			}
-			
-			base.OnIsFocusedChanged (e);
 		}
 
 		protected override void OnTextChanged()

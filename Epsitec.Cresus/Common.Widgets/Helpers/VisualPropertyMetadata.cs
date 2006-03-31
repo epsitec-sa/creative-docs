@@ -56,6 +56,10 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			this.InitialiseFromFlags (flags);
 		}
+		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, Types.SetValueOverrideCallback set_value_override_callback, VisualPropertyMetadataOptions flags) : base (default_value, get_value_override_callback, set_value_override_callback)
+		{
+			this.InitialiseFromFlags (flags);
+		}
 		
 		
 		public bool								AffectsLayout
