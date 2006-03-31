@@ -87,6 +87,8 @@ namespace Epsitec.Common.Document
 
 			this.miniBarTimer = new Timer();
 			this.miniBarTimer.TimeElapsed += new Support.EventHandler (this.HandleMiniBarTimeElapsed);
+			
+			this.IsVisibleChanged += this.HandleIsVisibleChanged;
 		}
 
 		protected override void Dispose(bool disposing)
@@ -100,13 +102,15 @@ namespace Epsitec.Common.Document
 				this.miniBarTimer.TimeElapsed -= new EventHandler(this.HandleMiniBarTimeElapsed);
 				this.miniBarTimer.Dispose();
 				this.miniBarTimer = null;
+				
+				this.IsVisibleChanged -= this.HandleIsVisibleChanged;
 			}
 			
 			base.Dispose(disposing);
 		}
 
 
-		protected override void OnIsVisibleChanged(Types.DependencyPropertyChangedEventArgs e)
+		private void HandleIsVisibleChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			this.CloseMiniBar(false);  // ferme la mini-palette si le viewer devient invisible
 		}

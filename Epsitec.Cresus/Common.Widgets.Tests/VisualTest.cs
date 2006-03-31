@@ -53,7 +53,7 @@ namespace Epsitec.Common.Widgets
 			#endregion
 			int count;
 		}
-		
+
 		[Test]
 		public void CheckVisualEnable()
 		{
@@ -61,71 +61,200 @@ namespace Epsitec.Common.Widgets
 			Visual b = new Visual ();
 			Visual c1 = new Visual ();
 			Visual c2 = new Visual ();
-			
+
 			a.Children.Add (b);
 			b.Children.Add (c1);
 			b.Children.Add (c2);
-			
-			a.IsEnabledChanged += new PropertyChangedEventHandler(VisualTest.A_IsEnabledChanged);
-			b.IsEnabledChanged += new PropertyChangedEventHandler(VisualTest.B_IsEnabledChanged);
-			c1.IsEnabledChanged += new PropertyChangedEventHandler(VisualTest.C1_IsEnabledChanged);
-			c2.IsEnabledChanged += new PropertyChangedEventHandler(VisualTest.C2_IsEnabledChanged);
-			
-			Assert.IsTrue (a.Enable);	Assert.IsTrue (a.IsEnabled);
-			Assert.IsTrue (b.Enable);	Assert.IsTrue (b.IsEnabled);
-			Assert.IsTrue (c1.Enable);	Assert.IsTrue (c1.IsEnabled);
-			Assert.IsTrue (c2.Enable);	Assert.IsTrue (c2.IsEnabled);
-			
+
+			a.IsEnabledChanged += new PropertyChangedEventHandler (VisualTest.A_IsEnabledChanged);
+			b.IsEnabledChanged += new PropertyChangedEventHandler (VisualTest.B_IsEnabledChanged);
+			c1.IsEnabledChanged += new PropertyChangedEventHandler (VisualTest.C1_IsEnabledChanged);
+			c2.IsEnabledChanged += new PropertyChangedEventHandler (VisualTest.C2_IsEnabledChanged);
+
+			Assert.IsTrue (a.Enable);
+			Assert.IsTrue (a.IsEnabled);
+			Assert.IsTrue (b.Enable);
+			Assert.IsTrue (b.IsEnabled);
+			Assert.IsTrue (c1.Enable);
+			Assert.IsTrue (c1.IsEnabled);
+			Assert.IsTrue (c2.Enable);
+			Assert.IsTrue (c2.IsEnabled);
+
 			VisualTest.buffer = new System.Text.StringBuilder ();
 			a.Enable = false;
-			
-			Assert.IsFalse (a.Enable);	Assert.IsFalse (a.IsEnabled);
-			Assert.IsTrue (b.Enable);	Assert.IsFalse (b.IsEnabled);
-			Assert.IsTrue (c1.Enable);	Assert.IsFalse (c1.IsEnabled);
-			Assert.IsTrue (c2.Enable);	Assert.IsFalse (c2.IsEnabled);
+
+			Assert.IsFalse (a.Enable);
+			Assert.IsFalse (a.IsEnabled);
+			Assert.IsTrue (b.Enable);
+			Assert.IsFalse (b.IsEnabled);
+			Assert.IsTrue (c1.Enable);
+			Assert.IsFalse (c1.IsEnabled);
+			Assert.IsTrue (c2.Enable);
+			Assert.IsFalse (c2.IsEnabled);
 			Assert.AreEqual (" A:1->0 B:1->0 C1:1->0 C2:1->0", VisualTest.buffer.ToString ());
-			
+
 			VisualTest.buffer = new System.Text.StringBuilder ();
 			a.Enable = true;
-			
-			Assert.IsTrue (a.Enable);	Assert.IsTrue (a.IsEnabled);
-			Assert.IsTrue (b.Enable);	Assert.IsTrue (b.IsEnabled);
-			Assert.IsTrue (c1.Enable);	Assert.IsTrue (c1.IsEnabled);
-			Assert.IsTrue (c2.Enable);	Assert.IsTrue (c2.IsEnabled);
+
+			Assert.IsTrue (a.Enable);
+			Assert.IsTrue (a.IsEnabled);
+			Assert.IsTrue (b.Enable);
+			Assert.IsTrue (b.IsEnabled);
+			Assert.IsTrue (c1.Enable);
+			Assert.IsTrue (c1.IsEnabled);
+			Assert.IsTrue (c2.Enable);
+			Assert.IsTrue (c2.IsEnabled);
 			Assert.AreEqual (" A:0->1 B:0->1 C1:0->1 C2:0->1", VisualTest.buffer.ToString ());
-			
+
 			VisualTest.buffer = new System.Text.StringBuilder ();
 			b.Enable = false;
-			
-			Assert.IsTrue (a.Enable);	Assert.IsTrue (a.IsEnabled);
-			Assert.IsFalse (b.Enable);	Assert.IsFalse (b.IsEnabled);
-			Assert.IsTrue (c1.Enable);	Assert.IsFalse (c1.IsEnabled);
-			Assert.IsTrue (c2.Enable);	Assert.IsFalse (c2.IsEnabled);
+
+			Assert.IsTrue (a.Enable);
+			Assert.IsTrue (a.IsEnabled);
+			Assert.IsFalse (b.Enable);
+			Assert.IsFalse (b.IsEnabled);
+			Assert.IsTrue (c1.Enable);
+			Assert.IsFalse (c1.IsEnabled);
+			Assert.IsTrue (c2.Enable);
+			Assert.IsFalse (c2.IsEnabled);
 			Assert.AreEqual (" B:1->0 C1:1->0 C2:1->0", VisualTest.buffer.ToString ());
-			
+
 			VisualTest.buffer = new System.Text.StringBuilder ();
 			c1.Enable = false;
-			
-			Assert.IsTrue (a.Enable);	Assert.IsTrue (a.IsEnabled);
-			Assert.IsFalse (b.Enable);	Assert.IsFalse (b.IsEnabled);
-			Assert.IsFalse (c1.Enable);	Assert.IsFalse (c1.IsEnabled);
-			Assert.IsTrue (c2.Enable);	Assert.IsFalse (c2.IsEnabled);
+
+			Assert.IsTrue (a.Enable);
+			Assert.IsTrue (a.IsEnabled);
+			Assert.IsFalse (b.Enable);
+			Assert.IsFalse (b.IsEnabled);
+			Assert.IsFalse (c1.Enable);
+			Assert.IsFalse (c1.IsEnabled);
+			Assert.IsTrue (c2.Enable);
+			Assert.IsFalse (c2.IsEnabled);
 			Assert.AreEqual ("", VisualTest.buffer.ToString ());
-			
+
 			VisualTest.buffer = new System.Text.StringBuilder ();
 			b.Enable = true;
-			
-			Assert.IsTrue (a.Enable);	Assert.IsTrue (a.IsEnabled);
-			Assert.IsTrue (b.Enable);	Assert.IsTrue (b.IsEnabled);
-			Assert.IsFalse (c1.Enable);	Assert.IsFalse (c1.IsEnabled);
-			Assert.IsTrue (c2.Enable);	Assert.IsTrue (c2.IsEnabled);
+
+			Assert.IsTrue (a.Enable);
+			Assert.IsTrue (a.IsEnabled);
+			Assert.IsTrue (b.Enable);
+			Assert.IsTrue (b.IsEnabled);
+			Assert.IsFalse (c1.Enable);
+			Assert.IsFalse (c1.IsEnabled);
+			Assert.IsTrue (c2.Enable);
+			Assert.IsTrue (c2.IsEnabled);
 			Assert.AreEqual (" B:0->1 C2:0->1", VisualTest.buffer.ToString ());
 
 			Assert.AreEqual (a, b.Parent);
-			
+
 			a.Children.Clear ();
 		}
-		
+
+		[Test]
+		public void CheckVisualVisibility()
+		{
+			Visual a = new Visual ();
+			Visual b = new Visual ();
+			Visual c1 = new Visual ();
+			Visual c2 = new Visual ();
+			
+			EventHandlerSupport handler = new EventHandlerSupport ();
+
+			a.Name = "a";
+			b.Name = "b";
+			c1.Name = "c1";
+			c2.Name = "c2";
+
+			a.IsVisibleChanged += handler.RecordEventAndName;
+			b.IsVisibleChanged += handler.RecordEventAndName;
+			c1.IsVisibleChanged += handler.RecordEventAndName;
+			c2.IsVisibleChanged += handler.RecordEventAndName;
+
+			a.Children.Add (b);
+			b.Children.Add (c1);
+			b.Children.Add (c2);
+
+			Assert.IsTrue (a.Visibility);
+			Assert.IsTrue (a.IsVisible);
+			Assert.IsTrue (b.Visibility);
+			Assert.IsTrue (b.IsVisible);
+			Assert.IsTrue (c1.Visibility);
+			Assert.IsTrue (c1.IsVisible);
+			Assert.IsTrue (c2.Visibility);
+			Assert.IsTrue (c2.IsVisible);
+
+			System.Console.Out.WriteLine (handler.Log);
+			handler.Clear ();
+			
+			a.Visibility = false;
+
+			Assert.IsFalse (a.Visibility);
+			Assert.IsFalse (a.IsVisible);
+			Assert.IsTrue (b.Visibility);
+			Assert.IsFalse (b.IsVisible);
+			Assert.IsTrue (c1.Visibility);
+			Assert.IsFalse (c1.IsVisible);
+			Assert.IsTrue (c2.Visibility);
+			Assert.IsFalse (c2.IsVisible);
+			Assert.AreEqual ("a-IsVisible:True,False.b-IsVisible:True,False.c1-IsVisible:True,False.c2-IsVisible:True,False.", handler.Log);
+			
+			handler.Clear ();
+			a.Visibility = true;
+
+			Assert.IsTrue (a.Visibility);
+			Assert.IsTrue (a.IsVisible);
+			Assert.IsTrue (b.Visibility);
+			Assert.IsTrue (b.IsVisible);
+			Assert.IsTrue (c1.Visibility);
+			Assert.IsTrue (c1.IsVisible);
+			Assert.IsTrue (c2.Visibility);
+			Assert.IsTrue (c2.IsVisible);
+			Assert.AreEqual ("a-IsVisible:False,True.b-IsVisible:False,True.c1-IsVisible:False,True.c2-IsVisible:False,True.", handler.Log);
+
+			handler.Clear ();
+			b.Visibility = false;
+
+			Assert.IsTrue (a.Visibility);
+			Assert.IsTrue (a.IsVisible);
+			Assert.IsFalse (b.Visibility);
+			Assert.IsFalse (b.IsVisible);
+			Assert.IsTrue (c1.Visibility);
+			Assert.IsFalse (c1.IsVisible);
+			Assert.IsTrue (c2.Visibility);
+			Assert.IsFalse (c2.IsVisible);
+			Assert.AreEqual ("b-IsVisible:True,False.c1-IsVisible:True,False.c2-IsVisible:True,False.", handler.Log);
+
+			handler.Clear ();
+			c1.Visibility = false;
+
+			Assert.IsTrue (a.Visibility);
+			Assert.IsTrue (a.IsVisible);
+			Assert.IsFalse (b.Visibility);
+			Assert.IsFalse (b.IsVisible);
+			Assert.IsFalse (c1.Visibility);
+			Assert.IsFalse (c1.IsVisible);
+			Assert.IsTrue (c2.Visibility);
+			Assert.IsFalse (c2.IsVisible);
+			Assert.AreEqual ("", handler.Log);
+
+			handler.Clear ();
+			b.Visibility = true;
+
+			Assert.IsTrue (a.Visibility);
+			Assert.IsTrue (a.IsVisible);
+			Assert.IsTrue (b.Visibility);
+			Assert.IsTrue (b.IsVisible);
+			Assert.IsFalse (c1.Visibility);
+			Assert.IsFalse (c1.IsVisible);
+			Assert.IsTrue (c2.Visibility);
+			Assert.IsTrue (c2.IsVisible);
+			Assert.AreEqual ("b-IsVisible:False,True.c2-IsVisible:False,True.", handler.Log);
+
+			Assert.AreEqual (a, b.Parent);
+
+			a.Children.Clear ();
+		}
+
 		[Test]
 		public void CheckVisualChildren1()
 		{

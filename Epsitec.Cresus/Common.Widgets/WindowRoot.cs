@@ -425,12 +425,51 @@ namespace Epsitec.Common.Widgets
 		{
 			this.HandleCultureChanged ();
 		}
+
+		internal void NotifyWindowIsVisibleChanged()
+		{
+			if (this.window.IsVisible)
+			{
+				this.InvalidateProperty (Visual.IsVisibleProperty, false, true);
+			}
+			else
+			{
+				this.InvalidateProperty (Visual.IsVisibleProperty, true, false);
+			}
+		}
 		
 		
 		
 		public event Support.EventHandler			WindowStylesChanged;
 		public event Support.EventHandler			WindowTypeChanged;
-		
+
+		static WindowRoot()
+		{
+			//	WindowRoot.IsVisible depends only on the window's visibility, so we
+			//	have to override the default IsVisibleProperty behaviour:
+
+			Helpers.VisualPropertyMetadata metadata;
+			
+			metadata = new Helpers.VisualPropertyMetadata (WindowRoot.GetIsVisibleValue, Helpers.VisualPropertyMetadataOptions.None);
+			Visual.IsVisibleProperty.OverrideMetadata (typeof (WindowRoot), metadata);
+		}
+
+		static object GetIsVisibleValue(Types.DependencyObject o)
+		{
+			//	A WindowRoot is visible if and only if its associated window
+			//	is visible too.
+			
+			WindowRoot root = o as WindowRoot;
+			
+			if (root.window == null)
+			{
+				return false;
+			}
+			else
+			{
+				return root.window.IsVisible;
+			}
+		}
 		
 		protected WindowStyles						window_styles;
 		protected WindowType						window_type;

@@ -380,29 +380,6 @@ namespace Epsitec.Common.Widgets.Collections
 				//	Maintenant que tous les visuals ont leur parent définitif, il
 				//	faut tous les passer en revue pour déterminer les changements
 				//	de propriétés héritées.
-#if false
-				foreach (Visual visual in this.visuals)
-				{
-					IList<Types.DependencyProperty> properties = Types.DependencyObjectTree.FindInheritedProperties (visual);
-
-					foreach (Types.DependencyProperty property in properties)
-					{
-						//	S'il y a tout à coup de nouvelles propriétés héritées, il
-						//	faut les inclure dans le snapshot de départ, sous leur forme
-						//	"undefined" :
-						
-						if (this.properties.Contains (property) == false)
-						{
-							this.snapshot.RecordUndefinedTree (visual, property);
-						}
-					}
-				}
-
-				//	Passe en revue tous les changements.
-
-				this.snapshot.InvalidateDifferentProperties ();
-#else
-				//	Passe en revue tous les changements.
 				
 				foreach (Visual visual in this.visuals)
 				{
@@ -410,7 +387,6 @@ namespace Epsitec.Common.Widgets.Collections
 				}
 
 				this.snapshot.InvalidateDifferentProperties ();
-#endif
 			}
 
 			public static Snapshot RecordTree(Visual visual)

@@ -469,9 +469,16 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.Visibility != value)
 				{
-					Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsVisibleProperty);
 					this.SetValueBase (Visual.VisibilityProperty, value);
-					snapshot.InvalidateDifferentProperties ();
+
+					if (value)
+					{
+						this.ClearValueBase (Visual.IsVisibleProperty);
+					}
+					else
+					{
+						this.SetValueBase (Visual.IsVisibleProperty, false);
+					}
 				}
 			}
 		}
@@ -484,9 +491,19 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsEnabledProperty);
-				this.SetValueBase (Visual.EnableProperty, value);
-				snapshot.InvalidateDifferentProperties ();
+				if (this.Enable != value)
+				{
+					this.SetValueBase (Visual.EnableProperty, value);
+
+					if (value)
+					{
+						this.ClearValueBase (Visual.IsEnabledProperty);
+					}
+					else
+					{
+						this.SetValueBase (Visual.IsEnabledProperty, false);
+					}
+				}
 			}
 		}
 		
@@ -495,7 +512,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return VisualTree.IsVisible (this);
+				return (bool) this.GetValue (Visual.IsVisibleProperty);
 			}
 		}
 		
@@ -503,7 +520,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return VisualTree.IsEnabled (this);
+				return (bool) this.GetValue (Visual.IsEnabledProperty);
 			}
 		}
 		
@@ -869,18 +886,6 @@ namespace Epsitec.Common.Widgets
 			that.Size = (Drawing.Size) value;
 		}
 		
-		private static object GetIsEnabledValue(DependencyObject o)
-		{
-			Visual that = o as Visual;
-			return that.IsEnabled;
-		}
-		
-		private static object GetIsVisibleValue(DependencyObject o)
-		{
-			Visual that = o as Visual;
-			return that.IsVisible;
-		}
-		
 		private static object GetIsFocusedValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
@@ -943,13 +948,6 @@ namespace Epsitec.Common.Widgets
 			that.OnParentChanged (new DependencyPropertyChangedEventArgs (Visual.ParentProperty, old_value, new_value));
 		}
 		
-		private static void NotifyIsVisibleChanged(DependencyObject o, object old_value, object new_value)
-		{
-			Visual that = o as Visual;
-			that.OnIsVisibleChanged (new DependencyPropertyChangedEventArgs (Visual.IsVisibleProperty, old_value, new_value));
-		}
-		
-		
 		private static void NotifyIsFocusedChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
@@ -990,10 +988,6 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnParentChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			Helpers.VisualTree.InvalidateCommandDispatcher (this);
-		}
-		
-		protected virtual void OnIsVisibleChanged(Types.DependencyPropertyChangedEventArgs e)
-		{
 		}
 		
 		protected virtual void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
@@ -1183,13 +1177,13 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty MinSizeProperty				= DependencyProperty.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsParentLayout));
 		public static readonly DependencyProperty MaxSizeProperty				= DependencyProperty.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyMetadataOptions.AffectsParentLayout));
 		
-		public static readonly DependencyProperty VisibilityProperty			= DependencyProperty.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyMetadataOptions.AffectsParentLayout | VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty EnableProperty				= DependencyProperty.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty VisibilityProperty			= DependencyProperty.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyMetadataOptions.None));
+		public static readonly DependencyProperty EnableProperty				= DependencyProperty.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.None));
 		
 		public static readonly DependencyProperty InheritParentFocusProperty	= DependencyProperty.Register ("InheritParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false));
-		
-		public static readonly DependencyProperty IsVisibleProperty				= DependencyProperty.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsVisibleValue), new PropertyInvalidatedCallback (Visual.NotifyIsVisibleChanged), VisualPropertyMetadataOptions.InheritsValue));
-		public static readonly DependencyProperty IsEnabledProperty				= DependencyProperty.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsEnabledValue), VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
+
+		public static readonly DependencyProperty IsVisibleProperty				= DependencyProperty.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsParentLayout | VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty IsEnabledProperty				= DependencyProperty.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty IsFocusedProperty				= DependencyProperty.RegisterReadOnly ("IsFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsFocusedChanged), VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
 		
 		public static readonly DependencyProperty IsKeyboardFocusedProperty		= DependencyProperty.RegisterReadOnly ("IsKeyboardFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetIsKeyboardFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsKeyboardFocusedChanged), VisualPropertyMetadataOptions.AffectsDisplay));

@@ -1385,6 +1385,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.WindowShown (this);
 			}
+
+			this.root.NotifyWindowIsVisibleChanged ();
 		}
 		
 		internal void OnWindowHidden()
@@ -1407,6 +1409,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.WindowHidden (this);
 			}
+			
+			this.root.NotifyWindowIsVisibleChanged ();
 		}
 
 		internal void OnWindowClosed()

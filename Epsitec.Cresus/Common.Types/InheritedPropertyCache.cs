@@ -196,6 +196,12 @@ namespace Epsitec.Common.Types
 						bits &= mask;
 						
 						this.defaultValues ^= bits;
+
+						bits  = this.defaultValues;
+						bits ^= this.oldValues;
+						bits &= mask;
+
+						this.oldValues ^= bits;
 					}
 					
 					bits  = ((bool) propertyValue.Value) ? mask : (byte) 0;

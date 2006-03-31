@@ -435,16 +435,7 @@ namespace Epsitec.Common.Types
 				//	There is a parent; ask it to provide its value and use
 				//	that as the locally cached value.
 
-				object value;
-
-				if (parent.inheritedPropertyCache.TryGetValue (parent, property, out value))
-				{
-					this.inheritedPropertyCache.SetValue (this, property, value);
-				}
-				else
-				{
-					throw new System.InvalidOperationException (string.Format ("Property {0} can be retrieved from parent", property.Name));
-				}
+				this.inheritedPropertyCache.SetValue (this, property, parent.GetValue (property));
 			}
 		}
 		
