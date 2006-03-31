@@ -301,6 +301,11 @@ namespace Epsitec.Common.Widgets.Helpers
 				visual = parent;
 			}
 		}
+
+		public static WindowRoot GetWindowRoot(Visual visual)
+		{
+			return VisualTree.GetRoot (visual) as WindowRoot;
+		}
 		
 		
 		public static Support.OpletQueue GetOpletQueue(Visual visual)
@@ -451,37 +456,21 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 
-		public static int ContainsKeyboardFocusCounter = 0;
-		
 		public static bool ContainsKeyboardFocus(Visual visual)
 		{
 			//	Retourne true si un widget, ou l'un de ses enfants, contient le
 			//	focus du clavier.
 
-			VisualTree.ContainsKeyboardFocusCounter++;
-			
-			if ((VisualTree.ContainsKeyboardFocusCounter % 100) == 0)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("ContainsKeyboardFocusCounter = {0}", VisualTree.ContainsKeyboardFocusCounter));
-			}
-			
 			if (visual != null)
 			{
 				if (visual.KeyboardFocus)
 				{
 					return true;
 				}
-				
-				if (visual.HasChildren)
-				{
-					foreach (Visual child in visual.Children)
-					{
-						if (VisualTree.ContainsKeyboardFocus (child))
-						{
-							return true;
-						}
-					}
-				}
+
+				WindowRoot root = VisualTree.GetWindowRoot (visual);
+
+				return root.DoesVisualContainKeyboardFocus (visual);
 			}	
 			
 			return false;

@@ -1,5 +1,7 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -149,6 +151,30 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate ();
 		}
 		#endregion
+
+
+		public bool DoesVisualContainKeyboardFocus(Visual visual)
+		{
+			return this.focus_chain.Contains (visual);
+		}
+		
+		public override void MessageHandler(Message message, Drawing.Point pos)
+		{
+			message.WindowRoot = this;
+
+			if (this.focus_chain.Count == 0)
+			{
+				Widget widget = this.window.FocusedWidget;
+
+				while (widget != null)
+				{
+					this.focus_chain.Add (widget);
+					widget = widget.Parent;
+				}
+			}
+			
+			base.MessageHandler (message, pos);
+		}
 		
 		public override void Invalidate(Drawing.Rectangle rect)
 		{
@@ -183,6 +209,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		internal void ClearFocusChain()
+		{
+			this.focus_chain.Clear ();
+		}
 		
 		internal override void SetBounds(Drawing.Rectangle value)
 		{
@@ -459,5 +489,6 @@ namespace Epsitec.Common.Widgets
 		protected WindowType						window_type;
 		protected Window							window;
 		protected bool								is_ready;
+		protected List<Visual>						focus_chain = new List<Visual> ();
 	}
 }

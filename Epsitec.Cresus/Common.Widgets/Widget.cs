@@ -4078,11 +4078,13 @@ namespace Epsitec.Common.Widgets
 			{
 				Widget[] children = this.Children.Widgets;
 				int  children_num = children.Length;
+
+				WindowRoot root = message.WindowRoot ?? Helpers.VisualTree.GetWindowRoot (this);
 				
 				for (int i = 0; i < children_num; i++)
 				{
 					Widget widget         = children[children_num-1 - i];
-					bool   contains_focus = widget.ContainsKeyboardFocus;
+					bool   contains_focus = root.DoesVisualContainKeyboardFocus (widget);
 					
 					if ((widget.IsFrozen == false) &&
 						((widget.Visibility) || (contains_focus && message.IsKeyType)) &&

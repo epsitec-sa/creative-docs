@@ -1598,6 +1598,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnFocusedWidgetChanged()
 		{
+			this.root.ClearFocusChain ();
+			
 			if (this.FocusedWidgetChanged != null)
 			{
 				this.FocusedWidgetChanged (this);
@@ -1847,7 +1849,7 @@ namespace Epsitec.Common.Widgets
 					pos = root.MapRootToClient (pos);
 					pos = root.MapClientToParent (pos);
 				}
-				
+
 				root.MessageHandler (message, pos);
 				
 				if (this.IsDisposed)

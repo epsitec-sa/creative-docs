@@ -585,8 +585,33 @@ namespace Epsitec.Common.Widgets
 
 				stopwatch.Stop ();
 
-				System.Console.WriteLine ("Created tree, top-down: {0:0} ms. {1} x ContainsKeyboardFocus", stopwatch.ElapsedMilliseconds, Helpers.VisualTree.ContainsKeyboardFocusCounter);
-				Helpers.VisualTree.ContainsKeyboardFocusCounter = 0;
+				System.Console.WriteLine ("Created tree of 150 elements, top-down: {0:0} ms.", stopwatch.ElapsedMilliseconds);
+				System.Console.Out.Flush ();
+				
+				root = new Visual ();
+				Visual node = null;
+
+				stopwatch.Reset ();
+				stopwatch.Start ();
+
+				for (int i = 0; i < 150-1; i++)
+				{
+					Visual child = new Visual ();
+					StaticText text = new StaticText ();
+					text.Text = "Default";
+					child.Children.Add (text);
+					if (node != null)
+					{
+						child.Children.Add (node);
+					}
+					node = child;
+				}
+				
+				root.Children.Add (node);
+
+				stopwatch.Stop ();
+
+				System.Console.WriteLine ("Created tree of 150 elements, bottom-up: {0:0} ms.", stopwatch.ElapsedMilliseconds);
 				System.Console.Out.Flush ();
 			}
 		}
