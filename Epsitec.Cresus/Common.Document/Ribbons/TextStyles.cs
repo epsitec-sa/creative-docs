@@ -153,13 +153,14 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboStyle.Items.Clear();
 
 			Text.TextStyle[] styles = this.document.TextStyles(this.characterMode ? StyleCategory.Character : StyleCategory.Paragraph);
+			string tt = this.characterMode ? Res.Strings.Action.Apply.Tooltip.StyleCharacter : Res.Strings.Action.Apply.Tooltip.StyleParagraph;
 			foreach ( Text.TextStyle style in styles )
 			{
 				string name      = style.Name;
 				string briefIcon = string.Concat(this.document.UniqueName, ".TextStyleBrief");
 				string menuIcon  = string.Concat(this.document.UniqueName, ".TextStyleMenu");
 				string parameter = string.Concat(style.Name, '\t', this.characterMode ? "Character" : "Paragraph");
-				string tooltip   = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+				string tooltip   = string.Format(tt, Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style)));
 				this.AddIconButtonsComboDyn(this.comboStyle, name, briefIcon, menuIcon, parameter, tooltip);
 			}
 

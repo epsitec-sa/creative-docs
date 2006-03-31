@@ -737,13 +737,38 @@ namespace Epsitec.Common.Document
 			return filename.ToLower().EndsWith(ext);
 		}
 
+		static public bool IsTextStyleName(string name)
+		{
+			//	Indique s'il s'agit d'un nom de style de paragraphe ou de caractère.
+			return name.StartsWith("P.") || name.StartsWith("C.");
+		}
+
+		static public string UserTextStyleName(string name)
+		{
+			//	Retourne le nom d'un style de paragraphe ou de caractère pour l'utilisateur.
+			if ( Misc.IsTextStyleName(name) )
+			{
+				return name.Substring(2);
+			}
+			return name;
+		}
+
 		static public string CopyName(string name)
 		{
 			//	Retourne la copie d'un nom.
 			//	"Bidon"              ->  "Copie de Bidon"
 			//	"Copie de Bidon"     ->  "Copie (2) de Bidon"
 			//	"Copie (2) de Bidon" ->  "Copie (3) de Bidon"
-			return Misc.CopyName(name, Res.Strings.Misc.Copy, Res.Strings.Misc.CopyOf);
+			if ( Misc.IsTextStyleName(name) )
+			{
+				string start = name.Substring(0, 2);
+				string end   = name.Substring(2);
+				return start + Misc.CopyName(end, Res.Strings.Misc.Copy, Res.Strings.Misc.CopyOf);
+			}
+			else
+			{
+				return Misc.CopyName(name, Res.Strings.Misc.Copy, Res.Strings.Misc.CopyOf);
+			}
 		}
 
 		static public string CopyName(string name, string copy, string of)

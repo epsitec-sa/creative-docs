@@ -1637,28 +1637,28 @@ namespace Epsitec.Common.Document
 			
 			this.textContext.StyleList.SetNextStyle(null, title, paraStyle);
 			this.textContext.StyleList.StyleMap.SetRank(null, title, rank++);
-			this.textContext.StyleList.StyleMap.SetCaption(null, title, "Titre");
+			this.textContext.StyleList.StyleMap.SetCaption(null, title, "P.Titre");
 			
 			this.textContext.StyleList.SetNextStyle(null, t1, paraStyle);
 			this.textContext.StyleList.StyleMap.SetRank(null, t1, rank++);
-			this.textContext.StyleList.StyleMap.SetCaption(null, t1, "Titre 1");
+			this.textContext.StyleList.StyleMap.SetCaption(null, t1, "P.Titre 1");
 			
 			this.textContext.StyleList.SetNextStyle(null, t2, paraStyle);
 			this.textContext.StyleList.StyleMap.SetRank(null, t2, rank++);
-			this.textContext.StyleList.StyleMap.SetCaption(null, t2, "Titre 2");
+			this.textContext.StyleList.StyleMap.SetCaption(null, t2, "P.Titre 2");
 			
 			this.textContext.StyleList.SetNextStyle(null, t3, paraStyle);
 			this.textContext.StyleList.StyleMap.SetRank(null, t3, rank++);
-			this.textContext.StyleList.StyleMap.SetCaption(null, t3, "Titre 3");
+			this.textContext.StyleList.StyleMap.SetCaption(null, t3, "P.Titre 3");
 			
 			this.textContext.StyleList.StyleMap.SetRank(null, l1, rank++);
-			this.textContext.StyleList.StyleMap.SetCaption(null, l1, "Liste à puces");
+			this.textContext.StyleList.StyleMap.SetCaption(null, l1, "P.Liste à puces");
 
 			this.textContext.StyleList.StyleMap.SetRank(null, l2, rank++);
-			this.textContext.StyleList.StyleMap.SetCaption(null, l2, "Liste 1./2./...");
+			this.textContext.StyleList.StyleMap.SetCaption(null, l2, "P.Liste 1./2./...");
 
 			this.textContext.StyleList.StyleMap.SetRank(null, l3, rank++);
-			this.textContext.StyleList.StyleMap.SetCaption(null, l3, "Liste a)/b)/...");
+			this.textContext.StyleList.StyleMap.SetCaption(null, l3, "P.Liste a)/b)/...");
 #endif	
 			#endregion
 			

@@ -853,6 +853,10 @@
 	<data name="Action.ToolArray">Tableau</data>
 	<data name="Action.ToolImage">Image bitmap</data>
 	<data name="Action.ToolDimension">Cote</data>
+	
+	<data name="Action.Apply.Tooltip.StyleParagraph">Appliquer le style de paragraphe {0}</data>
+	<data name="Action.Apply.Tooltip.StyleCharacter">Appliquer le style de caractère {0}</data>
+	<data name="Action.Apply.Tooltip.Font">Utiliser la police {0}</data>
 
 	<data name="Action.FileMain">Fichier</data>
 	<data name="Action.New">Nouveau</data>
@@ -1374,10 +1378,10 @@
 	<data name="Aggregates.Header.Sample">Exemple</data>
 	<data name="Aggregates.NoneLine">&lt;i&gt;Aucun&lt;/i&gt;</data>
 	<data name="Style.Aggregate.Name">Style graphique {0}</data>
-	<data name="Style.Paragraph.Name">Style paragraphe {0}</data>
-	<data name="Style.Character.Name">Style caractère {0}</data>
-	<data name="Style.Paragraph.Base">Paragraphe normal</data>
-	<data name="Style.Character.Base">Caractère normal</data>
+	<data name="Style.Paragraph.Name">P.Style {0}</data>
+	<data name="Style.Character.Name">C.Style {0}</data>
+	<data name="Style.Paragraph.Base">P.Normal</data>
+	<data name="Style.Character.Base">C.Normal</data>
 	
 	<data name="Color.Rgb">RVB</data>
 	<data name="Color.Cmyk">CMJN</data>

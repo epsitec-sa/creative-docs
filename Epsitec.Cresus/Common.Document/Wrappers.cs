@@ -1552,7 +1552,7 @@ namespace Epsitec.Common.Document
 				string parameter = string.Concat(id.InvariantFaceName, '\t', id.InvariantStyleName);
 				string briefIcon   = Misc.IconDyn (string.Concat(this.document.UniqueName, ".TextFontBrief"), parameter);
 				string regularText = Misc.ImageDyn(string.Concat(this.document.UniqueName, ".TextFontMenu"),  parameter);
-				string tooltip     = TextLayout.ConvertToTaggedText(id.InvariantFaceName);
+				string tooltip     = string.Format(Res.Strings.Action.Apply.Tooltip.Font, TextLayout.ConvertToTaggedText(id.InvariantFaceName));
 
 				combo.Items.Add(new IconButtonsCombo.Item(id.InvariantFaceName, briefIcon, regularText, regularText, tooltip));
 				i ++;
@@ -1663,8 +1663,8 @@ namespace Epsitec.Common.Document
 			graphics.RenderSolid(Color.FromBrightness(1));  // fond blanc
 			this.DrawStyle(graphics, rect, textStyle);
 
-			rect = new Rectangle(1, 0, size.Width-2, limit);
-			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
+			rect = new Rectangle(3, 0, size.Width-3, limit);
+			string text = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle));
 			Color c = adorner.ColorText(WidgetState.Enabled);
 			this.DrawDynamicText(graphics, rect, text, limit*10/14, c, ContentAlignment.MiddleLeft);
 		}
@@ -1683,8 +1683,8 @@ namespace Epsitec.Common.Document
 
 			double limit = System.Math.Floor(size.Width*0.5);
 
-			Rectangle r = new Rectangle(3, 0, limit-3-1, size.Height);
-			string text = this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle);
+			Rectangle r = new Rectangle(3, 0, limit-3, size.Height);
+			string text = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle));
 			Color c = adorner.ColorText(WidgetState.Enabled);
 			this.DrawDynamicText(graphics, r, text, 0, c, ContentAlignment.MiddleLeft);
 
