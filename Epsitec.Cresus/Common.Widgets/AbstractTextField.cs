@@ -856,7 +856,7 @@ namespace Epsitec.Common.Widgets
 				this.navigator.ProcessMessage(message, pos);
 			}
 			
-			if ( this.AutoSelectOnFocus && !this.IsKeyboardFocused )
+			if ( this.AutoSelectOnFocus && !this.KeyboardFocus )
 			{
 				this.SelectAll();
 				message.Swallowed = true;
@@ -1079,11 +1079,11 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void HandleDefocused()
 		{
-			System.Diagnostics.Debug.WriteLine ("AbstractTextField de-focused (IsKeyboardFocused="+this.IsKeyboardFocused+")");
+			System.Diagnostics.Debug.WriteLine ("AbstractTextField de-focused (KeyboardFocus="+this.KeyboardFocus+")");
 			
 			TextField.blinking = null;
 			
-			if (this.IsKeyboardFocused == false)
+			if (this.KeyboardFocus == false)
 			{
 				switch (this.DefocusAction)
 				{
@@ -1184,9 +1184,9 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.WriteLine ("Text defined. has_edited_text = false");
 		}
 
-		protected override void OnIsKeyboardFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
+		protected override void OnKeyboardFocusChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
-			base.OnIsKeyboardFocusedChanged (e);
+			base.OnKeyboardFocusChanged (e);
 			
 			this.UpdateButtonVisibility ();
 		}
@@ -1461,7 +1461,7 @@ namespace Epsitec.Common.Widgets
 			rClip = this.MapClientToRoot(rClip);
 			graphics.SetClippingRectangle(rClip);
 			
-			if ( this.IsKeyboardFocused || this.contextMenu != null )
+			if ( this.KeyboardFocus || this.contextMenu != null )
 			{
 				bool visibleCursor = false;
 				
@@ -1520,7 +1520,7 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				if ( !this.navigator.IsReadOnly && visibleCursor && this.IsKeyboardFocused )
+				if ( !this.navigator.IsReadOnly && visibleCursor && this.KeyboardFocus )
 				{
 					//	Dessine le curseur :
 					Drawing.Point p1, p2;

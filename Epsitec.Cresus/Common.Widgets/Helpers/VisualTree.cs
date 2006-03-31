@@ -498,7 +498,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			while (visual != null)
 			{
-				if (visual.IsKeyboardFocused)
+				if (visual.KeyboardFocus)
 				{
 					Window window = VisualTree.GetWindow (visual);
 					return window == null ? false : window.IsFocused;
@@ -525,7 +525,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			if (visual != null)
 			{
-				if (visual.IsKeyboardFocused)
+				if (visual.KeyboardFocus)
 				{
 					return true;
 				}

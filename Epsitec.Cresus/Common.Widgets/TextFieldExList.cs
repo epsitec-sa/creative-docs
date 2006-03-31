@@ -262,7 +262,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void HandleDefocused()
 		{
-			if ((this.IsKeyboardFocused == false) &&
+			if ((this.KeyboardFocus == false) &&
 				(this.Mode == TextFieldExListMode.EditActive))
 			{
 				switch (this.DefocusAction)

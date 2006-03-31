@@ -1660,7 +1660,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.focusedWidget != null )
 				{
-					this.focusedWidget.IsKeyboardFocusedChanged -= new PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
+					this.focusedWidget.KeyboardFocusChanged -= new PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
 					this.focusedWidget.PreProcessing -= new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
 					this.focusedWidget = null;
 				}
@@ -1673,7 +1673,7 @@ namespace Epsitec.Common.Widgets
 					
 					System.Diagnostics.Debug.Assert( this.focusedWidget != null );
 					
-					this.focusedWidget.IsKeyboardFocusedChanged += new PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
+					this.focusedWidget.KeyboardFocusChanged += new PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
 					this.focusedWidget.PreProcessing += new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
 				}
 			}

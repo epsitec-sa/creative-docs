@@ -695,7 +695,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override bool						IsKeyboardFocused
+		public override bool						KeyboardFocus
 		{
 			get
 			{
@@ -1614,7 +1614,7 @@ namespace Epsitec.Common.Widgets
 			//	Utiliser Focus() en lieu et place de SetFocused(true), pour
 			//	avoir une gestion complète des conditions de focus.
 			
-			bool old_focus = this.IsKeyboardFocused;
+			bool old_focus = this.KeyboardFocus;
 			bool new_focus = focused;
 			
 			if (old_focus == new_focus)
@@ -1624,7 +1624,7 @@ namespace Epsitec.Common.Widgets
 			
 			Window window = this.Window;
 
-			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsKeyboardFocusedProperty, Visual.IsFocusedProperty);
+			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.KeyboardFocusProperty, Visual.IsFocusedProperty);
 			
 			if (new_focus)
 			{
@@ -2586,7 +2586,7 @@ namespace Epsitec.Common.Widgets
 					//	Il y a un widget avec le focus. Ca peut être nous, un de nos descendants
 					//	ou un autre widget sans aucun lien.
 					
-					if (this.IsKeyboardFocused)
+					if (this.KeyboardFocus)
 					{
 						return this;
 					}

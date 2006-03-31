@@ -288,7 +288,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual bool						IsKeyboardFocused
+		public virtual bool						KeyboardFocus
 		{
 			get
 			{
@@ -892,10 +892,10 @@ namespace Epsitec.Common.Widgets
 			return that.IsFocused;
 		}
 		
-		private static object GetIsKeyboardFocusedValue(DependencyObject o)
+		private static object GetKeyboardFocusValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
-			return that.IsKeyboardFocused;
+			return that.KeyboardFocus;
 		}
 		
 		private static object GetContainsKeyboardFocusValue(DependencyObject o)
@@ -954,10 +954,10 @@ namespace Epsitec.Common.Widgets
 			that.OnIsFocusedChanged (new DependencyPropertyChangedEventArgs (Visual.IsFocusedProperty, old_value, new_value));
 		}
 		
-		private static void NotifyIsKeyboardFocusedChanged(DependencyObject o, object old_value, object new_value)
+		private static void NotifyKeyboardFocusChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
-			that.OnIsKeyboardFocusedChanged (new DependencyPropertyChangedEventArgs (Visual.IsKeyboardFocusedProperty, old_value, new_value));
+			that.OnKeyboardFocusChanged (new DependencyPropertyChangedEventArgs (Visual.KeyboardFocusProperty, old_value, new_value));
 		}
 		
 		private static void NotifyCommandChanged(DependencyObject o, object old_value, object new_value)
@@ -994,7 +994,7 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
-		protected virtual void OnIsKeyboardFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
+		protected virtual void OnKeyboardFocusChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
@@ -1131,15 +1131,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public event PropertyChangedEventHandler	IsKeyboardFocusedChanged
+		public event PropertyChangedEventHandler	KeyboardFocusChanged
 		{
 			add
 			{
-				this.AddEventHandler (Visual.IsKeyboardFocusedProperty, value);
+				this.AddEventHandler (Visual.KeyboardFocusProperty, value);
 			}
 			remove
 			{
-				this.RemoveEventHandler (Visual.IsKeyboardFocusedProperty, value);
+				this.RemoveEventHandler (Visual.KeyboardFocusProperty, value);
 			}
 		}
 		
@@ -1186,7 +1186,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty IsEnabledProperty				= DependencyProperty.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty IsFocusedProperty				= DependencyProperty.RegisterReadOnly ("IsFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsFocusedChanged), VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		public static readonly DependencyProperty IsKeyboardFocusedProperty		= DependencyProperty.RegisterReadOnly ("IsKeyboardFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetIsKeyboardFocusedValue), new PropertyInvalidatedCallback (Visual.NotifyIsKeyboardFocusedChanged), VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty KeyboardFocusProperty			= DependencyProperty.RegisterReadOnly ("KeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetKeyboardFocusValue), new PropertyInvalidatedCallback (Visual.NotifyKeyboardFocusChanged), VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty ContainsKeyboardFocusProperty	= DependencyProperty.RegisterReadOnly ("ContainsKeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetContainsKeyboardFocusValue), VisualPropertyMetadataOptions.None));
 		
 		public static readonly DependencyProperty AutoCaptureProperty			= DependencyProperty.Register ("AutoCapture", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (true));

@@ -1377,48 +1377,42 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (! this.window_is_visible);
 
-			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.Root, Visual.IsVisibleProperty);
-			
 			this.window_is_visible = true;
 			
 			if ((this.owner != null) &&
-				(this.window != null))
+				(this.window != null) &&
+				(this.window.Owner == null))
 			{
 				this.window.Owner = this.owner.window;
 			}
-			
-			snapshot.InvalidateDifferentProperties ();
+
+			this.root.NotifyWindowIsVisibleChanged ();
 			
 			if (this.WindowShown != null)
 			{
 				this.WindowShown (this);
 			}
-
-			this.root.NotifyWindowIsVisibleChanged ();
 		}
 		
 		internal void OnWindowHidden()
 		{
 			System.Diagnostics.Debug.Assert (this.window_is_visible);
 
-			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.Root, Visual.IsVisibleProperty);
-			
 			this.window_is_visible = false;
 			
 			if ((this.owner != null) &&
-				(this.window != null))
+				(this.window != null) &&
+				(this.window.Owner != null))
 			{
 				this.window.Owner = null;
 			}
-			
-			snapshot.InvalidateDifferentProperties ();
+
+			this.root.NotifyWindowIsVisibleChanged ();
 			
 			if (this.WindowHidden != null)
 			{
 				this.WindowHidden (this);
 			}
-			
-			this.root.NotifyWindowIsVisibleChanged ();
 		}
 
 		internal void OnWindowClosed()

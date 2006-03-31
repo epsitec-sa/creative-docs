@@ -1030,7 +1030,7 @@ namespace Epsitec.Common.Widgets
 				widget.TabIndex      = i;
 				widget.TabNavigation = TabNavigationMode.ActivateOnTab;
 				
-				widget.IsKeyboardFocusedChanged += new PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
+				widget.KeyboardFocusChanged += new PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
 				widget.TextChanged              += new Support.EventHandler (this.HandleTextChanged);
 				
 				widget.AutoSelectOnFocus = true;
@@ -1043,7 +1043,7 @@ namespace Epsitec.Common.Widgets
 				{
 					widget.SetParent (null);
 					
-					widget.IsKeyboardFocusedChanged -= new PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
+					widget.KeyboardFocusChanged -= new PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
 					widget.TextChanged              -= new Support.EventHandler (this.HandleTextChanged);
 					
 					widget.Dispose ();

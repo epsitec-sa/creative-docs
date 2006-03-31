@@ -143,7 +143,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case ShowCondition.WhenKeyboardFocused:
-					show = this.IsKeyboardFocused;
+					show = this.KeyboardFocus;
 					break;
 				
 				case ShowCondition.WhenModified:
@@ -202,9 +202,9 @@ namespace Epsitec.Common.Widgets
 			this.UpdateButtonVisibility ();
 		}
 
-		protected override void OnIsKeyboardFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
+		protected override void OnKeyboardFocusChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
-			base.OnIsKeyboardFocusedChanged (e);
+			base.OnKeyboardFocusChanged (e);
 			
 			this.UpdateButtonVisibility ();
 		}
