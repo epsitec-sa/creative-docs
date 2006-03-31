@@ -168,6 +168,11 @@
 	<data name="Units.Long.Centimeter">centimeters</data>
 	<data name="Units.Long.Inch">inches</data>
 
+	<data name="Container.Help.Principal">@@● Attributs des objets créés ou sélectionnés :</data>
+	<data name="Container.Help.Styles">@@● Réglages des styles du document :</data>
+	<data name="Container.Help.Pages">@@● Réglages des pages du document :</data>
+	<data name="Container.Help.Layers">@@● Réglages des calques de la page courante :</data>
+
 	<data name="Container.Guides.RadioGlobal">Document</data>
 	<data name="Container.Guides.RadioPage">Current page</data>
 	<data name="Container.Guides.Header.Type">Type</data>

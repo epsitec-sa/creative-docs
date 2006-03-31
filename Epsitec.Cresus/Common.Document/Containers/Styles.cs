@@ -13,6 +13,11 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Styles(Document document) : base(document)
 		{
+			StaticText help = new StaticText(this);
+			help.Text = Res.Strings.Container.Help.Styles;
+			help.Dock = DockStyle.Top;
+			help.DockMargins = new Margins(0, 0, -2, 7);
+
 			this.mainBook = new PaneBook(this);
 			this.mainBook.PaneBookStyle = PaneBookStyle.BottomTop;
 			this.mainBook.PaneBehaviour = PaneBookBehaviour.Draft;

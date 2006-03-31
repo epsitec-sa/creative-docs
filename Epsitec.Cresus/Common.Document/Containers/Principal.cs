@@ -12,6 +12,11 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Principal(Document document) : base(document)
 		{
+			StaticText help = new StaticText(this);
+			help.Text = Res.Strings.Container.Help.Principal;
+			help.Dock = DockStyle.Top;
+			help.DockMargins = new Margins(0, 0, -2, 7);
+
 			this.CreateSelectorToolBar();
 			this.CreateAggregateToolBar();
 			this.CreateTextToolBar();

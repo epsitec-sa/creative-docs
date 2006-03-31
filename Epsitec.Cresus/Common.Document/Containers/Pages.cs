@@ -12,6 +12,11 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Pages(Document document) : base(document)
 		{
+			StaticText help = new StaticText(this);
+			help.Text = Res.Strings.Container.Help.Pages;
+			help.Dock = DockStyle.Top;
+			help.DockMargins = new Margins(0, 0, -2, 7);
+
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
