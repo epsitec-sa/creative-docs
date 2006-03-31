@@ -35,6 +35,20 @@ namespace Epsitec.Common.Widgets
 				return this.window;
 			}
 		}
+		public override bool					Visibility
+		{
+			get
+			{
+				return base.Visibility;
+			}
+			set
+			{
+				if (value != true)
+				{
+					throw new System.ArgumentException ("WindowRoot.Visibility cannot be set to false");
+				}
+			}
+		}
 		
 #if false //#fix
 		public override CommandDispatcher		CommandDispatcher
@@ -428,14 +442,11 @@ namespace Epsitec.Common.Widgets
 
 		internal void NotifyWindowIsVisibleChanged()
 		{
-			if (this.window.IsVisible)
-			{
-				this.InvalidateProperty (Visual.IsVisibleProperty, false, true);
-			}
-			else
-			{
-				this.InvalidateProperty (Visual.IsVisibleProperty, true, false);
-			}
+			//	Copie l'état de visibilité de la fenêtre de manière à ce que
+			//	notre propriété IsVisible soit toujours synchronisée avec la
+			//	fenêtre :
+			
+			this.SetValue (Visual.IsVisibleProperty, this.window.IsVisible);
 		}
 		
 		
@@ -443,33 +454,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			WindowStylesChanged;
 		public event Support.EventHandler			WindowTypeChanged;
 
-		static WindowRoot()
-		{
-			//	WindowRoot.IsVisible depends only on the window's visibility, so we
-			//	have to override the default IsVisibleProperty behaviour:
-
-			Helpers.VisualPropertyMetadata metadata;
-			
-			metadata = new Helpers.VisualPropertyMetadata (WindowRoot.GetIsVisibleValue, Helpers.VisualPropertyMetadataOptions.None);
-			Visual.IsVisibleProperty.OverrideMetadata (typeof (WindowRoot), metadata);
-		}
-
-		static object GetIsVisibleValue(Types.DependencyObject o)
-		{
-			//	A WindowRoot is visible if and only if its associated window
-			//	is visible too.
-			
-			WindowRoot root = o as WindowRoot;
-			
-			if (root.window == null)
-			{
-				return false;
-			}
-			else
-			{
-				return root.window.IsVisible;
-			}
-		}
 		
 		protected WindowStyles						window_styles;
 		protected WindowType						window_type;

@@ -31,6 +31,10 @@ namespace Epsitec.Common.Types
 
 				for (int i = 0; i < InheritedPropertyCache.MaskBits; i++)
 				{
+					if (this.cachedValueFlags == 0)
+					{
+						break;
+					}
 					if ((mask & this.cachedValueFlags) != 0)
 					{
 						DependencyProperty property = DependencyProperty.GetInheritedPropertyFromCacheMask (mask);
@@ -151,9 +155,14 @@ namespace Epsitec.Common.Types
 		
 		public void InheritValuesFromParent(DependencyObject node, DependencyObject parent)
 		{
-			System.Diagnostics.Debug.Assert (parent != null);
-
-			this.SetValues (node, InheritedPropertyCache.OnlyUndefinedEntries (node, parent.InheritedPropertyCache.GetValues (parent)));
+			if (parent == null)
+			{
+				this.ClearAllValues (node);
+			}
+			else
+			{
+				this.SetValues (node, InheritedPropertyCache.OnlyUndefinedEntries (node, parent.InheritedPropertyCache.GetValues (parent)));
+			}
 		}
 
 		private static IEnumerable<LocalValueEntry> OnlyUndefinedEntries(DependencyObject node, IEnumerable<LocalValueEntry> entries)

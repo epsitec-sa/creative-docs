@@ -252,7 +252,15 @@ namespace Epsitec.Common.Widgets
 			a.AnchorMargins = new Margins(10, 0, 0, 30);
 			a.TabIndex = 20;
 			a.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			Assert.IsFalse (a.IsVisible);
+			Assert.IsTrue (a.Visibility);
+			
 			window.Root.Children.Add(a);
+
+			Assert.IsFalse (window.Root.IsVisible);
+			Assert.IsFalse (a.IsVisible);
+			
 			tip.SetToolTip(a, "C'est d'accord, tout baigne");
 
 			Button b = new Button();
@@ -783,7 +791,16 @@ namespace Epsitec.Common.Widgets
 			tab.ActivePage = page2;
 			window.FocusedWidget = a;
 
-			window.Show();
+			Assert.IsFalse (window.IsVisible);
+			Assert.IsFalse (window.Root.IsVisible);
+			Assert.IsFalse (a.IsVisible);
+			
+			window.Show ();
+			
+			Assert.IsTrue (window.IsVisible);
+			Assert.IsTrue (window.Root.IsVisible);
+			Assert.IsTrue (a.IsVisible);
+			
 			return window;
 		}
 		
@@ -971,8 +988,17 @@ namespace Epsitec.Common.Widgets
 			buttonRedo.Clicked += new MessageEventHandler(this.HandleMultiRedo);
 //			window.Root.DebugActive = true;
 			window.FocusedWidget    = multi;
-			window.Show();
+
+			Assert.IsFalse (window.IsVisible);
+			Assert.IsFalse (window.Root.IsVisible);
+			Assert.IsFalse (multi.IsVisible);
 			
+			window.Show();
+
+			Assert.IsTrue (window.IsVisible);
+			Assert.IsTrue (window.Root.IsVisible);
+			Assert.IsTrue (multi.IsVisible);
+
 //			multi.Text = @"abc <b>def</b> ghi.<br/>123 <i>456</i> 789 <b>qrs</b>.<br/>A<img src=""file:images/icon.png""/>B<br/>";
 			
 			return window;

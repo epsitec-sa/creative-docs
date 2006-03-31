@@ -164,6 +164,12 @@ namespace Epsitec.Common.Widgets
 			b.Name = "b";
 			c1.Name = "c1";
 			c2.Name = "c2";
+			
+			//	Triche pour que 'a' se comporte comme WindowRoot dans une
+			//	fenêtre visible; sans cela, 'a' resterait tout le temps
+			//	invisible :
+
+			a.SetValueBase (Visual.IsVisibleProperty, true);
 
 			a.IsVisibleChanged += handler.RecordEventAndName;
 			b.IsVisibleChanged += handler.RecordEventAndName;
@@ -200,6 +206,13 @@ namespace Epsitec.Common.Widgets
 			
 			handler.Clear ();
 			a.Visibility = true;
+			
+			Assert.IsTrue (a.Visibility);
+			Assert.IsFalse (a.IsVisible);
+			
+			//	Re-triche (cf. plus haut) :
+			
+			a.SetValueBase (Visual.IsVisibleProperty, true);
 
 			Assert.IsTrue (a.Visibility);
 			Assert.IsTrue (a.IsVisible);
@@ -251,8 +264,19 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual ("b-IsVisible:False,True.c2-IsVisible:False,True.", handler.Log);
 
 			Assert.AreEqual (a, b.Parent);
-
+			
+			handler.Clear ();
 			a.Children.Clear ();
+			
+			Assert.IsTrue (a.Visibility);
+			Assert.IsTrue (a.IsVisible);
+			Assert.IsTrue (b.Visibility);
+			Assert.IsFalse (b.IsVisible);
+			Assert.IsFalse (c1.Visibility);
+			Assert.IsFalse (c1.IsVisible);
+			Assert.IsTrue (c2.Visibility);
+			Assert.IsFalse (c2.IsVisible);
+			Assert.AreEqual ("b-IsVisible:True,False.c2-IsVisible:True,False.", handler.Log);
 		}
 
 		[Test]
@@ -419,7 +443,7 @@ namespace Epsitec.Common.Widgets
 
 			r1.SetValue (Visual.WindowProperty, "W1");
 
-			Assert.AreEqual ("r1-Window:<UndefinedValue>,W1.a-Window:<UndefinedValue>,W1.b-Window:<UndefinedValue>,W1.c1-Window:<UndefinedValue>,W1.c2-Window:<UndefinedValue>,W1.", handler.Log);
+			Assert.AreEqual ("r1-Window:<null>,W1.a-Window:<null>,W1.b-Window:<null>,W1.c1-Window:<null>,W1.c2-Window:<null>,W1.", handler.Log);
 			handler.Clear ();
 
 			Assert.AreEqual ("W1", a.GetValue (Visual.WindowProperty));
@@ -429,22 +453,22 @@ namespace Epsitec.Common.Widgets
 
 			r2.SetValue (Visual.WindowProperty, "W2");
 
-			Assert.AreEqual ("r2-Window:<UndefinedValue>,W2.", handler.Log);
+			Assert.AreEqual ("r2-Window:<null>,W2.", handler.Log);
 			handler.Clear ();
 			
 			r1.Children.Remove (a);
 
-			Assert.AreEqual ("a-Window:W1,<UndefinedValue>.b-Window:W1,<UndefinedValue>.c1-Window:W1,<UndefinedValue>.c2-Window:W1,<UndefinedValue>.", handler.Log);
+			Assert.AreEqual ("a-Window:W1,<null>.b-Window:W1,<null>.c1-Window:W1,<null>.c2-Window:W1,<null>.", handler.Log);
 			handler.Clear ();
 			
-			Assert.AreEqual (Types.UndefinedValue.Instance, a.GetValue (Visual.WindowProperty));
-			Assert.AreEqual (Types.UndefinedValue.Instance, b.GetValue (Visual.WindowProperty));
-			Assert.AreEqual (Types.UndefinedValue.Instance, c1.GetValue (Visual.WindowProperty));
-			Assert.AreEqual (Types.UndefinedValue.Instance, c2.GetValue (Visual.WindowProperty));
+			Assert.IsNull (a.GetValue (Visual.WindowProperty));
+			Assert.IsNull (b.GetValue (Visual.WindowProperty));
+			Assert.IsNull (c1.GetValue (Visual.WindowProperty));
+			Assert.IsNull (c2.GetValue (Visual.WindowProperty));
 
 			r2.Children.Add (a);
 
-			Assert.AreEqual ("a-Window:<UndefinedValue>,W2.b-Window:<UndefinedValue>,W2.c1-Window:<UndefinedValue>,W2.c2-Window:<UndefinedValue>,W2.", handler.Log);
+			Assert.AreEqual ("a-Window:<null>,W2.b-Window:<null>,W2.c1-Window:<null>,W2.c2-Window:<null>,W2.", handler.Log);
 			handler.Clear ();
 			
 			Assert.AreEqual ("W2", a.GetValue (Visual.WindowProperty));
@@ -463,8 +487,8 @@ namespace Epsitec.Common.Widgets
 
 			c1.Children.Add (c10);
 			c1.Children.Add (c11);
-			
-			Assert.AreEqual ("c10-Window:<UndefinedValue>,W2.c11-Window:<UndefinedValue>,W2.", handler.Log);
+
+			Assert.AreEqual ("c10-Window:<null>,W2.c11-Window:<null>,W2.", handler.Log);
 			handler.Clear ();
 
 			c1.SetValue (Visual.WindowProperty, "WX");
@@ -584,9 +608,9 @@ namespace Epsitec.Common.Widgets
 			{
 				this.buffer.Append (e.PropertyName);
 				this.buffer.Append (":");
-				this.buffer.Append (e.OldValue);
+				this.buffer.Append (e.OldValue == null ? "<null>" : e.OldValue);
 				this.buffer.Append (",");
-				this.buffer.Append (e.NewValue);
+				this.buffer.Append (e.NewValue == null ? "<null>" : e.NewValue);
 				this.buffer.Append (".");
 			}
 			public void RecordEventAndName(object sender, Types.DependencyPropertyChangedEventArgs e)
@@ -595,9 +619,9 @@ namespace Epsitec.Common.Widgets
 				this.buffer.Append ("-");
 				this.buffer.Append (e.PropertyName);
 				this.buffer.Append (":");
-				this.buffer.Append (e.OldValue);
+				this.buffer.Append (e.OldValue == null ? "<null>" : e.OldValue);
 				this.buffer.Append (",");
-				this.buffer.Append (e.NewValue);
+				this.buffer.Append (e.NewValue == null ? "<null>" : e.NewValue);
 				this.buffer.Append (".");
 			}
 			public void Clear()

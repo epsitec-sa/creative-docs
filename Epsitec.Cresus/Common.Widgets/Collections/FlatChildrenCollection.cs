@@ -372,7 +372,6 @@ namespace Epsitec.Common.Widgets.Collections
 			{
 				this.snapshot   = new Types.DependencyObjectTreeSnapshot ();
 				this.visuals    = new List<Visual> ();
-				this.properties = new List<Types.DependencyProperty> ();
 			}
 
 			public void NotifyChanges()
@@ -420,23 +419,12 @@ namespace Epsitec.Common.Widgets.Collections
 				{
 					this.visuals.Add (visual);
 					
-					IList<Types.DependencyProperty> properties = Types.DependencyObjectTree.FindInheritedProperties (visual);
-
-					foreach (Types.DependencyProperty property in properties)
-					{
-						if (this.properties.Contains (property) == false)
-						{
-							this.properties.Add (property);
-						}
-					}
-
 					this.snapshot.Record (visual, Visual.ParentProperty);
 				}
 			}
 
 			Types.DependencyObjectTreeSnapshot	snapshot;
 			List<Visual>						visuals;
-			List<Types.DependencyProperty>		properties;
 		}
 		#endregion
 
