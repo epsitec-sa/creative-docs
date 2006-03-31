@@ -303,12 +303,14 @@ namespace Epsitec.Common.Widgets
 				this.buttonMain[rank].IconName = item.BriefIcon;
 				this.buttonMain[rank].PreferredIconSize = new Drawing.Size(this.ButtonWidth, this.ButtonHeight);
 				this.buttonMain[rank].ActiveState = (this.SelectedIndex == index) ? ActiveState.Yes : ActiveState.No;
+				this.buttonMain[rank].SetSelected(this.SelectedIndex == index);
 				ToolTip.Default.SetToolTip(this.buttonMain[rank], item.Tooltip);
 			}
 			else
 			{
 				this.buttonMain[rank].IconName = null;
 				this.buttonMain[rank].ActiveState = ActiveState.No;
+				this.buttonMain[rank].SetSelected(false);
 				string tooltip = null;
 				ToolTip.Default.SetToolTip(this.buttonMain[rank], tooltip);
 			}

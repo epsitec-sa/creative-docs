@@ -105,11 +105,11 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				if ( this.debugMode == DebugMode.DebugCommands )
 				{
-					return 204+76;
+					return 240+40;
 				}
 				else
 				{
-					return 164+76;
+					return 240;
 				}
 			}
 		}
