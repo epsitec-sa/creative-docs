@@ -62,37 +62,48 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
-		public bool								AffectsLayout
+		public bool								AffectsMeasure
 		{
 			get
 			{
-				return this.affects_layout;
+				return this.affectsMeasure;
 			}
 			set
 			{
-				this.affects_layout = value;
+				this.affectsMeasure = value;
 			}
 		}
-		public bool								AffectsParentLayout
+		public bool								AffectsArrange
 		{
 			get
 			{
-				return this.affects_parent_layout;
+				return this.affectsArrange;
 			}
 			set
 			{
-				this.affects_parent_layout = value;
+				this.affectsArrange = value;
 			}
 		}
 		public bool								AffectsDisplay
 		{
 			get
 			{
-				return this.affects_display;
+				return this.affectsDisplay;
 			}
 			set
 			{
-				this.affects_display = value;
+				this.affectsDisplay = value;
+			}
+		}
+		public bool								AffectsChildrenLayout
+		{
+			get
+			{
+				return this.affectsChildrenLayout;
+			}
+			set
+			{
+				this.affectsChildrenLayout = value;
 			}
 		}
 		
@@ -100,24 +111,26 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			get
 			{
-				return this.inherits_value;
+				return this.inheritsValue;
 			}
 		}
 		public override bool					PropertyNotifiesChanges
 		{
 			get
 			{
-				return this.notifies_changes;
+				return this.notifiesChanges;
 			}
 		}
 		
 		protected virtual void InitialiseFromFlags(VisualPropertyMetadataOptions flags)
 		{
-			this.affects_layout        = (flags & VisualPropertyMetadataOptions.AffectsLayout) != 0;
-			this.affects_parent_layout = (flags & VisualPropertyMetadataOptions.AffectsParentLayout) != 0;
-			this.affects_display       = (flags & VisualPropertyMetadataOptions.AffectsDisplay) != 0;
-			this.inherits_value        = (flags & VisualPropertyMetadataOptions.InheritsValue) != 0;
-			this.notifies_changes      = (flags & VisualPropertyMetadataOptions.ChangesSilently) == 0;
+			this.affectsArrange        = (flags & VisualPropertyMetadataOptions.AffectsArrange) != 0;
+			this.affectsMeasure	       = (flags & VisualPropertyMetadataOptions.AffectsMeasure) != 0;
+			this.affectsDisplay        = (flags & VisualPropertyMetadataOptions.AffectsDisplay) != 0;
+			this.affectsChildrenLayout = (flags & VisualPropertyMetadataOptions.AffectsChildrenLayout) != 0;
+			
+			this.inheritsValue         = (flags & VisualPropertyMetadataOptions.InheritsValue) != 0;
+			this.notifiesChanges       = (flags & VisualPropertyMetadataOptions.ChangesSilently) == 0;
 		}
 		
 		protected override void OnPropertyInvalidated(Types.DependencyObject sender, object old_value, object new_value)
@@ -125,30 +138,32 @@ namespace Epsitec.Common.Widgets.Helpers
 			Visual visual = sender as Visual;
 			
 			System.Diagnostics.Debug.Assert (visual != null);
-			
-			if (this.affects_layout)
+
+			if (this.affectsChildrenLayout)
 			{
 				visual.NotifyLayoutChanged ();
 			}
-			
-			if (this.affects_parent_layout)
+
+			if ((this.affectsArrange) ||
+				(this.affectsMeasure))
 			{
 				visual.NotifyParentLayoutChanged ();
 			}
-			
-			if (this.affects_display)
+
+			if (this.affectsDisplay)
 			{
 				visual.NotifyDisplayChanged ();
 			}
 			
 			base.OnPropertyInvalidated (sender, old_value, new_value);
 		}
-		
-		
-		private bool							affects_layout;
-		private bool							affects_parent_layout;
-		private bool							affects_display;
-		private bool							inherits_value;
-		private bool							notifies_changes;
+
+
+		private bool							affectsChildrenLayout;
+		private bool							affectsArrange;
+		private bool							affectsMeasure;
+		private bool							affectsDisplay;
+		private bool							inheritsValue;
+		private bool							notifiesChanges;
 	}
 }

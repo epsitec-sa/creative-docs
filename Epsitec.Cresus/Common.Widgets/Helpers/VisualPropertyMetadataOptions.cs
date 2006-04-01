@@ -13,9 +13,10 @@ namespace Epsitec.Common.Widgets.Helpers
 	{
 		None					= 0,
 		
-		AffectsLayout			= 0x0001,
-		AffectsParentLayout		= 0x0002,
+		AffectsMeasure			= 0x0001,
+		AffectsArrange			= 0x0002,
 		AffectsDisplay			= 0x0004,
+		AffectsChildrenLayout	= 0x0008,
 		
 		InheritsValue			= 0x1000,		//	la valeur de la propriété peut être héritée par des enfants
 		ChangesSilently			= 0x2000,		//	les changements de la propriété ne génèrent pas d'événement
