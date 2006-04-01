@@ -103,6 +103,13 @@ namespace Epsitec.Common.Widgets.Helpers
 				return this.inherits_value;
 			}
 		}
+		public override bool					PropertyNotifiesChanges
+		{
+			get
+			{
+				return this.notifies_changes;
+			}
+		}
 		
 		protected virtual void InitialiseFromFlags(VisualPropertyMetadataOptions flags)
 		{
@@ -110,6 +117,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.affects_parent_layout = (flags & VisualPropertyMetadataOptions.AffectsParentLayout) != 0;
 			this.affects_display       = (flags & VisualPropertyMetadataOptions.AffectsDisplay) != 0;
 			this.inherits_value        = (flags & VisualPropertyMetadataOptions.InheritsValue) != 0;
+			this.notifies_changes      = (flags & VisualPropertyMetadataOptions.ChangesSilently) == 0;
 		}
 		
 		protected override void OnPropertyInvalidated(Types.DependencyObject sender, object old_value, object new_value)
@@ -141,5 +149,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		private bool							affects_parent_layout;
 		private bool							affects_display;
 		private bool							inherits_value;
+		private bool							notifies_changes;
 	}
 }

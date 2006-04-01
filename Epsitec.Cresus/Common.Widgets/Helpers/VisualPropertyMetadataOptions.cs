@@ -18,5 +18,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		AffectsDisplay			= 0x0004,
 		
 		InheritsValue			= 0x1000,		//	la valeur de la propriété peut être héritée par des enfants
+		ChangesSilently			= 0x2000,		//	les changements de la propriété ne génèrent pas d'événement
 	}
 }

@@ -239,14 +239,15 @@ namespace Epsitec.Common.Types
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
-			metadata.NotifyPropertyInvalidated (this, old_value, new_value);
-
-			if (this.HasEventHandlerForProperty (property))
+			if (metadata.NotifyPropertyInvalidated (this, old_value, new_value))
 			{
-				PropertyChangedEventHandler handler = this.propertyEvents[property];
-				DependencyPropertyChangedEventArgs args = new DependencyPropertyChangedEventArgs (property, old_value, new_value);
+				if (this.HasEventHandlerForProperty (property))
+				{
+					PropertyChangedEventHandler handler = this.propertyEvents[property];
+					DependencyPropertyChangedEventArgs args = new DependencyPropertyChangedEventArgs (property, old_value, new_value);
 
-				handler (this, args);
+					handler (this, args);
+				}
 			}
 		}
 		

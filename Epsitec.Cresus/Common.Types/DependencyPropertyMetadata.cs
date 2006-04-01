@@ -150,6 +150,13 @@ namespace Epsitec.Common.Types
 				this.canSerialize = value;
 			}
 		}
+		public virtual bool						PropertyNotifiesChanges
+		{
+			get
+			{
+				return true;
+			}
+		}
 
 
 		public DependencyPropertyMetadata MakeReadOnlySerializable()
@@ -166,9 +173,18 @@ namespace Epsitec.Common.Types
 			return (cloneable == null) ? value : cloneable.Clone ();
 		}
 
-		internal void NotifyPropertyInvalidated(DependencyObject sender, object old_value, object new_value)
+		internal bool NotifyPropertyInvalidated(DependencyObject sender, object old_value, object new_value)
 		{
-			this.OnPropertyInvalidated (sender, old_value, new_value);
+			if (this.PropertyNotifiesChanges)
+			{
+				this.OnPropertyInvalidated (sender, old_value, new_value);
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		
 		protected virtual void OnPropertyInvalidated(DependencyObject sender, object old_value, object new_value)

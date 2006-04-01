@@ -428,12 +428,12 @@ namespace Epsitec.Common.Widgets
 			
 			EventHandlerSupport handler = new EventHandlerSupport ();
 
-			r1.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
-			r2.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
-			a.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
-			b.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
-			c1.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
-			c2.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+			r1.AddEventHandler (Dummy.InheritedProperty, handler.RecordEventAndName);
+			r2.AddEventHandler (Dummy.InheritedProperty, handler.RecordEventAndName);
+			a.AddEventHandler (Dummy.InheritedProperty, handler.RecordEventAndName);
+			b.AddEventHandler (Dummy.InheritedProperty, handler.RecordEventAndName);
+			c1.AddEventHandler (Dummy.InheritedProperty, handler.RecordEventAndName);
+			c2.AddEventHandler (Dummy.InheritedProperty, handler.RecordEventAndName);
 
 			a.Children.Add (b);
 			b.Children.Add (c1);
@@ -441,67 +441,72 @@ namespace Epsitec.Common.Widgets
 
 			r1.Children.Add (a);
 
-			r1.SetValue (Visual.WindowProperty, "W1");
+			r1.SetValue (Dummy.InheritedProperty, "W1");
 
-			Assert.AreEqual ("r1-Window:<null>,W1.a-Window:<null>,W1.b-Window:<null>,W1.c1-Window:<null>,W1.c2-Window:<null>,W1.", handler.Log);
+			Assert.AreEqual ("r1-Inherited:<null>,W1.a-Inherited:<null>,W1.b-Inherited:<null>,W1.c1-Inherited:<null>,W1.c2-Inherited:<null>,W1.", handler.Log);
 			handler.Clear ();
 
-			Assert.AreEqual ("W1", a.GetValue (Visual.WindowProperty));
-			Assert.AreEqual ("W1", b.GetValue (Visual.WindowProperty));
-			Assert.AreEqual ("W1", c1.GetValue (Visual.WindowProperty));
-			Assert.AreEqual ("W1", c2.GetValue (Visual.WindowProperty));
+			Assert.AreEqual ("W1", a.GetValue (Dummy.InheritedProperty));
+			Assert.AreEqual ("W1", b.GetValue (Dummy.InheritedProperty));
+			Assert.AreEqual ("W1", c1.GetValue (Dummy.InheritedProperty));
+			Assert.AreEqual ("W1", c2.GetValue (Dummy.InheritedProperty));
 
-			r2.SetValue (Visual.WindowProperty, "W2");
+			r2.SetValue (Dummy.InheritedProperty, "W2");
 
-			Assert.AreEqual ("r2-Window:<null>,W2.", handler.Log);
+			Assert.AreEqual ("r2-Inherited:<null>,W2.", handler.Log);
 			handler.Clear ();
 			
 			r1.Children.Remove (a);
 
-			Assert.AreEqual ("a-Window:W1,<null>.b-Window:W1,<null>.c1-Window:W1,<null>.c2-Window:W1,<null>.", handler.Log);
+			Assert.AreEqual ("a-Inherited:W1,<null>.b-Inherited:W1,<null>.c1-Inherited:W1,<null>.c2-Inherited:W1,<null>.", handler.Log);
 			handler.Clear ();
-			
-			Assert.IsNull (a.GetValue (Visual.WindowProperty));
-			Assert.IsNull (b.GetValue (Visual.WindowProperty));
-			Assert.IsNull (c1.GetValue (Visual.WindowProperty));
-			Assert.IsNull (c2.GetValue (Visual.WindowProperty));
+
+			Assert.IsNull (a.GetValue (Dummy.InheritedProperty));
+			Assert.IsNull (b.GetValue (Dummy.InheritedProperty));
+			Assert.IsNull (c1.GetValue (Dummy.InheritedProperty));
+			Assert.IsNull (c2.GetValue (Dummy.InheritedProperty));
 
 			r2.Children.Add (a);
 
-			Assert.AreEqual ("a-Window:<null>,W2.b-Window:<null>,W2.c1-Window:<null>,W2.c2-Window:<null>,W2.", handler.Log);
+			Assert.AreEqual ("a-Inherited:<null>,W2.b-Inherited:<null>,W2.c1-Inherited:<null>,W2.c2-Inherited:<null>,W2.", handler.Log);
 			handler.Clear ();
-			
-			Assert.AreEqual ("W2", a.GetValue (Visual.WindowProperty));
-			Assert.AreEqual ("W2", b.GetValue (Visual.WindowProperty));
-			Assert.AreEqual ("W2", c1.GetValue (Visual.WindowProperty));
-			Assert.AreEqual ("W2", c2.GetValue (Visual.WindowProperty));
+
+			Assert.AreEqual ("W2", a.GetValue (Dummy.InheritedProperty));
+			Assert.AreEqual ("W2", b.GetValue (Dummy.InheritedProperty));
+			Assert.AreEqual ("W2", c1.GetValue (Dummy.InheritedProperty));
+			Assert.AreEqual ("W2", c2.GetValue (Dummy.InheritedProperty));
 
 			Visual c10 = new Visual ();
 			Visual c11 = new Visual ();
 
 			c10.Name = "c10";
 			c11.Name = "c11";
-			
-			c10.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
-			c11.AddEventHandler (Visual.WindowProperty, handler.RecordEventAndName);
+
+			c10.AddEventHandler (Dummy.InheritedProperty, handler.RecordEventAndName);
+			c11.AddEventHandler (Dummy.InheritedProperty, handler.RecordEventAndName);
 
 			c1.Children.Add (c10);
 			c1.Children.Add (c11);
 
-			Assert.AreEqual ("c10-Window:<null>,W2.c11-Window:<null>,W2.", handler.Log);
+			Assert.AreEqual ("c10-Inherited:<null>,W2.c11-Inherited:<null>,W2.", handler.Log);
 			handler.Clear ();
 
-			c1.SetValue (Visual.WindowProperty, "WX");
+			c1.SetValue (Dummy.InheritedProperty, "WX");
 
-			Assert.AreEqual ("WX", c1.GetValue (Visual.WindowProperty));
-			
-			Assert.AreEqual ("c1-Window:W2,WX.c10-Window:W2,WX.c11-Window:W2,WX.", handler.Log);
+			Assert.AreEqual ("WX", c1.GetValue (Dummy.InheritedProperty));
+
+			Assert.AreEqual ("c1-Inherited:W2,WX.c10-Inherited:W2,WX.c11-Inherited:W2,WX.", handler.Log);
 			handler.Clear ();
 
 			r1.Children.Add (a);
 
-			Assert.AreEqual ("a-Window:W2,W1.b-Window:W2,W1.c2-Window:W2,W1.", handler.Log);
+			Assert.AreEqual ("a-Inherited:W2,W1.b-Inherited:W2,W1.c2-Inherited:W2,W1.", handler.Log);
 			handler.Clear ();
+		}
+
+		class Dummy : Types.DependencyObject
+		{
+			public static Types.DependencyProperty InheritedProperty = Types.DependencyProperty.RegisterAttached ("Inherited", typeof (string), typeof (Dummy), new Types.DependencyPropertyMetadataWithInheritance (null));
 		}
 
 		[Test]
