@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types
 	/// qui permet une plus grande souplesse (valeurs par défaut, introspection,
 	/// sérialisation, styles, génération automatique d'événements, etc.)
 	/// </summary>
-	public abstract class DependencyObject : System.IDisposable
+	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache
 	{
 		protected DependencyObject()
 		{
@@ -65,6 +65,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		public IInheritedPropertyCache			InheritedPropertyCache
+		{
+			get
+			{
+				return this;
+			}
+		}
+		
 		public static int						RegisteredPropertyCount
 		{
 			get
@@ -97,9 +105,11 @@ namespace Epsitec.Common.Types
 			{
 				DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
-				if (metadata.InheritsValue)
+				if ((metadata.InheritsValue) &&
+					(this.inheritedPropertyCache.TryGetValue (this, property, out value)))
 				{
-					value = metadata.FindInheritedValue (this, property);
+					//	Re-use cached value.
+					System.Diagnostics.Debug.WriteLine ("Reuse cached value " + (value == null ? "<null>" : value.ToString ()));
 				}
 				else
 				{
@@ -134,11 +144,9 @@ namespace Epsitec.Common.Types
 
 			if (metadata.InheritsValue)
 			{
-				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (this, property);
-				
 				this.SetLocalValue (property, value);
-				
-				snapshot.InvalidateDifferentProperties ();
+				this.inheritedPropertyCache.SetValue (this, property, value);
+				this.inheritedPropertyCache.NotifyChanges (this);
 			}
 			else
 			{
@@ -164,11 +172,9 @@ namespace Epsitec.Common.Types
 
 			if (metadata.InheritsValue)
 			{
-				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreatePropertyTreeSnapshot (this, property);
-
 				this.ClearLocalValue (property);
-
-				snapshot.InvalidateDifferentProperties ();
+				this.InheritPropertyFromParent (property);
+				this.inheritedPropertyCache.NotifyChanges (this);
 			}
 			else
 			{
@@ -188,7 +194,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
+
 		public object CoerceValue(DependencyProperty property, object value)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
@@ -233,14 +239,15 @@ namespace Epsitec.Common.Types
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
-			metadata.NotifyPropertyInvalidated (this, old_value, new_value);
-
-			if (this.HasEventHandlerForProperty (property))
+			if (metadata.NotifyPropertyInvalidated (this, old_value, new_value))
 			{
-				PropertyChangedEventHandler handler = this.propertyEvents[property];
-				DependencyPropertyChangedEventArgs args = new DependencyPropertyChangedEventArgs (property, old_value, new_value);
+				if (this.HasEventHandlerForProperty (property))
+				{
+					PropertyChangedEventHandler handler = this.propertyEvents[property];
+					DependencyPropertyChangedEventArgs args = new DependencyPropertyChangedEventArgs (property, old_value, new_value);
 
-				handler (this, args);
+					handler (this, args);
+				}
 			}
 		}
 		
@@ -361,7 +368,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
+
 		protected void AddUserEventHandler(string name, System.Delegate handler)
 		{
 			if (this.userEvents == null)
@@ -409,6 +416,30 @@ namespace Epsitec.Common.Types
 		{
 		}
 
+		private void InheritPropertyFromParent(DependencyProperty property)
+		{
+			//	Update the cached value for this inherited property, based
+			//	on what is currently defined by the parent (if any).
+
+			DependencyObject parent = DependencyObjectTree.GetParent (this);
+
+			if (parent == null)
+			{
+				//	No parent means that we can clear the cache and forget
+				//	about it; clearing the cache will return the default
+				//	value from now on.
+
+				this.inheritedPropertyCache.ClearValue (this, property);
+			}
+			else
+			{
+				//	There is a parent; ask it to provide its value and use
+				//	that as the locally cached value.
+
+				this.inheritedPropertyCache.SetValue (this, property, parent.GetValue (property));
+			}
+		}
+		
 		internal static void Register(DependencyProperty property, System.Type ownerType)
 		{
 			System.Diagnostics.Debug.Assert (property != null);
@@ -496,10 +527,48 @@ namespace Epsitec.Common.Types
 		BindingExpressionDictionary							bindings;
 		PropertyChangedEventDictionary						propertyEvents;
 		UserEventDictionary									userEvents;
+		InheritedPropertyCache								inheritedPropertyCache;
 		
 		DependencyObjectType								cachedType;
 
 		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
 		static int											registeredPropertyCount;
+
+		#region IInheritedPropertyCache Members
+
+		void IInheritedPropertyCache.ClearAllValues(DependencyObject node)
+		{
+			this.inheritedPropertyCache.ClearAllValues (node);
+		}
+		void IInheritedPropertyCache.ClearValues(DependencyObject node, IEnumerable<DependencyProperty> properties)
+		{
+			this.inheritedPropertyCache.ClearValues (node, properties);
+		}
+		void IInheritedPropertyCache.SetValues(DependencyObject node, IEnumerable<LocalValueEntry> propertyValues)
+		{
+			this.inheritedPropertyCache.SetValues (node, propertyValues);
+		}
+		bool IInheritedPropertyCache.IsDefined(DependencyObject node, DependencyProperty property)
+		{
+			return this.inheritedPropertyCache.IsDefined (node, property);
+		}
+		bool IInheritedPropertyCache.TryGetValue(DependencyObject node, DependencyProperty property, out object value)
+		{
+			return this.inheritedPropertyCache.TryGetValue (node, property, out value);
+		}
+		void IInheritedPropertyCache.NotifyChanges(DependencyObject node)
+		{
+			this.inheritedPropertyCache.NotifyChanges (node);
+		}
+		IEnumerable<LocalValueEntry> IInheritedPropertyCache.GetValues(DependencyObject node)
+		{
+			return this.inheritedPropertyCache.GetValues (node);
+		}
+		void IInheritedPropertyCache.InheritValuesFromParent(DependencyObject node, DependencyObject parent)
+		{
+			this.inheritedPropertyCache.InheritValuesFromParent (node, parent);
+		}
+
+		#endregion
 	}
 }

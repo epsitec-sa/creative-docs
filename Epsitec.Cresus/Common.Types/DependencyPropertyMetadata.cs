@@ -150,6 +150,13 @@ namespace Epsitec.Common.Types
 				this.canSerialize = value;
 			}
 		}
+		public virtual bool						PropertyNotifiesChanges
+		{
+			get
+			{
+				return true;
+			}
+		}
 
 
 		public DependencyPropertyMetadata MakeReadOnlySerializable()
@@ -165,23 +172,19 @@ namespace Epsitec.Common.Types
 
 			return (cloneable == null) ? value : cloneable.Clone ();
 		}
-		public virtual object FindInheritedValue(DependencyObject o, DependencyProperty property)
+
+		internal bool NotifyPropertyInvalidated(DependencyObject sender, object old_value, object new_value)
 		{
-			DependencyObject parent = DependencyObjectTree.FindParentDefiningProperty (o, property);
-			
-			if (parent == null)
+			if (this.PropertyNotifiesChanges)
 			{
-				return this.CreateDefaultValue ();
+				this.OnPropertyInvalidated (sender, old_value, new_value);
+				
+				return true;
 			}
 			else
 			{
-				return parent.GetValue (property);
+				return false;
 			}
-		}
-
-		internal void NotifyPropertyInvalidated(DependencyObject sender, object old_value, object new_value)
-		{
-			this.OnPropertyInvalidated (sender, old_value, new_value);
 		}
 		
 		protected virtual void OnPropertyInvalidated(DependencyObject sender, object old_value, object new_value)

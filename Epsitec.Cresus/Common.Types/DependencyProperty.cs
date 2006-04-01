@@ -44,6 +44,23 @@ namespace Epsitec.Common.Types
 					}
 				}
 			}
+
+			if ((this.defaultMetadata.InheritsValue) &&
+				(this.propertyType == typeof (bool)))
+			{
+				//	This is a special property which can fit into a bitset-based
+				//	inherited property cache.
+
+				lock (DependencyProperty.exclusion)
+				{
+					if (DependencyProperty.bitsetBasedCachedInheritedPropertyCount < DependencyProperty.bitsetBasedCachedInheritedProperties.Length)
+					{
+						int index = DependencyProperty.bitsetBasedCachedInheritedPropertyCount++;
+						DependencyProperty.bitsetBasedCachedInheritedProperties[index] = this;
+						this.inheritedPropertyCacheMask = (1 << index);
+					}
+				}
+			}
 		}
 		
 		public string							Name
@@ -114,6 +131,14 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.globalIndex;
+			}
+		}
+		
+		internal int							InheritedPropertyCacheMask
+		{
+			get
+			{
+				return this.inheritedPropertyCacheMask;
 			}
 		}
 		
@@ -320,6 +345,32 @@ namespace Epsitec.Common.Types
 			return new ReadOnlyArray<DependencyProperty> (DependencyProperty.attachedPropertiesArray);
 		}
 		
+		internal static DependencyProperty GetInheritedPropertyFromCacheMask(int mask)
+		{
+			if (mask == 0)
+			{
+				return null;
+			}
+			if (mask < 0)
+			{
+				return null;
+			}
+			
+			int shift = 1;
+			
+			for (int i = 0; i < DependencyProperty.bitsetBasedCachedInheritedPropertyCount; i++)
+			{
+				if (shift == mask)
+				{
+					return DependencyProperty.bitsetBasedCachedInheritedProperties[i];
+				}
+				
+				shift = shift << 1;
+			}
+			
+			return null;
+		}
+
 		public void OverrideMetadata(System.Type type, DependencyPropertyMetadata metadata)
 		{
 			DependencyObjectType.FromSystemType (type);
@@ -464,6 +515,7 @@ namespace Epsitec.Common.Types
 		private bool							isPropertyAnICollection;
 		private bool							isReadOnly;
 		private int								globalIndex;
+		private int								inheritedPropertyCacheMask;
 		private ITypeConverter					typeConverter;
 		
 		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
@@ -472,6 +524,8 @@ namespace Epsitec.Common.Types
 		static List<DependencyProperty>			attachedPropertiesList = new List<DependencyProperty> ();
 		static DependencyProperty[]				attachedPropertiesArray;
 		static int								globalPropertyCount;
+		static DependencyProperty[]				bitsetBasedCachedInheritedProperties = new DependencyProperty[InheritedPropertyCache.MaskBits];
+		static int								bitsetBasedCachedInheritedPropertyCount = 0;
 		static System.Text.RegularExpressions.Regex validNameRegex;
 	}
 }

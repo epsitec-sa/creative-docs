@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonUndo = this.CreateIconButton("Undo", "Large");
 			this.buttonRedo = this.CreateIconButton("Redo", "Large");
-			this.buttonList = this.CreateMenuButton("UndoRedoList", Res.Strings.Action.UndoRedoList, new MessageEventHandler(this.HandleListClicked));
+			this.buttonList = this.CreateMenuButton ("UndoRedoList", Res.Strings.Action.UndoRedoList, new MessageEventHandler (this.HandleListPressed));
 			
 			this.UpdateClientGeometry();
 		}
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		private void HandleListClicked(object sender, MessageEventArgs e)
+		private void HandleListPressed(object sender, MessageEventArgs e)
 		{
 			//	Bouton pour ouvrir la liste cliqué.
 			if ( this.document.Modifier.ActiveViewer.IsCreating )
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Document.Ribbons
 			Point pos = button.MapClientToScreen(new Point(0, 1));
 			VMenu menu = this.document.Modifier.CreateUndoRedoMenu(null);
 			menu.Host = this;
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.ShowAsComboList(button, pos, button);
 		}
 
 

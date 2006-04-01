@@ -46,21 +46,27 @@ namespace Epsitec.Common.Widgets
 			graphics.AddRectangle (1, 1, size.Width-2, size.Height-2);
 			graphics.RenderSolid (Drawing.Color.FromBrightness (0));
 		}
+
+		[Test] public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
 		
 		[Test] public void CheckAdornerWidgets()
 		{
-			this.CreateAdornerWidgets();
+			Window.RunInTestEnvironment (this.CreateAdornerWidgets ());
 		}
 		
 		[Test] public void CheckAdornerWidgetsDisabled()
 		{
 			Window window = this.CreateAdornerWidgets();
 			this.RecursiveDisable(window.Root, true);
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckAdornerBigText()
 		{
-			this.CreateBigText();
+			Window.RunInTestEnvironment (this.CreateBigText());
 		}
 		
 		
@@ -279,7 +285,15 @@ namespace Epsitec.Common.Widgets
 			a.AnchorMargins = new Margins(10, 0, 0, 30);
 			a.TabIndex = 20;
 			a.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			Assert.IsFalse (a.IsVisible);
+			Assert.IsTrue (a.Visibility);
+			
 			window.Root.Children.Add(a);
+
+			Assert.IsFalse (window.Root.IsVisible);
+			Assert.IsFalse (a.IsVisible);
+			
 			tip.SetToolTip(a, "C'est d'accord, tout baigne");
 
 			Button b = new Button();
@@ -864,7 +878,16 @@ namespace Epsitec.Common.Widgets
 			tab.ActivePage = page2;
 			window.FocusedWidget = a;
 
-			window.Show();
+			Assert.IsFalse (window.IsVisible);
+			Assert.IsFalse (window.Root.IsVisible);
+			Assert.IsFalse (a.IsVisible);
+			
+			window.Show ();
+			
+			Assert.IsTrue (window.IsVisible);
+			Assert.IsTrue (window.Root.IsVisible);
+			Assert.IsTrue (a.IsVisible);
+			
 			return window;
 		}
 		
@@ -1052,8 +1075,17 @@ namespace Epsitec.Common.Widgets
 			buttonRedo.Clicked += new MessageEventHandler(this.HandleMultiRedo);
 //			window.Root.DebugActive = true;
 			window.FocusedWidget    = multi;
-			window.Show();
+
+			Assert.IsFalse (window.IsVisible);
+			Assert.IsFalse (window.Root.IsVisible);
+			Assert.IsFalse (multi.IsVisible);
 			
+			window.Show();
+
+			Assert.IsTrue (window.IsVisible);
+			Assert.IsTrue (window.Root.IsVisible);
+			Assert.IsTrue (multi.IsVisible);
+
 //			multi.Text = @"abc <b>def</b> ghi.<br/>123 <i>456</i> 789 <b>qrs</b>.<br/>A<img src=""file:images/icon.png""/>B<br/>";
 			
 			return window;
@@ -1284,6 +1316,7 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget = tb;
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		private void HandleWindowClosed(object sender)
@@ -1390,6 +1423,7 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget = table;
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckAdornerCell2()
@@ -1464,6 +1498,7 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget = table;
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckAdornerCell3()
@@ -1552,6 +1587,7 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget = table;
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckAdornerScrollArray()
@@ -1598,6 +1634,7 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget = table;
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 
@@ -1752,6 +1789,7 @@ namespace Epsitec.Common.Widgets
 			v2.Children.Add(buttonv2);
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckAdornerPaneBook2()
@@ -1797,6 +1835,7 @@ namespace Epsitec.Common.Widgets
 			p2.Children.Add(button2);
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 
@@ -1844,6 +1883,7 @@ namespace Epsitec.Common.Widgets
 			p2.Children.Add(button2);
 
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		private void HandleTextExEditionAccepted(object sender)

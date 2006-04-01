@@ -6,7 +6,14 @@ namespace Epsitec.Common.Drawing
 	[TestFixture]
 	public class GraphicsTest
 	{
-		[Test] public void CheckTextOutput()
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
+		[Test]
+		public void CheckTextOutput()
 		{
 			Window window = new Window ();
 			
@@ -15,6 +22,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Text_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckTextOutputStabilityCheck()
@@ -26,6 +34,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(TextStabilityCheck_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckTextOutputWingdings()
@@ -37,6 +46,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(TextWingdings_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckGammaOutput()
@@ -48,6 +58,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Gamma_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckSmooth()
@@ -58,6 +69,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Smooth_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckPixmapRawData()
@@ -69,6 +81,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(CheckPixmapRawData_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckCurve()
@@ -79,6 +92,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Curve_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckMultiPath()
@@ -89,6 +103,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(MultiPath_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckAlphaMask()
@@ -100,6 +115,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.Invalidate ();
 			window.ClientSize = new Size (300, 250);
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckEvenOddFill()
@@ -110,6 +126,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(EvenOddFill_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckNonZeroFill()
@@ -120,6 +137,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(NonZeroFill_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckPathAccumulationRasterizer()
@@ -130,6 +148,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(PathAccumulationRasterizer_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckPathAppend()
@@ -141,6 +160,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(PathAppend_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckFontPreviewer()
@@ -154,6 +174,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(FontPreviewer_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckClipping()
@@ -164,6 +185,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Clipping_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckTransform()
@@ -174,6 +196,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Transform_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckLineCaps()
@@ -184,6 +207,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(LineCaps_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckGradient1()
@@ -194,6 +218,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Gradient1_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckGradient2()
@@ -204,6 +229,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Gradient2_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckGradient3()
@@ -214,6 +240,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Gradient3_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckImage()
@@ -224,6 +251,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Image_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckImageRect()
@@ -234,6 +262,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(ImageRect_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckImageRectTIFF()
@@ -245,6 +274,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(ImageRectTIFF_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckImage100dpi200dpi()
@@ -256,6 +286,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Image100dpi200dpi_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckSpecial4Fill()
@@ -266,6 +297,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(Special4Fill_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		

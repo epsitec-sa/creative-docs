@@ -301,6 +301,11 @@ namespace Epsitec.Common.Widgets.Helpers
 				visual = parent;
 			}
 		}
+
+		public static WindowRoot GetWindowRoot(Visual visual)
+		{
+			return VisualTree.GetRoot (visual) as WindowRoot;
+		}
 		
 		
 		public static Support.OpletQueue GetOpletQueue(Visual visual)
@@ -450,90 +455,22 @@ namespace Epsitec.Common.Widgets.Helpers
 				return VisualTree.IsAncestor (descendant, visual);
 			}
 		}
-		
-		
-		public static bool IsVisible(Visual visual)
-		{
-			while ((visual != null) && (visual.Visibility))
-			{
-				if (visual is WindowRoot)
-				{
-					WindowRoot root   = visual as WindowRoot;
-					Window     window = root.Window;
-					
-					return window == null ? false : window.IsVisible;
-				}
-				
-				visual = visual.Parent;
-			}
-			
-			return false;
-		}
-		
-		public static bool IsEnabled(Visual visual)
-		{
-			while (visual.Enable)
-			{
-				visual = visual.Parent;
-				
-				if (visual == null)
-				{
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
-		public static bool IsFocused(Visual visual)
-		{
-			//	Retourne true si un widget, ou l'un de ses parents (pour autant
-			//	que l'héritage soit activé) contient le focus.
-			
-			while (visual != null)
-			{
-				if (visual.IsKeyboardFocused)
-				{
-					Window window = VisualTree.GetWindow (visual);
-					return window == null ? false : window.IsFocused;
-				}
-				
-				if (visual.InheritParentFocus)
-				{
-					visual = visual.Parent;
-				}
-				else
-				{
-					break;
-				}
-			}
-			
-			return false;
-		}
-		
-		
+
 		public static bool ContainsKeyboardFocus(Visual visual)
 		{
 			//	Retourne true si un widget, ou l'un de ses enfants, contient le
 			//	focus du clavier.
-			
+
 			if (visual != null)
 			{
-				if (visual.IsKeyboardFocused)
+				if (visual.KeyboardFocus)
 				{
 					return true;
 				}
-				
-				if (visual.HasChildren)
-				{
-					foreach (Visual child in visual.Children)
-					{
-						if (VisualTree.ContainsKeyboardFocus (child))
-						{
-							return true;
-						}
-					}
-				}
+
+				WindowRoot root = VisualTree.GetWindowRoot (visual);
+
+				return root.DoesVisualContainKeyboardFocus (visual);
 			}	
 			
 			return false;

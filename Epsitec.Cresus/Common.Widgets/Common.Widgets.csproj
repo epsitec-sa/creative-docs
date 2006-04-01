@@ -277,10 +277,6 @@
     <Compile Include="Collections\IWidgetCollectionHost.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\LayerCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Collections\LayeredChildrenCollection.cs" />
     <Compile Include="Collections\ShortcutCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -440,9 +436,6 @@
     <Compile Include="Layouts\ILayout.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Layouts\Layer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Layouts\LayoutEngine.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -507,6 +500,7 @@
     <Compile Include="Platform\WindowList.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Platform\WindowManagerOperation.cs" />
     <Compile Include="ProgressBar.cs">
       <SubType>Code</SubType>
     </Compile>

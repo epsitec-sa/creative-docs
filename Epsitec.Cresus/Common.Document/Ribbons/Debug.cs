@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = "Debug";
 
-			this.buttonOthers = this.CreateMenuButton("", "Debug menu...", new MessageEventHandler(this.HandleOthersClicked));
+			this.buttonOthers = this.CreateMenuButton ("", "Debug menu...", new MessageEventHandler (this.HandleOthersPressed));
 			
 			this.UpdateClientGeometry();
 		}
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		private void HandleOthersClicked(object sender, MessageEventArgs e)
+		private void HandleOthersPressed(object sender, MessageEventArgs e)
 		{
 			//	Bouton pour ouvrir le menu des autres opérations.
 			GlyphButton button = sender as GlyphButton;
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Document.Ribbons
 			VMenu menu = this.BuildOthersMenu();
 			if ( menu == null )  return;
 			menu.Host = this;
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.ShowAsComboList(button, pos, button);
 		}
 
 		protected VMenu BuildOthersMenu()

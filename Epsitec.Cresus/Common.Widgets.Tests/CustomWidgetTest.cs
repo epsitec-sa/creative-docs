@@ -11,6 +11,11 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		[Test] public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
 		[Test] public void CheckCustomWidgetSimpleWindow()
 		{
 			Window window = new Window ();
@@ -47,6 +52,7 @@ namespace Epsitec.Common.Widgets
 			b.AutoRepeat = false;
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		private void HandleWidgetClicked(object sender, MessageEventArgs e)

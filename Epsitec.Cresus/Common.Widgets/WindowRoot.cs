@@ -1,5 +1,7 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -33,6 +35,20 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.window;
+			}
+		}
+		public override bool					Visibility
+		{
+			get
+			{
+				return base.Visibility;
+			}
+			set
+			{
+				if (value != true)
+				{
+					throw new System.ArgumentException ("WindowRoot.Visibility cannot be set to false");
+				}
 			}
 		}
 		
@@ -135,6 +151,30 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate ();
 		}
 		#endregion
+
+
+		public bool DoesVisualContainKeyboardFocus(Visual visual)
+		{
+			return this.focus_chain.Contains (visual);
+		}
+		
+		public override void MessageHandler(Message message, Drawing.Point pos)
+		{
+			message.WindowRoot = this;
+
+			if (this.focus_chain.Count == 0)
+			{
+				Widget widget = this.window.FocusedWidget;
+
+				while (widget != null)
+				{
+					this.focus_chain.Add (widget);
+					widget = widget.Parent;
+				}
+			}
+			
+			base.MessageHandler (message, pos);
+		}
 		
 		public override void Invalidate(Drawing.Rectangle rect)
 		{
@@ -169,6 +209,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		internal void ClearFocusChain()
+		{
+			this.focus_chain.Clear ();
+		}
 		
 		internal override void SetBounds(Drawing.Rectangle value)
 		{
@@ -425,16 +469,26 @@ namespace Epsitec.Common.Widgets
 		{
 			this.HandleCultureChanged ();
 		}
+
+		internal void NotifyWindowIsVisibleChanged()
+		{
+			//	Copie l'état de visibilité de la fenêtre de manière à ce que
+			//	notre propriété IsVisible soit toujours synchronisée avec la
+			//	fenêtre :
+			
+			this.SetValue (Visual.IsVisibleProperty, this.window.IsVisible);
+		}
 		
 		
 		
 		public event Support.EventHandler			WindowStylesChanged;
 		public event Support.EventHandler			WindowTypeChanged;
-		
+
 		
 		protected WindowStyles						window_styles;
 		protected WindowType						window_type;
 		protected Window							window;
 		protected bool								is_ready;
+		protected List<Visual>						focus_chain = new List<Visual> ();
 	}
 }

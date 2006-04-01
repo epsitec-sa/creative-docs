@@ -94,6 +94,7 @@ namespace Epsitec.Common.Widgets.Collections
 				//	suffit de lui en attribuer un :
 
 				visual.SetParentVisual (this.host);
+				visual.InheritedPropertyCache.InheritValuesFromParent (visual, this.host);
 			}
 			else if (this.host == parent)
 			{
@@ -114,6 +115,7 @@ namespace Epsitec.Common.Widgets.Collections
 				System.Diagnostics.Debug.Assert (visual.Parent == null);
 				
 				visual.SetParentVisual (this.host);
+				visual.InheritedPropertyCache.InheritValuesFromParent (visual, this.host);
 			}
 			
 			System.Diagnostics.Debug.Assert (visual.Parent == this.host);
@@ -129,6 +131,7 @@ namespace Epsitec.Common.Widgets.Collections
 			System.Diagnostics.Debug.Assert (this.host == visual.Parent);
 			
 			visual.SetParentVisual (null);
+			visual.InheritedPropertyCache.ClearAllValues (visual);
 
 			System.Diagnostics.Debug.Assert (visual.Parent == null);
 			
@@ -242,7 +245,10 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 			if (item.Parent == this.host)
 			{
-				throw new System.InvalidOperationException (FlatChildrenCollection.NotTwiceMessage);
+				//	If the caller tries to add a visual to the same parent, we
+				//	simply accept it; don't do anything here...
+				
+				return;
 			}
 
 			Snapshot snapshot = Snapshot.RecordTree (item);
@@ -366,7 +372,6 @@ namespace Epsitec.Common.Widgets.Collections
 			{
 				this.snapshot   = new Types.DependencyObjectTreeSnapshot ();
 				this.visuals    = new List<Visual> ();
-				this.properties = new List<Types.DependencyProperty> ();
 			}
 
 			public void NotifyChanges()
@@ -377,22 +382,8 @@ namespace Epsitec.Common.Widgets.Collections
 				
 				foreach (Visual visual in this.visuals)
 				{
-					IList<Types.DependencyProperty> properties = Types.DependencyObjectTree.FindInheritedProperties (visual);
-
-					foreach (Types.DependencyProperty property in properties)
-					{
-						//	S'il y a tout à coup de nouvelles propriétés héritées, il
-						//	faut les inclure dans le snapshot de départ, sous leur forme
-						//	"undefined" :
-						
-						if (this.properties.Contains (property) == false)
-						{
-							this.snapshot.RecordUndefinedTree (visual, property);
-						}
-					}
+					visual.InheritedPropertyCache.NotifyChanges (visual);
 				}
-
-				//	Passe en revue tous les changements.
 
 				this.snapshot.InvalidateDifferentProperties ();
 			}
@@ -428,24 +419,12 @@ namespace Epsitec.Common.Widgets.Collections
 				{
 					this.visuals.Add (visual);
 					
-					IList<Types.DependencyProperty> properties = Types.DependencyObjectTree.FindInheritedProperties (visual);
-
-					foreach (Types.DependencyProperty property in properties)
-					{
-						if (this.properties.Contains (property) == false)
-						{
-							this.properties.Add (property);
-						}
-					}
-
-					this.snapshot.Record (visual, properties);
-					this.snapshot.RecordSubtree (visual, properties);
+					this.snapshot.Record (visual, Visual.ParentProperty);
 				}
 			}
 
 			Types.DependencyObjectTreeSnapshot	snapshot;
 			List<Visual>						visuals;
-			List<Types.DependencyProperty>		properties;
 		}
 		#endregion
 

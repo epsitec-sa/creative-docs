@@ -32,8 +32,6 @@ namespace Epsitec.Common.Types.Serialization
 
 		private void RestoreObjectField(DependencyObject obj, string field, string value)
 		{
-			System.Console.Out.WriteLine ("{0}: {1}='{2}'", this.ObjectMap.GetId (obj), field, value);
-
 			DependencyProperty property = null;
 
 			if (field.IndexOf ('.') < 0)

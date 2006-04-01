@@ -198,7 +198,9 @@
     <Compile Include="WindowTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Folder Include="resources" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

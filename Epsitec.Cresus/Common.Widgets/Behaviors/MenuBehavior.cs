@@ -285,7 +285,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.AttachRootWindow ();
 			}
 			
-			this.root_menu.IsVisibleChanged += new PropertyChangedEventHandler (this.HandleRootMenuIsVisibleChanged);
+			this.root_menu.IsVisibleChanged += this.HandleRootMenuIsVisibleChanged;
 		}
 		
 		internal void Detach(Widget root_menu)
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			System.Diagnostics.Debug.Assert (this.root_menu == root_menu);
 			
-			this.root_menu.IsVisibleChanged -= new PropertyChangedEventHandler (this.HandleRootMenuIsVisibleChanged);
+			this.root_menu.IsVisibleChanged -= this.HandleRootMenuIsVisibleChanged;
 			
 			if (this.root_menu.IsVisible)
 			{
@@ -477,7 +477,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			MenuBehavior.menu_list      = new System.Collections.ArrayList ();
 			MenuBehavior.menu_root_list = new System.Collections.ArrayList ();
 			
-			MenuBehavior.timer.TimeElapsed += new Support.EventHandler (MenuBehavior.HandleTimerTimeElapsed);
+			MenuBehavior.timer.TimeElapsed += MenuBehavior.HandleTimerTimeElapsed;
 		}
 		
 		
@@ -1245,14 +1245,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private static void RegisterFilter()
 		{
-//-			Window.ApplicationDeactivated += new Support.EventHandler (MenuBehavior.HandleApplicationDeactivated);
-			Window.MessageFilter          += new MessageHandler (MenuBehavior.MessageFilter);
+			Window.ApplicationDeactivated += MenuBehavior.HandleApplicationDeactivated;
+			Window.MessageFilter          += MenuBehavior.MessageFilter;
 		}
 		
 		private static void UnregisterFilter()
 		{
-//-			Window.ApplicationDeactivated -= new Support.EventHandler (MenuBehavior.HandleApplicationDeactivated);
-			Window.MessageFilter          -= new MessageHandler (MenuBehavior.MessageFilter);
+			Window.ApplicationDeactivated -= MenuBehavior.HandleApplicationDeactivated;
+			Window.MessageFilter          -= MenuBehavior.MessageFilter;
 		}
 		
 		private static void GenerateDummyMouseMoveEvent()

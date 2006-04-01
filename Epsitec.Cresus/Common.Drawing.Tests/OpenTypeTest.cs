@@ -7,6 +7,10 @@ namespace Epsitec.Common.OpenType
 	{
 		[Test] public void CheckFeatures()
 		{
+			//	Ce test requiert les fontes suivantes sur le système:
+			//	- Zapf Dingbats BT
+			//	- Arial Unicode MS
+			
 			FontCollection collection = new FontCollection ();
 			
 			collection.Initialize ();

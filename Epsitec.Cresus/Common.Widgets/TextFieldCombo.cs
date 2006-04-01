@@ -203,7 +203,7 @@ namespace Epsitec.Common.Widgets
 				case ShowCondition.Always:				show = true;										break;
 				case ShowCondition.Never:				show = false;										break;
 				case ShowCondition.WhenFocused:			show = this.IsFocused         || this.IsComboOpen;	break;
-				case ShowCondition.WhenKeyboardFocused:	show = this.IsKeyboardFocused || this.IsComboOpen;	break;
+				case ShowCondition.WhenKeyboardFocused:	show = this.KeyboardFocus || this.IsComboOpen;	break;
 				case ShowCondition.WhenModified:		show = this.HasEditedText;							break;
 				
 				default:

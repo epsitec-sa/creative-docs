@@ -18,7 +18,9 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll", SetLastError=true)]	internal extern static bool UpdateLayeredWindow(System.IntPtr handle, System.IntPtr dst_dc, ref Win32Api.Point dst, ref Win32Api.Size size, System.IntPtr src_dc, ref Win32Api.Point src, int color, ref Win32Api.BlendFunction blend, int flags);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetDC(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static int ReleaseDC(System.IntPtr handle, System.IntPtr dc);
-		[DllImport ("User32.dll")]	internal extern static bool PostMessage(System.IntPtr handle, int msg, System.IntPtr w_param, System.IntPtr l_param);
+		[DllImport ("User32.dll")]	internal extern static bool ReleaseCapture();
+		[DllImport ("User32.dll")]	internal extern static void SendMessage(System.IntPtr handle, uint msg, System.IntPtr w_param, System.IntPtr l_param);
+		[DllImport ("User32.dll")]	internal extern static bool PostMessage(System.IntPtr handle, uint msg, System.IntPtr w_param, System.IntPtr l_param);
 		[DllImport ("User32.dll")]  internal extern static int GetWindowThreadProcessId(System.IntPtr handle, out int pid);		
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetWindow(System.IntPtr handle, int direction);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr FindWindow(string window_class, string window_title);

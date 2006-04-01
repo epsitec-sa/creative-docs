@@ -28,7 +28,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 			}
 		}
 
-		private DependencyProperty property;
-		private T value;
+		private DependencyProperty				property;
+		private T								value;
 	}
 }
