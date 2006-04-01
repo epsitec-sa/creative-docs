@@ -16,6 +16,10 @@ namespace Epsitec.Common.Widgets
 	{
 		public Visual()
 		{
+			//	Since IsFocused would be automatically inherited, we have to define
+			//	it locally. Setting InheritParentFocus will clear the definition.
+			
+			this.SetValueBase (Visual.IsFocusedProperty, false);
 		}
 		
 		
@@ -938,7 +942,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (that.KeyboardFocus != focus)
 			{
-				that.SetValueBase (Visual.KeyboardFocusProperty, focus);
+				that.SetValueBase (Visual.KeyboardFocusProperty, value);
 
 				if (focus)
 				{
@@ -946,7 +950,40 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					that.ClearValueBase (Visual.IsFocusedProperty);
+					if (that.InheritParentFocus)
+					{
+						that.ClearValueBase (Visual.IsFocusedProperty);
+					}
+					else
+					{
+						that.SetValueBase (Visual.IsFocusedProperty, false);
+					}
+				}
+			}
+		}
+
+		private static void SetInheritParentFocus(DependencyObject o, object value)
+		{
+			Visual that = o as Visual;
+			bool enable = (bool) value;
+
+			if (that.InheritParentFocus != enable)
+			{
+				that.SetValueBase (Visual.InheritParentFocusProperty, value);
+
+				if (enable)
+				{
+					if (that.KeyboardFocus == false)
+					{
+						that.ClearValueBase (Visual.IsFocusedProperty);
+					}
+				}
+				else
+				{
+					if (that.KeyboardFocus == false)
+					{
+						that.SetValueBase (Visual.IsFocusedProperty, false);
+					}
 				}
 			}
 		}
@@ -1222,8 +1259,8 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly DependencyProperty VisibilityProperty			= DependencyProperty.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyMetadataOptions.None));
 		public static readonly DependencyProperty EnableProperty				= DependencyProperty.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.None));
-		
-		public static readonly DependencyProperty InheritParentFocusProperty	= DependencyProperty.Register ("InheritParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false));
+
+		public static readonly DependencyProperty InheritParentFocusProperty	= DependencyProperty.Register ("InheritParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, Visual.SetInheritParentFocus, VisualPropertyMetadataOptions.None));
 
 		public static readonly DependencyProperty IsVisibleProperty				= DependencyProperty.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsArrange | VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty IsEnabledProperty				= DependencyProperty.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
