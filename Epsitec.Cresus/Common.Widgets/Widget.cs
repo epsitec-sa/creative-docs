@@ -3389,11 +3389,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void SetBounds(double x1, double y1, double x2, double y2)
-		{
-			this.SetBounds (new Drawing.Rectangle (x1, y1, x2-x1, y2-y1));
-		}
-		
 		protected override void UpdateClientGeometry()
 		{
 			if (this.IsLayoutSuspended == false)
@@ -3523,7 +3518,7 @@ namespace Epsitec.Common.Widgets
 								break;
 						}
 						
-						child.SetBounds (x1, y1, x2, y2);
+						child.SetBounds (Drawing.Rectangle.FromOppositeCorners (x1, y1, x2, y2));
 					}
 				}
 				
@@ -3764,28 +3759,28 @@ namespace Epsitec.Common.Widgets
 					case DockStyle.Top:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - dy, client_rect.Width, dy);
 						bounds.Deflate (child.DockMargins);
-						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+						child.SetBounds (bounds);
 						client_rect.Top -= dy;
 						break;
 						
 					case DockStyle.Bottom:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, client_rect.Width, dy);
 						bounds.Deflate (child.DockMargins);
-						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+						child.SetBounds (bounds);
 						client_rect.Bottom += dy;
 						break;
 					
 					case DockStyle.Left:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, dx, client_rect.Height);
 						bounds.Deflate (child.DockMargins);
-						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+						child.SetBounds (bounds);
 						client_rect.Left += dx;
 						break;
 					
 					case DockStyle.Right:
 						bounds = new Drawing.Rectangle (client_rect.Right - dx, client_rect.Bottom, dx, client_rect.Height);
 						bounds.Deflate (child.DockMargins);
-						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+						child.SetBounds (bounds);
 						client_rect.Right -= dx;
 						break;
 					
@@ -3823,7 +3818,7 @@ namespace Epsitec.Common.Widgets
 							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, new_dx, client_rect.Height);
 							bounds.Deflate (child.DockMargins);
 						
-							child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+							child.SetBounds (bounds);
 							client_rect.Left += new_dx;
 						}
 						break;
@@ -3843,7 +3838,7 @@ namespace Epsitec.Common.Widgets
 							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - new_dy, client_rect.Width, new_dy);
 							bounds.Deflate (child.DockMargins);
 							
-							child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+							child.SetBounds (bounds);
 							client_rect.Top -= new_dy;
 						}
 						break;
@@ -3864,7 +3859,7 @@ namespace Epsitec.Common.Widgets
 					
 					bounds = child.Bounds;
 					bounds.Offset (0, - push_dy);
-					child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+					child.SetBounds (bounds);
 				}
 			}
 			
@@ -3882,7 +3877,7 @@ namespace Epsitec.Common.Widgets
 					
 					bounds = child.Bounds;
 					bounds.Offset (push_dx, 0);
-					child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+					child.SetBounds (bounds);
 				}
 			}
 		}

@@ -69,7 +69,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						break;
 				}
 				
-				child.SetBounds (Drawing.Rectangle.FromCorners (x1, y1, x2, y2));
+				child.SetBounds (Drawing.Rectangle.FromPoints (x1, y1, x2, y2));
 			}
 		}
 	}

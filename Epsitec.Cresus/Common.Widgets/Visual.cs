@@ -217,7 +217,6 @@ namespace Epsitec.Common.Widgets
 				this.Bounds = bounds;
 			}
 		}
-		
 		public Drawing.Point					Location
 		{
 			get
@@ -264,7 +263,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.parent == null)
 					{
-						this.WriteBounds (left, bottom, width, height);
+						this.SetBounds (left, bottom, width, height);
 					}
 					else
 					{
@@ -278,7 +277,7 @@ namespace Epsitec.Common.Widgets
 						if ((this.Anchor == AnchorStyles.None) &&
 							(this.Dock == DockStyle.None))
 						{
-							this.WriteBounds (left, bottom, width, height);
+							this.SetBounds (left, bottom, width, height);
 						}
 						else
 						{
@@ -291,10 +290,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void WriteBounds(double left, double bottom, double width, double height)
-		{
-			this.SetBounds (new Drawing.Rectangle (left, bottom, width, height));
-		}
 		
 		public Drawing.Size						PreferredSize
 		{
@@ -723,8 +718,13 @@ namespace Epsitec.Common.Widgets
 		{
 			this.command_cache_id = value;
 		}
-		
-		
+
+
+
+		private void SetBounds(double left, double bottom, double width, double height)
+		{
+			this.SetBounds (new Drawing.Rectangle (left, bottom, width, height));
+		}
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
 		{

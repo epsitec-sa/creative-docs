@@ -268,7 +268,7 @@ namespace Epsitec.Common.Drawing
 				
 				for (int j = 0; j < h_seg_count; j++)
 				{
-					list.Add (Rectangle.FromCorners (h_segs[j].Left, y_bot, h_segs[j].Right, y_top));
+					list.Add (Rectangle.FromPoints (h_segs[j].Left, y_bot, h_segs[j].Right, y_top));
 				}
 			}
 			
